@@ -8,25 +8,74 @@ module DiscourseWorkflows
         RUN_ONCE_FOR_EACH_ITEM = "runOnceForEachItem"
         MODES = [RUN_ONCE_FOR_ALL_ITEMS, RUN_ONCE_FOR_EACH_ITEM].freeze
         DISALLOWED_FOR_EACH_METHODS = %w[first last all itemMatching].freeze
-        RESERVED_ITEM_KEYS = %w[json pairedItem error index].freeze
-        MAX_SAMPLE_ITEMS = 20
+        MAX_INPUT_ITEMS = 20
+        MAX_OUTPUT_ITEMS = 5
+        MAX_OUTPUT_CHARS = 12_000
+        MAX_OUTPUT_STRING_LENGTH = 4_000
+        MAX_LOG_ENTRIES = 20
+        MAX_LOG_LENGTH = 1_000
         MAX_CODE_BYTES = 20_000
 
         def self.signature
           {
             name: name,
             description:
-              "Validates JavaScript generated for a Discourse workflow Code node against syntax, mode restrictions, and return shape.",
-            parameters: [
-              { name: "mode", description: "Code node mode", type: "string", required: true },
-              { name: "code", description: "JavaScript source", type: "string", required: true },
-              {
-                name: "sample_input_items",
-                description: "Optional sample input items to execute the script against",
-                type: "array",
-                required: false,
+              "Runs Code node JavaScript in the production workflow sandbox and returns a sample of output items, console logs, and errors. Use it to test scripts while writing them, including edge cases. With workflow_id, $(\"Node name\") defaults to data recorded by the workflow's last successful execution, and $input to the recorded input of node_id or the recorded output of input_node; input_items and node_outputs replace that with your own test data.",
+            json_schema: {
+              type: "object",
+              additionalProperties: false,
+              required: %w[mode code],
+              properties: {
+                mode: {
+                  type: "string",
+                  description: MODES.join(" or "),
+                },
+                code: {
+                  type: "string",
+                  description: "JavaScript source",
+                },
+                workflow_id: {
+                  type: "integer",
+                  description: "Workflow whose last successful execution supplies default data.",
+                },
+                node_id: {
+                  type: "string",
+                  description:
+                    "Existing Code node ID; its recorded input becomes the default $input.",
+                },
+                input_node: {
+                  type: "string",
+                  description:
+                    "Name of the node a new Code node will follow; its recorded output becomes the default $input.",
+                },
+                input_output_index: {
+                  type: "integer",
+                  description:
+                    "Output of input_node the new Code node connects to, such as 1 for a condition's false branch. Defaults to 0.",
+                },
+                input_items: {
+                  type: "array",
+                  description:
+                    "Test items for $input, such as [{ \"json\": { ... } }]; [] tests empty input. At most #{MAX_INPUT_ITEMS}.",
+                  items: {
+                    type: "object",
+                    additionalProperties: true,
+                  },
+                },
+                node_outputs: {
+                  type: "object",
+                  description:
+                    "Test output items keyed by node name, read via $(\"Node name\").first() or .all(). $(\"Node name\").item needs recorded paired items, so it only works with recorded data.",
+                  additionalProperties: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      additionalProperties: true,
+                    },
+                  },
+                },
               },
-            ],
+            },
           }
         end
 
@@ -34,159 +83,144 @@ module DiscourseWorkflows
           "workflow_validate_script"
         end
 
+        # Checks that need no data, so they can run on proposals without knowing what the agent tested with.
+        def self.static_errors(mode, code)
+          errors = []
+          errors << "Mode must be one of #{MODES.join(", ")}" if MODES.exclude?(mode)
+          errors << "Code is required" if code.blank?
+          errors << "Code exceeds #{MAX_CODE_BYTES} bytes" if code.bytesize > MAX_CODE_BYTES
+          if mode == RUN_ONCE_FOR_EACH_ITEM
+            code
+              .scan(/\$input\.(#{DISALLOWED_FOR_EACH_METHODS.join("|")})\b/)
+              .flatten
+              .uniq
+              .each do |method|
+                errors << "$input.#{method} is only available in #{RUN_ONCE_FOR_ALL_ITEMS} mode"
+              end
+          end
+          errors << syntax_error(code) if errors.empty?
+          errors.compact
+        end
+
+        def self.syntax_error(code)
+          js = MiniRacer::Context.new(timeout: 100)
+          js.eval("new Function(#{code.to_json})")
+          nil
+        rescue MiniRacer::Error => e
+          "JavaScript syntax error: #{e.message}"
+        ensure
+          js&.dispose
+        end
+
         def invoke
           return not_allowed_response if !ensure_can_manage_workflows!
 
           mode = parameters[:mode].to_s
           code = parameters[:code].to_s
-          sample_input_items = Array.wrap(parameters[:sample_input_items]).first(MAX_SAMPLE_ITEMS)
-          errors = []
-          warnings = []
+          errors = self.class.static_errors(mode, code)
+          return { status: "success", valid: false, errors: errors } if errors.present?
 
-          errors << "Mode must be one of #{MODES.join(", ")}" if MODES.exclude?(mode)
-          errors << "Code is required" if code.blank?
-          errors << "Code exceeds #{MAX_CODE_BYTES} bytes" if code.bytesize > MAX_CODE_BYTES
-          errors.concat(disallowed_method_errors(code)) if mode == RUN_ONCE_FOR_EACH_ITEM
+          workflow = DiscourseWorkflows::Workflow.find_by(id: parameters[:workflow_id])
+          if parameters[:workflow_id].present? && workflow.blank?
+            return error_response("Workflow not found")
+          end
 
-          return invalid_response(errors, warnings) if errors.present?
+          @notes = []
+          preview_context = preview_context(workflow)
+          return error_response(@input_error) if @input_error
 
-          sample_output_items = execute_sample(code, mode, sample_input_items)
-          validate_output_shape(sample_output_items, mode, errors, warnings)
+          run =
+            DiscourseWorkflows::Workflow::Action::RunNodePreview.call(
+              node_type_class: DiscourseWorkflows::Nodes::Code::V1,
+              preview_context: preview_context,
+              parameters: {
+                "mode" => mode,
+                "code" => code,
+              },
+              user: context.user,
+            )
+          output =
+            DiscourseWorkflows::Ai::Sample.call(
+              run[:outputs].first(1),
+              totals: run[:output_counts]&.first(1),
+              max_items: MAX_OUTPUT_ITEMS,
+              max_chars: MAX_OUTPUT_CHARS,
+              max_string_length: MAX_OUTPUT_STRING_LENGTH,
+            )
+          @notes << output[:truncated] if output[:truncated]
 
           {
             status: "success",
-            valid: errors.empty?,
-            errors: errors,
-            warnings: warnings,
-            sample_output_items: errors.empty? ? sample_output_items : [],
-          }
-        rescue MiniRacer::Error => e
-          invalid_response(["JavaScript execution error: #{e.message}"], [])
+            valid: run[:error].blank?,
+            errors: Array(run[:error]),
+            input_count: run[:input_count],
+            output: output[:outputs].first,
+            logs: logs(Array(run[:log])),
+            truncated: @notes.join(" ").presence,
+          }.compact
         end
 
         private
 
-        def invalid_response(errors, warnings)
-          {
-            status: "success",
-            valid: false,
-            errors: errors,
-            warnings: warnings,
-            sample_output_items: [],
-          }
-        end
+        def preview_context(workflow)
+          context =
+            DiscourseWorkflows::Workflow::Action::BuildExpressionPreviewContext.call(
+              workflow: workflow,
+              node_id: parameters[:node_id],
+            )
 
-        def disallowed_method_errors(code)
-          code
-            .scan(/\$input\.(#{DISALLOWED_FOR_EACH_METHODS.join("|")})\b/)
-            .flatten
-            .uniq
-            .map { |method| "$input.#{method} is only available in #{RUN_ONCE_FOR_ALL_ITEMS} mode" }
-        end
-
-        def execute_sample(code, mode, sample_input_items)
-          context = MiniRacer::Context.new(timeout: 100, max_memory: 10.megabytes)
-          context.eval("var __sampleInputItems = #{sample_items_json(sample_input_items)};")
-          context.eval(runtime_js(mode))
-          context.eval("(function() {\n#{code}\n}).call({});")
-        ensure
-          context&.dispose
-        end
-
-        def sample_items_json(sample_input_items)
-          items = sample_input_items.presence || [{ "json" => {} }]
-          JSON.generate(items)
-        end
-
-        def runtime_js(mode)
-          <<~JS
-            var __mode = #{mode.to_json};
-            var __currentItem = __sampleInputItems[0] || { json: {} };
-            var $input = Object.freeze({
-              item: __currentItem,
-              all: function() { return __sampleInputItems; },
-              first: function() { return __sampleInputItems[0] || { json: {} }; },
-              last: function() { return __sampleInputItems[__sampleInputItems.length - 1] || { json: {} }; },
-              itemMatching: function(index) { return __sampleInputItems[index] || { json: {} }; }
-            });
-            var $json = __currentItem.json || {};
-            var $vars = Object.freeze({});
-            var $site_settings = Object.freeze({});
-            var $execution = Object.freeze({});
-            var $current_user = Object.freeze({});
-            var console = Object.freeze({
-              log: function() {},
-              info: function() {},
-              warn: function() {},
-              error: function() {}
-            });
-            function $(name) {
-              return Object.freeze({
-                item: { json: {} },
-                all: function() { return []; },
-                first: function() { return { json: {} }; },
-                last: function() { return { json: {} }; }
-              });
-            }
-          JS
-        end
-
-        def validate_output_shape(output, mode, errors, warnings)
-          if mode == RUN_ONCE_FOR_EACH_ITEM
-            validate_each_item_output(output, errors, warnings)
-          else
-            validate_all_items_output(output, errors, warnings)
+          node_outputs = json_safe(parameters[:node_outputs] || {})
+          if !node_outputs.is_a?(Hash)
+            @input_error = "node_outputs must be an object keyed by node name."
+            return context
           end
-        end
-
-        def validate_each_item_output(output, errors, warnings)
-          if output.is_a?(Array)
-            errors << "#{RUN_ONCE_FOR_EACH_ITEM} must return one object, not an array"
-            return
+          node_outputs.each do |name, items|
+            next if name.start_with?("_", "$") # internal context keys, not node names
+            context[name] = Array.wrap(items)
+            context["__node_runs"]&.delete(name)
           end
 
-          validate_item(output, errors, warnings)
+          if !parameters[:input_items].nil?
+            input_items = Array.wrap(json_safe(parameters[:input_items]))
+            if input_items.length > MAX_INPUT_ITEMS
+              @notes << "Only the first #{MAX_INPUT_ITEMS} of #{input_items.length} input_items were used."
+            end
+            context["__input_items"] = input_items.first(MAX_INPUT_ITEMS)
+          elsif (input_node = parameters[:input_node].presence)
+            context["__input_items"] = recorded_output(context, input_node)
+          end
+
+          context["__input_items"] ||= [{ "json" => {} }]
+          context
         end
 
-        def validate_all_items_output(output, errors, warnings)
-          if output.nil?
-            warnings << "Script returned null or undefined; this produces no output items"
-            return
-          end
+        def recorded_output(context, node_name)
+          output_index = parameters[:input_output_index].to_i
+          run = Array(context.dig("__node_runs", node_name)).last
+          return Array(run.dig("outputs", output_index)) if run
+          return Array.wrap(context[node_name]) if context.key?(node_name) && output_index.zero?
 
-          unless output.is_a?(Array) || output.is_a?(Hash)
-            errors << "#{RUN_ONCE_FOR_ALL_ITEMS} must return an array of objects or one object"
-            return
-          end
-
-          Array.wrap(output).each { |item| validate_item(item, errors, warnings) }
+          @input_error =
+            "No recorded output #{output_index} for #{node_name.inspect}; pass input_items instead."
+          nil
         end
 
-        def validate_item(item, errors, warnings)
-          unless item.is_a?(Hash)
-            errors << "Output item must be an object"
-            return
+        def logs(entries)
+          if entries.length > MAX_LOG_ENTRIES
+            @notes << "Only the first #{MAX_LOG_ENTRIES} of #{entries.length} log entries are shown."
           end
 
-          validate_top_level_keys(item, errors, warnings)
-          if item.key?("json") && !item["json"].is_a?(Hash)
-            errors << "Output item json field must be an object"
-          end
+          entries.first(MAX_LOG_ENTRIES).map { |entry| truncated_log_entry(entry) }
         end
 
-        def validate_top_level_keys(item, errors, warnings)
-          unknown_keys = item.keys.reject { |key| reserved_item_key?(key) }
-          return if unknown_keys.empty?
-
-          if item.keys.any? { |key| reserved_item_key?(key) }
-            errors << "Output item mixes reserved item keys with plain fields"
-          else
-            warnings << "Output item is a plain object and will be normalized under json"
+        def truncated_log_entry(entry)
+          entry.transform_values do |value|
+            if value.is_a?(String)
+              DiscourseWorkflows::Ai::Truncation.text(value, MAX_LOG_LENGTH)
+            else
+              value
+            end
           end
-        end
-
-        def reserved_item_key?(key)
-          RESERVED_ITEM_KEYS.include?(key.to_s)
         end
       end
     end

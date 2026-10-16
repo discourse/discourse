@@ -27,6 +27,11 @@ fa_IR:
               label: شناسه موضوع
     discourse_events:
       title: "رویدادها"
+      preferences:
+        reminders:
+          preferences:
+            notification: "آگاه‌سازی"
+            none: "هیچ‌کدام"
       on_holiday: "در تعطیلات"
       disable_holiday: "غیرفعال کردن"
       enable_holiday: "فعال کردن"

@@ -40,6 +40,11 @@ sl:
     working_day_end_hour: "Končna ura delovnega dne."
     close_to_working_day_hours_extension: "Nastavite podaljšan delovni čas, da izpostavite časovni obseg."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} se bo pričel"
+        ongoing: "%{title} je v teku"
+        after: "%{title} je končan"
     category_type:
       default_calendar_view:
         day: "Dan"

@@ -7,8 +7,11 @@ import { extractError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 
 export default class OgImagePreview extends Component {
+  /** @type {string | null} */
   @tracked imageUrl = null;
   @tracked loading = false;
+
+  /** @type {string | null} */
   @tracked errorMessage = null;
 
   formData = { topic_id: "" };

@@ -1,9 +1,9 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import { i18n } from "discourse-i18n";
-import AiComposerHelperMenu from "../components/ai-composer-helper-menu";
-import ModalDiffModal from "../components/modal/diff-modal";
-import { showComposerAiHelper } from "../lib/show-ai-helper";
+import AiComposerHelperMenu from "../components/ai-composer-helper-menu.gjs";
+import ModalDiffModal from "../components/modal/diff-modal.gjs";
+import { showComposerAiHelper } from "../lib/show-ai-helper.js";
 
 function initializeAiHelperTrigger(api) {
   api.onToolbarCreate((toolbar) => {

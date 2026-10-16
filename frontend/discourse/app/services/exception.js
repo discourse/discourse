@@ -3,7 +3,10 @@ import { getOwner } from "@ember/owner";
 import Service from "@ember/service";
 
 export default class Exception extends Service {
+  /** @type {unknown} */
   @tracked thrown = null;
+
+  /** @type {import("@ember/routing/transition").default | null} */
   @tracked lastTransition = null;
 
   /**

@@ -13,10 +13,10 @@ import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import {
   bindFileInputChangeListener,
-  displayErrorForBulkUpload,
-  displayErrorForUpload,
+  displayUploadErrors,
   getUploadMarkdown,
   isImage,
+  rateLimitRetryOptions,
   validateUploadedFile,
 } from "discourse/lib/uploads";
 import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
@@ -263,28 +263,6 @@ export default class UppyComposerUpload {
       });
     });
 
-    this.uppyWrapper.uppyInstance.on("file-removed", (file, reason) => {
-      run(() => {
-        // we handle the cancel-all event specifically, so no need
-        // to do anything here. this event is also fired when some files
-        // are handled by an upload handler
-        if (reason === "cancel-all") {
-          return;
-        }
-        this.appEvents.trigger(
-          `${this.composerEventPrefix}:upload-cancelled`,
-          file.id
-        );
-        file.meta.cancelled = true;
-        this.#removeInProgressUpload(file.id);
-        this.#resetUpload(file);
-        if (this.#inProgressUploads.length === 0) {
-          this.#userCancelled = true;
-          this.uppyWrapper.uppyInstance.cancelAll();
-        }
-      });
-    });
-
     this.uppyWrapper.uppyInstance.on("upload-progress", (file, progress) => {
       run(() => {
         if (this.isDestroying) {
@@ -388,7 +366,10 @@ export default class UppyComposerUpload {
                 `${this.composerEventPrefix}:all-uploads-complete`
               );
 
-              this.#displayBufferedErrors();
+              displayUploadErrors(
+                this.#bufferedUploadErrors,
+                this.siteSettings
+              );
               this.#reset();
             }
           }
@@ -432,20 +413,6 @@ export default class UppyComposerUpload {
     this.#inProgressUploads = this.#inProgressUploads.filter(
       (upl) => upl.id !== fileId
     );
-  }
-
-  #displayBufferedErrors() {
-    if (this.#bufferedUploadErrors.length === 0) {
-      return;
-    } else if (this.#bufferedUploadErrors.length === 1) {
-      displayErrorForUpload(
-        this.#bufferedUploadErrors[0].data,
-        this.siteSettings,
-        this.#bufferedUploadErrors[0].fileName
-      );
-    } else {
-      displayErrorForBulkUpload(this.#bufferedUploadErrors);
-    }
   }
 
   #bufferUploadError(data, fileName) {
@@ -506,7 +473,7 @@ export default class UppyComposerUpload {
   #useXHRUploads() {
     this.uppyWrapper.uppyInstance.use(XHRUpload, {
       endpoint: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
-      shouldRetry: () => false,
+      ...rateLimitRetryOptions,
       headers: () => ({
         "X-CSRF-Token": this.session.csrfToken,
       }),
@@ -564,7 +531,23 @@ export default class UppyComposerUpload {
   _cancelUpload(data) {
     if (data) {
       // Single file
-      this.uppyWrapper.uppyInstance.removeFile(data.fileId);
+      const file = this.uppyWrapper.uppyInstance.getFile(data.fileId);
+      if (!file) {
+        return;
+      }
+
+      file.meta.cancelled = true;
+      this.uppyWrapper.uppyInstance.removeFile(file.id);
+      this.appEvents.trigger(
+        `${this.composerEventPrefix}:upload-cancelled`,
+        file.id
+      );
+      this.#removeInProgressUpload(file.id);
+      this.#resetUpload(file);
+      if (this.#inProgressUploads.length === 0) {
+        this.#userCancelled = true;
+        this.uppyWrapper.uppyInstance.cancelAll();
+      }
     } else {
       // All files
       this.#userCancelled = true;
@@ -584,7 +567,7 @@ export default class UppyComposerUpload {
       this.appEvents.trigger(`${this.composerEventPrefix}:upload-error`, file);
     }
     if (this.#inProgressUploads.length === 0) {
-      this.#displayBufferedErrors();
+      displayUploadErrors(this.#bufferedUploadErrors, this.siteSettings);
       this.#reset();
     }
   }

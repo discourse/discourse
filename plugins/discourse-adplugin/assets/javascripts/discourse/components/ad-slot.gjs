@@ -3,14 +3,14 @@ import EmberObject, { computed } from "@ember/object";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-import { isNthPost, isNthTopicListItem } from "../helpers/slot-position";
-import AdComponent from "./ad-component";
-import AdbutlerAd from "./adbutler-ad";
-import AmazonProductLinks from "./amazon-product-links";
-import CarbonadsAd from "./carbonads-ad";
-import GoogleAdsense from "./google-adsense";
-import GoogleDfpAd from "./google-dfp-ad";
-import HouseAd from "./house-ad";
+import { isNthPost, isNthTopicListItem } from "../helpers/slot-position.js";
+import AdComponent from "./ad-component.js";
+import AdbutlerAd from "./adbutler-ad.gjs";
+import AmazonProductLinks from "./amazon-product-links.gjs";
+import CarbonadsAd from "./carbonads-ad.gjs";
+import GoogleAdsense from "./google-adsense.gjs";
+import GoogleDfpAd from "./google-dfp-ad.gjs";
+import HouseAd from "./house-ad.gjs";
 
 const AD_COMPONENTS = {
   "house-ad": HouseAd,
@@ -226,16 +226,31 @@ export default class AdSlot extends AdComponent {
    */
   @computed("placement", "availableAdTypes", "router.currentRoute")
   get adComponentNames() {
-    if (
-      !this.availableAdTypes.includes("house-ad") ||
-      this.availableAdTypes.length === 1
-    ) {
-      // Current behaviour is to allow multiple ads from different networks
-      // to show in the same place. We could change this to choose one somehow.
+    if (!this.availableAdTypes.includes("house-ad")) {
+      // No house ads here -- network ads are shown as-is. Current behaviour
+      // is to allow multiple ads from different networks to show in the
+      // same place.
       return this.availableAdTypes;
     }
 
     const houseAds = this.site.get("house_creatives");
+
+    // House ads are the only configured ad type in this slot. Honour
+    // house_ads_frequency as a probability of showing an ad at all, so a
+    // site running only house ads can have them appear some of the time
+    // rather than every eligible slot (avoiding banner-blindness). When
+    // networks are also available the ratio logic below applies instead.
+    if (this.availableAdTypes.length === 1) {
+      const frequency = houseAds.settings.house_ads_frequency ?? 100;
+      if (frequency >= 100) {
+        return ["house-ad"];
+      }
+      if (frequency <= 0) {
+        return [];
+      }
+      return Math.random() * 100 < frequency ? ["house-ad"] : [];
+    }
+
     let houseAdsSkipped = false;
 
     if (houseAds.settings.house_ads_frequency === 100) {

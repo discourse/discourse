@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import AddMembers from "./add-members";
-import { MODES } from "./constants";
-import NewGroup from "./new-group";
-import Search from "./search";
+import AddMembers from "./add-members.gjs";
+import { MODES } from "./constants.js";
+import NewGroup from "./new-group.gjs";
+import Search from "./search.gjs";
 
 export default class ChatMessageCreator extends Component {
   @tracked mode = this.args.initialMode ?? MODES.search;

@@ -27,6 +27,11 @@ sk:
               label: ID témy
     discourse_events:
       title: "Udalosti"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notifikácia"
+            none: "Žiadny"
       on_holiday: "Na dovolenke"
       disable_holiday: "Zakázať"
       enable_holiday: "Povoliť"

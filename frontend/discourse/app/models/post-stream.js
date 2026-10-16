@@ -16,7 +16,6 @@ import { deepMerge } from "discourse/lib/object";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
-import { highlightPost } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import { loadTopicView } from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
@@ -74,6 +73,14 @@ export default class PostStream extends RestModel {
   filterRepliesToPostNumber =
     parseInt(this.topic.replies_to_post_number, 10) || false;
   @tracked filterUpwardsPostID = false;
+
+  /**
+   * Post awaiting focus once rendered. A fresh object per request, so the
+   * renderer can mark it `done` without writing tracked state mid-render.
+   *
+   * @type {{ postNumber: number, done: boolean } | null}
+   */
+  @tracked focusTarget = null;
   @tracked gaps;
   @tracked isMegaTopic;
   @tracked lastId;
@@ -292,6 +299,19 @@ export default class PostStream extends RestModel {
     return Object.values(this._identityMap).filter(Boolean);
   }
 
+  /**
+   * Moves focus to a post once it is rendered, so keyboard and screen reader
+   * users continue from there. The first post is skipped, as the page start
+   * already leads to it.
+   *
+   * @param {number} postNumber
+   */
+  focusPostOnRender(postNumber) {
+    if (postNumber > 1) {
+      this.focusTarget = { postNumber, done: false };
+    }
+  }
+
   cancelFilter() {
     this.streamFilters.mixedHiddenPosts = false;
 
@@ -347,8 +367,7 @@ export default class PostStream extends RestModel {
         : null;
 
       DiscourseURL.jumpToPost(postNumber, { originalTopOffset });
-
-      schedule("afterRender", () => highlightPost(postNumber));
+      this.focusPostOnRender(postNumber);
     });
   }
 
@@ -364,8 +383,7 @@ export default class PostStream extends RestModel {
       if (this.posts?.length > 1) {
         const postNumber = this.posts[1].post_number;
         DiscourseURL.jumpToPost(postNumber, { skipIfOnScreen: true });
-
-        schedule("afterRender", () => highlightPost(postNumber));
+        this.focusPostOnRender(postNumber);
       }
     });
   }
@@ -1225,6 +1243,7 @@ export default class PostStream extends RestModel {
       .filter((item) => item != null);
   }
 
+  /** @returns {globalThis.Promise<import("discourse/models/post").default[] | undefined>} */
   async loadIntoIdentityMap(postIds, opts) {
     if (isEmpty(postIds)) {
       return [];

@@ -263,7 +263,6 @@ da:
       zh_CN:
         name: Forenklet kinesisk
     share:
-      topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "indlæg #%{postNumber} af @%{username}"
       close: "luk"
       twitter: "Del på X"
@@ -311,12 +310,18 @@ da:
     topic_admin_menu: "emnehandlinger"
     skip_to_main_content: "Spring til hovedindhold"
     skip_user_nav: "Spring til profilindhold"
+    reorder:
+      removed: "Fjernede %{label}"
+      move_up: "Flyt op"
+      move_down: "Flyt ned"
+      position: "%{position} af %{total}"
     emails_are_disabled: "Alle udgående emails er blevet globalt deaktiveret af en administrator. Ingen email notifikationer af nogen slags vil blive sendt."
     emails_are_disabled_non_staff: "Udgående post er slået fra alle andre end personalet."
     software_update_prompt:
       message: "Vi har opdateret dette websted. <span>Genopfrisk siden</span> for at undgå problemer."
       dismiss: "Afvis alle"
     back_button: "Tilbage"
+    confirm_button: "Bekræft"
     welcome_banner:
       header:
         logged_in_members: "Velkommen tilbage, %{preferred_display_name}!"
@@ -412,9 +417,6 @@ da:
     max_of_count:
       one: "maks af %{count}"
       other: "maks af %{count}"
-    character_count:
-      one: "%{count} tegn"
-      other: "%{count} tegn"
     period_chooser:
       aria_label: "Filtrer efter periode"
     related_messages:
@@ -507,6 +509,9 @@ da:
           other: "Oprettet %{count} år siden"
     bookmarked:
       title: "Bogmærke"
+      edit_bookmark:
+        one: "Rediger bogmærke"
+        other: "Rediger bogmærker"
       help:
         bookmark: "Klik for at bogmærke dette emne"
         edit_bookmark_for_topic: "Klik for at redigere bogmærket for dette emne"
@@ -631,6 +636,9 @@ da:
       title:
         search: "Søg efter en besked"
         placeholder: "indtast beskeds titel, url eller id her"
+    dsa_statements:
+      category: "Kategori"
+      saving: "Gemmer…"
     review:
       show_more: "Vis mere"
       show_less: "Vis mindre"
@@ -1657,7 +1665,6 @@ da:
         upload_title: "Overfør dit profil billede"
         image_is_not_a_square: "Advarsel: vi har beskåret billedet; bredde og højde var ikke ens."
         logo_small: "Webstedets lille logo. Anvendes som standard."
-        use_custom: "Eller overfør en brugerdefineret avatar:"
       change_profile_background:
         title: "Profiloverskrift"
         instructions: "Profiloverskrifter vil blive centreret og har en standardbredde på 1110px."
@@ -2474,8 +2481,7 @@ da:
       discard: "Kassér"
       draft_saved: "Kladde gemt!"
       users_placeholder: "Tilføj brugere eller grupper"
-      title_placeholder: "Hvad handler diskussionen om i korte træk?"
-      title_placeholder_redesign: "Titel"
+      title_placeholder: "Titel"
       title_or_link_placeholder: "Skriv titel eller indsæt et link her"
       edit_reason_placeholder: "Hvorfor redigerer du?"
       topic_featured_link_placeholder: "Indtast link som vises med titel."
@@ -3600,6 +3606,7 @@ da:
       delete_error: "Der opstod en fejl under sletningen af kategorien."
       no_description: "Der er ingen beskrivelse for denne kategori."
       change_in_category_topic: "Rediger beskrivelse"
+      latest_topics: "Seneste emner"
       description_expand: "Vis mere"
       description_collapse: "Vis mindre"
       already_used: "Denne farve er blevet brugt af en anden kategori"
@@ -3809,6 +3816,7 @@ da:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       filter:
+        reset: "nulstil"
         button:
           label: "Filter"
       latest:
@@ -3959,9 +3967,6 @@ da:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Blev tildelt dette emblem %{count} gang"
-        other: "Blev tildelt dette emblem %{count} gange"
       granted_on: "Tildelt %{date}"
       others_count:
         one: "Givet til andre %{count} gang"
@@ -3993,7 +3998,7 @@ da:
       favorite_max_not_reached: "Markér dette emblem som favorit"
       favorite_count: "%{count}/%{max} emblemer markeret som favoritter"
     download_calendar:
-      title: "Hent kalender"
+      title: "Føj til kalender"
       save_ics: "Hent .ics fil"
       save_google: "Tilføj til Google kalender"
       remember: "Spørg mig ikke igen"
@@ -4479,6 +4484,7 @@ da:
             block: "Blokér"
             presets:
               custom: "Tilpasset"
+            automatic: "Automatisk"
           authorizations:
             user: "Bruger"
             status: "Status"
@@ -4823,6 +4829,7 @@ da:
           series:
             anonymous: "Anonym"
             crawlers: "Crawlere"
+          crawler_learn_more: "Lær mere"
         period:
           last_7_days: "Seneste 7 dage"
           last_30_days: "Seneste 30 dage"
@@ -5489,8 +5496,8 @@ da:
           upload: "Overfør"
           select_component: "Vælg en komponent…"
           unsaved_changes_alert: "Du har ikke gemt dine ændringer endnu, vil du kassere dem og gå videre?"
-          unsaved_parent_themes: "Du har ikke tildelt komponenten til temaer, vil du fortsætte?"
           discard: "Kassér"
+          leave: "Forlad"
           stay: "Bliv"
           delete_upload_confirm: "Slet denne overførsel? (Tema CSS kan muligvis stoppe med at virke!)"
           component_on_themes: "Inkluder komponent i disse temaer"
@@ -6301,12 +6308,10 @@ da:
           dropdown: "Rulleboks"
           multiselect: "Multivælg"
       site_text:
-        search: "Søg efter teksten du gerne vil rette"
+        search_label: "Søg"
+        theme_disabled: "Deaktiveret"
         edit: "Rediger"
-        revert: "Rul ændringer tilbage"
         revert_confirm: "Er du sikker på, at du vil rulle ændringerne tilbage?"
-        go_back: "Tilbage til søgning"
-        recommended: "Vi anbefaler ændringer i følgende tekst:"
         show_overriden: "Vis kun tilsidesatte"
         locale: "Sprog:"
         more_than_50_results: "Der er mere end 50 resultater. Begræns din søgning."

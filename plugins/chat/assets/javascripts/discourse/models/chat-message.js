@@ -1,5 +1,10 @@
 import { cached, tracked } from "@glimmer/tracking";
 import { trackedArray } from "@ember/reactive/collections";
+import {
+  isRateLimitError,
+  MAX_RATE_LIMIT_RETRY_SECONDS,
+  rateLimitWaitSeconds,
+} from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
@@ -8,6 +13,11 @@ import { generateCookFunction, parseMentions } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Bookmark from "discourse/models/bookmark";
 import User from "discourse/models/user";
+import {
+  NETWORK_ERROR,
+  RATE_LIMIT_COOLDOWN_ERROR,
+  RATE_LIMIT_ERROR,
+} from "discourse/plugins/chat/discourse/lib/chat-constants";
 import transformAutolinks from "discourse/plugins/chat/discourse/lib/transform-auto-links";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 
@@ -56,6 +66,7 @@ export default class ChatMessage {
   @tracked pinned;
   @tracked isAction;
   @tracked blocks;
+  @tracked aiLlmName;
   @autoTrackedArray reactions;
 
   @tracked _deletedAt;
@@ -100,6 +111,7 @@ export default class ChatMessage {
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
     this.mentionedUsers = this.#initMentionedUsers(args.mentioned_users);
     this.blocks = args.blocks;
+    this.aiLlmName = args.ai_llm_name;
     this.threadTitle = args.thread_title;
     this.threadId = args.thread_id;
 
@@ -225,6 +237,26 @@ export default class ChatMessage {
 
       this.highlighted = false;
     }, 2000);
+  }
+
+  setSendError(error) {
+    if (!isRateLimitError(error)) {
+      this.error = error.jqXHR?.responseJSON?.errors?.[0] ?? NETWORK_ERROR;
+      return;
+    }
+
+    this.error = RATE_LIMIT_COOLDOWN_ERROR;
+
+    discourseLater(
+      () => {
+        if (this.isDestroying || this.isDestroyed) {
+          return;
+        }
+
+        this.error = RATE_LIMIT_ERROR;
+      },
+      Math.min(rateLimitWaitSeconds(error), MAX_RATE_LIMIT_RETRY_SECONDS) * 1000
+    );
   }
 
   incrementVersion() {

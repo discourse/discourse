@@ -11,6 +11,11 @@ sl:
         context_menu:
           actions:
             delete: "Izbriši"
+        reorderable_list:
+          policies_pinned: "Pripeto"
+          policies_required: "Zahtevano"
+          table_type: "Tip"
+          cross_list_primary: "Primarna"
         colors:
           title: "Barve"
         categories:

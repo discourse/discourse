@@ -417,6 +417,80 @@ module("Unit | lib | discourse-workflows | schema-graph", function () {
     );
   });
 
+  test("classification answers resolve their types while preserving input fields", function (assert) {
+    const classify = node("classify", "action:classify");
+    const graph = {
+      nodes: [node("source", "trigger:source"), classify],
+      connections: [conn("source", "classify")],
+      nodeTypes: [
+        triggerType("trigger:source", prop("post", "object")),
+        {
+          name: "action:classify",
+          versions: {
+            "1.0": {
+              output_schema_resolver: "classify",
+              output_contracts: [{ mode: "merge" }],
+            },
+          },
+        },
+      ],
+    };
+    const common = {
+      type: { type: "string" },
+      reason: { type: ["string", "null"] },
+    };
+    const distribution = {
+      probabilities: { type: "object" },
+      confidence: { type: ["number", "null"] },
+    };
+    const configuration = {
+      questions: {
+        values: [
+          { name: " urgent ", type: "yes_no" },
+          { name: "team", type: "choice" },
+          { name: "severity", type: "score" },
+          { name: "__proto__", type: "yes_no" },
+          { name: "draft", type: "" },
+          { name: " " },
+          null,
+          "invalid",
+        ],
+      },
+    };
+
+    assert.deepEqual(
+      outputSchemaForNode(classify, graph, { configuration }).properties,
+      {
+        post: { type: "object" },
+        classification: objectSchema({
+          urgent: objectSchema({ ...common, probability: { type: "number" } }),
+          team: objectSchema({
+            ...common,
+            ...distribution,
+            choice: { type: "string" },
+          }),
+          severity: objectSchema({
+            ...common,
+            ...distribution,
+            score: { type: "number" },
+            level: { type: "string" },
+          }),
+          ["__proto__"]: objectSchema({
+            ...common,
+            probability: { type: "number" },
+          }),
+          draft: objectSchema(common),
+        }),
+      },
+      "downstream expressions can select each answer and the original input"
+    );
+    assert.deepEqual(
+      outputSchemaForNode(classify, graph, { configuration: {} }).properties,
+      { post: { type: "object" }, classification: objectSchema({}) },
+      "an unconfigured classifier still preserves the input"
+    );
+  });
+
   test("joins, union contracts and cycles resolve across the graph", function (assert) {
     const str = prop("v", "string");
     const num = prop("v", "integer");

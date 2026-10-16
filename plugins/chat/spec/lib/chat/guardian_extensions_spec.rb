@@ -90,10 +90,21 @@ RSpec.describe Chat::GuardianExtensions do
       end
     end
 
-    it "allows TL1 to chat by default and by extension higher trust levels" do
+    it "allows TL0 to chat by default and by extension higher trust levels" do
+      SiteSetting.chat_allowed_groups = SiteSetting.defaults[:chat_allowed_groups]
+      user.change_trust_level!(TrustLevel[0])
       expect(guardian.can_chat?).to eq(true)
       user.change_trust_level!(TrustLevel[3])
       expect(guardian.can_chat?).to eq(true)
+    end
+
+    it "allows anonymous visitors to preview public channels but not send messages by default" do
+      SiteSetting.chat_allowed_groups = SiteSetting.defaults[:chat_allowed_groups]
+      anonymous_guardian = Guardian.new
+
+      expect(anonymous_guardian.can_preview_anonymous_public_chat_channel?(channel)).to eq(true)
+      expect(anonymous_guardian.can_chat?).to eq(false)
+      expect(anonymous_guardian.can_create_chat_message?).to eq(false)
     end
 
     it "allows user in specific group to chat" do
@@ -463,6 +474,47 @@ RSpec.describe Chat::GuardianExtensions do
           expect(staff_guardian.can_flag_chat_message?(message)).to eq(true)
         end
       end
+
+      context "when allow_all_users_to_flag_illegal_content is enabled" do
+        before do
+          SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
+          SiteSetting.allow_all_users_to_flag_illegal_content = true
+        end
+
+        it "returns true for users outside the allowed groups" do
+          expect(guardian.can_flag_chat_message?(message)).to eq(true)
+        end
+
+        it "returns true for silenced users" do
+          UserSilencer.silence(user, staff)
+          expect(Guardian.new(user).can_flag_chat_message?(message)).to eq(true)
+        end
+      end
+    end
+
+    describe "#can_flag_message_as?" do
+      let!(:message) { Fabricate(:chat_message, chat_channel: channel) }
+
+      before do
+        SiteSetting.chat_message_flag_allowed_groups = ""
+        SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
+        SiteSetting.allow_all_users_to_flag_illegal_content = true
+      end
+
+      it "only allows the illegal flag for users outside the allowed groups" do
+        expect(guardian.can_flag_message_as?(message, ReviewableScore.types[:illegal], {})).to eq(
+          true,
+        )
+        expect(guardian.can_flag_message_as?(message, ReviewableScore.types[:spam], {})).to eq(
+          false,
+        )
+      end
+
+      it "allows any flag for users in the allowed groups" do
+        expect(
+          staff_guardian.can_flag_message_as?(message, ReviewableScore.types[:spam], {}),
+        ).to eq(true)
+      end
     end
 
     describe "#can_see_chat_message?" do
@@ -593,6 +645,19 @@ RSpec.describe Chat::GuardianExtensions do
 
             context "when group moderation is enabled" do
               before { SiteSetting.enable_category_group_moderation = true }
+
+              it "disallows a silenced group moderator from restoring" do
+                moderator = Fabricate(:user)
+                mods = Fabricate(:group)
+                mods.add(moderator)
+                Fabricate(:category_moderation_group, category: chatable, group: mods)
+
+                expect(Guardian.new(moderator).can_restore_chat?(message, chatable)).to eq(true)
+
+                UserSilencer.new(moderator).silence
+
+                expect(Guardian.new(moderator).can_restore_chat?(message, chatable)).to eq(false)
+              end
 
               it "allows a group moderator to restore" do
                 moderator = Fabricate(:user)

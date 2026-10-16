@@ -17,8 +17,13 @@ const DAYS = [
 ];
 
 class Day extends EmberObject {
+  /** @type {number | null} */
   id = null;
+
+  /** @type {Array<{ name: string, value: number }> | null} */
   startTimeOptions = null;
+
+  /** @type {import("discourse/models/user").default | null} */
   model = null;
 
   @computed("model.user_notification_schedule.day_{0,1,2,3,4,5,6}_start_time")
@@ -76,6 +81,7 @@ class Day extends EmberObject {
 
 @tagName("")
 export default class UserNotificationSchedule extends Component {
+  /** @type {Day[] | null} */
   days = null;
 
   didInsertElement() {

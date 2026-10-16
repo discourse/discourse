@@ -1,8 +1,11 @@
 import Component from "@glimmer/component";
+import { guidFor } from "@ember/object/internals";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class DToggleSwitch extends Component {
+  labelId = `${guidFor(this)}-label`;
+
   get computedLabel() {
     if (this.args.label) {
       return i18n(this.args.label);
@@ -15,6 +18,7 @@ export default class DToggleSwitch extends Component {
       <label class="d-toggle-switch__label">
         <button
           aria-checked={{if @state "true" "false"}}
+          aria-labelledby={{if this.computedLabel this.labelId}}
           class="d-toggle-switch__checkbox"
           role="switch"
           type="button"
@@ -29,7 +33,7 @@ export default class DToggleSwitch extends Component {
       </label>
 
       {{#if this.computedLabel}}
-        <span class="d-toggle-switch__checkbox-label">
+        <span class="d-toggle-switch__checkbox-label" id={{this.labelId}}>
           {{this.computedLabel}}
         </span>
       {{/if}}

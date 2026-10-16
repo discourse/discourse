@@ -62,8 +62,11 @@
     gap: var(--space-2);
   }
 
+  // Bounded height makes this the vertical scroller too, so the horizontal
+  // scrollbar stays on screen and the sticky header has something to stick to.
   &__scroll {
-    overflow-x: auto;
+    overflow: auto;
+    max-height: max(50dvh, calc(100dvh - var(--top-offset) - var(--space-4)));
   }
 
   &__table {
@@ -80,10 +83,16 @@
     }
 
     th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
       padding: var(--space-2) var(--space-3);
       background: var(--primary-very-low);
       font-weight: 700;
       white-space: nowrap;
+
+      // collapsed borders belong to the table and scroll away from sticky cells
+      box-shadow: inset 0 -1px 0 var(--primary-low);
     }
 
     th.--id,
@@ -96,12 +105,6 @@
     td.--add-column {
       min-width: 0;
       width: 1px;
-    }
-
-    th.--actions,
-    td.--actions {
-      min-width: 50px;
-      width: 50px;
     }
   }
 
@@ -129,6 +132,10 @@
     cursor: text;
   }
 
+  &__col-menu {
+    margin-left: var(--space-1);
+  }
+
   &__col-name-input {
     // stylelint-disable declaration-no-important
     outline: none !important;
@@ -143,8 +150,7 @@
 
   &__cell {
     &.--id,
-    &.--system,
-    &.--actions {
+    &.--system {
       padding: var(--space-2) var(--space-3);
     }
 
@@ -158,11 +164,6 @@
     &.--boolean {
       padding: var(--space-2) var(--space-3);
     }
-
-    &.--actions {
-      text-align: right;
-      white-space: nowrap;
-    }
   }
 
   &__cell-value {
@@ -174,16 +175,16 @@
     // stylelint-disable-next-line declaration-no-important
     outline: none !important;
     padding: var(--space-2) var(--space-3);
-
-    &.is-null {
-      color: var(--primary-low-mid);
-      font-style: italic;
-    }
     margin: 0;
     cursor: pointer;
     text-align: left;
     font: inherit;
     color: inherit;
+
+    &.is-null {
+      color: var(--primary-low-mid);
+      font-style: italic;
+    }
   }
 
   &__cell-input {
@@ -205,23 +206,7 @@
     margin: 0;
   }
 
-  &__empty {
-    text-align: center;
-    color: var(--primary-medium);
-    padding: var(--space-4);
-  }
-
   &__add-row td {
     border-bottom: 1px solid var(--primary-low);
-  }
-
-  &__th {
-    &.--id {
-      width: 60px;
-    }
-
-    &.--actions {
-      width: 50px;
-    }
   }
 }

@@ -30,8 +30,7 @@ class Service::ContractBase
 
   def initialize(*args, options: nil, **kwargs)
     @__options__ = options
-    kwargs.deep_symbolize_keys!.slice!(*self.class.attribute_names.map(&:to_sym))
-    super(*args, **kwargs)
+    super(*args, **kwargs.deep_symbolize_keys.slice(*self.class.attribute_names.map(&:to_sym)))
   end
 
   def options

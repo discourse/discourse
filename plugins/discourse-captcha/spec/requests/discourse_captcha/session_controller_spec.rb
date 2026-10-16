@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe SessionController do
-  describe "POST /session/login-code/verify" do
+  describe "#verify_login_code" do
     fab!(:existing_user, :user)
 
     before do
@@ -13,18 +13,64 @@ RSpec.describe SessionController do
       SiteSetting.hcaptcha_secret_key = "secret-key"
     end
 
+    it "verifies the email without CAPTCHA and waits for a username before creating an account" do
+      email = "new.person@example.com"
+      login_code = EmailLoginCode.generate!(email:)
+
+      expect {
+        post "/session/login-code/verify.json", params: { email:, code: login_code.code }
+      }.not_to change(User, :count)
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["username_required"]).to eq(true)
+      expect(login_code.reload.consumed_at).to be_nil
+      expect(session[:current_user_id]).to be_nil
+    end
+
     it "does not create an account without completing CAPTCHA" do
       email = "new.person@example.com"
       code = EmailLoginCode.generate!(email:).code
 
-      expect { post "/session/login-code/verify.json", params: { email:, code: } }.not_to change(
-        User,
-        :count,
-      )
+      expect {
+        post "/session/login-code/verify.json",
+             params: {
+               email:,
+               code:,
+               username: "chosen_username",
+             }
+      }.not_to change(User, :count)
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["error"]).to eq(I18n.t("captcha_verification_failed"))
       expect(session[:current_user_id]).to be_nil
+    end
+
+    it "requires CAPTCHA on final generated-username creation without consuming the code" do
+      plugin_instance = Plugin::Instance.new
+      modifier = proc { |_, _, _| :generated }
+      plugin_instance.register_modifier(:email_login_code_username_mode, &modifier)
+      email = "new.person@example.com"
+      login_code = EmailLoginCode.generate!(email:)
+
+      post "/session/login-code/verify.json", params: { email:, code: login_code.code }
+      username = response.parsed_body["username"]
+
+      expect(response.parsed_body["generated_username"]).to eq(true)
+      expect(User.find_by_email(email)).to be_nil
+
+      post "/session/login-code/verify.json", params: { email:, code: login_code.code, username: }
+
+      expect(response.parsed_body["error"]).to eq(I18n.t("captcha_verification_failed"))
+      expect(User.find_by_email(email)).to be_nil
+      expect(login_code.reload.consumed_at).to be_nil
+    ensure
+      if plugin_instance && modifier
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :email_login_code_username_mode,
+          &modifier
+        )
+      end
     end
 
     it "creates an account after the CAPTCHA provider verifies the challenge" do
@@ -39,10 +85,14 @@ RSpec.describe SessionController do
 
       post "/captcha/hcaptcha/create.json", params: { token: "captcha-token" }
 
-      expect { post "/session/login-code/verify.json", params: { email:, code: } }.to change(
-        User,
-        :count,
-      ).by(1)
+      expect {
+        post "/session/login-code/verify.json",
+             params: {
+               email:,
+               code:,
+               username: "chosen_username",
+             }
+      }.to change(User, :count).by(1)
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["account_created"]).to eq(true)
@@ -58,6 +108,7 @@ RSpec.describe SessionController do
              params: {
                email: invite.email,
                code:,
+               username: "invited_person",
                invite_key: invite.invite_key,
              }
       }.to change(User, :count).by(1)
@@ -74,6 +125,95 @@ RSpec.describe SessionController do
       expect(response.status).to eq(200)
       expect(response.parsed_body.dig("user", "username")).to eq(existing_user.username)
       expect(session[:current_user_id]).to eq(existing_user.id)
+    end
+
+    context "when an approval signup requires account details" do
+      fab!(:user_field, :user_field)
+
+      before do
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+        SiteSetting.full_name_requirement = "required_at_signup"
+      end
+
+      let(:email) { "approval.person@example.com" }
+      let(:login_code) { EmailLoginCode.generate!(email:) }
+      let(:account_details) do
+        {
+          username: "approval-person",
+          name: "Approval Person",
+          user_fields: {
+            user_field.id.to_s => "Developer",
+          },
+        }
+      end
+
+      it "verifies CAPTCHA only when submitting the approval account details" do
+        verification_request =
+          stub_request(:post, DiscourseCaptcha::HcaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
+            body: {
+              secret: SiteSetting.hcaptcha_secret_key,
+              response: "captcha-token",
+            },
+          ).to_return(status: 200, body: '{"success":true}')
+
+        expect {
+          post "/session/login-code/verify.json", params: { email:, code: login_code.code }
+        }.not_to change(User, :count)
+        signup_token = response.parsed_body["signup_token"]
+
+        expect(signup_token).to be_present
+        expect(verification_request).not_to have_been_requested
+        expect(login_code.reload.consumed_at).to be_nil
+
+        post "/captcha/hcaptcha/create.json", params: { token: "captcha-token" }
+
+        expect {
+          post "/session/login-code/verify.json",
+               params: account_details.merge(signup_token: signup_token)
+        }.to change(User, :count).by(1).and change(ReviewableUser, :count).by(1)
+
+        expect(response.parsed_body).to eq("pending_approval" => true)
+        expect(verification_request).to have_been_requested.once
+      end
+
+      it "requires valid CAPTCHA on the final request before creating the approval account" do
+        post "/session/login-code/verify.json", params: { email:, code: login_code.code }
+        signup_token = response.parsed_body["signup_token"]
+
+        expect {
+          post "/session/login-code/verify.json",
+               params: account_details.merge(signup_token: signup_token)
+        }.not_to change(User, :count)
+        expect(response.parsed_body["error"]).to eq(I18n.t("captcha_verification_failed"))
+        expect(ReviewableUser.count).to eq(0)
+        expect(login_code.reload.consumed_at).to be_nil
+
+        stub_request(:post, DiscourseCaptcha::HcaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
+          body: hash_including(response: "bad-token"),
+        ).to_return(status: 200, body: '{"success":false}')
+        post "/captcha/hcaptcha/create.json", params: { token: "bad-token" }
+        post "/session/login-code/verify.json",
+             params: account_details.merge(signup_token: signup_token)
+
+        expect(response.parsed_body["error"]).to eq(I18n.t("captcha_verification_failed"))
+        expect(User.find_by_email(email)).to be_nil
+        expect(ReviewableUser.count).to eq(0)
+        expect(login_code.reload.consumed_at).to be_nil
+
+        stub_request(:post, DiscourseCaptcha::HcaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
+          body: hash_including(response: "valid-token"),
+        ).to_return(status: 200, body: '{"success":true}')
+        post "/captcha/hcaptcha/create.json", params: { token: "valid-token" }
+
+        expect {
+          post "/session/login-code/verify.json",
+               params: account_details.merge(signup_token: signup_token)
+        }.to change(User, :count).by(1).and change(ReviewableUser, :count).by(1)
+
+        expect(response.parsed_body).to eq("pending_approval" => true)
+        expect(login_code.reload.consumed_at).to be_present
+      end
     end
 
     context "when signup requires user fields" do
@@ -100,6 +240,7 @@ RSpec.describe SessionController do
                params: {
                  email:,
                  code:,
+                 username: "chosen_username",
                  user_fields: {
                    user_field.id.to_s => "Developer",
                  },

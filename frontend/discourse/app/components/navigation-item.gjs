@@ -11,6 +11,8 @@ export default class NavigationItem extends Component {
   filterMode;
   hidden = false;
   activeClass = "";
+
+  /** @type {string | null | undefined} */
   hrefLink = null;
 
   @dependentKeyCompat

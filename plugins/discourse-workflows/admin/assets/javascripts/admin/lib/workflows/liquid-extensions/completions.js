@@ -1,10 +1,10 @@
-import { walkScope } from "../expression-context";
+import { walkScope } from "../expression-context.js";
 import {
   analyzeLiquidAt,
   LIQUID_FILTERS,
   LIQUID_TAGS,
   loopBindingsAt,
-} from "../liquid-context";
+} from "../liquid-context.js";
 
 // Surfaced first, since they are what a template is usually built around.
 const BOOSTED_ROOTS = { item: 10, items: 10, item_index: 5 };

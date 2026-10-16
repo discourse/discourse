@@ -8,7 +8,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import ChatChannelChooser from "../../chat-channel-chooser";
+import ChatChannelChooser from "../../chat-channel-chooser.js";
 
 export default class ChatModalMoveMessageToChannel extends Component {
   @service chatApi;

@@ -1,9 +1,9 @@
 import { i18n } from "discourse-i18n";
-import { buildTheme } from "../expression-extensions/theme";
-import { buildLiquidScope } from "../liquid-context";
-import { buildAutoCloseDelimiters } from "./auto-close-delimiters";
-import { buildLiquidCompletions } from "./completions";
-import { buildLiquidDragDrop } from "./drag-drop";
+import { buildTheme } from "../expression-extensions/theme.js";
+import { buildLiquidScope } from "../liquid-context.js";
+import { buildAutoCloseDelimiters } from "./auto-close-delimiters.js";
+import { buildLiquidCompletions } from "./completions.js";
+import { buildLiquidDragDrop } from "./drag-drop.js";
 
 export default function buildLiquidExtensions(cmParams, domainOpts = {}) {
   const sections = {

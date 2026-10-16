@@ -12,19 +12,22 @@ import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
-import { recurrenceContext, recurrenceRef } from "../../lib/event-recurrence";
-import ChatChannel from "./chat-channel";
-import Creator from "./creator";
-import Dates from "./dates";
-import Description from "./description";
-import EventStatus from "./event-status";
-import Image from "./image";
-import Invitees from "./invitees";
-import Livestream from "./livestream";
-import DiscoursePostEventLocation from "./location";
-import MoreMenu from "./more-menu";
-import Status from "./status";
-import Url from "./url";
+import {
+  recurrenceContext,
+  recurrenceRef,
+} from "../../lib/event-recurrence.js";
+import ChatChannel from "./chat-channel.gjs";
+import Creator from "./creator.gjs";
+import Dates from "./dates.gjs";
+import Description from "./description.gjs";
+import EventStatus from "./event-status.gjs";
+import Image from "./image.gjs";
+import Invitees from "./invitees.gjs";
+import Livestream from "./livestream.gjs";
+import DiscoursePostEventLocation from "./location.gjs";
+import MoreMenu from "./more-menu.gjs";
+import Status from "./status.gjs";
+import Url from "./url.gjs";
 
 const StatusSeparator = <template>
   <span class="separator">·</span>
@@ -185,10 +188,6 @@ export default class DiscoursePostEvent extends Component {
     return this.event.watchingInvitee?.status;
   }
 
-  get expiredAndRecurring() {
-    return this.event.isExpired && this.event.recurrence;
-  }
-
   get recurrenceLabel() {
     if (!this.event?.recurrence) {
       return null;
@@ -228,7 +227,6 @@ export default class DiscoursePostEvent extends Component {
       if (
         fetched.recurrence &&
         displayedStartsAt &&
-        fetched.startsAt &&
         displayedStartsAt !== fetched.startsAt
       ) {
         this.#filterForFutureOccurrence(fetched);
@@ -278,20 +276,8 @@ export default class DiscoursePostEvent extends Component {
             />
             <header class="event-header" {{this.setupMessageBus}}>
               <div class="event-date">
-                <div class="month">
-                  {{#if this.expiredAndRecurring}}
-                    -
-                  {{else}}
-                    {{this.startsAtMonth}}
-                  {{/if}}
-                </div>
-                <div class="day">
-                  {{#if this.expiredAndRecurring}}
-                    -
-                  {{else}}
-                    {{this.startsAtDay}}
-                  {{/if}}
-                </div>
+                <div class="month">{{this.startsAtMonth}}</div>
+                <div class="day">{{this.startsAtDay}}</div>
               </div>
               <div class="event-info">
                 <span class="name">
@@ -360,9 +346,7 @@ export default class DiscoursePostEvent extends Component {
                   clamp=this.clampDescription
                 )
                 Location=(component DiscoursePostEventLocation event=event)
-                Dates=(component
-                  Dates event=event expiredAndRecurring=this.expiredAndRecurring
-                )
+                Dates=(component Dates event=event)
                 Recurrence=(component
                   InfoSection icon="arrows-rotate" class="event-recurrence"
                 )
@@ -380,10 +364,7 @@ export default class DiscoursePostEvent extends Component {
                 )
               }}
             >
-              <Dates
-                @event={{event}}
-                @expiredAndRecurring={{this.expiredAndRecurring}}
-              />
+              <Dates @event={{event}} />
               {{#if event.recurrence}}
                 <InfoSection class="event-recurrence" @icon="arrows-rotate">
                   {{this.recurrenceLabel}}

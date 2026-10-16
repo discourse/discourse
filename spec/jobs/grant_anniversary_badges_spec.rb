@@ -147,6 +147,22 @@ RSpec.describe Jobs::GrantAnniversaryBadges do
       expect(badge.count).to eq(2)
     end
 
+    it "realigns a delayed grant with the user's join-date anniversary" do
+      previous_grant_at = Time.zone.parse("2023-05-21 18:00")
+      current_run_at = Time.zone.parse("2024-05-21 12:00")
+      anniversary_at = Time.zone.parse("2024-05-20 18:00")
+      user = Fabricate(:user, created_at: anniversary_at - 2.years)
+      badge = Badge.find(Badge::Anniversary)
+      Fabricate(:post, user: user, created_at: current_run_at - 1.month)
+      Fabricate(:user_badge, user: user, badge: badge, granted_at: previous_grant_at)
+
+      freeze_time(current_run_at) { granter.execute({}) }
+
+      expect(user.user_badges.where(badge: badge).order(:granted_at).pluck(:granted_at)).to eq(
+        [previous_grant_at, anniversary_at],
+      )
+    end
+
     it "supports date ranges" do
       user = Fabricate(:user, created_at: 3.years.ago)
       Fabricate(:post, user: user, created_at: 750.days.ago)

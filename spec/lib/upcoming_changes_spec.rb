@@ -529,6 +529,60 @@ RSpec.describe UpcomingChanges do
       UpcomingChanges.clear_caches!
     end
 
+    context "when the change has setting dependencies" do
+      let(:setting_name) { :enable_local_logins_via_code }
+
+      before do
+        mock_upcoming_change_metadata(enable_local_logins_via_code: { status: :beta })
+        SiteSetting.promote_upcoming_changes_on_status = :beta
+      end
+
+      it "disables auto-promoted code login for anonymous and registered users when email login is disabled" do
+        SiteSetting.enable_local_logins_via_email = false
+
+        expect(described_class.change_dependencies_met?(setting_name)).to eq(false)
+        expect(described_class.enabled?(setting_name)).to eq(false)
+        expect(SiteSetting.enable_local_logins_via_code).to eq(false)
+        expect(described_class.enabled_for_user?(setting_name, nil)).to eq(false)
+        expect(described_class.enabled_for_user?(setting_name, Fabricate(:user))).to eq(false)
+      end
+
+      it "disables auto-promoted code login when local login is disabled" do
+        SiteSetting.enable_local_logins = false
+
+        expect(described_class.enabled?(setting_name)).to eq(false)
+      end
+
+      it "resumes automatic promotion when dependencies are restored" do
+        SiteSetting.enable_local_logins_via_email = false
+        expect(described_class.enabled?(setting_name)).to eq(false)
+
+        SiteSetting.enable_local_logins_via_email = true
+
+        expect(described_class.enabled?(setting_name)).to eq(true)
+        expect(described_class.enabled_for_user?(setting_name, nil)).to eq(true)
+      end
+
+      it "preserves a manual opt-in while dependencies are disabled" do
+        SiteSetting.promote_upcoming_changes_on_status = :never
+        SiteSetting.enable_local_logins_via_code = true
+        SiteSetting.enable_local_logins_via_email = false
+
+        expect(described_class.enabled?(setting_name)).to eq(false)
+
+        SiteSetting.enable_local_logins_via_email = true
+
+        expect(described_class.enabled?(setting_name)).to eq(true)
+      end
+
+      it "keeps permanent changes disabled when dependencies are unmet" do
+        mock_upcoming_change_metadata(enable_local_logins_via_code: { status: :permanent })
+        SiteSetting.enable_local_logins_via_email = false
+
+        expect(described_class.enabled?(setting_name)).to eq(false)
+      end
+    end
+
     context "when the owning plugin is not configurable" do
       let(:plugin_setting_name) { :enable_experimental_sample_plugin_feature }
 

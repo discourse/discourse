@@ -4,7 +4,7 @@ import { cancel, later } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
-import SmoothStreamer from "../lib/smooth-streamer";
+import SmoothStreamer from "../lib/smooth-streamer.gjs";
 
 const DISCOVERY_TIMEOUT_MS = 20000;
 
@@ -218,6 +218,10 @@ export default class DiscobotDiscoveries extends Service {
     const requestId = buildRequestId();
     this.loadingDiscoveries = true;
     this.activeRequestId = requestId;
+    this.a11y.announce(
+      i18n("discourse_ai.discobot_discoveries.asking"),
+      "polite"
+    );
 
     this.scheduleDiscoveryTimeout();
 

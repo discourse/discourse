@@ -15,7 +15,10 @@ import { i18n } from "discourse-i18n";
 export default class CalendarSubscriptions extends Component {
   @service dialog;
 
+  /** @type {boolean | null} */
   @tracked hasSubscription = null;
+
+  /** @type {({ bookmarks: string } & Record<string, string>) | null} */
   @tracked urls = null;
   @tracked loading = false;
 
@@ -76,6 +79,10 @@ export default class CalendarSubscriptions extends Component {
   }
 
   <template>
+    <PluginOutlet
+      @name="calendar-preferences"
+      @outletArgs={{lazyHash model=@controller.model}}
+    />
     <div class="calendar-subscriptions">
       <p class="calendar-subscriptions__description">
         {{i18n "user.calendar_subscriptions.description"}}

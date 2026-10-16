@@ -7,9 +7,18 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/discourse-rss-polling/*": ["./assets/javascripts/*"],
+      "discourse/plugins/discourse-rss-polling/*": [
+        "./assets/javascripts/*",
+        "./assets/javascripts/*.gjs",
+        "./assets/javascripts/*.gts",
+        "./admin/assets/javascripts/*",
+        "./admin/assets/javascripts/*.gjs",
+        "./admin/assets/javascripts/*.gts"
+      ],
       "discourse/plugins/discourse-rss-polling/admin/*": [
-        "./admin/assets/javascripts/admin/*"
+        "./admin/assets/javascripts/admin/*",
+        "./admin/assets/javascripts/admin/*.gjs",
+        "./admin/assets/javascripts/admin/*.gts"
       ]
     }
   }

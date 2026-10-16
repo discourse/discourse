@@ -302,6 +302,8 @@ zh_CN:
       message_too_long: "消息过长，最多只能包含 %{count} 个字符。"
       retry_staged_message:
         title: "网络错误"
+        rate_limited_title: "消息过多"
+        rate_limited_waiting: "消息过多，请稍等片刻。"
         action: "重新发送？"
       bookmark_message: "书签"
       bookmark_message_edit: "编辑书签"
@@ -519,6 +521,8 @@ zh_CN:
         original_channel: '最初在<a href="%{channelLink}">%{channel}</a>中发送。'
         copy_success: "聊天引用已复制到剪贴板"
         default_thread_title: "消息串"
+        transcript_label: "聊天记录"
+        transcript_region: "来自 %{channel} 的聊天记录"
       notification_levels:
         never: "永不"
         mention: "仅限提及"
@@ -680,6 +684,8 @@ zh_CN:
         notify_moderators: "由于上面未列出的另一个原因，此消息需要管理人员加以注意。"
       flagging:
         action: "举报消息"
+      anonymous_flagging:
+        description: "如需举报非法内容，请联系 <a href='mailto:%{email}?subject=Illegal content: %{channel_title}&body=This chat message %{url} contains illegal content.'>%{email}</a>"
       emoji_picker:
         favorites: "常用"
         smileys_&_emotion: "笑脸和情感"
@@ -838,15 +844,24 @@ zh_CN:
         "action:chat_approval": "聊天审批"
         "trigger:chat_message_created": "已创建聊天消息"
       node_descriptions:
-        "action:send_chat_message": "向聊天频道发送消息"
+        "action:send_chat_message": "向聊天频道发送消息，或向一个或多个用户发送私信。"
         "action:chat_approval": "向聊天频道发送审批请求并等待回复"
         "trigger:chat_message_created": "创建新聊天消息时触发"
       chat_message_created:
         channel_id: "频道"
         channel_id_description: "留空可触发所有聊天频道。"
       send_chat_message:
+        target: "发送至"
+        targets:
+          channel: "频道"
+          user: "用户（每人一条私信）"
+          group: "群组（一条私信发送给所有人）"
         channel_id: "频道"
+        target_usernames: "收件人"
+        target_usernames_description: "要向用户发送消息。使用类似 $trigger.user.username 的表达式从每个项目中选择用户。"
         message: "消息"
+        actor_username: "发送人"
+        actor_username_description: "私信以该用户的身份发送，接收者看到的是他们自己撰写的。"
       chat_approval:
         message: "消息"
         buttons: "按钮"

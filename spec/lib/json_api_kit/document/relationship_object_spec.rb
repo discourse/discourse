@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Document::RelationshipObject do
-  subject(:relationship_object) { described_class.new(linkage, urls:, owner:, name: "posts") }
+  subject(:relationship_object) { described_class.new(linkage, client:, owner:, name:) }
 
   fab!(:author, :user)
   fab!(:topic)
 
   let(:guardian) { Guardian.new }
+  let(:edition) { JsonApiKit::Edition.current }
+  let(:client) { JsonApiKit::Client.new(guardian:, edition:, urls:) }
   let(:urls) do
     JsonApiKit::Urls.new(base: "https://example.com/api", current: "https://example.com/api/topics")
   end
@@ -39,11 +41,59 @@ RSpec.describe JsonApiKit::Document::RelationshipObject do
     )
   end
   let(:namespace) { nil }
+  let(:name) { "posts" }
   let(:linkage) { JsonApiKit::Linkage::ToOne.new([record]) }
   let(:relationship_url) { "https://example.com/api/topics/#{topic.id}/relationships/posts" }
   let(:related_url) { "https://example.com/api/topics/#{topic.id}/posts" }
 
   describe "#to_h" do
+    context "when the current relationship name has several words" do
+      let(:name) { "ordered_posts" }
+      let(:edition) { JsonApiKit::Edition.for(JsonApiKit::Timeline::FIRST_RELEASE) }
+      let(:version_change) do
+        Class
+          .new(JsonApiKit::VersionChange) do
+            resource :topics do
+              renamed_relationship from: :archived_posts, to: :ordered_posts
+            end
+          end
+          .new(__FILE__)
+      end
+
+      before do
+        allow(JsonApiKit::VersionChanges.core).to receive(:after).and_return([version_change])
+      end
+
+      it "uses the current names with kebab casing in URLs" do
+        expect(relationship_object.to_h[:links]).to eq(
+          self: "https://example.com/api/topics/#{topic.id}/relationships/ordered-posts",
+          related: "https://example.com/api/topics/#{topic.id}/ordered-posts",
+        )
+      end
+    end
+
+    context "when the type has a historical name" do
+      let(:edition) { JsonApiKit::Edition.for(JsonApiKit::Timeline::FIRST_RELEASE) }
+      let(:version_change) do
+        Class
+          .new(JsonApiKit::VersionChange) { renamed_type from: :topic_authors, to: :users }
+          .new(__FILE__)
+      end
+
+      before do
+        allow(JsonApiKit::VersionChanges.core).to receive(:after).and_return([version_change])
+      end
+
+      it "translates the linkage type" do
+        expect(relationship_object.to_h[:data]).to eq(type: "topicAuthors", id: author.id.to_s)
+      end
+
+      it "keeps the record identity in the current vocabulary" do
+        relationship_object.to_h
+        expect(record.identity.to_h).to eq(type: "users", id: author.id.to_s)
+      end
+    end
+
     it "renders the record it links to" do
       expect(relationship_object.to_h[:data]).to eq(type: "users", id: author.id.to_s)
     end

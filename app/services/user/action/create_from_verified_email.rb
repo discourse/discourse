@@ -2,17 +2,15 @@
 
 class User::Action::CreateFromVerifiedEmail < Service::ActionBase
   option :email
+  option :username
+  option :generated_username, default: -> { false }
   option :ip_address, optional: true
   option :user_fields, optional: true
   option :name, optional: true
+  option :password, optional: true
 
   def call
-    # A random name beats the generic "userN" fallback here: there is no
-    # signup form where the user could pick one before the account exists.
-    # Sites that turn random names off fall through to that generic name.
-    username =
-      UserNameSuggester.suggest(email, allow_generic_fallback: false) ||
-        RandomUsernameGenerator.generate || UserNameSuggester.suggest(email)
+    raise Discourse::SiteArchived if SiteSetting.site_archived
 
     user = User.where(staged: true).with_email(email).first
     user&.unstage!
@@ -21,8 +19,6 @@ class User::Action::CreateFromVerifiedEmail < Service::ActionBase
     user.attributes = {
       email: email,
       username: username,
-      # The generated username is a placeholder, so it must never become the
-      # full name. A staged account's existing name is real and survives.
       name: name.presence || user.name,
       active: false,
       locale: I18n.locale,
@@ -31,6 +27,9 @@ class User::Action::CreateFromVerifiedEmail < Service::ActionBase
     }
 
     assign_user_fields(user)
+    user.password = password if password.present?
+
+    user.enforce_username_restrictions = username.present?
 
     if SiteSetting.must_approve_users? && EmailValidator.can_auto_approve_user?(email)
       ReviewableUser.set_approved_fields!(user, Discourse.system_user)

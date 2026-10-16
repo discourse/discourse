@@ -6,17 +6,17 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import CodeEditor from "discourse/components/code-editor";
 import { escapeExpression } from "discourse/lib/utilities";
-import { schemaFieldsForNodeInput } from "../../../lib/workflows/data-preview";
+import { schemaFieldsForNodeInput } from "../../../lib/workflows/data-preview.js";
 import {
   inputIndexForConnection,
   outputIndexForConnection,
-} from "../../../lib/workflows/expression-paths";
-import buildLiquidExtensions from "../../../lib/workflows/liquid-extensions";
+} from "../../../lib/workflows/expression-paths.js";
+import buildLiquidExtensions from "../../../lib/workflows/liquid-extensions/index.js";
 import {
   inputConnectionsForNode,
   previousNodeForConnection,
   resolveDeclaredOutputSchemas,
-} from "../../../lib/workflows/schema-graph";
+} from "../../../lib/workflows/schema-graph.js";
 
 const MODE_FIELD = "mode";
 const PER_ITEM_MODE = "runOnceForEachItem";

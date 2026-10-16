@@ -9,6 +9,41 @@ RSpec.describe Search do
     Jobs.run_immediately!
   end
 
+  it "excludes private messages from every search mode when requested" do
+    message = Fabricate(:private_message_post, user: admin, raw: "scopeboundaryneedle private")
+    public_post = Fabricate(:post, raw: "scopeboundaryneedle public")
+    [message, public_post].each { |post| SearchIndexer.index(post, force: true) }
+    options = { guardian: admin.guardian, exclude_private_messages: true }
+
+    [
+      "in:messages",
+      "in:personal-direct",
+      "in:all-pms",
+      "topic:#{message.topic_id}",
+      "personal_messages:#{admin.username}",
+    ].each do |filter|
+      expect(Search.execute("#{filter} scopeboundaryneedle", options.dup).posts).to eq([])
+    end
+    expect(
+      Search.execute("scopeboundaryneedle", options.merge(type_filter: "private_messages")).posts,
+    ).to eq([])
+    expect(
+      Search.execute("scopeboundaryneedle", options.merge(search_context: message.topic)).posts,
+    ).to eq([])
+    expect(Search.execute("in:all scopeboundaryneedle", options.dup).posts.map(&:id)).to eq(
+      [public_post.id],
+    )
+    expect(
+      Search.execute(
+        message.topic_id.to_s,
+        options.merge(search_for_id: true, type_filter: "topic"),
+      ).posts,
+    ).to eq([])
+    expect(
+      Search.execute("in:all scopeboundaryneedle", guardian: admin.guardian).posts.map(&:id),
+    ).to contain_exactly(message.id, public_post.id)
+  end
+
   describe ".need_segmenting?" do
     subject(:search) { described_class }
 

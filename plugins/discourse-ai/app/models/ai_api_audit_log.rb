@@ -20,6 +20,16 @@ class AiApiAuditLog < ActiveRecord::Base
   scope :failed_requests, -> { where(FAILURE_CONDITION) }
   scope :successful_requests, -> { where(SUCCESS_CONDITION) }
 
+  module CompletionState
+    COMPLETE = 1
+    TRUNCATED = 2
+    EMPTY = 3
+  end
+
+  scope :empty_responses, -> { successful_requests.where(completion_state: CompletionState::EMPTY) }
+  scope :truncated_responses,
+        -> { successful_requests.where(completion_state: CompletionState::TRUNCATED) }
+
   module Provider
     OpenAI = 1
     Anthropic = 2
@@ -32,6 +42,8 @@ class AiApiAuditLog < ActiveRecord::Base
     Mistral = 9
     OpenRouter = 10
     BedrockConverse = 11
+    SystemOne = 12
+    OpenAiDecisions = 13
   end
 
   def self.token_and_spending_stats(scope)
@@ -76,6 +88,7 @@ end
 #  id                        :bigint           not null, primary key
 #  cache_read_tokens         :integer
 #  cache_write_tokens        :integer
+#  completion_state          :integer
 #  duration_msecs            :integer
 #  estimated_cost            :decimal(20, 10)
 #  feature_context           :jsonb
@@ -83,10 +96,12 @@ end
 #  language_model            :string(255)
 #  raw_request_payload       :string
 #  raw_response_payload      :string
+#  reasoning_tokens          :integer
 #  request_attempts          :jsonb
 #  request_tokens            :integer
 #  response_status           :integer
 #  response_tokens           :integer
+#  stop_reason               :string(50)
 #  time_to_first_token_msecs :integer
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
@@ -100,6 +115,7 @@ end
 #
 #  idx_ai_api_audit_logs_failed_id                           (id) WHERE (((response_status IS NOT NULL) AND ((response_status < 200) OR (response_status > 299))) OR ((response_status IS NULL) AND (COALESCE(response_tokens, 0) <= 0)))
 #  idx_ai_api_audit_logs_feature_name_id                     (feature_name,id) WHERE (feature_name IS NOT NULL)
+#  idx_ai_api_audit_logs_incomplete_id                       (completion_state,id) WHERE (completion_state = ANY (ARRAY[2, 3]))
 #  idx_ai_api_audit_logs_payload_id                          (id) WHERE ((raw_request_payload IS NOT NULL) OR (raw_response_payload IS NOT NULL))
 #  idx_ai_api_audit_logs_retried_id                          (id) WHERE (request_attempts IS NOT NULL)
 #  idx_ai_api_audit_logs_user_id_id                          (user_id,id)

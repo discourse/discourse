@@ -184,6 +184,8 @@ hy:
       chat_message_created:
         channel_id: "Ալիք"
       send_chat_message:
+        targets:
+          channel: "Ալիք"
         channel_id: "Ալիք"
         message: "Ուղարկել"
       chat_approval:

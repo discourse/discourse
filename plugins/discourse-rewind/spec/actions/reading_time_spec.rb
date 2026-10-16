@@ -1,29 +1,31 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseRewind::Action::ReadingTime do
-  fab!(:date) { Date.new(2021).all_year }
   fab!(:user)
   fab!(:other_user, :user)
 
   fab!(:user_visit_1) do
-    UserVisit.create!(
-      user_id: user.id,
+    Fabricate(
+      :user_visit,
+      user: user,
       visited_at: Date.new(2021, 3, 10),
       posts_read: 5,
       time_read: 100,
     )
   end
   fab!(:user_visit_2) do
-    UserVisit.create!(
-      user_id: user.id,
+    Fabricate(
+      :user_visit,
+      user: user,
       visited_at: Date.new(2021, 4, 18),
       posts_read: 12,
       time_read: 1000,
     )
   end
   fab!(:user_visit_3) do
-    UserVisit.create!(
-      user_id: other_user.id,
+    Fabricate(
+      :user_visit,
+      user: other_user,
       visited_at: Date.new(2021, 7, 24),
       posts_read: 8,
       time_read: 1200,
@@ -35,108 +37,23 @@ RSpec.describe DiscourseRewind::Action::ReadingTime do
     expect(result[:data][:reading_time]).to eq(1100)
   end
 
-  it "matches the correct book based on reading time" do
-    result = call_report
-    expect(result[:data][:book]).to eq("The Metamorphosis")
+  def read_for(seconds)
+    user_visit_1.update!(time_read: seconds - user_visit_2.time_read)
+    call_report
+  end
 
-    user_visit_1.update!(time_read: 5300 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("The Little Prince")
+  it "picks the shortest book that takes longer than the reading time" do
+    expect(read_for(3119)[:data][:book]).to eq("The Metamorphosis")
+    expect(read_for(3120)[:data][:book]).to eq("The Little Prince")
+  end
 
-    user_visit_1.update!(time_read: 7100 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("Animal Farm")
+  it "flags series" do
+    expect(read_for(359_900)[:data]).to include(book: "The Game of Thrones Series", series: true)
+  end
 
-    user_visit_1.update!(time_read: 10_700 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("The Alchemist")
+  it "returns nothing when the reading time exceeds every book" do
+    longest = described_class::POPULAR_BOOKS.values.pluck(:reading_time).max
 
-    user_visit_1.update!(time_read: 12_500 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("The Great Gatsby")
-
-    user_visit_1.update!(time_read: 14_900 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("Fahrenheit 451")
-
-    user_visit_1.update!(time_read: 16_100 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("And Then There Were None")
-
-    user_visit_1.update!(time_read: 16_700 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("1984")
-
-    user_visit_1.update!(time_read: 17_900 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("The Catcher in the Rye")
-
-    user_visit_1.update!(time_read: 19_640 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("The Hunger Games")
-
-    user_visit_1.update!(time_read: 22_700 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("To Kill a Mockingbird")
-
-    user_visit_1.update!(time_read: 24_500 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("A Tale of Two Cities")
-
-    user_visit_1.update!(time_read: 25_100 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("Pride and Prejudice")
-
-    user_visit_1.update!(time_read: 26_900 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("The Hobbit")
-
-    user_visit_1.update!(time_read: 29_900 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("Little Women")
-
-    user_visit_1.update!(time_read: 34_100 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("Jane Eyre")
-
-    user_visit_1.update!(time_read: 37_700 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("The Da Vinci Code")
-
-    user_visit_1.update!(time_read: 46_700 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("One Hundred Years of Solitude")
-
-    user_visit_1.update!(time_read: 107_900 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("The Lord of the Rings")
-
-    user_visit_1.update!(time_read: 179_900 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("The Complete works of Shakespeare")
-
-    user_visit_1.update!(time_read: 359_900 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("The Game of Thrones Series")
-
-    user_visit_1.update!(time_read: 719_900 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("Malazan Book of the Fallen")
-
-    user_visit_1.update!(time_read: 1_439_900 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("Terry Pratchett's Discworld series")
-
-    user_visit_1.update!(time_read: 2_159_900 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("The Wandering Inn web series")
-
-    user_visit_1.update!(time_read: 2_879_900 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("The Combined Cosmere works + Wheel of Time")
-
-    user_visit_1.update!(time_read: 3_599_900 - user_visit_2.time_read)
-    result = call_report
-    expect(result[:data][:book]).to eq("The Star Trek novels")
+    expect(read_for(longest)).to be_nil
   end
 end

@@ -314,20 +314,14 @@ describe DiscourseAi::Discover::DiscoveriesController do
         expect(posts.second.raw).not_to include("@support")
       end
 
-      it "uses an enabled AI bot when the follow-up agent has no dedicated user" do
+      it "rejects follow-up when the follow-up agent has no dedicated user" do
         follow_up_agent.update!(user: nil)
-        SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s
-        SiteSetting.ai_bot_allowed_groups = group.id.to_s
-        llm_model.toggle_companion_user
 
-        post "/discourse-ai/discoveries/continue-convo", params: { request_id: }
+        expect {
+          post "/discourse-ai/discoveries/continue-convo", params: { request_id: }
+        }.not_to change(Topic, :count)
 
-        expect(response.status).to eq(200)
-        topic = Topic.find(response.parsed_body["topic_id"])
-        expect(topic.allowed_users).to include(llm_model.reload.user)
-        expect(topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD]).to eq(
-          follow_up_agent.id.to_s,
-        )
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "continues from selected discussions when summary prose is hidden" do

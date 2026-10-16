@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import Card from "./card";
+import Card from "./card.js";
 
 export default class Column {
   static create(args = {}) {

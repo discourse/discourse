@@ -1058,6 +1058,45 @@ RSpec.describe GroupsController do
         expect(response_custom_fields[user_field_name]).to eq("A custom field")
       end
 
+      it "does not sort members by private custom fields for anonymous viewers" do
+        private_user_field = Fabricate(:user_field)
+        private_user_field_name = "user_field_#{private_user_field.id}"
+        first_member = Fabricate(:user, username: "alphabetical_first")
+        second_member = Fabricate(:user, username: "alphabetical_second")
+        group.add(first_member)
+        group.add(second_member)
+
+        UserCustomField.create!(
+          user_id: first_member.id,
+          name: private_user_field_name,
+          value: "second private value",
+        )
+        UserCustomField.create!(
+          user_id: second_member.id,
+          name: private_user_field_name,
+          value: "first private value",
+        )
+
+        get "/groups/#{group.name}/members.json",
+            params: {
+              include_custom_fields: true,
+              order: "custom_field",
+              order_field: private_user_field_name,
+              asc: true,
+            }
+
+        expect(response.status).to eq(200)
+
+        members = response.parsed_body["members"]
+        expect(members.flat_map { |member| member.fetch("custom_fields").values }).not_to include(
+          "first private value",
+          "second private value",
+        )
+        expect(members.map { |member| member["id"] }).to eq(
+          [first_member.id, second_member.id, user.id],
+        )
+      end
+
       it "allows sorting by custom fields" do
         group.add(user2)
         UserCustomField.create!(user_id: user2.id, name: user_field_name, value: "C custom field")
@@ -1240,6 +1279,103 @@ RSpec.describe GroupsController do
     end
     let(:category) { Fabricate(:category) }
     let(:tag) { Fabricate(:tag) }
+
+    it "keeps existing notification defaults during a profile-only update" do
+      group.add_owner(user)
+      group.update!(watching_category_ids: [category.id], tracking_tags: [tag.name])
+      CategoryUser.set_notification_level_for_category(
+        user,
+        NotificationLevels.all[:watching],
+        category.id,
+      )
+      TagUser.change(user.id, tag.id, NotificationLevels.all[:tracking])
+      sign_in(user)
+
+      put "/groups/#{group.id}.json",
+          params: {
+            group: {
+              bio_raw: "Updated profile 猫",
+            },
+            update_existing_users: "true",
+          }
+
+      expect(response.status).to eq(200)
+      expect(group.reload.bio_raw).to eq("Updated profile 猫")
+      expect(CategoryUser.find_by(user:, category:)&.notification_level).to eq(
+        NotificationLevels.all[:watching],
+      )
+      expect(TagUser.find_by(user:, tag:)&.notification_level).to eq(
+        NotificationLevels.all[:tracking],
+      )
+    end
+
+    it "ignores nonexistent category IDs when applying notification defaults to members" do
+      missing_id = Category.maximum(:id) + 1000
+      group.add_owner(user)
+      sign_in(user)
+
+      put "/groups/#{group.id}.json",
+          params: {
+            group: {
+              watching_category_ids: [category.id.to_s, missing_id.to_s],
+            },
+            update_existing_users: "true",
+          }
+
+      expect(response.status).to eq(200)
+      expect(group.reload.group_category_notification_defaults.pluck(:category_id)).to eq(
+        [category.id],
+      )
+      expect(CategoryUser.where(user:).pluck(:category_id)).to eq([category.id])
+    end
+
+    it "rejects conflicting tag defaults before saving profile changes or asking for confirmation" do
+      synonym = Fabricate(:tag, target_tag: tag)
+      group.add_owner(user)
+      original_bio = group.bio_raw
+      sign_in(user)
+
+      put "/groups/#{group.id}.json",
+          params: {
+            group: {
+              bio_raw: "Must not be saved",
+              watching_tags: [tag.name],
+              tracking_tags: [synonym.name],
+            },
+          }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(
+        I18n.t("groups.errors.conflicting_notification_defaults"),
+      )
+      expect(group.reload.bio_raw).to eq(original_bio)
+      expect(group.group_tag_notification_defaults).to be_empty
+      expect(TagUser.where(user:, tag:)).to be_empty
+    end
+
+    it "moves a synonym's tag default and member preference using a mixed-case name" do
+      synonym = Fabricate(:tag, target_tag: tag)
+      group.add_owner(user)
+      group.update!(tracking_tags: [tag.name])
+      TagUser.change(user.id, tag.id, NotificationLevels.all[:tracking])
+      sign_in(user)
+
+      put "/groups/#{group.id}.json",
+          params: {
+            group: {
+              watching_tags: [synonym.name.upcase],
+            },
+            update_existing_users: "true",
+          }
+
+      expect(response.status).to eq(200)
+      expect(
+        group.reload.group_tag_notification_defaults.pluck(:tag_id, :notification_level),
+      ).to eq([[tag.id, NotificationLevels.all[:watching]]])
+      expect(TagUser.where(user:).pluck(:tag_id, :notification_level)).to eq(
+        [[tag.id, NotificationLevels.all[:watching]]],
+      )
+    end
 
     context "with custom_fields" do
       before do
@@ -2032,8 +2168,44 @@ RSpec.describe GroupsController do
   end
 
   describe "membership edits" do
+    it "refuses the email selector from a group owner who may not view emails" do
+      group.add_owner(user)
+      sign_in(user)
+
+      [other_user.email, "missing@example.com"].each do |email|
+        put "/groups/#{group.id}/members.json", params: { user_emails: email }
+        expect(response.status).to eq(403)
+        expect(response.body).not_to include(email, other_user.username)
+
+        delete "/groups/#{group.id}/members.json", params: { user_emails: email }
+        expect(response.status).to eq(403)
+        expect(response.body).not_to include(email, other_user.username)
+      end
+
+      expect(group.users).to contain_exactly(user)
+    end
+
     describe "#add_members" do
       before { sign_in(admin) }
+
+      it "lets a TL2 owner add a username and invite an email without email visibility" do
+        owner = Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true)
+        group.add_owner(owner)
+        sign_in(owner)
+        expect(owner.guardian.can_invite_to_forum?([group])).to eq(true)
+        expect(owner.guardian.can_see_emails?).to eq(false)
+
+        put "/groups/#{group.id}/members.json",
+            params: {
+              usernames: other_user.username,
+              emails: "newcomer@example.com",
+            }
+
+        expect(response.status).to eq(200)
+        expect(group.reload.users).to include(other_user)
+        invite = Invite.find_by!(email: "newcomer@example.com", invited_by: owner)
+        expect(invite.groups).to eq([group])
+      end
 
       it "can make incremental adds" do
         expect do
@@ -2091,16 +2263,18 @@ RSpec.describe GroupsController do
         expect(response.status).to eq(200)
       end
 
-      it "returns a clear error when group owner without invite permission submits emails" do
+      it "refuses email invitations when the group owner cannot invite" do
+        SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:staff]
         group.add_owner(user)
         sign_in(user)
 
         put "/groups/#{group.id}/members.json", params: { emails: "test@example.com" }
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to include("Only usernames")
+        expect(response.parsed_body["errors"]).to eq([I18n.t("groups.errors.cannot_add_emails")])
       end
 
       it "rejects emails even when valid usernames are also submitted by owner without invite permission" do
+        SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:staff]
         group.add_owner(user)
         sign_in(user)
 
@@ -2113,7 +2287,7 @@ RSpec.describe GroupsController do
         }.not_to change { group.users.count }
 
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to include("Only usernames")
+        expect(response.parsed_body["errors"]).to eq([I18n.t("groups.errors.cannot_add_emails")])
       end
 
       context "when is able to add several members to a group" do
@@ -2166,6 +2340,11 @@ RSpec.describe GroupsController do
           end.to change { group.users.count }.by(1)
 
           expect(response.status).to eq(200)
+          expect(response.parsed_body["usernames"]).to contain_exactly(
+            user1.username,
+            user2.username,
+            user3.username,
+          )
         end
 
         it "sends invites to new users and ignores existing users" do
@@ -2249,7 +2428,7 @@ RSpec.describe GroupsController do
         end
 
         it "display error when try to add to many users at once" do
-          stub_const(GroupsController, "ADD_MEMBERS_LIMIT", 1) do
+          stub_const(GroupMemberAdder, "LIMIT", 1) do
             expect do
               put "/groups/#{group.id}/members.json",
                   params: {
@@ -2431,6 +2610,7 @@ RSpec.describe GroupsController do
         end
 
         it "notifies users when the param is present" do
+          Jobs.run_immediately!
           put "/groups/#{group.id}/owners.json",
               params: {
                 usernames: user.username,

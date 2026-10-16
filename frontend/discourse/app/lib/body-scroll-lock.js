@@ -83,8 +83,8 @@ function toArray(x) {
 
 const initialLockState = {
   lockedNum: 0,
-  lockedElements: [],
-  unLockCallback: null,
+  lockedElements: /** @type {HTMLElement[]} */ ([]),
+  unLockCallback: /** @type {(() => void) | null} */ (null),
   documentListenerAdded: false,
   initialClientPos: {
     clientX: 0,

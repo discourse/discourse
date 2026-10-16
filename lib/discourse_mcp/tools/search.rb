@@ -3,13 +3,19 @@
 module DiscourseMcp
   module Tools
     class Search
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(results: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
 
       def self.call(arguments:, request_context:)
         query = arguments.fetch("query").to_s
         limit = arguments.fetch("max_results", 10)
-        results = ::Search.execute(query, guardian: request_context.guardian)
+        results =
+          ::Search.execute(
+            query,
+            guardian: request_context.guardian,
+            exclude_private_messages: !request_context.has_scopes?(Scopes::PRIVATE_MESSAGES_READ),
+          )
         topics = results.posts.filter_map(&:topic).uniq(&:id).first(limit + 1)
         has_more = topics.length > limit
         topics = topics.first(limit)
@@ -25,6 +31,7 @@ module DiscourseMcp
 
     class FilterTopics
       TOP_PERIODS = %w[daily weekly monthly quarterly yearly all].freeze
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(results: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
 
@@ -92,6 +99,7 @@ module DiscourseMcp
     end
 
     class SearchPosts
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           posts: OutputSchema::OBJECT_ARRAY,
@@ -115,6 +123,7 @@ module DiscourseMcp
             search_type: :full_page,
             page:,
             blurb_length: 300,
+            exclude_private_messages: !request_context.has_scopes?(Scopes::PRIVATE_MESSAGES_READ),
           )
         raise DiscourseMcp::ToolError, I18n.t("mcp.errors.invalid_search_query") if results.blank?
 

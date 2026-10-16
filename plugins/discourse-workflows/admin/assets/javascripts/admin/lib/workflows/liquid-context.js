@@ -4,7 +4,7 @@ import {
   buildSiteSettingsScope,
   buildVarsScope,
   walkScope,
-} from "./expression-context";
+} from "./expression-context.js";
 
 // Standard Liquid filters, with the arguments each one accepts.
 export const LIQUID_FILTERS = [

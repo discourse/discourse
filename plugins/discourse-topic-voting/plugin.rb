@@ -276,7 +276,7 @@ after_initialize do
       additionalProperties: false,
     },
     output_schema: DiscourseTopicVoting::McpTools::SetVote::OUTPUT_SCHEMA,
-    required_scopes: %w[discourse-topic-voting:write],
+    required_scopes: DiscourseTopicVoting::McpTools::SetVote::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: false,
       destructiveHint: false,

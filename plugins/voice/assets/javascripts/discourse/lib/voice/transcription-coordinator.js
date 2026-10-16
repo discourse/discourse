@@ -5,10 +5,16 @@ import Composer from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import { i18n } from "discourse-i18n";
 import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
-import SubtitlesManager from "./subtitles";
-import TranscriptDraftSync from "./transcript-draft-sync";
-import { transcriptToMarkdown } from "./transcript-markdown";
-import TranscriptRecorder from "./transcript-recorder";
+import {
+  isSttModel,
+  preferredSttModel,
+  setPreferredSttModel,
+  sttModelUrl,
+} from "./stt-models.js";
+import SubtitlesManager from "./subtitles.js";
+import TranscriptDraftSync from "./transcript-draft-sync.js";
+import { transcriptToMarkdown } from "./transcript-markdown.js";
+import TranscriptRecorder from "./transcript-recorder.js";
 
 // Owns the speech-to-text pipeline and both of its consumers: the caption
 // overlay and the transcript recorder (with its composer-draft sync). The
@@ -20,6 +26,7 @@ export default class TranscriptionCoordinator {
   @tracked progress = null;
   @tracked captions = [];
   @tracked revision = 0;
+  @tracked sttModel = preferredSttModel();
 
   #subtitles;
   #transcript;
@@ -119,7 +126,10 @@ export default class TranscriptionCoordinator {
   }
 
   get #modelBaseUrl() {
-    return this.#siteSettings.voice_stt_model_base_url || null;
+    return sttModelUrl(
+      this.sttModel,
+      this.#siteSettings.voice_stt_model_base_url
+    );
   }
 
   get recording() {
@@ -155,6 +165,15 @@ export default class TranscriptionCoordinator {
   toggle() {
     this.enabled = !this.enabled;
     this.#subtitles.setPreference(this.enabled);
+    this.#syncSttEngine();
+  }
+
+  setSttModel(model) {
+    if (!isSttModel(model) || model === this.sttModel) {
+      return;
+    }
+    this.sttModel = model;
+    setPreferredSttModel(model);
     this.#syncSttEngine();
   }
 
@@ -332,6 +351,7 @@ export default class TranscriptionCoordinator {
     return {
       reply: transcriptToMarkdown(entries, {
         chatMarkup: !!this.#siteSettings.chat_enabled,
+        roomName: room?.name,
       }),
       title: i18n("voice.transcript.draft_title", {
         room: room?.name ?? "",

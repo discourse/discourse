@@ -63,6 +63,7 @@ import classPrepend, {
 import { registerCodemirrorLanguage } from "discourse/lib/codemirror-languages";
 import { registerComposerAction } from "discourse/lib/composer/actions-registry";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
+import { addImageWrapperButton } from "discourse/lib/composer/image-controls";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 import {
   _INTERNAL_SOURCE_KEY,
@@ -125,6 +126,7 @@ import {
   registerCustomCountable as registerUserCategorySectionLinkCountable,
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
+import { addUserNavSidebarLink } from "discourse/lib/sidebar/user-nav-sidebar";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import {
   _addTransformerName,
@@ -164,7 +166,6 @@ import {
   replaceCategoryLinkRenderer,
 } from "discourse/ui-kit/helpers/d-category-link";
 import { registerCustomAvatarHelper } from "discourse/ui-kit/helpers/d-user-avatar";
-import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 
 const blockedModifications = ["component:topic-list"];
 
@@ -1132,7 +1133,7 @@ class _PluginApi {
    * @param {function} toolbarEvent.addText - Append the given text to the selected text in the composer.
    *
    * @callback condition
-   * @param {Object} composer - The composer service object.
+   * @param {import("discourse/services/composer").default} composer - The composer service object.
    * @returns {boolean} - Whether the button should be displayed.
    *
    * @param {Object} opts - An Object.
@@ -2591,7 +2592,7 @@ class _PluginApi {
   }
 
   /**
-   * Download calendar modal which allow to pick between ICS and Google Calendar. Optionally, recurrence rule can be specified - https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10
+   * Add an event to an ICS-compatible app, Google Calendar, Microsoft Outlook, or Apple Calendar. Optionally, recurrence rule can be specified - https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10
    *
    * ```javascript
    * api.downloadCalendar("title of the event",
@@ -2764,7 +2765,7 @@ class _PluginApi {
    * @param {BaseSectionLink} baseSectionLink - Factory class to inherit from.
    * @returns {BaseSectionLink} - A class that extends BaseSectionLink.
    *
-   * @param {(addCommunitySectionLinkCallback|Object)} arg - A callback function or an Object.
+   * @param {(addCommunitySectionLinkCallback|{name: string, title: string, text: string, route?: string, href?: string, icon?: string})} arg - A callback function or an Object.
    * @param {string} arg.name - The name of the link. Needs to be dasherized and lowercase.
    * @param {string} arg.title - The title attribute for the link.
    * @param {string} arg.text - The text to display for the link.
@@ -2822,7 +2823,7 @@ class _PluginApi {
    * @param {Object} arg - An object
    * @param {string} arg.badgeTextFunction - Function used to generate the text for the badge displayed in the section link.
    * @param {string} arg.route - The Ember route name to generate the href attribute for the link.
-   * @param {Object} [arg.routeQuery] - Object representing the query params that should be appended to the route generated.
+   * @param {Record<string, unknown>} [arg.routeQuery] - Object representing the query params that should be appended to the route generated.
    * @param {shouldRegister} arg.shouldRegister - Function used to determine if the countable should be registered for the category.
    * @param {refreshCountFunction} arg.refreshCountFunction - Function used to calculate the value used to set the property for the count whenever the sidebar section link refreshes.
    * @param {prioritizeOverDefaults} args.prioritizeOverDefaults - Function used to determine whether the countable should be prioritized over the default countables of unread/new.
@@ -2991,6 +2992,40 @@ class _PluginApi {
    */
   addAdminSidebarSectionLink(sectionName, link) {
     addAdminSidebarSectionLink(sectionName, link);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Adds a link to a section of the user nav sidebar panel.
+   *
+   * The panel replaces the horizontal user navs, and the outlets a plugin adds
+   * its tabs through (`user-main-nav`, `user-activity-bottom`,
+   * `user-notifications-bottom`, `user-preferences-nav`) render markup the
+   * panel cannot read. A plugin with a tab in any of them registers it here as
+   * well to stay reachable once those navs are hidden.
+   *
+   * ```javascript
+   * api.addUserNavSidebarLink("activity", {
+   *   name: "activity-solved",
+   *   route: "userActivity.solved",
+   *   label: "solved.title",
+   *   icon: "square-check",
+   *   displayed: ({ siteSettings }) => siteSettings.solved_enabled,
+   * });
+   * ```
+   *
+   * @param {String} sectionName - The panel section to add the link to: profile,
+   *   activity, notifications, messages, invites or preferences.
+   * @param {Object} link - A link object representing a section link.
+   * @param {string} link.name - The name of the link. Needs to be dasherized and lowercase.
+   * @param {string} link.route - The Ember route name the link points at.
+   * @param {string} link.label - The i18n key for the link's text.
+   * @param {string} [link.icon] - The FontAwesome icon to display for the link.
+   * @param {Array} [link.routeParams] - Extra route models, after the username.
+   * @param {Function} [link.displayed] - Predicate deciding whether to show the link.
+   */
+  addUserNavSidebarLink(sectionName, link) {
+    addUserNavSidebarLink(sectionName, link);
   }
 
   /**
@@ -3552,8 +3587,8 @@ class _PluginApi {
    * ```
    *
    * @callback activityItemConfig
-   * @param {Object} periods - an object containing the periods that the block given to the `register_stat` server-side API returns.
-   * @returns {Object} - configuration object for the site activity item. The object must contain the following properties: `icon`, `class`, `activityText` and `period`.
+   * @param {Record<string, number>} periods - an object containing the periods that the block given to the `register_stat` server-side API returns.
+   * @returns {{icon: string, class: string, activityText: string, period: string}} - configuration object for the site activity item. The object must contain the following properties: `icon`, `class`, `activityText` and `period`.
    *
    * @param {string} name - a string that matches the string given to the `register_stat` server-side API.
    * @param {activityItemConfig} func - a callback that returns an object containing properties for the custom site activity item.
@@ -3718,7 +3753,7 @@ class _PluginApi {
    * - `previousTypes` - selection before this change
    * - `category`, `form`, and optionally `transientData`
    *
-   * @param {function(Object): (boolean|undefined|Promise<boolean|undefined>)} fn
+   * @param {(context: import("discourse/lib/on-before-category-types-change").OnBeforeCategoryTypesChangeContext) => (boolean|undefined|Promise<boolean|undefined>)} fn
    */
   registerOnBeforeCategoryTypesChange(fn) {
     registerOnBeforeCategoryTypesChange(fn);

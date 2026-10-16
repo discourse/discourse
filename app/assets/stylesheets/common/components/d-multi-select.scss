@@ -57,6 +57,7 @@
   display: flex;
   flex-direction: column;
   padding: 0.25em;
+  margin: 0;
   gap: 0.25em;
   height: 150px;
 }
@@ -81,7 +82,7 @@
 
   .d-multi-select-trigger__selection-label {
     @include ellipsis;
-    max-width: 3.5em;
+    max-width: 5em;
   }
 }
 

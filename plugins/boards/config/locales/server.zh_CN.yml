@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  discourse_workflows:
+    errors:
+      create_board_column:
+        board_not_found: "找不到此列的看板。"
+        forbidden: "工作流执行用户没有管理此看板的权限。"
+        invalid_params: "无法创建看板列： %{errors}"
+        failed: "无法创建看板列。"
+      create_board:
+        forbidden: "工作流执行用户没有创建看板的权限。"
+        invalid_params: "创建看板失败： %{errors}"
+        acl_failed: "无法创建看板的访问权限。请检查所选的组和权限。"
+        failed: "无法创建看板。"
   site_settings:
     boards_enabled: "将主题和轻量级的独立“浮动”卡片组织成可配置的、拖放式的看板式面板和列，所有这些都通过专门设计的管理用户界面和每个面板的访问控制来实现。"
     boards_manage_board_allowed_groups: "允许创建和配置看板的群组。"
@@ -18,6 +30,7 @@ zh_CN:
         acl_update_failed: "更新看板权限失败。"
         acl_create_failed: "创建看板权限失败。"
     errors:
+      slug_unavailable: "该看版的 slug 已被使用，请选择其他 slug。"
       board_not_found: "看板未找到"
       board_read_forbidden: "您没有权限查看此看板"
       board_write_forbidden: "您无权修改此看板"
@@ -42,6 +55,7 @@ zh_CN:
       cannot_reorder_recency_column: "按时间排序的卡片无法重新排序。"
       invalid_column_sort: "无效的列排序： %{sort}"
     onebox:
+      archived: "已存档看版"
       inline_to_card: "卡片 '%{card_name}' 在 '%{board_name}'"
       inline_to_board: "看板'%{board_name}'"
       created_by: "由 %{username} 创建"

@@ -132,6 +132,23 @@ acceptance("User Routes", function (needs) {
   });
 });
 
+acceptance("User Routes - names disabled", function (needs) {
+  needs.user();
+  needs.settings({ enable_names: false, prioritize_username_in_ux: false });
+  needs.pretender((server, helper) => {
+    const response = cloneJSON(userFixtures["/u/eviltrout.json"]);
+    server.get("/u/eviltrout.json", () => helper.response(response));
+  });
+
+  test("does not display a name present in the profile payload", async function (assert) {
+    await visit("/u/eviltrout");
+
+    assert.dom(".user-profile-names .username").includesText("eviltrout");
+    assert.dom(".user-profile-names .full-name").doesNotExist();
+    assert.dom(".user-profile-names").doesNotIncludeText("Robin Ward");
+  });
+});
+
 acceptance(
   "User Routes - Periods in current user's username",
   function (needs) {

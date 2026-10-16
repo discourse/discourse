@@ -17,6 +17,8 @@ ur:
     working_days: "کام کے دن مقرر کریں۔ آپ پوسٹ میں `خطہ کے اوقات` ٹیگ کا استعمال کرتے ہوئے گروپ کی دستیابی کو ظاہر کر سکتے ہیں، جیسے: `[timezones group=admins][timezones]`"
     close_to_working_day_hours_extension: "خطہ کے اوقات کو نمایاں کرنے کے لیے کام کے دن کے اوقات میں توسیع کا وقت سیٹ کریں۔"
   discourse_events:
+    reminder:
+      guest: "- %{name}"
     category_type:
       default_calendar_view:
         day: "دن"

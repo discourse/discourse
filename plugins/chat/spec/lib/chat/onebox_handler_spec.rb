@@ -9,6 +9,11 @@ describe Chat::OneboxHandler do
   fab!(:user_3) { Fabricate(:user, staged: true) }
   fab!(:user_4) { Fabricate(:user, suspended_till: 3.weeks.from_now) }
 
+  before do
+    SiteSetting.chat_allowed_groups =
+      "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+  end
+
   let(:public_chat_url) { "#{Discourse.base_url}/chat/c/-/#{public_channel.id}" }
   let(:private_chat_url) { "#{Discourse.base_url}/chat/c/-/#{private_channel.id}" }
   let(:invalid_chat_url) { "#{Discourse.base_url}/chat/c/-/999" }

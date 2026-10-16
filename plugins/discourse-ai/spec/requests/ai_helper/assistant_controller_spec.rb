@@ -175,6 +175,35 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
         expect(response.parsed_body["thumbnails"].first["id"]).to eq(upload.id)
       end
 
+      context "when a post-only user invokes a composer-only mode" do
+        fab!(:post_only_group, :group)
+        fab!(:post_only_user) { Fabricate(:user, refresh_auto_groups: true) }
+
+        before do
+          SiteSetting.composer_ai_helper_allowed_groups = restricted_group.id.to_s
+          SiteSetting.post_ai_helper_allowed_groups = post_only_group.id.to_s
+          post_only_group.add(post_only_user)
+          post_illustrator_agent.update!(allowed_group_ids: [post_only_group.id])
+        end
+
+        it "returns 403 without generating thumbnails for post location aliases" do
+          sign_in(post_only_user)
+
+          %w[post helper].each do |location|
+            post "/discourse-ai/ai-helper/stream_suggestion.json",
+                 params: {
+                   text: "A beautiful sunset",
+                   location:,
+                   mode: DiscourseAi::AiHelper::Assistant::ILLUSTRATE_POST,
+                 }
+
+            expect(response.status).to eq(403)
+            expect(response.parsed_body["errors"]).to be_present
+            expect(response.parsed_body["thumbnails"]).to be_nil
+          end
+        end
+      end
+
       it "returns a 403 when the user cannot access the post illustrator agent" do
         sign_in(user)
         post_illustrator_agent.update!(allowed_group_ids: [restricted_group.id])
@@ -236,6 +265,9 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
         SiteSetting.post_ai_helper_allowed_groups = post_group.id.to_s
         composer_group.add(composer_only_user)
         post_group.add(post_only_user)
+        AiAgent.find_by(id: SiteSetting.ai_helper_proofreader_agent).update!(
+          allowed_group_ids: [composer_group.id, post_group.id],
+        )
       end
 
       it "returns 403 when a composer-only user tries to use post helper" do
@@ -262,6 +294,24 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
                mode: DiscourseAi::AiHelper::Assistant::PROOFREAD,
                client_id: "test123",
              }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"].join).to include("location")
+      end
+
+      it "returns 400 with a location error for an unrecognized location" do
+        sign_in(post_only_user)
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([["hello ", "world"]]) do
+          post "/discourse-ai/ai-helper/stream_suggestion.json",
+               params: {
+                 text: "hello",
+                 location: "unknown",
+                 post_id: my_post.id,
+                 mode: DiscourseAi::AiHelper::Assistant::PROOFREAD,
+                 client_id: "test123",
+               }
+        end
 
         expect(response.status).to eq(400)
         expect(response.parsed_body["errors"].join).to include("location")
@@ -298,21 +348,24 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
         end
       end
 
-      it "allows a post-only user to use the post helper" do
+      it "allows a post-only user to use post helper aliases" do
         sign_in(post_only_user)
 
-        results = [["hello ", "world"]]
+        results = [["hello ", "world"], ["hello ", "world"]]
         DiscourseAi::Completions::Llm.with_prepared_responses(results) do
-          post "/discourse-ai/ai-helper/stream_suggestion.json",
-               params: {
-                 text: "hello",
-                 location: "post",
-                 post_id: my_post.id,
-                 mode: DiscourseAi::AiHelper::Assistant::PROOFREAD,
-                 client_id: "test123",
-               }
+          %w[post helper].each do |location|
+            post "/discourse-ai/ai-helper/stream_suggestion.json",
+                 params: {
+                   text: "hello",
+                   location:,
+                   post_id: my_post.id,
+                   mode: DiscourseAi::AiHelper::Assistant::PROOFREAD,
+                   client_id: "test123",
+                 }
 
-          expect(response.status).to eq(200)
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["success"]).to eq(true)
+          end
         end
       end
     end

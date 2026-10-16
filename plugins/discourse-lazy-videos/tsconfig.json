@@ -7,9 +7,13 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/discourse-lazy-videos/*": ["./assets/javascripts/*"],
-      "discourse/plugins/discourse-lazy-videos/admin/*": [
-        "./admin/assets/javascripts/admin/*"
+      "discourse/plugins/discourse-lazy-videos/*": [
+        "./assets/javascripts/*",
+        "./assets/javascripts/*.gjs",
+        "./assets/javascripts/*.gts",
+        "./test/javascripts/*",
+        "./test/javascripts/*.gjs",
+        "./test/javascripts/*.gts"
       ]
     }
   }

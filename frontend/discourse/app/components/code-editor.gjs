@@ -26,9 +26,9 @@ import { i18n } from "discourse-i18n";
  * @param {Function} [onFocusOut]
  * @param {Function} [onSetup] called with the `EditorView` once it exists
  * @param {boolean} [disabled] renders the content read-only
- * @param {string} [inputId] id of the editable element for its label
+ * @param {string} [inputId] id set on the editable element
  * @param {string} [describedBy] ids of the field's help and error descriptions
- * @param {boolean} [invalid] marks the editable element as invalid
+ * @param {*} [invalid] marks the editable element as invalid when truthy
  * @param {boolean} [resizable] adds a drag handle for the editor's height
  * @param {boolean} [autofocus] focuses the editor once it is ready
  * @param {boolean} [lineNumbers] shows a gutter; defaults to true

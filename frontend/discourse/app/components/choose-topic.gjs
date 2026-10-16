@@ -22,6 +22,7 @@ import { i18n } from "discourse-i18n";
 // label
 // loadOnInit
 export default class ChooseTopic extends Component {
+  /** @type {string | null} */
   @tracked topicTitle = null;
 
   async initialSearch() {

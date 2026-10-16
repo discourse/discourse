@@ -21,6 +21,7 @@ module Jobs
           ::Jobs.enqueue(
             :discourse_post_event_send_reminder,
             event_id: event_date.event.id,
+            event_date_id: event_date.id,
             reminder: reminder[:description],
           )
           event_date.update!(reminder_counter: event_date.reminder_counter + 1)
@@ -44,17 +45,18 @@ module Jobs
         return if !event_date.ended?
         event_date.update!(finished_at: Time.current)
 
-        # The occurrence goes along with the event: `set_next_date` below moves
+        # The occurrence goes along with the event: `set_next_recurrent_event_date` below moves
         # the event on to the next one, so it can no longer name the one that ended.
         DiscourseEvent.trigger(:discourse_post_event_event_ended, event_date.event, event_date)
         MessageBus.publish(
           "/topic/#{event_date.event.post.topic_id}",
-          reload_topic: true,
-          refresh_stream: true,
+          { reload_topic: true, refresh_stream: true },
+          event_date.event.post.topic.secure_audience_publish_messages,
         )
 
         return if event_date.event.recurrence.blank?
-        event_date.event.set_next_date
+        event_date.event.set_next_recurrent_event_date
+        TopicTrackingState.publish_latest(event_date.event.post.topic)
         event_date.event.set_topic_bump
       end
 

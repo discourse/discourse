@@ -3,9 +3,9 @@ import { action } from "@ember/object";
 import { isBlank } from "@ember/utils";
 import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
-import BaseField from "./da-base-field";
-import DAFieldDescription from "./da-field-description";
-import DAFieldLabel from "./da-field-label";
+import BaseField from "./da-base-field.gjs";
+import DAFieldDescription from "./da-field-description.gjs";
+import DAFieldLabel from "./da-field-label.gjs";
 
 export default class CategoriesField extends BaseField {
   get categories() {

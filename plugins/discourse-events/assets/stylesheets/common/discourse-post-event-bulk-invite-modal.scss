@@ -3,9 +3,13 @@
     margin: 0 0 1em 0;
   }
 
+  .bulk-invites-form {
+    gap: 0.5em;
+  }
+
   .bulk-invite-row {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.5em;
     padding: 0.25em 0;
 
@@ -20,6 +24,10 @@
         width: 100%;
         margin: 0;
       }
+
+      .form-kit__container-content {
+        width: 100%;
+      }
     }
 
     .remove-bulk-invite {
@@ -30,8 +38,13 @@
   .bulk-invites {
     margin-bottom: 2em;
 
-    .add-bulk-invite {
-      margin-left: auto;
+    .send-bulk-invites {
+      margin-right: auto;
+    }
+
+    .bulk-invite-actions {
+      flex-direction: column;
+      align-items: stretch;
     }
   }
 

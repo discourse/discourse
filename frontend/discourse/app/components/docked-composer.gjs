@@ -42,8 +42,13 @@ export default class DockedComposer extends Component {
   @tracked reply = "";
   @tracked uploads = trackedArray();
 
+  /** @type {HTMLElement | null} */
   inputElement = null;
+
+  /** @type {import("discourse/lib/uppy/uppy-upload").default | null} */
   uppyUpload = null;
+
+  /** @type {HTMLInputElement | null} */
   fileInputEl = null;
   #rootElement = null;
 

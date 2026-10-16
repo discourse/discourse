@@ -8,6 +8,12 @@ import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
+import {
+  centerOf,
+  dragEvent,
+  dragOver,
+  startDrag,
+} from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import BoardsBoardViewer from "discourse/plugins/boards/discourse/components/boards-board-viewer";
 import BoardsFabricators from "discourse/plugins/boards/discourse/lib/fabricators";
 
@@ -29,18 +35,6 @@ function columnCardIds(columnId) {
 
 function recentISO(daysAgo) {
   return new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000).toISOString();
-}
-
-function stubCardRect(cardId, { top = 0, height = 48 } = {}) {
-  const card = document.querySelector(cardSelector(cardId));
-  sinon.stub(card, "getBoundingClientRect").returns({
-    top,
-    bottom: top + height,
-    left: 0,
-    right: 200,
-    width: 200,
-    height,
-  });
 }
 
 module("Integration | Component | BoardsBoardViewer", function (hooks) {
@@ -97,20 +91,23 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
     this.dragDataTransfer = null;
     this.dragCard = async (cardId) => {
       this.dragDataTransfer = new DataTransfer();
-      stubCardRect(cardId);
-
-      await triggerEvent(cardSelector(cardId), "dragstart", {
-        clientX: 10,
-        clientY: 10,
+      await startDrag(cardSelector(cardId), {
         dataTransfer: this.dragDataTransfer,
       });
     };
 
-    this.dropOnColumn = async (columnId, { clientY = 0 } = {}) => {
-      await triggerEvent(columnSelector(columnId), "drop", {
-        clientY,
-        dataTransfer: this.dragDataTransfer,
+    this.dropOnColumn = async (columnId, { clientY } = {}) => {
+      const target = columnSelector(columnId);
+      const coordinates = clientY === undefined ? {} : { clientY };
+      const dataTransfer = this.dragDataTransfer;
+
+      await dragOver(target, { dataTransfer, coordinates });
+      await dragEvent(target, "drop", {
+        dataTransfer,
+        ...centerOf(target),
+        ...coordinates,
       });
+      await settled();
     };
   });
 
@@ -183,9 +180,12 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
       });
     });
 
-    stubCardRect(102, { top: 0, height: 48 });
     await this.dragCard(101);
-    await this.dropOnColumn(20, { clientY: 30 });
+    // Below the target card's midpoint, so the drop lands after it.
+    const targetRect = document
+      .querySelector(cardSelector(102))
+      .getBoundingClientRect();
+    await this.dropOnColumn(20, { clientY: targetRect.bottom - 2 });
 
     assert.strictEqual(requestData.card.column_id, "20");
     assert.strictEqual(requestData.card.after_card_id, "102");
@@ -280,6 +280,15 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
         boardTagNames: [],
         boardCategoryIds: [3],
       });
+      assert
+        .dom(`${columnSelector(10)} ${cardSelector(101)}`)
+        .hasClass(
+          "discourse-boards-card--dragging",
+          "the card stays hidden in its old slot while the move is pending"
+        );
+      assert
+        .dom(`${columnSelector(20)} .discourse-boards-column__drop-indicator`)
+        .exists("the placeholder stays where the card was dropped");
       opts.model.onConfirm({ category_id: 3 });
     });
 
@@ -313,6 +322,15 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
     await this.dropOnColumn(20);
 
     assert.strictEqual(moveRequestData.constraint_fix.category_id, "3");
+    assert
+      .dom(`${columnSelector(20)} ${cardSelector(101)}`)
+      .doesNotHaveClass(
+        "discourse-boards-card--dragging",
+        "the moved card is visible in its new column"
+      );
+    assert
+      .dom(".discourse-boards-column__drop-indicator")
+      .doesNotExist("the placeholder is cleared once the move lands");
   });
 
   test("renders and highlights an old linked card in a recency column", async function (assert) {
@@ -707,5 +725,63 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
       [101, 102],
       "it leaves the recency column order unchanged"
     );
+  });
+  test("archived boards disable editing and only offer unarchive to managers", async function (assert) {
+    const card = this.makeCard({ id: 101, columnId: 11, title: "Read only" });
+    await this.renderBoard(
+      [this.makeColumn({ id: 11, title: "Done", cards: [card] })],
+      {
+        archived: true,
+        can_manage: false,
+        can_write: false,
+        can_unarchive: true,
+      }
+    );
+    assert
+      .dom(cardSelector(101))
+      .doesNotHaveAttribute(
+        "data-drag-source",
+        "archived cards cannot be dragged"
+      );
+    assert.true(
+      this.messageBus.subscribe.calledWith("/boards/1"),
+      "archived boards stay subscribed to receive unarchive events"
+    );
+    await click('[data-identifier="boards-board-controls"]');
+    assert
+      .dom('[data-identifier="archive-board"]')
+      .hasText("Unarchive board...", "managers can restore the board");
+    assert
+      .dom('[data-identifier="add-column"]')
+      .doesNotExist("columns cannot be added");
+    assert
+      .dom('[data-identifier="board-settings"]')
+      .doesNotExist("board options cannot be edited");
+    assert
+      .dom('[data-identifier="delete-board"]')
+      .doesNotExist("archived boards cannot be deleted");
+  });
+
+  test("archived viewers have no board settings menu", async function (assert) {
+    await this.renderBoard([], {
+      archived: true,
+      can_manage: false,
+      can_write: false,
+      can_unarchive: false,
+    });
+    assert
+      .dom('[data-identifier="boards-board-controls"]')
+      .doesNotExist("viewers have no settings actions");
+  });
+
+  test("offers archive to a Manage ACL holder without ordinary configuration access", async function (assert) {
+    await this.renderBoard([], { can_manage: false, can_archive: true });
+    await click('[data-identifier="boards-board-controls"]');
+    assert
+      .dom('[data-identifier="archive-board"]')
+      .hasText("Archive board", "Manage ACL permits archiving");
+    assert
+      .dom('[data-identifier="board-settings"]')
+      .doesNotExist("existing configuration permission remains separate");
   });
 });

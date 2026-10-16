@@ -29,6 +29,8 @@ it:
       title: "Evento: Invito collettivo non riuscito"
       subject_template: "Invito collettivo elaborato con errori"
       text_body_template: "Il tuo file di invito collettivo è stato elaborato, %{processed} inviti creati con %{failed} errori. \n\nEcco il log:\n\n``` text\n%{logs}\n```\n"
+    discourse_post_event_reminder:
+      title: "Promemoria eventi"
   site_settings:
     map_events_to_color: "Assegna un colore a ciascuna etichetta o categoria."
     map_events_title: "Sovrascrive \"Eventi\" nel titolo della barra laterale \"Prossimi eventi\" per categoria."
@@ -56,6 +58,14 @@ it:
     event_participation_buttons: "Elenco dei pulsanti di partecipazione agli eventi che gli utenti possono utilizzare."
     sidebar_show_upcoming_events: "Mostra il link ai prossimi eventi nella barra laterale sotto \"Altro\"."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} sta per iniziare"
+        ongoing: "%{title} è in corso"
+        after: "%{title} è terminato"
+      additional_guests:
+        one: "  e %{count} altro"
+        other: "  e %{count} altri"
     category_type:
       default_calendar_view:
         day: "Giorno"

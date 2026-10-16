@@ -15,6 +15,14 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
   end
 
   describe "GET #index" do
+    it "offers uploaded document search in the tool catalog" do
+      get "/admin/plugins/discourse-ai/ai-agents.json"
+
+      expect(response.parsed_body.dig("meta", "tools")).to include(
+        a_hash_including("id" => "SearchUploadedDocuments"),
+      )
+    end
+
     it "returns a success response" do
       get "/admin/plugins/discourse-ai/ai-agents.json"
       expect(response).to be_successful
@@ -566,7 +574,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       end
     end
 
-    it "does not create a missing bot user for personal messages alone" do
+    it "creates a missing bot user for a personal-message agent" do
       agent =
         Fabricate(
           :ai_agent,
@@ -583,7 +591,8 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
           }
 
       expect(response).to have_http_status(:ok)
-      expect(agent.reload.user).to be_nil
+      expect(agent.reload.user).to be_present
+      expect(response.parsed_body.dig("ai_agent", "user", "id")).to eq(agent.user_id)
     end
 
     it "allows us to trivially clear top_p and temperature" do
@@ -1575,7 +1584,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
 
       # double check this happened and user is in group
       agents = AiAgent.allowed_modalities(user: new_user.reload, allow_personal_messages: true)
-      expect(agents.count).to eq(1)
+      expect(agents.map { |agent| agent[:id] }).to include(ai_agent.id)
 
       io_out, io_in = IO.pipe
 

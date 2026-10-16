@@ -21,7 +21,6 @@ class BrowserPageviewCountryDailyRollup < ActiveRecord::Base
       FROM browser_pageview_events
       WHERE created_at >= :start_date
         AND created_at < :end_date
-        AND #{BrowserPageviewEvent.rollup_source_condition}
       GROUP BY date, country_code
       ON CONFLICT (date, country_code) DO UPDATE
       SET count = EXCLUDED.count,

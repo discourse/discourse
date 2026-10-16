@@ -153,7 +153,6 @@ bs_BA:
     date_range_picker:
       apply: "Snimi"
     share:
-      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "zatvori"
       facebook: "Podijeli na Facebooku"
       email: "Pošalji putem e-maila"
@@ -189,6 +188,9 @@ bs_BA:
         enabled: "Pretvoreno u banner %{when}. Banner će biti prikazan na vrhu svake stranice dok ga korisnik ne isključi."
         disabled: "Maknuo banner %{when}. Banner se više neće prikazivati na vrhu svake stranice."
     topic_admin_menu: "akcije u vezi teme"
+    reorder:
+      removed: "Ukloljen %{label}"
+      position: "%{position} od %{total}"
     emails_are_disabled: "Sve odlazeće email poruke su globalno onemogućene od strane administratora. Ni jedna notifikacija bilo koje vrste neće biti poslana."
     software_update_prompt:
       dismiss: "Odpusti"
@@ -273,10 +275,6 @@ bs_BA:
       one: "maksimalno %{count}"
       few: "maksimalno %{count}"
       other: "maksimalno %{count}"
-    character_count:
-      one: "%{count} karakter"
-      few: "%{count} karaktera"
-      other: "%{count} karaktera"
     related_messages:
       title: "Povezane Poruke"
       pill: "Povezane Poruke"
@@ -414,6 +412,8 @@ bs_BA:
       title:
         search: "Traži poruku"
         placeholder: "ovdje ukucajte naslov poruke, url ili id"
+    dsa_statements:
+      category: "Kategorija"
     review:
       order_by: "Pordeak po"
       in_reply_to: "odgovori na"
@@ -1763,8 +1763,7 @@ bs_BA:
       create_shared_draft: "Kreiraj dijeljenu skicu"
       edit_shared_draft: "Izmijeni dijeljenu skicu"
       discard: "Odbaci"
-      title_placeholder: "O čemu je ova diskusija u jednoj rečenici?"
-      title_placeholder_redesign: "Naslov"
+      title_placeholder: "Naslov"
       title_or_link_placeholder: "Ukucajte naziv, ili zalijepite link ovdje"
       edit_reason_placeholder: "Zašto pravite izmjenu?"
       topic_featured_link_placeholder: "Unesite link prikazan sa nazivom"
@@ -2616,6 +2615,7 @@ bs_BA:
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
       no_description: "Please add a description for this category."
+      latest_topics: "Latest topics"
       already_used: "This color has been used by another category"
       security: "Security"
       permissions:
@@ -2797,6 +2797,7 @@ bs_BA:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
       filter:
+        reset: "reset"
         button:
           label: "Filter"
       latest:
@@ -2934,10 +2935,6 @@ bs_BA:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Zaradio / la sam ovu oznaku %{count} time"
-        few: "Zaradili ste ovu oznaku %{count} puta"
-        other: "Zaradili ste ovu oznaku %{count} puta"
       granted_on: "Odobren %{date}"
       title: Bedž
       allow_title: "Ovu značku možete koristiti kao naslov"
@@ -3265,6 +3262,7 @@ bs_BA:
             block: "Block"
             presets:
               custom: "Custom"
+            automatic: "Automatsko"
           authorizations:
             user: "User"
             status: "Status"
@@ -3520,6 +3518,7 @@ bs_BA:
         site_traffic:
           series:
             anonymous: "Anoniman"
+          crawler_learn_more: "Saznaj više"
         period:
           custom: "Custom"
         reports:
@@ -3975,6 +3974,7 @@ bs_BA:
           upload: "Učitavanje"
           unsaved_changes_alert: "Još niste spremili promjene, želite li ih odbaciti i krenuti dalje?"
           discard: "Odbaci"
+          leave: "Napusti"
           stay: "Ostani"
           delete_upload_confirm: "Izbrisati ovaj upload? (Tematski CSS može prestati raditi!)"
           import_web_tip: "Tema sa spremištem"
@@ -4556,12 +4556,10 @@ bs_BA:
           confirm: "Confirmation"
           dropdown: "Ispustiti"
       site_text:
-        search: "Potražite tekst koji želite urediti"
+        search_label: "Pretraži"
+        theme_disabled: "Neomogućen"
         edit: "Edit"
-        revert: "Vrati promjene"
         revert_confirm: "Jeste li sigurni da želite vratiti promjene?"
-        go_back: "Nazad na pretragu"
-        recommended: "Preporučujemo da prilagodite sledeći tekst tako da odgovara vašim potrebama:"
         show_overriden: "Only show overridden"
         more_than_50_results: "Postoji više od 50 rezultata. Pročistite pretraživanje."
         outdated:

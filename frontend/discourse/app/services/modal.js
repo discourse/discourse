@@ -25,6 +25,7 @@ export default class ModalService extends Service {
 
   @tracked containerElement;
 
+  /** @type {Element | null} */
   triggerElement = null;
 
   @action

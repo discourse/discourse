@@ -24,10 +24,17 @@ export default class UserInvitedShowController extends Controller {
   @tracked canLoadMore = true;
   @tracked hasLoadedInitialInvites = false;
   @tracked invitesLoading = false;
+
+  /** @type {string | null} */
   @tracked filter = null;
 
+  /** @type {import("discourse/models/user").default | null} */
   user = null;
+
+  /** @type {import("@ember/object").default & { invites: import("discourse/models/invite").default[], can_see_invite_details: boolean, counts?: { pending: number, redeemed: number, expired: number, total: number }, error?: string } | null | undefined} */
   model = null;
+
+  /** @type {{ pending: number, redeemed: number, expired: number, total: number } | null | undefined} */
   invitesCount = null;
 
   reinvitedAll = false;

@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::EditTag do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:admin)
   fab!(:tag) { Fabricate(:tag, name: "old-name") }
@@ -18,6 +18,36 @@ RSpec.describe DiscourseAi::Agents::Tools::EditTag do
   def tool(params = nil, **kwargs)
     params ||= kwargs
     described_class.new(params, bot_user: bot_user, llm: llm, context: context)
+  end
+
+  it "previews the tag and escaped current/proposed values without editing it" do
+    tag.update!(description: "Old description")
+    tag_tool =
+      tool(
+        name: tag.name,
+        new_name: "Neat Stuff!",
+        description: "<b>New description</b>",
+        reason: "Setup",
+      )
+    heading =
+      Nokogiri::HTML5.fragment(Chat::Message.cook(tag_tool.approval_title, user_id: admin.id))
+    expect(heading.at_css("a.hashtag-cooked[data-type='tag']")["data-id"]).to eq(tag.id.to_s)
+    expect(tag_tool.approval_changes).to eq(
+      [
+        { label: "Changing name:", before: "old-name", after: "neat-stuff" },
+        {
+          label: "Changing description:",
+          before: "Old description",
+          after: "<b>New description</b>",
+        },
+      ],
+    )
+    expect(tag_tool.approval_parameters).to be_empty
+    expect(tag.reload.name).to eq("old-name")
+    expect(tag.description).to eq("Old description")
+    expect(tool(name: tag.name, description: "", reason: "Cleanup").approval_changes).to eq(
+      [{ label: "Changing description:", before: "Old description", after: "Empty" }],
+    )
   end
 
   it "renames the tag and logs a staff action attributed to the context user" do

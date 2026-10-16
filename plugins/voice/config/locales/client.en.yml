@@ -1,6 +1,10 @@
 en:
   js:
     voice:
+      about:
+        participants:
+          one: "%{formatted_number} person joined voice chats"
+          other: "%{formatted_number} people joined voice chats"
       sidebar:
         title: "Voice rooms"
         create: "Create room"
@@ -168,7 +172,12 @@ en:
         auto_gain_control: "Automatic gain control"
         auto_gain_control_hint: "Keeps your volume steady by adjusting the microphone level automatically."
         subtitles: "Show live subtitles"
-        subtitles_hint: "Generates captions for what others say, on your device — nothing is sent anywhere. Requires a GPU-capable browser and downloads a ~2.5 GB model once."
+        subtitles_hint: "Generates captions for what others say, on your device — nothing is sent anywhere. Requires a GPU-capable browser and downloads the subtitles model once."
+        subtitles_model: "Subtitles model"
+        subtitles_model_hint: "Best quality is the most accurate. Smaller downloads about half as much, but makes more mistakes in noisy rooms and in some languages."
+        subtitles_models:
+          ultra: "Best quality (~410 MB)"
+          redux: "Smaller (~210 MB)"
         subtitles_failed: "Subtitles couldn't be started, so they were turned off."
         test_output: "Test"
         choose_output: "Choose output device"
@@ -189,6 +198,7 @@ en:
         draft_topic: "Open transcript draft"
         stop_and_open: "Stop recording and open draft"
         draft_title: "Call transcript: %{room}"
+        source_label: "Call transcript"
         unknown_speaker: "unknown speaker"
       stage:
         promoted_to_speaker: "You've been made a speaker."
@@ -290,6 +300,14 @@ en:
       memberships:
         add_user: "Add participant"
         remove_user: "Remove participant"
+      agent:
+        invite: "Invite LiveKit agent"
+        name: "Agent name"
+        type_name: "Type a name instead"
+        pick_name: "Choose from the list instead"
+        refresh: "Refresh the agent list"
+        deploy_hint: "Ensure your agent is deployed before adding it to this call."
+        invited: "Agent invited. It will appear when LiveKit connects it. This can take about a minute."
       admin:
         title: "Voice"
         dashboard_title: "Dashboard"
@@ -352,7 +370,7 @@ en:
             room_error: "Could not list participants: %{error}"
             no_rooms: "No live calls are using LiveKit right now."
         rooms_title: "Voice rooms"
-        create_room: "Add room"
+        create_room: "New room"
         edit: "Edit"
         update: "Update"
         create: "Create"
@@ -379,8 +397,8 @@ en:
           max_participants: "Max participants"
           max_participants_help: "Maximum participants allowed (2-50, or 2-200 for Stage rooms)."
           video_enabled: "Video"
-          video_enabled_help: "Allow participants to share their camera and screen in this room."
-          video_enabled_stage_help: "Allow speakers and moderators to share their camera and screen in this room. Listeners can only watch."
+          video_enabled_help: "Allow participants to share their camera and screen in this room, if the site settings allow their groups to."
+          video_enabled_stage_help: "Allow speakers and moderators to share their camera and screen in this room, if the site settings allow their groups to. Listeners can only watch."
           livekit_enabled: "Use media server (SFU)"
           livekit_enabled_help: "Route this room's calls through the site's LiveKit media server instead of the peer-to-peer mesh. A call already in progress is not affected — the room switches when its next call starts."
           chat_channel: "Chat channel"

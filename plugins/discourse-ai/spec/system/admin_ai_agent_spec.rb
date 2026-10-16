@@ -14,6 +14,21 @@ RSpec.describe "Admin AI agent configuration" do
     sign_in(admin)
   end
 
+  it "lets admins require uploaded document search on every reply" do
+    agent = Fabricate(:ai_agent)
+    agent_editor_page.visit_edit(agent)
+    agent_editor_page.select_tool("SearchUploadedDocuments")
+    agent_editor_page.select_tool("SearchUploadedDocuments", forced: true)
+    form.field("forced_tool_count").select(-1)
+    form.submit
+
+    expect(page).to have_content(I18n.t("js.discourse_ai.ai_agent.saved"))
+    agent_editor_page.visit_edit(agent)
+
+    expect(agent_editor_page).to have_forced_tool("Search Uploaded Documents")
+    expect(page).to have_select("Forced tool strategy", selected: "Apply to all replies")
+  end
+
   it "allows creation of a agent" do
     visit "/admin/plugins/discourse-ai/ai-agents"
 
@@ -176,6 +191,7 @@ RSpec.describe "Admin AI agent configuration" do
     agent_editor_page.visit_edit(source_agent).duplicate
 
     expect(agent_editor_page).to have_no_agent_user
+    form.field("enabled").toggle
 
     form.submit
 

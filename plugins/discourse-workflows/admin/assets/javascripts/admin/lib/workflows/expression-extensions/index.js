@@ -1,15 +1,15 @@
 import { i18n } from "discourse-i18n";
-import { buildScope } from "../expression-context";
-import { buildArgumentInfo } from "./argument-info";
-import { buildAutoCloseBraces } from "./auto-close-braces";
-import { buildCompletions } from "./completions";
-import { buildDragDrop } from "./drag-drop";
-import { buildExpressionEvaluation } from "./expression-evaluation";
-import { buildFocusEmptyArea } from "./focus-empty-area";
-import { buildHoverTooltip } from "./hover-tooltip";
-import { buildReferencePills } from "./reference-pills";
-import { buildTheme } from "./theme";
-import { buildValidation } from "./validation";
+import { buildScope } from "../expression-context.js";
+import { buildArgumentInfo } from "./argument-info.js";
+import { buildAutoCloseBraces } from "./auto-close-braces.js";
+import { buildCompletions } from "./completions.js";
+import { buildDragDrop } from "./drag-drop.js";
+import { buildExpressionEvaluation } from "./expression-evaluation.js";
+import { buildFocusEmptyArea } from "./focus-empty-area.js";
+import { buildHoverTooltip } from "./hover-tooltip.js";
+import { buildReferencePills } from "./reference-pills.js";
+import { buildTheme } from "./theme.js";
+import { buildValidation } from "./validation.js";
 
 export default function buildExpressionExtensions(cmParams, domainOpts = {}) {
   const itemPrefix = domainOpts.itemPrefix || "$json";

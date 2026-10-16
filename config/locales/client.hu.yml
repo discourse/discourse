@@ -285,7 +285,6 @@ hu:
       zh_CN:
         name: Kínai (egyszerűsített)
     share:
-      topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "%{postNumber}. bejegyzés, szerző: %{username}"
       close: "bezárás"
       twitter: "Megosztás X-en"
@@ -339,6 +338,12 @@ hu:
     skip_to_last_reply: "Ugrás az utolsó válaszhoz"
     skip_to_top: "Ugrás a tetejére"
     skip_user_nav: "Ugrás a profil tartalmára"
+    reorder:
+      remove: "%{label} eltávolítás"
+      removed: "Eltávolítva %{label}"
+      move_up: "Mozgatás fel"
+      move_down: "Mozgatás le"
+      position: "%{position} / %{total}"
     emails_are_disabled: "Egy adminisztrátor letiltotta a kimenő e-maileket. Semmilyen értesítő e-mail nem lesz elküldve."
     emails_are_disabled_no_smtp: "Minden kimenő e-mail le van tiltva, mivel nincs beállítva SMTP-szerver. Semmiféle e-mailt nem lehet kiküldeni."
     emails_are_disabled_non_staff: "A kimenő e-mailek le vannak tiltva a nem stábtagok számára."
@@ -348,6 +353,7 @@ hu:
     notifications_tracking:
       tooltip: "Értesítési szint: %{level}"
     back_button: "Vissza"
+    confirm_button: "Megerősítés"
     welcome_banner:
       header:
         new_members: "Üdvözöljük, %{preferred_display_name}!"
@@ -462,9 +468,6 @@ hu:
     max_of_count:
       one: "legfeljebb %{count}"
       other: "legfeljebb %{count}"
-    character_count:
-      one: "%{count} karakter"
-      other: "%{count} karakter"
     period_chooser:
       aria_label: "Szűrés időszak szerint"
     related_messages:
@@ -489,18 +492,9 @@ hu:
         use_predefined: "Sablonok böngészése"
         back: "Vissza"
         icebreakers:
-          fun_facts:
-            title: "Milyen érdekességeket tudsz rólad mondani?"
-            body: "Sziasztok! Nagyon örülök, hogy elindíthatom ezt az új közösséget. Kezdésként osszunk meg magunkról egy-egy érdekességet! Kezdem is a sort: imádok túrázni és új ösvényeket felfedezni. Rólatok mit érdemes tudni? Mi az az érdekesség, amit megosztanátok velünk?"
-          coolest_thing_you_have_seen_today:
-            title: "Mi a legmenőbb dolog, amit ma láttál?"
-            body: "Mi a legmenőbb dolog, amit ma láttál vagy tapasztaltál? Bármi lehet, egy gyönyörű naplementétől kezdve egy véletlenszerű kedves gesztusig. Kezdem: Láttam egy kutyát, amint segített egy idős embernek átkelni az úton!"
           introduce_yourself:
             title: "Mutasd be magad"
             body: "Üdv a közösségben! Ismerjük meg egymást. Kérlek mutatkozz be, és mesélj egy kicsit az érdeklődési körödről. Először én kezdem: szenvedélyesen rajongok a technológiáért, és szeretek másokat tanítani!"
-          what_is_your_favorite_food:
-            title: "Mi a kedvenc ételed?"
-            body: "Oszd meg kedvenc ételeidet a közösséggel! Kezdjük: Imádom a pizzát, főleg extra sajttal és pepperonival."
     design_wizard:
       back: "Vissza"
       next: "Következő"
@@ -757,6 +751,10 @@ hu:
       title:
         search: "Üzenet keresése"
         placeholder: "írja ide az üzenet címét, webcímét vagy azonosítóját"
+    dsa_statements:
+      category: "Kategória"
+      category_prompt: "Válasszon kategóriát"
+      saving: "Mentés…"
     review:
       show_more: "Több megjelenítése"
       show_less: "Kevesebb megjelenítése"
@@ -2012,7 +2010,6 @@ hu:
         upload_title: "Saját kép feltöltése"
         image_is_not_a_square: "Figyelmeztetés: a kép vágásra került; a szélesség és a magaság nem volt egyforma."
         logo_small: "Az oldal kis logója. Alapértelmezés szerint használt."
-        use_custom: "Vagy töltsön fel egy egyéni profilképet:"
       change_profile_background:
         title: "A profil borítóképe"
         instructions: "A profil borítóképe középre lesz igazítva, alapértelmezetten 1110 képpontos szélességgel."
@@ -2595,7 +2592,7 @@ hu:
       hide_forever: "nem, köszönöm"
       hidden_for_session: "Rendben, holnap megkérdezzük. Bármikor használhatja a „Bejelentkezés” gombot, hogy fiókot készítsen magának."
       intro: "Üdv! Úgy tűnik, hogy tetszik Önnek a fórumunk, de még nem regisztrált fiókot."
-      value_prop: "Unja már, hogy ugyanazokat a bejegyzéseket görgeti? Ha létrehoz egy fiókot, mindig oda tér vissza, ahol abbahagyta. Egy fiókkal értesítést is kaphat az új válaszokról, könyvjelzőket menthet, és egy kedveléssel megköszönheti másoknak. Mindannyian együtt dolgozhatunk azon, hogy ezt a közösséget nagyszerűvé tegyük. :heart:"
+      value_prop: "Unja már, hogy ugyanazokat a bejegyzéseket görgeti? Ha létrehoz egy fiókot, mindig oda tér vissza, ahol abbahagyta. Egy fiókkal értesítést is kaphat az új válaszokról, könyvjelzőket menthet, és egy kedveléssel megköszönheti másoknak. Mindannyian együtt dolgozhatunk azon, hogy ezt a közösséget nagyszerűvé tegyük."
     offline_indicator:
       no_internet: "Nincs internetkapcsolat."
       refresh_page: "Oldal frissítése"
@@ -3024,8 +3021,7 @@ hu:
       discard: "Elvetés"
       draft_saved: "Vázlat mentve!"
       users_placeholder: "Felhasználók vagy csoportok hozzáadása"
-      title_placeholder: "Mi lesz a témája ennek a beszélgetésnek egy rövid mondatban?"
-      title_placeholder_redesign: "Cím"
+      title_placeholder: "Cím"
       title_or_link_placeholder: "Írja be a címet, vagy illesszen be ide egy hivatkozást"
       edit_reason_placeholder: "Miért szerkeszti?"
       topic_featured_link_placeholder: "Írja be a címmel megjelenített hivatkozást."
@@ -4502,6 +4498,7 @@ hu:
       list: "Kategóriák felsorolása"
       no_description: "Adjon leírást ehhez a kategóriához."
       change_in_category_topic: "Leírás szerkesztése"
+      latest_topics: "Legutóbbi témák"
       description_expand: "Több megjelenítése"
       description_collapse: "Kevesebb megjelenítése"
       already_used: "Ezt a színt már egy másik kategória is használja."
@@ -4794,6 +4791,7 @@ hu:
       with_category: "%{filter} %{category} Témák"
       filter:
         title: "Szűrt eredmények: %{filter}"
+        reset: "alaphelyzet"
         button:
           label: "Szűrő"
       latest:
@@ -4968,9 +4966,6 @@ hu:
       admin:
         title: "Adminisztrátor"
     badges:
-      earned_n_times:
-        one: "Nyerte ezt a jelvényt %{count} idővel"
-        other: "%{count} alkalommal szerezte meg ezt a jelvényt"
       granted_on: "Kiadva %{date}"
       others_count:
         one: "Másoknak %{count} alkalommal megadva"
@@ -5005,11 +5000,11 @@ hu:
       favorite_max_not_reached: "Jelölje ezt a jelvényt kedvencnek"
       favorite_count: "%{count}/%{max} jelvény kedvencnek jelölve"
     download_calendar:
-      title: "Naptár letöltése"
+      title: "Hozzáadás a naptárhoz"
+      calendar: "Naptár"
       save_ics: ".ics fájl letöltése"
       save_google: "Hozzáadás a Google naptárhoz"
       remember: "Ne kérdezze többet"
-      remember_explanation: "(ezt a beállítást a felhasználói beállítások között módosíthatod)"
       download: "Letöltés"
       default_calendar: "Alapértelmezett naptár"
       default_calendar_instruction: "Határozza meg, hogy melyik naptárat kell használni a dátumok mentésekor"
@@ -5747,13 +5742,13 @@ hu:
             block: "Letiltás"
             presets:
               custom: "Egyéni"
+            automatic: "Autómatikus"
           authorizations:
             user: "Felhasználó"
             last_used: "Utoljára használva"
             status: "Állapot"
             actions: "Műveletek"
           activity:
-            rate_limits: "Korlátozások"
             outcome: "Eredmény"
             time: "Idő"
             user: "Felhasználó"
@@ -6336,6 +6331,7 @@ hu:
           series:
             anonymous: "Névtelen"
             crawlers: "Keresőrobotok"
+          crawler_learn_more: "Tudjon meg többet"
         period:
           last_7_days: "Elmúlt 7 nap"
           last_30_days: "Elmúlt 30 nap"
@@ -7271,8 +7267,8 @@ hu:
           upload: "Feltöltés"
           select_component: "Válassz egy összetevőt"
           unsaved_changes_alert: "Még nem mentette el a módosításokat, el akarja dobni őket, és továbblépni?"
-          unsaved_parent_themes: "Nem rendelted hozzá az összetevőket a témákhoz, szeretnél továbblépni?"
           discard: "Elvetés"
+          leave: "Elhagyás"
           stay: "Marad"
           css_html: "Egyéni kód"
           edit_css_html: "Kód szerkesztése"
@@ -8376,13 +8372,14 @@ hu:
           multiselect: "Többszörös kiválasztás"
       site_text:
         description: "Bármelyik szöveget személyre szabhatja a fórumon."
-        search: "A szerkesztendő szöveg keresése"
+        search_label: "Keresés"
+        theme_disabled: "Kikapcsolva"
+        filters: "Szűrők"
+        status:
+          invalid: "Érvénytelen"
         title: "Oldal szövegei"
         edit: "Szerkesztés"
-        revert: "Változtatások visszavonása"
         revert_confirm: "Biztos, hogy visszavonja a változtatásait?"
-        go_back: "Vissza a kereséshez"
-        recommended: "Azt tanácsoljuk, hogy módosítsd a következő szöveget az igényeidnek megfelelően:"
         show_overriden: "Csak a felülírtak megjelenítése"
         show_outdated: "Csak az elavult/érvénytelent jelenítse meg"
         show_untranslated: "Csak a lefordítatlanok megjelenítése"

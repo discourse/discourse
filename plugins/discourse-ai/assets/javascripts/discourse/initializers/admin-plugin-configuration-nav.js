@@ -11,6 +11,8 @@ export default {
       return;
     }
 
+    const siteSettings = container.lookup("service:site-settings");
+
     withPluginApi((api) => {
       api.setAdminPluginIcon(PLUGIN_ID, "discourse-sparkles");
       api.addAdminPluginConfigurationNav(PLUGIN_ID, [
@@ -29,6 +31,15 @@ export default {
           route: "adminPlugins.show.discourse-ai-llms",
           description: "discourse_ai.llms.preconfigured.description",
         },
+        ...(siteSettings.enable_discourse_workflows
+          ? [
+              {
+                label: "discourse_ai.decision_models.short_title",
+                route: "adminPlugins.show.discourse-ai-decision-models",
+                description: "discourse_ai.decision_models.description",
+              },
+            ]
+          : []),
         {
           label: "discourse_ai.secrets.short_title",
           route: "adminPlugins.show.discourse-ai-secrets",

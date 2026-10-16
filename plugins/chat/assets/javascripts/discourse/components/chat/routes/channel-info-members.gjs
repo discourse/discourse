@@ -152,7 +152,7 @@ export default class ChatRouteChannelInfoMembers extends Component {
 
   async debouncedLoad() {
     this.loadingSlider.transitionStarted();
-    await this.members.load({ limit: 20 });
+    await this.members.load({ limit: 20 }).catch(() => {});
     this.loadingSlider.transitionEnded();
   }
 

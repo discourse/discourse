@@ -47,6 +47,14 @@ end
 
 require_relative "lib/chat/engine"
 after_initialize do
+  original_message_bus_group_ids_lookup = MessageBus.group_ids_lookup
+  MessageBus.group_ids_lookup do |env|
+    host = RailsMultisite::ConnectionManagement.host(env)
+    RailsMultisite::ConnectionManagement.with_hostname(host) do
+      Chat.message_bus_group_ids_for(original_message_bus_group_ids_lookup&.call(env))
+    end
+  end
+
   register_seedfu_fixtures(Rails.root.join("plugins/chat/db/fixtures"))
 
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
@@ -434,6 +442,29 @@ after_initialize do
     Chat::AutoLeaveChannels.call(params: { group_id: group.id, event: :group_destroyed })
   end
 
+  homepage_channel = -> { Chat::Channel.find_by(id: SiteSetting.chat_homepage_channel.presence) }
+
+  register_homepage(
+    "chat",
+    name: "chat.homepage_option",
+    path: -> { homepage_channel.call&.relative_url&.delete_prefix(Discourse.base_path) || "/chat" },
+    route: "chat/chat#respond",
+    anonymous: true,
+    enabled: -> { SiteSetting.enable_public_channels },
+    available: ->(guardian:, request:) do
+      channel = homepage_channel.call
+      next false if channel.nil? || channel.archived? || !channel.public_channel?
+      next false if CrawlerDetection.crawler_layout_request?(request)
+
+      if guardian.anonymous?
+        guardian.can_preview_anonymous_public_chat_channel?(channel)
+      else
+        guardian.can_chat? && guardian.user.user_option&.chat_enabled &&
+          guardian.can_preview_chat_channel?(channel)
+      end
+    end,
+  )
+
   register_presence_channel_prefix("chat") do |channel_name|
     next if channel_name != "/chat/online"
     PresenceChannel::Config.new.tap { |config| config.allowed_group_ids = Chat.allowed_group_ids }
@@ -587,7 +618,7 @@ after_initialize do
     {
       create_message: {
         actions: %w[chat/api/channel_messages#create],
-        params: %i[chat_channel_id],
+        path_params: %i[chat_channel_id],
       },
     },
   )
@@ -658,7 +689,7 @@ after_initialize do
       "Lists chat channels followed by the authenticated user, including direct-message channels.",
     implementation: Chat::McpTools::ListChannels,
     output_schema: Chat::McpTools::ListChannels::OUTPUT_SCHEMA,
-    required_scopes: %w[chat:read],
+    required_scopes: Chat::McpTools::ListChannels::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,
@@ -700,7 +731,7 @@ after_initialize do
       additionalProperties: false,
     },
     output_schema: Chat::McpTools::ListMessages::OUTPUT_SCHEMA,
-    required_scopes: %w[chat:read],
+    required_scopes: Chat::McpTools::ListMessages::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,
@@ -734,7 +765,7 @@ after_initialize do
       additionalProperties: false,
     },
     output_schema: Chat::McpTools::CreateMessage::OUTPUT_SCHEMA,
-    required_scopes: %w[chat:write],
+    required_scopes: Chat::McpTools::CreateMessage::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: false,
       destructiveHint: false,

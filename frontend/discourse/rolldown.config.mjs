@@ -74,7 +74,6 @@ export function buildConfig({ devMode } = {}) {
     },
     input: {
       discourse: "discourse.js",
-      vendor: "vendor.js",
       ...(!isProduction || process.env.FORCE_BUILD_TESTS
         ? {
             "test-entrypoint": "tests/test-entrypoint.js",
@@ -83,7 +82,7 @@ export function buildConfig({ devMode } = {}) {
         : undefined),
     },
     output: {
-      minify: isProduction,
+      minify: isProduction || process.env.DISCOURSE_CI_MINIFY === "1",
       dir: "dist",
       sourcemap: true,
       cleanDir: !devMode,
@@ -111,6 +110,26 @@ export function buildConfig({ devMode } = {}) {
       }),
       wrapTestModulesPlugin(),
       discourseChunkNamesPlugin(),
+      {
+        name: "require-relative-import-extensions",
+        resolveId: {
+          filter: { id: /^\.\.?\// },
+          handler(source, importer) {
+            if (
+              !importer ||
+              importer.includes("/node_modules/") ||
+              source.includes("/node_modules/") ||
+              source.includes("?") ||
+              /\.(m?js|c?js|[mc]?ts|gjs|gts|json|s?css|hbs|wasm)$/.test(source)
+            ) {
+              return null;
+            }
+            this.error(
+              `Relative import "${source}" from ${relative(import.meta.dirname, importer)} must include the file extension.`
+            );
+          },
+        },
+      },
       {
         name: "forbid-plugin-imports",
         resolveId: {

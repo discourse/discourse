@@ -48,22 +48,18 @@ module("Integration | ui-kit | DHighlightedCode", function (hooks) {
   });
 
   test("re-highlights the code when it changes", async function (assert) {
-    class State {
-      @tracked code = "def foo; end";
-    }
-
-    const testState = new State();
+    const code = tracked("def foo; end");
 
     await render(
       <template>
-        <DHighlightedCode @code={{testState.code}} @lang="ruby" />
-        {{testState.code}}
+        <DHighlightedCode @code={{code.value}} @lang="ruby" />
+        {{code.value}}
       </template>
     );
 
     assert.dom("code.lang-ruby.hljs .hljs-title").hasText("foo");
 
-    testState.code = "def bar; end";
+    code.value = "def bar; end";
     await settled();
 
     assert.dom("code.lang-ruby.hljs .hljs-title").hasText("bar");

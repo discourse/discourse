@@ -16,7 +16,7 @@ import { module, test } from "qunit";
 import CodeEditor from "discourse/components/code-editor";
 import { capabilities } from "discourse/services/capabilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { I18n } from "discourse-i18n";
+import I18n from "discourse-i18n";
 
 // The editor binds to whichever modifier the platform uses for its commands.
 function pressWithModifier(element, key) {
@@ -99,6 +99,46 @@ module("Integration | Component | code-editor", function (hooks) {
       "one",
       "the escape sequence does not indent"
     );
+  });
+
+  test("Escape stays inside the editor until it has nothing left to close", async function (assert) {
+    const seen = [];
+    const spy = (event) => event.key === "Escape" && seen.push(event);
+    document.documentElement.addEventListener("keydown", spy, {
+      capture: true,
+    });
+
+    try {
+      await render(<template><CodeEditor @value="one" /></template>);
+      const view = find(".codemirror-editor").codemirrorView;
+      view.focus();
+      pressWithModifier(find(".cm-content"), "f");
+      await waitFor(".cm-search");
+      view.focus();
+
+      await triggerKeyEvent(".cm-content", "keydown", "Escape");
+      await triggerKeyEvent(".cm-content", "keydown", "Escape");
+      assert.strictEqual(
+        seen.length,
+        0,
+        "closing search and freeing Tab do not reach the document"
+      );
+
+      await triggerKeyEvent(".cm-content", "keydown", "Escape");
+      assert.strictEqual(seen.length, 1, "a further Escape passes through");
+
+      await triggerKeyEvent(".cm-content", "keydown", 65);
+      await triggerKeyEvent(".cm-content", "keydown", "Escape");
+      assert.strictEqual(
+        seen.length,
+        1,
+        "typing puts Tab back to indenting, so Escape stays inside again"
+      );
+    } finally {
+      document.documentElement.removeEventListener("keydown", spy, {
+        capture: true,
+      });
+    }
   });
 
   test("finds and replaces text inside the editor", async function (assert) {

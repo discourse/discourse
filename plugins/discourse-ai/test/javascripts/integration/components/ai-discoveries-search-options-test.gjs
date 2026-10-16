@@ -1,6 +1,12 @@
 import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
-import { click, render, settled } from "@ember/test-helpers";
+import {
+  click,
+  focus,
+  render,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { formatShortcut } from "discourse/lib/shortcut-format";
 import Category from "discourse/models/category";
@@ -308,6 +314,18 @@ module(
           "the indexed search is what the menu is showing"
         );
       assert
+        .dom(".ai-discoveries-search-options__option.--search")
+        .hasAttribute("aria-pressed", "true", "and reads as pressed");
+      assert
+        .dom(".ai-discoveries-search-options__option.--ask")
+        .hasAttribute("aria-pressed", "false", "while the others do not");
+      assert
+        .dom(".ai-discoveries-search-options__option.--advanced")
+        .doesNotHaveAttribute(
+          "aria-pressed",
+          "advanced search is an action rather than a choice"
+        );
+      assert
         .dom(".ai-discoveries-search-options__option.--advanced")
         .exists("advanced search is available for all topics");
 
@@ -330,6 +348,9 @@ module(
       assert
         .dom(".ai-discoveries-search-options__option.--ask")
         .hasClass("is-active", "asking takes over once it owns the term");
+      assert
+        .dom(".ai-discoveries-search-options__option.--ask")
+        .hasAttribute("aria-pressed", "true", "and is the one pressed");
       assert
         .dom(".ai-discoveries-search-options__option.--search")
         .doesNotHaveClass("is-active", "and the other option steps back");
@@ -886,6 +907,59 @@ module(
         .doesNotExist(
           "and a scope, which has no keybinding, is not offered here"
         );
+    });
+
+    test("the options are one tab stop, walked with the arrow keys", async function (assert) {
+      await render(<template><AiDiscoveriesSearchOptions /></template>);
+
+      assert
+        .dom(".ai-discoveries-search-options")
+        .hasAttribute("role", "toolbar", "the options read as one group");
+      assert
+        .dom(".ai-discoveries-search-options__option[tabindex='0']")
+        .exists({ count: 1 }, "only one option is reachable with Tab");
+      assert
+        .dom(".ai-discoveries-search-options__option.--search")
+        .hasAttribute("tabindex", "0", "and it is the one listed first");
+
+      await focus(".ai-discoveries-search-options__option.--search");
+      await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
+
+      assert
+        .dom(".ai-discoveries-search-options__option.--ask")
+        .isFocused("right moves to the next option");
+      assert
+        .dom(".ai-discoveries-search-options__option.--ask")
+        .hasAttribute("tabindex", "0", "and Tab comes back to it");
+
+      await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
+
+      assert
+        .dom(".ai-discoveries-search-options__option.--advanced")
+        .isFocused("advanced search is part of the group");
+
+      await triggerKeyEvent(document.activeElement, "keydown", "ArrowLeft");
+
+      assert
+        .dom(".ai-discoveries-search-options__option.--ask")
+        .isFocused("left moves back");
+    });
+
+    test("an option joining the group does not add a tab stop", async function (assert) {
+      await render(<template><AiDiscoveriesSearchOptions /></template>);
+
+      this.owner.lookup("service:search").searchContext = {
+        type: "topic",
+        id: 280,
+      };
+      await settled();
+
+      assert
+        .dom(".ai-discoveries-search-options__option.--topic")
+        .exists("the topic scope joins the group");
+      assert
+        .dom(".ai-discoveries-search-options__option[tabindex='0']")
+        .exists({ count: 1 }, "and the group is still a single tab stop");
     });
 
     test("offers the search options before typing", async function (assert) {

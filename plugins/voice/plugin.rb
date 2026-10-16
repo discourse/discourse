@@ -98,6 +98,8 @@ add_admin_route "voice.admin.title", "voice", use_new_show_route: true
 require_relative "lib/voice"
 
 after_initialize do
+  register_stat("voice_users", expose_via_api: true) { Voice::Statistics.about_users }
+
   SeedFu.fixture_paths << Rails.root.join("plugins/voice/db/fixtures").to_s
 
   require_relative "lib/voice/user_extension"
@@ -156,13 +158,32 @@ after_initialize do
     SiteSetting.voice_livekit_room_policy == "per_room" && Voice::Livekit.configured?
   end
 
+  # Gates the room-form media checkbox: with neither capability granted to any
+  # group, a room-level media toggle would decide nothing. The per-user rights
+  # themselves ride on each room's serialization instead.
+  add_to_serializer(:site, :voice_video_available) do
+    SiteSetting.voice_video_allowed_groups.present? ||
+      SiteSetting.voice_screen_share_allowed_groups.present?
+  end
+
   Voice::DefaultRoomSeeder.ensure! if SiteSetting.voice_enabled?
+  Voice::AgentBot.ensure! if SiteSetting.voice_enabled?
+
+  add_to_serializer(:site, :voice_livekit_agent_bot_id) do
+    Voice::AgentBot.user&.id if scope.can_invite_voice_agents? && Voice::AgentBot.available?
+  end
 
   # This can't live in the on(:site_setting_changed) handler below: plugin
   # event handlers are skipped while the plugin is disabled, which silently
   # covers the disabling transition itself.
   on_enabled_change do |_old_value, new_value|
+    if new_value && SiteSetting.voice_badges_enabled
+      Voice::BadgeGranterHooks.enable_all!
+    else
+      Voice::BadgeGranterHooks.disable_all!
+    end
     Voice::DefaultRoomSeeder.ensure! if new_value
+    new_value ? Voice::AgentBot.ensure! : Voice::AgentManager.stop_all!
     clear_all_voice_statuses unless new_value
     refresh_chat_hashtag_configurations
   end
@@ -178,8 +199,11 @@ after_initialize do
   end
 
   on(:site_setting_changed) do |name, _old_value, new_value|
+    if name.to_sym == :voice_livekit_agent_enabled
+      new_value ? Voice::AgentBot.ensure! : Voice::AgentManager.stop_all!
+    end
     if name.to_sym == :voice_badges_enabled
-      if new_value
+      if new_value && SiteSetting.voice_enabled
         Voice::BadgeGranterHooks.enable_all!
       else
         Voice::BadgeGranterHooks.disable_all!

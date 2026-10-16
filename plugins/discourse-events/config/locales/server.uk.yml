@@ -41,6 +41,8 @@ uk:
         ```текст
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Нагадування про подію"
   site_settings:
     map_events_to_color: "Призначити колір для кожного тегу або категорії."
     map_events_title: "Перезаписує «Події» у заголовку бічної панелі «Майбутні події» для кожної категорії."
@@ -83,6 +85,17 @@ uk:
     livestream_embeddable_chat_allowed_paths: "Дозволені шляхи для вбудованого чату прямої трансляції."
     livestream_enable_modal_chat_on_mobile: "Показувати чат прямої трансляції в модальному вікні на мобільному пристрої."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} ось-ось розпочнеться"
+        ongoing: "%{title} триває"
+        after: "%{title} закінчилась"
+      guest: "- %{name}"
+      additional_guests:
+        one: "  та %{count} інший"
+        few: "  та %{count} інші"
+        many: "  та %{count} інші"
+        other: "  та %{count} інші"
     category_type:
       default_calendar_view:
         label: "Стандартний вигляд календаря"

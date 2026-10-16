@@ -46,6 +46,10 @@ zh_TW:
           rsvp_to_event_with_link: "回覆<a href='%{url}'>活動</a>邀請以開始聊天"
           rsvp_body: "在活動前、活動期間及活動後與其他參加者交流。"
       preferences:
+        reminders:
+          preferences:
+            notification: "通知"
+            none: "無"
         all_events: "Discourse 活動－所有活動"
         all_events_description: "所有論壇活動"
         my_events: "Discourse 活動－我的活動"

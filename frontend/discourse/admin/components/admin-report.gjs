@@ -58,15 +58,33 @@ export function updateReportFilters(filters, id, value) {
   return customFilters;
 }
 
+/**
+ * @typedef {import("discourse/admin/components/admin-report-table-cell").ReportTableOptions & {
+ *   chartGrouping?: string,
+ *   hiddenLabels?: string[],
+ *   legendPosition?: string,
+ *   onLegendClick?: (key: string) => void
+ * }} AdminReportOptions
+ */
 export default class AdminReport extends Component {
   @service siteSettings;
 
   @tracked isLoading = false;
+
+  /** @type {string | null} */
   @tracked rateLimitationString = null;
+
+  /** @type {import("discourse/admin/models/report").default | null} */
   @tracked model = null;
   @tracked currentMode = this.args.filters?.mode;
+
+  /** @type {AdminReportOptions | null | undefined} */
   @tracked options = null;
+
+  /** @type {import("moment").Moment | null} */
   @tracked dateRangeFrom = null;
+
+  /** @type {import("moment").Moment | null} */
   @tracked dateRangeTo = null;
   @tracked userHasCustomDates = false;
 

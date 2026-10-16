@@ -81,6 +81,16 @@ RSpec.describe DiscourseAi::Completions::UploadEncoder do
     XML
   end
 
+  describe ".normalize_upload_ids" do
+    it "accepts arrays, JSON and comma separated decimal ids" do
+      expect(
+        [[3, "3", [4]], "[5, 5]", "6, 7", "010", "0x1a", nil].map do |ids|
+          described_class.normalize_upload_ids(ids)
+        end,
+      ).to eq([[3, 4], [5], [6, 7], [10], [], []])
+    end
+  end
+
   it "automatically converts gifs to pngs" do
     upload = UploadCreator.new(gif, "1x1.gif").create_for(Discourse.system_user.id)
     encoded = described_class.encode(upload_ids: [upload.id], max_pixels: MAX_PIXELS)

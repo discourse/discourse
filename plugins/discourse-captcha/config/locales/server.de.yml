@@ -18,7 +18,5 @@ de:
     discourse_captcha_provider: "Wähle einen Captcha-Anbieter aus. Dazu musst du ein Konto bei dem ausgewählten Anbieter haben."
     hcaptcha_site_key: "hCaptcha-Website-Schlüssel aus deinem <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>-Konto"
     hcaptcha_secret_key: "Geheimer hCaptcha-Schlüssel aus deinem <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>-Konto"
-    recaptcha_site_key: "ReCaptcha-Website-Schlüssel aus deinem <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a>-Konto"
-    recaptcha_secret_key: "ReCaptcha-Geheimschlüssel aus deinem <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a>-Konto"
   captcha_verification_failed: "Captcha-Verifizierung fehlgeschlagen"
   captcha_not_configured: "Captcha ist aktiviert, aber nicht richtig konfiguriert. Bitte wende dich an den Administrator der Website."

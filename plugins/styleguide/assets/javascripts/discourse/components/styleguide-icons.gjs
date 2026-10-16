@@ -1,18 +1,16 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { tagName } from "@ember-decorators/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { afterRender } from "discourse/lib/decorators";
 import { REPLACEMENTS } from "discourse/lib/icon-library";
 import discourseLater from "discourse/lib/later";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
-@tagName("")
 export default class StyleguideIcons extends Component {
-  iconIds = [];
+  @tracked iconIds = [];
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
     this.setIconIds();
   }
 
@@ -22,7 +20,7 @@ export default class StyleguideIcons extends Component {
     if (symbols.length > 0) {
       let ids = Array.from(symbols).map((item) => item.id);
       ids.push(...Object.keys(REPLACEMENTS));
-      this.set("iconIds", uniqueItemsFromArray(ids).sort());
+      this.iconIds = uniqueItemsFromArray(ids).sort();
     } else {
       // Let's try again a short time later if there are no svgs loaded yet
       discourseLater(this, this.setIconIds, 1500);

@@ -1,3 +1,5 @@
+const TOO_MANY_REQUESTS = 429;
+
 const _cache = {};
 
 export async function applyInlineOneboxes(inline, ajax, opts) {
@@ -42,6 +44,13 @@ export async function applyInlineOneboxes(inline, ajax, opts) {
         }
       });
     } catch (err) {
+      const rateLimited = (err.jqXHR ?? err).status === TOO_MANY_REQUESTS;
+
+      if (rateLimited) {
+        urls.slice(i).forEach((url) => delete _cache[url]);
+        return;
+      }
+
       // eslint-disable-next-line no-console
       console.error("Inline onebox request failed", err, batch);
     }

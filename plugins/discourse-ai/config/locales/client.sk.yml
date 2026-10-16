@@ -21,6 +21,8 @@ sk:
             title: "Spýtajte sa AI"
         ask_ai:
           title: "Spýtajte sa AI"
+          reports:
+            retry_questions: "Skúsiť znova"
           date: "Dátum"
           outcomes:
             failed: "Nepodarilo sa"
@@ -167,6 +169,13 @@ sk:
         type: "Typ"
         error: "Chyba"
         response: "Odpoveď"
+      discourse_workflows:
+        classify:
+          text: "Text"
+          upload_ids: "Obrázky"
+          name: "Meno"
+          type: "Typ"
+          type_score: "Skóre"
       ai_tool_approval:
         loading: "Prebieha načítavanie..."
         tool: "Akcia"
@@ -572,6 +581,14 @@ sk:
         delete: "Odstrániť"
         embedding: "Vkladám"
         tool: "Nástroj"
+      decision_models:
+        no_preset: "Žiadny"
+        display_name: "Meno"
+        model: "Model"
+        provider: "Poskytovateľ"
+        edit: "Upraviť"
+        delete: "Odstrániť"
+        test: "Spustiť test"
       mcp_servers:
         name: "Meno"
         description: "Popis"
@@ -801,9 +818,23 @@ sk:
         quick_search:
           suffix: "vo všetkých témach a príspevkoch s AI"
       ai_artifact:
+        editor:
+          version: "Verzia"
+          default: "Predvolené"
+          option_on: "Zapnuté"
+          option_off: "Vypnuté"
+          apply: "Použi"
         expand_view_label: "Rozbaliť zobrazenie"
         collapse_view_label: "Ukončiť režim celej obrazovky (tlačidlo ESC alebo Späť)"
         click_to_run_label: "Spustiť artefakt"
+        share: "Zdieľať"
+        create_link: "Vytvorte odkaz"
+        copied: "Skopírované do schránky"
+        copy_link: "Kopírovať odkaz"
+        copy_embed: "Kopírovať vloženie"
+        new_tab: "Zobraziť na novej karte"
+        filter_all: "Všetky"
+        filter_standalone: "Samostatný"
       ai_bot:
         title: "AI bot"
         llm: "Model:"

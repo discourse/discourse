@@ -3,6 +3,7 @@ import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import AuthTokenModal from "discourse/components/modal/auth-token";
+import ForgotPassword from "discourse/components/modal/forgot-password";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
@@ -20,6 +21,7 @@ export default class SecurityController extends Controller {
   @service router;
   @service currentUser;
 
+  /** @type {string | null} */
   passwordProgress = null;
   subpageTitle = i18n("user.preferences_nav.security");
   showAllAuthTokens = false;
@@ -131,8 +133,18 @@ export default class SecurityController extends Controller {
       this.set("passwordProgress", i18n("user.change_password.in_progress"));
       return this.model
         .changePassword()
-        .then(() => {
-          // password changed
+        .then((result) => {
+          if (result.email_code) {
+            this.set("passwordProgress", null);
+            this.modal.show(ForgotPassword, {
+              model: {
+                codeSent: true,
+                emailOrUsername: this.model.email || this.model.username,
+              },
+            });
+            return;
+          }
+
           this.setProperties({
             changePasswordProgress: false,
             passwordProgress: i18n("user.change_password.success"),

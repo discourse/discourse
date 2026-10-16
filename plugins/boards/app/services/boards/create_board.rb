@@ -22,7 +22,7 @@ module Boards
     private
 
     def can_manage(guardian:)
-      guardian.can_create_boards_board?
+      guardian.can_create_board?
     end
 
     def create_board(guardian:)

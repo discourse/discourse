@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::CreateCategory do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:admin)
 
@@ -18,6 +18,25 @@ RSpec.describe DiscourseAi::Agents::Tools::CreateCategory do
     described_class.new(params, bot_user: bot_user, llm: llm, context: context)
   end
 
+  it "puts the name in the heading and omits the body for name-only creation" do
+    category_tool = tool(name: "Cool stuff", reason: "Setup")
+    title = Nokogiri::HTML5.fragment(Chat::Message.cook(category_tool.approval_title))
+    expect(title.at_css("code").text).to eq("Cool stuff")
+    expect(category_tool.approval_question).to eq("Do you want to create this category?")
+    expect(category_tool.approval_show_description?).to eq(false)
+    expect(category_tool.approval_parameters).to be_empty
+  end
+
+  it "previews valid color parameters without treating arbitrary values as colors" do
+    category_tool =
+      tool(name: "Cool stuff", color: "#4CBB17", text_color: "invalid", reason: "Setup")
+
+    expect(category_tool.approval_parameters).to include(
+      { label: "color", value: "#4CBB17", color: "4CBB17" },
+      { label: "text_color", value: "invalid" },
+    )
+  end
+
   it "creates a category with a description and returns its id and url" do
     result =
       tool(name: "What we do", description: "All about our mission", reason: "Site setup").invoke
@@ -28,17 +47,22 @@ RSpec.describe DiscourseAi::Agents::Tools::CreateCategory do
     expect(category.name).to eq("What we do")
     expect(category.user_id).to eq(admin.id)
     expect(category.description).to include("All about our mission")
-    expect(result[:url]).to eq(category.url)
+    expect(result[:url]).to eq("#{Discourse.base_url}/c/what-we-do/#{category.id}")
   end
 
-  it "creates a subcategory under the given parent" do
-    parent = Fabricate(:category)
+  it "creates a subcategory with a full URL on a subfolder installation" do
+    set_subfolder "/forum"
+    parent = Fabricate(:category, name: "Support")
 
     result =
       tool(name: "How to use the forum", parent_category_id: parent.id, reason: "Setup").invoke
 
     expect(result[:status]).to eq("success")
-    expect(Category.find(result[:category_id]).parent_category_id).to eq(parent.id)
+    category = Category.find(result[:category_id])
+    expect(category.parent_category_id).to eq(parent.id)
+    expect(result[:url]).to eq(
+      "#{Discourse.base_url_no_prefix}/forum/c/support/how-to-use-the-forum/#{category.id}",
+    )
   end
 
   it "applies custom colors, stripping a leading # from hex codes" do

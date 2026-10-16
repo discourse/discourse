@@ -138,7 +138,6 @@ et:
     date_range_picker:
       apply: "Rakenda"
     share:
-      topic_html: 'Teema: <span class="topic-title">%{topicTitle}</span>'
       close: "Sulge"
       facebook: "Jaga Facebookis"
       email: "Jaga e-kirjaga"
@@ -176,6 +175,9 @@ et:
         enabled: "Tehtud bänneriks %{when}. Seda kuvatakse iga lehe ülaosas, kuni kasutaja selle eemaldab."
         disabled: "Bänner eemaldatud %{when}. Seda ei kuvata enam iga lehe ülaosas."
     topic_admin_menu: "teema toimingud"
+    reorder:
+      removed: "Eemaldatud %{label}"
+      position: "%{position} %{total}-st"
     emails_are_disabled: "Kõik väljuvad meilid on administraatori poolt blokeeritud. Ühtegi teavitust meili teel ei saadeta."
     software_update_prompt:
       dismiss: "Ignoreeri"
@@ -250,9 +252,6 @@ et:
     max_of_count:
       one: "maksimum %{count}-st"
       other: "maksimum %{count}-st"
-    character_count:
-      one: "%{count} sümbol"
-      other: "%{count} sümbolit"
     related_messages:
       title: "Seotud sõnumid"
       pill: "Seotud sõnumid"
@@ -394,6 +393,9 @@ et:
       title:
         search: "Otsi teemat"
         placeholder: "kirjuta siia teema pealkiri, URL või ID"
+    dsa_statements:
+      category: "Kategooriad"
+      saving: "Salvestan..."
     review:
       explain:
         total: "Kokku"
@@ -1538,8 +1540,7 @@ et:
       create_whisper: "Sosistamine"
       create_shared_draft: "Loo jagatud mustand"
       edit_shared_draft: "Muuda jagatud mustandit"
-      title_placeholder: "Kuidas seda vestlust ühe lausega kirjeldada?"
-      title_placeholder_redesign: "Pealkiri"
+      title_placeholder: "Pealkiri"
       title_or_link_placeholder: "Kirjuta pealkiri või kleebi link siia"
       edit_reason_placeholder: "Miks sa seda muudad?"
       topic_featured_link_placeholder: "Järgi pealkirjas näidatud viidet."
@@ -2292,6 +2293,7 @@ et:
       delete_confirm: "Kas oled kindel, et soovid selle kategooria kustutada?"
       delete_error: "Kategooria kustutamisel tekkis viga."
       no_description: "Palun lisa sellele kategooriale kirjeldus."
+      latest_topics: "Viimased teemad"
       already_used: "Teine kategooria juba kasutab seda värvi"
       security: "Turve"
       permissions:
@@ -2460,6 +2462,7 @@ et:
       with_topics: "%{filter} teemat"
       with_category: "%{filter} %{category} teemat"
       filter:
+        reset: "nulli"
         button:
           label: "Filter"
       latest:
@@ -2580,9 +2583,6 @@ et:
       admin:
         title: "Adminn"
     badges:
-      earned_n_times:
-        one: "Teenis selle märgise %{count} kord"
-        other: "Teenis selle märgise %{count} korda"
       granted_on: "Märgistatud %{date}"
       title: Märgised
       badge_count:
@@ -2861,6 +2861,7 @@ et:
             block: "Blokeeri"
             presets:
               custom: "Individuaalne"
+            automatic: "Automaatne"
           authorizations:
             user: "Kasutaja"
             status: "Staatus"
@@ -3090,6 +3091,7 @@ et:
         site_traffic:
           series:
             anonymous: "Anonüümne"
+          crawler_learn_more: "Uuri veel"
         period:
           custom: "Individuaalne"
         reports:
@@ -3461,6 +3463,7 @@ et:
           uploads: "Üleslaadimised"
           add_upload: "Lisa üleslaadimine"
           upload: "Laadi üles"
+          leave: "Lahku"
           installed: "Paigaldatud"
           install_popular: "Populaarsed"
           about_theme: "Teave"
@@ -3944,12 +3947,11 @@ et:
           confirm: "Kinnitus"
           dropdown: "Rippmenüü"
       site_text:
-        search: "Otsi teksi, mida soovid muuta"
+        search_label: "Otsi"
+        theme_disabled: "Välja lülitatud"
+        filters: "Filtrid"
         edit: "Muuda"
-        revert: "Pööra tagasi muudatused"
         revert_confirm: "Kas oled kindel, et soovid enda muudatused tagasi pöörata?"
-        go_back: "Tagasi otsingusse"
-        recommended: "Soovitame järgnevat teksti oma vajadustele vastavalt kohandada:"
         show_overriden: "Näita vaid käsitsi muudetuid"
         outdated:
           dismiss: "Ignoreeri"

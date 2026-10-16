@@ -38,6 +38,24 @@ module DiscourseMcp
       McpOauthAuthorization.find(authorization_id)
     end
 
+    def ensure_scopes!(required)
+      required = Array(required)
+      return if has_scopes?(required)
+
+      raise Error.new(
+              "Insufficient scope",
+              code: -32_001,
+              http_status: 403,
+              data: {
+                required_scopes: required,
+              },
+              headers: {
+                "WWW-Authenticate" =>
+                  Authenticator.challenge(scope: required.join(" "), error: "insufficient_scope"),
+              },
+            )
+    end
+
     def has_scopes?(required)
       Array(required).all? { |scope| scopes.include?(scope.to_s) }
     end

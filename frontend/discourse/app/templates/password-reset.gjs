@@ -91,6 +91,7 @@ export default <template>
             <DPasswordField
               autocomplete="new-password"
               autofocus="autofocus"
+              class="change-password-form__password"
               id="new-account-password"
               type={{if @controller.maskPassword "password" "text"}}
               @capsLockOn={{@controller.capsLockOn}}

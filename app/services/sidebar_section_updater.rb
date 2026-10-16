@@ -13,7 +13,10 @@ class SidebarSectionUpdater
   end
 
   def update!
+    was_public = nil
+
     @sidebar_section.with_lock do
+      was_public = @sidebar_section.public?
       @sidebar_section.assign_attributes(
         @section_params.merge(sidebar_urls_attributes: @links_params),
       )
@@ -22,7 +25,7 @@ class SidebarSectionUpdater
       update_link_order
     end
 
-    publish_public_update if @sidebar_section.public?
+    publish_public_update if was_public || @sidebar_section.public?
 
     @sidebar_section
   end

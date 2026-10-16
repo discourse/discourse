@@ -9,7 +9,7 @@ import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
-import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
+import ToggleChannelMembershipButton from "./toggle-channel-membership-button.gjs";
 
 export default <template>
   {{#if @channel}}
@@ -59,7 +59,7 @@ export default <template>
             <ToggleChannelMembershipButton
               @channel={{@channel}}
               @options={{hash
-                leaveClass="btn-transparent --danger chat-channel-card__leave-btn"
+                leaveClass="btn-default btn-small chat-channel-card__leave-btn"
                 labelType="short"
               }}
             />

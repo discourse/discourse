@@ -31,16 +31,16 @@ import {
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
-import ChatComposerThread from "./chat/composer/thread";
-import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
-import ChatSelectionManager from "./chat/selection-manager";
-import ChatChannelPreviewCard from "./chat-channel-preview-card";
-import Message from "./chat-message";
-import ChatMessagesContainer from "./chat-messages-container";
-import ChatMessagesScroller from "./chat-messages-scroller";
-import ChatSkeleton from "./chat-skeleton";
-import ChatThreadHeading from "./chat-thread-heading";
-import ChatUploadDropZone from "./chat-upload-drop-zone";
+import ChatComposerThread from "./chat/composer/thread.js";
+import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow.gjs";
+import ChatSelectionManager from "./chat/selection-manager.gjs";
+import ChatChannelPreviewCard from "./chat-channel-preview-card.gjs";
+import Message from "./chat-message.gjs";
+import ChatMessagesContainer from "./chat-messages-container.gjs";
+import ChatMessagesScroller from "./chat-messages-scroller.gjs";
+import ChatSkeleton from "./chat-skeleton.gjs";
+import ChatThreadHeading from "./chat-thread-heading.gjs";
+import ChatUploadDropZone from "./chat-upload-drop-zone.gjs";
 
 export default class ChatThread extends Component {
   @service capabilities;
@@ -425,7 +425,10 @@ export default class ChatThread extends Component {
       return;
     }
 
-    const message = this.messagesManager.findFirstMessageOfDay(new Date(date));
+    const message = this.messagesManager.findFirstMessageOfDay(
+      new Date(date),
+      this.currentUser.user_option.timezone
+    );
     if (message.firstOfResults && this.messagesLoader.canLoadMorePast) {
       this.fetchMessages({ target_date: date, direction: FUTURE });
     } else {
@@ -482,7 +485,26 @@ export default class ChatThread extends Component {
   }
 
   @action
-  resendStagedMessage() {}
+  resendStagedMessage(stagedMessage) {
+    this.chatThreadPane.sending = true;
+
+    stagedMessage.error = null;
+
+    this.chatApi
+      .sendMessage(this.args.thread.channel.id, {
+        cooked: stagedMessage.cooked,
+        message: stagedMessage.message,
+        upload_ids: stagedMessage.uploads.map((upload) => upload.id),
+        staged_id: stagedMessage.id,
+        thread_id: this.args.thread.id,
+      })
+      .catch((error) => {
+        stagedMessage.setSendError(error);
+      })
+      .finally(() => {
+        this.chatThreadPane.sending = false;
+      });
+  }
 
   async #sendNewMessage(message) {
     if (this.chatThreadPane.sending) {
@@ -507,7 +529,6 @@ export default class ChatThread extends Component {
           staged_id: message.id,
           upload_ids: message.uploads.map((upload) => upload.id),
           thread_id: message.thread.id,
-          client_created_at: message.createdAt.toISOString(),
           ...extractCurrentTopicInfo(this),
         }
       );
@@ -560,13 +581,7 @@ export default class ChatThread extends Component {
   #onSendError(stagedId, error) {
     const stagedMessage =
       this.args.thread.messagesManager.findStagedMessage(stagedId);
-    if (stagedMessage) {
-      if (error.jqXHR?.responseJSON?.errors?.length) {
-        stagedMessage.error = error.jqXHR.responseJSON.errors[0];
-      } else {
-        stagedMessage.error = "network_error";
-      }
-    }
+    stagedMessage?.setSendError(error);
 
     this.resetComposerMessage();
   }

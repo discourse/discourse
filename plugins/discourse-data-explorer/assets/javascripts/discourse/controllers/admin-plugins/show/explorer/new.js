@@ -36,9 +36,9 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked schema = null;
 
   @tracked groups = null;
-
+  @tracked availableTags = [];
   @tracked aiGroupIds = [];
-
+  @tracked aiTags = [];
   @tracked hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
 
   @tracked manualSql = "SELECT 1";
@@ -51,8 +51,7 @@ export default class AdminPluginsExplorerNew extends Controller {
 
   @tracked view = "sql";
 
-  manualFormData = { name: "", description: "", groupIds: [] };
-
+  manualFormData = { name: "", description: "", groupIds: [], tags: [] };
   _teardownAiGeneration = null;
 
   get previewDisabled() {
@@ -148,7 +147,12 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   @action
-  async create({ name, description, groupIds }) {
+  updateAiTags(value) {
+    this.aiTags = value;
+  }
+
+  @action
+  async create({ name, description, groupIds, tags }) {
     try {
       this.loading = true;
       const result = await this.store
@@ -157,6 +161,7 @@ export default class AdminPluginsExplorerNew extends Controller {
           description: description?.trim(),
           sql: this.manualSql,
           group_ids: groupIds,
+          tags,
         })
         .save();
       this.toasts.success({
@@ -277,6 +282,7 @@ export default class AdminPluginsExplorerNew extends Controller {
           description: this.generatedDescription,
           sql: this.generatedSql,
           group_ids: this.aiGroupIds,
+          tags: this.aiTags,
         })
         .save();
       this.toasts.success({
@@ -324,11 +330,18 @@ export default class AdminPluginsExplorerNew extends Controller {
     this.mode = rememberedMode() ?? "ai";
     this.schema = null;
     this.groups = null;
+    this.availableTags = [];
     this.aiGroupIds = [];
+    this.aiTags = [];
     this.hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
     this.manualSql = "SELECT 1";
     this.loading = false;
-    this.manualFormData = { name: "", description: "", groupIds: [] };
+    this.manualFormData = {
+      name: "",
+      description: "",
+      groupIds: [],
+      tags: [],
+    };
     this.previewLoading = false;
     this.previewResults = null;
     this.showPreview = false;

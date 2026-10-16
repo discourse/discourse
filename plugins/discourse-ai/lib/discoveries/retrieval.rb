@@ -296,7 +296,7 @@ module DiscourseAi
               search_metadata,
               "category_id" => topic.category_id,
               "username" => post.user&.username,
-              "name" => post.user&.name,
+              "name" => SiteSetting.enable_names? ? post.user&.name : nil,
               "avatar_template" => post.user&.avatar_template,
               "author_is_staff" => post.user&.staff? || false,
               "is_topic_op" => post.post_number == 1,

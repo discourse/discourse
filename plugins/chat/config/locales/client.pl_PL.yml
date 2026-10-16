@@ -347,6 +347,8 @@ pl_PL:
       message_too_long: "Wiadomość jest zbyt długa, wiadomości muszą mieć maksymalnie %{count} znaków."
       retry_staged_message:
         title: "Błąd sieci"
+        rate_limited_title: "Zbyt wiele wiadomości"
+        rate_limited_waiting: "Za dużo wiadomości, zaczekaj chwilę"
         action: "Wyślij ponownie?"
       bookmark_message: "Zakładka"
       bookmark_message_edit: "Edytuj zakładkę"
@@ -614,6 +616,8 @@ pl_PL:
         original_channel: 'Oryginalnie wysłane w <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Cytat z czatu skopiowany do schowka"
         default_thread_title: "Wątek"
+        transcript_label: "Transkrypcja"
+        transcript_region: "Transkrypcja z %{channel}"
       notification_levels:
         never: "Nigdy"
         mention: "Tylko dla wzmianek"
@@ -793,6 +797,8 @@ pl_PL:
         notify_moderators: "Ta wiadomość wymaga uwagi personelu z innego powodu niewymienionego powyżej."
       flagging:
         action: "Oflaguj wiadomość"
+      anonymous_flagging:
+        description: "Aby zgłosić nielegalną treść, skontaktuj się z <a href='mailto:%{email}?subject=Nielegalne treści: %{channel_title}&body=Ta wiadomość na czacie %{url} zawiera nielegalne treści.'>%{email}</a>"
       emoji_picker:
         favorites: "Często używane"
         smileys_&_emotion: "Buźki i emocje"
@@ -963,15 +969,24 @@ pl_PL:
         "action:chat_approval": "Zatwierdzenie czatu"
         "trigger:chat_message_created": "Utworzona wiadomość czatu"
       node_descriptions:
-        "action:send_chat_message": "Wyślij wiadomość do kanału czatu"
+        "action:send_chat_message": "Wyślij wiadomość na kanał czatu lub wiadomość bezpośrednią do jednego lub większej liczby użytkowników"
         "action:chat_approval": "Wyślij prośbę o zatwierdzenie na kanał czatu i czekaj na odpowiedź"
         "trigger:chat_message_created": "Wyzwala się, gdy zostanie utworzona nowa wiadomość czatu"
       chat_message_created:
         channel_id: "Kanał"
         channel_id_description: "Pozostaw puste, aby włączyć czat dla wszystkich kanałów."
       send_chat_message:
+        target: "Wyślij do"
+        targets:
+          channel: "Kanał"
+          user: "Użytkownicy (każdy z osobna wiadomość)"
+          group: "Grupa (jedna wiadomość bezpośrednia do wszystkich)"
         channel_id: "Kanał"
+        target_usernames: "Odbiorcy"
+        target_usernames_description: "Użytkownicy do wysłania wiadomości. Użyj wyrażenia takiego jak $trigger.user.username, aby wybrać użytkowników z każdego elementu."
         message: "Wiadomość"
+        actor_username: "Nadawca"
+        actor_username_description: "Wiadomości bezpośrednie wysyłane są w imieniu tego użytkownika, a odbiorcy widzą je jako napisane przez niego."
       chat_approval:
         message: "Wiadomość"
         buttons: "Przyciski"

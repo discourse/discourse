@@ -13,6 +13,11 @@ bs_BA:
             topic_id:
               label: ID teme
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Obavijest"
+            none: "Ništa"
       disable_holiday: "Onemogući"
       enable_holiday: "Omogući"
       date: "Datum"

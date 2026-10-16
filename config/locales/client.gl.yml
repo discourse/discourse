@@ -135,7 +135,6 @@ gl:
     date_range_picker:
       apply: "Aplicar"
     share:
-      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "pechar"
       facebook: "Compartir no Facebook"
       email: "Enviar por correo"
@@ -174,10 +173,14 @@ gl:
         enabled: "Faga disto un báner %{when}. Aparecerá na banda superior de todas as páxinas ata que sexa desbotado polo usuario."
         disabled: "Eliminou este báner %{when}. Xa non aparecerá máis na banda superior de todas as páxinas."
     topic_admin_menu: "accións do tema"
+    reorder:
+      removed: "Retirou ao %{label} o"
+      position: "%{position} de %{total}"
     emails_are_disabled: "Todos as mensaxes de correo saíntes foron desactivadas globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     software_update_prompt:
       dismiss: "Desbotar"
     back_button: "Volver"
+    confirm_button: "Confirmar"
     welcome_banner:
       header:
         anonymous_members: "Dámoslle a benvida a %{site_name}!"
@@ -257,9 +260,6 @@ gl:
     max_of_count:
       one: "máx. de %{count}"
       other: "máx. de %{count}"
-    character_count:
-      one: "%{count} carácter"
-      other: "%{count} caracteres"
     related_messages:
       title: "Mensaxes relacionadas"
       pill: "Mensaxes relacionadas"
@@ -404,6 +404,8 @@ gl:
       title:
         search: "Buscar unha mensaxe"
         placeholder: "escriba o título da mensaxe, url ou id aquí"
+    dsa_statements:
+      category: "Categoría"
     review:
       order_by: "Ordenar por"
       in_reply_to: "en resposta a"
@@ -1904,8 +1906,7 @@ gl:
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar o borrador compartido"
       discard: "Desbotar"
-      title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
-      title_placeholder_redesign: "Título"
+      title_placeholder: "Título"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
       edit_reason_placeholder: "Por que o está editando?"
       topic_featured_link_placeholder: "Escriba a ligazón amosada co título."
@@ -2865,6 +2866,7 @@ gl:
       delete_confirm: "Confirma a eliminación desta categoría?"
       delete_error: "Produciuse un erro elimando esta categoría."
       no_description: "Engada unha descrición a esta categoría."
+      latest_topics: "Últimos temas"
       already_used: "Esta cor usouna outra categoría"
       security: "Seguranza"
       security_add_group: "Engadir grupo"
@@ -3058,6 +3060,7 @@ gl:
       with_topics: "%{filter} temas"
       with_category: "Temas de %{filter} %{category}"
       filter:
+        reset: "restabelecer"
         button:
           label: "Filtro"
       latest:
@@ -3189,9 +3192,6 @@ gl:
       admin:
         title: "Administrador"
     badges:
-      earned_n_times:
-        one: "Gañou esta insignia %{count} vez"
-        other: "Gañou esta insignia %{count} veces"
       granted_on: "Concedida %{date}"
       title: Insignias
       allow_title: "Pode usar esta insignia como título"
@@ -3536,6 +3536,7 @@ gl:
             block: "Bloquear"
             presets:
               custom: "Personalizado"
+            automatic: "Automático"
           authorizations:
             user: "Usuario"
             status: "Estado"
@@ -3807,6 +3808,7 @@ gl:
           series:
             anonymous: "Anónimo"
             crawlers: "Rastrexadores"
+          crawler_learn_more: "Saber máis"
         period:
           custom: "Personalizado"
         reports:
@@ -4304,8 +4306,8 @@ gl:
             must_be_unique: "O nome da variábel non é correcto. Debe ser exclusivo."
           upload: "Cargar"
           unsaved_changes_alert: "Aínda non gardou os cambios. Quere desbotalos e continuar?"
-          unsaved_parent_themes: "Aínda non asignou o compoñente aos temas. Quere continuar?"
           discard: "Desbotar"
+          leave: "Abandonar"
           stay: "Deixar"
           delete_upload_confirm: "Eliminar esta carga? (Pode ser que o tema CSS deixe de funcionar!)"
           component_on_themes: "Incluír compoñentes nestes temas"
@@ -5002,12 +5004,11 @@ gl:
           confirm: "Confirmación"
           dropdown: "Despregábel"
       site_text:
-        search: "Busque o texto que quere editar"
+        search_label: "Buscar"
+        theme_disabled: "Desactivado"
+        filters: "Filtros"
         edit: "Editar"
-        revert: "Reverter os cambios"
         revert_confirm: "Confirma a reversión dos cambios?"
-        go_back: "Volver á busca"
-        recommended: "Recomendamos personalizar o seguinte texto para axeitalo ás súas necesidades:"
         show_overriden: "Amosar só os cambios"
         locale: "Idioma:"
         more_than_50_results: "Hai máis de 50 resultados. Restrinxa a busca."

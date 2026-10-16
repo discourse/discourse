@@ -20,6 +20,11 @@ da:
               label: Emne ID
     discourse_events:
       title: "Hændelser"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notifikation"
+            none: "Ingen"
       on_holiday: "På Ferie"
       disable_holiday: "Deaktiver"
       enable_holiday: "Aktiver"

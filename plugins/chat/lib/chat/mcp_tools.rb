@@ -3,6 +3,7 @@
 module Chat
   module McpTools
     class ListChannels
+      REQUIRED_SCOPES = %w[chat:read].freeze
       OUTPUT_SCHEMA =
         DiscourseMcp::OutputSchema.object(
           channels: {
@@ -35,6 +36,7 @@ module Chat
     end
 
     class ListMessages
+      REQUIRED_SCOPES = %w[chat:read].freeze
       OUTPUT_SCHEMA =
         DiscourseMcp::OutputSchema.object(
           channel_id: DiscourseMcp::OutputSchema::INTEGER,
@@ -98,6 +100,7 @@ module Chat
     end
 
     class CreateMessage
+      REQUIRED_SCOPES = %w[chat:write].freeze
       OUTPUT_SCHEMA =
         DiscourseMcp::OutputSchema.object(
           id: DiscourseMcp::OutputSchema::INTEGER,

@@ -21,9 +21,25 @@ export function addGlobalNotice(text, id, options = {}) {
 
 const GLOBAL_NOTICE_DISMISSED_PROMPT_KEY = "dismissed-global-notice-v2";
 
+/**
+ * @typedef {object} NoticeOptions
+ * @property {boolean} [dismissable]
+ * @property {string | null} [html]
+ * @property {string} [level]
+ * @property {boolean} [persistentDismiss]
+ * @property {((notice: Notice) => void) | null} [onDismiss]
+ * @property {((notice: Notice) => boolean) | null} [visibility]
+ * @property {import("moment").Duration | null} [dismissDuration]
+ */
+
 class Notice extends EmberObject {
+  /** @type {string | import("@ember/template").TrustedHTML | null} */
   text = null;
+
+  /** @type {string | null} */
   id = null;
+
+  /** @type {NoticeOptions | null} */
   options = null;
 
   init() {
@@ -59,6 +75,7 @@ export default class GlobalNotice extends Component {
   @service("logsNotice") logsNoticeService;
   @service router;
 
+  /** @type {Notice | null} */
   logNotice = null;
 
   constructor() {
@@ -125,6 +142,15 @@ export default class GlobalNotice extends Component {
             ? i18n("read_only_mode.enabled")
             : i18n("read_only_mode.enabled_anonymous"),
           id: "alert-read-only",
+        })
+      );
+    } else if (this.siteSettings.site_archived) {
+      notices.push(
+        Notice.create({
+          text: this.currentUser
+            ? i18n("site_archived.enabled")
+            : i18n("site_archived.enabled_anonymous"),
+          id: "alert-site-archived",
         })
       );
     }

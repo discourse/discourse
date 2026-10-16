@@ -1,9 +1,9 @@
-import { WORKFLOW_VARIABLE_MIME } from "../expression-context";
+import { WORKFLOW_VARIABLE_MIME } from "../expression-context.js";
 import {
   itemPrefixAt,
   liquidPathForVariable,
   openDelimiterAt,
-} from "../liquid-context";
+} from "../liquid-context.js";
 
 export function buildLiquidDragDrop({ cmView }, { perItem }) {
   const { dropCursor, ViewPlugin } = cmView;

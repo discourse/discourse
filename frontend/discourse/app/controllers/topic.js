@@ -23,7 +23,11 @@ import JumpToPost from "discourse/components/modal/jump-to-post";
 import PermanentlyDeleteConfirmModal from "discourse/components/modal/permanently-delete-confirm";
 import { MIN_POSTS_COUNT } from "discourse/components/topic-map/topic-map-summary";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import {
+  isRateLimitError,
+  popupAjaxError,
+  rateLimitWaitSeconds,
+} from "discourse/lib/ajax-error";
 import {
   addUniqueValueToArray,
   removeValueFromArray,
@@ -108,8 +112,14 @@ export default class TopicController extends Controller {
   @tracked model;
 
   @tracked multiSelect = false;
+
+  /** @type {boolean | null} */
   @tracked hasScrolled = null;
+
+  /** @type {string | null} */
   @tracked translationLocale = null;
+
+  /** @type {string | null} */
   @tracked translationTitle = null;
   @tracked editingTopicLocalization = false;
   @autoTrackedArray bookmarks = [];
@@ -118,22 +128,48 @@ export default class TopicController extends Controller {
   queryParams = TOPIC_QUERY_PARAMS;
 
   editingTopic = false;
+
+  /** @type {string | null} */
   enteredAt = null;
+
+  /** @type {number | null | undefined} */
   enteredIndex = null;
   retrying = false;
   userTriggeredProgress = null;
+
+  /** @type {string | null} */
   username_filters = null;
+
+  /** @type {number | string | null} */
   replies_to_post_number = null;
+
+  /** @type {string | null} */
   filter = null;
+
+  /** @type {string | null} */
   sort = null;
+
+  /** @type {string | number | null} */
   context = null;
   collapseReplies = false;
   quoteState = new QuoteState();
+
+  /** @type {number | null} */
   currentPostId = null;
+
+  /** @type {number | null | undefined} */
   userLastReadPostNumber = null;
+
+  /** @type {number | null} */
   highestPostNumber = null;
+
+  /** @type {Promise<{ id: number, topic_id: number, locale: string, title: string, fancy_title: string }> | null} */
   _localizationFetchPromise = null;
+
+  /** @type {string | null} */
   _originalTranslationTitle = null;
+
+  /** @type {number | null} */
   _progressIndex = null;
   _retryInProgress = false;
   _retryRateLimited = false;
@@ -142,6 +178,7 @@ export default class TopicController extends Controller {
   init() {
     super.init(...arguments);
 
+    this.appEvents.on("post:highlight", this, "_highlightPost");
     this.appEvents.on("post:show-revision", this, "_showRevision");
     this.appEvents.on("post:created", this, () =>
       this._removeDeleteOnOwnerReplyBookmarks()
@@ -150,6 +187,7 @@ export default class TopicController extends Controller {
 
   willDestroy() {
     super.willDestroy(...arguments);
+    this.appEvents.off("post:highlight", this, "_highlightPost");
     this.appEvents.off("post:show-revision", this, "_showRevision");
   }
 
@@ -914,6 +952,11 @@ export default class TopicController extends Controller {
         } else {
           opts.reply = data.reply;
         }
+
+        if (Composer.isEditDraft(data)) {
+          opts.draft = { ...data, reply: opts.reply };
+          opts.topic = topic;
+        }
       } else if (quotedText) {
         opts.quote = quotedText;
       }
@@ -1604,35 +1647,28 @@ export default class TopicController extends Controller {
 
     if (this._retryInProgress) {
       discourseLater(() => {
-        this.retryOnRateLimit(times, promise, topicId);
+        this.retryOnRateLimit(times, promise, topicId)?.catch(() => {});
       }, 100);
       return;
     }
 
     this._retryInProgress = true;
 
-    promise()
+    return promise()
       .catch((e) => {
-        const xhr = e.jqXHR;
-        if (
-          xhr &&
-          xhr.status === 429 &&
-          xhr.responseJSON &&
-          xhr.responseJSON.extras &&
-          xhr.responseJSON.extras.wait_seconds
-        ) {
-          let waitSeconds = xhr.responseJSON.extras.wait_seconds;
-          if (waitSeconds < 5) {
-            waitSeconds = 5;
-          }
-
-          this._retryRateLimited = true;
-
-          discourseLater(() => {
-            this._retryRateLimited = false;
-            this.retryOnRateLimit(times - 1, promise, topicId);
-          }, waitSeconds * 1000);
+        if (!isRateLimitError(e)) {
+          throw e;
         }
+
+        this._retryRateLimited = true;
+
+        discourseLater(
+          () => {
+            this._retryRateLimited = false;
+            this.retryOnRateLimit(times - 1, promise, topicId)?.catch(() => {});
+          },
+          rateLimitWaitSeconds(e) * 1000
+        );
       })
       .finally(() => {
         this._retryInProgress = false;
@@ -1755,7 +1791,7 @@ export default class TopicController extends Controller {
               this._newPostsInStream = postIds.concat(this._newPostsInStream);
               throw e;
             });
-        });
+        })?.catch(() => {});
 
         if (this.get("currentUser.id") !== data.user_id) {
           this.documentTitle.incrementBackgroundContextCount();
@@ -1905,6 +1941,12 @@ export default class TopicController extends Controller {
     }
   }
 
+  _highlightPost(postNumber, options = {}) {
+    if (options.jump !== false) {
+      this.model?.postStream?.focusPostOnRender(postNumber);
+    }
+  }
+
   _showRevision(postNumber, revision) {
     const post = this.model.get("postStream").postForPostNumber(postNumber);
 
@@ -2016,7 +2058,7 @@ export default class TopicController extends Controller {
     this.set("editingTopic", true);
   }
 
-  _openComposerForEdit(topic, post) {
+  async _openComposerForEdit(topic, post) {
     let editingSharedDraft = false;
     let draftsCategoryId = this.get("site.shared_drafts_category_id");
     if (draftsCategoryId && draftsCategoryId === topic.get("category.id")) {
@@ -2041,7 +2083,20 @@ export default class TopicController extends Controller {
       opts.action === composerModel?.action &&
       opts.draftKey === composerModel?.draftKey;
 
-    return editingSamePost ? composer.unshrink() : composer.open(opts);
+    if (editingSamePost) {
+      return composer.unshrink();
+    }
+
+    const draftData = await Draft.get(opts.draftKey);
+    const data = draftData.draft && JSON.parse(draftData.draft);
+
+    if (Composer.isEditDraft(data) && data.postId === post.id) {
+      opts.draft = data;
+      opts.draftSequence = draftData.draft_sequence;
+      opts.topic = topic;
+    }
+
+    return composer.open(opts);
   }
 
   async _openComposerForEditTranslation(topic, post) {

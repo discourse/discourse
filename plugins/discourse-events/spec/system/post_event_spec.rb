@@ -148,16 +148,15 @@ describe "Post event" do
       expect(composer).to have_value(/end=2024-06-03/)
     end
 
-    context "when showLocalTime is set and the event crosses midnight relative to the viewer",
-            timezone: "Australia/Brisbane" do
+    context "when showLocalTime is set and the event crosses midnight relative to the viewer" do
       it "renders the preview badge in the event timezone, not the viewer's" do
-        # 2025-09-07 22:30 Europe/Paris == 2025-09-08 06:30 Australia/Brisbane,
-        # so without showLocalTime the viewer would see "Sep 8" in the badge.
+        # 2025-09-07 00:30 Europe/Paris == 2025-09-06 22:30 UTC,
+        # so without showLocalTime the viewer would see "Sep 6" in the badge.
         # With showLocalTime, the preview must stay anchored to the event timezone.
         visit("/new-topic")
         composer.fill_title("Local time preview test")
         composer.fill_content <<~MD
-          [event start='2025-09-07 22:30' timezone='Europe/Paris' showLocalTime='true' status='public']
+          [event start='2025-09-07 00:30' timezone='Europe/Paris' showLocalTime='true' status='public']
           [/event]
         MD
 
@@ -208,7 +207,7 @@ describe "Post event" do
     end
   end
 
-  context "when showing local time", timezone: "Australia/Brisbane" do
+  context "when showing local time" do
     it "correctly shows month/day" do
       page.driver.with_playwright_page do |pw_page|
         pw_page.clock.install(time: Time.new(2025, 6, 5, 22, 0, 0))
@@ -216,7 +215,7 @@ describe "Post event" do
 
       title = "My FR test meetup event"
       raw = <<~MD
-        [event showLocalTime='true' start='2025-09-07 17:30' timezone='Europe/Paris']
+        [event showLocalTime='true' start='2025-09-07 00:30' timezone='Europe/Paris']
         [/event]
       MD
       post = PostCreator.create(admin, title:, raw:)
@@ -378,20 +377,27 @@ describe "Post event" do
     end
   end
 
-  it "shows '-' for expired recurring events instead of dates" do
-    title = "An expired recurring event"
+  it "keeps showing the last occurrence of an expired recurring event" do
+    freeze_time Time.utc(2026, 8, 31)
     raw = <<~MD
-      [event start='2024-01-01 10:00' recurrenceUntil='2025-07-31' recurrence='every_week']
+      [event start='2026-09-01 10:00' end='2026-09-01 11:00' recurrence='every_week' recurrenceUntil='2026-09-22 23:59']
       [/event]
     MD
-    post = PostCreator.create!(admin, title:, raw:)
+    post = PostCreator.create!(admin, title: "An expired recurring event", raw:)
+    PostCreator.create!(admin, topic_id: post.topic_id, raw: "Minutes of the last meeting")
 
+    [1, 8, 15, 22].each do |day|
+      freeze_time Time.utc(2026, 9, day, 11, 1)
+      Jobs::DiscourseCalendar::MonitorEventDates.new.execute({})
+    end
+
+    freeze_time Time.utc(2026, 9, 24)
     visit(post.topic.url)
 
-    expect(page).to have_css(".discourse-post-event")
-    expect(page).to have_css(".event-date .month", text: "-")
-    expect(page).to have_css(".event-date .day", text: "-")
-    expect(page).to have_css(".event-dates", text: "-")
+    expect(page).to have_css(".event-date .month", text: "SEP")
+    expect(page).to have_css(".event-date .day", text: "22")
+    expect(page).to have_css(".event-dates .discourse-local-date")
+    expect(page).to have_css("#post_2", text: "Minutes of the last meeting")
   end
 
   context "with DST handling for recurring events" do
@@ -417,7 +423,7 @@ describe "Post event" do
         post = PostCreator.create!(admin, title:, raw:)
 
         event = DiscourseEvents::Events::Event.find_by(post:)
-        event.set_next_date
+        event.set_next_recurrent_event_date
 
         sign_in(viewer)
 

@@ -1,12 +1,35 @@
 # frozen_string_literal: true
 
 module DiscourseMcp
+  module Scopes
+    PROFILE_READ = "mcp:profile:read"
+    PROFILE_WRITE = "mcp:profile:write"
+    CATEGORIES_READ = "mcp:categories:read"
+    CATEGORIES_WRITE = "mcp:categories:write"
+    CONTENT_READ = "mcp:content:read"
+    CONTENT_WRITE = "mcp:content:write"
+    DRAFTS_READ = "mcp:drafts:read"
+    DRAFTS_WRITE = "mcp:drafts:write"
+    PRIVATE_MESSAGES_READ = "mcp:private-messages:read"
+    PRIVATE_MESSAGES_WRITE = "mcp:private-messages:write"
+    MODERATION_READ = "mcp:moderation:read"
+    MODERATION_WRITE = "mcp:moderation:write"
+    SITE_SETTINGS_READ = "mcp:site-settings:read"
+    SITE_SETTINGS_WRITE = "mcp:site-settings:write"
+    THEMES_READ = "mcp:themes:read"
+    THEMES_WRITE = "mcp:themes:write"
+    GROUPS_READ = "mcp:groups:read"
+    GROUPS_WRITE = "mcp:groups:write"
+    USERS_READ = "mcp:users:read"
+    USERS_WRITE = "mcp:users:write"
+  end
+
   PROTOCOL_VERSION = "2026-07-28"
   LEGACY_PROTOCOL_VERSION = "2025-11-25"
   SUPPORTED_PROTOCOL_VERSIONS = [PROTOCOL_VERSION, LEGACY_PROTOCOL_VERSION].freeze
   JSONRPC_VERSION = "2.0"
   SERVER_NAME = "discourse"
-  INITIAL_SCOPE = "mcp:profile:read"
+  INITIAL_SCOPE = Scopes::PROFILE_READ
 
   class Error < StandardError
     attr_reader :code, :data, :http_status, :headers

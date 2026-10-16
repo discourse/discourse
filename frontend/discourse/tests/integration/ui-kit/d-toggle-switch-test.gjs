@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
@@ -51,5 +51,29 @@ module("Integration | ui-kit | DToggleSwitch", function (hooks) {
     });
 
     assert.dom(".d-toggle-switch__checkbox-label").hasText("bar");
+  });
+
+  test("it names the switch with its label", async function (assert) {
+    await render(
+      <template>
+        <DToggleSwitch @state={{false}} @translatedLabel="bar" />
+      </template>
+    );
+
+    assert
+      .dom(".d-toggle-switch__checkbox")
+      .hasAria(
+        "labelledby",
+        find(".d-toggle-switch__checkbox-label").id,
+        "the switch is announced with its visible label"
+      );
+  });
+
+  test("it leaves an unlabelled switch to its caller", async function (assert) {
+    await render(<template><DToggleSwitch @state={{false}} /></template>);
+
+    assert
+      .dom(".d-toggle-switch__checkbox")
+      .doesNotHaveAttribute("aria-labelledby");
   });
 });

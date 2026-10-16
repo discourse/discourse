@@ -254,34 +254,49 @@ export default class VoiceLivekitStatus extends Component {
             {{#if this.status.configured}}
               <h4>{{i18n "voice.admin.dashboard.livekit.rooms_title"}}</h4>
               {{#if this.roomRows.length}}
-                <table class="d-admin-table voice-livekit-status__rooms">
-                  <thead>
+                <table class="d-table voice-livekit-status__rooms">
+                  <thead class="d-table__header">
                     <tr>
-                      <th>{{i18n "voice.admin.dashboard.livekit.room"}}</th>
-                      <th>{{i18n
+                      <th class="d-table__header-cell">{{i18n
+                          "voice.admin.dashboard.livekit.room"
+                        }}</th>
+                      <th class="d-table__header-cell">{{i18n
                           "voice.admin.dashboard.livekit.discourse_participants"
                         }}</th>
-                      <th>{{i18n
+                      <th class="d-table__header-cell">{{i18n
                           "voice.admin.dashboard.livekit.livekit_participants"
                         }}</th>
-                      <th>{{i18n
+                      <th class="d-table__header-cell">{{i18n
                           "voice.admin.dashboard.livekit.room_status"
                         }}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {{#each this.roomRows as |row|}}
-                      <tr class="d-admin-row__content">
-                        <td class="d-admin-row__overview">{{row.name}}</td>
-                        <td class="d-admin-row__detail">
+                      <tr class="d-table__row">
+                        <td class="d-table__cell --overview">{{row.name}}</td>
+                        <td class="d-table__cell --detail">
+                          <div class="d-table__mobile-label">
+                            {{i18n
+                              "voice.admin.dashboard.livekit.discourse_participants"
+                            }}
+                          </div>
                           {{row.presenceCount}}
                         </td>
-                        <td class="d-admin-row__detail">
+                        <td class="d-table__cell --detail">
+                          <div class="d-table__mobile-label">
+                            {{i18n
+                              "voice.admin.dashboard.livekit.livekit_participants"
+                            }}
+                          </div>
                           {{if row.probed row.livekitCount "—"}}
                         </td>
                         <td
-                          class="d-admin-row__detail voice-livekit-status__room-diff"
+                          class="d-table__cell --detail voice-livekit-status__room-diff"
                         >
+                          <div class="d-table__mobile-label">
+                            {{i18n "voice.admin.dashboard.livekit.room_status"}}
+                          </div>
                           {{#if row.error}}
                             <span class="--error">
                               {{dIcon "circle-xmark"}}

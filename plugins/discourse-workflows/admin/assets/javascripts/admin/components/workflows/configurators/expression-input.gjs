@@ -8,23 +8,23 @@ import discourseLater from "discourse/lib/later";
 import {
   schemaFieldsForNodeInput,
   schemaFieldsForNodeOutput,
-} from "../../../lib/workflows/data-preview";
-import buildExpressionExtensions from "../../../lib/workflows/expression-extensions";
+} from "../../../lib/workflows/data-preview.js";
+import buildExpressionExtensions from "../../../lib/workflows/expression-extensions/index.js";
 import {
   inputIndexForConnection,
   nodeOutputJsonPath,
   outputIndexForConnection,
-} from "../../../lib/workflows/expression-paths";
-import { schemaFieldsForItems } from "../../../lib/workflows/schema-fields";
+} from "../../../lib/workflows/expression-paths.js";
+import { schemaFieldsForItems } from "../../../lib/workflows/schema-fields.js";
 import {
   ancestorOutputNodes,
   inputConnectionsForNode,
   previousNodeForConnection,
   resolveDeclaredOutputSchemas,
-} from "../../../lib/workflows/schema-graph";
-import ExpressionPreview from "../variable/expression-preview";
-import VariableInput from "../variable/input";
-import ReferencePropertyPicker from "../variable/reference-property-picker";
+} from "../../../lib/workflows/schema-graph.js";
+import ExpressionPreview from "../variable/expression-preview.gjs";
+import VariableInput from "../variable/input.gjs";
+import ReferencePropertyPicker from "../variable/reference-property-picker.gjs";
 
 const REFERENCE_PICKER_IDENTIFIER = "workflows-reference-picker";
 
@@ -133,7 +133,8 @@ export default class ExpressionInput extends Component {
       inputFields,
       ancestorNodes,
       siteSettings: this.siteSettings,
-      workflowVars: this.workflowsNodeTypes.workflowVars,
+      globalVars: this.workflowsNodeTypes.workflowVars,
+      workflowVariables: session?.variables,
       nodes: graph.nodes,
       itemPrefix,
       workflowId: session?.workflowId,
@@ -218,6 +219,16 @@ export default class ExpressionInput extends Component {
   }
 
   @action
+  labelEditor(view) {
+    if (this.args.inputId) {
+      view.contentDOM.id = this.args.inputId;
+    }
+    if (this.args.inputLabel) {
+      view.contentDOM.setAttribute("aria-label", this.args.inputLabel);
+    }
+  }
+
+  @action
   registerWrapper(element) {
     this.wrapperElement = element;
   }
@@ -274,6 +285,7 @@ export default class ExpressionInput extends Component {
         @onChange={{this.handleChange}}
         @onFocusIn={{this.handleFocusIn}}
         @onFocusOut={{this.handleFocusOut}}
+        @onSetup={{this.labelEditor}}
         @value={{this.displayValue}}
       />
     </div>

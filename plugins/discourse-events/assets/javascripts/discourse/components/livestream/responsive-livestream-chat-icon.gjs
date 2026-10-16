@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import MobileLivestreamChatIcon from "./mobile-livestream-chat-icon";
+import MobileLivestreamChatIcon from "./mobile-livestream-chat-icon.gjs";
 
 export default class ResponsiveLivestreamChatIcon extends Component {
   @service embeddableChat;
