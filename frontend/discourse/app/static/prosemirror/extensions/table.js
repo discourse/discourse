@@ -293,7 +293,10 @@ function createBodyRows(tbody, startIndex, maxColumns, schema) {
   return bodyRows;
 }
 
-/** Line breaks and whitespace alone don't make a table worth keeping. */
+/**
+ * Pasted and quoted HTML often carries empty tables. Whitespace and line
+ * breaks don't count as content.
+ */
 function hasContent(table) {
   let found = false;
   table.descendants((node) => {
