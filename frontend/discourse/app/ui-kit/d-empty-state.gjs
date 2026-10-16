@@ -7,12 +7,17 @@ const DEmptyState = <template>
   <div
     class="empty-state__container
       {{if @identifier (concat '--' @identifier)}}
-      {{if @svgContent '--with-image' '--text-only'}}"
+      {{if (or @svgContent @icon) '--with-image' '--text-only'}}"
+    ...attributes
   >
     <div class="empty-state">
       {{#if @svgContent}}
         <div class="empty-state__image">
           {{@svgContent}}
+        </div>
+      {{else if @icon}}
+        <div class="empty-state__image --icon">
+          {{dIcon @icon}}
         </div>
       {{/if}}
 

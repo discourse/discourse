@@ -64,6 +64,11 @@ export interface DButtonSignature<P = undefined> {
     // Actions / events
     /** Passed to `@action` as its first argument. */
     actionParam?: P;
+    /**
+     * Runs `@action` inside the click instead of deferring it, so the handler
+     * keeps the click's transient user activation.
+     */
+    immediate?: boolean;
     onKeyDown?: (event: KeyboardEvent) => void;
 
     // Navigation
@@ -213,6 +218,8 @@ export default class DButton<P = undefined> extends Component<
   /**
    * Binds `@action` to this click: `@actionParam`, plus the event when
    * `@forwardEvent` is set. Returns nothing when `@action` holds no handler.
+   * A `{ value }` handler is called as a method when the closure runs, so it
+   * keeps its receiver and a `.value` replaced before a deferred run wins.
    */
   #bindAction(event: Event): (() => void) | undefined {
     const args = this.args;
@@ -241,19 +248,19 @@ export default class DButton<P = undefined> extends Component<
 
   _triggerAction(event: Event) {
     const { action: actionVal, route, routeModels } = this.args;
-    const isIOS = this.capabilities?.isIOS;
 
     if (actionVal || route) {
       if (actionVal) {
         const invoke = this.#bindAction(event);
 
         if (invoke) {
-          if (isIOS) {
-            // Don't optimise INP in iOS
-            // it results in focus events not being triggered
+          // `next()` defers the handler so the browser can paint first (INP).
+          // Two cases must run inside the dispatch instead: iOS, where the
+          // deferral stops focus events firing, and handlers needing the
+          // click's transient user activation, which does not survive it.
+          if (this.args.immediate || this.capabilities?.isIOS) {
             invoke();
           } else {
-            // Using `next()` to optimise INP
             next(invoke);
           }
         }
