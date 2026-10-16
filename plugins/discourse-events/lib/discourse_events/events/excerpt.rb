@@ -53,7 +53,6 @@ module DiscourseEvents
         dates
       end
 
-      # an all-day event starting and ending on one date reads as a single day
       def same_day?(starts_at, ends_at)
         return false if ends_at.blank?
         Date.parse(starts_at) == Date.parse(ends_at)

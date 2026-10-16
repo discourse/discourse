@@ -4,8 +4,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DiscoursePostEvent from "discourse/plugins/discourse-events/discourse/components/discourse-post-event";
 
-// Composer previews have no post model, so the event is fetched by topic id.
-// Non-event topics (and the loading state) keep the plain onebox.
 export default class DiscoursePostEventOneboxPreview extends Component {
   @service discoursePostEventApi;
 
@@ -28,13 +26,12 @@ export default class DiscoursePostEventOneboxPreview extends Component {
 
   <template>
     {{#if this.event}}
-      <div class="discourse-post-event--preview">
-        <DiscoursePostEvent
-          @event={{this.event}}
-          @linkToPost={{true}}
-          @readOnly={{true}}
-        />
-      </div>
+      <DiscoursePostEvent
+        class="discourse-post-event--preview"
+        @event={{this.event}}
+        @linkToPost={{true}}
+        @readOnly={{true}}
+      />
     {{else}}
       {{this.fallback}}
     {{/if}}

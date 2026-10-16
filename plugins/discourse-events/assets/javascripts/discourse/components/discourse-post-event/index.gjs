@@ -268,7 +268,7 @@ export default class DiscoursePostEvent extends Component {
 
   <template>
     {{#let this.event as |event|}}
-      <div class="discourse-post-event">
+      <div class="discourse-post-event" ...attributes>
         <div class="discourse-post-event-widget">
           {{#if event}}
             <Image

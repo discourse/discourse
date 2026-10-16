@@ -63,8 +63,7 @@ acceptance("Event onebox", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
     await fillIn(".d-editor-input", `${url}\n\nEditable text`);
-    // the onebox is fetched after the preview is decorated; the card appears
-    // on the next preview update, once the cached onebox is cooked inline
+    // the decorator sees the onebox only after the next preview update
     await waitFor(".d-editor-preview aside.quote");
     await fillIn(".d-editor-input", `${url}\n\nEditable text!`);
     await waitFor(".d-editor-preview .discourse-post-event-widget");
@@ -91,12 +90,6 @@ acceptance("Event onebox", function (needs) {
     assert
       .dom(".onebox-wrapper .discourse-post-event-widget .name")
       .hasText(event.name);
-    assert
-      .dom(".onebox-wrapper")
-      .hasStyle(
-        { whiteSpace: "normal" },
-        "the card wrapper collapses editor whitespace"
-      );
     assert.strictEqual(
       eventRequests,
       1,
@@ -126,9 +119,12 @@ acceptance("Event onebox", function (needs) {
     await click(".composer-toggle-switch");
 
     assert
-      .dom(".onebox-wrapper aside.quote")
-      .exists("the rich editor keeps the server onebox");
-    assert.dom(".onebox-wrapper .discourse-post-event-widget").doesNotExist();
+      .dom(".ProseMirror aside.quote")
+      .hasStyle(
+        { whiteSpace: "normal" },
+        "the rich editor keeps the server onebox, without editor whitespace"
+      );
+    assert.dom(".ProseMirror .discourse-post-event-widget").doesNotExist();
   });
 
   test("published event oneboxes retain the interactive event card", async function (assert) {
