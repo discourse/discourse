@@ -23,6 +23,34 @@ RSpec.describe DiscourseWorkflows::NodeType do
     expect(overriding.reject(&:output_schema_resolver)).to be_empty
   end
 
+  it "requires every node without a user-defined output to declare it" do
+    user_defined_output = %w[
+      action:code
+      action:data_table
+      action:form
+      action:modal
+      action:set_fields
+      action:split_out
+      action:sql
+      action:workflow_call
+      flow:sticky_note
+      trigger:form
+      trigger:manual
+      trigger:workflow_call
+    ]
+
+    undeclared =
+      DiscourseWorkflows::Registry
+        .nodes(include_disabled_plugins: true)
+        .select do |node_class|
+          next false if user_defined_output.include?(node_class.identifier)
+          next false if node_class.singleton_class.instance_methods(false).include?(:output_schemas)
+          Array(node_class.description.fetch(:output_contracts)).empty?
+        end
+
+    expect(undeclared.map(&:identifier)).to be_empty
+  end
+
   it "preserves declarations through nodes that only forward or reorder items" do
     node_classes = [
       DiscourseWorkflows::Nodes::Log::V1,
