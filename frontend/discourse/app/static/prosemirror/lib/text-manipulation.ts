@@ -872,7 +872,10 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       $from.sameParent($to) &&
       $from.parent.isTextblock &&
       $from.parentOffset === 0 &&
-      $to.parentOffset === $to.parent.content.size;
+      $to.parentOffset === $to.parent.content.size &&
+      $from
+        .node(-1)
+        .canReplace($from.index(-1), $from.indexAfter(-1), doc.content);
 
     return wholeTextblock
       ? tr.replaceWith($from.before(), $to.after(), doc.content)

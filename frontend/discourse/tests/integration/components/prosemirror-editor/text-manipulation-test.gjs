@@ -650,6 +650,33 @@ module(
       assert.dom(".ProseMirror blockquote p").hasText("quoted");
     });
 
+    test("keeps a fully selected table cell when wrapping it as a block", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "| a | b |\n|---|---|\n| one | two |");
+      const { view } = state.textManipulation;
+      view.dispatch(
+        view.state.tr.setSelection(TextSelection.create(view.state.doc, 14, 17))
+      );
+
+      state.textManipulation.applySurroundSelection(
+        "[wrap=note]",
+        "[/wrap]",
+        "wrap_text"
+      );
+
+      const rowSizes = [];
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "table_row") {
+          rowSizes.push(node.childCount);
+        }
+      });
+      assert.true(
+        rowSizes.every((size) => size === 2),
+        "every row keeps both cells"
+      );
+      assert.strictEqual(countNodes(state, "wrap_block"), 1);
+    });
+
     test("selects the placeholder of a block inserted after a paragraph", async function (assert) {
       const state = await setupEditor();
       setContent(state, "hello world");
