@@ -145,7 +145,7 @@
   - plugins/discourse-patreon/connectors/admin-user-details/patreon
   - plugins/poll/modal/poll-breakdown
   - plugins/poll/poll-breakdown-option
-- [#44615](https://github.com/discourse/discourse/pull/44615) ✅
+- [#44615](https://github.com/discourse/discourse/pull/44615) ☑️
   - search-result-entry
 - [#44660](https://github.com/discourse/discourse/pull/44660)
   - admin/report-filters/bool
@@ -158,3 +158,14 @@
   - categories-only
   - navigation-item
   - plugins/discourse-patreon/connectors/topic-above-footer-buttons/patreon
+- [#44687](https://github.com/discourse/discourse/pull/44687)
+  - admin/admin-penalty-post-action
+  - admin/admin-penalty-reason
+  - admin/screened-ip-address-form
+  - d-document
+  - group-membership-button
+  - groups-form-interaction-fields
+  - user-notification-schedule
+  - user-notification-schedule-day
+  - plugins/discourse-cakeday/connectors/user-custom-preferences/user-date-of-birth-input
+  - plugins/discourse-subscriptions/payment-options
