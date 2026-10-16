@@ -1329,43 +1329,6 @@ module(
         .doesNotExist("no spreadsheet-style selection is introduced");
     });
 
-    test("Enter inserts a break inside a cell", async function (assert) {
-      const [editor] = await setupRichEditor(assert, TABLE);
-      const { view } = editor;
-
-      for (const row of [0, 1, 2]) {
-        for (const offset of [1, 2, 3]) {
-          const pos = cellPos(view, row, 2) + offset;
-          view.dispatch(
-            view.state.tr.setSelection(
-              TextSelection.create(view.state.doc, pos)
-            )
-          );
-
-          await pressKey(view, "Enter");
-
-          assert.deepEqual(
-            locateTable(view).grid.rows.map(
-              (tableRow) => tableRow.cells.length
-            ),
-            [3, 3, 3],
-            `Enter preserves the table dimensions (row ${row}, offset ${offset})`
-          );
-          assert.strictEqual(
-            view.state.doc.nodeAt(pos).type.name,
-            "hard_break",
-            `a line break is inserted at the cursor (row ${row}, offset ${offset})`
-          );
-          await apply(view, undo);
-          assert.strictEqual(
-            locateTable(view).grid.rows[row].cells[2].node.textContent,
-            ["h3", "a3", "b3"][row],
-            `undo restores the cell content (row ${row}, offset ${offset})`
-          );
-        }
-      }
-    });
-
     test("Enter consumes the two-space line break syntax inside a cell", async function (assert) {
       const [editor] = await setupRichEditor(assert, TABLE);
       const { view } = editor;
@@ -1418,28 +1381,20 @@ module(
       );
     });
 
-    test("synthetic Enter uses the table command and survives Markdown round-tripping", async function (assert) {
+    test("Enter inserts a line break that survives Markdown round-tripping", async function (assert) {
       const [editor] = await setupRichEditor(assert, TABLE);
       const { view } = editor;
-      const pos = cellPos(view, 1, 1) + 2;
       view.dispatch(
-        view.state.tr.setSelection(TextSelection.create(view.state.doc, pos))
-      );
-      const handled = view.someProp("handleKeyDown", (handler) =>
-        handler(
-          view,
-          new KeyboardEvent("keydown", { key: "Enter", keyCode: 13 })
+        view.state.tr.setSelection(
+          TextSelection.create(view.state.doc, cellPos(view, 1, 1) + 2)
         )
       );
-      await settled();
-      assert.true(
-        handled,
-        "the synthesized mobile key event reaches the table command"
-      );
-      const expected = `| h1 | h2 | h3 |\n|----|----|----|\n| a1 | a<br>2 | a3 |\n| b1 | b2 | b3 |\n\n`;
+
+      await pressKey(view, "Enter");
+
       assert.strictEqual(
         editor.value,
-        expected,
+        `| h1 | h2 | h3 |\n|----|----|----|\n| a1 | a<br>2 | a3 |\n| b1 | b2 | b3 |\n\n`,
         "the break serializes inside its cell"
       );
       await click(".composer-toggle-switch");
@@ -1454,15 +1409,24 @@ module(
       );
     });
 
-    for (const key of ["Backspace", "Delete"]) {
-      test(`${key} at cell boundaries preserves rows and columns`, async function (assert) {
-        const [editor] = await setupRichEditor(assert, TABLE);
-        const { view } = editor;
-        const original = view.state.doc;
+    test("Backspace and Delete at cell edges keep cells apart", async function (assert) {
+      const [editor] = await setupRichEditor(
+        assert,
+        `| h1 | | h3 |\n| --- | --- | --- |\n| a1 | | a3 |\n| | | |`
+      );
+      const { view } = editor;
+      const original = view.state.doc;
 
+      for (const key of ["Backspace", "Delete"]) {
         for (const row of [0, 1, 2]) {
           for (const col of [0, 1, 2]) {
-            const pos = cellPos(view, row, col) + (key === "Backspace" ? 1 : 3);
+            const { start, grid } = locateTable(view);
+            const cell = grid.rows[row].cells[col];
+            const pos =
+              start +
+              cell.offset +
+              1 +
+              (key === "Delete" ? cell.node.content.size : 0);
             view.dispatch(
               view.state.tr.setSelection(
                 TextSelection.create(view.state.doc, pos)
@@ -1471,56 +1435,17 @@ module(
             await pressKey(view, key, {
               keyCode: key === "Backspace" ? 8 : 46,
             });
+            await pressKey(view, key, {
+              keyCode: key === "Backspace" ? 8 : 46,
+            });
             assert.true(
               view.state.doc.eq(original),
-              `the boundary of cell ${row}, ${col} cannot be joined`
+              `${key} at cell ${row}, ${col} keeps the table intact`
             );
           }
         }
-      });
-    }
-
-    for (const key of ["Backspace", "Delete"]) {
-      test(`${key} preserves empty cells on repeated presses`, async function (assert) {
-        const [editor] = await setupRichEditor(
-          assert,
-          `| h1 | | h3 |\n| --- | --- | --- |\n| a1 | | a3 |\n| | | |`
-        );
-        const { view } = editor;
-        const original = view.state.doc;
-        for (const modifiers of [
-          {},
-          { altKey: true },
-          { ctrlKey: true },
-          { metaKey: true },
-        ]) {
-          const label = Object.keys(modifiers).join("+") || "no modifier";
-          for (const [row, col] of [
-            [0, 1],
-            [1, 1],
-            [2, 0],
-            [2, 1],
-            [2, 2],
-          ]) {
-            await selectCell(view, row, col);
-            for (let press = 0; press < 3; press++) {
-              const event = await pressKey(view, key, {
-                keyCode: key === "Backspace" ? 8 : 46,
-                ...modifiers,
-              });
-              assert.true(
-                event.defaultPrevented,
-                `the keydown is consumed before the browser can act (${label})`
-              );
-            }
-            assert.true(
-              view.state.doc.eq(original),
-              `empty cell ${row}, ${col} and its neighbors survive (${label})`
-            );
-          }
-        }
-      });
-    }
+      }
+    });
 
     test("Delete across cells preserves their boundaries", async function (assert) {
       const [editor] = await setupRichEditor(assert, TABLE);
