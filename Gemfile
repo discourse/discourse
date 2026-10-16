@@ -198,10 +198,6 @@ gem "rack-mini-profiler", require: ["enable_rails_patches"]
 
 gem "pitchfork", require: false
 
-# Used by discourse-prometheus to collect socket queue stats.
-# Was previously a transitive dependency of the unicorn gem.
-gem "raindrops", require: false, platform: :ruby
-
 gem "rbtrace", require: false, platform: :mri
 
 # required for feed importing and embedding
