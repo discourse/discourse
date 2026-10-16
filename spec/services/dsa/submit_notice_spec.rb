@@ -116,9 +116,10 @@ RSpec.describe Dsa::SubmitNotice do
     it "reuses the saved notice after a receipt queue failure" do
       Jobs.stubs(:enqueue).returns("queued")
       Jobs.stubs(:enqueue).with(:dsa_notice_receipt, anything).raises(IOError, "queue unavailable")
-      expect(result).to fail_with_exception(IOError)
-      topic_id = result.notice.post.topic.id
-      reference = result.notice.reference
+      expect { result }.to raise_error(IOError)
+      notice = Dsa::Notice.find(submission_id: params[:submission_id])
+      topic_id = notice.post.topic.id
+      reference = notice.reference
       Jobs.unstub(:enqueue)
 
       retry_result = nil
@@ -151,8 +152,8 @@ RSpec.describe Dsa::SubmitNotice do
       params[:explanation] += "\nEvidence\u2002copied\u202ffrom\u3000a listing."
       Jobs.stubs(:enqueue).returns("queued")
       Jobs.stubs(:enqueue).with(:dsa_notice_receipt, anything).raises(IOError, "queue unavailable")
-      expect(result).to fail_with_exception(IOError)
-      reference = result.notice.reference
+      expect { result }.to raise_error(IOError)
+      reference = Dsa::Notice.find(submission_id: params[:submission_id]).reference
       Jobs.unstub(:enqueue)
 
       retry_result = nil
@@ -173,11 +174,6 @@ RSpec.describe Dsa::SubmitNotice do
       expect { result }.not_to change(Topic, :count)
       expect(result).to fail_to_find_a_model(:notice)
       expect(Jobs::DsaNoticeReceipt.jobs).to be_empty
-    end
-
-    it "rejects service callers while the feature is disabled" do
-      SiteSetting.dsa_reporting_enabled = false
-      expect(result).to fail_a_policy(:enabled)
     end
   end
 end

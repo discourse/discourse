@@ -99,7 +99,8 @@ RSpec.describe DsaNoticesController do
       post "/dsa/illegal-content.json", params: { notice: }
       expect(response.status).to eq(201)
       post "/dsa/illegal-content.json", params: { notice: notice.merge(anonymous: true) }
-      expect(response.status).to eq(409)
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq([I18n.t("js.generic_error")])
     end
 
     it "returns not found when disabled" do
@@ -247,18 +248,15 @@ RSpec.describe DsaNoticesController do
       expect(response.status).to eq(429)
     end
 
-    it "logs a persistence failure without accepting the notice" do
+    it "returns a generic failure when the notice cannot be saved" do
       exception = ActiveRecord::RecordNotSaved.new("save failed")
       PostCreator.stubs(:create!).raises(exception)
-      Discourse.expects(:warn_exception).with(
-        exception,
-        message: "Illegal content notice could not be saved",
-      )
       expect do post "/dsa/illegal-content.json", params: { notice: } end.not_to change(
         Topic,
         :count,
       )
-      expect(response.status).to eq(503)
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq([I18n.t("js.generic_error")])
     end
 
     it "requires CSRF protection for public submissions" do
@@ -290,7 +288,7 @@ RSpec.describe DsaNoticesController do
         Topic,
         :count,
       ).by(1)
-      expect(response.status).to eq(503)
+      expect(response.status).to eq(500)
       Jobs.unstub(:enqueue)
 
       expect do post "/dsa/illegal-content.json", params: { notice: } end.not_to change(

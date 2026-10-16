@@ -41,9 +41,6 @@ export default class DsaNoticeForm extends Component {
       });
       window.scrollTo(0, 0);
     } catch (error) {
-      if ((error.jqXHR ?? error).status === 409) {
-        this.#submissionId = this.#newSubmissionId();
-      }
       popupAjaxError(error);
     }
   }

@@ -4,7 +4,6 @@ module Dsa
   class SubmitNotice
     include Service::Base
 
-    policy :enabled
     options { attribute :ip_address, :string }
 
     params do
@@ -83,17 +82,11 @@ module Dsa
         model :notice, :create_notice
       end
 
-      try do
-        only_if(:group_notifications_pending) { step :enqueue_group_notifications }
-        only_if(:receipt_pending) { step :enqueue_receipt }
-      end
+      only_if(:group_notifications_pending) { step :enqueue_group_notifications }
+      only_if(:receipt_pending) { step :enqueue_receipt }
     end
 
     private
-
-    def enabled
-      SiteSetting.dsa_reporting_enabled
-    end
 
     def rate_limit_lookup(options:)
       if options.ip_address.present?

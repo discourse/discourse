@@ -7,9 +7,6 @@ en:
     invalid_parameters: "The notice contains invalid values."
     invalid_url: "must be a valid HTTP or HTTPS URL without login credentials"
     invalid_email: "must be a valid email address"
-    submission_changed: "This notice was already submitted with different details. Check your changes and submit again to send a new notice."
-    retry_submission: "Your notice was saved, but notifications could not be queued. Submit again to retry without creating another notice."
-    failed: "Your notice could not be saved. Please try again."
   dsa_notice_mailer:
     subject_template: "[%{email_prefix}] Your illegal content notice %{reference}"
     text_body_template: |
