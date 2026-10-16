@@ -11,8 +11,6 @@ overrides:
   babel-plugin-ember-template-compilation@~2.3.0: 2.4.1
   broccoli-babel-transpiler@8.0.0: ^8.0.2
 
-packageExtensionsChecksum: sha256-ptHLNQpPYHnEQTtD5qe5GV8TV8W+KJrg77LwN4XtEOk=
-
 patchedDependencies:
   '@warp-drive/legacy@5.9.0-alpha.15':
     hash: de74ff6c540d75d173dcb41244cb6c4f6c86dabdb41908170a9d1c0e47ee099f
@@ -38,8 +36,8 @@ importers:
   .:
     devDependencies:
       '@discourse/lint-configs':
-        specifier: ^3.8.0
-        version: 3.8.0(eslint@10.6.0(jiti@2.7.0))(postcss@8.5.28)(prettier@3.8.1)(stylelint@17.5.0(typescript@7.1.0-dev.20260930.4))
+        specifier: ^3.8.1
+        version: 3.8.1(eslint@10.6.0(jiti@2.7.0))(postcss@8.5.28)(prettier@3.8.1)(stylelint@17.5.0(typescript@7.1.0-dev.20260930.4))
       '@discourse/moment-timezone-names-translations':
         specifier: ^1.0.0
         version: 1.0.0
@@ -101,8 +99,8 @@ importers:
   docs/developer-guides:
     devDependencies:
       '@discourse/lint-configs':
-        specifier: ^3.8.0
-        version: 3.8.0(eslint@10.6.0(jiti@2.7.0))(postcss@8.5.28)(prettier@3.8.1)(stylelint@17.5.0(typescript@6.0.3))
+        specifier: ^3.8.1
+        version: 3.8.1(eslint@10.6.0(jiti@2.7.0))(postcss@8.5.28)(prettier@3.8.1)(stylelint@17.5.0(typescript@6.0.3))
       prettier:
         specifier: 3.8.1
         version: 3.8.1
@@ -1856,8 +1854,8 @@ packages:
   '@discourse/jxl@1.3.0':
     resolution: {integrity: sha512-Veu75DEDC7uKsCCsD94UIjFwvHE73+AATBQbBWb83QyJV34wmyxl2Ji+fiiM234mlNn4cpo3DUl0QFrXgRTcfA==}
 
-  '@discourse/lint-configs@3.8.0':
-    resolution: {integrity: sha512-GeaLkfxmIrwbnX02KZYajdNfPRt1TN0Dfau4shhtp2tjSPfBTOaeUcifN3hKYc0JhdUmQId246QdmHTd602liw==}
+  '@discourse/lint-configs@3.8.1':
+    resolution: {integrity: sha512-Kp9Y7S/lQN/3edCP//B6bVZ5ZtCHNp2nHQkvnCcYSfh0TDJ4+y79DkqvM4YS123oNij5XKC9FWgW1fte4pNgiw==}
     peerDependencies:
       eslint: 10.6.0
       prettier: 3.8.1
@@ -9223,7 +9221,7 @@ snapshots:
     dependencies:
       wasm-feature-detect: 1.8.0
 
-  '@discourse/lint-configs@3.8.0(eslint@10.6.0(jiti@2.7.0))(postcss@8.5.28)(prettier@3.8.1)(stylelint@17.5.0(typescript@6.0.3))':
+  '@discourse/lint-configs@3.8.1(eslint@10.6.0(jiti@2.7.0))(postcss@8.5.28)(prettier@3.8.1)(stylelint@17.5.0(typescript@6.0.3))':
     dependencies:
       '@babel/core': 8.0.1
       '@babel/eslint-parser': 8.0.1(@babel/core@8.0.1)(eslint@10.6.0(jiti@2.7.0))
@@ -9250,7 +9248,7 @@ snapshots:
       - postcss
       - supports-color
 
-  '@discourse/lint-configs@3.8.0(eslint@10.6.0(jiti@2.7.0))(postcss@8.5.28)(prettier@3.8.1)(stylelint@17.5.0(typescript@7.1.0-dev.20260930.4))':
+  '@discourse/lint-configs@3.8.1(eslint@10.6.0(jiti@2.7.0))(postcss@8.5.28)(prettier@3.8.1)(stylelint@17.5.0(typescript@7.1.0-dev.20260930.4))':
     dependencies:
       '@babel/core': 8.0.1
       '@babel/eslint-parser': 8.0.1(@babel/core@8.0.1)(eslint@10.6.0(jiti@2.7.0))

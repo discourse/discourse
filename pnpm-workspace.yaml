@@ -88,10 +88,6 @@ peerDependencyRules:
   ignoreMissing:
     - "webpack"
     - "@types/react"
-packageExtensions:
-  "@discourse/lint-configs":
-    dependencies:
-      "@typescript-eslint/parser": "^8.62.1"
 overrides:
   "tmp": "^0.2.7"
   "@glint/tsserver-plugin>typescript": "^6.0.3"
