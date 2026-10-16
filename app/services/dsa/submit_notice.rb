@@ -120,9 +120,15 @@ module Dsa
       end
       unless params.notice.anonymous
         email_key = Digest::SHA256.hexdigest(params.notice.email)
-        RateLimiter.new(nil, "dsa-notice-email-#{email_key}", 3, 1.day).performed!
+        email_limiter = RateLimiter.new(nil, "dsa-notice-email-#{email_key}", 3, 1.day)
+        email_limiter.performed!
       end
-      RateLimiter.new(nil, "dsa-notice-global", 100, 1.hour).performed!
+      begin
+        RateLimiter.new(nil, "dsa-notice-global", 100, 1.hour).performed!
+      rescue RateLimiter::LimitExceeded
+        email_limiter&.rollback!
+        raise
+      end
     end
 
     def create_notice(params:)

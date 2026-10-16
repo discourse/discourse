@@ -162,6 +162,15 @@ RSpec.describe DsaNoticesController do
              "REMOTE_ADDR" => "198.51.100.51",
            }
       expect(response.status).to eq(201)
+
+      post "/dsa/illegal-content.json",
+           params: {
+             notice: notice.merge(submission_id: SecureRandom.uuid, anonymous: true),
+           },
+           headers: {
+             "REMOTE_ADDR" => "198.51.100.52",
+           }
+      expect(response.status).to eq(429)
     end
 
     it "preserves shared notice capacity when an email exceeds its allowance" do
@@ -185,6 +194,34 @@ RSpec.describe DsaNoticesController do
              "REMOTE_ADDR" => "198.51.100.51",
            }
       expect(response.status).to eq(201)
+
+      post "/dsa/illegal-content.json",
+           params: {
+             notice: notice.merge(submission_id: SecureRandom.uuid, anonymous: true),
+           },
+           headers: {
+             "REMOTE_ADDR" => "198.51.100.52",
+           }
+      expect(response.status).to eq(429)
+    end
+
+    it "preserves the daily email allowance when the site notice limit rejects a request" do
+      RateLimiter.enable
+      100.times { RateLimiter.new(nil, "dsa-notice-global", 100, 1.hour).performed! }
+      3.times do
+        post "/dsa/illegal-content.json", params: { notice: }
+        expect(response.status).to eq(429)
+      end
+
+      freeze_time(61.minutes.from_now) do
+        3.times do
+          post "/dsa/illegal-content.json",
+               params: {
+                 notice: notice.merge(submission_id: SecureRandom.uuid),
+               }
+          expect(response.status).to eq(201)
+        end
+      end
     end
 
     it "limits new notices globally across different IP addresses" do
