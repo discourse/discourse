@@ -4,6 +4,7 @@ import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
+import AiCreditAllocationStatus from "discourse/plugins/discourse-ai/discourse/components/ai-credit-allocation-status";
 
 export default <template>
   <DBreadcrumbsItem
@@ -43,6 +44,16 @@ export default <template>
             >
               <td class="d-table__cell --overview">
                 <strong>{{decisionModel.display_name}}</strong>
+                {{#if decisionModel.seeded}}
+                  <div class="ai-decision-models-list-editor__seeded">
+                    {{i18n "discourse_ai.decision_models.seeded_description"}}
+                  </div>
+                {{/if}}
+                {{#if decisionModel.credit_allocation}}
+                  <AiCreditAllocationStatus
+                    @allocation={{decisionModel.credit_allocation}}
+                  />
+                {{/if}}
               </td>
               <td class="d-table__cell --detail">
                 <div class="d-table__mobile-label">
@@ -62,12 +73,14 @@ export default <template>
                 }}
               </td>
               <td class="d-table__cell --controls">
-                <DButton
-                  class="btn-default btn-small ai-decision-models-list-editor__edit-btn"
-                  @label="discourse_ai.decision_models.edit"
-                  @route="adminPlugins.show.discourse-ai-decision-models.edit"
-                  @routeModels={{decisionModel.id}}
-                />
+                {{#unless decisionModel.seeded}}
+                  <DButton
+                    class="btn-default btn-small ai-decision-models-list-editor__edit-btn"
+                    @label="discourse_ai.decision_models.edit"
+                    @route="adminPlugins.show.discourse-ai-decision-models.edit"
+                    @routeModels={{decisionModel.id}}
+                  />
+                {{/unless}}
               </td>
             </tr>
           {{/each}}
