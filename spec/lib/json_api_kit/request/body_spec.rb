@@ -40,6 +40,44 @@ RSpec.describe JsonApiKit::Request::Body do
     end
   end
 
+  describe "#validation_errors" do
+    subject(:validation_errors) { body.validation_errors(errors) }
+
+    let(:document) do
+      {
+        "data" => {
+          "type" => "topics",
+          "attributes" => {
+            "displaySettings" => {
+              "theme" => "",
+            },
+          },
+        },
+      }
+    end
+    let(:errors) { Service::ContractBase.new.errors }
+
+    before { errors.add(attribute, "is invalid") }
+
+    context "when the error applies to the whole contract" do
+      let(:attribute) { :base }
+
+      it "points to the submitted resource object" do
+        expect(validation_errors.map(&:source)).to contain_exactly(pointer: "/data")
+      end
+    end
+
+    context "when the error applies to a nested attribute" do
+      let(:attribute) { :"display_settings.theme" }
+
+      it "points to the original top-level attribute" do
+        expect(validation_errors.map(&:source)).to contain_exactly(
+          pointer: "/data/attributes/displaySettings",
+        )
+      end
+    end
+  end
+
   describe "#invalid?" do
     context "when the type is an empty array" do
       let(:document) { { "data" => { "type" => [] } } }

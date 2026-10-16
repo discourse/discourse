@@ -9,7 +9,16 @@ module JsonApiKit
         def for(id, parameters, resource:, client:)
           build(parameters, resource:, client:) { |params, instance| instance.find(id, params) }
         end
+
+        def from(record, resource:, input:, client:)
+          request = Request.new(input.to_h, guardian: client.guardian, edition: client.edition)
+          assemble(
+            new(Query::Result.new(resource, request, record:), client:, fieldsets: input.fieldsets),
+          )
+        end
       end
+
+      def location = urls.for(query.record).to_s
 
       private
 

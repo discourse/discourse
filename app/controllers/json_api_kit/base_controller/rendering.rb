@@ -27,10 +27,24 @@ module JsonApiKit
 
       def set_json_format = request.format = :json
 
-      def render_document(document)
-        render json: document.to_h,
-               status: document.status,
-               content_type: Pagination::Profile::MEDIA_TYPE
+      def render_document(document, status: document.status)
+        render json: document.to_h, status:, content_type: Pagination::Profile::MEDIA_TYPE
+      end
+
+      def render_resource(record, status: :ok)
+        document =
+          Document::Individual.from(
+            record,
+            resource: request_resource,
+            input: request_query,
+            client:,
+          )
+        response.location = document.location if Rack::Utils.status_code(status) == 201
+        render_document(document, status:)
+      end
+
+      def render_validation_errors(errors)
+        render_document(Document::Errors.new(*request_body.validation_errors(errors)))
       end
 
       def render_server_error(error)
