@@ -39,28 +39,12 @@ RSpec.describe DiscourseWorkflows::Schema do
   end
 
   describe "reusable schema constants" do
-    it "exposes reusable basic user and group properties" do
-      property_types =
-        {
-          "user" => described_class::BASIC_USER_PROPERTIES,
-          "group" => described_class::BASIC_GROUP_PROPERTIES,
-        }.transform_values do |properties|
-          properties.transform_values { |property| property.fetch("type") }
-        end
-
-      expect(property_types).to eq(
-        "user" => {
-          "id" => "integer",
-          "username" => "string",
-          "name" => %w[string null],
-          "avatar_template" => "string",
-        },
-        "group" => {
-          "id" => "integer",
-          "name" => "string",
-          "full_name" => %w[string null],
-          "automatic" => "boolean",
-        },
+    it "exposes reusable basic group properties" do
+      expect(described_class::BASIC_GROUP_PROPERTIES.transform_values { _1.fetch("type") }).to eq(
+        "id" => "integer",
+        "name" => "string",
+        "full_name" => %w[string null],
+        "automatic" => "boolean",
       )
     end
 

@@ -918,6 +918,7 @@ en:
           boolean: "true or false"
           category_id: "a category ID"
           chat_channel_id: "a chat channel ID"
+          chat_integration_channel_id: "a chat integration channel ID"
           column_name: "a column name"
           data_table_id: "a data table ID"
           group_id: "a group ID"

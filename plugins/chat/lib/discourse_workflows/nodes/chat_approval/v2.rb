@@ -28,7 +28,7 @@ if defined?(DiscourseWorkflows)
               },
               "user" => {
                 "type" => "object",
-                "properties" => DiscourseWorkflows::Schema::BASIC_USER_PROPERTIES,
+                "properties" => DiscourseWorkflows::Schema::USER_PROPERTIES,
               },
             },
           }.freeze
@@ -233,9 +233,8 @@ if defined?(DiscourseWorkflows)
             user = interaction.user
             channel = interaction.message.chat_channel
             scope = user.guardian
-            channel_data =
-              Chat::WorkflowChannelSerializer.new(channel, scope: scope, root: false).as_json
-            user_data = BasicUserSerializer.new(user, scope: scope, root: false).as_json
+            channel_data = serialize_record(channel, Chat::WorkflowChannelSerializer, scope:)
+            user_data = serialize_user(user, guardian: scope)
 
             [
               DiscourseWorkflows::Item.wrap(

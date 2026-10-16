@@ -37,7 +37,7 @@ if defined?(DiscourseWorkflows)
 
           def output
             {
-              topic: serialize_record(topic, TopicListItemSerializer),
+              topic: serialize_topic_list_item(topic),
               user: serialize_user(voter),
               vote: {
                 id: @vote.id,
