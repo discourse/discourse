@@ -41,6 +41,7 @@ class SelectionToolbarView {
     const { selection, schema } = state;
 
     if (
+      !this.#getToolbar() ||
       selection.empty ||
       !this.#view.hasFocus() ||
       !selection.$from.parent.inlineContent ||
@@ -108,7 +109,8 @@ class SelectionToolbarView {
 /**
  * Floats formatting buttons over a text selection, for desktop pointers.
  *
- * @param {() => import("discourse/lib/composer/toolbar").ToolbarBase} getToolbar
+ * @param {() => import("discourse/lib/composer/toolbar").ToolbarBase | null} getToolbar
+ *   returns null while the toolbar should stay hidden
  * @returns {RichEditorExtension}
  */
 export default function richEditorSelectionToolbar(getToolbar) {

@@ -661,7 +661,10 @@ export default class ChatComposer extends Component {
       const selectionToolbar = this.#buildToolbar(SELECTION_TOOLBAR_BUTTONS);
       this.richEditorExtensions = [
         ...getExtensions(),
-        richEditorSelectionToolbar(() => selectionToolbar),
+        // the formatting bar already offers the same buttons
+        richEditorSelectionToolbar(() =>
+          this.showFormattingBar ? null : selectionToolbar
+        ),
       ];
     }
 
