@@ -5988,9 +5988,7 @@ ALTER SEQUENCE public.drafts_id_seq OWNED BY public.drafts.id;
 
 CREATE TABLE public.dsa_notices (
     id bigint NOT NULL,
-    submission_id uuid NOT NULL,
-    reference character varying NOT NULL,
-    post_id bigint NOT NULL,
+    post_id bigint,
     content_url text NOT NULL,
     explanation text NOT NULL,
     anonymous boolean DEFAULT false NOT NULL,
@@ -22111,20 +22109,6 @@ CREATE UNIQUE INDEX index_dsa_notices_on_post_id ON public.dsa_notices USING btr
 
 
 --
--- Name: index_dsa_notices_on_reference; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_dsa_notices_on_reference ON public.dsa_notices USING btree (reference);
-
-
---
--- Name: index_dsa_notices_on_submission_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_dsa_notices_on_submission_id ON public.dsa_notices USING btree (submission_id);
-
-
---
 -- Name: index_dsa_statement_of_records_on_reviewable_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25999,6 +25983,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261016072412'),
+('20261016072254'),
 ('20261016063822'),
 ('20261014224810'),
 ('20261014145458'),

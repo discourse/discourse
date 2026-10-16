@@ -4,16 +4,13 @@ module Dsa
   class Notice < ActiveRecord::Base
     self.table_name = "dsa_notices"
 
-    CONTENT_FIELDS = %w[content_url explanation anonymous name email declaration].freeze
-    private_constant :CONTENT_FIELDS
+    self.ignored_columns += %i[submission_id reference]
 
-    belongs_to :post, -> { with_deleted }
-
-    attribute :reference, :string, default: -> { "DSA-#{SecureRandom.hex(8).upcase}" }
+    belongs_to :post, -> { with_deleted }, optional: true
 
     def self.create_with_post!(attributes:, group:)
-      notice = new(attributes)
       transaction do
+        notice = create!(attributes)
         notice.post =
           PostCreator.create!(
             Discourse.system_user,
@@ -25,17 +22,12 @@ module Dsa
             skip_jobs: true,
           )
         notice.save!
+        notice
       end
-      notice
     end
 
-    def matches?(submitted_attributes)
-      attributes.slice(*CONTENT_FIELDS) ==
-        submitted_attributes.stringify_keys.slice(*CONTENT_FIELDS)
-    end
-
-    def group_notified?
-      group_notified_at.present?
+    def reference
+      "DSA-#{id}"
     end
 
     def receipt_sent?
@@ -95,15 +87,11 @@ end
 #  group_notified_at :datetime
 #  name              :string
 #  receipt_sent_at   :datetime
-#  reference         :string           not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  post_id           :bigint           not null
-#  submission_id     :uuid             not null
+#  post_id           :bigint
 #
 # Indexes
 #
-#  index_dsa_notices_on_post_id        (post_id) UNIQUE
-#  index_dsa_notices_on_reference      (reference) UNIQUE
-#  index_dsa_notices_on_submission_id  (submission_id) UNIQUE
+#  index_dsa_notices_on_post_id  (post_id) UNIQUE
 #

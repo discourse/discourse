@@ -7,7 +7,6 @@ RSpec.describe Jobs::DsaNoticeReceipt do
 
     let(:notice_params) do
       {
-        submission_id: SecureRandom.uuid,
         content_url: "https://example.com/post?a=1&b=2",
         explanation:
           "This listing advertises counterfeit goods as authentic and its payment instructions appear intended to deceive buyers.",

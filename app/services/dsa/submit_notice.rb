@@ -8,7 +8,6 @@ module Dsa
 
     params do
       attribute :notice do
-        attribute :submission_id, :string
         attribute :content_url, :string
         attribute :explanation, :string
         attribute :anonymous, :boolean, default: false
@@ -25,17 +24,12 @@ module Dsa
                 value.nil? || value.is_a?(String)
               end
             end
-          self.submission_id = submission_id.to_s.downcase
           self.content_url = content_url.to_s.strip
           self.explanation = explanation.to_s.strip
           self.name = anonymous ? nil : name.to_s.strip
           self.email = anonymous ? nil : email.to_s.strip.downcase
         end
 
-        validates :submission_id,
-                  format: {
-                    with: /\A[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}\z/,
-                  }
         validates :content_url, presence: true, length: { maximum: 2048 }
         validates :explanation, length: { minimum: 50, maximum: 20_000 }
         validates :declaration, inclusion: { in: [true] }
@@ -70,42 +64,14 @@ module Dsa
       end
 
       validates :notice, presence: true
-      delegate :submission_id, to: :notice
     end
 
-    step :rate_limit_lookup
-    lock :submission_id do
-      model :notice, :find_notice, optional: true
-      policy :matches_submission
-      only_if(:new_notice) do
-        step :rate_limit_notice
-        model :notice, :create_notice
-      end
-
-      only_if(:group_notifications_pending) { step :enqueue_group_notifications }
-      only_if(:receipt_pending) { step :enqueue_receipt }
-    end
+    step :rate_limit_notice
+    model :notice, :create_notice
+    step :enqueue_group_notifications
+    only_if(:receipt_pending) { step :enqueue_receipt }
 
     private
-
-    def rate_limit_lookup(options:)
-      if options.ip_address.present?
-        RateLimiter.new(nil, "dsa-notice-lookups-ip-#{options.ip_address}", 20, 1.hour).performed!
-      end
-      RateLimiter.new(nil, "dsa-notice-lookups", 1000, 1.hour).performed!
-    end
-
-    def find_notice(params:)
-      Dsa::Notice.find_by(submission_id: params.notice.submission_id)
-    end
-
-    def matches_submission(params:, notice:)
-      notice.nil? || notice.matches?(params.notice.to_hash)
-    end
-
-    def new_notice(notice:)
-      notice.nil?
-    end
 
     def rate_limit_notice(params:, options:)
       if options.ip_address.present?
@@ -130,17 +96,13 @@ module Dsa
       Dsa::Notice.create_with_post!(attributes: params.notice.to_hash, group:)
     end
 
-    def group_notifications_pending(notice:)
-      !notice.group_notified?
-    end
-
     def enqueue_group_notifications(notice:)
       PostJobsEnqueuer.new(notice.post, notice.post.topic, true).enqueue_jobs
       notice.mark_group_notified!
     end
 
     def receipt_pending(notice:)
-      notice.email.present? && !notice.receipt_sent?
+      notice.email.present?
     end
 
     def enqueue_receipt(notice:)

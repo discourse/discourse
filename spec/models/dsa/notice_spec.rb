@@ -3,8 +3,6 @@
 RSpec.describe Dsa::Notice do
   let(:attributes) do
     {
-      submission_id: SecureRandom.uuid,
-      reference: "DSA-1234567890ABCDEF",
       content_url: "https://example.com/post?a=1&b=2",
       explanation: "This listing advertises counterfeit goods as authentic and deceives buyers.",
       name: "Pat O'Brien",
@@ -22,28 +20,28 @@ RSpec.describe Dsa::Notice do
       attributes[:explanation] += "\nEvidence\u2002copied\u202ffrom\u3000a listing."
 
       created_notice = described_class.create_with_post!(attributes:, group:)
-      saved_notice = described_class.find_by!(submission_id: attributes[:submission_id])
+      saved_notice = described_class.find(created_notice.id)
 
       expect(saved_notice.post.id).to eq(created_notice.post.id)
       saved_notice.post.update!(raw: "Staff edited this PM.")
-      expect(saved_notice.reload.matches?(attributes)).to eq(true)
-      expect(saved_notice.reference).to eq(created_notice.reference)
+      expect(saved_notice.reload.attributes.symbolize_keys.slice(*attributes.keys)).to eq(
+        attributes,
+      )
+      expect(saved_notice.reference).to eq("DSA-#{saved_notice.id}")
       expect(saved_notice.summary(plain_text: true)).to include(
         attributes[:name],
         attributes[:explanation],
       )
     end
 
-    it "rolls back the PM when the notice cannot be stored" do
-      described_class.create_with_post!(attributes:, group:)
-      post_count = Post.count
+    it "rolls back the notice when the PM cannot be stored" do
+      PostCreator.stubs(:create!).raises(ActiveRecord::RecordNotSaved)
       notice_count = described_class.count
 
       expect do described_class.create_with_post!(attributes:, group:) end.to raise_error(
-        ActiveRecord::RecordNotUnique,
+        ActiveRecord::RecordNotSaved,
       )
 
-      expect(Post.count).to eq(post_count)
       expect(described_class.count).to eq(notice_count)
     end
   end
@@ -58,7 +56,6 @@ RSpec.describe Dsa::Notice do
         notice.mark_group_notified!
 
         expect(notice.reload.group_notified_at).to eq_time(Time.current)
-        expect(notice).to be_group_notified
       end
     end
   end
@@ -79,7 +76,7 @@ RSpec.describe Dsa::Notice do
   end
 
   describe "#summary" do
-    subject(:notice) { described_class.new(attributes) }
+    subject(:notice) { described_class.new(attributes.merge(id: 123)) }
 
     it "keeps supplied formatting and mentions out of the trusted message structure" do
       attributes[
@@ -111,7 +108,6 @@ RSpec.describe Dsa::Notice do
       expect(fragment.at_css('a[href^="https://example.com/"]')["href"]).to eq(
         attributes[:content_url],
       )
-      expect(fragment.text).not_to include(attributes[:submission_id])
       expect(notice.summary(plain_text: true)).to include(
         attributes[:name],
         attributes[:explanation],

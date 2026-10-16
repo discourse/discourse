@@ -16,8 +16,6 @@ export default class DsaNoticeForm extends Component {
 
   @tracked result;
 
-  #submissionId = this.#newSubmissionId();
-
   @cached
   get initialData() {
     return {
@@ -30,7 +28,6 @@ export default class DsaNoticeForm extends Component {
   @action
   async submit(data) {
     const { name, email, ...notice } = data;
-    notice.submission_id = this.#submissionId;
     if (!notice.anonymous) {
       notice.name = name;
       notice.email = email;
@@ -55,16 +52,6 @@ export default class DsaNoticeForm extends Component {
         message: i18n("user.email.invalid"),
       });
     }
-  }
-
-  #newSubmissionId() {
-    const bytes = crypto.getRandomValues(new Uint8Array(16));
-    bytes[6] = (bytes[6] % 16) + 64;
-    bytes[8] = (bytes[8] % 64) + 128;
-    const hex = Array.from(bytes, (byte) =>
-      byte.toString(16).padStart(2, "0")
-    ).join("");
-    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
   }
 
   <template>

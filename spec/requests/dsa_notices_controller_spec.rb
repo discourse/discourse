@@ -27,7 +27,6 @@ RSpec.describe DsaNoticesController do
   describe "#create" do
     let(:notice) do
       {
-        submission_id: SecureRandom.uuid,
         content_url: "#{Discourse.base_url}/t/reported-content/123/4",
         explanation:
           "This listing advertises counterfeit goods as authentic and its payment instructions appear intended to deceive buyers.",
@@ -61,7 +60,7 @@ RSpec.describe DsaNoticesController do
 
     it "returns too many requests when submission is rate limited" do
       RateLimiter.enable
-      20.times { RateLimiter.new(nil, "dsa-notice-lookups-ip-127.0.0.1", 20, 1.hour).performed! }
+      5.times { RateLimiter.new(nil, "dsa-notice-ip-127.0.0.1", 5, 1.hour).performed! }
 
       post "/dsa/illegal-content.json", params: { notice: }
 

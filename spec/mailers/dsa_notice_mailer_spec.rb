@@ -5,8 +5,7 @@ RSpec.describe DsaNoticeMailer do
     let(:notice) do
       Dsa::Notice.new(
         {
-          "submission_id" => SecureRandom.uuid,
-          "reference" => "DSA-1234567890ABCDEF",
+          "id" => 123,
           "content_url" => "https://example.com/post?a=1&b=2",
           "explanation" =>
             "This listing advertises counterfeit goods as authentic and deceives buyers.",
@@ -31,7 +30,6 @@ RSpec.describe DsaNoticeMailer do
         "https://example.com/post?a=1&b=2",
       )
       expect(message.text_part.decoded).not_to include(I18n.t("dsa_notice.staff_guidance"))
-      expect(message.html_part.decoded).not_to include(notice.submission_id)
       expect(message["X-Discourse-Reply-Key"]).to be_nil
     end
   end

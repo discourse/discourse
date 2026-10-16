@@ -3,7 +3,6 @@
 RSpec.describe Dsa::SubmitNotice do
   let(:params) do
     {
-      submission_id: SecureRandom.uuid,
       content_url: "#{Discourse.base_url}/t/reported/123",
       explanation:
         "This listing advertises counterfeit goods as authentic and its payment instructions appear intended to deceive buyers.",
@@ -23,7 +22,6 @@ RSpec.describe Dsa::SubmitNotice do
     it { is_expected.to validate_length_of(:name).is_at_most(200) }
     it { is_expected.to validate_presence_of(:email) }
     it { is_expected.to validate_length_of(:email).is_at_most(254) }
-    it { is_expected.not_to allow_value("invalid").for(:submission_id) }
     it { is_expected.not_to allow_value(false).for(:declaration) }
     it { is_expected.not_to allow_value("javascript:alert(1)").for(:content_url) }
 
@@ -85,43 +83,6 @@ RSpec.describe Dsa::SubmitNotice do
       end
     end
 
-    context "when an accepted submission is retried" do
-      it "returns the same notice without creating another PM" do
-        expect(result).to run_successfully
-
-        retry_result = nil
-        expect do
-          retry_result = described_class.call(params: { notice: params }, **dependencies)
-        end.not_to change(Topic, :count)
-
-        expect(retry_result).to run_successfully
-        expect(retry_result.notice.reference).to eq(result.notice.reference)
-      end
-
-      it "rejects changes to the accepted submission" do
-        expect(result).to run_successfully
-
-        changed_result =
-          described_class.call(params: { notice: params.merge(anonymous: true) }, **dependencies)
-
-        expect(changed_result).to fail_a_policy(:matches_submission)
-      end
-
-      it "retains the reference after the PM has been deleted" do
-        expect(result).to run_successfully
-        result.notice.post.topic.trash!(admin)
-        result.notice.post.trash!(admin)
-
-        retry_result = nil
-        expect do
-          retry_result = described_class.call(params: { notice: params }, **dependencies)
-        end.not_to change { Topic.with_deleted.count }
-
-        expect(retry_result).to run_successfully
-        expect(retry_result.notice.reference).to eq(result.notice.reference)
-      end
-    end
-
     context "when rate limits are enabled" do
       before { RateLimiter.enable }
 
@@ -147,33 +108,6 @@ RSpec.describe Dsa::SubmitNotice do
         expect(result).to run_successfully
       end
 
-      it "bounds lookups for repeated submissions" do
-        expect(result).to run_successfully
-        19.times do
-          RateLimiter.new(nil, "dsa-notice-lookups-ip-198.51.100.1", 20, 1.hour).performed!
-        end
-
-        expect do
-          described_class.call(params: { notice: params }, **dependencies)
-        end.to raise_error(RateLimiter::LimitExceeded)
-      end
-
-      it "preserves shared lookup capacity when one IP exceeds its allowance" do
-        999.times { RateLimiter.new(nil, "dsa-notice-lookups", 1000, 1.hour).performed! }
-        20.times do
-          RateLimiter.new(nil, "dsa-notice-lookups-ip-198.51.100.1", 20, 1.hour).performed!
-        end
-        expect { result }.to raise_error(RateLimiter::LimitExceeded)
-
-        remaining_result =
-          described_class.call(params: { notice: params }, options: { ip_address: "198.51.100.2" })
-        expect(remaining_result).to run_successfully
-
-        expect do
-          described_class.call(params: { notice: params }, options: { ip_address: "198.51.100.3" })
-        end.to raise_error(RateLimiter::LimitExceeded)
-      end
-
       it "preserves shared notice capacity when an email exceeds its allowance" do
         email_key = Digest::SHA256.hexdigest(params[:email])
         3.times { RateLimiter.new(nil, "dsa-notice-email-#{email_key}", 3, 1.day).performed! }
@@ -195,7 +129,7 @@ RSpec.describe Dsa::SubmitNotice do
         expect do
           described_class.call(
             params: {
-              notice: anonymous_params.merge(submission_id: SecureRandom.uuid),
+              notice: anonymous_params,
             },
             options: {
               ip_address: "198.51.100.3",
@@ -211,16 +145,11 @@ RSpec.describe Dsa::SubmitNotice do
         expect { result }.to raise_error(RateLimiter::LimitExceeded)
 
         freeze_time(61.minutes.from_now) do
-          retry_result = described_class.call(params: { notice: params }, **dependencies)
-          expect(retry_result).to run_successfully
+          accepted_result = described_class.call(params: { notice: params }, **dependencies)
+          expect(accepted_result).to run_successfully
 
           expect do
-            described_class.call(
-              params: {
-                notice: params.merge(submission_id: SecureRandom.uuid),
-              },
-              **dependencies,
-            )
+            described_class.call(params: { notice: params }, **dependencies)
           end.to raise_error(RateLimiter::LimitExceeded)
         end
       end
@@ -230,34 +159,14 @@ RSpec.describe Dsa::SubmitNotice do
         expect(result).to run_successfully
 
         expect do
-          described_class.call(
-            params: {
-              notice: params.merge(submission_id: SecureRandom.uuid),
-            },
-            options: {
-              ip_address: "198.51.100.2",
-            },
-          )
+          described_class.call(params: { notice: params }, options: { ip_address: "198.51.100.2" })
         end.to raise_error(RateLimiter::LimitExceeded)
       end
 
-      it "allows retries after the IP allowance for new notices is exhausted" do
-        params[:anonymous] = true
-        expect(result).to run_successfully
-        4.times { RateLimiter.new(nil, "dsa-notice-ip-198.51.100.1", 5, 1.hour).performed! }
-        expect do
-          described_class.call(
-            params: {
-              notice: params.merge(submission_id: SecureRandom.uuid),
-            },
-            **dependencies,
-          )
-        end.to raise_error(RateLimiter::LimitExceeded)
+      it "limits notices per IP address" do
+        5.times { RateLimiter.new(nil, "dsa-notice-ip-198.51.100.1", 5, 1.hour).performed! }
 
-        retry_result = described_class.call(params: { notice: params }, **dependencies)
-
-        expect(retry_result).to run_successfully
-        expect(retry_result.notice.reference).to eq(result.notice.reference)
+        expect { result }.to raise_error(RateLimiter::LimitExceeded)
       end
     end
 
@@ -295,28 +204,6 @@ RSpec.describe Dsa::SubmitNotice do
       it "queues no external receipt" do
         expect { result }.not_to change { Jobs::DsaNoticeReceipt.jobs.size }
         expect(result).to run_successfully
-      end
-    end
-
-    context "when receipt queuing fails" do
-      it "reuses the saved notice when queuing is retried" do
-        Jobs.stubs(:enqueue).returns("queued")
-        Jobs
-          .stubs(:enqueue)
-          .with(:dsa_notice_receipt, anything)
-          .raises(IOError, "queue unavailable")
-        expect { result }.to raise_error(IOError)
-        notice = Dsa::Notice.find_by!(submission_id: params[:submission_id])
-        Jobs.unstub(:enqueue)
-
-        retry_result = nil
-        expect do
-          retry_result = described_class.call(params: { notice: params }, **dependencies)
-        end.not_to change(Topic, :count)
-
-        expect(retry_result).to run_successfully
-        expect(retry_result.notice.reference).to eq(notice.reference)
-        expect(Jobs::DsaNoticeReceipt.jobs.size).to eq(1)
       end
     end
 
