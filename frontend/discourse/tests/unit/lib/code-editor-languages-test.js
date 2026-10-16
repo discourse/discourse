@@ -1,22 +1,22 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import {
-  clearRegisteredCodemirrorLanguages,
-  codemirrorLanguageNames,
-  loadCodemirrorLanguage,
-  registerCodemirrorLanguage,
-} from "discourse/lib/codemirror-languages";
+  clearRegisteredCodeEditorLanguages,
+  codeEditorLanguageNames,
+  loadCodeEditorLanguage,
+  registerCodeEditorLanguage,
+} from "discourse/lib/code-editor-languages";
 
-module("Unit | Utility | codemirror-languages", function (hooks) {
+module("Unit | Utility | code-editor-languages", function (hooks) {
   setupTest(hooks);
 
   hooks.afterEach(function () {
-    clearRegisteredCodemirrorLanguages();
+    clearRegisteredCodeEditorLanguages();
   });
 
   test("resolves each built-in shortcut to extensions", async function (assert) {
-    for (const name of codemirrorLanguageNames()) {
-      const build = await loadCodemirrorLanguage(name);
+    for (const name of codeEditorLanguageNames()) {
+      const build = await loadCodeEditorLanguage(name);
 
       assert.strictEqual(
         typeof build,
@@ -32,27 +32,27 @@ module("Unit | Utility | codemirror-languages", function (hooks) {
   });
 
   test("is null for an unknown name", async function (assert) {
-    assert.strictEqual(await loadCodemirrorLanguage("klingon"), null);
+    assert.strictEqual(await loadCodeEditorLanguage("klingon"), null);
   });
 
   test("resolves a registered shortcut", async function (assert) {
     const extensions = [];
-    registerCodemirrorLanguage("klingon", async () => ({
+    registerCodeEditorLanguage("klingon", async () => ({
       default: () => extensions,
     }));
 
-    const build = await loadCodemirrorLanguage("klingon");
+    const build = await loadCodeEditorLanguage("klingon");
 
     assert.strictEqual(build(), extensions);
-    assert.true(codemirrorLanguageNames().includes("klingon"));
+    assert.true(codeEditorLanguageNames().includes("klingon"));
   });
 
   test("a registered shortcut overrides a built-in one", async function (assert) {
     const extensions = [];
-    registerCodemirrorLanguage("sql", async () => ({
+    registerCodeEditorLanguage("sql", async () => ({
       default: () => extensions,
     }));
 
-    assert.strictEqual((await loadCodemirrorLanguage("sql"))(), extensions);
+    assert.strictEqual((await loadCodeEditorLanguage("sql"))(), extensions);
   });
 });

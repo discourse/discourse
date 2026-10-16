@@ -47,7 +47,7 @@ export default class EmailStylesEditor extends Component {
       <CodeEditor
         @language={{this.currentEditorMode}}
         @onChange={{this.updateEditorContents}}
-        @save={{@save}}
+        @onSave={{@save}}
         @value={{this.editorContents}}
       />
 

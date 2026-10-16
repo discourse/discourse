@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
+import { trustHTML } from "@ember/template";
 import {
   click,
   fillIn,
@@ -274,7 +275,7 @@ module("Integration | Component | code-editor", function (hooks) {
 
     await render(
       <template>
-        <CodeEditor @save={{save}} @submit={{submit}} @value="" />
+        <CodeEditor @onSave={{save}} @onSubmit={{submit}} @value="" />
       </template>
     );
     await waitFor(".cm-editor");
@@ -477,6 +478,34 @@ module("Integration | Component | code-editor", function (hooks) {
     assert
       .dom(".cm-lintRange")
       .doesNotExist("clearing the warnings unmarks it");
+  });
+
+  test("renders a placeholder as markup only when it is trusted", async function (assert) {
+    const plain = "<b>bold</b>";
+    const trusted = trustHTML("<b>bold</b>");
+
+    await render(
+      <template>
+        <div class="plain"><CodeEditor @placeholder={{plain}} @value="" /></div>
+        <div class="trusted"><CodeEditor
+            @placeholder={{trusted}}
+            @value=""
+          /></div>
+      </template>
+    );
+    await waitUntil(
+      () => document.querySelectorAll(".cm-placeholder").length === 2
+    );
+
+    assert
+      .dom(".plain .cm-placeholder b")
+      .doesNotExist("a plain string is shown as text");
+    assert
+      .dom(".plain .cm-placeholder")
+      .hasText("<b>bold</b>", "including its angle brackets");
+    assert
+      .dom(".trusted .cm-placeholder b")
+      .hasText("bold", "trusted markup is rendered");
   });
 
   test("shows a placeholder that arrives after the editor is built", async function (assert) {

@@ -150,8 +150,8 @@ export default class QueriesEdit extends Component {
                     @language="sql"
                     @languageOptions={{@controller.sqlLanguageOptions}}
                     @onChange={{@controller.updateSql}}
-                    @save={{@controller.save}}
-                    @submit={{@controller.run}}
+                    @onSave={{@controller.save}}
+                    @onSubmit={{@controller.run}}
                     @value={{@controller.model.sql}}
                   />
                 </div>
@@ -287,8 +287,8 @@ export default class QueriesEdit extends Component {
                   @language="sql"
                   @languageOptions={{@controller.sqlLanguageOptions}}
                   @onChange={{@controller.updateSql}}
-                  @save={{@controller.save}}
-                  @submit={{@controller.run}}
+                  @onSave={{@controller.save}}
+                  @onSubmit={{@controller.run}}
                   @value={{@controller.model.sql}}
                 />
               </div>
