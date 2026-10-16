@@ -120,7 +120,7 @@ Worked examples of every point above live on the styleguide's select page, under
 
 ## Extension points
 
-Plugins and themes customize a select through three transformers, all keyed on `@identifiers`:
+Plugins and themes customize a select through four transformers, all keyed on `@identifiers`:
 
 - `select-content` (value transformer) receives the item list and returns a new one. Its context
   is `{identifiers, filter, value, kind, instance, control}`.
@@ -132,6 +132,12 @@ Plugins and themes customize a select through three transformers, all keyed on `
   The active highlight is not exposed. It has no `control`: it runs at render time, where the
   control's verbs must not be called. To style a row from the select's state, such as
   `control.pending`, change the row in `select-content` instead.
+- `select-load` (value transformer) receives the `@load` function and must return a function.
+  Its context is `{identifiers, filter, kind, instance, control}`. It runs once per query when
+  its first page starts, outside render, and may update the extension's own state. The returned
+  loader handles every reveal of that query. It runs only for `@load` selects. A filter change
+  starts a new query. A mode flip without a filter change needs `control.reload()`; otherwise
+  it applies at the next query.
 - `select-on-change` (behavior transformer) wraps the controlled `@onChange`; call `next()` to
   proceed. Its context is `{identifiers, value, items, kind, instance}`, where `value` and `items`
   are the change being made.
@@ -170,13 +176,15 @@ for example in a `WeakMap`. It exposes:
 - `select(item)` to set a single value or add a multi value.
 - `deselect(item)` to remove a multi value, or clear a single value only if that item is held.
 - `clear()` to clear a nonempty selection.
+- `reload()` to start a new query, even with the same filter. It does not supersede a pending
+  `update()`.
 - `update(work)` to run synchronous or asynchronous work with a selection update scope.
 
 The scope has a pure `current` reader and `select(item)`, `deselect(item)`, and `clear()` verbs.
-It has no `close()` or `update()`. Inside `work`, call the scope's selection verbs. Calling
-`control.select()`, `control.deselect()`, or `control.clear()` expresses external selection intent
-and supersedes your own update. Scope writes use the normal selection rules, including caps,
-transformers, resolved-item caching, `@onChange`, and close-on-select;
+It has no `close()`, `reload()`, or `update()`. Inside `work`, call the scope's selection verbs.
+Calling `control.select()`, `control.deselect()`, or `control.clear()` expresses external
+selection intent and supersedes your own update. Scope writes use the normal selection rules,
+including caps, transformers, resolved-item caching, `@onChange`, and close-on-select;
 they do nothing while locked or after the scope loses authority.
 
 ```js
@@ -198,10 +206,10 @@ interaction. `update()` rejects when work throws or rejects, so catch the return
 
 A newer update, any external selection intent (including a re-pick, removal, or clear), opening
 a closed panel, a parent value change, or destruction supersedes the scope. Closing and filter
-resets do not. A parent value change is checked when reading `scope.current` or writing through
-the scope; a reordered multi value counts as a change. An A-to-B-to-A round trip between checks
-cannot be detected. Once work ends, its scope is no longer current. A deferred transformer
-commit may still finish after a normal end, but cannot commit after supersession.
+resets and reloads do not. A parent value change is checked when reading `scope.current` or
+writing through the scope; a reordered multi value counts as a change. An A-to-B-to-A round trip
+between checks cannot be detected. Once work ends, its scope is no longer current. A deferred
+transformer commit may still finish after a normal end, but cannot commit after supersession.
 
 While async work is pending, the trigger shows selection loading feedback and a spinner.
 Synchronous work has no loading flash. Programmatic single sets and re-picks are announced;
@@ -212,9 +220,42 @@ no-change result alongside a toast.
 `select-content` and `select-item-class` run while the list renders, so both must be pure. They
 must not write tracked state or call `update()` or any control or scope verbs. Those are for event
 time, such as a row's `onSelect`. A transformer that reads tracked state runs again when that
-state changes. Read `control.pending` there to return a reactive loading row, for example with
+state changes. `select-load` runs outside render and may update its own extension state, such
+as leaving a mode when the query has a filter. Read `control.pending` in `select-content` to
+return a reactive loading row, for example with
 `name: control.pending ? i18n("suggesting") : i18n("suggest")` and
 `disabled: control.pending`. Control methods do nothing once the select is destroyed.
+
+A suggester can keep its mode per control and use action rows to switch sources. In this
+example, `loadSuggestions` follows the same contract as `@load`, and the translation keys name
+Suggest and Back rows:
+
+```js
+const modes = new WeakMap();
+
+api.registerValueTransformer("select-content", ({ value, context }) => {
+  if (!context.identifiers.includes("choices")) return value;
+  const suggesting = modes.get(context.control) === true;
+  return [
+    {
+      id: "suggestion-mode",
+      name: i18n(suggesting ? "back" : "suggest"),
+      onSelect(control) {
+        if (suggesting) modes.delete(control);
+        else modes.set(control, true);
+        control.reload();
+      },
+    },
+    ...value,
+  ];
+});
+
+api.registerValueTransformer("select-load", ({ value, context }) => {
+  if (!context.identifiers.includes("choices")) return value;
+  if (context.filter) modes.delete(context.control);
+  return modes.get(context.control) ? loadSuggestions : value;
+});
+```
 
 ### Recipes
 
@@ -274,8 +315,9 @@ by mechanism.
   limit message renders in a dedicated top zone of the panel (never stacking with the footer or an
   error body), and the limit state is exposed on the engine and yielded to `:footer`.
 - Value transformers and behavior hooks keyed on `@identifiers` (`select-content` /
-  `select-item-class` / `select-on-change`, see [Extension points](#extension-points)), plus richer
-  screen-reader announcements than the legacy family.
+  `select-item-class` / `select-load` / `select-on-change`, see
+  [Extension points](#extension-points)), plus richer screen-reader announcements than the legacy
+  family.
 - Groups via `@groupBy` (a field name or `(item) => key`). The engine segments the filtered
   options and renders a structural boundary before each segment, and the boundary's presentation
   is label-driven: where `@groupLabel` yields text the boundary is a non-selectable header

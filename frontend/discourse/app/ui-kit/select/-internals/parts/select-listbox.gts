@@ -26,11 +26,11 @@ export interface SelectListContent {
   rawItems: SelectItemModel[];
   /**
    * The query these rows answer, captured when the load resolved. `@retainWhileReloading` keeps
-   * the previous rows mounted while a new query is in flight, so `engine.filter` is the query
-   * being *asked* while this is the query being *shown* — they differ for the whole debounce
+   * the previous rows mounted while a new query is in flight, so `engine.queryKey` is the query
+   * being *asked* while this is the query being *shown*. They differ for the whole debounce
    * plus fetch. Anything reacting to "the results changed" has to key on this one.
    */
-  filter: string;
+  query: string;
 }
 
 interface SelectListboxSignature {
@@ -162,13 +162,13 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
             a tabIndex of -1 and matches no focusable selector, so it is invisible to any such
             enumeration while still consuming a Tab press. }}
             @viewportTabbable={{false}}
-            {{! Keyed on the engine's filter, NOT the resolved payload's. This
+            {{! Keyed on the engine's query, not the resolved payload's. This
           modifier does no value comparison; it re-runs whenever a tag it consumed
           is dirtied, and reading the payload entangles the async resolution itself,
           which dirties on every load. Keyed that way a reveal counts as a change and
           throws the reader back to row one at the moment they scrolled for more. The
-          filter's own tag dirties only on a real query change. }}
-            {{didUpdate @listbox.resetListScroll @engine.filter}}
+          filter and reload nonce dirty only on a real query change. }}
+            {{didUpdate @listbox.resetListScroll @engine.queryKey}}
             {{willDestroy @listbox.releaseListbox}}
             {{didInsert @feedback.recordRowCount items.length}}
             {{didUpdate @feedback.recordRowCount items.length}}
@@ -176,16 +176,16 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
               @announcer.announceCountOnEntry
               (@listbox.setSizeOf items)
               @engine.total
-              content.filter
+              content.query
             }}
-            {{! The resolved filter is a key as much as an argument: a query that lands
+            {{! The resolved query is a key as much as an argument: a query that lands
           on the rows it already had changes neither count, so without it this never
           re-runs and a reader typing on hears nothing at all. }}
             {{didUpdate
               @announcer.announceCount
               (@listbox.setSizeOf items)
               @engine.total
-              content.filter
+              content.query
             }}
             {{didUpdate @announcer.announceReveal @engine.serverPending}}
             {{! Static in the mobile modal moves DOM focus into the listbox; every other
@@ -207,7 +207,7 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
               itemsKey=(if
                 @presenter.isTypeahead items @presenter.rovingNonTypeaheadKey
               )
-              resetKey=content.filter
+              resetKey=content.query
               logicalCount=(@listbox.navigableCount items)
               onActivate=@listbox.activateElement
               onActiveChange=@listbox.trackActiveOption
@@ -324,15 +324,15 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
             successive empty queries — an insert-only announcement would report the
             first and then stay silent for the rest of the session.
 
-            Keyed on the resolved filter, never the engine filter, which advances on
-            the keystroke. That would report an empty result for a query still in
+            Keyed on the resolved query, never the engine query, which advances on
+            a keystroke or reload. That would report an empty result for a query still in
             flight, over rows that still belong to the previous one. }}
           <div
             class="d-combobox__empty"
             role="status"
             {{didInsert @feedback.recordRowCount 0}}
-            {{didInsert @announcer.announceNoResults content.filter}}
-            {{didUpdate @announcer.announceNoResults content.filter}}
+            {{didInsert @announcer.announceNoResults content.query}}
+            {{didUpdate @announcer.announceNoResults content.query}}
           >
             {{#if @hasEmptyBlock}}
               {{yield to="empty"}}

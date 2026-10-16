@@ -202,7 +202,11 @@ export class LocalSource implements SelectSource {
 }
 
 export class PagedSource implements SelectSource {
-  #load: NonNullable<SelectEngineOptions["load"]>;
+  /** Pinned across reveals and retries until the query resets. */
+  #queryLoad?: NonNullable<SelectEngineOptions["load"]>;
+
+  /** Resolves the source for the first request of each query. */
+  #resolveLoad: (filter: string) => NonNullable<SelectEngineOptions["load"]>;
   #state: SelectState;
   #keyOf: (item: SelectItem) => string | null;
   #serverItems: SelectItem[] = [];
@@ -225,11 +229,12 @@ export class PagedSource implements SelectSource {
   #visibleMeasured = false;
 
   constructor(opts: {
-    load: NonNullable<SelectEngineOptions["load"]>;
+    /** Resolves a query's loader outside render, when its first request starts. */
+    resolveLoad: (filter: string) => NonNullable<SelectEngineOptions["load"]>;
     state: SelectState;
     keyOf: (item: SelectItem) => string | null;
   }) {
-    this.#load = opts.load;
+    this.#resolveLoad = opts.resolveLoad;
     this.#state = opts.state;
     this.#keyOf = opts.keyOf;
   }
@@ -372,6 +377,7 @@ export class PagedSource implements SelectSource {
     this.#visibleMeasured = false;
     this.#serverGeneration++;
     this.#serverRequest = undefined;
+    this.#queryLoad = undefined;
   }
 
   revealToken(): number {
@@ -402,11 +408,13 @@ export class PagedSource implements SelectSource {
     // Started after the current task rather than inside it: this runs during render, where a
     // loader writing tracked state would fail the render and its tracked reads would turn into
     // reload triggers. A request abandoned or reset before it starts is never sent.
-    const request = Promise.resolve().then(() =>
-      opts.signal?.aborted || generation !== this.#serverGeneration
-        ? []
-        : this.#load(filter, { ...opts, offset, limit })
-    );
+    const request = Promise.resolve().then(() => {
+      if (opts.signal?.aborted || generation !== this.#serverGeneration) {
+        return [];
+      }
+      this.#queryLoad ??= this.#resolveLoad(filter);
+      return this.#queryLoad(filter, { ...opts, offset, limit });
+    });
     this.#serverRequest = request;
     // An abandoned request must not keep answering for the one that replaces it. The consumer
     // aborts on teardown, so a panel closed mid-flight and reopened before the abort settles

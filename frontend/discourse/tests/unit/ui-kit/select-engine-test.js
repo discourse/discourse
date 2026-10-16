@@ -2,6 +2,7 @@ import { destroy } from "@ember/destroyable";
 import { isSettled, settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import LoadFeedbackTracker from "discourse/ui-kit/select/-internals/coordinators/load-feedback";
@@ -1100,7 +1101,7 @@ module("Unit | ui-kit | SelectEngine | deferred load start", function (hooks) {
   function pagedSource(load) {
     const state = new SelectState();
     const source = new PagedSource({
-      load,
+      resolveLoad: () => load,
       state,
       keyOf: (item) => String(item.id),
     });
@@ -1747,5 +1748,259 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
     gate.resolve();
     await settled();
     assert.false(engine.control.pending, "settled once the work ended");
+  });
+});
+
+module("Unit | ui-kit | SelectEngine | select-load", function (hooks) {
+  setupTest(hooks);
+
+  function clientItems(count) {
+    return Array.from({ length: count }, (_, i) => ({
+      id: i + 1,
+      name: `Item ${i + 1}`,
+    }));
+  }
+
+  test("select-load is never consulted for a client source", async function (assert) {
+    const spy = sinon.spy(({ value }) => value);
+    withPluginApi((api) => {
+      api.registerValueTransformer("select-load", spy);
+    });
+    const engine = new SelectEngine({
+      items: [
+        { id: 1, name: "Apple" },
+        { id: 2, name: "Banana" },
+      ],
+    });
+
+    engine.buildItems(await engine.loadItems(engine.loadContext));
+    engine.setFilter("a");
+    engine.buildItems(await engine.loadItems(engine.loadContext));
+    engine.reload();
+    engine.buildItems(await engine.loadItems(engine.loadContext));
+
+    assert.false(spy.called, "the transformer never ran");
+  });
+
+  test("select-load runs once per query, never for a reveal", async function (assert) {
+    const contexts = [];
+    withPluginApi((api) => {
+      api.registerValueTransformer("select-load", ({ value, context }) => {
+        contexts.push(context);
+        return value;
+      });
+    });
+    const kind = { scope: "recipe" };
+    const instance = { topicId: 7 };
+    const engine = new SelectEngine({
+      identifiers: "load-select",
+      getKindContext: () => kind,
+      getInstanceContext: () => instance,
+      load: (_filter, { offset = 0 }) => ({
+        items: Array.from({ length: 10 }, (_, i) => ({
+          id: offset + i + 1,
+          name: `Item ${offset + i + 1}`,
+        })),
+        hasMore: true,
+      }),
+    });
+
+    await engine.loadItems(engine.loadContext);
+    assert.strictEqual(contexts.length, 1, "the first query consults it");
+
+    engine.revealMore();
+    await engine.loadItems(engine.loadContext);
+    engine.revealMore();
+    await engine.loadItems(engine.loadContext);
+    assert.strictEqual(contexts.length, 1, "reveals reuse the query's loader");
+
+    engine.setFilter("Item 1");
+    await engine.loadItems(engine.loadContext);
+    assert.strictEqual(contexts.length, 2, "a new filter is a new query");
+    assert.strictEqual(contexts[1].filter, "Item 1", "with that filter");
+
+    engine.reload();
+    await engine.loadItems(engine.loadContext);
+    assert.strictEqual(contexts.length, 3, "a reload is a new query");
+
+    const [first] = contexts;
+    assert.strictEqual(first.filter, "", "the first query had no filter");
+    assert.true(
+      first.identifiers.includes("load-select"),
+      "identifiers are passed"
+    );
+    assert.strictEqual(first.kind, kind, "kind is passed");
+    assert.strictEqual(first.instance, instance, "instance is passed");
+    assert.strictEqual(first.control, engine.control, "control is passed");
+  });
+
+  test("select-load is resolved and the loader called only after the current task", async function (assert) {
+    const calls = [];
+    const source = new PagedSource({
+      resolveLoad: (filter) => {
+        calls.push(["resolve", filter]);
+        return (query, { offset }) => {
+          calls.push(["load", query, offset]);
+          return clientItems(2);
+        };
+      },
+      state: new SelectState(),
+      keyOf: (item) => String(item.id),
+    });
+    const rows = source.rows({});
+    assert.deepEqual(calls, [], "neither callback runs synchronously");
+    await Promise.resolve();
+    assert.deepEqual(
+      calls,
+      [
+        ["resolve", ""],
+        ["load", "", 0],
+      ],
+      "both run in order when the task yields"
+    );
+    assert.deepEqual(
+      await rows,
+      clientItems(2),
+      "the deferred source answers normally"
+    );
+  });
+
+  test("an abandoned first request does not resolve or pin a loader", async function (assert) {
+    let resolutions = 0;
+    withPluginApi((api) => {
+      api.registerValueTransformer("select-load", ({ value }) => {
+        resolutions++;
+        return value;
+      });
+    });
+    const engine = new SelectEngine({ load: () => clientItems(2) });
+    const abort = new AbortController();
+    const abandoned = engine.loadItems(engine.loadContext, {
+      signal: abort.signal,
+    });
+    abort.abort();
+    await abandoned;
+    assert.strictEqual(
+      resolutions,
+      0,
+      "abandoning before the microtask never resolves the loader"
+    );
+    assert.deepEqual(
+      await engine.loadItems(engine.loadContext),
+      clientItems(2),
+      "the replacement request still loads"
+    );
+    assert.strictEqual(resolutions, 1, "only the replacement pins a loader");
+  });
+
+  test("an in-flight abort keeps the loader pinned through retry and reveals", async function (assert) {
+    let resolutions = 0;
+    let release;
+    const offsets = [];
+    withPluginApi((api) => {
+      api.registerValueTransformer("select-load", () => {
+        resolutions++;
+        const prefix = resolutions;
+        return (_filter, { offset }) => {
+          offsets.push(offset);
+          const page = {
+            items: [{ id: offset + 1, name: `Source ${prefix}` }],
+            hasMore: true,
+          };
+          return offsets.length === 1
+            ? new Promise((resolve) => {
+                release = () => resolve(page);
+              })
+            : page;
+        };
+      });
+    });
+    const engine = new SelectEngine({ load: () => [] });
+    const abort = new AbortController();
+    const abandoned = engine.loadItems(engine.loadContext, {
+      signal: abort.signal,
+    });
+    await Promise.resolve();
+    abort.abort();
+    release();
+    await abandoned;
+    const retry = await engine.loadItems(engine.loadContext);
+    assert.strictEqual(
+      retry[0].name,
+      "Source 1",
+      "retry uses the original closure"
+    );
+    engine.revealMore();
+    const revealed = await engine.loadItems(engine.loadContext);
+    assert.deepEqual(
+      offsets,
+      [0, 0, 1],
+      "retry starts at zero and reveal advances"
+    );
+    assert.true(
+      revealed.every((item) => item.name === "Source 1"),
+      "reveals keep the same source"
+    );
+    assert.strictEqual(
+      resolutions,
+      1,
+      "an abort after start does not unpin the loader"
+    );
+    engine.control.reload();
+    assert.strictEqual(
+      (await engine.loadItems(engine.loadContext))[0].name,
+      "Source 2",
+      "reload resolves a new closure"
+    );
+  });
+
+  test("control.reload keeps a pending update and does nothing once destroyed", async function (assert) {
+    let release;
+    let scope;
+    const changes = [];
+    const engine = new SelectEngine({
+      items: clientItems(2),
+      onChange: (value) => changes.push(value),
+    });
+    const done = engine.control.update(async (currentScope) => {
+      scope = currentScope;
+      await new Promise((resolve) => {
+        release = resolve;
+      });
+      currentScope.select(clientItems(2)[1]);
+    });
+    const previous = engine.loadContext;
+    engine.control.reload();
+    assert.notStrictEqual(
+      engine.loadContext,
+      previous,
+      "reload starts a new query"
+    );
+    assert.true(scope.current, "reload leaves update authority intact");
+    assert.true(engine.control.pending, "the update is still pending");
+    assert.false("reload" in scope, "reload is not a selection-scope verb");
+    release();
+    await done;
+    assert.deepEqual(changes, [2], "the update can still select after reload");
+    destroy(engine);
+    const destroyedContext = engine.loadContext;
+    engine.control.reload();
+    assert.strictEqual(
+      engine.loadContext,
+      destroyedContext,
+      "a destroyed control cannot start another query"
+    );
+  });
+
+  test("select-load must return a function", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer("select-load", () => null);
+    });
+    const engine = new SelectEngine({ load: () => [] });
+    await assert.rejects(
+      engine.loadItems(engine.loadContext),
+      /select-load.*function/i,
+      "invalid results have a development assertion"
+    );
   });
 });

@@ -1,5 +1,6 @@
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { isDestroying, registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import { bind } from "discourse/lib/decorators";
@@ -202,7 +203,7 @@ export interface SelectLegacyContext {
 }
 
 /**
- * The handle an action row and a `select-content` transformer get for one select. It is the
+ * The handle an action row, `select-content`, and `select-load` get for one select. It is the
  * same frozen object for the select's whole life, so a transformer may key per-select state
  * on it. Its methods are for event time, such as a row's `onSelect`, never for building
  * content, and they do nothing once the select is destroyed.
@@ -222,6 +223,8 @@ export interface SelectControl {
   deselect(item: SelectItem): void;
   /** Clears a nonempty selection. */
   clear(): void;
+  /** Starts a new query without superseding a pending update. */
+  reload(): void;
   /** Runs event-time work with write authority until it ends or is superseded. */
   update(
     work: (scope: SelectUpdateScope) => void | Promise<void>
@@ -532,6 +535,13 @@ class EngineControl implements SelectControl {
     }
   }
 
+  /** Starts a new query while the select is alive, preserving update authority. */
+  reload(): void {
+    if (!isDestroying(this.#engine)) {
+      this.#engine.reload();
+    }
+  }
+
   select(item: SelectItem): void {
     if (!isDestroying(this.#engine)) {
       this.#engine.select(item, { programmatic: true });
@@ -620,7 +630,7 @@ export default class SelectEngine {
     });
     this.#source = this.#options.load
       ? new PagedSource({
-          load: this.#options.load,
+          resolveLoad: (filter) => this.#resolveLoad(filter),
           state: this.#state,
           keyOf: (item) =>
             this.#options.valueKey(this.#options.itemValue(item)),
@@ -642,6 +652,11 @@ export default class SelectEngine {
   /** The current filter term. */
   get filter(): string {
     return this.#state.filter;
+  }
+
+  /** Identifies a query across its pages, including explicit reloads of the same filter. */
+  get queryKey(): string {
+    return JSON.stringify([this.#state.nonce, this.#state.filter]);
   }
 
   /**
@@ -738,7 +753,7 @@ export default class SelectEngine {
     return this.#options.identifiers;
   }
 
-  /** The select's handle for action rows and `select-content` transformers. */
+  /** The select's handle for action rows, `select-content`, and `select-load`. */
   get control(): SelectControl {
     return this.#control;
   }
@@ -1139,6 +1154,21 @@ export default class SelectEngine {
       kind: this.#options.kindContext,
       instance: this.#options.instanceContext,
     };
+  }
+
+  /** Resolves the loader outside render when a query's first request starts. */
+  #resolveLoad(filter: string): NonNullable<SelectEngineOptions["load"]> {
+    const load = applyValueTransformer("select-load", this.#options.load!, {
+      identifiers: this.identifiers,
+      filter,
+      ...this.#extensionContext(),
+      control: this.#control,
+    });
+    assert(
+      "DSelect: `select-load` must return a function.",
+      typeof load === "function"
+    );
+    return load;
   }
 
   // `items` and `load` are mutually exclusive; the construction-time source kind wins.

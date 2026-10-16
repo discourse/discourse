@@ -481,13 +481,13 @@ export default class DSelect extends Component<DSelectSignature> {
   ): SelectListContent | Promise<SelectListContent> {
     const rawItems = this.engine.loadItems(context, opts);
     // Stamped at resolve time, not call time: an aborted-then-superseded load never reaches
-    // here, so the filter read on resolution is the one these rows were fetched for.
+    // here, so the query read on resolution is the one these rows were fetched for.
     return rawItems instanceof Promise
       ? rawItems.then((items) => ({
           rawItems: items,
-          filter: this.engine.filter,
+          query: this.engine.queryKey,
         }))
-      : { rawItems, filter: this.engine.filter };
+      : { rawItems, query: this.engine.queryKey };
   }
 
   /**

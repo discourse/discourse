@@ -28,6 +28,10 @@ import {
   probedEngine,
 } from "discourse/tests/helpers/d-select-hosts";
 import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
+import {
+  disableVirtualization,
+  enableVirtualization,
+} from "discourse/ui-kit/-internals/windowing/virtualizer";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 
@@ -1715,3 +1719,390 @@ module(
     });
   }
 );
+
+const ORIGINAL_ROWS = [
+  { id: 1, name: "Apple" },
+  { id: 2, name: "Apricot" },
+  { id: 3, name: "Beet" },
+];
+const SUGGESTED_ROWS = [
+  { id: 10, name: "Suggested ten" },
+  { id: 11, name: "Suggested eleven" },
+];
+
+/**
+ * A suggester written as a source swap: an action row flips a mode kept per select and starts a
+ * new query, and `select-load` answers that query from the suggestion source.
+ */
+function registerSuggester({ suggest } = {}) {
+  const modes = new WeakMap();
+  const calls = { original: [], suggest: [] };
+
+  const original = (filter, { offset = 0 } = {}) => {
+    calls.original.push({ filter, offset });
+    const term = filter.toLowerCase();
+    return {
+      items: ORIGINAL_ROWS.filter((row) =>
+        row.name.toLowerCase().includes(term)
+      ),
+      hasMore: false,
+    };
+  };
+  const suggestLoad = (filter, { offset = 0 } = {}) => {
+    calls.suggest.push({ filter, offset });
+    return suggest ? suggest() : { items: SUGGESTED_ROWS, hasMore: false };
+  };
+
+  withPluginApi((api) => {
+    api.registerValueTransformer("select-content", ({ value, context }) => {
+      if (!context.identifiers.includes("suggester")) {
+        return value;
+      }
+      const row = modes.get(context.control)
+        ? {
+            id: "back",
+            name: "Back to results",
+            onSelect: (control) => {
+              modes.delete(control);
+              control.reload();
+            },
+          }
+        : {
+            id: "suggest",
+            name: "Suggest tags",
+            onSelect: (control) => {
+              modes.set(control, true);
+              control.reload();
+            },
+          };
+      return [row, ...value];
+    });
+    api.registerValueTransformer("select-load", ({ value, context }) => {
+      if (!modes.get(context.control)) {
+        return value;
+      }
+      if (context.filter) {
+        modes.delete(context.control);
+        return value;
+      }
+      return suggestLoad;
+    });
+  });
+
+  return { original, calls };
+}
+
+class SuggesterHost extends Component {
+  @tracked value = [];
+
+  @action
+  onChange(value) {
+    this.value = value;
+  }
+
+  <template>
+    <DSelect
+      @debounce={{false}}
+      @identifier="suggester"
+      @load={{@load}}
+      @multiple={{true}}
+      @onChange={{this.onChange}}
+      @value={{this.value}}
+    >
+      <:selection as |item|>{{item.name}}</:selection>
+    </DSelect>
+  </template>
+}
+
+function numberedRows(count) {
+  return Array.from({ length: count }, (_, i) => ({
+    id: i + 1,
+    name: `Row ${i + 1}`,
+  }));
+}
+
+module("Integration | ui-kit | select | DSelect select-load", function (hooks) {
+  setupRenderingTest(hooks);
+
+  const QUERY = ".d-combobox__trigger [role='combobox']";
+
+  function optionNames() {
+    return [
+      ...document.querySelectorAll("ul[role='listbox'] > [role='option']"),
+    ].map((option) => option.textContent.trim());
+  }
+
+  test("a suggest row swaps the source for the next query", async function (assert) {
+    const { original, calls } = registerSuggester();
+
+    await render(<template><SuggesterHost @load={{original}} /></template>);
+    await click(QUERY);
+    assert.deepEqual(
+      optionNames(),
+      ["Suggest tags", "Apple", "Apricot", "Beet"],
+      "the original source answers first"
+    );
+
+    await click(optionWithText("Suggest tags"));
+
+    assert.deepEqual(
+      optionNames(),
+      ["Back to results", "Suggested ten", "Suggested eleven"],
+      "the suggestions replace the original rows"
+    );
+    assert.deepEqual(
+      calls.suggest,
+      [{ filter: "", offset: 0 }],
+      "the suggestion source was asked once, for its first page"
+    );
+  });
+
+  test("going back restores the original source from its first page", async function (assert) {
+    const { original, calls } = registerSuggester();
+
+    await render(<template><SuggesterHost @load={{original}} /></template>);
+    await click(QUERY);
+    await click(optionWithText("Suggest tags"));
+
+    await click(optionWithText("Suggested ten"));
+    await click(optionWithText("Back to results"));
+
+    assert.deepEqual(
+      optionNames(),
+      ["Suggest tags", "Apple", "Apricot", "Beet"],
+      "the original rows come back on their own, not after the suggestions"
+    );
+    assert.deepEqual(
+      calls.original.at(-1),
+      { filter: "", offset: 0 },
+      "the original source was asked for its first page again"
+    );
+    assert
+      .dom(".d-combobox__chip")
+      .includesText("Suggested ten", "the picked suggestion keeps its name");
+  });
+
+  test("typing leaves suggest mode", async function (assert) {
+    const { original, calls } = registerSuggester();
+
+    await render(<template><SuggesterHost @load={{original}} /></template>);
+    await click(QUERY);
+    await click(optionWithText("Suggest tags"));
+
+    await fillIn(QUERY, "ap");
+    assert.deepEqual(
+      optionNames(),
+      ["Suggest tags", "Apple", "Apricot"],
+      "the typed query is answered by the original source"
+    );
+    assert.deepEqual(
+      calls.original.at(-1),
+      { filter: "ap", offset: 0 },
+      "with the typed filter"
+    );
+
+    await fillIn(QUERY, "");
+    assert.deepEqual(
+      optionNames(),
+      ["Suggest tags", "Apple", "Apricot", "Beet"],
+      "clearing the filter shows the normal list"
+    );
+  });
+
+  test("a reload that lands before any loading state is announced as a new query", async function (assert) {
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+    let size = 60;
+    const load = (_filter, { offset = 0 }) => ({
+      items: Array.from({ length: size }, (_, i) => ({
+        id: offset + i + 1,
+        name: `Row ${offset + i + 1}`,
+      })),
+      total: size,
+      hasMore: false,
+    });
+
+    await render(
+      <template>
+        <EngineProbe @debounce={{false}} @load={{load}} @variant="button" />
+      </template>
+    );
+    await click(".d-combobox__trigger");
+    size = 40;
+    probedEngine().control.reload();
+    await settled();
+
+    assert
+      .dom("ul[role='listbox']")
+      .exists("the rows never gave way to the loading skeleton");
+    assert.strictEqual(
+      announce.withArgs(i18n("d_select.results_count", { count: 40 }), "polite")
+        .callCount,
+      1,
+      "the reloaded count is announced"
+    );
+  });
+
+  test("a slow swap shows the loading skeleton, not the reveal skeleton", async function (assert) {
+    let release;
+    const { original } = registerSuggester({
+      suggest: () =>
+        new Promise((resolve) => {
+          release = () => resolve({ items: SUGGESTED_ROWS, hasMore: false });
+        }),
+    });
+
+    await render(<template><SuggesterHost @load={{original}} /></template>);
+    await click(QUERY);
+
+    const picked = click(optionWithText("Suggest tags"));
+    await waitUntil(() => release);
+    await waitFor(".d-combobox__listbox--loading .d-combobox__skeleton");
+
+    assert
+      .dom(
+        "ul[role='listbox']:not(.d-combobox__listbox--loading) .d-combobox__skeleton"
+      )
+      .doesNotExist("a swap is not more rows for the same query");
+
+    release();
+    await picked;
+    await settled();
+    assert.deepEqual(
+      optionNames(),
+      ["Back to results", "Suggested ten", "Suggested eleven"],
+      "the suggestions land"
+    );
+  });
+
+  test("a fast reload clears the cursor even when the rows stay identical", async function (assert) {
+    const load = () => numberedRows(3);
+    await render(
+      <template>
+        <EngineProbe @debounce={{false}} @load={{load}} @variant="button" />
+      </template>
+    );
+    await click(".d-combobox__trigger");
+    const query = ".d-combobox__filter";
+    await triggerKeyEvent(query, "keydown", "ArrowDown");
+    assert
+      .dom(query)
+      .hasAttribute(
+        "aria-activedescendant",
+        /.+/,
+        "the cursor is on a row before reload"
+      );
+    const list = find("ul[role='listbox']");
+    probedEngine().control.reload();
+    await settled();
+    assert.strictEqual(
+      find("ul[role='listbox']"),
+      list,
+      "the list stayed mounted through the fast reload"
+    );
+    assert
+      .dom(query)
+      .doesNotHaveAttribute(
+        "aria-activedescendant",
+        "a new query clears the cursor"
+      );
+  });
+
+  test("select-load may update tracked state, and an empty reload reports again", async function (assert) {
+    const state = new (class {
+      @tracked calls = 0;
+    })();
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+    withPluginApi((api) => {
+      api.registerValueTransformer("select-load", ({ value }) => {
+        state.calls++;
+        return value;
+      });
+    });
+    const load = () => [];
+    await render(
+      <template>
+        <span class="loader-calls">{{state.calls}}</span><EngineProbe
+          @debounce={{false}}
+          @load={{load}}
+          @variant="button"
+        />
+      </template>
+    );
+    await click(".d-combobox__trigger");
+    assert
+      .dom(".loader-calls")
+      .hasText("1", "the transformer writes outside render");
+    assert.strictEqual(
+      announce.withArgs(i18n("d_select.no_results"), "polite").callCount,
+      1,
+      "the first empty result is announced"
+    );
+    probedEngine().control.reload();
+    await settled();
+    assert
+      .dom(".loader-calls")
+      .hasText("2", "reload resolves the transformer again");
+    assert.strictEqual(
+      announce.withArgs(i18n("d_select.no_results"), "polite").callCount,
+      2,
+      "the new empty query is announced again"
+    );
+  });
+
+  module("windowed", function (windowedHooks) {
+    windowedHooks.beforeEach(function () {
+      enableVirtualization();
+    });
+
+    windowedHooks.afterEach(function () {
+      disableVirtualization();
+    });
+
+    test("a fast reload resets the real window's scroll without replacing its viewport", async function (assert) {
+      const load = () => numberedRows(60);
+      await render(
+        <template>
+          {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+          <style>
+            .d-virtual-list {
+              height: 200px;
+              overflow-y: auto;
+            }
+          </style>
+          <EngineProbe @debounce={{false}} @load={{load}} @variant="button" />
+        </template>
+      );
+      await click(".d-combobox__trigger");
+      const viewport = find(".d-virtual-list");
+      assert.true(
+        document.querySelectorAll("ul[role='listbox'] > [role='option']")
+          .length < 60,
+        "only the real window is mounted"
+      );
+      viewport.scrollTop = viewport.scrollHeight;
+      await settled();
+      assert.true(viewport.scrollTop > 0, "the viewport was scrolled");
+      probedEngine().control.reload();
+      await settled();
+      assert.strictEqual(
+        find(".d-virtual-list"),
+        viewport,
+        "the fast reload kept the viewport mounted"
+      );
+      assert.strictEqual(
+        viewport.scrollTop,
+        0,
+        "the real window returns to the top"
+      );
+      assert
+        .dom(`${"ul[role='listbox'] > [role='option']"}[data-index='0']`)
+        .exists("the first row is mounted again");
+    });
+  });
+});
