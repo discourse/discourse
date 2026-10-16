@@ -238,6 +238,7 @@ export default class ChatComposer extends Component {
       getOwner(this),
       textManipulation
     );
+    // chat's keyboard shortcuts route by this attribute, as on the textarea
     interactor.element.dataset.chatComposerContext = this.context;
     interactor.element.addEventListener("keydown", this.onRichEditorKeyDown);
     this.composer.registerEditor(interactor);
@@ -678,11 +679,7 @@ export default class ChatComposer extends Component {
       return false;
     }
 
-    if (reply) {
-      if (!this.lastMessage?.replyable) {
-        return false;
-      }
-
+    if (reply && this.lastMessage?.replyable) {
       this.composer.replyTo(this.lastMessage);
       return true;
     }

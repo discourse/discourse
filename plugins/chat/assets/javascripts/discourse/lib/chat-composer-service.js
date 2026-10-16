@@ -2,10 +2,9 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 
-// The rich editor mounts asynchronously, so a focus can be requested before
-// the editor exists. Only the latest request across composers is replayed:
-// when the channel and thread composers both ask during one page load, the
-// last one wins, as it does with the synchronously mounted markdown editor.
+// The rich editor mounts asynchronously; a focus requested meanwhile is
+// replayed when it registers. Only the latest request across composers is kept,
+// matching the markdown editor, where the last focus call wins.
 let pendingFocus = null;
 
 export default class ChatComposerService extends Service {

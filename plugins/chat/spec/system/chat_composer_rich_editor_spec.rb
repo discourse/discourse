@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat composer editor toggle" do
+RSpec.describe "Chat composer rich editor" do
   fab!(:current_user, :user)
+  fab!(:other_user, :user)
   fab!(:channel_1, :chat_channel)
+  fab!(:message_1) { Fabricate(:chat_message, user: current_user, chat_channel: channel_1) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -10,6 +12,7 @@ RSpec.describe "Chat composer editor toggle" do
   before do
     chat_system_bootstrap
     channel_1.add(current_user)
+    channel_1.add(other_user)
     current_user.user_option.update!(composition_mode: UserOption.composition_mode_types[:rich])
     sign_in(current_user)
   end
@@ -106,5 +109,56 @@ RSpec.describe "Chat composer editor toggle" do
 
     expect(channel_page.messages).to have_message(text: "bold text")
     expect(page).to have_css(".chat-message-text strong", text: "bold")
+  end
+
+  it "adds a line break on Enter when sending needs Mod+Enter" do
+    current_user.user_option.update!(send_shortcut: "meta_enter")
+    chat_page.visit_channel(channel_1)
+    channel_page.composer.input.send_keys("line one")
+    channel_page.composer.enter_shortcut
+    channel_page.composer.input.send_keys("line two")
+
+    expect(channel_page.composer).to have_value("line one\nline two")
+
+    channel_page.composer.meta_enter_shortcut
+
+    expect(channel_page.messages).to have_message(text: "line two")
+  end
+
+  it "edits the last message with ArrowUp and cancels with Escape" do
+    chat_page.visit_channel(channel_1)
+    channel_page.composer.edit_last_message_shortcut
+
+    expect(channel_page.composer).to be_editing_message(message_1)
+
+    channel_page.composer.cancel_shortcut
+
+    expect(channel_page.composer).to be_editing_no_message
+  end
+
+  it "applies formatting shortcuts as marks" do
+    chat_page.visit_channel(channel_1)
+    channel_page.composer.bold_text_shortcut
+
+    expect(channel_page.composer).to have_value("**strong text**")
+  end
+
+  it "completes emojis and mentions" do
+    chat_page.visit_channel(channel_1)
+    channel_page.composer.input.send_keys(":grimac")
+    find(".emoji-shortname", text: "grimacing").click
+    channel_page.composer.input.send_keys("@#{other_user.username}")
+    find(".autocomplete.ac-user", text: other_user.username).click
+
+    expect(channel_page.composer).to have_value(":grimacing: @#{other_user.username} ")
+  end
+
+  it "replaces a partial emoji term picked from the full picker" do
+    chat_page.visit_channel(channel_1)
+    channel_page.composer.input.send_keys("hey :gri")
+    click_link(I18n.t("js.composer.more_emoji"))
+    find(".emoji-picker [data-emoji='grimacing']").click
+
+    expect(channel_page.composer).to have_value("hey :grimacing: ")
   end
 end

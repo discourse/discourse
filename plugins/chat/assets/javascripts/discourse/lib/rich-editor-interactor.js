@@ -45,9 +45,8 @@ export default class RichEditorInteractor {
       return;
     }
 
-    // Keys typed before the editor had focus arrive one per call, so they are
-    // inserted right away to keep their order, and as plain text: parsed as
-    // markdown, a lone `-` or `#` would become a list or heading.
+    // inserted now to keep typed keys in order, and as text so a lone `-` or
+    // `#` isn't parsed into a list or heading
     if (opts.addText) {
       const { view } = this.textManipulation;
       view.dispatch(view.state.tr.insertText(opts.addText));
