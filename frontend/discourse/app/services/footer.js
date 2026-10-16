@@ -8,6 +8,8 @@ import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 @disableImplicitInjections
 export default class FooterService extends Service {
   #hiders = trackedSet();
+
+  /** @type {boolean | null} */
   @tracked _showFooterOverride = null;
 
   get showFooter() {

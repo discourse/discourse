@@ -266,15 +266,31 @@ if defined?(DiscourseWorkflows)
             upload_ids = encoder.normalize_upload_ids(upload_ids)
             return [] if upload_ids.empty?
 
-            encoder
-              .encode(upload_ids:, max_pixels: MAX_IMAGE_PIXELS)
-              .map { |image| "data:#{image[:mime_type]};base64,#{image[:base64]}" }
-          rescue StandardError => e
-            raise DiscourseAi::Decisions::InvalidRequest, "Could not prepare images: #{e.message}"
+            missing = upload_ids - ::Upload.where(id: upload_ids).pluck(:id)
+            skips = []
+            images =
+              begin
+                encoder.encode(upload_ids:, max_pixels: MAX_IMAGE_PIXELS, skips:)
+              rescue StandardError => e
+                raise DiscourseAi::Decisions::InvalidRequest,
+                      "Could not prepare images: #{e.message}"
+              end
+
+            # Answering without every image would record a confident verdict on partial evidence.
+            reasons =
+              missing.map { |upload_id| upload_error_text("not_found", upload_id:) } +
+                skips.map { |skip| upload_error_text("skipped", **skip) }
+            raise DiscourseAi::Decisions::InvalidRequest, reasons.join(". ") if reasons.any?
+
+            images.map { |image| "data:#{image[:mime_type]};base64,#{image[:base64]}" }
           end
 
           def error_text(key, **args)
             I18n.t("discourse_ai.discourse_workflows.classify.errors.#{key}", **args)
+          end
+
+          def upload_error_text(key, **args)
+            I18n.t("discourse_ai.discourse_workflows.uploads.#{key}", **args)
           end
         end
       end

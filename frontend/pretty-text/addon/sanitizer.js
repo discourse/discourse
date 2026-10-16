@@ -89,6 +89,17 @@ function testDataAttribute(forTag, name, value) {
   });
 }
 
+export function isAllowListedAttr(forTag, name, value) {
+  const forAttr = forTag[name];
+
+  return !!(
+    (forAttr && (forAttr.includes("*") || forAttr.includes(value))) ||
+    (!name.includes("data-html-") &&
+      name.startsWith("data-") &&
+      (forTag["data-*"] || testDataAttribute(forTag, name, value)))
+  );
+}
+
 export function sanitize(text, allowLister) {
   if (!text) {
     return "";
@@ -119,13 +130,8 @@ export function sanitize(text, allowLister) {
     onIgnoreTagAttr(tag, name, value) {
       const forTag = allowList.attrList[tag];
       if (forTag) {
-        const forAttr = forTag[name];
-
         if (
-          (forAttr && (forAttr.includes("*") || forAttr.includes(value))) ||
-          (!name.includes("data-html-") &&
-            name.startsWith("data-") &&
-            (forTag["data-*"] || testDataAttribute(forTag, name, value))) ||
+          isAllowListedAttr(forTag, name, value) ||
           (tag === "a" &&
             name === "href" &&
             hrefAllowed(value, extraHrefMatchers)) ||

@@ -15,7 +15,10 @@ import { i18n } from "discourse-i18n";
 export default class CalendarSubscriptions extends Component {
   @service dialog;
 
+  /** @type {boolean | null} */
   @tracked hasSubscription = null;
+
+  /** @type {({ bookmarks: string } & Record<string, string>) | null} */
   @tracked urls = null;
   @tracked loading = false;
 

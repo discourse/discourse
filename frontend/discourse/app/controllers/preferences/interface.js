@@ -51,9 +51,12 @@ export default class InterfaceController extends Controller {
   @service session;
   @controller("preferences") preferencesController;
 
+  /** @type {number | null} */
   @tracked selectedInterfaceColorModeId = null;
   currentThemeId = currentThemeId();
   previewingColorScheme = false;
+
+  /** @type {number | null | undefined} */
   selectedDarkColorSchemeId = null;
   makeColorSchemeDefault = true;
   subpageTitle = i18n("user.preferences_nav.interface");

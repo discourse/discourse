@@ -1,61 +1,43 @@
-/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
-import { tracked } from "@glimmer/tracking";
-import Component from "@ember/component";
-import { computed } from "@ember/object";
-import {
-  attributeBindings,
-  classNameBindings,
-  classNames,
-} from "@ember-decorators/component";
+import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { deepEqual } from "discourse/lib/object";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
-@classNames("tap-tile")
-@classNameBindings("active")
-@attributeBindings("role", "ariaPressed", "tabIndex")
 export default class DTapTile extends Component {
-  role = "button";
-  tabIndex = 0;
-
-  @tracked _ariaPressedOverride;
-
-  init() {
-    super.init(...arguments);
-    this.set("elementId", `tap_tile_${this.tileId}`);
-  }
-
-  @computed("active")
-  get ariaPressed() {
-    if (this._ariaPressedOverride !== undefined) {
-      return this._ariaPressedOverride;
-    }
-    return this.active;
-  }
-
-  set ariaPressed(value) {
-    this._ariaPressedOverride = value;
-  }
-
-  @computed("activeTile", "tileId")
   get active() {
-    return deepEqual(this.activeTile, this.tileId);
+    return deepEqual(this.args.activeTile, this.args.tileId);
   }
 
+  @action
   click() {
-    this.onChange(this.tileId);
+    this.args.onChange(this.args.tileId);
   }
 
+  @action
   keyDown(e) {
     if (e.key === "Enter") {
       e.stopPropagation();
-      this.onChange(this.tileId);
+      this.args.onChange(this.args.tileId);
     }
   }
 
   <template>
-    {{#if this.icon}}
-      {{dIcon this.icon}}
-    {{/if}}
-    {{yield}}
+    <div
+      role="button"
+      tabindex="0"
+      ...attributes
+      aria-pressed={{if this.active "true" "false"}}
+      class={{dConcatClass "tap-tile" (if this.active "active")}}
+      id="tap_tile_{{@tileId}}"
+      {{on "click" this.click}}
+      {{on "keydown" this.keyDown}}
+    >
+      {{#if @icon}}
+        {{dIcon @icon}}
+      {{/if}}
+      {{yield}}
+    </div>
   </template>
 }

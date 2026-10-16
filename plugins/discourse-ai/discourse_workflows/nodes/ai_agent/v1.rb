@@ -325,7 +325,7 @@ if defined?(DiscourseWorkflows)
                 key = drop_reason_key(uploads_by_id[upload_id], agent_record, llm_model, guardian)
                 next if key.nil?
 
-                error_text(
+                upload_error_text(
                   key,
                   upload_id: upload_id,
                   agent: agent_record.name,
@@ -341,8 +341,8 @@ if defined?(DiscourseWorkflows)
           end
 
           def drop_reason_key(upload, agent_record, llm_model, guardian)
-            return "upload_not_found" if upload.nil?
-            return "upload_not_visible" if !guardian.can_see_upload?(upload)
+            return "not_found" if upload.nil?
+            return "not_visible" if !guardian.can_see_upload?(upload)
 
             encoder = ::DiscourseAi::Completions::UploadEncoder
             if !encoder.image?(upload)
@@ -364,6 +364,10 @@ if defined?(DiscourseWorkflows)
 
           def error_text(key, **args)
             I18n.t("discourse_ai.discourse_workflows.ai_agent.errors.#{key}", **args)
+          end
+
+          def upload_error_text(key, **args)
+            I18n.t("discourse_ai.discourse_workflows.uploads.#{key}", **args)
           end
 
           def run_agent(agent, config, log, runner)
@@ -392,7 +396,7 @@ if defined?(DiscourseWorkflows)
             result, structured = collect_reply(agent[:bot], bot_context, log)
 
             skipped =
-              execution_context.upload_skips.map { |skip| error_text("upload_skipped", **skip) }
+              execution_context.upload_skips.map { |skip| upload_error_text("skipped", **skip) }
             raise_uploads_not_sent!(agent_record, skipped) if skipped.any?
 
             { "result" => result }.merge(structured_fields(structured, agent_record))

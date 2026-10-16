@@ -16,6 +16,14 @@ import { autoTrackedArray } from "discourse/lib/tracked-tools";
 
 const PROBLEMS_CHECK_MINUTES = 1;
 
+/**
+ * @typedef {Object} LoadedDashboardSections
+ * @property {string} [period]
+ * @property {Date} [startDate]
+ * @property {Date} [endDate]
+ * @property {{ id: string, data?: unknown, error?: boolean }[]} sections
+ * @property {{ sections: { id: string, visible: boolean }[] }} [configuration]
+ */
 export default class AdminDashboardController extends Controller {
   @service siteSettings;
   @service exception;
@@ -24,8 +32,14 @@ export default class AdminDashboardController extends Controller {
   @tracked loadingProblems = false;
   @tracked problemsFetchedAt;
   @tracked range = DEFAULT_PERIOD;
+
+  /** @type {string | null} */
   @tracked start_date = null;
+
+  /** @type {string | null} */
   @tracked end_date = null;
+
+  /** @type {LoadedDashboardSections | null} */
   @tracked loadedSections = null;
   @tracked loadingSections = false;
   @tracked sectionsFetchError = false;
@@ -34,6 +48,8 @@ export default class AdminDashboardController extends Controller {
   queryParams = ["range", "start_date", "end_date"];
 
   isLoading = false;
+
+  /** @type {Date | null} */
   dashboardFetchedAt = null;
   _sectionsLoadId = 0;
   _sectionsLoadingCount = 0;

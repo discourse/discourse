@@ -236,7 +236,13 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def homepage_options
-    DiscoursePluginRegistry.homepage_options.map { |option| option.slice(:id, :path, :server_side) }
+    DiscoursePluginRegistry.homepage_options.map do |option|
+      {
+        id: option[:id],
+        path: HomepageHelper.option_path(option, scope),
+        server_side: option[:server_side],
+      }
+    end
   end
 
   def periods

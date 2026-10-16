@@ -58,6 +58,7 @@ export default function makeEngine(
       allowLister.allowListFeature(feature, info);
     });
 
+    options.allowLister = allowLister;
     options.sanitizer = options.discourse.sanitizer = options.discourse.sanitize
       ? (a) => sanitize(a, allowLister)
       : (a) => a;

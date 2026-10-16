@@ -11,7 +11,6 @@ module Chat
       @model = chat_message
       @previous_cooked = (chat_message.cooked || "").dup
       @should_secure_uploads = false
-      @size_cache = {}
       @opts = opts
       @used_hotlinked_media_ids = Set.new
       @stale_hotlinked_media_ids = []

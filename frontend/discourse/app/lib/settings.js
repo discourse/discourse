@@ -4,13 +4,17 @@ export function prioritizeNameInUx(name) {
   let siteSettings = helperContext().siteSettings;
 
   return (
-    !siteSettings.prioritize_username_in_ux && name && name.trim().length > 0
+    siteSettings.enable_names &&
+    !siteSettings.prioritize_username_in_ux &&
+    name &&
+    name.trim().length > 0
   );
 }
 
 export function prioritizeNameFallback(name, username) {
   let siteSettings = helperContext().siteSettings;
   if (
+    siteSettings.enable_names &&
     siteSettings.display_name_on_posts &&
     !siteSettings.prioritize_username_in_ux
   ) {

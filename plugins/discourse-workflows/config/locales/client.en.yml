@@ -1453,6 +1453,10 @@ en:
         finished_at: "Finished"
         run_time: "Run time"
         id: "ID"
+        execution: "Execution"
+        modes:
+          manual: "Manual"
+          error_mode: "Error workflow"
         expand: "Details"
         collapse: "Hide"
         details: "Details"
@@ -1462,7 +1466,6 @@ en:
         delete_selected: "Delete selected"
         select: "Select"
         cancel_select: "Cancel"
-        show: "Show"
         delete_confirm:
           one: "Are you sure you want to delete %{count} execution?"
           other: "Are you sure you want to delete %{count} executions?"

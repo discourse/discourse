@@ -221,6 +221,10 @@ function hasNoOutput(step) {
   );
 }
 
+function hasStepData(step) {
+  return step.input !== undefined;
+}
+
 function isFilterStep(step) {
   return step.node_type === "condition:filter";
 }
@@ -819,30 +823,32 @@ export default class ExecutionDetail extends Component {
                 </div>
               {{/if}}
 
-              <details class="workflows-execution-detail__step-section">
-                <summary>
-                  {{i18n "discourse_workflows.executions.input"}}
-                  {{#if (itemCount step.input)}}
-                    <span
-                      class="workflows-execution-detail__item-count"
-                    >{{itemCount step.input}}
-                      {{i18n "discourse_workflows.executions.items"}}</span>
-                  {{/if}}
-                </summary>
-                <pre>{{formatInputData step.input}}</pre>
-              </details>
-              <details class="workflows-execution-detail__step-section">
-                <summary>
-                  {{i18n "discourse_workflows.executions.output"}}
-                  {{#if (itemCount step.output)}}
-                    <span
-                      class="workflows-execution-detail__item-count"
-                    >{{itemCount step.output}}
-                      {{i18n "discourse_workflows.executions.items"}}</span>
-                  {{/if}}
-                </summary>
-                <pre>{{formatOutputData step.output}}</pre>
-              </details>
+              {{#if (hasStepData step)}}
+                <details class="workflows-execution-detail__step-section">
+                  <summary>
+                    {{i18n "discourse_workflows.executions.input"}}
+                    {{#if (itemCount step.input)}}
+                      <span
+                        class="workflows-execution-detail__item-count"
+                      >{{itemCount step.input}}
+                        {{i18n "discourse_workflows.executions.items"}}</span>
+                    {{/if}}
+                  </summary>
+                  <pre>{{formatInputData step.input}}</pre>
+                </details>
+                <details class="workflows-execution-detail__step-section">
+                  <summary>
+                    {{i18n "discourse_workflows.executions.output"}}
+                    {{#if (itemCount step.output)}}
+                      <span
+                        class="workflows-execution-detail__item-count"
+                      >{{itemCount step.output}}
+                        {{i18n "discourse_workflows.executions.items"}}</span>
+                    {{/if}}
+                  </summary>
+                  <pre>{{formatOutputData step.output}}</pre>
+                </details>
+              {{/if}}
             </div>
           </div>
         {{/each}}

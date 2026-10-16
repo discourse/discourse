@@ -77,6 +77,8 @@ export default class PostStream extends RestModel {
   /**
    * Post awaiting focus once rendered. A fresh object per request, so the
    * renderer can mark it `done` without writing tracked state mid-render.
+   *
+   * @type {{ postNumber: number, done: boolean } | null}
    */
   @tracked focusTarget = null;
   @tracked gaps;
@@ -1241,6 +1243,7 @@ export default class PostStream extends RestModel {
       .filter((item) => item != null);
   }
 
+  /** @returns {globalThis.Promise<import("discourse/models/post").default[] | undefined>} */
   async loadIntoIdentityMap(postIds, opts) {
     if (isEmpty(postIds)) {
       return [];

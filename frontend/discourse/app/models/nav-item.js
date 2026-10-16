@@ -347,6 +347,8 @@ export default class NavItem extends EmberObject {
 export class ExtraNavItem extends NavItem {
   @tracked href;
   @tracked count = 0;
+
+  /** @type {((category: Category | null | undefined, args: Record<string, unknown>) => boolean) | null} */
   customFilter = null;
 }
 
