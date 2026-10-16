@@ -13,9 +13,13 @@ require_relative "../lib/chrome_installed_checker"
 class QunitRunner
   DEFAULT_BROWSER_START_TIMEOUT = 45
   DEFAULT_BROWSER_INACTIVITY_TIMEOUT = 30
+  # the filter ends up in the test page URL; the dev server rejects query strings over 10KB
+  MAX_FILE_PATH_FILTER_LENGTH = 8 * 1024
+  TEST_FILE_GLOB = "*-test.{js,gjs,ts,gts}"
 
   def initialize(args)
     @file_paths = []
+    @path_args = []
     @verbose = ENV["ACTIONS_STEP_DEBUG"] == "true"
     @dry_run = false
     @rails_port = ENV["UNICORN_PORT"]&.to_i || 3000
@@ -174,6 +178,7 @@ class QunitRunner
     ensure_supported_target!
 
     @file_paths = args
+    @path_args = args
 
     detect_plugin_targets!
     expand_directory_paths!
@@ -203,7 +208,7 @@ class QunitRunner
         # Check if plugin has tests
         test_dirs = %w[test/javascripts test].map { |subdir| File.join(plugin_path, subdir) }
         test_dirs.any? do |test_dir|
-          Dir.exist?(test_dir) && Dir.glob(File.join(test_dir, "**", "*-test.{js,gjs}")).any?
+          Dir.exist?(test_dir) && Dir.glob(File.join(test_dir, "**", TEST_FILE_GLOB)).any?
         end
       end
       .map { |plugin_dir_name| resolve_plugin_namespace(plugin_dir_name) }
@@ -214,7 +219,7 @@ class QunitRunner
 
     @file_paths.each do |path|
       if File.directory?(path)
-        test_files = Dir.glob(File.join(path, "**", "*-test.{js,gjs}"))
+        test_files = Dir.glob(File.join(path, "**", TEST_FILE_GLOB))
         if test_files.empty?
           abort "Error: No test files found in directory: #{path}"
         else
@@ -241,7 +246,7 @@ class QunitRunner
     target = resolved_target
     puts "Target: #{target}" if @verbose
 
-    file_path_filter = build_file_path_filter(@file_paths)
+    file_path_filter = build_file_path_filter(@path_args)
 
     run_ember_exam(file_path_filter: file_path_filter, filter: @filter)
   end
@@ -546,11 +551,68 @@ class QunitRunner
     pages.shuffle.join(",")
   end
 
+  # Directories are passed as prefixes rather than expanded, to keep the filter within
+  # MAX_FILE_PATH_FILTER_LENGTH
   def build_file_path_filter(paths)
     return nil if paths.empty?
 
-    relative_paths = paths.map { |path| convert_to_ember_relative_path(path) }
-    relative_paths.join(",")
+    filter = join_file_path_filter(paths)
+
+    # the core tests root matches everything
+    return nil if filter.nil?
+    return filter if filter.length <= MAX_FILE_PATH_FILTER_LENGTH
+
+    filter = join_file_path_filter(collapse_to_complete_directories(paths))
+    return filter if filter.length <= MAX_FILE_PATH_FILTER_LENGTH
+
+    abort <<~MESSAGE
+      Error: Too many test files (#{@file_paths.length}) to filter by path. The filter is #{(filter.length / 1024.0).ceil}KB, but the test page URL allows #{MAX_FILE_PATH_FILTER_LENGTH / 1024}KB.
+      Pass directories instead, e.g. bin/qunit frontend/discourse/tests/unit
+    MESSAGE
+  end
+
+  def join_file_path_filter(paths)
+    filters = paths.map { |path| file_path_filter_entry(path) }
+    filters.uniq.join(",") if !filters.include?("")
+  end
+
+  def file_path_filter_entry(path)
+    relative = convert_to_ember_relative_path(path)
+    if !File.directory?(path) || relative.empty?
+      relative
+    elsif plugin_path?(path)
+      "#{relative}/"
+    else
+      "./#{relative}/"
+    end
+  end
+
+  # Replaces files with the highest directory whose tests are all selected, so the
+  # shorter filter can't match anything extra
+  def collapse_to_complete_directories(paths)
+    selected = @file_paths.map { File.expand_path(_1) }.to_set
+    complete =
+      Hash.new do |cache, dir|
+        cache[dir] = Dir.glob(File.join(dir, "**", TEST_FILE_GLOB)).all? { selected.include?(_1) }
+      end
+
+    paths.map do |path|
+      next path if File.directory?(path)
+
+      collapsed = path
+      dir = File.dirname(File.expand_path(path))
+      loop do
+        relative = convert_to_ember_relative_path(dir)
+        # stop at the target's root, or outside a tests directory
+        break if relative.empty? || relative.start_with?("/")
+        break if relative.match?(%r{\Adiscourse/plugins/[^/]+\z})
+        break if !complete[dir]
+
+        collapsed = dir
+        dir = File.dirname(dir)
+      end
+      collapsed
+    end
   end
 
   def build_query
@@ -691,7 +753,7 @@ class QunitRunner
   end
 
   def normalize_plugin_test_path(path)
-    path.sub(%r{\Atests?/javascripts/}, "")
+    path.to_s.sub(%r{\Atests?/javascripts(?:/|\z)|\Atests?\z}, "")
   end
 
   def plugin_names_from_filter(filter)
