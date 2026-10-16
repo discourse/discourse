@@ -85,10 +85,20 @@ module Migrations
           @env = env
           @input = input
           @output = output
+          @fetched = {}
         end
 
+        # Answers are remembered, so a retried setting doesn't ask twice.
         # @return [String, nil] nil when the secret is not available
         def fetch(setting_name)
+          return @fetched[setting_name] if @fetched.key?(setting_name)
+
+          @fetched[setting_name] = read(setting_name)
+        end
+
+        private
+
+        def read(setting_name)
           value = @env[self.class.env_name(setting_name)]
           return value if value.present?
           return unless @input.respond_to?(:tty?) && @input.tty?

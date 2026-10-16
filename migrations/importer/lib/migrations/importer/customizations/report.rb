@@ -23,6 +23,8 @@ module Migrations
         def item(section, label)
           status, message = yield
           add(section, label, status, message)
+        rescue Apply::RetryLater
+          raise
         rescue SkipItem => e
           add(section, label, :skipped, e.message)
         rescue StandardError => e
