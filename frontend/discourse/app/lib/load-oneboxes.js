@@ -8,7 +8,8 @@ export function loadOneboxes(
   categoryId,
   maxOneboxes,
   refresh,
-  offline
+  offline,
+  onLoad
 ) {
   const oneboxes = {};
   const inlineOneboxes = {};
@@ -51,6 +52,7 @@ export function loadOneboxes(
       categoryId,
       refresh,
       offline,
+      onLoad,
     });
   }
 
@@ -75,6 +77,7 @@ function _loadOneboxes({
   categoryId,
   refresh,
   offline,
+  onLoad,
 }) {
   Object.values(oneboxes).forEach((onebox) => {
     onebox.forEach((elem) => {
@@ -85,6 +88,7 @@ function _loadOneboxes({
         topicId,
         refresh,
         offline,
+        onResolve: onLoad,
       });
     });
   });

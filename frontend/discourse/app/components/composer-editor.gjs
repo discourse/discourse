@@ -675,7 +675,9 @@ export default class ComposerEditor extends Component {
       this.get("composer.topic.id"),
       this.get("composer.category.id"),
       this.siteSettings.max_oneboxes_per_post,
-      refresh
+      refresh,
+      false,
+      (html) => html && this.appEvents.trigger("composer:refresh-preview")
     );
 
     if (refresh && loaded > 0) {

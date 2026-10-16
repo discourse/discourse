@@ -1,5 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Composer - Onebox", function (needs) {
@@ -30,12 +31,28 @@ http://www.example.com/has-title.html
 
     assert.dom(".d-editor-preview").exists();
     assert.dom(".d-editor-preview").hasHtml(`
-<p><aside class=\"onebox\"><article class=\"onebox-body\"><h3><a href=\"http://www.example.com/article.html\" tabindex=\"-1\">An interesting article</a></h3></article></aside><br>
-This is another test <a href=\"http://www.example.com/has-title.html\" class=\"inline-onebox\" tabindex=\"-1\">This is a great title</a></p>
+<p></p><aside class=\"onebox\"><article class=\"onebox-body\"><h3><a href=\"http://www.example.com/article.html\" tabindex=\"-1\">An interesting article</a></h3></article></aside><br>
+This is another test <a href=\"http://www.example.com/has-title.html\" class=\"inline-onebox\" tabindex=\"-1\">This is a great title</a><p></p>
 <p><a href=\"http://www.example.com/no-title.html\" class=\"onebox\" target=\"_blank\" tabindex=\"-1\">http://www.example.com/no-title.html</a></p>
 <p>This is another test <a href=\"http://www.example.com/no-title.html\" class=\"\" tabindex=\"-1\">http://www.example.com/no-title.html</a><br>
 This is another test <a href=\"http://www.example.com/has-title.html\" class=\"inline-onebox\" tabindex=\"-1\">This is a great title</a></p>
-<p><aside class=\"onebox\"><article class=\"onebox-body\"><h3><a href=\"http://www.example.com/article.html\" tabindex=\"-1\">An interesting article</a></h3></article></aside></p>`);
+<p></p><aside class=\"onebox\"><article class=\"onebox-body\"><h3><a href=\"http://www.example.com/article.html\" tabindex=\"-1\">An interesting article</a></h3></article></aside><p></p>`);
+  });
+
+  test("decorates oneboxes once they load", async function (assert) {
+    withPluginApi((api) => {
+      api.decorateCookedElement((element) =>
+        element
+          .querySelectorAll("aside.onebox")
+          .forEach((onebox) => onebox.classList.add("decorated"))
+      );
+    });
+
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await fillIn(".d-editor-input", "http://www.example.com/has-title.html");
+
+    assert.dom(".d-editor-preview aside.onebox.decorated").exists();
   });
 });
 
