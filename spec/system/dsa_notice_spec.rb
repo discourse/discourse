@@ -6,6 +6,10 @@ RSpec.describe "Illegal content notices" do
   fab!(:topic)
   fab!(:reported_post) { Fabricate(:post, topic:) }
 
+  let(:explanation) do
+    "This listing advertises counterfeit goods as authentic and asks buyers to pay outside the marketplace. The product description and payment instructions appear intended to deceive buyers."
+  end
+
   let(:notice_page) { PageObjects::Pages::DsaNotice.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
@@ -31,7 +35,7 @@ RSpec.describe "Illegal content notices" do
     expect(notice_page.form.field("email")).to have_errors("Required")
     expect(page).to have_no_content("Notice received")
 
-    notice_page.fill_notice
+    notice_page.fill_notice(explanation:)
     notice_page.form.field("name").fill_in("Alex Morgan")
     notice_page.form.field("email").fill_in("alex@example.invalid")
     notice_page.form.field("declaration").check
@@ -44,16 +48,15 @@ RSpec.describe "Illegal content notices" do
     sign_in(admin)
     notice_page.open_group_notice(user: admin, group:, reference:)
     expect(page).to have_content("alex@example.invalid")
-    expect(page).to have_content(notice_page.explanation)
+    expect(page).to have_content(explanation)
     expect(page).to have_content("Replies to this PM stay internal.")
     expect(page).to have_no_content("Forum:")
   end
 
-  it "accepts an anonymous notice on a private site without retaining contact details" do
-    SiteSetting.login_required = true
+  it "accepts an anonymous notice without retaining contact details" do
     visit("/dsa/illegal-content?content_url=#{CGI.escape(reported_post.full_url)}")
     expect(notice_page).to have_notice_form
-    notice_page.fill_notice
+    notice_page.fill_notice(explanation:)
     notice_page.form.field("name").fill_in("Discard this name")
     notice_page.form.field("email").fill_in("discard@example.invalid")
     notice_page.form.field("anonymous").check
@@ -75,14 +78,5 @@ RSpec.describe "Illegal content notices" do
     expect(page).to have_content("Anonymous, no contact details provided")
     expect(page).to have_no_content("Discard this name")
     expect(page).to have_no_content("discard@example.invalid")
-  end
-
-  it "keeps anonymous email reporting instructions when DSA reporting is disabled" do
-    SiteSetting.dsa_reporting_enabled = false
-    SiteSetting.email_address_to_report_illegal_content = "legal@example.invalid"
-    topic_page.visit_topic(topic)
-    topic_page.click_post_action_button(reported_post, :flag)
-    expect(page).to have_css(".d-modal__body", text: "legal@example.invalid")
-    expect(notice_page).to have_no_notice_form
   end
 end

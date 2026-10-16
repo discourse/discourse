@@ -27,11 +27,7 @@ module PageObjects
         find(".dsa-notice__reference strong").text
       end
 
-      def explanation
-        "This listing advertises counterfeit goods as authentic and asks buyers to pay outside the marketplace. The product description and payment instructions appear intended to deceive buyers."
-      end
-
-      def fill_notice
+      def fill_notice(explanation:)
         form.field("explanation").fill_in(explanation)
       end
 
