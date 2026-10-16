@@ -135,20 +135,20 @@ export default class WindowedListCoordinator {
    *
    * The seed in `dRovingFocus` can only see MOUNTED rows, and the reveal scroll that brings an
    * off-window selection into view is deferred a runloop tick — so without this the seed of a
-   * windowed list never sees the selection, activates row zero instead, and then *pins* row
-   * zero. That pin is self-sustaining: the stale cursor stays mounted, so every later reconcile
+   * windowed list never sees the selection, activates row zero instead, and then keeps row
+   * zero mounted. That is self-sustaining: the stale cursor stays mounted, so every later reconcile
    * finds it still present and keeps it. The user-visible result is not a misplaced highlight
    * but silent data loss — Enter activates row zero and replaces the held value with the first
    * item, only ever past the fold.
    *
-   * `??`, never `||`: index 0 is a legitimate pin.
+   * `??`, never `||`: index 0 is a legitimate index to keep mounted.
    */
-  windowPins = (rows: readonly ListRow[]) => {
-    const pin = this._activePinnedIndex ?? this.revealRowIndex(rows);
+  mountedRows = (rows: readonly ListRow[]) => {
+    const kept = this._activeMountedIndex ?? this.revealRowIndex(rows);
     const headerIndices = this.#headerIndices(rows);
 
     return (indices: readonly number[]) => {
-      const extras: Array<number | undefined> = pin == null ? [] : [pin];
+      const extras: Array<number | undefined> = kept == null ? [] : [kept];
       const collectHeader = (index: number) => {
         const row = rows[index];
         const option = row && this.optionRow(row);
@@ -159,8 +159,8 @@ export default class WindowedListCoordinator {
       };
 
       indices.forEach(collectHeader);
-      if (pin != null) {
-        collectHeader(pin);
+      if (kept != null) {
+        collectHeader(kept);
       }
       return extras.filter((index): index is number => index != null);
     };
@@ -189,7 +189,7 @@ export default class WindowedListCoordinator {
   // alongside the headers for mounted groups. Not a logical option ordinal: with group headers
   // the two diverge, and the roving modifier addresses options by `data-logical-index` instead
   // (see #optionRawIndices).
-  @tracked _activePinnedIndex: number | undefined = undefined;
+  @tracked _activeMountedIndex: number | undefined = undefined;
 
   constructor({
     engine,
@@ -233,11 +233,11 @@ export default class WindowedListCoordinator {
       if (target?.isConnected) {
         target.focus({ preventScroll: true });
         // Focus is placed directly here, not through the roving modifier's `#setActive`, so
-        // `onActiveChange` never fires to seed the pin. Seed it now: a Home/End/Page jump
-        // before the first arrow keypress would otherwise scroll with nothing pinned, unmount
+        // `onActiveChange` never fires to seed the kept row. Seed it now: a Home/End/Page jump
+        // before the first arrow keypress would otherwise scroll with nothing kept mounted, unmount
         // the focused row, and drop focus to `<body>`.
         this.activeOptionKey = target.dataset.optionKey ?? null;
-        this._activePinnedIndex =
+        this._activeMountedIndex =
           target.dataset.index == null
             ? undefined
             : Number(target.dataset.index);
@@ -253,7 +253,11 @@ export default class WindowedListCoordinator {
     }
 
     target = this.#clampJumpTarget(target);
-    this.#scrollToJumpTarget(target, direction);
+    if (target === 0 && direction === "backward") {
+      this.resetListScroll();
+    } else {
+      this.#scrollToJumpTarget(target, direction);
+    }
     this.#jumpTimer = nextRunloop(() =>
       this.#reconcileJump(target, direction, 0)
     );
@@ -298,7 +302,7 @@ export default class WindowedListCoordinator {
     // `--active` (the modifier reports the active option only while it moves the cursor, so
     // it never reports the clearing on teardown).
     this.activeOptionKey = null;
-    this._activePinnedIndex = undefined;
+    this._activeMountedIndex = undefined;
     this.#listboxApi = null;
     this.#listboxRoving = null;
     this.#jumpTimer = undefined;
@@ -307,10 +311,22 @@ export default class WindowedListCoordinator {
   @action
   resetListScroll(): void {
     cancel(this.#jumpTimer);
-    this.#listboxApi?.scrollToIndex(0, {
-      align: "start",
-      behavior: "auto",
-    });
+    this.#listboxApi?.scrollToOffset(0, { behavior: "auto" });
+  }
+
+  /** Counts the contiguous leading sticky options. */
+  @bind
+  stickyCount(rows: readonly ListRow[]): number {
+    const firstScrolling = rows.findIndex(
+      (row) => !this.optionRow(row)?.flags.sticky
+    );
+    return firstScrolling === -1 ? rows.length : firstScrolling;
+  }
+
+  /** Whether the row at `index` is the last of the leading sticky options. */
+  @bind
+  isLastSticky(rows: readonly ListRow[], index: number): boolean {
+    return index === this.stickyCount(rows) - 1;
   }
 
   /** Reads the complete option set size, skipping structural and placeholder rows. */
@@ -344,7 +360,7 @@ export default class WindowedListCoordinator {
     this.activeOptionKey = meta?.pointer
       ? null
       : (element?.dataset.optionKey ?? null);
-    this._activePinnedIndex =
+    this._activeMountedIndex =
       element?.dataset.index == null
         ? undefined
         : Number(element.dataset.index);

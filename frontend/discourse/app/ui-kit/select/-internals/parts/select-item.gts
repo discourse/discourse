@@ -20,6 +20,8 @@ interface SelectItemSignature {
      * windowed list re-renders rows out from under an out-of-band `classList` mutation).
      */
     active?: boolean;
+    /** The last sticky row, which draws the rule under the sticky zone. */
+    stickyEnd?: boolean;
     /**
      * When true, the whole control is disabled/read-only and no option may be activated,
      * regardless of the row's own flag. Closing the overlay on lock is asynchronous (it
@@ -63,6 +65,8 @@ export default class SelectItem extends Component<SelectItemSignature> {
       class={{dConcatClass
         "d-combobox__option"
         (if @active "--active")
+        (if @descriptor.flags.sticky "--sticky")
+        (if @stickyEnd "--sticky-end")
         (if @descriptor.flags.selected "--selected")
         (if @descriptor.flags.__create "--create")
         (if @descriptor.flags.__none "--none")

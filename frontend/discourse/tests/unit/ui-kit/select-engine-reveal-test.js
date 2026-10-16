@@ -1396,3 +1396,55 @@ module(
     });
   }
 );
+
+module(
+  "Unit | ui-kit | SelectEngine | sticky leading accounting",
+  function (hooks) {
+    setupTest(hooks);
+
+    test("hoisting source options preserves the declared asynchronous total", async function (assert) {
+      const engine = new SelectEngine({
+        load: () => ({
+          items: [
+            { id: 1, name: "Action", sticky: true },
+            { id: 2, name: "Result" },
+          ],
+          total: 100,
+          hasMore: true,
+        }),
+        noneLabel: "None",
+        specialItems: () => [{ id: "special", name: "Special", sticky: true }],
+      });
+      const rows = engine.buildItems(
+        await engine.loadItems(engine.loadContext)
+      );
+      assert.deepEqual(
+        rows.map((row) => row.setSize),
+        [102, 102, 102, 102],
+        "hoisted source rows count once alongside true specials and none"
+      );
+      assert.deepEqual(
+        rows.map((row) => row.posInSet),
+        [1, 2, 3, 4],
+        "loaded positions remain contiguous"
+      );
+    });
+
+    test("server pages containing only sticky actions still make visible progress", async function (assert) {
+      const engine = new SelectEngine({
+        load: (_filter, { offset }) => ({
+          items: [{ id: offset, name: `Action ${offset}`, sticky: true }],
+          hasMore: true,
+        }),
+      });
+      for (let page = 0; page < 4; page++) {
+        engine.buildItems(await engine.loadItems(engine.loadContext));
+        assert.true(
+          engine.canRevealMore,
+          `page ${page} is visible growth before hoisting`
+        );
+        assert.true(engine.revealMore(), `page ${page} permits another reveal`);
+      }
+    });
+  }
+);

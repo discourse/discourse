@@ -25,9 +25,9 @@ entirely on `d-select.gts` and `select-engine.ts`.
 - `-internals/coordinators/` — non-rendering component-side classes constructed once by
   `DSelect` and configured downward with thunks (never holding a component reference):
   `variant-presenter.ts` (variant/ARIA policy), `select-announcer.ts` (screen-reader
-  announcement arbitration), `windowed-list-coordinator.ts` (windowing, pinning, and jump
-  navigation), `interaction-coordinator.ts` (open/close, focus, and pointer session),
-  `load-feedback.ts` (loading timers and skeleton sizing).
+  announcement arbitration), `windowed-list-coordinator.ts` (windowing, keeping rows mounted,
+  sticky rows, and jump navigation), `interaction-coordinator.ts` (open/close, focus, and
+  pointer session), `load-feedback.ts` (loading timers and skeleton sizing).
 - `-internals/parts/` — the rendering subcomponents: trigger pieces (`trigger-frame`,
   `combobox-query-input`, `multi-chips`, `single-trigger-display`, `selection-label`) and
   the list (`select-listbox`, `select-item`). Parts receive the stable helper objects
@@ -123,7 +123,10 @@ Worked examples of every point above live on the styleguide's select page, under
 Plugins and themes customize a select through four transformers, all keyed on `@identifiers`:
 
 - `select-content` (value transformer) receives the item list and returns a new one. Its context
-  is `{identifiers, filter, value, kind, instance, control}`.
+  is `{identifiers, filter, value, kind, instance, control}`. Set `sticky: true` on an option
+  to keep an action such as "Suggest" visible at the top while the list scrolls. Sticky options
+  lead the none row and specials, stay outside groups, and keep their relative order. Headers
+  and dividers ignore `sticky`. Bottom actions belong in `:footer`.
 - `select-item-class` (value transformer) starts with a fresh `[]` and returns an array of class
   names added to option rows, including none, create, and action rows. It does not apply to group
   headers, dividers, chips, or the trigger. Its context is
@@ -291,6 +294,9 @@ by mechanism.
   passes through unchanged, and `@value` is never mutated (the engine only emits via `@onChange`).
 - Per-item `disabled`; per-item action rows (`onSelect(control, item)`, which run instead of
   selecting and keep the overlay open unless the row calls `control.close()`).
+- Per-item `sticky: true` for leading rows that stay visible while scrolling, such as a
+  "Suggest" action. They remain options in the same listbox and participate in keyboard
+  navigation. Use `:footer` for bottom actions.
 - Selected-row indicator (`@selectedIcon`): shown always in multi-select (default check) and, in
   single-select, when the arg is set.
 - Trigger variants (`@variant`: typeahead / button / static); a leading `@icon`; a label-less
@@ -303,7 +309,7 @@ by mechanism.
   the editable label text, so it is not a live-while-editing surface); empty state
   (`@noResultsLabel` / `:empty`); loading skeleton (`@skeletonCount`); a muted source-error state
   with an optional retry (`@retryable`) and an `:error` consumer block.
-- A pinned `:footer` block below the option list (labels, links, action buttons), keyboard-reachable
+- A fixed `:footer` block below the option list (labels, links, action buttons), keyboard-reachable
   and yielding live state `{filter, value, hasValue, total, loadedCount, maximum, minimum, atMaximum,
   belowMinimum, remaining, close}` so its content can react (e.g. a "plus N more" from
   `total - loadedCount`).
@@ -329,15 +335,15 @@ by mechanism.
   Headers are `role="presentation"` rows in the windowed list. Each option in a *labeled* group
   references the id-bearing label span in its header through `aria-describedby`
   (splitter-bounded options carry no group description — an unlabeled boundary has nothing to
-  announce). The window extension pins a group's header while any of its rows are mounted, so
+  announce). The window extension keeps a group's header mounted while any of its rows are mounted, so
   descriptions resolve for every published window and the description DOM stays bounded by the
   window size by construction, even under near-unique `@groupBy`. The label span contains only
   the group's label text and is hidden when a custom `:groupHeader` renders, keeping arbitrary
   block markup out of option descriptions. The engine still rejects a string `@groupBy` that
   names the value field outright.
 
-  The previous mechanism resolved ID references on every rendered frame; header pins guarantee
-  them for every published window. During the one-runloop transient after an items change (the
+  The previous mechanism resolved ID references on every rendered frame; keeping headers mounted
+  guarantees them for every published window. During the one-runloop transient after an items change (the
   same stale-window interval covered by the `{{#if descriptor}}` row guard), a regrouped option
   can briefly reference a header outside the stale mounted set. Assistive technology treats that
   unresolvable ID reference as no description for that runloop.

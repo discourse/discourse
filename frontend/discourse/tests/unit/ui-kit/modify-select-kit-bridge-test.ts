@@ -438,3 +438,48 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     assert.strictEqual(changedTo, 3, "next() runs the default onChange");
   });
 });
+
+module(
+  "Unit | ui-kit | modify-select-kit bridge | sticky leading content",
+  function (hooks) {
+    setupTest(hooks);
+    setupLegacyBridgeCallbacks(hooks);
+
+    test("hoists prepended and appended actions after content transformation in stable order", function (assert) {
+      withPluginApi((api) => {
+        api.registerValueTransformer("select-content", ({ value }) => [
+          ...value,
+          { id: "native", name: "Native", sticky: true },
+        ]);
+        api
+          .modifySelectKit("sticky-select")
+          .prependContent(() => ({ id: "pre", name: "Prepend", sticky: true }));
+        api
+          .modifySelectKit("sticky-select")
+          .appendContent(() => ({ id: "post", name: "Append", sticky: true }));
+      });
+      const element = document.createElement("div");
+      const engine = new SelectEngine({
+        identifiers: ["sticky-select"],
+        noneLabel: "None",
+        specialItems: () => [{ id: "special", name: "Special", sticky: true }],
+        legacy: {
+          owner: getOwner(this),
+          getElement: () => element,
+          isDestroyed: () => false,
+        },
+      });
+      const rows = engine.buildItems([{ id: "core", name: "Core" }]);
+      assert.deepEqual(
+        ids(rows),
+        ["special", "pre", "native", "post", null, "core"],
+        "specials and bridge output retain their pre-hoist order"
+      );
+      assert.deepEqual(
+        rows.map((row) => row.flags.sticky),
+        [true, true, true, true, false, false],
+        "bridge actions carry the sticky descriptor flag"
+      );
+    });
+  }
+);

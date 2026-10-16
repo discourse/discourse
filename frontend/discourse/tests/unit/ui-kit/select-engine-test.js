@@ -1865,7 +1865,7 @@ module("Unit | ui-kit | SelectEngine | select-load", function (hooks) {
     );
   });
 
-  test("an abandoned first request does not resolve or pin a loader", async function (assert) {
+  test("an abandoned first request does not resolve or claim a loader", async function (assert) {
     let resolutions = 0;
     withPluginApi((api) => {
       api.registerValueTransformer("select-load", ({ value }) => {
@@ -1890,10 +1890,10 @@ module("Unit | ui-kit | SelectEngine | select-load", function (hooks) {
       clientItems(2),
       "the replacement request still loads"
     );
-    assert.strictEqual(resolutions, 1, "only the replacement pins a loader");
+    assert.strictEqual(resolutions, 1, "only the replacement claims a loader");
   });
 
-  test("an in-flight abort keeps the loader pinned through retry and reveals", async function (assert) {
+  test("an in-flight abort keeps the same loader through retry and reveals", async function (assert) {
     let resolutions = 0;
     let release;
     const offsets = [];
@@ -2001,6 +2001,123 @@ module("Unit | ui-kit | SelectEngine | select-load", function (hooks) {
       engine.loadItems(engine.loadContext),
       /select-load.*function/i,
       "invalid results have a development assertion"
+    );
+  });
+});
+
+module("Unit | ui-kit | SelectEngine | sticky rows", function (hooks) {
+  setupTest(hooks);
+
+  const ROWS = [
+    { id: 1, name: "Apple", section: "fruit" },
+    { id: 2, name: "Beet", section: "vegetable" },
+    { id: 3, name: "Cherry", section: "fruit" },
+  ];
+
+  function names(descriptors) {
+    return descriptors.map((row) => row.item.name ?? row.item.label);
+  }
+
+  test("sticky rows are hoisted ahead of the none row and the specials, in order", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer("select-content", ({ value }) => [
+        ...value,
+        { id: "late", name: "Late action", sticky: true, onSelect() {} },
+        { id: "plain", name: "Plain action", onSelect() {} },
+      ]);
+    });
+    const engine = new SelectEngine({
+      items: [
+        ROWS[0],
+        { id: "early", name: "Early action", sticky: true, onSelect() {} },
+        ROWS[1],
+      ],
+      noneLabel: "None",
+      specialItems: () => [
+        { id: "special", name: "Special" },
+        { id: "sticky-special", name: "Sticky special", sticky: true },
+      ],
+    });
+
+    const rows = engine.buildItems(await engine.loadItems(engine.loadContext));
+
+    assert.deepEqual(
+      names(rows),
+      [
+        "Sticky special",
+        "Early action",
+        "Late action",
+        "None",
+        "Special",
+        "Apple",
+        "Beet",
+        "Plain action",
+      ],
+      "sticky rows lead, keeping the order they had in the unhoisted list"
+    );
+    assert.deepEqual(
+      rows.map((row) => row.flags.sticky),
+      [true, true, true, false, false, false, false, false],
+      "only the hoisted rows are flagged sticky"
+    );
+  });
+
+  test("sticky rows are never grouped and a sticky header is ignored", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer("select-content", ({ value }) => [
+        { id: "act", name: "Sticky action", section: "fruit", sticky: true },
+        { __header: true, label: "Stray header", sticky: true },
+        ...value,
+      ]);
+    });
+    const engine = new SelectEngine({
+      items: ROWS,
+      groupBy: "section",
+      groupLabel: (key) => (key === "fruit" ? "Fruit" : "Vegetables"),
+    });
+
+    const rows = engine.buildItems(await engine.loadItems(engine.loadContext));
+    const sticky = rows.find((row) => row.item.id === "act");
+
+    assert.strictEqual(rows[0], sticky, "the sticky row comes first");
+    assert.strictEqual(
+      sticky.groupOrdinal,
+      undefined,
+      "it belongs to no group"
+    );
+    assert.false(
+      rows.some((row) => row.flags.sticky && row.flags.group),
+      "a header is never sticky"
+    );
+  });
+
+  test("sticky rows number from 1 and leave the set size unchanged", async function (assert) {
+    let makeSticky = true;
+    withPluginApi((api) => {
+      api.registerValueTransformer("select-content", ({ value }) => [
+        ...value,
+        { id: "act", name: "Action", sticky: makeSticky, onSelect() {} },
+      ]);
+    });
+    const engine = new SelectEngine({ items: ROWS, noneLabel: "None" });
+
+    const stickyRows = engine.buildItems(
+      await engine.loadItems(engine.loadContext)
+    );
+    makeSticky = false;
+    const plainRows = engine.buildItems(
+      await engine.loadItems(engine.loadContext)
+    );
+
+    assert.deepEqual(
+      stickyRows.map((row) => row.posInSet),
+      [1, 2, 3, 4, 5],
+      "positions run contiguously from the sticky row"
+    );
+    assert.strictEqual(
+      stickyRows[0].setSize,
+      plainRows[0].setSize,
+      "pinning moves a row without changing the size of the set"
     );
   });
 });

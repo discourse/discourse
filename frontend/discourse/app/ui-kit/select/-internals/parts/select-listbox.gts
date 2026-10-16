@@ -148,12 +148,13 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
             the reason the list was opened. }}
             @initialIndex={{@listbox.revealRowIndex items}}
             @items={{items}}
+            @keepMounted={{@listbox.mountedRows items}}
             @key="key"
             @onReachEnd={{@engine.revealMore}}
             @onRegisterApi={{@listbox.registerListboxApi}}
             @ownedRow={{true}}
-            @pinnedIndices={{@listbox.windowPins items}}
             @role="listbox"
+            @stickyCount={{@listbox.stickyCount items}}
             {{! The options are reached with the arrow keys from the combobox controller, so the
             scroll viewport must not also be a tab stop: in active roving mode the rows carry no
             tabindex, which is exactly the shape a browser adopts the scroller for, and it would
@@ -266,6 +267,7 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
                     @locked={{@presenter.isLocked}}
                     @multiple={{@multiple}}
                     @selectedIcon={{@selectedIcon}}
+                    @stickyEnd={{@listbox.isLastSticky items row.index}}
                     {{row.place row.start row.index}}
                     {{row.measure}}
                     {{! Keep focus in the trigger input on pointer-select so the input

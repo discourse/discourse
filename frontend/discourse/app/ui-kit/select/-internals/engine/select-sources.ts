@@ -202,7 +202,7 @@ export class LocalSource implements SelectSource {
 }
 
 export class PagedSource implements SelectSource {
-  /** Pinned across reveals and retries until the query resets. */
+  /** The query's loader, reused by its reveals and retries until the query resets. */
   #queryLoad?: NonNullable<SelectEngineOptions["load"]>;
 
   /** Resolves the source for the first request of each query. */

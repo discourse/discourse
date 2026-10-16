@@ -1,5 +1,6 @@
 import { cancel, next as nextRunloop } from "@ember/runloop";
 import ItemScope from "discourse/ui-kit/-internals/cursor/item-scope";
+import { padding } from "discourse/ui-kit/-internals/scroll-strip/reveal";
 import type { DRovingFocusConfig } from "../config.ts";
 import { activeSeed } from "../entry-policy.ts";
 
@@ -224,16 +225,26 @@ export default class ActiveDescendantStrategy {
    * document while a detached container is still awaiting its anchored position.
    */
   #scrollIntoView(target: HTMLElement): void {
+    if (getComputedStyle(target).position === "sticky") {
+      return;
+    }
     const container = this.#scrollableAncestor(target);
     if (!container) {
       return;
     }
     const itemRect = target.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
-    if (itemRect.top < containerRect.top) {
-      container.scrollTop -= containerRect.top - itemRect.top;
-    } else if (itemRect.bottom > containerRect.bottom) {
-      container.scrollTop += itemRect.bottom - containerRect.bottom;
+    const style = getComputedStyle(container);
+    const top =
+      containerRect.top +
+      padding(style.scrollPaddingTop, container.clientHeight);
+    const bottom =
+      containerRect.bottom -
+      padding(style.scrollPaddingBottom, container.clientHeight);
+    if (itemRect.top < top) {
+      container.scrollTop -= top - itemRect.top;
+    } else if (itemRect.bottom > bottom) {
+      container.scrollTop += itemRect.bottom - bottom;
     }
   }
 

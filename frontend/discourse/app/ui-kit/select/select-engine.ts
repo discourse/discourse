@@ -52,6 +52,9 @@ export interface SelectItem {
    */
   onSelect?: (control: SelectControl, item: SelectItem) => void;
 
+  /** Kept at the top of the list and visible while it scrolls. Structural rows ignore this. */
+  sticky?: boolean;
+
   /** When true, the item cannot be activated (guards both pointer and keyboard). */
   disabled?: boolean;
 
@@ -101,6 +104,8 @@ export interface SelectDescriptor {
   flags: {
     /** Whether this row's value is part of the current selection. */
     selected: boolean;
+    /** Whether this option stays at the top while the list scrolls. */
+    sticky: boolean;
     /** Whether the row cannot be activated (guards both pointer and keyboard). */
     disabled: boolean;
     /**

@@ -17,6 +17,7 @@ import {
   EngineProbe,
   probedEngine,
 } from "discourse/tests/helpers/d-select-hosts";
+import { settleGestureFrame } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import {
   disableVirtualization,
   enableVirtualization,
@@ -307,7 +308,7 @@ module(
 // controls the listbox, so Home/End/Page navigate options) over 500 items in a bounded
 // viewport mounts only a slice. A logical jump (End → the last option) must scroll the
 // target in, then land the cursor on it AFTER the new window commits — with
-// `aria-activedescendant` referencing a mounted option at every step, and the pinned
+// `aria-activedescendant` referencing a mounted option at every step, and the kept-mounted
 // active row kept mounted so DOM order stays monotonic.
 module("Integration | ui-kit | select | DSelect logical nav", function (hooks) {
   setupRenderingTest(hooks);
@@ -318,6 +319,42 @@ module("Integration | ui-kit | select | DSelect logical nav", function (hooks) {
 
   hooks.afterEach(function () {
     disableVirtualization();
+  });
+
+  // A resize is applied in the next frame. Only that resize may wait: a later jump still has to
+  // publish its window in the same render, or the cursor lands before the target mounts.
+  test("End still lands on the last logical option after every row resizes", async function (assert) {
+    const state = new (class {
+      @tracked tall = false;
+    })();
+
+    await render(
+      <template>
+        {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+        <style>
+          .d-virtual-list {
+            height: 200px;
+            overflow-y: auto;
+          }
+          .tall-rows .d-combobox__option {
+            min-height: 60px;
+          }
+        </style>
+        <div class={{if state.tall "tall-rows"}}>
+          <DSelect @items={{LOADED_ITEMS}} @variant="static" />
+        </div>
+      </template>
+    );
+    await openSelect();
+
+    state.tall = true;
+    await settleGestureFrame();
+
+    await triggerKeyEvent("[role='combobox']", "keydown", "End");
+
+    assert
+      .dom(LAST_OPTION_SELECTOR)
+      .hasClass("--active", "End lands on the last logical option");
   });
 
   test("End lands the cursor on the last logical option after scrolling it into the window", async function (assert) {
@@ -450,7 +487,7 @@ module("Integration | ui-kit | select | DSelect logical nav", function (hooks) {
       );
   });
 
-  test("the pinned active row stays mounted and DOM order stays monotonic after scrolling away", async function (assert) {
+  test("the kept-mounted active row stays mounted and DOM order stays monotonic after scrolling away", async function (assert) {
     await render(
       <template>
         {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
@@ -465,8 +502,8 @@ module("Integration | ui-kit | select | DSelect logical nav", function (hooks) {
     );
     await openSelect();
 
-    // Jump to the end (active + pinned at the last index), then scroll the viewport back
-    // to the top: the window shows the first rows while the pinned active row stays mounted.
+    // Jump to the end (active and kept mounted at the last index), then scroll the viewport back
+    // to the top: the window shows the first rows while the kept-mounted active row stays mounted.
     await triggerKeyEvent("[role='combobox']", "keydown", "End");
 
     const viewport = find(".d-virtual-list");
@@ -478,7 +515,7 @@ module("Integration | ui-kit | select | DSelect logical nav", function (hooks) {
     );
     assert.true(
       indices.includes(LAST_INDEX),
-      "the pinned active row (the last index) stays mounted after scrolling to the top"
+      "the kept-mounted active row (the last index) stays mounted after scrolling to the top"
     );
     for (let i = 1; i < indices.length; i++) {
       assert.true(
@@ -778,7 +815,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     });
   });
 
-  test("a pinned header keeps descriptions resolvable after its group scrolls past the window", async function (assert) {
+  test("a kept-mounted header keeps descriptions resolvable after its group scrolls past the window", async function (assert) {
     const items = Array.from({ length: 60 }, (_, index) => ({
       id: index,
       name: `Item ${index}`,
@@ -806,7 +843,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     await triggerKeyEvent("[role='combobox']", "keydown", "End");
 
     // The window sits deep inside the second group, far past its header row —
-    // only the pin keeps that header mounted. The first group has no mounted
+    // only keepMounted keeps that header mounted. The first group has no mounted
     // options, so its header is correctly unmounted: description DOM stays
     // bounded by the window instead of scaling with the group count.
     const headers = findAll(GROUP_HEADER_SELECTOR);
@@ -817,14 +854,14 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     );
     assert
       .dom(headers[0])
-      .hasText("Second", "the pinned header is the window's group");
+      .hasText("Second", "the kept-mounted header is the window's group");
     findAll(OPTION_SELECTOR).forEach((option) => {
       const headerId = option.getAttribute("aria-describedby");
       const label = headerId ? document.getElementById(headerId) : null;
       assert.strictEqual(
         label?.textContent.trim(),
         "Second",
-        "a mounted option's group description resolves through the pinned header"
+        "a mounted option's group description resolves through the kept-mounted header"
       );
     });
   });
@@ -858,7 +895,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
     await openSelect();
 
     // The reveal centers the held last-of-First option, so the window covers the
-    // boundary: First options via the pinned/revealed rows, Second options below.
+    // boundary: First options via the kept-mounted/revealed rows, Second options below.
     assert
       .dom(GROUP_HEADER_SELECTOR)
       .exists({ count: 2 }, "both groups touching the window keep a header");
@@ -1102,8 +1139,8 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
 
 // The roving seed only sees MOUNTED rows, and the reveal scroll that would mount an off-window
 // selection is deferred a tick — so a selection past the window loses the seed to row zero, which
-// then gets PINNED, keeping it mounted and surviving every later reconcile. The visible outcome
-// is worse than a misplaced highlight: Enter activates the pinned row, silently replacing the
+// then gets kept mounted, and surviving every later reconcile. The visible outcome
+// is worse than a misplaced highlight: Enter activates the kept-mounted row, silently replacing the
 // held value with the first item.
 module(
   "Integration | ui-kit | select | DSelect windowed selection seed",
@@ -1248,3 +1285,155 @@ module(
     });
   }
 );
+
+module("Integration | ui-kit | select | DSelect sticky rows", function (hooks) {
+  setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    enableVirtualization();
+  });
+
+  hooks.afterEach(function () {
+    disableVirtualization();
+  });
+
+  const STICKY_SELECTOR = `${OPTION_SELECTOR}.--sticky`;
+
+  function stickyItems(onSelect) {
+    return [
+      ...Array.from({ length: 200 }, (_, index) => ({
+        id: index,
+        name: `Item ${index}`,
+      })),
+      { id: "act", name: "Sticky action", sticky: true, onSelect },
+    ];
+  }
+
+  function viewport() {
+    return find(".d-virtual-list");
+  }
+
+  async function scrollViewport(top) {
+    viewport().scrollTop = top;
+    await triggerEvent(viewport(), "scroll");
+  }
+
+  function activeText() {
+    return find(`${OPTION_SELECTOR}.--active`)?.textContent.trim();
+  }
+
+  async function renderSticky(onSelect = () => {}) {
+    const items = stickyItems(onSelect);
+    await render(
+      <template>
+        {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+        <style>
+          .d-virtual-list {
+            height: 200px;
+            overflow-y: auto;
+          }
+        </style>
+        <DSelect @items={{items}} @variant="static" />
+      </template>
+    );
+    await openSelect();
+  }
+
+  test("a sticky row stays visible and clickable at the bottom of a long list", async function (assert) {
+    const onSelect = sinon.spy();
+    await renderSticky(onSelect);
+
+    await scrollViewport(viewport().scrollHeight);
+
+    const sticky = find(STICKY_SELECTOR);
+    assert.true(!!sticky, "the sticky row is still mounted");
+    const rect = sticky.getBoundingClientRect();
+    const box = viewport().getBoundingClientRect();
+    assert.true(rect.top >= box.top - 1, "its top is inside the viewport");
+    assert.true(rect.bottom <= box.bottom + 1, "and so is its bottom");
+
+    await click(sticky);
+    assert.true(onSelect.calledOnce, "clicking it runs its action");
+  });
+
+  test("a sticky row is the first option of the same listbox", async function (assert) {
+    await renderSticky();
+
+    assert
+      .dom(STICKY_SELECTOR)
+      .hasAttribute("role", "option")
+      .hasAttribute("aria-posinset", "1");
+    assert.strictEqual(
+      find(STICKY_SELECTOR).closest("[role='listbox']"),
+      find(LISTBOX_SELECTOR),
+      "it lives in the one listbox"
+    );
+    assert.strictEqual(
+      activeText(),
+      "Sticky action",
+      "opening seeds the cursor on the first row, the sticky one"
+    );
+  });
+
+  test("ArrowDown from a sticky row reaches the next row even when the list is scrolled far away", async function (assert) {
+    await renderSticky();
+    assert.strictEqual(
+      activeText(),
+      "Sticky action",
+      "the cursor starts on it"
+    );
+
+    await scrollViewport(viewport().scrollHeight);
+    await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+
+    assert.strictEqual(
+      activeText(),
+      "Item 0",
+      "the next row in the list, not the first row of the scrolled window"
+    );
+  });
+
+  test("Home lands on the sticky row and returns the list to the top", async function (assert) {
+    await renderSticky();
+    await triggerKeyEvent("[role='combobox']", "keydown", "End");
+    assert.true(viewport().scrollTop > 0, "End scrolled the list down");
+
+    await triggerKeyEvent("[role='combobox']", "keydown", "Home");
+
+    assert.strictEqual(activeText(), "Sticky action", "Home lands on it");
+    assert.strictEqual(
+      viewport().scrollTop,
+      0,
+      "and the list is back at the top"
+    );
+  });
+
+  test("ArrowUp never leaves the active row hidden under a sticky row", async function (assert) {
+    await renderSticky();
+    for (let i = 0; i < 21; i++) {
+      await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+    }
+    assert.strictEqual(activeText(), "Item 20", "the cursor is on Item 20");
+
+    // Measured in layout pixels: the test container is scaled, so rect distances are not the
+    // units scrollTop uses. A row's start is its placement offset; the zone is the viewport's
+    // scroll padding.
+    const startOf = (element) =>
+      Number(/translateY\(([\d.]+)px\)/.exec(element.style.transform)[1]);
+    const zone = parseFloat(getComputedStyle(viewport()).scrollPaddingTop);
+    assert.true(zone > 0, "the sticky row reserves a zone");
+
+    // Line Item 20 up just below the zone, so Item 19 sits under it.
+    const active = find(`${OPTION_SELECTOR}.--active`);
+    await scrollViewport(startOf(active) - zone);
+
+    await triggerKeyEvent("[role='combobox']", "keydown", "ArrowUp");
+
+    assert.strictEqual(activeText(), "Item 19", "the cursor moved up");
+    const previous = find(`${OPTION_SELECTOR}.--active`);
+    assert.true(
+      viewport().scrollTop <= startOf(previous) - zone + 1,
+      `the active row starts below the zone (scrollTop ${viewport().scrollTop}, row ${startOf(previous)}, zone ${zone})`
+    );
+  });
+});

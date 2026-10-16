@@ -3,6 +3,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import {
   click,
+  find,
   focus,
   render,
   settled,
@@ -3907,3 +3908,139 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       );
   });
 });
+
+module(
+  "Integration | ui-kit | Modifier | dRovingFocus | sticky leading navigation",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("vertical arrows cross a logical gap in either direction with the default orientation", async function (assert) {
+      let api;
+      const register = (value) => (api = value);
+      const jumps = [];
+      const jump = (index, direction) => jumps.push([index, direction]);
+      await render(
+        <template>
+          <input
+            aria-controls="sticky-list"
+            aria-expanded="true"
+            aria-label="Choices"
+            class="controller"
+            role="combobox"
+          />
+          <div
+            id="sticky-list"
+            role="listbox"
+            {{dRovingFocus
+              focusStrategy="active-descendant"
+              controllerElement=".controller"
+              itemSelector="[role=option]"
+              logicalCount=100
+              activeClass="--active"
+              onRegisterApi=register
+              onJump=jump
+            }}
+          >
+            <div data-logical-index="0" id="leading" role="option">Action</div>
+            <div
+              data-logical-index="50"
+              id="window-start"
+              role="option"
+            >Fifty</div>
+            <div data-logical-index="51" id="window-next" role="option">Fifty
+              one</div>
+          </div>
+        </template>
+      );
+      api.focusLogicalIndex(0);
+      await triggerKeyEvent(".controller", "keydown", "ArrowDown");
+      assert.deepEqual(
+        jumps,
+        [[1, "forward"]],
+        "Down requests the missing logical neighbour"
+      );
+      assert
+        .dom(".controller")
+        .hasAttribute(
+          "aria-activedescendant",
+          "leading",
+          "it does not activate the distant mounted row"
+        );
+      api.focusLogicalIndex(50);
+      await triggerKeyEvent(".controller", "keydown", "ArrowUp");
+      assert.deepEqual(
+        jumps,
+        [
+          [1, "forward"],
+          [49, "backward"],
+        ],
+        "Up requests the missing previous neighbour"
+      );
+      await triggerKeyEvent(".controller", "keydown", "ArrowDown");
+      assert
+        .dom(".controller")
+        .hasAttribute(
+          "aria-activedescendant",
+          "window-next",
+          "adjacent mounted rows still navigate directly"
+        );
+    });
+    test("an unhandled gap leaves the arrow available to its surrounding scroller", async function (assert) {
+      let api;
+      const register = (value) => (api = value);
+      await render(
+        <template>
+          <input
+            aria-controls="gap-list"
+            aria-expanded="true"
+            aria-label="Choices"
+            class="gap-controller"
+            role="combobox"
+          />
+          <div
+            id="gap-list"
+            role="listbox"
+            {{dRovingFocus
+              focusStrategy="active-descendant"
+              controllerElement=".gap-controller"
+              itemSelector="[role=option]"
+              logicalCount=100
+              activeClass="--active"
+              onRegisterApi=register
+            }}
+          >
+            <div
+              data-logical-index="0"
+              id="gap-leading"
+              role="option"
+            >Action</div>
+            <div
+              data-logical-index="50"
+              id="gap-window"
+              role="option"
+            >Fifty</div>
+          </div>
+        </template>
+      );
+      api.focusLogicalIndex(0);
+      const event = new KeyboardEvent("keydown", {
+        key: "ArrowDown",
+        bubbles: true,
+        cancelable: true,
+      });
+      find(".gap-controller").dispatchEvent(event);
+      await settled();
+      assert.false(
+        event.defaultPrevented,
+        "a missing neighbour without a jump handler leaves native scrolling available"
+      );
+      assert
+        .dom(".gap-controller")
+        .hasAttribute(
+          "aria-activedescendant",
+          "gap-leading",
+          "the cursor does not skip the missing rows"
+        );
+    });
+  }
+);

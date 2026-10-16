@@ -183,6 +183,14 @@
   padding: 0.5em 0.75em;
   cursor: pointer;
 
+  &.--sticky {
+    background: var(--secondary);
+  }
+
+  &.--sticky-end {
+    border-block-end: 1px solid var(--primary-low);
+  }
+
   // The keyboard cursor is a POSITION, not a state, so it is framed rather than filled. Sharing
   // the fill channel with the selection made both unreadable: a row just deselected still looked
   // selected, and on a row that IS selected the cursor vanished — which is exactly where a list

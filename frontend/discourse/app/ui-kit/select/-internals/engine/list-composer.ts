@@ -74,30 +74,40 @@ export default class ListComposer {
 
     // The option count never includes structural rows (headers/dividers), whether they come
     // from grouping below or an upstream injector.
-    const sourceCount = items.filter(
+    const visibleCount = items.filter(
       (item) => !this.#isStructural(item)
     ).length;
-    this.#noteVisible(sourceCount, inputCount);
+    this.#noteVisible(visibleCount, inputCount);
 
     const createItem = this.#shouldOfferCreate(items)
       ? // `#shouldOfferCreate` already guaranteed a `createItem` is present.
         this.#options.createItem!(this.#getFilter())
       : null;
 
+    const consumerSpecial = makeArray(
+      this.#options.specialItems?.(this.#snapshot()) ?? []
+    ) as SelectItem[];
+    // Sticky rows lead the whole list, ahead of the none row, so they are hoisted out of both the
+    // specials and the source rows before grouping, which never reaches them.
+    const isSticky = (item: SelectItem) =>
+      !!item.sticky && !this.#isStructural(item);
+    const sticky = [...consumerSpecial, ...items].filter(isSticky);
+    items = items.filter((item) => !isSticky(item));
+    const sourceCount = items.filter(
+      (item) => !this.#isStructural(item)
+    ).length;
+
     // Group the source options before appending create, so the create row is never grouped
     // and headers never enter the option count.
     const grouped = this.#shouldGroup() ? this.#groupItems(items) : items;
 
     const noneRow = this.#noneRow();
-    const consumerSpecial = makeArray(
-      this.#options.specialItems?.(this.#snapshot()) ?? []
-    ) as SelectItem[];
-    // The none row leads the specials so it is the first option (Home lands on it) and flows
-    // through the same counting path below, keeping its `posInSet`/`setSize`/`logicalIndex` in
-    // lockstep with the rest of the set.
+    const scrollingSpecial = consumerSpecial.filter((item) => !isSticky(item));
+    // The none row leads the scrolling specials and flows through the same counting path below,
+    // keeping its `posInSet`/`setSize`/`logicalIndex` in lockstep with the rest of the set.
     const specialItems = noneRow
-      ? [noneRow, ...consumerSpecial]
-      : consumerSpecial;
+      ? [...sticky, noneRow, ...scrollingSpecial]
+      : [...sticky, ...scrollingSpecial];
     const finalItems = createItem
       ? [...specialItems, ...grouped, createItem]
       : [...specialItems, ...grouped];
@@ -258,6 +268,7 @@ export default class ListComposer {
       item,
       flags: {
         selected,
+        sticky: !!item.sticky && !this.#isStructural(item),
         // At the cap only rows that could actually grow the selection are closed off. A
         // selected row stays open (deselecting it is how the user gets back under the cap), and
         // so do action rows and structural rows, neither of which ever becomes a value.

@@ -21,6 +21,8 @@ import SelectionBlockSelectExample from "../../examples/molecules/select/content
 import selectionBlockSelectSource from "../../examples/molecules/select/content/selection?source=file";
 import StatusIconSelectExample from "../../examples/molecules/select/content/status-icon.gjs";
 import statusIconSelectSource from "../../examples/molecules/select/content/status-icon?source=file";
+import StickySelectExample from "../../examples/molecules/select/content/sticky.gjs";
+import stickySelectSource from "../../examples/molecules/select/content/sticky?source=file";
 import TopicGlyphSelectExample from "../../examples/molecules/select/content/topic-glyph.gjs";
 import topicGlyphSelectSource from "../../examples/molecules/select/content/topic-glyph?source=file";
 import WholePickerSelectExample from "../../examples/molecules/select/content/whole-picker.gjs";
@@ -28,6 +30,17 @@ import wholePickerSelectSource from "../../examples/molecules/select/content/who
 import StyleguideExample from "../../styleguide-example.gjs";
 
 export default <template>
+  <StyleguideExample
+    @code={{stickySelectSource}}
+    @description={{i18n
+      "styleguide.sections.select.content.sticky_description"
+    }}
+    @title={{i18n "styleguide.sections.select.content.sticky_example"}}
+    @tryThis={{i18n "styleguide.sections.select.content.sticky_try_this"}}
+  >
+    <div class="select-examples__control"><StickySelectExample /></div>
+  </StyleguideExample>
+
   <StyleguideExample
     @code={{defaultsSelectSource}}
     @description={{i18n

@@ -266,6 +266,10 @@ en:
             manage: "Manage notification settings"
             manage_description: "Open the full notification preferences."
           content:
+            sticky_example: "A sticky action row"
+            sticky_description: "The Suggest action stays at the top while a long list scrolls. It remains an option in the same listbox."
+            sticky_try_this: "Scroll to the end, then choose Suggest to select the first topic. Use Home to return to the top."
+            sticky_action: "Suggest"
             defaults_example: "Rows without a block"
             defaults_description: "`@labelField` picks the field to display and `@selectedIcon` marks the chosen row. Between them they cover most lists, and a block that reproduces this is pure cost: it drops the unresolved-value treatment and, on a typeahead, changes how the trigger behaves."
             defaults_try_this: "Open it. Every row here is the component's own rendering, with no block involved."
