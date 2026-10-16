@@ -11,11 +11,11 @@ import DEmptyState from "discourse/ui-kit/d-empty-state";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import ChatChannelListFilterToggle from "./chat-channel-list-filter-toggle";
-import ChatChannelListOptionsButton from "./chat-channel-list-options-button";
-import ChatChannelRow from "./chat-channel-row";
-import ChatSidebarChannelListFilterEmptyState from "./chat-sidebar-channel-list-filter-empty-state";
-import ChatZero from "./svg/chat-zero";
+import ChatChannelListFilterToggle from "./chat-channel-list-filter-toggle.gjs";
+import ChatChannelListOptionsButton from "./chat-channel-list-options-button.gjs";
+import ChatChannelRow from "./chat-channel-row.gjs";
+import ChatSidebarChannelListFilterEmptyState from "./chat-sidebar-channel-list-filter-empty-state.gjs";
+import ChatZero from "./svg/chat-zero.gjs";
 
 export default class ChannelsListPublic extends Component {
   @service chatChannelsManager;

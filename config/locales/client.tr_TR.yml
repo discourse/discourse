@@ -289,7 +289,6 @@ tr_TR:
       zh_CN:
         name: Basitleştirilmiş Çince
     share:
-      topic_html: 'Konu: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username} adlı kullanıcının #%{postNumber}. gönderisi"
       close: "kapat"
       twitter: "X'te paylaş"
@@ -484,9 +483,6 @@ tr_TR:
     max_of_count:
       one: "maksimum %{count}"
       other: "maksimum %{count}"
-    character_count:
-      one: "%{count} karakter"
-      other: "%{count} karakter"
     period_chooser:
       aria_label: "Döneme göre filtrele"
     related_messages:
@@ -784,6 +780,10 @@ tr_TR:
       title:
         search: "Mesaj Arama"
         placeholder: "mesaj başlığını, url'yi veya kimliği buraya yazın"
+    dsa_statements:
+      category: "Kategori"
+      category_prompt: "Kategori seçin"
+      saving: "Kaydediliyor…"
     review:
       show_more: "Daha fazla göster"
       show_less: "Daha az göster"

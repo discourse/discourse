@@ -331,7 +331,6 @@ cs:
       zh_CN:
         name: Čínština zjednodušená
     share:
-      topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "příspěvek č.%{postNumber} od @%{username}"
       close: "zavřít"
       twitter: "Sdílet na X"
@@ -506,11 +505,6 @@ cs:
       few: "max z %{count}"
       many: "max z %{count}"
       other: "max z %{count}"
-    character_count:
-      one: "%{count} znak"
-      few: "%{count} znaky"
-      many: "%{count} znaků"
-      other: "%{count} znaků"
     period_chooser:
       aria_label: "Filtrovat dle období"
     related_messages:
@@ -827,6 +821,10 @@ cs:
       title:
         search: "Vyhledat zprávu"
         placeholder: "zde zadejte název tématu, adresu URL nebo id"
+    dsa_statements:
+      category: "Kategorie"
+      category_prompt: "Vyberte kategorii"
+      saving: "Ukládání…"
     review:
       show_more: "Zobrazit více"
       show_less: "Zobrazit méně"

@@ -4034,6 +4034,20 @@ RSpec.describe Topic do
     end
   end
 
+  describe ".recalculate_like_counts!" do
+    it "sums the like counts of each topic's live non-whisper posts" do
+      topic_1 = Fabricate(:post, like_count: 2).topic
+      Fabricate(:post, topic: topic_1, like_count: 3, post_type: Post.types[:whisper])
+      Fabricate(:post, topic: topic_1, like_count: 4, deleted_at: Time.zone.now)
+      topic_2 = Fabricate(:post, like_count: 5).topic
+
+      Topic.recalculate_like_counts!([topic_1.id, topic_2.id])
+
+      expect(topic_1.reload.like_count).to eq(2)
+      expect(topic_2.reload.like_count).to eq(5)
+    end
+  end
+
   describe "#update_action_counts" do
     let(:topic) { Fabricate(:topic) }
 

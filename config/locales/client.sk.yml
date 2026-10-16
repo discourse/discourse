@@ -224,7 +224,6 @@ sk:
         last_6_months: "Posledných 6 mesiacov"
         last_year: "Minulý rok"
     share:
-      topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "príspevok č.%{postNumber} od @%{username}"
       close: "zatvoriť"
       twitter: "Zdieľať na X"
@@ -385,11 +384,6 @@ sk:
       few: "najviac %{count}"
       many: "najviac %{count}"
       other: "najviac %{count}"
-    character_count:
-      one: "%{count} znak"
-      few: "%{count} znakov"
-      many: "%{count} znakov"
-      other: "%{count} znakov"
     period_chooser:
       aria_label: "Filtrovať podľa obdobia"
     related_messages:
@@ -696,6 +690,10 @@ sk:
       title:
         search: "Vyhľadajte správu"
         placeholder: "sem zadajte názov témy, adresu URL alebo ID"
+    dsa_statements:
+      category: "Kategória"
+      category_prompt: "Vyberte kategóriu"
+      saving: "Ukladanie…"
     review:
       show_more: "Zobraziť viac"
       show_less: "Zobraziť menej"

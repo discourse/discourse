@@ -10,11 +10,11 @@ import {
   preferredSttModel,
   setPreferredSttModel,
   sttModelUrl,
-} from "./stt-models";
-import SubtitlesManager from "./subtitles";
-import TranscriptDraftSync from "./transcript-draft-sync";
-import { transcriptToMarkdown } from "./transcript-markdown";
-import TranscriptRecorder from "./transcript-recorder";
+} from "./stt-models.js";
+import SubtitlesManager from "./subtitles.js";
+import TranscriptDraftSync from "./transcript-draft-sync.js";
+import { transcriptToMarkdown } from "./transcript-markdown.js";
+import TranscriptRecorder from "./transcript-recorder.js";
 
 // Owns the speech-to-text pipeline and both of its consumers: the caption
 // overlay and the transcript recorder (with its composer-draft sync). The
@@ -351,6 +351,7 @@ export default class TranscriptionCoordinator {
     return {
       reply: transcriptToMarkdown(entries, {
         chatMarkup: !!this.#siteSettings.chat_enabled,
+        roomName: room?.name,
       }),
       title: i18n("live.transcript.draft_title", {
         room: room?.name ?? "",

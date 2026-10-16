@@ -8,15 +8,17 @@ import {
   setAutoGainControlPreferred,
   setEchoCancellationPreferred,
   setPreferredNoiseSuppressionMode,
-} from "./audio-processing";
-import InputGateManager, { sliderToRms } from "./input-gate";
+} from "./audio-processing.js";
+import InputGateManager, { sliderToRms } from "./input-gate.js";
 import {
   audioConstraints,
   preferredInputDeviceId,
   setPreferredInputDeviceId,
-} from "./media-devices";
-import NoiseSuppressionManager, { SupersededError } from "./noise-suppression";
-import { engineForMode } from "./ns-engines";
+} from "./media-devices.js";
+import NoiseSuppressionManager, {
+  SupersededError,
+} from "./noise-suppression.js";
+import { engineForMode } from "./ns-engines.js";
 
 // Owns the local microphone pipeline: raw mic (with the browser's echo
 // cancellation / auto gain / native noise suppression applied per the stored

@@ -124,6 +124,7 @@ after_initialize do
 
   if respond_to?(:register_discourse_workflows_node)
     register_discourse_workflows_node { DiscourseWorkflows::Nodes::AiAgent::V1 }
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::Classify::V1 }
   end
 
   add_admin_route("discourse_ai.title", "discourse-ai", { use_new_show_route: true })
@@ -147,12 +148,19 @@ after_initialize do
   register_problem_check ProblemCheck::AiImageCaptionAgent
 
   register_modifier(:reviewable_automated_detection) do |automated, reviewable|
+    scores = reviewable.reviewable_scores
+
     automated ||
-      reviewable
-        .reviewable_scores
+      scores
         .where(
           "context LIKE ?",
           "#{ReviewableScore.sanitize_sql_like(DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX)}%",
+        )
+        .or(
+          scores.where(
+            user_id: SiteSetting.ai_spam_detection_user_id.presence,
+            reviewable_score_type: ReviewableScore.types[:spam],
+          ),
         )
         .exists?
   end
@@ -267,6 +275,7 @@ after_initialize do
 
   plugin_icons = %w[
     chart-column
+    chart-simple
     spell-check
     language
     images

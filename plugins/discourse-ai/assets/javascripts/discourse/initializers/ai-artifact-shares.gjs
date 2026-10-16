@@ -1,5 +1,5 @@
 import { apiInitializer } from "discourse/lib/api";
-import AiSharingActivityTabs from "../components/ai-sharing-activity-tabs";
+import AiSharingActivityTabs from "../components/ai-sharing-activity-tabs.gjs";
 
 export default apiInitializer((api) => {
   api.renderInOutlet("user-activity-bottom", AiSharingActivityTabs);

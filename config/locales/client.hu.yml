@@ -285,7 +285,6 @@ hu:
       zh_CN:
         name: Kínai (egyszerűsített)
     share:
-      topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "%{postNumber}. bejegyzés, szerző: %{username}"
       close: "bezárás"
       twitter: "Megosztás X-en"
@@ -469,9 +468,6 @@ hu:
     max_of_count:
       one: "legfeljebb %{count}"
       other: "legfeljebb %{count}"
-    character_count:
-      one: "%{count} karakter"
-      other: "%{count} karakter"
     period_chooser:
       aria_label: "Szűrés időszak szerint"
     related_messages:
@@ -755,6 +751,10 @@ hu:
       title:
         search: "Üzenet keresése"
         placeholder: "írja ide az üzenet címét, webcímét vagy azonosítóját"
+    dsa_statements:
+      category: "Kategória"
+      category_prompt: "Válasszon kategóriát"
+      saving: "Mentés…"
     review:
       show_more: "Több megjelenítése"
       show_less: "Kevesebb megjelenítése"

@@ -28,9 +28,14 @@ import { i18n } from "discourse-i18n";
 export default class DPickFilesButton extends Component {
   @service dialog;
 
+  /** @type {string | null | undefined} */
   fileInputId = null;
+
+  /** @type {string | null | undefined} */
   fileInputClass = null;
   fileInputDisabled = false;
+
+  /** @type {string | string[] | null | undefined} */
   acceptedFormatsOverride = null;
   allowMultiple = false;
   showButton = false;

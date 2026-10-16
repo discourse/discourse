@@ -34,7 +34,7 @@ export default function categoryListSubcategories(
  * list needs the grandparent layout rather than plain subcategory links.
  *
  * @param {Category[]} subcategories the subcategories being rendered
- * @param {Object} [options] the options passed to `categoryListSubcategories`
+ * @param {{ page?: string, subcategories?: Category[] }} [options] the options passed to `categoryListSubcategories`
  * @returns {boolean}
  */
 export function hasGrandchildren(subcategories, options) {

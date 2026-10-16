@@ -159,7 +159,6 @@ te:
         last_3_months: "గత 3 నెలలు"
         last_6_months: "గత 6 నెలలు"
     share:
-      topic_html: 'విషయం: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username}ద్వారా పోస్ట్ #%{postNumber}"
       close: "మూసివేయండి"
       facebook: "ఫేస్బుక్లో షేర్ చేయండి"
@@ -299,9 +298,6 @@ te:
     max_of_count:
       one: "%{count} గరిష్టం"
       other: "%{count} గరిష్టం"
-    character_count:
-      one: "%{count} అక్షరం"
-      other: "%{count} అక్షరాలు"
     period_chooser:
       aria_label: "కాలపరిమితి ప్రకారం ఫిల్టర్ చేయండి"
     related_messages:
@@ -485,6 +481,9 @@ te:
       title:
         search: "సందేశం కోసం శోధించండి"
         placeholder: "సందేశ శీర్షిక, url లేదా id ను ఇక్కడ టైప్ చేయండి"
+    dsa_statements:
+      category: "వర్గం"
+      saving: "సేవ్ చేయబడుతోంది…"
     review:
       show_more: "మరిన్ని చూపించండి"
       show_less: "తక్కువ చూపించండి"

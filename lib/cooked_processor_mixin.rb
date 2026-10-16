@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module CookedProcessorMixin
-  GIF_SOURCES_REGEXP = %r{(giphy|tenor)\.com/}
   LIGHTBOX_WRAPPER_CSS_CLASS = "lightbox-wrapper"
   MIN_LIGHTBOX_WIDTH = 100
   MIN_LIGHTBOX_HEIGHT = 100
@@ -188,23 +187,31 @@ module CookedProcessorMixin
     nil
   end
 
-  def add_to_size_cache(url, w, h)
-    @size_cache[url] = [w, h]
+  def get_size(url)
+    image_info(url)&.first
   end
 
-  def get_size(url)
-    return @size_cache[url] if @size_cache.has_key?(url)
+  def animated_image?(url)
+    !!image_info(url)&.last
+  end
 
+  # [[width, height], animated]
+  def image_info(url)
+    @image_info_cache ||= {}
+    @image_info_cache.fetch(url) { @image_info_cache[url] = fetch_image_info(url) }
+  end
+
+  def fetch_image_info(url)
     absolute_url = url
     absolute_url = Discourse.base_url_no_prefix + absolute_url if absolute_url =~ %r{\A/[^/]}
 
     return unless absolute_url
 
-    # FastImage fails when there's no scheme
+    # fetching fails when there's no scheme
     absolute_url = SiteSetting.scheme + ":" + absolute_url if absolute_url.start_with?("//")
 
-    # we can't direct FastImage to our secure-uploads url because it bounces
-    # anonymous requests with a 404 error
+    # we can't fetch our secure-uploads url because it bounces anonymous
+    # requests with a 404 error
     if url && Upload.secure_uploads_url?(url)
       absolute_url =
         Upload.signed_url_from_secure_uploads_url(absolute_url, include_content_disposition: false)
@@ -214,12 +221,12 @@ module CookedProcessorMixin
 
     upload = Upload.get_from_url(absolute_url)
     if upload && upload.width && upload.width > 0
-      @size_cache[url] = [upload.width, upload.height]
+      [[upload.width, upload.height], upload.animated]
     else
-      @size_cache[url] = FastImage.size(absolute_url)
+      RemoteImage.size_and_animated(absolute_url)
     end
-  rescue Zlib::BufError, URI::Error, OpenSSL::SSL::SSLError
-    # FastImage.size raises BufError for some gifs, leave it.
+  rescue URI::Error
+    # the secure uploads url helpers raise on malformed urls
   end
 
   def get_filename(upload, src)
@@ -441,9 +448,7 @@ module CookedProcessorMixin
       end
     end
 
-    if (upload.present? && upload.animated?) || src.match?(GIF_SOURCES_REGEXP)
-      img.add_class("animated")
-    end
+    img.add_class("animated") if upload.present? ? upload.animated? : animated_image?(src)
 
     generate_thumbnail =
       original_width > SiteSetting.max_image_width || original_height > SiteSetting.max_image_height

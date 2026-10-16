@@ -10,7 +10,7 @@ import { eq } from "discourse/truth-helpers";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import VoteCountTrigger from "./vote-count-trigger";
+import VoteCountTrigger from "./vote-count-trigger.gjs";
 
 export default class VoteCount extends Component {
   @service siteSettings;

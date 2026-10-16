@@ -3,14 +3,14 @@ import EmberObject, { computed } from "@ember/object";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-import { isNthPost, isNthTopicListItem } from "../helpers/slot-position";
-import AdComponent from "./ad-component";
-import AdbutlerAd from "./adbutler-ad";
-import AmazonProductLinks from "./amazon-product-links";
-import CarbonadsAd from "./carbonads-ad";
-import GoogleAdsense from "./google-adsense";
-import GoogleDfpAd from "./google-dfp-ad";
-import HouseAd from "./house-ad";
+import { isNthPost, isNthTopicListItem } from "../helpers/slot-position.js";
+import AdComponent from "./ad-component.js";
+import AdbutlerAd from "./adbutler-ad.gjs";
+import AmazonProductLinks from "./amazon-product-links.gjs";
+import CarbonadsAd from "./carbonads-ad.gjs";
+import GoogleAdsense from "./google-adsense.gjs";
+import GoogleDfpAd from "./google-dfp-ad.gjs";
+import HouseAd from "./house-ad.gjs";
 
 const AD_COMPONENTS = {
   "house-ad": HouseAd,

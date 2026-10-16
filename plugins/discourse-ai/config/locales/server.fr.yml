@@ -1050,8 +1050,8 @@ fr:
         disable_embeddings: "Vous devez d'abord désactiver « l'intégration de l'IA activée »."
         choose_model: "Définissez d'abord 'ai embeddings selected model'."
         model_test_failed: "Impossible de générer une intégration de test avec ce modèle. Vérifiez qu'il est correctement configuré."
-    secrets:
-      delete_failed_in_use: "Cet identifiant est actuellement utilisé par un ou plusieurs LLM, intégrations ou outils et ne peut pas être supprimé."
+    decision_models:
+      secret_not_found: "L'identifiant sélectionné n'existe pas."
     llm_models:
       missing_provider_param: "%{param} ne peut pas être vide"
       invalid_provider_param: "Le format de %{param} n'est pas valide."

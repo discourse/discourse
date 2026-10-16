@@ -424,7 +424,6 @@ ar:
       zh_CN:
         name: الصينية المبسطة
     share:
-      topic_html: 'الموضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "المنشور #%{postNumber} بواسطة @%{username}"
       close: "إغلاق"
       twitter: "المشاركة على X"
@@ -639,13 +638,6 @@ ar:
       few: "%{count} كحدٍ أقصى"
       many: "%{count} كحدٍ أقصى"
       other: "%{count} كحدٍ أقصى"
-    character_count:
-      zero: "%{count} حرف"
-      one: "حرف واحد (%{count})"
-      two: "حرفان (%{count})"
-      few: "%{count} أحرف"
-      many: "%{count} حرفًا"
-      other: "%{count} حرف"
     period_chooser:
       aria_label: "التصفية حسب الفترة"
     related_messages:
@@ -1056,6 +1048,9 @@ ar:
       title:
         search: "البحث عن رسالة"
         placeholder: "اكتب عنوان الرسالة أو عنوان URL أو المُعرِّف هنا"
+    dsa_statements:
+      category: "الفئة"
+      saving: "جارٍ الحفظ…"
     review:
       show_more: "عرض المزيد"
       show_less: "عرض أقل"

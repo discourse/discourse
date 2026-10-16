@@ -248,7 +248,6 @@ ja:
       zh_CN:
         name: 中国語 (簡体字)
     share:
-      topic_html: 'トピック: <span class="topic-title">%{topicTitle}</span>'
       post: "%{username} の投稿 #%{postNumber}"
       close: "閉じる"
       twitter: "X で共有"
@@ -412,8 +411,6 @@ ja:
     every_six_months: "6 か月毎"
     max_of_count:
       other: "最大 %{count}"
-    character_count:
-      other: "%{count} 文字"
     period_chooser:
       aria_label: "期間でフィルタ"
     related_messages:
@@ -655,6 +652,10 @@ ja:
       title:
         search: "メッセージの検索"
         placeholder: "ここにメッセージのタイトル、URL、または ID を入力してください"
+    dsa_statements:
+      category: "カテゴリ"
+      category_prompt: "カテゴリを選択する"
+      saving: "保存中…"
     review:
       show_more: "もっと表示"
       show_less: "表示を減らす"

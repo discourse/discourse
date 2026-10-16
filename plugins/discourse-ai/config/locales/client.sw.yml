@@ -42,6 +42,12 @@ sw:
         type: "Aina"
         error: "Hitilafu"
         response: "Mwitikio"
+      discourse_workflows:
+        classify:
+          text: "Neno"
+          upload_ids: "Picha"
+          name: "Jina"
+          type: "Aina"
       ai_tool_approval:
         loading: "Inaandaa...."
         tool: "Kitendo"
@@ -173,6 +179,12 @@ sw:
         edit: "Hariri"
         delete: "Futa"
         embedding: "Ambatanisha"
+      decision_models:
+        no_preset: "Hakuna"
+        display_name: "Jina"
+        provider: "Mkimu"
+        edit: "Hariri"
+        delete: "Futa"
       mcp_servers:
         name: "Jina"
         description: "Maelezo"

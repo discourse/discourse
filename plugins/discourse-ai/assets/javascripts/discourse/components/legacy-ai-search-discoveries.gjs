@@ -16,8 +16,8 @@ import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import AiBlinkingAnimation from "./ai-blinking-animation";
-import AiIndicatorWave from "./ai-indicator-wave";
+import AiBlinkingAnimation from "./ai-blinking-animation.gjs";
+import AiIndicatorWave from "./ai-indicator-wave.gjs";
 
 export default class LegacyAiSearchDiscoveries extends Component {
   @service search;

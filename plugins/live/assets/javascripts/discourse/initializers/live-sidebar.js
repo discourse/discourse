@@ -10,9 +10,9 @@ import LiveParticipantSidebarContextMenu from "discourse/plugins/live/discourse/
 import LiveParticipantSidebarSuffix from "discourse/plugins/live/discourse/components/live-participant-sidebar-suffix";
 import LiveRoomSidebarContextMenu from "discourse/plugins/live/discourse/components/live-room-sidebar-context-menu";
 import LiveCreateRoomModal from "discourse/plugins/live/discourse/components/modal/live-create-room";
-import buildAnonRoomsSection from "../lib/live/anon-rooms-section";
-import { humanKeyName } from "../lib/live/ptt-utils";
-import roomIcon, { roomBadge } from "../lib/live/room-icon";
+import buildAnonRoomsSection from "../lib/live/anon-rooms-section.js";
+import { humanKeyName } from "../lib/live/ptt-utils.js";
+import roomIcon, { roomBadge } from "../lib/live/room-icon.js";
 
 const LINK_NAME_PREFIX = "live-room-";
 const CHAT_PANEL = "chat";

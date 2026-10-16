@@ -80,6 +80,8 @@ export default class SiteSetting extends EmberObject {
   }
 
   @tracked isSaving = false;
+
+  /** @type {string | import("@ember/template").TrustedHTML | null} */
   @tracked validationMessage = null;
   updateExistingUsers = false;
 

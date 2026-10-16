@@ -34,6 +34,7 @@ class Reviewable < ActiveRecord::Base
   has_many :reviewable_histories, dependent: :destroy
   has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
   has_many :reviewable_notes, -> { order(created_at: :asc) }, dependent: :destroy
+  has_many :dsa_statement_of_records
 
   enum :status, { pending: 0, approved: 1, rejected: 2, ignored: 3, deleted: 4 }
 
@@ -458,6 +459,7 @@ class Reviewable < ActiveRecord::Base
                 application_date: Date.current.iso8601,
                 territorial_scope: DsaStatementOfRecord::TERRITORIAL_SCOPE,
                 source_type: "SOURCE_VOLUNTARY",
+                decision_ground: "DECISION_GROUND_INCOMPATIBLE_CONTENT",
               ),
           )
         end
@@ -530,6 +532,7 @@ class Reviewable < ActiveRecord::Base
 
   def self.viewable_by(user, order: nil, preload: true)
     return none if user.blank?
+    return none if !user.staff? && !user.category_group_moderator?
 
     result = self.order(order || "reviewables.score desc, reviewables.created_at desc")
 
@@ -1045,7 +1048,11 @@ class Reviewable < ActiveRecord::Base
   # Failure to save the statement rolls back the transaction.
   #
   # Keys must be symbols. Each hash must include :content_type, :content_date,
-  # :automated_detection, :automated_decision, and at least one decision field.
+  # :automated_detection, :automated_decision, :decision_facts, and at least one
+  # decision field.
+  #
+  # * :decision_facts [String] Required. Facts and circumstances known when the action
+  #   succeeds. Maximum 5000 characters. Core actions use fixed English wording.
   #
   # Decision fields:
   #
@@ -1111,9 +1118,10 @@ class Reviewable < ActiveRecord::Base
   #   * AUTOMATED_DECISION_NOT_AUTOMATED
   #
   # Multiple decision fields may describe the same action. Reviewable#perform
-  # supplies :application_date, :territorial_scope, and :source_type.
-  # Pending statements receive their grounds, category, and supporting explanation
-  # during human classification.
+  # supplies :application_date, :territorial_scope, :source_type, and :decision_ground.
+  # The decision ground is DECISION_GROUND_INCOMPATIBLE_CONTENT.
+  # Pending statements receive their contractual ground, category, and supporting
+  # explanation during human classification.
   #
   # @param action_id [Symbol] Requested action ID, before alias resolution.
   # @param result [Reviewable::PerformResult] Successful action result, including
@@ -1129,6 +1137,7 @@ class Reviewable < ActiveRecord::Base
   #     {
   #       decision_visibility: ["DECISION_VISIBILITY_OTHER"],
   #       decision_visibility_other: "Content edited",
+  #       decision_facts: "The flagged post was edited.",
   #       content_type: ["CONTENT_TYPE_TEXT"],
   #       content_date: post.created_at.to_date.iso8601,
   #       automated_detection:,

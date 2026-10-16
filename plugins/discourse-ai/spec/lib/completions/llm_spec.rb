@@ -355,6 +355,60 @@ RSpec.describe DiscourseAi::Completions::Llm do
   end
 
   describe "#prompt_capacity" do
+    it "counts Responses API images by their image tokens rather than their base64 text" do
+      model.update!(vision_enabled: true)
+      image = file_from_fixtures("logo.png")
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "Instructions",
+          messages: [
+            {
+              type: :user,
+              content: [
+                "Review this image",
+                {
+                  encoded_upload: {
+                    kind: :image,
+                    mime_type: "image/png",
+                    base64: Base64.strict_encode64(File.binread(image.path)),
+                  },
+                },
+              ],
+            },
+          ],
+        )
+      chat_size = model.to_llm.prompt_capacity(prompt).first
+
+      model.update!(url: "https://api.openai.com/v1/responses")
+      responses_size = model.to_llm.prompt_capacity(prompt).first
+
+      expect(responses_size).to be >= 256
+      expect(responses_size).to be_within(100).of(chat_size)
+    end
+
+    it "counts Ollama images by their image tokens rather than their base64 text" do
+      ollama_model = Fabricate(:ollama_model, vision_enabled: true)
+      measured_llm = ollama_model.to_llm
+      image = file_from_fixtures("logo.png")
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "Instructions",
+          messages: [{ type: :user, content: ["Review this image"] }],
+        )
+      text_size = measured_llm.prompt_capacity(prompt).first
+      prompt.messages.last[:content] << {
+        encoded_upload: {
+          kind: :image,
+          mime_type: "image/png",
+          base64: Base64.strict_encode64(File.binread(image.path)),
+        },
+      }
+
+      image_size = measured_llm.prompt_capacity(prompt).first
+
+      expect(image_size - text_size).to be_within(100).of(8192)
+    end
+
     it "admits native PDFs on supported providers and reserves rendered pages plus extracted text" do
       pdf = file_from_fixtures("2-page.pdf", "rag", "plugins/discourse-ai/spec/fixtures")
       encoded = {

@@ -34,6 +34,16 @@ RSpec.describe DiscourseAi::Agents::Tools::Read do
   end
 
   describe "#process" do
+    it "uses usernames for authors when names are disabled" do
+      SiteSetting.enable_names = false
+      post1.user.update!(name: "Hidden Author")
+
+      content = tool.invoke[:content]
+
+      expect(content).to include("#{post1.username} said:")
+      expect(content).not_to include(post1.user.name)
+    end
+
     it "can read private topics if allowed to" do
       category = topic_with_tags.category
       category.set_permissions(Group::AUTO_GROUPS[:staff] => :full)

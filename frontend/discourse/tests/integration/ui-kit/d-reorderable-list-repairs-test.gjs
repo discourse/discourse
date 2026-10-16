@@ -211,9 +211,7 @@ module("Integration | ui-kit | DReorderableList | repairs", function (hooks) {
   test("fix42618 a handle whose destinations vanished still closes its own menu", async function (assert) {
     const soloItems = [{ id: "solo", name: "Solo" }];
     const partnerItems = [{ id: "partner-alpha", name: "Partner Alpha" }];
-    const state = new (class {
-      @tracked showPartner = true;
-    })();
+    const showPartner = tracked(true);
 
     await render(
       <template>
@@ -232,7 +230,7 @@ module("Integration | ui-kit | DReorderableList | repairs", function (hooks) {
               <span data-test-item={{item.id}}>{{item.name}}</span>
             </:row>
           </DReorderableList>
-          {{#if state.showPartner}}
+          {{#if showPartner.value}}
             <DReorderableList
               id="repair-vanish-partner"
               @group={{group}}
@@ -259,7 +257,7 @@ module("Integration | ui-kit | DReorderableList | repairs", function (hooks) {
         "the sibling is a destination while it is mounted, so the menu opens holding it"
       );
 
-    state.showPartner = false;
+    showPartner.value = false;
     await settled();
 
     assert

@@ -158,7 +158,6 @@ bg:
         last_7_days: "Последните 7 дни"
         last_30_days: "Последните 30 дни"
     share:
-      topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "публикация #%{postNumber} от @%{username}"
       close: "затвори"
       facebook: "Споделете във Facebook"
@@ -290,9 +289,6 @@ bg:
     max_of_count:
       one: "максимално от %{count}"
       other: "максимално от %{count}"
-    character_count:
-      one: "%{count} символ"
-      other: "%{count} символа"
     period_chooser:
       aria_label: "Филтриране по период"
     related_messages:
@@ -453,6 +449,9 @@ bg:
       title:
         search: "Търси съобщения"
         placeholder: "въведете тук заглавието на съобщението, url или ID"
+    dsa_statements:
+      category: "Категория"
+      saving: "Запазване…"
     review:
       show_more: "Покажи повече"
       show_less: "Покажи по-малко"

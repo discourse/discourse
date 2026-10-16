@@ -135,7 +135,6 @@ gl:
     date_range_picker:
       apply: "Aplicar"
     share:
-      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "pechar"
       facebook: "Compartir no Facebook"
       email: "Enviar por correo"
@@ -261,9 +260,6 @@ gl:
     max_of_count:
       one: "máx. de %{count}"
       other: "máx. de %{count}"
-    character_count:
-      one: "%{count} carácter"
-      other: "%{count} caracteres"
     related_messages:
       title: "Mensaxes relacionadas"
       pill: "Mensaxes relacionadas"
@@ -408,6 +404,8 @@ gl:
       title:
         search: "Buscar unha mensaxe"
         placeholder: "escriba o título da mensaxe, url ou id aquí"
+    dsa_statements:
+      category: "Categoría"
     review:
       order_by: "Ordenar por"
       in_reply_to: "en resposta a"

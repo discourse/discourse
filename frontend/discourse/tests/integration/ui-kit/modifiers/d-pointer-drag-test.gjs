@@ -1056,15 +1056,13 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
     });
 
     test("touchAction is re-reflected when the consumer changes it", async function (assert) {
-      const state = new (class {
-        @tracked touchAction = "pan-y";
-      })();
+      const touchAction = tracked("pan-y");
 
       await render(
         <template>
           <div
             class="dpd-target"
-            {{dPointerDrag touchAction=state.touchAction}}
+            {{dPointerDrag touchAction=touchAction.value}}
           ></div>
         </template>
       );
@@ -1077,7 +1075,7 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
           "the initial value is reflected"
         );
 
-      state.touchAction = "pan-x";
+      touchAction.value = "pan-x";
       await settled();
 
       // The declaration has to be in place before a touch begins, so a value

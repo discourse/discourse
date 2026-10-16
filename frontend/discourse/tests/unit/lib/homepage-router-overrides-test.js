@@ -6,6 +6,7 @@ import applyRouterHomepageOverrides, {
   homepageNavigationDestination,
   homepagePath,
   homepagePreviewDestination,
+  isHomepageTransition,
 } from "discourse/lib/homepage-router-overrides";
 import { setDefaultHomepage } from "discourse/lib/utilities";
 import Site from "discourse/models/site";
@@ -106,5 +107,20 @@ module("Unit | Lib | homepage-router-overrides", function (hooks) {
     microLib.updateURL("/directory");
 
     assert.deepEqual(updatedURLs, ["/?sort=name", "/directory"]);
+  });
+
+  test("detects transitions that render the homepage", function (assert) {
+    assert.true(
+      isHomepageTransition({
+        intent: { url: "/directory?_discourse_homepage_rewrite=1" },
+      })
+    );
+    assert.true(
+      isHomepageTransition({
+        intent: { queryParams: { _discourse_homepage_rewrite: "1" } },
+      })
+    );
+    assert.false(isHomepageTransition({ intent: { url: "/directory" } }));
+    assert.false(isHomepageTransition(undefined));
   });
 });

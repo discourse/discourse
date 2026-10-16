@@ -1,5 +1,5 @@
 import liveLog from "discourse/plugins/live/discourse/lib/live/logger";
-import { liveAssetAppUrl, liveAssetUrl } from "./live-assets";
+import { liveAssetAppUrl, liveAssetUrl } from "./live-assets.js";
 
 // Stable filenames in the discourse_voice_assets gem's stt/ directory.
 const STT_WORKER_FILE = "subtitles-worker.js";

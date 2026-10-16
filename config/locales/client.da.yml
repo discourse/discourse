@@ -263,7 +263,6 @@ da:
       zh_CN:
         name: Forenklet kinesisk
     share:
-      topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "indlæg #%{postNumber} af @%{username}"
       close: "luk"
       twitter: "Del på X"
@@ -418,9 +417,6 @@ da:
     max_of_count:
       one: "maks af %{count}"
       other: "maks af %{count}"
-    character_count:
-      one: "%{count} tegn"
-      other: "%{count} tegn"
     period_chooser:
       aria_label: "Filtrer efter periode"
     related_messages:
@@ -640,6 +636,9 @@ da:
       title:
         search: "Søg efter en besked"
         placeholder: "indtast beskeds titel, url eller id her"
+    dsa_statements:
+      category: "Kategori"
+      saving: "Gemmer…"
     review:
       show_more: "Vis mere"
       show_less: "Vis mindre"

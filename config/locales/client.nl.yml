@@ -286,7 +286,6 @@ nl:
       zh_CN:
         name: Chinees Vereenvoudigd
     share:
-      topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "bericht %{postNumber} van @%{username}"
       close: "sluiten"
       twitter: "Delen op X"
@@ -471,9 +470,6 @@ nl:
     max_of_count:
       one: "max. %{count}"
       other: "max. %{count}"
-    character_count:
-      one: "%{count} teken"
-      other: "%{count} tekens"
     period_chooser:
       aria_label: "Filteren op periode"
     related_messages:
@@ -771,6 +767,10 @@ nl:
       title:
         search: "Zoeken naar een bericht"
         placeholder: "typ hier de titel, URL of ID van het bericht"
+    dsa_statements:
+      category: "Categorie"
+      category_prompt: "Kies een categorie"
+      saving: "Opslaan…"
     review:
       show_more: "Meer weergeven"
       show_less: "Minder weergeven"

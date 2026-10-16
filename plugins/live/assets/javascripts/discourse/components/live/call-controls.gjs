@@ -15,22 +15,22 @@ import { i18n } from "discourse-i18n";
 import {
   isAiMode,
   NOISE_SUPPRESSION_MODES,
-} from "../../lib/live/audio-processing";
+} from "../../lib/live/audio-processing.js";
 import {
   enumerateAudioDevices,
   enumerateVideoDevices,
   outputSelectionSupported,
   SYSTEM_DEFAULT_DEVICE_ID,
-} from "../../lib/live/media-devices";
-import { prefetchEngineAssets } from "../../lib/live/noise-suppression";
+} from "../../lib/live/media-devices.js";
+import { prefetchEngineAssets } from "../../lib/live/noise-suppression.js";
 import {
   engineForMode,
   noiseSuppressionModeLabel,
-} from "../../lib/live/ns-engines";
-import { queuePosition } from "../../lib/live/speak-queue";
-import LiveVideoSettingsModal from "../modal/live-video-settings";
-import LiveVoiceSettingsModal from "../modal/live-voice-settings";
-import LiveCallSubmenu from "./call-submenu";
+} from "../../lib/live/ns-engines.js";
+import { queuePosition } from "../../lib/live/speak-queue.js";
+import LiveVideoSettingsModal from "../modal/live-video-settings.gjs";
+import LiveVoiceSettingsModal from "../modal/live-voice-settings.gjs";
+import LiveCallSubmenu from "./call-submenu.gjs";
 
 const AUDIO_MENU = "live-audio-menu";
 const VIDEO_MENU = "live-video-menu";

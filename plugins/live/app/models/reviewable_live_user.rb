@@ -94,6 +94,7 @@ class ReviewableLiveUser < Reviewable
       user = target_created_by.reload
 
       {
+        decision_facts: "The user reported during a live call was suspended.",
         decision_account: "DECISION_ACCOUNT_SUSPENDED",
         content_type: ["CONTENT_TYPE_OTHER"],
         content_type_other: "User account",
@@ -107,6 +108,8 @@ class ReviewableLiveUser < Reviewable
       user = target_created_by.reload
 
       {
+        decision_facts:
+          "The user reported during a live call had their ability to participate restricted.",
         decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
         content_type: ["CONTENT_TYPE_OTHER"],
         content_type_other: "User account",

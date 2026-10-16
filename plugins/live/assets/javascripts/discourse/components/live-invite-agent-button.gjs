@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
-import LiveInviteAgentModal from "./modal/live-invite-agent";
+import LiveInviteAgentModal from "./modal/live-invite-agent.gjs";
 
 export default class LiveInviteAgentButton extends Component {
   @service site;

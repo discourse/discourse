@@ -4829,6 +4829,15 @@ experimental:
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403284"
       body_class: true
+  enable_new_reordering_controls:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/414613"
   enable_composer_redesign:
     default: false
     client: true
@@ -4891,6 +4900,23 @@ experimental:
     default: false
     hidden: true
     area: "experimental"
+  dsa_community_rules:
+    type: objects
+    default: []
+    area: "experimental"
+    schema:
+      name: community_rule
+      properties:
+        ground:
+          type: string
+          required: true
+          validations:
+            max_length: 500
+        explanation:
+          type: string
+          required: true
+          validations:
+            max_length: 2000
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true

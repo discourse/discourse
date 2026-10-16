@@ -17,12 +17,12 @@ import { i18n } from "discourse-i18n";
 import {
   toggleTileFullscreen,
   trackFullscreen,
-} from "../../lib/live/fullscreen";
+} from "../../lib/live/fullscreen.js";
 import {
   DEFAULT_TILE_ASPECT,
   trackVideoAspect,
-} from "../../lib/live/video-grid-layout";
-import LiveParticipantSidebarContextMenu from "../live-participant-sidebar-context-menu";
+} from "../../lib/live/video-grid-layout.js";
+import LiveParticipantSidebarContextMenu from "../live-participant-sidebar-context-menu.gjs";
 
 export default class LiveVideoTile extends Component {
   @service menu;

@@ -1,11 +1,11 @@
 // Registers the default extensions as a side effect.
-import "./extensions/register-default";
+import "./extensions/register-default.ts";
 import { DOMParser as ProseMirrorDOMParser } from "prosemirror-model";
 import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
-import { createSchema } from "./core/schema";
-import Serializer from "./core/serializer";
-import { transformWordHtml } from "./extensions/word-paste";
-import { isBoundary } from "./lib/plugin-utils";
+import { createSchema } from "./core/schema.js";
+import Serializer from "./core/serializer.js";
+import { transformWordHtml } from "./extensions/word-paste.js";
+import { isBoundary } from "./lib/plugin-utils.js";
 
 // Chrome and Safari copy the space next to an inline element as a non-breaking
 // space, which stops a pasted emoji from cooking. Restore just the copy

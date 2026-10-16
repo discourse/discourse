@@ -21,6 +21,75 @@ describe "Viewing reviewable item" do
     sign_in(admin)
   end
 
+  context "when dsa_reporting_enabled is enabled" do
+    let(:classification) { PageObjects::Components::DsaClassification.new }
+    let(:toasts) { PageObjects::Components::Toasts.new }
+    let(:rule) do
+      {
+        ground: "Terms of Service, section 3: Personal attacks",
+        explanation: "The content targets another person with insults.",
+      }
+    end
+
+    let(:other_rule) do
+      {
+        ground: "Terms of Service, section 4: Unsolicited advertising",
+        explanation: "The content promotes unrelated products.",
+      }
+    end
+
+    before do
+      SiteSetting.dsa_reporting_enabled = true
+      SiteSetting.dsa_community_rules = [rule, other_rule].to_json
+      reviewable_flagged_post.perform(admin, :delete_and_agree)
+    end
+
+    it "lets staff confirm the DSA classification of a flagged post removal after loading more reviewed items" do
+      dialog = PageObjects::Components::Dialog.new
+      note =
+        "Classified this moderation decision for DSA reporting. Community rule: #{other_rule[:ground]} Category: Other violation of terms and conditions"
+      reviewable_user = Fabricate(:reviewable_user, status: :rejected)
+
+      stub_const(ReviewablesController, "PER_PAGE", 1) do
+        visit("/review?status=reviewed&sort_order=created_at")
+        expect(page).to have_css(".review-item[data-reviewable-id='#{reviewable_user.id}']")
+        page.scroll_to(:bottom)
+        expect(page).to have_css(".review-item[data-reviewable-id='#{reviewable_flagged_post.id}']")
+      end
+
+      classification.select_rule(rule[:ground])
+      classification.select_category("Illegal or harmful speech")
+      classification.save
+
+      expect(dialog).to have_content(rule[:ground])
+      expect(dialog).to have_content("Illegal or harmful speech")
+
+      dialog.click_no
+
+      expect(classification).to have_selected_rule(rule[:ground])
+      expect(classification).to have_selected_category("Illegal or harmful speech")
+
+      review_page.visit_reviewable(reviewable_flagged_post)
+      classification.select_rule(other_rule[:ground])
+      classification.select_category("Other violation of terms and conditions")
+      classification.save
+
+      expect(dialog).to have_content(other_rule[:ground])
+      expect(dialog).to have_content("Other violation of terms and conditions")
+
+      dialog.click_yes
+
+      expect(toasts).to have_success(I18n.t("js.dsa_statements.saved"))
+      expect(classification).to have_no_sidebar
+      expect(review_page).to have_note(note)
+
+      page.refresh
+
+      expect(classification).to have_no_sidebar
+      expect(review_page).to have_note(note)
+    end
+  end
+
   describe "when the reviewable item is a flagged post" do
     it "shows the new reviewable UI" do
       review_page.visit_reviewable(reviewable_flagged_post)

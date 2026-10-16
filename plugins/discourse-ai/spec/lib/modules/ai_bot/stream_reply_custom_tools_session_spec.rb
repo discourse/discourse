@@ -548,24 +548,20 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
               tool_results: [{ tool_call_id: call.id, content: result }],
             ),
           )
-        }.to raise_error(DiscourseAi::Completions::ContextPreparation::Error, /unusable_summary/)
+        }.to raise_error(DiscourseAi::Completions::ContextPreparation::Error, /empty_summary/)
       end
       reply = Post.where(topic_id: topic_id, user: ai_agent.user).last
-      expect(reply.raw).to include("Partial answer before the action", "unusable_summary")
+      expect(reply.raw).to include("Partial answer before the action", "empty_summary")
       expect(reply.post_custom_prompt.custom_prompt.to_s).to include(result, call.id)
       expect(reply.post_custom_prompt.custom_prompt.to_s).not_to include("<compressed_context>")
       expect(described_class.resume_state_exists?(token)).to eq(false)
     end
 
-    it "restores the cumulative maintenance time and call limit rather than refreshing them on resume" do
+    it "ignores retired preparation budget fields when resuming a legacy payload" do
       llm.update!(max_prompt_tokens: 16_000)
+      ai_agent.update!(max_turn_tokens: 200_000)
       call =
-        DiscourseAi::Completions::ToolCall.new(
-          name: "client_tool",
-          parameters: {
-          },
-          id: "resume-budget",
-        )
+        DiscourseAi::Completions::ToolCall.new(name: "client_tool", parameters: {}, id: "legacy")
       token = nil
       DiscourseAi::Completions::Llm.with_prepared_responses([call]) do
         token =
@@ -573,26 +569,301 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
       key = described_class.redis_key(token)
       state = JSON.parse(Discourse.redis.get(key))
-      expect(state["preparation_elapsed_seconds"]).to eq(0)
-      state["preparation_calls"] = 8
-      state["preparation_elapsed_seconds"] = 80
+      state.delete("completion_count")
+      state.merge!(
+        "preparation_calls" => 8,
+        "preparation_elapsed_seconds" => 1000,
+        "preparation_spent_tokens" => 10_000_000,
+        "preparation_tokens" => 123,
+      )
       Discourse.redis.set(key, state.to_json)
-      DiscourseAi::Completions::Llm.with_prepared_responses(["unused"]) do |_, _, _, options|
-        expect {
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["First summary", "Complete summary", call],
+      ) do |_, _, _, options|
+        events =
           collect_events(
             build_session(
               resume_token: token,
               tool_results: [{ tool_call_id: call.id, content: "Oversized result " * 6000 }],
             ),
           )
-        }.to raise_error(
-          DiscourseAi::Completions::ContextPreparation::Error,
-          /preparation_budget_exhausted/,
-        )
-        expect(options.none? { |option| option[:feature_name] == "context_compression" }).to eq(
-          true,
+        expect(events.find { |type, _| type == :tool_calls }).to be_present
+        expect(options.map { |option| option[:feature_name] }).to eq(
+          %w[context_compression context_compression bot],
         )
       end
+      resumed_state = JSON.parse(Discourse.redis.get(key))
+      expect(resumed_state["completion_count"]).to eq(4)
+      expect(resumed_state["preparation_tokens"]).to eq(123)
+      expect(
+        resumed_state.keys &
+          %w[preparation_calls preparation_elapsed_seconds preparation_spent_tokens],
+      ).to eq([])
+    end
+
+    it "persists compaction completions across resumes and preserves the root final completion" do
+      llm.update!(max_prompt_tokens: 16_000)
+      ai_agent.update!(max_turn_tokens: 200_000)
+      call =
+        DiscourseAi::Completions::ToolCall.new(name: "client_tool", parameters: {}, id: "limited")
+      token = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses([call]) do
+        token =
+          collect_events(build_session).find { |type, _| type == :tool_calls }[1][:resume_token]
+      end
+      key = described_class.redis_key(token)
+      state = JSON.parse(Discourse.redis.get(key))
+      state["completion_count"] = 96
+      Discourse.redis.set(key, state.to_json)
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["First summary", "Complete summary", call],
+      ) do
+        collect_events(
+          build_session(
+            resume_token: token,
+            tool_results: [{ tool_call_id: call.id, content: "Oversized result " * 6000 }],
+          ),
+        )
+      end
+      expect(JSON.parse(Discourse.redis.get(key))["completion_count"]).to eq(99)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["Final answer at the execution limit", "Test title"],
+      ) do |_, _, prompts|
+        events =
+          collect_events(
+            build_session(
+              resume_token: token,
+              tool_results: [{ tool_call_id: call.id, content: "Done" }],
+            ),
+          )
+        expect(events.select { |type, _| type == :partial }.map(&:last).join).to eq(
+          "Final answer at the execution limit",
+        )
+        expect(prompts.first.tool_choice).to eq(:none)
+        expect(prompts.first.messages[-2][:content]).to eq(
+          DiscourseAi::Agents::Bot::COMPLETION_LIMIT_FINAL_ANSWER_HINT,
+        )
+        expect(described_class.resume_state_exists?(token)).to eq(false)
+      end
+    end
+
+    it "uses the last ordinary slot for current-turn maintenance and the reserved slot for a text-only final" do
+      llm.update!(max_prompt_tokens: 16_000)
+      ai_agent.update!(max_turn_tokens: 200_000)
+      call =
+        DiscourseAi::Completions::ToolCall.new(name: "client_tool", parameters: {}, id: "boundary")
+      query = "request " * 11_000
+      token = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses([call]) do
+        token =
+          collect_events(build_session(query: query)).find { |type, _| type == :tool_calls }[1][
+            :resume_token
+          ]
+      end
+      key = described_class.redis_key(token)
+      state = JSON.parse(Discourse.redis.get(key))
+      expect(state["prompt"]["messages"].map { |message| message["type"] }).to eq(%w[system user])
+      state["completion_count"] = 98
+      Discourse.redis.set(key, state.to_json)
+      summary = "The completed caller action returned useful evidence."
+      final = "Final answer using the completed action"
+      result = "Completed evidence " * 2000
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [summary, final, "Test title"],
+      ) do |_, _, prompts, options|
+        events =
+          collect_events(
+            build_session(
+              resume_token: token,
+              tool_results: [{ tool_call_id: call.id, content: result }],
+            ),
+          )
+        expect(options.map { |option| option[:feature_name] }.first(2)).to eq(
+          %w[context_compression bot],
+        )
+        expect(prompts.first.messages.last[:content]).to include(result)
+        expect(prompts[1].messages[1][:content]).to eq(
+          "<compressed_context>#{summary}</compressed_context>",
+        )
+        expect(prompts[1].tool_choice).to eq(:none)
+        expect(prompts[1].messages.map { |message| message[:content] }).to include(
+          DiscourseAi::Agents::Bot::COMPLETION_LIMIT_FINAL_ANSWER_HINT,
+        )
+        expect(options[1]).to include(max_tokens: 4096, thinking_effort: "none")
+        size, capacity = llm.to_llm.prompt_capacity(prompts[1], **options[1])
+        expect(size).to be_between(capacity * 0.8, capacity)
+        expect(events.select { |type, _| type == :partial }.map(&:last).join).to eq(final)
+        expect(events.select { |type, _| type == :tool_calls }).to eq([])
+      end
+      expect(described_class.resume_state_exists?(token)).to eq(false)
+    end
+
+    it "rejects a final whose changed output allowance no longer leaves room for the current request" do
+      llm.update!(max_prompt_tokens: 16_000)
+      ai_agent.update!(max_turn_tokens: 200_000)
+      call =
+        DiscourseAi::Completions::ToolCall.new(name: "client_tool", parameters: {}, id: "capacity")
+      token = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses([call]) do
+        token =
+          collect_events(build_session(query: "request " * 12_000)).find do |type, _|
+            type == :tool_calls
+          end[
+            1
+          ][
+            :resume_token
+          ]
+      end
+      key = described_class.redis_key(token)
+      state = JSON.parse(Discourse.redis.get(key))
+      state["completion_count"] = 98
+      Discourse.redis.set(key, state.to_json)
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["Completed caller evidence summarized."],
+      ) do |canned, _, _, options|
+        expect {
+          collect_events(
+            build_session(
+              resume_token: token,
+              tool_results: [{ tool_call_id: call.id, content: "Completed evidence " * 2000 }],
+            ),
+          )
+        }.to raise_error(DiscourseAi::Completions::ContextPreparation::Error, /hard_overflow/)
+        expect(canned.completions).to eq(1)
+        expect(options.map { |option| option[:feature_name] }).to eq(["context_compression"])
+      end
+      expect(described_class.resume_state_exists?(token)).to eq(false)
+    end
+
+    %w[maintenance final_reply].each do |failure_stage|
+      it "persists consumed completions when #{failure_stage} fails after access is revoked" do
+        llm.update!(max_prompt_tokens: 16_000)
+        ai_agent.update!(max_turn_tokens: 200_000)
+        call =
+          DiscourseAi::Completions::ToolCall.new(
+            name: "client_tool",
+            parameters: {
+            },
+            id: "failed-final",
+          )
+        token = nil
+        DiscourseAi::Completions::Llm.with_prepared_responses([call]) do
+          token =
+            collect_events(build_session(query: "request " * 11_000)).find do |type, _|
+              type == :tool_calls
+            end[
+              1
+            ][
+              :resume_token
+            ]
+        end
+        key = described_class.redis_key(token)
+        state = JSON.parse(Discourse.redis.get(key))
+        state["completion_count"] = 98
+        Discourse.redis.set(key, state.to_json)
+        topic = Topic.find(state["topic_id"])
+        result = "Completed evidence " * 2000
+        allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
+          :generate,
+        ).and_wrap_original do |generate, *args, **options, &block|
+          if options[:feature_name] == "context_compression"
+            options[:user].update!(admin: false, moderator: false)
+            topic.topic_allowed_users.where(user_id: admin.id).delete_all
+          end
+          generate.call(*args, **options, &block)
+        end
+        responses = [LlmCreditAllocation::CreditLimitExceeded.new("credits exhausted")]
+        responses.unshift("Completed caller evidence summarized.") if failure_stage == "final_reply"
+        DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
+          expect {
+            collect_events(
+              build_session(
+                resume_token: token,
+                tool_results: [{ tool_call_id: call.id, content: result }],
+              ),
+            )
+          }.to raise_error(LlmCreditAllocation::CreditLimitExceeded)
+        end
+        failed_state = JSON.parse(Discourse.redis.get(key))
+        completion_count = failure_stage == "maintenance" ? 99 : 100
+        expect(failed_state["completion_count"]).to eq(completion_count)
+        expect(failed_state["failed_tool_results"]).to eq(
+          [{ "tool_call_id" => call.id, "content" => result }],
+        )
+        expect {
+          collect_events(
+            build_session(
+              resume_token: token,
+              tool_results: [{ tool_call_id: call.id, content: result }],
+            ),
+          )
+        }.to raise_error(DiscourseAi::Completions::ContextPreparation::Error, /history_changed/)
+        expect(JSON.parse(Discourse.redis.get(key))["completion_count"]).to eq(completion_count)
+      end
+    end
+
+    it "preserves completed results when the execution completion limit blocks required compaction" do
+      llm.update!(max_prompt_tokens: 16_000)
+      call =
+        DiscourseAi::Completions::ToolCall.new(name: "client_tool", parameters: {}, id: "completed")
+      token = nil
+      topic_id = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses([call]) do
+        events = collect_events(build_session)
+        token = events.find { |type, _| type == :tool_calls }[1][:resume_token]
+        topic_id = events.find { |type, _| type == :context }[1][:topic_id]
+      end
+      key = described_class.redis_key(token)
+      state = JSON.parse(Discourse.redis.get(key))
+      state["completion_count"] = 99
+      Discourse.redis.set(key, state.to_json)
+      result = "Completed evidence " * 6000
+      DiscourseAi::Completions::Llm.with_prepared_responses(["unused"]) do |canned|
+        expect {
+          collect_events(
+            build_session(
+              resume_token: token,
+              tool_results: [{ tool_call_id: call.id, content: result }],
+            ),
+          )
+        }.to raise_error(DiscourseAi::Completions::ContextPreparation::Error, /completion_limit/)
+        expect(canned.completions).to eq(0)
+      end
+      reply = Post.where(topic_id: topic_id, user: ai_agent.user).last
+      expect(reply.post_custom_prompt.custom_prompt.to_s).to include(result, call.id)
+      expect(described_class.resume_state_exists?(token)).to eq(false)
+    end
+
+    it "rejects a resumed generation when the reserved final completion has already been consumed" do
+      call =
+        DiscourseAi::Completions::ToolCall.new(name: "client_tool", parameters: {}, id: "exhausted")
+      token = nil
+      topic_id = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses([call]) do
+        events = collect_events(build_session)
+        token = events.find { |type, _| type == :tool_calls }[1][:resume_token]
+        topic_id = events.find { |type, _| type == :context }[1][:topic_id]
+      end
+      key = described_class.redis_key(token)
+      state = JSON.parse(Discourse.redis.get(key))
+      state["completion_count"] = 100
+      Discourse.redis.set(key, state.to_json)
+      result = "Already completed"
+      DiscourseAi::Completions::Llm.with_prepared_responses(["unused"]) do |canned|
+        expect {
+          collect_events(
+            build_session(
+              resume_token: token,
+              tool_results: [{ tool_call_id: call.id, content: result }],
+            ),
+          )
+        }.to raise_error(DiscourseAi::Completions::ContextPreparation::Error, /completion_limit/)
+        expect(canned.completions).to eq(0)
+      end
+      reply = Post.where(topic_id: topic_id, user: ai_agent.user).last
+      expect(reply.post_custom_prompt.custom_prompt.to_s).to include(result, call.id)
+      expect(described_class.resume_state_exists?(token)).to eq(false)
     end
 
     it "prepares initial tool-heavy history and persists the prepared prompt while calls are pending" do
@@ -630,7 +901,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
         expect(prompts.first.messages.last[:content]).to include(source.raw, old_result)
         expect(state["prompt"]["messages"][1]["content"]).to include("<compressed_context>")
         expect(state["expected_tool_calls"].map { |call| call["id"] }).to eq(["next"])
-        expect(state["preparation_calls"]).to eq(1)
+        expect(state["completion_count"]).to eq(2)
       end
     end
 

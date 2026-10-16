@@ -1,5 +1,5 @@
-import LiveCallWidget from "./call-widget";
-import LiveVoiceCanvas from "./voice-canvas";
+import LiveCallWidget from "./call-widget.gjs";
+import LiveVoiceCanvas from "./voice-canvas.gjs";
 
 export default <template>
   <LiveVoiceCanvas />

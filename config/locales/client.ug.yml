@@ -291,7 +291,6 @@ ug:
       zh_CN:
         name: خەنچە ئاددىي
     share:
-      topic_html: 'تېما: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username} يوللىغان يازما سانى #%{postNumber}"
       close: "تاقا"
       twitter: "X دا ھەمبەھىر"
@@ -482,9 +481,6 @@ ug:
     max_of_count:
       one: "ئەڭ كۆپ %{count}"
       other: "ئەڭ كۆپ %{count}"
-    character_count:
-      one: "%{count} ھەرپ"
-      other: "%{count} ھەرپ"
     period_chooser:
       aria_label: "مۇددەت بويىچە سۈز"
     related_messages:
@@ -820,6 +816,10 @@ ug:
       title:
         search: "ئۇچۇر ئىزدە"
         placeholder: "بۇ جايغا ئۇچۇر ماۋزۇسى، تور ئادرېسى ياكى كىملىكى كىرگۈزۈلىدۇ"
+    dsa_statements:
+      category: "سەھىپە"
+      category_prompt: "سەھىپە تاللىنىدۇ"
+      saving: "ساقلاۋاتىدۇ…"
     review:
       show_more: "تېخىمۇ كۆپ كۆرسەت"
       show_less: "ئازراق كۆرسەت"

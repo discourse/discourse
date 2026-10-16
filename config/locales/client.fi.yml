@@ -267,7 +267,6 @@ fi:
       zh_CN:
         name: Kiina (yksinkertaistettu)
     share:
-      topic_html: 'Ketju: <span class="topic-title">%{topicTitle}</span>'
       post: "viesti %{postNumber} käyttäjältä @%{username}"
       close: "sulje"
       twitter: "Jaa X:ssä"
@@ -423,9 +422,6 @@ fi:
     max_of_count:
       one: "korkeintaan %{count}"
       other: "korkeintaan %{count}"
-    character_count:
-      one: "%{count} merkki"
-      other: "%{count} merkkiä"
     period_chooser:
       aria_label: "Suodata ajanjakson mukaan"
     related_messages:
@@ -685,6 +681,10 @@ fi:
       title:
         search: "Hae viestiä"
         placeholder: "Syötä viestin otsikko, url tai tunnus tähän"
+    dsa_statements:
+      category: "Luokka"
+      category_prompt: "Valitse alue"
+      saving: "Tallennetaan…"
     review:
       show_more: "Näytä lisää"
       show_less: "Näytä vähemmän"

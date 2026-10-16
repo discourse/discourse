@@ -27,9 +27,8 @@ type Measurement = number | null | (() => number | null);
  * A bound, which unlike a size is expected to be known. There is nothing to clamp
  * against until it is, so a consumer with no limit should leave the arg off.
  *
- * `strictNullChecks` is off repo-wide, so a nullable measurement still type-checks
- * here. The gesture holds the line instead. It skips a bound that does not
- * resolve, rather than reading it as zero.
+ * Untyped consumers can still pass a nullable measurement, so the gesture skips
+ * a bound that does not resolve, rather than reading it as zero.
  */
 type Bound = number | (() => number);
 

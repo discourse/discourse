@@ -9,12 +9,16 @@ import { i18n } from "discourse-i18n";
 
 export default class ShowController extends Controller {
   @tracked model;
+
+  /** @type {string | null} */
   @tracked username = null;
   @tracked loadingMore = false;
   @tracked noMoreBadges = false;
   @tracked showTitlePicker = false;
   @tracked userBadgesAll;
   @tracked userBadgesGrantCount;
+
+  /** @type {import("discourse/models/user-badge").default[] | null} */
   @autoTrackedArray userBadges = null;
 
   queryParams = ["username"];

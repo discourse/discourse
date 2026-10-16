@@ -291,7 +291,6 @@ zh_CN:
       zh_CN:
         name: 简体中文
     share:
-      topic_html: '话题：<span class="topic-title">%{topicTitle}</span>'
       post: "@%{username} 发布的帖子 #%{postNumber}"
       close: "关闭"
       twitter: "在 X 上分享"
@@ -502,8 +501,6 @@ zh_CN:
     every_six_months: "每六个月"
     max_of_count:
       other: "最多 %{count} 个"
-    character_count:
-      other: "%{count} 个字符"
     period_chooser:
       aria_label: "按期间筛选"
     related_messages:
@@ -855,6 +852,10 @@ zh_CN:
       title:
         search: "搜索消息"
         placeholder: "在此处输入消息标题、URL 或 ID"
+    dsa_statements:
+      category: "类别"
+      category_prompt: "选择一个类别"
+      saving: "正在保存…"
     review:
       show_more: "展开"
       show_less: "收起"

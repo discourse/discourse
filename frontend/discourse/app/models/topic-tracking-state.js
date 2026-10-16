@@ -269,7 +269,7 @@ export default class TopicTrackingState extends EmberObject {
    * is called by various topic routes, as is resetTracking.
    *
    * @method notifyIncoming
-   * @param {Object} data - The data sent by TopicTrackingState to MessageBus
+   * @param {{ message_type: string, topic_id: number, payload?: Record<string, unknown> }} data - The data sent by TopicTrackingState to MessageBus
    *                        which includes the message_type, payload of the topic,
    *                        and the topic_id.
    */
@@ -510,7 +510,7 @@ export default class TopicTrackingState extends EmberObject {
    * @method sync
    * @param {TopicList} list
    * @param {String} filter - The filter used for the list e.g. new/unread
-   * @param {Object} queryParams - The query parameters for the list e.g. page
+   * @param {Record<string, unknown>} [queryParams] - The query parameters for the list e.g. page
    */
   sync(list, filter, queryParams) {
     if (!list || !list.topics) {
@@ -552,6 +552,7 @@ export default class TopicTrackingState extends EmberObject {
     delete this.stateChangeCallbacks[callbackId];
   }
 
+  /** @returns {number[] | Set<number>} */
   getSubCategoryIds(categoryId) {
     if (!categoryId) {
       return [];

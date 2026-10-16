@@ -4101,6 +4101,143 @@ ALTER SEQUENCE public.data_explorer_tags_id_seq OWNED BY public.data_explorer_ta
 
 
 --
+-- Name: decision_model_credit_allocations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.decision_model_credit_allocations (
+    id bigint NOT NULL,
+    decision_model_id bigint NOT NULL,
+    daily_credits bigint NOT NULL,
+    soft_limit_percentage integer DEFAULT 80 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: decision_model_credit_allocations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.decision_model_credit_allocations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: decision_model_credit_allocations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.decision_model_credit_allocations_id_seq OWNED BY public.decision_model_credit_allocations.id;
+
+
+--
+-- Name: decision_model_credit_daily_usages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.decision_model_credit_daily_usages (
+    id bigint NOT NULL,
+    decision_model_id bigint NOT NULL,
+    usage_date date NOT NULL,
+    credits_used bigint DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: decision_model_credit_daily_usages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.decision_model_credit_daily_usages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: decision_model_credit_daily_usages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.decision_model_credit_daily_usages_id_seq OWNED BY public.decision_model_credit_daily_usages.id;
+
+
+--
+-- Name: decision_model_feature_credit_costs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.decision_model_feature_credit_costs (
+    id bigint NOT NULL,
+    decision_model_id bigint NOT NULL,
+    feature_name character varying NOT NULL,
+    credits_per_token numeric(10,4) DEFAULT 1.0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: decision_model_feature_credit_costs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.decision_model_feature_credit_costs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: decision_model_feature_credit_costs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.decision_model_feature_credit_costs_id_seq OWNED BY public.decision_model_feature_credit_costs.id;
+
+
+--
+-- Name: decision_models; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.decision_models (
+    id bigint NOT NULL,
+    display_name character varying(100) NOT NULL,
+    name character varying(255) NOT NULL,
+    provider character varying(50) NOT NULL,
+    url character varying(1000) NOT NULL,
+    ai_secret_id bigint,
+    vision_enabled boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    custom_headers jsonb DEFAULT '[]'::jsonb NOT NULL,
+    api_key character varying
+);
+
+
+--
+-- Name: decision_models_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.decision_models_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: decision_models_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.decision_models_id_seq OWNED BY public.decision_models.id;
+
+
+--
 -- Name: developers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -5360,7 +5497,8 @@ CREATE TABLE public.discourse_workflows_data_tables (
     created_by_id integer,
     updated_by_id integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    column_order character varying[] DEFAULT '{}'::character varying[] NOT NULL
 );
 
 
@@ -5954,7 +6092,9 @@ CREATE TABLE public.dsa_statement_of_records (
     status integer DEFAULT 0 NOT NULL,
     payload jsonb NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    classified_by_id bigint,
+    classified_at timestamp(6) without time zone
 );
 
 
@@ -14575,6 +14715,34 @@ ALTER TABLE ONLY public.data_explorer_tags ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: decision_model_credit_allocations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_model_credit_allocations ALTER COLUMN id SET DEFAULT nextval('public.decision_model_credit_allocations_id_seq'::regclass);
+
+
+--
+-- Name: decision_model_credit_daily_usages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_model_credit_daily_usages ALTER COLUMN id SET DEFAULT nextval('public.decision_model_credit_daily_usages_id_seq'::regclass);
+
+
+--
+-- Name: decision_model_feature_credit_costs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_model_feature_credit_costs ALTER COLUMN id SET DEFAULT nextval('public.decision_model_feature_credit_costs_id_seq'::regclass);
+
+
+--
+-- Name: decision_models id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_models ALTER COLUMN id SET DEFAULT nextval('public.decision_models_id_seq'::regclass);
+
+
+--
 -- Name: developers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -17192,6 +17360,38 @@ ALTER TABLE ONLY public.data_explorer_query_tags
 
 ALTER TABLE ONLY public.data_explorer_tags
     ADD CONSTRAINT data_explorer_tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: decision_model_credit_allocations decision_model_credit_allocations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_model_credit_allocations
+    ADD CONSTRAINT decision_model_credit_allocations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: decision_model_credit_daily_usages decision_model_credit_daily_usages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_model_credit_daily_usages
+    ADD CONSTRAINT decision_model_credit_daily_usages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: decision_model_feature_credit_costs decision_model_feature_credit_costs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_model_feature_credit_costs
+    ADD CONSTRAINT decision_model_feature_credit_costs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: decision_models decision_models_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.decision_models
+    ADD CONSTRAINT decision_models_pkey PRIMARY KEY (id);
 
 
 --
@@ -20215,6 +20415,13 @@ CREATE INDEX idx_notifications_speedup_unread_count ON public.notifications USIN
 
 
 --
+-- Name: idx_on_decision_model_id_usage_date_85aaac4721; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_on_decision_model_id_usage_date_85aaac4721 ON public.decision_model_credit_daily_usages USING btree (decision_model_id, usage_date);
+
+
+--
 -- Name: idx_on_llm_model_id_feature_name_2b0b794b27; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21647,6 +21854,27 @@ CREATE UNIQUE INDEX index_data_explorer_query_groups_on_query_id_and_group_id ON
 --
 
 CREATE UNIQUE INDEX index_data_explorer_query_stats_on_query_id_and_date ON public.data_explorer_query_stats USING btree (query_id, date);
+
+
+--
+-- Name: index_decision_model_credit_allocations_on_decision_model_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_decision_model_credit_allocations_on_decision_model_id ON public.decision_model_credit_allocations USING btree (decision_model_id);
+
+
+--
+-- Name: index_decision_model_feature_credit_costs_on_model_and_feature; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_decision_model_feature_credit_costs_on_model_and_feature ON public.decision_model_feature_credit_costs USING btree (decision_model_id, feature_name);
+
+
+--
+-- Name: index_decision_models_on_ai_secret_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_decision_models_on_ai_secret_id ON public.decision_models USING btree (ai_secret_id);
 
 
 --
@@ -24464,6 +24692,13 @@ CREATE UNIQUE INDEX index_topic_users_on_user_id_and_topic_id ON public.topic_us
 
 
 --
+-- Name: index_topic_users_on_user_id_and_topic_id_tracked; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_topic_users_on_user_id_and_topic_id_tracked ON public.topic_users USING btree (user_id, topic_id) WHERE (notification_level >= 2);
+
+
+--
 -- Name: index_topic_view_stats_on_topic_id_and_viewed_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25853,7 +26088,15 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261015175355'),
+('20261015175340'),
+('20261014224810'),
+('20261014145458'),
+('20261014065735'),
+('20261013222431'),
+('20261013183208'),
 ('20261013160643'),
+('20261013062937'),
 ('20261013010026'),
 ('20261013010022'),
 ('20261012021959'),

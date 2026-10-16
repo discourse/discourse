@@ -8,6 +8,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 
+// TODO (ui-kit-reorderable-list-cleanup) delete this file once
+// `enable_new_reordering_controls` ships; `user-fields-list-reorderable.gjs` replaces it.
 export default class AdminConfigAreasUserFieldsList extends Component {
   @service dialog;
   @service toasts;

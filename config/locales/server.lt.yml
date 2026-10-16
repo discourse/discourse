@@ -5,6 +5,28 @@
 # https://translate.discourse.org/
 
 lt:
+  dsa_statements:
+    classification_note: "Šis moderavimo sprendimas priskirtas DSA ataskaitoms.\nBendruomenės taisyklė: %{ground}\nKategorija: %{category}"
+    errors:
+      statements_changed: "Šio vertinimo teiginiai pasikeitė. Atnaujinkite puslapį, kad pamatytumėte dabartinę jų klasifikaciją."
+      failed: "Klasifikacijos išsaugoti nepavyko. Bandykite dar kartą."
+    categories:
+      STATEMENT_CATEGORY_ANIMAL_WELFARE: "Gyvūnų gerovė"
+      STATEMENT_CATEGORY_CONSUMER_INFORMATION: "Vartotojų informacijos pažeidimai"
+      STATEMENT_CATEGORY_CYBER_VIOLENCE: "Kibernetinis smurtas"
+      STATEMENT_CATEGORY_CYBER_VIOLENCE_AGAINST_WOMEN: "Kibernetinis smurtas prieš moteris"
+      STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS: "Duomenų apsaugos ir privatumo pažeidimai"
+      STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH: "Neteisėta arba žalinga kalba"
+      STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS: "Intelektinės nuosavybės pažeidimai"
+      STATEMENT_CATEGORY_NEGATIVE_EFFECTS_ON_CIVIC_DISCOURSE_OR_ELECTIONS: "Neigiamas poveikis pilietinei diskusijai ar rinkimams"
+      STATEMENT_CATEGORY_NOT_SPECIFIED_NOTICE: "Pranešėjas nenurodė tariamai neteisėto turinio rūšies"
+      STATEMENT_CATEGORY_OTHER_VIOLATION_TC: "Kitas sąlygų ir nuostatų pažeidimas"
+      STATEMENT_CATEGORY_PROTECTION_OF_MINORS: "Nepilnamečių apsauga"
+      STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY: "Rizika visuomenės saugumui"
+      STATEMENT_CATEGORY_SCAMS_AND_FRAUD: "Sukčiavimas ir apgaulė"
+      STATEMENT_CATEGORY_SELF_HARM: "Savęs žalojimas"
+      STATEMENT_CATEGORY_UNSAFE_AND_PROHIBITED_PRODUCTS: "Nesaugūs arba draudžiami produktai"
+      STATEMENT_CATEGORY_VIOLENCE: "Smurtas"
   markdown_endpoints:
     latest: "Naujausia"
     categories: "Kategorijos"
@@ -1310,6 +1332,7 @@ lt:
     problem:
       rails_env: "Jūsų serveris veikia %{env} režimu."
   site_settings:
+    dsa_community_rules: "Bendruomenės taisyklės, kurias galima naudoti DSA klasifikavimui, kai įjungta funkcija „ {{setting:dsa_reporting_enabled}} “. Kiekvienai taisyklei reikia nurodyti tikslią nuorodą į sutartį (iki 500 simbolių) ir paaiškinimą (iki 2000 simbolių). Norėdami išjungti klasifikavimą, palikite lauką tuščią."
     disabled: "uždrausta"
     display_local_time_in_user_card: "Rodyti vietinį laiką pagal vartotojo laiko juostą, kai atidaroma vartotojo kortelė."
     censored_words: "Žodžiai, kurie bus automatiškai pakeisti &#9632;&#9632;&#9632;&#9632;"
@@ -1504,6 +1527,7 @@ lt:
     remove_muted_tags_from_latest: "Naujausiame temų sąraše nerodykite temų, pažymėtų tik nutildytomis žymomis."
     force_lowercase_tags: "Priversti visas naujas žymas rašyti mažosiomis raidėmis."
     push_notifications_icon: "Ženklelio piktograma, rodoma pranešimų kampe. Rekomenduojamas 96 × 96 vienspalvis PNG su skaidrumu."
+    enable_new_reordering_controls: "Naudokite bendrus elementų perrikiavimo valdiklius sąrašo tipo nustatymuose, administravimo sąrašuose, naudotojų katalogo stulpeliuose ir šoninės juostos nuorodose, kad visur būtų taikoma tas pats vilkimo valdiklis, perkėlimo meniu ir valdymas klaviatūra."
     enable_main_outlet_grid_layout_change: "Įdėkite redagavimo skydelį pagrindiniame tinklelyje, kad temos galėtų jį išdėstyti tinklelio stulpelyje, ir naudokite siauresnę šoninę juostą."
     update_whispers_allowed_groups_default: "Atnaujiname numatytąjį „ {{setting:whispers_allowed_groups}} “ nustatymą, kad darbuotojai iš pradžių galėtų siųsti privačias žinutes. Jei anksčiau buvote pakeitę šį nustatymą, jūsų konfigūracija nesikeis, nebent nustatymą atstatytumėte į numatytąjį."
     sidebar_user_navigation: "Perkelia vartotojo puslapių navigaciją — profilį, veiklą, pranešimus, žinutes, kvietimus ir nustatymus — iš horizontalių skirtukų juostų į atskirą šoninį skydelį, kaip tai daroma administratoriaus srityje. Mobiliajame įrenginyje šis skydelis pasiekiamas per svetainės meniu kampe."
@@ -1619,6 +1643,11 @@ lt:
       characters: "turi būti tik skaičiai, raidės, brūkšneliai, taškai ir pabraukimai"
       unique: "privalo būti unikalus"
       must_end_with_alphanumeric: "turi baigtis raide arba skaičiumi"
+      contains_blocked_words:
+        one: "yra užblokuotas žodis „%{words}“"
+        few: "yra užblokuoti žodžiai „%{words}“"
+        many: "yra užblokuoti žodžiai „%{words}“"
+        other: "yra užblokuoti žodžiai „%{words}“"
     email:
       invalid: "netinkamas."
       not_allowed: "neleidžiama iš šio el. pašto teikėjo. Prašome naudoti kitą el. pašto adresą."

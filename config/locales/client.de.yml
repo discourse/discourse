@@ -312,7 +312,6 @@ de:
       zh_CN:
         name: Vereinfachtes Chinesisch
     share:
-      topic_html: 'Thema: <span class="topic-title">%{topicTitle}</span>'
       post: "Beitrag Nr. %{postNumber} von @%{username}"
       close: "Schließen"
       twitter: "Teilen auf X"
@@ -511,9 +510,6 @@ de:
     max_of_count:
       one: "max. %{count}"
       other: "max. %{count}"
-    character_count:
-      one: "%{count} Zeichen"
-      other: "%{count} Zeichen"
     period_chooser:
       aria_label: "Filtern nach Zeitraum"
     related_messages:
@@ -824,6 +820,10 @@ de:
       title:
         search: "Suche nach einer Nachricht"
         placeholder: "gib hier den Titel, die URL oder die ID der Nachricht ein"
+    dsa_statements:
+      category: "Kategorie"
+      category_prompt: "Kategorie auswählen"
+      saving: "Wird gespeichert …"
     review:
       show_more: "Mehr anzeigen"
       show_less: "Weniger anzeigen"

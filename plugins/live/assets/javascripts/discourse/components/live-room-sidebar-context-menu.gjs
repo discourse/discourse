@@ -5,9 +5,9 @@ import { clipboardCopy } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
-import LiveInviteAgentButton from "./live-invite-agent-button";
-import LiveInviteUsersModal from "./modal/live-invite-users";
-import LiveRoomInfoModal from "./modal/live-room-info";
+import LiveInviteAgentButton from "./live-invite-agent-button.gjs";
+import LiveInviteUsersModal from "./modal/live-invite-users.gjs";
+import LiveRoomInfoModal from "./modal/live-room-info.gjs";
 
 export default class LiveRoomSidebarContextMenu extends Component {
   @service modal;

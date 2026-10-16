@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import formatCurrency from "../helpers/format-currency";
+import formatCurrency from "../helpers/format-currency.js";
 
 const RECURRING = "recurring";
 

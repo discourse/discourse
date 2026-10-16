@@ -142,7 +142,6 @@ lv:
         last_7_days: "Pēdējās 7 dienas"
         last_30_days: "Pēdējās 30 dienas"
     share:
-      topic_html: 'Temats: <span class="topic-title">%{topicTitle}</span>'
       close: "aizvērt"
       facebook: "Dalīties Facebook"
       email: "Sūtīt pa e -pastu"
@@ -268,10 +267,6 @@ lv:
       zero: "ne vairāk kā %{count}"
       one: "ne vairāk kā %{count}"
       other: "ne vairāk kā %{count}"
-    character_count:
-      zero: "%{count} zīmes"
-      one: "%{count} zīme"
-      other: "%{count} zīmes"
     related_messages:
       title: "Saistītās ziņas"
       pill: "Saistītās ziņas"
@@ -386,6 +381,8 @@ lv:
       title:
         search: "Meklēt ziņojumu"
         placeholder: "šeit ierakstiet tēmas nosaukumu, URL vai ID"
+    dsa_statements:
+      category: "Sadaļa"
     review:
       order_by: "Kārtot pēc"
       in_reply_to: "atbildot uz"

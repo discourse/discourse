@@ -10,21 +10,21 @@ import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
-import { NOISE_SUPPRESSION_MODES } from "../../lib/live/audio-processing";
-import { rmsToPercent, sampleRms } from "../../lib/live/input-gate";
+import { NOISE_SUPPRESSION_MODES } from "../../lib/live/audio-processing.js";
+import { rmsToPercent, sampleRms } from "../../lib/live/input-gate.js";
 import {
   applyOutputDevice,
   audioConstraints,
   enumerateAudioDevices,
   outputSelectionSupported,
   SYSTEM_DEFAULT_DEVICE_ID,
-} from "../../lib/live/media-devices";
-import { prefetchEngineAssets } from "../../lib/live/noise-suppression";
+} from "../../lib/live/media-devices.js";
+import { prefetchEngineAssets } from "../../lib/live/noise-suppression.js";
 import {
   engineForMode,
   noiseSuppressionModeLabel,
-} from "../../lib/live/ns-engines";
-import { STT_MODELS, sttModelLabel } from "../../lib/live/stt-models";
+} from "../../lib/live/ns-engines.js";
+import { STT_MODELS, sttModelLabel } from "../../lib/live/stt-models.js";
 
 const METER_INTERVAL_MS = 50;
 

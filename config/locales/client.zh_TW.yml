@@ -287,7 +287,6 @@ zh_TW:
       zh_CN:
         name: 簡體中文
     share:
-      topic_html: '話題：<span class="topic-title">%{topicTitle}</span>'
       post: "由@%{username}發布#%{postNumber}"
       close: "關閉"
       twitter: "分享至 X"
@@ -485,8 +484,6 @@ zh_TW:
     every_six_months: "每半年"
     max_of_count:
       other: "（最大 %{count}）"
-    character_count:
-      other: "%{count} 個字元"
     period_chooser:
       aria_label: "按期間篩選"
     related_messages:
@@ -830,6 +827,10 @@ zh_TW:
       title:
         search: "搜尋訊息"
         placeholder: "在這裡輸入訊息標題、網址或 ID"
+    dsa_statements:
+      category: "分類"
+      category_prompt: "選擇一個分類"
+      saving: "正在儲存..."
     review:
       show_more: "顯示更多"
       show_less: "顯示更少"

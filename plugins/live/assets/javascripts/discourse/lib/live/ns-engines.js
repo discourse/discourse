@@ -1,6 +1,6 @@
 import { i18n } from "discourse-i18n";
 
-export { liveAssetUrl as nsUrl } from "./live-assets";
+export { liveAssetUrl as nsUrl } from "./live-assets.js";
 
 // The selectable AI noise-suppression engines. Every engine ships a worklet
 // bundle speaking the same protocol (src/ns-worklet/runtime.js in the

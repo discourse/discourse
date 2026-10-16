@@ -1,6 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 import liveLog from "discourse/plugins/live/discourse/lib/live/logger";
-import LivekitRoomSession from "./livekit-session";
+import LivekitRoomSession from "./livekit-session.js";
 
 // Owns the livekit sessions for SFU-transport rooms: connecting on join,
 // reconnect/teardown on disconnects, and the roster bookkeeping that mesh

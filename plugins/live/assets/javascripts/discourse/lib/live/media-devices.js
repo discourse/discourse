@@ -1,6 +1,6 @@
 import { i18n } from "discourse-i18n";
 import liveLog from "discourse/plugins/live/discourse/lib/live/logger";
-import { processingConstraints } from "./audio-processing";
+import { processingConstraints } from "./audio-processing.js";
 
 // Pre-rename key, kept so saved preferences survive.
 const INPUT_STORAGE_KEY = "voice_audio_input_device";

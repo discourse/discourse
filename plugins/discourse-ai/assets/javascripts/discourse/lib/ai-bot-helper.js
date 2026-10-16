@@ -1,7 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
-import ShareFullTopicModal from "../components/modal/share-full-topic-modal";
+import ShareFullTopicModal from "../components/modal/share-full-topic-modal.gjs";
 
 const MAX_AGENT_USER_ID = -1200;
 

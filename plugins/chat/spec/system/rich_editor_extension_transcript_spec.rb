@@ -103,10 +103,7 @@ describe "chat transcripts in rich editor" do
     )
 
     expect(rich).to have_css(".chat-transcript.chat-transcript-chained", count: 2)
-    expect(rich).to have_css(
-      ".chat-transcript .chat-transcript-meta",
-      text: "Originally sent in #{channel.name}",
-    )
+    expect(rich).to have_css(".chat-transcript .chat-transcript-group__channel", text: channel.name)
     expect(rich).to have_css(
       ".chat-transcript:nth-of-type(1) .chat-transcript-user .chat-transcript-username",
       text: message_1.user.username,
@@ -200,17 +197,20 @@ describe "chat transcripts in rich editor" do
 
       cdp.copy_paste(markdown, css_selector: composer.composer_input_selector)
 
-      expect(rich).to have_css(".chat-transcript-meta a")
+      expect(rich).to have_css(".chat-transcript-group__channel")
 
       attributes = page.evaluate_script(<<~JS)
         Object.fromEntries(
           Array.from(
-            document.querySelector(".d-editor-input.ProseMirror .chat-transcript-meta a").attributes
+            document.querySelector(".d-editor-input.ProseMirror .chat-transcript-group__channel").attributes
           ).map((attribute) => [attribute.name, attribute.value])
         )
       JS
 
-      expect(attributes).to eq({ "href" => "/chat/c/-/#{channel_id}" })
+      expect(attributes).to eq(
+        "class" => "hashtag-cooked chat-transcript-group__channel",
+        "href" => "/chat/c/-/%22%20onmouseover%3D%22alert(1)%22%20x%3D%22",
+      )
     end
   end
 end

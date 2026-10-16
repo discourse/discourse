@@ -1,4 +1,4 @@
-import LiveCallButton from "../../components/live/call-button";
+import LiveCallButton from "../../components/live/call-button.gjs";
 
 const LiveProfileCallButton = <template>
   {{#if @outletArgs.model.live_can_call}}

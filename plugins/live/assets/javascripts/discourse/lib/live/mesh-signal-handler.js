@@ -1,7 +1,7 @@
 import liveLog from "discourse/plugins/live/discourse/lib/live/logger";
-import PeerManager from "./peer-manager";
-import { iceUfrag } from "./sdp-utils";
-import { participantCanSpeak } from "./stage-roles";
+import PeerManager from "./peer-manager.js";
+import { iceUfrag } from "./sdp-utils.js";
+import { participantCanSpeak } from "./stage-roles.js";
 
 // Handles incoming mesh WebRTC signals (offer/answer/candidate): glare
 // resolution, ICE-restart detection, pending-candidate queueing, and the

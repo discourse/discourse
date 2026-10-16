@@ -1281,6 +1281,14 @@ RSpec.describe PostAlerter do
       DiscoursePluginRegistry.clear_modifiers!
     end
 
+    it "does not add a display name when names are disabled" do
+      SiteSetting.enable_names = false
+
+      notification = PostAlerter.new.create_notification(user, type, post)
+
+      expect(notification.data_hash).not_to have_key(:display_name)
+    end
+
     it "applies modifiers to notification_data" do
       Plugin::Instance
         .new
@@ -1306,7 +1314,9 @@ RSpec.describe PostAlerter do
     end
 
     describe "DiscoursePluginRegistry#push_notification_filters" do
-      after { DiscoursePluginRegistry.reset_register!(:push_notification_filters) }
+      let!(:original_filters) { DiscoursePluginRegistry._raw_push_notification_filters.dup }
+
+      after { DiscoursePluginRegistry._raw_push_notification_filters.replace(original_filters) }
 
       it "sends push notifications when all filters pass" do
         evil_trout.update!(last_seen_at: 10.minutes.ago)

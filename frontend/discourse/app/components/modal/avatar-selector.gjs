@@ -45,6 +45,8 @@ export default class AvatarSelectorModal extends Component {
 
   @tracked gravatarRefreshDisabled = false;
   @tracked gravatarFailed = false;
+
+  /** @type {string | null} */
   @tracked _selected = null;
   @tracked _pendingFile;
   @tracked _filePreview;

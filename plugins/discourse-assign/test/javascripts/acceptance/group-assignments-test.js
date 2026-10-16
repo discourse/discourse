@@ -6,8 +6,8 @@ import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import AssignedTopics from "../fixtures/assigned-group-assignments-fixtures";
-import GroupMembers from "../fixtures/group-members-fixtures";
+import AssignedTopics from "../fixtures/assigned-group-assignments-fixtures.js";
+import GroupMembers from "../fixtures/group-members-fixtures.js";
 
 let canSeeMembers = true;
 

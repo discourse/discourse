@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import rollupVirtualImports, {
   privateVirtualImports,
   routeNamesFor,
-} from "./rollup-virtual-imports";
+} from "./rollup-virtual-imports.js";
 
 function entrypoint(moduleFilenames, opts = {}, entrypointName = "main") {
   return rollupVirtualImports["virtual:entrypoint"](

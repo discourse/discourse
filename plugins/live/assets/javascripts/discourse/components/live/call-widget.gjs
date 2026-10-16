@@ -13,19 +13,19 @@ import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import { activeRingingEntries } from "../../lib/live/ringing";
+import { activeRingingEntries } from "../../lib/live/ringing.js";
 import {
   computeWidgetGrid,
   trackGridSize,
-} from "../../lib/live/video-grid-layout";
-import LiveInviteAgentButton from "../live-invite-agent-button";
-import LiveInviteUsersModal from "../modal/live-invite-users";
-import LiveRoomInfoModal from "../modal/live-room-info";
-import LiveCallControls from "./call-controls";
-import LiveRecordingBadge from "./recording-badge";
-import LiveRingingTile from "./ringing-tile";
-import LiveTranscriptBadge from "./transcript-badge";
-import LiveVideoTile from "./video-tile";
+} from "../../lib/live/video-grid-layout.js";
+import LiveInviteAgentButton from "../live-invite-agent-button.gjs";
+import LiveInviteUsersModal from "../modal/live-invite-users.gjs";
+import LiveRoomInfoModal from "../modal/live-room-info.gjs";
+import LiveCallControls from "./call-controls.gjs";
+import LiveRecordingBadge from "./recording-badge.gjs";
+import LiveRingingTile from "./ringing-tile.gjs";
+import LiveTranscriptBadge from "./transcript-badge.gjs";
+import LiveVideoTile from "./video-tile.gjs";
 
 const WIDGET_VIDEO_TILE_BUDGET = 4;
 const WIDGET_VIEWPORT_MARGIN = 16;

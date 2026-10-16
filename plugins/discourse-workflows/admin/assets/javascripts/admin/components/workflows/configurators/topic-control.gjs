@@ -11,8 +11,11 @@ import MultiSelect from "discourse/select-kit/components/multi-select";
 import { selectKitOptions } from "discourse/select-kit/components/select-kit";
 import TopicRow from "discourse/select-kit/components/topic-row";
 import { i18n } from "discourse-i18n";
-import { integerIdsFromValue, sameIds } from "../../../lib/workflows/id-values";
-import ExpressionWrapper from "./expression-wrapper";
+import {
+  integerIdsFromValue,
+  sameIds,
+} from "../../../lib/workflows/id-values.js";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 async function findTopics(term) {
   const results = await searchForTerm(term, {

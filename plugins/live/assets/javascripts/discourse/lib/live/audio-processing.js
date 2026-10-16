@@ -1,4 +1,4 @@
-import { NS_ENGINES } from "./ns-engines";
+import { NS_ENGINES } from "./ns-engines.js";
 
 // Per-device preferences for the browser's microphone processing chain and
 // the noise suppression mode. Echo cancellation and automatic gain control

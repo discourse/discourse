@@ -319,7 +319,6 @@ ro:
       zh_CN:
         name: Chineză simplificată
     share:
-      topic_html: 'Subiect: <span class="topic-title">%{topicTitle}</span>'
       post: "articol #%{postNumber} de @%{username}"
       close: "închide"
       twitter: "Partajează pe X"
@@ -482,10 +481,6 @@ ro:
       one: "max din %{count}"
       few: "max din %{count}"
       other: "max din %{count}"
-    character_count:
-      one: "%{count} caracter"
-      few: "%{count} caractere"
-      other: "%{count} de caractere"
     period_chooser:
       aria_label: "Filtrează după perioadă"
     related_messages:
@@ -700,6 +695,8 @@ ro:
       title:
         search: "Caută mesaj"
         placeholder: "scrie aici titlul mesajului, URL-ul sau ID-ul"
+    dsa_statements:
+      category: "Categorie"
     review:
       show_more: "Arată mai multe"
       show_less: "Arată mai puține"

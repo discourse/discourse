@@ -198,6 +198,7 @@ en:
         draft_topic: "Open transcript draft"
         stop_and_open: "Stop recording and open draft"
         draft_title: "Call transcript: %{room}"
+        source_label: "Call transcript"
         unknown_speaker: "unknown speaker"
       stage:
         promoted_to_speaker: "You've been made a speaker."
@@ -369,7 +370,7 @@ en:
             room_error: "Could not list participants: %{error}"
             no_rooms: "No live calls are using LiveKit right now."
         rooms_title: "Live rooms"
-        create_room: "Add room"
+        create_room: "New room"
         edit: "Edit"
         update: "Update"
         create: "Create"

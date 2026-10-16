@@ -312,7 +312,7 @@ if defined?(DiscourseWorkflows)
           end
 
           def prompt_content(prompt, upload_ids, agent_record, llm_model, runner, log)
-            upload_ids = normalize_upload_ids(upload_ids)
+            upload_ids = ::DiscourseAi::Completions::UploadEncoder.normalize_upload_ids(upload_ids)
             return prompt if upload_ids.blank?
 
             uploads_by_id =
@@ -325,7 +325,7 @@ if defined?(DiscourseWorkflows)
                 key = drop_reason_key(uploads_by_id[upload_id], agent_record, llm_model, guardian)
                 next if key.nil?
 
-                error_text(
+                upload_error_text(
                   key,
                   upload_id: upload_id,
                   agent: agent_record.name,
@@ -341,8 +341,8 @@ if defined?(DiscourseWorkflows)
           end
 
           def drop_reason_key(upload, agent_record, llm_model, guardian)
-            return "upload_not_found" if upload.nil?
-            return "upload_not_visible" if !guardian.can_see_upload?(upload)
+            return "not_found" if upload.nil?
+            return "not_visible" if !guardian.can_see_upload?(upload)
 
             encoder = ::DiscourseAi::Completions::UploadEncoder
             if !encoder.image?(upload)
@@ -366,29 +366,8 @@ if defined?(DiscourseWorkflows)
             I18n.t("discourse_ai.discourse_workflows.ai_agent.errors.#{key}", **args)
           end
 
-          def normalize_upload_ids(upload_ids)
-            case upload_ids
-            when String
-              parsed = parse_upload_ids_json(upload_ids)
-              return normalize_upload_ids(parsed) if parsed
-
-              upload_ids.split(",")
-            when Array
-              upload_ids.flatten
-            else
-              Array.wrap(upload_ids)
-            end
-              .filter_map do |upload_id|
-                id = Integer(upload_id, exception: false)
-                id if id&.positive?
-              end
-              .uniq
-          end
-
-          def parse_upload_ids_json(upload_ids)
-            JSON.parse(upload_ids)
-          rescue JSON::ParserError, TypeError
-            nil
+          def upload_error_text(key, **args)
+            I18n.t("discourse_ai.discourse_workflows.uploads.#{key}", **args)
           end
 
           def run_agent(agent, config, log, runner)
@@ -417,7 +396,7 @@ if defined?(DiscourseWorkflows)
             result, structured = collect_reply(agent[:bot], bot_context, log)
 
             skipped =
-              execution_context.upload_skips.map { |skip| error_text("upload_skipped", **skip) }
+              execution_context.upload_skips.map { |skip| upload_error_text("skipped", **skip) }
             raise_uploads_not_sent!(agent_record, skipped) if skipped.any?
 
             { "result" => result }.merge(structured_fields(structured, agent_record))

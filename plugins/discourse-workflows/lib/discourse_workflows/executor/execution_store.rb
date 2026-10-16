@@ -182,7 +182,11 @@ module DiscourseWorkflows
 
         attach_workflow_call_run!
         if created
-          ExecutionProgressPublisher.publish_created(@execution, workflow_name: workflow.name)
+          ExecutionProgressPublisher.publish_created(
+            @execution,
+            workflow_name: workflow.name,
+            trigger_node: @workflow_snapshot&.find_node(@trigger_node_id),
+          )
         end
         @execution
       end

@@ -6,7 +6,7 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
-import TopicRow from "./topic-row";
+import TopicRow from "./topic-row.gjs";
 
 @classNames("topic-chooser")
 @selectKitOptions({
@@ -25,6 +25,10 @@ export default class TopicChooser extends ComboBoxComponent {
     return TopicRow;
   }
 
+  /**
+   * @param {string | null | undefined} filter
+   * @returns {import("discourse/models/topic").default[] | import("rsvp").Promise<(import("discourse/models/topic").default | undefined)[] | undefined>}
+   */
   search(filter) {
     if (isEmpty(filter) && isEmpty(this.selectKit.options.additionalFilters)) {
       return [];

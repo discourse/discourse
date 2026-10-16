@@ -375,7 +375,6 @@ lt:
       zh_CN:
         name: Supaprastinta kinų kalba
     share:
-      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "įrašas #%{postNumber} by @%{username}"
       close: "uždaryti"
       twitter: "Bendrinti X platformoje"
@@ -601,11 +600,6 @@ lt:
       few: "daugiausia iš %{count}"
       many: "daugiausia iš %{count}"
       other: "daugiausia iš %{count}"
-    character_count:
-      one: "%{count} simbolis"
-      few: "%{count} simboliai"
-      many: "%{count} simbolių"
-      other: "%{count} simbolių"
     period_chooser:
       aria_label: "Filtruoti pagal laikotarpį"
     related_messages:
@@ -1025,6 +1019,20 @@ lt:
       title:
         search: "Ieškoti žinutės"
         placeholder: "čia įveskite pranešimo pavadinimą, URL ar ID"
+    dsa_statements:
+      title: "DSA klasifikacija"
+      help_title: "Apie DSA klasifikaciją"
+      help: "Pasirinkite bendruomenės taisyklę ir kategoriją, kurios paaiškina šį moderavimo sprendimą. Jos išsaugomos kartu su skaitmeninių paslaugų įstatymo motyvų sąrašu."
+      rule: "Bendruomenės taisyklė"
+      rule_prompt: "Pasirinkite bendruomenės taisyklę"
+      category: "Kategorija"
+      category_prompt: "Pasirinkite kategoriją"
+      pending: "Laukiama DSA klasifikacijos"
+      confirm_title: "Išsaugoti DSA klasifikaciją?"
+      confirm_message: "Patikrinkite bendruomenės taisyklę ir kategoriją. Šios klasifikacijos negalima pakeisti išsaugojus."
+      save: "Išsaugoti klasifikaciją"
+      saving: "Saugoma..."
+      saved: "Klasifikacija išsaugota"
     review:
       show_more: "Rodyti daugiau"
       show_less: "Rodyti mažiau"
@@ -4891,6 +4899,11 @@ lt:
         few: "+%{count}Daugiau"
         many: "+%{count}Daugiau"
         other: "+%{count}Daugiau"
+      granted_times:
+        one: "Suteiktas %{number} kartą"
+        few: "Suteiktas %{number} kartus"
+        many: "Suteiktas %{number} kartų"
+        other: "Suteiktas %{number} kartų"
       select_badge_for_title: Pasirinkti trofėjų ir naudoti, kaip antraštę
       none: "(nieko)"
       successfully_granted: "Sėkmingai suteiktas ženklelis %{badge} nariui %{username}"

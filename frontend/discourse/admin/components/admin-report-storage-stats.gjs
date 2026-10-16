@@ -1,64 +1,47 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { computed, set } from "@ember/object";
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
 import getUrl from "discourse/lib/get-url";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class AdminReportStorageStats extends Component {
-  @computed("model.data.backups")
+  @service currentUser;
+  @service siteSettings;
+
   get backupStats() {
-    return this.model?.data?.backups;
+    return this.args.model?.data?.backups;
   }
 
-  set backupStats(value) {
-    set(this, "model.data.backups", value);
-  }
-
-  @computed("model.data.uploads")
   get uploadStats() {
-    return this.model?.data?.uploads;
+    return this.args.model?.data?.uploads;
   }
 
-  set uploadStats(value) {
-    set(this, "model.data.uploads", value);
-  }
-
-  @computed("siteSettings.backup_location")
   get backupLocation() {
     return this.siteSettings.backup_location;
   }
 
-  @computed("backupStats")
   get showBackupStats() {
     return this.backupStats && this.currentUser.admin;
   }
 
-  @computed("backupLocation")
   get backupLocationName() {
     return i18n(`admin.backups.location.${this.backupLocation}`);
   }
 
-  @computed("backupStats.used_bytes")
   get usedBackupSpace() {
     return I18n.toHumanSize(this.backupStats?.used_bytes);
   }
 
-  @computed("backupStats.free_bytes")
   get freeBackupSpace() {
     return I18n.toHumanSize(this.backupStats?.free_bytes);
   }
 
-  @computed("uploadStats.used_bytes")
   get usedUploadSpace() {
     return I18n.toHumanSize(this.uploadStats?.used_bytes);
   }
 
-  @computed("uploadStats.free_bytes")
   get freeUploadSpace() {
     return I18n.toHumanSize(this.uploadStats?.free_bytes);
   }

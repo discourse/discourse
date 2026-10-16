@@ -19,6 +19,9 @@ import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 /**
+ * @typedef {{ get: (name: string) => unknown, set: (name: string, value: unknown) => Promise<void> }} ReviewableNoteFormApi
+ */
+/**
  * A form component for adding notes to Reviewable items.
  *
  * @component ReviewableNoteForm
@@ -62,7 +65,7 @@ export default class ReviewableNoteForm extends Component {
   /**
    * Registers the Form API reference.
    *
-   * @param {Object} api - The Form API object, with form helper methods.
+   * @param {ReviewableNoteFormApi} api - The Form API object, with form helper methods.
    */
   @action
   registerApi(api) {
@@ -77,7 +80,7 @@ export default class ReviewableNoteForm extends Component {
   /**
    * Handles form submission from Form component.
    *
-   * @param {Object} data - Form data from Form component
+   * @param {{ content?: string }} data - Form data from Form component
    */
   @action
   async onSubmit(data) {

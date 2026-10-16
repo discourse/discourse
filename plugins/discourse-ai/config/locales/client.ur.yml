@@ -76,6 +76,12 @@ ur:
       discourse_workflows:
         ai_agent:
           mode: "موڈ"
+        classify:
+          text: "ٹیکسٹ"
+          upload_ids: "تصاویر"
+          name: "نام"
+          type: "قِسم"
+          type_score: "اسکور"
       ai_tool_approval:
         loading: "لوڈ ہو رہا ہے..."
         tool: "عمل"
@@ -255,6 +261,13 @@ ur:
         edit: "ترمیم کریں"
         delete: "مٹائیں"
         embedding: "اَیمبَیڈ کرنا"
+      decision_models:
+        no_preset: "کوئی نہیں"
+        display_name: "نام"
+        provider: "پرووَائیڈر"
+        edit: "ترمیم کریں"
+        delete: "مٹائیں"
+        test: "ٹیسٹ چلائیں"
       mcp_servers:
         name: "نام"
         description: "تفصیل"

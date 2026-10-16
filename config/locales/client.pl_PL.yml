@@ -375,7 +375,6 @@ pl_PL:
       zh_CN:
         name: chiński uproszczony
     share:
-      topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
       post: "wpis #%{postNumber} od @%{username}"
       close: "zamknij"
       twitter: "Udostępnij na X"
@@ -601,11 +600,6 @@ pl_PL:
       few: "max z %{count}"
       many: "max z %{count}"
       other: "max z %{count}"
-    character_count:
-      one: "%{count} znak"
-      few: "%{count} znaki"
-      many: "%{count} znaków"
-      other: "%{count} znaków"
     period_chooser:
       aria_label: "Filtruj według okresu"
     related_messages:
@@ -1031,6 +1025,20 @@ pl_PL:
       title:
         search: "Wyszukaj wiadomość"
         placeholder: "tutaj wpisz tytuł wiadomości, adres URL lub id"
+    dsa_statements:
+      title: "Klasyfikacja DSA"
+      help_title: "O klasyfikacji DSA"
+      help: "Wybierz regułę społeczności i kategorię uzasadniającą tę decyzję o moderacji. Zostaną one zapisane wraz z uzasadnieniem zgodnie z Ustawą o usługach cyfrowych."
+      rule: "Zasady społeczności"
+      rule_prompt: "Wybierz regułę społeczności"
+      category: "Kategoria"
+      category_prompt: "Wybierz kategorię"
+      pending: "Oczekiwanie na klasyfikację DSA"
+      confirm_title: "Zapisać klasyfikację DSA?"
+      confirm_message: "Sprawdź regułę społeczności i kategorię. Klasyfikacji tej nie można zmienić po zapisaniu."
+      save: "Zapisz klasyfikację"
+      saving: "Zapisywanie…"
+      saved: "Klasyfikacja zapisana"
     review:
       show_more: "Pokaż więcej"
       show_less: "Pokaż mniej"

@@ -3,9 +3,6 @@
 module DiscourseAi
   module Completions
     class ContextPreparation
-      MAX_CALLS = 8
-      MAX_SECONDS = 90
-      MAX_ALLOWANCE_TOKENS = 1_000_000
       RETAINED_ATTACHMENTS_ACK = "The preceding attachments are retained historical evidence."
       HISTORY_DROPPED_NOTICE = <<~TEXT.squish
         Part of the earlier conversation was omitted because it could not be summarized to fit
@@ -14,34 +11,6 @@ module DiscourseAi
       TEXT
       PREVIOUS_SUMMARY_LABEL =
         "\nSummary from an earlier checkpoint (it does not cover messages omitted after it):\n"
-
-      class Budget
-        attr_reader :calls, :spent_tokens, :elapsed_seconds
-
-        def initialize(allowance:, calls: 0, spent_tokens: 0, elapsed_seconds: 0)
-          @allowance = allowance
-          @calls = calls
-          @spent_tokens = spent_tokens
-          @elapsed_seconds = elapsed_seconds
-          @mutex = Mutex.new
-        end
-
-        def reserve(tokens)
-          @mutex.synchronize do
-            if @calls >= MAX_CALLS || @spent_tokens + tokens > @allowance ||
-                 @elapsed_seconds >= MAX_SECONDS
-              return false
-            end
-            @calls += 1
-            @spent_tokens += tokens
-            true
-          end
-        end
-
-        def record_elapsed(seconds)
-          @mutex.synchronize { @elapsed_seconds += [seconds, 0].max }
-        end
-      end
 
       class Error < StandardError
         attr_reader :reason
@@ -71,29 +40,9 @@ module DiscourseAi
 
       attr_reader :protected_user_index
 
-      def calls
-        @budget.calls
-      end
-
-      def spent_tokens
-        @budget.spent_tokens
-      end
-
-      def elapsed_seconds
-        @budget.elapsed_seconds
-      end
-
-      def initialize(llm, threshold: 80, calls: 0, spent_tokens: 0, elapsed_seconds: 0)
+      def initialize(llm, threshold: 80)
         @llm = llm
         @threshold = threshold || 80
-        allowance = [[llm.max_prompt_tokens.to_i * 2, 64_000].max, MAX_ALLOWANCE_TOKENS].min
-        @budget =
-          Budget.new(
-            allowance: allowance,
-            calls: calls,
-            spent_tokens: spent_tokens,
-            elapsed_seconds: elapsed_seconds,
-          )
       end
 
       def prepare!(
@@ -106,7 +55,6 @@ module DiscourseAi
         protected_user_index: nil,
         **options
       )
-        @budget = execution_context.share_preparation_budget(@budget) if execution_context
         return :cancelled if cancel_manager&.cancelled?
         prompt.skip_trim = true
         size, capacity = @llm.prompt_capacity(prompt, **options)
@@ -181,9 +129,8 @@ module DiscourseAi
           ]
           candidate = copy_prompt(prompt, messages)
           candidate_size, candidate_capacity = @llm.prompt_capacity(candidate, **options)
-          if candidate_size >= size || candidate_size > candidate_capacity
-            raise Error.new("unusable_summary")
-          end
+          raise Error.new("summary_not_smaller") if candidate_size >= size
+          raise Error.new("summary_over_capacity") if candidate_size > candidate_capacity
           return :cancelled if cancel_manager&.cancelled?
           @protected_user_index = messages.length - tail.length
           prompt.messages.replace(messages)
@@ -320,7 +267,6 @@ module DiscourseAi
       end
 
       def summarize(source, **options)
-        started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
         evidence = @llm.context_evidence(source)
         remaining = evidence.to_json
         offset = 0
@@ -373,41 +319,28 @@ module DiscourseAi
           compression_prompt = build_prompt.call(low)
           remaining.slice!(0, low)
           offset += low
-          input_size, input_capacity, output_reserve = @llm.prompt_capacity(compression_prompt)
+          input_size, input_capacity = @llm.prompt_capacity(compression_prompt)
           raise Error.new("summary_input_overflow") if input_size > input_capacity
-          now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-          @budget.record_elapsed(now - started_at)
-          started_at = now
           return if options[:cancel_manager]&.cancelled?
-          if !@budget.reserve(input_size + output_reserve)
-            raise Error.new("preparation_budget_exhausted")
-          end
+          # Maintenance shares the execution completion limit; latency and estimated
+          # token costs must not discard a usable summary or leave evidence uncovered.
           if options[:subagent_execution_state] &&
                !options[:subagent_execution_state].reserve_completion
             raise Error.new("completion_limit")
           end
           # Uncapped: thinking tokens count against max_tokens and could leave no summary.
-          response =
-            @llm.generate(
-              compression_prompt,
-              user: options[:user],
-              feature_name: "context_compression",
-              feature_context: options[:feature_context],
-              execution_context: options[:execution_context],
-              cancel_manager: options[:cancel_manager],
-            )
-          now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-          @budget.record_elapsed(now - started_at)
-          started_at = now
-          raise Error.new("preparation_timeout") if elapsed_seconds >= MAX_SECONDS
-          summary = Llm.text_from_response(response)
-          raise Error.new("unusable_summary") if summary.blank?
+          summary = +""
+          @llm.generate(
+            compression_prompt,
+            user: options[:user],
+            feature_name: "context_compression",
+            feature_context: options[:feature_context],
+            execution_context: options[:execution_context],
+            cancel_manager: options[:cancel_manager],
+          ) { |partial| summary << partial if partial.is_a?(String) }
+          raise Error.new("empty_summary") if summary.blank?
         end
         summary
-      ensure
-        if started_at
-          @budget.record_elapsed(Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at)
-        end
       end
 
       def transient_hint?(message)

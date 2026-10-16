@@ -15,6 +15,8 @@ module DiscourseAi
         AiApiAuditLog::Provider::Mistral => "Mistral",
         AiApiAuditLog::Provider::OpenRouter => "OpenRouter",
         AiApiAuditLog::Provider::BedrockConverse => "Amazon Bedrock",
+        AiApiAuditLog::Provider::SystemOne => "System One",
+        AiApiAuditLog::Provider::OpenAiDecisions => "OpenAI Decisions",
       }.freeze
 
       def self.outcome(log)

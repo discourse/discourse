@@ -294,7 +294,6 @@ hr:
       zh_CN:
         name: kineski pojednostavljeni
     share:
-      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "objava #%{postNumber} od @%{username}"
       close: "zatvori"
       twitter: "Podijeli na X"
@@ -461,10 +460,6 @@ hr:
       one: "ukupno %{count}"
       few: "ukupno %{count}"
       other: "ukupno %{count}"
-    character_count:
-      one: "%{count} znakova"
-      few: "%{count} znakova"
-      other: "%{count} znakova"
     period_chooser:
       aria_label: "Filtrirajte po razdoblju"
     related_messages:
@@ -749,6 +744,9 @@ hr:
       title:
         search: "Traži poruku"
         placeholder: "ovdje upišite naslov poruke, URL ili id"
+    dsa_statements:
+      category: "Kategorija"
+      saving: "Spremanje…"
     review:
       show_more: "Prikaži više"
       show_less: "Prikaži manje"

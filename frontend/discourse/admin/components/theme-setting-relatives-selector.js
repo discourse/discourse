@@ -1,4 +1,4 @@
-import SiteSettingComponent from "./site-setting";
+import SiteSettingComponent from "./site-setting.gjs";
 
 export default class ThemeSettingRelativesSelectorComponent extends SiteSettingComponent {
   trackChanges = false;

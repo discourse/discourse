@@ -255,6 +255,9 @@ class User < ActiveRecord::Base
   attr_accessor :skip_email_validation
   attr_accessor :enforce_username_restrictions
 
+  # DiscourseConnect is authoritative for usernames, so watched words must not block SSO users.
+  attr_accessor :skip_username_watched_words_validation
+
   # Whether we need to be sending a system message after creation
   attr_accessor :send_welcome_message
 
@@ -1515,7 +1518,11 @@ class User < ActiveRecord::Base
   end
 
   def username_format_validator
-    UsernameValidator.perform_validation(self, "username")
+    UsernameValidator.perform_validation(
+      self,
+      "username",
+      skip_watched_words: skip_username_watched_words_validation,
+    )
   end
 
   def email_confirmed?
@@ -2000,7 +2007,7 @@ class User < ActiveRecord::Base
   end
 
   def display_name
-    if SiteSetting.prioritize_username_in_ux?
+    if !SiteSetting.enable_names? || SiteSetting.prioritize_username_in_ux?
       username
     else
       name.presence || username

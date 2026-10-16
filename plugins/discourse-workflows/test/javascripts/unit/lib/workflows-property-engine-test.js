@@ -12,6 +12,7 @@ import {
   getPropertySchema,
   i18nPrefix,
   i18nScope,
+  isEmptyExpression,
   localeKeyPart,
   normalizeOptions,
   propertyDescription,
@@ -21,6 +22,7 @@ import {
   propertyPlaceholder,
   propertySelectNoneKey,
   pruneModeHiddenFields,
+  wholeExpressionBody,
 } from "discourse/plugins/discourse-workflows/admin/lib/workflows/property-engine";
 
 module("Unit | Utility | workflows property engine", function () {
@@ -543,5 +545,41 @@ module("Unit | Utility | workflows property engine", function () {
       '[\n  "alpha",\n  "beta"\n]'
     );
     assert.strictEqual(normalizeCodeEditorValue("plain", "json"), "plain");
+  });
+
+  test("wholeExpressionBody", function (assert) {
+    [
+      ["={{ $json.id }}", "$json.id"],
+      ["={{ { val: 'x' } }}", "{ val: 'x' }"],
+      ["={{ {a: {b: 1} } }}", "{a: {b: 1} }"],
+      ["={{ `${x}` }}", "`${x}`"],
+      ["={{ (() => { return 1 })() }}", "(() => { return 1 })()"],
+      ["= {{ a }} ", "a"],
+      ["={{ a }} x {{ b }}", null],
+      ["=a {{ b }} c {{ d }}", null],
+      ["={{ a", null],
+      ["={{  }}", null],
+      ["{{ a }}", null],
+      [42, null],
+    ].forEach(([input, expected]) => {
+      assert.strictEqual(wholeExpressionBody(input), expected, String(input));
+    });
+  });
+
+  test("isEmptyExpression", function (assert) {
+    [
+      ["=", true],
+      ["=  ", true],
+      ["={{ }}", true],
+      ["={{   }}", true],
+      ["= {{ }} ", true],
+      ["={{ x }}", false],
+      ["={{ }}{{ x }}", false],
+      ["", false],
+      [null, false],
+      [false, false],
+    ].forEach(([input, expected]) => {
+      assert.strictEqual(isEmptyExpression(input), expected, String(input));
+    });
   });
 });

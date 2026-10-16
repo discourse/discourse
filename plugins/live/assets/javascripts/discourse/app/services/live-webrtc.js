@@ -7,26 +7,26 @@ import { manuallyTrack } from "discourse/lib/tracked-tools";
 import Draft from "discourse/models/draft";
 import { i18n } from "discourse-i18n";
 import liveLog from "discourse/plugins/live/discourse/lib/live/logger";
-import { confirmMeshPrivacy } from "../../components/modal/live-mesh-privacy-warning";
-import { reportMicAcquisitionFailure } from "../../components/modal/live-mic-permission";
-import AudioMonitor from "../../lib/live/audio-monitor";
-import { RING_SECONDS } from "../../lib/live/call-constants";
-import HeartbeatManager from "../../lib/live/heartbeat-manager";
-import IdleTracker, { idleThresholds } from "../../lib/live/idle-tracker";
-import { consumePendingInviteRef } from "../../lib/live/invite-ref";
-import LivekitCoordinator from "../../lib/live/livekit-coordinator";
-import LocalAudioPipeline from "../../lib/live/local-audio-pipeline";
-import LocalVideoManager from "../../lib/live/local-video-manager";
+import { confirmMeshPrivacy } from "../../components/modal/live-mesh-privacy-warning.gjs";
+import { reportMicAcquisitionFailure } from "../../components/modal/live-mic-permission.gjs";
+import AudioMonitor from "../../lib/live/audio-monitor.js";
+import { RING_SECONDS } from "../../lib/live/call-constants.js";
+import HeartbeatManager from "../../lib/live/heartbeat-manager.js";
+import IdleTracker, { idleThresholds } from "../../lib/live/idle-tracker.js";
+import { consumePendingInviteRef } from "../../lib/live/invite-ref.js";
+import LivekitCoordinator from "../../lib/live/livekit-coordinator.js";
+import LocalAudioPipeline from "../../lib/live/local-audio-pipeline.js";
+import LocalVideoManager from "../../lib/live/local-video-manager.js";
 import {
   applyOutputDevice,
   preferredOutputDeviceId,
   setPreferredOutputDeviceId,
-} from "../../lib/live/media-devices";
-import MeshSignalHandler from "../../lib/live/mesh-signal-handler";
-import ParticipantAudio from "../../lib/live/participant-audio";
-import PeerManager from "../../lib/live/peer-manager";
-import PresencePendingPeers from "../../lib/live/presence-pending-peers";
-import PttManager from "../../lib/live/ptt-manager";
+} from "../../lib/live/media-devices.js";
+import MeshSignalHandler from "../../lib/live/mesh-signal-handler.js";
+import ParticipantAudio from "../../lib/live/participant-audio.js";
+import PeerManager from "../../lib/live/peer-manager.js";
+import PresencePendingPeers from "../../lib/live/presence-pending-peers.js";
+import PttManager from "../../lib/live/ptt-manager.js";
 import {
   allowedQualityTiers,
   clampQuality,
@@ -39,12 +39,12 @@ import {
   setPreferredScreenContent,
   setPreferredScreenQuality,
   setPreferredVoiceQuality,
-} from "../../lib/live/quality-preferences";
-import RemoteStreamRegistry from "../../lib/live/remote-stream-registry";
-import { activeRingingEntries } from "../../lib/live/ringing";
-import RoomMessageQueue from "../../lib/live/room-message-queue";
-import RosterHandler from "../../lib/live/roster-handler";
-import SignalingManager from "../../lib/live/signaling";
+} from "../../lib/live/quality-preferences.js";
+import RemoteStreamRegistry from "../../lib/live/remote-stream-registry.js";
+import { activeRingingEntries } from "../../lib/live/ringing.js";
+import RoomMessageQueue from "../../lib/live/room-message-queue.js";
+import RosterHandler from "../../lib/live/roster-handler.js";
+import SignalingManager from "../../lib/live/signaling.js";
 import {
   playConnectedSound,
   playDeafenSound,
@@ -55,13 +55,13 @@ import {
   schedulePlaybackResume,
   startWaitingSound,
   stopCallSounds,
-} from "../../lib/live/sound-effects";
+} from "../../lib/live/sound-effects.js";
 import {
   participantCanSpeak,
   remoteTrackAllowed,
-} from "../../lib/live/stage-roles";
-import TranscriptionCoordinator from "../../lib/live/transcription-coordinator";
-import { applyVoiceQuality } from "../../lib/live/video-quality";
+} from "../../lib/live/stage-roles.js";
+import TranscriptionCoordinator from "../../lib/live/transcription-coordinator.js";
+import { applyVoiceQuality } from "../../lib/live/video-quality.js";
 
 // Pre-rename key, kept so saved preferences survive.
 const CAMERA_ENABLED_KEY_PREFIX = "voice-camera-enabled";

@@ -311,7 +311,6 @@ be:
       zh_CN:
         name: Кітайская спрошчаная
     share:
-      topic_html: 'Тэма: <span class="topic-title">%{topicTitle}</span>'
       post: "допіс №%{postNumber} ад карыстальніка @%{username}"
       close: "закрыць"
       twitter: "Абагуліць у X"
@@ -414,11 +413,6 @@ be:
       few: "не больш за %{count}"
       many: "не больш за %{count}"
       other: "не больш за %{count}"
-    character_count:
-      one: "%{count} сімвал"
-      few: "%{count} сімвалы"
-      many: "%{count} сімвалаў"
-      other: "%{count} сімвалаў"
     related_messages:
       title: "Звязаныя паведамленні"
       pill: "Звязаныя паведамленні"
@@ -653,6 +647,9 @@ be:
       title:
         search: "Пошук паведамлення"
         placeholder: "увядзіце загаловак, URL-адрас або ідэнтыфікатар паведамлення"
+    dsa_statements:
+      category: "Катэгорыя"
+      saving: "Захаванне…"
     review:
       show_more: "Паказаць больш"
       show_less: "Паказаць менш"

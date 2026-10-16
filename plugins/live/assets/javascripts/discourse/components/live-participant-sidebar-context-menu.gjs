@@ -10,10 +10,10 @@ import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
-import { humanKeyName } from "../lib/live/ptt-utils";
-import LiveFlag from "../lib/live-flag";
-import LivePttKeyCapture from "./live-ptt-key-capture";
-import LiveVoiceSettingsModal from "./modal/live-voice-settings";
+import { humanKeyName } from "../lib/live/ptt-utils.js";
+import LiveFlag from "../lib/live-flag.js";
+import LivePttKeyCapture from "./live-ptt-key-capture.gjs";
+import LiveVoiceSettingsModal from "./modal/live-voice-settings.gjs";
 
 export default class LiveParticipantSidebarContextMenu extends Component {
   @service currentUser;

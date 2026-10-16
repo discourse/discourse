@@ -6,7 +6,7 @@ import Report from "discourse/admin/models/report";
 import getURL from "discourse/lib/get-url";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
-import AdminDashboardTabController from "../../admin-dashboard-tab";
+import AdminDashboardTabController from "../../admin-dashboard-tab.js";
 
 function staticReport(reportType) {
   return computed("reports.[]", function () {
@@ -19,6 +19,8 @@ export default class AdminDashboardGeneralController extends AdminDashboardTabCo
   @service exception;
 
   isLoading = false;
+
+  /** @type {Date | null} */
   dashboardFetchedAt = null;
 
   @staticReport("users_by_type") usersByTypeReport;

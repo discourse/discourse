@@ -138,7 +138,6 @@ et:
     date_range_picker:
       apply: "Rakenda"
     share:
-      topic_html: 'Teema: <span class="topic-title">%{topicTitle}</span>'
       close: "Sulge"
       facebook: "Jaga Facebookis"
       email: "Jaga e-kirjaga"
@@ -253,9 +252,6 @@ et:
     max_of_count:
       one: "maksimum %{count}-st"
       other: "maksimum %{count}-st"
-    character_count:
-      one: "%{count} sümbol"
-      other: "%{count} sümbolit"
     related_messages:
       title: "Seotud sõnumid"
       pill: "Seotud sõnumid"
@@ -397,6 +393,9 @@ et:
       title:
         search: "Otsi teemat"
         placeholder: "kirjuta siia teema pealkiri, URL või ID"
+    dsa_statements:
+      category: "Kategooriad"
+      saving: "Salvestan..."
     review:
       explain:
         total: "Kokku"

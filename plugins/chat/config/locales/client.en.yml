@@ -39,6 +39,7 @@ en:
           other: "%{formatted_number} chat messages"
 
     chat:
+      homepage_option: "Chat channel"
       edit_category:
         tab_title: "Chat"
         channel: "Channel"
@@ -578,6 +579,8 @@ en:
         original_channel: 'Originally sent in <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chat quote copied to clipboard"
         default_thread_title: "Thread"
+        transcript_label: "Transcript"
+        transcript_region: "Transcript from %{channel}"
 
       notification_levels:
         never: "Never"

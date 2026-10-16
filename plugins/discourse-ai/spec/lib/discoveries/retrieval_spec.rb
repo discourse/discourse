@@ -34,6 +34,23 @@ describe DiscourseAi::Discoveries::Retrieval do
   end
 
   describe "#call" do
+    it "clears names from candidates when names are disabled" do
+      SiteSetting.enable_names = false
+      post_1.user.update!(name: "Hidden Author")
+      retrieval =
+        described_class.new(
+          user:,
+          lexical_retriever: ->(_query) { [source(post_1).merge("name" => post_1.user.name)] },
+          semantic_retriever: ->(_query) { [] },
+        )
+
+      result = retrieval.call("useful")
+
+      expect(result.candidates).to contain_exactly(
+        include("username" => post_1.user.username, "name" => nil),
+      )
+    end
+
     it "uses semantic retrieval with embeddings configured even when full-page semantic search is disabled" do
       SiteSetting.ai_embeddings_semantic_search_enabled = false
 

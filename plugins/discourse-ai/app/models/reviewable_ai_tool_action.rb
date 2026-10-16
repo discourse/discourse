@@ -91,6 +91,7 @@ class ReviewableAiToolAction < Reviewable
       post = Post.with_deleted.find_by!(topic_id: parameters["topic_id"], post_number: 1)
 
       {
+        decision_facts: "The topic was closed.",
         decision_visibility: ["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"],
         content_type: ["CONTENT_TYPE_TEXT"],
         content_date: post.created_at.to_date.iso8601,
@@ -103,6 +104,7 @@ class ReviewableAiToolAction < Reviewable
       post = Post.with_deleted.find_by!(topic_id: parameters["topic_id"], post_number: 1)
 
       {
+        decision_facts: "The topic was unlisted.",
         decision_visibility: ["DECISION_VISIBILITY_CONTENT_DEMOTED"],
         content_type: ["CONTENT_TYPE_TEXT"],
         content_date: post.created_at.to_date.iso8601,
@@ -115,6 +117,7 @@ class ReviewableAiToolAction < Reviewable
       post = Post.with_deleted.find_by!(topic_id: parameters["topic_id"], post_number: 1)
 
       {
+        decision_facts: "The topic was removed.",
         decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
         content_type: ["CONTENT_TYPE_TEXT"],
         content_date: post.created_at.to_date.iso8601,
@@ -127,6 +130,7 @@ class ReviewableAiToolAction < Reviewable
       post = Post.with_deleted.find(parameters["post_id"])
 
       {
+        decision_facts: "The post was locked.",
         decision_visibility: ["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"],
         content_type: ["CONTENT_TYPE_TEXT"],
         content_date: post.created_at.to_date.iso8601,
@@ -139,6 +143,7 @@ class ReviewableAiToolAction < Reviewable
       post = Post.with_deleted.find_by!(topic_id: parameters["topic_id"], post_number: 1)
 
       {
+        decision_facts: "The topic was placed in slow mode, limiting how often users can reply.",
         decision_visibility: ["DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED"],
         content_type: ["CONTENT_TYPE_TEXT"],
         content_date: post.created_at.to_date.iso8601,
@@ -149,6 +154,7 @@ class ReviewableAiToolAction < Reviewable
       post = Post.with_deleted.find(parameters["post_id"])
 
       {
+        decision_facts: "The post was edited.",
         decision_visibility: ["DECISION_VISIBILITY_OTHER"],
         decision_visibility_other: "Content edited",
         content_type: ["CONTENT_TYPE_TEXT"],
@@ -160,6 +166,7 @@ class ReviewableAiToolAction < Reviewable
       user = User.find_by_username(parameters["username"])
 
       {
+        decision_facts: "The account was suspended.",
         decision_account: "DECISION_ACCOUNT_SUSPENDED",
         content_type: ["CONTENT_TYPE_OTHER"],
         content_type_other: "User account",
@@ -173,6 +180,7 @@ class ReviewableAiToolAction < Reviewable
       user = User.find_by_username(parameters["username"])
 
       {
+        decision_facts: "The account had its ability to participate restricted.",
         decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
         content_type: ["CONTENT_TYPE_OTHER"],
         content_type_other: "User account",

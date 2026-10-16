@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import fullnumber from "../helpers/fullnumber";
+import fullnumber from "../helpers/fullnumber.js";
 
 export default class GamificationScore extends Component {
   @service site;

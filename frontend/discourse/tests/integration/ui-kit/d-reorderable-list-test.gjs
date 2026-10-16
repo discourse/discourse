@@ -573,11 +573,9 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     // because nothing else swaps an argument after the first render.
     const items = trackedArray(objectItems());
     const announce = sinon.spy(this.owner.lookup("service:a11y"), "announce");
-    const state = new (class {
-      @tracked movable = () => true;
-      @tracked removable = () => true;
-      @tracked itemLabel = label;
-    })();
+    const movable = tracked(() => true);
+    const removable = tracked(() => true);
+    const itemLabel = tracked(label);
 
     await render(
       <template>
@@ -585,11 +583,11 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
         <DReorderableList
           @items={{items}}
           @key="id"
-          @label={{state.itemLabel}}
-          @movable={{state.movable}}
+          @label={{itemLabel.value}}
+          @movable={{movable.value}}
           @onMove={{noop}}
           @onRemove={{noop}}
-          @removable={{state.removable}}
+          @removable={{removable.value}}
         >
           <:row as |item|>
             <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -601,20 +599,20 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
     assert.dom(".d-reorderable-list__handle").exists({ count: 3 });
     assert.dom(".d-reorderable-list__remove").exists({ count: 3 });
 
-    state.movable = (item) => item.id !== "bravo";
+    movable.value = (item) => item.id !== "bravo";
     await settled();
     assert
       .dom(handleSelector("bravo"))
       .doesNotExist("a swapped @movable re-freezes the row");
     assert.dom(".d-reorderable-list__handle").exists({ count: 2 });
 
-    state.removable = (item) => item.id !== "charlie";
+    removable.value = (item) => item.id !== "charlie";
     await settled();
     assert
       .dom(`${rowSelector("charlie")} .d-reorderable-list__remove`)
       .doesNotExist("a swapped @removable withdraws the control");
 
-    state.itemLabel = (item) => `Renamed ${item.name}`;
+    itemLabel.value = (item) => `Renamed ${item.name}`;
     await settled();
     await moveVia("alpha", "down");
     assert.true(
@@ -625,9 +623,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
   test("lets a consumer choose the remove control's button weight", async function (assert) {
     const items = objectItems();
-    const state = new (class {
-      @tracked buttonClass;
-    })();
+    const buttonClass = tracked(undefined);
 
     await render(
       <template>
@@ -638,7 +634,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
           @label={{label}}
           @onMove={{noop}}
           @onRemove={{noop}}
-          @removeButtonClass={{state.buttonClass}}
+          @removeButtonClass={{buttonClass.value}}
         >
           <:row as |item|>
             <span data-test-item={{item.id}}>{{item.name}}</span>
@@ -651,7 +647,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
       .dom(".d-reorderable-list__remove")
       .hasClass("btn-flat", "falls back to a flat control");
 
-    state.buttonClass = "btn-default";
+    buttonClass.value = "btn-default";
     await settled();
 
     assert
@@ -1038,9 +1034,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
       { ...initialItems[0], name: `${initialItems[0].name} current` },
       { ...initialItems[1], name: `${initialItems[1].name} current` },
     ];
-    const state = new (class {
-      @tracked items = initialItems;
-    })();
+    const items = tracked(initialItems);
     const moves = [];
     const onMove = (move) => moves.push(move);
 
@@ -1048,7 +1042,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
       <template>
         <DMenus />
         <DReorderableList
-          @items={{state.items}}
+          @items={{items.value}}
           @key="id"
           @label={{label}}
           @onMove={{onMove}}
@@ -1081,7 +1075,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
         "the primitive marks the dragged row, so no state is mirrored by hand"
       );
 
-    state.items = currentItems;
+    items.value = currentItems;
     await settled();
 
     const target = rowSelector(initialItems[0].id);
@@ -1273,15 +1267,13 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
 
   test("uses object identity for keyed rerendering when key is omitted", async function (assert) {
     const items = objectItems();
-    const state = new (class {
-      @tracked items = items;
-    })();
+    const listItems = tracked(items);
 
     await render(
       <template>
         <DMenus />
         <DReorderableList
-          @items={{state.items}}
+          @items={{listItems.value}}
           @label={{label}}
           @onMove={{noop}}
         >
@@ -1315,7 +1307,7 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
       "distinct objects resolve distinct DOM keys"
     );
 
-    state.items = [...items].reverse();
+    listItems.value = [...items].reverse();
     await settled();
 
     assert.deepEqual(
@@ -2055,15 +2047,13 @@ module(
     test("removing a dragged item clears its state before reinsertion", async function (assert) {
       const initialItems = objectItems();
       const draggedItem = initialItems[1];
-      const state = new (class {
-        @tracked items = initialItems;
-      })();
+      const items = tracked(initialItems);
 
       await render(
         <template>
           <DMenus />
           <DReorderableList
-            @items={{state.items}}
+            @items={{items.value}}
             @key="id"
             @label={{label}}
             @onMove={{noop}}
@@ -2090,7 +2080,7 @@ module(
           "the primitive marks the dragged row, so no state is mirrored by hand"
         );
 
-      state.items = initialItems.filter((item) => item !== draggedItem);
+      items.value = initialItems.filter((item) => item !== draggedItem);
       await settled();
       assert
         .dom(rowSelector(draggedItem.id))
@@ -2100,7 +2090,7 @@ module(
         dataTransfer,
         ...sourceCoordinates,
       });
-      state.items = initialItems;
+      items.value = initialItems;
       await settled();
 
       assert
@@ -2502,15 +2492,13 @@ module(
       const items = objectItems();
       const firstOnMove = sinon.spy();
       const secondOnMove = sinon.spy();
-      const state = new (class {
-        @tracked onMove = firstOnMove;
-      })();
+      const onMove = tracked(firstOnMove);
 
       await render(
-        <template><List @items={{items}} @onMove={{state.onMove}} /></template>
+        <template><List @items={{items}} @onMove={{onMove.value}} /></template>
       );
 
-      state.onMove = secondOnMove;
+      onMove.value = secondOnMove;
       await settled();
 
       await moveVia(items[1].id, "up");

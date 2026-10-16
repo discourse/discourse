@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import Block from "./block";
+import Block from "./block.gjs";
 
 export default class Blocks extends Component {
   @service appEvents;

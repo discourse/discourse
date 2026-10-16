@@ -11,12 +11,12 @@ import { and, not, or } from "discourse/truth-helpers";
 import DModal from "discourse/ui-kit/d-modal";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
-import BackgroundBlurManager from "../../lib/live/background-blur";
+import BackgroundBlurManager from "../../lib/live/background-blur.js";
 import {
   cameraConstraints,
   enumerateVideoDevices,
   SYSTEM_DEFAULT_DEVICE_ID,
-} from "../../lib/live/media-devices";
+} from "../../lib/live/media-devices.js";
 
 export default class LiveVideoSettingsModal extends Component {
   @service liveWebrtc;

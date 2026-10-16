@@ -222,9 +222,6 @@ sw:
     max_of_count:
       one: "kiwango cha juu cha %{count}"
       other: "kiwango cha juu cha %{count}"
-    character_count:
-      one: "Herufi %{count}"
-      other: "Herufi %{count}"
     suggested_topics:
       pm_title: "Ujumbe Uliopendekezwa"
     admin_onboarding_banner:
@@ -321,6 +318,8 @@ sw:
       edit: "Hariri"
     choose_topic:
       none_found: "Hakuna mada zilizopatikana."
+    dsa_statements:
+      category: "Kikundi"
     review:
       explain:
         total: "Jumla"

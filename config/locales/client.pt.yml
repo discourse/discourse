@@ -262,7 +262,6 @@ pt:
       zh_CN:
         name: Chinês Simplificado
     share:
-      topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
       post: "publicação #%{postNumber} de @%{username}"
       close: "fechar"
       twitter: "Partilhar no X"
@@ -427,9 +426,6 @@ pt:
     max_of_count:
       one: "máximo de %{count}"
       other: "máximo de %{count}"
-    character_count:
-      one: "%{count} caráter"
-      other: "%{count} carateres"
     period_chooser:
       aria_label: "Filtrar por período"
     related_messages:
@@ -699,6 +695,9 @@ pt:
       title:
         search: "Pesquisar por uma Mensagem"
         placeholder: "digite aqui o título da mensagem, url ou id"
+    dsa_statements:
+      category: "Categoria"
+      saving: "Guardando..."
     review:
       show_more: "Mostrar mais"
       show_less: "Mostrar menos"

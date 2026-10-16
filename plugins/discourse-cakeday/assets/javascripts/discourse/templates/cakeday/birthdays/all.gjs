@@ -2,7 +2,7 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
-import UserInfoList from "../../../components/user-info-list";
+import UserInfoList from "../../../components/user-info-list.gjs";
 
 export default <template>
   <DLoadMore @action={{@controller.loadMore}} @selector=".user-info">

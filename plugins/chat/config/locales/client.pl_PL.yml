@@ -616,6 +616,8 @@ pl_PL:
         original_channel: 'Oryginalnie wysłane w <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Cytat z czatu skopiowany do schowka"
         default_thread_title: "Wątek"
+        transcript_label: "Transkrypcja"
+        transcript_region: "Transkrypcja z %{channel}"
       notification_levels:
         never: "Nigdy"
         mention: "Tylko dla wzmianek"

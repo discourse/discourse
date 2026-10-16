@@ -6,7 +6,7 @@ import liveLog from "discourse/plugins/live/discourse/lib/live/logger";
 // cutout in front — then captures the canvas as the outgoing stream.
 // Mirrors the NoiseSuppressionManager contract: setup(raw stream) returns
 // the processed stream; the caller keeps ownership of the raw stream.
-import { liveAssetUrl } from "./live-assets";
+import { liveAssetUrl } from "./live-assets.js";
 
 // Pre-rename key, kept so saved preferences survive.
 const ENABLED_KEY = "voice_video_blur_enabled";

@@ -18,26 +18,29 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { toggleFullscreen, trackFullscreen } from "../../lib/live/fullscreen";
-import { activeRingingEntries } from "../../lib/live/ringing";
-import { speakQueue } from "../../lib/live/speak-queue";
+import {
+  toggleFullscreen,
+  trackFullscreen,
+} from "../../lib/live/fullscreen.js";
+import { activeRingingEntries } from "../../lib/live/ringing.js";
+import { speakQueue } from "../../lib/live/speak-queue.js";
 import {
   bestRowHeight,
   DEFAULT_TILE_ASPECT,
   trackGridSize,
-} from "../../lib/live/video-grid-layout";
-import LiveInviteAgentButton from "../live-invite-agent-button";
-import LiveInviteUsersModal from "../modal/live-invite-users";
-import LiveRoomInfoModal from "../modal/live-room-info";
-import LiveCallControls from "./call-controls";
-import LiveCallSubmenu from "./call-submenu";
-import LiveCaptionOverlay from "./caption-overlay";
-import LiveChatPanel from "./chat-panel";
-import LiveRecordingBadge from "./recording-badge";
-import LiveRingingTile from "./ringing-tile";
-import LiveSpeakQueue from "./speak-queue";
-import LiveTranscriptBadge from "./transcript-badge";
-import LiveVideoTile from "./video-tile";
+} from "../../lib/live/video-grid-layout.js";
+import LiveInviteAgentButton from "../live-invite-agent-button.gjs";
+import LiveInviteUsersModal from "../modal/live-invite-users.gjs";
+import LiveRoomInfoModal from "../modal/live-room-info.gjs";
+import LiveCallControls from "./call-controls.gjs";
+import LiveCallSubmenu from "./call-submenu.gjs";
+import LiveCaptionOverlay from "./caption-overlay.gjs";
+import LiveChatPanel from "./chat-panel.gjs";
+import LiveRecordingBadge from "./recording-badge.gjs";
+import LiveRingingTile from "./ringing-tile.gjs";
+import LiveSpeakQueue from "./speak-queue.gjs";
+import LiveTranscriptBadge from "./transcript-badge.gjs";
+import LiveVideoTile from "./video-tile.gjs";
 
 const ROOM_MENU = "live-room-menu";
 const SUBMENU = "live-call-submenu";
