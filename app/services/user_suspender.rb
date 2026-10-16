@@ -43,7 +43,8 @@ class UserSuspender
     by_user:,
     message: nil,
     post_id: nil,
-    reviewable_id: nil
+    reviewable_id: nil,
+    notification_context: nil
   )
     @user = user
     @suspended_till = suspended_till
@@ -52,6 +53,7 @@ class UserSuspender
     @message = message
     @post_id = post_id
     @reviewable_id = reviewable_id
+    @notification_context = notification_context
   end
 
   def suspend
@@ -82,12 +84,13 @@ class UserSuspender
       suspended_till: @user.suspended_till.iso8601(TIMESTAMP_PRECISION),
     )
 
-    if @message.present?
+    if @message.present? || @notification_context
       Jobs.enqueue(
         Jobs::CriticalUserEmail,
         type: "account_suspended",
         user_id: @user.id,
         user_history_id: @user_history.id,
+        notification_context: @notification_context,
       )
     end
 

@@ -5,6 +5,7 @@ class User::Action::SilenceAll < Service::ActionBase
   option :actor
   option :params
   option :raise_on_failure, default: -> { false }
+  option :notification_context, default: -> {}
 
   delegate :message, :post_id, :silenced_till, :reason, :reviewable_id, to: :params, private: true
 
@@ -28,6 +29,7 @@ class User::Action::SilenceAll < Service::ActionBase
           reason:,
           post_id:,
           reviewable_id:,
+          notification_context:,
         )
         .tap do |silencer|
           unless silencer.silence
@@ -39,6 +41,7 @@ class User::Action::SilenceAll < Service::ActionBase
             type: "account_silenced",
             user_id: user.id,
             user_history_id: silencer.user_history.id,
+            notification_context:,
           )
         end
     rescue => err

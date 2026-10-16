@@ -10,6 +10,7 @@ import { classify, dasherize } from "@ember/string";
 import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
 import DsaStatementClassification from "discourse/components/dsa-statement-classification";
 import DsaClassificationModal from "discourse/components/modal/dsa-classification";
+import DsaModerationAction from "discourse/components/modal/dsa-moderation-action";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
@@ -234,6 +235,16 @@ export default class ReviewableItem extends Component {
     }
 
     return this.siteSettings?.reviewable_claiming !== "required";
+  }
+
+  get dsaClassificationOptions() {
+    const { reviewable, classificationOptions } = this.args;
+    if (
+      reviewable.type === "ReviewableFlaggedPost" &&
+      classificationOptions?.community_rules?.length
+    ) {
+      return classificationOptions;
+    }
   }
 
   get primaryBundles() {
@@ -687,6 +698,21 @@ export default class ReviewableItem extends Component {
             `No handler for ${performableAction.client_action} found`
           );
         }
+      } else if (
+        this.dsaClassificationOptions &&
+        ["delete_and_agree", "agree_and_hide"].includes(
+          performableAction.server_action
+        )
+      ) {
+        if (await this.#claimReviewable()) {
+          await this.modal.show(DsaModerationAction, {
+            model: {
+              action: performableAction,
+              options: this.dsaClassificationOptions,
+              perform: performAction,
+            },
+          });
+        }
       } else {
         await performAction();
       }
@@ -734,6 +760,7 @@ export default class ReviewableItem extends Component {
       postId: reviewable.post_id,
       postEdit: reviewable.raw ?? reviewable.payload?.raw,
       reviewableId: reviewable.id,
+      dsaClassification: this.dsaClassificationOptions,
       perform: performAction,
     });
   }
