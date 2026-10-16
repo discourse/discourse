@@ -28,8 +28,14 @@ RSpec.describe "Nested view hidden posts" do
   it "marks hidden posts with the same hidden classes used by the flat topic view" do
     nested_view.visit_nested(topic)
 
-    hidden_post = find(".nested-post__article[data-post-number=\"#{hidden_reply.post_number}\"]")
-    hidden_post_classes = hidden_post.ancestor(".nested-post")["class"]
+    hidden_post =
+      browser_root.locator(
+        ".nested-post__article[data-post-number=\"#{hidden_reply.post_number}\"]",
+      ).filter(visible: true)
+    hidden_post_classes =
+      hidden_post.locator("xpath=ancestor::*").and(browser_page.locator(".nested-post")).last[
+        "class"
+      ]
 
     expect(hidden_post_classes).to include("post-hidden")
     expect(hidden_post_classes).to include("post--hidden")

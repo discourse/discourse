@@ -119,10 +119,30 @@ describe "Admin upcoming changes" do
       expect(change_item).to have_depends_on_notice(
         "This change requires Allow user locale to be enabled.",
       )
-      expect(change_item.find_item(:set_locale_from_cookie)).to have_link(
-        "Allow user locale",
-        href: "/admin/site_settings/category/all_results?filter=allow_user_locale",
-      )
+      expect(
+        change_item
+          .find_item(:set_locale_from_cookie)
+          .get_by_role("link")
+          .and(
+            change_item
+              .find_item(:set_locale_from_cookie)
+              .locator(
+                "[id=#{"Allow user locale".to_s.to_json}], [name=#{"Allow user locale".to_s.to_json}]",
+              )
+              .or(
+                change_item.find_item(:set_locale_from_cookie).get_by_role(
+                  "link",
+                  name: "Allow user locale",
+                ),
+              ),
+          )
+          .and(
+            change_item.find_item(:set_locale_from_cookie).locator(
+              "[href=#{"/admin/site_settings/category/all_results?filter=allow_user_locale".to_s.to_json}]",
+            ),
+          )
+          .filter(visible: true),
+      ).not_to have_count(0)
       expect(
         upcoming_changes_page.change_item(:enable_upload_debug_mode),
       ).to have_no_depends_on_notice
@@ -165,18 +185,26 @@ describe "Admin upcoming changes" do
   it "can enable and disable an upcoming change using the dropdown" do
     upcoming_changes_page.visit
 
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_disabled
+    expect(
+      upcoming_changes_page.change_item(:enable_upload_debug_mode),
+    ).to RSpecPredicates.be_disabled
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("everyone")
     expect(upcoming_changes_page).to have_enabled_for_success_toast("everyone")
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+    expect(
+      upcoming_changes_page.change_item(:enable_upload_debug_mode),
+    ).to RSpecPredicates.be_enabled
     expect(SiteSetting.enable_upload_debug_mode).to be_truthy
 
     # Revisit the page to skip the rate limit
     upcoming_changes_page.visit
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+    expect(
+      upcoming_changes_page.change_item(:enable_upload_debug_mode),
+    ).to RSpecPredicates.be_enabled
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("no_one")
     expect(upcoming_changes_page).to have_disabled_success_toast
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_disabled
+    expect(
+      upcoming_changes_page.change_item(:enable_upload_debug_mode),
+    ).to RSpecPredicates.be_disabled
 
     expect(SiteSetting.enable_upload_debug_mode).to be_falsey
   end
@@ -202,7 +230,9 @@ describe "Admin upcoming changes" do
     # Test 'no_one' option - should disable the change and clear groups
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("no_one")
     expect(upcoming_changes_page).to have_disabled_success_toast
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_disabled
+    expect(
+      upcoming_changes_page.change_item(:enable_upload_debug_mode),
+    ).to RSpecPredicates.be_disabled
 
     upcoming_changes_page.visit
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to have_no_group_selector
@@ -212,7 +242,9 @@ describe "Admin upcoming changes" do
     # Test 'everyone' option - should enable the change and clear groups
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("everyone")
     expect(upcoming_changes_page).to have_enabled_for_success_toast("everyone")
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+    expect(
+      upcoming_changes_page.change_item(:enable_upload_debug_mode),
+    ).to RSpecPredicates.be_enabled
 
     upcoming_changes_page.visit
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to have_no_group_selector
@@ -226,7 +258,9 @@ describe "Admin upcoming changes" do
         staffGroupName: I18n.t("groups.default_names.staff").titleize,
       },
     )
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+    expect(
+      upcoming_changes_page.change_item(:enable_upload_debug_mode),
+    ).to RSpecPredicates.be_enabled
 
     upcoming_changes_page.visit
     expect(UpcomingChanges.has_groups?(:enable_upload_debug_mode)).to be_truthy
@@ -249,7 +283,9 @@ describe "Admin upcoming changes" do
       "staff",
       "trust_level_4",
     )
-    expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+    expect(
+      upcoming_changes_page.change_item(:enable_upload_debug_mode),
+    ).to RSpecPredicates.be_enabled
     expect(UpcomingChanges.has_groups?(:enable_upload_debug_mode)).to be_truthy
     expect(SiteSetting.enable_upload_debug_mode).to be_truthy
   end
@@ -323,7 +359,7 @@ describe "Admin upcoming changes" do
           staffGroupName: I18n.t("groups.default_names.staff").titleize,
         },
       )
-      expect(item).to be_enabled
+      expect(item).to RSpecPredicates.be_enabled
       expect(SiteSettingGroup.find_by(name: "enable_upload_debug_mode").group_ids).to include(
         Group::AUTO_GROUPS[:staff].to_s,
       )
@@ -415,7 +451,7 @@ describe "Admin upcoming changes" do
       }.to_json,
     )
 
-    visit "/"
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     user_menu.open.click_notification_with_href("enable_upload_debug_mode")
 
@@ -438,18 +474,27 @@ describe "Admin upcoming changes" do
       upcoming_change_name: "enable_upload_debug_mode",
     )
 
-    visit "/admin"
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     sidebar.toggle_all_sections
 
-    expect(sidebar.find_section_link("admin_upcoming_changes")).to have_css(
-      ".sidebar-section-link-suffix.admin-sidebar-nav-link__dot",
-    )
+    expect(
+      sidebar
+        .find_section_link("admin_upcoming_changes")
+        .locator(".sidebar-section-link-suffix.admin-sidebar-nav-link__dot")
+        .filter(visible: true),
+    ).not_to have_count(0)
 
     sidebar.find_section_link("admin_upcoming_changes").click
 
-    expect(sidebar.find_section_link("admin_upcoming_changes")).to have_no_css(
-      ".sidebar-section-link-suffix.admin-sidebar-nav-link__dot",
-    )
+    expect(
+      sidebar
+        .find_section_link("admin_upcoming_changes")
+        .tap do |parent|
+          parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+        end
+        .locator(".sidebar-section-link-suffix.admin-sidebar-nav-link__dot")
+        .filter(visible: true),
+    ).to have_count(0)
   end
 
   it "does not display a notification dot when there are no new added events" do
@@ -458,12 +503,18 @@ describe "Admin upcoming changes" do
     current_user.custom_fields["last_visited_upcoming_changes_at"] = Time.current.iso8601
     current_user.save_custom_fields
 
-    visit "/admin"
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     sidebar.toggle_all_sections
 
-    expect(sidebar.find_section_link("admin_upcoming_changes")).to have_no_css(
-      ".sidebar-section-link-suffix.admin-sidebar-nav-link__dot",
-    )
+    expect(
+      sidebar
+        .find_section_link("admin_upcoming_changes")
+        .tap do |parent|
+          parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+        end
+        .locator(".sidebar-section-link-suffix.admin-sidebar-nav-link__dot")
+        .filter(visible: true),
+    ).to have_count(0)
   end
 
   context "when the staff group name has been localized" do
@@ -484,7 +535,9 @@ describe "Admin upcoming changes" do
           staffGroupName: I18n.t("groups.default_names.staff", locale: SiteSetting.default_locale),
         },
       )
-      expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+      expect(
+        upcoming_changes_page.change_item(:enable_upload_debug_mode),
+      ).to RSpecPredicates.be_enabled
       expect(SiteSetting.enable_upload_debug_mode).to be_truthy
       expect(SiteSettingGroup.find_by(name: "enable_upload_debug_mode").group_ids).to include(
         Group::AUTO_GROUPS[:staff].to_s,
@@ -590,7 +643,7 @@ describe "Admin upcoming changes" do
       # to mirror what happens on the next request in a real deployment.
       SiteSetting.refresh!
 
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(settings_page).to have_upcoming_change_default_warning(
         :limit_suggested_to_category,

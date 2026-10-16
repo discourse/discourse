@@ -10,22 +10,31 @@ describe "Admin Site Setting Category Bulk Action" do
   before { sign_in(admin) }
 
   it "prompts about unsaved settings when navigating away" do
-    page.visit("/admin/config/notifications")
+    browser_page
+      .goto("/admin/config/notifications")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     settings_page.fill_setting("max_mentions_per_post", 2)
 
-    expect(banner).to be_visible
-    expect(banner.element).to have_text("You have 1 unsaved change")
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
+      browser_text_pattern("You have 1 unsaved change"),
+      useInnerText: true,
+    )
 
-    settings_page.find(".admin-sidebar-nav-link", text: "Login & authentication").click
+    settings_page
+      .locator(".admin-sidebar-nav-link")
+      .filter(visible: true)
+      .filter(hasText: browser_text_pattern("Login & authentication"))
+      .click
 
-    expect(settings_page).to have_current_path("/admin/config/notifications")
+    expect(browser_page).to have_url("/admin/config/notifications")
 
     expect(dialog).to be_open
-    expect(dialog).to have_content("You have 1 unsaved change")
+    expect(dialog).to have_displayed_content("You have 1 unsaved change")
 
     dialog.click_no
 
-    expect(settings_page).to have_current_path("/admin/config/login-and-authentication")
+    expect(browser_page).to have_url("/admin/config/login-and-authentication")
   end
 end

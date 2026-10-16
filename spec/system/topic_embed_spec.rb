@@ -16,16 +16,29 @@ RSpec.describe "Imported topic embeds" do
   end
 
   it "does not execute JavaScript from an imported URL" do
-    visit("/embed/comments?#{{ embed_url: embed_url }.to_query}")
-    expect(page).to have_content(I18n.t("embed.loading"))
+    browser_page
+      .goto("/embed/comments?#{{ embed_url: embed_url }.to_query}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_content).to contain_text(
+      browser_text_pattern(I18n.t("embed.loading")),
+      useInnerText: true,
+    )
 
-    visit(TopicEmbed.last.post.topic.url)
-    link = find("#post_1 .cooked a", text: embed_url)
+    browser_page
+      .goto(TopicEmbed.last.post.topic.url)
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    link =
+      browser_root
+        .locator("#post_1 .cooked a")
+        .filter(visible: true)
+        .filter(hasText: browser_text_pattern(embed_url))
 
-    page.execute_script("window.topicEmbedXssExecuted = false")
+    browser_page.evaluate("function(arguments) { window.topicEmbedXssExecuted = false }", arg: [])
     link.hover
 
-    expect(page.evaluate_script("window.topicEmbedXssExecuted")).to eq(false)
-    expect(link["onmouseover"]).to be_nil
+    expect(
+      browser_page.evaluate("function(arguments) { return window.topicEmbedXssExecuted }", arg: []),
+    ).to eq(false)
+    expect(link.get_attribute("onmouseover")).to be_nil
   end
 end

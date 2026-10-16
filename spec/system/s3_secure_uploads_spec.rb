@@ -11,8 +11,8 @@ describe "Uploading files in the composer to S3" do
   describe "secure uploads" do
     def first_post_img(wait: Capybara.default_max_wait_time)
       first_post = topic_page.post_by_number(1, wait: wait)
-      expect(first_post).to have_css("img[data-base62-sha1]")
-      first_post.find(".cooked").first("img")
+      expect(first_post.locator("img[data-base62-sha1]").filter(visible: true)).not_to have_count(0)
+      first_post.locator(".cooked").filter(visible: true).locator("img").filter(visible: true).first
     end
 
     def expect_first_post_to_have_secure_upload
@@ -33,10 +33,12 @@ describe "Uploading files in the composer to S3" do
       composer.select_pm_user("otherguy")
 
       file_path = file_from_fixtures("logo.png", "images").path
-      attach_file("file-uploader", file_path, make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files(file_path)
 
-      expect(page).to have_no_css("#file-uploading")
-      expect(composer.preview).to have_css(".image-wrapper")
+      expect(browser_root.locator("#file-uploading").filter(visible: true)).to have_count(0)
+      expect(composer.preview.locator(".image-wrapper").filter(visible: true)).not_to have_count(0)
 
       composer.submit
 
@@ -54,10 +56,12 @@ describe "Uploading files in the composer to S3" do
       composer.switch_category(private_category.name)
 
       file_path = file_from_fixtures("logo.png", "images").path
-      attach_file("file-uploader", file_path, make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files(file_path)
 
-      expect(page).to have_no_css("#file-uploading")
-      expect(composer.preview).to have_css(".image-wrapper")
+      expect(browser_root.locator("#file-uploading").filter(visible: true)).to have_count(0)
+      expect(composer.preview.locator(".image-wrapper").filter(visible: true)).not_to have_count(0)
 
       composer.submit
 
@@ -74,10 +78,12 @@ describe "Uploading files in the composer to S3" do
       composer.fill_title("This is a test PM for secure uploads")
 
       file_path = file_from_fixtures("logo.png", "images").path
-      attach_file("file-uploader", file_path, make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files(file_path)
 
-      expect(page).to have_no_css("#file-uploading")
-      expect(composer.preview).to have_css(".image-wrapper")
+      expect(browser_root.locator("#file-uploading").filter(visible: true)).to have_count(0)
+      expect(composer.preview.locator(".image-wrapper").filter(visible: true)).not_to have_count(0)
 
       composer.submit
 
@@ -93,10 +99,12 @@ describe "Uploading files in the composer to S3" do
       composer.fill_title("This is a test PM for secure uploads")
 
       file_path = file_from_fixtures("logo.png", "images").path
-      attach_file("file-uploader", file_path, make_visible: true)
+      browser_root.locator(
+        "input[type='file']:not(:disabled)[id=#{"file-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"file-uploader".to_s.to_json}]",
+      ).set_input_files(file_path)
 
-      expect(page).to have_no_css("#file-uploading")
-      expect(composer.preview).to have_css(".image-wrapper")
+      expect(browser_root.locator("#file-uploading").filter(visible: true)).to have_count(0)
+      expect(composer.preview.locator(".image-wrapper").filter(visible: true)).not_to have_count(0)
 
       Jobs.run_immediately!
       composer.submit
@@ -107,9 +115,13 @@ describe "Uploading files in the composer to S3" do
       # At first the image will be secure when created via the composer, usually the
       # CookedPostProcessor job fixes this but running it immediately when creating the
       # post doesn't work in the test, so we need to rebake here to get the correct result.
-      expect(page).to have_css("img[src*='secure-uploads']")
+      expect(
+        browser_root.locator("img[src*='secure-uploads']").filter(visible: true),
+      ).not_to have_count(0)
       Post.last.rebake!
-      expect(page).not_to have_css("img[src*='secure-uploads']", wait: 5)
+      expect(
+        browser_root.locator("img[src*='secure-uploads']").filter(visible: true),
+      ).to have_count(0, timeout: 5 * 1000)
       topic = topic_page.current_topic
       expect(topic.first_post.uploads.first.secure).to eq(false)
     end

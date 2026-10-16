@@ -28,9 +28,11 @@ RSpec.describe "Nested view floating actions" do
     it "can change notification level" do
       nested_view.visit_nested(topic)
       nested_view.change_notification_level(3) # Watching
-      expect(page).to have_css(
-        ".nested-view__floating-actions .notifications-tracking-trigger-btn[data-level-id='3']",
-      )
+      expect(
+        browser_root.locator(
+          ".nested-view__floating-actions .notifications-tracking-trigger-btn[data-level-id='3']",
+        ).filter(visible: true),
+      ).not_to have_count(0)
     end
 
     it "can close and reopen a topic via admin menu" do
@@ -38,12 +40,12 @@ RSpec.describe "Nested view floating actions" do
       nested_view.click_admin_close_topic
 
       nested_view.open_admin_menu
-      expect(page).to have_css(".topic-admin-open")
+      expect(browser_root.locator(".topic-admin-open").filter(visible: true)).not_to have_count(0)
       expect(topic.reload).to be_closed
 
-      find(".topic-admin-open .btn").click
+      browser_root.locator(".topic-admin-open .btn").filter(visible: true).click
       nested_view.open_admin_menu
-      expect(page).to have_css(".topic-admin-close")
+      expect(browser_root.locator(".topic-admin-close").filter(visible: true)).not_to have_count(0)
       expect(topic.reload).not_to be_closed
     end
 

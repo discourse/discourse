@@ -6,11 +6,15 @@ module PageObjects
       ROW_SELECTOR = ".admin-category-management-list__table .d-table__row"
 
       def visit_all
-        page.visit("/admin/config/category-management/all")
+        browser_page
+          .goto("/admin/config/category-management/all")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       end
 
       def visit_support
-        page.visit("/admin/config/category-management/support")
+        browser_page
+          .goto("/admin/config/category-management/support")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       end
 
       def filter_controls
@@ -22,51 +26,71 @@ module PageObjects
       end
 
       def open_settings(category)
-        row(category).find(".admin-category-management-list__open-settings").click
+        row(category)
+          .locator(".admin-category-management-list__open-settings")
+          .filter(visible: true)
+          .click
       end
 
       def has_category?(category)
-        page.has_css?(row_selector(category))
+        have_count(0).does_not_match?(
+          browser_root.locator(row_selector(category)).filter(visible: true),
+        )
       end
 
       def has_no_category?(category)
-        page.has_no_css?(row_selector(category))
+        have_count(0).matches?(browser_root.locator(row_selector(category)).filter(visible: true))
       end
 
       def has_category_details?(category, description:, visibility:, topic_count:)
-        page.has_css?(category_badge_selector(category), text: category.name) &&
-          page.has_css?(
-            "#{row_selector(category)} .admin-category-management-list__description",
-            text: description,
+        contain_text([browser_text_pattern(category.name)], useInnerText: true).matches?(
+          browser_root.locator(category_badge_selector(category)).filter(visible: true),
+        ) &&
+          contain_text([browser_text_pattern(description)], useInnerText: true).matches?(
+            browser_root.locator(
+              "#{row_selector(category)} .admin-category-management-list__description",
+            ).filter(visible: true),
           ) &&
-          page.has_css?(
-            "#{row_selector(category)} .admin-category-management-list__visibility",
-            text: visibility,
+          contain_text([browser_text_pattern(visibility)], useInnerText: true).matches?(
+            browser_root.locator(
+              "#{row_selector(category)} .admin-category-management-list__visibility",
+            ).filter(visible: true),
           ) &&
-          page.has_css?(
-            "#{row_selector(category)} .admin-category-management-list__topic-count",
-            text: topic_count.to_s,
+          contain_text([browser_text_pattern(topic_count.to_s)], useInnerText: true).matches?(
+            browser_root.locator(
+              "#{row_selector(category)} .admin-category-management-list__topic-count",
+            ).filter(visible: true),
           )
       end
 
       def has_category_icon?(category)
-        page.has_css?("#{category_badge_selector(category)} .d-icon-#{category.icon}")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{category_badge_selector(category)} .d-icon-#{category.icon}",
+          ).filter(visible: true),
+        )
       end
 
       def has_category_emoji?(category)
-        page.has_css?("#{category_badge_selector(category)} img.emoji[title='#{category.emoji}']")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{category_badge_selector(category)} img.emoji[title='#{category.emoji}']",
+          ).filter(visible: true),
+        )
       end
 
       def has_open_settings_link?(category)
-        page.has_css?(
-          "#{row_selector(category)} .admin-category-management-list__open-settings[href='#{category.slug_url_without_id}/edit/general']",
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{row_selector(category)} .admin-category-management-list__open-settings[href='#{category.slug_url_without_id}/edit/general']",
+          ).filter(visible: true),
         )
       end
 
       private
 
       def row(category)
-        page.find(row_selector(category))
+        browser_root.locator(row_selector(category)).filter(visible: true)
       end
 
       def row_selector(category)

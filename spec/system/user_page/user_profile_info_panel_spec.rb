@@ -11,7 +11,10 @@ RSpec.describe "User Profile Info Panel" do
 
         it "displays the correct trust level element" do
           user_page.visit(user).expand_info_panel
-          expect(user_page).to have_css("dd.trust-level", text: TrustLevel.name(trust_level))
+          expect(user_page.locator("dd.trust-level").filter(visible: true)).to contain_text(
+            [browser_text_pattern(TrustLevel.name(trust_level))],
+            useInnerText: true,
+          )
         end
       end
     end

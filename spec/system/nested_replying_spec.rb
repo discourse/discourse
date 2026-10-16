@@ -31,7 +31,7 @@ RSpec.describe "Nested view replying" do
 
       expect(composer).to be_closed
       expect(nested_view).to have_nested_view
-      expect(page).to have_current_path(%r{/t/})
+      expect(browser_page).to have_url(%r{/t/})
     end
   end
 
@@ -48,7 +48,7 @@ RSpec.describe "Nested view replying" do
 
       expect(composer).to be_closed
       expect(nested_view).to have_nested_view
-      expect(page).to have_current_path(%r{/t/})
+      expect(browser_page).to have_url(%r{/t/})
     end
   end
 
@@ -59,14 +59,14 @@ RSpec.describe "Nested view replying" do
     end
 
     it "is visible for anonymous users and opens the login flow" do
-      Capybara.reset_sessions!
+      reset_browser_sessions
       nested_view.visit_nested(topic)
 
       expect(nested_view).to have_floating_reply_button
 
       nested_view.click_floating_reply_button
 
-      expect(page).to have_css("#login-account-name")
+      expect(browser_root.locator("#login-account-name").filter(visible: true)).not_to have_count(0)
     end
 
     it "opens the composer for a top-level reply" do
@@ -79,7 +79,7 @@ RSpec.describe "Nested view replying" do
       expect(composer).to be_closed
 
       expect(nested_view).to have_nested_view
-      expect(page).to have_current_path(%r{/t/})
+      expect(browser_page).to have_url(%r{/t/})
     end
 
     it "hides when the composer is open and reappears when closed" do

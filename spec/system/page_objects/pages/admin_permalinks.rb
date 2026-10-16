@@ -4,7 +4,9 @@ module PageObjects
   module Pages
     class AdminPermalinks < AdminBase
       def visit
-        page.visit("/admin/config/permalinks")
+        browser_page
+          .goto("/admin/config/permalinks")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
@@ -15,55 +17,70 @@ module PageObjects
       end
 
       def click_add_permalink
-        find(".admin-permalinks__header-add-permalink").click
+        browser_root.locator(".admin-permalinks__header-add-permalink").filter(visible: true).click
         self
       end
 
       def click_edit_permalink(url)
-        find("tr.#{url} .admin-permalink-item__edit").click
+        browser_root.locator("tr.#{url} .admin-permalink-item__edit").filter(visible: true).click
         self
       end
 
       def click_delete_permalink(url)
         open_permalink_menu(url)
-        find(".admin-permalink-item__delete").click
-        find(".dialog-footer .btn-danger").click
-        expect(page).to have_no_css(".dialog-body")
+        browser_root.locator(".admin-permalink-item__delete").filter(visible: true).click
+        browser_root.locator(".dialog-footer .btn-danger").filter(visible: true).click
+        expect(browser_root.locator(".dialog-body").filter(visible: true)).to have_count(0)
         has_closed_permalink_menu?
         self
       end
 
       def has_permalinks?(*permalinks)
-        all(".admin-permalink-item__url").map(&:text) == permalinks
+        browser_root
+          .locator(".admin-permalink-item__url")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .map { |element| element.inner_text.strip } == permalinks
       end
 
       def has_no_permalinks?
-        has_no_css?(".admin-permalink-item__url")
+        have_count(0).matches?(
+          browser_root.locator(".admin-permalink-item__url").filter(visible: true),
+        )
       end
 
       def has_no_filter?
-        has_no_css?(".d-filter-controls__input")
+        have_count(0).matches?(
+          browser_root.locator(".d-filter-controls__input").filter(visible: true),
+        )
       end
 
       def has_filter?
-        has_css?(".d-filter-controls__input")
+        have_count(0).does_not_match?(
+          browser_root.locator(".d-filter-controls__input").filter(visible: true),
+        )
       end
 
       def filter(text)
-        find(".d-filter-controls__input").fill_in with: text
+        browser_root.locator(".d-filter-controls__input").filter(visible: true).fill(text)
       end
 
       def has_no_results?
-        has_css?(".d-filter-controls__no-results")
+        have_count(0).does_not_match?(
+          browser_root.locator(".d-filter-controls__no-results").filter(visible: true),
+        )
       end
 
       def open_permalink_menu(url)
-        find("tr.#{url} .permalink-menu-trigger").click
+        browser_root.locator("tr.#{url} .permalink-menu-trigger").filter(visible: true).click
         self
       end
 
       def has_closed_permalink_menu?
-        has_no_css?(".permalink-menu-content")
+        have_count(0).matches?(
+          browser_root.locator(".permalink-menu-content").filter(visible: true),
+        )
       end
     end
   end

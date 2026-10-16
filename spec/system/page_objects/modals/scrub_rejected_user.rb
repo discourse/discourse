@@ -4,15 +4,15 @@ module PageObjects
   module Modals
     class ScrubRejectedUser < PageObjects::Modals::Base
       def modal
-        find(".admin-scrub-rejected-user-modal")
+        browser_root.locator(".admin-scrub-rejected-user-modal").filter(visible: true)
       end
 
       def fill_in_scrub_reason(reason)
-        modal.find("input#scrub-reason").fill_in(with: reason)
+        modal.locator("input#scrub-reason").filter(visible: true).fill(reason)
       end
 
       def scrub_button
-        modal.find(".d-modal__footer .btn.btn-danger")
+        modal.locator(".d-modal__footer .btn.btn-danger").filter(visible: true)
       end
     end
   end

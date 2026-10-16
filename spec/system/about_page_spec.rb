@@ -77,7 +77,7 @@ describe "About page" do
 
       it "shows the count of topics created in the last 7 days" do
         about_page.visit
-        expect(about_page.site_activities.topics).to have_count(2, "2")
+        expect(about_page.site_activities.topics).to RSpecPredicates.have_count(2, "2")
         expect(about_page.site_activities.topics).to have_7_days_period
       end
     end
@@ -92,7 +92,7 @@ describe "About page" do
 
       it "shows the count of topics created in the last day" do
         about_page.visit
-        expect(about_page.site_activities.posts).to have_count(3, "3")
+        expect(about_page.site_activities.posts).to RSpecPredicates.have_count(3, "3")
         expect(about_page.site_activities.posts).to have_1_day_period
       end
     end
@@ -116,7 +116,7 @@ describe "About page" do
           about_page.visit
 
           expect(about_page.site_activities).to have_activity_item("visitors")
-          expect(about_page.site_activities.visitors).to have_text(
+          expect(about_page.site_activities.visitors).to have_displayed_text(
             "0 visitors, about 0 from the EU",
           )
           expect(about_page).to have_traffic_info_footer
@@ -137,7 +137,7 @@ describe "About page" do
 
       it "shows the count of active users in the last 7 days" do
         about_page.visit
-        expect(about_page.site_activities.active_users).to have_count(4, "4") # 4 fabricated above
+        expect(about_page.site_activities.active_users).to RSpecPredicates.have_count(4, "4") # 4 fabricated above
         expect(about_page.site_activities.active_users).to have_7_days_period
       end
     end
@@ -153,7 +153,7 @@ describe "About page" do
 
       it "shows the count of signups in the last 7 days" do
         about_page.visit
-        expect(about_page.site_activities.sign_ups).to have_count(2, "2")
+        expect(about_page.site_activities.sign_ups).to RSpecPredicates.have_count(2, "2")
         expect(about_page.site_activities.sign_ups).to have_7_days_period
       end
     end
@@ -170,7 +170,7 @@ describe "About page" do
 
       it "shows the count of likes of all time" do
         about_page.visit
-        expect(about_page.site_activities.likes).to have_count(4, "4")
+        expect(about_page.site_activities.likes).to RSpecPredicates.have_count(4, "4")
         expect(about_page.site_activities.likes).to have_all_time_period
       end
     end
@@ -214,8 +214,8 @@ describe "About page" do
       displayed_admins = about_page.admins_list.users
       expect(displayed_admins.size).to eq(6)
 
-      about_page.admins_list.users.first[:node].click
-      expect(about_page).to have_css("#user-card")
+      about_page.admins_list.users.first[:node].locator("a[data-user-card]").first.click
+      expect(about_page.locator("#user-card").filter(visible: true)).not_to have_count(0)
     end
 
     it "doesn't show an expand/collapse button when there are fewer than 6 admins" do
@@ -298,7 +298,7 @@ describe "About page" do
       expect(displayed_mods.size).to eq(6)
 
       about_page.moderators_list.users.last[:node].click
-      expect(about_page).to have_css("#user-card")
+      expect(about_page.locator("#user-card").filter(visible: true)).not_to have_count(0)
     end
 
     it "doesn't show an expand/collapse button when there are fewer than 6 moderators" do
@@ -371,7 +371,11 @@ describe "About page" do
 
           about_page.visit
 
-          expect(about_page).to have_css(".about__apples + .about__bananas + .about__oranges")
+          expect(
+            about_page.locator(".about__apples + .about__bananas + .about__oranges").filter(
+              visible: true,
+            ),
+          ).not_to have_count(0)
         end
       end
 
@@ -383,7 +387,11 @@ describe "About page" do
 
           about_page.visit
 
-          expect(about_page).to have_css(".about__bananas + .about__apples + .about__oranges")
+          expect(
+            about_page.locator(".about__bananas + .about__apples + .about__oranges").filter(
+              visible: true,
+            ),
+          ).not_to have_count(0)
         end
       end
 
@@ -395,7 +403,11 @@ describe "About page" do
 
           about_page.visit
 
-          expect(about_page).to have_css(".about__bananas + .about__apples + .about__oranges")
+          expect(
+            about_page.locator(".about__bananas + .about__apples + .about__oranges").filter(
+              visible: true,
+            ),
+          ).not_to have_count(0)
         end
       end
     end
@@ -423,7 +435,7 @@ describe "About page" do
 
       about_page.edit_link.click
 
-      expect(page).to have_current_path("/admin/config/about")
+      expect(browser_page).to have_url("/admin/config/about")
     end
 
     it "doesn't appear for moderators" do

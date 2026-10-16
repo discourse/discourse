@@ -4,41 +4,52 @@ module PageObjects
   module Components
     class Dialog < PageObjects::Components::Base
       def closed?
-        has_no_css?(".dialog-container")
+        have_count(0).matches?(browser_root.locator(".dialog-container").filter(visible: true))
       end
 
       def open?
-        has_css?(".dialog-container")
+        have_count(0).does_not_match?(
+          browser_root.locator(".dialog-container").filter(visible: true),
+        )
       end
 
-      def has_content?(content)
-        find(".dialog-container").has_content?(content)
+      def has_displayed_content?(content)
+        contain_text(browser_text_pattern(content), useInnerText: true).matches?(
+          browser_root.locator(".dialog-container").filter(visible: true),
+        )
       end
 
       def click_yes
-        find(".dialog-footer .btn-primary").click
+        browser_root.locator(".dialog-footer .btn-primary").filter(visible: true).click
       end
 
       def click_danger
-        find(".dialog-footer .btn-danger").click
+        browser_root.locator(".dialog-footer .btn-danger").filter(visible: true).click
       end
 
       alias click_ok click_yes
 
       def click_no
-        find(".dialog-footer .btn-default").click
+        browser_root.locator(".dialog-footer .btn-default").filter(visible: true).click
       end
 
       def has_confirm_button_disabled?
-        has_css?(".dialog-footer .btn-danger[disabled]")
+        have_count(0).does_not_match?(
+          browser_root.locator(".dialog-footer .btn-danger[disabled]").filter(visible: true),
+        )
       end
 
       def has_no_confirm_button_disabled?
-        has_no_css?(".dialog-footer .btn-danger[disabled]")
+        have_count(0).matches?(
+          browser_root.locator(".dialog-footer .btn-danger[disabled]").filter(visible: true),
+        )
       end
 
       def fill_in_confirmation_phrase(phrase)
-        find(".dialog-body input.confirmation-phrase").fill_in(with: phrase)
+        browser_root
+          .locator(".dialog-body input.confirmation-phrase")
+          .filter(visible: true)
+          .fill(phrase)
       end
     end
   end

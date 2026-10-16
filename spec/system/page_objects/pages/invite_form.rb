@@ -4,23 +4,35 @@ module PageObjects
   module Pages
     class InviteForm < PageObjects::Pages::Base
       def open(key)
-        visit "/invites/#{key}"
+        browser_page.goto("/invites/#{key}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       end
 
       def fill_username(username)
-        find("#new-account-username").fill_in(with: username)
+        browser_root.locator("#new-account-username").filter(visible: true).fill(username)
       end
 
       def fill_password(password)
-        find("#new-account-password").fill_in(with: password)
+        browser_root.locator("#new-account-password").filter(visible: true).fill(password)
       end
 
       def has_valid_username?
-        find(".username-input").has_css?("#username-validation.good")
+        have_count(0).does_not_match?(
+          browser_root
+            .locator(".username-input")
+            .filter(visible: true)
+            .locator("#username-validation.good")
+            .filter(visible: true),
+        )
       end
 
       def has_valid_password?
-        find(".password-input").has_css?("#password-validation.good")
+        have_count(0).does_not_match?(
+          browser_root
+            .locator(".password-input")
+            .filter(visible: true)
+            .locator("#password-validation.good")
+            .filter(visible: true),
+        )
       end
 
       def has_valid_fields?
@@ -29,56 +41,92 @@ module PageObjects
       end
 
       def click_create_account
-        find(".invitation-cta__accept.btn-primary").click
+        browser_root.locator(".invitation-cta__accept.btn-primary").filter(visible: true).click
       end
 
       def has_successful_message?
-        has_css?(".invite-success")
+        have_count(0).does_not_match?(browser_root.locator(".invite-success").filter(visible: true))
       end
 
       def has_email_code_request?
-        has_css?(".code-login-form__email-step .code-login-form__continue")
+        have_count(0).does_not_match?(
+          browser_root.locator(".code-login-form__email-step .code-login-form__continue").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_no_password_field?
-        has_no_field?("new-account-password")
+        have_count(0).matches?(
+          browser_root
+            .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+            .and(
+              browser_root.locator(
+                "[id=#{"new-account-password".to_s.to_json}], [name=#{"new-account-password".to_s.to_json}]",
+              ).or(browser_root.get_by_label("new-account-password", exact: true)),
+            )
+            .filter(visible: true),
+        )
       end
 
       def has_introduction?
-        has_css?(".login-welcome-header") && has_css?(".invited-by") && has_css?(".email-message")
+        have_count(0).does_not_match?(
+          browser_root.locator(".login-welcome-header").filter(visible: true),
+        ) &&
+          have_count(0).does_not_match?(
+            browser_root.locator(".invited-by").filter(visible: true),
+          ) &&
+          have_count(0).does_not_match?(
+            browser_root.locator(".email-message").filter(visible: true),
+          )
       end
 
       def has_no_introduction?
-        has_no_css?(".login-welcome-header, .invited-by, .email-message")
+        have_count(0).matches?(
+          browser_root.locator(".login-welcome-header, .invited-by, .email-message").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_progress_steps?(completed:)
-        has_css?(".signup-progress-bar__segment", count: 3) &&
-          has_css?(".signup-progress-bar__segment.--completed", count: completed)
+        have_count(3).matches?(
+          browser_root.locator(".signup-progress-bar__segment").filter(visible: true),
+        ) &&
+          have_count(completed).matches?(
+            browser_root.locator(".signup-progress-bar__segment.--completed").filter(visible: true),
+          )
       end
 
       def request_email_code
-        find(".code-login-form__email-step .code-login-form__continue").click
+        browser_root
+          .locator(".code-login-form__email-step .code-login-form__continue")
+          .filter(visible: true)
+          .click
       end
 
       def has_email_code_entry?
-        has_css?(".code-login-form__code-step .d-otp-input")
+        have_count(0).does_not_match?(
+          browser_root.locator(".code-login-form__code-step .d-otp-input").filter(visible: true),
+        )
       end
 
       def enter_email_code(code)
-        find(".d-otp-input").fill_in(with: code)
+        browser_root.locator(".d-otp-input").filter(visible: true).fill(code)
       end
 
       def has_account_ready_step?
-        has_css?(".code-login-form__signup-details-step")
+        have_count(0).does_not_match?(
+          browser_root.locator(".code-login-form__signup-details-step").filter(visible: true),
+        )
       end
 
       def choose_code_signup_username(username)
-        find("#code-login-username").fill_in(with: username)
+        browser_root.locator("#code-login-username").filter(visible: true).fill(username)
       end
 
       def continue_code_signup
-        find(".code-login-form__continue-to-site").click
+        browser_root.locator(".code-login-form__continue-to-site").filter(visible: true).click
       end
     end
   end

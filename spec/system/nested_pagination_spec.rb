@@ -78,16 +78,20 @@ RSpec.describe "Nested view pagination" do
       nested_view.visit_nested(topic)
 
       expect(nested_view).to have_post(root_reply)
-      expect(page).to have_css(".nested-post-children__load-more")
+      expect(
+        browser_root.locator(".nested-post-children__load-more").filter(visible: true),
+      ).not_to have_count(0)
 
-      find(".nested-post-children__load-more").click
+      browser_root.locator(".nested-post-children__load-more").filter(visible: true).click
 
       expect(nested_view).to have_post(child_1)
       expect(nested_view).to have_post(child_2)
       expect(nested_view).to have_post(child_3)
       expect(nested_view).to have_post(child_4)
       expect(nested_view).to have_post(child_5)
-      expect(page).to have_no_css(".nested-post-children__load-more")
+      expect(
+        browser_root.locator(".nested-post-children__load-more").filter(visible: true),
+      ).to have_count(0)
     end
   end
 
@@ -109,12 +113,23 @@ RSpec.describe "Nested view pagination" do
       nested_view.visit_nested(topic)
 
       expect(nested_view).to have_nested_view
-      initial_count = all(".nested-view__roots > .nested-post").count
+      initial_count =
+        browser_root
+          .locator(".nested-view__roots > .nested-post")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .count
       expect(initial_count).to eq(20)
 
-      page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+      browser_page.evaluate(
+        "function(arguments) { window.scrollTo(0, document.body.scrollHeight) }",
+        arg: [],
+      )
 
-      expect(page).to have_css(".nested-view__roots > .nested-post", count: 22, wait: 5)
+      expect(
+        browser_root.locator(".nested-view__roots > .nested-post").filter(visible: true),
+      ).to have_count(22, timeout: 5 * 1000)
     end
   end
 end

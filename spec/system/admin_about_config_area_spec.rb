@@ -296,7 +296,7 @@ describe "Admin About Config Area Page" do
       config_area.general_settings_section.submit
       expect(config_area.general_settings_section).to have_saved_successfully
 
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       config_area.select_locale("ja")
 
       expect(config_area.general_settings_section.community_name_input.value).to eq("日本語コミュニティ")
@@ -330,7 +330,7 @@ describe "Admin About Config Area Page" do
       config_area.general_settings_section.submit
       expect(config_area.general_settings_section).to have_saved_successfully
 
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       config_area.select_locale("ja")
 
       expect(config_area.general_settings_section.community_name_input.value).to eq("")

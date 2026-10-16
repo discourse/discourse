@@ -10,7 +10,13 @@ describe "User preferences | Interface" do
   describe "Bookmarks" do
     it "changes the bookmark after notification preference" do
       user_preferences_page.visit(user)
-      click_link(I18n.t("js.user.preferences_nav.interface"))
+      browser_root
+        .locator(
+          "[id=#{I18n.t("js.user.preferences_nav.interface").to_s.to_json}], [name=#{I18n.t("js.user.preferences_nav.interface").to_s.to_json}]",
+        )
+        .or(browser_root.get_by_role("link", name: I18n.t("js.user.preferences_nav.interface")))
+        .filter(visible: true)
+        .click
 
       dropdown = PageObjects::Components::SelectKit.new("#bookmark-after-notification-mode")
 
@@ -18,7 +24,7 @@ describe "User preferences | Interface" do
       expect(dropdown).to have_selected_value(Bookmark.auto_delete_preferences[:clear_reminder])
 
       dropdown.select_row_by_value(Bookmark.auto_delete_preferences[:when_reminder_sent])
-      click_button(I18n.t("js.save"))
+      user_preferences_interface_page.save_changes
 
       expect(
         UserOption.exists?(
@@ -32,14 +38,20 @@ describe "User preferences | Interface" do
   describe "Send shortcut" do
     it "changes the send shortcut preference" do
       user_preferences_page.visit(user)
-      click_link(I18n.t("js.user.preferences_nav.interface"))
+      browser_root
+        .locator(
+          "[id=#{I18n.t("js.user.preferences_nav.interface").to_s.to_json}], [name=#{I18n.t("js.user.preferences_nav.interface").to_s.to_json}]",
+        )
+        .or(browser_root.get_by_role("link", name: I18n.t("js.user.preferences_nav.interface")))
+        .filter(visible: true)
+        .click
 
       dropdown = PageObjects::Components::SelectKit.new("#user-send-shortcut")
 
       expect(dropdown).to have_selected_value("enter")
 
       dropdown.select_row_by_value("meta_enter")
-      click_button(I18n.t("js.save"))
+      user_preferences_interface_page.save_changes
 
       expect(UserOption.exists?(user_id: user.id, send_shortcut: "meta_enter")).to be_truthy
     end
@@ -52,7 +64,13 @@ describe "User preferences | Interface" do
 
         user.user_option.update!(homepage_id: UserOption::HOMEPAGES.key("unread"))
         user_preferences_page.visit(user)
-        click_link(I18n.t("js.user.preferences_nav.interface"))
+        browser_root
+          .locator(
+            "[id=#{I18n.t("js.user.preferences_nav.interface").to_s.to_json}], [name=#{I18n.t("js.user.preferences_nav.interface").to_s.to_json}]",
+          )
+          .or(browser_root.get_by_role("link", name: I18n.t("js.user.preferences_nav.interface")))
+          .filter(visible: true)
+          .click
 
         dropdown = PageObjects::Components::SelectKit.new("#home-selector")
 
@@ -64,7 +82,13 @@ describe "User preferences | Interface" do
       SiteSetting.top_menu = "latest|hot"
 
       user_preferences_page.visit(user)
-      click_link(I18n.t("js.user.preferences_nav.interface"))
+      browser_root
+        .locator(
+          "[id=#{I18n.t("js.user.preferences_nav.interface").to_s.to_json}], [name=#{I18n.t("js.user.preferences_nav.interface").to_s.to_json}]",
+        )
+        .or(browser_root.get_by_role("link", name: I18n.t("js.user.preferences_nav.interface")))
+        .filter(visible: true)
+        .click
 
       dropdown = PageObjects::Components::SelectKit.new("#home-selector")
       dropdown.expand
@@ -218,7 +242,7 @@ describe "User preferences | Interface" do
         expect(mode_selector_in_sidebar).to have_dark_as_current_mode,
         "the selector in the sidebar should show dark mode as selected"
 
-        page.refresh
+        browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(interface_color_mode).to have_dark_mode_forced,
         "the interface should still be in dark mode after a page refresh"
@@ -253,7 +277,7 @@ describe "User preferences | Interface" do
         expect(mode_selector_in_sidebar).to have_dark_as_current_mode,
         "the selector in the sidebar should show dark mode as selected"
 
-        page.refresh
+        browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(interface_color_mode).to have_dark_mode_forced,
         "the interface should still be in dark mode after a page refresh"
@@ -297,7 +321,7 @@ describe "User preferences | Interface" do
         ),
         "the dropdown should now have dark mode selected"
 
-        page.refresh
+        browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(interface_color_mode).to have_dark_mode_forced,
         "the interface should still be in dark mode after a page refresh"
@@ -317,7 +341,9 @@ describe "User preferences | Interface" do
         user.user_option.update!(dark_scheme_id: color_scheme_dark_1.id)
 
         user_preferences_interface_page.visit(user)
-        expect(page).to have_css(".interface-color-mode")
+        expect(
+          browser_root.locator(".interface-color-mode").filter(visible: true),
+        ).not_to have_count(0)
       end
 
       it "hides the mode selector when theme has identical light and dark schemes" do
@@ -327,14 +353,14 @@ describe "User preferences | Interface" do
         )
 
         user_preferences_interface_page.visit(user)
-        expect(page).to have_no_css(".interface-color-mode")
+        expect(browser_root.locator(".interface-color-mode").filter(visible: true)).to have_count(0)
       end
 
       it "hides the mode selector when theme has no dark scheme" do
         Theme.find_default.update!(color_scheme_id: color_scheme_light_1, dark_color_scheme_id: nil)
 
         user_preferences_interface_page.visit(user)
-        expect(page).to have_no_css(".interface-color-mode")
+        expect(browser_root.locator(".interface-color-mode").filter(visible: true)).to have_count(0)
       end
     end
 
@@ -436,7 +462,7 @@ describe "User preferences | Interface" do
         expect(mode_selector_in_sidebar).to have_dark_as_current_mode,
         "the selector in the sidebar should still show dark mode as selected for the admin"
 
-        page.refresh
+        browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(interface_color_mode).to have_dark_mode_forced,
         "the interface should still be in dark mode for the admin after a page refresh"

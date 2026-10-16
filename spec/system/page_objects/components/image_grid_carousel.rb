@@ -8,47 +8,82 @@ module PageObjects
       end
 
       def has_carousel?
-        has_css?(carousel_selector)
+        have_count(0).does_not_match?(browser_root.locator(carousel_selector).filter(visible: true))
       end
 
       def has_track?
-        has_css?("#{carousel_selector} .d-image-carousel__track")
+        have_count(0).does_not_match?(
+          browser_root.locator("#{carousel_selector} .d-image-carousel__track").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_mode?(mode)
-        has_css?("#{carousel_selector} .d-image-carousel.d-image-carousel--#{mode}")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{carousel_selector} .d-image-carousel.d-image-carousel--#{mode}",
+          ).filter(visible: true),
+        )
       end
 
       def has_slides?(count:)
-        has_css?("#{carousel_selector} .d-image-carousel__slide", count: count)
+        have_count(count).matches?(
+          browser_root.locator("#{carousel_selector} .d-image-carousel__slide").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_active_slide?
-        has_css?("#{carousel_selector} .d-image-carousel__slide.is-active")
+        have_count(0).does_not_match?(
+          browser_root.locator("#{carousel_selector} .d-image-carousel__slide.is-active").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_active_slide_index?(index)
-        has_css?("#{carousel_selector} .d-image-carousel__slide[data-index='#{index}'].is-active")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{carousel_selector} .d-image-carousel__slide[data-index='#{index}'].is-active",
+          ).filter(visible: true),
+        )
       end
 
       def click_next
-        find("#{carousel_selector} .d-image-carousel__nav--next").click
+        browser_root
+          .locator("#{carousel_selector} .d-image-carousel__nav--next")
+          .filter(visible: true)
+          .click
       end
 
       def click_prev
-        find("#{carousel_selector} .d-image-carousel__nav--prev").click
+        browser_root
+          .locator("#{carousel_selector} .d-image-carousel__nav--prev")
+          .filter(visible: true)
+          .click
       end
 
       def next_button_disabled?
-        find("#{carousel_selector} .d-image-carousel__nav--next").disabled?
+        browser_root
+          .locator("#{carousel_selector} .d-image-carousel__nav--next")
+          .filter(visible: true)
+          .disabled?
       end
 
       def prev_button_disabled?
-        find("#{carousel_selector} .d-image-carousel__nav--prev").disabled?
+        browser_root
+          .locator("#{carousel_selector} .d-image-carousel__nav--prev")
+          .filter(visible: true)
+          .disabled?
       end
 
       def focus_track
-        find("#{carousel_selector} .d-image-carousel__track").click
+        browser_root
+          .locator("#{carousel_selector} .d-image-carousel__track")
+          .filter(visible: true)
+          .click
         self
       end
 

@@ -4,62 +4,85 @@ module PageObjects
   module Pages
     class Group < PageObjects::Pages::Base
       def visit(group)
-        page.visit("/g/#{group.name}")
+        browser_page.goto("/g/#{group.name}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def find(selector)
-        page.find(".group #{selector}")
+        browser_root.locator(".group #{selector}").filter(visible: true)
       end
 
       def add_users
-        find(".group-members-manage button.group-members-add").click
+        browser_root
+          .locator(".group-members-manage button.group-members-add")
+          .filter(visible: true)
+          .click
         self
       end
 
       def invite_members
-        find(".group-members-manage button.group-members-invite").click
+        browser_root
+          .locator(".group-members-manage button.group-members-invite")
+          .filter(visible: true)
+          .click
         self
       end
 
       def delete_group
-        page.find("[data-test-selector='delete-group-button']").click
-        page.find(".dialog-footer .btn-danger").click
+        browser_root
+          .locator("[data-test-selector='delete-group-button']")
+          .filter(visible: true)
+          .click
+        browser_root.locator(".dialog-footer .btn-danger").filter(visible: true).click
       end
 
       def select_user_and_add(user)
-        page.find(
-          ".modal-container .user-chooser .multi-select-header .select-kit-header-wrapper",
-        ).click
-        page.find(".modal-container .user-chooser .filter-input").set(user.username)
-        page.find(
-          ".modal-container li.email-group-user-chooser-row[data-value='#{user.username}']",
-        ).click
-        page.find(".modal-container button.add.btn-primary").click
+        browser_root
+          .locator(".modal-container .user-chooser .multi-select-header .select-kit-header-wrapper")
+          .filter(visible: true)
+          .click
+        browser_root
+          .locator(".modal-container .user-chooser .filter-input")
+          .filter(visible: true)
+          .fill(user.username)
+        browser_root
+          .locator(
+            ".modal-container li.email-group-user-chooser-row[data-value='#{user.username}']",
+          )
+          .filter(visible: true)
+          .click
+        browser_root.locator(".modal-container button.add.btn-primary").filter(visible: true).click
         self
       end
 
       def click_manage
-        page.find(".user-primary-navigation .manage").click
+        browser_root.locator(".user-primary-navigation .manage").filter(visible: true).click
       end
 
       def click_membership
-        page.find(".user-secondary-navigation li", text: "Membership").click
+        browser_root
+          .locator(".user-secondary-navigation li")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern("Membership"))
+          .click
       end
 
       def click_interaction
-        page.find(
-          ".user-secondary-navigation li",
-          text: I18n.t("js.groups.manage.interaction.title"),
-        ).click
+        browser_root
+          .locator(".user-secondary-navigation li")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern(I18n.t("js.groups.manage.interaction.title")))
+          .click
       end
 
       def click_save
-        page.find(".group-manage-save").click
+        browser_root.locator(".group-manage-save").filter(visible: true).click
       end
 
       def has_saved?
-        page.has_css?(".group-manage-save-button span", text: I18n.t("js.saved"))
+        contain_text([browser_text_pattern(I18n.t("js.saved"))], useInnerText: true).matches?(
+          browser_root.locator(".group-manage-save-button span").filter(visible: true),
+        )
       end
 
       def select_default_notification_level(level)

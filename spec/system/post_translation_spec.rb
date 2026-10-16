@@ -37,9 +37,19 @@ describe "Post translations" do
 
       topic_page.click_post_action_button(post, :show_more)
       topic_page.click_post_action_button(post, :add_translation)
-      find(".update-translations-menu__add .post-action-menu__add-translation").click
+      browser_root
+        .locator(".update-translations-menu__add .post-action-menu__add-translation")
+        .filter(visible: true)
+        .click
       translation_selector.expand
-      expect(all(".translation-selector-dropdown .select-kit-collection li").count).to eq(3)
+      expect(
+        browser_root
+          .locator(".translation-selector-dropdown .select-kit-collection li")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .count,
+      ).to eq(3)
       expect(translation_selector).to have_option_value("fr")
       expect(translation_selector).to have_option_value("es")
       expect(translation_selector).to have_option_value("pt_BR")
@@ -50,13 +60,20 @@ describe "Post translations" do
       topic_page.visit_topic(topic)
       topic_page.click_post_action_button(post, :show_more)
       topic_page.click_post_action_button(post, :add_translation)
-      find(".update-translations-menu__add .post-action-menu__add-translation").click
+      browser_root
+        .locator(".update-translations-menu__add .post-action-menu__add-translation")
+        .filter(visible: true)
+        .click
       expect(composer).to be_opened
       translation_selector.expand
       translation_selector.select_row_by_value("fr")
-      find("#translated-topic-title").fill_in(with: "Ceci est un sujet de test 0")
+      browser_root
+        .locator("#translated-topic-title")
+        .filter(visible: true)
+        .fill("Ceci est un sujet de test 0")
       composer.fill_content("Bonjour le monde")
       composer.submit
+      expect(composer).to be_closed
 
       expect(TopicLocalization.exists?(topic_id: topic.id, locale: "fr")).to be true
       expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be true
@@ -77,13 +94,20 @@ describe "Post translations" do
       topic_page.visit_topic(topic)
       topic_page.click_post_action_button(post, :show_more)
       topic_page.click_post_action_button(post, :add_translation)
-      find(".update-translations-menu__add .post-action-menu__add-translation").click
+      browser_root
+        .locator(".update-translations-menu__add .post-action-menu__add-translation")
+        .filter(visible: true)
+        .click
       expect(composer).to be_opened
       translation_selector.expand
       translation_selector.select_row_by_value("es")
-      find("#translated-topic-title").fill_in(with: "Este es un tema de prueba 0")
+      browser_root
+        .locator("#translated-topic-title")
+        .filter(visible: true)
+        .fill("Este es un tema de prueba 0")
       composer.fill_content("Hola mundo")
       composer.submit
+      expect(composer).to be_closed
 
       expect(TopicLocalization.exists?(topic_id: topic.id, locale: "es")).to be true
       expect(PostLocalization.exists?(post_id: post.id, locale: "es")).to be true
@@ -97,15 +121,19 @@ describe "Post translations" do
       topic_page.visit_topic(topic)
       topic_page.click_post_action_button(post, :show_more)
       topic_page.click_post_action_button(post, :add_translation)
-      view_translation_button = find(".post-action-menu__view-translation")
+      view_translation_button =
+        browser_root.locator(".post-action-menu__view-translation").filter(visible: true)
       expect(view_translation_button).to be_visible
-      expect(view_translation_button).to have_text(
-        I18n.t("js.post.localizations.view", { count: 1 }),
+      expect(view_translation_button).to contain_text(
+        browser_text_pattern(I18n.t("js.post.localizations.view", { count: 1 })),
+        useInnerText: true,
       )
 
       view_translation_button.click
       expect(view_translations_modal).to be_open
-      expect(find(".post-translations-modal__locale")).to have_text("fr")
+      expect(
+        browser_root.locator(".post-translations-modal__locale").filter(visible: true),
+      ).to contain_text(browser_text_pattern("fr"), useInnerText: true)
     end
 
     it "lets a user set independent post and topic title languages without closing the modal" do
@@ -132,7 +160,7 @@ describe "Post translations" do
       expect(view_translations_modal).to be_open
       view_translations_modal.close
 
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       topic_page.open_post_translations(post)
 
       expect(view_translations_modal).to have_post_language("English (en)")
@@ -143,13 +171,17 @@ describe "Post translations" do
       topic_page.visit_topic(topic)
       topic_page.click_post_action_button(post, :show_more)
       topic_page.click_post_action_button(post, :add_translation)
-      find(".post-action-menu__view-translation").click
-      find(".post-translations-modal__edit-action .btn").click
+      browser_root.locator(".post-action-menu__view-translation").filter(visible: true).click
+      browser_root.locator(".post-translations-modal__edit-action .btn").filter(visible: true).click
       expect(composer).to be_opened
       expect(translation_selector).to have_selected_value("fr")
-      find("#translated-topic-title").fill_in(with: "C'est un sujet de test 0.")
+      browser_root
+        .locator("#translated-topic-title")
+        .filter(visible: true)
+        .fill("C'est un sujet de test 0.")
       composer.fill_content("Bonjour le monde")
       composer.submit
+      expect(composer).to be_closed
 
       expect(TopicLocalization.exists?(topic_id: topic.id, locale: "fr")).to be true
       expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be true
@@ -165,9 +197,15 @@ describe "Post translations" do
 
       topic_page.click_post_action_button(post, :show_more)
       topic_page.click_post_action_button(post, :add_translation)
-      find(".update-translations-menu__add .post-action-menu__add-translation").click
-      find(".post-action-menu__view-translation").click
-      find(".post-translations-modal__delete-action .btn").click
+      browser_root
+        .locator(".update-translations-menu__add .post-action-menu__add-translation")
+        .filter(visible: true)
+        .click
+      browser_root.locator(".post-action-menu__view-translation").filter(visible: true).click
+      browser_root
+        .locator(".post-translations-modal__delete-action .btn")
+        .filter(visible: true)
+        .click
       expect(confirmation_dialog).to be_open
       confirmation_dialog.click_yes
 
@@ -180,7 +218,10 @@ describe "Post translations" do
       topic_page.visit_topic(topic)
       topic_page.click_post_action_button(post, :show_more)
       topic_page.click_post_action_button(post, :add_translation)
-      find(".update-translations-menu__add .post-action-menu__add-translation").click
+      browser_root
+        .locator(".update-translations-menu__add .post-action-menu__add-translation")
+        .filter(visible: true)
+        .click
       expect(composer).to be_opened
 
       translation_selector.expand
@@ -190,7 +231,10 @@ describe "Post translations" do
       composer.minimize
       expect(composer).to be_minimized
 
-      find("#post_#{post.post_number} .post-action-menu__reply").click
+      browser_root
+        .locator("#post_#{post.post_number} .post-action-menu__reply")
+        .filter(visible: true)
+        .click
 
       expect(discard_modal).to be_open
     end
@@ -201,7 +245,10 @@ describe "Post translations" do
       topic_page.visit_topic(topic)
       topic_page.click_post_action_button(post, :show_more)
       topic_page.click_post_action_button(post, :add_translation)
-      find(".update-translations-menu__add .post-action-menu__add-translation").click
+      browser_root
+        .locator(".update-translations-menu__add .post-action-menu__add-translation")
+        .filter(visible: true)
+        .click
       expect(composer).to be_opened
 
       translation_selector.expand
@@ -210,7 +257,10 @@ describe "Post translations" do
       composer.minimize
       expect(composer).to be_minimized
 
-      find("#post_#{post.post_number} .post-action-menu__reply").click
+      browser_root
+        .locator("#post_#{post.post_number} .post-action-menu__reply")
+        .filter(visible: true)
+        .click
 
       expect(discard_modal).to be_closed
       expect(composer).to be_opened
@@ -219,37 +269,40 @@ describe "Post translations" do
 
   context "when creating a new post in a different locale" do
     it "shows configured languages, the default locale, and no locale" do
-      visit("/latest")
-      page.find("#create-topic").click
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root.locator("#create-topic").filter(visible: true).click
       post_language_selector.expand
-      expect(post_language_selector).to have_content("English") # default locale
-      expect(post_language_selector).to have_content("French (Français)")
-      expect(post_language_selector).to have_content("Spanish (Español)")
-      expect(post_language_selector).to have_content("Portuguese (Português (BR))")
-      expect(post_language_selector).to have_content(
+      expect(post_language_selector).to have_displayed_content("English") # default locale
+      expect(post_language_selector).to have_displayed_content("French (Français)")
+      expect(post_language_selector).to have_displayed_content("Spanish (Español)")
+      expect(post_language_selector).to have_displayed_content("Portuguese (Português (BR))")
+      expect(post_language_selector).to have_displayed_content(
         I18n.t("js.post.localizations.post_language_selector.none"),
       )
     end
 
     it "allows a user to create a post in another locale" do
-      visit("/latest")
-      page.find("#create-topic").click
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root.locator("#create-topic").filter(visible: true).click
       post_language_selector.expand
       post_language_selector.option("[data-name='fr']").click
       composer.fill_title("Ceci est un sujet de test 1")
       composer.fill_content("Bonjour le monde")
       composer.submit
+      expect(composer).to be_closed
 
       updated_post = Topic.last.posts.first
       expect(updated_post.locale).to eq("fr")
     end
 
     it "does not select a locale by default" do
-      visit("/latest")
-      page.find("#create-topic").click
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root.locator("#create-topic").filter(visible: true).click
       expect(
-        page.has_no_css?(
-          "#{POST_LANGUAGE_SWITCHER_SELECTOR} .toolbar-popup-menu-options__trigger-label",
+        have_count(0).matches?(
+          browser_root.locator(
+            "#{POST_LANGUAGE_SWITCHER_SELECTOR} .toolbar-popup-menu-options__trigger-label",
+          ).filter(visible: true),
         ),
       ).to be true
     end
@@ -269,7 +322,10 @@ describe "Post translations" do
       topic_page.visit_topic(topic)
       topic_page.click_post_action_button(post, :show_more)
       topic_page.click_post_action_button(post, :add_translation)
-      find(".update-translations-menu__add .post-action-menu__add-translation").click
+      browser_root
+        .locator(".update-translations-menu__add .post-action-menu__add-translation")
+        .filter(visible: true)
+        .click
 
       expect(composer).to be_opened
       expect(translation_preview).to have_raw_toggle
@@ -284,7 +340,10 @@ describe "Post translations" do
       topic_page.visit_topic(topic)
       topic_page.click_post_action_button(post, :show_more)
       topic_page.click_post_action_button(post, :add_translation)
-      find(".update-translations-menu__add .post-action-menu__add-translation").click
+      browser_root
+        .locator(".update-translations-menu__add .post-action-menu__add-translation")
+        .filter(visible: true)
+        .click
 
       expect(composer).to be_opened
       expect(translation_preview.original_tab_active?).to be true
@@ -296,7 +355,10 @@ describe "Post translations" do
       topic_page.visit_topic(topic)
       topic_page.click_post_action_button(markdown_post.post_number, :show_more)
       topic_page.click_post_action_button(markdown_post.post_number, :add_translation)
-      find(".update-translations-menu__add .post-action-menu__add-translation").click
+      browser_root
+        .locator(".update-translations-menu__add .post-action-menu__add-translation")
+        .filter(visible: true)
+        .click
 
       expect(composer).to be_opened
       translation_preview.raw_toggle.toggle
@@ -313,7 +375,10 @@ describe "Post translations" do
       topic_page.visit_topic(topic)
       topic_page.click_post_action_button(post, :show_more)
       topic_page.click_post_action_button(post, :add_translation)
-      find(".update-translations-menu__add .post-action-menu__add-translation").click
+      browser_root
+        .locator(".update-translations-menu__add .post-action-menu__add-translation")
+        .filter(visible: true)
+        .click
 
       expect(composer).to be_opened
       translation_preview.raw_toggle.toggle
@@ -332,7 +397,10 @@ describe "Post translations" do
       topic_page.visit_topic(topic)
       topic_page.click_post_action_button(post, :show_more)
       topic_page.click_post_action_button(post, :add_translation)
-      find(".update-translations-menu__add .post-action-menu__add-translation").click
+      browser_root
+        .locator(".update-translations-menu__add .post-action-menu__add-translation")
+        .filter(visible: true)
+        .click
 
       expect(composer).to be_opened
       translation_preview.raw_toggle.toggle

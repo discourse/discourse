@@ -17,7 +17,9 @@ shared_examples "forgot password scenarios" do
   let(:user_reset_password_page) { PageObjects::Pages::UserResetPassword.new }
 
   def visit_reset_password_link
-    visit("/u/password-reset/#{password_reset_token}")
+    browser_page
+      .goto("/u/password-reset/#{password_reset_token}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
   end
 
   context "when user does not have any multi-factor authentication configured" do

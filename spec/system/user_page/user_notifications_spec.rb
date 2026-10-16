@@ -34,7 +34,7 @@ describe "User notifications" do
     it "Allows blocking loading via callback and limit" do
       user_page.visit(user)
 
-      page.execute_script <<~JS
+      browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: [])
         require("discourse/lib/plugin-api").withPluginApi("1.19.0", (api) => {
           api.setNotificationsLimit(1);
 
@@ -60,7 +60,10 @@ describe "User notifications" do
 
       expect(user_notifications_page).to have_notification_count_of(60)
 
-      page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+      browser_page.evaluate(
+        "function(arguments) { window.scrollTo(0, document.body.scrollHeight) }",
+        arg: [],
+      )
       expect(user_notifications_page).to have_notification_count_of(72)
     end
   end
@@ -96,8 +99,8 @@ describe "User notifications" do
 
         notification = user_notifications_page.find_notification(group_mention_notification)
 
-        expect(notification).to have_content(group.name)
-        expect(notification).to have_content(user.name)
+        expect(notification).to contain_text(browser_text_pattern(group.name), useInnerText: true)
+        expect(notification).to contain_text(browser_text_pattern(user.name), useInnerText: true)
       end
 
       context "when user doesn't have a name" do
@@ -113,8 +116,11 @@ describe "User notifications" do
 
           notification = user_notifications_page.find_notification(group_mention_notification)
 
-          expect(notification).to have_content(group.name)
-          expect(notification).to have_content(user.username)
+          expect(notification).to contain_text(browser_text_pattern(group.name), useInnerText: true)
+          expect(notification).to contain_text(
+            browser_text_pattern(user.username),
+            useInnerText: true,
+          )
         end
       end
     end

@@ -18,11 +18,18 @@ RSpec.describe "Categories Page" do
     it "renders hashtag icons in category descriptions" do
       category_page.visit_categories
 
-      within(
-        ".category-list tr[data-category-id='#{category_with_hashtag.id}'] .category-description",
+      within_browser(
+        browser_root.locator(
+          ".category-list tr[data-category-id='#{category_with_hashtag.id}'] .category-description",
+        ).filter(visible: true),
       ) do
-        expect(page).to have_css(".hashtag-cooked", text: "important")
-        expect(page).to have_css(".hashtag-cooked .d-icon")
+        expect(browser_root.locator(".hashtag-cooked").filter(visible: true)).to contain_text(
+          [browser_text_pattern("important")],
+          useInnerText: true,
+        )
+        expect(
+          browser_root.locator(".hashtag-cooked .d-icon").filter(visible: true),
+        ).not_to have_count(0)
       end
     end
   end
@@ -33,9 +40,15 @@ RSpec.describe "Categories Page" do
     it "displays subcategories and topics" do
       category_page.visit_categories
 
-      expect(page).to have_css(".badge-category[data-category-id='#{subcategory.id}']")
+      expect(
+        browser_root.locator(".badge-category[data-category-id='#{subcategory.id}']").filter(
+          visible: true,
+        ),
+      ).not_to have_count(0)
       topics.each do |t|
-        expect(page).to have_css(".featured-topic[data-topic-id='#{t.id}']", text: t.title)
+        expect(
+          browser_root.locator(".featured-topic[data-topic-id='#{t.id}']").filter(visible: true),
+        ).to contain_text([browser_text_pattern(t.title)], useInnerText: true)
       end
     end
   end

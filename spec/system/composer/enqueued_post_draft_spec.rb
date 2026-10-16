@@ -12,8 +12,8 @@ describe "Composer draft after enqueued post" do
     fab!(:category) { Fabricate(:category).tap { |c| c.update!(require_topic_approval: true) } }
 
     it "clears the draft and does not show the discard draft modal when reopening the composer" do
-      visit "/latest"
-      find("#create-topic").click
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root.locator("#create-topic").filter(visible: true).click
       expect(composer).to be_opened
 
       composer.fill_title("This is a test topic requiring approval")
@@ -22,14 +22,16 @@ describe "Composer draft after enqueued post" do
 
       composer.create
 
-      expect(page).to have_css(".post-enqueued-modal")
-      find(".post-enqueued-modal .btn-primary").click
-      expect(page).to have_no_css(".post-enqueued-modal")
+      expect(browser_root.locator(".post-enqueued-modal").filter(visible: true)).not_to have_count(
+        0,
+      )
+      browser_root.locator(".post-enqueued-modal .btn-primary").filter(visible: true).click
+      expect(browser_root.locator(".post-enqueued-modal").filter(visible: true)).to have_count(0)
       expect(composer).to be_closed
 
       try_until_success { expect(Draft.where(user: current_user).count).to eq(0) }
 
-      find("#create-topic").click
+      browser_root.locator("#create-topic").filter(visible: true).click
 
       expect(discard_draft_modal).to be_closed
       expect(composer).to be_opened

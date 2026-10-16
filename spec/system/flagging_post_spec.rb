@@ -27,10 +27,16 @@ describe "Flagging post" do
       flag_modal.take_action(:agree_and_hide)
 
       expect(
-        topic_page.post_by_number(post_to_flag).ancestor(".topic-post.post-hidden"),
+        topic_page
+          .post_by_number(post_to_flag)
+          .locator("xpath=ancestor::*")
+          .and(browser_page.locator(".topic-post.post-hidden"))
+          .last,
       ).to be_present
 
-      visit "/review/#{other_flag_reviewable.id}"
+      browser_page
+        .goto("/review/#{other_flag_reviewable.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(review_page).to have_reviewable_with_approved_status(other_flag_reviewable)
     end
@@ -51,10 +57,16 @@ describe "Flagging post" do
       expect(silence_user_modal).to be_closed
 
       expect(
-        topic_page.post_by_number(post_to_flag).ancestor(".topic-post.post-hidden"),
+        topic_page
+          .post_by_number(post_to_flag)
+          .locator("xpath=ancestor::*")
+          .and(browser_page.locator(".topic-post.post-hidden"))
+          .last,
       ).to be_present
 
-      visit "/review/#{Reviewable.sole.id}"
+      browser_page
+        .goto("/review/#{Reviewable.sole.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(review_page).to have_reviewable_with_approved_status(Reviewable.sole)
     end
@@ -69,15 +81,18 @@ describe "Flagging post" do
       topic_page.click_post_action_button(post_to_flag, :flag)
       flag_modal.choose_type(:illegal)
 
-      expect(flag_modal).to have_css(".illegal .description")
-      expect(flag_modal).to have_css(".flag-confirmation")
+      expect(flag_modal.locator(".illegal .description").filter(visible: true)).not_to have_count(0)
+      expect(flag_modal.locator(".flag-confirmation").filter(visible: true)).not_to have_count(0)
 
       flag_modal.fill_message("This looks totally illegal to me.")
       flag_modal.check_confirmation
 
       flag_modal.confirm_flag
 
-      expect(page).to have_content(I18n.t("js.post.actions.by_you.illegal"))
+      expect(browser_content).to contain_text(
+        browser_text_pattern(I18n.t("js.post.actions.by_you.illegal")),
+        useInnerText: true,
+      )
     end
   end
 
@@ -98,7 +113,10 @@ describe "Flagging post" do
 
       flag_modal.confirm_flag
 
-      expect(page).to have_content(I18n.t("js.post.actions.by_you.notify_user"))
+      expect(browser_content).to contain_text(
+        browser_text_pattern(I18n.t("js.post.actions.by_you.notify_user")),
+        useInnerText: true,
+      )
     end
   end
 
@@ -125,7 +143,10 @@ describe "Flagging post" do
       flag_modal.check_confirmation
       flag_modal.confirm_flag
 
-      expect(page).to have_content(I18n.t("js.post.actions.by_you.illegal"))
+      expect(browser_content).to contain_text(
+        browser_text_pattern(I18n.t("js.post.actions.by_you.illegal")),
+        useInnerText: true,
+      )
     end
   end
 
@@ -142,8 +163,13 @@ describe "Flagging post" do
       SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
       SiteSetting.allow_all_users_to_flag_illegal_content = true
       topic_page.visit_topic(topic).open_flag_topic_modal
-      expect(flag_modal.body).to have_content(
-        ActionView::Base.full_sanitizer.sanitize(I18n.t("js.flagging.review_process_description")),
+      expect(flag_modal.body).to contain_text(
+        browser_text_pattern(
+          ActionView::Base.full_sanitizer.sanitize(
+            I18n.t("js.flagging.review_process_description"),
+          ),
+        ),
+        useInnerText: true,
       )
       expect(flag_modal).to have_choices(I18n.t("js.flagging.formatted_name.illegal"))
     end
@@ -164,29 +190,40 @@ describe "Flagging post" do
       topic_page.visit_topic(topic, post_number: post_to_flag.post_number)
       topic_page.find_post_action_button(post_to_flag, :flag).click
 
-      expect(anonymous_flag_modal.body).to have_content(
-        ActionView::Base.full_sanitizer.sanitize(I18n.t("js.flagging.review_process_description")),
-      )
-      expect(anonymous_flag_modal.body).to have_content(
-        ActionView::Base.full_sanitizer.sanitize(
-          I18n.t(
-            "js.anonymous_flagging.description",
-            { email: "contact@example.com", topic_title: topic.title, url: current_url },
+      expect(anonymous_flag_modal.body).to contain_text(
+        browser_text_pattern(
+          ActionView::Base.full_sanitizer.sanitize(
+            I18n.t("js.flagging.review_process_description"),
           ),
         ),
+        useInnerText: true,
+      )
+      expect(anonymous_flag_modal.body).to contain_text(
+        browser_text_pattern(
+          ActionView::Base.full_sanitizer.sanitize(
+            I18n.t(
+              "js.anonymous_flagging.description",
+              { email: "contact@example.com", topic_title: topic.title, url: browser_page.url },
+            ),
+          ),
+        ),
+        useInnerText: true,
       )
 
       SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
       topic_page.visit_topic(topic)
       topic_page.find_post_action_button(post_to_flag, :flag).click
 
-      expect(anonymous_flag_modal.body).to have_content(
-        ActionView::Base.full_sanitizer.sanitize(
-          I18n.t(
-            "js.anonymous_flagging.description",
-            { email: "illegal@example.com", topic_title: topic.title, url: current_url },
+      expect(anonymous_flag_modal.body).to contain_text(
+        browser_text_pattern(
+          ActionView::Base.full_sanitizer.sanitize(
+            I18n.t(
+              "js.anonymous_flagging.description",
+              { email: "illegal@example.com", topic_title: topic.title, url: browser_page.url },
+            ),
           ),
         ),
+        useInnerText: true,
       )
     end
   end

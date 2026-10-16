@@ -8,15 +8,25 @@ module PageObjects
       end
 
       def similar_users
-        modal.all("table tbody tr td:nth-child(2)").map(&:text)
+        modal
+          .locator("table tbody tr td:nth-child(2)")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .map { |element| element.inner_text.strip }
       end
 
       def select_similar_user(username)
-        modal.find("table tbody tr", text: username).check
+        modal
+          .locator("table tbody tr")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern(username))
+          .locator("input[type=checkbox]")
+          .check
       end
 
       def modal
-        find(".d-modal.#{@penalty_type}-user-modal")
+        browser_root.locator(".d-modal.#{@penalty_type}-user-modal").filter(visible: true)
       end
 
       def suspend(reason, date: "tomorrow")
@@ -26,11 +36,11 @@ module PageObjects
       end
 
       def fill_in_suspend_reason(reason)
-        find("input.suspend-reason").fill_in with: reason
+        browser_root.locator("input.suspend-reason").filter(visible: true).fill(reason)
       end
 
       def fill_in_silence_reason(reason)
-        find("input.silence-reason").fill_in with: reason
+        browser_root.locator("input.silence-reason").filter(visible: true).fill(reason)
       end
 
       def set_future_date(date)
@@ -40,11 +50,13 @@ module PageObjects
       end
 
       def perform
-        find(".perform-penalize").click
+        browser_root.locator(".perform-penalize").filter(visible: true).click
       end
 
       def has_error_message?(message)
-        expect(find("#modal-alert").text).to eq(message)
+        expect(browser_root.locator("#modal-alert").filter(visible: true).inner_text.strip).to eq(
+          message,
+        )
       end
     end
   end

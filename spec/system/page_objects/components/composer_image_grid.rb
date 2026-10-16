@@ -8,19 +8,29 @@ module PageObjects
       end
 
       def add_image_to_grid
-        page.find(".composer-image-toolbar__add-to-grid").click
+        browser_root.locator(".composer-image-toolbar__add-to-grid").filter(visible: true).click
         self
       end
 
       def move_image_outside_grid
-        page.find(".composer-image-toolbar__move-outside-grid").click
+        browser_root
+          .locator(".composer-image-toolbar__move-outside-grid")
+          .filter(visible: true)
+          .click
         self
       end
 
       def scroll_grid_to_editor_middle(index:)
-        grid = @rich_editor.all(".composer-image-grid")[index]
+        grid =
+          @rich_editor
+            .locator(".composer-image-grid")
+            .filter(visible: true)
+            .tap { |elements| elements.first.wait_for(state: "visible") }
+            .all[
+            index
+          ]
 
-        grid.execute_script(<<~JS)
+        grid.evaluate("(element, args) => (function() { #{<<~JS} }).apply(element, args)", arg: [])
           const editor = this.closest(".ProseMirror");
           const editorRect = editor.getBoundingClientRect();
           const gridRect = this.getBoundingClientRect();
@@ -34,9 +44,17 @@ module PageObjects
       end
 
       def control_positions(index:)
-        grid = @rich_editor.all(".composer-image-grid")[index]
+        grid =
+          @rich_editor
+            .locator(".composer-image-grid")
+            .filter(visible: true)
+            .tap { |elements| elements.first.wait_for(state: "visible") }
+            .all[
+            index
+          ]
 
-        grid.evaluate_script(<<~JS)
+        grid.evaluate(
+          "(element, args) => (function() { return #{<<~JS} }).apply(element, args)",
           (() => {
             const editor = this.closest(".ProseMirror").getBoundingClientRect();
             const grid = this.getBoundingClientRect();
@@ -59,66 +77,132 @@ module PageObjects
             };
           })()
         JS
+          arg: [],
+        )
       end
 
       def select_first_grid_image
-        @rich_editor.all(".composer-image-grid .composer-image-node img").first.click
+        @rich_editor
+          .locator(".composer-image-grid .composer-image-node img")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .first
+          .click
         self
       end
 
       def has_add_to_grid_toolbar?
-        page.has_css?("[data-identifier='composer-image-toolbar']") &&
-          page.has_css?(".composer-image-toolbar__add-to-grid") &&
-          page.has_no_css?(".composer-image-toolbar__move-outside-grid")
+        have_count(0).does_not_match?(
+          browser_root.locator("[data-identifier='composer-image-toolbar']").filter(visible: true),
+        ) &&
+          have_count(0).does_not_match?(
+            browser_root.locator(".composer-image-toolbar__add-to-grid").filter(visible: true),
+          ) &&
+          have_count(0).matches?(
+            browser_root.locator(".composer-image-toolbar__move-outside-grid").filter(
+              visible: true,
+            ),
+          )
       end
 
       def has_move_outside_grid_toolbar?
-        page.has_css?("[data-identifier='composer-image-toolbar']") &&
-          page.has_css?(".composer-image-toolbar__move-outside-grid") &&
-          page.has_no_css?(".composer-image-toolbar__add-to-grid")
+        have_count(0).does_not_match?(
+          browser_root.locator("[data-identifier='composer-image-toolbar']").filter(visible: true),
+        ) &&
+          have_count(0).does_not_match?(
+            browser_root.locator(".composer-image-toolbar__move-outside-grid").filter(
+              visible: true,
+            ),
+          ) &&
+          have_count(0).matches?(
+            browser_root.locator(".composer-image-toolbar__add-to-grid").filter(visible: true),
+          )
       end
 
       def has_images?(count)
-        @rich_editor.has_css?(".composer-image-node img", count: count)
+        have_count(count).matches?(
+          @rich_editor.locator(".composer-image-node img").filter(visible: true),
+        )
       end
 
       def has_grid_images?(count)
-        @rich_editor.has_css?(".composer-image-grid .composer-image-node img", count: count)
+        have_count(count).matches?(
+          @rich_editor.locator(".composer-image-grid .composer-image-node img").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_grids?(count:)
-        @rich_editor.has_css?(".composer-image-grid", count: count)
+        have_count(count).matches?(
+          @rich_editor.locator(".composer-image-grid").filter(visible: true),
+        )
       end
 
       def has_no_grid_images?
-        @rich_editor.has_no_css?(".composer-image-grid .composer-image-node img")
+        have_count(0).matches?(
+          @rich_editor
+            .tap do |parent|
+              parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+            end
+            .locator(".composer-image-grid .composer-image-node img")
+            .filter(visible: true),
+        )
       end
 
       def has_single_grid_with_images?(count)
-        @rich_editor.has_css?(".composer-image-grid", count: 1) &&
-          @rich_editor.has_css?(".composer-image-grid .composer-image-node img", count: count) &&
-          @rich_editor.has_no_css?(".composer-image-grid .composer-image-grid")
+        have_count(1).matches?(
+          @rich_editor.locator(".composer-image-grid").filter(visible: true),
+        ) &&
+          have_count(count).matches?(
+            @rich_editor.locator(".composer-image-grid .composer-image-node img").filter(
+              visible: true,
+            ),
+          ) &&
+          have_count(0).matches?(
+            @rich_editor
+              .tap do |parent|
+                parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+              end
+              .locator(".composer-image-grid .composer-image-grid")
+              .filter(visible: true),
+          )
       end
 
       def has_mode_select?
-        @rich_editor.has_css?(".composer-image-gallery__mode-buttons")
+        have_count(0).does_not_match?(
+          @rich_editor.locator(".composer-image-gallery__mode-buttons").filter(visible: true),
+        )
       end
 
       def has_mode_selects?(count:)
-        @rich_editor.has_css?(".composer-image-gallery__mode-buttons", count: count)
+        have_count(count).matches?(
+          @rich_editor.locator(".composer-image-gallery__mode-buttons").filter(visible: true),
+        )
       end
 
       def select_mode(mode)
-        @rich_editor.find(".composer-image-gallery__mode-btn[data-mode='#{mode.downcase}']").click
+        @rich_editor
+          .locator(".composer-image-gallery__mode-btn[data-mode='#{mode.downcase}']")
+          .filter(visible: true)
+          .click
         self
       end
 
       def has_selected_mode?(value)
-        @rich_editor.has_css?(".composer-image-gallery__mode-btn[data-mode='#{value}'].is-active")
+        have_count(0).does_not_match?(
+          @rich_editor.locator(
+            ".composer-image-gallery__mode-btn[data-mode='#{value}'].is-active",
+          ).filter(visible: true),
+        )
       end
 
       def mode_value
-        @rich_editor.find(".composer-image-gallery")["data-mode"]
+        @rich_editor
+          .locator(".composer-image-gallery")
+          .filter(visible: true)
+          .get_attribute("data-mode")
       end
     end
   end

@@ -13,10 +13,16 @@ describe "Admin User Badges Page" do
   it "displays badge granter and links to their profile" do
     BadgeGranter.grant(badge, user, granted_by: granter)
     badge_row = user_badges_page.visit_page(user).find_badge_row_by_granter(granter)
-    expect(badge_row).to have_css("[data-badge-name='#{badge.name}']")
+    expect(
+      badge_row.locator("[data-badge-name='#{badge.name}']").filter(visible: true),
+    ).not_to have_count(0)
 
-    badge_row.click_link(granter.username)
-    expect(page).to have_current_path "/admin/users/#{granter.id}/#{granter.username}"
+    badge_row
+      .locator("[id=#{granter.username.to_s.to_json}], [name=#{granter.username.to_s.to_json}]")
+      .or(badge_row.get_by_role("link", name: granter.username))
+      .filter(visible: true)
+      .click
+    expect(browser_page).to have_url("/admin/users/#{granter.id}/#{granter.username}")
   end
 
   it "shows badges with SQL queries in the grant dropdown" do
@@ -32,6 +38,10 @@ describe "Admin User Badges Page" do
     badge_dropdown = PageObjects::Components::SelectKit.new(".user-badges .combo-box")
     badge_dropdown.expand
 
-    expect(page).to have_css(".select-kit-row[data-name='#{badge_with_query.name}']")
+    expect(
+      browser_root.locator(".select-kit-row[data-name='#{badge_with_query.name}']").filter(
+        visible: true,
+      ),
+    ).not_to have_count(0)
   end
 end

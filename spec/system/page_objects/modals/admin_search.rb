@@ -6,15 +6,21 @@ module PageObjects
       MODAL_SELECTOR = ".admin-search-modal"
 
       def search(query)
-        find(".admin-search__input-field").fill_in(with: query)
+        browser_root.locator(".admin-search__input-field").filter(visible: true).fill(query)
       end
 
       def find_result(type, position)
-        all(".admin-search__result[data-result-type='#{type}']")[position]
+        browser_root
+          .locator(".admin-search__result[data-result-type='#{type}']")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all[
+          position
+        ]
       end
 
       def input_enter
-        find(".admin-search__input-field").send_keys(:enter)
+        browser_root.locator(".admin-search__input-field").filter(visible: true).press("Enter")
       end
     end
   end

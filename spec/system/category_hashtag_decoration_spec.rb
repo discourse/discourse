@@ -22,8 +22,12 @@ RSpec.describe "Category hashtag decoration" do
     sign_in(viewer)
     topic_page.visit_topic(topic)
 
-    expect(page).to have_css("#post_1 .hashtag-cooked", count: 2)
-    expect(page).to have_no_css("#post_1 .style-type-injected-image")
-    expect(page).to have_no_css("#post_1 .id-injected-image")
+    expect(browser_root.locator("#post_1 .hashtag-cooked").filter(visible: true)).to have_count(2)
+    expect(
+      browser_root.locator("#post_1 .style-type-injected-image").filter(visible: true),
+    ).to have_count(0)
+    expect(browser_root.locator("#post_1 .id-injected-image").filter(visible: true)).to have_count(
+      0,
+    )
   end
 end

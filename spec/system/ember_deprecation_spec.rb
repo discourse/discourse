@@ -2,25 +2,23 @@
 
 describe "JS Deprecation Handling" do
   it "can successfully print a deprecation message after applying production-mode shims" do
-    visit("/latest")
-    expect(find("#main-outlet-wrapper")).to be_visible
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_root.locator("#main-outlet-wrapper").filter(visible: true)).to be_visible
 
     # Intercept console.warn so we can enumerate calls later
-    page.execute_script <<~JS
+    browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: [])
       window.intercepted_warnings = [];
       console.warn = (msg) => window.intercepted_warnings.push([msg, (new Error()).stack])
     JS
 
     warn_calls = nil
-    page.driver.with_playwright_page do |playwright_page|
-      warn_calls = playwright_page.evaluate <<~JS
+    browser_page.then { |playwright_page| warn_calls = playwright_page.evaluate <<~JS }
         () => {
           const { deprecate } = require('@ember/debug');
           deprecate("Some message", false, { id: "fake.deprecation", for: "discourse", since: "3.4.0", until: "3.5.0" });
           return window.intercepted_warnings;
         }
       JS
-    end
 
     expect(warn_calls.size).to eq(1)
     call, backtrace = warn_calls[0]
@@ -35,25 +33,43 @@ describe "JS Deprecation Handling" do
     SiteSetting.warn_critical_js_deprecations_message =
       "Discourse core changes will be applied to your site on Jan 15."
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css("#site-logo")
+    expect(browser_root.locator("#site-logo").filter(visible: true)).not_to have_count(0)
 
-    page.execute_script <<~JS
+    browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: [])
       const deprecated = require("discourse/lib/deprecated").default;
       deprecated("Fake deprecation message", { id: "fake.deprecation1" })
       deprecated("Other fake deprecation message", { id: "fake.deprecation2" })
     JS
 
-    message = find("#global-notice-critical-deprecation--fake-deprecation1")
-    expect(message).to have_text("One of your themes or plugins contains code which needs updating")
-    expect(message).to have_text("fake.deprecation1")
-    expect(message).to have_text(SiteSetting.warn_critical_js_deprecations_message)
+    message =
+      browser_root.locator("#global-notice-critical-deprecation--fake-deprecation1").filter(
+        visible: true,
+      )
+    expect(message).to contain_text(
+      browser_text_pattern("One of your themes or plugins contains code which needs updating"),
+      useInnerText: true,
+    )
+    expect(message).to contain_text(browser_text_pattern("fake.deprecation1"), useInnerText: true)
+    expect(message).to contain_text(
+      browser_text_pattern(SiteSetting.warn_critical_js_deprecations_message),
+      useInnerText: true,
+    )
 
-    message = find("#global-notice-critical-deprecation--fake-deprecation2")
-    expect(message).to have_text("One of your themes or plugins contains code which needs updating")
-    expect(message).to have_text("fake.deprecation2")
-    expect(message).to have_text(SiteSetting.warn_critical_js_deprecations_message)
+    message =
+      browser_root.locator("#global-notice-critical-deprecation--fake-deprecation2").filter(
+        visible: true,
+      )
+    expect(message).to contain_text(
+      browser_text_pattern("One of your themes or plugins contains code which needs updating"),
+      useInnerText: true,
+    )
+    expect(message).to contain_text(browser_text_pattern("fake.deprecation2"), useInnerText: true)
+    expect(message).to contain_text(
+      browser_text_pattern(SiteSetting.warn_critical_js_deprecations_message),
+      useInnerText: true,
+    )
   end
 
   it "emits ember-this-fallback deprecation for theme .hbs connectors using property fallback",
@@ -67,8 +83,8 @@ describe "JS Deprecation Handling" do
     t.save!
     SiteSetting.default_theme_id = t.id
 
-    visit "/latest"
-    expect(find("#main-outlet-wrapper")).to be_visible
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_root.locator("#main-outlet-wrapper").filter(visible: true)).to be_visible
 
     try_until_success do
       expect(
@@ -100,9 +116,13 @@ describe "JS Deprecation Handling" do
     t.save!
     SiteSetting.default_theme_id = t.id
 
-    visit "/latest"
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css("#global-notice-critical-deprecation--fake-deprecation")
+    expect(
+      browser_root.locator("#global-notice-critical-deprecation--fake-deprecation").filter(
+        visible: true,
+      ),
+    ).not_to have_count(0)
   end
 
   it "shows warnings for Discourse and Ember deprecations triggered before the handler is set up" do
@@ -135,9 +155,17 @@ describe "JS Deprecation Handling" do
     t.save!
     SiteSetting.default_theme_id = t.id
 
-    visit "/latest"
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css("#global-notice-critical-deprecation--fake-deprecation1")
-    expect(page).to have_css("#global-notice-critical-deprecation--fake-deprecation2")
+    expect(
+      browser_root.locator("#global-notice-critical-deprecation--fake-deprecation1").filter(
+        visible: true,
+      ),
+    ).not_to have_count(0)
+    expect(
+      browser_root.locator("#global-notice-critical-deprecation--fake-deprecation2").filter(
+        visible: true,
+      ),
+    ).not_to have_count(0)
   end
 end

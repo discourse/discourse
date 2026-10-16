@@ -10,7 +10,11 @@ module PageObjects
       end
 
       def label_component
-        find(context, visible: :all).ancestor("label.d-toggle-switch__label")
+        browser_root
+          .locator(context)
+          .locator("xpath=ancestor::*")
+          .and(browser_page.locator("label.d-toggle-switch__label"))
+          .last
       end
 
       def toggle
@@ -18,23 +22,26 @@ module PageObjects
       end
 
       def checked?
-        label_component.has_css?(".d-toggle-switch__checkbox[aria-checked=\"true\"]", visible: :all)
+        have_count(0).does_not_match?(
+          label_component.locator(".d-toggle-switch__checkbox[aria-checked=\"true\"]"),
+        )
       end
 
       def unchecked?
-        label_component.has_css?(
-          ".d-toggle-switch__checkbox[aria-checked=\"false\"]",
-          visible: :all,
+        have_count(0).does_not_match?(
+          label_component.locator(".d-toggle-switch__checkbox[aria-checked=\"false\"]"),
         )
       end
 
       def disabled?
-        label_component.has_css?(".d-toggle-switch__checkbox[disabled]", visible: :all)
+        have_count(0).does_not_match?(
+          label_component.locator(".d-toggle-switch__checkbox[disabled]"),
+        )
       end
 
       def enabled?
-        label_component.has_no_css?(".d-toggle-switch__checkbox[disabled]", visible: :all) &&
-          label_component.has_css?(".d-toggle-switch__checkbox", visible: :all)
+        have_count(0).matches?(label_component.locator(".d-toggle-switch__checkbox[disabled]")) &&
+          have_count(0).does_not_match?(label_component.locator(".d-toggle-switch__checkbox"))
       end
     end
   end

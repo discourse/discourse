@@ -6,45 +6,125 @@ module PageObjects
       MODAL_CLASS = ".admin-install-theme-modal"
 
       def modal
-        find(MODAL_CLASS)
+        browser_root.locator(MODAL_CLASS).filter(visible: true)
       end
 
       def popular_options
-        all(".popular-theme-item")
+        browser_root
+          .locator(".popular-theme-item")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
       end
 
       def create_new_theme(name:, component: false)
-        within(MODAL_CLASS) do
-          find(".install-theme-item__create").click
-          find(".install-theme-content__theme-name").fill_in(with: name)
+        within_browser(MODAL_CLASS) do
+          browser_root.locator(".install-theme-item__create").filter(visible: true).click
+          browser_root
+            .locator(".install-theme-content__theme-name")
+            .filter(visible: true)
+            .fill(name)
 
           type_dropdown = PageObjects::Components::SelectKit.new(".single-select")
           expect(type_dropdown.value).to eq(component ? "components" : "themes")
 
-          click_button(I18n.t("admin_js.admin.customize.theme.create"))
+          browser_root
+            .locator(
+              "[id=#{I18n.t("admin_js.admin.customize.theme.create").to_s.to_json}], [name=#{I18n.t("admin_js.admin.customize.theme.create").to_s.to_json}]",
+            )
+            .or(
+              browser_root.get_by_role(
+                "button",
+                name: I18n.t("admin_js.admin.customize.theme.create"),
+              ),
+            )
+            .filter(visible: true)
+            .click
         end
       end
 
       def choose_remote_repository(url)
-        within(MODAL_CLASS) do
-          find(".install-theme-item__remote").click
-          find(".install-theme-content .repo input").fill_in(with: url)
+        within_browser(MODAL_CLASS) do
+          browser_root.locator(".install-theme-item__remote").filter(visible: true).click
+          browser_root.locator(".install-theme-content .repo input").filter(visible: true).fill(url)
         end
         self
       end
 
       def stage_private_theme
-        within(MODAL_CLASS) { find(".create-placeholder").click }
+        within_browser(MODAL_CLASS) do
+          browser_root.locator(".create-placeholder").filter(visible: true).click
+        end
       end
 
       def has_private_theme_actions_disabled?
-        has_button?(I18n.t("admin_js.admin.customize.theme.install"), disabled: true) &&
-          has_button?(I18n.t("admin_js.admin.customize.theme.create_placeholder"), disabled: true)
+        have_count(0).does_not_match?(
+          browser_root
+            .get_by_role("button")
+            .and(
+              browser_root.locator(
+                "[id=#{I18n.t("admin_js.admin.customize.theme.install").to_s.to_json}], [name=#{I18n.t("admin_js.admin.customize.theme.install").to_s.to_json}]",
+              ).or(
+                browser_root.get_by_role(
+                  "button",
+                  name: I18n.t("admin_js.admin.customize.theme.install"),
+                ),
+              ),
+            )
+            .and(browser_root.locator(":disabled"))
+            .filter(visible: true),
+        ) &&
+          have_count(0).does_not_match?(
+            browser_root
+              .get_by_role("button")
+              .and(
+                browser_root.locator(
+                  "[id=#{I18n.t("admin_js.admin.customize.theme.create_placeholder").to_s.to_json}], [name=#{I18n.t("admin_js.admin.customize.theme.create_placeholder").to_s.to_json}]",
+                ).or(
+                  browser_root.get_by_role(
+                    "button",
+                    name: I18n.t("admin_js.admin.customize.theme.create_placeholder"),
+                  ),
+                ),
+              )
+              .and(browser_root.locator(":disabled"))
+              .filter(visible: true),
+          )
       end
 
       def has_private_theme_actions_enabled?
-        has_button?(I18n.t("admin_js.admin.customize.theme.install"), disabled: false) &&
-          has_button?(I18n.t("admin_js.admin.customize.theme.create_placeholder"), disabled: false)
+        have_count(0).does_not_match?(
+          browser_root
+            .get_by_role("button")
+            .and(
+              browser_root.locator(
+                "[id=#{I18n.t("admin_js.admin.customize.theme.install").to_s.to_json}], [name=#{I18n.t("admin_js.admin.customize.theme.install").to_s.to_json}]",
+              ).or(
+                browser_root.get_by_role(
+                  "button",
+                  name: I18n.t("admin_js.admin.customize.theme.install"),
+                ),
+              ),
+            )
+            .and(browser_root.locator(":not(:disabled)"))
+            .filter(visible: true),
+        ) &&
+          have_count(0).does_not_match?(
+            browser_root
+              .get_by_role("button")
+              .and(
+                browser_root.locator(
+                  "[id=#{I18n.t("admin_js.admin.customize.theme.create_placeholder").to_s.to_json}], [name=#{I18n.t("admin_js.admin.customize.theme.create_placeholder").to_s.to_json}]",
+                ).or(
+                  browser_root.get_by_role(
+                    "button",
+                    name: I18n.t("admin_js.admin.customize.theme.create_placeholder"),
+                  ),
+                ),
+              )
+              .and(browser_root.locator(":not(:disabled)"))
+              .filter(visible: true),
+          )
       end
     end
   end

@@ -4,12 +4,12 @@ module PageObjects
   module Pages
     class GroupIndex < PageObjects::Pages::Base
       def visit
-        page.visit("/groups")
+        browser_page.goto("/groups").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def click_new_group
-        page.find(".groups-header-new").click
+        browser_root.locator(".groups-header-new").filter(visible: true).click
         self
       end
     end

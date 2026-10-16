@@ -26,7 +26,7 @@ describe "Request tracking" do
     it "tracks an anonymous visit correctly" do
       events =
         track_pageview_events do
-          visit "/"
+          browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           try_until_success do
             CachedCounting.flush
             expect(
@@ -57,7 +57,7 @@ describe "Request tracking" do
 
       events =
         track_pageview_events do
-          find(".nav-item_categories a").click
+          browser_root.locator(".nav-item_categories a").filter(visible: true).click
 
           try_until_success do
             CachedCounting.flush
@@ -94,7 +94,7 @@ describe "Request tracking" do
 
       events =
         track_pageview_events do
-          visit "/"
+          browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
           try_until_success do
             CachedCounting.flush
@@ -125,7 +125,7 @@ describe "Request tracking" do
 
       events =
         track_pageview_events do
-          visit "/"
+          browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
           try_until_success do
             CachedCounting.flush
@@ -157,11 +157,13 @@ describe "Request tracking" do
       expect(event.referrer).to be_blank
       expect(event.session_id).to be_present
       expect(event.topic_id).to be_blank
-      expect(event.language).to eq(page.evaluate_script("navigator.language"))
+      expect(event.language).to eq(
+        browser_page.evaluate("function(arguments) { return navigator.language }", arg: []),
+      )
 
       events =
         track_pageview_events do
-          find(".nav-item_categories a").click
+          browser_root.locator(".nav-item_categories a").filter(visible: true).click
           try_until_success do
             CachedCounting.flush
             expect(
@@ -198,7 +200,7 @@ describe "Request tracking" do
 
       events =
         track_pageview_events do
-          visit "/foobar"
+          browser_page.goto("/foobar").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
           try_until_success do
             CachedCounting.flush
@@ -253,7 +255,7 @@ describe "Request tracking" do
     it "tracks non-ember pages correctly" do
       events =
         track_pageview_events do
-          visit "/safe-mode"
+          browser_page.goto("/safe-mode").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
           try_until_success do
             CachedCounting.flush
@@ -289,7 +291,7 @@ describe "Request tracking" do
     it "tracks bootstrapped error pages correctly" do
       SiteSetting.bootstrap_error_pages = true
 
-      visit "/foobar"
+      browser_page.goto("/foobar").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       try_until_success do
         CachedCounting.flush
@@ -344,7 +346,7 @@ describe "Request tracking" do
 
       events =
         track_pageview_events do
-          visit "/pub/some-page"
+          browser_page.goto("/pub/some-page").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
           try_until_success do
             CachedCounting.flush
@@ -387,11 +389,14 @@ describe "Request tracking" do
       before { sign_in(current_user) }
 
       it "tracks a logged-in topic view during in-app navigation" do
-        visit "/"
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         events =
           track_pageview_events do
-            find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
+            browser_root
+              .locator(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']")
+              .filter(visible: true)
+              .click
 
             try_until_success do
               CachedCounting.flush
@@ -417,17 +422,22 @@ describe "Request tracking" do
         expect(event.ip_address.to_s).to eq("::1")
         expect(event.referrer).to eq("#{Discourse.base_url_no_prefix}/")
         expect(event.session_id).to be_present
-        expect(event.language).to eq(page.evaluate_script("navigator.language"))
+        expect(event.language).to eq(
+          browser_page.evaluate("function(arguments) { return navigator.language }", arg: []),
+        )
       end
     end
 
     context "when anonymous" do
       it "tracks an anonymous topic view during in-app navigation" do
-        visit "/"
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         events =
           track_pageview_events do
-            find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
+            browser_root
+              .locator(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']")
+              .filter(visible: true)
+              .click
 
             try_until_success do
               CachedCounting.flush
@@ -459,7 +469,7 @@ describe "Request tracking" do
         let(:discovery) { PageObjects::Pages::Discovery.new }
 
         it "tracks the previous URL as referrer on browser back and forward navigation via beacon" do
-          visit "/"
+          browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           wait_for_beacon_count(1)
 
           discovery.topic_list.visit_topic(topic)
@@ -467,7 +477,7 @@ describe "Request tracking" do
 
           events =
             track_pageview_events do
-              page.go_back
+              browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
               wait_for_beacon_count(3)
             end
 
@@ -478,7 +488,7 @@ describe "Request tracking" do
 
           events =
             track_pageview_events do
-              page.go_forward
+              browser_page.go_forward.tap { SystemBrowserBootstrap.wait_for(browser_page) }
               wait_for_beacon_count(4)
             end
 
@@ -489,12 +499,12 @@ describe "Request tracking" do
         end
 
         it "tracks browser pageviews when sorting a topic list" do
-          visit "/latest"
+          browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           wait_for_beacon_count(1)
 
           discovery.topic_list_header.click_sort_by("views")
 
-          expect(page).to have_current_path("/latest?ascending=false&order=views")
+          expect(browser_page).to have_url("/latest?ascending=false&order=views")
           wait_for_beacon_count(2)
         end
 
@@ -538,7 +548,9 @@ describe "Request tracking" do
         home_url = "#{Discourse.base_url_no_prefix}/"
 
         home_entries =
-          capture_log_entries(controller: "PageviewController", entries: 1) { visit "/" }
+          capture_log_entries(controller: "PageviewController", entries: 1) do
+            browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+          end
 
         expect(home_entries.first).to include(
           common_fields(
@@ -552,7 +564,10 @@ describe "Request tracking" do
 
         topic_entries =
           capture_log_entries(controller: "PageviewController", entries: 1) do
-            find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
+            browser_root
+              .locator(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']")
+              .filter(visible: true)
+              .click
           end
 
         expect(topic_entries.first).to include(

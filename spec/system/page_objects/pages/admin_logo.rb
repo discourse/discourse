@@ -4,7 +4,9 @@ module PageObjects
   module Pages
     class AdminLogo < PageObjects::Pages::Base
       def visit
-        page.visit("/admin/config/logo")
+        browser_page
+          .goto("/admin/config/logo")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       end
 
       def form

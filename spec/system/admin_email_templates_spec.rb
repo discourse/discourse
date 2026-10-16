@@ -28,14 +28,17 @@ describe "Admin Email Templates" do
     expect(email_templates_page).to have_preview_content(
       "This is a modified test body with some markdown formatting",
     )
-    expect(page).to have_css(".d-editor-preview strong", text: "markdown")
+    expect(browser_root.locator(".d-editor-preview strong").filter(visible: true)).to contain_text(
+      [browser_text_pattern("markdown")],
+      useInnerText: true,
+    )
 
     email_templates_page.save_changes
-    expect(page).to have_css(".save-button .saved")
+    expect(browser_root.locator(".save-button .saved").filter(visible: true)).not_to have_count(0)
 
     email_templates_page.visit_template("user_notifications.account_exists")
     expect(email_templates_page).to have_subject_value(subject_text)
-    expect(composer).to have_value(body_text)
+    expect(composer).to RSpecPredicates.have_value(body_text)
   end
 
   it "shows link to site texts for template with multiple subjects" do

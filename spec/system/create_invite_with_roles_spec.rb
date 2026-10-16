@@ -22,7 +22,7 @@ describe "Creating invites with roles" do
 
   def open_invite_modal_for(current_user)
     user_invited_pending_page.visit(current_user)
-    find(".user-invite-buttons .btn", match: :first).click
+    browser_root.locator(".user-invite-buttons .btn").filter(visible: true).first.click
   end
 
   context "when signed in as an admin" do
@@ -58,10 +58,10 @@ describe "Creating invites with roles" do
       expect(invite.admin).to eq(true)
       expect(invite.email).to eq("future-admin@example.com")
       expect(invite.max_redemptions_allowed).to eq(1)
-      expect(modal.invite_link_input.value).to eq(invite.link)
+      expect(modal.invite_link_input.input_value).to eq(invite.link)
 
       modal.close
-      Capybara.reset_sessions!
+      reset_browser_sessions
 
       invite_form.open(invite.invite_key)
       invite_form.fill_username("futureadmin")
@@ -84,7 +84,7 @@ describe "Creating invites with roles" do
       SiteSetting.enable_site_owner_onboarding = true
       banner = PageObjects::Components::AdminOnboardingBanner.new
 
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(banner.step_not_completed?("invite_collaborators")).to eq(true)
       screenshot_marker(label: "invite-onboarding-banner", only: :desktop)
 
@@ -137,7 +137,7 @@ describe "Creating invites with roles" do
 
       expect(modal).to have_summary
       cdp.clipboard_has_text?(Invite.last.link)
-      expect(page).to have_css(".copy-button.ok")
+      expect(browser_root.locator(".copy-button.ok").filter(visible: true)).not_to have_count(0)
       screenshot_marker(label: "invite-created", only: :desktop)
 
       invite = Invite.last
@@ -174,7 +174,10 @@ describe "Creating invites with roles" do
       modal.edit_button.click
 
       expect(modal).to have_no_role_toggle
-      expect(modal.save_button).to have_text(I18n.t("js.user.invited.invite_roles.update"))
+      expect(modal.save_button).to contain_text(
+        browser_text_pattern(I18n.t("js.user.invited.invite_roles.update")),
+        useInnerText: true,
+      )
 
       modal.cancel_button.click
       expect(modal).to have_summary
@@ -212,8 +215,12 @@ describe "Creating invites with roles" do
     it "shows the previous invite modal" do
       open_invite_modal_for(admin)
 
-      expect(page).to have_css(".create-invite-modal")
-      expect(page).to have_no_css(".create-invite-with-roles-modal")
+      expect(browser_root.locator(".create-invite-modal").filter(visible: true)).not_to have_count(
+        0,
+      )
+      expect(
+        browser_root.locator(".create-invite-with-roles-modal").filter(visible: true),
+      ).to have_count(0)
     end
   end
 end

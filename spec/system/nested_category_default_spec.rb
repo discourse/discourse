@@ -42,7 +42,7 @@ RSpec.describe "Nested view category default" do
     it "shows checkbox as checked when category has nested default enabled" do
       category_page.visit_settings(nested_category)
 
-      expect(form.field("category_setting.nested_replies_default")).to be_checked
+      expect(form.field("category_setting.nested_replies_default")).to RSpecPredicates.be_checked
     end
   end
 
@@ -50,17 +50,24 @@ RSpec.describe "Nested view category default" do
     before { sign_in(user) }
 
     it "renders nested view when visiting a topic URL directly" do
-      page.visit("/t/#{topic.slug}/#{topic.id}")
+      browser_page
+        .goto("/t/#{topic.slug}/#{topic.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
+      expect(browser_page).to have_url(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
     end
 
     it "renders nested view when clicking a topic from the category page" do
-      page.visit("/c/#{nested_category.slug}/#{nested_category.id}")
-      find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
+      browser_page
+        .goto("/c/#{nested_category.slug}/#{nested_category.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root
+        .locator(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']")
+        .filter(visible: true)
+        .click
 
-      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
+      expect(browser_page).to have_url(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
     end
 
@@ -73,18 +80,24 @@ RSpec.describe "Nested view category default" do
 
       topic_list.visit_topic(topic)
 
-      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
+      expect(browser_page).to have_url(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
-      try_until_success { expect(page.evaluate_script("window.scrollY")).to eq(0) }
+      try_until_success do
+        expect(
+          browser_page.evaluate("function(arguments) { return window.scrollY }", arg: []),
+        ).to eq(0)
+      end
     end
 
     it "does not redirect topics in categories without nested default" do
       normal_topic = Fabricate(:topic, user: user, category: category)
       Fabricate(:post, topic: normal_topic, user: user, post_number: 1)
 
-      page.visit("/t/#{normal_topic.slug}/#{normal_topic.id}")
+      browser_page
+        .goto("/t/#{normal_topic.slug}/#{normal_topic.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_current_path(%r{/t/#{normal_topic.slug}/#{normal_topic.id}})
+      expect(browser_page).to have_url(%r{/t/#{normal_topic.slug}/#{normal_topic.id}})
       expect(nested_view).to have_no_nested_view
     end
   end

@@ -24,7 +24,7 @@ RSpec.describe "Admin tag list site setting" do
 
     settings_page.save_setting("digest_suppress_tags")
 
-    page.refresh
+    browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(settings_page).to have_tags_in_setting("digest_suppress_tags", [tag_1, tag_2])
   end
@@ -43,7 +43,12 @@ RSpec.describe "Admin tag list site setting" do
     tag_chooser.select_row_by_name(tag_2.name)
 
     expect(tag_chooser).to have_selected_names(tag_1.name, tag_2.name)
-    expect(settings_page.find_setting("digest_suppress_tags")).to have_css(".setting-controls__ok")
+    expect(
+      settings_page
+        .find_setting("digest_suppress_tags")
+        .locator(".setting-controls__ok")
+        .filter(visible: true),
+    ).not_to have_count(0)
     expect(SiteSetting.digest_suppress_tags).to eq("")
   end
 end

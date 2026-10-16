@@ -9,10 +9,10 @@ RSpec.describe "Viewing User Menu" do
     it "only displays as many notifications as the limit" do
       sign_in(user)
 
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       3.times { Fabricate(:notification, user: user) }
-      page.execute_script <<~JS
+      browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: [])
         require("discourse/lib/plugin-api").withPluginApi("1.22.0", (api) => {
           api.setUserMenuNotificationsLimit(2);
         })
@@ -46,19 +46,22 @@ RSpec.describe "Viewing User Menu" do
 
     it "does not raise a JS error on click" do
       sign_in(user)
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       page_errors = []
-      page.driver.with_playwright_page do |pw_page|
+      browser_page.then do |pw_page|
         pw_page.on("pageerror", ->(error) { page_errors << error.message })
       end
 
       user_menu.open
       user_menu.click_bookmarks_tab
-      find("#quick-access-bookmarks li.bookmark-reminder a").click
+      browser_root
+        .locator("#quick-access-bookmarks li.bookmark-reminder a")
+        .filter(visible: true)
+        .click
 
-      expect(page).to have_current_path(%r{/t/})
-      expect(page_errors).to be_empty
+      expect(browser_page).to have_url(%r{/t/})
+      expect(page_errors).to RSpecPredicates.be_empty
     end
   end
 
@@ -76,7 +79,7 @@ RSpec.describe "Viewing User Menu" do
 
       sign_in(user_in_mentionable_group)
 
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       user_menu.open
 
@@ -99,7 +102,7 @@ RSpec.describe "Viewing User Menu" do
 
         sign_in(user2)
 
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         user_menu.open
 
@@ -126,7 +129,7 @@ RSpec.describe "Viewing User Menu" do
 
         sign_in(user2)
 
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         user_menu.open
 
         expect(user_menu).to have_user_full_name_messaged_notification(post, user)
@@ -148,7 +151,7 @@ RSpec.describe "Viewing User Menu" do
         Bookmark.create!(bookmarkable: post, user: user2)
         sign_in(user2)
 
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         user_menu.open
         user_menu.click_bookmarks_tab
         expect(user_menu).to have_user_full_name_bookmarked_notification(post, user)
@@ -170,7 +173,7 @@ RSpec.describe "Viewing User Menu" do
 
         sign_in(user2)
 
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         user_menu.open
 

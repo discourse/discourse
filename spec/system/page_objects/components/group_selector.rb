@@ -11,36 +11,82 @@ module PageObjects
       end
 
       def hidden?
-        find("#{@context}").has_no_css?(".group-selector")
+        have_count(0).matches?(
+          browser_root
+            .locator("#{@context}")
+            .filter(visible: true)
+            .tap do |parent|
+              parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+            end
+            .locator(".group-selector")
+            .filter(visible: true),
+        )
       end
 
       def has_selected_groups?(*group_names)
         selected_groups =
-          find("#{@context} .group-selector")
-            .all(".d-multi-select-trigger__selected-item")
-            .map { |item| item[:innerText] }
+          browser_root
+            .locator("#{@context} .group-selector")
+            .filter(visible: true)
+            .locator(".d-multi-select-trigger__selected-item")
+            .filter(visible: true)
+            .tap { |elements| elements.first.wait_for(state: "visible") }
+            .all
+            .map do |item|
+              item.evaluate(
+                "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+                arg: "innerText",
+              )
+            end
         expect(selected_groups & group_names).to match_array(group_names)
       end
 
       def has_no_selected_groups?
-        find("#{@context} .group-selector").has_no_css?(".d-multi-select-trigger__selected-item")
+        have_count(0).matches?(
+          browser_root
+            .locator("#{@context} .group-selector")
+            .filter(visible: true)
+            .tap do |parent|
+              parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+            end
+            .locator(".d-multi-select-trigger__selected-item")
+            .filter(visible: true),
+        )
       end
 
       def open
-        find(@context).find(".group-selector .d-multi-select-trigger__expand-btn").click
-        expect(page).to have_css(".fk-d-menu.d-multi-select-content")
+        browser_root
+          .locator(@context)
+          .filter(visible: true)
+          .locator(".group-selector .d-multi-select-trigger__expand-btn")
+          .filter(visible: true)
+          .click
+        expect(
+          browser_root.locator(".fk-d-menu.d-multi-select-content").filter(visible: true),
+        ).not_to have_count(0)
       end
 
       def add_group(group_name)
         self.open
-        find(".dropdown-menu__item.d-multi-select__search-container").fill_in(with: group_name)
-        find(".dropdown-menu__item.d-multi-select__result[title='#{group_name}']").click
+        browser_root
+          .locator(".dropdown-menu__item.d-multi-select__search-container input")
+          .filter(visible: true)
+          .fill(group_name)
+        browser_root
+          .locator(".dropdown-menu__item.d-multi-select__result[title='#{group_name}']")
+          .filter(visible: true)
+          .click
       end
 
       def remove_group(group_name)
-        find(@context)
-          .find(".group-selector .d-multi-select-trigger__selected-item", text: group_name)
-          .find(".d-multi-select-trigger__remove-selection-icon")
+        browser_root
+          .locator(@context)
+          .filter(visible: true)
+          .locator(".group-selector .d-multi-select-trigger__selected-item")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern(group_name))
+          .locator(".d-multi-select-trigger__remove-selection-icon")
+          .filter(visible: true)
           .click
       end
     end

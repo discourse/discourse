@@ -10,7 +10,7 @@ module PageObjects
       end
 
       def component
-        find(@context)
+        browser_root.locator(@context).filter(visible: true)
       end
 
       def open_calendar
@@ -18,11 +18,13 @@ module PageObjects
       end
 
       def visible_pikaday
-        find(".pika-single:not(.is-hidden)")
+        browser_root.locator(".pika-single:not(.is-hidden)").filter(visible: true)
       end
 
       def hidden?
-        page.has_no_css?(".pika-single:not(.is-hidden)")
+        have_count(0).matches?(
+          browser_root.locator(".pika-single:not(.is-hidden)").filter(visible: true),
+        )
       end
 
       def select_date(year, month, day)
@@ -33,7 +35,10 @@ module PageObjects
       end
 
       def select_day(day_number)
-        find("button.pika-button.pika-day[data-pika-day='#{day_number}']:not(.is-disabled)").click
+        browser_root
+          .locator("button.pika-button.pika-day[data-pika-day='#{day_number}']:not(.is-disabled)")
+          .filter(visible: true)
+          .click
       end
 
       # The month is 0-based. Month name can be provided too.
@@ -68,17 +73,18 @@ module PageObjects
         # visible: false is here because pikaday sets the controls
         # to opacity: 0 for some reason.
         visible_pikaday
-          .find(".pika-select-month", visible: false)
+          .locator(".pika-select-month")
           .click
-          .find("option[value='#{parsed_month}']")
+          .locator("option[value='#{parsed_month}']")
+          .filter(visible: true)
           .click
       end
 
       def select_year(year)
         # need to wait for the element since eval_on_selector doesn't
-        find(".pika-select-year", visible: false)
+        browser_root.locator(".pika-select-year")
 
-        page.driver.with_playwright_page do |playwright_page|
+        browser_page.then do |playwright_page|
           playwright_page.eval_on_selector(
             ".pika-select-year",
             "select => { select.value = '#{year}'; select.dispatchEvent(new Event('change', { bubbles: true })); }",

@@ -6,15 +6,17 @@ RSpec.describe "Network Disconnected" do
   it "NetworkConnectivity service adds class to DOM and displays offline indicator" do
     SiteSetting.enable_offline_indicator = true
 
-    visit("/c")
+    browser_page.goto("/c").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css(".d-header")
-    expect(page).to have_no_css("html.network-disconnected")
-    expect(page).to have_no_css(".offline-indicator")
+    expect(browser_root.locator(".d-header").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator("html.network-disconnected").filter(visible: true)).to have_count(0)
+    expect(browser_root.locator(".offline-indicator").filter(visible: true)).to have_count(0)
 
     cdp.with_network_disconnected do
-      expect(page).to have_css("html.network-disconnected")
-      expect(page).to have_css(".offline-indicator")
+      expect(
+        browser_root.locator("html.network-disconnected").filter(visible: true),
+      ).not_to have_count(0)
+      expect(browser_root.locator(".offline-indicator").filter(visible: true)).not_to have_count(0)
     end
   end
 end

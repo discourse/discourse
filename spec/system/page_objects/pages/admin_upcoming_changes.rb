@@ -4,7 +4,9 @@ module PageObjects
   module Pages
     class AdminUpcomingChanges < PageObjects::Pages::Base
       def visit
-        page.visit("/admin/config/upcoming-changes")
+        browser_page
+          .goto("/admin/config/upcoming-changes")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       end
 
       def change_item(setting_name)
@@ -14,8 +16,8 @@ module PageObjects
       def has_change?(setting_name, description: nil)
         description ||= SiteSettings::LabelFormatter.description(setting_name)
         change_item(setting_name).exists?
-        change_item(setting_name).has_text?(description)
-        change_item(setting_name).has_text?(
+        change_item(setting_name).has_displayed_text?(description)
+        change_item(setting_name).has_displayed_text?(
           SiteSettings::LabelFormatter.humanized_name(setting_name),
         )
       end
@@ -56,11 +58,16 @@ module PageObjects
             locale: locale,
           )
 
-        page.has_content?(enabled_for_success_text)
+        contain_text(browser_text_pattern(enabled_for_success_text), useInnerText: true).matches?(
+          browser_content,
+        )
       end
 
       def has_disabled_success_toast?
-        page.has_content?(I18n.t("admin_js.admin.upcoming_changes.change_disabled"))
+        contain_text(
+          browser_text_pattern(I18n.t("admin_js.admin.upcoming_changes.change_disabled")),
+          useInnerText: true,
+        ).matches?(browser_content)
       end
     end
   end

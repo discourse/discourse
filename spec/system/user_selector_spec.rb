@@ -13,26 +13,34 @@ describe "User selector" do
 
   context "when autocompleting a username" do
     it "correctly shows the user" do
-      visit("/t/-/#{topic.id}")
-      find(".btn-primary.create").click
-      find(".d-editor-input").send_keys("Hello @som")
+      browser_page.goto("/t/-/#{topic.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root.locator(".btn-primary.create").filter(visible: true).click
+      browser_root.locator(".d-editor-input").filter(visible: true).press_sequentially("Hello @som")
 
-      within(".autocomplete.ac-user") do |el|
-        expect(el).to have_selector(".selected .avatar[title=someone]")
-        expect(el.find(".selected .username")).to have_content("someone")
+      within_browser(browser_root.locator(".autocomplete.ac-user").filter(visible: true)) do |el|
+        expect(
+          el.locator(".selected .avatar[title=someone]").filter(visible: true),
+        ).not_to have_count(0)
+        expect(el.locator(".selected .username").filter(visible: true)).to contain_text(
+          browser_text_pattern("someone"),
+          useInnerText: true,
+        )
       end
     end
   end
 
   context "when autocompleting a group" do
     it "correctly shows the user" do
-      visit("/t/-/#{topic.id}")
-      find(".btn-primary.create").click
-      find(".d-editor-input").send_keys("Hello @adm")
+      browser_page.goto("/t/-/#{topic.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root.locator(".btn-primary.create").filter(visible: true).click
+      browser_root.locator(".d-editor-input").filter(visible: true).press_sequentially("Hello @adm")
 
-      within(".autocomplete.ac-user") do |el|
-        expect(el).to have_selector(".selected .d-icon-users")
-        expect(el.find(".selected .username")).to have_content("admins")
+      within_browser(browser_root.locator(".autocomplete.ac-user").filter(visible: true)) do |el|
+        expect(el.locator(".selected .d-icon-users").filter(visible: true)).not_to have_count(0)
+        expect(el.locator(".selected .username").filter(visible: true)).to contain_text(
+          browser_text_pattern("admins"),
+          useInnerText: true,
+        )
       end
     end
   end

@@ -37,8 +37,10 @@ RSpec.describe "Accept invitation via email code" do
     invite_form.choose_code_signup_username("invited-person")
     invite_form.continue_code_signup
 
-    expect(page).to have_current_path(topic.relative_url)
+    expect(browser_page).to have_url(topic.relative_url)
     expect(topic_page).to have_post_number(1)
-    expect(page).to have_css(".header-dropdown-toggle.current-user")
+    expect(
+      browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+    ).not_to have_count(0)
   end
 end

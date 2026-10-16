@@ -8,9 +8,11 @@ RSpec.describe "Viewing group members" do
 
   it "loads more group members when a user scrolls to the bottom of the list" do
     stub_const(GroupsController, "MEMBERS_DEFAULT_PAGE_SIZE", 2) do
-      visit("/g/#{group.name}/members")
+      browser_page
+        .goto("/g/#{group.name}/members")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_selector(".group-member", count: 3)
+      expect(browser_root.locator(".group-member").filter(visible: true)).to have_count(3)
     end
   end
 
@@ -18,11 +20,12 @@ RSpec.describe "Viewing group members" do
     group.add_owner(user_in_group_1)
     sign_in(Fabricate(:user))
 
-    visit("/g/#{group.name}/members")
+    browser_page
+      .goto("/g/#{group.name}/members")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css(
-      ".directory-table__cell.group-owner",
-      text: I18n.t("js.groups.members.owner"),
-    )
+    expect(
+      browser_root.locator(".directory-table__cell.group-owner").filter(visible: true),
+    ).to contain_text([browser_text_pattern(I18n.t("js.groups.members.owner"))], useInnerText: true)
   end
 end

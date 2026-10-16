@@ -4,11 +4,11 @@ module PageObjects
   module Modals
     class GroupDefaultNotifications < PageObjects::Modals::Base
       def click_yes
-        footer.find(".btn-primary").click
+        footer.locator(".btn-primary").filter(visible: true).click
       end
 
       def click_no
-        footer.find(".btn:not(.btn-primary)").click
+        footer.locator(".btn:not(.btn-primary)").filter(visible: true).click
       end
     end
   end

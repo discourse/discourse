@@ -27,14 +27,19 @@ module PageObjects
       end
 
       def has_replace_row_error?(index: 0, text:)
-        has_css?(
-          "#{ROOT_SELECTOR} [data-name^='replace_rows.#{index}.'] .form-kit__errors",
-          text: text,
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+          browser_root.locator(
+            "#{ROOT_SELECTOR} [data-name^='replace_rows.#{index}.'] .form-kit__errors",
+          ).filter(visible: true),
         )
       end
 
       def has_no_replace_row_error?(index: 0)
-        has_no_css?("#{ROOT_SELECTOR} [data-name^='replace_rows.#{index}.'] .form-kit__errors")
+        have_count(0).matches?(
+          browser_root.locator(
+            "#{ROOT_SELECTOR} [data-name^='replace_rows.#{index}.'] .form-kit__errors",
+          ).filter(visible: true),
+        )
       end
 
       def toggle_remove_all
@@ -44,19 +49,27 @@ module PageObjects
       end
 
       def click_confirm
-        find("#bulk-topics-confirm").click
+        browser_root.locator("#bulk-topics-confirm").filter(visible: true).click
       end
 
       def has_disabled_submit?
-        has_css?("#bulk-topics-confirm[disabled]")
+        have_count(0).does_not_match?(
+          browser_root.locator("#bulk-topics-confirm[disabled]").filter(visible: true),
+        )
       end
 
       def has_remove_all_notice?
-        has_css?("#{ROOT_SELECTOR} .manage-tags-form__warning")
+        have_count(0).does_not_match?(
+          browser_root.locator("#{ROOT_SELECTOR} .manage-tags-form__warning").filter(visible: true),
+        )
       end
 
       def has_no_remove_tag_selector?
-        has_no_css?("#{ROOT_SELECTOR} [data-name='remove_tags'] .tag-chooser")
+        have_count(0).matches?(
+          browser_root.locator("#{ROOT_SELECTOR} [data-name='remove_tags'] .tag-chooser").filter(
+            visible: true,
+          ),
+        )
       end
 
       private

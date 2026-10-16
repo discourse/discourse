@@ -28,14 +28,29 @@ describe "Lightbox | Photoswipe" do
     it "lets the user inspect a single image and quote it into the composer" do
       topic_page.visit_topic(topic)
 
-      lightbox_link = topic_page.post_by_number(1).find("a.lightbox")
-      lightbox_image = lightbox_link.find("img", visible: :all)
-      expected_width = lightbox_link["data-target-width"].presence || lightbox_image["width"]
-      expected_height = lightbox_link["data-target-height"].presence || lightbox_image["height"]
-      expected_src = lightbox_image["data-orig-src"].presence || lightbox_link["href"]
+      lightbox_link = topic_page.post_by_number(1).locator("a.lightbox").filter(visible: true)
+      lightbox_image = lightbox_link.locator("img")
+      expected_width =
+        lightbox_link.get_attribute("data-target-width").presence ||
+          lightbox_image.evaluate(
+            "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+            arg: "width",
+          )
+      expected_height =
+        lightbox_link.get_attribute("data-target-height").presence ||
+          lightbox_image.evaluate(
+            "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+            arg: "height",
+          )
+      expected_src =
+        lightbox_image.get_attribute("data-orig-src").presence ||
+          lightbox_link.evaluate(
+            "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+            arg: "href",
+          )
       lightbox_link.click
 
-      expect(lightbox).to be_visible
+      expect(lightbox).to RSpecPredicates.be_visible
 
       expect(lightbox).to have_no_counter
       expect(lightbox).to have_caption_title("first image")
@@ -60,7 +75,7 @@ describe "Lightbox | Photoswipe" do
       lightbox.quote_button.click
 
       expect(composer).to be_opened
-      editor_value = composer.composer_input.value
+      editor_value = composer.composer_input.input_value
       expect(editor_value).to include(
         "![first image|#{expected_width}x#{expected_height}](#{expected_src})",
       )
@@ -71,7 +86,7 @@ describe "Lightbox | Photoswipe" do
       post.update(cooked: post.cooked.gsub(%r{<span class="informations">[^<]*</span>}, ""))
       topic_page.visit_topic(topic)
 
-      topic_page.post_by_number(1).find("a.lightbox").click
+      topic_page.post_by_number(1).locator("a.lightbox").filter(visible: true).click
 
       expect(lightbox).to have_no_image_info_button
     end
@@ -88,9 +103,12 @@ describe "Lightbox | Photoswipe" do
     it "has the correct lightbox elements" do
       topic_page.visit_topic(topic)
 
-      find("#post_1 .lightbox-wrapper:nth-of-type(2) .lightbox").click
+      browser_root
+        .locator("#post_1 .lightbox-wrapper:nth-of-type(2) .lightbox")
+        .filter(visible: true)
+        .click
 
-      expect(lightbox).to be_visible
+      expect(lightbox).to RSpecPredicates.be_visible
 
       expect(lightbox).to have_counter("2 / 2")
       expect(lightbox).to have_caption_title("second image")
@@ -118,9 +136,12 @@ describe "Lightbox | Photoswipe" do
     it "supports reversed layout" do
       topic_page.visit_topic(topic)
 
-      find("#post_1 .lightbox-wrapper:nth-of-type(1) .lightbox").click
+      browser_root
+        .locator("#post_1 .lightbox-wrapper:nth-of-type(1) .lightbox")
+        .filter(visible: true)
+        .click
 
-      expect(lightbox).to be_visible
+      expect(lightbox).to RSpecPredicates.be_visible
 
       # text is reversed by CSS, so check for correct property
       expect(lightbox.counter).to have_computed_style(direction: "rtl")
@@ -147,19 +168,19 @@ describe "Lightbox | Photoswipe" do
       expect(lightbox).to have_image_source(upload_2)
       expect(lightbox).to have_caption_title("second image")
 
-      send_keys(:right)
+      browser_page.keyboard.press("ArrowRight")
 
       expect(lightbox).to have_counter("1 / 3")
       expect(lightbox).to have_image_source(upload_1)
       expect(lightbox).to have_caption_title("first image")
 
-      send_keys(:right)
+      browser_page.keyboard.press("ArrowRight")
 
       expect(lightbox).to have_counter("3 / 3")
       expect(lightbox).to have_image_source(upload_3)
       expect(lightbox).to have_caption_title("third image")
 
-      send_keys(:left)
+      browser_page.keyboard.press("ArrowLeft")
 
       expect(lightbox).to have_counter("1 / 3")
       expect(lightbox).to have_image_source(upload_1)
@@ -168,8 +189,12 @@ describe "Lightbox | Photoswipe" do
   end
 
   context "when on mobile", mobile: true do
-    let(:screen_center_x) { page.evaluate_script("window.innerWidth / 2") }
-    let(:screen_center_y) { page.evaluate_script("window.innerHeight / 2") }
+    let(:screen_center_x) do
+      browser_page.evaluate("function(arguments) { return window.innerWidth / 2 }", arg: [])
+    end
+    let(:screen_center_y) do
+      browser_page.evaluate("function(arguments) { return window.innerHeight / 2 }", arg: [])
+    end
 
     before do
       upload_1.update(width: 400, height: 300)
@@ -179,9 +204,9 @@ describe "Lightbox | Photoswipe" do
 
     it "lets the user toggle image controls and information before closing the lightbox" do
       topic_page.visit_topic(topic)
-      topic_page.post_by_number(1).find("a.lightbox").click
+      topic_page.post_by_number(1).locator("a.lightbox").filter(visible: true).click
 
-      expect(lightbox).to be_visible
+      expect(lightbox).to RSpecPredicates.be_visible
       expect(lightbox).to have_ui_visible
 
       tap_screen_at(screen_center_x, screen_center_y)
@@ -190,7 +215,7 @@ describe "Lightbox | Photoswipe" do
       tap_screen_at(screen_center_x, screen_center_y)
       expect(lightbox).to have_ui_visible
 
-      expect(lightbox).to be_visible
+      expect(lightbox).to RSpecPredicates.be_visible
       expect(lightbox).to have_no_caption_details
 
       lightbox.image_info_button.click
@@ -201,11 +226,11 @@ describe "Lightbox | Photoswipe" do
 
       expect(lightbox).to have_no_caption_details
 
-      expect(lightbox).to be_visible
+      expect(lightbox).to RSpecPredicates.be_visible
 
       tap_screen_at(50, 50)
 
-      expect(lightbox).to be_hidden
+      expect(lightbox).to RSpecPredicates.be_hidden
     end
   end
 
@@ -217,13 +242,13 @@ describe "Lightbox | Photoswipe" do
       )
 
       topic_page.visit_topic(topic)
-      lightbox_link = topic_page.post_by_number(1).find("a.lightbox")
+      lightbox_link = topic_page.post_by_number(1).locator("a.lightbox").filter(visible: true)
 
       lightbox_link.click
-      expect(lightbox).to be_visible
+      expect(lightbox).to RSpecPredicates.be_visible
 
-      expect(lightbox_link["data-target-width"]).to eq(upload_1.width.to_s)
-      expect(lightbox_link["data-target-height"]).to eq(upload_1.height.to_s)
+      expect(lightbox_link.get_attribute("data-target-width")).to eq(upload_1.width.to_s)
+      expect(lightbox_link.get_attribute("data-target-height")).to eq(upload_1.height.to_s)
     end
   end
 end

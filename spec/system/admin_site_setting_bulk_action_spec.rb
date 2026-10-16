@@ -12,17 +12,20 @@ describe "Admin Site Setting Bulk Action" do
   it "saves multiple site settings" do
     settings_page.visit
 
-    expect(banner).to be_hidden
+    expect(banner).to RSpecPredicates.be_hidden
 
     settings_page.fill_setting("title", "The Shell")
     settings_page.fill_setting("site_description", "A cool place")
 
-    expect(banner).to be_visible
-    expect(banner.element).to have_text("You have 2 unsaved changes")
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
+      browser_text_pattern("You have 2 unsaved changes"),
+      useInnerText: true,
+    )
 
     banner.click_save
 
-    expect(banner).to be_hidden
+    expect(banner).to RSpecPredicates.be_hidden
     expect(settings_page).to have_overridden_setting("title", value: "The Shell")
     expect(settings_page).to have_overridden_setting("site_description", value: "A cool place")
   end
@@ -32,13 +35,16 @@ describe "Admin Site Setting Bulk Action" do
     settings_page.fill_setting("min_password_length", 12)
     settings_page.fill_setting("min_admin_password_length", 13)
 
-    expect(banner).to be_visible
-    expect(banner.element).to have_text("You have 2 unsaved changes")
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
+      browser_text_pattern("You have 2 unsaved changes"),
+      useInnerText: true,
+    )
 
     banner.click_save
 
     expect(dialog).to be_open
-    expect(dialog).to have_content(
+    expect(dialog).to have_displayed_content(
       I18n.t(
         "admin_js.admin.site_settings.requires_confirmation_messages.min_password_length.prompt",
       ),
@@ -46,7 +52,7 @@ describe "Admin Site Setting Bulk Action" do
     dialog.click_yes
 
     expect(dialog).to be_open
-    expect(dialog).to have_content(
+    expect(dialog).to have_displayed_content(
       I18n.t(
         "admin_js.admin.site_settings.requires_confirmation_messages.min_admin_password_length.prompt",
       ),
@@ -62,13 +68,16 @@ describe "Admin Site Setting Bulk Action" do
     settings_page.fill_setting("min_password_length", 12)
     settings_page.fill_setting("min_admin_password_length", 13)
 
-    expect(banner).to be_visible
-    expect(banner.element).to have_text("You have 2 unsaved changes")
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
+      browser_text_pattern("You have 2 unsaved changes"),
+      useInnerText: true,
+    )
 
     banner.click_save
 
     expect(dialog).to be_open
-    expect(dialog).to have_content(
+    expect(dialog).to have_displayed_content(
       I18n.t(
         "admin_js.admin.site_settings.requires_confirmation_messages.min_password_length.prompt",
       ),
@@ -76,15 +85,18 @@ describe "Admin Site Setting Bulk Action" do
     dialog.click_yes
 
     expect(dialog).to be_open
-    expect(dialog).to have_content(
+    expect(dialog).to have_displayed_content(
       I18n.t(
         "admin_js.admin.site_settings.requires_confirmation_messages.min_admin_password_length.prompt",
       ),
     )
     dialog.click_no
 
-    expect(banner).to be_visible
-    expect(banner.element).to have_text("You have 2 unsaved changes")
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
+      browser_text_pattern("You have 2 unsaved changes"),
+      useInnerText: true,
+    )
   end
 
   it "pops up an error when saving invalid settings" do
@@ -92,19 +104,25 @@ describe "Admin Site Setting Bulk Action" do
     settings_page.fill_setting("title", "The Shell")
     settings_page.fill_setting("contact_email", "Ooops")
 
-    expect(banner).to be_visible
-    expect(banner.element).to have_text("You have 2 unsaved changes")
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
+      browser_text_pattern("You have 2 unsaved changes"),
+      useInnerText: true,
+    )
 
     banner.click_save
 
     expect(dialog).to be_open
-    expect(dialog).to have_content(
+    expect(dialog).to have_displayed_content(
       I18n.t("js.generic_error_with_reason", error: "contact_email: Invalid email address."),
     )
     dialog.click_ok
 
-    expect(banner).to be_visible
-    expect(banner.element).to have_text("You have 2 unsaved changes")
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
+      browser_text_pattern("You have 2 unsaved changes"),
+      useInnerText: true,
+    )
   end
 
   it "persists unsaved settings when browsing categories" do
@@ -113,18 +131,27 @@ describe "Admin Site Setting Bulk Action" do
     settings_page.fill_setting("title", "The Shell")
     settings_page.fill_setting("site_description", "A cool place")
 
-    expect(banner).to be_visible
-    expect(banner.element).to have_text("You have 2 unsaved changes")
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
+      browser_text_pattern("You have 2 unsaved changes"),
+      useInnerText: true,
+    )
 
     settings_page.navigate_to_category(:branding)
 
-    expect(banner).to be_visible
-    expect(banner.element).to have_text("You have 2 unsaved changes")
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
+      browser_text_pattern("You have 2 unsaved changes"),
+      useInnerText: true,
+    )
 
     settings_page.navigate_to_category(:required)
 
-    expect(banner).to be_visible
-    expect(banner.element).to have_text("You have 2 unsaved changes")
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
+      browser_text_pattern("You have 2 unsaved changes"),
+      useInnerText: true,
+    )
 
     expect(settings_page).to have_overridden_setting("title", value: "The Shell")
     expect(settings_page).to have_overridden_setting("site_description", value: "A cool place")
@@ -136,18 +163,25 @@ describe "Admin Site Setting Bulk Action" do
     settings_page.fill_setting("title", "The Shell")
     settings_page.fill_setting("site_description", "A cool place")
 
-    expect(banner).to be_visible
-    expect(banner.element).to have_text("You have 2 unsaved changes")
+    expect(banner).to RSpecPredicates.be_visible
+    expect(banner.element).to contain_text(
+      browser_text_pattern("You have 2 unsaved changes"),
+      useInnerText: true,
+    )
 
-    settings_page.find(".admin-sidebar-nav-link", text: "Dashboard").click
+    settings_page
+      .locator(".admin-sidebar-nav-link")
+      .filter(visible: true)
+      .filter(hasText: browser_text_pattern("Dashboard"))
+      .click
 
-    expect(settings_page).to have_current_path("/admin/site_settings/category/required")
+    expect(browser_page).to have_url("/admin/site_settings/category/required")
 
     expect(dialog).to be_open
-    expect(dialog).to have_content("You have 2 unsaved changes")
+    expect(dialog).to have_displayed_content("You have 2 unsaved changes")
 
     dialog.click_no
 
-    expect(settings_page).to have_current_path("/admin")
+    expect(browser_page).to have_url("/admin")
   end
 end

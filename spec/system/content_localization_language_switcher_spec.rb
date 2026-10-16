@@ -53,120 +53,150 @@ describe "Content localization language switcher" do
     SiteSetting.content_localization_enabled = false
     SiteSetting.content_localization_language_switcher = "anonymous"
 
-    visit("/")
-    expect(page).to have_no_css(switcher_selector)
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).to have_count(0)
 
     SiteSetting.content_localization_enabled = true
 
-    page.refresh
+    browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
     switcher.expand
-    expect(switcher).to have_content("English")
-    expect(switcher).to have_content("Japanese (日本語)")
-    expect(switcher).to have_content("Spanish (Español)")
+    expect(switcher).to have_displayed_content("English")
+    expect(switcher).to have_displayed_content("Japanese (日本語)")
+    expect(switcher).to have_displayed_content("Spanish (Español)")
 
     SiteSetting.content_localization_supported_locales = "ja"
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     switcher.expand
-    expect(switcher).not_to have_content("Español")
+    expect(switcher).to have_no_displayed_content("Español")
   end
 
   it "only shows the language switcher if turned on for various types of users (anon, logged in)" do
     SiteSetting.content_localization_language_switcher = "none"
-    visit("/")
-    expect(page).not_to have_css(switcher_selector)
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).to have_count(0)
 
     SiteSetting.content_localization_language_switcher = "anonymous"
-    visit("/")
-    expect(page).to have_css(switcher_selector)
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).not_to have_count(0)
 
     SiteSetting.content_localization_language_switcher = "all"
-    visit("/")
-    expect(page).to have_css(switcher_selector)
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).not_to have_count(0)
 
     sign_in(japanese_user)
 
     SiteSetting.content_localization_language_switcher = "none"
-    visit("/")
-    expect(page).not_to have_css(switcher_selector)
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).to have_count(0)
 
     SiteSetting.content_localization_language_switcher = "anonymous"
-    visit("/")
-    expect(page).not_to have_css(switcher_selector)
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).to have_count(0)
 
     SiteSetting.content_localization_language_switcher = "all"
-    visit("/")
-    expect(page).to have_css(switcher_selector)
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).not_to have_count(0)
   end
 
   it "lets anonymous visitors switch language when set_locale_from_cookie is also enabled" do
     SiteSetting.set_locale_from_cookie = true
     SiteSetting.content_localization_language_switcher = "anonymous"
 
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     language_switcher.select_language("es")
 
-    expect(topic_list).to have_content("Estrategias de vida de El arte de la guerra")
+    expect(topic_list).to have_displayed_content("Estrategias de vida de El arte de la guerra")
   end
 
   it "displays the current language code on the trigger button" do
     SiteSetting.content_localization_language_switcher = "all"
 
-    visit("/")
-    expect(page.find(switcher_selector)).to have_content("EN")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).to contain_text(
+      browser_text_pattern("EN"),
+      useInnerText: true,
+    )
 
     language_switcher.select_language("ja")
-    expect(page.find(switcher_selector)).to have_content("JA")
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).to contain_text(
+      browser_text_pattern("JA"),
+      useInnerText: true,
+    )
 
     language_switcher.select_language("es")
-    expect(page.find(switcher_selector)).to have_content("ES")
+    expect(browser_root.locator(switcher_selector).filter(visible: true)).to contain_text(
+      browser_text_pattern("ES"),
+      useInnerText: true,
+    )
   end
 
   it "shows localized content when switching languages (anon, logged in)" do
     SiteSetting.content_localization_language_switcher = "all"
 
-    visit("/")
-    expect(topic_list).to have_content("Life strategies from The Art of War")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(topic_list).to have_displayed_content("Life strategies from The Art of War")
 
     language_switcher.select_language("es")
 
-    expect(topic_list).to have_content("Estrategias de vida de El arte de la guerra")
+    expect(topic_list).to have_displayed_content("Estrategias de vida de El arte de la guerra")
     I18n.with_locale("es") do
-      expect(page.find("#navigation-bar")).to have_content(I18n.t("js.filters.latest.title"))
+      expect(browser_root.locator("#navigation-bar").filter(visible: true)).to contain_text(
+        browser_text_pattern(I18n.t("js.filters.latest.title")),
+        useInnerText: true,
+      )
     end
 
     sign_in(japanese_user)
 
-    visit("/")
-    expect(topic_list).to have_content("孫子兵法からの人生戦略")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(topic_list).to have_displayed_content("孫子兵法からの人生戦略")
     I18n.with_locale("ja") do
-      expect(page.find("#navigation-bar")).to have_content(I18n.t("js.filters.latest.title"))
+      expect(browser_root.locator("#navigation-bar").filter(visible: true)).to contain_text(
+        browser_text_pattern(I18n.t("js.filters.latest.title")),
+        useInnerText: true,
+      )
     end
 
     language_switcher.select_language("es")
 
-    expect(topic_list).to have_content("Estrategias de vida de El arte de la guerra")
+    expect(topic_list).to have_displayed_content("Estrategias de vida de El arte de la guerra")
     I18n.with_locale("es") do
-      expect(page.find("#navigation-bar")).to have_content(I18n.t("js.filters.latest.title"))
+      expect(browser_root.locator("#navigation-bar").filter(visible: true)).to contain_text(
+        browser_text_pattern(I18n.t("js.filters.latest.title")),
+        useInnerText: true,
+      )
     end
   end
 
   it "marks the current language as selected in the dropdown" do
     SiteSetting.content_localization_language_switcher = "all"
 
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     switcher.expand
 
-    expect(page).to have_css("[data-menu-option-id='en'].--selected")
-    expect(page).to have_no_css("[data-menu-option-id='ja'].--selected")
-    expect(page).to have_no_css("[data-menu-option-id='es'].--selected")
+    expect(
+      browser_root.locator("[data-menu-option-id='en'].--selected").filter(visible: true),
+    ).not_to have_count(0)
+    expect(
+      browser_root.locator("[data-menu-option-id='ja'].--selected").filter(visible: true),
+    ).to have_count(0)
+    expect(
+      browser_root.locator("[data-menu-option-id='es'].--selected").filter(visible: true),
+    ).to have_count(0)
 
     switcher.collapse
     language_switcher.select_language("ja")
     switcher.expand
 
-    expect(page).to have_css("[data-menu-option-id='ja'].--selected")
-    expect(page).to have_no_css("[data-menu-option-id='en'].--selected")
-    expect(page).to have_no_css("[data-menu-option-id='es'].--selected")
+    expect(
+      browser_root.locator("[data-menu-option-id='ja'].--selected").filter(visible: true),
+    ).not_to have_count(0)
+    expect(
+      browser_root.locator("[data-menu-option-id='en'].--selected").filter(visible: true),
+    ).to have_count(0)
+    expect(
+      browser_root.locator("[data-menu-option-id='es'].--selected").filter(visible: true),
+    ).to have_count(0)
   end
 end

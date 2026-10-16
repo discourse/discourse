@@ -4,16 +4,18 @@ module PageObjects
   module Pages
     class GroupActivityPosts < PageObjects::Pages::Base
       def visit(group)
-        page.visit("/g/#{group.name}/activity/posts")
+        browser_page
+          .goto("/g/#{group.name}/activity/posts")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def has_user_stream_item?(count:)
-        has_css?(".post-list-item", count: count)
+        have_count(count).matches?(browser_root.locator(".post-list-item").filter(visible: true))
       end
 
       def scroll_to_last_item
-        page.execute_script <<~JS
+        browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: [])
           document.querySelector('.post-list-item:last-of-type').scrollIntoView(true);
         JS
       end

@@ -33,18 +33,29 @@ describe "Composer Form Template" do
   end
 
   it "uses tag name instead of tag ID in form template preview" do
-    visit("/")
-    find("#create-topic").click
-    find(".category-chooser").click
-    find(".category-row[data-value='#{category.id}']").click
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    browser_root.locator("#create-topic").filter(visible: true).click
+    browser_root.locator(".category-chooser").filter(visible: true).click
+    browser_root.locator(".category-row[data-value='#{category.id}']").filter(visible: true).click
 
-    expect(page).to have_css(".form-template-field__multi-select[name='cat-breed']")
+    expect(
+      browser_root.locator(".form-template-field__multi-select[name='cat-breed']").filter(
+        visible: true,
+      ),
+    ).not_to have_count(0)
 
-    find(".form-template-field__multi-select[name='cat-breed']").select("PERSIAN")
+    browser_root
+      .locator(".form-template-field__multi-select[name='cat-breed']")
+      .filter(visible: true)
+      .select_option(label: "PERSIAN")
 
-    preview = find(".d-editor-preview")
-    expect(preview).to have_content("PERSIAN")
-    expect(preview).to have_no_content(tag1.id.to_s)
+    preview = browser_root.locator(".d-editor-preview").filter(visible: true)
+    expect(preview).to contain_text(browser_text_pattern("PERSIAN"), useInnerText: true)
+    expect(
+      preview.tap do |parent|
+        parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+      end,
+    ).not_to contain_text(browser_text_pattern(tag1.id.to_s), useInnerText: true)
   end
 end
 
@@ -80,16 +91,23 @@ describe "Composer Form Template with uppercase tag names" do
   end
 
   it "selects a tag whose name contains uppercase characters" do
-    visit("/")
-    find("#create-topic").click
-    find(".category-chooser").click
-    find(".category-row[data-value='#{category.id}']").click
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    browser_root.locator("#create-topic").filter(visible: true).click
+    browser_root.locator(".category-chooser").filter(visible: true).click
+    browser_root.locator(".category-row[data-value='#{category.id}']").filter(visible: true).click
 
-    expect(page).to have_css(".form-template-field__multi-select[name='priority']")
+    expect(
+      browser_root.locator(".form-template-field__multi-select[name='priority']").filter(
+        visible: true,
+      ),
+    ).not_to have_count(0)
 
-    find(".form-template-field__multi-select[name='priority']").select("HIGH")
+    browser_root
+      .locator(".form-template-field__multi-select[name='priority']")
+      .filter(visible: true)
+      .select_option(label: "HIGH")
 
-    preview = find(".d-editor-preview")
-    expect(preview).to have_content("HIGH")
+    preview = browser_root.locator(".d-editor-preview").filter(visible: true)
+    expect(preview).to contain_text(browser_text_pattern("HIGH"), useInnerText: true)
   end
 end

@@ -6,31 +6,46 @@ module PageObjects
       SECTION_SELECTOR = ".db-main [data-section-id='reports']"
 
       def has_section?
-        has_css?(SECTION_SELECTOR)
+        have_count(0).does_not_match?(browser_root.locator(SECTION_SELECTOR).filter(visible: true))
       end
 
       def card_identifiers
-        within(SECTION_SELECTOR) { all(".db-report__card").map { |el| el["data-identifier"] } }
+        within_browser(SECTION_SELECTOR) do
+          browser_root
+            .locator(".db-report__card")
+            .filter(visible: true)
+            .tap { |elements| elements.first.wait_for(state: "visible") }
+            .all
+            .map { |el| el.get_attribute("data-identifier") }
+        end
       end
 
       def has_cards_in_order?(identifiers)
-        has_css?("#{SECTION_SELECTOR} .db-report__card", count: identifiers.size) &&
+        have_count(identifiers.size).matches?(
+          browser_root.locator("#{SECTION_SELECTOR} .db-report__card").filter(visible: true),
+        ) &&
           identifiers.each_with_index.all? do |identifier, index|
-            has_css?(
-              "#{SECTION_SELECTOR} .db-report__card:nth-child(#{index + 1})[data-identifier='#{identifier}']",
+            have_count(0).does_not_match?(
+              browser_root.locator(
+                "#{SECTION_SELECTOR} .db-report__card:nth-child(#{index + 1})[data-identifier='#{identifier}']",
+              ).filter(visible: true),
             )
           end
       end
 
       def has_card?(identifier)
-        has_css?("#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']",
+          ).filter(visible: true),
+        )
       end
 
       def has_card_size?(identifier, rows:, cols:)
         selector = "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']"
         selector += cols > 1 ? ".--wide" : ":not(.--wide)"
         selector += rows > 1 ? ".--rows-#{rows}" : ":not([class*='--rows-'])"
-        has_css?(selector)
+        have_count(0).does_not_match?(browser_root.locator(selector).filter(visible: true))
       end
 
       def has_default_report?
@@ -38,45 +53,70 @@ module PageObjects
       end
 
       def has_no_card?(identifier)
-        has_no_css?("#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']")
+        have_count(0).matches?(
+          browser_root.locator(
+            "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']",
+          ).filter(visible: true),
+        )
       end
 
       def has_add_tile?
-        has_css?("#{SECTION_SELECTOR} .db-report__add-report")
+        have_count(0).does_not_match?(
+          browser_root.locator("#{SECTION_SELECTOR} .db-report__add-report").filter(visible: true),
+        )
       end
 
       def has_no_add_tile?
-        has_no_css?("#{SECTION_SELECTOR} .db-report__add-report")
+        have_count(0).matches?(
+          browser_root.locator("#{SECTION_SELECTOR} .db-report__add-report").filter(visible: true),
+        )
       end
 
       def has_cog?
-        has_css?("#{SECTION_SELECTOR} .db-section__header-action .btn")
+        have_count(0).does_not_match?(
+          browser_root.locator("#{SECTION_SELECTOR} .db-section__header-action .btn").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_no_cog?
-        has_no_css?("#{SECTION_SELECTOR} .db-section__header-action .btn")
+        have_count(0).matches?(
+          browser_root.locator("#{SECTION_SELECTOR} .db-section__header-action .btn").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_no_remove_button?(identifier)
-        has_no_css?(
-          "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}'] .db-report__remove",
+        have_count(0).matches?(
+          browser_root.locator(
+            "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}'] .db-report__remove",
+          ).filter(visible: true),
         )
       end
 
       def open_default_report
-        within(
-          "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{default_report_identifier}']",
-        ) { find(".db-report__name").click }
+        within_browser(
+          browser_root.locator(
+            "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{default_report_identifier}']",
+          ).filter(visible: true),
+        ) { browser_root.locator(".db-report__name").filter(visible: true).click }
         self
       end
 
       def open_manage_reports_via_tile
-        find("#{SECTION_SELECTOR} .db-report__add-report").click
+        browser_root
+          .locator("#{SECTION_SELECTOR} .db-report__add-report")
+          .filter(visible: true)
+          .click
         self
       end
 
       def open_manage_reports_via_cog
-        within(SECTION_SELECTOR) { find(".db-section__header-action .btn").click }
+        within_browser(SECTION_SELECTOR) do
+          browser_root.locator(".db-section__header-action .btn").filter(visible: true).click
+        end
         self
       end
 
@@ -88,21 +128,26 @@ module PageObjects
       end
 
       def has_label_for?(identifier, label)
-        has_css?(
-          "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}'] .db-report__label",
-          text: label,
+        contain_text([browser_text_pattern(label)], useInnerText: true).matches?(
+          browser_root.locator(
+            "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}'] .db-report__label",
+          ).filter(visible: true),
         )
       end
 
       def has_no_label_for?(identifier)
-        has_no_css?(
-          "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}'] .db-report__label",
+        have_count(0).matches?(
+          browser_root.locator(
+            "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}'] .db-report__label",
+          ).filter(visible: true),
         )
       end
 
       def has_empty_state_for?(identifier)
-        has_css?(
-          "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}'] .db-report__empty",
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}'] .db-report__empty",
+          ).filter(visible: true),
         )
       end
 

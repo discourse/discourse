@@ -50,11 +50,25 @@ RSpec.describe "CSV Exports" do
     end
 
     it "exports data" do
-      visit "admin/users/list/active"
-      click_button "Export"
+      browser_page
+        .goto("admin/users/list/active")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root
+        .locator("[id=#{"Export".to_s.to_json}], [name=#{"Export".to_s.to_json}]")
+        .or(browser_root.get_by_role("button", name: "Export"))
+        .filter(visible: true)
+        .click
 
-      visit "/u/#{admin.username}/messages"
-      click_link "[User List] Data export complete"
+      browser_page
+        .goto("/u/#{admin.username}/messages")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root
+        .locator(
+          "[id=#{"[User List] Data export complete".to_s.to_json}], [name=#{"[User List] Data export complete".to_s.to_json}]",
+        )
+        .or(browser_root.get_by_role("link", name: "[User List] Data export complete"))
+        .filter(visible: true)
+        .click
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
 
@@ -146,11 +160,25 @@ RSpec.describe "CSV Exports" do
     end
 
     it "exports data" do
-      visit "admin/logs/staff_action_logs"
-      click_button "Export"
+      browser_page
+        .goto("admin/logs/staff_action_logs")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root
+        .locator("[id=#{"Export".to_s.to_json}], [name=#{"Export".to_s.to_json}]")
+        .or(browser_root.get_by_role("button", name: "Export"))
+        .filter(visible: true)
+        .click
 
-      visit "/u/#{admin.username}/messages"
-      click_link "[Staff Action] Data export complete"
+      browser_page
+        .goto("/u/#{admin.username}/messages")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root
+        .locator(
+          "[id=#{"[Staff Action] Data export complete".to_s.to_json}], [name=#{"[Staff Action] Data export complete".to_s.to_json}]",
+        )
+        .or(browser_root.get_by_role("link", name: "[Staff Action] Data export complete"))
+        .filter(visible: true)
+        .click
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
 
@@ -178,11 +206,25 @@ RSpec.describe "CSV Exports" do
     end
 
     it "exports the Bookmarks report" do
-      visit "admin/reports/bookmarks"
-      click_button "Export"
+      browser_page
+        .goto("admin/reports/bookmarks")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root
+        .locator("[id=#{"Export".to_s.to_json}], [name=#{"Export".to_s.to_json}]")
+        .or(browser_root.get_by_role("button", name: "Export"))
+        .filter(visible: true)
+        .click
 
-      visit "/u/#{admin.username}/messages"
-      click_link "[Bookmarks] Data export complete"
+      browser_page
+        .goto("/u/#{admin.username}/messages")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root
+        .locator(
+          "[id=#{"[Bookmarks] Data export complete".to_s.to_json}], [name=#{"[Bookmarks] Data export complete".to_s.to_json}]",
+        )
+        .or(browser_root.get_by_role("link", name: "[Bookmarks] Data export complete"))
+        .filter(visible: true)
+        .click
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
 
@@ -199,11 +241,25 @@ RSpec.describe "CSV Exports" do
     fab!(:screened_email_2, :screened_email)
 
     it "exports data" do
-      visit "admin/logs/screened_emails"
-      click_button "Export"
+      browser_page
+        .goto("admin/logs/screened_emails")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root
+        .locator("[id=#{"Export".to_s.to_json}], [name=#{"Export".to_s.to_json}]")
+        .or(browser_root.get_by_role("button", name: "Export"))
+        .filter(visible: true)
+        .click
 
-      visit "/u/#{admin.username}/messages"
-      click_link "[Screened Email] Data export complete"
+      browser_page
+        .goto("/u/#{admin.username}/messages")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root
+        .locator(
+          "[id=#{"[Screened Email] Data export complete".to_s.to_json}], [name=#{"[Screened Email] Data export complete".to_s.to_json}]",
+        )
+        .or(browser_root.get_by_role("link", name: "[Screened Email] Data export complete"))
+        .filter(visible: true)
+        .click
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
 
@@ -236,11 +292,25 @@ RSpec.describe "CSV Exports" do
     fab!(:screened_ip_2, :screened_ip_address)
 
     it "exports data" do
-      visit "admin/logs/screened_ip_addresses"
-      click_button "Export"
+      browser_page
+        .goto("admin/logs/screened_ip_addresses")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root
+        .locator("[id=#{"Export".to_s.to_json}], [name=#{"Export".to_s.to_json}]")
+        .or(browser_root.get_by_role("button", name: "Export"))
+        .filter(visible: true)
+        .click
 
-      visit "/u/#{admin.username}/messages"
-      click_link "[Screened Ip] Data export complete"
+      browser_page
+        .goto("/u/#{admin.username}/messages")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root
+        .locator(
+          "[id=#{"[Screened Ip] Data export complete".to_s.to_json}], [name=#{"[Screened Ip] Data export complete".to_s.to_json}]",
+        )
+        .or(browser_root.get_by_role("link", name: "[Screened Ip] Data export complete"))
+        .filter(visible: true)
+        .click
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
 
@@ -268,11 +338,25 @@ RSpec.describe "CSV Exports" do
     fab!(:screened_url) { Fabricate(:screened_url, last_match_at: Time.current) }
 
     it "exports data" do
-      visit "admin/logs/screened_urls"
-      click_button "Export"
+      browser_page
+        .goto("admin/logs/screened_urls")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root
+        .locator("[id=#{"Export".to_s.to_json}], [name=#{"Export".to_s.to_json}]")
+        .or(browser_root.get_by_role("button", name: "Export"))
+        .filter(visible: true)
+        .click
 
-      visit "/u/#{admin.username}/messages"
-      click_link "[Screened Url] Data export complete"
+      browser_page
+        .goto("/u/#{admin.username}/messages")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root
+        .locator(
+          "[id=#{"[Screened Url] Data export complete".to_s.to_json}], [name=#{"[Screened Url] Data export complete".to_s.to_json}]",
+        )
+        .or(browser_root.get_by_role("link", name: "[Screened Url] Data export complete"))
+        .filter(visible: true)
+        .click
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
 

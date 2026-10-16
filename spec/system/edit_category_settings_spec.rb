@@ -21,8 +21,12 @@ describe "Edit Category Settings" do
 
       expect(form.field("default_view").value).to eq("hot")
 
-      visit "/c/#{category.slug}/#{category.id}"
-      expect(page).to have_css(".navigation-container .hot.active", text: "Hot")
+      browser_page
+        .goto("/c/#{category.slug}/#{category.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(
+        browser_root.locator(".navigation-container .hot.active").filter(visible: true),
+      ).to contain_text([browser_text_pattern("Hot")], useInnerText: true)
     end
   end
 

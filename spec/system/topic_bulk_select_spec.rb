@@ -33,7 +33,7 @@ describe "Topic bulk select" do
 
     it "removes the topics from the list" do
       sign_in(admin)
-      visit("/new?subset=replies")
+      browser_page.goto("/new?subset=replies").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       topic_list_header.click_bulk_select_button
       expect(topic_list).to have_topic_checkbox(topic)
@@ -52,7 +52,7 @@ describe "Topic bulk select" do
       create_post(topic: other_topic)
 
       sign_in(admin)
-      visit("/new?subset=replies")
+      browser_page.goto("/new?subset=replies").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       topic_list_header.click_bulk_select_button
       topic_list.click_topic_checkbox(topic)
@@ -76,7 +76,7 @@ describe "Topic bulk select" do
     context "with the bulk actions dropdown" do
       it "removes the topics from the list" do
         sign_in(admin)
-        visit("/new")
+        browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         topic_list_header.click_bulk_select_button
         expect(topic_list).to have_topic_checkbox(topic)
@@ -86,7 +86,10 @@ describe "Topic bulk select" do
         topic_list_header.click_bulk_select_topics_dropdown
         topic_list_header.click_bulk_button("dismiss-new")
 
-        expect(page).to have_text(I18n.t("js.topics.none.education.new"))
+        expect(browser_content).to contain_text(
+          browser_text_pattern(I18n.t("js.topics.none.education.new")),
+          useInnerText: true,
+        )
       end
 
       it "turns off bulk select after dismissing" do
@@ -94,7 +97,7 @@ describe "Topic bulk select" do
         create_post(user:, topic: other_topic)
 
         sign_in(admin)
-        visit("/new")
+        browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         topic_list_header.click_bulk_select_button
         topic_list.click_topic_checkbox(topic)
@@ -110,7 +113,7 @@ describe "Topic bulk select" do
     context "with the dismiss new button" do
       it "removes the topics from the list" do
         sign_in(admin)
-        visit("/new")
+        browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         topic_list_header.click_bulk_select_button
         expect(topic_list).to have_topic_checkbox(topic)
@@ -119,7 +122,10 @@ describe "Topic bulk select" do
 
         topic_list_controls.dismiss_new
 
-        expect(page).to have_text(I18n.t("js.topics.none.education.new"))
+        expect(browser_content).to contain_text(
+          browser_text_pattern(I18n.t("js.topics.none.education.new")),
+          useInnerText: true,
+        )
       end
 
       it "turns off bulk select after dismissing" do
@@ -127,7 +133,7 @@ describe "Topic bulk select" do
         create_post(user:, topic: other_topic)
 
         sign_in(admin)
-        visit("/new")
+        browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         topic_list_header.click_bulk_select_button
         topic_list.click_topic_checkbox(topic)
@@ -151,7 +157,7 @@ describe "Topic bulk select" do
 
     def open_manage_tags_modal(topics_to_select)
       sign_in(admin)
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       open_bulk_actions_modal(topics_to_select, "manage-tags")
       PageObjects::Modals::ManageTags.new
@@ -295,16 +301,20 @@ describe "Topic bulk select" do
         modal.click_confirm
 
         expect(topic_bulk_actions_modal).to have_errors
-        expect(page).to have_css(
-          ".topic-bulk-actions-modal__errors .badge-category",
-          text: category_b.name,
+        expect(
+          browser_root.locator(".topic-bulk-actions-modal__errors .badge-category").filter(
+            visible: true,
+          ),
+        ).to contain_text([browser_text_pattern(category_b.name)], useInnerText: true)
+        expect(
+          browser_root.locator(".topic-bulk-actions-modal__errors .discourse-tag").filter(
+            visible: true,
+          ),
+        ).to contain_text([browser_text_pattern(restricted_tag.name)], useInnerText: true)
+        expect(browser_root.locator("#bulk-topics-close").filter(visible: true)).not_to have_count(
+          0,
         )
-        expect(page).to have_css(
-          ".topic-bulk-actions-modal__errors .discourse-tag",
-          text: restricted_tag.name,
-        )
-        expect(page).to have_css("#bulk-topics-close")
-        expect(page).to have_no_css("#bulk-topics-confirm")
+        expect(browser_root.locator("#bulk-topics-confirm").filter(visible: true)).to have_count(0)
         expect(topic.reload.tags).to include(restricted_tag)
         expect(topic_2.reload.tags).not_to include(restricted_tag)
       end
@@ -314,7 +324,7 @@ describe "Topic bulk select" do
   context "when closing" do
     it "closes multiple topics" do
       sign_in(admin)
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       # Click bulk select button
       topic_list_header.click_bulk_select_button
@@ -341,16 +351,18 @@ describe "Topic bulk select" do
     it "closes single topic" do
       # Watch the topic as a user
       sign_in(user)
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       topic = topics.third
-      visit("/t/#{topic.slug}/#{topic.id}")
+      browser_page
+        .goto("/t/#{topic.slug}/#{topic.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       topic_page.watch_topic
       expect(topic_page).to have_read_post(1)
 
       # Bulk close the topic as an admin
-      using_session(:admin) do
+      using_browser_session(:admin) do
         sign_in(admin)
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         topic_list_header.click_bulk_select_button
         topic_list.click_topic_checkbox(topics.third)
         topic_list_header.click_bulk_select_topics_dropdown
@@ -361,14 +373,14 @@ describe "Topic bulk select" do
 
       # The bulk close posts a small action, which no longer marks the topic
       # unread, so the watching user does not get a new post notification badge.
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(topic_list).to have_no_unread_badge(topics.third)
     end
 
     it "closes topics with message" do
       # Bulk close the topic with a message
       sign_in(admin)
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       topic = topics.first
       topic_list_header.click_bulk_select_button
       topic_list.click_topic_checkbox(topics.first)
@@ -381,42 +393,46 @@ describe "Topic bulk select" do
       expect(topic_list).to have_closed_status(topics.first)
 
       # Check that the topic now has the message
-      visit("/t/#{topic.slug}/#{topic.id}")
-      expect(topic_page).to have_content("None of these are useful")
+      browser_page
+        .goto("/t/#{topic.slug}/#{topic.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(topic_page).to have_displayed_content("None of these are useful")
     end
 
     it "works with keyboard shortcuts" do
       SiteSetting.enable_unified_new = true
 
       sign_in(admin)
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_css("#site-logo")
+      expect(browser_root.locator("#site-logo").filter(visible: true)).not_to have_count(0)
 
-      send_keys([:shift, "b"])
+      browser_page.keyboard.press(%w[Shift b].join("+"))
       expect(topic_list).to have_bulk_select_enabled
-      send_keys("j")
-      send_keys("x") # toggle select
+      browser_page.keyboard.type("j")
+      browser_page.keyboard.type("x") # toggle select
       expect(topic_list).to have_checkbox_selected_on_row(1)
 
-      send_keys("x") # toggle deselect
+      browser_page.keyboard.type("x") # toggle deselect
       expect(topic_list).to have_no_checkbox_selected_on_row(1)
 
       # watch topic and add a reply so we have something in /new?subset=replies
       topic = topics.first
-      visit("/t/#{topic.slug}/#{topic.id}")
+      browser_page
+        .goto("/t/#{topic.slug}/#{topic.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       topic_page.watch_topic
       expect(topic_page).to have_read_post(1)
       Fabricate(:post, topic: topic)
 
-      visit("/new?subset=replies")
+      browser_page.goto("/new?subset=replies").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(topic_list).to have_topics
 
-      send_keys([:shift, "b"])
+      browser_page.keyboard.press(%w[Shift b].join("+"))
       expect(topic_list).to have_bulk_select_enabled
-      send_keys("j")
-      send_keys("x")
-      send_keys([:shift, "d"])
+      browser_page.keyboard.type("j")
+      browser_page.keyboard.type("x")
+      browser_page.keyboard.press(%w[Shift d].join("+"))
 
       expect(topic_list).to have_no_topics
     end
@@ -425,7 +441,7 @@ describe "Topic bulk select" do
   context "when deleting" do
     it "removes the deleted topics from the list" do
       sign_in(admin)
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       open_bulk_actions_modal([topics.first, topics.second], "delete-topics")
       topic_bulk_actions_modal.click_bulk_topics_confirm
@@ -458,13 +474,26 @@ describe "Topic bulk select" do
 
     it "allows moving private messages to the Archive" do
       sign_in(admin)
-      visit("/u/#{admin.username}/messages")
-      expect(page).to have_content(private_message_1.title)
+      browser_page
+        .goto("/u/#{admin.username}/messages")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_content).to contain_text(
+        browser_text_pattern(private_message_1.title),
+        useInnerText: true,
+      )
       open_bulk_actions_modal([private_message_1], "archive-messages")
       topic_bulk_actions_modal.click_bulk_topics_confirm
-      expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
-      visit("/u/#{admin.username}/messages/archive")
-      expect(page).to have_content(private_message_1.title)
+      expect(browser_content).to contain_text(
+        browser_text_pattern(I18n.t("js.topics.bulk.completed")),
+        useInnerText: true,
+      )
+      browser_page
+        .goto("/u/#{admin.username}/messages/archive")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_content).to contain_text(
+        browser_text_pattern(private_message_1.title),
+        useInnerText: true,
+      )
       expect(UserArchivedMessage.exists?(user_id: admin.id, topic_id: private_message_1.id)).to eq(
         true,
       )
@@ -473,24 +502,50 @@ describe "Topic bulk select" do
     it "allows moving private messages to the Inbox" do
       UserArchivedMessage.create!(user: admin, topic: private_message_1)
       sign_in(admin)
-      visit("/u/#{admin.username}/messages/archive")
-      expect(page).to have_content(private_message_1.title)
+      browser_page
+        .goto("/u/#{admin.username}/messages/archive")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_content).to contain_text(
+        browser_text_pattern(private_message_1.title),
+        useInnerText: true,
+      )
       open_bulk_actions_modal([private_message_1], "move-messages-to-inbox")
       topic_bulk_actions_modal.click_bulk_topics_confirm
-      expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
-      visit("/u/#{admin.username}/messages")
-      expect(page).to have_content(private_message_1.title)
+      expect(browser_content).to contain_text(
+        browser_text_pattern(I18n.t("js.topics.bulk.completed")),
+        useInnerText: true,
+      )
+      browser_page
+        .goto("/u/#{admin.username}/messages")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_content).to contain_text(
+        browser_text_pattern(private_message_1.title),
+        useInnerText: true,
+      )
     end
 
     it "allows moving group private messages to the scoped group Archive" do
       sign_in(admin)
-      visit("/u/#{admin.username}/messages/group/#{group.name}")
-      expect(page).to have_content(group_private_message.title)
+      browser_page
+        .goto("/u/#{admin.username}/messages/group/#{group.name}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_content).to contain_text(
+        browser_text_pattern(group_private_message.title),
+        useInnerText: true,
+      )
       open_bulk_actions_modal([group_private_message], "archive-messages")
       topic_bulk_actions_modal.click_bulk_topics_confirm
-      expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
-      visit("/u/#{admin.username}/messages/group/#{group.name}/archive")
-      expect(page).to have_content(group_private_message.title)
+      expect(browser_content).to contain_text(
+        browser_text_pattern(I18n.t("js.topics.bulk.completed")),
+        useInnerText: true,
+      )
+      browser_page
+        .goto("/u/#{admin.username}/messages/group/#{group.name}/archive")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_content).to contain_text(
+        browser_text_pattern(group_private_message.title),
+        useInnerText: true,
+      )
     end
 
     it "removes archived group messages from the current inbox after infinite-scroll pagination" do
@@ -506,11 +561,14 @@ describe "Topic bulk select" do
 
       stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
         sign_in(admin)
-        visit("/u/#{admin.username}/messages/group/#{group.name}")
+        browser_page
+          .goto("/u/#{admin.username}/messages/group/#{group.name}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(topic_list).to have_topics(count: 2)
-        page.execute_script(
-          "document.querySelector('.paginated-topics-list .load-more-sentinel').scrollIntoView()",
+        browser_page.evaluate(
+          "function(arguments) { document.querySelector('.paginated-topics-list .load-more-sentinel').scrollIntoView() }",
+          arg: [],
         )
         expect(topic_list).to have_topics(count: all_group_messages.size)
 
@@ -522,7 +580,10 @@ describe "Topic bulk select" do
         expect(topic_bulk_actions_modal).to be_open
         topic_bulk_actions_modal.click_bulk_topics_confirm
 
-        expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
+        expect(browser_content).to contain_text(
+          browser_text_pattern(I18n.t("js.topics.bulk.completed")),
+          useInnerText: true,
+        )
         all_group_messages.each do |topic|
           expect(topic_list).to have_no_topic(topic)
           expect(GroupArchivedMessage.exists?(group_id: group.id, topic_id: topic.id)).to eq(true)
@@ -532,25 +593,51 @@ describe "Topic bulk select" do
 
     it "allows archiving group private messages from the group inbox page" do
       sign_in(admin)
-      visit("/g/#{group.name}/messages/inbox")
-      expect(page).to have_content(group_private_message.title)
+      browser_page
+        .goto("/g/#{group.name}/messages/inbox")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_content).to contain_text(
+        browser_text_pattern(group_private_message.title),
+        useInnerText: true,
+      )
       open_bulk_actions_modal([group_private_message], "archive-messages")
       topic_bulk_actions_modal.click_bulk_topics_confirm
-      expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
-      visit("/g/#{group.name}/messages/archive")
-      expect(page).to have_content(group_private_message.title)
+      expect(browser_content).to contain_text(
+        browser_text_pattern(I18n.t("js.topics.bulk.completed")),
+        useInnerText: true,
+      )
+      browser_page
+        .goto("/g/#{group.name}/messages/archive")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_content).to contain_text(
+        browser_text_pattern(group_private_message.title),
+        useInnerText: true,
+      )
     end
 
     it "allows moving group private messages to the scoped group Inbox" do
       GroupArchivedMessage.create!(group: group, topic: group_private_message)
       sign_in(admin)
-      visit("/u/#{admin.username}/messages/group/#{group.name}/archive")
-      expect(page).to have_content(group_private_message.title)
+      browser_page
+        .goto("/u/#{admin.username}/messages/group/#{group.name}/archive")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_content).to contain_text(
+        browser_text_pattern(group_private_message.title),
+        useInnerText: true,
+      )
       open_bulk_actions_modal([group_private_message], "move-messages-to-inbox")
       topic_bulk_actions_modal.click_bulk_topics_confirm
-      expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
-      visit("/u/#{admin.username}/messages/group/#{group.name}")
-      expect(page).to have_content(group_private_message.title)
+      expect(browser_content).to contain_text(
+        browser_text_pattern(I18n.t("js.topics.bulk.completed")),
+        useInnerText: true,
+      )
+      browser_page
+        .goto("/u/#{admin.username}/messages/group/#{group.name}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_content).to contain_text(
+        browser_text_pattern(group_private_message.title),
+        useInnerText: true,
+      )
     end
 
     context "when in mobile" do
@@ -558,7 +645,9 @@ describe "Topic bulk select" do
         # behavior is already tested on desktop, we simply ensure
         # the general workflow is working on mobile
         sign_in(admin)
-        visit("/u/#{admin.username}/messages")
+        browser_page
+          .goto("/u/#{admin.username}/messages")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         open_bulk_actions_modal([private_message_1], "archive-messages")
       end
     end
@@ -567,7 +656,7 @@ describe "Topic bulk select" do
   context "when clicking on the row" do
     it "selects it" do
       sign_in(admin)
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       topic_list_header.click_bulk_select_button
       topic_list.click_topic_title(topics.last)
@@ -577,25 +666,26 @@ describe "Topic bulk select" do
 
     it "opens topic in new window when pressing meta+Enter" do
       sign_in(admin)
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       topic_list_header.click_bulk_select_button
 
       new_window =
-        window_opened_by do
-          find(".topic-list-item[data-topic-id='#{topics.last.id}'] a.raw-topic-link").send_keys(
-            %i[meta return],
-          )
+        browser_page.expect_popup do
+          browser_root
+            .locator(".topic-list-item[data-topic-id='#{topics.last.id}'] a.raw-topic-link")
+            .filter(visible: true)
+            .press(%w[Meta Enter].join("+"))
         end
 
-      within_window(new_window) { expect(topic_page).to have_topic_title(topics.last.title) }
+      using_browser_page(new_window) { expect(topic_page).to have_topic_title(topics.last.title) }
     end
   end
 
   context "when changing topic notification levels" do
     it "allows changing notification levels for selected topics" do
       sign_in(admin)
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       # Click bulk select button
       topic_list_header.click_bulk_select_button
@@ -613,7 +703,9 @@ describe "Topic bulk select" do
       expect(topic_bulk_actions_modal).to be_open
 
       # By default, the confirm button is disabled
-      expect(page).to have_css("#bulk-topics-confirm:disabled")
+      expect(
+        browser_root.locator("#bulk-topics-confirm:disabled").filter(visible: true),
+      ).not_to have_count(0)
 
       topic_bulk_actions_modal.select_notification_level(NotificationLevels.all[:muted])
       topic_bulk_actions_modal.click_bulk_topics_confirm
@@ -636,7 +728,7 @@ describe "Topic bulk select" do
     it "shows errors in the modal when some topics cannot be moved due to tag restrictions" do
       original_category = topics.first.category
       sign_in(Fabricate(:moderator))
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       open_bulk_actions_modal([topics.first], "update-category")
 

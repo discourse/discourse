@@ -4,7 +4,9 @@ module PageObjects
   module Pages
     class NotFound < PageObjects::Pages::Base
       def visible?
-        has_css?("div.page-not-found")
+        have_count(0).does_not_match?(
+          browser_root.locator("div.page-not-found").filter(visible: true),
+        )
       end
     end
   end

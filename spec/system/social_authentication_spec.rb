@@ -27,7 +27,9 @@ shared_examples "social authentication scenarios" do
         expect(signup_page).to have_no_right_side_column
 
         signup_page.click_create_account
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
     end
 
@@ -45,7 +47,9 @@ shared_examples "social authentication scenarios" do
         expect(signup_page).to have_no_right_side_column
 
         signup_page.click_create_account
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
 
       context "when the email is not verified" do
@@ -59,7 +63,9 @@ shared_examples "social authentication scenarios" do
           expect(signup_page).to have_no_right_side_column
 
           signup_page.click_create_account
-          expect(page).to have_css(".account-created")
+          expect(browser_root.locator(".account-created").filter(visible: true)).not_to have_count(
+            0,
+          )
         end
       end
     end
@@ -77,7 +83,9 @@ shared_examples "social authentication scenarios" do
         expect(signup_page).to have_valid_email
         expect(signup_page).to have_no_right_side_column
         signup_page.click_create_account
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
 
       context "when the email is not verified" do
@@ -90,7 +98,9 @@ shared_examples "social authentication scenarios" do
           expect(signup_page).to have_valid_email
           expect(signup_page).to have_no_right_side_column
           signup_page.click_create_account
-          expect(page).to have_css(".account-created")
+          expect(browser_root.locator(".account-created").filter(visible: true)).not_to have_count(
+            0,
+          )
         end
       end
 
@@ -113,7 +123,9 @@ shared_examples "social authentication scenarios" do
 
           expect(signup_page).to have_no_right_side_column
           signup_page.click_create_account
-          expect(page).to have_css(".header-dropdown-toggle.current-user")
+          expect(
+            browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+          ).not_to have_count(0)
         end
 
         it "works with a provided name" do
@@ -126,7 +138,9 @@ shared_examples "social authentication scenarios" do
           expect(signup_page).to have_disabled_name_input
 
           signup_page.click_create_account
-          expect(page).to have_css(".header-dropdown-toggle.current-user")
+          expect(
+            browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+          ).not_to have_count(0)
         end
       end
     end
@@ -145,7 +159,7 @@ shared_examples "social authentication scenarios" do
         expect(signup_page).to have_valid_email
         expect(signup_page).to have_no_right_side_column
         signup_page.click_create_account
-        expect(page).to have_css(".account-created")
+        expect(browser_root.locator(".account-created").filter(visible: true)).not_to have_count(0)
       end
 
       context "when the email is not verified" do
@@ -158,7 +172,9 @@ shared_examples "social authentication scenarios" do
           expect(signup_page).to have_valid_username
           expect(signup_page).to have_valid_email
           signup_page.click_create_account
-          expect(page).to have_css(".account-created")
+          expect(browser_root.locator(".account-created").filter(visible: true)).not_to have_count(
+            0,
+          )
         end
       end
     end
@@ -176,7 +192,9 @@ shared_examples "social authentication scenarios" do
         expect(signup_page).to have_valid_email
         expect(signup_page).to have_no_right_side_column
         signup_page.click_create_account
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
     end
 
@@ -194,7 +212,9 @@ shared_examples "social authentication scenarios" do
         expect(signup_page).to have_valid_email
         expect(signup_page).to have_no_right_side_column
         signup_page.click_create_account
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
     end
 
@@ -212,7 +232,9 @@ shared_examples "social authentication scenarios" do
         expect(signup_page).to have_valid_email
         expect(signup_page).to have_no_right_side_column
         signup_page.click_create_account
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
     end
 
@@ -236,7 +258,9 @@ shared_examples "social authentication scenarios" do
         expect(signup_page).to have_disabled_email
         expect(signup_page).to have_disabled_name
         signup_page.click_create_account
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
     end
 
@@ -251,7 +275,9 @@ shared_examples "social authentication scenarios" do
       it "creates the account directly" do
         mock_google_auth
         signup_page.open.click_social_button("google_oauth2")
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
 
       it "shows signup form when no username can be derived" do
@@ -260,7 +286,16 @@ shared_examples "social authentication scenarios" do
         signup_page.open.click_social_button("google_oauth2")
         expect(signup_page).to be_open
         expect(signup_page).to have_no_password_input
-        expect(page).to have_field("new-account-username", with: "")
+        expect(
+          browser_root
+            .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+            .and(
+              browser_root.locator(
+                "[id=#{"new-account-username".to_s.to_json}], [name=#{"new-account-username".to_s.to_json}]",
+              ).or(browser_root.get_by_label("new-account-username", exact: true)),
+            )
+            .filter(visible: true),
+        ).to have_value("")
       end
     end
 
@@ -279,63 +314,69 @@ shared_examples "social authentication scenarios" do
           SiteSetting.auth_immediately = true
           mock_google_auth
 
-          visit("/login")
+          browser_page.goto("/login").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(signup_page).to be_open
           expect(signup_page).to have_no_password_input
           expect(signup_page).to have_valid_username
           expect(signup_page).to have_valid_email
 
-          visit("/signup")
+          browser_page.goto("/signup").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(signup_page).to be_open
           expect(signup_page).to have_no_password_input
           expect(signup_page).to have_valid_username
           expect(signup_page).to have_valid_email
 
-          visit("/")
+          browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(signup_page).to be_open
           expect(signup_page).to have_no_password_input
           expect(signup_page).to have_valid_username
           expect(signup_page).to have_valid_email
 
           signup_page.click_create_account
-          expect(page).to have_css(".header-dropdown-toggle.current-user")
+          expect(
+            browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+          ).not_to have_count(0)
         end
 
         it "shows the login-required page when auth_immediately is disabled" do
           SiteSetting.auth_immediately = false
           mock_google_auth
 
-          visit("/login")
+          browser_page.goto("/login").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(signup_page).to be_open
 
-          visit("/")
-          expect(page).to have_css(".login-welcome")
-          expect(page).to have_css(".site-logo")
+          browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+          expect(browser_root.locator(".login-welcome").filter(visible: true)).not_to have_count(0)
+          expect(browser_root.locator(".site-logo").filter(visible: true)).not_to have_count(0)
 
-          find(".login-welcome .login-button").click
+          browser_root.locator(".login-welcome .login-button").filter(visible: true).click
           expect(signup_page).to be_open
 
-          visit("/")
-          find(".login-welcome .sign-up-button").click
+          browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+          browser_root.locator(".login-welcome .sign-up-button").filter(visible: true).click
           expect(signup_page).to be_open
           expect(signup_page).to have_no_password_input
           expect(signup_page).to have_valid_username
           expect(signup_page).to have_valid_email
           signup_page.click_create_account
-          expect(page).to have_css(".header-dropdown-toggle.current-user")
+          expect(
+            browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+          ).not_to have_count(0)
         end
 
         it "automatically redirects when going to /signup" do
           SiteSetting.auth_immediately = false
           mock_google_auth
 
-          visit("/signup")
+          browser_page.goto("/signup").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(signup_page).to be_open
           expect(signup_page).to have_no_password_input
           expect(signup_page).to have_valid_username
           expect(signup_page).to have_valid_email
           signup_page.click_create_account
-          expect(page).to have_css(".header-dropdown-toggle.current-user")
+          expect(
+            browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+          ).not_to have_count(0)
         end
 
         it "automatically redirects when skipping the signup form" do
@@ -343,8 +384,10 @@ shared_examples "social authentication scenarios" do
           SiteSetting.auth_immediately = true
           mock_google_auth
 
-          visit("/login")
-          expect(page).to have_css(".header-dropdown-toggle.current-user")
+          browser_page.goto("/login").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+          expect(
+            browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+          ).not_to have_count(0)
         end
       end
 
@@ -352,27 +395,29 @@ shared_examples "social authentication scenarios" do
         SiteSetting.auth_immediately = false
         mock_google_auth
 
-        visit("/")
-        find(".header-buttons .login-button").click
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        browser_root.locator(".header-buttons .login-button").filter(visible: true).click
         expect(signup_page).to be_open
         expect(signup_page).to have_no_password_input
         expect(signup_page).to have_valid_username
         expect(signup_page).to have_valid_email
 
-        visit("/login")
+        browser_page.goto("/login").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(signup_page).to be_open
         expect(signup_page).to have_no_password_input
         expect(signup_page).to have_valid_username
         expect(signup_page).to have_valid_email
 
-        visit("/signup")
+        browser_page.goto("/signup").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(signup_page).to be_open
         expect(signup_page).to have_no_password_input
         expect(signup_page).to have_valid_username
         expect(signup_page).to have_valid_email
 
         signup_page.click_create_account
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
 
       it "redirects the user back to the last page they visited" do
@@ -380,9 +425,9 @@ shared_examples "social authentication scenarios" do
 
         category = Fabricate(:category)
 
-        visit(category.url)
+        browser_page.goto(category.url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        find(".header-buttons .login-button").click
+        browser_root.locator(".header-buttons .login-button").filter(visible: true).click
 
         expect(signup_page).to be_open
         expect(signup_page).to have_no_password_input
@@ -391,8 +436,10 @@ shared_examples "social authentication scenarios" do
 
         signup_page.click_create_account
 
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
-        expect(page).to have_current_path(category.url)
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
+        expect(browser_page).to have_url(category.url)
       end
     end
   end
@@ -414,19 +461,21 @@ shared_examples "social authentication scenarios" do
       it "logs in user" do
         mock_facebook_auth
         signup_page.open.click_social_button("facebook")
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
 
       it "removes destination_url cookie if present after setting up redirect" do
         mock_facebook_auth
-        visit("/")
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         category = Fabricate(:category)
 
         signup_page.open
 
         # Manually set the destination_url, as if it were set by a plugin
-        page.driver.with_playwright_page do |pw_page|
+        browser_page.then do |pw_page|
           pw_page.context.add_cookies(
             [{ url: pw_page.url, name: :destination_url, value: category.url }],
           )
@@ -437,10 +486,10 @@ shared_examples "social authentication scenarios" do
         end
 
         signup_page.click_social_button("facebook")
-        expect(page).to have_current_path(category.url)
+        expect(browser_page).to have_url(category.url)
 
         # Ensure the destination_url cookie was removed after being used
-        page.driver.with_playwright_page do |pw_page|
+        browser_page.then do |pw_page|
           cookie_found =
             pw_page.context.cookies.any? { |cookie| cookie["name"] == "destination_url" }
           expect(cookie_found).to be_falsey
@@ -458,9 +507,13 @@ shared_examples "social authentication scenarios" do
           mock_facebook_auth
           signup_page.open.click_social_button("facebook")
 
-          expect(page).to have_css(
-            ".alert-error",
-            text: I18n.t("login.suspended", date: I18n.l(user.suspended_till, format: :date_only)),
+          expect(browser_root.locator(".alert-error").filter(visible: true)).to contain_text(
+            [
+              browser_text_pattern(
+                I18n.t("login.suspended", date: I18n.l(user.suspended_till, format: :date_only)),
+              ),
+            ],
+            useInnerText: true,
           )
         end
       end
@@ -473,7 +526,9 @@ shared_examples "social authentication scenarios" do
       it "logs in user" do
         mock_google_auth
         signup_page.open.click_social_button("google_oauth2")
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
     end
 
@@ -484,7 +539,9 @@ shared_examples "social authentication scenarios" do
       it "logs in user" do
         mock_github_auth
         signup_page.open.click_social_button("github")
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
     end
 
@@ -501,7 +558,9 @@ shared_examples "social authentication scenarios" do
 
         mock_twitter_auth
         signup_page.open.click_social_button("twitter")
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
     end
 
@@ -512,7 +571,9 @@ shared_examples "social authentication scenarios" do
       it "logs in user" do
         mock_discord_auth
         signup_page.open.click_social_button("discord")
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
     end
 
@@ -524,7 +585,9 @@ shared_examples "social authentication scenarios" do
       it "logs in user" do
         mock_linkedin_auth
         signup_page.open.click_social_button("linkedin_oidc")
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
     end
   end
@@ -533,15 +596,25 @@ shared_examples "social authentication scenarios" do
     before { enable_auth_provider(:google_oauth2) }
 
     it "shows the unauthorized error message" do
-      visit("/auth/failure?message=unauthorized")
+      browser_page
+        .goto("/auth/failure?message=unauthorized")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_css(".alert-error", text: I18n.t("login.omniauth_error.unauthorized"))
+      expect(browser_root.locator(".alert-error").filter(visible: true)).to contain_text(
+        [browser_text_pattern(I18n.t("login.omniauth_error.unauthorized"))],
+        useInnerText: true,
+      )
     end
 
     it "shows the request_error message" do
-      visit("/auth/failure?message=request_error")
+      browser_page
+        .goto("/auth/failure?message=request_error")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_css(".alert-error", text: I18n.t("login.omniauth_error.request_error"))
+      expect(browser_root.locator(".alert-error").filter(visible: true)).to contain_text(
+        [browser_text_pattern(I18n.t("login.omniauth_error.request_error"))],
+        useInnerText: true,
+      )
     end
   end
 end

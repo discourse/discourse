@@ -8,8 +8,12 @@ module PageObjects
       BADGE_SELECTORS = { "No match" => ".db-pill.--neg", "Poor match" => ".db-pill.--neg" }.freeze
 
       def has_headline?(title, summary)
-        has_css?("#{SECTION} .db-section__subintro h3", exact_text: title) &&
-          has_css?("#{SECTION} .db-section__subintro p", exact_text: summary)
+        contain_text([browser_exact_text_pattern(title)], useInnerText: true).matches?(
+          browser_root.locator("#{SECTION} .db-section__subintro h3").filter(visible: true),
+        ) &&
+          contain_text([browser_exact_text_pattern(summary)], useInnerText: true).matches?(
+            browser_root.locator("#{SECTION} .db-section__subintro p").filter(visible: true),
+          )
       end
 
       def has_total_searches_kpi?(value, improving_delta: nil, worsening_delta: nil)
@@ -27,26 +31,37 @@ module PageObjects
           value,
           improving_delta: improving_delta,
           worsening_delta: worsening_delta,
-        ) && has_no_css?("#{kpi_selector("no_result_rate")} .db-section__metric-number.--neg")
+        ) &&
+          have_count(0).matches?(
+            browser_root.locator(
+              "#{kpi_selector("no_result_rate")} .db-section__metric-number.--neg",
+            ).filter(visible: true),
+          )
       end
 
       def has_alert_no_result_rate_kpi?(value)
-        has_css?(
-          "#{kpi_selector("no_result_rate")} .db-section__metric-number.--neg",
-          exact_text: value,
+        contain_text([browser_exact_text_pattern(value)], useInnerText: true).matches?(
+          browser_root.locator(
+            "#{kpi_selector("no_result_rate")} .db-section__metric-number.--neg",
+          ).filter(visible: true),
         )
       end
 
       def has_no_kpi_deltas?
-        has_no_css?("#{SECTION} .db-delta")
+        have_count(0).matches?(browser_root.locator("#{SECTION} .db-delta").filter(visible: true))
       end
 
       def has_no_kpis?
-        has_no_css?("#{SECTION} .db-section__metric")
+        have_count(0).matches?(
+          browser_root.locator("#{SECTION} .db-section__metric").filter(visible: true),
+        )
       end
 
       def hover_total_searches_tooltip
-        find("#{SECTION} [data-trigger][data-identifier='search-total-searches-tooltip']").hover
+        browser_root
+          .locator("#{SECTION} [data-trigger][data-identifier='search-total-searches-tooltip']")
+          .filter(visible: true)
+          .hover
         self
       end
 
@@ -55,7 +70,10 @@ module PageObjects
       end
 
       def hover_no_result_rate_tooltip
-        find("#{SECTION} [data-trigger][data-identifier='search-no-result-rate-tooltip']").hover
+        browser_root
+          .locator("#{SECTION} [data-trigger][data-identifier='search-no-result-rate-tooltip']")
+          .filter(visible: true)
+          .hover
         self
       end
 
@@ -64,7 +82,10 @@ module PageObjects
       end
 
       def hover_trending_tooltip
-        find("#{SECTION} [data-trigger][data-identifier='search-trending-tooltip']").hover
+        browser_root
+          .locator("#{SECTION} [data-trigger][data-identifier='search-trending-tooltip']")
+          .filter(visible: true)
+          .hover
         self
       end
 
@@ -74,50 +95,94 @@ module PageObjects
 
       def has_trending_rows?(rows)
         within_block("Trending searches") do
-          next false unless has_css?("[data-test-search-term-row]", count: rows.size)
+          unless have_count(rows.size).matches?(
+                   browser_root.locator("[data-test-search-term-row]").filter(visible: true),
+                 )
+            next false
+          end
 
           rows.each_with_index.all? do |row, index|
             nth = "[data-test-search-term-row]:nth-child(#{index + 1})"
-            has_css?("#{nth} a", text: row[:term]) && has_css?(nth, text: row[:searches].to_s)
+            contain_text([browser_text_pattern(row[:term])], useInnerText: true).matches?(
+              browser_root.locator("#{nth} a").filter(visible: true),
+            ) &&
+              contain_text(
+                [browser_text_pattern(row[:searches].to_s)],
+                useInnerText: true,
+              ).matches?(browser_root.locator(nth).filter(visible: true))
           end
         end
       end
 
       def click_trending_term(term)
         within_block("Trending searches") do
-          find("[data-test-search-term-row] a", text: term).click
+          browser_root
+            .locator("[data-test-search-term-row] a")
+            .filter(visible: true)
+            .filter(hasText: browser_text_pattern(term))
+            .click
         end
       end
 
       def has_no_trending_term?(term)
         within_block("Trending searches") do
-          has_no_css?("[data-test-search-term-row] a", text: term)
+          contain_text([browser_text_pattern(term)], useInnerText: true).does_not_match?(
+            browser_root.locator("[data-test-search-term-row] a").filter(visible: true),
+          )
         end
       end
 
       def has_trending_empty_state?(message)
-        within_block("Trending searches") { has_text?(message) }
+        within_block("Trending searches") do
+          contain_text(browser_text_pattern(message), useInnerText: true).matches?(browser_content)
+        end
       end
 
       def has_content_gap_rows?(rows)
         within_block("Content gaps") do
-          next false unless has_css?("[data-test-search-term-row]", count: rows.size)
+          unless have_count(rows.size).matches?(
+                   browser_root.locator("[data-test-search-term-row]").filter(visible: true),
+                 )
+            next false
+          end
 
           rows.each_with_index.all? do |row, index|
             nth = "[data-test-search-term-row]:nth-child(#{index + 1})"
-            has_css?("#{nth} a", text: row[:term]) && has_css?(nth, text: row[:searches].to_s) &&
-              has_css?("#{nth} #{BADGE_SELECTORS.fetch(row[:badge])}", text: row[:badge])
+            contain_text([browser_text_pattern(row[:term])], useInnerText: true).matches?(
+              browser_root.locator("#{nth} a").filter(visible: true),
+            ) &&
+              contain_text(
+                [browser_text_pattern(row[:searches].to_s)],
+                useInnerText: true,
+              ).matches?(browser_root.locator(nth).filter(visible: true)) &&
+              contain_text([browser_text_pattern(row[:badge])], useInnerText: true).matches?(
+                browser_root.locator("#{nth} #{BADGE_SELECTORS.fetch(row[:badge])}").filter(
+                  visible: true,
+                ),
+              )
           end
         end
       end
 
       def click_content_gap_term(term)
-        within_block("Content gaps") { find("[data-test-search-term-row] a", text: term).click }
+        within_block("Content gaps") do
+          browser_root
+            .locator("[data-test-search-term-row] a")
+            .filter(visible: true)
+            .filter(hasText: browser_text_pattern(term))
+            .click
+        end
       end
 
       def hover_content_gap_badge(term)
         within_block("Content gaps") do
-          find("[data-test-search-term-row]", text: term).find(".db-pill").hover
+          browser_root
+            .locator("[data-test-search-term-row]")
+            .filter(visible: true)
+            .filter(hasText: browser_text_pattern(term))
+            .locator(".db-pill")
+            .filter(visible: true)
+            .hover
         end
         self
       end
@@ -127,33 +192,53 @@ module PageObjects
       end
 
       def has_content_gaps_empty_state?(message)
-        within_block("Content gaps") { has_text?(message) }
+        within_block("Content gaps") do
+          contain_text(browser_text_pattern(message), useInnerText: true).matches?(browser_content)
+        end
       end
 
       def has_logging_disabled_notice?(message)
-        has_css?(SECTION, text: message) &&
-          has_css?(
-            "#{SECTION} a[href='/admin/site_settings/category/all_results?filter=log%20search%20queries']",
-            text: "log search queries",
+        contain_text([browser_text_pattern(message)], useInnerText: true).matches?(
+          browser_root.locator(SECTION).filter(visible: true),
+        ) &&
+          contain_text([browser_text_pattern("log search queries")], useInnerText: true).matches?(
+            browser_root.locator(
+              "#{SECTION} a[href='/admin/site_settings/category/all_results?filter=log%20search%20queries']",
+            ).filter(visible: true),
           )
       end
 
       def has_moderator_logging_disabled_notice?(message)
-        has_css?(SECTION, text: message) && has_no_css?("#{SECTION} .db-section__callout a")
+        contain_text([browser_text_pattern(message)], useInnerText: true).matches?(
+          browser_root.locator(SECTION).filter(visible: true),
+        ) &&
+          have_count(0).matches?(
+            browser_root.locator("#{SECTION} .db-section__callout a").filter(visible: true),
+          )
       end
 
       private
 
       def has_kpi?(type, value, improving_delta:, worsening_delta:)
-        unless has_css?("#{kpi_selector(type)} .db-section__metric-number", exact_text: value)
+        unless contain_text([browser_exact_text_pattern(value)], useInnerText: true).matches?(
+                 browser_root.locator("#{kpi_selector(type)} .db-section__metric-number").filter(
+                   visible: true,
+                 ),
+               )
           return false
         end
         if improving_delta.nil? && worsening_delta.nil?
-          return has_no_css?("#{kpi_selector(type)} .db-delta")
+          return(
+            have_count(0).matches?(
+              browser_root.locator("#{kpi_selector(type)} .db-delta").filter(visible: true),
+            )
+          )
         end
 
         modifier, text = improving_delta ? ["--pos", improving_delta] : ["--neg", worsening_delta]
-        has_css?("#{kpi_selector(type)} .db-delta.#{modifier}", exact_text: text)
+        contain_text([browser_exact_text_pattern(text)], useInnerText: true).matches?(
+          browser_root.locator("#{kpi_selector(type)} .db-delta.#{modifier}").filter(visible: true),
+        )
       end
 
       def kpi_selector(type)
@@ -161,7 +246,13 @@ module PageObjects
       end
 
       def within_block(title, &block)
-        within(find("#{SECTION} .db-section__row-block", text: title), &block)
+        within_browser(
+          browser_root
+            .locator("#{SECTION} .db-section__row-block")
+            .filter(visible: true)
+            .filter(hasText: browser_text_pattern(title)),
+          &block
+        )
       end
     end
   end

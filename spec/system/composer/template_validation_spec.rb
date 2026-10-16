@@ -76,17 +76,17 @@ describe "Composer Form Template Validations" do
         category_page.new_topic_button.click
 
         composer.fill_title(topic_title)
-        textarea = find("textarea")
+        textarea = browser_root.locator("textarea").filter(visible: true)
         message = "This is a test message!"
 
-        textarea.fill_in(with: message)
+        textarea.fill(message)
 
         expect(composer).to have_no_form_template_field_error(
           I18n.t("js.form_templates.errors.value_missing.default"),
         )
 
-        preview = find(".d-editor-preview")
-        expect(preview).to have_content(message)
+        preview = browser_root.locator(".d-editor-preview").filter(visible: true)
+        expect(preview).to contain_text(browser_text_pattern(message), useInnerText: true)
       end
     end
   end

@@ -24,13 +24,16 @@ describe "Viewing user staff info as an admin" do
     end
     it "shows the user's silencing link and count" do
       user_page.visit(user)
-      silencings_counters = page.find(".staff-counters .silencings")
-      expect(silencings_counters).to have_text("1")
+      silencings_counters =
+        browser_root.locator(".staff-counters .silencings").filter(visible: true)
+      expect(silencings_counters).to contain_text(browser_text_pattern("1"), useInnerText: true)
 
       user_page.click_staff_info_silencings_link
-      expect(user_page).to have_current_path("/admin/logs/staff_action_logs", ignore_query: true)
+      expect(browser_page).to have_url(
+        %r{^https?://[^/]+#{Regexp.escape("/admin/logs/staff_action_logs")}(?:\?.*)?$},
+      )
 
-      current_url = user_page.current_url
+      current_url = browser_page.url
       uri = URI.parse(current_url)
       filters = JSON.parse(URI.decode_www_form(uri.query).to_h["filters"])
 
@@ -54,9 +57,9 @@ describe "Viewing user staff info as an admin" do
 
       user_page.click_staff_info_flags_given_link
 
-      expect(page).to have_current_path(%r{/review})
-      expect(page).to have_current_path(/flagged_by=#{user.username}/)
-      expect(page).to have_current_path(/status=approved/)
+      expect(browser_page).to have_url(%r{/review})
+      expect(browser_page).to have_url(/flagged_by=#{user.username}/)
+      expect(browser_page).to have_url(/status=approved/)
     end
   end
 

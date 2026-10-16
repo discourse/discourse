@@ -24,7 +24,7 @@ describe "Block conditions" do
   describe "user conditions" do
     context "when anonymous" do
       it "hides logged-in-only blocks" do
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(blocks).to have_no_block("user-logged-in")
         expect(blocks).to have_no_block("user-admin")
@@ -37,7 +37,7 @@ describe "Block conditions" do
       before { sign_in(trust_level_0_user) }
 
       it "shows logged-in blocks but not role-specific blocks" do
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(blocks).to have_block("user-logged-in")
         expect(blocks).to have_no_block("user-admin")
@@ -50,7 +50,7 @@ describe "Block conditions" do
       before { sign_in(trust_level_2_user) }
 
       it "shows trust level blocks" do
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(blocks).to have_block("user-logged-in")
         expect(blocks).to have_block("user-trust-level-2")
@@ -62,7 +62,7 @@ describe "Block conditions" do
       before { sign_in(moderator) }
 
       it "shows moderator blocks" do
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(blocks).to have_block("user-logged-in")
         expect(blocks).to have_block("user-moderator")
@@ -74,7 +74,7 @@ describe "Block conditions" do
       before { sign_in(admin) }
 
       it "shows admin blocks" do
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(blocks).to have_block("user-logged-in")
         expect(blocks).to have_block("user-admin")
@@ -88,7 +88,7 @@ describe "Block conditions" do
     before { sign_in(trust_level_2_user) }
 
     it "shows discovery blocks on discovery pages" do
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(blocks).to have_block("route-discovery")
       expect(blocks).to have_no_block("route-category")
@@ -96,7 +96,9 @@ describe "Block conditions" do
     end
 
     it "shows category blocks on category pages" do
-      visit("/c/#{category.slug}/#{category.id}")
+      browser_page
+        .goto("/c/#{category.slug}/#{category.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(blocks).to have_block("route-discovery")
       expect(blocks).to have_block("route-category")
@@ -104,7 +106,9 @@ describe "Block conditions" do
     end
 
     it "shows topic blocks on topic pages" do
-      visit("/t/#{topic.slug}/#{topic.id}")
+      browser_page
+        .goto("/t/#{topic.slug}/#{topic.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(blocks).to have_block("route-topic")
       expect(blocks).to have_no_block("route-discovery")
@@ -116,24 +120,29 @@ describe "Block conditions" do
     before { sign_in(trust_level_2_user) }
 
     it "re-evaluates blocks when navigating from discovery to topic via click" do
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(blocks).to have_block("route-discovery")
       expect(blocks).to have_no_block("route-topic")
 
-      find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
+      browser_root
+        .locator(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']")
+        .filter(visible: true)
+        .click
 
       expect(blocks).to have_block("route-topic")
       expect(blocks).to have_no_block("route-discovery")
     end
 
     it "re-evaluates blocks when navigating from topic back to discovery" do
-      visit("/t/#{topic.slug}/#{topic.id}")
+      browser_page
+        .goto("/t/#{topic.slug}/#{topic.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(blocks).to have_block("route-topic")
       expect(blocks).to have_no_block("route-discovery")
 
-      find("#site-logo").click
+      browser_root.locator("#site-logo").filter(visible: true).click
 
       expect(blocks).to have_block("route-discovery")
       expect(blocks).to have_no_block("route-topic")
@@ -141,11 +150,15 @@ describe "Block conditions" do
 
     it "re-evaluates combined conditions when navigating to category page" do
       sign_in(admin)
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(blocks).to have_no_block("combined-admin-category")
 
-      find(".sidebar-section-link", text: category.name).click
+      browser_root
+        .locator(".sidebar-section-link")
+        .filter(visible: true)
+        .filter(hasText: browser_text_pattern(category.name))
+        .click
 
       expect(blocks).to have_block("combined-admin-category")
     end
@@ -158,7 +171,7 @@ describe "Block conditions" do
       before { SiteSetting.enable_badges = true }
 
       it "shows setting-dependent block" do
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(blocks).to have_block("setting-badges-enabled")
       end
@@ -168,7 +181,7 @@ describe "Block conditions" do
       before { SiteSetting.enable_badges = false }
 
       it "hides setting-dependent block" do
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(blocks).to have_no_block("setting-badges-enabled")
       end
@@ -178,21 +191,21 @@ describe "Block conditions" do
   describe "combined conditions (AND logic)" do
     context "with logged-in + TL1 requirement" do
       it "hides block when not logged in" do
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(blocks).to have_no_block("combined-logged-in-tl1")
       end
 
       it "hides block when logged in but below TL1" do
         sign_in(trust_level_0_user)
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(blocks).to have_no_block("combined-logged-in-tl1")
       end
 
       it "shows block when logged in and at TL1+" do
         sign_in(trust_level_1_user)
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(blocks).to have_block("combined-logged-in-tl1")
       end
@@ -201,21 +214,25 @@ describe "Block conditions" do
     context "with admin + category route requirement" do
       it "hides block when admin but not on category page" do
         sign_in(admin)
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(blocks).to have_no_block("combined-admin-category")
       end
 
       it "hides block when on category page but not admin" do
         sign_in(trust_level_2_user)
-        visit("/c/#{category.slug}/#{category.id}")
+        browser_page
+          .goto("/c/#{category.slug}/#{category.id}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(blocks).to have_no_block("combined-admin-category")
       end
 
       it "shows block when admin AND on category page" do
         sign_in(admin)
-        visit("/c/#{category.slug}/#{category.id}")
+        browser_page
+          .goto("/c/#{category.slug}/#{category.id}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(blocks).to have_block("combined-admin-category")
       end
@@ -225,21 +242,21 @@ describe "Block conditions" do
   describe "OR conditions (any combinator)" do
     it "hides block when neither admin nor moderator" do
       sign_in(trust_level_2_user)
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(blocks).to have_no_block("or-admin-or-moderator")
     end
 
     it "shows block when moderator (not admin)" do
       sign_in(moderator)
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(blocks).to have_block("or-admin-or-moderator")
     end
 
     it "shows block when admin (not just moderator)" do
       sign_in(admin)
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(blocks).to have_block("or-admin-or-moderator")
     end
@@ -249,7 +266,7 @@ describe "Block conditions" do
     before { sign_in(trust_level_2_user) }
 
     it "renders blocks in the order they were configured" do
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(blocks).to have_block("order-first")
       expect(blocks).to have_block("order-second")
@@ -266,7 +283,7 @@ describe "Block conditions" do
 
     context "when on desktop viewport (default)" do
       it "shows desktop-only blocks and hides mobile-only blocks" do
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(blocks).to have_block("viewport-desktop")
         expect(blocks).to have_no_block("viewport-mobile")
@@ -275,7 +292,7 @@ describe "Block conditions" do
 
     context "when on mobile viewport", mobile: true do
       it "shows mobile-only blocks and hides desktop-only blocks" do
-        visit("/latest")
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(blocks).to have_block("viewport-mobile")
         expect(blocks).to have_no_block("viewport-desktop")

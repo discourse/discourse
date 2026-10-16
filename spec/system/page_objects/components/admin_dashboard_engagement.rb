@@ -30,13 +30,19 @@ module PageObjects
 
       def deselect_activity_category(category)
         expand_activity_category_filter
-        find("#{ACTIVITY_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']").click
+        browser_root
+          .locator("#{ACTIVITY_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
+          .filter(visible: true)
+          .click
         self
       end
 
       def deselect_whos_posting_category(category)
         expand_whos_posting_category_filter
-        find("#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']").click
+        browser_root
+          .locator("#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
+          .filter(visible: true)
+          .click
         self
       end
 
@@ -52,40 +58,64 @@ module PageObjects
       end
 
       def has_activity_row?(category)
-        has_css?(ACTIVITY_CATEGORY_CELL, text: category.name)
+        contain_text([browser_text_pattern(category.name)], useInnerText: true).matches?(
+          browser_root.locator(ACTIVITY_CATEGORY_CELL).filter(visible: true),
+        )
       end
 
       def has_no_activity_row?(category)
-        has_no_css?(ACTIVITY_CATEGORY_CELL, text: category.name)
+        contain_text([browser_text_pattern(category.name)], useInnerText: true).does_not_match?(
+          browser_root.locator(ACTIVITY_CATEGORY_CELL).filter(visible: true),
+        )
       end
 
       def has_selected_activity_category?(category)
-        has_css?("#{ACTIVITY_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{ACTIVITY_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']",
+          ).filter(visible: true),
+        )
       end
 
       def has_selected_whos_posting_category?(category)
-        has_css?("#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']",
+          ).filter(visible: true),
+        )
       end
 
       def has_no_selected_whos_posting_category?(category)
-        has_no_css?("#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
+        have_count(0).matches?(
+          browser_root.locator(
+            "#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']",
+          ).filter(visible: true),
+        )
       end
 
       def has_activity_row_with_parent?(category)
-        has_css?("#{ACTIVITY_CATEGORY_CELL} #{parent_then_child_badges(category)}")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{ACTIVITY_CATEGORY_CELL} #{parent_then_child_badges(category)}",
+          ).filter(visible: true),
+        )
       end
 
       def has_selected_activity_category_with_parent?(category)
-        has_css?(
-          "#{ACTIVITY_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}'] " \
-            "#{parent_then_child_badges(category)}",
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{ACTIVITY_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}'] " \
+              "#{parent_then_child_badges(category)}",
+          ).filter(visible: true),
         )
       end
 
       def has_selected_whos_posting_category_with_parent?(category)
-        has_css?(
-          "#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}'] " \
-            "#{parent_then_child_badges(category)}",
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{WHOS_POSTING_CATEGORY_FILTER} .selected-choice[data-value='#{category.id}'] " \
+              "#{parent_then_child_badges(category)}",
+          ).filter(visible: true),
         )
       end
 
@@ -98,7 +128,7 @@ module PageObjects
       end
 
       def open_compare_groups_modal
-        find(ADD_GROUP_BUTTON).click
+        browser_root.locator(ADD_GROUP_BUTTON).filter(visible: true).click
         compare_groups_modal.has_open?
         self
       end
@@ -115,16 +145,24 @@ module PageObjects
       end
 
       def has_whos_posting_bar?(name)
-        has_css?(WHOS_POSTING_BAR_LABEL, text: name)
+        contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
+          browser_root.locator(WHOS_POSTING_BAR_LABEL).filter(visible: true),
+        )
       end
 
       def has_no_whos_posting_bar?(name)
-        has_no_css?(WHOS_POSTING_BAR_LABEL, text: name)
+        contain_text([browser_text_pattern(name)], useInnerText: true).does_not_match?(
+          browser_root.locator(WHOS_POSTING_BAR_LABEL).filter(visible: true),
+        )
       end
 
       def has_headline?(title, summary)
-        has_css?("#{SECTION} .db-section__subintro h3", exact_text: title) &&
-          has_css?("#{SECTION} .db-section__subintro p", exact_text: summary)
+        contain_text([browser_exact_text_pattern(title)], useInnerText: true).matches?(
+          browser_root.locator("#{SECTION} .db-section__subintro h3").filter(visible: true),
+        ) &&
+          contain_text([browser_exact_text_pattern(summary)], useInnerText: true).matches?(
+            browser_root.locator("#{SECTION} .db-section__subintro p").filter(visible: true),
+          )
       end
 
       private

@@ -14,7 +14,7 @@ describe "User tips" do
 
     it "does not show the 'first notification' tip to the user when disabled" do
       sign_in(user)
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(tooltip).to be_not_present
     end
@@ -28,20 +28,27 @@ describe "User tips" do
 
       expect(user.user_option.seen_popups).to eq(nil)
 
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(tooltip).to be_present(text: "Your first notification!")
 
       # Find an element with no action to simulate clicking outside the user tip
-      find("th.topic-list-data span", text: "Topic").click
+      browser_root
+        .locator("th.topic-list-data span")
+        .filter(visible: true)
+        .filter(hasText: browser_text_pattern("Topic"))
+        .click
 
       expect(tooltip).to be_not_present
     end
 
     it "shows a second notification once first is dismissed and user visits a topic" do
       sign_in(user)
-      visit("/")
-      find(".fk-d-tooltip__content .user-tip__buttons .btn-primary").click
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root
+        .locator(".fk-d-tooltip__content .user-tip__buttons .btn-primary")
+        .filter(visible: true)
+        .click
 
       expect(tooltip).to be_not_present
 
@@ -49,16 +56,20 @@ describe "User tips" do
 
       expect(tooltip).to be_present(text: "Topic timeline")
 
-      tooltip.find(".user-tip__buttons .btn-primary").click
+      tooltip.locator(".user-tip__buttons .btn-primary").filter(visible: true).click
 
       expect(tooltip).to be_present(text: "Keep reading!")
     end
 
     it "can skip all tips" do
       sign_in(user)
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      tooltip.find(".user-tip__buttons .btn", text: "Skip tips").click
+      tooltip
+        .locator(".user-tip__buttons .btn")
+        .filter(visible: true)
+        .filter(hasText: browser_text_pattern("Skip tips"))
+        .click
 
       expect(tooltip).to be_not_present
 
@@ -72,11 +83,15 @@ describe "User tips" do
 
       I18n.with_locale(:fr) do
         sign_in(user)
-        visit("/")
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(tooltip).to be_present(text: "Votre première notification !")
 
-        tooltip.find(".user-tip__buttons .btn", text: "J'ai compris !").click
+        tooltip
+          .locator(".user-tip__buttons .btn")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern("J'ai compris !"))
+          .click
 
         expect(tooltip).to be_not_present
       end

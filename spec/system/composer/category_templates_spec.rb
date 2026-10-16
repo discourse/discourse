@@ -299,7 +299,7 @@ describe "Composer Form Templates" do
     category_page.visit(category_topic_template)
     category_page.new_topic_button.click
     expect(composer).to have_composer_input
-    expect(composer).to have_content(category_topic_template.topic_template)
+    expect(composer).to have_displayed_content(category_topic_template.topic_template)
   end
 
   it "shows a form when a form template is assigned to the category" do
@@ -340,7 +340,7 @@ describe "Composer Form Templates" do
     # switch to category with topic template
     composer.switch_category(category_topic_template.name)
     expect(composer).to have_composer_input
-    expect(composer).to have_content(category_topic_template.topic_template)
+    expect(composer).to have_displayed_content(category_topic_template.topic_template)
     # switch to category with form template
     composer.switch_category(category_with_template_1.name)
     expect(composer).to have_form_template
@@ -407,7 +407,7 @@ describe "Composer Form Templates" do
     cdp.paste
 
     expect(composer).to have_no_in_progress_uploads
-    expect(composer.preview).to have_css(".image-wrapper")
+    expect(composer.preview.locator(".image-wrapper").filter(visible: true)).not_to have_count(0)
   end
 
   it "forms a post when template fields are filled in" do
@@ -421,15 +421,17 @@ describe "Composer Form Templates" do
 
     expect(topic_page).to have_topic_title(topic_title)
 
-    expect(page).to have_css(
-      "#{topic_page.post_by_number_selector(1)} .cooked p",
-      text: "Bruce Wayne",
-    )
+    expect(
+      browser_root.locator("#{topic_page.post_by_number_selector(1)} .cooked p").filter(
+        visible: true,
+      ),
+    ).to contain_text([browser_text_pattern("Bruce Wayne")], useInnerText: true)
 
-    expect(page).to have_css(
-      "#{topic_page.post_by_number_selector(1)} .cooked h3",
-      text: "What is your full name?",
-    )
+    expect(
+      browser_root.locator("#{topic_page.post_by_number_selector(1)} .cooked h3").filter(
+        visible: true,
+      ),
+    ).to contain_text([browser_text_pattern("What is your full name?")], useInnerText: true)
   end
 
   it "creates a post with an upload field" do
@@ -437,33 +439,44 @@ describe "Composer Form Templates" do
 
     category_page.visit(category_with_upload_template)
     category_page.new_topic_button.click
-    attach_file "prescription-uploader",
-                "#{Rails.root.join("spec/fixtures/images/logo.png")}",
-                make_visible: true
+    browser_root.locator(
+      "input[type='file']:not(:disabled)[id=#{"prescription-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"prescription-uploader".to_s.to_json}]",
+    ).set_input_files("#{Rails.root.join("spec/fixtures/images/logo.png")}")
 
-    expect(page).to have_css(".d-editor-preview img[alt='logo.png']")
+    expect(
+      browser_root.locator(".d-editor-preview img[alt='logo.png']").filter(visible: true),
+    ).not_to have_count(0)
 
     composer.fill_title(topic_title)
     composer.fill_form_template_field("input", "Bruce Wayne")
     composer.create
 
-    expect(page).to have_css("#{topic_page.post_by_number_selector(1)} .cooked img[alt='logo.png']")
+    expect(
+      browser_root.locator(
+        "#{topic_page.post_by_number_selector(1)} .cooked img[alt='logo.png']",
+      ).filter(visible: true),
+    ).not_to have_count(0)
   end
 
   it "doesn't allow uploading an invalid file type" do
     category_page.visit(category_with_upload_template)
     category_page.new_topic_button.click
-    attach_file "prescription-uploader",
-                "#{Rails.root.join("spec/fixtures/images/animated.gif")}",
-                make_visible: true
+    browser_root.locator(
+      "input[type='file']:not(:disabled)[id=#{"prescription-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"prescription-uploader".to_s.to_json}]",
+    ).set_input_files("#{Rails.root.join("spec/fixtures/images/animated.gif")}")
 
-    expect(page).to have_css(
-      "#dialog-holder .dialog-body p",
-      text: I18n.t("js.pick_files_button.unsupported_file_picked", { types: ".jpg, .png" }),
-      visible: :all,
+    expect(browser_root.locator("#dialog-holder .dialog-body p")).to contain_text(
+      [
+        browser_text_pattern(
+          I18n.t("js.pick_files_button.unsupported_file_picked", { types: ".jpg, .png" }),
+        ),
+      ],
+      useInnerText: true,
     )
 
-    expect(page).to have_no_css(".form-template-field__uploaded-files")
+    expect(
+      browser_root.locator(".form-template-field__uploaded-files").filter(visible: true),
+    ).to have_count(0)
   end
 
   it "creates a post with multiple uploads" do
@@ -471,26 +484,45 @@ describe "Composer Form Templates" do
 
     category_page.visit(category_with_upload_template)
     category_page.new_topic_button.click
-    attach_file "prescription-uploader",
-                "#{Rails.root.join("spec/fixtures/images/logo.png")}",
-                make_visible: true
-    attach_file "additional-docs-uploader",
-                [
-                  "#{Rails.root.join("spec/fixtures/media/small.mp3")}",
-                  "#{Rails.root.join("spec/fixtures/media/small.mp4")}",
-                  "#{Rails.root.join("spec/fixtures/pdf/small.pdf")}",
-                ],
-                make_visible: true
+    browser_root.locator(
+      "input[type='file']:not(:disabled)[id=#{"prescription-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"prescription-uploader".to_s.to_json}]",
+    ).set_input_files("#{Rails.root.join("spec/fixtures/images/logo.png")}")
+    browser_root.locator(
+      "input[type='file']:not(:disabled)[id=#{"additional-docs-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"additional-docs-uploader".to_s.to_json}]",
+    ).set_input_files(
+      [
+        "#{Rails.root.join("spec/fixtures/media/small.mp3")}",
+        "#{Rails.root.join("spec/fixtures/media/small.mp4")}",
+        "#{Rails.root.join("spec/fixtures/pdf/small.pdf")}",
+      ],
+    )
     composer.fill_title(topic_title)
     composer.fill_form_template_field("input", "Peter Parker}")
+    expect(
+      browser_root.locator(".form-template-field__uploaded-files li").filter(visible: true),
+    ).to have_count(4)
     composer.create
 
-    expect(page).to have_css("#{topic_page.post_by_number_selector(1)} .cooked img[alt='logo.png']")
-    expect(page).to have_css("#{topic_page.post_by_number_selector(1)} .cooked a.attachment")
-    expect(page).to have_css("#{topic_page.post_by_number_selector(1)} .cooked audio")
-    expect(page).to have_css(
-      "#{topic_page.post_by_number_selector(1)} .cooked .video-placeholder-container",
-    )
+    expect(
+      browser_root.locator(
+        "#{topic_page.post_by_number_selector(1)} .cooked img[alt='logo.png']",
+      ).filter(visible: true),
+    ).not_to have_count(0)
+    expect(
+      browser_root.locator("#{topic_page.post_by_number_selector(1)} .cooked a.attachment").filter(
+        visible: true,
+      ),
+    ).not_to have_count(0)
+    expect(
+      browser_root.locator("#{topic_page.post_by_number_selector(1)} .cooked audio").filter(
+        visible: true,
+      ),
+    ).not_to have_count(0)
+    expect(
+      browser_root.locator(
+        "#{topic_page.post_by_number_selector(1)} .cooked .video-placeholder-container",
+      ).filter(visible: true),
+    ).not_to have_count(0)
   end
 
   it "overrides uploaded file if allow_multiple false" do
@@ -498,15 +530,17 @@ describe "Composer Form Templates" do
 
     category_page.visit(category_with_upload_template)
     category_page.new_topic_button.click
-    attach_file "prescription-uploader",
-                "#{Rails.root.join("spec/fixtures/images/logo.png")}",
-                make_visible: true
+    browser_root.locator(
+      "input[type='file']:not(:disabled)[id=#{"prescription-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"prescription-uploader".to_s.to_json}]",
+    ).set_input_files("#{Rails.root.join("spec/fixtures/images/logo.png")}")
     composer.fill_title(topic_title)
-    attach_file "prescription-uploader",
-                "#{Rails.root.join("spec/fixtures/images/fake.jpg")}",
-                make_visible: true
+    browser_root.locator(
+      "input[type='file']:not(:disabled)[id=#{"prescription-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"prescription-uploader".to_s.to_json}]",
+    ).set_input_files("#{Rails.root.join("spec/fixtures/images/fake.jpg")}")
 
-    expect(page).to have_css(".form-template-field__uploaded-files li", count: 1)
+    expect(
+      browser_root.locator(".form-template-field__uploaded-files li").filter(visible: true),
+    ).to have_count(1)
   end
 
   it "shows labels and descriptions when a form template is assigned to the category" do
@@ -531,33 +565,73 @@ describe "Composer Form Templates" do
     composer.fill_title(topic_title)
     composer.fill_form_template_field("input", "Peter Parker")
 
-    expect(page).to have_css(".d-editor-preview", text: "Peter Parker")
+    expect(browser_root.locator(".d-editor-preview").filter(visible: true)).to contain_text(
+      [browser_text_pattern("Peter Parker")],
+      useInnerText: true,
+    )
 
-    find(:select, "4").find(:option, "Option 2").select_option
-    find(:select, "4").find(:option, "Option 1").select_option
+    browser_root
+      .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+      .and(
+        browser_root.locator("[id=#{"4".to_s.to_json}], [name=#{"4".to_s.to_json}]").or(
+          browser_root.get_by_label("4", exact: true),
+        ),
+      )
+      .filter(visible: true)
+      .and(browser_root.locator("select"))
+      .select_option(label: "Option 2")
+    browser_root
+      .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+      .and(
+        browser_root.locator("[id=#{"4".to_s.to_json}], [name=#{"4".to_s.to_json}]").or(
+          browser_root.get_by_label("4", exact: true),
+        ),
+      )
+      .filter(visible: true)
+      .and(browser_root.locator("select"))
+      .select_option(label: "Option 1")
 
-    expect(page).to have_css(".d-editor-preview", text: "Option 1")
+    expect(browser_root.locator(".d-editor-preview").filter(visible: true)).to contain_text(
+      [browser_text_pattern("Option 1")],
+      useInnerText: true,
+    )
 
-    find(:select, "6").find(:option, "Option 4").select_option
+    browser_root
+      .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+      .and(
+        browser_root.locator("[id=#{"6".to_s.to_json}], [name=#{"6".to_s.to_json}]").or(
+          browser_root.get_by_label("6", exact: true),
+        ),
+      )
+      .filter(visible: true)
+      .and(browser_root.locator("select"))
+      .select_option(label: "Option 4")
 
-    expect(page).to have_css(".d-editor-preview", text: "Option 4")
+    expect(browser_root.locator(".d-editor-preview").filter(visible: true)).to contain_text(
+      [browser_text_pattern("Option 4")],
+      useInnerText: true,
+    )
 
     message = "This is a test message!"
     composer.fill_form_template_field("textarea", message)
 
-    expect(page).to have_css(".d-editor-preview", text: message)
-
-    attach_file(
-      "5-uploader",
-      "#{Rails.root.join("spec/fixtures/images/logo.png")}",
-      make_visible: true,
+    expect(browser_root.locator(".d-editor-preview").filter(visible: true)).to contain_text(
+      [browser_text_pattern(message)],
+      useInnerText: true,
     )
-    expect(page).to have_css(".d-editor-preview img")
+
+    browser_root.locator(
+      "input[type='file']:not(:disabled)[id=#{"5-uploader".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"5-uploader".to_s.to_json}]",
+    ).set_input_files("#{Rails.root.join("spec/fixtures/images/logo.png")}")
+    expect(browser_root.locator(".d-editor-preview img").filter(visible: true)).not_to have_count(0)
 
     composer_message = "This is **bold** composer content"
     composer.fill_form_template_field("composer", composer_message)
 
-    expect(page).to have_css(".d-editor-preview", text: "This is bold composer content")
+    expect(browser_root.locator(".d-editor-preview").filter(visible: true)).to contain_text(
+      [browser_text_pattern("This is bold composer content")],
+      useInnerText: true,
+    )
   end
 
   context "when using tagchooser" do
@@ -611,14 +685,60 @@ describe "Composer Form Templates" do
       category_page.visit(category_with_tagchooser_template)
       category_page.new_topic_button.click
 
-      expect(page).to have_css("[name='1']", text: tag3.name.upcase)
-      expect(page).to have_css("[name='2']", text: tag4.name.upcase)
+      expect(browser_root.locator("[name='1']").filter(visible: true)).to contain_text(
+        [browser_text_pattern(tag3.name.upcase)],
+        useInnerText: true,
+      )
+      expect(browser_root.locator("[name='2']").filter(visible: true)).to contain_text(
+        [browser_text_pattern(tag4.name.upcase)],
+        useInnerText: true,
+      )
 
-      find(:select, "1").find(:option, tag1.description).select_option
-      find(:select, "2").find(:option, tag2.description).select_option
+      browser_root
+        .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+        .and(
+          browser_root.locator("[id=#{"1".to_s.to_json}], [name=#{"1".to_s.to_json}]").or(
+            browser_root.get_by_label("1", exact: true),
+          ),
+        )
+        .filter(visible: true)
+        .and(browser_root.locator("select"))
+        .select_option(label: tag1.description)
+      browser_root
+        .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+        .and(
+          browser_root.locator("[id=#{"2".to_s.to_json}], [name=#{"2".to_s.to_json}]").or(
+            browser_root.get_by_label("2", exact: true),
+          ),
+        )
+        .filter(visible: true)
+        .and(browser_root.locator("select"))
+        .select_option(label: tag2.description)
 
-      expect(page).to have_select("1", selected: tag1.description)
-      expect(page).to have_select("2", selected: tag2.description)
+      expect(
+        browser_root
+          .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+          .and(
+            browser_root.locator("[id=#{"1".to_s.to_json}], [name=#{"1".to_s.to_json}]").or(
+              browser_root.get_by_label("1", exact: true),
+            ),
+          )
+          .filter(visible: true)
+          .and(browser_root.locator("select"))
+          .locator("option:checked"),
+      ).to have_text(tag1.description)
+      expect(
+        browser_root
+          .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+          .and(
+            browser_root.locator("[id=#{"2".to_s.to_json}], [name=#{"2".to_s.to_json}]").or(
+              browser_root.get_by_label("2", exact: true),
+            ),
+          )
+          .filter(visible: true)
+          .and(browser_root.locator("select"))
+          .locator("option:checked"),
+      ).to have_text(tag2.description)
 
       mini_tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
       expect(mini_tag_chooser).to have_selected_name("#{tag1.name},#{tag2.name}")
@@ -630,7 +750,18 @@ describe "Composer Form Templates" do
       mini_tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
       mini_tag_chooser.select_row_by_name(tag1.name)
 
-      expect(page).to have_select("1", selected: tag1.description)
+      expect(
+        browser_root
+          .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+          .and(
+            browser_root.locator("[id=#{"1".to_s.to_json}], [name=#{"1".to_s.to_json}]").or(
+              browser_root.get_by_label("1", exact: true),
+            ),
+          )
+          .filter(visible: true)
+          .and(browser_root.locator("select"))
+          .locator("option:checked"),
+      ).to have_text(tag1.description)
 
       mini_tag_chooser.unselect_by_name(tag1.name)
 
@@ -647,7 +778,10 @@ describe "Composer Form Templates" do
       category_page.visit(category_with_title_placeholder)
       category_page.new_topic_button.click
 
-      expect(page).to have_field("reply-title", placeholder: "Describe your issue briefly")
+      expect(browser_root.locator("#reply-title")).to have_attribute(
+        "placeholder",
+        "Describe your issue briefly",
+      )
     end
 
     it "falls back to default placeholder if category topic title placeholder is nil" do
@@ -656,7 +790,9 @@ describe "Composer Form Templates" do
       category_page.visit(category_with_title_placeholder)
       category_page.new_topic_button.click
 
-      expect(find("#reply-title")[:placeholder]).to eq(I18n.t("js.composer.title_placeholder"))
+      expect(
+        browser_root.locator("#reply-title").filter(visible: true).get_attribute("placeholder"),
+      ).to eq(I18n.t("js.composer.title_placeholder"))
     end
   end
 end

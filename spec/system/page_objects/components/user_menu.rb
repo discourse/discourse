@@ -4,53 +4,96 @@ module PageObjects
   module Components
     class UserMenu < PageObjects::Components::Base
       def open
-        find(".header-dropdown-toggle.current-user").click
-        has_css?(".user-menu")
+        browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true).click
+        expect(browser_root.locator(".user-menu").filter(visible: true)).not_to have_count(0)
         self
       end
 
       def click_replies_notifications_tab
-        click_link("user-menu-button-replies")
-        has_css?("#quick-access-replies")
+        browser_root
+          .locator(
+            "[id=#{"user-menu-button-replies".to_s.to_json}], [name=#{"user-menu-button-replies".to_s.to_json}]",
+          )
+          .or(browser_root.get_by_role("link", name: "user-menu-button-replies"))
+          .filter(visible: true)
+          .click
+        expect(
+          browser_root.locator("#quick-access-replies").filter(visible: true),
+        ).not_to have_count(0)
         self
       end
 
       def click_bookmarks_tab
-        click_link("user-menu-button-bookmarks")
-        has_css?("#quick-access-bookmarks")
+        browser_root
+          .locator(
+            "[id=#{"user-menu-button-bookmarks".to_s.to_json}], [name=#{"user-menu-button-bookmarks".to_s.to_json}]",
+          )
+          .or(browser_root.get_by_role("link", name: "user-menu-button-bookmarks"))
+          .filter(visible: true)
+          .click
+        expect(
+          browser_root.locator("#quick-access-bookmarks").filter(visible: true),
+        ).not_to have_count(0)
         self
       end
 
       def click_profile_tab
-        click_link("user-menu-button-profile")
-        has_css?("#quick-access-profile")
+        browser_root
+          .locator(
+            "[id=#{"user-menu-button-profile".to_s.to_json}], [name=#{"user-menu-button-profile".to_s.to_json}]",
+          )
+          .or(browser_root.get_by_role("link", name: "user-menu-button-profile"))
+          .filter(visible: true)
+          .click
+        expect(
+          browser_root.locator("#quick-access-profile").filter(visible: true),
+        ).not_to have_count(0)
         self
       end
 
       def click_review_queue_tab
-        click_link("user-menu-button-review-queue")
-        has_css?("#quick-access-review-queue")
+        browser_root
+          .locator(
+            "[id=#{"user-menu-button-review-queue".to_s.to_json}], [name=#{"user-menu-button-review-queue".to_s.to_json}]",
+          )
+          .or(browser_root.get_by_role("link", name: "user-menu-button-review-queue"))
+          .filter(visible: true)
+          .click
+        expect(
+          browser_root.locator("#quick-access-review-queue").filter(visible: true),
+        ).not_to have_count(0)
         self
       end
 
       def click_reviewable(reviewable)
-        find("#quick-access-review-queue a[href$='/review/#{reviewable.id}']").click
+        browser_root
+          .locator("#quick-access-review-queue a[href$='/review/#{reviewable.id}']")
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_logout_button
-        find("#quick-access-profile .logout .btn").click
-        has_css?(".d-header .login-button")
+        browser_root.locator("#quick-access-profile .logout .btn").filter(visible: true).click
+        expect(
+          browser_root.locator(".d-header .login-button").filter(visible: true),
+        ).not_to have_count(0)
         self
       end
 
       def click_bookmark(bookmark)
-        find("#quick-access-bookmarks .bookmark a[href='#{bookmark.bookmarkable.url}']").click
+        browser_root
+          .locator("#quick-access-bookmarks .bookmark a[href='#{bookmark.bookmarkable.url}']")
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_notification_with_href(href_substring)
-        find(".user-menu .notification a[href*='#{href_substring}']").click
+        browser_root
+          .locator(".user-menu .notification a[href*='#{href_substring}']")
+          .filter(visible: true)
+          .click
         self
       end
 
@@ -62,45 +105,73 @@ module PageObjects
       end
 
       def has_group_mentioned_notification?(topic, user_that_mentioned_group, group_mentioned)
-        expect(find("#quick-access-replies .group-mentioned").text).to eq(
-          "#{user_that_mentioned_group.username} @#{group_mentioned.name}\n#{topic.title}",
-        )
+        expect(
+          browser_root
+            .locator("#quick-access-replies .group-mentioned")
+            .filter(visible: true)
+            .inner_text
+            .strip,
+        ).to eq("#{user_that_mentioned_group.username} @#{group_mentioned.name}\n#{topic.title}")
       end
 
       def has_user_full_name_mentioned_notification?(topic, user_that_mentioned)
-        expect(find("#quick-access-replies .mentioned").text).to eq(
-          "#{user_that_mentioned.name}\n#{topic.title}",
-        )
+        expect(
+          browser_root
+            .locator("#quick-access-replies .mentioned")
+            .filter(visible: true)
+            .inner_text
+            .strip,
+        ).to eq("#{user_that_mentioned.name}\n#{topic.title}")
       end
 
       def has_user_full_name_messaged_notification?(post, user)
-        expect(find("#quick-access-all-notifications .private-message").text).to eq(
-          "#{user.name}\n#{post.topic.title}",
-        )
+        expect(
+          browser_root
+            .locator("#quick-access-all-notifications .private-message")
+            .filter(visible: true)
+            .inner_text
+            .strip,
+        ).to eq("#{user.name}\n#{post.topic.title}")
       end
 
       def has_user_full_name_bookmarked_notification?(post, user)
-        expect(find("#quick-access-bookmarks .bookmark").text).to eq(
-          "#{user.name}\n#{post.topic.title}",
-        )
+        expect(
+          browser_root
+            .locator("#quick-access-bookmarks .bookmark")
+            .filter(visible: true)
+            .inner_text
+            .strip,
+        ).to eq("#{user.name}\n#{post.topic.title}")
       end
 
       def has_user_username_mentioned_notification?(topic, user_that_mentioned)
-        expect(find("#quick-access-replies .mentioned").text).to eq(
-          "#{user_that_mentioned.username}\n#{topic.title}",
-        )
+        expect(
+          browser_root
+            .locator("#quick-access-replies .mentioned")
+            .filter(visible: true)
+            .inner_text
+            .strip,
+        ).to eq("#{user_that_mentioned.username}\n#{topic.title}")
       end
 
       def has_right_replies_button_count?(count)
-        expect(find("#user-menu-button-replies").text).to eq(count.to_s)
+        expect(
+          browser_root.locator("#user-menu-button-replies").filter(visible: true).inner_text.strip,
+        ).to eq(count.to_s)
       end
 
       def has_notification_count_of?(count)
-        page.has_css?(".user-menu li.notification", count: count)
+        have_count(count).matches?(
+          browser_root.locator(".user-menu li.notification").filter(visible: true),
+        )
       end
 
       def has_bookmark_count_of?(count)
-        page.has_css?(".user-menu #quick-access-bookmarks li.bookmark", count: count)
+        have_count(count).matches?(
+          browser_root.locator(".user-menu #quick-access-bookmarks li.bookmark").filter(
+            visible: true,
+          ),
+        )
       end
     end
   end

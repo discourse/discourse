@@ -5,7 +5,9 @@ module PageObjects
     class AdminLogoForm < PageObjects::Components::Base
       def image_uploader(image_type)
         PageObjects::Components::UppyImageUploader.new(
-          find(".form-kit__container[data-name='#{image_type}']"),
+          browser_root.locator(".form-kit__container[data-name='#{image_type}']").filter(
+            visible: true,
+          ),
         )
       end
 
@@ -18,11 +20,13 @@ module PageObjects
       end
 
       def has_no_form_field?(field)
-        page.has_no_css?("#control-#{field}")
+        have_count(0).matches?(browser_root.locator("#control-#{field}").filter(visible: true))
       end
 
       def has_form_field?(field)
-        page.has_css?("#control-#{field}")
+        have_count(0).does_not_match?(
+          browser_root.locator("#control-#{field}").filter(visible: true),
+        )
       end
 
       def toggle_dark_mode(field)
@@ -32,15 +36,24 @@ module PageObjects
       end
 
       def expand_mobile_section
-        find(".admin-logo-form__mobile-section .collapsable").click
+        browser_root
+          .locator(".admin-logo-form__mobile-section .collapsable")
+          .filter(visible: true)
+          .click
       end
 
       def expand_email_section
-        find(".admin-logo-form__email-section .collapsable").click
+        browser_root
+          .locator(".admin-logo-form__email-section .collapsable")
+          .filter(visible: true)
+          .click
       end
 
       def expand_social_media_section
-        find(".admin-logo-form__social-media-section .collapsable").click
+        browser_root
+          .locator(".admin-logo-form__social-media-section .collapsable")
+          .filter(visible: true)
+          .click
       end
 
       def submit

@@ -49,7 +49,9 @@ describe "Viewing user private messages" do
     it "allows the user to view the default messages inbox" do
       set_subfolder "/forum"
 
-      page.visit "/forum/u/#{user.username}/messages"
+      browser_page
+        .goto("/forum/u/#{user.username}/messages")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(user_private_messages_page).to have_right_inbox_dropdown_value("Inbox")
     end
   end

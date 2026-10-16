@@ -39,39 +39,48 @@ RSpec.describe "Nested view cloaking" do
 
       expect(nested_view).to have_cloaked_root
 
-      expect(page).to have_no_css(
-        ".nested-view__roots > .nested-post:first-child.nested-post--cloaked",
-      )
+      expect(
+        browser_root.locator(
+          ".nested-view__roots > .nested-post:first-child.nested-post--cloaked",
+        ).filter(visible: true),
+      ).to have_count(0)
     end
 
     it "uncloaks roots when scrolling to them" do
       nested_view.visit_nested(topic)
       expect(nested_view).to have_nested_view
 
-      send_keys(:end)
+      browser_page.keyboard.press("End")
 
-      expect(page).to have_css(
-        ".nested-view__roots > .nested-post:first-child.nested-post--cloaked",
-        wait: 5,
-      )
+      expect(
+        browser_root.locator(
+          ".nested-view__roots > .nested-post:first-child.nested-post--cloaked",
+        ).filter(visible: true),
+      ).not_to have_count(0, timeout: 5 * 1000)
 
-      send_keys(:home)
+      browser_page.keyboard.press("Home")
 
-      expect(page).to have_no_css(
-        ".nested-view__roots > .nested-post:first-child.nested-post--cloaked",
-      )
+      expect(
+        browser_root.locator(
+          ".nested-view__roots > .nested-post:first-child.nested-post--cloaked",
+        ).filter(visible: true),
+      ).to have_count(0)
     end
 
     it "hides children content when root is cloaked" do
       nested_view.visit_nested(topic)
       expect(nested_view).to have_nested_view
 
-      expect(page).to have_no_css(
-        ".nested-view__roots > .nested-post--cloaked .nested-post__article",
-      )
-      expect(page).to have_no_css(
-        ".nested-view__roots > .nested-post--cloaked .nested-post-children",
-      )
+      expect(
+        browser_root.locator(
+          ".nested-view__roots > .nested-post--cloaked .nested-post__article",
+        ).filter(visible: true),
+      ).to have_count(0)
+      expect(
+        browser_root.locator(
+          ".nested-view__roots > .nested-post--cloaked .nested-post-children",
+        ).filter(visible: true),
+      ).to have_count(0)
     end
   end
 end

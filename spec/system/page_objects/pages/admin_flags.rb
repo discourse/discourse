@@ -4,7 +4,9 @@ module PageObjects
   module Pages
     class AdminFlags < AdminBase
       def visit
-        page.visit("/admin/config/flags")
+        browser_page
+          .goto("/admin/config/flags")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
@@ -15,60 +17,91 @@ module PageObjects
       end
 
       def toggle_flag_menu(key)
-        find(".#{key} .flag-menu-trigger").click
+        browser_root.locator(".#{key} .flag-menu-trigger").filter(visible: true).click
         self
       end
 
       def has_action_for_flag?(flag)
-        has_selector?(".#{flag} .flag-menu-trigger")
+        have_count(0).does_not_match?(
+          browser_root.locator(".#{flag} .flag-menu-trigger").filter(visible: true),
+        )
       end
 
       def has_no_action_for_flag?(flag)
-        has_no_selector?(".#{flag} .flag-menu-trigger")
+        have_count(0).matches?(
+          browser_root.locator(".#{flag} .flag-menu-trigger").filter(visible: true),
+        )
       end
 
       def has_disabled_edit_for_flag?(flag)
-        has_selector?(".#{flag} .admin-flag-item__edit[disabled]")
+        have_count(0).does_not_match?(
+          browser_root.locator(".#{flag} .admin-flag-item__edit[disabled]").filter(visible: true),
+        )
       end
 
       def has_disabled_item_action?(action)
-        has_selector?(".admin-flag-item__#{action}[disabled]")
+        have_count(0).does_not_match?(
+          browser_root.locator(".admin-flag-item__#{action}[disabled]").filter(visible: true),
+        )
       end
 
       def has_item_action?(action)
-        has_selector?(".admin-flag-item__#{action}")
+        have_count(0).does_not_match?(
+          browser_root.locator(".admin-flag-item__#{action}").filter(visible: true),
+        )
       end
 
       def has_no_item_action?(action)
-        has_no_selector?(".admin-flag-item__#{action}")
+        have_count(0).matches?(
+          browser_root.locator(".admin-flag-item__#{action}").filter(visible: true),
+        )
       end
 
       def has_flags?(*flags)
-        expect(all(".admin-flag-item__name").map(&:text)).to eq(flags)
+        expect(
+          browser_root
+            .locator(".admin-flag-item__name")
+            .filter(visible: true)
+            .tap { |elements| elements.first.wait_for(state: "visible") }
+            .all
+            .map { |element| element.inner_text.strip },
+        ).to eq(flags)
       end
 
       def has_add_flag_button_enabled?
-        has_css?(".admin-flags__header-add-flag:not([disabled])")
+        have_count(0).does_not_match?(
+          browser_root.locator(".admin-flags__header-add-flag:not([disabled])").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_add_flag_button_disabled?
-        has_css?(".admin-flags__header-add-flag[disabled]")
+        have_count(0).does_not_match?(
+          browser_root.locator(".admin-flags__header-add-flag[disabled]").filter(visible: true),
+        )
       end
 
       def has_flag?(flag)
-        has_css?(".admin-flag-item.#{flag}")
+        have_count(0).does_not_match?(
+          browser_root.locator(".admin-flag-item.#{flag}").filter(visible: true),
+        )
       end
 
       def has_no_flag?(flag)
-        has_no_css?(".admin-flag-item.#{flag}", wait: Capybara.default_max_wait_time * 3)
+        have_count(0, timeout: (Capybara.default_max_wait_time * 3) * 1000).matches?(
+          browser_root.locator(".admin-flag-item.#{flag}").filter(visible: true),
+        )
       end
 
       def has_saved_flag?(key)
-        has_css?(".admin-flag-item.#{key}.saved")
+        have_count(0).does_not_match?(
+          browser_root.locator(".admin-flag-item.#{key}.saved").filter(visible: true),
+        )
       end
 
       def has_closed_flag_menu?
-        has_no_css?(".flag-menu-content")
+        have_count(0).matches?(browser_root.locator(".flag-menu-content").filter(visible: true))
       end
 
       # Methods for when the enable_new_reordering_controls upcoming change is
@@ -111,45 +144,54 @@ module PageObjects
 
       # Waiting, unlike has_flags?, so it can follow a move or a page load.
       def has_flags_in_order?(*flags)
-        has_css?(".admin-flag-item__name", count: flags.size) &&
+        have_count(flags.size).matches?(
+          browser_root.locator(".admin-flag-item__name").filter(visible: true),
+        ) &&
           flags.each_with_index.all? do |flag, index|
-            has_css?(".admin-flag-item:nth-child(#{index + 1}) .admin-flag-item__name", text: flag)
+            contain_text([browser_text_pattern(flag)], useInnerText: true).matches?(
+              browser_root.locator(
+                ".admin-flag-item:nth-child(#{index + 1}) .admin-flag-item__name",
+              ).filter(visible: true),
+            )
           end
       end
 
       def move_down(key)
         toggle_flag_menu(key)
-        find(".admin-flag-item__move-down").click
+        browser_root.locator(".admin-flag-item__move-down").filter(visible: true).click
         has_closed_flag_menu?
         self
       end
 
       def move_up(key)
         toggle_flag_menu(key)
-        find(".admin-flag-item__move-up").click
+        browser_root.locator(".admin-flag-item__move-up").filter(visible: true).click
         has_closed_flag_menu?
         self
       end
 
       def click_add_flag
-        find(".admin-flags__header-add-flag").click
+        browser_root.locator(".admin-flags__header-add-flag").filter(visible: true).click
         self
       end
 
       def click_edit_flag(key)
-        find(".#{key} .admin-flag-item__edit").click
+        browser_root.locator(".#{key} .admin-flag-item__edit").filter(visible: true).click
         self
       end
 
       def click_delete_flag(key)
-        find(".#{key} .flag-menu-trigger").click
-        find(".admin-flag-item__delete").click
+        browser_root.locator(".#{key} .flag-menu-trigger").filter(visible: true).click
+        browser_root.locator(".admin-flag-item__delete").filter(visible: true).click
         self
       end
 
       def confirm_delete
-        find(".dialog-footer .btn-primary").click
-        expect(page).to have_no_css(".dialog-body", wait: Capybara.default_max_wait_time * 3)
+        browser_root.locator(".dialog-footer .btn-primary").filter(visible: true).click
+        expect(browser_root.locator(".dialog-body").filter(visible: true)).to have_count(
+          0,
+          timeout: (Capybara.default_max_wait_time * 3) * 1000,
+        )
         self
       end
 

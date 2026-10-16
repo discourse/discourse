@@ -29,7 +29,10 @@ RSpec.describe "Nested view ignored users" do
     nested_view.visit_nested(topic)
 
     expect(nested_view).to have_ignored_placeholder_for(ignored_reply)
-    expect(page).to have_no_content("Secret reply content from an ignored user")
+    expect(browser_content).not_to contain_text(
+      browser_text_pattern("Secret reply content from an ignored user"),
+      useInnerText: true,
+    )
   end
 
   it "reveals the real content when the eye-slash avatar button is clicked" do
@@ -40,9 +43,13 @@ RSpec.describe "Nested view ignored users" do
     nested_view.click_reveal_ignored(ignored_reply)
 
     expect(nested_view).to have_no_ignored_placeholder_for(ignored_reply)
-    expect(page).to have_css(
-      "[data-post-number='#{ignored_reply.post_number}']",
-      text: "Secret reply content from an ignored user",
+    expect(
+      browser_root.locator("[data-post-number='#{ignored_reply.post_number}']").filter(
+        visible: true,
+      ),
+    ).to contain_text(
+      [browser_text_pattern("Secret reply content from an ignored user")],
+      useInnerText: true,
     )
   end
 

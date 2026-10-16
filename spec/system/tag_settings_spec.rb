@@ -29,20 +29,20 @@ describe "Tag Settings" do
       sign_in(admin)
       tag_settings_page.visit_tab(tag_1, "localizations")
 
-      expect(form.field("locale")).to have_value(
+      expect(form.field("locale")).to RSpecPredicates.have_value(
         PageObjects::Components::DNativeSelect::NO_VALUE_OPTION,
       )
       form.field("locale").select("ja")
       tag_settings_page.click_save
       expect(toasts).to have_success(I18n.t("js.tagging.settings.saved"))
-      page.refresh
-      expect(form.field("locale")).to have_value("ja")
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(form.field("locale")).to RSpecPredicates.have_value("ja")
 
       form.field("locale").select_none
       tag_settings_page.click_save
       expect(toasts).to have_success(I18n.t("js.tagging.settings.saved"))
-      page.refresh
-      expect(form.field("locale")).to have_value(
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(form.field("locale")).to RSpecPredicates.have_value(
         PageObjects::Components::DNativeSelect::NO_VALUE_OPTION,
       )
     end
@@ -55,7 +55,7 @@ describe "Tag Settings" do
       tags_page.edit_tag_btn.click
 
       expect(tag_settings_page).to have_tag_settings_page
-      expect(page).to have_current_path("/tag/#{tag_1.id}-tag/#{tag_1.id}/edit/general")
+      expect(browser_page).to have_url("/tag/#{tag_1.id}-tag/#{tag_1.id}/edit/general")
       expect(tag_settings_page).to have_name_value(tag_1.name)
       expect(tag_settings_page).to have_slug_value("#{tag_1.id}-tag")
     end
@@ -65,31 +65,35 @@ describe "Tag Settings" do
 
       tags_page.visit_tag(tag_1)
       tags_page.edit_tag_btn.click
-      expect(page).to have_current_path("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
+      expect(browser_page).to have_url("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
 
       sign_in(trust_level_4)
       tags_page.visit_tag(tag_1)
       tags_page.edit_tag_btn.click
-      expect(page).to have_current_path("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
+      expect(browser_page).to have_url("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
 
       sign_in(user)
       tags_page.visit_tag(tag_1)
 
       expect(tags_page).to have_no_edit_tag_btn
-      visit("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
-      expect(page).to have_current_path("/tag/#{tag_1.slug}/#{tag_1.id}")
+      browser_page
+        .goto("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_page).to have_url("/tag/#{tag_1.slug}/#{tag_1.id}")
     end
 
     it "lets the user open tag settings from a direct placeholder slug URL in a new tab" do
       sign_in(admin)
 
-      new_tab = open_new_window(:tab)
-      switch_to_window(new_tab)
+      new_tab = browser_page.context.new_page
+      native_browser.switch_page(new_tab)
 
-      page.visit "/tag/-/#{tag_1.id}/edit/general"
+      browser_page
+        .goto("/tag/-/#{tag_1.id}/edit/general")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(tag_settings_page).to have_tag_settings_page
-      expect(page).to have_current_path("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
+      expect(browser_page).to have_url("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
       expect(tag_settings_page).to have_name_value(tag_1.name)
       expect(tag_settings_page).to have_slug_value(tag_1.slug)
       expect(tag_settings_page).to have_description_value(tag_1.description)
@@ -104,7 +108,9 @@ describe "Tag Settings" do
       tags_page.visit_tag(tag_1)
       tags_page.edit_tag_btn.click
 
-      expect(page).to have_no_css(".d-page-header__actions .btn-danger")
+      expect(
+        browser_root.locator(".d-page-header__actions .btn-danger").filter(visible: true),
+      ).to have_count(0)
       expect(tag_settings_page).to have_name_value(tag_1.name)
       expect(tag_settings_page).to have_slug_value(tag_1.slug)
       expect(tag_settings_page).to have_description_value(tag_1.description)
@@ -119,7 +125,7 @@ describe "Tag Settings" do
 
       expect(toasts).to have_success(I18n.t("js.tagging.settings.saved"))
 
-      expect(page).to have_current_path("/tag/custom-slug/#{tag_1.id}/edit/general")
+      expect(browser_page).to have_url("/tag/custom-slug/#{tag_1.id}/edit/general")
       expect(tag_settings_page).to have_name_value("updated-name")
       expect(tag_settings_page).to have_slug_value("custom-slug")
       expect(tag_settings_page).to have_description_value("new description")
@@ -134,21 +140,23 @@ describe "Tag Settings" do
 
       expect(toasts).to have_success(I18n.t("js.tagging.settings.saved"))
 
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(tag_settings_page).to have_no_localizations
 
       tags_page.visit_tag(tag_2)
       tags_page.edit_tag_btn.click
-      expect(page).to have_css(".d-page-header__actions .btn-danger")
+      expect(
+        browser_root.locator(".d-page-header__actions .btn-danger").filter(visible: true),
+      ).not_to have_count(0)
       tag_settings_page.click_delete
       dialog.click_danger
-      expect(page).to have_current_path("/tags")
+      expect(browser_page).to have_url("/tags")
 
       tags_page.visit_tag(tag_1)
       tags_page.edit_tag_btn.click
       tag_settings_page.click_back
-      expect(page).to have_current_path("/tag/custom-slug/#{tag_1.id}")
+      expect(browser_page).to have_url("/tag/custom-slug/#{tag_1.id}")
     end
 
     it "shows an error when the slug is invalid" do
@@ -190,7 +198,7 @@ describe "Tag Settings" do
       tags_page.tags_dropdown.select_row_by_name(synonym_tag.name)
 
       expect(topic_list).to have_topic(target_tagged_topic)
-      expect(page).to have_current_path("/tag/#{target_tag.name}/#{target_tag.id}")
+      expect(browser_page).to have_url("/tag/#{target_tag.name}/#{target_tag.id}")
       expect(tags_page.tags_dropdown).to have_selected_name(target_tag.name)
     end
 
@@ -198,15 +206,17 @@ describe "Tag Settings" do
       category = Fabricate(:category)
       target_tagged_topic.update!(category: category)
 
-      page.visit("/tags/c/#{category.slug}/#{category.id}/#{tag_2.name}")
-      expect(page).to have_css(".tag-drop")
+      browser_page
+        .goto("/tags/c/#{category.slug}/#{category.id}/#{tag_2.name}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_root.locator(".tag-drop").filter(visible: true)).not_to have_count(0)
 
       tags_page.tags_dropdown.expand
       tags_page.tags_dropdown.search(synonym_tag.name)
       tags_page.tags_dropdown.select_row_by_name(synonym_tag.name)
 
       expect(topic_list).to have_topic(target_tagged_topic)
-      expect(page).to have_current_path(
+      expect(browser_page).to have_url(
         "/tags/c/#{category.slug}/#{category.id}/#{target_tag.name}/#{target_tag.id}",
       )
       expect(tags_page.tags_dropdown).to have_selected_name(target_tag.name)

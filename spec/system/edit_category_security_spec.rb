@@ -39,7 +39,7 @@ describe "Edit Category Security" do
   it "can navigate to a group" do
     category_page.visit_security(category)
     category_permission_row.navigate_to_group(category_group_1.group.name)
-    expect(page).to have_current_path("/g/#{category_group_1.group.name}")
+    expect(browser_page).to have_url("/g/#{category_group_1.group.name}")
   end
 
   it "can delete a group's permissions" do

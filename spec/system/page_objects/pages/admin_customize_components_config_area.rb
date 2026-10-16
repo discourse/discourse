@@ -6,7 +6,7 @@ module PageObjects
       class ComponentRow < PageObjects::Components::Base
         def initialize(selector)
           @selector = selector
-          @element = find(selector)
+          @element = browser_root.locator(selector).filter(visible: true)
         end
 
         def enabled_toggle
@@ -16,28 +16,43 @@ module PageObjects
         end
 
         def edit_button
-          @element.find(".admin-config-components__edit")
+          @element.locator(".admin-config-components__edit").filter(visible: true)
         end
 
         def has_author?(name)
-          @element.find(".admin-config-components__author-name").has_text?(
-            I18n.t(
-              "admin_js.admin.config_areas.themes_and_components.components.by_author",
-              name: name,
+          contain_text(
+            browser_text_pattern(
+              I18n.t(
+                "admin_js.admin.config_areas.themes_and_components.components.by_author",
+                name: name,
+              ),
             ),
+            useInnerText: true,
+          ).matches?(
+            @element.locator(".admin-config-components__author-name").filter(visible: true),
           )
         end
 
         def has_description?(description)
-          @element.find(".admin-config-components__description").has_text?(description)
+          contain_text(browser_text_pattern(description), useInnerText: true).matches?(
+            @element.locator(".admin-config-components__description").filter(visible: true),
+          )
         end
 
         def has_one_parent_theme?(name)
-          @element.find(".admin-config-components__parent-themes").text == name
+          @element
+            .locator(".admin-config-components__parent-themes")
+            .filter(visible: true)
+            .inner_text
+            .strip == name
         end
 
         def has_two_parent_themes?(name1, name2)
-          @element.find(".admin-config-components__parent-themes").text ==
+          @element
+            .locator(".admin-config-components__parent-themes")
+            .filter(visible: true)
+            .inner_text
+            .strip ==
             I18n.t(
               "admin_js.admin.config_areas.themes_and_components.components.parent_themes_two",
               name1:,
@@ -46,7 +61,11 @@ module PageObjects
         end
 
         def has_three_parent_themes?(name1, name2, name3)
-          @element.find(".admin-config-components__parent-themes").text ==
+          @element
+            .locator(".admin-config-components__parent-themes")
+            .filter(visible: true)
+            .inner_text
+            .strip ==
             I18n.t(
               "admin_js.admin.config_areas.themes_and_components.components.parent_themes_three",
               name1:,
@@ -56,7 +75,11 @@ module PageObjects
         end
 
         def has_three_and_more_parent_themes?(name1, name2, name3, count)
-          @element.find(".admin-config-components__parent-themes").text ==
+          @element
+            .locator(".admin-config-components__parent-themes")
+            .filter(visible: true)
+            .inner_text
+            .strip ==
             I18n.t(
               "admin_js.admin.config_areas.themes_and_components.components.parent_themes_more_than_three",
               name1:,
@@ -67,15 +90,26 @@ module PageObjects
         end
 
         def pending_update?
-          @element.has_css?(".admin-config-components__update-available")
+          have_count(0).does_not_match?(
+            @element.locator(".admin-config-components__update-available").filter(visible: true),
+          )
         end
 
         def not_pending_update?
-          @element.has_no_css?(".admin-config-components__update-available")
+          have_count(0).matches?(
+            @element
+              .tap do |parent|
+                parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+              end
+              .locator(".admin-config-components__update-available")
+              .filter(visible: true),
+          )
         end
 
         def more_actions_menu
-          PageObjects::Components::DMenu.new(@element.find(".component-menu-trigger"))
+          PageObjects::Components::DMenu.new(
+            @element.locator(".component-menu-trigger").filter(visible: true),
+          )
         end
 
         def preview_button
@@ -116,7 +150,9 @@ module PageObjects
       end
 
       def visit
-        page.visit("/admin/config/customize/components")
+        browser_page
+          .goto("/admin/config/customize/components")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
@@ -125,23 +161,35 @@ module PageObjects
       end
 
       def has_no_component?(id)
-        has_no_css?(".admin-config-components__component-row[data-component-id=\"#{id}\"]")
+        have_count(0).matches?(
+          browser_root.locator(
+            ".admin-config-components__component-row[data-component-id=\"#{id}\"]",
+          ).filter(visible: true),
+        )
       end
 
       def has_component?(id)
-        has_css?(".admin-config-components__component-row[data-component-id=\"#{id}\"]")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            ".admin-config-components__component-row[data-component-id=\"#{id}\"]",
+          ).filter(visible: true),
+        )
       end
 
       def status_selector
-        PageObjects::Components::DNativeSelect.new(find(".d-filter-controls__dropdown"))
+        PageObjects::Components::DNativeSelect.new(
+          browser_root.locator(".d-filter-controls__dropdown").filter(visible: true),
+        )
       end
 
       def name_filter_input
-        find(".d-filter-controls__input")
+        browser_root.locator(".d-filter-controls__input").filter(visible: true)
       end
 
       def has_no_components?
-        has_no_css?(".admin-config-components__component-row")
+        have_count(0).matches?(
+          browser_root.locator(".admin-config-components__component-row").filter(visible: true),
+        )
       end
 
       def has_exact_components?(*ids)
@@ -149,43 +197,66 @@ module PageObjects
       end
 
       def has_exactly_n_components?(count)
-        has_css?(".admin-config-components__component-row", count:)
+        have_count(count).matches?(
+          browser_root.locator(".admin-config-components__component-row").filter(visible: true),
+        )
       end
 
       def components_shown
-        expect(page).to have_css(".admin-config-components__component-row")
+        expect(
+          browser_root.locator(".admin-config-components__component-row").filter(visible: true),
+        ).not_to have_count(0)
 
-        all(".admin-config-components__component-row").map { |node| node["data-component-id"].to_i }
+        browser_root
+          .locator(".admin-config-components__component-row")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .map { |node| node.get_attribute("data-component-id").to_i }
       end
 
       def has_name_filter_input?
-        has_css?(".d-filter-controls__input")
+        have_count(0).does_not_match?(
+          browser_root.locator(".d-filter-controls__input").filter(visible: true),
+        )
       end
 
       def has_status_selector?
-        has_css?(".d-filter-controls__dropdown")
+        have_count(0).does_not_match?(
+          browser_root.locator(".d-filter-controls__dropdown").filter(visible: true),
+        )
       end
 
       def has_no_name_filter_input?
-        has_no_css?(".d-filter-controls__input")
+        have_count(0).matches?(
+          browser_root.locator(".d-filter-controls__input").filter(visible: true),
+        )
       end
 
       def has_no_status_selector?
-        has_no_css?(".d-filter-controls__dropdown")
+        have_count(0).matches?(
+          browser_root.locator(".d-filter-controls__dropdown").filter(visible: true),
+        )
       end
 
       def has_no_components_installed_text?
-        page.has_text?(
-          I18n.t("admin_js.admin.config_areas.themes_and_components.components.no_components"),
-        )
+        contain_text(
+          browser_text_pattern(
+            I18n.t("admin_js.admin.config_areas.themes_and_components.components.no_components"),
+          ),
+          useInnerText: true,
+        ).matches?(browser_content)
       end
 
       def has_no_components_found_text?
-        page.has_text?(
-          I18n.t(
-            "admin_js.admin.config_areas.themes_and_components.components.no_components_found",
+        contain_text(
+          browser_text_pattern(
+            I18n.t(
+              "admin_js.admin.config_areas.themes_and_components.components.no_components_found",
+            ),
           ),
-        )
+          useInnerText: true,
+        ).matches?(browser_content)
       end
 
       def click_install_button

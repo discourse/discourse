@@ -6,46 +6,98 @@ module PageObjects
       MODAL_SELECTOR = ".post-translations-modal"
 
       def select_post_language(language)
-        within(full_modal_selector) do
-          select(language, from: I18n.t("js.post.localizations.modal.post_language"))
+        within_browser(full_modal_selector) do
+          browser_root.get_by_label(
+            I18n.t("js.post.localizations.modal.post_language"),
+            exact: true,
+          ).select_option(label: language)
         end
         self
       end
 
       def select_topic_language(language)
-        within(full_modal_selector) do
-          select(language, from: I18n.t("js.post.localizations.modal.topic_language"))
+        within_browser(full_modal_selector) do
+          browser_root.get_by_label(
+            I18n.t("js.post.localizations.modal.topic_language"),
+            exact: true,
+          ).select_option(label: language)
         end
         self
       end
 
       def save_post_language
-        find("#{full_modal_selector} .post-translations-modal__post-language .--save").click
+        browser_root
+          .locator("#{full_modal_selector} .post-translations-modal__post-language .--save")
+          .filter(visible: true)
+          .click
         self
       end
 
       def save_topic_language
-        find("#{full_modal_selector} .post-translations-modal__topic-language .--save").click
+        browser_root
+          .locator("#{full_modal_selector} .post-translations-modal__topic-language .--save")
+          .filter(visible: true)
+          .click
         self
       end
 
       def has_post_language?(language)
-        has_select?(I18n.t("js.post.localizations.modal.post_language"), selected: language)
+        have_text(language).matches?(
+          browser_root
+            .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+            .and(
+              browser_root.locator(
+                "[id=#{I18n.t("js.post.localizations.modal.post_language").to_s.to_json}], [name=#{I18n.t("js.post.localizations.modal.post_language").to_s.to_json}]",
+              ).or(
+                browser_root.get_by_label(
+                  I18n.t("js.post.localizations.modal.post_language"),
+                  exact: true,
+                ),
+              ),
+            )
+            .filter(visible: true)
+            .and(browser_root.locator("select"))
+            .locator("option:checked"),
+        )
       end
 
       def has_topic_language?(language)
-        has_select?(I18n.t("js.post.localizations.modal.topic_language"), selected: language)
+        have_text(language).matches?(
+          browser_root
+            .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+            .and(
+              browser_root.locator(
+                "[id=#{I18n.t("js.post.localizations.modal.topic_language").to_s.to_json}], [name=#{I18n.t("js.post.localizations.modal.topic_language").to_s.to_json}]",
+              ).or(
+                browser_root.get_by_label(
+                  I18n.t("js.post.localizations.modal.topic_language"),
+                  exact: true,
+                ),
+              ),
+            )
+            .filter(visible: true)
+            .and(browser_root.locator("select"))
+            .locator("option:checked"),
+        )
       end
 
       def has_language_notice?
-        has_css?(
-          "#{full_modal_selector} .post-translations-modal__post-language .form-kit__container-help-text",
-          text: I18n.t("js.post.localizations.modal.language_notice"),
+        contain_text(
+          [browser_text_pattern(I18n.t("js.post.localizations.modal.language_notice"))],
+          useInnerText: true,
+        ).matches?(
+          browser_root.locator(
+            "#{full_modal_selector} .post-translations-modal__post-language .form-kit__container-help-text",
+          ).filter(visible: true),
         )
       end
 
       def has_translation_language?(language)
-        has_css?("#{full_modal_selector} .post-translations-modal__locale", text: language)
+        contain_text([browser_text_pattern(language)], useInnerText: true).matches?(
+          browser_root.locator("#{full_modal_selector} .post-translations-modal__locale").filter(
+            visible: true,
+          ),
+        )
       end
     end
   end

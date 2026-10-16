@@ -12,8 +12,8 @@ describe "Edit Category Reset To Default" do
   it "lets an admin put the sort order and the default view back to the default" do
     category_page.visit_appearance(category)
 
-    expect(form.field("sort_order")).to have_value("likes")
-    expect(form.field("default_view")).to have_value("top")
+    expect(form.field("sort_order")).to RSpecPredicates.have_value("likes")
+    expect(form.field("default_view")).to RSpecPredicates.have_value("top")
 
     form.field("sort_order").select_none
     form.field("default_view").select_none
@@ -25,7 +25,7 @@ describe "Edit Category Reset To Default" do
       expect(category.default_view).to eq(nil)
     end
 
-    page.refresh
+    browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(form.field("sort_order")).to have_no_value
     expect(form.field("default_view")).to have_no_value

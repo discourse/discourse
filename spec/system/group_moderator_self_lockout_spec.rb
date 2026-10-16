@@ -21,7 +21,11 @@ describe "Group moderator self-lockout warning" do
   def visit_membership_settings
     group_page.visit(group)
     group_page.click_manage
-    page.find(".user-secondary-navigation li", text: "Membership").click
+    browser_root
+      .locator(".user-secondary-navigation li")
+      .filter(visible: true)
+      .filter(hasText: browser_text_pattern("Membership"))
+      .click
   end
 
   context "when non-owner moderator changes visibility to 'Owners only'" do
@@ -34,7 +38,7 @@ describe "Group moderator self-lockout warning" do
       group_page.click_save
 
       expect(dialog).to be_open
-      expect(dialog).to have_content(I18n.t("js.groups.manage.interaction.self_lockout"))
+      expect(dialog).to have_displayed_content(I18n.t("js.groups.manage.interaction.self_lockout"))
     end
 
     it "shows confirmation dialog for members_visibility_level change" do
@@ -44,7 +48,7 @@ describe "Group moderator self-lockout warning" do
       group_page.click_save
 
       expect(dialog).to be_open
-      expect(dialog).to have_content(I18n.t("js.groups.manage.interaction.self_lockout"))
+      expect(dialog).to have_displayed_content(I18n.t("js.groups.manage.interaction.self_lockout"))
     end
 
     it "saves when confirmed" do
@@ -54,7 +58,7 @@ describe "Group moderator self-lockout warning" do
       group_page.click_save
       dialog.click_yes
 
-      expect(page).to have_no_current_path(%r{/g/#{group.name}/manage})
+      expect(browser_page).not_to have_url(%r{/g/#{group.name}/manage})
       expect(group.reload.visibility_level).to eq(Group.visibility_levels[:owners])
     end
 
@@ -110,7 +114,9 @@ describe "Group moderator self-lockout warning" do
       member_dropdown.select_row_by_value("removeOwner")
 
       expect(dialog).to be_open
-      expect(dialog).to have_content(I18n.t("js.groups.members.remove_owner_self_lockout"))
+      expect(dialog).to have_displayed_content(
+        I18n.t("js.groups.members.remove_owner_self_lockout"),
+      )
     end
 
     it "shows confirmation dialog when removing self as member" do
@@ -119,7 +125,9 @@ describe "Group moderator self-lockout warning" do
       member_dropdown.select_row_by_value("removeMember")
 
       expect(dialog).to be_open
-      expect(dialog).to have_content(I18n.t("js.groups.members.remove_member_self_lockout"))
+      expect(dialog).to have_displayed_content(
+        I18n.t("js.groups.members.remove_member_self_lockout"),
+      )
     end
 
     it "does not remove when cancelled" do

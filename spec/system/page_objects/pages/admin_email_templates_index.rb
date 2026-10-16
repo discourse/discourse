@@ -6,24 +6,26 @@ module PageObjects
       class TemplateRow < PageObjects::Components::Base
         def initialize(selector)
           @selector = selector
-          @element = find(selector)
+          @element = browser_root.locator(selector).filter(visible: true)
         end
 
         def edit_button
-          @element.find(".admin-email-templates__edit-button")
+          @element.locator(".admin-email-templates__edit-button").filter(visible: true)
         end
 
         def name_cell
-          @element.find(".admin-email-templates__name")
+          @element.locator(".admin-email-templates__name").filter(visible: true)
         end
 
         def overridden?
-          @element[:class].include?("overridden")
+          @element.get_attribute("class").include?("overridden")
         end
       end
 
       def visit
-        page.visit("/admin/email/templates")
+        browser_page
+          .goto("/admin/email/templates")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       end
 
       def template(id)
@@ -35,11 +37,13 @@ module PageObjects
       end
 
       def only_overridden_checkbox
-        find("#toggle-overridden")
+        browser_root.locator("#toggle-overridden").filter(visible: true)
       end
 
       def has_exact_count_templates_shown?(count)
-        has_css?("tr[data-template-id]", count:)
+        have_count(count).matches?(
+          browser_root.locator("tr[data-template-id]").filter(visible: true),
+        )
       end
     end
   end

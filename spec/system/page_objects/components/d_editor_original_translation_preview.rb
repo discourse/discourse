@@ -13,11 +13,13 @@ module PageObjects
         ".d-editor-translation-preview-header__controls button:nth-child(2)"
 
       def has_raw_toggle?
-        page.has_css?(RAW_TOGGLE_SELECTOR)
+        have_count(0).does_not_match?(
+          browser_root.locator(RAW_TOGGLE_SELECTOR).filter(visible: true),
+        )
       end
 
       def has_no_raw_toggle?
-        page.has_no_css?(RAW_TOGGLE_SELECTOR)
+        have_count(0).matches?(browser_root.locator(RAW_TOGGLE_SELECTOR).filter(visible: true))
       end
 
       def raw_toggle
@@ -27,44 +29,56 @@ module PageObjects
       end
 
       def click_original_tab
-        find(ORIGINAL_TAB_SELECTOR).click
+        browser_root.locator(ORIGINAL_TAB_SELECTOR).filter(visible: true).click
         self
       end
 
       def click_translation_tab
-        find(TRANSLATION_TAB_SELECTOR).click
+        browser_root.locator(TRANSLATION_TAB_SELECTOR).filter(visible: true).click
         self
       end
 
       def original_tab_active?
-        page.has_css?("#{ORIGINAL_TAB_SELECTOR}.active")
+        have_count(0).does_not_match?(
+          browser_root.locator("#{ORIGINAL_TAB_SELECTOR}.active").filter(visible: true),
+        )
       end
 
       def translation_tab_active?
-        page.has_css?("#{TRANSLATION_TAB_SELECTOR}.active")
+        have_count(0).does_not_match?(
+          browser_root.locator("#{TRANSLATION_TAB_SELECTOR}.active").filter(visible: true),
+        )
       end
 
       def has_raw_markdown_content?
-        page.has_css?(RAW_CONTENT_SELECTOR)
+        have_count(0).does_not_match?(
+          browser_root.locator(RAW_CONTENT_SELECTOR).filter(visible: true),
+        )
       end
 
       def has_no_raw_markdown_content?
-        page.has_no_css?(RAW_CONTENT_SELECTOR)
+        have_count(0).matches?(browser_root.locator(RAW_CONTENT_SELECTOR).filter(visible: true))
       end
 
       def raw_markdown_content
-        find(RAW_CONTENT_SELECTOR).text
+        browser_root.locator(RAW_CONTENT_SELECTOR).filter(visible: true).inner_text.strip
       end
 
       def has_rendered_content?
-        page.has_css?(RENDERED_CONTENT_SELECTOR) && page.has_no_css?(RAW_CONTENT_SELECTOR)
+        have_count(0).does_not_match?(
+          browser_root.locator(RENDERED_CONTENT_SELECTOR).filter(visible: true),
+        ) &&
+          have_count(0).matches?(browser_root.locator(RAW_CONTENT_SELECTOR).filter(visible: true))
       end
 
       def has_rendered_preview_image?(alt:)
-        page.has_xpath?(
-          ".//*[contains(concat(' ', normalize-space(@class), ' '), ' d-editor-translation-preview-content ')]" \
-            "//*[contains(concat(' ', normalize-space(@class), ' '), ' d-editor-preview ')]" \
-            "//img[@alt=#{xpath_literal(alt)}][@src != '/images/transparent.png'][not(@data-orig-src)]",
+        have_count(0).does_not_match?(
+          browser_page.locator(
+            "xpath=" +
+              ".//*[contains(concat(' ', normalize-space(@class), ' '), ' d-editor-translation-preview-content ')]" \
+                "//*[contains(concat(' ', normalize-space(@class), ' '), ' d-editor-preview ')]" \
+                "//img[@alt=#{xpath_literal(alt)}][@src != '/images/transparent.png'][not(@data-orig-src)]",
+          ).filter(visible: true),
         )
       end
 

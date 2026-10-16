@@ -18,17 +18,26 @@ describe "Composer - ProseMirror - Watched Words" do
     end
 
     it "does not apply replacements to the raw content" do
-      visit "/t/#{topic.slug}/#{topic.id}"
-      find(".post-action-menu__edit").click
+      browser_page
+        .goto("/t/#{topic.slug}/#{topic.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root.locator(".post-action-menu__edit").filter(visible: true).click
       expect(composer).to be_opened
       composer.focus
 
-      expect(rich).to have_content("ETA")
-      expect(rich).to have_no_content("Estimated Time of Arrival (ETA)")
+      expect(rich).to contain_text(browser_text_pattern("ETA"), useInnerText: true)
+      expect(
+        rich.tap do |parent|
+          parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+        end,
+      ).not_to contain_text(
+        browser_text_pattern("Estimated Time of Arrival (ETA)"),
+        useInnerText: true,
+      )
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("We need to improve the ETA on this")
+      expect(composer).to RSpecPredicates.have_value("We need to improve the ETA on this")
     end
   end
 
@@ -42,16 +51,18 @@ describe "Composer - ProseMirror - Watched Words" do
     end
 
     it "does not censor the raw content" do
-      visit "/t/#{topic.slug}/#{topic.id}"
-      find(".post-action-menu__edit").click
+      browser_page
+        .goto("/t/#{topic.slug}/#{topic.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root.locator(".post-action-menu__edit").filter(visible: true).click
       expect(composer).to be_opened
       composer.focus
 
-      expect(rich).to have_content("badword")
+      expect(rich).to contain_text(browser_text_pattern("badword"), useInnerText: true)
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("This is a badword in the post")
+      expect(composer).to RSpecPredicates.have_value("This is a badword in the post")
     end
   end
 end

@@ -4,38 +4,90 @@ module PageObjects
   module Modals
     class SidebarEditNavigationModal < PageObjects::Modals::Base
       def closed?
-        has_no_css?(".sidebar__edit-navigation-menu__modal")
+        have_count(0).matches?(
+          browser_root.locator(".sidebar__edit-navigation-menu__modal").filter(visible: true),
+        )
       end
 
       def has_right_title?(title)
-        has_css?(".sidebar__edit-navigation-menu__modal .d-modal__title-text", text: title)
+        contain_text([browser_text_pattern(title)], useInnerText: true).matches?(
+          browser_root.locator(".sidebar__edit-navigation-menu__modal .d-modal__title-text").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_focus_on_filter_input?
-        has_css?(".sidebar__edit-navigation-menu__filter-input-field:focus")
+        have_count(0).does_not_match?(
+          browser_root.locator(".sidebar__edit-navigation-menu__filter-input-field:focus").filter(
+            visible: true,
+          ),
+        )
       end
 
       def filter(text)
-        find(".sidebar__edit-navigation-menu__filter-input-field").fill_in(with: text)
+        browser_root
+          .locator(".sidebar__edit-navigation-menu__filter-input-field")
+          .filter(visible: true)
+          .fill(text)
         self
       end
 
       def click_reset_to_defaults_button
-        click_button(I18n.t("js.sidebar.edit_navigation_modal_form.reset_to_defaults"))
+        browser_root
+          .locator(
+            "[id=#{I18n.t("js.sidebar.edit_navigation_modal_form.reset_to_defaults").to_s.to_json}], [name=#{I18n.t("js.sidebar.edit_navigation_modal_form.reset_to_defaults").to_s.to_json}]",
+          )
+          .or(
+            browser_root.get_by_role(
+              "button",
+              name: I18n.t("js.sidebar.edit_navigation_modal_form.reset_to_defaults"),
+            ),
+          )
+          .filter(visible: true)
+          .click
         self
       end
 
       def has_no_reset_to_defaults_button?
-        has_no_button?(I18n.t("js.sidebar.edit_navigation_modal_form.reset_to_defaults"))
+        have_count(0).matches?(
+          browser_root
+            .get_by_role("button")
+            .and(
+              browser_root.locator(
+                "[id=#{I18n.t("js.sidebar.edit_navigation_modal_form.reset_to_defaults").to_s.to_json}], [name=#{I18n.t("js.sidebar.edit_navigation_modal_form.reset_to_defaults").to_s.to_json}]",
+              ).or(
+                browser_root.get_by_role(
+                  "button",
+                  name: I18n.t("js.sidebar.edit_navigation_modal_form.reset_to_defaults"),
+                ),
+              ),
+            )
+            .filter(visible: true),
+        )
       end
 
       def save
-        find(".sidebar__edit-navigation-menu__save-button").click
+        browser_root
+          .locator(".sidebar__edit-navigation-menu__save-button")
+          .filter(visible: true)
+          .click
         self
       end
 
       def deselect_all
-        click_button(I18n.t("js.sidebar.edit_navigation_modal_form.deselect_button_text"))
+        browser_root
+          .locator(
+            "[id=#{I18n.t("js.sidebar.edit_navigation_modal_form.deselect_button_text").to_s.to_json}], [name=#{I18n.t("js.sidebar.edit_navigation_modal_form.deselect_button_text").to_s.to_json}]",
+          )
+          .or(
+            browser_root.get_by_role(
+              "button",
+              name: I18n.t("js.sidebar.edit_navigation_modal_form.deselect_button_text"),
+            ),
+          )
+          .filter(visible: true)
+          .click
         self
       end
 

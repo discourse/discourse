@@ -5,19 +5,23 @@ module PageObjects
       MODAL_SELECTOR = ".discard-draft-modal"
 
       def open?
-        has_css?(".d-modal#{MODAL_SELECTOR}")
+        have_count(0).does_not_match?(
+          browser_root.locator(".d-modal#{MODAL_SELECTOR}").filter(visible: true),
+        )
       end
 
       def closed?
-        has_no_css?(".d-modal#{MODAL_SELECTOR}")
+        have_count(0).matches?(
+          browser_root.locator(".d-modal#{MODAL_SELECTOR}").filter(visible: true),
+        )
       end
 
       def click_discard
-        footer.find(".discard-draft-modal__discard-btn").click
+        footer.locator(".discard-draft-modal__discard-btn").filter(visible: true).click
       end
 
       def click_cancel
-        footer.find(".discard-draft-modal__cancel-btn").click
+        footer.locator(".discard-draft-modal__cancel-btn").filter(visible: true).click
       end
     end
   end

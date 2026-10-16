@@ -33,9 +33,11 @@ describe "Emoji deny list" do
 
     it "removes denied emojis from the page title, heading, and body" do
       topic_page.visit_topic(topic)
-      expect(page.title).to eq("Time for business - Discourse")
+      expect(browser_page.title).to eq("Time for business - Discourse")
       expect(topic_page).to have_topic_title("Time for business")
-      expect(page).not_to have_css(".emoji[title=':monkey:']")
+      expect(browser_root.locator(".emoji[title=':monkey:']").filter(visible: true)).to have_count(
+        0,
+      )
     end
   end
 
@@ -99,7 +101,15 @@ describe "Emoji deny list" do
     it "removes denied emojis from the message title and body" do
       topic_page.visit_topic(topic)
       expect(topic_page).to have_topic_title("Want to catch up for today?")
-      expect(post).not_to have_css(".emoji[title=':monkey:']")
+      expect(
+        topic_page
+          .post_by_number(post)
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator(".emoji[title=':monkey:']")
+          .filter(visible: true),
+      ).to have_count(0)
     end
   end
 end

@@ -11,14 +11,17 @@ describe "Users directory" do
       DirectoryItem.refresh!
       sign_in(user)
 
-      visit("/u")
+      browser_page.goto("/u").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_css(".users-directory")
-      expect(page).not_to have_css(".spinner")
+      expect(browser_root.locator(".users-directory").filter(visible: true)).not_to have_count(0)
+      expect(browser_root.locator(".spinner").filter(visible: true)).to have_count(0)
       header_texts =
-        page
-          .all(".directory-table__column-header .header-contents")
-          .map { |element| element.text.strip }
+        browser_root
+          .locator(".directory-table__column-header .header-contents")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .map { |element| element.inner_text.strip.strip }
 
       expect(header_texts).to eq(
         [
@@ -36,14 +39,17 @@ describe "Users directory" do
 
     it "renders successfully for an anonymous user" do
       DirectoryItem.refresh!
-      visit("/u")
+      browser_page.goto("/u").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_css(".users-directory")
-      expect(page).not_to have_css(".spinner")
+      expect(browser_root.locator(".users-directory").filter(visible: true)).not_to have_count(0)
+      expect(browser_root.locator(".spinner").filter(visible: true)).to have_count(0)
       header_texts =
-        page
-          .all(".directory-table__column-header .header-contents")
-          .map { |element| element.text.strip }
+        browser_root
+          .locator(".directory-table__column-header .header-contents")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .map { |element| element.inner_text.strip.strip }
 
       expect(header_texts).to eq(
         [

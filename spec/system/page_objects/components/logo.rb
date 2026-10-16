@@ -6,11 +6,11 @@ module PageObjects
       SELECTOR = "#site-logo"
 
       def click
-        find(".d-header .title a").click
+        browser_root.locator(".d-header .title a").filter(visible: true).click
       end
 
       def hover
-        find(SELECTOR).hover
+        browser_root.locator(SELECTOR).filter(visible: true).hover
       end
     end
   end

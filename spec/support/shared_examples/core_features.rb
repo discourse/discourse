@@ -16,17 +16,19 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
       before { EmailToken.confirm(Fabricate(:email_token, user: active_user).token) }
 
       it "logs in" do
-        visit("/")
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         login_form.open
         login_form.fill_username(active_user.username)
         login_form.fill_password("secure_password")
         login_form.click_login
-        expect(page).to have_css(".current-user", visible: true)
+        expect(browser_root.locator(".current-user").filter(visible: true)).not_to have_count(0)
       end
 
       it "displays a login button in the header" do
-        visit("/")
-        expect(page).to have_css("header .login-button", visible: true)
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(
+          browser_root.locator("header .login-button").filter(visible: true),
+        ).not_to have_count(0)
       end
     end
   end
@@ -35,21 +37,29 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
     describe "Topics" do
       if skip_examples.exclude?(:"topics:read")
         context "with an anonymous user" do
-          before { visit "/" }
+          before { browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) } }
 
           it "lists latest topics" do
-            expect(page).to have_css(".topic-list-item", count: 4)
+            expect(browser_root.locator(".topic-list-item").filter(visible: true)).to have_count(4)
           end
 
           it "lists topics for a category" do
-            within("#sidebar-section-content-categories") { click_on("General") }
-            expect(page).to have_css(".topic-list-item", count: 3)
+            within_browser(
+              browser_root.locator("#sidebar-section-content-categories").filter(visible: true),
+            ) { browser_root.get_by_role("link", name: "General", exact: true).click }
+            expect(browser_root.locator(".topic-list-item").filter(visible: true)).to have_count(3)
           end
 
           it "displays a specific topic" do
-            click_on(topics.first.title)
-            expect(page).to have_content(topics.first.title)
-            expect(page).to have_content(topics.first.first_post.raw)
+            browser_root.get_by_role("link", name: topics.first.title, exact: true).click
+            expect(browser_content).to contain_text(
+              browser_text_pattern(topics.first.title),
+              useInnerText: true,
+            )
+            expect(browser_content).to contain_text(
+              browser_text_pattern(topics.first.first_post.raw),
+              useInnerText: true,
+            )
           end
         end
       end
@@ -57,48 +67,92 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
       context "with a logged in user" do
         before do
           sign_in(active_user)
-          visit "/"
+          browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         end
 
         if skip_examples.exclude?(:"topics:read")
           it "lists latest topics" do
-            expect(page).to have_css(".topic-list-item", count: 4)
+            expect(browser_root.locator(".topic-list-item").filter(visible: true)).to have_count(4)
           end
 
           it "lists topics for a category" do
-            within("#sidebar-section-content-categories") { click_on("General") }
-            expect(page).to have_css(".topic-list-item", count: 3)
+            within_browser(
+              browser_root.locator("#sidebar-section-content-categories").filter(visible: true),
+            ) { browser_root.get_by_role("link", name: "General", exact: true).click }
+            expect(browser_root.locator(".topic-list-item").filter(visible: true)).to have_count(3)
           end
 
           it "displays a specific topic" do
-            click_on(topics.first.title)
-            expect(page).to have_content(topics.first.title)
-            expect(page).to have_content(topics.first.first_post.raw)
+            browser_root.get_by_role("link", name: topics.first.title, exact: true).click
+            expect(browser_content).to contain_text(
+              browser_text_pattern(topics.first.title),
+              useInnerText: true,
+            )
+            expect(browser_content).to contain_text(
+              browser_text_pattern(topics.first.first_post.raw),
+              useInnerText: true,
+            )
           end
         end
 
         if skip_examples.exclude?(:"topics:reply")
           it "replies in a topic" do
-            click_on(topics.first.title)
-            expect(page).to have_content(topics.first.first_post.raw)
-            within(".actions") { click_button("Reply") }
+            browser_root.get_by_role("link", name: topics.first.title, exact: true).click
+            expect(browser_content).to contain_text(
+              browser_text_pattern(topics.first.first_post.raw),
+              useInnerText: true,
+            )
+            within_browser(browser_root.locator(".actions").filter(visible: true)) do
+              browser_root
+                .locator("[id=#{"Reply".to_s.to_json}], [name=#{"Reply".to_s.to_json}]")
+                .or(browser_root.get_by_role("button", name: "Reply"))
+                .filter(visible: true)
+                .click
+            end
             composer.focus
-            send_keys("This is a long enough reply.")
-            expect(page).to have_css(".d-editor-preview p", visible: true)
-            within(".save-or-cancel") { click_button("Reply") }
-            expect(page).to have_content("This is a long enough reply.")
+            browser_page.keyboard.type("This is a long enough reply.")
+            expect(
+              browser_root.locator(".d-editor-preview p").filter(visible: true),
+            ).not_to have_count(0)
+            within_browser(browser_root.locator(".save-or-cancel").filter(visible: true)) do
+              browser_root
+                .locator("[id=#{"Reply".to_s.to_json}], [name=#{"Reply".to_s.to_json}]")
+                .or(browser_root.get_by_role("button", name: "Reply"))
+                .filter(visible: true)
+                .click
+            end
+            expect(browser_content).to contain_text(
+              browser_text_pattern("This is a long enough reply."),
+              useInnerText: true,
+            )
           end
         end
 
         if skip_examples.exclude?(:"topics:create")
           it "creates a new topic" do
-            find("#create-topic", visible: true).click
+            browser_root.locator("#create-topic").filter(visible: true).click
             composer.fill_title("This is a new topic")
             composer.fill_content("This is a long enough sentence.")
-            expect(page).to have_css(".d-editor-preview p", visible: true)
-            within(".save-or-cancel") { click_button("Create Topic") }
-            expect(page).to have_content("This is a new topic")
-            expect(page).to have_content("This is a long enough sentence.")
+            expect(
+              browser_root.locator(".d-editor-preview p").filter(visible: true),
+            ).not_to have_count(0)
+            within_browser(browser_root.locator(".save-or-cancel").filter(visible: true)) do
+              browser_root
+                .locator(
+                  "[id=#{"Create Topic".to_s.to_json}], [name=#{"Create Topic".to_s.to_json}]",
+                )
+                .or(browser_root.get_by_role("button", name: "Create Topic"))
+                .filter(visible: true)
+                .click
+            end
+            expect(browser_content).to contain_text(
+              browser_text_pattern("This is a new topic"),
+              useInnerText: true,
+            )
+            expect(browser_content).to contain_text(
+              browser_text_pattern("This is a long enough sentence."),
+              useInnerText: true,
+            )
           end
         end
       end
@@ -109,11 +163,11 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
     describe "Likes" do
       before do
         sign_in(active_user)
-        visit "/"
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       end
 
       it "likes a post" do
-        click_on(topics.first.title)
+        browser_root.get_by_role("link", name: topics.first.title, exact: true).click
         topic_page.click_like_reaction_for(topics.first.posts.first)
         expect(topic_page).to have_like_count_for(topics.first.posts.first, 1)
       end
@@ -128,9 +182,17 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
       context "with an anonymous user" do
         it "displays a user’s profile" do
-          visit("/u/#{user.username}/summary")
-          expect(page).to have_content(user.name)
-          expect(page).to have_content("Activity")
+          browser_page
+            .goto("/u/#{user.username}/summary")
+            .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+          expect(browser_content).to contain_text(
+            browser_text_pattern(user.name),
+            useInnerText: true,
+          )
+          expect(browser_content).to contain_text(
+            browser_text_pattern("Activity"),
+            useInnerText: true,
+          )
         end
       end
 
@@ -138,15 +200,31 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
         before { sign_in(active_user) }
 
         it "displays a user’s profile" do
-          visit("/u/#{user.username}/summary")
-          expect(page).to have_content(user.name)
-          expect(page).to have_content("Message")
+          browser_page
+            .goto("/u/#{user.username}/summary")
+            .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+          expect(browser_content).to contain_text(
+            browser_text_pattern(user.name),
+            useInnerText: true,
+          )
+          expect(browser_content).to contain_text(
+            browser_text_pattern("Message"),
+            useInnerText: true,
+          )
         end
 
         it "displays the user’s own profile" do
-          visit("/u/#{active_user.username}/summary")
-          expect(page).to have_content(active_user.name)
-          expect(page).to have_content("Preferences")
+          browser_page
+            .goto("/u/#{active_user.username}/summary")
+            .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+          expect(browser_content).to contain_text(
+            browser_text_pattern(active_user.name),
+            useInnerText: true,
+          )
+          expect(browser_content).to contain_text(
+            browser_text_pattern("Preferences"),
+            useInnerText: true,
+          )
         end
       end
     end
@@ -167,7 +245,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
       context "with an anonymous user" do
         if skip_examples.exclude?(:"search:quick_search")
           it "searches using the quick search" do
-            visit("/")
+            browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
             search_page.click_search_icon
             search_page.type_in_search_menu(topics.first.title)
             search_page.click_search_menu_link
@@ -177,7 +255,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
         if skip_examples.exclude?(:"search:full_page")
           it "searches using the full page search" do
-            visit("/search")
+            browser_page.goto("/search").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
             search_page.type_in_search(topics.first.title)
             search_page.click_search_button
@@ -192,7 +270,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
         if skip_examples.exclude?(:"search:quick_search")
           it "searches using the quick search" do
-            visit("/")
+            browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
             search_page.click_search_icon
             search_page.type_in_search_menu(topics.first.title)
             search_page.click_search_menu_link
@@ -202,7 +280,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
         if skip_examples.exclude?(:"search:full_page")
           it "searches using the full page search" do
-            visit("/search")
+            browser_page.goto("/search").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
             search_page.type_in_search(topics.first.title)
             search_page.click_search_button
@@ -218,17 +296,14 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
     it "has expected javascript asset" do
       enabled_plugins = Discourse.plugins.filter(&:enabled?)
 
-      visit "/"
-      expect(page).to have_css("div.discourse-root", visible: :all) # Themes might hide it
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_root.locator("div.discourse-root")).not_to have_count(0) # Themes might hide it
 
       plugin_script_tags =
-        page
-          .all(
-            "script[data-plugin-name], link[rel=modulepreload][data-plugin-name]",
-            visible: :all,
-            minimum: 0,
-          )
-          .map { |tag| tag["data-plugin-name"] }
+        browser_root
+          .locator("script[data-plugin-name], link[rel=modulepreload][data-plugin-name]")
+          .all
+          .map { |tag| tag.get_attribute("data-plugin-name") }
 
       enabled_plugins.each do |plugin|
         if plugin.js_asset_exists?

@@ -22,7 +22,9 @@ describe "Admin Site Setting Search" do
     overridden_setting_count = SiteSetting.all_settings(only_overridden: true).length
     settings_page.visit
     settings_page.toggle_only_show_overridden
-    assert_selector(".admin-detail .row.setting.overridden", count: overridden_setting_count)
+    expect(
+      browser_root.locator(".admin-detail .row.setting.overridden").filter(visible: true),
+    ).to have_count(overridden_setting_count)
     settings_page.toggle_only_show_overridden
     expect(settings_page).to have_greater_than_n_results(overridden_setting_count)
   end

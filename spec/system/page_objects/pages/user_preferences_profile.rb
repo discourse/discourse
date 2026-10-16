@@ -4,32 +4,41 @@ module PageObjects
   module Pages
     class UserPreferencesProfile < PageObjects::Pages::Base
       def visit(user)
-        page.visit("/u/#{user.username}/preferences/profile")
+        browser_page
+          .goto("/u/#{user.username}/preferences/profile")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def hide_profile
-        find(".user-hide-profile .pref-hide-profile").click
+        browser_root.locator(".user-hide-profile .pref-hide-profile").filter(visible: true).click
       end
 
       def has_hidden_profile?
-        has_css?(".user-hide-profile .pref-hide-profile input[type=checkbox]:checked")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            ".user-hide-profile .pref-hide-profile input[type=checkbox]:checked",
+          ).filter(visible: true),
+        )
       end
 
       def expand_profile_details
-        find(".user-main .details .controls .btn-default").click
+        browser_root
+          .locator(".user-main .details .controls .btn-default")
+          .filter(visible: true)
+          .click
       end
 
       def fill_bio(with:)
-        find(".bio-composer .d-editor-input").fill_in(with:)
+        browser_root.locator(".bio-composer .d-editor-input").filter(visible: true).fill(with)
       end
 
       def save
-        find(".save-button .btn-primary").click
+        browser_root.locator(".save-button .btn-primary").filter(visible: true).click
       end
 
       def cooked_bio
-        find(".user-main .details .primary .bio")
+        browser_root.locator(".user-main .details .primary .bio").filter(visible: true)
       end
     end
   end

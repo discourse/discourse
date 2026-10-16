@@ -6,11 +6,11 @@ module PageObjects
       USERS_DROPDOWN = ".select-kit"
 
       def modal
-        find(".change-ownership-modal")
+        browser_root.locator(".change-ownership-modal").filter(visible: true)
       end
 
       def select_new_owner(user)
-        within(modal) do
+        within_browser(modal) do
           users_dropdown.expand
           users_dropdown.search(user.username)
           users_dropdown.select_row_by_value(user.username)
@@ -18,7 +18,9 @@ module PageObjects
       end
 
       def confirm_new_owner
-        within(modal) { find(".d-modal__footer .btn").click }
+        within_browser(modal) do
+          browser_root.locator(".d-modal__footer .btn").filter(visible: true).click
+        end
       end
 
       def users_dropdown

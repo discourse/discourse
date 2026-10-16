@@ -14,15 +14,21 @@ module PageObjects
       end
 
       def has_invitee_already_exists_error?
-        body.find(".alert-error").has_text?(I18n.t("topic_invite.user_exists"))
+        contain_text(
+          browser_text_pattern(I18n.t("topic_invite.user_exists")),
+          useInnerText: true,
+        ).matches?(body.locator(".alert-error").filter(visible: true))
       end
 
       def click_primary_button
-        body.find(".btn-primary").click
+        body.locator(".btn-primary").filter(visible: true).click
       end
 
       def has_successful_invite_message?
-        has_content?(I18n.t("js.topic.invite_private.success"))
+        contain_text(
+          browser_text_pattern(I18n.t("js.topic.invite_private.success")),
+          useInnerText: true,
+        ).matches?(browser_content)
       end
     end
   end

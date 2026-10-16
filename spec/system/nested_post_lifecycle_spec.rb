@@ -24,9 +24,13 @@ RSpec.describe "Nested view post lifecycle" do
 
     it "updates the post content after saving an edit" do
       nested_view.visit_nested(topic)
-      expect(page).to have_css(
-        "[data-post-number='#{root_reply.post_number}']",
-        text: "Original content before editing",
+      expect(
+        browser_root.locator("[data-post-number='#{root_reply.post_number}']").filter(
+          visible: true,
+        ),
+      ).to contain_text(
+        [browser_text_pattern("Original content before editing")],
+        useInnerText: true,
       )
 
       nested_view.click_post_edit_button(root_reply)
@@ -36,10 +40,11 @@ RSpec.describe "Nested view post lifecycle" do
       composer.submit
 
       expect(composer).to be_closed
-      expect(page).to have_css(
-        "[data-post-number='#{root_reply.post_number}']",
-        text: "Updated content after editing",
-      )
+      expect(
+        browser_root.locator("[data-post-number='#{root_reply.post_number}']").filter(
+          visible: true,
+        ),
+      ).to contain_text([browser_text_pattern("Updated content after editing")], useInnerText: true)
       expect(nested_view).to have_nested_view
     end
   end
@@ -52,9 +57,9 @@ RSpec.describe "Nested view post lifecycle" do
       op.rebake!
 
       nested_view.visit_nested(topic)
-      expect(page).to have_css(
-        ".nested-view__op",
-        text: "Original OP content that should be long enough to pass",
+      expect(browser_root.locator(".nested-view__op").filter(visible: true)).to contain_text(
+        [browser_text_pattern("Original OP content that should be long enough to pass")],
+        useInnerText: true,
       )
 
       nested_view.click_post_edit_button(op)
@@ -64,9 +69,9 @@ RSpec.describe "Nested view post lifecycle" do
       composer.submit
 
       expect(composer).to be_closed
-      expect(page).to have_css(
-        ".nested-view__op",
-        text: "Updated OP content that should also be long enough",
+      expect(browser_root.locator(".nested-view__op").filter(visible: true)).to contain_text(
+        [browser_text_pattern("Updated OP content that should also be long enough")],
+        useInnerText: true,
       )
     end
   end
@@ -81,10 +86,11 @@ RSpec.describe "Nested view post lifecycle" do
 
       it "shows a deleted placeholder after confirming deletion" do
         nested_view.visit_nested(topic)
-        expect(page).to have_css(
-          "[data-post-number='#{root_reply.post_number}']",
-          text: "Post that will be deleted",
-        )
+        expect(
+          browser_root.locator("[data-post-number='#{root_reply.post_number}']").filter(
+            visible: true,
+          ),
+        ).to contain_text([browser_text_pattern("Post that will be deleted")], useInnerText: true)
 
         nested_view.click_post_delete_button(root_reply)
         dialog.click_yes
@@ -98,10 +104,11 @@ RSpec.describe "Nested view post lifecycle" do
 
       it "shows a deleted placeholder" do
         nested_view.visit_nested(topic)
-        expect(page).to have_css(
-          "[data-post-number='#{root_reply.post_number}']",
-          text: "Post that will be deleted",
-        )
+        expect(
+          browser_root.locator("[data-post-number='#{root_reply.post_number}']").filter(
+            visible: true,
+          ),
+        ).to contain_text([browser_text_pattern("Post that will be deleted")], useInnerText: true)
 
         nested_view.click_post_delete_button(root_reply)
         dialog.click_yes
@@ -136,10 +143,11 @@ RSpec.describe "Nested view post lifecycle" do
 
       expect(nested_view).to have_deleted_post_class_for(root_reply)
       expect(nested_view).to have_post(child_reply)
-      expect(page).to have_css(
-        "[data-post-number='#{child_reply.post_number}']",
-        text: "Child reply content",
-      )
+      expect(
+        browser_root.locator("[data-post-number='#{child_reply.post_number}']").filter(
+          visible: true,
+        ),
+      ).to contain_text([browser_text_pattern("Child reply content")], useInnerText: true)
     end
   end
 
@@ -160,9 +168,13 @@ RSpec.describe "Nested view post lifecycle" do
 
       nested_view.click_post_recover_button(root_reply)
       expect(nested_view).to have_no_deleted_placeholder_for(root_reply)
-      expect(page).to have_css(
-        "[data-post-number='#{root_reply.post_number}']",
-        text: "Post that was deleted and recovered",
+      expect(
+        browser_root.locator("[data-post-number='#{root_reply.post_number}']").filter(
+          visible: true,
+        ),
+      ).to contain_text(
+        [browser_text_pattern("Post that was deleted and recovered")],
+        useInnerText: true,
       )
     end
   end
@@ -177,10 +189,11 @@ RSpec.describe "Nested view post lifecycle" do
 
       it "shows an eye button to toggle deleted content visibility" do
         nested_view.visit_nested(topic)
-        expect(page).to have_css(
-          "[data-post-number='#{root_reply.post_number}']",
-          text: "Secret deleted content here",
-        )
+        expect(
+          browser_root.locator("[data-post-number='#{root_reply.post_number}']").filter(
+            visible: true,
+          ),
+        ).to contain_text([browser_text_pattern("Secret deleted content here")], useInnerText: true)
 
         nested_view.click_post_delete_button(root_reply)
         dialog.click_yes
@@ -192,18 +205,18 @@ RSpec.describe "Nested view post lifecycle" do
         nested_view.click_toggle_deleted_content(root_reply)
 
         expect(nested_view).to have_deleted_content_visible_for(root_reply)
-        expect(page).to have_css(
-          ".nested-post__placeholder-reveal",
-          text: "Secret deleted content here",
-        )
+        expect(
+          browser_root.locator(".nested-post__placeholder-reveal").filter(visible: true),
+        ).to contain_text([browser_text_pattern("Secret deleted content here")], useInnerText: true)
       end
 
       it "hides deleted content when toggled again" do
         nested_view.visit_nested(topic)
-        expect(page).to have_css(
-          "[data-post-number='#{root_reply.post_number}']",
-          text: "Secret deleted content here",
-        )
+        expect(
+          browser_root.locator("[data-post-number='#{root_reply.post_number}']").filter(
+            visible: true,
+          ),
+        ).to contain_text([browser_text_pattern("Secret deleted content here")], useInnerText: true)
 
         nested_view.click_post_delete_button(root_reply)
         dialog.click_yes
@@ -246,10 +259,11 @@ RSpec.describe "Nested view post lifecycle" do
 
     it "updates the child post content after saving" do
       nested_view.visit_nested(topic)
-      expect(page).to have_css(
-        "[data-post-number='#{child_reply.post_number}']",
-        text: "Original child content here",
-      )
+      expect(
+        browser_root.locator("[data-post-number='#{child_reply.post_number}']").filter(
+          visible: true,
+        ),
+      ).to contain_text([browser_text_pattern("Original child content here")], useInnerText: true)
 
       nested_view.click_post_edit_button(child_reply)
       expect(composer).to be_opened
@@ -258,10 +272,11 @@ RSpec.describe "Nested view post lifecycle" do
       composer.submit
 
       expect(composer).to be_closed
-      expect(page).to have_css(
-        "[data-post-number='#{child_reply.post_number}']",
-        text: "Updated child content here",
-      )
+      expect(
+        browser_root.locator("[data-post-number='#{child_reply.post_number}']").filter(
+          visible: true,
+        ),
+      ).to contain_text([browser_text_pattern("Updated child content here")], useInnerText: true)
     end
   end
 end

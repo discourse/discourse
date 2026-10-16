@@ -10,15 +10,17 @@ describe "Changing email" do
   before { Jobs.run_immediately! }
 
   def generate_confirm_link
-    visit "/my/preferences/account"
+    browser_page
+      .goto("/my/preferences/account")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     email_dropdown = PageObjects::Components::SelectKit.new(".email-dropdown")
     expect(email_dropdown.visible?).to eq(true)
     email_dropdown.select_row_by_value("updateEmail")
 
-    find("#change-email").fill_in with: "newemail@example.com"
+    browser_root.locator("#change-email").filter(visible: true).fill("newemail@example.com")
 
-    find(".save-button button").click
+    browser_root.locator(".save-button button").filter(visible: true).click
 
     wait_for(timeout: Capybara.default_max_wait_time * 2) do
       ActionMailer::Base.deliveries.count === 1
@@ -41,12 +43,15 @@ describe "Changing email" do
   it "allows regular user to change their email" do
     sign_in user
 
-    visit generate_confirm_link
+    browser_page.goto(generate_confirm_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    find(".confirm-new-email .btn-primary").click
+    browser_root.locator(".confirm-new-email .btn-primary").filter(visible: true).click
 
-    expect(page).to have_css(".dialog-body", text: I18n.t("js.user.change_email.confirm_success"))
-    find(".dialog-footer .btn-primary").click
+    expect(browser_root.locator(".dialog-body").filter(visible: true)).to contain_text(
+      [browser_text_pattern(I18n.t("js.user.change_email.confirm_success"))],
+      useInnerText: true,
+    )
+    browser_root.locator(".dialog-footer .btn-primary").filter(visible: true).click
 
     expect(user.reload.primary_email.email).to eq(new_email)
   end
@@ -57,11 +62,14 @@ describe "Changing email" do
     second_factor = Fabricate(:user_second_factor_totp, user: user)
     sign_in user
 
-    visit generate_confirm_link
+    browser_page.goto(generate_confirm_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    find(".confirm-new-email .btn-primary").click
-    find(".second-factor-token-input").fill_in with: second_factor.totp_object.now
-    find("button[type=submit]").click
+    browser_root.locator(".confirm-new-email .btn-primary").filter(visible: true).click
+    browser_root
+      .locator(".second-factor-token-input")
+      .filter(visible: true)
+      .fill(second_factor.totp_object.now)
+    browser_root.locator("button[type=submit]").filter(visible: true).click
 
     expect(user.reload.primary_email.email).to eq(new_email)
   end
@@ -69,10 +77,10 @@ describe "Changing email" do
   it "works when user has webauthn 2fa" do
     with_security_key(user) do
       sign_in user
-      visit generate_confirm_link
+      browser_page.goto(generate_confirm_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      find(".confirm-new-email .btn-primary").click
-      find("#security-key-authenticate-button").click
+      browser_root.locator(".confirm-new-email .btn-primary").filter(visible: true).click
+      browser_root.locator("#security-key-authenticate-button").filter(visible: true).click
 
       try_until_success(
         reason: "Something about webauthn.js that we can't seem to track properly",
@@ -86,13 +94,16 @@ describe "Changing email" do
 
     confirm_link = generate_confirm_link
 
-    Capybara.reset_sessions! # log out
+    reset_browser_sessions # log out
 
-    visit confirm_link
+    browser_page.goto(confirm_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    find(".confirm-new-email .btn-primary").click
-    find(".second-factor-token-input").fill_in with: second_factor.totp_object.now
-    find("button[type=submit]:not([disabled])").click
+    browser_root.locator(".confirm-new-email .btn-primary").filter(visible: true).click
+    browser_root
+      .locator(".second-factor-token-input")
+      .filter(visible: true)
+      .fill(second_factor.totp_object.now)
+    browser_root.locator("button[type=submit]:not([disabled])").filter(visible: true).click
 
     expect(user.reload.primary_email.email).to eq(new_email)
   end
@@ -104,13 +115,13 @@ describe "Changing email" do
     confirm_old_link = generate_confirm_link
 
     # Confirm old email
-    visit confirm_old_link
-    find(".confirm-old-email .btn-primary").click
-    expect(page).to have_css(
-      ".dialog-body",
-      text: I18n.t("js.user.change_email.authorizing_old.confirm_success"),
+    browser_page.goto(confirm_old_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    browser_root.locator(".confirm-old-email .btn-primary").filter(visible: true).click
+    expect(browser_root.locator(".dialog-body").filter(visible: true)).to contain_text(
+      [browser_text_pattern(I18n.t("js.user.change_email.authorizing_old.confirm_success"))],
+      useInnerText: true,
     )
-    find(".dialog-footer .btn-primary").click
+    browser_root.locator(".dialog-footer .btn-primary").filter(visible: true).click
 
     # Confirm new email
     wait_for(timeout: Capybara.default_max_wait_time * 2) do
@@ -119,12 +130,15 @@ describe "Changing email" do
 
     confirm_new_link = get_link_from_email(:new)
 
-    visit confirm_new_link
+    browser_page.goto(confirm_new_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    find(".confirm-new-email .btn-primary").click
+    browser_root.locator(".confirm-new-email .btn-primary").filter(visible: true).click
 
-    expect(page).to have_css(".dialog-body", text: I18n.t("js.user.change_email.confirm_success"))
-    find(".dialog-footer .btn-primary").click
+    expect(browser_root.locator(".dialog-body").filter(visible: true)).to contain_text(
+      [browser_text_pattern(I18n.t("js.user.change_email.confirm_success"))],
+      useInnerText: true,
+    )
+    browser_root.locator(".dialog-footer .btn-primary").filter(visible: true).click
 
     expect(user.reload.primary_email.email).to eq(new_email)
   end
@@ -135,16 +149,16 @@ describe "Changing email" do
 
     confirm_old_link = generate_confirm_link
 
-    Capybara.reset_sessions! # log out
+    reset_browser_sessions # log out
 
     # Confirm old email
-    visit confirm_old_link
-    find(".confirm-old-email .btn-primary").click
-    expect(page).to have_css(
-      ".dialog-body",
-      text: I18n.t("js.user.change_email.authorizing_old.confirm_success"),
+    browser_page.goto(confirm_old_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    browser_root.locator(".confirm-old-email .btn-primary").filter(visible: true).click
+    expect(browser_root.locator(".dialog-body").filter(visible: true)).to contain_text(
+      [browser_text_pattern(I18n.t("js.user.change_email.authorizing_old.confirm_success"))],
+      useInnerText: true,
     )
-    find(".dialog-footer .btn-primary").click
+    browser_root.locator(".dialog-footer .btn-primary").filter(visible: true).click
 
     # Confirm new email
     wait_for(timeout: Capybara.default_max_wait_time * 2) do
@@ -153,12 +167,15 @@ describe "Changing email" do
 
     confirm_new_link = get_link_from_email(:new)
 
-    visit confirm_new_link
+    browser_page.goto(confirm_new_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    find(".confirm-new-email .btn-primary").click
+    browser_root.locator(".confirm-new-email .btn-primary").filter(visible: true).click
 
-    expect(page).to have_css(".dialog-body", text: I18n.t("js.user.change_email.confirm_success"))
-    find(".dialog-footer .btn-primary").click
+    expect(browser_root.locator(".dialog-body").filter(visible: true)).to contain_text(
+      [browser_text_pattern(I18n.t("js.user.change_email.confirm_success"))],
+      useInnerText: true,
+    )
+    browser_root.locator(".dialog-footer .btn-primary").filter(visible: true).click
 
     expect(user.reload.primary_email.email).to eq(new_email)
   end

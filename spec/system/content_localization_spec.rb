@@ -48,8 +48,11 @@ describe "Content Localization" do
 
   def scroll_to_post(post_number)
     5.times do
-      break if page.has_css?("#post_#{post_number} .cooked", visible: :all, wait: 0)
-      page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+      break if browser_root.locator("#post_#{post_number} .cooked").count != 0
+      browser_page.evaluate(
+        "function(arguments) { window.scrollTo(0, document.body.scrollHeight) }",
+        arg: [],
+      )
     end
   end
 
@@ -75,7 +78,7 @@ describe "Content Localization" do
     it "shows the user's language based on their user locale" do
       sign_in(japanese_user)
 
-      visit("/t/#{topic.id}")
+      browser_page.goto("/t/#{topic.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
     end
 
@@ -99,7 +102,7 @@ describe "Content Localization" do
       expect(preferences_interface_page).to be_automatic_translation_enabled
 
       preferences_interface_page.disable_automatic_translation.save_changes
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(preferences_interface_page).to be_automatic_translation_disabled
 
       topic_page.visit_topic(topic)
@@ -116,7 +119,7 @@ describe "Content Localization" do
 
       preferences_interface_page.visit(japanese_user)
       preferences_interface_page.enable_automatic_translation.save_changes
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(preferences_interface_page).to be_automatic_translation_enabled
       expect(preferences_interface_page).to have_no_understood_language("en")
 
@@ -152,10 +155,13 @@ describe "Content Localization" do
       site_local_user.user_option.update!(understood_languages: ["en"])
 
       sign_in(site_local_user)
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       language_switcher.select_language("ja")
-      expect(page.find(switcher_selector)).to have_content("JA")
+      expect(browser_root.locator(switcher_selector).filter(visible: true)).to contain_text(
+        browser_text_pattern("JA"),
+        useInnerText: true,
+      )
 
       preferences_interface_page.visit(site_local_user)
       expect(preferences_interface_page).to have_removable_understood_language("en")
@@ -179,12 +185,12 @@ describe "Content Localization" do
     it "allows users to set their post's locale when posting" do
       sign_in(japanese_user)
 
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       topic_list.visit_topic_with_title("孫子兵法からの人生戦略")
 
       topic_page.click_post_action_button(post_1, :reply)
       expect(composer).to be_opened
-      expect(composer.locale.text.gsub(/\u200B/, "")).to be_blank
+      expect(composer.locale.inner_text.strip.gsub(/\u200B/, "")).to be_blank
 
       composer.set_locale("日本語")
       composer.fill_content("この小説は、名前のない猫の視点から明治時代の人間社会を風刺的に描いています。")
@@ -204,17 +210,23 @@ describe "Content Localization" do
       sign_in(site_local_user)
 
       topic_page.visit_topic(topic)
-      expect(post_4_obj.post_language).to have_content("日本語")
+      expect(post_4_obj.post_language).to contain_text(
+        browser_text_pattern("日本語"),
+        useInnerText: true,
+      )
     end
 
     it "shows 'en' posts for 'en_GB' users" do
       brit_user = Fabricate(:user, locale: "en_GB")
 
       sign_in(brit_user)
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       topic_list.visit_topic_with_title("Life strategies from The Art of War")
-      expect(post_3_obj.post).to have_content("A general is one who ..")
+      expect(post_3_obj.post).to contain_text(
+        browser_text_pattern("A general is one who .."),
+        useInnerText: true,
+      )
     end
 
     context "with tl parameter" do
@@ -233,11 +245,19 @@ describe "Content Localization" do
       end
 
       it "persists locale for anonymous users across page views" do
-        visit("/t/#{topic.id}?tl=ja")
-        expect(topic_page.topic_title).to have_content("孫子兵法からの人生戦略")
+        browser_page
+          .goto("/t/#{topic.id}?tl=ja")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(topic_page.topic_title).to contain_text(
+          browser_text_pattern("孫子兵法からの人生戦略"),
+          useInnerText: true,
+        )
 
-        visit("/t/#{topic2.id}")
-        expect(topic_page.topic_title).to have_content("織田信長の生涯")
+        browser_page.goto("/t/#{topic2.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(topic_page.topic_title).to contain_text(
+          browser_text_pattern("織田信長の生涯"),
+          useInnerText: true,
+        )
       end
 
       it "lets anonymous users control topic and post translation from the topic-side modal" do
@@ -248,7 +268,9 @@ describe "Content Localization" do
         SiteSetting.navigation_menu = "sidebar"
         SiteSetting.default_navigation_menu_tags = tag.name
 
-        visit("/t/#{topic.id}?tl=ja")
+        browser_page
+          .goto("/t/#{topic.id}?tl=ja")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(topic_page).to have_topic_title("孫子兵法からの人生戦略")
         expect(post_1_obj).to have_cooked_content("傑作は単なる軍事戦略についてではありません")
         expect(topic_page).to have_content_language_preferences_launcher
@@ -266,7 +288,7 @@ describe "Content Localization" do
         expect(sidebar).to have_section_link("戦略")
 
         SiteSetting.set_locale_from_cookie = false
-        page.refresh
+        browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
         modal = topic_page.open_content_language_preferences
         expect(modal).to have_read_only_interface_language("English")
       end
@@ -286,25 +308,35 @@ describe "Content Localization" do
       end
 
       it "shows original title on topic list for anonymous users when topic locale matches browsing locale" do
-        visit("/?tl=ja")
-        expect(page).to have_css(".topic-list-body .raw-topic-link", text: "日本語で書かれたトピック")
-        expect(page).to have_no_css(
-          ".topic-list-body .raw-topic-link",
-          text: "A topic written in Japanese",
+        browser_page.goto("/?tl=ja").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(
+          browser_root.locator(".topic-list-body .raw-topic-link").filter(visible: true),
+        ).to contain_text([browser_text_pattern("日本語で書かれたトピック")], useInnerText: true)
+        expect(
+          browser_root.locator(".topic-list-body .raw-topic-link").filter(visible: true),
+        ).not_to contain_text(
+          [browser_text_pattern("A topic written in Japanese")],
+          useInnerText: true,
         )
 
         # navigate away and come back — locale should persist via cookie
-        visit("/")
-        expect(page).to have_css(".topic-list-body .raw-topic-link", text: "日本語で書かれたトピック")
-        expect(page).to have_no_css(
-          ".topic-list-body .raw-topic-link",
-          text: "A topic written in Japanese",
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(
+          browser_root.locator(".topic-list-body .raw-topic-link").filter(visible: true),
+        ).to contain_text([browser_text_pattern("日本語で書かれたトピック")], useInnerText: true)
+        expect(
+          browser_root.locator(".topic-list-body .raw-topic-link").filter(visible: true),
+        ).not_to contain_text(
+          [browser_text_pattern("A topic written in Japanese")],
+          useInnerText: true,
         )
       end
 
       it "ignores tl parameter for logged-in users" do
         sign_in(site_local_user)
-        visit("/t/#{topic.id}?tl=ja")
+        browser_page
+          .goto("/t/#{topic.id}?tl=ja")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
       end
@@ -347,7 +379,7 @@ describe "Content Localization" do
         topic_page.click_post_action_button(post_3, :edit)
         expect(edit_localized_post_dialog).to be_open
         edit_localized_post_dialog.click_yes
-        expect(composer).to have_content(post_3.raw)
+        expect(composer).to have_displayed_content(post_3.raw)
       end
 
       it "allows editing translated content when post is localized" do
@@ -358,7 +390,10 @@ describe "Content Localization" do
         topic_page.click_post_action_button(post_3, :edit)
         expect(edit_localized_post_dialog).to be_open
         edit_localized_post_dialog.click_no
-        expect(page).to have_css(".action-title", text: I18n.t("js.composer.translations.title"))
+        expect(browser_root.locator(".action-title").filter(visible: true)).to contain_text(
+          [browser_text_pattern(I18n.t("js.composer.translations.title"))],
+          useInnerText: true,
+        )
       end
 
       it "does not open the fast editor for localized posts" do
@@ -368,7 +403,7 @@ describe "Content Localization" do
         select_text_range("#{topic_page.post_by_number_selector(post_3.post_number)} .cooked", 0, 5)
         expect(topic_page.fast_edit_button).to be_visible
         topic_page.click_fast_edit_button
-        expect(page).to have_no_css("#fast-edit-input")
+        expect(browser_root.locator("#fast-edit-input").filter(visible: true)).to have_count(0)
         expect(edit_localized_post_dialog).to be_open
       end
 
@@ -388,7 +423,16 @@ describe "Content Localization" do
           topic_page.click_topic_edit_title
           expect(topic_page).to have_topic_title_editor
           expect(topic_page).to have_editing_localization_indicator
-          expect(page).to have_field("edit-title", with: topic_ja_localization.title)
+          expect(
+            browser_root
+              .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+              .and(
+                browser_root.locator(
+                  "[id=#{"edit-title".to_s.to_json}], [name=#{"edit-title".to_s.to_json}]",
+                ).or(browser_root.get_by_label("edit-title", exact: true)),
+              )
+              .filter(visible: true),
+          ).to have_value(topic_ja_localization.title)
         end
 
         it "opens a dialog for choosing which title to edit for admins when title is localized" do
@@ -413,10 +457,19 @@ describe "Content Localization" do
           edit_localized_post_dialog.click_yes
           expect(topic_page).to have_topic_title_editor
           expect(topic_page).to have_no_editing_localization_indicator
-          expect(page).to have_field("edit-title", with: topic.title)
+          expect(
+            browser_root
+              .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+              .and(
+                browser_root.locator(
+                  "[id=#{"edit-title".to_s.to_json}], [name=#{"edit-title".to_s.to_json}]",
+                ).or(browser_root.get_by_label("edit-title", exact: true)),
+              )
+              .filter(visible: true),
+          ).to have_value(topic.title)
 
           # Viewing translation - Save original title change and displayed title should NOT update (still viewing translation)
-          find("#edit-title").fill_in(with: "New Original Title")
+          browser_root.locator("#edit-title").filter(visible: true).fill("New Original Title")
           topic_page.click_topic_title_submit_edit
           expect(topic_page).to have_topic_title(original_translated_title)
 
@@ -426,13 +479,22 @@ describe "Content Localization" do
           edit_localized_post_dialog.click_no
           expect(topic_page).to have_topic_title_editor
           expect(topic_page).to have_editing_localization_indicator
-          expect(page).to have_field("edit-title", with: topic_ja_localization.title)
+          expect(
+            browser_root
+              .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+              .and(
+                browser_root.locator(
+                  "[id=#{"edit-title".to_s.to_json}], [name=#{"edit-title".to_s.to_json}]",
+                ).or(browser_root.get_by_label("edit-title", exact: true)),
+              )
+              .filter(visible: true),
+          ).to have_value(topic_ja_localization.title)
 
           # Viewing translation - Save translation title change and displayed title should update immediately
-          find("#edit-title").fill_in(with: "New Japanese Title")
+          browser_root.locator("#edit-title").filter(visible: true).fill("New Japanese Title")
           topic_page.click_topic_title_submit_edit
           expect(topic_page).to have_topic_title("New Japanese Title")
-          page.refresh
+          browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(topic_page).to have_topic_title("New Japanese Title")
         end
 
@@ -446,7 +508,7 @@ describe "Content Localization" do
           topic_page.click_topic_edit_title
           edit_localized_post_dialog.click_no
 
-          find("#edit-title").fill_in(with: "Changed Title")
+          browser_root.locator("#edit-title").filter(visible: true).fill("Changed Title")
           topic_page.click_topic_title_cancel_edit
 
           expect(topic_page).to have_topic_title(original_title)
@@ -466,20 +528,28 @@ describe "Content Localization" do
       it "shows the language of the post in history modal" do
         sign_in(admin)
 
-        visit("/")
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         topic_list.visit_topic_with_title(topic.title)
 
         post_1_obj.open_post_history
-        expect(post_history_modal.current_locale).to have_content("日本語")
-        expect(post_history_modal.previous_locale).to have_content(
-          I18n.t("js.post.revisions.locale.no_locale_set"),
+        expect(post_history_modal.current_locale).to contain_text(
+          browser_text_pattern("日本語"),
+          useInnerText: true,
+        )
+        expect(post_history_modal.previous_locale).to contain_text(
+          browser_text_pattern(I18n.t("js.post.revisions.locale.no_locale_set")),
+          useInnerText: true,
         )
 
         post_history_modal.click_previous_revision
-        expect(post_history_modal.current_locale).to have_content(
-          I18n.t("js.post.revisions.locale.locale_removed"),
+        expect(post_history_modal.current_locale).to contain_text(
+          browser_text_pattern(I18n.t("js.post.revisions.locale.locale_removed")),
+          useInnerText: true,
         )
-        expect(post_history_modal.previous_locale).to have_content("English")
+        expect(post_history_modal.previous_locale).to contain_text(
+          browser_text_pattern("English"),
+          useInnerText: true,
+        )
       end
     end
 
@@ -511,24 +581,30 @@ describe "Content Localization" do
 
       it "shows original content for a dynamically loaded post via the per-post toggle (20+ posts)" do
         sign_in(site_local_user)
-        visit("/")
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         topic_page.visit_topic(topic)
 
-        expect(post_3_obj.post).to have_content("A general is one who ..")
+        expect(post_3_obj.post).to contain_text(
+          browser_text_pattern("A general is one who .."),
+          useInnerText: true,
+        )
         expect(topic_page).to have_post_content(post_number: 3, content: "A general is one who ..")
 
         scroll_to_post(21)
 
-        expect(page).to have_css("#post_21")
+        expect(browser_root.locator("#post_21").filter(visible: true)).not_to have_count(0)
         expect(topic_page).to have_post_content(post_number: 21, content: "English translation 21")
 
         # the per-post toggle shows the original content for the loaded post
         post_21_obj.toggle_localized_content
-        expect(post_21_obj.post).to have_content("日本語コンテンツ 21")
+        expect(post_21_obj.post).to contain_text(
+          browser_text_pattern("日本語コンテンツ 21"),
+          useInnerText: true,
+        )
         expect(site_local_user.reload.user_option.automatically_translate).to eq(true)
 
-        page.refresh
+        browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
         scroll_to_post(21)
         expect(topic_page).to have_post_content(post_number: 21, content: "English translation 21")
       end
@@ -564,7 +640,7 @@ describe "Content Localization" do
       sign_in(site_local_user)
       topic_page.visit_topic(late_localization_topic)
 
-      expect(page).to have_no_css("#post_21", wait: 0)
+      expect(browser_root.locator("#post_21").filter(visible: true).count).to eq(0)
       expect(topic_page).to have_content_language_preferences_launcher
     end
 
@@ -589,12 +665,14 @@ describe "Content Localization" do
         sign_in(japanese_user)
 
         topic_page.visit_topic(shady_topic)
-        expect(page).to have_title(shady_topic_ja_localization.fancy_title)
+        expect(browser_page).to have_title(
+          Regexp.new(Regexp.escape(shady_topic_ja_localization.fancy_title)),
+        )
 
         SiteSetting.content_localization_enabled = false
-        page.refresh
+        browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(page).to have_title(shady_topic.title)
+        expect(browser_page).to have_title(Regexp.new(Regexp.escape(shady_topic.title)))
       end
     end
 
@@ -640,7 +718,7 @@ describe "Content Localization" do
 
           SiteSetting.content_localization_enabled = false
 
-          page.refresh
+          browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(topic_page).to have_topic_title(jap_topic.fancy_title)
           expect(post_1_obj).to have_cooked_content(jap_post.cooked)
         end
@@ -656,7 +734,7 @@ describe "Content Localization" do
 
           SiteSetting.content_localization_use_default_locale_when_unsupported = false
 
-          page.refresh
+          browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(topic_page).to have_topic_title(jap_topic.fancy_title)
           expect(post_1_obj).to have_cooked_content(jap_post.cooked)
         end
@@ -694,7 +772,7 @@ describe "Content Localization" do
       it "displays localized tag names in sidebar, topic list, tag dropdown, and topic view" do
         sign_in(japanese_user)
 
-        visit("/")
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(sidebar).to have_section_link("戦略")
         expect(topic_list).to have_topic_tag(topic, "戦略")
@@ -704,12 +782,14 @@ describe "Content Localization" do
         discovery.tag_drop.collapse
 
         topic_list.visit_topic_with_title("孫子兵法からの人生戦略")
-        expect(page).to have_css(".title-wrapper .discourse-tag", text: "戦略")
+        expect(
+          browser_root.locator(".title-wrapper .discourse-tag").filter(visible: true),
+        ).to contain_text([browser_text_pattern("戦略")], useInnerText: true)
 
         switcher.expand
         switcher.option("[data-menu-option-id='en']").click
 
-        visit("/")
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(sidebar).to have_section_link("strategy")
         expect(topic_list).to have_topic_tag(topic, "strategy")
 
@@ -718,14 +798,16 @@ describe "Content Localization" do
         discovery.tag_drop.collapse
 
         topic_list.visit_topic_with_title("Life strategies from The Art of War")
-        expect(page).to have_css(".title-wrapper .discourse-tag", text: "strategy")
+        expect(
+          browser_root.locator(".title-wrapper .discourse-tag").filter(visible: true),
+        ).to contain_text([browser_text_pattern("strategy")], useInnerText: true)
       end
 
       it "shows the original tag name consistently when its source language is missing" do
         tag.update!(locale: nil)
         sign_in(japanese_user)
 
-        visit("/")
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(sidebar).to have_section_link(tag.name)
         expect(topic_list).to have_topic_tag(topic, tag.name)
@@ -740,7 +822,7 @@ describe "Content Localization" do
         mini_tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
 
         sign_in(japanese_user)
-        visit("/new-topic")
+        browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(composer).to be_opened
         mini_tag_chooser.expand
         mini_tag_chooser.search("戦")
@@ -754,7 +836,7 @@ describe "Content Localization" do
 
         sign_in(admin)
         admin.update!(locale: "ja")
-        visit("/new-topic")
+        browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(composer).to be_opened
 
         composer.fill_title("テストトピック with localized tags")
@@ -783,7 +865,7 @@ describe "Content Localization" do
         # Topic already has the "strategy" tag via topic_tag fab
         sign_in(admin)
         admin.update!(locale: "ja")
-        visit(topic.url)
+        browser_page.goto(topic.url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         topic_page.click_topic_edit_title
         edit_dialog.click_yes # edit original
@@ -801,7 +883,9 @@ describe "Content Localization" do
 
         topic_page.click_topic_title_submit_edit
 
-        expect(topic_page).to have_no_css("#topic-title .submit-edit")
+        expect(topic_page.locator("#topic-title .submit-edit").filter(visible: true)).to have_count(
+          0,
+        )
         topic.reload
         expect(topic.category).to eq(new_category)
         expect(topic.tags).to include(tag, tag2)
@@ -833,10 +917,10 @@ describe "Content Localization" do
       expect(topic_page).to have_no_post_action_button(author_post, :add_translation)
 
       SiteSetting.content_localization_allow_author_localization = true
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(topic_page).to have_post_action_button(author_post, :add_translation)
       topic_page.click_post_action_button(author_post, :add_translation)
-      find(".post-action-menu__add-translation").click
+      browser_root.locator(".post-action-menu__add-translation").filter(visible: true).click
       expect(translation_composer).to be_opened
 
       translation_composer.select_locale("Japanese (日本語)")
@@ -872,13 +956,14 @@ describe "Content Localization" do
       sign_in(admin)
 
       settings_page.visit("content_localization_supported_locales")
-      expect(settings_page.find_setting("content_localization_supported_locales")).to have_content(
-        "English, Japanese",
+      expect(settings_page.find_setting("content_localization_supported_locales")).to contain_text(
+        browser_text_pattern("English, Japanese"),
+        useInnerText: true,
       )
 
       settings_page.select_list_values("content_localization_supported_locales", %w[es])
       settings_page.save_setting("content_localization_supported_locales")
-      expect(settings_page.error_message("content_localization_supported_locales")).to have_content(
+      expect(settings_page.error_message("content_localization_supported_locales")).to include(
         I18n.t(
           "site_settings.errors.content_localization_locale_limit",
           max: SiteSetting.content_localization_max_locales,

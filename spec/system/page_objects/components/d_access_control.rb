@@ -24,11 +24,13 @@ module PageObjects
       end
 
       def has_row?(type:, id:)
-        component.has_css?(row_selector(type:, id:))
+        have_count(0).does_not_match?(
+          component.locator(row_selector(type:, id:)).filter(visible: true),
+        )
       end
 
       def has_no_row?(type:, id:)
-        component.has_no_css?(row_selector(type:, id:))
+        have_count(0).matches?(component.locator(row_selector(type:, id:)).filter(visible: true))
       end
 
       def row(type:, id:)
@@ -44,7 +46,7 @@ module PageObjects
       end
 
       def has_loss_warning?(message)
-        dialog.has_content?(message)
+        dialog.has_displayed_content?(message)
       end
 
       def confirm_loss_warning
@@ -58,7 +60,7 @@ module PageObjects
       private
 
       def component
-        form.field(FIELD_NAME).component.find(".d-access-control")
+        form.field(FIELD_NAME).component.locator(".d-access-control").filter(visible: true)
       end
 
       def add_grantee(type:, id:, search: nil)
@@ -69,8 +71,10 @@ module PageObjects
       end
 
       def grantee_chooser
-        chooser = component.find(".d-access-control__chooser")
-        PageObjects::Components::SelectKit.new("##{chooser["id"]}")
+        chooser = component.locator(".d-access-control__chooser").filter(visible: true)
+        PageObjects::Components::SelectKit.new(
+          "##{chooser.evaluate("(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }", arg: "id")}",
+        )
       end
 
       def row_selector(type:, id:)
