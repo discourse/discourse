@@ -7,20 +7,24 @@ module JsonApiKit
 
       private
 
+      def service_params = { params: request_body.parameters, guardian: }
+
       def request_body
         @request_body ||=
           begin
-            verify_input(request_query)
+            request_query
             verify_input(Request::Body.parse(request.raw_post, resource: request_resource))
           end
       end
 
       def request_query
         @request_query ||=
-          Request::Input::Individual.new(
-            request.query_parameters,
-            resource: request_resource,
-            edition:,
+          verify_input(
+            Request::Input::Individual.new(
+              request.query_parameters,
+              resource: request_resource,
+              edition:,
+            ),
           )
       end
 
