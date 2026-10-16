@@ -101,9 +101,9 @@ lt:
       delete_messages:
         confirm:
           one: "Ar tikrai norite ištrinti šį pranešimą?"
-          few: "Ar tikrai norite ištrinti šį pranešimą?"
-          many: "Ar tikrai norite ištrinti šį pranešimą?"
-          other: "Ar tikrai norite ištrinti šias %{count} žinutes?"
+          few: "Ar tikrai norite ištrinti šiuos %{count} pranešimus?"
+          many: "Ar tikrai norite ištrinti šiuos %{count} pranešimų?"
+          other: "Ar tikrai norite ištrinti šiuos %{count} pranešimus?"
       channel_settings:
         title: "Kanalo nustatymai"
         edit: "Redaguoti"
@@ -938,20 +938,62 @@ lt:
           open_insert_link_modal: "%{shortcut} Įterpti nuorodą (tik kūrėjui)"
           composer_bold: "%{shortcut} Paryškintas (tik kūrėjui)"
           composer_italic: "%{shortcut} Kursyvas (tik kūrėjui)"
+          composer_code: "%{shortcut} Kodas (tik kūrėjui)"
+          drawer_toggle: "%{shortcut} Perjungti pokalbių langą"
+          drawer_close: "%{shortcut} Uždaryti pokalbių langą"
+          mark_all_channels_read: "%{shortcut} Pažymėti visus kanalus kaip perskaitytus"
+    topic_statuses:
+      chat:
+        help: "Šioje temoje įjungta pokalbių funkcija"
+    user:
+      allow_private_messages: "Leisti kitiems vartotojams siųsti man asmenines žinutes ir tiesiogines pokalbių žinutes."
+      muted_users_instructions: "Užblokuoti visus pranešimus, asmenines žinutes ir tiesioginius pokalbių pranešimus iš šių naudotojų."
+      allowed_pm_users_instructions: "Leisti tik asmenines žinutes arba tiesioginius pokalbių pranešimus iš šių naudotojų."
+      allow_private_messages_from_specific_users: "Leisti tik konkretiems vartotojams siųsti man asmenines žinutes arba tiesioginius pokalbių pranešimus"
+      ignored_users_instructions: "Užblokuoti visus šių naudotojų įrašus, žinutes, pranešimus, asmenines žinutes ir tiesioginius pokalbių pranešimus."
+    user_menu:
+      no_chat_notifications_title: "Dar neturite jokių pokalbių pranešimų"
+      no_chat_notifications_body: >
+        Šiame skydelyje gausite pranešimą, kai kas nors jums atsiųs privačią žinutę arba <b> paminės</b> jus pokalbyje <b> naudodamas @žymę</b>. Pranešimai taip pat bus siunčiami į jūsų el. paštą, jei kurį laiką nebūsite prisijungę. <br><br> Spustelėkite bet kurio pokalbių kanalo viršuje esantį pavadinimą, kad nustatytumėte, kokius pranešimus norite gauti tame kanale. Daugiau informacijos rasite <a href='%{preferencesUrl}'>pranešimų nustatymuose</a>.
+      tabs:
+        chat_notifications: "Pokalbių pranešimai"
+        chat_notifications_with_unread:
+          one: "Pokalbių pranešimai – %{count} neskaitytas pranešimas"
+          few: "Pokalbių pranešimai – %{count} neskaityti pranešimai"
+          many: "Pokalbių pranešimai – %{count} neskaitytų pranešimų"
+          other: "Pokalbių pranešimai – %{count} neskaityti pranešimai"
     styleguide:
       sections:
         chat:
           title: Pokalbis
     sidebar:
+      start_new_dm:
+        text: Pradėti asmeninį pokalbį arba grupinį pokalbį
+        title: Nauja asmeninė žinutė arba grupinis pokalbis
       panels:
         chat:
           label: "Pokalbis"
     discourse_workflows:
+      node_unavailable:
+        requires_chat: "Reikalingas įjungtas pokalbių įskiepis"
+      nodes:
+        "action:send_chat_message": "Siųsti pokalbio pranešimą"
+        "action:chat_approval": "Pokalbių patvirtinimas"
+        "trigger:chat_message_created": "Pokalbio pranešimas sukurtas"
+      node_descriptions:
+        "action:send_chat_message": "Siųsti žinutę į pokalbių kanalą"
+        "action:chat_approval": "Siųsti patvirtinimo užklausą pokalbių kanalui ir laukti atsakymo"
+        "trigger:chat_message_created": "Suveikia, kai sukuriamas naujas pokalbio pranešimas"
+      chat_message_created:
+        channel_id: "Kanalas"
+        channel_id_description: "Palikite tuščią, kad suaktyvintumėte visus pokalbių kanalus."
       send_chat_message:
+        channel_id: "Kanalas"
         message: "Žinutės"
       chat_approval:
         message: "Žinutės"
         buttons: "Mygtukai"
+        buttons_description: "Pridėkite nuo vieno iki dešimties atsakymo mygtukų."
         add_button: "Pridėti mygtuką"
         label: "Pavadinimas"
         label_description: "Tekstas, rodomas ant mygtuko."
