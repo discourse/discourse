@@ -96,7 +96,7 @@ module Dsa
     end
 
     def find_notice(params:)
-      Dsa::Notice.find(submission_id: params.notice.submission_id)
+      Dsa::Notice.find_by(submission_id: params.notice.submission_id)
     end
 
     def matches_submission(params:, notice:)
@@ -127,7 +127,7 @@ module Dsa
     def create_notice(params:)
       group = Group.find_by(id: SiteSetting.dsa_notice_group)
       group = Group[:admins] if !group || !group.users.exists?
-      Dsa::Notice.create!(attributes: params.notice.to_hash, group:)
+      Dsa::Notice.create_with_post!(attributes: params.notice.to_hash, group:)
     end
 
     def group_notifications_pending(notice:)
@@ -144,7 +144,7 @@ module Dsa
     end
 
     def enqueue_receipt(notice:)
-      Jobs.enqueue(:dsa_notice_receipt, post_id: notice.post.id)
+      Jobs.enqueue(:dsa_notice_receipt, notice_id: notice.id)
     end
   end
 end

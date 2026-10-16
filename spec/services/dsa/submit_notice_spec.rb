@@ -107,7 +107,7 @@ RSpec.describe Dsa::SubmitNotice do
         expect(changed_result).to fail_a_policy(:matches_submission)
       end
 
-      it "retains the reference after the saved notice has been deleted" do
+      it "retains the reference after the PM has been deleted" do
         expect(result).to run_successfully
         result.notice.post.topic.trash!(admin)
         result.notice.post.trash!(admin)
@@ -306,7 +306,7 @@ RSpec.describe Dsa::SubmitNotice do
           .with(:dsa_notice_receipt, anything)
           .raises(IOError, "queue unavailable")
         expect { result }.to raise_error(IOError)
-        notice = Dsa::Notice.find(submission_id: params[:submission_id])
+        notice = Dsa::Notice.find_by!(submission_id: params[:submission_id])
         Jobs.unstub(:enqueue)
 
         retry_result = nil
@@ -328,9 +328,10 @@ RSpec.describe Dsa::SubmitNotice do
         expect(result.notice.post.topic.allowed_users).to contain_exactly(Discourse.system_user)
       end
 
-      it "queues the external receipt" do
+      it "queues the external receipt for the saved notice" do
         expect { result }.to change { Jobs::DsaNoticeReceipt.jobs.size }.by(1)
         expect(result).to run_successfully
+        expect(Jobs::DsaNoticeReceipt.jobs.last["args"].first["notice_id"]).to eq(result.notice.id)
       end
     end
   end

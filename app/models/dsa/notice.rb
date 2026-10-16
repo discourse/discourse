@@ -1,117 +1,109 @@
 # frozen_string_literal: true
 
 module Dsa
-  class Notice
+  class Notice < ActiveRecord::Base
+    self.table_name = "dsa_notices"
+
     CONTENT_FIELDS = %w[content_url explanation anonymous name email declaration].freeze
-    METADATA_PATTERN = /\n\n<!-- dsa-notice:(\{[^\n]*\}) -->\z/
-    private_constant :CONTENT_FIELDS, :METADATA_PATTERN
+    private_constant :CONTENT_FIELDS
 
-    attr_reader :post
+    belongs_to :post, -> { with_deleted }
 
-    def self.find(submission_id:)
-      marker = "<!-- dsa-notice:{\"submission_id\":\"#{submission_id}\","
-      post =
-        Post
-          .with_deleted
-          .where(user_id: Discourse.system_user.id, post_number: 1)
-          .find_by("raw LIKE ?", "%#{marker}%")
-      from_post(post)
+    attribute :reference, :string, default: -> { "DSA-#{SecureRandom.hex(8).upcase}" }
+
+    def self.create_with_post!(attributes:, group:)
+      notice = new(attributes)
+      transaction do
+        notice.post =
+          PostCreator.create!(
+            Discourse.system_user,
+            title: I18n.t("dsa_notice.subject", reference: notice.reference),
+            raw: notice.raw,
+            archetype: Archetype.private_message,
+            target_group_names: group.name,
+            skip_validations: true,
+            skip_jobs: true,
+          )
+        notice.save!
+      end
+      notice
     end
 
-    def self.from_post(post)
-      return unless post && (match = post.raw.match(METADATA_PATTERN))
-      new(post:, data: JSON.parse(match[1]))
-    end
-
-    def self.create!(attributes:, group:)
-      data = attributes.stringify_keys.slice("submission_id", *CONTENT_FIELDS)
-      data["reference"] = "DSA-#{SecureRandom.hex(8).upcase}"
-      notice = new(data:)
-      post =
-        PostCreator.create!(
-          Discourse.system_user,
-          title: I18n.t("dsa_notice.subject", reference: notice.reference),
-          raw: notice.raw,
-          archetype: Archetype.private_message,
-          target_group_names: group.name,
-          skip_validations: true,
-          skip_jobs: true,
-        )
-      new(post:, data:)
-    end
-
-    def initialize(data:, post: nil)
-      @data, @post = data, post
-    end
-
-    def reference
-      @data.fetch("reference")
-    end
-
-    def email
-      @data["email"]
-    end
-
-    def matches?(attributes)
-      @data.slice(*CONTENT_FIELDS) == attributes.stringify_keys.slice(*CONTENT_FIELDS)
+    def matches?(submitted_attributes)
+      attributes.slice(*CONTENT_FIELDS) ==
+        submitted_attributes.stringify_keys.slice(*CONTENT_FIELDS)
     end
 
     def group_notified?
-      @data["group_notified"] == true
+      group_notified_at.present?
     end
 
     def receipt_sent?
-      @data["receipt_sent"] == true
+      receipt_sent_at.present?
     end
 
     def mark_group_notified!
-      mark("group_notified")
+      update!(group_notified_at: Time.current)
     end
 
     def mark_receipt_sent!
-      mark("receipt_sent")
+      update!(receipt_sent_at: Time.current)
     end
 
     def summary(plain_text: false)
       reporter =
-        if @data["anonymous"]
+        if anonymous
           I18n.t("dsa_notice.anonymous")
         elsif plain_text
-          "#{@data["name"]} (#{email})"
+          "#{name} (#{email})"
         else
-          "#{escaped(@data["name"])} ([#{escaped(email)}](mailto:#{ERB::Util.url_encode(email)}))"
+          "#{escaped(name)} ([#{escaped(email)}](mailto:#{ERB::Util.url_encode(email)}))"
         end
       I18n.t(
         "dsa_notice.summary",
         reference:,
-        content_url: plain_text ? @data.fetch("content_url") : "<#{@data.fetch("content_url")}>",
-        explanation: plain_text ? @data.fetch("explanation") : escaped(@data.fetch("explanation")),
+        content_url: plain_text ? content_url : "<#{content_url}>",
+        explanation: plain_text ? explanation : escaped(explanation),
         reporter:,
       )
     end
 
     def raw
-      "#{summary}\n\n#{I18n.t("dsa_notice.staff_guidance")}#{metadata}"
+      "#{summary}\n\n#{I18n.t("dsa_notice.staff_guidance")}"
     end
 
     private
-
-    def metadata
-      "\n\n<!-- dsa-notice:#{ERB::Util.json_escape(JSON.generate(@data, ascii_only: true))} -->"
-    end
 
     def escaped(value)
       ERB::Util.html_escape(
         value.gsub(/[\\`*_{}\[\]()#+.!|~=:\/-]/) { |character| "\\#{character}" },
       ).gsub("@", "&#64;")
     end
-
-    def mark(field)
-      post.with_lock do
-        match = post.raw.match(METADATA_PATTERN)
-        @data = JSON.parse(match[1]).merge(field => true)
-        post.update_columns(raw: post.raw.sub(METADATA_PATTERN) { metadata })
-      end
-    end
   end
 end
+
+# == Schema Information
+#
+# Table name: dsa_notices
+#
+#  id                :bigint           not null, primary key
+#  anonymous         :boolean          default(FALSE), not null
+#  content_url       :text             not null
+#  declaration       :boolean          not null
+#  email             :string
+#  explanation       :text             not null
+#  group_notified_at :datetime
+#  name              :string
+#  receipt_sent_at   :datetime
+#  reference         :string           not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  post_id           :bigint           not null
+#  submission_id     :uuid             not null
+#
+# Indexes
+#
+#  index_dsa_notices_on_post_id        (post_id) UNIQUE
+#  index_dsa_notices_on_reference      (reference) UNIQUE
+#  index_dsa_notices_on_submission_id  (submission_id) UNIQUE
+#

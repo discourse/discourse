@@ -5983,6 +5983,47 @@ ALTER SEQUENCE public.drafts_id_seq OWNED BY public.drafts.id;
 
 
 --
+-- Name: dsa_notices; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dsa_notices (
+    id bigint NOT NULL,
+    submission_id uuid NOT NULL,
+    reference character varying NOT NULL,
+    post_id bigint NOT NULL,
+    content_url text NOT NULL,
+    explanation text NOT NULL,
+    anonymous boolean DEFAULT false NOT NULL,
+    name character varying,
+    email character varying,
+    declaration boolean NOT NULL,
+    group_notified_at timestamp(6) without time zone,
+    receipt_sent_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: dsa_notices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dsa_notices_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dsa_notices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dsa_notices_id_seq OWNED BY public.dsa_notices.id;
+
+
+--
 -- Name: dsa_statement_of_records; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -14979,6 +15020,13 @@ ALTER TABLE ONLY public.drafts ALTER COLUMN id SET DEFAULT nextval('public.draft
 
 
 --
+-- Name: dsa_notices id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dsa_notices ALTER COLUMN id SET DEFAULT nextval('public.dsa_notices_id_seq'::regclass);
+
+
+--
 -- Name: email_change_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -17671,6 +17719,14 @@ ALTER TABLE ONLY public.draft_sequences
 
 ALTER TABLE ONLY public.drafts
     ADD CONSTRAINT drafts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dsa_notices dsa_notices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dsa_notices
+    ADD CONSTRAINT dsa_notices_pkey PRIMARY KEY (id);
 
 
 --
@@ -22048,6 +22104,27 @@ CREATE UNIQUE INDEX index_drafts_on_user_id_and_draft_key ON public.drafts USING
 
 
 --
+-- Name: index_dsa_notices_on_post_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_dsa_notices_on_post_id ON public.dsa_notices USING btree (post_id);
+
+
+--
+-- Name: index_dsa_notices_on_reference; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_dsa_notices_on_reference ON public.dsa_notices USING btree (reference);
+
+
+--
+-- Name: index_dsa_notices_on_submission_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_dsa_notices_on_submission_id ON public.dsa_notices USING btree (submission_id);
+
+
+--
 -- Name: index_dsa_statement_of_records_on_reviewable_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25922,6 +25999,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261016063822'),
 ('20261014224810'),
 ('20261014145458'),
 ('20261014065735'),
