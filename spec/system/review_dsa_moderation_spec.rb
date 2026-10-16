@@ -97,9 +97,9 @@ describe "Classifying reviewable moderation" do
 
     stub_const(ReviewablesController, "PER_PAGE", 1) do
       visit("/review?sort_order=created_at")
-      expect(page).to have_css(".review-item[data-reviewable-id='#{newer_reviewable.id}']")
+      expect(review_page).to have_reviewable_with_pending_status(newer_reviewable)
       page.scroll_to(:bottom)
-      expect(page).to have_css(".review-item[data-reviewable-id='#{reviewable.id}']")
+      expect(review_page).to have_reviewable_with_pending_status(reviewable)
       review_page.select_bundled_action(reviewable, "post-agree_and_hide", bundle_index: 1)
 
       expect(modal).to have_action_title("Hide post")

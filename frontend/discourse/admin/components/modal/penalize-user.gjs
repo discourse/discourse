@@ -34,7 +34,7 @@ export default class PenalizeUser extends Component {
   @tracked message;
   @tracked readyToDeleteAll = false;
   @tracked classificationStep = false;
-  @tracked classification;
+  #classification;
   #classificationForm;
   #beforeCompleted = false;
 
@@ -98,7 +98,7 @@ export default class PenalizeUser extends Component {
     );
   }
 
-  get penaltyParams() {
+  get #penaltyParams() {
     return {
       reason: this.reason,
       message: this.message,
@@ -107,7 +107,7 @@ export default class PenalizeUser extends Component {
       post_edit: this.postEdit,
       other_user_ids: this.otherUserIds,
       reviewable_id: this.args.model.reviewableId,
-      dsa_classification: this.classification,
+      dsa_classification: this.#classification,
       ...(this.args.model.penaltyType === "suspend"
         ? { suspend_until: this.penalizeUntil }
         : { silenced_till: this.penalizeUntil }),
@@ -138,7 +138,7 @@ export default class PenalizeUser extends Component {
 
   @action
   async submitClassification(data) {
-    this.classification = { ...data };
+    this.#classification = { ...data };
     const rule = this.args.model.dsaClassification.community_rules.find(
       (entry) => entry.id === data.community_rule
     );
@@ -170,15 +170,13 @@ export default class PenalizeUser extends Component {
         this.#beforeCompleted = true;
       }
 
-      const opts = this.penaltyParams;
+      const opts = this.#penaltyParams;
 
       if (this.args.model.penaltyType === "suspend") {
-        opts.suspend_until = this.penalizeUntil;
         result = await (this.args.model.perform
           ? this.args.model.perform(opts)
           : this.args.model.user.suspend(opts));
       } else if (this.args.model.penaltyType === "silence") {
-        opts.silenced_till = this.penalizeUntil;
         result = await (this.args.model.perform
           ? this.args.model.perform(opts)
           : this.args.model.user.silence(opts));

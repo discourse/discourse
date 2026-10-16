@@ -3998,6 +3998,47 @@ en:
       edit: "We also edited your post."
     statement: |
       This decision follows our **%{ground}** rule. %{explanation} You can %{contact} if you disagree.
+    post_hidden:
+      preview: "Your post has been hidden."
+      subject_template: "Post hidden"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your post was hidden.
+
+        <%{base_url}%{url}>
+
+        **You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden.**
+
+        However, if the post is hidden a second time, it will remain hidden until handled by staff.
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+    post_hidden_again:
+      preview: "Your post has been hidden again."
+      subject_template: "Post hidden again, staff notified"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your post was hidden again.
+
+        <%{base_url}%{url}>
+
+        **Because this post has been hidden more than once, your post will now remain hidden until it is handled by a staff member.**
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+    flags_agreed_and_post_deleted:
+      preview: "Your post has been removed."
+      subject_template: "Post removed by staff"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was removed.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        Please review our [community guidelines](%{base_url}/guidelines) for details.
 
   system_messages:
     reviewables_reminder:

@@ -48,6 +48,18 @@ class DsaNotification
     raise Discourse::InvalidParameters.new(:penalty_until)
   end
 
+  def self.template_key(template, context:, locale:)
+    unless context&.fetch("source") == "review" &&
+             template.match?(
+               /\Asystem_messages\.(post_hidden|post_hidden_again|flags_agreed_and_post_deleted)\./,
+             )
+      return template
+    end
+    return template if TranslationOverride.exists?(locale:, translation_key: template)
+
+    template.sub(/\Asystem_messages\./, "dsa_notifications.")
+  end
+
   def self.append(body, context, template:, recipient:)
     return body unless context
 

@@ -2101,6 +2101,106 @@ RSpec.describe ReviewablesController do
         expect(notice.raw).to include(I18n.t("dsa_notifications.detection_automated"))
       end
 
+      %w[post_hidden post_hidden_again flags_agreed_and_post_deleted].each do |message_type|
+        it "uses own moderation wording for #{message_type} when only automated checks flagged it" do
+          Fabricate(
+            :post_action,
+            post: flagged_post,
+            user: Discourse.system_user,
+            post_action_type_id: PostActionType.types[:inappropriate],
+          )
+          flagged_post.update_columns(
+            hidden: false,
+            hidden_at: message_type == "post_hidden_again" ? 1.day.ago : nil,
+          )
+          reviewable.reviewable_scores.delete_all
+          Fabricate(
+            :reviewable_score,
+            reviewable:,
+            user: Discourse.system_user,
+            reason: "watched_word",
+          )
+          post_url = flagged_post.url
+          action =
+            message_type == "flags_agreed_and_post_deleted" ? "delete_and_agree" : "agree_and_hide"
+
+          put "/review/#{reviewable.id}/perform/#{action}.json",
+              params: {
+                version: reviewable.version,
+                dsa_classification: classification,
+              }
+          Jobs::SendSystemMessage.jobs.each do |job|
+            Jobs::SendSystemMessage.new.execute(job.fetch("args").first.with_indifferent_access)
+          end
+
+          expect(response).to have_http_status(:ok)
+          notice = Post.joins(:topic).find_by!(topics: { archetype: Archetype.private_message })
+          expected_body =
+            I18n.t(
+              "dsa_notifications.#{message_type}.text_body_template",
+              site_name: SiteSetting.title,
+              base_url: Discourse.base_url,
+              url: post_url,
+              edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
+              flagged_post_raw_content: flagged_post.raw,
+            )
+          expect(notice.topic.title).to eq(
+            I18n.t("dsa_notifications.#{message_type}.subject_template"),
+          )
+          expect(notice.raw).to start_with(expected_body.rstrip)
+          expect(notice.raw).to include(
+            I18n.t("dsa_notifications.source_review"),
+            I18n.t("dsa_notifications.detection_automated"),
+            rule[:ground],
+            rule[:explanation],
+          )
+        end
+      end
+
+      it "preserves customized title and body for a post found through own moderation" do
+        customized_title = "Our custom moderation notice"
+        customized_body = "Our custom notice about %{url}"
+        TranslationOverride.upsert!(
+          "en",
+          "system_messages.post_hidden.subject_template",
+          customized_title,
+        )
+        TranslationOverride.upsert!(
+          "en",
+          "system_messages.post_hidden.text_body_template",
+          customized_body,
+        )
+        Fabricate(
+          :post_action,
+          post: flagged_post,
+          user: Discourse.system_user,
+          post_action_type_id: PostActionType.types[:inappropriate],
+        )
+        flagged_post.update_columns(hidden: false)
+        reviewable.reviewable_scores.delete_all
+        Fabricate(
+          :reviewable_score,
+          reviewable:,
+          user: Discourse.system_user,
+          reason: "watched_word",
+        )
+
+        put "/review/#{reviewable.id}/perform/agree_and_hide.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+            }
+        Jobs::SendSystemMessage.jobs.each do |job|
+          Jobs::SendSystemMessage.new.execute(job.fetch("args").first.with_indifferent_access)
+        end
+
+        expect(response).to have_http_status(:ok)
+        notice = Post.joins(:topic).find_by!(topics: { archetype: Archetype.private_message })
+        expect(notice.topic.title).to eq(customized_title)
+        expect(notice.raw).to start_with(customized_body % { url: flagged_post.url })
+        expect(notice.raw).to include(I18n.t("dsa_notifications.source_review"), rule[:ground])
+      end
+
       it "rejects malformed classification, outdated rules and invalid categories before moderation" do
         [
           "invalid",
