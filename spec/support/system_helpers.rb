@@ -66,6 +66,7 @@ module SystemHelpers
   def visit_in_app(path)
     error = page.evaluate_async_script(<<~JS, path, Capybara.default_max_wait_time * 1000)
       const [path, timeout, done] = arguments;
+      const timer = setTimeout(() => done(`Timeout navigating to ${path}`), timeout);
       Promise.resolve(require("discourse/lib/url").default.routeTo(path))
         .catch((error) => {
           if (error.name !== "TransitionAborted") {
@@ -73,7 +74,8 @@ module SystemHelpers
           }
         })
         .then(() => window.clientSettled(timeout))
-        .then(() => done(true), (error) => done(error.message));
+        .then(() => done(true), (error) => done(error.message))
+        .finally(() => clearTimeout(timer));
     JS
 
     raise error if error.is_a?(String)
