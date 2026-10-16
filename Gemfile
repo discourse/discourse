@@ -200,7 +200,11 @@ gem "pitchfork", require: false
 
 # Used by discourse-prometheus to collect socket queue stats.
 # Was previously a transitive dependency of the unicorn gem.
-gem "raindrops", require: false, platform: :ruby
+gem "raindrops",
+    git: "https://github.com/Shopify/raindrops",
+    ref: "2ee42dabf76556e1010663932191b5ffaf4d4bf2",
+    require: false,
+    platform: :ruby
 
 gem "rbtrace", require: false, platform: :mri
 
