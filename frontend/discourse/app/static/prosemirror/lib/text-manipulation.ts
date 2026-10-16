@@ -194,7 +194,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     const { state } = this.view;
     const { to } = state.selection;
     let { from } = state.selection;
-    if (trimLeading) {
+    if (trimLeading && state.selection instanceof TextSelection) {
       let found = false;
       state.doc.nodesBetween(from, to, (node, pos) => {
         if (found) {
@@ -203,7 +203,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
         if (node.isText) {
           const start = Math.max(from - pos, 0);
           const text = node.text!.slice(start, to - pos);
-          const whitespace = text.match(/^\s*/)![0].length;
+          const whitespace = /^\s*/.exec(text)![0].length;
           from = pos + start + whitespace;
           found = whitespace < text.length;
         } else if (node.isInline) {
@@ -677,12 +677,16 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
 
   #restoreSelection(sel: SelectedText): void {
     const { state } = this.view;
-    if (sel.start !== state.selection.from || sel.end !== state.selection.to) {
+    // A caller may hold on to a selection across edits that shrink the doc.
+    const size = state.doc.content.size;
+    const start = Math.min(sel.start, size);
+    const end = Math.min(sel.end, size);
+    if (start !== state.selection.from || end !== state.selection.to) {
       this.view.dispatch(
         state.tr.setSelection(
           TextSelection.between(
-            state.doc.resolve(sel.start),
-            state.doc.resolve(sel.end)
+            state.doc.resolve(start),
+            state.doc.resolve(end)
           )
         )
       );

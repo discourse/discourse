@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { render, settled, waitFor } from "@ember/test-helpers";
 import { closeHistory, undo } from "prosemirror-history";
-import { TextSelection } from "prosemirror-state";
+import { NodeSelection, TextSelection } from "prosemirror-state";
 import { module, test } from "qunit";
 import ProsemirrorEditor from "discourse/static/prosemirror/components/prosemirror-editor";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -401,6 +401,34 @@ module(
         7,
         "the selection starts after whitespace"
       );
+    });
+
+    test("keeps a selected block whole when trimming leading whitespace", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "```\n  indented\n```");
+      const { view } = state.textManipulation;
+      view.dispatch(
+        view.state.tr.setSelection(NodeSelection.create(view.state.doc, 0))
+      );
+      const selected = state.textManipulation.getSelected(true);
+      assert.strictEqual(selected.start, 0, "the selection is not trimmed");
+      assert.strictEqual(
+        selected.end,
+        view.state.doc.firstChild.nodeSize,
+        "the selection still covers the block"
+      );
+    });
+
+    test("clamps a stale selection to the current document", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello world");
+      selectAll(state);
+      const selected = state.textManipulation.getSelected();
+      setContent(state, "hi");
+      state.textManipulation.applySurround(selected, "**", "**", "bold_text");
+      assert
+        .dom(".ProseMirror strong")
+        .hasText("hi", "the surviving text is formatted");
     });
 
     test("selects the rendered content of a structured placeholder", async function (assert) {
