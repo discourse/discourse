@@ -13,6 +13,14 @@ RSpec.describe DiscourseWorkflows::Schemas::FormFields do
 
       expect(fields.map { |field| field["key"] }).to eq(%w[first_name user_email])
     end
+
+    it "transliterates labels with the default locale regardless of the request locale" do
+      SiteSetting.default_locale = "en"
+
+      fields = I18n.with_locale(:de) { described_class.with_keys([{ "field_label" => "Größe" }]) }
+
+      expect(fields.first["key"]).to eq("grosse")
+    end
   end
 
   describe ".validate_submission" do
