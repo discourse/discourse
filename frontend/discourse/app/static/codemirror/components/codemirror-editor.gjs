@@ -7,6 +7,8 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { isTrustedHTML } from "@ember/template";
 import {
   autocompletion,
+  closeBrackets,
+  closeBracketsKeymap,
   closeCompletion,
   completeFromList,
   completionStatus,
@@ -17,16 +19,30 @@ import {
   historyKeymap,
   indentWithTab,
 } from "@codemirror/commands";
+import {
+  bracketMatching,
+  foldGutter,
+  foldKeymap,
+  indentOnInput,
+} from "@codemirror/language";
 import { setDiagnostics } from "@codemirror/lint";
-import { closeSearchPanel, search, searchKeymap } from "@codemirror/search";
+import {
+  closeSearchPanel,
+  highlightSelectionMatches,
+  search,
+  searchKeymap,
+} from "@codemirror/search";
 import { Compartment, EditorState, Transaction } from "@codemirror/state";
 import {
+  crosshairCursor,
+  drawSelection,
   EditorView,
   highlightActiveLine,
   highlightActiveLineGutter,
   keymap,
   lineNumbers,
   placeholder,
+  rectangularSelection,
   ViewPlugin,
 } from "@codemirror/view";
 import { loadCodeEditorLanguage } from "discourse/lib/code-editor-languages";
@@ -160,8 +176,21 @@ export default class CodemirrorEditor extends Component {
 
     if (this.args.codeEditing) {
       extensions.push(
+        EditorState.allowMultipleSelections.of(true),
+        drawSelection(),
+        rectangularSelection(),
+        crosshairCursor(),
+        closeBrackets(),
+        bracketMatching(),
+        indentOnInput(),
+        highlightSelectionMatches(),
         search(),
-        keymap.of([...searchKeymap, indentWithTab]),
+        keymap.of([
+          ...closeBracketsKeymap,
+          ...foldKeymap,
+          ...searchKeymap,
+          indentWithTab,
+        ]),
         EditorState.phrases.of({
           Find: i18n("code_editor.search.find"),
           Replace: i18n("code_editor.search.replace"),
@@ -204,6 +233,10 @@ export default class CodemirrorEditor extends Component {
 
     if (this.args.lineNumbers) {
       extensions.push(lineNumbers());
+    }
+
+    if (this.args.codeEditing) {
+      extensions.push(foldGutter());
     }
 
     if (this.args.lineWrapping) {

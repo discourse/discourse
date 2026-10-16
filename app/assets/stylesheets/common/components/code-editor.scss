@@ -78,8 +78,35 @@
     background: var(--tertiary-low) !important;
   }
 
+  // Translucent, because the line sits above the drawn selection.
   .cm-activeLine {
-    background: var(--primary-very-low);
+    background: rgb(var(--primary-rgb), 0.04);
+  }
+
+  .cm-selectionMatch {
+    background: rgb(var(--tertiary-rgb), 0.2);
+  }
+
+  .cm-matchingBracket,
+  .cm-editor.cm-focused .cm-matchingBracket {
+    background: rgb(var(--tertiary-rgb), 0.25);
+    outline: 1px solid rgb(var(--tertiary-rgb), 0.5);
+  }
+
+  .cm-nonmatchingBracket,
+  .cm-editor.cm-focused .cm-nonmatchingBracket {
+    background: var(--danger-low);
+  }
+
+  .cm-foldPlaceholder {
+    background: var(--primary-low);
+    border-color: var(--primary-low-mid);
+    color: var(--primary-medium);
+  }
+
+  .cm-foldGutter .cm-gutterElement {
+    cursor: pointer;
+    color: var(--primary-medium);
   }
 
   .cm-gutters {
