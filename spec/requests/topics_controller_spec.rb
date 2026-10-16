@@ -2333,6 +2333,20 @@ RSpec.describe TopicsController do
         expect(response).to be_forbidden
       end
     end
+
+    context "when a deleted topic and a live topic share a slug" do
+      it "returns the live topic" do
+        deleted_topic = Fabricate(:deleted_topic, title: "Shadowed Topic A")
+        deleted_topic.update_column(:slug, "shadowed-slug")
+        live_topic = Fabricate(:topic, title: "Shadowed Topic B")
+        live_topic.update_column(:slug, "shadowed-slug")
+
+        get "/t/id_for/shadowed-slug.json"
+
+        expect(response).to be_successful
+        expect(response.parsed_body["topic_id"]).to eq(live_topic.id)
+      end
+    end
   end
 
   describe "#update" do

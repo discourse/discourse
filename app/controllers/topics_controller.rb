@@ -57,7 +57,8 @@ class TopicsController < ApplicationController
   skip_before_action :check_xhr, only: %i[show feed]
 
   def id_for_slug
-    topic = Topic.with_deleted.find_by_slug(params[:slug])
+    # a deleted topic with the same slug must not shadow the live one
+    topic = Topic.find_by_slug(params[:slug]) || Topic.with_deleted.find_by_slug(params[:slug])
     raise Discourse::NotFound if topic.blank?
 
     raise Discourse::NotFound if !guardian.can_see?(topic) && deleted_for_permalink?(topic)
