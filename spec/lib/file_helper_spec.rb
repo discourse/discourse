@@ -150,6 +150,85 @@ RSpec.describe FileHelper do
     end
   end
 
+  describe ".optimize_image!" do
+    def with_optimizer_input(fixture)
+      Tempfile.create(["optimizer-spec-", File.extname(fixture)]) do |file|
+        FileUtils.cp(file_from_fixtures(fixture).path, file.path)
+        yield file.path
+      end
+    end
+
+    it "reduces PNG size" do
+      with_optimizer_input("large_and_unoptimized.png") do |path|
+        original_size = File.size(path)
+
+        expect(described_class.optimize_image!(path)).to eq(path)
+
+        expect(File.size(path)).to be < original_size
+        expect(FastImage.type(path)).to eq(:png)
+      end
+    end
+
+    it "keeps the input intact if replacing the optimized image fails" do
+      with_optimizer_input("large_and_unoptimized.png") do |path|
+        original = File.binread(path)
+        File.stubs(:rename).raises(Errno::EACCES)
+
+        expect { described_class.optimize_image!(path) }.to raise_error(Errno::EACCES)
+
+        expect(File.binread(path)).to eq(original)
+      end
+    end
+
+    it "reduces PNG size further when quantization is enabled" do
+      with_optimizer_input("large_and_unoptimized.png") do |path|
+        original = File.binread(path)
+        described_class.optimize_image!(path)
+        lossless_size = File.size(path)
+        File.binwrite(path, original)
+
+        described_class.optimize_image!(path, allow_pngquant: true)
+
+        expect(File.size(path)).to be < lossless_size
+        expect(FastImage.type(path)).to eq(:png)
+      end
+    end
+
+    it "optimizes JPEGs with the configured metadata policy" do
+      with_optimizer_input("unoptimized_with_metadata.jpg") do |path|
+        original = File.binread(path)
+        SiteSetting.composer_media_optimization_image_enabled = false
+        SiteSetting.strip_image_metadata = false
+        described_class.optimize_image!(path)
+        expect(File.binread(path)).to include("Exif")
+        expect(File.size(path)).to be < original.bytesize
+
+        File.binwrite(path, original)
+        SiteSetting.strip_image_metadata = true
+        described_class.optimize_image!(path)
+        expect(File.binread(path)).not_to include("Exif")
+        expect(FastImage.type(path)).to eq(:jpeg)
+        expect(File.size(path)).to be < original.bytesize
+      end
+    end
+
+    it "keeps the input when optimization fails or cannot reduce its size" do
+      with_optimizer_input("logo.png") do |path|
+        described_class.optimize_image!(path)
+        optimized = File.binread(path)
+
+        expect(described_class.optimize_image!(path)).to be_nil
+        expect(File.binread(path)).to eq(optimized)
+
+        invalid_png = "\x89PNG\r\n\x1a\n".b
+        File.binwrite(path, invalid_png)
+
+        expect(described_class.optimize_image!(path)).to be_nil
+        expect(File.binread(path)).to eq(invalid_png)
+      end
+    end
+  end
+
   describe "inline safety checks" do
     describe ".is_inline_safe?" do
       it "returns true for non-SVG images" do
