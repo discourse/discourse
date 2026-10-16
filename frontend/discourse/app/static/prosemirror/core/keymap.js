@@ -85,7 +85,7 @@ export function buildKeymap(
 
   const schema = params.schema;
 
-  // Cells contain inline text, so splitting their textblock splits the cell.
+  // Cells are isolating, so the default Enter chain cannot split them.
   keys.Enter = keys.Enter
     ? chainCommands(insertTableBreak, keys.Enter)
     : insertTableBreak;

@@ -1,25 +1,61 @@
 import { Fragment } from "prosemirror-model";
-import { TextSelection } from "prosemirror-state";
+import { NodeSelection, TextSelection } from "prosemirror-state";
 import {
   cellAround,
   cellCoords,
   cellType,
   copyCell,
   findTable,
+  isCell,
   rowRange,
   tableGrid,
 } from "./grid.js";
 
+/**
+ * Enter inside a cell: cells hold inline content only, so a line break stands
+ * in for the block split.
+ */
 export function insertTableBreak(state, dispatch) {
-  if (!(state.selection instanceof TextSelection) || !currentCell(state)) {
+  const { selection } = state;
+
+  // A selected cell would otherwise get an empty sibling cell inserted.
+  if (selection instanceof NodeSelection && isCell(selection.node)) {
+    dispatch?.(
+      state.tr.setSelection(TextSelection.create(state.doc, selection.to - 1))
+    );
+    return true;
+  }
+
+  const inlineNode =
+    selection instanceof NodeSelection && selection.node.isInline;
+
+  if (
+    (!(selection instanceof TextSelection) && !inlineNode) ||
+    !cellAround(selection.$from)
+  ) {
     return false;
   }
 
-  dispatch?.(
-    state.tr
-      .replaceSelectionWith(state.schema.nodes.hard_break.create())
-      .scrollIntoView()
-  );
+  if (dispatch) {
+    const tr = state.tr;
+    const hardBreak = state.schema.nodes.hard_break.create();
+    const { $from } = selection;
+
+    if (inlineNode) {
+      tr.insert(selection.from, hardBreak);
+      tr.setSelection(TextSelection.create(tr.doc, selection.from + 1));
+    } else if (
+      selection.empty &&
+      $from.nodeBefore?.isText &&
+      $from.nodeBefore.text.endsWith("  ")
+    ) {
+      // Markdown line-break syntax, as the paragraph Enter handler treats it.
+      tr.replaceRangeWith($from.pos - 2, $from.pos, hardBreak);
+    } else {
+      tr.replaceSelectionWith(hardBreak);
+    }
+    dispatch(tr.scrollIntoView());
+  }
   return true;
 }
 

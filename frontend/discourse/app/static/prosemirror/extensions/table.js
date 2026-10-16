@@ -50,6 +50,8 @@ const extension = {
     table_row: {
       content: "(table_cell | table_header_cell)+",
       tableRole: "row",
+      // Isolating cells would otherwise open gap cursor positions between them.
+      allowGapCursor: false,
       parseDOM: [{ tag: "tr" }],
       toDOM() {
         return ["tr", 0];
