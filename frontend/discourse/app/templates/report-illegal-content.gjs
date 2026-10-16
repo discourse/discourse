@@ -3,5 +3,5 @@ import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 
 export default <template>
   {{hideApplicationSidebar}}
-  <DsaNoticeForm @contentUrl={{@controller.content_url}} @model={{@model}} />
+  <DsaNoticeForm @contentUrl={{@controller.content_url}} />
 </template>

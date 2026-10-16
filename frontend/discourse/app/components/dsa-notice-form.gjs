@@ -3,12 +3,14 @@ import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
+import FKContainer from "discourse/form-kit/components/fk/container";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
 export default class DsaNoticeForm extends Component {
-  @service a11y;
+  @service siteSettings;
 
   @tracked result;
 
@@ -37,7 +39,6 @@ export default class DsaNoticeForm extends Component {
         type: "POST",
         data: { notice },
       });
-      this.a11y.announce(i18n("dsa_notice.received"));
       window.scrollTo(0, 0);
     } catch (error) {
       if ((error.jqXHR ?? error).status === 409) {
@@ -60,10 +61,13 @@ export default class DsaNoticeForm extends Component {
   <template>
     <div class="dsa-notice" ...attributes>
       {{#if this.result}}
-        <h1>{{i18n "dsa_notice.received"}}</h1>
-        <p>{{i18n "dsa_notice.received_description" site=@model.site_title}}</p>
+        <h1 tabindex="-1" {{dAutoFocus}}>{{i18n "dsa_notice.received"}}</h1>
+        <p>{{i18n
+            "dsa_notice.received_description"
+            site=this.siteSettings.title
+          }}</p>
         <p class="dsa-notice__reference">
-          {{i18n "dsa_notice.reference"}}:
+          {{i18n "dsa_notice.reference"}}
           <strong>{{this.result.reference}}</strong>
         </p>
         {{#if this.result.contact}}
@@ -72,13 +76,13 @@ export default class DsaNoticeForm extends Component {
           <p>{{i18n "dsa_notice.anonymous_confirmation"}}</p>
         {{/if}}
       {{else}}
-        <h1>{{i18n "dsa_notice.title" site=@model.site_title}}</h1>
-        <Form
-          @data={{this.initialData}}
-          @onSubmit={{this.submit}}
-          as |form draft|
-        >
-          <form.Container @direction="column" @format="max">
+        <h1>{{i18n "dsa_notice.title" site=this.siteSettings.title}}</h1>
+        <FKContainer @direction="column" @format="max">
+          <Form
+            @data={{this.initialData}}
+            @onSubmit={{this.submit}}
+            as |form draft|
+          >
             <form.Section>
               <form.Field
                 @format="full"
@@ -147,8 +151,8 @@ export default class DsaNoticeForm extends Component {
                 <form.Submit @label="dsa_notice.submit" />
               </form.Actions>
             </form.Section>
-          </form.Container>
-        </Form>
+          </Form>
+        </FKContainer>
       {{/if}}
     </div>
   </template>

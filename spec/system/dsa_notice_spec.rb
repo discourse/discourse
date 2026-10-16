@@ -37,6 +37,7 @@ RSpec.describe "Illegal content notices" do
     notice_page.form.field("declaration").check
     notice_page.form.submit
     expect(notice_page).to have_confirmation
+    expect(notice_page).to have_focused_confirmation
     expect(page).to have_content("We will email you a receipt")
     reference = notice_page.reference
 
@@ -65,6 +66,7 @@ RSpec.describe "Illegal content notices" do
     notice_page.form.field("declaration").check
     notice_page.form.submit
     expect(notice_page).to have_confirmation
+    expect(notice_page).to have_focused_confirmation
     expect(page).to have_content("Save this reference. You submitted anonymously")
     reference = notice_page.reference
 

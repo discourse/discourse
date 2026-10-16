@@ -3,18 +3,15 @@
 module Jobs
   class DsaNoticeReceipt < ::Jobs::Base
     def execute(args)
-      DistributedMutex.synchronize("dsa-notice-receipt-#{args.fetch(:topic_id)}") do
-        topic = Topic.find_by(id: args[:topic_id])
-        notice = topic&.custom_fields&.fetch("dsa_notice", nil)
-        if notice.blank? || notice["email"].blank? ||
-             topic.custom_fields["dsa_notice_receipt_sent"] == "t"
-          return
-        end
+      DistributedMutex.synchronize("dsa-notice-receipt-#{args.fetch(:post_id)}") do
+        notice = Dsa::Notice.from_post(Post.find_by(id: args[:post_id]))
+        return if !notice || notice.email.blank? || notice.receipt_sent?
 
-        message = DsaNoticeMailer.receipt(notice)
-        sent = Email::Sender.new(message, :dsa_notice_receipt).send
+        sent = Email::Sender.new(DsaNoticeMailer.receipt(notice), :dsa_notice_receipt).send
         if sent.is_a?(EmailLog) && sent.persisted?
-          topic.upsert_custom_fields("dsa_notice_receipt_sent" => "t")
+          notice.mark_receipt_sent!
+        elsif sent.nil?
+          Jobs.enqueue_in(1.hour, :dsa_notice_receipt, post_id: notice.post.id)
         end
       end
     end

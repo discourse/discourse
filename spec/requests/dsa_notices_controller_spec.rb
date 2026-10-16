@@ -9,18 +9,17 @@ RSpec.describe DsaNoticesController do
   end
 
   describe "#index" do
-    it "serves the form and site title without login on a private site" do
+    it "serves the form without login on a private site" do
       SiteSetting.login_required = true
       get "/dsa/illegal-content"
       expect(response.status).to eq(200)
       get "/dsa/illegal-content.json"
-      expect(response.status).to eq(200)
-      expect(response.parsed_body).to eq("site_title" => SiteSetting.title)
+      expect(response.status).to eq(406)
     end
 
     it "returns not found when disabled" do
       SiteSetting.dsa_reporting_enabled = false
-      get "/dsa/illegal-content.json"
+      get "/dsa/illegal-content"
       expect(response.status).to eq(404)
     end
   end
@@ -123,6 +122,62 @@ RSpec.describe DsaNoticesController do
              notice: notice.merge(submission_id: SecureRandom.uuid, email: notice[:email].upcase),
            }
       expect(response.status).to eq(429)
+    end
+
+    it "does not charge notice limits for rejected validation attempts" do
+      RateLimiter.enable
+      5.times do
+        post "/dsa/illegal-content.json", params: { notice: notice.merge(declaration: false) }
+        expect(response.status).to eq(422)
+      end
+      post "/dsa/illegal-content.json", params: { notice: }
+      expect(response.status).to eq(201)
+    end
+
+    it "bounds repeated lookups without charging another new notice" do
+      RateLimiter.enable
+      20.times do
+        post "/dsa/illegal-content.json", params: { notice: }
+        expect(response.status).to eq(201)
+      end
+      post "/dsa/illegal-content.json", params: { notice: }
+      expect(response.status).to eq(429)
+    end
+
+    it "limits new notices globally across different IP addresses" do
+      RateLimiter.enable
+      100.times do |index|
+        post "/dsa/illegal-content.json",
+             params: {
+               notice: notice.merge(submission_id: SecureRandom.uuid, anonymous: true),
+             },
+             headers: {
+               "REMOTE_ADDR" => "198.51.100.#{index + 1}",
+             }
+        expect(response.status).to eq(201)
+      end
+      post "/dsa/illegal-content.json",
+           params: {
+             notice: notice.merge(anonymous: true),
+           },
+           headers: {
+             "REMOTE_ADDR" => "198.51.100.201",
+           }
+      expect(response.status).to eq(429)
+    end
+
+    it "logs a persistence failure without accepting the notice" do
+      exception = ActiveRecord::RecordNotSaved.new("save failed")
+      PostCreator.stubs(:create!).raises(exception)
+      Discourse.expects(:warn_exception).with(
+        exception,
+        message: "Illegal content notice could not be saved",
+      )
+      expect do post "/dsa/illegal-content.json", params: { notice: } end.not_to change(
+        Topic,
+        :count,
+      )
+      expect(response.status).to eq(503)
     end
 
     it "requires CSRF protection for public submissions" do

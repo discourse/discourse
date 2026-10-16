@@ -13,7 +13,7 @@ en:
       submit: "Submit notice"
       received: "Notice received"
       received_description: "Your notice has been sent to %{site} for review."
-      reference: "Notice reference"
+      reference: "Notice reference:"
       contact_confirmation: "We will email you a receipt with this reference and a copy of your notice."
       anonymous_confirmation: "Save this reference. You submitted anonymously, so we cannot email you a receipt or decision."
     mcp_oauth_client_id_metadata_policy:

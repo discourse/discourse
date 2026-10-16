@@ -19,6 +19,10 @@ module PageObjects
         has_css?(".dsa-notice h1", text: "Notice received")
       end
 
+      def has_focused_confirmation?
+        has_css?(".dsa-notice h1:focus", text: "Notice received")
+      end
+
       def reference
         find(".dsa-notice__reference strong").text
       end
