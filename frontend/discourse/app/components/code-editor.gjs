@@ -41,6 +41,8 @@ import { i18n } from "discourse-i18n";
  */
 export default class CodeEditor extends Component {
   @tracked Editor;
+
+  /** @type {HTMLElement | null} */
   @tracked editorElement = null;
 
   get isLoading() {
