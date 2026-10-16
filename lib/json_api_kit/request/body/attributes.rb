@@ -33,6 +33,13 @@ module JsonApiKit
           raise ConversionError.new(error, location: error_location([error.raw]))
         end
 
+        def location_for(parameter)
+          return Location.new(document, %w[data]) if parameter == :base
+          locations_for(parameter.to_s.split(/[.\[]/, 2).first).sole
+        rescue Enumerable::SoleItemExpectedError
+          Location.new(document, %w[data attributes])
+        end
+
         private
 
         attr_reader :document, :glossary, :existing
