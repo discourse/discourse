@@ -26,7 +26,7 @@ export default class PenalizeUser extends Component {
 
   @tracked otherUserIds = [];
   @tracked postAction = "delete";
-  @tracked postEdit = this.args.model.postEdit; // eslint-disable-line discourse/no-unnecessary-tracked
+  @tracked postEdit = this.args.model.postEdit;
   @tracked flash;
   @tracked reason;
   @tracked message;
@@ -198,15 +198,17 @@ export default class PenalizeUser extends Component {
           {{/if}}
           <AdminPenaltyReason
             @message={{this.message}}
+            @onChangeMessage={{fn (mut this.message)}}
+            @onChangeReason={{fn (mut this.reason)}}
             @penaltyType={{@model.penaltyType}}
-            @reason={{this.reason}}
           />
           {{#if @model.postId}}
             <AdminPenaltyPostAction
+              @onChangePostAction={{fn (mut this.postAction)}}
+              @onChangePostEdit={{fn (mut this.postEdit)}}
               @onDeleteAllPostsReady={{this.updateReadyToDeleteAll}}
               @postAction={{this.postAction}}
               @postEdit={{this.postEdit}}
-              @postId={{@model.postId}}
               @user={{@model.user}}
             />
           {{/if}}
