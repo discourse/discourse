@@ -141,6 +141,15 @@ acceptance("Search - Full Page", function (needs) {
       .exists({ count: 1 }, "shows results for the new term");
   });
 
+  test("picking a type after the URL drops the term keeps what was typed", async function (assert) {
+    await visit("/search?q=dev");
+    await visit("/search");
+    await fillIn(".search-query", "consectetur");
+    await click(`.search-types__type[data-search-type="${SEARCH_TYPE_USERS}"]`);
+
+    assert.dom(".search-query").hasValue("consectetur");
+  });
+
   test("search for personal messages", async function (assert) {
     await visit("/search");
 
