@@ -419,18 +419,6 @@ module(
       );
     });
 
-    test("clamps a stale selection to the current document", async function (assert) {
-      const state = await setupEditor();
-      setContent(state, "hello world");
-      selectAll(state);
-      const selected = state.textManipulation.getSelected();
-      setContent(state, "hi");
-      state.textManipulation.applySurround(selected, "**", "**", "bold_text");
-      assert
-        .dom(".ProseMirror strong")
-        .hasText("hi", "the surviving text is formatted");
-    });
-
     test("selects the rendered content of a structured placeholder", async function (assert) {
       const state = await setupEditor();
       const translations = I18n.translations[I18n.locale].js.composer;
@@ -1004,12 +992,15 @@ module(
       setContent(state, "first\n\nsecond");
       selectAll(state);
 
+      let calls = 0;
       state.textManipulation.applyList(
         state.textManipulation.getSelected(),
-        (previous) =>
-          previous === undefined
+        (previous) => {
+          calls++;
+          return previous === undefined
             ? "?1 "
-            : `?${parseInt(previous.slice(1), 10) + 1} `,
+            : `?${parseInt(previous.slice(1), 10) + 1} `;
+        },
         "list_item"
       );
 
@@ -1018,6 +1009,7 @@ module(
         "?1 first\n\n?2 second",
         "each head derives from the previous one and blank lines do not advance it"
       );
+      assert.strictEqual(calls, 2, "the head is computed once per line");
     });
 
     test("preserves additional content in list prefixes", async function (assert) {

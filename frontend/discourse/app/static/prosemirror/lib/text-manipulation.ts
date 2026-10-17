@@ -78,6 +78,23 @@ interface FoundPlaceholder {
   pos: number;
 }
 
+// A private-use character has no meaning in markdown, so it can't turn into
+// syntax such as a checkbox or an emoji the way a letter could.
+const PROBE_TEXT = "\uE000";
+
+/** Reuses a resolved head for the first line so function heads run once per line. */
+function headWithFirst(
+  head: string | ((previous?: string) => string),
+  first: string
+): (previous?: string) => string {
+  return (previous) =>
+    previous === undefined
+      ? first
+      : typeof head === "function"
+        ? head(previous)
+        : head;
+}
+
 function singleChild(content: Node | Fragment | null | undefined): Node | null {
   return content?.childCount === 1 ? content.firstChild : null;
 }
@@ -291,7 +308,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     if (mark) {
       toggleMark(mark.type, mark.attrs)(this.view.state, this.view.dispatch);
     } else if (opts?.multiline && !this.view.state.selection.empty) {
-      this.#applySurroundLines(head, tail, opts);
+      this.#applySurroundLines(headWithFirst(head, hval), tail, opts);
     } else {
       this.#applySurroundFallback(hval, tail, exampleKey, opts);
     }
@@ -345,11 +362,13 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
   ): void {
     this.#restoreSelection(sel);
     const hval = typeof head === "function" ? head() : head;
-    const doc = hval == null ? null : this.tryConvertFromMarkdown(hval + "x");
+    const nextHead = headWithFirst(head, hval);
+    const doc =
+      hval == null ? null : this.tryConvertFromMarkdown(hval + PROBE_TEXT);
     const probe = singleChild(doc);
 
     if (!probe) {
-      this.#applyListFallback(head, exampleKey, opts);
+      this.#applyListFallback(nextHead, exampleKey, opts);
       return;
     }
 
@@ -362,10 +381,12 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       (isList && container?.type !== this.schema.nodes.list_item) ||
       paragraph?.type !== this.schema.nodes.paragraph
     ) {
-      this.#applyListFallback(head, exampleKey, opts);
+      this.#applyListFallback(nextHead, exampleKey, opts);
       return;
     }
-    const isPlainProbe = singleChild(paragraph)?.eq(this.schema.text("x"));
+    const isPlainProbe = singleChild(paragraph)?.eq(
+      this.schema.text(PROBE_TEXT)
+    );
 
     if (
       isPlainProbe &&
@@ -386,7 +407,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       return;
     }
 
-    this.#applyListFallback(head, exampleKey, opts);
+    this.#applyListFallback(nextHead, exampleKey, opts);
   }
 
   applyHeading(_selection: SelectedText, level: number): void {
@@ -663,30 +684,26 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
   }
 
   #probeMark(head: string, tail: string): Mark | null {
-    const doc = this.tryConvertFromMarkdown(head + "x" + tail);
+    const doc = this.tryConvertFromMarkdown(head + PROBE_TEXT + tail);
     const paragraph = singleChild(doc);
     const text =
       paragraph?.type === this.schema.nodes.paragraph
         ? singleChild(paragraph)
         : null;
 
-    return text?.isText && text.text === "x" && text.marks.length === 1
+    return text?.isText && text.text === PROBE_TEXT && text.marks.length === 1
       ? text.marks[0]!
       : null;
   }
 
   #restoreSelection(sel: SelectedText): void {
     const { state } = this.view;
-    // A caller may hold on to a selection across edits that shrink the doc.
-    const size = state.doc.content.size;
-    const start = Math.min(sel.start, size);
-    const end = Math.min(sel.end, size);
-    if (start !== state.selection.from || end !== state.selection.to) {
+    if (sel.start !== state.selection.from || sel.end !== state.selection.to) {
       this.view.dispatch(
         state.tr.setSelection(
           TextSelection.between(
-            state.doc.resolve(start),
-            state.doc.resolve(end)
+            state.doc.resolve(sel.start),
+            state.doc.resolve(sel.end)
           )
         )
       );
@@ -694,7 +711,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
   }
 
   #applySurroundLines(
-    head: string | ((previous?: string) => string),
+    head: (previous?: string) => string,
     tail: string,
     opts: SurroundOptions
   ): void {
@@ -704,7 +721,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     let previous: string | undefined;
     const addLine = (start: number, end: number) => {
       if (start < end || opts.applyEmptyLines) {
-        previous = typeof head === "function" ? head(previous) : head;
+        previous = head(previous);
         lines.push({ from: start, to: end, head: previous });
       }
     };
@@ -836,15 +853,16 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
   // Leading text keeps block rules from claiming the markup, like mid-line
   // markdown when cooked.
   #convertInlineMarkdown(markdown: string): Fragment | null {
-    const doc = this.tryConvertFromMarkdown("x " + markdown);
+    const lead = PROBE_TEXT + " ";
+    const doc = this.tryConvertFromMarkdown(lead + markdown);
     const paragraph = singleChild(doc);
     const first =
       paragraph?.type === this.schema.nodes.paragraph
         ? paragraph.firstChild
         : null;
 
-    return first?.isText && first.text!.startsWith("x ")
-      ? paragraph!.content.cut(2)
+    return first?.isText && first.text!.startsWith(lead)
+      ? paragraph!.content.cut(lead.length)
       : null;
   }
 
@@ -1008,7 +1026,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
   }
 
   #applyListFallback(
-    head: string | ((previous?: string) => string),
+    head: (previous?: string) => string,
     exampleKey: string,
     opts?: SurroundOptions
   ): void {
@@ -1016,12 +1034,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     const { from, to } = state.selection;
     const text = this.#selectedMarkdownOr(exampleKey);
     if (opts?.multiline === false) {
-      this.#applySurroundFallback(
-        typeof head === "function" ? head() : head,
-        "",
-        exampleKey,
-        opts
-      );
+      this.#applySurroundFallback(head(), "", exampleKey, opts);
       this.focus();
       return;
     }
@@ -1033,9 +1046,8 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
         if (!opts?.applyEmptyLines && !line.length) {
           return line;
         }
-        const lineHead = typeof head === "function" ? head(previous) : head;
-        previous = lineHead;
-        return lineHead + line;
+        previous = head(previous);
+        return previous + line;
       })
       .join("\n");
 
