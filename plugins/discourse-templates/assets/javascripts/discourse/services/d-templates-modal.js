@@ -12,8 +12,7 @@ export default class DTemplatesModalService extends Service {
 
   @action
   hide() {
-    // return the focus back to the textarea
-    this.model?.textarea?.focus();
+    this.model?.editor?.focus();
 
     // clear the model
     this.model = null;
