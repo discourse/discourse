@@ -48,9 +48,11 @@ class SelectionToolbarView {
     const { state } = this.#view;
     const { selection, schema } = state;
 
+    // selected nodes, like oneboxes and images, float their own toolbars
     if (
       !this.#getToolbar() ||
       selection.empty ||
+      selection.node ||
       !this.#view.hasFocus() ||
       !selection.$from.parent.inlineContent ||
       selection.$from.parent.type.spec.code
