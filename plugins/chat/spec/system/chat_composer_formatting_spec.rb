@@ -73,6 +73,27 @@ RSpec.describe "Chat composer formatting" do
 
         expect(page).to have_no_css(".chat-composer__formatting-bar")
       end
+
+      it "strikes text and wraps it in a code block" do
+        chat_page.visit_channel(channel_1)
+        find(".chat-composer-button.-toggle-formatting").click
+        expect(find(".chat-composer-button.-toggle-formatting")[:class]).to include("--active")
+
+        channel_page.composer.input.send_keys("gone", [SystemHelpers::PLATFORM_KEY_MODIFIER, "a"])
+        find(".chat-composer__formatting-bar .strikethrough").click
+
+        expect(channel_page.composer).to have_value("~~gone~~")
+
+        channel_page.composer.input.send_keys(
+          [SystemHelpers::PLATFORM_KEY_MODIFIER, "a"],
+          :backspace,
+          "x = 1",
+          [SystemHelpers::PLATFORM_KEY_MODIFIER, "a"],
+        )
+        find(".chat-composer__formatting-bar .code-block").click
+
+        expect(channel_page.composer).to have_value("```\nx = 1\n```")
+      end
     end
   end
 end

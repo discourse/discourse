@@ -26,6 +26,7 @@ export default class ChatFormattingToolbar extends ToolbarBase {
 
     this.groups = [
       { group: "fontStyles", buttons: [] },
+      { group: "lists", buttons: [] },
       { group: "blocks", buttons: [] },
     ];
 
@@ -43,24 +44,31 @@ export default class ChatFormattingToolbar extends ToolbarBase {
         group: "fontStyles",
         perform: (e) => e.applySurround("_", "_", "italic_text"),
       }),
-      formattingButtons.code({
-        group: "fontStyles",
-        perform: (e) => e.applySurround("`", "`", "code_text"),
-      }),
+      formattingButtons.strikethrough({ group: "fontStyles" }),
       formattingButtons.link({
         group: "fontStyles",
         // the channel switcher has mod+k in chat
         shortcut: "L",
         perform: openLinkModal,
       }),
+      formattingButtons.orderedList({ group: "lists" }),
+      formattingButtons.bulletList({ group: "lists" }),
       // chat doesn't bind the post composer's quote shortcut
       formattingButtons.blockquote({ group: "blocks", shortcut: undefined }),
-      formattingButtons.bulletList({ group: "blocks" }),
-      formattingButtons.orderedList({ group: "blocks" }),
+      formattingButtons.code({
+        group: "blocks",
+        perform: (e) => e.applySurround("`", "`", "code_text"),
+      }),
+      formattingButtons.codeBlock({ group: "blocks" }),
     ];
 
     buttons
       .filter((button) => !only || only.includes(button.id))
       .forEach((button) => this.addButton(button));
+
+    if (!only) {
+      this.addSeparator({ group: "fontStyles" });
+      this.addSeparator({ group: "lists" });
+    }
   }
 }

@@ -16,6 +16,8 @@ export interface ToolbarState {
   inBulletList?: boolean;
   /** Whether the selection is inside an ordered list. */
   inOrderedList?: boolean;
+  /** Whether the selection has strikethrough formatting. */
+  inStrikethrough?: boolean;
   /** Whether the selection has inline code formatting. */
   inCode?: boolean;
   /** Whether the selection is inside a code block. */

@@ -717,16 +717,6 @@ export default class ChatComposer extends Component {
         {{willDestroy this.teardown}}
         {{willDestroy this.cancelPersistDraft}}
       >
-        {{#if (and this.showFormattingBar this.editor (not this.disabled))}}
-          <div
-            aria-label={{i18n "chat.composer.formatting"}}
-            class="chat-composer__formatting-bar"
-            role="toolbar"
-          >
-            <ToolbarButtons @data={{this.formattingToolbar}} />
-          </div>
-        {{/if}}
-
         <div class="chat-composer__outer-container">
           {{#if this.site.mobileView}}
             <ChatComposerDropdown
@@ -736,72 +726,90 @@ export default class ChatComposer extends Component {
           {{/if}}
 
           <div class="chat-composer__inner-container">
-            {{#if this.site.desktopView}}
-              <ChatComposerDropdown
-                @buttons={{this.dropdownButtons}}
-                @isDisabled={{this.disabled}}
-              />
+            {{#if (and this.showFormattingBar this.editor (not this.disabled))}}
+              <div
+                aria-label={{i18n "chat.composer.formatting"}}
+                class="chat-composer__formatting-bar"
+                role="toolbar"
+              >
+                <ToolbarButtons @data={{this.formattingToolbar}} />
+              </div>
             {{/if}}
 
-            <div
-              class="chat-composer__input-container"
-              {{on "click" this.focusOrPromptLogin}}
-            >
-              {{#if this.editorComponent}}
-                <this.editorComponent
-                  @change={{this.onInput}}
-                  @class="chat-composer__input"
-                  @disabled={{this.disabled}}
-                  @eventPrefix={{null}}
-                  @extensions={{this.richEditorExtensions}}
-                  @focusIn={{this.onTextareaFocusIn}}
-                  @focusOut={{this.onTextareaFocusOut}}
-                  @id={{this.composerId}}
-                  @keymap={{this.keymap}}
-                  @lineBreakOnEnter={{true}}
-                  @onSetup={{this.setupEditor}}
-                  @onSubmit={{this.onSend}}
-                  @placeholder={{this.placeholder}}
-                  @submitOnEnter={{this.submitOnEnter}}
-                  @toggleRichEditor={{this.toggleEditor}}
-                  @trailingParagraph={{false}}
-                  @value={{this.draft.message}}
+            <div class="chat-composer__input-row">
+              {{#if this.site.desktopView}}
+                <ChatComposerDropdown
+                  @buttons={{this.dropdownButtons}}
+                  @isDisabled={{this.disabled}}
+                />
+              {{/if}}
+
+              <div
+                class="chat-composer__input-container"
+                {{on "click" this.focusOrPromptLogin}}
+              >
+                {{#if this.editorComponent}}
+                  <this.editorComponent
+                    @change={{this.onInput}}
+                    @class="chat-composer__input"
+                    @disabled={{this.disabled}}
+                    @eventPrefix={{null}}
+                    @extensions={{this.richEditorExtensions}}
+                    @focusIn={{this.onTextareaFocusIn}}
+                    @focusOut={{this.onTextareaFocusOut}}
+                    @id={{this.composerId}}
+                    @keymap={{this.keymap}}
+                    @lineBreakOnEnter={{true}}
+                    @onSetup={{this.setupEditor}}
+                    @onSubmit={{this.onSend}}
+                    @placeholder={{this.placeholder}}
+                    @submitOnEnter={{this.submitOnEnter}}
+                    @toggleRichEditor={{this.toggleEditor}}
+                    @trailingParagraph={{false}}
+                    @value={{this.draft.message}}
+                  />
+                {{/if}}
+              </div>
+
+              {{#each this.inlineButtons as |button|}}
+                <DButton
+                  aria-label={{button.ariaLabel}}
+                  class={{dConcatClass
+                    (concat "-" button.id)
+                    button.classNames
+                  }}
+                  disabled={{or this.disabled button.disabled}}
+                  tabindex={{if button.disabled -1 0}}
+                  title={{button.title}}
+                  @icon={{button.icon}}
+                  {{on
+                    "click"
+                    (fn this.handleInlineButtonAction button.action)
+                  }}
+                  {{on "focus" (fn this.computeIsFocused true)}}
+                  {{on "blur" (fn this.computeIsFocused false)}}
+                />
+              {{/each}}
+
+              <PluginOutlet
+                @name="chat-composer-inline-buttons"
+                @outletArgs={{lazyHash composer=this channel=@channel}}
+              />
+
+              {{#if this.site.desktopView}}
+                <DButton
+                  class="-send"
+                  disabled={{or this.disabled (not this.sendEnabled)}}
+                  tabindex={{if this.sendEnabled 0 -1}}
+                  title={{i18n "chat.composer.send"}}
+                  @icon="paper-plane"
+                  {{on "click" this.onSend}}
+                  {{on "mousedown" this.trapMouseDown}}
+                  {{on "focus" (fn this.computeIsFocused true)}}
+                  {{on "blur" (fn this.computeIsFocused false)}}
                 />
               {{/if}}
             </div>
-
-            {{#each this.inlineButtons as |button|}}
-              <DButton
-                aria-label={{button.ariaLabel}}
-                class={{dConcatClass (concat "-" button.id) button.classNames}}
-                disabled={{or this.disabled button.disabled}}
-                tabindex={{if button.disabled -1 0}}
-                title={{button.title}}
-                @icon={{button.icon}}
-                {{on "click" (fn this.handleInlineButtonAction button.action)}}
-                {{on "focus" (fn this.computeIsFocused true)}}
-                {{on "blur" (fn this.computeIsFocused false)}}
-              />
-            {{/each}}
-
-            <PluginOutlet
-              @name="chat-composer-inline-buttons"
-              @outletArgs={{lazyHash composer=this channel=@channel}}
-            />
-
-            {{#if this.site.desktopView}}
-              <DButton
-                class="-send"
-                disabled={{or this.disabled (not this.sendEnabled)}}
-                tabindex={{if this.sendEnabled 0 -1}}
-                title={{i18n "chat.composer.send"}}
-                @icon="paper-plane"
-                {{on "click" this.onSend}}
-                {{on "mousedown" this.trapMouseDown}}
-                {{on "focus" (fn this.computeIsFocused true)}}
-                {{on "blur" (fn this.computeIsFocused false)}}
-              />
-            {{/if}}
           </div>
           {{#if this.site.mobileView}}
             <DButton

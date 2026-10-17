@@ -269,6 +269,18 @@ export function buildToolbarEvent(
   };
 }
 
+/** Turns the selection into a code block, or toggles an existing one. */
+export function applyCodeBlock(toolbarEvent: ToolbarEvent): void {
+  if (
+    !toolbarEvent.commands?.toggleCodeBlock ||
+    !toolbarEvent.commands.toggleCodeBlock()
+  ) {
+    toolbarEvent.applySurround("```\n", "\n```", "paste_code_text", {
+      multiline: false,
+    });
+  }
+}
+
 /** Turns the selection into a bulleted list, or toggles an existing one. */
 export function applyBulletList(toolbarEvent: ToolbarEvent): void {
   if (
@@ -325,6 +337,15 @@ export const formattingButtons = {
     };
   },
 
+  strikethrough: (attrs: ToolbarButtonAttrs = {}): ToolbarButtonAttrs => ({
+    id: "strikethrough",
+    icon: "strikethrough",
+    trimLeading: true,
+    perform: (e) => e.applySurround("~~", "~~", "strikethrough_text"),
+    active: ({ state }) => state.inStrikethrough,
+    ...attrs,
+  }),
+
   link: (attrs: ToolbarButtonAttrs = {}): ToolbarButtonAttrs => ({
     id: "link",
     icon: "link",
@@ -354,6 +375,15 @@ export const formattingButtons = {
     trimLeading: true,
     perform: (e) => e.formatCode(),
     active: ({ state }) => state.inCode || state.inCodeBlock,
+    ...attrs,
+  }),
+
+  codeBlock: (attrs: ToolbarButtonAttrs = {}): ToolbarButtonAttrs => ({
+    id: "code-block",
+    icon: "file-code",
+    title: "composer.code_block_title",
+    perform: applyCodeBlock,
+    active: ({ state }) => state.inCodeBlock,
     ...attrs,
   }),
 
