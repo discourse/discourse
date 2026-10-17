@@ -479,6 +479,15 @@ const extension = {
         const tr = state.tr;
         const inspected = new Set();
 
+        // a marked-up url no longer oneboxes, and the preview can't show it
+        if (docChanged) {
+          state.doc.descendants((node, nodePos) => {
+            if (node.type.name === "onebox_inline" && node.marks.length) {
+              tr.setNodeMarkup(nodePos, null, node.attrs, []);
+            }
+          });
+        }
+
         for (const position of [state.selection.from, leftPos]) {
           const { from, to } = topBlockRange(state.doc, position);
           if (inspected.has(from)) {
