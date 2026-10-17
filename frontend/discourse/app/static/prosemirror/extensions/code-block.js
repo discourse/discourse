@@ -175,9 +175,11 @@ function convertCodeBlockToParagraphs(schema) {
       const endPos = editorState.selection.$from.end() + 1;
 
       // Create paragraph nodes
-      const paragraphNodes = paragraphs.map((text) =>
-        schema.nodes.paragraph.create(null, schema.text(text))
-      );
+      const paragraphNodes = paragraphs.length
+        ? paragraphs.map((text) =>
+            schema.nodes.paragraph.create(null, schema.text(text))
+          )
+        : [schema.nodes.paragraph.create()];
 
       const tr = editorState.tr.replaceWith(startPos, endPos, paragraphNodes);
 

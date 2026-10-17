@@ -13,7 +13,11 @@ RSpec.describe "Chat composer formatting" do
     sign_in(current_user)
   end
 
-  after { page.execute_script("localStorage.removeItem('discourse_chat_composer_formatting_bar')") }
+  after { page.execute_script(<<~JS) }
+      Object.keys(localStorage)
+        .filter((key) => key.startsWith("discourse_chat_composer_"))
+        .forEach((key) => localStorage.removeItem(key));
+    JS
 
   context "with the rich editor" do
     before do

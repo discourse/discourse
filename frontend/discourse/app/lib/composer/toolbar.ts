@@ -275,7 +275,10 @@ export function applyCodeBlock(toolbarEvent: ToolbarEvent): void {
     !toolbarEvent.commands?.toggleCodeBlock ||
     !toolbarEvent.commands.toggleCodeBlock()
   ) {
-    toolbarEvent.applySurround("```\n", "\n```", "paste_code_text", {
+    const { pre, post } = toolbarEvent.selected;
+    const head = pre && !pre.endsWith("\n") ? "\n```\n" : "```\n";
+    const tail = post && !post.startsWith("\n") ? "\n```\n" : "\n```";
+    toolbarEvent.applySurround(head, tail, "paste_code_text", {
       multiline: false,
     });
   }

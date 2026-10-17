@@ -46,10 +46,7 @@ export default class ChatFormattingToolbar extends ToolbarBase {
 
     const buttons = [
       formattingButtons.bold({ group: "fontStyles" }),
-      formattingButtons.italic({
-        group: "fontStyles",
-        perform: (e) => e.applySurround("_", "_", "italic_text"),
-      }),
+      formattingButtons.italic({ group: "fontStyles" }),
       formattingButtons.strikethrough({ group: "fontStyles" }),
       formattingButtons.link({
         group: "fontStyles",
@@ -63,7 +60,7 @@ export default class ChatFormattingToolbar extends ToolbarBase {
       formattingButtons.blockquote({ group: "blocks", shortcut: undefined }),
       formattingButtons.code({
         group: "blocks",
-        perform: (e) => e.applySurround("`", "`", "code_text"),
+        perform: (e) => e.applySurround("`", "`", "code_title"),
       }),
       formattingButtons.codeBlock({ group: "blocks" }),
     ];

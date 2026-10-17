@@ -34,7 +34,6 @@ import {
 } from "discourse/lib/composer/toolbar";
 import { SEND_SHORTCUT_META_ENTER } from "discourse/lib/constants";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
-import KeyValueStore from "discourse/lib/key-value-store";
 import loadRichEditor from "discourse/lib/load-rich-editor";
 import { cloneJSON } from "discourse/lib/object";
 import optionalService from "discourse/lib/optional-service";
@@ -60,8 +59,6 @@ import LocalDatesCreateModal from "discourse/plugins/discourse-local-dates/disco
 
 const CHAT_PRESENCE_KEEP_ALIVE = 5 * 1000; // 5 seconds
 
-const store = new KeyValueStore("discourse_chat_composer_");
-
 export default class ChatComposer extends Component {
   @service site;
   @service siteSettings;
@@ -73,16 +70,19 @@ export default class ChatComposer extends Component {
   @service currentUser;
   @service modal;
   @service menu;
+  @service chatFormattingBar;
 
   @optionalService composerPresenceManager;
 
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
   @tracked richEditorComponent;
-  @tracked showFormattingBar = !!store.getObject("formatting_bar");
 
   formattingToolbar = this.#buildToolbar();
   richEditorExtensions;
+
+  // chat addresses the whole channel with @all
+  globalMentions = ["all"];
 
   constructor() {
     super(...arguments);
@@ -91,6 +91,10 @@ export default class ChatComposer extends Component {
       this.composer.awaitEditor();
       this.#loadRichEditor();
     }
+  }
+
+  get showFormattingBar() {
+    return this.chatFormattingBar.shown;
   }
 
   get useRichEditor() {
@@ -245,8 +249,7 @@ export default class ChatComposer extends Component {
 
   @action
   toggleFormattingBar() {
-    this.showFormattingBar = !this.showFormattingBar;
-    store.setObject({ key: "formatting_bar", value: this.showFormattingBar });
+    this.chatFormattingBar.toggle();
   }
 
   @action
@@ -511,9 +514,9 @@ export default class ChatComposer extends Component {
 
     const component = await loadRichEditor();
 
-    // read after the load, which registers the default extensions; touch
-    // devices keep their native selection menu
-    if (!this.capabilities.touch) {
+    // read after the load, which registers the default extensions; mobile
+    // keeps its native selection menu
+    if (!this.site.mobileView) {
       const selectionToolbar = this.#buildToolbar(SELECTION_TOOLBAR_BUTTONS);
       this.richEditorExtensions = [
         ...getExtensions(),
@@ -757,6 +760,8 @@ export default class ChatComposer extends Component {
                     @extensions={{this.richEditorExtensions}}
                     @focusIn={{this.onTextareaFocusIn}}
                     @focusOut={{this.onTextareaFocusOut}}
+                    @globalMentions={{this.globalMentions}}
+                    @hashtagContext="chat-composer"
                     @id={{this.composerId}}
                     @keymap={{this.keymap}}
                     @lineBreakOnEnter={{true}}

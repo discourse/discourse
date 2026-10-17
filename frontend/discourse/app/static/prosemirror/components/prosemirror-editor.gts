@@ -122,6 +122,10 @@ interface ProsemirrorEditorSignature {
     ) => undefined | (() => void);
     /** ID of the topic being edited. */
     topicId?: number;
+    /** Mentions that address everyone and need no lookup, besides the site's here mention. */
+    globalMentions?: string[];
+    /** The `hashtag_configurations` entry whose type order resolves hashtags. */
+    hashtagContext?: string;
     /** ID of the category being edited. */
     categoryId?: number;
     /** Class added to the editable element. */
@@ -229,6 +233,8 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         placeholder: this.args.placeholder,
         topicId: this.args.topicId,
         categoryId: this.args.categoryId,
+        globalMentions: this.args.globalMentions,
+        hashtagContext: this.args.hashtagContext,
         session: this.session,
         menu: this.menu,
         capabilities: this.capabilities,
@@ -324,6 +330,12 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         return true;
       },
     };
+  }
+
+  @action
+  updateEditable(): void {
+    // `editable` is only re-read on a state update
+    this.view?.updateState(this.view.state);
   }
 
   @action
@@ -585,6 +597,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
       {{didInsert this.setup}}
       {{didUpdate this.convertFromValue @value}}
       {{didUpdate this.updateContext "placeholder" @placeholder}}
+      {{didUpdate this.updateEditable @disabled}}
       {{willDestroy this.teardown}}
       {{forceScrollingElementPosition}}
     ></div>

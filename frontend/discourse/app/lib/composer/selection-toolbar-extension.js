@@ -2,6 +2,12 @@ import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { updatePosition } from "discourse/float-kit/lib/update-position";
 
 const IDENTIFIER = "composer-selection-toolbar";
+const MENU_OPTIONS = {
+  placement: "top",
+  fallbackPlacements: ["bottom"],
+  padding: 0,
+  offset: 6,
+};
 
 class SelectionToolbarView {
   #view;
@@ -61,13 +67,15 @@ class SelectionToolbarView {
 
     if (this.#menuInstance?.expanded) {
       this.#menuInstance.trigger = trigger;
-      updatePosition(trigger, this.#menuInstance.content, {});
+      updatePosition(trigger, this.#menuInstance.content, MENU_OPTIONS);
       return;
     }
 
-    if (this.#showing) {
+    // another menu with this identifier may have closed ours
+    if (this.#showing && !this.#menuInstance) {
       return;
     }
+    this.#menuInstance = null;
 
     this.#showing = true;
     this.#getContext()
@@ -75,10 +83,7 @@ class SelectionToolbarView {
         identifier: IDENTIFIER,
         component: ToolbarButtons,
         data: this.#getToolbar(),
-        placement: "top",
-        fallbackPlacements: ["bottom"],
-        padding: 0,
-        offset: 6,
+        ...MENU_OPTIONS,
         closeOnClickOutside: false,
         closeOnEscape: false,
       })
