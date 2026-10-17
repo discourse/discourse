@@ -448,32 +448,38 @@ module(
       }
     });
 
-    test("toggles bold mark via parser detection", async function (assert) {
-      const state = await setupEditor();
-      setContent(state, "hello world");
-      selectAll(state);
+    for (const [name, head] of [
+      ["bold", "**"],
+      ["strikethrough", "~~"],
+    ]) {
+      test(`toggles the ${name} mark via parser detection`, async function (assert) {
+        const state = await setupEditor();
+        setContent(state, "hello world");
+        selectAll(state);
+        state.textManipulation.applySurroundSelection(
+          head,
+          head,
+          `${name}_text`
+        );
+        assert.strictEqual(
+          getMarkdown(state).trim(),
+          `${head}hello world${head}`,
+          "the mark is applied"
+        );
 
-      const sel = state.textManipulation.getSelected();
-      state.textManipulation.applySurround(sel, "**", "**", "bold_text");
-
-      assert.strictEqual(getMarkdown(state).trim(), "**hello world**");
-    });
-
-    test("toggles strikethrough (extension mark) via parser detection", async function (assert) {
-      const state = await setupEditor();
-      setContent(state, "hello world");
-      selectAll(state);
-
-      const sel = state.textManipulation.getSelected();
-      state.textManipulation.applySurround(
-        sel,
-        "~~",
-        "~~",
-        "strikethrough_text"
-      );
-
-      assert.strictEqual(getMarkdown(state).trim(), "~~hello world~~");
-    });
+        selectAll(state);
+        state.textManipulation.applySurroundSelection(
+          head,
+          head,
+          `${name}_text`
+        );
+        assert.strictEqual(
+          getMarkdown(state).trim(),
+          "hello world",
+          "the mark is removed"
+        );
+      });
+    }
 
     test("preserves combined marks in the fallback", async function (assert) {
       const state = await setupEditor();
@@ -665,60 +671,35 @@ module(
       assert.strictEqual(countNodes(state, "wrap_block"), 1);
     });
 
-    test("selects the placeholder of a block inserted after a paragraph", async function (assert) {
-      const state = await setupEditor();
-      setContent(state, "hello world");
-      const { view } = state.textManipulation;
-      view.dispatch(
-        view.state.tr.setSelection(TextSelection.create(view.state.doc, 12))
-      );
+    for (const [where, pos] of [
+      ["after", 12],
+      ["before", 1],
+    ]) {
+      test(`selects the placeholder of a block inserted ${where} a paragraph`, async function (assert) {
+        const state = await setupEditor();
+        setContent(state, "hello world");
+        const { view } = state.textManipulation;
+        view.dispatch(
+          view.state.tr.setSelection(TextSelection.create(view.state.doc, pos))
+        );
 
-      state.textManipulation.applySurroundSelection(
-        "\n[wrap=note]\n",
-        "\n[/wrap]\n",
-        "wrap_text"
-      );
+        state.textManipulation.applySurroundSelection(
+          "\n[wrap=note]\n",
+          "\n[/wrap]\n",
+          "wrap_text"
+        );
 
-      const { from, to } = view.state.selection;
-      assert.strictEqual(view.state.doc.textBetween(from, to), "Wrap content");
-      assert.strictEqual(countNodes(state, "wrap_block"), 1);
-      assert
-        .dom(".ProseMirror p")
-        .hasText("hello world", "the paragraph is kept");
-    });
-
-    test("selects the placeholder of a block inserted before a paragraph", async function (assert) {
-      const state = await setupEditor();
-      setContent(state, "hello world");
-      const { view } = state.textManipulation;
-      view.dispatch(
-        view.state.tr.setSelection(TextSelection.create(view.state.doc, 1))
-      );
-
-      state.textManipulation.applySurroundSelection(
-        "\n[wrap=note]\n",
-        "\n[/wrap]\n",
-        "wrap_text"
-      );
-
-      const { from, to } = view.state.selection;
-      assert.strictEqual(view.state.doc.textBetween(from, to), "Wrap content");
-      assert.strictEqual(countNodes(state, "wrap_block"), 1);
-      assert
-        .dom(".ProseMirror > p")
-        .hasText("hello world", "the paragraph is kept");
-    });
-
-    test("removes mark when already applied", async function (assert) {
-      const state = await setupEditor();
-      setContent(state, "**hello world**");
-      selectAll(state);
-
-      const sel = state.textManipulation.getSelected();
-      state.textManipulation.applySurround(sel, "**", "**", "bold_text");
-
-      assert.strictEqual(getMarkdown(state).trim(), "hello world");
-    });
+        const { from, to } = view.state.selection;
+        assert.strictEqual(
+          view.state.doc.textBetween(from, to),
+          "Wrap content"
+        );
+        assert.strictEqual(countNodes(state, "wrap_block"), 1);
+        assert
+          .dom(".ProseMirror > p")
+          .hasText("hello world", "the paragraph is kept");
+      });
+    }
 
     test("falls back to round-trip for unrecognized markup", async function (assert) {
       const state = await setupEditor();
@@ -809,16 +790,40 @@ module(
         .hasText("hello ? world", "only the supplied range is prefixed");
     });
 
-    test("applies bullet list via parser detection", async function (assert) {
-      const state = await setupEditor();
-      setContent(state, "hello world");
-      selectAll(state);
+    for (const [name, head, exampleKey, applied] of [
+      ["bullet list", "* ", "list_item", "* hello world"],
+      [
+        "ordered list",
+        (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+        "list_item",
+        "1. hello world",
+      ],
+      ["blockquote", "> ", "blockquote_text", "> hello world"],
+    ]) {
+      test(`applies and removes a ${name} via parser detection`, async function (assert) {
+        const state = await setupEditor();
+        setContent(state, "hello world");
+        selectAll(state);
+        state.textManipulation.applyList(
+          state.textManipulation.getSelected(),
+          head,
+          exampleKey
+        );
+        assert.strictEqual(getMarkdown(state).trim(), applied, "it is applied");
 
-      const sel = state.textManipulation.getSelected();
-      state.textManipulation.applyList(sel, "* ", "list_item");
-
-      assert.strictEqual(getMarkdown(state).trim(), "* hello world");
-    });
+        placeCursor(state);
+        state.textManipulation.applyList(
+          state.textManipulation.getSelected(),
+          head,
+          exampleKey
+        );
+        assert.strictEqual(
+          getMarkdown(state).trim(),
+          "hello world",
+          "it is removed"
+        );
+      });
+    }
 
     test("creates a list item for each selected line", async function (assert) {
       const state = await setupEditor();
@@ -877,98 +882,19 @@ module(
       );
     });
 
-    test("applies ordered list with function head", async function (assert) {
-      const state = await setupEditor();
-      setContent(state, "hello world");
-      selectAll(state);
-
-      const sel = state.textManipulation.getSelected();
-      state.textManipulation.applyList(
-        sel,
-        (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
-        "list_item"
-      );
-
-      assert.strictEqual(getMarkdown(state).trim(), "1. hello world");
-    });
-
-    test("applies blockquote via parser detection", async function (assert) {
-      const state = await setupEditor();
-      setContent(state, "hello world");
-      selectAll(state);
-
-      const sel = state.textManipulation.getSelected();
-      state.textManipulation.applyList(sel, "> ", "blockquote_text");
-
-      assert.strictEqual(getMarkdown(state).trim(), "> hello world");
-    });
-
-    test("toggles bullet list off", async function (assert) {
-      const state = await setupEditor();
-      setContent(state, "* hello world");
-      placeCursor(state);
-
-      const sel = state.textManipulation.getSelected();
-      state.textManipulation.applyList(sel, "* ", "list_item");
-
-      assert.strictEqual(getMarkdown(state).trim(), "hello world");
-    });
-
-    test("toggles ordered list off", async function (assert) {
-      const state = await setupEditor();
-      setContent(state, "1. hello world");
-      placeCursor(state);
-
-      const sel = state.textManipulation.getSelected();
-      state.textManipulation.applyList(
-        sel,
-        (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
-        "list_item"
-      );
-
-      assert.strictEqual(getMarkdown(state).trim(), "hello world");
-    });
-
-    test("toggles blockquote off", async function (assert) {
-      const state = await setupEditor();
-      setContent(state, "> hello world");
-      placeCursor(state);
-
-      const sel = state.textManipulation.getSelected();
-      state.textManipulation.applyList(sel, "> ", "blockquote_text");
-
-      assert.strictEqual(getMarkdown(state).trim(), "hello world");
-    });
-
-    test("switches from bullet list to ordered list", async function (assert) {
-      const state = await setupEditor();
-      setContent(state, "* hello world");
-      placeCursor(state);
-
-      const sel = state.textManipulation.getSelected();
-      state.textManipulation.applyList(
-        sel,
-        (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
-        "list_item"
-      );
-
-      const md = getMarkdown(state).trim();
-      assert.true(md.startsWith("1."));
-      assert.false(md.startsWith("* "));
-    });
-
     test("switches from ordered list to bullet list", async function (assert) {
       const state = await setupEditor();
       setContent(state, "1. hello world");
       placeCursor(state);
 
-      const sel = state.textManipulation.getSelected();
-      state.textManipulation.applyList(sel, "* ", "list_item");
+      state.textManipulation.applyList(
+        state.textManipulation.getSelected(),
+        "* ",
+        "list_item"
+      );
 
-      const md = getMarkdown(state).trim();
-      const isBullet = md.startsWith("* ") || md.startsWith("- ");
-      assert.true(isBullet);
-      assert.false(md.startsWith("1."));
+      assert.dom(".ProseMirror ul li").hasText("hello world");
+      assert.dom(".ProseMirror ol").doesNotExist();
     });
 
     test("falls back to markdown round-trip for unrecognized list head", async function (assert) {
@@ -1012,37 +938,26 @@ module(
       assert.strictEqual(calls, 2, "the head is computed once per line");
     });
 
-    test("preserves additional content in list prefixes", async function (assert) {
-      const state = await setupEditor();
-      setContent(state, "hello world");
-      selectAll(state);
+    for (const [head, exampleKey, selector, text] of [
+      ["* [x] ", "list_item", "li", "[x] hello world"],
+      ["> prefix ", "blockquote_text", "blockquote", "prefix hello world"],
+    ]) {
+      test(`preserves additional content in the "${head}" prefix`, async function (assert) {
+        const state = await setupEditor();
+        setContent(state, "hello world");
+        selectAll(state);
 
-      state.textManipulation.applyList(
-        state.textManipulation.getSelected(),
-        "* [x] ",
-        "list_item"
-      );
+        state.textManipulation.applyList(
+          state.textManipulation.getSelected(),
+          head,
+          exampleKey
+        );
 
-      assert
-        .dom(".ProseMirror li")
-        .hasText("[x] hello world", "the prefix content is retained");
-    });
-
-    test("preserves additional content in blockquote prefixes", async function (assert) {
-      const state = await setupEditor();
-      setContent(state, "hello world");
-      selectAll(state);
-
-      state.textManipulation.applyList(
-        state.textManipulation.getSelected(),
-        "> prefix ",
-        "blockquote_text"
-      );
-
-      assert
-        .dom(".ProseMirror blockquote")
-        .hasText("prefix hello world", "the prefix content is retained");
-    });
+        assert
+          .dom(`.ProseMirror ${selector}`)
+          .hasText(text, "the prefix content is retained");
+      });
+    }
 
     test("preserves the starting number of an ordered list", async function (assert) {
       const state = await setupEditor();
