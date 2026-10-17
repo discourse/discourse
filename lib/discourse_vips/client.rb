@@ -14,6 +14,9 @@ module DiscourseVips
     WORKER_GRACE_SECONDS = 2
     private_constant :WORKER_GRACE_SECONDS
 
+    SHARED_WORKER_RETRY_SECONDS = 10
+    private_constant :SHARED_WORKER_RETRY_SECONDS
+
     @owner_pid = Process.pid
     @shared_worker = false
     @worker_process_mutex = Mutex.new
@@ -27,7 +30,7 @@ module DiscourseVips
       payload = { command: command.map(&:to_s), timeout:, nice:, read:, write: }
 
       ImageProcessing::Instrumentation.instrument(operation:) do
-        response = send_command(payload, timeout:)
+        response = send_command_with_retries(payload, timeout:)
         case response["status"]
         when "ok"
           response["value"]
@@ -44,6 +47,24 @@ module DiscourseVips
     def self.before_fork
       reset_worker_process
     end
+
+    def self.send_command_with_retries(request, timeout:)
+      give_up_at = Process.clock_gettime(Process::CLOCK_MONOTONIC) + SHARED_WORKER_RETRY_SECONDS
+      delay = 0.1
+
+      begin
+        send_command(request, timeout:)
+      rescue WorkerUnavailable
+        if !@shared_worker || Process.clock_gettime(Process::CLOCK_MONOTONIC) + delay > give_up_at
+          raise
+        end
+
+        sleep delay
+        delay = [delay * 2, 1].min
+        retry
+      end
+    end
+    private_class_method :send_command_with_retries
 
     def self.send_command(request, timeout:)
       deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout + WORKER_GRACE_SECONDS

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "fork_drain"
+
 module Scheduler
   # ThreadPool manages a pool of worker threads that process tasks from a queue.
   # It maintains a minimum number of threads and can scale up to a maximum number
@@ -15,6 +17,12 @@ module Scheduler
 
   class ThreadPool
     class ShutdownError < StandardError
+    end
+
+    class << self
+      def wait_for_idle(timeout:)
+        ForkDrain.wait_for_idle(timeout: timeout)
+      end
     end
 
     def initialize(min_threads:, max_threads:, idle_time: nil)
@@ -39,23 +47,31 @@ module Scheduler
       @mutex = Mutex.new
       @new_work = ConditionVariable.new
       @shutdown = false
+      @pid = Process.pid
 
       # Initialize minimum number of threads
       @min_threads.times { spawn_thread }
     end
 
     def post(&block)
-      raise ShutdownError, "Cannot post work to a shutdown ThreadPool" if shutdown?
+      reset_after_fork if @pid != Process.pid
 
       db = RailsMultisite::ConnectionManagement.current_db
       locale = I18n.locale
       wrapped_block = wrap_block(block, db, locale)
 
-      @mutex.synchronize do
-        @queue << wrapped_block
-        spawn_thread if @threads.length == 0
+      ForkDrain.register
+      begin
+        @mutex.synchronize do
+          raise ShutdownError, "Cannot post work to a shutdown ThreadPool" if @shutdown
+          spawn_thread if @threads.length == 0
+          @queue << wrapped_block
 
-        @new_work.signal
+          @new_work.signal
+        end
+      rescue Exception
+        ForkDrain.complete
+        raise
       end
     end
 
@@ -98,6 +114,14 @@ module Scheduler
       @mutex.synchronize { @shutdown }
     end
 
+    def idle?
+      return true if @pid != Process.pid
+
+      @mutex.synchronize do
+        @threads.none?(&:alive?) || (@queue.empty? && @busy_threads.none?(&:alive?))
+      end
+    end
+
     def stats
       @mutex.synchronize do
         {
@@ -112,6 +136,16 @@ module Scheduler
     end
 
     private
+
+    def reset_after_fork
+      @pid = Process.pid
+      @threads = Set.new
+      @busy_threads = Set.new
+      @queue = Queue.new
+      @mutex = Mutex.new
+      @new_work = ConditionVariable.new
+      @min_threads.times { spawn_thread } if !@shutdown
+    end
 
     def wrap_block(block, db, locale)
       proc do
@@ -148,7 +182,7 @@ module Scheduler
 
           @busy_threads << Thread.current if work
 
-          if !done && work && @queue.length > 0 && @threads.length < @max_threads &&
+          if !done && !@shutdown && work && @queue.length > 0 && @threads.length < @max_threads &&
                @busy_threads.length == @threads.length
             spawn_thread
           end
@@ -161,6 +195,7 @@ module Scheduler
             work.call
           ensure
             @mutex.synchronize { @busy_threads.delete(Thread.current) }
+            ForkDrain.complete
           end
         end
       end

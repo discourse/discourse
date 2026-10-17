@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require "weakref"
+require_relative "fork_drain"
 
 module Scheduler
   module Deferrable
@@ -19,6 +20,7 @@ module Scheduler
 
       @mutex = Mutex.new
       @stats_mutex = Mutex.new
+      @pid = Process.pid
       @paused = false
       @thread = nil
       @reactor = nil
@@ -40,12 +42,15 @@ module Scheduler
     end
 
     def pause
-      stop!
       @paused = true
+      stop!(finish_work: !!@thread&.alive?)
     end
 
     def resume
+      reset_after_fork if @pid != Process.pid
+      return if !@paused
       @paused = false
+      start_thread if @async && !@queue.empty?
     end
 
     # for test and sidekiq
@@ -60,16 +65,27 @@ module Scheduler
       current_user: nil,
       &blk
     )
+      reset_after_fork if @pid != Process.pid
       @stats_mutex.synchronize do
         stats = (@stats[desc] ||= { queued: 0, finished: 0, duration: 0, errors: 0 })
         stats[:queued] += 1
       end
 
+      ForkDrain.register
       if @async
-        start_thread if !@thread&.alive? && !@paused
-        @queue.push({ site: db, user: current_user, db: db, job: blk, desc: desc }, force: force)
+        begin
+          start_thread if !@thread&.alive? && !@paused
+          @queue.push({ site: db, user: current_user, db: db, job: blk, desc: desc }, force: force)
+        rescue Exception
+          ForkDrain.complete
+          raise
+        end
       else
-        blk.call
+        begin
+          blk.call
+        ensure
+          ForkDrain.complete
+        end
       end
     end
 
@@ -107,8 +123,21 @@ module Scheduler
 
     private
 
+    def reset_after_fork
+      @queue.shift(block: false) until @queue.empty?
+      @pid = Process.pid
+      @mutex = Mutex.new
+      @stats_mutex = Mutex.new
+      @thread = nil
+      @reactor = nil
+      @stats = LruRedux::ThreadSafeCache.new(STATS_CACHE_SIZE)
+      @finish = false
+      @paused = false
+    end
+
     def start_thread
       @mutex.synchronize do
+        @finish = false
         @reactor = MessageBus::TimerThread.new if !@reactor
         @thread =
           Thread.new do
@@ -145,17 +174,21 @@ module Scheduler
     rescue => ex
       Discourse.handle_job_exception(ex, message: "Processing deferred code queue")
     ensure
-      if ActiveRecord::Base.connection&.verify!
-        ActiveRecord::Base.connection_handler.clear_active_connections!
-      end
-      if start
-        @stats_mutex.synchronize do
-          stats = @stats[desc]
-          if stats
-            stats[:finished] += 1
-            stats[:duration] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+      begin
+        if ActiveRecord::Base.connection&.verify!
+          ActiveRecord::Base.connection_handler.clear_active_connections!
+        end
+        if start
+          @stats_mutex.synchronize do
+            stats = @stats[desc]
+            if stats
+              stats[:finished] += 1
+              stats[:duration] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+            end
           end
         end
+      ensure
+        ForkDrain.complete if job
       end
     end
   end

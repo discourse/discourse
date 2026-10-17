@@ -3,6 +3,15 @@
 discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 enable_logstash_logger = ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
 stderr_log_path = "#{discourse_path}/log/unicorn.stderr.log"
+oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"]
+
+refork_after_setting = ENV["APP_SERVER_REFORK_AFTER"]
+if refork_after_setting
+  raise "APP_SERVER_REFORK_AFTER requires Linux" if !Pitchfork::REFORKING_AVAILABLE
+  refork_after(
+    refork_after_setting.split(",").map { |limit| limit.strip == "false" ? false : Integer(limit) },
+  )
+end
 
 if enable_logstash_logger
   require_relative "../lib/discourse_logstash_logger"
@@ -57,41 +66,58 @@ before_fork do |server|
 
   throttle_time = Float(ENV["APP_SERVER_FORK_THROTTLE"], exception: false) || 1
   sleep(throttle_time) if !Rails.env.development?
+
+  Discourse.before_fork
 end
 
 after_mold_fork do |server, mold|
-  if mold.generation.zero?
-    Discourse.preload_rails!
+  Scheduler::ForkDrain.reset_after_fork
+  Scheduler::Defer.resume
+  if refork_after_setting && !GlobalSetting.mini_racer_single_threaded
+    raise "APP_SERVER_REFORK_AFTER requires mini_racer_single_threaded"
+  end
 
-    supervisor = ENV["UNICORN_SUPERVISOR_PID"].to_i
+  Discourse.preload_rails!
+  Discourse.apply_db_variables_overrides(web: false)
 
-    if supervisor > 0
-      Thread.new do
-        while true
-          unless File.exist?("/proc/#{supervisor}")
-            server.logger.error "Kill self, supervisor is gone"
-            Process.kill "TERM", Process.pid
-          end
-          sleep 2
+  GC.config(rgengc_allow_full_mark: true) if oob_gc_enabled
+
+  supervisor = ENV["UNICORN_SUPERVISOR_PID"].to_i
+
+  if supervisor > 0
+    Thread.new do
+      while true
+        unless File.exist?("/proc/#{supervisor}")
+          server.logger.error "Kill self, supervisor is gone"
+          Process.kill "TERM", Process.pid
         end
+        sleep 2
       end
     end
   end
 
   Discourse.redis.close
   DiscourseVips::Client.use_shared_worker
-  Discourse.before_fork
   Process.warmup
 end
 
 after_worker_fork do |server, worker|
+  Scheduler::ForkDrain.reset_after_fork
   DiscourseEvent.trigger(:web_fork_started)
-  Discourse.apply_worker_db_variables_overrides
+  Discourse.apply_db_variables_overrides(web: true)
   Discourse.after_fork
   SignalTrapLogger.instance.after_fork
 end
 
+before_worker_exit do |_server, _worker|
+  Discourse.resume_after_fork
+  Scheduler::ThreadPool.wait_for_idle(timeout: 10)
+  Scheduler::Defer.stop!(finish_work: true)
+end
+
 before_service_worker_ready do |server, service_worker|
+  Discourse.resume_after_fork
+
   sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
 
   require "demon/discourse_vips"
@@ -142,24 +168,31 @@ before_service_worker_ready do |server, service_worker|
     STDOUT.puts "Pitchfork ready on http://localhost:#{ENV["UNICORN_PORT"] || 3000} (#{parts.join(", ")})"
   end
 
+  check_demon =
+    lambda do |&check|
+      check.call
+    rescue => e
+      Rails.logger.warn("Error in demon processes heartbeat check: #{e}\n#{e.backtrace.join("\n")}")
+    end
+
   Thread.new do
     while true
-      begin
-        sleep 60
+      sleep 60
 
-        if sidekiqs > 0
+      if sidekiqs > 0
+        check_demon.call do
           Demon::Sidekiq.ensure_running
           Demon::Sidekiq.heartbeat_check
           Demon::Sidekiq.rss_memory_check
         end
+      end
 
-        Demon::DiscourseVips.ensure_running if GlobalSetting.enable_vips_image_processing
+      if GlobalSetting.enable_vips_image_processing
+        check_demon.call { Demon::DiscourseVips.ensure_running }
+      end
 
-        DiscoursePluginRegistry.demon_processes.each { |demon_class| demon_class.ensure_running }
-      rescue => e
-        Rails.logger.warn(
-          "Error in demon processes heartbeat check: #{e}\n#{e.backtrace.join("\n")}",
-        )
+      DiscoursePluginRegistry.demon_processes.each do |demon_class|
+        check_demon.call { demon_class.ensure_running }
       end
     end
   end
