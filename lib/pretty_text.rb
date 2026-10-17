@@ -530,6 +530,12 @@ module PrettyText
     doc.css(".video-onebox,video").remove
   end
 
+  def self.replace_diagrams(doc, post)
+    doc
+      .css("pre[data-code-wrap='mermaid']")
+      .each { |pre| pre.replace(link_paragraph(doc, post.full_url, I18n.t("emails.view_diagram"))) }
+  end
+
   def self.convert_vimeo_iframes(doc)
     doc
       .css("iframe[src*='player.vimeo.com']")
@@ -655,6 +661,7 @@ module PrettyText
     DiscourseEvent.trigger(:reduce_cooked, doc, post)
     strip_secure_uploads(doc) if post&.should_secure_uploads?
     strip_image_wrapping(doc)
+    replace_diagrams(doc, post) if post
     convert_vimeo_iframes(doc)
     make_all_links_absolute(doc)
     doc.to_html

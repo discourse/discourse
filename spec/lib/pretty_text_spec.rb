@@ -1407,6 +1407,26 @@ RSpec.describe PrettyText do
       end
     end
 
+    describe ".replace_diagrams" do
+      let(:html) { <<~HTML }
+        <pre data-code-wrap="mermaid"><code class="lang-mermaid">flowchart LR
+          A --&gt; B
+        </code></pre>
+        <pre data-code-wrap="ruby"><code class="lang-ruby">puts 1</code></pre>
+      HTML
+
+      it "replaces diagram code blocks with a link to the post" do
+        expect(described_class.format_for_email(html, post)).to match_html(<<~HTML)
+          <p><a href="#{post.full_url}">#{I18n.t("emails.view_diagram")}</a></p>
+          <pre data-code-wrap="ruby"><code class="lang-ruby">puts 1</code></pre>
+        HTML
+      end
+
+      it "keeps diagram code blocks when there is no post to link to" do
+        expect(described_class.format_for_email(html)).to include("lang-mermaid")
+      end
+    end
+
     describe ".convert_vimeo_iframes" do
       it "converts a Vimeo iframe to a link, ignoring an invalid unlisted hash" do
         html = %(<p>Video:</p><iframe src="https://player.vimeo.com/video/1?h=not-valid!"></iframe>)
