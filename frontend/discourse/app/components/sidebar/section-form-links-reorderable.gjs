@@ -26,7 +26,7 @@ export default class SidebarSectionFormLinksReorderable extends Component {
    * Applies a committed move onto the backing arrays, which hold links awaiting
    * deletion as well as visible ones.
    *
-   * @param {Object} move - The normalized move from the list.
+   * @param {import("discourse/ui-kit/d-reorderable-list/types").ReorderableMove<{ segment: string }>} move - The normalized move from the list.
    */
   @bind
   handleMove(move) {

@@ -101,9 +101,9 @@ lt:
       delete_messages:
         confirm:
           one: "Ar tikrai norite ištrinti šį pranešimą?"
-          few: "Ar tikrai norite ištrinti šį pranešimą?"
-          many: "Ar tikrai norite ištrinti šį pranešimą?"
-          other: "Ar tikrai norite ištrinti šias %{count} žinutes?"
+          few: "Ar tikrai norite ištrinti šiuos %{count} pranešimus?"
+          many: "Ar tikrai norite ištrinti šiuos %{count} pranešimų?"
+          other: "Ar tikrai norite ištrinti šiuos %{count} pranešimus?"
       channel_settings:
         title: "Kanalo nustatymai"
         edit: "Redaguoti"

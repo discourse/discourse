@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@babel/core": "^7.29.7",
+    "@babel/plugin-transform-modules-amd": "^7.29.7",
     "@babel/plugin-transform-typescript": "^7.29.7",
     "@babel/preset-env": "^7.29.2",
-    "@babel/standalone": "^8.0.4",
     "@csstools/postcss-light-dark-function": "^3.0.3",
     "@glimmer/syntax": "^0.95.0",
     "@rollup/browser": "^4.63.1",
@@ -34,7 +34,7 @@
     "postcss-nesting": "^14.0.1",
     "postcss-value-parser": "^4.2.0",
     "rolldown": "1.2.7",
-    "source-map-js": "^1.2.1",
+    "source-map-js": "^1.2.2",
     "strip-test-selectors": "^0.1.0",
     "terser": "^5.51.2"
   },
@@ -42,7 +42,7 @@
     "node": ">= 20",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": "^10"
+    "pnpm": "^12"
   },
   "devDependencies": {
     "vitest": "^4.1.11"

@@ -27,7 +27,7 @@ export default class ArgsTable extends Component {
    * Transforms the raw args object into an array of entry objects for display.
    * Each entry contains the original key/value plus formatted display representations.
    *
-   * @returns {Array<{key: string, value: any, displayValue: string, typeInfo: string, isDeprecated: boolean, deprecationInfo: Object|null}>}
+   * @returns {Array<{key: string, value: unknown, displayValue: string, typeInfo: string, isDeprecated: boolean, deprecationInfo: {message: string | undefined, since: string | undefined}|null}>}
    */
   get entries() {
     const entries = [];

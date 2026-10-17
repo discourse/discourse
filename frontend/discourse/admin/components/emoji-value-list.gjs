@@ -105,7 +105,7 @@ export default class EmojiValueList extends Component {
    * Applies a committed move and persists the new order. Wrapping and
    * announcements are the list's own.
    *
-   * @param {Object} move - The normalized move from the list.
+   * @param {import("discourse/ui-kit/d-reorderable-list/types").ReorderableMove<{ value: string, isEditable: boolean, isEditing: boolean }>} move - The normalized move from the list.
    */
   @action
   handleMove(move) {

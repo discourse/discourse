@@ -12,10 +12,13 @@ import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class ChangeThemeSourceModal extends Component {
+  /** @type {string | null} */
   @tracked publicKey = null;
   @tracked loading = false;
   @tracked generateNewKey = false;
   @tracked remoteUrl = this.args.model.theme.remote_theme?.remote_url || "";
+
+  /** @type {{ submit: (event?: Event) => Promise<void> } | null} */
   @tracked formApi = null;
 
   @cached

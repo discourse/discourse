@@ -18,6 +18,7 @@ export const FORMAT = "YYYY-MM-DD HH:mmZ";
 })
 @pluginApiIdentifiers("future-date-input-selector")
 export default class FutureDateInputSelector extends ComboBoxComponent {
+  /** @type {string | null | undefined} */
   userTimezone = null;
 
   init() {

@@ -11,6 +11,12 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    const outlined = (selector, title) => (assert) =>
+      assert
+        .dom(`.ProseMirror ${selector}`)
+        .hasClass("composer-html-inline-node")
+        .hasAttribute("title", title);
+
     Object.entries({
       "basic inline HTML tags": [
         "<kbd>Ctrl</kbd>",
@@ -102,8 +108,28 @@ module(
       ],
       "span with lang attribute": [
         '<span lang="ja">日本語</span>',
-        '<p><span lang="ja">日本語</span> </p>',
+        outlined("span[lang]", '<span lang="ja">'),
         '<span lang="ja">日本語</span> ',
+      ],
+      "span with an empty data attribute": [
+        "a <span data-fish>fishy</span> word",
+        outlined("span[data-fish]", "<span data-fish>"),
+        "a <span data-fish>fishy</span> word",
+      ],
+      "span with an explicitly empty attribute is written bare": [
+        'a <span data-fish="">fishy</span> word',
+        outlined("span[data-fish]", "<span data-fish>"),
+        "a <span data-fish>fishy</span> word",
+      ],
+      "span without attributes": [
+        "<span>plain</span>",
+        outlined("span", "<span>"),
+        "<span>plain</span> ",
+      ],
+      "span with a valued data attribute": [
+        '<span data-mood="happy">text</span>',
+        outlined("span[data-mood]", '<span data-mood="happy">'),
+        '<span data-mood="happy">text</span> ',
       ],
       "br tag converts to hard break": [
         "Line1<br>Line2",
@@ -148,10 +174,10 @@ module(
         "<p><kbd><sup>x</sup></kbd> y</p>",
         "<kbd><sup>x</sup></kbd> y",
       ],
-      "anchor without href keeps its name": [
-        'see <a name="top">here</a>',
-        '<p>see <a name="top">here</a> </p>',
-        'see <a name="top">here</a> ',
+      "anchor without href keeps its name and own title": [
+        'see <a name="top" title="Top">here</a>',
+        outlined("a[name]", "Top"),
+        'see <a name="top" title="Top">here</a> ',
       ],
       "allow-listed tags and attributes inside a table round-trip": [
         '| a |\n|---|\n| <ol start="3"><li>c</li></ol> <div data-x="1" onclick="y()">d</div> <abbr title="T">e</abbr> <h2>f</h2> |\n',
@@ -162,6 +188,17 @@ module(
           assert.dom("td h2").hasText("f");
         },
         '| a |\n|----|\n| <ol start="3"><li>c</li></ol> <div data-x="1">d</div> <abbr title="T">e</abbr> <h2>f</h2>  |\n\n',
+      ],
+      "only tags with no look of their own are outlined": [
+        "| a |\n|---|\n| <p>p</p> <div>d</div> <ul><li>l</li></ul> <kbd>k</kbd> |\n",
+        (assert) => {
+          assert.dom("td p").hasClass("composer-html-inline-node");
+          assert.dom("td div").hasAttribute("title", "<div>");
+          assert.dom("td ul").doesNotHaveClass("composer-html-inline-node");
+          assert.dom("td li").doesNotHaveClass("composer-html-inline-node");
+          assert.dom("td kbd").doesNotHaveClass("composer-html-inline-node");
+        },
+        "| a |\n|----|\n| <p>p</p> <div>d</div> <ul><li>l</li></ul> <kbd>k</kbd>  |\n\n",
       ],
       "mark tags keep being marks when they carry attributes": [
         '<strong class="x">bold</strong> <code class="lang-js">c</code>',
@@ -190,6 +227,20 @@ module(
 
       assert.dom(".ProseMirror table ul li").exists({ count: 2 });
       assert.true(editor.value.includes("| <ul><li>a</li><li>b</li></ul>"));
+    });
+
+    test("inline HTML inserted after load is outlined", async function (assert) {
+      const [editor] = await setupRichEditor(assert, "a");
+      const { state, dispatch } = editor.view;
+      const span = state.schema.nodes.html_inline.create(
+        { tag: "span" },
+        state.schema.text("b")
+      );
+
+      dispatch(state.tr.insert(2, span));
+      await settled();
+
+      assert.dom(".ProseMirror span").hasClass("composer-html-inline-node");
     });
 
     test("pasted phrasing tags keep allow-listed attributes", async function (assert) {

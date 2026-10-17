@@ -25,10 +25,16 @@ export default class SpreadsheetEditor extends Component {
 
   @tracked showEditReason = false;
   @tracked loading = true;
+
+  /** @type {HTMLElement | import("jspreadsheet-ce").WorksheetInstance | null} */
   spreadsheet = null;
   defaultColWidth = 150;
   isEditingTable = !!this.args.model.tableTokens;
+
+  /** @type {("left" | "center" | "right" | null)[] | null} */
   alignments = null;
+
+  /** @type {string | null} */
   initialSnapshot = null;
 
   constructor() {

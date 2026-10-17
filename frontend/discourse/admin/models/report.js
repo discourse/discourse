@@ -207,7 +207,11 @@ export default class Report extends EmberObject {
   average = false;
   percent = false;
   higher_is_better = true;
+
+  /** @type {string | null} */
   description_link = null;
+
+  /** @type {string | null} */
   description = null;
 
   @computed("type", "start_date", "end_date")

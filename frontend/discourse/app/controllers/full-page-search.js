@@ -85,6 +85,7 @@ export default class FullPageSearchController extends Controller {
   @tracked searching = false;
   @tracked loading = false;
 
+  /** @type {boolean | null} */
   bulkSelectEnabled = null;
 
   queryParams = [
@@ -97,15 +98,25 @@ export default class FullPageSearchController extends Controller {
   ];
 
   q;
+
+  /** @type {string | number | null} */
   context_id = null;
   search_type = SEARCH_TYPE_DEFAULT;
+
+  /** @type {string | null} */
   context = null;
   sortOrder = 0;
+
+  /** @type {{ name: string, id: number, term?: string, alias?: string }[] | null} */
   sortOrders = null;
   invalidSearch = false;
   page = 1;
+
+  /** @type {number | null} */
   resultCount = null;
   additionalSearchResults = [];
+
+  /** @type {string | null | undefined} */
   error = null;
   _searchOnSortChange = true;
 

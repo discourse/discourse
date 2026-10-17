@@ -8,6 +8,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 
+/** @type {{ scale: number | null, modifier: string }[]} */
 export const FITZPATRICK_MODIFIERS = [
   { scale: null, modifier: "" },
   { scale: 2, modifier: ":t1" },

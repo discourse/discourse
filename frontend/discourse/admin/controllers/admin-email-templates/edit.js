@@ -13,6 +13,7 @@ export default class AdminEmailTemplatesEditController extends Controller {
   @service dialog;
   @controller adminEmailTemplates;
 
+  /** @type {import("discourse/admin/models/email-template").default | null | undefined} */
   @tracked emailTemplate = null;
   saved = false;
 

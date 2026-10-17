@@ -44,7 +44,15 @@ export default class WebHook extends RestModel {
   wildcard_web_hook = false;
   verify_certificate = true;
   active = false;
+
+  /** @type {Array<{ id: number, name: string }> | null} */
   web_hook_event_types = null;
+
+  /**
+   * Group names, or a comma-separated string of them when set by a group selector.
+   *
+   * @type {string[] | string | null}
+   */
   group_names = null;
 
   @computed("wildcard_web_hook")

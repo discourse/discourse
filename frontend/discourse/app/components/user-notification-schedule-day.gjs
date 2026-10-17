@@ -1,39 +1,32 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import { concat } from "@ember/helper";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
-export default class UserNotificationScheduleDay extends Component {
-  <template>
-    <tr class="day {{this.dayLabel}}">
-      <td class="day-label">{{this.dayLabel}}</td>
+const UserNotificationScheduleDay = <template>
+  {{#let (i18n (concat "user.notification_schedule." @day)) as |dayLabel|}}
+    <tr class="day {{dayLabel}}">
+      <td class="day-label">{{dayLabel}}</td>
       <td class="starts-at">
         <ComboBox
-          @content={{this.startTimeOptions}}
-          @onChange={{this.onChangeStartTime}}
-          @value={{this.startTimeValue}}
+          @content={{@startTimeOptions}}
+          @onChange={{@onChangeStartTime}}
+          @value={{@startTimeValue}}
           @valueProperty="value"
         />
       </td>
-      {{#if this.endTimeOptions}}
+      {{#if @endTimeOptions}}
         <td class="to">{{i18n "user.notification_schedule.to"}}</td>
         <td class="ends-at">
           <ComboBox
-            @content={{this.endTimeOptions}}
-            @onChange={{this.onChangeEndTime}}
-            @value={{this.endTimeValue}}
+            @content={{@endTimeOptions}}
+            @onChange={{@onChangeEndTime}}
+            @value={{@endTimeValue}}
             @valueProperty="value"
           />
         </td>
       {{/if}}
     </tr>
-  </template>
+  {{/let}}
+</template>;
 
-  @computed("day")
-  get dayLabel() {
-    return i18n(`user.notification_schedule.${this.day}`);
-  }
-}
+export default UserNotificationScheduleDay;

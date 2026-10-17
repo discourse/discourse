@@ -46,26 +46,48 @@ const BINDINGS = {
 
 @tagName("")
 export default class DTimeShortcutPicker extends Component {
+  /** @type {string | null | undefined} */
   userTimezone = null;
 
+  /** @type {((type: string, datetime: import("moment").Moment | null | undefined) => void) | null | undefined} */
   onTimeSelected = null;
 
+  /** @type {string | null} */
   selectedShortcut = null;
   selectedTime = null;
   selectedDate = null;
+
+  /** @type {import("moment").Moment | null | undefined} */
   selectedDatetime = null;
+
+  /** @type {import("moment").Moment | Date | string | null | undefined} */
   prefilledDatetime = null;
+
+  /** @type {number | null | undefined} */
   selectedDurationMins = null;
 
+  /** @type {string[] | null | undefined} */
   hiddenOptions = null;
+
+  /** @type {unknown[] | null} */
   customOptions = null;
 
+  /** @type {string | null} */
   lastCustomDate = null;
+
+  /** @type {string | null} */
   lastCustomTime = null;
+
+  /** @type {import("moment").Moment | null} */
   parsedLastCustomDatetime = null;
+
+  /** @type {string | null} */
   customDate = null;
+
+  /** @type {string | null} */
   customTime = null;
 
+  /** @type {{ bind: (keys: string | string[], callback: (event: KeyboardEvent, combo: string) => unknown) => unknown, unbind: (keys: string | string[]) => unknown } | null} */
   _itsatrap = null;
 
   @computed("selectedShortcut")
@@ -78,6 +100,7 @@ export default class DTimeShortcutPicker extends Component {
     return this.selectedShortcut === TIME_SHORTCUT_TYPES.RELATIVE;
   }
 
+  /** @returns {string | null} */
   @computed("customDate", "customTime")
   get customDatetimeFilled() {
     return this.customDate && this.customTime;

@@ -14,6 +14,8 @@ import { i18n } from "discourse-i18n";
 
 export default class ChangeOwnerModal extends Component {
   @tracked saving = false;
+
+  /** @type {string | null | undefined} */
   @tracked newOwner = null;
   @tracked flash;
 

@@ -32,7 +32,7 @@ export default class EditBadgeGroupings extends Component {
   /**
    * Applies a committed move onto the staged working copy.
    *
-   * @param {Object} move - The normalized move from the list.
+   * @param {import("discourse/ui-kit/d-reorderable-list/types").ReorderableMove<import("discourse/models/badge-grouping").default>} move - The normalized move from the list.
    */
   @action
   handleMove(move) {
