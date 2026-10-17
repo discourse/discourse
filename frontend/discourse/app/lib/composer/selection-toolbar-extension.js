@@ -13,13 +13,15 @@ class SelectionToolbarView {
   #view;
   #getContext;
   #getToolbar;
+  #utils;
   #menuInstance;
   #showing = false;
 
-  constructor(view, { getContext, getToolbar }) {
+  constructor(view, { getContext, getToolbar, utils }) {
     this.#view = view;
     this.#getContext = getContext;
     this.#getToolbar = getToolbar;
+    this.#utils = utils;
   }
 
   update(view) {
@@ -56,10 +58,8 @@ class SelectionToolbarView {
       return false;
     }
 
-    // the link toolbar already floats over links
-    return !selection.$head
-      .marks()
-      .some((mark) => mark.type === schema.marks.link);
+    // the link toolbar floats over links, judged from the same position
+    return !this.#utils.getMarkRange(selection.$head, schema.marks.link);
   }
 
   #show() {
@@ -122,7 +122,7 @@ class SelectionToolbarView {
  */
 export default function selectionToolbarExtension(getToolbar) {
   return {
-    plugins({ pmState: { Plugin }, getContext }) {
+    plugins({ pmState: { Plugin }, getContext, utils }) {
       let toolbarView;
 
       return new Plugin({
@@ -130,6 +130,7 @@ export default function selectionToolbarExtension(getToolbar) {
           toolbarView = new SelectionToolbarView(view, {
             getContext,
             getToolbar,
+            utils,
           });
           return toolbarView;
         },
