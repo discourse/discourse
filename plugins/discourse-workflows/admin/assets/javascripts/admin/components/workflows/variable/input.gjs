@@ -10,6 +10,12 @@ export default class VariableInput extends Component {
 
   @tracked Editor;
 
+  get editorClass() {
+    return this.args.class
+      ? `workflows-variable-input ${this.args.class}`
+      : "workflows-variable-input";
+  }
+
   @action
   async loadEditor() {
     const [Editor] = await Promise.all([
@@ -32,10 +38,11 @@ export default class VariableInput extends Component {
       {{#if this.Editor}}
         <this.Editor
           @change={{@onChange}}
-          @class="workflows-variable-input"
+          @class={{this.editorClass}}
           @extensions={{@extensions}}
           @focusIn={{@onFocusIn}}
           @focusOut={{@onFocusOut}}
+          @lineNumbers={{@lineNumbers}}
           @lineWrapping={{true}}
           @onSetup={{@onSetup}}
           @value={{@value}}

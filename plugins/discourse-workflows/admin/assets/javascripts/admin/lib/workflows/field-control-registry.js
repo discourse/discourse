@@ -15,6 +15,7 @@ import FieldPathControl from "../../components/workflows/configurators/field-pat
 import FilterQuery from "../../components/workflows/configurators/filter-query.gjs";
 import GroupSelect from "../../components/workflows/configurators/group-select.gjs";
 import IconControl from "../../components/workflows/configurators/icon-control.gjs";
+import LiquidControl from "../../components/workflows/configurators/liquid-control.gjs";
 import MultiComboBox from "../../components/workflows/configurators/multi-combo-box.gjs";
 import MultiInput from "../../components/workflows/configurators/multi-input.gjs";
 import NoticeControl from "../../components/workflows/configurators/notice-control.gjs";
@@ -59,6 +60,7 @@ const FIELD_CONTROL_REGISTRY = {
     renderer: DataTableSelect,
   },
   group_select: { kind: "field", type: "custom", renderer: GroupSelect },
+  liquid: { kind: "field", type: "custom", renderer: LiquidControl },
   data_table_column_select: {
     kind: "field",
     type: "custom",

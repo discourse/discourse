@@ -16,6 +16,7 @@ import {
   STRING_METHODS,
 } from "./completions-data.js";
 import { expressionLanguage } from "./lang-expression/index.js";
+import { liquidLanguage } from "./lang-liquid/index.js";
 import {
   analyzePropertyAccess,
   isInsideExpression,
@@ -50,6 +51,7 @@ function methodsForType(value) {
 // analyzePropertyAccess in the consumer, not here.
 export const expressionUtils = {
   expressionLanguage,
+  liquidLanguage,
   analyzePropertyAccess,
   resolveNodeValue,
   isInsideExpression,
