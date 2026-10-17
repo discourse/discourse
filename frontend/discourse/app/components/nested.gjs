@@ -42,6 +42,9 @@ const STORED_SCROLL_ANCHORS = Object.create(null);
 // Exported so system specs can wait out the full restoration window.
 export const SCROLL_RESTORE_WINDOW_MS = 1250;
 
+/**
+ * @typedef {{ post: import("discourse/models/post").default, children: NestedPostNode[], _renderKey?: number | string }} NestedPostNode
+ */
 export default class Nested extends Component {
   @service appEvents;
   @service currentUser;
@@ -55,6 +58,8 @@ export default class Nested extends Component {
   @tracked cloakBelow = 0;
   @tracked focusDirection = "forward";
   @tracked focusedPath = [];
+
+  /** @type {{ postNumber: number, offsetFromTop: number, scrollY?: number } | null} */
   @tracked mobileReturnAnchor = null;
   viewportTracker = new PostStreamViewportTracker();
   #initialFocusedPathKey = null;
@@ -166,6 +171,7 @@ export default class Nested extends Component {
     this.viewportTracker.destroy();
   }
 
+  /** @returns {NestedPostNode[]} */
   get emptyPath() {
     return [];
   }

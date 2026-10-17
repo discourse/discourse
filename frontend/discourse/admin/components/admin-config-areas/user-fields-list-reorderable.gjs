@@ -39,7 +39,7 @@ export default class AdminConfigAreasUserFieldsList extends Component {
    * new slot — a drag can jump several rows, which the old adjacent-swap
    * persistence could not express.
    *
-   * @param {Object} move - The normalized move from the list.
+   * @param {import("discourse/ui-kit/d-reorderable-list/types").ReorderableMove<import("discourse/admin/models/user-field").default>} move - The normalized move from the list.
    */
   @action
   async handleMove(move) {

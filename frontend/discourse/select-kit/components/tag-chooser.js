@@ -31,6 +31,7 @@ export default class TagChooser extends MultiSelectComponent {
   valueProperty = "id";
   nameProperty = "name";
 
+  /** @type {(string | { id: number | string, name: string })[] | null | undefined} */
   blockedTags = null;
   excludeSynonyms = false;
   excludeHasSynonyms = false;

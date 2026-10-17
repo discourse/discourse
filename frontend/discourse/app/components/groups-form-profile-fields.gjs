@@ -17,7 +17,10 @@ import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class GroupsFormProfileFields extends Component {
+  /** @type {boolean | null} */
   disableSave = null;
+
+  /** @type {string | null | undefined} */
   nameInput = null;
 
   @computed("model.automatic")

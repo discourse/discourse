@@ -30,6 +30,30 @@ const INLINE_TAGS = [
   "span",
 ];
 
+// Tags with a look of their own on the element (markers and cell borders
+// count, margins and link colour don't). Any other tag is outlined.
+const STYLED_TAGS = [
+  ...INLINE_TAGS.filter((tag) => tag !== "span"),
+  "abbr",
+  "blockquote",
+  "dd",
+  "details",
+  "dl",
+  "dt",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "li",
+  "ol",
+  "pre",
+  "summary",
+  "table",
+  "ul",
+];
+
 const VOID_TAGS = [
   "area",
   "base",
@@ -190,9 +214,10 @@ function serializeHtmlAttrs(htmlAttrs) {
     return "";
   }
   return Object.entries(htmlAttrs)
-    .map(
-      ([k, v]) =>
-        ` ${k}="${v.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}"`
+    .map(([k, v]) =>
+      v === ""
+        ? ` ${k}`
+        : ` ${k}="${v.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}"`
     )
     .join("");
 }
@@ -500,6 +525,40 @@ const extension = {
       state.renderInline(node);
       state.write(`</${node.attrs.tag}>`);
     },
+  },
+  plugins({ pmState: { Plugin }, pmView: { Decoration, DecorationSet } }) {
+    function outlineDecorations(doc) {
+      const decorations = [];
+      doc.descendants((node, pos) => {
+        if (node.type.name !== "html_inline") {
+          return;
+        }
+
+        const { tag, htmlAttrs } = node.attrs;
+        if (STYLED_TAGS.includes(tag)) {
+          return;
+        }
+
+        const attrs = { class: "composer-html-inline-node" };
+        if (!htmlAttrs?.title) {
+          attrs.title = `<${tag}${serializeHtmlAttrs(htmlAttrs)}>`;
+        }
+        decorations.push(Decoration.node(pos, pos + node.nodeSize, attrs));
+      });
+      return DecorationSet.create(doc, decorations);
+    }
+
+    return new Plugin({
+      state: {
+        init: (_, state) => outlineDecorations(state.doc),
+        apply: (tr, set) => (tr.docChanged ? outlineDecorations(tr.doc) : set),
+      },
+      props: {
+        decorations(state) {
+          return this.getState(state);
+        },
+      },
+    });
   },
   inputRules: {
     match: new RegExp(`<(${INPUT_RULE_TAGS.join("|")})>$`, "i"),

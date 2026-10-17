@@ -49,6 +49,57 @@ RSpec.describe DiscourseAi::Admin::AiDecisionModelsController do
     end
   end
 
+  describe "seeded decision models" do
+    fab!(:seeded_model) do
+      Fabricate(
+        :decision_model,
+        id: -1,
+        ai_secret: nil,
+        api_key: "seeded-key",
+        url: "https://jolteon.internal/v1/systemone",
+        custom_headers: [{ "name" => "X-Pool", "value" => "internal-pool" }],
+      )
+    end
+
+    it "lists them with their credit status and without hosting details" do
+      Fabricate(
+        :decision_model_credit_allocation,
+        decision_model: seeded_model,
+        daily_credits: 1000,
+        daily_used: 900,
+      )
+
+      get "/admin/plugins/discourse-ai/ai-decision-models.json"
+
+      serialized = response.parsed_body["ai_decision_models"].first
+      expect(serialized).to include("seeded" => true, "url" => "********")
+      expect(serialized).not_to have_key("custom_headers")
+      expect(serialized["credit_allocation"]).to include(
+        "daily_credits" => 1000,
+        "credits_remaining" => 100,
+        "soft_limit_reached" => true,
+        "hard_limit_reached" => false,
+      )
+      expect(response.body).not_to include(seeded_model.api_key, seeded_model.url, "internal-pool")
+    end
+
+    it "cannot be updated or deleted" do
+      put "/admin/plugins/discourse-ai/ai-decision-models/#{seeded_model.id}.json",
+          params: {
+            ai_decision_model: valid_attrs,
+          }
+      expect(response.status).to eq(403)
+
+      delete "/admin/plugins/discourse-ai/ai-decision-models/#{seeded_model.id}.json"
+      expect(response.status).to eq(403)
+
+      expect(seeded_model.reload).to have_attributes(
+        display_name: "TypeSafe Jev",
+        url: "https://jolteon.internal/v1/systemone",
+      )
+    end
+  end
+
   describe "authorization" do
     fab!(:decision_model)
 

@@ -1,8 +1,9 @@
-/* eslint-disable ember/no-classic-components */
-import Component, { Textarea } from "@ember/component";
-import { action, computed } from "@ember/object";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
+import withEventValue from "discourse/helpers/with-event-value";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { eq } from "discourse/truth-helpers";
 import DTextField from "discourse/ui-kit/d-text-field";
@@ -10,53 +11,46 @@ import { i18n } from "discourse-i18n";
 
 const CUSTOM_REASON_KEY = "custom";
 
-@tagName("")
+const REASON_KEYS = [
+  "not_listening_to_staff",
+  "consuming_staff_time",
+  "combative",
+  "in_wrong_place",
+  "no_constructive_purpose",
+  CUSTOM_REASON_KEY,
+];
+
 export default class AdminPenaltyReason extends Component {
-  selectedReason = CUSTOM_REASON_KEY;
-  customReason = "";
+  @tracked selectedReason = CUSTOM_REASON_KEY;
+  @tracked customReason = "";
 
-  reasonKeys = [
-    "not_listening_to_staff",
-    "consuming_staff_time",
-    "combative",
-    "in_wrong_place",
-    "no_constructive_purpose",
-    CUSTOM_REASON_KEY,
-  ];
+  reasons = REASON_KEYS.map((key) => ({
+    id: key,
+    name: i18n(`admin.user.suspend_reasons.${key}`),
+  }));
 
-  @computed("selectedReason")
   get isCustomReason() {
     return this.selectedReason === CUSTOM_REASON_KEY;
   }
 
-  @computed("reasonKeys")
-  get reasons() {
-    return this.reasonKeys.map((key) => {
-      return { id: key, name: i18n(`admin.user.suspend_reasons.${key}`) };
-    });
-  }
-
   @action
   setSelectedReason(value) {
-    this.set("selectedReason", value);
-    this.setReason();
+    this.selectedReason = value;
+    this.#updateReason();
   }
 
   @action
   setCustomReason(value) {
-    this.set("customReason", value);
-    this.setReason();
+    this.customReason = value;
+    this.#updateReason();
   }
 
-  setReason() {
-    if (this.isCustomReason) {
-      this.set("reason", this.customReason);
-    } else {
-      this.set(
-        "reason",
-        i18n(`admin.user.suspend_reasons.${this.selectedReason}`)
-      );
-    }
+  #updateReason() {
+    this.args.onChangeReason(
+      this.isCustomReason
+        ? this.customReason
+        : i18n(`admin.user.suspend_reasons.${this.selectedReason}`)
+    );
   }
 
   <template>
@@ -103,10 +97,11 @@ export default class AdminPenaltyReason extends Component {
 
     <div class="penalty-message-controls">
       <label>{{i18n "admin.user.suspend_message"}}</label>
-      <Textarea
+      <textarea
         class="suspend-message"
         placeholder={{i18n "admin.user.suspend_message_placeholder"}}
-        @value={{this.message}}
+        value={{@message}}
+        {{on "input" (withEventValue @onChangeMessage)}}
       />
     </div>
   </template>

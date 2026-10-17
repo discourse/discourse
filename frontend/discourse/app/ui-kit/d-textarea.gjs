@@ -65,13 +65,17 @@ const DTextarea = Component.extend({
     "title",
     "aria-label",
   ],
+  /** @type {number | string | null | undefined} */
   rows: null,
+  /** @type {number | string | null | undefined} */
   cols: null,
 
   value: "",
 
+  /** @type {string | null | undefined} */
   placeholder: null,
   disabled: false,
+  /** @type {number | string | null | undefined} */
   maxlength: null,
 
   init() {

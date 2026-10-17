@@ -28,7 +28,10 @@ export const LIMITED_RESULTS_NOTICE_VALUE =
 })
 @pluginApiIdentifiers(["multiple-categories-selector"])
 export default class MultipleCategoriesSelector extends MultiSelectComponent {
+  /** @type {import("discourse/models/category").default[] | null | undefined} */
   categories = null;
+
+  /** @type {import("discourse/models/category").default[] | null | undefined} */
   blockedCategories = null;
 
   init() {

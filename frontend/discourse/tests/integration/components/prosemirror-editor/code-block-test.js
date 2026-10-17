@@ -58,6 +58,17 @@ module(
       });
     });
 
+    test("code block without a language is highlighted with default_code_lang", async function (assert) {
+      this.siteSettings.default_code_lang = "javascript";
+
+      await testMarkdown(
+        assert,
+        '```\nconsole.log("Hello, world!");\n```',
+        `<pre><code><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">"Hello, world!"</span>);</code>${select()}</pre>`,
+        '```\nconsole.log("Hello, world!");\n```'
+      );
+    });
+
     test("pasting code with line wrappers keeps a single code block", async function (assert) {
       const [editor] = await setupRichEditor(assert, "");
 

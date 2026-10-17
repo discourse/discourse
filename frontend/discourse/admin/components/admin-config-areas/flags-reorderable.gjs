@@ -57,7 +57,7 @@ export default class AdminConfigAreasFlags extends Component {
    * landed, rolling back on failure. The server orders only the flags that
    * can move, so the position sent is the flag's place among those.
    *
-   * @param {Object} move - The normalized move from the list.
+   * @param {import("discourse/ui-kit/d-reorderable-list/types").ReorderableMove<import("discourse/models/post-action-type").default>} move - The normalized move from the list.
    */
   @action
   async handleMove(move) {

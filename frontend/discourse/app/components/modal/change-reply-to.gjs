@@ -9,7 +9,10 @@ import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class ChangeReplyTo extends Component {
+  /** @type {import("discourse/models/post").default | null} */
   @tracked selectedPost = null;
+
+  /** @type {string | null} */
   @tracked flash = null;
 
   noop = () => {};

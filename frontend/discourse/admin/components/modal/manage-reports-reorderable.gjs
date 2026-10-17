@@ -32,6 +32,8 @@ export default class ManageReports extends Component {
   @tracked allKeys = [];
   @tracked providers = [];
   @tracked search = "";
+
+  /** @type {{ title: string, key: string } | null} */
   @tracked nextCursor = null;
   @tracked hasMore = false;
   @tracked loading = true;

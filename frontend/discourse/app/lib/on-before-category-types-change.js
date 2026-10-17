@@ -9,8 +9,8 @@ const callbacks = [];
  * @property {import("discourse/services/category-type-chooser").CategoryType[]} previousTypes - Snapshot of the selection before this change (shallow-copied
  *   array, same object references as before).
  * @property {import("discourse/models/category").default} category - The category being edited.
- * @property {Object} form - The Form API object for the edit category form.
- * @property {Object} [transientData] - Transient data from the Form wrapper, when available.
+ * @property {{ set: (name: string, value: unknown) => Promise<void>, setProperties: (values: Record<string, unknown>) => Promise<void> } & Record<string, unknown>} form - The Form API object for the edit category form.
+ * @property {Record<string, unknown>} [transientData] - Transient data from the Form wrapper, when available.
  */
 
 /**

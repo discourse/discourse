@@ -33,6 +33,7 @@ const DOCUMENT_TYPES_STRING = DOCUMENT_TYPES.join(", ");
 export default class FileTypesList extends Component {
   @service toasts;
 
+  /** @type {string[] | null} */
   @tracked createdChoices = null;
 
   get settingValue() {
