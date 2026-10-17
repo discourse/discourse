@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action, get } from "@ember/object";
 import { service } from "@ember/service";
-import AceEditor from "discourse/components/ace-editor";
+import CodeEditor from "discourse/components/code-editor";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -44,12 +44,11 @@ export default class EmailStylesEditor extends Component {
 
   <template>
     <div ...attributes>
-      <AceEditor
-        @content={{this.editorContents}}
-        @editorId={{@fieldName}}
-        @mode={{this.currentEditorMode}}
+      <CodeEditor
+        @language={{this.currentEditorMode}}
         @onChange={{this.updateEditorContents}}
-        @save={{@save}}
+        @onSave={{@save}}
+        @value={{this.editorContents}}
       />
 
       <div class="admin-footer">

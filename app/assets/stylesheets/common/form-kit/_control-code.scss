@@ -1,35 +1,15 @@
 .form-kit__field[data-control-type="code"] {
-  .ace-wrapper {
+  .code-editor {
     width: 100%;
 
     > .loading-container {
       width: 100%;
     }
   }
-
-  .ace-wrapper[data-disabled="true"] {
-    opacity: 0.5;
-
-    .ace_scroller {
-      cursor: not-allowed !important;
-    }
-  }
-
-  .ace-wrapper[data-disabled="false"] {
-    .ace_focus {
-      outline: 2px solid var(--tertiary);
-      outline-offset: -1px;
-
-      @include default-input {
-        height: unset;
-        border-color: var(--tertiary);
-      }
-    }
-  }
 }
 
 .form-kit__control-code {
-  min-height: 250px !important;
+  min-height: 250px;
   width: 100%;
   box-sizing: border-box;
 
