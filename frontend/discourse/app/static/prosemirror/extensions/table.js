@@ -50,6 +50,8 @@ const extension = {
     table_row: {
       content: "(table_cell | table_header_cell)+",
       tableRole: "row",
+      // Isolating cells would otherwise open gap cursor positions between them.
+      allowGapCursor: false,
       parseDOM: [{ tag: "tr" }],
       toDOM() {
         return ["tr", 0];
@@ -58,6 +60,7 @@ const extension = {
     table_header_cell: {
       content: "inline*",
       tableRole: "header_cell",
+      isolating: true,
       attrs: { alignment: { default: null } },
       parseDOM: [
         {
@@ -82,6 +85,7 @@ const extension = {
     table_cell: {
       content: "inline*",
       tableRole: "cell",
+      isolating: true,
       attrs: { alignment: { default: null } },
       parseDOM: [
         {
