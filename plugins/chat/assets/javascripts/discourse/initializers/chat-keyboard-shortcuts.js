@@ -181,21 +181,17 @@ export default {
         global: true,
       });
 
-      // the composer's editor binds these keys itself; listed here for the
-      // shortcuts help
+      // bound by the composer's editor
       for (const [key, name] of [
         ["b", "composer_bold"],
         ["i", "composer_italic"],
         ["e", "composer_code"],
         ["l", "open_insert_link_modal"],
       ]) {
-        api.addKeyboardShortcut(`${PLATFORM_KEY_MODIFIER}+${key}`, () => {}, {
-          global: true,
-          help: {
-            category: "chat",
-            name: `chat.keyboard_shortcuts.${name}`,
-            definition: { keys1: ["meta", key], keysDelimiter: "plus" },
-          },
+        api.addKeyboardShortcutHelp({
+          category: "chat",
+          name: `chat.keyboard_shortcuts.${name}`,
+          definition: { keys1: ["meta", key], keysDelimiter: "plus" },
         });
       }
       api.addKeyboardShortcut(`-`, (event) => toggleChatDrawer(event), {

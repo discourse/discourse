@@ -175,20 +175,18 @@ export default class ChatComposer extends Component {
     };
 
     if (!this.capabilities.isMobileDevice) {
-      keymap.esc = (event) => {
-        if (this.#isComposingOrCompleting(event)) {
-          return true;
-        }
+      // handlers return whether they acted
+      const unlessCompleting = (handle) => (event) =>
+        this.#isComposingOrCompleting(event) || !handle(event);
 
+      keymap.esc = unlessCompleting((event) => {
         this.handleEscape(event);
-        return false;
-      };
-      keymap.up = (event) =>
-        this.#isComposingOrCompleting(event) ||
-        !this.#editOrReplyToLastMessage(false);
-      keymap["shift+up"] = (event) =>
-        this.#isComposingOrCompleting(event) ||
-        !this.#editOrReplyToLastMessage(true);
+        return true;
+      });
+      keymap.up = unlessCompleting(() => this.#editOrReplyToLastMessage(false));
+      keymap["shift+up"] = unlessCompleting(() =>
+        this.#editOrReplyToLastMessage(true)
+      );
     }
 
     return keymap;

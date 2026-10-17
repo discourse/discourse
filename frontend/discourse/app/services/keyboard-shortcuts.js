@@ -358,8 +358,17 @@ export default class KeyboardShortcutLib extends Service {
 
     this.bindKey(shortcut, { handler: callback, ...opts });
     if (opts.help) {
-      addExtraKeyboardShortcutHelp(opts.help);
+      this.addShortcutHelp(opts.help);
     }
+  }
+
+  /**
+   * Lists a shortcut in the keyboard shortcuts modal without binding it, for
+   * keys an editor or other focused element handles itself. `help` takes the
+   * shape documented for `addShortcut`.
+   */
+  addShortcutHelp(help) {
+    addExtraKeyboardShortcutHelp(help);
   }
 
   /**
