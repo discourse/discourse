@@ -40,30 +40,38 @@ export default class DTemplatesService extends Service {
       return;
     }
 
+    const editor = new TextareaTextManipulation(getOwner(this), { textarea });
     const modal = document.querySelector(".d-modal");
-    const onInsertTemplate = this.#insertTemplateIntoTextArea.bind(this);
     const extractVariables = (model) => variablesExtractor?.(model);
 
     if (modal?.contains(textarea)) {
       if (!modal.classList.contains("d-templates")) {
-        this.#showModal(textarea, (template) => {
+        this.#showModal(editor, (template) => {
           const modalModel = this.modal.activeModal?.opts?.model;
-          onInsertTemplate(textarea, template, extractVariables(modalModel));
+          this.#insertTemplate(editor, template, extractVariables(modalModel));
         });
       }
     } else {
-      this.#showModal(textarea, (template) =>
-        onInsertTemplate(textarea, template, extractVariables())
-      );
+      this.showEditorUI(editor, variablesExtractor);
     }
+  }
+
+  /**
+   * @param {import("discourse/lib/composer/text-manipulation").TextManipulation} editor
+   * @param {() => Object} [variablesExtractor]
+   */
+  showEditorUI(editor, variablesExtractor = null) {
+    this.#showModal(editor, (template) =>
+      this.#insertTemplate(editor, template, variablesExtractor?.())
+    );
   }
 
   #isTextArea(element) {
     return element?.nodeName === "TEXTAREA";
   }
 
-  #showModal(textarea, onInsertTemplate) {
-    this.dTemplatesModal.show({ textarea, onInsertTemplate });
+  #showModal(editor, onInsertTemplate) {
+    this.dTemplatesModal.show({ editor, onInsertTemplate });
   }
 
   #showComposerPreviewUI(onInsertTemplate) {
@@ -72,16 +80,14 @@ export default class DTemplatesService extends Service {
     this.appEvents.trigger("discourse-templates:show", { onInsertTemplate });
   }
 
-  #insertTemplateIntoTextArea(textarea, template, variables) {
+  #insertTemplate(editor, template, variables) {
     template = this.#replaceTemplateVariables(
       template.title,
       template.content,
       variables
     );
 
-    new TextareaTextManipulation(getOwner(this), { textarea }).insertBlock(
-      template.content
-    );
+    editor.insertBlock(template.content);
   }
 
   #insertTemplateIntoComposer(template) {

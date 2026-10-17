@@ -147,7 +147,7 @@ class LinkToolbarPluginView {
     this.#menuInstance = null;
 
     if (this.#toolbarReplaced) {
-      this.#getContext().replaceToolbar(null, this.#linkToolbar);
+      this.#getContext().replaceToolbar?.(null, this.#linkToolbar);
       this.#toolbarReplaced = false;
     }
   }
@@ -192,7 +192,7 @@ class LinkToolbarPluginView {
     if (this.#getContext().capabilities.viewport.sm) {
       this.#showFloatingToolbar();
     } else {
-      this.#getContext().replaceToolbar(this.#linkToolbar);
+      this.#getContext().replaceToolbar?.(this.#linkToolbar);
       this.#toolbarReplaced = true;
     }
   }
