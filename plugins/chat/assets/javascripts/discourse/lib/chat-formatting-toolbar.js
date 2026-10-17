@@ -5,7 +5,13 @@ import {
 } from "discourse/lib/composer/toolbar";
 import { rovingButtonBar } from "discourse/lib/roving-button-bar";
 
-export const SELECTION_TOOLBAR_BUTTONS = ["bold", "italic", "code", "link"];
+export const SELECTION_TOOLBAR_BUTTONS = [
+  "bold",
+  "italic",
+  "strikethrough",
+  "code",
+  "link",
+];
 
 /**
  * Formatting buttons shared by the chat composer's formatting bar and the
