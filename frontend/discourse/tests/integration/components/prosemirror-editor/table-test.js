@@ -245,6 +245,32 @@ module(
       });
     });
 
+    test("tables without text keep their emoji and images", async function (assert) {
+      const [editor] = await setupRichEditor(
+        assert,
+        `before\n\n| :smile: | |\n| --- | --- |\n| | ![alt](/images/avatar.png) |\n\nafter`
+      );
+
+      assert.strictEqual(
+        editor.value,
+        `before\n\n| :smile: |  |\n|----|----|\n|  | ![alt](/images/avatar.png) |\n\nafter`,
+        "the table is serialized"
+      );
+    });
+
+    test("tables with no content are dropped", async function (assert) {
+      const [editor] = await setupRichEditor(
+        assert,
+        `before\n\n| | |\n| --- | --- |\n| <br> | |\n\nafter`
+      );
+
+      assert.strictEqual(
+        editor.value,
+        `before\n\nafter`,
+        "a table holding only blank cells and line breaks is omitted"
+      );
+    });
+
     test("table within quotes", async function (assert) {
       await testMarkdown(
         assert,
