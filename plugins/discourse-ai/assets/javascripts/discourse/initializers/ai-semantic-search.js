@@ -1,9 +1,13 @@
 import { apiInitializer } from "discourse/lib/api";
 
 export default apiInitializer((api) => {
-  api.modifyClass("component:search-result-entry", {
-    pluginId: "discourse-ai",
-
-    classNameBindings: ["bulkSelectEnabled", "post.generatedByAi:ai-result"],
-  });
+  api.registerValueTransformer(
+    "search-result-entry-class",
+    ({ value, context }) => {
+      if (context.post.generatedByAi) {
+        value.push("ai-result");
+      }
+      return value;
+    }
+  );
 });

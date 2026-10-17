@@ -130,8 +130,14 @@ export default class DashboardReports extends Component {
 
   @tracked cards = [];
   @tracked loading = false;
+
+  /** @type {{ key: string, rows: number, cols: number } | null} */
   @tracked liveResize = null;
+
+  /** @type {{ key: string, rect: { left: number, top: number, width: number, height: number } } | null} */
   @tracked freeFollow = null;
+
+  /** @type {string | null} */
   @tracked activeResizeKey = null;
 
   measureCard = (handle) => handle.closest(".db-report__card");

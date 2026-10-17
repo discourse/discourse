@@ -15,6 +15,7 @@ import { i18n } from "discourse-i18n";
 export default class UserNotificationsDropdown extends DropdownSelectBox {
   @service modal;
 
+  /** @returns {string | null} */
   @computed("mainCollection.[]", "value")
   get userNotificationIcon() {
     return (

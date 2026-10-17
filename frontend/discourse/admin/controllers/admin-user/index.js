@@ -25,11 +25,20 @@ export default class AdminUserIndexController extends Controller {
   @service siteSettings;
   @service modal;
 
+  /** @type {number[] | null} */
   @tracked customGroupIdsBuffer = null;
+
+  /** @type {number | null | undefined} */
   originalPrimaryGroupId = null;
+
+  /** @type {{ id: number, name: string, full_name?: string, display_name?: string, automatic: boolean, flair_url?: string | null, flair_bg_color?: string | null, flair_color?: string | null }[] | null} */
   availableGroups = null;
   userTitleValue = null;
+
+  /** @type {string | null} */
   ssoExternalEmail = null;
+
+  /** @type {string | null} */
   ssoLastPayload = null;
   isLoading = false;
 

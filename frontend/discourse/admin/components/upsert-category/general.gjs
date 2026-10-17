@@ -55,6 +55,8 @@ export default class UpsertCategoryGeneral extends Component {
   @service categoryTypeChooser;
 
   @tracked loadingDescription = false;
+
+  /** @type {string | null} */
   @tracked descriptionHtml = null;
   @tracked descriptionExpanded = false;
   @tracked descriptionOverflows = false;

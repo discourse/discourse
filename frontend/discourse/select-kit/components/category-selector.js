@@ -17,7 +17,10 @@ import SelectedChoiceCategory from "./selected-choice-category.gjs";
 })
 @pluginApiIdentifiers(["category-selector"])
 export default class CategorySelector extends MultiSelectComponent {
+  /** @type {Array<import("discourse/models/category").default | { id: number, name: string }> | null | undefined} */
   categories = null;
+
+  /** @type {import("discourse/models/category").default[] | null | undefined} */
   blockedCategories = null;
 
   init() {

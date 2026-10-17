@@ -11,6 +11,7 @@ import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class JsonSchemaEditorModal extends Component {
+  /** @type {{ destroy: () => void, validate: () => { message: string }[], getValue: () => unknown } | null} */
   @tracked editor = null;
   @tracked value = this.args.model.value;
   @tracked flash;

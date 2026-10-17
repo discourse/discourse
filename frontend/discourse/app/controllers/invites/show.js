@@ -45,8 +45,14 @@ export default class InvitesShowController extends Controller {
       this.site.get("user_fields")?.filter((f) => f.show_on_signup),
     getAccountPassword: () => this.accountPassword,
   });
+
+  /** @type {string | null} */
   successMessage = null;
+
+  /** @type {string | null} */
   errorMessage = null;
+
+  /** @type {import("@ember/object").default & { username?: string | null, name?: string | null, email?: string | null, email_valid?: boolean, auth_provider?: string, associate_url?: string, can_edit_username?: boolean, can_edit_name?: boolean } | null} */
   authOptions = null;
   maskPassword = true;
 

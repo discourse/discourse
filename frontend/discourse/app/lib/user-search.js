@@ -304,6 +304,7 @@ export default function userSearch(options) {
   const limit = options.limit || 6;
   const url = options.url || userPath("search/users");
   const params = {
+    search_context: options.searchContext,
     topic_id: options.topicId,
     category_id: options.categoryId,
     include_groups: options.includeGroups,

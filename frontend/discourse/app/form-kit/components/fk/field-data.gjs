@@ -61,7 +61,7 @@ export default class FKFieldData extends Component {
 
   /**
    * Parses the validation rules for the field.
-   * @type {Object|null}
+   * @returns {{ required?: { trim: boolean }, startsWith?: { prefix: string | undefined }, endsWith?: { suffix: string | undefined }, between?: { min: number, max: number | undefined }, length?: { min: number, max: number | undefined }, dateBeforeOrEqual?: { date: Date }, dateAfterOrEqual?: { date: Date }, [rule: string]: Record<string, unknown> | undefined } | null}
    */
   get rules() {
     return this.args.validation
@@ -249,7 +249,7 @@ export default class FKFieldData extends Component {
 
   /**
    * Validation rules for the field.
-   * @type {string|Object}
+   * @returns {string | null | undefined}
    */
   get validation() {
     return this.args.validation;
@@ -319,10 +319,9 @@ export default class FKFieldData extends Component {
   /**
    * Validates the field value.
    * @param {string} name - The name of the field.
-   * @param {any} value - The value of the field.
-   * @param {Object} data - Additional data for validation.
-   * @param {Object} context - Additional validation handlers.
-   * @param {Function} context.preventSubmit - Prevents the current submission.
+   * @param {unknown} value - The value of the field.
+   * @param {Record<string, unknown>} data - Additional data for validation.
+   * @param {{ preventSubmit: () => void }} context - Additional validation handlers.
    * @returns {Promise<void>}
    */
   async validate(name, value, data, { preventSubmit }) {

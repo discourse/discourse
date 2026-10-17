@@ -128,6 +128,7 @@ export default class ReviewableItem extends Component {
     this.messageBus.unsubscribe("/reviewable_action", this._updateStatus);
   }
 
+  /** @returns {{ activeTab: string, insightsOpened: boolean, updates: Record<string, unknown> | null }} */
   @cached
   get state() {
     // reading the argument is what ties this cache to a single reviewable

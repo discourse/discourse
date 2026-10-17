@@ -9,10 +9,15 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef {import("discourse/models/rest").default & { id: number, total_score: number, min_score_visibility: number, hide_post_score: number, scores: { user_id: number, type_bonus: number, trust_level_bonus: number | string, take_action_bonus: number, flags_agreed: number, flags_disagreed: number, flags_ignored: number, user_accuracy_bonus: number, score: number }[] }} ReviewableExplanation
+ */
 export default class ExplainReviewable extends Component {
   @service store;
 
   @tracked loading = true;
+
+  /** @type {ReviewableExplanation | null} */
   @tracked reviewableExplanation = null;
 
   constructor() {

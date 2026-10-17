@@ -69,6 +69,23 @@ const SIMPLIFIED_FIELD_LIST = [
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
 const DISCUSSION_TYPE_ID = "discussion";
 
+/**
+ * @typedef {Record<string, unknown> & { name?: string, style_type?: string, emoji?: string | null, icon?: string | null }} CategoryFormData
+ */
+/**
+ * @typedef {Object} CategoryFormApi
+ * @property {(name: string, value: unknown) => Promise<void>} set
+ * @property {(values: Record<string, unknown>) => Promise<void>} setProperties
+ * @property {(name: string) => unknown} get
+ * @property {() => void} commit
+ * @property {(name: string) => void} commitField
+ * @property {(event?: Event) => Promise<void>} submit
+ * @property {(event?: Event) => Promise<void>} reset
+ * @property {(name: string, error: { title?: string, message?: string }) => void} addError
+ * @property {(name: string) => void} removeError
+ * @property {() => void} removeErrors
+ * @property {boolean} isDirty
+ */
 export default class EditCategoryTabsController extends Controller {
   @service currentUser;
   @service dialog;
@@ -84,6 +101,8 @@ export default class EditCategoryTabsController extends Controller {
     this.keyValueStore.getItem(SHOW_ADVANCED_TABS_KEY) === "true";
   @tracked formData;
   @tracked selectedTab = "general";
+
+  /** @type {CategoryFormApi | null} */
   @tracked formApi = null;
   @tracked siteTextsLocale = this.siteSettings.default_locale;
   @tracked isLoadingSiteTextsLocale = false;
@@ -94,6 +113,8 @@ export default class EditCategoryTabsController extends Controller {
   deleting = false;
   showTooltip = false;
   expandedMenu = false;
+
+  /** @type {{ slug?: string } | null} */
   parentParams = null;
   validators = [];
 
@@ -248,10 +269,11 @@ export default class EditCategoryTabsController extends Controller {
    * Both `addError` and `removeError` are passed to validators so they can
    * manage errors bidirectionally.
    *
-   * @param {Object} data - The current form draft data.
-   * @param {Object} helpers
-   * @param {Function} helpers.addError - Adds a validation error for a field.
-   * @param {Function} helpers.removeError - Removes a validation error for a field.
+   * @param {CategoryFormData} data - The current form draft data.
+   * @param {Pick<CategoryFormApi, "addError" | "removeError">} helpers
+   * @param {CategoryFormApi["addError"]} helpers.addError - Adds a validation error for a field.
+   * @param {CategoryFormApi["removeError"]} helpers.removeError - Removes a validation error for a field.
+   * @returns {void}
    */
   @action
   validateForm(data, { addError, removeError }) {

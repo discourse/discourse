@@ -12,6 +12,7 @@ import { cook } from "discourse/lib/text";
 export default class DCookText extends Component {
   @service siteSettings;
 
+  /** @type {import("@ember/template").TrustedHTML | null} */
   @tracked cooked = null;
 
   constructor(owner, args) {

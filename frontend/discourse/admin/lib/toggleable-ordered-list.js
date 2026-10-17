@@ -2,8 +2,11 @@ import { tracked } from "@glimmer/tracking";
 
 export default class ToggleableOrderedList {
   @tracked enabledOrder;
+
+  /** @type {string | null} */
   @tracked draggedId = null;
 
+  /** @param {{ cap?: number, minSelected?: number, initialOrder?: string[] }} [options] */
   constructor({ cap, minSelected = 0, initialOrder = [] } = {}) {
     this.cap = cap;
     this.minSelected = minSelected;

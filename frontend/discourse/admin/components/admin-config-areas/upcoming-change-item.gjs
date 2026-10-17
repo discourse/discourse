@@ -38,6 +38,7 @@ export default class UpcomingChangeItem extends Component {
   @tracked savingEnabledFor = false;
   @tracked bufferedGroupsDirty = false;
 
+  /** @type {import("discourse/float-kit/lib/d-menu-instance").default | null} */
   registeredMenu = null;
 
   applyLightbox = modifier((element) => lightbox(element));

@@ -32,6 +32,7 @@ export default class GroupCardContents extends CardContentsBase {
   avatarDataAttrKey = "groupCard";
   mentionSelector = "a.mention-group";
 
+  /** @type {import("discourse/models/group").default | null} */
   group = null;
 
   @computed("topic.postStream")

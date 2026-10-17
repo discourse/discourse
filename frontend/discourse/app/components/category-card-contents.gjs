@@ -63,10 +63,16 @@ export default class CategoryCardContents extends CardContentsBase {
   avatarDataAttrKey = "id";
   avatarSelector = CATEGORY_HASHTAG_SELECTOR;
   canShowWhenUserProfilesHidden = true;
+
+  /** @type {import("discourse/models/category").default | null} */
   category = null;
+
+  /** @type {string | number | null} */
   categoryId = null;
   elementId = "category-card";
   eventPrefix = null;
+
+  /** @type {import("discourse/models/topic").default[] | null} */
   latestTopics = null;
   menuIdentifier = "category-card";
   mentionSelector = CATEGORY_HASHTAG_SELECTOR;

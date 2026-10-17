@@ -1174,6 +1174,7 @@ en:
         description: "Models that answer typed questions about content (yes/no, choice, score) with probabilities, faster and cheaper than an LLM."
         create_new: "New decision model"
         no_decision_models: "No decision models yet"
+        seeded_description: "Pre-configured model"
         manage: "Manage decision models"
         back: "Back to decision models"
         start_from: "Start from"

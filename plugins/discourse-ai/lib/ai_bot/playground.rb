@@ -988,6 +988,7 @@ module DiscourseAi
               raw: failure_reply,
               skip_validations: true,
               skip_guardian: true,
+              post_type: post_type,
               custom_fields: ai_custom_fields(authorization_user_id: authorization_user_id),
             )
         end
@@ -1019,6 +1020,7 @@ module DiscourseAi
               raw: error_message,
               skip_validations: true,
               skip_guardian: true,
+              post_type: post_type,
               custom_fields: ai_custom_fields(authorization_user_id: authorization_user_id),
             )
         end
@@ -1037,6 +1039,7 @@ module DiscourseAi
               raw: failure_reply,
               skip_validations: true,
               skip_guardian: true,
+              post_type: post_type,
               custom_fields: ai_custom_fields(authorization_user_id: authorization_user_id),
             )
         end

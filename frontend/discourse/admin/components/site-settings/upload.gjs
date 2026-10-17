@@ -70,10 +70,21 @@ const FilePreview = <template>
   </div>
 </template>;
 
+/**
+ * @typedef {{
+ *   file_name: string,
+ *   url?: string,
+ *   original_filename?: string,
+ *   human_filesize?: string,
+ *   width?: number | null,
+ *   height?: number | null
+ * }} SiteSettingUploadedFile
+ */
 export default class SiteSettingUpload extends Component {
   @service currentUser;
   @service siteSettings;
 
+  /** @type {SiteSettingUploadedFile | null} */
   @tracked uploadedFile = null;
 
   uppyUpload = new UppyUpload(getOwner(this), {
