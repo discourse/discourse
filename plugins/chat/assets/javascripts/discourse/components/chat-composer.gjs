@@ -7,51 +7,41 @@ import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { cancel, next } from "@ember/runloop";
+import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
-import {
-  emojiSearch,
-  isSkinTonableEmoji,
-  normalizeEmoji,
-} from "pretty-text/emoji";
-import { replacements, translations } from "pretty-text/emoji/data";
-import { Promise } from "rsvp";
+import { normalizeEmoji } from "pretty-text/emoji";
+import { replacements } from "pretty-text/emoji/data";
+import TextareaEditor from "discourse/components/composer/textarea-editor";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
-import EmojiAutocompleteResults from "discourse/components/emoji-autocomplete-results";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
 import {
-  SEND_SHORTCUT_META_ENTER,
-  USER_OPTION_COMPOSITION_MODES,
-} from "discourse/lib/constants";
-import discourseDebounce from "discourse/lib/debounce";
+  emojiAutocompleteOptions,
+  mentionAutocompleteOptions,
+} from "discourse/lib/composer/autocomplete-options";
+import {
+  setCompositionMode,
+  toggledCompositionMode,
+} from "discourse/lib/composer/composition-mode";
+import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
+import selectionToolbarExtension from "discourse/lib/composer/selection-toolbar-extension";
+import {
+  buildToolbarEvent,
+  shortcutKeymap,
+} from "discourse/lib/composer/toolbar";
+import { SEND_SHORTCUT_META_ENTER } from "discourse/lib/constants";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
-import KeyValueStore from "discourse/lib/key-value-store";
-import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import loadRichEditor from "discourse/lib/load-rich-editor";
 import { cloneJSON } from "discourse/lib/object";
 import optionalService from "discourse/lib/optional-service";
-import { emojiUrlFor } from "discourse/lib/text";
-import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
-import userSearch, { validateSearchResult } from "discourse/lib/user-search";
-import {
-  destroyUserStatuses,
-  initUserStatusHtml,
-  renderUserStatusHtml,
-} from "discourse/lib/user-status-on-autocomplete";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
-import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
-import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { and, not, or } from "discourse/truth-helpers";
-import DTextarea from "discourse/ui-kit/d-textarea";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dAutocomplete, { SKIP } from "discourse/ui-kit/modifiers/d-autocomplete";
+import { isAutocompleteOpen } from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import DButton from "discourse/plugins/chat/discourse/components/chat/composer/button";
 import ChatComposerDropdown from "discourse/plugins/chat/discourse/components/chat-composer-dropdown";
@@ -63,16 +53,11 @@ import ChatFormattingToolbar, {
   SELECTION_TOOLBAR_BUTTONS,
 } from "discourse/plugins/chat/discourse/lib/chat-formatting-toolbar";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
-import RichEditorInteractor from "discourse/plugins/chat/discourse/lib/rich-editor-interactor";
-import richEditorSelectionToolbar from "discourse/plugins/chat/discourse/lib/rich-editor-selection-toolbar";
-import TextareaInteractor from "discourse/plugins/chat/discourse/lib/textarea-interactor";
 import LocalDatesCreateModal from "discourse/plugins/discourse-local-dates/discourse/components/modal/local-dates-create" with {
   discourseImport: "optional",
 };
 
 const CHAT_PRESENCE_KEEP_ALIVE = 5 * 1000; // 5 seconds
-
-const store = new KeyValueStore("discourse_chat_composer_");
 
 export default class ChatComposer extends Component {
   @service site;
@@ -81,23 +66,23 @@ export default class ChatComposer extends Component {
   @service store;
   @service chat;
   @service chatComposerWarningsTracker;
-  @service appEvents;
   @service emojiStore;
   @service currentUser;
   @service modal;
   @service menu;
+  @service chatFormattingBar;
 
   @optionalService composerPresenceManager;
 
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
   @tracked richEditorComponent;
-  @tracked showFormattingBar = !!store.getObject("formatting_bar");
 
   formattingToolbar = this.#buildToolbar();
   richEditorExtensions;
 
-  #textareaInteractor;
+  // chat addresses the whole channel with @all
+  globalMentions = ["all"];
 
   constructor() {
     super(...arguments);
@@ -106,6 +91,10 @@ export default class ChatComposer extends Component {
       this.composer.awaitEditor();
       this.#loadRichEditor();
     }
+  }
+
+  get showFormattingBar() {
+    return this.chatFormattingBar.shown;
   }
 
   get useRichEditor() {
@@ -166,95 +155,67 @@ export default class ChatComposer extends Component {
     return !this.currentUser || this.args.disabled;
   }
 
-  // A handler returning false consumes the key; true lets the editor apply
-  // its own binding.
-  get richEditorKeymap() {
-    const skip = () =>
-      this.capabilities.isMobileDevice || this.#isAutocompleteDisplayed();
-    const send = () => {
-      if (skip()) {
-        return true;
-      }
-      this.onSend();
-      return false;
-    };
+  get editorComponent() {
+    return this.useRichEditor ? this.richEditorComponent : TextareaEditor;
+  }
 
-    return {
-      // Inside lists, code blocks and the like Enter keeps its structural
-      // meaning (new item, new line); only a plain paragraph sends.
-      Enter: () => {
-        if (this.#isAutocompleteDisplayed() || !this.#inPlainParagraph()) {
-          return true;
-        }
+  get submitOnEnter() {
+    return (
+      !this.capabilities.isMobileDevice &&
+      this.currentUser?.user_option.send_shortcut !== SEND_SHORTCUT_META_ENTER
+    );
+  }
 
-        if (!this.capabilities.isMobileDevice && this.#sendsOnEnter(false)) {
-          this.onSend();
-          return false;
-        }
-
-        this.#insertLineBreak();
-        return false;
-      },
-      "Mod+Enter": send,
-      "Ctrl+Enter": send,
-      "Ctrl+m": () => {
+  // a handler returning false consumes the key, in either editor
+  get keymap() {
+    const keymap = {
+      ...shortcutKeymap(this.formattingToolbar, () =>
+        buildToolbarEvent(this.editor)
+      ),
+      "ctrl+m": () => {
         this.toggleEditor();
         return false;
       },
-      ArrowUp: () => skip() || !this.#editOrReplyToLastMessage(false),
-      "Shift+ArrowUp": () => skip() || !this.#editOrReplyToLastMessage(true),
+      "mod+shift+f": () => {
+        this.toggleFormattingBar();
+        return false;
+      },
     };
+
+    if (!this.capabilities.isMobileDevice) {
+      // handlers return whether they acted
+      const unlessCompleting = (handle) => (event) =>
+        this.#isComposingOrCompleting(event) || !handle(event);
+
+      keymap.esc = unlessCompleting((event) => {
+        this.handleEscape(event);
+        return true;
+      });
+      keymap.up = unlessCompleting(() => this.#editOrReplyToLastMessage(false));
+      keymap["shift+up"] = unlessCompleting(() =>
+        this.#editOrReplyToLastMessage(true)
+      );
+    }
+
+    return keymap;
   }
 
   @action
   persistDraft() {}
 
   @action
-  setupAutocomplete(textarea) {
-    const autocompleteHandler = new TextareaAutocompleteHandler(textarea);
-    const apply = (options) =>
-      dAutocomplete.setupAutocomplete(
-        getOwner(this),
-        textarea,
-        autocompleteHandler,
-        {
-          ...options,
-          treatAsTextarea: true,
-          afterComplete: (text, event) => {
-            event.preventDefault();
-            this.editor.syncValue(text);
-            options.afterComplete?.();
-          },
-        }
-      );
+  setupEditor(textManipulation) {
+    const { element } = textManipulation;
 
-    this.#applyAutocompletes(apply);
-  }
+    if (element.tagName === "TEXTAREA") {
+      element.rows = 1;
+      element.setAttribute("autocapitalize", "sentences");
+      element.setAttribute("autocorrect", "on");
+    }
 
-  @action
-  setupTextareaInteractor(textarea) {
-    this.#textareaInteractor = new TextareaInteractor(getOwner(this), textarea);
-    this.composer.registerEditor(this.#textareaInteractor);
-    this.#autofocus();
-  }
-
-  @action
-  teardownTextareaInteractor() {
-    this.composer.unregisterEditor(this.#textareaInteractor);
-    this.#textareaInteractor.destroy();
-    this.#textareaInteractor = null;
-  }
-
-  @action
-  setupRichEditor(textManipulation) {
-    const interactor = new RichEditorInteractor(
-      getOwner(this),
-      textManipulation
-    );
-    // chat's keyboard shortcuts route by this attribute, as on the textarea
-    interactor.element.dataset.chatComposerContext = this.context;
-    interactor.element.addEventListener("keydown", this.onRichEditorKeyDown);
-    this.composer.registerEditor(interactor);
+    element.addEventListener("paste", textManipulation.paste);
+    this.composer.registerEditor(textManipulation);
+    this.#refreshTextareaHeight();
 
     this.#applyAutocompletes((options) =>
       textManipulation.autocomplete({
@@ -267,19 +228,14 @@ export default class ChatComposer extends Component {
 
     return () => {
       textManipulation.autocomplete("destroy");
-      interactor.element.removeEventListener(
-        "keydown",
-        this.onRichEditorKeyDown
-      );
-      this.composer.unregisterEditor(interactor);
+      element.removeEventListener("paste", textManipulation.paste);
+      this.composer.unregisterEditor(textManipulation);
     };
   }
 
   @action
   async toggleEditor() {
-    const preference = this.useRichEditor
-      ? USER_OPTION_COMPOSITION_MODES.markdown
-      : USER_OPTION_COMPOSITION_MODES.rich;
+    const preference = toggledCompositionMode(this.currentUser);
 
     if (!this.useRichEditor) {
       this.composer.awaitEditor();
@@ -290,22 +246,20 @@ export default class ChatComposer extends Component {
     // same render that reads it.
     this.editor?.element.blur();
 
-    this.currentUser.set("user_option.composition_mode", preference);
-    discourseDebounce(this, this.#saveEditorPreference, preference, 1000);
+    setCompositionMode(this.currentUser, preference);
 
     next(() => this.composer.focus({ ensureAtEnd: true }));
   }
 
   @action
   toggleFormattingBar() {
-    this.showFormattingBar = !this.showFormattingBar;
-    store.setObject({ key: "formatting_bar", value: this.showFormattingBar });
+    this.chatFormattingBar.toggle();
   }
 
   @action
   didUpdateMessage() {
     this.cancelPersistDraft();
-    this.editor?.syncValue(this.draft.message);
+    this.#refreshTextareaHeight();
     this.persistDraft();
     this.captureMentions({ skipDebounce: true });
   }
@@ -351,23 +305,11 @@ export default class ChatComposer extends Component {
   @action
   setup() {
     this.composer.scroller = this.args.scroller;
-    this.appEvents.on("chat:modify-selection", this, "modifySelection");
-    this.appEvents.on(
-      "chat:open-insert-link-modal",
-      this,
-      "openUpsertLinkModal"
-    );
   }
 
   @action
   teardown() {
     this.composer.stopAwaitingEditor();
-    this.appEvents.off("chat:modify-selection", this, "modifySelection");
-    this.appEvents.off(
-      "chat:open-insert-link-modal",
-      this,
-      "openUpsertLinkModal"
-    );
     this.pane.sending = false;
   }
 
@@ -399,7 +341,7 @@ export default class ChatComposer extends Component {
   onInput(event) {
     this.draft.draftSaved = false;
     this.draft.message = event.target.value;
-    this.editor.refreshHeight();
+    this.#refreshTextareaHeight();
     this.reportReplyingPresence();
     this.persistDraft();
     this.captureMentions();
@@ -411,7 +353,7 @@ export default class ChatComposer extends Component {
 
     this.inProgressUploadsCount = inProgressUploadsCount || 0;
 
-    this.editor?.focus();
+    this.composer.focus();
     this.reportReplyingPresence();
 
     // Only persist once uploads settle.
@@ -457,7 +399,7 @@ export default class ChatComposer extends Component {
     }
 
     await this.args.onSendMessage(this.draft);
-    this.editor.refreshHeight();
+    this.#refreshTextareaHeight();
   }
 
   async reactingToLastMessage() {
@@ -507,22 +449,6 @@ export default class ChatComposer extends Component {
     );
   }
 
-  @action
-  modifySelection(event, options = { type: null, context: null }) {
-    if (options.context !== this.context) {
-      return;
-    }
-
-    const sel = this.editor.getSelected("", { lineVal: true });
-    if (options.type === "bold") {
-      this.editor.applySurround(sel, "**", "**", "bold_text");
-    } else if (options.type === "italic") {
-      this.editor.applySurround(sel, "_", "_", "italic_text");
-    } else if (options.type === "code") {
-      this.editor.applySurround(sel, "`", "`", "code_text");
-    }
-  }
-
   forceScrollPosition() {
     if (!this.capabilities.isIOS || this.capabilities.isIpadOS) {
       return;
@@ -553,83 +479,20 @@ export default class ChatComposer extends Component {
     this.isFocused = true;
   }
 
-  // Escape needs the DOM event: subclasses stop it from reaching the global
-  // shortcut that closes the drawer or thread.
   @action
-  onRichEditorKeyDown(event) {
-    if (
-      event.key === "Escape" &&
-      !event.shiftKey &&
-      !this.capabilities.isMobileDevice &&
-      !this.#isAutocompleteDisplayed()
-    ) {
-      this.handleEscape(event);
-    }
-  }
-
-  @action
-  onKeyDown(event) {
-    if (
-      this.capabilities.isMobileDevice ||
-      event.altKey ||
-      event.isComposing ||
-      this.#isAutocompleteDisplayed()
-    ) {
-      return;
-    }
-
-    if (event.key === "Escape" && !event.shiftKey) {
-      return this.handleEscape(event);
-    }
-
-    if (event.key === "m" && event.ctrlKey) {
-      event.preventDefault();
-      this.toggleEditor();
-      return;
-    }
-
-    if (event.key === "Enter") {
-      const send =
-        this.#sendsOnEnter(event.shiftKey) || event.ctrlKey || event.metaKey;
-
-      if (!send) {
-        // insert newline
-        return;
-      }
-
-      this.onSend();
-      event.preventDefault();
-      return false;
-    }
-
-    if (event.key === "ArrowUp") {
-      this.#editOrReplyToLastMessage(event.shiftKey);
-    }
-  }
-
-  @action
-  openUpsertLinkModal(event, options = { context: null }) {
-    if (options.context !== this.context) {
-      return;
-    }
-
-    const selected = this.editor.getSelected("", { lineVal: true });
-    const hasSelection = !!selected && selected.start !== selected.end;
+  openLinkModal(toolbarEvent) {
+    const { selected } = toolbarEvent;
     this.modal.show(UpsertHyperlink, {
       model: {
-        hasSelection,
-        toolbarEvent: {
-          selected,
-          addText: (text) => this.editor.addText(selected, text),
-          applyLink: (url) => this.editor.applyLink(url),
-        },
+        hasSelection: selected.start !== selected.end,
+        toolbarEvent,
       },
     });
   }
 
   @action
-  onSelectEmoji(emoji, context = null) {
-    this.editor.insertEmoji(emoji, context);
+  onSelectEmoji(emoji) {
+    this.editor.emojiSelected(emoji);
 
     if (this.site.desktopView) {
       this.composer.focus();
@@ -655,14 +518,14 @@ export default class ChatComposer extends Component {
 
     const component = await loadRichEditor();
 
-    // read after the load, which registers the default extensions; touch
-    // devices keep their native selection menu
-    if (!this.capabilities.touch) {
+    // read after the load, which registers the default extensions; mobile
+    // keeps its native selection menu
+    if (!this.site.mobileView) {
       const selectionToolbar = this.#buildToolbar(SELECTION_TOOLBAR_BUTTONS);
       this.richEditorExtensions = [
         ...getExtensions(),
         // the formatting bar already offers the same buttons
-        richEditorSelectionToolbar(() =>
+        selectionToolbarExtension(() =>
           this.showFormattingBar ? null : selectionToolbar
         ),
       ];
@@ -677,51 +540,15 @@ export default class ChatComposer extends Component {
       capabilities: this.capabilities,
       site: this.site,
       only,
-      getTextManipulation: () => this.editor?.textManipulation,
-      openLinkModal: () =>
-        this.openUpsertLinkModal(null, { context: this.context }),
+      getEditor: () => this.editor,
+      openLinkModal: this.openLinkModal,
     });
-  }
-
-  #saveEditorPreference(preference) {
-    this.currentUser.set("user_option.composition_mode", preference);
-    return this.currentUser.save(["composition_mode"]);
   }
 
   #autofocus() {
     if (this.site.desktopView && this.args.autofocus) {
-      next(() =>
-        this.composer.focus({ ensureAtEnd: true, refreshHeight: true })
-      );
+      next(() => this.composer.focus({ ensureAtEnd: true }));
     }
-  }
-
-  #inPlainParagraph() {
-    const { view } = this.editor.textManipulation;
-    const { $from } = view.state.selection;
-
-    return (
-      $from.depth === 1 &&
-      $from.parent.type === view.state.schema.nodes.paragraph
-    );
-  }
-
-  // Matches the markdown editor's newline rather than starting a paragraph.
-  #insertLineBreak() {
-    const { view } = this.editor.textManipulation;
-
-    view.dispatch(
-      view.state.tr
-        .replaceSelectionWith(view.state.schema.nodes.hard_break.create())
-        .scrollIntoView()
-    );
-  }
-
-  #sendsOnEnter(shiftKey) {
-    return (
-      this.currentUser.user_option.send_shortcut !== SEND_SHORTCUT_META_ENTER &&
-      !shiftKey
-    );
   }
 
   #editOrReplyToLastMessage(reply) {
@@ -771,188 +598,92 @@ export default class ChatComposer extends Component {
 
   #userAutocompleteOptions() {
     return {
-      component: UserAutocompleteResults,
-      key: UserAutocompleteResults.TRIGGER_KEY,
+      ...mentionAutocompleteOptions({
+        owner: getOwner(this),
+        decorateUsers: (users) => {
+          const present = this.chat.presenceChannel.users?.map(
+            (user) => user.username
+          );
+          users.forEach((user) => {
+            if (present?.includes(user.username)) {
+              user.cssClasses = "is-online";
+            }
+          });
+        },
+        onSelect: (result) => {
+          if (result.isUser) {
+            this.#addMentionedUser(cloneJSON(result));
+          }
+        },
+      }),
       width: "100%",
       fixedTextareaPosition: true,
       autoSelectFirstSuggestion: true,
-      transformComplete: (obj) => {
-        if (obj.isUser) {
-          this.#addMentionedUser(cloneJSON(obj));
-        }
-        validateSearchResult(obj);
-        return obj.username || obj.name;
-      },
-      dataSource: (term) => {
-        destroyUserStatuses();
-        return userSearch({ term, includeGroups: true }).then((result) => {
-          if (result?.users?.length > 0) {
-            const presentUserNames = this.chat.presenceChannel.users?.map(
-              (item) => item.username
-            );
-            result.users.forEach((user) => {
-              if (presentUserNames.includes(user.username)) {
-                user.cssClasses = "is-online";
-              }
-            });
-            initUserStatusHtml(getOwner(this), result.users);
-          }
-          return result;
-        });
-      },
-      onRender: (options) => {
-        renderUserStatusHtml(options);
-      },
       afterComplete: () => {
         this.composer.focus();
         this.captureMentions();
       },
-      onClose: destroyUserStatuses,
     };
   }
 
   #emojiAutocompleteOptions() {
     return {
-      component: EmojiAutocompleteResults,
-      key: EmojiAutocompleteResults.TRIGGER_KEY,
-      afterComplete: () => this.composer.focus(),
+      ...emojiAutocompleteOptions({
+        site: this.site,
+        siteSettings: this.siteSettings,
+        emojiStore: this.emojiStore,
+        context: "chat",
+        openPicker: (term) => this.#openEmojiPicker(term),
+        // quick typing shouldn't trip the autocomplete
+        minLength: 2,
+        ignoreEmoticons: true,
+      }),
       fixedTextareaPosition: true,
-      onKeyUp: (text, cp) => {
-        const matches =
-          /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()+])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?)$/gi.exec(
-            text.substring(0, cp)
-          );
-
-        if (matches && matches[1]) {
-          return [matches[1]];
-        }
-      },
-      transformComplete: async (v) => {
-        if (v.code) {
-          return `${v.code}:`;
-        } else {
-          const emojiContext = this.editor.emojiTermContext();
-
-          const menuOptions = {
-            identifier: "emoji-picker",
-            groupIdentifier: "emoji-picker",
-            component: EmojiPickerDetached,
-            context: "chat",
-            modalForMobile: true,
-            data: {
-              didSelectEmoji: (emoji) => {
-                this.onSelectEmoji(emoji, emojiContext);
-              },
-              term: v.term,
-              context: "chat",
-            },
-          };
-
-          // Close the keyboard before showing the emoji picker
-          // it avoids a whole range of bugs on iOS
-          await waitForClosedKeyboard(this.site, this.capabilities);
-
-          const virtualElement = virtualElementFromTextRange();
-          this.menuInstance = await this.menu.show(virtualElement, menuOptions);
-          return "";
-        }
-      },
-      dataSource: (term) => {
-        return new Promise((resolve) => {
-          const full = `:${term}`;
-          term = term.toLowerCase();
-
-          // We need to avoid quick emoji autocomplete cause it can interfere with quick
-          // typing, set minimal length to 2
-          let minLength = Math.max(
-            this.siteSettings.emoji_autocomplete_min_chars,
-            2
-          );
-
-          if (term.length < minLength) {
-            return resolve(SKIP);
-          }
-
-          // bypass :-p and other common typed smileys
-          if (
-            !term.match(
-              /[^-\{\}\[\]\(\)\*_\<\>\\\/].*[^-\{\}\[\]\(\)\*_\<\>\\\/]/
-            )
-          ) {
-            return resolve(SKIP);
-          }
-
-          if (term === "") {
-            const favorites = this.emojiStore.favoritesForContext("chat");
-            if (favorites.length > 0) {
-              return resolve(favorites.slice(0, 5));
-            } else {
-              return resolve([
-                "slight_smile",
-                "smile",
-                "wink",
-                "sunny",
-                "blush",
-              ]);
-            }
-          }
-
-          // note this will only work for emojis starting with :
-          // eg: :-)
-          const emojiTranslation = this.site.custom_emoji_translation || {};
-          const allTranslations = Object.assign(
-            {},
-            translations,
-            emojiTranslation
-          );
-          if (allTranslations[full]) {
-            return resolve([allTranslations[full]]);
-          }
-
-          const emojiDenied = this.site.denied_emojis || [];
-          const match = term.match(/^:?(.*?):t([2-6])?$/);
-          if (match) {
-            const name = match[1];
-            const scale = match[2];
-
-            if (isSkinTonableEmoji(name) && !emojiDenied.includes(name)) {
-              if (scale) {
-                return resolve([`${name}:t${scale}`]);
-              } else {
-                return resolve([2, 3, 4, 5, 6].map((x) => `${name}:t${x}`));
-              }
-            }
-          }
-
-          loadEmojiSearchAliases().then((searchAliases) => {
-            const options = emojiSearch(term, {
-              maxResults: 5,
-              diversity: this.emojiStore.diversity,
-              exclude: emojiDenied,
-              searchAliases,
-            });
-
-            resolve(options);
-          });
-        })
-          .then((list) => {
-            if (list === SKIP) {
-              return;
-            }
-            return list.map((code) => ({ code, src: emojiUrlFor(code) }));
-          })
-          .then((list) => {
-            if (list?.length) {
-              list.push({ label: i18n("composer.more_emoji"), term });
-            }
-            return list;
-          });
-      },
+      afterComplete: () => this.composer.focus(),
     };
   }
 
-  #isAutocompleteDisplayed() {
-    return document.querySelector(".autocomplete");
+  async #openEmojiPicker(term) {
+    // the picker takes focus, which resets a textarea's selection
+    const { start, end } = this.editor.getSelected();
+
+    // Close the keyboard before showing the emoji picker
+    // it avoids a whole range of bugs on iOS
+    await waitForClosedKeyboard(this.site, this.capabilities);
+
+    this.menuInstance = await this.menu.show(virtualElementFromTextRange(), {
+      identifier: "emoji-picker",
+      groupIdentifier: "emoji-picker",
+      component: EmojiPickerDetached,
+      context: "chat",
+      modalForMobile: true,
+      data: {
+        didSelectEmoji: (emoji) => {
+          this.editor.selectText(start, end - start, { scroll: false });
+          this.onSelectEmoji(emoji);
+        },
+        term,
+        context: "chat",
+      },
+    });
+  }
+
+  #isComposingOrCompleting(event) {
+    return event.isComposing || isAutocompleteOpen();
+  }
+
+  #refreshTextareaHeight() {
+    const textarea = this.editor?.element;
+    if (textarea?.tagName !== "TEXTAREA") {
+      return;
+    }
+
+    schedule("afterRender", () => {
+      // `auto` first, or the textarea won't shrink
+      textarea.style.height = "auto";
+      // +1 avoids a scrollbar from rounding on some browsers
+      textarea.style.height = `${textarea.scrollHeight + 1}px`;
+    });
   }
 
   #deleteEmptyMessage() {
@@ -993,16 +724,6 @@ export default class ChatComposer extends Component {
         {{willDestroy this.teardown}}
         {{willDestroy this.cancelPersistDraft}}
       >
-        {{#if (and this.showFormattingBar this.editor (not this.disabled))}}
-          <div
-            aria-label={{i18n "chat.composer.formatting"}}
-            class="chat-composer__formatting-bar"
-            role="toolbar"
-          >
-            <ToolbarButtons @data={{this.formattingToolbar}} />
-          </div>
-        {{/if}}
-
         <div class="chat-composer__outer-container">
           {{#if this.site.mobileView}}
             <ChatComposerDropdown
@@ -1012,91 +733,92 @@ export default class ChatComposer extends Component {
           {{/if}}
 
           <div class="chat-composer__inner-container">
-            {{#if this.site.desktopView}}
-              <ChatComposerDropdown
-                @buttons={{this.dropdownButtons}}
-                @isDisabled={{this.disabled}}
-              />
+            {{#if (and this.showFormattingBar this.editor (not this.disabled))}}
+              <div
+                aria-label={{i18n "chat.composer.formatting"}}
+                class="chat-composer__formatting-bar"
+                role="toolbar"
+              >
+                <ToolbarButtons @data={{this.formattingToolbar}} />
+              </div>
             {{/if}}
 
-            <div
-              class="chat-composer__input-container"
-              {{on "click" this.focusOrPromptLogin}}
-            >
-              {{#if this.useRichEditor}}
-                {{#if this.richEditorComponent}}
-                  <this.richEditorComponent
+            <div class="chat-composer__input-row">
+              {{#if this.site.desktopView}}
+                <ChatComposerDropdown
+                  @buttons={{this.dropdownButtons}}
+                  @isDisabled={{this.disabled}}
+                />
+              {{/if}}
+
+              <div
+                class="chat-composer__input-container"
+                {{on "click" this.focusOrPromptLogin}}
+              >
+                {{#if this.editorComponent}}
+                  <this.editorComponent
                     @change={{this.onInput}}
                     @class="chat-composer__input"
                     @disabled={{this.disabled}}
+                    @eventPrefix={{null}}
                     @extensions={{this.richEditorExtensions}}
                     @focusIn={{this.onTextareaFocusIn}}
                     @focusOut={{this.onTextareaFocusOut}}
-                    @keymap={{this.richEditorKeymap}}
-                    @onSetup={{this.setupRichEditor}}
+                    @globalMentions={{this.globalMentions}}
+                    @hashtagContext="chat-composer"
+                    @id={{this.composerId}}
+                    @keymap={{this.keymap}}
+                    @lineBreakOnEnter={{true}}
+                    @onSetup={{this.setupEditor}}
+                    @onSubmit={{this.onSend}}
                     @placeholder={{this.placeholder}}
+                    @submitOnEnter={{this.submitOnEnter}}
                     @toggleRichEditor={{this.toggleEditor}}
                     @trailingParagraph={{false}}
                     @value={{this.draft.message}}
                   />
                 {{/if}}
-              {{else}}
-                <DTextarea
-                  autocapitalize="sentences"
-                  autocorrect="on"
-                  class="chat-composer__input"
-                  data-chat-composer-context={{this.context}}
-                  disabled={{this.disabled}}
-                  id={{this.composerId}}
-                  placeholder={{this.placeholder}}
-                  rows={{1}}
-                  type="text"
-                  value={{readonly this.draft.message}}
-                  {{preventScrollOnFocus}}
-                  {{forceScrollingElementPosition}}
-                  {{didInsert this.setupTextareaInteractor}}
-                  {{willDestroy this.teardownTextareaInteractor}}
-                  {{on "input" this.onInput}}
-                  {{on "keydown" this.onKeyDown}}
-                  {{on "focusin" this.onTextareaFocusIn}}
-                  {{on "focusout" this.onTextareaFocusOut}}
-                  {{didInsert this.setupAutocomplete}}
+              </div>
+
+              {{#each this.inlineButtons as |button|}}
+                <DButton
+                  aria-label={{button.ariaLabel}}
+                  class={{dConcatClass
+                    (concat "-" button.id)
+                    button.classNames
+                  }}
+                  disabled={{or this.disabled button.disabled}}
+                  tabindex={{if button.disabled -1 0}}
+                  title={{button.title}}
+                  @icon={{button.icon}}
+                  {{on
+                    "click"
+                    (fn this.handleInlineButtonAction button.action)
+                  }}
+                  {{on "focus" (fn this.computeIsFocused true)}}
+                  {{on "blur" (fn this.computeIsFocused false)}}
+                />
+              {{/each}}
+
+              <PluginOutlet
+                @name="chat-composer-inline-buttons"
+                @outletArgs={{lazyHash composer=this channel=@channel}}
+              />
+
+              {{#if this.site.desktopView}}
+                <DButton
+                  class="-send"
+                  disabled={{or this.disabled (not this.sendEnabled)}}
+                  tabindex={{if this.sendEnabled 0 -1}}
+                  title={{i18n "chat.composer.send"}}
+                  @icon="paper-plane"
+                  {{on "click" this.onSend}}
+                  {{on "mousedown" this.trapMouseDown}}
+                  {{on "focus" (fn this.computeIsFocused true)}}
+                  {{on "blur" (fn this.computeIsFocused false)}}
                 />
               {{/if}}
             </div>
-
-            {{#each this.inlineButtons as |button|}}
-              <DButton
-                aria-label={{button.ariaLabel}}
-                class={{dConcatClass (concat "-" button.id) button.classNames}}
-                disabled={{or this.disabled button.disabled}}
-                tabindex={{if button.disabled -1 0}}
-                title={{button.title}}
-                @icon={{button.icon}}
-                {{on "click" (fn this.handleInlineButtonAction button.action)}}
-                {{on "focus" (fn this.computeIsFocused true)}}
-                {{on "blur" (fn this.computeIsFocused false)}}
-              />
-            {{/each}}
-
-            <PluginOutlet
-              @name="chat-composer-inline-buttons"
-              @outletArgs={{lazyHash composer=this channel=@channel}}
-            />
-
-            {{#if this.site.desktopView}}
-              <DButton
-                class="-send"
-                disabled={{or this.disabled (not this.sendEnabled)}}
-                tabindex={{if this.sendEnabled 0 -1}}
-                title={{i18n "chat.composer.send"}}
-                @icon="paper-plane"
-                {{on "click" this.onSend}}
-                {{on "mousedown" this.trapMouseDown}}
-                {{on "focus" (fn this.computeIsFocused true)}}
-                {{on "blur" (fn this.computeIsFocused false)}}
-              />
-            {{/if}}
           </div>
           {{#if this.site.mobileView}}
             <DButton

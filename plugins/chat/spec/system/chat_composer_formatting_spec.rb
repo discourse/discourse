@@ -13,7 +13,11 @@ RSpec.describe "Chat composer formatting" do
     sign_in(current_user)
   end
 
-  after { page.execute_script("localStorage.removeItem('discourse_chat_composer_formatting_bar')") }
+  after { page.execute_script(<<~JS) }
+      Object.keys(localStorage)
+        .filter((key) => key.startsWith("discourse_chat_composer_"))
+        .forEach((key) => localStorage.removeItem(key));
+    JS
 
   context "with the rich editor" do
     before do
@@ -25,7 +29,7 @@ RSpec.describe "Chat composer formatting" do
       channel_page.composer.input.send_keys("ship it now")
       channel_page.composer.input.send_keys(*Array.new(3) { %i[shift left] })
 
-      find(".fk-d-menu[data-identifier='chat-selection-toolbar'] .bold").click
+      find(".fk-d-menu[data-identifier='composer-selection-toolbar'] .bold").click
 
       expect(channel_page.composer).to have_value("ship it **now**")
     end
@@ -37,14 +41,14 @@ RSpec.describe "Chat composer formatting" do
       channel_page.composer.input.send_keys(*Array.new(3) { %i[shift left] })
 
       expect(page).to have_css(".chat-composer__formatting-bar")
-      expect(page).to have_no_css(".fk-d-menu[data-identifier='chat-selection-toolbar']")
+      expect(page).to have_no_css(".fk-d-menu[data-identifier='composer-selection-toolbar']")
     end
 
     it "hides the floating toolbar without a selection" do
       chat_page.visit_channel(channel_1)
       channel_page.composer.input.send_keys("ship it now")
 
-      expect(page).to have_no_css(".fk-d-menu[data-identifier='chat-selection-toolbar']")
+      expect(page).to have_no_css(".fk-d-menu[data-identifier='composer-selection-toolbar']")
     end
   end
 
@@ -72,6 +76,27 @@ RSpec.describe "Chat composer formatting" do
         find(".chat-composer-button.-toggle-formatting").click
 
         expect(page).to have_no_css(".chat-composer__formatting-bar")
+      end
+
+      it "strikes text and wraps it in a code block" do
+        chat_page.visit_channel(channel_1)
+        find(".chat-composer-button.-toggle-formatting").click
+        expect(find(".chat-composer-button.-toggle-formatting")[:class]).to include("--active")
+
+        channel_page.composer.input.send_keys("gone", [SystemHelpers::PLATFORM_KEY_MODIFIER, "a"])
+        find(".chat-composer__formatting-bar .strikethrough").click
+
+        expect(channel_page.composer).to have_value("~~gone~~")
+
+        channel_page.composer.input.send_keys(
+          [SystemHelpers::PLATFORM_KEY_MODIFIER, "a"],
+          :backspace,
+          "x = 1",
+          [SystemHelpers::PLATFORM_KEY_MODIFIER, "a"],
+        )
+        find(".chat-composer__formatting-bar .code-block").click
+
+        expect(channel_page.composer).to have_value("```\nx = 1\n```")
       end
     end
   end

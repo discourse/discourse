@@ -52,6 +52,7 @@ import type A11yService from "discourse/services/a11y";
 import type AppEventsService from "discourse/services/app-events";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import type ModalService from "discourse/services/modal";
+import { isAutocompleteOpen } from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import { authorizesOneOrMoreExtensions } from "../../../lib/uploads.js";
 import { buildCommands, buildCustomState } from "../core/commands.js";
@@ -71,6 +72,31 @@ import TextManipulation, {
 
 const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab", "ArrowDown", "ArrowUp"];
 
+// key names as the textarea editor's keymap spells them, mapped to the
+// spelling extension keymaps use, so bindings for the same key chain
+const KEY_NAMES: Record<string, string> = {
+  shift: "Shift",
+  alt: "Alt",
+  ctrl: "Ctrl",
+  meta: "Meta",
+  mod: "Mod",
+  up: "ArrowUp",
+  down: "ArrowDown",
+  left: "ArrowLeft",
+  right: "ArrowRight",
+  esc: "Escape",
+  escape: "Escape",
+  enter: "Enter",
+  tab: "Tab",
+  space: "Space",
+  backspace: "Backspace",
+  del: "Delete",
+  pageup: "PageUp",
+  pagedown: "PageDown",
+  home: "Home",
+  end: "End",
+};
+
 interface ProsemirrorEditorSignature {
   Args: {
     /** Markdown content displayed in the editor. */
@@ -79,8 +105,11 @@ interface ProsemirrorEditorSignature {
     placeholder?: string;
     /** Whether the editor is read-only. */
     disabled?: boolean;
-    /** Additional keyboard shortcuts keyed by shortcut expression. */
-    keymap?: Record<string, () => boolean | void>;
+    /**
+     * Additional keyboard shortcuts keyed by shortcut expression, spelled as
+     * for the textarea editor. A handler returning false consumes the key.
+     */
+    keymap?: Record<string, (event: KeyboardEvent) => boolean | void>;
     /** Called when the serialized markdown changes. */
     change?: (value: { target: { value: string } }) => void;
     /** Called when the editor receives focus. */
@@ -93,6 +122,10 @@ interface ProsemirrorEditorSignature {
     ) => undefined | (() => void);
     /** ID of the topic being edited. */
     topicId?: number;
+    /** Mentions that address everyone and need no lookup, besides the site's here mention. */
+    globalMentions?: string[];
+    /** The `hashtag_configurations` entry whose type order resolves hashtags. */
+    hashtagContext?: string;
     /** ID of the category being edited. */
     categoryId?: number;
     /** Class added to the editable element. */
@@ -107,6 +140,18 @@ interface ProsemirrorEditorSignature {
     toggleRichEditor?: () => void;
     /** Markdown cook options from the host editor, exposed to extensions. */
     markdownOptions?: MarkdownOptions;
+    /** Called to submit, on Mod+Enter and, with `submitOnEnter`, on Enter. */
+    onSubmit?: () => void;
+    /**
+     * Whether Enter in a plain paragraph submits. Lists, quotes and code keep
+     * their own Enter either way.
+     */
+    submitOnEnter?: boolean;
+    /**
+     * Whether Enter in a plain paragraph that doesn't submit adds a line break
+     * rather than a new paragraph, like a newline in the textarea editor.
+     */
+    lineBreakOnEnter?: boolean;
     /** Set to false to stop padding the document with a trailing empty paragraph. */
     trailingParagraph?: boolean;
   };
@@ -163,6 +208,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
 
   glimmerNodeViews = trackedArray<RenderableGlimmerNodeView>();
   #lastSerialized?: string;
+  #keyEvent?: KeyboardEvent;
   #destructor?: () => void;
 
   get pluginParams(): PluginParams {
@@ -187,6 +233,8 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         placeholder: this.args.placeholder,
         topicId: this.args.topicId,
         categoryId: this.args.categoryId,
+        globalMentions: this.args.globalMentions,
+        hashtagContext: this.args.hashtagContext,
         session: this.session,
         menu: this.menu,
         capabilities: this.capabilities,
@@ -225,19 +273,70 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
   }
 
   get keymapFromArgs(): Record<string, Command> {
-    const replacements: Record<string, string> = {
-      shift: "Shift",
-      tab: "Tab",
-    };
     const result: Record<string, Command> = {};
-    for (const [key, value] of Object.entries(this.args.keymap ?? {})) {
+    for (const [key, handler] of Object.entries(this.args.keymap ?? {})) {
       const pmKey = key
         .split("+")
-        .map((word) => replacements[word] ?? word)
+        .map((word) => KEY_NAMES[word] ?? word)
         .join("-");
-      result[pmKey] = () => !(value() ?? false);
+
+      result[pmKey] = () => {
+        const event = this.#keyEvent!;
+        if (handler(event) ?? false) {
+          return false;
+        }
+
+        // a consumed key stays in the editor, as in the textarea editor
+        event.stopPropagation();
+        return true;
+      };
     }
     return result;
+  }
+
+  get submitKeymap(): Record<string, Command> {
+    const submit: Command = (state, dispatch) => {
+      if (dispatch) {
+        this.args.onSubmit?.();
+      }
+      return true;
+    };
+
+    return {
+      "Mod-Enter": submit,
+      "Ctrl-Enter": submit,
+      "Meta-Enter": submit,
+      Enter: (state, dispatch) => {
+        const { $from } = state.selection;
+        if (
+          $from.depth !== 1 ||
+          $from.parent.type !== state.schema.nodes.paragraph
+        ) {
+          return false;
+        }
+
+        if (this.args.submitOnEnter) {
+          return submit(state, dispatch);
+        }
+
+        if (!this.args.lineBreakOnEnter) {
+          return false;
+        }
+
+        dispatch?.(
+          state.tr
+            .replaceSelectionWith(state.schema.nodes.hard_break.create())
+            .scrollIntoView()
+        );
+        return true;
+      },
+    };
+  }
+
+  @action
+  updateEditable(): void {
+    // `editable` is only re-read on a state update
+    this.view?.updateState(this.view.state);
   }
 
   @action
@@ -254,6 +353,8 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
     const params = this.pluginParams;
 
     const plugins = [
+      // first, so submitting wins over extension keymaps
+      ...(this.args.onSubmit ? [keymap(this.submitKeymap)] : []),
       buildInputRules(this.extensions, params, this.args.includeDefault),
       keymap(
         buildKeymap(
@@ -346,10 +447,13 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         },
       },
       handleKeyDown: (view, event) => {
+        // runs ahead of the keymaps, which don't receive the event
+        this.#keyEvent = event;
+
         // suppress if the autocomplete is open
         return (
           AUTOCOMPLETE_KEY_DOWN_SUPPRESS.includes(event.key) &&
-          !!document.querySelector(".autocomplete")
+          isAutocompleteOpen()
         );
       },
     });
@@ -494,6 +598,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
       {{didInsert this.setup}}
       {{didUpdate this.convertFromValue @value}}
       {{didUpdate this.updateContext "placeholder" @placeholder}}
+      {{didUpdate this.updateEditable @disabled}}
       {{willDestroy this.teardown}}
       {{forceScrollingElementPosition}}
     ></div>

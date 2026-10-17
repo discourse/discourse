@@ -57,7 +57,7 @@ module PageObjects
         end
 
         def rich_editor?
-          component.has_css?(".chat-composer__input.ProseMirror", wait: 0)
+          input.tag_name != "textarea"
         end
 
         def has_rich_editor?
@@ -79,7 +79,7 @@ module PageObjects
         def has_value?(expected)
           return has_field?(input[:id], with: expected) unless rich_editor?
 
-          try_until_success { expect(value).to match(expected) }
+          try_until_success { expect(value).to eq(expected) }
           true
         rescue RSpec::Expectations::ExpectationNotMetError
           false

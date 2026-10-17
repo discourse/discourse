@@ -988,7 +988,7 @@ third line`
 
     assert.strictEqual(
       this.value,
-      "starting to type an emoji like :woman_genie:",
+      "starting to type an emoji like :woman_genie: ",
       "it works when there is a partial emoji"
     );
   });

@@ -898,6 +898,7 @@ en:
           composer_bold: "%{shortcut} Bold (composer only)"
           composer_italic: "%{shortcut} Italic (composer only)"
           composer_code: "%{shortcut} Code (composer only)"
+          composer_formatting_bar: "%{shortcut} Toggle formatting bar (composer only)"
           drawer_toggle: "%{shortcut} Toggle chat drawer"
           drawer_close: "%{shortcut} Close chat drawer"
           mark_all_channels_read: "%{shortcut} Mark all channels read"

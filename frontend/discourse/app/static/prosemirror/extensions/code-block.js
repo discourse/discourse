@@ -175,9 +175,11 @@ function convertCodeBlockToParagraphs(schema) {
       const endPos = editorState.selection.$from.end() + 1;
 
       // Create paragraph nodes
-      const paragraphNodes = paragraphs.map((text) =>
-        schema.nodes.paragraph.create(null, schema.text(text))
-      );
+      const paragraphNodes = paragraphs.length
+        ? paragraphs.map((text) =>
+            schema.nodes.paragraph.create(null, schema.text(text))
+          )
+        : [schema.nodes.paragraph.create()];
 
       const tr = editorState.tr.replaceWith(startPos, endPos, paragraphNodes);
 
@@ -300,6 +302,21 @@ const extension = {
     "Shift-Tab": indentCodeBlock(true),
   }),
   commands: ({ schema }) => ({
+    toggleCodeBlock() {
+      return (state, dispatch) => {
+        const { selection } = state;
+
+        if (selection.$from.parent.type === schema.nodes.code_block) {
+          return convertCodeBlockToParagraphs(schema)(state, dispatch);
+        }
+
+        if (selection.empty) {
+          return setBlockType(schema.nodes.code_block)(state, dispatch);
+        }
+
+        return convertSelectionToCodeBlock(schema)(state, dispatch);
+      };
+    },
     formatCode() {
       return (state, dispatch) => {
         const { selection } = state;

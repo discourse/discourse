@@ -20,6 +20,7 @@ const extension = {
     mention: {
       attrs: { name: {} },
       inline: true,
+      leafText: (node) => `@${node.attrs.name}`,
       group: "inline",
       draggable: true,
       selectable: false,
@@ -115,8 +116,10 @@ const extension = {
           processMentionNodes(view) {
             const mentionNames = [];
             const mentionNodes = [];
-            const hereMention =
-              getContext().siteSettings.here_mention.toLowerCase();
+            const { siteSettings, globalMentions = [] } = getContext();
+            const everyone = [siteSettings.here_mention, ...globalMentions].map(
+              (name) => name.toLowerCase()
+            );
 
             if (this._processingMentionNodes) {
               return;
@@ -146,7 +149,7 @@ const extension = {
                 const lowerName = name.toLowerCase();
                 if (
                   VALID_MENTIONS.has(lowerName) ||
-                  hereMention === lowerName
+                  everyone.includes(lowerName)
                 ) {
                   continue;
                 }
@@ -256,7 +259,8 @@ function checkMentionWarning(name, response, context) {
     }
   }
 
-  if (body) {
+  // only the post composer has a messages area
+  if (body && context.appEvents.has("composer-messages:create")) {
     context.appEvents.trigger("composer-messages:create", {
       extraClass: "custom-body",
       templateName: "education",

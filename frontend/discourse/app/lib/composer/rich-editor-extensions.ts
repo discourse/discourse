@@ -43,6 +43,10 @@ export interface PluginContext {
   placeholder?: string;
   /** ID of the topic being edited. */
   topicId?: number;
+  /** Mentions that address everyone and need no lookup, besides the site's here mention. */
+  globalMentions?: string[];
+  /** The `hashtag_configurations` entry whose type order resolves hashtags. */
+  hashtagContext?: string;
   /** ID of the category being edited. */
   categoryId?: number;
   /** Current application session. */

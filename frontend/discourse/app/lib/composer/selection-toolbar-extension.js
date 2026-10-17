@@ -1,19 +1,27 @@
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { updatePosition } from "discourse/float-kit/lib/update-position";
 
-const IDENTIFIER = "chat-selection-toolbar";
+const IDENTIFIER = "composer-selection-toolbar";
+const MENU_OPTIONS = {
+  placement: "top",
+  fallbackPlacements: ["bottom"],
+  padding: 0,
+  offset: 6,
+};
 
 class SelectionToolbarView {
   #view;
   #getContext;
   #getToolbar;
+  #utils;
   #menuInstance;
   #showing = false;
 
-  constructor(view, { getContext, getToolbar }) {
+  constructor(view, { getContext, getToolbar, utils }) {
     this.#view = view;
     this.#getContext = getContext;
     this.#getToolbar = getToolbar;
+    this.#utils = utils;
   }
 
   update(view) {
@@ -50,10 +58,8 @@ class SelectionToolbarView {
       return false;
     }
 
-    // the link toolbar already floats over links
-    return !selection.$head
-      .marks()
-      .some((mark) => mark.type === schema.marks.link);
+    // the link toolbar floats over links, judged from the same position
+    return !this.#utils.getMarkRange(selection.$head, schema.marks.link);
   }
 
   #show() {
@@ -61,13 +67,15 @@ class SelectionToolbarView {
 
     if (this.#menuInstance?.expanded) {
       this.#menuInstance.trigger = trigger;
-      updatePosition(trigger, this.#menuInstance.content, {});
+      updatePosition(trigger, this.#menuInstance.content, MENU_OPTIONS);
       return;
     }
 
-    if (this.#showing) {
+    // another menu with this identifier may have closed ours
+    if (this.#showing && !this.#menuInstance) {
       return;
     }
+    this.#menuInstance = null;
 
     this.#showing = true;
     this.#getContext()
@@ -75,10 +83,7 @@ class SelectionToolbarView {
         identifier: IDENTIFIER,
         component: ToolbarButtons,
         data: this.#getToolbar(),
-        placement: "top",
-        fallbackPlacements: ["bottom"],
-        padding: 0,
-        offset: 6,
+        ...MENU_OPTIONS,
         closeOnClickOutside: false,
         closeOnEscape: false,
       })
@@ -107,15 +112,17 @@ class SelectionToolbarView {
 }
 
 /**
- * Floats formatting buttons over a text selection, for desktop pointers.
+ * A rich editor extension that floats a toolbar over a non-empty text
+ * selection, outside code and links. Not registered by default: editors opt
+ * in by passing it with their extensions.
  *
  * @param {() => import("discourse/lib/composer/toolbar").ToolbarBase | null} getToolbar
  *   returns null while the toolbar should stay hidden
  * @returns {RichEditorExtension}
  */
-export default function richEditorSelectionToolbar(getToolbar) {
+export default function selectionToolbarExtension(getToolbar) {
   return {
-    plugins({ pmState: { Plugin }, getContext }) {
+    plugins({ pmState: { Plugin }, getContext, utils }) {
       let toolbarView;
 
       return new Plugin({
@@ -123,6 +130,7 @@ export default function richEditorSelectionToolbar(getToolbar) {
           toolbarView = new SelectionToolbarView(view, {
             getContext,
             getToolbar,
+            utils,
           });
           return toolbarView;
         },

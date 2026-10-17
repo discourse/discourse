@@ -693,6 +693,13 @@ class _PluginApi {
   }
 
   /**
+   * See KeyboardShortcuts.addShortcutHelp documentation.
+   **/
+  addKeyboardShortcutHelp(help) {
+    this.container.lookup("service:keyboard-shortcuts").addShortcutHelp(help);
+  }
+
+  /**
    * See KeyboardShortcuts.unbind documentation.
    **/
   removeKeyboardShortcut(shortcut, callback) {

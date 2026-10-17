@@ -94,6 +94,7 @@ const extension = {
     emoji: {
       attrs: { code: {} },
       inline: true,
+      leafText: (node) => `:${node.attrs.code}:`,
       group: "inline",
       draggable: true,
       selectable: false,

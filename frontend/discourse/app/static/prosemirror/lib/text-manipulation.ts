@@ -159,6 +159,14 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     });
   }
 
+  get element(): HTMLElement {
+    return this.view.dom;
+  }
+
+  get value(): string {
+    return this.convertToMarkdown(this.view.state.doc);
+  }
+
   getSelected(): SelectedText {
     const { state } = this.view;
     const { from, to } = state.selection;
@@ -232,6 +240,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       italic_text: this.schema.marks.em,
       bold_text: this.schema.marks.strong,
       code_title: this.schema.marks.code,
+      strikethrough_text: this.schema.marks.strikethrough,
     };
 
     const mark = applySurroundMap[exampleKey];
@@ -439,15 +448,15 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       index = value.length - match.index;
     }
 
-    this.view.dispatch(
-      this.view.state.tr
-        .replaceRangeWith(
-          from - index,
-          to,
-          this.schema.nodes.emoji.create({ code })
-        )
-        .insertText(" ")
+    const tr = this.view.state.tr.replaceRangeWith(
+      from - index,
+      to,
+      this.schema.nodes.emoji.create({ code })
     );
+    if (!/^\s/.test(tr.selection.$to.nodeAfter?.text ?? "")) {
+      tr.insertText(" ");
+    }
+    this.view.dispatch(tr);
 
     next(() => this.focus());
   }
@@ -494,6 +503,10 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       command(this.view.state, this.view.dispatch);
       return true;
     }
+  }
+
+  insertTypedText(text: string): void {
+    this.view.dispatch(this.view.state.tr.insertText(text).scrollIntoView());
   }
 
   insertText(text: string): void {
@@ -668,6 +681,9 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       inItalic: hasMark(this.view.state, this.schema.marks.em),
       inLink: hasMark(this.view.state, this.schema.marks.link),
       inCode: hasMark(this.view.state, this.schema.marks.code),
+      inStrikethrough:
+        !!this.schema.marks.strikethrough &&
+        hasMark(this.view.state, this.schema.marks.strikethrough),
       inBulletList: inNode(this.view.state, this.schema.nodes.bullet_list),
       inOrderedList: inNode(this.view.state, this.schema.nodes.ordered_list),
       inCodeBlock: inNode(this.view.state, this.schema.nodes.code_block),

@@ -18,7 +18,7 @@ export default class ChatChannelComposer extends ChatComposerService {
     message.channel.draft = message;
 
     if (this.site.desktopView) {
-      this.focus({ refreshHeight: true, ensureAtEnd: true });
+      this.focus({ ensureAtEnd: true });
     }
   }
 
@@ -56,10 +56,10 @@ export default class ChatChannelComposer extends ChatComposerService {
         }
       }
 
-      this.threadComposer.focus({ ensureAtEnd: true, refreshHeight: true });
+      this.threadComposer.focus({ ensureAtEnd: true });
     } else {
       message.channel.draft.inReplyTo = message;
-      this.focus({ ensureAtEnd: true, refreshHeight: true });
+      this.focus({ ensureAtEnd: true });
     }
   }
 }
