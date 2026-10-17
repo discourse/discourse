@@ -151,7 +151,12 @@ export default class CodemirrorEditor extends Component {
       // Ahead of the defaults, so a host's own shortcut wins the binding.
       keymap.of(this.#commandKeymap),
       this.#history.of(history()),
-      keymap.of([...defaultKeymap, ...historyKeymap]),
+      keymap.of([
+        // Backspace must see a bracket pair before the plain delete takes it.
+        ...(this.args.codeEditing ? closeBracketsKeymap : []),
+        ...defaultKeymap,
+        ...historyKeymap,
+      ]),
       this.#language.of([]),
       this.#readOnly.of(this.#readOnlyExtensions),
       this.#placeholder.of(this.#placeholderExtension),
@@ -185,12 +190,7 @@ export default class CodemirrorEditor extends Component {
         indentOnInput(),
         highlightSelectionMatches(),
         search(),
-        keymap.of([
-          ...closeBracketsKeymap,
-          ...foldKeymap,
-          ...searchKeymap,
-          indentWithTab,
-        ]),
+        keymap.of([...foldKeymap, ...searchKeymap, indentWithTab]),
         EditorState.phrases.of({
           Find: i18n("code_editor.search.find"),
           Replace: i18n("code_editor.search.replace"),
@@ -214,6 +214,13 @@ export default class CodemirrorEditor extends Component {
           "replaced $ matches": i18n("code_editor.search.replaced_all", {
             matches: "$",
           }),
+          "Fold line": i18n("code_editor.fold.fold_line"),
+          "Unfold line": i18n("code_editor.fold.unfold_line"),
+          "folded code": i18n("code_editor.fold.folded_code"),
+          unfold: i18n("code_editor.fold.unfold"),
+          "Folded lines": i18n("code_editor.fold.folded_lines"),
+          "Unfolded lines": i18n("code_editor.fold.unfolded_lines"),
+          to: i18n("code_editor.fold.to"),
         })
       );
     }
@@ -235,6 +242,8 @@ export default class CodemirrorEditor extends Component {
       extensions.push(lineNumbers());
     }
 
+    // Kept apart from the other editing extensions so the fold gutter
+    // renders after the line numbers.
     if (this.args.codeEditing) {
       extensions.push(foldGutter());
     }

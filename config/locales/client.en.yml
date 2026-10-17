@@ -24,6 +24,14 @@ en:
         on_line: "on line"
         replaced_match: "Replaced match on line %{line}"
         replaced_all: "Replaced matches: %{matches}"
+      fold:
+        fold_line: "Fold line"
+        unfold_line: "Unfold line"
+        folded_code: "Folded code"
+        unfold: "Unfold"
+        folded_lines: "Folded lines"
+        unfolded_lines: "Unfolded lines"
+        to: "to"
     user_api_key:
       title: 'Authorize "%{application_name}"'
       authorize: "Authorize"
