@@ -63,9 +63,6 @@ acceptance("Event onebox", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
     await fillIn(".d-editor-input", `${url}\n\nEditable text`);
-    // the decorator sees the onebox only after the next preview update
-    await waitFor(".d-editor-preview aside.quote");
-    await fillIn(".d-editor-input", `${url}\n\nEditable text!`);
     await waitFor(".d-editor-preview .discourse-post-event-widget");
 
     assert
@@ -97,7 +94,7 @@ acceptance("Event onebox", function (needs) {
     assert
       .dom(".d-editor-input")
       .hasValue(
-        `${url}\n\nEditable text!`,
+        `${url}\n\nEditable text`,
         "switching modes preserves the source URL"
       );
   });
