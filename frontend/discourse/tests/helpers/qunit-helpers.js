@@ -11,6 +11,7 @@ import {
 import { isEmpty } from "@ember/utils";
 import { setupApplicationTest } from "ember-qunit";
 import $ from "jquery";
+import { resetInlineOneboxCache } from "pretty-text/inline-oneboxer";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
@@ -234,6 +235,7 @@ export function testCleanup(container, app) {
   resetPluginOutletDecorators();
   resetUsernameDecorators();
   resetOneboxCache();
+  resetInlineOneboxCache();
   resetCustomPostMessageCallbacks();
   resetUserSearchCache();
   resetHighestReadCache();

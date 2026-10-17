@@ -70,3 +70,7 @@ export function applyCachedInlineOnebox(url, onebox) {
 export function deleteCachedInlineOnebox(url) {
   return delete _cache[url];
 }
+
+export function resetInlineOneboxCache() {
+  Object.keys(_cache).forEach((url) => delete _cache[url]);
+}
