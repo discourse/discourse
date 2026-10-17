@@ -87,13 +87,11 @@
     background: rgb(var(--tertiary-rgb), 0.2);
   }
 
-  .cm-matchingBracket,
   .cm-editor.cm-focused .cm-matchingBracket {
     background: rgb(var(--tertiary-rgb), 0.25);
     outline: 1px solid rgb(var(--tertiary-rgb), 0.5);
   }
 
-  .cm-nonmatchingBracket,
   .cm-editor.cm-focused .cm-nonmatchingBracket {
     background: var(--danger-low);
   }
