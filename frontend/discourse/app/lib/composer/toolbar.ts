@@ -120,7 +120,7 @@ export interface ToolbarButton {
   /** Whether the button keeps focus in the editor. */
   preventFocus?: boolean;
   /** Reports whether the button is available. */
-  condition: () => boolean;
+  condition: (event?: ToolbarEvent) => boolean;
   /** Whether the shortcut is omitted from the title. */
   hideShortcutInTitle?: boolean;
   /** Localized button title. */
@@ -189,6 +189,12 @@ function getButtonLabel(labelKey: string, defaultLabel: string): string | null {
   return i18n(labelKey) === defaultLabel ? null : labelKey;
 }
 
+/** Key bindings as the editor components take them; returning false consumes the key. */
+export type EditorKeymap = Record<
+  string,
+  (event: KeyboardEvent) => boolean | void
+>;
+
 /**
  * Key bindings that run a toolbar's button and menu option shortcuts, for an
  * editor component's `keymap`.
@@ -199,16 +205,20 @@ function getButtonLabel(labelKey: string, defaultLabel: string): string | null {
 export function shortcutKeymap(
   toolbar: ToolbarBase,
   newToolbarEvent: () => ToolbarEvent
-): Record<string, () => false> {
-  const keymap: Record<string, () => false> = {};
+): EditorKeymap {
+  const keymap: EditorKeymap = {};
 
   for (const [combo, button] of Object.entries(toolbar.shortcuts)) {
     keymap[combo] = () => {
       const event = newToolbarEvent();
 
       if ("shortcutAction" in button && button.shortcutAction) {
-        const condition = button.condition as (event: ToolbarEvent) => boolean;
-        if (condition(event)) {
+        const { condition } = button;
+        const allowed =
+          typeof condition === "function"
+            ? condition(event)
+            : (condition ?? true);
+        if (allowed) {
           button.shortcutAction(event);
         }
       } else {
@@ -478,8 +488,7 @@ export class ToolbarBase {
       createdButton.shortcutKeys = `mod+${buttonAttrs.shortcut}`;
       createdButton.hideShortcutInTitle = buttonAttrs.hideShortcutInTitle;
 
-      // These shortcuts are actually bound in the keymap inside
-      // components/d-editor.gjs
+      // bound by `shortcutKeymap`
       this.shortcuts[
         `${PLATFORM_KEY_MODIFIER}+${buttonAttrs.shortcut}`.toLowerCase()
       ] = createdButton;
@@ -502,8 +511,7 @@ export class ToolbarBase {
         if (option.shortcut) {
           option.shortcutKeys = `mod+${option.shortcut}`;
 
-          // These shortcuts are actually bound in the keymap inside
-          // components/d-editor.gjs
+          // bound by `shortcutKeymap`
           this.shortcuts[
             `${PLATFORM_KEY_MODIFIER}+${option.shortcut}`.toLowerCase()
           ] = option;
