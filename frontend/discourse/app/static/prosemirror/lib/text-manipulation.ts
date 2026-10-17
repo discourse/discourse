@@ -666,9 +666,6 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     }
   }
 
-  /**
-   * Updates the toolbar state object based on the current editor active states
-   */
   updateState(): void {
     const activeHeadingLevel = [1, 2, 3, 4, 5, 6].find((headingLevel) =>
       isNodeActive(this.view.state, this.schema.nodes.heading, {
@@ -691,8 +688,27 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       inHeading: !!activeHeadingLevel,
       inHeadingLevel: activeHeadingLevel,
       inParagraph: inNode(this.view.state, this.schema.nodes.paragraph),
+      inOnebox: this.#selectionHasOnebox(),
       ...this.customState(this.view.state),
     });
+  }
+
+  /**
+   * Updates the toolbar state object based on the current editor active states
+   */
+  #selectionHasOnebox(): boolean {
+    const { onebox_inline } = this.schema.nodes;
+    if (!onebox_inline) {
+      return false;
+    }
+
+    const { from, to } = this.view.state.selection;
+    let found = false;
+    this.view.state.doc.nodesBetween(from, to, (node) => {
+      found ||= node.type === onebox_inline;
+      return !found;
+    });
+    return found;
   }
 }
 

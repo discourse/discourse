@@ -137,8 +137,8 @@ export interface ToolbarButton {
   popupMenu?: PopupMenu;
   /** Custom handler for the button shortcut. */
   shortcutAction?: (event: ToolbarEvent) => void;
-  /** Whether the button is disabled. */
-  disabled?: boolean;
+  /** Whether the button is disabled, fixed or from the editor state. */
+  disabled?: boolean | ((context: ToolbarStateContext) => boolean);
   /** Whether the user's preferences exclude the button from the toolbar. */
   hiddenByUser?: boolean;
 }
@@ -164,6 +164,8 @@ interface ToolbarGroup {
 }
 
 interface ToolbarContext {
+  /** The editor's text operations, whose state drives active and disabled buttons. */
+  textManipulation?: TextManipulation;
   newToolbarEvent?: (trimLeading?: boolean) => ToolbarEvent;
   send?: (actionName: string, event?: ToolbarEvent) => void;
   appEvents?: {
@@ -187,6 +189,18 @@ export interface ToolbarOptions {
 function getButtonLabel(labelKey: string, defaultLabel: string): string | null {
   // use the Font Awesome icon if the label matches the default
   return i18n(labelKey) === defaultLabel ? null : labelKey;
+}
+
+/** Resolves a button's `disabled` against the editor state it may depend on. */
+export function isButtonDisabled(
+  button: Pick<ToolbarButton, "disabled">,
+  context: ToolbarContext | undefined
+): boolean {
+  if (typeof button.disabled !== "function") {
+    return !!button.disabled;
+  }
+
+  return button.disabled({ state: context?.textManipulation?.state ?? {} });
 }
 
 /** Key bindings as the editor components take them; returning false consumes the key. */
@@ -378,6 +392,8 @@ export const formattingButtons = {
     trimLeading: true,
     perform: (e) => e.formatCode(),
     active: ({ state }) => state.inCode || state.inCodeBlock,
+    // code would turn the preview back into a bare url
+    disabled: ({ state }) => !!state.inOnebox,
     ...attrs,
   }),
 
@@ -490,6 +506,10 @@ export class ToolbarBase {
       this.hiddenButtons.includes(buttonAttrs.id);
 
     createdButton.action = async () => {
+      if (isButtonDisabled(createdButton, this.context)) {
+        return;
+      }
+
       if (buttonAttrs.popupMenu) {
         await waitForClosedKeyboard(this.capabilities, this.site);
       }

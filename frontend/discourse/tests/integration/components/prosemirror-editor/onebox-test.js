@@ -4,6 +4,7 @@ import { toggleMark } from "prosemirror-commands";
 import { NodeSelection, TextSelection } from "prosemirror-state";
 import { module, test } from "qunit";
 import { buildEngine } from "discourse/static/markdown-it";
+import codeBlock from "discourse/static/prosemirror/extensions/code-block";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { setupRichEditor } from "discourse/tests/helpers/rich-editor-helper";
@@ -89,6 +90,35 @@ module(
 
       assert.dom("code a.inline-onebox").doesNotExist("the mark is dropped");
       assert.dom("a.inline-onebox").exists("the onebox stays");
+    });
+
+    test("keeps the url when an inline onebox is turned into a code block", async function (assert) {
+      const [editor] = await setupRichEditor(assert, "a\n\nb");
+      const { view } = editor;
+
+      const text = `${URL} `;
+      const tr = view.state.tr.insertText(text, 1, 2);
+      tr.setSelection(TextSelection.create(tr.doc, 1 + text.length));
+      view.dispatch(tr);
+      await settled();
+      assert.dom("a.inline-onebox").exists();
+
+      view.dispatch(
+        view.state.tr.setSelection(
+          TextSelection.create(
+            view.state.doc,
+            1,
+            view.state.doc.firstChild.nodeSize - 1
+          )
+        )
+      );
+      codeBlock.commands({ schema: view.state.schema }).toggleCodeBlock()(
+        view.state,
+        view.dispatch
+      );
+      await settled();
+
+      assert.true(editor.value.includes(URL), "the url is kept as text");
     });
 
     test("promotes a lone inline onebox to a full onebox when the cursor leaves its line", async function (assert) {

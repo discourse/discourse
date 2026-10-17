@@ -66,6 +66,7 @@ const extension = {
     onebox_inline: {
       attrs: { url: {}, title: {} },
       inline: true,
+      leafText: (node) => node.attrs.url,
       group: "inline",
       selectable: true,
       draggable: true,

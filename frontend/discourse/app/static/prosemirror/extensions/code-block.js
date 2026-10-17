@@ -266,7 +266,12 @@ function convertSelectionToCodeBlock(schema) {
     const { from, to } = editorState.selection;
     // Extract plain text with proper block separators
     const textContent =
-      editorState.doc.textBetween(from, to, "\n\n", "\n") || "code";
+      editorState.doc.textBetween(
+        from,
+        to,
+        "\n\n",
+        (node) => node.type.spec.leafText?.(node) ?? "\n"
+      ) || "code";
 
     const codeBlock = schema.nodes.code_block.create(
       {},

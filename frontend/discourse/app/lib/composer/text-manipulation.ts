@@ -30,6 +30,8 @@ export interface ToolbarState {
   inHeadingLevel?: number;
   /** Whether the selection is inside a paragraph. */
   inParagraph?: boolean;
+  /** Whether the selection includes an inline onebox. */
+  inOnebox?: boolean;
   /** Whether the selection has small text formatting. */
   inSmall?: boolean;
 }
