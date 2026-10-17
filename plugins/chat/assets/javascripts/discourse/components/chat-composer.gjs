@@ -176,6 +176,10 @@ export default class ChatComposer extends Component {
         this.toggleEditor();
         return false;
       },
+      "mod+shift+f": () => {
+        this.toggleFormattingBar();
+        return false;
+      },
     };
 
     if (!this.capabilities.isMobileDevice) {

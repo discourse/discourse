@@ -305,6 +305,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
     return {
       "Mod-Enter": submit,
       "Ctrl-Enter": submit,
+      "Meta-Enter": submit,
       Enter: (state, dispatch) => {
         const { $from } = state.selection;
         if (

@@ -182,16 +182,17 @@ export default {
       });
 
       // bound by the composer's editor
-      for (const [key, name] of [
-        ["b", "composer_bold"],
-        ["i", "composer_italic"],
-        ["e", "composer_code"],
-        ["l", "open_insert_link_modal"],
+      for (const [keys, name] of [
+        [["meta", "b"], "composer_bold"],
+        [["meta", "i"], "composer_italic"],
+        [["meta", "e"], "composer_code"],
+        [["meta", "l"], "open_insert_link_modal"],
+        [["meta", "shift", "f"], "composer_formatting_bar"],
       ]) {
         api.addKeyboardShortcutHelp({
           category: "chat",
           name: `chat.keyboard_shortcuts.${name}`,
-          definition: { keys1: ["meta", key], keysDelimiter: "plus" },
+          definition: { keys1: keys, keysDelimiter: "plus" },
         });
       }
       api.addKeyboardShortcut(`-`, (event) => toggleChatDrawer(event), {
