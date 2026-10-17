@@ -17,6 +17,7 @@ import { EditorSelection, EditorState } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import { module, test } from "qunit";
 import CodeEditor from "discourse/components/code-editor";
+import loadCodemirror from "discourse/lib/load-codemirror";
 import { capabilities } from "discourse/services/capabilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { dragPointer } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
@@ -160,6 +161,14 @@ module("Integration | Component | code-editor", function (hooks) {
       1,
       "the cursor sits inside"
     );
+
+    await triggerKeyEvent(".cm-content", "keydown", "Backspace");
+
+    assert.strictEqual(
+      view.state.doc.toString(),
+      "",
+      "Backspace removes the pair"
+    );
   });
 
   test("marks the bracket matching the cursor", async function (assert) {
@@ -218,25 +227,42 @@ module("Integration | Component | code-editor", function (hooks) {
   });
 
   test("folds a block from the gutter", async function (assert) {
+    const translations = I18n.translations[I18n.locale].js.code_editor.fold;
+    const original = translations.fold_line;
+    translations.fold_line = "Plegar";
     const value = "if (a) {\n  b;\n}";
-    await render(
-      <template>
-        <CodeEditor @language="javascript" @value={{value}} />
-      </template>
-    );
-    await waitFor(".cm-content span[class]");
-    await waitFor(".cm-foldGutter [title]");
+    try {
+      await render(
+        <template>
+          <CodeEditor @language="javascript" @value={{value}} />
+        </template>
+      );
+      // The gutter's first element is a hidden spacer, not a line marker.
+      const marker =
+        '.cm-foldGutter .cm-gutterElement:not([style*="visibility"]) [title]';
+      await waitFor(".cm-content span[class]");
+      await waitFor(marker);
 
-    assert.dom(".cm-foldGutter").exists("the gutter is there");
-    assert
-      .dom(".cm-gutter:last-of-type")
-      .hasClass("cm-foldGutter", "after the line numbers");
+      assert
+        .dom(".cm-gutter:last-of-type")
+        .hasClass("cm-foldGutter", "after the line numbers");
+      assert
+        .dom(marker)
+        .hasAttribute("title", "Plegar", "the marker is translated");
+
+      await click(marker);
+
+      assert.dom(".cm-foldPlaceholder").exists("the block is folded");
+      assert
+        .dom(".cm-line")
+        .exists({ count: 1 }, "the braces collapse onto one line");
+    } finally {
+      translations.fold_line = original;
+    }
   });
 
   test("leaves the bare editor without code editing behaviour", async function (assert) {
-    const Editor = (
-      await import("discourse/static/codemirror/components/codemirror-editor.gjs")
-    ).default;
+    const Editor = await loadCodemirror();
     await render(<template><Editor @value="(one)" /></template>);
     const view = find(".codemirror-editor").codemirrorView;
 
