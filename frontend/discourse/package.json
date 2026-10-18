@@ -168,7 +168,7 @@
     "jsuites": "^5.13.3",
     "message-bus-client": "^4.6.0",
     "pretender": "^3.4.7",
-    "qunit": "^2.26.0",
+    "qunit": "^3.0.0",
     "qunit-dom": "^3.6.0",
     "rolldown": "1.2.7",
     "sinon": "^22.1.0",
