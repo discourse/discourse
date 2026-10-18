@@ -9574,7 +9574,7 @@ snapshots:
 
   '@embroider/addon-shim@1.10.3(supports-color@10.2.2)':
     dependencies:
-      '@embroider/shared-internals': 3.1.1(supports-color@10.2.2)
+      '@embroider/shared-internals': 3.2.0(supports-color@10.2.2)
       broccoli-funnel: 3.0.8(supports-color@10.2.2)
       common-ancestor-path: 1.0.1
       semver: 7.8.5
