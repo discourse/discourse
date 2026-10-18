@@ -148,7 +148,7 @@
     "a11y-dialog": "8.1.5",
     "ansi-to-html": "^0.7.2",
     "babel-plugin-debug-macros": "^2.0.0",
-    "babel-plugin-ember-template-compilation": "^4.0.0",
+    "babel-plugin-ember-template-compilation": "^4.0.1",
     "content-tag": "^4.0.0",
     "deprecation-silencer": "workspace:1.0.0",
     "discourse-i18n": "workspace:*",
