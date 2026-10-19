@@ -44,6 +44,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
  */
 // eslint-discourse keep-array-sorted
 export const VALUE_TRANSFORMERS = Object.freeze([
+  "admin-dashboard-report-renderer",
   "admin-onboarding-start-posting-options",
   "admin-plugin-icon",
   "admin-reports-show-query-params",

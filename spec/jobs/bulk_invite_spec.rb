@@ -59,6 +59,32 @@ RSpec.describe Jobs::BulkInvite do
       expect(post.raw).to include("1 error")
     end
 
+    it "selects topic invitation emails only for rows with a valid topic" do
+      described_class.new.execute(
+        current_user_id: admin.id,
+        invites: [
+          { email: "topic@discourse.org", topic_id: topic.id },
+          { email: "forum@discourse.org" },
+          { email: "invalid-topic@discourse.org", topic_id: -1 },
+        ],
+      )
+
+      expect(Jobs::InviteEmail.jobs.map { |job| job["args"].first }).to contain_exactly(
+        hash_including(
+          "invite_id" => Invite.find_by!(email: "topic@discourse.org").id,
+          "invite_to_topic" => true,
+        ),
+        hash_including(
+          "invite_id" => Invite.find_by!(email: "forum@discourse.org").id,
+          "invite_to_topic" => false,
+        ),
+        hash_including(
+          "invite_id" => Invite.find_by!(email: "invalid-topic@discourse.org").id,
+          "invite_to_topic" => false,
+        ),
+      )
+    end
+
     it "handles daylight savings time correctly" do
       # EDT (-04:00) transitions to EST (-05:00) on the first Sunday in November.
       # Freeze time to the last Day of October, so that the creation and expiration date will be in different time zones.

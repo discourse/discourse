@@ -1,15 +1,16 @@
-/* eslint-disable ember/no-classic-components */
-import Component, { Input } from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { isEmpty } from "@ember/utils";
-import { tagName } from "@ember-decorators/component";
 import UploadRuntime from "discourse/components/upload-runtime";
 import withEventValue from "discourse/helpers/with-event-value";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import { resettableTracked } from "discourse/lib/tracked-tools";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
@@ -17,8 +18,13 @@ import { i18n } from "discourse-i18n";
 
 const DEFAULT_GROUP = "default";
 
-@tagName("")
 export default class EmojiUploader extends Component {
+  @tracked name;
+  @tracked group = DEFAULT_GROUP;
+
+  /** @type {string[] | null} */
+  @resettableTracked newEmojiGroups = this.args.emojiGroups;
+
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "emoji-uploader",
     type: "emoji",
@@ -35,7 +41,7 @@ export default class EmojiUploader extends Component {
         payload.name = this.name;
 
         // if uploading multiple files, we can't use the name for every emoji
-        this.set("name", null);
+        this.name = null;
       }
 
       if (!isEmpty(this.group) && this.group !== DEFAULT_GROUP) {
@@ -46,62 +52,27 @@ export default class EmojiUploader extends Component {
     },
 
     uploadDone: (upload) => {
-      this.done(upload, this.group);
-      this.set("name", null);
+      this.args.done(upload, this.group);
+      this.name = null;
     },
   });
 
-  group = "default";
-
-  /** @type {string[] | null} */
-  emojiGroups = null;
-
-  /** @type {string[] | null} */
-  newEmojiGroups = null;
-
-  @computed("name")
-  get hasName() {
-    return !isEmpty(this.name);
-  }
-
-  @computed("group")
-  get hasGroup() {
-    return !isEmpty(this.group);
-  }
-
-  @computed("uppyUpload.uploading", "uppyUpload.uploadProgress")
   get buttonLabel() {
-    if (this.uppyUpload?.uploading) {
-      return `${i18n("admin.emoji.uploading")} ${this.uppyUpload?.uploadProgress}%`;
+    if (this.uppyUpload.uploading) {
+      return `${i18n("admin.emoji.uploading")} ${this.uppyUpload.uploadProgress}%`;
     } else {
       return i18n("admin.emoji.choose_files");
     }
   }
 
-  @computed("uppyUpload.uploading")
-  get buttonIcon() {
-    if (this.uppyUpload?.uploading) {
-      return "spinner";
-    } else {
-      return "plus";
-    }
-  }
-
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-    this.set("newEmojiGroups", this.emojiGroups);
-  }
-
   @action
   createEmojiGroup(group) {
-    let newEmojiGroups = this.newEmojiGroups;
     if (group !== DEFAULT_GROUP) {
-      newEmojiGroups = uniqueItemsFromArray(this.emojiGroups.concat([group]));
+      this.newEmojiGroups = uniqueItemsFromArray(
+        this.args.emojiGroups.concat([group])
+      );
     }
-    this.setProperties({
-      newEmojiGroups,
-      group,
-    });
+    this.group = group;
   }
 
   @action

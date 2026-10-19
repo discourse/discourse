@@ -87,10 +87,12 @@ acceptance("Composer - Inline Onebox", function (needs) {
   });
 
   let requestsCount;
+  let requestParams;
 
   needs.pretender((server, helper) => {
-    server.get("/inline-onebox", () => {
+    server.get("/inline-onebox", (request) => {
       ++requestsCount;
+      requestParams = request.queryParams;
       return helper.response({ "inline-oneboxes": [] });
     });
   });
@@ -116,5 +118,15 @@ acceptance("Composer - Inline Onebox", function (needs) {
       .hasHtml(
         '<p>Test <a href="http://www.example.com/page" tabindex="-1">www.example.com/page</a> Test</p>'
       );
+  });
+
+  test("requests titles in the context of the composed topic", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await fillIn(".d-editor-input", `Test www.example.com/page`);
+
+    const { model } = this.owner.lookup("service:composer");
+    assert.strictEqual(requestParams.topic_id, String(model.topic.id));
+    assert.strictEqual(requestParams.category_id, String(model.category.id));
   });
 });
