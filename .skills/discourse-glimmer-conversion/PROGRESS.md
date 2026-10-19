@@ -169,7 +169,7 @@
   - user-notification-schedule-day
   - plugins/discourse-cakeday/connectors/user-custom-preferences/user-date-of-birth-input
   - plugins/discourse-subscriptions/payment-options
-- [#44766](https://github.com/discourse/discourse/pull/44766)
+- [#44766](https://github.com/discourse/discourse/pull/44766) ☑️
   - admin/admin-report-table
   - admin/emoji-uploader
   - admin/watched-word-form
