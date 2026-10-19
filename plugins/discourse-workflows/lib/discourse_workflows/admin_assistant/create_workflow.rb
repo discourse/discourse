@@ -56,17 +56,14 @@ module DiscourseWorkflows
 
       def details
         return I18n.t("discourse_workflows.admin_assistant.invalid_draft") unless draft
-        if WorkflowDraft.contains_secret?(draft.slice(:name, :operations))
+        if WorkflowDraft.contains_secret?(draft.slice(:name, :operations, :script_validations))
           return I18n.t("discourse_workflows.admin_assistant.secret_draft")
         end
 
         preview =
           JSON.pretty_generate(
             kind: PREVIEW_KIND,
-            configuration: {
-              name: draft[:name],
-              operations: draft[:operations],
-            },
+            configuration: draft.slice(:name, :operations, :script_validations),
           )
         longest_run = preview.scan(/`+/).map(&:length).max.to_i
         fence = "`" * [3, longest_run + 1].max
@@ -84,7 +81,7 @@ module DiscourseWorkflows
         if draft[:name].blank? || !draft[:operations].is_a?(Array) || draft[:operations].blank?
           return error_response(I18n.t("discourse_workflows.admin_assistant.incomplete_draft"))
         end
-        if WorkflowDraft.contains_secret?(draft.slice(:name, :operations))
+        if WorkflowDraft.contains_secret?(draft.slice(:name, :operations, :script_validations))
           return error_response(I18n.t("discourse_workflows.admin_assistant.secret_draft"))
         end
 

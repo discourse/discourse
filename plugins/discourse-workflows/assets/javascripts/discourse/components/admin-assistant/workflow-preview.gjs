@@ -49,6 +49,11 @@ export default class AdminAssistantWorkflowPreview extends Component {
     return this.preview?.nodes ? layoutWorkflowPreview(this.preview) : null;
   }
 
+  get hasFailedScripts() {
+    const validations = this.preview?.configuration?.script_validations;
+    return Array.isArray(validations) && validations.some((validation) => validation?.valid === false);
+  }
+
   get exactConfiguration() {
     return JSON.stringify(this.preview.configuration, null, 2);
   }
@@ -90,7 +95,7 @@ export default class AdminAssistantWorkflowPreview extends Component {
   @bind
   nodeStyle(node) {
     return trustHTML(
-      `inset-inline-start: ${node.x}px; inset-block-start: ${node.y}px; width: ${this.layout.nodeWidth}px; height: ${this.layout.nodeHeight}px;`
+      `left: ${node.x}px; top: ${node.y}px; width: ${this.layout.nodeWidth}px; height: ${this.layout.nodeHeight}px;`
     );
   }
 
@@ -109,6 +114,12 @@ export default class AdminAssistantWorkflowPreview extends Component {
             {{i18n "discourse_workflows.admin_assistant.preview.read_only"}}
           </span>
         </header>
+
+        {{#if this.hasFailedScripts}}
+          <p class="assistant-workflow-preview__warning" role="status">
+            {{i18n "discourse_workflows.admin_assistant.preview.script_validation_warning"}}
+          </p>
+        {{/if}}
 
         {{#if this.layout}}
           <div class="assistant-workflow-preview__scroller" tabindex="0">

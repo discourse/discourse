@@ -36,6 +36,7 @@ en:
           label: "Workflow preview"
           exact_configuration: "Exact configuration"
           read_only: "Read-only preview"
+          script_validation_warning: "Some Code nodes failed syntax or mode checks. Review the errors in Exact configuration before approving."
           connects_to: "Connects to %{nodes}"
           branch: "Branch %{number}"
           node_count:

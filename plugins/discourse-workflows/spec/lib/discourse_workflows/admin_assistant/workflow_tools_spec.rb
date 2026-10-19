@@ -435,6 +435,53 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::GenerateWorkflow do
     expect(DiscourseWorkflows::AiAuthoringSession.count).to eq(0)
   end
 
+  it "preserves passed and failed script checks in the signed draft and approval preview" do
+    proposal["operations"] += [
+      {
+        "op" => "add_node",
+        "client_id" => "code",
+        "node" => {
+          "type" => "action:code",
+          "name" => "Process items",
+          "parameters" => {
+            "mode" => "runOnceForEachItem",
+            "code" => "var items = $input.all(); return items;",
+          },
+        },
+      },
+      { "op" => "add_connection", "from" => "manual", "to" => "code" },
+    ]
+    [true, false].each do |valid|
+      validations = [
+        {
+          "operation_index" => 1,
+          "node_name" => "Process items",
+          "mode" => "runOnceForEachItem",
+          "valid" => valid,
+          "errors" => valid ? [] : ["$input.all is only available in runOnceForAllItems mode"],
+        },
+      ]
+      proposal["script_validations"] = validations
+      result = nil
+      expect { result = tool.invoke }.not_to change { DiscourseWorkflows::Workflow.count }
+      expect(result[:status]).to eq("success")
+      expect(result[:script_validations]).to eq(validations)
+      expect(
+        DiscourseWorkflows::AdminAssistant::WorkflowDraft.read(result[:draft_token])[:script_validations],
+      ).to eq(validations)
+
+      creator = DiscourseWorkflows::AdminAssistant::CreateWorkflow.new(
+        { draft_token: result[:draft_token] },
+        bot_user: Discourse.system_user,
+        llm: nil,
+        context: context,
+      )
+      code = Nokogiri::HTML5.fragment(PrettyText.cook(creator.details)).at_css("pre code")
+      expect(JSON.parse(code.text).dig("configuration", "script_validations")).to eq(validations)
+      expect(creator.validation_error).to be_nil
+    end
+  end
+
   it "rejects non-admin users and unavailable capability" do
     context.user = Fabricate(:user)
     expect(tool.invoke[:status]).to eq("error")

@@ -76,6 +76,7 @@ module DiscourseWorkflows
           "\n",
         )
         if WorkflowDraft.contains_secret?(operations) ||
+             WorkflowDraft.contains_secret?(proposal[:script_validations]) ||
              WorkflowDraft.contains_secret_text?(public_text)
           return generation_error
         end
@@ -87,13 +88,19 @@ module DiscourseWorkflows
         validation = validate_draft(name, operations)
         return generation_error unless validation[:valid]
 
-        draft_token = WorkflowDraft.sign({ name: name, operations: operations }, user: context.user)
+        draft_attributes = {
+          name: name,
+          operations: operations,
+          script_validations: proposal[:script_validations],
+        }.compact
+        draft_token = WorkflowDraft.sign(draft_attributes, user: context.user)
         {
           status: "success",
           name: name,
           summary: proposal[:summary].to_s,
+          script_validations: proposal[:script_validations],
           draft_token: draft_token,
-        }
+        }.compact
       rescue ActiveRecord::ActiveRecordError, Discourse::InvalidParameters
         generation_error
       ensure
