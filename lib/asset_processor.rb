@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AssetProcessor
-  BASE_COMPILER_VERSION = 121
+  BASE_COMPILER_VERSION = 122
 
   BUNDLE =
     PrecompiledBundle.new(

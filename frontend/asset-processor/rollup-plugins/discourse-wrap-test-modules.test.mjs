@@ -24,13 +24,15 @@ describe("discourse-wrap-test-modules", () => {
 
     expect(out).toBe(
       `import { test } from "qunit";\nimport x from "./x";\n` +
-        `export default function () {\n\ntest("a", () => x());\n}\n`
+        `export default function () {\n\ntest("a", () => x());\n}\n` +
+        `export const __discourseTestModule = true;\n`
     );
   });
 
   it("wraps a test file without imports", () => {
     expect(transform(`test("a", () => {});`, "unit/poll-test.js")).toBe(
-      `\nexport default function () {\ntest("a", () => {});\n}\n`
+      `\nexport default function () {\ntest("a", () => {});\n}\n` +
+        `export const __discourseTestModule = true;\n`
     );
   });
 

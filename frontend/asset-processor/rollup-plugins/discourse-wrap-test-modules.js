@@ -36,7 +36,8 @@ export default function discourseWrapTestModules({
           lastImport?.end ?? 0,
           "\nexport default function () {\n"
         );
-        magic.append("\n}\n");
+        // App modules can end in "-test" too, so the runner needs a marker to tell them apart
+        magic.append("\n}\nexport const __discourseTestModule = true;\n");
 
         return {
           code: magic.toString(),
