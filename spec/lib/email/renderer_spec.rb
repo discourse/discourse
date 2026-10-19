@@ -19,8 +19,8 @@ RSpec.describe Email::Renderer do
 
   let(:renderer) { Email::Renderer.new(message) }
 
-  it "escapes HTML entities from text" do
-    expect(renderer.text).to eq("Key & Peele")
+  it "preserves HTML entities in the original plain-text body" do
+    expect(renderer.text).to eq(message.text_part.body.decoded)
   end
 
   context "with email_renderer_html modifier" do
