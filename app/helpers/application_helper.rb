@@ -120,6 +120,11 @@ module ApplicationHelper
       end
     end
 
+    EmberAssets.import_map.each do |stable, real|
+      real_url = script_asset_path(real)
+      imports[real_url.sub(File.basename(real), File.basename(stable))] = real_url
+    end
+
     JSON.pretty_generate({ imports: }).html_safe
   end
 
