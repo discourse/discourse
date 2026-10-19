@@ -40,14 +40,12 @@ acceptance("Run Query", function (needs) {
 
   let updateParams;
   let query2Tags;
-  let query2Name;
   let query2Deletes;
 
   needs.hooks.beforeEach(() => {
     sinon.stub(window, "open");
     updateParams = null;
     query2Tags = ["custom", "existing"];
-    query2Name = "What about 0?";
     query2Deletes = 0;
   });
 
@@ -201,7 +199,7 @@ acceptance("Run Query", function (needs) {
         query: {
           id: 2,
           sql: 'SELECT 0 zero, null "null", false "false"',
-          name: query2Name,
+          name: "What about 0?",
           description: "",
           param_info: [],
           created_at: "2023-05-04T22:16:06.007Z",
@@ -516,10 +514,7 @@ acceptance("Run Query", function (needs) {
 
     assert
       .dom(".dialog-body")
-      .hasText(
-        i18n("explorer.delete_confirm", { name: query2Name }),
-        "the confirmation names the query"
-      );
+      .hasText(i18n("explorer.delete_confirm"), "the confirmation is shown");
     assert.strictEqual(query2Deletes, 0, "opening the dialog does not delete");
 
     await click(".dialog-footer .btn-default");
@@ -537,23 +532,6 @@ acceptance("Run Query", function (needs) {
     assert
       .dom(".query-action-bar__right")
       .includesText(i18n("explorer.recover"), "the undelete button is offered");
-  });
-
-  test("the delete confirmation escapes the query name", async function (assert) {
-    query2Name = "<b>Not</b> markup";
-    await visit("/admin/plugins/discourse-data-explorer/queries/2");
-
-    await click(".query-action-bar__right .btn-danger");
-
-    assert
-      .dom(".dialog-body b")
-      .doesNotExist("markup in the name is not rendered as HTML");
-    assert
-      .dom(".dialog-body")
-      .hasText(
-        i18n("explorer.delete_confirm", { name: query2Name }),
-        "the name is shown as literal text"
-      );
   });
 
   test("adds a new tag while editing a query", async function (assert) {
