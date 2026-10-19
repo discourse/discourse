@@ -31,7 +31,6 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
 
       expected_tool_count =
         DiscourseAi::Agents::Agent.all_available_tools.length +
-          DiscourseAi::Agents::Agent.external_tools.length +
           DiscourseAi::Completions::NativeTools.all.length
       expect(response.parsed_body["meta"]["tools"].length).to eq(expected_tool_count)
     end
