@@ -255,7 +255,9 @@ class GitIntegrationTests(unittest.TestCase):
             if str(value) == "/run/refreshed-auth.json":
                 return refreshed
             return Path(value)
-        def codex(*args, **kwargs):
+        def codex(command, **kwargs):
+            self.assertEqual("gpt-6.1-sol", command[command.index("--model") + 1])
+            self.assertEqual('model_reasoning_effort="medium"', command[command.index("-c") + 1])
             auth = instance.work / "codex-home/auth.json"
             seen.append(json.loads(auth.read_text())["token"])
             auth.write_text(json.dumps({"token": f"v{len(seen) + 1}"}))

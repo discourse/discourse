@@ -37,7 +37,7 @@ for image in /run/card-images/*; do
     image_args+=(--image "$image")
   fi
 done
-sudo -u discourse -E timeout --signal=TERM --kill-after=30s 2700 codex exec "${image_args[@]}" --sandbox danger-full-access --json --output-schema /opt/bot/result-schema.json --output-last-message /workspace/result.json - < /run/prompt.txt > /workspace/codex.jsonl 2> /workspace/codex.stderr
+sudo -u discourse -E timeout --signal=TERM --kill-after=30s 2700 codex exec --model gpt-6.1-sol -c 'model_reasoning_effort="medium"' "${image_args[@]}" --sandbox danger-full-access --json --output-schema /opt/bot/result-schema.json --output-last-message /workspace/result.json - < /run/prompt.txt > /workspace/codex.jsonl 2> /workspace/codex.stderr
 python3 - <<'PY'
 import json
 result=json.load(open('/workspace/result.json'))

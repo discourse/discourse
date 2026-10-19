@@ -290,7 +290,9 @@ class Integrator:
                   + json.dumps(conflicts))
         try:
             with (self.work / "conflicts.jsonl").open("a") as log:
-                subprocess.run(["/usr/local/bin/codex", "exec", "--sandbox", "danger-full-access", "--json", "-"],
+                subprocess.run(["/usr/local/bin/codex", "exec", "--model", "gpt-6.1-sol",
+                                "-c", 'model_reasoning_effort="medium"',
+                                "--sandbox", "danger-full-access", "--json", "-"],
                                cwd=self.repo, input=prompt, text=True, stdout=log, stderr=log, timeout=1200,
                                env={**os.environ, "HOME": "/home/discourse", "CODEX_HOME": str(home)},
                                preexec_fn=sandbox_child([str(self.repo), str(home), "/opt/bundle", "/tmp", "/home/discourse"], "discourse"),

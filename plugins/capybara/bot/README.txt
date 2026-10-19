@@ -8,6 +8,7 @@ The bot removes the preview container and tunnel on its next poll, retrying fail
 Accepted DONE integration already underway finishes its merge, deployment and publication even if the card is deleted.
 Move a card to TODO to queue it. The bot reads the initial topic post, the latest 99 human replies, and their images.
 It claims the card, moves it to IN PROGRESS, and starts a Codex session in Docker through OrbStack.
+Card coding and conflict resolution both explicitly use gpt-6.1-sol with medium reasoning effort.
 Each TODO attempt starts with a fresh checkout of the committed capybara branch in /Users/joffreyjaffeux/Code/discourse.
 Uncommitted host edits are never copied. Failed work remains available for recovery until it is superseded, deleted, or moved to DONE. A new attempt does not use the previous preview as its starting point.
 
