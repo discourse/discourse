@@ -1,0 +1,9 @@
+The board is the request authority. A topic-backed card supplies title, latest body, replies and upload images. TODO creates a fresh isolated checkout of the committed capybara branch. BACKLOG has no trigger.
+
+The controller owns Run records in SQLite. New records carry integration_version=1; legacy records deserialize to zero. running -> review -> integrating -> deploying -> done is the accepted path. Failed integration remains visible and does not acknowledge success.
+
+A trusted integration container receives read-only card workspace and writable source checkout. Its coding conflict resolver runs with write access restricted to its isolated integration checkout. It applies base..head changes onto current capybara, commits with a stable run marker, fetches official discourse/discourse main and rebases local commits onto that pinned SHA. Publication checks a clean capybara checkout, uses a compare-and-swap branch update and non-destructive read-tree checkout, and saves backup and per-run refs. No remote push.
+
+DockerBoard(config, client).deploy(commit, event) stops the prior board container, recreates it with the selected source commit and persistent database, uploads, Redis and Linux workspace, installs bundle and pnpm dependencies, migrates, starts frontend and Rails, checks public frontend and administrator login. reconcile() runs before polling the board so restart can proceed during board downtime.
+
+A native host helper was considered. It would need another durable queue and native dependency/process supervision. The Docker runtime keeps these operations in the existing controller and follows the user's all-Docker requirement. The one-time native database dump and original native database remain as rollback records.

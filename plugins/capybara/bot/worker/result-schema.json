@@ -1,0 +1,1 @@
+{"type":"object","properties":{"summary":{"type":"string"},"tests":{"type":"array","items":{"type":"string"}},"ready":{"type":"boolean"}},"required":["summary","tests","ready"],"additionalProperties":false}
