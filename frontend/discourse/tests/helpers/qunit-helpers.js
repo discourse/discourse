@@ -14,7 +14,6 @@ import $ from "jquery";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
-import { resetAdminDashboardReportRenderers } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { resetAdminDashboardSections } from "discourse/admin/lib/admin-dashboard-sections";
 import { resetAdminReportRelatedItemsRenderers } from "discourse/admin/lib/admin-report-related-items";
 import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
@@ -223,7 +222,6 @@ export function testCleanup(container, app) {
   resetMobile();
   noteKeyboardEvidence();
   resetAdditionalReportModes();
-  resetAdminDashboardReportRenderers();
   resetAdminReportRelatedItemsRenderers();
   resetAdminDashboardSections();
   resetDeferredClassModifications();
