@@ -45,6 +45,11 @@ class PushNotificationLocalizationWait
     claimed
   end
 
+  # For a delivery that failed after claiming, so another one can send the push.
+  def self.unclaim(post_id, token)
+    Discourse.redis.hdel(key(post_id), "#{CLAIMED_PREFIX}#{token}")
+  end
+
   # @return [Boolean] Whether the translator is done with the post
   def self.done?(post_id)
     Discourse.redis.hexists(key(post_id), DONE_FIELD)

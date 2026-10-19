@@ -4,11 +4,21 @@ module Jobs
   class DeliverPushNotification < ::Jobs::Base
     def execute(args)
       payload = args[:payload].with_indifferent_access
+      token = args[:localization_wait_token]
+      return if token && !PushNotificationLocalizationWait.claim(payload[:post_id], token)
 
-      if (token = args[:localization_wait_token])
-        return if !PushNotificationLocalizationWait.claim(payload[:post_id], token)
+      begin
+        deliver(args, payload, held: token.present?)
+      rescue StandardError
+        # Lets the retry or the wait limit's delivery send it instead.
+        PushNotificationLocalizationWait.unclaim(payload[:post_id], token) if token
+        raise
       end
+    end
 
+    private
+
+    def deliver(args, payload, held:)
       user = User.find_by(id: args[:user_id])
       push_window = SiteSetting.push_notification_time_window_mins
       if !user ||
@@ -23,7 +33,7 @@ module Jobs
         post = Post.includes(:localizations).find_by(id: payload[:post_id]) if payload[:post_id]
         topic = post&.topic || (Topic.find_by(id: payload[:topic_id]) if payload[:topic_id])
 
-        return if !token && localization_pending?(post, user) && held?(post, user, args)
+        return if !held && localization_pending?(post, user) && held?(post, user, args)
 
         I18n.with_locale(user.effective_locale) do
           payload.merge!(
@@ -39,8 +49,6 @@ module Jobs
       PushNotificationPusher.push(user, payload.deep_dup) if user.push_subscriptions.exists?
       HubPushNotificationPusher.push(user, payload.deep_dup)
     end
-
-    private
 
     # Translations are usually stored seconds after the post, so a push sent right
     # away would carry the original text. Plugins producing translations decide

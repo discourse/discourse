@@ -288,6 +288,18 @@ RSpec.describe Jobs::DeliverPushNotification do
         deliver(localization_wait_token: token)
       end
 
+      it "lets another delivery send a held push when one fails" do
+        deliver
+        token = held_token
+
+        PushNotificationPusher.stubs(:push).raises(StandardError).then.returns(nil)
+
+        expect { deliver(localization_wait_token: token) }.to raise_error(StandardError)
+
+        PushNotificationPusher.expects(:push).once
+        deliver(localization_wait_token: token)
+      end
+
       it "does not release pushes held for other locales" do
         deliver
         Jobs::DeliverPushNotification.jobs.clear
