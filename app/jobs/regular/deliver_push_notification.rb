@@ -3,6 +3,12 @@
 module Jobs
   class DeliverPushNotification < ::Jobs::Base
     def execute(args)
+      payload = args[:payload].with_indifferent_access
+
+      if (token = args[:localization_wait_token])
+        return if !PushNotificationLocalizationWait.claim(payload[:post_id], token)
+      end
+
       user = User.find_by(id: args[:user_id])
       push_window = SiteSetting.push_notification_time_window_mins
       if !user ||
@@ -13,10 +19,21 @@ module Jobs
         return
       end
 
-      payload = args[:payload].with_indifferent_access
-
       if SiteSetting.content_localization_enabled
-        I18n.with_locale(user.effective_locale) { localize_content!(payload) }
+        post = Post.includes(:localizations).find_by(id: payload[:post_id]) if payload[:post_id]
+        topic = post&.topic || (Topic.find_by(id: payload[:topic_id]) if payload[:topic_id])
+
+        return if !token && localization_pending?(post, user) && held?(post, user, args)
+
+        I18n.with_locale(user.effective_locale) do
+          payload.merge!(
+            ContentLocalization.translated_notification_fields(
+              topic: topic,
+              post: post,
+              scope: user.guardian,
+            ),
+          )
+        end
       end
 
       PushNotificationPusher.push(user, payload.deep_dup) if user.push_subscriptions.exists?
@@ -25,31 +42,36 @@ module Jobs
 
     private
 
-    def localize_content!(payload)
-      locale = I18n.locale.to_s.sub("-", "_")
+    # Translations are usually stored seconds after the post, so a push sent right
+    # away would carry the original text. Plugins producing translations decide
+    # whether one is still on its way for this recipient.
+    def localization_pending?(post, user)
+      return false if post.nil?
+      return false if SiteSetting.push_notification_localization_max_wait_mins <= 0
+      return false if !ContentLocalization.automatically_translate?(user.guardian)
+      return false if ContentLocalization.understands?(post.locale, user.guardian)
+      return false if PushNotificationLocalizationWait.done?(post.id)
 
-      if (topic_id = payload[:topic_id])
-        topic_localization =
-          TopicLocalization.find_by(topic_id: topic_id, locale: locale) ||
-            TopicLocalization.matching_locale(locale).find_by(topic_id: topic_id)
-        payload[:topic_title] = topic_localization.title if topic_localization
-      end
+      DiscoursePluginRegistry.apply_modifier(
+        :deliver_push_notification_localization_pending,
+        false,
+        post,
+        user,
+      )
+    end
 
-      if (post_id = payload[:post_id])
-        post_localization =
-          PostLocalization.find_by(post_id: post_id, locale: locale) ||
-            PostLocalization.matching_locale(locale).find_by(post_id: post_id)
-        if post_localization
-          payload[:excerpt] = Post.excerpt(
-            post_localization.cooked,
-            400,
-            text_entities: true,
-            strip_links: true,
-            remap_emoji: true,
-            plain_hashtags: true,
-          )
-        end
-      end
+    def held?(post, user, args)
+      token =
+        PushNotificationLocalizationWait.hold(
+          post_id: post.id,
+          locale: user.effective_locale,
+          job_args: args,
+        )
+
+      # A translation stored between the check and the hold has already fired its
+      # release, so look again rather than wait for the limit.
+      post.reload
+      localization_pending?(post, user) || !PushNotificationLocalizationWait.claim(post.id, token)
     end
   end
 end

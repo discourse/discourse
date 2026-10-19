@@ -59,7 +59,23 @@ class PostAlerter
               payload,
               user,
             )
-          MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+
+          live_payload = payload
+          if SiteSetting.content_localization_enabled
+            translated =
+              I18n.with_locale(user.effective_locale) do
+                ContentLocalization.translated_notification_fields(
+                  topic: post.topic,
+                  post: post,
+                  scope: user.guardian,
+                )
+              end
+            # A caller-provided excerpt isn't the post's text, so its translation doesn't apply.
+            translated.delete(:excerpt) if excerpt
+            live_payload = payload.merge(translated)
+          end
+
+          MessageBus.publish("/notification-alert/#{user.id}", live_payload, user_ids: [user.id])
         end
       end
 
