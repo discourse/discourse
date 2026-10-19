@@ -64,6 +64,54 @@ zh_CN:
             declined: "最后一次右键点击：已拒绝，浏览器接受了"
         multi_select:
           title: "多选"
+        reorderable_list:
+          title: "可重新排序列表"
+          groups:
+            aria_label: "可重新排序列表示例组"
+            start:
+              title: "从这里开始"
+              description: "默认 shell：每行一个手柄，用于拖动、打开移动菜单和占用键盘。"
+            policies:
+              title: "行策略"
+              description: "哪些行可以移动，哪些行可以移除：被固定的行会保留其位置，而受保护的行则没有移除的途径。"
+            content:
+              title: "交互式行内容"
+              description: "每行都带有独立的实时控件——切换开关和输入框。它们保持正常的焦点和点击反应；列表只占用这些控件的句柄。"
+            layouts:
+              title: "单元格布局"
+              description: "手动放置表格形状的行：列表渲染行，预先连接的控件放置在单元格需要的任何位置。"
+            groups:
+              title: "多个列表"
+              description: "同一组下注册的列表可以通过拖动或从移动菜单中接受对方的行。"
+          description: "DReorderableList 的交互式示例：拖动、每个句柄后面的移动菜单、键盘快捷键、固定行、跨列表组、删除和内联创建。"
+          basic_example: "默认列表"
+          basic_description: "开箱即用的框架。每一行都有一个控件，即拖拽手柄：它既是拖动控制点，又可以打开一个移动目标菜单。Tab 键可以按文档顺序依次移动到每个手柄以及各行自身的控件，方向键则可以在手柄之间快速移动。每次实际移动都会提示新的位置，如果移动被拒绝（无论在哪一端），也会显示拒绝信息，而不是什么都不做。"
+          basic_try_this: "Tab 键切换到某个句柄，然后按 Enter 键打开移动菜单；或者按方向键在列表中移动。按住 Alt 键并按方向键可移动行；按住 Alt 键并按 Home 键或 End 键可将行移动到末尾。"
+          policies_example: "已置顶和必填行"
+          policies_description: "两个谓词，两种策略，都是减法策略。可移动谓词排除的行不产生任何句柄，并保留其原始位置——此列表固定其首尾两行，周围的行则在剩余的位置内移动。可移除谓词排除的行不产生任何移除控制，因此受保护的行不提供任何不可操作的功能。"
+          policies_try_this: "从菜单中将第一个可移动行移到最底部：固定行不会移动。所需的行根本没有移除控件。"
+          policies_pinned: "已置顶"
+          policies_required: "必选"
+          toggles_example: "带有切换开关的行"
+          toggles_description: "管理后台模式：每行都带有自己的交互式控件，这些控件保持正常的焦点和点击状态。关闭的行仍然保留在列表中，但无法移动——它们保留在原来的位置，但会失去句柄，而不是消失到一个单独的区块中。"
+          toggles_try_this: "关闭某个开关后，该行会保持在原位，但无法再移动。重新排列它周围的行，你会发现它仍然停留在原地。"
+          editable_example: "可编辑行"
+          editable_description: "设置值列表模式具有稳定的标识：每行一个输入框，句柄位于行首，列表自身的删除控件位于行尾。输入内容始终在输入框内，Tab 键可以像在其他任何地方一样在行内控件之间切换。"
+          editable_try_this: "编辑一个值，然后删除一行——删除操作会被宣布，焦点会落在被删除的行上。"
+          table_example: "原生表格行，手动放置"
+          table_description: "手动放置单元格布局：列表渲染表格主体及其行，并提供预先连接的控件以放置行——此处句柄占据第一列。"
+          table_try_this: "拖动手柄，或按 Enter 键：重新排序控件位于第一个单元格中，整行将移动。"
+          table_field: "字段"
+          table_type: "类型"
+          cross_list_example: "跨列表移动"
+          cross_list_description: "同一组下注册的列表可以互相接受对方的行。拖动操作会将一行移动到另一行，每个拖放手柄的菜单都会按名称列出同级列表，因此无需鼠标指针即可进行移动操作。即使是空列表，也仍然会接受拖放操作。"
+          cross_list_try_this: "将一行从“主要”拖到“次要”，或者打开一行的菜单，然后按名称选择另一个列表。"
+          cross_list_empty: "在此处删除一行"
+          cross_list_primary: "主要"
+          cross_list_secondary: "次要"
+          create_example: "创造可供性"
+          create_description: "启用创建功能后，列表会在行之后渲染一个输入框，因此追加操作属于重新排序的同一个组件。"
+          create_try_this: "输入水果名称并按回车键。"
         toasts:
           title: "消息框"
         font_scale:

@@ -17,8 +17,8 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import AiTool from "../admin/models/ai-tool";
-import AiMcpServerToolsModal from "./modal/ai-mcp-server-tools-modal";
+import AiTool from "discourse/plugins/discourse-ai/discourse/admin/models/ai-tool";
+import AiMcpServerToolsModal from "discourse/plugins/discourse-ai/discourse/components/modal/ai-mcp-server-tools-modal";
 
 export default class AiToolListEditor extends Component {
   @service adminPluginNavManager;

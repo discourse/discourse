@@ -7,8 +7,18 @@
 zh_CN:
   js:
     discourse_captcha:
+      title: "验证码"
       configuration_test:
         tab_title: "测试"
+        title: "配置测试"
+        description: "测试您保存的验证码密钥。"
+        start: "测试配置"
+        retry: "再次测试"
+        complete_challenge: "完成挑战以验证您保存的密钥。"
+        verifying: "正在向您的验证码提供商验证…"
+        not_configured: "选择一个验证码提供商，并在测试前将站点密钥和密钥都保存在“设置”中。"
+        challenge_failed: "验证码加载失败。请检查您的密钥和提供商设置。"
+        expired: "挑战已过期。请重新开始并再次完成挑战。"
       missing_token: "请完成人机验证。"
       verification_failed: "人机验证失败，请重试。"
       placeholder: 占位符

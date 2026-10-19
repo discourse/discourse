@@ -17,6 +17,7 @@ nb_NO:
       location: "Sted"
   mcp:
     errors:
+      category_not_found: "Kategorien finnes ikke"
       topic_not_found: "Fant ikke emnet"
     oauth:
       deny: "Avslå"

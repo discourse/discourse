@@ -315,6 +315,8 @@ RSpec.describe SessionController do
       end
 
       context "when timezone param is provided" do
+        let(:user) { Fabricate(:user, timezone: nil) }
+
         it "sets the user_option timezone for the user" do
           post "/session/email-login/#{email_token.token}.json",
                params: {
@@ -1595,6 +1597,17 @@ RSpec.describe SessionController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["username_required"]).to eq(true)
         expect(response.parsed_body["trust_level"]).to eq(1)
+      end
+
+      it "tells the deferred avatar selector whether the avatar can be edited" do
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(response.parsed_body["can_edit_avatar"]).to eq(true)
+
+        SiteSetting.auth_overrides_avatar = true
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(response.parsed_body["can_edit_avatar"]).to eq(false)
       end
 
       it "waits for username selection before creating or authenticating an account" do
@@ -3493,6 +3506,8 @@ RSpec.describe SessionController do
         end
 
         context "when timezone param is provided" do
+          let(:user) { Fabricate(:user, timezone: nil) }
+
           it "sets the user_option timezone for the user" do
             post "/session.json",
                  params: {

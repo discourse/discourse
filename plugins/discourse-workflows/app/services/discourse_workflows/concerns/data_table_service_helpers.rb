@@ -18,6 +18,14 @@ module DiscourseWorkflows
       def within_storage_limit
         DataTables::Facade.within_storage_limit?
       end
+
+      def column_exists(data_table:, params:)
+        data_table.columns.any? { |c| c["name"] == params.column_name }
+      end
+
+      def not_reserved_column(params:)
+        !DataTables::Types.system_column?(params.column_name)
+      end
     end
   end
 end

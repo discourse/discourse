@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import Owner, { setOwner } from "@ember/owner";
@@ -38,7 +39,7 @@ export default class DTooltipInstance extends FloatKitInstance {
   @tracked options: TooltipOptions;
   @tracked portalOutletOverrideElement?: HTMLElement | null;
 
-  @tracked _trigger: FloatKitTrigger;
+  @tracked _trigger?: FloatKitTrigger;
 
   constructor(owner: Owner, options: Partial<TooltipOptions> = {}) {
     super();
@@ -48,8 +49,17 @@ export default class DTooltipInstance extends FloatKitInstance {
     this.portalOutletOverrideElement = options.portalOutletElement;
   }
 
-  get trigger() {
-    return this._trigger;
+  /**
+   * Set when the trigger registers, which comes before the float can show or
+   * hand out its API. A read before then is a bug, so it asserts.
+   */
+  get trigger(): FloatKitTrigger {
+    const trigger = this._trigger;
+    assert(
+      "DTooltipInstance: the trigger is read before it registered",
+      trigger
+    );
+    return trigger;
   }
 
   set trigger(element: FloatKitTrigger) {

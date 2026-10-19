@@ -18,6 +18,7 @@ vi:
       link: "Link"
   mcp:
     errors:
+      category_not_found: "Không tìm thấy chuyên mục"
       topic_not_found: "Không tìm thấy chủ đề"
     oauth:
       deny: "Từ chối"

@@ -1,3 +1,4 @@
+import { assert } from "@ember/debug";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 
@@ -121,7 +122,7 @@ class MinHeap {
     const heap = this.#heap;
     const top = heap[0];
     const last = heap.pop();
-    if (heap.length > 0) {
+    if (last !== undefined && heap.length > 0) {
       heap[0] = last;
       let i = 0;
       for (;;) {
@@ -269,11 +270,12 @@ export default class DAG<T = unknown> {
    * @returns True if the item was repositioned, false otherwise.
    */
   reposition(key: string, position: DAGPosition): boolean {
-    if (!this.has(key) || !position) {
+    const item = this.#items.get(key);
+    if (!item || !position) {
       return false;
     }
 
-    const { value } = this.#items.get(key);
+    const { value } = item;
 
     return this.#replace(key, value, position, { repositionOnly: true });
   }
@@ -321,8 +323,9 @@ export default class DAG<T = unknown> {
 
     for (let i = 0; i < sortedKeys.length; i++) {
       const key = sortedKeys[i];
-      if (this.has(key)) {
-        const { value, before, after } = this.#items.get(key);
+      const item = this.#items.get(key);
+      if (item) {
+        const { value, before, after } = item;
         result.push({ key, value, position: { before, after } });
       }
     }
@@ -468,8 +471,12 @@ export default class DAG<T = unknown> {
       }
     } catch (e) {
       for (let i = 0; i < added.length; i += 2) {
-        this.#vertices.get(added[i]).outEdges.delete(added[i + 1]);
-        this.#vertices.get(added[i + 1]).inEdges.delete(added[i]);
+        // Both ends were created by #getOrCreateVertex before being recorded.
+        const from = this.#vertices.get(added[i]);
+        const to = this.#vertices.get(added[i + 1]);
+        assert("A recorded edge has both vertices", from && to);
+        from.outEdges.delete(added[i + 1]);
+        to.inEdges.delete(added[i]);
       }
       throw e;
     }
@@ -564,11 +571,11 @@ export default class DAG<T = unknown> {
     position?: DAGPosition,
     { repositionOnly }: { repositionOnly: boolean } = { repositionOnly: false }
   ): boolean {
-    if (!this.has(key)) {
+    const existingItem = this.#items.get(key);
+    if (!existingItem) {
       return false;
     }
 
-    const existingItem = this.#items.get(key);
     const oldValue = existingItem.value;
     const oldPosition = {
       before: existingItem.before,
@@ -595,6 +602,7 @@ export default class DAG<T = unknown> {
     }
 
     if (repositionOnly) {
+      assert("A reposition carries a position", position);
       this.#onRepositionItem?.(key, position, oldPosition);
     } else {
       this.#onReplaceItem?.(key, value, oldValue, position, oldPosition);
@@ -649,12 +657,16 @@ export default class DAG<T = unknown> {
       ordinals.set(sortedKeys[i], i);
     }
 
+    // `ordinals` and `inDegree` hold every vertex key, and edges only join
+    // vertices, so the lookups below are always defined.
     const inDegree = new Map<string, number>();
     const ready = new MinHeap();
     for (const [key, v] of vertices) {
       inDegree.set(key, v.inEdges.size);
       if (v.inEdges.size === 0) {
-        ready.push(ordinals.get(key));
+        const ordinal = ordinals.get(key);
+        assert("Every vertex has an ordinal", ordinal !== undefined);
+        ready.push(ordinal);
       }
     }
 
@@ -663,11 +675,17 @@ export default class DAG<T = unknown> {
       const key = sortedKeys[ready.pop()];
       result.push(key);
 
-      for (const succKey of vertices.get(key).outEdges) {
-        const d = inDegree.get(succKey) - 1;
+      const vertex = vertices.get(key);
+      assert("A ready key is a vertex", vertex);
+      for (const succKey of vertex.outEdges) {
+        const degree = inDegree.get(succKey);
+        assert("Every successor has an in-degree", degree !== undefined);
+        const d = degree - 1;
         inDegree.set(succKey, d);
         if (d === 0) {
-          ready.push(ordinals.get(succKey));
+          const ordinal = ordinals.get(succKey);
+          assert("Every vertex has an ordinal", ordinal !== undefined);
+          ready.push(ordinal);
         }
       }
     }
@@ -690,7 +708,12 @@ export default class DAG<T = unknown> {
   #keysInRankOrder(): string[] {
     const ranks = this.#computeRanks();
     const keys = [...this.#vertices.keys()];
-    keys.sort((a, b) => compareRanks(ranks.get(a), ranks.get(b)));
+    keys.sort((a, b) => {
+      const rankA = ranks.get(a);
+      const rankB = ranks.get(b);
+      assert("Every vertex has a rank", rankA && rankB);
+      return compareRanks(rankA, rankB);
+    });
     return keys;
   }
 
@@ -723,7 +746,7 @@ export default class DAG<T = unknown> {
 
         const anchorRank = rankOf(ref);
         if (
-          best === null ||
+          bestRank === null ||
           (latest
             ? compareRanks(anchorRank, bestRank) > 0
             : compareRanks(anchorRank, bestRank) < 0)
@@ -743,6 +766,7 @@ export default class DAG<T = unknown> {
       }
 
       const v = this.#vertices.get(key);
+      assert("A ranked key is a vertex", v);
       // Placeholder vertices (referenced but never added) sort past every
       // real insertion index.
       const idx = v.insertionIdx === -1 ? Infinity : v.insertionIdx;

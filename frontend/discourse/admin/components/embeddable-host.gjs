@@ -12,8 +12,13 @@ import { i18n } from "discourse-i18n";
 export default class EmbeddableHost extends Component {
   @service dialog;
 
+  /** @type {import("discourse/models/category").default | null | undefined} */
   @tracked category = null;
+
+  /** @type {string | null} */
   @tracked tags = null;
+
+  /** @type {string | null} */
   @tracked user = null;
 
   constructor() {

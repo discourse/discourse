@@ -15,7 +15,10 @@ import { i18n } from "discourse-i18n";
 const SUMMARY_LIMIT = 5;
 
 export default class AdminReportTableSummary extends Component {
+  /** @type {Record<string, unknown>[] | null} */
   @tracked items = null;
+
+  /** @type {number | null} */
   @tracked total = null;
   @tracked isLoading = false;
   @tracked hasError = false;

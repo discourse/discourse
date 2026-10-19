@@ -7,6 +7,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import DButton from "discourse/ui-kit/d-button";
+import DFlashMessage from "discourse/ui-kit/d-flash-message";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
@@ -17,11 +18,11 @@ import {
   isLive,
   isPending,
   isRunning,
-} from "../../../lib/workflows/execution-progress";
+} from "../../../lib/workflows/execution-progress.js";
 import {
   localeKeyPart,
   propertyOptionLabel,
-} from "../../../lib/workflows/property-engine";
+} from "../../../lib/workflows/property-engine.js";
 
 function formatJson(data) {
   if (Array.isArray(data) && data.length === 0) {
@@ -188,12 +189,40 @@ function stepSummary(step) {
   return String(step.error);
 }
 
+// A step that continued on error succeeds, so these explain what it continued past.
+function stepWarnings(step) {
+  const warnings = [];
+  const handledError = step.metadata?.handled_error?.message;
+  if (handledError) {
+    warnings.push(
+      i18n("discourse_workflows.executions.handled_error", {
+        message: handledError,
+      })
+    );
+  }
+
+  step.metadata?.item_errors?.forEach(({ message, items }) => {
+    warnings.push(
+      i18n("discourse_workflows.executions.item_error", {
+        count: items.length,
+        message,
+      })
+    );
+  });
+
+  return warnings;
+}
+
 function hasNoOutput(step) {
   return (
     step.status === "success" &&
     Array.isArray(step.output) &&
     step.output.length === 0
   );
+}
+
+function hasStepData(step) {
+  return step.input !== undefined;
 }
 
 function isFilterStep(step) {
@@ -286,6 +315,19 @@ export default class ExecutionDetail extends Component {
     return isLive(this.execution);
   }
 
+  get executionError() {
+    // A failing step already explains the error in its summary.
+    if (this.execution.steps?.some((step) => step.error)) {
+      return null;
+    }
+
+    return this.execution.error;
+  }
+
+  get executionErrorType() {
+    return this.execution.status === "error" ? "error" : "warning";
+  }
+
   @action
   async initialize() {
     this.#progress.lastMessageId = this.execution.message_bus_last_id ?? 0;
@@ -340,6 +382,14 @@ export default class ExecutionDetail extends Component {
       lines.push(
         `  Duration: ${formatDuration(step.started_at, step.finished_at)}${step.metadata?.js_elapsed_ms ? ` (javascript: ${step.metadata.js_elapsed_ms}ms)` : ""}`
       );
+
+      stepWarnings(step).forEach((warning) => {
+        lines.push(`  Warning: ${warning}`);
+      });
+
+      step.metadata?.hints?.forEach((hint) => {
+        lines.push(`  Hint: ${hint.message}`);
+      });
 
       if (step.metadata?.conditions) {
         lines.push("  Conditions:");
@@ -555,6 +605,12 @@ export default class ExecutionDetail extends Component {
         </div>
       {{/if}}
 
+      <DFlashMessage
+        class="workflows-execution-detail__error"
+        @flash={{this.executionError}}
+        @type={{this.executionErrorType}}
+      />
+
       <div class="workflows-execution-detail__steps">
         {{#each this.execution.steps as |step|}}
           <div
@@ -627,12 +683,30 @@ export default class ExecutionDetail extends Component {
             {{/if}}
 
             <div class="workflows-execution-detail__step-body">
+              {{#each (stepWarnings step) as |warning|}}
+                <DFlashMessage
+                  class="workflows-execution-detail__step-warning"
+                  @flash={{warning}}
+                  @type="warning"
+                />
+              {{/each}}
+
+              {{#each step.metadata.hints as |hint|}}
+                <DFlashMessage
+                  class="workflows-execution-detail__hint"
+                  @flash={{hint.message}}
+                  @type="warning"
+                />
+              {{/each}}
+
               {{#if (hasNoOutput step)}}
-                <div
-                  class="alert alert-info workflows-execution-detail__no-output"
-                >
-                  {{i18n "discourse_workflows.executions.no_output_data"}}
-                </div>
+                <DFlashMessage
+                  class="workflows-execution-detail__no-output"
+                  @flash={{i18n
+                    "discourse_workflows.executions.no_output_data"
+                  }}
+                  @type="info"
+                />
               {{/if}}
 
               {{#if step.metadata.conditions}}
@@ -749,30 +823,32 @@ export default class ExecutionDetail extends Component {
                 </div>
               {{/if}}
 
-              <details class="workflows-execution-detail__step-section">
-                <summary>
-                  {{i18n "discourse_workflows.executions.input"}}
-                  {{#if (itemCount step.input)}}
-                    <span
-                      class="workflows-execution-detail__item-count"
-                    >{{itemCount step.input}}
-                      {{i18n "discourse_workflows.executions.items"}}</span>
-                  {{/if}}
-                </summary>
-                <pre>{{formatInputData step.input}}</pre>
-              </details>
-              <details class="workflows-execution-detail__step-section">
-                <summary>
-                  {{i18n "discourse_workflows.executions.output"}}
-                  {{#if (itemCount step.output)}}
-                    <span
-                      class="workflows-execution-detail__item-count"
-                    >{{itemCount step.output}}
-                      {{i18n "discourse_workflows.executions.items"}}</span>
-                  {{/if}}
-                </summary>
-                <pre>{{formatOutputData step.output}}</pre>
-              </details>
+              {{#if (hasStepData step)}}
+                <details class="workflows-execution-detail__step-section">
+                  <summary>
+                    {{i18n "discourse_workflows.executions.input"}}
+                    {{#if (itemCount step.input)}}
+                      <span
+                        class="workflows-execution-detail__item-count"
+                      >{{itemCount step.input}}
+                        {{i18n "discourse_workflows.executions.items"}}</span>
+                    {{/if}}
+                  </summary>
+                  <pre>{{formatInputData step.input}}</pre>
+                </details>
+                <details class="workflows-execution-detail__step-section">
+                  <summary>
+                    {{i18n "discourse_workflows.executions.output"}}
+                    {{#if (itemCount step.output)}}
+                      <span
+                        class="workflows-execution-detail__item-count"
+                      >{{itemCount step.output}}
+                        {{i18n "discourse_workflows.executions.items"}}</span>
+                    {{/if}}
+                  </summary>
+                  <pre>{{formatOutputData step.output}}</pre>
+                </details>
+              {{/if}}
             </div>
           </div>
         {{/each}}
@@ -787,7 +863,7 @@ export default class ExecutionDetail extends Component {
             }}
           </div>
           <DButton
-            class="btn-default btn-small"
+            class="btn-default btn-small workflows-execution-detail__export"
             @action={{this.exportAsText}}
             @icon="download"
             @label="discourse_workflows.executions.export"

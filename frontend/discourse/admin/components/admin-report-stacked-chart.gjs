@@ -6,7 +6,7 @@ import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
 import { remToPx } from "discourse/lib/rem-to-px";
 import I18n, { i18n } from "discourse-i18n";
-import Chart from "./chart";
+import Chart from "./chart.gjs";
 
 function hexToRgba(hex, alpha) {
   const r = parseInt(hex.slice(1, 3), 16);

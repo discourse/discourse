@@ -24,7 +24,7 @@ import {
   FeedEnabledToggle,
   previewSummary,
 } from "discourse/plugins/discourse-rss-polling/discourse/lib/rss-polling-item";
-import RssPollingFeedSettings from "../../admin/models/rss-polling-feed-settings";
+import RssPollingFeedSettings from "../../admin/models/rss-polling-feed-settings.js";
 
 export default class RssPollingFeedForm extends Component {
   @service dialog;

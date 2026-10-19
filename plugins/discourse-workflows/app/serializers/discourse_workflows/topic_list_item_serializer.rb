@@ -2,6 +2,6 @@
 
 module DiscourseWorkflows
   class TopicListItemSerializer < ::TopicListItemSerializer
-    attributes :user_id
+    attributes :user_id, :url
   end
 end

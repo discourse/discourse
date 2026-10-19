@@ -63,6 +63,8 @@ module("Unit | Utility | click-track", function (hooks) {
           <a class="mention" href="/u/joe">@joe</a>
           <a class="hashtag-cooked" href="/c/staff/42" data-type="category" data-slug="staff"><svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg><span>staff</span></a>
           <a class="mention-group" href="/g/support">@support</a>
+          <a class="user-card-link" href="/u/joe" data-user-card="joe">joe</a>
+          <a class="group-card-link" href="/g/support" data-group-card="support">support</a>
           <a class="hashtag-cooked category-card-hashtag" href="/c/staff/42" data-type="category" data-id="42">staff</a>
           <a class="mailto" href="mailto:foo@bar.com">email-me</a>
           <a class="a-without-href">no href</a>
@@ -242,6 +244,11 @@ module("Unit | Utility | click-track", function (hooks) {
   test("returns true for tracking mentions and group mentions so the card can appear", async function (assert) {
     assert.true(track(generateClickEventOn(".mention")));
     assert.true(track(generateClickEventOn(".mention-group")));
+  });
+
+  test("leaves user and group card links to the card listener", async function (assert) {
+    assert.true(track(generateClickEventOn(".user-card-link")));
+    assert.true(track(generateClickEventOn(".group-card-link")));
   });
 
   test("leaves category card hashtags to the card listener", async function (assert) {

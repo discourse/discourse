@@ -222,11 +222,26 @@ module DiscourseWorkflows
       end
 
       def rename_column!(old_name:, new_name:)
-        with_lock_timeout { connection.rename_column(@table_name, old_name, new_name) }
+        with_lock_timeout do
+          connection.rename_column(@table_name, old_name, new_name)
+          @data_table.update_columns(
+            column_order:
+              @data_table.column_order.map { |name| name == old_name ? new_name : name },
+          )
+        end
+      end
+
+      def move_column!(column_name, position)
+        names = @data_table.user_columns.map { |column| column["name"] } - [column_name]
+        names.insert([position, names.size].min, column_name)
+        @data_table.update_columns(column_order: names)
       end
 
       def drop_column!(column_name)
-        with_lock_timeout { connection.remove_column(@table_name, column_name) }
+        with_lock_timeout do
+          connection.remove_column(@table_name, column_name)
+          @data_table.update_columns(column_order: @data_table.column_order - [column_name])
+        end
       end
 
       private

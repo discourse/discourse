@@ -309,6 +309,28 @@ ja:
       thinking: "思考中"
       read_post:
         unknown_post: "投稿"
+      chat_tool_approval:
+        topic_states:
+          open: "オープン"
+          closed: "終了"
+          active: "アクティブ"
+          deleted: "削除済み"
+        solution_post: "投稿 #%{number}"
+        duration_label: "期間:"
+        user_duration:
+          other: "%{count} 日"
+        post_states:
+          locked: "ロック済み"
+        posts_label: "投稿"
+        category_label: "カテゴリ"
+        category_fields:
+          name: "名前"
+          description: "説明"
+          color: "色"
+          text_color: "テキストの色"
+        approve_label: "はい"
+        reject_label: "いいえ"
+        empty_value: "空"
       agents:
         cannot_have_duplicate_tools: "重複するツールは使用できません"
         github_helper:

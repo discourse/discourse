@@ -11,6 +11,7 @@ import DAsyncContent from "discourse/ui-kit/d-async-content";
 import { i18n } from "discourse-i18n";
 
 export default class ChooseMessage extends Component {
+  /** @type {string | null} */
   @tracked messageTitle = null;
 
   @action

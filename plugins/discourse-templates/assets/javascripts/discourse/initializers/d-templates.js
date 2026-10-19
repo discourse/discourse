@@ -1,7 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
-import extractVariablesFromChatChannel from "../../lib/variables-chat-channel";
-import extractVariablesFromChatThread from "../../lib/variables-chat-thread";
+import extractVariablesFromChatChannel from "../../lib/variables-chat-channel.js";
+import extractVariablesFromChatThread from "../../lib/variables-chat-thread.js";
 
 export default {
   name: "discourse-templates-add-ui-builder",

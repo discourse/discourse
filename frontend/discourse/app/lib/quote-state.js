@@ -2,9 +2,14 @@ import { tracked } from "@glimmer/tracking";
 import { waitForPromise } from "@ember/test-waiters";
 import toMarkdown from "discourse/lib/to-markdown";
 
+/**
+ * @typedef {{ full?: boolean, username?: string, post?: string | number, topic?: string | number }} QuoteOptions
+ */
 export default class QuoteState {
+  /** @type {string | number | null | undefined} */
   @tracked postId = null;
 
+  /** @type {QuoteOptions | null | undefined} */
   #opts = null;
   #selectedHtml = null;
   #cookedHtml = null;
@@ -20,6 +25,7 @@ export default class QuoteState {
     return template.content.textContent ?? "";
   }
 
+  /** @returns {QuoteOptions | null | undefined} */
   get opts() {
     return this.#opts;
   }

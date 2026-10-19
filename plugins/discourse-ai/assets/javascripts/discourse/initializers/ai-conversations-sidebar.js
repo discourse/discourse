@@ -1,6 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import AiBotSidebarNewConversation from "../components/ai-bot-sidebar-new-conversation";
-import { AI_CONVERSATIONS_PANEL } from "../services/ai-conversations-sidebar-manager";
+import AiBotSidebarNewConversation from "../components/ai-bot-sidebar-new-conversation.gjs";
+import { AI_CONVERSATIONS_PANEL } from "../services/ai-conversations-sidebar-manager.js";
 
 export default {
   name: "ai-conversations-sidebar",

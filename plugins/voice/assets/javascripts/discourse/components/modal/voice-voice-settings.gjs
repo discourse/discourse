@@ -10,20 +10,21 @@ import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
-import { NOISE_SUPPRESSION_MODES } from "../../lib/voice/audio-processing";
-import { rmsToPercent, sampleRms } from "../../lib/voice/input-gate";
+import { NOISE_SUPPRESSION_MODES } from "../../lib/voice/audio-processing.js";
+import { rmsToPercent, sampleRms } from "../../lib/voice/input-gate.js";
 import {
   applyOutputDevice,
   audioConstraints,
   enumerateAudioDevices,
   outputSelectionSupported,
   SYSTEM_DEFAULT_DEVICE_ID,
-} from "../../lib/voice/media-devices";
-import { prefetchEngineAssets } from "../../lib/voice/noise-suppression";
+} from "../../lib/voice/media-devices.js";
+import { prefetchEngineAssets } from "../../lib/voice/noise-suppression.js";
 import {
   engineForMode,
   noiseSuppressionModeLabel,
-} from "../../lib/voice/ns-engines";
+} from "../../lib/voice/ns-engines.js";
+import { STT_MODELS, sttModelLabel } from "../../lib/voice/stt-models.js";
 
 const METER_INTERVAL_MS = 50;
 
@@ -89,6 +90,13 @@ export default class VoiceVoiceSettingsModal extends Component {
     return NOISE_SUPPRESSION_MODES.map((mode) => ({
       id: mode,
       name: noiseSuppressionModeLabel(mode),
+    }));
+  }
+
+  get sttModelOptions() {
+    return Object.keys(STT_MODELS).map((model) => ({
+      id: model,
+      name: sttModelLabel(model),
     }));
   }
 
@@ -454,6 +462,22 @@ export default class VoiceVoiceSettingsModal extends Component {
               />
               <p class="voice-voice-settings__hint">
                 {{i18n "voice.voice_settings.subtitles_hint"}}
+              </p>
+            </div>
+
+            <div class="voice-voice-settings__field">
+              <label class="voice-voice-settings__label">
+                {{i18n "voice.voice_settings.subtitles_model"}}
+              </label>
+              <ComboBox
+                class="voice-voice-settings__subtitles-model-select"
+                @content={{this.sttModelOptions}}
+                @onChange={{this.voiceWebrtc.setSttModel}}
+                @options={{hash none=false}}
+                @value={{this.voiceWebrtc.sttModel}}
+              />
+              <p class="voice-voice-settings__hint">
+                {{i18n "voice.voice_settings.subtitles_model_hint"}}
               </p>
             </div>
           {{/if}}

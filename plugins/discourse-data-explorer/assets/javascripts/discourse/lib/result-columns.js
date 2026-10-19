@@ -1,22 +1,24 @@
 import Badge from "discourse/models/badge";
-import BadgeViewComponent from "../components/result-types/badge";
-import CategoryViewComponent from "../components/result-types/category";
-import GroupViewComponent from "../components/result-types/group";
-import HtmlViewComponent from "../components/result-types/html";
-import JsonViewComponent from "../components/result-types/json";
-import PostViewComponent from "../components/result-types/post";
-import ReltimeViewComponent from "../components/result-types/reltime";
-import TagGroupViewComponent from "../components/result-types/tag-group";
-import TextViewComponent from "../components/result-types/text";
-import TopicViewComponent from "../components/result-types/topic";
-import UrlViewComponent from "../components/result-types/url";
-import UserViewComponent from "../components/result-types/user";
+import BadgeViewComponent from "../components/result-types/badge.gjs";
+import CategoryViewComponent from "../components/result-types/category.gjs";
+import GroupViewComponent from "../components/result-types/group.gjs";
+import HtmlViewComponent from "../components/result-types/html.gjs";
+import JsonViewComponent from "../components/result-types/json.gjs";
+import PostViewComponent from "../components/result-types/post.gjs";
+import ReltimeViewComponent from "../components/result-types/reltime.gjs";
+import ReviewableViewComponent from "../components/result-types/reviewable.gjs";
+import TagGroupViewComponent from "../components/result-types/tag-group.gjs";
+import TextViewComponent from "../components/result-types/text.gjs";
+import TopicViewComponent from "../components/result-types/topic.gjs";
+import UrlViewComponent from "../components/result-types/url.gjs";
+import UserViewComponent from "../components/result-types/user.gjs";
 
 export const VIEW_COMPONENTS = {
   topic: TopicViewComponent,
   text: TextViewComponent,
   post: PostViewComponent,
   reltime: ReltimeViewComponent,
+  reviewable: ReviewableViewComponent,
   badge: BadgeViewComponent,
   url: UrlViewComponent,
   user: UserViewComponent,

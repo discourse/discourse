@@ -14,11 +14,22 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 @tagName("")
 @selectKitPropUtils
 export default class SelectedName extends Component {
+  /** @type {string | number | import("@ember/template").TrustedHTML | null | undefined} */
   name = null;
+
+  /** @type {unknown} */
   value = null;
+
+  /** @type {string | number | import("@ember/template").TrustedHTML | null | undefined} */
   headerTitle = null;
+
+  /** @type {string | null | undefined} */
   headerLang = null;
+
+  /** @type {string | number | import("@ember/template").TrustedHTML | null | undefined} */
   headerLabel = null;
+
+  /** @type {string | null} */
   id = null;
 
   @tracked _langOverride;

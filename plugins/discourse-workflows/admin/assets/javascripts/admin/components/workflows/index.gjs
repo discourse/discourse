@@ -14,17 +14,19 @@ import DiscourseURL, {
   applyQueryParams,
   searchParamsFromPath,
 } from "discourse/lib/url";
-import { eq } from "discourse/truth-helpers";
+import { eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DMultiSelect from "discourse/ui-kit/d-multi-select";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DUserLink from "discourse/ui-kit/d-user-link";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import AdminTable from "./admin-table";
-import EmptyState from "./empty-state";
+import AdminTable from "./admin-table.gjs";
+import EmptyState from "./empty-state.gjs";
 
 export default class WorkflowsIndex extends Component {
   @service currentUser;
@@ -243,6 +245,19 @@ export default class WorkflowsIndex extends Component {
   }
 
   <template>
+    <DPageSubheader @titleLabel={{i18n "discourse_workflows.title"}}>
+      <:actions as |actions|>
+        {{#if this.hasWorkflows}}
+          <actions.Primary
+            class="workflows-index__new-btn"
+            @action={{this.createWorkflow}}
+            @icon="plus"
+            @label="discourse_workflows.new_workflow"
+          />
+        {{/if}}
+      </:actions>
+    </DPageSubheader>
+
     {{#if this.hasWorkflows}}
       <div class="d-filter-controls workflows-index__filters">
         <div class="d-filter-controls__inputs">
@@ -273,24 +288,15 @@ export default class WorkflowsIndex extends Component {
             </:result>
           </DMultiSelect>
 
-          {{#unless this.filtering}}
-            {{#if this.hasActiveFilters}}
-              <DButton
-                class="btn-default d-filter-controls__reset"
-                @action={{this.resetFilters}}
-                @icon="arrow-rotate-left"
-                @label="filter_controls.reset"
-              />
-            {{/if}}
-          {{/unless}}
+          <DButton
+            class="btn-default d-filter-controls__reset"
+            @action={{this.resetFilters}}
+            @ariaLabel="filter_controls.reset"
+            @disabled={{not this.hasActiveFilters}}
+            @icon="arrow-rotate-left"
+            @title="filter_controls.reset"
+          />
         </div>
-
-        <DButton
-          class="btn-primary workflows-index__new-btn"
-          @action={{this.createWorkflow}}
-          @icon="plus"
-          @label="discourse_workflows.new_workflow"
-        />
       </div>
 
       {{#if this.resultSet.content.length}}
@@ -328,12 +334,12 @@ export default class WorkflowsIndex extends Component {
                 {{i18n "discourse_workflows.creator"}}
               </div>
               {{#if workflow.createdBy}}
-                <a
+                <DUserLink
                   class="workflows-index__creator-link"
-                  href={{workflow.createdBy.path}}
+                  @user={{workflow.createdBy}}
                 >
                   {{dAvatar workflow.createdBy imageSize="tiny"}}
-                </a>
+                </DUserLink>
               {{/if}}
             </td>
             <td class="d-table__cell --overview workflows-index__name">
@@ -378,13 +384,13 @@ export default class WorkflowsIndex extends Component {
                 {{i18n "discourse_workflows.last_editor"}}
               </div>
               {{#if workflow.updatedBy}}
-                <a
+                <DUserLink
                   class="workflows-index__last-editor-link"
-                  href={{workflow.updatedBy.path}}
+                  @user={{workflow.updatedBy}}
                 >
                   {{dAvatar workflow.updatedBy imageSize="tiny"}}
                   <span>{{workflow.updatedBy.username}}</span>
-                </a>
+                </DUserLink>
               {{/if}}
             </td>
             <td class="d-table__cell --detail workflows-index__last-update">

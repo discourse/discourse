@@ -7,6 +7,8 @@ export default class AdminSearchLogsTermController extends Controller {
   @service siteSettings;
 
   loading = false;
+
+  /** @type {string | null} */
   term = null;
   period = DEFAULT_PERIOD;
   searchType = "all";

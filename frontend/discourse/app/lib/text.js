@@ -35,6 +35,11 @@ export async function generateCookFunction(options) {
   return await withEngine("generateCookFunction", options);
 }
 
+/**
+ * Loads the markdown engine and returns its link matcher for `options`.
+ *
+ * @returns {Promise<import("discourse/lib/link-matcher").LinkMatcher>}
+ */
 export async function generateLinkifyFunction(options) {
   return await withEngine("generateLinkifyFunction", options);
 }
@@ -205,7 +210,7 @@ export function serializeBBCodeAttr(value, name) {
 /**
  * Builds a BBCode attributes string from an object of key-value pairs.
  *
- * @param {Object} attrs - Object containing attribute key-value pairs
+ * @param {Record<string, unknown>} attrs - Object containing attribute key-value pairs
  * @param {Object} [opts] - Options
  * @param {string[]} [opts.skipAttrs] - Array of attribute names to skip
  * @returns {string} The serialized attributes string (e.g., 'name=value foo="bar baz"')

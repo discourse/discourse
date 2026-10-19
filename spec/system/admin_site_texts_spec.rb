@@ -15,8 +15,8 @@ describe "Admin Site Texts Page" do
     expect(site_texts_page).to have_translation_key("js.skip_to_main_content")
     expect(site_texts_page).to have_translation_value(I18n.t("js.skip_to_main_content"))
 
-    site_texts_page.visit
     site_texts_page.search("js.skip_to_main_content")
+    expect(site_texts_page).to have_highlighted_translation_key("js.skip_to_main_content")
     expect(site_texts_page).to have_translation_key("js.skip_to_main_content")
     expect(site_texts_page).to have_translation_value(I18n.t("js.skip_to_main_content"))
   end
@@ -27,8 +27,8 @@ describe "Admin Site Texts Page" do
     expect(site_texts_page).to have_translation_key("themes.other_error")
     expect(site_texts_page).to have_translation_value(I18n.t("themes.other_error"))
 
-    site_texts_page.visit
     site_texts_page.search("themes.other_error")
+    expect(site_texts_page).to have_highlighted_translation_key("themes.other_error")
     expect(site_texts_page).to have_translation_key("themes.other_error")
     expect(site_texts_page).to have_translation_value(I18n.t("themes.other_error"))
   end
@@ -42,9 +42,8 @@ describe "Admin Site Texts Page" do
       I18n.t("js.skip_to_main_content", locale: "it"),
     )
 
-    site_texts_page.visit
-    site_texts_page.select_locale("it")
     site_texts_page.search("js.skip_to_main_content")
+    expect(site_texts_page).to have_highlighted_translation_key("js.skip_to_main_content")
     expect(site_texts_page).to have_translation_key("js.skip_to_main_content")
     expect(site_texts_page).to have_translation_value(
       I18n.t("js.skip_to_main_content", locale: "it"),

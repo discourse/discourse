@@ -14,11 +14,11 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import DiscoursePostEvent from "discourse/plugins/discourse-events/discourse/components/discourse-post-event";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
-import zoomFrameUrl from "../../lib/zoom-frame-url";
-import { isWithinEventTimeframe } from "../../models/discourse-post-event-event";
-import dismissKeyboardOnChatSend from "../../modifiers/dismiss-keyboard-on-chat-send";
-import zoomPageViewportFit from "../../modifiers/zoom-page-viewport-fit";
-import EmbeddableChatChannel from "./embeddable-chat-channel";
+import zoomFrameUrl from "../../lib/zoom-frame-url.js";
+import { isWithinEventTimeframe } from "../../models/discourse-post-event-event.js";
+import dismissKeyboardOnChatSend from "../../modifiers/dismiss-keyboard-on-chat-send.js";
+import zoomPageViewportFit from "../../modifiers/zoom-page-viewport-fit.js";
+import EmbeddableChatChannel from "./embeddable-chat-channel.gjs";
 
 const FRAME_MESSAGE_SOURCE = "discourse-zoom-frame";
 

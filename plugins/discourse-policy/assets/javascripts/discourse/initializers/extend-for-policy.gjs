@@ -2,7 +2,7 @@ import EmberObject from "@ember/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import PostPolicy from "../components/post-policy";
+import PostPolicy from "../components/post-policy.gjs";
 
 const SETTINGS = [
   { name: "groups" },

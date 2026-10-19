@@ -548,6 +548,10 @@ someone change a size, use one of the resize primitives above.
 drag with a keyboard path, and every resize between regions should use the
 keyboard support already in `DResizeSeparator` or `dResizeEdge`.
 
+**For a list the user puts in order, use `DReorderableList`.** It pairs the
+drag with a move menu and keyboard shortcuts, and it announces each completed
+move. See the [UI kit guide](02-ui-kit.md).
+
 **Announce the outcome, not the movement.** A completed reorder reports the
 item's new visible position once through `a11y.announce()`. A no-op announces
 nothing, and moving the pointer across drop indicators announces nothing.

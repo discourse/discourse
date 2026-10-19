@@ -5,6 +5,28 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  dsa_statements:
+    classification_note: "Sklasyfikowano tę decyzję o moderacji w celu raportowania DSA.\nZasada społeczności: %{ground}\nKategoria: %{category}"
+    errors:
+      statements_changed: "Oświadczenia zawarte w tej recenzji uległy zmianie. Odśwież stronę, aby zobaczyć ich aktualną klasyfikację."
+      failed: "Nie udało się zapisać klasyfikacji. Spróbuj ponownie."
+    categories:
+      STATEMENT_CATEGORY_ANIMAL_WELFARE: "Dobrostan zwierząt"
+      STATEMENT_CATEGORY_CONSUMER_INFORMATION: "Naruszenia informacji konsumenckich"
+      STATEMENT_CATEGORY_CYBER_VIOLENCE: "Cyberprzemoc"
+      STATEMENT_CATEGORY_CYBER_VIOLENCE_AGAINST_WOMEN: "Cyberprzemoc wobec kobiet"
+      STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS: "Ochrona danych i naruszenia prywatności"
+      STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH: "Nielegalna lub szkodliwa mowa"
+      STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS: "Naruszenia własności intelektualnej"
+      STATEMENT_CATEGORY_NEGATIVE_EFFECTS_ON_CIVIC_DISCOURSE_OR_ELECTIONS: "Negatywne skutki dla dyskursu obywatelskiego lub wyborów"
+      STATEMENT_CATEGORY_NOT_SPECIFIED_NOTICE: "Rodzaj rzekomo niezgodnej z prawem treści nie został określony przez osobę powiadamiającą"
+      STATEMENT_CATEGORY_OTHER_VIOLATION_TC: "Inne naruszenie warunków umowy"
+      STATEMENT_CATEGORY_PROTECTION_OF_MINORS: "Ochrona nieletnich"
+      STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY: "Ryzyko dla bezpieczeństwa publicznego"
+      STATEMENT_CATEGORY_SCAMS_AND_FRAUD: "Oszustwa i wyłudzenia"
+      STATEMENT_CATEGORY_SELF_HARM: "Samookaleczenie"
+      STATEMENT_CATEGORY_UNSAFE_AND_PROHIBITED_PRODUCTS: "Produkty niebezpieczne lub zakazane"
+      STATEMENT_CATEGORY_VIOLENCE: "Przemoc"
   markdown_endpoints:
     latest: "Najnowsze"
     categories: "Kategorie"
@@ -26,10 +48,34 @@ pl_PL:
       date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      category_create_failed: "Nie można utworzyć kategorii"
+      category_delete_confirmation_required: "Usunięcie kategorii musi zostać potwierdzone"
+      category_delete_name_mismatch: "Nazwa kategorii nie pasuje"
+      category_not_found: "Nie odnaleziono kategorii"
+      category_update_failed: "Nie można zaktualizować kategorii"
+      category_update_required: "Należy podać co najmniej jedno pole kategorii"
       draft_sequence_conflict: "Konflikt sekwencji roboczej"
       draft_too_long: "Szkic jest zbyt długi"
+      group_create_failed: "Nie udało się zaktualizować motywu"
+      group_delete_confirmation_required: "Usunięcie grupy musi zostać potwierdzone"
+      group_delete_name_mismatch: "Nazwa grupy nie pasuje"
+      group_member_selector_required: "Podaj dokładnie jedną z następujących nazw użytkowników: user_ids lub user_emails"
+      group_user_limit:
+        one: "Wybierz nie więcej niż %{count} użytkownika."
+        few: "Wybierz nie więcej niż %{count} użytkowników."
+        many: "Wybierz nie więcej niż %{count} użytkowników."
+        other: "Wybierz nie więcej niż %{count} użytkowników."
+      group_membership_request_not_found: "Ten użytkownik nie ma oczekującej prośby o członkostwo w grupie"
       group_not_found: "Grupa nie znaleziona"
       group_post_single_cursor: "Podaj before_post_id lub before, nie oba"
+      group_request_reason_required: "Aby poprosić o członkostwo w grupie, konieczne jest podanie powodu"
+      group_update_existing_users_required:
+        one: "Ta zmiana dotyczy również istniejącego %{count} członka. Wywołaj ponownie funkcję update_existing_users, aby zdecydować, czy zastosować ją do nich."
+        few: "Ta zmiana dotyczy również istniejących %{count} członków. Wywołaj ponownie funkcję update_existing_users, aby zdecydować, czy zastosować ją do nich."
+        many: "Ta zmiana dotyczy również istniejących %{count} członków. Wywołaj ponownie funkcję update_existing_users, aby zdecydować, czy zastosować ją do nich."
+        other: "Ta zmiana dotyczy również istniejących %{count} członków. Wywołaj ponownie funkcję update_existing_users, aby zdecydować, czy zastosować ją do nich."
+      group_update_failed: "Nie udało się zaktualizować grupy"
+      group_update_required: "Podaj co najmniej jedno pole grupy do aktualizacji"
       invalid_date: "Nieprawidłowa data"
       invalid_directory_period: "Nieprawidłowy okres katalogu"
       invalid_reply_mode: "Nieprawidłowy tryb odpowiedzi"
@@ -81,8 +127,10 @@ pl_PL:
       top_period_only_for_top_view: "Okres górny obsługiwany jest tylko przez widok górny"
       upload_not_found: "Nie znaleziono pliku do przesłania"
       upload_too_large: "Przesłany plik jest za duży"
-      user_update_required: "Podaj co najmniej jedno pole profilu do aktualizacji"
+      user_create_failed: "Nie udało się utworzyć użytkownika"
+      user_deactivation_pending_review: "Przed dezaktywacją konta sprawdź, czy konto tego użytkownika oczekuje na zatwierdzenie."
       user_not_found: "Użytkownik nie został znaleziony"
+      user_update_required: "Podaj co najmniej jedno pole profilu do aktualizacji"
     oauth:
       authorize_title: "Autoryzuj klienta MCP"
       client_request: "%{client_name} żąda dostępu do %{site_name}."
@@ -873,6 +921,8 @@ pl_PL:
         many: "Jednocześnie można dodać maksymalnie %{count} użytkowników"
         other: "Jednocześnie można dodać maksymalnie %{count} użytkowników"
       usernames_or_emails_required: "Nazwy użytkowników lub adresy e-mail muszą być obecne"
+      users_not_found: "Brak pasujących kont użytkowników: %{values}"
+      conflicting_notification_defaults: "Każda kategoria lub tag może mieć tylko jeden domyślny poziom powiadomień."
       cannot_add_emails: "Do dodawania członków do tej grupy można używać wyłącznie nazw użytkowników. Aby zaprosić e-mailem, użyj przycisku „Zaproś”."
       counting_too_many_email_domains:
         one: "Maksymalnie %{count} domena e-mail może być liczona jednocześnie"
@@ -2075,6 +2125,8 @@ pl_PL:
         total_users: "Łączna liczba aktywnych kont użytkowników"
       description: "Pokaż liczbę powiązanych kont pogrupowanych według dostawcy logowania. Dotyczy tylko sytuacji, gdy włączone są metody logowania społecznościowego."
   dashboard:
+    reports:
+      cap_reached: "Pulpit nawigacyjny pokazuje już maksymalną liczbę raportów: %{max}. Usuń jeden przed dodaniem kolejnego."
     problem:
       twitter_login: 'Wygląda na to, że logowanie przez Twittera obecnie nie działa. Sprawdź dane uwierzytelniające w <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">ustawieniach witryny</a>.'
       group_email_credentials: 'Wystąpił problem z poświadczeniami e-mail dla grupy <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Wiadomości e-mail nie będą wysyłane z grupowej skrzynki odbiorczej do czasu rozwiązania tego problemu. %{error}'
@@ -2127,6 +2179,7 @@ pl_PL:
   random_username:
     unavailable: "Nie udało się wygenerować losowej nazwy użytkownika. Sprawdź listy słów w losowej nazwie użytkownika w ustawieniach swojej witryny."
   site_settings:
+    dsa_community_rules: "Reguły społeczności są dostępne dla klasyfikacji DSA, gdy włączona jest opcja {{setting:dsa_reporting_enabled}} . Każda reguła wymaga dokładnego odniesienia umownego (do 500 znaków) oraz wyjaśnienia (do 2000 znaków). Pozostaw puste, aby wyłączyć klasyfikację."
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
     disabled: "wyłączone"
     display_local_time_in_user_card: "Wyświetl czas lokalny w oparciu o strefę czasową użytkownika po otwarciu karty użytkownika."
@@ -2660,7 +2713,7 @@ pl_PL:
     reviewable_default_visibility: "Nie pokazuj elementów, które można przeglądać, chyba że spełniają ten priorytet"
     reviewable_low_priority_threshold: "Filtr priorytetu ukrywa sprawdzalne elementy, które nie spełniają tego wyniku, chyba że zostanie użyty filtr „(dowolny)”."
     high_trust_flaggers_auto_hide_posts: "Nowe wpisy użytkowników są automatycznie ukryte po oznaczeniu ich jako spam przez użytkownika TL3 +"
-    allow_all_users_to_flag_illegal_content: "Anonimowi użytkownicy zobaczą informację, że muszą wysłać e-mail do administratorów, aby zgłosić nielegalne treści. To ustawienie ma pierwszeństwo przed ustawieniem {{setting:flag_post_allowed_groups}}."
+    allow_all_users_to_flag_illegal_content: "Pozwól każdemu zgłaszać nielegalne treści, w tym użytkownikom o poziomie zaufania 0 i wyciszonym. Anonimowi użytkownicy zobaczą informację, że muszą wysłać e-mail do administratorów, aby zgłosić nielegalne treści. To ustawienie ma pierwszeństwo przed {{setting:flag_post_allowed_groups}}."
     email_address_to_report_illegal_content: "Jeżeli pozostawisz to pole puste, zostanie użyty domyślny adres e-mail administratora witryny."
     cooldown_hours_until_reflag: "Ile czasu użytkownicy będą musieli poczekać, aż będą mogli zmienić etykietę wpisu"
     slow_mode_prevents_editing: "Czy „Tryb wolny” uniemożliwia edycję po {{setting:editing_grace_period}}?"
@@ -3018,8 +3071,9 @@ pl_PL:
     lazy_load_categories_groups: "Leniwie ładuj informacje o kategoriach tylko dla użytkowników z tych grup. Poprawia to wydajność w witrynach z wieloma kategoriami."
     enable_auto_grid_images: "Automatycznie zawija obrazy w tagi [grid], gdy w kompozytorze zostanie przesłane 3 lub więcej obrazów."
     enable_new_checkbox_style: "Włącz nowy styl pól wyboru dla pól wyboru FormKit."
-    enable_new_post_reactions_menu: "Włącz przeprojektowane menu polubień wpisów i reakcji, z nieskończonym przewijaniem i natywną obsługą mobilną."
     enable_composer_redesign: "Włącz przeprojektowany kompozytor."
+    enable_new_reordering_controls: "Użyj współdzielonych elementów sterujących kolejnością ustawień listy, list administracyjnych, kolumn katalogu użytkowników i łączy paska bocznego, zapewniając każdemu z nich ten sam uchwyt przeciągania, menu przenoszenia i obsługę klawiatury."
+    enable_main_outlet_grid_layout_change: "Umieść kompozytora wewnątrz głównej siatki układu, aby motywy mogły go umieścić w kolumnie siatki, i użyj węższego paska bocznego."
     enable_composer_toolbar_customization: "Umożliw członkom wybór, które przyciski będą wyświetlane na pasku narzędzi kompozytora, w preferencjach interfejsu."
     prioritize_recently_used_tags: "Podczas dodawania tagów podczas tworzenia lub edytowania tematu, na górze listy, przed najpopularniejszymi tagami na forum, wyświetlane są tagi, których dany członek ostatnio użył we własnych tematach."
     experimental_impersonation_time_limit_minutes: "Jak długo musi upłynąć, zanim sesja podszywania się zostanie automatycznie zakończona."
@@ -3080,6 +3134,7 @@ pl_PL:
     improved_crawler_detection: "Umożliwia ulepszone śledzenie robotów indeksujących, co pozwala na lepsze wykrywanie prawdopodobnych robotów i zapewnia dokładniejsze raportowanie ruchu sieciowego."
     enable_invite_modal_with_roles: "Umożliwia przeprojektowany proces zapraszania, który pozwala administratorom zapraszać kogoś bezpośrednio jako administratora. Zaproszona osoba staje się moderatorem po rejestracji, a administratorem po potwierdzeniu zaproszenia przez osobę zapraszającą e-mailem."
     update_pending_users_reminder_default: "Aktualizujemy domyślną wartość ustawienia {{setting:pending_users_reminder_delay_minutes}} na 30 minut, aby personel był szybko powiadamiany o oczekiwaniu na zatwierdzenie nowego członka. Jeśli to ustawienie zostało już wcześniej zmienione, ta zmiana nie będzie miała żadnego efektu."
+    update_whispers_allowed_groups_default: "Aktualizujemy domyślne ustawienie {{setting:whispers_allowed_groups}} , aby umożliwić pracownikom publikowanie szeptów. Jeśli to ustawienie zostało wcześniej zmienione, konfiguracja nie ulegnie zmianie, chyba że je zresetujesz."
     sidebar_user_navigation: "Przenosi nawigację po stronach użytkownika — profilu, aktywności, powiadomień, wiadomości, zaproszeń i preferencji — z poziomych pasków kart do dedykowanego panelu bocznego, podobnie jak w przypadku panelu administracyjnego. Na urządzeniach mobilnych panel jest dostępny z menu hamburgerowego."
     enable_generated_llms_txt: "Generuje zwięzły plik /llms.txt, gdy nie przesłano pliku niestandardowego. Dokument opisuje publiczne ścieżki odnajdywania, preferowany interfejs Discourse MCP oraz odpowiedzialny dostęp agenta. Aby dostroić automatyczny dostęp, skonfiguruj {{setting:slow_down_crawler_user_agents}} i {{setting:slow_down_crawler_rate}}."
     enable_markdown_endpoints: "Obsługiwane tematy i listy tematów są obsługiwane w formacie Markdown za pośrednictwem adresów URL .md i żądań z nagłówkiem Accept: text/markdown. Zawsze obowiązują standardowe zasady widoczności i prywatności profilu."
@@ -3174,6 +3229,7 @@ pl_PL:
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Nie można włączyć DiscourseConnect, jeśli wymuszono 2FA."
       delete_rejected_email_after_days: "To ustawienie nie może być niższe niż ustawienie delete_email_logs_after_days ani większe niż %{max}"
       invalid_uncategorized_category_setting: 'Kategorii „Bez kategorii” nie można wybrać, jeśli opcja ''allow uncategorized topics'' nie jest włączona.'
+      uncategorized_category_missing: "Nie można włączyć opcji „zezwól na tematy nieskategoryzowane”, ponieważ kategoria „Nieskategoryzowane” już nie istnieje."
       invalid_search_ranking_weights: "Wartość jest nieprawidłowa dla ustawienia witryny search_ranking_weights. Przykład: '{0.1,0.2,0.3,1.0}'. Należy pamiętać, że maksymalna wartość dla każdej wagi wynosi 1.0."
       content_localization_locale_limit: "Liczba obsługiwanych ustawień regionalnych nie może przekroczyć %{max}."
       content_localization_language_switcher_requirements: "Przełącznik języka wymaga włączenia opcji {{setting:allow_user_locale}} i ustawienia co najmniej jednego języka dla opcji {{setting:content_localization_supported_locales}} . {{settings:content_localization_language_switcher,allow_user_locale,content_localization_supported_locales|All required settings}}"
@@ -3526,6 +3582,7 @@ pl_PL:
     wrong_invite_code: "Wprowadzony kod zaproszenia był nieprawidłowy."
     reserved_username: "Niedozwolona nazwa użytkownika."
     missing_user_field: "Nie wypełniłeś wszystkich wymaganych pól użytkownika"
+    missing_user_field_details: "Uzupełnij wymagane pole użytkownika '%{name}' (ID: %{id})."
     missing_username: "Wpisz nazwę użytkownika"
     missing_full_name: "Wpisz swoje imię i nazwisko"
     auth_complete: "Uwierzytelnianie zostało zakończone."
@@ -3600,6 +3657,11 @@ pl_PL:
       must_end_with_alphanumeric: "musi kończyć się literą lub cyfrą"
       must_not_contain_two_special_chars_in_seq: "nie może zawierać sekwencji 2 lub więcej znaków specjalnych (.-_)"
       must_not_end_with_confusing_suffix: "nie może kończyć się w sposób wprowadzający w błąd, np. .json, .png itp."
+      contains_blocked_words:
+        one: "zawiera zablokowane „%{words}” słowo"
+        few: "zawiera zablokowane „%{words}” słowa"
+        many: "zawiera zablokowanych „%{words}” słów"
+        other: "zawiera zablokowanych „%{words}” słów"
     email:
       blank: "nie może być puste."
       invalid: "jest nieprawidłowy."
@@ -4921,6 +4983,16 @@ pl_PL:
         Jeśli nie wyłączyłeś uwierzytelniania dwuskładnikowego (2FA), ktoś mógł włamać się na Twoje konto.
 
         W razie pytań [skontaktuj się z naszą przyjazną obsługą] (%{base_url}/about).
+    account_associated:
+      title: "Nowe powiązane konto"
+      subject_template: "[%{email_prefix}] Nowe powiązane konto"
+      subject_template_improved: "Nowe powiązane konto"
+      text_body_template: |
+        Konto %{provider_name} zostało właśnie połączone z Twoim kontem w %{site_name}. Teraz możesz się na nie logować.
+
+        Jeśli to Ty, nie musisz nic więcej robić.
+
+        Jeśli to nie Ty, ktoś może mieć dostęp do Twojego konta. [Sprawdź powiązane konta](%{base_url}/my/preferences/account), [sprawdź istniejące sesje](%{base_url}/my/preferences/security) i rozważ zmianę hasła.
     digest:
       why: "Krótkie podsumowanie %{site_link} od %{since}"
       since_last_visit: "Od twojej ostatniej wizyty"
@@ -5936,6 +6008,11 @@ pl_PL:
         many: "Dostępne tylko w: %{category_names}"
         other: "Dostępne tylko w: %{category_names}"
       restricted_to_truncated: "Dostępne tylko w: %{category_names} i %{more_count} więcej"
+      required_tag_group:
+        one: 'Wybierz %{count} tag więcej z grupy tagów „%{tag_group_name}” przed użyciem tego tagu'
+        few: 'Wybierz %{count} tagi więcej z grupy tagów „%{tag_group_name}” przed użyciem tego tagu'
+        many: 'Wybierz %{count} tagów więcej z grupy tagów „%{tag_group_name}” przed użyciem tego tagu'
+        other: 'Wybierz %{count} tagów więcej z grupy tagów „%{tag_group_name}” przed użyciem tego tagu'
       synonym: 'Zamiast tego użyj „%{tag_name}”'
       has_synonyms: 'Nie można użyć "%{tag_name}", ponieważ zawiera synonimy.'
       one_tag_per_topic_group: 'Konflikty z „%{tag_names}” (dozwolony tylko jeden na temat)'
@@ -6102,6 +6179,7 @@ pl_PL:
     unknown: "nieznane"
     site_setting:
       update_existing_users: "zaktualizować istniejących użytkowników? %{value}"
+      missing_category_reset: "Przywrócono do wartości domyślnej, ponieważ kategoria, do której wskazywał (id %{category_id}), już nie istnieje."
     user_merged: "%{username} został scalony z tym kontem"
     user_delete_self: "Usunięte samodzielnie z %{url}"
     webhook_deactivation_reason: "Twój webhook został automatycznie zdezaktywowany. Otrzymaliśmy wiele błędnych odpowiedzi HTTP z statusem '%{status}'."

@@ -6,8 +6,7 @@ module DiscourseWorkflows
       I18N_SCOPE = "post_lifecycle"
       PROPERTIES = {
         **NodeType::TOPIC_TYPE_FILTER_PROPERTIES,
-        **NodeType::CATEGORY_FILTER_PROPERTIES,
-        **NodeType::TAG_FILTER_PROPERTIES,
+        **NodeType::TOPIC_SCOPE_FILTER_PROPERTIES,
       }.freeze
 
       OUTPUT_CONTRACTS = [
@@ -34,13 +33,8 @@ module DiscourseWorkflows
       end
 
       def matches?(trigger_ctx)
-        matches_topic_type?(topic, trigger_ctx.get_node_parameter("topic_type", "topics")) &&
-          matches_category_ids?(
-            topic.category_id,
-            category_ids_parameter(trigger_ctx),
-            include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-          ) &&
-          matches_tags?(topic, normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
+        matches_topic_type?(topic, trigger_ctx.get_node_parameter("topic_type")) &&
+          matches_topic_filters?(topic, trigger_ctx)
       end
 
       private

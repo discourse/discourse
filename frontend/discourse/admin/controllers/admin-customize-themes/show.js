@@ -95,7 +95,6 @@ export default class AdminCustomizeThemesShowController extends Controller {
       }),
       didConfirm: () => {
         const model = this.model;
-        model.setProperties({ recentlyInstalled: false });
         model.destroyRecord().then(() => {
           removeValueFromArray(this.allThemes, model);
           this.router.transitionTo("adminConfig.customize.themes");

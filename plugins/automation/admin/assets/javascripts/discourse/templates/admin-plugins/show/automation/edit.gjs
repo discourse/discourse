@@ -156,10 +156,6 @@ export default <template>
                 <AutomationField
                   @automation={{@controller.automation}}
                   @field={{field}}
-                  @saveAutomation={{fn
-                    @controller.saveAutomation
-                    @controller.automation
-                  }}
                 />
               {{/each}}
             {{/if}}
@@ -186,10 +182,6 @@ export default <template>
                     <AutomationField
                       @automation={{@controller.automation}}
                       @field={{field}}
-                      @saveAutomation={{fn
-                        @controller.saveAutomation
-                        @controller.automation
-                      }}
                     />
                   {{/each}}
                 </div>
@@ -199,11 +191,7 @@ export default <template>
             <div class="control-group">
               <DButton
                 class="btn-primary update-automation"
-                @action={{fn
-                  @controller.saveAutomation
-                  @controller.automation
-                  true
-                }}
+                @action={{fn @controller.saveAutomation true}}
                 @isLoading={{@controller.isUpdatingAutomation}}
                 @label="discourse_automation.update"
                 @type="submit"

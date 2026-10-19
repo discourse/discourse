@@ -9,6 +9,11 @@ class ReviewableUser < Reviewable
 
   after_create :retain_avatar_snapshot
 
+  def title_for_notification(user)
+    target&.username || payload&.dig("username") ||
+      I18n.t("js.review.user_label", locale: user.effective_locale)
+  end
+
   def self.payload_for(user)
     profile = user.user_profile
     avatar = user.uploaded_avatar
@@ -25,7 +30,10 @@ class ReviewableUser < Reviewable
   end
 
   def self.additional_args(params)
-    { reject_reason: params[:reject_reason], send_email: params[:send_email] != "false" }
+    ReviewableActionBuilder.penalty_args(params).merge(
+      reject_reason: params[:reject_reason],
+      send_email: params[:send_email] != "false",
+    )
   end
 
   def build_combined_actions(actions, guardian, args)
@@ -79,9 +87,24 @@ class ReviewableUser < Reviewable
   end
 
   def perform_remove_avatar(performed_by, args)
+    avatar = target.uploaded_avatar
     target.remove_avatar!(performed_by)
 
-    create_result(:success)
+    create_result(:success) { |result| result.removed_avatar = avatar }
+  end
+
+  def perform_silence_user(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
+    create_result(:success, :rejected)
+  end
+
+  def perform_suspend_user(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
+    create_result(:success, :rejected)
   end
 
   def perform_approve_user(performed_by, args)
@@ -193,6 +216,61 @@ class ReviewableUser < Reviewable
   end
 
   private
+
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    case action_id
+    when :suspend_user
+      user = target.reload
+
+      {
+        decision_facts: "The reviewed account was suspended.",
+        decision_account: "DECISION_ACCOUNT_SUSPENDED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_account_restriction:
+          (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
+        automated_detection:,
+        automated_decision:,
+      }.compact
+    when :silence_user
+      user = target.reload
+
+      {
+        decision_facts: "The reviewed account had its ability to participate restricted.",
+        decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_service_restriction:
+          (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
+        automated_detection:,
+        automated_decision:,
+      }.compact
+    when :delete_user, :delete_user_block
+      user = target
+      return unless user&.destroyed?
+
+      {
+        decision_facts: "The reviewed account was deleted.",
+        decision_account: "DECISION_ACCOUNT_TERMINATED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        automated_detection:,
+        automated_decision:,
+      }
+    when :remove_avatar
+      {
+        decision_facts: "The reviewed account's avatar was removed.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        content_type: ["CONTENT_TYPE_IMAGE"],
+        content_date: result.removed_avatar.created_at.to_date.iso8601,
+        automated_detection:,
+        automated_decision:,
+      }
+    end
+  end
 
   def retain_avatar_snapshot
     upload_id = payload&.dig("avatar_upload_id")

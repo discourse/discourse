@@ -23,10 +23,10 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
-import { tagNames, tagSuggestionParams } from "../lib/ai-helper-suggestions";
-import { showComposerAiHelper } from "../lib/show-ai-helper";
-import AiBlinkingAnimation from "./ai-blinking-animation";
-import AiIndicatorWave from "./ai-indicator-wave";
+import { tagNames, tagSuggestionParams } from "../lib/ai-helper-suggestions.js";
+import { showComposerAiHelper } from "../lib/show-ai-helper.js";
+import AiBlinkingAnimation from "./ai-blinking-animation.gjs";
+import AiIndicatorWave from "./ai-indicator-wave.gjs";
 
 async function requestSuggestion(url, data) {
   try {
@@ -229,14 +229,10 @@ export default class AiSearchDiscoveries extends Component {
       (agent) =>
         agent.id === parseInt(this.siteSettings?.ai_ask_ai_follow_up_agent, 10)
     );
-    const hasEnabledLlmBot = this.currentUser.ai_enabled_chat_bots?.some(
-      (bot) => !bot.is_agent && bot.username
-    );
-    const hasConversationRecipient = followUpAgent?.force_default_llm
-      ? followUpAgent.username
-      : hasEnabledLlmBot || followUpAgent?.username;
     const followUpAgentCanReceiveMessages =
-      followUpAgent?.allow_personal_messages && hasConversationRecipient;
+      followUpAgent?.allow_personal_messages &&
+      followUpAgent?.username &&
+      followUpAgent?.has_default_llm;
 
     return (
       (this.discobotDiscoveries.discovery?.length > 0 || this.hasSources) &&

@@ -11,12 +11,12 @@ import { and, not, or } from "discourse/truth-helpers";
 import DModal from "discourse/ui-kit/d-modal";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
-import BackgroundBlurManager from "../../lib/voice/background-blur";
+import BackgroundBlurManager from "../../lib/voice/background-blur.js";
 import {
   cameraConstraints,
   enumerateVideoDevices,
   SYSTEM_DEFAULT_DEVICE_ID,
-} from "../../lib/voice/media-devices";
+} from "../../lib/voice/media-devices.js";
 
 export default class VoiceVideoSettingsModal extends Component {
   @service voiceWebrtc;

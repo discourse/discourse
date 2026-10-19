@@ -14,7 +14,7 @@ import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { isGPTBot } from "../lib/ai-bot-helper";
+import { isGPTBot } from "../lib/ai-bot-helper.js";
 
 const DRAFT_KEY_PREFIX = "ai-bot-docked-draft-";
 
@@ -322,6 +322,8 @@ export default class AiBotDockedComposer extends Component {
     }
     const result = await this.aiBotDockedSubmit.submitReply({
       topicId: this.topicId,
+      agentId: this.topic.ai_agent_id,
+      llmModelId: this.topic.ai_llm_model_id,
       raw,
       uploads,
       inProgressUploadsCount,

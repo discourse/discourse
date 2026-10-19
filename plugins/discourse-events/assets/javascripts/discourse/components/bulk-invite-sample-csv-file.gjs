@@ -1,10 +1,7 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/ui-kit/d-button";
 
-@tagName("")
 export default class BulkInviteSampleCsvFile extends Component {
   @action
   downloadSampleCsv() {

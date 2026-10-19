@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::LockPost do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:post)
 
@@ -17,6 +17,21 @@ RSpec.describe DiscourseAi::Agents::Tools::LockPost do
   end
 
   let(:context) { DiscourseAi::Agents::BotContext.new }
+
+  it "previews the post and its locked state without exposing parameter IDs" do
+    preview = tool(post_id: post.id, locked: true, reason: "Preventing edits")
+
+    expect(preview.approval_title).to include(post.topic.title, post.url)
+    expect(preview.approval_changes).to eq(
+      [{ label: "Changing status:", before: "Unlocked", after: "Locked" }],
+    )
+    expect(preview.approval_parameters).to eq([])
+
+    post.update!(locked_by_id: Discourse.system_user.id)
+    expect(tool(post_id: post.id, locked: false).approval_changes).to eq(
+      [{ label: "Changing status:", before: "Locked", after: "Unlocked" }],
+    )
+  end
 
   it "locks the post when locked is true" do
     result = tool(post_id: post.id, locked: true, reason: "Preventing edits").invoke

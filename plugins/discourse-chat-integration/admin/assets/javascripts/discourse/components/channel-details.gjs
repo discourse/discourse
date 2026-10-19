@@ -8,9 +8,9 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
-import ChannelData from "./channel-data";
-import InlineChannelForm from "./inline-channel-form";
-import RuleRow from "./rule-row";
+import ChannelData from "./channel-data.gjs";
+import InlineChannelForm from "./inline-channel-form.gjs";
+import RuleRow from "./rule-row.gjs";
 
 export default class ChannelDetails extends Component {
   @service dialog;

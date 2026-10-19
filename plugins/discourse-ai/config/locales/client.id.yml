@@ -97,6 +97,11 @@ id:
       ai_decoded_transcript:
         type: "Tipe"
         error: "Gangguan"
+      discourse_workflows:
+        classify:
+          name: "Nama"
+          type: "Tipe"
+          type_score: "Skor"
       ai_tool_approval:
         loading: "Diproses..."
         tool: "Aksi"
@@ -233,6 +238,12 @@ id:
         save: "Simpan"
         edit: "Ubah"
         delete: "Hapus"
+      decision_models:
+        no_preset: "Tidak ada"
+        display_name: "Nama"
+        model: "Model"
+        edit: "Ubah"
+        delete: "Hapus"
       mcp_servers:
         name: "Nama"
         description: "Deskripsi"
@@ -307,6 +318,11 @@ id:
         semantic_search: "Topik (Semantik)"
         quick_search:
           suffix: "di semua topik dan posting dengan AI"
+      ai_artifact:
+        editor:
+          default: "Asal"
+          apply: "menerapkan"
+        filter_all: "Semua"
       ai_bot:
         llm: "Model:"
         pm_warning: "Pesan chatbot AI dipantau secara berkala oleh moderator."

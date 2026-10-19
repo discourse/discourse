@@ -12,7 +12,7 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DNavItem from "discourse/ui-kit/d-nav-item";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import SetupProvider from "../../../components/modal/setup-provider";
+import SetupProvider from "../../../components/modal/setup-provider.gjs";
 
 export default class DiscourseChatIntegrationProviders extends Component {
   @service router;

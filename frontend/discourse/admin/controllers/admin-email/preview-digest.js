@@ -8,8 +8,13 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 export default class AdminEmailPreviewDigestController extends Controller {
   @service dialog;
 
+  /** @type {string | null | undefined} */
   username = null;
+
+  /** @type {string | null} */
   lastSeen = null;
+
+  /** @type {string | null} */
   email = null;
 
   @computed("email")

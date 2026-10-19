@@ -1,6 +1,6 @@
 import Service, { service } from "@ember/service";
 import { CREATE_TOPIC } from "discourse/models/composer";
-import { buildEventSkeleton } from "../lib/raw-event-helper";
+import { buildEventSkeleton } from "../lib/raw-event-helper.js";
 
 // Matches an opening `[event` BBCode tag — `[event ` (with attributes) or
 // `[event]` (bare). Used to detect when the user has added/removed the block.

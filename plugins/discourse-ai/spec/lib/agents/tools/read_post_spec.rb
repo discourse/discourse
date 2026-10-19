@@ -14,7 +14,7 @@ RSpec.describe DiscourseAi::Agents::Tools::ReadPost do
         ```
       MARKDOWN
 
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
 
   before do

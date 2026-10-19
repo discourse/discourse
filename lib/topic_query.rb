@@ -462,8 +462,7 @@ class TopicQuery
     col_name = whisperer ? "highest_staff_post_number" : "highest_post_number"
 
     list.where("tu.last_read_post_number < topics.#{col_name}").where(
-      "COALESCE(tu.notification_level, :regular) >= :tracking",
-      regular: TopicUser.notification_levels[:regular],
+      "tu.notification_level >= :tracking",
       tracking: TopicUser.notification_levels[:tracking],
     )
   end

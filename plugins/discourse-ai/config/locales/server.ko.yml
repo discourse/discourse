@@ -33,6 +33,24 @@ ko:
           title: "백업"
       read_post:
         unknown_post: "글"
+      chat_tool_approval:
+        topic_states:
+          open: "열기"
+          closed: "닫힘"
+          active: "활성화 사용자"
+          deleted: "삭제됨"
+        solution_post: "게시물 #%{number}"
+        duration_label: "기간:"
+        user_duration:
+          other: "%{count}일"
+        posts_label: "글"
+        category_label: "카테고리"
+        category_fields:
+          name: "그룹명"
+          description: "내용"
+          color: "색상"
+        approve_label: "예"
+        reject_label: "아니오"
       tool_summary:
         search: "검색"
         time: "시간"

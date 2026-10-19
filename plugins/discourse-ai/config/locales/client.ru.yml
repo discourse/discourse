@@ -245,6 +245,12 @@ ru:
           agent_id: "Агент"
           mode: "Режим"
           select_agent: "Выберите агента..."
+        classify:
+          text: "Текст"
+          upload_ids: "Изображения"
+          name: "Название"
+          type: "Тип"
+          type_score: "Оценка"
       ai_tool_approval:
         loading: "Загрузка…"
         agent: "Агент"
@@ -752,6 +758,15 @@ ru:
         delete: "Удалить"
         embedding: "Встраивание"
         tool: "Инструмент"
+      decision_models:
+        no_preset: "Нет"
+        display_name: "Название"
+        model: "Модель"
+        provider: "Поставщик"
+        vision_enabled: "Поддерживает ввод изображений."
+        edit: "Изменить"
+        delete: "Удалить"
+        test: "Выполнить тест"
       mcp_servers:
         short_title: "Серверы MCP"
         name: "Название"
@@ -1012,9 +1027,23 @@ ru:
         quick_search:
           suffix: "во всех темах и публикациях с AI"
       ai_artifact:
+        editor:
+          version: "Версии"
+          default: "Домашнюю страницу"
+          option_on: "Включено"
+          option_off: "Выключено"
+          apply: "Применить"
         expand_view_label: "Расширить вид"
         collapse_view_label: "Выйти из полноэкранного режима (кнопка ESC или «Назад»)"
         click_to_run_label: "Запустить артефакт"
+        share: "Поделиться"
+        create_link: "Создать ссылку"
+        copied: "Скопировано в буфер"
+        copy_link: "Копировать ссылку"
+        copy_embed: "Скопировать код для вставки"
+        new_tab: "Показать в новой вкладке"
+        filter_all: "Все"
+        filter_standalone: "Обособленное"
       ai_bot:
         title: "AI-бот"
         agent: "Агент:"

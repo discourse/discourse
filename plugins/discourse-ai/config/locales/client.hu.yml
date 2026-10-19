@@ -53,6 +53,12 @@ hu:
       discourse_workflows:
         ai_agent:
           mode: "Mód"
+        classify:
+          text: "Szöveg"
+          upload_ids: "Képek"
+          name: "Név"
+          type: "Típus"
+          type_score: "Pontszám"
       ai_tool_approval:
         loading: "Betöltés…"
         tool: "Művelet"
@@ -232,6 +238,13 @@ hu:
         edit: "Szerkesztés"
         delete: "Törlés"
         embedding: "Beágyazás"
+      decision_models:
+        no_preset: "Egyik sem"
+        display_name: "Név"
+        provider: "Szolgáltató"
+        edit: "Szerkesztés"
+        delete: "Törlés"
+        test: "Teszt futtatása"
       mcp_servers:
         name: "Név"
         description: "Leírás"
@@ -311,6 +324,18 @@ hu:
         providers:
           google: "Google"
           fake: "Egyéni"
+      ai_artifact:
+        editor:
+          version: "Verzió"
+          default: "Alapértelmezett"
+          option_on: "Be"
+          option_off: "Ki"
+          apply: "Alkalmaz"
+        share: "Megosztás"
+        create_link: "Hivatkozás létrehozása"
+        copy_link: "Hivatkozás másolása"
+        filter_all: "Összes"
+        filter_standalone: "Önálló"
       ai_bot:
         debug_ai_modal:
           duration_label: "Időtartam:"

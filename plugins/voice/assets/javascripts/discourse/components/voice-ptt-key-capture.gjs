@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { modifier as modifierFn } from "ember-modifier";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import { humanKeyName } from "../lib/voice/ptt-utils";
+import { humanKeyName } from "../lib/voice/ptt-utils.js";
 
 const RESERVED_KEYS = new Set(["Escape", "Tab", "Enter"]);
 

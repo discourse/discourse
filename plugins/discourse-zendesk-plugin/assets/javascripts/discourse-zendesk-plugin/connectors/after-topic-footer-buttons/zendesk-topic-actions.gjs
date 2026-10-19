@@ -1,41 +1,46 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class ZendeskTopicActions extends Component {
-  init() {
-    super.init(...arguments);
-    const zendesk_id = this.topic.get("discourse_zendesk_plugin_zendesk_id");
+  @service currentUser;
+
+  @tracked dirty;
+  @tracked zendesk_id;
+  @tracked zendesk_url;
+
+  constructor() {
+    super(...arguments);
+    const zendesk_id = this.args.topic.get(
+      "discourse_zendesk_plugin_zendesk_id"
+    );
     if (zendesk_id && zendesk_id !== "") {
-      this.set("zendesk_id", zendesk_id);
+      this.zendesk_id = zendesk_id;
     }
-    this.setProperties({
-      zendesk_url: this.topic.get("discourse_zendesk_plugin_zendesk_url"),
-      valid_zendesk_credential: this.get(
-        "currentUser.discourse_zendesk_plugin_status"
-      ),
-    });
+    this.zendesk_url = this.args.topic.get(
+      "discourse_zendesk_plugin_zendesk_url"
+    );
+  }
+
+  get valid_zendesk_credential() {
+    return this.currentUser?.discourse_zendesk_plugin_status;
   }
 
   @action
   createZendeskIssue() {
-    let self = this;
-    self.set("dirty", true);
+    this.dirty = true;
     ajax("/zendesk-plugin/issues", {
       type: "POST",
       data: {
-        topic_id: this.get("topic").get("id"),
+        topic_id: this.args.topic.get("id"),
       },
     }).then((topic) => {
-      self.setProperties({
-        zendesk_id: topic.discourse_zendesk_plugin_zendesk_id,
-        zendesk_url: topic.discourse_zendesk_plugin_zendesk_url,
-      });
+      this.zendesk_id = topic.discourse_zendesk_plugin_zendesk_id;
+      this.zendesk_url = topic.discourse_zendesk_plugin_zendesk_url;
     });
   }
 

@@ -34,6 +34,8 @@ export default class UsersPopup extends Component {
   @tracked users = [];
   @tracked loading = false;
   @tracked canLoadMore = true;
+
+  /** @type {number | null} */
   @tracked bodyMinHeight = null;
 
   displayName = (user) => {

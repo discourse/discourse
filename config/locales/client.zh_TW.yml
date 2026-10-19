@@ -287,7 +287,6 @@ zh_TW:
       zh_CN:
         name: 簡體中文
     share:
-      topic_html: '話題：<span class="topic-title">%{topicTitle}</span>'
       post: "由@%{username}發布#%{postNumber}"
       close: "關閉"
       twitter: "分享至 X"
@@ -342,6 +341,12 @@ zh_TW:
     skip_to_last_reply: "跳至最後回覆"
     skip_to_top: "跳至頂端"
     skip_user_nav: "跳至個人檔案內容"
+    reorder:
+      remove: "移除 %{label}"
+      removed: "%{label}移除"
+      move_up: "上移"
+      move_down: "下移"
+      position: "%{position} / %{total}"
     emails_are_disabled: "管理員已停用了全域的外部信件功能。將不再寄出任何類型的電子郵件。"
     emails_are_disabled_no_smtp: "由於尚未設定 SMTP 伺服器，所有外寄電子郵件均已停用。無法傳送任何電子郵件。"
     emails_are_disabled_non_staff: "非員工用戶的外發電子郵件已被禁用。"
@@ -442,6 +447,8 @@ zh_TW:
     generic_error: "抱歉，發生錯誤。"
     generic_error_with_reason: "發生錯誤：%{error}"
     multiple_errors: "發生多個錯誤：%{errors}"
+    too_many_requests:
+      other: "你的操作過於頻繁。請等待 %{count} 秒後再試。"
     sign_up: "註冊"
     log_in: "登入"
     age: "年齡"
@@ -477,8 +484,6 @@ zh_TW:
     every_six_months: "每半年"
     max_of_count:
       other: "（最大 %{count}）"
-    character_count:
-      other: "%{count} 個字元"
     period_chooser:
       aria_label: "按期間篩選"
     related_messages:
@@ -822,6 +827,10 @@ zh_TW:
       title:
         search: "搜尋訊息"
         placeholder: "在這裡輸入訊息標題、網址或 ID"
+    dsa_statements:
+      category: "分類"
+      category_prompt: "選擇一個分類"
+      saving: "正在儲存..."
     review:
       show_more: "顯示更多"
       show_less: "顯示更少"
@@ -1075,10 +1084,21 @@ zh_TW:
         view_conversation: "查看私人訊息"
         note_added: "管理員備註"
         note_added_by: "管理員備註：%{username} · %{relativeDate}"
+        author_silenced_by: "作者已被 %{username} 禁言 · %{relativeDate}"
+        author_silenced_automatically: "作者已被自動禁言 · %{relativeDate}"
+        author_suspended_by: "作者已被 %{username} 停權 · %{relativeDate}"
+        author_suspended_automatically: "作者已被自動停權 · %{relativeDate}"
         no_events: "沒有可顯示的時間軸事件"
       author_penalty:
+        effect:
+          retains_silence: "作者仍會維持禁言狀態。"
+          retains_suspension: "作者仍會維持停權狀態。"
+          retains_silence_and_suspension: "作者仍會維持禁言及停權狀態。"
+          lifts_silence: "作者的禁言將會解除。"
         toast:
+          still_silenced: "%{username} 仍處於禁言狀態。"
           undo: "復原"
+          undone: "%{username} 的禁言已解除。"
       notes:
         add_note_description: "新增備註，為其他管理員提供背景資訊。"
         add_note_button: "新增備註"
@@ -1704,6 +1724,9 @@ zh_TW:
       external_links_in_new_tab: "在新分頁中開啟所有外部連結"
       enable_quoting: "允許引用劃記文字"
       enable_smart_lists: "在編輯器中編寫時啟用智慧型列表"
+      composer_toolbar:
+        title: "編輯器工具列"
+        instructions: "選擇要顯示在編輯器工具列上的按鈕。隱藏按鈕後仍可使用對應的鍵盤快捷鍵。"
       enable_markdown_monospace_font: "在撰寫器的 Markdown 模式中使用等寬字型"
       automatically_translate: "自動翻譯以其他語言撰寫的主題和貼文"
       content_languages:
@@ -2066,7 +2089,6 @@ zh_TW:
         upload_title: "上傳你的圖片"
         image_is_not_a_square: "警告：我們裁切了你的圖片，因為該圖片不是正方形的。"
         logo_small: "網站的小標誌。預設使用。"
-        use_custom: "或上傳自訂頭像："
       change_profile_background:
         title: "個人檔案標頭"
         instructions: "個人檔案標頭將會置中以及預設1110px的寬度。"
@@ -2597,6 +2619,10 @@ zh_TW:
       login_disabled: "在唯讀模式下不能登入"
       logout_disabled: "站點在只讀模式下無法登出。"
       signup_disabled: "網站處於唯讀模式時無法註冊。"
+    site_archived:
+      enabled: "此網站處於封存模式。你仍可繼續瀏覽，但回覆、按讚及其他操作已停用。"
+      enabled_anonymous: "此網站處於封存模式。你仍可繼續瀏覽或登入，但回覆、按讚及其他操作已停用。"
+      signup_disabled: "網站處於封存模式時無法註冊。"
     staff_writes_only_mode:
       enabled: "此網站處於管理人員專用模式。請繼續瀏覽，但回覆、按讚和其他操作僅限於管理人員。"
       enabled_anonymous: "此網站目前處於僅限工作人員模式。你仍可繼續瀏覽，但無法註冊，且只有工作人員可以登入。"
@@ -2631,7 +2657,6 @@ zh_TW:
       hide_forever: "不了"
       hidden_for_session: "好的，我們明天再問您。您也可以隨時使用「登入」來建立帳號。"
       intro: "你好！:heart_eyes: 看起來你挺喜歡這樣的討論，可是你還沒有註冊帳號。"
-      value_prop: "厭倦了捲動相同的貼文？當您建立帳號後，您就可以隨時回到您離開的地方。有了帳號，您也可以收到新回覆的通知、儲存書籤，以及使用讚來感謝他人。我們可以一起努力，讓這個社群變得更美好。 :heart:"
     offline_indicator:
       no_internet: "沒有網際網路連線。"
       refresh_page: "重新整理頁面"
@@ -2695,6 +2720,7 @@ zh_TW:
         approve: "批准"
         login: "登入"
     forgot_password:
+      code_instructions: "如果有符合的帳戶，我們已將驗證碼寄送至該帳戶的電子郵件地址。請輸入驗證碼以重設密碼。"
       title: "寄出密碼"
       action: "我忘了我的密碼"
       invite: "請輸入使用者名稱或電子郵件地址，我們將寄給你重設密碼的郵件。"
@@ -2739,7 +2765,14 @@ zh_TW:
       signup_instructions: "輸入你的電子郵件地址以加入此社群。我們會傳送一組代碼供你確認，之後即可開始使用！"
       user_fields_title: "即將完成"
       user_fields_instructions: "只需再提供幾項資料，即可完成帳戶建立。"
+      signup_details_title: "選擇你的使用者名稱和頭像"
       account_ready_continue: "繼續"
+      account_details_title: "完成帳戶建立"
+      account_details_instructions: "在提交帳戶供審核前，請先設定你在社群中顯示的個人資料。"
+      create_password_optional: "建立密碼（選填）"
+      submit_for_approval: "提交審核"
+      pending_approval_title: "你的帳戶正在等待核准。"
+      pending_approval_instructions: "你的帳戶須經工作人員核准後才能登入。核准後，我們會以電子郵件通知你。"
       username_label: "使用者名稱"
       username_placeholder: "選擇使用者名稱"
       regenerate_username: "建議一個隨機的使用者名稱"
@@ -2852,6 +2885,8 @@ zh_TW:
       social_login_available: "你也可以透過其他相同 email 的社交帳號登入。"
       your_email: "您帳號的電郵地址是 <b>%{email}</b>"
       accept_invite: "接受邀請"
+      send_code: "傳送代碼"
+      code_instructions: "我們會將一次性代碼寄送至 %{email}，以確認你的電子郵件地址。"
       success: "你的帳號已被建立，且您已經登入了。"
       name_label: "姓名"
       password_label: "密碼"
@@ -3205,8 +3240,7 @@ zh_TW:
       cancel_edit: "取消編輯"
       draft_saved: "草稿已儲存！"
       users_placeholder: "新增使用者或群組"
-      title_placeholder: "用一個簡短的句子來描述想討論的內容。"
-      title_placeholder_redesign: "標題"
+      title_placeholder: "標題"
       title_or_link_placeholder: "鍵入標題，或貼上一個連結在這裡"
       edit_reason_placeholder: "你為什麼做編輯?"
       topic_featured_link_placeholder: "在標題裡輸入連結"
@@ -3383,9 +3417,57 @@ zh_TW:
         visit: "開啟連結"
         remove_preview: "移除預覽"
         link_copied: "連結已複製！"
+      preview_node:
+        show_source: "顯示原始碼"
+        show_preview: "顯示預覽"
       table:
+        add_row: "新增列"
+        add_column: "新增欄"
+        insert_row_above: "在上方插入"
+        insert_header_above: "在上方插入標題列"
+        insert_row_below: "在下方插入"
+        insert_column_left: "在左側插入"
+        insert_column_right: "在右側插入"
+        duplicate_row: "複製列"
+        duplicate_column: "複製欄"
+        move_row_up: "將列上移"
+        move_row_down: "將列下移"
+        move_column_left: "將欄左移"
+        move_column_right: "將欄右移"
+        clear_contents: "清除內容"
+        delete_row: "刪除列"
+        delete_column: "刪除欄"
+        delete_table: "刪除表格"
+        align_left: "靠左對齊"
+        align_center: "置中對齊"
+        align_right: "靠右對齊"
+        row_actions: "第 %{number} 列的操作"
+        column_actions: "第 %{number} 欄的操作"
+        row_inserted: "已插入列"
+        header_inserted: "已插入標題列"
+        column_inserted: "已插入欄"
+        row_duplicated: "已複製列"
+        column_duplicated: "已複製欄"
+        row_moved_up: "已將列上移"
+        row_moved_down: "已將列下移"
+        column_moved_left: "已將欄左移"
+        column_moved_right: "已將欄右移"
+        contents_cleared: "已清除儲存格內容"
+        row_deleted: "已刪除列"
+        column_deleted: "已刪除欄"
+        table_deleted: "已刪除表格"
         alignment_left: "左側"
+        alignment_center: "中央"
         alignment_right: "右側"
+        alignment_changed: "已將欄內文字對齊至%{alignment}"
+        rows_added:
+          other: "已新增 %{count} 列"
+        columns_added:
+          other: "已新增 %{count} 欄"
+        rows_removed:
+          other: "已移除 %{count} 列"
+        columns_removed:
+          other: "已移除 %{count} 欄"
       unsupported_token: "富文字編輯器不支援此貼文使用的所有功能；系統將為你切換至 Markdown 編輯器。"
     notifications:
       tooltip:
@@ -3543,6 +3625,8 @@ zh_TW:
       full_page_title: "搜尋"
       results: "結果"
       no_results: "未找到任何結果。"
+      results_announcement:
+        other: "找到 %{count} 筆結果。"
       no_more_results: "沒有找到更多的結果。"
       post_format: "#%{post_number} %{username}"
       results_page: "'%{term}' 的搜尋結果"
@@ -3571,6 +3655,7 @@ zh_TW:
         search_field: "網站標題中的搜索欄位"
         search_icon: "搜索個人資料頭像附近的圖標"
       type:
+        label: "搜尋類型"
         default: "新發表的貼文"
         users: "使用者"
         categories: "分類"
@@ -4848,6 +4933,7 @@ zh_TW:
       no_description: "請為此分類新增描述。"
       change_in_category_topic: "編輯描述"
       latest_topics: "最新主題"
+      view_all_topics: "檢視所有主題 (%{number})"
       description_updated: "說明已更新"
       description_expand: "顯示更多"
       description_collapse: "顯示更少"
@@ -5139,6 +5225,7 @@ zh_TW:
       with_category: "%{filter} %{category} 話題"
       filter:
         title: "%{filter}的篩選結果"
+        results_for: "搜尋結果：%{query}"
         reset: "重設"
         button:
           label: "過濾"
@@ -5244,6 +5331,7 @@ zh_TW:
       image_load_error: '無法加載<a href="%url%">圖片</a>。'
     cannot_render_video: 由於您的瀏覽器不支援該編解碼器，因此無法顯示此視訊。
     invalid_video_url: 由於 URL 無效或無法使用，因此無法播放此視訊。
+    play_video: 播放影片
     keyboard_shortcuts_help:
       search_label: "搜尋快速鍵"
       search_placeholder: "依說明或按鍵組合搜尋快速鍵"
@@ -5366,8 +5454,6 @@ zh_TW:
         search_open: "開啟管理介面的搜尋"
         search_full_page: "開啟全頁管理搜尋"
     badges:
-      earned_n_times:
-        other: "授予徽章 %{count} 次"
       granted_on: "授予於%{date}"
       others_count:
         other: "授予他人 %{count} 次"
@@ -5402,7 +5488,10 @@ zh_TW:
       calendar: "行事曆"
       save_ics: "下載 .ics 文件"
       save_google: "新增至 Google 行事曆"
+      save_outlook: "新增至 Microsoft Outlook"
+      save_apple: "新增至 Apple 行事曆"
       remember: "不再詢問"
+      remember_explanation: "你可以稍後在個人資料的偏好設定中變更此選項。"
       download: "下載"
       default_calendar: "預設行事曆"
       default_calendar_instruction: "確定儲存日期時應使用哪個行事曆"
@@ -5480,6 +5569,8 @@ zh_TW:
         synonyms_hint: "使用上述標籤時，將以 %{baseTagName} 取代。"
         add_synonyms_confirm: "目前使用 %{synonymNames} 的所有位置都將改用 %{tagName}。確定要進行此變更嗎？"
       localization:
+        language: "標籤語言"
+        language_description: "此標籤名稱與說明的主要語言。"
         hint: "新增本地化名稱，讓不同語言的使用者看到不同的標籤名稱。"
         locale: "語系"
         name: "名稱"
@@ -6167,6 +6258,7 @@ zh_TW:
             use_preset: "設置"
             presets:
               custom: "客製"
+            automatic: "自動建立"
           authorizations:
             user: "使用者"
             scopes: "授予的作用域"
@@ -8087,8 +8179,8 @@ zh_TW:
           upload: "上傳"
           select_component: "選擇要上傳的資產（png、woff2 等…)"
           unsaved_changes_alert: "您尚未儲存變更的內容，您是否要棄用內容並繼續進行？"
-          unsaved_parent_themes: "您尚未將元件分配給主題，是否要繼續？"
           discard: "捨棄"
+          leave: "離開"
           stay: "保留"
           css_html: "自訂程式碼"
           edit_css_html: "編輯程式碼"

@@ -38,6 +38,27 @@ module("Unit | lib | discourse-workflows | summarizeOutputKey", function () {
     );
   });
 
+  test("uses the full path when derived leaves collide", function (assert) {
+    const rows = [
+      { aggregation: "count", field: "topic.id" },
+      { aggregation: "count", field: "user.id" },
+      { aggregation: "sum", field: "post.id" },
+    ];
+
+    assert.strictEqual(summarizeOutputKey(rows[0], rows), "count_topic_id");
+    assert.strictEqual(summarizeOutputKey(rows[1], rows), "count_user_id");
+    assert.strictEqual(summarizeOutputKey(rows[2], rows), "sum_id");
+  });
+
+  test("ignores rows with explicit names when checking collisions", function (assert) {
+    const rows = [
+      { aggregation: "count", field: "topic.id" },
+      { aggregation: "count", field: "user.id", output_field_name: "users" },
+    ];
+
+    assert.strictEqual(summarizeOutputKey(rows[0], rows), "count_id");
+  });
+
   test("drops the trailing underscore when there is no field", function (assert) {
     assert.strictEqual(summarizeOutputKey({ aggregation: "count" }), "count");
     assert.strictEqual(

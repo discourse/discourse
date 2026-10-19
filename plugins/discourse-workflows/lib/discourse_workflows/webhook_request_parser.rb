@@ -5,8 +5,6 @@ module DiscourseWorkflows
     MAX_BODY_SIZE = 1.megabyte
     BODY_TOO_LARGE_ERROR = "Request body too large"
 
-    FILTERED_HEADERS = %w[authorization cookie proxy-authorization].to_set.freeze
-
     RACK_UNPREFIXED_HEADERS = {
       "CONTENT_TYPE" => "content-type",
       "CONTENT_LENGTH" => "content-length",
@@ -38,7 +36,7 @@ module DiscourseWorkflows
           header_name = normalize_header_name(key)
           next unless header_name
 
-          headers[header_name] = FILTERED_HEADERS.include?(header_name) ? "[FILTERED]" : value.to_s
+          headers[header_name] = value.to_s
         end
     end
 
