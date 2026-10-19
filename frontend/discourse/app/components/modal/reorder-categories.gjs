@@ -30,6 +30,8 @@ export default class ReorderCategories extends Component {
 
   @tracked changed = false;
   @tracked entries = this.reorder();
+
+  /** @type {number | null} */
   @tracked highlightedCategoryId = null;
 
   get sortedEntries() {

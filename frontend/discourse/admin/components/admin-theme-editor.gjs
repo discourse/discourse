@@ -41,6 +41,7 @@ export default class AdminThemeEditor extends Component {
   @tracked showAdvanced;
   currentTargetName;
 
+  /** @type {string | false | null} */
   warning = null;
 
   @computed("fieldName", "currentTargetName", "theme")

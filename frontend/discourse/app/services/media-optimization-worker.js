@@ -31,8 +31,13 @@ export default class MediaOptimizationWorkerService extends Service {
   @service currentUser;
   @service siteSettings;
 
+  /** @type {Worker | null} */
   worker = null;
+
+  /** @type {import("@uppy/core").UppyFile<import("@uppy/core").Meta, import("@uppy/core").Body> | null} */
   currentComposerUploadData = null;
+
+  /** @type {Record<string, (file?: File) => void> | null} */
   promiseResolvers = null;
   workerDoneCount = 0;
   workerPendingCount = 0;

@@ -18,10 +18,16 @@ import SelectedChoiceColor from "./selected-choice-color.js";
 })
 @pluginApiIdentifiers("list-setting")
 export default class ListSetting extends MultiSelectComponent {
+  /** @type {(string | { id?: string | number, name?: string, value?: string | number, label?: string, color?: string })[] | null | undefined} */
   choices = null;
+
+  /** @type {string | null | undefined} */
   nameProperty = null;
+
+  /** @type {string | null | undefined} */
   valueProperty = null;
 
+  /** @returns {ListSetting["choices"]} */
   @computed("choices")
   get content() {
     return this.choices;

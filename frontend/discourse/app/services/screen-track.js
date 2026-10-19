@@ -32,13 +32,21 @@ export default class ScreenTrack extends Service {
 
   _ajaxFailures = 0;
   _consolidatedTimings = [];
+
+  /** @type {number | null} */
   _lastTick = null;
+
+  /** @type {number | null} */
   _lastScrolled = null;
   _lastFlush = 0;
   _timings = new Map();
   _totalTimings = new Map();
   _topicTime = 0;
+
+  /** @type {number[] | null} */
   _onscreen = null;
+
+  /** @type {number[] | null} */
   _readOnscreen = null;
   _readPosts = new Set();
   _inProgress = false;

@@ -13,13 +13,34 @@ const EMPTY_SEGMENT = Object.freeze({
   value: null,
 });
 
+/**
+ * @typedef {{ name: string, description: string }} FilterOptionModifier
+ * @typedef {{ id: number, name: string, slug: string }} FilterCategory
+ * @typedef {object} FilterTip
+ * @property {string} name
+ * @property {string} description
+ * @property {string} [alias]
+ * @property {number} [priority]
+ * @property {string} [type]
+ * @property {number} [min]
+ * @property {FilterOptionModifier[]} [prefixes]
+ * @property {FilterOptionModifier[]} [delimiters]
+ * @property {FilterOptionModifier[]} [extra_entries]
+ * @typedef {object} FilterSuggestion
+ * @property {string} name
+ * @property {string} [description]
+ * @property {string} [term]
+ * @property {boolean} [isSuggestion]
+ * @property {FilterCategory} [category]
+ * @property {FilterOptionModifier[]} [delimiters]
+ */
 export default class FilterSuggestions {
   /**
    * Main entry point - takes raw input text and available tips, returns suggestions
    * @param {string} text - The full input text from the user
-   * @param {Array} tips - Available filter tips from the server
-   * @param {Object} context - Additional context (site data, etc.)
-   * @returns {Object} { suggestions: Array, activeFilter: string|null }
+   * @param {FilterTip[]} [tips] - Available filter tips from the server
+   * @param {{ site?: { categories?: FilterCategory[] } }} [context] - Additional context (site data, etc.)
+   * @returns {Promise<{ suggestions: Array<FilterTip | FilterSuggestion>, activeFilter: string | null }>}
    */
   static async getSuggestions(text, tips = [], context = {}) {
     const lastSegment = parseLastSegment(text);

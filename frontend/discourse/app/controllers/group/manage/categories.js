@@ -2,6 +2,7 @@ import Controller from "@ember/controller";
 import { computed } from "@ember/object";
 
 export default class GroupManageCategoriesController extends Controller {
+  /** @returns {import("discourse/models/category").default[]} */
   @computed(
     "model.watchingCategories.[]",
     "model.watchingFirstPostCategories.[]",

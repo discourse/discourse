@@ -31,7 +31,10 @@ export default class FormTemplateFieldWrapper extends Component {
   @service composer;
   @service siteSettings;
 
+  /** @type {unknown} */
   @tracked error = null;
+
+  /** @type {unknown} */
   @tracked parsedTemplate = null;
 
   initialValues = this.args.initialValues ?? {};

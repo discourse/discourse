@@ -19,6 +19,8 @@ export default class AdminDashboardGeneralController extends AdminDashboardTabCo
   @service exception;
 
   isLoading = false;
+
+  /** @type {Date | null} */
   dashboardFetchedAt = null;
 
   @staticReport("users_by_type") usersByTypeReport;

@@ -18,6 +18,8 @@ export default class UserNavSidebarStateManager extends Service {
    * Where the viewer was before they opened a user's admin page. Captured on
    * arrival rather than read from history as they go, so that moving between
    * that page's own tabs doesn't rewrite where they came from.
+   *
+   * @type {string | null}
    */
   @tracked entryURL = null;
 

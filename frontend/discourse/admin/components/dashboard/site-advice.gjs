@@ -15,6 +15,8 @@ export default class DashboardSiteAdvice extends Component {
   @service currentUser;
 
   @tracked refreshing = false;
+
+  /** @type {number | null} */
   @tracked ignoringId = null;
 
   get sortedProblems() {

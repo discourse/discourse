@@ -11,6 +11,38 @@ import Category from "discourse/models/category";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef {Object} CategoryBadgeCategory
+ * @property {number | string} [id]
+ * @property {string} [name]
+ * @property {string | null} [slug]
+ * @property {string | null} [color]
+ * @property {string | null} [textColor]
+ * @property {string | null} [style_type]
+ * @property {string | null} [icon]
+ * @property {string | null} [emoji]
+ * @property {boolean} [read_restricted]
+ * @property {number | null} [parent_category_id]
+ * @property {CategoryBadgeCategory | null} [parentCategory]
+ */
+
+/**
+ * @typedef {Object} CategoryBadgeOptions
+ * @property {String}  [url] The url that we want the category badge to link to.
+ * @property {Boolean} [allowUncategorized] If false, returns an empty string for the uncategorized category.
+ * @property {boolean | "false"} [link] If false, the category badge will not be a link.
+ * @property {Boolean} [hideParent] If true, parent category will be hidden in the badge.
+ * @property {Boolean} [previewColor] If true, category color will be set as an inline style.
+ * @property {CategoryBadgeCategory[]} [ancestors] The ancestors of the category to generate the badge for.
+ * @property {String}  [styleType] Badge style, either "icon", "emoji" or "square" (default).
+ * @property {String}  [emoji] The emoji to use for the badge (if styleType is "emoji").
+ * @property {String}  [icon] The icon to use for the badge (if styleType is "icon").
+ * @property {string} [extraClasses] Additional wrapper classes.
+ * @property {number} [topicCount] Topic count displayed after the badge.
+ * @property {boolean} [hasSubcategories] Whether to display the subcategory indicator.
+ * @property {boolean} [readOnly] Whether to display the read-only indicator.
+ */
+
 let _renderer = defaultCategoryLinkRenderer;
 
 export function replaceCategoryLinkRenderer(fn) {
@@ -26,17 +58,9 @@ export function addExtraIconRenderer(renderer) {
 /**
   Generates category badge HTML
 
-  @param {Object} category The category to generate the badge for.
-  @param {Object} opts
-    @param {String}  [opts.url] The url that we want the category badge to link to.
-    @param {Boolean} [opts.allowUncategorized] If false, returns an empty string for the uncategorized category.
-    @param {Boolean} [opts.link] If false, the category badge will not be a link.
-    @param {Boolean} [opts.hideParent] If true, parent category will be hidden in the badge.
-    @param {Boolean} [opts.previewColor] If true, category color will be set as an inline style.
-    @param {Array}   [opts.ancestors] The ancestors of the category to generate the badge for.
-    @param {String}  [opts.styleType] Badge style, either "icon", "emoji" or "square" (default).
-    @param {String}  [opts.emoji] The emoji to use for the badge (if styleType is "emoji").
-    @param {String}  [opts.icon] The icon to use for the badge (if styleType is "icon").
+  @param {CategoryBadgeCategory | null} [category] The category to generate the badge for.
+  @param {CategoryBadgeOptions | null} [opts]
+  @returns {string}
 **/
 export function categoryBadgeHTML(category, opts) {
   const { site, siteSettings } = helperContext();

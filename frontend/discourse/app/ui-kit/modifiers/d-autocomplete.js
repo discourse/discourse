@@ -25,6 +25,27 @@ export const EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP =
   /[\s.…?,@/#!%&*;:\[\]{}=\-_()+]/;
 
 /**
+ * @template [T=unknown]
+ * @typedef {Object} AutocompleteOptions
+ * @property {string} [key]
+ * @property {(term: string) => T[] | "skip" | "__CANCELLED" | null | undefined | PromiseLike<T[] | "skip" | "__CANCELLED" | null | undefined>} [dataSource]
+ * @property {(data: { options: T[] }) => string} [template]
+ * @property {unknown} [component]
+ * @property {(result: T, event: Event | undefined) => string | null | undefined | PromiseLike<string | null | undefined>} [transformComplete]
+ * @property {(text: string, event: Event | undefined) => void} [afterComplete]
+ * @property {boolean} [debounced]
+ * @property {boolean} [preserveKey]
+ * @property {boolean} [autoSelectFirstSuggestion]
+ * @property {(element: HTMLElement, context: { backSpace?: boolean, inCodeBlock: () => boolean | Promise<boolean>, inLink: () => boolean | Promise<boolean> }) => boolean | undefined | PromiseLike<boolean | undefined>} [triggerRule]
+ * @property {(text: string, caretPosition: number) => string[] | null | undefined} [onKeyUp]
+ * @property {boolean} [fixedTextareaPosition]
+ * @property {number} [offset]
+ * @property {boolean} [forceRefresh]
+ * @property {(results: T[]) => void} [onRender]
+ * @property {() => void} [onClose]
+ */
+
+/**
  * Class-based modifier for adding autocomplete functionality to input elements
  * Preserves exact CSS structure for backward compatibility
  *
@@ -47,10 +68,11 @@ export default class DAutocompleteModifier extends Modifier {
   /**
    * Static helper function to set up autocomplete on any element
    *
-   * @param {Object} owner - Ember owner
+   * @template T
+   * @param {import("@ember/owner").default} owner - Ember owner
    * @param {HTMLElement} element - The element to modify with autocomplete functionality
-   * @param {Object} autocompleteHandler - Handler for text operations
-   * @param {Object} options - Autocomplete options
+   * @param {import("discourse/lib/composer/text-manipulation").AutocompleteHandler} autocompleteHandler - Handler for text operations
+   * @param {AutocompleteOptions<T>} options - Autocomplete options
    */
   static setupAutocomplete(owner, element, autocompleteHandler, options) {
     const modifier = new DAutocompleteModifier(owner, {
@@ -75,13 +97,22 @@ export default class DAutocompleteModifier extends Modifier {
   @tracked results = [];
   @tracked selectedIndex = -1;
   @tracked searchTerm = "";
+
+  /** @type {number | null} */
   @tracked completeStart = null;
+
+  /** @type {number | null} */
   @tracked completeEnd = null;
   @tracked pendingSpaceSearch = false;
 
   // Internal state
+  /** @type {string | null} */
   previousTerm = null;
+
+  /** @type {import("@ember/runloop").Timer | null} */
   debouncedSearch = null;
+
+  /** @type {HTMLElement | null} */
   targetElement = null;
 
   // Constants

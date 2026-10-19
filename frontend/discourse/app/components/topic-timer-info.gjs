@@ -18,11 +18,22 @@ export default class TopicTimerInfo extends Component {
   clockIcon = trustHTML(`${iconHTML("far-clock")}`);
   trashLabel = i18n("post.controls.remove_timer");
 
+  /** @type {import("@ember/template").TrustedHTML | null} */
   title = null;
+
+  /** @type {import("@ember/template").TrustedHTML | null} */
   notice = null;
+
+  /** @type {boolean | null} */
   showTopicTimer = null;
+
+  /** @type {(() => void) | null | undefined} */
   showTopicTimerModal = null;
+
+  /** @type {(() => void) | null | undefined} */
   removeTopicTimer = null;
+
+  /** @type {import("@ember/runloop").Timer | null} */
   _delayedRerender = null;
 
   @computed("currentUser.canSetTopicTimer")

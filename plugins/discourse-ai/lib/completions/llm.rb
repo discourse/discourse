@@ -280,13 +280,13 @@ module DiscourseAi
               maximum: max_tokens || llm_model.max_output_tokens.presence || work.remaining,
             )
           if helper_options[:max_tokens] && helper_options[:max_tokens] <= 0
-            raise ContextPreparation::Error.new("turn_budget_exhausted")
+            raise ContextPreparation::Error.new("turn_budget_exhausted", prompt: prompt)
           end
           _, _, provider_output = prompt_capacity(prompt, **helper_options)
           generation_reservation =
             work.reserve_generation_output(provider_output, max_tokens: helper_options[:max_tokens])
           if !execution_context.work_execution_state.reserve_completion
-            raise ContextPreparation::Error.new("completion_limit")
+            raise ContextPreparation::Error.new("completion_limit", prompt: prompt)
           end
           model_params[:max_tokens] = helper_options[:max_tokens] if helper_options[:max_tokens]
         end
@@ -314,9 +314,10 @@ module DiscourseAi
           if capacity <= 0
             raise ContextPreparation::Error.new(
                     max_prompt_tokens.to_i <= 0 ? "unknown_capacity" : "hard_overflow",
+                    prompt: prompt,
                   )
           end
-          raise ContextPreparation::Error.new("hard_overflow") if size > capacity
+          raise ContextPreparation::Error.new("hard_overflow", prompt: prompt) if size > capacity
         end
 
         call_context = execution_context&.dup
@@ -506,7 +507,10 @@ module DiscourseAi
             .each do |upload|
               if upload[:kind] == :document && upload[:text].blank?
                 if dialect.is_a?(Dialects::Converse) || dialect.is_a?(Dialects::Command)
-                  raise ContextPreparation::Error.new("unsupported_document_provider")
+                  raise ContextPreparation::Error.new(
+                          "unsupported_document_provider",
+                          prompt: prompt,
+                        )
                 end
                 attachment_tokens += document_capacity_tokens(upload)
               elsif upload[:kind] == :image

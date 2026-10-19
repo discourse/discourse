@@ -28,7 +28,11 @@ export default class PublishPageModal extends Component {
   @service store;
 
   @tracked state = States.initializing;
+
+  /** @type {string | null | undefined} */
   @tracked reason = null;
+
+  /** @type {import("discourse/models/published-page").default | null} */
   @tracked publishedPage = null;
 
   constructor() {

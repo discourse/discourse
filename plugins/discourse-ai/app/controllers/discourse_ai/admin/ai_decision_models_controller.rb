@@ -10,7 +10,8 @@ module DiscourseAi
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARgAAAEYCAMAAACwUBm+AAAAA1BMVEX/AAAZ4gk3AAAAYklEQVR42u3BAQEAAACCIP+vbkhAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHwaM2cAAalku0EAAAAASUVORK5CYII="
 
       def index
-        decision_models = DecisionModel.order(:display_name)
+        decision_models =
+          DecisionModel.includes(:decision_model_credit_allocation).order(:display_name)
 
         render json: {
                  ai_decision_models:
@@ -56,6 +57,7 @@ module DiscourseAi
 
       def update
         decision_model = DecisionModel.find(params[:id])
+        return render_seeded_error if decision_model.seeded?
         initial_attributes = decision_model.attributes.dup
 
         if decision_model.update(decision_model_params)
@@ -74,6 +76,7 @@ module DiscourseAi
 
       def destroy
         decision_model = DecisionModel.find(params[:id])
+        return render_seeded_error if decision_model.seeded?
 
         details =
           decision_model
@@ -152,6 +155,10 @@ module DiscourseAi
       end
 
       private
+
+      def render_seeded_error
+        render_json_error(I18n.t("discourse_ai.decision_models.cannot_modify_seeded"), status: 403)
+      end
 
       def decision_model_params
         input = params.require(:ai_decision_model)

@@ -384,6 +384,12 @@ export default class NodeConfigurator extends Component {
 
   @action
   scheduleSave() {
+    if (this.saveStatus === "saved" && this.isDirty) {
+      this.#cancelSavedTimers();
+      this.saveStatus = null;
+      this.isSaveStatusFading = false;
+    }
+
     cancel(this.autosaveTimer);
     this.autosaveTimer = later(() => {
       this.#saveConfiguration({ throwOnError: true }).catch(() => {

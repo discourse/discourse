@@ -41,7 +41,10 @@ class PrecompiledBundle
     installed = Rails.root.join("node_modules/.pnpm/lock.yaml")
     lockfile = Rails.root.join("pnpm-lock.yaml")
 
-    return if File.exist?(installed) && File.read(installed) == File.read(lockfile)
+    # pnpm copies only the last document of the lockfile into node_modules
+    if File.exist?(installed) && File.read(installed) == File.read(lockfile).split(/^---\n/).last
+      return
+    end
 
     raise <<~MSG.squish
       Cannot build #{@filename_prefix}: node_modules is missing or out of date.

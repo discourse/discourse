@@ -7,6 +7,15 @@ import dUniqueId from "discourse/ui-kit/helpers/d-unique-id";
 import I18n, { i18n, I18nMissingInterpolationArgument } from "discourse-i18n";
 
 /**
+ * @typedef {Object} TranslationPlaceholders
+ * @property {Map<string, string[]>} appearance
+ * @property {Map<string, HTMLSpanElement[]>} elements
+ * @property {Map<string, string>} keys
+ * @property {string[]} rendered
+ * @property {(string | HTMLSpanElement)[]} parts
+ */
+
+/**
  * Provides the ability to interpolate both strings and components into translatable strings.
  * This component allows for complex i18n scenarios where you need to embed interactive
  * components within translated text.
@@ -51,7 +60,7 @@ export default class DInterpolatedTranslation extends Component {
   /**
    * Processes the translation string and returns all of the rendering data.
    *
-   * @returns {Object}
+   * @returns {TranslationPlaceholders}
    */
   get textAndPlaceholders() {
     const optionsArg = this.args.options || {};
@@ -147,7 +156,7 @@ export default class DInterpolatedTranslation extends Component {
   /**
    * Checks for any mismatches between the placeholders expected, and those provided.
    *
-   * @param {Object} info The rendering object returned by textAndPlaceholders().
+   * @param {TranslationPlaceholders} info The rendering object returned by textAndPlaceholders().
    */
   @action
   checkPlaceholders(info) {

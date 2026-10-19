@@ -1221,6 +1221,7 @@ pl_PL:
         description: "Modele, które odpowiadają na pytania dotyczące treści (tak/nie, wybór, wynik) z prawdopodobieństwem, szybciej i taniej niż LLM."
         create_new: "Nowy model decyzyjny"
         no_decision_models: "Brak jeszcze modeli decyzyjnych"
+        seeded_description: "Model wstępnie skonfigurowany"
         manage: "Zarządzaj modelami decyzyjnymi"
         back: "Powrót do modeli decyzyjnych"
         start_from: "Zacznij od"

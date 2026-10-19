@@ -545,7 +545,7 @@ RSpec.describe NotificationsController do
                 notification_type: Notification.types[:mentioned],
                 topic: post.topic,
               )
-            expect(mention_notification.data_hash[:display_name]).to eq(mentioner.name)
+            expect(mention_notification.data_hash).not_to have_key(:display_name)
 
             get "/notifications.json"
 

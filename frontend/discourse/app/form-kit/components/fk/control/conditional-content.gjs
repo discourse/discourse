@@ -25,6 +25,7 @@ const Contents = <template>
 </template>;
 
 export default class FKControlConditionalContent extends Component {
+  /** @type {string | null | undefined} */
   @tracked manuallySetName = null;
   // Bumped after `onChange` settles to re-sync the radios with `activeName`,
   // so a rejected change doesn't leave the clicked radio selected.

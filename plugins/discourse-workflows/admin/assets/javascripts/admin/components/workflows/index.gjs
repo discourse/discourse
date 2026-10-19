@@ -19,6 +19,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DMultiSelect from "discourse/ui-kit/d-multi-select";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DUserLink from "discourse/ui-kit/d-user-link";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
@@ -333,12 +334,12 @@ export default class WorkflowsIndex extends Component {
                 {{i18n "discourse_workflows.creator"}}
               </div>
               {{#if workflow.createdBy}}
-                <a
+                <DUserLink
                   class="workflows-index__creator-link"
-                  href={{workflow.createdBy.path}}
+                  @user={{workflow.createdBy}}
                 >
                   {{dAvatar workflow.createdBy imageSize="tiny"}}
-                </a>
+                </DUserLink>
               {{/if}}
             </td>
             <td class="d-table__cell --overview workflows-index__name">
@@ -383,13 +384,13 @@ export default class WorkflowsIndex extends Component {
                 {{i18n "discourse_workflows.last_editor"}}
               </div>
               {{#if workflow.updatedBy}}
-                <a
+                <DUserLink
                   class="workflows-index__last-editor-link"
-                  href={{workflow.updatedBy.path}}
+                  @user={{workflow.updatedBy}}
                 >
                   {{dAvatar workflow.updatedBy imageSize="tiny"}}
                   <span>{{workflow.updatedBy.username}}</span>
-                </a>
+                </DUserLink>
               {{/if}}
             </td>
             <td class="d-table__cell --detail workflows-index__last-update">
