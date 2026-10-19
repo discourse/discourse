@@ -1,10 +1,9 @@
-import AiDecisionModelEditorForm from "../../../../components/ai-decision-model-editor-form.gjs";
+import AiDecisionModelEditor from "../../../../components/ai-decision-model-editor.gjs";
 
 export default <template>
-  <section class="admin-detail">
-    <AiDecisionModelEditorForm
-      @decisionModels={{@controller.allDecisionModels}}
-      @model={{@controller.model}}
-    />
-  </section>
+  <AiDecisionModelEditor
+    @decisionModels={{@controller.allDecisionModels}}
+    @model={{@controller.model}}
+    @preset={{@controller.preset}}
+  />
 </template>
