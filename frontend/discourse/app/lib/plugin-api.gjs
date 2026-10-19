@@ -482,7 +482,8 @@ class _PluginApi {
    * @template {object} [C=Record<string, unknown>] - Properties of the context supplied when applying the hook.
    * @param {string} transformerName the name of the transformer
    * @param {import("discourse/lib/transformer").BehaviorTransformer<R, C>} behaviorCallback
-   * Middleware which can call next() to run the remaining queue, including the default behavior.
+   * Middleware which can call next() to run the remaining queue, including the default behavior. If the callback
+   * doesn't call next(), the default behavior is completely overridden.
    * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerBehaviorTransformer(transformerName, behaviorCallback) {
@@ -548,8 +549,11 @@ class _PluginApi {
    * @template [T=unknown] - The value passed to the callback.
    * @template {object} [C=Record<string, unknown>] - Properties of the context supplied when applying the hook.
    * @param {string} transformerName the name of the transformer
-   * @param {import("discourse/lib/transformer").ValueTransformer<T, C> | import("discourse/lib/transformer").MutableValueTransformer<T, C>} valueCallback
-   * Receives the current value and context. Return the replacement value, or mutate the value for mutable hooks.
+   * @param {import("discourse/lib/transformer").AnyValueTransformer<T, C>} valueCallback
+   * Receives the current value and context. To avoid potential errors or unexpected behavior the callback must be a
+   * pure function, i.e. return the transformed value instead of mutating the input value, return the same output for
+   * the same input and not have any side effects. Only hooks applied with `applyMutableValueTransformer` expect the
+   * callback to mutate the value instead; their return value is ignored.
    * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerValueTransformer(transformerName, valueCallback) {

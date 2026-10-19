@@ -49,6 +49,12 @@ const mutableCallback: MutableValueTransformer<string[], HookContext> = ({
   value.push("added");
 };
 _registerTransformer("labels", transformerTypes.VALUE, mutableCallback);
+_registerTransformer<number, HookContext>(
+  "count",
+  // @ts-expect-error a value callback must return the hook's value type; overload errors are reported here
+  transformerTypes.VALUE,
+  () => "wrong"
+);
 
 const behaviorCallback: BehaviorTransformer<Promise<number>, HookContext> = ({
   next,
@@ -97,6 +103,14 @@ withPluginApi((api) => {
       expectTypeOf(hookContext).toEqualTypeOf<HookContext | null | undefined>();
       return value;
     }
+  );
+  api.registerValueTransformer<string[], HookContext>("labels", ({ value }) => {
+    value.push("added");
+  });
+  api.registerValueTransformer<number, HookContext>(
+    "count",
+    // @ts-expect-error a value callback must return the hook's value type
+    () => "wrong"
   );
   api.registerBehaviorTransformer<Promise<number>, HookContext>(
     "load",

@@ -44,6 +44,20 @@ export type MutableValueTransformer<
 > = (args: Parameters<ValueTransformer<T, C>>[0]) => void;
 
 /**
+ * Either kind of value callback, as accepted at registration.
+ *
+ * A union with `MutableValueTransformer` would accept any return type, because a function returning a value is
+ * assignable to one returning `void`. Returning `T | void` keeps the result checked.
+ *
+ * @typeParam T - The value passed to the callback.
+ * @typeParam C - Properties of the optional context object.
+ */
+export type AnyValueTransformer<
+  T = unknown,
+  C extends object = Record<string, unknown>,
+> = (args: Parameters<ValueTransformer<T, C>>[0]) => T | void;
+
+/**
  * The core implementation called after the behavior middleware.
  * @typeParam R - The default implementation's result, including a Promise for async behavior.
  * @typeParam C - Properties supplied in the context before the calling instance is added.
@@ -101,7 +115,7 @@ let skipApplyExceptionOnTests = false;
  */
 let validTransformerNames = new Map<string, TransformerSource>();
 
-/** Core names must be lowercase and unique across transformer categories. */
+// Core names must be lowercase and unique across transformer categories.
 [
   [BEHAVIOR_TRANSFORMERS, transformerTypes.BEHAVIOR] as const,
   [VALUE_TRANSFORMERS, transformerTypes.VALUE] as const,
@@ -224,16 +238,17 @@ export function _addTransformerName(
  *
  * INTERNAL API: use pluginApi.registerBehaviorTransformer or pluginApi.registerValueTransformer instead.
  *
- * @param transformerName - the name of the transformer
- * @param transformerType - the type of the transformer being registered
  * @typeParam T - The value passed to the callback.
  * @typeParam C - Properties of the optional context object.
+ * @param transformerName - the name of the transformer
+ * @param transformerType - the type of the transformer being registered
  * @param callback - callback that will transform the value.
+ * @returns True if the transformer exists, false if the name is unknown and the callback was ignored.
  */
 export function _registerTransformer<T, C extends object>(
   transformerName: string,
   transformerType: "VALUE",
-  callback: ValueTransformer<T, C> | MutableValueTransformer<T, C>
+  callback: AnyValueTransformer<T, C>
 ): boolean;
 /**
  * Registers behavior middleware through the internal API.
@@ -331,10 +346,9 @@ export function applyBehaviorTransformer<
     );
   }
 
-  // The nullish typeof check excludes null before the constructor checks.
   if (
-    typeof (context ?? undefined) !== "undefined" &&
-    !(typeof context === "object" && context!.constructor === Object)
+    context != null &&
+    !(typeof context === "object" && context.constructor === Object)
   ) {
     throw `${prefix()}("${transformerName}", ...): context must be a simple JS object or nullish.`;
   }
@@ -431,12 +445,11 @@ export function applyValueTransformer<
     );
   }
 
-  // The nullish typeof check excludes null before the constructor checks.
   if (
-    typeof (context ?? undefined) !== "undefined" &&
+    context != null &&
     !(
       typeof context === "object" &&
-      (context!.constructor === Object || context!.constructor === undefined)
+      (context.constructor === Object || context.constructor === undefined)
     )
   ) {
     throw (

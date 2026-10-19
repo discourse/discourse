@@ -4,7 +4,6 @@
  * These transformers are invoked at key points to allow customization of the application behavior.
  *
  * USE ONLY lowercase names
- *
  */
 // eslint-discourse keep-array-sorted
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
@@ -38,7 +37,6 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
  * Each transformer represents a specific value or computation that can be customized.
  *
  * USE ONLY lowercase names
- *
  */
 // eslint-discourse keep-array-sorted
 export const VALUE_TRANSFORMERS = Object.freeze([

@@ -127,20 +127,8 @@ applyBehaviorTransformer(
 
 ## TypeScript
 
-The transformer pipeline exports `ValueTransformer`, `MutableValueTransformer`,
-`BehaviorTransformer`, and `DefaultBehaviorTransformer` callback types from
-`discourse/lib/transformer`. Value callbacks take value and context type parameters:
-`ValueTransformer<T, C>` returns `T`, while `MutableValueTransformer<T, C>` mutates the
-value and returns `void`. Behavior callbacks take return and context type parameters. Context types can be interfaces without an
-index signature. Hook names remain strings so plugins and themes can introduce hooks.
+The transformer pipeline exports `ValueTransformer`, `MutableValueTransformer`, `AnyValueTransformer`, `BehaviorTransformer`, and `DefaultBehaviorTransformer` callback types from `discourse/lib/transformer`. Value callbacks take value and context type parameters: `ValueTransformer<T, C>` returns `T`, while `MutableValueTransformer<T, C>` mutates the value and returns `void`. `registerValueTransformer` accepts `AnyValueTransformer<T, C>`, which allows either kind but still rejects a callback returning something other than `T`. Behavior callbacks take return and context type parameters. Context types can be interfaces without an index signature. Hook names remain strings so plugins and themes can introduce hooks.
 
-`applyValueTransformer` and `applyMutableValueTransformer` infer their result type
-from the default value. Supply an explicit type argument when a hook can return a
-broader type than its default, for example
-`applyValueTransformer<string | null>("custom-label", null)`.
-Registration and application must agree on a hook's value, context, and return types;
-the string registry does not enforce a shared contract between separate calls.
+`applyValueTransformer` and `applyMutableValueTransformer` infer their result type from the default value. Supply an explicit type argument when a hook can return a broader type than its default, for example `applyValueTransformer<string | null>("custom-label", null)`. Registration and application must agree on a hook's value, context, and return types; the string registry does not enforce a shared contract between separate calls.
 
-Behavior callbacks receive a shallow copy of the context. `next()` and
-`applyBehaviorTransformer` can return `void` when middleware stops the chain or calls
-`next()` after the queue is exhausted. Promise results pass through unchanged.
+Behavior callbacks receive a shallow copy of the context. `next()` and `applyBehaviorTransformer` can return `void` when middleware stops the chain or calls `next()` after the queue is exhausted. Promise results pass through unchanged.
