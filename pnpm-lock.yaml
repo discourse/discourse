@@ -169,6 +169,7 @@ overrides:
   broccoli-babel-transpiler@8.0.0: ^8.0.2
 
 patchedDependencies:
+  '@warp-drive/json-api@5.9.0-alpha.15': 8a9a8808d6b8632a4fbab8240855ec8a12583f7a48fc8d04c142b89ecc90f4ee
   '@warp-drive/legacy@5.9.0-alpha.15': de74ff6c540d75d173dcb41244cb6c4f6c86dabdb41908170a9d1c0e47ee099f
   babel-plugin-debug-macros@0.3.4: 387f93bad78f3a98b20dc742f4f0b7a165c7e6ebc65cc60356748346c0725c7f
   ember-source@7.3.0: aa23a9187235d165dee5e57e37f5310baafb88869fb08c274dca853d6b804201
@@ -452,7 +453,7 @@ importers:
         version: 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@ember/test-waiters@4.1.2(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
       '@warp-drive/json-api':
         specifier: 5.9.0-alpha.15
-        version: 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2))(supports-color@10.2.2)
+        version: 5.9.0-alpha.15(patch_hash=8a9a8808d6b8632a4fbab8240855ec8a12583f7a48fc8d04c142b89ecc90f4ee)(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2))(supports-color@10.2.2)
       '@warp-drive/legacy':
         specifier: 5.9.0-alpha.15
         version: 5.9.0-alpha.15(patch_hash=de74ff6c540d75d173dcb41244cb6c4f6c86dabdb41908170a9d1c0e47ee099f)(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2))(@warp-drive/utilities@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)
@@ -10937,7 +10938,7 @@ snapshots:
       - '@glint/template'
       - supports-color
 
-  '@warp-drive/json-api@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2))(supports-color@10.2.2)':
+  '@warp-drive/json-api@5.9.0-alpha.15(patch_hash=8a9a8808d6b8632a4fbab8240855ec8a12583f7a48fc8d04c142b89ecc90f4ee)(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2))(supports-color@10.2.2)':
     dependencies:
       '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
       '@warp-drive/core': 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
