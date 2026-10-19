@@ -9,7 +9,7 @@ export function buildAutoCloseDelimiters({ cmAutocomplete, cmView }) {
 
   return EditorView.inputHandler.of((view, from, to, text) => {
     const delimiter = DELIMITERS[text];
-    if (!delimiter) {
+    if (!delimiter || view.compositionStarted || view.state.readOnly) {
       return false;
     }
 
@@ -27,6 +27,8 @@ export function buildAutoCloseDelimiters({ cmAutocomplete, cmView }) {
     view.dispatch({
       changes: { from, to, insert: closed },
       selection: { anchor: from + 2 },
+      userEvent: "input.type",
+      scrollIntoView: true,
     });
 
     startCompletion(view);

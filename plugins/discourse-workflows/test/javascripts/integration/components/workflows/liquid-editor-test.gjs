@@ -179,6 +179,21 @@ module("Integration | Component | Workflows | Liquid editor", function (hooks) {
     assert.strictEqual(view.state.doc.toString(), "{%  %}", "logic tag");
   });
 
+  test("leaves a read-only template alone when a delimiter is typed", async function (assert) {
+    const field = { value: "{", set() {}, disabled: true };
+
+    await render(<template><LiquidControl @field={{field}} /></template>);
+    await waitFor(".cm-editor");
+    const view = find(".codemirror-editor").codemirrorView;
+
+    const handled = view.state
+      .facet(view.constructor.inputHandler)
+      .some((handler) => handler(view, 1, 1, "{", () => null));
+
+    assert.false(handled, "no handler claims the keystroke");
+    assert.strictEqual(view.state.doc.toString(), "{", "nothing is inserted");
+  });
+
   test("highlights the template's tags and output", async function (assert) {
     const value = "{% for item in items %}{{ item.name }}{% endfor %}";
 

@@ -269,12 +269,23 @@ module("Unit | lib | discourse-workflows | liquid-context", function () {
   module("itemPrefixAt", function () {
     test("recovers a shadowed alias in a reversed loop", function (assert) {
       const text =
-        "{% for item in items limit: 2 reversed %}{% for item in item.collected %}";
+        "{% for item in items reversed limit: 2 %}{% for item in item.collected %}";
 
       assert.strictEqual(
         liquidPathForVariable("$json.name", itemPrefixAt(text, text.length)),
         "items[forloop.parentloop.rindex0].name",
         "the reverse index addresses the original collection"
+      );
+    });
+
+    test("ignores reversed unless it follows the collection", function (assert) {
+      const text =
+        "{% for item in items limit: 2 reversed %}{% for item in item.collected %}";
+
+      assert.strictEqual(
+        liquidPathForVariable("$json.name", itemPrefixAt(text, text.length)),
+        "items[forloop.parentloop.index0].name",
+        "the loop runs forward, so the forward index is used"
       );
     });
 

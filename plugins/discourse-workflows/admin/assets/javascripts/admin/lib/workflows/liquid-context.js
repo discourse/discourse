@@ -149,7 +149,8 @@ export function buildLiquidScope({
 
 const LOOP_TAG_RE =
   /\{%-?\s*(for|endfor|comment|endcomment|raw|endraw)\b([^%]*)%\}/g;
-const FOR_BINDING_RE = /^\s*([\w-]+)\s+in\s+([\w.[\]'"-]+)/;
+// `reversed` only counts right after the collection, as in Liquid itself.
+const FOR_BINDING_RE = /^\s*([\w-]+)\s+in\s+([\w.[\]'"-]+)(\s+reversed\b)?/;
 
 /**
  * The `for` loops enclosing `pos`, outermost first, as `{ name, path }` pairs.
@@ -202,7 +203,7 @@ export function enclosingLoopsAt(text, pos) {
     const options = match[2].slice(binding[0].length);
     if (/\boffset\s*:/.test(options)) {
       loop.index = null;
-    } else if (/\breversed\b/.test(options)) {
+    } else if (binding[3]) {
       loop.index = "rindex0";
     }
     stack.push(loop);
