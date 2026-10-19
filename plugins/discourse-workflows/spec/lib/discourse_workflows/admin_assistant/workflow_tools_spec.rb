@@ -134,7 +134,9 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
 
   it "rejects secret-bearing script validation metadata in signed drafts" do
     tool.parameters[:draft_token] = DiscourseWorkflows::AdminAssistant::WorkflowDraft.sign(
-      draft_attributes.merge(script_validations: [{ "valid" => false, "errors" => ["api_key: sensitive-value"] }]),
+      draft_attributes.merge(
+        script_validations: [{ "valid" => false, "errors" => ["api_key: sensitive-value"] }],
+      ),
       user: admin,
     )
 
@@ -497,7 +499,9 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::GenerateWorkflow do
   end
 
   it "does not return secret-bearing script validation metadata" do
-    proposal["script_validations"] = [{ "valid" => false, "errors" => ["api_key: sensitive-value"] }]
+    proposal["script_validations"] = [
+      { "valid" => false, "errors" => ["api_key: sensitive-value"] },
+    ]
 
     result = tool.invoke
     expect(result[:status]).to eq("error")
