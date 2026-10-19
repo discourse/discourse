@@ -18,4 +18,12 @@ describe DiscourseAi::Agents::AskAiSynthesis do
       ],
     )
   end
+
+  it "lets the combined search return as many sources as it asks for" do
+    SiteSetting.ai_ask_ai_related_count = 2
+    SiteSetting.ai_ask_ai_combined_search_prototype = true
+
+    source_refs = agent.response_format.find { |field| field["key"] == "source_refs" }
+    expect(source_refs["max_items"]).to eq(DiscourseAi::Discoveries::MAX_RELATED_DISCUSSIONS)
+  end
 end
