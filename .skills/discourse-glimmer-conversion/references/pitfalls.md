@@ -57,6 +57,12 @@ end of the matching section with the commit sha.
   lost it), drop it with a member that becomes an arg, and annotate new public members
   initialized to `null` or `[]`. `pnpm lint:types` won't notice, because `.gjs` bodies aren't
   type-checked.
+- **Seeding tracked state from an arg is a snapshot however it is written.**
+  `ember/no-tracked-properties-from-args` flags `@tracked x = this.args.x` but not
+  `@tracked period = periodString(this.args.model.leaderboard.default_period)`, nor the same
+  assignment in a constructor. `GamificationLeaderboard` stays mounted across
+  `/leaderboard/:id`, so a snapshot keeps the previous leaderboard's period. Use
+  `@resettableTracked` for a local copy seeded from an arg.
 
 ## Reactivity
 
