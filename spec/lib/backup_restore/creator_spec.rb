@@ -53,6 +53,32 @@ describe BackupRestore::Creator do
     after { FileUtils.rm_rf(creator.instance_variable_get(:@tmp_directory)) }
 
     [1, 4].each do |concurrency|
+      it "downloads files with GET requests and no HEAD requests with #{concurrency} workers" do
+        GlobalSetting.stubs(:backup_s3_download_concurrency).returns(concurrency)
+        2.times do |index|
+          Fabricate(:upload, url: "//bucket.s3.amazonaws.com/original/1X/file#{index}.png")
+        end
+        client = Aws::S3::Client.new(stub_responses: true)
+        client.stub_responses(:get_object, body: "file contents", content_length: 13)
+        S3Helper.any_instance.stubs(:s3_client).returns(client)
+        Discourse::Utils.stubs(:execute_command)
+
+        silence_stdout { creator.send(:add_remote_uploads_to_archive, tar_filename) }
+
+        2.times do |index|
+          path =
+            File.join(
+              creator.instance_variable_get(:@tmp_directory),
+              Discourse.store.upload_path,
+              "original/1X/file#{index}.png",
+            )
+          expect(File.read(path)).to eq("file contents")
+        end
+        operations = client.api_requests.map { |request| request[:operation_name] }
+        expect(operations.count(:get_object)).to eq(2)
+        expect(operations).not_to include(:head_object)
+      end
+
       context "with #{concurrency} download workers" do
         before do
           GlobalSetting.stubs(:backup_s3_download_concurrency).returns(concurrency)
@@ -155,7 +181,7 @@ describe BackupRestore::Creator do
           missing = Fabricate(:upload, url: "//bucket.s3.amazonaws.com/original/1X/missing.png")
           Fabricate(:upload, url: "//bucket.s3.amazonaws.com/original/1X/present.png")
           store = FileStore::S3Store.new
-          store.define_singleton_method(:download_file) do |upload, filename|
+          store.define_singleton_method(:download_file) do |upload, filename, **_options|
             raise "No such key" if upload.id == missing.id
             File.write(filename, "file contents")
           end
