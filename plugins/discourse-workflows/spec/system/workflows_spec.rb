@@ -181,6 +181,23 @@ RSpec.describe "Discourse Workflows" do
     expect(workflows_page).to have_no_failed_workflow(recovered_workflow)
   end
 
+  it "opens a user card from the creator and last editor avatars" do
+    creator = Fabricate(:user)
+    editor = Fabricate(:user)
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: creator)
+    workflow.update!(updated_by: editor)
+    user_card = PageObjects::Components::UserCard.new
+
+    workflows_page.visit_index
+
+    workflows_page.click_creator(workflow)
+    expect(user_card).to be_showing_user(creator.username)
+
+    page.send_keys(:escape)
+    workflows_page.click_last_editor(workflow)
+    expect(user_card).to be_showing_user(editor.username)
+  end
+
   context "with workflow tags" do
     fab!(:ops_workflow) do
       Fabricate(
