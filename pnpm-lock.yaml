@@ -801,8 +801,8 @@ importers:
         specifier: ^1.10.3
         version: 1.10.3(supports-color@10.2.2)
       '@messageformat/runtime':
-        specifier: ^3.0.2
-        version: 3.0.2
+        specifier: ^3.0.3
+        version: 3.0.3
       make-plural:
         specifier: ^8.1.0
         version: 8.1.0
@@ -2486,8 +2486,8 @@ packages:
   '@marijn/find-cluster-break@1.0.4':
     resolution: {integrity: sha512-Wy0V7+SGUjnF9/TkiM1hKVDPj7jKXduPNboMVtHTA8dySMURWqfg/JZ9E2Sq8JgSJmkl7k7Qe9FLeMSrSraWmQ==}
 
-  '@messageformat/runtime@3.0.2':
-    resolution: {integrity: sha512-dkIPDCjXcfhSHgNE1/qV6TeczQZR59Yx0xXeafVKgK3QVWoxc38ljwpksUpnzCGvN151KUbCJTDZVmahtf1YZw==}
+  '@messageformat/runtime@3.0.3':
+    resolution: {integrity: sha512-FE0hP0m15+9p/ia5HWQ/JsUSNLcxZkl1jl1HlRrWCiMAsgiulg7AuOFLaBR6dpPqtPWWuApY7VLo3rIAcrgrkA==}
 
   '@microsoft/tsdoc-config@0.18.1':
     resolution: {integrity: sha512-9brPoVdfN9k9g0dcWkFeA7IH9bbcttzDJlXvkf8b2OBzd5MueR1V2wkKBL0abn0otvmkHJC6aapBOTJDDeMCZg==}
@@ -10142,7 +10142,7 @@ snapshots:
 
   '@marijn/find-cluster-break@1.0.4': {}
 
-  '@messageformat/runtime@3.0.2':
+  '@messageformat/runtime@3.0.3':
     dependencies:
       make-plural: 7.5.0
 
