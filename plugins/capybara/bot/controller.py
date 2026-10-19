@@ -20,6 +20,7 @@ import docker
 import requests
 
 from auth import configure_board_auth, load_board_credentials
+from volume_cleanup import collect_volumes
 
 LOG = logging.getLogger("codex-board-bot")
 OWNER = "codex-board-bot"
@@ -228,6 +229,9 @@ class Runtime:
             errors.append(f"container cleanup: {error}")
         if errors:
             raise RuntimeError("; ".join(errors))
+
+    def collect_volumes(self, runs, cards, jobs):
+        return collect_volumes(self.client, self.config.board_id, runs, cards, jobs)
 
     def exists(self, run):
         container = self.container(run)
@@ -470,6 +474,7 @@ class Controller:
         self.recovered = False
         self.last_error = ""
         self.last_poll = None
+        self.volume_cleanup = {}
 
     def save(self, run):
         self.runs[run.run_id] = run
@@ -755,6 +760,7 @@ class Controller:
                     run.report_pending = False
                     self.save(run)
         self.integration_jobs()
+        self.volume_cleanup = self.runtime.collect_volumes(list(self.runs.values()), cards, set(self.jobs))
         if snapshot["archived"] or any(run.phase in INTEGRATION or run.phase == "integration_failed" for run in self.runs.values()):
             return
         for run in list(self.runs.values()):
@@ -786,7 +792,7 @@ class Controller:
 
     def status(self):
         return {"ok": not bool(self.last_error) and not any(run.phase == "integration_failed" or (run.phase in {"deploying", "publishing", "confirming"} and run.error) for run in self.runs.values()), "board_id": self.board_id,
-                "last_poll": self.last_poll, "error": self.last_error,
+                "last_poll": self.last_poll, "error": self.last_error, "volume_cleanup": self.volume_cleanup,
                 "runs": [{"card_id": run.card_id, "run_id": run.run_id, "phase": run.phase,
                           "preview_url": run.preview_url, "error": run.error,
                           "cleanup_pending": run.cleanup_pending, "integrated_commit": run.integrated_commit,

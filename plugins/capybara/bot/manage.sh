@@ -49,6 +49,10 @@ case "${1:-status}" in
     [[ "$card_id" =~ ^[0-9]+$ ]] || { echo 'The card ID must be numeric.' >&2; exit 1; }
     test ! -e "$archive_path" || { echo 'The destination already exists.' >&2; exit 1; }
     workspace_volume=$("$docker_bin" "${docker_args[@]}" exec discourse-board-controller python -c 'import json,sqlite3,sys; rows=sqlite3.connect("/data/runs.sqlite3").execute("SELECT payload FROM runs ORDER BY rowid DESC"); print(next(json.loads(r[0])["workspace_volume"] for r in rows if json.loads(r[0])["card_id"]==int(sys.argv[1])))' "$card_id")
+    "$docker_bin" "${docker_args[@]}" volume inspect "$workspace_volume" >/dev/null 2>&1 || {
+      echo 'The workspace has been reclaimed and is no longer available for export.' >&2
+      exit 1
+    }
     "$docker_bin" "${docker_args[@]}" run --rm --entrypoint tar \
       --mount "type=volume,source=$workspace_volume,target=/workspace,readonly" \
       discourse-codex-worker:local -C /workspace \

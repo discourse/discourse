@@ -9,7 +9,7 @@ Accepted DONE integration already underway finishes its merge, deployment and pu
 Move a card to TODO to queue it. The bot reads the initial topic post, the latest 99 human replies, and their images.
 It claims the card, moves it to IN PROGRESS, and starts a Codex session in Docker through OrbStack.
 Each TODO attempt starts with a fresh checkout of the committed capybara branch in /Users/joffreyjaffeux/Code/discourse.
-Uncommitted host edits are never copied. A previous unaccepted preview is retained for recovery but is not the next attempt's starting point.
+Uncommitted host edits are never copied. Failed work remains available for recovery until it is superseded, deleted, or moved to DONE. A new attempt does not use the previous preview as its starting point.
 
 Successful runs move to REVIEW and post a summary, commit, checks, and both preview links in the topic:
 https://<card-preview>/session/admin-account/become
@@ -53,8 +53,9 @@ The input limits are 50 images, 20 MB per image and 50 MB combined. GIF inputs u
 
 Recover and verify
 
-Run ./manage.sh export CARD_ID /absolute/path/card-source.tar.gz to recover the latest attempt's source and Git history.
-Workspace volumes include the card and run IDs. Session volumes are retained per card.
+Run ./manage.sh export CARD_ID /absolute/path/card-source.tar.gz to recover the latest retained attempt's source and Git history.
+Workspace volumes include the card and run IDs. Session volumes are shared per card while recoverable attempts need them.
+Completed, deleted, and superseded workspaces are reclaimed and cannot be exported.
 Run logs include run.log, codex.jsonl, result.json, base.txt and commit.txt in the workspace volume.
 Use Docker to run test_controller.py, test_integration.py and test_images.py.
 The capybara plugin's Rails specs cover topic cards, discussion, uploads, permissions and integration status messages.
@@ -94,3 +95,9 @@ The controller mounts that file read-only at BOARD_HTTP_AUTH_FILE. Missing or in
 Polling, image uploads and deployment checks authenticate only to the configured main origin.
 Reconciliation restores authentication after tunnel replacement or an ngrok agent restart.
 To rotate credentials, replace that JSON file and recreate the controller. Preview domains keep their existing login flow.
+
+Run volume retention
+--------------------
+Each successful board poll reconciles recorded workspace, integration, and session volumes. Running and REVIEW attempts, every integration/deployment/publication/confirmation phase, and unfinished background jobs retain their volumes. The current failed attempt retains its workspace for diagnosis and export until it is superseded, deleted, or moved to DONE. An integration failure retains its accepted work even in DONE until it is superseded or deleted. Shared sessions and legacy workspaces remain while any recoverable attempt references them.
+
+Completed, deleted, cancelled, and superseded attempts release their volumes once container cleanup and background jobs finish. Completed/deleted/superseded workspaces can no longer be exported after reclamation. Publication diagnostics and run metadata remain in controller state. Ownership labels must match this board and card; unknown volumes and volumes attached to any running or stopped container are untouched. Docker conflicts and temporary API errors are logged and retried on later polls. No global volume prune is used. The main board database, Redis, uploads, workspace, and controller state are retained. A failed board snapshot cannot authorize volume deletion.

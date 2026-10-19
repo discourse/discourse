@@ -60,6 +60,9 @@ class RuntimeDouble:
         self.live = True
         self.cleanup_error = False
 
+    def collect_volumes(self, runs, cards, jobs):
+        return {}
+
     def reconcile(self):
         pass
 
@@ -117,6 +120,25 @@ class ControllerTests(unittest.TestCase):
     def complete(self):
         self.executor.tasks[-1][0].set_result(copy.deepcopy(RESULT))
         self.controller.poll()
+
+    def test_volume_cleanup_requires_successful_board_snapshot(self):
+        self.runtime.collect_volumes = Mock()
+        with patch.object(self.board, "snapshot", side_effect=requests.ConnectionError("unavailable")):
+            with self.assertRaises(requests.ConnectionError):
+                self.controller.poll()
+        self.runtime.collect_volumes.assert_not_called()
+
+    def test_volume_cleanup_sees_integration_phase_and_live_job(self):
+        self.controller.poll()
+        self.complete()
+        run = next(iter(self.controller.runs.values()))
+        self.board.move("DONE")
+        self.runtime.collect_volumes = Mock(return_value={})
+        self.controller.poll()
+        runs, cards, jobs = self.runtime.collect_volumes.call_args.args
+        self.assertEqual("integrating", runs[0].phase)
+        self.assertIn(run.run_id, jobs)
+        self.assertEqual("DONE", cards[run.card_id]["column"])
 
     def test_claim_uses_latest_locked_card_contents(self):
         self.board.claim_edit = {"title": "Latest title", "notes": "Latest requirement",
