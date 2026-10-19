@@ -55,6 +55,9 @@ const FOREIGN_SHARE = 0.6;
  * @property {"answer"|"lookup"} intent what a decision model judged the reader
  *   is after
  * @property {number} probability the chance the model gives that intent
+ * @property {"here"|"site"} [scope] for a search made in a topic or category,
+ *   whether it is about that place or the whole site
+ * @property {number} [scope_probability] the chance the model gives that scope
  */
 
 /**
@@ -89,7 +92,10 @@ export function chooseTab(
   } = {}
 ) {
   const topicCount = topics?.posts?.length ?? 0;
-  const contextCount = scope ? (context?.posts?.length ?? 0) : 0;
+  // a search about the whole site is not shown its context first
+  const aboutSite =
+    intent?.scope === "site" && intent.scope_probability >= INTENT_PROBABILITY;
+  const contextCount = scope && !aboutSite ? (context?.posts?.length ?? 0) : 0;
 
   if (usesSearchSyntax(query)) {
     return {

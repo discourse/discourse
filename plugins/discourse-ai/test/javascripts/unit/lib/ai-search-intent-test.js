@@ -73,6 +73,50 @@ module("Discourse AI | Unit | Lib | ai-search-intent", function (hooks) {
     );
   });
 
+  test("a search about the whole site skips its context", function (assert) {
+    const context = { posts: [{ id: 2 }] };
+    assert.deepEqual(
+      chooseTab("install discourse", {
+        topics,
+        context,
+        scope: "topic:5",
+        intent: { scope: "site", scope_probability: 0.9 },
+      }),
+      { tab: "topics", reason: "topic_results" }
+    );
+    assert.deepEqual(
+      chooseTab("install discourse", {
+        topics,
+        context,
+        scope: "category:3",
+        intent: { scope: "site", scope_probability: 0.9 },
+      }),
+      { tab: "topics", reason: "topic_results" }
+    );
+  });
+
+  test("an unsure or local scope keeps the context first", function (assert) {
+    const context = { posts: [{ id: 2 }] };
+    assert.deepEqual(
+      chooseTab("deadline", {
+        topics,
+        context,
+        scope: "topic:5",
+        intent: { scope: "site", scope_probability: 0.6 },
+      }),
+      { tab: "context", reason: "topic_match" }
+    );
+    assert.deepEqual(
+      chooseTab("deadline", {
+        topics,
+        context,
+        scope: "topic:5",
+        intent: { scope: "here", scope_probability: 0.9 },
+      }),
+      { tab: "context", reason: "topic_match" }
+    );
+  });
+
   test("search syntax wins over the intent", function (assert) {
     assert.deepEqual(
       chooseTab('"reset password"', {

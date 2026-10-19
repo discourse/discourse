@@ -264,6 +264,55 @@ describe DiscourseAi::Discover::DiscoveriesController do
       )
     end
 
+    it "answers a scoped search from the whole site when the model says it is about the site" do
+      topic = Fabricate(:topic, title: "Upgrading to PostgreSQL 18")
+
+      DiscourseAi::Decisions.with_canned_answers(
+        intent: "answer",
+        scope: {
+          "here" => 0.1,
+          "site" => 0.9,
+        },
+      ) do
+        expect_enqueued_with(job: :stream_discover_reply, args: { scope: nil }) do
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query: "install discourse",
+                 request_id:,
+                 scope: "topic:#{topic.id}",
+                 classify_intent: true,
+               }
+        end
+      end
+
+      expect(response.parsed_body["intent"]).to include(
+        "scope" => "site",
+        "scope_probability" => 0.9,
+      )
+      expect(AskAiLog.last).to have_attributes(
+        ask_scope: "topic:#{topic.id}",
+        ask_scope_model: "site",
+        ask_scope_probability: 0.9,
+        ask_intent_model: "answer",
+      )
+    end
+
+    it "keeps the scope for a search about the place it was made in" do
+      topic = Fabricate(:topic, title: "Upgrading to PostgreSQL 18")
+
+      DiscourseAi::Decisions.with_canned_answers(intent: "lookup", scope: "here") do
+        expect_enqueued_with(job: :stream_discover_reply, args: { scope: "topic:#{topic.id}" }) do
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query: "disk space",
+                 request_id:,
+                 scope: "topic:#{topic.id}",
+                 classify_intent: true,
+               }
+        end
+      end
+    end
+
     it "says when the reader prefers results in the combined search" do
       SiteSetting.ai_ask_ai_combined_search_prototype = true
       4.times do

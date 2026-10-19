@@ -604,6 +604,28 @@ describe "AI combined search" do
       expect_tab("ask")
     end
 
+    it "opens a search about the whole site on its results, answering from the whole site" do
+      inside.posts.each { |post| SearchIndexer.index(post, force: true) }
+      SiteSetting.ai_ask_ai_search_intent_decision_model = Fabricate(:decision_model).id
+
+      DiscourseAi::Decisions.with_canned_answers(
+        intent: "lookup",
+        scope: {
+          "here" => 0.1,
+          "site" => 0.9,
+        },
+      ) do
+        visit inside.url
+        wait_for_discoveries_channel
+        open_header_search
+        ask("widget configuration", input: "#icon-search-input")
+
+        expect(page).to have_css(tab("context"), text: "This topic")
+        expect_tab("topics")
+      end
+      expect(scopes.last).to be_nil
+    end
+
     it "starts afresh in a new context rather than searching again" do
       visit category.url
       wait_for_discoveries_channel

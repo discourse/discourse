@@ -2,8 +2,9 @@
 
 module DiscourseAi
   module Discoveries
-    # Asks a decision model whether a search wants an answer or a lookup, so the
-    # search menu can open on the tab that suits it.
+    # Asks a decision model whether a search wants an answer or a lookup, and,
+    # when it was made from a topic or category, whether it is about that place
+    # or the whole site, so the search can open on the tab that suits it.
     class Intent
       FEATURE_NAME = "ai_search_intent"
       CHOICES = %w[answer lookup].freeze
@@ -16,8 +17,25 @@ module DiscourseAi
             "a particular topic, page, post, person or term.",
         choices: CHOICES,
       }.freeze
+      SCOPE_CHOICES = %w[here site].freeze
+      SCOPE_QUESTION = {
+        name: "scope",
+        type: "choice",
+        instructions:
+          "The search was made while viewing the forum topic or category in searching_in. " \
+            "Choose here when it is about that topic or category, and site when it is about " \
+            "the forum in general.",
+        choices: SCOPE_CHOICES,
+      }.freeze
+      # below this the model is no surer than the rules it would replace
+      CONFIDENT_PROBABILITY = 0.7
       # the menu waits on this before choosing a tab, so a slow model is skipped
       TIMEOUT_SECONDS = 2
+
+      def self.about_site?(judgement)
+        judgement.present? && judgement[:scope] == "site" &&
+          judgement[:scope_probability] >= CONFIDENT_PROBABILITY
+      end
 
       def self.decision_model
         id = SiteSetting.ai_ask_ai_search_intent_decision_model
@@ -29,10 +47,17 @@ module DiscourseAi
         @decision_model = decision_model
       end
 
-      # @return [Hash, nil] the intent and the probability the model gives it, or nil
-      #   when no model is set or it could not decide
-      def call(query)
+      # @param scope [String, nil] the scope key the search was made in
+      # @return [Hash, nil] the intent and, for a topic or category, the scope, each
+      #   with the probability the model gives it; nil when nothing was decided
+      def call(query, scope: nil)
         return if @decision_model.nil?
+
+        place = searched_place(scope)
+        state = { query: }
+        state[:searching_in] = place if place
+        questions = [QUESTION]
+        questions << SCOPE_QUESTION if place
 
         client =
           DiscourseAi::Decisions::Client.new(
@@ -40,17 +65,44 @@ module DiscourseAi
             timeout: TIMEOUT_SECONDS,
             max_attempts: 1,
           )
-        result =
-          client.decide({ query: }, questions: [QUESTION], feature_name: FEATURE_NAME, user: @user)
-        answer = result[QUESTION[:name]]
-        return if answer.refusal?
+        result = client.decide(state, questions:, feature_name: FEATURE_NAME, user: @user)
 
-        # some models report confidence as certainty across all choices, which is far
-        # lower than the chosen one's probability, so the probability is what is kept
-        { intent: answer.choice, probability: answer.probabilities.fetch(answer.choice) }
+        judgement = {}
+        if (intent = chosen(result[QUESTION[:name]]))
+          judgement.merge!(intent: intent[0], probability: intent[1])
+        end
+        if place && (scope_choice = chosen(result[SCOPE_QUESTION[:name]]))
+          judgement.merge!(scope: scope_choice[0], scope_probability: scope_choice[1])
+        end
+        judgement.presence
       rescue DiscourseAi::Decisions::Error => e
         Rails.logger.warn("Discourse AI search intent failed: #{e.class}")
         nil
+      end
+
+      private
+
+      # Some models report confidence as certainty across all choices, which is far
+      # lower than the chosen one's probability, so the probability is what is kept.
+      def chosen(answer)
+        return if answer.refusal?
+
+        [answer.choice, answer.probabilities.fetch(answer.choice)]
+      end
+
+      # Personal messages are left out: their titles are private to a few people.
+      def searched_place(scope)
+        type, id = scope.to_s.split(":", 2)
+        case type
+        when "topic"
+          topic = Topic.find_by(id:)
+          if topic && !topic.private_message? && @user.guardian.can_see?(topic)
+            { type: "topic", title: topic.title }
+          end
+        when "category"
+          category = Category.find_by(id:)
+          { type: "category", name: category.name } if category && @user.guardian.can_see?(category)
+        end
       end
     end
   end

@@ -43,12 +43,22 @@ module DiscourseAi
           intent_heuristic = ""
         end
 
+        judge =
+          if params[:classify_intent].to_s == "true"
+            DiscourseAi::Discoveries::Intent.new(user: current_user)
+          end
+
+        # A scoped search is judged before its answer is queued, so the answer can
+        # leave a scope the search is not about.
+        intent = judge.call(query, scope:) if judge && scope
+        answer_scope = DiscourseAi::Discoveries::Intent.about_site?(intent) ? nil : scope
+
         ask_log =
           DiscourseAi::Discoveries.enqueue_reply(
             user: current_user,
             request_id:,
             query:,
-            scope:,
+            scope: answer_scope,
             trigger:,
             trigger_reason:,
             intent_heuristic:,
@@ -56,18 +66,9 @@ module DiscourseAi
 
         DiscourseAi::Discoveries.record_recent_ask(user_id: current_user.id, query:)
 
-        # judged after the answer is queued so it does not hold the answer up, and
-        # logged beside the heuristic's guess so the two can be compared
-        intent =
-          if ask_log && params[:classify_intent].to_s == "true"
-            DiscourseAi::Discoveries::Intent.new(user: current_user).call(query)
-          end
-        if intent
-          ask_log.update!(
-            ask_intent_model: intent[:intent],
-            ask_intent_probability: intent[:probability],
-          )
-        end
+        # otherwise it is judged after, so it does not hold the answer up
+        intent = judge.call(query) if judge && !scope && ask_log
+        record_judgement(ask_log, scope:, intent:) if ask_log && (scope || intent)
 
         prefers_results =
           (
@@ -225,6 +226,17 @@ module DiscourseAi
           raise Discourse::InvalidAccess
         end
         raise Discourse::InvalidAccess if guardian.is_silenced?
+      end
+
+      # logged beside the heuristic's guess so the two can be compared
+      def record_judgement(ask_log, scope:, intent:)
+        ask_log.update!(
+          ask_scope: scope.to_s,
+          ask_intent_model: intent&.dig(:intent).to_s,
+          ask_intent_probability: intent&.dig(:probability) || 0,
+          ask_scope_model: intent&.dig(:scope).to_s,
+          ask_scope_probability: intent&.dig(:scope_probability) || 0,
+        )
       end
 
       def ask_ai_action?

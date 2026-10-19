@@ -25,6 +25,9 @@ end
 #  ask_intent_model          :string           default(""), not null
 #  ask_intent_probability    :float            default(0.0), not null
 #  ask_outcome               :integer
+#  ask_scope                 :string           default(""), not null
+#  ask_scope_model           :string           default(""), not null
+#  ask_scope_probability     :float            default(0.0), not null
 #  ask_tab_opened            :string           default(""), not null
 #  ask_tab_opened_reason     :string           default(""), not null
 #  ask_tab_switched_after_ms :integer          default(0), not null
