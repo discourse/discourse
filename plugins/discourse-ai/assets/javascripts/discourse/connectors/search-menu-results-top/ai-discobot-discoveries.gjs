@@ -6,11 +6,11 @@ import { eq } from "discourse/truth-helpers";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import AiDiscoveriesSearchOptions from "../../components/ai-discoveries-search-options";
-import AiSearchAnswer from "../../components/ai-search/ai-search-answer";
-import AiSearchTabs from "../../components/ai-search/ai-search-tabs";
-import AiSearchDiscoveries from "../../components/ai-search-discoveries";
-import { contextScope } from "../../lib/ai-search-scope";
+import AiDiscoveriesSearchOptions from "../../components/ai-discoveries-search-options.gjs";
+import AiSearchAnswer from "../../components/ai-search/ai-search-answer.gjs";
+import AiSearchTabs from "../../components/ai-search/ai-search-tabs.gjs";
+import AiSearchDiscoveries from "../../components/ai-search-discoveries.gjs";
+import { contextScope } from "../../lib/ai-search-scope.js";
 
 export default class AiDiscobotDiscoveries extends Component {
   static shouldRender(args, { siteSettings, currentUser }) {

@@ -6,7 +6,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
-import sum from "../helpers/sum";
+import sum from "../helpers/sum.js";
 
 export default class MinimalGamificationLeaderboardRow extends Component {
   @service siteSettings;

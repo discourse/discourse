@@ -68,6 +68,7 @@ jobs:
       CHEAP_SOURCE_MAPS: "1"
       DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null"
       EMBER_ENV: development
+      DISCOURSE_CI_MINIFY: ${{ matrix.build_type == 'system' && '1' || '' }}
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
@@ -271,6 +272,25 @@ jobs:
             exit 1
           fi
 
+      - name: Install playwright
+        if: matrix.build_type == 'system'
+        run: pnpm playwright-install
+
+      - name: Precompile the JS bundles
+        if: matrix.build_type == 'backend' || matrix.build_type == 'system'
+        run: bin/rake assets:precompile:asset_processor assets:precompile:pretty_text
+
+      - name: Deploy Playwright outside node_modules
+        if: matrix.build_type == 'system'
+        run: |
+          pnpm deploy --filter @discourse/playwright-runner --prod tmp/playwright
+          echo "PLAYWRIGHT_CLI_EXECUTABLE_PATH=$PWD/tmp/playwright/node_modules/.bin/playwright" >> $GITHUB_ENV
+
+      # Drop node_modules to match production
+      - name: Remove node_modules
+        if: matrix.build_type == 'backend' || matrix.build_type == 'system'
+        run: find . -name node_modules -type d -prune -not -path './tmp/*' -print0 | xargs -0 rm -rf
+
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: LD_PRELOAD="$RUBY_ALLOCATOR" bin/turbo_rspec --use-runtime-info --format=progress
@@ -310,10 +330,6 @@ jobs:
         with:
           name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
           path: ./frontend/discourse/test-execution-*.json
-
-      - name: Install playwright
-        if: matrix.build_type == 'system'
-        run: pnpm playwright-install
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
@@ -421,7 +437,7 @@ jobs:
         with:
           fetch-depth: 1
 
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         if: steps.check-artifacts.outputs.exists == 'true'
         with:
           pattern: deprecation-reports-*

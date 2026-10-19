@@ -1,4 +1,4 @@
-import { attrs, withDefaults } from "./helpers";
+import { attrs, withDefaults } from "./helpers.js";
 
 // Tag stays on the legacy `Store` + `RestAdapter` path; this schema only
 // powers the wrapper's field forwarders. `target_tag` / `localizations` are

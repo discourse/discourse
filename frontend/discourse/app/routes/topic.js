@@ -35,7 +35,10 @@ export default class TopicRoute extends DiscourseRoute {
   @service modal;
   @service router;
 
+  /** @type {ReturnType<typeof import("discourse/lib/later").default> | null} */
   scheduledReplace = null;
+
+  /** @type {number | null} */
   lastScrollPos = null;
   isTransitioning = false;
   queryParams = {

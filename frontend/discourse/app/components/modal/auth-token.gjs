@@ -18,6 +18,8 @@ export default class AuthTokenComponent extends Component {
   @service currentUser;
 
   @tracked expanded = false;
+
+  /** @type {{ cooked: string, excerpt: string } | null} */
   @tracked latestPost = null;
 
   constructor() {

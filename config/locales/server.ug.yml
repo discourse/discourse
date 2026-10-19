@@ -16,6 +16,7 @@ ug:
       link: "ئۇلانما"
   mcp:
     errors:
+      category_not_found: "سەھىپە تېپىلمىدى"
       draft_too_long: "دەسلەپكى نۇسخا بەك ئۇزۇن"
       post_not_found: "يازما تېپىلمىدى"
       topic_not_found: "تېما تېپىلمىدى"

@@ -18,6 +18,7 @@ register_svg_icon "angle-left"
 register_svg_icon "circle-exclamation"
 register_svg_icon "info"
 register_svg_icon "pencil"
+register_svg_icon "thumbtack-slash"
 register_svg_icon "upload"
 
 add_admin_route "explorer.title", "discourse-data-explorer", use_new_show_route: true
@@ -280,6 +281,7 @@ after_initialize do
     require_relative "lib/discourse_data_explorer/tools/run_sql"
     require_relative "lib/discourse_data_explorer/tools/submit_query"
     require_relative "lib/discourse_data_explorer/ai_query_generator"
+    require_relative "lib/discourse_data_explorer/query_generation"
 
     DiscourseAi.register_feature(
       module_name: :data_explorer,

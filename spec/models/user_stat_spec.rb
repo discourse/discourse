@@ -9,6 +9,58 @@ RSpec.describe UserStat do
     expect(user.user_stat.new_since).to be_present
   end
 
+  describe ".recalculate_likes!" do
+    fab!(:liker, :user)
+    fab!(:author, :user)
+
+    def like!(post)
+      UserAction.create!(
+        action_type: UserAction::LIKE,
+        user_id: liker.id,
+        acting_user_id: liker.id,
+        target_post_id: post.id,
+        target_topic_id: post.topic_id,
+      )
+      UserAction.create!(
+        action_type: UserAction::WAS_LIKED,
+        user_id: author.id,
+        acting_user_id: liker.id,
+        target_post_id: post.id,
+        target_topic_id: post.topic_id,
+      )
+    end
+
+    it "only counts likes on visible regular posts in visible public topics" do
+      like!(Fabricate(:post, user: author))
+      like!(Fabricate(:private_message_post, user: author))
+      like!(Fabricate(:post, user: author, post_type: Post.types[:whisper]))
+      like!(Fabricate(:post, user: author, hidden: true))
+      like!(Fabricate(:post, user: author, deleted_at: Time.zone.now))
+      like!(Fabricate(:post, user: author, topic: Fabricate(:topic, visible: false)))
+      liker.user_stat.update!(likes_given: 42)
+
+      UserStat.recalculate_likes!([liker.id, author.id])
+
+      expect(liker.user_stat.reload).to have_attributes(likes_given: 1, likes_received: 0)
+      expect(author.user_stat.reload).to have_attributes(likes_given: 0, likes_received: 1)
+    end
+
+    it "matches the directory refresh" do
+      like!(Fabricate(:post, user: author))
+      like!(Fabricate(:post, user: author, hidden: true))
+      DirectoryItem.refresh_period!(:all, force: true)
+      directory_counts =
+        UserStat.where(user_id: [liker.id, author.id]).pluck(:likes_given, :likes_received)
+      UserStat.where(user_id: [liker.id, author.id]).update_all(likes_given: 9, likes_received: 9)
+
+      UserStat.recalculate_likes!([liker.id, author.id])
+
+      expect(
+        UserStat.where(user_id: [liker.id, author.id]).pluck(:likes_given, :likes_received),
+      ).to eq(directory_counts)
+    end
+  end
+
   describe "#update_view_counts" do
     let(:user) { Fabricate(:user) }
     let(:stat) { user.user_stat }

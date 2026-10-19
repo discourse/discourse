@@ -11,7 +11,7 @@ export default class VoiceRoomsEditController extends Controller {
   saveRoom() {
     this.toasts.success({
       data: { message: i18n("voice.admin.room_updated") },
-      duration: 2000,
+      duration: "short",
     });
     this.router.transitionTo("adminPlugins.show.voice-rooms.index");
   }

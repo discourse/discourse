@@ -47,9 +47,7 @@ module DiscourseWorkflows
     private
 
     def node_registered?(node_class)
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.any? do |entry|
-        entry[:value] == (node_class.name || node_class)
-      end
+      Registry.plugin_for(node_class).present?
     end
 
     # `Plugin::Instance#on` gates the handler on the owning plugin being enabled,

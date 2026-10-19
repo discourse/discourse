@@ -4,10 +4,19 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class AdminEmailAdvancedTestController extends Controller {
+  /** @type {string | null} */
   email = null;
+
+  /** @type {string | null} */
   text = null;
+
+  /** @type {string | null} */
   elided = null;
+
+  /** @type {1 | 2 | null} */
   format = null;
+
+  /** @type {boolean | null} */
   loading = null;
 
   @action

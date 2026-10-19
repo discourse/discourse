@@ -13,6 +13,59 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
     sign_in(admin) if !example.metadata[:anonymous]
   end
 
+  it "keeps list and detail outcomes in parity and filters incomplete responses within successful requests" do
+    records =
+      [
+        [nil, 200, 0, "successful"],
+        [nil, nil, 1, "successful"],
+        [nil, nil, 0, "failed"],
+        [AiApiAuditLog::CompletionState::EMPTY, 200, 100, "empty"],
+        [AiApiAuditLog::CompletionState::TRUNCATED, 200, 100, "truncated"],
+        [AiApiAuditLog::CompletionState::EMPTY, 500, 100, "failed"],
+      ].map do |state, status, tokens, outcome|
+        [
+          Fabricate(
+            :ai_api_audit_log,
+            completion_state: state,
+            response_status: status,
+            response_tokens: tokens,
+            reasoning_tokens: 0,
+            stop_reason: "length",
+          ),
+          outcome,
+        ]
+      end
+    get index_path
+    listed = response.parsed_body["logs"].index_by { |log| log["id"] }
+    records.each do |log, outcome|
+      expect(listed[log.id]["outcome"]).to eq(outcome)
+      get "/admin/plugins/discourse-ai/ai-logs/#{log.id}.json"
+      expect(response.parsed_body).to include(
+        "outcome" => outcome,
+        "reasoning_tokens" => 0,
+        "stop_reason" => "length",
+      )
+    end
+    historical_success, historical_positive, historical_failure, empty, truncated, failed_empty =
+      records.map(&:first)
+    get index_path, params: { outcome: "empty" }
+    expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([empty.id])
+    get index_path, params: { outcome: "truncated" }
+    expect(response.parsed_body["logs"].map { |log| log["id"] }).to eq([truncated.id])
+    get index_path, params: { outcome: "successful" }
+    expect(response.parsed_body["logs"].map { |log| log["id"] }).to contain_exactly(
+      historical_success.id,
+      historical_positive.id,
+      empty.id,
+      truncated.id,
+    )
+    get index_path, params: { outcome: "failed" }
+    expect(response.parsed_body["logs"].map { |log| log["id"] }).to contain_exactly(
+      historical_failure.id,
+      failed_empty.id,
+    )
+  end
+
   def request_ai_logs_endpoint(endpoint, log, headers: {})
     case endpoint
     when :index

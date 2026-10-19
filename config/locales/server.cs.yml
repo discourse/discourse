@@ -19,6 +19,7 @@ cs:
       link: "Odkaz"
   mcp:
     errors:
+      category_not_found: "Kategorie nebyla nalezena"
       draft_too_long: "Koncept je příliš dlouhý"
       topic_not_found: "Téma nenalezeno"
     oauth:

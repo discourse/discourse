@@ -394,6 +394,7 @@ ar:
         filter_placeholder: "تصفية المستخدمين"
         remove_invitee: "إزالة المدعو من القائمة"
         add_invitee: "إضافة مدعو إلى القائمة"
+        this_event: "هذا الحدث"
       bulk_invite_modal:
         confirm: "تأكيد"
         text: "تحميل ملف CSV"

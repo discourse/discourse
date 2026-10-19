@@ -45,6 +45,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
  */
 // eslint-discourse keep-array-sorted
 export const VALUE_TRANSFORMERS = Object.freeze([
+  "admin-dashboard-report-renderer",
   "admin-onboarding-start-posting-options",
   "admin-plugin-icon",
   "admin-reports-show-query-params",
@@ -150,7 +151,9 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "search-menu-recent-searches",
   "search-menu-search-context-enabled",
   "search-menu-search-shortcuts-enabled",
+  "search-result-entry-class",
   "sidebar-anonymous-default-categories",
+  "sidebar-panel",
   "site-setting-allows-none",
   "small-user-attrs",
   "tag-separator",

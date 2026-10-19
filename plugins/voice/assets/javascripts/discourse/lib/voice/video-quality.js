@@ -4,7 +4,7 @@ import {
   QUALITY_MAXIMUM,
   QUALITY_STANDARD,
   SCREEN_CONTENT_MOTION,
-} from "./quality-preferences";
+} from "./quality-preferences.js";
 
 // Mesh budget: every watcher costs the sender a full encode, so resolution
 // and bitrate scale down as the watcher count grows. Each connection's
@@ -85,6 +85,15 @@ function encodingFor(kind, senderCount, tier = QUALITY_STANDARD) {
 
 export function cameraEncodingFor(tier) {
   return encodingFor("camera", 1, tier);
+}
+
+// Lower simulcast layers for an SFU camera publish, lowest first. Maximum has
+// no ladder of its own, so it borrows the high tier's lower rungs.
+export function cameraSimulcastLayersFor(tier = QUALITY_STANDARD) {
+  const ladder =
+    CAMERA_LADDERS[tier === QUALITY_MAXIMUM ? QUALITY_HIGH : tier] ??
+    CAMERA_LADDERS[QUALITY_STANDARD];
+  return [ladder[2], ladder[1]];
 }
 
 export function screenEncodingFor(tier) {

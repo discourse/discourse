@@ -18,6 +18,7 @@ export default class UserActivityBookmarksController extends Controller {
 
   queryParams = ["q"];
 
+  /** @type {string | null | undefined} */
   q = null;
   loading = false;
   loadingMore = false;

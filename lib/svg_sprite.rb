@@ -344,6 +344,15 @@ module SvgSprite
       end
   end
 
+  def self.legacy_icon_ids
+    @legacy_icon_ids ||=
+      core_svgs_files
+        .select { |path| File.basename(File.dirname(path)) == FontAwesomeSync::LEGACY_DIRECTORY }
+        .flat_map do |path|
+          symbols_for(File.basename(path, ".svg"), File.read(path), strict: true).keys
+        end
+  end
+
   # Just used in tests
   def self.clear_plugin_svg_sprite_cache!
     @plugin_svgs = nil
@@ -502,7 +511,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
       symbols = svgs_for(theme_id)
       in_sprite = all_icons(theme_id).select { |id| symbols.key?(id) }
 
-      only_available ? in_sprite : in_sprite + (symbols.keys - in_sprite).sort
+      # Legacy names still render where already used, but aren't offered for new picks
+      only_available ? in_sprite : in_sprite + (symbols.keys - in_sprite - legacy_icon_ids).sort
     end
   end
 

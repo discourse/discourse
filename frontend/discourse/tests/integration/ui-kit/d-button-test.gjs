@@ -1,5 +1,8 @@
-import { click, render, triggerKeyEvent } from "@ember/test-helpers";
+import { hash } from "@ember/helper";
+import { click, render, settled, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
+import { capabilities } from "discourse/services/capabilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DButton from "discourse/ui-kit/d-button";
 import I18n, { i18n } from "discourse-i18n";
@@ -239,6 +242,117 @@ module("Integration | ui-kit | DButton", function (hooks) {
     await click(".btn");
 
     assert.strictEqual(this.foo, "bar");
+  });
+
+  module("action dispatch", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      this.calls = [];
+      this.record = (...args) => this.calls.push(args);
+    });
+
+    test("dispatches @actionParam as the only argument", async function (assert) {
+      const record = this.record;
+
+      await render(
+        <template><DButton @action={{record}} @actionParam="topic" /></template>
+      );
+      await click(".btn");
+
+      assert.deepEqual(this.calls, [["topic"]]);
+    });
+
+    test("dispatches undefined when there is no @actionParam", async function (assert) {
+      const record = this.record;
+
+      await render(<template><DButton @action={{record}} /></template>);
+      await click(".btn");
+
+      assert.deepEqual(this.calls, [[undefined]]);
+    });
+
+    test("dispatches the event after @actionParam with @forwardEvent", async function (assert) {
+      const record = this.record;
+
+      await render(
+        <template>
+          <DButton
+            @action={{record}}
+            @actionParam="topic"
+            @forwardEvent={{true}}
+          />
+        </template>
+      );
+      await click(".btn");
+
+      assert.strictEqual(this.calls.length, 1);
+      assert.strictEqual(this.calls[0][0], "topic");
+      assert.true(this.calls[0][1] instanceof MouseEvent, "the click event");
+    });
+
+    test("dispatches the event for a truthy non-boolean @forwardEvent", async function (assert) {
+      const record = this.record;
+
+      await render(
+        <template><DButton @action={{record}} @forwardEvent="true" /></template>
+      );
+      await click(".btn");
+
+      assert.strictEqual(this.calls.length, 1);
+      assert.true(this.calls[0][1] instanceof MouseEvent, "the click event");
+    });
+
+    test("dispatches to the value of an object @action", async function (assert) {
+      const record = this.record;
+
+      await render(
+        <template>
+          <DButton @action={{hash value=record}} @actionParam="topic" />
+          <DButton
+            class="forwarding"
+            @action={{hash value=record}}
+            @actionParam="draft"
+            @forwardEvent={{true}}
+          />
+        </template>
+      );
+      await click(".btn:not(.forwarding)");
+      await click(".btn.forwarding");
+
+      assert.deepEqual(this.calls[0], ["topic"]);
+      assert.strictEqual(this.calls[1][0], "draft");
+      assert.true(this.calls[1][1] instanceof MouseEvent, "the click event");
+    });
+
+    test("dispatches nothing for an object @action without a value", async function (assert) {
+      await render(<template><DButton @action={{hash}} /></template>);
+      await click(".btn");
+
+      assert.dom(".btn").exists("the click is handled without throwing");
+    });
+
+    test("dispatches after the click on most platforms", async function (assert) {
+      sinon.stub(capabilities, "isIOS").value(false);
+      const record = this.record;
+
+      await render(<template><DButton @action={{record}} /></template>);
+      document.querySelector(".btn").click();
+
+      assert.deepEqual(this.calls, [], "deferred past the click");
+      await settled();
+      assert.deepEqual(this.calls, [[undefined]]);
+    });
+
+    test("dispatches during the click on iOS", async function (assert) {
+      sinon.stub(capabilities, "isIOS").value(true);
+      const record = this.record;
+
+      await render(
+        <template><DButton @action={{record}} @actionParam="topic" /></template>
+      );
+      document.querySelector(".btn").click();
+
+      assert.deepEqual(this.calls, [["topic"]], "not deferred on iOS");
+    });
   });
 
   test("ellipses", async function (assert) {

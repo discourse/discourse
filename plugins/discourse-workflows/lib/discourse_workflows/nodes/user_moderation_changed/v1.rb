@@ -95,9 +95,7 @@ module DiscourseWorkflows
         end
 
         def matches?(trigger_ctx)
-          changes =
-            Array.wrap(trigger_ctx.get_node_parameter("changes", [])).compact_blank.map(&:to_s)
-          changes.empty? || changes.include?(@change)
+          matches_changes?(trigger_ctx, @change)
         end
       end
     end

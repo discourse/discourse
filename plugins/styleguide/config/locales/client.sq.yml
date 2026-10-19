@@ -17,6 +17,11 @@ sq:
         context_menu:
           actions:
             delete: "Fshij"
+        reorderable_list:
+          policies_pinned: "E përzgjedhur"
+          policies_required: "E nevojshme"
+          table_type: "Lloji"
+          cross_list_primary: "Kryesor"
         colors:
           title: "Ngjyrat"
         dropdowns:

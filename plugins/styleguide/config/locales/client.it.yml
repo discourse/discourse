@@ -38,6 +38,12 @@ it:
             delete: "Elimina"
         multi_select:
           title: "Selezione multipla"
+        reorderable_list:
+          policies_pinned: "Appuntato"
+          policies_required: "Obbligatorie"
+          table_field: "Campo"
+          table_type: "Tipo"
+          cross_list_primary: "Primario"
         toasts:
           title: "Toast"
         font_scale:

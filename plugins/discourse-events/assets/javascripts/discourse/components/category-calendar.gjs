@@ -3,9 +3,9 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
-import formatEventForCalendar from "../lib/format-event-for-calendar";
-import openEventComposer from "../lib/open-event-composer";
-import FullCalendar from "./full-calendar";
+import formatEventForCalendar from "../lib/format-event-for-calendar.js";
+import openEventComposer from "../lib/open-event-composer.js";
+import FullCalendar from "./full-calendar.gjs";
 
 export default class CategoryCalendar extends Component {
   @service composer;
@@ -176,6 +176,7 @@ export default class CategoryCalendar extends Component {
         @initialView={{this.categorySetting.defaultView}}
         @onDateClick={{if this.canCreateEvent this.onDateClick}}
         @onLoadEvents={{this.loadEvents}}
+        @placeholder={{true}}
         @refreshKey={{this.refreshKey}}
         @weekends={{this.renderWeekends}}
       />

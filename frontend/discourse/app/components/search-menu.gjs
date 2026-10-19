@@ -62,7 +62,11 @@ export default class SearchMenu extends Component {
 
   searchInputId = this.args.searchInputId ?? "search-term";
   closeWhenHidden = modifier((_element, [hidden]) => hidden && this.close());
+
+  /** @type {import("@ember/runloop").Timer | null} */
   _debouncer = null;
+
+  /** @type {(Promise<unknown> & { abort: () => void }) | null} */
   _activeSearch = null;
 
   willDestroy() {

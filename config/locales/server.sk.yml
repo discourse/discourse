@@ -18,6 +18,7 @@ sk:
       link: "Odkaz"
   mcp:
     errors:
+      category_not_found: "Kategória sa nenašla"
       draft_too_long: "Koncept je príliš dlhý"
       topic_not_found: "Téma sa nenašla"
     oauth:

@@ -351,16 +351,14 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       pinResponse(this.channel, 3)
     );
     // message ids: 202 (excerpt 0, newest) / 201 (excerpt 1) / 200 (excerpt 2)
-    const view = new (class {
-      @tracked bottomId = null;
-    })();
+    const bottomId = tracked(null);
 
     await render(
       <template>
         <ChatPinnedMessageBar
           @channel={{this.channel}}
           @onJumpToMessage={{this.noop}}
-          @viewportBottomMessageId={{view.bottomId}}
+          @viewportBottomMessageId={{bottomId.value}}
         />
       </template>
     );
@@ -369,13 +367,13 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       .dom(".chat-pinned-bar__excerpt")
       .hasText("Pinned excerpt 0", "defaults to the newest pin");
 
-    view.bottomId = 201;
+    bottomId.value = 201;
     await settled();
     assert
       .dom(".chat-pinned-bar__excerpt")
       .hasText("Pinned excerpt 1", "follows the pin governing the view");
 
-    view.bottomId = 100; // above every pin
+    bottomId.value = 100; // above every pin
     await settled();
     assert
       .dom(".chat-pinned-bar__excerpt")

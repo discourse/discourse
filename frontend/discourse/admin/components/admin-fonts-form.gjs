@@ -26,6 +26,7 @@ export default class AdminFontsForm extends Component {
   @service toasts;
   @service modal;
 
+  /** @type {boolean | null} */
   updateExistingUsers = null;
 
   get formData() {

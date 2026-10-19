@@ -129,6 +129,23 @@ en:
           message_4: "Your average message length was <strong>%{length}</strong> characters"
           message_5: "Your favorite channels:"
           dancing_baby_alt: "Dancing baby"
+        voice_usage:
+          title: Phone bill
+          subtitle: Your voice call statement
+          subtitle_others: "%{username}'s voice call statement"
+          total_airtime: Total airtime
+          call_count:
+            one: "across %{count} call"
+            other: "across %{count} calls"
+          top_contacts: Most talked with
+          top_rooms: Favorite rooms
+          hours:
+            one: "%{count} hr"
+            other: "%{count} hrs"
+          minutes:
+            one: "%{count} min"
+            other: "%{count} mins"
+          amount_due: "Amount due: nothing, calls are on the house"
         invites:
           guest_book_title: Guest Book
           guest_book_subtitle: Your Community Invitations

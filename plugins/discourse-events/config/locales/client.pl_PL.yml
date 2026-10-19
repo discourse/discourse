@@ -427,6 +427,7 @@ pl_PL:
         filter_placeholder: "Filtruj użytkowników"
         remove_invitee: "Usuń zaproszonego z listy"
         add_invitee: "Dodaj zaproszonego do listy"
+        this_event: "To wydarzenie"
       bulk_invite_modal:
         confirm: "potwierdź"
         text: "Prześlij plik CSV"

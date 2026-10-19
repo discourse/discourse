@@ -13,10 +13,10 @@ import getURL from "discourse/lib/get-url";
 import { deepEqual } from "discourse/lib/object";
 import DiscourseURL, { groupPath, userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
-import DeletePostsConfirmationModal from "../../components/modal/delete-posts-confirmation";
-import MergeUsersConfirmationModal from "../../components/modal/merge-users-confirmation";
-import MergeUsersProgressModal from "../../components/modal/merge-users-progress";
-import MergeUsersPromptModal from "../../components/modal/merge-users-prompt";
+import DeletePostsConfirmationModal from "../../components/modal/delete-posts-confirmation.gjs";
+import MergeUsersConfirmationModal from "../../components/modal/merge-users-confirmation.gjs";
+import MergeUsersProgressModal from "../../components/modal/merge-users-progress.gjs";
+import MergeUsersPromptModal from "../../components/modal/merge-users-prompt.gjs";
 
 export default class AdminUserIndexController extends Controller {
   @service router;
@@ -25,11 +25,20 @@ export default class AdminUserIndexController extends Controller {
   @service siteSettings;
   @service modal;
 
+  /** @type {number[] | null} */
   @tracked customGroupIdsBuffer = null;
+
+  /** @type {number | null | undefined} */
   originalPrimaryGroupId = null;
+
+  /** @type {{ id: number, name: string, full_name?: string, display_name?: string, automatic: boolean, flair_url?: string | null, flair_bg_color?: string | null, flair_color?: string | null }[] | null} */
   availableGroups = null;
   userTitleValue = null;
+
+  /** @type {string | null} */
   ssoExternalEmail = null;
+
+  /** @type {string | null} */
   ssoLastPayload = null;
   isLoading = false;
 
@@ -526,6 +535,11 @@ export default class AdminUserIndexController extends Controller {
   @action
   showSilenceModal() {
     this.adminTools.showSilenceModal(this.model);
+  }
+
+  @action
+  toggleEditing(field) {
+    this.toggleProperty(field);
   }
 
   @action

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
-import VoiceInviteAgentModal from "./modal/voice-invite-agent";
+import VoiceInviteAgentModal from "./modal/voice-invite-agent.gjs";
 
 export default class VoiceInviteAgentButton extends Component {
   @service site;

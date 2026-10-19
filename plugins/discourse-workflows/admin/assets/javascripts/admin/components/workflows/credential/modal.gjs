@@ -12,8 +12,8 @@ import {
   fieldVisible,
   normalizeSchema,
   propertyLabel,
-} from "../../../lib/workflows/property-engine";
-import Field from "../configurators/field";
+} from "../../../lib/workflows/property-engine.js";
+import Field from "../configurators/field.gjs";
 
 const CREDENTIAL_DATA_NAME_FIELD = "credential_data_name";
 

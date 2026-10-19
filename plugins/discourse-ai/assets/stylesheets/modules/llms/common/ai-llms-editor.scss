@@ -162,6 +162,11 @@
   font-size: var(--font-down-1);
 }
 
+.ai-decision-models-list-editor__seeded {
+  color: var(--primary-high);
+  font-size: var(--font-down-1);
+}
+
 @include viewport.until(md) {
   .ai-llm-list__description {
     max-width: 80%;

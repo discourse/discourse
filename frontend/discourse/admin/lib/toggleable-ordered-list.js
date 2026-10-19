@@ -2,8 +2,11 @@ import { tracked } from "@glimmer/tracking";
 
 export default class ToggleableOrderedList {
   @tracked enabledOrder;
+
+  /** @type {string | null} */
   @tracked draggedId = null;
 
+  /** @param {{ cap?: number, minSelected?: number, initialOrder?: string[] }} [options] */
   constructor({ cap, minSelected = 0, initialOrder = [] } = {}) {
     this.cap = cap;
     this.minSelected = minSelected;
@@ -44,6 +47,9 @@ export default class ToggleableOrderedList {
     }
   }
 
+  // TODO (ui-kit-reorderable-list-cleanup) the members from here to
+  // `onDragEnd` serve the pre-DReorderableList consumers only. Delete them
+  // with the legacy arms; `reorderVisible` is the replacement.
   moveUp(key) {
     const index = this.enabledOrder.indexOf(key);
     if (index <= 0) {
@@ -96,5 +102,24 @@ export default class ToggleableOrderedList {
 
   onDragEnd() {
     this.draggedId = null;
+  }
+
+  /**
+   * Adopts a new order for the enabled keys that are currently on screen.
+   *
+   * A search filter can hide an enabled row, and a hidden row still holds its
+   * place in the saved order. So the visible keys are written back into the
+   * slots they already occupy and every hidden key keeps its index, rather than
+   * the caller's on-screen sequence replacing the whole order and dropping
+   * whatever it could not see.
+   *
+   * @param {string[]} visibleKeys - Enabled keys in their new on-screen order.
+   */
+  reorderVisible(visibleKeys) {
+    const moving = new Set(visibleKeys);
+    let next = 0;
+    this.enabledOrder = this.enabledOrder.map((key) =>
+      moving.has(key) ? visibleKeys[next++] : key
+    );
   }
 }

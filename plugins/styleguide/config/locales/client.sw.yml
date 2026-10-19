@@ -13,6 +13,10 @@ sw:
         context_menu:
           actions:
             delete: "Futa"
+        reorderable_list:
+          policies_pinned: "Imebandikwa"
+          policies_required: "Muhimu na Inahitajika"
+          table_type: "Aina"
         colors:
           title: "Rangi"
         icons:

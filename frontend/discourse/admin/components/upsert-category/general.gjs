@@ -15,6 +15,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import categoryStyleType from "discourse/lib/category-style-type";
 import {
   availableCategoryType,
   unavailableBadgeText,
@@ -54,6 +55,8 @@ export default class UpsertCategoryGeneral extends Component {
   @service categoryTypeChooser;
 
   @tracked loadingDescription = false;
+
+  /** @type {string | null} */
   @tracked descriptionHtml = null;
   @tracked descriptionExpanded = false;
   @tracked descriptionOverflows = false;
@@ -745,7 +748,10 @@ export default class UpsertCategoryGeneral extends Component {
       >
         <styleField.Control>
           <@form.ConditionalContent
-            @activeName={{or styleField.value @category.styleType "square"}}
+            @activeName={{or
+              (categoryStyleType (or styleField.value @category.styleType))
+              "square"
+            }}
             @onChange={{this.onStyleTypeChange}}
             as |cc|
           >
@@ -753,9 +759,11 @@ export default class UpsertCategoryGeneral extends Component {
               <Condition @name="icon">
                 {{i18n "category.styles.icon"}}
               </Condition>
-              <Condition @name="emoji">
-                {{i18n "category.styles.emoji"}}
-              </Condition>
+              {{#if this.siteSettings.enable_emoji}}
+                <Condition @name="emoji">
+                  {{i18n "category.styles.emoji"}}
+                </Condition>
+              {{/if}}
               <Condition @name="square">
                 {{i18n "category.styles.square"}}
               </Condition>

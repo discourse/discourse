@@ -417,6 +417,7 @@ uk:
         filter_placeholder: "Фільтр користувачів"
         remove_invitee: "Видалити запрошення зі списку"
         add_invitee: "Додати запрошення до списку"
+        this_event: "Ця подія"
       bulk_invite_modal:
         confirm: "підтвердити"
         text: "Завантажити файл CSV"

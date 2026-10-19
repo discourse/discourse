@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import bodyClass from "discourse/helpers/body-class";
-import { TABLE_AI_LAYOUT } from "../services/gists";
+import { TABLE_AI_LAYOUT } from "../services/gists.js";
 
 export default class AiTopicGist extends Component {
   @service gists;

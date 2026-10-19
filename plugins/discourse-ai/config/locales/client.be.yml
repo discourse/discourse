@@ -40,6 +40,12 @@ be:
       ai_decoded_transcript:
         type: "Тып"
         error: "памылка"
+      discourse_workflows:
+        classify:
+          upload_ids: "Выява"
+          name: "Імя"
+          type: "Тып"
+          type_score: "Балы"
       ai_tool_approval:
         loading: "Загрузка ..."
         tool: "Дзеянне"
@@ -165,6 +171,11 @@ be:
         edit: "Рэдагаваць"
         delete: "Выдаліць"
         embedding: "узаемадзеянне"
+      decision_models:
+        no_preset: "Няма"
+        display_name: "Імя"
+        edit: "Рэдагаваць"
+        delete: "Выдаліць"
       mcp_servers:
         name: "Назва"
         description: "Апісанне"
@@ -208,6 +219,13 @@ be:
         display_name: "Імя"
         providers:
           google: "Google"
+      ai_artifact:
+        editor:
+          version: "Версія"
+          default: "Прадвызначаная"
+          apply: "Прымяніць"
+        share: "Абагуліць"
+        filter_all: "Усе"
       ai_bot:
         debug_ai_modal:
           request: "запыт"

@@ -4,7 +4,7 @@ import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import ArgsTable from "../shared/args-table";
+import ArgsTable from "../shared/args-table.gjs";
 
 interface OutletInfoSignature {
   Args: {

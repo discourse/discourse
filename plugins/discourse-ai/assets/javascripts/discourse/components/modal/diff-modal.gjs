@@ -18,10 +18,10 @@ import { i18n } from "discourse-i18n";
 import {
   isAiCreditLimitError,
   popupAiCreditLimitError,
-} from "../../lib/ai-errors";
-import DiffStreamer from "../../lib/diff-streamer";
-import SmoothStreamer from "../../lib/smooth-streamer";
-import AiIndicatorWave from "../ai-indicator-wave";
+} from "../../lib/ai-errors.js";
+import DiffStreamer from "../../lib/diff-streamer.gjs";
+import SmoothStreamer from "../../lib/smooth-streamer.gjs";
+import AiIndicatorWave from "../ai-indicator-wave.gjs";
 
 export default class ModalDiffModal extends Component {
   @service messageBus;

@@ -292,6 +292,30 @@ he:
       default_pm_prefix: "[הודעה פרטית של בינה מלאכותית ללא כותרת]"
       read_post:
         unknown_post: "פרסום"
+      chat_tool_approval:
+        topic_states:
+          open: "פתוח"
+          closed: "סגור"
+          active: "פעיל"
+          deleted: "נמחק"
+        solution_post: "פוסט מס׳ %{number}"
+        duration_label: "משך:"
+        user_duration:
+          one: "יום"
+          two: "יומיים"
+          other: "%{count} יום"
+        post_states:
+          locked: "נעול"
+        posts_label: "פרסומים"
+        category_label: "קטגוריה"
+        category_fields:
+          name: "שם"
+          description: "תיאור"
+          color: "צבע"
+          text_color: "צבע הטקסט"
+        approve_label: "כן"
+        reject_label: "לא"
+        empty_value: "ריק"
       agents:
         cannot_have_duplicate_tools: "לא יכולים להיות כלים כפולים"
         github_helper:
@@ -582,6 +606,7 @@ he:
         reject:
           title: "לדחות"
     summarization:
+      published_summary_heading: "סיכום מבוסס בינה מלאכותית"
       configuration_hint:
         one: "יש להגדיר את ההגדרה `%{setting}` תחילה."
         two: "יש להגדיר את ההגדרות האלו תחילה: %{settings}."

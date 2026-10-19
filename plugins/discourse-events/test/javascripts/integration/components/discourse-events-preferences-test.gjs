@@ -5,7 +5,7 @@ import User, { addSaveableUserOptionField } from "discourse/models/user";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import form from "discourse/tests/helpers/form-kit-helper";
-import DiscourseEventsPreferences from "../../discourse/connectors/calendar-preferences/discourse-events-preferences";
+import DiscourseEventsPreferences from "discourse/plugins/discourse-events/discourse/connectors/calendar-preferences/discourse-events-preferences";
 
 module(
   "Integration | Component | DiscourseEventsPreferences",

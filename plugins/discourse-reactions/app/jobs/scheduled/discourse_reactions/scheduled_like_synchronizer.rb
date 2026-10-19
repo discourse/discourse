@@ -3,15 +3,10 @@
 module Jobs
   module DiscourseReactions
     class ScheduledLikeSynchronizer < ::Jobs::Scheduled
-      every 1.hour
+      every 1.day
 
       def execute(args = {})
-        if !SiteSetting.discourse_reactions_enabled ||
-             !SiteSetting.discourse_reactions_like_sync_enabled
-          return
-        end
-
-        ::DiscourseReactions::ReactionLikeSynchronizer.sync!
+        ::Jobs.enqueue(Jobs::DiscourseReactions::LikeSynchronizer)
       end
     end
   end

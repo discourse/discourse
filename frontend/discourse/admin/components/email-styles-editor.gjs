@@ -1,66 +1,43 @@
-/* eslint-disable ember/no-classic-components */
-import { tracked } from "@glimmer/tracking";
-import Component from "@ember/component";
-import { fn } from "@ember/helper";
-import { action, computed } from "@ember/object";
+import Component from "@glimmer/component";
+import { action, get } from "@ember/object";
 import { service } from "@ember/service";
-import { tagName } from "@ember-decorators/component";
 import AceEditor from "discourse/components/ace-editor";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class EmailStylesEditor extends Component {
   @service dialog;
 
-  @tracked _editorIdOverride;
-
-  @computed("fieldName")
-  get editorId() {
-    if (this._editorIdOverride !== undefined) {
-      return this._editorIdOverride;
-    }
-    return this.fieldName;
-  }
-
-  set editorId(value) {
-    this._editorIdOverride = value;
-  }
-
-  @computed("styles", "fieldName")
   get editorContents() {
-    return this.styles[this.fieldName];
+    return get(this.args.styles, this.args.fieldName);
   }
 
-  set editorContents(value) {
-    this.styles.setField(this.fieldName, value);
-  }
-
-  @computed("fieldName")
   get currentEditorMode() {
-    return this.fieldName === "css" ? "scss" : this.fieldName;
+    return this.args.fieldName === "css" ? "scss" : this.args.fieldName;
   }
 
-  @computed("fieldName", "styles.html", "styles.css")
   get resetDisabled() {
     return (
-      this.get(`styles.${this.fieldName}`) ===
-      this.get(`styles.default_${this.fieldName}`)
+      get(this.args.styles, this.args.fieldName) ===
+      get(this.args.styles, `default_${this.args.fieldName}`)
     );
+  }
+
+  @action
+  updateEditorContents(value) {
+    this.args.styles.setField(this.args.fieldName, value);
   }
 
   @action
   reset() {
     this.dialog.yesNoConfirm({
       message: i18n("admin.customize.email_style.reset_confirm", {
-        fieldName: i18n(`admin.customize.email_style.${this.fieldName}`),
+        fieldName: i18n(`admin.customize.email_style.${this.args.fieldName}`),
       }),
       didConfirm: () => {
-        this.styles.setField(
-          this.fieldName,
-          this.styles.get(`default_${this.fieldName}`)
+        this.updateEditorContents(
+          get(this.args.styles, `default_${this.args.fieldName}`)
         );
-        this.notifyPropertyChange("editorContents");
       },
     });
   }
@@ -69,9 +46,9 @@ export default class EmailStylesEditor extends Component {
     <div ...attributes>
       <AceEditor
         @content={{this.editorContents}}
-        @editorId={{this.editorId}}
+        @editorId={{@fieldName}}
         @mode={{this.currentEditorMode}}
-        @onChange={{fn (mut this.editorContents)}}
+        @onChange={{this.updateEditorContents}}
         @save={{@save}}
       />
 

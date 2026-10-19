@@ -9,8 +9,8 @@ import { or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import ArgsTable from "../shared/args-table";
-import devToolsState from "../state";
+import ArgsTable from "../shared/args-table.gjs";
+import devToolsState from "../state.js";
 
 // Outlets matching these patterns will be displayed with an icon only.
 // Feel free to add more if it improves the layout.

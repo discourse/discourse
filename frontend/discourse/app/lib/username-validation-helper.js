@@ -20,6 +20,8 @@ function validResult(attrs) {
 
 export default class UsernameValidationHelper {
   @tracked usernameValidationResult;
+
+  /** @type {string | null | undefined} */
   checkedUsername = null;
 
   constructor({

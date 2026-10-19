@@ -28,21 +28,23 @@ export async function applyInlineOneboxes(inline, ajax, opts) {
           topic_id: opts.topicId,
         },
       });
-      result["inline-oneboxes"].forEach((onebox) => {
-        if (onebox.title) {
-          _cache[onebox.url] = onebox;
+      const loaded = result["inline-oneboxes"].filter((onebox) => onebox.title);
+      loaded.forEach((onebox) => {
+        _cache[onebox.url] = onebox;
 
-          let links = inline[onebox.url] || [];
-          links.forEach((link) => {
-            link.innerText = onebox.title;
-            link.classList.add("inline-onebox");
-            if (onebox.css_class) {
-              link.classList.add(onebox.css_class);
-            }
-            link.classList.remove("inline-onebox-loading");
-          });
-        }
+        let links = inline[onebox.url] || [];
+        links.forEach((link) => {
+          link.innerText = onebox.title;
+          link.classList.add("inline-onebox");
+          if (onebox.css_class) {
+            link.classList.add(onebox.css_class);
+          }
+          link.classList.remove("inline-onebox-loading");
+        });
       });
+      if (loaded.length) {
+        opts.onLoad?.(loaded);
+      }
     } catch (err) {
       const rateLimited = (err.jqXHR ?? err).status === TOO_MANY_REQUESTS;
 
@@ -67,4 +69,8 @@ export function applyCachedInlineOnebox(url, onebox) {
 
 export function deleteCachedInlineOnebox(url) {
   return delete _cache[url];
+}
+
+export function resetInlineOneboxCache() {
+  Object.keys(_cache).forEach((url) => delete _cache[url]);
 }

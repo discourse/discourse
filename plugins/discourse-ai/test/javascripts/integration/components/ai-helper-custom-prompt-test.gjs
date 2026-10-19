@@ -4,19 +4,14 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import AiHelperCustomPrompt from "discourse/plugins/discourse-ai/discourse/components/ai-helper-custom-prompt";
 
-class TestState {
-  @tracked value = "test";
-}
-
 module("Integration | Component | AiHelperCustomPrompt", function (hooks) {
   setupRenderingTest(hooks);
 
   async function renderPrompt(submit, initialValue = "test") {
-    const state = new TestState();
-    state.value = initialValue;
+    const promptValue = tracked(initialValue);
     await render(
       <template>
-        <AiHelperCustomPrompt @submit={{submit}} @value={{state.value}} />
+        <AiHelperCustomPrompt @submit={{submit}} @value={{promptValue.value}} />
       </template>
     );
   }

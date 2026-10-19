@@ -1,4 +1,4 @@
-import { attrs, withDefaults } from "./helpers";
+import { attrs, withDefaults } from "./helpers.js";
 
 // Identity key for the legacy `Store.update` URL routing is `name`, not `id`
 // — the model sets `primaryKey = "name"` so `/tag/${name}/notifications.json`

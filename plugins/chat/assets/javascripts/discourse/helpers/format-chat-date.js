@@ -5,8 +5,8 @@ import { i18n } from "discourse-i18n";
 
 export default function formatChatDate(message, options = {}) {
   const currentUser = User.current();
-  const tz = currentUser ? currentUser.user_option.timezone : moment.tz.guess();
-  const date = moment(new Date(message.createdAt), tz);
+  const timezone = currentUser?.user_option?.timezone || moment.tz.guess();
+  const date = moment(message.createdAt).tz(timezone);
 
   const title = date.format(i18n("dates.long_with_year"));
   let display;

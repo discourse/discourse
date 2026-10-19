@@ -556,6 +556,7 @@ class StaffActionLogger
         action: UserHistory.actions[:suspend_user],
         target_user_id: user.id,
         details: details,
+        expires_at: user.suspended_till,
       )
     args[:post_id] = opts[:post_id] if opts[:post_id]
     UserHistory.create!(args)
@@ -748,7 +749,7 @@ class StaffActionLogger
 
     changed_attributes = category.previous_changes.slice(*category_params.keys)
 
-    if !old_permissions.empty? && (old_permissions != category_params[:permissions].to_h)
+    if old_permissions.present? && (old_permissions != category_params[:permissions].to_h)
       changed_attributes.merge!(
         permissions: [old_permissions.to_json, category_params[:permissions].to_json],
       )
@@ -821,6 +822,7 @@ class StaffActionLogger
         action: UserHistory.actions[:silence_user],
         target_user_id: user.id,
         details: opts[:details],
+        expires_at: user.silenced_till,
       )
     create_args[:post_id] = opts[:post_id] if opts[:post_id]
 

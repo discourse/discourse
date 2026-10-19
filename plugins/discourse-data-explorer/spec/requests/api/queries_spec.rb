@@ -84,7 +84,7 @@ RSpec.describe "JSON:API queries", type: :request do
             "isDefault" => false,
             "createdAt" => query.created_at.as_json,
             "lastRunAt" => query.last_run_at.as_json,
-            "tags" => [],
+            "tags" => ["custom"],
           },
           "links" => {
             "self" => "#{base}/queries/#{query.id}",
@@ -183,7 +183,7 @@ RSpec.describe "JSON:API queries", type: :request do
             "isDefault" => false,
             "createdAt" => middle.created_at.as_json,
             "lastRunAt" => middle.last_run_at.as_json,
-            "tags" => [],
+            "tags" => ["custom"],
           },
           "links" => {
             "self" => "#{base}/queries/#{middle.id}",

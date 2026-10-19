@@ -373,6 +373,28 @@ es:
       read_post:
         unknown_post: "publicación"
       chat_tool_approval:
+        topic_states:
+          open: "Abierto"
+          closed: "Cerrado"
+          active: "Activo"
+          deleted: "Eliminado"
+        solution_post: "Publicación n.º %{number}"
+        duration_label: "Duración:"
+        user_duration:
+          one: "%{count} día"
+          other: "%{count} días"
+        post_states:
+          locked: "Bloqueado"
+        posts_label: "Publicaciones"
+        category_label: "Categoría"
+        category_fields:
+          name: "nombre"
+          description: "descripción"
+          color: "color"
+          text_color: "color del texto"
+        approve_label: "Sí"
+        reject_label: "No"
+        empty_value: "Vacío"
         unexpected_error: "se ha producido un error inesperado"
       agents:
         cannot_delete_system_agent: "Los agentes del sistema no se pueden eliminar, desactívalos en su lugar"
@@ -895,8 +917,8 @@ es:
         disable_embeddings: "Tienes que desactivar primero «ai embeddings enabled»."
         choose_model: "Establece primero «ai embeddings selected model»."
         model_test_failed: "No hemos podido generar una prueba de incrustación con este modelo. Comprueba que esté configurada correctamente."
-    secrets:
-      delete_failed_in_use: "Esta credencial está siendo utilizada actualmente por uno o más LLM, incrustaciones o herramientas y no puede eliminarse."
+    decision_models:
+      secret_not_found: "La credencial seleccionada no existe"
     llm_models:
       missing_provider_param: "%{param} no puede estar en blanco"
       secret_required: "Se debe seleccionar una credencial"

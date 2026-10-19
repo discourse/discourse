@@ -17,6 +17,7 @@ const LIST_TYPE = {
 export default class CategoryListItem extends Component {
   @service discovery;
 
+  /** @type {import("discourse/models/category").default | null} */
   category = null;
   listType = LIST_TYPE.NORMAL;
 
