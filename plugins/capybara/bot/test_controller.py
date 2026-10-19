@@ -294,6 +294,57 @@ class ControllerTests(unittest.TestCase):
         self.assertEqual("cancelled", self.store.all()[0].phase)
         self.assertEqual(1, len(self.runtime.cleaned))
 
+    def test_deleted_review_card_retries_cleanup_after_restart(self):
+        self.controller.poll()
+        self.complete()
+        previous = self.store.all()[0]
+        self.board.deleted = True
+        self.runtime.cleanup_error = True
+        self.controller.poll()
+        self.assertEqual("cancelled", self.store.all()[0].phase)
+        self.assertTrue(self.store.all()[0].cleanup_pending)
+        self.runtime.cleanup_error = False
+        self.executor = Executor()
+        self.controller = self.build()
+        self.controller.poll()
+        self.assertFalse(self.store.all()[0].cleanup_pending)
+        self.assertEqual((previous.container_name, previous.tunnel_name), self.runtime.cleaned[-1])
+        self.assertEqual([], self.executor.tasks)
+        self.assertEqual(["claim", "review"], [command[0] for command in self.board.commands])
+
+    def test_deleted_running_card_cleans_late_worker_completion(self):
+        self.controller.poll()
+        future, previous, event = self.executor.tasks[0]
+        self.board.deleted = True
+        self.controller.poll()
+        self.assertTrue(event.is_set())
+        future.set_result(copy.deepcopy(RESULT))
+        self.controller.poll()
+        self.assertEqual("cancelled", self.store.all()[0].phase)
+        self.assertFalse(self.store.all()[0].cleanup_pending)
+        self.assertEqual(2, self.runtime.cleaned.count((previous.container_name, previous.tunnel_name)))
+        self.assertEqual(["claim"], [command[0] for command in self.board.commands])
+
+    def test_deleted_accepted_card_finishes_integration_deploy_and_publication(self):
+        self.controller.poll()
+        self.complete()
+        self.board.move("DONE")
+        self.controller.poll()
+        self.board.deleted = True
+        self.controller.poll()
+        self.assertFalse(self.executor.tasks[-1][2].is_set())
+        self.executor.tasks[-1][0].set_result({"commit": "c" * 40})
+        self.controller.poll()
+        self.assertEqual("deploying", self.store.all()[0].phase)
+        self.executor.tasks[-1][0].set_result({"commit": "c" * 40})
+        self.controller.poll()
+        self.assertEqual("publishing", self.store.all()[0].phase)
+        self.executor.tasks[-1][0].set_result({"commit": "c" * 40, "pull_request_url": "https://github.com/discourse/discourse/pull/123"})
+        self.controller.poll()
+        self.assertEqual("done", self.store.all()[0].phase)
+        self.assertEqual("c" * 40, self.store.all()[0].published_commit)
+        self.assertEqual(["claim", "review"], [command[0] for command in self.board.commands])
+
     def test_transient_snapshot_error_preserves_instance(self):
         self.controller.poll()
         self.complete()

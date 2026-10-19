@@ -3,6 +3,9 @@ Use the Capybara board
 Open https://joffrey.ngrok.dev/boards/capybara/1.
 New cards are Discourse topics in the Capybara category. Open their topics to add replies or images.
 Put draft requests in BACKLOG. The bot ignores that column.
+Deleting a Capybara card closes its topic and cancels active coding or review previews.
+The bot removes the preview container and tunnel on its next poll, retrying failed cleanup.
+Accepted DONE integration already underway finishes its merge, deployment and publication even if the card is deleted.
 Move a card to TODO to queue it. The bot reads the initial topic post, the latest 99 human replies, and their images.
 It claims the card, moves it to IN PROGRESS, and starts a Codex session in Docker through OrbStack.
 Each TODO attempt starts with a fresh checkout of the committed capybara branch in /Users/joffreyjaffeux/Code/discourse.
@@ -73,3 +76,12 @@ The token and publisher container are removed after each attempt. Host Docker ad
 To rotate it, replace the host secret with a token having the same repository permissions and recreate the controller.
 Publication stops if the token expires, the PR closes, its target changes, or the remote branch changes unexpectedly.
 Historical runs created before publishing was enabled keep their completed state and are not pushed retrospectively.
+
+Main board HTTP authentication
+
+The main joffrey.ngrok.dev endpoint requires HTTP Basic authentication at the ngrok edge.
+Credentials are kept outside Git and coding mounts in /Users/joffreyjaffeux/Documents/Codex/capybara-secrets/board-http-auth.json.
+The controller mounts that file read-only at BOARD_HTTP_AUTH_FILE. Missing or invalid configured credentials stop startup.
+Polling, image uploads and deployment checks authenticate only to the configured main origin.
+Reconciliation restores authentication after tunnel replacement or an ngrok agent restart.
+To rotate credentials, replace that JSON file and recreate the controller. Preview domains keep their existing login flow.

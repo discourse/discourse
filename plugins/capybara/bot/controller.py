@@ -19,6 +19,8 @@ import uuid
 import docker
 import requests
 
+from auth import configure_board_auth, load_board_credentials
+
 LOG = logging.getLogger("codex-board-bot")
 OWNER = "codex-board-bot"
 ACTIVE = {"running", "review"}
@@ -97,6 +99,7 @@ class Board:
         self.root = self.url.rsplit("/codex-board-bot", 1)[0]
         self.bootstrap_user = bootstrap_user
         self.session = requests.Session()
+        configure_board_auth(self.session, self.root, load_board_credentials())
         self.csrf = None
         self.session.headers.update({"Accept": "application/json", "X-Requested-With": "XMLHttpRequest"})
 

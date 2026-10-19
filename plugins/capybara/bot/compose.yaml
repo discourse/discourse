@@ -10,6 +10,7 @@ services:
     environment:
       BOARD_API: ${BOARD_API:-https://joffrey.ngrok.dev/codex-board-bot}
       BOARD_ID: "1"
+      BOARD_HTTP_AUTH_FILE: /run/secrets/board-http-auth.json
       SEED_HOST_PATH: ${SEED_HOST_PATH:-/Users/joffreyjaffeux/Code/discourse}
       WORKER_IMAGE: discourse-codex-worker:local
       NGROK_API: http://host.docker.internal:4040
@@ -23,6 +24,7 @@ services:
       - "127.0.0.1:8099:8099"
     volumes:
       - controller-state:/data
+      - ${BOARD_HTTP_AUTH_HOST_PATH:-/Users/joffreyjaffeux/Documents/Codex/capybara-secrets/board-http-auth.json}:/run/secrets/board-http-auth.json:ro
       - ./publisher-target.json:/run/publisher-target.json:ro
       - ${GITHUB_FORK_TOKEN_HOST_PATH:-/Users/joffreyjaffeux/Documents/Codex/capybara-secrets/github-fork-token}:/run/secrets/github-fork-token:ro
       - /var/run/docker.sock:/var/run/docker.sock

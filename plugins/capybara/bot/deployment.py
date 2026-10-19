@@ -7,6 +7,8 @@ import time
 import docker
 import requests
 
+from auth import configure_board_auth, load_board_credentials
+
 
 class DockerBoard:
     name = "capybara-board"
@@ -18,6 +20,7 @@ class DockerBoard:
         self.host = os.environ.get("BOARD_HOST", "joffrey.ngrok.dev")
         self.port = int(os.environ.get("BOARD_PORT", "3410"))
         self.bootstrap = os.environ.get("BOARD_BOOTSTRAP_HOST_PATH", "")
+        self.credentials = load_board_credentials()
         self.ngrok = requests.Session()
         self.ngrok.headers["Host"] = "localhost:4040"
         self.ngrok_api = config.ngrok_api.rstrip("/")
@@ -66,15 +69,30 @@ class DockerBoard:
         tunnel = next((x for x in response.json()["tunnels"] if x["public_url"] == f"https://{self.host}"), None)
         address = f"http://127.0.0.1:{self.port}"
         if tunnel and tunnel["config"]["addr"] in (address, address.replace("127.0.0.1", "localhost")):
-            return
+            if not self.credentials or self.tunnel_auth_matches():
+                return
         if tunnel:
             from urllib.parse import quote
             response = self.ngrok.delete(f"{self.ngrok_api}/api/tunnels/{quote(tunnel['name'], safe='')}", timeout=15)
             response.raise_for_status()
-        response = self.ngrok.post(f"{self.ngrok_api}/api/tunnels", timeout=30,
-                                   json={"name": "command_line", "proto": "http", "addr": address,
-                                         "hostname": self.host, "schemes": ["https"]})
+        payload = {"name": "command_line", "proto": "http", "addr": address,
+                   "hostname": self.host, "schemes": ["https"]}
+        if self.credentials:
+            payload["basic_auth"] = [self.credentials.ngrok_value()]
+        response = self.ngrok.post(f"{self.ngrok_api}/api/tunnels", timeout=30, json=payload)
         response.raise_for_status()
+
+    def tunnel_auth_matches(self):
+        url = f"https://{self.host}/session/csrf.json"
+        with requests.Session() as session:
+            session.trust_env = False
+            session.headers["ngrok-skip-browser-warning"] = "1"
+            response = session.get(url, timeout=15, allow_redirects=False)
+            if response.status_code != 401 or not response.headers.get("WWW-Authenticate", "").lower().startswith("basic "):
+                return False
+            configure_board_auth(session, url, self.credentials)
+            response = session.get(url, timeout=15, allow_redirects=False)
+            return response.status_code != 401
 
     def wait(self, container, event):
         deadline = time.monotonic() + 1800
@@ -89,6 +107,7 @@ class DockerBoard:
                 self.point_tunnel()
                 try:
                     with requests.Session() as session:
+                        configure_board_auth(session, f"https://{self.host}", self.credentials)
                         session.headers["ngrok-skip-browser-warning"] = "1"
                         response = session.get(f"https://{self.host}/session/joffreyjaffeux/become", timeout=30)
                         response.raise_for_status()
@@ -140,5 +159,8 @@ class DockerBoard:
                 current.reload()
                 if current.status != "running":
                     current.start()
+                ready = current.exec_run(["cat", "/workspace/board-ready"])
+                if ready.exit_code == 0 and ready.output.decode().strip() == current.labels["commit"]:
+                    self.point_tunnel()
         finally:
             self.lock.release()

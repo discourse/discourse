@@ -6,11 +6,19 @@ import urllib.request
 import uuid
 from pathlib import Path
 
+from auth import load_board_credentials
+
 BASE = os.environ.get('BOARD_URL', 'https://joffrey.ngrok.dev')
 
 class Client:
     def __init__(self, username):
-        self.opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
+        handlers = [urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar())]
+        credentials = load_board_credentials()
+        if credentials:
+            passwords = urllib.request.HTTPPasswordMgrWithDefaultRealm()
+            passwords.add_password(None, BASE, credentials.username, credentials.password)
+            handlers.append(urllib.request.HTTPBasicAuthHandler(passwords))
+        self.opener = urllib.request.build_opener(*handlers)
         self.opener.open(BASE + '/session/' + username + '/become').close()
         self.headers = {'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'ngrok-skip-browser-warning': '1'}
         self.headers['X-CSRF-Token'] = self.request('/session/csrf.json')[1]['csrf']
