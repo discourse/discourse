@@ -11,6 +11,9 @@ import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translatio
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import { openTopicFromQuery } from "../../lib/open-topic-from-query.js";
@@ -192,9 +195,26 @@ export default class AiSearchAnswer extends Component {
                     <span class="ai-search-answer__related-title">
                       {{dReplaceEmoji topic.title}}
                     </span>
-                    {{#if topic.categoryModel}}
-                      {{dCategoryLink topic.categoryModel link=false}}
+                    {{#if topic.bumped_at}}
+                      <span class="ai-search-answer__related-date">
+                        {{dFormatDate topic.bumped_at format="tiny"}}
+                      </span>
                     {{/if}}
+                    {{#if topic.categoryModel}}
+                      <span class="ai-search-answer__related-category">
+                        {{dCategoryLink topic.categoryModel link=false}}
+                      </span>
+                    {{/if}}
+                    <span
+                      class="ai-search-answer__related-replies"
+                      title={{i18n
+                        "discourse_ai.ai_search.related_replies"
+                        count=topic.topic_replies
+                      }}
+                    >
+                      {{dIcon "reply"}}
+                      {{dNumber topic.topic_replies}}
+                    </span>
                   </a>
                 </li>
               {{/each}}

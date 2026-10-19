@@ -332,6 +332,7 @@ module DiscourseAi
               "passages" => passages,
               "post_updated_at" => post.updated_at.iso8601(6),
               "topic_updated_at" => topic.updated_at.iso8601(6),
+              "topic_bumped_at" => topic.bumped_at&.iso8601,
             )
           end
           .first(CANDIDATE_LIMIT)

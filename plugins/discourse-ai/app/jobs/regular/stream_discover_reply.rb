@@ -451,6 +451,7 @@ module Jobs
           category: source["category"].presence,
           category_id: source["category_id"],
           topic_replies: source["topic_replies"].to_i,
+          bumped_at: source["topic_bumped_at"],
           username: source["username"],
           name: SiteSetting.enable_names? ? source["name"] : nil,
           avatar_template: source["avatar_template"],

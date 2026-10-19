@@ -1843,6 +1843,9 @@ en:
 
       ai_search:
         related_topics: "Related topics"
+        related_replies:
+          one: "%{count} reply"
+          other: "%{count} replies"
         title: "Search"
         input_label: "Search or ask a question"
         input_placeholder: "Search with keywords or ask a question"

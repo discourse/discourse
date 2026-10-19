@@ -200,31 +200,62 @@
     list-style: none;
   }
 
+  &__related-item + &__related-item {
+    border-top: 1px solid var(--content-border-color);
+  }
+
   &__related-link {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-    padding: var(--space-1) var(--space-2);
+    display: grid;
+    grid-template:
+      "title date" auto
+      "category replies" auto / minmax(0, 1fr) auto;
+    column-gap: var(--space-3);
+    align-items: baseline;
+    padding: var(--space-2);
     margin-inline: calc(-1 * var(--space-2));
-    border-radius: var(--d-border-radius);
+    line-height: var(--line-height-medium);
 
     &:hover {
       background: var(--d-hover);
     }
-
-    .badge-category__wrapper {
-      flex-shrink: 0;
-      font-size: var(--font-down-1);
-    }
   }
 
   &__related-title {
-    flex: 1;
-    min-width: 0;
+    grid-area: title;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     color: var(--tertiary);
+  }
+
+  &__related-category {
+    grid-area: category;
+    min-width: 0;
+    line-height: var(--line-height-medium);
+  }
+
+  // the category badge sets its own size, which these match
+  &__related-date,
+  &__related-replies {
+    justify-self: end;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__related-date {
+    grid-area: date;
+  }
+
+  &__related-replies {
+    grid-area: replies;
+    display: inline-flex;
+    gap: var(--space-1);
+    align-items: center;
+
+    .d-icon {
+      font-size: var(--font-down-1);
+      transform: scaleX(-1);
+    }
   }
 
   &__follow-up {

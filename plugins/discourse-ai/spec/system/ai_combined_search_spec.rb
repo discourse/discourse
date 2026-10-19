@@ -124,7 +124,9 @@ describe "AI combined search" do
   end
 
   it "lists every related topic the answer used" do
-    more_topics = Array.new(3) { |i| Fabricate(:topic, title: "Account recovery guide part #{i}") }
+    category = Fabricate(:category, name: "Account help")
+    more_topics =
+      Array.new(3) { |i| Fabricate(:topic, category:, title: "Account recovery guide part #{i}") }
     visit "/"
     wait_for_discoveries_channel
     ask(query)
@@ -137,11 +139,25 @@ describe "AI combined search" do
       sources:
         sources +
           more_topics.map do |topic|
-            { title: topic.title, url: topic.url, excerpt: "An excerpt about #{topic.title}" }
+            {
+              title: topic.title,
+              url: topic.url,
+              excerpt: "An excerpt about #{topic.title}",
+              category_id: topic.category_id,
+              topic_replies: 12,
+              bumped_at: 2.days.ago.iso8601,
+            }
           end,
     )
 
     expect(page).to have_css(".ai-search-answer__related-heading", text: "Related topics")
+    last_row = find(".ai-search-answer__related-link", text: more_topics.last.title)
+    expect(last_row).to have_css(".ai-search-answer__related-date", text: "2d")
+    expect(last_row).to have_css(
+      ".ai-search-answer__related-replies[title='12 replies']",
+      text: "12",
+    )
+    expect(last_row).to have_css(".ai-search-answer__related-category", text: "Account help")
     expect(page).to have_css(".ai-search-answer__related-item", count: 5)
     expect(page).to have_css(".ai-search-answer__related-link", text: more_topics.last.title)
     expect(page).to have_no_css(".ai-search-answer__related-excerpt")
