@@ -278,6 +278,16 @@ RSpec.describe Jobs::DeliverPushNotification do
         2.times { deliver(localization_wait_token: token) }
       end
 
+      it "still sends a held push whose wait state has expired" do
+        deliver
+        token = held_token
+        Discourse.redis.del("push_notification_localization_wait:#{localized_post.id}")
+
+        PushNotificationPusher.expects(:push).once
+
+        deliver(localization_wait_token: token)
+      end
+
       it "does not release pushes held for other locales" do
         deliver
         Jobs::DeliverPushNotification.jobs.clear
