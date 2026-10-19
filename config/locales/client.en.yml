@@ -3904,6 +3904,7 @@ en:
         show_preview: "Show preview"
 
       table:
+        default_heading: "Column %{number}"
         add_row: "Add row"
         add_column: "Add column"
         insert_row_above: "Insert above"
@@ -6732,63 +6733,6 @@ en:
         pattern_mismatch: "Please match the requested format."
         bad_input: "Please enter a valid input."
 
-    table_builder:
-      title: "Table Builder"
-      modal:
-        title: "Table Builder"
-        create: "Build Table"
-        help:
-          title: "Using the Spreadsheet Editor"
-          enter_key: "Enter"
-          tab_key: "Tab"
-          new_row: "at the end of a row to insert a new row."
-          new_col: "at the end of a column to insert a new column."
-          options: "Right-click on cells to access more options in a dropdown menu."
-        confirm_close: "Are you sure you want to close the table builder? Any unsaved changes will be lost."
-      edit:
-        btn_edit: "Edit Table"
-        modal:
-          title: "Edit Table"
-          cancel: "cancel"
-          create: "Save"
-          reason: "Why are you editing?"
-          trigger_reason: "Add reason for edit"
-        default_edit_reason: "Update Table with Table Editor"
-      default_header:
-        col_1: "Column 1"
-        col_2: "Column 2"
-        col_3: "Column 3"
-        col_4: "Column 4"
-      spreadsheet:
-        no_records_found: "No records found"
-        show: "Show"
-        entries: "entries"
-        about: "About"
-        prompts:
-          delete_selected_rows: "Are you sure you want to delete the selected rows?"
-          delete_selected_cols: "Are you sure you want to delete the selected columns?"
-          will_destroy_merged_cells: "This action will destroy any existing merged cells. Are you sure?"
-          will_clear_search_results: "This action will destroy any existing merged cells. Are you sure?"
-          conflicts_with_merged_cells: "There is a conflict with another merged cell"
-        invalid_merge_props: "Invalid merged properties"
-        cells_already_merged: "Cell already merged"
-        no_cells_selected: "No cells selected"
-        context_menu:
-          row:
-            before: "Insert a new row before"
-            after: "Insert a new row after"
-            delete: "Delete selected rows"
-          col:
-            before: "Insert a new column before"
-            after: "Insert a new column after"
-            delete: "Delete selected columns"
-            rename: "Rename this column"
-          order:
-            ascending: "Order ascending"
-            descending: "Order descending"
-          copy: "Copy..."
-          paste: "Paste..."
-          save: "Save as..."
     powered_by_discourse: "Powered by Discourse"
     safari_15_warning: "Your browser will soon be incompatible with this community. To keep participating here, please upgrade your browser or <a href='%{url}'>learn more</a>."
 

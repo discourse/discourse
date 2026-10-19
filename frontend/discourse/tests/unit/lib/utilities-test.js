@@ -5,7 +5,6 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import {
-  arrayToTable,
   caretRowCol,
   clipboardCopyAsync,
   defaultHomepage,
@@ -17,7 +16,6 @@ import {
   inCodeBlock,
   initializeDefaultHomepage,
   mergeSortedLists,
-  replaceTableRaw,
   selectedHTML,
   setCaretPosition,
   setDefaultHomepage,
@@ -27,11 +25,6 @@ import {
   unicodeSlugify,
 } from "discourse/lib/utilities";
 import Site from "discourse/models/site";
-import {
-  mdTable,
-  mdTableNonUniqueHeadings,
-  mdTableSpecialChars,
-} from "discourse/tests/fixtures/md-table";
 import { chromeTest } from "discourse/tests/helpers/qunit-helpers";
 import {
   disableRaiseOnDeprecation,
@@ -494,154 +487,8 @@ module("Unit | Utilities | clipboard", function (hooks) {
   );
 });
 
-module("Unit | Utilities | table-builder", function (hooks) {
+module("Unit | Utilities | tables", function (hooks) {
   setupTest(hooks);
-
-  test("arrayToTable", function (assert) {
-    const tableData = [
-      {
-        col0: "Toyota",
-        col1: "Supra",
-        col2: "1998",
-      },
-      {
-        col0: "Nissan",
-        col1: "Skyline",
-        col2: "1999",
-      },
-      {
-        col0: "Honda",
-        col1: "S2000",
-        col2: "2001",
-      },
-    ];
-
-    assert.strictEqual(
-      arrayToTable(tableData, ["Make", "Model", "Year"]),
-      mdTable,
-      "it creates a markdown table from an array of objects (with headers as keys)"
-    );
-
-    const specialCharsTableData = [
-      {
-        col0: "Toyota",
-        col1: "Supra",
-        col2: "$50,000",
-      },
-      {
-        col0: "",
-        col1: "Celica",
-        col2: "$20,000",
-      },
-      {
-        col0: "Nissan",
-        col1: "GTR",
-        col2: "$80,000",
-      },
-    ];
-
-    assert.strictEqual(
-      arrayToTable(specialCharsTableData, ["Make", "Model", "Price"]),
-      mdTableSpecialChars,
-      "it creates a markdown table with special characters in correct alignment"
-    );
-
-    const nonUniqueColumns = ["col1", "col2", "col1"];
-
-    assert.strictEqual(
-      arrayToTable(
-        [{ col0: "Col A", col1: "Col B", col2: "Col C" }],
-        nonUniqueColumns
-      ),
-      mdTableNonUniqueHeadings,
-      "it does not suppress a column if heading is the same as another column"
-    );
-  });
-  test("arrayToTable with custom column prefix", function (assert) {
-    const tableData = [
-      {
-        A0: "hey",
-        A1: "you",
-      },
-      {
-        A0: "over",
-        A1: "there",
-      },
-    ];
-
-    assert.strictEqual(
-      arrayToTable(tableData, ["Col 1", "Col 2"], "A"),
-      `|Col 1 | Col 2|\n|--- | ---|\n|hey | you|\n|over | there|\n`,
-      "it works"
-    );
-  });
-
-  test("arrayToTable returns valid table with multiline cell data", function (assert) {
-    const tableData = [
-      {
-        col0: "Jane\nDoe",
-        col1: "Teri",
-      },
-      {
-        col0: "Finch",
-        col1: "Sami",
-      },
-    ];
-
-    assert.strictEqual(
-      arrayToTable(tableData, ["Col 1", "Col 2"]),
-      `|Col 1 | Col 2|\n|--- | ---|\n|Jane Doe | Teri|\n|Finch | Sami|\n`,
-      "it creates a valid table"
-    );
-  });
-
-  test("arrayToTable with alignment specification", function (assert) {
-    const tableData = [
-      { col0: "left", col1: "center", col2: "right", col3: "unspecificated" },
-      { col0: "111", col1: "222", col2: "333", col3: "444" },
-    ];
-    const alignment = ["left", "center", "right", null];
-    assert.strictEqual(
-      arrayToTable(
-        tableData,
-        ["Col 1", "Col 2", "Col 3", "Col 4"],
-        "col",
-        alignment
-      ),
-      "|Col 1 | Col 2 | Col 3 | Col 4|\n|:-- | :-: | --: | ---|\n|left | center | right | unspecificated|\n|111 | 222 | 333 | 444|\n",
-      "it creates a valid table"
-    );
-  });
-
-  test("arrayToTable escapes `|` in headings and cells", function (assert) {
-    const tableData = [
-      {
-        col0: "`a|b`",
-        col1: "![image|200x50](/images/discourse-logo-sketch.png)",
-        col2: "",
-        col3: "|",
-      },
-      { col0: "1|1", col1: "2|2", col2: "3|3", col3: "4|4" },
-    ];
-    assert.strictEqual(
-      arrayToTable(tableData, ["Col | 1", "Col 2", "Col 3", "Col 4"]),
-      "|Col \\| 1 | Col 2 | Col 3 | Col 4|\n|--- | --- | --- | ---|\n|`a\\|b` | ![image\\|200x50](/images/discourse-logo-sketch.png) |  | \\||\n|1\\|1 | 2\\|2 | 3\\|3 | 4\\|4|\n",
-      "it creates a valid table"
-    );
-  });
-
-  test("replaceTableRaw", function (assert) {
-    const raw = "Some text\n\nMaterial | Value\n--- | ---\nA | 1\n\nMore text";
-    const result = replaceTableRaw(
-      raw,
-      [2, 5],
-      "| Material | Value |\n| --- | --- |\n| A | 1 |"
-    );
-    assert.strictEqual(
-      result,
-      "Some text\n\n| Material | Value |\n| --- | --- |\n| A | 1 |\n\nMore text"
-    );
-  });
 
   test("findTableRegex", function (assert) {
     const oneTable = `|Make|Model|Year|\n|--- | --- | ---|\n|Toyota|Supra|1998|`;
