@@ -16,6 +16,7 @@ export default class AdminSiteSettingsFilterControls extends Component {
   @tracked filter = this.args.initialFilter || "";
   @tracked onlyOverridden = false;
 
+  /** @type {HTMLElement | null} */
   menuTrigger = null;
 
   @action

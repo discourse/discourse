@@ -177,6 +177,13 @@ describe "bin/qunit" do
     )
   end
 
+  it "targets the plugin when given a plugin directory without a trailing slash" do
+    result = run("plugins/chat")
+    expect(result.status).to eq(0)
+    expect(result.args).to include("target=chat&testem=1")
+    expect(result.env).to include("LOAD_PLUGINS" => "1")
+  end
+
   it "prevents running files from multiple targets" do
     result = run(core_test_file, chat_test_file)
     expect(result.status).to eq(1)

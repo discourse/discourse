@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import DataExplorerAdminDashboardCard from "../components/admin-dashboard-card";
+import DataExplorerAdminDashboardCard from "../components/admin-dashboard-card.gjs";
 
 export default {
   name: "data-explorer-register-admin-dashboard-renderer",

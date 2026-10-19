@@ -11,7 +11,7 @@ import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import BoardsEditableTitle from "../boards-editable-title";
+import BoardsEditableTitle from "../boards-editable-title.gjs";
 
 export default class BoardsCardDetail extends Component {
   @service siteSettings;

@@ -25,6 +25,24 @@ th:
           title: "สำรอง"
       read_post:
         unknown_post: "โพส"
+      chat_tool_approval:
+        topic_states:
+          open: "เปิด"
+          closed: "ปิด"
+          active: "ใช้งานอยู่"
+          deleted: "ลบ"
+        solution_post: "โพสต์ #%{number}"
+        duration_label: "ช่วงเวลา:"
+        user_duration:
+          other: "%{count} วัน"
+        posts_label: "โพส"
+        category_label: "หมวดหมู่"
+        category_fields:
+          name: "ชื่อ"
+          description: "รายละเอียด"
+          color: "สี"
+        approve_label: "ใช่"
+        reject_label: "ไม่ใช่"
       tool_summary:
         search: "ค้นหา"
         time: "เวลา"

@@ -174,8 +174,4 @@ RSpec.describe DiscourseWorkflows::Nodes::PostEdited::V1 do
       expect(trigger.matches?(trigger_context("trust_levels" => ["1"]))).to eq(false)
     end
   end
-
-  def trigger_context(parameters)
-    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
-  end
 end

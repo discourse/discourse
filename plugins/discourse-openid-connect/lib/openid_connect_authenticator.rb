@@ -31,9 +31,8 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
 
   def primary_email_verified?(auth)
     supplied_verified_boolean = auth["extra"]["raw_info"]["email_verified"]
-    # If the payload includes the email_verified boolean, use it. Otherwise assume true
     if supplied_verified_boolean.nil?
-      true
+      SiteSetting.openid_connect_email_verified_claim_fallback
     else
       # Many providers violate the spec, and send this as a string rather than a boolean
       supplied_verified_boolean == true ||

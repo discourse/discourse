@@ -16,6 +16,7 @@ fa_IR:
       link: "پیوند"
   mcp:
     errors:
+      category_not_found: "دسته یافت نشد"
       draft_too_long: "پیش‌نویس خیلی طولانی است"
       topic_not_found: "موضوع پیدا نشد"
     oauth:

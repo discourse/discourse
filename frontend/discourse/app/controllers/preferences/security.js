@@ -21,6 +21,7 @@ export default class SecurityController extends Controller {
   @service router;
   @service currentUser;
 
+  /** @type {string | null} */
   passwordProgress = null;
   subpageTitle = i18n("user.preferences_nav.security");
   showAllAuthTokens = false;

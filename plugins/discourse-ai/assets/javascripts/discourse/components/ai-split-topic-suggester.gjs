@@ -11,7 +11,7 @@ import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
-import { tagSuggestionParams } from "../lib/ai-helper-suggestions";
+import { tagSuggestionParams } from "../lib/ai-helper-suggestions.js";
 
 export default class AiSplitTopicSuggester extends Component {
   @service site;

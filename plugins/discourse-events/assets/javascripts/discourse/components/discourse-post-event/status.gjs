@@ -14,7 +14,7 @@ import DComboButton from "discourse/ui-kit/d-combo-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import CalendarPrompt from "./calendar-prompt";
+import CalendarPrompt from "./calendar-prompt.gjs";
 
 const statusButtonClass = (selected) =>
   selected ? "btn-primary" : "btn-default";

@@ -1,6 +1,26 @@
 # frozen_string_literal: true
 
 describe BackupRestore::Creator do
+  describe "backup filenames" do
+    it "includes the Discourse version and migration version for both backup types" do
+      freeze_time(Time.utc(2026, 9, 25, 12))
+      SiteSetting.title = "My forum"
+      BackupRestore.stubs(:current_database_version).returns(20_260_923_080_644)
+      stub_const(Discourse::VERSION, "STRING", "2026.9.0-latest") do
+        described_class.any_instance.stubs(:include_uploads?).returns(true)
+
+        [true, false].each do |with_uploads|
+          creator = described_class.new(nil, with_uploads: with_uploads)
+          extension = with_uploads ? "tar.gz" : "sql.gz"
+
+          expect(creator.instance_variable_get(:@backup_filename)).to eq(
+            "my-forum-2026-09-25-120000-v2026-9-0-latest-20260923080644.#{extension}",
+          )
+        end
+      end
+    end
+  end
+
   describe "#pg_dump_command" do
     it "excludes disposable nested hot score data" do
       command = described_class.new(Discourse.system_user.id).send(:pg_dump_command)

@@ -15,7 +15,7 @@ import { attachmentDownloadStrategy } from "discourse/lib/download-strategy";
 import getURL from "discourse/lib/get-url";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
-import ThemeUploadAddModal from "../../../components/theme-upload-add";
+import ThemeUploadAddModal from "../../../components/theme-upload-add.gjs";
 
 const THEME_UPLOAD_VAR = 2;
 
@@ -27,6 +27,7 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @service toasts;
 
   editRouteName = "adminCustomizeThemes.edit";
+  parentThemesSaved = false;
 
   @computed("model.id")
   get downloadUrl() {
@@ -121,6 +122,17 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @computed("model.themeable_site_settings")
   get themeSiteSettings() {
     return this.model?.themeable_site_settings;
+  }
+
+  get pendingSettings() {
+    return [
+      ...(this.settings ?? []),
+      ...(this.themeSiteSettings ?? []),
+      ...(this.translations ?? []),
+      this.model.component
+        ? this.relativesSelectorSettingsForComponent
+        : this.relativesSelectorSettingsForTheme,
+    ].filter((setting) => setting.hasPendingChanges);
   }
 
   @computed("model.component", "model.remote_theme")
@@ -538,6 +550,11 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   @action
+  markParentThemesSaved() {
+    this.parentThemesSaved = true;
+  }
+
+  @action
   removeChildTheme(theme) {
     this.model.removeChildTheme(theme).then(() => this.store.findAll("theme"));
   }
@@ -550,7 +567,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
       }),
       didConfirm: () => {
         const model = this.model;
-        model.setProperties({ recentlyInstalled: false });
         model.destroyRecord().then(() => {
           removeValueFromArray(this.allThemes, model);
 

@@ -21,7 +21,6 @@ zh_TW:
     openid_connect_authorize_parameters: "從 /auth/oidc 重新導向至 IDP 的 authorize endpoint 時要包含的 URL 參數"
     openid_connect_overrides_email: "每次登入時，使用 openid-connect 值覆寫使用者的電子郵件。其運作方式與 {{setting:auth_overrides_email}} 設定相同，但僅適用於 OpenID Connect 登入。"
     openid_connect_claims: "明確定義 claim，供不會依 scope 傳回資料的提供者使用。（JSON）"
-    openid_connect_groups_claim: "OIDC token 中包含使用者群組字串陣列的 claim 名稱。留空即可停用群組同步。"
     openid_connect_user_field_mappings: "將 OIDC claim 對應至 Discourse 使用者欄位。每個項目會將一個 OIDC claim 名稱與 Discourse 使用者欄位的數字 ID 配對。"
     openid_connect_match_by_email: "使用電子郵件地址，將 OpenID Connect 驗證與現有的 Discourse 使用者帳號配對。"
     openid_connect_use_pkce: "為 OpenID Connect 驗證啟用代碼交換證明金鑰（Proof Key for Code Exchange，PKCE）。"

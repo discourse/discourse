@@ -9,11 +9,12 @@ import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import discourseReactionsEmoji from "../helpers/discourse-reactions-emoji";
-import CustomReaction from "../models/discourse-reactions-custom-reaction";
+import discourseReactionsEmoji from "../helpers/discourse-reactions-emoji.js";
+import CustomReaction from "../models/discourse-reactions-custom-reaction.js";
 
 export default class DiscourseReactionsUsersMenu extends Component {
   @service router;
+  @service siteSettings;
 
   @tracked activeFilter = null;
 
@@ -85,7 +86,9 @@ export default class DiscourseReactionsUsersMenu extends Component {
   }
 
   get showFilters() {
-    return this.reactions.length > 1;
+    // Every reaction renders as the like icon without emoji, so per-reaction
+    // filters would be indistinguishable.
+    return this.siteSettings.enable_emoji && this.reactions.length > 1;
   }
 
   get titleText() {

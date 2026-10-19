@@ -25,7 +25,27 @@ function sanitizeKey(name) {
     .replace(/[ .]/g, "_");
 }
 
-export function summarizeOutputKey(row = {}) {
+export function fieldKey(field, fields) {
+  const leaf = leafName(field);
+  if (fields.filter((other) => leafName(other) === leaf).length < 2) {
+    return leaf;
+  }
+
+  return sanitizeKey(field);
+}
+
+function derivedFields(rows, aggregation) {
+  return rows
+    .filter(
+      (row) =>
+        String(row.aggregation ?? "") === aggregation &&
+        summarizeOutputKeyIsDerived(row)
+    )
+    .map((row) => String(row.field ?? "").trim())
+    .filter(Boolean);
+}
+
+export function summarizeOutputKey(row = {}, rows = [row]) {
   const explicit = String(row.output_field_name ?? "").trim();
   if (explicit) {
     return explicit;
@@ -39,7 +59,9 @@ export function summarizeOutputKey(row = {}) {
     return prefix.replace(/_$/, "");
   }
 
-  return `${prefix}${sanitizeKey(leafName(field))}`;
+  return `${prefix}${sanitizeKey(
+    fieldKey(field, derivedFields(rows, aggregation))
+  )}`;
 }
 
 export function summarizeOutputKeyIsDerived(row = {}) {

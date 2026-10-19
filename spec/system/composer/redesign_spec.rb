@@ -52,6 +52,16 @@ describe "Composer redesign" do
       expect(composer).to have_pm_recipients_in_category_row
       expect(composer).to have_title_below_category_row
     end
+
+    it "shows the toolbar even if the user hid it in the legacy composer", mobile: true do
+      visit("/")
+      page.execute_script("window.localStorage.setItem('discourse_toolbar-enabled', 'false');")
+
+      visit("/new-topic")
+
+      expect(composer).to be_opened
+      expect(composer).to have_footer_toolbar
+    end
   end
 
   context "when enable_composer_redesign is disabled" do

@@ -15,7 +15,11 @@ export default class BulkPinOptions extends Component {
   @tracked loading = true;
   @tracked pinnedInCategoryCount = 0;
   @tracked pinnedGloballyCount = 0;
+
+  /** @type {string | null} */
   @tracked pinnedInCategoryUntil = null;
+
+  /** @type {string | null} */
   @tracked pinnedGloballyUntil = null;
 
   constructor() {

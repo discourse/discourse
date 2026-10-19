@@ -14,7 +14,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import ThemesGridPlaceholder from "./themes-grid-placeholder";
+import ThemesGridPlaceholder from "./themes-grid-placeholder.gjs";
 
 // NOTE (martin): We will need to revisit and improve this component
 // over time.

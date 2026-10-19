@@ -100,20 +100,15 @@ module("Integration | ui-kit | DNativeSelect", function (hooks) {
   });
 
   test("keeps the selection when options are rebuilt", async function (assert) {
-    class State {
-      @tracked
-      options = [
-        { value: "foo", label: "The real foo" },
-        { value: "bar", label: "The real bar" },
-      ];
-    }
-
-    const state = new State();
+    const options = tracked([
+      { value: "foo", label: "The real foo" },
+      { value: "bar", label: "The real bar" },
+    ]);
 
     await render(
       <template>
         <DNativeSelect @value="bar" as |s|>
-          {{#each state.options as |option|}}
+          {{#each options.value as |option|}}
             <s.Option @value={{option.value}}>{{option.label}}</s.Option>
           {{/each}}
         </DNativeSelect>
@@ -125,7 +120,7 @@ module("Integration | ui-kit | DNativeSelect", function (hooks) {
       label: "The real bar",
     });
 
-    state.options = [
+    options.value = [
       { value: "baz", label: "The real baz" },
       { value: "foo", label: "The real foo" },
       { value: "bar", label: "The real bar" },
@@ -139,19 +134,15 @@ module("Integration | ui-kit | DNativeSelect", function (hooks) {
   });
 
   test("keeps the selection when the value is not a string", async function (assert) {
-    class State {
-      @tracked value = 30;
-    }
-
-    const state = new State();
-    const handleChange = (value) => (state.value = value);
+    const selectedValue = tracked(30);
+    const handleChange = (value) => (selectedValue.value = value);
 
     await render(
       <template>
         <DNativeSelect
           @includeNone={{false}}
           @onChange={{handleChange}}
-          @value={{state.value}}
+          @value={{selectedValue.value}}
           as |s|
         >
           <s.Option @value={{1}}>One</s.Option>

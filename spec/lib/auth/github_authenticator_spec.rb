@@ -262,32 +262,18 @@ RSpec.describe Auth::GithubAuthenticator do
   end
 
   describe "avatar retrieval" do
-    let(:job_klass) { Jobs::DownloadAvatarFromUrl }
+    it "queues the GitHub picture for its associated account" do
+      expect { authenticator.after_authenticate(auth_token_for(user)) }.to change {
+        Jobs::DownloadAvatarFromUrl.jobs.size
+      }.by(1)
 
-    context "when user has a custom avatar" do
-      fab!(:user_avatar) { Fabricate(:user_avatar, custom_upload: Fabricate(:upload)) }
-      fab!(:user_with_custom_avatar) { Fabricate(:user, user_avatar: user_avatar) }
+      account = user.user_associated_accounts.find_by!(provider_name: "github")
 
-      it "does not enqueue a download_avatar_from_url job" do
-        expect {
-          authenticator.after_authenticate(auth_token_for(user_with_custom_avatar))
-        }.to_not change(job_klass.jobs, :size)
-      end
-    end
-
-    context "when user does not have a custom avatar" do
-      it "enqueues a download_avatar_from_url job" do
-        expect { authenticator.after_authenticate(auth_token_for(user)) }.to change(
-          job_klass.jobs,
-          :size,
-        ).by(1)
-
-        job_args = job_klass.jobs.last["args"].first
-
-        expect(job_args["url"]).to eq("https://avatars3.githubusercontent.com/u/#{user.username}")
-        expect(job_args["user_id"]).to eq(user.id)
-        expect(job_args["override_gravatar"]).to eq(false)
-      end
+      expect(Jobs::DownloadAvatarFromUrl.jobs.last["args"].first).to include(
+        "url" => "https://avatars3.githubusercontent.com/u/#{user.username}",
+        "user_id" => user.id,
+        "associated_account_id" => account.id,
+      )
     end
   end
 end

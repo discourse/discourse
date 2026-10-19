@@ -38,6 +38,12 @@ tr_TR:
             delete: "Sil"
         multi_select:
           title: "Çoklu seçim"
+        reorderable_list:
+          policies_pinned: "Sabitlendi"
+          policies_required: "Gerekli"
+          table_field: "Alan"
+          table_type: "Tür"
+          cross_list_primary: "Birincil"
         toasts:
           title: "Beliren pencereler"
         font_scale:

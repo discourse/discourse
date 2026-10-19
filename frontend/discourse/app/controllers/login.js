@@ -51,6 +51,8 @@ export default class LoginPageController extends Controller {
   @tracked secondFactorToken;
   @tracked flash;
   @tracked flashType;
+
+  /** @type {string | null} */
   @tracked loginMode = null;
   queryParams = [{ loginMode: "mode" }];
 

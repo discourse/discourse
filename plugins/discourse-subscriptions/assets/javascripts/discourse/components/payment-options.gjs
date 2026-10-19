@@ -1,31 +1,20 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { action, computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { i18n } from "discourse-i18n";
-import PaymentPlan from "./payment-plan";
+import PaymentPlan from "./payment-plan.gjs";
 
-@tagName("")
 export default class PaymentOptions extends Component {
-  @computed("plans")
   get orderedPlans() {
-    if (this.plans) {
-      return this.plans.sort((a, b) =>
+    if (this.args.plans) {
+      return this.args.plans.toSorted((a, b) =>
         a.unit_amount > b.unit_amount ? 1 : -1
       );
     }
   }
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    if (this.plans && this.plans.length === 1) {
-      this.set("selectedPlan", this.plans[0].id);
-    }
-  }
-
   @action
   clickPlan(plan) {
-    this.set("selectedPlan", plan.id);
+    this.args.onSelectPlan(plan.id);
   }
 
   <template>
@@ -39,7 +28,7 @@ export default class PaymentOptions extends Component {
           <PaymentPlan
             @clickPlan={{this.clickPlan}}
             @plan={{plan}}
-            @selectedPlan={{this.selectedPlan}}
+            @selectedPlan={{@selectedPlan}}
           />
         {{/each}}
       </div>

@@ -12,8 +12,19 @@ RSpec.describe "Markdown endpoints" do
 
   after { category.clear_url_cache }
 
-  it "respects the upcoming change promotion policy and explicit opt-in" do
+  it "automatically enables Markdown endpoints when stable changes are promoted" do
     SiteSetting.promote_upcoming_changes_on_status = "stable"
+
+    get "/latest.md"
+    expect(response).to have_http_status(:ok)
+    expect(response.media_type).to eq("text/markdown")
+
+    get "/latest", headers: { "ACCEPT" => "text/html" }
+    expect(response.headers["Link"]).to include("/latest.md")
+  end
+
+  it "respects explicit opt-in when automatic promotion is disabled" do
+    SiteSetting.promote_upcoming_changes_on_status = "never"
 
     get "/latest.md"
     expect(response).to have_http_status(:not_found)
@@ -274,6 +285,40 @@ RSpec.describe "Markdown endpoints" do
       expect(rows.first).to eq("**URL:** <#{topic.url}>\\")
       rendered_metadata = Nokogiri::HTML5.fragment(PrettyText.cook(metadata))
       expect(rendered_metadata.at_css("a")["href"]).to eq(topic.url)
+    end
+  end
+
+  it "lets plugins add topic sections between the metadata and the first post" do
+    plugin_instance = Plugin::Instance.new
+    modifier =
+      Proc.new do |sections, topic_view, guardian|
+        sections + ["## Plugin section", "Topic #{topic_view.topic.id} for #{guardian.user&.id}"]
+      end
+    DiscoursePluginRegistry.register_modifier(
+      plugin_instance,
+      :markdown_topic_header_sections,
+      &modifier
+    )
+
+    begin
+      get "/t/#{topic.slug}/#{topic.id}.md"
+
+      expect(response).to have_http_status(:ok)
+      body = response.body
+      expect(body).to include("**Page:** 1\n\n## Plugin section\n\nTopic #{topic.id} for \n\n")
+      expect(body.index("## Plugin section")).to be < body.index(post.raw)
+
+      get "/t/#{topic.slug}/#{topic.id}/1.md"
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(post.raw)
+      expect(response.body).not_to include("## Plugin section")
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :markdown_topic_header_sections,
+        &modifier
+      )
     end
   end
 

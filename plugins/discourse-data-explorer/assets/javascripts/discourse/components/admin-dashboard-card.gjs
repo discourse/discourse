@@ -2,16 +2,16 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
-import { chartability, chartDatasets, hasDates } from "../lib/chart-helpers";
+import { chartability, chartDatasets, hasDates } from "../lib/chart-helpers.js";
 import {
   buildColumnComponents,
   buildRelationTables,
   displayColumnNames,
   relationLabel,
   VIEW_COMPONENTS,
-} from "../lib/result-columns";
-import DataExplorerChart from "./data-explorer-chart";
-import QueryRowContent from "./query-row-content";
+} from "../lib/result-columns.js";
+import DataExplorerChart from "./data-explorer-chart.gjs";
+import QueryRowContent from "./query-row-content.gjs";
 
 const CARD_VIEW_COMPONENTS = Object.fromEntries(
   ["badge", "category", "group", "text", "topic", "user"].map((type) => [

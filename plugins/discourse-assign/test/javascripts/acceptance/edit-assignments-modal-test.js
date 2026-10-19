@@ -4,7 +4,7 @@ import {
   acceptance,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
-import topicWithAssignedPosts from "../fixtures/topic-with-assigned-posts";
+import topicWithAssignedPosts from "../fixtures/topic-with-assigned-posts.js";
 
 const topic = topicWithAssignedPosts();
 const firstReply = topic.post_stream.posts[1];
@@ -30,13 +30,8 @@ acceptance("Edit assignments modal", function (needs) {
     ];
     server.get("/assign/suggestions", () =>
       helper.response({
-        assign_allowed_for_groups: [],
+        groups: [],
         suggestions,
-      })
-    );
-    server.get("/u/search/users", () =>
-      helper.response({
-        users: suggestions,
       })
     );
   });

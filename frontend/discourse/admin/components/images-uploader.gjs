@@ -1,13 +1,10 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { tagName } from "@ember-decorators/component";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class ImagesUploader extends Component {
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "images-uploader",
@@ -16,7 +13,7 @@ export default class ImagesUploader extends Component {
       imagesOnly: true,
     },
     uploadDone: (upload) => {
-      this.done(upload);
+      this.args.done(upload);
     },
   });
 

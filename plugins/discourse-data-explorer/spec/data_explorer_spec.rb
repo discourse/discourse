@@ -535,7 +535,10 @@ describe DiscourseDataExplorer::DataExplorer do
             1 AS last_editor_id,
             1 AS group_id,
             1 AS category_id,
-            1 AS "author$user_id"
+            1 AS "author$user_id",
+            1 AS reviewable_id,
+            1 AS related_reviewable_id,
+            1 AS "reviewable$item"
         SQL
 
         relations, colrender =
@@ -558,9 +561,12 @@ describe DiscourseDataExplorer::DataExplorer do
             17 => :group,
             18 => :category,
             19 => :user,
+            20 => :reviewable,
+            21 => :reviewable,
+            22 => :reviewable,
           },
         )
-        expect(relations.keys).not_to include(:group, :category)
+        expect(relations.keys).not_to include(:group, :category, :reviewable)
       end
 
       it "reports relations hidden by the guardian" do

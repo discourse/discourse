@@ -16,6 +16,8 @@ import { i18n } from "discourse-i18n";
 @tagName("")
 export default class WatchedWordForm extends Component {
   formSubmitted = false;
+
+  /** @type {string | null} */
   actionKey = null;
   showMessage = false;
   isCaseSensitive = false;

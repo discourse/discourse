@@ -15,7 +15,11 @@ import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { NODE_DIRECT_SETTING_KEYS } from "../../../lib/workflows/node-data-shape";
+import {
+  continuesOnError,
+  NODE_DIRECT_SETTING_KEYS,
+  withContinueOnError,
+} from "../../../lib/workflows/node-data-shape.js";
 import {
   nodeTypeDescription,
   nodeTypeIcon,
@@ -25,23 +29,24 @@ import {
   nodeTypeStyle,
   resolveNodeTypeVersion,
   typeVersionForNode,
-} from "../../../lib/workflows/node-types";
+} from "../../../lib/workflows/node-types.js";
 import {
+  applySchemaDefaults,
   credentialSlotAnchorField,
   credentialSlotVisible,
   credentialTypesForSlot,
-  fieldType,
   findNodeType,
   getPropertySchema,
-} from "../../../lib/workflows/property-engine";
-import { runExecuteStep } from "../canvas/canvas-execute-step";
-import { shouldShowExecuteStep } from "../canvas/workflow-node";
-import CredentialControl from "../configurators/credential";
-import PropertyEngineConfigurator from "../configurators/property-engine";
-import InputContext from "../context/input";
-import OutputContext from "../context/output";
-import { takenNodeNames } from "../editor/node-factory";
-import LivePreview from "./live-preview";
+  pruneModeHiddenFields,
+} from "../../../lib/workflows/property-engine.js";
+import { runExecuteStep } from "../canvas/canvas-execute-step.js";
+import { shouldShowExecuteStep } from "../canvas/workflow-node.gjs";
+import CredentialControl from "../configurators/credential.gjs";
+import PropertyEngineConfigurator from "../configurators/property-engine.gjs";
+import InputContext from "../context/input.gjs";
+import OutputContext from "../context/output.gjs";
+import { takenNodeNames } from "../editor/node-factory.js";
+import LivePreview from "./live-preview.gjs";
 
 function credentialSlotLabel(slot) {
   return i18n(slot.label_key || "discourse_workflows.credentials.type");
@@ -81,6 +86,7 @@ export default class NodeConfigurator extends Component {
     notesInFlow: this.args.model.node.configuration?.notesInFlow === true,
     alwaysOutputData:
       this.args.model.node.configuration?.alwaysOutputData === true,
+    continueOnError: continuesOnError(this.args.model.node.configuration),
   };
 
   @tracked credentialConfig = structuredClone(
@@ -151,6 +157,10 @@ export default class NodeConfigurator extends Component {
       this.args.model.node.type,
       typeVersionForNode(this.args.model.node)
     );
+  }
+
+  get canContinueOnError() {
+    return !this.args.model.node.type?.startsWith("trigger:");
   }
 
   get showsOutputContext() {
@@ -247,15 +257,22 @@ export default class NodeConfigurator extends Component {
       notes: this.settingsApi.get("notes") || "",
       notesInFlow: this.settingsApi.get("notesInFlow") === true,
       alwaysOutputData: this.settingsApi.get("alwaysOutputData") === true,
+      continueOnError: this.settingsApi.get("continueOnError") === true,
     };
   }
 
   get isDirty() {
     const nameDirty = this.nodeName !== this.initialNodeName;
     const configurationDirty =
-      JSON.stringify(this.configuration) !==
-      JSON.stringify(this.initialConfiguration);
+      JSON.stringify(this.persistedConfiguration) !==
+      JSON.stringify(
+        pruneModeHiddenFields(this.propertySchema, this.initialConfiguration)
+      );
     return nameDirty || configurationDirty;
+  }
+
+  get persistedConfiguration() {
+    return pruneModeHiddenFields(this.propertySchema, this.configuration);
   }
 
   get showSaveStatus() {
@@ -273,6 +290,7 @@ export default class NodeConfigurator extends Component {
         notes: this.configuration.notes || "",
         notesInFlow: this.configuration.notesInFlow === true,
         alwaysOutputData: this.configuration.alwaysOutputData === true,
+        continueOnError: continuesOnError(this.configuration),
       };
     }
     this.activeTab = tab;
@@ -293,11 +311,6 @@ export default class NodeConfigurator extends Component {
     const notes = value || "";
     await set(name, notes);
     await set("notesInFlow", notes.trim().length > 0);
-  }
-
-  @action
-  async handleAlwaysOutputDataSet(value, { set, name }) {
-    await set(name, value);
   }
 
   @action
@@ -361,12 +374,22 @@ export default class NodeConfigurator extends Component {
       notes: this.settingsConfiguration.notes,
       notesInFlow: this.settingsConfiguration.notesInFlow,
       alwaysOutputData: this.settingsConfiguration.alwaysOutputData,
+      ...withContinueOnError(
+        config,
+        this.settingsConfiguration.continueOnError
+      ),
       credentials: this.credentialConfig,
     };
   }
 
   @action
   scheduleSave() {
+    if (this.saveStatus === "saved" && this.isDirty) {
+      this.#cancelSavedTimers();
+      this.saveStatus = null;
+      this.isSaveStatusFading = false;
+    }
+
     cancel(this.autosaveTimer);
     this.autosaveTimer = later(() => {
       this.#saveConfiguration({ throwOnError: true }).catch(() => {
@@ -387,7 +410,7 @@ export default class NodeConfigurator extends Component {
     if (this.isDirty) {
       cancel(this.autosaveTimer);
       this.args.model.onSave(
-        this.configuration,
+        this.persistedConfiguration,
         this.trimmedNodeName || this.initialNodeName
       );
     }
@@ -412,30 +435,8 @@ export default class NodeConfigurator extends Component {
 
   async #loadTypes() {
     this.nodeTypes = await this.workflowsNodeTypes.load();
-    this.#applyDefaults();
+    applySchemaDefaults(this.propertySchema, this.initialConfiguration);
     this.#setSavedBaseline(this.configuration, this.initialNodeName);
-  }
-
-  #applyDefaults() {
-    const config = this.initialConfiguration;
-
-    for (const [key, fs] of Object.entries(this.propertySchema)) {
-      if (config[key] != null) {
-        continue;
-      }
-      if (fs.default !== undefined) {
-        config[key] = fs.default;
-      } else if (
-        fieldType(fs) === "collection" ||
-        fieldType(fs) === "fixed_collection"
-      ) {
-        config[key] = {};
-      } else if (fieldType(fs) === "assignment_collection") {
-        config[key] = { assignments: [] };
-      } else if (fieldType(fs) === "array") {
-        config[key] = [];
-      }
-    }
   }
 
   #cancelTimers() {
@@ -482,7 +483,7 @@ export default class NodeConfigurator extends Component {
       return;
     }
 
-    const configuration = structuredClone(this.configuration);
+    const configuration = structuredClone(this.persistedConfiguration);
     const nodeName = this.trimmedNodeName || this.initialNodeName;
 
     this.#setSavingStatus();
@@ -731,7 +732,6 @@ export default class NodeConfigurator extends Component {
                     }}
                     @format="full"
                     @name="alwaysOutputData"
-                    @onSet={{this.handleAlwaysOutputDataSet}}
                     @title={{i18n
                       "discourse_workflows.configurator.always_output_data"
                     }}
@@ -740,6 +740,23 @@ export default class NodeConfigurator extends Component {
                   >
                     <field.Control />
                   </form.Field>
+                  {{#if this.canContinueOnError}}
+                    <form.Field
+                      class="workflows-configurator-form__setting-toggle"
+                      @description={{i18n
+                        "discourse_workflows.configurator.continue_on_error_help"
+                      }}
+                      @format="full"
+                      @name="continueOnError"
+                      @title={{i18n
+                        "discourse_workflows.configurator.continue_on_error"
+                      }}
+                      @type="toggle"
+                      as |field|
+                    >
+                      <field.Control />
+                    </form.Field>
+                  {{/if}}
                 </Form>
                 {{#if this.nodeDescription}}
                   <div class="workflows-configurator-modal__node">

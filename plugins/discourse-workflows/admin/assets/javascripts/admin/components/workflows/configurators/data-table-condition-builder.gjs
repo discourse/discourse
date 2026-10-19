@@ -9,9 +9,9 @@ import {
   isSingleValueOperator,
   operatorOptionsForType,
   operatorsForType,
-} from "../../../lib/workflows/condition-operators";
-import Collection from "./collection";
-import Field from "./field";
+} from "../../../lib/workflows/condition-operators.js";
+import Collection from "./collection.gjs";
+import Field from "./field.gjs";
 
 const VALUE_SCHEMA = { type: "string", required: true };
 

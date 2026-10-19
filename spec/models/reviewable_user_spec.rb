@@ -447,23 +447,209 @@ RSpec.describe ReviewableUser, type: :model do
     context "when suspending or silencing" do
       fab!(:reviewable, :suspect_user_reviewable)
 
-      it "rejects the reviewable and keeps the user, letting the client apply the suspension" do
-        result = reviewable.perform(moderator, :suspend_user)
+      it "rejects the reviewable and suspends the user" do
+        result =
+          reviewable.perform(
+            moderator,
+            :suspend_user,
+            reason: "spam",
+            suspend_until: 2.days.from_now,
+          )
         expect(result.success?).to eq(true)
 
         expect(reviewable.rejected?).to eq(true)
         expect(reviewable.reload.target).to be_present
         expect(reviewable.target.approved).to eq(false)
-        expect(reviewable.target.suspended?).to eq(false)
+        expect(reviewable.target).to be_suspended
       end
 
-      it "rejects the reviewable and keeps the user, letting the client apply the silencing" do
-        result = reviewable.perform(moderator, :silence_user)
+      it "keeps the suspect user pending when suspension details are invalid" do
+        result =
+          reviewable.perform(moderator, :suspend_user, reason: "", suspend_until: 2.days.from_now)
+
+        expect(result).not_to be_success
+        expect(reviewable.reload).to be_pending
+        expect(reviewable.target.reload).not_to be_suspended
+      end
+
+      it "rejects the reviewable and silences the user" do
+        result =
+          reviewable.perform(
+            moderator,
+            :silence_user,
+            reason: "spam",
+            silenced_till: 2.days.from_now,
+          )
         expect(result.success?).to eq(true)
 
         expect(reviewable.rejected?).to eq(true)
         expect(reviewable.reload.target).to be_present
-        expect(reviewable.target.silenced?).to eq(false)
+        expect(reviewable.target).to be_silenced
+      end
+    end
+
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      let(:reviewable) { Fabricate(:suspect_user_reviewable) }
+
+      before do
+        freeze_time
+        SiteSetting.dsa_reporting_enabled = true
+      end
+
+      it "creates no statement when approve_user handles the user reviewable" do
+        expect { expect(reviewable.perform(admin, :approve_user)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "creates no statement when delete_user handles a user reviewable whose account was already deleted" do
+        reviewable.target.destroy!
+        reviewable.reload
+
+        expect { expect(reviewable.perform(admin, :delete_user)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+      end
+
+      it "creates no termination statement when rejecting a user reviewable preserves the author's posts and account" do
+        author = reviewable.target
+        Fabricate(:post, user: author)
+
+        expect { expect(reviewable.perform(admin, :delete_user)).to be_success }.not_to change(
+          DsaStatementOfRecord,
+          :count,
+        )
+
+        expect(author.reload).not_to be_approved
+        expect(reviewable.reload).to be_rejected
+      end
+
+      it "records a statement when delete_user handles the user reviewable" do
+        content_date = reviewable.target.created_at.to_date.iso8601
+
+        expect { reviewable.perform(admin, :delete_user) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The reviewed account was deleted.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "Yes",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_date" => content_date,
+          "application_date" => Date.current.iso8601,
+          "content_type_other" => "User account",
+          "decision_account" => "DECISION_ACCOUNT_TERMINATED",
+        )
+      end
+
+      it "records a statement when delete_user_block handles the user reviewable" do
+        content_date = reviewable.target.created_at.to_date.iso8601
+
+        expect { reviewable.perform(admin, :delete_user_block) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The reviewed account was deleted.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "Yes",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_date" => content_date,
+          "application_date" => Date.current.iso8601,
+          "content_type_other" => "User account",
+          "decision_account" => "DECISION_ACCOUNT_TERMINATED",
+        )
+      end
+
+      it "records a statement when silence_user handles the user reviewable" do
+        expect {
+          reviewable.perform(admin, :silence_user, reason: "Spam", silenced_till: 2.days.from_now)
+        }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The reviewed account had its ability to participate restricted.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "Yes",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_date" => reviewable.target.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "content_type_other" => "User account",
+          "decision_provision" => "DECISION_PROVISION_PARTIAL_SUSPENSION",
+          "end_date_service_restriction" => 2.days.from_now.to_date.iso8601,
+        )
+      end
+
+      it "records a statement when suspend_user handles the user reviewable" do
+        expect {
+          reviewable.perform(admin, :suspend_user, reason: "Spam", suspend_until: 2.days.from_now)
+        }.to change(DsaStatementOfRecord, :count).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The reviewed account was suspended.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "Yes",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_OTHER"],
+          "content_date" => reviewable.target.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "content_type_other" => "User account",
+          "decision_account" => "DECISION_ACCOUNT_SUSPENDED",
+          "end_date_account_restriction" => 2.days.from_now.to_date.iso8601,
+        )
+      end
+
+      it "records a statement when remove_avatar handles the user reviewable" do
+        avatar = Fabricate(:upload, created_at: 3.days.ago)
+        reviewable.target.update!(uploaded_avatar: avatar)
+
+        expect { reviewable.perform(admin, :remove_avatar) }.to change(
+          DsaStatementOfRecord,
+          :count,
+        ).by(1)
+
+        statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
+
+        expect(statement).to be_pending
+        expect(statement.payload).to eq(
+          "territorial_scope" => DsaStatementOfRecord::TERRITORIAL_SCOPE,
+          "decision_facts" => "The reviewed account's avatar was removed.",
+          "source_type" => "SOURCE_VOLUNTARY",
+          "decision_ground" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "automated_detection" => "Yes",
+          "automated_decision" => "AUTOMATED_DECISION_NOT_AUTOMATED",
+          "content_type" => ["CONTENT_TYPE_IMAGE"],
+          "content_date" => avatar.created_at.to_date.iso8601,
+          "application_date" => Date.current.iso8601,
+          "decision_visibility" => ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        )
       end
     end
   end

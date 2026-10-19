@@ -13,6 +13,7 @@ const ReviewableIndex = <template>
           <div class="reviewables">
             {{#each @controller.reviewables.content as |r|}}
               <ReviewableItem
+                @classificationOptions={{@controller.reviewables.extras.dsa_classification}}
                 @reviewable={{r}}
                 @showHelp={{false}}
                 @updateStatuses={{@controller.updateStatuses}}

@@ -77,15 +77,13 @@ module("Integration | Component | RelativeTimePicker", function (hooks) {
   });
 
   test("onChange callback works w/ a start value", async function (assert) {
-    const testState = new (class {
-      @tracked minutes = 120;
-    })();
+    const minutes = tracked(120);
 
-    const update = (value) => (testState.minutes = value);
+    const update = (value) => (minutes.value = value);
     await render(
       <template>
         <DRelativeTimePicker
-          @durationMinutes={{testState.minutes}}
+          @durationMinutes={{minutes.value}}
           @onChange={{update}}
         />
       </template>
@@ -102,7 +100,7 @@ module("Integration | Component | RelativeTimePicker", function (hooks) {
     // clear the duration
     await fillIn(".relative-time-duration", "");
     assert.dom(".relative-time-duration").hasValue("");
-    assert.strictEqual(testState.minutes, null, "onChange called with null");
+    assert.strictEqual(minutes.value, null, "onChange called with null");
     // semi-acceptable behavior: because `initValues()` is called, it changes the interval:
     assert.strictEqual(
       selectKit().header().value(),
@@ -113,14 +111,14 @@ module("Integration | Component | RelativeTimePicker", function (hooks) {
     // type <60 minutes
     await typeIn(".relative-time-duration", "18");
     assert.dom(".relative-time-duration").hasValue("18");
-    assert.strictEqual(testState.minutes, 18, "onChange called with 18");
+    assert.strictEqual(minutes.value, 18, "onChange called with 18");
 
     // select "days"
     await selectKit().expand();
     await selectKit().selectRowByValue("days");
     assert.dom(".relative-time-duration").hasValue("18");
     assert.strictEqual(
-      testState.minutes,
+      minutes.value,
       18 * 60 * 24,
       "onChange called with 18 * 60 * 24"
     );
@@ -134,7 +132,7 @@ module("Integration | Component | RelativeTimePicker", function (hooks) {
     );
     assert.dom(".relative-time-duration").hasValue("2");
     assert.strictEqual(
-      testState.minutes,
+      minutes.value,
       2 * 60 * 24,
       "onChange called with 2 * 60 * 24"
     );
@@ -143,12 +141,12 @@ module("Integration | Component | RelativeTimePicker", function (hooks) {
     await selectKit().expand();
     await selectKit().selectRowByValue("mins");
     assert.dom(".relative-time-duration").hasValue("2");
-    assert.strictEqual(testState.minutes, 2, "onChange called with 2");
+    assert.strictEqual(minutes.value, 2, "onChange called with 2");
 
     // type >60 minutes
     await fillIn(".relative-time-duration", "90");
     assert.dom(".relative-time-duration").hasValue("1.5");
-    assert.strictEqual(testState.minutes, 90, "onChange called with 90");
+    assert.strictEqual(minutes.value, 90, "onChange called with 90");
     assert.strictEqual(
       selectKit().header().value(),
       "hours",
@@ -157,21 +155,18 @@ module("Integration | Component | RelativeTimePicker", function (hooks) {
   });
 
   test("updates the input when args change", async function (assert) {
-    const testState = new (class {
-      @tracked value;
-    })();
-    testState.value = 10;
+    const durationMinutes = tracked(10);
 
     await render(
       <template>
-        <DRelativeTimePicker @durationMinutes={{testState.value}} />
+        <DRelativeTimePicker @durationMinutes={{durationMinutes.value}} />
       </template>
     );
 
     assert.strictEqual(selectKit().header().value(), "mins");
     assert.dom(".relative-time-duration").hasValue("10");
 
-    testState.value = 20;
+    durationMinutes.value = 20;
     await settled();
 
     assert.dom(".relative-time-duration").hasValue("20");

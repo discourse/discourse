@@ -33,6 +33,7 @@ import Reactions from "discourse/plugins/discourse-rewind/discourse/components/r
 import ReadingTime from "discourse/plugins/discourse-rewind/discourse/components/reports/reading-time";
 import TimeOfDayActivity from "discourse/plugins/discourse-rewind/discourse/components/reports/time-of-day-activity";
 import TopWords from "discourse/plugins/discourse-rewind/discourse/components/reports/top-words";
+import VoiceUsage from "discourse/plugins/discourse-rewind/discourse/components/reports/voice-usage";
 import WritingAnalysis from "discourse/plugins/discourse-rewind/discourse/components/reports/writing-analysis";
 
 const REPORT_COMPONENTS = {
@@ -51,6 +52,7 @@ const REPORT_COMPONENTS = {
   "reading-time": ReadingTime,
   "time-of-day-activity": TimeOfDayActivity,
   "top-words": TopWords,
+  "voice-usage": VoiceUsage,
   "writing-analysis": WritingAnalysis,
 };
 

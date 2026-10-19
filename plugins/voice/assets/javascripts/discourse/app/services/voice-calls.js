@@ -2,11 +2,14 @@ import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { isPrimaryTab } from "discourse/lib/utilities";
-import VoiceIncomingCallModal from "../../components/modal/voice-incoming-call";
-import { claimCallAlert } from "../../lib/voice/call-alert-dedup";
-import { RING_SECONDS } from "../../lib/voice/call-constants";
-import { setPendingInviteRef } from "../../lib/voice/invite-ref";
-import { startRingtone, stopCallSounds } from "../../lib/voice/sound-effects";
+import VoiceIncomingCallModal from "../../components/modal/voice-incoming-call.gjs";
+import { claimCallAlert } from "../../lib/voice/call-alert-dedup.js";
+import { RING_SECONDS } from "../../lib/voice/call-constants.js";
+import { setPendingInviteRef } from "../../lib/voice/invite-ref.js";
+import {
+  startRingtone,
+  stopCallSounds,
+} from "../../lib/voice/sound-effects.js";
 
 // Direct calls: starts them (user-card button) and answers them (the ring
 // event published when someone invites this user into an ephemeral room).

@@ -2,7 +2,7 @@ import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import loadChartJS from "discourse/lib/load-chart-js";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import DataExplorerAdminDashboardCard from "../../discourse/components/admin-dashboard-card";
+import DataExplorerAdminDashboardCard from "discourse/plugins/discourse-data-explorer/discourse/components/admin-dashboard-card";
 
 function cell(row, col) {
   return `.de-dashboard-card__table tbody tr:nth-child(${row}) td:nth-child(${col})`;

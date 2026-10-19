@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { makeArray } from "discourse/lib/helpers";
 import MultiSelect from "discourse/select-kit/components/multi-select";
-import ExpressionWrapper from "./expression-wrapper";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default class MultiInput extends Component {
   get value() {

@@ -178,8 +178,9 @@ export default class BulkUserSuspendConfirmation extends Component {
           />
           <AdminPenaltyReason
             @message={{this.message}}
+            @onChangeMessage={{fn (mut this.message)}}
+            @onChangeReason={{fn (mut this.reason)}}
             @penaltyType="suspend"
-            @reason={{this.reason}}
           />
         {{/if}}
       </:body>

@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
-import { preloadCategories } from "../lib/boards-categories";
-import Column from "./column";
+import { preloadCategories } from "../lib/boards-categories.js";
+import Column from "./column.js";
 
 export default class Board {
   static async createPayload(data) {

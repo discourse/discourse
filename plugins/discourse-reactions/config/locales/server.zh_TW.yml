@@ -13,7 +13,6 @@ zh_TW:
     discourse_reactions_enabled_reactions: "定義一組啟用反應的清單，並允許可用的表情符號於本清單中。"
     discourse_reactions_desaturated_reaction_panel: "通過將反應顯示為去飽和度，直到懸停，以減少反應的視覺噪聲。"
     discourse_reactions_excluded_from_like: "不計為讚的反應。不在此清單中的任何反應都會在徽章、報表及其他用途上視為讚。"
-    discourse_reactions_like_sync_enabled: "若啟用此功能，系統會為歷史反應建立相應的讚記錄，但 {{setting:discourse_reactions_excluded_from_like}} 中定義的反應除外。此同步會定期在背景執行，也會在您變更 {{setting:discourse_reactions_excluded_from_like}} 時執行。"
     discourse_reactions_allow_any_emoji: "若啟用此功能，反應選擇器會新增一個按鈕，讓使用者選取任何表情符號。成員可選擇任何表情符號（包括自訂表情符號）作為反應。若要限制可用的反應，請使用 {{setting:emoji_deny_list}} 網站設定。"
     enable_discourse_reactions_by_default: "啟用此即將推出的變更時，會將 {{setting:discourse_reactions_enabled}} 設定的預設值從停用改為啟用。"
     errors:

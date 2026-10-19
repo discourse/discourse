@@ -798,8 +798,12 @@ es:
       chat_message_created:
         channel_id: "Canal"
       send_chat_message:
+        targets:
+          channel: "Canal"
         channel_id: "Canal"
+        target_usernames: "Destinatarios"
         message: "Mensaje"
+        actor_username: "Remitente"
       chat_approval:
         message: "Mensaje"
         buttons: "Botones"

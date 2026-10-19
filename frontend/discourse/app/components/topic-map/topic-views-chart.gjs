@@ -73,6 +73,8 @@ function predictTodaysViews(data) {
 
 export default class TopicViewsChart extends Component {
   @tracked noData = false;
+
+  /** @type {import("chart.js").Chart<"line"> | null} */
   chart = null;
 
   @action

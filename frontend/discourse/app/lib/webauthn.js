@@ -21,6 +21,7 @@ export function isWebauthnSupported() {
 // The webauthn API only supports one auth attempt at a time
 // We need this service to cancel the previous attempt when a new one is started
 class WebauthnAbortService {
+  /** @type {AbortController | undefined} */
   controller = undefined;
 
   signal() {

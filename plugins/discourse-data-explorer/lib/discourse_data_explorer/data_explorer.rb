@@ -334,6 +334,10 @@ module DiscourseDataExplorer
           class: Category,
           ignore: true,
         },
+        reviewable: {
+          class: Reviewable,
+          ignore: true,
+        },
         reltime: {
           ignore: true,
         },

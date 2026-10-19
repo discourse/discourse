@@ -57,6 +57,8 @@ export default class DiscoveryListController extends Controller {
 
   @tracked model;
   @tracked showTagInfo = false;
+
+  /** @type {import("discourse/models/tag-info").default | null} */
   @tracked tagInfo = null;
   @tracked loadingTagInfo = false;
   queryParams = Object.keys(queryParams);

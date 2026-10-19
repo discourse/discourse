@@ -9,6 +9,7 @@ import ListSetting from "discourse/select-kit/components/list-setting";
 const TOKEN_SEPARATOR = "|";
 
 export default class SettingFieldCompactList extends Component {
+  /** @type {Array<string | { name: string, value: string }> | null} */
   @tracked createdChoices = null;
 
   get hasEnumChoices() {

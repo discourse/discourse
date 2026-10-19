@@ -14,13 +14,10 @@ module DiscourseWorkflows
 
       WorkflowDependency
         .cached_published_triggers(trigger_class.identifier)
-        .select do |published_trigger|
-          trigger.matches?(
-            DiscourseWorkflows::TriggerNodeContext.from_published_trigger(published_trigger),
-          )
-        end
         .each do |published_trigger|
-          DiscourseWorkflows::TriggerDispatcher.enqueue(
+          next if !trigger.matches?(TriggerNodeContext.from_published_trigger(published_trigger))
+
+          TriggerDispatcher.enqueue(
             published_trigger,
             trigger_data: (trigger_data ||= trigger.output),
             user_id: user_id,
@@ -31,6 +28,10 @@ module DiscourseWorkflows
               "for workflow #{published_trigger.workflow_id}: #{e.message}",
           )
         end
+    rescue => e
+      Rails.logger.error(
+        "discourse-workflows: trigger #{trigger_class.identifier} failed: #{e.message}",
+      )
     end
   end
 end

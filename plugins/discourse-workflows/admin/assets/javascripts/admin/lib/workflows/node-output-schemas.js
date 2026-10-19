@@ -1,8 +1,9 @@
-import summarize from "./output-schemas/summarize";
+import classify from "./output-schemas/classify.js";
+import summarize from "./output-schemas/summarize.js";
 
 // Nodes whose output keys come from what the author typed cannot declare them as a contract, so
 // they compute them in Ruby and name an editor-side counterpart through `output_schema_resolver`.
-const RESOLVERS = { summarize };
+const RESOLVERS = { classify, summarize };
 
 export function outputSchemasFromResolver(resolver, configuration = {}) {
   if (!resolver) {

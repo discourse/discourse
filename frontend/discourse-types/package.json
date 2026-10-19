@@ -17,30 +17,55 @@
   "scripts": {
     "compile-dts-generator": "tsc --ignoreConfig --types node dts-generator.ts --target esnext --moduleResolution nodenext --module nodenext",
     "generate-external-types": "node generate-external-types.js",
-    "generate-external": "pnpm compile-dts-generator && pnpm generate-external-types"
+    "generate-external": "pnpm compile-dts-generator && pnpm generate-external-types",
+    "test": "node --test --test-timeout=60000 language-server.test.mjs"
   },
   "exports": {
     "./tsconfig-plugin": "./tsconfig-plugin.json",
     "./tests/*": {
-      "types": "./declarations/tests/*.d.ts"
+      "types": [
+        "./declarations/tests/*.d.ts",
+        "./declarations/tests/*.d.gjs.ts",
+        "./declarations/tests/*.d.gts.ts"
+      ]
     },
     "./admin/*": {
-      "types": "./declarations/admin/*.d.ts"
+      "types": [
+        "./declarations/admin/*.d.ts",
+        "./declarations/admin/*.d.gjs.ts",
+        "./declarations/admin/*.d.gts.ts"
+      ]
     },
     "./dialog-holder/*": {
-      "types": "./declarations/dialog-holder/*.d.ts"
+      "types": [
+        "./declarations/dialog-holder/*.d.ts",
+        "./declarations/dialog-holder/*.d.gjs.ts",
+        "./declarations/dialog-holder/*.d.gts.ts"
+      ]
     },
     "./float-kit/*": {
-      "types": "./declarations/float-kit/*.d.ts"
+      "types": [
+        "./declarations/float-kit/*.d.ts",
+        "./declarations/float-kit/*.d.gjs.ts",
+        "./declarations/float-kit/*.d.gts.ts"
+      ]
     },
     "./select-kit/*": {
-      "types": "./declarations/select-kit/*.d.ts"
+      "types": [
+        "./declarations/select-kit/*.d.ts",
+        "./declarations/select-kit/*.d.gjs.ts",
+        "./declarations/select-kit/*.d.gts.ts"
+      ]
     },
     "./truth-helpers": {
       "types": "./declarations/truth-helpers/index.d.ts"
     },
     "./truth-helpers/*": {
-      "types": "./declarations/truth-helpers/*.d.ts"
+      "types": [
+        "./declarations/truth-helpers/*.d.ts",
+        "./declarations/truth-helpers/*.d.gjs.ts",
+        "./declarations/truth-helpers/*.d.gts.ts"
+      ]
     },
     "./blocks": {
       "types": "./declarations/app/blocks/index.d.ts"
@@ -52,17 +77,22 @@
       "types": "./declarations/app/lib/blocks/index.d.ts"
     },
     "./*": {
-      "types": "./declarations/app/*.d.ts"
+      "types": [
+        "./declarations/app/*.d.ts",
+        "./declarations/app/*.d.gjs.ts",
+        "./declarations/app/*.d.gts.ts"
+      ]
     }
   },
   "devDependencies": {
     "@types/node": "^26.4.0",
-    "compare-versions": "^6.1.1"
+    "compare-versions": "^6.1.1",
+    "typescript": "7.1.0-dev.20260930.4"
   },
   "engines": {
     "node": ">= 20",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": "^10"
+    "pnpm": "^12"
   }
 }

@@ -20,7 +20,7 @@ export default <template>
       <:actions as |actions|>
         <actions.Primary
           @icon="plus"
-          @label="explorer.create"
+          @label="explorer.new_query"
           @route="adminPlugins.show.explorer.new"
         />
         <actions.Wrapped>
