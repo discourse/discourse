@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import AiSearchBestMatch from "../../components/ai-search/ai-search-best-match";
+import AiSearchBestMatch from "../../components/ai-search/ai-search-best-match.gjs";
 
 export default class AiSearchBestMatchConnector extends Component {
   static shouldRender(args, { siteSettings, currentUser }) {

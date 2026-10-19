@@ -503,6 +503,12 @@ discourse_ai:
     default: false
     client: true
     area: "ai-features/search"
+  ai_ask_ai_search_intent_decision_model:
+    type: enum
+    default: ""
+    client: true
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
+    area: "ai-features/search"
   ai_ask_ai_agent:
     default: "-41"
     type: enum

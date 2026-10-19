@@ -1444,7 +1444,14 @@ CREATE TABLE public.ask_ai_logs (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     ask_trigger character varying DEFAULT ''::character varying NOT NULL,
-    ask_trigger_reason character varying DEFAULT ''::character varying NOT NULL
+    ask_trigger_reason character varying DEFAULT ''::character varying NOT NULL,
+    ask_intent_heuristic character varying DEFAULT ''::character varying NOT NULL,
+    ask_intent_model character varying DEFAULT ''::character varying NOT NULL,
+    ask_intent_probability double precision DEFAULT 0.0 NOT NULL,
+    ask_tab_opened character varying DEFAULT ''::character varying NOT NULL,
+    ask_tab_opened_reason character varying DEFAULT ''::character varying NOT NULL,
+    ask_tab_switched_to character varying DEFAULT ''::character varying NOT NULL,
+    ask_tab_switched_after_ms integer DEFAULT 0 NOT NULL
 );
 
 
@@ -26091,6 +26098,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261019213757'),
+('20261019213116'),
 ('20261018172000'),
 ('20261015175355'),
 ('20261015175340'),

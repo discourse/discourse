@@ -10,9 +10,9 @@ import DSkeleton from "discourse/ui-kit/d-skeleton";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import AiSearchAnswer from "./ai-search-answer";
-import AiSearchBestMatch from "./ai-search-best-match";
-import AiSearchConversation from "./ai-search-conversation";
+import AiSearchAnswer from "./ai-search-answer.gjs";
+import AiSearchBestMatch from "./ai-search-best-match.gjs";
+import AiSearchConversation from "./ai-search-conversation.gjs";
 
 export default class AiSearchPage extends Component {
   @service aiSearchSession;

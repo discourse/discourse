@@ -1,6 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
-import { tagNames, tagSuggestionParams } from "./ai-helper-suggestions";
-import { showComposerAiHelper } from "./show-ai-helper";
+import { tagNames, tagSuggestionParams } from "./ai-helper-suggestions.js";
+import { showComposerAiHelper } from "./show-ai-helper.js";
 
 async function requestSuggestion(url, data) {
   try {

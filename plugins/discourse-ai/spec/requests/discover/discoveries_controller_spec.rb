@@ -225,6 +225,138 @@ describe DiscourseAi::Discover::DiscoveriesController do
     end
   end
 
+  describe "#reply with search intent" do
+    fab!(:decision_model)
+    fab!(:llm_model)
+    fab!(:ai_agent) do
+      Fabricate(
+        :ai_agent,
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        default_llm_id: llm_model.id,
+      )
+    end
+    let(:request_id) { SecureRandom.uuid }
+
+    before do
+      Group.refresh_automatic_groups!
+      SiteSetting.ai_ask_ai_agent = ai_agent.id
+      SiteSetting.ai_ask_ai_search_intent_decision_model = decision_model.id
+    end
+
+    it "returns the decision model's judgement and logs it beside the heuristic's" do
+      DiscourseAi::Decisions.with_canned_answers(intent: { "answer" => 0.3, "lookup" => 0.7 }) do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query: "password reset",
+               request_id:,
+               intent_heuristic: "answer",
+               classify_intent: true,
+             }
+      end
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["intent"]).to eq("intent" => "lookup", "probability" => 0.7)
+      expect(response.parsed_body["ask_log_id"]).to eq(AskAiLog.last.id)
+      expect(AskAiLog.last).to have_attributes(
+        ask_intent_heuristic: "answer",
+        ask_intent_model: "lookup",
+        ask_intent_probability: 0.7,
+      )
+    end
+
+    it "logs only the heuristic when no judgement is asked for" do
+      post "/discourse-ai/discoveries/reply",
+           params: {
+             query: "password reset",
+             request_id:,
+             intent_heuristic: "lookup",
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).not_to have_key("intent")
+      expect(AskAiLog.last).to have_attributes(ask_intent_heuristic: "lookup", ask_intent_model: "")
+    end
+
+    it "ignores an unknown heuristic and a missing decision model" do
+      SiteSetting.ai_ask_ai_search_intent_decision_model = ""
+
+      post "/discourse-ai/discoveries/reply",
+           params: {
+             query: "password reset",
+             request_id:,
+             intent_heuristic: "whatever",
+             classify_intent: true,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).not_to have_key("intent")
+      expect(AskAiLog.last).to have_attributes(ask_intent_heuristic: "", ask_intent_model: "")
+    end
+  end
+
+  describe "#record_tabs" do
+    fab!(:llm_model)
+    fab!(:ai_agent) do
+      Fabricate(
+        :ai_agent,
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        default_llm_id: llm_model.id,
+      )
+    end
+    fab!(:ask_log) { AskAiLog.create!(user:, query: "password reset", asked_at: Time.current) }
+
+    before do
+      Group.refresh_automatic_groups!
+      SiteSetting.ai_ask_ai_agent = ai_agent.id
+    end
+
+    it "records the opened tab and the first switch, keeping each first report" do
+      put "/discourse-ai/discoveries/tabs",
+          params: {
+            ask_log_id: ask_log.id,
+            tab_opened: "topics",
+            tab_opened_reason: "topic_results",
+          }
+      expect(response.status).to eq(204)
+
+      put "/discourse-ai/discoveries/tabs",
+          params: {
+            ask_log_id: ask_log.id,
+            tab_switched_to: "ask",
+            tab_switched_after_ms: 1200,
+          }
+      put "/discourse-ai/discoveries/tabs",
+          params: {
+            ask_log_id: ask_log.id,
+            tab_switched_to: "context",
+            tab_switched_after_ms: 5000,
+          }
+
+      expect(ask_log.reload).to have_attributes(
+        ask_tab_opened: "topics",
+        ask_tab_opened_reason: "topic_results",
+        ask_tab_switched_to: "ask",
+        ask_tab_switched_after_ms: 1200,
+      )
+    end
+
+    it "rejects an unknown tab" do
+      put "/discourse-ai/discoveries/tabs", params: { ask_log_id: ask_log.id, tab_opened: "nope" }
+
+      expect(response.status).to eq(400)
+      expect(ask_log.reload.ask_tab_opened).to eq("")
+    end
+
+    it "does not touch another user's ask" do
+      other_log = AskAiLog.create!(user: Fabricate(:user), query: "x", asked_at: Time.current)
+
+      put "/discourse-ai/discoveries/tabs", params: { ask_log_id: other_log.id, tab_opened: "ask" }
+
+      expect(response.status).to eq(404)
+      expect(other_log.reload.ask_tab_opened).to eq("")
+    end
+  end
+
   describe "#continue_convo" do
     fab!(:group)
     fab!(:llm_model)

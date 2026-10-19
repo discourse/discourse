@@ -38,23 +38,62 @@ module DiscourseAi
           trigger_reason = ""
         end
 
-        DiscourseAi::Discoveries.enqueue_reply(
-          user: current_user,
-          request_id:,
-          query:,
-          scope:,
-          trigger:,
-          trigger_reason:,
-        )
+        intent_heuristic = params[:intent_heuristic].to_s
+        if DiscourseAi::Discoveries::Intent::CHOICES.exclude?(intent_heuristic)
+          intent_heuristic = ""
+        end
+
+        ask_log =
+          DiscourseAi::Discoveries.enqueue_reply(
+            user: current_user,
+            request_id:,
+            query:,
+            scope:,
+            trigger:,
+            trigger_reason:,
+            intent_heuristic:,
+          )
 
         DiscourseAi::Discoveries.record_recent_ask(user_id: current_user.id, query:)
 
-        render json: { request_id: }, status: :ok
+        # judged after the answer is queued so it does not hold the answer up, and
+        # logged beside the heuristic's guess so the two can be compared
+        intent =
+          if ask_log && params[:classify_intent].to_s == "true"
+            DiscourseAi::Discoveries::Intent.new(user: current_user).call(query)
+          end
+        if intent
+          ask_log.update!(
+            ask_intent_model: intent[:intent],
+            ask_intent_probability: intent[:probability],
+          )
+        end
+
+        render json: { request_id:, ask_log_id: ask_log&.id, intent: }.compact, status: :ok
       rescue DiscourseAi::Discoveries::RequestConflict
         render_json_error(
           I18n.t("discourse_ai.ai_bot.discoveries.errors.request_conflict"),
           status: :conflict,
         )
+      end
+
+      def record_tabs
+        RateLimiter.new(
+          current_user,
+          "ai_discover_tabs_#{current_user.id}",
+          60,
+          1.minute,
+        ).performed!
+
+        DiscourseAi::Discoveries.record_tabs(
+          user: current_user,
+          ask_log_id: params.require(:ask_log_id),
+          opened: params[:tab_opened].presence,
+          opened_reason: params[:tab_opened_reason].to_s,
+          switched_to: params[:tab_switched_to].presence,
+          switched_after_ms: params[:tab_switched_after_ms],
+        )
+        head :no_content
       end
 
       # the Ember app is served for HTML loads before this runs
@@ -180,7 +219,8 @@ module DiscourseAi
       end
 
       def ask_ai_action?
-        %w[search_page recent clear_recent].include?(action_name) || params[:request_id].present?
+        %w[search_page recent clear_recent record_tabs].include?(action_name) ||
+          params[:request_id].present?
       end
 
       def normalized_query

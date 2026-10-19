@@ -195,8 +195,15 @@ export default class DiscobotDiscoveries extends Service {
     this.lastQuery = "";
   }
 
+  /**
+   * @returns {Promise<Object|undefined>} the server's reply when a request was
+   *   made, which carries the decision model's intent when one was asked for
+   */
   @action
-  async triggerDiscovery(query, { scope, trigger, triggerReason } = {}) {
+  async triggerDiscovery(
+    query,
+    { scope, trigger, triggerReason, intentHeuristic, classifyIntent } = {}
+  ) {
     const normalizedQuery = query?.trim();
 
     // an answer that failed or timed out is worth asking again, even though the
@@ -237,12 +244,15 @@ export default class DiscobotDiscoveries extends Service {
           ...(scope && { scope }),
           ...(trigger && { trigger }),
           ...(triggerReason && { trigger_reason: triggerReason }),
+          ...(intentHeuristic && { intent_heuristic: intentHeuristic }),
+          ...(classifyIntent && { classify_intent: true }),
         },
       });
 
       if (response.request_id !== requestId) {
         throw new Error("Discovery request ID mismatch");
       }
+      return response;
     } catch {
       if (this.activeRequestId === requestId) {
         this.failDiscovery(

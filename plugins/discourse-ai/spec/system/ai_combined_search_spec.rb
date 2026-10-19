@@ -28,10 +28,16 @@ describe "AI combined search" do
     # the answer is streamed from the spec instead, one phase at a time
     allow(DiscourseAi::Discoveries).to receive(
       :enqueue_reply,
-    ) do |request_id:, scope: nil, trigger: "", trigger_reason: "", **|
+    ) do |user:, query:, request_id:, scope: nil, trigger: "", trigger_reason: "", intent_heuristic: "", **|
       request_ids << request_id
       scopes << scope
       triggers << [trigger, trigger_reason]
+      AskAiLog.create!(
+        user:,
+        query:,
+        asked_at: Time.current,
+        ask_intent_heuristic: intent_heuristic,
+      )
     end
 
     sign_in(user)
@@ -233,6 +239,25 @@ describe "AI combined search" do
       select_tab("topics")
       expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
       expect(request_ids.size).to eq(1)
+    end
+
+    it "logs the tab the search opened on and the first one the reader switched to" do
+      visit "/"
+      wait_for_discoveries_channel
+      ask(query)
+
+      expect_tab("topics")
+      select_tab("ask")
+      select_tab("topics")
+
+      try_until_success do
+        expect(AskAiLog.last).to have_attributes(
+          ask_intent_heuristic: "lookup",
+          ask_tab_opened: "topics",
+          ask_tab_opened_reason: "topic_results",
+          ask_tab_switched_to: "ask",
+        )
+      end
     end
 
     it "leaves related results to the combined search, so the list holds still" do

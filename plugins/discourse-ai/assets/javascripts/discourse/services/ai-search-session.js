@@ -4,14 +4,16 @@ import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { searchForTerm, translateResults } from "discourse/lib/search";
-import { chooseTab } from "../lib/ai-search-intent";
-import { topicIdFromUrl } from "../lib/ai-search-references";
-import { withScope } from "../lib/ai-search-scope";
+import { chooseTab, readsAsQuestion } from "../lib/ai-search-intent.js";
+import { topicIdFromUrl } from "../lib/ai-search-references.js";
+import { withScope } from "../lib/ai-search-scope.js";
 
 const SEMANTIC_MATCH_RANK = 5;
 const BEST_MATCH_COUNT = 2;
 // a search this soon after the last one on the same page is still the same hunt
 const SEARCH_AGAIN_WINDOW_MS = 3 * 60 * 1000;
+// how long the tabs wait on the decision model before judging the query alone
+const INTENT_WAIT_MS = 1000;
 
 export async function keywordSearch(query) {
   try {
@@ -83,6 +85,9 @@ export default class AiSearchSession extends Service {
   #subscribed = false;
   #tabChosenByReader = false;
   #lastSearch = null;
+  // the menu search's tab choices, logged on its ask to judge how well the
+  // opening tab was chosen
+  #tabLog = null;
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -223,10 +228,10 @@ export default class AiSearchSession extends Service {
     this.semanticPosts = null;
 
     this.discoveries.dismissDiscovery();
-    this.#ask(query, { trigger });
+    const asked = this.#ask(query, { trigger });
 
     if (surface === "menu") {
-      this.#searchMenuTabs(query, { searchedAgain });
+      this.#searchMenuTabs(query, { searchedAgain, asked });
       this.#lastSearch = { query, at: Date.now() };
     } else {
       keywordSearch(this.#scoped(query)).then((posts) => {
@@ -275,6 +280,15 @@ export default class AiSearchSession extends Service {
 
   @action
   selectTab(tab) {
+    const log = this.#tabLog;
+    if (log && !log.switched && tab !== this.selectedTab) {
+      log.switched = true;
+      this.#recordTabs(log, {
+        tab_switched_to: tab,
+        tab_switched_after_ms: Date.now() - log.since,
+      });
+    }
+
     this.#tabChosenByReader = true;
     this.selectedTab = tab;
     this.#showSelectedResults();
@@ -332,7 +346,9 @@ export default class AiSearchSession extends Service {
 
   // Every tab is searched at once, so switching between them is instant; the
   // one to open on is chosen once the keyword results show what there is.
-  async #searchMenuTabs(query, { searchedAgain }) {
+  async #searchMenuTabs(query, { searchedAgain, asked }) {
+    const log = { asked, since: Date.now(), switched: false };
+    this.#tabLog = log;
     this.#tabChosenByReader = false;
     this.selectedTab = null;
     this.topicsResults = null;
@@ -340,9 +356,10 @@ export default class AiSearchSession extends Service {
     this.search.noResults = false;
 
     const scopeKey = this.scope?.key;
-    const [topics, context] = await Promise.all([
+    const [topics, context, intent] = await Promise.all([
       this.#menuSearch(query),
       scopeKey ? this.#menuSearch(withScope(query, scopeKey)) : null,
+      this.#waitForIntent(asked),
     ]);
     if (this.query !== query) {
       return;
@@ -354,15 +371,43 @@ export default class AiSearchSession extends Service {
       : null;
 
     if (!this.#tabChosenByReader) {
-      this.selectedTab = chooseTab(query, {
+      const { tab, reason } = chooseTab(query, {
         topics: this.topicsResults,
         context: this.contextResults,
         scope: scopeKey,
         siteLocale: this.siteSettings.default_locale,
         searchedAgain,
-      }).tab;
+        intent,
+      });
+      this.selectedTab = tab;
+      log.since = Date.now();
+      this.#recordTabs(log, { tab_opened: tab, tab_opened_reason: reason });
     }
     this.#showSelectedResults();
+  }
+
+  async #recordTabs(log, data) {
+    const askLogId = (await log.asked)?.ask_log_id;
+    if (!askLogId) {
+      return;
+    }
+
+    try {
+      await ajax("/discourse-ai/discoveries/tabs", {
+        type: "PUT",
+        data: { ask_log_id: askLogId, ...data },
+      });
+    } catch {
+      // only the measurement is lost
+    }
+  }
+
+  async #waitForIntent(asked) {
+    const waited = new Promise((resolve) =>
+      setTimeout(resolve, INTENT_WAIT_MS, null)
+    );
+    const intent = asked.then((response) => response?.intent ?? null);
+    return await Promise.race([intent, waited]);
   }
 
   async #menuSearch(term) {
@@ -441,9 +486,13 @@ export default class AiSearchSession extends Service {
 
   #ask(query, { trigger }) {
     // a fresh request every time, so the rewrite is always published
-    this.discoveries.triggerDiscovery(query, {
+    const asked = this.discoveries.triggerDiscovery(query, {
       scope: this.scope?.key,
       trigger,
+      intentHeuristic: readsAsQuestion(query) ? "answer" : "lookup",
+      classifyIntent:
+        this.surface === "menu" &&
+        !!this.siteSettings.ai_ask_ai_search_intent_decision_model,
     });
 
     // Semantic ranks only mark the best matches once there is an answer.
@@ -464,6 +513,8 @@ export default class AiSearchSession extends Service {
     } else {
       this.semanticPosts = [];
     }
+
+    return asked;
   }
 
   // a second search here, sharing a word with the last, suggests its results

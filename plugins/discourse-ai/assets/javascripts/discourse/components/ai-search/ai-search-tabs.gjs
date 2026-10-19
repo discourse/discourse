@@ -8,7 +8,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
-import AiSearchBestMatch from "./ai-search-best-match";
+import AiSearchBestMatch from "./ai-search-best-match.gjs";
 
 /**
  * The kinds of result a combined search fetched, as pills that switch between

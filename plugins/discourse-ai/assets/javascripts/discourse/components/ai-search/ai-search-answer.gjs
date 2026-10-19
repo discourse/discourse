@@ -13,7 +13,7 @@ import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
-import { openTopicFromQuery } from "../../lib/open-topic-from-query";
+import { openTopicFromQuery } from "../../lib/open-topic-from-query.js";
 
 /**
  * The answer for the current combined search. It opens to its related topics

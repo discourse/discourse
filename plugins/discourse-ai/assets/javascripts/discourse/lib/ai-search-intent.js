@@ -7,6 +7,9 @@ const QUESTION_MARK = /[?？]\s*$/;
 // this many words is natural language rather than keywords
 const QUESTION_LENGTH = 5;
 
+// below this the decision model is no surer than how the query is written
+const INTENT_PROBABILITY = 0.7;
+
 // the writing systems each site language is searched in; anything else is
 // left out of the search index's stemming and matches poorly
 const LOCALE_SCRIPTS = {
@@ -48,6 +51,13 @@ const FOREIGN_SHARE = 0.6;
  */
 
 /**
+ * @typedef {Object} SearchIntent
+ * @property {"answer"|"lookup"} intent what a decision model judged the reader
+ *   is after
+ * @property {number} probability the chance the model gives that intent
+ */
+
+/**
  * Which tab a search should open on, guessed from how the query reads and
  * what the keyword searches found. Every tab is fetched, so this only decides
  * what the reader sees first.
@@ -60,11 +70,13 @@ const FOREIGN_SHARE = 0.6;
  * @param {string} [found.siteLocale] the language the site is searched in
  * @param {boolean} [found.searchedAgain] whether an earlier search on this
  *   page seems not to have helped
+ * @param {SearchIntent} [found.intent] a decision model's judgement, which
+ *   replaces how the query reads when it is confident
  * @returns {{tab: SearchTab, reason: string}}
  */
 export function chooseTab(
   query,
-  { topics, context, scope, siteLocale, searchedAgain } = {}
+  { topics, context, scope, siteLocale, searchedAgain, intent } = {}
 ) {
   const topicCount = topics?.posts?.length ?? 0;
   const contextCount = scope ? (context?.posts?.length ?? 0) : 0;
@@ -91,7 +103,11 @@ export function chooseTab(
     return { tab: "ask", reason: "searched_again" };
   }
 
-  if (readsAsQuestion(query)) {
+  const confident = intent?.probability >= INTENT_PROBABILITY;
+  if (confident && intent.intent === "answer") {
+    return { tab: "ask", reason: "intent_answer" };
+  }
+  if (!confident && readsAsQuestion(query)) {
     return { tab: "ask", reason: "question" };
   }
 

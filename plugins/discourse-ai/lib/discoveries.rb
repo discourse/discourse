@@ -48,6 +48,7 @@ module DiscourseAi
     # answer can be tuned against what readers do with the answers
     TRIGGERS = %w[enter pause page scope recent].freeze
     TRIGGER_REASON_PATTERN = /\A[a-z_:]{0,60}\z/
+    SEARCH_TABS = %w[ask topics context].freeze
 
     class RequestConflict < StandardError
     end
@@ -143,7 +144,16 @@ module DiscourseAi
         }
       end
 
-      def enqueue_reply(user:, request_id:, query:, scope: nil, trigger: "", trigger_reason: "")
+      # @return [AskAiLog, nil] the new ask's log, or nil when the request was already made
+      def enqueue_reply(
+        user:,
+        request_id:,
+        query:,
+        scope: nil,
+        trigger: "",
+        trigger_reason: "",
+        intent_heuristic: ""
+      )
         return if bind_request(user_id: user.id, request_id:, query:) != :created
 
         asked_at = Time.current
@@ -154,6 +164,7 @@ module DiscourseAi
             asked_at:,
             ask_trigger: trigger,
             ask_trigger_reason: trigger_reason,
+            ask_intent_heuristic: intent_heuristic,
           )
         settings = result_settings
         Jobs.enqueue(
@@ -167,9 +178,41 @@ module DiscourseAi
           related_count: settings[:related_count],
           scope:,
         )
+        ask_log
       rescue StandardError
         ask_log&.update!(ask_outcome: :failed)
         raise
+      end
+
+      # Records which tab the search menu opened an ask on, and the first one the
+      # reader switched to. Each is kept from its first report only.
+      def record_tabs(
+        user:,
+        ask_log_id:,
+        opened: nil,
+        opened_reason: "",
+        switched_to: nil,
+        switched_after_ms: 0
+      )
+        ask_log = AskAiLog.find_by(id: ask_log_id, user_id: user.id)
+        raise Discourse::NotFound if ask_log.nil?
+
+        updates = {}
+        if opened.present? && ask_log.ask_tab_opened.blank?
+          raise Discourse::InvalidParameters.new(:tab_opened) if SEARCH_TABS.exclude?(opened)
+          opened_reason = "" if !opened_reason.to_s.match?(TRIGGER_REASON_PATTERN)
+          updates.merge!(ask_tab_opened: opened, ask_tab_opened_reason: opened_reason.to_s)
+        end
+        if switched_to.present? && ask_log.ask_tab_switched_to.blank?
+          if SEARCH_TABS.exclude?(switched_to)
+            raise Discourse::InvalidParameters.new(:tab_switched_to)
+          end
+          updates.merge!(
+            ask_tab_switched_to: switched_to,
+            ask_tab_switched_after_ms: switched_after_ms.to_i.clamp(0, 1.hour.in_milliseconds),
+          )
+        end
+        ask_log.update!(updates) if updates.present?
       end
 
       def bind_request(user_id:, request_id:, query:)

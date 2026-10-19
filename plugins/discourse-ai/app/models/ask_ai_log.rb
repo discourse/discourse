@@ -18,25 +18,32 @@ end
 #
 # Table name: ask_ai_logs
 #
-#  id                      :bigint           not null, primary key
-#  answer                  :text
-#  answer_title            :text
-#  ask_outcome             :integer
-#  ask_trigger             :string           default(""), not null
-#  ask_trigger_reason      :string           default(""), not null
-#  asked_at                :datetime         not null
-#  candidate_post_ids      :bigint           default([]), not null, is an Array
-#  failure_stage           :integer
-#  keyword_query           :text
-#  query                   :text             not null
-#  query_locale            :string
-#  semantic_query          :text
-#  source_post_ids         :bigint           default([]), not null, is an Array
-#  suggested_follow_up     :text
-#  time_to_first_answer_ms :integer
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  user_id                 :bigint           not null
+#  id                        :bigint           not null, primary key
+#  answer                    :text
+#  answer_title              :text
+#  ask_intent_heuristic      :string           default(""), not null
+#  ask_intent_model          :string           default(""), not null
+#  ask_intent_probability    :float            default(0.0), not null
+#  ask_outcome               :integer
+#  ask_tab_opened            :string           default(""), not null
+#  ask_tab_opened_reason     :string           default(""), not null
+#  ask_tab_switched_after_ms :integer          default(0), not null
+#  ask_tab_switched_to       :string           default(""), not null
+#  ask_trigger               :string           default(""), not null
+#  ask_trigger_reason        :string           default(""), not null
+#  asked_at                  :datetime         not null
+#  candidate_post_ids        :bigint           default([]), not null, is an Array
+#  failure_stage             :integer
+#  keyword_query             :text
+#  query                     :text             not null
+#  query_locale              :string
+#  semantic_query            :text
+#  source_post_ids           :bigint           default([]), not null, is an Array
+#  suggested_follow_up       :text
+#  time_to_first_answer_ms   :integer
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  user_id                   :bigint           not null
 #
 # Indexes
 #

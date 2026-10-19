@@ -18,14 +18,14 @@ import { i18n } from "discourse-i18n";
 import AiSearchReferences, {
   citedTopicsFromCooked,
   citedTopicsFromRaw,
-} from "../../lib/ai-search-references";
-import { withScope } from "../../lib/ai-search-scope";
+} from "../../lib/ai-search-references.js";
+import { withScope } from "../../lib/ai-search-scope.js";
 import {
   keywordSearch,
   semanticSearch,
-} from "../../services/ai-search-session";
-import AiBlinkingAnimation from "../ai-blinking-animation";
-import AiSearchReferencesPanel from "./ai-search-references-panel";
+} from "../../services/ai-search-session.js";
+import AiBlinkingAnimation from "../ai-blinking-animation.gjs";
+import AiSearchReferencesPanel from "./ai-search-references-panel.gjs";
 
 function referenceFromPost(post) {
   return {

@@ -1,5 +1,5 @@
 import { array, concat } from "@ember/helper";
-import AiSearchPage from "../components/ai-search/ai-search-page";
+import AiSearchPage from "../components/ai-search/ai-search-page.gjs";
 
 export default <template>
   {{! keyed so moving to another conversation or query, including through
