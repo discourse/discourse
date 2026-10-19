@@ -111,6 +111,16 @@ RSpec.describe "Chat composer rich editor" do
     expect(page).to have_css(".chat-message-text strong", text: "bold")
   end
 
+  it "starts a list on a line added with Shift+Enter" do
+    chat_page.visit_channel(channel_1)
+    channel_page.composer.input.send_keys("intro", %i[shift enter], "- first")
+    channel_page.composer.enter_shortcut
+    channel_page.composer.input.send_keys("second")
+
+    expect(channel_page.composer.component).to have_css("li", count: 2)
+    expect(channel_page.composer).to have_value("intro\n\n* first\n* second")
+  end
+
   it "keeps markup chat doesn't render as plain text" do
     chat_page.visit_channel(channel_1)
     channel_page.composer.input.send_keys("# not a heading")
