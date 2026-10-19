@@ -113,6 +113,21 @@ export function buildConfig({ devMode } = {}) {
       }),
       wrapTestModulesPlugin(),
       discourseChunkNamesPlugin(),
+      {
+        name: "json-to-ast-side-effects",
+        resolveId: {
+          filter: { id: /^json-to-ast$/ },
+          async handler(source, importer, options) {
+            const resolved = await this.resolve(source, importer, {
+              ...options,
+              skipSelf: true,
+            });
+
+            // The parser's CommonJS wrapper otherwise survives after its debug-only consumers are removed.
+            return resolved ? { ...resolved, moduleSideEffects: false } : null;
+          },
+        },
+      },
       chunkImportMapPlugin({
         root: import.meta.dirname,
         noImportMap: (chunk) => chunk.facadeModuleId?.includes("/app/workers/"),
