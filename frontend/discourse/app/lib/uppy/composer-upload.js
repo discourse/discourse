@@ -3,14 +3,12 @@ import EmberObject from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { run } from "@ember/runloop";
 import { service } from "@ember/service";
-import Uppy from "@uppy/core";
-import DropTarget from "@uppy/drop-target";
-import XHRUpload from "@uppy/xhr-upload";
 import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
 import { updateCsrfToken } from "discourse/lib/ajax";
 import ComposerVideoThumbnailUppy from "discourse/lib/composer-video-thumbnail-uppy";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
+import { getUppy } from "discourse/lib/load-uppy";
 import {
   bindFileInputChangeListener,
   displayUploadErrors,
@@ -117,6 +115,7 @@ export default class UppyComposerUpload {
   }
 
   setup(element) {
+    const { Uppy, DropTarget } = getUppy();
     if (this.#uploadTargetBound) {
       this.teardown();
     }
@@ -471,6 +470,7 @@ export default class UppyComposerUpload {
   }
 
   #useXHRUploads() {
+    const { XHRUpload } = getUppy();
     this.uppyWrapper.uppyInstance.use(XHRUpload, {
       endpoint: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
       ...rateLimitRetryOptions,

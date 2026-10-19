@@ -5,13 +5,10 @@ import { getOwner, setOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
 import { run } from "@ember/runloop";
 import { service } from "@ember/service";
-import AwsS3 from "@uppy/aws-s3";
-import Uppy from "@uppy/core";
-import DropTarget from "@uppy/drop-target";
-import XHRUpload from "@uppy/xhr-upload";
 import { ajax, updateCsrfToken } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";
+import { getUppy } from "discourse/lib/load-uppy";
 import { deepMerge } from "discourse/lib/object";
 import {
   bindFileInputChangeListener,
@@ -156,6 +153,7 @@ export default class UppyUpload {
 
   @bind
   setup(fileInputEl) {
+    const { Uppy, DropTarget } = getUppy();
     if (fileInputEl) {
       this._fileInputEl = fileInputEl;
       this.allowMultipleFiles = this._fileInputEl.multiple;
@@ -457,6 +455,7 @@ export default class UppyUpload {
   }
 
   #useXHRUploads() {
+    const { XHRUpload } = getUppy();
     this.uppyWrapper.uppyInstance.use(XHRUpload, {
       endpoint: this.#xhrUploadUrl(),
       ...rateLimitRetryOptions,
@@ -476,6 +475,7 @@ export default class UppyUpload {
   }
 
   #useS3Uploads() {
+    const { AwsS3 } = getUppy();
     this.#usingS3Uploads = true;
     this.uppyWrapper.uppyInstance.use(AwsS3, {
       shouldUseMultipart: false,

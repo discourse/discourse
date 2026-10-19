@@ -3,6 +3,7 @@ import { waitUntil } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import loadUppy from "discourse/lib/load-uppy";
 import { dialog } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import pretender from "discourse/tests/helpers/create-pretender";
@@ -34,6 +35,10 @@ function uploadResponse(fileName) {
 
 module("Unit | Lib | uppy/uppy-upload", function (hooks) {
   setupTest(hooks);
+
+  hooks.beforeEach(async function () {
+    await loadUppy();
+  });
 
   hooks.beforeEach(function () {
     this.fileInput = document.createElement("input");

@@ -5,6 +5,7 @@ import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { isBlank } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
+import UploadRuntime from "discourse/components/upload-runtime";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
@@ -51,32 +52,34 @@ export default class AvatarUploader extends Component {
   }
 
   <template>
-    <span ...attributes>
-      <input
-        accept="image/*"
-        aria-hidden="true"
-        class="hidden-upload-field"
-        disabled={{this.uppyUpload.uploading}}
-        id="custom-profile-upload"
-        type="file"
-        {{didInsert this.uppyUpload.setup}}
-      />
-      <DButton
-        class="btn-default avatar-uploader__button"
-        data-avatar-upload-id={{this.uploadedAvatarId}}
-        data-uploaded={{this.customAvatarUploaded}}
-        @action={{this.chooseImage}}
-        @disabled={{this.uppyUpload.uploading}}
-        @icon="far-image"
-        @title="user.change_avatar.upload_title"
-        @translatedLabel={{this.uploadLabel}}
-      />
+    <UploadRuntime>
+      <span ...attributes>
+        <input
+          accept="image/*"
+          aria-hidden="true"
+          class="hidden-upload-field"
+          disabled={{this.uppyUpload.uploading}}
+          id="custom-profile-upload"
+          type="file"
+          {{didInsert this.uppyUpload.setup}}
+        />
+        <DButton
+          class="btn-default avatar-uploader__button"
+          data-avatar-upload-id={{this.uploadedAvatarId}}
+          data-uploaded={{this.customAvatarUploaded}}
+          @action={{this.chooseImage}}
+          @disabled={{this.uppyUpload.uploading}}
+          @icon="far-image"
+          @title="user.change_avatar.upload_title"
+          @translatedLabel={{this.uploadLabel}}
+        />
 
-      {{#if this.imageIsNotASquare}}
-        <div class="warning">{{i18n
-            "user.change_avatar.image_is_not_a_square"
-          }}</div>
-      {{/if}}
-    </span>
+        {{#if this.imageIsNotASquare}}
+          <div class="warning">{{i18n
+              "user.change_avatar.image_is_not_a_square"
+            }}</div>
+        {{/if}}
+      </span>
+    </UploadRuntime>
   </template>
 }

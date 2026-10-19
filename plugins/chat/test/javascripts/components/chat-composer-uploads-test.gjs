@@ -1,5 +1,6 @@
 import { click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import loadUppy from "discourse/lib/load-uppy";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import {
@@ -43,6 +44,10 @@ function setupUploadPretender() {
 
 module("Component | ChatComposerUploads", function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(async function () {
+    await loadUppy();
+  });
 
   test("loading uploads from an outside source (e.g. draft or editing message)", async function (assert) {
     this.existingUploads = [fakeUpload];

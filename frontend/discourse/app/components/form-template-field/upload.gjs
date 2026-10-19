@@ -5,6 +5,7 @@ import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { trustHTML } from "@ember/template";
+import UploadRuntime from "discourse/components/upload-runtime";
 import { bind } from "discourse/lib/decorators";
 import {
   autoTrackedArray,
@@ -132,61 +133,66 @@ export default class FormTemplateFieldUpload extends Component {
   }
 
   <template>
-    <div class="control-group form-template-field" data-field-type="upload">
-      {{#if @attributes.label}}
-        <label class="form-template-field__label">
-          {{@attributes.label}}
-          {{#if @validations.required}}
-            {{dIcon "asterisk" class="form-template-field__required-indicator"}}
-          {{/if}}
-        </label>
-      {{/if}}
+    <UploadRuntime>
+      <div class="control-group form-template-field" data-field-type="upload">
+        {{#if @attributes.label}}
+          <label class="form-template-field__label">
+            {{@attributes.label}}
+            {{#if @validations.required}}
+              {{dIcon
+                "asterisk"
+                class="form-template-field__required-indicator"
+              }}
+            {{/if}}
+          </label>
+        {{/if}}
 
-      {{#if @attributes.description}}
-        <span class="form-template-field__description">
-          {{trustHTML @attributes.description}}
-        </span>
-      {{/if}}
+        {{#if @attributes.description}}
+          <span class="form-template-field__description">
+            {{trustHTML @attributes.description}}
+          </span>
+        {{/if}}
 
-      <DPickFilesButton
-        @acceptedFileTypesString={{@attributes.file_types}}
-        @acceptedFormatsOverride={{@attributes.file_types}}
-        @allowMultiple={{@attributes.allow_multiple}}
-        @fileInputClass="form-template-field__upload"
-        @fileInputDisabled={{this.disabled}}
-        @fileInputId={{this.fileUploadElementId}}
-        @icon="upload"
-        @label={{this.uploadStatusLabel}}
-        @onFilesPicked={{true}}
-        @registerFileInput={{this.uppyUpload.setup}}
-        @showButton={{true}}
-      />
+        <DPickFilesButton
+          @acceptedFileTypesString={{@attributes.file_types}}
+          @acceptedFormatsOverride={{@attributes.file_types}}
+          @allowMultiple={{@attributes.allow_multiple}}
+          @fileInputClass="form-template-field__upload"
+          @fileInputDisabled={{this.disabled}}
+          @fileInputId={{this.fileUploadElementId}}
+          @icon="upload"
+          @label={{this.uploadStatusLabel}}
+          @onFilesPicked={{true}}
+          @registerFileInput={{this.uppyUpload.setup}}
+          @showButton={{true}}
+        />
 
-      {{#if this.uploadedFiles}}
-        <ul class="form-template-field__uploaded-files">
-          {{#each this.uploadedFiles as |file|}}
-            <li>
-              {{dIcon "file"}}
-              <a
-                href={{file.url}}
-                rel="noopener noreferrer"
-                target="_blank"
-              >{{file.file_name}}</a>
-              <span>{{file.human_filesize}}</span>
-            </li>
-          {{/each}}
-        </ul>
-      {{/if}}
+        {{#if this.uploadedFiles}}
+          <ul class="form-template-field__uploaded-files">
+            {{#each this.uploadedFiles as |file|}}
+              <li>
+                {{dIcon "file"}}
+                <a
+                  href={{file.url}}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >{{file.file_name}}</a>
+                <span>{{file.human_filesize}}</span>
+              </li>
+            {{/each}}
+          </ul>
+        {{/if}}
 
-      <input
-        aria-hidden="true"
-        class="form-template-field__upload-hidden-input"
-        name={{@id}}
-        required={{if @validations.required "required" ""}}
-        tabindex="-1"
-        type="text"
-        value={{this.uploadValue}}
-      />
-    </div>
+        <input
+          aria-hidden="true"
+          class="form-template-field__upload-hidden-input"
+          name={{@id}}
+          required={{if @validations.required "required" ""}}
+          tabindex="-1"
+          type="text"
+          value={{this.uploadValue}}
+        />
+      </div>
+    </UploadRuntime>
   </template>
 }

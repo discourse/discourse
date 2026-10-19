@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import loadUppy from "discourse/lib/load-uppy";
 import { isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
@@ -107,7 +108,7 @@ export default class ComposerVideoThumbnailUppy {
         if (!isEmpty) {
           // upload video thumbnail
           try {
-            canvas.toBlob((blob) => {
+            canvas.toBlob(async (blob) => {
               if (!blob) {
                 // toBlob can return null if blob creation fails
                 warn("Failed to create thumbnail blob", {
@@ -118,6 +119,7 @@ export default class ComposerVideoThumbnailUppy {
               }
 
               try {
+                await loadUppy();
                 this._uppyUpload = new UppyUpload(getOwner(this), {
                   id: "video-thumbnail",
                   type: "thumbnail",

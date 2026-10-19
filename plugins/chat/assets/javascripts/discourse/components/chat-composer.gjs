@@ -21,6 +21,7 @@ import EmojiAutocompleteResults from "discourse/components/emoji-autocomplete-re
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import UploadRuntime from "discourse/components/upload-runtime";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { SEND_SHORTCUT_META_ENTER } from "discourse/lib/constants";
@@ -873,13 +874,16 @@ export default class ChatComposer extends Component {
       </div>
 
       {{#if this.canAttachUploads}}
-        <ChatComposerUploads
-          @composerInputEl={{this.composer.textarea.element}}
-          @existingUploads={{this.draft.uploads}}
-          @fileUploadElementId={{this.fileUploadElementId}}
-          @onUploadChanged={{this.onUploadChanged}}
-          @uploadDropZone={{@uploadDropZone}}
-        />
+        {{! Upload lifecycle overrides require the runtime before the component mounts. }}
+        <UploadRuntime>
+          <ChatComposerUploads
+            @composerInputEl={{this.composer.textarea.element}}
+            @existingUploads={{this.draft.uploads}}
+            @fileUploadElementId={{this.fileUploadElementId}}
+            @onUploadChanged={{this.onUploadChanged}}
+            @uploadDropZone={{@uploadDropZone}}
+          />
+        </UploadRuntime>
       {{/if}}
 
       <div class="chat-replying-indicator-container">

@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import loadUppy from "discourse/lib/load-uppy";
 import UppyComposerUpload from "discourse/lib/uppy/composer-upload";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
 
@@ -9,8 +10,8 @@ function fakeComposerModel() {
   return { privateMessage: false };
 }
 
-function buildUploader(context) {
-  return new UppyComposerUpload(getOwner(context), {
+function buildUploader(context, UploaderClass = UppyComposerUpload) {
+  return new UploaderClass(getOwner(context), {
     composerEventPrefix: "composer",
     composerModel: fakeComposerModel(),
     uploadMarkdownResolvers: [],
@@ -34,6 +35,10 @@ function buildPasteEvent(target, files) {
 
 module("Unit | Lib | uppy/composer-upload", function (hooks) {
   setupTest(hooks);
+
+  hooks.beforeEach(async function () {
+    await loadUppy();
+  });
 
   hooks.beforeEach(function () {
     this.fileInput = document.createElement("input");
@@ -110,6 +115,34 @@ module("Unit | Lib | uppy/composer-upload", function (hooks) {
     );
 
     outside.remove();
+  });
+
+  test("setup remains synchronous for lifecycle overrides", function (assert) {
+    class CustomUploader extends UppyComposerUpload {
+      setup(element) {
+        const result = super.setup(element);
+        assert.strictEqual(
+          result,
+          undefined,
+          "setup does not return a pending promise"
+        );
+        const instance = this.uppyWrapper.uppyInstance;
+        assert.notStrictEqual(
+          instance,
+          null,
+          "the instance is ready immediately after super.setup"
+        );
+        instance.opts.onBeforeFileAdded = () => false;
+      }
+    }
+
+    const uploader = buildUploader(this, CustomUploader);
+    uploader.setup(this.formEl);
+    assert.false(
+      uploader.uppyWrapper.uppyInstance.opts.onBeforeFileAdded(),
+      "the lifecycle override can install an upload restriction synchronously"
+    );
+    uploader.teardown();
   });
 
   test("setup() called twice tears down the first binding", function (assert) {

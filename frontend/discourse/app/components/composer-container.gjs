@@ -19,6 +19,7 @@ import ComposerTitle from "discourse/components/composer-title";
 import ComposerToggles from "discourse/components/composer-toggles";
 import ComposerUserSelector from "discourse/components/composer-user-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import UploadRuntime from "discourse/components/upload-runtime";
 import htmlClass from "discourse/helpers/html-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import discourseDebounce from "discourse/lib/debounce";
@@ -408,33 +409,20 @@ export default class ComposerContainer extends Component {
               />
             </div>
 
-            <ComposerEditor @toolbarPortalTarget={{this.toolbarPortalTarget}}>
-              <div
-                class="composer-fields"
-                {{trackFieldsHeight this.composerRedesign}}
-              >
-                <PluginOutlet
-                  @name="before-composer-fields"
-                  @outletArgs={{lazyHash model=this.composer.model}}
-                />
-                {{#unless this.composer.model.viewFullscreen}}
-                  {{#if this.composer.model.canEditTitle}}
-                    {{#unless this.composerRedesign}}
-                      {{#if this.composer.model.creatingPrivateMessage}}
-                        <PmUserSelector
-                          @focusTarget={{this.composer.focusTarget}}
-                          @model={{this.composer.model}}
-                          @showWarning={{this.composer.showWarning}}
-                          @topicId={{this.composer.topicModel.id}}
-                        />
-                      {{/if}}
-                    {{/unless}}
-
-                    <div
-                      class="title-and-category
-                        {{if this.composer.isPreviewVisible 'with-preview'}}"
-                    >
-                      {{#if this.composerRedesign}}
+            {{! Upload lifecycle overrides require the runtime before the component mounts. }}
+            <UploadRuntime>
+              <ComposerEditor @toolbarPortalTarget={{this.toolbarPortalTarget}}>
+                <div
+                  class="composer-fields"
+                  {{trackFieldsHeight this.composerRedesign}}
+                >
+                  <PluginOutlet
+                    @name="before-composer-fields"
+                    @outletArgs={{lazyHash model=this.composer.model}}
+                  />
+                  {{#unless this.composer.model.viewFullscreen}}
+                    {{#if this.composer.model.canEditTitle}}
+                      {{#unless this.composerRedesign}}
                         {{#if this.composer.model.creatingPrivateMessage}}
                           <PmUserSelector
                             @focusTarget={{this.composer.focusTarget}}
@@ -443,103 +431,119 @@ export default class ComposerContainer extends Component {
                             @topicId={{this.composer.topicModel.id}}
                           />
                         {{/if}}
-                      {{/if}}
+                      {{/unless}}
 
-                      {{#unless this.composerRedesign}}
+                      <div
+                        class="title-and-category
+                          {{if this.composer.isPreviewVisible 'with-preview'}}"
+                      >
+                        {{#if this.composerRedesign}}
+                          {{#if this.composer.model.creatingPrivateMessage}}
+                            <PmUserSelector
+                              @focusTarget={{this.composer.focusTarget}}
+                              @model={{this.composer.model}}
+                              @showWarning={{this.composer.showWarning}}
+                              @topicId={{this.composer.topicModel.id}}
+                            />
+                          {{/if}}
+                        {{/if}}
+
+                        {{#unless this.composerRedesign}}
+                          <ComposerTitle
+                            @composer={{this.composer.model}}
+                            @focusTarget={{this.composer.focusTarget}}
+                            @lastValidatedAt={{this.composer.lastValidatedAt}}
+                          />
+                        {{/unless}}
+
+                        {{#if this.composer.model.showCategoryChooser}}
+                          <div class="category-input">
+                            <CategoryChooser
+                              @onChange={{this.composer.updateCategory}}
+                              @options={{hash
+                                disabled=this.composer.disableCategoryChooser
+                                scopedCategoryId=this.composer.scopedCategoryId
+                                prioritizedCategoryId=this.composer.prioritizedCategoryId
+                                readOnlyCategoryId=this.composer.readOnlyCategoryId
+                              }}
+                              @value={{this.composer.model.categoryId}}
+                            />
+                            <PluginOutlet
+                              @name="after-composer-category-input"
+                              @outletArgs={{lazyHash
+                                composer=this.composer.model
+                              }}
+                            />
+                            <DPopupInputTip
+                              @validation={{this.composer.categoryValidation}}
+                            />
+                          </div>
+                        {{/if}}
+
+                        {{#if this.composer.canEditTags}}
+                          <div class="tags-input">
+                            <MiniTagChooser
+                              @onChange={{fn (mut this.composer.model.tags)}}
+                              @options={{hash
+                                disabled=this.composer.disableTagsChooser
+                                categoryId=this.composer.model.categoryId
+                                minimum=this.composer.model.minimumRequiredTags
+                                icon=(if this.composerRedesign "tag")
+                                prioritizeRecentTags=true
+                                useHeaderSelectedCount=(if
+                                  this.composerRedesign true
+                                )
+                              }}
+                              @value={{this.composer.model.tags}}
+                            />
+                            <PluginOutlet
+                              @name="after-composer-tag-input"
+                              @outletArgs={{lazyHash
+                                composer=this.composer.model
+                              }}
+                            />
+                            <DPopupInputTip
+                              @validation={{this.composer.tagValidation}}
+                            />
+                          </div>
+                        {{/if}}
+
+                        <PluginOutlet
+                          @name="after-title-and-category"
+                          @outletArgs={{lazyHash
+                            model=this.composer.model
+                            tagValidation=this.composer.tagValidation
+                            canEditTags=this.composer.canEditTags
+                            disabled=this.composer.disableTagsChooser
+                          }}
+                        />
+                      </div>
+                    {{/if}}
+
+                    <span>
+                      <PluginOutlet
+                        @connectorTagName="div"
+                        @name="composer-fields"
+                        @outletArgs={{lazyHash
+                          model=this.composer.model
+                          showPreview=this.composer.isPreviewVisible
+                        }}
+                      />
+                    </span>
+
+                    {{#if this.composerRedesign}}
+                      {{#if this.composer.model.canEditTitle}}
                         <ComposerTitle
                           @composer={{this.composer.model}}
                           @focusTarget={{this.composer.focusTarget}}
                           @lastValidatedAt={{this.composer.lastValidatedAt}}
                         />
-                      {{/unless}}
-
-                      {{#if this.composer.model.showCategoryChooser}}
-                        <div class="category-input">
-                          <CategoryChooser
-                            @onChange={{this.composer.updateCategory}}
-                            @options={{hash
-                              disabled=this.composer.disableCategoryChooser
-                              scopedCategoryId=this.composer.scopedCategoryId
-                              prioritizedCategoryId=this.composer.prioritizedCategoryId
-                              readOnlyCategoryId=this.composer.readOnlyCategoryId
-                            }}
-                            @value={{this.composer.model.categoryId}}
-                          />
-                          <PluginOutlet
-                            @name="after-composer-category-input"
-                            @outletArgs={{lazyHash
-                              composer=this.composer.model
-                            }}
-                          />
-                          <DPopupInputTip
-                            @validation={{this.composer.categoryValidation}}
-                          />
-                        </div>
                       {{/if}}
-
-                      {{#if this.composer.canEditTags}}
-                        <div class="tags-input">
-                          <MiniTagChooser
-                            @onChange={{fn (mut this.composer.model.tags)}}
-                            @options={{hash
-                              disabled=this.composer.disableTagsChooser
-                              categoryId=this.composer.model.categoryId
-                              minimum=this.composer.model.minimumRequiredTags
-                              icon=(if this.composerRedesign "tag")
-                              prioritizeRecentTags=true
-                              useHeaderSelectedCount=(if
-                                this.composerRedesign true
-                              )
-                            }}
-                            @value={{this.composer.model.tags}}
-                          />
-                          <PluginOutlet
-                            @name="after-composer-tag-input"
-                            @outletArgs={{lazyHash
-                              composer=this.composer.model
-                            }}
-                          />
-                          <DPopupInputTip
-                            @validation={{this.composer.tagValidation}}
-                          />
-                        </div>
-                      {{/if}}
-
-                      <PluginOutlet
-                        @name="after-title-and-category"
-                        @outletArgs={{lazyHash
-                          model=this.composer.model
-                          tagValidation=this.composer.tagValidation
-                          canEditTags=this.composer.canEditTags
-                          disabled=this.composer.disableTagsChooser
-                        }}
-                      />
-                    </div>
-                  {{/if}}
-
-                  <span>
-                    <PluginOutlet
-                      @connectorTagName="div"
-                      @name="composer-fields"
-                      @outletArgs={{lazyHash
-                        model=this.composer.model
-                        showPreview=this.composer.isPreviewVisible
-                      }}
-                    />
-                  </span>
-
-                  {{#if this.composerRedesign}}
-                    {{#if this.composer.model.canEditTitle}}
-                      <ComposerTitle
-                        @composer={{this.composer.model}}
-                        @focusTarget={{this.composer.focusTarget}}
-                        @lastValidatedAt={{this.composer.lastValidatedAt}}
-                      />
                     {{/if}}
-                  {{/if}}
-                {{/unless}}
-              </div>
-            </ComposerEditor>
+                  {{/unless}}
+                </div>
+              </ComposerEditor>
+            </UploadRuntime>
 
             <span>
               <PluginOutlet
