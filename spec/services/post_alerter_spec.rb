@@ -1618,6 +1618,19 @@ RSpec.describe PostAlerter do
         expect(messages.first.data[:excerpt]).to eq("翻訳された投稿")
       end
 
+      it "tells the push to keep an excerpt provided by the caller" do
+        evil_trout.update_columns(last_seen_at: 1.hour.ago)
+        Fabricate(:push_subscription, user: evil_trout)
+
+        expect_enqueued_with(
+          job: :deliver_push_notification,
+          args: {
+            user_id: evil_trout.id,
+            keep_excerpt: true,
+          },
+        ) { publish_alert(excerpt: "You were assigned") }
+      end
+
       it "keeps an excerpt provided by the caller" do
         messages = publish_alert(excerpt: "You were assigned")
 

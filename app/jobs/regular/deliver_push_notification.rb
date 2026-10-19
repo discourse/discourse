@@ -35,15 +35,16 @@ module Jobs
 
         return if !held && localization_pending?(post, user) && held?(post, user, args)
 
-        I18n.with_locale(user.effective_locale) do
-          payload.merge!(
+        translated =
+          I18n.with_locale(user.effective_locale) do
             ContentLocalization.translated_notification_fields(
               topic: topic,
               post: post,
               scope: user.guardian,
-            ),
-          )
-        end
+            )
+          end
+        translated.delete(:excerpt) if args[:keep_excerpt]
+        payload.merge!(translated)
       end
 
       PushNotificationPusher.push(user, payload.deep_dup) if user.push_subscriptions.exists?
@@ -78,8 +79,16 @@ module Jobs
 
       # A translation stored between the check and the hold has already fired its
       # release, so look again rather than wait for the limit.
-      post.reload
-      localization_pending?(post, user) || !PushNotificationLocalizationWait.claim(post.id, token)
+      begin
+        post.reload
+        still_pending = localization_pending?(post, user)
+      rescue StandardError
+        # Otherwise the held push would be sent alongside this job's retry.
+        raise if PushNotificationLocalizationWait.claim(post.id, token)
+        return true
+      end
+
+      still_pending || !PushNotificationLocalizationWait.claim(post.id, token)
     end
   end
 end

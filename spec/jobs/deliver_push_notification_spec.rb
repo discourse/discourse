@@ -214,6 +214,24 @@ RSpec.describe Jobs::DeliverPushNotification do
       Jobs::DeliverPushNotification.new.execute(user_id: user.id, payload: localizable_payload)
     end
 
+    it "keeps a caller-provided excerpt" do
+      Fabricate(:push_subscription, user: user)
+      Fabricate(:topic_localization, topic: topic, locale: "ja", title: "ローカライズされたトピック")
+      Fabricate(:post_localization, post: localized_post, locale: "ja", cooked: "<p>翻訳</p>")
+
+      PushNotificationPusher
+        .expects(:push)
+        .with do |_, p|
+          p[:topic_title] == "ローカライズされたトピック" && p[:excerpt] == "Original post content"
+        end
+
+      Jobs::DeliverPushNotification.new.execute(
+        user_id: user.id,
+        payload: localizable_payload,
+        keep_excerpt: true,
+      )
+    end
+
     describe "when a translation is still pending" do
       let(:plugin) { Plugin::Instance.new }
       let(:pending) { [true] }
@@ -298,6 +316,24 @@ RSpec.describe Jobs::DeliverPushNotification do
 
         PushNotificationPusher.expects(:push).once
         deliver(localization_wait_token: token)
+      end
+
+      it "sends the held push at the wait limit even when the translation never came" do
+        deliver
+        token = held_token
+
+        PushNotificationPusher.expects(:push).with { |_, p| p[:excerpt] == "Original post content" }
+
+        deliver(localization_wait_token: token)
+      end
+
+      it "does not leave a held push behind for its retry to duplicate when holding fails" do
+        Post.any_instance.stubs(:reload).raises(ActiveRecord::ConnectionNotEstablished)
+        PushNotificationPusher.expects(:push).never
+
+        expect { deliver }.to raise_error(ActiveRecord::ConnectionNotEstablished)
+
+        deliver(localization_wait_token: held_token)
       end
 
       it "does not release pushes held for other locales" do
