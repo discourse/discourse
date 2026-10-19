@@ -1,5 +1,4 @@
 import { makeArray } from "discourse/lib/helpers";
-import { applyValueTransformer } from "discourse/lib/transformer";
 import type SelectOptionsView from "discourse/ui-kit/select/-internals/engine/select-options";
 import type {
   SelectDescriptor,
@@ -8,6 +7,7 @@ import type {
   SelectSnapshot,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
+import type { SelectContentContext } from "./customizations.ts";
 
 export default class ListComposer {
   #options: SelectOptionsView;
@@ -17,7 +17,13 @@ export default class ListComposer {
   #isSelected: (item: SelectItem) => boolean;
   #getAtMaximum: () => boolean;
   #getTotal: () => number | undefined;
-  #getContentContext: () => Record<string, unknown>;
+  #getContentContext: () => Omit<SelectContentContext, "filter" | "value">;
+
+  /** Native content steps run before the compatibility bridge. */
+  #applyContent: (
+    items: SelectItem[],
+    context: SelectContentContext
+  ) => SelectItem[];
   #applyLegacyContent: (items: SelectItem[]) => SelectItem[];
 
   /** Records transformed option counts without invalidating the current render. */
@@ -31,7 +37,12 @@ export default class ListComposer {
     isSelected: (item: SelectItem) => boolean;
     getAtMaximum: () => boolean;
     getTotal: () => number | undefined;
-    getContentContext: () => Record<string, unknown>;
+    getContentContext: () => Omit<SelectContentContext, "filter" | "value">;
+    /** Applies sealed per-select content declarations. */
+    applyContent: (
+      items: SelectItem[],
+      context: SelectContentContext
+    ) => SelectItem[];
     applyLegacyContent: (items: SelectItem[]) => SelectItem[];
     /** Measures source options before and after content extensions. */
     noteVisible: (visible: number, input: number) => void;
@@ -44,13 +55,14 @@ export default class ListComposer {
     this.#getAtMaximum = opts.getAtMaximum;
     this.#getTotal = opts.getTotal;
     this.#getContentContext = opts.getContentContext;
+    this.#applyContent = opts.applyContent;
     this.#applyLegacyContent = opts.applyLegacyContent;
     this.#noteVisible = opts.noteVisible;
   }
 
   /**
    * Builds the final rendered item list from the source's resolved items: applies
-   * plugin `select-content` transformers, groups the options, appends the create-on-the-fly
+   * content customizations, groups the options, appends the create-on-the-fly
    * item, and prepends any special items.
    *
    * @param rawItems - The items resolved by the source.
@@ -60,16 +72,15 @@ export default class ListComposer {
     let items: SelectItem[] = [...(makeArray(rawItems) as SelectItem[])];
     const inputCount = items.filter((item) => !this.#isStructural(item)).length;
 
-    items = applyValueTransformer("select-content", items, {
-      identifiers: this.#options.identifiers,
+    items = this.#applyContent(items, {
       filter: this.#getFilter(),
       value: this.#getValue(),
       ...this.#getContentContext(),
     });
 
     // Legacy `modifySelectKit(id).{prepend,append,replace}Content` extensions run in
-    // their own stage, after the native transformer, so ordering is deterministic and
-    // does not depend on global transformer registration order.
+    // their own stage, after native customizations, so ordering is deterministic and
+    // does not depend on global registration order.
     items = this.#applyLegacyContent(items);
 
     // The option count never includes structural rows (headers/dividers), whether they come

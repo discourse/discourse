@@ -536,6 +536,22 @@ class _PluginApi {
   }
 
   /**
+   * Registers per-select setups through a mutable, targeted registry.
+   *
+   * @overload
+   * @param {"select-customizations"} transformerName
+   * @param {(args: { value: import("discourse/ui-kit/select/-internals/engine/customizations").SelectCustomizationRegistry }) => void} valueCallback
+   * @returns {boolean}
+   */
+  /**
+   * Registers a value transformer with the general value/context contract.
+   *
+   * @overload
+   * @param {string} transformerName
+   * @param {function({value, context})} valueCallback
+   * @returns {boolean}
+   */
+  /**
    * Register a transformer to override values defined in Discourse.
    *
    * Example: return a static value

@@ -24,6 +24,7 @@ export class Host extends Component {
     <DSelect
       @identifier="test-select"
       @items={{ITEMS}}
+      @kind="test-select"
       @onChange={{this.onChange}}
       @placeholder="Pick one"
       @value={{this.value}}
@@ -80,6 +81,7 @@ export class MultiLimitsHost extends Component {
       @createItem={{@createItem}}
       @identifier="test-multi-limits"
       @items={{this.items}}
+      @kind="test-multi-limits"
       @maximum={{@maximum}}
       @minimum={{@minimum}}
       @multiple={{true}}

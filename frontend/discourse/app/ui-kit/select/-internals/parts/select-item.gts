@@ -59,40 +59,42 @@ export default class SelectItem extends Component<SelectItemSignature> {
   }
 
   <template>
-    <li
-      aria-disabled={{if @descriptor.flags.disabled "true"}}
-      aria-selected={{if @descriptor.flags.selected "true" "false"}}
-      class={{dConcatClass
-        "d-select__option"
-        (if @active "--active")
-        (if @descriptor.flags.sticky "--sticky")
-        (if @stickyEnd "--sticky-end")
-        (if @descriptor.flags.selected "--selected")
-        (if @descriptor.flags.__create "--create")
-        (if @descriptor.flags.__none "--none")
-        (@engine.itemClasses @descriptor)
-      }}
-      role="option"
-      ...attributes
-      {{on "click" this.handleClick}}
-    >
-      {{! Both glyphs stay hidden from assistive tech deliberately: an option row takes its
-      accessible name from its contents, so a screen-reader-only selected label here would land
-      inside every row's name. The row's aria-selected attribute is the state channel.
-
-      A consumer-supplied glyph keeps the show-when-selected behaviour — there is no unselected
-      counterpart to pair it with. }}
-      {{#if @selectedIcon}}
-        {{dIcon @selectedIcon class="d-select__option-selected-icon"}}
-      {{else if @multiple}}
-        {{! The hollow square pair reads as a checkbox, and the solid variant is absent from
-        the icon sprite. }}
-        {{dIcon
-          (if @descriptor.flags.selected "far-square-check" "far-square")
-          class="d-select__option-selected-icon --checkbox"
+    {{#let (@engine.rowPresentation @descriptor) as |row|}}
+      <li
+        aria-disabled={{if @descriptor.flags.disabled "true"}}
+        aria-selected={{if @descriptor.flags.selected "true" "false"}}
+        class={{dConcatClass
+          "d-select__option"
+          (if @active "--active")
+          (if @descriptor.flags.sticky "--sticky")
+          (if @stickyEnd "--sticky-end")
+          (if @descriptor.flags.selected "--selected")
+          (if @descriptor.flags.__create "--create")
+          (if @descriptor.flags.__none "--none")
+          row.classes
         }}
-      {{/if}}
-      {{yield @descriptor.item}}
-    </li>
+        role="option"
+        ...attributes
+        {{on "click" this.handleClick}}
+      >
+        {{! Both glyphs stay hidden from assistive tech deliberately: an option row takes its
+        accessible name from its contents, so a screen-reader-only selected label here would land
+        inside every row's name. The row's aria-selected attribute is the state channel.
+
+        A consumer-supplied glyph keeps the show-when-selected behaviour — there is no unselected
+        counterpart to pair it with. }}
+        {{#if @selectedIcon}}
+          {{dIcon @selectedIcon class="d-select__option-selected-icon"}}
+        {{else if @multiple}}
+          {{! The hollow square pair reads as a checkbox, and the solid variant is absent from
+          the icon sprite. }}
+          {{dIcon
+            (if @descriptor.flags.selected "far-square-check" "far-square")
+            class="d-select__option-selected-icon --checkbox"
+          }}
+        {{/if}}
+        {{yield @descriptor.item}}
+      </li>
+    {{/let}}
   </template>
 }

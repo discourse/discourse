@@ -17,6 +17,7 @@ const ON_CHANGE_ID = "discourse.select-kit.modify-select-kit-on-change";
 
 /** A deprecation the bridge fired, with the plugin it was attributed to. */
 interface FiredDeprecation {
+  message?: string;
   id?: string;
   source?: { name?: string };
 }
@@ -61,8 +62,12 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     firedDeprecations.length = 0;
     if (!handlerRegistered) {
       registerDeprecationHandler(
-        (_message: string, options?: FiredDeprecation) =>
-          firedDeprecations.push({ id: options?.id, source: options?.source })
+        (message: string, options?: FiredDeprecation) =>
+          firedDeprecations.push({
+            message,
+            id: options?.id,
+            source: options?.source,
+          })
       );
       handlerRegistered = true;
     }
@@ -72,7 +77,8 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
   function engineFor(owner: Owner | undefined, opts: SelectEngineOptions = {}) {
     const element = document.createElement("div");
     return new SelectEngine({
-      identifiers: opts.identifiers ?? ["test-select"],
+      kind: opts.kind ?? "test-select",
+      identifier: opts.identifier,
       items: opts.items ?? [],
       multiple: opts.multiple ?? false,
       onChange: opts.onChange ?? (() => {}),
@@ -121,29 +127,69 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     assert.deepEqual(ids(items), ["only"], "replace wins over the rest");
   });
 
-  test("fans out across the identifier array (a base-identifier callback fires)", function (assert) {
+  test("matches legacy callbacks on the kind, not the identifier", function (assert) {
     withPluginApi((api) => {
       api
-        .modifySelectKit("combo-box")
-        .appendContent(() => ({ id: "base", name: "From base" }));
+        .modifySelectKit("category-chooser")
+        .appendContent(() => ({ id: "by-kind", name: "By kind" }));
       api
-        .modifySelectKit("unrelated")
-        .appendContent(() => ({ id: "nope", name: "Should not fire" }));
+        .modifySelectKit("composer-category")
+        .appendContent(() => ({ id: "by-identifier", name: "By identifier" }));
     });
 
     const engine = engineFor(getOwner(this), {
-      identifiers: ["combo-box", "category-chooser"],
+      kind: "category-chooser",
+      identifier: "composer-category",
     });
     const items = engine.buildItems([{ id: "core", name: "Core" }]);
 
-    assert.true(
-      ids(items).includes("base"),
-      "the base-identifier row is added"
+    assert.deepEqual(
+      ids(items),
+      ["core", "by-kind"],
+      "only the callback registered on the kind fires"
     );
-    assert.false(
-      ids(items).includes("nope"),
-      "an unrelated identifier's callback does not fire"
+
+    const unnamed = engineFor(getOwner(this), {
+      kind: undefined,
+      identifier: "category-chooser",
+    });
+    assert.deepEqual(
+      ids(unnamed.buildItems([{ id: "core", name: "Core" }])),
+      ["core"],
+      "an identifier equal to the old name does not reach the bridge"
     );
+  });
+
+  test("the deprecation names the kind and select-customizations", async function (assert) {
+    withPluginApi((api) => {
+      api
+        .modifySelectKit("test-select")
+        .appendContent(() => ({ id: "x", name: "X" }));
+      api.modifySelectKit("test-select").onChange(() => {});
+    });
+
+    const engine = engineFor(getOwner(this), {
+      items: [{ id: 7, name: "Seven" }],
+    });
+    engine.buildItems([]);
+    engine.select({ id: 7, name: "Seven" });
+    await settled();
+
+    for (const id of [CONTENT_ID, ON_CHANGE_ID]) {
+      const [fired] = firedFor(id);
+      assert.true(
+        fired?.message?.includes('modifySelectKit("test-select")'),
+        `${id} names the kind`
+      );
+      assert.true(
+        fired?.message?.includes("select-customizations"),
+        `${id} names the replacement transformer`
+      );
+      assert.false(
+        /select-content|select-on-change/.test(fired?.message ?? ""),
+        `${id} no longer names a removed transformer`
+      );
+    }
   });
 
   test("reconstructs the legacy (component, value, item) onChange signature", function (assert) {
@@ -233,7 +279,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     });
 
     const engine = new SelectEngine({
-      identifiers: ["test-select"],
+      kind: "test-select",
       items: [],
       getValue: () => null,
       legacy: {
@@ -288,7 +334,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     let multiple = false;
     const element = document.createElement("div");
     const engine = new SelectEngine({
-      identifiers: ["test-select"],
+      kind: "test-select",
       items: [],
       getMultiple: () => multiple,
       getValue: () => (multiple ? [] : null),
@@ -443,16 +489,19 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     await settled();
   });
 
-  test("select-on-change behavior transformer wraps the controlled onChange", function (assert) {
+  test("a change customization wraps the controlled onChange", function (assert) {
     let context: { value: unknown } | undefined;
     let changedTo: unknown;
     withPluginApi((api) => {
-      api.registerBehaviorTransformer(
-        "select-on-change",
-        ({ context: ctx, next }) => {
-          context = ctx;
-          next();
-        }
+      api.registerValueTransformer(
+        "select-customizations",
+        ({ value: selects }) =>
+          selects.forAll((spec) =>
+            spec.change((next, ctx) => {
+              context = ctx;
+              next();
+            })
+          )
       );
     });
 
@@ -480,10 +529,16 @@ module(
 
     test("hoists prepended and appended actions after content transformation in stable order", function (assert) {
       withPluginApi((api) => {
-        api.registerValueTransformer("select-content", ({ value }) => [
-          ...value,
-          { id: "native", name: "Native", sticky: true },
-        ]);
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.content((items) => [
+                ...items,
+                { id: "native", name: "Native", sticky: true },
+              ])
+            )
+        );
         api
           .modifySelectKit("sticky-select")
           .prependContent(() => ({ id: "pre", name: "Prepend", sticky: true }));
@@ -493,7 +548,7 @@ module(
       });
       const element = document.createElement("div");
       const engine = new SelectEngine({
-        identifiers: ["sticky-select"],
+        kind: "sticky-select",
         noneLabel: "None",
         specialItems: () => [{ id: "special", name: "Special", sticky: true }],
         legacy: {

@@ -1,10 +1,13 @@
 import { makeArray } from "discourse/lib/helpers";
-import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import type {
   SelectItem,
   SelectItemId,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
+import type {
+  SelectChangeContext,
+  SelectCustomizationContext,
+} from "./customizations.ts";
 import type SelectOptionsView from "./select-options.ts";
 import type { SelectionOrigin } from "./selection-updates.ts";
 
@@ -22,7 +25,13 @@ export default class SelectionActions {
     value: SelectValue,
     payload: SelectItem | SelectItem[] | null
   ) => void;
-  #getExtensionContext: () => Record<string, unknown>;
+  #getExtensionContext: () => SelectCustomizationContext;
+
+  /** Runs the once-only change queue around the guarded controlled emit. */
+  #runChange: (
+    defaultStep: () => void,
+    context: SelectChangeContext
+  ) => void | Promise<void>;
 
   constructor(opts: {
     options: SelectOptionsView;
@@ -38,7 +47,12 @@ export default class SelectionActions {
       value: SelectValue,
       payload: SelectItem | SelectItem[] | null
     ) => void;
-    getExtensionContext: () => Record<string, unknown>;
+    getExtensionContext: () => SelectCustomizationContext;
+    /** Applies sealed per-select change declarations. */
+    runChange: (
+      defaultStep: () => void,
+      context: SelectChangeContext
+    ) => void | Promise<void>;
   }) {
     this.#options = opts.options;
     this.#onIntent = opts.onIntent;
@@ -48,6 +62,7 @@ export default class SelectionActions {
     this.#resolveOneSync = opts.resolveOneSync;
     this.#applyLegacyOnChange = opts.applyLegacyOnChange;
     this.#getExtensionContext = opts.getExtensionContext;
+    this.#runChange = opts.runChange;
   }
 
   /**
@@ -286,7 +301,7 @@ export default class SelectionActions {
     reason?: "clear"
   ): void {
     // Coerce ids to their source item's native type up front, so the payload, the
-    // `select-on-change` transformer context, and the legacy bridge all emit one consistent,
+    // change customization context, and the legacy bridge all emit one consistent,
     // single-typed value rather than a parent/URL-typed held id mixed with a freshly-picked
     // native one.
     const nextValue = this.#coerceValue(rawNextValue);
@@ -294,17 +309,15 @@ export default class SelectionActions {
     const payload = this.#options.multiple ? items : (items[0] ?? null);
 
     // The selection-side-effect extension point: the default behavior emits the
-    // controlled `onChange`; registered `select-on-change` transformers wrap it (and
+    // controlled `onChange`; registered change middleware wraps it (and
     // may run `next()` to proceed or skip it).
-    applyBehaviorTransformer(
-      "select-on-change",
+    this.#runChange(
       () => {
         if (this.#beforeEmit(origin, nextValue)) {
           this.#options.onChange?.(nextValue, payload, { origin, reason });
         }
       },
       {
-        identifiers: this.#options.identifiers,
         value: nextValue,
         items: payload,
         ...this.#getExtensionContext(),

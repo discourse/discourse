@@ -26,11 +26,10 @@ import SelectEngine, {
  * It reuses select-kit's own `applyContentPluginApiCallbacks` /
  * `applyOnChangePluginApiCallbacks`, which already implement the exact legacy
  * semantics — the three ordering stages (all prepends, then all appends, then
- * replace-wins) and the fan-out across an identifier array (a callback on a base
- * identifier fires for every derived one). To preserve those semantics faithfully we
- * feed those functions a facade shaped like the old component instance:
+ * replace-wins). Matching is limited to the engine's single kind. We feed those
+ * functions a facade shaped like the old component instance:
  *
- *   - `pluginApiIdentifiers` — the identifier array the callbacks are keyed on;
+ *   - `pluginApiIdentifiers` — a one-element array containing the engine's kind;
  *   - a live `element` and a resolvable owner (`getOwner(component)`), which content
  *     callbacks read to build their context (e.g. locating the composer);
  *   - `isDestroying` / `isDestroyed`, checked by callbacks after an await;
@@ -175,7 +174,7 @@ class LegacySelectKitComponent extends EmberObject {
   declare selectKit: LegacySelectKit;
   declare isLoading: boolean;
 
-  /** The items entering the current legacy content run, after `select-content`. */
+  /** The items entering the current legacy content run, after native content customizations. */
   declare content: SelectItem[];
   declare __getElement?: () => Element | null;
   declare __isDestroyed?: () => boolean;
@@ -185,7 +184,7 @@ class LegacySelectKitComponent extends EmberObject {
   }
 
   get pluginApiIdentifiers(): string[] {
-    return this.engine.identifiers;
+    return this.engine.kind ? [this.engine.kind] : [];
   }
 
   get element(): Element | null {
@@ -238,7 +237,7 @@ function adaptInjectedRows(
 function report(
   facade: LegacySelectKitComponent,
   kind: CallbackKind,
-  identifiers: string[],
+  targetKind: string,
   sources: Map<string, CallbackSource | undefined>
 ): void {
   let reported = REPORTED.get(facade);
@@ -248,12 +247,8 @@ function report(
   }
 
   const replacement =
-    kind === "content"
-      ? 'api.registerValueTransformer("select-content", …)'
-      : 'api.registerBehaviorTransformer("select-on-change", …)';
-  const message = `\`api.modifySelectKit("${identifiers.join(
-    '"/"'
-  )}")\` extends a component now built on the ui-kit select engine. Migrate to \`${replacement}\`.`;
+    'api.registerValueTransformer("select-customizations", …)';
+  const message = `\`api.modifySelectKit("${targetKind}")\` extends a component now built on the ui-kit select engine. Migrate to \`${replacement}\`.`;
   const id =
     kind === "content" ? CONTENT_DEPRECATION_ID : ON_CHANGE_DEPRECATION_ID;
 
@@ -271,24 +266,25 @@ function report(
 
 /**
  * Applies legacy content callbacks (prepend / append / replace) to the engine's item
- * list, after the native `select-content` transformer has run. Returns the list
- * unchanged when nothing is registered for the engine's identifiers.
+ * list, after native content customizations have run. Returns the list unchanged
+ * when nothing is registered for the engine's kind.
  *
- * @param items - The items after native transformers.
+ * @param items - The items after native content customizations.
  * @returns The items with legacy callbacks applied.
  */
 export function applyLegacySelectKitContent(
   engine: SelectEngine,
   items: SelectItem[]
 ): SelectItem[] {
-  const identifiers = engine.identifiers;
-  if (!identifiers.length || !hasContentPluginApiCallbacks(identifiers)) {
+  const kind = engine.kind;
+  const targets = kind ? [kind] : [];
+  if (!kind || !hasContentPluginApiCallbacks(targets)) {
     return items;
   }
 
   const facade = facadeFor(engine);
   facade.content = items;
-  report(facade, "content", identifiers, contentCallbackSources(identifiers));
+  report(facade, "content", kind, contentCallbackSources(targets));
   const result: SelectItem[] = applyContentPluginApiCallbacks(items, facade);
 
   // A no-op run returns the same array reference; only adapt when it actually changed.
@@ -313,13 +309,14 @@ export function applyLegacySelectKitOnChange(
   value: SelectValue,
   items: SelectItem | SelectItem[] | null
 ): void {
-  const identifiers = engine.identifiers;
-  if (!identifiers.length || !hasOnChangePluginApiCallbacks(identifiers)) {
+  const kind = engine.kind;
+  const targets = kind ? [kind] : [];
+  if (!kind || !hasOnChangePluginApiCallbacks(targets)) {
     return;
   }
 
   const facade = facadeFor(engine);
-  report(facade, "onChange", identifiers, onChangeCallbackSources(identifiers));
+  report(facade, "onChange", kind, onChangeCallbackSources(targets));
 
   applyOnChangePluginApiCallbacks(value, items, facade);
 }

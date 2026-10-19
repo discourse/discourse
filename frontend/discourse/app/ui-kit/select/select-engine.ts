@@ -1,11 +1,13 @@
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
-import { assert } from "@ember/debug";
 import { isDestroying, registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import SelectCustomizations, {
+  type SelectCustomizationContext,
+  type SelectRowPresentation,
+} from "discourse/ui-kit/select/-internals/engine/customizations";
 import ListComposer from "discourse/ui-kit/select/-internals/engine/list-composer";
 import SelectOptionsView from "discourse/ui-kit/select/-internals/engine/select-options";
 import {
@@ -208,9 +210,8 @@ export interface SelectLegacyContext {
 }
 
 /**
- * The handle an action row, `select-content`, and `select-load` get for one select. It is the
- * same frozen object for the select's whole life, so a transformer may key per-select state
- * on it. Its methods are for event time, such as a row's `onSelect`, never for building
+ * The handle action rows, content customizations, and load customizations get for one select.
+ * It is the same frozen object for the select's whole life. Its methods are for event time, such as a row's `onSelect`, never for building
  * content, and they do nothing once the select is destroyed.
  */
 export interface SelectControl {
@@ -298,17 +299,20 @@ export interface SelectEngineOptions {
     | ((filter: string, items: SelectItem[]) => boolean)
     | undefined;
 
-  /** Keys plugin `select-content` transformers match on. */
-  identifiers?: string | string[];
+  /** The recipe or family name, fixed at construction. */
+  kind?: string;
+
+  /** The call-site name, fixed at construction. */
+  identifier?: string;
 
   /**
-   * Live reader for the recipe's data, passed to transformers as `context.kind`. Identity is
-   * already in `identifiers`; this carries what the recipe knows, such as its scope.
+   * Live reader for the recipe's data, passed to customizations as `context.kindContext`.
+   * This carries what the recipe knows, such as its scope.
    */
   getKindContext?: () => object | undefined;
 
   /**
-   * Live reader for the call site's data, passed to transformers as `context.instance`, such
+   * Live reader for the call site's data, passed to customizations as `context.instanceContext`, such
    * as the topic being edited.
    */
   getInstanceContext?: () => object | undefined;
@@ -496,7 +500,7 @@ export interface SelectEngineOptions {
   /**
    * Handles for the `modifySelectKit` compat bridge, supplied by the component:
    * `{ owner, getElement, isDestroyed }`. Only needed when the select carries
-   * identifiers that legacy extensions may target.
+   * a kind that legacy extensions may target.
    */
   legacy?: SelectLegacyContext | null;
 }
@@ -565,8 +569,8 @@ class EngineControl implements SelectControl {
  * the parent owns the value (`@value`), which the engine reads live via a `getValue`
  * thunk and never stores. The engine owns only internal UI state — the filter, a
  * reload nonce, and a resolved-item cache — plus the selection *logic*: it derives
- * `isSelected`/display from the value, builds the rendered item list (plugin
- * transformers + create-on-the-fly + special items), resolves a value id to its
+ * `isSelected`/display from the value, builds the rendered item list (content
+ * customizations + create-on-the-fly + special items), resolves a value id to its
  * display item(s), and emits `onChange(nextValue, item|items)` for the parent to apply.
  *
  * It renders nothing: `DSelect` and its internal parts drive the DOM from this public
@@ -588,6 +592,9 @@ export default class SelectEngine {
   #source!: SelectSource;
   #control: SelectControl;
 
+  /** Sealed declarations collected once, before source validation. */
+  #customizations: SelectCustomizations;
+
   /**
    * @param opts - The engine's configuration; every field is documented on
    *   {@link SelectEngineOptions}.
@@ -601,6 +608,8 @@ export default class SelectEngine {
     });
     this.#selectionActions = new SelectionActions({
       options: this.#options,
+      runChange: (defaultStep, context) =>
+        this.#customizations.runChange(defaultStep, context),
       onIntent: (origin) => this.#selectionUpdates.handleIntent(origin),
       beforeEmit: (origin, value) =>
         this.#selectionUpdates.prepareEmit(origin, value),
@@ -620,6 +629,8 @@ export default class SelectEngine {
     registerDestructor(this, () => this.#selectionUpdates.supersede());
     this.#listComposer = new ListComposer({
       options: this.#options,
+      applyContent: (items, context) =>
+        this.#customizations.applyContent(items, context),
       getFilter: () => this.#state.filter,
       getValue: () => this.value,
       getHasValue: () => this.hasValue,
@@ -644,6 +655,10 @@ export default class SelectEngine {
           filtered: () => this.filteredItems,
           all: () => localItems(this.#options),
         });
+    this.#customizations = new SelectCustomizations({
+      kind: this.kind,
+      identifier: this.identifier,
+    });
     // Catch a both-sources misconfiguration up front (before any menu opens); the same
     // check also runs per load for a live `items` source that turns non-empty later.
     this.#assertSingleSource();
@@ -753,12 +768,17 @@ export default class SelectEngine {
     return this.#options.multiple;
   }
 
-  /** The transformer identifiers. */
-  get identifiers(): string[] {
-    return this.#options.identifiers;
+  /** The recipe or family name captured at construction. */
+  get kind(): string | undefined {
+    return this.#options.kind;
   }
 
-  /** The select's handle for action rows, `select-content`, and `select-load`. */
+  /** The call-site name captured at construction. */
+  get identifier(): string | undefined {
+    return this.#options.identifier;
+  }
+
+  /** The select's handle for action rows, content customizations, and load customizations. */
   get control(): SelectControl {
     return this.#control;
   }
@@ -935,7 +955,7 @@ export default class SelectEngine {
 
   /**
    * Builds the final rendered item list from the source's resolved items: applies
-   * plugin `select-content` transformers, groups the options, appends the create-on-the-fly
+   * content customizations, groups the options, appends the create-on-the-fly
    * item, and prepends any special items.
    *
    * @param rawItems - The items resolved by the source.
@@ -1030,13 +1050,12 @@ export default class SelectEngine {
   }
 
   /**
-   * Additional option-row classes from render-time transformers. Each call starts with
-   * a fresh array so classes cannot leak between rows or renders.
+   * Option-row presentation from render-time customizations. Each evaluation starts fresh
+   * so classes cannot leak between rows or renders.
    */
   @bind
-  itemClasses(descriptor: SelectDescriptor): string[] {
-    return applyValueTransformer("select-item-class", [], {
-      identifiers: this.identifiers,
+  rowPresentation(descriptor: SelectDescriptor): SelectRowPresentation {
+    return this.#customizations.applyRow({
       item: descriptor.item,
       selected: descriptor.flags.selected,
       disabled: descriptor.flags.disabled,
@@ -1153,27 +1172,23 @@ export default class SelectEngine {
     this.#options.requestClose?.();
   }
 
-  /** The recipe and call-site data every select transformer receives. */
-  #extensionContext(): { kind: object; instance: object } {
+  /** The static names and live data shared by select customizations. */
+  #extensionContext(): SelectCustomizationContext {
     return {
-      kind: this.#options.kindContext,
-      instance: this.#options.instanceContext,
+      kind: this.kind,
+      identifier: this.identifier,
+      kindContext: this.#options.kindContext,
+      instanceContext: this.#options.instanceContext,
     };
   }
 
   /** Resolves the loader outside render when a query's first request starts. */
   #resolveLoad(filter: string): NonNullable<SelectEngineOptions["load"]> {
-    const load = applyValueTransformer("select-load", this.#options.load!, {
-      identifiers: this.identifiers,
+    return this.#customizations.applyLoad(this.#options.load!, {
       filter,
       ...this.#extensionContext(),
       control: this.#control,
     });
-    assert(
-      "DSelect: `select-load` must return a function.",
-      typeof load === "function"
-    );
-    return load;
   }
 
   // `items` and `load` are mutually exclusive; the construction-time source kind wins.

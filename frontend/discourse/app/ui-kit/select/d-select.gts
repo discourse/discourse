@@ -47,12 +47,14 @@ interface DSelectSignature {
   Args: {
     value?: SelectValue;
     multiple?: boolean;
-    identifiers?: string | string[];
+    /** The select's recipe or family, fixed at construction. */
+    kind?: string;
+    /** The call-site name used for customization and menu identity. */
     identifier?: string;
-    /** A recipe's own data, passed to transformers as `context.kind`. */
+    /** A recipe's own data, passed to customizations as `context.kindContext`. */
     kindContext?: object;
     /**
-     * The call site's data, passed to transformers as `context.instance`. A recipe forwards the
+     * The call site's data, passed to customizations as `context.instanceContext`. A recipe forwards the
      * one it was given.
      */
     instanceContext?: object;
@@ -308,7 +310,8 @@ export default class DSelect extends Component<DSelectSignature> {
     // propagates into the engine (which reads them on every access). Static-by-contract
     // args below are passed by value.
     getMultiple: () => this.args.multiple,
-    identifiers: this.args.identifiers ?? this.args.identifier,
+    kind: this.args.kind,
+    identifier: this.args.identifier,
     getKindContext: () => this.args.kindContext,
     getInstanceContext: () => this.args.instanceContext,
     getMinChars: () => this.args.minChars,

@@ -145,6 +145,7 @@ module(
           <DSelect
             @identifier="test-select"
             @items={{ITEMS}}
+            @kind="test-select"
             @maximum={{state.maximum}}
             @multiple={{state.multiple}}
             @value={{state.value}}
@@ -186,13 +187,19 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("select-content receives the kind, instance and control contexts", async function (assert) {
+    test("content receives the names, the context data and the control", async function (assert) {
       let seen;
       withPluginApi((api) => {
-        api.registerValueTransformer("select-content", ({ value, context }) => {
-          seen = context;
-          return value;
-        });
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.content((items, context) => {
+                seen = context;
+                return items;
+              })
+            )
+        );
       });
       const kind = { scope: "recipe" };
       const instance = { topicId: 7 };
@@ -203,6 +210,7 @@ module(
             @identifier="context-select"
             @instanceContext={{instance}}
             @items={{ITEMS}}
+            @kind="context-kind"
             @kindContext={{kind}}
             @value={{2}}
           />
@@ -210,12 +218,23 @@ module(
       );
       await click("[role='combobox']");
 
-      assert.strictEqual(seen.kind, kind, "the recipe context is passed as is");
+      assert.strictEqual(seen.kind, "context-kind", "the kind is its name");
       assert.strictEqual(
-        seen.instance,
+        seen.identifier,
+        "context-select",
+        "the identifier is the call site's name"
+      );
+      assert.strictEqual(
+        seen.kindContext,
+        kind,
+        "the recipe context is passed as is"
+      );
+      assert.strictEqual(
+        seen.instanceContext,
         instance,
         "the call-site context is passed as is"
       );
+      assert.false("instance" in seen, "the old data key is gone");
       assert.strictEqual(seen.control.value, 2, "the control reads the value");
       assert.strictEqual(
         seen.control.filter,
@@ -224,35 +243,58 @@ module(
       );
     });
 
-    test("kind and instance default to frozen empty objects", async function (assert) {
+    test("names default to undefined and context data to frozen empty objects", async function (assert) {
       let seen;
       withPluginApi((api) => {
-        api.registerValueTransformer("select-content", ({ value, context }) => {
-          seen = context;
-          return value;
-        });
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.content((items, context) => {
+                seen = context;
+                return items;
+              })
+            )
+        );
       });
 
       await render(<template><DSelect @items={{ITEMS}} /></template>);
       await click("[role='combobox']");
 
-      assert.deepEqual(seen.kind, {}, "kind is empty without a recipe context");
-      assert.true(Object.isFrozen(seen.kind), "and frozen");
+      assert.true("kind" in seen, "the kind key is present");
+      assert.strictEqual(seen.kind, undefined, "without a kind");
+      assert.true("identifier" in seen, "the identifier key is present");
+      assert.strictEqual(seen.identifier, undefined, "without an identifier");
       assert.deepEqual(
-        seen.instance,
+        seen.kindContext,
         {},
-        "instance is empty without a call-site context"
+        "kindContext is empty without a recipe context"
       );
-      assert.true(Object.isFrozen(seen.instance), "and frozen");
+      assert.true(Object.isFrozen(seen.kindContext), "and frozen");
+      assert.deepEqual(
+        seen.instanceContext,
+        {},
+        "instanceContext is empty without a call-site context"
+      );
+      assert.true(Object.isFrozen(seen.instanceContext), "and frozen");
     });
 
-    test("a new @instanceContext re-runs select-content", async function (assert) {
+    test("a new @instanceContext re-runs content customizations", async function (assert) {
       const state = new ContextState();
       withPluginApi((api) => {
-        api.registerValueTransformer("select-content", ({ value, context }) => [
-          ...value,
-          { id: "from-instance", name: `Row ${context.instance.label}` },
-        ]);
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.content((items, context) => [
+                ...items,
+                {
+                  id: "from-instance",
+                  name: `Row ${context.instanceContext.label}`,
+                },
+              ])
+            )
+        );
       });
 
       await render(
@@ -271,13 +313,19 @@ module(
         .includesText("Row Second", "the row follows the call-site context");
     });
 
-    test("a transformer that reads tracked state re-runs when it changes", async function (assert) {
+    test("a content customization that reads tracked state re-runs when it changes", async function (assert) {
       const state = new ContextState();
       withPluginApi((api) => {
-        api.registerValueTransformer("select-content", ({ value }) => [
-          ...value,
-          { id: "tracked", name: `Row ${state.label}` },
-        ]);
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.content((items) => [
+                ...items,
+                { id: "tracked", name: `Row ${state.label}` },
+              ])
+            )
+        );
       });
 
       await render(<template><DSelect @items={{ITEMS}} /></template>);
@@ -292,15 +340,18 @@ module(
         .includesText("Row Changed", "the list follows the state it read");
     });
 
-    test("select-on-change receives the kind and instance contexts", async function (assert) {
+    test("change receives the names and the context data", async function (assert) {
       let seen;
       withPluginApi((api) => {
-        api.registerBehaviorTransformer(
-          "select-on-change",
-          ({ context, next }) => {
-            seen = context;
-            next();
-          }
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.change((next, context) => {
+                seen = context;
+                next();
+              })
+            )
         );
       });
       const kind = { scope: "recipe" };
@@ -310,8 +361,10 @@ module(
       await render(
         <template>
           <DSelect
+            @identifier="change-select"
             @instanceContext={{instance}}
             @items={{ITEMS}}
+            @kind="change-kind"
             @kindContext={{kind}}
             @onChange={{onChange}}
           />
@@ -320,9 +373,19 @@ module(
       await click("[role='combobox']");
       await click(optionWithText("Banana"));
 
-      assert.strictEqual(seen.kind, kind, "the recipe context is passed");
+      assert.strictEqual(seen.kind, "change-kind", "the kind is passed");
       assert.strictEqual(
-        seen.instance,
+        seen.identifier,
+        "change-select",
+        "the identifier is passed"
+      );
+      assert.strictEqual(
+        seen.kindContext,
+        kind,
+        "the recipe context is passed"
+      );
+      assert.strictEqual(
+        seen.instanceContext,
         instance,
         "the call-site context is passed"
       );
@@ -333,10 +396,16 @@ module(
     test("the control is one frozen object for the life of the select", async function (assert) {
       const controls = [];
       withPluginApi((api) => {
-        api.registerValueTransformer("select-content", ({ value, context }) => {
-          controls.push(context.control);
-          return value;
-        });
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.content((items, context) => {
+                controls.push(context.control);
+                return items;
+              })
+            )
+        );
       });
 
       await render(
@@ -462,6 +531,18 @@ function updateRow(name, work, { close = true } = {}) {
  * release runs even when an assertion throws, so a failure stays in its own test instead of
  * holding settledness until the suite times out.
  */
+/**
+ * The option with `text`, or a synchronous throw. An unawaited `click(undefined)` rejects outside
+ * the test and aborts the whole run, so a click that is not awaited at once goes through here.
+ */
+function requireOption(text) {
+  const option = optionWithText(text);
+  if (!option) {
+    throw new Error(`No option reads "${text}"`);
+  }
+  return option;
+}
+
 async function duringUpdate(gate, clicking, whilePending) {
   try {
     await waitFor(".d-select__pending-icon", { timeout: 2000 });
@@ -954,9 +1035,15 @@ module(
     test("an async update leaves hand picks unannounced, even when deferred", async function (assert) {
       const queued = [];
       withPluginApi((api) => {
-        api.registerBehaviorTransformer("select-on-change", ({ next }) => {
-          queued.push(next);
-        });
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.change((next) => {
+                queued.push(next);
+              })
+            )
+        );
       });
 
       await render(
@@ -1022,26 +1109,32 @@ module(
       );
     });
 
-    test("an async update re-runs a select-content transformer that reads pending", async function (assert) {
+    test("an async update re-runs a content customization that reads pending", async function (assert) {
       const gate = deferred();
       withPluginApi((api) => {
-        api.registerValueTransformer("select-content", ({ value, context }) => [
-          ...value,
-          updateRow(
-            context.control.pending ? "Loading suggestion" : "Suggest",
-            async () => {
-              await gate.promise;
-            },
-            { close: false }
-          ),
-        ]);
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.content((items, context) => [
+                ...items,
+                updateRow(
+                  context.control.pending ? "Loading suggestion" : "Suggest",
+                  async () => {
+                    await gate.promise;
+                  },
+                  { close: false }
+                ),
+              ])
+            )
+        );
       });
 
       await render(
         <template><AsyncUpdateHost @items={{ITEMS}} @value={{1}} /></template>
       );
       await click("[role='combobox']");
-      await duringUpdate(gate, click(optionWithText("Suggest")), async () => {
+      await duringUpdate(gate, click(requireOption("Suggest")), async () => {
         await waitUntil(() => optionWithText("Loading suggestion"), {
           timeout: 2000,
         });
@@ -1090,11 +1183,13 @@ module(
     test("item classes are added to option rows without replacing core classes", async function (assert) {
       withPluginApi((api) => {
         api.registerValueTransformer(
-          "select-item-class",
-          ({ value, context }) =>
-            context.identifiers.includes("test-select")
-              ? [...value, "x-extra", `x-item-${context.item.id}`]
-              : value
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forIdentifier("test-select", (spec) =>
+              spec.row((row, context) => {
+                row.classes.push("x-extra", `x-item-${context.item.id}`);
+              })
+            )
         );
       });
 
@@ -1111,15 +1206,17 @@ module(
         .hasClass("--selected", "the core state modifier stays");
     });
 
-    test("item classes receive the row item and the extension data, without the control", async function (assert) {
+    test("row customizations receive the item, the names and the context data, without the control", async function (assert) {
       const seen = [];
       withPluginApi((api) => {
         api.registerValueTransformer(
-          "select-item-class",
-          ({ value, context }) => {
-            seen.push(context);
-            return value;
-          }
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.row((row, context) => {
+                seen.push(context);
+              })
+            )
         );
       });
       const items = [
@@ -1135,6 +1232,7 @@ module(
             @identifier="item-class-select"
             @instanceContext={{instance}}
             @items={{items}}
+            @kind="item-class-kind"
             @kindContext={{kind}}
           />
         </template>
@@ -1142,17 +1240,23 @@ module(
       await click("[role='combobox']");
 
       const apple = seen.find((context) => context.item?.id === 1);
-      assert.true(!!apple, "the transformer runs for the Apple row");
+      assert.true(!!apple, "the customization runs for the Apple row");
       assert.strictEqual(apple.item, items[0], "item is the raw source item");
-      assert.true(
-        apple.identifiers.includes("item-class-select"),
-        "identifiers include @identifier"
-      );
-      assert.strictEqual(apple.kind, kind, "kind is the recipe context");
       assert.strictEqual(
-        apple.instance,
+        apple.identifier,
+        "item-class-select",
+        "identifier is @identifier"
+      );
+      assert.strictEqual(apple.kind, "item-class-kind", "kind is @kind");
+      assert.strictEqual(
+        apple.kindContext,
+        kind,
+        "kindContext is the recipe context"
+      );
+      assert.strictEqual(
+        apple.instanceContext,
         instance,
-        "instance is the call-site context"
+        "instanceContext is the call-site context"
       );
       assert.false(
         "control" in apple,
@@ -1165,9 +1269,15 @@ module(
     test("item classes follow the selection as it changes", async function (assert) {
       withPluginApi((api) => {
         api.registerValueTransformer(
-          "select-item-class",
-          ({ value, context }) =>
-            context.selected ? [...value, "is-held"] : value
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.row((row, context) => {
+                if (context.selected) {
+                  row.classes.push("is-held");
+                }
+              })
+            )
         );
       });
       const empty = [];
@@ -1195,11 +1305,16 @@ module(
       const disabledById = {};
       withPluginApi((api) => {
         api.registerValueTransformer(
-          "select-item-class",
-          ({ value, context }) => {
-            disabledById[context.item.id] = context.disabled;
-            return context.disabled ? [...value, "is-capped"] : value;
-          }
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.row((row, context) => {
+                disabledById[context.item.id] = context.disabled;
+                if (context.disabled) {
+                  row.classes.push("is-capped");
+                }
+              })
+            )
         );
       });
       const held = [1];
@@ -1221,10 +1336,13 @@ module(
 
     test("item classes skip group headers and dividers", async function (assert) {
       withPluginApi((api) => {
-        api.registerValueTransformer("select-item-class", ({ value }) => [
-          ...value,
-          "x-row",
-        ]);
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.row((row) => row.classes.push("x-row"))
+            )
+        );
       });
       const sectioned = [
         { id: 1, name: "Apple", section: "fruit" },
@@ -1265,10 +1383,13 @@ module(
 
     test("item classes apply to the none row and the create row", async function (assert) {
       withPluginApi((api) => {
-        api.registerValueTransformer("select-item-class", ({ value }) => [
-          ...value,
-          "x-row",
-        ]);
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.row((row) => row.classes.push("x-row"))
+            )
+        );
       });
       const createItem = (filter) => ({
         id: filter,
@@ -1299,16 +1420,22 @@ module(
         .hasClass("x-row", "the create row is an item");
     });
 
-    test("item classes start from a fresh array for every row and render", async function (assert) {
+    test("item classes start from a fresh row for every row and render", async function (assert) {
       const inputs = [];
       withPluginApi((api) => {
         api.registerValueTransformer(
-          "select-item-class",
-          ({ value, context }) => {
-            inputs.push({ value, length: value.length });
-            value.push(`x-item-${context.item.id}`);
-            return value;
-          }
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.row((row, context) => {
+                inputs.push({
+                  row,
+                  classes: row.classes,
+                  length: row.classes.length,
+                });
+                row.classes.push(`x-item-${context.item.id}`);
+              })
+            )
         );
       });
 
@@ -1326,9 +1453,14 @@ module(
         "each input starts empty"
       );
       assert.strictEqual(
-        new Set(inputs.map(({ value }) => value)).size,
+        new Set(inputs.map(({ row }) => row)).size,
         inputs.length,
-        "every call gets its own array"
+        "every call gets its own row"
+      );
+      assert.strictEqual(
+        new Set(inputs.map(({ classes }) => classes)).size,
+        inputs.length,
+        "and its own classes array"
       );
       for (const item of ITEMS) {
         assert
@@ -1344,10 +1476,13 @@ module(
       const items = [...ITEMS, { id: "action", name: "Action", onSelect() {} }];
       const held = [1];
       withPluginApi((api) => {
-        api.registerValueTransformer("select-item-class", ({ value }) => [
-          ...value,
-          "x-row",
-        ]);
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.row((row) => row.classes.push("x-row"))
+            )
+        );
       });
 
       await render(
@@ -1372,9 +1507,15 @@ module(
     test("item classes ignore empty and falsy entries", async function (assert) {
       withPluginApi((api) => {
         api.registerValueTransformer(
-          "select-item-class",
-          ({ value, context }) =>
-            context.item.id === 3 ? [...value, null, "", false] : value
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.row((row, context) => {
+                if (context.item.id === 3) {
+                  row.classes.push(null, "", false);
+                }
+              })
+            )
         );
       });
 
@@ -1426,8 +1567,10 @@ module(
     test("a client list is sized by the rows a transformer keeps", async function (assert) {
       const announce = spyAnnounce(this);
       withPluginApi((api) => {
-        api.registerValueTransformer("select-content", ({ value }) =>
-          value.slice(0, 2)
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) => spec.content((items) => items.slice(0, 2)))
         );
       });
       const items = numbered(5);
@@ -1453,8 +1596,10 @@ module(
     test("a grouped client list is counted from its options, not its headers", async function (assert) {
       const announce = spyAnnounce(this);
       withPluginApi((api) => {
-        api.registerValueTransformer("select-content", ({ value }) =>
-          value.slice(0, 2)
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) => spec.content((items) => items.slice(0, 2)))
         );
       });
       const items = numbered(5);
@@ -1486,11 +1631,17 @@ module(
     test("rows a transformer adds count toward the set and the announcement", async function (assert) {
       const announce = spyAnnounce(this);
       withPluginApi((api) => {
-        api.registerValueTransformer("select-content", ({ value }) => [
-          ...value,
-          { id: "extra-1", name: "Extra 1" },
-          { id: "extra-2", name: "Extra 2" },
-        ]);
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.content((items) => [
+                ...items,
+                { id: "extra-1", name: "Extra 1" },
+                { id: "extra-2", name: "Extra 2" },
+              ])
+            )
+        );
       });
       const items = numbered(3);
 
@@ -1514,8 +1665,12 @@ module(
     test("a paged set is the declared total plus the transformer's net change", async function (assert) {
       const announce = spyAnnounce(this);
       withPluginApi((api) => {
-        api.registerValueTransformer("select-content", ({ value }) =>
-          value.filter((item) => item.id % 4 !== 0)
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.content((items) => items.filter((item) => item.id % 4 !== 0))
+            )
         );
       });
       const load = (_filter, { offset = 0 }) => ({
@@ -1597,8 +1752,12 @@ module(
     test("paging does not re-announce an estimate that moved", async function (assert) {
       const announce = spyAnnounce(this);
       withPluginApi((api) => {
-        api.registerValueTransformer("select-content", ({ value }) =>
-          value.filter((item) => item.id % 4 !== 0)
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.content((items) => items.filter((item) => item.id % 4 !== 0))
+            )
         );
       });
       const load = (_filter, { offset = 0 }) => ({
@@ -1671,8 +1830,12 @@ module(
                 });
             });
       withPluginApi((api) => {
-        api.registerValueTransformer("select-content", ({ value }) =>
-          value.filter((item) => item.id % 2 === 1)
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.content((rows) => rows.filter((row) => row.id % 2 === 1))
+            )
         );
       });
       await render(
@@ -1727,11 +1890,11 @@ const SUGGESTED_ROWS = [
 ];
 
 /**
- * A suggester written as a source swap: an action row flips a mode kept per select and starts a
- * new query, and `select-load` answers that query from the suggestion source.
+ * A suggester written as a source swap: an action row flips a mode kept in the setup closure (one
+ * per select) and starts a new query, and the `load` customization answers that query from the
+ * suggestion source.
  */
 function registerSuggester({ suggest } = {}) {
-  const modes = new WeakMap();
   const calls = { original: [], suggest: [] };
 
   const original = (filter, { offset = 0 } = {}) => {
@@ -1750,39 +1913,45 @@ function registerSuggester({ suggest } = {}) {
   };
 
   withPluginApi((api) => {
-    api.registerValueTransformer("select-content", ({ value, context }) => {
-      if (!context.identifiers.includes("suggester")) {
-        return value;
-      }
-      const row = modes.get(context.control)
-        ? {
-            id: "back",
-            name: "Back to results",
-            onSelect: (control) => {
-              modes.delete(control);
-              control.reload();
-            },
-          }
-        : {
-            id: "suggest",
-            name: "Suggest tags",
-            onSelect: (control) => {
-              modes.set(control, true);
-              control.reload();
-            },
-          };
-      return [row, ...value];
-    });
-    api.registerValueTransformer("select-load", ({ value, context }) => {
-      if (!modes.get(context.control)) {
-        return value;
-      }
-      if (context.filter) {
-        modes.delete(context.control);
-        return value;
-      }
-      return suggestLoad;
-    });
+    api.registerValueTransformer(
+      "select-customizations",
+      ({ value: selects }) =>
+        selects.forIdentifier("suggester", (spec) => {
+          let suggesting = false;
+
+          spec.content((items) => {
+            const row = suggesting
+              ? {
+                  id: "back",
+                  name: "Back to results",
+                  onSelect: (control) => {
+                    suggesting = false;
+                    control.reload();
+                  },
+                }
+              : {
+                  id: "suggest",
+                  name: "Suggest tags",
+                  onSelect: (control) => {
+                    suggesting = true;
+                    control.reload();
+                  },
+                };
+            return [row, ...items];
+          });
+
+          spec.load((load, context) => {
+            if (!suggesting) {
+              return load;
+            }
+            if (context.filter) {
+              suggesting = false;
+              return load;
+            }
+            return suggestLoad;
+          });
+        })
+    );
   });
 
   return { original, calls };
@@ -1817,293 +1986,303 @@ function numberedRows(count) {
   }));
 }
 
-module("Integration | ui-kit | select | DSelect select-load", function (hooks) {
-  setupRenderingTest(hooks);
+module(
+  "Integration | ui-kit | select | DSelect load customizations",
+  function (hooks) {
+    setupRenderingTest(hooks);
 
-  const QUERY = ".d-select__trigger [role='combobox']";
+    const QUERY = ".d-select__trigger [role='combobox']";
 
-  function optionNames() {
-    return [
-      ...document.querySelectorAll("ul[role='listbox'] > [role='option']"),
-    ].map((option) => option.textContent.trim());
-  }
+    function optionNames() {
+      return [
+        ...document.querySelectorAll("ul[role='listbox'] > [role='option']"),
+      ].map((option) => option.textContent.trim());
+    }
 
-  test("a suggest row swaps the source for the next query", async function (assert) {
-    const { original, calls } = registerSuggester();
+    test("a suggest row swaps the source for the next query", async function (assert) {
+      const { original, calls } = registerSuggester();
 
-    await render(<template><SuggesterHost @load={{original}} /></template>);
-    await click(QUERY);
-    assert.deepEqual(
-      optionNames(),
-      ["Suggest tags", "Apple", "Apricot", "Beet"],
-      "the original source answers first"
-    );
+      await render(<template><SuggesterHost @load={{original}} /></template>);
+      await click(QUERY);
+      assert.deepEqual(
+        optionNames(),
+        ["Suggest tags", "Apple", "Apricot", "Beet"],
+        "the original source answers first"
+      );
 
-    await click(optionWithText("Suggest tags"));
+      await click(optionWithText("Suggest tags"));
 
-    assert.deepEqual(
-      optionNames(),
-      ["Back to results", "Suggested ten", "Suggested eleven"],
-      "the suggestions replace the original rows"
-    );
-    assert.deepEqual(
-      calls.suggest,
-      [{ filter: "", offset: 0 }],
-      "the suggestion source was asked once, for its first page"
-    );
-  });
-
-  test("going back restores the original source from its first page", async function (assert) {
-    const { original, calls } = registerSuggester();
-
-    await render(<template><SuggesterHost @load={{original}} /></template>);
-    await click(QUERY);
-    await click(optionWithText("Suggest tags"));
-
-    await click(optionWithText("Suggested ten"));
-    await click(optionWithText("Back to results"));
-
-    assert.deepEqual(
-      optionNames(),
-      ["Suggest tags", "Apple", "Apricot", "Beet"],
-      "the original rows come back on their own, not after the suggestions"
-    );
-    assert.deepEqual(
-      calls.original.at(-1),
-      { filter: "", offset: 0 },
-      "the original source was asked for its first page again"
-    );
-    assert
-      .dom(".d-select__chip")
-      .includesText("Suggested ten", "the picked suggestion keeps its name");
-  });
-
-  test("typing leaves suggest mode", async function (assert) {
-    const { original, calls } = registerSuggester();
-
-    await render(<template><SuggesterHost @load={{original}} /></template>);
-    await click(QUERY);
-    await click(optionWithText("Suggest tags"));
-
-    await fillIn(QUERY, "ap");
-    assert.deepEqual(
-      optionNames(),
-      ["Suggest tags", "Apple", "Apricot"],
-      "the typed query is answered by the original source"
-    );
-    assert.deepEqual(
-      calls.original.at(-1),
-      { filter: "ap", offset: 0 },
-      "with the typed filter"
-    );
-
-    await fillIn(QUERY, "");
-    assert.deepEqual(
-      optionNames(),
-      ["Suggest tags", "Apple", "Apricot", "Beet"],
-      "clearing the filter shows the normal list"
-    );
-  });
-
-  test("a reload that lands before any loading state is announced as a new query", async function (assert) {
-    const announce = sinon.spy(
-      getOwner(this).lookup("service:a11y"),
-      "announce"
-    );
-    let size = 60;
-    const load = (_filter, { offset = 0 }) => ({
-      items: Array.from({ length: size }, (_, i) => ({
-        id: offset + i + 1,
-        name: `Row ${offset + i + 1}`,
-      })),
-      total: size,
-      hasMore: false,
+      assert.deepEqual(
+        optionNames(),
+        ["Back to results", "Suggested ten", "Suggested eleven"],
+        "the suggestions replace the original rows"
+      );
+      assert.deepEqual(
+        calls.suggest,
+        [{ filter: "", offset: 0 }],
+        "the suggestion source was asked once, for its first page"
+      );
     });
 
-    await render(
-      <template>
-        <EngineProbe @debounce={{false}} @load={{load}} @variant="button" />
-      </template>
-    );
-    await click(".d-select__trigger");
-    size = 40;
-    probedEngine().control.reload();
-    await settled();
+    test("going back restores the original source from its first page", async function (assert) {
+      const { original, calls } = registerSuggester();
 
-    assert
-      .dom("ul[role='listbox']")
-      .exists("the rows never gave way to the loading skeleton");
-    assert.strictEqual(
-      announce.withArgs(i18n("d_select.results_count", { count: 40 }), "polite")
-        .callCount,
-      1,
-      "the reloaded count is announced"
-    );
-  });
+      await render(<template><SuggesterHost @load={{original}} /></template>);
+      await click(QUERY);
+      await click(optionWithText("Suggest tags"));
 
-  test("a slow swap shows the loading skeleton, not the reveal skeleton", async function (assert) {
-    let release;
-    const { original } = registerSuggester({
-      suggest: () =>
-        new Promise((resolve) => {
-          release = () => resolve({ items: SUGGESTED_ROWS, hasMore: false });
-        }),
+      await click(optionWithText("Suggested ten"));
+      await click(optionWithText("Back to results"));
+
+      assert.deepEqual(
+        optionNames(),
+        ["Suggest tags", "Apple", "Apricot", "Beet"],
+        "the original rows come back on their own, not after the suggestions"
+      );
+      assert.deepEqual(
+        calls.original.at(-1),
+        { filter: "", offset: 0 },
+        "the original source was asked for its first page again"
+      );
+      assert
+        .dom(".d-select__chip")
+        .includesText("Suggested ten", "the picked suggestion keeps its name");
     });
 
-    await render(<template><SuggesterHost @load={{original}} /></template>);
-    await click(QUERY);
+    test("typing leaves suggest mode", async function (assert) {
+      const { original, calls } = registerSuggester();
 
-    const picked = click(optionWithText("Suggest tags"));
-    await waitUntil(() => release);
-    await waitFor(".d-select__listbox--loading .d-select__skeleton");
+      await render(<template><SuggesterHost @load={{original}} /></template>);
+      await click(QUERY);
+      await click(optionWithText("Suggest tags"));
 
-    assert
-      .dom(
-        "ul[role='listbox']:not(.d-select__listbox--loading) .d-select__skeleton"
-      )
-      .doesNotExist("a swap is not more rows for the same query");
-
-    release();
-    await picked;
-    await settled();
-    assert.deepEqual(
-      optionNames(),
-      ["Back to results", "Suggested ten", "Suggested eleven"],
-      "the suggestions land"
-    );
-  });
-
-  test("a fast reload clears the cursor even when the rows stay identical", async function (assert) {
-    const load = () => numberedRows(3);
-    await render(
-      <template>
-        <EngineProbe @debounce={{false}} @load={{load}} @variant="button" />
-      </template>
-    );
-    await click(".d-select__trigger");
-    const query = ".d-select__filter";
-    await triggerKeyEvent(query, "keydown", "ArrowDown");
-    assert
-      .dom(query)
-      .hasAttribute(
-        "aria-activedescendant",
-        /.+/,
-        "the cursor is on a row before reload"
+      await fillIn(QUERY, "ap");
+      assert.deepEqual(
+        optionNames(),
+        ["Suggest tags", "Apple", "Apricot"],
+        "the typed query is answered by the original source"
       );
-    const list = find("ul[role='listbox']");
-    probedEngine().control.reload();
-    await settled();
-    assert.strictEqual(
-      find("ul[role='listbox']"),
-      list,
-      "the list stayed mounted through the fast reload"
-    );
-    assert
-      .dom(query)
-      .doesNotHaveAttribute(
-        "aria-activedescendant",
-        "a new query clears the cursor"
+      assert.deepEqual(
+        calls.original.at(-1),
+        { filter: "ap", offset: 0 },
+        "with the typed filter"
       );
-  });
 
-  test("select-load may update tracked state, and an empty reload reports again", async function (assert) {
-    const state = new (class {
-      @tracked calls = 0;
-    })();
-    const announce = sinon.spy(
-      getOwner(this).lookup("service:a11y"),
-      "announce"
-    );
-    withPluginApi((api) => {
-      api.registerValueTransformer("select-load", ({ value }) => {
-        state.calls++;
-        return value;
+      await fillIn(QUERY, "");
+      assert.deepEqual(
+        optionNames(),
+        ["Suggest tags", "Apple", "Apricot", "Beet"],
+        "clearing the filter shows the normal list"
+      );
+    });
+
+    test("a reload that lands before any loading state is announced as a new query", async function (assert) {
+      const announce = sinon.spy(
+        getOwner(this).lookup("service:a11y"),
+        "announce"
+      );
+      let size = 60;
+      const load = (_filter, { offset = 0 }) => ({
+        items: Array.from({ length: size }, (_, i) => ({
+          id: offset + i + 1,
+          name: `Row ${offset + i + 1}`,
+        })),
+        total: size,
+        hasMore: false,
       });
-    });
-    const load = () => [];
-    await render(
-      <template>
-        <span class="loader-calls">{{state.calls}}</span><EngineProbe
-          @debounce={{false}}
-          @load={{load}}
-          @variant="button"
-        />
-      </template>
-    );
-    await click(".d-select__trigger");
-    assert
-      .dom(".loader-calls")
-      .hasText("1", "the transformer writes outside render");
-    assert.strictEqual(
-      announce.withArgs(i18n("d_select.no_results"), "polite").callCount,
-      1,
-      "the first empty result is announced"
-    );
-    probedEngine().control.reload();
-    await settled();
-    assert
-      .dom(".loader-calls")
-      .hasText("2", "reload resolves the transformer again");
-    assert.strictEqual(
-      announce.withArgs(i18n("d_select.no_results"), "polite").callCount,
-      2,
-      "the new empty query is announced again"
-    );
-  });
 
-  module("windowed", function (windowedHooks) {
-    windowedHooks.beforeEach(function () {
-      enableVirtualization();
-    });
-
-    windowedHooks.afterEach(function () {
-      disableVirtualization();
-    });
-
-    test("a fast reload resets the real window's scroll without replacing its viewport", async function (assert) {
-      const load = () => numberedRows(60);
       await render(
         <template>
-          {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
-          <style>
-            .d-virtual-list {
-              height: 200px;
-              overflow-y: auto;
-            }
-          </style>
           <EngineProbe @debounce={{false}} @load={{load}} @variant="button" />
         </template>
       );
       await click(".d-select__trigger");
-      const viewport = find(".d-virtual-list");
-      assert.true(
-        document.querySelectorAll("ul[role='listbox'] > [role='option']")
-          .length < 60,
-        "only the real window is mounted"
-      );
-      viewport.scrollTop = viewport.scrollHeight;
+      size = 40;
+      probedEngine().control.reload();
       await settled();
-      assert.true(viewport.scrollTop > 0, "the viewport was scrolled");
+
+      assert
+        .dom("ul[role='listbox']")
+        .exists("the rows never gave way to the loading skeleton");
+      assert.strictEqual(
+        announce.withArgs(
+          i18n("d_select.results_count", { count: 40 }),
+          "polite"
+        ).callCount,
+        1,
+        "the reloaded count is announced"
+      );
+    });
+
+    test("a slow swap shows the loading skeleton, not the reveal skeleton", async function (assert) {
+      let release;
+      const { original } = registerSuggester({
+        suggest: () =>
+          new Promise((resolve) => {
+            release = () => resolve({ items: SUGGESTED_ROWS, hasMore: false });
+          }),
+      });
+
+      await render(<template><SuggesterHost @load={{original}} /></template>);
+      await click(QUERY);
+      const picked = click(requireOption("Suggest tags"));
+      await waitUntil(() => release);
+      await waitFor(".d-select__listbox--loading .d-select__skeleton");
+
+      assert
+        .dom(
+          "ul[role='listbox']:not(.d-select__listbox--loading) .d-select__skeleton"
+        )
+        .doesNotExist("a swap is not more rows for the same query");
+
+      release();
+      await picked;
+      await settled();
+      assert.deepEqual(
+        optionNames(),
+        ["Back to results", "Suggested ten", "Suggested eleven"],
+        "the suggestions land"
+      );
+    });
+
+    test("a fast reload clears the cursor even when the rows stay identical", async function (assert) {
+      const load = () => numberedRows(3);
+      await render(
+        <template>
+          <EngineProbe @debounce={{false}} @load={{load}} @variant="button" />
+        </template>
+      );
+      await click(".d-select__trigger");
+      const query = ".d-select__filter";
+      await triggerKeyEvent(query, "keydown", "ArrowDown");
+      assert
+        .dom(query)
+        .hasAttribute(
+          "aria-activedescendant",
+          /.+/,
+          "the cursor is on a row before reload"
+        );
+      const list = find("ul[role='listbox']");
       probedEngine().control.reload();
       await settled();
       assert.strictEqual(
-        find(".d-virtual-list"),
-        viewport,
-        "the fast reload kept the viewport mounted"
-      );
-      assert.strictEqual(
-        viewport.scrollTop,
-        0,
-        "the real window returns to the top"
+        find("ul[role='listbox']"),
+        list,
+        "the list stayed mounted through the fast reload"
       );
       assert
-        .dom(`${"ul[role='listbox'] > [role='option']"}[data-index='0']`)
-        .exists("the first row is mounted again");
+        .dom(query)
+        .doesNotHaveAttribute(
+          "aria-activedescendant",
+          "a new query clears the cursor"
+        );
     });
-  });
-});
 
-/** A controlled select carrying the identifier the contract fixtures target. */
+    test("a load customization may update tracked state, and an empty reload reports again", async function (assert) {
+      const state = new (class {
+        @tracked calls = 0;
+      })();
+      const announce = sinon.spy(
+        getOwner(this).lookup("service:a11y"),
+        "announce"
+      );
+      withPluginApi((api) => {
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.load((load) => {
+                state.calls++;
+                return load;
+              })
+            )
+        );
+      });
+      const load = () => [];
+      await render(
+        <template>
+          <span class="loader-calls">{{state.calls}}</span><EngineProbe
+            @debounce={{false}}
+            @load={{load}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      assert
+        .dom(".loader-calls")
+        .hasText("1", "the transformer writes outside render");
+      assert.strictEqual(
+        announce.withArgs(i18n("d_select.no_results"), "polite").callCount,
+        1,
+        "the first empty result is announced"
+      );
+      probedEngine().control.reload();
+      await settled();
+      assert
+        .dom(".loader-calls")
+        .hasText("2", "reload resolves the transformer again");
+      assert.strictEqual(
+        announce.withArgs(i18n("d_select.no_results"), "polite").callCount,
+        2,
+        "the new empty query is announced again"
+      );
+    });
+
+    module("windowed", function (windowedHooks) {
+      windowedHooks.beforeEach(function () {
+        enableVirtualization();
+      });
+
+      windowedHooks.afterEach(function () {
+        disableVirtualization();
+      });
+
+      test("a fast reload resets the real window's scroll without replacing its viewport", async function (assert) {
+        const load = () => numberedRows(60);
+        await render(
+          <template>
+            {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+            <style>
+              .d-virtual-list {
+                height: 200px;
+                overflow-y: auto;
+              }
+            </style>
+            <EngineProbe @debounce={{false}} @load={{load}} @variant="button" />
+          </template>
+        );
+        await click(".d-select__trigger");
+        const viewport = find(".d-virtual-list");
+        assert.true(
+          document.querySelectorAll("ul[role='listbox'] > [role='option']")
+            .length < 60,
+          "only the real window is mounted"
+        );
+        viewport.scrollTop = viewport.scrollHeight;
+        await settled();
+        assert.true(viewport.scrollTop > 0, "the viewport was scrolled");
+        probedEngine().control.reload();
+        await settled();
+        assert.strictEqual(
+          find(".d-virtual-list"),
+          viewport,
+          "the fast reload kept the viewport mounted"
+        );
+        assert.strictEqual(
+          viewport.scrollTop,
+          0,
+          "the real window returns to the top"
+        );
+        assert
+          .dom(`${"ul[role='listbox'] > [role='option']"}[data-index='0']`)
+          .exists("the first row is mounted again");
+      });
+    });
+  }
+);
+
+/** A controlled select carrying the kind and identifier the contract fixtures target. */
 class ContractHost extends Component {
   @tracked value = this.args.value ?? (this.args.multiple ? [] : null);
 
@@ -2117,6 +2296,7 @@ class ContractHost extends Component {
     <DSelect
       @identifier="contract-select"
       @items={{ITEMS}}
+      @kind="contract-select"
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
       @placeholder="Pick one"
@@ -2379,10 +2559,12 @@ module(
     test("contract: content, value and filter are readable on the component", async function (assert) {
       const seen = [];
       withPluginApi((api) => {
-        api.registerValueTransformer("select-content", ({ value, context }) =>
-          context.identifiers.includes("contract-select")
-            ? [...value, { id: 9, name: "Extra" }]
-            : value
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forIdentifier("contract-select", (spec) =>
+              spec.content((items) => [...items, { id: 9, name: "Extra" }])
+            )
         );
         api.modifySelectKit("contract-select").replaceContent((component) => {
           // Read defensively so a missing member fails an assertion, not the render.
@@ -2407,7 +2589,7 @@ module(
       assert.deepEqual(
         seen.at(-1),
         { content: [1, 2, 3, 9], value: 1, filter: "" },
-        "content is the list after select-content, with the held value"
+        "content is the list after the content customizations, with the held value"
       );
 
       await click(optionWithText("Cherry pie"));

@@ -1334,15 +1334,21 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
     );
   });
 
-  test("two writes still apply when a select-on-change transformer defers or vetoes", async function (assert) {
+  test("two writes still apply when a change customization defers or vetoes", async function (assert) {
     const queued = [];
     let mode = "defer";
     withPluginApi((api) => {
-      api.registerBehaviorTransformer("select-on-change", ({ next }) => {
-        if (mode === "defer") {
-          queued.push(next);
-        }
-      });
+      api.registerValueTransformer(
+        "select-customizations",
+        ({ value: selects }) =>
+          selects.forAll((spec) =>
+            spec.change((next) => {
+              if (mode === "defer") {
+                queued.push(next);
+              }
+            })
+          )
+      );
     });
 
     const deferring = controlled({ items: [A, B, C], multiple: true });
@@ -1577,9 +1583,15 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
   test("an update's own deferred change neither supersedes it nor survives a later supersession", async function (assert) {
     const queued = [];
     withPluginApi((api) => {
-      api.registerBehaviorTransformer("select-on-change", ({ next }) => {
-        queued.push(next);
-      });
+      api.registerValueTransformer(
+        "select-customizations",
+        ({ value: selects }) =>
+          selects.forAll((spec) =>
+            spec.change((next) => {
+              queued.push(next);
+            })
+          )
+      );
     });
 
     const own = controlled({ items: [A, B] });
@@ -1751,7 +1763,7 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
   });
 });
 
-module("Unit | ui-kit | SelectEngine | select-load", function (hooks) {
+module("Unit | ui-kit | SelectEngine | load customizations", function (hooks) {
   setupTest(hooks);
 
   function clientItems(count) {
@@ -1761,10 +1773,13 @@ module("Unit | ui-kit | SelectEngine | select-load", function (hooks) {
     }));
   }
 
-  test("select-load is never consulted for a client source", async function (assert) {
-    const spy = sinon.spy(({ value }) => value);
+  test("a load customization is never consulted for a client source", async function (assert) {
+    const spy = sinon.spy((load) => load);
     withPluginApi((api) => {
-      api.registerValueTransformer("select-load", spy);
+      api.registerValueTransformer(
+        "select-customizations",
+        ({ value: selects }) => selects.forAll((spec) => spec.load(spy))
+      );
     });
     const engine = new SelectEngine({
       items: [
@@ -1779,21 +1794,28 @@ module("Unit | ui-kit | SelectEngine | select-load", function (hooks) {
     engine.reload();
     engine.buildItems(await engine.loadItems(engine.loadContext));
 
-    assert.false(spy.called, "the transformer never ran");
+    assert.false(spy.called, "the customization never ran");
   });
 
-  test("select-load runs once per query, never for a reveal", async function (assert) {
+  test("a load customization runs once per query, never for a reveal", async function (assert) {
     const contexts = [];
     withPluginApi((api) => {
-      api.registerValueTransformer("select-load", ({ value, context }) => {
-        contexts.push(context);
-        return value;
-      });
+      api.registerValueTransformer(
+        "select-customizations",
+        ({ value: selects }) =>
+          selects.forAll((spec) =>
+            spec.load((load, context) => {
+              contexts.push(context);
+              return load;
+            })
+          )
+      );
     });
     const kind = { scope: "recipe" };
     const instance = { topicId: 7 };
     const engine = new SelectEngine({
-      identifiers: "load-select",
+      identifier: "load-select",
+      kind: "load-kind",
       getKindContext: () => kind,
       getInstanceContext: () => instance,
       load: (_filter, { offset = 0 }) => ({
@@ -1825,16 +1847,18 @@ module("Unit | ui-kit | SelectEngine | select-load", function (hooks) {
 
     const [first] = contexts;
     assert.strictEqual(first.filter, "", "the first query had no filter");
-    assert.true(
-      first.identifiers.includes("load-select"),
-      "identifiers are passed"
+    assert.strictEqual(first.identifier, "load-select", "identifier is passed");
+    assert.strictEqual(first.kind, "load-kind", "kind is passed");
+    assert.strictEqual(first.kindContext, kind, "kindContext is passed");
+    assert.strictEqual(
+      first.instanceContext,
+      instance,
+      "instanceContext is passed"
     );
-    assert.strictEqual(first.kind, kind, "kind is passed");
-    assert.strictEqual(first.instance, instance, "instance is passed");
     assert.strictEqual(first.control, engine.control, "control is passed");
   });
 
-  test("select-load is resolved and the loader called only after the current task", async function (assert) {
+  test("the loader is resolved and called only after the current task", async function (assert) {
     const calls = [];
     const source = new PagedSource({
       resolveLoad: (filter) => {
@@ -1868,10 +1892,16 @@ module("Unit | ui-kit | SelectEngine | select-load", function (hooks) {
   test("an abandoned first request does not resolve or claim a loader", async function (assert) {
     let resolutions = 0;
     withPluginApi((api) => {
-      api.registerValueTransformer("select-load", ({ value }) => {
-        resolutions++;
-        return value;
-      });
+      api.registerValueTransformer(
+        "select-customizations",
+        ({ value: selects }) =>
+          selects.forAll((spec) =>
+            spec.load((load) => {
+              resolutions++;
+              return load;
+            })
+          )
+      );
     });
     const engine = new SelectEngine({ load: () => clientItems(2) });
     const abort = new AbortController();
@@ -1898,22 +1928,28 @@ module("Unit | ui-kit | SelectEngine | select-load", function (hooks) {
     let release;
     const offsets = [];
     withPluginApi((api) => {
-      api.registerValueTransformer("select-load", () => {
-        resolutions++;
-        const prefix = resolutions;
-        return (_filter, { offset }) => {
-          offsets.push(offset);
-          const page = {
-            items: [{ id: offset + 1, name: `Source ${prefix}` }],
-            hasMore: true,
-          };
-          return offsets.length === 1
-            ? new Promise((resolve) => {
-                release = () => resolve(page);
-              })
-            : page;
-        };
-      });
+      api.registerValueTransformer(
+        "select-customizations",
+        ({ value: selects }) =>
+          selects.forAll((spec) =>
+            spec.load(() => {
+              resolutions++;
+              const prefix = resolutions;
+              return (_filter, { offset }) => {
+                offsets.push(offset);
+                const page = {
+                  items: [{ id: offset + 1, name: `Source ${prefix}` }],
+                  hasMore: true,
+                };
+                return offsets.length === 1
+                  ? new Promise((resolve) => {
+                      release = () => resolve(page);
+                    })
+                  : page;
+              };
+            })
+          )
+      );
     });
     const engine = new SelectEngine({ load: () => [] });
     const abort = new AbortController();
@@ -1992,14 +2028,17 @@ module("Unit | ui-kit | SelectEngine | select-load", function (hooks) {
     );
   });
 
-  test("select-load must return a function", async function (assert) {
+  test("a load customization must return a function", async function (assert) {
     withPluginApi((api) => {
-      api.registerValueTransformer("select-load", () => null);
+      api.registerValueTransformer(
+        "select-customizations",
+        ({ value: selects }) => selects.forAll((spec) => spec.load(() => null))
+      );
     });
     const engine = new SelectEngine({ load: () => [] });
     await assert.rejects(
       engine.loadItems(engine.loadContext),
-      /select-load.*function/i,
+      /load customization must return a function/i,
       "invalid results have a development assertion"
     );
   });
@@ -2020,11 +2059,17 @@ module("Unit | ui-kit | SelectEngine | sticky rows", function (hooks) {
 
   test("sticky rows are hoisted ahead of the none row and the specials, in order", async function (assert) {
     withPluginApi((api) => {
-      api.registerValueTransformer("select-content", ({ value }) => [
-        ...value,
-        { id: "late", name: "Late action", sticky: true, onSelect() {} },
-        { id: "plain", name: "Plain action", onSelect() {} },
-      ]);
+      api.registerValueTransformer(
+        "select-customizations",
+        ({ value: selects }) =>
+          selects.forAll((spec) =>
+            spec.content((items) => [
+              ...items,
+              { id: "late", name: "Late action", sticky: true, onSelect() {} },
+              { id: "plain", name: "Plain action", onSelect() {} },
+            ])
+          )
+      );
     });
     const engine = new SelectEngine({
       items: [
@@ -2064,11 +2109,22 @@ module("Unit | ui-kit | SelectEngine | sticky rows", function (hooks) {
 
   test("sticky rows are never grouped and a sticky header is ignored", async function (assert) {
     withPluginApi((api) => {
-      api.registerValueTransformer("select-content", ({ value }) => [
-        { id: "act", name: "Sticky action", section: "fruit", sticky: true },
-        { __header: true, label: "Stray header", sticky: true },
-        ...value,
-      ]);
+      api.registerValueTransformer(
+        "select-customizations",
+        ({ value: selects }) =>
+          selects.forAll((spec) =>
+            spec.content((items) => [
+              {
+                id: "act",
+                name: "Sticky action",
+                section: "fruit",
+                sticky: true,
+              },
+              { __header: true, label: "Stray header", sticky: true },
+              ...items,
+            ])
+          )
+      );
     });
     const engine = new SelectEngine({
       items: ROWS,
@@ -2094,10 +2150,16 @@ module("Unit | ui-kit | SelectEngine | sticky rows", function (hooks) {
   test("sticky rows number from 1 and leave the set size unchanged", async function (assert) {
     let makeSticky = true;
     withPluginApi((api) => {
-      api.registerValueTransformer("select-content", ({ value }) => [
-        ...value,
-        { id: "act", name: "Action", sticky: makeSticky, onSelect() {} },
-      ]);
+      api.registerValueTransformer(
+        "select-customizations",
+        ({ value: selects }) =>
+          selects.forAll((spec) =>
+            spec.content((items) => [
+              ...items,
+              { id: "act", name: "Action", sticky: makeSticky, onSelect() {} },
+            ])
+          )
+      );
     });
     const engine = new SelectEngine({ items: ROWS, noneLabel: "None" });
 

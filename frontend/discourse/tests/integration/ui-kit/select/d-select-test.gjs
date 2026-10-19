@@ -2828,7 +2828,12 @@ module(
       await render(
         <template>
           <input class="elsewhere" />
-          <DSelect @identifier="test-select" @items={{ITEMS}} @value={{2}} />
+          <DSelect
+            @identifier="test-select"
+            @items={{ITEMS}}
+            @kind="test-select"
+            @value={{2}}
+          />
         </template>
       );
 

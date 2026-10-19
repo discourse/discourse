@@ -1,5 +1,4 @@
 import { assert } from "@ember/debug";
-import { makeArray } from "discourse/lib/helpers";
 import type {
   SelectEngineOptions,
   SelectItem,
@@ -11,7 +10,7 @@ import type {
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
-/** What a transformer reads as `kind` or `instance` when the select was given none. */
+/** The default `kindContext` and `instanceContext` data when none was provided. */
 const EMPTY_CONTEXT: object = Object.freeze({});
 
 /**
@@ -25,7 +24,8 @@ export default class SelectOptionsView {
   #readMultiple?: SelectEngineOptions["getMultiple"];
   #readLocked?: SelectEngineOptions["getLocked"];
   #multiple?: SelectEngineOptions["multiple"];
-  #identifiers: string[];
+  #kind?: string;
+  #identifier?: string;
   #readKindContext?: SelectEngineOptions["getKindContext"];
   #readInstanceContext?: SelectEngineOptions["getInstanceContext"];
   #readMinChars?: SelectEngineOptions["getMinChars"];
@@ -72,7 +72,8 @@ export default class SelectOptionsView {
     this.#readMultiple = opts.getMultiple;
     this.#readLocked = opts.getLocked;
     this.#multiple = opts.multiple;
-    this.#identifiers = makeArray(opts.identifiers) as string[];
+    this.#kind = opts.kind;
+    this.#identifier = opts.identifier;
     this.#readKindContext = opts.getKindContext;
     this.#readInstanceContext = opts.getInstanceContext;
     this.#readMinChars = opts.getMinChars;
@@ -180,8 +181,14 @@ export default class SelectOptionsView {
     return this.#readCloseOnSelect ?? !this.multiple;
   }
 
-  get identifiers(): string[] {
-    return this.#identifiers;
+  /** The recipe or family name captured at construction. */
+  get kind(): string | undefined {
+    return this.#kind;
+  }
+
+  /** The call-site name captured at construction. */
+  get identifier(): string | undefined {
+    return this.#identifier;
   }
 
   get kindContext(): object {

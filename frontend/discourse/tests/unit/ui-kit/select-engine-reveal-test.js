@@ -1137,8 +1137,12 @@ module(
 
     function hideRows(predicate) {
       withPluginApi((api) => {
-        api.registerValueTransformer("select-content", ({ value }) =>
-          value.filter((item) => !predicate(item))
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.content((items) => items.filter((item) => !predicate(item)))
+            )
         );
       });
     }
@@ -1322,8 +1326,10 @@ module(
         { id: 3, name: "Cherry" },
       ];
       withPluginApi((api) => {
-        api.registerValueTransformer("select-content", ({ value }) =>
-          value.slice(0, 1)
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) => spec.content((rows) => rows.slice(0, 1)))
         );
       });
       const engine = new SelectEngine({ items });
@@ -1344,6 +1350,15 @@ module(
     });
 
     test("structural rows do not count toward the paged net change", async function (assert) {
+      withPluginApi((api) => {
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.content((items) => [...items, { id: 2, name: "Banana" }])
+            )
+        );
+      });
       const engine = new SelectEngine({
         load: () => ({
           items: [
@@ -1354,12 +1369,6 @@ module(
           total: 100,
           hasMore: true,
         }),
-      });
-      withPluginApi((api) => {
-        api.registerValueTransformer("select-content", ({ value }) => [
-          ...value,
-          { id: 2, name: "Banana" },
-        ]);
       });
       const rows = engine.buildItems(
         await engine.loadItems(engine.loadContext)
@@ -1373,8 +1382,14 @@ module(
 
     test("visible growth clears a barren streak", async function (assert) {
       withPluginApi((api) => {
-        api.registerValueTransformer("select-content", ({ value }) =>
-          value.filter((item) => item.id === 1 || item.id === 3)
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.content((items) =>
+                items.filter((item) => item.id === 1 || item.id === 3)
+              )
+            )
         );
       });
       const engine = new SelectEngine({

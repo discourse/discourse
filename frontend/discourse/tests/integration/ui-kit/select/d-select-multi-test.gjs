@@ -61,6 +61,7 @@ class MultiValueCoercionHost extends Component {
     <DSelect
       @identifier="test-multi-value-coercion"
       @items={{ITEMS}}
+      @kind="test-multi-value-coercion"
       @multiple={{true}}
       @onChange={{this.onChange}}
       @placeholder="Pick some"
