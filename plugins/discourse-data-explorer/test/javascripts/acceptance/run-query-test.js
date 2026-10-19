@@ -40,11 +40,13 @@ acceptance("Run Query", function (needs) {
 
   let updateParams;
   let query2Tags;
+  let query2Deletes;
 
   needs.hooks.beforeEach(() => {
     sinon.stub(window, "open");
     updateParams = null;
     query2Tags = ["custom", "existing"];
+    query2Deletes = 0;
   });
 
   needs.hooks.afterEach(() => {
@@ -309,6 +311,11 @@ acceptance("Run Query", function (needs) {
       }
     );
 
+    server.delete("/admin/plugins/discourse-data-explorer/queries/2", () => {
+      query2Deletes += 1;
+      return helper.response({ success: true, errors: [] });
+    });
+
     server.get("/session/csrf.json", function () {
       return helper.response({
         csrf: "mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs= ",
@@ -498,6 +505,33 @@ acceptance("Run Query", function (needs) {
       "/admin/plugins/discourse-data-explorer/queries/2",
       "running a query without inputs does not add a null params query string"
     );
+  });
+
+  test("deleting a query asks for confirmation first", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    await click(".query-action-bar__right .btn-danger");
+
+    assert
+      .dom(".dialog-body")
+      .hasText(i18n("explorer.delete_confirm"), "the confirmation is shown");
+    assert.strictEqual(query2Deletes, 0, "opening the dialog does not delete");
+
+    await click(".dialog-footer .btn-default");
+
+    assert.dom(".dialog-body").doesNotExist("cancelling closes the dialog");
+    assert.strictEqual(query2Deletes, 0, "cancelling does not delete");
+
+    await click(".query-action-bar__right .btn-danger");
+    await click(".dialog-footer .btn-danger");
+
+    assert.strictEqual(query2Deletes, 1, "confirming deletes the query");
+    assert
+      .dom(".query-action-bar__right .btn-danger")
+      .doesNotExist("the delete button is gone after deleting");
+    assert
+      .dom(".query-action-bar__right")
+      .includesText(i18n("explorer.recover"), "the undelete button is offered");
   });
 
   test("adds a new tag while editing a query", async function (assert) {

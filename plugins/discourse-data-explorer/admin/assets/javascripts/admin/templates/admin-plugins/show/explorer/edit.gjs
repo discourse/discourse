@@ -257,7 +257,7 @@ export default class QueriesEdit extends Component {
           {{else if this.showDestroyQuery}}
             <DButton
               class="btn-danger"
-              @action={{@controller.destroyQuery}}
+              @action={{@controller.confirmDestroyQuery}}
               @disabled={{@controller.actionsBusy}}
               @icon="trash-can"
               @label="explorer.delete"

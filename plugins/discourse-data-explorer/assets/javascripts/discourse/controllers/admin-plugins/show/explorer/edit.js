@@ -25,6 +25,7 @@ const DASHBOARD_REPORT_SOURCE = "data_explorer_query";
 
 export default class PluginsExplorerController extends Controller {
   @service modal;
+  @service dialog;
   @service appEvents;
   @service siteSettings;
   @service messageBus;
@@ -476,6 +477,14 @@ export default class PluginsExplorerController extends Controller {
     } finally {
       this.loading = false;
     }
+  }
+
+  @action
+  confirmDestroyQuery() {
+    this.dialog.deleteConfirm({
+      message: i18n("explorer.delete_confirm"),
+      didConfirm: () => this.destroyQuery(),
+    });
   }
 
   @action
