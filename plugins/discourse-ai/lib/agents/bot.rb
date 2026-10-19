@@ -599,6 +599,7 @@ module DiscourseAi
           AiToolAction.create!(
             tool_name: tool.name,
             tool_parameters: tool.parameters,
+            tool_options: tool.agent_options.to_h,
             ai_agent_id: @agent.id,
             bot_user_id: @bot_user.id,
             post_id: context.post_id,
