@@ -255,16 +255,14 @@ module Email
       strip_hashtag_link_icons
       reset_tables
 
-      html_lang = SiteSetting.default_locale.sub("_", "-")
+      locale = (@opts[:locale].presence || SiteSetting.default_locale).to_s
+      rtl = Rtl::LOCALES.include?(locale)
+      html_lang = locale.sub("_", "-")
       style("html", nil, :lang => html_lang, "xml:lang" => html_lang)
-      style("body", "line-height: 1.4; text-align:#{Rtl.new(nil).enabled? ? "right" : "left"};")
-      style("body", nil, dir: Rtl.new(nil).enabled? ? "rtl" : "ltr")
+      style("body", "line-height: 1.4; text-align:#{rtl ? "right" : "left"};")
+      style("body", nil, dir: rtl ? "rtl" : "ltr")
 
-      style(
-        ".with-dir",
-        "text-align:#{Rtl.new(nil).enabled? ? "right" : "left"};",
-        dir: Rtl.new(nil).enabled? ? "rtl" : "ltr",
-      )
+      style(".with-dir", "text-align:#{rtl ? "right" : "left"};", dir: rtl ? "rtl" : "ltr")
 
       style("blockquote > :first-child", "margin-top: 0;")
       style("blockquote > :last-child", "margin-bottom: 0;")

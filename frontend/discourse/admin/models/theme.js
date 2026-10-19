@@ -69,6 +69,8 @@ class Theme extends RestModel {
       { id: 0, name: "common" },
       { id: 1, name: "desktop", icon: "desktop" },
       { id: 2, name: "mobile", icon: "mobile-screen-button" },
+      { id: 10, name: "email_header" },
+      { id: 11, name: "email_footer" },
     ].map((target) => {
       target["edited"] = this.hasEdited(target.name);
       target["error"] = this.hasError(target.name);
@@ -97,6 +99,8 @@ class Theme extends RestModel {
       ],
       desktop: common,
       mobile: common,
+      email_header: ["email_header"],
+      email_footer: ["email_footer"],
     };
   }
 

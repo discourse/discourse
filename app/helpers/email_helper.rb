@@ -27,13 +27,30 @@ module EmailHelper
     raw "<a href='#{Discourse.base_url_no_prefix}#{url}' style='color: ##{@anchor_color}'>#{title}</a>"
   end
 
-  def email_html_template(preview: nil)
+  def email_html_template(preview: nil, theme_email_header: "", theme_email_footer: "")
     email_preview = preview.present? ? PrettyText.cook(preview, sanitize: false).html_safe : ""
+    template = EmailStyle.new.html
+    email_content = capture { yield }
 
-    EmailStyle
-      .new
-      .html
-      .sub("%{email_content}") { capture { yield } }
+    if template.exclude?("%{theme_email_header}") && template.exclude?("%{theme_email_footer}")
+      email_content = "#{theme_email_header}#{email_content}#{theme_email_footer}".html_safe
+    end
+
+    email_content_replaced = false
+    template
+      .gsub(/%\{(?:email_content|theme_email_header|theme_email_footer)\}/) do |placeholder|
+        case placeholder
+        when "%{email_content}"
+          next placeholder if email_content_replaced
+
+          email_content_replaced = true
+          email_content
+        when "%{theme_email_header}"
+          theme_email_header
+        when "%{theme_email_footer}"
+          theme_email_footer
+        end
+      end
       .gsub("%{email_preview}", email_preview)
       .gsub("%{html_lang}", html_lang)
       .gsub("%{dark_mode_meta_tags}", dark_mode_meta_tags)

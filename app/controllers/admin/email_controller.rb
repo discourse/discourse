@@ -3,6 +3,24 @@
 class Admin::EmailController < Admin::AdminController
   allow_when_archived :handle_mail
 
+  EMAIL_PREVIEW_SENDER_TYPES = {
+    "digest" => :digest,
+    "password_reset" => :forgot_password,
+    "password_reset_code" => :email_login_code,
+    "email_login_code" => :email_login_code,
+    "signup" => :signup,
+    "activation_reminder" => :activation_reminder,
+    "email_login" => :email_login,
+    "admin_login" => :admin_login,
+    "account_created" => :account_created,
+    "confirm_new_email" => :confirm_new_email,
+    "test_email" => :test_message,
+  }.freeze
+  TEMPLATE_PREVIEW_PREFIX = "template:"
+  PREVIEW_PASSWORD_RESET_TOKEN = "preview-password-reset-token"
+  PREVIEW_EMAIL_TOKEN = "preview-email-token"
+  PREVIEW_LOGIN_CODE = "PREVIEW"
+
   def index
   end
 
@@ -13,6 +31,7 @@ class Admin::EmailController < Admin::AdminController
 
   def test
     params.require(:email_address)
+    ensure_test_email_recipient!(params[:email_address])
     begin
       message = TestMailer.send_test(params[:email_address])
       Email::Sender.new(message, :test_message).send
@@ -24,13 +43,36 @@ class Admin::EmailController < Admin::AdminController
   end
 
   def preview_digest
-    params.require(:last_seen_at)
     params.require(:username)
+    email_type = preview_email_type
+    params.require(:last_seen_at) if email_type == "digest"
     user = User.find_by_username(params[:username])
     raise Discourse::InvalidParameters unless user
 
-    renderer = Email::Renderer.new(UserNotifications.digest(user, since: params[:last_seen_at]))
-    render json: MultiJson.dump(html_content: renderer.html, text_content: renderer.text)
+    locale = preview_locale(user)
+    message = preview_message(user, email_type, locale)
+    if preview_message_empty?(message)
+      render json: MultiJson.dump(subject: nil, html_content: "", text_content: "")
+      return
+    end
+
+    renderer = Email::Renderer.new(message, locale:)
+    render json:
+             MultiJson.dump(
+               subject: message.subject,
+               html_content: renderer.html,
+               text_content: renderer.text,
+             )
+  end
+
+  def preview_types
+    templates =
+      Admin::EmailTemplatesController.email_keys.map do |key|
+        serializer = AdminEmailTemplateSerializer.new(key)
+        { id: key, title: serializer.title }
+      end
+
+    render json: { email_templates: templates }
   end
 
   def advanced_test
@@ -43,25 +85,24 @@ class Admin::EmailController < Admin::AdminController
   end
 
   def send_digest
-    params.require(:last_seen_at)
     params.require(:username)
     params.require(:email)
+    ensure_test_email_recipient!(params[:email])
+    email_type = preview_email_type
+    params.require(:last_seen_at) if email_type == "digest"
     user = User.find_by_username(params[:username])
     raise Discourse::InvalidParameters unless user
 
-    message, skip_reason =
-      UserNotifications.public_send(
-        :digest,
-        user,
-        since: params[:last_seen_at],
-        skip_unsubscribe_links: true,
-      )
+    locale = preview_locale(user)
+    message, skip_reason = send_preview_message(user, email_type, locale)
 
     if message
       message.to = params[:email]
 
       begin
-        Email::Sender.new(message, :digest).send
+        I18n.with_locale(locale) do
+          Email::Sender.new(message, preview_sender_type(email_type)).send
+        end
         render json: success_json
       rescue => e
         render json: { errors: [e.message] }, status: :unprocessable_entity
@@ -109,6 +150,118 @@ class Admin::EmailController < Admin::AdminController
   end
 
   private
+
+  def preview_message_empty?(message)
+    message.body.to_s.blank? && message.text_part&.body.to_s.blank? &&
+      message.html_part&.body.to_s.blank?
+  end
+
+  def ensure_test_email_recipient!(recipient)
+    return if !SiteSetting.restrict_admin_email_test_sends_to_self
+
+    normalized_recipient = recipient.to_s.strip.downcase
+    return if current_user.user_emails.where("lower(email) = ?", normalized_recipient).exists?
+
+    raise Discourse::InvalidParameters.new(I18n.t("email_settings.test_email_restricted"))
+  end
+
+  def preview_locale(user)
+    locale = params[:locale].presence || user.effective_locale
+    if locale.blank? || LocaleSiteSetting.supported_locales.exclude?(locale)
+      raise Discourse::InvalidParameters.new(:locale)
+    end
+
+    locale
+  end
+
+  def preview_email_type
+    email_type = params[:email_type].presence || "digest"
+    return email_type if EMAIL_PREVIEW_SENDER_TYPES.key?(email_type)
+    return email_type if valid_template_preview?(email_type)
+
+    raise Discourse::InvalidParameters.new(:email_type)
+  end
+
+  def preview_message(user, email_type, locale)
+    if template_key = preview_template_key(email_type)
+      return template_preview_message(user, template_key, locale)
+    end
+
+    case email_type
+    when "digest"
+      UserNotifications.digest(
+        user,
+        since: params[:last_seen_at],
+        skip_unsubscribe_links: true,
+        locale:,
+      )
+    when "password_reset"
+      UserNotifications.forgot_password(user, email_token: PREVIEW_PASSWORD_RESET_TOKEN, locale:)
+    when "password_reset_code"
+      EmailLoginCodeMailer.send_code(user.email, PREVIEW_LOGIN_CODE, password_reset: true, locale:)
+    when "email_login_code"
+      EmailLoginCodeMailer.send_code(user.email, PREVIEW_LOGIN_CODE, locale:)
+    when "signup"
+      UserNotifications.signup(user, email_token: PREVIEW_EMAIL_TOKEN, locale:)
+    when "activation_reminder"
+      UserNotifications.activation_reminder(user, email_token: PREVIEW_EMAIL_TOKEN, locale:)
+    when "email_login"
+      UserNotifications.email_login(user, email_token: PREVIEW_EMAIL_TOKEN, locale:)
+    when "admin_login"
+      UserNotifications.admin_login(user, email_token: PREVIEW_EMAIL_TOKEN, locale:)
+    when "account_created"
+      UserNotifications.account_created(user, email_token: PREVIEW_EMAIL_TOKEN, locale:)
+    when "confirm_new_email"
+      UserNotifications.confirm_new_email(user, email_token: PREVIEW_EMAIL_TOKEN, locale:)
+    when "test_email"
+      TestMailer.send_test(user.email, locale:)
+    end
+  end
+
+  def preview_sender_type(email_type)
+    return :test_message if preview_template_key(email_type)
+
+    EMAIL_PREVIEW_SENDER_TYPES.fetch(email_type)
+  end
+
+  def send_preview_message(user, email_type, locale)
+    if email_type == "digest"
+      UserNotifications.public_send(
+        :digest,
+        user,
+        since: params[:last_seen_at],
+        skip_unsubscribe_links: true,
+        locale:,
+      )
+    else
+      [preview_message(user, email_type, locale), nil]
+    end
+  end
+
+  def valid_template_preview?(email_type)
+    template_key = preview_template_key(email_type)
+    template_key.present? && Admin::EmailTemplatesController.email_keys.include?(template_key)
+  end
+
+  def preview_template_key(email_type)
+    if email_type.start_with?(TEMPLATE_PREVIEW_PREFIX)
+      email_type.delete_prefix(TEMPLATE_PREVIEW_PREFIX)
+    end
+  end
+
+  def template_preview_message(user, template_key, locale)
+    subject = template_preview_value("#{template_key}.subject_template", locale)
+    body = template_preview_value("#{template_key}.text_body_template", locale)
+    TestMailer.send_template_preview(user.email, subject:, body:, locale:)
+  end
+
+  def template_preview_value(translation_key, locale)
+    value = I18n.t(translation_key, locale:)
+    value = value[:other] || value["other"] if value.is_a?(Hash)
+    raise Discourse::InvalidParameters.new(:email_type) if !value.is_a?(String)
+
+    value
+  end
 
   def delivery_settings
     action_mailer_settings.reject { |k, _| k == :password }.map { |k, v| { name: k, value: v } }

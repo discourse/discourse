@@ -10,7 +10,12 @@ class UserNotifications < ActionMailer::Base
   include Email::BuildEmailHelper
 
   def signup(user, opts = {})
-    build_user_email_token_by_template("user_notifications.signup", user, opts[:email_token])
+    build_user_email_token_by_template(
+      "user_notifications.signup",
+      user,
+      opts[:email_token],
+      locale: opts[:locale],
+    )
   end
 
   def activation_reminder(user, opts = {})
@@ -18,6 +23,7 @@ class UserNotifications < ActionMailer::Base
       "user_notifications.activation_reminder",
       user,
       opts[:email_token],
+      locale: opts[:locale],
     )
   end
 
@@ -141,6 +147,7 @@ class UserNotifications < ActionMailer::Base
       ),
       user,
       opts[:email_token],
+      locale: opts[:locale],
     )
   end
 
@@ -149,15 +156,26 @@ class UserNotifications < ActionMailer::Base
       user.has_password? ? "user_notifications.forgot_password" : "user_notifications.set_password",
       user,
       opts[:email_token],
+      locale: opts[:locale],
     )
   end
 
   def email_login(user, opts = {})
-    build_user_email_token_by_template("user_notifications.email_login", user, opts[:email_token])
+    build_user_email_token_by_template(
+      "user_notifications.email_login",
+      user,
+      opts[:email_token],
+      locale: opts[:locale],
+    )
   end
 
   def admin_login(user, opts = {})
-    build_user_email_token_by_template("user_notifications.admin_login", user, opts[:email_token])
+    build_user_email_token_by_template(
+      "user_notifications.admin_login",
+      user,
+      opts[:email_token],
+      locale: opts[:locale],
+    )
   end
 
   def account_created(user, opts = {})
@@ -165,6 +183,7 @@ class UserNotifications < ActionMailer::Base
       "user_notifications.account_created",
       user,
       opts[:email_token],
+      locale: opts[:locale],
     )
   end
 
@@ -290,7 +309,9 @@ class UserNotifications < ActionMailer::Base
   end
 
   def digest(user, opts = {})
-    I18n.with_locale(user_locale(user)) do
+    locale = opts[:locale].presence || user_locale(user)
+
+    I18n.with_locale(locale) do
       build_summary_for(user)
       if !opts[:skip_unsubscribe_links]
         @unsubscribe_key = UnsubscribeKey.create_key_for(@user, UnsubscribeKey::DIGEST_TYPE)
@@ -434,9 +455,11 @@ class UserNotifications < ActionMailer::Base
           from_alias: I18n.t("user_notifications.digest.from", site_name: Email.site_title),
           subject: I18n.t(subject_key, email_prefix: @email_prefix, date: short_date(Time.now)),
           add_unsubscribe_link: !opts[:skip_unsubscribe_links],
-          unsubscribe_url: "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}",
+          unsubscribe_url:
+            @unsubscribe_key && "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}",
           topic_ids: topics_for_digest.map(&:id),
           post_ids: topics_for_digest.filter_map { |topic| topic.first_post&.id },
+          locale:,
         }
 
         opts[:recipient_user] = user
@@ -992,11 +1015,11 @@ class UserNotifications < ActionMailer::Base
 
   private
 
-  def build_user_email_token_by_template(template, user, email_token)
+  def build_user_email_token_by_template(template, user, email_token, locale: nil)
     build_email(
       user.email,
       template: template,
-      locale: user_locale(user),
+      locale: locale.presence || user_locale(user),
       email_token: email_token,
       recipient_user: user,
     )

@@ -308,6 +308,8 @@ class ThemeField < ActiveRecord::Base
       types[:scss]
     elsif %w[migrations extra_js].include?(target.to_s)
       types[:js]
+    elsif %w[email_header email_footer].include?(target.to_s)
+      types[:html]
     elsif target.to_s == "settings" || target.to_s == "translations"
       types[:yaml]
     end
@@ -525,6 +527,20 @@ class ThemeField < ActiveRecord::Base
       names: %w[head_tag header after_header body_tag footer],
       types: :html,
       canonical: ->(h) { "#{h[:target]}/#{h[:name]}.html" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\Aemail/header\.html\z},
+      targets: :email_header,
+      names: "email_header",
+      types: :html,
+      canonical: ->(_hash) { "email/header.html" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\Aemail/footer\.html\z},
+      targets: :email_footer,
+      names: "email_footer",
+      types: :html,
+      canonical: ->(_hash) { "email/footer.html" },
     ),
     ThemeFileMatcher.new(
       regex: %r{\A(?<target>(?:mobile|desktop|common))/(?:\k<target>)\.scss\z},

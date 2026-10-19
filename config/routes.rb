@@ -232,6 +232,7 @@ Discourse::Application.routes.draw do
           get "server-settings" => "email#server_settings"
           post "test"
           get "preview-digest" => "email#preview_digest"
+          get "preview-types" => "email#preview_types"
           post "send-digest" => "email#send_digest"
           get "smtp_should_reject"
           post "handle_mail"

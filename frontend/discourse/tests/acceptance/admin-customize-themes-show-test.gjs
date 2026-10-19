@@ -1,7 +1,8 @@
-import { visit } from "@ember/test-helpers";
+import { click, currentURL, find, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("Admin - Customize - Themes - Show", function (needs) {
   needs.user();
@@ -44,6 +45,18 @@ acceptance("Admin - Customize - Themes - Show", function (needs) {
                 upload_id: 84,
                 url: "/uploads/default/original/1X/783d7817fd5e44b15d3532ffb13d2f70174a039f.png",
                 filename: "dark.png",
+              },
+              {
+                name: "email_header",
+                target: "email_header",
+                value: "<header>Email header content</header>",
+                type_id: 0,
+              },
+              {
+                name: "email_footer",
+                target: "email_footer",
+                value: "<footer>Email footer content</footer>",
+                type_id: 0,
               },
               {
                 name: "en",
@@ -169,6 +182,196 @@ acceptance("Admin - Customize - Themes - Show", function (needs) {
         "theme:-1",
         "the theme id is exposed via outletArgs on the translation selector outlet"
       );
+  });
+
+  test("shows email fields in a separate advanced editor row", async function (assert) {
+    await visit("/admin/customize/themes/-1/common/scss/edit");
+
+    assert
+      .dom(".theme-editor__advanced-fields")
+      .doesNotExist("email fields are hidden by default");
+
+    await click(".d-toggle-switch__checkbox");
+
+    assert
+      .dom(".theme-editor__fields")
+      .doesNotIncludeText(
+        "Email header",
+        "email fields are excluded from the standard field row"
+      );
+    assert
+      .dom(".edit-main-nav")
+      .doesNotIncludeText(
+        "Email header",
+        "email fields are excluded from the target row"
+      );
+    assert
+      .dom(".theme-editor__advanced-fields")
+      .includesText(
+        "Email header",
+        "the advanced row includes the email header"
+      )
+      .includesText(
+        "Email footer",
+        "the advanced row includes the email footer"
+      );
+  });
+
+  test("handles direct links to advanced email fields", async function (assert) {
+    this.siteSettings.enable_email_theme_header_and_footer = true;
+
+    await visit("/admin/customize/themes/-1/email_header/email_header/edit");
+
+    assert
+      .dom(".d-toggle-switch__checkbox")
+      .hasAttribute(
+        "aria-checked",
+        "true",
+        "advanced mode is shown as enabled"
+      );
+    assert
+      .dom(
+        '.edit-main-nav a[href="/admin/customize/themes/-1/common/scss/edit"]'
+      )
+      .exists("the standard target row links to a valid standard field");
+    assert
+      .dom(".theme-editor__advanced-fields")
+      .includesText("Email header", "the advanced row remains visible");
+    assert
+      .dom(".theme-editor__email-disabled-notice")
+      .doesNotExist(
+        "the disabled notice is hidden when email fields are enabled"
+      );
+    assert
+      .dom(".ace-wrapper")
+      .hasAttribute(
+        "data-disabled",
+        "false",
+        "the email field remains editable"
+      );
+
+    await click(".d-toggle-switch__checkbox");
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/customize/themes/-1/common/scss/edit",
+      "disabling advanced mode leaves the email editor"
+    );
+    assert
+      .dom(".theme-editor__advanced-fields")
+      .doesNotExist("email fields are hidden after disabling advanced mode");
+  });
+
+  test("preserves email editor content mode and advanced navigation", async function (assert) {
+    this.siteSettings.enable_email_theme_header_and_footer = true;
+
+    await visit("/admin/customize/themes/-1/email_header/email_header/edit");
+
+    let editor = find(".theme-editor__code").aceEditor;
+    assert.strictEqual(
+      editor.getValue(),
+      "<header>Email header content</header>",
+      "the email header content is loaded"
+    );
+    assert.strictEqual(
+      editor.getSession().getMode().$id,
+      "ace/mode/html",
+      "the email header uses HTML mode"
+    );
+
+    await click(
+      '.theme-editor__advanced-fields a[href="/admin/customize/themes/-1/email_footer/email_footer/edit"]'
+    );
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/customize/themes/-1/email_footer/email_footer/edit",
+      "the footer link uses the footer target"
+    );
+    editor = find(".theme-editor__code").aceEditor;
+    assert.strictEqual(
+      editor.getValue(),
+      "<footer>Email footer content</footer>",
+      "the editor updates to the email footer content"
+    );
+    assert
+      .dom(".theme-editor__code")
+      .hasClass("ace_editor", "Ace styling remains active");
+    assert
+      .dom(".theme-editor__code .ace_text-layer")
+      .includesText(
+        "Email footer content",
+        "Ace renders the email footer content"
+      );
+    assert.strictEqual(
+      editor.getSession().getMode().$id,
+      "ace/mode/html",
+      "the email footer remains in HTML mode"
+    );
+
+    await click(
+      '.theme-editor__fields a[href="/admin/customize/themes/-1/common/header/edit"]'
+    );
+
+    assert
+      .dom(".d-toggle-switch__checkbox")
+      .hasAttribute(
+        "aria-checked",
+        "true",
+        "advanced mode remains enabled after navigating to a standard field"
+      );
+    assert
+      .dom(".theme-editor__advanced-fields")
+      .exists("the advanced email fields remain visible");
+    assert.strictEqual(
+      find(".theme-editor__code").aceEditor.getValue(),
+      "",
+      "the editor updates to the selected standard field"
+    );
+  });
+
+  test("disables email fields when theme email fragments are disabled", async function (assert) {
+    this.siteSettings.enable_email_theme_header_and_footer = false;
+
+    await visit("/admin/customize/themes/-1/common/scss/edit");
+    await click(".d-toggle-switch__checkbox");
+
+    assert
+      .dom(".theme-editor__advanced-fields")
+      .hasClass("is-disabled", "the email field options appear disabled");
+    assert
+      .dom(".theme-editor__email-disabled-notice")
+      .hasText(
+        i18n("admin.customize.theme.email_theme_fields_disabled"),
+        "the page explains that configured email fields will not be used"
+      );
+    assert
+      .dom(".ace-wrapper")
+      .hasAttribute(
+        "data-disabled",
+        "false",
+        "non-email theme fields remain editable"
+      );
+
+    await click(
+      '.theme-editor__advanced-fields a[href="/admin/customize/themes/-1/email_header/email_header/edit"]'
+    );
+
+    assert
+      .dom(".ace-wrapper")
+      .hasAttribute(
+        "data-disabled",
+        "true",
+        "the email field editor is disabled"
+      );
+    assert
+      .dom(".theme-editor__code")
+      .hasAttribute(
+        "aria-describedby",
+        "theme-email-fields-disabled-notice",
+        "the editor references the explanatory notice"
+      )
+      .hasAttribute("aria-readonly", "true", "the editor is marked read-only");
   });
 
   test("shows the compatibility-pinned ref for the pending update", async function (assert) {

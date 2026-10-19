@@ -402,6 +402,20 @@
     }
   }
 
+  .theme-editor {
+    &__advanced-fields.is-disabled,
+    &__code.is-disabled {
+      opacity: 0.5;
+    }
+
+    &__email-disabled-notice {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-block: var(--space-2) 0;
+    }
+  }
+
   .content-list ul {
     margin-bottom: 10px;
   }
@@ -893,6 +907,19 @@
 }
 
 .admin-customize-email-style {
+  .email-styles-editor {
+    &__theme-fields {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+    }
+
+    &__theme-fields-copy p {
+      margin: 0 0 var(--space-1);
+    }
+  }
+
   .ace-wrapper {
     position: relative;
     width: 100%;

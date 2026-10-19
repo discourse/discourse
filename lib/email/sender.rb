@@ -69,7 +69,12 @@ module Email
 
       @message.charset = "UTF-8"
 
-      renderer = Email::Renderer.new(@message, user_id: @user&.id)
+      renderer =
+        Email::Renderer.new(
+          @message,
+          user_id: @user&.id,
+          locale: @user&.effective_locale || I18n.locale,
+        )
 
       if @message.html_part
         @message.html_part.body = renderer.html
@@ -80,6 +85,7 @@ module Email
             body renderer.html
           end
       end
+      @message.text_part.body = renderer.text
 
       # Fix relative (ie upload) HTML links in markdown which do not work well in plain text emails.
       # These are the links we add when a user uploads a file or image.
@@ -271,7 +277,7 @@ module Email
         style.inline_secure_images(@message.attachments, @message_attachments_index)
       end
 
-      @message.html_part.body = style.to_s
+      @message.html_part.body = "#{style}\n"
 
       email_log.message_id = @message.message_id
 

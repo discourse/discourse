@@ -4,6 +4,8 @@ import { service } from "@ember/service";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
+const EMAIL_TARGETS = ["email_header", "email_footer"];
+
 export default class AdminCustomizeThemesEditController extends Controller {
   @service router;
 
@@ -41,6 +43,14 @@ export default class AdminCustomizeThemesEditController extends Controller {
   setTargetName(name) {
     const target = this.get("model.targets").find((t) => t.name === name);
     this.set("currentTarget", target && target.id);
+    if (EMAIL_TARGETS.includes(name)) {
+      this.set("showAdvanced", true);
+    }
+  }
+
+  @action
+  setShowAdvanced(showAdvanced) {
+    this.set("showAdvanced", showAdvanced);
   }
 
   @action
