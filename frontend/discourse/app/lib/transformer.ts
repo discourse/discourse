@@ -7,6 +7,77 @@ import {
 } from "discourse/lib/registry/transformers";
 import { consolePrefix } from "discourse/lib/source-identifier";
 
+/** The registration category of a transformer. */
+export type TransformerType = "BEHAVIOR" | "VALUE";
+
+/**
+ * Context copied for a behavior chain, including its optional calling instance.
+ * @typeParam C - Properties supplied by the caller before the calling instance is added.
+ */
+export type BehaviorTransformerContext<
+  C extends object = Record<string, unknown>,
+> = C & { _unstable_self?: unknown };
+
+/**
+ * A value hook receives the current value and the original, optional context.
+ * @typeParam T - The value passed to the callback.
+ * @typeParam C - Properties of the optional context object.
+ */
+export type ValueTransformer<
+  T = unknown,
+  C extends object = Record<string, unknown>,
+> = (args: {
+  /** The result of the preceding transformer, or the default value. */
+  value: T;
+  /** The context passed when applying the hook. */
+  context: C | null | undefined;
+}) => T;
+
+/**
+ * Mutates the supplied value; the pipeline ignores the callback's return value.
+ * @typeParam T - The value to mutate.
+ * @typeParam C - Properties of the optional context object.
+ */
+export type MutableValueTransformer<
+  T = unknown,
+  C extends object = Record<string, unknown>,
+> = (args: Parameters<ValueTransformer<T, C>>[0]) => void;
+
+/**
+ * The core implementation called after the behavior middleware.
+ * @typeParam R - The default implementation's result, including a Promise for async behavior.
+ * @typeParam C - Properties supplied in the context before the calling instance is added.
+ */
+export type DefaultBehaviorTransformer<
+  R = unknown,
+  C extends object = Record<string, unknown>,
+> = (args: {
+  /** A shallow copy of the supplied context, shared throughout the chain. */
+  context: BehaviorTransformerContext<C>;
+}) => R;
+
+/**
+ * Behavior middleware may continue the chain or replace the default behavior.
+ * @typeParam R - The expected behavior result; middleware and next() may also return void.
+ * @typeParam C - Properties supplied in the context before the calling instance is added.
+ */
+export type BehaviorTransformer<
+  R = unknown,
+  C extends object = Record<string, unknown>,
+> = (args: {
+  /** Runs the remaining middleware and default behavior; an exhausted chain returns undefined. */
+  next: () => R | void;
+  /** A shallow copy of the supplied context, shared throughout the chain. */
+  context: BehaviorTransformerContext<C>;
+}) => R | void;
+
+type TransformerSource = "CORE" | "PLUGIN";
+
+interface TransformerInfo {
+  name: string;
+  source: TransformerSource;
+}
+
 const CORE_TRANSFORMER = "CORE";
 const PLUGIN_TRANSFORMER = "PLUGIN";
 
@@ -14,12 +85,10 @@ export const transformerTypes = Object.freeze({
   // key and value must match
   BEHAVIOR: "BEHAVIOR",
   VALUE: "VALUE",
-});
+} as const);
 
 /**
  * Test flag - disables throwing an exception if applying a transformer fails on tests
- *
- * @type {boolean}
  */
 let skipApplyExceptionOnTests = false;
 
@@ -30,13 +99,12 @@ let skipApplyExceptionOnTests = false;
  *
  * The list can be edited in `discourse/lib/registry/transformers`
  */
-let validTransformerNames = new Map();
+let validTransformerNames = new Map<string, TransformerSource>();
 
-// Initialize the valid transformer names, notice that we perform some checks to ensure the transformer names are
-// correctly defined, i.e., lowercase and unique.
+/** Core names must be lowercase and unique across transformer categories. */
 [
-  [BEHAVIOR_TRANSFORMERS, transformerTypes.BEHAVIOR],
-  [VALUE_TRANSFORMERS, transformerTypes.VALUE],
+  [BEHAVIOR_TRANSFORMERS, transformerTypes.BEHAVIOR] as const,
+  [VALUE_TRANSFORMERS, transformerTypes.VALUE] as const,
 ].forEach(([list, transformerType]) => {
   list.forEach((name) => {
     if (DEBUG) {
@@ -64,7 +132,8 @@ let validTransformerNames = new Map();
   });
 });
 
-const transformersRegistry = new Map();
+/** Hook names are extensible, so callback types are erased while stored. */
+const transformersRegistry = new Map<string, unknown[]>();
 
 /**
  * Indicates if the registry is open for registration.
@@ -74,8 +143,6 @@ const transformersRegistry = new Map();
  *
  * When the registry is open, the system will throw an error if a transformer name is added and will accept registering
  * transformers to be applied.
- *
- * @type {boolean}
  */
 let registryOpened = false;
 
@@ -84,11 +151,11 @@ let registryOpened = false;
  *
  * INTERNAL API: to be used only in `initializers/freeze-valid-transformers`
  */
-export function _freezeValidTransformerNames() {
+export function _freezeValidTransformerNames(): void {
   registryOpened = true;
 }
 
-function _normalizeTransformerName(name, type) {
+function _normalizeTransformerName(name: string, type: string): string {
   return `${name}/${type.toLowerCase()}`;
 }
 
@@ -100,10 +167,13 @@ function _normalizeTransformerName(name, type) {
  * DO NOT USE THIS FUNCTION TO ADD CORE TRANSFORMER NAMES. Instead register them directly in the
  * validTransformerNames set above.
  *
- * @param {string} name the name to register
- * @param {string} transformerType the type of the transformer being added
+ * @param name - the name to register
+ * @param transformerType - the type of the transformer being added
  */
-export function _addTransformerName(name, transformerType) {
+export function _addTransformerName(
+  name: string,
+  transformerType: TransformerType
+): void {
   const prefix = () =>
     `${consolePrefix()} api.add${capitalize(
       transformerType.toLowerCase()
@@ -154,16 +224,32 @@ export function _addTransformerName(name, transformerType) {
  *
  * INTERNAL API: use pluginApi.registerBehaviorTransformer or pluginApi.registerValueTransformer instead.
  *
- * @param {string} transformerName the name of the transformer
- * @param {string} transformerType the type of the transformer being registered
- * @param {function} callback callback that will transform the value.
- * @returns {boolean} True if the transformer exists, false otherwise.
+ * @param transformerName - the name of the transformer
+ * @param transformerType - the type of the transformer being registered
+ * @typeParam T - The value passed to the callback.
+ * @typeParam C - Properties of the optional context object.
+ * @param callback - callback that will transform the value.
  */
+export function _registerTransformer<T, C extends object>(
+  transformerName: string,
+  transformerType: "VALUE",
+  callback: ValueTransformer<T, C> | MutableValueTransformer<T, C>
+): boolean;
+/**
+ * Registers behavior middleware through the internal API.
+ * @typeParam R - The expected behavior result, in addition to a possible void result.
+ * @typeParam C - Properties supplied in the context before the calling instance is added.
+ */
+export function _registerTransformer<R, C extends object>(
+  transformerName: string,
+  transformerType: "BEHAVIOR",
+  callback: BehaviorTransformer<R, C>
+): boolean;
 export function _registerTransformer(
-  transformerName,
-  transformerType,
-  callback
-) {
+  transformerName: string,
+  transformerType: TransformerType,
+  callback: (...args: never[]) => unknown
+): boolean {
   if (!transformerTypes[transformerType]) {
     throw new Error(`Invalid transformer type: ${transformerType}`);
   }
@@ -210,11 +296,20 @@ export function _registerTransformer(
   return true;
 }
 
-export function applyBehaviorTransformer(
-  transformerName,
-  defaultCallback,
-  context
-) {
+/**
+ * Applies middleware in registration order, with the core implementation last.
+ * @typeParam R - The result inferred from the default callback; middleware may also return void.
+ * @typeParam C - Properties inferred from the supplied context object.
+ */
+export function applyBehaviorTransformer<
+  R,
+  C extends object = Record<string, unknown>,
+>(
+  this: unknown,
+  transformerName: string,
+  defaultCallback: DefaultBehaviorTransformer<R, C>,
+  context?: C | null
+): R | void {
   const normalizedTransformerName = _normalizeTransformerName(
     transformerName,
     transformerTypes.BEHAVIOR
@@ -236,15 +331,20 @@ export function applyBehaviorTransformer(
     );
   }
 
+  // The nullish typeof check excludes null before the constructor checks.
   if (
     typeof (context ?? undefined) !== "undefined" &&
-    !(typeof context === "object" && context.constructor === Object)
+    !(typeof context === "object" && context!.constructor === Object)
   ) {
     throw `${prefix()}("${transformerName}", ...): context must be a simple JS object or nullish.`;
   }
 
-  const transformers = transformersRegistry.get(normalizedTransformerName);
-  const appliedContext = { ...context };
+  // Registration and application must agree on the contract for this hook name.
+  const transformers = transformersRegistry.get(normalizedTransformerName) as
+    | BehaviorTransformer<R, C>[]
+    | undefined;
+  // Spreading an optional generic context loses C in TypeScript.
+  const appliedContext = { ...context } as BehaviorTransformerContext<C>;
   if (!appliedContext._unstable_self && this) {
     appliedContext._unstable_self = this;
   }
@@ -255,7 +355,7 @@ export function applyBehaviorTransformer(
 
   const callbackQueue = [...transformers, defaultCallback];
 
-  function nextCallback() {
+  function nextCallback(): R | void {
     const currentCallback = callbackQueue.shift();
 
     if (!currentCallback) {
@@ -264,7 +364,10 @@ export function applyBehaviorTransformer(
 
     // do not surround the default implementation in the try ... catch block
     if (currentCallback === defaultCallback) {
-      return currentCallback({ context: appliedContext });
+      // Equality identifies the default callback, whose arguments omit next.
+      return (currentCallback as DefaultBehaviorTransformer<R, C>)({
+        context: appliedContext,
+      });
     }
 
     try {
@@ -292,20 +395,27 @@ export function applyBehaviorTransformer(
 /**
  * Apply a transformer to a value.
  *
- * @param {string} transformerName - The name of the transformer applied
- * @param {*} defaultValue - The default value
- * @param {*} [context] - The optional context to pass to the transformer callbacks
- * @param {Object} [opts] - Options for the transformer
- * @param {boolean} [opts.mutable] - Flag indicating if the value should be mutated instead of returned
- * @returns {*} The transformed value
- * @throws {Error} If the transformer name does not exist or the context is invalid
+ * @typeParam T - The result type, inferred from the default value; specify a wider type when needed.
+ * @typeParam C - Properties inferred from the optional context object.
+ *
+ * @param transformerName - The name of the transformer applied
+ * @param defaultValue - The default value
+ * @param context - The optional context to pass to the transformer callbacks
+ * @param opts - Options for the transformer
+ * @throws If the transformer name does not exist or the context is invalid
  */
-export function applyValueTransformer(
-  transformerName,
-  defaultValue,
-  context,
-  opts = { mutable: false }
-) {
+export function applyValueTransformer<
+  T,
+  C extends object = Record<string, unknown>,
+>(
+  transformerName: string,
+  defaultValue: T,
+  context?: C | null,
+  opts: {
+    /** Mutate the original value and ignore callback return values. */
+    mutable?: boolean;
+  } | null = { mutable: false }
+): T {
   const normalizedTransformerName = _normalizeTransformerName(
     transformerName,
     transformerTypes.VALUE
@@ -321,11 +431,12 @@ export function applyValueTransformer(
     );
   }
 
+  // The nullish typeof check excludes null before the constructor checks.
   if (
     typeof (context ?? undefined) !== "undefined" &&
     !(
       typeof context === "object" &&
-      (context.constructor === Object || context.constructor === undefined)
+      (context!.constructor === Object || context!.constructor === undefined)
     )
   ) {
     throw (
@@ -336,7 +447,10 @@ export function applyValueTransformer(
     );
   }
 
-  const transformers = transformersRegistry.get(normalizedTransformerName);
+  // Registration and application must agree on the contract for this hook name.
+  const transformers = transformersRegistry.get(normalizedTransformerName) as
+    | ValueTransformer<T, C>[]
+    | undefined;
 
   if (!transformers) {
     return defaultValue;
@@ -375,36 +489,30 @@ export function applyValueTransformer(
  * Apply a transformer to a mutable value.
  * The registered transformers should mutate the value instead of returning it.
  *
- * @param {string} transformerName - The name of the transformer applied
- * @param {*} defaultValue - The default value
- * @param {*} [context] - The optional context to pass to the transformer callbacks
- * @returns {*} The transformed value
- * @throws {Error} If the transformer name does not exist or the context is invalid
+ * @typeParam T - The original value's type, preserved in the returned reference.
+ * @typeParam C - Properties inferred from the optional context object.
+ *
+ * @param transformerName - The name of the transformer applied
+ * @param defaultValue - The default value
+ * @param context - The optional context to pass to the transformer callbacks
+ * @throws If the transformer name does not exist or the context is invalid
  */
-export function applyMutableValueTransformer(
-  transformerName,
-  defaultValue,
-  context
-) {
+export function applyMutableValueTransformer<
+  T,
+  C extends object = Record<string, unknown>,
+>(transformerName: string, defaultValue: T, context?: C | null): T {
   return applyValueTransformer(transformerName, defaultValue, context, {
     mutable: true,
   });
 }
 
 /**
- * @typedef {Object} TransformerInfo
- * @property {string} name - The normalized name of the transformer
- * @property {string} source - The source of the transformer
- */
-
-/**
  * Find a transformer info by name, without considering the type
  *
- * @param name the name of the transformer
+ * @param name - the name of the transformer
  *
- * @returns {TransformerInfo | null} info the transformer info or null if not found
  */
-function findTransformerInfoByName(name) {
+function findTransformerInfoByName(name: string): TransformerInfo | null {
   for (const searchedType of Object.keys(transformerTypes)) {
     const searchedName = _normalizeTransformerName(name, searchedType);
     const source = validTransformerNames?.get(searchedName);
@@ -420,24 +528,23 @@ function findTransformerInfoByName(name) {
 /**
  * Check if a transformer name exists
  *
- * @param normalizedName the normalized name to check
- * @returns {boolean} true if the transformer name exists, false otherwise
+ * @param normalizedName - the normalized name to check
  */
-function transformerNameExists(normalizedName) {
+function transformerNameExists(normalizedName: string): boolean {
   return validTransformerNames.has(normalizedName);
 }
-
-///////// Testing helpers
 
 /**
  * Check if a transformer was added
  *
- * @param {string} name the name to check
- * @param {string} type the type of the transformer
+ * @param name - the name to check
+ * @param type - the type of the transformer
  *
- * @returns {boolean} true if a transformer with the given name and type exists, false otherwise
  */
-export function transformerWasAdded(name, type) {
+export function transformerWasAdded(
+  name: string,
+  type: TransformerType
+): boolean {
   return validTransformerNames.has(_normalizeTransformerName(name, type));
 }
 
@@ -445,16 +552,15 @@ export function transformerWasAdded(name, type) {
  * Stores the initial state of `registryOpened` to allow the correct reset after a test that needs to manually
  * override the registry opened state finishes running.
  *
- * @type {boolean | null}
  */
-let testRegistryOpenedState = null; // initially set to null bto allow testing if it was initialized
+let testRegistryOpenedState: boolean | null = null;
 
 /**
  * Opens the transformers registry for registration
  *
  * USE ONLY FOR TESTING PURPOSES.
  */
-export function acceptNewTransformerNames() {
+export function acceptNewTransformerNames(): void {
   if (!isTesting()) {
     throw new Error("Use `acceptNewTransformerNames` only in tests.");
   }
@@ -471,7 +577,7 @@ export function acceptNewTransformerNames() {
  *
  * USE ONLY FOR TESTING PURPOSES.
  */
-export function acceptTransformerRegistrations() {
+export function acceptTransformerRegistrations(): void {
   if (!isTesting()) {
     throw new Error("Use `acceptTransformerRegistrations` only in tests.");
   }
@@ -488,7 +594,7 @@ export function acceptTransformerRegistrations() {
  *
  * USE ONLY FOR TESTING PURPOSES.
  */
-export function resetTransformers() {
+export function resetTransformers(): void {
   if (!isTesting()) {
     throw new Error("Use `resetTransformers` only in tests.");
   }
@@ -506,7 +612,7 @@ export function resetTransformers() {
 /**
  * Clears all transformer names registered using the plugin API
  */
-function clearPluginTransformers() {
+function clearPluginTransformers(): void {
   validTransformerNames = new Map(
     [...validTransformerNames].filter(([, type]) => type === CORE_TRANSFORMER)
   );
@@ -519,6 +625,6 @@ function clearPluginTransformers() {
  *
  * USE ONLY FOR TESTING PURPOSES.
  */
-export function disableThrowingApplyExceptionOnTests() {
+export function disableThrowingApplyExceptionOnTests(): void {
   skipApplyExceptionOnTests = true;
 }

@@ -426,7 +426,7 @@ class _PluginApi {
    *   },
    * };
    *
-   * @param name the name of the new transformer
+   * @param {string} name the name of the new transformer
    *
    */
   addBehaviorTransformerName(name) {
@@ -478,12 +478,11 @@ class _PluginApi {
    * });
    * ```
    *
+   * @template [R=unknown] - The expected behavior result; middleware may also return void.
+   * @template {object} [C=Record<string, unknown>] - Properties of the context supplied when applying the hook.
    * @param {string} transformerName the name of the transformer
-   * @param {function({next, context})} behaviorCallback callback to be used to transform or override the behavior.
-   * @param {*} behaviorCallback.next callback that executes the remaining transformer queue producing the expected
-   * behavior. Notice that this includes the default behavior and if next() is not called in your transformer's callback
-   * the default behavior will be completely overridden
-   * @param {*} [behaviorCallback.context] the optional context in which the behavior is being transformed
+   * @param {import("discourse/lib/transformer").BehaviorTransformer<R, C>} behaviorCallback
+   * Middleware which can call next() to run the remaining queue, including the default behavior.
    * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerBehaviorTransformer(transformerName, behaviorCallback) {
@@ -515,7 +514,7 @@ class _PluginApi {
    *   },
    * };
    *
-   * @param name the name of the new transformer
+   * @param {string} name the name of the new transformer
    *
    */
   addValueTransformerName(name) {
@@ -546,12 +545,11 @@ class _PluginApi {
    * });
    * ```
    *
+   * @template [T=unknown] - The value passed to the callback.
+   * @template {object} [C=Record<string, unknown>] - Properties of the context supplied when applying the hook.
    * @param {string} transformerName the name of the transformer
-   * @param {function({value, context})} valueCallback callback to be used to transform the value. To avoid potential
-   * errors or unexpected behavior the callback must be a pure function, i.e. return the transform value instead of
-   * mutating the input value, return the same output for the same input and not have any side effects.
-   * @param {*} valueCallback.value the value to be transformed
-   * @param {*} [valueCallback.context] the optional context in which the value is being transformed
+   * @param {import("discourse/lib/transformer").ValueTransformer<T, C> | import("discourse/lib/transformer").MutableValueTransformer<T, C>} valueCallback
+   * Receives the current value and context. Return the replacement value, or mutate the value for mutable hooks.
    * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerValueTransformer(transformerName, valueCallback) {

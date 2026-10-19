@@ -5,7 +5,6 @@
  *
  * USE ONLY lowercase names
  *
- * @constant {ReadonlyArray<string>} BEHAVIOR_TRANSFORMERS - An immutable array of behavior transformer identifiers
  */
 // eslint-discourse keep-array-sorted
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
@@ -40,7 +39,6 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
  *
  * USE ONLY lowercase names
  *
- * @constant {ReadonlyArray<string>} VALUE_TRANSFORMERS - An immutable array of value transformer identifiers
  */
 // eslint-discourse keep-array-sorted
 export const VALUE_TRANSFORMERS = Object.freeze([
