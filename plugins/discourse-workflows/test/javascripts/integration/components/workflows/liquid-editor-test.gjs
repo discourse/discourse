@@ -6,8 +6,10 @@ import {
   triggerEvent,
   triggerKeyEvent,
   waitFor,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { loadCodeEditorLanguage } from "discourse/lib/code-editor-languages";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import LiquidControl from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/liquid-control";
@@ -154,6 +156,7 @@ module("Integration | Component | Workflows | Liquid editor", function (hooks) {
     await render(<template><LiquidControl @field={{field}} /></template>);
     await waitFor(".cm-editor");
     const view = find(".codemirror-editor").codemirrorView;
+    await waitUntil(() => view.state.languageDataAt("closeBrackets", 0).length);
 
     // Each keystroke goes through the editor's input handlers, the way typing
     // does, falling back to a plain insert when none takes it.
@@ -194,21 +197,31 @@ module("Integration | Component | Workflows | Liquid editor", function (hooks) {
     assert.strictEqual(view.state.doc.toString(), "{", "nothing is inserted");
   });
 
-  test("highlights the template's tags and output", async function (assert) {
-    const value = "{% for item in items %}{{ item.name }}{% endfor %}";
-
-    await render(
-      <template>
-        <VariableInput @extensions={{liquidExtensions}} @value={{value}} />
-      </template>
+  test("registers liquid as a code editor language", async function (assert) {
+    assert.strictEqual(
+      typeof (await loadCodeEditorLanguage("liquid")),
+      "function",
+      "the shortcut resolves to a builder"
     );
-    await waitFor(".cm-wf-brace");
+  });
 
-    assert.dom(".cm-wf-brace").exists("delimiters are highlighted");
+  test("highlights the template's tags and output", async function (assert) {
+    const field = {
+      value: "{% for item in items %}{{ item.name }}{% endfor %}",
+      set() {},
+    };
+
+    await render(<template><LiquidControl @field={{field}} /></template>);
+    await waitFor(".cm-hl-bracket");
+
+    assert.dom(".cm-hl-bracket").exists("delimiters are highlighted");
     assert
-      .dom(".cm-wf-keyword")
+      .dom(".cm-hl-keyword")
       .exists("the tag keyword is highlighted separately from its arguments");
-    assert.dom(".cm-wf-property").exists("a dotted property is highlighted");
+    assert.dom(".cm-hl-property").exists("a dotted property is highlighted");
+    assert
+      .dom(".cm-hl-function")
+      .doesNotExist("nothing is mistaken for a filter");
   });
 
   test("drops a dragged field as a Liquid output tag", async function (assert) {

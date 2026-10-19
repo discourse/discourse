@@ -127,14 +127,15 @@ export default class LiquidControl extends Component {
     <div class="workflows-liquid-control" {{didInsert this.loadVariables}}>
       {{#if this.ready}}
         <CodeEditor
-          class="workflows-variable-input --liquid"
+          class="workflows-liquid-control__editor"
           name={{@field.name}}
           style={{this.style}}
           @describedBy={{@field.describedBy}}
           @disabled={{@field.disabled}}
           @extensions={{this.buildExtensions}}
           @inputId={{@field.id}}
-          @invalid={{@field.error}}
+          @invalid={{if @field.error true false}}
+          @language="liquid"
           @lineWrapping={{true}}
           @onChange={{this.handleChange}}
           @resizable={{true}}

@@ -1,5 +1,5 @@
-import { StreamLanguage } from "@codemirror/language";
-import { tags as t } from "@lezer/highlight";
+// Tokenizes Liquid templates for the code editor; registered as the
+// "liquid" language by the plugin's initializer.
 
 const TAG_KEYWORDS = new Set([
   "assign",
@@ -164,48 +164,50 @@ function tokenizeInside(stream, state) {
   return null;
 }
 
-const liquidStreamParser = {
-  name: "liquid",
+function streamParser(t) {
+  return {
+    name: "liquid",
 
-  startState() {
-    return {
-      context: "text",
-      expectTagName: false,
-      afterDot: false,
-      afterPipe: false,
-    };
-  },
-
-  token(stream, state) {
-    if (state.context === "text") {
-      return tokenizeText(stream, state);
-    }
-    return tokenizeInside(stream, state);
-  },
-
-  languageData: {
-    commentTokens: {
-      block: { open: "{% comment %}", close: "{% endcomment %}" },
+    startState() {
+      return {
+        context: "text",
+        expectTagName: false,
+        afterDot: false,
+        afterPipe: false,
+      };
     },
-    closeBrackets: { brackets: ["(", "[", "'", '"'] },
-  },
 
-  tokenTable: {
-    content: t.content,
-    brace: t.brace,
-    keyword: t.keyword,
-    string: t.string,
-    number: t.number,
-    bool: t.bool,
-    null: t.null,
-    variableName: t.variableName,
-    propertyName: t.propertyName,
-    filter: t.function(t.variableName),
-    operator: t.operator,
-    punctuation: t.punctuation,
-  },
-};
+    token(stream, state) {
+      if (state.context === "text") {
+        return tokenizeText(stream, state);
+      }
+      return tokenizeInside(stream, state);
+    },
 
-export function liquidLanguage() {
-  return StreamLanguage.define(liquidStreamParser);
+    languageData: {
+      commentTokens: {
+        block: { open: "{% comment %}", close: "{% endcomment %}" },
+      },
+      closeBrackets: { brackets: ["(", "[", "'", '"'] },
+    },
+
+    tokenTable: {
+      content: t.content,
+      brace: t.brace,
+      keyword: t.keyword,
+      string: t.string,
+      number: t.number,
+      bool: t.bool,
+      null: t.null,
+      variableName: t.variableName,
+      propertyName: t.propertyName,
+      filter: t.function(t.variableName),
+      operator: t.operator,
+      punctuation: t.punctuation,
+    },
+  };
+}
+
+export default function liquidLanguage({ cmLanguage, lezerHighlight }) {
+  return cmLanguage.StreamLanguage.define(streamParser(lezerHighlight.tags));
 }

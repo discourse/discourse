@@ -1,5 +1,4 @@
 import { i18n } from "discourse-i18n";
-import { buildTheme } from "../expression-extensions/theme.js";
 import { buildLiquidScope } from "../liquid-context.js";
 import { buildAutoCloseDelimiters } from "./auto-close-delimiters.js";
 import { buildLiquidCompletions } from "./completions.js";
@@ -34,8 +33,6 @@ export default function buildLiquidExtensions(cmParams, domainOpts = {}) {
   const scope = () => (perItem() ? scopes.perItem : scopes.allItems);
 
   return [
-    cmParams.utils.liquidLanguage(),
-    buildTheme(cmParams),
     buildAutoCloseDelimiters(cmParams),
     buildLiquidDragDrop(cmParams, { perItem }),
     buildLiquidCompletions(cmParams, { scope, sections }),
