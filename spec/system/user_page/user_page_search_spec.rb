@@ -11,7 +11,7 @@ describe "User page search" do
   it "filters down to the user" do
     sign_in(user)
 
-    visit("/u/#{user.username}")
+    browser_page.goto("/u/#{user.username}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     search_page.click_search_icon
     search_page.click_in_posts_by_user
 

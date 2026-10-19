@@ -10,16 +10,25 @@ module PageObjects
       end
 
       def confirm_button
-        within(modal) { find(".btn.confirm-suspend") }
+        within_browser(modal) { browser_root.locator(".btn.confirm-suspend").filter(visible: true) }
       end
 
       def has_confirm_button_disabled?
-        within(modal) { has_css?(".btn.confirm-suspend[disabled]") }
+        within_browser(modal) do
+          have_count(0).does_not_match?(
+            browser_root.locator(".btn.confirm-suspend[disabled]").filter(visible: true),
+          )
+        end
       end
 
       def has_confirm_button_enabled?
-        within(modal) do
-          has_no_css?(".btn.confirm-suspend[disabled]") && has_css?(".btn.confirm-suspend")
+        within_browser(modal) do
+          have_count(0).matches?(
+            browser_root.locator(".btn.confirm-suspend[disabled]").filter(visible: true),
+          ) &&
+            have_count(0).does_not_match?(
+              browser_root.locator(".btn.confirm-suspend").filter(visible: true),
+            )
         end
       end
 
@@ -30,32 +39,45 @@ module PageObjects
       end
 
       def fill_in_reason(reason)
-        find("input.suspend-reason").fill_in(with: reason)
+        browser_root.locator("input.suspend-reason").filter(visible: true).fill(reason)
       end
 
       def has_successful_log_entry_for_user?(user:, position:, total:)
-        within(modal) do
-          has_css?(
-            ".bulk-user-suspend-confirmation__progress-line.-success",
-            text:
-              I18n.t(
-                "admin_js.admin.users.bulk_actions.suspend.confirmation_modal.user_suspend_succeeded",
-                position:,
-                total:,
-                username: user.username,
+        within_browser(modal) do
+          contain_text(
+            [
+              browser_text_pattern(
+                I18n.t(
+                  "admin_js.admin.users.bulk_actions.suspend.confirmation_modal.user_suspend_succeeded",
+                  position:,
+                  total:,
+                  username: user.username,
+                ),
               ),
+            ],
+            useInnerText: true,
+          ).matches?(
+            browser_root.locator(".bulk-user-suspend-confirmation__progress-line.-success").filter(
+              visible: true,
+            ),
           )
         end
       end
 
       def has_no_error_log_entries?
-        within(modal) { has_no_css?(".bulk-user-suspend-confirmation__progress-line.-error") }
+        within_browser(modal) do
+          have_count(0).matches?(
+            browser_root.locator(".bulk-user-suspend-confirmation__progress-line.-error").filter(
+              visible: true,
+            ),
+          )
+        end
       end
 
       private
 
       def modal
-        find(MODAL_SELECTOR)
+        browser_root.locator(MODAL_SELECTOR).filter(visible: true)
       end
     end
   end

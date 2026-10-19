@@ -55,14 +55,20 @@ describe "Admin User Page" do
     before { admin_user_page.visit(user) }
 
     it "can list accounts with identical IPs" do
-      find(".ip-lookup-trigger").click
+      browser_root.locator(".ip-lookup-trigger").filter(visible: true).click
 
-      expect(page).to have_content("#{I18n.t("js.ip_lookup.other_accounts")}\n3")
+      expect(browser_content).to contain_text(
+        browser_text_pattern("#{I18n.t("js.ip_lookup.other_accounts")}\n3"),
+        useInnerText: true,
+      )
 
-      table = page.find(".other-accounts table")
-      expect(table).to have_content(similar_user.username)
-      expect(table).to have_content(another_mod.username)
-      expect(table).to have_content(another_admin.username)
+      table = browser_root.locator(".other-accounts table").filter(visible: true)
+      expect(table).to contain_text(browser_text_pattern(similar_user.username), useInnerText: true)
+      expect(table).to contain_text(browser_text_pattern(another_mod.username), useInnerText: true)
+      expect(table).to contain_text(
+        browser_text_pattern(another_admin.username),
+        useInnerText: true,
+      )
     end
 
     it "displays the suspend and silence buttons" do
@@ -71,8 +77,10 @@ describe "Admin User Page" do
     end
 
     it "displays username in the title" do
-      expect(page).to have_css(".display-row.username")
-      expect(page.title).to eq("#{user.username} - Users - Admin - Discourse")
+      expect(browser_root.locator(".display-row.username").filter(visible: true)).not_to have_count(
+        0,
+      )
+      expect(browser_page.title).to eq("#{user.username} - Users - Admin - Discourse")
     end
 
     describe "the upcoming changes section" do
@@ -103,7 +111,9 @@ describe "Admin User Page" do
           admin_user_page.visit(user)
           open_upcoming_changes
           expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
-          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
+          expect(
+            admin_user_page.upcoming_change("enable_upload_debug_mode"),
+          ).to RSpecPredicates.be_enabled
           expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
             "enabled_for_everyone",
           )
@@ -120,7 +130,9 @@ describe "Admin User Page" do
           admin_user_page.visit(user)
           open_upcoming_changes
           expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
-          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_disabled
+          expect(
+            admin_user_page.upcoming_change("enable_upload_debug_mode"),
+          ).to RSpecPredicates.be_disabled
           expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
             "enabled_for_no_one",
           )
@@ -147,7 +159,9 @@ describe "Admin User Page" do
             admin_user_page.visit(user)
             open_upcoming_changes
             expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
-            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
+            expect(
+              admin_user_page.upcoming_change("enable_upload_debug_mode"),
+            ).to RSpecPredicates.be_enabled
             expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
               "in_specific_groups",
             )
@@ -167,7 +181,9 @@ describe "Admin User Page" do
             admin_user_page.visit(user)
             open_upcoming_changes
             expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
-            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
+            expect(
+              admin_user_page.upcoming_change("enable_upload_debug_mode"),
+            ).to RSpecPredicates.be_enabled
             expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
               "in_specific_groups",
             )
@@ -182,7 +198,9 @@ describe "Admin User Page" do
             admin_user_page.visit(user)
             open_upcoming_changes
             expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
-            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_disabled
+            expect(
+              admin_user_page.upcoming_change("enable_upload_debug_mode"),
+            ).to RSpecPredicates.be_disabled
             expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
               "not_in_specific_groups",
             )
@@ -238,11 +256,11 @@ describe "Admin User Page" do
         suspend_user_modal.perform
         expect(suspend_user_modal).to be_closed
 
-        expect(page).to have_css(".suspension-info")
+        expect(browser_root.locator(".suspension-info").filter(visible: true)).not_to have_count(0)
         expect(similar_user.reload).to be_suspended
 
         admin_user_page.click_unsuspend_button
-        expect(page).not_to have_css(".suspension-info")
+        expect(browser_root.locator(".suspension-info").filter(visible: true)).to have_count(0)
       end
 
       it "displays error when used is already suspended" do
@@ -280,10 +298,10 @@ describe "Admin User Page" do
         silence_user_modal.perform
 
         expect(silence_user_modal).to be_closed
-        expect(page).to have_css(".silence-info")
+        expect(browser_root.locator(".silence-info").filter(visible: true)).not_to have_count(0)
 
         admin_user_page.click_unsilence_button
-        expect(page).not_to have_css(".silence-info")
+        expect(browser_root.locator(".silence-info").filter(visible: true)).to have_count(0)
       end
     end
   end
@@ -363,7 +381,9 @@ describe "Admin User Page" do
       admin_users_page.user_row(user.id).username.click
 
       # ensure the automatic groups are displayed
-      page.find(".admin-user__automatic-groups").has_text?("trust_level")
+      expect(
+        browser_root.locator(".admin-user__automatic-groups").filter(visible: true),
+      ).to contain_text(browser_text_pattern("trust_level"), useInnerText: true)
     end
 
     describe "with user action logs" do
@@ -388,8 +408,8 @@ describe "Admin User Page" do
         expect(staff_action_logs_page).to have_log_row(user_a_silenced)
         expect(staff_action_logs_page).to have_no_log_row(user_b_silenced)
 
-        page.go_back # navigate back to user page
-        page.go_back # navigate back to user list
+        browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) } # navigate back to user page
+        browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) } # navigate back to user list
 
         admin_users_page.user_row(user_b.id).username.click
         admin_user_page.click_action_logs_button

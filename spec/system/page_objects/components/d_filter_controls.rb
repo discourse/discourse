@@ -9,69 +9,86 @@ module PageObjects
       end
 
       def component
-        find(@component_selector)
+        browser_root.locator(@component_selector).filter(visible: true)
       end
 
       def type_in_search(input)
-        component.find(".d-filter-controls__input").set(input)
+        component.locator(".d-filter-controls__input").filter(visible: true).fill(input)
       end
 
       def clear_search
-        component.find(".d-filter-controls__input").set("")
+        component.locator(".d-filter-controls__input").filter(visible: true).fill("")
       end
 
       def select_dropdown_option(text, dropdown_id: nil)
         selector = ".d-filter-controls__dropdown"
         selector += "#{selector}--#{dropdown_id}" if dropdown_id
-        component.find(selector).select(text)
+        component.locator(selector).filter(visible: true).select_option(label: text)
       end
 
       def select_all_dropdown_option(dropdown_id: nil)
         selector = ".d-filter-controls__dropdown"
         selector += "#{selector}--#{dropdown_id}" if dropdown_id
-        find(selector).find("option[value='all']").select_option
+        browser_root.locator(selector).filter(visible: true).select_option(value: "all")
       end
 
       def toggle_dropdown_filters
-        component.find(".d-filter-controls__toggle-filters").click
+        component.locator(".d-filter-controls__toggle-filters").filter(visible: true).click
       end
 
       def has_no_results_reset_button?
-        page.has_css?(".d-filter-controls__no-results .d-filter-controls__reset")
+        have_count(0).does_not_match?(
+          browser_root.locator(".d-filter-controls__no-results .d-filter-controls__reset").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_disabled_reset_button?
-        component.has_css?(".d-filter-controls__reset:disabled")
+        have_count(0).does_not_match?(
+          component.locator(".d-filter-controls__reset:disabled").filter(visible: true),
+        )
       end
 
       def click_reset_button
-        component.find(".d-filter-controls__reset").click
+        component.locator(".d-filter-controls__reset").filter(visible: true).click
       end
 
       def click_no_results_reset_button
-        page.find(".d-filter-controls__no-results .d-filter-controls__reset").click
+        browser_root
+          .locator(".d-filter-controls__no-results .d-filter-controls__reset")
+          .filter(visible: true)
+          .click
       end
 
       def has_no_no_results_reset_button?
-        page.has_no_css?(".d-filter-controls__no-results .d-filter-controls__reset")
+        have_count(0).matches?(
+          browser_root.locator(".d-filter-controls__no-results .d-filter-controls__reset").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_no_results_message?
-        page.has_css?(".d-filter-controls__no-results")
+        have_count(0).does_not_match?(
+          browser_root.locator(".d-filter-controls__no-results").filter(visible: true),
+        )
       end
 
       def search_input_value
-        component.find(".d-filter-controls__input").value
+        component.locator(".d-filter-controls__input").filter(visible: true).input_value
       end
 
       def has_dropdown_value?(text, dropdown_id: nil)
         selector = ".d-filter-controls__dropdown"
         selector += "#{selector}--#{dropdown_id}" if dropdown_id
-        component.has_css?("#{selector} option:checked", text: text)
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+          component.locator("#{selector} option:checked"),
+        )
       end
 
       def dropdown_value
-        component.find(".d-filter-controls__dropdown option:checked").text
+        component.locator(".d-filter-controls__dropdown option:checked").inner_text.strip
       end
     end
   end

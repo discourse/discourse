@@ -24,11 +24,12 @@ describe "Review queue | author penalty" do
     review_page.visit_reviewable(reviewable)
 
     expect(review_page).to have_reviewable_action_dropdown
-    expect(page).to have_no_css(
-      ".review-item__meta-flagged-user .d-icon-microphone-slash",
-      visible: :all,
-    )
-    expect(page).to have_no_css(".reviewable-action.post-unsilence-user")
+    expect(
+      browser_root.locator(".review-item__meta-flagged-user .d-icon-microphone-slash"),
+    ).to have_count(0)
+    expect(
+      browser_root.locator(".reviewable-action.post-unsilence-user").filter(visible: true),
+    ).to have_count(0)
   end
 
   context "when automated tooling silenced the author for this post" do
@@ -40,32 +41,34 @@ describe "Review queue | author penalty" do
     it "marks the flagged user as silenced" do
       review_page.visit_reviewable(reviewable)
 
-      expect(page).to have_css(
-        ".review-item__meta-flagged-user .d-icon-microphone-slash",
-        visible: :all,
-      )
-      expect(page).to have_css(
-        ".review-item__meta-flagged-user .svg-icon-title[title='This user is silenced.']",
-        visible: :all,
-      )
+      expect(
+        browser_root.locator(".review-item__meta-flagged-user .d-icon-microphone-slash"),
+      ).not_to have_count(0)
+      expect(
+        browser_root.locator(
+          ".review-item__meta-flagged-user .svg-icon-title[title='This user is silenced.']",
+        ),
+      ).not_to have_count(0)
     end
 
     it "records the penalty in the timeline" do
       review_page.visit_reviewable(reviewable)
       review_page.click_timeline_tab
 
-      expect(page).to have_css(".timeline-event__title", text: "Author silenced automatically")
+      expect(browser_root.locator(".timeline-event__title").filter(visible: true)).to contain_text(
+        [browser_text_pattern("Author silenced automatically")],
+        useInnerText: true,
+      )
     end
 
     it "lifts the silence without resolving the flag" do
       review_page.visit_reviewable(reviewable)
 
-      find(".reviewable-action.post-unsilence-user").click
+      browser_root.locator(".reviewable-action.post-unsilence-user").filter(visible: true).click
 
-      expect(page).to have_no_css(
-        ".review-item__meta-flagged-user .d-icon-microphone-slash",
-        visible: :all,
-      )
+      expect(
+        browser_root.locator(".review-item__meta-flagged-user .d-icon-microphone-slash"),
+      ).to have_count(0)
       expect(author.reload).not_to be_silenced
       expect(reviewable.reload).to be_pending
     end
@@ -75,7 +78,9 @@ describe "Review queue | author penalty" do
 
       review_page.select_bundled_action(reviewable, "post-delete_and_agree", bundle_index: 1)
 
-      expect(page).to have_css(".fk-d-default-toast__message", text: "spammer99 is still silenced.")
+      expect(
+        browser_root.locator(".fk-d-default-toast__message").filter(visible: true),
+      ).to contain_text([browser_text_pattern("spammer99 is still silenced.")], useInnerText: true)
       expect(author.reload).to be_silenced
     end
 
@@ -84,30 +89,38 @@ describe "Review queue | author penalty" do
       other_reviewable = PostActionCreator.spam(flagger, other_post).reviewable
       other_post.update!(hidden: true, hidden_at: Time.zone.now)
 
-      page.visit("/review")
+      browser_page.goto("/review").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       review_page.select_bundled_action(reviewable, "post-delete_and_agree", bundle_index: 1)
-      expect(page).to have_css(".fk-d-default-toast__title", text: "Post deleted.")
+      expect(
+        browser_root.locator(".fk-d-default-toast__title").filter(visible: true),
+      ).to contain_text([browser_text_pattern("Post deleted.")], useInnerText: true)
 
       review_page.select_bundled_action(
         other_reviewable,
         "post-agree_and_keep_hidden",
         bundle_index: 1,
       )
-      expect(page).to have_css(".fk-d-default-toast__title", text: "Post kept hidden.")
+      expect(
+        browser_root.locator(".fk-d-default-toast__title").filter(visible: true),
+      ).to contain_text([browser_text_pattern("Post kept hidden.")], useInnerText: true)
 
-      expect(page).to have_css(".reviewable-undo-penalty", count: 1)
+      expect(browser_root.locator(".reviewable-undo-penalty").filter(visible: true)).to have_count(
+        1,
+      )
     end
 
     it "offers an undo on that toast" do
       review_page.visit_reviewable(reviewable)
 
       review_page.select_bundled_action(reviewable, "post-delete_and_agree", bundle_index: 1)
-      find(".reviewable-undo-penalty").click
+      browser_root.locator(".reviewable-undo-penalty").filter(visible: true).click
 
-      expect(page).to have_css(
-        ".fk-d-default-toast__message",
-        text: "spammer99 is no longer silenced.",
+      expect(
+        browser_root.locator(".fk-d-default-toast__message").filter(visible: true),
+      ).to contain_text(
+        [browser_text_pattern("spammer99 is no longer silenced.")],
+        useInnerText: true,
       )
       expect(author.reload).not_to be_silenced
     end

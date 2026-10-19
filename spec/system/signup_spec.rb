@@ -27,27 +27,33 @@ shared_examples "signup scenarios" do
       screenshot_marker(label: "signup")
 
       signup_page.click_create_account
-      expect(page).to have_current_path("/u/account-created")
+      expect(browser_page).to have_url("/u/account-created")
 
       mail = ActionMailer::Base.deliveries.first
       expect(mail.to).to contain_exactly(invite.email)
       activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
 
-      visit activation_link
+      browser_page.goto(activation_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       screenshot_marker(label: "signup-activation")
 
       activate_account.click_activate_account
       activate_account.click_continue
 
-      expect(page).to have_current_path("/")
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(browser_page).to have_url("/")
+      expect(
+        browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+      ).not_to have_count(0)
 
-      visit "/u/john/preferences/security"
+      browser_page
+        .goto("/u/john/preferences/security")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      find(".btn-second-factor").click
+      browser_root.locator(".btn-second-factor").filter(visible: true).click
 
-      expect(page).to have_css(".user-preferences.second-factor")
+      expect(
+        browser_root.locator(".user-preferences.second-factor").filter(visible: true),
+      ).not_to have_count(0)
     end
 
     it "redirects to the topic the user was invited to after activating account" do
@@ -67,18 +73,20 @@ shared_examples "signup scenarios" do
       expect(mail.to).to contain_exactly(invite.email)
       activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
 
-      visit activation_link
+      browser_page.goto(activation_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       activate_account.click_activate_account
 
-      expect(page).to have_current_path("/t/#{topic.slug}/#{topic.id}")
+      expect(browser_page).to have_url("/t/#{topic.slug}/#{topic.id}")
     end
 
     it "redirects to a new-topic after signin and keeps the query" do
       category = Fabricate(:category)
       SiteSetting.create_topic_allowed_groups = "0"
 
-      visit "/new-topic?category_id=#{category.id}"
+      browser_page
+        .goto("/new-topic?category_id=#{category.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       signup_page
         .open
         .fill_email("johndoe@awesomeemail.com")
@@ -89,16 +97,16 @@ shared_examples "signup scenarios" do
 
       signup_page.click_create_account
 
-      expect(page).to have_current_path("/u/account-created")
+      expect(browser_page).to have_url("/u/account-created")
 
       mail = ActionMailer::Base.deliveries.first
       activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
 
-      visit activation_link
+      browser_page.goto(activation_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       activate_account.click_activate_account
 
-      expect(page).to have_current_path("/c/#{category.id}")
+      expect(browser_page).to have_url("/c/#{category.id}")
       expect(composer).to be_opened
     end
 
@@ -107,7 +115,7 @@ shared_examples "signup scenarios" do
       expect(signup_page).to have_valid_fields
 
       signup_page.click_create_account
-      expect(signup_page).to have_content(
+      expect(signup_page).to have_displayed_content(
         I18n.t("activerecord.errors.models.user_password.attributes.password.common"),
       )
     end
@@ -125,7 +133,7 @@ shared_examples "signup scenarios" do
         expect(signup_page).to have_valid_fields
 
         signup_page.click_create_account
-        expect(page).to have_current_path("/u/account-created")
+        expect(browser_page).to have_url("/u/account-created")
       end
 
       it "cannot signup with invalid code" do
@@ -138,8 +146,8 @@ shared_examples "signup scenarios" do
         expect(signup_page).to have_valid_fields
 
         signup_page.click_create_account
-        expect(signup_page).to have_content(I18n.t("login.wrong_invite_code"))
-        expect(signup_page).to have_no_css(".account-created")
+        expect(signup_page).to have_displayed_content(I18n.t("login.wrong_invite_code"))
+        expect(signup_page.locator(".account-created").filter(visible: true)).to have_count(0)
       end
     end
 
@@ -163,7 +171,7 @@ shared_examples "signup scenarios" do
         expect(signup_page).to have_valid_fields
 
         signup_page.click_create_account
-        expect(page).to have_current_path("/u/account-created")
+        expect(browser_page).to have_url("/u/account-created")
       end
 
       it "cannot signup without filling the custom field" do
@@ -173,12 +181,17 @@ shared_examples "signup scenarios" do
           .fill_username("john")
           .fill_password("supersecurepassword")
 
-        expect(signup_page).to have_content("What you do for work")
+        expect(signup_page).to have_displayed_content("What you do for work")
 
         signup_page.click_create_account
-        expect(signup_page).to have_content(I18n.t("js.user_fields.required", name: "Occupation"))
-        expect(signup_page).to have_no_css(".account-created")
-        expect(signup_page).to have_css(".tip.bad", text: "Please enter a value for \"Occupation\"")
+        expect(signup_page).to have_displayed_content(
+          I18n.t("js.user_fields.required", name: "Occupation"),
+        )
+        expect(signup_page.locator(".account-created").filter(visible: true)).to have_count(0)
+        expect(signup_page.locator(".tip.bad").filter(visible: true)).to contain_text(
+          [browser_text_pattern("Please enter a value for \"Occupation\"")],
+          useInnerText: true,
+        )
       end
     end
 
@@ -198,14 +211,14 @@ shared_examples "signup scenarios" do
         signup_page.click_create_account
 
         wait_for(timeout: 5) { User.find_by(username: "john") != nil }
-        expect(page).to have_current_path("/u/account-created")
+        expect(browser_page).to have_url("/u/account-created")
 
-        visit "/"
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         login_page.open
         login_page.fill_username("john")
         login_page.fill_password("supersecurepassword")
         login_page.click_login
-        expect(login_page).to have_content(I18n.t("login.not_approved"))
+        expect(login_page).to have_displayed_content(I18n.t("login.not_approved"))
 
         user = User.find_by(username: "john")
         user.update!(approved: true)
@@ -213,8 +226,10 @@ shared_examples "signup scenarios" do
 
         login_page.click_login
 
-        expect(page).to have_current_path("/")
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(browser_page).to have_url("/")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
 
       it "can login directly when using an auto approved email" do
@@ -228,15 +243,17 @@ shared_examples "signup scenarios" do
 
         signup_page.click_create_account
 
-        expect(page).to have_current_path("/u/account-created")
+        expect(browser_page).to have_url("/u/account-created")
 
         user = User.find_by(username: "john")
         EmailToken.confirm(Fabricate(:email_token, user:).token)
-        visit "/"
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         login_page.open.fill_username("john").fill_password("supersecurepassword").click_login
 
-        expect(page).to have_current_path("/")
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(browser_page).to have_url("/")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
     end
 
@@ -244,7 +261,7 @@ shared_examples "signup scenarios" do
       before { set_subfolder "/discuss" }
 
       it "can signup and activate account" do
-        visit("/discuss/signup")
+        browser_page.goto("/discuss/signup").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         signup_page
           .fill_email(invite.email)
           .fill_username("john")
@@ -252,19 +269,21 @@ shared_examples "signup scenarios" do
         expect(signup_page).to have_valid_fields
 
         signup_page.click_create_account
-        expect(page).to have_current_path("/discuss/u/account-created")
+        expect(browser_page).to have_url("/discuss/u/account-created")
 
         mail = ActionMailer::Base.deliveries.first
         expect(mail.to).to contain_exactly(invite.email)
         activation_link = mail.body.to_s[%r{\S+/u/activate-account/\S+}]
 
-        visit activation_link
+        browser_page.goto(activation_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         activate_account.click_activate_account
         activate_account.click_continue
 
-        expect(page).to have_current_path("/discuss/")
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(browser_page).to have_url("/discuss/")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
     end
   end
@@ -283,7 +302,7 @@ shared_examples "signup scenarios" do
         .fill_password("supersecurepassword")
       expect(signup_page).to have_valid_username
       expect(signup_page).to have_valid_password
-      expect(signup_page).to have_content(I18n.t("user.email.not_allowed"))
+      expect(signup_page).to have_displayed_content(I18n.t("user.email.not_allowed"))
     end
   end
 
@@ -293,24 +312,43 @@ shared_examples "signup scenarios" do
     it "cannot open the signup page" do
       signup_page.open
       expect(signup_page).to be_closed
-      expect(page).to have_no_css(".sign-up-button")
+      expect(browser_root.locator(".sign-up-button").filter(visible: true)).to have_count(0)
 
       login_page.open_from_header
-      expect(login_page).to have_no_css("#new-account-link")
+      expect(login_page.locator("#new-account-link").filter(visible: true)).to have_count(0)
     end
 
     it "can signup with invite link" do
       invite = Fabricate(:invite)
-      visit "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+      browser_page
+        .goto("/invites/#{invite.invite_key}?t=#{invite.email_token}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      find("#new-account-password").fill_in(with: "supersecurepassword")
-      find("#new-account-username").fill_in(with: "johndoe")
-      find(".username-input").has_css?("#username-validation.good")
-      find(".create-account__password-tip-validation").has_css?("#password-validation.good")
-      find(".invitation-cta__accept").click
+      browser_root
+        .locator("#new-account-password")
+        .filter(visible: true)
+        .fill("supersecurepassword")
+      browser_root.locator("#new-account-username").filter(visible: true).fill("johndoe")
+      expect(
+        browser_root
+          .locator(".username-input")
+          .filter(visible: true)
+          .locator("#username-validation.good")
+          .filter(visible: true),
+      ).not_to have_count(0)
+      expect(
+        browser_root
+          .locator(".create-account__password-tip-validation")
+          .filter(visible: true)
+          .locator("#password-validation.good")
+          .filter(visible: true),
+      ).not_to have_count(0)
+      browser_root.locator(".invitation-cta__accept").filter(visible: true).click
 
-      expect(page).to have_current_path("/")
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(browser_page).to have_url("/")
+      expect(
+        browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+      ).not_to have_count(0)
     end
   end
 
@@ -319,14 +357,24 @@ shared_examples "signup scenarios" do
     invite = Fabricate(:invite, invited_by: inviter)
     Fabricate(:user_field, name: "test", show_on_signup: false)
 
-    visit "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+    browser_page
+      .goto("/invites/#{invite.invite_key}?t=#{invite.email_token}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css(".invited-by .user-info[data-username='#{inviter.username}']")
-    expect(page).to have_no_css(".user-field-test")
-    find(".invitation-cta__sign-in").click
-    expect(page).to have_css("#login-form")
-    page.go_back
-    expect(page).to have_css(".invited-by .user-info[data-username='#{inviter.username}']")
+    expect(
+      browser_root.locator(".invited-by .user-info[data-username='#{inviter.username}']").filter(
+        visible: true,
+      ),
+    ).not_to have_count(0)
+    expect(browser_root.locator(".user-field-test").filter(visible: true)).to have_count(0)
+    browser_root.locator(".invitation-cta__sign-in").filter(visible: true).click
+    expect(browser_root.locator("#login-form").filter(visible: true)).not_to have_count(0)
+    browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(
+      browser_root.locator(".invited-by .user-info[data-username='#{inviter.username}']").filter(
+        visible: true,
+      ),
+    ).not_to have_count(0)
   end
 
   describe "full name field" do
@@ -386,12 +434,12 @@ shared_examples "signup scenarios" do
       user_field_dropdown = Fabricate(:user_field_dropdown)
 
       signup_page.open
-      find(".signup-page-cta__signup").click
+      browser_root.locator(".signup-page-cta__signup").filter(visible: true).click
 
-      expect(signup_page).to have_content(
+      expect(signup_page).to have_displayed_content(
         I18n.t("js.user_fields.required", name: user_field_text.name),
       )
-      expect(signup_page).to have_content(
+      expect(signup_page).to have_displayed_content(
         I18n.t("js.user_fields.required_select", name: user_field_dropdown.name),
       )
     end
@@ -401,7 +449,7 @@ shared_examples "signup scenarios" do
 
       signup_page.open
 
-      expect(signup_page).to have_no_css(".user-field-test")
+      expect(signup_page.locator(".user-field-test").filter(visible: true)).to have_count(0)
     end
   end
 end

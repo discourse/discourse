@@ -16,7 +16,7 @@ describe "Bulk pin and unpin topics" do
   before { sign_in(admin) }
 
   it "allows a user to pin and unpin multiple topics in bulk" do
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(topic_list).to have_no_pinned_status(topic_1)
     expect(topic_list).to have_no_pinned_status(topic_2)
@@ -33,7 +33,7 @@ describe "Bulk pin and unpin topics" do
 
     expect(toasts).to have_success(I18n.t("js.topics.bulk.completed"))
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(topic_list).to have_pinned_status(topic_1)
     expect(topic_list).to have_pinned_status(topic_2)
@@ -48,7 +48,7 @@ describe "Bulk pin and unpin topics" do
 
     expect(toasts).to have_success(I18n.t("js.topics.bulk.completed"))
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(topic_list).to have_no_pinned_status(topic_1)
     expect(topic_list).to have_no_pinned_status(topic_2)
@@ -65,7 +65,7 @@ describe "Bulk pin and unpin topics" do
 
     dialog = PageObjects::Components::Dialog.new
 
-    visit("/c/#{category.id}")
+    browser_page.goto("/c/#{category.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     topic_list_header.click_bulk_select_button
     topic_list.click_topic_checkbox(topic_2)
@@ -81,7 +81,9 @@ describe "Bulk pin and unpin topics" do
     topic_bulk_actions_modal.pin_globally_date_selector.select_row_by_value("next_month")
     topic_bulk_actions_modal.click_pin_globally
 
-    expect(dialog).to have_content(I18n.t("js.topic.feature_topic.confirm_pin_globally", count: 4))
+    expect(dialog).to have_displayed_content(
+      I18n.t("js.topic.feature_topic.confirm_pin_globally", count: 4),
+    )
     dialog.click_yes
 
     expect(toasts).to have_success(I18n.t("js.topics.bulk.completed"))

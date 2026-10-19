@@ -24,12 +24,12 @@ describe "Admin Onboarding Banner" do
 
   describe "banner visibility" do
     it "shows the onboarding banner for admin users" do
-      visit("/")
-      expect(banner).to be_visible
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(banner).to RSpecPredicates.be_visible
     end
 
     it "shows all three onboarding steps" do
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(banner.step_names).to eq(%w[select_theme start_posting invite_collaborators])
       expect(banner.step("select_theme")).to be_present
       expect(banner.step("invite_collaborators")).to be_present
@@ -37,8 +37,8 @@ describe "Admin Onboarding Banner" do
     end
 
     it "can close the banner prematurely" do
-      visit("/")
-      expect(banner).to be_visible
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(banner).to RSpecPredicates.be_visible
 
       banner.close
 
@@ -56,7 +56,7 @@ describe "Admin Onboarding Banner" do
 
   describe "start posting step" do
     it "opens composer with selected topic and marks step as complete when topic is created" do
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(banner.step_not_completed?("start_posting")).to eq(true)
 
       banner.click_step_action("start_posting")
@@ -66,16 +66,19 @@ describe "Admin Onboarding Banner" do
       predefined_topics_modal.select_topic(0)
 
       expect(composer).to be_opened
-      expect(composer.composer_input.value).to eq(
+      expect(composer.composer_input.input_value).to eq(
         I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.plan_categories.body"),
       )
       expect(composer.category_chooser).to have_selected_name(staff_category.name)
 
-      composer.composer_input.set("Testing topic selection")
+      composer.composer_input.fill("Testing topic selection")
       composer.create
-      expect(page).to have_content("Testing topic selection")
+      expect(browser_content).to contain_text(
+        browser_text_pattern("Testing topic selection"),
+        useInnerText: true,
+      )
 
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(banner.step_completed?("start_posting")).to eq(true)
 
       log =
@@ -90,17 +93,20 @@ describe "Admin Onboarding Banner" do
       logs = PageObjects::Pages::AdminStaffActionLogs.new
       logs.visit
       logs.show_details(log)
-      expect(page).to have_css(
-        ".log-details-modal",
-        text: "Selected option: What categories should we start with?",
+      expect(browser_root.locator(".log-details-modal").filter(visible: true)).to contain_text(
+        [browser_text_pattern("Selected option: What categories should we start with?")],
+        useInnerText: true,
       )
-      expect(page).to have_css(".log-details-modal", text: "Option ID: plan_categories")
+      expect(browser_root.locator(".log-details-modal").filter(visible: true)).to contain_text(
+        [browser_text_pattern("Option ID: plan_categories")],
+        useInnerText: true,
+      )
     end
 
     %w[plan_invites introduce_yourself write_your_own].each do |option|
       it "publishes the #{option} choice in its category and records the original option" do
         category = option == "plan_invites" ? staff_category : general_category
-        visit("/")
+        browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         banner.click_step_action("start_posting")
         predefined_topics_modal.select_option(option)
 
@@ -108,12 +114,12 @@ describe "Admin Onboarding Banner" do
         expect(composer.category_chooser).to have_selected_name(category.name)
         if option == "write_your_own"
           expect(composer).to have_input_title("")
-          expect(composer).to have_value("")
+          expect(composer).to RSpecPredicates.have_value("")
         else
           expect(composer).to have_input_title(
             I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.#{option}.title"),
           )
-          expect(composer).to have_value(
+          expect(composer).to RSpecPredicates.have_value(
             I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.#{option}.body"),
           )
         end
@@ -121,7 +127,10 @@ describe "Admin Onboarding Banner" do
         composer.fill_title("A conversation for our community")
         composer.fill_content("A new conversation tailored to our community.")
         composer.create
-        expect(page).to have_content("A new conversation tailored to our community.")
+        expect(browser_content).to contain_text(
+          browser_text_pattern("A new conversation tailored to our community."),
+          useInnerText: true,
+        )
 
         try_until_success do
           log = UserHistory.find_by(acting_user_id: admin.id, subject: "start_posting")
@@ -132,7 +141,7 @@ describe "Admin Onboarding Banner" do
     end
 
     it "does not attribute an unrelated topic to a discarded suggestion" do
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       banner.click_step_action("start_posting")
       predefined_topics_modal.select_option("plan_categories")
       composer.discard
@@ -141,12 +150,15 @@ describe "Admin Onboarding Banner" do
       expect(banner.step_not_completed?("start_posting")).to eq(true)
       expect(UserHistory.exists?(acting_user_id: admin.id, subject: "start_posting")).to eq(false)
 
-      visit("/new-topic")
+      browser_page.goto("/new-topic").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       composer.fill_title("An unrelated community conversation")
       composer.fill_content("This topic was not started from an onboarding suggestion.")
       composer.switch_category(general_category.name)
       composer.create
-      expect(page).to have_content("This topic was not started from an onboarding suggestion.")
+      expect(browser_content).to contain_text(
+        browser_text_pattern("This topic was not started from an onboarding suggestion."),
+        useInnerText: true,
+      )
 
       try_until_success do
         log = UserHistory.find_by(acting_user_id: admin.id, subject: "start_posting")
@@ -157,13 +169,13 @@ describe "Admin Onboarding Banner" do
     end
 
     it "retains attribution when a saved draft is resumed after a reload" do
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       banner.click_step_action("start_posting")
       predefined_topics_modal.select_option("plan_invites")
       composer.close
       expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
 
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       drafts_menu = PageObjects::Components::DraftsMenu.new
       drafts_menu.open
       drafts_menu.resume_draft
@@ -171,8 +183,11 @@ describe "Admin Onboarding Banner" do
         I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.plan_invites.title"),
       )
       composer.create
-      expect(page).to have_content(
-        I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.plan_invites.body"),
+      expect(browser_content).to contain_text(
+        browser_text_pattern(
+          I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.plan_invites.body"),
+        ),
+        useInnerText: true,
       )
 
       try_until_success do
@@ -183,7 +198,7 @@ describe "Admin Onboarding Banner" do
 
     it "disables Staff suggestions when the configured category is unavailable" do
       SiteSetting.staff_category_id = -1
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       banner.click_step_action("start_posting")
       expect(predefined_topics_modal).to have_disabled_option("plan_categories")
       expect(predefined_topics_modal).to have_disabled_option("plan_invites")
@@ -193,7 +208,7 @@ describe "Admin Onboarding Banner" do
     end
 
     it "can cancel topic selection without completing step" do
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       banner.click_step_action("start_posting")
       expect(predefined_topics_modal).to be_open
 
@@ -206,7 +221,7 @@ describe "Admin Onboarding Banner" do
 
   describe "invite collaborators step" do
     it "marks step as complete after creating invite" do
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(banner.step_not_completed?("invite_collaborators")).to eq(true)
 
       banner.click_step_action("invite_collaborators")
@@ -221,7 +236,7 @@ describe "Admin Onboarding Banner" do
     end
 
     it "does not mark step complete if modal is cancelled" do
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(banner.step_not_completed?("invite_collaborators")).to eq(true)
       banner.click_step_action("invite_collaborators")
 
@@ -234,23 +249,25 @@ describe "Admin Onboarding Banner" do
 
   describe "select theme step" do
     it "opens the design wizard as a sheet" do
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(banner.step_not_completed?("select_theme")).to eq(true)
 
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_panel).to be_visible
+      expect(design_wizard_panel).to RSpecPredicates.be_visible
       expect(design_wizard_panel).to have_site_sidebar
     end
 
     it "docks to the bottom edge on a narrow viewport, leaving the preview visible" do
       admin.update!(uploaded_avatar: Fabricate(:image_upload, width: 100, height: 100))
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       banner.click_step_action("select_theme")
-      expect(design_wizard_panel).to be_visible
+      expect(design_wizard_panel).to RSpecPredicates.be_visible
 
-      page.current_window.resize_to(320, 740)
+      browser_page
+        .set_viewport_size({ width: 320, height: 740 })
+        .tap { SystemBrowserSynchronization.wait_for_resize(browser_page) }
 
       dimensions = design_wizard_panel.layout_dimensions
 
@@ -266,26 +283,26 @@ describe "Admin Onboarding Banner" do
       custom_theme = Fabricate(:theme)
       custom_theme.set_default!
 
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_panel).to be_visible
-      expect(page).to have_current_path("/")
+      expect(design_wizard_panel).to RSpecPredicates.be_visible
+      expect(browser_page).to have_url("/")
       expect(design_wizard_panel).to have_no_selected_theme
       expect(design_wizard_panel).to have_disabled_next
 
       design_wizard_panel.select_theme(Theme.horizon_theme.id)
 
-      expect(page).to have_current_path("/?preview_theme_id=#{Theme.horizon_theme.id}")
-      expect(design_wizard_panel).to be_visible
+      expect(browser_page).to have_url("/?preview_theme_id=#{Theme.horizon_theme.id}")
+      expect(design_wizard_panel).to RSpecPredicates.be_visible
       expect(design_wizard_panel).to have_selected_theme(Theme.horizon_theme)
     end
 
     it "does not mark the step complete when closed without saving" do
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_panel).to be_visible
+      expect(design_wizard_panel).to RSpecPredicates.be_visible
 
       design_wizard_panel.next_step
       design_wizard_panel.select_palette("default")
@@ -293,7 +310,7 @@ describe "Admin Onboarding Banner" do
 
       design_wizard_panel.close
 
-      expect(design_wizard_panel).to be_hidden
+      expect(design_wizard_panel).to RSpecPredicates.be_hidden
       expect(design_wizard_panel).to have_no_palette_preview
       expect(banner.step_not_completed?("select_theme")).to eq(true)
     end
@@ -303,7 +320,7 @@ describe "Admin Onboarding Banner" do
       horizon.set_default!
       ColorScheme.where(theme_id: horizon.id).update_all(user_selectable: true)
 
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       banner.click_step_action("select_theme")
       design_wizard_panel.next_step
 
@@ -316,45 +333,45 @@ describe "Admin Onboarding Banner" do
       design_wizard_panel.next_step
       design_wizard_panel.save
 
-      expect(banner).to be_visible
+      expect(banner).to RSpecPredicates.be_visible
       expect(ColorScheme.where(theme_id: horizon.id).pluck(:user_selectable)).to all(eq(false))
     end
 
     it "reverts a previewed welcome banner when closed without saving" do
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_panel).to be_visible
+      expect(design_wizard_panel).to RSpecPredicates.be_visible
 
       design_wizard_panel.next_step
       design_wizard_panel.next_step
 
       expect(design_wizard_panel).to have_welcome_banner_enabled
-      expect(page).to have_css(".welcome-banner")
+      expect(browser_root.locator(".welcome-banner").filter(visible: true)).not_to have_count(0)
 
       design_wizard_panel.toggle_welcome_banner
 
       expect(design_wizard_panel).to have_no_welcome_banner_enabled
-      expect(page).to have_no_css(".welcome-banner")
+      expect(browser_root.locator(".welcome-banner").filter(visible: true)).to have_count(0)
 
       design_wizard_panel.close
 
-      expect(design_wizard_panel).to be_hidden
-      expect(page).to have_css(".welcome-banner")
+      expect(design_wizard_panel).to RSpecPredicates.be_hidden
+      expect(browser_root.locator(".welcome-banner").filter(visible: true)).not_to have_count(0)
       expect(SiteSetting.enable_welcome_banner(theme_id: Theme.find_default.id)).to eq(true)
     end
 
     it "previews and applies the design choices and marks step complete" do
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_panel).to be_visible
+      expect(design_wizard_panel).to RSpecPredicates.be_visible
 
       # picking another theme reloads the page with a theme preview and the
       # wizard resumes in the sheet
       design_wizard_panel.select_theme(Theme.horizon_theme.id)
-      expect(page).to have_current_path("/?preview_theme_id=#{Theme.horizon_theme.id}")
-      expect(design_wizard_panel).to be_visible
+      expect(browser_page).to have_url("/?preview_theme_id=#{Theme.horizon_theme.id}")
+      expect(design_wizard_panel).to RSpecPredicates.be_visible
 
       design_wizard_panel.next_step
       design_wizard_panel.select_palette("royal")
@@ -367,16 +384,16 @@ describe "Admin Onboarding Banner" do
       design_wizard_panel.select_search_experience("search_icon")
 
       expect(design_wizard_panel).to have_welcome_banner_enabled
-      expect(page).to have_css(".welcome-banner")
+      expect(browser_root.locator(".welcome-banner").filter(visible: true)).not_to have_count(0)
       design_wizard_panel.select_welcome_banner_location("below_site_header")
       design_wizard_panel.toggle_welcome_banner
-      expect(page).to have_no_css(".welcome-banner")
+      expect(browser_root.locator(".welcome-banner").filter(visible: true)).to have_count(0)
 
       design_wizard_panel.save
 
       # Page reloads after saving; wait for it to complete
-      expect(banner).to be_visible
-      expect(design_wizard_panel).to be_hidden
+      expect(banner).to RSpecPredicates.be_visible
+      expect(design_wizard_panel).to RSpecPredicates.be_hidden
       expect(banner.step_completed?("select_theme")).to eq(true)
 
       expect(SiteSetting.default_theme_id).to eq(Theme.horizon_theme.id)
@@ -402,12 +419,12 @@ describe "Admin Onboarding Banner" do
 
   describe "completing all steps" do
     it "disables onboarding when select theme is completed last" do
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       banner.click_step_action("start_posting")
       predefined_topics_modal.select_topic(0)
       composer.create
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(banner.step_completed?("start_posting")).to eq(true)
 
@@ -419,7 +436,7 @@ describe "Admin Onboarding Banner" do
       expect(banner.step_completed?("invite_collaborators")).to eq(true)
 
       banner.click_step_action("select_theme")
-      expect(design_wizard_panel).to be_visible
+      expect(design_wizard_panel).to RSpecPredicates.be_visible
       design_wizard_panel.next_step
       design_wizard_panel.next_step
       design_wizard_panel.save
@@ -451,7 +468,7 @@ describe "Admin Onboarding Banner" do
 
     it "does not show the banner" do
       sign_in(regular_user)
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(banner).to be_not_visible
     end
@@ -461,7 +478,7 @@ describe "Admin Onboarding Banner" do
     before { SiteSetting.enable_site_owner_onboarding = false }
 
     it "does not show the banner" do
-      visit("/")
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(banner).to be_not_visible
     end

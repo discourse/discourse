@@ -8,14 +8,14 @@ describe "Wizard" do
   before { sign_in(admin) }
 
   it "successfully completes the setup wizard" do
-    visit("/wizard")
+    browser_page.goto("/wizard").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     screenshot_marker(label: "wizard")
 
     expect(wizard_page).to be_on_step("setup")
     wizard_page.fill_field("text", "title", "My Test Site")
     wizard_page.select_dropdown_option("default-locale", "en")
     wizard_page.click_jump_in
-    expect(page).to have_current_path("/")
+    expect(browser_page).to have_url("/")
   end
 
   describe "Setup step" do
@@ -46,7 +46,7 @@ describe "Wizard" do
       wizard_page.fill_field("text", "title", "My Test Site")
       wizard_page.click_jump_in
 
-      expect(page).to have_current_path("/")
+      expect(browser_page).to have_url("/")
     end
 
     it "prevents submission when title is empty" do
@@ -55,7 +55,9 @@ describe "Wizard" do
       wizard_page.click_jump_in
 
       expect(wizard_page).to be_on_step("setup")
-      expect(page).to have_css(".wizard-container__field.text-title.invalid")
+      expect(
+        browser_root.locator(".wizard-container__field.text-title.invalid").filter(visible: true),
+      ).not_to have_count(0)
     end
 
     it "prevents submission when title is 'Discourse'" do
@@ -64,38 +66,55 @@ describe "Wizard" do
       wizard_page.click_jump_in
 
       expect(wizard_page).to be_on_step("setup")
-      expect(page).to have_css(".wizard-container__field.text-title.invalid")
+      expect(
+        browser_root.locator(".wizard-container__field.text-title.invalid").filter(visible: true),
+      ).not_to have_count(0)
     end
 
     it "allows keyboard navigation of radio inputs" do
       wizard_page.go_to_step("setup")
 
       radio_field = wizard_page.find_field("radio", "login-required")
-      first_radio = radio_field.find("input[type='radio']", match: :first, visible: :all)
-      choice_id = first_radio[:value]
+      first_radio = radio_field.locator("input[type='radio']").first
+      choice_id =
+        first_radio.evaluate(
+          "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+          arg: "value",
+        )
 
-      page.execute_script("arguments[0].focus()", first_radio)
-
-      expect(radio_field).to have_css(".wizard-container__radio-choice:focus-within")
-      expect(page.evaluate_script("document.activeElement.type")).to eq("radio")
-
-      first_radio.send_keys(:space)
-      expect(radio_field).to have_css(
-        ".wizard-container__radio-choice[data-choice-id='#{choice_id}'].--selected",
+      browser_page.evaluate(
+        "function(arguments) { arguments[0].focus() }",
+        arg: browser_arguments(first_radio),
       )
+
+      expect(
+        radio_field.locator(".wizard-container__radio-choice:focus-within").filter(visible: true),
+      ).not_to have_count(0)
+      expect(
+        browser_page.evaluate(
+          "function(arguments) { return document.activeElement.type }",
+          arg: [],
+        ),
+      ).to eq("radio")
+
+      first_radio.press("Space")
+      expect(
+        radio_field.locator(
+          ".wizard-container__radio-choice[data-choice-id='#{choice_id}'].--selected",
+        ).filter(visible: true),
+      ).not_to have_count(0)
     end
 
     it "keeps arrow key navigation within same radio group" do
       wizard_page.go_to_step("setup")
 
       login_required_field = wizard_page.find_field("radio", "login-required")
-      private_radio =
-        login_required_field.find("[data-choice-id='private'] input[type='radio']", visible: :all)
+      private_radio = login_required_field.locator("[data-choice-id='private'] input[type='radio']")
 
       private_radio.click
-      private_radio.send_keys(:right)
+      private_radio.press("ArrowRight")
 
-      expect(login_required_field).to have_css("input[type='radio']:focus", visible: :all)
+      expect(login_required_field.locator("input[type='radio']:focus")).not_to have_count(0)
     end
   end
 end

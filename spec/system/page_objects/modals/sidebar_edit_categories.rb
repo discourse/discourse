@@ -5,99 +5,138 @@ require_relative "sidebar_edit_navigation_modal"
 module PageObjects
   module Modals
     class SidebarEditCategories < SidebarEditNavigationModal
-      def filter(text)
-        super
-        has_css?(".sidebar-categories-form.--filtered")
-        self
-      end
-
       def has_parent_category_color?(category)
-        has_css?(
-          ".sidebar-categories-form .sidebar-categories-form__row",
-          style: "border-left-color: ##{category.color} ",
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            ".sidebar-categories-form .sidebar-categories-form__row[style=#{"border-left-color: ##{category.color} ".to_json}]",
+          ).filter(visible: true),
         )
       end
 
       def has_category_description_excerpt?(category)
-        has_css?(
-          ".sidebar-categories-form .sidebar-categories-form__category-row",
-          text: category.description_excerpt,
+        contain_text(
+          [browser_text_pattern(category.description_excerpt)],
+          useInnerText: true,
+        ).matches?(
+          browser_root.locator(
+            ".sidebar-categories-form .sidebar-categories-form__category-row",
+          ).filter(visible: true),
         )
       end
 
       def has_no_categories?
-        has_no_css?(".sidebar-categories-form .sidebar-categories-form__category-row") &&
-          has_css?(
-            ".sidebar-categories-form .sidebar-categories-form__no-categories",
-            text: I18n.t("js.sidebar.categories_form_modal.no_categories"),
+        have_count(0).matches?(
+          browser_root.locator(
+            ".sidebar-categories-form .sidebar-categories-form__category-row",
+          ).filter(visible: true),
+        ) &&
+          contain_text(
+            [browser_text_pattern(I18n.t("js.sidebar.categories_form_modal.no_categories"))],
+            useInnerText: true,
+          ).matches?(
+            browser_root.locator(
+              ".sidebar-categories-form .sidebar-categories-form__no-categories",
+            ).filter(visible: true),
           )
       end
 
       def has_categories?(categories)
-        has_css?(".sidebar-categories-form", text: categories.map(&:name).join("\n"))
+        contain_text(
+          [browser_text_pattern(categories.map(&:name).join("\n"))],
+          useInnerText: true,
+        ).matches?(browser_root.locator(".sidebar-categories-form").filter(visible: true))
       end
 
       def toggle_category_checkbox(category)
-        find(
-          ".sidebar-categories-form .sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__input",
-        ).click
+        browser_root
+          .locator(
+            ".sidebar-categories-form .sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__input",
+          )
+          .filter(visible: true)
+          .click
 
         self
       end
 
       def has_checkbox?(category, disabled: false)
-        has_selector?(
-          ".sidebar-categories-form .sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__input#{disabled ? "[disabled]" : ""}",
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            ".sidebar-categories-form .sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__input#{disabled ? "[disabled]" : ""}",
+          ).filter(visible: true),
         )
       end
 
       def has_category_row?(category)
-        has_css?(".sidebar-categories-form__category-row[data-category-id='#{category.id}']")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            ".sidebar-categories-form__category-row[data-category-id='#{category.id}']",
+          ).filter(visible: true),
+        )
       end
 
       def has_no_category_row?(category)
-        has_no_css?(".sidebar-categories-form__category-row[data-category-id='#{category.id}']")
+        have_count(0).matches?(
+          browser_root.locator(
+            ".sidebar-categories-form__category-row[data-category-id='#{category.id}']",
+          ).filter(visible: true),
+        )
       end
 
       def has_no_show_more_button?(category)
-        has_no_css?(
-          ".sidebar-categories-form__category-row[data-test-category-id='#{category.id}'] .sidebar-categories-form__show-more-btn",
+        have_count(0).matches?(
+          browser_root.locator(
+            ".sidebar-categories-form__category-row[data-test-category-id='#{category.id}'] .sidebar-categories-form__show-more-btn",
+          ).filter(visible: true),
         )
       end
 
       def has_show_more_button?(category)
-        has_css?(
-          ".sidebar-categories-form__category-row[data-test-category-id='#{category.id}'] .sidebar-categories-form__show-more-btn",
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            ".sidebar-categories-form__category-row[data-test-category-id='#{category.id}'] .sidebar-categories-form__show-more-btn",
+          ).filter(visible: true),
         )
       end
 
       def scroll_to_category(category)
-        scroll_to(find(".sidebar-categories-form__category-row[data-category-id='#{category.id}']"))
+        browser_root
+          .locator(".sidebar-categories-form__category-row[data-category-id='#{category.id}']")
+          .filter(visible: true)
+          .evaluate("element => element.scrollIntoView({block: 'center'})")
         self
       end
 
       def click_show_more_button(category)
-        find(
-          ".sidebar-categories-form__category-row[data-test-category-id='#{category.id}'] .sidebar-categories-form__show-more-btn",
-        ).click
+        browser_root
+          .locator(
+            ".sidebar-categories-form__category-row[data-test-category-id='#{category.id}'] .sidebar-categories-form__show-more-btn",
+          )
+          .filter(visible: true)
+          .click
         self
       end
 
       def has_tag_in_description?(category)
-        has_css?(
-          ".sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__category-description a.hashtag-cooked[data-type='tag']",
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            ".sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__category-description a.hashtag-cooked[data-type='tag']",
+          ).filter(visible: true),
         )
       end
 
       def has_icon_in_description?(category)
-        has_css?(
-          ".sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__category-description a.hashtag-cooked .hashtag-category-icon",
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            ".sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__category-description a.hashtag-cooked .hashtag-category-icon",
+          ).filter(visible: true),
         )
       end
 
       def has_emoji_in_description?(category)
-        has_css?(
-          ".sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__category-description a.hashtag-cooked .hashtag-category-emoji",
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            ".sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__category-description a.hashtag-cooked .hashtag-category-emoji",
+          ).filter(visible: true),
         )
       end
     end

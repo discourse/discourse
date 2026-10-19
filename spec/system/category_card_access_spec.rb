@@ -41,7 +41,7 @@ RSpec.describe "Category card access" do
 
     hashtag_post.click_category_hashtag(private_category)
 
-    expect(not_found_page).to be_visible
+    expect(not_found_page).to RSpecPredicates.be_visible
     expect(category_card).to be_closed
   end
 
@@ -50,7 +50,7 @@ RSpec.describe "Category card access" do
 
     hashtag_post.click_category_hashtag(private_category)
 
-    expect(not_found_page).to be_visible
+    expect(not_found_page).to RSpecPredicates.be_visible
     expect(category_card).to be_closed
   end
 end

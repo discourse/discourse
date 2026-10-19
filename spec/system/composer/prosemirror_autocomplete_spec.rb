@@ -34,20 +34,27 @@ describe "Composer - ProseMirror - Autocomplete" do
   it "keeps emoji autocomplete open when pressing arrow down near a horizontal rule" do
     open_composer
 
-    composer.send_keys(:enter, "---", :enter)
+    begin
+      browser_page.keyboard.press("Enter")
+      browser_page.keyboard.type("---")
+      browser_page.keyboard.press("Enter")
+    end
 
-    expect(rich).to have_css("hr")
+    expect(rich.locator("hr").filter(visible: true)).not_to have_count(0)
 
-    composer.send_keys(:up, :up)
+    begin
+      browser_page.keyboard.press("ArrowUp")
+      browser_page.keyboard.press("ArrowUp")
+    end
     composer.type_content(" :smi")
 
     expect(composer).to have_emoji_autocomplete_selected(1)
 
-    composer.send_keys(:down)
+    browser_page.keyboard.press("ArrowDown")
 
     expect(composer).to have_emoji_autocomplete_selected(2)
 
-    composer.send_keys(:up)
+    browser_page.keyboard.press("ArrowUp")
 
     expect(composer).to have_emoji_autocomplete_selected(1)
   end
@@ -60,11 +67,14 @@ describe "Composer - ProseMirror - Autocomplete" do
     expect(composer).to have_emoji_autocomplete
 
     # "more" emoji picker
-    composer.send_keys(:down, :enter)
-    find("img[data-emoji='repeat_single_button']").click
+    begin
+      browser_page.keyboard.press("ArrowDown")
+      browser_page.keyboard.press("Enter")
+    end
+    browser_root.locator("img[data-emoji='repeat_single_button']").filter(visible: true).click
     composer.toggle_rich_editor
 
-    expect(composer).to have_value("Why :repeat_single_button: ")
+    expect(composer).to RSpecPredicates.have_value("Why :repeat_single_button: ")
   end
 
   context "with composer messages" do
@@ -102,26 +112,46 @@ describe "Composer - ProseMirror - Autocomplete" do
 
       composer.type_content("Hey @#{current_user.username} ")
 
-      expect(rich).to have_css("a.mention", text: current_user.username)
+      expect(rich.locator("a.mention").filter(visible: true)).to contain_text(
+        [browser_text_pattern(current_user.username)],
+        useInnerText: true,
+      )
 
       composer.type_content("and @invalid_user - how are you?")
 
-      expect(rich).to have_no_css("a.mention", text: "@invalid_user")
+      expect(
+        rich
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("a.mention")
+          .filter(visible: true),
+      ).not_to contain_text([browser_text_pattern("@invalid_user")], useInnerText: true)
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value(
+      expect(composer).to RSpecPredicates.have_value(
         "Hey @#{current_user.username} and @invalid_user - how are you?",
       )
     end
 
     it "validates mentions in drafts" do
-      page.visit("/t/#{topic.id}")
+      browser_page.goto("/t/#{topic.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(composer).to be_opened
 
-      expect(rich).to have_css("a.mention", text: current_user.username)
-      expect(rich).to have_no_css("a.mention", text: "@unknown")
+      expect(rich.locator("a.mention").filter(visible: true)).to contain_text(
+        [browser_text_pattern(current_user.username)],
+        useInnerText: true,
+      )
+      expect(
+        rich
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("a.mention")
+          .filter(visible: true),
+      ).not_to contain_text([browser_text_pattern("@unknown")], useInnerText: true)
     end
 
     it "validates mentions case-insensitively" do
@@ -129,12 +159,25 @@ describe "Composer - ProseMirror - Autocomplete" do
 
       composer.type_content("Hey @testuser_123 and @TESTUSER_123 ")
 
-      expect(rich).to have_css("a.mention", text: "testuser_123")
-      expect(rich).to have_css("a.mention", text: "TESTUSER_123")
+      expect(rich.locator("a.mention").filter(visible: true)).to contain_text(
+        [browser_text_pattern("testuser_123")],
+        useInnerText: true,
+      )
+      expect(rich.locator("a.mention").filter(visible: true)).to contain_text(
+        [browser_text_pattern("TESTUSER_123")],
+        useInnerText: true,
+      )
 
       composer.type_content("and @InvalidUser ")
 
-      expect(rich).to have_no_css("a.mention", text: "@InvalidUser")
+      expect(
+        rich
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("a.mention")
+          .filter(visible: true),
+      ).not_to contain_text([browser_text_pattern("@InvalidUser")], useInnerText: true)
     end
 
     it "validates group mentions case-insensitively" do
@@ -142,12 +185,25 @@ describe "Composer - ProseMirror - Autocomplete" do
 
       composer.type_content("Hey @testgroup_abc and @TESTGROUP_ABC ")
 
-      expect(rich).to have_css("a.mention", text: "testgroup_abc")
-      expect(rich).to have_css("a.mention", text: "TESTGROUP_ABC")
+      expect(rich.locator("a.mention").filter(visible: true)).to contain_text(
+        [browser_text_pattern("testgroup_abc")],
+        useInnerText: true,
+      )
+      expect(rich.locator("a.mention").filter(visible: true)).to contain_text(
+        [browser_text_pattern("TESTGROUP_ABC")],
+        useInnerText: true,
+      )
 
       composer.type_content("and @InvalidGroup ")
 
-      expect(rich).to have_no_css("a.mention", text: "@InvalidGroup")
+      expect(
+        rich
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator("a.mention")
+          .filter(visible: true),
+      ).not_to contain_text([browser_text_pattern("@InvalidGroup")], useInnerText: true)
     end
 
     context "with unicode usernames" do
@@ -172,11 +228,16 @@ describe "Composer - ProseMirror - Autocomplete" do
 
         composer.type_content("Hey @#{unicode_user.username} - how are you?")
 
-        expect(rich).to have_css("a.mention", text: unicode_user.username)
+        expect(rich.locator("a.mention").filter(visible: true)).to contain_text(
+          [browser_text_pattern(unicode_user.username)],
+          useInnerText: true,
+        )
 
         composer.toggle_rich_editor
 
-        expect(composer).to have_value("Hey @#{unicode_user.username} - how are you?")
+        expect(composer).to RSpecPredicates.have_value(
+          "Hey @#{unicode_user.username} - how are you?",
+        )
       end
     end
   end
@@ -189,10 +250,16 @@ describe "Composer - ProseMirror - Autocomplete" do
       expect(composer).to have_hashtag_autocomplete
 
       # the xpath here is to get the parent element, which is the actual hashtag-autocomplete__option
-      find(".hashtag-color--category-#{category_with_emoji.id}").find(:xpath, "..").click
-      expect(rich).to have_css(
-        ".hashtag-cooked .hashtag-category-emoji.hashtag-color--category-#{category_with_emoji.id} img.emoji[title='cat']",
-      )
+      browser_root
+        .locator(".hashtag-color--category-#{category_with_emoji.id}")
+        .filter(visible: true)
+        .locator("xpath=..")
+        .click
+      expect(
+        rich.locator(
+          ".hashtag-cooked .hashtag-category-emoji.hashtag-color--category-#{category_with_emoji.id} img.emoji[title='cat']",
+        ).filter(visible: true),
+      ).not_to have_count(0)
     end
 
     it "correctly renders category with icon hashtags after selecting from autocomplete" do
@@ -201,11 +268,19 @@ describe "Composer - ProseMirror - Autocomplete" do
       composer.type_content("here is the ##{category_with_icon.slug[0..1]}")
       expect(composer).to have_hashtag_autocomplete
 
-      find(".hashtag-color--category-#{category_with_icon.id}").find(:xpath, "..").click
-      expect(rich).to have_css(
-        ".hashtag-cooked .hashtag-category-icon.hashtag-color--category-#{category_with_icon.id} svg.d-icon.d-icon-bell",
-      )
-      expect(rich).to have_css(".hashtag-cooked svg use[href='#bell']")
+      browser_root
+        .locator(".hashtag-color--category-#{category_with_icon.id}")
+        .filter(visible: true)
+        .locator("xpath=..")
+        .click
+      expect(
+        rich.locator(
+          ".hashtag-cooked .hashtag-category-icon.hashtag-color--category-#{category_with_icon.id} svg.d-icon.d-icon-bell",
+        ).filter(visible: true),
+      ).not_to have_count(0)
+      expect(
+        rich.locator(".hashtag-cooked svg use[href='#bell']").filter(visible: true),
+      ).not_to have_count(0)
     end
 
     it "correctly renders category with square hashtags after selecting from autocomplete" do
@@ -214,10 +289,16 @@ describe "Composer - ProseMirror - Autocomplete" do
       composer.type_content("here is the ##{category_without_icon.slug[0..1]}")
       expect(composer).to have_hashtag_autocomplete
 
-      find(".hashtag-color--category-#{category_without_icon.id}").find(:xpath, "..").click
-      expect(rich).to have_css(
-        ".hashtag-cooked .hashtag-category-square.hashtag-color--category-#{category_without_icon.id}",
-      )
+      browser_root
+        .locator(".hashtag-color--category-#{category_without_icon.id}")
+        .filter(visible: true)
+        .locator("xpath=..")
+        .click
+      expect(
+        rich.locator(
+          ".hashtag-cooked .hashtag-category-square.hashtag-color--category-#{category_without_icon.id}",
+        ).filter(visible: true),
+      ).not_to have_count(0)
     end
 
     it "correctly renders tag hashtags after selecting from autocomplete" do
@@ -226,8 +307,16 @@ describe "Composer - ProseMirror - Autocomplete" do
       composer.type_content("##{tag.name[0..2]}")
       expect(composer).to have_hashtag_autocomplete
 
-      find(".hashtag-color--tag-#{tag.id}").find(:xpath, "..").click
-      expect(rich).to have_css(".hashtag-cooked .d-icon.d-icon-tag.hashtag-color--tag-#{tag.id}")
+      browser_root
+        .locator(".hashtag-color--tag-#{tag.id}")
+        .filter(visible: true)
+        .locator("xpath=..")
+        .click
+      expect(
+        rich.locator(".hashtag-cooked .d-icon.d-icon-tag.hashtag-color--tag-#{tag.id}").filter(
+          visible: true,
+        ),
+      ).not_to have_count(0)
     end
   end
 end

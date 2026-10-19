@@ -4,35 +4,60 @@ module PageObjects
   module Components
     class AdminOnboardingBanner < PageObjects::Components::Base
       def step_names
-        all(".admin-onboarding-banner .onboarding-step").map { |step| step[:id] }
+        browser_root
+          .locator(".admin-onboarding-banner .onboarding-step")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
+          .map do |step|
+            step.evaluate(
+              "(element, name) => { const value = element[name]; return value !== null && value !== undefined && value !== false && !['object', 'function'].includes(typeof value) ? value : element.getAttribute(name); }",
+              arg: "id",
+            )
+          end
       end
 
       def visible?
-        has_css?(".admin-onboarding-banner")
+        have_count(0).does_not_match?(
+          browser_root.locator(".admin-onboarding-banner").filter(visible: true),
+        )
       end
 
       def not_visible?
-        has_no_css?(".admin-onboarding-banner")
+        have_count(0).matches?(
+          browser_root.locator(".admin-onboarding-banner").filter(visible: true),
+        )
       end
 
       def close
-        find(".admin-onboarding-banner .btn-close").click
+        browser_root.locator(".admin-onboarding-banner .btn-close").filter(visible: true).click
       end
 
       def step(step_id)
-        find("div##{step_id}")
+        browser_root.locator("div##{step_id}").filter(visible: true)
       end
 
       def step_completed?(step_id)
-        has_css?("div##{step_id} .onboarding-step__checkbox > svg.--completed")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "div##{step_id} .onboarding-step__checkbox > svg.--completed",
+          ).filter(visible: true),
+        )
       end
 
       def step_not_completed?(step_id)
-        has_no_css?("div##{step_id} .onboarding-step__checkbox > svg.--completed")
+        have_count(0).matches?(
+          browser_root.locator(
+            "div##{step_id} .onboarding-step__checkbox > svg.--completed",
+          ).filter(visible: true),
+        )
       end
 
       def click_step_action(step_id)
-        find("div##{step_id} .onboarding-step__action .btn").click
+        browser_root
+          .locator("div##{step_id} .onboarding-step__action .btn")
+          .filter(visible: true)
+          .click
       end
     end
   end

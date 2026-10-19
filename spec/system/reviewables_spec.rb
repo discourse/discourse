@@ -25,11 +25,11 @@ describe "Reviewables" do
       end
 
       it "keeps a flagged post reviewable pending when staff discard changes from Agree and edit" do
-        visit("/review")
+        browser_page.goto("/review").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         open_agree_and_edit
 
-        expect(composer).to have_value(post.raw)
+        expect(composer).to RSpecPredicates.have_value(post.raw)
         expect(review_page).to have_reviewable_with_pending_status(short_reviewable)
 
         composer.fill_title("A title change that should be discarded")
@@ -49,12 +49,12 @@ describe "Reviewables" do
 
       it "resolves a flagged post reviewable when staff save title and body changes with Agree and edit" do
         SiteSetting.reviewable_claiming = "required"
-        visit("/review")
+        browser_page.goto("/review").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         review_page.click_claim_reviewable
 
         open_agree_and_edit
 
-        expect(composer).to have_value(post.raw)
+        expect(composer).to RSpecPredicates.have_value(post.raw)
 
         composer.fill_title("A topic title corrected by a moderator")
         composer.fill_content("This post has been edited by a moderator.")
@@ -72,7 +72,7 @@ describe "Reviewables" do
       end
 
       it "opens a modal when suspending a user" do
-        visit("/review")
+        browser_page.goto("/review").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         select_kit =
           PageObjects::Components::SelectKit.new(".dropdown-select-box.post-agree-and-hide")
@@ -80,14 +80,14 @@ describe "Reviewables" do
 
         select_kit.select_row_by_value("post-agree_and_suspend")
 
-        expect(review_page).to have_css(
-          "#discourse-modal-title",
-          text: I18n.t("js.flagging.take_action_options.suspend.title"),
+        expect(review_page.locator("#discourse-modal-title").filter(visible: true)).to contain_text(
+          [browser_text_pattern(I18n.t("js.flagging.take_action_options.suspend.title"))],
+          useInnerText: true,
         )
       end
 
       it "shows a toast when disagreeing with a flag" do
-        visit("/review")
+        browser_page.goto("/review").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         select_kit = PageObjects::Components::SelectKit.new(".dropdown-select-box.post-disagree")
         select_kit.expand
@@ -157,7 +157,7 @@ describe "Reviewables" do
           PostActionCreator.spam(flagger, Fabricate(:post, user: spammer_two)).reviewable,
       }
 
-      visit("/review")
+      browser_page.goto("/review").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       reviewables.each do |spammer, reviewable|
         review_page.delete_user_from_reviewable(
@@ -166,7 +166,7 @@ describe "Reviewables" do
           confirm: false,
         )
 
-        expect(dialog).to have_content(
+        expect(dialog).to have_displayed_content(
           I18n.t("reviewables.actions.reject_user.block.confirm", username: spammer.username),
         )
 
@@ -252,10 +252,12 @@ describe "Reviewables" do
 
         review_page.select_bundled_action(queued_post_reviewable, "delete_user")
 
-        expect(dialog).to have_content(
+        expect(dialog).to have_displayed_content(
           "Are you sure you want to delete @#{queued_post_reviewable.target_created_by.username}?",
         )
-        expect(page).to have_css(".dialog-footer .btn-danger", text: I18n.t("js.delete"))
+        expect(
+          browser_root.locator(".dialog-footer .btn-danger").filter(visible: true),
+        ).to contain_text([browser_text_pattern(I18n.t("js.delete"))], useInnerText: true)
         dialog.click_danger
 
         expect(review_page).to have_no_error_dialog_visible
@@ -279,7 +281,7 @@ describe "Reviewables" do
         try_until_success do
           expect(
             ReviewableClaimedTopic.where(topic_id: queued_post_reviewable.topic_id),
-          ).to be_empty
+          ).to RSpecPredicates.be_empty
         end
       end
 
@@ -310,7 +312,10 @@ describe "Reviewables" do
         reason_dropdown =
           PageObjects::Components::SelectKit.new(".revise-and-reject-reviewable__reason")
         reason_dropdown.select_row_by_value(SiteSetting.reviewable_revision_reasons_map.first)
-        find(".revise-and-reject-reviewable__feedback").fill_in(with: "This is a test")
+        browser_root
+          .locator(".revise-and-reject-reviewable__feedback")
+          .filter(visible: true)
+          .fill("This is a test")
         revise_modal.click_primary_button
 
         expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
@@ -341,8 +346,14 @@ describe "Reviewables" do
         reason_dropdown =
           PageObjects::Components::SelectKit.new(".revise-and-reject-reviewable__reason")
         reason_dropdown.select_row_by_value("other_reason")
-        find(".revise-and-reject-reviewable__custom-reason").fill_in(with: "I felt like it")
-        find(".revise-and-reject-reviewable__feedback").fill_in(with: "This is a test")
+        browser_root
+          .locator(".revise-and-reject-reviewable__custom-reason")
+          .filter(visible: true)
+          .fill("I felt like it")
+        browser_root
+          .locator(".revise-and-reject-reviewable__feedback")
+          .filter(visible: true)
+          .fill("This is a test")
         revise_modal.click_primary_button
 
         expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
@@ -378,7 +389,7 @@ describe "Reviewables" do
     end
 
     it "informs admin and allows to delete them" do
-      visit("/review")
+      browser_page.goto("/review").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(review_page).to have_information_about_unknown_reviewables_visible
       expect(review_page).to have_listing_for_unknown_reviewables_plugin(
         reviewable.type,
@@ -392,7 +403,7 @@ describe "Reviewables" do
     it "does not inform moderator about them" do
       sign_in(moderator)
 
-      visit("/review")
+      browser_page.goto("/review").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(review_page).to have_no_information_about_unknown_reviewables_visible
     end
   end
@@ -409,9 +420,9 @@ describe "Reviewables" do
       SiteSetting.moderator_guide_topic = topic.id
 
       review_page.visit_reviewable(reviewable)
-      expect(review_page).to have_css(
-        "a.review-resources__link",
-        text: I18n.t("js.review.help.community_moderation_guide"),
+      expect(review_page.locator("a.review-resources__link").filter(visible: true)).to contain_text(
+        [browser_text_pattern(I18n.t("js.review.help.community_moderation_guide"))],
+        useInnerText: true,
       )
     end
 
@@ -419,9 +430,11 @@ describe "Reviewables" do
       SiteSetting.moderator_guide_topic = ""
 
       review_page.visit_reviewable(reviewable)
-      expect(review_page).to have_no_css(
-        "a.review-resources__link",
-        text: I18n.t("js.review.help.community_moderation_guide"),
+      expect(
+        review_page.locator("a.review-resources__link").filter(visible: true),
+      ).not_to contain_text(
+        [browser_text_pattern(I18n.t("js.review.help.community_moderation_guide"))],
+        useInnerText: true,
       )
     end
   end
@@ -439,18 +452,17 @@ describe "Reviewables" do
         },
       )
 
-      visit("/review")
+      browser_page.goto("/review").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      title_html = page.find(".title-text", match: :first).native.inner_html
+      title_html = browser_root.locator(".title-text").filter(visible: true).first.inner_html
 
       expect(title_html).to include("&lt;img")
       expect(title_html).to include("&lt;script&gt;")
       expect(title_html).to include("&lt;b&gt;")
       expect(title_html).to include("&amp;")
-      expect(page).to have_no_css(
-        ".title-text img, .title-text script, .title-text b",
-        visible: :all,
-      )
+      expect(
+        browser_root.locator(".title-text img, .title-text script, .title-text b"),
+      ).to have_count(0)
     end
   end
 

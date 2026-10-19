@@ -9,7 +9,7 @@ module PageObjects
       end
 
       def save
-        find(".btn.no-text.btn-icon.ok").click
+        browser_root.locator(".btn.no-text.btn-icon.ok").filter(visible: true).click
         self
       end
 

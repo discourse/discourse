@@ -121,13 +121,13 @@ describe "Admin Users Page" do
     it "remembers selected users when the user list refreshes due to search" do
       admin_users_page.visit
       admin_users_page.bulk_select_button.click
-      admin_users_page.search_input.fill_in(with: user_1.username)
+      admin_users_page.search_input.fill(user_1.username)
       admin_users_page.user_row(user_1.id).bulk_select_checkbox.click
 
-      admin_users_page.search_input.fill_in(with: user_2.username)
+      admin_users_page.search_input.fill(user_2.username)
       admin_users_page.user_row(user_2.id).bulk_select_checkbox.click
 
-      admin_users_page.search_input.fill_in(with: "")
+      admin_users_page.search_input.fill("")
 
       expect(admin_users_page).to have_users([user_1.id, user_2.id, user_3.id])
       expect(admin_users_page.user_row(user_1.id).bulk_select_checkbox).to be_checked
@@ -142,7 +142,7 @@ describe "Admin Users Page" do
       confirmation_modal.fill_in_confirmation_phrase(user_count: 2)
       confirmation_modal.confirm
 
-      expect(confirmation_modal).to have_content("Starting bulk delete…")
+      expect(confirmation_modal).to have_displayed_content("Starting bulk delete…")
       expect(confirmation_modal).to have_successful_log_entry_for_user(
         user: user_1,
         position: 1,
@@ -251,7 +251,9 @@ describe "Admin Users Page" do
     it "shows list of active users" do
       admin_users_page.visit
       expect(admin_users_page).to have_active_tab("active")
-      expect(page).to have_css(".directory-table__cell.username")
+      expect(
+        browser_root.locator(".directory-table__cell.username").filter(visible: true),
+      ).not_to have_count(0)
       expect(admin_users_page).to have_users(
         [current_user.id, another_admin.id, user_1.id, user_2.id, user_3.id],
       )
@@ -269,7 +271,9 @@ describe "Admin Users Page" do
       user_1.update!(silenced_till: 1.day.from_now)
       admin_users_page.click_tab("silenced")
       expect(admin_users_page).to have_active_tab("silenced")
-      expect(page).to have_css(".users-list.silenced")
+      expect(browser_root.locator(".users-list.silenced").filter(visible: true)).not_to have_count(
+        0,
+      )
       expect(admin_users_page).to have_users([user_1.id])
     end
 
@@ -283,7 +287,7 @@ describe "Admin Users Page" do
     it "redirects to groups page" do
       admin_users_page.visit
       admin_users_page.click_tab("groups")
-      expect(page).to have_current_path("/admin/groups")
+      expect(browser_page).to have_url("/admin/groups")
     end
 
     it "redirect to invites page" do
@@ -291,7 +295,7 @@ describe "Admin Users Page" do
       admin_users_page.click_tab("settings")
       admin_users_page.click_send_invites
 
-      expect(page).to have_current_path("/u/#{current_user.username}/invited/pending")
+      expect(browser_page).to have_url("/u/#{current_user.username}/invited/pending")
     end
 
     it "allows to export users" do
@@ -299,8 +303,11 @@ describe "Admin Users Page" do
       admin_users_page.click_tab("settings")
       admin_users_page.click_export
 
-      expect(page).to have_css(".dialog-body")
-      expect(page).to have_content(I18n.t("admin_js.admin.export_csv.success"))
+      expect(browser_root.locator(".dialog-body").filter(visible: true)).not_to have_count(0)
+      expect(browser_content).to contain_text(
+        browser_text_pattern(I18n.t("admin_js.admin.export_csv.success")),
+        useInnerText: true,
+      )
     end
   end
 end

@@ -4,36 +4,57 @@ module PageObjects
   module Modals
     class Bookmark < PageObjects::Modals::Base
       def fill_name(name)
-        fill_in("bookmark-name", with: name)
+        browser_root
+          .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+          .and(
+            browser_root.locator(
+              "[id=#{"bookmark-name".to_s.to_json}], [name=#{"bookmark-name".to_s.to_json}]",
+            ).or(browser_root.get_by_label("bookmark-name", exact: true)),
+          )
+          .filter(visible: true)
+          .fill(name)
       end
 
       def name
-        find("#bookmark-name")
+        browser_root.locator("#bookmark-name").filter(visible: true)
       end
 
       def select_preset_reminder(identifier)
-        find("#tap_tile_#{identifier}").click
+        browser_root.locator("#tap_tile_#{identifier}").filter(visible: true).click
         closed?
       end
 
       def has_active_preset?(identifier)
-        has_css?("#tap_tile_#{identifier}.tap-tile.active")
+        have_count(0).does_not_match?(
+          browser_root.locator("#tap_tile_#{identifier}.tap-tile.active").filter(visible: true),
+        )
       end
 
       def has_preset?(identifier)
-        has_css?("#tap_tile_#{identifier}")
+        have_count(0).does_not_match?(
+          browser_root.locator("#tap_tile_#{identifier}").filter(visible: true),
+        )
       end
 
       def has_no_preset?(identifier)
-        has_no_css?("#tap_tile_#{identifier}")
+        have_count(0).matches?(
+          browser_root.locator("#tap_tile_#{identifier}").filter(visible: true),
+        )
       end
 
       def editing_id?(bookmark_id)
-        has_css?(".bookmark-reminder-modal[data-bookmark-id='#{bookmark_id}']")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            ".bookmark-reminder-modal[data-bookmark-id='#{bookmark_id}']",
+          ).filter(visible: true),
+        )
       end
 
       def select_relative_time_duration(duration)
-        find("#bookmark-relative-time-picker").fill_in(with: duration)
+        browser_root
+          .locator("#bookmark-relative-time-picker input")
+          .filter(visible: true)
+          .fill(duration.to_s)
       end
 
       def select_relative_time_interval(interval)
@@ -54,27 +75,27 @@ module PageObjects
       end
 
       def custom_date_picker
-        find(".tap-tile-date-input #custom-date .date-picker")
+        browser_root.locator(".tap-tile-date-input #custom-date .date-picker").filter(visible: true)
       end
 
       def custom_time_picker
-        find(".tap-tile-time-input #custom-time")
+        browser_root.locator(".tap-tile-time-input #custom-time").filter(visible: true)
       end
 
       def save
-        find("#save-bookmark").click
+        browser_root.locator("#save-bookmark").filter(visible: true).click
       end
 
       def delete
-        find("#delete-bookmark").click
+        browser_root.locator("#delete-bookmark").filter(visible: true).click
       end
 
       def confirm_delete
-        find(".dialog-footer .btn-danger").click
+        browser_root.locator(".dialog-footer .btn-danger").filter(visible: true).click
       end
 
       def existing_reminder_alert
-        find(".existing-reminder-at-alert")
+        browser_root.locator(".existing-reminder-at-alert").filter(visible: true)
       end
 
       def existing_reminder_alert_message(bookmark)

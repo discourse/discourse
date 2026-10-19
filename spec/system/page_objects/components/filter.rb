@@ -4,12 +4,12 @@ module PageObjects
   module Components
     class Filter < PageObjects::Components::Base
       def filter(text)
-        page.find(".sidebar-filter__input").fill_in(with: text)
+        browser_root.locator(".sidebar-filter__input").filter(visible: true).fill(text)
         self
       end
 
       def clear
-        page.find(".sidebar-filter__clear").click
+        browser_root.locator(".sidebar-filter__clear").filter(visible: true).click
         self
       end
     end

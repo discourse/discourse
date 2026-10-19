@@ -27,9 +27,12 @@ describe "I18n translation overrides" do
     end
 
     it "applies translation overrides to module-scope i18n() calls" do
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_css(".i18n-test-output", text: "Overridden at module scope")
+      expect(browser_root.locator(".i18n-test-output").filter(visible: true)).to contain_text(
+        [browser_text_pattern("Overridden at module scope")],
+        useInnerText: true,
+      )
     end
   end
 
@@ -40,12 +43,17 @@ describe "I18n translation overrides" do
     end
 
     it "applies overrides to js and admin_js keys" do
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      js_result = page.evaluate_script("I18n.t('dates.tiny.half_a_minute')")
+      js_result =
+        browser_page.evaluate(
+          "function(arguments) { return I18n.t('dates.tiny.half_a_minute') }",
+          arg: [],
+        )
       expect(js_result).to eq("override for js key")
 
-      admin_js_result = page.evaluate_script("I18n.t('admin.title')")
+      admin_js_result =
+        browser_page.evaluate("function(arguments) { return I18n.t('admin.title') }", arg: [])
       expect(admin_js_result).to eq("override for admin_js key")
     end
   end
@@ -61,15 +69,23 @@ describe "I18n translation overrides" do
 
     it "applies override from user locale and prefers user locale translation over fallback override" do
       sign_in(user)
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       # Override in user's locale is applied
-      de_override = page.evaluate_script("I18n.t('dates.tiny.half_a_minute')")
+      de_override =
+        browser_page.evaluate(
+          "function(arguments) { return I18n.t('dates.tiny.half_a_minute') }",
+          arg: [],
+        )
       expect(de_override).to eq("de override")
 
       # User locale translation is preferred over fallback locale override
       # (de has this key, so en override should not be used)
-      fallback_result = page.evaluate_script("I18n.t('dates.tiny.x_minutes', { count: 1 })")
+      fallback_result =
+        browser_page.evaluate(
+          "function(arguments) { return I18n.t('dates.tiny.x_minutes', { count: 1 }) }",
+          arg: [],
+        )
       expect(fallback_result).not_to eq("en override")
     end
   end

@@ -14,10 +14,10 @@ RSpec.describe "Share target" do
     url = "https://example.com/shared-link"
     expected_body = "#{text}\n\n#{url}"
 
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     seed_shared_content(title:, text:, url:, files: [shared_image_file])
 
-    visit("/share-target")
+    browser_page.goto("/share-target").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(share_target_modal).to be_open
     expect(share_target_modal).to have_preview_text(text)
@@ -28,16 +28,16 @@ RSpec.describe "Share target" do
     expect(composer).to be_opened
     expect(composer).to have_input_title(title)
 
-    wait_for(timeout: 5) { composer.composer_input.value.include?("upload://") }
+    wait_for(timeout: 5) { composer.composer_input.input_value.include?("upload://") }
     expect(composer).to have_no_in_progress_uploads
 
-    composer_value = composer.composer_input.value
+    composer_value = composer.composer_input.input_value
     expect(composer_value).to include(expected_body)
     expect(composer_value).to match(%r{!\[shared-image\|.*\]\(upload://.*\)})
   end
 
   def seed_shared_content(title:, text:, url:, files:)
-    page.execute_script(<<~JS)
+    browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: [])
         window.__shareTargetCacheSeeded = false;
         window.__shareTargetCacheSeedError = "";
 
@@ -86,9 +86,19 @@ RSpec.describe "Share target" do
         });
       JS
 
-    wait_for(timeout: 5) { page.evaluate_script("window.__shareTargetCacheSeeded === true") }
+    wait_for(timeout: 5) do
+      browser_page.evaluate(
+        "function(arguments) { return window.__shareTargetCacheSeeded === true }",
+        arg: [],
+      )
+    end
 
-    expect(page.evaluate_script("window.__shareTargetCacheSeedError")).to eq("")
+    expect(
+      browser_page.evaluate(
+        "function(arguments) { return window.__shareTargetCacheSeedError }",
+        arg: [],
+      ),
+    ).to eq("")
   end
 
   def shared_image_file

@@ -13,11 +13,13 @@ describe "Topic page" do
     HTML
 
   it "allows TOC anchor navigation" do
-    visit("/t/#{topic.slug}/#{topic.id}")
+    browser_page
+      .goto("/t/#{topic.slug}/#{topic.id}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    find("#toc-h2-testing .anchor", visible: :all).click
+    browser_root.locator("#toc-h2-testing .anchor").click
 
-    expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}#toc-h2-testing}, url: true)
+    expect(browser_page).to have_url(%r{/t/#{topic.slug}/#{topic.id}#toc-h2-testing})
   end
 
   context "with links to an anchor in another topic" do
@@ -66,14 +68,13 @@ describe "Topic page" do
     before { set_subfolder "/forum" }
 
     it "allows TOC anchor navigation" do
-      visit("/forum/t/#{topic.slug}/#{topic.id}")
+      browser_page
+        .goto("/forum/t/#{topic.slug}/#{topic.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      find("#toc-h2-testing .anchor", visible: :all).click
+      browser_root.locator("#toc-h2-testing .anchor").click
 
-      expect(page).to have_current_path(
-        %r{/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing},
-        url: true,
-      )
+      expect(browser_page).to have_url(%r{/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing})
     end
   end
 
@@ -86,9 +87,13 @@ describe "Topic page" do
       RAW
 
     it "includes the copy button" do
-      visit("/t/#{topic.slug}/#{topic.id}")
+      browser_page
+        .goto("/t/#{topic.slug}/#{topic.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_css(".codeblock-button-wrapper")
+      expect(
+        browser_root.locator(".codeblock-button-wrapper").filter(visible: true),
+      ).not_to have_count(0)
     end
   end
 
@@ -105,39 +110,49 @@ describe "Topic page" do
     end
 
     it "displays the gap to admins, and allows them to expand it" do
-      visit "/t/#{topic.slug}/#{topic.id}"
+      browser_page
+        .goto("/t/#{topic.slug}/#{topic.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_css(".topic-post", count: 2)
-      find(".post-stream .gap").click()
-      expect(page).to have_css(".topic-post", count: 4)
+      expect(browser_root.locator(".topic-post").filter(visible: true)).to have_count(2)
+      browser_root.locator(".post-stream .gap").filter(visible: true).click()
+      expect(browser_root.locator(".topic-post").filter(visible: true)).to have_count(4)
     end
   end
 
   it "supports shift+a kbd shortcut to toggle admin menu" do
     sign_in admin
 
-    visit("/t/#{topic.slug}/#{topic.id}")
+    browser_page
+      .goto("/t/#{topic.slug}/#{topic.id}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css(".toggle-admin-menu")
+    expect(browser_root.locator(".toggle-admin-menu").filter(visible: true)).not_to have_count(0)
 
-    send_keys([:shift, "a"])
+    browser_page.keyboard.press(%w[Shift a].join("+"))
 
-    expect(page).to have_css(".topic-admin-menu-content")
+    expect(
+      browser_root.locator(".topic-admin-menu-content").filter(visible: true),
+    ).not_to have_count(0)
 
-    send_keys([:shift, "a"])
+    browser_page.keyboard.press(%w[Shift a].join("+"))
 
-    expect(page).to have_no_css(".topic-admin-menu-content")
+    expect(browser_root.locator(".topic-admin-menu-content").filter(visible: true)).to have_count(0)
   end
 
   context "with End keyboard shortcut" do
     fab!(:posts) { Fabricate.times(25, :post, topic: topic) }
 
     it "loads last post" do
-      visit "/t/#{topic.slug}/#{topic.id}/1"
+      browser_page
+        .goto("/t/#{topic.slug}/#{topic.id}/1")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      send_keys(:end)
+      browser_page.keyboard.press("End")
 
-      expect(find("#post_#{topic.highest_post_number}")).to be_visible
+      expect(
+        browser_root.locator("#post_#{topic.highest_post_number}").filter(visible: true),
+      ).to be_visible
     end
   end
 
@@ -184,29 +199,38 @@ describe "Topic page" do
     end
 
     it "renders all content types and scrolls to the last post" do
-      visit "/t/#{topic2.slug}/#{topic2.id}"
+      browser_page
+        .goto("/t/#{topic2.slug}/#{topic2.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_css("h2", text: "Key Takeaways")
-      expect(page).to have_css("blockquote")
-      expect(page).to have_css(".emoji")
+      expect(browser_root.locator("h2").filter(visible: true)).to contain_text(
+        [browser_text_pattern("Key Takeaways")],
+        useInnerText: true,
+      )
+      expect(browser_root.locator("blockquote").filter(visible: true)).not_to have_count(0)
+      expect(browser_root.locator(".emoji").filter(visible: true)).not_to have_count(0)
 
       screenshot_marker(label: "topic-rich-content")
 
-      send_keys(:end)
-      expect(find("#post_#{topic2.reload.highest_post_number}")).to be_visible
+      browser_page.keyboard.press("End")
+      expect(
+        browser_root.locator("#post_#{topic2.reload.highest_post_number}").filter(visible: true),
+      ).to be_visible
     end
   end
 
   context "when triple clicking to select a paragraph" do
     it "select the last paragraph" do
-      visit "/t/#{topic.slug}/#{topic.id}/1"
+      browser_page
+        .goto("/t/#{topic.slug}/#{topic.id}/1")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      paragraph = find("#test-last-cooked-paragraph")
+      paragraph = browser_root.locator("#test-last-cooked-paragraph").filter(visible: true)
 
-      page.driver.with_playwright_page do |pw_page|
+      browser_page.then do |pw_page|
         paragraph.hover
 
-        rect = paragraph.native.bounding_box
+        rect = paragraph.bounding_box
         x = rect["x"] + rect["width"] / 2
         y = rect["y"] + rect["height"] / 2
 
@@ -214,7 +238,11 @@ describe "Topic page" do
       end
 
       # get the selected text in the browser
-      select_content = page.evaluate_script("window.getSelection().toString()")
+      select_content =
+        browser_page.evaluate(
+          "function(arguments) { return window.getSelection().toString() }",
+          arg: [],
+        )
 
       # the browser is returning control characters among the whiter space in the end of the text
       # this regex will work as a .rstrip on steroids and remove them

@@ -8,13 +8,15 @@ module PageObjects
       end
 
       def select_image(path)
-        attach_file(path) { @element.find("label.btn").click }
+        browser_page
+          .expect_file_chooser { @element.locator("label.btn").filter(visible: true).click }
+          .set_files(path)
       end
 
       def select_image_with_keyboard(path)
-        label = @element.find("label.btn")
-        label.send_keys(:enter)
-        attach_file(path) { label.click }
+        label = @element.locator("label.btn").filter(visible: true)
+        label.press("Enter")
+        browser_page.expect_file_chooser { label.click }.set_files(path)
       end
 
       def has_uploaded_image?
@@ -22,29 +24,38 @@ module PageObjects
         # uploaded image.
         # allow up to 10 seconds for the upload to finish in case this is
         # called immediately after selecting an image.
-        @element.has_css?(".btn-danger", wait: 10)
+        have_count(0, timeout: 10 * 1000).does_not_match?(
+          @element.locator(".btn-danger").filter(visible: true),
+        )
       end
 
       def remove_image
-        @element.find(".btn-danger").click
-        @element.has_no_css?(".btn-danger")
+        @element.locator(".btn-danger").filter(visible: true).click
+        have_count(0).matches?(
+          @element
+            .tap do |parent|
+              parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+            end
+            .locator(".btn-danger")
+            .filter(visible: true),
+        )
       end
 
       def remove_image_with_keyboard
-        delete_button = @element.find(".btn-danger")
-        delete_button.send_keys(:enter)
+        delete_button = @element.locator(".btn-danger").filter(visible: true)
+        delete_button.press("Enter")
       end
 
       def toggle_lightbox_preview
-        @element.find(".image-uploader-lightbox-btn").click
+        @element.locator(".image-uploader-lightbox-btn").filter(visible: true).click
       end
 
       def close_lightbox_preview
-        find(".pswp__button--close").click
+        browser_root.locator(".pswp__button--close").filter(visible: true).click
       end
 
       def has_lightbox_preview?
-        has_css?(".pswp--open")
+        have_count(0).does_not_match?(browser_root.locator(".pswp--open").filter(visible: true))
       end
     end
   end

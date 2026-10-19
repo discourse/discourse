@@ -3,12 +3,13 @@
 module PageObjects
   module Components
     class Base
-      include Capybara::DSL
+      include NativeSystemHelpers
       include RSpec::Matchers
+      include Playwright::Test::Matchers
       include SystemHelpers
 
       def context_component
-        page.find(@context)
+        browser_root.locator(@context).filter(visible: true)
       end
     end
   end

@@ -18,16 +18,20 @@ describe "Edit Category Images" do
       it "displays and updates new counter" do
         category_page.visit_images(category)
 
-        find("#category-logo-uploader .file-uploader__controls").click
-        attach_file(
-          "category-logo-uploader__input",
-          "#{Rails.root.join("spec/fixtures/images/logo.png")}",
-          make_visible: true,
-        )
+        browser_root
+          .locator("#category-logo-uploader .file-uploader__controls")
+          .filter(visible: true)
+          .click
+        browser_root.locator(
+          "input[type='file']:not(:disabled)[id=#{"category-logo-uploader__input".to_s.to_json}], input[type='file']:not(:disabled)[name=#{"category-logo-uploader__input".to_s.to_json}]",
+        ).set_input_files("#{Rails.root.join("spec/fixtures/images/logo.png")}")
 
-        expect(page).to have_content("uploaded successfully").or have_css(
-               ".has-image .file-uploader__preview.input-xxlarge",
-             )
+        try_until_success do
+          success_message = browser_page.get_by_text("uploaded successfully").visible?
+          uploaded_preview =
+            browser_root.locator(".has-image .file-uploader__preview.input-xxlarge").visible?
+          expect(success_message || uploaded_preview).to eq(true)
+        end
 
         upload = Upload.last
         expect(upload.user_id).to eq(admin.id)

@@ -6,60 +6,111 @@ module PageObjects
       TOPIC_MAP_KLASS = ".topic-map.--op"
 
       def is_visible?
-        has_css?(TOPIC_MAP_KLASS)
+        have_count(0).does_not_match?(browser_root.locator(TOPIC_MAP_KLASS).filter(visible: true))
       end
 
       def is_not_visible?
-        has_no_css?(TOPIC_MAP_KLASS)
+        have_count(0).matches?(browser_root.locator(TOPIC_MAP_KLASS).filter(visible: true))
       end
 
       def has_no_users?
-        has_no_css?("#{TOPIC_MAP_KLASS} .topic-map__users-trigger")
+        have_count(0).matches?(
+          browser_root.locator("#{TOPIC_MAP_KLASS} .topic-map__users-trigger").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_no_likes?
-        has_no_css?("#{TOPIC_MAP_KLASS} .topic-map__likes-trigger")
+        have_count(0).matches?(
+          browser_root.locator("#{TOPIC_MAP_KLASS} .topic-map__likes-trigger").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_no_links?
-        has_no_css?("#{TOPIC_MAP_KLASS} .topic-map__links-trigger")
+        have_count(0).matches?(
+          browser_root.locator("#{TOPIC_MAP_KLASS} .topic-map__links-trigger").filter(
+            visible: true,
+          ),
+        )
       end
 
       def users_count
-        find("#{TOPIC_MAP_KLASS} .topic-map__users-trigger .number").text.to_i
+        browser_root
+          .locator("#{TOPIC_MAP_KLASS} .topic-map__users-trigger .number")
+          .filter(visible: true)
+          .inner_text
+          .strip
+          .to_i
       end
 
       def likes_count
-        find("#{TOPIC_MAP_KLASS} .topic-map__likes-trigger .number").text.to_i
+        browser_root
+          .locator("#{TOPIC_MAP_KLASS} .topic-map__likes-trigger .number")
+          .filter(visible: true)
+          .inner_text
+          .strip
+          .to_i
       end
 
       def links_count
-        find("#{TOPIC_MAP_KLASS} .topic-map__links-trigger .number").text.to_i
+        browser_root
+          .locator("#{TOPIC_MAP_KLASS} .topic-map__links-trigger .number")
+          .filter(visible: true)
+          .inner_text
+          .strip
+          .to_i
       end
 
       def views_count
-        find("#{TOPIC_MAP_KLASS} .topic-map__views-trigger .number").text.to_i
+        browser_root
+          .locator("#{TOPIC_MAP_KLASS} .topic-map__views-trigger .number")
+          .filter(visible: true)
+          .inner_text
+          .strip
+          .to_i
       end
 
       def avatars_details
-        find("#{TOPIC_MAP_KLASS} .topic-map__users-list").all(".poster.trigger-user-card")
+        browser_root
+          .locator("#{TOPIC_MAP_KLASS} .topic-map__users-list")
+          .filter(visible: true)
+          .locator(".poster.trigger-user-card")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
       end
 
       def expanded_avatars_details
-        find("#{TOPIC_MAP_KLASS} .topic-map__users-trigger").click
-        find("#{TOPIC_MAP_KLASS} .topic-map__users-content").all(".poster.trigger-user-card")
+        browser_root
+          .locator("#{TOPIC_MAP_KLASS} .topic-map__users-trigger")
+          .filter(visible: true)
+          .click
+        browser_root
+          .locator("#{TOPIC_MAP_KLASS} .topic-map__users-content")
+          .filter(visible: true)
+          .locator(".poster.trigger-user-card")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
       end
 
       def has_no_avatars_details_in_map?
-        has_no_css?("#{TOPIC_MAP_KLASS} .topic-map__users-list")
+        have_count(0).matches?(
+          browser_root.locator("#{TOPIC_MAP_KLASS} .topic-map__users-list").filter(visible: true),
+        )
       end
 
       def has_bottom_map?
-        has_css?(".topic-map.--bottom")
+        have_count(0).does_not_match?(
+          browser_root.locator(".topic-map.--bottom").filter(visible: true),
+        )
       end
 
       def has_no_bottom_map?
-        has_no_css?(".topic-map.--bottom")
+        have_count(0).matches?(browser_root.locator(".topic-map.--bottom").filter(visible: true))
       end
     end
   end

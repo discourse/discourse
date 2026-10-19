@@ -8,11 +8,13 @@ module PageObjects
       end
 
       def click_new_topic
-        footer.find(".share-target-modal__new-topic").click
+        footer.locator(".share-target-modal__new-topic").filter(visible: true).click
       end
 
       def has_preview_text?(text)
-        body.has_css?(".share-target-modal__preview-text", text: text)
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+          body.locator(".share-target-modal__preview-text").filter(visible: true),
+        )
       end
     end
   end

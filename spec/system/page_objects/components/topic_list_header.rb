@@ -11,49 +11,59 @@ module PageObjects
       end
 
       def has_bulk_select_button?
-        page.has_css?(".bulk-select")
+        have_count(0).does_not_match?(browser_root.locator(".bulk-select").filter(visible: true))
       end
 
       def click_bulk_select_button
-        find(".bulk-select").click
+        browser_root.locator(".bulk-select").filter(visible: true).click
       end
 
       def has_bulk_select_topics_dropdown?
-        page.has_css?(
-          "#{TOPIC_LIST_HEADER_SELECTOR} .bulk-select-topics .bulk-select-topics-dropdown",
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{TOPIC_LIST_HEADER_SELECTOR} .bulk-select-topics .bulk-select-topics-dropdown",
+          ).filter(visible: true),
         )
       end
 
       def click_bulk_select_topics_dropdown
-        find("#{TOPIC_LIST_HEADER_SELECTOR} .bulk-select-topics .bulk-select-topics-dropdown").click
+        browser_root
+          .locator("#{TOPIC_LIST_HEADER_SELECTOR} .bulk-select-topics .bulk-select-topics-dropdown")
+          .filter(visible: true)
+          .click
       end
 
       def click_bulk_button(name)
-        find(bulk_select_dropdown_item(name)).click
+        browser_root.locator(bulk_select_dropdown_item(name)).filter(visible: true).click
       end
 
       def has_bulk_select_modal?
-        page.has_css?("#discourse-modal-title")
+        have_count(0).does_not_match?(
+          browser_root.locator("#discourse-modal-title").filter(visible: true),
+        )
       end
 
       def click_bulk_topics_confirm
-        find("#bulk-topics-confirm").click
+        browser_root.locator("#bulk-topics-confirm").filter(visible: true).click
       end
 
       def click_silent
-        find("#topic-bulk-action-options__silent").click
+        browser_root.locator("#topic-bulk-action-options__silent").filter(visible: true).click
       end
 
       def fill_in_close_note(message)
-        find("#bulk-close-note").set(message)
+        browser_root.locator("#bulk-close-note").filter(visible: true).fill(message)
       end
 
       def click_dismiss_read_confirm
-        find("#dismiss-read-confirm").click
+        browser_root.locator("#dismiss-read-confirm").filter(visible: true).click
       end
 
       def click_sort_by(order)
-        find("#{TOPIC_LIST_HEADER_SELECTOR} th[data-sort-order='#{order}']").click
+        browser_root
+          .locator("#{TOPIC_LIST_HEADER_SELECTOR} th[data-sort-order='#{order}']")
+          .filter(visible: true)
+          .click
       end
 
       private

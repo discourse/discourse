@@ -29,7 +29,7 @@ describe "Admin Dashboard Redesign | Reports section" do
   it "shows drag controls only once more than one report is enabled" do
     AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
 
-    page.visit("/admin")
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     dashboard.open_manage_reports_via_cog
     expect(modal).to have_open
     expect(modal).to have_no_drag_controls
@@ -42,7 +42,7 @@ describe "Admin Dashboard Redesign | Reports section" do
     AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
     AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
 
-    page.visit("/admin")
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     dashboard.open_manage_reports_via_cog
     expect(modal).to have_open
 
@@ -62,7 +62,7 @@ describe "Admin Dashboard Redesign | Reports section" do
       AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
       AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
 
-      page.visit("/admin")
+      browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       dashboard.open_manage_reports_via_cog
       expect(modal).to have_open
 
@@ -84,7 +84,7 @@ describe "Admin Dashboard Redesign | Reports section" do
       AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
       AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
 
-      page.visit("/admin")
+      browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       dashboard.open_manage_reports_via_cog
       expect(modal).to have_open
 
@@ -95,14 +95,19 @@ describe "Admin Dashboard Redesign | Reports section" do
         },
       )
 
-      expect(page.evaluate_script("window.getSelection().toString()")).to be_present
+      expect(
+        browser_page.evaluate(
+          "function(arguments) { return window.getSelection().toString() }",
+          arg: [],
+        ),
+      ).to be_present
     end
 
     it "reorders reports with a real browser drag" do
       AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
       AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
 
-      page.visit("/admin")
+      browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       dashboard.open_manage_reports_via_cog
       expect(modal).to have_open
 
@@ -117,7 +122,7 @@ describe "Admin Dashboard Redesign | Reports section" do
       Fabricate(:tall_admin_dashboard_report, position: 0)
       Fabricate(:admin_dashboard_report, identifier: "topics", position: 1, cols: 2)
 
-      page.visit("/admin")
+      browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       dashboard.open_manage_reports_via_cog
       expect(modal).to have_open
       modal.toggle("core_report:admin_logins")
@@ -125,7 +130,7 @@ describe "Admin Dashboard Redesign | Reports section" do
       modal.apply
       expect(modal).to have_closed
 
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(dashboard).to have_cards_in_order(
         %w[core_report:topics core_report:signups core_report:admin_logins],
       )
@@ -139,7 +144,7 @@ describe "Admin Dashboard Redesign | Reports section" do
     AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
     AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
 
-    page.visit("/admin")
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(dashboard).to have_section
     expect(dashboard.card_identifiers).to eq(%w[core_report:signups core_report:topics])
 
@@ -164,7 +169,7 @@ describe "Admin Dashboard Redesign | Reports section" do
       "core_report:admin_logins",
     )
 
-    page.refresh
+    browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(dashboard.card_identifiers).to contain_exactly(
       "core_report:signups",
       "core_report:topics",
@@ -187,14 +192,14 @@ describe "Admin Dashboard Redesign | Reports section" do
     Fabricate(:tall_admin_dashboard_report, position: 0)
     Fabricate(:admin_dashboard_report, identifier: "topics", position: 1, cols: 2)
 
-    page.visit("/admin")
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     dashboard.open_manage_reports_via_cog
     expect(modal).to have_open
     modal.toggle("core_report:admin_logins")
     modal.apply
     expect(modal).to have_closed
 
-    page.refresh
+    browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(dashboard).to have_card_size("core_report:signups", rows: 3, cols: 2)
     expect(dashboard).to have_card_size("core_report:topics", rows: 1, cols: 2)
     expect(dashboard).to have_card_size("core_report:admin_logins", rows: 1, cols: 1)
@@ -204,7 +209,7 @@ describe "Admin Dashboard Redesign | Reports section" do
     Fabricate(:tall_admin_dashboard_report, position: 0)
     Fabricate(:admin_dashboard_report, identifier: "topics", position: 1)
 
-    page.visit("/admin")
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     dashboard.open_manage_reports_via_cog
     expect(modal).to have_open
     modal.move_up("core_report:topics")
@@ -212,7 +217,7 @@ describe "Admin Dashboard Redesign | Reports section" do
     modal.apply
     expect(modal).to have_closed
 
-    page.refresh
+    browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(dashboard).to have_cards_in_order(%w[core_report:topics core_report:signups])
     expect(dashboard).to have_card_size("core_report:signups", rows: 3, cols: 2)
     expect(dashboard).to have_card_size("core_report:topics", rows: 1, cols: 1)
@@ -237,7 +242,7 @@ describe "Admin Dashboard Redesign | Reports section" do
       end,
     )
 
-    page.visit("/admin")
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(dashboard.card_identifiers.size).to eq(AdminDashboardReport::VISIBLE_CAP)
     expect(dashboard).to have_no_add_tile
   end
@@ -245,7 +250,7 @@ describe "Admin Dashboard Redesign | Reports section" do
   it "does not render a label pill for standard reports" do
     AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
 
-    page.visit("/admin")
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(dashboard).to have_no_label_for("core_report:signups")
   end
 
@@ -253,7 +258,7 @@ describe "Admin Dashboard Redesign | Reports section" do
     AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
 
     sign_in(Fabricate(:moderator))
-    page.visit("/admin")
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(dashboard).to have_card("core_report:signups")
     expect(dashboard).to have_no_cog

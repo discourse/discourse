@@ -6,32 +6,43 @@ module PageObjects
       TOOLBAR_SELECTOR = "[data-identifier='composer-onebox-toolbar']"
 
       def has_toolbar?
-        page.has_css?(TOOLBAR_SELECTOR)
+        have_count(0).does_not_match?(browser_root.locator(TOOLBAR_SELECTOR).filter(visible: true))
       end
 
       def has_no_toolbar?
-        page.has_no_css?(TOOLBAR_SELECTOR)
+        have_count(0).matches?(browser_root.locator(TOOLBAR_SELECTOR).filter(visible: true))
       end
 
       def has_copy_button?
-        page.has_css?("button.composer-onebox-toolbar__copy")
+        have_count(0).does_not_match?(
+          browser_root.locator("button.composer-onebox-toolbar__copy").filter(visible: true),
+        )
       end
 
       def has_remove_preview_button?
-        page.has_css?("button.composer-onebox-toolbar__remove-preview")
+        have_count(0).does_not_match?(
+          browser_root.locator("button.composer-onebox-toolbar__remove-preview").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_visit_link?
-        page.has_css?("a.composer-onebox-toolbar__visit")
+        have_count(0).does_not_match?(
+          browser_root.locator("a.composer-onebox-toolbar__visit").filter(visible: true),
+        )
       end
 
       def click_remove_preview
-        page.find("button.composer-onebox-toolbar__remove-preview").click
+        browser_root
+          .locator("button.composer-onebox-toolbar__remove-preview")
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_copy
-        page.find("button.composer-onebox-toolbar__copy").click
+        browser_root.locator("button.composer-onebox-toolbar__copy").filter(visible: true).click
         self
       end
     end

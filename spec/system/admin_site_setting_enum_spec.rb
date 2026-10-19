@@ -11,10 +11,15 @@ describe "Admin site setting enum" do
     settings_page.visit("tag_style")
     settings_page.select_enum_value("tag_style", "box")
 
-    expect(settings_page.find_setting("tag_style")).to have_css(".preview .discourse-tag.box")
+    expect(
+      settings_page
+        .find_setting("tag_style")
+        .locator(".preview .discourse-tag.box")
+        .filter(visible: true),
+    ).not_to have_count(0)
 
     settings_page.save_setting("tag_style")
-    page.refresh
+    browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(settings_page.enum_setting("tag_style").value).to eq("box")
   end
@@ -23,7 +28,7 @@ describe "Admin site setting enum" do
     settings_page.visit("hide_post_sensitivity")
     settings_page.select_enum_value("hide_post_sensitivity", "0")
     settings_page.save_setting("hide_post_sensitivity")
-    page.refresh
+    browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(settings_page.enum_setting("hide_post_sensitivity").value).to eq("0")
   end

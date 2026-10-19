@@ -29,10 +29,10 @@ module ThemeScreenshotMarker
       end
 
       if (mode = ENV["SCREENSHOTS_MODE"].presence)
-        page.driver.with_playwright_page { |pw_page| pw_page.emulate_media(colorScheme: mode) }
+        with_screenshot_page { |pw_page| pw_page.emulate_media(colorScheme: mode) }
       end
 
-      page.driver.with_playwright_page do |pw_page|
+      with_screenshot_page do |pw_page|
         pw_page.add_style_tag(content: "#global-notice-theme-preview { display: none !important; }")
       end
     end
@@ -56,7 +56,7 @@ module ThemeScreenshotMarker
     theme_name = ENV["SCREENSHOTS_THEME_NAME"] || "default"
     mode = ENV["SCREENSHOTS_MODE"] || "light"
 
-    page.driver.with_playwright_page do |pw_page|
+    with_screenshot_page do |pw_page|
       unless @message_bus_blocked
         pw_page.route(%r{/message-bus/}, ->(route, _request) { route.abort })
         @message_bus_blocked = true
@@ -68,11 +68,21 @@ module ThemeScreenshotMarker
 
     filename = File.join(raw_dir, "#{device}-#{theme_name}-#{mode}-#{label}.png")
 
-    page.driver.with_playwright_page do |pw_page|
+    with_screenshot_page do |pw_page|
       pw_page.set_viewport_size(width: pw_page.viewport_size[:width], height: 1200)
       pw_page.screenshot(path: filename)
     end
 
     puts "📸 #{filename}"
+  end
+
+  private
+
+  def with_screenshot_page
+    if RSpec.current_example.metadata[:native_playwright]
+      yield browser_page
+    else
+      page.driver.with_playwright_page { |playwright_page| yield playwright_page }
+    end
   end
 end

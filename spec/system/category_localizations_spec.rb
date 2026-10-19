@@ -29,7 +29,7 @@ describe "Category Localizations" do
 
   def get_category_dropdown(nth)
     selector = ".category-breadcrumb li:nth-child(#{nth}) .category-drop"
-    expect(page).to have_css(selector)
+    expect(browser_root.locator(selector).filter(visible: true)).not_to have_count(0)
     PageObjects::Components::SelectKit.new(selector)
   end
 
@@ -77,7 +77,7 @@ describe "Category Localizations" do
         category_without_locale = Fabricate(:category, locale: nil)
         category_page.visit_edit_localizations(category_without_locale)
 
-        expect(form.field("locale")).to have_value(
+        expect(form.field("locale")).to RSpecPredicates.have_value(
           PageObjects::Components::DNativeSelect::NO_VALUE_OPTION,
         )
       end
@@ -85,7 +85,7 @@ describe "Category Localizations" do
       it "loads the saved locale correctly" do
         category_page.visit_edit_localizations(category)
 
-        expect(form.field("locale")).to have_value("en")
+        expect(form.field("locale")).to RSpecPredicates.have_value("en")
       end
 
       it "allows setting and persisting the category locale" do
@@ -95,13 +95,13 @@ describe "Category Localizations" do
         form.field("locale").select("ja")
         category_page.save_settings
 
-        page.refresh
-        expect(form.field("locale")).to have_value("ja")
+        browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(form.field("locale")).to RSpecPredicates.have_value("ja")
 
         form.field("locale").select_none
         category_page.save_settings
-        page.refresh
-        expect(form.field("locale")).to have_value(
+        browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(form.field("locale")).to RSpecPredicates.have_value(
           PageObjects::Components::DNativeSelect::NO_VALUE_OPTION,
         )
       end
@@ -116,20 +116,26 @@ describe "Category Localizations" do
 
         it "allows adding new localizations" do
           category_page.visit_edit_localizations(mono_category)
-          category_page.find(".edit-category-tab-localizations .add-localization").click
+          browser_root
+            .locator(".edit-category-tab-localizations .add-localization")
+            .filter(visible: true)
+            .click
           form.field("localizations.0.locale").select("es")
           form.field("localizations.0.name").fill_in("Solicitud de función")
           form.field("localizations.0.description").fill_in(
             "Solicitar nuevas funcionalidades en esta categoría",
           )
-          category_page.find(".edit-category-tab-localizations .add-localization").click
+          browser_root
+            .locator(".edit-category-tab-localizations .add-localization")
+            .filter(visible: true)
+            .click
           form.field("localizations.1.locale").select("fr")
           form.field("localizations.1.name").fill_in("Demande de fonctionnalité")
           form.field("localizations.1.description").fill_in(
             "Demander de nouvelles fonctionnalités dans cette catégorie",
           )
           category_page.save_settings
-          page.refresh
+          browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
           expect(CategoryLocalization.where(category_id: mono_category.id).count).to eq(2)
           expect(
@@ -164,25 +170,33 @@ describe "Category Localizations" do
           expect(CategoryLocalization.where(category_id: category.id).count).to eq(2)
           category_page.visit_edit_localizations(category)
 
-          expect(category_page).to have_selector(
-            ".edit-category-tab-localizations .form-kit__collection .form-kit__row",
-            count: 2,
-          )
           expect(
-            page.all(".form-kit__collection .form-kit__control-select option.--selected").map(
-              &:text
-            ),
+            browser_root.locator(
+              ".edit-category-tab-localizations .form-kit__collection .form-kit__row",
+            ).filter(visible: true),
+          ).to have_count(2)
+          expect(
+            browser_root
+              .locator(".form-kit__collection .form-kit__control-select option.--selected")
+              .tap { |elements| elements.first.wait_for(state: "attached") }
+              .all
+              .map { |element| element.inner_text.strip },
           ).to contain_exactly("Spanish (Español)", "Japanese (日本語)")
 
-          page.find(".edit-category-tab-localizations .remove-localization", match: :first).click
+          browser_root
+            .locator(".edit-category-tab-localizations .remove-localization")
+            .filter(visible: true)
+            .first
+            .click
           category_page.save_settings
-          page.refresh
+          browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
           expect(CategoryLocalization.where(category_id: category.id).count).to eq(1)
-          expect(category_page).to have_selector(
-            ".edit-category-tab-localizations .form-kit__collection .form-kit__row",
-            count: 1,
-          )
+          expect(
+            browser_root.locator(
+              ".edit-category-tab-localizations .form-kit__collection .form-kit__row",
+            ).filter(visible: true),
+          ).to have_count(1)
         end
       end
     end
@@ -216,7 +230,7 @@ describe "Category Localizations" do
 
       shared_examples_for "navigating the site via various category links" do
         it "keeps the translated category name when navigating sidebar" do
-          visit("/")
+          browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           switcher.expand
           switcher.option("[data-menu-option-id='es']").click
 
@@ -225,10 +239,22 @@ describe "Category Localizations" do
 
           category_dropdown = get_category_dropdown(1)
           expect(category_dropdown).to have_selected_name("Solicitudes")
-          expect(category_page.category_box(subcat)).to have_text("Subcategoría")
-          expect(category_page.category_box(subcat)).to have_text("Una subcategoría de un padre")
-          expect(topic_list.topic(cat_topic)).to have_text("Solicitudes")
-          expect(topic_list.topic(subcat_topic)).to have_text("Subcategoría")
+          expect(category_page.category_box(subcat)).to contain_text(
+            browser_text_pattern("Subcategoría"),
+            useInnerText: true,
+          )
+          expect(category_page.category_box(subcat)).to contain_text(
+            browser_text_pattern("Una subcategoría de un padre"),
+            useInnerText: true,
+          )
+          expect(topic_list.topic(cat_topic)).to contain_text(
+            browser_text_pattern("Solicitudes"),
+            useInnerText: true,
+          )
+          expect(topic_list.topic(subcat_topic)).to contain_text(
+            browser_text_pattern("Subcategoría"),
+            useInnerText: true,
+          )
 
           category_page.category_box(subcat).click
 
@@ -239,39 +265,50 @@ describe "Category Localizations" do
         end
 
         it "keeps the translated category name when navigating topic filters" do
-          visit("/categories")
+          browser_page.goto("/categories").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           switcher.expand
           switcher.option("[data-menu-option-id='es']").click
 
-          expect(category_list.category_box(category)).to have_text("Solicitudes")
+          expect(category_list.category_box(category)).to contain_text(
+            browser_text_pattern("Solicitudes"),
+            useInnerText: true,
+          )
 
           category_list.category_box(category).click
           category_dropdown = get_category_dropdown(1)
 
           expect(category_dropdown).to have_selected_name("Solicitudes")
           expect(sidebar).to have_section_link("Solicitudes")
-          expect(category_page.category_box(subcat)).to have_text("Subcategoría")
+          expect(category_page.category_box(subcat)).to contain_text(
+            browser_text_pattern("Subcategoría"),
+            useInnerText: true,
+          )
 
           sidebar.click_topics_button
 
-          expect(topic_list.topic(cat_topic)).to have_text("Solicitudes")
+          expect(topic_list.topic(cat_topic)).to contain_text(
+            browser_text_pattern("Solicitudes"),
+            useInnerText: true,
+          )
         end
 
         it "keeps the translated category name when navigating category dropdown" do
-          visit("/latest")
+          browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
           switcher.expand
           switcher.option("[data-menu-option-id='es']").click
 
           category_dropdown = get_category_dropdown(1)
 
-          expect(category_dropdown.component).to have_text(
+          expect(category_dropdown.component).to contain_text(
             I18n.t("js.categories.categories_label", locale: "es"),
           )
           category_dropdown.component.click
           expect(category_dropdown).to be_expanded
-          expect(page.find(".select-kit-collection div[data-name='Solicitudes']")).to have_text(
-            "Solicitudes",
-          )
+          expect(
+            browser_root.locator(".select-kit-collection div[data-name='Solicitudes']").filter(
+              visible: true,
+            ),
+          ).to contain_text(browser_text_pattern("Solicitudes"), useInnerText: true)
         end
       end
 
@@ -283,7 +320,7 @@ describe "Category Localizations" do
         shared_examples_for "editing category settings" do
           it "shows the original category name in the category edit page" do
             sign_in(admin)
-            visit("/")
+            browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
             switcher.expand
             switcher.option("[data-menu-option-id='es']").click
@@ -292,9 +329,12 @@ describe "Category Localizations" do
             category_page.visit(category)
             category_page.click_edit_category
 
-            expect(find(".edit-category-tab-general input.category-name").value).to eq(
-              category.name,
-            )
+            expect(
+              browser_root
+                .locator(".edit-category-tab-general input.category-name")
+                .filter(visible: true)
+                .input_value,
+            ).to eq(category.name)
           end
         end
 

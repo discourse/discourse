@@ -4,33 +4,42 @@ module PageObjects
   module Pages
     class UserActivityStream < PageObjects::Pages::Base
       def visit_replies(user)
-        page.visit("/u/#{user.username_lower}/activity/replies")
+        browser_page
+          .goto("/u/#{user.username_lower}/activity/replies")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def has_items?(count:)
-        page.has_css?(".user-stream-item", count:)
+        have_count(count).matches?(browser_root.locator(".user-stream-item").filter(visible: true))
       end
 
       def scroll_to_bottom
-        page.scroll_to(:bottom)
+        browser_page.evaluate("() => window.scrollTo(0, document.scrollingElement.scrollHeight)")
         self
       end
 
       def scroll_to_item(index)
-        page.execute_script(
-          "document.querySelectorAll('.user-stream-item')[#{index}].scrollIntoView(true)",
+        browser_page.evaluate(
+          "function(arguments) { #{"document.querySelectorAll('.user-stream-item')[#{index}].scrollIntoView(true)"} }",
+          arg: [],
         )
         self
       end
 
       def open_item(index)
-        page.all(".user-stream-item .title a")[index].click
+        browser_root
+          .locator(".user-stream-item .title a")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all[
+          index
+        ].click
         self
       end
 
       def scroll_position
-        page.evaluate_script("window.scrollY")
+        browser_page.evaluate("function(arguments) { return window.scrollY }", arg: [])
       end
     end
   end

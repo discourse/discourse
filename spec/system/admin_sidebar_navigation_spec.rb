@@ -17,48 +17,53 @@ describe "Admin | Sidebar Navigation" do
   end
 
   it "shows the sidebar when navigating to an admin route and hides it when leaving" do
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(sidebar).to have_section("categories")
     sidebar.click_link_in_section("community", "admin")
-    expect(page).to have_current_path("/admin")
-    expect(sidebar).to be_visible
+    expect(browser_page).to have_url("/admin")
+    expect(sidebar).to RSpecPredicates.be_visible
     expect(sidebar).to have_no_section("categories")
-    expect(page).to have_no_css(".admin-main-nav")
+    expect(browser_root.locator(".admin-main-nav").filter(visible: true)).to have_count(0)
 
     sidebar.click_back_to_forum
-    expect(page).to have_current_path("/latest")
+    expect(browser_page).to have_url("/latest")
     expect(sidebar).to have_no_section("admin-root")
   end
 
   it "goes back to exactly the same page when clicking back to forum" do
-    visit("/hot")
+    browser_page.goto("/hot").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.click_link_in_section("community", "admin")
 
     sidebar.click_back_to_forum
-    expect(page).to have_current_path("/hot")
+    expect(browser_page).to have_url("/hot")
   end
 
   context "with subfolder" do
     before { set_subfolder "/discuss" }
 
     it "navigates back to homepage correctly" do
-      visit("/discuss/admin")
+      browser_page.goto("/discuss/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       sidebar.click_back_to_forum
-      expect(page).to have_current_path("/discuss/")
+      expect(browser_page).to have_url("/discuss/")
     end
   end
 
   it "displays the panel header" do
-    visit("/admin")
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(sidebar).to have_panel_header
   end
 
   it "collapses sections by default" do
-    visit("/admin")
-    links = page.all(".sidebar-section-link-content-text")
-    expect(links.map(&:text)).to eq(
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    links =
+      browser_root
+        .locator(".sidebar-section-link-content-text")
+        .filter(visible: true)
+        .tap { |elements| elements.first.wait_for(state: "visible") }
+        .all
+    expect(links.map { |element| element.inner_text.strip }).to eq(
       [
         I18n.t("admin_js.admin.dashboard.title"),
         I18n.t("admin_js.admin.config.users.title"),
@@ -74,17 +79,17 @@ describe "Admin | Sidebar Navigation" do
   context "when on mobile" do
     it "shows the admin sidebar links in the header-dropdown when navigating to an admin route and hides them when leaving",
        mobile: true do
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       sidebar_dropdown.click
       expect(sidebar).to have_section("community")
       sidebar.click_link_in_section("community", "admin")
-      expect(page).to have_current_path("/admin")
+      expect(browser_page).to have_url("/admin")
       sidebar_dropdown.click
       expect(sidebar).to have_no_section("community")
-      expect(page).to have_no_css(".admin-main-nav")
+      expect(browser_root.locator(".admin-main-nav").filter(visible: true)).to have_count(0)
 
       sidebar.click_back_to_forum
-      expect(page).to have_current_path("/latest")
+      expect(browser_page).to have_url("/latest")
 
       sidebar_dropdown.click
       expect(sidebar).to have_no_section("admin-root")
@@ -92,12 +97,14 @@ describe "Admin | Sidebar Navigation" do
   end
 
   it "allows sections to be expanded" do
-    visit("/admin")
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     sidebar.toggle_all_sections
-    expect(page).to have_selector(
-      ".sidebar-section-link-content-text",
-      minimum: UNFILTERED_LINK_COUNT,
-    )
+    expect(
+      browser_root
+        .locator(".sidebar-section-link-content-text")
+        .filter(visible: true)
+        .nth(UNFILTERED_LINK_COUNT - 1),
+    ).to be_attached
 
     sidebar.toggle_all_sections
     expected_links = [
@@ -109,68 +116,105 @@ describe "Admin | Sidebar Navigation" do
       I18n.t("admin_js.admin.config.whats_new.title"),
       I18n.t("admin_js.admin.config.upcoming_changes.title"),
     ]
-    expect(page).to have_selector(
-      ".sidebar-section-link-content-text",
-      count: expected_links.length,
-    )
-    expect(all(".sidebar-section-link-content-text").map(&:text)).to eq(expected_links)
+    expect(
+      browser_root.locator(".sidebar-section-link-content-text").filter(visible: true),
+    ).to have_count(expected_links.length)
+    expect(
+      browser_root
+        .locator(".sidebar-section-link-content-text")
+        .filter(visible: true)
+        .tap { |elements| elements.first.wait_for(state: "visible") }
+        .all
+        .map { |element| element.inner_text.strip },
+    ).to eq(expected_links)
 
     sidebar.toggle_all_sections
-    expect(page).to have_selector(
-      ".sidebar-section-link-content-text",
-      minimum: UNFILTERED_LINK_COUNT,
-    )
+    expect(
+      browser_root
+        .locator(".sidebar-section-link-content-text")
+        .filter(visible: true)
+        .nth(UNFILTERED_LINK_COUNT - 1),
+    ).to be_attached
   end
 
   it "highlights the 'Themes and components' link when either the themes, themes components or theme site settings admin page is visited" do
-    visit("/admin/config/customize/themes")
+    browser_page
+      .goto("/admin/config/customize/themes")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css(
-      '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
-    )
+    expect(
+      browser_root.locator(
+        '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
+      ).filter(visible: true),
+    ).not_to have_count(0)
 
-    click_link("Components")
+    browser_root
+      .locator("[id=#{"Components".to_s.to_json}], [name=#{"Components".to_s.to_json}]")
+      .or(browser_root.get_by_role("link", name: "Components", exact: true))
+      .filter(visible: true)
+      .click
 
-    expect(page).to have_current_path("/admin/config/customize/components")
+    expect(browser_page).to have_url("/admin/config/customize/components")
 
-    expect(page).to have_css(
-      '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
-    )
+    expect(
+      browser_root.locator(
+        '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
+      ).filter(visible: true),
+    ).not_to have_count(0)
 
-    click_link("Theme site settings")
+    browser_root
+      .locator(
+        "[id=#{"Theme site settings".to_s.to_json}], [name=#{"Theme site settings".to_s.to_json}]",
+      )
+      .or(browser_root.get_by_role("link", name: "Theme site settings"))
+      .filter(visible: true)
+      .click
 
-    expect(page).to have_current_path("/admin/config/customize/theme-site-settings")
+    expect(browser_page).to have_url("/admin/config/customize/theme-site-settings")
 
-    expect(page).to have_css(
-      '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
-    )
+    expect(
+      browser_root.locator(
+        '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
+      ).filter(visible: true),
+    ).not_to have_count(0)
   end
 
   it "highlights the 'All site settings' link on the all settings page" do
-    visit("/admin/site_settings/category/all_results")
+    browser_page
+      .goto("/admin/site_settings/category/all_results")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css(
-      '.sidebar-section-link-wrapper[data-list-item-name="admin_all_site_settings"] a.active',
-    )
+    expect(
+      browser_root.locator(
+        '.sidebar-section-link-wrapper[data-list-item-name="admin_all_site_settings"] a.active',
+      ).filter(visible: true),
+    ).not_to have_count(0)
   end
 
   it "does not show the button to customize sidebar sections, that is only supported in the main panel" do
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(sidebar).to have_add_section_button
-    visit("/admin")
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(sidebar).to have_no_add_section_button
   end
 
   it "displays limited links for moderator" do
     sign_in(moderator)
-    visit("/admin")
+    browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.toggle_all_sections
 
-    expect(page).to have_no_css(".sidebar-section--collapsed")
+    expect(browser_root.locator(".sidebar-section--collapsed").filter(visible: true)).to have_count(
+      0,
+    )
 
-    links = page.all(".sidebar-section-link-content-text")
-    expect(links.map(&:text)).to eq(
+    links =
+      browser_root
+        .locator(".sidebar-section-link-content-text")
+        .filter(visible: true)
+        .tap { |elements| elements.first.wait_for(state: "visible") }
+        .all
+    expect(links.map { |element| element.inner_text.strip }).to eq(
       [
         I18n.t("admin_js.admin.dashboard.title"),
         I18n.t("admin_js.admin.config.users.title"),
@@ -184,8 +228,13 @@ describe "Admin | Sidebar Navigation" do
     )
 
     filter.filter("watched")
-    links = page.all(".sidebar-section-link-content-text")
+    links =
+      browser_root
+        .locator(".sidebar-section-link-content-text")
+        .filter(visible: true)
+        .tap { |elements| elements.first.wait_for(state: "visible") }
+        .all
     expect(links.count).to eq(1)
-    expect(links.map(&:text)).to eq(["Watched words"])
+    expect(links.map { |element| element.inner_text.strip }).to eq(["Watched words"])
   end
 end

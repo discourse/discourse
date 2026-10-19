@@ -6,20 +6,20 @@ module PageObjects
       def visit_nested(topic, query: nil)
         url = "/t/#{topic.slug}/#{topic.id}"
         url += "?#{query}" if query
-        page.visit(url)
+        browser_page.goto(url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def visit_nested_context(topic, post_number:, context: nil)
         url = "/t/#{topic.slug}/#{topic.id}/#{post_number}"
         url += "?context=#{context}" if context
-        page.visit(url)
+        browser_page.goto(url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def reload_with_pending_pagination
         # Capybara's refresh waits for AJAX to settle, but pagination is intentionally held open.
-        page.driver.with_playwright_page(&:reload)
+        browser_page.reload
         self
       end
 
@@ -30,7 +30,10 @@ module PageObjects
       # the existing nested controller/components staying mounted across
       # the transition.
       def route_to(path)
-        page.execute_script(%(require("discourse/lib/url").default.routeTo(#{path.to_json});))
+        browser_page.evaluate(
+          "function(arguments) { #{%(require("discourse/lib/url").default.routeTo(#{path.to_json});)} }",
+          arg: [],
+        )
         self
       end
 
@@ -47,143 +50,228 @@ module PageObjects
       # ── Root view assertions ──────────────────────────────────────
 
       def has_nested_view?
-        has_css?(".nested-view")
+        have_count(0).does_not_match?(browser_root.locator(".nested-view").filter(visible: true))
       end
 
       def has_no_nested_view?
-        has_no_css?(".nested-view")
+        have_count(0).matches?(browser_root.locator(".nested-view").filter(visible: true))
       end
 
       def has_root_post?(post)
-        has_css?(".nested-view__roots [data-post-number='#{post.post_number}']")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            ".nested-view__roots [data-post-number='#{post.post_number}']",
+          ).filter(visible: true),
+        )
       end
 
       def has_no_root_post?(post)
-        has_no_css?(".nested-view__roots [data-post-number='#{post.post_number}']")
+        have_count(0).matches?(
+          browser_root.locator(
+            ".nested-view__roots [data-post-number='#{post.post_number}']",
+          ).filter(visible: true),
+        )
       end
 
       # ── Context view assertions ───────────────────────────────────
 
       def has_context_view?
-        has_css?(".nested-context-view")
+        have_count(0).does_not_match?(
+          browser_root.locator(".nested-context-view").filter(visible: true),
+        )
       end
 
       def has_no_context_view?
-        has_no_css?(".nested-context-view")
+        have_count(0).matches?(browser_root.locator(".nested-context-view").filter(visible: true))
       end
 
       def has_context_banner?
-        has_css?(".nested-context-view__banner", text: I18n.t("js.nested_replies.context.banner"))
+        contain_text(
+          [browser_text_pattern(I18n.t("js.nested_replies.context.banner"))],
+          useInnerText: true,
+        ).matches?(browser_root.locator(".nested-context-view__banner").filter(visible: true))
       end
 
       def has_no_context_banner?
-        has_no_css?(".nested-context-view__banner")
+        have_count(0).matches?(
+          browser_root.locator(".nested-context-view__banner").filter(visible: true),
+        )
       end
 
       def has_view_full_thread_link?
-        has_css?(".nested-context-view__full-thread")
+        have_count(0).does_not_match?(
+          browser_root.locator(".nested-context-view__full-thread").filter(visible: true),
+        )
       end
 
       def has_view_parent_context_link?
-        has_css?(".nested-context-view__parent-context")
+        have_count(0).does_not_match?(
+          browser_root.locator(".nested-context-view__parent-context").filter(visible: true),
+        )
       end
 
       def has_no_view_parent_context_link?
-        has_no_css?(".nested-context-view__parent-context")
+        have_count(0).matches?(
+          browser_root.locator(".nested-context-view__parent-context").filter(visible: true),
+        )
       end
 
       # ── Post assertions ───────────────────────────────────────────
 
       def has_post_at_depth?(post, depth:)
-        has_css?(".nested-post.--depth-#{depth} [data-post-number='#{post.post_number}']")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            ".nested-post.--depth-#{depth} [data-post-number='#{post.post_number}']",
+          ).filter(visible: true),
+        )
       end
 
       def has_post?(post)
-        has_css?("[data-post-number='#{post.post_number}']")
+        have_count(0).does_not_match?(
+          browser_root.locator("[data-post-number='#{post.post_number}']").filter(visible: true),
+        )
       end
 
       def has_post_text?(text)
-        has_css?(".nested-post__article", text: text)
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+          browser_root.locator(".nested-post__article").filter(visible: true),
+        )
       end
 
       def has_no_post?(post)
-        has_no_css?("[data-post-number='#{post.post_number}']")
+        have_count(0).matches?(
+          browser_root.locator("[data-post-number='#{post.post_number}']").filter(visible: true),
+        )
       end
 
       def has_continue_thread_for?(post)
-        within(post_container(post)) { has_css?(".nested-post__continue-link") }
+        within_browser(post_container(post)) do
+          have_count(0).does_not_match?(
+            browser_root.locator(".nested-post__continue-link").filter(visible: true),
+          )
+        end
       end
 
       def has_no_continue_thread_for?(post)
-        within(post_container(post)) { has_no_css?(".nested-post__continue-link") }
+        within_browser(post_container(post)) do
+          have_count(0).matches?(
+            browser_root.locator(".nested-post__continue-link").filter(visible: true),
+          )
+        end
       end
 
       def has_highlighted_post?(post)
-        has_css?(".nested-post--highlighted [data-post-number='#{post.post_number}']", wait: 5)
+        have_count(0, timeout: 5 * 1000).does_not_match?(
+          browser_root.locator(
+            ".nested-post--highlighted [data-post-number='#{post.post_number}']",
+          ).filter(visible: true),
+        )
       end
 
       def has_reply_button_for?(post)
-        has_css?("[data-post-number='#{post.post_number}'] .post-action-menu__reply")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "[data-post-number='#{post.post_number}'] .post-action-menu__reply",
+          ).filter(visible: true),
+        )
       end
 
       def has_no_reply_button_for?(post)
-        has_no_css?("[data-post-number='#{post.post_number}'] .post-action-menu__reply")
+        have_count(0).matches?(
+          browser_root.locator(
+            "[data-post-number='#{post.post_number}'] .post-action-menu__reply",
+          ).filter(visible: true),
+        )
       end
 
       def has_like_button_for?(post)
-        has_css?("[data-post-number='#{post.post_number}'] .post-action-menu__like")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "[data-post-number='#{post.post_number}'] .post-action-menu__like",
+          ).filter(visible: true),
+        )
       end
 
       def click_like_on_post(post)
-        find("[data-post-number='#{post.post_number}'] .post-action-menu__like").click
+        browser_root
+          .locator("[data-post-number='#{post.post_number}'] .post-action-menu__like")
+          .filter(visible: true)
+          .click
       end
 
       def has_replies_toggle_for?(post)
-        has_css?("[data-post-number='#{post.post_number}'] .nested-post__expand-replies")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "[data-post-number='#{post.post_number}'] .nested-post__expand-replies",
+          ).filter(visible: true),
+        )
       end
 
       def has_no_replies_toggle_for?(post)
-        has_no_css?("[data-post-number='#{post.post_number}'] .nested-post__expand-replies")
+        have_count(0).matches?(
+          browser_root.locator(
+            "[data-post-number='#{post.post_number}'] .nested-post__expand-replies",
+          ).filter(visible: true),
+        )
       end
 
       def has_load_more_children_for?(post)
-        has_css?(
-          wrapper_selector(
-            post,
-            "> .nested-post__main > .nested-post-children .nested-post-children__load-more",
-          ),
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            wrapper_selector(
+              post,
+              "> .nested-post__main > .nested-post-children .nested-post-children__load-more",
+            ),
+          ).filter(visible: true),
         )
       end
 
       def has_no_show_replies_button_for?(post)
-        has_no_css?("[data-post-number='#{post.post_number}'] .post-action-menu__show-replies")
+        have_count(0).matches?(
+          browser_root.locator(
+            "[data-post-number='#{post.post_number}'] .post-action-menu__show-replies",
+          ).filter(visible: true),
+        )
       end
 
       def has_mobile_focus?
-        has_css?(".nested-view__mobile-focus")
+        have_count(0).does_not_match?(
+          browser_root.locator(".nested-view__mobile-focus").filter(visible: true),
+        )
       end
 
       def has_no_mobile_focus?
-        has_no_css?(".nested-view__mobile-focus")
+        have_count(0).matches?(
+          browser_root.locator(".nested-view__mobile-focus").filter(visible: true),
+        )
       end
 
       def has_mobile_ancestor?(post)
-        has_css?(
-          "[data-test-nested-mobile-ancestor='#{post.post_number}']",
-          text: post.user.username,
+        contain_text([browser_text_pattern(post.user.username)], useInnerText: true).matches?(
+          browser_root.locator("[data-test-nested-mobile-ancestor='#{post.post_number}']").filter(
+            visible: true,
+          ),
         )
       end
 
       def has_no_mobile_ancestor?(post)
-        has_no_css?("[data-test-nested-mobile-ancestor='#{post.post_number}']")
+        have_count(0).matches?(
+          browser_root.locator("[data-test-nested-mobile-ancestor='#{post.post_number}']").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_no_mobile_ancestor_user_card_trigger?(post)
-        has_no_css?("[data-test-nested-mobile-ancestor='#{post.post_number}'] [data-user-card]")
+        have_count(0).matches?(
+          browser_root.locator(
+            "[data-test-nested-mobile-ancestor='#{post.post_number}'] [data-user-card]",
+          ).filter(visible: true),
+        )
       end
 
       def post_viewport_top(post)
-        page.evaluate_script(<<~JS)
+        browser_page.evaluate("function(arguments) { return #{<<~JS} }", arg: [])
           document
             .querySelector("[data-post-number='#{post.post_number}']")
             .closest(".nested-post")
@@ -193,7 +281,7 @@ module PageObjects
       end
 
       def mobile_ancestor_viewport_top(post)
-        page.evaluate_script(<<~JS)
+        browser_page.evaluate("function(arguments) { return #{<<~JS} }", arg: [])
           document
             .querySelector("[data-test-nested-mobile-ancestor='#{post.post_number}']")
             .getBoundingClientRect()
@@ -202,55 +290,92 @@ module PageObjects
       end
 
       def has_depth_line_for?(post)
-        has_css?(depth_line_selector(post))
+        have_count(0).does_not_match?(
+          browser_root.locator(depth_line_selector(post)).filter(visible: true),
+        )
       end
 
       def has_no_depth_line_for?(post)
-        has_no_css?(depth_line_selector(post))
+        have_count(0).matches?(
+          browser_root.locator(depth_line_selector(post)).filter(visible: true),
+        )
       end
 
       def has_leaf_depth_line_for?(post)
-        has_css?(leaf_depth_line_selector(post))
+        have_count(0).does_not_match?(
+          browser_root.locator(leaf_depth_line_selector(post)).filter(visible: true),
+        )
       end
 
       def has_no_leaf_depth_line_for?(post)
-        has_no_css?(leaf_depth_line_selector(post))
+        have_count(0).matches?(
+          browser_root.locator(leaf_depth_line_selector(post)).filter(visible: true),
+        )
       end
 
       def has_children_visible_for?(post)
-        has_css?(wrapper_selector(post, "> .nested-post__main > .nested-post-children"))
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            wrapper_selector(post, "> .nested-post__main > .nested-post-children"),
+          ).filter(visible: true),
+        )
       end
 
       def has_no_children_visible_for?(post)
-        has_no_css?(wrapper_selector(post, "> .nested-post__main > .nested-post-children"))
+        have_count(0).matches?(
+          browser_root.locator(
+            wrapper_selector(post, "> .nested-post__main > .nested-post-children"),
+          ).filter(visible: true),
+        )
       end
 
       def has_collapsed_bar_for?(post)
-        has_css?(wrapper_selector(post, "> .nested-post__main > .nested-post__collapsed-bar"))
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            wrapper_selector(post, "> .nested-post__main > .nested-post__collapsed-bar"),
+          ).filter(visible: true),
+        )
       end
 
       def has_no_collapsed_bar_for?(post)
-        has_no_css?(wrapper_selector(post, "> .nested-post__main > .nested-post__collapsed-bar"))
+        have_count(0).matches?(
+          browser_root.locator(
+            wrapper_selector(post, "> .nested-post__main > .nested-post__collapsed-bar"),
+          ).filter(visible: true),
+        )
       end
 
       def has_post_content_visible_for?(post)
-        has_css?(wrapper_selector(post, "> .nested-post__main > .nested-post__article"))
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            wrapper_selector(post, "> .nested-post__main > .nested-post__article"),
+          ).filter(visible: true),
+        )
       end
 
       def has_no_post_content_visible_for?(post)
-        has_no_css?(wrapper_selector(post, "> .nested-post__main > .nested-post__article"))
+        have_count(0).matches?(
+          browser_root.locator(
+            wrapper_selector(post, "> .nested-post__main > .nested-post__article"),
+          ).filter(visible: true),
+        )
       end
 
       def has_sort_active?(sort)
-        has_css?(".nested-sort-selector__trigger", text: I18n.t("js.nested_replies.sort.#{sort}"))
+        contain_text(
+          [browser_text_pattern(I18n.t("js.nested_replies.sort.#{sort}"))],
+          useInnerText: true,
+        ).matches?(browser_root.locator(".nested-sort-selector__trigger").filter(visible: true))
       end
 
       def has_root_post_count?(count)
-        has_css?(".nested-view__roots > .nested-post", count: count)
+        have_count(count).matches?(
+          browser_root.locator(".nested-view__roots > .nested-post").filter(visible: true),
+        )
       end
 
       def current_scroll_position
-        page.evaluate_script("window.scrollY")
+        browser_page.evaluate("function(arguments) { return window.scrollY }", arg: [])
       end
 
       def with_root_pagination_paused(topic, &block)
@@ -259,27 +384,33 @@ module PageObjects
       end
 
       def disable_cloaking
-        page.execute_script(
-          'require("discourse/modifiers/post-stream-viewport-tracker").disableCloaking()',
+        browser_page.evaluate(
+          "function(arguments) { require(\"discourse/modifiers/post-stream-viewport-tracker\").disableCloaking() }",
+          arg: [],
         )
         self
       end
 
       def scroll_to_bottom
-        page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+        browser_page.evaluate(
+          "function(arguments) { window.scrollTo(0, document.body.scrollHeight) }",
+          arg: [],
+        )
         self
       end
 
       def user_scroll_by(distance:)
         start_position = current_scroll_position
 
-        page.driver.with_playwright_page do |playwright_page|
+        browser_page.then do |playwright_page|
           viewport = playwright_page.viewport_size
           playwright_page.mouse.move(viewport[:width] * 0.65, viewport[:height] * 0.5)
           playwright_page.mouse.wheel(0, distance)
         end
 
-        page.evaluate_async_script(<<~JS, start_position)
+        browser_page.evaluate(
+          "function(args) { return new Promise(resolve => { args.push(resolve); (function() { #{
+            <<~JS
           const [startPosition, done] = arguments;
           let previousPosition;
           let stableFrames = 0;
@@ -302,10 +433,13 @@ module PageObjects
 
           requestAnimationFrame(finishWhenStable);
         JS
+          } }).apply(this, args); }); }",
+          arg: browser_arguments(start_position),
+        )
       end
 
       def centered_root_post_number
-        page.evaluate_script(<<~JS)
+        browser_page.evaluate("function(arguments) { return #{<<~JS} }", arg: [])
           (() => {
             const roots = document.querySelector(".nested-view__roots");
             const rootsRect = roots.getBoundingClientRect();
@@ -324,177 +458,262 @@ module PageObjects
       end
 
       def scroll_to_post(post)
-        page.execute_script(<<~JS)
+        browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: [])
           document.querySelector("[data-post-number='#{post.post_number}']").scrollIntoView();
         JS
         self
       end
 
       def has_op_post?
-        has_css?(".nested-view__op")
+        have_count(0).does_not_match?(
+          browser_root.locator(".nested-view__op").filter(visible: true),
+        )
       end
 
       def has_no_reply_button_on_op?
-        has_no_css?(".nested-view__op .post-action-menu__reply")
+        have_count(0).matches?(
+          browser_root.locator(".nested-view__op .post-action-menu__reply").filter(visible: true),
+        )
       end
 
       def has_topic_title_editor?
-        has_css?(".edit-topic-title")
+        have_count(0).does_not_match?(
+          browser_root.locator(".edit-topic-title").filter(visible: true),
+        )
       end
 
       def has_no_topic_title_editor?
-        has_no_css?(".edit-topic-title")
+        have_count(0).matches?(browser_root.locator(".edit-topic-title").filter(visible: true))
       end
 
       def has_topic_title_in_site_header?(topic)
-        has_css?(
-          "header.d-header .header-title .topic-link[data-topic-id='#{topic.id}']",
-          text: topic.title,
+        contain_text([browser_text_pattern(topic.title)], useInnerText: true).matches?(
+          browser_root.locator(
+            "header.d-header .header-title .topic-link[data-topic-id='#{topic.id}']",
+          ).filter(visible: true),
         )
       end
 
       def has_no_topic_title_in_site_header?(topic)
-        has_no_css?(
-          "header.d-header .header-title .topic-link[data-topic-id='#{topic.id}']",
-          text: topic.title,
+        contain_text([browser_text_pattern(topic.title)], useInnerText: true).does_not_match?(
+          browser_root.locator(
+            "header.d-header .header-title .topic-link[data-topic-id='#{topic.id}']",
+          ).filter(visible: true),
         )
       end
 
       def has_topic_map?
-        has_css?(".nested-view__op > .nested-view__topic-map .topic-map__contents")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            ".nested-view__op > .nested-view__topic-map .topic-map__contents",
+          ).filter(visible: true),
+        )
       end
 
       def has_no_top_replies_button?
-        has_no_css?(".nested-view__op > .nested-view__topic-map .top-replies")
+        have_count(0).matches?(
+          browser_root.locator(".nested-view__op > .nested-view__topic-map .top-replies").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_topic_actions_above_controls?
-        has_css?(".nested-view__topic-actions + .nested-view__controls")
+        have_count(0).does_not_match?(
+          browser_root.locator(".nested-view__topic-actions + .nested-view__controls").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_activity_log_link?
-        has_css?(".nested-view__activity-link", wait: 10)
+        have_count(0, timeout: 10 * 1000).does_not_match?(
+          browser_root.locator(".nested-view__activity-link").filter(visible: true),
+        )
       end
 
       def has_no_activity_log_link?
-        has_no_css?(".nested-view__activity-link")
+        have_count(0).matches?(
+          browser_root.locator(".nested-view__activity-link").filter(visible: true),
+        )
       end
 
       def has_share_topic_action?
-        has_css?(".nested-view__topic-actions #topic-footer-button-share-and-invite")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            ".nested-view__topic-actions #topic-footer-button-share-and-invite",
+          ).filter(visible: true),
+        )
       end
 
       def has_bookmark_topic_action?
-        has_css?(".nested-view__topic-actions .bookmark-menu__trigger")
+        have_count(0).does_not_match?(
+          browser_root.locator(".nested-view__topic-actions .bookmark-menu__trigger").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_flag_topic_action?
-        has_css?(".nested-view__topic-actions #topic-footer-button-flag")
+        have_count(0).does_not_match?(
+          browser_root.locator(".nested-view__topic-actions #topic-footer-button-flag").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_no_topic_action_reply_button?
-        has_no_css?(".nested-view__topic-actions .create")
+        have_count(0).matches?(
+          browser_root.locator(".nested-view__topic-actions .create").filter(visible: true),
+        )
       end
 
       def has_floating_reply_button?
-        has_css?(".nested-view__floating-actions:not(.--hidden) .nested-view__floating-reply")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            ".nested-view__floating-actions:not(.--hidden) .nested-view__floating-reply",
+          ).filter(visible: true),
+        )
       end
 
       def has_no_floating_reply_button?
-        has_no_css?(".nested-view__floating-actions:not(.--hidden) .nested-view__floating-reply")
+        have_count(0).matches?(
+          browser_root.locator(
+            ".nested-view__floating-actions:not(.--hidden) .nested-view__floating-reply",
+          ).filter(visible: true),
+        )
       end
 
       def has_floating_actions?
-        has_css?(".nested-view__floating-actions:not(.--hidden)")
+        have_count(0).does_not_match?(
+          browser_root.locator(".nested-view__floating-actions:not(.--hidden)").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_no_floating_actions?
-        has_no_css?(".nested-view__floating-actions:not(.--hidden)")
+        have_count(0).matches?(
+          browser_root.locator(".nested-view__floating-actions:not(.--hidden)").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_notification_button?
-        has_css?(".nested-view__floating-actions .topic-notifications-button")
+        have_count(0).does_not_match?(
+          browser_root.locator(".nested-view__floating-actions .topic-notifications-button").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_no_notification_button?
-        has_no_css?(".nested-view__floating-actions .topic-notifications-button")
+        have_count(0).matches?(
+          browser_root.locator(".nested-view__floating-actions .topic-notifications-button").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_admin_menu_button?
-        has_css?(".nested-view__floating-actions .toggle-admin-menu")
+        have_count(0).does_not_match?(
+          browser_root.locator(".nested-view__floating-actions .toggle-admin-menu").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_no_admin_menu_button?
-        has_no_css?(".nested-view__floating-actions .toggle-admin-menu")
+        have_count(0).matches?(
+          browser_root.locator(".nested-view__floating-actions .toggle-admin-menu").filter(
+            visible: true,
+          ),
+        )
       end
 
       # ── Actions ───────────────────────────────────────────────────
 
       def click_edit_topic
-        find(".nested-view__title .fancy-title").click
+        browser_root.locator(".nested-view__title .fancy-title").filter(visible: true).click
         self
       end
 
       def open_activity_log
-        find(".nested-view__activity-link").click
+        browser_root.locator(".nested-view__activity-link").filter(visible: true).click
         self
       end
 
       def click_cancel_edit_topic
-        find(".edit-topic-title .cancel-edit").click
+        browser_root.locator(".edit-topic-title .cancel-edit").filter(visible: true).click
         self
       end
 
       def click_save_edit_topic
-        find(".edit-topic-title .submit-edit").click
+        browser_root.locator(".edit-topic-title .submit-edit").filter(visible: true).click
         self
       end
 
       def fill_in_topic_title(title)
-        find(".edit-topic-title input#edit-title").fill_in(with: title)
+        browser_root.locator(".edit-topic-title input#edit-title").filter(visible: true).fill(title)
         self
       end
 
       def click_post_edit_button(post)
-        within("[data-post-number='#{post.post_number}']") do
-          find(".show-more-actions").click if has_css?(".show-more-actions", wait: 2)
-          find("button.edit").click
+        within_browser(
+          browser_root.locator("[data-post-number='#{post.post_number}']").filter(visible: true),
+        ) do
+          if have_count(0, timeout: 2 * 1000).does_not_match?(
+               browser_root.locator(".show-more-actions").filter(visible: true),
+             )
+            browser_root.locator(".show-more-actions").filter(visible: true).click
+          end
+          browser_root.locator("button.edit").filter(visible: true).click
         end
         self
       end
 
       def click_view_full_thread
-        find(".nested-context-view__full-thread").click
+        browser_root.locator(".nested-context-view__full-thread").filter(visible: true).click
         self
       end
 
       def click_view_parent_context
-        find(".nested-context-view__parent-context").click
+        browser_root.locator(".nested-context-view__parent-context").filter(visible: true).click
         self
       end
 
       def click_reply_on_post(post)
-        find("[data-post-number='#{post.post_number}'] .post-action-menu__reply").click
+        browser_root
+          .locator("[data-post-number='#{post.post_number}'] .post-action-menu__reply")
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_replies_toggle(post)
-        find("[data-post-number='#{post.post_number}'] .nested-post__expand-replies").click
+        browser_root
+          .locator("[data-post-number='#{post.post_number}'] .nested-post__expand-replies")
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_load_more_children(post)
-        find(
-          wrapper_selector(
-            post,
-            "> .nested-post__main > .nested-post-children .nested-post-children__load-more",
-          ),
-        ).click
+        browser_root
+          .locator(
+            wrapper_selector(
+              post,
+              "> .nested-post__main > .nested-post-children .nested-post-children__load-more",
+            ),
+          )
+          .filter(visible: true)
+          .click
         self
       end
 
       def trigger_replies_toggle(post)
-        page.evaluate_script(<<~JS)
+        browser_page.evaluate("function(arguments) { return #{<<~JS} }", arg: [])
           (() => {
             const button = document.querySelector(
               "[data-post-number='#{post.post_number}'] .nested-post__expand-replies"
@@ -512,7 +731,7 @@ module PageObjects
       end
 
       def scroll_post_near_top(post, offset: 80)
-        page.execute_script(<<~JS)
+        browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: [])
           const post = document.querySelector("[data-post-number='#{post.post_number}']");
           post.scrollIntoView();
           window.scrollBy(0, -#{offset});
@@ -521,112 +740,152 @@ module PageObjects
       end
 
       def scroll_past_topic_title
-        page.execute_script(<<~JS)
+        browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: [])
           window.scrollTo(0, document.body.scrollHeight);
         JS
         self
       end
 
       def click_reply_on_op
-        find(".nested-view__op .post-action-menu__reply").click
+        browser_root
+          .locator(".nested-view__op .post-action-menu__reply")
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_continue_thread(post)
-        within(post_container(post)) { find(".nested-post__continue-link").click }
+        within_browser(post_container(post)) do
+          browser_root.locator(".nested-post__continue-link").filter(visible: true).click
+        end
         self
       end
 
       def click_depth_line(post)
-        find(depth_line_selector(post)).click
+        browser_root.locator(depth_line_selector(post)).filter(visible: true).click
         self
       end
 
       def click_collapsed_bar(post)
-        find(wrapper_selector(post, "> .nested-post__main > .nested-post__collapsed-bar")).click
+        browser_root
+          .locator(wrapper_selector(post, "> .nested-post__main > .nested-post__collapsed-bar"))
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_mobile_ancestor(post)
-        find("[data-test-nested-mobile-ancestor='#{post.post_number}']").click
+        browser_root
+          .locator("[data-test-nested-mobile-ancestor='#{post.post_number}']")
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_mobile_ancestor_avatar(post)
-        find(
-          "[data-test-nested-mobile-ancestor='#{post.post_number}'] .nested-view__mobile-ancestor-avatar",
-        ).click
+        browser_root
+          .locator(
+            "[data-test-nested-mobile-ancestor='#{post.post_number}'] .nested-view__mobile-ancestor-avatar",
+          )
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_mobile_focus_back
-        find(".nested-view__mobile-focus-back").click
+        browser_root.locator(".nested-view__mobile-focus-back").filter(visible: true).click
         self
       end
 
       def click_floating_reply_button
-        find(".nested-view__floating-reply").click
+        browser_root.locator(".nested-view__floating-reply").filter(visible: true).click
         self
       end
 
       def open_admin_menu
-        find(".nested-view__floating-actions .toggle-admin-menu").click
+        browser_root
+          .locator(".nested-view__floating-actions .toggle-admin-menu")
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_admin_close_topic
         open_admin_menu
-        find(".topic-admin-close .btn").click
+        browser_root.locator(".topic-admin-close .btn").filter(visible: true).click
         self
       end
 
       def click_admin_open_topic
         open_admin_menu
-        find(".topic-admin-open .btn").click
+        browser_root.locator(".topic-admin-open .btn").filter(visible: true).click
         self
       end
 
       def change_notification_level(level)
-        find(
-          ".nested-view__floating-actions .topic-notifications-button .notifications-tracking-trigger-btn",
-        ).click
-        find(".notifications-tracking-btn[data-level-id='#{level}']").click
+        browser_root
+          .locator(
+            ".nested-view__floating-actions .topic-notifications-button .notifications-tracking-trigger-btn",
+          )
+          .filter(visible: true)
+          .click
+        browser_root
+          .locator(".notifications-tracking-btn[data-level-id='#{level}']")
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_copy_link_on_op
-        within(".nested-view__op") do
-          find(".show-more-actions").click if has_css?(".show-more-actions", wait: 0)
-          find("button.post-action-menu__copy-link").click
+        within_browser(browser_root.locator(".nested-view__op").filter(visible: true)) do
+          if browser_root.locator(".show-more-actions").filter(visible: true).count != 0
+            browser_root.locator(".show-more-actions").filter(visible: true).click
+          end
+          browser_root.locator("button.post-action-menu__copy-link").filter(visible: true).click
         end
         self
       end
 
       def click_copy_link_on_post(post)
-        within("[data-post-number='#{post.post_number}']") do
-          find(".show-more-actions").click if has_css?(".show-more-actions", wait: 0)
-          find("button.post-action-menu__copy-link").click
+        within_browser(
+          browser_root.locator("[data-post-number='#{post.post_number}']").filter(visible: true),
+        ) do
+          if browser_root.locator(".show-more-actions").filter(visible: true).count != 0
+            browser_root.locator(".show-more-actions").filter(visible: true).click
+          end
+          browser_root.locator("button.post-action-menu__copy-link").filter(visible: true).click
         end
         self
       end
 
       def click_sort(sort)
-        find(".nested-sort-selector__trigger").click
-        find(".dropdown-menu .btn", text: I18n.t("js.nested_replies.sort.#{sort}")).click
+        browser_root.locator(".nested-sort-selector__trigger").filter(visible: true).click
+        browser_root
+          .locator(".dropdown-menu .btn")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern(I18n.t("js.nested_replies.sort.#{sort}")))
+          .click
         self
       end
 
       def scroll_to_position(scroll_y)
-        page.evaluate_async_script(<<~JS)
+        browser_page.evaluate(
+          "function(args) { return new Promise(resolve => { args.push(resolve); (function() { #{
+            <<~JS
           const done = arguments[0];
           window.scrollTo(0, #{scroll_y});
           setTimeout(done, 50);
         JS
+          } }).apply(this, args); }); }",
+          arg: [],
+        )
         self
       end
 
       def scroll_during_pending_restore(distance:)
-        page.evaluate_async_script(<<~JS)
+        browser_page.evaluate(
+          "function(args) { return new Promise(resolve => { args.push(resolve); (function() { #{
+            <<~JS
           const done = arguments[0];
           const positions = { restored: window.scrollY };
 
@@ -640,86 +899,144 @@ module PageObjects
             done(positions);
           }, 250);
         JS
+          } }).apply(this, args); }); }",
+          arg: [],
+        )
       end
 
       def scroll_position_after_restore_window
-        page.evaluate_async_script(<<~JS)
+        browser_page.evaluate(
+          "function(args) { return new Promise(resolve => { args.push(resolve); (function() { #{
+            <<~JS
           const done = arguments[0];
           const { SCROLL_RESTORE_WINDOW_MS } = require("discourse/components/nested");
           setTimeout(() => done(window.scrollY), SCROLL_RESTORE_WINDOW_MS + 50);
         JS
+          } }).apply(this, args); }); }",
+          arg: [],
+        )
       end
 
       # ── Deletion/recovery assertions ─────────────────────────────
 
       def has_deleted_placeholder_for?(post)
-        has_css?("[data-post-number='#{post.post_number}'].nested-post__placeholder--deleted")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "[data-post-number='#{post.post_number}'].nested-post__placeholder--deleted",
+          ).filter(visible: true),
+        )
       end
 
       def has_no_deleted_placeholder_for?(post)
-        has_no_css?("[data-post-number='#{post.post_number}'].nested-post__placeholder--deleted")
+        have_count(0).matches?(
+          browser_root.locator(
+            "[data-post-number='#{post.post_number}'].nested-post__placeholder--deleted",
+          ).filter(visible: true),
+        )
       end
 
       def has_deleted_post_class_for?(post)
-        has_css?(".nested-post--deleted [data-post-number='#{post.post_number}']")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            ".nested-post--deleted [data-post-number='#{post.post_number}']",
+          ).filter(visible: true),
+        )
       end
 
       def has_toggle_deleted_content_button_for?(post)
-        has_css?("[data-post-number='#{post.post_number}'] button.toggle-deleted-content")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "[data-post-number='#{post.post_number}'] button.toggle-deleted-content",
+          ).filter(visible: true),
+        )
       end
 
       def has_no_toggle_deleted_content_button_for?(post)
-        has_no_css?("[data-post-number='#{post.post_number}'] button.toggle-deleted-content")
+        have_count(0).matches?(
+          browser_root.locator(
+            "[data-post-number='#{post.post_number}'] button.toggle-deleted-content",
+          ).filter(visible: true),
+        )
       end
 
       def click_toggle_deleted_content(post)
-        find("[data-post-number='#{post.post_number}'] button.toggle-deleted-content").click
+        browser_root
+          .locator("[data-post-number='#{post.post_number}'] button.toggle-deleted-content")
+          .filter(visible: true)
+          .click
         self
       end
 
       def has_deleted_content_visible_for?(post)
-        has_css?(wrapper_selector(post, ".nested-post__placeholder-reveal"))
+        have_count(0).does_not_match?(
+          browser_root.locator(wrapper_selector(post, ".nested-post__placeholder-reveal")).filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_no_deleted_content_visible_for?(post)
-        has_no_css?(wrapper_selector(post, ".nested-post__placeholder-reveal"))
+        have_count(0).matches?(
+          browser_root.locator(wrapper_selector(post, ".nested-post__placeholder-reveal")).filter(
+            visible: true,
+          ),
+        )
       end
 
       # ── Ignored-user placeholder assertions ──────────────────────
 
       def has_ignored_placeholder_for?(post)
-        has_css?("[data-post-number='#{post.post_number}'].nested-post__placeholder--ignored")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "[data-post-number='#{post.post_number}'].nested-post__placeholder--ignored",
+          ).filter(visible: true),
+        )
       end
 
       def has_no_ignored_placeholder_for?(post)
-        has_no_css?("[data-post-number='#{post.post_number}'].nested-post__placeholder--ignored")
+        have_count(0).matches?(
+          browser_root.locator(
+            "[data-post-number='#{post.post_number}'].nested-post__placeholder--ignored",
+          ).filter(visible: true),
+        )
       end
 
       def click_reveal_ignored(post)
-        find(
-          "button.nested-post__placeholder-avatar--reveal[data-post-number='#{post.post_number}']",
-        ).click
+        browser_root
+          .locator(
+            "button.nested-post__placeholder-avatar--reveal[data-post-number='#{post.post_number}']",
+          )
+          .filter(visible: true)
+          .click
         self
       end
 
       # ── Post actions ────────────────────────────────────────────
 
       def click_post_delete_button(post)
-        within("[data-post-number='#{post.post_number}']") do
-          find(".show-more-actions").click if has_css?(".show-more-actions", wait: 2)
-          find("button.delete").click
+        within_browser(
+          browser_root.locator("[data-post-number='#{post.post_number}']").filter(visible: true),
+        ) do
+          if have_count(0, timeout: 2 * 1000).does_not_match?(
+               browser_root.locator(".show-more-actions").filter(visible: true),
+             )
+            browser_root.locator(".show-more-actions").filter(visible: true).click
+          end
+          browser_root.locator("button.delete").filter(visible: true).click
         end
         self
       end
 
       def click_post_recover_button(post)
         selector = "[data-post-number='#{post.post_number}']"
-        if has_css?("#{selector} button.recover", wait: 5)
-          find("#{selector} button.recover").click
+        if have_count(0, timeout: 5 * 1000).does_not_match?(
+             browser_root.locator("#{selector} button.recover").filter(visible: true),
+           )
+          browser_root.locator("#{selector} button.recover").filter(visible: true).click
         else
-          within(selector) do
-            find(".show-more-actions").click
-            find("button.recover").click
+          within_browser(selector) do
+            browser_root.locator(".show-more-actions").filter(visible: true).click
+            browser_root.locator("button.recover").filter(visible: true).click
           end
         end
         self
@@ -728,61 +1045,91 @@ module PageObjects
       # ── Pinned post assertions ─────────────────────────────────
 
       def has_pinned_post?(post)
-        has_css?(".nested-post--pinned [data-post-number='#{post.post_number}']")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            ".nested-post--pinned [data-post-number='#{post.post_number}']",
+          ).filter(visible: true),
+        )
       end
 
       def has_no_pinned_post?(post)
-        has_no_css?(".nested-post--pinned [data-post-number='#{post.post_number}']")
+        have_count(0).matches?(
+          browser_root.locator(
+            ".nested-post--pinned [data-post-number='#{post.post_number}']",
+          ).filter(visible: true),
+        )
       end
 
       # ── Load more ───────────────────────────────────────────────
 
       def has_load_more_roots_button?
-        has_css?(".nested-view__load-more")
+        have_count(0).does_not_match?(
+          browser_root.locator(".nested-view__load-more").filter(visible: true),
+        )
       end
 
       def click_load_more_roots
-        find(".nested-view__load-more").click
+        browser_root.locator(".nested-view__load-more").filter(visible: true).click
         self
       end
 
       # ── Cloaking ─────────────────────────────────────────────────
 
       def has_cloaked_root?
-        has_css?(".nested-view__roots > .nested-post--cloaked")
+        have_count(0).does_not_match?(
+          browser_root.locator(".nested-view__roots > .nested-post--cloaked").filter(visible: true),
+        )
       end
 
       def has_no_cloaked_root?
-        has_no_css?(".nested-view__roots > .nested-post--cloaked")
+        have_count(0).matches?(
+          browser_root.locator(".nested-view__roots > .nested-post--cloaked").filter(visible: true),
+        )
       end
 
       def has_cloaked_root_for?(post)
-        has_css?(".nested-post--cloaked [data-post-number='#{post.post_number}']")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            ".nested-post--cloaked [data-post-number='#{post.post_number}']",
+          ).filter(visible: true),
+        )
       end
 
       def has_uncloaked_root_for?(post)
-        has_no_css?(".nested-post--cloaked [data-post-number='#{post.post_number}']") &&
-          has_css?("[data-post-number='#{post.post_number}']")
+        have_count(0).matches?(
+          browser_root.locator(
+            ".nested-post--cloaked [data-post-number='#{post.post_number}']",
+          ).filter(visible: true),
+        ) &&
+          have_count(0).does_not_match?(
+            browser_root.locator("[data-post-number='#{post.post_number}']").filter(visible: true),
+          )
       end
 
       # ── Suggested topics ──────────────────────────────────────────
 
       def has_suggested_topics?
-        has_css?("#suggested-topics")
+        have_count(0).does_not_match?(
+          browser_root.locator("#suggested-topics").filter(visible: true),
+        )
       end
 
       def has_no_suggested_topics?
-        has_no_css?("#suggested-topics")
+        have_count(0).matches?(browser_root.locator("#suggested-topics").filter(visible: true))
       end
 
       def has_suggested_topic?(topic)
-        has_css?("#suggested-topics .topic-list-item[data-topic-id='#{topic.id}']")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "#suggested-topics .topic-list-item[data-topic-id='#{topic.id}']",
+          ).filter(visible: true),
+        )
       end
 
       private
 
       def post_container(post)
-        find("[data-post-number='#{post.post_number}']")
+        browser_root.locator("[data-post-number='#{post.post_number}']").filter(visible: true)
       end
 
       def wrapper_selector(post, child_selector = nil)

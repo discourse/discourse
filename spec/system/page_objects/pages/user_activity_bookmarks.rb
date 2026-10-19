@@ -6,7 +6,7 @@ module PageObjects
       def visit(user, q: nil)
         url = "/u/#{user.username_lower}/activity/bookmarks"
         url += "?q=#{q}" if q
-        page.visit(url)
+        browser_page.goto(url).tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
@@ -22,33 +22,45 @@ module PageObjects
 
       def clear_query_with_backspace
         search_element.click
-        page.execute_script(
-          "arguments[0].selectionStart = arguments[0].selectionEnd = arguments[0].value.length",
-          search_element.native,
+        browser_page.evaluate(
+          "function(arguments) { arguments[0].selectionStart = arguments[0].selectionEnd = arguments[0].value.length }",
+          arg: browser_arguments(search_element),
         )
-        search_element.value.length.times { search_element.send_keys(:backspace) }
+        search_element.input_value.length.times { browser_page.keyboard.press("Backspace") }
         self
       end
 
       def fill_in_search(query)
-        fill_in("bookmark-search", with: query)
+        browser_root
+          .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+          .and(
+            browser_root.locator(
+              "[id=#{"bookmark-search".to_s.to_json}], [name=#{"bookmark-search".to_s.to_json}]",
+            ).or(browser_root.get_by_label("bookmark-search", exact: true)),
+          )
+          .filter(visible: true)
+          .fill(query)
         self
       end
 
       def search_element
-        find_by_id("bookmark-search")
+        browser_root.locator("#bookmark-search").filter(visible: true)
       end
 
       def has_empty_search?
-        search_element.value == ""
+        search_element.input_value == ""
       end
 
       def has_topic?(topic)
-        has_content?(topic.title)
+        contain_text(browser_text_pattern(topic.title), useInnerText: true).matches?(
+          browser_content,
+        )
       end
 
       def has_no_topic?(topic)
-        has_no_content?(topic.title)
+        contain_text(browser_text_pattern(topic.title), useInnerText: true).does_not_match?(
+          browser_content,
+        )
       end
 
       def bookmark_list
@@ -56,7 +68,7 @@ module PageObjects
       end
 
       def submit_button
-        page.find(".bookmark-search-form button")
+        browser_root.locator(".bookmark-search-form button").filter(visible: true)
       end
     end
   end

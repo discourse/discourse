@@ -19,18 +19,24 @@ describe "Topic list" do
   let(:topic) { PageObjects::Pages::Topic.new }
 
   def focussed_topic_id
-    page.evaluate_script(
-      "document.activeElement.closest('.topic-list-item')?.dataset.topicId",
+    browser_page.evaluate(
+      "function(arguments) { return document.activeElement.closest('.topic-list-item')?.dataset.topicId }",
+      arg: [],
     )&.to_i
   end
 
   def focussed_post_id
-    page.evaluate_script("document.activeElement.closest('.onscreen-post')?.dataset.postId")&.to_i
+    browser_page.evaluate(
+      "function(arguments) { return document.activeElement.closest('.onscreen-post')?.dataset.postId }",
+      arg: [],
+    )&.to_i
   end
 
   it "refocusses last clicked topic when going back to topic list" do
-    visit("/latest")
-    expect(page).to have_css("body.navigation-topics")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_root.locator("body.navigation-topics").filter(visible: true)).not_to have_count(
+      0,
+    )
     expect(discovery.topic_list).to have_topics
 
     # Click a topic
@@ -38,8 +44,10 @@ describe "Topic list" do
     expect(topic).to have_topic_title(topics[5].title)
 
     # Going back to the topic-list should re-focus
-    page.go_back
-    expect(page).to have_css("body.navigation-topics")
+    browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_root.locator("body.navigation-topics").filter(visible: true)).not_to have_count(
+      0,
+    )
     expect(focussed_topic_id).to eq(topics[5].id)
 
     # Click topic again
@@ -47,21 +55,28 @@ describe "Topic list" do
     expect(topic).to have_topic_title(topics[5].title)
 
     # Visiting a topic list another way should not focus
-    find(".sidebar-section-link[data-link-name='everything']").click
-    expect(page).to have_css("body.navigation-topics")
+    browser_root
+      .locator(".sidebar-section-link[data-link-name='everything']")
+      .filter(visible: true)
+      .click
+    expect(browser_root.locator("body.navigation-topics").filter(visible: true)).not_to have_count(
+      0,
+    )
     expect(focussed_topic_id).to eq(nil)
   end
 
   it "refocusses properly when navigating via the 'last activity' link" do
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     # Visit topic via activity column and keyboard
     discovery.topic_list.visit_topic_last_reply_via_keyboard(topics[2])
     expect(topic).to have_topic_title(topics[2].title)
 
     # Going back to the topic-list should re-focus
-    page.go_back
-    expect(page).to have_css("body.navigation-topics")
+    browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_root.locator("body.navigation-topics").filter(visible: true)).not_to have_count(
+      0,
+    )
     expect(focussed_topic_id).to eq(topics[2].id)
 
     # Visit topic via keyboard using posts map (OP button)
@@ -69,21 +84,28 @@ describe "Topic list" do
     expect(topic).to have_topic_title(topics[4].title)
 
     # Going back to the topic-list should re-focus
-    page.go_back
-    expect(page).to have_css("body.navigation-topics")
+    browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_root.locator("body.navigation-topics").filter(visible: true)).not_to have_count(
+      0,
+    )
     expect(focussed_topic_id).to eq(topics[4].id)
   end
 
   it "does not refocus topic when visiting via something other than topic list" do
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     # Clicking sidebar link should visit topic
-    find(".sidebar-section-link[data-link-name='my topic link']").click
+    browser_root
+      .locator(".sidebar-section-link[data-link-name='my topic link']")
+      .filter(visible: true)
+      .click
     expect(topic).to have_topic_title(topics[4].title)
 
     # Going back to the topic-list should not re-focus
-    page.go_back
-    expect(page).to have_css("body.navigation-topics")
+    browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_root.locator("body.navigation-topics").filter(visible: true)).not_to have_count(
+      0,
+    )
     expect(focussed_topic_id).to eq(nil)
   end
 
@@ -92,10 +114,10 @@ describe "Topic list" do
     oldest_topic = Fabricate(:post).topic
     oldest_topic.update(bumped_at: 1.day.ago)
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     # Scroll to bottom for infinite load
-    page.execute_script <<~JS
+    browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: [])
       document.querySelectorAll('.topic-list-item')[24].scrollIntoView(true);
     JS
 
@@ -104,19 +126,23 @@ describe "Topic list" do
     expect(topic).to have_topic_title(oldest_topic.title)
 
     # Going back to the topic-list should re-focus
-    page.go_back
-    expect(page).to have_css("body.navigation-topics")
+    browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    expect(browser_root.locator("body.navigation-topics").filter(visible: true)).not_to have_count(
+      0,
+    )
     expect(focussed_topic_id).to eq(oldest_topic.id)
   end
 
   it "opens topic in new window when pressing meta+Enter" do
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(discovery.topic_list).to have_topics
 
     new_window =
-      window_opened_by { discovery.topic_list.send_keys_to_topic(topics[5], %i[meta return]) }
+      browser_page.expect_popup do
+        discovery.topic_list.send_keys_to_topic(topics[5], %i[meta return])
+      end
 
-    within_window(new_window) { expect(topic).to have_topic_title(topics[5].title) }
+    using_browser_page(new_window) { expect(topic).to have_topic_title(topics[5].title) }
   end
 
   it "shows a topic list" do
@@ -144,15 +170,15 @@ describe "Topic list" do
       topic.update!(views: views, like_count: rand(views / 100..views / 4))
     end
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(discovery.topic_list).to have_topics
     screenshot_marker(label: "topic-list")
 
-    visit "/categories"
+    browser_page.goto("/categories").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     screenshot_marker(label: "categories")
 
-    find("#create-topic").click
-    expect(page).to have_css("#reply-control.open")
+    browser_root.locator("#create-topic").filter(visible: true).click
+    expect(browser_root.locator("#reply-control.open").filter(visible: true)).not_to have_count(0)
     screenshot_marker(label: "composer-new-topic")
   end
 end

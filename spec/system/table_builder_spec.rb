@@ -30,10 +30,10 @@ describe "Table Builder" do
 
   context "when creating a new table" do
     it "adds spreadsheet table items to the composer" do
-      visit("/latest")
-      page.find("#create-topic").click
-      find(".toolbar-menu__options-trigger").click
-      page.find("button[data-name='toggle-spreadsheet']").click
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root.locator("#create-topic").filter(visible: true).click
+      browser_root.locator(".toolbar-menu__options-trigger").filter(visible: true).click
+      browser_root.locator("button[data-name='toggle-spreadsheet']").filter(visible: true).click
       insert_table_modal.type_in_cell(0, 0, "Item 1")
       insert_table_modal.type_in_cell(0, 1, "Item 2")
       insert_table_modal.type_in_cell(0, 2, "Item 3")
@@ -51,27 +51,31 @@ describe "Table Builder" do
             | |  |  | |
           TABLE
 
-      expect(normalize_value(composer.composer_input.value)).to eq(normalize_value(created_table))
+      expect(normalize_value(composer.composer_input.input_value)).to eq(
+        normalize_value(created_table),
+      )
     end
 
     context "when cancelling table creation" do
       it "closes the modal when nothing changed" do
-        visit("/latest")
-        page.find("#create-topic").click
-        find(".toolbar-menu__options-trigger").click
-        page.find("button[data-name='toggle-spreadsheet']").click
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        browser_root.locator("#create-topic").filter(visible: true).click
+        browser_root.locator(".toolbar-menu__options-trigger").filter(visible: true).click
+        browser_root.locator("button[data-name='toggle-spreadsheet']").filter(visible: true).click
         insert_table_modal.cancel
-        expect(page).to have_no_css(".insert-table-modal")
+        expect(browser_root.locator(".insert-table-modal").filter(visible: true)).to have_count(0)
       end
 
       it "warns about unsaved changes" do
-        visit("/latest")
-        page.find("#create-topic").click
-        find(".toolbar-menu__options-trigger").click
-        page.find("button[data-name='toggle-spreadsheet']").click
+        browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        browser_root.locator("#create-topic").filter(visible: true).click
+        browser_root.locator(".toolbar-menu__options-trigger").filter(visible: true).click
+        browser_root.locator("button[data-name='toggle-spreadsheet']").filter(visible: true).click
         insert_table_modal.type_in_cell(0, 0, "Item 1")
         insert_table_modal.cancel
-        expect(page).to have_css(".dialog-container .dialog-content")
+        expect(
+          browser_root.locator(".dialog-container .dialog-content").filter(visible: true),
+        ).not_to have_count(0)
       end
     end
   end
@@ -79,8 +83,8 @@ describe "Table Builder" do
   context "when editing a table" do
     it "prefills the spreadsheet from the post's Markdown table" do
       topic_page.visit_topic(topic)
-      topic_page.find(".btn-edit-table", visible: :all).click
-      expect(page).to have_selector(".insert-table-modal")
+      topic_page.locator(".btn-edit-table").click
+      expect(browser_root.locator(".insert-table-modal").filter(visible: true)).not_to have_count(0)
 
       expected_table_content = [
         %w[Toyota Supra 1998],
@@ -97,8 +101,8 @@ describe "Table Builder" do
 
     it "updates the post with the new table content" do
       topic_page.visit_topic(topic)
-      topic_page.find(".btn-edit-table", visible: :all).click
-      expect(page).to have_selector(".insert-table-modal")
+      topic_page.locator(".btn-edit-table").click
+      expect(browser_root.locator(".insert-table-modal").filter(visible: true)).not_to have_count(0)
       insert_table_modal.type_in_cell(1, 1, " GTR")
       insert_table_modal.click_insert_table
 
@@ -115,8 +119,8 @@ describe "Table Builder" do
 
     it "preserves an empty table header" do
       topic_page.visit_topic(topic2)
-      topic_page.find(".btn-edit-table", visible: :all).click
-      expect(page).to have_selector(".insert-table-modal")
+      topic_page.locator(".btn-edit-table").click
+      expect(browser_root.locator(".insert-table-modal").filter(visible: true)).not_to have_count(0)
       insert_table_modal.type_in_cell(0, 0, " updated")
       insert_table_modal.click_insert_table
 
@@ -135,8 +139,10 @@ describe "Table Builder" do
         edit_reason = "Updated Nissan model"
 
         topic_page.visit_topic(topic)
-        topic_page.find(".btn-edit-table", visible: :all).click
-        expect(page).to have_selector(".insert-table-modal")
+        topic_page.locator(".btn-edit-table").click
+        expect(browser_root.locator(".insert-table-modal").filter(visible: true)).not_to have_count(
+          0,
+        )
         insert_table_modal.type_in_cell(1, 1, " GTR")
         insert_table_modal.click_edit_reason
         insert_table_modal.type_edit_reason(edit_reason)
@@ -149,37 +155,43 @@ describe "Table Builder" do
     context "when cancelling table creation" do
       it "closes the modal when nothing changed" do
         topic_page.visit_topic(topic)
-        topic_page.find(".btn-edit-table", visible: :all).click
-        expect(page).to have_selector(".insert-table-modal")
+        topic_page.locator(".btn-edit-table").click
+        expect(browser_root.locator(".insert-table-modal").filter(visible: true)).not_to have_count(
+          0,
+        )
         insert_table_modal.cancel
-        expect(page).to have_no_css(".insert-table-modal")
+        expect(browser_root.locator(".insert-table-modal").filter(visible: true)).to have_count(0)
       end
 
       it "closes the modal if there are no changes in a table with empty headers" do
         topic_page.visit_topic(topic2)
-        topic_page.find(".btn-edit-table", visible: :all).click
+        topic_page.locator(".btn-edit-table").click
         insert_table_modal.cancel
 
-        expect(page).to have_no_css(".insert-table-modal")
+        expect(browser_root.locator(".insert-table-modal").filter(visible: true)).to have_count(0)
       end
 
       it "warns about unsaved changes" do
         topic_page.visit_topic(topic)
-        topic_page.find(".btn-edit-table", visible: :all).click
-        expect(page).to have_selector(".insert-table-modal")
+        topic_page.locator(".btn-edit-table").click
+        expect(browser_root.locator(".insert-table-modal").filter(visible: true)).not_to have_count(
+          0,
+        )
         insert_table_modal.type_in_cell(1, 1, " GTR")
         insert_table_modal.cancel
-        expect(page).to have_css(".dialog-container .dialog-content")
+        expect(
+          browser_root.locator(".dialog-container .dialog-content").filter(visible: true),
+        ).not_to have_count(0)
       end
     end
 
     it "ignores default Discourse keyboard shortcuts" do
       topic_page.visit_topic(topic)
-      topic_page.find(".btn-edit-table", visible: :all).click
-      insert_table_modal.find_cell(0, 0)
-      insert_table_modal.send_keys(:shift, "s")
-      expect(page).to have_css(".insert-table-modal")
-      expect(page).to have_no_css(".share-topic-modal")
+      topic_page.locator(".btn-edit-table").click
+      insert_table_modal.find_cell(0, 0).wait_for(state: "visible")
+      browser_page.keyboard.press(%w[Shift s].join("+"))
+      expect(browser_root.locator(".insert-table-modal").filter(visible: true)).not_to have_count(0)
+      expect(browser_root.locator(".share-topic-modal").filter(visible: true)).to have_count(0)
     end
 
     it "does not show duplicate edit buttons on quoted tables" do
@@ -194,9 +206,9 @@ describe "Table Builder" do
       quoting_post = create_post(user:, topic:, raw:)
       topic_page.visit_topic(topic)
 
-      within "#post_#{quoting_post.post_number}" do
-        expect(page).to have_css(".btn-edit-table", count: 1, visible: :all)
-      end
+      within_browser(
+        browser_root.locator("#post_#{quoting_post.post_number}").filter(visible: true),
+      ) { expect(browser_root.locator(".btn-edit-table")).to have_count(1) }
     end
   end
 end

@@ -4,7 +4,9 @@ module PageObjects
   module Pages
     class UserNotifications < PageObjects::Pages::Base
       def visit(user)
-        page.visit("/u/#{user.username}/notifications")
+        browser_page
+          .goto("/u/#{user.username}/notifications")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
@@ -17,7 +19,7 @@ module PageObjects
       end
 
       def find_notification(notification)
-        find(".notification a[href='#{notification.url}']")
+        browser_root.locator(".notification a[href='#{notification.url}']").filter(visible: true)
       end
 
       def has_selected_filter_value?(value)
@@ -25,15 +27,19 @@ module PageObjects
       end
 
       def has_notification?(notification)
-        page.has_css?(".notification a[href='#{notification.url}']")
+        have_count(0).does_not_match?(
+          browser_root.locator(".notification a[href='#{notification.url}']").filter(visible: true),
+        )
       end
 
       def has_no_notification?(notification)
-        page.has_no_css?(".notification a[href='#{notification.url}']")
+        have_count(0).matches?(
+          browser_root.locator(".notification a[href='#{notification.url}']").filter(visible: true),
+        )
       end
 
       def has_notification_count_of?(count)
-        page.has_css?(".notification", count: count)
+        have_count(count).matches?(browser_root.locator(".notification").filter(visible: true))
       end
     end
   end

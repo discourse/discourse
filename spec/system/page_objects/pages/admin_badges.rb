@@ -6,36 +6,48 @@ module PageObjects
       def visit_page(badge_id = nil)
         path = "/admin/badges"
         path += "/#{badge_id}" if badge_id
-        page.visit path
-        expect(page).to have_current_path(path)
-        expect(page).to have_css(".admin-badge-list")
+        browser_page.goto(path).tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(browser_page).to have_url(path)
+        expect(browser_root.locator(".admin-badge-list").filter(visible: true)).not_to have_count(0)
         self
       end
 
       def new_page
-        page.visit "/admin/badges/new"
+        browser_page.goto("/admin/badges/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def has_badge?(title)
-        page.has_css?(".current-badge-header .badge-display-name", text: title)
+        contain_text([browser_text_pattern(title)], useInnerText: true).matches?(
+          browser_root.locator(".current-badge-header .badge-display-name").filter(visible: true),
+        )
       end
 
       def filter_badges(text)
-        page.fill_in(class: "d-filter-controls__input", with: text)
+        browser_root
+          .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+          .and(browser_root.locator(".#{"d-filter-controls__input".to_s.split.join(".")}"))
+          .filter(visible: true)
+          .fill(text)
         self
       end
 
       def has_badge_in_list?(name)
-        page.has_css?(".admin-badge-list-item .badge-display-name", text: name)
+        contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
+          browser_root.locator(".admin-badge-list-item .badge-display-name").filter(visible: true),
+        )
       end
 
       def has_no_badge_in_list?(name)
-        page.has_no_css?(".admin-badge-list-item .badge-display-name", text: name)
+        contain_text([browser_text_pattern(name)], useInnerText: true).does_not_match?(
+          browser_root.locator(".admin-badge-list-item .badge-display-name").filter(visible: true),
+        )
       end
 
       def has_no_badges_found_message?
-        page.has_css?(".d-filter-controls__no-results")
+        have_count(0).does_not_match?(
+          browser_root.locator(".d-filter-controls__no-results").filter(visible: true),
+        )
       end
 
       def has_saved_form?
@@ -48,7 +60,7 @@ module PageObjects
       end
 
       def delete_badge
-        page.find(".badge-form__delete-badge-btn").click
+        browser_root.locator(".badge-form__delete-badge-btn").filter(visible: true).click
         self
       end
 
@@ -66,17 +78,25 @@ module PageObjects
       def upload_image(name)
         form.choose_conditional("upload-image")
 
-        attach_file(File.absolute_path(file_from_fixtures(name))) do
-          form.field("image_url").find(".file-uploader__controls .btn").click
-        end
+        browser_page
+          .expect_file_chooser do
+            form
+              .field("image_url")
+              .locator(".file-uploader__controls .btn")
+              .filter(visible: true)
+              .click
+          end
+          .set_files(File.absolute_path(file_from_fixtures(name)))
 
-        expect(form.field("image_url")).to have_css(".btn-danger")
+        expect(
+          form.field("image_url").locator(".btn-danger").filter(visible: true),
+        ).not_to have_count(0)
 
         self
       end
 
       def edit_groupings
-        page.find(".edit-groupings-btn").click
+        browser_root.locator(".edit-groupings-btn").filter(visible: true).click
         self
       end
 

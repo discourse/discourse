@@ -10,13 +10,17 @@ describe "Admin Site Setting Value Lists" do
     context "when on non-touch devices" do
       it "hides reorder buttons by default for simple-list settings" do
         settings_page.visit("top_menu")
-        expect(page).to have_css("html.discourse-no-touch")
+        expect(
+          browser_root.locator("html.discourse-no-touch").filter(visible: true),
+        ).not_to have_count(0)
         expect(settings_page).to have_hidden_reorder_buttons("top_menu")
       end
 
       it "hides reorder buttons by default for emoji-list settings" do
         settings_page.visit("default_emoji_reactions")
-        expect(page).to have_css("html.discourse-no-touch")
+        expect(
+          browser_root.locator("html.discourse-no-touch").filter(visible: true),
+        ).not_to have_count(0)
         expect(settings_page).to have_hidden_reorder_buttons("default_emoji_reactions")
       end
     end
@@ -24,13 +28,17 @@ describe "Admin Site Setting Value Lists" do
     context "when on touch devices", mobile: true do
       it "shows reorder buttons by default for simple-list settings" do
         settings_page.visit("top_menu")
-        expect(page).to have_css("html.discourse-touch")
+        expect(
+          browser_root.locator("html.discourse-touch").filter(visible: true),
+        ).not_to have_count(0)
         expect(settings_page).to have_visible_reorder_buttons("top_menu")
       end
 
       it "shows reorder buttons by default for emoji-list settings" do
         settings_page.visit("default_emoji_reactions")
-        expect(page).to have_css("html.discourse-touch")
+        expect(
+          browser_root.locator("html.discourse-touch").filter(visible: true),
+        ).not_to have_count(0)
         expect(settings_page).to have_visible_reorder_buttons("default_emoji_reactions")
       end
     end
@@ -48,13 +56,17 @@ describe "Admin Site Setting Value Lists" do
       context "when on non-touch devices" do
         it "shows the reorder handle for simple-list settings" do
           settings_page.visit("top_menu")
-          expect(page).to have_css("html.discourse-no-touch")
+          expect(
+            browser_root.locator("html.discourse-no-touch").filter(visible: true),
+          ).not_to have_count(0)
           expect(settings_page).to have_reorder_handle("top_menu")
         end
 
         it "shows the reorder handle for emoji-list settings" do
           settings_page.visit("default_emoji_reactions")
-          expect(page).to have_css("html.discourse-no-touch")
+          expect(
+            browser_root.locator("html.discourse-no-touch").filter(visible: true),
+          ).not_to have_count(0)
           expect(settings_page).to have_reorder_handle("default_emoji_reactions")
         end
       end
@@ -62,13 +74,17 @@ describe "Admin Site Setting Value Lists" do
       context "when on touch devices", mobile: true do
         it "shows the same reorder handle for simple-list settings" do
           settings_page.visit("top_menu")
-          expect(page).to have_css("html.discourse-touch")
+          expect(
+            browser_root.locator("html.discourse-touch").filter(visible: true),
+          ).not_to have_count(0)
           expect(settings_page).to have_reorder_handle("top_menu")
         end
 
         it "shows the same reorder handle for emoji-list settings" do
           settings_page.visit("default_emoji_reactions")
-          expect(page).to have_css("html.discourse-touch")
+          expect(
+            browser_root.locator("html.discourse-touch").filter(visible: true),
+          ).not_to have_count(0)
           expect(settings_page).to have_reorder_handle("default_emoji_reactions")
         end
       end
@@ -80,7 +96,7 @@ describe "Admin Site Setting Value Lists" do
         settings_page.save_setting("default_emoji_reactions")
         expect(settings_page).to have_overridden_setting("default_emoji_reactions")
 
-        page.refresh
+        browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(settings_page).to have_list_values_in_order(
           "default_emoji_reactions",
@@ -99,18 +115,29 @@ describe "Admin Site Setting Value Lists" do
           settings_page.visit_category("basic")
           expect(settings_page).to have_reorder_handle("top_menu")
 
-          page.execute_script(<<~JS)
+          browser_page.evaluate("function(arguments) { #{<<~JS} }", arg: [])
             document
               .querySelector("[data-setting='top_menu'] .d-reorderable-list__handle")
               .scrollIntoView({ block: "center" });
           JS
-          before = page.evaluate_script("Math.round(window.scrollY)")
+          before =
+            browser_page.evaluate(
+              "function(arguments) { return Math.round(window.scrollY) }",
+              arg: [],
+            )
           expect(before).to be > 0
 
           settings_page.open_reorder_menu("top_menu")
 
-          expect(page).to have_css(".d-reorderable-list__move-item:focus")
-          expect(page.evaluate_script("Math.round(window.scrollY)")).to eq(before)
+          expect(
+            browser_root.locator(".d-reorderable-list__move-item:focus").filter(visible: true),
+          ).not_to have_count(0)
+          expect(
+            browser_page.evaluate(
+              "function(arguments) { return Math.round(window.scrollY) }",
+              arg: [],
+            ),
+          ).to eq(before)
         end
       end
 
@@ -123,8 +150,10 @@ describe "Admin Site Setting Value Lists" do
 
         settings_page.open_reorder_menu("top_menu")
 
-        expect(page).to have_css(".d-reorderable-list__move-item:focus")
-        background = page.evaluate_script(<<~JS)
+        expect(
+          browser_root.locator(".d-reorderable-list__move-item:focus").filter(visible: true),
+        ).not_to have_count(0)
+        background = browser_page.evaluate("function(arguments) { return #{<<~JS} }", arg: [])
           getComputedStyle(document.querySelector(".d-reorderable-list__move-item:focus"))
             .backgroundColor
         JS

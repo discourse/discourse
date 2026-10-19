@@ -23,14 +23,14 @@ module PageObjects
       end
 
       def open_menu
-        find("#{@row_selector} #{@handle}").click
+        browser_root.locator("#{@row_selector} #{@handle}").filter(visible: true).click
         self
       end
 
       # @param target [Symbol, String] :top, :up, :down, :bottom, or :list.
       def move(target)
         open_menu
-        find(destination_selector(target)).click
+        browser_root.locator(destination_selector(target)).filter(visible: true).click
         self
       end
 
@@ -38,26 +38,34 @@ module PageObjects
       # only what it can reach and the set it publishes matches it.
       def has_destination?(target)
         open_menu
-        result = has_css?(destination_selector(target))
+        result =
+          have_count(0).does_not_match?(
+            browser_root.locator(destination_selector(target)).filter(visible: true),
+          )
         close_menu
         result
       end
 
       def has_no_destination?(target)
         open_menu
-        result = has_no_css?(destination_selector(target))
+        result =
+          have_count(0).matches?(
+            browser_root.locator(destination_selector(target)).filter(visible: true),
+          )
         close_menu
         result
       end
 
       def has_handle?
-        has_css?("#{@row_selector} #{@handle}")
+        have_count(0).does_not_match?(
+          browser_root.locator("#{@row_selector} #{@handle}").filter(visible: true),
+        )
       end
 
       private
 
       def close_menu
-        send_keys(:escape)
+        browser_page.keyboard.press("Escape")
       end
 
       def destination_selector(target)

@@ -191,7 +191,7 @@ RSpec.describe "Nested context view" do
 
       nested_view.route_to_nested_context(topic, post_number: chain_posts[4].post_number)
 
-      expect(page).to have_current_path(
+      expect(browser_page).to have_url(
         %r{/t/#{Regexp.escape(topic.slug)}/#{topic.id}/#{chain_posts[4].post_number}\b},
       )
       expect(nested_view).to have_post(chain_posts[4])
@@ -218,7 +218,7 @@ RSpec.describe "Nested context view" do
 
       nested_view.route_to_topic_post(topic, post_number: chain_posts[2].post_number)
 
-      expect(page).to have_current_path(
+      expect(browser_page).to have_url(
         %r{/t/#{Regexp.escape(topic.slug)}/#{topic.id}/#{chain_posts[2].post_number}\b},
       )
       expect(nested_view).to have_highlighted_post(chain_posts[2])
@@ -248,7 +248,7 @@ RSpec.describe "Nested context view" do
       composer.submit
       expect(composer).to be_closed
 
-      expect(page).to have_current_path(%r{/t/})
+      expect(browser_page).to have_url(%r{/t/})
     end
   end
 end

@@ -14,28 +14,30 @@ module PageObjects
 
       def select_icon(icon_id)
         filter(icon_id)
-        find("[data-icon-id='#{icon_id}']").click
+        browser_root.locator("[data-icon-id='#{icon_id}']").filter(visible: true).click
       end
 
       def select_first_icon
-        find("[data-icon-id]", match: :first).click
+        browser_root.locator("[data-icon-id]").filter(visible: true).first.click
       end
 
       def filter(term)
-        filter_input.fill_in(with: term)
+        filter_input.fill(term)
       end
 
       def type_filter(term)
-        filter_input.send_keys(term)
+        filter_input.press_sequentially(term)
         self
       end
 
       def filter_input
-        find(".d-icon-grid-picker__filter .filter-input")
+        browser_root.locator(".d-icon-grid-picker__filter .filter-input").filter(visible: true)
       end
 
       def has_icon?(icon_id)
-        page.has_css?("[data-icon-id='#{icon_id}']")
+        have_count(0).does_not_match?(
+          browser_root.locator("[data-icon-id='#{icon_id}']").filter(visible: true),
+        )
       end
 
       def clear
@@ -43,15 +45,15 @@ module PageObjects
       end
 
       def value
-        wrapper["data-value"]
+        wrapper.get_attribute("data-value")
       end
 
       def has_selected_icon?(icon_id)
-        wrapper["data-value"] == icon_id
+        wrapper.get_attribute("data-value") == icon_id
       end
 
       def has_no_selected_icon?
-        wrapper["data-value"].blank?
+        wrapper.get_attribute("data-value").blank?
       end
 
       def has_clear_button?
@@ -74,35 +76,21 @@ module PageObjects
 
       def scoped(selector)
         case @scope
-        when Capybara::Node::Element
-          @scope.find(selector)
+        when Playwright::Locator
+          @scope.locator(selector).filter(visible: true)
         when String
-          find("#{@scope} #{selector}")
+          browser_root.locator("#{@scope} #{selector}").filter(visible: true)
         else
-          find(selector)
+          browser_root.locator(selector).filter(visible: true)
         end
       end
 
-      def scoped_has_css?(selector, **opts)
-        case @scope
-        when Capybara::Node::Element
-          @scope.has_css?(selector, **opts)
-        when String
-          page.has_css?("#{@scope} #{selector}", **opts)
-        else
-          page.has_css?(selector, **opts)
-        end
+      def scoped_has_css?(selector)
+        have_count(0).does_not_match?(scoped(selector))
       end
 
-      def scoped_has_no_css?(selector, **opts)
-        case @scope
-        when Capybara::Node::Element
-          @scope.has_no_css?(selector, **opts)
-        when String
-          page.has_no_css?("#{@scope} #{selector}", **opts)
-        else
-          page.has_no_css?(selector, **opts)
-        end
+      def scoped_has_no_css?(selector)
+        have_count(0).matches?(scoped(selector))
       end
     end
   end

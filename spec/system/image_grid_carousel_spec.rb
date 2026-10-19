@@ -74,12 +74,12 @@ describe "Image Carousel" do
 
     carousel.focus_track
 
-    send_keys(:left)
+    browser_page.keyboard.press("ArrowLeft")
     expect(carousel).to have_active_slide_index(1)
 
     wait_for_timeout(150) # we throttle keyboard actions
 
-    send_keys(:right)
+    browser_page.keyboard.press("ArrowRight")
     expect(carousel).to have_active_slide_index(0)
   end
 
@@ -105,7 +105,7 @@ describe "Image Carousel" do
     expect(composer.image_grid).to have_selected_mode("grid")
 
     composer.toggle_rich_editor
-    expect(composer.composer_input.value).to include("[grid]")
+    expect(composer.composer_input.input_value).to include("[grid]")
   end
 
   it "keeps controls usable for short, tall, and multiple grids", js: true do

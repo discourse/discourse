@@ -4,7 +4,7 @@ module PageObjects
   module Components
     class TopicAdminMenu < Base
       def click_set_topic_timer
-        find(".admin-topic-timer-update button").click
+        browser_root.locator(".admin-topic-timer-update button").filter(visible: true).click
         PageObjects::Modals::EditTopicTimer.new
       end
     end

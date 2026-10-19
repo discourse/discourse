@@ -16,12 +16,24 @@ describe "User activity posts" do
   end
 
   it "lists posts with correctly-formatted titles" do
-    visit "/u/#{user.username_lower}/activity/replies"
+    browser_page
+      .goto("/u/#{user.username_lower}/activity/replies")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css(".stream-topic-title .title", count: 2)
+    expect(browser_root.locator(".stream-topic-title .title").filter(visible: true)).to have_count(
+      2,
+    )
 
-    title_element = find(".stream-topic-title .title a[href*='/#{topic1.id}/']")
-    expect(title_element).to have_text("Title with &amp; characters and emoji")
-    expect(title_element).to have_css("img.emoji[title='wave']")
+    title_element =
+      browser_root.locator(".stream-topic-title .title a[href*='/#{topic1.id}/']").filter(
+        visible: true,
+      )
+    expect(title_element).to contain_text(
+      browser_text_pattern("Title with &amp; characters and emoji"),
+      useInnerText: true,
+    )
+    expect(
+      title_element.locator("img.emoji[title='wave']").filter(visible: true),
+    ).not_to have_count(0)
   end
 end

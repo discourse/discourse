@@ -6,7 +6,7 @@ module PageObjects
       SELECTOR = ".badge-category__wrapper"
 
       def find_for_category(category)
-        find(category_selector(category))
+        browser_root.locator(category_selector(category)).filter(visible: true)
       end
 
       def category_selector(category)

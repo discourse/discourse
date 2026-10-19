@@ -10,18 +10,25 @@ describe "Custom sidebar sections" do
 
   shared_examples "creating custom sections" do |relative_root_url|
     it "allows the user to create custom section" do
-      visit("#{relative_root_url}/latest")
+      browser_page
+        .goto("#{relative_root_url}/latest")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(sidebar).to have_no_add_section_button
 
       sign_in user
-      visit("#{relative_root_url}/latest")
+      browser_page
+        .goto("#{relative_root_url}/latest")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       sidebar.click_add_section_button
 
-      expect(section_modal).to be_visible
+      expect(section_modal).to RSpecPredicates.be_visible
       expect(section_modal).to have_disabled_save
       expect(section_modal).to have_section_links_label
-      expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+      expect(sidebar.custom_section_modal_title).to contain_text(
+        browser_text_pattern("Add custom section"),
+        useInnerText: true,
+      )
 
       section_modal.fill_name("My section")
       section_modal.fill_link("Sidebar Tags", "/tags")
@@ -40,7 +47,7 @@ describe "Custom sidebar sections" do
 
   it "allows the user to create sections with different link formats" do
     sign_in user
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.click_add_section_button
     section_modal.fill_name("Preferences section")
@@ -62,9 +69,12 @@ describe "Custom sidebar sections" do
 
     sidebar.click_add_section_button
 
-    expect(section_modal).to be_visible
+    expect(section_modal).to RSpecPredicates.be_visible
     expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+    expect(sidebar.custom_section_modal_title).to contain_text(
+      browser_text_pattern("Add custom section"),
+      useInnerText: true,
+    )
 
     section_modal.fill_name("External link section")
 
@@ -83,9 +93,12 @@ describe "Custom sidebar sections" do
 
     sidebar.click_add_section_button
 
-    expect(section_modal).to be_visible
+    expect(section_modal).to RSpecPredicates.be_visible
     expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+    expect(sidebar.custom_section_modal_title).to contain_text(
+      browser_text_pattern("Add custom section"),
+      useInnerText: true,
+    )
 
     section_modal.fill_name("Anchor section")
     section_modal.fill_link("Faq", "/faq#anchor")
@@ -97,9 +110,12 @@ describe "Custom sidebar sections" do
 
     sidebar.click_add_section_button
 
-    expect(section_modal).to be_visible
+    expect(section_modal).to RSpecPredicates.be_visible
     expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+    expect(sidebar.custom_section_modal_title).to contain_text(
+      browser_text_pattern("Add custom section"),
+      useInnerText: true,
+    )
 
     section_modal.fill_name("Query section")
     section_modal.fill_link("Faq", "/faq?a=b")
@@ -111,9 +127,12 @@ describe "Custom sidebar sections" do
 
     sidebar.click_add_section_button
 
-    expect(section_modal).to be_visible
+    expect(section_modal).to RSpecPredicates.be_visible
     expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+    expect(sidebar.custom_section_modal_title).to contain_text(
+      browser_text_pattern("Add custom section"),
+      useInnerText: true,
+    )
 
     section_modal.fill_name("Heading section")
     section_modal.fill_link("Faq", "/faq#someheading")
@@ -134,12 +153,14 @@ describe "Custom sidebar sections" do
 
     sign_in user
 
-    visit("/latest?ascending=true&order=posts")
+    browser_page
+      .goto("/latest?ascending=true&order=posts")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(sidebar).to have_exact_url_match_link("Sorted latest")
     expect(sidebar).to have_no_active_links
     expect(sidebar).to have_no_exact_url_match_link("everything")
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(sidebar).to have_active_link("everything")
     expect(sidebar).to have_no_exact_url_match_link("Sorted latest")
   end
@@ -148,7 +169,7 @@ describe "Custom sidebar sections" do
     SiteSetting.top_menu = "read|posted|latest"
 
     sign_in user
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.click_add_section_button
     section_modal.fill_name("My section")
@@ -159,31 +180,34 @@ describe "Custom sidebar sections" do
     expect(sidebar).to have_section_link("Home", href: "/")
 
     sidebar.click_section_link("Home")
-    expect(page).to have_css("#navigation-bar .active a[href='/read']")
+    expect(
+      browser_root.locator("#navigation-bar .active a[href='/read']").filter(visible: true),
+    ).not_to have_count(0)
   end
 
   it "allows typing in the icon picker filter input" do
     sign_in user
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     sidebar.click_add_section_button
 
     picker = section_modal.first_link_icon_picker
     picker.expand.type_filter("globe")
 
-    expect(picker.filter_input.value).to eq("globe")
+    expect(picker.filter_input.input_value).to eq("globe")
     expect(picker).to have_icon("globe")
   end
 
   it "accessibility - when new row is added in custom section, first new input is focused" do
     sign_in user
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.click_add_section_button
     sidebar.click_add_link_button
 
     is_focused =
-      page.evaluate_script(
-        "document.activeElement.classList.contains('d-icon-grid-picker-trigger')",
+      browser_page.evaluate(
+        "function(arguments) { return document.activeElement.classList.contains('d-icon-grid-picker-trigger') }",
+        arg: [],
       )
 
     expect(is_focused).to be true
@@ -191,14 +215,18 @@ describe "Custom sidebar sections" do
 
   it "accessibility - when customization modal is closed, trigger is refocused" do
     sign_in user
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.click_add_section_button
     section_modal.close
 
     expect(section_modal).to be_closed
 
-    is_focused = page.evaluate_script("document.activeElement.classList.contains('add-section')")
+    is_focused =
+      browser_page.evaluate(
+        "function(arguments) { return document.activeElement.classList.contains('add-section') }",
+        arg: [],
+      )
 
     expect(is_focused).to be true
   end
@@ -211,10 +239,13 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
 
     sign_in user
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.edit_custom_section("My section")
-    expect(find("#discourse-modal-title")).to have_content("Edit custom section")
+    expect(browser_root.locator("#discourse-modal-title").filter(visible: true)).to contain_text(
+      browser_text_pattern("Edit custom section"),
+      useInnerText: true,
+    )
 
     section_modal.fill_name("Edited section")
     section_modal.fill_link("Edited Tags", "/tags")
@@ -248,7 +279,7 @@ describe "Custom sidebar sections" do
 
     sign_in user
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(sidebar.primary_section_links("my-section")).to eq(
       ["Sidebar Tags", "Sidebar Categories", "Sidebar Latest"],
@@ -256,9 +287,11 @@ describe "Custom sidebar sections" do
 
     sidebar.edit_custom_section("My section")
 
-    tags_link = find(".draggable[data-link-name='Sidebar Tags']")
-    latest_link = find(".draggable[data-link-name='Sidebar Latest']")
-    tags_link.drag_to(latest_link, delay: 0.4)
+    tags_link =
+      browser_root.locator(".draggable[data-link-name='Sidebar Tags']").filter(visible: true)
+    latest_link =
+      browser_root.locator(".draggable[data-link-name='Sidebar Latest']").filter(visible: true)
+    drag_browser_element(source: tags_link, target: latest_link, delay_seconds: 0.4)
     section_modal.save
     expect(section_modal).to be_closed
 
@@ -280,12 +313,14 @@ describe "Custom sidebar sections" do
 
     sign_in user
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.open_on_mobile
     sidebar.edit_custom_section("My section")
 
-    expect(page).not_to have_css(".sidebar-section-form-link .draggable")
+    expect(
+      browser_root.locator(".sidebar-section-form-link .draggable").filter(visible: true),
+    ).to have_count(0)
   end
 
   # TODO (ui-kit-reorderable-list-cleanup) fold these over the examples above
@@ -308,7 +343,7 @@ describe "Custom sidebar sections" do
       end
 
       sign_in user
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       sidebar.edit_custom_section("My section")
 
       url_field = ".sidebar-section-form-link input[name='link-url']"
@@ -319,9 +354,12 @@ describe "Custom sidebar sections" do
       drag_with_pointer(from: url_field, by: { x: -400 })
 
       expect(
-        page.evaluate_script(
-          "(() => { const i = document.querySelector(\"#{url_field}\"); " \
-            "return i.selectionEnd - i.selectionStart; })()",
+        browser_page.evaluate(
+          "function(arguments) { return #{
+            "(() => { const i = document.querySelector(\"#{url_field}\"); " \
+              "return i.selectionEnd - i.selectionStart; })()"
+          } }",
+          arg: [],
         ),
       ).to be > 0
     end
@@ -350,7 +388,7 @@ describe "Custom sidebar sections" do
 
       sign_in user
 
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(sidebar.primary_section_links("my-section")).to eq(
         ["Sidebar Tags", "Sidebar Categories", "Sidebar Latest"],
@@ -398,7 +436,7 @@ describe "Custom sidebar sections" do
 
       sign_in user
 
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       sidebar.edit_custom_section("My section")
 
@@ -454,14 +492,16 @@ describe "Custom sidebar sections" do
 
       sign_in user
 
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       sidebar.open_on_mobile
       sidebar.edit_custom_section("My section")
 
       # The handle renders on every viewport now that the drag begins on the grip
       # rather than anywhere on the row, so a press meant to scroll still scrolls.
-      expect(page).to have_css(".sidebar-section-form-link .draggable")
+      expect(
+        browser_root.locator(".sidebar-section-form-link .draggable").filter(visible: true),
+      ).not_to have_count(0)
 
       # Neither path substitutes for the other: the menu behind the handle is the
       # only route without a drag, and the drag is the only route without a
@@ -484,13 +524,15 @@ describe "Custom sidebar sections" do
     end
 
     sign_in user
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     rows = "[data-section-name='my-section'] li[data-sidebar-custom-link]"
-    expect(page).to have_css("#{rows}[data-drag-source]", count: 2)
+    expect(browser_root.locator("#{rows}[data-drag-source]").filter(visible: true)).to have_count(2)
     # The row drags as a registered source, so its anchor must not drag too.
     # Checked on the rendered value: the binding only works as a real boolean.
-    expect(page).to have_css("#{rows} a[draggable='false']", count: 2)
+    expect(
+      browser_root.locator("#{rows} a[draggable='false']").filter(visible: true),
+    ).to have_count(2)
 
     # Dropped below the target row's midpoint: its exact center sits on the
     # boundary the insertion index is measured against.
@@ -503,7 +545,11 @@ describe "Custom sidebar sections" do
       },
     )
 
-    expect(page).to have_css("#{rows}:first-child [data-link-name='Sidebar Categories']")
+    expect(
+      browser_root.locator("#{rows}:first-child [data-link-name='Sidebar Categories']").filter(
+        visible: true,
+      ),
+    ).not_to have_count(0)
     expect(sidebar.primary_section_links("my-section")).to eq(
       ["Sidebar Categories", "Sidebar Tags"],
     )
@@ -521,24 +567,34 @@ describe "Custom sidebar sections" do
     end
 
     sign_in user
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     rows = "[data-section-name='my-section'] li[data-sidebar-custom-link]"
-    expect(page).to have_css("#{rows}[data-drag-source]", count: 2)
+    expect(browser_root.locator("#{rows}[data-drag-source]").filter(visible: true)).to have_count(2)
 
     drag_and_hold(
       from: "#{rows}:first-child",
       over: ".sidebar-sections",
       to: ".sidebar-link-drop-target",
-    ) { expect(page).to have_css(".sidebar-link-drop-target:not(.is-arming)") }
+    ) do
+      expect(
+        browser_root.locator(".sidebar-link-drop-target:not(.is-arming)").filter(visible: true),
+      ).not_to have_count(0)
+    end
 
-    expect(page).to have_css(".sidebar-section-form-modal")
-    expect(find("input[name='link-name']").value).to eq("Sidebar Tags")
+    expect(
+      browser_root.locator(".sidebar-section-form-modal").filter(visible: true),
+    ).not_to have_count(0)
+    expect(browser_root.locator("input[name='link-name']").filter(visible: true).input_value).to eq(
+      "Sidebar Tags",
+    )
 
-    find("input[name='section-name']").fill_in(with: "Split out")
-    find("#save-section").click
+    browser_root.locator("input[name='section-name']").filter(visible: true).fill("Split out")
+    browser_root.locator("#save-section").filter(visible: true).click
 
-    expect(page).to have_css("[data-section-name='split-out']")
+    expect(
+      browser_root.locator("[data-section-name='split-out']").filter(visible: true),
+    ).not_to have_count(0)
     expect(sidebar.primary_section_links("split-out")).to eq(["Sidebar Tags"])
     expect(sidebar.primary_section_links("my-section")).to eq(["Sidebar Categories"])
   end
@@ -550,15 +606,15 @@ describe "Custom sidebar sections" do
     end
 
     sign_in user
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     sidebar.open_on_mobile
 
     rows = "[data-section-name='my-section'] li[data-sidebar-custom-link]"
-    expect(page).to have_css(rows)
-    expect(page).not_to have_css("#{rows}[data-drag-source]")
+    expect(browser_root.locator(rows).filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator("#{rows}[data-drag-source]").filter(visible: true)).to have_count(0)
     # With no registered drag to make room for, the attribute is left off and
     # the anchor keeps the browser default.
-    expect(page).not_to have_css("#{rows} a[draggable]")
+    expect(browser_root.locator("#{rows} a[draggable]").filter(visible: true)).to have_count(0)
   end
 
   it "does not allow the user to edit public section" do
@@ -569,19 +625,26 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
 
     sign_in user
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(sidebar).to have_section("Public section")
 
-    find(".sidebar-section[data-section-name='public-section']").hover
+    browser_root
+      .locator(".sidebar-section[data-section-name='public-section']")
+      .filter(visible: true)
+      .hover
 
-    expect(page).not_to have_css(
-      ".sidebar-section[data-section-name='public-section'] button.sidebar-section-header-button",
-    )
+    expect(
+      browser_root.locator(
+        ".sidebar-section[data-section-name='public-section'] button.sidebar-section-header-button",
+      ).filter(visible: true),
+    ).to have_count(0)
 
-    expect(page).not_to have_css(
-      ".sidebar-section[data-section-name='public-section'] .d-icon-globe",
-    )
+    expect(
+      browser_root.locator(
+        ".sidebar-section[data-section-name='public-section'] .d-icon-globe",
+      ).filter(visible: true),
+    ).to have_count(0)
   end
 
   it "allows the user to delete custom section" do
@@ -590,12 +653,12 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_1)
 
     sign_in user
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.edit_custom_section("My section")
 
     section_modal.delete
-    expect(section_modal).to have_text("Are you sure you want to delete this section?")
+    expect(section_modal).to have_displayed_text("Are you sure you want to delete this section?")
     section_modal.confirm_delete
 
     expect(sidebar).to have_no_section("My section")
@@ -603,7 +666,7 @@ describe "Custom sidebar sections" do
 
   it "allows admin to create, edit and delete public section" do
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     sidebar.click_add_section_button
 
     section_modal.fill_name("Public section")
@@ -613,13 +676,17 @@ describe "Custom sidebar sections" do
 
     expect(sidebar).to have_section("Public section")
     expect(sidebar).to have_section_link("Sidebar Tags")
-    expect(page).to have_css(".sidebar-section[data-section-name='public-section'] .d-icon-globe")
+    expect(
+      browser_root.locator(
+        ".sidebar-section[data-section-name='public-section'] .d-icon-globe",
+      ).filter(visible: true),
+    ).not_to have_count(0)
 
     sidebar.edit_custom_section("Public section")
     section_modal.fill_name("Edited public section")
     section_modal.save
 
-    expect(section_modal).to have_text(
+    expect(section_modal).to have_displayed_text(
       "Changes will be visible to everyone on this site. Are you sure?",
     )
 
@@ -629,7 +696,7 @@ describe "Custom sidebar sections" do
 
     sidebar.edit_custom_section("Edited public section")
     section_modal.delete
-    expect(section_modal).to have_text(
+    expect(section_modal).to have_displayed_text(
       "This section is visible to everyone, are you sure you want to delete it?",
     )
     section_modal.confirm_delete
@@ -649,10 +716,16 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
 
     sign_in user
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css(".sidebar-section-header", text: "公開セクション")
-    expect(page).to have_css(".sidebar-section-link", text: "タグ")
+    expect(browser_root.locator(".sidebar-section-header").filter(visible: true)).to contain_text(
+      [browser_text_pattern("公開セクション")],
+      useInnerText: true,
+    )
+    expect(browser_root.locator(".sidebar-section-link").filter(visible: true)).to contain_text(
+      [browser_text_pattern("タグ")],
+      useInnerText: true,
+    )
   end
 
   it "loads source labels when editing localized public custom sections" do
@@ -667,10 +740,16 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
 
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css(".sidebar-section-header", text: "公開セクション")
-    expect(page).to have_css(".sidebar-section-link", text: "タグ")
+    expect(browser_root.locator(".sidebar-section-header").filter(visible: true)).to contain_text(
+      [browser_text_pattern("公開セクション")],
+      useInnerText: true,
+    )
+    expect(browser_root.locator(".sidebar-section-link").filter(visible: true)).to contain_text(
+      [browser_text_pattern("タグ")],
+      useInnerText: true,
+    )
 
     sidebar.edit_custom_section("Public section")
 
@@ -689,7 +768,7 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
 
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.edit_custom_section("Public section")
 
@@ -705,7 +784,7 @@ describe "Custom sidebar sections" do
     SiteSetting.content_localization_supported_locales = "ja"
 
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.click_community_section_more_button
     sidebar.click_customize_community_section_button
@@ -722,7 +801,7 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
 
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.edit_custom_section("Docs")
 
@@ -740,7 +819,7 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_section_localization, sidebar_section:, locale: "ja", title: "ドキュメント")
 
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.edit_custom_section("Docs")
     section_modal.open_translations
@@ -759,7 +838,7 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
 
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.edit_custom_section("Public section")
     section_modal.open_translations
@@ -779,7 +858,7 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
 
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.edit_custom_section("Public section")
 
@@ -809,7 +888,7 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_url_localization, sidebar_url:, locale: "ja", name: "ガイド")
 
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.edit_custom_section("Docs")
     section_modal.open_translations
@@ -833,7 +912,7 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_url_localization, sidebar_url:, locale: "en", name: "Guide")
 
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.edit_custom_section("Docs")
     section_modal.fill_name("Documentation")
@@ -855,7 +934,7 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_section_localization, sidebar_section:, locale: "fr", title: "Docs FR")
 
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.edit_custom_section("Docs")
 
@@ -879,7 +958,7 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_section_link, sidebar_section:, linkable: api)
 
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.edit_custom_section("Docs")
     section_modal.open_translations
@@ -895,7 +974,7 @@ describe "Custom sidebar sections" do
       [%w[fr Documentation]],
     )
     expect(guide.reload.localizations.pluck(:locale, :name)).to eq([["fr", "Guide FR"]])
-    expect(api.reload.localizations).to be_empty
+    expect(api.reload.localizations).to RSpecPredicates.be_empty
   end
 
   it "labels a group by its own language when a link has a different source" do
@@ -911,7 +990,7 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_url_localization, sidebar_url: guide_ja, locale: "en", name: "Guide v2")
 
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.edit_custom_section("Docs")
     section_modal.open_translations
@@ -931,7 +1010,7 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_section_link, sidebar_section:, linkable: guide)
 
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.edit_custom_section("Docs")
     section_modal.open_translations
@@ -952,7 +1031,7 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_section_link, sidebar_section:, linkable: scratch)
 
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.edit_custom_section("Drafts")
     section_modal.mark_as_public
@@ -979,22 +1058,26 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_section_localization, sidebar_section:, locale: "fr", title: "Documentation")
 
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.edit_custom_section("Docs")
     section_modal.open_translations
     section_modal.fill_translation("fr", "Docs", "")
     section_modal.save
 
-    expect(page).to have_css(
-      ".dialog-body",
-      text: I18n.t("js.sidebar.sections.custom.localizations.remove_cleared_confirm", count: 1),
+    expect(browser_root.locator(".dialog-body").filter(visible: true)).to contain_text(
+      [
+        browser_text_pattern(
+          I18n.t("js.sidebar.sections.custom.localizations.remove_cleared_confirm", count: 1),
+        ),
+      ],
+      useInnerText: true,
     )
 
     section_modal.confirm_update
 
     expect(section_modal).to be_closed
-    expect(sidebar_section.reload.localizations).to be_empty
+    expect(sidebar_section.reload.localizations).to RSpecPredicates.be_empty
   end
 
   it "removes every translation for a language at once" do
@@ -1008,7 +1091,7 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_url_localization, sidebar_url: guide, locale: "fr", name: "Guide FR")
 
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.edit_custom_section("Docs")
     section_modal.open_translations
@@ -1024,8 +1107,8 @@ describe "Custom sidebar sections" do
     section_modal.confirm_update
 
     expect(section_modal).to be_closed
-    expect(sidebar_section.reload.localizations).to be_empty
-    expect(guide.reload.localizations).to be_empty
+    expect(sidebar_section.reload.localizations).to RSpecPredicates.be_empty
+    expect(guide.reload.localizations).to RSpecPredicates.be_empty
   end
 
   it "does not allow duplicate section title translation locales" do
@@ -1038,7 +1121,7 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
 
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.edit_custom_section("Public section")
     section_modal.open_translations
@@ -1053,7 +1136,7 @@ describe "Custom sidebar sections" do
 
   it "displays warning when public section is marked as private" do
     sign_in admin
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     sidebar.click_add_section_button
 
     section_modal.fill_name("Public section")
@@ -1068,7 +1151,7 @@ describe "Custom sidebar sections" do
     section_modal.mark_as_public
     section_modal.save
 
-    expect(section_modal).to have_text(
+    expect(section_modal).to have_displayed_text(
       "This section is visible to everyone. After the update, it will be visible only to you. Are you sure?",
     )
 
@@ -1076,9 +1159,11 @@ describe "Custom sidebar sections" do
 
     expect(section_modal).to be_closed
     expect(sidebar).to have_section("Edited public section")
-    expect(page).not_to have_css(
-      ".sidebar-section[data-section-name='edited-public-section'] .d-icon-globe",
-    )
+    expect(
+      browser_root.locator(
+        ".sidebar-section[data-section-name='edited-public-section'] .d-icon-globe",
+      ).filter(visible: true),
+    ).to have_count(0)
   end
 
   it "shows anonymous public sections" do
@@ -1088,7 +1173,7 @@ describe "Custom sidebar sections" do
     sidebar_url_2 = Fabricate(:sidebar_url, name: "Sidebar Categories", value: "/categories")
     Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(sidebar).to have_section("Public section")
     expect(sidebar).to have_section_link("Sidebar Tags")
     expect(sidebar).to have_section_link("Sidebar Categories")
@@ -1110,32 +1195,50 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
 
     sign_in user
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     sidebar.click_section_link("Tagged")
 
-    expect(page).to have_current_path(
+    expect(browser_page).to have_url(
       "/tags/c/#{category.slug}/#{category.id}/#{tag.slug}/#{tag.id}?status=closed",
     )
   end
 
   it "validates custom section fields" do
     sign_in user
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     sidebar.click_add_section_button
 
     section_modal.fill_name("A" * (SidebarSection::MAX_TITLE_LENGTH + 1))
     section_modal.fill_link("B" * (SidebarUrl::MAX_NAME_LENGTH + 1), "https:")
 
-    expect(page.find(".title.warning")).to have_content("Title must be shorter than 30 characters")
-    expect(page.find(".name.warning")).to have_content("Name must be shorter than 80 characters")
-    expect(page.find(".value.warning")).to have_content("Format is invalid")
+    expect(browser_root.locator(".title.warning").filter(visible: true)).to contain_text(
+      browser_text_pattern("Title must be shorter than 30 characters"),
+      useInnerText: true,
+    )
+    expect(browser_root.locator(".name.warning").filter(visible: true)).to contain_text(
+      browser_text_pattern("Name must be shorter than 80 characters"),
+      useInnerText: true,
+    )
+    expect(browser_root.locator(".value.warning").filter(visible: true)).to contain_text(
+      browser_text_pattern("Format is invalid"),
+      useInnerText: true,
+    )
 
     section_modal.fill_name("")
     section_modal.fill_link("", "")
-    expect(page.find(".title.warning")).to have_content("Title cannot be blank")
-    expect(page.find(".name.warning")).to have_content("Name cannot be blank")
-    expect(page.find(".value.warning")).to have_content("Link cannot be blank")
+    expect(browser_root.locator(".title.warning").filter(visible: true)).to contain_text(
+      browser_text_pattern("Title cannot be blank"),
+      useInnerText: true,
+    )
+    expect(browser_root.locator(".name.warning").filter(visible: true)).to contain_text(
+      browser_text_pattern("Name cannot be blank"),
+      useInnerText: true,
+    )
+    expect(browser_root.locator(".value.warning").filter(visible: true)).to contain_text(
+      browser_text_pattern("Link cannot be blank"),
+      useInnerText: true,
+    )
 
     expect(section_modal).to have_disabled_save
   end
@@ -1153,7 +1256,7 @@ describe "Custom sidebar sections" do
 
     sign_in user
 
-    visit("/latest")
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(sidebar).to have_section_expanded("談話")
     expect(sidebar).to have_section_expanded("趣")

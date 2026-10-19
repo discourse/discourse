@@ -35,7 +35,7 @@ describe "Viewing sidebar as anonymous user" do
     it "hides the tags section when tagging is disabled" do
       SiteSetting.tagging_enabled = false
 
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(sidebar).to have_no_tags_section
     end
@@ -43,13 +43,13 @@ describe "Viewing sidebar as anonymous user" do
     it "hides the tags section when there are no top or configured tags" do
       Tag.delete_all
 
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(sidebar).to have_no_tags_section
     end
 
     it "shows the site's top tags when no navigation tags are configured" do
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(sidebar).to have_tags_section
       expect(sidebar).to have_all_tags_section_link
@@ -60,7 +60,7 @@ describe "Viewing sidebar as anonymous user" do
       SiteSetting.default_navigation_menu_tags = "#{tag5.name}"
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag5.name])
 
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(sidebar).to have_tags_section
       expect(sidebar).to have_all_tags_section_link
@@ -70,7 +70,7 @@ describe "Viewing sidebar as anonymous user" do
     it "shows the configured navigation tags" do
       SiteSetting.default_navigation_menu_tags = "#{tag3.name}|#{tag4.name}"
 
-      visit("/latest")
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(sidebar).to have_tags_section
       expect(sidebar).to have_all_tags_section_link

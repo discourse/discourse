@@ -20,7 +20,9 @@ module PageObjects
       end
 
       def banner_image_uploader
-        PageObjects::Components::UppyImageUploader.new(card.find(".file-uploader"))
+        PageObjects::Components::UppyImageUploader.new(
+          card.locator(".file-uploader").filter(visible: true),
+        )
       end
 
       def has_no_banner_image_field?
@@ -42,7 +44,9 @@ module PageObjects
       end
 
       def card
-        find(".admin-config-area-about__general-settings-section")
+        browser_root.locator(".admin-config-area-about__general-settings-section").filter(
+          visible: true,
+        )
       end
 
       def form

@@ -35,7 +35,7 @@ describe "Unified new topic list" do
       before { SiteSetting.enable_unified_new = true }
 
       it "lets the user switch between all new topics, topics, and replies" do
-        visit("/new")
+        browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(topic_list).to have_topics(count: 6)
         [
@@ -47,8 +47,8 @@ describe "Unified new topic list" do
           new_topic_with_tag,
         ].each { |topic| expect(topic_list).to have_topic(topic) }
 
-        expect(tabs_toggle.replies_tab).to have_count(3)
-        expect(tabs_toggle.topics_tab).to have_count(3)
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(3)
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(3)
 
         expect(tabs_toggle.all_tab).to be_active
         expect(tabs_toggle.replies_tab).to be_inactive
@@ -65,10 +65,10 @@ describe "Unified new topic list" do
         expect(tabs_toggle.replies_tab).to be_inactive
         expect(tabs_toggle.topics_tab).to be_active
 
-        expect(tabs_toggle.replies_tab).to have_count(3)
-        expect(tabs_toggle.topics_tab).to have_count(3)
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(3)
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(3)
 
-        expect(page).to have_current_path("/new?subset=topics")
+        expect(browser_page).to have_url("/new?subset=topics")
 
         tabs_toggle.all_tab.click
 
@@ -86,20 +86,24 @@ describe "Unified new topic list" do
         expect(tabs_toggle.replies_tab).to be_active
         expect(tabs_toggle.topics_tab).to be_inactive
 
-        expect(tabs_toggle.replies_tab).to have_count(3)
-        expect(tabs_toggle.topics_tab).to have_count(3)
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(3)
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(3)
 
-        expect(page).to have_current_path("/new?subset=replies")
+        expect(browser_page).to have_url("/new?subset=replies")
       end
 
       it "respects the subset query param and activates the appropriate tab" do
-        visit("/new?subset=topics")
+        browser_page
+          .goto("/new?subset=topics")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(tabs_toggle.all_tab).to be_inactive
         expect(tabs_toggle.replies_tab).to be_inactive
         expect(tabs_toggle.topics_tab).to be_active
 
-        visit("/new?subset=replies")
+        browser_page
+          .goto("/new?subset=replies")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(tabs_toggle.all_tab).to be_inactive
         expect(tabs_toggle.replies_tab).to be_active
@@ -107,41 +111,43 @@ describe "Unified new topic list" do
       end
 
       it "strips out the subset query params when switching back to the All tab from any of the other tabs" do
-        visit("/new")
+        browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         tabs_toggle.replies_tab.click
 
         expect(tabs_toggle.all_tab).to be_inactive
         expect(tabs_toggle.replies_tab).to be_active
 
-        expect(page).to have_current_path("/new?subset=replies")
+        expect(browser_page).to have_url("/new?subset=replies")
 
         tabs_toggle.all_tab.click
 
         expect(tabs_toggle.all_tab).to be_active
         expect(tabs_toggle.replies_tab).to be_inactive
-        expect(page).to have_current_path("/new")
+        expect(browser_page).to have_url("/new")
       end
 
       it "live-updates the counts shown on the tabs" do
-        visit("/new")
+        browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(tabs_toggle.replies_tab).to have_count(3)
-        expect(tabs_toggle.topics_tab).to have_count(3)
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(3)
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(3)
 
         TopicUser.update_last_read(user, new_reply_in_category.id, 2, 1, 1)
 
-        expect(tabs_toggle.replies_tab).to have_count(2)
-        expect(tabs_toggle.topics_tab).to have_count(3)
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(2)
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(3)
 
         TopicUser.update_last_read(user, new_topic.id, 1, 1, 1)
 
-        expect(tabs_toggle.replies_tab).to have_count(2)
-        expect(tabs_toggle.topics_tab).to have_count(2)
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(2)
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(2)
       end
 
       context "when the /new topic list is scoped to a category" do
         it "lets the user switch between new topics and replies in the category" do
-          visit("/c/#{category.slug}/#{category.id}/l/new")
+          browser_page
+            .goto("/c/#{category.slug}/#{category.id}/l/new")
+            .tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(topic_list).to have_topics(count: 2)
           expect(topic_list).to have_topic(new_reply_in_category)
           expect(topic_list).to have_topic(new_topic_in_category)
@@ -150,8 +156,8 @@ describe "Unified new topic list" do
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_inactive
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(1)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(1)
 
           tabs_toggle.topics_tab.click
 
@@ -162,12 +168,10 @@ describe "Unified new topic list" do
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_active
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(1)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(1)
 
-          expect(page).to have_current_path(
-            "/c/#{category.slug}/#{category.id}/l/new?subset=topics",
-          )
+          expect(browser_page).to have_url("/c/#{category.slug}/#{category.id}/l/new?subset=topics")
 
           tabs_toggle.all_tab.click
 
@@ -183,22 +187,26 @@ describe "Unified new topic list" do
           expect(tabs_toggle.replies_tab).to be_active
           expect(tabs_toggle.topics_tab).to be_inactive
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(1)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(1)
 
-          expect(page).to have_current_path(
+          expect(browser_page).to have_url(
             "/c/#{category.slug}/#{category.id}/l/new?subset=replies",
           )
         end
 
         it "respects the subset query param and activates the appropriate tab" do
-          visit("/c/#{category.slug}/#{category.id}/l/new?subset=topics")
+          browser_page
+            .goto("/c/#{category.slug}/#{category.id}/l/new?subset=topics")
+            .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
           expect(tabs_toggle.all_tab).to be_inactive
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_active
 
-          visit("/c/#{category.slug}/#{category.id}/l/new?subset=replies")
+          browser_page
+            .goto("/c/#{category.slug}/#{category.id}/l/new?subset=replies")
+            .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
           expect(tabs_toggle.all_tab).to be_inactive
           expect(tabs_toggle.replies_tab).to be_active
@@ -208,21 +216,25 @@ describe "Unified new topic list" do
         it "live-updates the counts shown on the tabs" do
           Fabricate(:post, topic: Fabricate(:topic, category: category))
 
-          visit("/c/#{category.slug}/#{category.id}/l/new")
+          browser_page
+            .goto("/c/#{category.slug}/#{category.id}/l/new")
+            .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(2)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(2)
 
           TopicUser.update_last_read(user, new_topic_in_category.id, 1, 1, 1)
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(1)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(1)
         end
       end
 
       context "when the /new topic list is scoped to a tag" do
         it "lets the user switch between new topics and replies with the tag" do
-          visit("/tag/#{tag.slug}/#{tag.id}/l/new")
+          browser_page
+            .goto("/tag/#{tag.slug}/#{tag.id}/l/new")
+            .tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(topic_list).to have_topics(count: 2)
           [new_reply_with_tag, new_topic_with_tag].each do |topic|
             expect(topic_list).to have_topic(topic)
@@ -232,8 +244,8 @@ describe "Unified new topic list" do
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_inactive
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(1)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(1)
 
           tabs_toggle.topics_tab.click
 
@@ -244,10 +256,10 @@ describe "Unified new topic list" do
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_active
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(1)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(1)
 
-          expect(page).to have_current_path("/tag/#{tag.slug}/#{tag.id}/l/new?subset=topics")
+          expect(browser_page).to have_url("/tag/#{tag.slug}/#{tag.id}/l/new?subset=topics")
 
           tabs_toggle.all_tab.click
 
@@ -263,20 +275,24 @@ describe "Unified new topic list" do
           expect(tabs_toggle.replies_tab).to be_active
           expect(tabs_toggle.topics_tab).to be_inactive
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(1)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(1)
 
-          expect(page).to have_current_path("/tag/#{tag.slug}/#{tag.id}/l/new?subset=replies")
+          expect(browser_page).to have_url("/tag/#{tag.slug}/#{tag.id}/l/new?subset=replies")
         end
 
         it "respects the subset query param and activates the appropriate tab" do
-          visit("/tag/#{tag.slug}/#{tag.id}/l/new?subset=topics")
+          browser_page
+            .goto("/tag/#{tag.slug}/#{tag.id}/l/new?subset=topics")
+            .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
           expect(tabs_toggle.all_tab).to be_inactive
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_active
 
-          visit("/tag/#{tag.slug}/#{tag.id}/l/new?subset=replies")
+          browser_page
+            .goto("/tag/#{tag.slug}/#{tag.id}/l/new?subset=replies")
+            .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
           expect(tabs_toggle.all_tab).to be_inactive
           expect(tabs_toggle.replies_tab).to be_active
@@ -286,15 +302,17 @@ describe "Unified new topic list" do
         it "live-updates the counts shown on the tabs" do
           Fabricate(:post, topic: Fabricate(:topic, tags: [tag]))
 
-          visit("/tag/#{tag.slug}/#{tag.id}/l/new")
+          browser_page
+            .goto("/tag/#{tag.slug}/#{tag.id}/l/new")
+            .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(2)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(2)
 
           TopicUser.update_last_read(user, new_topic_with_tag.id, 1, 1, 1)
 
-          expect(tabs_toggle.replies_tab).to have_count(1)
-          expect(tabs_toggle.topics_tab).to have_count(1)
+          expect(tabs_toggle.replies_tab).to RSpecPredicates.have_count(1)
+          expect(tabs_toggle.topics_tab).to RSpecPredicates.have_count(1)
         end
       end
     end
@@ -303,7 +321,7 @@ describe "Unified new topic list" do
       before { SiteSetting.enable_unified_new = false }
 
       it "doesn't show the tabs toggle" do
-        visit("/new")
+        browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(tabs_toggle).to be_not_rendered
       end
     end
@@ -322,22 +340,24 @@ describe "Unified new topic list" do
       end
 
       it "shows All, Topics, and Replies tabs" do
-        visit("/new")
+        browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(tabs_toggle).to be_rendered
-        expect(tabs_toggle.all_tab).to be_visible
-        expect(tabs_toggle.replies_tab).to be_visible
-        expect(tabs_toggle.topics_tab).to be_visible
+        expect(tabs_toggle.all_tab).to RSpecPredicates.be_visible
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.be_visible
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.be_visible
       end
 
       it "shows a CTA to show replies when on the new topics tab" do
-        visit("/new?subset=topics")
+        browser_page
+          .goto("/new?subset=topics")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(empty_state).to have_cta_text(I18n.t("js.topic.browse_new_replies"))
         empty_state.click_cta
 
         expect(tabs_toggle.replies_tab).to be_active
-        expect(page).to have_current_path("/new?subset=replies")
+        expect(browser_page).to have_url("/new?subset=replies")
       end
     end
 
@@ -351,22 +371,24 @@ describe "Unified new topic list" do
       end
 
       it "shows All, Topics, and Replies tabs" do
-        visit("/new")
+        browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(tabs_toggle).to be_rendered
-        expect(tabs_toggle.all_tab).to be_visible
-        expect(tabs_toggle.replies_tab).to be_visible
-        expect(tabs_toggle.topics_tab).to be_visible
+        expect(tabs_toggle.all_tab).to RSpecPredicates.be_visible
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.be_visible
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.be_visible
       end
 
       it "shows a CTA to show topics when on the new replies tab" do
-        visit("/new?subset=replies")
+        browser_page
+          .goto("/new?subset=replies")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(empty_state).to have_cta_text(I18n.t("js.topic.browse_new_topics"))
         empty_state.click_cta
 
         expect(tabs_toggle.topics_tab).to be_active
-        expect(page).to have_current_path("/new?subset=topics")
+        expect(browser_page).to have_url("/new?subset=topics")
       end
     end
   end
@@ -384,22 +406,24 @@ describe "Unified new topic list" do
       end
 
       it "shows All, Topics, and Replies tabs" do
-        visit("/new")
+        browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(tabs_toggle).to be_rendered
-        expect(tabs_toggle.all_tab).to be_visible
-        expect(tabs_toggle.replies_tab).to be_visible
-        expect(tabs_toggle.topics_tab).to be_visible
+        expect(tabs_toggle.all_tab).to RSpecPredicates.be_visible
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.be_visible
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.be_visible
       end
 
       it "shows a CTA to show topics when on the new replies tab" do
-        visit("/new?subset=replies")
+        browser_page
+          .goto("/new?subset=replies")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(empty_state).to have_cta_text(I18n.t("js.topic.browse_new_topics"))
         empty_state.click_cta
 
         expect(tabs_toggle.topics_tab).to be_active
-        expect(page).to have_current_path("/new?subset=topics")
+        expect(browser_page).to have_url("/new?subset=topics")
       end
     end
 
@@ -413,22 +437,24 @@ describe "Unified new topic list" do
       end
 
       it "shows All, Topics, and Replies tabs" do
-        visit("/new")
+        browser_page.goto("/new").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(tabs_toggle).to be_rendered
-        expect(tabs_toggle.all_tab).to be_visible
-        expect(tabs_toggle.replies_tab).to be_visible
-        expect(tabs_toggle.topics_tab).to be_visible
+        expect(tabs_toggle.all_tab).to RSpecPredicates.be_visible
+        expect(tabs_toggle.replies_tab).to RSpecPredicates.be_visible
+        expect(tabs_toggle.topics_tab).to RSpecPredicates.be_visible
       end
 
       it "shows a CTA to show replies when on the new topics tab" do
-        visit("/new?subset=topics")
+        browser_page
+          .goto("/new?subset=topics")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(empty_state).to have_cta_text(I18n.t("js.topic.browse_new_replies"))
         empty_state.click_cta
 
         expect(tabs_toggle.replies_tab).to be_active
-        expect(page).to have_current_path("/new?subset=replies")
+        expect(browser_page).to have_url("/new?subset=replies")
       end
     end
   end

@@ -4,29 +4,46 @@ module PageObjects
   module Pages
     class AdminWebhooks < PageObjects::Pages::Base
       def visit_page
-        page.visit("/admin/api/web_hooks")
+        browser_page
+          .goto("/admin/api/web_hooks")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def has_webhook_listed?(url)
-        page.has_css?(table_selector, text: url)
+        contain_text([browser_text_pattern(url)], useInnerText: true).matches?(
+          browser_root.locator(table_selector).filter(visible: true),
+        )
       end
 
       def has_no_webhook_listed?(url)
-        page.has_no_css?(table_selector, text: url)
+        contain_text([browser_text_pattern(url)], useInnerText: true).does_not_match?(
+          browser_root.locator(table_selector).filter(visible: true),
+        )
       end
 
       def has_webhook_details?(url)
-        page.has_css?(summary_selector, text: url)
+        contain_text([browser_text_pattern(url)], useInnerText: true).matches?(
+          browser_root.locator(summary_selector).filter(visible: true),
+        )
       end
 
       def click_add
-        page.find(header_actions_selector, text: I18n.t("admin_js.admin.web_hooks.add")).click
+        browser_root
+          .locator(header_actions_selector)
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern(I18n.t("admin_js.admin.web_hooks.add")))
+          .click
         self
       end
 
       def fill_payload_url(payload_url)
-        page.find(form_selector).find(payload_url_field_selector).fill_in(with: payload_url)
+        browser_root
+          .locator(form_selector)
+          .filter(visible: true)
+          .locator(payload_url_field_selector)
+          .filter(visible: true)
+          .fill(payload_url)
         self
       end
 
@@ -37,29 +54,41 @@ module PageObjects
       end
 
       def edit_payload_url(payload_url)
-        form = page.find(form_selector)
-        form.find(payload_url_field_selector).fill_in(with: payload_url)
+        form = browser_root.locator(form_selector).filter(visible: true)
+        form.locator(payload_url_field_selector).filter(visible: true).fill(payload_url)
 
         click_save
       end
 
       def click_back
-        page.find(back_button_selector).click
+        browser_root.locator(back_button_selector).filter(visible: true).click
       end
 
       def click_save
-        page.find(save_button_selector).click
+        browser_root.locator(save_button_selector).filter(visible: true).click
       end
 
       def click_edit(payload_url)
-        row = page.find(row_selector, text: payload_url)
-        row.find("button", text: I18n.t("admin_js.admin.web_hooks.edit")).click
+        row =
+          browser_root
+            .locator(row_selector)
+            .filter(visible: true)
+            .filter(hasText: browser_text_pattern(payload_url))
+        row
+          .locator("button")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern(I18n.t("admin_js.admin.web_hooks.edit")))
+          .click
       end
 
       def click_delete(payload_url)
-        row = page.find(row_selector, text: payload_url)
-        row.find(".webhook-menu-trigger").click
-        page.find(".admin-web-hook__delete").click
+        row =
+          browser_root
+            .locator(row_selector)
+            .filter(visible: true)
+            .filter(hasText: browser_text_pattern(payload_url))
+        row.locator(".webhook-menu-trigger").filter(visible: true).click
+        browser_root.locator(".admin-web-hook__delete").filter(visible: true).click
       end
 
       private

@@ -19,7 +19,7 @@ describe "Admin Dashboard Redesign" do
 
     dashboard.select_preset("last_7_days")
 
-    expect(page).to have_current_path("/admin?range=last_7_days")
+    expect(browser_page).to have_url("/admin?range=last_7_days")
     expect(dashboard).to have_active_period("last_7_days")
 
     picker = dashboard.open_custom_date_range
@@ -28,14 +28,14 @@ describe "Admin Dashboard Redesign" do
     picker.apply
 
     expect(dashboard).to have_active_period("custom")
-    expect(page).to have_current_path(
+    expect(browser_page).to have_url(
       "/admin?end_date=2026-05-20&range=custom&start_date=2026-05-01",
     )
     expect(dashboard).to have_custom_label("May 1, 2026 – May 20, 2026")
 
     dashboard.select_preset("last_6_months")
 
-    expect(page).to have_current_path("/admin?range=last_6_months")
+    expect(browser_page).to have_url("/admin?range=last_6_months")
     expect(dashboard).to have_active_period("last_6_months")
   end
 

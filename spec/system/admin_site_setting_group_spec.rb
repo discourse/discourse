@@ -16,7 +16,7 @@ describe "Admin site setting group" do
     chooser.select_row_by_value(group.id)
 
     settings_page.save_setting("site_contact_group_name")
-    page.refresh
+    browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(SiteSetting.site_contact_group_name).to eq(group.id.to_s)
     expect(settings_page.group_setting("site_contact_group_name")).to have_selected_name(group.name)

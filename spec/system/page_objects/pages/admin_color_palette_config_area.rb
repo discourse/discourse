@@ -4,7 +4,9 @@ module PageObjects
   module Pages
     class AdminColorPaletteConfigArea < PageObjects::Pages::Base
       def visit(palette_id)
-        page.visit("/admin/config/colors/#{palette_id}")
+        browser_page
+          .goto("/admin/config/colors/#{palette_id}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       end
 
       def form
@@ -12,11 +14,15 @@ module PageObjects
       end
 
       def palette_id
-        find(form.component)["data-palette-id"].to_i
+        browser_root
+          .locator(form.component)
+          .filter(visible: true)
+          .get_attribute("data-palette-id")
+          .to_i
       end
 
       def edit_name_button
-        find(".admin-config-color-palettes__edit-name")
+        browser_root.locator(".admin-config-color-palettes__edit-name").filter(visible: true)
       end
 
       def name_field
@@ -24,15 +30,15 @@ module PageObjects
       end
 
       def name_heading
-        find(".admin-config-color-palettes__name")
+        browser_root.locator(".admin-config-color-palettes__name").filter(visible: true)
       end
 
       def name_save_button
-        find(".admin-config-color-palettes__save-name")
+        browser_root.locator(".admin-config-color-palettes__save-name").filter(visible: true)
       end
 
       def delete_button
-        find(".delete-palette")
+        browser_root.locator(".delete-palette").filter(visible: true)
       end
 
       def user_selectable_field
@@ -49,16 +55,16 @@ module PageObjects
 
       def color_palette_editor
         PageObjects::Components::ColorPaletteEditor.new(
-          form.field("colors").component.find(".color-palette-editor"),
+          form.field("colors").component.locator(".color-palette-editor").filter(visible: true),
         )
       end
 
       def duplicate_button
-        find(".duplicate-palette")
+        browser_root.locator(".duplicate-palette").filter(visible: true)
       end
 
       def copy_to_clipboard
-        find(".copy-to-clipboard").click
+        browser_root.locator(".copy-to-clipboard").filter(visible: true).click
 
         expect(PageObjects::Components::Toasts.new).to have_success(
           I18n.t("admin_js.admin.config_areas.color_palettes.copied_to_clipboard"),
@@ -66,11 +72,21 @@ module PageObjects
       end
 
       def has_unsaved_changes_indicator?
-        has_text?(I18n.t("admin_js.admin.config_areas.color_palettes.unsaved_changes"))
+        contain_text(
+          browser_text_pattern(
+            I18n.t("admin_js.admin.config_areas.color_palettes.unsaved_changes"),
+          ),
+          useInnerText: true,
+        ).matches?(browser_content)
       end
 
       def has_no_unsaved_changes_indicator?
-        has_no_text?(I18n.t("admin_js.admin.config_areas.color_palettes.unsaved_changes"))
+        contain_text(
+          browser_text_pattern(
+            I18n.t("admin_js.admin.config_areas.color_palettes.unsaved_changes"),
+          ),
+          useInnerText: true,
+        ).does_not_match?(browser_content)
       end
     end
   end

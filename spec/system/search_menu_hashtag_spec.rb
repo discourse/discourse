@@ -14,13 +14,24 @@ describe "Search menu hashtag autocomplete" do
   end
 
   it "preserves prior hashtag when selecting a suggestion for a second hashtag" do
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     search_page.click_search_icon
     search_page.type_in_search_menu("#ux #des")
 
-    expect(page).to have_css(".search-menu-assistant-item.tag")
-    find(".search-menu-assistant-item.tag", match: :first).click
+    expect(
+      browser_root.locator(".search-menu-assistant-item.tag").filter(visible: true),
+    ).not_to have_count(0)
+    browser_root.locator(".search-menu-assistant-item.tag").filter(visible: true).first.click
 
-    expect(page).to have_field("icon-search-input", with: "#ux #design")
+    expect(
+      browser_root
+        .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+        .and(
+          browser_root.locator(
+            "[id=#{"icon-search-input".to_s.to_json}], [name=#{"icon-search-input".to_s.to_json}]",
+          ).or(browser_root.get_by_label("icon-search-input", exact: true)),
+        )
+        .filter(visible: true),
+    ).to have_value("#ux #design")
   end
 end

@@ -14,44 +14,76 @@ module PageObjects
       end
 
       def available?
-        find(container_selector).has_css?(TRIGGER_SELECTOR)
+        have_count(0).does_not_match?(
+          browser_root
+            .locator(container_selector)
+            .filter(visible: true)
+            .locator(TRIGGER_SELECTOR)
+            .filter(visible: true),
+        )
       end
 
       def not_available?
-        find(container_selector).has_no_css?(TRIGGER_SELECTOR)
+        have_count(0).matches?(
+          browser_root
+            .locator(container_selector)
+            .filter(visible: true)
+            .tap do |parent|
+              parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+            end
+            .locator(TRIGGER_SELECTOR)
+            .filter(visible: true),
+        )
       end
 
       def expand
         # Ensure the menu is closed before we try to expand it.
         # This prevents flakiness if the menu is still closing from a previous action.
-        page.has_no_css?(CONTENT_SELECTOR)
+        expect(browser_root.locator(CONTENT_SELECTOR).filter(visible: true)).to have_count(0)
 
-        find(container_selector).find(TRIGGER_SELECTOR).click
-        find(CONTENT_SELECTOR)
+        browser_root
+          .locator(container_selector)
+          .filter(visible: true)
+          .locator(TRIGGER_SELECTOR)
+          .filter(visible: true)
+          .click
+        browser_root.locator(CONTENT_SELECTOR).filter(visible: true)
       end
 
       def has_light_as_current_mode?
-        has_css?(TRIGGER_SELECTOR + "[data-current-mode='light']")
+        have_count(0).does_not_match?(
+          browser_root.locator(TRIGGER_SELECTOR + "[data-current-mode='light']").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_dark_as_current_mode?
-        has_css?(TRIGGER_SELECTOR + "[data-current-mode='dark']")
+        have_count(0).does_not_match?(
+          browser_root.locator(TRIGGER_SELECTOR + "[data-current-mode='dark']").filter(
+            visible: true,
+          ),
+        )
       end
 
       def has_auto_as_current_mode?
-        has_css?(TRIGGER_SELECTOR + "[data-current-mode='auto']")
+        have_count(0).does_not_match?(
+          browser_root.locator(TRIGGER_SELECTOR + "[data-current-mode='auto']").filter(
+            visible: true,
+          ),
+        )
       end
 
       def light_option
-        find("#{SELECTOR}__light-option")
+        browser_root.locator("#{SELECTOR}__light-option").filter(visible: true)
       end
 
       def dark_option
-        find("#{SELECTOR}__dark-option")
+        browser_root.locator("#{SELECTOR}__dark-option").filter(visible: true)
       end
 
       def auto_option
-        find("#{SELECTOR}__auto-option")
+        browser_root.locator("#{SELECTOR}__auto-option").filter(visible: true)
       end
     end
   end

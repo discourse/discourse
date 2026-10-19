@@ -45,7 +45,7 @@ describe "Admin Webhooks Page" do
     webhooks_page.visit_page
     webhooks_page.click_add
 
-    expect(tag_chooser).to be_visible
+    expect(tag_chooser).to RSpecPredicates.be_visible
 
     tag_chooser.expand
     tag_chooser.search(tag.name)

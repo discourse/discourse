@@ -20,7 +20,9 @@ RSpec.describe "Admin EmbeddableHost Management" do
   it "allows admin to add, edit and delete embeddable hosts" do
     admin_embedding_page.visit
 
-    expect(page).not_to have_css(".admin-embedding-index__code")
+    expect(
+      browser_root.locator(".admin-embedding-index__code").filter(visible: true),
+    ).to have_count(0)
 
     admin_embedding_page.click_add_host
 
@@ -31,13 +33,24 @@ RSpec.describe "Admin EmbeddableHost Management" do
     admin_embedding_host_form_page.fill_in_post_author(author)
     admin_embedding_host_form_page.click_save
 
-    expect(page).to have_content("awesome-discourse-site.local")
-    expect(page).to have_content("/blog/.*")
-    expect(page).to have_content("#{tag.name}")
-    expect(page).to have_content("#{category.name}")
-    expect(page).to have_content("#{author.username}")
+    expect(browser_content).to contain_text(
+      browser_text_pattern("awesome-discourse-site.local"),
+      useInnerText: true,
+    )
+    expect(browser_content).to contain_text(browser_text_pattern("/blog/.*"), useInnerText: true)
+    expect(browser_content).to contain_text(browser_text_pattern("#{tag.name}"), useInnerText: true)
+    expect(browser_content).to contain_text(
+      browser_text_pattern("#{category.name}"),
+      useInnerText: true,
+    )
+    expect(browser_content).to contain_text(
+      browser_text_pattern("#{author.username}"),
+      useInnerText: true,
+    )
 
-    expect(page).to have_css(".admin-embedding-index__code")
+    expect(
+      browser_root.locator(".admin-embedding-index__code").filter(visible: true),
+    ).not_to have_count(0)
 
     admin_embedding_page.click_edit_host
 
@@ -48,16 +61,33 @@ RSpec.describe "Admin EmbeddableHost Management" do
     admin_embedding_host_form_page.fill_in_post_author(author_2)
     admin_embedding_host_form_page.click_save
 
-    expect(page).to have_content("updated-example.com")
-    expect(page).to have_content("/updated-blog/.*")
-    expect(page).to have_content("#{tag.name}, #{tag_2.name}")
-    expect(page).to have_content("#{category_2.name}")
-    expect(page).to have_content("#{author_2.username}")
+    expect(browser_content).to contain_text(
+      browser_text_pattern("updated-example.com"),
+      useInnerText: true,
+    )
+    expect(browser_content).to contain_text(
+      browser_text_pattern("/updated-blog/.*"),
+      useInnerText: true,
+    )
+    expect(browser_content).to contain_text(
+      browser_text_pattern("#{tag.name}, #{tag_2.name}"),
+      useInnerText: true,
+    )
+    expect(browser_content).to contain_text(
+      browser_text_pattern("#{category_2.name}"),
+      useInnerText: true,
+    )
+    expect(browser_content).to contain_text(
+      browser_text_pattern("#{author_2.username}"),
+      useInnerText: true,
+    )
 
     admin_embedding_page.click_delete
     admin_embedding_page.confirm_delete
 
-    expect(page).not_to have_css(".admin-embedding-index__code")
+    expect(
+      browser_root.locator(".admin-embedding-index__code").filter(visible: true),
+    ).to have_count(0)
   end
 
   it "allows admin to toggle full app mode and updates the snippet" do
@@ -87,7 +117,10 @@ RSpec.describe "Admin EmbeddableHost Management" do
     Fabricate(:embeddable_host)
 
     admin_embedding_page.visit
-    expect(page).not_to have_content("#{author.username}")
+    expect(browser_content).not_to contain_text(
+      browser_text_pattern("#{author.username}"),
+      useInnerText: true,
+    )
 
     admin_embedding_page.click_tab("posts-and-topics")
 
@@ -95,6 +128,9 @@ RSpec.describe "Admin EmbeddableHost Management" do
     admin_embedding_posts_and_topics_page.click_save
 
     admin_embedding_page.click_tab("hosts")
-    expect(page).to have_content("#{author.username}")
+    expect(browser_content).to contain_text(
+      browser_text_pattern("#{author.username}"),
+      useInnerText: true,
+    )
   end
 end

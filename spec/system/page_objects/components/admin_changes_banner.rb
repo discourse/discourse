@@ -4,27 +4,29 @@ module PageObjects
   module Components
     class AdminChangesBanner < Base
       def visible?
-        has_css?(selector)
+        have_count(0).does_not_match?(browser_root.locator(selector).filter(visible: true))
       end
 
       def hidden?
-        has_no_css?(selector)
+        have_count(0).matches?(browser_root.locator(selector).filter(visible: true))
       end
 
       def element
-        find(selector)
+        browser_root.locator(selector).filter(visible: true)
       end
 
       def click_save
-        element.find(".btn-primary").click
+        element.locator(".btn-primary").filter(visible: true).click
       end
 
       def click_discard
-        element.find(".btn-default").click
+        element.locator(".btn-default").filter(visible: true).click
       end
 
       def has_label?(label)
-        element.has_css?(".admin-changes-banner__main-label", text: label)
+        contain_text([browser_text_pattern(label)], useInnerText: true).matches?(
+          element.locator(".admin-changes-banner__main-label").filter(visible: true),
+        )
       end
 
       private

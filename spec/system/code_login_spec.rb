@@ -2,10 +2,12 @@
 
 require "rotp"
 
-describe "Login via email code" do
+describe "Login via email code", native_playwright: true do
   include ThemeScreenshotMarker
 
   fab!(:user) { Fabricate(:user, password: "supersecurepassword") }
+
+  let(:login) { PageObjects::Native::Login.new(browser_page) }
 
   before do
     SiteSetting.enable_local_logins_via_email = true
@@ -15,7 +17,7 @@ describe "Login via email code" do
   end
 
   def fill_code(code)
-    find(".d-otp-input").fill_in(with: code)
+    login.code_input.fill(code)
   end
 
   def latest_emailed_code(email)
@@ -26,25 +28,26 @@ describe "Login via email code" do
   end
 
   def start_code_login(email)
-    visit("/login")
-    expect(page).to have_css("#login-account-name")
-    find("#one-time-code-link").click
-    expect(page).to have_css(".code-login-form__email-step")
+    login.visit
+    expect(login.account_name).to be_visible
+    login.code_login_link.click
+    expect(login.email_step).to be_visible
     screenshot_marker(label: "code-login-email-step")
 
-    find(".code-login-form__email-step input[type='email']").fill_in(with: email)
-    find(".code-login-form__continue").click
-    expect(page).to have_css(".code-login-form__code-step")
+    login.email_input.fill(email)
+    login.continue_button.click
+    expect(login.code_step).to be_visible
     screenshot_marker(label: "code-login-code-step")
   end
 
   it "logs an existing user in without a password" do
     start_code_login(user.email)
-    expect(page).to have_css(".code-login-form__resend[disabled]")
+    expect(login.resend_button).to be_visible
+    expect(login.resend_button).to be_disabled
 
     fill_code(latest_emailed_code(user.email))
 
-    expect(page).to have_css(".header-dropdown-toggle.current-user")
+    expect(login.current_user).to be_visible
     expect(User.find_by_email(user.email)).to eq(user)
   end
 
@@ -54,14 +57,11 @@ describe "Login via email code" do
     wrong_code = code == "000000" ? "000001" : "000000"
 
     fill_code(wrong_code)
-    expect(page).to have_css(
-      ".code-login-form__error",
-      text: I18n.t("email_login_code.invalid_code"),
-    )
+    expect(login.error).to contain_text(I18n.t("email_login_code.invalid_code"))
     screenshot_marker(label: "code-login-wrong-code")
 
     fill_code(code)
-    expect(page).to have_css(".header-dropdown-toggle.current-user")
+    expect(login.current_user).to be_visible
   end
 
   context "when the user has a second factor" do
@@ -71,32 +71,32 @@ describe "Login via email code" do
       start_code_login(user.email)
       fill_code(latest_emailed_code(user.email))
 
-      expect(page).to have_css(".code-login-form__second-factor-step")
+      expect(login.second_factor_step).to be_visible
       screenshot_marker(label: "code-login-second-factor")
 
-      find(".second-factor-token-input").fill_in(with: ROTP::TOTP.new(user_second_factor.data).now)
-      find(".code-login-form__second-factor-step .code-login-form__verify").click
+      login.second_factor_input.fill(ROTP::TOTP.new(user_second_factor.data).now)
+      login.second_factor_verify.click
 
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(login.current_user).to be_visible
     end
   end
 
   it "defaults to password login and can opt into code login" do
-    visit("/login")
-    expect(page).to have_css("#login-account-name")
-    expect(page).to have_no_css(".code-login-form")
+    login.visit
+    expect(login.account_name).to be_visible
+    expect(login.form).to have_count(0)
     screenshot_marker(label: "code-login-password-form")
 
-    find("#one-time-code-link").click
-    expect(page).to have_css(".code-login-form__email-step")
-    find(".code-login-form__password-toggle").click
-    expect(page).to have_css("#login-account-name")
+    login.code_login_link.click
+    expect(login.email_step).to be_visible
+    login.password_toggle.click
+    expect(login.account_name).to be_visible
 
-    find("#login-account-name").fill_in(with: user.username)
-    find("#login-account-password").fill_in(with: "supersecurepassword")
-    find("#login-button").click
+    login.account_name.fill(user.username)
+    login.account_password.fill("supersecurepassword")
+    login.login_button.click
 
-    expect(page).to have_css(".header-dropdown-toggle.current-user")
+    expect(login.current_user).to be_visible
   end
 
   context "with a required checkbox user field" do
@@ -107,38 +107,38 @@ describe "Login via email code" do
     it "renders the checkbox at a usable size and lets it be toggled" do
       new_email = "new.person@example.com"
 
-      visit("/login?mode=code")
-      expect(page).to have_css(".code-login-form__email-step")
+      login.visit_code_login
+      expect(login.email_step).to be_visible
 
-      find(".code-login-form__email-step input[type='email']").fill_in(with: new_email)
-      find(".code-login-form__continue").click
-      expect(page).to have_css(".code-login-form__code-step")
+      login.email_input.fill(new_email)
+      login.continue_button.click
+      expect(login.code_step).to be_visible
 
       fill_code(latest_emailed_code(new_email))
 
-      expect(page).to have_css(".code-login-form__user-fields-step")
+      expect(login.user_fields_step).to be_visible
       screenshot_marker(label: "code-login-user-fields-step")
 
-      checkbox = find(".user-field.confirm input[type='checkbox']")
+      checkbox = login.terms_checkbox
 
       # Regression: the shared `.input-group input` rule stretches inputs to
       # `min-width: 250px; width: 100%`. Without the checkbox override applying
       # to `.login-fullpage`, the checkbox renders as a full-width bar. Assert it
       # stays small.
-      expect(checkbox.evaluate_script("this.offsetWidth")).to be < 50
+      expect(checkbox.evaluate("element => element.offsetWidth")).to be < 50
 
       checkbox.click
       expect(checkbox).to be_checked
 
-      find(".code-login-form__user-fields-step .code-login-form__verify").click
+      login.user_fields_verify.click
 
-      expect(page).to have_css(".code-login-form__signup-details-step")
+      expect(login.signup_details_step).to be_visible
 
-      fill_in("code-login-username", with: "new-person")
-      expect(page).to have_no_css(".code-login-form__continue-to-site[disabled]")
-      find(".code-login-form__continue-to-site").click
+      login.signup_username.fill("new-person")
+      expect(login.continue_to_site).to be_enabled
+      login.continue_to_site.click
 
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(login.current_user).to be_visible
 
       user = User.find_by_email(new_email)
       expect(user.custom_fields["user_field_#{user_field.id}"]).to eq("true")
@@ -149,11 +149,11 @@ describe "Login via email code" do
     before { SiteSetting.enable_local_logins_via_code = false }
 
     it "does not offer the code option" do
-      visit("/login")
+      login.visit
 
-      expect(page).to have_css("#login-account-name")
-      expect(page).to have_css("#email-login-link", visible: :all)
-      expect(page).to have_no_css("#one-time-code-link", visible: :all)
+      expect(login.account_name).to be_visible
+      expect(login.email_login_link).to have_count(1)
+      expect(login.code_login_link).to have_count(0)
     end
   end
 end

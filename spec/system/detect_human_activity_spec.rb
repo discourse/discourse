@@ -7,9 +7,7 @@ describe "Detect human activity" do
   before { SiteSetting.dashboard_improvements = true }
 
   def flush_engagement
-    page.driver.with_playwright_page do |pw_page|
-      pw_page.evaluate("window.dispatchEvent(new Event('pagehide'))")
-    end
+    browser_page.then { |pw_page| pw_page.evaluate("window.dispatchEvent(new Event('pagehide'))") }
   end
 
   def engagement
@@ -17,13 +15,13 @@ describe "Detect human activity" do
   end
 
   it "stores continuous mouse movement and time to first interaction" do
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(discovery.topic_list).to have_topics(count: 5)
 
     # `steps` interpolates the movement into many small mousemove events,
     # mimicking the continuous path a real pointer traces.
-    page.driver.with_playwright_page { |pw_page| pw_page.mouse.move(400, 400, steps: 30) }
-    page.driver.with_playwright_page { |pw_page| pw_page.keyboard.press("a") }
+    browser_page.then { |pw_page| pw_page.mouse.move(400, 400, steps: 30) }
+    browser_page.then { |pw_page| pw_page.keyboard.press("a") }
     flush_engagement
 
     try_until_success { expect(BrowserPageviewSessionEngagement.count).to eq(1) }
@@ -32,13 +30,13 @@ describe "Detect human activity" do
   end
 
   it "ignores teleporting mouse jumps" do
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(discovery.topic_list).to have_topics(count: 5)
 
     # Each move jumps straight to its destination with no intermediate events,
     # the way a script driving the cursor would. A real keypress and click meet
     # the two-category threshold so a snapshot is sent.
-    page.driver.with_playwright_page do |pw_page|
+    browser_page.then do |pw_page|
       pw_page.mouse.move(50, 50)
       pw_page.mouse.move(600, 600)
       pw_page.mouse.move(50, 600)
@@ -54,12 +52,12 @@ describe "Detect human activity" do
   end
 
   it "accumulates engaged duration while the tab is visible and focused" do
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(discovery.topic_list).to have_topics(count: 5)
 
     # An interaction is needed so a snapshot is sent; then stay engaged for a
     # beat before flushing so the duration has time to accumulate.
-    page.driver.with_playwright_page do |pw_page|
+    browser_page.then do |pw_page|
       pw_page.keyboard.press("a")
       pw_page.mouse.down
       pw_page.mouse.up
@@ -72,14 +70,14 @@ describe "Detect human activity" do
   end
 
   it "counts back/forward navigation" do
-    visit("/")
+    browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
     expect(discovery.topic_list).to have_topics(count: 5)
 
     # In-app navigation uses pushState (no popstate); the back button does fire
     # popstate, which is what we count.
     discovery.topic_list.visit_topic(topics[0])
-    page.go_back
-    page.driver.with_playwright_page { |pw_page| pw_page.keyboard.press("a") }
+    browser_page.go_back.tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    browser_page.then { |pw_page| pw_page.keyboard.press("a") }
     flush_engagement
 
     try_until_success { expect(BrowserPageviewSessionEngagement.count).to eq(1) }

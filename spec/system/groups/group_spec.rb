@@ -20,15 +20,31 @@ describe "Group" do
 
         group_index_page.click_new_group
 
-        group_form_page.fill_in("name", with: "illuminati")
-        group_form_page.fill_in("full_name", with: "The Illuminati")
+        browser_root
+          .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+          .and(
+            browser_root.locator("[id=#{"name".to_s.to_json}], [name=#{"name".to_s.to_json}]").or(
+              browser_root.get_by_label("name", exact: true),
+            ),
+          )
+          .filter(visible: true)
+          .fill("illuminati")
+        browser_root
+          .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+          .and(
+            browser_root.locator(
+              "[id=#{"full_name".to_s.to_json}], [name=#{"full_name".to_s.to_json}]",
+            ).or(browser_root.get_by_label("full_name", exact: true)),
+          )
+          .filter(visible: true)
+          .fill("The Illuminati")
 
-        expect(group_form_page).to have_css(".tip.good")
+        expect(browser_root.locator(".tip.good").filter(visible: true)).not_to have_count(0)
 
         group_form_page.add_automatic_email_domain("illumi.net")
         group_form_page.click_save
 
-        expect(page).to have_current_path("/g/illuminati")
+        expect(browser_page).to have_url("/g/illuminati")
       end
     end
 
@@ -39,16 +55,32 @@ describe "Group" do
         group_index_page.visit
         group_index_page.click_new_group
 
-        group_form_page.fill_in("name", with: "illuminati")
-        group_form_page.fill_in("full_name", with: "The Illuminati")
+        browser_root
+          .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+          .and(
+            browser_root.locator("[id=#{"name".to_s.to_json}], [name=#{"name".to_s.to_json}]").or(
+              browser_root.get_by_label("name", exact: true),
+            ),
+          )
+          .filter(visible: true)
+          .fill("illuminati")
+        browser_root
+          .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+          .and(
+            browser_root.locator(
+              "[id=#{"full_name".to_s.to_json}], [name=#{"full_name".to_s.to_json}]",
+            ).or(browser_root.get_by_label("full_name", exact: true)),
+          )
+          .filter(visible: true)
+          .fill("The Illuminati")
 
-        expect(group_form_page).to have_css(".tip.good")
+        expect(browser_root.locator(".tip.good").filter(visible: true)).not_to have_count(0)
 
         group_form_page.add_automatic_email_domain("illumi.net")
 
         group_form_page.click_save
         expect(dialog).to be_open
-        expect(dialog).to have_content(
+        expect(dialog).to have_displayed_content(
           I18n.t(
             "admin_js.admin.groups.manage.membership.automatic_membership_user_count",
             count: 1,
@@ -56,13 +88,13 @@ describe "Group" do
         )
 
         dialog.click_no
-        expect(page).to have_current_path("/g/custom/new")
+        expect(browser_page).to have_url("/g/custom/new")
 
         group_form_page.click_save
         expect(dialog).to be_open
 
         dialog.click_yes
-        expect(page).to have_current_path("/g/illuminati")
+        expect(browser_page).to have_url("/g/illuminati")
       end
     end
   end
@@ -74,11 +106,21 @@ describe "Group" do
       group_page.click_manage
       group_page.click_membership
 
-      group_page.fill_in("title", with: "The Illuminati")
+      browser_root
+        .locator("input:not(:disabled), textarea:not(:disabled), select:not(:disabled)")
+        .and(
+          browser_root.locator("[id=#{"title".to_s.to_json}], [name=#{"title".to_s.to_json}]").or(
+            browser_root.get_by_label("title", exact: true),
+          ),
+        )
+        .filter(visible: true)
+        .fill("The Illuminati")
 
       group_page.click_save
 
-      expect(group_page).to have_css(".group-manage-save-button span", text: "Saved!")
+      expect(
+        browser_root.locator(".group-manage-save-button span").filter(visible: true),
+      ).to contain_text([browser_text_pattern("Saved!")], useInnerText: true)
     end
   end
 
@@ -88,7 +130,7 @@ describe "Group" do
 
       group_page.delete_group
 
-      expect(page).to have_current_path("/g")
+      expect(browser_page).to have_url("/g")
     end
   end
 
@@ -112,7 +154,7 @@ describe "Group" do
       group_page.click_save
 
       expect(default_notifications_modal).to be_open
-      expect(default_notifications_modal).to have_content(
+      expect(default_notifications_modal).to have_displayed_content(
         I18n.t("js.groups.default_notifications.modal_description", count: 2),
       )
     end

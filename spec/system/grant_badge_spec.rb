@@ -61,15 +61,28 @@ describe "Granting Badges" do
 
     it "shows badge in post header" do
       topic_page.visit_topic(post.topic)
-      expect(topic_page.post_by_number(post).find(".user-badge-buttons")).to have_css(
-        ".user-badge-button-somebadge",
-      )
+      expect(
+        topic_page
+          .post_by_number(post)
+          .locator(".user-badge-buttons")
+          .filter(visible: true)
+          .locator(".user-badge-button-somebadge")
+          .filter(visible: true),
+      ).not_to have_count(0)
     end
 
     it "doesn't show badge in post header when `show_badges_in_post_header` site setting is disabled" do
       SiteSetting.show_badges_in_post_header = false
       topic_page.visit_topic(post.topic)
-      expect(topic_page.post_by_number(post)).to_not have_css(".user-badge-buttons")
+      expect(
+        topic_page
+          .post_by_number(post)
+          .tap do |parent|
+            parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+          end
+          .locator(".user-badge-buttons")
+          .filter(visible: true),
+      ).to have_count(0)
     end
   end
 end

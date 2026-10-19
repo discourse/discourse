@@ -11,13 +11,13 @@ describe "Navigation menu states" do
     before { SiteSetting.navigation_menu = "header dropdown" }
 
     it "does not show the sidebar" do
-      visit "/"
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(sidebar_navigation).to be_not_visible
     end
 
     it "opens and closes the hamburger menu from the toggle" do
-      visit "/"
-      expect(header_dropdown).to be_visible
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(header_dropdown).to RSpecPredicates.be_visible
       header_dropdown.open
       expect(header_dropdown).to have_dropdown_visible
       expect(header_dropdown).to have_sidebar_panel("main")
@@ -30,18 +30,24 @@ describe "Navigation menu states" do
       fab!(:current_user) { Fabricate(:admin, refresh_auto_groups: true) }
 
       it "shows the sidebar and allows toggling it" do
-        visit "/admin"
-        expect(sidebar_navigation).to be_visible
+        browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(sidebar_navigation).to RSpecPredicates.be_visible
         sidebar_navigation.click_header_toggle
         expect(sidebar_navigation).to be_not_visible
         sidebar_navigation.click_header_toggle
-        expect(sidebar_navigation).to be_visible
-        expect(find(sidebar_navigation.header_toggle_css)).to have_css(".d-icon-discourse-sidebar")
+        expect(sidebar_navigation).to RSpecPredicates.be_visible
+        expect(
+          browser_root
+            .locator(sidebar_navigation.header_toggle_css)
+            .filter(visible: true)
+            .locator(".d-icon-discourse-sidebar")
+            .filter(visible: true),
+        ).not_to have_count(0)
       end
 
       it "shows the hamburger menu and allows toggling it, which shows the MAIN_PANEL only" do
-        visit "/admin"
-        expect(header_dropdown).to be_visible
+        browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(header_dropdown).to RSpecPredicates.be_visible
         header_dropdown.open
         expect(header_dropdown).to have_dropdown_visible
         expect(header_dropdown).to have_sidebar_panel("main")
@@ -51,12 +57,14 @@ describe "Navigation menu states" do
       end
 
       it "shows the sidebar on other admin pages" do
-        visit "/admin"
-        expect(sidebar_navigation).to be_visible
-        visit "/admin/site_settings/category/all_results"
-        expect(sidebar_navigation).to be_visible
-        visit "/admin/reports"
-        expect(sidebar_navigation).to be_visible
+        browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(sidebar_navigation).to RSpecPredicates.be_visible
+        browser_page
+          .goto("/admin/site_settings/category/all_results")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(sidebar_navigation).to RSpecPredicates.be_visible
+        browser_page.goto("/admin/reports").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(sidebar_navigation).to RSpecPredicates.be_visible
       end
     end
   end
@@ -65,38 +73,44 @@ describe "Navigation menu states" do
     before { SiteSetting.navigation_menu = "sidebar" }
 
     it "shows the sidebar" do
-      visit "/"
-      expect(sidebar_navigation).to be_visible
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(sidebar_navigation).to RSpecPredicates.be_visible
     end
 
     it "does not show the hamburger menu" do
-      visit "/"
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(header_dropdown).to be_not_visible
     end
 
     it "opens and closes the sidebar from the toggle" do
-      visit "/"
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       sidebar_navigation.click_header_toggle
       expect(sidebar_navigation).to be_not_visible
       sidebar_navigation.click_header_toggle
-      expect(sidebar_navigation).to be_visible
+      expect(sidebar_navigation).to RSpecPredicates.be_visible
     end
 
     context "for admins" do
       fab!(:current_user) { Fabricate(:admin, refresh_auto_groups: true) }
 
       it "shows the sidebar and allows toggling it" do
-        visit "/admin"
-        expect(sidebar_navigation).to be_visible
+        browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        expect(sidebar_navigation).to RSpecPredicates.be_visible
         sidebar_navigation.click_header_toggle
         expect(sidebar_navigation).to be_not_visible
         sidebar_navigation.click_header_toggle
-        expect(sidebar_navigation).to be_visible
-        expect(find(sidebar_navigation.header_toggle_css)).to have_css(".d-icon-bars")
+        expect(sidebar_navigation).to RSpecPredicates.be_visible
+        expect(
+          browser_root
+            .locator(sidebar_navigation.header_toggle_css)
+            .filter(visible: true)
+            .locator(".d-icon-bars")
+            .filter(visible: true),
+        ).not_to have_count(0)
       end
 
       it "does not show the hamburger menu" do
-        visit "/admin"
+        browser_page.goto("/admin").tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(header_dropdown).to be_not_visible
       end
     end

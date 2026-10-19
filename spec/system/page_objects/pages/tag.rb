@@ -4,36 +4,40 @@ module PageObjects
   module Pages
     class Tag < PageObjects::Pages::Base
       def visit_tag(tag)
-        page.visit "/tag/#{tag.slug_for_url}/#{tag.id}"
+        browser_page
+          .goto("/tag/#{tag.slug_for_url}/#{tag.id}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def tag_info_btn
-        find("#show-tag-info")
+        browser_root.locator("#show-tag-info").filter(visible: true)
       end
 
       def has_tag_info_btn?
-        has_css?("#show-tag-info")
+        have_count(0).does_not_match?(browser_root.locator("#show-tag-info").filter(visible: true))
       end
 
       def has_no_tag_info_btn?
-        has_no_css?("#show-tag-info")
+        have_count(0).matches?(browser_root.locator("#show-tag-info").filter(visible: true))
       end
 
       def edit_tag_btn
-        find("#edit-tag")
+        browser_root.locator("#edit-tag").filter(visible: true)
       end
 
       def has_edit_tag_btn?
-        has_css?("#edit-tag")
+        have_count(0).does_not_match?(browser_root.locator("#edit-tag").filter(visible: true))
       end
 
       def has_no_edit_tag_btn?
-        has_no_css?("#edit-tag")
+        have_count(0).matches?(browser_root.locator("#edit-tag").filter(visible: true))
       end
 
       def has_no_tag?(name)
-        has_no_css?(".tag-box", text: name)
+        contain_text([browser_text_pattern(name)], useInnerText: true).does_not_match?(
+          browser_root.locator(".tag-box").filter(visible: true),
+        )
       end
 
       def tags_dropdown

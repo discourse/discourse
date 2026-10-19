@@ -28,7 +28,7 @@ describe "Admin Dashboard Configure menu" do
       expect(dashboard).to have_no_section("engagement")
 
       dashboard.close_configure_menu
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(dashboard).to have_section("highlights")
       expect(dashboard).to have_section("reports")
@@ -96,7 +96,9 @@ describe "Admin Dashboard Configure menu" do
         dashboard.visit
         dashboard.open_configure_menu
 
-        expect(page).to have_css(".d-reorderable-list__handle")
+        expect(
+          browser_root.locator(".d-reorderable-list__handle").filter(visible: true),
+        ).not_to have_count(0)
       end
 
       it "reorders sections with a real browser drag" do

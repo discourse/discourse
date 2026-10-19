@@ -40,6 +40,10 @@ describe "Admin Site Setting Formatting" do
   end
 
   def setting_label(setting_name)
-    settings_page.find(settings_page.setting_row_selector(setting_name) + " h3").text
+    settings_page
+      .locator(settings_page.setting_row_selector(setting_name) + " h3")
+      .filter(visible: true)
+      .inner_text
+      .strip
   end
 end

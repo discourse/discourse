@@ -15,12 +15,12 @@ describe "Admin Site Setting Requires Confirmation" do
     settings_page.visit("min_password_length")
     settings_page.change_number_setting("min_password_length", 12)
     expect(dialog).to be_open
-    expect(dialog).to have_content(
+    expect(dialog).to have_displayed_content(
       I18n.t(
         "admin_js.admin.site_settings.requires_confirmation_messages.min_password_length.prompt",
       ),
     )
-    expect(dialog).to have_content(
+    expect(dialog).to have_displayed_content(
       I18n.t(
         "admin_js.admin.site_settings.requires_confirmation_messages.min_password_length.confirm",
       ),
@@ -50,7 +50,7 @@ describe "Admin Site Setting Requires Confirmation" do
       settings_page.visit("can_permanently_delete")
       settings_page.toggle_bool_setting("can_permanently_delete")
       expect(dialog).to be_open
-      expect(dialog).to have_content(
+      expect(dialog).to have_displayed_content(
         I18n.t(
           "admin_js.admin.site_settings.requires_confirmation_messages.can_permanently_delete.prompt",
         ),
@@ -69,12 +69,12 @@ describe "Admin Site Setting Requires Confirmation" do
       settings_page.toggle_bool_setting("mcp_server_enabled")
 
       expect(dialog).to be_open
-      expect(dialog).to have_content(
+      expect(dialog).to have_displayed_content(
         I18n.t(
           "admin_js.admin.site_settings.requires_confirmation_messages.mcp_server_enabled.prompt",
         ),
       )
-      expect(dialog).to have_content(
+      expect(dialog).to have_displayed_content(
         I18n.t(
           "admin_js.admin.site_settings.requires_confirmation_messages.mcp_server_enabled.confirm",
         ),
@@ -87,7 +87,7 @@ describe "Admin Site Setting Requires Confirmation" do
       settings_page.visit("content_security_policy")
       settings_page.toggle_bool_setting("content_security_policy")
       expect(dialog).to be_open
-      expect(dialog).to have_content(
+      expect(dialog).to have_displayed_content(
         I18n.t(
           "admin_js.admin.site_settings.requires_confirmation_messages.content_security_policy.prompt",
         ),

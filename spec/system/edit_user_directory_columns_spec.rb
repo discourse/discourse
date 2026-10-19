@@ -15,7 +15,7 @@ describe "Edit user directory columns" do
     it "keeps a column where the admin moved it" do
       columns = DirectoryColumn.order(:position).to_a
 
-      visit("/u")
+      browser_page.goto("/u").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       columns_modal.open
       expect(columns_modal).to have_columns_in_order(columns)
 

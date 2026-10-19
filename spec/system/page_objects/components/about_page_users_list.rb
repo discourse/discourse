@@ -10,49 +10,71 @@ module PageObjects
       end
 
       def has_expand_button?
-        container.has_css?(".about-page-users-list__expand-button")
+        have_count(0).does_not_match?(
+          container.locator(".about-page-users-list__expand-button").filter(visible: true),
+        )
       end
 
       def has_no_expand_button?
-        container.has_no_css?(".about-page-users-list__expand-button")
+        have_count(0).matches?(
+          container
+            .tap do |parent|
+              parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+            end
+            .locator(".about-page-users-list__expand-button")
+            .filter(visible: true),
+        )
       end
 
       def expandable?
-        container.find(".about-page-users-list__expand-button").has_text?(
-          I18n.t("js.about.view_more"),
-        )
+        contain_text(
+          browser_text_pattern(I18n.t("js.about.view_more")),
+          useInnerText: true,
+        ).matches?(container.locator(".about-page-users-list__expand-button").filter(visible: true))
       end
 
       def collapsible?
-        container.find(".about-page-users-list__expand-button").has_text?(
-          I18n.t("js.about.view_less"),
-        )
+        contain_text(
+          browser_text_pattern(I18n.t("js.about.view_less")),
+          useInnerText: true,
+        ).matches?(container.locator(".about-page-users-list__expand-button").filter(visible: true))
       end
 
       def expand
-        container.find(
-          ".about-page-users-list__expand-button",
-          text: I18n.t("js.about.view_more"),
-        ).click
+        container
+          .locator(".about-page-users-list__expand-button")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern(I18n.t("js.about.view_more")))
+          .click
       end
 
       def collapse
-        container.find(
-          ".about-page-users-list__expand-button",
-          text: I18n.t("js.about.view_less"),
-        ).click
+        container
+          .locator(".about-page-users-list__expand-button")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern(I18n.t("js.about.view_less")))
+          .click
       end
 
       def users
         container
-          .all(".user-info")
+          .locator(".user-info")
+          .filter(visible: true)
+          .tap { |elements| elements.first.wait_for(state: "visible") }
+          .all
           .map do |node|
-            name_first = node.find(".name-line")[:class].include?("--name-first")
-            name_text = node.find(".name-line .name").text
-            username_text = node.find(".name-line .username").text
+            name_first =
+              node
+                .locator(".name-line")
+                .filter(visible: true)
+                .get_attribute("class")
+                .include?("--name-first")
+            name_text = node.locator(".name-line .name").filter(visible: true).inner_text.strip
+            username_text =
+              node.locator(".name-line .username").filter(visible: true).inner_text.strip
 
             {
-              username: node["data-username"],
+              username: node.get_attribute("data-username"),
               displayed_username: name_first ? name_text : username_text,
               displayed_name: name_first ? username_text : name_text,
               node:,

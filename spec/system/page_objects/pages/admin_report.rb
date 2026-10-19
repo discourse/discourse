@@ -4,35 +4,74 @@ module PageObjects
   module Pages
     class AdminReport < PageObjects::Pages::Base
       def visit_index(group: nil)
-        page.visit("/admin/reports#{group ? "?group=#{group}" : ""}")
+        browser_page
+          .goto("/admin/reports#{group ? "?group=#{group}" : ""}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def visit_default_dashboard_report
-        page.visit(
-          "/admin/reports/#{SeedData::AdminDashboardReports::DEFAULT_BUILTIN_REPORTS.first}",
-        )
+        browser_page
+          .goto("/admin/reports/#{SeedData::AdminDashboardReports::DEFAULT_BUILTIN_REPORTS.first}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def has_back_to_dashboard?
-        has_link?("Back to dashboard")
+        have_count(0).does_not_match?(
+          browser_root
+            .get_by_role("link")
+            .and(
+              browser_root.locator(
+                "[id=#{"Back to dashboard".to_s.to_json}], [name=#{"Back to dashboard".to_s.to_json}]",
+              ).or(browser_root.get_by_role("link", name: "Back to dashboard")),
+            )
+            .filter(visible: true),
+        )
       end
 
       def has_no_back_to_dashboard?
-        has_no_link?("Back to dashboard")
+        have_count(0).matches?(
+          browser_root
+            .get_by_role("link")
+            .and(
+              browser_root.locator(
+                "[id=#{"Back to dashboard".to_s.to_json}], [name=#{"Back to dashboard".to_s.to_json}]",
+              ).or(browser_root.get_by_role("link", name: "Back to dashboard")),
+            )
+            .filter(visible: true),
+        )
       end
 
       def has_back_to_all_reports?
-        has_link?("Back to all reports", href: "/admin/reports")
+        have_count(0).does_not_match?(
+          browser_root
+            .get_by_role("link")
+            .and(
+              browser_root.locator(
+                "[id=#{"Back to all reports".to_s.to_json}], [name=#{"Back to all reports".to_s.to_json}]",
+              ).or(browser_root.get_by_role("link", name: "Back to all reports")),
+            )
+            .and(browser_root.locator("[href=#{"/admin/reports".to_s.to_json}]"))
+            .filter(visible: true),
+        )
       end
 
       def has_no_back_to_all_reports?
-        has_no_link?("Back to all reports")
+        have_count(0).matches?(
+          browser_root
+            .get_by_role("link")
+            .and(
+              browser_root.locator(
+                "[id=#{"Back to all reports".to_s.to_json}], [name=#{"Back to all reports".to_s.to_json}]",
+              ).or(browser_root.get_by_role("link", name: "Back to all reports")),
+            )
+            .filter(visible: true),
+        )
       end
 
       def go_back
-        find(".back-button").click
+        browser_root.locator(".back-button").filter(visible: true).click
         self
       end
 
@@ -43,16 +82,20 @@ module PageObjects
       CATEGORY_FILTER = ".admin-report .chart__additional-filters .multiple-categories-selector"
 
       def visit_report(type)
-        page.visit("/admin/reports/#{type}")
+        browser_page
+          .goto("/admin/reports/#{type}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def has_rendered_report?(type)
-        page.has_css?(".admin-report.#{type.tr("_", "-")}")
+        have_count(0).does_not_match?(
+          browser_root.locator(".admin-report.#{type.tr("_", "-")}").filter(visible: true),
+        )
       end
 
       def has_category_filter?
-        page.has_css?(CATEGORY_FILTER)
+        have_count(0).does_not_match?(browser_root.locator(CATEGORY_FILTER).filter(visible: true))
       end
 
       def category_filter
@@ -60,31 +103,43 @@ module PageObjects
       end
 
       def has_selected_category?(category)
-        page.has_css?("#{CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
+        have_count(0).does_not_match?(
+          browser_root.locator(
+            "#{CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']",
+          ).filter(visible: true),
+        )
       end
 
       def has_group?(name)
-        page.has_css?(".admin-reports-group__title", text: name)
+        contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
+          browser_root.locator(".admin-reports-group__title").filter(visible: true),
+        )
       end
 
       def has_no_group?(name)
-        page.has_no_css?(".admin-reports-group__title", text: name)
+        contain_text([browser_text_pattern(name)], useInnerText: true).does_not_match?(
+          browser_root.locator(".admin-reports-group__title").filter(visible: true),
+        )
       end
 
       def has_report?(title)
-        page.has_css?(".admin-section-landing-item__title", text: title)
+        contain_text([browser_text_pattern(title)], useInnerText: true).matches?(
+          browser_root.locator(".admin-section-landing-item__title").filter(visible: true),
+        )
       end
 
       def has_no_report?(title)
-        page.has_no_css?(".admin-section-landing-item__title", text: title)
+        contain_text([browser_text_pattern(title)], useInnerText: true).does_not_match?(
+          browser_root.locator(".admin-section-landing-item__title").filter(visible: true),
+        )
       end
 
       def has_current_all_reports_path?
-        page.has_current_path?("/admin/reports")
+        have_url("/admin/reports").matches?(browser_page)
       end
 
       def has_current_reports_path?(group: nil)
-        page.has_current_path?("/admin/reports#{group ? "?group=#{group}" : ""}")
+        have_url("/admin/reports#{group ? "?group=#{group}" : ""}").matches?(browser_page)
       end
     end
   end

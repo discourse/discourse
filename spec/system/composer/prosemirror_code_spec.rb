@@ -1,7 +1,15 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Code formatting" do
+describe "Composer - ProseMirror - Code formatting", native_playwright: true do
   include_context "with prosemirror editor"
+
+  let(:composer) { PageObjects::Native::Composer.new(browser_page) }
+
+  def open_composer
+    composer.visit
+    expect(composer.opened_composer).to be_visible
+    composer.editor.click
+  end
 
   describe "code formatting" do
     # formatCode() behavior is determined by selection type and context:
@@ -18,74 +26,90 @@ describe "Composer - ProseMirror - Code formatting" do
         composer.type_content("```#{code}")
 
         composer.select_code_block
-        composer.send_keys(:tab)
+        composer.editor.press("Tab", timeout: 30_000)
         composer.toggle_rich_editor
-        expect(composer).to have_value("```\n    first line\n   second line\n  third line\n```")
+        expect(composer.markdown_editor).to have_value(
+          "```\n    first line\n   second line\n  third line\n```",
+        )
 
         composer.toggle_rich_editor
         composer.select_code_block
-        composer.send_keys(%i[shift tab])
+        composer.editor.press("Shift+Tab", timeout: 30_000)
         composer.toggle_rich_editor
-        expect(composer).to have_value("```\n#{code}\n```")
+        expect(composer.markdown_editor).to have_value("```\n#{code}\n```")
       end
 
       it "converts code block back to single paragraph" do
         open_composer
         composer.type_content("```\nSingle line of code\n```")
-        expect(rich).to have_css("pre code", text: "Single line of code")
-        composer.send_keys(:up, :end)
-        find(".toolbar__button.code").click
-        expect(rich).to have_css("p", text: "Single line of code")
-        expect(rich).to have_no_css("pre code")
+        expect(composer.code_block).to contain_text(/Single line of code/, useInnerText: true)
+        composer.editor.press("ArrowUp", timeout: 30_000)
+        composer.editor.press("End", timeout: 30_000)
+        composer.code_button.click
+        expect(composer.paragraph_containing("Single line of code")).to contain_text(
+          /Single line of code/,
+          useInnerText: true,
+        )
+        expect(composer.code_block).to have_count(0)
       end
 
       it "converts code block to multiple paragraphs respecting \\n\\n splits" do
         open_composer
         composer.type_content("First paragraph\n\nSecond paragraph\n\nThird paragraph")
         composer.select_all
-        find(".toolbar__button.code").click
-        expect(rich).to have_css(
-          "pre code",
-          text: "First paragraph\nSecond paragraph\nThird paragraph",
+        composer.code_button.click
+        expect(composer.code_block).to contain_text(
+          /First paragraph\n+Second paragraph\n+Third paragraph/,
+          useInnerText: true,
         )
-        composer.send_keys(:left)
-        find(".toolbar__button.code").click
-        expect(rich).to have_css("p", text: "First paragraph")
-        expect(rich).to have_css("p", text: "Second paragraph")
-        expect(rich).to have_css("p", text: "Third paragraph")
-        expect(rich).to have_no_css("pre code")
+        composer.editor.press("ArrowLeft", timeout: 30_000)
+        composer.code_button.click
+        expect(composer.paragraph_containing("First paragraph")).to contain_text(
+          /First paragraph/,
+          useInnerText: true,
+        )
+        expect(composer.paragraph_containing("Second paragraph")).to contain_text(
+          /Second paragraph/,
+          useInnerText: true,
+        )
+        expect(composer.paragraph_containing("Third paragraph")).to contain_text(
+          /Third paragraph/,
+          useInnerText: true,
+        )
+        expect(composer.code_block).to have_count(0)
       end
 
       it "selects all resulting paragraphs for easy back-and-forth toggling" do
         open_composer
         composer.type_content("```\nFirst\n\nSecond\n```")
-        composer.send_keys(:up, :end)
-        find(".toolbar__button.code").click
-        find(".toolbar__button.code").click
-        expect(rich).to have_css("pre code", text: "First\nSecond")
+        composer.editor.press("ArrowUp", timeout: 30_000)
+        composer.editor.press("End", timeout: 30_000)
+        composer.code_button.click
+        composer.code_button.click
+        expect(composer.code_block).to contain_text(/First\n+Second/, useInnerText: true)
       end
     end
 
     context "with empty selection (cursor only)" do
       it "creates code block when in empty block" do
         open_composer
-        find(".toolbar__button.code").click
-        expect(rich).to have_css("pre code")
-        expect(rich).to have_css("p", count: 1)
+        composer.code_button.click
+        expect(composer.code_block).to be_visible
+        expect(composer.paragraphs).to have_count(1)
       end
 
       it "toggles stored inline code mark when in non-empty block" do
         open_composer
         composer.type_content("Before ")
-        find(".toolbar__button.code").click
-        expect(page).to have_css(".toolbar__button.code.--active")
+        composer.code_button.click
+        expect(composer.active_code_button).to be_visible
         composer.type_content("code")
-        expect(rich).to have_css("code", text: "code")
-        find(".toolbar__button.code").click
-        expect(page).to have_no_css(".toolbar__button.code.--active")
+        expect(composer.inline_code).to contain_text(/code/, useInnerText: true)
+        composer.code_button.click
+        expect(composer.active_code_button).to have_count(0)
         composer.type_content(" after")
-        expect(rich).to have_css("code", text: "code")
-        expect(rich).to have_content("Before code after")
+        expect(composer.inline_code).to contain_text(/code/, useInnerText: true)
+        expect(rich).to contain_text(/Before code after/, useInnerText: true)
       end
     end
 
@@ -94,37 +118,48 @@ describe "Composer - ProseMirror - Code formatting" do
         open_composer
         composer.type_content("First paragraph\n\nSecond paragraph")
         composer.select_all
-        find(".toolbar__button.code").click
-        expect(rich).to have_css("pre code", count: 1)
-        expect(rich).to have_css("pre code", text: "First paragraph\nSecond paragraph")
+        composer.code_button.click
+        expect(composer.code_block).to have_count(1)
+        expect(composer.code_block).to contain_text(
+          /First paragraph\n+Second paragraph/,
+          useInnerText: true,
+        )
       end
 
       it "creates single code block from mixed block types" do
         open_composer
         composer.type_content("# Heading\n\nParagraph text\n\n> Quote text")
         composer.select_all
-        find(".toolbar__button.code").click
-        expect(rich).to have_css("pre code", count: 1)
-        expect(rich).to have_css("pre code", text: "Heading\nParagraph text\nQuote text")
+        composer.code_button.click
+        expect(composer.code_block).to have_count(1)
+        expect(composer.code_block).to contain_text(
+          /Heading\n+Paragraph text\n+Quote text/,
+          useInnerText: true,
+        )
       end
 
       it "selects entire content of newly created code block" do
         open_composer
         composer.type_content("First\n\nSecond")
         composer.select_all
-        find(".toolbar__button.code").click
-        find(".toolbar__button.code").click
-        expect(rich).to have_css("p", text: "First")
-        expect(rich).to have_css("p", text: "Second")
+        composer.code_button.click
+        composer.code_button.click
+        expect(composer.paragraph_containing("First")).to contain_text(/First/, useInnerText: true)
+        expect(composer.paragraph_containing("Second")).to contain_text(
+          /Second/,
+          useInnerText: true,
+        )
       end
 
       it "preserves plain text content without markdown conversion" do
         open_composer
         composer.type_content("**Bold text** and *italic text*")
         composer.select_all
-        find(".toolbar__button.code").click
-        expect(rich).to have_css("pre code", text: "Bold text and italic text")
-        expect(rich).to have_no_css("pre code", text: "**Bold text** and *italic text*")
+        composer.code_button.click
+        expect(composer.code_block).to contain_text(/Bold text and italic text/, useInnerText: true)
+        expect(
+          composer.code_block.filter(hasText: /\*\*Bold text\*\* and \*italic text\*/),
+        ).to have_count(0)
       end
     end
 
@@ -132,51 +167,28 @@ describe "Composer - ProseMirror - Code formatting" do
       it "creates inline code marks for partial text selection" do
         open_composer
         composer.type_content("This is a test")
-        rich.find("p").double_click
-        page.execute_script(<<~JS)
-          const selection = window.getSelection();
-          const range = document.createRange();
-          const textNode = document.querySelector('.ProseMirror p').firstChild;
-          range.setStart(textNode, 5);
-          range.setEnd(textNode, 9);
-          selection.removeAllRanges();
-          selection.addRange(range);
-        JS
-        find(".toolbar__button.code").click
-        expect(rich).to have_css("code", text: "is a")
-        expect(rich).to have_content("This is a test")
+        composer.paragraphs.dblclick
+        composer.select_paragraph_text(start_index: 5, end_index: 9)
+        composer.code_button.click
+        expect(composer.inline_code).to contain_text(/is a/, useInnerText: true)
+        expect(rich).to contain_text(/This is a test/, useInnerText: true)
       end
 
       it "creates inline code marks when selecting all text content within paragraph" do
         open_composer
         composer.type_content("Hello world")
-        page.execute_script(<<~JS)
-          const selection = window.getSelection();
-          const range = document.createRange();
-          const textNode = document.querySelector('.ProseMirror p').firstChild;
-          range.setStart(textNode, 0);
-          range.setEnd(textNode, textNode.textContent.length);
-          selection.removeAllRanges();
-          selection.addRange(range);
-        JS
-        find(".toolbar__button.code").click
-        expect(rich).to have_css("code", text: "Hello world")
+        composer.select_paragraph_text(start_index: 0)
+        composer.code_button.click
+        expect(composer.inline_code).to contain_text(/Hello world/, useInnerText: true)
       end
 
       it "removes inline code marks from selection that has them" do
         open_composer
         composer.type_content("This `is a` test")
-        page.execute_script(<<~JS)
-          const selection = window.getSelection();
-          const range = document.createRange();
-          const codeElement = document.querySelector('.ProseMirror code');
-          range.selectNodeContents(codeElement);
-          selection.removeAllRanges();
-          selection.addRange(range);
-        JS
-        find(".toolbar__button.code").click
-        expect(rich).to have_no_css("code")
-        expect(rich).to have_content("This is a test")
+        composer.select_inline_code
+        composer.code_button.click
+        expect(composer.inline_code).to have_count(0)
+        expect(rich).to contain_text(/This is a test/, useInnerText: true)
       end
     end
 
@@ -185,24 +197,24 @@ describe "Composer - ProseMirror - Code formatting" do
         open_composer
         composer.type_content("Full paragraph text")
         composer.select_all
-        find(".toolbar__button.code").click
-        expect(rich).to have_css("pre code", text: "Full paragraph text")
+        composer.code_button.click
+        expect(composer.code_block).to contain_text(/Full paragraph text/, useInnerText: true)
       end
 
       it "creates code block from fully selected heading" do
         open_composer
         composer.type_content("# Full heading text")
         composer.select_all
-        find(".toolbar__button.code").click
-        expect(rich).to have_css("pre code", text: "Full heading text")
+        composer.code_button.click
+        expect(composer.code_block).to contain_text(/Full heading text/, useInnerText: true)
       end
 
       it "creates code block from fully selected list item" do
         open_composer
         composer.type_content("1. List item")
         composer.select_all
-        find(".toolbar__button.code").click
-        expect(rich).to have_css("pre code", text: "List item")
+        composer.code_button.click
+        expect(composer.code_block).to contain_text(/List item/, useInnerText: true)
       end
     end
 
@@ -210,24 +222,42 @@ describe "Composer - ProseMirror - Code formatting" do
       it "converts multiple paragraphs to code block and back preserving structure" do
         open_composer
         composer.type_content("First paragraph  ")
-        composer.send_keys(:shift, :enter)
+        composer.editor.press("Shift+Enter", timeout: 30_000)
         composer.type_content("Second line\nSecond paragraph\nThird paragraph")
-        expect(rich).to have_css("p", count: 3)
-        expect(rich).to have_css("p", text: "First paragraph  \nSecond line")
-        expect(rich).to have_css("p", text: "Second paragraph")
-        expect(rich).to have_css("p", text: "Third paragraph")
-        composer.select_all
-        find(".toolbar__button.code").click
-        expect(rich).to have_css("pre code", count: 1)
-        expect(rich).to have_css(
-          "pre code",
-          text: "First paragraph  \nSecond line\nSecond paragraph\nThird paragraph",
+        expect(composer.paragraphs).to have_count(3)
+        expect(composer.paragraph_containing("First paragraph  \nSecond line")).to contain_text(
+          /First paragraph  \n+Second line/,
+          useInnerText: true,
         )
-        composer.send_keys(:left)
-        find(".toolbar__button.code").click
-        expect(rich).to have_css("p", text: "First paragraph  \nSecond line")
-        expect(rich).to have_css("p", text: "Second paragraph")
-        expect(rich).to have_css("p", text: "Third paragraph")
+        expect(composer.paragraph_containing("Second paragraph")).to contain_text(
+          /Second paragraph/,
+          useInnerText: true,
+        )
+        expect(composer.paragraph_containing("Third paragraph")).to contain_text(
+          /Third paragraph/,
+          useInnerText: true,
+        )
+        composer.select_all
+        composer.code_button.click
+        expect(composer.code_block).to have_count(1)
+        expect(composer.code_block).to contain_text(
+          /First paragraph  \n+Second line\n+Second paragraph\n+Third paragraph/,
+          useInnerText: true,
+        )
+        composer.editor.press("ArrowLeft", timeout: 30_000)
+        composer.code_button.click
+        expect(composer.paragraph_containing("First paragraph  \nSecond line")).to contain_text(
+          /First paragraph  \n+Second line/,
+          useInnerText: true,
+        )
+        expect(composer.paragraph_containing("Second paragraph")).to contain_text(
+          /Second paragraph/,
+          useInnerText: true,
+        )
+        expect(composer.paragraph_containing("Third paragraph")).to contain_text(
+          /Third paragraph/,
+          useInnerText: true,
+        )
       end
     end
   end
@@ -236,33 +266,36 @@ describe "Composer - ProseMirror - Code formatting" do
     it "allows typing after a code mark with/without the mark" do
       open_composer
       composer.type_content("This is ~~SPARTA!~~ `code!`.")
-      expect(rich).to have_css("code", text: "code!")
+      expect(composer.inline_code).to contain_text(/code!/, useInnerText: true)
       # within the code mark
-      composer.send_keys(:backspace)
-      composer.send_keys(:backspace)
+      composer.editor.press("Backspace", timeout: 30_000)
+      composer.editor.press("Backspace", timeout: 30_000)
       composer.type_content("!")
-      expect(rich).to have_css("code", text: "code!")
+      expect(composer.inline_code).to contain_text(/code!/, useInnerText: true)
       # after the code mark
-      composer.send_keys(:right)
+      composer.editor.press("ArrowRight", timeout: 30_000)
       composer.type_content(".")
       composer.toggle_rich_editor
-      expect(composer).to have_value("This is ~~SPARTA!~~ `code!`.")
+      expect(composer.markdown_editor).to have_value("This is ~~SPARTA!~~ `code!`.")
     end
 
     it "allows typing before a code mark with/without the mark" do
       open_composer
       composer.type_content("`code mark`")
-      expect(rich).to have_css("code", text: "code mark")
+      expect(composer.inline_code).to contain_text(/code mark/, useInnerText: true)
       # before the code mark
-      composer.send_keys(SystemHelpers::LINE_START_KEY)
-      wait_for_timeout
-      composer.send_keys(:left)
+      composer.editor.press(
+        RUBY_PLATFORM.match?(/darwin/i) ? "Meta+ArrowLeft" : "Home",
+        timeout: 30_000,
+      )
+      browser_page.wait_for_timeout(100)
+      composer.editor.press("ArrowLeft", timeout: 30_000)
       composer.type_content("..")
       # within the code mark
-      composer.send_keys(:right)
+      composer.editor.press("ArrowRight", timeout: 30_000)
       composer.type_content("!!")
       composer.toggle_rich_editor
-      expect(composer).to have_value("..`!!code mark`")
+      expect(composer.markdown_editor).to have_value("..`!!code mark`")
     end
   end
 end

@@ -25,10 +25,9 @@ module PageObjects
 
       def click_save
         form.submit
-        expect(page).to have_css(
-          ".admin-permalink-item__url",
-          wait: Capybara.default_max_wait_time * 3,
-        )
+        expect(
+          browser_root.locator(".admin-permalink-item__url").filter(visible: true),
+        ).not_to have_count(0, timeout: (Capybara.default_max_wait_time * 3) * 1000)
       end
 
       def form

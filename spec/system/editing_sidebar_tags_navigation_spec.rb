@@ -27,7 +27,7 @@ RSpec.describe "Editing sidebar tags navigation" do
 
   shared_examples "a user can edit the sidebar tags navigation" do |mobile|
     it "allows a user to edit the sidebar tags navigation", mobile: mobile do
-      visit "/latest"
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       sidebar.open_on_mobile if mobile
 
@@ -54,7 +54,7 @@ RSpec.describe "Editing sidebar tags navigation" do
       expect(sidebar).to have_no_section_link(tag3.name)
       expect(sidebar).to have_no_section_link(tag4.name)
 
-      visit "/latest"
+      browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       sidebar.open_on_mobile if mobile
 
@@ -86,7 +86,7 @@ RSpec.describe "Editing sidebar tags navigation" do
   end
 
   it "allows a user to filter the tags in the modal by the tag's name" do
-    visit "/latest"
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(sidebar).to have_tags_section
 
@@ -108,7 +108,7 @@ RSpec.describe "Editing sidebar tags navigation" do
   it "allows a user to deselect all tags in the modal which will display the site's top tags" do
     Fabricate(:tag_sidebar_section_link, user: user, linkable: tag1)
 
-    visit "/latest"
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(sidebar).to have_tags_section
     expect(sidebar).to have_section_link(tag1.name)
@@ -130,7 +130,7 @@ RSpec.describe "Editing sidebar tags navigation" do
 
     SiteSetting.default_navigation_menu_tags = "#{tag2.name}|#{tag3.name}"
 
-    visit "/latest"
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(sidebar).to have_tags_section
     expect(sidebar).to have_section_link(tag1.name)
@@ -152,7 +152,7 @@ RSpec.describe "Editing sidebar tags navigation" do
     Fabricate(:tag_sidebar_section_link, linkable: tag1, user: user)
     Fabricate(:tag_sidebar_section_link, linkable: tag2, user: user)
 
-    visit "/latest"
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(sidebar).to have_tags_section
 
@@ -178,7 +178,7 @@ RSpec.describe "Editing sidebar tags navigation" do
   end
 
   it "displays empty state when filtering by selected with no tags selected" do
-    visit "/latest"
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(sidebar).to have_tags_section
 
@@ -199,7 +199,7 @@ RSpec.describe "Editing sidebar tags navigation" do
         Fabricate(:tag, name: "Tag #{sprintf("%03d", index)}")
       end
 
-    visit "/latest"
+    browser_page.goto("/latest").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(sidebar).to have_tags_section
 

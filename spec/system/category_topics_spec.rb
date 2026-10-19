@@ -12,7 +12,7 @@ describe "Viewing categories page" do
     it "displays and updates new counter" do
       sign_in(user)
 
-      visit("/categories")
+      browser_page.goto("/categories").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       category_list.click_new_posts_badge(count: 1)
       category_list.click_topic(topic)
@@ -37,12 +37,16 @@ describe "Viewing categories page" do
       fab!(:post) { create_post(topic: topic) }
 
       it "lists the topic on the subcategory" do
-        visit "/c/#{parent_category.slug}/#{subcategoryA.slug}"
+        browser_page
+          .goto("/c/#{parent_category.slug}/#{subcategoryA.slug}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(topic_list).to have_topic(topic)
       end
 
       it "does not list the topic on the parent category" do
-        visit "/c/#{parent_category.slug}"
+        browser_page
+          .goto("/c/#{parent_category.slug}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         expect(topic_list).to have_no_topic(topic)
       end
     end

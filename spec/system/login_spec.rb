@@ -37,7 +37,9 @@ shared_examples "login scenarios" do
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
       login_form.open.fill(username: "john", password: "supersecurepassword").click_login
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(
+        browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+      ).not_to have_count(0)
     end
 
     it "can login with redirect" do
@@ -47,41 +49,51 @@ shared_examples "login scenarios" do
         .open_with_redirect("/about")
         .fill(username: "john", password: "supersecurepassword")
         .click_login
-      expect(page).to have_current_path("/about")
+      expect(browser_page).to have_url("/about")
     end
 
     it "can login and activate account" do
       login_form.open.fill(username: "john", password: "supersecurepassword").click_login
-      expect(page).to have_css(".not-activated-modal")
+      expect(browser_root.locator(".not-activated-modal").filter(visible: true)).not_to have_count(
+        0,
+      )
       login_form.click(".activation-controls button.resend")
 
       activation_link = wait_for_email_link(user, :activation)
-      visit activation_link
+      browser_page.goto(activation_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       activate_account.click_activate_account
       activate_account.click_continue
 
-      expect(page).to have_current_path("/")
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(browser_page).to have_url("/")
+      expect(
+        browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+      ).not_to have_count(0)
     end
 
     it "redirects to the wizard after activating account" do
       login_form.open.fill(username: "admin", password: "supersecurepassword").click_login
-      expect(page).to have_css(".not-activated-modal")
+      expect(browser_root.locator(".not-activated-modal").filter(visible: true)).not_to have_count(
+        0,
+      )
       login_form.click(".activation-controls button.resend")
 
       activation_link = wait_for_email_link(admin, :activation)
-      visit activation_link
+      browser_page.goto(activation_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       activate_account.click_activate_account
-      expect(page).to have_current_path(%r{/wizard})
+      expect(browser_page).to have_url(%r{/wizard})
     end
 
     it "shows error when when activation link is invalid" do
       login_form.open.fill(username: "john", password: "supersecurepassword").click_login
-      expect(page).to have_css(".not-activated-modal")
+      expect(browser_root.locator(".not-activated-modal").filter(visible: true)).not_to have_count(
+        0,
+      )
 
-      visit "/u/activate-account/123abc"
+      browser_page
+        .goto("/u/activate-account/123abc")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       activate_account.click_activate_account
       expect(activate_account).to have_error
@@ -94,18 +106,21 @@ shared_examples "login scenarios" do
 
       login_form.open.fill(username: user.username, password:).click_login
 
-      expect(find(".alert-error")).to have_content(
-        I18n.t("js.login.password_expired", reset_url: "/password-reset").gsub(/<.*?>/, ""),
+      expect(browser_root.locator(".alert-error").filter(visible: true)).to contain_text(
+        browser_text_pattern(
+          I18n.t("js.login.password_expired", reset_url: "/password-reset").gsub(/<.*?>/, ""),
+        ),
+        useInnerText: true,
       )
 
-      find(".alert-error a").click
+      browser_root.locator(".alert-error a").filter(visible: true).click
 
       # TODO: prefill username when fullpage
-      if find("#username-or-email").value.blank?
-        find("#username-or-email").fill_in(with: user.username)
+      if browser_root.locator("#username-or-email").filter(visible: true).input_value.blank?
+        browser_root.locator("#username-or-email").filter(visible: true).fill(user.username)
       end
 
-      find("button.forgot-password-reset").click
+      browser_root.locator("button.forgot-password-reset").filter(visible: true).click
 
       reset_password_link = wait_for_email_link(user, :reset_password)
       expect(reset_password_link).to be_present
@@ -121,10 +136,12 @@ shared_examples "login scenarios" do
       login_form.open.fill_username("john").email_login_link
 
       login_link = wait_for_email_link(user, :email_login)
-      visit login_link
+      browser_page.goto(login_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      find(".email-login-form .btn-primary").click
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      browser_root.locator(".email-login-form .btn-primary").filter(visible: true).click
+      expect(
+        browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+      ).not_to have_count(0)
     end
   end
 
@@ -132,21 +149,23 @@ shared_examples "login scenarios" do
     before { SiteSetting.login_required = true }
 
     it "keeps topics private until the user logs in" do
-      visit "/"
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       screenshot_marker(label: "login-required")
-      expect(page).to have_css(".login-welcome")
-      expect(page).to have_css(".site-logo")
-      expect(page.body).not_to include(topic.title)
-      expect(page.body).not_to include(topic2.title)
+      expect(browser_root.locator(".login-welcome").filter(visible: true)).not_to have_count(0)
+      expect(browser_root.locator(".site-logo").filter(visible: true)).not_to have_count(0)
+      expect(browser_page.content).not_to include(topic.title)
+      expect(browser_page.content).not_to include(topic2.title)
 
-      find(".login-welcome .login-button").click
+      browser_root.locator(".login-welcome .login-button").filter(visible: true).click
 
       screenshot_marker(label: "login-form")
 
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
       login_form.fill(username: "john", password: "supersecurepassword").click_login
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(
+        browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+      ).not_to have_count(0)
     end
 
     it "redirects to a PM after login" do
@@ -158,12 +177,14 @@ shared_examples "login scenarios" do
       Fabricate(:post, topic: pm, user: user, reads: 2, created_at: 1.day.ago)
       Fabricate(:group_private_message_topic, user: user, recipient_group: group)
 
-      visit "/t/#{pm.id}"
+      browser_page.goto("/t/#{pm.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
       login_form.fill(username: "john", password: "supersecurepassword").click_login
 
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
-      expect(page).to have_css("#topic-title")
-      expect(page).to have_css(".private_message")
+      expect(
+        browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+      ).not_to have_count(0)
+      expect(browser_root.locator("#topic-title").filter(visible: true)).not_to have_count(0)
+      expect(browser_root.locator(".private_message").filter(visible: true)).not_to have_count(0)
     end
 
     it "redirects to a route with a query parameters after login and keeps the query parameters" do
@@ -171,19 +192,21 @@ shared_examples "login scenarios" do
 
       category = Fabricate(:category)
 
-      visit "/new-topic?category_id=#{category.id}"
+      browser_page
+        .goto("/new-topic?category_id=#{category.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       login_form.fill(username: "john", password: "supersecurepassword").click_login
 
-      expect(page).to have_current_path("/new-topic?category_id=#{category.id}")
+      expect(browser_page).to have_url("/new-topic?category_id=#{category.id}")
     end
 
     it "does not leak category metadata if homepage is /categories" do
       SiteSetting.top_menu = "categories|latest|new|top"
-      visit "/"
+      browser_page.goto("/").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_css(".login-welcome")
+      expect(browser_root.locator(".login-welcome").filter(visible: true)).not_to have_count(0)
 
-      expect(page.body).not_to include(category.name)
+      expect(browser_page.content).not_to include(category.name)
     end
   end
 
@@ -198,14 +221,16 @@ shared_examples "login scenarios" do
       Fabricate(:post, topic: pm, user: user, reads: 2, created_at: 1.day.ago)
       Fabricate(:group_private_message_topic, user: user, recipient_group: group)
 
-      visit "/t/#{pm.id}"
-      find(".btn.login-button").click
+      browser_page.goto("/t/#{pm.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root.locator(".btn.login-button").filter(visible: true).click
 
       login_form.fill(username: "john", password: "supersecurepassword").click_login
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(
+        browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+      ).not_to have_count(0)
 
-      expect(page).to have_css("#topic-title")
-      expect(page).to have_css(".private_message")
+      expect(browser_root.locator("#topic-title").filter(visible: true)).not_to have_count(0)
+      expect(browser_root.locator(".private_message").filter(visible: true)).not_to have_count(0)
     end
 
     it "redirects to a public topic when hitting Reply then logging in" do
@@ -213,13 +238,15 @@ shared_examples "login scenarios" do
       topic = Fabricate(:topic)
       Fabricate(:post, topic: topic, created_at: 1.day.ago)
 
-      visit "/t/#{topic.id}"
-      find(".topic-footer-main-buttons .btn-primary").click
+      browser_page.goto("/t/#{topic.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root.locator(".topic-footer-main-buttons .btn-primary").filter(visible: true).click
 
       login_form.fill(username: "john", password: "supersecurepassword").click_login
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(
+        browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+      ).not_to have_count(0)
 
-      expect(page).to have_css("#topic-title")
+      expect(browser_root.locator("#topic-title").filter(visible: true)).not_to have_count(0)
     end
 
     it "redirects to a route with a query parameters after login and keeps the query parameters" do
@@ -227,10 +254,12 @@ shared_examples "login scenarios" do
 
       category = Fabricate(:category)
 
-      visit "/new-topic?category_id=#{category.id}"
+      browser_page
+        .goto("/new-topic?category_id=#{category.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       login_form.fill(username: "john", password: "supersecurepassword").click_login
 
-      expect(page).to have_current_path("/new-topic?category_id=#{category.id}")
+      expect(browser_page).to have_url("/new-topic?category_id=#{category.id}")
     end
 
     context "with user api key and omniauth" do
@@ -289,15 +318,19 @@ shared_examples "login scenarios" do
 
       it "completes signup and redirects to the user api key authorization form" do
         mock_google_auth
-        visit("/user-api-key/new?#{args.to_query}")
+        browser_page
+          .goto("/user-api-key/new?#{args.to_query}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(page).to have_css(".authorize-api-key__scopes")
+        expect(
+          browser_root.locator(".authorize-api-key__scopes").filter(visible: true),
+        ).not_to have_count(0)
       end
 
       it "redirects when navigating to login with redirect param" do
         mock_google_auth
         login_form.open_with_redirect("/about")
-        expect(page).to have_current_path("/about")
+        expect(browser_page).to have_url("/about")
       end
     end
   end
@@ -321,20 +354,27 @@ shared_examples "login scenarios" do
       it "requires to set 2FA after login" do
         login_form.open.fill(username: "jane", password: "supersecurepassword").click_login
 
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
-        expect(page).to have_content(I18n.t("js.user.second_factor.enforced_notice"))
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
+        expect(browser_content).to contain_text(
+          browser_text_pattern(I18n.t("js.user.second_factor.enforced_notice")),
+          useInnerText: true,
+        )
       end
     end
 
     it "can login with totp" do
       login_form.open.fill(username: "john", password: "supersecurepassword").click_login
 
-      expect(page).to have_css(".second-factor")
+      expect(browser_root.locator(".second-factor").filter(visible: true)).not_to have_count(0)
 
       totp = ROTP::TOTP.new(user_second_factor.data).now
-      find("#login-second-factor").fill_in(with: totp)
+      browser_root.locator("#login-second-factor").filter(visible: true).fill(totp)
 
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(
+        browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+      ).not_to have_count(0)
     end
 
     it "can login with totp and redirect" do
@@ -343,24 +383,29 @@ shared_examples "login scenarios" do
         .fill(username: "john", password: "supersecurepassword")
         .click_login
 
-      expect(page).to have_css(".second-factor")
+      expect(browser_root.locator(".second-factor").filter(visible: true)).not_to have_count(0)
 
       totp = ROTP::TOTP.new(user_second_factor.data).now
-      find("#login-second-factor").fill_in(with: totp)
+      browser_root.locator("#login-second-factor").filter(visible: true).fill(totp)
 
-      expect(page).to have_current_path("/about")
+      expect(browser_page).to have_url("/about")
     end
 
     it "can login with backup code" do
       login_form.open.fill(username: "john", password: "supersecurepassword").click_login
 
-      expect(page).to have_css(".second-factor")
+      expect(browser_root.locator(".second-factor").filter(visible: true)).not_to have_count(0)
 
-      find(".toggle-second-factor-method").click
-      find(".second-factor-token-input").fill_in(with: "iAmValidBackupCode")
+      browser_root.locator(".toggle-second-factor-method").filter(visible: true).click
+      browser_root
+        .locator(".second-factor-token-input")
+        .filter(visible: true)
+        .fill("iAmValidBackupCode")
       login_form.click_login
 
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(
+        browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+      ).not_to have_count(0)
     end
 
     context "with login link" do
@@ -372,24 +417,31 @@ shared_examples "login scenarios" do
         login_form.open.fill_username("john").email_login_link
 
         login_link = wait_for_email_link(user, :email_login)
-        visit login_link
+        browser_page.goto(login_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
         totp = ROTP::TOTP.new(user_second_factor.data).now
-        find(".second-factor-token-input").fill_in(with: totp)
-        find(".email-login-form .btn-primary").click
+        browser_root.locator(".second-factor-token-input").filter(visible: true).fill(totp)
+        browser_root.locator(".email-login-form .btn-primary").filter(visible: true).click
 
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
 
       it "can login with login link and backup code" do
         login_form.open.fill_username("john").email_login_link
 
         login_link = wait_for_email_link(user, :email_login)
-        visit login_link
-        find(".toggle-second-factor-method").click
-        find(".second-factor-token-input").fill_in(with: "iAmValidBackupCode")
-        find(".email-login-form .btn-primary").click
+        browser_page.goto(login_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
+        browser_root.locator(".toggle-second-factor-method").filter(visible: true).click
+        browser_root
+          .locator(".second-factor-token-input")
+          .filter(visible: true)
+          .fill("iAmValidBackupCode")
+        browser_root.locator(".email-login-form .btn-primary").filter(visible: true).click
 
-        expect(page).to have_css(".header-dropdown-toggle.current-user")
+        expect(
+          browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+        ).not_to have_count(0)
       end
     end
 
@@ -413,41 +465,50 @@ shared_examples "login scenarios" do
 
     it "lets the user retry an invalid TOTP code and reset their password" do
       login_form.open.fill_username("john").forgot_password
-      find("button.forgot-password-reset").click
+      browser_root.locator("button.forgot-password-reset").filter(visible: true).click
 
       reset_password_link = wait_for_email_link(user, :reset_password)
-      visit reset_password_link
-      find(".second-factor-token-input").fill_in(with: "123456")
-      find(".password-reset .btn-primary").click
+      browser_page.goto(reset_password_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root.locator(".second-factor-token-input").filter(visible: true).fill("123456")
+      browser_root.locator(".password-reset .btn-primary").filter(visible: true).click
 
-      expect(page).to have_css(
-        ".alert-error",
-        text: "Invalid authentication code. Each code can only be used once.",
+      expect(browser_root.locator(".alert-error").filter(visible: true)).to contain_text(
+        [browser_text_pattern("Invalid authentication code. Each code can only be used once.")],
+        useInnerText: true,
       )
-      expect(page).to have_css(".second-factor-token-input")
+      expect(
+        browser_root.locator(".second-factor-token-input").filter(visible: true),
+      ).not_to have_count(0)
 
       totp = ROTP::TOTP.new(user_second_factor.data).now
-      find(".second-factor-token-input").fill_in(with: totp)
-      find(".password-reset .btn-primary").click
-      find("#new-account-password").fill_in(with: "newsuperpassword")
-      find(".change-password-form .btn-primary").click
+      browser_root.locator(".second-factor-token-input").filter(visible: true).fill(totp)
+      browser_root.locator(".password-reset .btn-primary").filter(visible: true).click
+      browser_root.locator("#new-account-password").filter(visible: true).fill("newsuperpassword")
+      browser_root.locator(".change-password-form .btn-primary").filter(visible: true).click
 
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(
+        browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+      ).not_to have_count(0)
     end
 
     it "can reset password with a backup code" do
       login_form.open.fill_username("john").forgot_password
-      find("button.forgot-password-reset").click
+      browser_root.locator("button.forgot-password-reset").filter(visible: true).click
 
       reset_password_link = wait_for_email_link(user, :reset_password)
-      visit reset_password_link
-      find(".toggle-second-factor-method").click
-      find(".second-factor-token-input").fill_in(with: "iAmValidBackupCode")
-      find(".password-reset .btn-primary").click
-      find("#new-account-password").fill_in(with: "newsuperpassword")
-      find(".change-password-form .btn-primary").click
+      browser_page.goto(reset_password_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      browser_root.locator(".toggle-second-factor-method").filter(visible: true).click
+      browser_root
+        .locator(".second-factor-token-input")
+        .filter(visible: true)
+        .fill("iAmValidBackupCode")
+      browser_root.locator(".password-reset .btn-primary").filter(visible: true).click
+      browser_root.locator("#new-account-password").filter(visible: true).fill("newsuperpassword")
+      browser_root.locator(".change-password-form .btn-primary").filter(visible: true).click
 
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(
+        browser_root.locator(".header-dropdown-toggle.current-user").filter(visible: true),
+      ).not_to have_count(0)
     end
   end
 end

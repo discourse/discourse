@@ -22,123 +22,190 @@ module PageObjects
       ACTIVE_IMG = ".pswp__item[aria-hidden='false'] .pswp__img"
 
       def initialize
-        @component = find(SELECTOR)
+        @component = browser_root.locator(SELECTOR).filter(visible: true)
       end
 
       def visible?
-        page.has_css?(SELECTOR)
+        have_count(0).does_not_match?(browser_root.locator(SELECTOR).filter(visible: true))
       end
 
       def hidden?
-        page.has_no_css?(SELECTOR)
+        have_count(0).matches?(browser_root.locator(SELECTOR).filter(visible: true))
       end
 
       def next_button
-        component.find(NEXT_BTN)
+        component.locator(NEXT_BTN).filter(visible: true)
       end
 
       def prev_button
-        component.find(PREV_BTN)
+        component.locator(PREV_BTN).filter(visible: true)
       end
 
       def image_info_button
-        component.find(IMAGE_INFO_BTN)
+        component.locator(IMAGE_INFO_BTN).filter(visible: true)
       end
 
       def quote_button
-        component.find(QUOTE_BTN)
+        component.locator(QUOTE_BTN).filter(visible: true)
       end
 
       def close_button
-        component.find(CLOSE_BTN)
+        component.locator(CLOSE_BTN).filter(visible: true)
       end
 
       def counter
-        component.find(COUNTER)
+        component.locator(COUNTER).filter(visible: true)
       end
 
       def has_counter?(text)
-        component.has_css?(COUNTER, text: text)
+        contain_text([browser_text_pattern(text)], useInnerText: true).matches?(
+          component.locator(COUNTER).filter(visible: true),
+        )
       end
 
       def has_no_counter?
-        component.has_no_css?(COUNTER)
+        have_count(0).matches?(
+          component
+            .tap do |parent|
+              parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+            end
+            .locator(COUNTER)
+            .filter(visible: true),
+        )
       end
 
       def has_caption_title?(caption)
-        component.has_css?(CAPTION_TITLE, text: caption)
+        contain_text([browser_text_pattern(caption)], useInnerText: true).matches?(
+          component.locator(CAPTION_TITLE).filter(visible: true),
+        )
       end
 
       def has_caption_details?(details)
-        component.has_css?(CAPTION_DETAILS, text: details)
+        have_css("opacity", "1").matches?(component.locator(CAPTION_DETAILS)) &&
+          contain_text([browser_text_pattern(details)], useInnerText: true).matches?(
+            component.locator(CAPTION_DETAILS).filter(visible: true),
+          )
       end
 
       def has_no_caption?
-        component.has_no_css?(CAPTION)
+        have_count(0).matches?(
+          component
+            .tap do |parent|
+              parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+            end
+            .locator(CAPTION)
+            .filter(visible: true),
+        )
       end
 
       def has_no_caption_details?
-        component.has_no_css?(CAPTION_DETAILS)
+        component.wait_for(state: "visible")
+        details = component.locator(CAPTION_DETAILS)
+        details.count.zero? || have_css("opacity", "0").matches?(details)
       end
 
       def has_next_button?
-        component.has_css?(NEXT_BTN)
+        have_count(0).does_not_match?(component.locator(NEXT_BTN).filter(visible: true))
       end
 
       def has_no_next_button?
-        component.has_no_css?(NEXT_BTN)
+        have_count(0).matches?(
+          component
+            .tap do |parent|
+              parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+            end
+            .locator(NEXT_BTN)
+            .filter(visible: true),
+        )
       end
 
       def has_prev_button?
-        component.has_css?(PREV_BTN)
+        have_count(0).does_not_match?(component.locator(PREV_BTN).filter(visible: true))
       end
 
       def has_no_prev_button?
-        component.has_no_css?(PREV_BTN)
+        have_count(0).matches?(
+          component
+            .tap do |parent|
+              parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+            end
+            .locator(PREV_BTN)
+            .filter(visible: true),
+        )
       end
 
       def has_download_button?
-        component.has_css?(DOWNLOAD_BTN)
+        have_count(0).does_not_match?(component.locator(DOWNLOAD_BTN).filter(visible: true))
       end
 
       def has_no_download_button?
-        component.has_no_css?(DOWNLOAD_BTN)
+        have_count(0).matches?(
+          component
+            .tap do |parent|
+              parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+            end
+            .locator(DOWNLOAD_BTN)
+            .filter(visible: true),
+        )
       end
 
       def has_original_image_button?
-        component.has_css?(ORIGINAL_IMAGE_BTN)
+        have_count(0).does_not_match?(component.locator(ORIGINAL_IMAGE_BTN).filter(visible: true))
       end
 
       def has_no_original_image_button?
-        component.has_no_css?(ORIGINAL_IMAGE_BTN)
+        have_count(0).matches?(
+          component
+            .tap do |parent|
+              parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+            end
+            .locator(ORIGINAL_IMAGE_BTN)
+            .filter(visible: true),
+        )
       end
 
       def has_image_info_button?
-        component.has_css?(IMAGE_INFO_BTN)
+        have_count(0).does_not_match?(component.locator(IMAGE_INFO_BTN).filter(visible: true))
       end
 
       def has_no_image_info_button?
-        component.has_no_css?(IMAGE_INFO_BTN)
+        have_count(0).matches?(
+          component
+            .tap do |parent|
+              parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+            end
+            .locator(IMAGE_INFO_BTN)
+            .filter(visible: true),
+        )
       end
 
       def has_quote_button?
-        component.has_css?(QUOTE_BTN)
+        have_count(0).does_not_match?(component.locator(QUOTE_BTN).filter(visible: true))
       end
 
       def has_no_quote_button?
-        component.has_no_css?(QUOTE_BTN)
+        have_count(0).matches?(
+          component
+            .tap do |parent|
+              parent.wait_for(state: "visible", timeout: Capybara.default_max_wait_time * 1000)
+            end
+            .locator(QUOTE_BTN)
+            .filter(visible: true),
+        )
       end
 
       def has_ui_visible?
-        page.has_css?(UI_VISIBLE)
+        have_count(0).does_not_match?(browser_root.locator(UI_VISIBLE).filter(visible: true))
       end
 
       def has_no_ui_visible?
-        page.has_no_css?(UI_VISIBLE)
+        have_count(0).matches?(browser_root.locator(UI_VISIBLE).filter(visible: true))
       end
 
       def has_image_source?(upload)
-        component.has_css?(ACTIVE_IMG + "[src$='#{upload.url}']")
+        have_count(0).does_not_match?(
+          component.locator(ACTIVE_IMG + "[src$='#{upload.url}']").filter(visible: true),
+        )
       end
     end
   end

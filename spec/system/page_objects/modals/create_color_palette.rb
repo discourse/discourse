@@ -4,7 +4,7 @@ module PageObjects
   module Modals
     class CreateColorPalette < PageObjects::Pages::Base
       def modal
-        find(".create-color-palette")
+        browser_root.locator(".create-color-palette").filter(visible: true)
       end
 
       def base_dropdown
@@ -12,7 +12,7 @@ module PageObjects
       end
 
       def create_button
-        within(modal) { find(".btn-primary") }
+        within_browser(modal) { browser_root.locator(".btn-primary").filter(visible: true) }
       end
     end
   end

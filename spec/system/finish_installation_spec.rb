@@ -56,7 +56,7 @@ RSpec.describe "Finish Installation" do
           finish_installation_page.visit_page
           finish_installation_page.click_login_with_discourse_id
 
-          expect(page).to have_current_path("/wizard")
+          expect(browser_page).to have_url("/wizard")
 
           user1 = User.find_by_email("dev1@example.com")
           user2 = User.find_by_email("dev2@example.com")
@@ -91,7 +91,7 @@ RSpec.describe "Finish Installation" do
           finish_installation_page.visit_page
           finish_installation_page.click_login_with_discourse_id
 
-          expect(page).to have_current_path("/wizard")
+          expect(browser_page).to have_url("/wizard")
         ensure
           reset_omniauth_config(:discourse_id)
         end
@@ -117,9 +117,11 @@ RSpec.describe "Finish Installation" do
               uid: "12345",
               info: OmniAuth::AuthHash::InfoHash.new(email: "dev1@example.com", nickname: "dev1"),
             )
-            finish_installation_page.visit("/discuss/finish-installation")
+            browser_page
+              .goto("/discuss/finish-installation")
+              .tap { SystemBrowserBootstrap.wait_for(browser_page) }
             finish_installation_page.click_login_with_discourse_id
-            expect(page).to have_current_path("/discuss/wizard")
+            expect(browser_page).to have_url("/discuss/wizard")
           ensure
             reset_omniauth_config(:discourse_id)
           end
@@ -274,10 +276,10 @@ RSpec.describe "Finish Installation" do
         activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
 
         activate_account_page = PageObjects::Pages::ActivateAccount.new
-        visit activation_link
+        browser_page.goto(activation_link).tap { SystemBrowserBootstrap.wait_for(browser_page) }
         activate_account_page.click_activate_account
 
-        expect(page).to have_current_path("/wizard")
+        expect(browser_page).to have_url("/wizard")
       end
     end
   end

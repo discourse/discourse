@@ -17,16 +17,16 @@ describe "Navigating with breadcrumbs" do
   fab!(:c3_child_topic) { Fabricate(:topic, category: category3_child) }
 
   it "can navigate between categories" do
-    visit("/c/#{category1.id}")
+    browser_page.goto("/c/#{category1.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_current_path("/c/#{category1.slug}/#{category1.id}")
+    expect(browser_page).to have_url("/c/#{category1.slug}/#{category1.id}")
     expect(discovery.topic_list).to have_topic(c1_topic)
     expect(discovery.topic_list).to have_topics(count: 1)
 
     expect(discovery.category_drop).to have_selected_value(category1.id)
     discovery.category_drop.select_row_by_value(category2.id)
 
-    expect(page).to have_current_path("/c/#{category2.slug}/#{category2.id}")
+    expect(browser_page).to have_url("/c/#{category2.slug}/#{category2.id}")
     expect(discovery.topic_list).to have_topic(c2_topic)
     expect(discovery.topic_list).to have_topic(c2_child_topic)
     expect(discovery.topic_list).to have_topics(count: 2)
@@ -55,8 +55,8 @@ describe "Navigating with breadcrumbs" do
     fab!(:c3_child_topic_tagged) { Fabricate(:topic, category: category3_child, tags: [tag]) }
 
     it "can filter by tags" do
-      visit("/c/#{category1.id}")
-      expect(page).to have_current_path("/c/#{category1.slug}/#{category1.id}")
+      browser_page.goto("/c/#{category1.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_page).to have_url("/c/#{category1.slug}/#{category1.id}")
       expect(discovery.topic_list).to have_topic(c1_topic)
       expect(discovery.topic_list).to have_topic(c1_topic_tagged)
       expect(discovery.topic_list).to have_topics(count: 2)
@@ -69,7 +69,9 @@ describe "Navigating with breadcrumbs" do
     end
 
     it "maintains no-subcategories option" do
-      visit("/c/#{category3.slug}/#{category3.id}/none")
+      browser_page
+        .goto("/c/#{category3.slug}/#{category3.id}/none")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
       expect(discovery.topic_list).to have_topic(c3_topic)
       expect(discovery.topic_list).to have_topic(c3_topic_tagged)
       expect(discovery.topic_list).to have_topics(count: 2)
@@ -78,7 +80,7 @@ describe "Navigating with breadcrumbs" do
       expect(discovery.tag_drop).to have_selected_name("tags")
       discovery.tag_drop.select_row_by_name(tag.name)
 
-      expect(page).to have_current_path(
+      expect(browser_page).to have_url(
         "/tags/c/#{category3.slug}/#{category3.id}/none/#{tag.slug}/#{tag.id}",
       )
       expect(discovery.topic_list).to have_topics(count: 1)
@@ -88,8 +90,8 @@ describe "Navigating with breadcrumbs" do
 
   describe "initial page loads for no-subcategories" do
     it "shows correct data for /c/" do
-      visit("/c/#{category3.id}")
-      expect(page).to have_current_path("/c/#{category3.slug}/#{category3.id}/none")
+      browser_page.goto("/c/#{category3.id}").tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_page).to have_url("/c/#{category3.slug}/#{category3.id}/none")
       expect(discovery.topic_list).to have_topic(c3_topic)
       expect(discovery.topic_list).to have_topics(count: 1)
     end
@@ -99,8 +101,10 @@ describe "Navigating with breadcrumbs" do
       c3_topic.update!(tags: [tag])
       c3_child_topic.update!(tags: [tag])
 
-      visit("/tags/c/#{category3.slug}/#{category3.id}/#{tag.name}/#{tag.id}")
-      expect(page).to have_current_path(
+      browser_page
+        .goto("/tags/c/#{category3.slug}/#{category3.id}/#{tag.name}/#{tag.id}")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+      expect(browser_page).to have_url(
         "/tags/c/#{category3.slug}/#{category3.id}/none/#{tag.slug}/#{tag.id}",
       )
       expect(discovery.topic_list).to have_topic(c3_topic)

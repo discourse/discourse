@@ -7,21 +7,51 @@ module PageObjects
         WRAPPER_CSS = ".review-item__meta-topic-title"
 
         def has_closed_topic_status?
-          within(WRAPPER_CSS) { has_css?(".topic-status [class*='d-icon-lock']") }
+          within_browser(WRAPPER_CSS) do
+            have_count(0).does_not_match?(
+              browser_root.locator(".topic-status [class*='d-icon-lock']").filter(visible: true),
+            )
+          end
         end
 
         def has_topic_link?(topic_title:, post_url:)
-          within(WRAPPER_CSS) { expect(page).to have_link(topic_title, href: post_url) }
+          within_browser(WRAPPER_CSS) do
+            expect(
+              browser_root
+                .get_by_role("link")
+                .and(
+                  browser_root.locator(
+                    "[id=#{topic_title.to_s.to_json}], [name=#{topic_title.to_s.to_json}]",
+                  ).or(browser_root.get_by_role("link", name: topic_title)),
+                )
+                .and(browser_root.locator("[href=#{post_url.to_s.to_json}]"))
+                .filter(visible: true),
+            ).not_to have_count(0)
+          end
         end
 
         def has_category_badge?(category_name)
-          within(WRAPPER_CSS) do
-            expect(page).to have_css(".badge-category__name", text: category_name)
+          within_browser(WRAPPER_CSS) do
+            expect(
+              browser_root.locator(".badge-category__name").filter(visible: true),
+            ).to contain_text([browser_text_pattern(category_name)], useInnerText: true)
           end
         end
 
         def has_tag_link?(tag_name:, tag_url:)
-          within(WRAPPER_CSS) { expect(page).to have_link(tag_name, href: tag_url) }
+          within_browser(WRAPPER_CSS) do
+            expect(
+              browser_root
+                .get_by_role("link")
+                .and(
+                  browser_root.locator(
+                    "[id=#{tag_name.to_s.to_json}], [name=#{tag_name.to_s.to_json}]",
+                  ).or(browser_root.get_by_role("link", name: tag_name)),
+                )
+                .and(browser_root.locator("[href=#{tag_url.to_s.to_json}]"))
+                .filter(visible: true),
+            ).not_to have_count(0)
+          end
         end
       end
     end

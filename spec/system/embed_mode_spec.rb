@@ -9,64 +9,93 @@ describe "Embed mode" do
   before { SiteSetting.embed_full_app = true }
 
   it "applies embed-mode class to body when embed_mode=true" do
-    visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+    browser_page
+      .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css("body.embed-mode")
+    expect(browser_root.locator("body.embed-mode").filter(visible: true)).not_to have_count(0)
   end
 
   it "does not apply embed-mode class without the param" do
-    visit("/t/#{topic.slug}/#{topic.id}")
+    browser_page
+      .goto("/t/#{topic.slug}/#{topic.id}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_no_css("body.embed-mode")
+    expect(browser_root.locator("body.embed-mode").filter(visible: true)).to have_count(0)
   end
 
   it "hides suggested topics in embed mode" do
     Fabricate(:post) # create another topic for suggestions
-    visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+    browser_page
+      .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css("body.embed-mode")
-    expect(page).to have_no_css(".suggested-topics")
+    expect(browser_root.locator("body.embed-mode").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator(".suggested-topics").filter(visible: true)).to have_count(0)
   end
 
   it "shows the topic navigation widget" do
-    visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+    browser_page
+      .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css(".topic-navigation")
+    expect(browser_root.locator(".topic-navigation").filter(visible: true)).not_to have_count(0)
   end
 
   it "loads topic content without JS errors" do
-    visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+    browser_page
+      .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css("body.embed-mode")
-    expect(page).to have_css("#topic-title .fancy-title", text: topic.title, visible: :all)
-    expect(page).to have_css("#post_1")
+    expect(browser_root.locator("body.embed-mode").filter(visible: true)).not_to have_count(0)
+    expect(browser_root.locator("#topic-title .fancy-title")).to contain_text(
+      [browser_text_pattern(topic.title)],
+      useInnerText: true,
+    )
+    expect(browser_root.locator("#post_1").filter(visible: true)).not_to have_count(0)
   end
 
   it "shows 'be the first to reply' message for topic with no replies" do
-    visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+    browser_page
+      .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css(".embed-topic-footer__first-reply")
-    expect(page).to have_css(".embed-topic-footer__first-reply .btn-primary")
+    expect(
+      browser_root.locator(".embed-topic-footer__first-reply").filter(visible: true),
+    ).not_to have_count(0)
+    expect(
+      browser_root.locator(".embed-topic-footer__first-reply .btn-primary").filter(visible: true),
+    ).not_to have_count(0)
   end
 
   it "shows powered by discourse badge" do
     SiteSetting.enable_powered_by_discourse = true
-    visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+    browser_page
+      .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_css(".embed-topic-footer .powered-by-discourse")
+    expect(
+      browser_root.locator(".embed-topic-footer .powered-by-discourse").filter(visible: true),
+    ).not_to have_count(0)
   end
 
   it "does not show powered by discourse badge when setting is disabled" do
     SiteSetting.enable_powered_by_discourse = false
-    visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+    browser_page
+      .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_no_css(".embed-topic-footer .powered-by-discourse")
+    expect(
+      browser_root.locator(".embed-topic-footer .powered-by-discourse").filter(visible: true),
+    ).to have_count(0)
   end
 
   it "does not show embed footer without embed mode" do
-    visit("/t/#{topic.slug}/#{topic.id}")
+    browser_page
+      .goto("/t/#{topic.slug}/#{topic.id}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    expect(page).to have_no_css(".embed-topic-footer")
+    expect(browser_root.locator(".embed-topic-footer").filter(visible: true)).to have_count(0)
   end
 
   context "when logged in" do
@@ -79,27 +108,35 @@ describe "Embed mode" do
       fab!(:no_reply_post) { Fabricate(:post, topic: no_reply_topic) }
 
       it "shows the docked composer" do
-        visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
+        browser_page
+          .goto("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(topic_page).to have_docked_composer
       end
 
       it "does not show the docked composer outside embed mode" do
-        visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}")
+        browser_page
+          .goto("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(topic_page).to have_no_docked_composer
       end
 
       it "does not show floating timeline button" do
-        visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
+        browser_page
+          .goto("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(topic_page).to have_no_floating_timeline_button
       end
 
       it "hides the standard composer" do
-        visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
+        browser_page
+          .goto("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(page).to have_no_css("#reply-control.open")
+        expect(browser_root.locator("#reply-control.open").filter(visible: true)).to have_count(0)
       end
     end
 
@@ -107,51 +144,89 @@ describe "Embed mode" do
       fab!(:reply) { Fabricate(:post, topic: topic) }
 
       it "shows the docked composer" do
-        visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+        browser_page
+          .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(topic_page).to have_docked_composer
       end
 
       it "focuses the docked composer when clicking reply" do
-        visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+        browser_page
+          .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         topic_page.click_embed_reply_button
 
-        expect(page).to have_css(".embed-mode-composer .d-editor-input:focus")
+        expect(
+          browser_root.locator(".embed-mode-composer .d-editor-input:focus").filter(visible: true),
+        ).not_to have_count(0)
       end
 
       it "submits a reply through the docked composer" do
         user.user_option.update!(composition_mode: UserOption.composition_mode_types[:markdown])
-        visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+        browser_page
+          .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
         expect(topic_page).to have_docked_composer
 
-        find(".embed-mode-composer .d-editor-input").fill_in(with: "Hello from the docked composer")
-        find(".embed-mode-composer .docked-composer__submit-btn").click
+        browser_root
+          .locator(".embed-mode-composer .d-editor-input")
+          .filter(visible: true)
+          .fill("Hello from the docked composer")
+        browser_root
+          .locator(".embed-mode-composer .docked-composer__submit-btn")
+          .filter(visible: true)
+          .click
 
-        expect(page).to have_css(".topic-post", text: "Hello from the docked composer")
+        expect(browser_root.locator(".topic-post").filter(visible: true)).to contain_text(
+          [browser_text_pattern("Hello from the docked composer")],
+          useInnerText: true,
+        )
       end
 
       it "edits a post through the docked composer" do
         own_post = Fabricate(:post, topic: topic, user: user, raw: "Original content")
-        visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+        browser_page
+          .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        find("#post_#{own_post.post_number} button.edit").click
+        browser_root
+          .locator("#post_#{own_post.post_number} button.edit")
+          .filter(visible: true)
+          .click
 
-        expect(page).to have_css(".embed-mode-composer__editing")
-        expect(page).to have_no_css("#reply-control.composer-action-edit")
+        expect(
+          browser_root.locator(".embed-mode-composer__editing").filter(visible: true),
+        ).not_to have_count(0)
+        expect(
+          browser_root.locator("#reply-control.composer-action-edit").filter(visible: true),
+        ).to have_count(0)
 
-        find(".embed-mode-composer .d-editor-input").fill_in(with: "Edited content")
-        find(".embed-mode-composer .docked-composer__submit-btn").click
+        browser_root
+          .locator(".embed-mode-composer .d-editor-input")
+          .filter(visible: true)
+          .fill("Edited content")
+        browser_root
+          .locator(".embed-mode-composer .docked-composer__submit-btn")
+          .filter(visible: true)
+          .click
 
-        expect(page).to have_no_css(".embed-mode-composer__editing")
-        expect(page).to have_css("#post_#{own_post.post_number}", text: "Edited content")
+        expect(
+          browser_root.locator(".embed-mode-composer__editing").filter(visible: true),
+        ).to have_count(0)
+        expect(
+          browser_root.locator("#post_#{own_post.post_number}").filter(visible: true),
+        ).to contain_text([browser_text_pattern("Edited content")], useInnerText: true)
       end
 
       context "with many replies" do
         before { 15.times { Fabricate(:post, topic: topic) } }
 
         it "shows floating timeline button when footer is not visible" do
-          visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+          browser_page
+            .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+            .tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(topic_page).to have_post_number(2)
 
           expect(topic_page).to have_floating_timeline_button
@@ -159,33 +234,51 @@ describe "Embed mode" do
         end
 
         it "opens the timeline when clicking the floating timeline button" do
-          visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+          browser_page
+            .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+            .tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(topic_page).to have_post_number(2)
 
           topic_page.click_floating_timeline_button
-          expect(page).to have_css(".timeline-fullscreen.show")
+          expect(
+            browser_root.locator(".timeline-fullscreen.show").filter(visible: true),
+          ).not_to have_count(0)
         end
 
         it "shows the topic progress bar at the bottom (not sticky)" do
-          visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+          browser_page
+            .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+            .tap { SystemBrowserBootstrap.wait_for(browser_page) }
           expect(topic_page).to have_post_number(2)
 
-          expect(page).to have_css("#topic-progress-wrapper", visible: :visible)
-          expect(page).to have_css(".topic-navigation.with-topic-progress", visible: :visible)
+          expect(
+            browser_root.locator("#topic-progress-wrapper").filter(visible: true),
+          ).not_to have_count(0)
+          expect(
+            browser_root.locator(".topic-navigation.with-topic-progress").filter(visible: true),
+          ).not_to have_count(0)
         end
       end
 
       it "does not show 'be the first to reply' message" do
-        visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+        browser_page
+          .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(page).to have_no_css(".embed-topic-footer__first-reply")
+        expect(
+          browser_root.locator(".embed-topic-footer__first-reply").filter(visible: true),
+        ).to have_count(0)
       end
 
       it "still shows powered by discourse badge" do
         SiteSetting.enable_powered_by_discourse = true
-        visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+        browser_page
+          .goto("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-        expect(page).to have_css(".embed-topic-footer .powered-by-discourse")
+        expect(
+          browser_root.locator(".embed-topic-footer .powered-by-discourse").filter(visible: true),
+        ).not_to have_count(0)
       end
     end
   end
@@ -195,15 +288,28 @@ describe "Embed mode" do
     fab!(:no_reply_post) { Fabricate(:post, topic: no_reply_topic) }
 
     it "does not show the docked composer" do
-      visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
+      browser_page
+        .goto("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       expect(topic_page).to have_no_docked_composer
     end
 
     it "shows login label on the embed first-reply footer" do
-      visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
+      browser_page
+        .goto("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-      expect(page).to have_button(I18n.t("js.topic.login_reply"))
+      expect(
+        browser_root
+          .get_by_role("button")
+          .and(
+            browser_root.locator(
+              "[id=#{I18n.t("js.topic.login_reply").to_s.to_json}], [name=#{I18n.t("js.topic.login_reply").to_s.to_json}]",
+            ).or(browser_root.get_by_role("button", name: I18n.t("js.topic.login_reply"))),
+          )
+          .filter(visible: true),
+      ).not_to have_count(0)
     end
   end
 end

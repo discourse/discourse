@@ -22,6 +22,9 @@ describe "Editing topic timers" do
     edit_topic_timer_modal.set_relative_time_interval("hours")
     edit_topic_timer_modal.click_save
 
-    expect(page).to have_text("This topic will automatically close in 10 hours.")
+    expect(browser_content).to contain_text(
+      browser_text_pattern("This topic will automatically close in 10 hours."),
+      useInnerText: true,
+    )
   end
 end

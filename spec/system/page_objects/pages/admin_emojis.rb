@@ -4,43 +4,62 @@ module PageObjects
   module Pages
     class AdminEmojis < AdminBase
       def visit_page
-        page.visit "/admin/config/emoji"
+        browser_page
+          .goto("/admin/config/emoji")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def visit_import_page
-        page.visit "/admin/config/emoji/import"
+        browser_page
+          .goto("/admin/config/emoji/import")
+          .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         self
       end
 
       def has_emoji_listed?(name)
-        page.has_css?(emoji_table_selector, text: name)
+        contain_text([browser_text_pattern(name)], useInnerText: true).matches?(
+          browser_root.locator(emoji_table_selector).filter(visible: true),
+        )
       end
 
       def has_no_emoji_listed?(name)
-        page.has_no_css?(emoji_table_selector, text: name)
+        contain_text([browser_text_pattern(name)], useInnerText: true).does_not_match?(
+          browser_root.locator(emoji_table_selector).filter(visible: true),
+        )
       end
 
       def delete_emoji(name)
-        find(".d-table__row", text: name).find(delete_button_selector).click
+        browser_root
+          .locator(".d-table__row")
+          .filter(visible: true)
+          .filter(hasText: browser_text_pattern(name))
+          .locator(delete_button_selector)
+          .filter(visible: true)
+          .click
       end
 
       def upload_zip(path)
-        attach_file(path, class: "admin-emoji-import__file-input", make_visible: true)
+        browser_root.locator("input.admin-emoji-import__file-input").set_input_files(path.to_s)
         self
       end
 
       def has_import_preview?
-        page.has_css?(".admin-emoji-import__summary")
+        have_count(0).does_not_match?(
+          browser_root.locator(".admin-emoji-import__summary").filter(visible: true),
+        )
       end
 
       def confirm_import
-        find(".admin-emoji-import__actions .btn-primary").click
+        browser_root
+          .locator(".admin-emoji-import__actions .btn-primary")
+          .filter(visible: true)
+          .click
         self
       end
 
       def click_tab(tab_name)
-        find(".admin-emoji-tabs__#{tab_name}").click
+        browser_root.locator(".admin-emoji-tabs__#{tab_name}").filter(visible: true).click
         self
       end
 

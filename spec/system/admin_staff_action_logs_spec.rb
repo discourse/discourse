@@ -34,21 +34,37 @@ describe "Admin staff action logs" do
   before { sign_in(current_user) }
 
   it "shows details for an action" do
-    visit "/admin/logs/staff_action_logs"
-
-    expect(staff_action_logs_page.log_row(history_1)).to have_content(
+    browser_page
+      .goto("/admin/logs/staff_action_logs")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
+    row = staff_action_logs_page.log_row(history_1)
+    expect(row).to contain_text(
       I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"),
-    ).and have_content("enforce_second_factor").and have_content(
-                  I18n.t("admin_js.admin.logs.staff_actions.new_value", "all"),
-                ).and have_content(I18n.t("admin_js.admin.logs.staff_actions.previous_value", "no"))
-
-    expect(staff_action_logs_page.log_row(history_2)).to have_content(
+      useInnerText: true,
+    )
+    expect(row).to contain_text("enforce_second_factor", useInnerText: true)
+    expect(row).to contain_text(
+      I18n.t("admin_js.admin.logs.staff_actions.new_value", "all"),
+      useInnerText: true,
+    )
+    expect(row).to contain_text(
+      I18n.t("admin_js.admin.logs.staff_actions.previous_value", "no"),
+      useInnerText: true,
+    )
+    row = staff_action_logs_page.log_row(history_2)
+    expect(row).to contain_text(
       I18n.t("admin_js.admin.logs.staff_actions.actions.topic_closed"),
-    ).and have_css("[data-link-topic-id='#{history_2.topic_id}']")
+      useInnerText: true,
+    )
+    expect(
+      row.locator("[data-link-topic-id='#{history_2.topic_id}']").filter(visible: true),
+    ).not_to have_count(0)
   end
 
   it "keeps staff action details as text" do
-    visit "/admin/logs/staff_action_logs"
+    browser_page
+      .goto("/admin/logs/staff_action_logs")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(staff_action_logs_page).to have_no_injected_detail_element(history_with_html_value)
     expect(staff_action_logs_page).to have_details_text(
@@ -58,7 +74,9 @@ describe "Admin staff action logs" do
   end
 
   it "can filter by type of action" do
-    visit "/admin/logs/staff_action_logs"
+    browser_page
+      .goto("/admin/logs/staff_action_logs")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     expect(staff_action_logs_page).to have_log_row(history_1)
     expect(staff_action_logs_page).to have_log_row(history_2)
@@ -66,9 +84,15 @@ describe "Admin staff action logs" do
 
     staff_action_logs_page.filter_by_action(:change_site_setting)
 
-    expect(page).to have_css(
-      ".staff-action-logs-filters .filter",
-      text: I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"),
+    expect(
+      browser_root.locator(".staff-action-logs-filters .filter").filter(visible: true),
+    ).to contain_text(
+      [
+        browser_text_pattern(
+          I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"),
+        ),
+      ],
+      useInnerText: true,
     )
 
     expect(staff_action_logs_page).to have_log_row(history_1)
@@ -85,21 +109,34 @@ describe "Admin staff action logs" do
   end
 
   it "can export filtered logs" do
-    visit "/admin/logs/staff_action_logs"
+    browser_page
+      .goto("/admin/logs/staff_action_logs")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
     staff_action_logs_page.filter_by_action(:change_site_setting)
 
-    expect(page).to have_css(
-      ".staff-action-logs-filters .filter",
-      text: I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"),
+    expect(
+      browser_root.locator(".staff-action-logs-filters .filter").filter(visible: true),
+    ).to contain_text(
+      [
+        browser_text_pattern(
+          I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"),
+        ),
+      ],
+      useInnerText: true,
     )
 
-    expect(page).to have_css(".export-staff-action-logs")
+    expect(
+      browser_root.locator(".export-staff-action-logs").filter(visible: true),
+    ).not_to have_count(0)
 
     expect do
       staff_action_logs_page.click_export_button
 
-      expect(page).to have_text(I18n.t("admin_js.admin.export_csv.success"))
+      expect(browser_content).to contain_text(
+        browser_text_pattern(I18n.t("admin_js.admin.export_csv.success")),
+        useInnerText: true,
+      )
     end.to change { Jobs::ExportCsvFile.jobs.size }.by(1)
 
     job = Jobs::ExportCsvFile.jobs.last
@@ -108,9 +145,14 @@ describe "Admin staff action logs" do
   end
 
   it "displays no result" do
-    visit "/admin/logs/staff_action_logs"
+    browser_page
+      .goto("/admin/logs/staff_action_logs")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
     staff_action_logs_page.filter_by_action(:toggle_flag)
-    expect(page).to have_text(I18n.t("js.search.no_results"))
+    expect(browser_content).to contain_text(
+      browser_text_pattern(I18n.t("js.search.no_results")),
+      useInnerText: true,
+    )
   end
 
   it "can show details for an action" do
@@ -118,10 +160,15 @@ describe "Admin staff action logs" do
       details:
         "Discourse is automatically enabling this for all our hosted customers, please see https://meta.discourse.org/t/123 for more information.",
     )
-    visit "/admin/logs/staff_action_logs"
+    browser_page
+      .goto("/admin/logs/staff_action_logs")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
-    find("#{staff_action_logs_page.log_row_selector(history_1)} .col.value.details a").click
-    expect(PageObjects::Modals::Base.new).to have_content(history_1.details)
+    browser_root
+      .locator("#{staff_action_logs_page.log_row_selector(history_1)} .col.value.details a")
+      .filter(visible: true)
+      .click
+    expect(PageObjects::Modals::Base.new).to have_displayed_content(history_1.details)
   end
 
   describe "date time filting" do
@@ -132,7 +179,9 @@ describe "Admin staff action logs" do
     end
 
     it "can see filtered logs" do
-      visit "/admin/logs/staff_action_logs"
+      browser_page
+        .goto("/admin/logs/staff_action_logs")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       staff_action_logs_page.fill_date_filter_from(7.days.ago)
       staff_action_logs_page.fill_date_filter_to(2.days.ago)
@@ -144,7 +193,9 @@ describe "Admin staff action logs" do
     end
 
     it "can export filtered logs" do
-      visit "/admin/logs/staff_action_logs"
+      browser_page
+        .goto("/admin/logs/staff_action_logs")
+        .tap { SystemBrowserBootstrap.wait_for(browser_page) }
 
       staff_action_logs_page.fill_date_filter_from(7.days.ago)
       staff_action_logs_page.fill_date_filter_to(2.days.ago)
@@ -152,7 +203,10 @@ describe "Admin staff action logs" do
       expect do
         staff_action_logs_page.click_export_button
 
-        expect(page).to have_text(I18n.t("admin_js.admin.export_csv.success"))
+        expect(browser_content).to contain_text(
+          browser_text_pattern(I18n.t("admin_js.admin.export_csv.success")),
+          useInnerText: true,
+        )
       end.to change { Jobs::ExportCsvFile.jobs.size }.by(1)
 
       job = Jobs::ExportCsvFile.jobs.last

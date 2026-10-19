@@ -4,43 +4,55 @@ module PageObjects
   module Modals
     class CreateInvite < PageObjects::Modals::Base
       def modal
-        find(".create-invite-modal")
+        browser_root.locator(".create-invite-modal").filter(visible: true)
       end
 
       def edit_options_link
-        within(modal) { find(".edit-link-options") }
+        within_browser(modal) { browser_root.locator(".edit-link-options").filter(visible: true) }
       end
 
       def save_button
-        within(modal) { find(".save-invite") }
+        within_browser(modal) { browser_root.locator(".save-invite").filter(visible: true) }
       end
 
       def save_and_email_button
-        within(modal) { find(".save-invite-and-send-email") }
+        within_browser(modal) do
+          browser_root.locator(".save-invite-and-send-email").filter(visible: true)
+        end
       end
 
       def copy_button
-        within(modal) { find(".copy-button") }
+        within_browser(modal) { browser_root.locator(".copy-button").filter(visible: true) }
       end
 
       def has_copy_button?
-        within(modal) { has_css?(".copy-button") }
+        within_browser(modal) do
+          have_count(0).does_not_match?(browser_root.locator(".copy-button").filter(visible: true))
+        end
       end
 
       def has_alert_message?(message)
-        within(modal) { has_css?("#modal-alert .invite-link", text: message) }
+        within_browser(modal) do
+          contain_text([browser_text_pattern(message)], useInnerText: true).matches?(
+            browser_root.locator("#modal-alert .invite-link").filter(visible: true),
+          )
+        end
       end
 
       def has_invite_link_input?
-        within(modal) { has_css?("input.invite-link") }
+        within_browser(modal) do
+          have_count(0).does_not_match?(
+            browser_root.locator("input.invite-link").filter(visible: true),
+          )
+        end
       end
 
       def invite_link_input
-        within(modal) { find("input.invite-link") }
+        within_browser(modal) { browser_root.locator("input.invite-link").filter(visible: true) }
       end
 
       def link_limits_info_paragraph
-        within(modal) { find("p.link-limits-info") }
+        within_browser(modal) { browser_root.locator("p.link-limits-info").filter(visible: true) }
       end
 
       def form

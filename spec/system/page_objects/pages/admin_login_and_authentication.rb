@@ -5,27 +5,38 @@ module PageObjects
     class AdminLoginAndAuthentication < PageObjects::Pages::Base
       def visit(tab = nil)
         if tab.present?
-          page.visit("/admin/config/login-and-authentication/#{tab}")
+          browser_page
+            .goto("/admin/config/login-and-authentication/#{tab}")
+            .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         else
-          page.visit("/admin/config/login-and-authentication")
+          browser_page
+            .goto("/admin/config/login-and-authentication")
+            .tap { SystemBrowserBootstrap.wait_for(browser_page) }
         end
         self
       end
 
       def click_tab(tab)
-        find(
-          ".admin-config.login .nav-pills li a[href='/admin/config/login-and-authentication/#{tab}']",
-        ).click
+        browser_root
+          .locator(
+            ".admin-config.login .nav-pills li a[href='/admin/config/login-and-authentication/#{tab}']",
+          )
+          .filter(visible: true)
+          .click
         expect_page_to_be_active(tab)
         self
       end
 
       def expect_page_to_be_active(tab)
-        expect(page).to have_current_path("/admin/config/login-and-authentication/#{tab}")
+        expect(browser_page).to have_url("/admin/config/login-and-authentication/#{tab}")
       end
 
       def has_setting?(setting_name)
-        has_css?(".row.setting[data-setting=\"#{setting_name}\"]")
+        have_count(0).does_not_match?(
+          browser_root.locator(".row.setting[data-setting=\"#{setting_name}\"]").filter(
+            visible: true,
+          ),
+        )
       end
     end
   end

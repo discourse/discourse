@@ -6,15 +6,23 @@ module PageObjects
       MODAL_SELECTOR = ".admin-incoming-email-modal"
 
       def has_no_error?
-        has_no_css?(".admin-incoming-email-modal__error")
+        have_count(0).matches?(
+          browser_root.locator(".admin-incoming-email-modal__error").filter(visible: true),
+        )
       end
 
       def has_error_message?(message)
-        has_css?(".admin-incoming-email-modal__error-message", text: message)
+        contain_text([browser_text_pattern(message)], useInnerText: true).matches?(
+          browser_root.locator(".admin-incoming-email-modal__error-message").filter(visible: true),
+        )
       end
 
       def has_error_description?(description)
-        has_css?(".admin-incoming-email-modal__error-description", text: description)
+        contain_text([browser_text_pattern(description)], useInnerText: true).matches?(
+          browser_root.locator(".admin-incoming-email-modal__error-description").filter(
+            visible: true,
+          ),
+        )
       end
     end
   end

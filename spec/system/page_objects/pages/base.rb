@@ -3,8 +3,9 @@
 module PageObjects
   module Pages
     class Base
-      include Capybara::DSL
+      include NativeSystemHelpers
       include RSpec::Matchers
+      include Playwright::Test::Matchers
       include SystemHelpers
     end
   end

@@ -11,7 +11,7 @@ describe "Creating Invites" do
   let(:cdp) { PageObjects::CDP.new }
 
   def open_invite_modal
-    find(".user-invite-buttons .btn", match: :first).click
+    browser_root.locator(".user-invite-buttons .btn").filter(visible: true).first.click
   end
 
   def visit_invites_page_and_open_modal
@@ -39,13 +39,14 @@ describe "Creating Invites" do
     create_invite_modal.save_button.click
     create_invite_modal.copy_button.click
 
-    invite_link = create_invite_modal.invite_link_input.value
+    invite_link = create_invite_modal.invite_link_input.input_value
     invite_key = invite_link.split("/").last
 
     cdp.clipboard_has_text?(invite_link)
 
-    expect(create_invite_modal.link_limits_info_paragraph).to have_text(
-      "Link is valid for up to 7 users and expires in 3 days.",
+    expect(create_invite_modal.link_limits_info_paragraph).to contain_text(
+      browser_text_pattern("Link is valid for up to 7 users and expires in 3 days."),
+      useInnerText: true,
     )
 
     create_invite_modal.close
@@ -65,7 +66,10 @@ describe "Creating Invites" do
   it "has the correct modal title when creating a new invite" do
     visit_invites_page_and_open_modal
 
-    expect(create_invite_modal.header).to have_text(I18n.t("js.user.invited.invite.new_title"))
+    expect(create_invite_modal.header).to contain_text(
+      browser_text_pattern(I18n.t("js.user.invited.invite.new_title")),
+      useInnerText: true,
+    )
   end
 
   it "hides the modal footer after creating an invite via simple mode" do
@@ -88,7 +92,10 @@ describe "Creating Invites" do
     end
 
     it "has the correct modal title" do
-      expect(create_invite_modal.header).to have_text(I18n.t("js.user.invited.invite.edit_title"))
+      expect(create_invite_modal.header).to contain_text(
+        browser_text_pattern(I18n.t("js.user.invited.invite.edit_title")),
+        useInnerText: true,
+      )
     end
 
     it "displays the invite link and a copy button" do
@@ -105,7 +112,7 @@ describe "Creating Invites" do
 
     it "is possible to populate all the fields" do
       user.update!(admin: true)
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       open_invite_modal
       display_advanced_options
 
@@ -121,7 +128,7 @@ describe "Creating Invites" do
 
       expect(create_invite_modal).to have_copy_button
 
-      invite_link = create_invite_modal.invite_link_input.value
+      invite_link = create_invite_modal.invite_link_input.input_value
       invite_key = invite_link.split("/").last
 
       create_invite_modal.close
@@ -145,7 +152,7 @@ describe "Creating Invites" do
       Jobs.run_immediately!
       another_group = Fabricate(:group)
       user.update!(admin: true)
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       open_invite_modal
       display_advanced_options
 
@@ -167,7 +174,7 @@ describe "Creating Invites" do
         I18n.t("js.user.invited.invite.invite_saved_with_sending_email"),
       )
 
-      invite_link = create_invite_modal.invite_link_input.value
+      invite_link = create_invite_modal.invite_link_input.input_value
 
       create_invite_modal.close
 
@@ -195,7 +202,7 @@ describe "Creating Invites" do
         I18n.t("js.user.invited.invite.invite_saved_without_sending_email"),
       )
 
-      invite_link = create_invite_modal.invite_link_input.value
+      invite_link = create_invite_modal.invite_link_input.input_value
 
       create_invite_modal.close
 
@@ -208,7 +215,7 @@ describe "Creating Invites" do
       expect(create_invite_modal.form).to have_no_field_with_name("inviteToGroups")
 
       group.add_owner(user)
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       open_invite_modal
       display_advanced_options
 
@@ -217,7 +224,7 @@ describe "Creating Invites" do
 
     it "shows the inviteToGroups field for admins" do
       user.update!(admin: true)
-      page.refresh
+      browser_page.reload.tap { SystemBrowserBootstrap.wait_for(browser_page) }
       open_invite_modal
       display_advanced_options
 
@@ -233,8 +240,8 @@ describe "Creating Invites" do
       expect(create_invite_modal.form).to have_field_with_name("expiresAt")
 
       expires_at_field = create_invite_modal.form.field("expiresAt").component
-      date = expires_at_field.find(".date-picker").value
-      time = expires_at_field.find(".time-input").value
+      date = expires_at_field.locator(".date-picker").filter(visible: true).input_value
+      time = expires_at_field.locator(".time-input").filter(visible: true).input_value
 
       expire_date = Time.parse("#{date} #{time}").utc
       expected = (now + 1.day).beginning_of_minute
@@ -279,9 +286,11 @@ describe "Creating Invites" do
     end
 
     it "can open the invite modal from the empty state button" do
-      find(".empty-state .btn-primary").click
+      browser_root.locator(".empty-state .btn-primary").filter(visible: true).click
 
-      expect(page).to have_css(".create-invite-modal")
+      expect(browser_root.locator(".create-invite-modal").filter(visible: true)).not_to have_count(
+        0,
+      )
     end
   end
 end

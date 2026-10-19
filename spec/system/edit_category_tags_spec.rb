@@ -33,7 +33,9 @@ describe "Edit Category Tags" do
 
     category_page.save_settings
 
-    visit "/new-topic?category_id=#{category.id}"
+    browser_page
+      .goto("/new-topic?category_id=#{category.id}")
+      .tap { SystemBrowserBootstrap.wait_for(browser_page) }
     composer.fill_title("Test topic with restricted tags")
 
     tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
