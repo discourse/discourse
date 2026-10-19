@@ -251,6 +251,10 @@ module DiscourseDataExplorer
     def destroy
       query = Query.find(params[:id])
       query.update!(hidden: true)
+      ::AdminDashboard::Reports::Mounter.unmount(
+        source: AdminDashboardReportProvider::SOURCE_NAME,
+        identifier: query.id.to_s,
+      )
       render json: { success: true, errors: [] }
     end
 
