@@ -72,6 +72,11 @@ export default <template>
         @saved={{@controller.saved}}
         @saveDisabled={{@controller.saveDisabled}}
       >
+        <DButton
+          class="btn-default email-template__preview"
+          @href={{@controller.previewUrl}}
+          @label="admin.email.preview_saved_template"
+        />
         {{#if @controller.emailTemplate.can_revert}}
           <DButton
             @action={{@controller.revertChanges}}

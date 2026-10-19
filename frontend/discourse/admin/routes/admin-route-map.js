@@ -36,7 +36,8 @@ export default function () {
       function () {
         this.route("settings", { path: "/" });
         this.route("serverSettings", { path: "/server-settings" });
-        this.route("previewDigest", { path: "/preview-digest" });
+        this.route("previewDigest", { path: "/preview" });
+        this.route("previewDigestLegacy", { path: "/preview-digest" });
         this.route("advancedTest", { path: "/advanced-test" });
         this.route(
           "adminEmailTemplates",

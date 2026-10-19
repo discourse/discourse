@@ -45,4 +45,24 @@ module("Unit | Model | theme", function (hooks) {
 
     assert.strictEqual(theme.uploads.length, 1, "expecting an upload");
   });
+
+  test("exposes a single email target with HTML and optional text fields", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const theme = store.createRecord("theme", { theme_fields: [] });
+    assert.true(
+      theme.targets.some((target) => target.name === "email"),
+      "includes the email target"
+    );
+    assert.deepEqual(
+      theme.fieldNames.email,
+      ["header", "footer", "header_text", "footer_text"],
+      "includes HTML and text fields"
+    );
+    theme.setField("email", "footer_text", "Literal text", undefined, 9);
+    assert.strictEqual(
+      theme.getField("email", "footer_text"),
+      "Literal text",
+      "loads saved text fields"
+    );
+  });
 });

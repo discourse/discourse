@@ -97,6 +97,7 @@ class ThemeField < ActiveRecord::Base
         js: 6,
         theme_screenshot_upload_var: 7,
         json: 8,
+        text: 9,
       )
   end
 
@@ -308,6 +309,8 @@ class ThemeField < ActiveRecord::Base
       types[:scss]
     elsif %w[migrations extra_js].include?(target.to_s)
       types[:js]
+    elsif target.to_s == "email"
+      name.to_s.end_with?("_text") ? types[:text] : types[:html]
     elsif target.to_s == "settings" || target.to_s == "translations"
       types[:yaml]
     end
@@ -525,6 +528,27 @@ class ThemeField < ActiveRecord::Base
       names: %w[head_tag header after_header body_tag footer],
       types: :html,
       canonical: ->(h) { "#{h[:target]}/#{h[:name]}.html" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\Aemail/(?<name>header|footer)\.html\z},
+      targets: :email,
+      names: %w[header footer],
+      types: :html,
+      canonical: ->(hash) { "email/#{hash[:name]}.html" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\Aemail/header\.txt\z},
+      targets: :email,
+      names: "header_text",
+      types: :text,
+      canonical: ->(_hash) { "email/header.txt" },
+    ),
+    ThemeFileMatcher.new(
+      regex: %r{\Aemail/footer\.txt\z},
+      targets: :email,
+      names: "footer_text",
+      types: :text,
+      canonical: ->(_hash) { "email/footer.txt" },
     ),
     ThemeFileMatcher.new(
       regex: %r{\A(?<target>(?:mobile|desktop|common))/(?:\k<target>)\.scss\z},

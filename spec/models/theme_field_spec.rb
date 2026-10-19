@@ -28,6 +28,44 @@ RSpec.describe ThemeField do
     end
   end
 
+  describe "guess_type" do
+    it "guesses html for email header and footer fields" do
+      expect(ThemeField.guess_type(name: "header", target: :email)).to eq(ThemeField.types[:html])
+      expect(ThemeField.guess_type(name: "footer", target: :email)).to eq(ThemeField.types[:html])
+    end
+  end
+
+  it "maps email header and footer fields to theme files" do
+    header = theme.set_field(target: :email, name: "header", value: "Header")
+    footer = theme.set_field(target: :email, name: "footer", value: "Footer")
+
+    expect(header.file_path).to eq("email/header.html")
+    expect(footer.file_path).to eq("email/footer.html")
+    expect(ThemeField.opts_from_file_path("email/header.html")).to eq(
+      name: "header",
+      type: :html,
+      target: :email,
+    )
+    expect(ThemeField.opts_from_file_path("email/footer.html")).to eq(
+      name: "footer",
+      type: :html,
+      target: :email,
+    )
+  end
+
+  it "maps optional email text fields to text files" do
+    %w[header footer].each do |position|
+      field = theme.set_field(target: :email, name: "#{position}_text", value: "Text <literal>")
+      expect(field.type_id).to eq(ThemeField.types[:text])
+      expect(field.file_path).to eq("email/#{position}.txt")
+      expect(ThemeField.opts_from_file_path(field.file_path)).to eq(
+        name: "#{position}_text",
+        type: :text,
+        target: :email,
+      )
+    end
+  end
+
   it "does not insert a script tag when there are no inline script" do
     theme_field =
       ThemeField.create!(theme_id: -1, target_id: 0, name: "body_tag", value: "<div>new div</div>")
