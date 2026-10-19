@@ -1,7 +1,9 @@
 import { concat, fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import DMenu from "discourse/float-kit/components/d-menu";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
@@ -91,12 +93,30 @@ export default <template>
                       @route="adminPlugins.show.discourse-gamification-leaderboards.show"
                     >{{i18n "gamification.edit"}} </LinkTo>
 
-                    <DButton
-                      class="btn-small leaderboard-admin__delete btn-danger"
-                      @action={{fn @controller.destroyLeaderboard leaderboard}}
-                      @icon="trash-can"
-                      @title="gamification.delete"
-                    />
+                    <DMenu
+                      @icon="ellipsis-vertical"
+                      @identifier="leaderboard-admin-menu"
+                      @placement="bottom-end"
+                      @title={{i18n "more_options"}}
+                      @triggerClass="btn-default btn-small"
+                    >
+                      <:content as |menu|>
+                        <DDropdownMenu as |dropdown|>
+                          <dropdown.item>
+                            <DButton
+                              class="btn-transparent --danger leaderboard-admin__delete"
+                              @action={{fn
+                                @controller.destroyLeaderboard
+                                leaderboard
+                                menu.close
+                              }}
+                              @icon="trash-can"
+                              @label="gamification.delete"
+                            />
+                          </dropdown.item>
+                        </DDropdownMenu>
+                      </:content>
+                    </DMenu>
                   </div>
                 </td>
               </tr>
