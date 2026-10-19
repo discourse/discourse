@@ -8,7 +8,6 @@ import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
-import UploadRuntime from "discourse/components/upload-runtime";
 import { ajax } from "discourse/lib/ajax";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
@@ -203,23 +202,21 @@ export default class RagUploader extends Component {
         </tbody>
       </table>
 
-      <UploadRuntime>
-        <input
-          accept={{this.acceptedFileTypes}}
-          class="hidden-upload-field"
-          disabled={{this.uploading}}
-          multiple="multiple"
-          type="file"
-          {{didInsert this.uppyUpload.setup}}
-        />
-        <DButton
-          class="btn-default"
-          @action={{this.submitFiles}}
-          @icon="plus"
-          @label="discourse_ai.rag.uploads.button"
-          @title="discourse_ai.rag.uploads.button"
-        />
-      </UploadRuntime>
+      <input
+        accept={{this.acceptedFileTypes}}
+        class="hidden-upload-field"
+        disabled={{this.uploading}}
+        multiple="multiple"
+        type="file"
+        {{didInsert this.uppyUpload.setup}}
+      />
+      <DButton
+        class="btn-default"
+        @action={{this.submitFiles}}
+        @icon="plus"
+        @label="discourse_ai.rag.uploads.button"
+        @title="discourse_ai.rag.uploads.button"
+      />
     </div>
   </template>
 }

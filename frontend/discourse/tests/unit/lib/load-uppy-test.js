@@ -1,6 +1,6 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import loadUppy, { getUppy, isUppyLoaded } from "discourse/lib/load-uppy";
+import loadUppy, { getUppy, withUppy } from "discourse/lib/load-uppy";
 
 module("Unit | Lib | load-uppy", function (hooks) {
   setupTest(hooks);
@@ -25,7 +25,13 @@ module("Unit | Lib | load-uppy", function (hooks) {
       first,
       "synchronous setup can access the runtime"
     );
-    assert.true(isUppyLoaded(), "the runtime is marked loaded");
+    let ranWith;
+    withUppy((runtime) => (ranWith = runtime));
+    assert.strictEqual(
+      ranWith,
+      first,
+      "a loaded runtime is used synchronously"
+    );
     assert.strictEqual(
       typeof first.Uppy,
       "function",

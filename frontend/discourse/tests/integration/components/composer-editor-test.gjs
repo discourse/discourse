@@ -2,17 +2,12 @@
 import { click, fillIn, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ComposerEditor from "discourse/components/composer-editor";
-import loadUppy from "discourse/lib/load-uppy";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
 
 module("Integration | Component | ComposerEditor", function (hooks) {
   setupRenderingTest(hooks);
-
-  hooks.beforeEach(async function () {
-    await loadUppy();
-  });
 
   test("warns about users that will not see a mention", async function (assert) {
     const expectation = (warning) => {

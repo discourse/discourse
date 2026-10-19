@@ -7,7 +7,6 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { isEmpty } from "@ember/utils";
-import UploadRuntime from "discourse/components/upload-runtime";
 import withEventValue from "discourse/helpers/with-event-value";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { resettableTracked } from "discourse/lib/tracked-tools";
@@ -123,22 +122,20 @@ export default class EmojiUploader extends Component {
       </div>
       <div class="control-group">
         <div class="input">
-          <UploadRuntime>
-            <input
-              accept=".gif,.png,.svg"
-              class="hidden-upload-field"
-              disabled={{this.uppyUpload.uploading}}
-              multiple="true"
-              type="file"
-              {{didInsert this.uppyUpload.setup}}
-            />
-            <DButton
-              class="btn-primary"
-              @action={{this.chooseFiles}}
-              @disabled={{this.uppyUpload.uploading}}
-              @translatedLabel={{this.buttonLabel}}
-            />
-          </UploadRuntime>
+          <input
+            accept=".gif,.png,.svg"
+            class="hidden-upload-field"
+            disabled={{this.uppyUpload.uploading}}
+            multiple="true"
+            type="file"
+            {{didInsert this.uppyUpload.setup}}
+          />
+          <DButton
+            class="btn-primary"
+            @action={{this.chooseFiles}}
+            @disabled={{this.uppyUpload.uploading}}
+            @translatedLabel={{this.buttonLabel}}
+          />
         </div>
       </div>
     </div>

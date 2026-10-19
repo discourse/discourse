@@ -3,7 +3,6 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import UploadRuntime from "discourse/components/upload-runtime";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -33,26 +32,24 @@ export default class TagsUploader extends Component {
   }
 
   <template>
-    <UploadRuntime>
-      <div id="tag-uploader">
-        <label
-          class={{dConcatClass
-            "btn btn-default"
-            (if this.addDisabled "disabled")
-          }}
-        >
-          {{dIcon "upload"}}
-          {{i18n "admin.watched_words.form.upload"}}
-          <input
-            accept="text/plain,text/csv"
-            class="hidden-upload-field"
-            disabled={{this.addDisabled}}
-            type="file"
-            {{didInsert this.uppyUpload.setup}}
-          />
-        </label>
-        <span class="instructions">{{i18n "tagging.upload_instructions"}}</span>
-      </div>
-    </UploadRuntime>
+    <div id="tag-uploader">
+      <label
+        class={{dConcatClass
+          "btn btn-default"
+          (if this.addDisabled "disabled")
+        }}
+      >
+        {{dIcon "upload"}}
+        {{i18n "admin.watched_words.form.upload"}}
+        <input
+          accept="text/plain,text/csv"
+          class="hidden-upload-field"
+          disabled={{this.addDisabled}}
+          type="file"
+          {{didInsert this.uppyUpload.setup}}
+        />
+      </label>
+      <span class="instructions">{{i18n "tagging.upload_instructions"}}</span>
+    </div>
   </template>
 }

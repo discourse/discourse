@@ -10,7 +10,6 @@ import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import UploadRuntime from "discourse/components/upload-runtime";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { SEND_SHORTCUT_META_ENTER } from "discourse/lib/constants";
@@ -469,15 +468,13 @@ export default class AiBotConversations extends Component {
             @isLoading={{unless this.isSubmitDisabled this.loading}}
             @title="discourse_ai.ai_bot.conversations.header"
           />
-          <UploadRuntime @showSpinner={{false}}>
-            <input
-              class="hidden-upload-field"
-              id="ai-bot-file-uploader"
-              multiple="multiple"
-              type="file"
-              {{didInsert this.registerFileInput}}
-            />
-          </UploadRuntime>
+          <input
+            class="hidden-upload-field"
+            id="ai-bot-file-uploader"
+            multiple="multiple"
+            type="file"
+            {{didInsert this.registerFileInput}}
+          />
         </div>
 
         <AiAgentLlmSelector

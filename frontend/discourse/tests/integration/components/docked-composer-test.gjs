@@ -1,9 +1,7 @@
 import { getOwner } from "@ember/owner";
-import Service from "@ember/service";
-import { fillIn, render, settled, triggerKeyEvent } from "@ember/test-helpers";
+import { fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DockedComposer from "discourse/components/docked-composer";
-import loadUppy from "discourse/lib/load-uppy";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
@@ -12,48 +10,6 @@ module("Integration | Component | DockedComposer", function (hooks) {
 
   hooks.beforeEach(function () {
     pretender.get("/emojis/search-aliases.json", () => response([]));
-  });
-
-  test("renders its editor while the upload runtime loads", async function (assert) {
-    await loadUppy();
-    let finishLoading;
-    const loading = new Promise((resolve) => (finishLoading = resolve));
-    this.owner.register(
-      "service:upload-runtime",
-      class extends Service {
-        loaded = false;
-
-        load() {
-          return loading;
-        }
-      }
-    );
-
-    await render(
-      <template>
-        <DockedComposer
-          @composerEvents={{false}}
-          @draftKey="test-pending-runtime"
-        >
-          <:header><span class="pending-upload-header">Reply</span></:header>
-        </DockedComposer>
-      </template>
-    );
-    assert
-      .dom(".pending-upload-header")
-      .exists("the header does not wait for uploads");
-    assert
-      .dom(".d-editor-input")
-      .exists("the editor does not wait for uploads");
-    assert
-      .dom(".docked-composer__inner > .hidden-upload-field")
-      .doesNotExist("the file input waits for the runtime");
-
-    finishLoading();
-    await settled();
-    assert
-      .dom(".docked-composer__inner > .hidden-upload-field")
-      .exists("the file input mounts once the runtime is ready");
   });
 
   test("submits on bare Enter by default", async function (assert) {

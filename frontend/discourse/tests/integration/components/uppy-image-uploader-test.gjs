@@ -1,57 +1,10 @@
-import Service from "@ember/service";
-import {
-  click,
-  render,
-  settled,
-  triggerEvent,
-  waitFor,
-} from "@ember/test-helpers";
+import { click, render, triggerEvent, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
-import loadUppy from "discourse/lib/load-uppy";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | UppyImageUploader", function (hooks) {
   setupRenderingTest(hooks);
-
-  test("renders the image preview while upload controls load", async function (assert) {
-    await loadUppy();
-    let finishLoading;
-    const loading = new Promise((resolve) => (finishLoading = resolve));
-    this.owner.register(
-      "service:upload-runtime",
-      class extends Service {
-        loaded = false;
-
-        load() {
-          return loading;
-        }
-      }
-    );
-    await render(
-      <template>
-        <UppyImageUploader
-          @id="pending-image"
-          @imageUrl="/images/avatar.png"
-          @type="avatar"
-        />
-      </template>
-    );
-    assert
-      .dom(".file-uploader__preview")
-      .exists("the preview renders immediately");
-    assert
-      .dom(".image-uploader-lightbox-btn")
-      .exists("viewing the existing image remains available");
-    assert
-      .dom("#pending-image__input")
-      .doesNotExist("file selection waits for the runtime");
-    finishLoading();
-    await settled();
-    assert
-      .dom("#pending-image__input")
-      .exists("upload controls mount after loading");
-  });
 
   test("with image", async function (assert) {
     await render(
@@ -129,23 +82,11 @@ module("Integration | Component | UppyImageUploader", function (hooks) {
       });
       dataTransfer.items.add(file);
 
-      await triggerEvent(target, "dragenter", {
-        dataTransfer,
-        clientX: 0,
-        clientY: 0,
-      });
-      await triggerEvent(target, "dragover", {
-        dataTransfer,
-        clientX: 0,
-        clientY: 0,
-      });
+      await triggerEvent(target, "dragenter", { dataTransfer });
+      await triggerEvent(target, "dragover", { dataTransfer });
 
       return async () => {
-        await triggerEvent(target, "dragleave", {
-          dataTransfer,
-          clientX: 0,
-          clientY: 0,
-        });
+        await triggerEvent(target, "dragleave", { dataTransfer });
       };
     };
 

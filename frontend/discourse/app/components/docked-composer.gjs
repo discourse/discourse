@@ -10,7 +10,6 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import UploadRuntime from "discourse/components/upload-runtime";
 import bodyClass from "discourse/helpers/body-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { SEND_SHORTCUT_META_ENTER } from "discourse/lib/constants";
@@ -449,15 +448,13 @@ export default class DockedComposer extends Component {
             </DEditor>
           </div>
 
-          <UploadRuntime @showSpinner={{false}}>
-            <input
-              class="hidden-upload-field"
-              id={{this.uploaderId}}
-              multiple="multiple"
-              type="file"
-              {{didInsert this.registerFileInput}}
-            />
-          </UploadRuntime>
+          <input
+            class="hidden-upload-field"
+            id={{this.uploaderId}}
+            multiple="multiple"
+            type="file"
+            {{didInsert this.registerFileInput}}
+          />
         </div>
 
         {{#if this.showUploadsContainer}}

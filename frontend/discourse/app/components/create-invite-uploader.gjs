@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import UploadRuntime from "discourse/components/upload-runtime";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 
 export default class CreateInviteUploader extends Component {
@@ -34,20 +33,18 @@ export default class CreateInviteUploader extends Component {
   }
 
   <template>
-    <UploadRuntime>
-      <div ...attributes>
-        {{yield
-          (hash
-            data=@data
-            uploading=this.uppyUpload.uploading
-            uploadProgress=this.uppyUpload.uploadProgress
-            uploaded=this.uploaded
-            submitDisabled=this.submitDisabled
-            startUpload=this.startUpload
-          )
-          this.uppyUpload.setup
-        }}
-      </div>
-    </UploadRuntime>
+    <div ...attributes>
+      {{yield
+        (hash
+          data=@data
+          uploading=this.uppyUpload.uploading
+          uploadProgress=this.uppyUpload.uploadProgress
+          uploaded=this.uploaded
+          submitDisabled=this.submitDisabled
+          startUpload=this.startUpload
+        )
+        this.uppyUpload.setup
+      }}
+    </div>
   </template>
 }

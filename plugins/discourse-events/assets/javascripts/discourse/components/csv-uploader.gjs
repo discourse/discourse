@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import UploadRuntime from "discourse/components/upload-runtime";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { or } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -53,23 +52,21 @@ export default class CsvUploader extends Component {
   }
 
   <template>
-    <UploadRuntime>
-      <span>
-        <label class="btn" disabled={{this.uploadButtonDisabled}}>
-          {{dIcon "upload"}}&nbsp;{{this.uploadButtonText}}
-          <input
-            accept=".csv"
-            class="hidden-upload-field"
-            disabled={{this.uppyUpload.uploading}}
-            type="file"
-            {{didInsert this.uppyUpload.setup}}
-          />
-        </label>
-        {{#if (or this.uppyUpload.uploading this.uppyUpload.processing)}}
-          <span>{{i18n "upload_selector.uploading"}}
-            {{this.uppyUpload.uploadProgress}}%</span>
-        {{/if}}
-      </span>
-    </UploadRuntime>
+    <span>
+      <label class="btn" disabled={{this.uploadButtonDisabled}}>
+        {{dIcon "upload"}}&nbsp;{{this.uploadButtonText}}
+        <input
+          accept=".csv"
+          class="hidden-upload-field"
+          disabled={{this.uppyUpload.uploading}}
+          type="file"
+          {{didInsert this.uppyUpload.setup}}
+        />
+      </label>
+      {{#if (or this.uppyUpload.uploading this.uppyUpload.processing)}}
+        <span>{{i18n "upload_selector.uploading"}}
+          {{this.uppyUpload.uploadProgress}}%</span>
+      {{/if}}
+    </span>
   </template>
 }

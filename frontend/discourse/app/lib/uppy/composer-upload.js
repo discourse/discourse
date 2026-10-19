@@ -8,7 +8,11 @@ import { updateCsrfToken } from "discourse/lib/ajax";
 import ComposerVideoThumbnailUppy from "discourse/lib/composer-video-thumbnail-uppy";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
-import { getUppy } from "discourse/lib/load-uppy";
+import {
+  getUppy,
+  reportUppyLoadFailure,
+  withUppy,
+} from "discourse/lib/load-uppy";
 import {
   bindFileInputChangeListener,
   displayUploadErrors,
@@ -57,6 +61,8 @@ export default class UppyComposerUpload {
   #consecutiveImages = [];
 
   #uploadTargetBound = false;
+  #runtimeReady;
+  #setupId = 0;
   #userCancelled = false;
 
   #fileInputEl;
@@ -84,6 +90,8 @@ export default class UppyComposerUpload {
   }
 
   teardown() {
+    this.#setupId++;
+
     if (!this.#uploadTargetBound) {
       return;
     }
@@ -115,7 +123,6 @@ export default class UppyComposerUpload {
   }
 
   setup(element) {
-    const { Uppy, DropTarget } = getUppy();
     if (this.#uploadTargetBound) {
       this.teardown();
     }
@@ -137,6 +144,23 @@ export default class UppyComposerUpload {
       capture: true,
     });
 
+    this.#uploadTargetBound = true;
+    this.#bindMobileUploadButton();
+
+    const setupId = ++this.#setupId;
+    this.#runtimeReady = withUppy((runtime) => {
+      if (setupId === this.#setupId) {
+        this.#setupUppy(element, runtime);
+      }
+    });
+
+    // Signals that the uploader is bound and ready to accept files via the
+    // `${composerEventPrefix}:add-files` event, e.g. for content shared into
+    // the composer through the Web Share Target.
+    this.appEvents.trigger(`${this.composerEventPrefix}:uploader-ready`);
+  }
+
+  #setupUppy(element, { Uppy, DropTarget }) {
     this.uppyWrapper.uppyInstance = new Uppy({
       id: this.uppyId,
       autoProceed: true,
@@ -392,14 +416,6 @@ export default class UppyComposerUpload {
     this.#setupPreProcessors();
 
     this.uppyWrapper.uppyInstance.use(DropTarget, { target: element });
-
-    this.#uploadTargetBound = true;
-    this.#bindMobileUploadButton();
-
-    // Signals that the uploader is bound and ready to accept files via the
-    // `${composerEventPrefix}:add-files` event, e.g. for content shared into
-    // the composer through the Web Share Target.
-    this.appEvents.trigger(`${this.composerEventPrefix}:uploader-ready`);
   }
 
   #abortAndReset() {
@@ -595,6 +611,14 @@ export default class UppyComposerUpload {
 
   @bind
   async _addFiles(files, opts = {}) {
+    if (
+      !this.uppyWrapper.uppyInstance &&
+      (await this.#runtimeReady) === false
+    ) {
+      reportUppyLoadFailure(this.dialog);
+      return;
+    }
+
     if (!this.session.csrfToken) {
       await updateCsrfToken();
     }

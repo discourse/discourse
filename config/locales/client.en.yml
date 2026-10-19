@@ -4115,6 +4115,7 @@ en:
       processing: "Processing upload"
       select_file: "Click to upload or drag & drop file"
       default_image_alt_text: image
+      runtime_load_failed: "Uploads could not be loaded. Refresh the page to try again."
 
     search:
       sort_by: "Sort by"
