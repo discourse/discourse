@@ -481,6 +481,36 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(thinking["message"]).to eq("Web search: OpenAI news")
     end
 
+    [nil, "setCustomRaw", "streamCustomRaw"].each do |custom_output|
+      it "returns script errors to the model #{custom_output ? "after #{custom_output}" : "without custom output"}" do
+        custom_tool.update!(script: <<~JS)
+          function invoke() {
+            #{custom_output ? "chain.#{custom_output}('Partial output');" : ""}
+            throw new Error("Category not found");
+          }
+        JS
+        source = Fabricate(:private_message_post, user: user, recipient: bot_user)
+        answer = "The category lookup failed because the category was not found."
+        reply = nil
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [tool_call, answer],
+        ) do |_, _, prompts|
+          reply = playground.reply_to(source, auto_set_title: false)
+
+          tool_result = prompts.last.messages.find { |message| message[:type] == :tool }
+          expect(tool_result).to include(id: tool_call.id, name: tool_call.name)
+          expect(JSON.parse(tool_result[:content])).to eq("error" => "Error: Category not found")
+        end
+
+        expect(reply.raw).to eq(answer)
+        tool_result = reply.post_custom_prompt.custom_prompt.find { |entry| entry[2] == "tool" }
+        expect(tool_result.take(4)).to eq(
+          ['{"error":"Error: Category not found"}', tool_call.id, "tool", tool_call.name],
+        )
+      end
+    end
+
     it "uses custom tool in conversation" do
       ai_agent.update!(show_thinking: true)
       agent_klass = AiAgent.all_agents.find { |p| p.name == ai_agent.name }
