@@ -29,6 +29,7 @@
 
 # Plugins except for the bundled ones
 /plugins/*
+!/plugins/capybara
 !/plugins/discourse-details
 !/plugins/discourse-local-dates
 !/plugins/discourse-narrative-bot
@@ -116,6 +117,7 @@ yarn-error.log
 
 # Auto-generated plugin JS assets
 /app/assets/javascripts/plugins/*
+!/plugins/capybara
 /app/assets/generated
 
 # Generated API documentation files

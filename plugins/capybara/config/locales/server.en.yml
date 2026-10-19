@@ -1,0 +1,3 @@
+en:
+  site_settings:
+    capybara_enabled: "Enable the local Capybara development board bot"

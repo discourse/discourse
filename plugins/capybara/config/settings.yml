@@ -1,0 +1,4 @@
+capybara:
+  capybara_enabled:
+    default: true
+    client: false
