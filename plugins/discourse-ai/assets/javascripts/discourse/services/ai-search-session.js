@@ -5,11 +5,8 @@ import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { searchForTerm, translateResults } from "discourse/lib/search";
 import { chooseTab, readsAsQuestion } from "../lib/ai-search-intent.js";
-import { topicIdFromUrl } from "../lib/ai-search-references.js";
 import { withScope } from "../lib/ai-search-scope.js";
 
-const SEMANTIC_MATCH_RANK = 5;
-const BEST_MATCH_COUNT = 2;
 // a search this soon after the last one on the same page is still the same hunt
 const SEARCH_AGAIN_WINDOW_MS = 3 * 60 * 1000;
 // how long the tabs wait on the reply's judgements before judging the query alone
@@ -134,26 +131,6 @@ export default class AiSearchSession extends Service {
     }));
   }
 
-  get citedTopicIds() {
-    return new Set(
-      this.relatedTopics.map((source) => topicIdFromUrl(source.url))
-    );
-  }
-
-  get semanticRanks() {
-    const ranks = new Map();
-    this.semanticPosts?.forEach((post, index) => {
-      if (!ranks.has(post.topic_id)) {
-        ranks.set(post.topic_id, index + 1);
-      }
-    });
-    return ranks;
-  }
-
-  get decorating() {
-    return this.answerSettled && Boolean(this.semanticPosts);
-  }
-
   get canFollowUp() {
     return (
       this.answerSettled &&
@@ -183,26 +160,6 @@ export default class AiSearchSession extends Service {
 
   isActiveFor(query) {
     return Boolean(query) && this.query === query.trim();
-  }
-
-  /**
-   * The strongest of the given results: cited in the answer first, then by
-   * semantic rank. Empty until the answer settles.
-   */
-  bestMatchIds(topicIds) {
-    if (!this.decorating) {
-      return new Set();
-    }
-
-    const rank = (id) => this.semanticRanks.get(id) ?? Infinity;
-    const cited = (id) => (this.citedTopicIds.has(id) ? 0 : 1);
-
-    return new Set(
-      [...new Set(topicIds)]
-        .filter((id) => cited(id) === 0 || rank(id) <= SEMANTIC_MATCH_RANK)
-        .sort((a, b) => cited(a) - cited(b) || rank(a) - rank(b))
-        .slice(0, BEST_MATCH_COUNT)
-    );
   }
 
   /**
@@ -526,13 +483,14 @@ export default class AiSearchSession extends Service {
         !!this.siteSettings.ai_ask_ai_search_intent_decision_model,
     });
 
-    // Semantic ranks only mark the best matches once there is an answer.
-    // Embeddings describe public topics, so they cannot rank within one topic
-    // or among messages.
+    // The page lists semantic matches when no keywords match. Embeddings
+    // describe public topics, so they cannot rank within one topic or among
+    // messages.
     const semanticInScope = !["topic", "messages"].includes(
       this.scope?.key.split(":")[0]
     );
     if (
+      this.surface === "page" &&
       this.siteSettings.ai_embeddings_semantic_search_enabled &&
       semanticInScope
     ) {

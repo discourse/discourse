@@ -8,7 +8,6 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
-import AiSearchBestMatch from "./ai-search-best-match.gjs";
 
 /**
  * The kinds of result a combined search fetched, as pills that switch between
@@ -44,9 +43,6 @@ export default class AiSearchTabs extends Component {
       icon: "far-discobot",
       label: i18n("discourse_ai.ai_search.tabs.ask"),
       empty: this.session.answerFailed,
-      answered:
-        Boolean(this.session.discoveries.streamedText) &&
-        !this.session.answerFailed,
     });
 
     return tabs.map((tab) => ({
@@ -106,12 +102,6 @@ export default class AiSearchTabs extends Component {
                 class="ai-search-tabs__empty"
                 title={{i18n "discourse_ai.ai_search.tabs.no_answer"}}
               >{{dIcon "ban"}}</span>
-            {{else if tab.answered}}
-              {{! the star that marks the AI's picks among the results }}
-              <AiSearchBestMatch
-                class="ai-search-tabs__answered"
-                @label={{i18n "discourse_ai.ai_search.tabs.answered"}}
-              />
             {{/if}}
           {{else if tab.count}}
             <span class="ai-search-tabs__count">{{tab.count}}</span>

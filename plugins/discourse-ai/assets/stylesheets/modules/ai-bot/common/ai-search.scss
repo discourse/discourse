@@ -62,10 +62,6 @@
     color: var(--primary-medium);
   }
 
-  &__result {
-    position: relative;
-  }
-
   &__conversation {
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
@@ -281,35 +277,6 @@
   border-bottom: 1px solid var(--content-border-color);
 }
 
-// Hung off the result's edge, so it appears without moving it. The menu clips
-// at its edge, so while a combined search shows the scrolling list reaches past it by
-// the overhang (padded back so nothing inside moves) and the panel stops
-// clipping.
-.search-menu:has(.ai-search-tabs) {
-  --ai-search-overhang: 1rem;
-
-  .menu-panel,
-  .menu-panel .panel-body {
-    overflow: visible;
-  }
-
-  // clipping was also what let the body shrink to the panel, which is what
-  // gives the list a height to scroll within
-  .menu-panel .panel-body {
-    min-height: 0;
-  }
-
-  // anchors the sticker to its row, so it scrolls with the list
-  .search-result-topic .item {
-    position: relative;
-  }
-
-  .menu-panel .panel-body-contents {
-    margin-left: calc(-1 * var(--ai-search-overhang));
-    padding-left: var(--ai-search-overhang);
-  }
-}
-
 // Results sit beside an answer that summarises them, so each one is held to a
 // line per part: more of them fit in the menu.
 .search-menu:has(.ai-search-tabs) .search-result-topic {
@@ -319,46 +286,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-}
-
-.ai-search-best-match {
-  --ai-search-best-match-size: 1.25rem;
-
-  // a literal gold, like the stickers on marked homework, rather than a theme
-  // colour that could be anything
-  --ai-search-best-match-gold: #f6c343;
-  --ai-search-best-match-gold-edge: #c28a12;
-  position: absolute;
-  display: inline-flex;
-  width: var(--ai-search-best-match-size);
-  height: var(--ai-search-best-match-size);
-
-  // centred on the row's edge, past its padding
-  margin-left: calc(
-    -1 * (var(--space-4) + var(--ai-search-best-match-size) / 2)
-  );
-  line-height: 1;
-  transform: rotate(-12deg);
-  filter: drop-shadow(0 0 1px var(--secondary))
-    drop-shadow(0 1px 1px rgb(0 0 0 / 30%));
-  animation: ai-search-sticker-in 0.3s ease-out;
-
-  // set through fill, which the menu's tinting of result icons leaves alone
-  .d-icon {
-    width: 100%;
-    height: 100%;
-    fill: var(--ai-search-best-match-gold);
-    stroke: var(--ai-search-best-match-gold-edge);
-    stroke-width: 28px;
-    paint-order: stroke;
-  }
-}
-
-@keyframes ai-search-sticker-in {
-  from {
-    opacity: 0;
-    transform: rotate(-12deg) scale(0.4);
   }
 }
 
@@ -527,15 +454,6 @@
   &__empty {
     color: var(--primary-high);
     background: var(--primary-low-mid);
-  }
-
-  // the results' gold star, pinned where the counts sit on the other tabs
-  &__answered.ai-search-best-match {
-    --ai-search-best-match-size: 1.3em;
-    top: -0.5em;
-    right: -0.5em;
-    margin-left: 0;
-    font-size: var(--font-down-2);
   }
 }
 

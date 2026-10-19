@@ -88,11 +88,6 @@ describe "AI combined search" do
     # a question opens on the answer
     expect_tab("ask")
     expect(page).to have_css(".ai-search-answer .d-skeleton")
-    expect(page).to have_no_css("#{tab("ask")} .ai-search-best-match")
-    width_before =
-      page.evaluate_script(
-        "Math.round(document.querySelector('#{tab("ask")}').getBoundingClientRect().width)",
-      )
 
     publish(
       done: false,
@@ -104,13 +99,6 @@ describe "AI combined search" do
     publish(done: false, phase: "answering", ai_discover_reply: "Use the **forgot")
 
     expect(page).to have_css(".ai-search-answer__body .cooked", text: "Use the")
-    # the results' star marks that there is an answer, without resizing the pill
-    expect(page).to have_css("#{tab("ask")} .ai-search-best-match[title='AI answer found']")
-    expect(
-      page.evaluate_script(
-        "Math.round(document.querySelector('#{tab("ask")}').getBoundingClientRect().width)",
-      ),
-    ).to eq(width_before)
     # added once the answer is complete, so they do not slide down as it streams
     expect(page).to have_no_css(".ai-search-answer__more")
 
@@ -209,7 +197,6 @@ describe "AI combined search" do
     publish(done: true, phase: "complete", answerable: false, ai_discover_reply: "", sources: [])
 
     expect(page).to have_css("#{tab("ask")} .ai-search-tabs__empty .d-icon-ban")
-    expect(page).to have_no_css("#{tab("ask")} .ai-search-best-match")
   end
 
   it "opens on the answer for a query outside the site's language" do
@@ -396,95 +383,6 @@ describe "AI combined search" do
       expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
       expect(page).to have_no_css(".ai-quick-search-notice")
       expect(page).to have_no_css(".search-menu .ai-search-result")
-    end
-
-    it "puts a sticker on the best matches without moving them" do
-      visit "/"
-      wait_for_discoveries_channel
-      ask(query)
-
-      expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
-      row_height = <<~JS
-        Math.round(document.querySelector(".search-menu .search-result-topic .item").getBoundingClientRect().height)
-      JS
-      before = page.evaluate_script(row_height)
-
-      publish(
-        done: true,
-        phase: "complete",
-        answerable: true,
-        ai_discover_reply: "Use the forgot password link.",
-        sources:,
-      )
-
-      expect(page).to have_css(".search-menu .search-result-topic .ai-search-best-match", count: 1)
-      expect(find(".search-menu .search-result-topic .ai-search-best-match").text).to be_blank
-      expect(page.evaluate_script(row_height)).to eq(before)
-      overhang = page.evaluate_script(<<~JS)
-        (() => {
-          const sticker = document.querySelector(".search-menu .search-result-topic .ai-search-best-match").getBoundingClientRect();
-          const row = document.querySelector(".search-menu .search-result-topic .item").getBoundingClientRect();
-          const centre = document.elementFromPoint(sticker.left + sticker.width / 2, sticker.top + sticker.height / 2);
-          return {
-            hangs: sticker.left < row.left,
-            visible: Boolean(centre?.closest(".ai-search-best-match")),
-          };
-        })()
-      JS
-      expect(overhang).to eq("hangs" => true, "visible" => true)
-    end
-
-    it "scrolls the sticker with its result in the header search" do
-      Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
-      # enough results to overflow the menu
-      extra_topics =
-        8.times.map do |index|
-          topic = Fabricate(:topic, title: "Password question number #{index + 1} here")
-          Fabricate(:post, topic:, raw: "Another password question")
-          SearchIndexer.index(topic, force: true)
-          topic
-        end
-      cited =
-        [topic_1, *extra_topics].map { |topic| { title: topic.title, url: topic.url, excerpt: "" } }
-      page.current_window.resize_to(1400, 450)
-
-      visit "/"
-      wait_for_discoveries_channel
-      find("#search-button").click
-      ask(query, input: "#icon-search-input")
-      publish(
-        done: true,
-        phase: "complete",
-        answerable: true,
-        ai_discover_reply: "Use the forgot password link.",
-        sources: cited,
-      )
-      expect(page).to have_css(".search-menu .search-result-topic .ai-search-best-match")
-
-      offsets = page.evaluate_script(<<~JS)
-          (() => {
-            const sticker = () => document.querySelector(".search-menu .search-result-topic .ai-search-best-match").getBoundingClientRect();
-            const row = () => document.querySelector(".search-menu .search-result-topic .ai-search-best-match").closest(".item");
-            const offset = () => Math.round(sticker().top - row().getBoundingClientRect().top);
-            const list = document.querySelector(".search-menu .panel-body-contents");
-
-            list.scrollTop = 0;
-            row().scrollIntoView({ block: "nearest" });
-            const shown = sticker();
-            const centre = document.elementFromPoint(shown.left + shown.width / 2, shown.top + shown.height / 2);
-            const hangs = shown.left < row().getBoundingClientRect().left && Boolean(centre?.closest(".ai-search-best-match"));
-            const before = offset();
-            const scrolledFrom = list.scrollTop;
-
-            list.scrollTop = list.scrollHeight;
-            return { hangs, scrolled: list.scrollTop !== scrolledFrom, before, after: offset() };
-          })()
-        JS
-      expect(offsets["hangs"]).to eq(true)
-      expect(offsets["scrolled"]).to eq(true)
-      expect(offsets["after"]).to eq(offsets["before"])
-    ensure
-      page.current_window.resize_to(1400, 1400)
     end
   end
 

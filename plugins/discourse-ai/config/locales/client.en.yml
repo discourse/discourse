@@ -1868,7 +1868,6 @@ en:
           cited: "Cited"
           semantic: "Semantic"
           keyword: "Keyword"
-        best_match: "Best match"
         tabs:
           label: "Search results"
           ask: "Ask AI"
@@ -1876,7 +1875,6 @@ en:
           this_topic: "This topic"
           messages: "Messages"
           no_answer: "No AI answer found"
-          answered: "AI answer found"
         no_keyword_matches: "No keyword matches found."
         no_answer: "AI couldn’t find a clear answer. %{askLink}"
         ask_community: "Ask the community."
