@@ -132,6 +132,8 @@ async function performRollup(modules, opts) {
       discourseHbs(),
       discourseGjs(),
       discourseRegisterComponents({ basePath }),
+      // Must run after discourseRegisterComponents, which would otherwise register the wrapper
+      // of a test file under components/ as a component
       discourseWrapTestModules({
         basePath,
         testModules: opts.entrypoints.test?.modules,
