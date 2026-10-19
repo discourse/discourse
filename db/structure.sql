@@ -19997,10 +19997,10 @@ CREATE INDEX idx_dwf_data_tables_on_created_by_id ON public.discourse_workflows_
 
 
 --
--- Name: idx_dwf_data_tables_on_name; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_dwf_data_tables_on_lower_name; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX idx_dwf_data_tables_on_name ON public.discourse_workflows_data_tables USING btree (name);
+CREATE UNIQUE INDEX idx_dwf_data_tables_on_lower_name ON public.discourse_workflows_data_tables USING btree (lower((name)::text));
 
 
 --
@@ -26091,6 +26091,7 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20261019105124'),
+('20261019104439'),
 ('20261018172000'),
 ('20261015175355'),
 ('20261015175340'),
