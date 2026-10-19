@@ -26,7 +26,6 @@ describe "Composer - ProseMirror - Container" do
       )
     end
 
-    visit("/")
     open_composer
     expect(composer).to have_markdown_editor_active
   end

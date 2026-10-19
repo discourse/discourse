@@ -148,7 +148,7 @@ describe "Topic list" do
     expect(discovery.topic_list).to have_topics
     screenshot_marker(label: "topic-list")
 
-    visit "/categories"
+    route_to "/categories"
     screenshot_marker(label: "categories")
 
     find("#create-topic").click

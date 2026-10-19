@@ -116,7 +116,7 @@ describe "Reviewables" do
       expect(modal).to be_closed
       review_page.visit_reviewable(reviewable)
       expect(review_page).to have_reviewable_with_approved_status(reviewable)
-      admin_user_page.visit(post.user)
+      route_to("/admin/users/#{post.user.id}/#{post.user.username}")
       expect(admin_user_page).to have_unsuspend_button
     end
   end
@@ -139,7 +139,7 @@ describe "Reviewables" do
       expect(modal).to be_closed
       review_page.visit_reviewable(reviewable)
       expect(review_page).to have_reviewable_with_approved_status(reviewable)
-      admin_user_page.visit(post.user)
+      route_to("/admin/users/#{post.user.id}/#{post.user.username}")
       expect(admin_user_page).to have_unsilence_button
     end
   end

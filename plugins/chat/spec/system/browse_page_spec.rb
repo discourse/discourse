@@ -138,7 +138,7 @@ RSpec.describe "Browse page" do
           end
         end
 
-        include_examples "never visible channels" do
+        it_behaves_like "never visible channels" do
           before { chat_page.visit_browse(:all) }
         end
       end
@@ -165,7 +165,7 @@ RSpec.describe "Browse page" do
           end
         end
 
-        include_examples "never visible channels" do
+        it_behaves_like "never visible channels" do
           before { chat_page.visit_browse(:open) }
         end
       end
@@ -192,7 +192,7 @@ RSpec.describe "Browse page" do
           end
         end
 
-        include_examples "never visible channels" do
+        it_behaves_like "never visible channels" do
           before { chat_page.visit_browse(:closed) }
         end
       end
@@ -221,7 +221,7 @@ RSpec.describe "Browse page" do
           end
         end
 
-        include_examples "never visible channels" do
+        it_behaves_like "never visible channels" do
           before { chat_page.visit_browse(:archived) }
         end
       end

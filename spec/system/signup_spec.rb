@@ -200,7 +200,6 @@ shared_examples "signup scenarios" do
         wait_for(timeout: 5) { User.find_by(username: "john") != nil }
         expect(page).to have_current_path("/u/account-created")
 
-        visit "/"
         login_page.open
         login_page.fill_username("john")
         login_page.fill_password("supersecurepassword")
@@ -232,7 +231,6 @@ shared_examples "signup scenarios" do
 
         user = User.find_by(username: "john")
         EmailToken.confirm(Fabricate(:email_token, user:).token)
-        visit "/"
         login_page.open.fill_username("john").fill_password("supersecurepassword").click_login
 
         expect(page).to have_current_path("/")

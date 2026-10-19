@@ -63,6 +63,24 @@ module SystemHelpers
     expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
   end
 
+  def route_to(path)
+    error = page.evaluate_async_script(<<~JS, path, Capybara.default_max_wait_time * 1000)
+      const [path, timeout, done] = arguments;
+      const timer = setTimeout(() => done(`Timeout navigating to ${path}`), timeout);
+      Promise.resolve(require("discourse/lib/url").default.routeTo(path))
+        .catch((error) => {
+          if (error.name !== "TransitionAborted") {
+            throw error;
+          }
+        })
+        .then(() => window.clientSettled(timeout))
+        .then(() => done(true), (error) => done(error.message))
+        .finally(() => clearTimeout(timer));
+    JS
+
+    raise error if error.is_a?(String)
+  end
+
   def setup_system_test
     # `time:` freezes Ruby and the page's JavaScript clock, but not the browser's cookie-store
     # clock. Persistent cookies use an absolute expiry based on Ruby time, so historical examples

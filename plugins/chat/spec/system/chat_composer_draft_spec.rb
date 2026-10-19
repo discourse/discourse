@@ -38,11 +38,11 @@ RSpec.describe "Chat composer draft" do
 
         expect(channel_page.composer).to have_value("draft")
 
-        chat_page.visit_channel(channel_2)
+        chat_page.visit_channel(channel_2, in_app: true)
 
         expect(channel_page.composer).to have_value("draft2")
 
-        chat_page.visit_channel(channel_1)
+        chat_page.visit_channel(channel_1, in_app: true)
 
         expect(channel_page.composer).to have_value("draft")
       end
@@ -155,11 +155,11 @@ RSpec.describe "Chat composer draft" do
 
         expect(thread_page.composer).to have_value("draft")
 
-        chat_page.visit_thread(thread_2)
+        chat_page.visit_thread(thread_2, in_app: true)
 
         expect(thread_page.composer).to have_value("draft2")
 
-        chat_page.visit_thread(thread_1)
+        chat_page.visit_thread(thread_1, in_app: true)
 
         expect(thread_page.composer).to have_value("draft")
       end

@@ -88,7 +88,7 @@ describe "Admin Onboarding Banner" do
       expect(Topic.last.category_id).to eq(staff_category.id)
 
       logs = PageObjects::Pages::AdminStaffActionLogs.new
-      logs.visit
+      route_to("/admin/logs/staff_action_logs")
       logs.show_details(log)
       expect(page).to have_css(
         ".log-details-modal",
@@ -141,7 +141,7 @@ describe "Admin Onboarding Banner" do
       expect(banner.step_not_completed?("start_posting")).to eq(true)
       expect(UserHistory.exists?(acting_user_id: admin.id, subject: "start_posting")).to eq(false)
 
-      visit("/new-topic")
+      route_to("/new-topic")
       composer.fill_title("An unrelated community conversation")
       composer.fill_content("This topic was not started from an onboarding suggestion.")
       composer.switch_category(general_category.name)

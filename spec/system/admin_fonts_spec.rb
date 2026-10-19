@@ -29,7 +29,6 @@ describe "Admin Fonts Page" do
       fonts_page.visit
       expect(fonts_page.form.active_font("base")).to eq("Helvetica")
 
-      fonts_page.visit
       expect(fonts_page.form.active_font("heading")).to eq("JetBrains Mono")
     end
 

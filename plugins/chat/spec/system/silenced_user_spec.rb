@@ -15,7 +15,6 @@ RSpec.describe "Silenced user" do
       UserSilencer.silence(silenced_user)
       channel_1.add(silenced_user)
       sign_in(silenced_user)
-      chat.visit_channel(channel_1)
     end
 
     it "disables the composer" do

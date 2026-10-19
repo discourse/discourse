@@ -24,7 +24,7 @@ RSpec.describe "Reviewable User Notes" do
 
     expect(page).to have_text("This user needs attention")
 
-    visit(
+    route_to(
       "/admin/users/#{reviewable_flagged_post.target_created_by.id}/#{reviewable_flagged_post.target_created_by.username}",
     )
 

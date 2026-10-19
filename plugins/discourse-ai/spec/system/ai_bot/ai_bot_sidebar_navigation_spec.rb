@@ -68,7 +68,7 @@ RSpec.describe "AI Bot sidebar navigation" do
 
       expect(page).to have_css(".sidebar-sections.ai-conversations-panel")
 
-      visit("/admin")
+      route_to("/admin")
 
       expect(page).to have_css(".sidebar-sections.admin-panel")
     end

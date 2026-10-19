@@ -86,7 +86,6 @@ describe "Manage Boards Boards" do
       expect(boards_page).to have_empty_state
       expect(Boards::Board.count).to eq(0)
 
-      boards_page.visit_page
       boards_page.click_new_board
       boards_page.save_board_modal
       expect(boards_page.board_settings_form.field("name")).to have_errors("Required")

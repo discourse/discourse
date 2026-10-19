@@ -182,8 +182,6 @@ describe "Admin upcoming changes" do
   end
 
   it "tests different enabled_for options behavior" do
-    upcoming_changes_page.visit
-
     # Add a group to test clearing behavior
     SiteSetting.enable_upload_debug_mode = true
     Fabricate(

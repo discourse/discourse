@@ -99,7 +99,7 @@ describe "Unified new topic list" do
         expect(tabs_toggle.replies_tab).to be_inactive
         expect(tabs_toggle.topics_tab).to be_active
 
-        visit("/new?subset=replies")
+        route_to("/new?subset=replies")
 
         expect(tabs_toggle.all_tab).to be_inactive
         expect(tabs_toggle.replies_tab).to be_active
@@ -198,7 +198,7 @@ describe "Unified new topic list" do
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_active
 
-          visit("/c/#{category.slug}/#{category.id}/l/new?subset=replies")
+          route_to("/c/#{category.slug}/#{category.id}/l/new?subset=replies")
 
           expect(tabs_toggle.all_tab).to be_inactive
           expect(tabs_toggle.replies_tab).to be_active
@@ -276,7 +276,7 @@ describe "Unified new topic list" do
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_active
 
-          visit("/tag/#{tag.slug}/#{tag.id}/l/new?subset=replies")
+          route_to("/tag/#{tag.slug}/#{tag.id}/l/new?subset=replies")
 
           expect(tabs_toggle.all_tab).to be_inactive
           expect(tabs_toggle.replies_tab).to be_active

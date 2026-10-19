@@ -30,7 +30,7 @@ module PageObjects
       # the existing nested controller/components staying mounted across
       # the transition.
       def route_to(path)
-        page.execute_script(%(require("discourse/lib/url").default.routeTo(#{path.to_json});))
+        super
         self
       end
 

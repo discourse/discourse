@@ -62,7 +62,7 @@ describe "Filtering topics" do
 
       expect(page).to have_current_path(topic.url)
 
-      visit("/filter")
+      route_to("/filter")
       topic_query_filter.fill_in("status:open")
 
       expect(topic_list).to have_topic(topic)

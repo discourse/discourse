@@ -235,7 +235,7 @@ describe "Admin Color Palette Config Area Page" do
     config_area.default_light_on_theme_field.have_value?(false)
     config_area.default_dark_on_theme_field.have_value?(true)
 
-    config_area.visit(color_scheme_2.id)
+    route_to("/admin/config/colors/#{color_scheme_2.id}")
     config_area.default_light_on_theme_field.have_value?(false)
     config_area.default_dark_on_theme_field.have_value?(false)
   end

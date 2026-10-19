@@ -26,7 +26,8 @@ RSpec.describe "Discourse Workflows - Executions" do
     )
     expect(executions_page).to have_detail
 
-    executions_page.visit_index.open_workflow(workflow.name)
+    route_to("/admin/plugins/discourse-workflows/executions")
+    executions_page.open_workflow(workflow.name)
 
     expect(page).to have_current_path("/admin/plugins/discourse-workflows/workflows/#{workflow.id}")
   end

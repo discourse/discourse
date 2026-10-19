@@ -227,6 +227,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       start_date: "2026-05-01",
       end_date: "2026-05-12",
       traffic_type: "logged_in,anonymous",
+      in_app: true,
     )
     expect(traffic).to have_grouped_filter_pill(
       dimension: "traffic_type",
@@ -253,7 +254,12 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     traffic.remove_filter("traffic_type")
     expect(traffic).to have_no_filter_pills
 
-    traffic.visit(start_date: "2026-05-01", end_date: "2026-05-12", traffic_type: "likely_crawler")
+    traffic.visit(
+      start_date: "2026-05-01",
+      end_date: "2026-05-12",
+      traffic_type: "likely_crawler",
+      in_app: true,
+    )
     expect(traffic).to have_filter_pill(dimension: "traffic_type", label: "Likely crawlers")
     expect(traffic).to have_metric(label: "Distinct sessions", value: "1")
     expect(traffic).to have_series_total(label: "logged-in-human", value: "0")

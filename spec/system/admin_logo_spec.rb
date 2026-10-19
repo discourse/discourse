@@ -35,7 +35,6 @@ describe "Admin Logo Page" do
       logo_page.form.submit
       expect(logo_page.form).to have_saved_successfully
 
-      visit("/")
       logo_page.visit
 
       expect(logo_page.form).to have_form_field(:logo_dark)
@@ -97,7 +96,6 @@ describe "Admin Logo Page" do
       logo_page.form.submit
       expect(logo_page.form).to have_saved_successfully
 
-      visit("/")
       logo_page.visit
       logo_page.form.expand_mobile_section
 
@@ -143,7 +141,6 @@ describe "Admin Logo Page" do
       logo_page.form.submit
       expect(logo_page.form).to have_saved_successfully
 
-      visit("/")
       logo_page.visit
       logo_page.form.expand_email_section
 
@@ -189,7 +186,6 @@ describe "Admin Logo Page" do
       logo_page.form.submit
       expect(logo_page.form).to have_saved_successfully
 
-      visit("/")
       logo_page.visit
       logo_page.form.expand_social_media_section
 

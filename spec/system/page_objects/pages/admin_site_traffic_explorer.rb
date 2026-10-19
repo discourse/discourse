@@ -22,10 +22,10 @@ module PageObjects
         "ip" => "IP address",
       }.freeze
 
-      def visit(start_date:, end_date:, traffic_type: nil)
+      def visit(start_date:, end_date:, traffic_type: nil, in_app: false)
         path = "#{PATH}?end_date=#{end_date}&range=custom&start_date=#{start_date}"
         path += "&traffic_type=#{traffic_type}" if traffic_type
-        page.visit(path)
+        in_app ? route_to(path) : page.visit(path)
         self
       end
 

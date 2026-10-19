@@ -64,15 +64,15 @@ describe "Post stream" do
       expect(page).to have_css("[data-post-number='30']")
       expect(page).to have_no_css("#main-container")
 
-      topic_page.visit_topic(topic, post_number: 1)
+      route_to("/t/#{topic.slug}/#{topic.id}/1")
       expect(page).to have_css("[data-post-number='1']")
       expect(page).to have_css("#main-container")
 
-      topic_page.visit_topic(topic, post_number: 30)
+      route_to("/t/#{topic.slug}/#{topic.id}/30")
       expect(page).to have_css("[data-post-number='30']")
       expect(page).to have_no_css("#main-container")
 
-      visit "/"
+      route_to "/"
       expect(page).to have_css("#main-container")
     end
   end

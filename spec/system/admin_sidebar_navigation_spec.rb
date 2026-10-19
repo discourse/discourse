@@ -157,7 +157,7 @@ describe "Admin | Sidebar Navigation" do
   it "does not show the button to customize sidebar sections, that is only supported in the main panel" do
     visit("/")
     expect(sidebar).to have_add_section_button
-    visit("/admin")
+    route_to("/admin")
     expect(sidebar).to have_no_add_section_button
   end
 

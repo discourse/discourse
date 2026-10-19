@@ -101,7 +101,8 @@ RSpec.describe "Archive channel" do
             visit("/")
             expect(page.find(".chat-channel-unread-indicator")).to have_content(1)
 
-            chat.visit_channel_settings(channel_1)
+            route_to("#{channel_1.url}/info/settings")
+            expect(PageObjects::Pages::ChatSidebar.new).to have_unread_channel(channel_1)
             click_button(I18n.t("js.chat.channel_settings.archive_channel"))
             find("#split-topic-name").fill_in(with: "An interesting topic for cats")
             click_button(I18n.t("js.chat.channel_archive.title"))

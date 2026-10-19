@@ -53,9 +53,9 @@ describe "Navigation menu states" do
       it "shows the sidebar on other admin pages" do
         visit "/admin"
         expect(sidebar_navigation).to be_visible
-        visit "/admin/site_settings/category/all_results"
+        route_to "/admin/site_settings/category/all_results"
         expect(sidebar_navigation).to be_visible
-        visit "/admin/reports"
+        route_to "/admin/reports"
         expect(sidebar_navigation).to be_visible
       end
     end

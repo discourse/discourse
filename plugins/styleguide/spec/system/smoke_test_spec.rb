@@ -147,6 +147,8 @@ RSpec.describe "Styleguide Smoke Test" do
   # renders before a broken example inside it throws, so a wrapper-only check
   # passes for a group whose examples never mounted.
   it "renders each drag and drop group's examples" do
+    visit "/styleguide/molecules/drag-and-drop"
+
     {
       "basics" => ".styleguide-drag-and-drop__swatches",
       "sources" => ".styleguide-drag-and-drop__grip",
@@ -156,7 +158,7 @@ RSpec.describe "Styleguide Smoke Test" do
       "resize" => ".styleguide-drag-and-drop__resizable",
       "gestures" => ".styleguide-drag-and-drop__knob",
     }.each do |group, selectors|
-      visit "/styleguide/molecules/drag-and-drop?group=#{group}"
+      styleguide.select_group(group)
 
       expect(page).to have_css("[data-test-styleguide-group='#{group}']")
       Array(selectors).each { |selector| expect(page).to have_css(selector) }

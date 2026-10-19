@@ -23,7 +23,6 @@ describe "Discourse Connect Provider" do
     sso, sig = build_discourse_connect_payload(return_url)
     EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
-    visit "/"
     visit "/session/sso_provider?sso=#{CGI.escape(sso)}&sig=#{sig}"
     expect(page).to have_current_path("/login")
 
@@ -42,7 +41,6 @@ describe "Discourse Connect Provider" do
     new_email = "new.person@example.com"
     sso, sig = build_discourse_connect_payload(return_url)
 
-    visit "/"
     visit "/session/sso_provider?sso=#{CGI.escape(sso)}&sig=#{sig}"
     expect(page).to have_current_path("/login")
     expect(page).to have_css("#login-account-name")
@@ -79,7 +77,6 @@ describe "Discourse Connect Provider" do
       sso, sig = build_discourse_connect_payload(return_url)
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
-      visit "/"
       visit "/session/sso_provider?sso=#{CGI.escape(sso)}&sig=#{sig}"
       expect(page).to have_current_path("/login")
 

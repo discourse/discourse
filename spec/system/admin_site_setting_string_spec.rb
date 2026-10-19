@@ -14,7 +14,7 @@ describe "Admin site setting string" do
 
     expect(settings_page).to have_overridden_setting("site_description", value: "A place to talk")
 
-    settings_page.visit("company_name")
+    route_to("/admin/site_settings?filter=company_name")
     settings_page.submit_setting_with_keyboard("company_name", "Acme")
 
     expect(settings_page).to have_overridden_setting("company_name", value: "Acme")

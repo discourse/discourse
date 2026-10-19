@@ -96,7 +96,7 @@ RSpec.describe "Move message to channel" do
         expect(page).to have_current_path(chat.channel_path(channel_2.slug, channel_2.id))
         expect(channel_page.messages).to have_message(text: message_1.message)
 
-        chat_page.visit_channel(channel_1)
+        chat_page.visit_channel(channel_1, in_app: true)
 
         expect(channel_page.messages).to have_deleted_message(message_1)
       end
@@ -112,11 +112,11 @@ RSpec.describe "Move message to channel" do
         expect(page).to have_current_path(chat.channel_path(channel_2.slug, channel_2.id))
         expect(channel_page.messages).to have_message(text: thread.original_message.message)
 
-        chat_page.visit_thread(channel_2.threads.first)
+        chat_page.visit_thread(channel_2.threads.first, in_app: true)
         chat_page.find(".chat-message .chat-message-thread-indicator").click
         thread.replies.each { |reply| expect(thread_page.messages).to have_message(id: reply.id) }
 
-        chat_page.visit_channel(channel_1)
+        chat_page.visit_channel(channel_1, in_app: true)
 
         expect(channel_page.messages).to have_no_message(text: thread.original_message.message)
       end
@@ -152,7 +152,7 @@ RSpec.describe "Move message to channel" do
           expect(page).to have_current_path(chat.channel_path(channel_2.slug, channel_2.id))
           expect(channel_page.messages).to have_css(".chat-uploads .chat-img-upload")
 
-          chat_page.visit_channel(channel_1)
+          chat_page.visit_channel(channel_1, in_app: true)
 
           expect(channel_page.messages).to have_deleted_message(message_with_upload)
         end

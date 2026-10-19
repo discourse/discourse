@@ -214,7 +214,7 @@ RSpec.describe "Message notifications - mobile", mobile: true do
             create_message(channel_1, user: user_1)
             expect(channels_index_page).to have_unread_channel(channel_1)
 
-            visit("/chat/direct-messages")
+            route_to("/chat/direct-messages")
             create_message(dm_channel_1, user: user_1)
             expect(channels_index_page).to have_unread_channel(dm_channel_1)
           end

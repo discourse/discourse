@@ -22,7 +22,6 @@ describe "DiscourseRewind | dismiss" do
     expect(rewind_page).to have_no_rewind_notification_active
     expect(user.user_option.reload.discourse_rewind_dismissed_at).to be_present
 
-    visit("/")
     rewind_page.visit_my_activity
     expect(rewind_page).to have_no_rewind_notification_active
   end

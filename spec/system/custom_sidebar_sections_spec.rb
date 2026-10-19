@@ -139,7 +139,7 @@ describe "Custom sidebar sections" do
     expect(sidebar).to have_no_active_links
     expect(sidebar).to have_no_exact_url_match_link("everything")
 
-    visit("/latest")
+    route_to("/latest")
     expect(sidebar).to have_active_link("everything")
     expect(sidebar).to have_no_exact_url_match_link("Sorted latest")
   end

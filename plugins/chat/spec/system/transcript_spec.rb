@@ -48,7 +48,8 @@ RSpec.describe "Quoting chat message transcripts" do
         chat_page.visit_channel(chat_channel_1)
 
         clip_text = copy_messages_to_clipboard(message_1)
-        topic_page.visit_topic_and_open_composer(post_1.topic)
+        route_to(post_1.topic.url)
+        topic_page.click_reply_button
         topic_page.fill_in_composer("This is a new post!\n\n" + clip_text)
 
         within(".d-editor-preview") { expect(page).to have_css(".chat-transcript") }
@@ -69,7 +70,8 @@ RSpec.describe "Quoting chat message transcripts" do
       it "quotes the messages" do
         chat_page.visit_channel(chat_channel_1)
         clip_text = copy_messages_to_clipboard([message_1, message_2])
-        topic_page.visit_topic_and_open_composer(post_1.topic)
+        route_to(post_1.topic.url)
+        topic_page.click_reply_button
         topic_page.fill_in_composer("This is a new post!\n\n" + clip_text)
 
         expect(page).to have_css(".d-editor-preview .chat-transcript", count: 2)
@@ -101,7 +103,8 @@ RSpec.describe "Quoting chat message transcripts" do
         chat_page.visit_channel(chat_channel_1)
 
         clip_text = copy_messages_to_clipboard(message_1)
-        topic_page.visit_topic_and_open_composer(post_1.topic)
+        route_to(post_1.topic.url)
+        topic_page.click_reply_button
         topic_page.fill_in_composer(clip_text)
 
         within(".chat-transcript-messages") do

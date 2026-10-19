@@ -409,7 +409,6 @@ RSpec.describe "Nested view" do
       child_reply.update!(raw: "A child post\n\n#{("Scrollable child content.\n\n" * 30).strip}")
       child_reply.rebake!
 
-      page.visit("/latest")
       nested_view.visit_nested(topic)
       nested_view.scroll_post_near_top(great_grandchild_reply)
 

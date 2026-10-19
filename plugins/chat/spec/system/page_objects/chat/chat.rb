@@ -64,8 +64,15 @@ module PageObjects
         drawer?(expectation: false, channel_id: channel_id, expanded: expanded)
       end
 
-      def visit_channel(channel, message_id: nil, with_preloaded_channels: true, check: true)
-        visit(channel.url + (message_id ? "/#{message_id}" : ""))
+      def visit_channel(
+        channel,
+        message_id: nil,
+        with_preloaded_channels: true,
+        check: true,
+        in_app: false
+      )
+        path = channel.url + (message_id ? "/#{message_id}" : "")
+        in_app ? route_to(path) : visit(path)
         has_finished_loading?(with_preloaded_channels: with_preloaded_channels) if check
       end
 
@@ -83,8 +90,8 @@ module PageObjects
         has_css?(".c-user-threads.--loaded")
       end
 
-      def visit_thread(thread)
-        visit(thread.url)
+      def visit_thread(thread, in_app: false)
+        in_app ? route_to(thread.url) : visit(thread.url)
         has_css?(".chat-thread.--loaded[data-id=\"#{thread.id}\"]")
       end
 

@@ -62,7 +62,7 @@ describe "AI Tool Management" do
     expect(form.collection_field("parameters", 0, "required")).to be_checked
     expect(form.collection_field("parameters", 0, "isEnum")).to be_unchecked
 
-    visit "/admin/plugins/discourse-ai/ai-agents/new"
+    route_to "/admin/plugins/discourse-ai/ai-agents/new"
 
     tool_id = AiTool.order("id desc").limit(1).pluck(:id).first
     tool_selector = PageObjects::Components::SelectKit.new("#control-tools .select-kit")
