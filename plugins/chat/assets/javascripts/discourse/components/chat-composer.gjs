@@ -26,6 +26,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { SEND_SHORTCUT_META_ENTER } from "discourse/lib/constants";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
+import { afterUppyLoads } from "discourse/lib/load-uppy";
 import { cloneJSON } from "discourse/lib/object";
 import optionalService from "discourse/lib/optional-service";
 import { emojiUrlFor } from "discourse/lib/text";
@@ -40,7 +41,7 @@ import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
-import { not, or } from "discourse/truth-helpers";
+import { and, not, or } from "discourse/truth-helpers";
 import DTextarea from "discourse/ui-kit/d-textarea";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dAutocomplete, { SKIP } from "discourse/ui-kit/modifiers/d-autocomplete";
@@ -76,6 +77,19 @@ export default class ChatComposer extends Component {
 
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
+  @tracked uploadRuntimeSettled = false;
+
+  constructor() {
+    super(...arguments);
+
+    // Themes extend ChatComposerUploads and expect its uploader instance to
+    // exist once it renders.
+    afterUppyLoads(() => {
+      if (!this.isDestroying) {
+        this.uploadRuntimeSettled = true;
+      }
+    });
+  }
 
   get shouldRenderMessageDetails() {
     return (
@@ -235,7 +249,7 @@ export default class ChatComposer extends Component {
 
   @action
   uploadClicked() {
-    document.querySelector(`#${this.fileUploadElementId}`).click();
+    document.querySelector(`#${this.fileUploadElementId}`)?.click();
   }
 
   @action
@@ -872,7 +886,7 @@ export default class ChatComposer extends Component {
         </div>
       </div>
 
-      {{#if this.canAttachUploads}}
+      {{#if (and this.canAttachUploads this.uploadRuntimeSettled)}}
         <ChatComposerUploads
           @composerInputEl={{this.composer.textarea.element}}
           @existingUploads={{this.draft.uploads}}

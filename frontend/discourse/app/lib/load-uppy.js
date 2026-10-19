@@ -55,6 +55,25 @@ export function withUppy(callback) {
   );
 }
 
+/**
+ * Runs `callback` once loading the upload runtime has settled, whether or not
+ * it succeeded: synchronously when it has already loaded.
+ *
+ * @param {() => void} callback
+ */
+export function afterUppyLoads(callback) {
+  if (runtime) {
+    callback();
+    return;
+  }
+
+  waitForPromise(
+    loadUppy()
+      .catch(() => {})
+      .then(callback)
+  );
+}
+
 // Every uploader shares the failed import, so one notice covers the page.
 export function reportUppyLoadFailure(dialog) {
   if (failureReported) {

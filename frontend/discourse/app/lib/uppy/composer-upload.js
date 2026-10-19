@@ -21,6 +21,7 @@ import {
   rateLimitRetryOptions,
   validateUploadedFile,
 } from "discourse/lib/uploads";
+import captureDrops from "discourse/lib/uppy/capture-drops";
 import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
 import UppyWrapper from "discourse/lib/uppy/wrapper";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
@@ -61,8 +62,9 @@ export default class UppyComposerUpload {
   #consecutiveImages = [];
 
   #uploadTargetBound = false;
+  #releaseDrops;
   #runtimeReady;
-  #setupId = 0;
+  #setupAbort;
   #userCancelled = false;
 
   #fileInputEl;
@@ -90,7 +92,7 @@ export default class UppyComposerUpload {
   }
 
   teardown() {
-    this.#setupId++;
+    this.#setupAbort?.abort();
 
     if (!this.#uploadTargetBound) {
       return;
@@ -147,9 +149,10 @@ export default class UppyComposerUpload {
     this.#uploadTargetBound = true;
     this.#bindMobileUploadButton();
 
-    const setupId = ++this.#setupId;
+    const { signal } = (this.#setupAbort = new AbortController());
+    this.#releaseDrops = captureDrops(element, this._addFiles, signal);
     this.#runtimeReady = withUppy((runtime) => {
-      if (setupId === this.#setupId) {
+      if (!signal.aborted) {
         this.#setupUppy(element, runtime);
       }
     });
@@ -416,6 +419,7 @@ export default class UppyComposerUpload {
     this.#setupPreProcessors();
 
     this.uppyWrapper.uppyInstance.use(DropTarget, { target: element });
+    this.#releaseDrops();
   }
 
   #abortAndReset() {
@@ -611,6 +615,8 @@ export default class UppyComposerUpload {
 
   @bind
   async _addFiles(files, opts = {}) {
+    const signal = this.#setupAbort?.signal;
+
     if (
       !this.uppyWrapper.uppyInstance &&
       (await this.#runtimeReady) === false
@@ -621,6 +627,10 @@ export default class UppyComposerUpload {
 
     if (!this.session.csrfToken) {
       await updateCsrfToken();
+    }
+
+    if (signal?.aborted) {
+      return;
     }
 
     files = Array.isArray(files) ? files : [files];

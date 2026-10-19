@@ -21,6 +21,7 @@ import {
   rateLimitRetryOptions,
   validateUploadedFile,
 } from "discourse/lib/uploads";
+import captureDrops from "discourse/lib/uppy/capture-drops";
 import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
 import UppyWrapper from "discourse/lib/uppy/wrapper";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
@@ -108,8 +109,9 @@ export default class UppyUpload {
   #bufferedUploadErrors = [];
 
   #fileInputEventListener;
+  #releaseDrops;
   #runtimeReady;
-  #setupId = 0;
+  #setupAbort;
   #usingS3Uploads;
 
   _fileInputEl;
@@ -138,7 +140,7 @@ export default class UppyUpload {
   }
 
   teardown() {
-    this.#setupId++;
+    this.#setupAbort?.abort();
     this.messageBus.unsubscribe(`/uploads/${this.config.type}`);
 
     this._fileInputEl?.removeEventListener(
@@ -160,15 +162,22 @@ export default class UppyUpload {
 
   @bind
   setup(fileInputEl) {
+    this.#setupAbort?.abort();
+    const { signal } = (this.#setupAbort = new AbortController());
+
     if (fileInputEl) {
       this._fileInputEl = fileInputEl;
       this.allowMultipleFiles = this._fileInputEl.multiple;
       this.#bindFileInputChange();
     }
 
-    const setupId = ++this.#setupId;
+    const dropTarget = this.#resolvedDropTargetOptions?.target;
+    this.#releaseDrops = dropTarget
+      ? captureDrops(dropTarget, this.addFiles, signal)
+      : null;
+
     this.#runtimeReady = withUppy((runtime) => {
-      if (setupId === this.#setupId) {
+      if (!signal.aborted) {
         this.#setupUppy(runtime);
       }
     });
@@ -221,6 +230,8 @@ export default class UppyUpload {
 
   @bind
   async addFiles(files, opts = {}) {
+    const signal = this.#setupAbort?.signal;
+
     if (
       !this.uppyWrapper.uppyInstance &&
       (await this.#runtimeReady) === false
@@ -231,6 +242,10 @@ export default class UppyUpload {
 
     if (!this.session.csrfToken) {
       await updateCsrfToken();
+    }
+
+    if (signal?.aborted) {
+      return;
     }
 
     files = Array.isArray(files) ? files : [files];
@@ -321,6 +336,7 @@ export default class UppyUpload {
       // DropTarget is a UI plugin, only preprocessors must call _useUploadPlugin
       this.uppyWrapper.uppyInstance.use(DropTarget, resolvedDropTargetOptions);
     }
+    this.#releaseDrops?.();
 
     this.uppyWrapper.uppyInstance.on("progress", (progress) => {
       this.uploadProgress = progress;

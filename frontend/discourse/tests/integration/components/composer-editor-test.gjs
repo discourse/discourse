@@ -1,13 +1,36 @@
 /* eslint-disable qunit/no-conditional-assertions */
+import { action } from "@ember/object";
 import { click, fillIn, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ComposerEditor from "discourse/components/composer-editor";
+import { resetUppyForTesting } from "discourse/lib/load-uppy";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
 
 module("Integration | Component | ComposerEditor", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("theme overrides of the editor init see the uploader on a cold load", async function (assert) {
+    resetUppyForTesting();
+    let uppyInstance;
+
+    class ThemedComposerEditor extends ComposerEditor {
+      @action
+      _composerEditorInitEditor(elem) {
+        super._composerEditorInitEditor(elem);
+        uppyInstance = this.uppyComposerUpload.uppyWrapper.uppyInstance;
+      }
+    }
+
+    await render(<template><ThemedComposerEditor /></template>);
+
+    assert.dom(".d-editor-input").exists("the editor renders");
+    assert.true(
+      Boolean(uppyInstance?.opts.onBeforeFileAdded),
+      "the override can wrap the uploader's hooks"
+    );
+  });
 
   test("warns about users that will not see a mention", async function (assert) {
     const expectation = (warning) => {
