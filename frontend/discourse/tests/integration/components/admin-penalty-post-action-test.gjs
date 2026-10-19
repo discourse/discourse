@@ -41,6 +41,7 @@ module("Integration | Component | AdminPenaltyPostAction", function (hooks) {
 
     assert.strictEqual(postAction.value, "edit", "reports the picked action");
     assert.dom(".post-editor").hasValue("original post");
+    assert.dom(".post-editor").isFocused("moves focus to the editor");
 
     await fillIn(".post-editor", "edited post");
     assert.deepEqual(edits, ["edited post"], "reports the edited post");
