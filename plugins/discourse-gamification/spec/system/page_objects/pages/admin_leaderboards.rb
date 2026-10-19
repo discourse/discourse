@@ -27,6 +27,11 @@ module PageObjects
         excluded_groups_sk.collapse
       end
 
+      def click_creator(leaderboard)
+        find("#leaderboard-admin__row-#{leaderboard.id} .leaderboard-admin__creator-link").click
+        self
+      end
+
       def edit_leaderboard(leaderboard)
         find("#leaderboard-admin__row-#{leaderboard.id} .leaderboard-admin__edit").click
       end

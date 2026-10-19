@@ -58,6 +58,21 @@ describe "Admin leaderboards" do
       expect(leaderboard.reload.name).to eq("Coolest dudettes")
     end
 
+    it "shows the creator and opens their user card" do
+      creator = User.find(leaderboard.created_by_id)
+      user_card = PageObjects::Components::UserCard.new
+
+      visit("/admin/plugins/discourse-gamification")
+
+      expect(page).to have_css(
+        "#leaderboard-admin__row-#{leaderboard.id} .leaderboard-admin__creator-link",
+        text: creator.username,
+      )
+
+      admin_leaderboard_page.click_creator(leaderboard)
+      expect(user_card).to be_showing_user(creator.username)
+    end
+
     it "can delete a leaderboard" do
       visit("/admin/plugins/discourse-gamification")
 
