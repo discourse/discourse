@@ -48,15 +48,38 @@ RSpec.describe SvgSprite::FontAwesomeSync do
   end
 
   describe "#write!" do
-    it "vendors the package sprites unchanged" do
+    it "vendors the package sprites without the paths' own fill" do
       publish_package(solid: { "heart" => "M1" })
 
       sync.write!
 
       expect(vendor_path.join("fontawesome/solid.svg").read).to eq(
-        package_path.join("sprites/solid.svg").read,
+        package_path.join("sprites/solid.svg").read.gsub(' fill="currentColor"', ""),
       )
       expect(vendor_path.join("fontawesome-legacy")).not_to exist
+    end
+
+    it "strips the paths' own fill regardless of its spelling" do
+      publish_package(solid: { "heart" => "M1" })
+      package_path.join("sprites/solid.svg").write(<<~XML)
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="heart" viewBox="0 0 512 512"><path fill="currentcolor" d="M1"/></symbol>
+        <symbol id="star" viewBox="0 0 512 512"><path fill='CurrentColor' d="M2"/></symbol>
+        </svg>
+      XML
+
+      sync.write!
+
+      expect(vendor_path.join("fontawesome/solid.svg").read).not_to include("fill=")
+    end
+
+    it "strips the paths' own fill from renamed icons' artwork" do
+      vendor_solid("user-large" => "M-old")
+      publish_package(solid: { "user" => "M-new" }, aliases: { "user" => ["user-large"] })
+
+      sync.write!
+
+      expect(vendor_path.join("fontawesome-legacy/solid.svg").read).not_to include("fill=")
     end
 
     it "keeps renamed icons under their old name with the successor's artwork" do
@@ -109,6 +132,17 @@ RSpec.describe SvgSprite::FontAwesomeSync do
 
       expect { sync.write! }.to raise_error(described_class::UnsafeSpriteError, /heart/)
       expect(vendor_path.join("fontawesome/solid.svg")).not_to exist
+    end
+
+    it "refuses package sprites with paths filled other than currentColor" do
+      publish_package(solid: { "heart" => "M1" })
+      package_path.join("sprites/solid.svg").write(<<~XML)
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="heart" viewBox="0 0 512 512"><path fill="red" d="M1"/></symbol>
+        </svg>
+      XML
+
+      expect { sync.write! }.to raise_error(described_class::UnsafeSpriteError, /heart/)
     end
   end
 

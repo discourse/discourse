@@ -228,9 +228,7 @@ RSpec.describe SvgSpriteController do
       expect(response.status).to eq(200)
 
       expect(response.body).to include("fab-github")
-      svg = Nokogiri.XML(response.body).root
-      expect(svg["fill"]).to eq("#CC0000")
-      expect(svg["color"]).to eq("#CC0000")
+      expect(response.body).to include('fill="#CC0000"')
       expect(response.headers["Cache-Control"]).to eq("max-age=86400, public, immutable")
     end
 
@@ -239,9 +237,7 @@ RSpec.describe SvgSpriteController do
       expect(response.status).to eq(200)
 
       expect(response.body).to include("fab-github")
-      svg = Nokogiri.XML(response.body).root
-      expect(svg["fill"]).to eq("#CC0000")
-      expect(svg["color"]).to eq("#CC0000")
+      expect(response.body).to include('fill="#CC0000"')
       expect(response.headers["Cache-Control"]).to eq("max-age=86400, public, immutable")
     end
 

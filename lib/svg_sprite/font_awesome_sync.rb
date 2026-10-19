@@ -14,7 +14,11 @@ module SvgSprite
 
     # The bundled sprite is inserted into every page with innerHTML, so only plain
     # path artwork is accepted from the package.
-    ALLOWED_ATTRIBUTES = { "symbol" => %w[id viewBox], "path" => %w[d fill] }.freeze
+    ALLOWED_ATTRIBUTES = { "symbol" => %w[id viewBox], "path" => %w[d] }.freeze
+
+    # A fill on the path beats the fill inherited from the icon's <svg>, which is
+    # how themes and plugins color icons.
+    PATH_FILL = /\s+fill=(["'])currentcolor\1/i
     ICON_ID = /\A[a-z0-9]+(?:-[a-z0-9]+)*\z/
 
     LEGACY_HEADER = <<~XML
@@ -39,7 +43,7 @@ module SvgSprite
     def files
       @files ||=
         STYLES.each_with_object({}) do |style, files|
-          upstream = @package_path.join("sprites/#{style}.svg").read
+          upstream = @package_path.join("sprites/#{style}.svg").read.gsub(PATH_FILL, "")
           upstream_symbols = symbols(upstream)
           verify!(style, upstream_symbols)
 
@@ -82,8 +86,7 @@ module SvgSprite
 
             allowed = ALLOWED_ATTRIBUTES[node.name]
             node.element? && allowed.present? &&
-              node.attribute_nodes.all? { |attribute| allowed.include?(attribute.name) } &&
-              node["fill"].in?([nil, "currentColor"])
+              node.attribute_nodes.all? { |attribute| allowed.include?(attribute.name) }
           end
     end
 

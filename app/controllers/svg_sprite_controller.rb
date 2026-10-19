@@ -86,15 +86,8 @@ class SvgSpriteController < ApplicationController
       else
         doc = Nokogiri.XML(icon)
         doc.at_xpath("symbol").name = "svg"
-        svg = doc.at_xpath("svg")
-        svg["xmlns"] = "http://www.w3.org/2000/svg"
-
-        if params[:color]
-          color = adjust_hex(params[:color])
-          svg["fill"] = color
-          # paths with fill="currentColor" ignore the inherited fill
-          svg["color"] = color
-        end
+        doc.at_xpath("svg")["xmlns"] = "http://www.w3.org/2000/svg"
+        doc.at_xpath("svg")["fill"] = adjust_hex(params[:color]) if params[:color]
 
         response.headers["Last-Modified"] = 1.year.ago.httpdate
         response.headers["Content-Length"] = doc.to_s.bytesize.to_s
