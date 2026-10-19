@@ -205,6 +205,13 @@ happily. Restart `bin/dev` and wait for the new file to appear in the bundle
 (`grep -rl <basename> frontend/discourse/dist/assets/js/`) before believing the run. Editing
 an existing test file is picked up normally.
 
+### Wait for the rebuild before a mutation run
+
+A fixed `sleep` after editing a file is not enough: a module many others import (`d-user-info`
+rebuilt 89 files) can take longer, and the run then tests the old bundle, so a mutation
+"passes" and the test looks weak. Wait for `[ember] Rebuild complete ... <path>` for that file
+in the `bin/dev` log, both after the mutation and after restoring it.
+
 ### After swapping files under a running `bin/dev`
 
 Copying `origin/main` versions over your files and back (to compare against the classic
