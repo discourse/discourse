@@ -56,6 +56,7 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery do
     expect(described_class.mandatory_approval?).to eq(true)
     expect(tool.details).to include(query[:name], query[:description], query[:sql])
     expect(tool.details).not_to include(token)
+    expect(tool.approval_parameters).to be_empty
     expect { tool.invoke }.not_to change { DiscourseDataExplorer::Query.count }
   end
 
@@ -68,7 +69,7 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery do
     saved = DiscourseDataExplorer::Query.order(:id).last
     expect(saved).to have_attributes(query.merge(user_id: other_admin.id))
     expect(saved.query_groups).to be_empty
-    expect(reviewable.payload.dig("continuation", "tool_result")).to be_nil
+    expect(reviewable.payload&.dig("continuation", "tool_result")).to be_nil
   end
 
   it "binds approval to the signed requester and exact draft token" do
@@ -202,11 +203,12 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::GenerateQuery do
 
   it "denies policy before query generation and rejects oversized requests" do
     DiscourseDataExplorer::AdminAssistant::Capability.stubs(:status).returns(:restricted)
-    expect(DiscourseDataExplorer::QueryGeneration).not_to receive(:call)
+    allow(DiscourseDataExplorer::QueryGeneration).to receive(:call)
     expect(tool.invoke[:status]).to eq("error")
 
     DiscourseDataExplorer::AdminAssistant::Capability.stubs(:status).returns(:available)
     tool.parameters[:description] = "x" * 4001
     expect(tool.invoke[:status]).to eq("error")
+    expect(DiscourseDataExplorer::QueryGeneration).not_to have_received(:call)
   end
 end

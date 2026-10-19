@@ -47,6 +47,10 @@ module DiscourseDataExplorer
         self.class.help
       end
 
+      def approval_parameters
+        []
+      end
+
       def details
         return I18n.t("discourse_data_explorer.admin_assistant.invalid_draft") unless draft
 

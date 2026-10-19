@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Data Explorer assistant private-message completion" do
+RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery, "private-message completion" do
   fab!(:admin)
   fab!(:llm_model) { Fabricate(:llm_model, name: "gpt-3.5-turbo") }
   fab!(:ai_agent) do
@@ -19,6 +19,7 @@ RSpec.describe "Data Explorer assistant private-message completion" do
 
   before do
     prepare_ai_bot_fixtures(bots: [llm_model])
+    SiteSetting.data_explorer_enabled = true
     DiscourseDataExplorer::AdminAssistant::Capability.stubs(:status).returns(:available)
   end
 

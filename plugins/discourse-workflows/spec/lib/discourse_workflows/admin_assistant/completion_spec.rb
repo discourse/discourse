@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Workflow assistant chat completion" do
+RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow, "chat completion" do
   fab!(:admin)
   fab!(:llm_model) { Fabricate(:llm_model, name: "gpt-3.5-turbo") }
   fab!(:ai_agent) do
