@@ -893,6 +893,19 @@
 }
 
 .admin-customize-email-style {
+  .email-styles-editor {
+    &__theme-fields {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+    }
+
+    &__theme-fields-copy p {
+      margin: 0 0 var(--space-1);
+    }
+  }
+
   .ace-wrapper {
     position: relative;
     width: 100%;

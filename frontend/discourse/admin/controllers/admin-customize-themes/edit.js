@@ -41,6 +41,14 @@ export default class AdminCustomizeThemesEditController extends Controller {
   setTargetName(name) {
     const target = this.get("model.targets").find((t) => t.name === name);
     this.set("currentTarget", target && target.id);
+    if (name === "email") {
+      this.set("showAdvanced", true);
+    }
+  }
+
+  @action
+  setShowAdvanced(showAdvanced) {
+    this.set("showAdvanced", showAdvanced);
   }
 
   @action
