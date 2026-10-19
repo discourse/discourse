@@ -56,7 +56,7 @@ for attempt in range(360):
             Path("/task/work/capybara-smoke-" + ("done" if options.action == "done" else "review") + ".json").write_text(json.dumps(card, indent=2))
             print("Verified", state, flush=True)
             break
-    except urllib.error.URLError:
+    except (urllib.error.URLError, json.JSONDecodeError):
         pass
     time.sleep(5)
 else:
