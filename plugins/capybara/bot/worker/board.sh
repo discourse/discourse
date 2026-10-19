@@ -6,6 +6,9 @@ mkdir -p /workspace/discourse
 chown discourse:discourse /workspace /workspace/discourse
 sudo -u discourse git config --global --add safe.directory /seed
 until pg_isready -q; do sleep 1; done
+until redis-cli ping >/dev/null 2>&1; do sleep 1; done
+DISCOURSE_SECRET_KEY_BASE="$(python3 /opt/bot/board-secret.py)"
+export DISCOURSE_SECRET_KEY_BASE
 cd /workspace/discourse
 rm -f /workspace/board-ready
 chown discourse:discourse public public/uploads

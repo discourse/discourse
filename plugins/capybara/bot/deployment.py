@@ -41,7 +41,7 @@ class DockerBoard:
         volumes = {self.config.seed: {"bind": "/seed", "mode": "ro"},
                    self.bootstrap: {"bind": "/bootstrap", "mode": "ro"}}
         for suffix, target in (("workspace", "/workspace"), ("postgres", "/shared/postgres_data"),
-                               ("redis", "/shared/redis"), ("uploads", "/workspace/discourse/public/uploads")):
+                               ("redis", "/shared/redis_data"), ("uploads", "/workspace/discourse/public/uploads")):
             name = f"capybara-board-{suffix}"
             try:
                 volume = self.client.volumes.get(name)
