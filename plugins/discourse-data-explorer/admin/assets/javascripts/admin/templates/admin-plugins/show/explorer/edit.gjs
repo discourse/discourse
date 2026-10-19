@@ -114,10 +114,8 @@ export default class QueriesEdit extends Component {
                 {{i18n "explorer.query_tags"}}
               </span>
               <QueryTagChooser
-                @allowDefaultTag={{@controller.model.is_default}}
+                @automaticTags={{@controller.model.automatic_tags}}
                 @availableTags={{@controller.availableTags}}
-                @mandatoryValues={{@controller.mandatoryTags}}
-                @mandatoryValueTitle={{i18n "explorer.default_tag_mandatory"}}
                 @onChange={{@controller.updateTags}}
                 @value={{@controller.model.tags}}
               />
