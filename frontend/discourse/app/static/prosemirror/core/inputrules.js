@@ -16,11 +16,11 @@ export function buildInputRules(extensions, params, includeDefault = true) {
     });
 
     const defaultRules = [
-      blockRule(/^\s*>\s$/, wrapIn(schema.nodes.blockquote)),
+      blockRule(/\s*>\s/, wrapIn(schema.nodes.blockquote)),
       orderedListRule(schema.nodes.ordered_list),
       bulletListRule(schema.nodes.bullet_list),
-      blockRule(/^```$/, setBlock(schema.nodes.code_block)),
-      blockRule(/^ {4}$/, setBlock(schema.nodes.code_block)),
+      blockRule(/```/, setBlock(schema.nodes.code_block)),
+      blockRule(/ {4}/, setBlock(schema.nodes.code_block)),
       ...(schema.nodes.heading ? [headingRule(schema.nodes.heading, 6)] : []),
       markInputRule(/\*\*([^*]+)\*\*$/, schema.marks.strong),
       markInputRule(/(^|\s)__([^_]+)__$/, schema.marks.strong, getAttrs),
@@ -122,7 +122,7 @@ function wrapHandlerWithBacktickCheck(handler) {
 
 function orderedListRule(nodeType) {
   return blockRule(
-    /^(\d+)\.\s$/,
+    /(\d+)\.\s/,
     wrapIn(
       nodeType,
       (match) => ({ order: +match[1] }),
@@ -132,21 +132,22 @@ function orderedListRule(nodeType) {
 }
 
 function bulletListRule(nodeType) {
-  return blockRule(/^\s*([-+*])\s$/, wrapIn(nodeType));
+  return blockRule(/\s*([-+*])\s/, wrapIn(nodeType));
 }
 
 function headingRule(nodeType, maxLevel) {
   return blockRule(
-    new RegExp("^(#{1," + maxLevel + "})\\s$"),
+    new RegExp("(#{1," + maxLevel + "})\\s"),
     setBlock(nodeType, (match) => ({ level: match[1].length }))
   );
 }
 
-// Block markup typed right after a line break starts a new block, as it does
-// at the start of a paragraph: the break goes, the paragraph splits there.
-function blockRule(regex, apply) {
+// Block markup, matched at the start of a paragraph or right after a line
+// break, where it starts a new block too: the break goes, the paragraph
+// splits there.
+function blockRule(markup, apply) {
   return new InputRule(
-    new RegExp(`(?:^|\ufffc)${regex.source.slice(1)}`),
+    new RegExp(`(?:^|\ufffc)${markup.source}$`),
     (state, match, start, end) => {
       // the placeholder stands for any leaf node, like a mention
       const afterBreak = match[0].startsWith("\ufffc");
