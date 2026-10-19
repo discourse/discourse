@@ -2,6 +2,7 @@ import argparse
 import concurrent.futures
 import copy
 import tempfile
+import time
 import unittest
 from unittest.mock import Mock, patch
 
@@ -25,7 +26,7 @@ class BoardDouble:
 
     def snapshot(self):
         return {"board_id": 1, "archived": self.archived,
-                "columns": {"BACKLOG": 5, "TODO": 1, "IN PROGRESS": 2, "REVIEW": 3, "DONE": 4},
+                "columns": {"BACKLOG": 5, "TODO": 1, "IN PROGRESS": 2, "REVIEW": 3, "DONE": 4, "ARCHIVED": 6},
                 "cards": [] if self.deleted else [copy.deepcopy(self.card)]}
 
     def move(self, column):
@@ -49,6 +50,9 @@ class BoardDouble:
             if self.fail_after_review:
                 self.fail_after_review = False
                 raise requests.ConnectionError("Review accepted but response lost")
+        elif command == "archive":
+            self.move("ARCHIVED")
+            self.card["run"] = {"run_id": run.run_id, "status": "done"}
         elif command in ("failed", "done"):
             self.move(self.card["column"])
         return copy.deepcopy(self.card)
@@ -191,7 +195,8 @@ class ControllerTests(unittest.TestCase):
         self.executor.tasks[-1][0].set_result({"commit": "c" * 40, "pull_request_url": "https://github.com/discourse/discourse/pull/123"})
         self.controller.poll()
         self.assertEqual("done", self.store.all()[0].phase)
-        self.assertEqual("done", self.board.commands[-1][0])
+        self.assertEqual("archive", self.board.commands[-1][0])
+        self.assertEqual("ARCHIVED", self.board.card["column"])
         self.assertIn("c" * 40, self.board.commands[-1][2])
 
     def test_done_acknowledgement_waits_for_successful_cleanup(self):
@@ -567,6 +572,110 @@ class ControllerTests(unittest.TestCase):
                                                "pull_request_url": "https://github.com/discourse/discourse/pull/123"})
         self.controller.poll()
         self.assertEqual("done", self.store.all()[0].phase)
+
+
+    def saved_completed_run(self, published=True):
+        self.controller.poll()
+        self.complete()
+        self.board.move("DONE")
+        run = self.controller.runs[self.executor.tasks[0][1].run_id]
+        run.phase = "done"
+        run.integrated_commit = "c" * 40
+        run.published_commit = run.integrated_commit if published else ""
+        run.pull_request_url = "https://github.com/discourse/discourse/pull/123" if published else ""
+        run.report_pending = True
+        self.controller.save(run)
+        self.controller.jobs.clear()
+        return run
+
+    def test_confirmed_published_run_moves_to_archive_even_if_previously_reported_done(self):
+        run = self.saved_completed_run()
+        self.board.card["run"]["status"] = "done"
+        self.controller.poll()
+        self.assertEqual("ARCHIVED", self.board.card["column"])
+        self.assertEqual("archive", self.board.commands[-1][0])
+        self.assertFalse(self.store.all()[0].report_pending)
+        count = len(self.board.commands)
+        self.controller.poll()
+        self.assertEqual(count, len(self.board.commands))
+
+    def test_unpublished_legacy_done_is_not_archived(self):
+        run = self.saved_completed_run(published=False)
+        run.publication_required = False
+        self.controller.save(run)
+        self.controller.poll()
+        self.assertEqual("DONE", self.board.card["column"])
+        self.assertEqual("done", self.board.commands[-1][0])
+
+    def test_mismatched_published_commit_does_not_archive(self):
+        run = self.saved_completed_run()
+        run.published_commit = "d" * 40
+        self.controller.save(run)
+        self.controller.poll()
+        self.assertEqual("DONE", self.board.card["column"])
+        self.assertFalse(any(c[0] == "archive" for c in self.board.commands))
+
+    def test_confirming_run_with_accepted_commit_stays_done(self):
+        run = self.saved_completed_run()
+        run.phase = "confirming"
+        run.retry_after = time.time() + 3600
+        run.report_pending = False
+        self.controller.save(run)
+        self.controller.poll()
+        self.assertEqual("DONE", self.board.card["column"])
+        self.assertFalse(any(c[0] == "archive" for c in self.board.commands))
+
+    def test_archive_response_loss_recovers_after_restart_without_duplicate_report(self):
+        run = self.saved_completed_run()
+        transition = self.board.transition
+        def lose_archive_response(command, generation, message=""):
+            card = transition(command, generation, message)
+            if command == "archive":
+                raise requests.ConnectionError("Response lost after archive committed")
+            return card
+        self.board.transition = lose_archive_response
+        with self.assertRaises(requests.ConnectionError):
+            self.controller.poll()
+        count = len(self.board.commands)
+        self.board.transition = transition
+        self.controller = self.build()
+        self.controller.poll()
+        self.assertEqual("ARCHIVED", self.board.card["column"])
+        self.assertEqual(count, len(self.board.commands))
+        self.assertFalse(self.store.all()[0].report_pending)
+
+    def test_archive_cleanup_failure_keeps_done_until_cleanup_retry(self):
+        run = self.saved_completed_run()
+        run.cleanup_pending = True
+        self.runtime.cleanup_error = True
+        self.controller.save(run)
+        self.controller.poll()
+        self.assertEqual("DONE", self.board.card["column"])
+        self.runtime.cleanup_error = False
+        self.controller.poll()
+        self.assertEqual("ARCHIVED", self.board.card["column"])
+
+    def test_archive_does_not_clobber_new_generation_or_manual_todo(self):
+        run = self.saved_completed_run()
+        self.board.card["run"]["run_id"] = "another-generation"
+        self.controller.poll()
+        self.assertEqual("DONE", self.board.card["column"])
+        self.board.move("TODO")
+        self.controller.poll()
+        self.assertEqual("IN PROGRESS", self.board.card["column"])
+        self.assertFalse(any(c[0] == "archive" for c in self.board.commands))
+
+    def test_deleted_completed_card_is_not_archived(self):
+        self.saved_completed_run()
+        self.board.deleted = True
+        self.controller.poll()
+        self.assertFalse(any(c[0] == "archive" for c in self.board.commands))
+
+    def test_archived_card_never_launches_coding(self):
+        self.board.move("ARCHIVED")
+        self.controller.poll()
+        self.assertEqual([], self.executor.tasks)
+
 
 
 class ResourceTests(unittest.TestCase):

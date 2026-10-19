@@ -80,7 +80,7 @@ RSpec.describe DiscourseCapybara::RequeueReviewCard do
     end
 
     it "leaves every other column unchanged" do
-      ["BACKLOG", "TODO", "IN PROGRESS", "DONE"].each do |title|
+      ["BACKLOG", "TODO", "IN PROGRESS", "DONE", "ARCHIVED"].each do |title|
         column =
           board.columns.find_by(title: title) ||
             Fabricate(:boards_column, board: board, title: title)

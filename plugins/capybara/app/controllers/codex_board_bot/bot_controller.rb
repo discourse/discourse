@@ -25,6 +25,7 @@ class ::CodexBoardBot::BotController < ::ApplicationController
     acl.owner = Boards::PLUGIN_NAME
     acl.allowed_user_ids = (acl.allowed_user_ids + [user.id]).uniq
     acl.save!
+    ensure_archived_column
     render json: { username: user.username }
   end
 
@@ -61,6 +62,7 @@ class ::CodexBoardBot::BotController < ::ApplicationController
         "integrating" => %w[DONE DONE integrating],
         "integration_failed" => %w[DONE DONE integration_failed],
         "done" => %w[DONE DONE done],
+        "archive" => %w[DONE ARCHIVED done],
       }
       raise Discourse::InvalidParameters unless commands.key?(command)
       run_id = params.require(:run_id).to_s
@@ -158,6 +160,42 @@ class ::CodexBoardBot::BotController < ::ApplicationController
   end
 
   private
+
+  def ensure_archived_column
+    @board.with_lock do
+      done = @board.columns.find_by!(title: "DONE")
+      archived = @board.columns.find_by(title: "ARCHIVED")
+      unless archived
+        result =
+          Boards::CreateColumn.call(
+            guardian: guardian,
+            params: {
+              board_id: @board.id,
+              title: "ARCHIVED",
+            },
+          )
+        raise Discourse::InvalidParameters unless result.success?
+        archived = result[:column]
+      end
+      loop do
+        ids = @board.columns.order(:position, :id).pluck(:id)
+        archived_index = ids.index(archived.id)
+        done_index = ids.index(done.id)
+        break if archived_index == done_index + 1
+        direction = archived_index <= done_index ? 1 : -1
+        result =
+          Boards::MoveColumn.call(
+            guardian: guardian,
+            params: {
+              board_id: @board.id,
+              column_id: archived.id,
+              direction: direction,
+            },
+          )
+        raise Discourse::InvalidParameters unless result.success?
+      end
+    end
+  end
 
   def ensure_development_board
     raise Discourse::NotFound if Rails.env.production?

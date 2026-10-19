@@ -140,7 +140,7 @@ class Board:
         snapshot = self.request("GET", "/snapshot")
         if not isinstance(snapshot.get("cards"), list) or not isinstance(snapshot.get("archived"), bool):
             raise ValueError("Incomplete board snapshot")
-        for name in ("BACKLOG", "TODO", "IN PROGRESS", "REVIEW", "DONE"):
+        for name in ("BACKLOG", "TODO", "IN PROGRESS", "REVIEW", "DONE", "ARCHIVED"):
             if name not in snapshot.get("columns", {}):
                 raise ValueError(f"Missing board column {name}")
         if len({card["id"] for card in snapshot["cards"]}) != len(snapshot["cards"]):
@@ -647,19 +647,28 @@ class Controller:
                         self.cleanup(run)
                     else:
                         self.cancel(run, "done" if done else "cancelled")
-            if run.phase == "done" and not run.cleanup_pending and card and card["column"] == "DONE" and (card.get("run") or {}).get("run_id") == run.run_id and card["run"].get("status") != "done":
-                run.claimed_version = card["version"]
-                try:
+            if (run.phase == "done" and not run.cleanup_pending and card
+                    and (card.get("run") or {}).get("run_id") == run.run_id):
+                archive_ready = (run.publication_required and bool(run.integrated_commit)
+                                 and run.published_commit == run.integrated_commit and bool(run.pull_request_url))
+                if archive_ready and card["column"] == "ARCHIVED" and card["run"].get("status") == "done":
+                    if run.report_pending:
+                        run.report_pending = False
+                        run.claimed_version = card["version"]
+                        self.save(run)
+                elif card["column"] == "DONE" and (archive_ready or card["run"].get("status") != "done"):
+                    run.claimed_version = card["version"]
                     message = (f"Merged into capybara as `{run.integrated_commit}` and updated from official Discourse upstream. "
                                "The board has restarted successfully. Preview resources were removed."
                                if run.integrated_commit else "Preview resources were removed.")
                     if run.published_commit:
                         message += f" Published `{run.published_commit}` to {run.pull_request_url}."
-                    self.board.transition("done", run, message)
-                    run.report_pending = False
-                except Conflict:
-                    pass
-                self.save(run)
+                    try:
+                        self.board.transition("archive" if archive_ready else "done", run, message)
+                        run.report_pending = False
+                    except Conflict:
+                        pass
+                    self.save(run)
             if run.phase == "integration_failed" and (not card or snapshot["archived"] or card["column"] != "DONE"):
                 run.phase = "cancelled"
                 run.report_pending = False

@@ -60,6 +60,11 @@ class VolumeCleanupTests(unittest.TestCase):
         self.card["column"] = "DONE"
         self.assertEqual(3, len(self.collect()["removed"]))
 
+    def test_archived_failed_attempt_releases_volumes(self):
+        self.run.phase = "failed"
+        self.card["column"] = "ARCHIVED"
+        self.assertEqual(3, len(self.collect()["removed"]))
+
     def test_superseded_failure_releases_old_workspace_but_shared_session_is_retained(self):
         self.run.phase = "failed"
         next_run = Run.create(self.card, 1, "second")

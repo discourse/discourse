@@ -24,7 +24,7 @@ def volume_plan(runs, cards, jobs):
         current = bool(card and (card.get("run") or {}).get("run_id") == run.run_id)
         retained = (run.run_id in jobs or run.cleanup_pending or run.phase in PROTECTED_PHASES
                     or (current and run.phase == "integration_failed")
-                    or (current and run.phase == "failed" and card["column"] != "DONE")
+                    or (current and run.phase == "failed" and card["column"] not in {"DONE", "ARCHIVED"})
                     or run.phase not in PROTECTED_PHASES | {"done", "cancelled", "failed", "integration_failed"})
         for attribute, kind in (("workspace_volume", "workspace"), ("codex_volume", "session"),
                                 ("integration_volume", "integration")):
