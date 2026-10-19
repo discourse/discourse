@@ -6,6 +6,8 @@ import {
   testMarkdown,
 } from "discourse/tests/helpers/rich-editor-helper";
 
+const IMAGE = "p img:not(.ProseMirror-separator)";
+
 module(
   "Integration | Component | prosemirror-editor - html-inline extension",
   function (hooks) {
@@ -82,11 +84,11 @@ module(
         '<img src="https://example.com/image.png" alt="Alt text" width="100" height="200">',
         (assert) => {
           assert
-            .dom("p img")
+            .dom(IMAGE)
             .hasAttribute("src", "https://example.com/image.png");
-          assert.dom("p img").hasAttribute("alt", "Alt text");
-          assert.dom("p img").hasAttribute("width", "100");
-          assert.dom("p img").hasAttribute("height", "200");
+          assert.dom(IMAGE).hasAttribute("alt", "Alt text");
+          assert.dom(IMAGE).hasAttribute("width", "100");
+          assert.dom(IMAGE).hasAttribute("height", "200");
         },
         "![Alt text|100x200](https://example.com/image.png)",
       ],
@@ -94,9 +96,9 @@ module(
         '<img src="https://example.com/image.png" alt="Alt text"> after',
         (assert) => {
           assert
-            .dom("p img")
+            .dom(IMAGE)
             .hasAttribute("src", "https://example.com/image.png");
-          assert.dom("p img").hasAttribute("alt", "Alt text");
+          assert.dom(IMAGE).hasAttribute("alt", "Alt text");
           assert.dom("p").hasText("after");
         },
         "![Alt text](https://example.com/image.png) after",

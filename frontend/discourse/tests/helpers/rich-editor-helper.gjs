@@ -70,7 +70,7 @@ export async function setupRichEditor(assert, markdown, opts = {}) {
   const html = editor.innerHTML
     // we don't care about some PM-specifics
     .replace(' class="ProseMirror-selectednode"', "")
-    .replace('<img class="ProseMirror-separator" alt="">', "")
+    .replaceAll('<img class="ProseMirror-separator" alt="">', "")
     .replace('<br class="ProseMirror-trailingBreak">', "")
     // or artifacts
     .replace(' class=""', "")
