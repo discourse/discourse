@@ -21,7 +21,6 @@ import {
   rateLimitRetryOptions,
   validateUploadedFile,
 } from "discourse/lib/uploads";
-import captureDrops from "discourse/lib/uppy/capture-drops";
 import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
 import UppyWrapper from "discourse/lib/uppy/wrapper";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
@@ -109,7 +108,6 @@ export default class UppyUpload {
   #bufferedUploadErrors = [];
 
   #fileInputEventListener;
-  #releaseDrops;
   #runtimeReady;
   #setupAbort;
   #usingS3Uploads;
@@ -170,11 +168,6 @@ export default class UppyUpload {
       this.allowMultipleFiles = this._fileInputEl.multiple;
       this.#bindFileInputChange();
     }
-
-    const dropTarget = this.#resolvedDropTargetOptions?.target;
-    this.#releaseDrops = dropTarget
-      ? captureDrops(dropTarget, this.addFiles, signal)
-      : null;
 
     this.#runtimeReady = withUppy((runtime) => {
       if (!signal.aborted) {
@@ -336,7 +329,6 @@ export default class UppyUpload {
       // DropTarget is a UI plugin, only preprocessors must call _useUploadPlugin
       this.uppyWrapper.uppyInstance.use(DropTarget, resolvedDropTargetOptions);
     }
-    this.#releaseDrops?.();
 
     this.uppyWrapper.uppyInstance.on("progress", (progress) => {
       this.uploadProgress = progress;

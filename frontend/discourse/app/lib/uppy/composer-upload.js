@@ -21,7 +21,6 @@ import {
   rateLimitRetryOptions,
   validateUploadedFile,
 } from "discourse/lib/uploads";
-import captureDrops from "discourse/lib/uppy/capture-drops";
 import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
 import UppyWrapper from "discourse/lib/uppy/wrapper";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
@@ -62,7 +61,6 @@ export default class UppyComposerUpload {
   #consecutiveImages = [];
 
   #uploadTargetBound = false;
-  #releaseDrops;
   #runtimeReady;
   #setupAbort;
   #userCancelled = false;
@@ -150,7 +148,6 @@ export default class UppyComposerUpload {
     this.#bindMobileUploadButton();
 
     const { signal } = (this.#setupAbort = new AbortController());
-    this.#releaseDrops = captureDrops(element, this._addFiles, signal);
     this.#runtimeReady = withUppy((runtime) => {
       if (!signal.aborted) {
         this.#setupUppy(element, runtime);
@@ -419,7 +416,6 @@ export default class UppyComposerUpload {
     this.#setupPreProcessors();
 
     this.uppyWrapper.uppyInstance.use(DropTarget, { target: element });
-    this.#releaseDrops();
   }
 
   #abortAndReset() {

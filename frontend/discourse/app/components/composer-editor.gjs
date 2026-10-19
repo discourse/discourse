@@ -33,7 +33,6 @@ import {
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
-import { afterUppyLoads } from "discourse/lib/load-uppy";
 import { generateCookFunction } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import {
@@ -526,14 +525,6 @@ export default class ComposerEditor extends Component {
     document.getElementById(this.fileUploadElementId).click();
   }
 
-  #initWhenUploadsLoad(element, init) {
-    afterUppyLoads(() => {
-      if (!this.isDestroying && element.isConnected) {
-        init(element);
-      }
-    });
-  }
-
   @on("didInsertElement")
   _composerEditorInit() {
     this.appEvents.trigger(`${this.composerEventPrefix}:will-open`);
@@ -581,18 +572,6 @@ export default class ComposerEditor extends Component {
         preview.removeEventListener("click", fn)
       );
     }
-  }
-
-  // Themes extend the init actions and expect the uploader instance to exist
-  // once `super` returns, so they wait for the upload runtime.
-  @action
-  _initEditorWhenUploadsLoad(element) {
-    this.#initWhenUploadsLoad(element, this._composerEditorInitEditor);
-  }
-
-  @action
-  _initFormTemplateWhenUploadsLoad(element) {
-    this.#initWhenUploadsLoad(element, this._composerEditorInitFormTemplate);
   }
 
   @action
@@ -1006,7 +985,7 @@ export default class ComposerEditor extends Component {
           {{/if}}
           <form
             id="form-template-form"
-            {{didInsert this._initFormTemplateWhenUploadsLoad}}
+            {{didInsert this._composerEditorInitFormTemplate}}
           >
             <Wrapper
               @id={{this.selectedFormTemplateId}}
@@ -1067,7 +1046,7 @@ export default class ComposerEditor extends Component {
         @userToolbarPreferences={{true}}
         @validation={{this.validation}}
         @value={{this.composer.model.reply}}
-        {{didInsert this._initEditorWhenUploadsLoad}}
+        {{didInsert this._composerEditorInitEditor}}
         {{willDestroy this._composerEditorDestroyEditor}}
         {{didInsert this._composerEditorInitPreview}}
         {{willDestroy this._composerEditorDestroyPreview}}

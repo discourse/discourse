@@ -140,36 +140,6 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       upload.teardown();
     });
 
-    test("files dropped while loading reach the uploader", async function (assert) {
-      const target = document.createElement("div");
-      document.body.appendChild(target);
-      const upload = buildUpload(this, { uploadDropTargetOptions: { target } });
-
-      upload.setup(this.fileInput);
-      const dataTransfer = new DataTransfer();
-      dataTransfer.items.add(createFile(SIBLING_FILE));
-      const drop = new DragEvent("drop", {
-        bubbles: true,
-        cancelable: true,
-        dataTransfer,
-      });
-      target.dispatchEvent(drop);
-
-      assert.true(drop.defaultPrevented, "the browser does not open the file");
-
-      await waitUntil(
-        () => upload.uppyWrapper.uppyInstance?.getFiles().length > 0
-      );
-      assert.deepEqual(
-        upload.uppyWrapper.uppyInstance.getFiles().map((file) => file.name),
-        [SIBLING_FILE],
-        "the dropped file is added once the runtime loads"
-      );
-
-      upload.teardown();
-      target.remove();
-    });
-
     test("a failed load is reported once per page", async function (assert) {
       resetUppyForTesting({
         importer: () => Promise.reject(new Error("chunk failed")),
