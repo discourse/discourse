@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import FlagModal from "discourse/components/modal/flag";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { not } from "discourse/truth-helpers";
@@ -228,7 +227,7 @@ export default class VoiceParticipantSidebarContextMenu extends Component {
   @action
   flag() {
     this.args.close();
-    this.modal.show(FlagModal, {
+    this.modal.show(import("discourse/components/modal/flag"), {
       model: {
         flagTarget: new VoiceFlag(this.room),
         flagModel: {

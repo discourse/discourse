@@ -5,6 +5,11 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import ItsATrap from "@discourse/itsatrap";
+import TopicTimerInfo from "discourse/components/topic-timer-info";
+import {
+  TIME_SHORTCUT_TYPES,
+  timeShortcuts,
+} from "discourse/lib/time-shortcut";
 import {
   BUMP_TYPE,
   CLOSE_AFTER_LAST_POST_STATUS_TYPE,
@@ -14,12 +19,7 @@ import {
   DELETE_STATUS_TYPE,
   OPEN_STATUS_TYPE,
   PUBLISH_TO_CATEGORY_STATUS_TYPE,
-} from "discourse/components/modal/edit-topic-timer";
-import TopicTimerInfo from "discourse/components/topic-timer-info";
-import {
-  TIME_SHORTCUT_TYPES,
-  timeShortcuts,
-} from "discourse/lib/time-shortcut";
+} from "discourse/lib/topic-timer-types";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import { FORMAT } from "discourse/select-kit/components/future-date-input-selector";
 import DNativeSelect from "discourse/ui-kit/d-native-select";

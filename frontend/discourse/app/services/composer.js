@@ -7,9 +7,6 @@ import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
-import ChangeReplyTo from "discourse/components/modal/change-reply-to";
-import DiscardDraftModal from "discourse/components/modal/discard-draft";
-import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
 import TopicReplyChoiceDialog from "discourse/components/topic-reply-choice-dialog";
 import WrapAttributesModal from "discourse/components/wrap-attributes-modal";
 import {
@@ -771,7 +768,7 @@ export default class ComposerService extends Service {
       return;
     }
 
-    this.modal.show(ChangeReplyTo, {
+    this.modal.show(import("discourse/components/modal/change-reply-to"), {
       model: {
         topic: model.topic,
         editingPostNumber: model.post?.post_number,
@@ -1539,7 +1536,9 @@ export default class ComposerService extends Service {
 
   @action
   postWasEnqueued(details) {
-    this.modal.show(PostEnqueuedModal, { model: details });
+    this.modal.show(import("discourse/components/modal/post-enqueued"), {
+      model: details,
+    });
   }
 
   // Notify the composer messages controller that a reply has been typed. Some
@@ -1784,7 +1783,7 @@ export default class ComposerService extends Service {
 
     return new Promise((resolve) => {
       if (this.get("model.anyDirty")) {
-        this.modal.show(DiscardDraftModal, {
+        this.modal.show(import("discourse/components/modal/discard-draft"), {
           model: {
             confirmMessageKey: this.get("model.editingPost")
               ? "post.cancel_composer.confirm_edit"

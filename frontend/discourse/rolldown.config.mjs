@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import { basename, relative } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
+import discourseRegisterComponents from "../asset-processor/rollup-plugins/discourse-register-components.js";
 import chunkImportMapPlugin from "./lib/chunk-import-map-plugin.mjs";
 import discourseChunkNamesPlugin from "./lib/discourse-chunk-names.mjs";
 import discourseSourceImports from "./lib/discourse-source-imports.mjs";
@@ -16,7 +17,7 @@ exitIfDevServerRunning();
 
 writeResolverConfig(
   {
-    staticAppPaths: ["static", "admin", "workers"],
+    staticAppPaths: ["static", "admin", "workers", "components/modal"],
     splitAtRoutes: [{ type: "string", value: "wizard" }],
   },
   {
@@ -52,6 +53,7 @@ const aliases = [
 
 export function buildConfig({ devMode } = {}) {
   const isProduction = process.env.EMBER_ENV === "production";
+  let bootModules;
 
   if (!isProduction) {
     process.env.NODE_ENV = "development";
@@ -89,6 +91,36 @@ export function buildConfig({ devMode } = {}) {
       dir: "dist",
       sourcemap: true,
       cleanDir: !devMode,
+      // Lazy entrypoints otherwise partition eager dependencies into many small chunks.
+      codeSplitting:
+        isProduction && !process.env.FORCE_BUILD_TESTS
+          ? {
+              groups: [
+                {
+                  name(id, context) {
+                    if (!bootModules) {
+                      bootModules = new Set();
+                      const visit = (moduleId) => {
+                        if (bootModules.has(moduleId)) {
+                          return;
+                        }
+                        bootModules.add(moduleId);
+                        for (const dependency of context.getModuleInfo(moduleId)
+                          ?.importedIds ?? []) {
+                          visit(dependency);
+                        }
+                      };
+                      visit(`${process.cwd()}/discourse.js`);
+                    }
+                    return bootModules.has(id)
+                      ? "discourse-runtime"
+                      : undefined;
+                  },
+                  includeDependenciesRecursively: false,
+                },
+              ],
+            }
+          : true,
       hashCharacters: "base36",
       assetFileNames: "assets/js/[name]-[hash].digested[extname]",
       chunkFileNames: "assets/js/[name]-[hash].digested.js", // See also: discourseChunkNamesPlugin
@@ -110,6 +142,11 @@ export function buildConfig({ devMode } = {}) {
         parallel: true,
         skipPreflightCheck: true, // Skip per-file config verification
         babelrc: false, // Skip per-file `.babelrc`/`.babelignore` checks
+      }),
+      // Lazy modals are reached by import only, so they register themselves for `modifyClass`.
+      discourseRegisterComponents({
+        basePath: `${process.cwd()}/app/`,
+        include: /\/app\/components\/modal\//,
       }),
       wrapTestModulesPlugin(),
       discourseChunkNamesPlugin(),

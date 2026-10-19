@@ -2,7 +2,6 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import BookmarkModal from "discourse/components/modal/bookmark";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
@@ -104,7 +103,7 @@ export default class GroupReportsShowController extends Controller {
         bookmarkable_id: this.queryGroup.id,
         user_id: this.currentUser.id,
       });
-    return this.modal.show(BookmarkModal, {
+    return this.modal.show(import("discourse/components/modal/bookmark"), {
       model: {
         bookmark: new BookmarkFormData(modalBookmark),
         afterSave: (bookmarkFormData) => {

@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import HistoryModal from "discourse/components/modal/history";
 import { historyHeat } from "discourse/components/post/meta-data/edits-indicator";
 import { longDate } from "discourse/lib/formatter";
 import DButton from "discourse/ui-kit/d-button";
@@ -42,7 +41,7 @@ export default class ReviewablePostEdits extends Component {
     event?.preventDefault();
     let postId = this.args.reviewable?.post_id;
     this.store.find("post", postId).then((post) => {
-      this.modal.show(HistoryModal, {
+      this.modal.show(import("discourse/components/modal/history"), {
         model: {
           post,
           postId,

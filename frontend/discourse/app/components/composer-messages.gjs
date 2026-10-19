@@ -6,7 +6,6 @@ import EmberObject, { action, computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { tagName } from "@ember-decorators/component";
 import ComposerMessage from "discourse/components/composer-message";
-import ShareTopic from "discourse/components/modal/share-topic";
 import { ajax } from "discourse/lib/ajax";
 import {
   addUniqueValueToArray,
@@ -42,7 +41,7 @@ function visibleMessages(messages) {
  */
 @tagName("")
 export default class ComposerMessages extends Component {
-  @tracked showShareModal;
+  @tracked shareModalComponent;
 
   /** @type {SimilarComposerTopic[] | null} */
   @autoTrackedArray similarTopics = null;
@@ -123,6 +122,15 @@ export default class ComposerMessages extends Component {
       checkedMessages: false,
       similarTopics: [],
     });
+  }
+
+  @action
+  async showShareModal() {
+    const { default: component } =
+      await import("discourse/components/modal/share-topic");
+    if (!this.isDestroying) {
+      this.shareModalComponent = component;
+    }
   }
 
   @action
@@ -415,12 +423,12 @@ export default class ComposerMessages extends Component {
         <ComposerMessage
           @closeMessage={{this.closeMessage}}
           @message={{message}}
-          @shareModal={{fn (mut this.showShareModal) true}}
+          @shareModal={{this.showShareModal}}
           @switchPM={{this.switchPM}}
         />
-        {{#if this.showShareModal}}
-          <ShareTopic
-            @closeModal={{fn (mut this.showShareModal) false}}
+        {{#if this.shareModalComponent}}
+          <this.shareModalComponent
+            @closeModal={{fn (mut this.shareModalComponent) null}}
             @model={{this.shareModalData}}
           />
         {{/if}}

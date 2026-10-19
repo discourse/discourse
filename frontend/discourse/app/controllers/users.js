@@ -3,8 +3,6 @@ import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
-import EditUserDirectoryColumnsModal from "discourse/components/modal/edit-user-directory-columns";
-import EditUserDirectoryColumnsModalReorderable from "discourse/components/modal/edit-user-directory-columns-reorderable";
 import discourseDebounce from "discourse/lib/debounce";
 import { longDate } from "discourse/lib/formatter";
 import Group from "discourse/models/group";
@@ -142,11 +140,11 @@ export default class UsersController extends Controller {
   showEditColumnsModal() {
     // TODO (ui-kit-reorderable-list-cleanup) drop the branch and the legacy
     // component once the change ships.
-    const Modal = this.siteSettings.enable_new_reordering_controls
-      ? EditUserDirectoryColumnsModalReorderable
-      : EditUserDirectoryColumnsModal;
+    const modalModule = this.siteSettings.enable_new_reordering_controls
+      ? import("discourse/components/modal/edit-user-directory-columns-reorderable")
+      : import("discourse/components/modal/edit-user-directory-columns");
 
-    this.modal.show(Modal);
+    this.modal.show(modalModule);
   }
 
   @action

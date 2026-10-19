@@ -8,7 +8,6 @@ import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import BackButton from "discourse/components/back-button";
-import PermanentlyDeleteConfirmModal from "discourse/components/modal/permanently-delete-confirm";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import bodyClass from "discourse/helpers/body-class";
@@ -585,17 +584,20 @@ export default class BoardsBoardViewer extends Component {
     // Need a bit of a stronger delete confirmation when getting rid
     // of a lot of cards.
     if (column.cards.length > 5) {
-      return this.modal.show(PermanentlyDeleteConfirmModal, {
-        model: {
-          message: i18n("boards.board.confirm_delete_column_with_cards", {
-            count: column.cards.length,
-          }),
-          confirmPhrase: column.title,
-          didConfirm: () => {
-            saveColumns();
+      return this.modal.show(
+        import("discourse/components/modal/permanently-delete-confirm"),
+        {
+          model: {
+            message: i18n("boards.board.confirm_delete_column_with_cards", {
+              count: column.cards.length,
+            }),
+            confirmPhrase: column.title,
+            didConfirm: () => {
+              saveColumns();
+            },
           },
-        },
-      });
+        }
+      );
     }
 
     this.dialog.confirm({

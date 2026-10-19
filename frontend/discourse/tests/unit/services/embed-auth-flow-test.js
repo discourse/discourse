@@ -72,7 +72,7 @@ module("Unit | Service | embed-auth-flow", function (hooks) {
     await service.requestAccess({ intent: "login" });
 
     assert.strictEqual(
-      this.modalShow.firstCall.args[0],
+      (await this.modalShow.firstCall.args[0]).default,
       EmbedAuthFlowModal,
       "uses our custom modal component (native buttons preserve user activation)"
     );

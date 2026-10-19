@@ -9,9 +9,6 @@ import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
 import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
 import DsaStatementClassification from "discourse/components/dsa-statement-classification";
-import DsaClassificationModal from "discourse/components/modal/dsa-classification";
-import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
-import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
 import ReviewableHelpResources from "discourse/components/reviewable/help-resources";
 import ReviewableInsights from "discourse/components/reviewable/insights";
@@ -66,10 +63,11 @@ const reviewableTypeLabels = {};
 
 // The mappings defined here are default core mappings, and cannot be overridden
 // by plugins.
-const defaultActionModalClassMap = {
-  revise_and_reject_post: ReviseAndRejectPostReviewable,
+const defaultActionModals = {
+  revise_and_reject_post: () =>
+    import("discourse/components/modal/revise-and-reject-post-reviewable"),
 };
-export const actionModalClassMap = { ...defaultActionModalClassMap };
+export const actionModalClassMap = {};
 
 export function addPluginReviewableParam(reviewableType, param) {
   pluginReviewableParams[reviewableType]
@@ -78,9 +76,9 @@ export function addPluginReviewableParam(reviewableType, param) {
 }
 
 export function registerReviewableActionModal(actionName, modalClass) {
-  if (Object.keys(defaultActionModalClassMap).includes(actionName)) {
+  if (actionName in defaultActionModals) {
     throw new Error(
-      `Cannot override default action modal class for ${actionName} (mapped to ${defaultActionModalClassMap[actionName].name})!`
+      `Cannot override default action modal class for ${actionName}!`
     );
   }
   actionModalClassMap[actionName] = modalClass;
@@ -310,7 +308,7 @@ export default class ReviewableItem extends Component {
 
   @action
   openClassification() {
-    this.modal.show(DsaClassificationModal, {
+    this.modal.show(import("discourse/components/modal/dsa-classification"), {
       model: {
         classificationOptions: this.args.classificationOptions,
         reviewable: this.args.reviewable,
@@ -424,9 +422,10 @@ export default class ReviewableItem extends Component {
 
     const message = performableAction.get("confirm_message");
     const requireRejectReason = performableAction.get("require_reject_reason");
-    const actionModalClass = requireRejectReason
-      ? RejectReasonReviewableModal
-      : actionModalClassMap[performableAction.server_action];
+    const defaultActionModal =
+      defaultActionModals[performableAction.server_action];
+    const actionModalClass =
+      actionModalClassMap[performableAction.server_action];
 
     if (message) {
       if (await this.#claimReviewable()) {
@@ -443,15 +442,20 @@ export default class ReviewableItem extends Component {
           this.dialog.confirm(confirmOptions);
         }
       }
-    } else if (actionModalClass) {
+    } else if (requireRejectReason || defaultActionModal || actionModalClass) {
       if (await this.#claimReviewable()) {
-        this.modal.show(actionModalClass, {
-          model: {
-            reviewable: this.args.reviewable,
-            performConfirmed: this._performConfirmed,
-            action: performableAction,
-          },
-        });
+        this.modal.show(
+          requireRejectReason
+            ? import("discourse/components/modal/reject-reason-reviewable")
+            : (defaultActionModal?.() ?? actionModalClass),
+          {
+            model: {
+              reviewable: this.args.reviewable,
+              performConfirmed: this._performConfirmed,
+              action: performableAction,
+            },
+          }
+        );
       }
     } else {
       return this._performConfirmed(performableAction);

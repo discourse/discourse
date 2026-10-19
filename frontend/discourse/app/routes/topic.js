@@ -2,19 +2,6 @@ import { action, get } from "@ember/object";
 import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import AddPmParticipants from "discourse/components/modal/add-pm-participants";
-import AnonymousFlagModal from "discourse/components/modal/anonymous-flag";
-import ChangeOwnerModal from "discourse/components/modal/change-owner";
-import ChangeTimestampModal from "discourse/components/modal/change-timestamp";
-import EditSlowModeModal from "discourse/components/modal/edit-slow-mode";
-import EditTopicTimerModal from "discourse/components/modal/edit-topic-timer";
-import FeatureTopicModal from "discourse/components/modal/feature-topic";
-import FlagModal from "discourse/components/modal/flag";
-import GrantBadgeModal from "discourse/components/modal/grant-badge";
-import HistoryModal from "discourse/components/modal/history";
-import MoveToTopicModal from "discourse/components/modal/move-to-topic";
-import PublishPageModal from "discourse/components/modal/publish-page";
-import RawEmailModal from "discourse/components/modal/raw-email";
 import PostFlag from "discourse/lib/flag-targets/post-flag";
 import TopicFlag from "discourse/lib/flag-targets/topic-flag";
 import discourseLater from "discourse/lib/later";
@@ -72,7 +59,7 @@ export default class TopicRoute extends DiscourseRoute {
       modalTitle = "user.invited.create";
     }
 
-    this.modal.show(AddPmParticipants, {
+    this.modal.show(import("discourse/components/modal/add-pm-participants"), {
       model: {
         title: modalTitle,
         inviteModel: this.modelFor("topic"),
@@ -82,19 +69,24 @@ export default class TopicRoute extends DiscourseRoute {
 
   @action
   showFlags(model) {
-    this.modal.show(this.currentUser ? FlagModal : AnonymousFlagModal, {
-      model: {
-        flagTarget: new PostFlag(),
-        flagModel: model,
-        setHidden: () => model.set("hidden", true),
-      },
-    });
+    this.modal.show(
+      this.currentUser
+        ? import("discourse/components/modal/flag")
+        : import("discourse/components/modal/anonymous-flag"),
+      {
+        model: {
+          flagTarget: new PostFlag(),
+          flagModel: model,
+          setHidden: () => model.set("hidden", true),
+        },
+      }
+    );
   }
 
   @action
   showFlagTopic() {
     const model = this.modelFor("topic");
-    this.modal.show(FlagModal, {
+    this.modal.show(import("discourse/components/modal/flag"), {
       model: {
         flagTarget: new TopicFlag(),
         flagModel: model,
@@ -106,7 +98,7 @@ export default class TopicRoute extends DiscourseRoute {
   @action
   showPagePublish() {
     const model = this.modelFor("topic");
-    this.modal.show(PublishPageModal, {
+    this.modal.show(import("discourse/components/modal/publish-page"), {
       model,
     });
   }
@@ -114,7 +106,7 @@ export default class TopicRoute extends DiscourseRoute {
   @action
   showTopicTimerModal() {
     const model = this.modelFor("topic");
-    this.modal.show(EditTopicTimerModal, {
+    this.modal.show(import("discourse/components/modal/edit-topic-timer"), {
       model: {
         topic: model,
         setTopicTimer: (v) => model.set("topic_timer", v),
@@ -130,14 +122,14 @@ export default class TopicRoute extends DiscourseRoute {
 
   @action
   showTopicSlowModeUpdate() {
-    this.modal.show(EditSlowModeModal, {
+    this.modal.show(import("discourse/components/modal/edit-slow-mode"), {
       model: { topic: this.modelFor("topic") },
     });
   }
 
   @action
   showChangeTimestamp() {
-    this.modal.show(ChangeTimestampModal, {
+    this.modal.show(import("discourse/components/modal/change-timestamp"), {
       model: { topic: this.modelFor("topic") },
     });
   }
@@ -151,7 +143,7 @@ export default class TopicRoute extends DiscourseRoute {
       pinnedGloballyUntil: null,
     });
 
-    this.modal.show(FeatureTopicModal, {
+    this.modal.show(import("discourse/components/modal/feature-topic"), {
       model: {
         topic: model,
         pinGlobally: () => topicController.send("pinGlobally"),
@@ -164,7 +156,7 @@ export default class TopicRoute extends DiscourseRoute {
 
   @action
   showHistory(model, revision) {
-    this.modal.show(HistoryModal, {
+    this.modal.show(import("discourse/components/modal/history"), {
       model: {
         postId: model.id,
         postVersion: revision || "latest",
@@ -177,7 +169,7 @@ export default class TopicRoute extends DiscourseRoute {
   @action
   showGrantBadgeModal(post = null) {
     const topicController = this.controllerFor("topic");
-    this.modal.show(GrantBadgeModal, {
+    this.modal.show(import("discourse/components/modal/grant-badge"), {
       model: {
         selectedPost: post ?? topicController.selectedPosts[0],
       },
@@ -186,13 +178,13 @@ export default class TopicRoute extends DiscourseRoute {
 
   @action
   showRawEmail(model) {
-    this.modal.show(RawEmailModal, { model });
+    this.modal.show(import("discourse/components/modal/raw-email"), { model });
   }
 
   @action
   moveToTopic() {
     const topicController = this.controllerFor("topic");
-    this.modal.show(MoveToTopicModal, {
+    this.modal.show(import("discourse/components/modal/move-to-topic"), {
       model: {
         topic: this.modelFor("topic"),
         selectedPostsCount: topicController.selectedPostsCount,
@@ -207,7 +199,7 @@ export default class TopicRoute extends DiscourseRoute {
   @action
   changeOwner(post = null) {
     const topicController = this.controllerFor("topic");
-    this.modal.show(ChangeOwnerModal, {
+    this.modal.show(import("discourse/components/modal/change-owner"), {
       model: {
         deselectAll: topicController.deselectAll,
         multiSelect: topicController.multiSelect,

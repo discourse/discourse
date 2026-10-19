@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
+import { waitForPromise } from "@ember/test-waiters";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/ui-kit/d-modal";
@@ -28,6 +29,15 @@ export default class ModalService extends Service {
   /** @type {Element | null} */
   triggerElement = null;
 
+  #pendingRequest = null;
+  #loadTrigger = null;
+
+  willDestroy() {
+    // Don't resolve `show()` promises here: their callers may already be destroyed.
+    this.#pendingRequest = null;
+    super.willDestroy(...arguments);
+  }
+
   @action
   setContainerElement(element) {
     this.containerElement = element;
@@ -36,28 +46,26 @@ export default class ModalService extends Service {
   /**
    * Render a modal
    *
-   * @param {Component} modal - a reference to the component class for the modal
-   * @param {Object} [options] - options
-   * @param {string} [options.model] - An object which will be passed as the `@model` argument on the component
+   * When given an import promise, the current modal stays open until the new one has loaded,
+   * then `show` is called again with the resolved class.
+   *
+   * @param {Component | Promise<{ default: Component }>} modal - Component class or a dynamic import promise
+   * @param {object} [opts] - options
+   * @param {object} [opts.model] - An object passed as the component's `@model` argument
    *
    * @returns {Promise} A promise that resolves when the modal is closed, with any data passed to closeModal
    */
   async show(modal, opts) {
-    const trigger = document.activeElement;
+    if (typeof modal?.then === "function") {
+      return this.#showWhenLoaded(modal, opts);
+    }
+
+    const trigger = this.#loadTrigger ?? document.activeElement;
+    this.#loadTrigger = null;
 
     this.close({ initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW });
 
-    await waitForClosedKeyboard(this.site, this.capabilities);
-
-    let resolveShowPromise;
-    const promise = new Promise((resolve) => {
-      resolveShowPromise = resolve;
-    });
-
-    this.opts = opts ??= {};
-    this.activeModal = { component: modal, opts, resolveShowPromise };
-    this.triggerElement = trigger;
-
+    opts ??= {};
     const unsupportedOpts = Object.keys(opts).filter((key) =>
       LEGACY_OPTS.has(key)
     );
@@ -69,10 +77,27 @@ export default class ModalService extends Service {
       );
     }
 
-    return promise;
+    const request = this.#startRequest();
+
+    waitForClosedKeyboard(this.site, this.capabilities).then(() => {
+      if (this.#pendingRequest === request) {
+        this.#pendingRequest = null;
+        this.opts = opts;
+        this.activeModal = {
+          component: modal,
+          opts,
+          resolveShowPromise: request.resolve,
+        };
+        this.triggerElement = trigger;
+      }
+    });
+
+    return request.promise;
   }
 
   close(data) {
+    this.#pendingRequest?.resolve(data);
+    this.#pendingRequest = null;
     this.activeModal?.resolveShowPromise?.(data);
     this.activeModal = null;
     this.opts = {};
@@ -80,5 +105,41 @@ export default class ModalService extends Service {
       this.triggerElement.focus();
     }
     this.triggerElement = null;
+  }
+
+  #showWhenLoaded(modulePromise, opts) {
+    const trigger = document.activeElement;
+    const request = this.#startRequest();
+
+    waitForPromise(modulePromise).then(
+      ({ default: modal }) => {
+        if (this.#pendingRequest === request) {
+          this.#pendingRequest = null;
+          this.#loadTrigger = trigger;
+          request.resolve(this.show(modal, opts));
+        }
+      },
+      (error) => {
+        if (this.#pendingRequest === request) {
+          this.#pendingRequest = null;
+          request.reject(error);
+        }
+      }
+    );
+
+    return request.promise;
+  }
+
+  #startRequest() {
+    this.#pendingRequest?.resolve({
+      initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW,
+    });
+
+    const request = {};
+    request.promise = new Promise((resolve, reject) =>
+      Object.assign(request, { resolve, reject })
+    );
+    this.#pendingRequest = request;
+    return request;
   }
 }

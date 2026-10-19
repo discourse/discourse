@@ -105,6 +105,22 @@ this.modal.show(MyModal, {
 const result = await this.modal.show(MyModal);
 ```
 
+### Loading a modal on demand
+
+`modal.show()` also accepts a dynamic import, so the modal's code is only downloaded when it is opened. Core modals (`discourse/components/modal/*`) are not part of the initial bundle, so prefer this form when opening them:
+
+```js
+this.modal.show(import("discourse/components/modal/share-topic"), {
+  model: { topic: this.topic },
+});
+```
+
+The current modal stays open until the new one has loaded. Closing it in the meantime cancels the request.
+
+A static `import ShareTopic from "discourse/components/modal/share-topic"` still works in themes and plugins, but it downloads the modal before your code runs, adding to the page's initial load. Synchronous access by name, such as `require()` or a container lookup, is not supported for core modals.
+
+If you override `show()` in the modal service, it is first called with the import promise and then again with the loaded component class.
+
 ## More customizability!
 
 `<DModal>` has a number of named blocks and arguments.

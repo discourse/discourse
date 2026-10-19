@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import FullscreenCodeModal from "discourse/components/modal/fullscreen-code";
 import DButton from "discourse/ui-kit/d-button";
 
 export default class Json extends Component {
@@ -19,7 +18,7 @@ export default class Json extends Component {
 
   @action
   viewJson() {
-    this.modal.show(FullscreenCodeModal, {
+    this.modal.show(import("discourse/components/modal/fullscreen-code"), {
       model: {
         code: this.parsedJson
           ? JSON.stringify(this.parsedJson, null, 2)

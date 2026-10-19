@@ -14,7 +14,6 @@ import {
 } from "@ember-decorators/component";
 import { observes, on as onEvent } from "@ember-decorators/object";
 import CardContentsBase from "discourse/components/card-contents-base";
-import UserStatusModal from "discourse/components/modal/user-status";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserBadge from "discourse/components/user-badge";
 import formatUsername from "discourse/helpers/format-username";
@@ -378,7 +377,7 @@ export default class UserCardContents extends CardContentsBase {
     const user = this.user;
     this._close();
 
-    this.modal.show(UserStatusModal, {
+    this.modal.show(import("discourse/components/modal/user-status"), {
       model: {
         user,
         status: this.currentUser.status,

@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { click, settled, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import DModal, {
@@ -37,7 +38,149 @@ class MyModalClass extends Component {
   }
 }
 
+function resolvedSoon(promise) {
+  return Promise.race([
+    promise,
+    new Promise((resolve) => setTimeout(() => resolve("still pending"), 100)),
+  ]);
+}
+
 acceptance("Modal service: component-based API", function () {
+  test("loads a core modal when requested and resolves its close data", async function (assert) {
+    await visit("/");
+    const modalService = getOwner(this).lookup("service:modal");
+
+    const promise = modalService.show(
+      import("discourse/components/modal/post-enqueued"),
+      {
+        model: { pending_count: 2 },
+      }
+    );
+    await settled();
+
+    assert.dom(".post-enqueued-modal").exists("the requested modal renders");
+    await click(".post-enqueued-modal .modal-close");
+    assert.deepEqual(
+      await promise,
+      { initiatedBy: CLOSE_INITIATED_BY_BUTTON },
+      "the lazy modal returns its close data"
+    );
+  });
+
+  test("closing during a load resolves right away and the modal never opens", async function (assert) {
+    await visit("/");
+    const modalService = getOwner(this).lookup("service:modal");
+    let finishLoading;
+    const loading = new Promise((resolve) => (finishLoading = resolve));
+    const promise = modalService.show(loading);
+
+    modalService.close({ cancelled: true });
+
+    assert.deepEqual(await resolvedSoon(promise), { cancelled: true });
+
+    finishLoading(await import("discourse/components/modal/post-enqueued"));
+    await settled();
+    assert.dom(".d-modal").doesNotExist("the cancelled load never opens");
+  });
+
+  test("overrides receive the import promise, then the loaded class", async function (assert) {
+    await visit("/");
+    const modalService = getOwner(this).lookup("service:modal");
+    const show = sinon.spy(modalService, "show");
+
+    try {
+      modalService.show(import("discourse/components/modal/post-enqueued"), {
+        model: { pending_count: 2 },
+      });
+      await settled();
+      const { default: PostEnqueued } =
+        await import("discourse/components/modal/post-enqueued");
+
+      assert.true(show.firstCall.args[0] instanceof Promise);
+      assert.strictEqual(show.secondCall.args[0], PostEnqueued);
+    } finally {
+      show.restore();
+    }
+  });
+
+  test("the current modal stays open until the requested one loads", async function (assert) {
+    await visit("/");
+    const modalService = getOwner(this).lookup("service:modal");
+    let finishLoading;
+    const loading = new Promise((resolve) => (finishLoading = resolve));
+
+    const current = modalService.show(MyModalClass, {
+      model: { text: "current" },
+    });
+    await settled();
+    modalService.show(loading);
+    await Promise.resolve();
+
+    assert.dom(".service-modal").exists("the current modal is still open");
+
+    finishLoading(await import("discourse/components/modal/post-enqueued"));
+    await settled();
+
+    assert.deepEqual(await current, {
+      initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW,
+    });
+    assert.dom(".service-modal").doesNotExist();
+    assert.dom(".post-enqueued-modal").exists("the loaded modal replaces it");
+  });
+
+  test("a newer modal supersedes an earlier load", async function (assert) {
+    await visit("/");
+    const modalService = getOwner(this).lookup("service:modal");
+    let finishLoading;
+    const loading = new Promise((resolve) => (finishLoading = resolve));
+    const pending = modalService.show(loading);
+
+    modalService.show(MyModalClass, { model: { text: "latest" } });
+
+    assert.deepEqual(await resolvedSoon(pending), {
+      initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW,
+    });
+
+    finishLoading(await import("discourse/components/modal/post-enqueued"));
+    await settled();
+    assert.dom(".service-modal").exists("the latest request opens");
+    assert
+      .dom(".post-enqueued-modal")
+      .doesNotExist("the stale request stays closed");
+  });
+
+  test("a failed load does not prevent later modals", async function (assert) {
+    await visit("/");
+    const modalService = getOwner(this).lookup("service:modal");
+
+    await assert.rejects(
+      modalService.show(Promise.reject(new Error("Modal download failed"))),
+      /Modal download failed/,
+      "the load failure is reported to the caller"
+    );
+
+    modalService.show(MyModalClass, { model: { text: "recovered" } });
+    await settled();
+    assert.dom(".service-modal").exists("a later modal opens normally");
+  });
+
+  test("a lazy modal restores focus to its original trigger", async function (assert) {
+    await visit("/");
+    const modalService = getOwner(this).lookup("service:modal");
+    await click(".header-sidebar-toggle button");
+    const trigger = document.activeElement;
+
+    modalService.show(import("discourse/components/modal/post-enqueued"));
+    await settled();
+    await click(".post-enqueued-modal .modal-close");
+
+    assert.strictEqual(
+      document.activeElement,
+      trigger,
+      "focus returns to the trigger"
+    );
+  });
+
   test("displays correctly", async function (assert) {
     await visit("/");
 
@@ -241,4 +384,39 @@ acceptance("Modal service: component-based API", function () {
   });
 
   // (See also, `tests/integration/component/d-modal-test.js`)
+});
+
+acceptance("Modal service: mobile keyboard", function (needs) {
+  needs.mobileView();
+
+  test("closing while the keyboard is visible cancels the pending modal", async function (assert) {
+    await visit("/");
+    const modalService = getOwner(this).lookup("service:modal");
+
+    document.documentElement.classList.add("keyboard-visible");
+    try {
+      const promise = modalService.show(MyModalClass, {
+        model: { text: "cancelled" },
+      });
+
+      modalService.close({ cancelled: true });
+
+      assert.deepEqual(
+        await promise,
+        { cancelled: true },
+        "closing resolves the request before the keyboard closes"
+      );
+
+      document.documentElement.classList.remove("keyboard-visible");
+      await settled();
+
+      assert
+        .dom(".service-modal")
+        .doesNotExist(
+          "the cancelled modal stays closed after the keyboard closes"
+        );
+    } finally {
+      document.documentElement.classList.remove("keyboard-visible");
+    }
+  });
 });

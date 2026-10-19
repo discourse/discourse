@@ -2,11 +2,8 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import BulkTopicActions, {
-  addBulkDropdownAction,
-} from "discourse/components/modal/bulk-topic-actions";
-import DismissReadModal from "discourse/components/modal/dismiss-read";
 import DMenu from "discourse/float-kit/components/d-menu";
+import { addBulkDropdownAction } from "discourse/lib/bulk-topic-actions";
 import Topic from "discourse/models/topic";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -247,7 +244,7 @@ export default class BulkSelectTopicsDropdown extends Component {
       confirmButtonTranslationKey = opts.confirmButtonTranslationKey;
     }
 
-    this.modal.show(BulkTopicActions, {
+    this.modal.show(import("discourse/components/modal/bulk-topic-actions"), {
       model: {
         action: actionName,
         title,
@@ -269,7 +266,7 @@ export default class BulkSelectTopicsDropdown extends Component {
 
     switch (actionId) {
       case "dismiss-unread":
-        this.modal.show(DismissReadModal, {
+        this.modal.show(import("discourse/components/modal/dismiss-read"), {
           model: {
             title: "topics.bulk.dismiss_read_with_selected",
             count: this.args.bulkSelectHelper.selected.length,

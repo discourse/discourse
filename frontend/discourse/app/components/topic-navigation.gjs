@@ -16,7 +16,6 @@ import TrackedMediaQuery from "discourse/lib/tracked-media-query";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
-import JumpToPost from "./modal/jump-to-post.gjs";
 
 const MIN_WIDTH_TIMELINE = 925;
 const MIN_HEIGHT_TIMELINE = 325;
@@ -205,7 +204,7 @@ export default class TopicNavigation extends Component {
   @bind
   keyboardTrigger(e) {
     if (e.type === "jump") {
-      this.modal.show(JumpToPost, {
+      this.modal.show(import("discourse/components/modal/jump-to-post"), {
         model: {
           topic: this.args.topic,
           jumpToIndex: this.args.jumpToIndex,

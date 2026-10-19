@@ -5,7 +5,6 @@ import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import RequestGroupMembershipForm from "./modal/request-group-membership-form.gjs";
 
 export default class GroupMembershipButton extends Component {
   @service appEvents;
@@ -89,11 +88,14 @@ export default class GroupMembershipButton extends Component {
       return this.args.showLogin();
     }
 
-    this.modal.show(RequestGroupMembershipForm, {
-      model: {
-        group: this.args.model,
-      },
-    });
+    this.modal.show(
+      import("discourse/components/modal/request-group-membership-form"),
+      {
+        model: {
+          group: this.args.model,
+        },
+      }
+    );
   }
 
   <template>

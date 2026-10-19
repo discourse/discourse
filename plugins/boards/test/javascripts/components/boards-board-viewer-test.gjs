@@ -662,7 +662,7 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
     await click(".discourse-boards-column__menu-delete");
 
     assert.strictEqual(
-      modalComponent,
+      (await modalComponent).default,
       PermanentlyDeleteConfirmModal,
       "it opens the permanently-delete confirm modal"
     );

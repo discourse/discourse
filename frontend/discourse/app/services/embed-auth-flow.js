@@ -1,5 +1,4 @@
 import Service, { service } from "@ember/service";
-import EmbedAuthFlowModal from "discourse/components/modal/embed-auth-flow";
 import { ajax } from "discourse/lib/ajax";
 import EmbedMode from "discourse/lib/embed-mode";
 import getURL from "discourse/lib/get-url";
@@ -89,7 +88,7 @@ export default class EmbedAuthFlow extends Service {
   }
 
   _promptForStorageAccess(intent) {
-    this.modal.show(EmbedAuthFlowModal, {
+    this.modal.show(import("discourse/components/modal/embed-auth-flow"), {
       model: {
         kind: "storage-access",
         siteName: this._siteName,
@@ -130,7 +129,7 @@ export default class EmbedAuthFlow extends Service {
   }
 
   _promptForSignin(intent) {
-    this.modal.show(EmbedAuthFlowModal, {
+    this.modal.show(import("discourse/components/modal/embed-auth-flow"), {
       model: {
         kind: "signin",
         siteName: this._siteName,

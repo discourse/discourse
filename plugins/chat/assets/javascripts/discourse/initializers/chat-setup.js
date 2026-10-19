@@ -1,7 +1,6 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
-import GifsModal from "discourse/components/modal/gifs";
 import { bind } from "discourse/lib/decorators";
 import EmbedMode from "discourse/lib/embed-mode";
 import { number } from "discourse/lib/formatter";
@@ -172,7 +171,7 @@ class ChatSetupInit {
             const modal = owner.lookup("service:modal");
             const currentUser = owner.lookup("service:current-user");
 
-            modal.show(GifsModal, {
+            modal.show(import("discourse/components/modal/gifs"), {
               model: {
                 customPickHandler: buildGifPickHandler({
                   api,

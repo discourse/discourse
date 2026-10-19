@@ -19,7 +19,6 @@ import { replacements, translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
 import EmojiAutocompleteResults from "discourse/components/emoji-autocomplete-results";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
-import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -456,7 +455,7 @@ export default class ChatComposer extends Component {
 
     const selected = this.composer.textarea.getSelected("", { lineVal: true });
     const hasSelection = !!selected && selected.start !== selected.end;
-    this.modal.show(UpsertHyperlink, {
+    this.modal.show(import("discourse/components/modal/upsert-hyperlink"), {
       model: {
         hasSelection,
         toolbarEvent: {

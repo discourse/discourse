@@ -1,0 +1,14 @@
+diff --git a/dist/src/app-files.js b/dist/src/app-files.js
+index 7019cd0fe6bee786cc8a2afc4a3113f9c387a3ea..1b0d5d69551c8e02ff754f3e2144423f02272195 100644
+--- a/dist/src/app-files.js
++++ b/dist/src/app-files.js
+@@ -77,6 +77,9 @@ class AppFiles {
+                 // skip tests because they are dealt with separately
+                 continue;
+             }
++            if (staticAppPathsPattern?.test(relativePath)) {
++                continue;
++            }
+             if (relativePath.startsWith('components/')) {
+                 // hbs files are not resolvable when they're used via co-location with
+                 // an associated js file because it's the js that is resolvable.

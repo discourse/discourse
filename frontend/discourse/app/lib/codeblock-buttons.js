@@ -1,6 +1,5 @@
 import { guidFor } from "@ember/object/internals";
 import { cancel } from "@ember/runloop";
-import FullscreenCodeModal from "discourse/components/modal/fullscreen-code";
 import { bind } from "discourse/lib/decorators";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { iconHTML } from "discourse/lib/icon-library";
@@ -187,7 +186,7 @@ export default class CodeblockButtons {
         }
       } else if (action === "fullscreen") {
         const modal = getOwnerWithFallback(this).lookup("service:modal");
-        modal.show(FullscreenCodeModal, {
+        modal.show(import("discourse/components/modal/fullscreen-code"), {
           model: {
             code: text,
             codeClasses: codeEl.className,

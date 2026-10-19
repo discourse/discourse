@@ -9,6 +9,7 @@ import { trustHTML } from "@ember/template";
 import ManageTagsForm from "discourse/components/modal/bulk-topic-actions/manage-tags-form";
 import BulkPinOptions from "discourse/components/modal/feature-topic/bulk-pin-options";
 import { extractError } from "discourse/lib/ajax-error";
+import { bulkDropdownAction } from "discourse/lib/bulk-topic-actions";
 import { topicLevels } from "discourse/lib/notification-levels";
 import renderTag from "discourse/lib/render-tag";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -23,11 +24,7 @@ import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 
-const _customActions = {};
-
-export function addBulkDropdownAction(name, customAction) {
-  _customActions[name] = customAction;
-}
+export { addBulkDropdownAction } from "discourse/lib/bulk-topic-actions";
 
 export default class BulkTopicActions extends Component {
   @service toasts;
@@ -63,8 +60,9 @@ export default class BulkTopicActions extends Component {
         onPerform: this.performAndRefresh,
       });
     } else if (this.model.initialAction === "set-component") {
-      if (this.model.initialActionLabel in _customActions) {
-        _customActions[this.model.initialActionLabel]({
+      const customAction = bulkDropdownAction(this.model.initialActionLabel);
+      if (customAction) {
+        customAction({
           setComponent: this.setComponent.bind(this),
           topics: this.model.bulkSelectHelper.selected,
           performAndRefresh: this.performAndRefresh.bind(this),
@@ -273,7 +271,7 @@ export default class BulkTopicActions extends Component {
         if (this.customAction) {
           this.customAction(this.performAndRefresh.bind(this));
         } else {
-          _customActions[this.model.initialActionLabel](this);
+          bulkDropdownAction(this.model.initialActionLabel)(this);
         }
     }
   }

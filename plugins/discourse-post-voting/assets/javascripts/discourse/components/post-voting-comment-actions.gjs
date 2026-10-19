@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import FlagModal from "discourse/components/modal/flag";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
@@ -58,7 +57,7 @@ export default class PostVotingCommentActions extends Component {
   @action
   showFlag() {
     this.comment.availableFlags = this.comment.available_flags;
-    this.modal.show(FlagModal, {
+    this.modal.show(import("discourse/components/modal/flag"), {
       model: {
         flagTarget: new PostVotingFlag(),
         flagModel: this.comment,

@@ -5,7 +5,6 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import FastEdit from "discourse/components/fast-edit";
-import FastEditModal from "discourse/components/modal/fast-edit";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
@@ -330,7 +329,7 @@ export default class AiPostHelperMenu extends Component {
       this.showFastEdit = true;
       return;
     } else {
-      return this.modal.show(FastEditModal, {
+      return this.modal.show(import("discourse/components/modal/fast-edit"), {
         model: {
           initialValue: this.args.data.quoteState.buffer,
           newValue: this.suggestion,

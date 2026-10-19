@@ -1,8 +1,18 @@
-import MoveToTopic from "discourse/components/modal/move-to-topic";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import MoveSolutionConfirmationModal from "../components/modal/move-solution-confirmation.gjs";
 
 const STORAGE_KEY = "discourse-solved-hide-move-confirmation";
+
+// Core passes an import promise first, then the loaded class.
+async function isMoveToTopic(modal) {
+  if (typeof modal !== "function") {
+    return false;
+  }
+
+  const { default: MoveToTopic } =
+    await import("discourse/components/modal/move-to-topic");
+  return modal === MoveToTopic;
+}
 
 export default {
   name: "solved-move-confirmation",
@@ -23,30 +33,23 @@ export default {
 
           const originalShow = this._solvedOriginalShow;
 
-          if (modal === MoveToTopic && opts?.model?.selectedPosts) {
-            const selectedPosts = opts.model.selectedPosts;
-            const hasSolvedPost = selectedPosts?.some((p) => p.accepted_answer);
+          const selectedPosts = opts?.model?.selectedPosts;
 
-            if (hasSolvedPost) {
-              const hideConfirmation =
-                localStorage.getItem(STORAGE_KEY) === "true";
+          if (
+            selectedPosts?.some((p) => p.accepted_answer) &&
+            localStorage.getItem(STORAGE_KEY) !== "true" &&
+            (await isMoveToTopic(modal))
+          ) {
+            const result = await originalShow(MoveSolutionConfirmationModal, {
+              model: { count: selectedPosts.length },
+            });
 
-              if (!hideConfirmation) {
-                const result = await originalShow(
-                  MoveSolutionConfirmationModal,
-                  {
-                    model: { count: selectedPosts.length },
-                  }
-                );
+            if (!result?.confirmed) {
+              return;
+            }
 
-                if (!result?.confirmed) {
-                  return;
-                }
-
-                if (result.dontShowAgain) {
-                  localStorage.setItem(STORAGE_KEY, "true");
-                }
-              }
+            if (result.dontShowAgain) {
+              localStorage.setItem(STORAGE_KEY, "true");
             }
           }
 

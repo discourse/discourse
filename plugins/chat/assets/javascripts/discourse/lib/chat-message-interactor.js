@@ -4,9 +4,6 @@ import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { isSkinTonableEmoji } from "pretty-text/emoji";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
-import AnonymousFlagModal from "discourse/components/modal/anonymous-flag";
-import BookmarkModal from "discourse/components/modal/bookmark";
-import FlagModal from "discourse/components/modal/flag";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { bind } from "discourse/lib/decorators";
@@ -405,7 +402,7 @@ export default class ChatMessageInteractor {
     // Hopefully, this can be dropped in future chrome versions
     document.activeElement?.blur();
 
-    this.modal.show(BookmarkModal, {
+    this.modal.show(import("discourse/components/modal/bookmark"), {
       model: {
         bookmark: new BookmarkFormData(
           this.message.bookmark ||
@@ -436,13 +433,18 @@ export default class ChatMessageInteractor {
     const model = new ChatMessage(this.message.channel, this.message);
     model.username = this.message.user?.username;
     model.user_id = this.message.user?.id;
-    this.modal.show(this.currentUser ? FlagModal : AnonymousFlagModal, {
-      model: {
-        flagTarget: new ChatMessageFlag(getOwner(this)),
-        flagModel: model,
-        setHidden: () => model.set("hidden", true),
-      },
-    });
+    this.modal.show(
+      this.currentUser
+        ? import("discourse/components/modal/flag")
+        : import("discourse/components/modal/anonymous-flag"),
+      {
+        model: {
+          flagTarget: new ChatMessageFlag(getOwner(this)),
+          flagModel: model,
+          setHidden: () => model.set("hidden", true),
+        },
+      }
+    );
   }
 
   @action

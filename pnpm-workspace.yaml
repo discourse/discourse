@@ -80,6 +80,8 @@ patchedDependencies:
   "ember-source@7.3.0": "patches/ember-source@7.3.0.patch"
   "http-proxy@1.18.1": "patches/http-proxy@1.18.1.patch"
   "pikaday": "patches/pikaday.patch"
+  # Lets `staticAppPaths` keep components out of the boot registry too
+  "@embroider/core@4.6.9": "patches/@embroider__core@4.6.9.patch"
 peerDependencyRules:
   allowedVersions:
     "@mixer/parallel-prettier>prettier": "*"

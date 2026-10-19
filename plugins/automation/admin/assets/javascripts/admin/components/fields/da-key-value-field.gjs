@@ -1,7 +1,5 @@
-import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import ModalJsonSchemaEditor from "discourse/components/modal/json-schema-editor";
+import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import BaseField from "./da-base-field.gjs";
@@ -9,7 +7,7 @@ import DAFieldDescription from "./da-field-description.gjs";
 import DAFieldLabel from "./da-field-label.gjs";
 
 export default class KeyValueField extends BaseField {
-  @tracked showJsonEditorModal = false;
+  @service modal;
 
   jsonSchema = {
     type: "array",
@@ -38,18 +36,6 @@ export default class KeyValueField extends BaseField {
           <DButton class="configure-btn" @action={{this.openModal}}>
             {{this.showJsonModalLabel}}
           </DButton>
-
-          {{#if this.showJsonEditorModal}}
-            <ModalJsonSchemaEditor
-              @closeModal={{this.closeModal}}
-              @model={{hash
-                value=this.value
-                updateValue=this.mutValue
-                settingName=@label
-                jsonSchema=this.jsonSchema
-              }}
-            />
-          {{/if}}
 
           <DAFieldDescription @description={{@description}} />
         </div>
@@ -84,11 +70,13 @@ export default class KeyValueField extends BaseField {
 
   @action
   openModal() {
-    this.showJsonEditorModal = true;
-  }
-
-  @action
-  closeModal() {
-    this.showJsonEditorModal = false;
+    this.modal.show(import("discourse/components/modal/json-schema-editor"), {
+      model: {
+        value: this.value,
+        updateValue: this.mutValue,
+        settingName: this.args.label,
+        jsonSchema: this.jsonSchema,
+      },
+    });
   }
 }

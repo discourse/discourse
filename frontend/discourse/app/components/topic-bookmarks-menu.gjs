@@ -3,7 +3,6 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import BookmarkMenu from "discourse/components/bookmark-menu";
-import BookmarkModal from "discourse/components/modal/bookmark";
 import TopicBookmarkPostSubmenu from "discourse/components/topic-bookmark-post-submenu";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -190,7 +189,7 @@ export default class TopicBookmarksMenu extends Component {
     const bookmark = this.topicBookmark;
     const formData = new BookmarkFormData(bookmark);
     try {
-      await this.modal.show(BookmarkModal, {
+      await this.modal.show(import("discourse/components/modal/bookmark"), {
         model: {
           bookmark: formData,
           afterSave: (savedData) => {
@@ -219,7 +218,7 @@ export default class TopicBookmarksMenu extends Component {
 
     const formData = new BookmarkFormData(bookmark);
     try {
-      await this.modal.show(BookmarkModal, {
+      await this.modal.show(import("discourse/components/modal/bookmark"), {
         model: {
           bookmark: formData,
           afterSave: (savedData) => {

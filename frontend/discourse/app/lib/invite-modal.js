@@ -1,6 +1,4 @@
 import { getOwner } from "@ember/owner";
-import CreateInvite from "discourse/components/modal/create-invite";
-import CreateInviteWithRoles from "discourse/components/modal/create-invite-with-roles";
 
 /**
  * Opens the invite creation modal, selecting the redesigned role-based
@@ -15,9 +13,9 @@ export function showCreateInviteModal(context, opts = {}) {
   const modal = owner.lookup("service:modal");
   const siteSettings = owner.lookup("service:site-settings");
 
-  const component = siteSettings.enable_invite_modal_with_roles
-    ? CreateInviteWithRoles
-    : CreateInvite;
+  const modalModule = siteSettings.enable_invite_modal_with_roles
+    ? import("discourse/components/modal/create-invite-with-roles")
+    : import("discourse/components/modal/create-invite");
 
-  return modal.show(component, opts);
+  return modal.show(modalModule, opts);
 }

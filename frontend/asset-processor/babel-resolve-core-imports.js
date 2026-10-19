@@ -1,6 +1,9 @@
 import { readDiscourseImportMode } from "./discourse-import-attribute.js";
 import rollupVirtualImports from "./rollup-virtual-imports.js";
 
+// Core modals load on demand, so their imports go through the async broker.
+const LAZY_PREFIX = "discourse/components/modal/";
+
 export default function (babel) {
   const { types: t } = babel;
 
@@ -15,6 +18,26 @@ export default function (babel) {
       }
     },
     visitor: {
+      CallExpression(path) {
+        if (
+          path.node.callee.type === "Import" &&
+          t.isStringLiteral(path.node.arguments[0]) &&
+          path.node.arguments[0].value.startsWith(LAZY_PREFIX)
+        ) {
+          path.replaceWith(
+            t.callExpression(
+              t.memberExpression(
+                t.memberExpression(
+                  t.identifier("window"),
+                  t.identifier("moduleBroker")
+                ),
+                t.identifier("load")
+              ),
+              [path.node.arguments[0]]
+            )
+          );
+        }
+      },
       ImportDeclaration(path) {
         const moduleName = path.node.source.value;
         if (
@@ -28,20 +51,23 @@ export default function (babel) {
 
         // Core imports are required unless explicitly marked optional.
         const optional = readDiscourseImportMode(path) === "optional";
+        const lazy = moduleName.startsWith(LAZY_PREFIX);
 
-        const lookup = () =>
-          t.callExpression(
+        const lookup = () => {
+          const expression = t.callExpression(
             t.memberExpression(
               t.memberExpression(
                 t.identifier("window"),
                 t.identifier("moduleBroker")
               ),
-              t.identifier("lookup")
+              t.identifier(lazy ? "load" : "lookup")
             ),
             optional
               ? [t.stringLiteral(moduleName), t.booleanLiteral(true)]
               : [t.stringLiteral(moduleName)]
           );
+          return lazy ? t.awaitExpression(expression) : expression;
+        };
 
         const replacements = [];
         const properties = [];
@@ -67,6 +93,10 @@ export default function (babel) {
 
         if (properties.length) {
           replacements.unshift(declare(t.objectPattern(properties), lookup()));
+        }
+
+        if (lazy && replacements.length === 0) {
+          replacements.push(t.expressionStatement(lookup()));
         }
 
         path.replaceWithMultiple(replacements);

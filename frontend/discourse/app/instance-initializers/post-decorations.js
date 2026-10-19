@@ -1,5 +1,4 @@
 import { schedule } from "@ember/runloop";
-import FullscreenTableModal from "discourse/components/modal/fullscreen-table";
 import Columns from "discourse/lib/columns";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import { iconElement, iconHTML } from "discourse/lib/icon-library";
@@ -146,7 +145,7 @@ export default {
           return;
         }
 
-        modal.show(FullscreenTableModal, {
+        modal.show(import("discourse/components/modal/fullscreen-table"), {
           model: {
             table,
             postId,

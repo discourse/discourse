@@ -9,6 +9,9 @@ import "./discourse-common-loader-shims.js";
 import "@warp-drive/ember/install";
 import embroiderCompatModules from "@embroider/virtual/compat-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
+import loadCoreModal, {
+  CORE_MODAL_PREFIX,
+} from "discourse/lib/load-core-modal";
 import { registerSettings } from "discourse/lib/theme-settings-store";
 import { defineModules } from "./lib/loader-shim.js";
 
@@ -58,6 +61,12 @@ window.moduleBroker = {
       return {};
     }
     return require(moduleName);
+  },
+  async load(moduleName, optional = false) {
+    if (moduleName.startsWith(CORE_MODAL_PREFIX)) {
+      return loadCoreModal(moduleName, optional);
+    }
+    return this.lookup(moduleName, optional);
   },
 };
 

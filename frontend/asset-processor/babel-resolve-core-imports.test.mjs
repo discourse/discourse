@@ -43,6 +43,42 @@ import defaultExport, * as MyModule2 from "discourse/module-2";
   `);
 });
 
+test("waits for core modal imports before evaluating plugin code", async () => {
+  class Modal {}
+  const calls = [];
+  const run = new (Object.getPrototypeOf(async function () {}).constructor)(
+    "window",
+    compile(`
+      import Modal from "discourse/components/modal/flag";
+      export default Modal;
+    `).replace("export default Modal;", "return Modal;")
+  );
+
+  const modal = await run({
+    moduleBroker: {
+      async load(name) {
+        calls.push(name);
+        return { default: Modal };
+      },
+    },
+  });
+
+  expect(calls).toEqual(["discourse/components/modal/flag"]);
+  expect(modal).toBe(Modal);
+});
+
+test("loads optional modal namespace and side-effect imports", () => {
+  expect(
+    compile(`
+      import * as Modal from "discourse/components/modal/flag" with { discourseImport: "optional" };
+      import "discourse/components/modal/move-to-topic";
+    `)
+  ).toMatchInlineSnapshot(`
+    "const Modal = await window.moduleBroker.load("discourse/components/modal/flag", true);
+    await window.moduleBroker.load("discourse/components/modal/move-to-topic");"
+  `);
+});
+
 test("marks optional core imports with a second lookup argument", () => {
   expect(
     compile(`
@@ -89,4 +125,12 @@ import Thing from "discourse/plugins/other/lib/thing";
     import { settings } from "discourse/theme-12/settings";
     import Thing from "discourse/plugins/other/lib/thing";"
   `);
+});
+
+test("loads dynamic core modal imports through the broker", () => {
+  expect(
+    compile('modal.show(import("discourse/components/modal/flag"));')
+  ).toBe(
+    'modal.show(window.moduleBroker.load("discourse/components/modal/flag"));'
+  );
 });

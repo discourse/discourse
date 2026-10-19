@@ -1,14 +1,12 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import ModalJsonSchemaEditor from "discourse/components/modal/json-schema-editor";
+import { service } from "@ember/service";
 import { prettyJSON } from "discourse/lib/formatter";
 import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class AiAgentResponseFormatEditor extends Component {
-  @tracked showJsonEditorModal = false;
+  @service modal;
 
   jsonSchema = {
     type: "array",
@@ -63,17 +61,15 @@ export default class AiAgentResponseFormatEditor extends Component {
 
   @action
   openModal() {
-    this.showJsonEditorModal = true;
-  }
-
-  @action
-  closeModal() {
-    this.showJsonEditorModal = false;
-  }
-
-  @action
-  updateResponseFormat(form, value) {
-    form.set("response_format", JSON.parse(value));
+    this.modal.show(import("discourse/components/modal/json-schema-editor"), {
+      model: {
+        value: this.responseFormatAsJSON,
+        updateValue: (value) =>
+          this.args.form.set("response_format", JSON.parse(value)),
+        settingName: this.editorTitle,
+        jsonSchema: this.jsonSchema,
+      },
+    });
   }
 
   <template>
@@ -97,17 +93,5 @@ export default class AiAgentResponseFormatEditor extends Component {
         />
       </div>
     </@form.Container>
-
-    {{#if this.showJsonEditorModal}}
-      <ModalJsonSchemaEditor
-        @closeModal={{this.closeModal}}
-        @model={{hash
-          value=this.responseFormatAsJSON
-          updateValue=(fn this.updateResponseFormat @form)
-          settingName=this.editorTitle
-          jsonSchema=this.jsonSchema
-        }}
-      />
-    {{/if}}
   </template>
 }

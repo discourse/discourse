@@ -27,13 +27,14 @@ function componentPathFor(id, basePath) {
 
 // Components are reached by import, so nothing can look one up by name. Each module says what
 // it is as it evaluates, which is when a `modifyClass` call that arrived first can be applied.
-export default function discourseRegisterComponents({ basePath }) {
+export default function discourseRegisterComponents({ basePath, include }) {
   return {
     name: "discourse-register-components",
 
     transform: {
       // After the gjs and babel transforms, so this parses plain JS.
       order: "post",
+      ...(include && { filter: { id: include } }),
 
       handler(code, id) {
         const path = componentPathFor(id, basePath);

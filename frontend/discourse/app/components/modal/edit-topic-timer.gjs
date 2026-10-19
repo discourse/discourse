@@ -5,20 +5,32 @@ import { trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
 import EditTopicTimerForm from "discourse/components/edit-topic-timer-form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import {
+  BUMP_TYPE,
+  CLOSE_AFTER_LAST_POST_STATUS_TYPE,
+  CLOSE_STATUS_TYPE,
+  DELETE_AFTER_LAST_POST_STATUS_TYPE,
+  DELETE_REPLIES_TYPE,
+  DELETE_STATUS_TYPE,
+  OPEN_STATUS_TYPE,
+  PUBLISH_TO_CATEGORY_STATUS_TYPE,
+} from "discourse/lib/topic-timer-types";
 import TopicTimer from "discourse/models/topic-timer";
 import { FORMAT } from "discourse/select-kit/components/future-date-input-selector";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
-export const CLOSE_STATUS_TYPE = "close";
-export const CLOSE_AFTER_LAST_POST_STATUS_TYPE = "close_after_last_post";
-export const OPEN_STATUS_TYPE = "open";
-export const PUBLISH_TO_CATEGORY_STATUS_TYPE = "publish_to_category";
-export const DELETE_STATUS_TYPE = "delete";
-export const DELETE_AFTER_LAST_POST_STATUS_TYPE = "delete_after_last_post";
-export const BUMP_TYPE = "bump";
-export const DELETE_REPLIES_TYPE = "delete_replies";
+export {
+  BUMP_TYPE,
+  CLOSE_AFTER_LAST_POST_STATUS_TYPE,
+  CLOSE_STATUS_TYPE,
+  DELETE_AFTER_LAST_POST_STATUS_TYPE,
+  DELETE_REPLIES_TYPE,
+  DELETE_STATUS_TYPE,
+  OPEN_STATUS_TYPE,
+  PUBLISH_TO_CATEGORY_STATUS_TYPE,
+} from "discourse/lib/topic-timer-types";
 
 export default class EditTopicTimer extends Component {
   @tracked topicTimer;

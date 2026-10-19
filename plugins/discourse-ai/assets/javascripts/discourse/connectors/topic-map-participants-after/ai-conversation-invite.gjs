@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Participant from "discourse/components/header/topic/participant";
-import AddPmParticipants from "discourse/components/modal/add-pm-participants";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 
@@ -24,7 +23,7 @@ export default class AiConversationInvite extends Component {
 
   @action
   showInvite() {
-    this.modal.show(AddPmParticipants, {
+    this.modal.show(import("discourse/components/modal/add-pm-participants"), {
       model: {
         title: "discourse_ai.ai_bot.invite_ai_conversation.title",
         inviteModel: this.args.outletArgs.topic,
