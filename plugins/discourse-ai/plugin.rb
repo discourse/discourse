@@ -275,7 +275,7 @@ after_initialize do
 
   plugin_icons = %w[
     chart-column
-    chart-simple
+    scale-balanced
     spell-check
     language
     images
