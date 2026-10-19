@@ -108,6 +108,7 @@ en:
       run: "Run"
       undo: "Discard changes"
       delete: "Delete"
+      delete_confirm: "Are you sure you want to delete the query \"%{name}\"?"
       recover: "Undelete query"
       dashboard:
         add: "Add to dashboard"

@@ -40,11 +40,15 @@ acceptance("Run Query", function (needs) {
 
   let updateParams;
   let query2Tags;
+  let query2Name;
+  let query2Deletes;
 
   needs.hooks.beforeEach(() => {
     sinon.stub(window, "open");
     updateParams = null;
     query2Tags = ["custom", "existing"];
+    query2Name = "What about 0?";
+    query2Deletes = 0;
   });
 
   needs.hooks.afterEach(() => {
@@ -197,7 +201,7 @@ acceptance("Run Query", function (needs) {
         query: {
           id: 2,
           sql: 'SELECT 0 zero, null "null", false "false"',
-          name: "What about 0?",
+          name: query2Name,
           description: "",
           param_info: [],
           created_at: "2023-05-04T22:16:06.007Z",
@@ -308,6 +312,11 @@ acceptance("Run Query", function (needs) {
         });
       }
     );
+
+    server.delete("/admin/plugins/discourse-data-explorer/queries/2", () => {
+      query2Deletes += 1;
+      return helper.response({ success: true, errors: [] });
+    });
 
     server.get("/session/csrf.json", function () {
       return helper.response({
@@ -498,6 +507,53 @@ acceptance("Run Query", function (needs) {
       "/admin/plugins/discourse-data-explorer/queries/2",
       "running a query without inputs does not add a null params query string"
     );
+  });
+
+  test("deleting a query asks for confirmation first", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    await click(".query-action-bar__right .btn-danger");
+
+    assert
+      .dom(".dialog-body")
+      .hasText(
+        i18n("explorer.delete_confirm", { name: query2Name }),
+        "the confirmation names the query"
+      );
+    assert.strictEqual(query2Deletes, 0, "opening the dialog does not delete");
+
+    await click(".dialog-footer .btn-default");
+
+    assert.dom(".dialog-body").doesNotExist("cancelling closes the dialog");
+    assert.strictEqual(query2Deletes, 0, "cancelling does not delete");
+
+    await click(".query-action-bar__right .btn-danger");
+    await click(".dialog-footer .btn-danger");
+
+    assert.strictEqual(query2Deletes, 1, "confirming deletes the query");
+    assert
+      .dom(".query-action-bar__right .btn-danger")
+      .doesNotExist("the delete button is gone after deleting");
+    assert
+      .dom(".query-action-bar__right")
+      .includesText(i18n("explorer.recover"), "the undelete button is offered");
+  });
+
+  test("the delete confirmation escapes the query name", async function (assert) {
+    query2Name = "<b>Not</b> markup";
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    await click(".query-action-bar__right .btn-danger");
+
+    assert
+      .dom(".dialog-body b")
+      .doesNotExist("markup in the name is not rendered as HTML");
+    assert
+      .dom(".dialog-body")
+      .hasText(
+        i18n("explorer.delete_confirm", { name: query2Name }),
+        "the name is shown as literal text"
+      );
   });
 
   test("adds a new tag while editing a query", async function (assert) {

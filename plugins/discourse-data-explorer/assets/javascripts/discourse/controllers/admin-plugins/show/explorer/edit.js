@@ -8,6 +8,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import { measuredMin } from "discourse/lib/resize-measurements";
+import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
 import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
@@ -25,6 +26,7 @@ const DASHBOARD_REPORT_SOURCE = "data_explorer_query";
 
 export default class PluginsExplorerController extends Controller {
   @service modal;
+  @service dialog;
   @service appEvents;
   @service siteSettings;
   @service messageBus;
@@ -476,6 +478,16 @@ export default class PluginsExplorerController extends Controller {
     } finally {
       this.loading = false;
     }
+  }
+
+  @action
+  confirmDestroyQuery() {
+    this.dialog.deleteConfirm({
+      message: i18n("explorer.delete_confirm", {
+        name: escapeExpression(this.model.name),
+      }),
+      didConfirm: () => this.destroyQuery(),
+    });
   }
 
   @action
