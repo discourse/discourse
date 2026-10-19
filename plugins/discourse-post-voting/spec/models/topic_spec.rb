@@ -54,7 +54,7 @@ describe Topic do
         )
       end
 
-      it "should not allow Post Voting topics to be created when the category is not allowed" do
+      it "does not allow Post Voting topics to be created when the category is not allowed" do
         SiteSetting.post_voting_enabled = true
         SiteSetting.post_voting_category_mode = "opt_in"
         allowed_category = Fabricate(:category)
