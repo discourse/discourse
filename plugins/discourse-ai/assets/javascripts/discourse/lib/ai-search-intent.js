@@ -71,7 +71,7 @@ const FOREIGN_SHARE = 0.6;
  * @param {boolean} [found.searchedAgain] whether an earlier search on this
  *   page seems not to have helped
  * @param {SearchIntent} [found.intent] a decision model's judgement, which
- *   replaces how the query reads when it is confident
+ *   can open a search on the answer when it is confident, but never away from it
  * @returns {{tab: SearchTab, reason: string}}
  */
 export function chooseTab(
@@ -103,11 +103,12 @@ export function chooseTab(
     return { tab: "ask", reason: "searched_again" };
   }
 
-  const confident = intent?.probability >= INTENT_PROBABILITY;
-  if (confident && intent.intent === "answer") {
+  // The model spots answers well but lookups poorly, and the answer usually
+  // serves a reader better than keyword results, so it only ever adds answers.
+  if (intent?.intent === "answer" && intent.probability >= INTENT_PROBABILITY) {
     return { tab: "ask", reason: "intent_answer" };
   }
-  if (!confident && readsAsQuestion(query)) {
+  if (readsAsQuestion(query)) {
     return { tab: "ask", reason: "question" };
   }
 

@@ -260,6 +260,55 @@ describe "AI combined search" do
       end
     end
 
+    context "with a decision model judging intent" do
+      fab!(:decision_model)
+
+      before { SiteSetting.ai_ask_ai_search_intent_decision_model = decision_model.id }
+
+      it "opens on the answer when the model is sure the reader wants one" do
+        DiscourseAi::Decisions.with_canned_answers(intent: { "answer" => 0.9, "lookup" => 0.1 }) do
+          visit "/"
+          wait_for_discoveries_channel
+          ask(query)
+
+          expect_tab("ask")
+          expect(page).to have_css("#{tab("topics")} .ai-search-tabs__count", text: "1")
+        end
+
+        try_until_success do
+          expect(AskAiLog.last).to have_attributes(
+            ask_intent_heuristic: "lookup",
+            ask_intent_model: "answer",
+            ask_intent_probability: 0.9,
+            ask_tab_opened: "ask",
+            ask_tab_opened_reason: "intent_answer",
+          )
+        end
+      end
+
+      it "judges from the query alone when the model is too slow, still logging its verdict" do
+        slow_intent = instance_double(DiscourseAi::Discoveries::Intent)
+        allow(slow_intent).to receive(:call) do
+          sleep 1.5
+          { intent: "answer", probability: 0.95 }
+        end
+        allow(DiscourseAi::Discoveries::Intent).to receive(:new).and_return(slow_intent)
+
+        visit "/"
+        wait_for_discoveries_channel
+        ask(query)
+
+        expect_tab("topics")
+        try_until_success(timeout: 5) do
+          expect(AskAiLog.last).to have_attributes(
+            ask_intent_model: "answer",
+            ask_tab_opened: "topics",
+            ask_tab_opened_reason: "topic_results",
+          )
+        end
+      end
+    end
+
     it "leaves related results to the combined search, so the list holds still" do
       SiteSetting.ai_embeddings_semantic_quick_search_enabled = true
 

@@ -17,13 +17,13 @@ module("Discourse AI | Unit | Lib | ai-search-intent", function (hooks) {
     );
   });
 
-  test("a confident lookup intent opens on the results, however the query reads", function (assert) {
+  test("a lookup intent never moves a question off the answer", function (assert) {
     assert.deepEqual(
       chooseTab("where is the theme settings page?", {
         topics,
         intent: { intent: "lookup", probability: 0.9 },
       }),
-      { tab: "topics", reason: "topic_results" }
+      { tab: "ask", reason: "question" }
     );
   });
 
