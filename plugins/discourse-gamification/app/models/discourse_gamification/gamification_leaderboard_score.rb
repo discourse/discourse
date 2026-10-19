@@ -20,7 +20,9 @@ module DiscourseGamification
     def self.calculate_scores(leaderboard, since_date: Date.today, only_subclass: nil)
       queries =
         if only_subclass
-          only_subclass.query(leaderboard:)
+          if !Scorable.category_scoped?(leaderboard:) || only_subclass.supports_category_scoping?
+            only_subclass.query(leaderboard:)
+          end
         else
           scorables_queries(leaderboard:)
         end
@@ -38,18 +40,15 @@ module DiscourseGamification
         GROUP BY 1, 2
       SQL
 
-      source_queries =
-        if queries.present?
-          "#{queries} UNION ALL #{score_event_query}"
-        else
-          score_event_query
-        end
+      source_queries = [queries.presence].compact
+      source_queries << score_event_query unless Scorable.category_scoped?(leaderboard:)
+      return if source_queries.empty?
 
       DB.exec(<<~SQL, since: since_date, leaderboard_id: leaderboard.id)
         INSERT INTO gamification_leaderboard_scores (leaderboard_id, user_id, date, score)
         SELECT :leaderboard_id, user_id, date, SUM(points) AS score
         FROM (
-          #{source_queries}
+          #{source_queries.join(" UNION ALL ")}
         ) AS source
         JOIN users AS u ON u.id = source.user_id
         WHERE user_id IS NOT NULL

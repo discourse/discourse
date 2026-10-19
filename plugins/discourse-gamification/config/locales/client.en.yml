@@ -49,7 +49,7 @@ en:
         scoring_configuration: "Scoring configuration"
         scoring_configuration_description: "Override the global scoring rules for this leaderboard. Leave fields empty to use the global defaults."
         scorable_categories: "Scorable categories"
-        scorable_categories_help: "Categories to include in scoring. Leave empty to use the global setting."
+        scorable_categories_help: "Select categories to count only category-based activity. Visits, reading, invitations, flags, chat, and manual score adjustments are excluded. Leave empty to use the global scoring settings."
         score_overrides: "Score weights"
         score_overrides_help: "Override the point values for each action. Leave empty to use the global default. Set to 0 to disable."
         weight:
