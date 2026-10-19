@@ -299,6 +299,8 @@ zh_CN:
       view_dashboard: "在仪表板上浏览所有主题和问题。"
       disclaimer: "人工智能生成的观察结果描述的是提出的问题，而非答案的质量或实用性。建议的后续问题是可供研究的方向，而非已确认的空白。问题可能出现在多个学科中。"
     ai_artifact:
+      share_version_conflict: "此链接已发布其他版本。请刷新页面并选择“更新置顶版本”进行更改。"
+      uploads_cannot_be_shared: "该资源引用了可能为私有的上传内容。在发布独立链接之前，请先删除这些上传内容的引用。"
       errors:
         max_keys_exceeded:
           other: "只能在工件中使用 %{count} 个密钥。"
@@ -318,6 +320,10 @@ zh_CN:
           llm_not_found: "找不到 ID 为 %{llm_model_id} 的 LLM 模型"
           no_llm_configured: "没有为智能体 '%{agent}' 配置 LLM。请选择一个 LLM 模型，或配置智能体/站点默认 LLM。"
           uploads_not_sent: "代理“%{agent}”未收到所有上传内容"
+      classify:
+        errors:
+          decision_model_not_found: "未找到 ID 为 %{id} 的决策模型"
+          classify_failed: "决策模型“%{decision_model}”无法回答： %{error}"
       uploads:
         not_found: "未找到上传文件 %{upload_id}"
         not_visible: "%{username} 无法查看上传内容 %{upload_id}"
@@ -1321,7 +1327,22 @@ zh_CN:
         choose_model: "首先设置 'ai embeddings selected model'。"
         model_test_failed: "我们无法使用此模型生成测试嵌入向量。请检查配置是否正确。"
     decision_models:
+      custom_headers:
+        invalid_format: "必须是包含标头名称和值对的数组。"
+        too_many: "不能包含超过 %{count} 个条目"
+        unsupported_provider: "仅支持 System One 和 TypeSafe 型号"
+        invalid_name: "必须具有有效的 HTTP 名称，长度最多为 %{name_length} 个字符"
+        invalid_value: "必须具有最多 %{value_length} 个字符的可打印 ASCII 值"
+        reserved_name: "无法覆盖保留的传输或身份验证标头。"
+        duplicate_name: "名称必须唯一（不区分大小写）"
       secret_not_found: "所选凭据不存在"
+      invalid_url: "必须是 http:// 或 https:// 格式的 URL，或者不带端口号的 srv:// 格式 URL。"
+      test_refused: "决策模型拒绝回答测试问题。"
+      test_image_not_read: "决策模型无法识别测试图像。如果模型无法读取图像，请取消勾选“支持图像输入”。"
+      credit_limit_exceeded: "%{model_name} 已用完今天的 AI 积分。积分将于 %{reset_time} 重置。"
+      cannot_modify_seeded: "预配置的决策模型无法编辑或删除。"
+    secrets:
+      delete_failed_in_use: "此凭证目前正被一个或多个LLM、嵌入、决策模型或工具使用，无法删除。"
     llm_models:
       missing_provider_param: "%{param}不能为空"
       invalid_provider_param: "%{param} 格式无效"
