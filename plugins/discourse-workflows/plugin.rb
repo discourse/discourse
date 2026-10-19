@@ -229,6 +229,14 @@ after_initialize do
       enabled_by_setting: "discourse_workflows_ai_authoring_enabled",
       plugin: self,
     )
+
+    DiscourseAi.register_tools(
+      [
+        DiscourseWorkflows::Ai::Tools::SearchChatChannels,
+        DiscourseWorkflows::Ai::Tools::SearchChatIntegrationChannels,
+      ],
+      plugin: self,
+    )
   end
 
   add_to_serializer :site,

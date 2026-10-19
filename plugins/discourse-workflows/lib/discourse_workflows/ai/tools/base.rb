@@ -4,10 +4,6 @@ module DiscourseWorkflows
   module Ai
     module Tools
       class Base < DiscourseAi::Agents::Tools::Tool
-        def self.custom?
-          true
-        end
-
         private
 
         def ensure_can_manage_workflows!
