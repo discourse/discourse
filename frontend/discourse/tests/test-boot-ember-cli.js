@@ -93,6 +93,14 @@ export async function startTests() {
     for (const [key, value] of Object.entries(rawModules)) {
       availableModules[key] = value.default;
     }
+  } else if (!hasThemeJs) {
+    // Plugin test files are wrapped in a default-exported function at build time too
+    availableModules = {};
+    for (const name of Object.keys(requirejs.entries)) {
+      if (name.startsWith("discourse/plugins/") && name.endsWith("-test")) {
+        availableModules[name] = requirejs(name).default;
+      }
+    }
   }
 
   await awaitVisualReadiness();

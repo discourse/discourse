@@ -22,6 +22,7 @@ import discourseRegisterComponents from "./rollup-plugins/discourse-register-com
 import discourseRouteMaps from "./rollup-plugins/discourse-route-maps.js";
 import discourseTerser from "./rollup-plugins/discourse-terser.js";
 import discourseVirtualLoader from "./rollup-plugins/discourse-virtual-loader.js";
+import discourseWrapTestModules from "./rollup-plugins/discourse-wrap-test-modules.js";
 import { labelFor, routeNamesFor } from "./rollup-virtual-imports.js";
 import { urlTableFor } from "./route-map-parser.js";
 import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms.js";
@@ -131,6 +132,10 @@ async function performRollup(modules, opts) {
       discourseHbs(),
       discourseGjs(),
       discourseRegisterComponents({ basePath }),
+      discourseWrapTestModules({
+        basePath,
+        testModules: opts.entrypoints.test?.modules,
+      }),
       discourseTerser({ opts }),
     ],
   });
