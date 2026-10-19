@@ -16,7 +16,7 @@ Successful runs move to REVIEW and post a summary, commit, checks, and both prev
 https://<card-preview>/session/admin-account/become
 https://<card-preview>/session/user-account/become
 
-Edit the topic or add replies, then move REVIEW back to TODO to request another attempt from current capybara.
+Reply to a REVIEW card topic to automatically queue another attempt from current capybara. Bot replies and replies to cards in other columns leave the card unchanged. Editing an existing post does not queue work; move the card to TODO after an edit if needed.
 Move REVIEW to DONE to accept the change. The bot removes that preview container and its ngrok tunnel.
 It applies only the accepted task's changes to capybara as one commit, fetches official discourse/discourse main,
 and rebases local commits onto that upstream SHA. Codex resolves conflicts inside an isolated Docker checkout.

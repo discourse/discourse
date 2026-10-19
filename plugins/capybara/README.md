@@ -1,6 +1,6 @@
 # Capybara
 
-Capybara makes new cards on the development board into Discourse topics. Open a card topic to add replies or upload images. The coding bot reads the latest human discussion and the images attached to those posts when it claims a TODO card. BACKLOG cards stay idle.
+Capybara makes new cards on the development board into Discourse topics. Open a card topic to add replies or upload images. The coding bot reads the latest human discussion and the images attached to those posts when it claims a TODO card. A human reply to a REVIEW card topic automatically returns it to TODO for another attempt. Bot replies do not queue work, and replies leave other columns unchanged. BACKLOG cards stay idle.
 
 This plugin is based on [the official Discourse plugin skeleton](https://github.com/discourse/discourse-plugin-skeleton) at commit `9c79225314c80e3a5328730c51ff00fa5c7984c8`. The engine, plugin metadata, lint configuration, dependency manifests, and CI template come from that template. `DiscourseCapybara` avoids a namespace collision with the Capybara test library.
 

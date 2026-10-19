@@ -25,6 +25,8 @@ end
 after_initialize do
   require_relative "lib/discourse_capybara/topic_cards"
   Boards::CreateCard.prepend(DiscourseCapybara::TopicCards)
+  require_relative "lib/discourse_capybara/requeue_review_card"
+  on(:post_created) { |post, options| DiscourseCapybara::RequeueReviewCard.call(post, options) }
   require_relative "lib/discourse_capybara/deleted_topic_cards"
   Boards::DestroyCard.prepend(DiscourseCapybara::DeletedTopicCards)
 end
