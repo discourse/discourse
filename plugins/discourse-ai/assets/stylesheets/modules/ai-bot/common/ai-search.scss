@@ -127,7 +127,6 @@
 // shrink: the search menu is a height-limited flex column.
 .ai-search-answer {
   --ai-search-answer-height: 12rem;
-  --ai-search-related-height: 7.5rem;
   position: relative;
   display: flex;
   flex-shrink: 0;
@@ -189,62 +188,43 @@
     flex: 1;
   }
 
-  &__related {
-    @include scroll-strip;
-    display: flex;
-    gap: var(--space-3);
-    margin: 0;
-    overflow-x: auto;
-    list-style: none;
-    scroll-snap-type: x mandatory;
+  &__related-heading {
+    margin: 0 0 var(--space-1);
+    font-size: var(--font-down-1);
+    font-weight: normal;
+    color: var(--primary-high);
   }
 
-  &__related-item {
-    // two in view; the rest scroll behind the fade and chevron
-    flex: 0 0 calc((100% - var(--space-3)) / 2);
-    display: flex;
-    scroll-snap-align: start;
-
-    &:only-child {
-      flex-basis: 100%;
-    }
-    flex-direction: column;
-    box-sizing: border-box;
-    height: var(--ai-search-related-height);
-    overflow: hidden;
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
-    animation: ai-search-fade-in 0.3s ease-out;
+  &__related-list {
+    margin: 0;
+    list-style: none;
   }
 
   &__related-link {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    height: 100%;
-    padding: var(--space-3);
-    color: var(--primary);
+    gap: var(--space-2);
+    align-items: center;
+    padding: var(--space-1) var(--space-2);
+    margin-inline: calc(-1 * var(--space-2));
+    border-radius: var(--d-border-radius);
 
     &:hover {
-      background: var(--primary-very-low);
+      background: var(--d-hover);
+    }
+
+    .badge-category__wrapper {
+      flex-shrink: 0;
+      font-size: var(--font-down-1);
     }
   }
 
   &__related-title {
+    flex: 1;
+    min-width: 0;
     overflow: hidden;
-    font-weight: bold;
     text-overflow: ellipsis;
     white-space: nowrap;
     color: var(--tertiary);
-  }
-
-  &__related-excerpt {
-    display: -webkit-box;
-    overflow: hidden;
-    font-size: var(--font-down-1);
-    color: var(--primary-high);
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
   }
 
   &__follow-up {
@@ -260,14 +240,9 @@
 
   &.--compact {
     --ai-search-answer-height: 7.5rem;
-    --ai-search-related-height: 6.5rem;
 
     .ai-search-answer__title {
       font-size: var(--font-0);
-    }
-
-    .ai-search-answer__related-link {
-      padding: var(--space-2);
     }
   }
 }

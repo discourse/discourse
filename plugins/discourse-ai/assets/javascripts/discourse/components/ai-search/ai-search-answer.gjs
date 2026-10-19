@@ -8,7 +8,6 @@ import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
-import DOverflowControls from "discourse/ui-kit/d-overflow-controls";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -182,24 +181,17 @@ export default class AiSearchAnswer extends Component {
 
       {{#if this.showMore}}
         <div class="ai-search-answer__more">
-          <DOverflowControls
-            @axis="horizontal"
-            @ownedScroller={{true}}
-            @wrapperClass="ai-search-answer__related-controls"
-            as |strip|
-          >
-            <ul class="ai-search-answer__related" {{strip.scroller}}>
+          <div class="ai-search-answer__related">
+            <h3 class="ai-search-answer__related-heading">
+              {{i18n "discourse_ai.ai_search.related_topics"}}
+            </h3>
+            <ul class="ai-search-answer__related-list">
               {{#each this.session.relatedTopics as |topic|}}
                 <li class="ai-search-answer__related-item">
                   <a class="ai-search-answer__related-link" href={{topic.url}}>
                     <span class="ai-search-answer__related-title">
                       {{dReplaceEmoji topic.title}}
                     </span>
-                    {{#if topic.excerpt}}
-                      <span class="ai-search-answer__related-excerpt">
-                        {{dReplaceEmoji topic.excerpt}}
-                      </span>
-                    {{/if}}
                     {{#if topic.categoryModel}}
                       {{dCategoryLink topic.categoryModel link=false}}
                     {{/if}}
@@ -207,7 +199,7 @@ export default class AiSearchAnswer extends Component {
                 </li>
               {{/each}}
             </ul>
-          </DOverflowControls>
+          </div>
 
           {{#if this.session.canFollowUp}}
             <form

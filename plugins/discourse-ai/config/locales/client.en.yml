@@ -1842,6 +1842,7 @@ en:
             expanded_description: "with AI summaries"
 
       ai_search:
+        related_topics: "Related topics"
         title: "Search"
         input_label: "Search or ask a question"
         input_placeholder: "Search with keywords or ask a question"

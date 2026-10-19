@@ -123,29 +123,7 @@ describe "AI combined search" do
     expect(page).to have_no_text("Keywords")
   end
 
-  it "gives a lone related topic the full width" do
-    visit "/"
-    wait_for_discoveries_channel
-    ask(query)
-
-    publish(
-      done: true,
-      phase: "complete",
-      answerable: true,
-      ai_discover_reply: "Use the forgot password link.",
-      sources: sources.first(1),
-    )
-    expect(page).to have_css(".ai-search-answer__related-item")
-
-    widths = page.evaluate_script(<<~JS)
-        ["ai-search-answer__related", "ai-search-answer__related-item"].map((name) =>
-          Math.round(document.querySelector(`.${name}`).getBoundingClientRect().width)
-        )
-      JS
-    expect(widths.uniq.size).to eq(1)
-  end
-
-  it "scrolls related topics sideways when they outnumber the room" do
+  it "lists every related topic the answer used" do
     more_topics = Array.new(3) { |i| Fabricate(:topic, title: "Account recovery guide part #{i}") }
     visit "/"
     wait_for_discoveries_channel
@@ -162,18 +140,11 @@ describe "AI combined search" do
             { title: topic.title, url: topic.url, excerpt: "An excerpt about #{topic.title}" }
           end,
     )
-    expect(page).to have_css(".ai-search-answer__related-item", count: 5)
 
-    overflow = page.evaluate_script(<<~JS)
-        (() => {
-          const list = document.querySelector(".ai-search-answer__related");
-          return list.scrollWidth > list.clientWidth;
-        })()
-      JS
-    expect(overflow).to eq(true)
-    expect(page).to have_css(
-      ".ai-search-answer__related-controls .d-overflow-controls__btn.--right",
-    )
+    expect(page).to have_css(".ai-search-answer__related-heading", text: "Related topics")
+    expect(page).to have_css(".ai-search-answer__related-item", count: 5)
+    expect(page).to have_css(".ai-search-answer__related-link", text: more_topics.last.title)
+    expect(page).to have_no_css(".ai-search-answer__related-excerpt")
   end
 
   it "opens on the answer when nothing matches the keywords, and says so on the topics tab" do
