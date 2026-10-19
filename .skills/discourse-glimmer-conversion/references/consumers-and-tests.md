@@ -88,7 +88,7 @@ in someone else's site.
 
 Structure per the `discourse-writing-js-tests` skill:
 `setupRenderingTest(hooks)` from `discourse/tests/helpers/component-test`, `render` and
-`settled` from `@ember/test-helpers`, an inline `<template>` with a real import, `assert.dom`.
+`rerender` from `@ember/test-helpers`, an inline `<template>` with a real import, `assert.dom`.
 
 Outer state the test mutates after rendering goes in a standalone `tracked(v)` box from
 `@glimmer/tracking`, not a local class with a `@tracked` field; this replaces
@@ -102,10 +102,16 @@ test("updates when the arg changes", async function (assert) {
   assert.dom(".foo-bar").hasText("a", "renders the initial value");
 
   value.value = "b";
-  await settled();
+  await rerender();
   assert.dom(".foo-bar").hasText("b", "re-renders when the arg changes");
 });
 ```
+
+After changing tracked state, `await rerender()`: it waits only for that change to reach the
+DOM. `settled()` also waits for test waiters, pending requests and run loop timers, so a test
+that quietly depends on async work passes with it by accident. These conversions set the bar
+for new tests, so keep `settled()` for steps that start async work on purpose, and prefer the
+interaction helpers (`click`, `fillIn`), which settle on their own.
 
 The box skips a write of the same value (`Object.is`). `tracked()` with no argument, or
 with an object whose only keys are `value`/`initializer`/`equals`/`description`, returns
@@ -146,7 +152,7 @@ over a dropped default the callers relied on.
   data-flow §5): the in-place enum test on the theme editor still passed with `@onChange`
   removed. Mutation-test against the direct test.
 - One test per arg that `didReceiveAttrs`/`didUpdateAttrs` used to react to (change the
-  arg, `settled()`, assert the DOM or state followed).
+  arg, `rerender()`, assert the DOM or state followed).
 - A test for a `get()` read must change *only* the untracked field. If the same change also
   flips a tracked value the template reads around the getter (an `{{#if}}` block), the block
   renders fresh and the test passes without the fix. `ComposerActionTitle` reads
