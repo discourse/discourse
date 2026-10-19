@@ -15,9 +15,7 @@ class-less ones in `templateOnly()` (February 2023, read per snapshot).
 Not counted: route templates, legacy connector objects (`setupComponent` hooks), re-exports, and
 the runtime machinery in INFRA.
 
-`--local` makes the "Now" bar REF with the working tree's changed app files laid over it.
-
-Usage: .skills/discourse-glimmer-conversion/scripts/component-history.py [--period half|quarter] [--years 4] [--local] [--out PATH] [--json PATH]
+Usage: .skills/discourse-glimmer-conversion/scripts/component-history.py [--period half|quarter] [--years 4] [--out PATH] [--json PATH]
 Run from the core checkout. `git fetch origin main` first.
 """
 
@@ -104,25 +102,6 @@ def snapshots(years, period):
     if not out or out[-1][1] != head[1]:
         out.append(("Now", head[1], head[0]))
     return out
-
-
-def local_tree():
-    """A tree of REF with every app file changed or added in the working tree swapped in."""
-    changed = run(["git", "diff", "--name-only", "-z", "HEAD"]).decode().split("\0")
-    added = run(["git", "ls-files", "--others", "--exclude-standard", "-z"]).decode().split("\0")
-    env = os.environ | {"GIT_INDEX_FILE": run(["mktemp", "-u"]).decode().strip()}
-    try:
-        subprocess.run(["git", "read-tree", REF], env=env, check=True)
-        for p in filter(APP_RE.match, changed + added):
-            if os.path.exists(p):
-                blob = run(["git", "hash-object", "-w", p]).decode().strip()
-                subprocess.run(["git", "update-index", "--add", "--cacheinfo", f"100644,{blob},{p}"], env=env, check=True)
-            else:
-                subprocess.run(["git", "update-index", "--force-remove", p], env=env, check=True)
-        return subprocess.run(["git", "write-tree"], env=env, check=True, capture_output=True, text=True).stdout.strip()
-    finally:
-        if os.path.exists(env["GIT_INDEX_FILE"]):
-            os.remove(env["GIT_INDEX_FILE"])
 
 
 def candidates(sha):
@@ -294,7 +273,6 @@ def classify(sha):
         return "glimmer" if in_component_dir(modules[key][0]) else None
 
     def resolve(source, from_key):
-        source = re.sub(r"\.(g?[jt]s)$", "", source)
         if source.startswith("."):
             stem = posixpath.normpath(posixpath.join(posixpath.dirname(from_key), source))
             return next((k for k in (stem, f"{stem}/index") if k in modules), None)
@@ -539,22 +517,24 @@ def _bar(x, y, w, h, color, radius):
     )
 
 
-def table(rows, group, title):
+def table(rows, group):
     body = "".join(
         f"<tr><td>{html.escape(r['label'])}</td><td>{r['date']}</td><td>{r['counts'][group]['classic']}</td>"
         f"<td>{r['counts'][group]['glimmer']}</td><td>{r['counts'][group]['skipped']}</td></tr>"
         for r in rows
     )
     return (
-        f"<details><summary>{title}</summary><table><tr><th>Period</th><th>Commit date</th><th>Classic</th>"
+        "<details><summary>Table</summary><table><tr><th>Period</th><th>Commit date</th><th>Classic</th>"
         f"<th>Glimmer</th><th>Not counted</th></tr>{body}</table></details>"
     )
 
 
 def render(rows, period):
-    groups = [(g, t) for g, t in GROUPS if any(r["counts"][g]["classic"] + r["counts"][g]["glimmer"] for r in rows)]
-    charts = "".join(f'<section class="chart"><h2>{t}</h2>{svg_chart(rows, g)}</section>' for g, t in groups)
-    charts += "".join(table(rows, g, t) for g, t in groups)
+    charts = "".join(
+        f'<section class="chart"><h2>{title}</h2>{svg_chart(rows, g)}{table(rows, g)}</section>'
+        for g, title in GROUPS
+        if any(r["counts"][g]["classic"] + r["counts"][g]["glimmer"] for r in rows)
+    )
     return f"""<!doctype html><html><head><meta charset="utf-8"><title>Classic vs Glimmer components</title>
 <style>{CSS}</style></head><body><div class="viz-root">
 <h1>Classic vs Glimmer components</h1>
@@ -567,18 +547,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--period", choices=PERIODS, default="half")
     ap.add_argument("--years", type=int, default=4)
-    ap.add_argument("--local", action="store_true", help="count working-tree changes in the Now bar")
     ap.add_argument("--out", default="tmp/component-history.html")
     ap.add_argument("--json", help="also write the raw counts here")
     args = ap.parse_args()
 
     rows = []
-    points = snapshots(args.years, args.period)
-    if args.local:
-        if points[-1][0] == "Now":
-            points.pop()
-        points.append(("Now", datetime.date.today().isoformat(), local_tree()))
-    for label, date, sha in points:
+    for label, date, sha in snapshots(args.years, args.period):
         counts = classify(sha)
         rows.append({"label": label, "date": date, "sha": sha, "counts": counts})
         summary = "  ".join(f"{g}: {c['classic']}c/{c['glimmer']}g/{c['skipped']}s" for g, c in counts.items())
