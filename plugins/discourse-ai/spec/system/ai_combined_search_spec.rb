@@ -23,7 +23,7 @@ describe "AI combined search" do
     SiteSetting.discourse_ai_enabled = true
     SiteSetting.ai_ask_ai_enabled = true
     SiteSetting.ai_ask_ai_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
-    SiteSetting.ai_ask_ai_combined_search_prototype = true
+    SiteSetting.enable_ai_combined_search = true
 
     # the answer is streamed from the spec instead, one phase at a time
     allow(DiscourseAi::Discoveries).to receive(

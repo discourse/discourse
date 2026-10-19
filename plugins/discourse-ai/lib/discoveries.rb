@@ -141,13 +141,17 @@ module DiscourseAi
         "discourse-ai:discoveries:recent-asks:2:#{user_id}"
       end
 
-      def result_settings
+      def combined_search_for?(user)
+        UpcomingChanges.enabled_for_user?(:enable_ai_combined_search, user)
+      end
+
+      def result_settings(user = nil)
         {
           summary_detail: SiteSetting.ai_ask_ai_summary_detail.to_sym,
-          # the combined search scrolls its related topics, so it can show the most
+          # the combined search lists its related topics compactly, so it can show the most
           related_count:
             (
-              if SiteSetting.ai_ask_ai_combined_search_prototype
+              if combined_search_for?(user)
                 MAX_RELATED_DISCUSSIONS
               else
                 SiteSetting.ai_ask_ai_related_count
@@ -206,7 +210,7 @@ module DiscourseAi
             ask_trigger_reason: trigger_reason,
             ask_intent_heuristic: intent_heuristic,
           )
-        settings = result_settings
+        settings = result_settings(user)
         Jobs.enqueue(
           :stream_discover_reply,
           user_id: user.id,

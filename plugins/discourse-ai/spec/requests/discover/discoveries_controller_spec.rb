@@ -314,7 +314,7 @@ describe DiscourseAi::Discover::DiscoveriesController do
     end
 
     it "says when the reader prefers results in the combined search" do
-      SiteSetting.ai_ask_ai_combined_search_prototype = true
+      SiteSetting.enable_ai_combined_search = true
       4.times do
         AskAiLog.create!(
           user:,

@@ -72,7 +72,7 @@ module DiscourseAi
 
         prefers_results =
           (
-            if SiteSetting.ai_ask_ai_combined_search_prototype &&
+            if DiscourseAi::Discoveries.combined_search_for?(current_user) &&
                  DiscourseAi::Discoveries.prefers_results?(current_user)
               true
             end

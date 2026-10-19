@@ -51,7 +51,7 @@ export default class AiDiscobotDiscoveries extends Component {
   });
 
   get combinedSearch() {
-    return this.siteSettings.ai_ask_ai_combined_search_prototype;
+    return this.siteSettings.enable_ai_combined_search;
   }
 
   get currentScope() {

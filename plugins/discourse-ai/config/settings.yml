@@ -499,10 +499,13 @@ discourse_ai:
     max: 6
     client: true
     area: "ai-features/search"
-  ai_ask_ai_combined_search_prototype:
+  enable_ai_combined_search:
     default: false
+    hidden: true
     client: true
-    area: "ai-features/search"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
   ai_ask_ai_search_intent_decision_model:
     type: enum
     default: ""

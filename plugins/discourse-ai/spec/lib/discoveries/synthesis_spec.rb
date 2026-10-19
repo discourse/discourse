@@ -23,6 +23,25 @@ describe DiscourseAi::Discoveries::Synthesis do
 
   before { enable_current_plugin }
 
+  it "lets the model return as many sources as the request asks for" do
+    agent = nil
+    allow(DiscourseAi::Agents::Bot).to receive(:as) do |_user, **kwargs|
+      agent = kwargs[:agent]
+      raise StopIteration
+    end
+
+    expect {
+      synthesis.call(
+        query: "plugins",
+        candidates: [{ "source_ref" => "source_1", "title" => "Plugins", "url" => "/t/plugins/1" }],
+        related_count: 6,
+      )
+    }.to raise_error(StopIteration)
+
+    source_refs = agent.response_format.find { |field| field["key"] == "source_refs" }
+    expect(source_refs["max_items"]).to eq(6)
+  end
+
   it "uses one tool-free structured call to select sources and stream an answer" do
     SiteSetting.ai_ask_ai_related_count = 4
     feature_name = nil

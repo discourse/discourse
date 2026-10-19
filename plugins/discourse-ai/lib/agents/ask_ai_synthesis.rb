@@ -14,7 +14,7 @@ module DiscourseAi
             "key" => "source_refs",
             "type" => "array",
             "array_type" => "string",
-            "max_items" => DiscourseAi::Discoveries.result_settings[:related_count],
+            "max_items" => SiteSetting.ai_ask_ai_related_count,
           },
           { "key" => "title", "type" => "string" },
           { "key" => "answer", "type" => "string" },

@@ -106,13 +106,25 @@ describe DiscourseAi::Discoveries do
       expect(described_class.result_settings).to eq(summary_detail: :detailed, related_count: 5)
     end
 
-    it "asks for the most related topics when the combined search scrolls them" do
+    it "asks for the most related topics for readers with the combined search" do
       SiteSetting.ai_ask_ai_related_count = 2
-      SiteSetting.ai_ask_ai_combined_search_prototype = true
+      SiteSetting.enable_ai_combined_search = true
 
-      expect(described_class.result_settings[:related_count]).to eq(
+      expect(described_class.result_settings(user)[:related_count]).to eq(
         described_class::MAX_RELATED_DISCUSSIONS,
       )
+    end
+
+    it "keeps the shared count for readers outside the combined search's groups" do
+      SiteSetting.ai_ask_ai_related_count = 2
+      SiteSetting.enable_ai_combined_search = true
+      Fabricate(
+        :site_setting_group,
+        name: "enable_ai_combined_search",
+        group_ids: Fabricate(:group).id.to_s,
+      )
+
+      expect(described_class.result_settings(user)[:related_count]).to eq(2)
     end
   end
 

@@ -170,7 +170,7 @@ en:
     ai_ask_ai_enabled: "Enable Ask AI in search"
     ai_ask_ai_summary_detail: "Choose how much detail to include in Ask AI summaries."
     ai_ask_ai_related_count: "Set the maximum number of related discussions Ask AI selects and shows with each answer."
-    ai_ask_ai_combined_search_prototype: "Experimental: pressing enter in the header search answers with AI and shows keyword results together, and follow-up questions continue on a full page."
+    enable_ai_combined_search: "Pressing enter in the header search answers with AI and shows keyword results together as tabs, opening on the one the search most likely wants. Follow-up questions continue on a full page."
     ai_ask_ai_search_intent_decision_model: "Experimental: decision model that judges whether a search wants an AI answer or keyword results, to choose which tab the combined search opens on. Search queries are sent to this model's provider. Leave blank to judge from how the query is written."
     ai_ask_ai_agent: "Agent that selects sources and writes Ask AI answers."
     ai_ask_ai_query_rewriter_agent: "Agent used to prepare separate keyword and semantic queries for Ask AI. If this agent or its model is unavailable, Ask AI searches with the user's original query."

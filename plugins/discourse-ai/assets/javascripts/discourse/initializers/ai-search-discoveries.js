@@ -41,7 +41,7 @@ export default apiInitializer((api) => {
 
   // enter fetches every kind of result at once and opens on the likeliest,
   // so nothing in the menu has to be picked before searching
-  const combinedSearch = settings.ai_ask_ai_combined_search_prototype;
+  const combinedSearch = settings.enable_ai_combined_search;
   const aiSearchSession = api.container.lookup("service:ai-search-session");
 
   const startCombined = (query, { trigger }) => {

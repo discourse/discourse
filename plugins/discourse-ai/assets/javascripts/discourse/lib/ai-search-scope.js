@@ -14,7 +14,7 @@ import { i18n } from "discourse-i18n";
  */
 export function combinedSearchActive(siteSettings, currentUser) {
   return Boolean(
-    siteSettings.ai_ask_ai_combined_search_prototype &&
+    siteSettings.enable_ai_combined_search &&
     siteSettings.ai_ask_ai_enabled &&
     siteSettings.ai_ask_ai_agent &&
     currentUser?.can_use_ask_ai

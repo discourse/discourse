@@ -103,7 +103,7 @@ module Jobs
       candidate_topic_ids = retrieval_result.candidates.pluck("topic_id").uniq
 
       stage = :synthesis
-      result_settings = request_result_settings(args)
+      result_settings = request_result_settings(args, user)
       synthesis =
         DiscourseAi::Discoveries::Synthesis.new(user:, ai_agent:, llm_model:, cancel_manager:)
       selected_sources = nil
@@ -344,8 +344,8 @@ module Jobs
       )
     end
 
-    def request_result_settings(args)
-      configured_settings = DiscourseAi::Discoveries.result_settings
+    def request_result_settings(args, user)
+      configured_settings = DiscourseAi::Discoveries.result_settings(user)
       summary_detail = args[:summary_detail].to_s.to_sym
       if !DiscourseAi::Discoveries::SUMMARY_DETAILS.include?(summary_detail)
         summary_detail = configured_settings[:summary_detail]
