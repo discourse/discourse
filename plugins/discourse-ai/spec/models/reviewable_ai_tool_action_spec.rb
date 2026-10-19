@@ -1,5 +1,27 @@
 # frozen_string_literal: true
 
+module ExternalReviewablePlugin
+  class ExternalEcho < DiscourseAi::Agents::Tools::Tool
+    def self.signature
+      { name: name, description: "Echoes an option", parameters: [] }
+    end
+
+    def self.name
+      "ExternalEcho"
+    end
+
+    def self.accepted_options
+      [option(:greeting, type: :string)]
+    end
+
+    def invoke
+      return error_response("no greeting") if options[:greeting] != "hello"
+
+      { status: "success" }
+    end
+  end
+end
+
 RSpec.describe ReviewableAiToolAction do
   fab!(:admin)
   fab!(:ai_agent)
@@ -13,11 +35,12 @@ RSpec.describe ReviewableAiToolAction do
     ai_agent.reload
   end
 
-  def create_tool_action(tool_name: "close_topic", params: nil, post_id: nil)
+  def create_tool_action(tool_name: "close_topic", params: nil, post_id: nil, tool_options: {})
     params ||= { topic_id: topic.id, closed: true, reason: "Off-topic" }
     AiToolAction.create!(
       tool_name: tool_name,
       tool_parameters: params,
+      tool_options: tool_options,
       ai_agent: ai_agent,
       bot_user_id: bot_user.id,
       post_id: post_id,
@@ -122,22 +145,27 @@ RSpec.describe ReviewableAiToolAction do
   end
 
   describe "#perform_approve" do
-    it "rebuilds a tool supplied by a plugin for approval" do
-      tool_class =
-        Class.new(DiscourseAi::Agents::Tools::CloseTopic) do
-          def self.name
-            "extension_close_topic"
-          end
-        end
-      plugin = Plugin::Instance.new
-      modifier = ->(tools) { tools + [tool_class] }
-      DiscoursePluginRegistry.register_modifier(plugin, :ai_agent_available_tools, &modifier)
-      reviewable = create_reviewable(create_tool_action(tool_name: "extension_close_topic"))
+    it "rebuilds an externally registered tool with the options queued with the action" do
+      DiscourseAi.register_tools(
+        [ExternalReviewablePlugin::ExternalEcho],
+        plugin: Plugin::Instance.new,
+      )
+      tool_action =
+        create_tool_action(
+          tool_name: "ExternalEcho",
+          params: {
+          },
+          tool_options: {
+            greeting: "hello",
+          },
+        )
+      reviewable = create_reviewable(tool_action)
 
       expect(reviewable.perform(admin, :approve).success?).to eq(true)
-      expect(topic.reload.closed).to eq(true)
     ensure
-      DiscoursePluginRegistry.unregister_modifier(plugin, :ai_agent_available_tools, &modifier)
+      DiscoursePluginRegistry._raw_external_ai_tools.reject! do |entry|
+        entry[:value] == ExternalReviewablePlugin::ExternalEcho
+      end
     end
 
     it "executes the tool and transitions to approved" do
