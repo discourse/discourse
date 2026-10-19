@@ -6,6 +6,7 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
+import UploadRuntime from "discourse/components/upload-runtime";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import lightbox from "discourse/lib/lightbox";
 import { authorizesOneOrMoreExtensions, isImage } from "discourse/lib/uploads";
@@ -311,11 +312,60 @@ export default class SiteSettingUpload extends Component {
             />
           {{/if}}
         {{else}}
-          <div class="file-uploader__controls">
+          <UploadRuntime>
+            <div class="file-uploader__controls">
+              <label
+                class="btn btn-transparent
+                  {{if this.disabled 'disabled'}}
+                  {{if this.isUploading 'hidden'}}"
+                for={{this.inputId}}
+                tabindex="0"
+                title={{this.disabledReason}}
+                {{on "keydown" this.onKeydown}}
+              >
+                {{dIcon "upload"}}
+                <DPickFilesButton
+                  @acceptedFormatsOverride={{this.acceptedFormats}}
+                  @fileInputDisabled={{this.disabled}}
+                  @fileInputId={{this.inputId}}
+                  @registerFileInput={{this.uppyUpload.setup}}
+                />
+                {{i18n "upload_selector.select_file"}}
+              </label>
+
+              <div
+                class="file-uploader__progress-status
+                  {{unless this.isUploading 'hidden'}}"
+              >
+                <div
+                  aria-label={{this.uploadStatusLabel}}
+                  class="progress-bar-container"
+                  role="progressbar"
+                >
+                  <div
+                    class="progress-bar"
+                    style={{this.progressBarStyle}}
+                  ></div>
+                </div>
+
+                <span>{{this.uploadStatusLabel}}</span>
+              </div>
+            </div>
+          </UploadRuntime>
+        {{/if}}
+      </div>
+
+      {{#if this.restrictionsInfo}}
+        <div class="file-uploader__restrictions">
+          {{this.restrictionsInfo}}
+        </div>
+      {{/if}}
+
+      {{#if @value}}
+        <div class="file-uploader__controls">
+          <UploadRuntime>
             <label
-              class="btn btn-transparent
-                {{if this.disabled 'disabled'}}
-                {{if this.isUploading 'hidden'}}"
+              class="btn btn-default btn-small {{if this.disabled 'disabled'}}"
               for={{this.inputId}}
               tabindex="0"
               title={{this.disabledReason}}
@@ -328,51 +378,9 @@ export default class SiteSettingUpload extends Component {
                 @fileInputId={{this.inputId}}
                 @registerFileInput={{this.uppyUpload.setup}}
               />
-              {{i18n "upload_selector.select_file"}}
+              {{i18n "upload_selector.change"}}
             </label>
-
-            <div
-              class="file-uploader__progress-status
-                {{unless this.isUploading 'hidden'}}"
-            >
-              <div
-                aria-label={{this.uploadStatusLabel}}
-                class="progress-bar-container"
-                role="progressbar"
-              >
-                <div class="progress-bar" style={{this.progressBarStyle}}></div>
-              </div>
-
-              <span>{{this.uploadStatusLabel}}</span>
-            </div>
-          </div>
-        {{/if}}
-      </div>
-
-      {{#if this.restrictionsInfo}}
-        <div class="file-uploader__restrictions">
-          {{this.restrictionsInfo}}
-        </div>
-      {{/if}}
-
-      {{#if @value}}
-        <div class="file-uploader__controls">
-          <label
-            class="btn btn-default btn-small {{if this.disabled 'disabled'}}"
-            for={{this.inputId}}
-            tabindex="0"
-            title={{this.disabledReason}}
-            {{on "keydown" this.onKeydown}}
-          >
-            {{dIcon "upload"}}
-            <DPickFilesButton
-              @acceptedFormatsOverride={{this.acceptedFormats}}
-              @fileInputDisabled={{this.disabled}}
-              @fileInputId={{this.inputId}}
-              @registerFileInput={{this.uppyUpload.setup}}
-            />
-            {{i18n "upload_selector.change"}}
-          </label>
+          </UploadRuntime>
           <DButton
             class="btn-danger btn-small"
             @action={{this.deleteUpload}}

@@ -106,6 +106,23 @@ module("Integration | Component | UploadRuntime", function (hooks) {
     );
   });
 
+  test("can wait without a spinner", async function (assert) {
+    const loading = deferred();
+    this.runtime.load.returns(loading.promise);
+    await render(
+      <template>
+        <UploadRuntime @showSpinner={{false}}><input
+            class="upload-input"
+          /></UploadRuntime>
+      </template>
+    );
+    assert.dom(".spinner").doesNotExist("nothing renders while loading");
+
+    loading.resolve();
+    await settled();
+    assert.dom(".upload-input").exists("the content mounts after loading");
+  });
+
   test("does not mount children after destruction during loading", async function (assert) {
     const loading = deferred();
     const visible = tracked(true);

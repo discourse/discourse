@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import UploadRuntime from "discourse/components/upload-runtime";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -33,17 +34,19 @@ export default class WatchedWordUploader extends Component {
   }
 
   <template>
-    <div class="watched-words-uploader" ...attributes>
-      <label class="btn btn-default {{if this.addDisabled 'disabled'}}">
-        {{dIcon "upload"}}
-        {{i18n "admin.watched_words.form.upload"}}
-        <input
-          class="hidden-upload-field"
-          disabled={{this.addDisabled}}
-          type="file"
-          {{didInsert this.uppyUpload.setup}}
-        />
-      </label>
-    </div>
+    <UploadRuntime>
+      <div class="watched-words-uploader" ...attributes>
+        <label class="btn btn-default {{if this.addDisabled 'disabled'}}">
+          {{dIcon "upload"}}
+          {{i18n "admin.watched_words.form.upload"}}
+          <input
+            class="hidden-upload-field"
+            disabled={{this.addDisabled}}
+            type="file"
+            {{didInsert this.uppyUpload.setup}}
+          />
+        </label>
+      </div>
+    </UploadRuntime>
   </template>
 }

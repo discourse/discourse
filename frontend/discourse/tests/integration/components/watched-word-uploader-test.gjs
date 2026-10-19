@@ -1,5 +1,6 @@
 import { getOwner } from "@ember/owner";
-import { render } from "@ember/test-helpers";
+import Service from "@ember/service";
+import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import WatchedWordUploader from "discourse/admin/components/watched-word-uploader";
@@ -59,5 +60,33 @@ module("Integration | Component | WatchedWordUploader", function (hooks) {
     await this.container
       .lookup("service:app-events")
       .trigger("upload-mixin:watched-word-uploader:add-files", words);
+  });
+
+  test("waits for the upload runtime before binding its input", async function (assert) {
+    let finishLoading;
+    const loading = new Promise((resolve) => (finishLoading = resolve));
+    this.owner.register(
+      "service:upload-runtime",
+      class extends Service {
+        loaded = false;
+
+        load() {
+          return loading;
+        }
+      }
+    );
+
+    await render(
+      <template><WatchedWordUploader @actionKey="flag" /></template>
+    );
+    assert
+      .dom(".hidden-upload-field")
+      .doesNotExist("the input waits for the runtime");
+
+    finishLoading();
+    await settled();
+    assert
+      .dom(".hidden-upload-field")
+      .exists("the input mounts once the runtime is ready");
   });
 });

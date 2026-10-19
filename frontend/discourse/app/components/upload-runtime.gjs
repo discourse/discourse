@@ -18,6 +18,10 @@ export default class UploadRuntime extends Component {
     }
   }
 
+  get showSpinner() {
+    return this.args.showSpinner ?? true;
+  }
+
   async #load() {
     try {
       await this.uploadRuntime.load();
@@ -37,7 +41,7 @@ export default class UploadRuntime extends Component {
       {{yield}}
     {{else if this.failed}}
       <DButton @action={{this.uploadRuntime.reload}} @label="refresh" />
-    {{else}}
+    {{else if this.showSpinner}}
       {{dLoadingSpinner}}
     {{/if}}
   </template>

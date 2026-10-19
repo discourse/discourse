@@ -236,7 +236,7 @@ export default class ChatComposer extends Component {
 
   @action
   uploadClicked() {
-    document.querySelector(`#${this.fileUploadElementId}`).click();
+    document.querySelector(`#${this.fileUploadElementId}`)?.click();
   }
 
   @action

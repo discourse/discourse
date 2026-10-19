@@ -414,42 +414,42 @@ export default class DockedComposer extends Component {
             {{yield to="header"}}
           </div>
         {{/if}}
-        <UploadRuntime>
-          <div class="docked-composer__inner">
-            <div class="docked-composer__editor">
-              <DEditor
-                @categoryId={{@categoryId}}
-                @change={{this.onReplyChange}}
-                @composerEvents={{this.composerEvents}}
-                @extraButtons={{this.addToolbarButtons}}
-                @onSetup={{this.setupEditor}}
-                @placeholder={{@placeholder}}
-                @processPreview={{false}}
-                @topicId={{@topicId}}
-                @value={{this.reply}}
-              >
-                {{#if (has-block "submit")}}
-                  {{yield
-                    (hash
-                      submit=this.submit
-                      disabled=this.submitDisabled
-                      isSubmitting=@isSubmitting
-                    )
-                    to="submit"
-                  }}
-                {{else}}
-                  <DButton
-                    class="docked-composer__submit-btn"
-                    @action={{this.submit}}
-                    @disabled={{this.submitDisabled}}
-                    @icon="reply"
-                    @isLoading={{@isSubmitting}}
-                    @title={{@submitTitle}}
-                  />
-                {{/if}}
-              </DEditor>
-            </div>
+        <div class="docked-composer__inner">
+          <div class="docked-composer__editor">
+            <DEditor
+              @categoryId={{@categoryId}}
+              @change={{this.onReplyChange}}
+              @composerEvents={{this.composerEvents}}
+              @extraButtons={{this.addToolbarButtons}}
+              @onSetup={{this.setupEditor}}
+              @placeholder={{@placeholder}}
+              @processPreview={{false}}
+              @topicId={{@topicId}}
+              @value={{this.reply}}
+            >
+              {{#if (has-block "submit")}}
+                {{yield
+                  (hash
+                    submit=this.submit
+                    disabled=this.submitDisabled
+                    isSubmitting=@isSubmitting
+                  )
+                  to="submit"
+                }}
+              {{else}}
+                <DButton
+                  class="docked-composer__submit-btn"
+                  @action={{this.submit}}
+                  @disabled={{this.submitDisabled}}
+                  @icon="reply"
+                  @isLoading={{@isSubmitting}}
+                  @title={{@submitTitle}}
+                />
+              {{/if}}
+            </DEditor>
+          </div>
 
+          <UploadRuntime @showSpinner={{false}}>
             <input
               class="hidden-upload-field"
               id={{this.uploaderId}}
@@ -457,9 +457,8 @@ export default class DockedComposer extends Component {
               type="file"
               {{didInsert this.registerFileInput}}
             />
-          </div>
-
-        </UploadRuntime>
+          </UploadRuntime>
+        </div>
 
         {{#if this.showUploadsContainer}}
           <div class="docked-composer__uploads">

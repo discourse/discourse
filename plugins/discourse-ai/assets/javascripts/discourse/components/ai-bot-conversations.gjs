@@ -445,46 +445,41 @@ export default class AiBotConversations extends Component {
       @updateInput={{this.updateInputValue}}
     >
       <:default>
-        <UploadRuntime>
-          <div
-            class={{dConcatClass
-              "ai-bot-conversations__input-wrapper"
-              (if this.isSubmitDisabled "--disabled")
-            }}
-            {{this.creditLimitTooltipModifier}}
-          >
-            <DButton
-              class="btn btn-transparent ai-bot-upload-btn"
-              @action={{unless this.isSubmitDisabled this.openFileUpload}}
-              @disabled={{this.isSubmitDisabled}}
-              @icon="upload"
-              @title="discourse_ai.ai_bot.conversations.upload_files"
-            />
-            <textarea
-              autofocus={{unless this.isSubmitDisabled "true"}}
-              disabled={{if this.isSubmitDisabled true this.loading}}
-              id="ai-bot-conversations-input"
-              minlength="10"
-              placeholder={{i18n
-                "discourse_ai.ai_bot.conversations.placeholder"
-              }}
-              rows="1"
-              {{didInsert this.setTextArea}}
-              {{on "input" this.updateInputValue}}
-              {{on "keydown" this.handleKeyDown}}
-              {{on "beforeinput" this.handleBeforeInput}}
-            />
-            <DButton
-              class="ai-bot-button btn-transparent ai-conversation-submit"
-              @action={{unless
-                this.isSubmitDisabled
-                this.prepareAndSubmitToBot
-              }}
-              @disabled={{this.isSubmitDisabled}}
-              @icon="paper-plane"
-              @isLoading={{unless this.isSubmitDisabled this.loading}}
-              @title="discourse_ai.ai_bot.conversations.header"
-            />
+        <div
+          class={{dConcatClass
+            "ai-bot-conversations__input-wrapper"
+            (if this.isSubmitDisabled "--disabled")
+          }}
+          {{this.creditLimitTooltipModifier}}
+        >
+          <DButton
+            class="btn btn-transparent ai-bot-upload-btn"
+            @action={{unless this.isSubmitDisabled this.openFileUpload}}
+            @disabled={{this.isSubmitDisabled}}
+            @icon="upload"
+            @title="discourse_ai.ai_bot.conversations.upload_files"
+          />
+          <textarea
+            autofocus={{unless this.isSubmitDisabled "true"}}
+            disabled={{if this.isSubmitDisabled true this.loading}}
+            id="ai-bot-conversations-input"
+            minlength="10"
+            placeholder={{i18n "discourse_ai.ai_bot.conversations.placeholder"}}
+            rows="1"
+            {{didInsert this.setTextArea}}
+            {{on "input" this.updateInputValue}}
+            {{on "keydown" this.handleKeyDown}}
+            {{on "beforeinput" this.handleBeforeInput}}
+          />
+          <DButton
+            class="ai-bot-button btn-transparent ai-conversation-submit"
+            @action={{unless this.isSubmitDisabled this.prepareAndSubmitToBot}}
+            @disabled={{this.isSubmitDisabled}}
+            @icon="paper-plane"
+            @isLoading={{unless this.isSubmitDisabled this.loading}}
+            @title="discourse_ai.ai_bot.conversations.header"
+          />
+          <UploadRuntime @showSpinner={{false}}>
             <input
               class="hidden-upload-field"
               id="ai-bot-file-uploader"
@@ -492,8 +487,8 @@ export default class AiBotConversations extends Component {
               type="file"
               {{didInsert this.registerFileInput}}
             />
-          </div>
-        </UploadRuntime>
+          </UploadRuntime>
+        </div>
 
         <AiAgentLlmSelector
           @agentName={{@controller.agent}}

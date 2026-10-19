@@ -14,7 +14,7 @@ module("Integration | Component | DockedComposer", function (hooks) {
     pretender.get("/emojis/search-aliases.json", () => response([]));
   });
 
-  test("renders its header while the upload runtime loads", async function (assert) {
+  test("renders its editor while the upload runtime loads", async function (assert) {
     await loadUppy();
     let finishLoading;
     const loading = new Promise((resolve) => (finishLoading = resolve));
@@ -44,13 +44,16 @@ module("Integration | Component | DockedComposer", function (hooks) {
       .exists("the header does not wait for uploads");
     assert
       .dom(".d-editor-input")
-      .doesNotExist("the upload-capable editor waits for the runtime");
+      .exists("the editor does not wait for uploads");
+    assert
+      .dom(".docked-composer__inner > .hidden-upload-field")
+      .doesNotExist("the file input waits for the runtime");
 
     finishLoading();
     await settled();
     assert
-      .dom(".d-editor-input")
-      .exists("the editor mounts once the runtime is ready");
+      .dom(".docked-composer__inner > .hidden-upload-field")
+      .exists("the file input mounts once the runtime is ready");
   });
 
   test("submits on bare Enter by default", async function (assert) {

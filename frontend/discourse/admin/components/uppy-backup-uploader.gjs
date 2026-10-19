@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import UploadRuntime from "discourse/components/upload-runtime";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
 
@@ -38,22 +39,24 @@ export default class UppyBackupUploader extends Component {
   }
 
   <template>
-    <span>
-      <label
-        class="btn btn-small btn-primary admin-backups-upload"
-        disabled={{this.uppyUpload.uploading}}
-        title={{i18n "admin.backups.upload.title"}}
-        ...attributes
-      >
-        {{this.uploadButtonText}}
-        <input
-          accept=".gz"
-          class="hidden-upload-field"
+    <UploadRuntime>
+      <span>
+        <label
+          class="btn btn-small btn-primary admin-backups-upload"
           disabled={{this.uppyUpload.uploading}}
-          type="file"
-          {{didInsert this.uppyUpload.setup}}
-        />
-      </label>
-    </span>
+          title={{i18n "admin.backups.upload.title"}}
+          ...attributes
+        >
+          {{this.uploadButtonText}}
+          <input
+            accept=".gz"
+            class="hidden-upload-field"
+            disabled={{this.uppyUpload.uploading}}
+            type="file"
+            {{didInsert this.uppyUpload.setup}}
+          />
+        </label>
+      </span>
+    </UploadRuntime>
   </template>
 }
