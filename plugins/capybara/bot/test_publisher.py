@@ -8,7 +8,9 @@ import unittest
 from unittest.mock import Mock, patch
 
 from publisher import ForkPublisher
-from worker.publish import git, push_ref, validate_pr, validate_target
+from worker.publish import git, push_ref, validate_pr, validate_target, publish, github, sanitize
+import io
+import urllib.error
 
 TARGET = {"repository": "discourse/capybara-bot", "repository_id": 1426162178,
           "branch": "capybara", "base_repository": "discourse/discourse", "base_branch": "main", "pull_request": 123}
@@ -42,10 +44,13 @@ class TargetTests(unittest.TestCase):
 
     def test_git_credentials_never_appear_in_arguments_or_logs(self):
         with patch("worker.publish.subprocess.run") as run:
-            run.return_value = Mock(returncode=1, stdout="", stderr="secret")
+            run.return_value = Mock(returncode=1, stdout="", stderr="remote denied github_pat_secret123 https://user:password@github.com/x Basic abc123")
             with self.assertRaisesRegex(RuntimeError, "Restricted Git operation failed") as error:
                 git(["ls-remote", "https://github.com/discourse/capybara-bot.git"], "/tmp", {"GIT_ASKPASS": "/askpass"})
-            self.assertNotIn("secret", str(error.exception))
+            self.assertNotIn("github_pat_secret123", str(error.exception))
+            self.assertNotIn("password", str(error.exception))
+            self.assertNotIn("abc123", str(error.exception))
+            self.assertIn("remote denied", str(error.exception))
             args = run.call_args.args[0]
             self.assertIn("credential.helper=", args)
             self.assertIn("core.hooksPath=/dev/null", args)
@@ -171,3 +176,163 @@ class JournalTests(unittest.TestCase):
             created.return_value.exec_run.assert_called_with(["rm", "-f", "/run/github-token"])
             created.return_value.remove.assert_called_with(force=True)
             self.assertFalse(any("fixture-token" in str(call) for call in runtime.exec.call_args_list))
+
+
+class ConfirmationTests(unittest.TestCase):
+    def test_accepted_push_survives_stale_pr_and_retry_is_read_only(self):
+        commit = "b" * 40
+        current = "a" * 40
+        stale = copy.deepcopy(PR)
+        fresh = copy.deepcopy(PR)
+        fresh["head"]["sha"] = commit
+        calls = []
+
+        def api(path, token):
+            return {"object": {"sha": current}} if "/git/ref/" in path else stale
+
+        def command(args, cwd, env):
+            nonlocal current
+            calls.append(args[0])
+            if args[0] == "ls-remote":
+                return current + " refs/heads/capybara"
+            if args[0] == "push":
+                current = commit
+            return ""
+
+        with tempfile.TemporaryDirectory() as directory, patch("worker.publish.github", side_effect=api), patch("worker.publish.git", side_effect=command):
+            first = publish(TARGET, commit, "a" * 40, "/token", destination=directory)
+            self.assertEqual("confirming", first["status"])
+            self.assertEqual("metadata_lag", first["diagnostic"]["reason"])
+            self.assertEqual("a" * 40, first["diagnostic"]["observed_sha"])
+            self.assertEqual(commit, json.loads(Path(directory, "accepted.json").read_text())["commit"])
+            self.assertEqual(1, calls.count("push"))
+            stale["head"]["sha"] = commit
+            calls.clear()
+            second = publish(TARGET, commit, "a" * 40, "/token", destination=directory, confirm_only=True)
+            self.assertEqual("confirmed", second["status"])
+            self.assertEqual([], calls)
+            current = "a" * 40
+            rewound = publish(TARGET, commit, "a" * 40, "/token", destination=directory, confirm_only=True)
+            self.assertEqual("branch_changed", rewound["diagnostic"]["reason"])
+            self.assertEqual([], calls)
+
+    def test_closed_pr_after_acceptance_is_not_confirmed_or_republished(self):
+        closed = copy.deepcopy(PR)
+        closed["state"] = "closed"
+        with patch("worker.publish.github", side_effect=[{"object": {"sha": "b" * 40}}, closed]), patch("worker.publish.git") as command, tempfile.TemporaryDirectory() as directory:
+            result = publish(TARGET, "b" * 40, "a" * 40, "/token", destination=directory, confirm_only=True)
+            self.assertEqual("confirming", result["status"])
+            self.assertIn("closed", result["diagnostic"]["mismatches"])
+            command.assert_not_called()
+
+    def test_http_error_keeps_safe_diagnostics(self):
+        headers = {"X-GitHub-Request-Id": "REQ-123", "Retry-After": "30", "X-RateLimit-Reset": "12345"}
+        error = urllib.error.HTTPError("https://api.github.com/x", 503, "Unavailable", headers,
+                                      io.BytesIO(b'{"message":"temporarily unavailable github_pat_abc123"}'))
+        with tempfile.TemporaryDirectory() as directory:
+            token = Path(directory, "token")
+            token.write_text("github_pat_abc123")
+            with patch("worker.publish.urllib.request.urlopen", side_effect=error):
+                with self.assertRaises(RuntimeError) as raised:
+                    github("repos/test", token)
+            detail = raised.exception.details
+            self.assertEqual("503", detail["status"])
+            self.assertEqual("REQ-123", detail["request_id"])
+            self.assertEqual("30", detail["retry_after"])
+            self.assertNotIn("github_pat_abc123", str(raised.exception))
+
+    def test_previous_receipt_is_recovered_before_container_removal(self):
+        with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ, {
+                "DATA_DIR": directory, "PUBLISHER_TARGET": directory + "/target",
+                "GITHUB_FORK_TOKEN": directory + "/token"}):
+            Path(directory, "target").write_text(json.dumps(TARGET))
+            Path(directory, "token").write_text("fixture-token")
+            runtime, client = Mock(), Mock()
+            result = {"commit": "b" * 40, "pull_request_url": "https://github.com/discourse/discourse/pull/123",
+                      "status": "confirming", "diagnostic": {"reason": "metadata_lag"}}
+            runtime.read.side_effect = lambda container, path: json.dumps(result)
+            publisher = ForkPublisher(Mock(board_id=1, worker_image="worker", seed="/source"), client, runtime)
+            publisher.save({"target": TARGET, "head": "a" * 40, "pending": "b" * 40})
+            run = Mock(integrated_commit="b" * 40, card_id=2, run_id="run", container_name="card-run", phase="publishing")
+            client.containers.get.return_value.labels = {"owner": "codex-board-bot", "board_id": "1", "card_id": "2", "run_id": "run", "role": "publisher"}
+            returned = publisher.push(run, Mock())
+            self.assertEqual("confirming", returned["status"])
+            self.assertIn("--confirm-only", runtime.exec.call_args.args[1])
+            self.assertEqual("b" * 40, json.loads(publisher.journal_path.read_text())["accepted"])
+            self.assertIn("metadata_lag", Path(returned["log_path"]).read_text())
+            client.containers.create.return_value.remove.assert_called_once_with(force=True)
+
+    def test_nonzero_helper_retains_specific_error_after_container_removal(self):
+        with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ, {
+                "DATA_DIR": directory, "PUBLISHER_TARGET": directory + "/target",
+                "GITHUB_FORK_TOKEN": directory + "/token"}):
+            Path(directory, "target").write_text(json.dumps(TARGET))
+            Path(directory, "token").write_text("fixture-token")
+            runtime, client = Mock(), Mock()
+            runtime.exec.side_effect = RuntimeError("Worker command exited 1")
+            def read(container, path):
+                if path.endswith("accepted.json"):
+                    raise FileNotFoundError()
+                return json.dumps({"status": "failed", "diagnostic": {"status": "503", "request_id": "REQ-456"}})
+            runtime.read.side_effect = read
+            client.containers.get.side_effect = __import__("docker").errors.NotFound("missing")
+            publisher = ForkPublisher(Mock(board_id=1, worker_image="worker", seed="/source"), client, runtime)
+            publisher.save({"target": TARGET, "head": "a" * 40, "pending": ""})
+            run = Mock(integrated_commit="b" * 40, card_id=2, run_id="run", container_name="card-run", phase="publishing")
+            with self.assertRaisesRegex(RuntimeError, "REQ-456"):
+                publisher.push(run, Mock())
+            log = Path(directory, "publication/run.jsonl").read_text()
+            self.assertIn("503", log)
+            self.assertIn("REQ-456", log)
+            self.assertNotIn("fixture-token", log)
+            client.containers.create.return_value.remove.assert_called_once_with(force=True)
+
+    def test_fatal_helper_output_is_saved_and_redacted(self):
+        with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ, {
+                "DATA_DIR": directory, "PUBLISHER_TARGET": directory + "/target",
+                "GITHUB_FORK_TOKEN": directory + "/token"}):
+            Path(directory, "target").write_text(json.dumps(TARGET))
+            Path(directory, "token").write_text("nonstandard-fixture-secret")
+            runtime, client = Mock(), Mock()
+            runtime.exec.side_effect = RuntimeError("Worker command exited 1")
+            def read(container, path):
+                if path.endswith("process.log"):
+                    return "SyntaxError fixture nonstandard-fixture-secret Basic abc123"
+                raise FileNotFoundError()
+            runtime.read.side_effect = read
+            client.containers.get.side_effect = __import__("docker").errors.NotFound("missing")
+            publisher = ForkPublisher(Mock(board_id=1, worker_image="worker", seed="/source"), client, runtime)
+            publisher.save({"target": TARGET, "head": "a" * 40, "pending": ""})
+            run = Mock(integrated_commit="b" * 40, card_id=2, run_id="run", container_name="card-run", phase="publishing")
+            with self.assertRaisesRegex(RuntimeError, "SyntaxError"):
+                publisher.push(run, Mock())
+            log = Path(directory, "publication/run.jsonl").read_text()
+            self.assertNotIn("nonstandard-fixture-secret", log)
+            self.assertNotIn("abc123", log)
+            self.assertIn("SyntaxError", log)
+            client.containers.create.return_value.remove.assert_called_once_with(force=True)
+
+    def test_cleanup_failure_after_acceptance_retains_confirm_only_retry(self):
+        with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ, {
+                "DATA_DIR": directory, "PUBLISHER_TARGET": directory + "/target",
+                "GITHUB_FORK_TOKEN": directory + "/token"}):
+            Path(directory, "target").write_text(json.dumps(TARGET))
+            Path(directory, "token").write_text("fixture-token")
+            runtime, client = Mock(), Mock()
+            result = {"commit": "b" * 40, "pull_request_url": "https://github.com/discourse/discourse/pull/123", "status": "confirmed"}
+            runtime.read.side_effect = lambda container, path: json.dumps(result)
+            client.containers.get.side_effect = __import__("docker").errors.NotFound("missing")
+            container = client.containers.create.return_value
+            container.remove.side_effect = RuntimeError("Docker cleanup unavailable")
+            publisher = ForkPublisher(Mock(board_id=1, worker_image="worker", seed="/source"), client, runtime)
+            publisher.save({"target": TARGET, "head": "a" * 40, "pending": ""})
+            run = Mock(integrated_commit="b" * 40, card_id=2, run_id="run", container_name="card-run", phase="publishing")
+            first = publisher.push(run, Mock())
+            self.assertEqual("confirming", first["status"])
+            self.assertIn("cleanup unavailable", first["diagnostic"]["message"])
+            self.assertEqual("b" * 40, json.loads(publisher.journal_path.read_text())["accepted"])
+            container.remove.side_effect = None
+            second = publisher.push(run, Mock())
+            self.assertEqual("confirmed", second["status"])
+            self.assertIn("--confirm-only", runtime.exec.call_args.args[1])
+            self.assertEqual("", json.loads(publisher.journal_path.read_text())["accepted"])

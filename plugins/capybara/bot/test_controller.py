@@ -508,6 +508,44 @@ class ControllerTests(unittest.TestCase):
         self.assertEqual("done", self.store.all()[0].phase)
         self.assertIn("pull/123", self.board.commands[-1][2])
 
+    def test_accepted_push_waits_for_confirmation_without_failure_report(self):
+        self.controller.poll()
+        self.complete()
+        self.board.move("DONE")
+        self.controller.poll()
+        for _ in range(2):
+            self.executor.tasks[-1][0].set_result({"commit": "c" * 40})
+            self.controller.poll()
+        before = len(self.board.commands)
+        self.executor.tasks[-1][0].set_result({"status": "confirming", "commit": "c" * 40,
+                                               "pull_request_url": "https://github.com/discourse/discourse/pull/123",
+                                               "diagnostic": {"reason": "metadata_lag"}, "log_path": "/data/publication/run.jsonl"})
+        self.controller.poll()
+        run = self.store.all()[0]
+        self.assertEqual("confirming", run.phase)
+        self.assertEqual("", run.error)
+        self.assertTrue(self.controller.status()["ok"])
+        self.assertEqual("metadata_lag", self.controller.status()["runs"][0]["confirmation_diagnostic"]["reason"])
+        self.assertIn("Pushed", self.board.commands[-1][2])
+        self.assertFalse(any(command[0] == "integration_failed" for command in self.board.commands[before:]))
+        self.executor = Executor()
+        self.controller = self.build()
+        with patch("controller.time.time", return_value=run.retry_after + 1):
+            self.controller.poll()
+        self.assertEqual("confirming", self.executor.tasks[-1][1].phase)
+        self.executor.tasks[-1][0].set_exception(RuntimeError("Docker unavailable"))
+        self.controller.poll()
+        retry = self.store.all()[0]
+        self.assertEqual("confirming", retry.phase)
+        self.assertEqual("", retry.error)
+        self.assertFalse(any(command[0] == "integration_failed" for command in self.board.commands[before:]))
+        with patch("controller.time.time", return_value=retry.retry_after + 1):
+            self.controller.poll()
+        self.executor.tasks[-1][0].set_result({"status": "confirmed", "commit": "c" * 40,
+                                               "pull_request_url": "https://github.com/discourse/discourse/pull/123"})
+        self.controller.poll()
+        self.assertEqual("done", self.store.all()[0].phase)
+
 
 class ResourceTests(unittest.TestCase):
     def test_cleanup_refuses_unowned_container(self):

@@ -24,7 +24,10 @@ The Docker board then installs Bundler and pnpm dependencies, migrates its persi
 and verifies public access and administrator login. A separate trusted publisher then updates only
 discourse/capybara-bot:capybara for https://github.com/discourse/discourse/pull/44782 before reporting success.
 Accepted DONE integration finishes before another TODO is claimed, including when the accepted card is reopened meanwhile.
-Deployment and publication failures retry their saved phase with a delay. A pre-publication integration failure is reported on DONE and blocks new work until retried.
+Deployment and publication failures retry their saved phase with a delay.
+After Git accepts a push, the bot reports that it is waiting for GitHub confirmation.
+Confirmation retries only read the exact fork ref and PR metadata. They never fetch or push again, including after restart.
+A stale PR SHA does not report a failed push. A changed branch, closed PR or API error remains visible in confirmation diagnostics. A pre-publication integration failure is reported on DONE and blocks new work until retried.
 After fixing the reported issue, move that card to TODO. Your local edits are preserved rather than stashed or discarded.
 Historical DONE cards from before integration was enabled are not merged retrospectively.
 
@@ -64,7 +67,13 @@ publisher-target.json pins the fork repository ID, capybara branch, upstream mai
 The publisher checks that the PR is open and still uses that exact head and base before pushing.
 Its explicit refspec updates only refs/heads/capybara. A force-with-lease checks the last recorded remote SHA,
 so rebased commits can replace the branch while unexpected manual changes stop publication.
-The durable /data/fork-publication.json journal records the expected head and pending commit for crash recovery.
+The durable /data/fork-publication.json journal records the expected head, pending commit and accepted push for crash recovery.
+Each attempt appends sanitized diagnostics to /data/publication/<run_id>.jsonl in the controller-state volume.
+The logs survive disposable publisher removal and controller replacement. They include timestamps, attempt number,
+operation, expected and observed SHA, HTTP status, GitHub request ID, Retry-After and rate-limit information when available.
+Fatal helper output and Git stderr are bounded and credentials are redacted before storage.
+The /health response exposes confirmation_diagnostic and publication_log per run.
+Read an attempt log with Docker Compose exec controller cat /data/publication/<run_id>.jsonl.
 Do not reset that journal to bypass a remote mismatch. Inspect the unexpected change first.
 
 The fine-grained token grants Contents read/write and Metadata read only on discourse/capybara-bot.

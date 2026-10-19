@@ -1,6 +1,6 @@
 The board is the request authority. A topic-backed card supplies title, latest body, replies and upload images. TODO creates a fresh isolated checkout of the committed capybara branch. BACKLOG has no trigger.
 
-The controller owns Run records in SQLite. New records carry integration_version=1; legacy records deserialize to zero. running -> review -> integrating -> deploying -> publishing -> done is the accepted path. Failed integration remains visible and does not acknowledge success. New runs require publication; legacy saved runs default to publication_required=false.
+The controller owns Run records in SQLite. New records carry integration_version=1; legacy records deserialize to zero. running -> review -> integrating -> deploying -> publishing -> confirming -> done is the accepted path. Failed integration remains visible and does not acknowledge success. New runs require publication; legacy saved runs default to publication_required=false.
 
 A trusted integration container receives read-only card workspace and writable source checkout. Its coding conflict resolver runs with write access restricted to its isolated integration checkout. It applies base..head changes onto current capybara, commits with a stable run marker, fetches official discourse/discourse main and rebases local commits onto that pinned SHA. Publication checks a clean capybara checkout, uses a compare-and-swap branch update and non-destructive read-tree checkout, and saves backup and per-run refs. Local integration has no remote credential.
 
@@ -8,7 +8,12 @@ DockerBoard(config, client).deploy(commit, event) stops the prior board containe
 
 A native host helper was considered. It would need another durable queue and native dependency/process supervision. The Docker runtime keeps these operations in the existing controller and follows the user's all-Docker requirement. The one-time native database dump and original native database remain as rollback records.
 
-ForkPublisher owns a separate durable publication journal with the immutable repository ID, capybara ref, upstream main and PR number. Before each push, the trusted helper validates fork identity, PR head/base and open state. An explicit refspec and force-with-lease compare the recorded remote SHA, while the pending SHA lets retries recognize an already completed push. Unknown remote changes stop publication. Only successful deployment and publication allow the topic DONE acknowledgement and next TODO claim.
+ForkPublisher owns a separate durable publication journal with the immutable repository ID, capybara ref, upstream main and PR number. Before each push, the trusted helper validates fork identity, PR head/base and open state. An explicit refspec and force-with-lease compare the recorded remote SHA, while the pending SHA lets retries recognize an already completed push.
+The helper saves an accepted receipt immediately after Git accepts the push, before PR metadata confirmation.
+The controller recovers receipts and attempt diagnostics from a previous publisher before removing it and saves acceptance in its durable journal.
+Accepted runs enter confirming. Subsequent attempts read the exact GitHub ref and PR identity without any Git import or push.
+Stale PR metadata, API failures, and a changed remote head remain distinct diagnostics. A changed head is never overwritten after acceptance.
+Per-run JSONL attempts, structured helper results and bounded process output survive container cleanup with credentials redacted. Unknown remote changes stop publication. Only successful deployment and publication allow the topic DONE acknowledgement and next TODO claim.
 
 The fine-grained Contents write token is limited to discourse/capybara-bot and stored outside all coding mounts. Only the controller and its dedicated disposable publisher receive it. The publisher gets a read-only seed and private root-only secret files, without Docker socket or Codex credentials. Cleanup removes the secret and container. The coding sandbox cannot access the credential; host Docker administrators remain trusted. Publisher helpers and images are installed by the operator rather than rebuilt from card changes.
 
