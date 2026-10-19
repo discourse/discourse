@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # name: capybara
-# about: Topic-backed development cards and the local Docker coding bot
+# about: TO BE DEFINED
 # version: 0.2.0
 # authors: Joffrey Jaffeux
 # url: https://github.com/discourse/discourse-plugin-skeleton
