@@ -10,7 +10,11 @@ const ReviewShow = <template>
       {{i18n "review.back_to_queue"}}
     </LinkTo>
   </div>
-  <ReviewableItem @reviewable={{@controller.reviewable}} @showHelp={{true}} />
+  <ReviewableItem
+    @classificationOptions={{@controller.reviewable.extras.dsa_classification}}
+    @reviewable={{@controller.reviewable}}
+    @showHelp={{true}}
+  />
 </template>;
 
 export default ReviewShow;

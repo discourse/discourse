@@ -1,6 +1,6 @@
 import { i18n } from "discourse-i18n";
-import AiBlinkingAnimation from "./ai-blinking-animation";
-import AiIndicatorWave from "./ai-indicator-wave";
+import AiBlinkingAnimation from "./ai-blinking-animation.gjs";
+import AiIndicatorWave from "./ai-indicator-wave.gjs";
 
 const AiSummarySkeleton = <template>
   <div class="ai-summary__container">

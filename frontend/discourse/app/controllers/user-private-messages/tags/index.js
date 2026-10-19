@@ -3,6 +3,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 
 export default class extends Controller {
+  /** @type {string | null} */
   @tracked tagsForUser = null;
   @tracked sortedByCount = true;
   @tracked sortedByName = false;

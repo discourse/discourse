@@ -250,6 +250,12 @@ tr_TR:
         ai_agent:
           agent_id: "Ajan"
           mode: "Mod"
+        classify:
+          text: "Metin"
+          upload_ids: "Görüntüler"
+          name: "Ad"
+          type: "Tür"
+          type_score: "Puan"
       ai_tool_approval:
         loading: "Yükleniyor..."
         agent: "Ajan"
@@ -807,7 +813,6 @@ tr_TR:
           result: "Test sonucu"
       secrets:
         short_title: "Kimlik bilgileri"
-        description: "LLM'ler, gömülü öğeler ve araçlar arasında paylaşılan kimlik doğrulama bilgilerini yönetin."
         name: "Ad"
         secret: "Değer"
         select_secret: "Bir kimlik bilgisi seçin..."
@@ -832,6 +837,15 @@ tr_TR:
         mcp_server_oauth_client_secret: "MCP sunucusu OAuth istemci gizli anahtarı"
         modal:
           title: "Yeni kimlik bilgisi oluştur"
+      decision_models:
+        no_preset: "Hiçbiri"
+        display_name: "Ad"
+        model: "Model"
+        provider: "Sağlayıcı"
+        api_key: "Kimlik bilgisi"
+        edit: "Düzenle"
+        delete: "Sil"
+        test: "Testi çalıştır"
       mcp_servers:
         short_title: "MCP sunucuları"
         new: "Yeni MCP sunucusu"
@@ -1167,9 +1181,24 @@ tr_TR:
         quick_search:
           suffix: "YZ ile tüm konu ve gönderilerde"
       ai_artifact:
+        editor:
+          version: "Sürüm"
+          default: "Varsayılan"
+          option_on: "Açık"
+          option_off: "Kapalı"
+          apply: "Uygula"
         expand_view_label: "Görünümü genişlet"
         collapse_view_label: "Tam Ekrandan Çık (ESC veya Geri tuşu)"
         click_to_run_label: "Artifact'i çalıştır"
+        share: "Paylaş"
+        create_link: "Bağlantı oluştur"
+        copied: "Panoya kopyalandı"
+        copy_link: "Bağlantıyı kopyala"
+        copy_embed: "Yerleştirmeyi kopyala"
+        new_tab: "Yeni sekmede göster"
+        filter_all: "Tümü"
+        filter_standalone: "Bağımsız"
+        filter_conversation: "Konuşma"
       ai_bot:
         title: "YZ botu"
         agent: "Ajan:"

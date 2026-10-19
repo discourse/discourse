@@ -19,7 +19,8 @@ try {
     path.join(RAILS_ROOT, "pnpm-lock.yaml"),
     "utf8"
   );
-  nodeModulesOutdated = installed !== lockfile;
+  // pnpm copies only the last document of the lockfile into node_modules
+  nodeModulesOutdated = installed !== lockfile.split(/^---\n/m).at(-1);
 } catch (e) {
   nodeModulesOutdated = true;
 }

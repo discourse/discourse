@@ -16,6 +16,17 @@ import DiscourseURL from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { capabilities } from "discourse/services/capabilities";
 
+/**
+ * @typedef {{
+ *   anonymous?: boolean,
+ *   global?: boolean,
+ *   handler?: string | ((event: KeyboardEvent) => void),
+ *   postAction?: string,
+ *   click?: string,
+ *   path?: string,
+ * }} ShortcutBinding
+ */
+
 let disabledBindings = [];
 
 export function disableDefaultKeyboardShortcuts(bindings) {
@@ -228,6 +239,7 @@ export default class KeyboardShortcutLib extends Service {
     return this.keyTrapper == null;
   }
 
+  /** @param {ShortcutBinding | null} [binding] */
   bindKey(key, binding = null) {
     if (this.isTornDown()) {
       return;
@@ -690,6 +702,7 @@ export default class KeyboardShortcutLib extends Service {
     return false;
   }
 
+  /** @returns {NodeListOf<Element> | Element[]} */
   categoriesTopicsList() {
     switch (this.siteSettings.desktop_category_page_style) {
       case "categories_with_featured_topics":

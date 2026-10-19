@@ -92,6 +92,49 @@ RSpec.describe "Anonymous public chat channels" do
     expect(sidebar).to have_no_section("community")
   end
 
+  context "when flagging messages" do
+    let(:anonymous_flag_modal) { PageObjects::Modals::AnonymousFlag.new }
+
+    it "doesn't offer visitors a flag action by default" do
+      chat_page.visit_channel(public_channel)
+      channel_page.expand_message_actions(existing_message)
+
+      expect(page).to have_css("[data-value='copyLink']")
+      expect(page).to have_no_css("[data-value='flag']")
+    end
+
+    let(:expected_description) do
+      ActionView::Base.full_sanitizer.sanitize(
+        I18n.t(
+          "js.chat.anonymous_flagging.description",
+          email: "contact@example.com",
+          channel_title: public_channel.title,
+          url: "#{Discourse.base_url}/chat/c/-/#{public_channel.id}/#{existing_message.id}",
+        ),
+      )
+    end
+
+    before { SiteSetting.contact_email = "contact@example.com" }
+
+    it "lets visitors email a report when allow_all_users_to_flag_illegal_content is enabled" do
+      SiteSetting.allow_all_users_to_flag_illegal_content = true
+
+      chat_page.visit_channel(public_channel)
+      channel_page.messages.flag(existing_message)
+
+      expect(anonymous_flag_modal.body).to have_content(expected_description)
+    end
+
+    it "lets visitors on mobile email a report", mobile: true do
+      SiteSetting.allow_all_users_to_flag_illegal_content = true
+
+      chat_page.visit_channel(public_channel)
+      channel_page.messages.flag(existing_message)
+
+      expect(anonymous_flag_modal.body).to have_content(expected_description)
+    end
+  end
+
   it "keeps visitors out of browse" do
     visit("/chat/browse/open")
 

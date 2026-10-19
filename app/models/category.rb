@@ -648,7 +648,11 @@ class Category < ActiveRecord::Base
   end
 
   def trash_category_definition
-    topic&.trash!
+    return if topic.blank?
+
+    topic.first_post&.trash!
+    topic.trash!
+    Topic.reset_highest(topic.id)
   end
 
   def clear_related_site_settings
@@ -830,6 +834,11 @@ class Category < ActiveRecord::Base
 
   def parent_category_validator
     if parent_category_id
+      if parent_category.blank?
+        errors.add(:base, I18n.t("category.errors.not_found"))
+        return
+      end
+
       errors.add(:base, I18n.t("category.errors.uncategorized_parent")) if uncategorized?
 
       errors.add(:base, I18n.t("category.errors.self_parent")) if parent_category_id == id
@@ -1220,18 +1229,16 @@ class Category < ActiveRecord::Base
 
   def permissions_compatibility_validator
     # when saving subcategories
-    if @permissions && parent_category_id.present?
-      return if parent_category.category_groups.empty?
+    if (@permissions || parent_category_id_changed?) && parent_category_id.present?
+      return if parent_category.blank? || parent_category.category_groups.empty?
 
       parent_permissions = parent_category.category_groups.pluck(:group_id, :permission_type)
       child_permissions =
-        (
-          if @permissions.empty?
-            [[Group[:everyone].id, CategoryGroup.permission_types[:full]]]
-          else
-            @permissions
-          end
-        )
+        @permissions ||
+          category_groups.map { |permission| [permission.group_id, permission.permission_type] }
+      if child_permissions.empty?
+        child_permissions = [[Group[:everyone].id, CategoryGroup.permission_types[:full]]]
+      end
       check_permissions_compatibility(parent_permissions, child_permissions)
 
       # when saving parent category

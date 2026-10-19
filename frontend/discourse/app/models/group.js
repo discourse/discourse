@@ -46,10 +46,18 @@ export default class Group extends RestModel {
   @autoTrackedArray requesters = [];
 
   user_count = 0;
+
+  /** @type {number | null} */
   limit = null;
+
+  /** @type {number | null} */
   offset = null;
   request_count = 0;
+
+  /** @type {number | null} */
   requestersLimit = null;
+
+  /** @type {number | null} */
   requestersOffset = null;
 
   @dependentKeyCompat
@@ -342,8 +350,8 @@ export default class Group extends RestModel {
       email_username: this.email_username,
       email_from_alias: this.email_from_alias,
       email_password: this.email_password,
-      flair_icon: null,
-      flair_upload_id: null,
+      flair_icon: /** @type {string | null} */ (null),
+      flair_upload_id: /** @type {number | null} */ (null),
       flair_bg_color: this.flairBackgroundHexColor,
       flair_color: this.flairHexColor,
       bio_raw: this.bio_raw,

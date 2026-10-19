@@ -82,6 +82,31 @@ RSpec.describe "Discourse Workflows" do
     expect(workflows_page).to have_workflow("My workflow")
   end
 
+  it "lets an admin scope a post trigger to specific topics" do
+    topic = Fabricate(:post).topic
+    workflow =
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        nodes: [
+          {
+            "id" => "post-created",
+            "type" => "trigger:post_created",
+            "typeVersion" => "1.0",
+            "name" => "Post created",
+            "parameters" => {
+            },
+          },
+        ],
+      )
+
+    editor_page.visit_node(workflow, "post-created")
+    editor_page.filter_by_topic(topic)
+    expect(editor_page).to have_saved_node_configuration
+    page.refresh
+    expect(editor_page).to have_topic_filter(topic)
+  end
+
   it "lets an admin add fixed event triggers while keeping existing status filters editable" do
     category = Fabricate(:category)
     node_id = "existing-status"
@@ -154,6 +179,23 @@ RSpec.describe "Discourse Workflows" do
 
     expect(workflows_page).to have_failed_workflow(failed_workflow)
     expect(workflows_page).to have_no_failed_workflow(recovered_workflow)
+  end
+
+  it "opens a user card from the creator and last editor avatars" do
+    creator = Fabricate(:user)
+    editor = Fabricate(:user)
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: creator)
+    workflow.update!(updated_by: editor)
+    user_card = PageObjects::Components::UserCard.new
+
+    workflows_page.visit_index
+
+    workflows_page.click_creator(workflow)
+    expect(user_card).to be_showing_user(creator.username)
+
+    page.send_keys(:escape)
+    workflows_page.click_last_editor(workflow)
+    expect(user_card).to be_showing_user(editor.username)
   end
 
   context "with workflow tags" do

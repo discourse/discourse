@@ -11,7 +11,7 @@ import {
   NULL_HELPER,
 } from "discourse/ui-kit/d-decorated-html";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
-import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
+import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder.gjs";
 
 export default class PollResultsPieComponent extends Component {
   htmlLegendPlugin = {

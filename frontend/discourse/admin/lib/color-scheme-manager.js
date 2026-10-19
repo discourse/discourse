@@ -103,7 +103,7 @@ export function showColorMode(mode) {
 /**
  * Apply color scheme by updating stylesheet links
  *
- * @param {Object} scheme - color scheme to apply
+ * @param {{ id?: number | null, save?: (options: { forceSave: boolean }) => unknown } | null | undefined} scheme - color scheme to apply
  * @param {Object} options
  * @param {boolean} options.replace - replace existing tags? (default: false)
  * @param {boolean} options.save - save changes to the server? (default: false)
@@ -203,8 +203,8 @@ export async function applyColorScheme(scheme, options = {}) {
 /**
  * Set color scheme as active for the default theme and apply immediately
  *
- * @param {Object} scheme - color scheme to set as default
- * @param {Object} defaultTheme - the default theme object
+ * @param {{ id: number, is_base: boolean, updateDefaultOnTheme: (field: string, value: boolean) => unknown }} scheme - color scheme to set as default
+ * @param {{ color_scheme_id: number | null, dark_color_scheme_id: number | null } | null | undefined} defaultTheme - the default theme object
  * @param {Object} options
  * @param {string} options.previewMode - preview mode: "live", "none", or "reload" (default: auto-detect)
  * @param {string} options.mode - "light" or "dark" (default: "light")

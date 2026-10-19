@@ -829,10 +829,7 @@ RSpec.describe CategoriesController do
     it "preloads user fields for restricted categories" do
       category.set_permissions(admins: :full)
       category.save!
-      Fabricate(:category, parent_category: category).tap do |subcategory|
-        subcategory.set_permissions(admins: :full)
-        subcategory.save!
-      end
+      Fabricate(:category, parent_category: category, permissions: { admins: :full })
       sign_in(admin)
 
       get "/c/#{category.slug}/find_by_slug.json"

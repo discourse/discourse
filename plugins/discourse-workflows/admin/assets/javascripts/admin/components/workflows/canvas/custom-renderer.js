@@ -3,9 +3,9 @@ import {
   buildWorkflowGraphIndex,
   getConnectionKind,
   normalizeSourceOutput,
-} from "../../../lib/workflows/graph-constants";
-import { updateInputHandles, updateOutputHandles } from "./handles";
-import { loopBackLayout, loopBodyPath } from "./rete-path-utils";
+} from "../../../lib/workflows/graph-constants.js";
+import { updateInputHandles, updateOutputHandles } from "./handles.js";
+import { loopBackLayout, loopBodyPath } from "./rete-path-utils.js";
 
 function resolveCurve(classicPath, kind) {
   if (kind === "loopBody") {

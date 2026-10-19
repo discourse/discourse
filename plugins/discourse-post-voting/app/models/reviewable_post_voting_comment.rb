@@ -3,6 +3,10 @@
 class ReviewablePostVotingComment < Reviewable
   include ReviewableActionBuilder
 
+  def self.additional_args(params)
+    ReviewableActionBuilder.penalty_args(params)
+  end
+
   def serializer
     ReviewablePostVotingCommentSerializer
   end
@@ -10,8 +14,7 @@ class ReviewablePostVotingComment < Reviewable
   def self.action_aliases
     {
       agree_and_keep_hidden: :agree_and_delete,
-      agree_and_silence: :agree_and_delete,
-      agree_and_suspend: :agree_and_delete,
+      agree_and_keep_deleted: :agree_and_keep_comment,
       delete_and_agree: :agree_and_delete,
     }
   end
@@ -92,6 +95,20 @@ class ReviewablePostVotingComment < Reviewable
     agree { comment.recover! }
   end
 
+  def perform_agree_and_suspend(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_agree_and_delete(performed_by, args)
+  end
+
+  def perform_agree_and_silence(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_agree_and_delete(performed_by, args)
+  end
+
   def perform_agree_and_delete(performed_by, args)
     agree { comment.trash!(performed_by) }
   end
@@ -113,6 +130,50 @@ class ReviewablePostVotingComment < Reviewable
   end
 
   private
+
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    case action_id
+    when :agree_and_delete, :delete_and_agree, :delete_and_ignore, :agree_and_keep_deleted,
+         :agree_and_keep_hidden
+      {
+        decision_facts: "The flagged voting comment was removed.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_REMOVED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: comment.created_at.to_date.iso8601,
+        automated_detection: "No",
+        automated_decision:,
+      }
+    when :agree_and_suspend
+      user = target_created_by.reload
+
+      {
+        decision_facts: "The author of the flagged voting comment was suspended.",
+        decision_account: "DECISION_ACCOUNT_SUSPENDED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_account_restriction:
+          (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
+        automated_detection: "No",
+        automated_decision:,
+      }.compact
+    when :agree_and_silence
+      user = target_created_by.reload
+
+      {
+        decision_facts:
+          "The author of the flagged voting comment had their ability to participate restricted.",
+        decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_service_restriction:
+          (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
+        automated_detection: "No",
+        automated_decision:,
+      }.compact
+    end
+  end
 
   def agree
     yield if block_given?

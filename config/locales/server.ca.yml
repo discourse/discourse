@@ -17,6 +17,7 @@ ca:
       location: "Ubicació"
   mcp:
     errors:
+      category_not_found: "Categoria no trobada"
       topic_not_found: "Tema no trobat"
     oauth:
       deny: "Denega"

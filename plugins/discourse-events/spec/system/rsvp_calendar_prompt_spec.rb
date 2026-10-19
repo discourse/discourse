@@ -13,8 +13,7 @@ RSpec.describe "RSVP calendar prompt" do
     sign_in(user)
   end
 
-  it "offers to add the event to a calendar after Going, including when rejoining",
-     time: Time.zone.parse("2026-09-14 12:00:00") do
+  it "offers to add the event to a calendar after Going, including when rejoining" do
     post =
       PostCreator.create!(
         admin,

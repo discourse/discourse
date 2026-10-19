@@ -87,6 +87,10 @@ jobs:
             if: ${{ !cancelled() }}
             run: pnpm lint:types
 
+          - name: TypeScript language server
+            if: ${{ !cancelled() }}
+            run: pnpm --dir=frontend/discourse-types test
+
           - name: Prettier
             if: ${{ !cancelled() }}
             run: |

@@ -81,6 +81,12 @@ pt:
       discourse_workflows:
         ai_agent:
           mode: "Modo"
+        classify:
+          text: "Texto"
+          upload_ids: "Imagens"
+          name: "Nome"
+          type: "Tipo"
+          type_score: "Pontuação"
       ai_tool_approval:
         loading: "A carregar..."
         tool: "Ação"
@@ -299,6 +305,13 @@ pt:
         edit: "Editar"
         delete: "Eliminar"
         embedding: "Incorporação"
+      decision_models:
+        no_preset: "Nenhuma"
+        display_name: "Nome"
+        model: "Modelo"
+        provider: "Provedor"
+        edit: "Editar"
+        delete: "Eliminar"
       mcp_servers:
         name: "Nome"
         description: "Descrição"
@@ -361,6 +374,15 @@ pt:
         providers:
           google: "Google"
           fake: "Personalizar"
+      ai_artifact:
+        editor:
+          version: "Versão"
+          default: "Predefinição"
+          apply: "Aplicar"
+        share: "Partilhar"
+        create_link: "Criar ligação"
+        copy_link: "Copiar hiperligação"
+        filter_all: "Todos"
       ai_bot:
         llm: "Modelo:"
         debug_ai_modal:

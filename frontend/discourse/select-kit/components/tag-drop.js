@@ -12,8 +12,8 @@ import {
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
 import { i18n } from "discourse-i18n";
-import TagDropHeader from "./tag-drop/tag-drop-header";
-import TagRow from "./tag-row";
+import TagDropHeader from "./tag-drop/tag-drop-header.gjs";
+import TagRow from "./tag-row.gjs";
 
 export const NO_TAG_ID = "no-tags";
 export const ALL_TAGS_ID = "all-tags";

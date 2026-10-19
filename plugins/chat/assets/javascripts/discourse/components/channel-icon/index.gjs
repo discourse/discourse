@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 
 export default class ChatChannelIcon extends Component {
@@ -33,20 +33,20 @@ export default class ChatChannelIcon extends Component {
   }
 
   get categoryChannelIcon() {
-    const { emoji } = this.args.channel;
-    return emoji ? dReplaceEmoji(`:${emoji}:`) : dIcon("d-chat");
+    return this.channelEmoji || dIcon("d-chat");
   }
 
-  get channelEmojiCode() {
-    return `:${this.args.channel.emoji}:`;
+  get channelEmoji() {
+    const { emoji } = this.args.channel;
+    return emoji && dEmoji(emoji);
   }
 
   <template>
     {{#if @channel.isDirectMessageChannel}}
       {{#if this.groupDirectMessage}}
-        {{#if @channel.emoji}}
+        {{#if this.channelEmoji}}
           <div class="chat-channel-icon --emoji">
-            {{dReplaceEmoji this.channelEmojiCode}}
+            {{this.channelEmoji}}
           </div>
         {{else if this.groupIsDuoOnly}}
           <div class="chat-channel-icon --avatar">

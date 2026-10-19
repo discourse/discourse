@@ -373,6 +373,28 @@ tr_TR:
       read_post:
         unknown_post: "gönderi"
       chat_tool_approval:
+        topic_states:
+          open: "Aç"
+          closed: "Kapalı"
+          active: "Aktif"
+          deleted: "Silindi"
+        solution_post: "#%{number} numaralı gönderi"
+        duration_label: "Süre:"
+        user_duration:
+          one: "%{count} gün"
+          other: "%{count} gün"
+        post_states:
+          locked: "Kilitli"
+        posts_label: "Gönderiler"
+        category_label: "Kategori"
+        category_fields:
+          name: "ad"
+          description: "açıklama"
+          color: "renk"
+          text_color: "metin rengi"
+        approve_label: "Evet"
+        reject_label: "Hayır"
+        empty_value: "Boş"
         unexpected_error: "beklenmedik bir hata oluştu"
       agents:
         cannot_delete_system_agent: "Sistem aracıları silinemez; bunun yerine lütfen devre dışı bırakın"
@@ -895,8 +917,8 @@ tr_TR:
         disable_embeddings: "Önce \"yz yerleştirmeleri etkin\" seçeneğini devre dışı bırakmanız gerekiyor."
         choose_model: "Önce 'ai embeddings selected model'ı ayarlayın."
         model_test_failed: "Bu modelle bir test gömme oluşturmayı başaramadık. Doğru şekilde yapılandırıldığını kontrol edin."
-    secrets:
-      delete_failed_in_use: "Bu kimlik bilgisi şu anda bir veya daha fazla LLM, gömme veya araç tarafından kullanılmaktadır ve silinemez."
+    decision_models:
+      secret_not_found: "Seçilen kimlik bilgisi mevcut değil"
     llm_models:
       missing_provider_param: "%{param} boş olamaz"
       secret_required: "Bir kimlik bilgisi seçilmelidir."

@@ -2,8 +2,8 @@ import { getOwner } from "@ember/owner";
 import { click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import DiscoursePostEvent from "../../discourse/components/discourse-post-event";
-import DiscoursePostEventEvent from "../../discourse/models/discourse-post-event-event";
+import DiscoursePostEvent from "discourse/plugins/discourse-events/discourse/components/discourse-post-event";
+import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 
 function buildEvent(overrides = {}) {
   return DiscoursePostEventEvent.create({
@@ -37,6 +37,76 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
       { instantiate: false }
     );
   }
+
+  test("read-only mode keeps the card but drops its controls", async function (assert) {
+    const attrs = {
+      can_update_attendance: true,
+      stats: { going: 1, interested: 0, invited: 0, not_going: 0 },
+      should_display_invitees: true,
+    };
+
+    const event = buildEvent(attrs);
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+
+    assert.dom(".going-button").exists("the interactive card offers an RSVP");
+    assert.dom(".event-invitees").exists();
+    assert
+      .dom(
+        '.event-header__controls [data-identifier="discourse-post-event-more-menu"]'
+      )
+      .exists();
+
+    const readOnlyEvent = buildEvent(attrs);
+    await render(
+      <template>
+        <DiscoursePostEvent @event={{readOnlyEvent}} @readOnly={{true}} />
+      </template>
+    );
+
+    assert.dom(".event-date .day").exists("the date box is still shown");
+    assert.dom(".event-dates").exists("the dates are still listed");
+    assert.dom(".going-button").doesNotExist();
+    assert.dom(".event-invitees").doesNotExist();
+    assert
+      .dom(
+        '.event-header__controls [data-identifier="discourse-post-event-more-menu"]'
+      )
+      .doesNotExist();
+  });
+
+  test("read-only mode neither fetches details nor subscribes to updates", async function (assert) {
+    let fetched = 0;
+    getOwner(this).unregister("service:discourse-post-event-api");
+    getOwner(this).register(
+      "service:discourse-post-event-api",
+      {
+        async event() {
+          fetched++;
+          return buildEvent();
+        },
+      },
+      { instantiate: false }
+    );
+    const messageBus = getOwner(this).lookup("service:message-bus");
+    const subscribed = [];
+    const originalSubscribe = messageBus.subscribe;
+    messageBus.subscribe = (path) => subscribed.push(path);
+
+    try {
+      const event = buildEvent({ creator: null });
+      await render(
+        <template>
+          <DiscoursePostEvent @event={{event}} @readOnly={{true}} />
+        </template>
+      );
+
+      assert.dom(".event-date .day").exists("the card still renders");
+      assert.strictEqual(fetched, 0, "a creator-less event is not refetched");
+      assert.deepEqual(subscribed, [], "no message-bus subscription is made");
+    } finally {
+      messageBus.subscribe = originalSubscribe;
+    }
+  });
 
   test("interpolates the weekday into the recurrence label", async function (assert) {
     stubApi.call(this, buildEvent({ recurrence: "every_week" }));

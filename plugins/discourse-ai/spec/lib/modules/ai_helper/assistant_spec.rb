@@ -3,13 +3,27 @@
 RSpec.describe DiscourseAi::AiHelper::Assistant do
   subject(:assistant) { described_class.new }
 
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:empty_locale_user) { Fabricate(:user, locale: "") }
 
   before do
     enable_current_plugin
     assign_fake_provider_to(:ai_default_llm_model)
-    Group.refresh_automatic_groups!
+  end
+
+  def stub_streamed_completion(deltas)
+    body =
+      deltas
+        .map { |delta| { choices: [{ index: 0, delta: { content: delta } }] } }
+        .push({ choices: [{ index: 0, delta: {}, finish_reason: "stop" }] })
+        .map { |event| "data: #{event.to_json}\n\n" }
+        .join
+    body << "data: [DONE]\n\n"
+
+    stub_request(:post, "https://api.openai.com/v1/chat/completions").to_return(
+      status: 200,
+      body: body,
+    )
   end
 
   let(:english_text) { <<~STRING }
@@ -67,8 +81,11 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
       )
     end
 
-    it "returns all available prompts" do
+    it "returns all available prompts with their locations" do
       prompts = assistant.available_prompts(user)
+      names_in = ->(location) do
+        prompts.select { |prompt| prompt[:location].include?(location) }.map { |p| p[:name] }
+      end
 
       expect(prompts.map { |p| p[:name] }).to contain_exactly(
         "translate",
@@ -78,30 +95,14 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
         "explain",
         "replace_dates",
       )
-    end
-
-    it "returns all prompts to be shown in the composer" do
-      prompts = assistant.available_prompts(user)
-      filtered_prompts = prompts.select { |prompt| prompt[:location].include?("composer") }
-
-      expect(filtered_prompts.map { |p| p[:name] }).to contain_exactly(
+      expect(names_in.("composer")).to contain_exactly(
         "translate",
         "generate_titles",
         "proofread",
         "markdown_table",
         "replace_dates",
       )
-    end
-
-    it "returns all prompts to be shown in the post menu" do
-      prompts = assistant.available_prompts(user)
-      filtered_prompts = prompts.select { |prompt| prompt[:location].include?("post") }
-
-      expect(filtered_prompts.map { |p| p[:name] }).to contain_exactly(
-        "translate",
-        "explain",
-        "proofread",
-      )
+      expect(names_in.("post")).to contain_exactly("translate", "explain", "proofread")
     end
 
     it "does not raise an error when effective_locale does not exactly match keys in LocaleSiteSetting" do
@@ -198,16 +199,6 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
       context "when handling edge cases" do
         before { DiscourseAi::AiHelper::Assistant.clear_prompt_cache! }
 
-        it "does not include illustrate_post when no image generation tools are enabled" do
-          # Disable all image generation tools
-          AiTool.where(is_image_generation_tool: true).update_all(enabled: false)
-          DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
-
-          prompts = assistant.available_prompts(user)
-
-          expect(prompts.map { |p| p[:name] }).not_to include("illustrate_post")
-        end
-
         it "handles tool discovery returning empty array" do
           # Create a tool that looks like an image tool but isn't
           AiTool.create!(
@@ -236,8 +227,6 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
 
           DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
 
-          # Should not raise error, just exclude illustrate_post
-          expect { assistant.available_prompts(user) }.not_to raise_error
           prompts = assistant.available_prompts(user)
           expect(prompts.map { |p| p[:name] }).not_to include("illustrate_post")
         end
@@ -293,6 +282,14 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
   end
 
   describe "#generate_and_send_prompt" do
+    fab!(:plain_text_agent) do
+      Fabricate(
+        :ai_agent,
+        response_format: nil,
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+      )
+    end
+
     context "when using a prompt that returns text" do
       let(:mode) { described_class::TRANSLATE }
 
@@ -313,13 +310,7 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
 
       context "when the agent is not using structured outputs" do
         it "still works" do
-          regular_agent =
-            Fabricate(
-              :ai_agent,
-              response_format: nil,
-              allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
-            )
-          SiteSetting.ai_helper_translator_agent = regular_agent.id
+          SiteSetting.ai_helper_translator_agent = plain_text_agent.id
 
           response =
             DiscourseAi::Completions::Llm.with_prepared_responses([english_text]) do
@@ -347,20 +338,12 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
       end
 
       it "returns an array with each title" do
-        expected = [
-          "The solitary horse",
-          "The horse etched in gold",
-          "A horse's infinite journey",
-          "A horse lost in time",
-          "A horse's last ride",
-        ]
-
         response =
           DiscourseAi::Completions::Llm.with_prepared_responses([titles]) do
             assistant.generate_and_send_prompt(mode, english_text, user)
           end
 
-        expect(response[:suggestions]).to contain_exactly(*expected)
+        expect(response[:suggestions]).to eq(titles[:output])
       end
 
       it "returns clean suggestions when the model streams the JSON across many partial chunks" do
@@ -399,23 +382,33 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
           "\n",
           "}",
         ]
-
-        body =
-          deltas
-            .map { |delta| { choices: [{ index: 0, delta: { content: delta } }] } }
-            .push({ choices: [{ index: 0, delta: {}, finish_reason: "stop" }] })
-            .map { |event| "data: #{event.to_json}\n\n" }
-            .join
-        body << "data: [DONE]\n\n"
-
-        stub_request(:post, "https://api.openai.com/v1/chat/completions").to_return(
-          status: 200,
-          body: body,
-        )
+        stub_streamed_completion(deltas)
 
         response = streaming_assistant.generate_and_send_prompt(mode, english_text, user)
 
         expect(response[:suggestions]).to eq(["The solitary horse", "A horse lost in time"])
+      end
+
+      it "keeps only the non-blank string suggestions" do
+        mixed_titles = { output: [["The solitary horse", nil], 1, " ", "A horse lost in time"] }
+
+        response =
+          DiscourseAi::Completions::Llm.with_prepared_responses([mixed_titles]) do
+            assistant.generate_and_send_prompt(mode, english_text, user)
+          end
+
+        expect(response[:suggestions]).to eq(["The solitary horse", "A horse lost in time"])
+      end
+
+      it "returns no suggestions when the title agent replies with text instead of a list" do
+        SiteSetting.ai_helper_title_suggestions_agent = plain_text_agent.id
+
+        response =
+          DiscourseAi::Completions::Llm.with_prepared_responses(
+            ["1. The solitary horse\n2. A horse lost in time"],
+          ) { assistant.generate_and_send_prompt(mode, english_text, user) }
+
+        expect(response[:suggestions]).to eq([])
       end
     end
 
@@ -437,19 +430,7 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
           "2-pass on every message.",
           "\"}",
         ]
-
-        body =
-          deltas
-            .map { |delta| { choices: [{ index: 0, delta: { content: delta } }] } }
-            .push({ choices: [{ index: 0, delta: {}, finish_reason: "stop" }] })
-            .map { |event| "data: #{event.to_json}\n\n" }
-            .join
-        body << "data: [DONE]\n\n"
-
-        stub_request(:post, "https://api.openai.com/v1/chat/completions").to_return(
-          status: 200,
-          body: body,
-        )
+        stub_streamed_completion(deltas)
 
         response = streaming_assistant.generate_and_send_prompt(mode, english_text, user)
 

@@ -7,8 +7,8 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import { i18n } from "discourse-i18n";
-import ErrorWorkflowChooser from "./error-workflow-chooser";
-import InUseDialog from "./in-use-dialog";
+import ErrorWorkflowChooser from "./error-workflow-chooser.js";
+import InUseDialog from "./in-use-dialog.gjs";
 
 export default class WorkflowSettings extends Component {
   @service router;

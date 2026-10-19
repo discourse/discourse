@@ -23,6 +23,10 @@ sv:
         add: "Gilla detta inlägg"
         remove: "Ta bort denna gillning"
         cant_remove: "Du kan inte längre ta bort ditt gillande"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Tillagd"
+        changes_removed: "Borttagen"
     notifications:
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:

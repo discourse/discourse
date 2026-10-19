@@ -6,8 +6,8 @@ import User from "discourse/models/user";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel" with {
   discourseImport: "optional",
 };
-import DiscoursePostEventEventStats from "./discourse-post-event-event-stats";
-import DiscoursePostEventInvitee from "./discourse-post-event-invitee";
+import DiscoursePostEventEventStats from "./discourse-post-event-event-stats.js";
+import DiscoursePostEventInvitee from "./discourse-post-event-invitee.js";
 
 const DEFAULT_REMINDER = {
   type: "notification",
@@ -106,6 +106,7 @@ export default class DiscoursePostEventEvent {
   @tracked customFields;
   @tracked channel;
   @tracked imageUpload;
+  @tracked isFutureOccurrence = false;
 
   @tracked _watchingInvitee;
   @tracked _sampleInvitees;
@@ -232,6 +233,27 @@ export default class DiscoursePostEventEvent {
 
   get pastEventTimeframe() {
     return isPastEventTimeframe(this.allDay, this.startsAt, this.endsAt);
+  }
+
+  filterForFutureOccurrence() {
+    this.isFutureOccurrence = true;
+    this.sampleInvitees = this.sampleInvitees.filter(
+      (invitee) => invitee.status !== "going" || invitee.recurring
+    );
+
+    const recurringCount = this.stats?.goingRecurring ?? 0;
+    if (this.stats) {
+      this.stats.going = recurringCount;
+    }
+    this.atCapacity =
+      this.maxAttendees != null && recurringCount >= this.maxAttendees;
+
+    if (
+      this.watchingInvitee?.status === "going" &&
+      !this.watchingInvitee?.recurring
+    ) {
+      this.watchingInvitee = null;
+    }
   }
 
   updateFromEvent(event) {

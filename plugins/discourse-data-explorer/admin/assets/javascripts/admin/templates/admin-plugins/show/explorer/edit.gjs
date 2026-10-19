@@ -114,10 +114,8 @@ export default class QueriesEdit extends Component {
                 {{i18n "explorer.query_tags"}}
               </span>
               <QueryTagChooser
-                @allowDefaultTag={{@controller.model.is_default}}
+                @automaticTags={{@controller.model.automatic_tags}}
                 @availableTags={{@controller.availableTags}}
-                @mandatoryValues={{@controller.mandatoryTags}}
-                @mandatoryValueTitle={{i18n "explorer.default_tag_mandatory"}}
                 @onChange={{@controller.updateTags}}
                 @value={{@controller.model.tags}}
               />
@@ -232,6 +230,17 @@ export default class QueriesEdit extends Component {
               @value={{@controller.view}}
             />
           {{/if}}
+          {{#if @controller.showDashboardToggle}}
+            <DButton
+              class="btn-default query-action-bar__dashboard-toggle"
+              @action={{@controller.toggleDashboard}}
+              @disabled={{@controller.dashboardToggleDisabled}}
+              @icon={{@controller.dashboardToggleIcon}}
+              @isLoading={{@controller.dashboardBusy}}
+              @label={{@controller.dashboardToggleLabel}}
+              @translatedTitle={{@controller.dashboardToggleTitle}}
+            />
+          {{/if}}
           <QueryResultDownloadButtons
             @content={{@controller.results}}
             @includeQueryExport={{true}}
@@ -248,7 +257,7 @@ export default class QueriesEdit extends Component {
           {{else if this.showDestroyQuery}}
             <DButton
               class="btn-danger"
-              @action={{@controller.destroyQuery}}
+              @action={{@controller.confirmDestroyQuery}}
               @disabled={{@controller.actionsBusy}}
               @icon="trash-can"
               @label="explorer.delete"

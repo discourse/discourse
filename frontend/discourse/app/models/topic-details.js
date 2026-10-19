@@ -33,6 +33,8 @@ export default class TopicDetails extends RestCompatModel {
   }
 
   @tracked loaded = false;
+
+  /** @type {import("discourse/models/topic").default | null} */
   topic = null;
 
   #topicId;

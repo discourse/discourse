@@ -9,7 +9,6 @@ discourse_github:
   github_linkback_access_token:
     default: ""
     secret: true
-    validator: "GithubLinkbackAccessTokenSettingValidator"
   github_linkback_maximum_links:
     default: 25
     min: 1

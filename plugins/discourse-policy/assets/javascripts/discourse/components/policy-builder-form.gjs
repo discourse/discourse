@@ -3,8 +3,8 @@ import { action } from "@ember/object";
 import { isBlank } from "@ember/utils";
 import Form from "discourse/components/form";
 import { i18n } from "discourse-i18n";
-import PolicyGroupInput from "./policy-group-input";
-import PolicyReminderInput from "./policy-reminder-input";
+import PolicyGroupInput from "./policy-group-input.gjs";
+import PolicyReminderInput from "./policy-reminder-input.gjs";
 
 export default class PolicyBuilderForm extends Component {
   @action

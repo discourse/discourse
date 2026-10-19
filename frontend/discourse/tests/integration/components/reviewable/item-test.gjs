@@ -355,17 +355,17 @@ module("Integration | Component | Reviewable | Item", function (hooks) {
   });
 
   test("leaves edit mode when a different reviewable is passed in", async function (assert) {
-    const state = new (class {
-      @tracked reviewable = editableReviewable(1);
-    })();
+    const currentReviewable = tracked(editableReviewable(1));
 
     await render(
-      <template><ReviewableItem @reviewable={{state.reviewable}} /></template>
+      <template>
+        <ReviewableItem @reviewable={{currentReviewable.value}} />
+      </template>
     );
 
     await click(".reviewable-action.edit");
 
-    state.reviewable = editableReviewable(2);
+    currentReviewable.value = editableReviewable(2);
     await settled();
 
     assert
@@ -399,12 +399,14 @@ module("Integration | Component | Reviewable | Item", function (hooks) {
   });
 
   test("goes back to the timeline tab when a different reviewable is passed in", async function (assert) {
-    const state = new (class {
-      @tracked reviewable = plainReviewable({ id: 1, type: "ReviewableUser" });
-    })();
+    const currentReviewable = tracked(
+      plainReviewable({ id: 1, type: "ReviewableUser" })
+    );
 
     await render(
-      <template><ReviewableItem @reviewable={{state.reviewable}} /></template>
+      <template>
+        <ReviewableItem @reviewable={{currentReviewable.value}} />
+      </template>
     );
 
     await click(".d-nav-submenu__tabs .insights a");
@@ -414,7 +416,10 @@ module("Integration | Component | Reviewable | Item", function (hooks) {
       .hasClass("active", "the insights tab is selected");
     assert.dom(".review-insight").exists("the insights tab is mounted");
 
-    state.reviewable = plainReviewable({ id: 2, type: "ReviewableUser" });
+    currentReviewable.value = plainReviewable({
+      id: 2,
+      type: "ReviewableUser",
+    });
     await settled();
 
     assert

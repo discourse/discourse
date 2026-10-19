@@ -13,7 +13,10 @@ export default class ComposerActionStateService extends Service {
   @service composer;
   @service dialog;
 
+  /** @type {import("discourse/models/topic").default | null} */
   topicSnapshot = null;
+
+  /** @type {import("discourse/models/post").default | null | undefined} */
   postSnapshot = null;
 
   get snapshot() {

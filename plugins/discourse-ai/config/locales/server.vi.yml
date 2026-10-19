@@ -44,6 +44,27 @@ vi:
           title: "Bản sao lưu"
       read_post:
         unknown_post: "tút"
+      chat_tool_approval:
+        topic_states:
+          open: "Mở"
+          closed: "Đã đóng"
+          active: "Hoạt động"
+          deleted: "Đã xóa"
+        solution_post: "Bài #%{number}"
+        duration_label: "Thời hạn:"
+        user_duration:
+          other: "%{count} ngày"
+        post_states:
+          locked: "Đã khóa"
+        posts_label: "Số lượng tút"
+        category_label: "Chuyên mục"
+        category_fields:
+          name: "Tên"
+          description: "mô tả"
+          color: "màu sắc"
+          text_color: "màu chữ"
+        approve_label: "Đồng ý"
+        reject_label: "Không"
       agents:
         smart_dates:
           name: "Ngày thông minh"

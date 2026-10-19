@@ -4,9 +4,7 @@ import Modifier from "ember-modifier";
  * @typedef ScrollIntoViewSignature
  *
  * @property {object} Args
- * @property {Array} Args.Positional
- * @property {boolean} Args.Positional.0 - Whether to scroll this element into view
- * @property {ScrollIntoViewOptions} [Args.Positional.1] - ScrollIntoView options (behavior, block, inline)
+ * @property {[shouldScroll: boolean, options?: ScrollIntoViewOptions]} Args.Positional
  */
 
 /**

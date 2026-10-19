@@ -654,8 +654,12 @@ el:
       chat_message_created:
         channel_id: "Κανάλι"
       send_chat_message:
+        targets:
+          channel: "Κανάλι"
         channel_id: "Κανάλι"
+        target_usernames: "Παραλήπτες"
         message: "Μήνυμα"
+        actor_username: "Αποστολέας"
       chat_approval:
         message: "Μήνυμα"
         buttons: "Κουμπιά"

@@ -158,6 +158,24 @@ acceptance(
   }
 );
 
+acceptance("User Card - names disabled", function (needs) {
+  needs.user();
+  needs.settings({ enable_names: false, prioritize_username_in_ux: false });
+  needs.pretender((server, helper) => {
+    const cardResponse = cloneJSON(userFixtures["/u/eviltrout/card.json"]);
+    server.get("/u/eviltrout/card.json", () => helper.response(cardResponse));
+  });
+
+  test("does not display a name present in the card payload", async function (assert) {
+    await visit("/t/this-is-a-test-topic/9");
+    await click('a[data-user-card="eviltrout"]');
+
+    assert.dom(".user-card .username").includesText("eviltrout");
+    assert.dom(".user-card .full-name").doesNotExist();
+    assert.dom(".user-card").doesNotIncludeText("Robin Ward");
+  });
+});
+
 acceptance("User Card - User Status", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {

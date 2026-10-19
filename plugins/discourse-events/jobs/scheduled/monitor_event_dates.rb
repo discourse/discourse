@@ -50,12 +50,13 @@ module Jobs
         DiscourseEvent.trigger(:discourse_post_event_event_ended, event_date.event, event_date)
         MessageBus.publish(
           "/topic/#{event_date.event.post.topic_id}",
-          reload_topic: true,
-          refresh_stream: true,
+          { reload_topic: true, refresh_stream: true },
+          event_date.event.post.topic.secure_audience_publish_messages,
         )
 
         return if event_date.event.recurrence.blank?
         event_date.event.set_next_recurrent_event_date
+        TopicTrackingState.publish_latest(event_date.event.post.topic)
         event_date.event.set_topic_bump
       end
 

@@ -1,42 +1,40 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { action, computed } from "@ember/object";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { action, get } from "@ember/object";
 import { service } from "@ember/service";
-import { tagName } from "@ember-decorators/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import RequestGroupMembershipForm from "./modal/request-group-membership-form";
+import RequestGroupMembershipForm from "./modal/request-group-membership-form.gjs";
 
-@tagName("")
 export default class GroupMembershipButton extends Component {
   @service appEvents;
   @service currentUser;
   @service dialog;
   @service modal;
 
-  @computed("model.public_admission", "userIsGroupUser")
+  @tracked updatingMembership = false;
+
   get canJoinGroup() {
-    return this.model?.public_admission && !this.userIsGroupUser;
+    return get(this.args.model, "public_admission") && !this.userIsGroupUser;
   }
 
-  @computed("model.public_exit", "userIsGroupUser")
   get canLeaveGroup() {
-    return this.model?.public_exit && this.userIsGroupUser;
+    return get(this.args.model, "public_exit") && this.userIsGroupUser;
   }
 
-  @computed("model.allow_membership_requests", "userIsGroupUser")
   get canRequestMembership() {
-    return this.model?.allow_membership_requests && !this.userIsGroupUser;
+    return (
+      get(this.args.model, "allow_membership_requests") && !this.userIsGroupUser
+    );
   }
 
-  @computed("model.is_group_user")
   get userIsGroupUser() {
-    return !!this.model?.is_group_user;
+    return !!get(this.args.model, "is_group_user");
   }
 
   removeFromGroup() {
-    const model = this.model;
+    const model = this.args.model;
     model
       .leave()
       .then(() => {
@@ -44,17 +42,17 @@ export default class GroupMembershipButton extends Component {
         this.appEvents.trigger("group:leave", model);
       })
       .catch(popupAjaxError)
-      .finally(() => this.set("updatingMembership", false));
+      .finally(() => (this.updatingMembership = false));
   }
 
   @action
   joinGroup() {
     if (!this.currentUser) {
-      return this.showLogin();
+      return this.args.showLogin();
     }
 
-    this.set("updatingMembership", true);
-    const group = this.model;
+    this.updatingMembership = true;
+    const group = this.args.model;
 
     group
       .join()
@@ -64,21 +62,23 @@ export default class GroupMembershipButton extends Component {
       })
       .catch(popupAjaxError)
       .finally(() => {
-        this.set("updatingMembership", false);
+        this.updatingMembership = false;
       });
   }
 
   @action
   leaveGroup() {
-    this.set("updatingMembership", true);
+    this.updatingMembership = true;
 
-    if (this.model.public_admission) {
+    if (this.args.model.public_admission) {
       this.removeFromGroup();
     } else {
       return this.dialog.yesNoConfirm({
         message: i18n("groups.confirm_leave"),
         didConfirm: () => this.removeFromGroup(),
-        didCancel: () => this.set("updatingMembership", false),
+        didCancel: () => {
+          this.updatingMembership = false;
+        },
       });
     }
   }
@@ -86,12 +86,12 @@ export default class GroupMembershipButton extends Component {
   @action
   showRequestMembershipForm() {
     if (!this.currentUser) {
-      return this.showLogin();
+      return this.args.showLogin();
     }
 
     this.modal.show(RequestGroupMembershipForm, {
       model: {
-        group: this.model,
+        group: this.args.model,
       },
     });
   }
@@ -118,7 +118,6 @@ export default class GroupMembershipButton extends Component {
         <DButton
           class="btn-default group-index-request"
           @action={{this.showRequestMembershipForm}}
-          @disabled={{this.loading}}
           @icon="user-plus"
           @label="groups.request"
         />

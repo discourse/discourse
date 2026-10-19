@@ -165,7 +165,6 @@ nb_NO:
       be:
         name: Hviterussisk
     share:
-      topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "innlegg #%{postNumber} av @%{username}"
       close: "lukk"
       facebook: "Del på Facebook"
@@ -212,6 +211,9 @@ nb_NO:
     topic_admin_menu: "emnehandlinger"
     skip_to_main_content: "Gå til hovedinnhold"
     skip_user_nav: "Gå til profilinnhold"
+    reorder:
+      removed: "Fjernet %{label}"
+      position: "%{position} av %{total}"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     emails_are_disabled_non_staff: "Utgående e-post er deaktivert for brukere som ikke er blant staben."
     software_update_prompt:
@@ -307,9 +309,6 @@ nb_NO:
     max_of_count:
       one: "maksimum av %{count}"
       other: "maksimum av %{count}"
-    character_count:
-      one: "%{count} tegn"
-      other: "%{count} tegn"
     period_chooser:
       aria_label: "Filtrer etter periode"
     related_messages:
@@ -535,6 +534,9 @@ nb_NO:
       title:
         search: "Søk etter melding"
         placeholder: "Skriv tittel, URL eller ID her"
+    dsa_statements:
+      category: "Kategori"
+      saving: "Lagrer…"
     review:
       show_more: "Vis mer"
       show_less: "Vis mindre"
@@ -1615,7 +1617,6 @@ nb_NO:
         upload_title: "Last opp bilde"
         image_is_not_a_square: "Vi har beskåret bildet ditt, høyde og bredde er ikke lik"
         logo_small: "Nettstedets lille logo. Brukes som standard."
-        use_custom: "Eller last opp en egendefinert avatar:"
       change_profile_background:
         title: "bakgrunns bildet"
         instructions: "Profiloverskrifter vil være sentrert og har en standardbredde på 1110 piksler."
@@ -2124,7 +2125,6 @@ nb_NO:
       hide_forever: "nei takk"
       hidden_for_session: "OK, vi vil spørre deg i morgen. Du kan alltid bruke «Logg inn» for å opprette en konto."
       intro: "Hei! Ser ut som du liker diskusjonen, men du har ikke registrert deg for en konto ennå."
-      value_prop: "Lei av å bla gjennom de samme innleggene? Når du oppretter en konto, kommer du alltid tilbake til hvor du slapp. Med en konto kan du også bli varslet om nye svar, lagre bokmerker og bruke likeklikk for å takke andre. Vi kan alle jobbe sammen for å gjøre dette fellesskapet flott :heart:"
     offline_indicator:
       no_internet: "Ingen internettforbindelse."
       refresh_page: "Oppdater siden"
@@ -2483,8 +2483,7 @@ nb_NO:
       edit_shared_draft: "Rediger delt utkast"
       discard: "Forkast"
       users_placeholder: "Legg til brukere eller grupper"
-      title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
-      title_placeholder_redesign: "Tittel"
+      title_placeholder: "Tittel"
       title_or_link_placeholder: "Skriv inn tittel eller lim inn en lenke her"
       edit_reason_placeholder: "Hvorfor endrer du?"
       topic_featured_link_placeholder: "Skriv inn lenke vist med tittel."
@@ -4074,9 +4073,6 @@ nb_NO:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Har gjort seg fortjent til dette merket"
-        other: "Har gjort seg fortjent til dette merket %{count} ganger"
       granted_on: "Tildelt %{date}"
       title: Merker
       allow_title: "Du kan bruke dette merket som tittel"
@@ -4431,6 +4427,7 @@ nb_NO:
             block: "Blokker"
             presets:
               custom: "Egendefinert"
+            automatic: "Automatisk"
           authorizations:
             user: "Bruker"
             status: "Status"
@@ -5151,6 +5148,7 @@ nb_NO:
             must_be_unique: "Ugyldig variabelnavn. Må være unikt."
           upload: "Last opp"
           discard: "Forkast"
+          leave: "Forlat"
           delete_upload_confirm: "Slett denne opplastingen? (Draktens CSS kan slutte å virke!)"
           import_web_tip: "Pakkebrønn inneholdende drakt"
           is_private: "Drakten er i et privat git repository"

@@ -1,13 +1,13 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { tagName } from "@ember-decorators/component";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 
-@tagName("")
 export default class CreateInviteUploader extends Component {
+  @tracked uploaded = false;
+
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "create-invite-uploader",
     type: "csv",
@@ -19,11 +19,10 @@ export default class CreateInviteUploader extends Component {
       csvOnly: true,
     },
     uploadDone: () => {
-      this.set("uploaded", true);
+      this.uploaded = true;
     },
   });
 
-  @computed("uppyUpload.filesAwaitingUpload", "uppyUpload.uploading")
   get submitDisabled() {
     return !this.uppyUpload?.filesAwaitingUpload || this.uppyUpload?.uploading;
   }
@@ -37,9 +36,9 @@ export default class CreateInviteUploader extends Component {
     <div ...attributes>
       {{yield
         (hash
-          data=this.data
-          uploading=this.uploading
-          uploadProgress=this.uploadProgress
+          data=@data
+          uploading=this.uppyUpload.uploading
+          uploadProgress=this.uppyUpload.uploadProgress
           uploaded=this.uploaded
           submitDisabled=this.submitDisabled
           startUpload=this.startUpload

@@ -129,13 +129,7 @@ export default class AiLogDetailModal extends Component {
   }
 
   get formattedOutcome() {
-    const successful =
-      (this.log?.response_status >= 200 && this.log?.response_status <= 299) ||
-      (this.log?.response_status == null &&
-        Number(this.log?.response_tokens || 0) > 0);
-    const outcome = i18n(
-      `discourse_ai.logs.${successful ? "successful" : "failed"}`
-    );
+    const outcome = i18n(`discourse_ai.logs.${this.log.outcome}`);
 
     return this.log?.response_status == null
       ? outcome
@@ -143,6 +137,10 @@ export default class AiLogDetailModal extends Component {
           outcome,
           status: this.log.response_status,
         });
+  }
+
+  get hasReasoningTokens() {
+    return this.log?.reasoning_tokens != null;
   }
 
   get formattedCreatedAt() {
@@ -269,6 +267,16 @@ export default class AiLogDetailModal extends Component {
               >{{this.formattedCreatedAt}}</dd></div>
             <div><dt>{{i18n "discourse_ai.logs.outcome"}}</dt><dd
               >{{this.formattedOutcome}}</dd></div>
+            {{#if this.log.stop_reason}}
+              <div class="ai-log-detail-modal__metadata-stop-reason"><dt>{{i18n
+                    "discourse_ai.logs.stop_reason"
+                  }}</dt><dd>{{this.log.stop_reason}}</dd></div>
+            {{/if}}
+            {{#if this.hasReasoningTokens}}
+              <div class="ai-log-detail-modal__metadata-reasoning"><dt>{{i18n
+                    "discourse_ai.logs.reasoning_tokens"
+                  }}</dt><dd>{{this.log.reasoning_tokens}}</dd></div>
+            {{/if}}
             <div><dt>{{i18n "discourse_ai.logs.feature"}}</dt><dd>{{or
                   this.log.feature_name
                   "—"

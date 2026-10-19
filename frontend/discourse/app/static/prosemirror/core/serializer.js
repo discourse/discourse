@@ -2,7 +2,7 @@ import {
   defaultMarkdownSerializer,
   MarkdownSerializerState,
 } from "prosemirror-markdown";
-import expelBoundaryPunctuation from "../lib/expel-boundary-punctuation";
+import expelBoundaryPunctuation from "../lib/expel-boundary-punctuation.ts";
 
 export default class Serializer {
   #afterSerializers;

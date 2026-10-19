@@ -15,9 +15,33 @@ export function warpStore() {
 //   static type             — schema type, e.g. "badge"
 //   static normalize        — rooted JSON → JSON:API document
 //   static builders         — { list(opts), one(id), save(record, data), delete(id) }
+/**
+ * A request object built by the helpers in `discourse/data/builders/helpers`.
+ *
+ * @typedef {object} WarpRequest
+ * @property {string} url
+ * @property {string} method
+ * @property {string} op
+ * @property {{ type: string, id: string }} [data]
+ * @property {{ body?: unknown, normalize?: (payload: Record<string, unknown> | null | undefined) => import("@warp-drive/core/types/spec/json-api-raw").JsonApiDocument }} [options]
+ */
+
+/**
+ * @typedef {object} WarpRestBuilders
+ * @property {(opts?: Record<string, unknown>) => WarpRequest} [list]
+ * @property {(id: string | number) => WarpRequest} [one]
+ * @property {(record: WarpRestModel, data: Record<string, unknown>) => WarpRequest} [save]
+ * @property {(id: string | number) => WarpRequest} [delete]
+ */
+
 export default class WarpRestModel {
+  /** @type {string | null} */
   static type = null;
+
+  /** @type {((payload: Record<string, unknown> | null | undefined) => import("@warp-drive/core/types/spec/json-api-raw").JsonApiDocument) | null} */
   static normalize = null;
+
+  /** @type {WarpRestBuilders | null} */
   static builders = null;
 
   static findAll(opts) {

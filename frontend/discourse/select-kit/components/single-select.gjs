@@ -12,7 +12,7 @@ import SelectKitBody from "discourse/select-kit/components/select-kit/select-kit
 import { isNumeric } from "discourse/select-kit/lib/input-utils";
 import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import SingleSelectHeader from "./select-kit/single-select-header";
+import SingleSelectHeader from "./select-kit/single-select-header.gjs";
 
 @classNames("single-select")
 @selectKitOptions({

@@ -204,6 +204,21 @@ RSpec.describe DiscourseWorkflows::Webhook::Action::AuthenticateNode do
         end
       end
 
+      context "when the header is the authorization header" do
+        let(:headers) { { "authorization" => "Token abc" } }
+
+        before do
+          header_credential.update_column(
+            :data,
+            { "name" => "Authorization", "value" => "Token abc" },
+          )
+        end
+
+        it "returns :authenticated" do
+          expect(result).to eq(:authenticated)
+        end
+      end
+
       context "when credential is missing name or value" do
         before { header_credential.update_column(:data, { "name" => "X-Api-Key" }) }
 

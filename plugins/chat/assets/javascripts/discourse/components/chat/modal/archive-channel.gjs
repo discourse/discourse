@@ -14,7 +14,7 @@ import {
   NEW_TOPIC_SELECTION,
 } from "discourse/plugins/chat/discourse/components/chat-to-topic-selector";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
-import ChatToTopicSelector from "../../chat-to-topic-selector";
+import ChatToTopicSelector from "../../chat-to-topic-selector.gjs";
 
 export default class ChatModalArchiveChannel extends Component {
   @service chatApi;
