@@ -17,6 +17,13 @@ RSpec.describe SvgSprite do
     expect(bundle).to match(/angles-down/)
   end
 
+  it "lets symbols draw outside their viewBox" do
+    symbols = Nokogiri.XML(SvgSprite.bundle).css("symbol")
+
+    expect(symbols).to be_present
+    expect(symbols.map { |symbol| symbol["overflow"] }.uniq).to eq(["visible"])
+  end
+
   it "can generate paths" do
     version = SvgSprite.version # Icons won't change for this test
 
