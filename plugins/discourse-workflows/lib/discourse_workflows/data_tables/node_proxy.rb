@@ -85,9 +85,12 @@ module DiscourseWorkflows
         result = update_matching_rows(query, row_input, options)
         return result if result[:count] > 0
 
-        ensure_insertable!(row_input)
-        row = options["dry_run"] ? dry_run_insert_row(row_input) : @facade.insert(row_input)
-        { data: [row], count: 1 }
+        insert_row_input(row_input, options)
+      end
+
+      def insert_row(options)
+        options = normalize_options(options)
+        insert_row_input(build_row_input(options["data"]), options)
       end
 
       def delete_rows(options)
@@ -192,6 +195,12 @@ module DiscourseWorkflows
             ]
           end
         with_count(result.merge(rows: pairs))
+      end
+
+      def insert_row_input(row_input, options)
+        ensure_insertable!(row_input)
+        row = options["dry_run"] ? dry_run_insert_row(row_input) : @facade.insert(row_input)
+        { data: [row], count: 1 }
       end
 
       def dry_run_insert_row(row_input)

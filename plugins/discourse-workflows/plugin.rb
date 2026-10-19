@@ -220,6 +220,10 @@ after_initialize do
     require_relative "lib/discourse_workflows/ai/tools/search_chat_channels"
     require_relative "lib/discourse_workflows/ai/tools/search_chat_integration_channels"
     require_relative "lib/discourse_workflows/ai/tools/workflow_validate_script"
+    require_relative "lib/discourse_workflows/ai/tools/data_table_base"
+    require_relative "lib/discourse_workflows/ai/tools/data_table_schema"
+    require_relative "lib/discourse_workflows/ai/tools/data_table_query"
+    require_relative "lib/discourse_workflows/ai/tools/data_table_write"
     require_relative "lib/discourse_workflows/ai_workflow_author"
 
     DiscourseAi.register_feature(
@@ -234,6 +238,9 @@ after_initialize do
       [
         DiscourseWorkflows::Ai::Tools::SearchChatChannels,
         DiscourseWorkflows::Ai::Tools::SearchChatIntegrationChannels,
+        DiscourseWorkflows::Ai::Tools::DataTableSchema,
+        DiscourseWorkflows::Ai::Tools::DataTableQuery,
+        DiscourseWorkflows::Ai::Tools::DataTableWrite,
       ],
       plugin: self,
     )
