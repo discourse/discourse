@@ -393,6 +393,7 @@ fr:
         filter_placeholder: "Filtrer les utilisateurs"
         remove_invitee: "Supprimer l'invité de la liste"
         add_invitee: "Ajouter l'invité à la liste"
+        this_event: "Cet événement"
       bulk_invite_modal:
         confirm: "confirmer"
         text: "Téléverser un fichier CSV"

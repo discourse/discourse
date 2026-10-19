@@ -5,6 +5,28 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  dsa_statements:
+    classification_note: "已将此审核决定归类为 DSA 报告。\n社区规则： %{ground}\n类别： %{category}"
+    errors:
+      statements_changed: "本次评测的声明已更改。请刷新页面以查看其最新分类。"
+      failed: "分类结果无法保存，请重试。"
+    categories:
+      STATEMENT_CATEGORY_ANIMAL_WELFARE: "动物福利"
+      STATEMENT_CATEGORY_CONSUMER_INFORMATION: "消费者信息侵权"
+      STATEMENT_CATEGORY_CYBER_VIOLENCE: "网络暴力"
+      STATEMENT_CATEGORY_CYBER_VIOLENCE_AGAINST_WOMEN: "针对女性的网络暴力"
+      STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS: "数据保护和隐私侵权"
+      STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH: "非法或有害言论"
+      STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS: "知识产权侵权"
+      STATEMENT_CATEGORY_NEGATIVE_EFFECTS_ON_CIVIC_DISCOURSE_OR_ELECTIONS: "对公民讨论或选举的负面影响"
+      STATEMENT_CATEGORY_NOT_SPECIFIED_NOTICE: "举报人未具体说明涉嫌非法内容的类型。"
+      STATEMENT_CATEGORY_OTHER_VIOLATION_TC: "其他违反条款和条件的行为"
+      STATEMENT_CATEGORY_PROTECTION_OF_MINORS: "保护未成年人"
+      STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY: "公共安全风险"
+      STATEMENT_CATEGORY_SCAMS_AND_FRAUD: "诈骗和欺诈"
+      STATEMENT_CATEGORY_SELF_HARM: "自我伤害"
+      STATEMENT_CATEGORY_UNSAFE_AND_PROHIBITED_PRODUCTS: "不安全或违禁产品"
+      STATEMENT_CATEGORY_VIOLENCE: "暴力"
   markdown_endpoints:
     latest: "最新"
     categories: "类别"
@@ -1896,6 +1918,7 @@ zh_CN:
   random_username:
     unavailable: "无法生成随机用户名。请检查网站设置中的随机用户名词库。"
   site_settings:
+    dsa_community_rules: "启用 {{setting:dsa_reporting_enabled}} 后，即可使用社区规则进行 DSA 分类。每条规则都需要一个准确的合同参考（最多 500 个字符）和一个解释（最多 2000 个字符）。留空则禁用分类。"
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"
     display_local_time_in_user_card: "打开用户卡片时，根据用户的时区显示当地时间。"
@@ -2788,6 +2811,7 @@ zh_CN:
     enable_auto_grid_images: "在编辑器中上传 3 张或更多图片后，自动将图片包装在 [grid] 标记中。"
     enable_new_checkbox_style: "为 FormKit 复选框启用重新设计的复选框样式。"
     enable_composer_redesign: "启用重新设计的编辑器。"
+    enable_new_reordering_controls: "在列表设置、管理列表、用户目录列和侧边栏链接上使用共享的重新排序控件，使每个控件都具有相同的拖动手柄、移动菜单和键盘支持。"
     enable_main_outlet_grid_layout_change: "将编辑器放置在主布局网格内，以便主题可以将其定位在网格列中，并使用更窄的侧边栏。"
     enable_composer_toolbar_customization: "允许成员在其界面偏好设置中选择哪些按钮显示在编辑器工具栏中。"
     prioritize_recently_used_tags: "如果在创建或编辑话题时添加标签，会在列表顶部显示该成员最近在自己的话题中使用过的标签，然后再显示论坛最热门的标签。"
@@ -3294,6 +3318,8 @@ zh_CN:
       must_end_with_alphanumeric: "必须以字母或数字结尾"
       must_not_contain_two_special_chars_in_seq: "不得包含 2 个或更多特殊字符 (.-_) 的序列"
       must_not_end_with_confusing_suffix: "不得以 .json 或 .png 等令人困惑的后缀结尾。"
+      contains_blocked_words:
+        other: "包含屏蔽词： %{words}"
     email:
       blank: "不能为空。"
       invalid: "无效。"
