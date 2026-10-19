@@ -12,6 +12,13 @@ const SEARCH_AGAIN_WINDOW_MS = 3 * 60 * 1000;
 // how long the tabs wait on the reply's judgements before judging the query alone
 const INTENT_WAIT_MS = 1000;
 
+function findsAsMuch(results, other) {
+  return (
+    Boolean(results) &&
+    (results.posts?.length ?? 0) >= (other?.posts?.length ?? 0)
+  );
+}
+
 export async function keywordSearch(query) {
   try {
     const results = await ajax("/search", { data: { q: query } });
@@ -321,19 +328,29 @@ export default class AiSearchSession extends Service {
     this.search.noResults = false;
 
     const scopeKey = this.scope?.key;
-    const [topics, context, reply] = await Promise.all([
+    const replied = this.#waitForReply(asked);
+    const [topics, context] = await Promise.all([
       this.#menuSearch(query),
       scopeKey ? this.#menuSearch(withScope(query, scopeKey)) : null,
-      this.#waitForReply(asked),
     ]);
     if (this.query !== query) {
       return;
     }
 
-    this.topicsResults = topics ?? { posts: [], resultTypes: [] };
-    this.contextResults = scopeKey
-      ? (context ?? { posts: [], resultTypes: [] })
-      : null;
+    // the rewrite can land first, and stays when it found at least as much
+    const empty = { posts: [], resultTypes: [] };
+    if (!findsAsMuch(this.topicsResults, topics)) {
+      this.topicsResults = topics ?? empty;
+      this.keywordQuery = query;
+    }
+    if (scopeKey && !findsAsMuch(this.contextResults, context)) {
+      this.contextResults = context ?? empty;
+    }
+
+    const reply = await replied;
+    if (this.query !== query) {
+      return;
+    }
 
     if (!this.#tabChosenByReader) {
       const { tab, reason } = chooseTab(query, {
@@ -460,8 +477,6 @@ export default class AiSearchSession extends Service {
       return;
     }
 
-    const findsAsMuch = (better, current) =>
-      better && (better.posts?.length ?? 0) >= (current?.posts?.length ?? 0);
     if (findsAsMuch(topics, this.topicsResults)) {
       this.topicsResults = topics;
       this.keywordQuery = rewritten;

@@ -291,6 +291,27 @@ describe "AI combined search" do
         end
       end
 
+      it "shows the keyword results when the reader switches from the answer" do
+        DiscourseAi::Decisions.with_canned_answers(intent: "answer") do
+          visit "/"
+          wait_for_discoveries_channel
+          ask(query)
+          expect_tab("ask")
+        end
+        publish(
+          done: true,
+          phase: "complete",
+          answerable: true,
+          ai_discover_reply: "Use the forgot password link.",
+          sources:,
+        )
+        expect(page).to have_css(".ai-search-answer__body .cooked", text: "forgot password")
+
+        select_tab("topics")
+
+        expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
+      end
+
       it "moves to the results when the answer it opened on finds nothing" do
         DiscourseAi::Decisions.with_canned_answers(intent: "answer") do
           visit "/"
@@ -328,6 +349,31 @@ describe "AI combined search" do
 
         expect(page).to have_css(".ai-search-answer__empty")
         expect_tab("ask")
+      end
+
+      it "keeps rewritten keyword results that arrive while the menu waits for the model" do
+        question = "does this site have any guides on that"
+        slow_intent = instance_double(DiscourseAi::Discoveries::Intent)
+        allow(slow_intent).to receive(:call) do
+          sleep 1.5
+          nil
+        end
+        allow(DiscourseAi::Discoveries::Intent).to receive(:new).and_return(slow_intent)
+
+        visit "/"
+        wait_for_discoveries_channel
+        ask(question)
+        publish(
+          query: question,
+          done: false,
+          phase: "rewritten",
+          keyword_query: "password",
+          semantic_query: "Password guides",
+        )
+
+        expect(page).to have_css("#{tab("topics")} .ai-search-tabs__count", text: "1")
+        select_tab("topics")
+        expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
       end
 
       it "judges from the query alone when the model is too slow, still logging its verdict" do
