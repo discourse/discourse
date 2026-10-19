@@ -40,6 +40,9 @@ RSpec.describe "Admin Assistant workflow approval preview" do
   end
 
   before do
+    SiteSetting.discourse_ai_enabled = true
+    SiteSetting.ai_bot_enabled = true
+    SiteSetting.enable_discourse_workflows = true
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
     DiscourseWorkflows::AdminAssistant::Capability.stubs(:status).returns(:available)
