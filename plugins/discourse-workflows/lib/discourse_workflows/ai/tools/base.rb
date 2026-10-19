@@ -7,13 +7,11 @@ module DiscourseWorkflows
         private
 
         def ensure_can_manage_workflows!
-          return true if context.user&.guardian&.can_manage_workflows?
-
-          false
+          !!context.user&.guardian&.can_manage_workflows?
         end
 
         def not_allowed_response
-          error_response(I18n.t("discourse.errors.disallowed"))
+          error_response(I18n.t("invalid_access"))
         end
 
         def json_safe(value)

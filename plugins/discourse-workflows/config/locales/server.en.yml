@@ -267,6 +267,9 @@ en:
         search_chat_channels: "Searches chat channel names and IDs for workflow parameters"
         search_chat_integration_channels: "Searches external chat integration channel labels and IDs for workflow parameters"
         workflow_validate_script: "Runs workflow Code node JavaScript with test data"
+        data_table_schema: "Lists workflow data tables with their columns"
+        data_table_query: "Reads rows from a workflow data table"
+        data_table_write: "Inserts, updates, upserts or deletes workflow data table rows"
       tool_summary:
         workflow_node_catalog: "Reading workflow node catalog"
         workflow_ai_agent_catalog: "Reading AI agent catalog"
@@ -278,6 +281,9 @@ en:
         search_chat_channels: "Searching chat channels"
         search_chat_integration_channels: "Searching external chat integration channels"
         workflow_validate_script: "Testing script"
+        data_table_schema: "Reading data table schema"
+        data_table_query: "Querying data table"
+        data_table_write: "Writing to data table"
       tool_description:
         workflow_node_catalog: "Read workflow node catalog"
         workflow_ai_agent_catalog: "Read AI agent catalog"
@@ -289,6 +295,22 @@ en:
         search_chat_channels: "Searched chat channels"
         search_chat_integration_channels: "Searched external chat integration channels"
         workflow_validate_script: "Tested script"
+        data_table_schema: "Read data table schema"
+        data_table_query: "Queried data table"
+        data_table_write: "Wrote to data table"
+      tool_options:
+        data_table_schema:
+          allowed_tables:
+            name: "Allowed tables"
+            description: "Comma-separated data table names or ids this agent may use. Leave empty to allow all tables."
+        data_table_query:
+          allowed_tables:
+            name: "Allowed tables"
+            description: "Comma-separated data table names or ids this agent may use. Leave empty to allow all tables."
+        data_table_write:
+          allowed_tables:
+            name: "Allowed tables"
+            description: "Comma-separated data table names or ids this agent may use. Leave empty to allow all tables."
   reviewables:
     reasons:
       workflow_flagged_user: "A workflow added this user to the review queue."
