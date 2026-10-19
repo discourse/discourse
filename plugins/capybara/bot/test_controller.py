@@ -66,6 +66,9 @@ class RuntimeDouble:
     def integrate(self, run, event):
         raise AssertionError("Manual executor runs no threads")
 
+    def publish(self, run, event):
+        raise AssertionError("Manual executor runs no threads")
+
     def deploy(self, run, event):
         raise AssertionError("Manual executor runs no threads")
 
@@ -161,6 +164,9 @@ class ControllerTests(unittest.TestCase):
         self.controller.poll()
         self.assertEqual("deploying", self.store.all()[0].phase)
         self.executor.tasks[-1][0].set_result({"commit": "c" * 40})
+        self.controller.poll()
+        self.assertEqual("publishing", self.store.all()[0].phase)
+        self.executor.tasks[-1][0].set_result({"commit": "c" * 40, "pull_request_url": "https://github.com/discourse/discourse/pull/123"})
         self.controller.poll()
         self.assertEqual("done", self.store.all()[0].phase)
         self.assertEqual("done", self.board.commands[-1][0])
@@ -423,8 +429,33 @@ class ControllerTests(unittest.TestCase):
         self.assertEqual("deploying", self.executor.tasks[0][1].phase)
         self.executor.tasks[0][0].set_result({"commit": "c" * 40})
         self.controller.poll()
-        self.assertEqual("done", self.store.all()[0].phase)
+        self.assertEqual("publishing", self.store.all()[0].phase)
 
+    def test_publication_failure_retries_after_restart_without_merge_or_deploy(self):
+        self.controller.poll()
+        self.complete()
+        self.board.move("DONE")
+        self.controller.poll()
+        for _ in range(2):
+            self.executor.tasks[-1][0].set_result({"commit": "c" * 40})
+            self.controller.poll()
+        self.assertEqual("publishing", self.store.all()[0].phase)
+        self.executor.tasks[-1][0].set_exception(RuntimeError("GitHub unavailable"))
+        self.controller.poll()
+        run = self.store.all()[0]
+        self.assertEqual("publishing", run.phase)
+        self.assertFalse(self.controller.status()["ok"])
+        self.assertFalse(any(c[0] == "done" for c in self.board.commands))
+        self.executor = Executor()
+        self.controller = self.build()
+        with patch("controller.time.time", return_value=run.retry_after + 1):
+            self.controller.poll()
+        self.assertEqual(1, len(self.executor.tasks))
+        self.assertEqual("publishing", self.executor.tasks[-1][1].phase)
+        self.executor.tasks[-1][0].set_result({"commit": "c" * 40, "pull_request_url": "https://github.com/discourse/discourse/pull/123"})
+        self.controller.poll()
+        self.assertEqual("done", self.store.all()[0].phase)
+        self.assertIn("pull/123", self.board.commands[-1][2])
 
 
 class ResourceTests(unittest.TestCase):

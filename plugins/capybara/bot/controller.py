@@ -22,7 +22,7 @@ import requests
 LOG = logging.getLogger("codex-board-bot")
 OWNER = "codex-board-bot"
 ACTIVE = {"running", "review"}
-INTEGRATION = {"integrating", "deploying"}
+INTEGRATION = {"integrating", "deploying", "publishing"}
 
 
 class Conflict(Exception):
@@ -58,6 +58,9 @@ class Run:
     integration_volume: str = ""
     retry_after: float = 0
     deployment_attempts: int = 0
+    publication_required: bool = False
+    published_commit: str = ""
+    pull_request_url: str = ""
 
     @classmethod
     def create(cls, card, board_id, run_id=None):
@@ -65,7 +68,7 @@ class Run:
         stem = f"capybara-board-{board_id}-card-{card["id"]}"
         name = f"{stem}-{identity}"
         return cls(card_id=card["id"], run_id=identity,
-                   claimed_version=card["version"], card=card, integration_version=1,
+                   claimed_version=card["version"], card=card, integration_version=1, publication_required=True,
                    integration_volume=f"{name}-integration",
                    container_name=name, tunnel_name=name,
                    workspace_volume=f"{name}-workspace", codex_volume=f"{stem}-session")
@@ -367,6 +370,10 @@ class Runtime:
         self.board_runtime.deploy(run.integrated_commit, event)
         return {"commit": run.integrated_commit}
 
+    def publish(self, run, event):
+        from publisher import ForkPublisher
+        return ForkPublisher(self.config, self.client, self).push(run, event)
+
     def integrate(self, run, event):
         labels = {"owner": OWNER, "board_id": str(self.config.board_id),
                   "card_id": str(run.card_id), "run_id": run.run_id, "role": "integrator"}
@@ -537,7 +544,14 @@ class Controller:
                 if run.phase == "integrating":
                     run.integrated_commit = result["commit"]
                     run.phase = "deploying"
+                elif run.phase == "deploying" and run.publication_required:
+                    run.phase = "publishing"
+                    run.error = ""
+                    run.retry_after = 0
                 else:
+                    if run.phase == "publishing":
+                        run.published_commit = result["commit"]
+                        run.pull_request_url = result["pull_request_url"]
                     run.phase = "done"
                     run.error = ""
                     run.retry_after = 0
@@ -547,7 +561,8 @@ class Controller:
             if (run.phase in INTEGRATION and not self.jobs and not run.cleanup_pending
                     and time.time() >= run.retry_after):
                 event = threading.Event()
-                action = self.runtime.integrate if run.phase == "integrating" else self.runtime.deploy
+                action = {"integrating": self.runtime.integrate, "deploying": self.runtime.deploy,
+                          "publishing": self.runtime.publish}[run.phase]
                 self.jobs[run.run_id] = (self.executor.submit(action, dataclasses.replace(run), event), event)
                 break
 
@@ -609,6 +624,8 @@ class Controller:
                     message = (f"Merged into capybara as `{run.integrated_commit}` and updated from official Discourse upstream. "
                                "The board has restarted successfully. Preview resources were removed."
                                if run.integrated_commit else "Preview resources were removed.")
+                    if run.published_commit:
+                        message += f" Published `{run.published_commit}` to {run.pull_request_url}."
                     self.board.transition("done", run, message)
                     run.report_pending = False
                 except Conflict:
@@ -629,13 +646,13 @@ class Controller:
                 else:
                     run.report_pending = False
                     self.save(run)
-            if (run.phase == "deploying" and run.error and run.report_pending and card
+            if (run.phase in {"deploying", "publishing"} and run.error and run.report_pending and card
                     and card["column"] == "DONE" and (card.get("run") or {}).get("run_id") == run.run_id):
                 run.claimed_version = card["version"]
                 try:
                     self.board.transition("integration_failed", run,
                                           f"Changes were merged into capybara as `{run.integrated_commit}`. "
-                                          f"The board restart failed. {run.error}\n\nDeployment will retry automatically.")
+                                          f"{run.phase.capitalize()} failed. {run.error}\n\nThis step will retry automatically.")
                 except Conflict:
                     pass
                 else:
@@ -732,11 +749,12 @@ class Controller:
             self.launch(run)
 
     def status(self):
-        return {"ok": not bool(self.last_error) and not any(run.phase == "integration_failed" or (run.phase == "deploying" and run.error) for run in self.runs.values()), "board_id": self.board_id,
+        return {"ok": not bool(self.last_error) and not any(run.phase == "integration_failed" or (run.phase in {"deploying", "publishing"} and run.error) for run in self.runs.values()), "board_id": self.board_id,
                 "last_poll": self.last_poll, "error": self.last_error,
                 "runs": [{"card_id": run.card_id, "run_id": run.run_id, "phase": run.phase,
                           "preview_url": run.preview_url, "error": run.error,
-                          "cleanup_pending": run.cleanup_pending, "integrated_commit": run.integrated_commit} for run in self.runs.values()]}
+                          "cleanup_pending": run.cleanup_pending, "integrated_commit": run.integrated_commit,
+                          "published_commit": run.published_commit, "pull_request_url": run.pull_request_url} for run in self.runs.values()]}
 
 
 def main():

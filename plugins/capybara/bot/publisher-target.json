@@ -1,0 +1,8 @@
+{
+  "repository": "discourse/capybara-bot",
+  "repository_id": 1426162178,
+  "branch": "capybara",
+  "base_repository": "discourse/discourse",
+  "base_branch": "main",
+  "pull_request": 44782
+}

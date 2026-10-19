@@ -16,11 +16,12 @@ Edit the topic or add replies, then move REVIEW back to TODO to request another 
 Move REVIEW to DONE to accept the change. The bot removes that preview container and its ngrok tunnel.
 It applies only the accepted task's changes to capybara as one commit, fetches official discourse/discourse main,
 and rebases local commits onto that upstream SHA. Codex resolves conflicts inside an isolated Docker checkout.
-The trusted publisher requires a clean capybara checkout and preserves backup refs. It never pushes remotely.
+Local integration requires a clean capybara checkout and preserves backup refs.
 The Docker board then installs Bundler and pnpm dependencies, migrates its persistent database, starts the frontend and Rails,
-and verifies public access and administrator login before reporting success in the topic.
+and verifies public access and administrator login. A separate trusted publisher then updates only
+discourse/capybara-bot:capybara for https://github.com/discourse/discourse/pull/44782 before reporting success.
 Accepted DONE integration finishes before another TODO is claimed, including when the accepted card is reopened meanwhile.
-Deployment failures retry with a delay. A pre-publication integration failure is reported on DONE and blocks new work until retried.
+Deployment and publication failures retry their saved phase with a delay. A pre-publication integration failure is reported on DONE and blocks new work until retried.
 After fixing the reported issue, move that card to TODO. Your local edits are preserved rather than stashed or discarded.
 Historical DONE cards from before integration was enabled are not merged retrospectively.
 
@@ -53,3 +54,22 @@ Use Docker to run test_controller.py, test_integration.py and test_images.py.
 The capybara plugin's Rails specs cover topic cards, discussion, uploads, permissions and integration status messages.
 The plugin is tracked at plugins/capybara. Its bot/ directory contains the versioned bot package.
 The installed runtime copy is /Users/joffreyjaffeux/Documents/Codex/2026-10-19/ok/outputs/kanban-bot.
+
+Restricted GitHub publishing
+
+publisher-target.json pins the fork repository ID, capybara branch, upstream main and PR 44782.
+The publisher checks that the PR is open and still uses that exact head and base before pushing.
+Its explicit refspec updates only refs/heads/capybara. A force-with-lease checks the last recorded remote SHA,
+so rebased commits can replace the branch while unexpected manual changes stop publication.
+The durable /data/fork-publication.json journal records the expected head and pending commit for crash recovery.
+Do not reset that journal to bypass a remote mismatch. Inspect the unexpected change first.
+
+The fine-grained token grants Contents read/write and Metadata read only on discourse/capybara-bot.
+It expires on 17 January 2027. GitHub scopes it to the repository; the trusted publisher enforces the branch and PR restriction.
+The host secret is /Users/joffreyjaffeux/Documents/Codex/capybara-secrets/github-fork-token, outside the coding mounts.
+The controller mounts it read-only and copies it with root-only permissions into a separate disposable publisher container.
+That container has a read-only source seed and no Docker socket or Codex credential. Coding workers never receive this token.
+The token and publisher container are removed after each attempt. Host Docker administrators remain trusted.
+To rotate it, replace the host secret with a token having the same repository permissions and recreate the controller.
+Publication stops if the token expires, the PR closes, its target changes, or the remote branch changes unexpectedly.
+Historical runs created before publishing was enabled keep their completed state and are not pushed retrospectively.

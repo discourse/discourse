@@ -15,12 +15,16 @@ services:
       NGROK_API: http://host.docker.internal:4040
       BOARD_BOOTSTRAP_HOST_PATH: /Users/joffreyjaffeux/Documents/Codex/2026-10-19/ok/work/board-bootstrap
       BASE_BRANCH: capybara
+      PUBLISHER_TARGET: /run/publisher-target.json
+      GITHUB_FORK_TOKEN: /run/secrets/github-fork-token
       MAX_CONCURRENCY: "1"
       RUN_TIMEOUT_SECONDS: "3600"
     ports:
       - "127.0.0.1:8099:8099"
     volumes:
       - controller-state:/data
+      - ./publisher-target.json:/run/publisher-target.json:ro
+      - ${GITHUB_FORK_TOKEN_HOST_PATH:-/Users/joffreyjaffeux/Documents/Codex/capybara-secrets/github-fork-token}:/run/secrets/github-fork-token:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - ${CODEX_AUTH_HOST_PATH:-/Users/joffreyjaffeux/.codex/auth.json}:/run/secrets/codex-auth.json:ro
     extra_hosts:
