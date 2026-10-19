@@ -1,5 +1,6 @@
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import { attributeBindings, classNames } from "@ember-decorators/component";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
@@ -9,8 +10,8 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
-import SelectKitRow from "./select-kit/select-kit-row";
-import TagChooserRow from "./tag-chooser-row";
+import SelectKitRow from "./select-kit/select-kit-row.gjs";
+import TagChooserRow from "./tag-chooser-row.gjs";
 
 @classNames("tag-chooser")
 @attributeBindings("categoryId")
@@ -21,6 +22,7 @@ import TagChooserRow from "./tag-chooser-row";
   allowAny: "canCreateTag",
   maximum: "maximumTagCount",
   valueProperty: "id",
+  prioritizeRecentTags: false,
 })
 @pluginApiIdentifiers("tag-chooser")
 export default class TagChooser extends MultiSelectComponent {
@@ -29,6 +31,7 @@ export default class TagChooser extends MultiSelectComponent {
   valueProperty = "id";
   nameProperty = "name";
 
+  /** @type {(string | { id: number | string, name: string })[] | null | undefined} */
   blockedTags = null;
   excludeSynonyms = false;
   excludeHasSynonyms = false;
@@ -41,14 +44,6 @@ export default class TagChooser extends MultiSelectComponent {
       termMatchesForbidden: false,
       termMatchErrorMessage: null,
     });
-  }
-
-  modifyComponentForRow(collection, item) {
-    if (this.getValue(item) === this.selectKit.filter && !item.count) {
-      return SelectKitRow;
-    }
-
-    return TagChooserRow;
   }
 
   @computed("site.can_create_tag", "allowCreate")
@@ -102,13 +97,16 @@ export default class TagChooser extends MultiSelectComponent {
     );
   }
 
-  @action
-  _onChange(value, items) {
-    if (this.onChange) {
-      this.onChange(items);
-    } else {
-      this.set("tags", items);
+  get _normalizedBlockedTags() {
+    return makeArray(this.blockedTags).filter(Boolean);
+  }
+
+  modifyComponentForRow(collection, item) {
+    if (this.getValue(item) === this.selectKit.filter && !item.count) {
+      return SelectKitRow;
     }
+
+    return TagChooserRow;
   }
 
   validateCreate(filter, content) {
@@ -130,10 +128,6 @@ export default class TagChooser extends MultiSelectComponent {
 
   createContentFromInput(input) {
     return this.tagUtils.createContentFromInput(input);
-  }
-
-  get _normalizedBlockedTags() {
-    return makeArray(this.blockedTags).filter(Boolean);
   }
 
   search(query) {
@@ -175,16 +169,32 @@ export default class TagChooser extends MultiSelectComponent {
       data.excludeHasSynonyms = true;
     }
 
-    return this.tagUtils.searchTags(
-      "/tags/filter/search",
-      data,
-      this._transformJson
+    const prioritizeRecentTags =
+      this.selectKit.options.prioritizeRecentTags &&
+      this.siteSettings.prioritize_recently_used_tags &&
+      isEmpty(query);
+
+    if (prioritizeRecentTags) {
+      data.prioritizeRecentTags = true;
+    }
+
+    return this.tagUtils.searchTags("/tags/filter/search", data, (json) =>
+      this._transformJson(json, { skipSort: prioritizeRecentTags })
     );
   }
 
+  @action
+  _onChange(value, items) {
+    if (this.onChange) {
+      this.onChange(items);
+    } else {
+      this.set("tags", items);
+    }
+  }
+
   @bind
-  _transformJson(json) {
-    if (this.isDestroyed || this.isDestroying) {
+  _transformJson(json, { skipSort = false } = {}) {
+    if (this.isDestroying) {
       return [];
     }
 
@@ -205,7 +215,7 @@ export default class TagChooser extends MultiSelectComponent {
       });
     }
 
-    results = this.tagUtils.sortSearchResults(results);
+    results = skipSort ? results : this.tagUtils.sortSearchResults(results);
 
     return uniqueItemsFromArray(results, "name");
   }

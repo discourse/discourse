@@ -147,7 +147,7 @@ class DiscourseAi::Utils::ImageToText
     end
     prompt = DiscourseAi::Completions::Prompt.new(system_message, messages: messages)
     result = llm.generate(prompt, user: Discourse.system_user, execution_context:)
-    extract_chunks(result)
+    extract_chunks(DiscourseAi::Completions::Llm.text_from_response(result))
   end
 
   def extract_text_with_tesseract(page)

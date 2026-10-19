@@ -15,12 +15,12 @@
     "xss": "^1.0.15"
   },
   "devDependencies": {
-    "ember-source": "~6.10.0"
+    "ember-source": "~7.3.0"
   },
   "engines": {
     "node": ">= 20",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": "^10"
+    "pnpm": "^12"
   }
 }

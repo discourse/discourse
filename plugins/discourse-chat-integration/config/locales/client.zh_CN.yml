@@ -276,7 +276,13 @@ zh_CN:
             provider:
               label: 提供程序
     discourse_workflows:
+      node_unavailable:
+        requires_chat_integration: "需要启用聊天集成插件"
+      nodes:
+        "action:send_chat_integration_message": "发送聊天集成消息"
+      node_descriptions:
+        "action:send_chat_integration_message": "向聊天集成频道（Slack、Discord、Telegram 等）发送通知"
       send_chat_integration_message:
         channel_id: "频道"
         configure: "配置"
-        message: "发送私信"
+        message: "消息"

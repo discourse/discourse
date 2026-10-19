@@ -60,6 +60,8 @@ fr:
       cast-votes:
         title: "Distribuez vos votes"
         label: "Votez maintenant !"
+      keep-vote:
+        label: "Retour"
       show-results:
         title: "Afficher les résultats du sondage"
         label: "Résultats"

@@ -197,9 +197,22 @@ ru:
     discourse_workflows:
       nodes:
         "trigger:assigned": "Назначенные"
+        "trigger:unassigned": "Неназначенные"
       assign_topic:
+        resource: "Ресурс"
+        resources:
+          topic: "Тема"
+          post: "Публикация"
         operations:
           assign: "Назначить"
           unassign: "Снять ответственного"
         topic_id: "ID темы"
+        post_id: "ID сообщения"
+        assignee: "Назначенный"
+      check_assignment:
+        target_types:
+          topic: "Тема"
+          post: "Публикация"
+        topic_id: "ID темы"
+        post_id: "ID сообщения"
         assignee: "Назначенный"

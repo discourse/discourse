@@ -14,19 +14,96 @@ zh_CN:
     rss_polling:
       title: RSS 轮询
     admin:
+      logs:
+        staff_actions:
+          actions:
+            create_rss_polling_feed: 创建 RSS 订阅源
+            update_rss_polling_feed: 更新 RSS 订阅源
+            destroy_rss_polling_feed: 删除 RSS 订阅源
+            enable_rss_polling_feed: 启用 RSS 订阅源
+            disable_rss_polling_feed: 禁用 RSS 订阅源
+            poll_rss_polling_feed: 立即轮询 RSS 订阅源
       rss_polling:
+        feed_settings: 订阅源设置
+        discourse_settings: Discourse 设置
         author: 作者
         feed_url: URL
+        feed_url_must_be_http: 输入以 http:// 或 https:// 开头的有效订阅源 URL。
         discourse_category: 类别
         discourse_tags: 标签
+        required_tags_hint: "此类别需要下列标签之一 — 请添加一个标签，否则导入的话题将被拒绝："
+        required_tag_error: '至少添加 %{count} 个来自“%{tag_group}”群组的标签，否则导入的话题将被拒绝。'
+        feed_category_filter: 类别筛选器
+        feed_category_filter_description: 仅导入订阅源类别包含此文本（不区分大小写）的条目。留空则会导入所有条目。
+        showing: "正在显示前 %{count} 个条目，共 %{total} 个。"
         feeds:
+          title: 订阅源
+          nav_description: 管理导入到 Discourse 的 RSS/Atom 订阅源。
+          description: 配置被轮询并作为话题导入的 RSS/Atom 订阅源。
+          add: 添加订阅源
+          add_header: 添加订阅源
+          edit_header: 编辑订阅源
+          empty: 您尚未配置任何订阅源。
           edit: 编辑
           delete: 删除
+          enable: 启用订阅源
+          disable: 禁用订阅源
+          back: 返回订阅源
           save: 保存
-          confirm_delete: "确定要删除此 Feed 吗？"
+          confirm_delete: "确定要删除此订阅源吗？"
+          delete_success: 订阅源已删除
+          save_success: 订阅源已保存
+          enable_success: 订阅源已启用
+          disable_success: 订阅源已禁用
         test:
+          button: 测试订阅源
           title: 预览
+          empty: 此订阅源未返回任何条目。
           dismiss: 关闭
+          would_import: 将会导入
+          summary:
+            would_import: "%{count} 个条目将会导入"
+            already_imported: "%{count} 个条目已导入"
+            skipped: "%{count} 个条目将会跳过"
+          already_imported: "已导入 — 轮询将会更新<a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>现有话题</a>。"
+          already_imported_plain: "已导入 — 轮询将会更新现有话题。"
+          skip_reasons:
+            missing_content: 已跳过 — 该条目没有内容。
+            missing_title: 已跳过 — 该条目没有标题。
+            invalid_url: 已跳过 — 该条目没有有效的导入链接。
+            category_filter_mismatch: "已跳过 — 条目类别：%{categories}"
+            category_filter_mismatch_none: 已跳过 — 该条目没有类别。
+          errors:
+            fetch_failed: 无法获取订阅源。请检查 URL 是否正确且可访问。
+            parse_failed: 该响应似乎不是有效的 RSS 或 Atom 订阅源。
+            invalid_feed: 由于数据格式错误，无法读取订阅源。
+            blank_feed_url: 输入要测试的订阅源 URL。
+            category_deleted: 此订阅源导入到的类别不再存在。编辑此订阅源并选择新的类别。
+            unknown: 无法读取此订阅源。该订阅源可能暂时不可用，或返回了意外内容。请测试此订阅源以进行诊断，或查看日志以获取详细信息。
         status:
           enabled: 已启用
           disabled: 已禁用
+          disabled_note: 不会按计划进行轮询
+        history:
+          recent: 最近的轮询
+          show_older: "显示 %{count} 个更早的轮询"
+          poll_now: 立即轮询
+          poll_now_dirty: 在轮询前保存更改。
+          poll_now_disabled: 在轮询前启用订阅源。
+          poll_confirm: 轮询现在将获取此订阅源并导入或更新话题。是否继续？
+          poll_started: 轮询已开始 — 最新尝试很快就会出现在此处。
+          empty: 此订阅源尚未进行轮询。
+          no_items: 本次轮询中未处理任何条目。
+          no_changes: 无更改
+          imported_count: "%{count} 个已导入"
+          updated_count: "%{count} 个已更新"
+          skipped_count: "%{count} 个已跳过"
+          failed_count: "%{count} 个已失败"
+          imported: "作为新<a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>话题</a>导入。"
+          imported_plain: "作为新话题导入。"
+          updated: "已更新<a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>现有话题</a>。"
+          updated_plain: "已更新现有话题。"
+          failed: 无法导入。
+          failed_reasons:
+            import_rejected: "无法导入 — 此条目没有有效的导入链接。"
+            import_error: "无法导入：%{error}"

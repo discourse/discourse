@@ -280,12 +280,33 @@ module BadgeQueries
   end
 
   def self.anniversaries(start_date, end_date)
+    end_year = end_date.year
     start_date = start_date.iso8601(6)
     end_date = end_date.iso8601(6)
 
     <<~SQL
-      SELECT u.id
-        FROM users AS u
+      WITH anniversary_candidates AS (
+        SELECT u.*,
+               #{end_year} - EXTRACT(YEAR FROM u.created_at)::integer AS anniversary_year
+          FROM users AS u
+      ),
+      anniversary_years AS (
+        SELECT u.*,
+               CASE
+                 WHEN u.created_at + make_interval(years => u.anniversary_year) <= '#{end_date}'
+                   THEN u.anniversary_year
+                 ELSE u.anniversary_year - 1
+               END AS current_anniversary_year
+          FROM anniversary_candidates AS u
+      ),
+      users_with_anniversaries AS (
+        SELECT u.*,
+               u.created_at + make_interval(years => u.current_anniversary_year) AS anniversary_at,
+               u.created_at + make_interval(years => u.current_anniversary_year + 1) AS next_anniversary_at
+          FROM anniversary_years AS u
+      )
+      SELECT u.id AS user_id, u.anniversary_at AS granted_at
+        FROM users_with_anniversaries AS u
         JOIN posts AS p ON p.user_id = u.id
         JOIN topics AS t ON p.topic_id = t.id
        WHERE u.id > 0
@@ -300,9 +321,9 @@ module BadgeQueries
          AND t.visible
          AND t.archetype <> 'private_message'
          AND t.deleted_at IS NULL
-         AND NOT EXISTS (SELECT 1 FROM user_badges AS ub WHERE ub.user_id = u.id AND ub.badge_id = #{Badge::Anniversary} AND ub.granted_at BETWEEN '#{start_date}' AND '#{end_date}')
+         AND NOT EXISTS (SELECT 1 FROM user_badges AS ub WHERE ub.user_id = u.id AND ub.badge_id = #{Badge::Anniversary} AND ub.granted_at >= u.anniversary_at AND ub.granted_at < u.next_anniversary_at)
          AND NOT EXISTS (SELECT 1 FROM anonymous_users AS au WHERE au.user_id = u.id)
-       GROUP BY u.id
+       GROUP BY u.id, u.anniversary_at
       HAVING COUNT(p.id) > 0
     SQL
   end

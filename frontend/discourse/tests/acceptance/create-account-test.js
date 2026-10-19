@@ -147,6 +147,53 @@ acceptance("Create Account", function () {
   });
 });
 
+acceptance("Create Account with email code available", function (needs) {
+  needs.settings({
+    enable_local_logins_via_code: true,
+    enable_local_logins_via_email: true,
+  });
+
+  test("defaults to email-only signup", async function (assert) {
+    await visit("/signup");
+
+    assert
+      .dom(".code-login-form__email-step")
+      .exists("shows email-code signup");
+    assert
+      .dom("#new-account-password")
+      .doesNotExist("does not show a password field");
+  });
+
+  test("restores a verified signup after a full page load", async function (assert) {
+    this.owner.lookup("service:session-store").setObject({
+      key: "email-code-signup-continuation",
+      value: {
+        email: "verified@example.com",
+        expiresAt: Date.now() + 60_000,
+        signupToken: "signup-token",
+        username: "",
+      },
+    });
+
+    await visit("/signup");
+
+    assert
+      .dom(".code-login-form__account-details-step")
+      .exists("restores the account details step");
+    assert
+      .dom(".code-login-form__hidden-email")
+      .hasValue("verified@example.com", "preserves the verified email");
+  });
+
+  test("uses traditional signup when email-code signup is unavailable", async function (assert) {
+    this.siteSettings.enable_local_logins_via_email = false;
+    await visit("/signup");
+
+    assert.dom("#new-account-password").exists("shows traditional signup");
+    assert.dom(".code-login-form").doesNotExist("does not show code signup");
+  });
+});
+
 acceptance("Create Account - full name requirement", function () {
   test("full name required", async function (assert) {
     const site = Site.current();

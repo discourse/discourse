@@ -13,6 +13,7 @@ import DiscourseURL, {
   userPath,
 } from "discourse/lib/url";
 import Session from "discourse/models/session";
+import Site from "discourse/models/site";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Utility | url", function (hooks) {
@@ -372,6 +373,33 @@ module("Unit | Utility | url", function (hooks) {
     }
   });
 
+  test("routeTo redirects paths registered as server-rendered homepages", function (assert) {
+    const site = Site.current();
+    const originalOptions = site.homepage_options;
+    site.set("homepage_options", [
+      { id: "directory", path: "/directory", server_side: true },
+    ]);
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    try {
+      for (const path of [
+        "/directory/people/1/example",
+        "/directory?neighborhood=mississippi",
+        "/directory#shops",
+      ]) {
+        DiscourseURL.redirectTo.resetHistory();
+        DiscourseURL.routeTo(path);
+
+        assert.true(
+          DiscourseURL.redirectTo.calledWith(path),
+          `${path} is redirected to the server`
+        );
+      }
+    } finally {
+      site.set("homepage_options", originalOptions);
+    }
+  });
+
   test("routeTo full page loads when a refresh is required", async function (assert) {
     sinon.stub(DiscourseURL, "isComposerOpen").get(() => false);
     sinon.stub(DiscourseURL, "redirectTo");
@@ -420,6 +448,43 @@ module("Unit | Utility | url", function (hooks) {
     assert.true(
       DiscourseURL.replaceState.calledWith("#heading1"),
       "in-page anchors call replaceState with the url fragment"
+    );
+  });
+
+  test("handleURL restores the anchor after the transition", async function (assert) {
+    let redirected = false;
+    sinon.stub(DiscourseURL, "routerService").get(() => ({
+      transitionTo: () => ({
+        promise: Promise.resolve(),
+        followRedirects: () =>
+          new Promise((resolve) =>
+            setTimeout(() => {
+              redirected = true;
+              resolve();
+            }, 0)
+          ),
+      }),
+    }));
+    sinon.stub(DiscourseURL, "jumpToElement");
+    sinon.stub(DiscourseURL, "replaceState");
+
+    await DiscourseURL.handleURL("/t/some-topic/123#heading1");
+
+    assert.true(redirected, "waits for redirects before restoring");
+    assert.true(
+      DiscourseURL.replaceState.calledWith("#heading1"),
+      "the anchor is put back on the URL once the route has settled"
+    );
+    assert.true(
+      DiscourseURL.jumpToElement.calledWith("heading1"),
+      "the anchor is scrolled to"
+    );
+
+    DiscourseURL.replaceState.resetHistory();
+    await DiscourseURL.handleURL("/t/some-topic/123");
+    assert.false(
+      DiscourseURL.replaceState.called,
+      "no replaceState without an anchor"
     );
   });
 

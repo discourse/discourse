@@ -13,6 +13,7 @@ import Site from "discourse/models/site";
 
 function isNew(topic) {
   return (
+    !topic.deleted &&
     topic.last_read_post_number === null &&
     ((topic.notification_level !== 0 && !topic.notification_level) ||
       topic.notification_level >= NotificationLevels.TRACKING) &&
@@ -23,6 +24,7 @@ function isNew(topic) {
 
 function isUnread(topic) {
   return (
+    !topic.deleted &&
     topic.last_read_post_number !== null &&
     topic.last_read_post_number < topic.highest_post_number &&
     topic.notification_level >= NotificationLevels.TRACKING
@@ -83,6 +85,24 @@ export default class TopicTrackingState extends EmberObject {
     this.messageBus.unsubscribe("/delete", this.onDeleteMessage);
     this.messageBus.unsubscribe("/recover", this.onRecoverMessage);
     this.messageBus.unsubscribe("/destroy", this.onDestroyMessage);
+  }
+
+  get mutedTopics() {
+    return this.currentUser?.muted_topics || [];
+  }
+
+  get unmutedTopics() {
+    return this.currentUser?.unmuted_topics || [];
+  }
+
+  /**
+   * Used to determine whether to show the message at the top of the topic list
+   * e.g. "see 1 new or updated topic"
+   *
+   * @method hasIncoming
+   */
+  get hasIncoming() {
+    return this.incomingCount > 0;
   }
 
   /**
@@ -147,6 +167,9 @@ export default class TopicTrackingState extends EmberObject {
   @bind
   onDeleteMessage(msg) {
     this.modifyStateProp(msg, "deleted", true);
+    if (this.newIncoming) {
+      this.clearIncoming([msg.topic_id]);
+    }
     this.messageCount++;
   }
 
@@ -167,14 +190,6 @@ export default class TopicTrackingState extends EmberObject {
     ) {
       DiscourseURL.redirectTo("/");
     }
-  }
-
-  get mutedTopics() {
-    return this.currentUser?.muted_topics || [];
-  }
-
-  get unmutedTopics() {
-    return this.currentUser?.unmuted_topics || [];
   }
 
   trackMutedOrUnmutedTopic(data) {
@@ -254,7 +269,7 @@ export default class TopicTrackingState extends EmberObject {
    * is called by various topic routes, as is resetTracking.
    *
    * @method notifyIncoming
-   * @param {Object} data - The data sent by TopicTrackingState to MessageBus
+   * @param {{ message_type: string, topic_id: number, payload?: Record<string, unknown> }} data - The data sent by TopicTrackingState to MessageBus
    *                        which includes the message_type, payload of the topic,
    *                        and the topic_id.
    */
@@ -405,16 +420,6 @@ export default class TopicTrackingState extends EmberObject {
   }
 
   /**
-   * Used to determine whether to show the message at the top of the topic list
-   * e.g. "see 1 new or updated topic"
-   *
-   * @method hasIncoming
-   */
-  get hasIncoming() {
-    return this.incomingCount > 0;
-  }
-
-  /**
    * Removes the topic ID provided from the tracker state.
    *
    * Calls onStateChange callbacks.
@@ -505,7 +510,7 @@ export default class TopicTrackingState extends EmberObject {
    * @method sync
    * @param {TopicList} list
    * @param {String} filter - The filter used for the list e.g. new/unread
-   * @param {Object} queryParams - The query parameters for the list e.g. page
+   * @param {Record<string, unknown>} [queryParams] - The query parameters for the list e.g. page
    */
   sync(list, filter, queryParams) {
     if (!list || !list.topics) {
@@ -537,10 +542,6 @@ export default class TopicTrackingState extends EmberObject {
     this.messageCount++;
   }
 
-  _generateCallbackId() {
-    return Math.random().toString(12).slice(2, 11);
-  }
-
   onStateChange(cb) {
     let callbackId = this._generateCallbackId();
     this.stateChangeCallbacks[callbackId] = cb;
@@ -551,6 +552,7 @@ export default class TopicTrackingState extends EmberObject {
     delete this.stateChangeCallbacks[callbackId];
   }
 
+  /** @returns {number[] | Set<number>} */
   getSubCategoryIds(categoryId) {
     if (!categoryId) {
       return [];
@@ -764,6 +766,26 @@ export default class TopicTrackingState extends EmberObject {
     }
   }
 
+  modifyState(topic, data) {
+    this._setState({ topic, data });
+  }
+
+  modifyStateProp(topic, prop, data) {
+    const state = this.findState(topic);
+    if (state) {
+      state[prop] = data;
+      this._afterStateChange();
+    }
+  }
+
+  findState(topicOrId) {
+    return this.states.get(this._stateKey(topicOrId));
+  }
+
+  _generateCallbackId() {
+    return Math.random().toString(12).slice(2, 11);
+  }
+
   _setState({ topic, data, skipAfterStateChange }) {
     const stateKey = this._stateKey(topic);
     const oldState = this.states.get(stateKey);
@@ -779,22 +801,6 @@ export default class TopicTrackingState extends EmberObject {
     } else {
       return false;
     }
-  }
-
-  modifyState(topic, data) {
-    this._setState({ topic, data });
-  }
-
-  modifyStateProp(topic, prop, data) {
-    const state = this.findState(topic);
-    if (state) {
-      state[prop] = data;
-      this._afterStateChange();
-    }
-  }
-
-  findState(topicOrId) {
-    return this.states.get(this._stateKey(topicOrId));
   }
 
   /*

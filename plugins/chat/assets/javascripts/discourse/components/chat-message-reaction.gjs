@@ -10,47 +10,25 @@ import { modifier } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
 import discourseLater from "discourse/lib/later";
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
-import { and } from "discourse/truth-helpers";
+import { and, eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { i18n } from "discourse-i18n";
 import ChatMessageReactionsUsers from "discourse/plugins/chat/discourse/components/chat-message-reactions-users";
 import { getReactionText } from "discourse/plugins/chat/discourse/lib/get-reaction-text";
+
+let descriptionSequence = 0;
 
 export default class ChatMessageReaction extends Component {
   @service currentUser;
   @service menu;
   @service site;
-  @service siteSettings;
-  @service tooltip;
 
-  registerTooltip = modifier((element) => {
-    if (
-      this.args.disableTooltip ||
-      this.useReactionsUsersPopup ||
-      !this.popoverContent?.length
-    ) {
-      return;
-    }
-
-    const instance = this.tooltip.register(element, {
-      content: trustHTML(this.popoverContent),
-      identifier: "chat-message-reaction-tooltip",
-      animated: false,
-      placement: "top",
-      fallbackPlacements: ["bottom"],
-      triggers: this.site.mobileView ? ["hold"] : ["hover"],
-    });
-
-    return () => {
-      instance.destroy();
-    };
-  });
-
-  // With the new reactions popup enabled, hovering (desktop) or long-pressing
-  // (mobile) a reaction opens a users popup centred on that reaction. Each
-  // reaction registers its own popup; the shared `groupIdentifier` ensures only
-  // one is open at a time, so moving to another reaction opens a fresh popup.
+  // Hovering (desktop) or long-pressing (mobile) a reaction opens a users popup
+  // centred on that reaction. Each reaction registers its own popup; the shared
+  // `groupIdentifier` ensures only one is open at a time, so moving to another
+  // reaction opens a fresh popup.
   registerReactionsUsersPopup = modifier((element) => {
-    if (!this.useReactionsUsersPopup) {
+    if (this.args.disableTooltip) {
       return;
     }
 
@@ -93,6 +71,12 @@ export default class ChatMessageReaction extends Component {
         this.scheduleCloseReactionsUsersPopup,
         { passive: true }
       );
+      element.addEventListener("focus", this.openReactionsUsersPopup, {
+        passive: true,
+      });
+      element.addEventListener("blur", this.scheduleCloseReactionsUsersPopup, {
+        passive: true,
+      });
     }
 
     return () => {
@@ -105,12 +89,65 @@ export default class ChatMessageReaction extends Component {
         "pointerleave",
         this.scheduleCloseReactionsUsersPopup
       );
+      element.removeEventListener("focus", this.openReactionsUsersPopup);
+      element.removeEventListener(
+        "blur",
+        this.scheduleCloseReactionsUsersPopup
+      );
       instance.destroy();
       this.#reactionsUsersPopupInstance = null;
     };
   });
+
+  descriptionId = `chat-message-reaction-description-${descriptionSequence++}`;
   #reactionsUsersPopupInstance = null;
   #closeReactionsUsersPopupTimer = null;
+
+  get showCount() {
+    return this.args.showCount ?? true;
+  }
+
+  get emojiString() {
+    return `:${this.args.reaction.emoji}:`;
+  }
+
+  get emojiUrl() {
+    return emojiUrlFor(this.args.reaction.emoji);
+  }
+
+  get isCountedReaction() {
+    return !!(this.showCount && this.args.reaction.count);
+  }
+
+  get ariaLabel() {
+    const emoji = this.args.reaction.emoji;
+
+    if (this.isCountedReaction) {
+      return i18n("chat.reactions.counted", {
+        emoji,
+        count: this.args.reaction.count,
+      });
+    }
+
+    if (this.args.reaction.reacted) {
+      return i18n("chat.reactions.remove", { emoji });
+    }
+
+    return i18n("chat.reactions.add", { emoji });
+  }
+
+  @cached
+  get popoverContent() {
+    if (!this.args.reaction.count || !this.args.reaction.users?.length) {
+      return;
+    }
+
+    return emojiUnescape(getReactionText(this.args.reaction, this.currentUser));
+  }
+
+  get description() {
+    return this.popoverContent ? trustHTML(this.popoverContent) : undefined;
+  }
 
   // Close on a short delay so moving the pointer across the gap between the
   // reaction and the popup (or briefly off either) doesn't dismiss it.
@@ -123,29 +160,14 @@ export default class ChatMessageReaction extends Component {
   }
 
   @bind
+  openReactionsUsersPopup() {
+    this.cancelCloseReactionsUsersPopup();
+    this.#reactionsUsersPopupInstance?.show();
+  }
+
+  @bind
   cancelCloseReactionsUsersPopup() {
     cancel(this.#closeReactionsUsersPopupTimer);
-  }
-
-  // When the new reactions popup is enabled the reaction opens a users popup, so
-  // the names tooltip is suppressed here.
-  get useReactionsUsersPopup() {
-    return (
-      this.siteSettings.enable_new_chat_reactions_popup &&
-      !this.args.disableTooltip
-    );
-  }
-
-  get showCount() {
-    return this.args.showCount ?? true;
-  }
-
-  get emojiString() {
-    return `:${this.args.reaction.emoji}:`;
-  }
-
-  get emojiUrl() {
-    return emojiUrlFor(this.args.reaction.emoji);
   }
 
   @action
@@ -163,43 +185,48 @@ export default class ChatMessageReaction extends Component {
     );
   }
 
-  @cached
-  get popoverContent() {
-    if (!this.args.reaction.count || !this.args.reaction.users?.length) {
-      return;
-    }
-
-    return emojiUnescape(getReactionText(this.args.reaction, this.currentUser));
-  }
-
   <template>
     {{#if (and @reaction this.emojiUrl)}}
       <button
-        {{on "click" this.handleClick passive=true}}
-        {{this.registerTooltip}}
-        {{this.registerReactionsUsersPopup}}
-        type="button"
-        title={{this.emojiString}}
-        data-emoji-name={{@reaction.emoji}}
-        tabindex={{if @interactive "0" "-1"}}
+        aria-describedby={{if this.description this.descriptionId}}
+        aria-label={{this.ariaLabel}}
+        aria-pressed={{if
+          this.isCountedReaction
+          (if @reaction.reacted "true" "false")
+        }}
         class={{dConcatClass
           "chat-message-reaction"
           (if @reaction.reacted "reacted")
         }}
+        data-emoji-name={{@reaction.emoji}}
+        {{! `interactive` is opt-out, as it is on the message itself: only an explicit
+        false makes a reaction display-only. }}
+        tabindex={{if (eq @interactive false) "-1" "0"}}
+        title={{this.emojiString}}
+        type="button"
+        {{on "click" this.handleClick passive=true}}
+        {{this.registerReactionsUsersPopup}}
       >
         <img
-          loading="lazy"
-          class="emoji"
-          width="20"
-          height="20"
           alt={{this.emojiString}}
+          class="emoji"
+          height="20"
+          loading="lazy"
           src={{this.emojiUrl}}
+          width="20"
         />
 
         {{#if (and this.showCount @reaction.count)}}
           <span class="count">{{@reaction.count}}</span>
         {{/if}}
       </button>
+
+      {{#if this.description}}
+        <span
+          class="sr-only"
+          id={{this.descriptionId}}
+        >{{this.description}}</span>
+      {{/if}}
     {{/if}}
   </template>
 }

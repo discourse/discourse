@@ -97,18 +97,18 @@ export default class ChatHeaderIcon extends Component {
     {{#unless (and this.site.mobileView this.isActive)}}
       <li class="header-dropdown-toggle chat-header-icon">
         <DButton
+          class={{dConcatClass "icon" "btn-flat" (if this.isActive "active")}}
+          tabindex="0"
+          title={{this.title}}
           @action={{this.openChat}}
           @href={{this.href}}
-          tabindex="0"
-          class={{dConcatClass "icon" "btn-flat" (if this.isActive "active")}}
-          title={{this.title}}
         >
           {{~dIcon this.icon~}}
           {{#if this.showUnreadIndicator}}
             <ChatHeaderIconUnreadIndicator
-              @urgentCount={{@urgentCount}}
-              @unreadCount={{@unreadCount}}
               @indicatorPreference={{@indicatorPreference}}
+              @unreadCount={{@unreadCount}}
+              @urgentCount={{@urgentCount}}
             />
           {{/if}}
         </DButton>

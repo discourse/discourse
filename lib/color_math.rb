@@ -59,7 +59,7 @@ module ColorMath
 
     def self.hex_to_rgb(color)
       color = color.gsub(/(.)/, '\1\1') if color.length == 3
-      raise new RuntimeError("Hex color must be 6 characters") if color.length != 6
+      raise "Hex color must be 6 characters" if color.length != 6
       color.scan(/../).map { |c| c.to_i(16) }
     end
 

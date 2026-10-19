@@ -64,6 +64,46 @@ describe DiscoursePolicy::PolicyController do
     end
   end
 
+  context "when an add-users-to-group assignment is removed" do
+    it "does not grant accepters access to topics restricted to the former group" do
+      group_to_add = Fabricate(:group)
+      group_to_add.add_owner(moderator)
+      private_category = Fabricate(:private_category, group: group_to_add)
+      private_topic = Fabricate(:topic, category: private_category, user: moderator)
+      private_post = Fabricate(:post, topic: private_topic, user: moderator, raw: "Restricted post")
+      policy_post = create_post(raw: <<~MD, user: moderator)
+            [policy group=#{group.name} add-users-to-group=#{group_to_add.name}]
+            I always open **doors**!
+            [/policy]
+          MD
+
+      sign_in(moderator)
+      put "/posts/#{policy_post.id}.json", params: { post: { raw: <<~MD } }
+                [policy group=#{group.name}]
+                I always open **doors**!
+                [/policy]
+              MD
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["post"]["raw"]).not_to include("add-users-to-group")
+
+      sign_in(user1)
+      get "/t/#{private_topic.id}.json"
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(private_post.raw)
+
+      put "/policy/accept.json", params: { post_id: policy_post.id }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq("OK")
+
+      get "/t/#{private_topic.id}.json"
+
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(private_post.raw)
+    end
+  end
+
   describe "#accepted" do
     before { sign_in(user1) }
 
@@ -285,6 +325,71 @@ describe DiscoursePolicy::PolicyController do
       expect(response.parsed_body["errors"]).to include(
         I18n.t("discourse_policy.errors.policy_group_inaccessible"),
       )
+    end
+  end
+
+  describe "policy validation" do
+    fab!(:admin)
+    fab!(:editor, :trust_level_4)
+    fab!(:audience_group, :group)
+    fab!(:target_group, :group)
+    fab!(:post) { Fabricate(:post, user: admin, raw: "Original content") }
+
+    before do
+      audience_group.add(editor)
+      target_group.add_owner(admin)
+    end
+
+    it "rejects an HTML policy from an editor without policy permissions" do
+      raw = <<~HTML
+        <div class="policy" data-group="#{audience_group.name}" data-add-users-to-group="#{target_group.name}">
+        I agree
+        </div>
+      HTML
+
+      sign_in(editor)
+      put "/posts/#{post.id}.json", params: { post: { raw: raw } }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(
+        I18n.t("discourse_policy.errors.no_policy_permission"),
+      )
+      expect(post.reload.raw).to eq("Original content")
+      expect(post.post_policy).to be_nil
+    end
+  end
+
+  describe "wiki policy posts" do
+    fab!(:admin)
+
+    let(:policy_post) { create_post(user: admin, raw: raw) }
+
+    it "rejects making a policy post a wiki while allowing quoted policy markup" do
+      sign_in(admin)
+
+      put "/posts/#{policy_post.id}/wiki.json", params: { wiki: "true" }
+
+      aggregate_failures do
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("discourse_policy.errors.policy_cannot_be_wiki"),
+        )
+        expect(policy_post.reload).not_to be_wiki
+      end
+
+      quoted_policy_post = create_post(user: admin, raw: <<~MD)
+        [quote="someone, post:1, topic:1"]
+        #{raw}
+        [/quote]
+      MD
+
+      put "/posts/#{quoted_policy_post.id}/wiki.json", params: { wiki: "true" }
+
+      aggregate_failures do
+        expect(response.status).to eq(200)
+        expect(response.body).to be_blank
+        expect(quoted_policy_post.reload).to be_wiki
+      end
     end
   end
 end

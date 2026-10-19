@@ -31,3 +31,8 @@ uk:
       recalculate_scores_remaining: "Ви досягли максимальної кількості перерахунків балів. Будь ласка, зачекайте %{time_left} , перш ніж спробувати ще раз."
   errors:
     leaderboard_positions_not_ready: "Ми формуємо вашу таблицю лідерів. Спробуйте ще раз за кілька хвилин."
+  discourse_gamification:
+    discourse_workflows:
+      gamification_score:
+        invalid_points: "Оцінка має бути цілим числом, відмінним від нуля, отримано: %{points}"
+        invalid_date: "Недійсна дата: %{date}"

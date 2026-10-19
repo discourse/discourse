@@ -4,8 +4,8 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import KeyValueStore from "discourse/lib/key-value-store";
-import resizableNode from "../modifiers/chat/resizable-node";
-import ChatSidePanelResizer from "./chat-side-panel-resizer";
+import resizableNode from "../modifiers/chat/resizable-node.js";
+import ChatSidePanelResizer from "./chat-side-panel-resizer.gjs";
 
 const MIN_PANEL_WIDTH = 250;
 const STORE_NAMESPACE = "discourse_chat_side_panel_size_";
@@ -15,6 +15,10 @@ export default class ChatSidePanel extends Component {
   @service site;
 
   store = new KeyValueStore(STORE_NAMESPACE);
+
+  get mainContainerWidth() {
+    return document.getElementById("main-chat-outlet").clientWidth;
+  }
 
   @action
   setupSize(element) {
@@ -49,10 +53,6 @@ export default class ChatSidePanel extends Component {
       );
       this.storeWidth(size.width);
     }
-  }
-
-  get mainContainerWidth() {
-    return document.getElementById("main-chat-outlet").clientWidth;
   }
 
   storeWidth(width) {

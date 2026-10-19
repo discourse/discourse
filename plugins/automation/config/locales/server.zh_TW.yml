@@ -5,14 +5,191 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    discourse_automation_enabled: "啟用 discourse-automation 外掛"
+    discourse_automation_max_recursion_depth: "自動化遞迴深度上限"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "（空白）"
+    models:
+      automations:
+        validations:
+          script_blank: "指令碼不得空白"
+          trigger_blank: "觸發條件不得空白"
+          script_missing_required_fields: "指令碼缺少必填欄位：%{fields}"
+          trigger_missing_required_fields: "觸發條件缺少必填欄位：%{fields}"
+      fields:
+        required_field: 必須填寫 `%{target}:%{target_name}` 上的欄位 `%{name}`。
+        invalid_field: 欄位元件 `%{component}` 無法用於 `%{target}:%{target_name}`。
+        invalid_metadata: '`%{field}` 的資料無效，或元件 `%{component}` 未知。'
     triggerables:
+      post_flag_created:
+        title: 已建立貼文標記
+        description: 貼文遭標記時觸發自動化
+      errors:
+        custom_fields_or_user_profile_required: "必須至少提供 `custom_fields` 或 `user_profile` 其中一項。"
+      user_badge_granted:
+        title: 已授予使用者徽章
+        doc: 使用者獲授予徽章時觸發自動化。
+      user_first_logged_in:
+        title: 使用者首次登入
+        doc: 使用者首次登入時觸發自動化。
+      stalled_topic:
+        title: 停滯的主題
+        doc: 主題擁有者在指定期間內沒有新回覆時觸發自動化。建議將此觸發條件限制在標籤／分類範圍內，因為受影響的主題數可能非常多。基於安全考量，受影響的主題數上限為 250。
+      api_call:
+        title: API 呼叫
+        description: 發出 POST 請求以觸發自動化
+        doc: 應使用全域 API 金鑰，向 `/automations/:id/trigger.json` 發出 POST 請求。
+      category_created_edited:
+        title: 已建立／編輯分類
+        description: 建立或編輯分類時觸發自動化
+      recurring:
+        title: 週期性
+        invalid_interval: 間隔必須是正數。
+      point_in_time:
+        title: 指定時間點
+        description: 到達指定日期時觸發自動化
+      user_added_to_group:
+        title: 使用者已加入群組
+        description: 使用者加入指定群組時觸發自動化
+      user_removed_from_group:
+        title: 使用者已從群組移除
+        description: 使用者從指定群組移除時觸發自動化
+      user_promoted:
+        title: 使用者已提升
+        description: 使用者從一個信任等級提升至另一個信任等級時
+        transition_placeholder: "從 %{from_level_name} 到 %{to_level_name}"
+      stalled_wiki:
+        title: 停滯的 Wiki
+        description: Wiki 超過所定義的期間未經編輯時觸發自動化
+      post_created_edited:
+        title: 已建立／編輯貼文
+        description: 編輯或建立有效貼文時觸發自動化
+      pm_created:
+        title: 已建立私人訊息
+        description: 建立有效的私人訊息時觸發自動化
+      topic_tags_changed:
+        title: 主題標籤已變更
+        description: 主題標籤變更時觸發自動化
       topic:
-        title: 話題
+        title: 主題
+        description: 相關指令碼只會用於指定主題，例如需要執行驗證的指令碼會很實用
+      topic_closed:
+        title: 主題已關閉
+        description: 主題關閉時觸發指令碼。
+      after_post_cook:
+        title: 貼文轉譯後
+        description: 貼文內容轉譯後觸發自動化
+      user_updated:
+        title: 使用者更新後
+        description: 使用者更新任何資訊時觸發自動化
     scriptables:
+      email_on_flagged_post:
+        title: 貼文遭標記時傳送電子郵件
+        description: 貼文建立標記時傳送自訂電子郵件
+        subject: "遭標記的貼文：%{topic_title}（%{flagger_username}）"
+        default_template: |-
+          有一篇貼文遭到標記。
+
+          主題：{{topic_title}}（{{topic_url}}）
+          貼文：{{post_url}}（#{{post_number}}）
+          標記類型：{{flag_type}}
+          遭標記的使用者：{{flagged_username}}
+          標記者：{{flagger_username}}
+          分類：{{category}}
+          標籤：{{tags}}
+
+          --------
+          貼文摘錄：
+          {{post_excerpt}}
+      post:
+        title: 建立貼文
+        description: 在指定主題上建立貼文
+      topic:
+        title: 建立主題
+        description: 以特定使用者身分建立主題
+      flag_post_on_words:
+        title: 依字詞標記貼文
+        description: 若貼文包含指定字詞則加以標記
+        flag_message: "貼文包含不允許的字詞：%{words}"
+        doc: 同時包含所有指定字詞的貼文將遭到標記並隱藏。請注意，以逗號分隔多個字詞時會視為複合條件（每個字詞都必須存在）。
+      zapier_webhook:
+        title: Zapier Webhook
+        description: 以觸發條件的 context 作為內文呼叫 Zap
+      auto_responder:
+        title: 自動回覆器
+        description: 回覆包含指定關鍵字的貼文
+      auto_tag_topic:
+        title: 自動標記主題
+        description: 自動將標籤新增至主題
       pin_topic:
-        title: 置頂話題
+        title: 將主題置頂
+        description: 在指定日期將指定主題置頂
+      banner_topic:
+        title: 設為橫幅主題
+        description: 將主題設為橫幅
+      gift_exchange:
+        title: 禮物交換
+        description: 允許匿名配對群組中的使用者，互相贈送禮物。
+        doc: 禮物交換需要一個至少有 3 位使用者的現有群組。在所選日期，群組中的每位使用者都會與一位贈送者及一位受贈者配對。
+      remove_upload_markup_from_deleted_posts:
+        title: 移除已刪除貼文中的上傳標記
+        description: 以系統使用者身分操作，並為已刪除貼文新增修訂，以移除上傳標記。與「清理上傳項目」工作搭配使用時，會永久刪除已刪除貼文中的上傳項目。請謹慎使用！
+        edit_reason: 自動化已從已刪除貼文移除上傳標記
+      send_pms:
+        title: 傳送私人訊息
+        description: 允許傳送私人訊息（可延遲傳送）。
+        doc: 允許向使用者傳送多則私人訊息。每則私人訊息都可設定延遲。
+      suspend_user_by_email:
+        title: 依電子郵件停權使用者
+        description: 依電子郵件地址自動停權帳號
+      user_global_notice:
+        title: 使用者全域通知
+        description: 允許向使用者顯示全域通知
+      user_group_membership_through_badge:
+        title: 透過徽章管理使用者群組成員資格
+        description: 依徽章修改使用者群組成員資格
+      suspend_user_by_email_with_api_call:
+        doc: 透過 API 呼叫觸發 `suspend_user_by_email` 時，端點預期傳送的參數中包含有效的 `email`。也可使用 `reasons` 與 `suspend_until (ISO 8601 format)` 覆寫預設欄位值。
+      user_global_notice_with_stalled_topic:
+        doc: 透過停滯主題觸發時，主題擁有者會收到全域通知。
+      user_global_notice_with_first_accepted_solution:
+        doc: 透過第一個接受的解決方案觸發時，解決方案作者會收到全域通知。
+      send_pms_with_api_call:
+        doc: 將 `send pms` 指令碼搭配 `api call` 觸發條件使用時，請求中的 `usernames` 參數會用來填入收件者清單。
+      topic_required_words:
+        title: 主題必要字詞
+        description: 允許定義主題所需的字詞清單，每篇貼文都應至少使用其中一個字詞。
+        doc: '「主題必要字詞」需要指定主題。編輯／建立貼文時，系統會依字詞清單驗證貼文，且至少必須出現其中一個字詞。'
+        errors:
+          must_include_word: "貼文必須包含以下至少一個字詞：%{words}"
       close_topic:
-        title: 關閉話題
+        title: 關閉主題
+        description: 關閉主題，並可選擇顯示關閉訊息
+      append_last_edited_by:
+        title: 附加最後編輯者
+        description: 將貼文的「最後編輯者」詳細資料新增至轉譯後內容底部。
+        text: "最後由 @%{username} 於 %{date_time} 編輯"
       append_last_checked_by:
+        title: 附加最後檢查者
+        description: 將貼文的「最後檢查者」詳細資料新增至轉譯後內容底部。
+        text: "最後由 @%{username} 於 %{date_time} 檢查"
+        summary: 檢查文件
+        details: "對文件執行檢查："
         button_text: 完成
+      add_user_to_group_through_custom_field:
+        title: "透過使用者自訂欄位將使用者加入群組"
+        description: "使用者登入時或透過週期性檢查，自動將使用者加入群組"
+      group_category_notification_default:
+        title: "群組分類預設通知"
+        description: "設定群組成員對分類的預設通知等級"
+      send_chat_message:
+        title: "傳送聊天訊息"
+        description: "向頻道傳送自訂聊天訊息"
+      random_assign:
+        title: "隨機指派"
+        description: "將主題隨機指派給群組"
+      set_topic_timer:
+        title: "設定主題計時器"
+        description: "在主題上設定主題計時器"

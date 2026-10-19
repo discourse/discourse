@@ -4,7 +4,7 @@ import { TextSelection } from "prosemirror-state";
 import type { RichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 
 function isInlineContainer(node: Node): boolean {
-  return (
+  return Boolean(
     node.isInline &&
     !node.isText &&
     node.type?.spec?.content &&

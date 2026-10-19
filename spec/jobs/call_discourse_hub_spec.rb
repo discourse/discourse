@@ -23,11 +23,10 @@ RSpec.describe Jobs::CallDiscourseHub do
         DiscourseHub.stubs(:discourse_version_check).returns(
           {
             "latestVersion" => "2026.3.1",
-            "criticalUpdates" => false,
             "missingVersionsCount" => 2,
             "versions" => [
-              { "version" => "2026.3.1", "notes" => "Latest release", "critical" => true },
-              { "version" => "2026.2.5", "notes" => "Security patch", "critical" => false },
+              { "version" => "2026.3.1", "notes" => "Latest release" },
+              { "version" => "2026.2.5", "notes" => "Security patch" },
             ],
           },
         )

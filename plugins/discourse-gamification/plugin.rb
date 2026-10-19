@@ -72,6 +72,10 @@ after_initialize do
     Guardian.include(DiscourseGamification::GuardianExtension)
   end
 
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::GamificationScore::V1 }
+  end
+
   add_directory_column(
     "gamification_score",
     query: DiscourseGamification::DirectoryIntegration.query,

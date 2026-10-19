@@ -64,7 +64,7 @@ RSpec.describe UserNotifications do
 
     let(:email_html) { Email::Renderer.new(email).html }
 
-    it "works" do
+    it "addresses the signup email to the user with a subject and body" do
       expect(email.to).to eq([user.email])
       expect(email.subject).to be_present
       expect(email.from).to eq([SiteSetting.notification_email])
@@ -77,10 +77,54 @@ RSpec.describe UserNotifications do
     end
   end
 
+  describe ".signup_after_approval" do
+    before do
+      SiteSetting.enable_local_logins_via_code = true
+      SiteSetting.enable_local_logins = true
+      SiteSetting.enable_local_logins_via_email = true
+    end
+
+    it "links a passwordless user to code login when it is available" do
+      passwordless_user = Fabricate(:user, password: nil)
+      body = UserNotifications.signup_after_approval(passwordless_user).body.to_s
+
+      expect(body).to include("#{Discourse.base_url}/login?mode=code")
+      expect(body).not_to include("code=")
+      expect(body).to include("#{Discourse.base_url}/guidelines")
+    end
+
+    it "links a user with a password to the default destination" do
+      body = UserNotifications.signup_after_approval(user).body.to_s
+
+      expect(body).to include("logging in at:\n#{Discourse.base_url}")
+      expect(body).not_to include("/login?mode=code")
+    end
+
+    it "uses the default destination when code login is unavailable" do
+      SiteSetting.enable_local_logins_via_code = false
+      passwordless_user = Fabricate(:user, password: nil)
+      body = UserNotifications.signup_after_approval(passwordless_user).body.to_s
+
+      expect(body).to include("logging in at:\n#{Discourse.base_url}")
+      expect(body).not_to include("/login?mode=code")
+    end
+
+    it "uses the default destination when external login is required" do
+      SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      SiteSetting.discourse_connect_secret = "s" * 32
+      SiteSetting.enable_discourse_connect = true
+      passwordless_user = Fabricate(:user, password: nil)
+      body = UserNotifications.signup_after_approval(passwordless_user).body.to_s
+
+      expect(body).to include("logging in at:\n#{Discourse.base_url}")
+      expect(body).not_to include("/login?mode=code")
+    end
+  end
+
   describe ".forgot_password" do
     subject(:email) { UserNotifications.forgot_password(user) }
 
-    it "works" do
+    it "addresses the password reset email to the user with a subject and body" do
       expect(email.to).to eq([user.email])
       expect(email.subject).to be_present
       expect(email.from).to eq([SiteSetting.notification_email])
@@ -103,7 +147,7 @@ RSpec.describe UserNotifications do
   describe ".post_approved" do
     fab!(:post)
 
-    it "works" do
+    it "addresses the post approval email to the user with a subject and body" do
       subject =
         UserNotifications.post_approved(user, { notification_data_hash: { post_url: post.url } })
 
@@ -187,6 +231,100 @@ RSpec.describe UserNotifications do
       end
     end
 
+    context "with a content modifier" do
+      let(:plugin) { Plugin::Instance.new }
+
+      it "skips sending when a modifier removes all content" do
+        Fabricate(:topic, user: Fabricate(:admin))
+        modifier = proc { |content| content.merge(topics: [], posts: []) }
+        DiscoursePluginRegistry.register_modifier(plugin, :user_digest_content, &modifier)
+
+        expect(email.to).to be_blank
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, :user_digest_content, &modifier)
+      end
+
+      it "renders selected topics and replies with the standard digest preparation" do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.allow_user_locale = true
+        user.update!(locale: "ja")
+        topic = Fabricate(:topic, locale: "en")
+        first_post = Fabricate(:post, topic: topic, locale: "en")
+        reply = Fabricate(:post, topic: topic, locale: "en", post_number: 2)
+        topic_translation = Fabricate(:topic_localization, topic: topic)
+        post_translation = Fabricate(:post_localization, post: first_post)
+        reply_translation = Fabricate(:post_localization, post: reply)
+        modifier =
+          proc { |content| content.merge(topics: [topic], posts: Post.where(id: reply.id)) }
+        DiscoursePluginRegistry.register_modifier(plugin, :user_digest_content, &modifier)
+
+        mail = UserNotifications.digest(user)
+
+        [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+          expect(body).to include(topic_translation.title, reply_translation.raw)
+        end
+        expect(mail.html_part.body.to_s).to include(post_translation.raw)
+        expect(mail.header["X-Discourse-Topic-Ids"].to_s).to eq(topic.id.to_s)
+        expect(mail.header["X-Discourse-Post-Ids"].to_s).to eq(first_post.id.to_s)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, :user_digest_content, &modifier)
+      end
+
+      it "renders replies without new topics" do
+        reply = Fabricate(:post, post_number: 2, raw: "A reply for the digest")
+        modifier = proc { |content| content.merge(topics: Topic.none, posts: [reply]) }
+        DiscoursePluginRegistry.register_modifier(plugin, :user_digest_content, &modifier)
+
+        mail = UserNotifications.digest(user)
+
+        expect(mail.to).to eq([user.email])
+        expect(mail.html_part.body.to_s).to include(reply.raw)
+        expect(mail.text_part.body.to_s).to include(reply.raw)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, :user_digest_content, &modifier)
+      end
+
+      it "renders custom content in both formats with the digest envelope" do
+        require "action_view/testing/resolvers"
+        original_view_paths = UserNotifications.view_paths
+        UserNotifications.prepend_view_path(
+          ActionView::FixtureResolver.new(
+            "custom_digest.html.erb" => "<p><%= message %></p>",
+            "custom_digest.text.erb" => "<%= message %>",
+          ),
+        )
+        message = "Additional digest content"
+        modifier =
+          proc do |content, recipient, since|
+            content.merge(
+              topics: [],
+              posts: [],
+              template: "custom_digest",
+              template_locals: {
+                message: "#{message} for #{recipient.username} since #{since.to_date}",
+              },
+              subject_key: "user_notifications.digest.new_topics",
+              has_custom_content: true,
+            )
+          end
+        DiscoursePluginRegistry.register_modifier(plugin, :user_digest_content, &modifier)
+
+        mail = UserNotifications.digest(user, since: 1.day.ago)
+
+        expect(mail.to).to eq([user.email])
+        expect(mail.subject).to eq(I18n.t("user_notifications.digest.new_topics"))
+        [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+          expect(body).to include("#{message} for #{user.username} since #{1.day.ago.to_date}")
+        end
+        expect(mail.header["List-Unsubscribe"].to_s).to match(%r{/email/unsubscribe/\h{64}})
+        expect(mail.header["List-Unsubscribe-Post"].to_s).to eq("List-Unsubscribe=One-Click")
+        expect(mail.header["X-Discourse-Topic-Ids"]).to be_nil
+      ensure
+        UserNotifications.view_paths = original_view_paths
+        DiscoursePluginRegistry.unregister_modifier(plugin, :user_digest_content, &modifier)
+      end
+    end
+
     context "with topics only from new users" do
       let!(:new_today) do
         Fabricate(
@@ -225,7 +363,7 @@ RSpec.describe UserNotifications do
 
       let!(:another_post) { Fabricate(:post, topic: another_popular_topic, post_number: 1) }
 
-      it "works" do
+      it "builds the digest with content, topic headers, and unsubscribe headers" do
         expect(email.to).to eq([user.email])
         expect(email.subject).to be_present
         expect(email.from).to eq([SiteSetting.notification_email])
@@ -485,7 +623,7 @@ RSpec.describe UserNotifications do
 
       it "applies lang/xml:lang html attributes" do
         SiteSetting.default_locale = "pl_PL"
-        html = email.html_part.to_s
+        html = email.html_part.body.to_s
 
         expect(html).to match(' lang="pl-PL"')
         expect(html).to match(' xml:lang="pl-PL"')
@@ -513,6 +651,474 @@ RSpec.describe UserNotifications do
         html = email.html_part.body.to_s
         expect(html).not_to include(old_topic.title)
       end
+    end
+  end
+
+  describe "translated digest content" do
+    fab!(:user) { Fabricate(:user, locale: "ja") }
+    fab!(:author) { Fabricate(:user, trust_level: TrustLevel[2]) }
+    fab!(:topic) { Fabricate(:topic, user: author, locale: "en", created_at: 1.hour.ago) }
+    fab!(:other_topic) { Fabricate(:topic, user: author, locale: "en", created_at: 2.hours.ago) }
+    fab!(:post) do
+      Fabricate(:post, user: author, topic: topic, locale: "en", raw: "Original first post")
+    end
+    fab!(:reply) do
+      Fabricate(
+        :post,
+        user: author,
+        topic: topic,
+        locale: "en",
+        raw: "Original popular reply",
+        score: 100,
+        created_at: 1.hour.ago,
+      )
+    end
+    fab!(:post_translation) { Fabricate(:post_localization, post: post) }
+    fab!(:reply_translation) { Fabricate(:post_localization, post: reply) }
+    fab!(:topic_translation) { Fabricate(:topic_localization, topic: topic) }
+    fab!(:other_topic_translation) { Fabricate(:topic_localization, topic: other_topic) }
+
+    before do
+      SiteSetting.allow_user_locale = true
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.digest_topics = 1
+      SiteSetting.digest_other_topics = 1
+      SiteSetting.digest_posts = 1
+      topic.update!(bumped_at: 1.hour.ago)
+      other_topic.update!(bumped_at: 2.hours.ago)
+    end
+
+    def digest_mail(recipient = user)
+      UserNotifications.digest(recipient, since: 1.day.ago)
+    end
+
+    it "translates popular topics, popular posts, and other new topics in both parts" do
+      mail = digest_mail
+      html = mail.html_part.body.to_s
+      text = mail.text_part.body.to_s
+      [html, text].each do |body|
+        expect(body).to include(
+          topic_translation.title,
+          other_topic_translation.title,
+          reply_translation.raw,
+        )
+        expect(body).not_to include(topic.title, other_topic.title, reply.raw)
+      end
+      expect(html).to include(post_translation.raw)
+      expect(text).not_to include(post.raw)
+      expect(html).to include(I18n.t("user_notifications.digest.popular_topics", locale: "ja"))
+      expect(I18n.locale).to eq(:en)
+    end
+
+    it "keeps content in the recipient's selected language and understood languages" do
+      topic.update!(locale: "ja")
+      post.update!(locale: "ja")
+      reply.update!(locale: "en")
+      other_topic.update!(locale: "fr")
+      user.user_option.update!(understood_languages: ["en"])
+      mail = digest_mail
+      [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+        expect(body).to include(topic.title, reply.raw, other_topic_translation.title)
+        expect(body).not_to include(
+          topic_translation.title,
+          reply_translation.raw,
+          other_topic.title,
+        )
+      end
+      expect(mail.html_part.body.to_s).to include(post.raw)
+    end
+
+    it "falls back for missing and stale post translations" do
+      post_translation.destroy!
+      topic_translation.destroy!
+      reply_translation.update!(post_version: reply.version - 1)
+      mail = digest_mail
+      expect(mail.html_part.body.to_s).to include(topic.title, post.raw, reply.raw)
+      expect(mail.text_part.body.to_s).to include(topic.title, reply.raw)
+      expect(mail.html_part.body.to_s).not_to include(reply_translation.raw)
+    end
+
+    it "respects the automatic translation preference" do
+      user.user_option.update!(automatically_translate: false)
+      mail = digest_mail
+      [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+        expect(body).to include(topic.title, other_topic.title, reply.raw)
+        expect(body).not_to include(topic_translation.title, reply_translation.raw)
+      end
+    end
+
+    it "keeps original content when localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+      mail = digest_mail
+      [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+        expect(body).to include(topic.title, reply.raw)
+        expect(body).not_to include(topic_translation.title, reply_translation.raw)
+      end
+    end
+
+    it "uses the effective locale when user locales are disabled" do
+      SiteSetting.allow_user_locale = false
+      mail = digest_mail
+      [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+        expect(body).to include(topic.title, reply.raw)
+        expect(body).not_to include(topic_translation.title, reply_translation.raw)
+      end
+    end
+
+    it "uses normalized language matches and skips sources whose language is unknown" do
+      user.update!(locale: "pt_BR")
+      topic_translation.update!(locale: "pt")
+      reply_translation.update!(locale: "pt")
+      post.update!(locale: nil)
+      mail = digest_mail
+      [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+        expect(body).to include(topic_translation.title, reply_translation.raw)
+      end
+      expect(mail.html_part.body.to_s).to include(post.raw)
+      expect(mail.html_part.body.to_s).not_to include(post_translation.raw)
+    end
+
+    it "escapes translated titles and sanitizes translated post content" do
+      title = %(<img src="x" onerror="alert(1)"> Translated meeting)
+      topic_translation.update!(title: title)
+      PostLocalizationUpdater.update(
+        post: reply,
+        locale: "ja",
+        user: author,
+        raw:
+          %(Safe localized reply\n\n<img src="x" onerror="alert(1)">\n\n<script>alert(1)</script>),
+      )
+      html = Nokogiri::HTML5.fragment(Email::Renderer.new(digest_mail).html)
+      expect(html.text).to include(title, "Safe localized reply")
+      expect(html.css("script, [onerror], [onload]")).to be_empty
+    end
+
+    it "formats translated links and redacts secure images from digest excerpts" do
+      setup_s3
+      SiteSetting.secure_uploads = true
+      SiteSetting.login_required = true
+      secure_url = "/secure-uploads/original/1X/translated.png"
+      [post_translation, reply_translation].each do |translation|
+        translation.update!(
+          cooked: "<p>#{translation.raw}<a href='/u/admin'>Admin</a><img src='#{secure_url}'></p>",
+        )
+      end
+      mail = digest_mail
+      renderer = Email::Renderer.new(mail)
+      html = Nokogiri::HTML5.fragment(renderer.html)
+      expect(html.css("a").map { |link| link["href"] }).to include("#{Discourse.base_url}/u/admin")
+      expect(html.at_css("[data-stripped-secure-upload]")).to be_present
+      expect(html.css("img").map { |image| image["src"] }).not_to include(
+        secure_url,
+        "#{Discourse.base_url}#{secure_url}",
+      )
+    end
+
+    it "loads translations in a bounded number of queries as the digest grows" do
+      original_queries = track_sql_queries { digest_mail.html_part.body.to_s }
+      additional_topic = Fabricate(:topic, user: author, locale: "en", created_at: 1.hour.ago)
+      additional_post = Fabricate(:post, user: author, topic: additional_topic, locale: "en")
+      Fabricate(:topic_localization, topic: additional_topic)
+      Fabricate(:post_localization, post: additional_post)
+      SiteSetting.digest_topics = 2
+      expanded_queries = track_sql_queries { digest_mail.html_part.body.to_s }
+      %w[post_localizations topic_localizations].each do |table|
+        expect(expanded_queries.count { |query| query.include?(%(FROM "#{table}")) }).to eq(
+          original_queries.count { |query| query.include?(%(FROM "#{table}")) },
+        )
+      end
+    end
+  end
+
+  describe "translated notification content" do
+    fab!(:user) { Fabricate(:user, locale: "ja") }
+    fab!(:topic) { Fabricate(:topic, locale: "en") }
+    fab!(:post) { Fabricate(:post, topic: topic, locale: "en") }
+    fab!(:reply) { Fabricate(:post, topic: topic, locale: "en", reply_to_post_number: 1) }
+    fab!(:post_translation) { Fabricate(:post_localization, post: post) }
+    fab!(:reply_translation) { Fabricate(:post_localization, post: reply) }
+    fab!(:topic_translation) { Fabricate(:topic_localization, topic: topic) }
+
+    before do
+      SiteSetting.allow_user_locale = true
+      SiteSetting.content_localization_enabled = true
+      user.user_option.update!(
+        email_previous_replies: UserOption.previous_replies_type[:always],
+        email_in_reply_to: true,
+      )
+    end
+
+    def notification_mail(recipient = user)
+      UserNotifications.user_replied(
+        recipient,
+        post: reply,
+        notification_type: "replied",
+        notification_data_hash: {
+          original_username: reply.username,
+          topic_title: topic.title,
+        },
+      )
+    end
+
+    it "uses the recipient's translations for the subject, post, and previous replies" do
+      original_post_attributes = reply.attributes.slice("raw", "cooked")
+      original_topic_title = topic.title
+      mail = notification_mail
+      expect(mail.subject).to include(topic_translation.title)
+      [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+        expect(body).to include(reply_translation.raw, post_translation.raw)
+        expect(body).not_to include(reply.raw, post.raw)
+      end
+      expect(reply.reload.attributes.slice("raw", "cooked")).to eq(original_post_attributes)
+      expect(topic.reload.title).to eq(original_topic_title)
+      expect(I18n.locale).to eq(:en)
+    end
+
+    it "uses translations for mailing list notifications" do
+      mail = UserNotifications.mailing_list_notify(user, reply)
+      expect(mail.subject).to include(topic_translation.title)
+      expect(mail.html_part.body.to_s).to include(reply_translation.raw)
+      expect(mail.text_part.body.to_s).to include(reply_translation.raw)
+    end
+
+    it "preserves the original PM subject when the topic has been renamed" do
+      topic.update!(archetype: Archetype.private_message, category_id: nil)
+      original_title = "Original PM title"
+      mail =
+        UserNotifications.user_private_message(
+          user,
+          post: reply,
+          notification_type: "private_message",
+          notification_data_hash: {
+            original_username: reply.username,
+            topic_title: original_title,
+          },
+        )
+      expect(mail.subject).to include(original_title)
+      expect(mail.html_part.body.to_s).to include(reply_translation.raw)
+      expect(mail.text_part.body.to_s).to include(reply_translation.raw)
+    end
+
+    it "preserves plugin title and body overrides when translations are available" do
+      plugin = Plugin::Instance.new
+      custom_title = "Plugin supplied title"
+      custom_raw = "Plugin supplied plain text"
+      custom_cooked = "<p>Plugin supplied HTML</p>"
+      modifier =
+        proc do |options|
+          options[:title] = custom_title
+          options[:post].raw = custom_raw
+          options[:post].cooked = custom_cooked
+          options
+        end
+      DiscoursePluginRegistry.register_modifier(plugin, :user_notification_email_options, &modifier)
+
+      mail = notification_mail
+      aggregate_failures do
+        expect(mail.subject).to include(custom_title)
+        expect(mail.html_part.body.to_s).to include(custom_cooked)
+        expect(mail.text_part.body.to_s).to include(custom_raw)
+        expect(mail.html_part.body.to_s).to include(post_translation.raw)
+        expect(mail.text_part.body.to_s).to include(post_translation.raw)
+      end
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :user_notification_email_options,
+        &modifier
+      )
+    end
+
+    it "uses translated excerpts" do
+      SiteSetting.post_excerpts_in_emails = true
+      expect(notification_mail.html_part.body.to_s).to include(reply_translation.raw)
+    end
+
+    it "falls back to the original when translations are missing" do
+      reply_translation.destroy!
+      topic_translation.destroy!
+      mail = notification_mail
+      expect(mail.subject).to include(topic.title)
+      expect(mail.html_part.body.to_s).to include(reply.raw)
+      expect(mail.text_part.body.to_s).to include(reply.raw)
+    end
+
+    it "respects the automatic translation preference" do
+      user.user_option.update!(automatically_translate: false)
+      mail = notification_mail
+      expect(mail.subject).to include(topic.title)
+      expect(mail.html_part.body.to_s).to include(reply.raw)
+      expect(mail.text_part.body.to_s).to include(reply.raw)
+    end
+
+    it "keeps content in languages the recipient understands" do
+      user.user_option.update!(understood_languages: ["en"])
+      mail = notification_mail
+      expect(mail.subject).to include(topic.title)
+      expect(mail.html_part.body.to_s).to include(reply.raw)
+      expect(mail.text_part.body.to_s).to include(reply.raw)
+    end
+
+    it "keeps selected and understood languages while translating other context posts" do
+      topic.update!(locale: "ja")
+      reply.update!(locale: "ja", post_number: 4)
+      french_post =
+        Fabricate(:post, topic: topic, locale: "fr", post_number: 3, raw: "French context")
+      french_translation = Fabricate(:post_localization, post: french_post)
+      user.user_option.update!(understood_languages: ["en_GB"])
+      mail = notification_mail
+      expect(mail.subject).to include(topic.title)
+      [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+        expect(body).to include(reply.raw, post.raw, french_translation.raw)
+        expect(body).not_to include(
+          topic_translation.title,
+          reply_translation.raw,
+          post_translation.raw,
+          french_post.raw,
+        )
+      end
+    end
+
+    it "keeps original content when localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+      mail = notification_mail
+      expect(mail.subject).to include(topic.title)
+      expect(mail.html_part.body.to_s).to include(reply.raw)
+      expect(mail.text_part.body.to_s).to include(reply.raw)
+    end
+
+    it "keeps original content when the source language is unknown" do
+      topic.update!(locale: nil)
+      reply.update!(locale: nil)
+      mail = notification_mail
+      expect(mail.subject).to include(topic.title)
+      expect(mail.html_part.body.to_s).to include(reply.raw)
+      expect(mail.text_part.body.to_s).to include(reply.raw)
+    end
+
+    it "redacts translated content in private emails" do
+      SiteSetting.private_email = true
+      mail = notification_mail
+      expect(mail.subject).not_to include(topic_translation.title, topic.title)
+      [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+        expect(body).not_to include(
+          reply_translation.raw,
+          post_translation.raw,
+          reply.raw,
+          post.raw,
+        )
+      end
+    end
+
+    it "falls back to original content for stale translations" do
+      reply_translation.update!(post_version: reply.version - 1)
+      mail = notification_mail
+      expect(mail.html_part.body.to_s).to include(reply.raw)
+      expect(mail.text_part.body.to_s).to include(reply.raw)
+    end
+
+    it "uses normalized locale matches" do
+      user.update!(locale: "pt_BR")
+      reply_translation.update!(locale: "pt")
+      mail = notification_mail
+      expect(mail.html_part.body.to_s).to include(reply_translation.raw)
+      expect(mail.text_part.body.to_s).to include(reply_translation.raw)
+    end
+
+    it "uses the effective locale when user locales are disabled" do
+      SiteSetting.allow_user_locale = false
+      mail = notification_mail
+      expect(mail.subject).to include(topic.title)
+      expect(mail.html_part.body.to_s).to include(reply.raw)
+      expect(mail.text_part.body.to_s).to include(reply.raw)
+    end
+
+    it "uses translated content with customized email templates" do
+      [SiteSetting.default_locale, user.locale].each do |locale|
+        TranslationOverride.upsert!(
+          locale,
+          "user_notifications.user_replied.text_body_template",
+          "%{topic_title}\n\n%{message}\n\n%{context}",
+        )
+      end
+      mail = notification_mail
+      renderer = Email::Renderer.new(mail)
+      [renderer.html, renderer.text].each do |body|
+        expect(body).to include(
+          topic_translation.title,
+          reply_translation.raw,
+          post_translation.raw,
+        )
+      end
+    end
+
+    it "uses the translated title and excerpt when inviting a user to a topic" do
+      mail =
+        UserNotifications.user_invited_to_topic(
+          user,
+          post: post,
+          notification_type: "invited_to_topic",
+          notification_data_hash: {
+            original_username: post.username,
+            topic_title: topic.title,
+          },
+        )
+      [mail.html_part.body.to_s, mail.text_part.body.to_s].each do |body|
+        expect(body).to include(topic_translation.title, post_translation.raw)
+      end
+    end
+
+    it "keeps original incoming email subjects for staged recipients" do
+      user.update!(staged: true)
+      incoming_email = Fabricate(:incoming_email, post: post, subject: "Original incoming subject")
+      expect(notification_mail.subject).to include(incoming_email.subject)
+    end
+
+    it "formats translated links and redacts secure images" do
+      setup_s3
+      SiteSetting.secure_uploads = true
+      SiteSetting.login_required = true
+      secure_url = "/secure-uploads/original/1X/translated.png"
+      reply_translation.update!(
+        cooked:
+          "<p>#{reply_translation.raw}<a href='/u/admin'>Admin</a><img src='#{secure_url}'></p>",
+      )
+      html = Nokogiri::HTML5.fragment(notification_mail.html_part.body.to_s)
+      expect(html.css("a").map { |link| link["href"] }).to include("#{Discourse.base_url}/u/admin")
+      expect(html.css("img").map { |image| image["src"] }).not_to include(
+        secure_url,
+        "#{Discourse.base_url}#{secure_url}",
+      )
+      expect(html.at_css("[data-stripped-secure-upload]")).to be_present
+    end
+
+    it "loads post translations in a bounded number of queries as context grows" do
+      original_queries = track_sql_queries { notification_mail.html_part.body.to_s }
+      3.times do
+        context_post = Fabricate(:post, topic: topic, locale: "en")
+        Fabricate(:post_localization, post: context_post)
+      end
+      latest_post = Fabricate(:post, topic: topic, locale: "en")
+      latest_translation = Fabricate(:post_localization, post: latest_post)
+      mail = nil
+      expanded_queries =
+        track_sql_queries do
+          mail = UserNotifications.mailing_list_notify(user, latest_post)
+          mail.html_part.body.to_s
+        end
+      expect(mail.html_part.body.to_s).to include(latest_translation.raw, reply_translation.raw)
+      expect(expanded_queries.count { |query| query.include?('FROM "post_localizations"') }).to eq(
+        original_queries.count { |query| query.include?('FROM "post_localizations"') },
+      )
+    end
+
+    it "selects content independently for each recipient" do
+      notification_mail.html_part.body.to_s
+      other_user = Fabricate(:user, locale: "en")
+      mail = notification_mail(other_user)
+      expect(mail.subject).to include(topic.title)
+      expect(mail.html_part.body.to_s).to include(reply.raw)
+      expect(mail.text_part.body.to_s).to include(reply.raw)
     end
   end
 
@@ -660,7 +1266,7 @@ RSpec.describe UserNotifications do
       describe "max_tags_per_email_subject siteSetting enabled" do
         before { SiteSetting.enable_max_tags_per_email_subject = true }
 
-        it "should match max_tags_per_email_subject" do
+        it "limits subject tags to max_tags_per_email_subject" do
           SiteSetting.email_subject =
             "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tags}%{topic_title}"
           SiteSetting.max_tags_per_topic = 1
@@ -683,7 +1289,7 @@ RSpec.describe UserNotifications do
       describe "max_tags_per_email_subject siteSetting disabled" do
         before { SiteSetting.enable_max_tags_per_email_subject = false }
 
-        it "should match max_tags_per_topic" do
+        it "limits subject tags to max_tags_per_topic" do
           SiteSetting.email_subject =
             "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tags}%{topic_title}"
           SiteSetting.max_tags_per_topic = 2
@@ -705,7 +1311,29 @@ RSpec.describe UserNotifications do
     end
 
     describe "optional placeholders in email body" do
-      it "should render optional_tags, optional_cat, optional_pm, and optional_re in body templates" do
+      it "renders no body hashtags when the email tag limit is zero" do
+        SiteSetting.enable_max_tags_per_email_subject = true
+        SiteSetting.max_tags_per_email_subject = 0
+        TranslationOverride.upsert!(
+          I18n.locale,
+          "user_notifications.user_replied.text_body_template",
+          "Tags: %{optional_tags}\n\n",
+        )
+
+        mail =
+          UserNotifications.user_replied(
+            user,
+            post: response,
+            notification_type: notification.notification_type,
+            notification_data_hash: notification.data_hash,
+          )
+
+        expect(Email::Renderer.new(mail).text.lines.first.strip).to eq("Tags:")
+      end
+
+      it "renders optional placeholders with tag links in the body and plain tags in the subject" do
+        Fabricate(:category, name: tag2.name, slug: tag2.name.downcase)
+        SiteSetting.email_subject = "%{optional_tags}%{topic_title}"
         custom_body = <<~BODY
           You got a reply!
 
@@ -731,17 +1359,19 @@ RSpec.describe UserNotifications do
             notification_data_hash: notification.data_hash,
           )
 
-        body = mail.body.to_s
+        renderer = Email::Renderer.new(mail)
+        links = Nokogiri::HTML5.parse(renderer.html).css("a.hashtag-cooked")
 
-        expect(body).to include(tag2.name)
-        expect(body).to include(tag3.name)
-        expect(body).to include(category.name)
-
-        expect(body).not_to include("translation missing")
-        expect(body).not_to include("%{optional_tags}")
-        expect(body).not_to include("%{optional_cat}")
-        expect(body).not_to include("%{optional_pm}")
-        expect(body).not_to include("%{optional_re}")
+        expect(renderer.text).to include(
+          "Category: [#{category.name}]",
+          "Tags: ##{tag2.name}::tag ##{tag3.name} ##{tag1.name}",
+          "PM marker: \nRe marker: \n",
+        )
+        expect(renderer.text).not_to include(hidden_tag.name)
+        expect(links.map(&:text)).to eq([tag2, tag3, tag1].map { |tag| "##{tag.name}" })
+        expect(links.map { |link| link["href"] }).to eq([tag2, tag3, tag1].map(&:full_url))
+        expect(mail.subject).to eq("#{tag2.name} #{tag3.name} #{tag1.name} #{topic.title}")
+        expect(mail["X-Discourse-Tags"].value).to eq("#{tag2.name} #{tag3.name} #{tag1.name}")
       end
     end
 
@@ -1142,7 +1772,7 @@ RSpec.describe UserNotifications do
 
   shared_examples "supports reply by email" do
     context "with reply_by_email" do
-      it "should have allow_reply_by_email set when that feature is enabled" do
+      it "sets allow_reply_by_email when the feature is enabled" do
         expects_build_with(has_entry(:allow_reply_by_email, true))
       end
     end
@@ -1158,7 +1788,7 @@ RSpec.describe UserNotifications do
 
   shared_examples "respect for private_email" do
     context "with private_email" do
-      it "doesn't support reply by email" do
+      it "doesn't include topic title or slug for regular users" do
         SiteSetting.private_email = true
 
         mailer =
@@ -1176,6 +1806,35 @@ RSpec.describe UserNotifications do
         expect(message.html_part.body.to_s).not_to include(topic.slug)
         expect(message.text_part.body.to_s).not_to include(topic.title)
         expect(message.text_part.body.to_s).not_to include(topic.slug)
+      end
+
+      it "still links back to the topic for staged users" do
+        skip_types = %i[linked quoted mentioned group_mentioned]
+        if skip_types.include?(notification_type)
+          skip "Staged users don't receive #{notification_type} emails"
+        end
+
+        invite_types = %i[invited_to_private_message invited_to_topic watching_first_post]
+        if invite_types.include?(notification_type)
+          skip "Invite-type emails use a different template structure"
+        end
+
+        SiteSetting.private_email = true
+        user.update!(staged: true)
+
+        mailer =
+          UserNotifications.public_send(
+            mail_type,
+            user,
+            notification_type: Notification.types[notification.notification_type],
+            notification_data_hash: notification.data_hash,
+            post: notification.post,
+          )
+        message = mailer.message
+
+        slugless_path = notification.post.topic.slugless_url
+        expect(message.html_part.body.to_s).to include(slugless_path)
+        expect(message.text_part.body.to_s).to include(slugless_path)
       end
     end
   end
@@ -1242,23 +1901,23 @@ RSpec.describe UserNotifications do
         expects_build_with(has_key(:topic_id))
       end
 
-      it "should have user name as from_alias" do
+      it "uses the user's name as from_alias" do
         SiteSetting.enable_names = true
         SiteSetting.display_name_on_posts = true
         expects_build_with(has_entry(:from_alias, user.name))
       end
 
-      it "should not have user name as from_alias if display_name_on_posts is disabled" do
+      it "omits the user's name from from_alias when display_name_on_posts is disabled" do
         SiteSetting.enable_names = false
         SiteSetting.display_name_on_posts = false
         expects_build_with(has_entry(:from_alias, "walterwhite"))
       end
 
-      it "should explain how to respond" do
+      it "explains how to respond" do
         expects_build_with(Not(has_entry(:include_respond_instructions, false)))
       end
 
-      it "should not explain how to respond if the user is suspended" do
+      it "omits response instructions for suspended users" do
         User.any_instance.stubs(:suspended?).returns(true)
         expects_build_with(has_entry(:include_respond_instructions, false))
       end
@@ -1285,7 +1944,7 @@ RSpec.describe UserNotifications do
           )
         end
 
-        it "shouldn't use the default html_override" do
+        it "does not use the default html_override" do
           expects_build_with(Not(has_key(:html_override)))
         end
       end
@@ -1295,6 +1954,7 @@ RSpec.describe UserNotifications do
   describe "user mentioned email" do
     include_examples "notification email building" do
       let(:notification_type) { :mentioned }
+
       include_examples "respect for private_email"
       include_examples "supports reply by email"
       include_examples "sets user locale"
@@ -1318,6 +1978,7 @@ RSpec.describe UserNotifications do
   describe "user replied" do
     include_examples "notification email building" do
       let(:notification_type) { :replied }
+
       include_examples "respect for private_email"
       include_examples "supports reply by email"
       include_examples "sets user locale"
@@ -1327,6 +1988,7 @@ RSpec.describe UserNotifications do
   describe "user quoted" do
     include_examples "notification email building" do
       let(:notification_type) { :quoted }
+
       include_examples "respect for private_email"
       include_examples "supports reply by email"
       include_examples "sets user locale"
@@ -1336,9 +1998,78 @@ RSpec.describe UserNotifications do
   describe "user posted" do
     include_examples "notification email building" do
       let(:notification_type) { :posted }
+
       include_examples "respect for private_email"
       include_examples "supports reply by email"
       include_examples "sets user locale"
+    end
+  end
+
+  describe "invitation email attribution" do
+    fab!(:inviter) { Fabricate(:user, trust_level: TrustLevel[2], name: "Message Inviter") }
+    fab!(:invitee, :user)
+
+    %i[private_message topic].each do |destination|
+      it "identifies the inviter when another user started the #{destination}" do
+        SiteSetting.enable_names = true
+        SiteSetting.display_name_on_email_from = true
+        post =
+          if destination == :private_message
+            Fabricate(:private_message_post, recipient: inviter)
+          else
+            Fabricate(:post)
+          end
+
+        post.topic.invite(inviter, invitee.username)
+        notification = invitee.notifications.find_by!(topic_id: post.topic_id)
+        notification_type = "invited_to_#{destination}"
+        mail =
+          UserNotifications.public_send(
+            "user_#{notification_type}",
+            invitee,
+            notification_type: notification_type,
+            notification_data_hash: notification.data_hash,
+            post: notification.post,
+          )
+
+        expect(mail.text_part.body.decoded).to include("#{inviter.username} invited you")
+        expect(mail[:from].display_names).to eq([inviter.name])
+      end
+    end
+  end
+
+  describe "invitation email titles" do
+    fab!(:inviter) { Fabricate(:user, trust_level: TrustLevel[2]) }
+    fab!(:invitee, :user)
+
+    %i[private_message topic].each do |destination|
+      it "renders HTML in a #{destination} title as text" do
+        post =
+          if destination == :private_message
+            Fabricate(:private_message_post, recipient: inviter)
+          else
+            Fabricate(:post)
+          end
+        post.topic.update!(title: %(<img src="x" onerror="alert(1)"> Meeting & planning))
+        post.topic.invite(inviter, invitee.username)
+        notification = invitee.notifications.find_by!(topic_id: post.topic_id)
+        notification_type = "invited_to_#{destination}"
+        mail =
+          UserNotifications.public_send(
+            "user_#{notification_type}",
+            invitee,
+            notification_type: notification_type,
+            notification_data_hash: notification.data_hash,
+            post: notification.post,
+          )
+        renderer = Email::Renderer.new(mail)
+        html = Nokogiri::HTML5.fragment(renderer.html)
+
+        expect(html.css("[onerror], img[src='x']")).to be_empty
+        expect(html.text).to include(post.topic.title)
+        expect(renderer.text).to include(post.topic.title)
+        expect(html.css("a").map { |link| link["href"] }).to include(post.topic.url)
+      end
     end
   end
 
@@ -1368,7 +2099,7 @@ RSpec.describe UserNotifications do
         notification.save!
       end
 
-      it "should include the group name" do
+      it "includes the group name" do
         expects_build_with(has_entry(:group_name, group.name))
       end
 
@@ -1417,7 +2148,7 @@ RSpec.describe UserNotifications do
         )
       end
 
-      it "sends the email as the inviter" do
+      it "uses the inviter's username when names are disabled" do
         SiteSetting.enable_names = false
 
         expect(mailer.message.to_s).to include(
@@ -1425,7 +2156,7 @@ RSpec.describe UserNotifications do
         )
       end
 
-      it "sends the email as the inviter" do
+      it "uses the inviter's name as the sender" do
         expect(mailer.message.to_s).to include(
           "From: #{inviter.name} <#{SiteSetting.notification_email}>",
         )
@@ -1436,6 +2167,7 @@ RSpec.describe UserNotifications do
   describe "watching first post" do
     include_examples "notification email building" do
       let(:notification_type) { :invited_to_topic }
+
       include_examples "respect for private_email"
       include_examples "no reply by email"
       include_examples "sets user locale"
@@ -1541,6 +2273,7 @@ RSpec.describe UserNotifications do
         include_examples "with notification derived from template" do
           let(:locale) { "fr" }
           let(:mail_type) { mail_type }
+
           it "sets the locale" do
             expects_build_with(has_entry(:locale, "fr"))
           end
@@ -1564,6 +2297,7 @@ RSpec.describe UserNotifications do
         include_examples "with notification derived from template" do
           let(:locale) { "fr" }
           let(:mail_type) { mail_type }
+
           it "sets the locale" do
             expects_build_with(has_entry(:locale, "en"))
           end
@@ -1791,6 +2525,18 @@ RSpec.describe UserNotifications do
 
       expect(mail.body).to include(custom_flag.description)
       expect(mail.body).to_not include(I18n.t("flag_reasons.spam"))
+    end
+  end
+
+  describe ".account_associated" do
+    it "names the provider the account was linked to" do
+      mail = UserNotifications.account_associated(user, provider_name: "Google")
+
+      expect(mail.to).to contain_exactly(user.email)
+      expect(mail.subject).to include(
+        I18n.t("user_notifications.account_associated.title", locale: :en),
+      )
+      expect(mail.body.encoded).to include("A Google account was just linked")
     end
   end
 

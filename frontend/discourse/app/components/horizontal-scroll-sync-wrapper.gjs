@@ -118,17 +118,17 @@ export default class HorizontalScrollSyncWrapper extends Component {
   }
 
   <template>
-    <div {{this.setup}} class="horizontal-scroll-sync__container" ...attributes>
+    <div class="horizontal-scroll-sync__container" ...attributes {{this.setup}}>
       <div
-        {{on "scroll" this.handleTopScrollBarScroll passive=true}}
         class="horizontal-scroll-sync__top-scroll"
+        {{on "scroll" this.handleTopScrollBarScroll passive=true}}
       >
         <div class="horizontal-scroll-sync__fake-content"></div>
       </div>
 
       <div
-        {{dOnResize this.syncScrollWidth}}
         class="horizontal-scroll-sync__content"
+        {{dOnResize this.syncScrollWidth}}
       >
         {{yield}}
       </div>

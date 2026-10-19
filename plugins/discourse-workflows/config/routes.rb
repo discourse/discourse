@@ -14,6 +14,11 @@ DiscourseWorkflows::Engine.routes.draw do
       get "/credentials" => "admin#index"
       get "/workflows/new" => "admin#index"
       get "/workflows/:id" => "admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/nodes/:node_id" => "admin#index",
+          :constraints => {
+            id: /\d+/,
+            node_id: %r{[^/]+},
+          }
       get "/workflows/:id/executions" => "admin#index", :constraints => { id: /\d+/ }
       get "/workflows/:id/executions/:execution_id" => "admin#index",
           :constraints => {
@@ -21,6 +26,14 @@ DiscourseWorkflows::Engine.routes.draw do
             execution_id: /\d+/,
           }
       get "/workflows/:id/settings" => "admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/variables" => "admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/variables/manage" => "admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/variables/new" => "admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/variables/:variable_id/edit" => "admin#index",
+          :constraints => {
+            id: /\d+/,
+            variable_id: /\d+/,
+          }
       get "/workflows/:id/versions" => "admin#index", :constraints => { id: /\d+/ }
     end
 
@@ -54,6 +67,12 @@ DiscourseWorkflows::Engine.routes.draw do
            :constraints => {
              version_id: /[0-9a-f-]{36}/,
            }
+      post "/workflows/:workflow_id/variables" => "workflow_variables#create"
+      post "/workflows/:workflow_id/variables/import" => "workflow_variables#import"
+      put "/workflows/:workflow_id/variables/:variable_id" => "workflow_variables#update"
+      delete "/workflows/:workflow_id/variables/:variable_id" => "workflow_variables#destroy"
+      put "/workflows/:workflow_id/variables/:variable_id/value" =>
+            "workflow_variables#update_value"
       delete "/executions" => "executions#destroy"
       get "/executions/:id" => "executions#show"
       get "/stats" => "stats#index"
@@ -75,6 +94,7 @@ DiscourseWorkflows::Engine.routes.draw do
       delete "/data-tables/:id" => "data_tables#destroy"
       post "/data-tables/:data_table_id/columns" => "data_table_columns#create"
       patch "/data-tables/:data_table_id/columns/:column_name/rename" => "data_table_columns#rename"
+      put "/data-tables/:data_table_id/columns/:column_name/move" => "data_table_columns#move"
       delete "/data-tables/:data_table_id/columns/:column_name" => "data_table_columns#destroy"
       get "/data-tables/:data_table_id/rows" => "data_table_rows#index"
       post "/data-tables/:data_table_id/rows" => "data_table_rows#create"
@@ -89,6 +109,7 @@ DiscourseWorkflows::Engine.routes.draw do
     post "/trigger-topic-admin-button" => "topic_admin_button#create"
     post "/trigger-post-button" => "post_button#create"
     post "/modal-responses" => "modal_responses#create"
+    post "/modal-dismissals" => "modal_dismissals#create"
   end
 
   scope "/workflows", defaults: { format: :json } do

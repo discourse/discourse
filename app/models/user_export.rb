@@ -30,6 +30,29 @@ class UserExport < ActiveRecord::Base
       end
   end
 
+  def attach_upload(zip_filename, uploader_id)
+    return if !File.exist?(zip_filename)
+
+    upload =
+      File.open(zip_filename) do |file|
+        UploadCreator.new(
+          file,
+          File.basename(zip_filename),
+          type: "csv_export",
+          for_export: "true",
+        ).create_for(uploader_id)
+      end
+
+    if upload.persisted?
+      update_columns(upload_id: upload.id)
+    else
+      Rails.logger.warn("Failed to upload the file #{zip_filename}: #{upload.errors.full_messages}")
+    end
+
+    File.delete(zip_filename)
+    upload
+  end
+
   def retain_hours
     (created_at + DESTROY_CREATED_BEFORE - Time.zone.now).to_i / 1.hour
   end

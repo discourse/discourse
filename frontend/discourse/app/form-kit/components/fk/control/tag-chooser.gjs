@@ -13,22 +13,23 @@ export default class FKControlTagChooser extends FKBaseControl {
 
   <template>
     <TagChooser
-      @tags={{@field.value}}
-      @onChange={{this.handleChange}}
-      @everyTag={{@showAllTags}}
-      @excludeSynonyms={{@excludeSynonyms}}
-      @excludeHasSynonyms={{@excludeTagsWithSynonyms}}
-      @unlimitedTagCount={{@unlimited}}
-      @categoryId={{@categoryId}}
+      class="form-kit__control-tag-chooser"
       @allowCreate={{@allowCreate}}
       @blockedTags={{@blockedTags}}
+      @categoryId={{@categoryId}}
+      @everyTag={{@showAllTags}}
+      @excludeHasSynonyms={{@excludeTagsWithSynonyms}}
+      @excludeSynonyms={{@excludeSynonyms}}
+      @onChange={{this.handleChange}}
       @options={{hash
         disabled=@field.disabled
         filterPlaceholder=@placeholder
         maximum=@maximum
         mobilePlacement=@mobilePlacement
+        prioritizeRecentTags=@prioritizeRecentTags
       }}
-      class="form-kit__control-tag-chooser"
+      @tags={{@field.value}}
+      @unlimitedTagCount={{@unlimited}}
     />
   </template>
 }

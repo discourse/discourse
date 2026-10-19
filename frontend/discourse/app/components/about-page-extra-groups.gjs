@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import AboutPageUsers from "discourse/components/about-page-users";
 import { ajax } from "discourse/lib/ajax";
+import { groupPath } from "discourse/lib/url";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 
 export default class AboutPageExtraGroups extends Component {
@@ -17,6 +18,14 @@ export default class AboutPageExtraGroups extends Component {
   constructor() {
     super(...arguments);
     this.loadGroups();
+  }
+
+  get showGroupDescription() {
+    return this.siteSettings.about_page_extra_groups_show_description;
+  }
+
+  get showInitialMembers() {
+    return this.siteSettings.about_page_extra_groups_initial_members;
   }
 
   groupName(group) {
@@ -100,14 +109,6 @@ export default class AboutPageExtraGroups extends Component {
     }
   }
 
-  get showGroupDescription() {
-    return this.siteSettings.about_page_extra_groups_show_description;
-  }
-
-  get showInitialMembers() {
-    return this.siteSettings.about_page_extra_groups_initial_members;
-  }
-
   <template>
     <DConditionalLoadingSpinner @condition={{this.loading}}>
       {{#each this.groups as |group|}}
@@ -117,14 +118,14 @@ export default class AboutPageExtraGroups extends Component {
             {{if this.showGroupDescription '--has-description'}}"
         >
           <h3>
-            <a href="/g/{{group.name}}">{{this.groupName group}}</a>
+            <a href={{groupPath group.name}}>{{this.groupName group}}</a>
           </h3>
           {{#if this.showGroupDescription}}
             <p>{{trustHTML group.bio_cooked}}</p>
           {{/if}}
           <AboutPageUsers
-            @users={{group.members}}
             @truncateAt={{this.showInitialMembers}}
+            @users={{group.members}}
           />
         </section>
       {{/each}}

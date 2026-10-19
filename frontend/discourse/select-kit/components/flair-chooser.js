@@ -5,8 +5,8 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
-import FlairRow from "./flair-row";
-import SelectedFlair from "./selected-flair";
+import FlairRow from "./flair-row.gjs";
+import SelectedFlair from "./selected-flair.gjs";
 
 @classNames("flair-chooser")
 @selectKitOptions({
@@ -14,10 +14,6 @@ import SelectedFlair from "./selected-flair";
 })
 @pluginApiIdentifiers(["flair-chooser"])
 export default class FlairChooser extends ComboBoxComponent {
-  modifyComponentForRow() {
-    return FlairRow;
-  }
-
   @computed("value", "content.[]", "selectKit.noneItem")
   get selectedContent() {
     const content = (this.content || []).find(
@@ -29,5 +25,9 @@ export default class FlairChooser extends ComboBoxComponent {
     } else {
       return this.selectKit.noneItem;
     }
+  }
+
+  modifyComponentForRow() {
+    return FlairRow;
   }
 }

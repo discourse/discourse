@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import CustomSection from "./custom-section";
+import CustomSection from "./custom-section.gjs";
 
 export default class SidebarCustomSections extends Component {
   @service currentUser;
@@ -20,8 +20,11 @@ export default class SidebarCustomSections extends Component {
     <div class="sidebar-custom-sections">
       {{#each this.sections as |section|}}
         <CustomSection
-          @sectionData={{section}}
           @collapsable={{@collapsable}}
+          @enableLinkDrop={{@enableLinkDrop}}
+          @expandActiveSection={{@expandActiveSection}}
+          @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
+          @sectionData={{section}}
           @toggleNavigationMenu={{@toggleNavigationMenu}}
         />
       {{/each}}

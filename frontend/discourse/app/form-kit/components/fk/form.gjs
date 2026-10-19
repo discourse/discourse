@@ -72,6 +72,20 @@ class FKForm extends Component {
     this.router.off("routeWillChange", this.checkIsDirty);
   }
 
+  get validateOn() {
+    return this.args.validateOn ?? VALIDATION_TYPES.submit;
+  }
+
+  get fieldValidationEvent() {
+    const { validateOn } = this;
+
+    if (validateOn === VALIDATION_TYPES.submit) {
+      return undefined;
+    }
+
+    return validateOn;
+  }
+
   @action
   async checkIsDirty(transition) {
     let triggerConfirm;
@@ -102,20 +116,6 @@ class FKForm extends Component {
         },
       });
     }
-  }
-
-  get validateOn() {
-    return this.args.validateOn ?? VALIDATION_TYPES.submit;
-  }
-
-  get fieldValidationEvent() {
-    const { validateOn } = this;
-
-    if (validateOn === VALIDATION_TYPES.submit) {
-      return undefined;
-    }
-
-    return validateOn;
   }
 
   @action
@@ -273,7 +273,13 @@ class FKForm extends Component {
     try {
       this.isSubmitting = true;
 
-      await this.validate([...this.fields.values()]);
+      const submissionPrevented = await this.validate([
+        ...this.fields.values(),
+      ]);
+
+      if (submissionPrevented) {
+        return;
+      }
 
       if (this.formData.isValid) {
         if (this.args.commitOnSubmit !== false) {
@@ -323,6 +329,8 @@ class FKForm extends Component {
     }
 
     this.isValidating = true;
+    let submissionPrevented = false;
+    const preventSubmit = () => (submissionPrevented = true);
 
     try {
       for (const field of fields) {
@@ -331,23 +339,27 @@ class FKForm extends Component {
         await field.validate?.(
           field.name,
           this.formData.get(field.name),
-          this.formData.draftData
+          this.formData.draftData,
+          { preventSubmit }
         );
       }
 
       await this.args.validate?.(this.formData.draftData, {
         addError: this.addError,
         removeError: this.removeError,
+        preventSubmit,
       });
     } finally {
       this.isValidating = false;
     }
+
+    return submissionPrevented;
   }
 
   <template>
     <form
-      novalidate
       class="form-kit"
+      novalidate
       ...attributes
       {{on "submit" this.onSubmit}}
       {{on "reset" this.onReset}}
@@ -400,16 +412,16 @@ class FKForm extends Component {
 const Form = <template>
   {{#each (array @data) as |data|}}
     <FKForm
-      @data={{data}}
+      ...attributes
       @commitOnSubmit={{@commitOnSubmit}}
-      @onSubmit={{@onSubmit}}
-      @validate={{@validate}}
-      @validateOn={{@validateOn}}
+      @data={{data}}
+      @onDirtyCheck={{@onDirtyCheck}}
       @onRegisterApi={{@onRegisterApi}}
       @onReset={{@onReset}}
       @onSet={{@onSet}}
-      @onDirtyCheck={{@onDirtyCheck}}
-      ...attributes
+      @onSubmit={{@onSubmit}}
+      @validate={{@validate}}
+      @validateOn={{@validateOn}}
       as |components draftData|
     >
       {{yield components draftData}}

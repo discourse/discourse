@@ -1,24 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Completions::XlsxToText do
-  def with_xlsx(entries)
-    tempfile = Tempfile.new(%w[workbook .xlsx])
-    path = tempfile.path
-    tempfile.close
-    FileUtils.rm_f(path)
-
-    ::Zip::File.open(path, create: true) do |zip_file|
-      entries.each do |name, content|
-        zip_file.get_output_stream(name) { |stream| stream.write(content) }
-      end
-    end
-
-    yield path
-  ensure
-    tempfile&.close
-    FileUtils.rm_f(path) if path
-  end
-
   def workbook_xml
     <<~XML
       <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -54,7 +36,8 @@ RSpec.describe DiscourseAi::Completions::XlsxToText do
   end
 
   it "extracts sheets in workbook order as tab-delimited text" do
-    with_xlsx(
+    with_zipped_document(
+      "xlsx",
       "xl/workbook.xml" => workbook_xml,
       "xl/_rels/workbook.xml.rels" => workbook_rels_xml,
       "xl/sharedStrings.xml" => shared_strings_xml,
@@ -82,15 +65,19 @@ RSpec.describe DiscourseAi::Completions::XlsxToText do
   end
 
   it "falls back to worksheet entries when workbook metadata is missing" do
-    with_xlsx("xl/worksheets/sheet2.xml" => <<~XML, "xl/worksheets/sheet1.xml" => <<~XML) do |path|
+    with_zipped_document(
+      "xlsx",
+      "xl/worksheets/sheet2.xml" => <<~XML,
         <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
           <sheetData><row><c t="inlineStr"><is><t>Second</t></is></c></row></sheetData>
         </worksheet>
       XML
+      "xl/worksheets/sheet1.xml" => <<~XML,
         <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
           <sheetData><row><c t="inlineStr"><is><t>First</t></is></c></row></sheetData>
         </worksheet>
       XML
+    ) do |path|
       expect(described_class.convert(path)).to eq(
         "Sheet: Sheet1\n\nFirst\n\nSheet: Sheet2\n\nSecond",
       )
@@ -98,7 +85,7 @@ RSpec.describe DiscourseAi::Completions::XlsxToText do
   end
 
   it "limits very wide sparse rows" do
-    with_xlsx("xl/worksheets/sheet1.xml" => <<~XML) do |path|
+    with_zipped_document("xlsx", "xl/worksheets/sheet1.xml" => <<~XML) do |path|
         <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
           <sheetData>
             <row><c r="A1" t="inlineStr"><is><t>Visible</t></is></c><c r="ZZ1" t="inlineStr"><is><t>Too far away</t></is></c></row>
@@ -110,7 +97,7 @@ RSpec.describe DiscourseAi::Completions::XlsxToText do
   end
 
   it "returns blank text when the workbook has no readable sheets" do
-    with_xlsx("docProps/core.xml" => "<properties />") do |path|
+    with_zipped_document("xlsx", "docProps/core.xml" => "<properties />") do |path|
       expect(described_class.convert(path)).to eq("")
     end
   end

@@ -12,7 +12,13 @@ describe "Creating invites with roles" do
   let(:invite_form) { PageObjects::Pages::InviteForm.new }
   let(:cdp) { PageObjects::CDP.new }
 
-  before { SiteSetting.enable_invite_modal_with_roles = true }
+  before do
+    SiteSetting.enable_invite_modal_with_roles = true
+
+    # Redemption here goes through the password invite form, which the email
+    # code flow replaces when enable_local_logins_via_code is on.
+    SiteSetting.enable_local_logins_via_code = false
+  end
 
   def open_invite_modal_for(current_user)
     user_invited_pending_page.visit(current_user)
@@ -40,6 +46,7 @@ describe "Creating invites with roles" do
       screenshot_marker(label: "invite-admins-advanced", only: :desktop)
       modal.toggle_advanced_options
 
+      modal.select_delivery("email")
       modal.form.field("email").fill_in("future-admin@example.com")
       modal.save_button.click
 
@@ -85,12 +92,33 @@ describe "Creating invites with roles" do
       expect(modal).to be_open
       expect(modal.selected_role).to eq("admin")
 
+      modal.select_delivery("email")
       modal.form.field("email").fill_in("collaborator@example.com")
       modal.save_button.click
       expect(modal).to have_summary
       modal.close
 
       expect(banner.step_completed?("invite_collaborators")).to eq(true)
+    end
+
+    it "can create an admin invite link with a domain restriction" do
+      cdp.allow_clipboard
+
+      open_invite_modal_for(admin)
+
+      modal.select_role("admin")
+      modal.toggle_advanced_options
+      modal.form.field("domain").fill_in("example.com")
+      modal.save_button.click
+
+      expect(modal).to have_summary
+      cdp.clipboard_has_text?(Invite.last.link)
+
+      invite = Invite.last
+      expect(invite.admin).to eq(true)
+      expect(invite.email).to eq(nil)
+      expect(invite.domain).to eq("example.com")
+      expect(invite.max_redemptions_allowed).to eq(1)
     end
 
     it "can create a member link invite with a domain restriction" do
@@ -103,7 +131,6 @@ describe "Creating invites with roles" do
 
       modal.toggle_advanced_options
       screenshot_marker(label: "invite-members-advanced", only: :desktop)
-      modal.toggle_advanced_options
 
       modal.form.field("domain").fill_in("example.com")
       modal.save_button.click
@@ -139,6 +166,7 @@ describe "Creating invites with roles" do
       open_invite_modal_for(admin)
 
       modal.select_role("admin")
+      modal.select_delivery("email")
       modal.form.field("email").fill_in("future-admin@example.com")
       modal.save_button.click
       expect(modal).to have_summary

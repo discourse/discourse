@@ -5,10 +5,10 @@ import { action } from "@ember/object";
 import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import Channel from "./channel";
-import Group from "./group";
-import ListAction from "./list-action";
-import User from "./user";
+import Channel from "./channel.gjs";
+import Group from "./group.gjs";
+import ListAction from "./list-action.gjs";
+import User from "./user.gjs";
 
 export default class List extends Component {
   cantAddMoreMembersLabel = i18n(
@@ -68,14 +68,14 @@ export default class List extends Component {
                     "-highlighted"
                   )
                 }}
+                data-identifier={{item.identifier}}
+                id={{item.id}}
+                role="button"
+                tabindex="0"
                 {{on "click" (fn this.handleClick item)}}
                 {{on "keypress" (fn this.handleEnter item)}}
                 {{on "mousemove" (fn @onHighlight item)}}
                 {{on "mouseleave" (fn @onHighlight null)}}
-                role="button"
-                tabindex="0"
-                data-identifier={{item.identifier}}
-                id={{item.id}}
               >
                 {{component
                   (this.componentForItem item.type)

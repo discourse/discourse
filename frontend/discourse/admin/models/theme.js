@@ -175,6 +175,18 @@ class Theme extends RestModel {
     }
   }
 
+  @computed("childThemes.[]")
+  get child_theme_ids() {
+    if (this.childThemes) {
+      return this.childThemes?.map((theme) => get(theme, "id"));
+    }
+  }
+
+  @computed("component", "enabled", "hasParents")
+  get warnUnassignedComponent() {
+    return this.component && this.enabled && !this.hasParents;
+  }
+
   getKey(field) {
     return `${field.target} ${field.name}`;
   }
@@ -268,18 +280,6 @@ class Theme extends RestModel {
         this.notifyPropertyChange("theme_fields.[]");
       }
     }
-  }
-
-  @computed("childThemes.[]")
-  get child_theme_ids() {
-    if (this.childThemes) {
-      return this.childThemes?.map((theme) => get(theme, "id"));
-    }
-  }
-
-  @computed("recentlyInstalled", "component", "hasParents")
-  get warnUnassignedComponent() {
-    return this.recentlyInstalled && this.component && !this.hasParents;
   }
 
   removeChildTheme(theme) {

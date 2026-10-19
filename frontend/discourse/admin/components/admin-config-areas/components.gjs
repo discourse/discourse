@@ -15,6 +15,8 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { extractErrorInfo } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
+import downloadBlob from "discourse/lib/download-blob";
+import { attachmentDownloadStrategy } from "discourse/lib/download-strategy";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import { descriptionForRemoteUrl } from "discourse/lib/popular-themes";
@@ -111,7 +113,8 @@ export default class AdminConfigAreasComponents extends Component {
     return {
       selectedType: COMPONENTS,
       userId: null,
-      content: [],
+      content:
+        /** @type {import("discourse/admin/models/theme").default[]} */ ([]),
       installedThemes: this.components,
       addTheme: this.addComponent,
       updateSelectedType: () => {},
@@ -240,11 +243,11 @@ export default class AdminConfigAreasComponents extends Component {
 
   <template>
     <DPageSubheader
-      @titleLabel={{i18n
-        "admin.config_areas.themes_and_components.components.title"
-      }}
       @descriptionLabel={{i18n
         "admin.config_areas.themes_and_components.components.description"
+      }}
+      @titleLabel={{i18n
+        "admin.config_areas.themes_and_components.components.title"
       }}
     >
       <:actions as |actions|>
@@ -253,8 +256,8 @@ export default class AdminConfigAreasComponents extends Component {
           @outletArgs={{lazyHash actions=actions}}
         >
           <actions.Primary
-            @label="admin.config_areas.themes_and_components.components.install"
             @action={{this.installModal}}
+            @label="admin.config_areas.themes_and_components.components.install"
           />
         </PluginOutlet>
       </:actions>
@@ -263,21 +266,21 @@ export default class AdminConfigAreasComponents extends Component {
       {{#if this.hasComponents}}
         <DFilterControls
           @array={{this.components}}
-          @dropdownOptions={{STATUS_FILTER_OPTIONS}}
-          @initialTextFilter={{this.nameFilter}}
-          @dropdownValue={{this.statusFilter}}
-          @textFilterQueryParam="filter"
           @dropdownFilterQueryParam="status"
+          @dropdownOptions={{STATUS_FILTER_OPTIONS}}
+          @dropdownValue={{this.statusFilter}}
+          @initialTextFilter={{this.nameFilter}}
           @inputPlaceholder={{i18n
             "admin.config_areas.themes_and_components.components.search_components"
           }}
+          @loading={{this.loading}}
           @noResultsMessage={{i18n
             "admin.config_areas.themes_and_components.components.no_components_found"
           }}
-          @onTextFilterChange={{this.onNameFilterChange}}
           @onDropdownFilterChange={{this.onStatusFilterChange}}
           @onResetFilters={{this.onResetFilters}}
-          @loading={{this.loading}}
+          @onTextFilterChange={{this.onNameFilterChange}}
+          @textFilterQueryParam="filter"
         >
           <:content>
             <DLoadMore
@@ -388,6 +391,10 @@ class ComponentRow extends Component {
     );
   }
 
+  get exportAction() {
+    return attachmentDownloadStrategy() === "native" ? undefined : this.export;
+  }
+
   @action
   async toggleEnabled() {
     this.disableToggle = true;
@@ -455,6 +462,17 @@ class ComponentRow extends Component {
   }
 
   @action
+  async export() {
+    try {
+      await downloadBlob(
+        getURL(`/admin/customize/themes/${this.args.component.id}/export`)
+      );
+    } catch {
+      this.dialog.alert(i18n("generic_error"));
+    }
+  }
+
+  @action
   delete() {
     return this.dialog.deleteConfirm({
       title: i18n(
@@ -509,15 +527,15 @@ class ComponentRow extends Component {
 
   <template>
     <tr
-      data-component-id={{@component.id}}
       class="d-table__row admin-config-components__component-row
         {{if this.hasUpdates 'has-update'}}"
+      data-component-id={{@component.id}}
     >
       <td class="d-table__cell --overview">
         <LinkTo
           class="d-table__overview-link"
-          @route="adminCustomizeThemes.show"
           @models={{array "themes" @component.id}}
+          @route="adminCustomizeThemes.show"
         >
           <div class="d-table__overview-name">{{@component.name}}</div>
         </LinkTo>
@@ -577,9 +595,9 @@ class ComponentRow extends Component {
           {{i18n "admin.config_areas.themes_and_components.components.enabled"}}
         </div>
         <DToggleSwitch
-          @state={{this.enabled}}
           class="admin-config-components__toggle"
           disabled={{this.disableToggle}}
+          @state={{this.enabled}}
           {{on "click" this.toggleEnabled}}
         />
       </td>
@@ -592,10 +610,10 @@ class ComponentRow extends Component {
             @routeModels={{array "themes" @component.id}}
           />
           <DMenu
+            @class="admin-config-components__more-actions"
+            @icon="ellipsis"
             @identifier="component-menu"
             @title={{i18n "admin.config_areas.flags.more_options.title"}}
-            @icon="ellipsis"
-            @class="admin-config-components__more-actions"
             @triggerClass="btn-default"
           >
             <:content>
@@ -603,13 +621,13 @@ class ComponentRow extends Component {
                 <dropdown.item>
                   <DButton
                     class="btn-transparent admin-config-components__preview"
-                    target="_blank"
                     rel="noopener noreferrer"
-                    @label="admin.config_areas.themes_and_components.components.preview"
-                    @icon="desktop"
+                    target="_blank"
                     @href={{getURL
                       (concat "/admin/themes/" @component.id "/preview")
                     }}
+                    @icon="desktop"
+                    @label="admin.config_areas.themes_and_components.components.preview"
                   />
                 </dropdown.item>
                 {{#if @component.remote_theme.is_git}}
@@ -617,18 +635,18 @@ class ComponentRow extends Component {
                     {{#if this.hasUpdates}}
                       <DButton
                         class="btn-transparent admin-config-components__update"
-                        @label="admin.config_areas.themes_and_components.components.update"
-                        @icon="cloud-arrow-down"
                         @action={{this.updateToLatest}}
+                        @icon="cloud-arrow-down"
                         @isLoading={{this.updating}}
+                        @label="admin.config_areas.themes_and_components.components.update"
                       />
                     {{else}}
                       <DButton
                         class="btn-transparent admin-config-components__check-updates"
-                        @label="admin.config_areas.themes_and_components.components.check_update"
-                        @icon="arrows-rotate"
                         @action={{this.checkForUpdates}}
+                        @icon="arrows-rotate"
                         @isLoading={{this.checkingForUpdates}}
+                        @label="admin.config_areas.themes_and_components.components.check_update"
                       />
                     {{/if}}
                   </dropdown.item>
@@ -636,23 +654,22 @@ class ComponentRow extends Component {
                 <dropdown.item>
                   <DButton
                     class="btn-transparent admin-config-components__export"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    @label="admin.config_areas.themes_and_components.components.export"
-                    @icon="download"
+                    @action={{this.exportAction}}
                     @href={{getURL
                       (concat
                         "/admin/customize/themes/" @component.id "/export"
                       )
                     }}
+                    @icon="download"
+                    @label="admin.config_areas.themes_and_components.components.export"
                   />
                 </dropdown.item>
                 <dropdown.item>
                   <DButton
                     class="btn-danger admin-config-components__delete"
-                    @label="admin.config_areas.themes_and_components.components.delete"
-                    @icon="trash-can"
                     @action={{this.delete}}
+                    @icon="trash-can"
+                    @label="admin.config_areas.themes_and_components.components.delete"
                   />
                 </dropdown.item>
               </DDropdownMenu>

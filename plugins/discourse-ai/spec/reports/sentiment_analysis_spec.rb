@@ -22,4 +22,14 @@ RSpec.describe DiscourseAi::Sentiment::SentimentAnalysisReport do
     report = Report.find("sentiment_analysis")
     expect(report.labels).to eq(%w[Positive Neutral Negative])
   end
+
+  it "produces data that can be cached for the admin dashboard" do
+    Fabricate(:sentiment_classification, target: post)
+
+    report = Report.find("sentiment_analysis")
+
+    expect(report.data).to be_present
+    expect(report.data).to all(be_a(Hash))
+    expect { Report.cache(report) }.not_to raise_error
+  end
 end

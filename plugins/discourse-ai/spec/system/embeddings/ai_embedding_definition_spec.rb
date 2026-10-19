@@ -92,4 +92,18 @@ RSpec.describe "Managing Embeddings configurations" do
     expect(embedding_def.embed_prompt).to eq(embed_prefix)
     expect(embedding_def.search_prompt).to eq(search_prefix)
   end
+
+  it "supports editing an existing configuration" do
+    embedding_def = Fabricate(:embedding_definition)
+
+    visit "/admin/plugins/discourse-ai/ai-embeddings/#{embedding_def.id}/edit"
+
+    form.field("display_name").fill_in("Updated embeddings")
+    form.submit
+
+    expect(PageObjects::Components::Toasts.new).to have_success(
+      I18n.t("js.discourse_ai.embeddings.saved"),
+    )
+    expect(embedding_def.reload.display_name).to eq("Updated embeddings")
+  end
 end

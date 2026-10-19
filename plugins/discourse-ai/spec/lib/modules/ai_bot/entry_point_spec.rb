@@ -1,192 +1,300 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseAi::AiBot::EntryPoint do
-  before { enable_current_plugin }
-
+describe DiscourseAi::AiBot::EntryPoint do
   describe "#inject_into" do
+    describe "registers conversations as a homepage option" do
+      fab!(:user)
+      fab!(:bot_allowed_group, :group)
+      fab!(:llm_model)
+      fab!(:conversation_agent) do
+        Fabricate(
+          :ai_agent,
+          allowed_group_ids: [bot_allowed_group.id],
+          allow_personal_messages: true,
+          default_llm: llm_model,
+        ).tap(&:ensure_user!)
+      end
+
+      before do
+        prepare_ai_bot_fixtures(bots: [llm_model])
+        SiteSetting.ai_bot_allowed_groups = bot_allowed_group.id.to_s
+        SiteSetting.top_menu = "latest|new|top|categories"
+        SiteSetting.default_homepage = "ai-conversations"
+        bot_allowed_group.add(user)
+      end
+
+      it "offers conversations as a default homepage choice" do
+        expect(HomepageSiteSetting.choices).to include("ai-conversations")
+        expect(HomepageHelper.resolve(nil, user)).to eq("ai-conversations")
+      end
+
+      it "is not offered, and falls back to the top menu homepage, when the bot is disabled" do
+        SiteSetting.ai_bot_enabled = false
+
+        expect(HomepageSiteSetting.choices).not_to include("ai-conversations")
+        expect(HomepageHelper.resolve(nil, user)).to eq("latest")
+      end
+
+      it "falls back to the top menu homepage for anonymous visitors" do
+        expect(HomepageHelper.resolve).to eq("latest")
+        expect(Site.json_for(Guardian.new)).not_to include("ai_bot_anonymous_preview")
+      end
+
+      it "offers anonymous visitors a preview when they're in the allowed groups" do
+        SiteSetting.ai_bot_allowed_groups =
+          "#{bot_allowed_group.id}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+
+        expect(HomepageHelper.resolve).to eq("ai-conversations")
+        expect(JSON.parse(Site.json_for(Guardian.new))["ai_bot_anonymous_preview"]).to eq(true)
+      end
+    end
+
     describe "subscribes to the post_created event" do
       fab!(:admin)
       fab!(:bot_allowed_group, :group)
-
       fab!(:gpt_4) { Fabricate(:llm_model, name: "gpt-4") }
-      let(:gpt_bot) { gpt_4.reload.user }
-
       fab!(:claude_2) { Fabricate(:llm_model, name: "claude-2") }
+      fab!(:agent) do
+        Fabricate(
+          :ai_agent,
+          enabled: true,
+          allowed_group_ids: [bot_allowed_group.id],
+          allow_personal_messages: true,
+          default_llm: gpt_4,
+        ).tap(&:ensure_user!)
+      end
 
       let(:post_args) do
         {
           title: "Dear AI, I want to ask a question",
           raw: "Hello, Can you please tell me a story?",
           archetype: Archetype.private_message,
-          target_usernames: [gpt_bot.username].join(","),
+          target_usernames: agent.user.username,
+          topic_opts: {
+            custom_fields: {
+              DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD => agent.id,
+              DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD => gpt_4.id,
+            },
+          },
         }
       end
 
       before do
-        toggle_enabled_bots(bots: [gpt_4, claude_2])
-        SiteSetting.ai_bot_enabled = true
+        prepare_ai_bot_fixtures(bots: [gpt_4, claude_2])
         SiteSetting.ai_bot_allowed_groups = bot_allowed_group.id
         bot_allowed_group.add(admin)
       end
 
       it "adds a can_debug_ai_bot_conversations method to current user" do
         SiteSetting.ai_bot_debugging_allowed_groups = bot_allowed_group.id.to_s
-        serializer = CurrentUserSerializer.new(admin, scope: Guardian.new(admin))
-        serializer = serializer.as_json
+        serializer = CurrentUserSerializer.new(admin, scope: Guardian.new(admin)).as_json
 
         expect(serializer[:current_user][:can_debug_ai_bot_conversations]).to eq(true)
       end
 
-      describe "adding TOPIC_AI_BOT_PM_FIELD to topic custom fields" do
-        it "is added when user PMs a single bot" do
-          topic = PostCreator.create!(admin, post_args).topic
-          expect(topic.reload.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD]).to eq("t")
-        end
+      it "marks a personal message with one agent recipient as an AI conversation" do
+        topic = PostCreator.create!(admin, post_args).topic
 
-        it "is not added when user PMs a bot and another user" do
-          user = Fabricate(:user)
-          post_args[:target_usernames] = [gpt_bot.username, user.username].join(",")
-          topic = PostCreator.create!(admin, post_args).topic
-          expect(topic.reload.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD]).to be_nil
-        end
+        expect(topic.reload.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD]).to eq("t")
       end
 
-      it "adds information about forcing default llm to current_user_serializer" do
-        Group.refresh_automatic_groups!
+      describe "PM topic tracking state" do
+        fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
-        agent =
-          Fabricate(
-            :ai_agent,
-            enabled: true,
-            allowed_group_ids: [bot_allowed_group.id],
-            default_llm_id: claude_2.id,
-            force_default_llm: true,
+        let!(:bot_pm) { PostCreator.create!(admin, post_args).topic }
+        let!(:human_pm) do
+          PostCreator.create!(
+            user,
+            title: "A question for a human instead",
+            raw: "Hello there, do you have a minute?",
+            archetype: Archetype.private_message,
+            target_usernames: admin.username,
+          ).topic
+        end
+        let!(:bot_reply) do
+          PostCreator.create!(agent.user, topic_id: bot_pm.id, raw: "Here is my considered answer.")
+        end
+
+        before do
+          PostCreator.create!(user, topic_id: human_pm.id, raw: "Following up on this one.")
+          TopicUser.update_last_read(admin, bot_pm.id, 1, 1, 0)
+          TopicUser.update_last_read(admin, human_pm.id, 1, 1, 0)
+        end
+
+        it "leaves bot PMs out of the unread report" do
+          expect(PrivateMessageTopicTrackingState.report(admin).map(&:topic_id)).to contain_exactly(
+            human_pm.id,
           )
-        agent.create_user!
+        end
 
-        serializer = CurrentUserSerializer.new(admin, scope: Guardian.new(admin))
-        serializer = serializer.as_json
-        bots = serializer[:current_user][:ai_enabled_chat_bots]
+        it "does not publish unread updates for bot PMs" do
+          messages =
+            MessageBus.track_publish(PrivateMessageTopicTrackingState.user_channel(admin.id)) do
+              PrivateMessageTopicTrackingState.publish_unread(bot_reply)
+            end
 
-        agent_bot = bots.find { |bot| bot["id"] == agent.user_id }
+          expect(messages).to be_empty
+        end
 
-        expect(agent_bot["username"]).to eq(agent.user.username)
-        expect(agent_bot["force_default_llm"]).to eq(true)
+        it "includes bot PMs when the AI bot is disabled" do
+          SiteSetting.ai_bot_enabled = false
+
+          expect(PrivateMessageTopicTrackingState.report(admin).map(&:topic_id)).to contain_exactly(
+            bot_pm.id,
+            human_pm.id,
+          )
+        end
       end
 
-      it "includes user ids for all agents in the serializer" do
-        Group.refresh_automatic_groups!
+      it "does not mark a personal message that includes another person" do
+        user = Fabricate(:user)
+        post_args[:target_usernames] = [agent.user.username, user.username].join(",")
+        topic = PostCreator.create!(admin, post_args).topic
 
-        agent = Fabricate(:ai_agent, enabled: true, allowed_group_ids: [bot_allowed_group.id])
-        agent.create_user!
-
-        serializer = CurrentUserSerializer.new(admin, scope: Guardian.new(admin))
-        serializer = serializer.as_json
-        bots = serializer[:current_user][:ai_enabled_chat_bots]
-
-        agent_bot = bots.find { |bot| bot["id"] == agent.user_id }
-        expect(agent_bot["username"]).to eq(agent.user.username)
-        expect(agent_bot["force_default_llm"]).to eq(false)
+        expect(topic.reload.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD]).to be_nil
       end
 
-      it "queues a job to generate a reply by the AI" do
+      it "serializes agents and selectable models independently" do
+        serializer = CurrentUserSerializer.new(admin, scope: Guardian.new(admin)).as_json
+        current_user_json = serializer[:current_user]
+
+        serialized_agent =
+          current_user_json[:ai_enabled_agents].find { |item| item[:id] == agent.id }
+        serialized_model =
+          current_user_json[:ai_available_llm_models].find { |item| item["id"] == gpt_4.id }
+
+        expect(serialized_agent).to include(
+          username: agent.user.username_lower,
+          default_llm_id: gpt_4.id,
+          force_default_llm: false,
+        )
+        expect(serialized_model).to include(
+          "display_name" => gpt_4.display_name,
+          "model_name" => gpt_4.name,
+        )
+        expect(serialized_model).not_to have_key("username")
+      end
+
+      it "adds forced-model information to the agent payload" do
+        agent.update!(default_llm: claude_2, force_default_llm: true)
+
+        serializer = CurrentUserSerializer.new(admin, scope: Guardian.new(admin)).as_json
+        serialized_agent =
+          serializer[:current_user][:ai_enabled_agents].find { |item| item[:id] == agent.id }
+
+        expect(serialized_agent).to include(
+          default_llm_id: claude_2.id,
+          default_llm_name: claude_2.display_name,
+          force_default_llm: true,
+        )
+      end
+
+      it "queues a model snapshot using the agent speaker" do
         expect { PostCreator.create!(admin, post_args) }.to change(
-          Jobs::CreateAiReply.jobs,
-          :size,
-        ).by(1)
-      end
-
-      it "does not queue a job for small actions" do
-        post = PostCreator.create!(admin, post_args)
-
-        expect {
-          post.topic.add_moderator_post(
-            admin,
-            "this is a small action",
-            post_type: Post.types[:small_action],
-          )
-        }.not_to change(Jobs::CreateAiReply.jobs, :size)
-
-        expect {
-          post.topic.add_moderator_post(
-            admin,
-            "this is a small action",
-            post_type: Post.types[:moderator_action],
-          )
-        }.not_to change(Jobs::CreateAiReply.jobs, :size)
-
-        expect {
-          post.topic.add_moderator_post(
-            admin,
-            "this is a small action",
-            post_type: Post.types[:whisper],
-          )
-        }.not_to change(Jobs::CreateAiReply.jobs, :size)
-      end
-
-      it "includes the bot's user_id" do
-        claude_bot = DiscourseAi::AiBot::EntryPoint.find_user_from_model("claude-2")
-        claude_post_attrs = post_args.merge(target_usernames: [claude_bot.username].join(","))
-
-        expect { PostCreator.create!(admin, claude_post_attrs) }.to change(
           Jobs::CreateAiReply.jobs,
           :size,
         ).by(1)
 
         job_args = Jobs::CreateAiReply.jobs.last["args"].first
-        expect(job_args["bot_user_id"]).to eq(claude_bot.id)
+        expect(job_args).to include(
+          "bot_user_id" => agent.user_id,
+          "agent_id" => agent.id,
+          "llm_model_id" => gpt_4.id,
+          "authorization_user_id" => admin.id,
+        )
       end
 
-      context "when the post is not from a PM" do
-        it "does nothing" do
+      it "does not queue a job for small actions" do
+        post = PostCreator.create!(admin, post_args)
+
+        %i[small_action moderator_action whisper].each do |post_type|
           expect {
-            PostCreator.create!(admin, post_args.merge(archetype: Archetype.default))
+            post.topic.add_moderator_post(
+              admin,
+              "this is a small action",
+              post_type: Post.types[post_type],
+            )
           }.not_to change(Jobs::CreateAiReply.jobs, :size)
         end
       end
 
-      context "when the bot doesn't have access to the PM" do
-        it "does nothing" do
-          user_2 = Fabricate(:user)
-          expect {
-            PostCreator.create!(admin, post_args.merge(target_usernames: [user_2.username]))
-          }.not_to change(Jobs::CreateAiReply.jobs, :size)
-        end
+      it "does not queue a reply outside a personal message without an agent mention" do
+        expect {
+          PostCreator.create!(
+            admin,
+            post_args.except(:topic_opts, :target_usernames).merge(archetype: Archetype.default),
+          )
+        }.not_to change(Jobs::CreateAiReply.jobs, :size)
       end
 
-      context "when the user is not allowed to interact with the bot" do
-        it "does nothing" do
-          bot_allowed_group.remove(admin)
-          expect { PostCreator.create!(admin, post_args) }.not_to change(
-            Jobs::CreateAiReply.jobs,
-            :size,
+      it "does not queue when the target is not an AI agent" do
+        user = Fabricate(:user)
+
+        expect {
+          PostCreator.create!(
+            admin,
+            post_args.except(:topic_opts).merge(target_usernames: user.username),
           )
-        end
+        }.not_to change(Jobs::CreateAiReply.jobs, :size)
       end
 
-      context "when the post was created by the bot" do
-        it "does nothing" do
-          gpt_topic_id = PostCreator.create!(admin, post_args).topic_id
-          reply_args =
-            post_args.except(:archetype, :target_usernames, :title).merge(topic_id: gpt_topic_id)
+      it "does not queue when the author cannot use the agent" do
+        bot_allowed_group.remove(admin)
 
-          expect { PostCreator.create!(gpt_bot, reply_args) }.not_to change(
-            Jobs::CreateAiReply.jobs,
-            :size,
+        expect { PostCreator.create(admin, post_args) }.not_to change(
+          Jobs::CreateAiReply.jobs,
+          :size,
+        )
+      end
+
+      it "does not queue a response to the agent's own post" do
+        topic_id = PostCreator.create!(admin, post_args).topic_id
+        reply_args =
+          post_args.except(:archetype, :target_usernames, :title, :topic_opts).merge(
+            topic_id: topic_id,
           )
-        end
+
+        expect { PostCreator.create!(agent.user, reply_args) }.not_to change(
+          Jobs::CreateAiReply.jobs,
+          :size,
+        )
       end
     end
 
-    it "will include ai_search_discoveries field in the user_option if discover agent is enabled" do
-      SiteSetting.ai_discover_enabled = true
-      SiteSetting.ai_discover_agent = Fabricate(:ai_agent).id
-
+    it "includes ai_search_discoveries in user_option if the discover agent is enabled" do
+      enable_current_plugin
       user = Fabricate(:user)
+      group = Fabricate(:group)
+      group.add(user)
+      llm_model = Fabricate(:llm_model)
+      agent = Fabricate(:ai_agent, allowed_group_ids: [group.id], default_llm_id: llm_model.id)
+      enable_legacy_discover
+      SiteSetting.ai_discover_agent = agent.id
+      SiteSetting.ai_embeddings_enabled = true
+      SiteSetting.ai_embeddings_semantic_search_enabled = true
       user.user_option.update!(ai_search_discoveries: true)
-      serializer = CurrentUserSerializer.new(user, scope: Guardian.new(user))
-      serializer = serializer.as_json
-      expect(serializer[:current_user][:user_option][:ai_search_discoveries]).to eq(true)
+      serializer = CurrentUserSerializer.new(user, scope: Guardian.new(user)).as_json
+
+      expect(serializer[:current_user][:user_option]).to include(ai_search_discoveries: true)
+    end
+
+    it "allows Ask AI independently of the deprecated Discoveries preference" do
+      enable_current_plugin
+      user = Fabricate(:user)
+      group = Fabricate(:group)
+      group.add(user)
+      llm_model = Fabricate(:llm_model)
+      agent = Fabricate(:ai_agent, allowed_group_ids: [group.id], default_llm_id: llm_model.id)
+      SiteSetting.ai_ask_ai_enabled = true
+      SiteSetting.ai_ask_ai_agent = agent.id
+      SiteSetting.ai_ask_ai_allowed_groups = group.id.to_s
+      SiteSetting.ai_embeddings_enabled = true
+      SiteSetting.ai_embeddings_semantic_search_enabled = true
+      user.user_option.update!(ai_search_discoveries: false)
+
+      serializer = CurrentUserSerializer.new(user, scope: Guardian.new(user)).as_json
+
+      expect(serializer[:current_user]).to include(can_use_ask_ai: true)
     end
   end
 end

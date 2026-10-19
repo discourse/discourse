@@ -6,6 +6,7 @@
   gap: var(--space-2);
   height: 100%;
   min-height: 0;
+  min-width: 0;
 
   canvas {
     width: 100% !important;
@@ -15,6 +16,11 @@
   &__table {
     overflow: auto;
     font-size: var(--font-down-2);
+
+    th,
+    td {
+      white-space: nowrap;
+    }
   }
 
   &__empty {
@@ -112,6 +118,25 @@ table.group-reports {
     @include viewport.until(sm) {
       flex-direction: column;
       height: auto;
+    }
+  }
+
+  /* The floor a resize may not cross, read from here by the separator. Declared
+     rather than measured once, so it follows the layout rather than whichever
+     state the editor opened in. Carried by a class, so panes without a separator
+     keep their own sizing. */
+
+  .query-editor__panes {
+    min-height: 400px;
+
+    @include viewport.until(sm) {
+      min-height: 548px;
+    }
+  }
+
+  &.no-schema .query-editor__panes {
+    @include viewport.until(sm) {
+      min-height: 300px;
     }
   }
 
@@ -315,11 +340,8 @@ table.group-reports {
   }
 
   .grippie {
-    cursor: nwse-resize;
     padding-bottom: var(--space-2);
     user-select: none;
-    color: var(--primary);
-    text-align: right;
   }
 }
 
@@ -363,31 +385,33 @@ table.group-reports {
     white-space: pre-wrap;
   }
 
-  .groups {
-    margin: 10px 0;
+  &__metadata-fields {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin: 10px 0;
+  }
 
-    @include viewport.until(md) {
-      flex-direction: column;
-      align-items: flex-start;
-    }
+  &__metadata-field {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
 
-    .label {
-      margin-right: 10px;
-      color: var(--primary-high);
-    }
-
-    .name {
-      display: inline;
+    @include viewport.from(md) {
+      flex-direction: row;
+      align-items: center;
     }
 
     .select-kit.multi-select {
       @include viewport.until(md) {
-        width: 360px;
+        width: min(22.5rem, 100%);
       }
     }
+  }
+
+  &__metadata-label {
+    color: var(--primary-high);
   }
 }
 
@@ -527,30 +551,71 @@ table.group-reports {
 .query-ai-prompt {
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
+  gap: var(--space-1);
   margin: 1em 0;
 
   &__label {
-    font-weight: 700;
+    margin: 0;
+    color: var(--primary);
+    font-size: var(--font-down-1-rem);
+    font-weight: 600;
+    line-height: var(--line-height-medium);
   }
 
   &__input {
     width: 100%;
+    height: auto;
     min-height: 4em;
   }
 
   &__actions {
     display: flex;
     align-items: center;
-    gap: 0.75em;
+    margin-block-start: var(--space-1);
+  }
+}
+
+.data-explorer-workflow-ai-query {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-self: stretch;
+  min-width: 0;
+  margin-block: var(--space-3) 0;
+  padding: var(--space-3);
+  background: var(--primary-very-low);
+  border: 1px solid var(--primary-low);
+  border-inline-start: 3px solid var(--tertiary);
+  border-radius: var(--d-border-radius);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
   }
 
-  &__generating {
+  &__icon {
     display: inline-flex;
     align-items: center;
-    gap: 0.35em;
-    color: var(--primary-medium);
-    font-size: var(--font-down-1);
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 2rem;
+    height: 2rem;
+    color: var(--tertiary);
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius-pill);
+  }
+
+  &__title {
+    margin: 0;
+    color: var(--primary);
+    font-size: var(--font-up-1);
+    line-height: var(--line-height-medium);
+  }
+
+  &__prompt {
+    margin: 0;
   }
 }
 
@@ -642,6 +707,18 @@ table.group-reports {
     margin-top: 1.5em;
   }
 
+  .query-new__access-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: 1em;
+  }
+
+  .query-new__access-field {
+    flex: 1 1 15rem;
+    min-width: 0;
+  }
+
   .query-new__preview {
     margin-top: 0.5em;
   }
@@ -670,6 +747,11 @@ table.group-reports {
   .query-new__description-input {
     width: 100%;
     min-height: 60px;
+  }
+
+  .query-group-select,
+  .query-tag-chooser {
+    width: 100%;
   }
 
   .query-new__actions {
@@ -915,28 +997,9 @@ table.group-reports {
       max-width: 100%;
     }
 
-    .query-badge {
-      font-size: var(--font-down-2);
-      padding: 0.15rem 0.3rem;
-      border-radius: 4px;
-      color: var(--primary-high);
-      background: var(--primary-low);
-      letter-spacing: 0.25px;
-      align-items: center;
-      display: inline-flex;
-      gap: var(--space-1);
-    }
-
     .query-desc {
+      @include line-clamp(2);
       color: var(--primary-high);
-      max-width: 20vw;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-
-      @include viewport.until(md) {
-        max-width: 90vw;
-      }
     }
 
     .query-created-by {
@@ -961,6 +1024,10 @@ table.group-reports {
 
     .query-created-at {
       color: var(--primary-medium);
+    }
+
+    .d-table__cell-actions .btn {
+      min-width: 4.5em;
     }
   }
 
@@ -995,6 +1062,10 @@ table.group-reports {
 
 .result-json {
   display: flex;
+}
+
+.query-result-hidden {
+  color: var(--primary-medium);
 }
 
 .result-json-value {

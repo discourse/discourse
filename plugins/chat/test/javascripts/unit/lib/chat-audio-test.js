@@ -26,7 +26,10 @@ module("Unit | chat-audio", function (hooks) {
     this.currentUser.user_option.chat_header_indicator_preference = "all_new";
 
     withPluginApi(async (api) => {
-      this.stub = sinon.spy(api, "registerDesktopNotificationHandler");
+      this.stub = sinon.spy(
+        Object.getPrototypeOf(api),
+        "registerDesktopNotificationHandler"
+      );
       chatAudioInitializer.initialize(getOwner(this));
 
       // stub the service worker response

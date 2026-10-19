@@ -7,6 +7,7 @@ import dynamicChunkUrlPlugin from "./lib/dynamic-chunk-url-plugin.mjs";
 import writeResolverConfig from "./lib/embroider-vite-resolver-options.mjs";
 import maybeBabel from "./lib/maybe-babel.mjs";
 import optimizedEmber from "./lib/optimized-ember.mjs";
+import productionEmberDeprecations from "./lib/production-ember-deprecations.mjs";
 import { exitIfDevServerRunning } from "./lib/rolldown-devserver-lock.mjs";
 import wrapTestModulesPlugin from "./lib/wrap-test-modules-plugin.mjs";
 
@@ -43,29 +44,8 @@ const aliases = [
   },
 
   {
-    find: "@ember-decorators/object",
-    replacement: "@ember-decorators/object/addon",
-  },
-  {
-    find: "@ember-decorators/utils/decorator",
-    replacement: "@ember-decorators/utils/addon/decorator",
-  },
-  {
-    find: "@ember-decorators/utils/collapse-proto",
-    replacement: "@ember-decorators/utils/addon/collapse-proto",
-  },
-  {
-    find: "@ember-decorators/component",
-    replacement: "@ember-decorators/component/addon",
-  },
-
-  {
     find: "ember-exam/test-support/load",
     replacement: "ember-exam/addon-test-support/load",
-  },
-  {
-    find: "@ember/render-modifiers",
-    replacement: "@ember/render-modifiers/addon",
   },
 ];
 
@@ -80,6 +60,7 @@ export function buildConfig({ devMode } = {}) {
     tsconfig: false,
     resolve: {
       extensions,
+      conditionNames: isProduction ? ["production"] : ["development"],
     },
     experimental: {
       incrementalBuild: true,
@@ -93,7 +74,6 @@ export function buildConfig({ devMode } = {}) {
     },
     input: {
       discourse: "discourse.js",
-      vendor: "vendor.js",
       ...(!isProduction || process.env.FORCE_BUILD_TESTS
         ? {
             "test-entrypoint": "tests/test-entrypoint.js",
@@ -102,7 +82,7 @@ export function buildConfig({ devMode } = {}) {
         : undefined),
     },
     output: {
-      minify: isProduction,
+      minify: isProduction || process.env.DISCOURSE_CI_MINIFY === "1",
       dir: "dist",
       sourcemap: true,
       cleanDir: !devMode,
@@ -118,6 +98,7 @@ export function buildConfig({ devMode } = {}) {
       viteAliasPlugin({ entries: aliases }),
       dynamicChunkUrlPlugin(),
       discourseSourceImports(),
+      ...(isProduction ? [productionEmberDeprecations()] : []),
       optimizedEmber(),
       viteImportGlobPlugin(),
       maybeBabel({
@@ -129,6 +110,26 @@ export function buildConfig({ devMode } = {}) {
       }),
       wrapTestModulesPlugin(),
       discourseChunkNamesPlugin(),
+      {
+        name: "require-relative-import-extensions",
+        resolveId: {
+          filter: { id: /^\.\.?\// },
+          handler(source, importer) {
+            if (
+              !importer ||
+              importer.includes("/node_modules/") ||
+              source.includes("/node_modules/") ||
+              source.includes("?") ||
+              /\.(m?js|c?js|[mc]?ts|gjs|gts|json|s?css|hbs|wasm)$/.test(source)
+            ) {
+              return null;
+            }
+            this.error(
+              `Relative import "${source}" from ${relative(import.meta.dirname, importer)} must include the file extension.`
+            );
+          },
+        },
+      },
       {
         name: "forbid-plugin-imports",
         resolveId: {

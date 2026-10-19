@@ -7,21 +7,24 @@ import {
   isSingleValueOperator,
   operatorOptionsForType,
   operatorsForType,
-} from "../../../lib/workflows/condition-operators";
-import { schemaFieldsForNodeInput } from "../../../lib/workflows/data-preview";
+} from "../../../lib/workflows/condition-operators.js";
+import { schemaFieldsForNodeInput } from "../../../lib/workflows/data-preview.js";
 import {
   inputFieldPrefixForConnection,
   inputIndexForConnection,
   outputIndexForConnection,
-} from "../../../lib/workflows/expression-paths";
-import { isExpression } from "../../../lib/workflows/property-engine";
+} from "../../../lib/workflows/expression-paths.js";
+import {
+  isExpression,
+  wholeExpressionBody,
+} from "../../../lib/workflows/property-engine.js";
 import {
   inputConnectionsForNode,
   previousNodeForConnection,
   resolveDeclaredOutputSchemas,
-} from "../../../lib/workflows/schema-graph";
-import Collection from "./collection";
-import Field from "./field";
+} from "../../../lib/workflows/schema-graph.js";
+import Collection from "./collection.gjs";
+import Field from "./field.gjs";
 
 function flattenFields(fields, prefix = "", labelPrefix = "") {
   const result = [];
@@ -75,10 +78,7 @@ function leafKey(fieldPath) {
   }
   path = String(path);
 
-  const exprMatch = path.match(/^=\{\{\s*(.*?)\s*\}\}$/);
-  if (exprMatch) {
-    path = exprMatch[1];
-  }
+  path = wholeExpressionBody(path) ?? path;
 
   const bracketSegments = [
     ...path.matchAll(/\[((?:"(?:\\.|[^"\\])*")|(?:'(?:\\.|[^'\\])*'))\]/g),
@@ -160,20 +160,6 @@ export default class ConditionBuilder extends Component {
   @tracked conditionSchemas = (
     this.args.formApi?.get(this.args.fieldName) || []
   ).map((item) => this.#buildConditionSchema(item));
-
-  #buildConditionSchema(item) {
-    return {
-      opSchema: operationSchema(item),
-      singleValue: isSingleValueOperator(item?.operator?.operation),
-      rvSchema: rightValueSchema(item),
-    };
-  }
-
-  #updateSchemaAtIndex(index, schema) {
-    const newSchemas = [...this.conditionSchemas];
-    newSchemas[index] = schema;
-    this.conditionSchemas = newSchemas;
-  }
 
   get fieldOptions() {
     if (this.args.fieldOptions) {
@@ -303,55 +289,69 @@ export default class ConditionBuilder extends Component {
     });
   }
 
+  #buildConditionSchema(item) {
+    return {
+      opSchema: operationSchema(item),
+      singleValue: isSingleValueOperator(item?.operator?.operation),
+      rvSchema: rightValueSchema(item),
+    };
+  }
+
+  #updateSchemaAtIndex(index, schema) {
+    const newSchemas = [...this.conditionSchemas];
+    newSchemas[index] = schema;
+    this.conditionSchemas = newSchemas;
+  }
+
   <template>
     <Collection
-      @form={{@form}}
-      @formApi={{@formApi}}
-      @fieldName={{@fieldName}}
-      @label={{@label}}
       @addLabel={{i18n "discourse_workflows.if.add_condition"}}
       @emptyItem={{this.emptyCondition}}
-      @onAdd={{this.onConditionAdded}}
-      @onRemove={{this.removeCondition}}
-      @session={{@session}}
       @emptyStateDescription={{i18n
         "discourse_workflows.if.no_conditions_body"
       }}
+      @fieldName={{@fieldName}}
+      @form={{@form}}
+      @formApi={{@formApi}}
+      @label={{@label}}
+      @onAdd={{this.onConditionAdded}}
+      @onRemove={{this.removeCondition}}
+      @session={{@session}}
       as |ctx|
     >
       <Field
-        @form={{ctx.object}}
-        @formApi={{@formApi}}
         @configuration={{ctx.item}}
         @fieldName="leftValue"
-        @schema={{leftValueSchema this.fieldOptions}}
+        @form={{ctx.object}}
+        @formApi={{@formApi}}
         @label={{this.fieldLabel}}
-        @session={{@session}}
         @onSet={{fn this.handleLeftValueSet ctx.index}}
+        @schema={{leftValueSchema this.fieldOptions}}
+        @session={{@session}}
       />
 
       {{#let (get this.conditionSchemas ctx.index) as |schemas|}}
         <ctx.object.Object @name="operator" as |operator|>
           <Field
-            @form={{operator}}
-            @formApi={{@formApi}}
             @configuration={{ctx.item.operator}}
             @fieldName="operation"
-            @schema={{schemas.opSchema}}
+            @form={{operator}}
+            @formApi={{@formApi}}
             @label={{i18n "discourse_workflows.if.operator"}}
-            @session={{@session}}
             @onSet={{fn this.handleOperatorSet ctx.index}}
+            @schema={{schemas.opSchema}}
+            @session={{@session}}
           />
         </ctx.object.Object>
 
         {{#unless schemas.singleValue}}
           <Field
-            @form={{ctx.object}}
-            @formApi={{@formApi}}
             @configuration={{ctx.item}}
             @fieldName="rightValue"
-            @schema={{schemas.rvSchema}}
+            @form={{ctx.object}}
+            @formApi={{@formApi}}
             @label={{i18n "discourse_workflows.if.value"}}
+            @schema={{schemas.rvSchema}}
             @session={{@session}}
           />
         {{/unless}}

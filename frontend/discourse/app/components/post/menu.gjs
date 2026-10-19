@@ -24,21 +24,21 @@ import DSmallUserList, {
 } from "discourse/ui-kit/d-small-user-list";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import PostMenuButtonConfig from "./menu/button-config";
-import PostMenuButtonWrapper from "./menu/button-wrapper";
-import PostMenuAddTranslationButton from "./menu/buttons/add-translation";
-import PostMenuAdminButton from "./menu/buttons/admin";
-import PostMenuBookmarkButton from "./menu/buttons/bookmark";
-import PostMenuCopyLinkButton from "./menu/buttons/copy-link";
-import PostMenuDeleteButton from "./menu/buttons/delete";
-import PostMenuEditButton from "./menu/buttons/edit";
-import PostMenuFlagButton from "./menu/buttons/flag";
-import PostMenuLikeButton from "./menu/buttons/like";
-import PostMenuReadButton from "./menu/buttons/read";
-import PostMenuRepliesButton from "./menu/buttons/replies";
-import PostMenuReplyButton from "./menu/buttons/reply";
-import PostMenuShareButton from "./menu/buttons/share";
-import PostMenuShowMoreButton from "./menu/buttons/show-more";
+import PostMenuButtonConfig from "./menu/button-config.gjs";
+import PostMenuButtonWrapper from "./menu/button-wrapper.gjs";
+import PostMenuAddTranslationButton from "./menu/buttons/add-translation.gjs";
+import PostMenuAdminButton from "./menu/buttons/admin.gjs";
+import PostMenuBookmarkButton from "./menu/buttons/bookmark.gjs";
+import PostMenuCopyLinkButton from "./menu/buttons/copy-link.gjs";
+import PostMenuDeleteButton from "./menu/buttons/delete.gjs";
+import PostMenuEditButton from "./menu/buttons/edit.gjs";
+import PostMenuFlagButton from "./menu/buttons/flag.gjs";
+import PostMenuLikeButton from "./menu/buttons/like.gjs";
+import PostMenuReadButton from "./menu/buttons/read.gjs";
+import PostMenuRepliesButton from "./menu/buttons/replies.gjs";
+import PostMenuReplyButton from "./menu/buttons/reply.gjs";
+import PostMenuShareButton from "./menu/buttons/share.gjs";
+import PostMenuShowMoreButton from "./menu/buttons/show-more.gjs";
 
 const VIBRATE_DURATION = 5;
 
@@ -441,6 +441,22 @@ export default class PostMenu extends Component {
     );
   }
 
+  @cached
+  get #hiddenItems() {
+    const setting = this.siteSettings.post_menu_hidden_items;
+
+    if (isEmpty(setting)) {
+      return [];
+    }
+
+    return setting
+      .split("|")
+      .filter(
+        (itemKey) =>
+          !this.args.post.bookmarked || itemKey !== buttonKeys.BOOKMARK
+      );
+  }
+
   @action
   async toggleLike() {
     await applyBehaviorTransformer(
@@ -529,22 +545,6 @@ export default class PostMenu extends Component {
     this.#fetchWhoRead();
   }
 
-  @cached
-  get #hiddenItems() {
-    const setting = this.siteSettings.post_menu_hidden_items;
-
-    if (isEmpty(setting)) {
-      return [];
-    }
-
-    return setting
-      .split("|")
-      .filter(
-        (itemKey) =>
-          !this.args.post.bookmarked || itemKey !== buttonKeys.BOOKMARK
-      );
-  }
-
   async #fetchWhoRead() {
     const users = await this.store.find("post-reader", {
       id: this.args.post.id,
@@ -627,7 +627,6 @@ export default class PostMenu extends Component {
       <DSmallUserList
         class="who-read"
         @addSelf={{false}}
-        @isVisible={{this.isWhoReadVisible}}
         @count={{if
           this.remainingReaders
           this.remainingReaders
@@ -638,6 +637,7 @@ export default class PostMenu extends Component {
           "post.actions.people.read_capped"
           "post.actions.people.read"
         }}
+        @isVisible={{this.isWhoReadVisible}}
         @users={{this.readers}}
       />
       {{#if
@@ -646,11 +646,11 @@ export default class PostMenu extends Component {
         )
       }}
         <UserTip
+          @contentText={{i18n "user_tips.post_menu.content"}}
           @id="post_menu"
-          @triggerSelector=".post-controls .actions .show-more-actions"
           @placement="top"
           @titleText={{i18n "user_tips.post_menu.title"}}
-          @contentText={{i18n "user_tips.post_menu.content"}}
+          @triggerSelector=".post-controls .actions .show-more-actions"
         />
       {{/if}}
     </PluginOutlet>

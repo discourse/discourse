@@ -15,7 +15,7 @@ import I18n from "discourse-i18n";
 acceptance("Admin Sidebar - Sections", function (needs) {
   needs.user({
     admin: true,
-    groups: [AUTO_GROUPS.admins],
+    visibleGroups: [AUTO_GROUPS.admins],
   });
 
   let _originalTestTranslations;
@@ -218,7 +218,7 @@ acceptance("Admin Sidebar - Sections", function (needs) {
 acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
   needs.user({
     admin: true,
-    groups: [AUTO_GROUPS.admins],
+    visibleGroups: [AUTO_GROUPS.admins],
   });
 
   needs.hooks.beforeEach(() => {
@@ -337,7 +337,7 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
 acceptance("Admin Sidebar - Plugin Icons", function (needs) {
   needs.user({
     admin: true,
-    groups: [AUTO_GROUPS.admins],
+    visibleGroups: [AUTO_GROUPS.admins],
   });
 
   needs.hooks.beforeEach(() => {
@@ -425,7 +425,7 @@ acceptance(
   function (needs) {
     needs.user({
       admin: true,
-      groups: [AUTO_GROUPS.admins],
+      visibleGroups: [AUTO_GROUPS.admins],
     });
 
     needs.hooks.beforeEach(() => {

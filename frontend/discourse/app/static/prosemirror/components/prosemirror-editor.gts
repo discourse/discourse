@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { assert } from "@ember/debug";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
@@ -7,7 +8,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import "../extensions/register-default";
+import "../extensions/register-default.ts";
 import type { ComponentLike } from "@glint/template";
 import * as ProsemirrorCommands from "prosemirror-commands";
 import { baseKeymap } from "prosemirror-commands";
@@ -35,6 +36,7 @@ import type MenuService from "discourse/float-kit/services/menu";
 import type ToastsService from "discourse/float-kit/services/toasts";
 import {
   getExtensions,
+  type MarkdownOptions,
   type PluginParams,
   type RichEditorExtension,
 } from "discourse/lib/composer/rich-editor-extensions";
@@ -46,25 +48,26 @@ import type Site from "discourse/models/site";
 import type User from "discourse/models/user";
 import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
 import { focusOffScreen } from "discourse/modifiers/prevent-scroll-on-focus";
+import type A11yService from "discourse/services/a11y";
 import type AppEventsService from "discourse/services/app-events";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import type ModalService from "discourse/services/modal";
 import { i18n } from "discourse-i18n";
-import { authorizesOneOrMoreExtensions } from "../../../lib/uploads";
-import { buildCommands, buildCustomState } from "../core/commands";
-import { buildInputRules } from "../core/inputrules";
-import { buildKeymap } from "../core/keymap";
-import Parser, { UnsupportedTokenError } from "../core/parser";
-import { extractNodeViews, extractPlugins } from "../core/plugin";
-import { createSchema } from "../core/schema";
-import Serializer from "../core/serializer";
-import placeholder from "../extensions/placeholder";
-import type GlimmerNodeView from "../lib/glimmer-node-view";
-import * as utils from "../lib/plugin-utils";
+import { authorizesOneOrMoreExtensions } from "../../../lib/uploads.js";
+import { buildCommands, buildCustomState } from "../core/commands.js";
+import { buildInputRules } from "../core/inputrules.js";
+import { buildKeymap } from "../core/keymap.js";
+import Parser, { UnsupportedTokenError } from "../core/parser.js";
+import { extractNodeViews, extractPlugins } from "../core/plugin.js";
+import { createSchema } from "../core/schema.js";
+import Serializer from "../core/serializer.js";
+import placeholder from "../extensions/placeholder.ts";
+import type GlimmerNodeView from "../lib/glimmer-node-view.js";
+import * as utils from "../lib/plugin-utils.js";
 import TextManipulation, {
   type CustomState,
   type EditorCommands,
-} from "../lib/text-manipulation";
+} from "../lib/text-manipulation.ts";
 
 const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab", "ArrowDown", "ArrowUp"];
 
@@ -102,6 +105,8 @@ interface ProsemirrorEditorSignature {
     replaceToolbar?: (toolbar: ToolbarBase | null, owner?: ToolbarBase) => void;
     /** Toggles between the rich and plain-text editors. */
     toggleRichEditor?: () => void;
+    /** Markdown cook options from the host editor, exposed to extensions. */
+    markdownOptions?: MarkdownOptions;
   };
 }
 
@@ -113,7 +118,9 @@ type NodeViewComponent = ComponentLike<{
     view: EditorView;
     getPos: () => number | undefined;
     dom: HTMLElement;
+    contentDOM?: HTMLElement;
     pluginParams: PluginParams;
+    options?: Record<string, unknown>;
     onSetup: (instance: unknown) => void;
   };
 }>;
@@ -143,10 +150,11 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
   @service declare siteSettings: SiteSettings;
 
   @service declare appEvents: AppEventsService;
+  @service declare a11y: A11yService;
   @service declare currentUser: User;
 
   schema: Schema = createSchema(this.extensions, this.args.includeDefault);
-  view: EditorView;
+  declare view: EditorView;
   declare parser: Parser;
   declare serializer: Serializer;
   declare textManipulation: TextManipulation;
@@ -185,8 +193,10 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         site: this.site,
         siteSettings: this.siteSettings,
         appEvents: this.appEvents,
+        a11y: this.a11y,
         dialog: this.dialog,
         replaceToolbar: this.args.replaceToolbar,
+        markdownOptions: this.args.markdownOptions,
         // TODO(devxp-typescript-pending): remove the cast once GlimmerNodeView's
         // component field has a typed invocation signature.
         addGlimmerNodeView: (nodeView) =>
@@ -212,7 +222,10 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
   }
 
   get keymapFromArgs(): Record<string, Command> {
-    const replacements: Record<string, string> = { tab: "Tab" };
+    const replacements: Record<string, string> = {
+      shift: "Shift",
+      tab: "Tab",
+    };
     const result: Record<string, Command> = {};
     for (const [key, value] of Object.entries(this.args.keymap ?? {})) {
       const pmKey = key
@@ -299,8 +312,10 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         paste: (view, event) => {
           // When !authorizesOneOrMoreExtensions, we don't ComposerUpload#setup,
           // which is originally responsible for preventDefault.
+          const { clipboardData } = event;
+          assert("A paste event carries clipboard data", clipboardData);
           if (
-            event.clipboardData.files.length > 0 &&
+            clipboardData.files.length > 0 &&
             !authorizesOneOrMoreExtensions(
               this.currentUser.staff,
               this.siteSettings
@@ -310,9 +325,17 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
           }
         },
         drop: (view, event) => {
-          if (
-            [...event.dataTransfer.items].some((item) => item.kind === "file")
-          ) {
+          if (view.dragging) {
+            // A drag from this editor is a move, but the browser exposes the
+            // dragged content as a file too, so keep it away from the upload
+            // drop target on an ancestor, which would upload it again.
+            event.stopPropagation();
+            return;
+          }
+
+          const { dataTransfer } = event;
+          assert("A drop event carries a data transfer", dataTransfer);
+          if ([...dataTransfer.items].some((item) => item.kind === "file")) {
             // Skip processing the drop event (e.g. Safari cross-window content drag),
             // Uppy's DropTarget should handle that instead.
             return true;
@@ -328,7 +351,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
       },
     });
 
-    this.textManipulation = new TextManipulation(getOwner(this), {
+    this.textManipulation = new TextManipulation(getOwner(this)!, {
       schema: this.schema,
       view: this.view,
       convertFromMarkdown: this.convertFromMarkdown,
@@ -473,12 +496,14 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
     {{#each this.glimmerNodeViews key="dom" as |nodeView|}}
       {{~#in-element nodeView.dom insertBefore=null~}}
         <nodeView.component
-          @node={{nodeView.node}}
-          @view={{nodeView.view}}
-          @getPos={{nodeView.getPos}}
+          @contentDOM={{nodeView.contentDOM}}
           @dom={{nodeView.dom}}
-          @pluginParams={{nodeView.pluginParams}}
+          @getPos={{nodeView.getPos}}
+          @node={{nodeView.node}}
           @onSetup={{nodeView.setComponentInstance}}
+          @options={{nodeView.options}}
+          @pluginParams={{nodeView.pluginParams}}
+          @view={{nodeView.view}}
         />
       {{~/in-element~}}
     {{/each}}

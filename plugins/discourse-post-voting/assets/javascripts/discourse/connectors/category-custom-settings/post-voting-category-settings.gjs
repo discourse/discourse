@@ -17,34 +17,6 @@ export default class PostVotingCategorySettings extends Component {
     );
   }
 
-  @action
-  async allowPostVotingChanged(value, { set, name }) {
-    await set(name, value);
-
-    if (this.descendantCount === 0) {
-      return;
-    }
-
-    if (isChecked(value) === this.savedAllowPostVoting) {
-      if (this.applyToSubcategoriesPending) {
-        await set("custom_fields.apply_post_voting_to_subcategories", false);
-      }
-
-      return;
-    }
-
-    const applied = await this.dialog.yesNoConfirm({
-      message: i18n(
-        isChecked(value)
-          ? "category.post_voting_subcategories.enable"
-          : "category.post_voting_subcategories.disable",
-        { count: this.descendantCount }
-      ),
-    });
-
-    await set("custom_fields.apply_post_voting_to_subcategories", applied);
-  }
-
   // Nothing to opt in or out of when every category is allowed.
   get showAllowPostVoting() {
     return this.siteSettings.post_voting_category_mode !== ALL_CATEGORIES;
@@ -77,19 +49,47 @@ export default class PostVotingCategorySettings extends Component {
       ?.allow_post_voting;
   }
 
+  @action
+  async allowPostVotingChanged(value, { set, name }) {
+    await set(name, value);
+
+    if (this.descendantCount === 0) {
+      return;
+    }
+
+    if (isChecked(value) === this.savedAllowPostVoting) {
+      if (this.applyToSubcategoriesPending) {
+        await set("custom_fields.apply_post_voting_to_subcategories", false);
+      }
+
+      return;
+    }
+
+    const applied = await this.dialog.yesNoConfirm({
+      message: i18n(
+        isChecked(value)
+          ? "category.post_voting_subcategories.enable"
+          : "category.post_voting_subcategories.disable",
+        { count: this.descendantCount }
+      ),
+    });
+
+    await set("custom_fields.apply_post_voting_to_subcategories", applied);
+  }
+
   <template>
     <@outletArgs.form.Section
-      @title={{i18n "category.post_voting_settings_heading"}}
       class="category-custom-settings-outlet post-voting-category-settings"
+      @title={{i18n "category.post_voting_settings_heading"}}
     >
       <@outletArgs.form.Object @name="custom_fields" as |object|>
         {{#if this.showAllowPostVoting}}
           <object.Field
-            @name="allow_post_voting"
-            @title={{i18n "category.allow_post_voting"}}
             @format="max"
-            @type="checkbox"
+            @name="allow_post_voting"
             @onSet={{this.allowPostVotingChanged}}
+            @title={{i18n "category.allow_post_voting"}}
+            @type="checkbox"
             as |field|
           >
             <field.Control>
@@ -105,9 +105,9 @@ export default class PostVotingCategorySettings extends Component {
 
         {{#if this.postVotingAllowed}}
           <object.Field
+            @format="max"
             @name="create_as_post_voting_default"
             @title={{i18n "category.create_as_post_voting_default"}}
-            @format="max"
             @type="checkbox"
             as |field|
           >
@@ -115,9 +115,9 @@ export default class PostVotingCategorySettings extends Component {
           </object.Field>
 
           <object.Field
+            @format="max"
             @name="only_post_voting_in_this_category"
             @title={{i18n "category.only_post_voting_in_this_category"}}
-            @format="max"
             @type="checkbox"
             as |field|
           >

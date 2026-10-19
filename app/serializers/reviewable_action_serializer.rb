@@ -2,22 +2,25 @@
 
 class ReviewableActionSerializer < ApplicationSerializer
   attributes :id,
+             :action_name,
              :icon,
              :button_class,
              :label,
              :confirm_message,
+             :confirm_destructive,
              :description,
              :server_action,
              :client_action,
              :require_reject_reason,
-             :completed_message
+             :completed_message,
+             :penalty_effect
 
   def label
     I18n.t(object.label)
   end
 
   def confirm_message
-    I18n.t(object.confirm_message)
+    I18n.t(object.confirm_message, **(object.confirm_message_args || {}))
   end
 
   def description
@@ -40,11 +43,19 @@ class ReviewableActionSerializer < ApplicationSerializer
     object.confirm_message.present?
   end
 
+  def include_confirm_destructive?
+    object.confirm_destructive.present?
+  end
+
   def include_client_action?
     object.client_action.present?
   end
 
   def include_require_reject_reason?
     object.require_reject_reason.present?
+  end
+
+  def include_penalty_effect?
+    object.penalty_effect.present?
   end
 end

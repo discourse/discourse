@@ -5,7 +5,7 @@ import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
 import { remToPx } from "discourse/lib/rem-to-px";
 import I18n, { i18n } from "discourse-i18n";
-import Chart from "./chart";
+import Chart from "./chart.gjs";
 
 function getCSSColor(varName) {
   return getComputedStyle(document.documentElement)
@@ -128,6 +128,11 @@ export default class AdminReportStackedChart extends Component {
               const ci = legend.chart;
               const req = chartData[index].req;
 
+              if (chartOptions.onLegendClick) {
+                chartOptions.onLegendClick(req);
+                return;
+              }
+
               if (ci.isDatasetVisible(index)) {
                 ci.hide(index);
                 if (!chartOptions.hiddenLabels.includes(req)) {
@@ -210,7 +215,10 @@ export default class AdminReportStackedChart extends Component {
               display: !chartOptions.hideYAxisGridLines,
             },
             ticks: {
-              callback: (label) => number(label),
+              callback: (_label, index, ticks) => {
+                const value = ticks[index]?.value;
+                return Number.isInteger(Number(value)) ? number(value) : null;
+              },
               sampleSize: 5,
               maxRotation: 25,
               minRotation: 0,
@@ -238,8 +246,8 @@ export default class AdminReportStackedChart extends Component {
   <template>
     <Chart
       ...attributes
-      @chartConfig={{this.chartConfig}}
       class="admin-report-chart admin-report-stacked-chart"
+      @chartConfig={{this.chartConfig}}
     />
   </template>
 

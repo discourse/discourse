@@ -57,11 +57,7 @@ class Upload < ActiveRecord::Base
     )
   end
 
-  after_destroy do
-    User.where(uploaded_avatar_id: id).update_all(uploaded_avatar_id: nil)
-    UserAvatar.where(gravatar_upload_id: id).update_all(gravatar_upload_id: nil)
-    UserAvatar.where(custom_upload_id: id).update_all(custom_upload_id: nil)
-  end
+  after_destroy { UserAvatar.remove_upload(id) }
 
   scope :by_users, -> { where("uploads.id > ?", SEEDED_ID_THRESHOLD) }
 
@@ -306,14 +302,19 @@ class Upload < ActiveRecord::Base
       if extension == "svg"
         w, h =
           begin
-            ImageMagick.identify(
-              "-ping",
-              "-format",
-              "%w %h",
-              "MSVG:#{path}",
-              read: [path],
-              timeout: MAX_IDENTIFY_SECONDS,
-            ).split(" ")
+            if GlobalSetting.enable_vips_image_processing
+              DiscourseVips.svg_dimensions(input_path: path, timeout: MAX_IDENTIFY_SECONDS)
+            else
+              ImageMagick.identify(
+                "-ping",
+                "-format",
+                "%w %h",
+                "MSVG:#{path}",
+                operation: :upload_svg_dimensions,
+                read: [path],
+                timeout: MAX_IDENTIFY_SECONDS,
+              ).split(" ")
+            end
           rescue StandardError
             [0, 0]
           end
@@ -377,7 +378,8 @@ class Upload < ActiveRecord::Base
   def calculate_dominant_color!(local_path = nil)
     color = nil
 
-    color = "" if !FileHelper.is_supported_image?("image.#{extension}") || extension == "svg"
+    color = "" if !FileHelper.is_supported_image?("image.#{extension}") ||
+      %w[svg ico].include?(extension)
 
     if color.nil?
       local_path ||=
@@ -395,32 +397,39 @@ class Upload < ActiveRecord::Base
 
       color ||=
         begin
-          data =
-            ImageMagick.magick(
-              local_path,
-              "-depth",
-              "8",
-              "-resize",
-              "1x1",
-              "-define",
-              "histogram:unique-colors=true",
-              "-format",
-              "%c",
-              "histogram:info:",
-              read: [local_path],
-              nice: 10,
-              timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
-            )
+          if GlobalSetting.enable_vips_image_processing
+            color =
+              DiscourseVips.dominant_color(
+                input_path: local_path,
+                timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
+              )
+            color = "" if color !~ /\A[0-9A-F]{6}\z/
+            color
+          else
+            data =
+              ImageMagick.magick(
+                local_path,
+                "-depth",
+                "8",
+                "-resize",
+                "1x1",
+                "-define",
+                "histogram:unique-colors=true",
+                "-format",
+                "%c",
+                "histogram:info:",
+                operation: :upload_dominant_color,
+                read: [local_path],
+                nice: 10,
+                timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
+              )
 
-          # Output format:
-          # 1: (110.873,116.226,93.8821) #6F745E srgb(43.4798%,45.5789%,36.8165%)
+            color = data[/#([0-9A-F]{6})/, 1]
+            raise "Calculated dominant color but unable to parse output:\n#{data}" if color.nil?
 
-          color = data[/#([0-9A-F]{6})/, 1]
-
-          raise "Calculated dominant color but unable to parse output:\n#{data}" if color.nil?
-
-          color
-        rescue Discourse::Utils::CommandError
+            color
+          end
+        rescue DiscourseVips::Error, Discourse::Utils::CommandError
           # Timeout or unable to parse image
           # This can happen due to bad user input - ignore and save
           # an empty string to prevent re-evaluation
@@ -435,7 +444,7 @@ class Upload < ActiveRecord::Base
     end
   end
 
-  def target_image_quality(local_path, test_quality)
+  def target_jpeg_image_quality(local_path, test_quality)
     @file_quality ||=
       begin
         ImageMagick.identify(
@@ -443,6 +452,7 @@ class Upload < ActiveRecord::Base
           "-format",
           "%Q",
           local_path,
+          operation: :upload_quality_probe,
           read: [local_path],
           timeout: MAX_IDENTIFY_SECONDS,
         ).to_i

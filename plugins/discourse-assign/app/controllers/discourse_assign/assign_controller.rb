@@ -4,60 +4,47 @@ module DiscourseAssign
   class AssignController < ApplicationController
     requires_plugin PLUGIN_NAME
     requires_login
+
+    SEARCH_LIMIT = 6
+
     before_action :ensure_logged_in, :ensure_assign_allowed
 
     def suggestions
-      target = assignment_target_from_params
-      raise Discourse::InvalidAccess if target && !guardian.can_assign?(target)
-
-      users = [current_user, *recent_assignees(target)]
-      assign_allowed_groups =
-        if target
-          DiscourseAssign::AssignmentPermissions.assign_allowed_groups_for_target(
-            current_user,
-            target,
-          )
-        else
-          DiscourseAssign::AssignmentPermissions.assign_allowed_groups_for_user(current_user)
-        end
-      assignable_group_ids =
-        if target
-          DiscourseAssign::AssignmentPermissions.allowed_group_ids_for_target(current_user, target)
-        else
-          Group.assignable(current_user).pluck(:id)
-        end
+      target = optional_assignable_target
 
       render json: {
-               assign_allowed_on_groups: assign_allowed_groups.pluck(:name),
-               assign_allowed_for_groups:
-                 Group.visible_groups(current_user).where(id: assignable_group_ids).pluck(:name),
-               suggestions:
-                 ActiveModel::ArraySerializer.new(
-                   users,
-                   scope: guardian,
-                   each_serializer: FoundUserSerializer,
-                   include_status: true,
-                 ),
+               suggestions: serialize_users([current_user, *recent_assignees(target)]),
+               groups: serialize_groups(searchable_groups(target)),
+             }
+    end
+
+    def search
+      term = params.require(:term).strip
+      raise Discourse::InvalidParameters.new(:term) if term.blank?
+      target = optional_assignable_target
+
+      users =
+        UserSearch.new(
+          term,
+          searching_user: current_user,
+          user_ids: assignable_user_ids(target),
+          limit: SEARCH_LIMIT,
+        ).search
+      groups = Group.search_groups(term, groups: searchable_groups(target), sort: :auto)
+
+      render json: {
+               users: serialize_users(users),
+               groups: serialize_groups(groups.limit(SEARCH_LIMIT)),
              }
     end
 
     def unassign
-      target_id = params.require(:target_id)
-      target_type = params.require(:target_type)
-      raise Discourse::NotFound if !Assignment.valid_type?(target_type)
-      target = target_type.constantize.where(id: target_id).first
-      raise Discourse::NotFound if target.blank? || !guardian.can_see?(target)
-      raise Discourse::InvalidAccess if !guardian.can_assign?(target)
-
-      assigner = Assigner.new(target, current_user)
-      assigner.unassign
+      Assigner.new(assignable_target_from_params, current_user).unassign
 
       render json: success_json
     end
 
     def assign
-      target_id = params.require(:target_id)
-      target_type = params.require(:target_type)
       username = params.permit(:username)["username"].presence
       group_name = params.permit(:group_name)["group_name"].presence
       note = params.permit(:note)["note"].presence
@@ -65,10 +52,7 @@ module DiscourseAssign
       should_notify = params.permit(:should_notify)["should_notify"]
       should_notify = (should_notify.present? ? should_notify.to_s == "true" : true)
 
-      raise Discourse::NotFound if !Assignment.valid_type?(target_type)
-
-      target = target_type.constantize.where(id: target_id).first
-      raise Discourse::NotFound if target.blank? || !guardian.can_see?(target)
+      target = target_from_params
 
       assign_to = DiscourseAssign::AssigneeResolver.resolve!(guardian, username:, group_name:)
 
@@ -181,17 +165,39 @@ module DiscourseAssign
       raise Discourse::InvalidAccess.new unless current_user.can_assign?
     end
 
-    def recent_assignees(target)
-      allowed_user_ids =
-        if target
-          DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(target)
-        else
-          DiscourseAssign::AssignmentPermissions.assignable_user_ids_for_user(current_user)
-        end
+    def assignable_user_ids(target)
+      DiscourseAssign::AssignmentPermissions.assignable_user_ids(target, assigner: current_user)
+    end
 
+    def searchable_groups(target)
+      groups =
+        Group.visible_groups(current_user).where(
+          id:
+            DiscourseAssign::AssignmentPermissions.assignable_groups(
+              target,
+              assigner: current_user,
+            ).select(:id),
+        )
+      DiscoursePluginRegistry.apply_modifier(:groups_for_users_search, groups)
+    end
+
+    def serialize_users(users)
+      ActiveModel::ArraySerializer.new(
+        users,
+        scope: guardian,
+        each_serializer: FoundUserSerializer,
+        include_status: true,
+      )
+    end
+
+    def serialize_groups(groups)
+      groups.pluck(:name, :full_name).map { |name, full_name| { name:, full_name: } }
+    end
+
+    def recent_assignees(target)
       User
         .where.not(id: current_user.id)
-        .where(id: allowed_user_ids)
+        .where(id: assignable_user_ids(target))
         .joins(<<~SQL)
           JOIN(
             SELECT assigned_to_id user_id, MAX(created_at) last_assigned
@@ -213,17 +219,24 @@ module DiscourseAssign
         .limit(5)
     end
 
-    def assignment_target_from_params
-      return if params[:target_id].blank? && params[:target_type].blank?
-
-      target_id = params.require(:target_id)
+    def target_from_params
       target_type = params.require(:target_type)
       raise Discourse::NotFound if !Assignment.valid_type?(target_type)
 
-      target = target_type.constantize.where(id: target_id).first
+      target = target_type.constantize.find_by(id: params.require(:target_id))
       raise Discourse::NotFound if target.blank? || !guardian.can_see?(target)
 
       target
+    end
+
+    def assignable_target_from_params
+      target_from_params.tap { |target| guardian.ensure_can_assign!(target) }
+    end
+
+    def optional_assignable_target
+      return if params[:target_id].blank? && params[:target_type].blank?
+
+      assignable_target_from_params
     end
   end
 end

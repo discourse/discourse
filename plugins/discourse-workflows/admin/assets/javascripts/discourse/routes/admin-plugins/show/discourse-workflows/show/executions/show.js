@@ -6,6 +6,9 @@ export default class DiscourseWorkflowsShowExecutionsShowRoute extends Discourse
     const result = await ajax(
       `/admin/plugins/discourse-workflows/executions/${params.execution_id}`
     );
-    return result.execution;
+    return {
+      ...result.execution,
+      message_bus_last_id: result.meta?.message_bus_last_id ?? 0,
+    };
   }
 }

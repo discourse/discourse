@@ -105,6 +105,7 @@ RSpec.describe "AI Composer helper" do
 
     context "when not a member of custom prompt group" do
       let(:mode) { DiscourseAi::AiHelper::Assistant::CUSTOM_PROMPT }
+
       before { custom_prompts_agent.update!(allowed_group_ids: [non_member_group.id]) }
 
       it "does not show custom prompt option" do
@@ -238,7 +239,7 @@ RSpec.describe "AI Composer helper" do
     end
   end
 
-  context "when suggesting titles with AI title suggester" do
+  context "when suggesting titles from the AI helper menu" do
     let(:mode) { DiscourseAi::AiHelper::Assistant::GENERATE_TITLES }
 
     let(:titles) do
@@ -253,12 +254,10 @@ RSpec.describe "AI Composer helper" do
       }
     end
 
-    it "opens a menu with title suggestions" do
-      visit("/latest")
-      page.find("#create-topic").click
-      composer.fill_content(input)
+    it "opens a dropdown with title suggestions" do
+      trigger_composer_helper(input)
       DiscourseAi::Completions::Llm.with_prepared_responses([titles]) do
-        ai_suggestion_dropdown.click_suggest_titles_button
+        ai_helper_menu.select_helper_model(mode)
 
         wait_for { ai_suggestion_dropdown.has_dropdown? }
 
@@ -267,11 +266,9 @@ RSpec.describe "AI Composer helper" do
     end
 
     it "replaces the topic title with the selected title" do
-      visit("/latest")
-      page.find("#create-topic").click
-      composer.fill_content(input)
+      trigger_composer_helper(input)
       DiscourseAi::Completions::Llm.with_prepared_responses([titles]) do
-        ai_suggestion_dropdown.click_suggest_titles_button
+        ai_helper_menu.select_helper_model(mode)
         wait_for { ai_suggestion_dropdown.has_dropdown? }
         ai_suggestion_dropdown.select_suggestion_by_value(1)
 
@@ -279,13 +276,10 @@ RSpec.describe "AI Composer helper" do
       end
     end
 
-    it "closes the menu when clicking outside" do
-      visit("/latest")
-      page.find("#create-topic").click
-      composer.fill_content(input)
-
+    it "closes the dropdown when clicking outside" do
+      trigger_composer_helper(input)
       DiscourseAi::Completions::Llm.with_prepared_responses([titles]) do
-        ai_suggestion_dropdown.click_suggest_titles_button
+        ai_helper_menu.select_helper_model(mode)
 
         wait_for { ai_suggestion_dropdown.has_dropdown? }
 
@@ -295,15 +289,17 @@ RSpec.describe "AI Composer helper" do
       end
     end
 
-    it "only shows trigger button if there is sufficient content in the composer" do
-      visit("/latest")
-      page.find("#create-topic").click
-      composer.fill_content("abc")
+    it "only offers title suggestions when there is sufficient content in the composer" do
+      trigger_composer_helper("abc")
 
-      expect(ai_suggestion_dropdown).to have_no_suggestion_button
+      expect(ai_helper_menu).to have_context_menu
+      expect(ai_helper_menu).to have_no_option(mode)
 
+      ai_helper_menu.press_escape_key
       composer.fill_content(input)
-      expect(ai_suggestion_dropdown).to have_suggestion_button
+      composer.click_toolbar_button("ai-helper-trigger")
+
+      expect(ai_helper_menu).to have_option(mode)
     end
   end
 
@@ -524,7 +520,6 @@ RSpec.describe "AI Composer helper" do
   end
 
   context "when AI helper is disabled" do
-    let(:mode) { DiscourseAi::AiHelper::Assistant::GENERATE_TITLES }
     before { SiteSetting.ai_helper_enabled = false }
 
     it "does not show the AI helper button in the composer toolbar" do
@@ -533,17 +528,9 @@ RSpec.describe "AI Composer helper" do
       composer.fill_content(input)
       expect(page).to have_no_css(".d-editor-button-bar button.ai-helper-trigger")
     end
-
-    it "does not trigger AI suggestion buttons" do
-      visit("/latest")
-      page.find("#create-topic").click
-      composer.fill_content(input)
-      expect(ai_suggestion_dropdown).to have_no_suggestion_button
-    end
   end
 
   context "when user is not a member of AI helper allowed group" do
-    let(:mode) { DiscourseAi::AiHelper::Assistant::GENERATE_TITLES }
     before { SiteSetting.composer_ai_helper_allowed_groups = non_member_group.id.to_s }
 
     it "does not show the AI helper button in the composer toolbar" do
@@ -552,24 +539,17 @@ RSpec.describe "AI Composer helper" do
       composer.fill_content(input)
       expect(page).to have_no_css(".d-editor-button-bar button.ai-helper-trigger")
     end
-
-    it "does not trigger AI suggestion buttons" do
-      visit("/latest")
-      page.find("#create-topic").click
-      composer.fill_content(input)
-      expect(ai_suggestion_dropdown).to have_no_suggestion_button
-    end
   end
 
-  context "when suggestion features are disabled" do
+  context "when the suggestions feature is disabled" do
     let(:mode) { DiscourseAi::AiHelper::Assistant::GENERATE_TITLES }
+
     before { SiteSetting.ai_helper_enabled_features = "context_menu" }
 
-    it "does not show suggestion buttons in the composer" do
-      visit("/latest")
-      page.find("#create-topic").click
-      composer.fill_content(input)
-      expect(ai_suggestion_dropdown).to have_no_suggestion_button
+    it "does not offer title suggestions in the AI helper menu" do
+      trigger_composer_helper(input)
+      expect(ai_helper_menu).to have_context_menu
+      expect(ai_helper_menu).to have_no_option(mode)
     end
   end
 
@@ -585,7 +565,7 @@ RSpec.describe "AI Composer helper" do
   end
 
   context "when triggering composer AI helper", mobile: true do
-    it "should close the composer helper before showing the diff modal" do
+    it "closes the composer helper before showing the diff modal" do
       visit("/latest")
       page.find("#create-topic").click
       composer.fill_content(input)

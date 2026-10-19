@@ -21,6 +21,75 @@ describe "Viewing reviewable item" do
     sign_in(admin)
   end
 
+  context "when dsa_reporting_enabled is enabled" do
+    let(:classification) { PageObjects::Components::DsaClassification.new }
+    let(:toasts) { PageObjects::Components::Toasts.new }
+    let(:rule) do
+      {
+        ground: "Terms of Service, section 3: Personal attacks",
+        explanation: "The content targets another person with insults.",
+      }
+    end
+
+    let(:other_rule) do
+      {
+        ground: "Terms of Service, section 4: Unsolicited advertising",
+        explanation: "The content promotes unrelated products.",
+      }
+    end
+
+    before do
+      SiteSetting.dsa_reporting_enabled = true
+      SiteSetting.dsa_community_rules = [rule, other_rule].to_json
+      reviewable_flagged_post.perform(admin, :delete_and_agree)
+    end
+
+    it "lets staff confirm the DSA classification of a flagged post removal after loading more reviewed items" do
+      dialog = PageObjects::Components::Dialog.new
+      note =
+        "Classified this moderation decision for DSA reporting. Community rule: #{other_rule[:ground]} Category: Other violation of terms and conditions"
+      reviewable_user = Fabricate(:reviewable_user, status: :rejected)
+
+      stub_const(ReviewablesController, "PER_PAGE", 1) do
+        visit("/review?status=reviewed&sort_order=created_at")
+        expect(page).to have_css(".review-item[data-reviewable-id='#{reviewable_user.id}']")
+        page.scroll_to(:bottom)
+        expect(page).to have_css(".review-item[data-reviewable-id='#{reviewable_flagged_post.id}']")
+      end
+
+      classification.select_rule(rule[:ground])
+      classification.select_category("Illegal or harmful speech")
+      classification.save
+
+      expect(dialog).to have_content(rule[:ground])
+      expect(dialog).to have_content("Illegal or harmful speech")
+
+      dialog.click_no
+
+      expect(classification).to have_selected_rule(rule[:ground])
+      expect(classification).to have_selected_category("Illegal or harmful speech")
+
+      review_page.visit_reviewable(reviewable_flagged_post)
+      classification.select_rule(other_rule[:ground])
+      classification.select_category("Other violation of terms and conditions")
+      classification.save
+
+      expect(dialog).to have_content(other_rule[:ground])
+      expect(dialog).to have_content("Other violation of terms and conditions")
+
+      dialog.click_yes
+
+      expect(toasts).to have_success(I18n.t("js.dsa_statements.saved"))
+      expect(classification).to have_no_sidebar
+      expect(review_page).to have_note(note)
+
+      page.refresh
+
+      expect(classification).to have_no_sidebar
+      expect(review_page).to have_note(note)
+    end
+  end
+
   describe "when the reviewable item is a flagged post" do
     it "shows the new reviewable UI" do
       review_page.visit_reviewable(reviewable_flagged_post)
@@ -116,6 +185,23 @@ describe "Viewing reviewable item" do
       review_note_form.add_note("This is a review note.")
       review_page.click_insights_tab
       review_page.click_timeline_tab
+      expect(page).to have_text("This is a review note.")
+    end
+
+    it "only shows a note on the reviewable it was added to" do
+      other_reviewable = Fabricate(:reviewable_flagged_post)
+
+      review_page.visit_reviewable(reviewable_flagged_post)
+      review_note_form.add_note("This is a review note.")
+
+      expect(page).to have_text("This is a review note.")
+
+      review_page.visit_reviewable_from_user_menu(other_reviewable)
+
+      expect(page).to have_no_text("This is a review note.")
+
+      review_page.visit_reviewable_from_user_menu(reviewable_flagged_post)
+
       expect(page).to have_text("This is a review note.")
     end
 
@@ -270,7 +356,7 @@ describe "Viewing reviewable item" do
 
         expect(review_page).to have_ip_hostname("ip-81-2-69-142.example.com")
 
-        review_page.visit_reviewable(other_reviewable)
+        review_page.visit_reviewable_from_user_menu(other_reviewable)
         review_page.click_insights_tab
 
         expect(review_page).to have_ip_hostname("ip-2-125-160-216.example.com")
@@ -365,6 +451,8 @@ describe "Viewing reviewable item" do
       )
 
       review_page.click_scrub_user_button
+
+      expect(scrub_user_modal.scrub_button).to be_disabled
 
       scrubbing_reason = "a spammer who knows how to make GDPR requests"
       scrub_user_modal.fill_in_scrub_reason(scrubbing_reason)

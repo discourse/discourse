@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import AiSplitTopicSuggester from "../../components/ai-split-topic-suggester";
-import { showPostAIHelper } from "../../lib/show-ai-helper";
+import AiSplitTopicSuggester from "../../components/ai-split-topic-suggester.gjs";
+import { showPostAIHelper } from "../../lib/show-ai-helper.js";
 
 export default class AiTitleSuggestion extends Component {
   static shouldRender(args, context) {
@@ -9,8 +9,8 @@ export default class AiTitleSuggestion extends Component {
 
   <template>
     <AiSplitTopicSuggester
-      @selectedPosts={{@outletArgs.selectedPosts}}
       @mode="suggest_title"
+      @selectedPosts={{@outletArgs.selectedPosts}}
       @updateAction={{@outletArgs.updateTopicName}}
     />
   </template>

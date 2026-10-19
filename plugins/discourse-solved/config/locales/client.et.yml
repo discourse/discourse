@@ -22,6 +22,9 @@ et:
               buckets:
                 lt_1h: "< 1 tund"
   js:
+    discourse_workflows:
+      solution_changed:
+        tag_names: "Sildid"
     notifications:
       alt:
         solved:
@@ -46,6 +49,12 @@ et:
     topic_statuses:
       solved:
         help: "ellel teemal on lahendus"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Teema"
+            category: "Kategooriad"
     discourse_automation:
       triggerables:
         first_accepted_solution:

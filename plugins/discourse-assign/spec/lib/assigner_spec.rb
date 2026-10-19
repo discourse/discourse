@@ -161,6 +161,28 @@ RSpec.describe Assigner do
       expect(assignment.target).to eq(topic)
     end
 
+    it "triggers unassigned event after unassigning" do
+      assigner.assign(moderator)
+      assignment_id = topic.assignment.id
+
+      event = DiscourseEvent.track(:unassigned) { assigner.unassign }
+
+      assignment = event[:params].first
+      expect(assignment.id).to eq(assignment_id)
+      expect(assignment.topic_id).to eq(topic.id)
+      expect(assignment.assigned_to_id).to eq(moderator.id)
+    end
+
+    it "triggers unassigned event when deactivating instead of destroying" do
+      assigner.assign(moderator)
+      assignment_id = topic.assignment.id
+
+      event = DiscourseEvent.track(:unassigned) { assigner.unassign(deactivate: true) }
+
+      assignment = event[:params].first
+      expect(assignment.id).to eq(assignment_id)
+    end
+
     context "with published assignment workflows" do
       fab!(:all_assignments_workflow) do
         Fabricate(
@@ -1057,7 +1079,7 @@ RSpec.describe Assigner do
       }
     end
 
-    it "doesn't send an email if the assigner and assignee are not different" do
+    it "doesn't send an email when assigning a user to themself" do
       SiteSetting.assign_mailer = AssignMailer.levels[:different_users]
 
       expect { described_class.new(topic, moderator).assign(moderator_2) }.to change {
@@ -1065,7 +1087,7 @@ RSpec.describe Assigner do
       }.by(1)
     end
 
-    it "doesn't send an email if the assigner and assignee are not different" do
+    it "doesn't send an email when assigning a group to one of its members" do
       SiteSetting.assign_mailer = AssignMailer.levels[:different_users]
 
       expect { described_class.new(topic, moderator).assign(moderator) }.not_to change {

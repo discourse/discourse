@@ -13,7 +13,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <PluginOutlet @name="admin-email-templates-edit" @connectorTagName="div">
+  <PluginOutlet @connectorTagName="div" @name="admin-email-templates-edit">
     <div class="email-template">
       <div class="back-to-email-templates">
         <LinkTo @route="adminEmailTemplates">
@@ -24,16 +24,16 @@ export default <template>
       <label>{{i18n "admin.customize.email_templates.subject"}}</label>
       {{#if @controller.hasMultipleSubjects}}
         <h3><LinkTo
-            @route="adminSiteText"
-            @query={{hash q=@controller.hasMultipleSubjects}}
             class="email-template__has-multiple-subjects"
+            @query={{hash q=@controller.hasMultipleSubjects}}
+            @route="adminSiteText"
           >{{i18n
               "admin.customize.email_templates.multiple_subjects"
             }}</LinkTo></h3>
       {{else}}
         <Input
-          @value={{@controller.buffered.subject}}
           class="email-template__subject"
+          @value={{@controller.buffered.subject}}
           {{on "focusin" @controller.trackTextarea}}
           {{on "focusout" @controller.saveCursorPos}}
         />
@@ -44,18 +44,18 @@ export default <template>
 
       {{#if @controller.hasMultipleBodyTemplates}}
         <h3><LinkTo
-            @route="adminSiteText"
-            @query={{hash q=@controller.hasMultipleBodyTemplates}}
             class="email-template__has-multiple-bodies"
+            @query={{hash q=@controller.hasMultipleBodyTemplates}}
+            @route="adminSiteText"
           >{{i18n
               "admin.customize.email_templates.multiple_bodies"
             }}</LinkTo></h3>
       {{else}}
         <DEditor
-          {{didInsert @controller.registerTextarea}}
-          @value={{@controller.buffered.body}}
-          @forceEditorMode={{USER_OPTION_COMPOSITION_MODES.markdown}}
           class="email-template__body"
+          @forceEditorMode={{USER_OPTION_COMPOSITION_MODES.markdown}}
+          @value={{@controller.buffered.body}}
+          {{didInsert @controller.registerTextarea}}
           {{on "focusin" @controller.trackTextarea}}
           {{on "focusout" @controller.saveCursorPos}}
         />
@@ -67,8 +67,8 @@ export default <template>
       />
 
       <DSaveControls
-        @model={{@controller.emailTemplate}}
         @action={{@controller.saveChanges}}
+        @model={{@controller.emailTemplate}}
         @saved={{@controller.saved}}
         @saveDisabled={{@controller.saveDisabled}}
       >

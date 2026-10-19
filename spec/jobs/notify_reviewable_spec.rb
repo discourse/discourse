@@ -29,7 +29,7 @@ RSpec.describe Jobs::NotifyReviewable do
       )
     end
 
-    it "will notify users of new reviewable content for the user menu" do
+    it "notifies users of new reviewable content for the user menu" do
       SiteSetting.navigation_menu = "sidebar"
       SiteSetting.enable_category_group_moderation = true
 
@@ -103,7 +103,7 @@ RSpec.describe Jobs::NotifyReviewable do
       expect(group_user_message.data[:unseen_reviewable_count]).to eq(1)
     end
 
-    it "won't notify a group when disabled" do
+    it "does not notify a group when disabled" do
       SiteSetting.enable_category_group_moderation = false
 
       GroupUser.create!(group_id: group.id, user_id: moderator.id)

@@ -10,6 +10,8 @@ describe DiscourseAi::Embeddings::EntryPoint do
     SiteSetting.ai_embeddings_selected_model = embedding_definition.id
   end
 
+  after { DiscourseAi::Embeddings::ProviderHealth.clear!(embedding_definition) }
+
   describe "registering event callbacks" do
     context "when creating a topic" do
       let(:creator) do
@@ -30,6 +32,20 @@ describe DiscourseAi::Embeddings::EntryPoint do
         SiteSetting.ai_embeddings_enabled = true
 
         expect { creator.create }.to change(Jobs::GenerateEmbeddings.jobs, :size).by(1) # topic_created AND post_created
+      end
+
+      it "does not queue work while the selected provider is paused" do
+        SiteSetting.ai_embeddings_enabled = true
+        error =
+          DiscourseAi::Inference::EmbeddingInferenceError.new(
+            provider: embedding_definition.provider,
+            category: :authentication_failed,
+          )
+        expect do
+          DiscourseAi::Embeddings::ProviderHealth.request!(embedding_definition) { raise error }
+        end.to raise_error(DiscourseAi::Inference::EmbeddingInferenceError)
+
+        expect { creator.create }.not_to change(Jobs::GenerateEmbeddings.jobs, :size)
       end
 
       it "does nothing if embeddings analysis is disabled" do

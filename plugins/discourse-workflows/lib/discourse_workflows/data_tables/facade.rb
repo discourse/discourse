@@ -87,8 +87,10 @@ module DiscourseWorkflows
           Storage.total_size_bytes
         end
 
-        def batch_size_bytes(data_table_ids)
-          Storage.batch_size_bytes(data_table_ids)
+        def batch_stats(data_table_ids)
+          return {} if data_table_ids.empty?
+
+          with_statement_timeout { Storage.batch_stats(data_table_ids) }
         end
 
         def size_bytes(data_table_id)
@@ -102,12 +104,36 @@ module DiscourseWorkflows
         def drop_table!(data_table_id)
           Storage.drop_table!(data_table_id)
         end
+
+        def with_statement_timeout
+          connection = ActiveRecord::Base.connection
+          previous_timeout =
+            connection.select_value("SHOW statement_timeout") if connection.transaction_open?
+
+          connection.transaction(requires_new: true) do
+            connection.execute("SET LOCAL statement_timeout = '#{STATEMENT_TIMEOUT_MS}ms'")
+
+            result = yield
+
+            if previous_timeout
+              connection.execute(
+                "SET LOCAL statement_timeout = #{connection.quote(previous_timeout)}",
+              )
+            end
+
+            result
+          end
+        rescue ActiveRecord::QueryCanceled, PG::QueryCanceled
+          raise StatementTimeout, "Data table query exceeded the maximum allowed execution time"
+        end
       end
 
       SORT_DIRECTIONS = { "asc" => "ASC", "desc" => "DESC" }.freeze
       MAX_LIMIT = 100
 
       attr_reader :data_table
+
+      delegate :with_statement_timeout, to: :class, private: true
 
       def initialize(data_table)
         @data_table = data_table
@@ -196,11 +222,26 @@ module DiscourseWorkflows
       end
 
       def rename_column!(old_name:, new_name:)
-        with_lock_timeout { connection.rename_column(@table_name, old_name, new_name) }
+        with_lock_timeout do
+          connection.rename_column(@table_name, old_name, new_name)
+          @data_table.update_columns(
+            column_order:
+              @data_table.column_order.map { |name| name == old_name ? new_name : name },
+          )
+        end
+      end
+
+      def move_column!(column_name, position)
+        names = @data_table.user_columns.map { |column| column["name"] } - [column_name]
+        names.insert([position, names.size].min, column_name)
+        @data_table.update_columns(column_order: names)
       end
 
       def drop_column!(column_name)
-        with_lock_timeout { connection.remove_column(@table_name, column_name) }
+        with_lock_timeout do
+          connection.remove_column(@table_name, column_name)
+          @data_table.update_columns(column_order: @data_table.column_order - [column_name])
+        end
       end
 
       private
@@ -352,15 +393,6 @@ module DiscourseWorkflows
         end
       rescue PG::LockNotAvailable
         raise
-      end
-
-      def with_statement_timeout
-        connection.transaction do
-          connection.execute("SET LOCAL statement_timeout = '#{STATEMENT_TIMEOUT_MS}ms'")
-          yield
-        end
-      rescue ActiveRecord::QueryCanceled
-        raise StatementTimeout, "Data table query exceeded the maximum allowed execution time"
       end
     end
   end

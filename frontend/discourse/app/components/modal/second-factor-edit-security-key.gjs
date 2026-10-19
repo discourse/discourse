@@ -38,9 +38,9 @@ export default class SecondFactorEditSecurityKey extends Component {
 
   <template>
     <DModal
-      @title={{i18n "user.second_factor.security_key.edit"}}
       @closeModal={{@closeModal}}
       @tagName="form"
+      @title={{i18n "user.second_factor.security_key.edit"}}
     >
       <:body>
         <div class="input-group">
@@ -48,9 +48,9 @@ export default class SecondFactorEditSecurityKey extends Component {
               "user.second_factor.security_key.edit_description"
             }}</label>
           <Input
-            name="security-key-name"
             id="security-key-name"
             maxlength={{this.maxSecondFactorNameLength}}
+            name="security-key-name"
             @type="text"
             @value={{@model.securityKey.name}}
           />
@@ -58,8 +58,8 @@ export default class SecondFactorEditSecurityKey extends Component {
       </:body>
       <:footer>
         <DButton
-          @action={{this.editSecurityKey}}
           class="btn-primary"
+          @action={{this.editSecurityKey}}
           @label="user.second_factor.security_key.save"
           @type="submit"
         />

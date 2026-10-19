@@ -159,7 +159,7 @@ RSpec.describe Chat::CreateThread do
       it { is_expected.to fail_a_policy(:threading_enabled_for_channel) }
     end
 
-    context "when original message is not found" do
+    context "when the original message belongs to another channel" do
       fab!(:channel_2) { Fabricate(:chat_channel, threading_enabled: true) }
 
       before { params[:channel_id] = channel_2.id }
@@ -167,7 +167,7 @@ RSpec.describe Chat::CreateThread do
       it { is_expected.to fail_to_find_a_model(:original_message) }
     end
 
-    context "when original message is not found" do
+    context "when the original message has been destroyed" do
       before { message_1.destroy! }
 
       it { is_expected.to fail_to_find_a_model(:original_message) }

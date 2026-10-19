@@ -68,7 +68,7 @@ RSpec.describe Auth::TwitterAuthenticator do
 
   describe "#healthy?" do
     let(:authenticator) { described_class.new }
-    let(:request_token_url) { "https://api.twitter.com/oauth/request_token" }
+    let(:request_token_url) { "https://api.x.com/oauth/request_token" }
 
     before do
       SiteSetting.twitter_consumer_key = "key"

@@ -4,6 +4,7 @@ import BadgeTitle from "discourse/components/badge-title";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { and } from "discourse/truth-helpers";
 import DBadgeCard from "discourse/ui-kit/d-badge-card";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
@@ -27,20 +28,34 @@ export default <template>
     <div class="show-badge-details">
       <DBadgeCard
         @badge={{@controller.model}}
-        @size="large"
         @count={{@controller.userBadgesGrantCount}}
+        @granted={{@controller.hasBadge}}
+        @size="large"
       />
-      <div
-        class="badge-grant-info {{if @controller.hiddenSetTitle '' 'hidden'}}"
-      >
-        <div>
+      {{#if (and @controller.canSelectTitle @controller.showTitlePicker)}}
+        <div class="badge-set-title">
+          <PluginOutlet
+            @name="selectable-user-badges"
+            @outletArgs={{lazyHash
+              selectableUserBadges=@controller.selectableUserBadges
+              closeAction=@controller.toggleTitlePicker
+            }}
+          >
+            <BadgeTitle
+              @closeAction={{@controller.toggleTitlePicker}}
+              @selectableUserBadges={{@controller.selectableUserBadges}}
+            />
+          </PluginOutlet>
+        </div>
+      {{else}}
+        <div class="badge-grant-info">
           {{#if @controller.canSelectTitle}}
             <div class="grant-info-item">
               {{i18n "badges.allow_title"}}
               <DButton
-                @action={{@controller.toggleSetUserTitle}}
-                @icon="pencil"
                 class="btn-default pad-left"
+                @action={{@controller.toggleTitlePicker}}
+                @icon="pencil"
               />
             </div>
           {{/if}}
@@ -49,25 +64,6 @@ export default <template>
               {{i18n "badges.multiple_grant"}}
             </div>
           {{/if}}
-        </div>
-      </div>
-
-      {{#if @controller.canSelectTitle}}
-        <div
-          class="badge-set-title {{if @controller.hiddenSetTitle 'hidden' ''}}"
-        >
-          <PluginOutlet
-            @name="selectable-user-badges"
-            @outletArgs={{lazyHash
-              selectableUserBadges=@controller.selectableUserBadges
-              closeAction=@controller.toggleSetUserTitle
-            }}
-          >
-            <BadgeTitle
-              @selectableUserBadges={{@controller.selectableUserBadges}}
-              @closeAction={{@controller.toggleSetUserTitle}}
-            />
-          </PluginOutlet>
         </div>
       {{/if}}
     </div>
@@ -78,10 +74,10 @@ export default <template>
           <div class="badges-granted">
             {{#each @controller.userBadges as |ub|}}
               <DUserInfo
-                @user={{ub.user}}
-                @size="medium"
-                @date={{ub.granted_at}}
                 class="badge-info"
+                @date={{ub.granted_at}}
+                @size="medium"
+                @user={{ub.user}}
               >
                 <div class="granted-on">
                   {{trustHTML
@@ -104,9 +100,9 @@ export default <template>
           {{#if @controller.canShowOthers}}
             <div>
               <a
-                id="show-others-with-badge-link"
-                href={{@controller.model.url}}
                 class="btn btn-default"
+                href={{@controller.model.url}}
+                id="show-others-with-badge-link"
               >{{i18n "badges.others_count" count=@controller.othersCount}}</a>
             </div>
           {{/if}}

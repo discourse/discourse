@@ -30,9 +30,9 @@ export default class SchemaSettingTypeGroups extends SchemaSettingTypeModels {
   <template>
     <GroupChooser
       @content={{this.groupChoices}}
-      @value={{this.value}}
       @onChange={{this.onInput}}
       @options={{this.groupChooserOptions}}
+      @value={{this.value}}
     />
 
     <div class="schema-field__input-supporting-text">

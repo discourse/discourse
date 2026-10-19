@@ -46,13 +46,11 @@ module DiscourseDev
         raise 'To run this rake task in a production site, set the value of `ALLOW_DEV_POPULATE` environment variable to "1"'
       end
 
-      SiteSetting.persist_browser_pageview_events = true
-
       rows = build_rows
       ::BrowserPageviewEvent.insert_all(rows)
       mirror_to_application_requests(rows)
 
-      puts "Enabled persist_browser_pageview_events and inserted #{rows.size} events."
+      puts "Inserted #{rows.size} browser pageview events."
       rows.size
     end
 
@@ -75,6 +73,7 @@ module DiscourseDev
           url: "https://forum.example.com/t/sample-topic/#{rand(1000)}",
           ip_address: "192.0.2.#{rand(1..254)}",
           user_agent: "Mozilla/5.0 (X11; Linux x86_64) Chrome/123",
+          browser: ::BrowserPageviewEvent.browsers.fetch("chrome"),
           session_id: SecureRandom.hex(16),
           country_code: country_pool.sample,
           normalized_referrer: normalized,
@@ -88,7 +87,8 @@ module DiscourseDev
     def mirror_to_application_requests(rows)
       rows
         .group_by do |row|
-          req_type = row[:user_id] ? :page_view_logged_in_browser : :page_view_anon_browser
+          req_type =
+            row[:user_id] ? :page_view_logged_in_browser_beacon : :page_view_anon_browser_beacon
           [row[:created_at].to_date, req_type]
         end
         .each do |(date, req_type), grouped|

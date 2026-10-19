@@ -16,10 +16,10 @@ export default <template>
   <svg class="workflow-loop-back" style={{SVG_STYLE}}>
     <path
       class="workflow-loop-back__path"
+      d={{@entry.pathD}}
       fill="none"
       stroke="var(--primary-low-mid)"
       stroke-width="1.5"
-      d={{@entry.pathD}}
     />
     <polygon
       class="workflow-loop-back__arrow"
@@ -28,14 +28,14 @@ export default <template>
     />
     <foreignObject
       class="workflow-loop-back__button-fo"
-      width="28"
       height="28"
+      width="28"
       x={{@entry.loopButtonX}}
       y={{@entry.loopButtonY}}
     >
       <button
-        type="button"
         class="workflow-loop-back__add-btn"
+        type="button"
         {{on "click" (fn handleAdd @onAdd @entry.loopNodeClientId)}}
       >+</button>
     </foreignObject>

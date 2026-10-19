@@ -7,6 +7,10 @@ describe "Admin Dashboard Redesign | Engagement section" do
   fab!(:category_alpha) { Fabricate(:category, name: "Category Alpha") }
   fab!(:category_bravo) { Fabricate(:category, name: "Category Bravo") }
   fab!(:category_dormant) { Fabricate(:category, name: "Category Dormant") }
+  fab!(:category_delta) { Fabricate(:category, name: "Category Delta") }
+  fab!(:category_charlie) do
+    Fabricate(:category, name: "Category Charlie", parent_category: category_delta)
+  end
 
   let(:dashboard) { PageObjects::Pages::AdminDashboard.new }
   let(:engagement) { dashboard.engagement }
@@ -25,6 +29,7 @@ describe "Admin Dashboard Redesign | Engagement section" do
     )
     Fabricate(:topic, category: category_alpha, created_at: "2026-06-12")
     Fabricate(:topic, category: category_bravo, created_at: "2026-06-12")
+    Fabricate(:topic, category: category_charlie, created_at: "2026-06-12")
     Jobs::MaintainCategoryActivityDailyRollups.new.execute
     sign_in(current_user)
   end
@@ -85,6 +90,22 @@ describe "Admin Dashboard Redesign | Engagement section" do
     expect(engagement).to have_selected_activity_category(category_dormant)
   end
 
+  it "shows the parent category next to a sub-category in the Activity by category table and the category filters",
+     time: Time.zone.local(2026, 6, 15, 12, 0, 0) do
+    dashboard.visit
+    expect(dashboard).to have_section("engagement")
+
+    expect(engagement).to have_activity_row_with_parent(category_charlie)
+
+    engagement.expand_activity_category_filter
+
+    expect(engagement).to have_selected_activity_category_with_parent(category_charlie)
+
+    engagement.select_whos_posting_category(category_charlie)
+
+    expect(engagement).to have_selected_whos_posting_category_with_parent(category_charlie)
+  end
+
   it "saves an admin's 'Who's posting' selection when the picker closes, and persists it across a refresh",
      time: Time.zone.local(2026, 6, 15, 12, 0, 0) do
     dashboard.visit
@@ -114,5 +135,83 @@ describe "Admin Dashboard Redesign | Engagement section" do
     engagement.expand_whos_posting_category_filter
 
     expect(engagement).to have_no_selected_whos_posting_category(category_alpha)
+  end
+
+  it "adds a group via the Compare groups modal and persists it across a refresh",
+     time: Time.zone.local(2026, 6, 15, 12, 0, 0) do
+    support_group = Fabricate(:group, name: "support")
+    poster = Fabricate(:user, created_at: "2026-05-01")
+    Fabricate(:group_user, group: support_group, user: poster)
+    Fabricate(:post, user: poster, created_at: "2026-06-12")
+
+    dashboard.visit
+    expect(dashboard).to have_section("engagement")
+    expect(engagement).to have_no_whos_posting_bar("support")
+
+    engagement.open_compare_groups_modal
+    engagement.toggle_compare_groups_row("group:#{support_group.id}")
+    engagement.apply_compare_groups
+
+    expect(engagement).to have_whos_posting_bar("support")
+
+    dashboard.visit
+
+    expect(engagement).to have_whos_posting_bar("support")
+  end
+
+  it "does not persist a moderator's group selection",
+     time: Time.zone.local(2026, 6, 15, 12, 0, 0) do
+    support_group = Fabricate(:group, name: "support")
+    poster = Fabricate(:user, created_at: "2026-05-01")
+    Fabricate(:group_user, group: support_group, user: poster)
+    Fabricate(:post, user: poster, created_at: "2026-06-12")
+    sign_in(moderator)
+
+    dashboard.visit
+    engagement.open_compare_groups_modal
+    engagement.toggle_compare_groups_row("group:#{support_group.id}")
+    engagement.apply_compare_groups
+
+    expect(engagement).to have_whos_posting_bar("support")
+
+    dashboard.visit
+
+    expect(engagement).to have_no_whos_posting_bar("support")
+  end
+
+  it "shows that engagement is up when every engagement metric improves",
+     time: Time.zone.local(2026, 6, 15, 12, 0, 0) do
+    Fabricate(:user_visit_daily_rollup, date: Date.new(2026, 5, 1), dau: 1, mau: 2)
+    Fabricate(:user_visit_daily_rollup, date: Date.new(2026, 6, 1), dau: 2, mau: 2)
+
+    prior_engaged_user = Fabricate(:user, created_at: Time.zone.local(2026, 1, 1))
+    Fabricate(
+      :user_action,
+      user: prior_engaged_user,
+      action_type: UserAction::LIKE,
+      created_at: Time.zone.local(2026, 5, 1),
+    )
+
+    2.times do
+      current_engaged_user = Fabricate(:user, created_at: Time.zone.local(2026, 1, 1))
+      Fabricate(
+        :user_action,
+        user: current_engaged_user,
+        action_type: UserAction::LIKE,
+        created_at: Time.zone.local(2026, 6, 1),
+      )
+    end
+
+    Fabricate(:user, created_at: Time.zone.local(2026, 5, 1))
+    Fabricate.times(2, :user, created_at: Time.zone.local(2026, 6, 1))
+    Discourse.cache.clear
+
+    dashboard.visit
+
+    expect(engagement).to have_headline(
+      "Engagement is up in the selected period",
+      "Stickiness, daily engagement, and new signups have all improved, showing that more " \
+        "members are joining and participating in your community.",
+    )
   end
 end

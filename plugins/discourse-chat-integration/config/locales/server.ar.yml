@@ -19,8 +19,10 @@ ar:
     chat_integration_slack_transcript_quote: هل تريد تضمين نص Slack في علامات [quote]؟
     errors:
       chat_integration_slack_api_configs_are_empty: "يجب عليك إدخال عنوان URL لخطاف ويب صادر أو رمز وصول"
+      chat_integration_telegram_api_base_url_invalid: "يجب أن يكون عنوان URL الأساسي لواجهة برمجة تطبيقات Telegram عنوان URL صالحًا على بروتوكول HTTPS دون بيانات اعتماد، أو سلسلة استعلام، أو مقطع فرعي."
     chat_integration_telegram_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Telegram"
     chat_integration_telegram_access_token: "رمز وصول برنامج الروبوت الخاص بك من botfather@ على Telegram"
+    chat_integration_telegram_api_base_url: "عنوان URL الأساسي المُستخدَم لطلبات واجهة برمجة تطبيقات روبوت Telegram. لا تقم بتغييره إلا عند توجيه الطلبات عبر وكيل HTTPS موثوق. يجب أيضًا إضافة المضيفين على الشبكات الخاصة إلى إعداد الموقع `allowed_internal_hosts`."
     chat_integration_telegram_excerpt_length: "طول المقتطف من منشور Telegram"
     chat_integration_telegram_enable_slash_commands: "السماح بإدارة اشتراكات Telegram باستخدام \"الأوامر التي تبدأ بشرطة مائلة\""
     chat_integration_discord_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Discord"
@@ -68,6 +70,14 @@ ar:
         title: إرسال رسالة Slack
       send_chat_integration_message:
         title: إرسال رسالة Chat-Integration
+  discourse_workflows:
+    errors:
+      send_chat_integration_message:
+        channel_not_found: "لم يتم العثور على القناة: %{channel_id}"
+        provider_disabled: "موفِّر تكامل الدردشة معطَّل أو مفقود: %{provider}"
+        provider_failed: "تعذَّر على الموفِّر %{provider} من إرسال الرسالة."
+        provider_failed_with_details: "تعذَّر على الموفِّر %{provider} من إرسال الرسالة: %{details}"
+        message_required: "يلزم إدخال رسالة."
   chat_integration:
     all_categories: "(جميع الفئات)"
     deleted_category: "(فئة محذوفة)"

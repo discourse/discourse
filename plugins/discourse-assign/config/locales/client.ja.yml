@@ -185,9 +185,22 @@ ja:
     discourse_workflows:
       nodes:
         "trigger:assigned": "割り当て完了"
+        "trigger:unassigned": "未割り当て"
       assign_topic:
+        resource: "リソース"
+        resources:
+          topic: "トピック"
+          post: "投稿"
         operations:
           assign: "割り当てる"
           unassign: "割り当て解除"
         topic_id: "トピック ID"
+        post_id: "投稿 ID"
+        assignee: "割り当てられた担当者"
+      check_assignment:
+        target_types:
+          topic: "トピック"
+          post: "投稿"
+        topic_id: "トピック ID"
+        post_id: "投稿 ID"
         assignee: "割り当てられた担当者"

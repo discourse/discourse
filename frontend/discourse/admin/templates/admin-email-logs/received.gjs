@@ -29,12 +29,12 @@ const RECEIVED_FILTERS = [
 
 export default <template>
   <EmailLogsList
-    @status="received"
-    @logType="received"
-    @sourceModel={{IncomingEmail}}
-    @headers={{RECEIVED_HEADERS}}
     @filters={{RECEIVED_FILTERS}}
+    @headers={{RECEIVED_HEADERS}}
+    @logType="received"
     @onShowEmail={{routeAction "showIncomingEmail"}}
+    @sourceModel={{IncomingEmail}}
+    @status="received"
   >
     <:default as |emailLog|>
       <tr data-test-email-log-row-id={{emailLog.id}}>

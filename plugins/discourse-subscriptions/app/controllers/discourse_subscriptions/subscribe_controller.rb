@@ -14,7 +14,11 @@ module DiscourseSubscriptions
       products = []
 
       if product_ids.present? && is_stripe_configured?
-        response = ::Stripe::Product.list({ ids: product_ids, active: true }, stripe_request_opts)
+        response =
+          ::Stripe::Product.list(
+            { ids: product_ids, active: true, limit: 100 },
+            stripe_request_opts,
+          )
 
         products = response[:data].map { |p| serialize_product(p) }
       end

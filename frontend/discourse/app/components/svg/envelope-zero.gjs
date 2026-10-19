@@ -1,9 +1,9 @@
 const SvgEnvelopeZero = <template>
   <svg
-    width="259"
+    fill="none"
     height="211"
     viewBox="0 0 259 211"
-    fill="none"
+    width="259"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path

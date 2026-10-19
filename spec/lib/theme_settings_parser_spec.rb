@@ -44,6 +44,7 @@ RSpec.describe ThemeSettingsParser do
     expect(loader.find_by_name(:float_setting)[:type]).to eq(types[:float])
     expect(loader.find_by_name(:list_setting)[:type]).to eq(types[:list])
     expect(loader.find_by_name(:enum_setting)[:type]).to eq(types[:enum])
+    expect(loader.find_by_name(:icon_setting)[:type]).to eq(types[:icon])
   end
 
   describe "description locale" do
@@ -71,7 +72,7 @@ RSpec.describe ThemeSettingsParser do
   end
 
   describe "enum setting" do
-    it "should never have less than 1 choices" do
+    it "retains at least one choice" do
       choices = loader.find_by_name(:enum_setting)[:opts][:choices]
       expect(choices.class).to eq(Array)
       expect(choices.length).to eq(3)

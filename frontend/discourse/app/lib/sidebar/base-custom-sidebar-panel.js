@@ -50,6 +50,15 @@ export default class BaseCustomSidebarPanel {
     return false;
   }
 
+  /**
+   * Overrides the header's back link, for a panel that can be reached from
+   * somewhere other than the forum.
+   *
+   * @returns {{href: string, label: string}|undefined} An href and an i18n key,
+   * or undefined to leave the default "back to forum" link alone.
+   */
+  get backLink() {}
+
   get expandActiveSection() {
     return false;
   }
@@ -59,6 +68,28 @@ export default class BaseCustomSidebarPanel {
    * Filter allows to remove sidebar links which does not match the filter phrase.
    */
   get filterable() {
+    return false;
+  }
+
+  /**
+   * How many links the panel must hold before its filter earns its place. A
+   * short panel is quicker to read than to filter.
+   *
+   * @returns {number} Defaults to 0, showing the filter whenever `filterable`.
+   */
+  get filterableMinLinks() {
+    return 0;
+  }
+
+  /**
+   * @returns {boolean} Controls whether the search is shown.
+   * Displays modal on click allowing searching for admin pages, site settings, themes, components and reports.
+   */
+  get searchable() {
+    return false;
+  }
+
+  get scrollActiveLinkIntoView() {
     return false;
   }
 
@@ -74,22 +105,10 @@ export default class BaseCustomSidebarPanel {
   }
 
   /**
-   * @returns {boolean} Controls whether the search is shown.
-   * Displays modal on click allowing searching for admin pages, site settings, themes, components and reports.
-   */
-  get searchable() {
-    return false;
-  }
-
-  /**
    * @returns {Function} Action when search input is clicked.
    */
   onSearchClick() {
     return null;
-  }
-
-  get scrollActiveLinkIntoView() {
-    return false;
   }
 
   #notImplemented() {

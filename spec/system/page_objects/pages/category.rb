@@ -184,6 +184,21 @@ module PageObjects
         page.has_no_css?(tab_css)
       end
 
+      def has_changes_banner?
+        page.has_css?(".admin-changes-banner")
+      end
+
+      def has_powered_by_discourse?
+        page.has_css?(".powered-by-discourse")
+      end
+
+      def changes_banner_is_clear_of_powered_by_discourse?
+        page.evaluate_script(<<~JS)
+          document.querySelector(".admin-changes-banner").getBoundingClientRect().bottom <=
+            document.querySelector(".powered-by-discourse").getBoundingClientRect().top
+        JS
+      end
+
       def has_category_title?(title)
         page.has_css?(".category-header h1", text: title)
       end

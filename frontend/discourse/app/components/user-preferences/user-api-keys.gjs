@@ -62,15 +62,15 @@ class UserApiKeyRow extends Component {
       <div class="user-api-key__actions">
         {{#if @apiKey.revoked}}
           <DButton
+            class="btn-default btn-small"
             @action={{fn (routeAction "undoRevokeApiKey") @apiKey}}
             @label="user.undo_revoke_access"
-            class="btn-default btn-small"
           />
         {{else}}
           <DButton
+            class="btn-default btn-small"
             @action={{fn (routeAction "revokeApiKey") @apiKey}}
             @label="user.revoke_access"
-            class="btn-default btn-small"
           />
         {{/if}}
       </div>

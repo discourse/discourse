@@ -5,19 +5,15 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
 
   let(:trigger_data) { { "topic_id" => 1 } }
   let(:execution_context) do
-    DiscourseWorkflows::Executor::ExecutionContext.new(
-      workflow: workflow,
-      trigger_data: trigger_data,
-      user: nil,
-    )
+    DiscourseWorkflows::Executor::ExecutionContext.new(workflow:, trigger_data:, user: nil)
   end
   let(:options) { DiscourseWorkflows::Executor::ExecutionOptions.new }
   let(:store) do
     described_class.new(
       trigger_node_id: "node_1",
-      execution_context: execution_context,
+      execution_context:,
       execution_mode: :normal,
-      options: options,
+      options:,
     )
   end
 
@@ -29,6 +25,52 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
       expect(execution_context.execution).to eq(execution)
       expect(execution_context.resume_token).to be_present
       expect(execution_context.context["$trigger"]).to eq(trigger_data)
+    end
+  end
+
+  describe "#publish_progress" do
+    it "publishes a compact step update to the admin-secured execution channel" do
+      execution = store.start!
+      step =
+        DiscourseWorkflows::Executor::Step.build(
+          node: OpenStruct.new(id: "1", name: "Node A", type: "action:code", typeVersion: "1.0"),
+          position: 0,
+          input: [{ "json" => { "secret" => "not published" } }],
+        )
+
+      messages =
+        MessageBus.track_publish("/discourse-workflows/execution/#{execution.id}") do
+          store.publish_progress(step:)
+        end
+
+      expect(messages.length).to eq(1)
+      expect(messages.first.group_ids).to eq([Group::AUTO_GROUPS[:admins]])
+      payload = messages.first.data
+      expect(payload).to include(type: "execution_progress", refresh: false)
+      expect(payload[:execution]).to include(id: execution.id, status: "running")
+      expect(payload[:step]).to include(
+        "node_id" => "1",
+        "node_name" => "Node A",
+        "status" => "running",
+      )
+      expect(messages.first.data.to_json).not_to include("not published")
+    end
+
+    it "publishes terminal state after persistence" do
+      execution = store.start!
+
+      messages =
+        MessageBus.track_publish("/discourse-workflows/execution/#{execution.id}") do
+          store.finish!(steps: [])
+        end
+
+      expect(messages.length).to eq(1)
+      expect(messages.first.data).to include(type: "execution_progress", refresh: true)
+      expect(messages.first.data[:execution]).to include(
+        id: execution.id,
+        status: "success",
+        finished_at: be_present,
+      )
     end
   end
 
@@ -46,7 +88,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
         ),
       ]
 
-      store.finish!(steps: steps)
+      store.finish!(steps:)
 
       parsed = store.execution.execution_data.data
       expect(parsed["context"]["node_a"]).to eq([{ "json" => { "x" => 1 } }])
@@ -65,7 +107,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
       )
       steps = [
         DiscourseWorkflows::Executor::Step.build(
-          node: node,
+          node:,
           position: 0,
           input: input_groups.first,
           status: DiscourseWorkflows::Executor::Step::SUCCESS,
@@ -73,21 +115,21 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
         ),
       ]
 
-      allow(MessageBus).to receive(:publish)
+      messages =
+        MessageBus.track_publish("/discourse-workflows/workflow/#{workflow.id}") do
+          store.finish!(steps:)
+        end
 
-      store.finish!(steps: steps)
-
-      expect(MessageBus).to have_received(:publish) do |channel, payload, opts|
-        expect(channel).to eq("/discourse-workflows/workflow/#{workflow.id}")
-        expect(opts).to eq(group_ids: [Group::AUTO_GROUPS[:admins]])
-        expect(payload[:type]).to eq("execution_completed")
-        published_run = payload.dig(:lastExecutionRunData, "Node A", 0)
-        expect(published_run).to include("node_name" => "Node A")
-        expect(published_run["outputs"]).to include(
-          hash_including("index" => 0, "item_count" => 1),
-          hash_including("index" => 1, "item_count" => 1),
-        )
-      end
+      expect(messages.length).to eq(1)
+      payload = messages.first.data
+      expect(messages.first.group_ids).to eq([Group::AUTO_GROUPS[:admins]])
+      expect(payload[:type]).to eq("execution_completed")
+      published_run = payload.dig(:lastExecutionRunData, "Node A", 0)
+      expect(published_run).to include("node_name" => "Node A")
+      expect(published_run["outputs"]).to include(
+        hash_including("index" => 0, "item_count" => 1),
+        hash_including("index" => 1, "item_count" => 1),
+      )
 
       run = store.execution.execution_data.run_data.dig("Node A", 0)
       expect(run).to include(
@@ -114,7 +156,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
           ),
         ]
 
-        store.finish!(steps: steps)
+        store.finish!(steps:)
 
         entry = store.execution.execution_data.data.dig("entries", "1", 0)
         expect(entry.dig("input", 0, "json", "body")).to include(
@@ -146,7 +188,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
             ),
           ]
 
-          store.finish!(steps: steps)
+          store.finish!(steps:)
 
           entry = store.execution.execution_data.data.dig("entries", "1", 0)
           expect(entry["input"]).to include(
@@ -184,7 +226,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
             )
           end
 
-        store.finish!(steps: steps)
+        store.finish!(steps:)
 
         data = store.execution.execution_data.data
         entry = data.dig("entries", "node-0", 0)
@@ -198,6 +240,46 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
           "__reason" => "execution_data_size_limit",
         )
       end
+    end
+  end
+
+  describe "#pause_waiting_execution!" do
+    let(:node) do
+      OpenStruct.new(id: "wait-1", name: "Wait", type: "action:test", typeVersion: "1.0")
+    end
+
+    before { store.start! }
+
+    it "persists the requested timeout action" do
+      waiting_until = 15.minutes.from_now
+
+      store.pause_waiting_execution!(node:, waiting_until:, timeout_action: "fail")
+
+      expect(store.execution.reload).to have_attributes(
+        status: "waiting",
+        waiting_node_id: "wait-1",
+        waiting_until: be_within(1.second).of(waiting_until),
+        timeout_action: "fail",
+      )
+    end
+
+    it "keeps timeout action nil when existing callers omit it" do
+      store.pause_waiting_execution!(node:)
+
+      expect(store.execution.reload.timeout_action).to be_nil
+    end
+
+    it "keeps the execution running when its waiting checkpoint cannot be saved",
+       :aggregate_failures do
+      interrupt_checkpoint = -> { raise Sidekiq::Shutdown }
+      DiscourseWorkflows::ExecutionData.set_callback(:save, :before, interrupt_checkpoint)
+
+      expect { store.pause_waiting_execution!(node:) }.to raise_error(Sidekiq::Shutdown)
+
+      expect(store.execution.reload).to have_attributes(status: "running", waiting_node_id: nil)
+      expect(store.execution.execution_data).to be_nil
+    ensure
+      DiscourseWorkflows::ExecutionData.skip_callback(:save, :before, interrupt_checkpoint)
     end
   end
 
@@ -250,22 +332,22 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
       let(:options) { DiscourseWorkflows::Executor::ExecutionOptions.new(draft_execution: true) }
 
       it "publishes completion data when the execution fails before node output exists" do
-        allow(MessageBus).to receive(:publish)
+        messages =
+          MessageBus.track_publish("/discourse-workflows/workflow/#{workflow.id}") do
+            store.fail!(error: StandardError.new("boom"), steps: [])
+          end
 
-        store.fail!(error: StandardError.new("boom"), steps: [])
-
-        expect(MessageBus).to have_received(:publish) do |channel, payload, opts|
-          expect(channel).to eq("/discourse-workflows/workflow/#{workflow.id}")
-          expect(opts).to eq(group_ids: [Group::AUTO_GROUPS[:admins]])
-          expect(payload[:type]).to eq("execution_completed")
-          expect(payload[:execution]).to include(
-            id: store.execution.id,
-            workflow_id: workflow.id,
-            trigger_node_id: "node_1",
-            status: "error",
-          )
-          expect(payload[:lastExecutionRunData]).to eq({})
-        end
+        expect(messages.length).to eq(1)
+        payload = messages.first.data.deep_symbolize_keys
+        expect(messages.first.group_ids).to eq([Group::AUTO_GROUPS[:admins]])
+        expect(payload[:type]).to eq("execution_completed")
+        expect(payload[:execution]).to include(
+          id: store.execution.id,
+          workflow_id: workflow.id,
+          trigger_node_id: "node_1",
+          status: "error",
+        )
+        expect(payload[:lastExecutionRunData]).to eq({})
       end
     end
   end
@@ -276,39 +358,37 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
       execution_context.store_context("node_a", "data_a")
       node = OpenStruct.new(id: "1", name: "Node A", type: "action:code", typeVersion: "1.0")
       output_groups = [[{ "json" => { "saved" => true } }]]
+      metadata = { "review_agent" => { "id" => 1, "name" => "Content review" } }
       execution_context.store_node_run(
         node,
         inputs: [[{ "json" => { "input" => true } }]],
         outputs: output_groups,
         input_sources: [{ "node_name" => "Trigger", "output_index" => 0 }],
+        metadata: metadata,
       )
       steps = [
         DiscourseWorkflows::Executor::Step.build(
-          node: node,
+          node:,
           position: 0,
           input: [],
           status: DiscourseWorkflows::Executor::Step::WAITING,
           output: output_groups.first,
         ),
       ]
-      store.finish!(steps: steps)
+      store.finish!(steps:)
       existing_data = store.execution.execution_data.data.deep_dup
       existing_data["node_contexts"] = { "node_a" => { "counter" => 1 } }
       store.execution.execution_data.update!(data: existing_data)
       store.execution.update!(status: :waiting, waiting_node_id: "1")
 
       restored_context =
-        DiscourseWorkflows::Executor::ExecutionContext.new(
-          workflow: workflow,
-          trigger_data: trigger_data,
-          user: nil,
-        )
+        DiscourseWorkflows::Executor::ExecutionContext.new(workflow:, trigger_data:, user: nil)
       restored =
         described_class.new(
           trigger_node_id: "node_1",
           execution_context: restored_context,
           execution_mode: :normal,
-          options: options,
+          options:,
         )
 
       restored.resume!(store.execution)
@@ -317,6 +397,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
       expect(
         restored_context.context.dig("__node_runs", "Node A", 0, "outputs", 0, 0, "json"),
       ).to eq("saved" => true)
+      expect(restored_context.context.dig("__node_runs", "Node A", 0, "metadata")).to eq(metadata)
       expect(restored_context.node_context_for(OpenStruct.new(id: "node_a", name: "node_a"))).to eq(
         "counter" => 1,
       )

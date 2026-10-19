@@ -59,6 +59,17 @@ module PageObjects
         )
       end
 
+      def toggle_translations
+        PageObjects::Components::DToggleSwitch.new(
+          ".ai-translations__toggle-container .d-toggle-switch__checkbox",
+        ).toggle
+        self
+      end
+
+      def language_switcher_checkbox
+        page.find(".ai-translations__language-switcher input[type='checkbox']")
+      end
+
       def has_locale_selector?
         page.has_css?(".ai-translations__settings-panel .multi-select")
       end

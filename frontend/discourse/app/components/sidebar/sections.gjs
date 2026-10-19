@@ -1,12 +1,13 @@
-import AnonymousSections from "./anonymous/sections";
-import UserSections from "./user/sections";
+import AnonymousSections from "./anonymous/sections.gjs";
+import UserSections from "./user/sections.gjs";
 
 const SidebarSections = <template>
   {{#if @currentUser}}
     <UserSections
       @collapsableSections={{@collapsableSections}}
-      @panel={{@panel}}
+      @enableLinkDrop={{@enableLinkDrop}}
       @hideApiSections={{@hideApiSections}}
+      @panel={{@panel}}
       @toggleNavigationMenu={{@toggleNavigationMenu}}
     />
   {{else}}

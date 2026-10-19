@@ -17,6 +17,7 @@ id:
       create:
         form:
           insert: Masukkan
+          save: Simpan
           timezones_title: Zona waktu yang ditampilkan
           invalid_date: Tanggal tidak valid, pastikan tanggal dan waktu sudah benar
           date_title: Tanggal

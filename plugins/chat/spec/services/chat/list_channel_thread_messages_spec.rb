@@ -10,6 +10,7 @@ RSpec.describe Chat::ListChannelThreadMessages do
     it { is_expected.to validate_presence_of(:channel_id) }
     it { is_expected.to allow_values(1, options.max_page_size, nil).for(:page_size) }
     it { is_expected.not_to allow_values(0).for(:page_size) }
+
     it do
       is_expected.to validate_inclusion_of(:direction).in_array(
         Chat::MessagesQuery::VALID_DIRECTIONS,
@@ -94,7 +95,10 @@ RSpec.describe Chat::ListChannelThreadMessages do
     let(:params) { { thread_id:, channel_id: thread.channel_id, **optional_params } }
     let(:dependencies) { { guardian: } }
 
-    before { thread.channel.add(user) }
+    before do
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      thread.channel.add(user)
+    end
 
     context "when data is not valid" do
       let(:thread_id) { nil }

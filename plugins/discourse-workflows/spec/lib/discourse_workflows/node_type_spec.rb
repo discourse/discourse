@@ -286,27 +286,23 @@ RSpec.describe DiscourseWorkflows::NodeType do
     end
   end
 
-  describe ".normalize_category_ids" do
+  describe ".normalize_ids" do
     it "coerces scalars, arrays, and mixed values to unique integer ids" do
-      expect(described_class.normalize_category_ids(nil)).to eq([])
-      expect(described_class.normalize_category_ids("")).to eq([])
-      expect(described_class.normalize_category_ids([])).to eq([])
-      expect(described_class.normalize_category_ids("12")).to eq([12])
-      expect(described_class.normalize_category_ids(12)).to eq([12])
-      expect(described_class.normalize_category_ids(["12", 3, " 12 "])).to eq([12, 3])
-      expect(described_class.normalize_category_ids([nil, ""])).to eq([])
+      expect(described_class.normalize_ids(nil)).to eq([])
+      expect(described_class.normalize_ids("")).to eq([])
+      expect(described_class.normalize_ids([])).to eq([])
+      expect(described_class.normalize_ids("12")).to eq([12])
+      expect(described_class.normalize_ids(12)).to eq([12])
+      expect(described_class.normalize_ids(["12", 3, " 12 "])).to eq([12, 3])
+      expect(described_class.normalize_ids([nil, ""])).to eq([])
     end
 
     it "coerces unresolved expression strings to a non-matching id" do
-      expect(described_class.normalize_category_ids(["=$json.category_id"])).to eq([0])
+      expect(described_class.normalize_ids(["=$json.category_id"])).to eq([0])
     end
   end
 
   describe ".category_ids_parameter" do
-    def trigger_context(parameters)
-      DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
-    end
-
     it "reads category_ids when present" do
       expect(
         described_class.category_ids_parameter(trigger_context("category_ids" => %w[1 2])),
@@ -332,35 +328,82 @@ RSpec.describe DiscourseWorkflows::NodeType do
     end
   end
 
-  describe ".matches_category_ids?" do
+  describe "#matches_topic_filters?" do
+    fab!(:topic)
+
+    let(:node_class) { Class.new(described_class) { public :matches_topic_filters? } }
+
+    def node_declaring(properties)
+      node_class.description(properties:)
+      node_class.new
+    end
+
+    it "ignores filters the node does not declare" do
+      node = node_declaring(described_class::TAG_FILTER_PROPERTIES)
+      stray_filters = { topic_ids: [topic.id + 1], category_ids: [topic.category_id + 1] }
+
+      expect(node.matches_topic_filters?(topic, trigger_context(stray_filters))).to eq(true)
+    end
+
+    it "declares the topic filter only on triggers whose event repeats inside a topic",
+       :aggregate_failures do
+      repeating = %w[
+        post_created
+        post_edited
+        post_destroyed
+        post_recovered
+        post_moved
+        post_like_changed
+      ]
+      once_per_topic = %w[
+        topic_created
+        topic_closed
+        topic_published
+        topic_timer_changed
+        stale_topic
+        topic_tag_changed
+      ]
+
+      repeating.each do |name|
+        expect(
+          DiscourseWorkflows::Registry.find_node_type("trigger:#{name}").properties,
+        ).to have_key(:topic_ids)
+      end
+      once_per_topic.each do |name|
+        expect(
+          DiscourseWorkflows::Registry.find_node_type("trigger:#{name}").properties,
+        ).not_to have_key(:topic_ids)
+      end
+    end
+  end
+
+  describe "#matches_category_ids?" do
+    subject(:node) { Class.new(described_class) { public :matches_category_ids? }.new }
+
     fab!(:parent_category, :category)
     fab!(:subcategory) { Fabricate(:category, parent_category: parent_category) }
     fab!(:other_category, :category)
 
-    it "matches everything when no categories are configured" do
-      expect(described_class.matches_category_ids?(subcategory.id, [])).to eq(true)
-      expect(described_class.matches_category_ids?(nil, [])).to eq(true)
+    it "matches everything when no categories are configured", :aggregate_failures do
+      expect(node.matches_category_ids?(subcategory.id, [])).to eq(true)
+      expect(node.matches_category_ids?(nil, [])).to eq(true)
     end
 
-    it "expands subcategories by default" do
-      expect(described_class.matches_category_ids?(subcategory.id, [parent_category.id])).to eq(
-        true,
-      )
-      expect(described_class.matches_category_ids?(subcategory.id, [other_category.id])).to eq(
-        false,
-      )
+    it "expands subcategories by default", :aggregate_failures do
+      expect(node.matches_category_ids?(subcategory.id, [parent_category.id])).to eq(true)
+      expect(node.matches_category_ids?(subcategory.id, [other_category.id])).to eq(false)
     end
 
-    it "matches exactly when include_subcategories is false" do
+    it "matches exactly when include_subcategories is false", :aggregate_failures do
       expect(
-        described_class.matches_category_ids?(
+        node.matches_category_ids?(
           subcategory.id,
           [parent_category.id],
           include_subcategories: false,
         ),
       ).to eq(false)
       expect(
-        described_class.matches_category_ids?(
+        node.matches_category_ids?(
           parent_category.id,
           [parent_category.id],
           include_subcategories: false,
@@ -370,7 +413,7 @@ RSpec.describe DiscourseWorkflows::NodeType do
 
     it "expands subcategories when include_subcategories is nil" do
       expect(
-        described_class.matches_category_ids?(
+        node.matches_category_ids?(
           subcategory.id,
           [parent_category.id],
           include_subcategories: nil,
@@ -380,10 +423,7 @@ RSpec.describe DiscourseWorkflows::NodeType do
 
     it "matches against the union of all configured categories" do
       expect(
-        described_class.matches_category_ids?(
-          subcategory.id,
-          [other_category.id, parent_category.id],
-        ),
+        node.matches_category_ids?(subcategory.id, [other_category.id, parent_category.id]),
       ).to eq(true)
     end
   end

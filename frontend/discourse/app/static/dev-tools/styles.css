@@ -42,35 +42,38 @@
   &.--dragging {
     opacity: 0.5;
   }
+}
 
-  button {
-    background: none;
-    border: none;
-    padding: 5px;
-    color: var(--primary-700);
+.dev-tools-toolbar button,
+.dev-tools-toolbar .dev-tools-toolbar__link {
+  background: none;
+  border: none;
+  padding: 5px;
+  color: var(--primary-700);
+  text-align: center;
+  text-decoration: none;
+
+  .d-icon {
+    color: inherit !important;
+  }
+
+  &:hover:not(.gripper) {
+    background-color: var(--primary-50);
+  }
+
+  &.gripper {
+    cursor: grab;
+    padding-block: 0;
+    border-bottom: 1px dotted var(--primary-low-mid);
+    color: var(--primary-500);
+  }
+
+  &.--active {
+    background-color: var(--primary-100);
+    color: var(--tertiary);
 
     .d-icon {
-      color: inherit !important;
-    }
-
-    &:hover:not(.gripper) {
-      background-color: var(--primary-50);
-    }
-
-    &.gripper {
-      cursor: grab;
-      padding-block: 0;
-      border-bottom: 1px dotted var(--primary-low-mid);
-      color: var(--primary-500);
-    }
-
-    &.--active {
-      background-color: var(--primary-100);
-      color: var(--tertiary);
-
-      .d-icon {
-        font-weight: bold;
-      }
+      font-weight: bold;
     }
   }
 }

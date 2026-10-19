@@ -28,7 +28,7 @@ class UserSilencer
   def silence
     return false if @user.staff?
     hide_posts unless @opts[:keep_posts]
-    return false if @user.silenced_till.present?
+    return false if @user.silenced?
     @user.silenced_till = @opts[:silenced_till] || 1000.years.from_now
     if @user.save
       message_type = @opts[:message] || :silenced_by_staff
@@ -97,6 +97,8 @@ class UserSilencer
   end
 
   def unsilence
+    return false if @user.silenced_till.blank?
+
     @user.silenced_till = nil
     if @user.save
       DiscourseEvent.trigger(:user_unsilenced, user: @user, by_user: @by_user)

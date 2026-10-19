@@ -10,7 +10,6 @@ te:
       admin_dashboard_card:
         no_results: "ఫలితాలు లేవు"
     explorer:
-      default_query: "అప్రమేయ"
       or: "లేదా"
       create: "సృష్టించండి"
       ai:
@@ -24,6 +23,7 @@ te:
           no: "లేదు"
       delete: "తొలగించండి"
       query_groups: "సమూహాలు"
+      query_tags: "ట్యాగులు"
       query_description: "వివరణ"
       query_user: "సృష్టికర్త"
       reset_params: "రీసెట్ చేయండి"

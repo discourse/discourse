@@ -301,6 +301,9 @@ def regenerate_missing_optimized
   missing_uploads = Set.new
 
   avatar_upload_ids = UserAvatar.all.pluck(:custom_upload_id, :gravatar_upload_id).flatten.compact
+  avatar_upload_ids.concat(
+    UserAssociatedAccount.where.not(avatar_upload_id: nil).pluck(:avatar_upload_id),
+  )
 
   default_scope = OptimizedImage.includes(:upload)
 

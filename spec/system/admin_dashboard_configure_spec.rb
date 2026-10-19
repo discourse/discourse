@@ -14,7 +14,7 @@ describe "Admin Dashboard Configure menu" do
     it "applies toggles immediately, persists across reload, and shows an empty state when everything is hidden" do
       dashboard.visit
       expect(dashboard).to have_configure_button
-      %w[highlights reports traffic engagement search].each do |id|
+      %w[highlights reports traffic engagement search system].each do |id|
         expect(dashboard).to have_section(id)
       end
 
@@ -41,13 +41,16 @@ describe "Admin Dashboard Configure menu" do
         .toggle_section("highlights")
         .toggle_section("reports")
         .toggle_section("search")
+        .toggle_section("system")
 
       expect(dashboard).to have_empty_state
     end
 
     it "keeps a section's position when it is toggled off and back on" do
       dashboard.visit
-      expect(dashboard.section_ids_in_order).to eq(%w[highlights reports traffic engagement search])
+      expect(dashboard.section_ids_in_order).to eq(
+        %w[highlights reports traffic engagement search system],
+      )
 
       dashboard.open_configure_menu.toggle_section("highlights")
       expect(dashboard).to have_no_section("highlights")
@@ -56,7 +59,9 @@ describe "Admin Dashboard Configure menu" do
 
       # it reappears in its original slot, not pushed to the bottom
       expect(dashboard).to have_first_section("highlights")
-      expect(dashboard.section_ids_in_order).to eq(%w[highlights reports traffic engagement search])
+      expect(dashboard.section_ids_in_order).to eq(
+        %w[highlights reports traffic engagement search system],
+      )
     end
 
     it "reorders sections via the arrow buttons on mobile", mobile: true do
@@ -67,6 +72,47 @@ describe "Admin Dashboard Configure menu" do
       # reorder applies immediately, without closing the menu
       expect(dashboard).to have_first_section("reports")
       expect(dashboard.section_ids_in_order.first(2)).to eq(%w[reports highlights])
+    end
+
+    # TODO (ui-kit-reorderable-list-cleanup) fold these over the examples above
+    # once the change ships and the arrow buttons are gone.
+    context "when enable_new_reordering_controls is enabled" do
+      before { SiteSetting.enable_new_reordering_controls = true }
+
+      it "reorders sections via the move menu on mobile", mobile: true do
+        dashboard.visit
+
+        dashboard.open_configure_menu.move_section_up_via_list("reports")
+
+        # reorder applies immediately, without closing the menu
+        expect(dashboard).to have_first_section("reports")
+        expect(dashboard.section_ids_in_order.first(2)).to eq(%w[reports highlights])
+      end
+
+      it "shows the drag handle on mobile", mobile: true do
+        # The rendering test only proves the handle is in the DOM. A touch screen
+        # reaches the menu as a modal rather than a popover, so this asserts it is
+        # actually visible there, which is the only thing a finger can act on.
+        dashboard.visit
+        dashboard.open_configure_menu
+
+        expect(page).to have_css(".d-reorderable-list__handle")
+      end
+
+      it "reorders sections with a real browser drag" do
+        dashboard.visit
+        dashboard.open_configure_menu
+
+        # Asserted before the drag: without it, a run where the two are already
+        # in the expected order passes whether or not the drag did anything.
+        expect(dashboard.section_ids_in_order.first(2)).to eq(%w[highlights reports])
+
+        dashboard.drag_section("reports", "highlights")
+
+        try_until_success do
+          expect(dashboard.section_ids_in_order.first(2)).to eq(%w[reports highlights])
+        end
+      end
     end
   end
 

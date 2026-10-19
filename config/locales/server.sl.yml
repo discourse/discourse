@@ -5,6 +5,34 @@
 # https://translate.discourse.org/
 
 sl:
+  markdown_endpoints:
+    latest: "Najnovejše"
+    categories: "Kategorije"
+    tags: "Oznake"
+    previous_page: "Prejšnja stran"
+    next_page: "Naslednja stran"
+    replies: "Odgovori"
+    last_updated: "Zadnjič posodobljeno"
+    event:
+      location: "Lokacija"
+      link: "Povezava"
+  mcp:
+    errors:
+      topic_not_found: "Ne najdemo temo."
+    oauth:
+      deny: "Zavrni"
+  llms_txt:
+    sections:
+      optional: "Neobvezno"
+    links:
+      search:
+        label: "Išči"
+      categories:
+        label: "Kategorije"
+      about:
+        label: "O nas"
+      guidelines:
+        label: "Navodila"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -454,15 +482,14 @@ sl:
     success_unapproved: "Uspešno ste zamenjali geslo."
   email_login:
     title: "Prijava z e-naslovom"
+  browsers:
+    chrome: "Google Chrome"
+    edge: "Microsoft Edge"
+    firefox: "Firefox"
+    ie: "Internet Explorer"
+    opera: "Opera"
+    safari: "Safari"
   user_auth_tokens:
-    browser:
-      chrome: "Google Chrome"
-      edge: "Microsoft Edge"
-      firefox: "Firefox"
-      ie: "Internet Explorer"
-      opera: "Opera"
-      safari: "Safari"
-      unknown: "neznan brskalnik"
     device:
       android: "Android naprava"
       ipad: "iPad"
@@ -480,6 +507,10 @@ sl:
       macos: "macOS"
       windows: "Microsoft Windows"
       unknown: "neznan operacijski sistem"
+  admin_site_traffic_explorer:
+    unknown: "Neznano"
+    traffic_types:
+      anonymous: "Anonimni"
   change_email:
     error: "Prišlo je do napake med spremembo vašega e-naslova. Mogoče je e-naslov že uporabljen?"
     error_staged: "Prišlo je do napake pri menjavi vašega e-naslova. E-naslov je že v uporabi s strani prirejenega uporabnika."
@@ -554,7 +585,7 @@ sl:
   unsubscribed:
     title: "Nastavitve e-pošte spremenjene!"
   unsubscribe:
-    title: "Odjavi"
+    unsubscribe: "Odjavi"
     mute_topic: "Utišaj vsa obvestila za to temo, %{link}"
     log_out: "Odjava"
     submit: "Shrani nastavitve"
@@ -625,6 +656,11 @@ sl:
         share: "Deli"
       types:
         staff: "Osebje"
+    posters_by_member_type_members:
+      labels:
+        user: "Uporabnik"
+        count: "Prispevki"
+        share: "Deli"
     trust_level_pipeline:
       labels:
         count: "Člani"
@@ -682,6 +718,9 @@ sl:
         user: "Uporabnik"
         num_topics: "Tem"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "Obiskov"
+    top_entry_urls:
       labels:
         count: "Obiskov"
     top_referrers_by_browser_pageviews:
@@ -897,6 +936,7 @@ sl:
     password_too_long: "Geslo je omejeno na 200 znakov."
     email_too_long: "Vaš e-naslov je predolg. E-naslov je lahko dolg največ 254 znakov, od tega domena največ 253 znakov."
     reserved_username: "Uporabniško ime ni dovoljeno."
+    missing_username: "Vnesite uporabniško ime"
     auth_complete: "Avtentikacija je končana."
     click_to_continue: "Kliknite tukaj za nadaljevanje."
     second_factor_title: "Preverjanje v dveh korakih"
@@ -1535,9 +1575,6 @@ sl:
     user_posted_pm_staged:
       title: "Uporabnik je objavil ZS prirejeni"
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "Suspendiran račun"
       subject_template: "[%{email_prefix}] Vaš uporabniški račun je bil suspendiran"
@@ -1648,7 +1685,7 @@ sl:
         Član osebja foruma je potrdil vaš račun pri %{site_name}.
 
         Do vašega računa lahko dostopate s prijavo na:
-        %{base_url}
+        %{login_url}
 
         Če zgornja povezava ne deluje, poskusite kopirati povezavo v naslov v vašem spletnem brskalniku.
 
@@ -1951,6 +1988,9 @@ sl:
     resend_email:
       title: "Ponovno pošlji aktivacijsko e-sporočilo"
       message: "<p>Ponovno smo poslali aktivacijsko e-sporočilo na<b>%{email}</b>"
+  design_wizard:
+    palette_pairs:
+      default: "Privzeto"
   wizard:
     title: "Postavitev Discourse"
     step:
@@ -2006,6 +2046,12 @@ sl:
       high: "Visoka"
     missing_version: "Podati morate verzijo parametra"
     conflict: "Prišlo je do konflikta, ki to preprečuje. "
+    reasons:
+      fast_typer_time:
+        one: "%{count} sekunda"
+        two: "%{count} sekundi"
+        few: "%{count} sekunde"
+        other: "%{count} sekund"
     actions:
       agree:
         title: "Ja"
@@ -2065,8 +2111,6 @@ sl:
         title: "Da"
       approve_and_unhide:
         title: "Da"
-      delete_post:
-        complete: "Prispevek izbrisan"
       delete_user:
         complete: "Uporabnik izbrisan"
         reason: "Izbriši preko vrste za pregled"

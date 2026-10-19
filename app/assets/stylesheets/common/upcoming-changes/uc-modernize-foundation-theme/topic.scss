@@ -1,0 +1,5 @@
+:where(.uc-modernize-foundation-theme) {
+  .posts-wrapper {
+    -webkit-font-smoothing: var(--webkit-font-smoothing);
+  }
+}

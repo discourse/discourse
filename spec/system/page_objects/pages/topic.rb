@@ -7,12 +7,17 @@ module PageObjects
         @composer_component = PageObjects::Components::Composer.new
         @fast_edit_component = PageObjects::Components::FastEditor.new
         @topic_map_component = PageObjects::Components::TopicMap.new
+        @topic_timeline_component = PageObjects::Components::TopicTimeline.new
         @private_message_map_component = PageObjects::Components::PrivateMessageMap.new
       end
 
       def visit_topic(topic, post_number: nil)
         visit(topic.url(post_number))
         self
+      end
+
+      def timeline
+        @topic_timeline_component
       end
 
       def open_new_topic

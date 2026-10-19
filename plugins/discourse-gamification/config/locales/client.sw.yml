@@ -36,3 +36,8 @@ sw:
       custom_range_from: "Kutoka"
       admin:
         name: "Jina"
+    discourse_workflows:
+      gamification_score:
+        username: "Mtumiaji"
+        date: "Tarehe"
+        description: "Maelezo"

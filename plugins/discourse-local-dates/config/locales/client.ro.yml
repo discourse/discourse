@@ -22,6 +22,7 @@ ro:
       create:
         form:
           insert: Introdu
+          save: Salvează
           format_description: "Format utilizat pentru a afișa data utilizatorului. Folosește Z pentru a afișa decalajul și zz pentru numele fusului orar."
           timezones_title: Fusuri orare de afișat
           timezones_description: Fusurile orare vor fi utilizate pentru a afișa datele în previzualizare și în rezervă.

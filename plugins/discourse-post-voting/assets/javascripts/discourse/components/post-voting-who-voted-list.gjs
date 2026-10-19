@@ -10,7 +10,7 @@ import DSmallUserList, {
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { whoVoted } from "../lib/post-voting-utilities";
+import { whoVoted } from "../lib/post-voting-utilities.js";
 
 export default class PostVotingWhoVotedList extends Component {
   @tracked totalVotersCount = 0;
@@ -56,12 +56,12 @@ export default class PostVotingWhoVotedList extends Component {
       <:content as |voters|>
         {{#let (this.splitUpAndDownLists voters) as |splitVoters|}}
           <PostVotingSmallUserList
-            @list={{get splitVoters "up"}}
             @direction="up"
+            @list={{get splitVoters "up"}}
           />
           <PostVotingSmallUserList
-            @list={{get splitVoters "down"}}
             @direction="down"
+            @list={{get splitVoters "down"}}
           />
         {{/let}}
         {{#let (this.calcRemainingCount voters) as |remainingCount|}}
@@ -83,12 +83,12 @@ const PostVotingSmallUserList = <template>
   {{#if @list}}
     <div class="post-voting-popup-content__wrapper">
       <span
+        aria-label={{i18n
+          (if (eq @direction "up") "vote.upvotes" "vote.downvotes")
+        }}
         class={{dConcatClass
           "post-voting-popup-content__icon"
           (if (eq @direction "up") "--upvote" "--downvote")
-        }}
-        aria-label={{i18n
-          (if (eq @direction "up") "vote.upvotes" "vote.downvotes")
         }}
       >
         {{dIcon "vote-up-filled"}}

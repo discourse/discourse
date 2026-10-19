@@ -12,11 +12,27 @@ module Chat
     MATCH_QUALITY_PREFIX = 2
     MATCH_QUALITY_PARTIAL = 3
 
+    DEFAULT_MATCH_QUALITY_SELECT = "chat_channels.*, #{MATCH_QUALITY_PARTIAL} AS match_quality"
+
     def self.structured(guardian, include_threads: false)
       memberships = guardian.user ? Chat::ChannelMembershipManager.all_for_user(guardian.user) : []
+
       public_channels = secured_public_channels(guardian, status: :open, following: true)
-      direct_message_channels =
-        guardian.user ? secured_direct_message_channels(guardian.user.id, guardian) : []
+      direct_message_channels = []
+
+      if guardian.user
+        direct_message_channels = secured_direct_message_channels(guardian.user.id, guardian)
+
+        if public_channels.size == MAX_PUBLIC_CHANNEL_RESULTS
+          public_channels |= secured_starred_public_channels(guardian)
+        end
+
+        if direct_message_channels.size == MAX_DM_CHANNEL_RESULTS
+          direct_message_channels |=
+            secured_starred_direct_message_channels(guardian.user.id, guardian)
+        end
+      end
+
       {
         public_channels:,
         direct_message_channels:,
@@ -104,7 +120,7 @@ module Chat
 
       channels =
         Chat::Channel.includes(
-          :last_message,
+          last_message: [:uploads],
           chatable: %i[
             topic_only_relative_url
             uploaded_background
@@ -157,7 +173,7 @@ module Chat
               filter: filter_sql,
             )
 
-          channels = channels.select("chat_channels.*, #{MATCH_QUALITY_PARTIAL} AS match_quality")
+          channels = channels.select(DEFAULT_MATCH_QUALITY_SELECT)
           channels = channels.order("chat_channels.name ASC, categories.name ASC")
         else
           escaped_exact = Chat::Channel.connection.quote(filter_term)
@@ -195,7 +211,7 @@ module Chat
             channels.order("match_quality ASC, chat_channels.name ASC, categories.name ASC")
         end
       else
-        channels = channels.select("chat_channels.*, #{MATCH_QUALITY_PARTIAL} AS match_quality")
+        channels = channels.select(DEFAULT_MATCH_QUALITY_SELECT)
         channels = channels.order("LOWER(chat_channels.name) ASC")
       end
 
@@ -212,6 +228,10 @@ module Chat
                 following: true,
               },
             )
+
+          if options[:starred]
+            channels = channels.where(user_chat_channel_memberships: { starred: true })
+          end
         else
           channels =
             channels.where(
@@ -228,6 +248,10 @@ module Chat
       options[:offset] = [options[:offset].to_i, 0].max
 
       channels.limit(options[:limit]).offset(options[:offset])
+    end
+
+    def self.secured_starred_public_channels(guardian)
+      secured_public_channels(guardian, status: :open, following: true, starred: true)
     end
 
     def self.secured_public_channels(guardian, options = { following: true })
@@ -254,6 +278,10 @@ module Chat
 
     def self.secured_direct_message_channels(user_id, guardian)
       secured_direct_message_channels_search(user_id, guardian, following: true)
+    end
+
+    def self.secured_starred_direct_message_channels(user_id, guardian)
+      secured_direct_message_channels_search(user_id, guardian, following: true, starred: true)
     end
 
     def self.secured_direct_message_channels_search(user_id, guardian, options = {})
@@ -317,12 +345,13 @@ module Chat
 
         query = query.select(select_sql)
       else
-        query = query.select("chat_channels.*, #{MATCH_QUALITY_PARTIAL} AS match_quality")
+        query = query.select(DEFAULT_MATCH_QUALITY_SELECT)
       end
 
       if options.key?(:following)
         following_params = { user_id: }
         following_params[:following] = options[:following] if options[:following].present?
+        following_params[:starred] = true if options[:starred]
         query =
           query.joins(:user_chat_channel_memberships).where(
             user_chat_channel_memberships: following_params,

@@ -24,7 +24,6 @@ he:
       answer_count:
         one: "תשובה %{count}"
         two: "%{count} תשובות"
-        many: "%{count} תשובות"
         other: "%{count} תשובות"
   site_settings:
     qa_tags: "תגיות להפעלת שו\"ת על נושא"
@@ -78,7 +77,6 @@ he:
       undo_vote_action_window:
         one: "אי אפשר לבטל הצבעה דקה %{count} לאחר ההצבעה."
         two: "אי אפשר לבטל הצבעה %{count} דקות לאחר ההצבעה."
-        many: "אי אפשר לבטל הצבעה %{count} דקות לאחר ההצבעה."
         other: "אי אפשר לבטל הצבעה %{count} דקות לאחר ההצבעה."
       one_vote_per_post: "אפשר להצביע רק פעם אחת לכל פוסט."
       one_vote_per_comment: "אפשר להצביע רק פעם אחת לכל תגובה."

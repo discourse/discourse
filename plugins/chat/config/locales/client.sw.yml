@@ -116,6 +116,11 @@ sw:
         sort:
           relevance: "Umuhimu"
           latest: "Hivi Karibuni"
+      channel_list:
+        options:
+          filter: "Ichujwe"
+        filter:
+          mentions: "Kutajwa"
       incoming_webhooks:
         back: "Iliyopita"
         description: "Elezo"
@@ -168,8 +173,14 @@ sw:
       chat_message_created:
         channel_id: "Chaneli"
       send_chat_message:
+        targets:
+          channel: "Chaneli"
         channel_id: "Chaneli"
         message: "Ujumbe"
       chat_approval:
         message: "Ujumbe"
+        value: "Thamani"
+        style_default: "Halisi"
+        style_success: "Mafanikio"
+        icon: "ikoni"
         channel_id: "Chaneli"

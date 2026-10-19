@@ -361,6 +361,7 @@ acceptance(
         .hasAttribute("href", "3.css", "correct stylesheet loaded");
 
       document.querySelector("link#cs-preview-light").remove();
+      document.querySelector("link#cs-preview-dark").remove();
 
       await visit("/u/charlie/preferences/interface");
 

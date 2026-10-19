@@ -28,7 +28,7 @@ RSpec.describe Wizard::StepUpdater do
       expect(wizard.completed_steps?("setup")).to eq(true)
     end
 
-    it "won't allow updates to the default value when required" do
+    it "prevents updates to a required default value" do
       updater =
         wizard.create_updater(
           "setup",

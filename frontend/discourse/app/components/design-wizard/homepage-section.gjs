@@ -1,5 +1,6 @@
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import OptionRow from "discourse/components/design-wizard/option-row";
 import { HORIZON_THEME_ID } from "discourse/lib/theme-selector";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -107,11 +108,11 @@ const CategoryStyleMock = <template>
 const DesignWizardHomepageSection = <template>
   <div class="design-wizard__homepage-cards">
     <button
-      type="button"
+      aria-pressed={{if (eq @homepage "categories") "false" "true"}}
       class="design-wizard__homepage-card
         {{unless (eq @homepage 'categories') '--selected'}}"
-      aria-pressed={{if (eq @homepage "categories") "false" "true"}}
       data-homepage="topics"
+      type="button"
       {{on "click" (fn @onSelectHomepage "latest")}}
     >
       <span
@@ -123,11 +124,11 @@ const DesignWizardHomepageSection = <template>
       {{i18n "design_wizard.homepage.topics"}}
     </button>
     <button
-      type="button"
+      aria-pressed={{if (eq @homepage "categories") "true" "false"}}
       class="design-wizard__homepage-card
         {{if (eq @homepage 'categories') '--selected'}}"
-      aria-pressed={{if (eq @homepage "categories") "true" "false"}}
       data-homepage="categories"
+      type="button"
       {{on "click" (fn @onSelectHomepage "categories")}}
     >
       <span class="design-wizard__homepage-thumbnail --categories">
@@ -138,7 +139,7 @@ const DesignWizardHomepageSection = <template>
   </div>
 
   {{#if (eq @homepage "categories")}}
-    <div class="design-wizard__homepage-detail">
+    <div class="design-wizard__detail-group">
       <span class="design-wizard__label">
         {{i18n "design_wizard.homepage.category_page_style"}}
       </span>
@@ -146,11 +147,11 @@ const DesignWizardHomepageSection = <template>
         {{#let (categoryStyleKind @categoryPageStyle) as |selectedKind|}}
           {{#each CATEGORY_STYLE_OPTIONS as |option|}}
             <button
-              type="button"
+              aria-pressed={{if (eq selectedKind option.kind) "true" "false"}}
               class="design-wizard__style-block
                 {{if (eq selectedKind option.kind) '--selected'}}"
-              aria-pressed={{if (eq selectedKind option.kind) "true" "false"}}
               data-style={{option.value}}
+              type="button"
               {{on "click" (fn @onSelectCategoryPageStyle option.value)}}
             >
               <span
@@ -166,29 +167,19 @@ const DesignWizardHomepageSection = <template>
       </div>
     </div>
   {{else}}
-    <div class="design-wizard__homepage-detail">
+    <div class="design-wizard__detail-group">
       <span class="design-wizard__label">
         {{i18n "design_wizard.homepage.topic_page_type"}}
       </span>
-      <div class="design-wizard__topic-page-options">
+      <div class="design-wizard__option-rows">
         {{#each TOPIC_PAGES as |page|}}
-          <button
-            type="button"
-            class="design-wizard__topic-page-option
-              {{if (eq page @homepage) '--selected'}}"
-            aria-pressed={{if (eq page @homepage) "true" "false"}}
+          <OptionRow
             data-topic-page={{page}}
-            {{on "click" (fn @onSelectHomepage page)}}
-          >
-            <span class="design-wizard__topic-page-option-texts">
-              <span class="design-wizard__topic-page-option-label">
-                {{topicPageLabel page}}
-              </span>
-              <span class="design-wizard__topic-page-option-description">
-                {{topicPageDescription page}}
-              </span>
-            </span>
-          </button>
+            @description={{topicPageDescription page}}
+            @label={{topicPageLabel page}}
+            @onSelect={{fn @onSelectHomepage page}}
+            @selected={{eq page @homepage}}
+          />
         {{/each}}
       </div>
     </div>

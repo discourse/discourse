@@ -5,7 +5,7 @@ describe "Editing topic timers" do
   fab!(:topic) { post.topic }
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
-  let(:timer_type_selector) { PageObjects::Components::DSelect.new(".timer-type") }
+  let(:timer_type_selector) { PageObjects::Components::DNativeSelect.new(".timer-type") }
 
   before { sign_in(admin) }
 

@@ -9,7 +9,7 @@ ur:
     admin:
       site_settings:
         categories:
-          spoiler_alert: "ڈسکورس سپوئلر الرٹ"
+          spoiler_alert: "Discourse اسپوئلر الرٹ"
   js:
     spoiler:
       title: دھندلا اسپوئلر

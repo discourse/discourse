@@ -17,6 +17,8 @@ import { i18n } from "discourse-i18n";
 const UP = "up";
 const DOWN = "down";
 
+// TODO (ui-kit-reorderable-list-cleanup) delete this file once
+// `enable_new_reordering_controls` ships; `edit-user-directory-columns-reorderable.gjs` replaces it.
 export default class EditUserDirectoryColumns extends Component {
   @tracked loading = true;
   @tracked columns;
@@ -114,10 +116,10 @@ export default class EditUserDirectoryColumns extends Component {
 
   <template>
     <DModal
-      @closeModal={{@closeModal}}
-      @title={{i18n "directory.edit_columns.title"}}
       class="edit-user-directory-columns-modal"
+      @closeModal={{@closeModal}}
       @flash={{this.flash}}
+      @title={{i18n "directory.edit_columns.title"}}
     >
       <:body>
         {{#if this.loading}}
@@ -128,7 +130,7 @@ export default class EditUserDirectoryColumns extends Component {
               <div class="edit-directory-column">
                 <div class="left-content">
                   <label class="column-name">
-                    <Input @type="checkbox" @checked={{column.enabled}} />
+                    <Input @checked={{column.enabled}} @type="checkbox" />
                     {{#if (directoryColumnIsAutomatic column=column)}}
                       {{directoryTableHeaderTitle
                         field=column.name
@@ -149,14 +151,14 @@ export default class EditUserDirectoryColumns extends Component {
                 </div>
                 <div class="right-content">
                   <DButton
-                    @icon="arrow-up"
-                    @action={{fn this.moveUp column}}
                     class="btn-default button-secondary move-column-up"
+                    @action={{fn this.moveUp column}}
+                    @icon="arrow-up"
                   />
                   <DButton
-                    @icon="arrow-down"
-                    @action={{fn this.moveDown column}}
                     class="btn-default button-secondary move-column-down"
+                    @action={{fn this.moveDown column}}
+                    @icon="arrow-down"
                   />
                 </div>
               </div>
@@ -166,14 +168,14 @@ export default class EditUserDirectoryColumns extends Component {
       </:body>
       <:footer>
         <DButton
-          @label="directory.edit_columns.save"
-          @action={{this.save}}
           class="btn-primary"
+          @action={{this.save}}
+          @label="directory.edit_columns.save"
         />
         <DButton
-          @label="directory.edit_columns.reset_to_default"
+          class="btn-default reset-to-default"
           @action={{this.resetToDefault}}
-          class="btn-default btn-secondary reset-to-default"
+          @label="directory.edit_columns.reset_to_default"
         />
       </:footer>
     </DModal>

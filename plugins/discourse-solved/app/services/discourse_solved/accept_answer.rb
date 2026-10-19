@@ -202,10 +202,10 @@ class DiscourseSolved::AcceptAnswer
   end
 
   def find_or_create_solved_topic(topic:)
-    DiscourseSolved::SolvedTopic.find_or_create_by!(topic:)
+    DiscourseSolved::SolvedTopic.find_or_create_by(topic:)
   end
 
   def create_topic_answer(solved_topic:, post:, guardian:)
-    DiscourseSolved::TopicAnswer.create!(solved_topic:, post:, accepter: guardian.user)
+    DiscourseSolved::TopicAnswer.create(solved_topic:, post:, accepter: guardian.user)
   end
 end

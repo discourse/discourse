@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -9,6 +8,10 @@ import ReviewableNoteForm from "discourse/components/reviewable/note-form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import escape from "discourse/lib/escape";
+import {
+  penaltyIcon,
+  penaltyPastTense,
+} from "discourse/lib/reviewable-penalty";
 import { sanitize } from "discourse/lib/text";
 import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
 import { and, eq } from "discourse/truth-helpers";
@@ -22,6 +25,11 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 /**
+ * @typedef {{ id: number, username: string, avatar_template: string, name?: string | null }} ReviewableTimelineUser
+ * @typedef {{ id: number, content: string, cooked?: string | null, created_at: string, updated_at: string, user?: ReviewableTimelineUser | null }} ReviewableNoteData
+ * @typedef {{ type: string, date: string, user: ReviewableTimelineUser | null | undefined, icon: string, titleKey?: string, description?: import("@ember/template").TrustedHTML | null, score?: { count: number, type: string, title: string }, noteId?: number, canDelete?: boolean | null }} ReviewableTimelineEvent
+ */
+/**
  * Timeline component for reviewable items that displays chronological events
  * including flags, reviews, notes, and target post creation.
  *
@@ -31,23 +39,10 @@ export default class ReviewableTimeline extends Component {
   @service currentUser;
 
   /**
-   * Array of notes associated with the reviewable
-   *
-   * @type {Array<ReviewableNote>}
-   */
-  @tracked reviewableNotes = [];
-
-  constructor() {
-    super(...arguments);
-
-    this.reviewableNotes = this.args.reviewable.reviewable_notes || [];
-  }
-
-  /**
    * Combines all timeline events from reviewable scores, histories, and the reviewable itself
    * and sorts them chronologically.
    *
-   * @returns {Array<Object>} Array of timeline event objects sorted by date (newest first)
+   * @returns {ReviewableTimelineEvent[]} Array of timeline event objects sorted by date (newest first)
    */
   get timelineEvents() {
     const events = [];
@@ -156,8 +151,27 @@ export default class ReviewableTimeline extends Component {
       });
     }
 
+    this.args.reviewable.author_penalties?.forEach((penalty) => {
+      if (!penalty.from_this_target || !penalty.applied_at) {
+        return;
+      }
+
+      events.push({
+        type: `author_${penaltyPastTense(penalty.kind)}`,
+        date: penalty.applied_at,
+        user: penalty.applied_by,
+        icon: penaltyIcon(penalty.kind),
+        titleKey: penalty.automatic
+          ? `review.timeline.author_${penaltyPastTense(penalty.kind)}_automatically`
+          : `review.timeline.author_${penaltyPastTense(penalty.kind)}_by`,
+        description: penalty.reason
+          ? trustHTML(sanitize(penalty.reason))
+          : null,
+      });
+    });
+
     // Add notes events
-    this.reviewableNotes.forEach((note) => {
+    this.args.reviewable.reviewable_notes?.forEach((note) => {
       const date = note.created_at;
       events.push({
         type: "note",
@@ -165,7 +179,7 @@ export default class ReviewableTimeline extends Component {
         user: note.user,
         icon: "far-pen-to-square",
         titleKey: "review.timeline.note_added_by",
-        description: trustHTML(`<p>${escape(note.content)}</p>`),
+        description: trustHTML(note.cooked ?? `<p>${escape(note.content)}</p>`),
         noteId: note.id,
         canDelete:
           this.currentUser &&
@@ -200,7 +214,7 @@ export default class ReviewableTimeline extends Component {
   /**
    * Handles creation of a new note.
    *
-   * @param {Object} noteData - The created note data from the server
+   * @param {ReviewableNoteData} noteData - The created note data from the server
    */
   @action
   onNoteCreated(noteData) {
@@ -209,8 +223,7 @@ export default class ReviewableTimeline extends Component {
       noteData.user = this.currentUser;
     }
 
-    this.reviewableNotes = [...this.reviewableNotes, noteData];
-    this.args.reviewable.reviewable_notes = this.reviewableNotes;
+    this.args.reviewable.reviewable_notes.push(noteData);
   }
 
   /**
@@ -225,8 +238,8 @@ export default class ReviewableTimeline extends Component {
         type: "DELETE",
       });
 
-      // Remove the note from the local array
-      this.reviewableNotes = this.reviewableNotes.filter(
+      const { reviewable } = this.args;
+      reviewable.reviewable_notes = reviewable.reviewable_notes.filter(
         (note) => note.id !== noteId
       );
     } catch (error) {
@@ -271,7 +284,11 @@ export default class ReviewableTimeline extends Component {
                     </div>
                     {{#if event.description}}
                       <DDecoratedHtml
-                        @className="timeline-event__description"
+                        @className={{if
+                          (eq event.type "note")
+                          "timeline-event__description --note"
+                          "timeline-event__description"
+                        }}
                         @html={{event.description}}
                       />
                     {{/if}}
@@ -280,10 +297,10 @@ export default class ReviewableTimeline extends Component {
                   {{#if (and (eq event.type "note") event.canDelete)}}
                     <div class="timeline-event__actions">
                       <DButton
+                        class="btn-transparent --danger timeline-event__delete-note btn-transparent"
+                        @action={{fn this.deleteNote event.noteId}}
                         @icon="trash-can"
                         @title="review.notes.delete_note"
-                        @action={{fn this.deleteNote event.noteId}}
-                        class="btn-transparent --danger timeline-event__delete-note btn-transparent"
                       />
                     </div>
                   {{/if}}
@@ -304,8 +321,8 @@ export default class ReviewableTimeline extends Component {
         </div>
       {{/if}}
       <ReviewableNoteForm
-        @reviewable={{@reviewable}}
         @onNoteCreated={{this.onNoteCreated}}
+        @reviewable={{@reviewable}}
       />
     </div>
   </template>

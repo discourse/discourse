@@ -4,12 +4,7 @@ class ReviewableQueuedPost < Reviewable
   include ReviewableActionBuilder
 
   def self.action_aliases
-    {
-      discard_post: :reject_post,
-      reject_and_silence: :reject_post,
-      reject_and_suspend: :reject_post,
-      delete_user_block: :delete_and_block_user,
-    }
+    { discard_post: :reject_post, delete_user_block: :delete_and_block_user }
   end
 
   after_create do
@@ -27,13 +22,14 @@ class ReviewableQueuedPost < Reviewable
   after_commit :compute_user_stats, only: %i[create update]
 
   def self.additional_args(params)
-    return {} if params[:revise_reason].blank?
+    args = ReviewableActionBuilder.penalty_args(params)
+    return args if params[:revise_reason].blank?
 
-    {
+    args.merge(
       revise_reason: params[:revise_reason],
       revise_feedback: params[:revise_feedback],
       revise_custom_reason: params[:revise_custom_reason],
-    }
+    )
   end
 
   def build_combined_actions(actions, guardian, args)
@@ -155,6 +151,20 @@ class ReviewableQueuedPost < Reviewable
     perform_approve_post(performed_by, args)
   end
 
+  def perform_reject_and_suspend(performed_by, args)
+    result = suspend_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_reject_post(performed_by, args)
+  end
+
+  def perform_reject_and_silence(performed_by, args)
+    result = silence_user(performed_by:, args:)
+    return result unless result.success?
+
+    perform_reject_post(performed_by, args)
+  end
+
   def perform_reject_post(performed_by, args)
     # Backwards compatibility, new code should listen for `reviewable_transitioned_to`
     DiscourseEvent.trigger(:rejected_post, self)
@@ -209,20 +219,89 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    reviewable_ids = Reviewable.where(created_by: target_created_by).pluck(:id)
-    result = super { |r| r.remove_reviewable_ids += reviewable_ids }
+    user = target_created_by
+    reviewable_ids = Reviewable.where(created_by: user).pluck(:id)
+
+    result =
+      super do |result|
+        result.deleted_user = user
+        result.remove_reviewable_ids += reviewable_ids
+      end
+
     update_column(:target_created_by_id, nil)
     result
   end
 
   def perform_delete_and_block_user(performed_by, args)
-    reviewable_ids = Reviewable.where(created_by: target_created_by).pluck(:id)
-    result = super { |r| r.remove_reviewable_ids += reviewable_ids }
+    user = target_created_by
+    reviewable_ids = Reviewable.where(created_by: user).pluck(:id)
+
+    result =
+      super do |result|
+        result.deleted_user = user
+        result.remove_reviewable_ids += reviewable_ids
+      end
+
     update_column(:target_created_by_id, nil)
     result
   end
 
   private
+
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    case action_id
+    when :reject_post, :revise_and_reject_post, :discard_post
+      {
+        decision_facts: "The post was held for approval and rejected before publication.",
+        decision_visibility: ["DECISION_VISIBILITY_CONTENT_DISABLED"],
+        content_type: ["CONTENT_TYPE_TEXT"],
+        content_date: created_at.to_date.iso8601,
+        automated_detection:,
+        automated_decision:,
+      }
+    when :reject_and_suspend
+      user = target_created_by.reload
+
+      {
+        decision_facts: "The author of a post held for approval was suspended.",
+        decision_account: "DECISION_ACCOUNT_SUSPENDED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_account_restriction:
+          (user.suspended_till.to_date.iso8601 unless user.suspended_forever?),
+        automated_detection:,
+        automated_decision:,
+      }.compact
+    when :reject_and_silence
+      user = target_created_by.reload
+
+      {
+        decision_facts:
+          "The author of a post held for approval had their ability to participate restricted.",
+        decision_provision: "DECISION_PROVISION_PARTIAL_SUSPENSION",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        end_date_service_restriction:
+          (user.silenced_till.to_date.iso8601 unless user.silenced_forever?),
+        automated_detection:,
+        automated_decision:,
+      }.compact
+    when :delete_user, :delete_and_block_user, :delete_user_block
+      user = result.deleted_user
+
+      {
+        decision_facts: "The author of a post held for approval had their account deleted.",
+        decision_account: "DECISION_ACCOUNT_TERMINATED",
+        content_type: ["CONTENT_TYPE_OTHER"],
+        content_type_other: "User account",
+        content_date: user.created_at.to_date.iso8601,
+        automated_detection:,
+        automated_decision:,
+      }
+    end
+  end
 
   def delete_opts
     {
@@ -271,11 +350,12 @@ end
 #
 # Indexes
 #
-#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
+#  idx_reviewables_score_desc_created_at_desc                  (score DESC,created_at DESC)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)
 #  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_target_created_by_id                   (target_created_by_id)
 #  index_reviewables_on_target_id_where_post_type_eq_post      (target_id) WHERE ((target_type)::text = 'Post'::text)
 #  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
 #  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE

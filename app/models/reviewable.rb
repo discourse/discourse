@@ -34,6 +34,7 @@ class Reviewable < ActiveRecord::Base
   has_many :reviewable_histories, dependent: :destroy
   has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
   has_many :reviewable_notes, -> { order(created_at: :asc) }, dependent: :destroy
+  has_many :dsa_statement_of_records
 
   enum :status, { pending: 0, approved: 1, rejected: 2, ignored: 3, deleted: 4 }
 
@@ -70,8 +71,18 @@ class Reviewable < ActiveRecord::Base
     where("score >= ?", min_score_for_priority)
   end
 
+  def self.sti_class_for(type_name)
+    super
+  rescue ActiveRecord::SubclassNotFound
+    Reviewable::UnknownType
+  end
+
   def self.valid_type?(type)
     type.to_s.safe_constantize.in?(types)
+  end
+
+  def self.valid_filter_type?(type)
+    valid_type?(type) || custom_filter_type_options.any? { |option| option[:id].to_s == type.to_s }
   end
 
   def self.types
@@ -100,16 +111,52 @@ class Reviewable < ActiveRecord::Base
     @reviewable_filters ||= []
   end
 
-  def self.add_custom_filter(new_filter)
+  def self.custom_filter_type_options
+    (@reviewable_filter_type_options || []) | DiscoursePluginRegistry.reviewable_filter_type_options
+  end
+
+  def self.custom_reason_filter_options
+    registrations =
+      (@reviewable_reason_filter_options || []) |
+        DiscoursePluginRegistry.reviewable_filter_reason_registrations
+
+    registrations.flat_map do |registration|
+      options = registration[:options]
+      options = options.call if options.respond_to?(:call)
+
+      Array(options).map { |option| option.merge(filter: registration[:filter]) }
+    end
+  end
+
+  def self.add_custom_filter(new_filter, type_filter: nil, reason_filters: nil)
     custom_filters << new_filter
+    if type_filter
+      (@reviewable_filter_type_options ||= []) << type_filter.merge(filter: new_filter.first)
+    end
+    if reason_filters
+      (@reviewable_reason_filter_options ||= []) << {
+        filter: new_filter.first,
+        options: reason_filters,
+      }
+    end
   end
 
   def self.clear_custom_filters!
     @reviewable_filters = []
+    @reviewable_filter_type_options = []
+    @reviewable_reason_filter_options = []
   end
 
   def set_type_source
     self.type_source = Reviewable.source_for(type)
+  end
+
+  def title_for_notification(user)
+    topic&.title.presence || payload&.dig("title").presence ||
+      I18n.t(
+        topic_id ? "js.review.topics.deleted" : "js.review.title",
+        locale: user.effective_locale,
+      )
   end
 
   def created_new!
@@ -304,10 +351,23 @@ class Reviewable < ActiveRecord::Base
     )
   end
 
+  def self.preload_author_penalties(reviewables)
+    histories = reviewables.flat_map(&:author_penalties).filter_map(&:history)
+    return if histories.empty?
+
+    ActiveRecord::Associations::Preloader.new(records: histories, associations: :acting_user).call
+  end
+
+  def author_penalties
+    @author_penalties ||= AuthorPenalty.all_for(target_created_by, target_post:, reviewable_id: id)
+  end
+
   def actions_for(guardian, args = nil)
     args ||= {}
-    built_actions =
-      Actions.new(self, guardian).tap { |actions| build_actions(actions, guardian, args) }
+    built_actions = Actions.new(self, guardian)
+    return built_actions if !can_review_target?(guardian)
+
+    build_actions(built_actions, guardian, args)
 
     # Empty bundles can cause big issues on the client side, so we remove them
     # here. It's not valid anyway to have a bundle with no actions, but you can
@@ -335,6 +395,7 @@ class Reviewable < ActiveRecord::Base
 
   def update_fields(params, performed_by, version: nil)
     return true if params.blank?
+    raise Discourse::InvalidAccess if !can_review_target?(performed_by.guardian)
 
     (params[:payload] || {}).each { |k, v| payload[k] = v }
     self.category_id = params[:category_id] if params.has_key?(:category_id)
@@ -376,6 +437,33 @@ class Reviewable < ActiveRecord::Base
       update_count = transition_to(result.transition_to, performed_by) if result.transition_to
       update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
       recalculate_score if result.recalculate_score
+
+      if SiteSetting.dsa_reporting_enabled
+        attributes =
+          dsa_statement_attributes(
+            action_id:,
+            result:,
+            automated_detection: dsa_automated_detection,
+            automated_decision:
+              dsa_automated_decision(
+                performed_by:,
+                decision_automation: args[:decision_automation],
+              ),
+          )
+
+        if attributes
+          DsaStatementOfRecord.create!(
+            reviewable_id: id,
+            payload:
+              attributes.merge(
+                application_date: Date.current.iso8601,
+                territorial_scope: DsaStatementOfRecord::TERRITORIAL_SCOPE,
+                source_type: "SOURCE_VOLUNTARY",
+                decision_ground: "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+              ),
+          )
+        end
+      end
     end
 
     result.after_commit.call if result && result.after_commit
@@ -384,18 +472,19 @@ class Reviewable < ActiveRecord::Base
       result.affected_reviewable_ids |= resolved_reviewable_ids(affected_candidate_ids)
     end
 
-    unless status == :pending
-      if update_count || result.remove_reviewable_ids.present?
-        Jobs.enqueue(
-          :notify_reviewable,
-          reviewable_id: id,
-          performing_username: performed_by.username,
-          updated_reviewable_ids: result.remove_reviewable_ids,
-        )
-      end
+    # An action that leaves the reviewable pending didn't resolve it, so it stays in the queue.
+    result.remove_reviewable_ids -= [id] if pending?
 
-      notify_users(result, guardian)
+    if update_count || result.remove_reviewable_ids.present?
+      Jobs.enqueue(
+        :notify_reviewable,
+        reviewable_id: id,
+        performing_username: performed_by.username,
+        updated_reviewable_ids: result.remove_reviewable_ids,
+      )
     end
+
+    notify_users(result, guardian)
 
     result
   end
@@ -407,6 +496,12 @@ class Reviewable < ActiveRecord::Base
   end
 
   def transition_to(status_symbol, performed_by)
+    # Claims are held per topic, so one left behind would claim the topic's next reviewable.
+    # Released while still pending so the unclaim is recorded on this reviewable's timeline.
+    if topic_id && pending? && status_symbol.to_sym != :pending
+      ReviewableClaimedTopic.release_manual_claim(topic_id, performed_by)
+    end
+
     self.status = status_symbol
     save!
 
@@ -431,8 +526,13 @@ class Reviewable < ActiveRecord::Base
       .each { |r| r.perform(performed_by, action, args) }
   end
 
+  def self.with_deleted_content
+    Post.unscoped { Topic.unscoped { PostAction.unscoped { yield } } }
+  end
+
   def self.viewable_by(user, order: nil, preload: true)
     return none if user.blank?
+    return none if !user.staff? && !user.category_group_moderator?
 
     result = self.order(order || "reviewables.score desc, reviewables.created_at desc")
 
@@ -480,15 +580,29 @@ class Reviewable < ActiveRecord::Base
         )
         .where(
           "reviewables.category_id IS NULL OR reviewables.category_id IN (?)",
-          Guardian.new(user).allowed_category_ids,
+          user.guardian.allowed_category_ids,
         )
 
-    exclude_private_messages_hidden_from(result, user)
+    result = exclude_private_messages_hidden_from(result, user)
+    visible_target =
+      user.guardian.reviewable_post_scope.where("posts.id = reviewable_target.id").select(1)
+
+    result.where(<<~SQL)
+      NOT EXISTS (
+        SELECT 1 FROM posts reviewable_target
+        WHERE reviewables.target_type = 'Post'
+          AND reviewable_target.id = reviewables.target_id
+          AND NOT EXISTS (#{visible_target.to_sql})
+      )
+    SQL
   end
 
   def self.exclude_private_messages_hidden_from(result, user)
-    visible_private_message_ids =
-      Guardian.new(user).private_message_topic_scope(Topic.unscoped).select(:id)
+    visible_private_message =
+      user
+        .guardian
+        .private_message_topic_scope(Topic.unscoped.where("topics.id = private_message.id"))
+        .select(1)
 
     result.where(<<~SQL, private_message: Archetype.private_message)
         NOT EXISTS (
@@ -496,7 +610,7 @@ class Reviewable < ActiveRecord::Base
           FROM topics private_message
           WHERE private_message.id = reviewables.topic_id
             AND private_message.archetype = :private_message
-            AND private_message.id NOT IN (#{visible_private_message_ids.to_sql})
+            AND NOT EXISTS (#{visible_private_message.to_sql})
         )
       SQL
   end
@@ -553,7 +667,14 @@ class Reviewable < ActiveRecord::Base
     result = viewable_by(user, order: order, preload: preload)
     result = by_status(result, status)
     result = result.where(id: ids) if ids
-    result = result.where("reviewables.type = ?", Reviewable.sti_class_for(type).sti_name) if type
+    if type
+      custom_type = custom_filter_type_options.find { |option| option[:id].to_s == type.to_s }
+      if custom_type
+        result = apply_custom_filter(result, custom_type[:filter], custom_type[:value])
+      else
+        result = result.where("reviewables.type = ?", Reviewable.sti_class_for(type).sti_name)
+      end
+    end
     result = result.where("reviewables.category_id = ?", category_id) if category_id
     result = result.where("reviewables.topic_id = ?", topic_id) if topic_id
     result = result.where("reviewables.created_at >= ?", from_date) if from_date
@@ -571,13 +692,19 @@ class Reviewable < ActiveRecord::Base
     end
 
     if score_type
-      score_type = score_type.to_i
-      result = result.where(<<~SQL, score_type: score_type)
-      EXISTS(
-        SELECT 1 FROM reviewable_scores
-        WHERE reviewable_scores.reviewable_id = reviewables.id AND reviewable_scores.reviewable_score_type = :score_type
-      )
-      SQL
+      custom_score_type =
+        custom_reason_filter_options.find { |option| option[:id].to_s == score_type.to_s }
+      if custom_score_type
+        result = apply_custom_filter(result, custom_score_type[:filter], custom_score_type[:value])
+      else
+        score_type = score_type.to_i
+        result = result.where(<<~SQL, score_type: score_type)
+          EXISTS(
+            SELECT 1 FROM reviewable_scores
+            WHERE reviewable_scores.reviewable_id = reviewables.id AND reviewable_scores.reviewable_score_type = :score_type
+          )
+        SQL
+      end
     end
 
     if reviewed_by
@@ -620,7 +747,7 @@ class Reviewable < ActiveRecord::Base
           filter_query = filter.last
 
           next(memo) unless additional_filters[key]
-          filter_query.call(result, additional_filters[key])
+          filter_query.call(memo, additional_filters[key])
         end
     end
 
@@ -646,6 +773,12 @@ class Reviewable < ActiveRecord::Base
     result = result.offset(offset) if offset
     result
   end
+
+  def self.apply_custom_filter(result, key, value)
+    filter = custom_filters.find { |registered_filter| registered_filter.first == key }
+    filter ? filter.last.call(result, value) : result
+  end
+  private_class_method :apply_custom_filter
 
   def self.unseen_list_for(user, preload: true, limit: nil)
     results = list_for(user, preload: preload, limit: limit, include_claimed_by_others: false)
@@ -796,19 +929,36 @@ class Reviewable < ActiveRecord::Base
     score
   end
 
+  # The account that the delete user actions destroy. Subclasses that delete a
+  # different account must override this, otherwise the confirmation prompt will
+  # name the wrong user.
+  def target_user
+    target_type == "User" ? target : target_created_by
+  end
+
   def delete_user_actions(actions, bundle = nil, require_reject_reason: false)
     bundle ||=
       actions.add_bundle(
-        "reject_user",
+        "#{id}-reject_user",
         icon: "user-xmark",
         label: "reviewables.actions.reject_user.title",
       )
+
+    # The reject reason modal already acts as a confirmation step, so only ask
+    # for a separate confirmation when it isn't shown.
+    username = target_user&.username
+    confirmable = !require_reject_reason && username.present?
 
     actions.add(:delete_user, bundle: bundle) do |a|
       a.icon = "user-xmark"
       a.label = "reviewables.actions.reject_user.delete.title"
       a.description = "reviewables.actions.reject_user.delete.description"
       a.require_reject_reason = require_reject_reason
+      if confirmable
+        a.confirm_message = "reviewables.actions.reject_user.delete.confirm"
+        a.confirm_message_args = { username: username }
+        a.confirm_destructive = true
+      end
     end
 
     actions.add(:delete_user_block, bundle: bundle) do |a|
@@ -816,6 +966,11 @@ class Reviewable < ActiveRecord::Base
       a.label = "reviewables.actions.reject_user.block.title"
       a.require_reject_reason = require_reject_reason
       a.description = "reviewables.actions.reject_user.block.description"
+      if confirmable
+        a.confirm_message = "reviewables.actions.reject_user.block.confirm"
+        a.confirm_message_args = { username: username }
+        a.confirm_destructive = true
+      end
     end
   end
 
@@ -881,6 +1036,149 @@ class Reviewable < ActiveRecord::Base
   end
 
   private
+
+  # Returns the DSA statement attributes for a successfully completed action.
+  #
+  # Override in subclasses to declare each action's decision and subject metadata.
+  # Return nil when the action should not produce a statement.
+  #
+  # Called inside the moderation transaction after the action and reviewable updates
+  # succeed, when the dsa_reporting_enabled site setting is enabled. A hash creates
+  # one pending statement.
+  # Failure to save the statement rolls back the transaction.
+  #
+  # Keys must be symbols. Each hash must include :content_type, :content_date,
+  # :automated_detection, :automated_decision, :decision_facts, and at least one
+  # decision field.
+  #
+  # * :decision_facts [String] Required. Facts and circumstances known when the action
+  #   succeeds. Maximum 5000 characters. Core actions use fixed English wording.
+  #
+  # Decision fields:
+  #
+  # * :decision_visibility [Array<String>] One or more of:
+  #   * DECISION_VISIBILITY_CONTENT_REMOVED
+  #   * DECISION_VISIBILITY_CONTENT_DISABLED
+  #   * DECISION_VISIBILITY_CONTENT_DEMOTED
+  #   * DECISION_VISIBILITY_CONTENT_AGE_RESTRICTED
+  #   * DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED
+  #   * DECISION_VISIBILITY_CONTENT_LABELLED
+  #   * DECISION_VISIBILITY_OTHER
+  # * :decision_visibility_other [String] Required for DECISION_VISIBILITY_OTHER.
+  #   Maximum 500 characters.
+  # * :decision_account [String] One of:
+  #   * DECISION_ACCOUNT_SUSPENDED
+  #   * DECISION_ACCOUNT_TERMINATED
+  # * :decision_provision [String] One of:
+  #   * DECISION_PROVISION_PARTIAL_SUSPENSION
+  #   * DECISION_PROVISION_TOTAL_SUSPENSION
+  #   * DECISION_PROVISION_PARTIAL_TERMINATION
+  #   * DECISION_PROVISION_TOTAL_TERMINATION
+  # * :decision_monetary [String] One of:
+  #   * DECISION_MONETARY_SUSPENSION
+  #   * DECISION_MONETARY_TERMINATION
+  #   * DECISION_MONETARY_OTHER
+  # * :decision_monetary_other [String] Required for DECISION_MONETARY_OTHER.
+  #   Maximum 500 characters.
+  #
+  # Subject fields:
+  #
+  # * :content_type [Array<String>] Required. One or more of:
+  #   * CONTENT_TYPE_APP
+  #   * CONTENT_TYPE_AUDIO
+  #   * CONTENT_TYPE_IMAGE
+  #   * CONTENT_TYPE_PRODUCT
+  #   * CONTENT_TYPE_SYNTHETIC_MEDIA
+  #   * CONTENT_TYPE_TEXT
+  #   * CONTENT_TYPE_VIDEO
+  #   * CONTENT_TYPE_OTHER
+  # * :content_type_other [String] Required when :content_type includes
+  #   CONTENT_TYPE_OTHER. Maximum 500 characters. Use "User account" for accounts.
+  # * :content_date [String] Required. Subject creation date in YYYY-MM-DD format,
+  #   on or after 2000-01-01. Use the account creation date for account subjects.
+  # * :content_language [String] Optional. Uppercase ISO 639-1 language code.
+  #
+  # Restriction expiry fields, in YYYY-MM-DD format:
+  #
+  # * :end_date_visibility_restriction [String]
+  # * :end_date_account_restriction [String]
+  # * :end_date_service_restriction [String]
+  # * :end_date_monetary_restriction [String]
+  #
+  # These fields are optional. Omit them for an indefinite restriction.
+  # Each expiry must be on or after the application date.
+  #
+  # Automation fields:
+  #
+  # * :automated_detection [String] Required. "Yes" or "No", indicating whether
+  #   automated means identified the content.
+  # * :automated_decision [String] Required. One of:
+  #   * AUTOMATED_DECISION_FULLY
+  #   * AUTOMATED_DECISION_PARTIALLY
+  #   * AUTOMATED_DECISION_NOT_AUTOMATED
+  #
+  # Multiple decision fields may describe the same action. Reviewable#perform
+  # supplies :application_date, :territorial_scope, :source_type, and :decision_ground.
+  # The decision ground is DECISION_GROUND_INCOMPATIBLE_CONTENT.
+  # Pending statements receive their contractual ground, category, and supporting
+  # explanation during human classification.
+  #
+  # @param action_id [Symbol] Requested action ID, before alias resolution.
+  # @param result [Reviewable::PerformResult] Successful action result, including
+  #   :deleted_user or :removed_avatar when returned by the action.
+  # @param automated_detection [String] Computed detection value: "Yes" or "No".
+  # @param automated_decision [String] Computed AUTOMATED_DECISION_* value.
+  # @return [Hash{Symbol => String, Array<String>}, nil] Statement attributes,
+  #   or nil when no statement applies.
+  # @example Report a human decision on a manually flagged post
+  #   def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+  #     return unless action_id == :agree_and_edit
+  #
+  #     {
+  #       decision_visibility: ["DECISION_VISIBILITY_OTHER"],
+  #       decision_visibility_other: "Content edited",
+  #       decision_facts: "The flagged post was edited.",
+  #       content_type: ["CONTENT_TYPE_TEXT"],
+  #       content_date: post.created_at.to_date.iso8601,
+  #       automated_detection:,
+  #       automated_decision:,
+  #     }
+  #   end
+  def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    nil
+  end
+
+  def dsa_automated_detection
+    automated =
+      reviewable_scores.where(
+        user_id: Discourse::SYSTEM_USER_ID,
+        reason: %w[watched_word fast_typer auto_silence_regex email_spam suspect_user],
+      ).exists?
+
+    if DiscoursePluginRegistry.apply_modifier(:reviewable_automated_detection, automated, self)
+      "Yes"
+    else
+      "No"
+    end
+  end
+
+  def dsa_automated_decision(performed_by:, decision_automation:)
+    return "AUTOMATED_DECISION_PARTIALLY" if decision_automation == :partial
+    return "AUTOMATED_DECISION_FULLY" if decision_automation == :full || !performed_by.human?
+
+    "AUTOMATED_DECISION_NOT_AUTOMATED"
+  end
+
+  def can_review_target?(guardian)
+    post = target_post
+    !post || guardian.can_review_post?(post)
+  end
+
+  def target_post
+    return if target_type != "Post"
+
+    @post ||= target || Post.with_deleted.find_by(id: target_id)
+  end
 
   def delete_user_action?(action_id)
     resolved_action = (aliases[action_id] || action_id).to_sym
@@ -969,11 +1267,12 @@ end
 #
 # Indexes
 #
-#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
+#  idx_reviewables_score_desc_created_at_desc                  (score DESC,created_at DESC)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)
 #  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_target_created_by_id                   (target_created_by_id)
 #  index_reviewables_on_target_id_where_post_type_eq_post      (target_id) WHERE ((target_type)::text = 'Post'::text)
 #  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
 #  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE

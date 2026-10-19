@@ -1,5 +1,19 @@
 @use "lib/viewport";
 
+@keyframes code-login-form-dice-roll {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: rotate(180deg) scale(1.2);
+  }
+
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
 @keyframes code-login-form-step-in {
   from {
     opacity: 0;
@@ -35,8 +49,10 @@
 
   &__code-step,
   &__second-factor-step,
+  &__account-details-step,
   &__user-fields-step,
-  &__complete-step {
+  &__signup-details-step,
+  &__pending-approval-step {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -48,10 +64,52 @@
     }
   }
 
+  &__account-details-step,
   &__user-fields-step {
     .user-fields {
       align-self: stretch;
       margin-top: 0.5em;
+    }
+  }
+
+  &__account-fields {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-self: stretch;
+    gap: 1em 0.5em;
+
+    &.--with-username-generator {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .code-login-form__username-field {
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-column: 1 / -1;
+      gap: 0.25em 0.5em;
+
+      > label,
+      > .code-login-form__error {
+        grid-column: 1 / -1;
+      }
+    }
+
+    .code-login-form__username-input {
+      display: contents;
+    }
+
+    .code-login-form__name-field {
+      grid-column: 1 / -1;
+    }
+
+    .code-login-form__password-field,
+    .code-login-form__create-password {
+      grid-column: 1;
+    }
+
+    .code-login-form__password-field input {
+      width: 100%;
+      min-width: 0;
     }
   }
 
@@ -63,6 +121,12 @@
   }
 
   &__name {
+    width: 100%;
+    margin: 0;
+  }
+
+  &__password-field {
+    align-self: stretch;
     width: 100%;
     margin: 0;
   }
@@ -86,6 +150,22 @@
 
     .avatar {
       display: block;
+    }
+  }
+
+  &__avatar-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 144px;
+    height: 144px;
+    border-radius: 50%;
+    background: var(--primary-low);
+    color: var(--primary-medium);
+
+    .d-icon {
+      width: 50%;
+      height: 50%;
     }
   }
 
@@ -114,9 +194,57 @@
     gap: 0.25em;
   }
 
+  &__username-input {
+    // The regenerate button sits beside the input rather than inside it, so it
+    // doesn't compete with password managers for the field's trailing edge.
+    display: flex;
+    align-self: stretch;
+    gap: 0.5em;
+
+    // Outweigh the base input[type="text"] margin-bottom so the input and the
+    // regenerate button beside it stay the same height.
+    input[type="text"] {
+      flex: 1 1 auto;
+      min-width: 0;
+      width: auto;
+      margin: 0;
+    }
+  }
+
   &__new-account-username {
     width: 100%;
-    margin: 0;
+
+    // Crossfade the text while a regenerated username is on its way, so the
+    // new name fades in rather than snapping into place.
+    @media (prefers-reduced-motion: no-preference) {
+      transition: color 0.2s ease;
+
+      &.--swapping {
+        color: transparent;
+      }
+    }
+  }
+
+  &__username-regen {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+
+    // The dice glyph is wider than it is tall, so at the default 1em it
+    // renders visually smaller than square icons.
+    .d-icon {
+      font-size: var(--font-up-2);
+    }
+
+    // One cycle matches the minimum rolling duration the component holds, so
+    // the spin completes cleanly on fast responses and keeps going on slow
+    // ones instead of freezing mid-roll.
+    @media (prefers-reduced-motion: no-preference) {
+      &.--rolling .d-icon {
+        animation: code-login-form-dice-roll 0.4s ease infinite;
+      }
+    }
   }
 
   &__continue-to-site {

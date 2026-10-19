@@ -1,0 +1,21 @@
+.discourse-post-event {
+  .discourse-post-event-widget {
+    border-width: 1px;
+  }
+
+  .event-dates {
+    .date {
+      max-width: 75vw;
+    }
+  }
+
+  .event-invitees-status {
+    font-size: var(--font-down-1);
+  }
+
+  .creators {
+    .created-by {
+      display: none;
+    }
+  }
+}

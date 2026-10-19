@@ -3,7 +3,7 @@ import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import DInputTip from "discourse/ui-kit/d-input-tip";
 import { i18n } from "discourse-i18n";
-import UserFieldBase from "./base";
+import UserFieldBase from "./base.js";
 
 export default class UserFieldConfirm extends UserFieldBase {
   constructor() {
@@ -35,8 +35,8 @@ export default class UserFieldConfirm extends UserFieldBase {
         </span>
       </label>
       <DInputTip
-        @validation={{@validation}}
         class={{unless @validation.reason "hidden"}}
+        @validation={{@validation}}
       />
     </div>
   </template>

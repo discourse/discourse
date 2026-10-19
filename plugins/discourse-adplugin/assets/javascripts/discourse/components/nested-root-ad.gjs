@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import AdSlot, { slotContenders } from "./ad-slot";
+import AdSlot, { slotContenders } from "./ad-slot.gjs";
 
 export default class NestedRootAd extends Component {
   static shouldRender(args, context) {
@@ -17,9 +17,9 @@ export default class NestedRootAd extends Component {
   <template>
     <div class="ad-connector ad-connector--nested-root">
       <AdSlot
-        @placement="nested-roots-between"
         @category={{@topic.category.slug}}
         @indexNumber={{@index}}
+        @placement="nested-roots-between"
       />
     </div>
   </template>

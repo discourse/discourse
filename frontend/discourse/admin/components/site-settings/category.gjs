@@ -4,9 +4,9 @@ import { eq } from "discourse/truth-helpers";
 
 const Category = <template>
   <CategoryChooser
-    @value={{@value}}
     @onChange={{@changeValueCallback}}
     @options={{hash allowUncategorized=true none=(eq @setting.default "")}}
+    @value={{@value}}
   />
 </template>;
 

@@ -9,6 +9,8 @@ class AiTool < ActiveRecord::Base
   validates :summary, presence: true, length: { maximum: 255 }
   validates :script, presence: true, length: { maximum: 100_000 }
   validates :created_by_id, presence: true
+  validates :rag_chunk_tokens, numericality: { greater_than: 0 }
+  validates :rag_chunk_overlap_tokens, numericality: { greater_than_or_equal_to: 0 }
   belongs_to :created_by, class_name: "User"
   belongs_to :rag_llm_model, class_name: "LlmModel"
   has_many :rag_document_fragments, dependent: :destroy, as: :target

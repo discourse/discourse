@@ -3,6 +3,20 @@
 module ReviewableActionBuilder
   extend ActiveSupport::Concern
 
+  class << self
+    def penalty_args(params)
+      {
+        reason: params[:reason],
+        message: params[:message],
+        suspend_until: params[:suspend_until],
+        silenced_till: params[:silenced_till],
+        post_action: params[:post_action],
+        post_edit: params[:post_edit],
+        other_user_ids: params[:other_user_ids],
+      }
+    end
+  end
+
   attr_accessor :actions, :guardian, :action_args
 
   def build_actions(actions, guardian, args)
@@ -39,9 +53,10 @@ module ReviewableActionBuilder
     client_action: nil,
     confirm: false,
     require_reject_reason: false,
+    secondary: false,
     source: nil
   )
-    actions.add(id, bundle: bundle) do |action|
+    actions.add(id, bundle:, secondary:) do |action|
       source ||= type_source
       if source == "core"
         prefix = "reviewables.actions.#{id}"
@@ -57,7 +72,12 @@ module ReviewableActionBuilder
       action.confirm_message = "#{prefix}.confirm" if confirm
       action.completed_message = "#{prefix}.complete"
       action.require_reject_reason = require_reject_reason
+      action.penalty_effect = penalty_effect_for(id)
     end
+  end
+
+  def penalty_effect_for(_action_id)
+    nil
   end
 
   def build_penalty_actions(actions, bundle:, silence:, suspend:, user: target_user)
@@ -70,14 +90,6 @@ module ReviewableActionBuilder
     if !user.suspended?
       build_action(actions, suspend, icon: "ban", bundle:, client_action: "suspend")
     end
-  end
-
-  def perform_silence_user(performed_by, args)
-    create_result(:success, :rejected)
-  end
-
-  def perform_suspend_user(performed_by, args)
-    create_result(:success, :rejected)
   end
 
   def perform_delete_user(performed_by, args, &)
@@ -119,32 +131,38 @@ module ReviewableActionBuilder
     create_result(:success, :approved, [created_by_id], false)
   end
 
-  private
-
-  # Returns the user associated with the reviewable, if applicable.
-  # For most reviewables, this will be the user who created the reviewable target.
-  #
-  # @return [User] The user associated with the reviewable.
-  def target_user
-    if target_type == "User"
-      try(:target)
-    else
-      try(:target_created_by)
-    end
+  def suspend_user(performed_by:, args:)
+    perform_penalty(performed_by:, args:, penalty_type: "suspend")
   end
 
-  # Returns the post associated with the reviewable, if applicable.
-  # This method assumes that the including class has a `target` that is a Post or
-  # a `target_id` that can be used to look up the Post.
-  #
-  # @return [Post, nil] The post associated with the reviewable, or nil if not found.
-  def target_post
-    @post ||=
-      if defined?(target) && target.is_a?(Post)
-        target
-      elsif defined?(target_id)
-        Post.with_deleted.find_by(id: target_id)
-      end
+  def silence_user(performed_by:, args:)
+    perform_penalty(performed_by:, args:, penalty_type: "silence")
+  end
+
+  private
+
+  def perform_penalty(performed_by:, args:, penalty_type:)
+    guardian = args[:guardian] || Guardian.new(performed_by)
+    service = penalty_type == "suspend" ? User::Suspend : User::Silence
+    result = create_result(:failure)
+    result.errors = ActiveModel::Errors.new(self)
+    penalty_params =
+      args.merge(
+        user_id: target_user&.id,
+        post_id: target_type == "Post" ? target_id : target.try(:post_id),
+        reviewable_id: id,
+      )
+
+    service.call(guardian:, params: penalty_params, options: { raise_on_failure: true }) do
+      on_success { result = create_result(:success) }
+      on_failed_contract { |contract| result.errors = contract.errors }
+      on_model_not_found(:user) { raise Discourse::NotFound }
+      on_failed_policy(:can_suspend_all_users) { raise Discourse::InvalidAccess }
+      on_failed_policy(:can_silence_all_users) { raise Discourse::InvalidAccess }
+      on_failed_policy(:not_suspended_already) { |policy| result.errors.add(:base, policy.reason) }
+      on_failed_policy(:not_silenced_already) { |policy| result.errors.add(:base, policy.reason) }
+    end
+    result
   end
 
   # Options for deleting a user, used by perform_delete_user and perform_delete_and_block_user.

@@ -32,21 +32,38 @@ export default class ReviewIndexController extends Controller {
     "score_type",
   ];
 
+  /** @type {string | null | undefined} */
   type = null;
   status = "pending";
   priority = this.siteSettings.reviewable_default_visibility;
+
+  /** @type {number | string | null} */
   category_id = null;
+
+  /** @type {import("discourse/models/result-set").default | null} */
   reviewables = null;
+
+  /** @type {number | string | null} */
   topic_id = null;
   filtersExpanded = false;
   username = "";
   reviewed_by = "";
   claimed_by = "";
   flagged_by = "";
+
+  /** @type {string | null} */
   from_date = null;
+
+  /** @type {string | null} */
   to_date = null;
+
+  /** @type {string | null} */
   sort_order = null;
+
+  /** @type {string | null} */
   additional_filters = null;
+
+  /** @type {number | string | null} */
   filterScoreType = null;
   unknownTypeSource = REVIEWABLE_UNKNOWN_TYPE_SOURCE;
 
@@ -109,17 +126,17 @@ export default class ReviewIndexController extends Controller {
     return this.filtersExpanded ? "chevron-up" : "chevron-down";
   }
 
+  @computed("unknownReviewableTypes")
+  get displayUnknownReviewableTypesWarning() {
+    return this.unknownReviewableTypes?.length > 0 && this.currentUser.admin;
+  }
+
   setRange(range) {
     this.setProperties(range);
   }
 
   refreshModel() {
     next(() => this.send("refreshRoute"));
-  }
-
-  @computed("unknownReviewableTypes")
-  get displayUnknownReviewableTypesWarning() {
-    return this.unknownReviewableTypes?.length > 0 && this.currentUser.admin;
   }
 
   @action

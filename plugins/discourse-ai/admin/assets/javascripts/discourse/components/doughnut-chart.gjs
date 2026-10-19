@@ -127,7 +127,7 @@ export default class DoughnutChart extends Component {
   <template>
     {{#if this.config}}
       <h3 class="doughnut-chart-title">{{@doughnutTitle}}</h3>
-      <Chart @chartConfig={{this.config}} class="admin-report-doughnut" />
+      <Chart class="admin-report-doughnut" @chartConfig={{this.config}} />
     {{/if}}
   </template>
 }

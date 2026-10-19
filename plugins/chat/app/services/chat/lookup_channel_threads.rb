@@ -68,7 +68,7 @@ module Chat
     end
 
     def can_view_channel(guardian:, channel:)
-      guardian.can_preview_chat_channel?(channel)
+      guardian.can_join_chat_channel?(channel)
     end
 
     def fetch_threads(guardian:, channel:, params:)

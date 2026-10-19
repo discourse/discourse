@@ -165,9 +165,8 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
     this.post.action_code = "some_code";
     this.post.action_code_who = "somegroup";
 
-    I18n.translations[I18n.locale].js.action_codes = {
-      some_code: "Some %{who} Code Action",
-    };
+    I18n.translations[I18n.locale].js.action_codes.some_code =
+      "Some %{who} Code Action";
 
     await renderComponent(this.post);
 
@@ -185,6 +184,23 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
         "/g/somegroup",
         "the group mention link has the correct href"
       );
+  });
+
+  test("encodes action actor names in user mention hrefs", async function (assert) {
+    const xssPayload = '"><img src=x>';
+    const actionCode = "test_encoded_mention";
+    I18n.translations[I18n.locale].js.action_codes[actionCode] =
+      "Action %{who}";
+    this.post.action_code = actionCode;
+    this.post.action_code_who = xssPayload;
+
+    await renderComponent(this.post);
+
+    assert.dom(".small-action-desc img").doesNotExist();
+    assert
+      .dom(".small-action-desc a.mention")
+      .hasAttribute("href", `/u/${encodeURIComponent(xssPayload)}`)
+      .hasText(`@${xssPayload}`);
   });
 
   test("api.addPostSmallActionIcon", async function (assert) {
@@ -240,7 +256,7 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
   test("a11y heading is rendered even when small action is cloaked", async function (assert) {
     await render(
       <template>
-        <PostSmallAction @post={{this.post}} @cloaked={{true}} />
+        <PostSmallAction @cloaked={{true}} @post={{this.post}} />
       </template>
     );
 
@@ -360,10 +376,10 @@ module(
           <ul>
             <NestedActivityLogItem
               @action={{this.post}}
-              @topicId={{1}}
-              @editPost={{editPost}}
               @deletePost={{deletePost}}
+              @editPost={{editPost}}
               @recoverPost={{recoverPost}}
+              @topicId={{1}}
             />
           </ul>
         </template>
@@ -379,6 +395,38 @@ module(
 
       await click(".nested-activity-log-modal__post .small-action-edit");
       await click(".nested-activity-log-modal__post .small-action-delete");
+    });
+
+    test("encodes synthetic action actor names in user mention hrefs", async function (assert) {
+      const xssPayload = '"><img src=x>';
+      const actionCode = "test_encoded_mention";
+      I18n.translations[I18n.locale].js.action_codes[actionCode] =
+        "Action %{who}";
+      const syntheticAction = {
+        synthetic: true,
+        action_code: actionCode,
+        action_code_who: xssPayload,
+        created_at: "2025-09-23T16:10:28.695Z",
+        user_id: 42,
+        username: "activity-author",
+        avatar_template: "/letter_avatar_proxy/v4/letter/a/13edae/{size}.png",
+      };
+
+      await render(
+        <template>
+          <ul>
+            <NestedActivityLogItem @action={{syntheticAction}} @topicId={{1}} />
+          </ul>
+        </template>
+      );
+
+      assert
+        .dom(".nested-activity-log-modal__desc img[src='x']")
+        .doesNotExist();
+      assert
+        .dom(".nested-activity-log-modal__desc a.mention")
+        .hasAttribute("href", `/u/${encodeURIComponent(xssPayload)}`)
+        .hasText(`@${xssPayload}`);
     });
 
     test("keeps the synthetic topic-created row read-only", async function (assert) {
@@ -439,9 +487,9 @@ module("Integration | Component | Modal | NestedActivityLog", function (hooks) {
     await render(
       <template>
         <NestedActivityLog
-          @model={{model}}
           @closeModal={{closeModal}}
           @inline={{true}}
+          @model={{model}}
         />
       </template>
     );

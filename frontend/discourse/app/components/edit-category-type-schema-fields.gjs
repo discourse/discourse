@@ -126,32 +126,32 @@ export default class EditCategoryTypeSchemaFields extends Component {
       {{yield to="beforeSiteSettings"}}
 
       <@form.Emphasis
-        @title={{i18n "category.type_settings_schema.site_settings"}}
         @subtitle={{i18n "category.settings_apply_to_all_of_type_warning"}}
+        @title={{i18n "category.type_settings_schema.site_settings"}}
       >
         {{#if this.hasSiteTexts}}
           <@form.Object @name="site_texts" as |siteTexts|>
             {{#each this.schema.site_texts as |entry|}}
               {{#if (this.isFieldVisible entry)}}
                 <siteTexts.Field
-                  @name={{entry.name}}
-                  @type="input"
-                  @title={{entry.label}}
                   @description={{entry.description}}
                   @disabled={{@isLoadingSiteTextsLocale}}
-                  @labelFormat="full"
                   @format="large"
+                  @labelFormat="full"
+                  @name={{entry.name}}
+                  @title={{entry.label}}
+                  @type="input"
                   as |field|
                 >
                   <div class="schema-site-text">
                     {{#if @availableLocales}}
                       <ComboBox
-                        @valueProperty="value"
+                        class="schema-site-text__locale"
                         @content={{@availableLocales}}
-                        @value={{@siteTextsLocale}}
                         @onChange={{@switchSiteTextsLocale}}
                         @options={{hash filterable=true}}
-                        class="schema-site-text__locale"
+                        @value={{@siteTextsLocale}}
+                        @valueProperty="value"
                       />
                     {{/if}}
                     <field.Control />

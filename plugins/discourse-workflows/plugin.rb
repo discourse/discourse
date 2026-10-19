@@ -12,6 +12,50 @@ enabled_site_setting :enable_discourse_workflows
 module ::DiscourseWorkflows
   PLUGIN_NAME = "discourse-workflows"
   TEMPLATES_PATH = File.expand_path("config/templates", __dir__)
+
+  def self.reviewable_score_context(workflow_id)
+    "discourse_workflows:workflow:#{workflow_id}" if workflow_id.present?
+  end
+
+  def self.review_agent(exec_ctx, item_index:)
+    agents = exec_ctx.nearest_upstream_metadata("review_agent", item_index:)
+    agents.first if agents&.one?
+  end
+
+  def self.record_review_agent(reviewable, exec_ctx, item_index:)
+    agent = review_agent(exec_ctx, item_index:)
+    return if !agent
+
+    agent_id = agent.fetch("id").to_s
+
+    reviewable.with_lock do
+      DiscourseWorkflows::ReviewableAgent.insert_all(
+        [{ reviewable_id: reviewable.id, ai_agent_id: agent_id, created_at: Time.current }],
+        unique_by: %i[reviewable_id ai_agent_id],
+      )
+
+      # Keep legacy readers working during the rollback window.
+      payload = reviewable.payload || {}
+      agent_ids = Array(payload["workflow_review_agent_ids"])
+      next if agent_ids.include?(agent_id)
+
+      reviewable.update!(
+        payload: payload.merge("workflow_review_agent_ids" => agent_ids + [agent_id]),
+      )
+    end
+  end
+
+  def self.review_attribution(exec_ctx, item_index:, flag_type:, escape: false)
+    agent = review_agent(exec_ctx, item_index:)
+    values = { workflow_name: exec_ctx.get_workflow.name }
+    key = "discourse_workflows.#{flag_type}.flagged_by_workflow"
+    if agent
+      key = "discourse_workflows.#{flag_type}.flagged_by_agent"
+      values[:agent_name] = agent.fetch("name")
+    end
+    values.transform_values! { |value| ERB::Util.html_escape(value) } if escape
+    I18n.t(key, **values)
+  end
 end
 
 require_relative "lib/discourse_workflows/engine"
@@ -56,6 +100,7 @@ register_svg_icon "layer-group"
 register_svg_icon "copy"
 register_svg_icon "paste"
 register_svg_icon "scissors"
+register_svg_icon "sliders"
 
 add_admin_route "discourse_workflows.admin.title", "discourse-workflows", use_new_show_route: true
 
@@ -65,34 +110,96 @@ DiscoursePluginRegistry.define_filtered_register(:discourse_workflows_credential
 after_initialize do
   Rails.application.config.filter_parameters += %i[signature]
 
+  add_custom_reviewable_filter(
+    [
+      :workflow_id,
+      proc do |results, value|
+        context = "discourse_workflows:workflow:%"
+        if value != :all
+          workflow_id = value.to_s[/\A[1-9]\d*\z/]
+          next results if !workflow_id
+
+          context = DiscourseWorkflows.reviewable_score_context(workflow_id)
+        end
+
+        results.where(<<~SQL, context:)
+          EXISTS (
+            SELECT 1
+            FROM reviewable_scores
+            WHERE reviewable_scores.reviewable_id = reviewables.id
+            AND reviewable_scores.context LIKE :context
+          )
+        SQL
+      end,
+    ],
+    type_filter: {
+      id: "discourse_workflows:workflow",
+      value: :all,
+    },
+    reason_filters: -> do
+      DiscourseWorkflows::Workflow
+        .order(:name)
+        .pluck(:id, :name)
+        .map { |id, name| { id: "discourse_workflows:workflow:#{id}", name:, value: id } }
+    end,
+  )
+
+  add_custom_reviewable_filter(
+    [
+      :workflow_review_agent_id,
+      proc do |results, value|
+        agent_id = value.to_s
+        next results if !agent_id.match?(/\A-?[1-9][0-9]*\z/)
+
+        results.where(
+          id:
+            DiscourseWorkflows::ReviewableAgent.where(ai_agent_id: agent_id.to_i).select(
+              :reviewable_id,
+            ),
+        )
+      end,
+    ],
+    reason_filters: -> do
+      next [] if !defined?(AiAgent)
+
+      AiAgent
+        .where(<<~SQL)
+          EXISTS (
+            SELECT 1 FROM discourse_workflows_reviewable_agents
+            WHERE discourse_workflows_reviewable_agents.ai_agent_id = ai_agents.id
+          )
+        SQL
+        .order(:name)
+        .pluck(:id, :name)
+        .map { |id, name| { id: "discourse_workflows:agent:#{id}", name:, value: id } }
+    end,
+  )
+
   add_to_class(:guardian, :can_manage_workflows?) { is_admin? }
 
   nodes_dir = File.join(File.dirname(__FILE__), "lib/discourse_workflows/nodes")
   Dir.glob(File.join(nodes_dir, "**/*.rb")).each { |f| Rails.autoloaders.main.load_file(f) }
 
-  DiscourseWorkflows::NodeType.registered_nodes.each do |node_class|
-    DiscoursePluginRegistry.register_discourse_workflows_node(node_class, self)
-
-    next unless node_class.respond_to?(:event_name) && node_class.event_name
-    on(node_class.event_name) do |*args|
-      DiscourseWorkflows::EventListener.handle(node_class, *args)
-    end
-  end
-
+  # Contributing plugins claim their nodes first so that ownership — and the
+  # enabled check that rides on it — lands on them rather than on this plugin.
   DiscourseWorkflows.node_registration_ready = true
   DiscourseWorkflows.flush_plugin_node_registrations!
+
+  DiscourseWorkflows::NodeType.registered_nodes.each do |node_class|
+    DiscourseWorkflows.register_node(node_class, self)
+  end
   DiscourseWorkflows::Registry.reset_indexes!
 
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
-    DiscourseWorkflows::CredentialTypes::BasicAuth,
+    "DiscourseWorkflows::CredentialTypes::BasicAuth",
     self,
   )
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
-    DiscourseWorkflows::CredentialTypes::BearerToken,
+    "DiscourseWorkflows::CredentialTypes::BearerToken",
     self,
   )
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
-    DiscourseWorkflows::CredentialTypes::HeaderAuth,
+    "DiscourseWorkflows::CredentialTypes::HeaderAuth",
     self,
   )
 
@@ -100,15 +207,18 @@ after_initialize do
     require_relative "lib/discourse_workflows/ai/tools/base"
     require_relative "lib/discourse_workflows/ai/graph_digest"
     require_relative "lib/discourse_workflows/ai/progress_publisher"
+    require_relative "lib/discourse_workflows/ai/truncation"
+    require_relative "lib/discourse_workflows/ai/sample"
+    require_relative "lib/discourse_workflows/ai/node_menu"
+    require_relative "lib/discourse_workflows/ai/workflow_outline"
     require_relative "lib/discourse_workflows/ai/tools/workflow_node_catalog"
     require_relative "lib/discourse_workflows/ai/tools/workflow_ai_agent_catalog"
-    require_relative "lib/discourse_workflows/ai/tools/workflow_graph_context"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_node_details"
     require_relative "lib/discourse_workflows/ai/tools/workflow_validate_patch"
     require_relative "lib/discourse_workflows/ai/tools/workflow_ask_questions"
     require_relative "lib/discourse_workflows/ai/tools/workflow_resolve_entity"
     require_relative "lib/discourse_workflows/ai/tools/search_chat_channels"
     require_relative "lib/discourse_workflows/ai/tools/search_chat_integration_channels"
-    require_relative "lib/discourse_workflows/ai/tools/workflow_script_context"
     require_relative "lib/discourse_workflows/ai/tools/workflow_validate_script"
     require_relative "lib/discourse_workflows/ai_workflow_author"
 

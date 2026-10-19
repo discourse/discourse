@@ -1,6 +1,6 @@
 <meta name="generator" content="Discourse <%= Discourse::VERSION::STRING %> - https://github.com/discourse/discourse version <%= Discourse.git_version %>">
 <%- if SiteSetting.site_favicon_url.present? %>
-<link rel="icon" type="image/png" href="<%=SiteSetting.site_favicon_url%>">
+<link rel="icon" type="<%= MiniMime.lookup_by_filename(SiteSetting.site_favicon_url)&.content_type || "image/png" %>" href="<%=SiteSetting.site_favicon_url%>">
 <%- end %>
 <% site_apple_touch_icon_url = SiteSetting.site_apple_touch_icon_url %>
 <%- if site_apple_touch_icon_url.present? %>
@@ -19,4 +19,6 @@
 <% if SiteSetting.google_site_verification_token.present? %>
   <meta name="google-site-verification" content="<%= SiteSetting.google_site_verification_token %>">
 <% end %>
-<link rel="search" type="application/opensearchdescription+xml" href="<%= Discourse.base_url %>/opensearch.xml" title="<%= SiteSetting.title %> Search">
+<% if guardian.can_search? %>
+  <link rel="search" type="application/opensearchdescription+xml" href="<%= Discourse.base_url %>/opensearch.xml" title="<%= SiteSetting.title %> Search">
+<% end %>

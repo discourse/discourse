@@ -73,7 +73,17 @@ hy:
       nodes:
         "trigger:assigned": "Վերագրված"
       assign_topic:
+        resources:
+          topic: "Թեմա"
+          post: "Գրառում"
         operations:
           assign: "Վերագրել"
           unassign: "Ետ կանչել վերագրումը"
         topic_id: "Թեմայի ID"
+        post_id: "Գրառման ID"
+      check_assignment:
+        target_types:
+          topic: "Թեմա"
+          post: "Գրառում"
+        topic_id: "Թեմայի ID"
+        post_id: "Գրառման ID"

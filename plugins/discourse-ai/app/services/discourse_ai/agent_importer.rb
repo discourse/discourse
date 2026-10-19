@@ -51,6 +51,9 @@ module DiscourseAi
           end
         end
         mcp_server_assignments = resolve_mcp_server_assignments(agent_data["mcp_servers"])
+        if agent_data.key?("subagents")
+          attrs[:subagent_ids] = resolve_subagent_ids(agent_data["subagents"])
+        end
 
         if existing_agent && overwrite
           existing_agent.update!(**attrs)
@@ -94,6 +97,11 @@ module DiscourseAi
         conflicts[:custom_tools] = existing_tools if existing_tools.any?
       end
 
+      if @data["agent"].key?("subagents")
+        missing_subagents = missing_subagent_names(@data["agent"]["subagents"])
+        conflicts[:subagents] = missing_subagents if missing_subagents.any?
+      end
+
       if @data["agent"]["mcp_servers"].present?
         missing_mcp_servers =
           Array(@data["agent"]["mcp_servers"]).filter_map do |server|
@@ -125,6 +133,13 @@ module DiscourseAi
             count: conflicts[:custom_tools].size,
           )
         messages << error
+      end
+
+      if conflicts[:subagents] && conflicts[:subagents].any?
+        messages << I18n.t(
+          "discourse_ai.errors.subagents_missing",
+          names: conflicts[:subagents].join(", "),
+        )
       end
 
       if conflicts[:mcp_servers] && conflicts[:mcp_servers].any?
@@ -179,6 +194,35 @@ module DiscourseAi
           tool_config
         end
       end
+    end
+
+    def resolve_subagent_ids(raw_names)
+      unless raw_names.is_a?(Array)
+        raise ImportError.new(
+                I18n.t("discourse_ai.errors.subagents_missing", names: raw_names.to_s),
+                subagents: [raw_names.to_s],
+              )
+      end
+
+      names = raw_names.filter_map { |name| name.to_s.presence }.uniq
+      found = AiAgent.where(name: names).index_by(&:name)
+      missing = names.reject { |name| found.key?(name) }
+
+      if missing.any?
+        raise ImportError.new(
+                I18n.t("discourse_ai.errors.subagents_missing", names: missing.join(", ")),
+                subagents: missing,
+              )
+      end
+
+      names.map { |name| found.fetch(name).id }
+    end
+
+    def missing_subagent_names(raw_names)
+      return [] if !raw_names.is_a?(Array)
+
+      names = raw_names.filter_map { |name| name.to_s.presence }.uniq
+      names - AiAgent.where(name: names).pluck(:name)
     end
 
     def resolve_mcp_server_assignments(raw_servers)

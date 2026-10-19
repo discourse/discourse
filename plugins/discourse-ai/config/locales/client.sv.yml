@@ -8,6 +8,10 @@ sv:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Datum"
+          outcomes:
+            failed: "Misslyckad"
         reports:
           filters:
             sort_by:
@@ -36,6 +40,18 @@ sv:
             canned_reply:
               label: "Svara"
     discourse_ai:
+      copied: "Kopierad"
+      ai_decoded_transcript:
+        type: "Typ"
+        error: "Fel"
+        response: "Svar"
+      discourse_workflows:
+        classify:
+          text: "Text"
+          upload_ids: "Bilder"
+          name: "Namn"
+          type: "Typ"
+          type_score: "Poäng"
       ai_tool_approval:
         loading: "Laddar..."
         tool: "Åtgärd"
@@ -118,6 +134,38 @@ sv:
         periods:
           last_day: "Senaste 24 timmarna"
           custom: "Anpassad..."
+      logs:
+        short_title: "Loggar"
+        apply: "Tillämpa"
+        successful: "Lyckad"
+        failed: "Misslyckad"
+        unknown: "Okänd"
+        time: "Tid"
+        when: "När"
+        request: "Förfrågning"
+        provider: "Leverantör"
+        user: "Användare"
+        context: "Sammanhang"
+        topic: "Ämne"
+        post: "Inlägg"
+        post_short: "Inlägg %{id}"
+        duration: "Varaktighet"
+        actions: "Åtgärder"
+        view_details: "Detaljer"
+        periods:
+          hour: "Senaste timmen"
+          day: "Senaste 24 timmarna"
+          week: "Senaste 7 dagarna"
+          custom: "Anpassad"
+        detail:
+          request: "Förfrågning"
+          response: "Svar"
+          context: "Sammanhang"
+          network_error: "Nätverksfel"
+        retention:
+          summary_stage: "Sammanfattning"
+          deleted_stage: "Raderade"
+          save: "Spara"
       ai_agent:
         name: "Namn"
         edit: "Redigera"
@@ -167,6 +215,12 @@ sv:
         edit: "Redigera"
         delete: "Radera"
         embedding: "Inbäddning"
+      decision_models:
+        no_preset: "Ingen"
+        display_name: "Namn"
+        provider: "Leverantör"
+        edit: "Redigera"
+        delete: "Radera"
       mcp_servers:
         name: "Namn"
         description: "Beskrivning"
@@ -185,6 +239,9 @@ sv:
       llms:
         display_name: "Namn"
         provider: "Leverantör"
+        vision_modes:
+          disabled:
+            title: "Inaktiverad"
         save: "Spara"
         edit: "Redigera"
         delete: Ta bort
@@ -235,8 +292,17 @@ sv:
         providers:
           google: "Google"
           fake: "Anpassad"
+      ai_artifact:
+        editor:
+          version: "Version"
+          default: "Standard"
+          apply: "Tillämpa"
+        share: "Dela"
+        filter_all: "Alla"
+        filter_standalone: "Fristående"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Varaktighet:"
           request: "Förfrågning"
           response: "Svar"
           next_log: "Nästa"
@@ -270,8 +336,11 @@ sv:
         topic:
           title: "Sammanfattning av ämne"
       discobot_discoveries:
-        regular_results: "Ämnen"
-        collapse: "Förminska"
-        tooltip:
-          actions:
-            disable: "Inaktivera"
+        legacy:
+          regular_results: "Ämnen"
+          collapse: "Förminska"
+          tooltip:
+            actions:
+              disable: "Inaktivera"
+        search_all_topics: "Alla ämnen"
+        search_messages: "Meddelanden"

@@ -147,4 +147,90 @@ RSpec.describe BrowserDetection do
       expect(BrowserDetection.os(user_agent)).to eq(os)
     end
   end
+
+  describe ".browser" do
+    it "detects Edge" do
+      user_agent = "Mozilla/5.0 Chrome/124.0 Safari/537.36 Edg/124.0"
+
+      expect(described_class.browser(user_agent)).to eq(:edge)
+    end
+
+    it "detects Opera" do
+      user_agent = "Mozilla/5.0 Chrome/124.0 Safari/537.36 OPR/109.0"
+
+      expect(described_class.browser(user_agent)).to eq(:opera)
+    end
+
+    it "detects Samsung Browser" do
+      user_agent = "Mozilla/5.0 Chrome/120.0 Mobile Safari/537.36 SamsungBrowser/24.0"
+
+      expect(described_class.browser(user_agent)).to eq(:samsung_browser)
+    end
+
+    it "detects UC Browser" do
+      user_agent = "Mozilla/5.0 Chrome/70.0 Mobile Safari/537.36 UCBrowser/13.4.0"
+
+      expect(described_class.browser(user_agent)).to eq(:uc_browser)
+    end
+
+    it "detects QQ Browser" do
+      user_agent = "Mozilla/5.0 Chrome/70.0 Mobile Safari/537.36 MQQBrowser/13.1"
+
+      expect(described_class.browser(user_agent)).to eq(:qq_browser)
+    end
+
+    it "detects Baidu Browser" do
+      user_agent = "Mozilla/5.0 Chrome/70.0 Mobile Safari/537.36 BIDUBrowser/7.6"
+
+      expect(described_class.browser(user_agent)).to eq(:baidu_browser)
+    end
+
+    it "detects KaiOS Browser" do
+      user_agent = "Mozilla/5.0 Mobile KaiOS/2.5 Firefox/84.0"
+
+      expect(described_class.browser(user_agent)).to eq(:kaios_browser)
+    end
+
+    it "detects Internet Explorer" do
+      user_agent = "Mozilla/5.0 IEMobile/11.0"
+
+      expect(described_class.browser(user_agent)).to eq(:ie)
+    end
+
+    it "detects Firefox" do
+      user_agent = "Mozilla/5.0 FxiOS/126.0 Mobile/15E148 Safari/605.1.15"
+
+      expect(described_class.browser(user_agent)).to eq(:firefox)
+    end
+
+    it "detects Chrome" do
+      user_agent = "Mozilla/5.0 CriOS/124.0 Mobile/15E148 Safari/604.1"
+
+      expect(described_class.browser(user_agent)).to eq(:chrome)
+    end
+
+    it "detects Android Browser" do
+      user_agent = "Mozilla/5.0 Android 4.4 Version/4.0 Mobile Safari/537.36"
+
+      expect(described_class.browser(user_agent)).to eq(:android_browser)
+    end
+
+    it "detects Safari" do
+      user_agent = "Mozilla/5.0 Version/17.0 Mobile/15E148 Safari/604.1"
+
+      expect(described_class.browser(user_agent)).to eq(:safari)
+    end
+
+    it "returns unknown for unsupported browsers" do
+      expect(described_class.browser("ExampleBrowser/1.0")).to eq(:unknown)
+    end
+
+    it "detects Chrome before Android Browser" do
+      expect(
+        described_class.browser(
+          "Mozilla/5.0 (Linux; Android 4.4.2) Version/4.0 Chrome/30.0 Safari/537.36",
+        ),
+      ).to eq(:chrome)
+    end
+  end
 end

@@ -77,6 +77,7 @@ class NestedTopic::ListRoots
         roots,
         params.sort,
         max_depth: NestedReplies::TreeLoader::PRELOAD_DEPTH,
+        starting_depth: 0,
       )
     context[:children_map] = tree_data[:children_map]
     context[:all_posts] = tree_data[:all_posts]

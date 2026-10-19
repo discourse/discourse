@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 fa_IR:
+  js:
+    discourse_captcha:
+      configuration_test:
+        tab_title: "آزمایش کردن"

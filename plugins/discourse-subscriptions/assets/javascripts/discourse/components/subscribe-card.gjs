@@ -23,9 +23,9 @@ export default class SubscribeCard extends Component {
 
   <template>
     <div
-      {{didInsert this.setCardElementStyles}}
       id="card-element"
       ...attributes
+      {{didInsert this.setCardElementStyles}}
     ></div>
   </template>
 }

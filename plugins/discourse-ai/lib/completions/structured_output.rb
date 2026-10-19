@@ -24,6 +24,19 @@ module DiscourseAi
         @done = false
       end
 
+      def content?
+        raw = @raw_response.strip
+        return false if raw.empty? || raw.match?(/\A\{\s*\}\z/)
+        return false if raw == "{" && (@prefilled || !finished?)
+
+        true
+      end
+
+      def prefill
+        @prefilled = true
+        self << "{"
+      end
+
       def to_s
         # we may want to also normalize the JSON here for the broken case
         @raw_response.to_s
@@ -83,6 +96,15 @@ module DiscourseAi
           # Ints and bools, and arrays are always returned as is.
           @tracked[prop_name]
         end
+      end
+
+      # Yields the unread chunk of a string property, if any. Reading consumes
+      # the buffer, so unlike a presence check at the call site this never
+      # drops whitespace-only chunks (e.g. a "\n\n" delta between paragraphs).
+      def read_buffered_property_chunk(prop_name)
+        chunk = read_buffered_property(prop_name)
+        yield chunk if !chunk.nil? && !chunk.empty?
+        chunk
       end
 
       def notify_progress(key, value)

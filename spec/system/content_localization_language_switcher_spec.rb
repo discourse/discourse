@@ -32,7 +32,6 @@ describe "Content localization language switcher" do
     SiteSetting.content_localization_supported_locales = "es|ja"
     SiteSetting.content_localization_enabled = true
     SiteSetting.allow_user_locale = true
-    SiteSetting.set_locale_from_cookie = true
 
     Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
     Fabricate(
@@ -98,6 +97,16 @@ describe "Content localization language switcher" do
     SiteSetting.content_localization_language_switcher = "all"
     visit("/")
     expect(page).to have_css(switcher_selector)
+  end
+
+  it "lets anonymous visitors switch language when set_locale_from_cookie is also enabled" do
+    SiteSetting.set_locale_from_cookie = true
+    SiteSetting.content_localization_language_switcher = "anonymous"
+
+    visit("/")
+    language_switcher.select_language("es")
+
+    expect(topic_list).to have_content("Estrategias de vida de El arte de la guerra")
   end
 
   it "displays the current language code on the trigger button" do

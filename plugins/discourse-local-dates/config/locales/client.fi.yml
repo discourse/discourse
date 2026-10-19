@@ -19,9 +19,11 @@ fi:
         countdown:
           passed: päivämäärä on mennyt
       title: Lisää päivämäärä/aika
+      edit_date: Muokkaa kohdetta %{date}
       create:
         form:
           insert: Lisää
+          save: Tallenna
           format_description: "Muotoilu, jota käytetään päivämäärän näyttämiseen käyttäjälle. Aseta Z näyttääksesi siirtymän ja zz aikavyöhykkeen nimen."
           timezones_title: Näytettävät aikavyöhykkeet
           timezones_description: Aikavyöhykkeitä käytetään näytettäessä päivämääriä esikatselussa sekä varana virhetilanteissa.

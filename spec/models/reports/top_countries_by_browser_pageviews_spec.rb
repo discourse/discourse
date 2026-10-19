@@ -13,7 +13,7 @@ describe Reports::TopCountriesByBrowserPageviews do
 
     it "ranks countries by event count and computes percent of total browser pageviews" do
       3.times { Fabricate(:browser_pageview_event, country_code: "US") }
-      1.times { Fabricate(:browser_pageview_event, country_code: "GB") }
+      Fabricate(:browser_pageview_event, country_code: "GB")
 
       data = report.data
       expect(data.map { |row| row[:country_code] }).to eq(%w[US GB])
@@ -50,6 +50,25 @@ describe Reports::TopCountriesByBrowserPageviews do
       expect(data.map { |row| row[:country_code] }).to contain_exactly("US", "GB")
       expect(data.first[:count]).to eq(1)
       expect(data.first[:percent]).to eq(50)
+    end
+
+    it "excludes likely crawler pageviews once crawler detection is enabled" do
+      SiteSetting.improved_crawler_detection = true
+      3.times { Fabricate(:browser_pageview_event, country_code: "US", score: 10) }
+      Fabricate(:browser_pageview_event, country_code: "GB", score: 90)
+      Fabricate(:browser_pageview_event, country_code: "GB", score: 10)
+
+      data = report.data
+      expect(data.map { |row| row[:country_code] }).to eq(%w[US GB])
+      expect(data.map { |row| row[:count] }).to eq([3, 1])
+      expect(data.first[:percent]).to eq(75)
+    end
+
+    it "counts likely crawler pageviews while crawler detection is disabled" do
+      SiteSetting.improved_crawler_detection = false
+      3.times { Fabricate(:browser_pageview_event, country_code: "US", score: 90) }
+
+      expect(report.data.first[:count]).to eq(3)
     end
 
     it "returns empty data when no events exist in range" do

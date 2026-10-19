@@ -39,6 +39,10 @@ module("Unit | Admin | Lib | dashboard-format", function (hooks) {
       assert.strictEqual(formatDeltaPercent(-0.4), "-0.4%");
     });
 
+    test("rounds a negative sub-1% half step away from zero", function (assert) {
+      assert.strictEqual(formatDeltaPercent(-0.05), "-0.1%");
+    });
+
     test("renders an exact-zero delta without a sign", function (assert) {
       assert.strictEqual(formatDeltaPercent(0), "0%");
     });

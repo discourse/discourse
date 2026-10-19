@@ -47,6 +47,8 @@ ja:
       cast-votes:
         title: "投票する"
         label: "今すぐ投票！"
+      keep-vote:
+        label: "戻る"
       show-results:
         title: "投票結果を表示する"
         label: "結果"

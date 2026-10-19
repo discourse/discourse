@@ -336,6 +336,7 @@ class Search
           ip_address: @opts[:ip_address],
           user_agent: @opts[:user_agent],
           user_id: @opts[:user_id],
+          session_id: @opts[:session_id],
         )
       @results.search_log_id = search_log_id unless status == :error
     end
@@ -789,7 +790,7 @@ class Search
     if date = Search.word_to_date(match)
       posts.where("posts.created_at < ?", date)
     else
-      posts
+      posts.none
     end
   end
 
@@ -799,7 +800,7 @@ class Search
     if date = Search.word_to_date(match)
       posts.where("posts.created_at > ?", date)
     else
-      posts
+      posts.none
     end
   end
 
@@ -1109,6 +1110,7 @@ class Search
     end
 
     return nil unless @guardian.can_see?(post)
+    return nil if @opts[:exclude_private_messages] && post.topic.private_message?
 
     @results.add(post)
     @results
@@ -1275,7 +1277,8 @@ class Search
         posts = posts.where("#{user_search_fields} ILIKE ?", "%#{term_without_quote}%")
       else
         posts = posts.where(post_number: 1) if @in_title
-        posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights)}")
+        weight_filter = weights == "ABCD" ? nil : weights
+        posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter:)}")
         exact_terms = @term.scan(Regexp.new(PHRASE_MATCH_REGEXP_PATTERN)).flatten
 
         exact_terms.each do |exact|
@@ -1286,6 +1289,9 @@ class Search
     end
 
     posts = apply_filters(posts)
+    if @opts[:exclude_private_messages]
+      posts = posts.where.not(topics: { archetype: Archetype.private_message })
+    end
 
     # If we have a search context, prioritize those posts first
     posts =

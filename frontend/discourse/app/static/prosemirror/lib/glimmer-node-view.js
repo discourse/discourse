@@ -10,6 +10,7 @@ import { next } from "@ember/runloop";
  * @property {import("discourse/lib/composer/rich-editor-extensions").PluginParams} pluginParams
  * @property {any} component
  * @property {string} name
+ * @property {Record<string, unknown>} [options]
  */
 export default class GlimmerNodeView {
   @tracked node;
@@ -28,12 +29,14 @@ export default class GlimmerNodeView {
     component,
     name,
     hasContent = false,
+    options,
   }) {
     this.node = node;
     this.view = view;
     this.getPos = getPos;
     this.pluginParams = pluginParams ?? { getContext };
     this.component = component;
+    this.options = options;
 
     this.pluginParams.getContext().addGlimmerNodeView(this);
 
@@ -59,7 +62,12 @@ export default class GlimmerNodeView {
   }
 
   update(node) {
-    this.node = node;
+    // assigning an unchanged node would re-render the component on every
+    // keystroke anywhere in the document
+    if (node !== this.node) {
+      this.node = node;
+      this.#componentInstance?.update?.(node);
+    }
 
     return true;
   }

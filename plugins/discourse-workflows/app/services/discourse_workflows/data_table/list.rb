@@ -14,7 +14,7 @@ module DiscourseWorkflows
     end
 
     model :data_tables, optional: true
-    model :table_sizes, :compute_table_sizes, optional: true
+    model :table_stats, :compute_table_stats, optional: true
     model :total_rows, :compute_total_rows
     model :load_more_url, :compute_load_more_url, optional: true
 
@@ -31,8 +31,8 @@ module DiscourseWorkflows
       context[:page].records
     end
 
-    def compute_table_sizes(data_tables:)
-      DiscourseWorkflows::DataTables::Facade.batch_size_bytes(data_tables.map(&:id))
+    def compute_table_stats(data_tables:)
+      DiscourseWorkflows::DataTables::Facade.batch_stats(data_tables.map(&:id))
     end
 
     def compute_total_rows

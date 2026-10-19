@@ -72,13 +72,21 @@ el:
       post: "Ανάρτηση"
     discourse_workflows:
       nodes:
-        "action:assign_topic": "Ανάθεση θέματος"
         "trigger:assigned": "Ανατέθηκες"
-      node_descriptions:
-        "action:assign_topic": "Ανάθεση ή ακύρωση ανάθεσης θέματος"
       assign_topic:
+        resource: "Πόρος"
+        resources:
+          topic: "Νήμα"
+          post: "Ανάρτηση"
         operation: "Λειτουργία"
         operations:
           assign: "Ανάθεση"
           unassign: "Ακύρωση ανάθεσης"
         topic_id: "ID Θέματος"
+        post_id: "Post ID"
+      check_assignment:
+        target_types:
+          topic: "Νήμα"
+          post: "Ανάρτηση"
+        topic_id: "ID Θέματος"
+        post_id: "Post ID"

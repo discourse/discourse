@@ -101,6 +101,7 @@ RSpec.describe SiteSerializer do
           workflow_id: post_button_workflow.id,
           label: "Run workflow",
           icon: "bolt",
+          post_number: nil,
           position: "last",
           confirmation: false,
           confirmation_message: nil,
@@ -152,6 +153,7 @@ RSpec.describe SiteSerializer do
           "parameters" => {
             "label" => "Run workflow",
             "group_ids" => [Group::AUTO_GROUPS[:logged_in_users]],
+            "post_number" => "2",
             "position" => "more_menu",
             "confirmation" => true,
             "confirmation_message" => "Really run this?",
@@ -169,6 +171,7 @@ RSpec.describe SiteSerializer do
           workflow_id: post_button_workflow.id,
           label: "Run workflow",
           icon: nil,
+          post_number: 2,
           position: "more_menu",
           confirmation: true,
           confirmation_message: "Really run this?",

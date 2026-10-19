@@ -5,3 +5,15 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    rss_polling_enabled: "啟用從多個 RSS 摘要匯入嵌入式貼文"
+    rss_polling_frequency: "摘要輪詢頻率（分鐘）"
+    rss_polling_feed_request_timeout: "擷取摘要時等待其回應的最長時間（秒）。"
+    rss_polling_verbose_logging: "記錄每次輪詢嘗試的詳細資訊，包括匯入或略過哪些項目及原因。"
+    rss_polling_use_pubdate: "將主題建立日期設為 RSS 摘要中的 pubDate"
+    rss_polling_update_tags: "更新主題時同步更新主題標籤。停用後仍會擷取初始標籤，但不會再變更標籤。"
+  rss_polling:
+    errors:
+      feed_url_must_be_http: "摘要 URL 必須以 http:// 或 https:// 開頭。"
+      unknown_author_username: "找不到使用者名稱為「%{username}」的使用者。"
+      required_tag_group: "「%{category}」中的主題至少需要「%{tag_group}」群組的 %{count} 個標籤（%{tags}）。請新增其中一個標籤，以免匯入項目遭拒。"

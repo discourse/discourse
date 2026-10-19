@@ -13,9 +13,9 @@ export default class ChatNavbarClosePinsButton extends Component {
     {{#if this.site.desktopView}}
       <LinkTo
         class="c-navbar__close-pins-button btn-transparent btn btn-icon no-text"
-        @route="chat.channel"
-        @models={{@channel.routeModels}}
         title={{this.closeButtonTitle}}
+        @models={{@channel.routeModels}}
+        @route="chat.channel"
       >
         {{dIcon "xmark"}}
       </LinkTo>

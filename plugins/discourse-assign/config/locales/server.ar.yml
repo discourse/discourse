@@ -9,7 +9,7 @@ ar:
     assign_enabled: "تفعيل المكوِّن الإضافي للتعيين"
     assigns_public: "السماح للعامة برؤية تعيينات الموضوعات"
     assigns_user_url_path: "مسار الموضوعات المعيَّنة إلى المستخدمين (استخدم: {username} لاستبدال اسم المستخدم)"
-    assigns_by_staff_mention: "تعيين الموضوع تلقائيًا إذا أشار أحد أعضاء طاقم العمل إلى عضو آخر في طاقم العمل"
+    assigns_by_staff_mention: "تعيين الموضوع تلقائيًا إذا أشار أحد أعضاء فريق العمل إلى عضو آخر في فريق العمل"
     unassign_creates_tracking_post: "إنشاء همسة أو إجراء صغير لتتبُّع التغيير إذا ألغيت تعيين موضوع"
     assign_self_regex: "العبارة النمطية التي يجب تمريرها للتعيين الذاتي. مثال: 'قائمتي'"
     assign_other_regex: "العبارة النمطية التي يجب تمريرها لتعيين الموضوعات إلى الآخرين من خلال الإشارة. مثال: \"قائمتك\""
@@ -42,6 +42,7 @@ ar:
         nobody: "تصفية الموضوعات غير المخصصة لأي شخص"
         anyone: "تصفية الموضوعات المخصصة لأي شخص"
     already_claimed: "تمت المطالبة بملكية هذا الموضوع بالفعل."
+    no_assignee: "لم يتم تحديد أي مستخدم معيَّن."
     already_assigned: "الموضوع معيَّن بالفعل إلى @%{username}"
     too_many_assigns: "لقد بلغ @%{username} أقصى عدد من الموضوعات المعيَّنة (%{max})."
     too_many_assigns_for_topic: "تم بلوغ الحد الأقصى لعدد المهام المعيَّنة في الموضوع والبالغ %{limit}."
@@ -63,9 +64,6 @@ ar:
       weekly: "أسبوعيًا"
       monthly: "شهريًا"
       quarterly: "ربع سنوي"
-    discourse_workflows:
-      assign_topic:
-        error: "فشل تعيين الموضوع: %{reason}"
   assign_mailer:
     title: "تعيين مرسل البريد"
     subject_template: "عيَّن [%{email_prefix}] %{assignee_name} الموضوع \"%{topic_title}\" إليك!"

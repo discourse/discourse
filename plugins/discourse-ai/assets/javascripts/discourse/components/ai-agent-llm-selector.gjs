@@ -8,69 +8,30 @@ import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-b
 import { i18n } from "discourse-i18n";
 
 const AGENT_SELECTOR_KEY = "ai_agent_selector_id";
-const LLM_SELECTOR_KEY = "ai_llm_selector_id";
+const LEGACY_LLM_SELECTOR_KEY = "ai_llm_selector_id";
+const LLM_SELECTOR_KEY = "ai_llm_selector_model_id";
 
 export default class AiAgentLlmSelector extends Component {
   @service currentUser;
   @service keyValueStore;
 
-  @tracked llm;
   @tracked allowLLMSelector = true;
+  @tracked llm;
+
+  #preferredLlmId;
 
   constructor() {
     super(...arguments);
 
-    if (this.botOptions?.length) {
+    if (this.botOptions.length) {
       this.#loadStoredAgent();
       this.#loadStoredLlm();
 
       next(() => {
-        this.resetTargetRecipients();
+        this.resetTargetRecipient();
         this.notifySelectionChanged();
       });
     }
-  }
-
-  get composer() {
-    return this.args?.outletArgs?.model;
-  }
-
-  get hasLlmSelector() {
-    return (
-      this.currentUser.ai_enabled_chat_bots?.some((bot) => !bot.is_agent) ||
-      false
-    );
-  }
-
-  get enabledAgents() {
-    return this.currentUser.ai_enabled_agents || [];
-  }
-
-  get botOptions() {
-    if (!this.enabledAgents) {
-      return;
-    }
-
-    let enabledAgents = this.enabledAgents;
-    enabledAgents = enabledAgents.filter(
-      (agent) => agent.allow_personal_messages
-    );
-
-    if (!this.hasLlmSelector) {
-      enabledAgents = enabledAgents.filter((agent) => agent.username);
-    }
-
-    return enabledAgents.map((agent) => {
-      return {
-        id: agent.id,
-        name: agent.name,
-        description: agent.description,
-      };
-    });
-  }
-
-  get filterable() {
-    return this.botOptions.length > 8;
   }
 
   get value() {
@@ -82,21 +43,9 @@ export default class AiAgentLlmSelector extends Component {
     this.keyValueStore.setItem(AGENT_SELECTOR_KEY, newValue);
     this.args.setAgentId(newValue);
     this.setAllowLLMSelector();
-    this.resetTargetRecipients();
+    this.#selectModelForAgent();
+    this.resetTargetRecipient();
     this.notifySelectionChanged();
-  }
-
-  setAllowLLMSelector() {
-    if (!this.hasLlmSelector) {
-      this.allowLLMSelector = false;
-      return;
-    }
-
-    const agent = this.enabledAgents.find(
-      (innerAgent) => innerAgent.id === this._value
-    );
-
-    this.allowLLMSelector = !agent?.force_default_llm;
   }
 
   get currentLlm() {
@@ -104,16 +53,66 @@ export default class AiAgentLlmSelector extends Component {
   }
 
   set currentLlm(newValue) {
-    this.llm = newValue;
-    this.keyValueStore.setItem(LLM_SELECTOR_KEY, newValue);
-
-    // Pass the LLM model ID (not user ID) for credit checking
-    const bot = this.currentUser.ai_enabled_chat_bots.find(
-      (b) => b.id === newValue
-    );
-    this.args.setLlmId?.(bot?.llm_model_id);
-    this.resetTargetRecipients();
+    this.#setEffectiveLlm(newValue, { persistPreference: true });
     this.notifySelectionChanged();
+  }
+
+  get composer() {
+    return this.args?.outletArgs?.model;
+  }
+
+  get hasLlmSelector() {
+    return this.llmOptions.length > 0;
+  }
+
+  get hasUnavailableLlm() {
+    return this.llm && !this.llmOptions.some((model) => model.id === this.llm);
+  }
+
+  get enabledAgents() {
+    return this.currentUser.ai_enabled_agents || [];
+  }
+
+  get selectedAgent() {
+    return this.enabledAgents.find((agent) => agent.id === this._value);
+  }
+
+  get botOptions() {
+    return this.enabledAgents
+      .filter((agent) => agent.allow_personal_messages && agent.username)
+      .map((agent) => ({
+        id: agent.id,
+        name: agent.name,
+        description: agent.description,
+      }));
+  }
+
+  get filterable() {
+    return this.botOptions.length > 8;
+  }
+
+  get llmOptions() {
+    return (this.currentUser.ai_available_llm_models || [])
+      .map((model) => ({ id: model.id, name: model.display_name }))
+      .sort((first, second) => first.name.localeCompare(second.name));
+  }
+
+  get showAgentSelector() {
+    return (
+      this.botOptions.length > 1 || (this.args.agentId && !this.selectedAgent)
+    );
+  }
+
+  get showLLMSelector() {
+    return (
+      this.allowLLMSelector &&
+      (this.llmOptions.length > 1 || this.hasUnavailableLlm)
+    );
+  }
+
+  setAllowLLMSelector() {
+    this.allowLLMSelector =
+      this.hasLlmSelector && !this.selectedAgent?.force_default_llm;
   }
 
   notifySelectionChanged() {
@@ -121,131 +120,127 @@ export default class AiAgentLlmSelector extends Component {
       return;
     }
 
-    let agentName = null;
-    if (this.showAgentSelector) {
-      agentName = this.enabledAgents.find(
-        (agent) => agent.id === this._value
-      )?.name;
-    }
-
+    const agentName = this.showAgentSelector ? this.selectedAgent?.name : null;
     let llmName = null;
-    if (this.showLLMSelector) {
-      llmName = this.currentUser.ai_enabled_chat_bots.find(
-        (bot) => bot.id === this.llm
-      )?.display_name;
+    if (this.selectedAgent?.force_default_llm) {
+      llmName = this.selectedAgent.default_llm_name;
+    } else if (this.showLLMSelector) {
+      llmName = this.llmOptions.find((model) => model.id === this.llm)?.name;
     }
 
     this.args.onSelectionChanged({ agentName, llmName });
   }
 
-  resetTargetRecipients() {
-    if (this.allowLLMSelector) {
-      const botUsername = this.currentUser.ai_enabled_chat_bots.find(
-        (bot) => bot.id === this.llm
-      ).username;
-      this.args.setTargetRecipient(botUsername);
-    } else {
-      const agent = this.enabledAgents.find(
-        (innerAgent) => innerAgent.id === this._value
-      );
-      this.args.setTargetRecipient(agent.username || "");
-    }
-  }
-
-  get llmOptions() {
-    const availableBots = this.currentUser.ai_enabled_chat_bots
-      .filter((bot) => !bot.is_agent)
-      .filter(Boolean);
-
-    return availableBots
-      .map((bot) => {
-        return {
-          id: bot.id,
-          name: bot.display_name,
-        };
-      })
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }
-
-  get showAgentSelector() {
-    return this.botOptions?.length > 1;
-  }
-
-  get showLLMSelector() {
-    return this.allowLLMSelector && this.llmOptions.length > 1;
+  resetTargetRecipient() {
+    this.args.setTargetRecipient(this.selectedAgent?.username || "");
   }
 
   #getAgentIdFromAttrs() {
-    const agentName = this.args?.agentName;
+    if (this.args.agentId) {
+      return parseInt(this.args.agentId, 10);
+    }
+
+    const agentName = this.args.agentName;
     if (agentName) {
       const slug = slugify(agentName);
       const agent = this.botOptions.find(
-        (p) => p.name === agentName || (slug && slugify(p.name) === slug)
+        (option) =>
+          option.name === agentName || (slug && slugify(option.name) === slug)
       );
-      if (agent) {
-        return agent.id;
-      }
+      return agent?.id;
     }
   }
 
   #getLlmIdFromAttrs() {
-    const llmName = this.args?.llmName;
+    if (this.args.llmModelId) {
+      return parseInt(this.args.llmModelId, 10);
+    }
+
+    const llmName = this.args.llmName;
     if (llmName) {
       const slug = slugify(llmName);
       const llm = this.llmOptions.find(
-        (l) => l.name === llmName || (slug && slugify(l.name) === slug)
+        (option) =>
+          option.name === llmName || (slug && slugify(option.name) === slug)
       );
-      if (llm) {
-        return llm.id;
-      }
+      return llm?.id || llmName;
     }
   }
 
   #loadStoredAgent() {
+    const attrAgentId = this.#getAgentIdFromAttrs();
     let agentId =
-      this.#getAgentIdFromAttrs() ||
-      this.keyValueStore.getItem(AGENT_SELECTOR_KEY);
+      attrAgentId ??
+      parseInt(this.keyValueStore.getItem(AGENT_SELECTOR_KEY), 10);
 
-    this._value = this.botOptions[0].id;
-    if (agentId) {
-      agentId = parseInt(agentId, 10);
-      if (this.botOptions.some((bot) => bot.id === agentId)) {
-        this._value = agentId;
-      }
+    if (!this.botOptions.some((agent) => agent.id === agentId)) {
+      agentId = attrAgentId === undefined ? this.botOptions[0].id : null;
     }
-
-    // deferred: the parent tracks state already consumed by templates
-    // rendered before this component
-    next(() => this.args.setAgentId(this._value));
+    this._value = agentId;
+    this.setAllowLLMSelector();
+    next(() => this.args.setAgentId(agentId));
   }
 
   #loadStoredLlm() {
-    this.setAllowLLMSelector();
-
-    if (this.hasLlmSelector) {
-      let llmId =
-        this.#getLlmIdFromAttrs() ||
-        this.keyValueStore.getItem(LLM_SELECTOR_KEY);
-      if (llmId) {
-        llmId = parseInt(llmId, 10);
-      }
-
-      const llmOption =
-        this.llmOptions.find((innerLlmOption) => innerLlmOption.id === llmId) ||
-        this.llmOptions[0];
-
-      if (llmOption) {
-        llmId = llmOption.id;
-      } else {
-        llmId = "";
-      }
-
-      if (llmId) {
-        next(() => {
-          this.currentLlm = llmId;
-        });
-      }
+    const hasExplicitLlm =
+      (this.args.llmModelId !== undefined &&
+        this.args.llmModelId !== null &&
+        this.args.llmModelId !== "") ||
+      Boolean(this.args.llmName);
+    let llmId = this.selectedAgent?.force_default_llm
+      ? null
+      : this.#getLlmIdFromAttrs();
+    if (!hasExplicitLlm) {
+      llmId ||= parseInt(this.keyValueStore.getItem(LLM_SELECTOR_KEY), 10);
+      llmId ||= this.#translateLegacyLlmId();
     }
+    const available = this.llmOptions.some((model) => model.id === llmId);
+    if (!available && !hasExplicitLlm) {
+      llmId = this.llmOptions[0]?.id || null;
+    }
+
+    this.#preferredLlmId = llmId;
+    if (llmId && available) {
+      this.keyValueStore.setItem(LLM_SELECTOR_KEY, llmId);
+    }
+
+    const effectiveLlmId = this.selectedAgent?.force_default_llm
+      ? this.selectedAgent.default_llm_id
+      : llmId;
+    this.llm = effectiveLlmId;
+    next(() => this.args.setLlmId?.(effectiveLlmId || null));
+  }
+
+  #selectModelForAgent() {
+    if (this.selectedAgent?.force_default_llm) {
+      this.#setEffectiveLlm(this.selectedAgent.default_llm_id);
+    } else {
+      const llmId = this.llmOptions.some(
+        (model) => model.id === this.#preferredLlmId
+      )
+        ? this.#preferredLlmId
+        : this.llmOptions[0]?.id || null;
+      this.#setEffectiveLlm(llmId, { persistPreference: true });
+    }
+  }
+
+  #setEffectiveLlm(newValue, { persistPreference = false } = {}) {
+    this.llm = newValue;
+    if (persistPreference) {
+      this.#preferredLlmId = newValue;
+      this.keyValueStore.setItem(LLM_SELECTOR_KEY, newValue);
+    }
+    this.args.setLlmId?.(newValue || null);
+  }
+
+  #translateLegacyLlmId() {
+    const legacyUserId = parseInt(
+      this.keyValueStore.getItem(LEGACY_LLM_SELECTOR_KEY),
+      10
+    );
+    return this.currentUser.ai_available_llm_models?.find(
+      (model) => model.legacy_user_id === legacyUserId
+    )?.id;
   }
 
   <template>
@@ -257,13 +252,13 @@ export default class AiAgentLlmSelector extends Component {
           {{/if}}
           <DropdownSelectBox
             class="agent-llm-selector__agent-dropdown"
-            @value={{this.value}}
             @content={{this.botOptions}}
             @options={{hash
-              icon=(if @showLabels "angle-down" "robot")
-              filterable=this.filterable
               customStyle=true
+              filterable=this.filterable
+              icon=(if @showLabels "angle-down" "robot")
             }}
+            @value={{this.value}}
           />
         </div>
       {{/if}}
@@ -274,12 +269,12 @@ export default class AiAgentLlmSelector extends Component {
           {{/if}}
           <DropdownSelectBox
             class="agent-llm-selector__llm-dropdown"
-            @value={{this.currentLlm}}
             @content={{this.llmOptions}}
             @options={{hash
-              icon=(if @showLabels "angle-down" "globe")
               customStyle=true
+              icon=(if @showLabels "angle-down" "globe")
             }}
+            @value={{this.currentLlm}}
           />
         </div>
       {{/if}}

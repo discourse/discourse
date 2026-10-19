@@ -17,7 +17,7 @@ module DiscourseAi
           # max_tokens is deprecated however we still need to support it
           # on older OpenAI models and older Azure models, so we will only normalize
           # if our model name starts with o (to denote all the reasoning models)
-          if llm_model.name.starts_with?(/o|gpt-5/)
+          if llm_model.name.starts_with?(/o|gpt-[56]/)
             max_tokens = normalized.delete(:max_tokens)
             normalized[:max_completion_tokens] = max_tokens if max_tokens
           end

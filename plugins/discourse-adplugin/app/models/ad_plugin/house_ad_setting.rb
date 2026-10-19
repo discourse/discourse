@@ -9,6 +9,7 @@ module AdPlugin
       post_bottom: "",
       topic_list_between: "",
       nested_roots_between: "",
+      above_site_header: "",
     }
 
     def self.all

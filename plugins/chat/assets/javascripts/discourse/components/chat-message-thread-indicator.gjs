@@ -4,8 +4,8 @@ import { trustHTML } from "@ember/template";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
-import ChatThreadParticipants from "./chat-thread-participants";
-import ChatUserAvatar from "./chat-user-avatar";
+import ChatThreadParticipants from "./chat-thread-participants.gjs";
+import ChatUserAvatar from "./chat-user-avatar.gjs";
 
 export default class ChatMessageThreadIndicator extends Component {
   get interactiveUser() {
@@ -22,17 +22,17 @@ export default class ChatMessageThreadIndicator extends Component {
   <template>
     <LinkTo
       class="chat-message-thread-indicator"
-      @route="chat.channel.thread.near-message"
-      @models={{this.threadMessageRoute}}
-      title={{i18n "chat.threads.open"}}
       tabindex="0"
+      title={{i18n "chat.threads.open"}}
       ...attributes
+      @models={{this.threadMessageRoute}}
+      @route="chat.channel.thread.near-message"
     >
       <div class="chat-message-thread-indicator__last-reply-avatar">
         <ChatUserAvatar
-          @user={{@message.thread.preview.lastReplyUser}}
           @avatarSize="small"
           @interactive={{this.interactiveUser}}
+          @user={{@message.thread.preview.lastReplyUser}}
         />
       </div>
 

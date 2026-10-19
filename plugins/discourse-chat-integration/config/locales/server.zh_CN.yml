@@ -22,7 +22,7 @@ zh_CN:
       chat_integration_telegram_api_base_url_invalid: "Telegram API 基本 URL 必须是有效的 HTTPS URL，且不包含凭据、查询字符串或片段。"
     chat_integration_telegram_enabled: "启用 Telegram 聊天集成提供程序"
     chat_integration_telegram_access_token: "来自 Telegram botfather 的机器人访问令牌"
-    chat_integration_telegram_api_base_url: "用于 Telegram Bot API 请求的基本 URL。仅当通过受信任的 HTTPS 代理路由请求时才可更改此设置。私有网络上的主机也必须添加到允许的内部主机站点设置中。"
+    chat_integration_telegram_api_base_url: "用于 Telegram Bot API 请求的基本 URL。仅当通过可信的 HTTPS 代理路由请求时才可更改此设置。私有网络上的主机也必须添加到允许的内部主机站点设置中。"
     chat_integration_telegram_excerpt_length: "Telegram 帖子摘要长度"
     chat_integration_telegram_enable_slash_commands: "允许使用“斜杠命令”管理 Telegram 订阅"
     chat_integration_discord_enabled: "启用 Discord 聊天集成提供程序"
@@ -73,7 +73,11 @@ zh_CN:
   discourse_workflows:
     errors:
       send_chat_integration_message:
-        channel_not_found: "未找到频道： %{channel_id}"
+        channel_not_found: "找不到频道：%{channel_id}"
+        provider_disabled: "聊天集成提供商已禁用或缺失：%{provider}"
+        provider_failed: "%{provider} 提供商无法发送消息"
+        provider_failed_with_details: "%{provider} 提供商无法发送消息：%{details}"
+        message_required: "消息为必填项"
   chat_integration:
     all_categories: "（所有类别）"
     deleted_category: "（已删除的类别）"

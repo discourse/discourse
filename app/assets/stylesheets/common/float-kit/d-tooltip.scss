@@ -23,11 +23,18 @@
   }
 
   &__inner-content {
+    box-sizing: border-box;
     display: flex;
-    overflow: hidden;
+    max-height: 60dvh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     overflow-wrap: break-word;
     padding: 0.5rem;
-    align-items: center;
+
+    // `safe` so content taller than the cap starts at the top instead of being centred,
+    // which would put the first lines above the scrollport and out of reach
+    align-items: safe center;
   }
 
   &__content {

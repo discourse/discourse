@@ -107,12 +107,12 @@ describe "Single thread in side panel" do
     end
 
     context "when in drawer" do
-      it "opens the channel and highlights the message when clicking original message link" do
+      it "takes the user to the highlighted message after they click the original message link" do
         visit("/latest")
         chat_page.open_from_header
         chat_drawer_page.open_channel(channel)
         channel_page.message_thread_indicator(thread.original_message).click
-        find(".chat-message-info__original-message").click
+        thread_page.open_original_message
 
         expect(chat_drawer_page).to have_open_channel(channel)
         expect(channel_page.messages).to have_message(
@@ -122,10 +122,10 @@ describe "Single thread in side panel" do
       end
     end
 
-    it "highlights the message in the channel when clicking original message link" do
+    it "takes the user to the highlighted message after they click the original message link" do
       chat_page.visit_thread(thread)
 
-      find(".chat-message-info__original-message").click
+      thread_page.open_original_message
 
       expect(channel_page.messages).to have_message(
         id: thread.original_message.id,
@@ -246,10 +246,11 @@ describe "Single thread in side panel" do
         expect(side_panel).to have_open_thread(thread)
       end
 
-      it "navigates back to channel when clicking original message link", mobile: true do
+      it "takes the user back to the channel after they click the original message link",
+         mobile: true do
         chat_page.visit_thread(thread)
 
-        find(".chat-message-info__original-message").click
+        thread_page.open_original_message
 
         expect(page).to have_current_path("/chat/c/#{channel.slug}/#{channel.id}")
       end
@@ -264,50 +265,6 @@ describe "Single thread in side panel" do
         chat_page.visit_thread(thread)
 
         expect(page).to have_selector(".chat-thread .chat-message-separator__text", text: "Today")
-      end
-    end
-
-    context "when thread messages are sent with client timestamps" do
-      it "orders thread messages by client timestamp rather than server timestamp" do
-        first_message =
-          Chat::CreateMessage.call(
-            params: {
-              chat_channel_id: channel.id,
-              thread_id: thread.id,
-              message: "Thread message created first but should appear second",
-              client_created_at: 30.seconds.ago.iso8601,
-            },
-            guardian: current_user.guardian,
-          ).message_instance
-
-        second_message =
-          Chat::CreateMessage.call(
-            params: {
-              chat_channel_id: channel.id,
-              thread_id: thread.id,
-              message: "Thread message created second but should appear first",
-              client_created_at: 45.seconds.ago.iso8601,
-            },
-            guardian: current_user.guardian,
-          ).message_instance
-
-        chat_page.visit_thread(thread)
-
-        expect(page).to have_selector(
-          ".chat-thread .chat-message-container[data-id='#{first_message.id}'] .chat-message-text",
-          text: "Thread message created first but should appear second",
-        )
-        expect(page).to have_selector(
-          ".chat-thread .chat-message-container[data-id='#{second_message.id}'] .chat-message-text",
-          text: "Thread message created second but should appear first",
-        )
-
-        messages = page.all(".chat-thread .chat-message-container[data-id]")
-        message_ids = messages.map { |msg| msg["data-id"].to_i }
-        second_message_index = message_ids.index(second_message.id)
-        first_message_index = message_ids.index(first_message.id)
-
-        expect(second_message_index).to be < first_message_index
       end
     end
   end

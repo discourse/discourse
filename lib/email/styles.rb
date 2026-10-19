@@ -11,6 +11,7 @@ module Email
       "max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;"
     ONEBOX_IMAGE_THUMBNAIL_STYLE = "width: 60px;"
     ONEBOX_INLINE_AVATAR_STYLE = "width: 20px; height: 20px; float: none; vertical-align: middle;"
+    CODE_BACKGROUND_COLOR = "#f9f9f9"
 
     @@plugin_callbacks = []
 
@@ -285,8 +286,11 @@ module Email
       style("div.summary-footer", "color:#666; font-size:95%; text-align:center; padding-top:15px;")
       style("span.post-count", "margin: 0 5px; color: #777;")
       style("pre", "word-wrap: break-word; max-width: 694px;")
-      style("code", "background-color: #f9f9f9; padding: 2px 5px;")
-      style("pre code", "display: block; background-color: #f9f9f9; overflow: auto; padding: 5px;")
+      style("code", "background-color: #{CODE_BACKGROUND_COLOR}; padding: 2px 5px;")
+      style(
+        "pre code",
+        "display: block; background-color: #{CODE_BACKGROUND_COLOR}; overflow: auto; padding: 5px;",
+      )
       style("pre.onebox code", "white-space: normal;")
       style("pre code li", "white-space: pre;")
       style(
@@ -440,6 +444,7 @@ module Email
     def to_html
       replace_secure_uploads_urls if SiteSetting.secure_uploads?
       replace_relative_urls
+      make_all_links_absolute
       deduplicate_styles
 
       @fragment.to_html
@@ -477,14 +482,9 @@ module Email
     end
 
     def make_all_links_absolute
-      site_uri = URI(Discourse.base_url)
       @fragment
-        .css("a")
-        .each do |link|
-          link["href"] = "#{site_uri}#{link["href"]}" if URI(link["href"].to_s).host.blank?
-        rescue URI::Error
-          # leave it
-        end
+        .css("a[href]")
+        .each { |link| link["href"] = UrlHelper.absolute_without_cdn(link["href"]) }
     end
 
     private

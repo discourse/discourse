@@ -9,8 +9,8 @@ import AdminCreateLeaderboard from "discourse/plugins/discourse-gamification/adm
 
 export default <template>
   <DBreadcrumbsItem
-    @path="/admin/plugins/{{@controller.adminPluginNavManager.currentPlugin.name}}/leaderboards"
     @label={{i18n "gamification.leaderboard.title"}}
+    @path="/admin/plugins/{{@controller.adminPluginNavManager.currentPlugin.name}}/leaderboards"
   />
 
   <div class="discourse-gamification__leaderboards admin-detail">
@@ -18,17 +18,18 @@ export default <template>
       <:actions as |actions|>
         {{#if @controller.model.leaderboards}}
           <actions.Primary
-            @label="gamification.leaderboard.new"
-            @title="gamification.leaderboard.new"
             class="leaderboard-admin__btn-new"
             @action={{fn (mut @controller.creatingNew) true}}
+            @icon="plus"
+            @label="gamification.leaderboard.new"
+            @title="gamification.leaderboard.new"
           />
 
           <actions.Default
-            @label="gamification.recalculate"
-            @title="gamification.recalculate"
             class="leaderboard-admin__btn-recalculate"
             @action={{@controller.recalculateScores}}
+            @label="gamification.recalculate"
+            @title="gamification.recalculate"
           />
         {{/if}}
       </:actions>
@@ -40,25 +41,40 @@ export default <template>
 
     <div class="leaderboards">
       {{#if @controller.model.leaderboards}}
-        <table>
-          <thead>
-            <th>{{i18n "gamification.admin.name"}}</th>
-            <th>{{i18n "gamification.admin.period"}}</th>
-            <th></th>
+        <table class="d-table">
+          <thead class="d-table__header">
+            <tr class="d-table__row">
+              <th class="d-table__header-cell">{{i18n
+                  "gamification.admin.name"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "gamification.admin.period"
+                }}</th>
+              <th class="d-table__header-cell"></th>
+            </tr>
           </thead>
 
-          <tbody>
+          <tbody class="d-table__body">
             {{#each @controller.model.leaderboards as |leaderboard|}}
-              <tr id={{concat "leaderboard-admin__row-" leaderboard.id}}>
-                <td>
+              <tr
+                class="d-table__row"
+                id={{concat "leaderboard-admin__row-" leaderboard.id}}
+              >
+                <td class="d-table__cell --overview">
                   <LinkTo
-                    @route="gamificationLeaderboard.byName"
+                    class="d-table__overview-link"
                     @model={{leaderboard.id}}
+                    @route="gamificationLeaderboard.byName"
                   >
-                    {{leaderboard.name}}
+                    <div class="d-table__overview-name">
+                      {{leaderboard.name}}
+                    </div>
                   </LinkTo>
                 </td>
-                <td>
+                <td class="d-table__cell --detail">
+                  <div class="d-table__mobile-label">
+                    {{i18n "gamification.admin.period"}}
+                  </div>
                   {{#if leaderboard.fromDate}}
                     {{dFormatDate (@controller.parseDate leaderboard.fromDate)}}
                     -
@@ -67,19 +83,19 @@ export default <template>
                     {{leaderboard.defaultPeriod}}
                   {{/if}}
                 </td>
-                <td style="width: 120px">
-                  <div class="leaderboard-admin__listitem-action">
+                <td class="d-table__cell --controls">
+                  <div class="d-table__cell-actions">
                     <LinkTo
-                      @route="adminPlugins.show.discourse-gamification-leaderboards.show"
+                      class="btn btn-default leaderboard-admin__edit btn-text btn-small"
                       @model={{leaderboard}}
-                      class="btn leaderboard-admin__edit btn-text btn-small"
+                      @route="adminPlugins.show.discourse-gamification-leaderboards.show"
                     >{{i18n "gamification.edit"}} </LinkTo>
 
                     <DButton
                       class="btn-small leaderboard-admin__delete btn-danger"
+                      @action={{fn @controller.destroyLeaderboard leaderboard}}
                       @icon="trash-can"
                       @title="gamification.delete"
-                      @action={{fn @controller.destroyLeaderboard leaderboard}}
                     />
                   </div>
                 </td>
@@ -92,9 +108,9 @@ export default <template>
           <div class="admin-plugin-config-area__empty-list">
             {{i18n "gamification.leaderboard.none"}}
             <DButton
-              @label="gamification.leaderboard.cta"
               class="btn-default btn-small leaderboard-admin__cta-new"
               @action={{fn (mut @controller.creatingNew) true}}
+              @label="gamification.leaderboard.cta"
             />
           </div>
         {{/unless}}

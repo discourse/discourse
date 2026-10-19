@@ -15,7 +15,7 @@ class ThemeSettingsValidator
         value.is_a?(Integer) || value.is_a?(Float)
       when types[:bool]
         value.is_a?(TrueClass) || value.is_a?(FalseClass)
-      when types[:list]
+      when types[:list], types[:icon]
         value.is_a?(String)
       when types[:objects]
         value.is_a?(Array) && value.all? { |v| v.is_a?(Hash) }

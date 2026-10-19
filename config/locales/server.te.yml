@@ -5,6 +5,34 @@
 # https://translate.discourse.org/
 
 te:
+  markdown_endpoints:
+    latest: "తాజా"
+    categories: "వర్గాలు"
+    tags: "ట్యాగులు"
+    previous_page: "గత పుట"
+    next_page: "తరువాతి పుట"
+    replies: "ప్రత్యుత్తరాలు"
+    event:
+      location: "ప్రాంతం"
+      link: "లింక్"
+  mcp:
+    errors:
+      topic_not_found: "విషయం కనిపించలేదు"
+    oauth:
+      deny: "తిరస్కరించండి"
+      approve: "అధికారం ఇవ్వండి"
+  llms_txt:
+    sections:
+      optional: "ఐచ్ఛికం"
+    links:
+      search:
+        label: "వెతుకు"
+      categories:
+        label: "వర్గాలు"
+      about:
+        label: "మా సంఘం గురించి"
+      guidelines:
+        label: "మార్గదర్శకాలు"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -493,16 +521,15 @@ te:
     success_unapproved: "మీరు విజయవంతంగా సంకేతపదం మార్చారు."
   email_login:
     title: "ఇమెయిల్ లాగిన్"
+  browsers:
+    chrome: "గూగుల్ క్రోమ్"
+    discoursehub: "DiscourseHub యాప్"
+    edge: "మైక్రోసాఫ్ట్ ఎడ్జ్"
+    firefox: "ఫైర్‌ఫాక్స్"
+    ie: "ఇంటర్నెట్ ఎక్స్ ప్లోరర్"
+    opera: "ఒపేరా"
+    safari: "సఫారి"
   user_auth_tokens:
-    browser:
-      chrome: "గూగుల్ క్రోమ్"
-      discoursehub: "DiscourseHub యాప్"
-      edge: "మైక్రోసాఫ్ట్ ఎడ్జ్"
-      firefox: "ఫైర్‌ఫాక్స్"
-      ie: "ఇంటర్నెట్ ఎక్స్ ప్లోరర్"
-      opera: "ఒపేరా"
-      safari: "సఫారి"
-      unknown: "తెలియని బ్రౌజర్"
     device:
       android: "ఆండ్రాయిడ్ పరికరం"
       chromebook: "క్రోమ్ OS"
@@ -522,6 +549,9 @@ te:
       macos: "macOS"
       windows: "మైక్రోసాఫ్ట్ విండోస్"
       unknown: "తెలియని ఆపరేటింగ్ సిస్టమ్"
+  admin_site_traffic_explorer:
+    traffic_types:
+      anonymous: "అనామక"
   change_email:
     error: "మీ ఈమెయిల్ చిరునామా మార్చడంలో దోషం. బహుశా ఆ చిరునామా ఈసరికే వాడుకలో ఉందా?"
     confirm: "నిర్ధారించండి"
@@ -615,7 +645,7 @@ te:
   uploads:
     marked_insecure_from_theme_component_reason: "థీమ్ భాగంలో ఉపయోగించిన అప్లోడ్"
   unsubscribe:
-    title: "చందాను తీసివేయండి"
+    unsubscribe: "చందాను తీసివేయండి"
     stop_watching_topic: "ఈ విషయాన్నీ అనుసరించటం ఆపివేయండి, %{link}"
     unwatch_category: "%{category} లో అన్ని విషయాలను అనుసరించడం ఆపివేయండి"
     mailing_list_mode: "మెయిలింగ్ జాబితా మోడ్ను ఆపివేయండి"
@@ -725,6 +755,11 @@ te:
         share: "షేర్ చేయండి"
       types:
         staff: "సిబ్బంది"
+    posters_by_member_type_members:
+      labels:
+        user: "సభ్యుడు"
+        count: "పోస్ట్‌లు"
+        share: "షేర్ చేయండి"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -870,6 +905,9 @@ te:
         num_clicks: "నొక్కులు"
         num_topics: "విషయాలు"
     top_countries_by_browser_pageviews:
+      labels:
+        count: "సందర్శనాలు"
+    top_entry_urls:
       labels:
         count: "సందర్శనాలు"
     top_referrers_by_browser_pageviews:
@@ -1373,7 +1411,6 @@ te:
     user_profile_view_duration_hours: "ప్రతి IP/యూజర్‌కి ప్రతి N గంటలకు ఒకసారి కొత్త వినియోగదారు ప్రొఫైల్ వీక్షణను లెక్కించండి"
     levenshtein_distance_spammer_emails: "స్పామర్ ఇమెయిల్‌లను సరిపోల్చేటప్పుడు, అస్పష్టమైన సరిపోలికను అనుమతించే అక్షరాల సంఖ్య తేడా."
     max_new_accounts_per_registration_ip: "ఈ IP నుండి ఇప్పటికే (n) ట్రస్ట్ లెవల్ 0 ఖాతాలు ఉంటే (మరియు ఎవరూ స్టాఫ్ మెంబర్ లేదా TL2 లేదా అంతకంటే ఎక్కువ వద్ద), ఆ IP నుండి కొత్త సైన్అప్‌లను ఆమోదించడాన్ని ఆపివేయండి. పరిమితిని నిలిపివేయడానికి 0కి సెట్ చేయండి."
-    min_ban_entries_for_roll_up: "రోల్ అప్ బటన్‌ను క్లిక్ చేసినప్పుడు, కనీసం (N) ఎంట్రీలు ఉంటే కొత్త సబ్‌నెట్ బ్యాన్ ఎంట్రీని సృష్టిస్తుంది."
     max_age_unmatched_emails: "(N) రోజుల తర్వాత సరిపోలని స్క్రీన్ చేయబడిన ఇమెయిల్ ఎంట్రీలను తొలగించండి."
     max_age_unmatched_ips: "(N) రోజుల తర్వాత సరిపోలని స్క్రీన్ చేయబడిన IP ఎంట్రీలను తొలగించండి."
     num_flaggers_to_close_topic: "జోక్యం కోసం టాపిక్‌ను ఆటోమేటిక్‌గా పాజ్ చేయడానికి అవసరమైన కనిష్ట సంఖ్యలో ప్రత్యేకమైన ఫ్లాగర్‌లు అవసరం"
@@ -1609,7 +1646,6 @@ te:
       invalid_email: "చెల్లని ఈమెయిలు చిరునామా."
       invalid_username: "ఆ పేరుతో ఏ వాడురకీ లేరు."
       valid_username: "ఆ సభ్యనామంతో ఒక సభ్యుడు ఉన్నారు."
-      invalid_group: "ఆ పేరుతో సమూహం లేదు."
       invalid_integer_min_max: "ఇది తప్పనిసరిగా %{min} మరియు %{max} మధ్య ఉండాలి."
       invalid_integer_min: "విలువ %{min} లేదా అంతకంటే ఎక్కువ ఉండాలి."
       invalid_integer_max: "విలువ %{max} కంటే ఎక్కువగా ఉండకూడదు."
@@ -1705,6 +1741,7 @@ te:
     new_registrations_disabled: "కొత్త ఖాతా నమోదులను ప్రస్తుతం అనుమతించడం లేదు."
     password_too_long: "సంకేతపదాలు 200 అక్షరాలకు పరిమితం"
     reserved_username: "ఆ సభ్యనామం అనుమతించబడదు."
+    missing_username: "దయచేసి సభ్యనామం నమోదు చేయండి"
     click_to_continue: "కొనసాగించడానికి ఇక్కడ క్లిక్ చేయండి."
     second_factor_title: "రెండు-కారకాల ప్రమాణీకరణ"
     second_factor_backup_description: "దయచేసి మీ బ్యాకప్ కోడ్‌లలో ఒకదానిని నమోదు చేయండి:"
@@ -1985,10 +2022,6 @@ te:
     user_posted_pm:
       title: "సభ్యుడు పోస్ట్ చేసిన PM"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
-    user_posted_pm_staged:
-      text_body_template: |2
-
-        %{message}
     account_suspended:
       title: "ఖాతా నిలిపివేయబడింది"
     account_suspended_forever:
@@ -2053,7 +2086,7 @@ te:
         ఒక సిబ్బంది మీ ఖాతాను %{site_name}లో ఆమోదించారు.
 
         మీరు ఇప్పుడు ఇక్కడ లాగిన్ చేయడం ద్వారా మీ కొత్త ఖాతాను యాక్సెస్ చేయవచ్చు:
-        %{base_url}
+        %{login_url}
 
         పై లింక్ క్లిక్ చేయలేకపోతే, దాన్ని కాపీ చేసి మీ వెబ్ బ్రౌజర్ చిరునామా బార్‌లో అతికించడానికి ప్రయత్నించండి.
 
@@ -2406,6 +2439,10 @@ te:
   safe_mode:
     title: "సురక్షిత మోడ్‌ను నమోదు చేయండి"
     enter: "సేఫ్ మోడ్‌ని నమోదు చేయండి"
+  design_wizard:
+    palette_pairs:
+      default: "అప్రమేయ"
+      dracula: "డ్రాక్యులా"
   wizard:
     title: "డిస్కర్స్ సెటప్"
     step:
@@ -2479,6 +2516,9 @@ te:
       medium: "మధ్యస్థం"
       high: "అధిక"
     reasons:
+      fast_typer_time:
+        one: "ఒక సెకను"
+        other: "%{count} సెకన్లు"
       links:
         category: వర్గం సెట్టింగులు
     actions:
@@ -2509,6 +2549,8 @@ te:
         title: "పోస్ట్ మరియు ప్రత్యుత్తరాలను తొలగించండి"
       disagree_and_restore:
         title: "పోస్ట్‌ని పునరుద్ధరించండి"
+      disagree_and_keep_deleted:
+        title: "పోస్ట్‌ను తొలగించి ఉంచండి"
       disagree_bundle:
         title: "లేదు"
       disagree:
@@ -2550,12 +2592,6 @@ te:
         title: "అవును"
       approve_and_unhide:
         title: "అవును"
-      delete_post:
-        title: "పోస్ట్ తొలగించండి"
-      hide_post:
-        title: "పోస్ట్ను దాచండి"
-      restore_post:
-        title: "పోస్ట్‌ని పునరుద్ధరించండి"
       silence_user:
         title: "సభ్యుని నిశ్శబ్దం చేయండి"
       suspend_user:

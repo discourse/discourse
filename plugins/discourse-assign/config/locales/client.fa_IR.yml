@@ -52,4 +52,15 @@ fa_IR:
       nodes:
         "trigger:assigned": "اختصاص داده شده"
       assign_topic:
+        resource: "منبع"
+        resources:
+          topic: "موضوع"
+          post: "نوشته"
         topic_id: "شناسه موضوع"
+        post_id: "شناسه نوشته"
+      check_assignment:
+        target_types:
+          topic: "موضوع"
+          post: "نوشته"
+        topic_id: "شناسه موضوع"
+        post_id: "شناسه نوشته"

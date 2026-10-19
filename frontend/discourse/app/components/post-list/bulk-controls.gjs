@@ -45,37 +45,37 @@ export default class PostListBulkControls extends Component {
 
         <div class="post-list-bulk-controls__actions">
           <DButton
+            class="btn-transparent bulk-clear-all"
             @action={{@bulkSelectHelper.clearAll}}
             @label="post_list.bulk.clear_all"
-            class="btn-transparent bulk-clear-all"
           />
           <DButton
+            class="btn-transparent bulk-select-all"
             @action={{@bulkSelectHelper.selectAll}}
             @label="post_list.bulk.select_all"
-            class="btn-transparent bulk-select-all"
           />
 
           {{#if @bulkSelectHelper.hasSelection}}
             <DMenu
-              @label={{i18n "post_list.bulk.actions"}}
-              @placement="bottom"
-              @icon="chevron-down"
-              @modalForMobile={{true}}
-              @autofocus={{true}}
-              @identifier="post-list-bulk-actions-dropdown"
-              @onRegisterApi={{this.onRegisterApi}}
               class="bulk-actions-dropdown"
+              @autofocus={{true}}
+              @icon="chevron-down"
+              @identifier="post-list-bulk-actions-dropdown"
+              @label={{i18n "post_list.bulk.actions"}}
+              @modalForMobile={{true}}
+              @onRegisterApi={{this.onRegisterApi}}
+              @placement="bottom"
             >
               <:content>
                 <DDropdownMenu as |dropdown|>
                   {{#each @bulkActions as |bulkAction|}}
                     <dropdown.item>
                       <DButton
-                        @label={{bulkAction.label}}
-                        @icon={{bulkAction.icon}}
-                        @disabled={{@bulkSelectHelper.loading}}
                         class="btn-transparent {{bulkAction.class}}"
                         @action={{fn this.onBulkActionSelect bulkAction}}
+                        @disabled={{@bulkSelectHelper.loading}}
+                        @icon={{bulkAction.icon}}
+                        @label={{bulkAction.label}}
                       />
                     </dropdown.item>
                   {{/each}}

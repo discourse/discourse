@@ -244,7 +244,7 @@ RSpec.describe Invite do
       context "when adding to another topic" do
         fab!(:another_topic) { Fabricate(:topic, user: topic.user) }
 
-        it "should be the same invite" do
+        it "returns the same invite" do
           new_invite = Invite.generate(topic.user, email: "test@example.com", topic: another_topic)
           expect(invite).to eq(new_invite)
           expect(invite.topics).to contain_exactly(topic, another_topic)
@@ -264,11 +264,19 @@ RSpec.describe Invite do
         expect(invite.max_redemptions_allowed).to eq(1)
       end
 
-      it "requires an email address" do
-        expect { Invite.generate(admin, admin: true) }.to raise_error(
-          ActiveRecord::RecordInvalid,
-          /#{I18n.t("invite.admin_invite_requires_email")}/,
-        )
+      it "creates a single-use invite link when a shareable link is chosen" do
+        invite = Invite.generate(admin, admin: true)
+
+        expect(invite.admin).to eq(true)
+        expect(invite.is_invite_link?).to eq(true)
+        expect(invite.max_redemptions_allowed).to eq(1)
+      end
+
+      it "can be combined with a domain restriction when created as a link" do
+        invite = Invite.generate(admin, domain: "example.com", admin: true)
+
+        expect(invite.admin).to eq(true)
+        expect(invite.domain).to eq("example.com")
       end
 
       it "requires the inviter to be an admin" do
@@ -278,9 +286,58 @@ RSpec.describe Invite do
         )
       end
 
-      it "cannot be combined with a domain restriction" do
-        invite = Fabricate.build(:invite, email: nil, domain: "example.com", admin: true)
+      it "requires the inviter to still be an admin when the email is removed" do
+        invite = Invite.generate(admin, email: "test@example.com", admin: true)
+        admin.update!(admin: false)
+
+        invite.email = nil
         expect(invite).not_to be_valid
+        expect(invite.errors[:base]).to include(
+          I18n.t("invite.admin_invite_requires_admin_inviter"),
+        )
+      end
+
+      it "requires the inviter to still be an admin when the domain restriction is removed" do
+        invite = Invite.generate(admin, domain: "example.com", admin: true)
+        admin.update!(admin: false)
+
+        invite.domain = nil
+        expect(invite).not_to be_valid
+        expect(invite.errors[:base]).to include(
+          I18n.t("invite.admin_invite_requires_admin_inviter"),
+        )
+      end
+
+      it "requires the inviter to still be an admin when the domain restriction is changed" do
+        invite = Invite.generate(admin, domain: "example.com", admin: true)
+        admin.update!(admin: false)
+
+        invite.domain = "other-example.com"
+        expect(invite).not_to be_valid
+        expect(invite.errors[:base]).to include(
+          I18n.t("invite.admin_invite_requires_admin_inviter"),
+        )
+      end
+
+      it "requires the inviter to still be staff when a moderator invite's domain restriction is removed" do
+        invite = Invite.generate(admin, domain: "example.com", moderator: true)
+        admin.update!(admin: false)
+
+        invite.domain = nil
+        expect(invite).not_to be_valid
+        expect(invite.errors[:base]).to include(
+          I18n.t("invite.moderator_invite_requires_staff_inviter"),
+        )
+      end
+
+      it "must be single-use" do
+        invite = Invite.generate(admin, admin: true)
+
+        invite.max_redemptions_allowed = 2
+        expect(invite).not_to be_valid
+        expect(invite.errors[:max_redemptions_allowed]).to include(
+          I18n.t("invite.max_redemptions_allowed_one_staff"),
+        )
       end
 
       it "triggers an event when created" do
@@ -333,7 +390,7 @@ RSpec.describe Invite do
   describe "#redeem" do
     fab!(:invite)
 
-    it "works" do
+    it "redeems the invite" do
       user = invite.redeem
       expect(invite.invited_users.map(&:user)).to contain_exactly(user)
       expect(user.is_a?(User)).to eq(true)
@@ -386,14 +443,14 @@ RSpec.describe Invite do
     end
 
     context "as a moderator" do
-      it "will give the user a moderator flag" do
+      it "gives the user a moderator flag" do
         invite.update!(moderator: true, invited_by: Fabricate(:admin))
 
         user = invite.redeem
         expect(user).to be_moderator
       end
 
-      it "will not give the user a moderator flag if the inviter is not staff" do
+      it "does not give the user a moderator flag when the inviter is not staff" do
         # update_columns skips the ensure_valid_moderator_invite validation so we
         # can exercise the redeemer's own inviter check in isolation
         invite.update_columns(moderator: true)
@@ -415,7 +472,8 @@ RSpec.describe Invite do
         user = invite.redeem
         expect(user.groups).to contain_exactly(group)
       end
-      it "should not raise error when both group & site tag preferences same" do
+
+      it "does not raise an error when group and site tag preferences match" do
         tag = Fabricate(:tag)
         group.tracking_tags = [tag.name]
         group.save!
@@ -426,10 +484,13 @@ RSpec.describe Invite do
     end
 
     context "when inviting to a topic" do
-      fab!(:topic, :private_message_topic)
+      fab!(:topic) { Fabricate(:private_message_topic, user: invite.invited_by) }
       fab!(:another_topic, :private_message_topic)
 
-      before { invite.topic_invites.create!(topic: topic) }
+      before do
+        Group.refresh_automatic_groups_for_user!(invite.invited_by)
+        invite.topic_invites.create!(topic: topic)
+      end
 
       it "adds the user to topic_users" do
         invited_user = invite.redeem

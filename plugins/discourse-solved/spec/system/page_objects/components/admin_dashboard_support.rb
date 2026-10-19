@@ -13,8 +13,9 @@ module PageObjects
         has_no_css?(SELECTOR)
       end
 
-      def has_headline?(text)
-        has_css?("#{SELECTOR} .db-section__subintro h3", text: text)
+      def has_headline?(title, summary)
+        has_css?("#{SELECTOR} .db-section__subintro h3", exact_text: title) &&
+          has_css?("#{SELECTOR} .db-section__subintro p", exact_text: summary)
       end
 
       def has_kpi?(label)
@@ -71,6 +72,14 @@ module PageObjects
 
       def has_no_selected_category?(category)
         has_no_css?("#{CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
+      end
+
+      def has_selected_category_with_parent?(category)
+        has_css?(
+          "#{CATEGORY_FILTER} .selected-choice[data-value='#{category.id}'] " \
+            ".badge-category__wrapper:has(.badge-category[data-category-id='#{category.parent_category_id}']) + " \
+            ".badge-category__wrapper .badge-category[data-category-id='#{category.id}']",
+        )
       end
     end
   end

@@ -1,4 +1,3 @@
-import { inject as controller } from "@ember/controller";
 import { computed } from "@ember/object";
 import { service } from "@ember/service";
 import { REPORT_MODES } from "discourse/admin/lib/constants";
@@ -7,7 +6,7 @@ import Report from "discourse/admin/models/report";
 import getURL from "discourse/lib/get-url";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
-import AdminDashboardTabController from "../../admin-dashboard-tab";
+import AdminDashboardTabController from "../../admin-dashboard-tab.js";
 
 function staticReport(reportType) {
   return computed("reports.[]", function () {
@@ -16,11 +15,12 @@ function staticReport(reportType) {
 }
 
 export default class AdminDashboardGeneralController extends AdminDashboardTabController {
-  @service router;
   @service siteSettings;
-  @controller("exception") exceptionController;
+  @service exception;
 
   isLoading = false;
+
+  /** @type {Date | null} */
   dashboardFetchedAt = null;
 
   @staticReport("users_by_type") usersByTypeReport;
@@ -170,8 +170,7 @@ export default class AdminDashboardGeneralController extends AdminDashboardTabCo
           });
         })
         .catch((e) => {
-          this.exceptionController.set("thrown", e.jqXHR);
-          this.router.replaceWith("exception");
+          this.exception.show(e.jqXHR);
         })
         .finally(() => this.set("isLoading", false));
     }

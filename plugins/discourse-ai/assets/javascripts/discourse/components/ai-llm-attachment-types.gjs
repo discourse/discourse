@@ -47,14 +47,14 @@ export default class AiLlmAttachmentTypes extends Component {
 
   <template>
     <ListSetting
-      @value={{this.currentValue}}
-      @settingName="allowed_attachment_types"
+      @allowAny={{true}}
       @choices={{this.settingChoices}}
       @onChange={{this.handleChange}}
-      @allowAny={{true}}
       @options={{hash
         noneLabel=(i18n "discourse_ai.llms.attachment_types_placeholder")
       }}
+      @settingName="allowed_attachment_types"
+      @value={{this.currentValue}}
     />
   </template>
 }

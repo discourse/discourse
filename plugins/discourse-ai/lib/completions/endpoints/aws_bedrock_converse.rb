@@ -38,6 +38,12 @@ module DiscourseAi
           LlmCreditAllocation.check_credits!(@llm_model, feature_name)
 
           start_time = Time.now
+          start_time_msecs = monotonic_milliseconds
+          time_to_first_token_msecs = nil
+          record_first_token =
+            lambda do
+              time_to_first_token_msecs ||= (monotonic_milliseconds - start_time_msecs).round
+            end
 
           return if cancel_manager&.cancelled?
 
@@ -85,6 +91,7 @@ module DiscourseAi
             end
           end
 
+          reset_attempt_state!
           call_status = :error
           cancelled = false
           cancel_manager_callback = nil
@@ -118,11 +125,12 @@ module DiscourseAi
           return if cancel_manager&.cancelled?
 
           processor =
-            DiscourseAi::Completions::ConverseMessageProcessor.new(
-              streaming_mode: @streaming_mode,
-              partial_tool_calls: partial_tool_calls,
-              output_thinking: output_thinking,
-            )
+            @processor =
+              DiscourseAi::Completions::ConverseMessageProcessor.new(
+                streaming_mode: @streaming_mode,
+                partial_tool_calls: partial_tool_calls,
+                output_thinking: output_thinking,
+              )
 
           client = build_sdk_client
 
@@ -131,13 +139,18 @@ module DiscourseAi
               orig_blk = blk
               blk =
                 lambda do |partial|
+                  should_record_first_token = !partial.is_a?(String) || !partial.empty?
                   partials_raw << partial.to_s
                   response_data << partial if partial.is_a?(String)
                   if partial.is_a?(String) && structured_output.present?
                     structured_output << partial if !partial.empty?
                     partial = structured_output
                   end
-                  orig_blk.call(partial) if partial
+                  if partial
+                    record_first_token.call if should_record_first_token
+                    @visible_output ||= visible_partial?(partial)
+                    orig_blk.call(partial)
+                  end
                 end
 
               if cancel_manager
@@ -158,6 +171,7 @@ module DiscourseAi
               unless cancelled
                 if structured_output
                   structured_output.finish
+                  @visible_output ||= structured_output.content?
                   if structured_output.broken?
                     blk.call("")
                   else
@@ -175,15 +189,20 @@ module DiscourseAi
               results = processor.process_message(resp.to_h.deep_symbolize_keys)
               results.each { |partial| partials_raw << partial.to_s }
 
+              # Non-streaming callers receive their first output only after the response is complete.
               if structured_output.present?
                 results.each { |data| structured_output << data if data.is_a?(String) }
                 structured_output.finish
+                record_first_token.call
                 call_status = :success
+                @visible_output = visible_partial?(structured_output)
                 return structured_output
               end
 
+              @visible_output = visible_partial?(results)
               response_data = results.length == 1 ? results.first : results
               response_data = "" if response_data.nil?
+              record_first_token.call
               call_status = :success
               response_data
             end
@@ -192,7 +211,7 @@ module DiscourseAi
             Rails.logger.error("#{self.class.name}: #{e.class}: #{e.message}")
             raise CompletionFailed, e.message
           ensure
-            should_log = log && call_status != :cancelled
+            should_log = log && (call_status != :cancelled || partials_raw.present?)
 
             if should_log
               log.raw_response_payload = raw_response if raw_response.present?
@@ -202,15 +221,31 @@ module DiscourseAi
                 processor.cache_read_input_tokens if processor.cache_read_input_tokens
               log.cache_write_tokens =
                 processor.cache_write_input_tokens if processor.cache_write_input_tokens
+              update_completion_state(
+                log,
+                call_status,
+                cancelled: cancelled,
+                response_limit_tripped: !!execution_context&.response_limit_tripped,
+              )
+              execution_context&.settle_generation(
+                tokens: log.response_tokens,
+                tokenizer: tokenizer,
+                complete: call_status == :success && !cancelled,
+              )
               log.response_tokens = tokenizer.size(partials_raw) if log.response_tokens.blank?
               log.response_status ||= 200 if call_status == :success
               log.estimated_cost = estimated_cost_for(log)
               log.created_at = start_time
               log.updated_at = Time.now
               log.duration_msecs = (Time.now - start_time) * 1000
+              log.time_to_first_token_msecs = time_to_first_token_msecs
               log.save!
+              execution_context.audit_log_id = log.id if execution_context
 
-              execution_context&.token_usage_tracker&.add_from_audit_log(log)
+              execution_context&.token_usage_tracker&.add_from_audit_log(
+                log,
+                preparation: feature_name == "context_compression",
+              )
 
               AiApiRequestStat.record_from_audit_log(log, llm_model: @llm_model)
               LlmQuota.log_usage(
@@ -255,8 +290,11 @@ module DiscourseAi
 
         def default_options(dialect)
           options = {}
-          apply_anthropic_thinking_config!(options) if supports_anthropic_thinking?
-          apply_anthropic_effort_config!(options) if supports_anthropic_thinking?
+          if supports_anthropic_thinking?
+            options[:max_tokens] = effective_max_output_tokens
+            apply_anthropic_thinking_config!(options)
+            apply_anthropic_effort_config!(options)
+          end
 
           options
         end
@@ -317,7 +355,7 @@ module DiscourseAi
           options = default_options(dialect).merge(model_params.except(:response_format))
           apply_anthropic_thinking_config!(options)
 
-          params = { model_id: llm_model.name, messages: prompt.messages }
+          params = { model_id: bedrock_model_id, messages: prompt.messages }
 
           params[:system] = prompt.system if prompt.system.present?
 
@@ -421,6 +459,18 @@ module DiscourseAi
           end
         end
 
+        def output_stop_reason
+          @processor.stop_reason
+        end
+
+        def output_limit_reached?
+          @processor.output_limit_reached
+        end
+
+        def reported_reasoning_tokens
+          @processor.reasoning_tokens
+        end
+
         def build_stream_handler(processor, blk, &cancel_check)
           handler = Aws::BedrockRuntime::EventStreams::ConverseStreamOutput.new
 
@@ -449,7 +499,10 @@ module DiscourseAi
 
           handler.on_message_start_event { |_event| cancel_check.call }
 
-          handler.on_message_stop_event { |_event| cancel_check.call }
+          handler.on_message_stop_event do |event|
+            cancel_check.call
+            processor.process_streamed_message(type: :message_stop, stop_reason: event.stop_reason)
+          end
 
           handler.on_metadata_event do |event|
             usage = event.usage

@@ -153,10 +153,8 @@ module DiscourseWorkflows
         def output_connection_types(node)
           node_class =
             DiscourseWorkflows::Registry.find_node_type(node["type"], version: node["typeVersion"])
-          outputs = Array.wrap(node_class&.outputs(node["parameters"] || {}) || [:main])
-          outputs.map do |output|
-            output.respond_to?(:to_h) ? output.to_h.with_indifferent_access[:key].to_s : output.to_s
-          end
+          ports = Array.wrap(node_class&.ports(node["parameters"] || {}) || [{ type: "main" }])
+          ports.map { |port| port[:type].to_s }.uniq
         end
 
         def incoming_connections(node_id, connection_records)

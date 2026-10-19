@@ -21,9 +21,25 @@ export function addGlobalNotice(text, id, options = {}) {
 
 const GLOBAL_NOTICE_DISMISSED_PROMPT_KEY = "dismissed-global-notice-v2";
 
+/**
+ * @typedef {object} NoticeOptions
+ * @property {boolean} [dismissable]
+ * @property {string | null} [html]
+ * @property {string} [level]
+ * @property {boolean} [persistentDismiss]
+ * @property {((notice: Notice) => void) | null} [onDismiss]
+ * @property {((notice: Notice) => boolean) | null} [visibility]
+ * @property {import("moment").Duration | null} [dismissDuration]
+ */
+
 class Notice extends EmberObject {
+  /** @type {string | import("@ember/template").TrustedHTML | null} */
   text = null;
+
+  /** @type {string | null} */
   id = null;
+
+  /** @type {NoticeOptions | null} */
   options = null;
 
   init() {
@@ -59,6 +75,7 @@ export default class GlobalNotice extends Component {
   @service("logsNotice") logsNoticeService;
   @service router;
 
+  /** @type {Notice | null} */
   logNotice = null;
 
   constructor() {
@@ -66,16 +83,6 @@ export default class GlobalNotice extends Component {
 
     this.logsNoticeService.addObserver("hidden", this._handleLogsNoticeUpdate);
     this.logsNoticeService.addObserver("text", this._handleLogsNoticeUpdate);
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    this.logsNoticeService.removeObserver("text", this._handleLogsNoticeUpdate);
-    this.logsNoticeService.removeObserver(
-      "hidden",
-      this._handleLogsNoticeUpdate
-    );
   }
 
   get visible() {
@@ -135,6 +142,15 @@ export default class GlobalNotice extends Component {
             ? i18n("read_only_mode.enabled")
             : i18n("read_only_mode.enabled_anonymous"),
           id: "alert-read-only",
+        })
+      );
+    } else if (this.siteSettings.site_archived) {
+      notices.push(
+        Notice.create({
+          text: this.currentUser
+            ? i18n("site_archived.enabled")
+            : i18n("site_archived.enabled_anonymous"),
+          id: "alert-site-archived",
         })
       );
     }
@@ -228,6 +244,16 @@ export default class GlobalNotice extends Component {
     });
   }
 
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+
+    this.logsNoticeService.removeObserver("text", this._handleLogsNoticeUpdate);
+    this.logsNoticeService.removeObserver(
+      "hidden",
+      this._handleLogsNoticeUpdate
+    );
+  }
+
   @action
   dismissNotice(notice) {
     notice.options.onDismiss?.(notice);
@@ -267,8 +293,8 @@ export default class GlobalNotice extends Component {
         {{#each this.notices as |notice|}}
           <div class="row">
             <div
-              id="global-notice-{{notice.id}}"
               class="alert alert-{{notice.options.level}} {{notice.id}}"
+              id="global-notice-{{notice.id}}"
             >
               {{#if notice.options.html}}
                 {{trustHTML notice.options.html}}
@@ -278,9 +304,9 @@ export default class GlobalNotice extends Component {
 
               {{#if notice.options.dismissable}}
                 <DButton
-                  @icon="xmark"
-                  @action={{fn this.dismissNotice notice}}
                   class="btn-transparent close"
+                  @action={{fn this.dismissNotice notice}}
+                  @icon="xmark"
                 />
               {{/if}}
             </div>

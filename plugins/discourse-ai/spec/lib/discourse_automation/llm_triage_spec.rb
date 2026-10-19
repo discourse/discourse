@@ -109,7 +109,7 @@ describe DiscourseAi::Automation::LlmTriage do
     # nothing should happen, no classification, its a PM
   end
 
-  it "will triage PMs if automation allows it" do
+  it "triages PMs if automation allows it" do
     # needs to be admin or it will not be able to just step in to
     # PM
     reply_user.update!(admin: true)
@@ -185,6 +185,24 @@ describe DiscourseAi::Automation::LlmTriage do
 
     # Verify it's a whisper post (since we set whisper: true)
     expect(last_post.post_type).to eq(Post.types[:whisper])
+  end
+
+  it "replies as the canned reply user when one is configured with a reply agent" do
+    ai_agent.update!(default_llm: llm_model, user_id: nil)
+
+    add_automation_field("canned_reply", nil, type: "message")
+    add_automation_field("reply_agent", ai_agent.id, type: "choices")
+
+    post = Fabricate(:post, raw: "I need help with a problem")
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(["bad", "Agent reply"]) do
+      automation.running_in_background!
+      automation.trigger!({ "post" => post })
+    end
+
+    last_post = post.topic.reload.posts.order(:post_number).last
+    expect(last_post.raw).to eq("Agent reply")
+    expect(last_post.user_id).to eq(reply_user.id)
   end
 
   it "does not create replies when the action is edit" do

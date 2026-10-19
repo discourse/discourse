@@ -30,10 +30,18 @@ class UserNotifications < ActionMailer::Base
         locale: locale,
       )
 
+    login_url =
+      if !user.has_password? && Invite.email_code_enabled?(user)
+        "#{Discourse.base_url}/login?mode=code"
+      else
+        Discourse.base_url
+      end
+
     build_email(
       user.email,
       template: "user_notifications.signup_after_approval",
       locale: locale,
+      login_url:,
       new_user_tips: tips,
       recipient_user: user,
     )
@@ -79,7 +87,7 @@ class UserNotifications < ActionMailer::Base
       locale: user_locale(user),
       client_ip: opts[:client_ip],
       location: location.presence || I18n.t("staff_action_logs.unknown"),
-      browser: I18n.t("user_auth_tokens.browser.#{browser}"),
+      browser: I18n.t("browsers.#{browser}"),
       device: I18n.t("user_auth_tokens.device.#{device}"),
       os: I18n.t("user_auth_tokens.os.#{os}"),
       recipient_user: user,
@@ -239,6 +247,16 @@ class UserNotifications < ActionMailer::Base
     )
   end
 
+  def account_associated(user, opts = {})
+    build_email(
+      user.email,
+      template: "user_notifications.account_associated",
+      locale: user_locale(user),
+      provider_name: opts[:provider_name],
+      recipient_user: user,
+    )
+  end
+
   def account_second_factor_disabled(user, opts = {})
     build_email(
       user.email,
@@ -250,43 +268,33 @@ class UserNotifications < ActionMailer::Base
   end
 
   def digest(user, opts = {})
-    build_summary_for(user)
-    if !opts[:skip_unsubscribe_links]
-      @unsubscribe_key = UnsubscribeKey.create_key_for(@user, UnsubscribeKey::DIGEST_TYPE)
-    end
+    I18n.with_locale(user_locale(user)) do
+      build_summary_for(user)
+      if !opts[:skip_unsubscribe_links]
+        @unsubscribe_key = UnsubscribeKey.create_key_for(@user, UnsubscribeKey::DIGEST_TYPE)
+      end
 
-    @since = opts[:since].presence
-    @since ||= [user.last_seen_at, user.user_stat&.digest_attempted_at, 1.month.ago].compact.max
+      @since = opts[:since].presence
+      @since ||= [user.last_seen_at, user.user_stat&.digest_attempted_at, 1.month.ago].compact.max
 
-    # Fetch some topics and posts to show
-    digest_opts = {
-      limit: SiteSetting.digest_topics + SiteSetting.digest_other_topics,
-      top_order: true,
-    }
-    topics_for_digest = Topic.for_digest(user, @since, digest_opts)
-    if topics_for_digest.empty? && !user.user_option.try(:include_tl0_in_digests)
-      # Find some topics from new users that are at least 24 hours old
-      topics_for_digest =
-        Topic.for_digest(user, @since, digest_opts.merge(include_tl0: true)).where(
-          "topics.created_at < ?",
-          24.hours.ago,
-        )
-    end
+      # Fetch some topics and posts to show
+      digest_opts = {
+        limit: SiteSetting.digest_topics + SiteSetting.digest_other_topics,
+        top_order: true,
+      }
+      topics_for_digest = Topic.for_digest(user, @since, digest_opts)
+      if topics_for_digest.empty? && !user.user_option.try(:include_tl0_in_digests)
+        # Find some topics from new users that are at least 24 hours old
+        topics_for_digest =
+          Topic.for_digest(user, @since, digest_opts.merge(include_tl0: true)).where(
+            "topics.created_at < ?",
+            24.hours.ago,
+          )
+      end
 
-    @popular_topics = topics_for_digest[0, SiteSetting.digest_topics]
-
-    if @popular_topics.present?
-      @other_new_for_you =
-        (
-          if topics_for_digest.size > SiteSetting.digest_topics
-            topics_for_digest[SiteSetting.digest_topics..-1]
-          else
-            []
-          end
-        )
-
-      @popular_posts =
-        if SiteSetting.digest_posts > 0
+      posts_for_digest =
+        if SiteSetting.digest_topics > 0 && topics_for_digest.present? &&
+             SiteSetting.digest_posts > 0
           Post
             .order("posts.score DESC")
             .for_mailing_list(user, @since)
@@ -305,85 +313,124 @@ class UserNotifications < ActionMailer::Base
           []
         end
 
-      @excerpts = {}
+      # Replacement topics/posts must be authorized and bounded before Core prepares them.
+      # Custom templates receive template_locals in both HTML and text formats.
+      content =
+        DiscoursePluginRegistry.apply_modifier(
+          :user_digest_content,
+          {
+            topics: topics_for_digest,
+            posts: posts_for_digest,
+            template: nil,
+            template_locals: {
+            },
+            subject_key: nil,
+            has_custom_content: false,
+          },
+          user,
+          @since,
+        )
+      topics_for_digest = content[:topics].to_a
+      ActiveRecord::Associations::Preloader.new(
+        records: topics_for_digest,
+        associations: :first_post,
+      ).call
+      @popular_topics = topics_for_digest.first(SiteSetting.digest_topics)
+      @other_new_for_you = topics_for_digest.drop(SiteSetting.digest_topics)
+      @popular_posts = content[:posts].to_a
 
-      @popular_topics.each do |t|
-        next if t.first_post.blank?
-        @excerpts[t.first_post.id] = email_excerpt(t.first_post.cooked, t.first_post)
-      end
+      if @popular_topics.present? || @popular_posts.present? || content[:has_custom_content]
+        @digest_best_posts = @popular_topics.to_h { |topic| [topic.id, topic.best_post] }
+        prepare_digest_localizations(user, topics_for_digest)
+        @excerpts = {}
 
-      # Try to find 3 interesting stats for the top of the digest
-      new_topics_count = Topic.for_digest(user, @since).count
-      # We used topics from new users instead, so count should match
-      new_topics_count = topics_for_digest.size if new_topics_count == 0
+        @popular_topics.each do |t|
+          next if t.first_post.blank?
+          @excerpts[t.first_post.id] = email_excerpt(digest_post_cooked(t.first_post), t.first_post)
+        end
 
-      @counts = [
-        {
-          id: "new_topics",
-          label_key: "user_notifications.digest.new_topics",
-          value: new_topics_count,
-          href: "#{Discourse.base_url}/new",
-        },
-      ]
+        # Try to find 3 interesting stats for the top of the digest
+        new_topics_count = Topic.for_digest(user, @since).count
+        # We used topics from new users instead, so count should match
+        new_topics_count = topics_for_digest.size if new_topics_count == 0
 
-      # totalling unread notifications (which are low-priority only) and unread
-      # PMs and bookmark reminder notifications, so the total is both unread low
-      # and high priority PMs
-      value = user.unread_notifications + user.unread_high_priority_notifications
-      if value > 0
-        @counts << {
-          id: "unread_notifications",
-          label_key: "user_notifications.digest.unread_notifications",
-          value: value,
-          href: "#{Discourse.base_url}/my/notifications",
-        }
-      end
+        @counts = [
+          {
+            id: "new_topics",
+            label_key: "user_notifications.digest.new_topics",
+            value: new_topics_count,
+            href: "#{Discourse.base_url}/new",
+          },
+        ]
 
-      if @counts.size < 3
-        value = user.unread_notifications_of_type(Notification.types[:liked], since: @since)
+        # totalling unread notifications (which are low-priority only) and unread
+        # PMs and bookmark reminder notifications, so the total is both unread low
+        # and high priority PMs
+        value = user.unread_notifications + user.unread_high_priority_notifications
         if value > 0
           @counts << {
-            id: "likes_received",
-            label_key: "user_notifications.digest.liked_received",
+            id: "unread_notifications",
+            label_key: "user_notifications.digest.unread_notifications",
             value: value,
             href: "#{Discourse.base_url}/my/notifications",
           }
         end
-      end
 
-      if @counts.size < 3 && user.user_option.digest_after_minutes.to_i >= 1440
-        value = summary_new_users_count(@since)
-        if value > 0
-          @counts << {
-            id: "new_users",
-            label_key: "user_notifications.digest.new_users",
-            value: value,
-            href: "#{Discourse.base_url}/about",
-          }
+        if @counts.size < 3
+          value = user.unread_notifications_of_type(Notification.types[:liked], since: @since)
+          if value > 0
+            @counts << {
+              id: "likes_received",
+              label_key: "user_notifications.digest.liked_received",
+              value: value,
+              href: "#{Discourse.base_url}/my/notifications",
+            }
+          end
         end
+
+        if @counts.size < 3 && user.user_option.digest_after_minutes.to_i >= 1440
+          value = summary_new_users_count(@since)
+          if value > 0
+            @counts << {
+              id: "new_users",
+              label_key: "user_notifications.digest.new_users",
+              value: value,
+              href: "#{Discourse.base_url}/about",
+            }
+          end
+        end
+
+        @preheader_text = I18n.t("user_notifications.digest.preheader", since: @since)
+
+        subject_key = content[:subject_key] || "user_notifications.digest.subject_template"
+
+        if SiteSetting.simple_email_subject && I18n.exists?("#{subject_key}_improved")
+          subject_key += "_improved"
+        end
+
+        opts = {
+          from_alias: I18n.t("user_notifications.digest.from", site_name: Email.site_title),
+          subject: I18n.t(subject_key, email_prefix: @email_prefix, date: short_date(Time.now)),
+          add_unsubscribe_link: !opts[:skip_unsubscribe_links],
+          unsubscribe_url: "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}",
+          topic_ids: topics_for_digest.map(&:id),
+          post_ids: topics_for_digest.filter_map { |topic| topic.first_post&.id },
+        }
+
+        opts[:recipient_user] = user
+
+        if content[:template]
+          render_options = {
+            template: content[:template],
+            locals: content[:template_locals],
+            layout: false,
+          }
+          opts[:html_override] = render_to_string(**render_options, formats: [:html])
+          opts[:body] = render_to_string(**render_options, formats: [:text])
+        end
+
+        build_email(user.email, opts)
       end
-
-      @preheader_text = I18n.t("user_notifications.digest.preheader", since: @since)
-
-      subject_key = "user_notifications.digest.subject_template"
-
-      if SiteSetting.simple_email_subject && I18n.exists?("#{subject_key}_improved")
-        subject_key += "_improved"
-      end
-
-      opts = {
-        from_alias: I18n.t("user_notifications.digest.from", site_name: Email.site_title),
-        subject: I18n.t(subject_key, email_prefix: @email_prefix, date: short_date(Time.now)),
-        add_unsubscribe_link: !opts[:skip_unsubscribe_links],
-        unsubscribe_url: "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}",
-        topic_ids: topics_for_digest.pluck(:id),
-        post_ids:
-          topics_for_digest.joins(:posts).where(posts: { post_number: 1 }).pluck("posts.id"),
-      }
-
-      opts[:recipient_user] = user
-
-      build_email(user.email, opts)
     end
   end
 
@@ -488,12 +535,46 @@ class UserNotifications < ActionMailer::Base
 
   protected
 
+  def localized_email_posts(posts, user)
+    return {} if !SiteSetting.content_localization_enabled || SiteSetting.private_email?
+
+    ActiveRecord::Associations::Preloader.new(records: posts, associations: :localizations).call
+    posts.each_with_object({}) do |post, localizations|
+      next unless ContentLocalization.show_translated_post?(post, user.guardian)
+      # Unsaved content changes must take precedence over persisted translations.
+      next if post.will_save_change_to_raw? || post.will_save_change_to_cooked?
+
+      localization = post.get_localization
+      if localization && localization.post_version == post.version
+        localizations[post.id] = localization
+      end
+    end
+  end
+
+  def prepare_digest_localizations(user, topics)
+    posts = [
+      *@popular_topics.map(&:first_post),
+      *@digest_best_posts.values,
+      *@popular_posts,
+    ].compact
+    @localized_posts = localized_email_posts(posts, user)
+    @localized_topic_titles = {}
+    return if !SiteSetting.content_localization_enabled || SiteSetting.private_email?
+
+    topics = [*topics, *@popular_posts.map(&:topic)].uniq(&:id)
+    ActiveRecord::Associations::Preloader.new(records: topics, associations: :localizations).call
+    topics.each do |topic|
+      title = ContentLocalization.translated_topic_title(topic, user.guardian)
+      @localized_topic_titles[topic.id] = title if title
+    end
+  end
+
   def user_locale(user)
     user.effective_locale
   end
 
-  def email_post_markdown(post, add_posted_by = false)
-    result = +"#{post.raw}\n\n"
+  def email_post_markdown(post, add_posted_by = false, localization: nil)
+    result = +"#{localization&.raw.presence || post.raw}\n\n"
     if add_posted_by
       result << "#{I18n.t("user_notifications.posted_by", username: post.username, post_date: post.created_at.strftime("%m/%d/%Y"))}\n\n"
     end
@@ -569,6 +650,13 @@ class UserNotifications < ActionMailer::Base
       use_topic_title_subject = false
     end
 
+    if !SiteSetting.private_email? && !original_subject && topic_title == post.topic.title
+      I18n.with_locale(user_locale(user)) do
+        topic_title =
+          ContentLocalization.translated_topic_title(post.topic, user.guardian) || topic_title
+      end
+    end
+
     email_options = {
       title: topic_title,
       post: post,
@@ -593,7 +681,7 @@ class UserNotifications < ActionMailer::Base
       email_options[:group_name] = Group.find_by(id: group_id)&.name
     end
 
-    send_notification_email(email_options)
+    I18n.with_locale(user_locale(user)) { send_notification_email(email_options) }
   end
 
   def send_notification_email(opts)
@@ -684,10 +772,18 @@ class UserNotifications < ActionMailer::Base
 
     # make .present? cheaper
     context_posts = context_posts.to_a
+    in_reply_to_post = post.reply_to_post if user.user_option.email_in_reply_to
+    localized_posts = localized_email_posts([post, in_reply_to_post, *context_posts].compact, user)
 
     if context_posts.present?
       context << +"-- \n*#{I18n.t("user_notifications.previous_discussion")}*\n"
-      context_posts.each { |cp| context << email_post_markdown(cp, true) }
+      context_posts.each do |context_post|
+        context << email_post_markdown(
+          context_post,
+          true,
+          localization: localized_posts[context_post.id],
+        )
+      end
     end
 
     translation_override_exists =
@@ -706,7 +802,10 @@ class UserNotifications < ActionMailer::Base
         "_to_topic_body"
       end
 
-      topic_excerpt = post.excerpt.tr("\n", " ") if post.is_first_post? && post.excerpt
+      if post.is_first_post?
+        cooked = localized_posts[post.id]&.cooked.presence || post.cooked
+        topic_excerpt = Post.excerpt(cooked, nil, post: post)&.tr("\n", " ")
+      end
       topic_url = post.topic&.url
 
       if SiteSetting.private_email?
@@ -719,7 +818,7 @@ class UserNotifications < ActionMailer::Base
           invite_template,
           username: username,
           group_name: group_name,
-          topic_title: gsub_emoji_to_unicode(title),
+          topic_title: ERB::Util.html_escape(gsub_emoji_to_unicode(title)),
           topic_excerpt: topic_excerpt,
           site_title: SiteSetting.title,
           site_description: SiteSetting.site_description,
@@ -733,13 +832,11 @@ class UserNotifications < ActionMailer::Base
         EmailLog.where(user_id: user.id).where("created_at > ?", 1.day.ago).count >=
           (SiteSetting.max_emails_per_day_per_user - 1)
 
-      in_reply_to_post = post.reply_to_post if user.user_option.email_in_reply_to
-
       if SiteSetting.private_email?
         message = I18n.t("system_messages.contents_hidden")
       else
         message =
-          email_post_markdown(post) +
+          email_post_markdown(post, localization: localized_posts[post.id]) +
             (
               if reached_limit
                 "\n\n#{I18n.t "user_notifications.reached_limit", count: SiteSetting.max_emails_per_day_per_user}"
@@ -750,9 +847,7 @@ class UserNotifications < ActionMailer::Base
       end
 
       first_footer_classes = "highlight"
-      if (allow_reply_by_email && user.staged) || (user.suspended? || user.staged?)
-        first_footer_classes = ""
-      end
+      first_footer_classes = "" if user.suspended? || (user.staged? && !SiteSetting.private_email?)
 
       unless translation_override_exists
         html =
@@ -761,6 +856,7 @@ class UserNotifications < ActionMailer::Base
             format: :html,
             locals: {
               context_posts: context_posts,
+              localized_posts: localized_posts,
               reached_limit: reached_limit,
               post: post,
               in_reply_to_post: in_reply_to_post,
@@ -786,15 +882,17 @@ class UserNotifications < ActionMailer::Base
       mailing_list_mode: user.user_option.mailing_list_mode,
       unsubscribe_url: post.unsubscribe_url(user),
       allow_reply_by_email: allow_reply_by_email,
-      only_reply_by_email: allow_reply_by_email && user.staged,
+      only_reply_by_email: allow_reply_by_email && user.staged? && !SiteSetting.private_email?,
       use_site_subject: use_site_subject,
       add_re_to_subject: add_re_to_subject,
       show_category_in_subject: show_category_in_subject,
       show_tags_in_subject: show_tags_in_subject,
+      tag_names: tags,
       private_reply: post.topic.private_message?,
       subject_pm: subject_pm,
       participants: participants,
-      include_respond_instructions: !(user.suspended? || user.staged?),
+      include_respond_instructions:
+        !(user.suspended? || (user.staged? && !SiteSetting.private_email?)),
       notification_type: notification_type,
       template: template,
       use_topic_title_subject: use_topic_title_subject,

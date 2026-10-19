@@ -134,8 +134,8 @@ export default class SecondFactorAddTotp extends Component {
                     </div>
                   {{else}}
                     <a
-                      href
                       class="show-second-factor-key"
+                      href
                       {{on "click" this.enableShowSecondFactorKey}}
                     >{{i18n "user.second_factor.show_key_description"}}</a>
                   {{/if}}
@@ -149,15 +149,15 @@ export default class SecondFactorAddTotp extends Component {
                 }}</label>
               <div class="controls totp-app-name">
                 <input
+                  id="second-factor-name"
+                  maxlength={{this.maxSecondFactorNameLength}}
+                  placeholder={{i18n "user.second_factor.totp.default_name"}}
+                  type="text"
+                  value={{this.secondFactorName}}
                   {{on
                     "input"
                     (withEventValue (fn (mut this.secondFactorName)))
                   }}
-                  value={{this.secondFactorName}}
-                  type="text"
-                  placeholder={{i18n "user.second_factor.totp.default_name"}}
-                  maxlength={{this.maxSecondFactorNameLength}}
-                  id="second-factor-name"
                 />
               </div>
 
@@ -166,10 +166,10 @@ export default class SecondFactorAddTotp extends Component {
               </label>
               <div class="controls totp-app-token">
                 <DSecondFactorInput
+                  id="second-factor-token"
+                  value={{this.secondFactorToken}}
                   @onChange={{fn (mut this.secondFactorToken)}}
                   @secondFactorMethod={{this.totpType}}
-                  value={{this.secondFactorToken}}
-                  id="second-factor-token"
                 />
               </div>
             </div>

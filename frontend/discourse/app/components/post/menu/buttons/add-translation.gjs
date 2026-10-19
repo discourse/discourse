@@ -75,12 +75,12 @@ export default class PostMenuAddTranslationButton extends Component {
     {{#if this.showTranslationButton}}
       <DMenu
         ...attributes
-        @identifier="post-action-menu-edit-translations"
         class="update-translations-menu"
-        @title={{this.addTranslationsLabel}}
-        @icon="language"
-        @onRegisterApi={{this.onRegisterApi}}
         @arrow={{false}}
+        @icon="language"
+        @identifier="post-action-menu-edit-translations"
+        @onRegisterApi={{this.onRegisterApi}}
+        @title={{this.addTranslationsLabel}}
       >
         <:content>
           <DDropdownMenu as |dropdown|>
@@ -92,18 +92,18 @@ export default class PostMenuAddTranslationButton extends Component {
                 <dropdown.item class="update-translations-menu__view">
                   <DButton
                     class="post-action-menu__view-translation"
-                    @translatedLabel={{this.viewTranslationLabel}}
-                    @icon="eye"
                     @action={{this.viewTranslations}}
+                    @icon="eye"
+                    @translatedLabel={{this.viewTranslationLabel}}
                   />
                 </dropdown.item>
               {{/if}}
               <dropdown.item class="update-translations-menu__add">
                 <DButton
                   class="post-action-menu__add-translation"
-                  @label="post.localizations.add"
-                  @icon="plus"
                   @action={{this.addTranslation}}
+                  @icon="plus"
+                  @label="post.localizations.add"
                 />
               </dropdown.item>
             </PluginOutlet>

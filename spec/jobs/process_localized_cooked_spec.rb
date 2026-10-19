@@ -70,6 +70,31 @@ describe Jobs::ProcessLocalizedCooked do
     expect(messages.first.data[:id]).to eq(post.id)
   end
 
+  it "restricts private message notifications to the topic audience" do
+    recipient = Fabricate(:user)
+    private_message_post = Fabricate(:private_message_post, recipient: recipient)
+    private_message_localization =
+      Fabricate(
+        :post_localization,
+        post: private_message_post,
+        locale: "ja",
+        raw: "これはテスト投稿です。",
+        cooked: "<p>これはテスト投稿です。</p>",
+      )
+
+    messages =
+      MessageBus.track_publish("/topic/#{private_message_post.topic_id}") do
+        job.execute(post_localization_id: private_message_localization.id)
+      end
+
+    expect(messages.length).to eq(1)
+    message = messages.first
+    expect(message.data).to eq(type: :localized, id: private_message_post.id)
+    expect(message.user_ids).to contain_exactly(
+      *private_message_post.topic.secure_audience_publish_messages[:user_ids],
+    )
+  end
+
   it "processes oneboxes and images" do
     stub_image_size
     onebox_html = <<~HTML

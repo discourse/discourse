@@ -40,3 +40,8 @@ pt:
       custom_range_from: "De"
       admin:
         name: "Nome"
+    discourse_workflows:
+      gamification_score:
+        username: "Utilizador"
+        date: "Data"
+        description: "Descrição"

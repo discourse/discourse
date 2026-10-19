@@ -69,9 +69,20 @@ uk:
             many: "Виберіть <strong>%{count} варіантів</strong>."
             other: "Виберіть <strong>%{count} варіантів</strong>."
           between_min_and_max_options: "Виберіть між <strong>%{min} і %{max} варіантами</strong>."
+      vote_recorded: "Ваш голос зафіксовано."
+      voted_choices:
+        title: "Ви проголосували за:"
       cast-votes:
         title: "Проголосуйте"
         label: "Проголосувати!"
+        update_title: "Оновіть свій голос"
+        update_label: "Оновити голосування"
+      amend-vote:
+        title: "Змініть свій голос"
+        label: "Змінити голос"
+      keep-vote:
+        title: "Повернутися без зміни свого голосу"
+        label: "Назад"
       show-results:
         title: "Показати результати опитування"
         label: "Результати"

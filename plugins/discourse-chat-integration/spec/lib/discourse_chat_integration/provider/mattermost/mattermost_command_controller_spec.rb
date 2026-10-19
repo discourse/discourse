@@ -14,7 +14,7 @@ describe "Mattermost Command Controller", type: :request do
   end
 
   describe "with plugin disabled" do
-    it "should return a 404" do
+    it "returns a 404" do
       post "/chat-integration/mattermost/command.json"
       expect(response.status).to eq(404)
     end
@@ -26,7 +26,7 @@ describe "Mattermost Command Controller", type: :request do
       SiteSetting.chat_integration_mattermost_enabled = false
     end
 
-    it "should return a 404" do
+    it "returns a 404" do
       post "/chat-integration/mattermost/command.json"
       expect(response.status).to eq(404)
     end
@@ -41,7 +41,7 @@ describe "Mattermost Command Controller", type: :request do
     end
 
     describe "when forum is private" do
-      it "should not redirect to login page" do
+      it "does not redirect to the login page" do
         SiteSetting.login_required = true
         token = "sometoken"
         SiteSetting.chat_integration_mattermost_incoming_webhook_token = token
@@ -53,14 +53,14 @@ describe "Mattermost Command Controller", type: :request do
     end
 
     describe "when the token is invalid" do
-      it "should raise the right error" do
+      it "returns an error for a missing token" do
         post "/chat-integration/mattermost/command.json", params: { text: "help" }
         expect(response.status).to eq(400)
       end
     end
 
     describe "when incoming webhook token has not been set" do
-      it "should raise the right error" do
+      it "returns an error for an invalid token" do
         post "/chat-integration/mattermost/command.json",
              params: {
                text: "help",
@@ -80,7 +80,7 @@ describe "Mattermost Command Controller", type: :request do
       before { SiteSetting.chat_integration_mattermost_incoming_webhook_token = token }
 
       describe "add new rule" do
-        it "should add a new rule correctly" do
+        it "adds a new rule" do
           post "/chat-integration/mattermost/command.json",
                params: {
                  text: "watch #{category.slug}",
