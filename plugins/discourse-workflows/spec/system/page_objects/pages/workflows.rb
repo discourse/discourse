@@ -70,6 +70,20 @@ module PageObjects
           find(".workflows-index__name", text: name).find("a").click
           self
         end
+
+        def click_creator(workflow)
+          find(
+            ".workflows-index__row[data-item-id='#{workflow.id}'] .workflows-index__creator-link",
+          ).click
+          self
+        end
+
+        def click_last_editor(workflow)
+          find(
+            ".workflows-index__row[data-item-id='#{workflow.id}'] .workflows-index__last-editor-link",
+          ).click
+          self
+        end
       end
     end
   end
