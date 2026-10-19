@@ -467,15 +467,18 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::GenerateWorkflow do
       expect(result[:status]).to eq("success")
       expect(result[:script_validations]).to eq(validations)
       expect(
-        DiscourseWorkflows::AdminAssistant::WorkflowDraft.read(result[:draft_token])[:script_validations],
+        DiscourseWorkflows::AdminAssistant::WorkflowDraft.read(result[:draft_token])[
+          :script_validations
+        ],
       ).to eq(validations)
 
-      creator = DiscourseWorkflows::AdminAssistant::CreateWorkflow.new(
-        { draft_token: result[:draft_token] },
-        bot_user: Discourse.system_user,
-        llm: nil,
-        context: context,
-      )
+      creator =
+        DiscourseWorkflows::AdminAssistant::CreateWorkflow.new(
+          { draft_token: result[:draft_token] },
+          bot_user: Discourse.system_user,
+          llm: nil,
+          context: context,
+        )
       code = Nokogiri::HTML5.fragment(PrettyText.cook(creator.details)).at_css("pre code")
       expect(JSON.parse(code.text).dig("configuration", "script_validations")).to eq(validations)
       expect(creator.validation_error).to be_nil

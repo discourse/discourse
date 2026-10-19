@@ -51,7 +51,10 @@ export default class AdminAssistantWorkflowPreview extends Component {
 
   get hasFailedScripts() {
     const validations = this.preview?.configuration?.script_validations;
-    return Array.isArray(validations) && validations.some((validation) => validation?.valid === false);
+    return (
+      Array.isArray(validations) &&
+      validations.some((validation) => validation?.valid === false)
+    );
   }
 
   get exactConfiguration() {
@@ -117,7 +120,9 @@ export default class AdminAssistantWorkflowPreview extends Component {
 
         {{#if this.hasFailedScripts}}
           <p class="assistant-workflow-preview__warning" role="status">
-            {{i18n "discourse_workflows.admin_assistant.preview.script_validation_warning"}}
+            {{i18n
+              "discourse_workflows.admin_assistant.preview.script_validation_warning"
+            }}
           </p>
         {{/if}}
 

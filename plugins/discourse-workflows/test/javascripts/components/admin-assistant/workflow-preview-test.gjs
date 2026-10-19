@@ -150,25 +150,45 @@ module(
           </div>
         </template>
       );
-      const nodes = this.element.querySelectorAll(".assistant-workflow-preview__node");
-      const connection = this.element.querySelector(".assistant-workflow-preview__connection");
-      const start = connection.getPointAtLength(0).matrixTransform(connection.getScreenCTM());
-      const end = connection.getPointAtLength(connection.getTotalLength()).matrixTransform(connection.getScreenCTM());
-      assert.true(Math.abs(start.x - nodes[0].getBoundingClientRect().right) < 1, "connection starts at the source node");
-      assert.true(Math.abs(end.x - nodes[1].getBoundingClientRect().left) < 1, "connection ends at the target node");
-      assert.strictEqual(getComputedStyle(nodes[0]).direction, "rtl", "node text keeps the page direction");
+      const nodes = this.element.querySelectorAll(
+        ".assistant-workflow-preview__node"
+      );
+      const connection = this.element.querySelector(
+        ".assistant-workflow-preview__connection"
+      );
+      const start = connection
+        .getPointAtLength(0)
+        .matrixTransform(connection.getScreenCTM());
+      const end = connection
+        .getPointAtLength(connection.getTotalLength())
+        .matrixTransform(connection.getScreenCTM());
+      assert.true(
+        Math.abs(start.x - nodes[0].getBoundingClientRect().right) < 1,
+        "connection starts at the source node"
+      );
+      assert.true(
+        Math.abs(end.x - nodes[1].getBoundingClientRect().left) < 1,
+        "connection ends at the target node"
+      );
+      assert.strictEqual(
+        getComputedStyle(nodes[0]).direction,
+        "rtl",
+        "node text keeps the page direction"
+      );
     });
 
     test("shows script-check warnings and preserves errors in exact configuration", async function (assert) {
       this.message = approvalMessage(111, {
         name: "Code workflow",
         operations: [addNode("code", "Process items", "action:code")],
-        script_validations: [{
-          operation_index: 0,
-          node_name: "Process items",
-          valid: false,
-          errors: ["<img src=x onerror=alert(1)> invalid script"],
-        }],
+        script_validations: [
+          {
+            operation_index: 0,
+            node_name: "Process items",
+            valid: false,
+            errors: ["<img src=x onerror=alert(1)> invalid script"],
+          },
+        ],
       });
       await render(
         <template>
@@ -176,7 +196,9 @@ module(
         </template>
       );
       assert.dom(".assistant-workflow-preview__warning").exists();
-      assert.dom(".assistant-workflow-preview__details code").includesText("invalid script");
+      assert
+        .dom(".assistant-workflow-preview__details code")
+        .includesText("invalid script");
       assert.dom(".assistant-workflow-preview img").doesNotExist();
     });
 
