@@ -93,6 +93,15 @@ export default class ChatComposer extends Component {
     }
   }
 
+  // the same limits chat cooks with, so the editor can't author more
+  get markdownOptions() {
+    const chat = this.site.markdown_additional_options?.chat;
+    return {
+      featuresOverride: chat?.limited_pretty_text_features,
+      markdownItRules: chat?.limited_pretty_text_markdown_rules,
+    };
+  }
+
   get showFormattingBar() {
     return this.chatFormattingBar.shown;
   }
@@ -769,6 +778,7 @@ export default class ChatComposer extends Component {
                     @id={{this.composerId}}
                     @keymap={{this.keymap}}
                     @lineBreakOnEnter={{true}}
+                    @markdownOptions={{this.markdownOptions}}
                     @onSetup={{this.setupEditor}}
                     @onSubmit={{this.onSend}}
                     @placeholder={{this.placeholder}}

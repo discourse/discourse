@@ -294,6 +294,7 @@ function convertSelectionToCodeBlock(schema) {
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownItRules: ["fence"],
   nodeSpec: {
     code_block: {
       createGapCursor: true,

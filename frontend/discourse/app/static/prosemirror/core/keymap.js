@@ -135,14 +135,16 @@ export function buildKeymap(
     splitListItem(schema.nodes.list_item)
   );
 
-  chainWithExisting("Mod-Shift-_", (state, dispatch) => {
-    dispatch?.(
-      state.tr
-        .replaceSelectionWith(schema.nodes.horizontal_rule.create())
-        .scrollIntoView()
-    );
-    return true;
-  });
+  if (schema.nodes.horizontal_rule) {
+    chainWithExisting("Mod-Shift-_", (state, dispatch) => {
+      dispatch?.(
+        state.tr
+          .replaceSelectionWith(schema.nodes.horizontal_rule.create())
+          .scrollIntoView()
+      );
+      return true;
+    });
+  }
 
   return keys;
 }

@@ -111,6 +111,17 @@ RSpec.describe "Chat composer rich editor" do
     expect(page).to have_css(".chat-message-text strong", text: "bold")
   end
 
+  it "keeps markup chat doesn't render as plain text" do
+    chat_page.visit_channel(channel_1)
+    channel_page.composer.input.send_keys("# not a heading")
+
+    expect(channel_page.composer.component).to have_no_css("h1")
+
+    channel_page.composer.enter_shortcut
+
+    expect(channel_page.messages).to have_message(text: "# not a heading")
+  end
+
   it "adds a line break on Enter when sending needs Mod+Enter" do
     current_user.user_option.update!(send_shortcut: "meta_enter")
     chat_page.visit_channel(channel_1)

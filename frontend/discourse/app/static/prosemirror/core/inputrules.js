@@ -26,7 +26,7 @@ export function buildInputRules(extensions, params, includeDefault = true) {
         bulletListRule(schema.nodes.bullet_list),
         textblockTypeInputRule(/^```$/, schema.nodes.code_block),
         textblockTypeInputRule(/^ {4}$/, schema.nodes.code_block),
-        headingRule(schema.nodes.heading, 6),
+        ...(schema.nodes.heading ? [headingRule(schema.nodes.heading, 6)] : []),
       ].map((rule) => {
         rule.inCodeMark = false;
         return rule;
@@ -38,11 +38,15 @@ export function buildInputRules(extensions, params, includeDefault = true) {
       // `---`, `___ `, `***`. The en/em-dash variants are kept for content
       // that already contains those characters (e.g. pasted), since the editor
       // no longer converts `--`/`---` to dashes as you type.
-      new InputRule(
-        /^(---|\u2013-|\u2014-|___\s|\*\*\*\s)$/,
-        horizontalRuleHandler,
-        { inCodeMark: false }
-      ),
+      ...(schema.nodes.horizontal_rule
+        ? [
+            new InputRule(
+              /^(---|\u2013-|\u2014-|___\s|\*\*\*\s)$/,
+              horizontalRuleHandler,
+              { inCodeMark: false }
+            ),
+          ]
+        : []),
     ];
 
     rules.push(...defaultRules.map((rule) => processInputRule(rule, params)));

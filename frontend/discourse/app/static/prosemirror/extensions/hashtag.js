@@ -9,6 +9,7 @@ const INVALID_HASHTAGS = new Set();
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownFeatures: ["hashtag-autocomplete"],
   nodeSpec: {
     hashtag: {
       leafText: (node) => `#${node.attrs.name}`,

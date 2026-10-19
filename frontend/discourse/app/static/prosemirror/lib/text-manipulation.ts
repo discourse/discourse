@@ -421,7 +421,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     let command;
     if (level === 0) {
       command = setBlockType(this.schema.nodes.paragraph);
-    } else {
+    } else if (this.schema.nodes.heading) {
       command = setBlockType(this.schema.nodes.heading, { level });
     }
     command?.(this.view.state, this.view.dispatch);
@@ -667,11 +667,13 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
   }
 
   updateState(): void {
-    const activeHeadingLevel = [1, 2, 3, 4, 5, 6].find((headingLevel) =>
-      isNodeActive(this.view.state, this.schema.nodes.heading, {
-        level: headingLevel,
-      })
-    );
+    const activeHeadingLevel =
+      this.schema.nodes.heading &&
+      [1, 2, 3, 4, 5, 6].find((headingLevel) =>
+        isNodeActive(this.view.state, this.schema.nodes.heading!, {
+          level: headingLevel,
+        })
+      );
 
     Object.assign(this.state, {
       inBold: hasMark(this.view.state, this.schema.marks.strong),

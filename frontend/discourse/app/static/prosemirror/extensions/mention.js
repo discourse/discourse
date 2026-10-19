@@ -16,6 +16,7 @@ const resolvedMentionRegex = mentionRegex(unicodeEnabled);
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownFeatures: ["mentions"],
   nodeSpec: {
     mention: {
       attrs: { name: {} },

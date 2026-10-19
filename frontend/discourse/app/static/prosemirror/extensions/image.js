@@ -29,6 +29,7 @@ const UPLOAD_TIMEOUT = 30_000;
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownItRules: ["image"],
   nodeViews: {
     image: {
       component: MediaNodeView,

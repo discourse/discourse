@@ -35,6 +35,7 @@ import type DialogService from "discourse/dialog-holder/services/dialog";
 import type MenuService from "discourse/float-kit/services/menu";
 import type ToastsService from "discourse/float-kit/services/toasts";
 import {
+  extensionsCookedBy,
   getExtensions,
   type MarkdownOptions,
   type PluginParams,
@@ -200,7 +201,11 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
   @service declare a11y: A11yService;
   @service declare currentUser: User;
 
-  schema: Schema = createSchema(this.extensions, this.args.includeDefault);
+  schema: Schema = createSchema(
+    this.extensions,
+    this.args.includeDefault,
+    this.args.markdownOptions?.markdownItRules
+  );
   declare view: EditorView;
   declare parser: Parser;
   declare serializer: Serializer;
@@ -264,7 +269,10 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
   }
 
   get extensions(): RichEditorExtension[] {
-    const extensions = this.args.extensions ?? getExtensions();
+    const extensions = extensionsCookedBy(
+      this.args.extensions ?? getExtensions(),
+      this.args.markdownOptions
+    );
 
     // enforcing core extensions
     return extensions.includes(placeholder)

@@ -35,6 +35,7 @@ export function oneboxTypeAtPos(doc, pos) {
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownFeatures: ["onebox"],
   nodeSpec: {
     onebox: {
       attrs: { url: {}, html: {} },
