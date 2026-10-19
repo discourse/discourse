@@ -18,8 +18,8 @@ class QunitRunner
   TEST_FILE_GLOB = "*-test.{js,gjs,ts,gts}"
 
   def initialize(args)
-    @file_paths = []
-    @path_args = []
+    @paths = []
+    @test_files = []
     @verbose = ENV["ACTIONS_STEP_DEBUG"] == "true"
     @dry_run = false
     @rails_port = ENV["UNICORN_PORT"]&.to_i || 3000
@@ -177,8 +177,7 @@ class QunitRunner
 
     ensure_supported_target!
 
-    @file_paths = args
-    @path_args = args
+    @paths = args
 
     detect_plugin_targets!
     expand_directory_paths!
@@ -217,7 +216,7 @@ class QunitRunner
   def expand_directory_paths!
     expanded = []
 
-    @file_paths.each do |path|
+    @paths.each do |path|
       if File.directory?(path)
         if !test_directory?(path)
           abort "Error: #{path} is not a test directory. Pass frontend/discourse/tests, one of its subdirectories, or a plugin directory."
@@ -236,7 +235,7 @@ class QunitRunner
       end
     end
 
-    @file_paths = expanded.uniq
+    @test_files = expanded.uniq
   end
 
   # Directories become path-prefix filters, so they must map onto test module paths
@@ -246,17 +245,15 @@ class QunitRunner
   end
 
   def run_tests
-    ensure_file_paths_exist!
-
-    if @file_paths && @verbose
-      puts "Files to test: #{@file_paths.length}"
-      puts "  #{@file_paths.join("\n  ")}"
+    if @verbose
+      puts "Files to test: #{@test_files.length}"
+      puts "  #{@test_files.join("\n  ")}"
     end
 
     target = resolved_target
     puts "Target: #{target}" if @verbose
 
-    file_path_filter = build_file_path_filter(@path_args)
+    file_path_filter = build_file_path_filter(@paths)
 
     run_ember_exam(file_path_filter: file_path_filter, filter: @filter)
   end
@@ -358,15 +355,6 @@ class QunitRunner
     end
 
     file_path
-  end
-
-  def ensure_file_paths_exist!
-    @file_paths.each do |file_path|
-      next if File.exist?(file_path)
-
-      puts "Error: File not found: #{file_path}"
-      exit 1
-    end
   end
 
   def check_dev_environment!
@@ -564,65 +552,26 @@ class QunitRunner
   # Directories are passed as prefixes rather than expanded, to keep the filter within
   # MAX_FILE_PATH_FILTER_LENGTH
   def build_file_path_filter(paths)
-    return nil if paths.empty?
+    return nil if paths.empty? || paths.any? { |path| core_tests_root?(path) }
 
-    filter = join_file_path_filter(paths)
-    return nil if filter.nil?
-    return filter if filter.length <= MAX_FILE_PATH_FILTER_LENGTH
-
-    filter = join_file_path_filter(collapse_to_complete_directories(paths))
+    filter = paths.map { |path| file_path_filter_entry(path) }.uniq.join(",")
     return filter if filter.length <= MAX_FILE_PATH_FILTER_LENGTH
 
     abort <<~MESSAGE
-      Error: Too many test files (#{@file_paths.length}) to filter by path. The filter is #{(filter.length / 1024.0).ceil}KB, but the test page URL allows #{MAX_FILE_PATH_FILTER_LENGTH / 1024}KB.
+      Error: Too many test files to filter by path. The filter is #{(filter.length / 1024.0).ceil}KB, but the test page URL allows #{MAX_FILE_PATH_FILTER_LENGTH / 1024}KB.
       Pass directories instead, e.g. bin/qunit frontend/discourse/tests/unit
     MESSAGE
   end
 
-  # nil when the core tests root is included, since it matches everything
-  def join_file_path_filter(paths)
-    filters = paths.map { |path| file_path_filter_entry(path) }
-    filters.uniq.join(",") if !filters.include?("")
+  def core_tests_root?(path)
+    File.expand_path(path) == "#{frontend_dir}/tests"
   end
 
   def file_path_filter_entry(path)
     relative = convert_to_ember_relative_path(path)
-    if !File.directory?(path) || relative.empty?
-      relative
-    elsif plugin_path?(path)
-      "#{relative}/"
-    else
-      "./#{relative}/"
-    end
-  end
+    return relative if !File.directory?(path)
 
-  # Replaces files with the highest directory whose tests are all selected, so the
-  # shorter filter can't match anything extra
-  def collapse_to_complete_directories(paths)
-    selected = @file_paths.map { File.expand_path(_1) }.to_set
-    complete =
-      Hash.new do |cache, dir|
-        cache[dir] = Dir.glob(File.join(dir, "**", TEST_FILE_GLOB)).all? { selected.include?(_1) }
-      end
-
-    paths.map do |path|
-      next path if File.directory?(path)
-
-      collapsed = path
-      dir = File.dirname(File.expand_path(path))
-      loop do
-        break if !test_directory?(dir)
-
-        # stop at the target's root
-        relative = convert_to_ember_relative_path(dir)
-        break if relative.empty? || relative.match?(%r{\Adiscourse/plugins/[^/]+\z})
-        break if !complete[dir]
-
-        collapsed = dir
-        dir = File.dirname(dir)
-      end
-      collapsed
-    end
+    plugin_path?(path) ? "#{relative}/" : "./#{relative}/"
   end
 
   def build_query
@@ -664,7 +613,7 @@ class QunitRunner
   def resolved_target
     @resolved_target ||=
       begin
-        implicit_target = (target_from_paths(@file_paths) if @file_paths.any?)
+        implicit_target = (target_from_paths(@paths) if @paths.any?)
 
         if @target && implicit_target && @target != implicit_target
           puts "Files are for '#{implicit_target}', but target was configured as '#{@target}'"

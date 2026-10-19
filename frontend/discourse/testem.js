@@ -20,16 +20,6 @@ const sandboxDisabled =
 
 const REPO_ROOT = path.resolve(__dirname, "..", "..");
 
-const parallel = parseInt(process.env.QUNIT_PARALLEL || 1, 10);
-
-// Parallel browsers can't share a fixed devtools port, so let Chrome pick one
-const remoteDebuggingPort =
-  process.env.CI ||
-  parallel > 1 ||
-  process.argv.some((arg) => /^--parallel(=|$)/.test(arg))
-    ? 0
-    : 3001;
-
 /**
  * Label identifying which CI run group produced a report, so the artifacts of a
  * single workflow run stay distinguishable.
@@ -277,7 +267,7 @@ module.exports = {
   disable_watching: true,
   launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
   tap_failed_tests_only: false,
-  parallel,
+  parallel: parseInt(process.env.QUNIT_PARALLEL || 1, 10),
   socket_server_options: {
     maxHttpBufferSize: 1e8, // 100MB
   },
@@ -296,7 +286,7 @@ module.exports = {
       "--disable-software-rasterizer",
       "--disable-search-engine-choice-screen",
       "--mute-audio",
-      `--remote-debugging-port=${remoteDebuggingPort}`,
+      "--remote-debugging-port=0",
       "--window-size=1440,900",
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
@@ -310,7 +300,7 @@ module.exports = {
       "--disable-software-rasterizer",
       "--disable-search-engine-choice-screen",
       "--mute-audio",
-      `--remote-debugging-port=${remoteDebuggingPort}`,
+      "--remote-debugging-port=0",
       "--window-size=1440,900",
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",

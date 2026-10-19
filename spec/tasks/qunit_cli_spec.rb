@@ -212,14 +212,8 @@ describe "bin/qunit" do
     expect(result.err).to include("frontend/discourse is not a test directory")
   end
 
-  it "collapses a long file list into fully selected directories" do
-    result = run(*core_test_files_in("unit"))
-    expect(result.status).to eq(0)
-    expect(result.args).to include("--file-path", "./unit/")
-  end
-
-  it "aborts when a long file list can't be collapsed" do
-    result = run(*core_test_files_in("acceptance").drop(1))
+  it "aborts when a file list is too long for the test page URL" do
+    result = run(*core_test_files_in("acceptance"))
     expect(result.status).to eq(1)
     expect(result.err).to include("Too many test files", "Pass directories instead")
   end
