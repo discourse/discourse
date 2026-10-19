@@ -1,4 +1,5 @@
-import { assert } from "@ember/debug";
+import { DEBUG } from "@glimmer/env";
+import { assert, warn } from "@ember/debug";
 import {
   applyMutableValueTransformer,
   withTransformerErrorHandling,
@@ -18,7 +19,7 @@ export interface SelectNames {
   identifier: string | undefined;
 }
 
-/** Live data shared by the four customization points. */
+/** Live data shared by the customization points. */
 export interface SelectCustomizationContext extends SelectNames {
   /** Data published by the recipe. */
   kindContext: object;
@@ -36,10 +37,51 @@ export interface SelectContentContext extends SelectCustomizationContext {
   control: SelectControl;
 }
 
+/** Core presentation values that customizations may override. */
+export interface SelectPresentationOptions {
+  /** The caret glyph, optionally chosen separately for each menu state. */
+  caretIcon?:
+    | string
+    | Readonly<{
+        /** The glyph while the menu is open. */
+        open?: string;
+        /** The glyph while the menu is closed. */
+        closed?: string;
+      }>;
+  /** Suppresses trigger text when a label supplies its accessible name. */
+  iconOnly?: boolean;
+  /** The accessible name of the trigger and listbox. */
+  label?: string;
+  /** Text shown when nothing is selected. */
+  placeholder?: string;
+  /** Text shown in an empty panel filter. */
+  searchPlaceholder?: string;
+  /** A decorative leading trigger icon. */
+  icon?: string;
+  /** Whether the trigger shows its caret. */
+  showCaret?: boolean;
+  /** Whether a selection can offer a clear control. */
+  clearable?: boolean;
+  /** The single-select none row's label; empty suppresses the row. */
+  noneLabel?: string;
+  /** An additive lock: a later customization cannot remove it. */
+  disabled?: boolean;
+}
+
+/** Options callbacks read upstream state only, avoiding selection and presentation cycles. */
+export interface SelectOptionsContext extends SelectCustomizationContext {
+  /** The normalized controlled value. */
+  value: SelectValue;
+  /** The live select handle; only read it while resolving options. */
+  control: SelectControl;
+}
+
 /** Presentation starts fresh for every option row evaluation. */
 export interface SelectRowPresentation {
   /** Classes appended to the core classes; falsy entries are ignored. */
   classes: (string | false | null | undefined | 0)[];
+  /** An explicit tooltip; an item's own title is never used implicitly. */
+  title: string | undefined;
 }
 
 /** State of the option row being presented. */
@@ -75,6 +117,11 @@ type Content = (
 ) => SelectItem[];
 /** A row step mutates presentation; its return value is ignored. */
 type Row = (row: SelectRowPresentation, context: SelectRowContext) => void;
+/** An options step returns a partial over an immutable snapshot of the values so far. */
+type Options = (
+  current: Readonly<SelectPresentationOptions>,
+  context: SelectOptionsContext
+) => Partial<SelectPresentationOptions> | void;
 /** The loader a load step receives and returns. */
 type Loader = NonNullable<SelectEngineOptions["load"]>;
 /** A load step wraps or replaces the previous loader. */
@@ -93,6 +140,8 @@ export interface SelectCustomizationSpec {
   content(callback: Content): void;
   /** Appends a row presentation step. */
   row(callback: Row): void;
+  /** Appends a presentation-options step. */
+  options(callback: Options): void;
   /** Appends a loader step. */
   load(callback: Load): void;
   /** Appends change middleware. */
@@ -119,6 +168,9 @@ class Declarations {
 
   /** Row steps, in declaration order. */
   row: Row[] = [];
+
+  /** Options steps, in declaration order. */
+  options: Options[] = [];
 
   /** Loader steps, in declaration order. */
   load: Load[] = [];
@@ -191,7 +243,7 @@ export default class SelectCustomizations {
 
   /** Keeps mutations made before a row step fails, then continues the remaining steps. */
   applyRow(context: SelectRowContext): SelectRowPresentation {
-    const row: SelectRowPresentation = { classes: [] };
+    const row: SelectRowPresentation = { classes: [], title: undefined };
     for (const step of this.#steps.row) {
       withTransformerErrorHandling(() => step(row, context));
     }
@@ -213,6 +265,57 @@ export default class SelectCustomizations {
         }) ?? load;
     }
     return load;
+  }
+
+  /** Resolves core keys in tier order, keeping snapshots immutable and locks additive. */
+  resolveOptions(
+    base: SelectPresentationOptions,
+    context: SelectOptionsContext
+  ): Readonly<SelectPresentationOptions> {
+    let current = this.#optionsSnapshot(base);
+    for (const step of this.#steps.options) {
+      const previous = current;
+      const partial = withTransformerErrorHandling(
+        () => step(previous, context),
+        () => undefined
+      );
+      if (!partial || typeof partial !== "object" || Array.isArray(partial)) {
+        continue;
+      }
+      const next = { ...current };
+      for (const key of Object.keys(partial)) {
+        if (!Object.hasOwn(base, key)) {
+          if (DEBUG) {
+            warn(`DSelect: unknown options customization key "${key}"`, false, {
+              id: "discourse.d-select.unknown-option",
+            });
+          }
+          continue;
+        }
+        // The runtime schema check above narrows the callback's untyped return keys.
+        const option = key as keyof SelectPresentationOptions;
+        Object.assign(next, {
+          [option]:
+            option === "disabled"
+              ? !!current.disabled || !!partial.disabled
+              : partial[option],
+        });
+      }
+      current = this.#optionsSnapshot(next);
+    }
+    if (current.iconOnly && !current.label) {
+      if (DEBUG) {
+        warn(
+          "DSelect: iconOnly requires a label and is ignored without one",
+          false,
+          {
+            id: "discourse.d-select.icon-only-without-label",
+          }
+        );
+      }
+      current = this.#optionsSnapshot({ ...current, iconOnly: false });
+    }
+    return current;
   }
 
   /** Runs once-only continuations without reporting errors originating downstream. */
@@ -261,6 +364,19 @@ export default class SelectCustomizations {
     return run(0);
   }
 
+  /** Copies nested caret state so freezing a snapshot never freezes caller-owned data. */
+  #optionsSnapshot(
+    options: SelectPresentationOptions
+  ): Readonly<SelectPresentationOptions> {
+    return Object.freeze({
+      ...options,
+      caretIcon:
+        typeof options.caretIcon === "object" && options.caretIcon !== null
+          ? Object.freeze({ ...options.caretIcon })
+          : options.caretIcon,
+    });
+  }
+
   /** Seals even failed setups and discards every declaration they made. */
   #setup(setup: Setup, names: SelectNames): void {
     const pending = new Declarations();
@@ -280,6 +396,7 @@ export default class SelectCustomizations {
         row: (callback) => append(pending.row, callback),
         load: (callback) => append(pending.load, callback),
         change: (callback) => append(pending.change, callback),
+        options: (callback) => append(pending.options, callback),
       },
       {
         get(target, key, receiver) {
@@ -311,6 +428,7 @@ export default class SelectCustomizations {
     if (succeeded) {
       this.#steps.content.push(...pending.content);
       this.#steps.row.push(...pending.row);
+      this.#steps.options.push(...pending.options);
       this.#steps.load.push(...pending.load);
       this.#steps.change.push(...pending.change);
     }

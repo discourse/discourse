@@ -118,12 +118,9 @@ interface DSelectSignature {
     /** A leading (decorative) icon in the trigger. */
     icon?: string;
     /**
-     * Renders a label-less, icon-only trigger: the value / placeholder text is suppressed, leaving
-     * the leading `@icon` and the caret. Only takes effect on the `button` and `static`
-     * single-select variants — a `typeahead` trigger is an editable input and a multi-select shows
-     * chips, so neither can be icon-only. Requires `@label`: with no visible text, `@label` is the
-     * trigger's accessible name (enforced by a debug assertion). Drive `@icon` from `@value` for a
-     * selection-reactive glyph.
+     * Suppresses value/placeholder text on single-select `button` and `static` triggers.
+     * Requires a resolved label; ignored with a debug warning otherwise.
+     * Drive `@icon` from `@value` for a selection-reactive glyph.
      */
     iconOnly?: boolean;
     /**
@@ -318,6 +315,7 @@ export default class DSelect extends Component<DSelectSignature> {
     getMaximum: () => this.args.maximum,
     getMinimum: () => this.args.minimum,
     getNoneLabel: () => this.args.noneLabel,
+    getOptions: () => this.args,
     items: () =>
       typeof this.args.items === "function"
         ? this.args.items()
@@ -459,7 +457,9 @@ export default class DSelect extends Component<DSelectSignature> {
       "DSelect: `disabled` is an argument, not an attribute — write `@disabled` instead. " +
         "The trigger is a `div`, so a bare `disabled` attribute is inert and the control stays " +
         "interactive.",
-      !element.hasAttribute("disabled") || this.args.disabled != null
+      !element.hasAttribute("disabled") ||
+        this.args.disabled != null ||
+        this.presenter.isDisabled
     );
   }
 
@@ -638,7 +638,7 @@ export default class DSelect extends Component<DSelectSignature> {
         <TriggerFrame
           @caret={{this.presenter.caretIcon}}
           @clearLabel={{this.presenter.clearLabel}}
-          @icon={{@icon}}
+          @icon={{this.presenter.icon}}
           @onClear={{this.interaction.handleClear}}
           @onLabelActivate={{this.interaction.focusFromLabel}}
           @pending={{this.engine.pending}}
@@ -702,7 +702,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @onFocus={{this.interaction.handleTriggerFocus}}
               @onInputKeydown={{this.interaction.handleInputKeydown}}
               @pending={{this.engine.pending}}
-              @placeholder={{@placeholder}}
+              @placeholder={{this.presenter.placeholder}}
               @presenter={{this.presenter}}
               @registerInput={{this.interaction.registerTriggerInput}}
               @resolveSelection={{this.resolveSingle}}
@@ -837,7 +837,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @hasGroupHeaderBlock={{has-block "groupHeader"}}
               @hasItemBlock={{has-block "item"}}
               @hasLoadingItemBlock={{has-block "loadingItem"}}
-              @label={{@label}}
+              @label={{this.presenter.ariaLabelText}}
               @listbox={{this.listbox}}
               @listboxId={{this.listboxId}}
               @loadListContent={{this.loadListContent}}

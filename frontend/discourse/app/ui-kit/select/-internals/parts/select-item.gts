@@ -1,8 +1,10 @@
 import Component from "@glimmer/component";
+import { createCache, getValue } from "@glimmer/tracking/primitives/cache";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import type { SelectRowPresentation } from "discourse/ui-kit/select/-internals/engine/customizations";
 import SelectEngine, {
   SelectDescriptor,
   SelectItem as SelectItemModel,
@@ -46,6 +48,18 @@ interface SelectItemSignature {
  * roving highlight via `activeClass`. This part is internal to the select family.
  */
 export default class SelectItem extends Component<SelectItemSignature> {
+  /** Descriptor wrappers are rebuilt by the list even when row customization inputs are unchanged. */
+  #presentation?: {
+    engine: SelectEngine;
+    descriptor: SelectDescriptor;
+    cache: ReturnType<typeof createCache<SelectRowPresentation>>;
+  };
+
+  /** Shares classes and title while tracking both callback dependencies and row input changes. */
+  get presentation(): SelectRowPresentation {
+    return this.#resolvePresentation(this.args.engine, this.args.descriptor);
+  }
+
   /**
    * Activates the item unless the control is locked or the row itself is disabled (the
    * modifier already skips disabled items for the keyboard; this guards the pointer path).
@@ -58,8 +72,30 @@ export default class SelectItem extends Component<SelectItemSignature> {
     this.args.engine.activate(this.args.descriptor.item);
   }
 
+  /** Reuses the tracked computation across equivalent list descriptor wrappers. */
+  #resolvePresentation(
+    engine: SelectEngine,
+    descriptor: SelectDescriptor
+  ): SelectRowPresentation {
+    const previous = this.#presentation;
+    if (
+      !previous ||
+      previous.engine !== engine ||
+      previous.descriptor.item !== descriptor.item ||
+      previous.descriptor.flags.selected !== descriptor.flags.selected ||
+      previous.descriptor.flags.disabled !== descriptor.flags.disabled
+    ) {
+      this.#presentation = {
+        engine,
+        descriptor,
+        cache: createCache(() => engine.rowPresentation(descriptor)),
+      };
+    }
+    return getValue(this.#presentation!.cache)!;
+  }
+
   <template>
-    {{#let (@engine.rowPresentation @descriptor) as |row|}}
+    {{#let this.presentation as |row|}}
       <li
         aria-disabled={{if @descriptor.flags.disabled "true"}}
         aria-selected={{if @descriptor.flags.selected "true" "false"}}
@@ -74,6 +110,7 @@ export default class SelectItem extends Component<SelectItemSignature> {
           row.classes
         }}
         role="option"
+        title={{row.title}}
         ...attributes
         {{on "click" this.handleClick}}
       >

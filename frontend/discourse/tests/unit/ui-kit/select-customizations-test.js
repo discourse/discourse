@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
@@ -736,5 +737,185 @@ module("Unit | ui-kit | select-customizations", function (hooks) {
       assert.deepEqual(changes, [2], "the change was emitted once");
       assert.strictEqual(this.reported.length, 1, "the rejection is reported");
     });
+  });
+});
+
+module("Unit | ui-kit | select-customizations | options", function (hooks) {
+  setupTest(hooks);
+
+  function noneRow(engine) {
+    return engine.buildItems(ITEMS).find((row) => row.flags.__none)?.item.name;
+  }
+
+  test("noneLabel reaches a headless engine", function (assert) {
+    customize((selects) =>
+      selects.forAll((spec) => spec.options(() => ({ noneLabel: "Nothing" })))
+    );
+
+    assert.strictEqual(
+      noneRow(new SelectEngine({ items: ITEMS, noneLabel: "None" })),
+      "Nothing",
+      "it renames the static none label"
+    );
+    assert.strictEqual(
+      noneRow(new SelectEngine({ items: ITEMS, getNoneLabel: () => "None" })),
+      "Nothing",
+      "it wins over the live reader"
+    );
+    assert.strictEqual(
+      noneRow(new SelectEngine({ items: ITEMS })),
+      "Nothing",
+      "it adds a none row where there was none"
+    );
+    assert.strictEqual(
+      noneRow(new SelectEngine({ items: ITEMS, multiple: true })),
+      undefined,
+      "a multi-select still has no none row"
+    );
+  });
+
+  test("a throwing options callback is reported and its partial skipped", function (assert) {
+    customize((selects) => {
+      selects.forAll((spec) =>
+        spec.options(() => {
+          throw new Error("options boom");
+        })
+      );
+      selects.forAll((spec) => spec.options(() => ({ noneLabel: "After" })));
+    });
+    const engine = new SelectEngine({ items: ITEMS, noneLabel: "None" });
+
+    assert.throws(() => engine.buildItems(ITEMS), /options boom/);
+
+    disableThrowingApplyExceptionOnTests();
+    assert.strictEqual(
+      noneRow(new SelectEngine({ items: ITEMS, noneLabel: "None" })),
+      "After",
+      "later callbacks still apply"
+    );
+  });
+
+  test("options takes only a function", function (assert) {
+    customize((selects) => selects.forAll((spec) => spec.options("label")));
+
+    assert.throws(() => new SelectEngine({}), /must be a function/);
+  });
+
+  test("each callback gets a frozen snapshot, and an earlier lock survives a later false", function (assert) {
+    const snapshots = [];
+    const caret = { open: "plus", closed: "minus" };
+    customize((selects) => {
+      selects.forIdentifier("fruit", (spec) =>
+        spec.options((current) => {
+          snapshots.push(current);
+          return { disabled: false, label: "Identifier" };
+        })
+      );
+      selects.forAll((spec) => {
+        spec.options((current) => {
+          snapshots.push(current);
+          return { disabled: true, label: "First", caretIcon: caret };
+        });
+        spec.options((current) => {
+          snapshots.push(current);
+          return { disabled: false, label: "Second" };
+        });
+      });
+    });
+    const engine = new SelectEngine({
+      identifier: "fruit",
+      getOptions: () => ({ label: "Base" }),
+    });
+
+    assert.true(engine.resolvedOptions.disabled, "the first lock stays");
+    assert.strictEqual(
+      engine.resolvedOptions.label,
+      "Identifier",
+      "the most specific tier wins"
+    );
+    assert.deepEqual(
+      snapshots.map((snapshot) => snapshot.label),
+      ["Base", "First", "Second"],
+      "earlier snapshots keep their values"
+    );
+    assert.true(snapshots.every(Object.isFrozen), "every snapshot is frozen");
+    assert.true(
+      Object.isFrozen(engine.resolvedOptions.caretIcon),
+      "nested caret state is frozen too"
+    );
+    assert.false(Object.isFrozen(caret), "the callback's own object is not");
+  });
+
+  test("a headless noneLabel follows the live reader until a customization overrides it", function (assert) {
+    const state = new (class {
+      @tracked label;
+      @tracked multiple = false;
+      @tracked override;
+    })();
+    customize((selects) =>
+      selects.forAll((spec) =>
+        spec.options(() =>
+          state.override === undefined ? {} : { noneLabel: state.override }
+        )
+      )
+    );
+    const engine = new SelectEngine({
+      noneLabel: "Static",
+      getNoneLabel: () => state.label,
+      getMultiple: () => state.multiple,
+    });
+    const noneLabel = () =>
+      engine.buildItems([]).find((row) => row.flags.__none)?.item.name;
+
+    assert.strictEqual(noneLabel(), "Static", "the static label is the base");
+    state.label = "Live";
+    assert.strictEqual(noneLabel(), "Live", "the live reader takes over");
+    state.override = "Override";
+    assert.strictEqual(noneLabel(), "Override", "the customization wins");
+    state.multiple = true;
+    assert.strictEqual(
+      noneLabel(),
+      undefined,
+      "a multi-select has no none row"
+    );
+    state.multiple = false;
+    state.override = "";
+    assert.strictEqual(
+      noneLabel(),
+      undefined,
+      "an empty label removes the row"
+    );
+    state.override = undefined;
+    assert.strictEqual(
+      noneLabel(),
+      "Live",
+      "dropping the override restores it"
+    );
+  });
+
+  test("resolving options never reads items or the lock", function (assert) {
+    let itemReads = 0;
+    customize((selects) =>
+      selects.forAll((spec) =>
+        spec.options((current, context) => ({
+          disabled: context.control.value === 2 && !context.control.pending,
+        }))
+      )
+    );
+    const engine = new SelectEngine({
+      items: () => {
+        itemReads++;
+        return [];
+      },
+      getValue: () => 2,
+      valueItems: { id: 2, name: "Two" },
+      getLocked: () => {
+        throw new Error("must not read locked");
+      },
+    });
+    const before = itemReads;
+
+    assert.true(engine.resolvedOptions.disabled, "the value drives the lock");
+    assert.strictEqual(itemReads, before, "no item reads");
   });
 });

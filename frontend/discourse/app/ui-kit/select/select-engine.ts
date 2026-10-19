@@ -6,6 +6,7 @@ import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import SelectCustomizations, {
   type SelectCustomizationContext,
+  type SelectPresentationOptions,
   type SelectRowPresentation,
 } from "discourse/ui-kit/select/-internals/engine/customizations";
 import ListComposer from "discourse/ui-kit/select/-internals/engine/list-composer";
@@ -210,9 +211,9 @@ export interface SelectLegacyContext {
 }
 
 /**
- * The handle action rows, content customizations, and load customizations get for one select.
- * It is the same frozen object for the select's whole life. Its methods are for event time, such as a row's `onSelect`, never for building
- * content, and they do nothing once the select is destroyed.
+ * The live handle for action rows and content, options, and load customizations.
+ * The object stays frozen for the select's life. Its methods are for event time,
+ * never for render-time callbacks, and do nothing once the select is destroyed.
  */
 export interface SelectControl {
   /** The held value. */
@@ -289,6 +290,9 @@ export interface SelectEngineOptions {
 
   /** Live reader for {@link noneLabel}. */
   getNoneLabel?: () => string | undefined;
+
+  /** Live raw presentation args, read before any items, resolved selection, or lock state. */
+  getOptions?: () => Readonly<SelectPresentationOptions>;
 
   /** Live reader for {@link valueItems}. */
   getValueItems?: () => SelectItem | SelectItem[] | undefined;
@@ -659,6 +663,7 @@ export default class SelectEngine {
       kind: this.kind,
       identifier: this.identifier,
     });
+    this.#options.attachResolvedOptions(() => this.resolvedOptions);
     // Catch a both-sources misconfiguration up front (before any menu opens); the same
     // check also runs per load for a live `items` source that turns non-empty later.
     this.#assertSingleSource();
@@ -689,6 +694,34 @@ export default class SelectEngine {
    */
   get value(): SelectValue {
     return this.#selectionActions.value;
+  }
+
+  /** One reactive options pass shared by the engine, presenter, and every rendered row. */
+  @cached
+  get resolvedOptions(): Readonly<SelectPresentationOptions> {
+    const args = this.#options.presentationOptions;
+    return this.#customizations.resolveOptions(
+      {
+        caretIcon: args.caretIcon,
+        iconOnly: args.iconOnly,
+        label: args.label,
+        placeholder: args.placeholder,
+        searchPlaceholder: args.searchPlaceholder,
+        icon: args.icon,
+        showCaret: args.showCaret,
+        clearable: args.clearable,
+        noneLabel: args.noneLabel ?? this.#options.baseNoneLabel,
+        disabled: args.disabled,
+      },
+      {
+        kind: this.kind,
+        identifier: this.identifier,
+        kindContext: this.#options.kindContext,
+        instanceContext: this.#options.instanceContext,
+        value: this.value,
+        control: this.#control,
+      }
+    );
   }
 
   /** Whether anything is selected. */
@@ -778,7 +811,7 @@ export default class SelectEngine {
     return this.#options.identifier;
   }
 
-  /** The select's handle for action rows, content customizations, and load customizations. */
+  /** The live handle for action rows and content, options, and load customizations. */
   get control(): SelectControl {
     return this.#control;
   }
@@ -1051,7 +1084,7 @@ export default class SelectEngine {
 
   /**
    * Option-row presentation from render-time customizations. Each evaluation starts fresh
-   * so classes cannot leak between rows or renders.
+   * so classes and titles cannot leak between rows or renders.
    */
   @bind
   rowPresentation(descriptor: SelectDescriptor): SelectRowPresentation {

@@ -1,4 +1,5 @@
 import { assert } from "@ember/debug";
+import type { SelectPresentationOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
 import type {
   SelectEngineOptions,
   SelectItem,
@@ -36,6 +37,12 @@ export default class SelectOptionsView {
   #minimum?: SelectEngineOptions["minimum"];
   #readNoneLabel?: SelectEngineOptions["getNoneLabel"];
   #noneLabel?: SelectEngineOptions["noneLabel"];
+
+  /** Raw presentation inputs, kept separate from downstream lock and selection readers. */
+  #readPresentationOptions?: SelectEngineOptions["getOptions"];
+
+  /** Attached after customization setup and before source validation. */
+  #readResolvedOptions?: () => Readonly<SelectPresentationOptions>;
   #valueField: string;
   #labelField: string;
   // Whether the consumer declared `valueItems` at all, as opposed to it merely being empty
@@ -84,6 +91,7 @@ export default class SelectOptionsView {
     this.#minimum = opts.minimum;
     this.#readNoneLabel = opts.getNoneLabel;
     this.#noneLabel = opts.noneLabel;
+    this.#readPresentationOptions = opts.getOptions;
     this.#valueField = opts.valueField ?? "id";
     this.#labelField = opts.labelField ?? "name";
     // Values are unique by contract (selection identity, row keys), so grouping by the value
@@ -136,15 +144,23 @@ export default class SelectOptionsView {
     return this.#readMinChars?.() ?? this.#minChars ?? 0;
   }
 
-  // Single-select only: the label for the prepended "none" row, or `null` when unset/empty or on a
-  // multi-select (there "none" is the placeholder, not a row). Gating multi here keeps every
-  // downstream consumer — injection and the `isSelected` special-case — inert on multi.
+  /** Raw none label for options resolution, independent of the overlay and multiple mode. */
+  get baseNoneLabel(): string | undefined {
+    return this.#readNoneLabel?.() ?? this.#noneLabel;
+  }
+
+  /** Customized single-select none label; empty labels and multiple mode suppress the row. */
   get noneLabel(): string | null {
     if (this.multiple) {
       return null;
     }
-    const label = this.#readNoneLabel?.() ?? this.#noneLabel;
+    const label = this.#readResolvedOptions?.().noneLabel ?? this.baseNoneLabel;
     return label ? label : null;
+  }
+
+  /** The call site's live presentation args, before customizations. */
+  get presentationOptions(): Readonly<SelectPresentationOptions> {
+    return this.#readPresentationOptions?.() ?? {};
   }
 
   // Multi-only, and `null` for anything below one — which also absorbs `0`, negatives, and
@@ -277,6 +293,11 @@ export default class SelectOptionsView {
 
   get legacy(): SelectLegacyContext | null {
     return this.#legacy;
+  }
+
+  /** Connects engine-owned resolution without making raw option reads depend on it. */
+  attachResolvedOptions(read: () => Readonly<SelectPresentationOptions>): void {
+    this.#readResolvedOptions = read;
   }
 
   // Two ids denote the same option iff their string forms match, so a bound "5" selects

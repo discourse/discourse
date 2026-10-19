@@ -1,8 +1,8 @@
-import { assert } from "@ember/debug";
 import type { FloatContentRole } from "discourse/float-kit/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import type { DRovingFocusEntry } from "discourse/ui-kit/modifiers/d-roving-focus";
+import type { SelectPresentationOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
 import SelectEngine, {
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -22,19 +22,11 @@ function filterOf(context: unknown): string | undefined {
 export type SelectVariant =
   (typeof SELECT_VARIANTS)[keyof typeof SELECT_VARIANTS];
 
-interface VariantPresenterArgs {
+interface VariantPresenterArgs extends SelectPresentationOptions {
   value?: SelectValue;
   multiple?: boolean;
   labelField?: string;
-  placeholder?: string;
-  searchPlaceholder?: string;
-  label?: string;
   variant?: SelectVariant;
-  iconOnly?: boolean;
-  caretIcon?: string | { open?: string; closed?: string };
-  showCaret?: boolean;
-  clearable?: boolean;
-  disabled?: boolean;
   readonly?: boolean;
   retryable?: boolean;
   debounce?: boolean | number;
@@ -215,9 +207,9 @@ export default class VariantPresenter {
     return this.isStatic && this.isReadonly ? "true" : undefined;
   }
 
-  /** Whether the control cannot be opened or mutated (disabled or readonly). */
+  /** Whether the resolved disabled option prevents opening or mutation. */
   get isDisabled(): boolean {
-    return this.#getArgs().disabled ?? false;
+    return this.#engine.resolvedOptions.disabled ?? false;
   }
 
   get isReadonly(): boolean {
@@ -230,7 +222,7 @@ export default class VariantPresenter {
 
   /** The resolved caret icon for the current open/closed state. */
   get caretIcon(): string {
-    const arg = this.#getArgs().caretIcon;
+    const arg = this.#engine.resolvedOptions.caretIcon;
     if (typeof arg === "string") {
       return arg;
     }
@@ -241,23 +233,30 @@ export default class VariantPresenter {
 
   /** The caret shows unless a consumer explicitly opts out (icon-only triggers). */
   get showCaret(): boolean {
-    return this.#getArgs().showCaret ?? true;
+    return this.#engine.resolvedOptions.showCaret ?? true;
   }
 
   /**
    * Whether to render a label-less trigger. Effective only on the `button`/`static` single-select
    * variants; on a `typeahead` (editable input) or `multiple` (chips are the display) the arg is
-   * inert. Asserts `@label` is present, since a suppressed label leaves the accessible name with no
-   * visible text to fall back on.
+   * inert. Options resolution ignores it with a warning when no accessible label resolves.
    */
   get iconOnly(): boolean {
-    const args = this.#getArgs();
-    const requested = args.iconOnly ?? false;
-    assert(
-      "DSelect: `@iconOnly` requires `@label` — the trigger's visible text is suppressed, so `@label` provides its accessible name.",
-      !requested || !!args.label
+    return (
+      !!this.#engine.resolvedOptions.iconOnly &&
+      this.triggerIsControl &&
+      !this.#getArgs().multiple
     );
-    return requested && this.triggerIsControl && !args.multiple;
+  }
+
+  /** The resolved decorative leading trigger icon. */
+  get icon(): string | undefined {
+    return this.#engine.resolvedOptions.icon;
+  }
+
+  /** The resolved empty-selection text for a single trigger. */
+  get placeholder(): string | undefined {
+    return this.#engine.resolvedOptions.placeholder;
   }
 
   /** A source error offers a retry action unless a consumer opts out. */
@@ -268,7 +267,9 @@ export default class VariantPresenter {
   /** Whether the clear control renders: opted in, something selected, and not locked. */
   get showClear(): boolean {
     return (
-      !!this.#getArgs().clearable && this.#engine.hasValue && !this.isLocked
+      !!this.#engine.resolvedOptions.clearable &&
+      this.#engine.hasValue &&
+      !this.isLocked
     );
   }
 
@@ -426,19 +427,20 @@ export default class VariantPresenter {
     if (this.#engine.hasValue || this.#engine.pending) {
       return "";
     }
-    return this.#getArgs().placeholder || i18n("d_select.add_placeholder");
+    return this.placeholder || i18n("d_select.add_placeholder");
   }
 
-  /** The filter input's placeholder (the consumer's `@searchPlaceholder` or a default). */
+  /** The filter input's resolved placeholder, or a default. */
   get searchPlaceholderText(): string {
     return (
-      this.#getArgs().searchPlaceholder ?? i18n("d_select.search_placeholder")
+      this.#engine.resolvedOptions.searchPlaceholder ??
+      i18n("d_select.search_placeholder")
     );
   }
 
-  /** The combobox/listbox accessible name (the consumer's `@label` or a default). */
+  /** The combobox/listbox's resolved accessible name, or a default. */
   get ariaLabelText(): string {
-    return this.#getArgs().label ?? i18n("d_select.label");
+    return this.#engine.resolvedOptions.label ?? i18n("d_select.label");
   }
 
   /**

@@ -933,23 +933,32 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
       .hasText("Banana", "the label still renders when not icon-only");
   });
 
-  test("@iconOnly without @label fires a debug assertion", async function (assert) {
-    let fired = false;
-    setupOnerror((error) => {
-      fired = true;
-      assert.true(
-        error.message.includes("`@iconOnly` requires `@label`"),
-        "the assertion names the missing @label requirement"
+  test("@iconOnly without @label is ignored with a warning", async function (assert) {
+    const warn = sinon.stub(console, "warn");
+
+    try {
+      await render(
+        <template>
+          <DSelect
+            @iconOnly={{true}}
+            @items={{ITEMS}}
+            @value={{2}}
+            @variant="static"
+          />
+        </template>
       );
-    });
 
-    await render(
-      <template>
-        <DSelect @iconOnly={{true}} @items={{ITEMS}} @variant="static" />
-      </template>
-    );
-
-    assert.true(fired, "the debug assertion fired during render");
+      assert
+        .dom(".d-select__trigger.--icon-only")
+        .doesNotExist("the trigger keeps its text layout");
+      assert.dom(".d-select__value").hasText("Banana", "the value shows");
+      assert.true(
+        warn.calledWithMatch("iconOnly"),
+        "a warning names the ignored option"
+      );
+    } finally {
+      warn.restore();
+    }
   });
 
   test("an icon-only dropdown is not constrained to the narrow trigger width", async function (assert) {
