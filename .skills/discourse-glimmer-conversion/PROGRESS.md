@@ -147,7 +147,7 @@
   - plugins/poll/poll-breakdown-option
 - [#44615](https://github.com/discourse/discourse/pull/44615) ☑️
   - search-result-entry
-- [#44660](https://github.com/discourse/discourse/pull/44660)
+- [#44660](https://github.com/discourse/discourse/pull/44660) ☑️
   - admin/report-filters/bool
   - admin/report-filters/category
   - admin/report-filters/category-list
@@ -158,7 +158,7 @@
   - categories-only
   - navigation-item
   - plugins/discourse-patreon/connectors/topic-above-footer-buttons/patreon
-- [#44687](https://github.com/discourse/discourse/pull/44687)
+- [#44687](https://github.com/discourse/discourse/pull/44687) ☑️
   - admin/admin-penalty-post-action
   - admin/admin-penalty-reason
   - admin/screened-ip-address-form

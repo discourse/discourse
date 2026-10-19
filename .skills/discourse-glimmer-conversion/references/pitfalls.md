@@ -50,6 +50,13 @@ end of the matching section with the commit sha.
   (`<PaymentOptions @plans={{false}} />`). The classic `if (this.plans)` skipped it;
   `this.args.plans?.toSorted(...)` throws, because `false` is not nullish. Keep the classic
   guard's truthiness when the arg can be a boolean.
+- **Field types are declarations.** Under `strict`, `x = null` declares `null`, `x = []`
+  declares `never[]`, and plugins and themes in TypeScript compile against those
+  declarations, so `#44656` gave such members a `/** @type */`. Keep the annotation on a
+  member that survives the conversion, even when its initializer changes (`newEmojiGroups`
+  lost it), drop it with a member that becomes an arg, and annotate new public members
+  initialized to `null` or `[]`. `pnpm lint:types` won't notice, because `.gjs` bodies aren't
+  type-checked.
 
 ## Reactivity
 
