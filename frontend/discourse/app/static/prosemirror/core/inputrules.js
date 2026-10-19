@@ -148,7 +148,15 @@ function blockRule(regex, apply) {
   return new InputRule(
     new RegExp(`(?:^|\ufffc)${regex.source.slice(1)}`),
     (state, match, start, end) => {
+      // the placeholder stands for any leaf node, like a mention
       const afterBreak = match[0].startsWith("\ufffc");
+      if (
+        afterBreak &&
+        state.doc.nodeAt(start)?.type !== state.schema.nodes.hard_break
+      ) {
+        return null;
+      }
+
       const tr = state.tr.delete(afterBreak ? start + 1 : start, end);
       if (afterBreak) {
         tr.delete(start, start + 1).split(start);
