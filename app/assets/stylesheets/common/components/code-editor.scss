@@ -9,17 +9,15 @@
   // the editor and would be cut off.
   background: var(--secondary);
 
-  // The editor fills whatever height the box has, so dragging the grippie or
-  // setting a height on the host grows the text area rather than leaving a
-  // dead strip under it.
-  > .loading-container {
+  // Flex rather than percentage heights, so a host that only sets a
+  // min-height still gets a full-size editor instead of a dead strip.
+  > .loading-container,
+  .codemirror-editor {
+    display: flex;
+    flex-direction: column;
     flex: 1 1 auto;
     width: 100%;
     min-height: 0;
-  }
-
-  .codemirror-editor {
-    height: 100%;
   }
 
   .grippie {
@@ -32,9 +30,15 @@
   }
 
   .cm-editor {
-    height: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
     background: transparent;
     color: var(--primary);
+
+    // Code reads left to right whatever the UI language.
+
+    /*! rtl:ignore */
+    direction: ltr;
 
     &.cm-focused {
       outline: 2px solid var(--tertiary);

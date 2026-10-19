@@ -615,6 +615,75 @@ module("Integration | Component | code-editor", function (hooks) {
       .doesNotExist("clearing the warnings unmarks it");
   });
 
+  test("keeps line warnings when the value is swapped", async function (assert) {
+    class State {
+      @tracked value = "one\ntwo";
+    }
+    const state = new State();
+    const warnings = [{ line: 1, message: "Avoid this" }];
+
+    await render(
+      <template>
+        <CodeEditor @lineWarnings={{warnings}} @value={{state.value}} />
+      </template>
+    );
+    await waitUntil(() => document.querySelector(".cm-lintRange"));
+
+    state.value = "uno\ndos";
+    await settled();
+
+    assert
+      .dom(".cm-lintRange")
+      .exists({ count: 1 }, "the same warning marks the new text");
+  });
+
+  test("uses a translated label for the completion list", async function (assert) {
+    const translations = I18n.translations[I18n.locale].js.code_editor;
+    const original = translations.completions;
+    translations.completions = "Sugerencias";
+    const completions = ["alpha", "alpine"];
+    try {
+      await render(
+        <template>
+          <CodeEditor @completions={{completions}} @value="al" />
+        </template>
+      );
+      const view = find(".codemirror-editor").codemirrorView;
+      view.dispatch({ selection: { anchor: 2 } });
+      startCompletion(view);
+      await waitFor(".cm-tooltip-autocomplete li");
+
+      assert
+        .dom(".cm-tooltip-autocomplete ul")
+        .hasAttribute("aria-label", "Sugerencias");
+    } finally {
+      translations.completions = original;
+    }
+  });
+
+  test("fills a host that only sets a minimum height", async function (assert) {
+    await render(
+      <template><CodeEditor style="min-height: 240px" @value="one" /></template>
+    );
+    await waitFor(".cm-editor");
+
+    assert.true(
+      find(".cm-editor").offsetHeight >= 230,
+      `the editor is ${find(".cm-editor").offsetHeight}px tall`
+    );
+  });
+
+  test("keeps code left to right inside a right-to-left page", async function (assert) {
+    await render(
+      <template>
+        <div dir="rtl"><CodeEditor @value="one" /></div>
+      </template>
+    );
+    await waitFor(".cm-editor");
+
+    assert.strictEqual(getComputedStyle(find(".cm-content")).direction, "ltr");
+  });
+
   test("renders a placeholder as markup only when it is trusted", async function (assert) {
     const plain = "<b>bold</b>";
     const trusted = trustHTML("<b>bold</b>");
