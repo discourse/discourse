@@ -6,16 +6,24 @@ module DiscourseDataExplorer
       FEATURE = :data_explorer_query_authoring
 
       def self.status(user:, phase:)
-        access = DiscourseAi::Agents::AdminAssistantAccess.check(feature: FEATURE, user: user, phase: phase)
+        access =
+          DiscourseAi::Agents::AdminAssistantAccess.check(
+            feature: FEATURE,
+            user: user,
+            phase: phase,
+          )
         return :restricted if !access.allowed
         public_status
       end
 
       def self.public_status
-        return :disabled unless SiteSetting.discourse_ai_enabled && SiteSetting.data_explorer_enabled
+        unless SiteSetting.discourse_ai_enabled && SiteSetting.data_explorer_enabled
+          return :disabled
+        end
         return :generation_disabled unless SiteSetting.data_explorer_ai_queries_enabled
 
-        agent_id = DiscourseAi::Agents::Agent.external_agent_id(DiscourseDataExplorer::AiQueryGenerator)
+        agent_id =
+          DiscourseAi::Agents::Agent.external_agent_id(DiscourseDataExplorer::AiQueryGenerator)
         agent = AiAgent.find_by(id: agent_id)
         return :unconfigured if !agent&.enabled?
 
@@ -28,10 +36,17 @@ module DiscourseDataExplorer
       private_class_method :public_status
 
       def self.message(user:, phase:)
-        access = DiscourseAi::Agents::AdminAssistantAccess.check(feature: FEATURE, user: user, phase: phase)
+        access =
+          DiscourseAi::Agents::AdminAssistantAccess.check(
+            feature: FEATURE,
+            user: user,
+            phase: phase,
+          )
         return access.message if !access.allowed && access.message.present?
 
-        I18n.t("discourse_data_explorer.admin_assistant.availability.#{status(user: user, phase: phase)}")
+        I18n.t(
+          "discourse_data_explorer.admin_assistant.availability.#{status(user: user, phase: phase)}",
+        )
       end
     end
   end

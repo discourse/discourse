@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow, "chat completion" do
+RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
   fab!(:admin)
   fab!(:llm_model) { Fabricate(:llm_model, name: "gpt-3.5-turbo") }
   fab!(:ai_agent) do
@@ -21,18 +21,18 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow, "chat complet
   it "approves in chat and presents the saved workflow URL through generic continuation" do
     channel = Fabricate(:direct_message_channel, users: [admin, ai_agent.user])
     source_message = Fabricate(:chat_message, chat_channel: channel, user: admin)
-    operations =
-      [
-        {
-          "op" => "add_node",
-          "client_id" => "manual",
-          "node" => {
-            "type" => "trigger:manual",
-            "name" => "Manual",
-            "parameters" => {},
+    operations = [
+      {
+        "op" => "add_node",
+        "client_id" => "manual",
+        "node" => {
+          "type" => "trigger:manual",
+          "name" => "Manual",
+          "parameters" => {
           },
         },
-      ]
+      },
+    ]
     token =
       DiscourseWorkflows::AdminAssistant::WorkflowDraft.sign(
         { name: "Manual workflow", operations: operations },
@@ -41,7 +41,10 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow, "chat complet
     action =
       AiToolAction.create!(
         tool_name: DiscourseWorkflows::AdminAssistant::CreateWorkflow.name,
-        tool_parameters: { draft_token: token, requester_id: admin.id },
+        tool_parameters: {
+          draft_token: token,
+          requester_id: admin.id,
+        },
         ai_agent: ai_agent,
         bot_user_id: ai_agent.user_id,
       )
@@ -50,7 +53,10 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow, "chat complet
         target: action,
         created_by: ai_agent.user,
         reviewable_by_moderator: true,
-        payload: { chat_message_id: source_message.id, llm_model_id: llm_model.id },
+        payload: {
+          chat_message_id: source_message.id,
+          llm_model_id: llm_model.id,
+        },
       )
     approval_message =
       Fabricate(
@@ -65,7 +71,9 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow, "chat complet
     url = "#{Discourse.base_url}/admin/plugins/discourse-workflows/workflows/#{workflow.id}"
     prompts = nil
 
-    DiscourseAi::Completions::Llm.with_prepared_responses(["[Open the workflow](#{url})."]) do |_, _, captured_prompts|
+    DiscourseAi::Completions::Llm.with_prepared_responses(
+      ["[Open the workflow](#{url})."],
+    ) do |_, _, captured_prompts|
       Jobs::ResumeAiToolApproval.new.execute(reviewable_id: reviewable.id)
       prompts = captured_prompts
     end

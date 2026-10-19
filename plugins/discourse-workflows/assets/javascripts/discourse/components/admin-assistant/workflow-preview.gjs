@@ -7,7 +7,7 @@ import { i18n } from "discourse-i18n";
 import {
   extractWorkflowPreview,
   layoutWorkflowPreview,
-} from "../../lib/admin-assistant/workflow-preview";
+} from "../../lib/admin-assistant/workflow-preview.js";
 
 function nodeIcon(type) {
   if (type.startsWith("trigger:")) {

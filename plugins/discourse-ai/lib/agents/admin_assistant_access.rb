@@ -27,11 +27,7 @@ module DiscourseAi
       def self.check(feature:, user:, phase:)
         decision = Decision.new
         request = Request.new(feature: feature, user: user, phase: phase)
-        DiscoursePluginRegistry.apply_modifier(
-          :admin_assistant_feature_access,
-          decision,
-          request,
-        )
+        DiscoursePluginRegistry.apply_modifier(:admin_assistant_feature_access, decision, request)
 
         Result.new(allowed: decision.allowed?, message: decision.message)
       end

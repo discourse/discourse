@@ -20,9 +20,9 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::Capability do
   end
 
   it "stops before model lookup when a generic policy denies access" do
-    DiscourseAi::Agents::AdminAssistantAccess
-      .stubs(:check)
-      .returns(DiscourseAi::Agents::AdminAssistantAccess::Result.new(allowed: false, message: "No"))
+    DiscourseAi::Agents::AdminAssistantAccess.stubs(:check).returns(
+      DiscourseAi::Agents::AdminAssistantAccess::Result.new(allowed: false, message: "No"),
+    )
     AiAgent.expects(:find_by).never
 
     expect(described_class.status(user: admin, phase: :approval)).to eq(:restricted)

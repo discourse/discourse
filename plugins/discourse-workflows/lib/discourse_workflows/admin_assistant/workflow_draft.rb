@@ -4,8 +4,20 @@ module DiscourseWorkflows
   module AdminAssistant
     class WorkflowDraft < DiscourseAi::Agents::Tools::DraftReference
       SENSITIVE_KEYS = %w[
-        password secret secret_key token auth_token bearer_token credential credentials api_key
-        authorization private_key client_secret access_token refresh_token
+        password
+        secret
+        secret_key
+        token
+        auth_token
+        bearer_token
+        credential
+        credentials
+        api_key
+        authorization
+        private_key
+        client_secret
+        access_token
+        refresh_token
       ].freeze
       SENSITIVE_TEXT =
         %r{

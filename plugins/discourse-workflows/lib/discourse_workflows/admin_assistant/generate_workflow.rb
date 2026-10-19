@@ -47,7 +47,9 @@ module DiscourseWorkflows
       end
 
       def invoke
-        return error_response(I18n.t("discourse_workflows.admin_assistant.not_allowed")) if !authorized?
+        if !authorized?
+          return error_response(I18n.t("discourse_workflows.admin_assistant.not_allowed"))
+        end
         if Capability.status(user: context.user, phase: :generation) != :available
           return error_response(Capability.message(user: context.user, phase: :generation))
         end
@@ -70,13 +72,18 @@ module DiscourseWorkflows
 
         proposal = session.proposed_patch.symbolize_keys
         operations = Array.wrap(proposal[:operations])
-        public_text = [proposal[:title], proposal[:workflow_name], proposal[:summary]].compact.join("\n")
-        if WorkflowDraft.contains_secret?(operations) || WorkflowDraft.contains_secret_text?(public_text)
+        public_text = [proposal[:title], proposal[:workflow_name], proposal[:summary]].compact.join(
+          "\n",
+        )
+        if WorkflowDraft.contains_secret?(operations) ||
+             WorkflowDraft.contains_secret_text?(public_text)
           return generation_error
         end
 
         name =
-          (proposal[:workflow_name].presence || proposal[:title].presence || description).truncate(100)
+          (proposal[:workflow_name].presence || proposal[:title].presence || description).truncate(
+            100,
+          )
         validation = validate_draft(name, operations)
         return generation_error unless validation[:valid]
 
@@ -116,8 +123,10 @@ module DiscourseWorkflows
           user: context.user,
           status: "drafting",
           latest_request: description,
-          latest_response: {},
-          proposed_patch: {},
+          latest_response: {
+          },
+          proposed_patch: {
+          },
           messages: [
             {
               "type" => "user",

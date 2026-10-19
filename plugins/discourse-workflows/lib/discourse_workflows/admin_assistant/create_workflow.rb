@@ -63,7 +63,10 @@ module DiscourseWorkflows
         preview =
           JSON.pretty_generate(
             kind: PREVIEW_KIND,
-            configuration: { name: draft[:name], operations: draft[:operations] },
+            configuration: {
+              name: draft[:name],
+              operations: draft[:operations],
+            },
           )
         longest_run = preview.scan(/`+/).map(&:length).max.to_i
         fence = "`" * [3, longest_run + 1].max
@@ -71,7 +74,9 @@ module DiscourseWorkflows
       end
 
       def validation_error
-        return error_response(I18n.t("discourse_workflows.admin_assistant.not_allowed")) if !authorized?
+        if !authorized?
+          return error_response(I18n.t("discourse_workflows.admin_assistant.not_allowed"))
+        end
         if Capability.status(user: context.user, phase: execution_phase) != :available
           return error_response(Capability.message(user: context.user, phase: execution_phase))
         end
@@ -93,7 +98,9 @@ module DiscourseWorkflows
         parameters[:requester_id] = draft[:user_id] if context.reviewable_id.blank?
 
         validation = validate_draft
-        return error_response(I18n.t("discourse_workflows.admin_assistant.invalid_graph")) if !validation[:valid]
+        if !validation[:valid]
+          return error_response(I18n.t("discourse_workflows.admin_assistant.invalid_graph"))
+        end
 
         nil
       end
@@ -144,7 +151,12 @@ module DiscourseWorkflows
         DiscourseWorkflows::Workflow.transaction do
           result =
             DiscourseWorkflows::Workflow::Create.call(
-              params: { name: draft[:name], nodes: [], connections: {} },
+              params: {
+                name: draft[:name],
+                nodes: [],
+                connections: {
+                },
+              },
               guardian: context.user.guardian,
             )
           raise Discourse::InvalidParameters if !result.success?

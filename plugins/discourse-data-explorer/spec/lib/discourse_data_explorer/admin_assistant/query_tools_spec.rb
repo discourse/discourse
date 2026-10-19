@@ -35,21 +35,26 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery do
     action =
       AiToolAction.create!(
         tool_name: described_class.name,
-        tool_parameters: { draft_token: draft_token, requester_id: requester_id },
+        tool_parameters: {
+          draft_token: draft_token,
+          requester_id: requester_id,
+        },
         ai_agent: ai_agent,
         bot_user_id: Discourse.system_user.id,
       )
-    ReviewableAiToolAction.needs_review!(
-      target: action,
-      created_by: Discourse.system_user,
-      reviewable_by_moderator: true,
-    ).tap do |reviewable|
-      reviewable.add_score(
-        Discourse.system_user,
-        ReviewableScore.types[:needs_approval],
-        force_review: true,
+    ReviewableAiToolAction
+      .needs_review!(
+        target: action,
+        created_by: Discourse.system_user,
+        reviewable_by_moderator: true,
       )
-    end
+      .tap do |reviewable|
+        reviewable.add_score(
+          Discourse.system_user,
+          ReviewableScore.types[:needs_approval],
+          force_review: true,
+        )
+      end
   end
 
   it "requires approval and shows the exact query without its token" do
@@ -76,7 +81,9 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery do
     wrong_requester = build_reviewable(requester_id: other_admin.id)
     wrong_token = build_reviewable("#{token}tampered")
 
-    expect { wrong_requester.perform(other_admin, :approve) }.to raise_error(Discourse::InvalidAccess)
+    expect { wrong_requester.perform(other_admin, :approve) }.to raise_error(
+      Discourse::InvalidAccess,
+    )
     expect { wrong_token.perform(other_admin, :approve) }.to raise_error(Discourse::InvalidAccess)
     expect(DiscourseDataExplorer::Query.count).to eq(0)
   end
@@ -139,15 +146,9 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery do
       end
     end.not_to change { DiscourseDataExplorer::Query.count }
     expect(
-      DiscourseDataExplorer::AdminAssistant::QueryDraft.claim(
-        token,
-        reviewable_id: reviewable.id,
-      ),
+      DiscourseDataExplorer::AdminAssistant::QueryDraft.claim(token, reviewable_id: reviewable.id),
     ).to eq(true)
-    DiscourseDataExplorer::AdminAssistant::QueryDraft.release(
-      token,
-      reviewable_id: reviewable.id,
-    )
+    DiscourseDataExplorer::AdminAssistant::QueryDraft.release(token, reviewable_id: reviewable.id)
   end
 
   it "reconstructs a pending tool even when runtime policy now hides it" do
@@ -183,9 +184,7 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::GenerateQuery do
     }
   end
 
-  before do
-    DiscourseDataExplorer::AdminAssistant::Capability.stubs(:status).returns(:available)
-  end
+  before { DiscourseDataExplorer::AdminAssistant::Capability.stubs(:status).returns(:available) }
 
   it "generates a bounded signed draft without saving a query" do
     DiscourseDataExplorer::QueryGeneration

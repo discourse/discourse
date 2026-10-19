@@ -40,7 +40,8 @@ module DiscourseDataExplorer
       end
 
       def self.available_for_context?(context)
-        context&.user&.admin? && Capability.status(user: context.user, phase: :visibility) == :available
+        context&.user&.admin? &&
+          Capability.status(user: context.user, phase: :visibility) == :available
       end
 
       def summary
@@ -55,23 +56,30 @@ module DiscourseDataExplorer
         return I18n.t("discourse_data_explorer.admin_assistant.invalid_draft") unless draft
 
         [draft[:name], draft[:description], draft[:sql]].map do |text|
-          text.to_s.lines.map { |line| "    #{line}" }.join
-        end.join("\n\n")
+            text.to_s.lines.map { |line| "    #{line}" }.join
+          end
+          .join("\n\n")
       end
 
       def validation_error
-        return error_response(I18n.t("discourse_data_explorer.admin_assistant.not_allowed")) if !context.user&.admin?
+        if !context.user&.admin?
+          return error_response(I18n.t("discourse_data_explorer.admin_assistant.not_allowed"))
+        end
         if Capability.status(user: context.user, phase: execution_phase) != :available
           return error_response(Capability.message(user: context.user, phase: execution_phase))
         end
-        return error_response(I18n.t("discourse_data_explorer.admin_assistant.invalid_draft")) if !draft
+        if !draft
+          return error_response(I18n.t("discourse_data_explorer.admin_assistant.invalid_draft"))
+        end
         if draft[:sql].blank? || draft[:name].blank?
           return error_response(I18n.t("discourse_data_explorer.admin_assistant.incomplete_draft"))
         end
 
         requester = User.find_by(id: draft[:user_id], admin: true)
         if requester.blank?
-          return error_response(I18n.t("discourse_data_explorer.admin_assistant.requester_not_admin"))
+          return(
+            error_response(I18n.t("discourse_data_explorer.admin_assistant.requester_not_admin"))
+          )
         end
         if context.reviewable_id.blank? && draft[:user_id] != context.user.id
           return error_response(I18n.t("discourse_data_explorer.admin_assistant.not_allowed"))

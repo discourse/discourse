@@ -6,7 +6,12 @@ module DiscourseWorkflows
       FEATURE = :workflow_authoring
 
       def self.status(user:, phase:)
-        access = DiscourseAi::Agents::AdminAssistantAccess.check(feature: FEATURE, user: user, phase: phase)
+        access =
+          DiscourseAi::Agents::AdminAssistantAccess.check(
+            feature: FEATURE,
+            user: user,
+            phase: phase,
+          )
         return :restricted if !access.allowed
         public_status
       end
@@ -26,15 +31,23 @@ module DiscourseWorkflows
       private_class_method :public_status
 
       def self.message(user:, phase:)
-        access = DiscourseAi::Agents::AdminAssistantAccess.check(feature: FEATURE, user: user, phase: phase)
+        access =
+          DiscourseAi::Agents::AdminAssistantAccess.check(
+            feature: FEATURE,
+            user: user,
+            phase: phase,
+          )
         return access.message if !access.allowed && access.message.present?
 
-        I18n.t("discourse_workflows.admin_assistant.availability.#{status(user: user, phase: phase)}")
+        I18n.t(
+          "discourse_workflows.admin_assistant.availability.#{status(user: user, phase: phase)}",
+        )
       end
 
       def self.authoring_agent
         configured_id = SiteSetting.discourse_workflows_workflow_authoring_agent.to_i
-        default_id = DiscourseAi::Agents::Agent.external_agent_id(DiscourseWorkflows::AiWorkflowAuthor)
+        default_id =
+          DiscourseAi::Agents::Agent.external_agent_id(DiscourseWorkflows::AiWorkflowAuthor)
         AiAgent.find_by(id: configured_id) || AiAgent.find_by(id: default_id)
       end
       private_class_method :authoring_agent

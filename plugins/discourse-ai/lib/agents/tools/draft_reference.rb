@@ -43,12 +43,7 @@ module DiscourseAi
               raise Discourse::InvalidParameters
             end
 
-            signed =
-              verifier.generate(
-                serialized,
-                expires_in: self::LIFETIME,
-                purpose: purpose,
-              )
+            signed = verifier.generate(serialized, expires_in: self::LIFETIME, purpose: purpose)
             reference = "#{reference_prefix}#{SecureRandom.hex(16)}"
             Discourse.redis.setex(draft_key(reference), self::LIFETIME.to_i, signed)
             reference

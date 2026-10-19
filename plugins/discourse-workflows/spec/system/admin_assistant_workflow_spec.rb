@@ -20,7 +20,8 @@ RSpec.describe "Admin Assistant workflow approval preview" do
         "node" => {
           "type" => "trigger:manual",
           "name" => "Manual trigger",
-          "parameters" => {},
+          "parameters" => {
+          },
         },
       },
       {
@@ -29,7 +30,9 @@ RSpec.describe "Admin Assistant workflow approval preview" do
         "node" => {
           "type" => "action:log",
           "name" => "Record accepted topic",
-          "parameters" => { "message" => "Accepted" },
+          "parameters" => {
+            "message" => "Accepted",
+          },
         },
       },
       { "op" => "add_connection", "from" => "manual", "to" => "accepted" },
@@ -71,7 +74,9 @@ RSpec.describe "Admin Assistant workflow approval preview" do
         target: action,
         created_by: ai_agent.user,
         reviewable_by_moderator: true,
-        payload: { chat_message_id: source_message.id },
+        payload: {
+          chat_message_id: source_message.id,
+        },
       )
     reviewable.add_score(
       Discourse.system_user,

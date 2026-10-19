@@ -71,7 +71,9 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
       { "op" => "add_connection", "from" => "manual", "to" => "review" },
     ]
   end
-  let(:token) { DiscourseWorkflows::AdminAssistant::WorkflowDraft.sign(draft_attributes, user: admin) }
+  let(:token) do
+    DiscourseWorkflows::AdminAssistant::WorkflowDraft.sign(draft_attributes, user: admin)
+  end
   let(:context) { DiscourseAi::Agents::BotContext.new(user: admin, messages: []) }
   let(:tool) do
     described_class.new(
@@ -137,7 +139,8 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
         operations.first.deep_merge("node" => { "name" => "<img src=x onerror=alert(1)>" }),
       ],
     }
-    unsafe_token = DiscourseWorkflows::AdminAssistant::WorkflowDraft.sign(unsafe_attributes, user: admin)
+    unsafe_token =
+      DiscourseWorkflows::AdminAssistant::WorkflowDraft.sign(unsafe_attributes, user: admin)
     unsafe_tool =
       described_class.new(
         { draft_token: unsafe_token },
@@ -339,15 +342,9 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
       end.not_to change { DiscourseWorkflows::Workflow.count }
     end.not_to change { AiAgent.count }
     expect(
-      DiscourseWorkflows::AdminAssistant::WorkflowDraft.claim(
-        agent_token,
-        reviewable_id: item.id,
-      ),
+      DiscourseWorkflows::AdminAssistant::WorkflowDraft.claim(agent_token, reviewable_id: item.id),
     ).to eq(true)
-    DiscourseWorkflows::AdminAssistant::WorkflowDraft.release(
-      agent_token,
-      reviewable_id: item.id,
-    )
+    DiscourseWorkflows::AdminAssistant::WorkflowDraft.release(agent_token, reviewable_id: item.id)
   end
 
   it "hides tools and authoring instructions when public capability is unavailable" do
@@ -366,10 +363,7 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
 
   it "registers both workflow tools for the admin assistant and pending replay" do
     tools = DiscourseAi::Agents::DiscourseAdminAssistant.new.tools
-    expect(tools).to include(
-      DiscourseWorkflows::AdminAssistant::GenerateWorkflow,
-      described_class,
-    )
+    expect(tools).to include(DiscourseWorkflows::AdminAssistant::GenerateWorkflow, described_class)
     expect(DiscourseAi::Agents::Agent.all_available_tools).to include(described_class)
     prompt =
       DiscourseAi::Agents::DiscourseAdminAssistant.new.craft_prompt(

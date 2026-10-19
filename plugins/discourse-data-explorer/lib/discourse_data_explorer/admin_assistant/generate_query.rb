@@ -36,7 +36,8 @@ module DiscourseDataExplorer
       end
 
       def self.available_for_context?(context)
-        context&.user&.admin? && Capability.status(user: context.user, phase: :visibility) == :available
+        context&.user&.admin? &&
+          Capability.status(user: context.user, phase: :visibility) == :available
       end
 
       def summary
@@ -48,7 +49,9 @@ module DiscourseDataExplorer
       end
 
       def invoke
-        return error_response(I18n.t("discourse_data_explorer.admin_assistant.not_allowed")) if !context.user&.admin?
+        if !context.user&.admin?
+          return error_response(I18n.t("discourse_data_explorer.admin_assistant.not_allowed"))
+        end
         if Capability.status(user: context.user, phase: :generation) != :available
           return error_response(Capability.message(user: context.user, phase: :generation))
         end
@@ -58,7 +61,11 @@ module DiscourseDataExplorer
           return error_response(I18n.t("discourse_data_explorer.admin_assistant.invalid_request"))
         end
 
-        query = DiscourseDataExplorer::QueryGeneration.call(user: context.user, ai_description: description)
+        query =
+          DiscourseDataExplorer::QueryGeneration.call(
+            user: context.user,
+            ai_description: description,
+          )
         query.merge(status: "success", draft_token: QueryDraft.sign(query, user: context.user))
       rescue DiscourseDataExplorer::QueryGeneration::Error, Discourse::InvalidParameters
         error_response(I18n.t("discourse_data_explorer.admin_assistant.generation_failed"))

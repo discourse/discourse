@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery, "private-message completion" do
+RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery do
   fab!(:admin)
   fab!(:llm_model) { Fabricate(:llm_model, name: "gpt-3.5-turbo") }
   fab!(:ai_agent) do
@@ -36,7 +36,10 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery, "private-mess
     action =
       AiToolAction.create!(
         tool_name: DiscourseDataExplorer::AdminAssistant::CreateQuery.name,
-        tool_parameters: { draft_token: token, requester_id: admin.id },
+        tool_parameters: {
+          draft_token: token,
+          requester_id: admin.id,
+        },
         ai_agent: ai_agent,
         bot_user_id: ai_agent.user_id,
         post_id: source_post.id,
@@ -46,7 +49,9 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery, "private-mess
         target: action,
         created_by: ai_agent.user,
         reviewable_by_moderator: true,
-        payload: { llm_model_id: llm_model.id },
+        payload: {
+          llm_model_id: llm_model.id,
+        },
       )
     approval_post =
       Fabricate(
@@ -64,7 +69,9 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery, "private-mess
     url = "#{Discourse.base_url}/admin/plugins/discourse-data-explorer/queries/#{query.id}"
     prompts = nil
 
-    DiscourseAi::Completions::Llm.with_prepared_responses(["[Open the query](#{url})."]) do |_, _, captured_prompts|
+    DiscourseAi::Completions::Llm.with_prepared_responses(
+      ["[Open the query](#{url})."],
+    ) do |_, _, captured_prompts|
       Jobs::ResumeAiToolApproval.new.execute(reviewable_id: reviewable.id)
       prompts = captured_prompts
     end
