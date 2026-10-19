@@ -135,6 +135,19 @@
   padding: 0.25em 0;
 }
 
+.email-preview {
+  &__subject,
+  &__template-notice {
+    margin: 1em 0.5em;
+  }
+
+  &__subject {
+    display: flex;
+    gap: 0.5em;
+    overflow-wrap: anywhere;
+  }
+}
+
 .email-preview-digest {
   .controls {
     margin: 1em 0.5em;

@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { interpolationKeysWithStatus as computeInterpolationKeysWithStatus } from "discourse/admin/lib/interpolation-keys";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import BufferedProxy from "discourse/lib/buffered-proxy";
+import getURL from "discourse/lib/get-url";
 import { isObject } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
 
@@ -26,6 +27,12 @@ export default class AdminEmailTemplatesEditController extends Controller {
     return BufferedProxy.create({
       content: this.emailTemplate,
     });
+  }
+
+  get previewUrl() {
+    return getURL(
+      `/admin/email/preview?email_type=${encodeURIComponent(`template:${this.emailTemplate.id}`)}`
+    );
   }
 
   @computed("buffered.body", "buffered.subject")
