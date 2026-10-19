@@ -15,7 +15,7 @@ options = parser.parse_args()
 client = Client("joffreyjaffeux")
 columns = client.request("/codex-board-bot/snapshot")[1]["columns"]
 if options.action == "create":
-    brief = "Create plugins/capybara/doc/workflow-verification.md. Document BACKLOG as idle, TODO as a fresh capybara checkout, topic replies and images as task context, REVIEW with both impersonation links, and DONE as squash integration plus official upstream rebase and Docker board restart. If an image is attached in a reply, include its exact text in a short verification paragraph. Make no application behavior changes. Verify the document contents with a focused shell check."
+    brief = "Create plugins/capybara/doc/workflow-verification.md. Document BACKLOG as idle, TODO as a fresh capybara checkout, topic replies and images as task context, REVIEW with exactly the two preview impersonation links NGROKURL/session/admin-account/become and NGROKURL/session/user-account/become, and DONE as squash integration plus official upstream rebase and Docker board restart. If an image is attached in a reply, include its exact text in a short verification paragraph. Make no application behavior changes. Verify the document contents with a focused shell check."
     status, result = client.request("/boards/api/boards/1/cards", {"card": {"title": "Verify Capybara topic and Docker workflow", "column_id": columns["BACKLOG"], "notes": brief}})
     assert status == 201, (status, result)
     card_id = result["card"]["id"]
