@@ -368,7 +368,7 @@ module DiscourseAi
         tools =
           available_tools.reject do |tool|
             tool_name = tool.signature[:name]
-            tool_name == Tools::ViewImage.name ||
+            !tool.available_for_context?(context) || tool_name == Tools::ViewImage.name ||
               reserved_spawn_agent && tool_name.to_s.casecmp(Tools::SpawnAgent.name).zero?
           end
 

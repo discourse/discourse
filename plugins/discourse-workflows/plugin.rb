@@ -63,6 +63,8 @@ require_relative "lib/discourse_workflows/plugin_node_registration"
 
 register_asset "stylesheets/common/index.scss"
 register_svg_icon "bolt"
+register_svg_icon "code-branch"
+register_svg_icon "gear"
 register_svg_icon "arrows-split-up-and-left"
 register_svg_icon "list"
 register_svg_icon "arrow-rotate-right"
@@ -221,6 +223,17 @@ after_initialize do
     require_relative "lib/discourse_workflows/ai/tools/search_chat_integration_channels"
     require_relative "lib/discourse_workflows/ai/tools/workflow_validate_script"
     require_relative "lib/discourse_workflows/ai_workflow_author"
+    require_relative "lib/discourse_workflows/admin_assistant/capability"
+    require_relative "lib/discourse_workflows/admin_assistant/workflow_draft"
+    require_relative "lib/discourse_workflows/admin_assistant/generate_workflow"
+    require_relative "lib/discourse_workflows/admin_assistant/create_workflow"
+
+    admin_assistant_tools = [
+      DiscourseWorkflows::AdminAssistant::GenerateWorkflow,
+      DiscourseWorkflows::AdminAssistant::CreateWorkflow,
+    ]
+    register_modifier(:ai_agent_available_tools) { |tools| tools + admin_assistant_tools }
+    register_modifier(:admin_assistant_tools) { |tools, _agent| tools + admin_assistant_tools }
 
     DiscourseAi.register_feature(
       module_name: :discourse_workflows,
