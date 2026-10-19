@@ -33,7 +33,8 @@ module("Unit | Utility | load-script", function (hooks) {
   });
 
   hooks.afterEach(function () {
-    document.createElement = this.originalCreateElement;
+    delete document.createElement;
+    delete document.head.appendChild;
     this.appendedScripts.forEach((script) => script.remove?.());
   });
 

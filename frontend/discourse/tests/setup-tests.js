@@ -5,6 +5,7 @@ import "./loader-shims.js";
 import "discourse/static/markdown-it";
 /* eslint-enable simple-import-sort/imports */
 
+import { ASYNC_OBSERVERS, SYNC_OBSERVERS } from "@ember/-internals/metal";
 import { getOwner } from "@ember/owner";
 import { run } from "@ember/runloop";
 import {
@@ -25,6 +26,7 @@ import { setupS3CDN, setupURL } from "discourse/lib/get-url";
 import { setLoadedFaker } from "discourse/lib/load-faker";
 import PreloadStore from "discourse/lib/preload-store";
 import { loadSprites } from "discourse/lib/svg-sprite-loader";
+import { WebauthnAbortHandler } from "discourse/lib/webauthn";
 import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
 import { resetCategoryCache } from "discourse/models/category";
 import Session from "discourse/models/session";
@@ -247,7 +249,13 @@ export default async function setupTests(config) {
   noteKeyboardEvidence();
 
   let app;
+  let observerTargets;
   QUnit.testStart(async function (ctx) {
+    observerTargets = new Set([
+      ...ASYNC_OBSERVERS.keys(),
+      ...SYNC_OBSERVERS.keys(),
+    ]);
+
     let settings = resetSettings();
 
     resetThemeSettings();
@@ -326,7 +334,32 @@ export default async function setupTests(config) {
   QUnit.testDone(function () {
     testCleanup(getOwner(app), app);
 
+    // A pending ceremony never settles in headless Chrome, so it would retain the app
+    WebauthnAbortHandler.controller?.abort();
+    WebauthnAbortHandler.controller = undefined;
+
+    const fakes = [...sinon.getFakes()];
+    sinon.clock?.reset();
     sinon.restore();
+    sinon.clock = undefined;
+    // Unformatted error stacks (on the stub and on each call) retain every frame's
+    // receiver (e.g. the test context and its owner) for as long as a test module
+    // keeps the stub
+    for (const fake of fakes) {
+      delete fake.stackTraceError;
+      fake.resetHistory?.();
+    }
+
+    // Ember keeps observed objects in global maps until they're destroyed,
+    // which models never are
+    for (const map of [ASYNC_OBSERVERS, SYNC_OBSERVERS]) {
+      for (const observed of map.keys()) {
+        if (!observerTargets.has(observed)) {
+          map.delete(observed);
+        }
+      }
+    }
+    observerTargets = null;
 
     // Destroy the previous Application so its entire dependency graph
     // (ApplicationInstance, container, registry, services, etc.) can be GC'd.
@@ -360,6 +393,11 @@ export default async function setupTests(config) {
 
     window.MessageBus.unsubscribe("*");
     localStorage.clear();
+    if (window.Testem) {
+      // Chrome keeps logged objects alive for DevTools, pinning whole apps
+      // eslint-disable-next-line no-console
+      console.clear();
+    }
     enableLoadMoreObserver();
     enableVirtualization();
 
@@ -392,7 +430,12 @@ export default async function setupTests(config) {
   // forces 0 as duration for all jquery animations
   $.fx.off = true;
 
-  setupToolbar();
+  if (window.Testem && navigator.userAgent.includes("HeadlessChrome")) {
+    // Nobody sees this report, and it keeps every passed test's DOM to unhide later
+    QUnit.config.reporters.html = false;
+  } else {
+    setupToolbar();
+  }
   reportMemoryUsageAfterTests();
   patchFailedAssertion();
 
