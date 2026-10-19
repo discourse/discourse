@@ -132,6 +132,17 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
     expect { tool.invoke }.not_to change { DiscourseWorkflows::Workflow.count }
   end
 
+  it "rejects secret-bearing script validation metadata in signed drafts" do
+    tool.parameters[:draft_token] = DiscourseWorkflows::AdminAssistant::WorkflowDraft.sign(
+      draft_attributes.merge(script_validations: [{ "valid" => false, "errors" => ["api_key: sensitive-value"] }]),
+      user: admin,
+    )
+
+    expect(tool.details).to eq(I18n.t("discourse_workflows.admin_assistant.secret_draft"))
+    expect(tool.validation_error[:status]).to eq("error")
+    expect { tool.invoke }.not_to change { DiscourseWorkflows::Workflow.count }
+  end
+
   it "keeps malicious node text inert while preserving the exact configuration" do
     unsafe_attributes = {
       name: "Unsafe </code><script>alert(1)</script> ``` name",
@@ -483,6 +494,16 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::GenerateWorkflow do
       expect(JSON.parse(code.text).dig("configuration", "script_validations")).to eq(validations)
       expect(creator.validation_error).to be_nil
     end
+  end
+
+  it "does not return secret-bearing script validation metadata" do
+    proposal["script_validations"] = [{ "valid" => false, "errors" => ["api_key: sensitive-value"] }]
+
+    result = tool.invoke
+    expect(result[:status]).to eq("error")
+    expect(result[:draft_token]).to be_nil
+    expect(result[:script_validations]).to be_nil
+    expect(DiscourseWorkflows::AiAuthoringSession.count).to eq(0)
   end
 
   it "rejects non-admin users and unavailable capability" do
