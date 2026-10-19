@@ -10,7 +10,7 @@
     "@glint/ember-tsc": "^1.11.6",
     "@glint/tsserver-plugin": "^2.7.9",
     "@rdil/parallel-prettier": "^3.0.0",
-    "concurrently": "^10.0.5",
+    "concurrently": "^10.0.6",
     "ember-content-mapper": "^0.3.1",
     "eslint": "10.6.0",
     "execa": "^10.0.1",
