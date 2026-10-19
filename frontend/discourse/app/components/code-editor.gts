@@ -34,6 +34,9 @@ export interface CodeEditorSignature {
     /**
      * Configuration for the language, whose shape the language defines. Watched
      * by identity, so pass a stable reference rather than an inline hash.
+     *
+     * EXPERIMENTAL: the built-in languages hand it to the underlying editor's
+     * language packages, so the accepted shape may change without warning.
      */
     languageOptions?: object;
     /**
@@ -86,8 +89,8 @@ export interface CodeEditorSignature {
     inputId?: string;
     /** Ids of the elements that describe the field, such as help and errors. */
     describedBy?: string;
-    /** Marks the editable area invalid when truthy. */
-    invalid?: unknown;
+    /** Marks the editable area invalid. */
+    invalid?: boolean;
   };
   Element: HTMLDivElement;
 }

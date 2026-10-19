@@ -7,6 +7,7 @@ en:
     code_editor:
       resize: "Resize code editor"
       tab_hint: "Press Escape, then Tab to move focus out of the editor."
+      completions: "Completions"
       search:
         find: "Find"
         replace: "Replace"

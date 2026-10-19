@@ -214,6 +214,7 @@ export default class CodemirrorEditor extends Component {
           "replaced $ matches": i18n("code_editor.search.replaced_all", {
             matches: "$",
           }),
+          Completions: i18n("code_editor.completions"),
           "Fold line": i18n("code_editor.fold.fold_line"),
           "Unfold line": i18n("code_editor.fold.unfold_line"),
           "folded code": i18n("code_editor.fold.folded_code"),
@@ -458,6 +459,10 @@ export default class CodemirrorEditor extends Component {
     });
     this.view.dispatch({ effects: this.#history.reconfigure(history()) });
     this.#lastValue = value;
+
+    // The replacement dropped the diagnostics along with the old text.
+    this.#lastWarnings = null;
+    this.updateWarnings();
     this.#suppressChange = false;
   }
 
