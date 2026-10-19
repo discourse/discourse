@@ -44,6 +44,35 @@ module("Discourse AI | Unit | Lib | ai-search-intent", function (hooks) {
     );
   });
 
+  test("a reader who prefers results opens on them, even over a confident answer", function (assert) {
+    assert.deepEqual(
+      chooseTab("how do I reset my password", {
+        topics,
+        prefersResults: true,
+        intent: { intent: "answer", probability: 0.9 },
+      }),
+      { tab: "topics", reason: "reader_prefers_results" }
+    );
+  });
+
+  test("a preference for results needs results, and yields to a second search", function (assert) {
+    assert.deepEqual(
+      chooseTab("password reset", {
+        topics: { posts: [] },
+        prefersResults: true,
+      }),
+      { tab: "ask", reason: "no_keyword_matches" }
+    );
+    assert.deepEqual(
+      chooseTab("password reset", {
+        topics,
+        prefersResults: true,
+        searchedAgain: true,
+      }),
+      { tab: "ask", reason: "searched_again" }
+    );
+  });
+
   test("search syntax wins over the intent", function (assert) {
     assert.deepEqual(
       chooseTab('"reset password"', {

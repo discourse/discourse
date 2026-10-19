@@ -264,6 +264,24 @@ describe DiscourseAi::Discover::DiscoveriesController do
       )
     end
 
+    it "says when the reader prefers results in the combined search" do
+      SiteSetting.ai_ask_ai_combined_search_prototype = true
+      4.times do
+        AskAiLog.create!(
+          user:,
+          query: "q",
+          asked_at: 1.hour.ago,
+          ask_tab_opened: "ask",
+          ask_tab_switched_to: "topics",
+          ask_tab_switched_after_ms: 1000,
+        )
+      end
+
+      post "/discourse-ai/discoveries/reply", params: { query: "password reset", request_id: }
+
+      expect(response.parsed_body["prefers_results"]).to eq(true)
+    end
+
     it "logs only the heuristic when no judgement is asked for" do
       post "/discourse-ai/discoveries/reply",
            params: {

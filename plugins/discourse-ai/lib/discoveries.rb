@@ -49,6 +49,10 @@ module DiscourseAi
     TRIGGERS = %w[enter pause page scope recent].freeze
     TRIGGER_REASON_PATTERN = /\A[a-z_:]{0,60}\z/
     SEARCH_TABS = %w[ask topics context].freeze
+    # leaving the answer this soon means it was not what the reader came for
+    QUICK_SWITCH_MS = 10_000
+    PREFERENCE_ASKS = 10
+    PREFERENCE_MIN_ASKS = 4
 
     class RequestConflict < StandardError
     end
@@ -140,8 +144,44 @@ module DiscourseAi
       def result_settings
         {
           summary_detail: SiteSetting.ai_ask_ai_summary_detail.to_sym,
-          related_count: SiteSetting.ai_ask_ai_related_count,
+          # the combined search scrolls its related topics, so it can show the most
+          related_count:
+            (
+              if SiteSetting.ai_ask_ai_combined_search_prototype
+                MAX_RELATED_DISCUSSIONS
+              else
+                SiteSetting.ai_ask_ai_related_count
+              end
+            ),
         }
+      end
+
+      # Whether the reader's recent asks show them leaving the answer for the
+      # results, unless they have lately been coming back to it.
+      def prefers_results?(user)
+        logs = AskAiLog.where(user_id: user.id).where.not(ask_tab_opened: "")
+        opened_on_answer =
+          logs
+            .where(ask_tab_opened: "ask")
+            .order(asked_at: :desc)
+            .limit(PREFERENCE_ASKS)
+            .pluck(:ask_tab_switched_to, :ask_tab_switched_after_ms)
+        return false if opened_on_answer.size < PREFERENCE_MIN_ASKS
+
+        left =
+          opened_on_answer.count do |switched_to, after_ms|
+            switched_to.present? && after_ms < QUICK_SWITCH_MS
+          end
+        return false if left * 2 <= opened_on_answer.size
+
+        returned =
+          logs
+            .where.not(ask_tab_opened: "ask")
+            .order(asked_at: :desc)
+            .limit(PREFERENCE_ASKS)
+            .pluck(:ask_tab_switched_to)
+            .count("ask")
+        returned < 2
       end
 
       # @return [AskAiLog, nil] the new ask's log, or nil when the request was already made

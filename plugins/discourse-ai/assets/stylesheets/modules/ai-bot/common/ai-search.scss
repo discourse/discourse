@@ -194,17 +194,24 @@
   }
 
   &__related {
-    display: grid;
-
-    // auto-fit, so a lone related topic takes the whole row
-    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    @include scroll-strip;
+    display: flex;
     gap: var(--space-3);
     margin: 0;
+    overflow-x: auto;
     list-style: none;
+    scroll-snap-type: x mandatory;
   }
 
   &__related-item {
+    // two in view; the rest scroll behind the fade and chevron
+    flex: 0 0 calc((100% - var(--space-3)) / 2);
     display: flex;
+    scroll-snap-align: start;
+
+    &:only-child {
+      flex-basis: 100%;
+    }
     flex-direction: column;
     box-sizing: border-box;
     height: var(--ai-search-related-height);

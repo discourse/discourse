@@ -69,7 +69,16 @@ module DiscourseAi
           )
         end
 
-        render json: { request_id:, ask_log_id: ask_log&.id, intent: }.compact, status: :ok
+        prefers_results =
+          (
+            if SiteSetting.ai_ask_ai_combined_search_prototype &&
+                 DiscourseAi::Discoveries.prefers_results?(current_user)
+              true
+            end
+          )
+
+        render json: { request_id:, ask_log_id: ask_log&.id, intent:, prefers_results: }.compact,
+               status: :ok
       rescue DiscourseAi::Discoveries::RequestConflict
         render_json_error(
           I18n.t("discourse_ai.ai_bot.discoveries.errors.request_conflict"),

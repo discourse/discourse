@@ -72,11 +72,21 @@ const FOREIGN_SHARE = 0.6;
  *   page seems not to have helped
  * @param {SearchIntent} [found.intent] a decision model's judgement, which
  *   can open a search on the answer when it is confident, but never away from it
+ * @param {boolean} [found.prefersResults] whether the reader's recent searches
+ *   show them leaving the answer for the results
  * @returns {{tab: SearchTab, reason: string}}
  */
 export function chooseTab(
   query,
-  { topics, context, scope, siteLocale, searchedAgain, intent } = {}
+  {
+    topics,
+    context,
+    scope,
+    siteLocale,
+    searchedAgain,
+    intent,
+    prefersResults,
+  } = {}
 ) {
   const topicCount = topics?.posts?.length ?? 0;
   const contextCount = scope ? (context?.posts?.length ?? 0) : 0;
@@ -101,6 +111,13 @@ export function chooseTab(
   // a second search here means the first one's results did not help
   if (searchedAgain) {
     return { tab: "ask", reason: "searched_again" };
+  }
+
+  if (prefersResults && (contextCount > 0 || topicCount > 0)) {
+    return {
+      tab: contextCount > 0 ? "context" : "topics",
+      reason: "reader_prefers_results",
+    };
   }
 
   // The model spots answers well but lookups poorly, and the answer usually

@@ -12,7 +12,7 @@ const SEMANTIC_MATCH_RANK = 5;
 const BEST_MATCH_COUNT = 2;
 // a search this soon after the last one on the same page is still the same hunt
 const SEARCH_AGAIN_WINDOW_MS = 3 * 60 * 1000;
-// how long the tabs wait on the decision model before judging the query alone
+// how long the tabs wait on the reply's judgements before judging the query alone
 const INTENT_WAIT_MS = 1000;
 
 export async function keywordSearch(query) {
@@ -43,6 +43,7 @@ export async function semanticSearch(query) {
  * opening on the one the query most likely wants.
  */
 export default class AiSearchSession extends Service {
+  @service appEvents;
   @service discobotDiscoveries;
   @service messageBus;
   @service search;
@@ -96,6 +97,7 @@ export default class AiSearchSession extends Service {
         "/discourse-ai/discoveries",
         this.onDiscovery
       );
+      this.appEvents.off("discourse-ai:answer-failed", this.onAnswerFailed);
     }
   }
 
@@ -254,6 +256,7 @@ export default class AiSearchSession extends Service {
   subscribe() {
     if (!this.#subscribed) {
       this.messageBus.subscribe("/discourse-ai/discoveries", this.onDiscovery);
+      this.appEvents.on("discourse-ai:answer-failed", this.onAnswerFailed);
       this.#subscribed = true;
     }
   }
@@ -310,6 +313,11 @@ export default class AiSearchSession extends Service {
   }
 
   @bind
+  onAnswerFailed() {
+    this.#leaveFailedAnswer();
+  }
+
+  @bind
   onDiscovery(update) {
     if (!this.query || update.query !== this.query) {
       return;
@@ -356,10 +364,10 @@ export default class AiSearchSession extends Service {
     this.search.noResults = false;
 
     const scopeKey = this.scope?.key;
-    const [topics, context, intent] = await Promise.all([
+    const [topics, context, reply] = await Promise.all([
       this.#menuSearch(query),
       scopeKey ? this.#menuSearch(withScope(query, scopeKey)) : null,
-      this.#waitForIntent(asked),
+      this.#waitForReply(asked),
     ]);
     if (this.query !== query) {
       return;
@@ -377,11 +385,35 @@ export default class AiSearchSession extends Service {
         scope: scopeKey,
         siteLocale: this.siteSettings.default_locale,
         searchedAgain,
-        intent,
+        intent: reply?.intent,
+        prefersResults: reply?.prefers_results,
       });
       this.selectedTab = tab;
       log.since = Date.now();
       this.#recordTabs(log, { tab_opened: tab, tab_opened_reason: reason });
+      if (this.answerFailed) {
+        this.#leaveFailedAnswer();
+      }
+    }
+    this.#showSelectedResults();
+  }
+
+  // a failed answer is a dead end, so the reader is moved to results that exist
+  #leaveFailedAnswer() {
+    if (
+      this.surface !== "menu" ||
+      this.selectedTab !== "ask" ||
+      this.#tabChosenByReader
+    ) {
+      return;
+    }
+
+    if (this.contextResults?.posts?.length) {
+      this.selectedTab = "context";
+    } else if (this.topicsResults?.posts?.length) {
+      this.selectedTab = "topics";
+    } else {
+      return;
     }
     this.#showSelectedResults();
   }
@@ -402,12 +434,11 @@ export default class AiSearchSession extends Service {
     }
   }
 
-  async #waitForIntent(asked) {
+  async #waitForReply(asked) {
     const waited = new Promise((resolve) =>
       setTimeout(resolve, INTENT_WAIT_MS, null)
     );
-    const intent = asked.then((response) => response?.intent ?? null);
-    return await Promise.race([intent, waited]);
+    return await Promise.race([asked, waited]);
   }
 
   async #menuSearch(term) {

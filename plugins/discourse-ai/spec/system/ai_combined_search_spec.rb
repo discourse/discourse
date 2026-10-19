@@ -157,6 +157,37 @@ describe "AI combined search" do
     expect(widths.uniq.size).to eq(1)
   end
 
+  it "scrolls related topics sideways when they outnumber the room" do
+    more_topics = Array.new(3) { |i| Fabricate(:topic, title: "Account recovery guide part #{i}") }
+    visit "/"
+    wait_for_discoveries_channel
+    ask(query)
+
+    publish(
+      done: true,
+      phase: "complete",
+      answerable: true,
+      ai_discover_reply: "Use the forgot password link.",
+      sources:
+        sources +
+          more_topics.map do |topic|
+            { title: topic.title, url: topic.url, excerpt: "An excerpt about #{topic.title}" }
+          end,
+    )
+    expect(page).to have_css(".ai-search-answer__related-item", count: 5)
+
+    overflow = page.evaluate_script(<<~JS)
+        (() => {
+          const list = document.querySelector(".ai-search-answer__related");
+          return list.scrollWidth > list.clientWidth;
+        })()
+      JS
+    expect(overflow).to eq(true)
+    expect(page).to have_css(
+      ".ai-search-answer__related-controls .d-overflow-controls__btn.--right",
+    )
+  end
+
   it "opens on the answer when nothing matches the keywords, and says so on the topics tab" do
     visit "/"
     wait_for_discoveries_channel
@@ -284,6 +315,45 @@ describe "AI combined search" do
             ask_tab_opened_reason: "intent_answer",
           )
         end
+      end
+
+      it "moves to the results when the answer it opened on finds nothing" do
+        DiscourseAi::Decisions.with_canned_answers(intent: "answer") do
+          visit "/"
+          wait_for_discoveries_channel
+          ask(query)
+          expect_tab("ask")
+        end
+
+        publish(
+          done: true,
+          phase: "complete",
+          answerable: false,
+          ai_discover_reply: "",
+          sources: [],
+        )
+
+        expect_tab("topics")
+        expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
+      end
+
+      it "leaves a reader on the answer they chose, even when it finds nothing" do
+        visit "/"
+        wait_for_discoveries_channel
+        ask(query)
+        expect_tab("topics")
+        select_tab("ask")
+
+        publish(
+          done: true,
+          phase: "complete",
+          answerable: false,
+          ai_discover_reply: "",
+          sources: [],
+        )
+
+        expect(page).to have_css(".ai-search-answer__empty")
+        expect_tab("ask")
       end
 
       it "judges from the query alone when the model is too slow, still logging its verdict" do

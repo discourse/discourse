@@ -105,6 +105,54 @@ describe DiscourseAi::Discoveries do
 
       expect(described_class.result_settings).to eq(summary_detail: :detailed, related_count: 5)
     end
+
+    it "asks for the most related topics when the combined search scrolls them" do
+      SiteSetting.ai_ask_ai_related_count = 2
+      SiteSetting.ai_ask_ai_combined_search_prototype = true
+
+      expect(described_class.result_settings[:related_count]).to eq(
+        described_class::MAX_RELATED_DISCUSSIONS,
+      )
+    end
+  end
+
+  describe ".prefers_results?" do
+    def ask(opened:, switched_to: "", after_ms: 0, at: Time.current)
+      AskAiLog.create!(
+        user:,
+        query: "q",
+        asked_at: at,
+        ask_tab_opened: opened,
+        ask_tab_switched_to: switched_to,
+        ask_tab_switched_after_ms: after_ms,
+      )
+    end
+
+    it "is true when the reader mostly leaves the answer quickly" do
+      3.times { ask(opened: "ask", switched_to: "topics", after_ms: 2000) }
+      ask(opened: "ask")
+
+      expect(described_class.prefers_results?(user)).to eq(true)
+    end
+
+    it "needs enough asks opened on the answer to judge" do
+      3.times { ask(opened: "ask", switched_to: "topics", after_ms: 2000) }
+
+      expect(described_class.prefers_results?(user)).to eq(false)
+    end
+
+    it "ignores switches made after reading the answer for a while" do
+      4.times { ask(opened: "ask", switched_to: "topics", after_ms: 30_000) }
+
+      expect(described_class.prefers_results?(user)).to eq(false)
+    end
+
+    it "is false once the reader keeps coming back to the answer" do
+      4.times { ask(opened: "ask", switched_to: "topics", after_ms: 2000, at: 1.day.ago) }
+      2.times { ask(opened: "topics", switched_to: "ask", after_ms: 2000) }
+
+      expect(described_class.prefers_results?(user)).to eq(false)
+    end
   end
 
   describe ".record_recent_ask" do

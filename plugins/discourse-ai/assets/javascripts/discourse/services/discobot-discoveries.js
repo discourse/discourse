@@ -28,6 +28,7 @@ export default class DiscobotDiscoveries extends Service {
   // We use this to retain state after search menu gets closed.
   // Similar to discourse/discourse#25504
   @service a11y;
+  @service appEvents;
 
   @tracked discovery = "";
   @tracked lastQuery = "";
@@ -98,6 +99,9 @@ export default class DiscobotDiscoveries extends Service {
 
     if (update.answerable !== undefined) {
       this.answerable = update.answerable;
+      if (update.done && update.answerable === false) {
+        this.appEvents.trigger("discourse-ai:answer-failed");
+      }
     }
 
     if (update.ai_discover_follow_up !== undefined) {
@@ -276,6 +280,7 @@ export default class DiscobotDiscoveries extends Service {
     this.activeRequestId = "";
     this.smoothStreamer.resetStreaming();
     this.a11y.announce(message, "assertive");
+    this.appEvents.trigger("discourse-ai:answer-failed");
   }
 
   timeoutDiscovery() {
@@ -295,6 +300,7 @@ export default class DiscobotDiscoveries extends Service {
       i18n("discourse_ai.discobot_discoveries.timed_out"),
       "assertive"
     );
+    this.appEvents.trigger("discourse-ai:answer-failed");
   }
 
   scheduleDiscoveryTimeout() {
