@@ -182,9 +182,11 @@ export default class AiSearchDiscoveries extends Component {
 
   // offered once an answer has settled, so it isn't what a screen reader meets
   // while waiting for one
+  // the combined search picks the tab itself, so there is no default to set
   get showAskAiDefaultToggle() {
     return (
       Boolean(this.currentUser) &&
+      !this.siteSettings.enable_ai_combined_search &&
       !this.hasNoContent &&
       !this.discobotDiscoveries.loadingDiscoveries &&
       !this.discobotDiscoveries.isStreaming &&

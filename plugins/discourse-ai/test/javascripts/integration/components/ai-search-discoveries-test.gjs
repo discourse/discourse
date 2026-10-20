@@ -255,6 +255,29 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       );
   });
 
+  test("the default toggle is left out under the combined search", async function (assert) {
+    this.siteSettings.enable_ai_combined_search = true;
+    this.owner.register(
+      "service:discobot-discoveries",
+      class extends Service {
+        discovery = "A useful answer.";
+        streamedText = "A useful answer.";
+        loadingDiscoveries = false;
+        isStreaming = false;
+        discoveryTimedOut = false;
+
+        triggerDiscovery() {}
+        onDiscoveryUpdate() {}
+      }
+    );
+
+    await render(
+      <template><AiSearchDiscoveries @searchTerm="test search" /></template>
+    );
+
+    assert.dom(".ai-search-discoveries__default-preference").doesNotExist();
+  });
+
   test("the default toggle can be dismissed for this browser", async function (assert) {
     this.owner.register(
       "service:discobot-discoveries",
