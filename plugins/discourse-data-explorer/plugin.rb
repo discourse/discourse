@@ -291,8 +291,10 @@ after_initialize do
       DiscourseDataExplorer::AdminAssistant::GenerateQuery,
       DiscourseDataExplorer::AdminAssistant::CreateQuery,
     ]
-    register_modifier(:ai_agent_available_tools) { |tools| tools + admin_assistant_tools }
+
     register_modifier(:admin_assistant_tools) { |tools, _agent| tools + admin_assistant_tools }
+
+    DiscourseAi.register_tools(admin_assistant_tools, plugin: self)
 
     DiscourseAi.register_feature(
       module_name: :data_explorer,

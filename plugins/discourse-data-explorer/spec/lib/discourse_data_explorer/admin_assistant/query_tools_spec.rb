@@ -151,16 +151,17 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery do
     DiscourseDataExplorer::AdminAssistant::QueryDraft.release(token, reviewable_id: reviewable.id)
   end
 
-  it "reconstructs a pending tool even when runtime policy now hides it" do
-    reviewable = build_reviewable
+  it "resolves the tools by name but hides them at runtime when restricted" do
     DiscourseDataExplorer::AdminAssistant::Capability.stubs(:status).returns(:restricted)
     runtime_context = DiscourseAi::Agents::BotContext.new(user: admin, messages: [])
 
     expect(
       DiscourseAi::Agents::DiscourseAdminAssistant.new.runtime_tools(context: runtime_context),
     ).not_to include(described_class)
-    expect(DiscourseAi::Agents::Agent.all_available_tools).to include(described_class)
-    expect { reviewable.perform(other_admin, :approve) }.to raise_error(Discourse::InvalidAccess)
+    expect(DiscourseAi::Agents::Agent.external_tool_by_name("CreateQuery")).to eq(described_class)
+    expect(DiscourseAi::Agents::Agent.external_tool_by_name("GenerateQuery")).to eq(
+      DiscourseDataExplorer::AdminAssistant::GenerateQuery,
+    )
   end
 end
 

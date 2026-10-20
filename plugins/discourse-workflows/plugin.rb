@@ -236,7 +236,7 @@ after_initialize do
       DiscourseWorkflows::AdminAssistant::GenerateWorkflow,
       DiscourseWorkflows::AdminAssistant::CreateWorkflow,
     ]
-    register_modifier(:ai_agent_available_tools) { |tools| tools + admin_assistant_tools }
+
     register_modifier(:admin_assistant_tools) { |tools, _agent| tools + admin_assistant_tools }
 
     DiscourseAi.register_feature(
@@ -248,13 +248,14 @@ after_initialize do
     )
 
     DiscourseAi.register_tools(
-      [
-        DiscourseWorkflows::Ai::Tools::SearchChatChannels,
-        DiscourseWorkflows::Ai::Tools::SearchChatIntegrationChannels,
-        DiscourseWorkflows::Ai::Tools::DataTableSchema,
-        DiscourseWorkflows::Ai::Tools::DataTableQuery,
-        DiscourseWorkflows::Ai::Tools::DataTableWrite,
-      ],
+      admin_assistant_tools +
+        [
+          DiscourseWorkflows::Ai::Tools::SearchChatChannels,
+          DiscourseWorkflows::Ai::Tools::SearchChatIntegrationChannels,
+          DiscourseWorkflows::Ai::Tools::DataTableSchema,
+          DiscourseWorkflows::Ai::Tools::DataTableQuery,
+          DiscourseWorkflows::Ai::Tools::DataTableWrite,
+        ],
       plugin: self,
     )
   end
