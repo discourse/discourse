@@ -11,3 +11,10 @@ The development-only bot routes remain under `/codex-board-bot`, and existing ru
 The plugin does not enable its bot routes or card conversion in production. Install the bot controller and Docker worker from the accompanying bot package.
 
 ARCHIVED follows DONE. Accept a REVIEW card by moving it to DONE. After merging into capybara, deployment, and confirmed publication to the configured PR branch, the bot moves the card to ARCHIVED. Pending confirmation and failed publication stay in DONE. Reopened or superseded cards are not moved. Historical cleanup-only runs are not treated as published. Admin setup creates or repairs the ARCHIVED column order without duplicating it.
+
+## Review deliverables
+
+Every completed run posts its test results and a downloadable diff in the card topic.
+Changed Markdown documents appear in the reply, with their originals attached alongside generated documents and assets.
+Attachments use persistent Discourse uploads, so preview cleanup does not remove them.
+The reply lists files excluded by safety or size limits.

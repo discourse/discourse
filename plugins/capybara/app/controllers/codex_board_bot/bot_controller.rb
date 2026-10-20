@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 require "mini_mime"
+require "base64"
+require "digest"
+require "tempfile"
 
 class ::CodexBoardBot::BotController < ::ApplicationController
   requires_plugin "capybara"
@@ -139,6 +142,138 @@ class ::CodexBoardBot::BotController < ::ApplicationController
     render json: snapshot_card(card)
   end
 
+  REVIEW_EXTENSIONS = %w[
+    md
+    txt
+    rst
+    csv
+    pdf
+    docx
+    pptx
+    xlsx
+    zip
+    png
+    jpg
+    jpeg
+    gif
+    webp
+    diff
+    patch
+  ].freeze
+  REVIEW_MAX_FILES = 24
+  REVIEW_MAX_FILE_BYTES = 2 * 1024 * 1024
+  REVIEW_MAX_TOTAL_BYTES = 8 * 1024 * 1024
+
+  def review_artifacts
+    with_review_card do |card, run_id|
+      files = params.require(:files)
+      unless files.is_a?(Array) && files.size.between?(1, REVIEW_MAX_FILES)
+        raise Discourse::InvalidParameters
+      end
+      total = 0
+      validated =
+        files.map do |item|
+          path = item.require(:path).to_s
+          extension = File.extname(path).delete_prefix(".").downcase
+          unless valid_review_path?(path) && REVIEW_EXTENSIONS.include?(extension)
+            raise Discourse::InvalidParameters
+          end
+          encoded = item.require(:content_base64).to_s
+          if encoded.bytesize > (REVIEW_MAX_FILE_BYTES * 4 / 3) + 4
+            raise Discourse::InvalidParameters
+          end
+          begin
+            content = Base64.strict_decode64(encoded)
+          rescue ArgumentError
+            raise Discourse::InvalidParameters
+          end
+          total += content.bytesize
+          digest = Digest::SHA256.hexdigest(content)
+          unless content.bytesize.between?(1, REVIEW_MAX_FILE_BYTES) &&
+                   total <= REVIEW_MAX_TOTAL_BYTES && digest == item.require(:sha256)
+            raise Discourse::InvalidParameters
+          end
+          [path, content, digest]
+        end
+      raise Discourse::InvalidParameters if validated.map(&:first).uniq.size != validated.size
+      key = "review-artifacts-#{card.id}-#{run_id}"
+      stored = PluginStore.get(CodexBoardBot::STORE, key) || {}
+      new_keys = validated.map { |path, _, digest| Digest::SHA256.hexdigest("#{path}:#{digest}") }
+      new_bytes =
+        validated.each_with_index.sum do |(_, content, _), index|
+          stored.key?(new_keys[index]) ? 0 : content.bytesize
+        end
+      if (stored.keys | new_keys).size > REVIEW_MAX_FILES ||
+           stored.values.sum { |entry| entry.fetch("size", 0) } + new_bytes > REVIEW_MAX_TOTAL_BYTES
+        raise Discourse::InvalidParameters
+      end
+      results =
+        validated.map do |path, content, digest|
+          identity = Digest::SHA256.hexdigest("#{path}:#{digest}")
+          entry = stored[identity]
+          upload = Upload.find_by(id: entry&.dig("upload_id"))
+          unless upload
+            Tempfile.create(["review-artifact", File.extname(path)]) do |file|
+              file.binmode
+              file.write(content)
+              file.flush
+              upload =
+                UploadCreator.new(
+                  file,
+                  File.basename(path),
+                  type: "composer",
+                  skip_validations: true,
+                ).create_for(current_user.id)
+              raise Discourse::InvalidParameters unless upload.persisted? && upload.errors.empty?
+            end
+            stored[identity] = {
+              "upload_id" => upload.id,
+              "path" => path,
+              "sha256" => digest,
+              "size" => content.bytesize,
+            }
+            PluginStore.set(CodexBoardBot::STORE, key, stored)
+          end
+          { path: path, sha256: digest, upload_id: upload.id, short_url: upload.short_url }
+        end
+      render json: { files: results }
+    end
+  end
+
+  def review_handoff
+    with_review_card(columns: %w[REVIEW]) do |card, run_id|
+      message = params.require(:message).to_s
+      raise Discourse::InvalidParameters if message.blank? || message.length > 20_000
+      digest = Digest::SHA256.hexdigest(message)
+      posts = card.topic.posts.where(user_id: current_user.id, deleted_at: nil)
+      post =
+        posts
+          .where(
+            id: PostCustomField.where(name: "capybara_bot_run", value: run_id).select(:post_id),
+          )
+          .order(:post_number)
+          .last
+      unless post&.custom_fields&.dig("capybara_review_digest") == digest
+        if post
+          post.revise(current_user, { raw: message }, skip_validations: true)
+          raise Discourse::InvalidParameters unless post.reload.raw == message
+        else
+          post =
+            PostCreator.create!(
+              current_user,
+              topic_id: card.topic_id,
+              raw: message,
+              skip_validations: true,
+            )
+        end
+        post.custom_fields["capybara_bot_run"] = run_id
+        post.custom_fields["capybara_review_digest"] = digest
+        post.save_custom_fields
+      end
+      render json: snapshot_card(card)
+    end
+  end
+
   def upload
     upload = Upload.find(params.require(:id))
     posts =
@@ -160,6 +295,38 @@ class ::CodexBoardBot::BotController < ::ApplicationController
   end
 
   private
+
+  def valid_review_path?(path)
+    path.present? && path.length <= 240 && !path.start_with?("/") &&
+      !path.bytes.any? { |byte| byte < 32 || byte == 92 } &&
+      path.split("/").none? { |part| part.in?(["", ".", ".."]) } &&
+      !path.match?(
+        %r{(^|/)(\.env(?:\..*)?|\.git|\.ssh|\.aws|credentials[^/]*|secrets?[^/]*|auth\.json|id_rsa|id_ed25519)(/|$)|\.(pem|key|p12|pfx)$}i,
+      )
+  end
+
+  def with_review_card(columns: ["IN PROGRESS", "REVIEW"])
+    raise Discourse::InvalidAccess unless current_user.username == "codex-bot"
+    raise Discourse::InvalidAccess if @board.archived?
+    card = @board.cards.find(params.require(:card_id))
+    raise Discourse::InvalidParameters unless card.topic?
+    guardian.ensure_can_see!(card.topic)
+    guardian.ensure_can_create_post!(card.topic)
+    card.with_lock do
+      current_run = PluginStore.get(CodexBoardBot::STORE, "card-#{card.id}") || {}
+      run_id = params.require(:run_id).to_s
+      raise Discourse::InvalidParameters unless run_id.match?(/\A[a-zA-Z0-9-]{8,80}\z/)
+      expected_status = card.column.title == "REVIEW" ? "review" : "running"
+      unless columns.include?(card.column.title) && run_id == current_run["run_id"] &&
+               current_run["status"] == expected_status &&
+               current_run["version"] == card.column_changed_at.iso8601(6) &&
+               params.require(:expected_run_id) == run_id &&
+               params.require(:expected_version) == card.column_changed_at.iso8601(6)
+        return render json: { error: "Card moved or run superseded" }, status: :conflict
+      end
+      yield card, run_id
+    end
+  end
 
   def ensure_archived_column
     @board.with_lock do

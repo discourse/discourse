@@ -36,3 +36,11 @@ When upgrading an existing board without this file, preserve its current Redis S
 A regular human reply to a REVIEW topic card returns it to TODO through Boards::UpdateCard as codex-bot. The post-created hook locks and rechecks the card, excludes bot/system/imported posts, preserves run markers, and publishes the normal board and topic membership updates. Existing controller version handling cancels the old review and reads the latest discussion when claiming TODO. Other columns remain unchanged.
 
 ARCHIVED follows DONE. Accept a REVIEW card by moving it to DONE. After merging into capybara, deployment, and confirmed publication to the configured PR branch, the bot moves the card to ARCHIVED. Pending confirmation and failed publication stay in DONE. Reopened or superseded cards are not moved. Historical cleanup-only runs are not treated as published. Admin setup creates or repairs the ARCHIVED column order without duplicating it.
+
+Review handoff persistence
+--------------------------
+Run.review_bundle, review_uploads, and review_pending record the completed coding result before any upload or REVIEW transition. Existing records default to an empty bundle and no pending handoff. Pending delivery reconciles before recovery can restart coding. Native Discourse uploads are deduplicated by run, path, and SHA-256 under the card lock. The upload endpoint checks bot identity, board/topic permissions, current run, status, column version, extensions, count, and bytes without changing site upload settings.
+
+The trusted stdlib collector is injected into the existing worker and runs as discourse. Immutable Git base/head blobs supply attachments and the eligible binary diff. Literal Git pathspecs prevent filenames from expanding the diff. Secret-like content and unsafe paths are excluded from both. The final topic post contains every upload short_url, allowing native UploadReferences to retain those files after preview and workspace cleanup.
+
+POST /codex-board-bot/review-handoff repairs a current REVIEW post under the same card lock. It matches capybara_bot_run and saves a message digest. Retries revise the existing post only if the content changed. Creating a new supplemental bot post is limited to a missing same-run post. The normal REVIEW transition still creates one post atomically with the card update.

@@ -21,6 +21,7 @@ import requests
 
 from auth import configure_board_auth, load_board_credentials
 from volume_cleanup import collect_volumes
+from review_artifacts import MAX_JSON_BYTES, render_review, validate_bundle
 
 LOG = logging.getLogger("codex-board-bot")
 OWNER = "codex-board-bot"
@@ -66,6 +67,9 @@ class Run:
     pull_request_url: str = ""
     confirmation_diagnostic: dict = dataclasses.field(default_factory=dict)
     publication_log: str = ""
+    review_bundle: dict = dataclasses.field(default_factory=dict)
+    review_uploads: list = dataclasses.field(default_factory=list)
+    review_pending: bool = False
 
     @classmethod
     def create(cls, card, board_id, run_id=None):
@@ -157,6 +161,19 @@ class Board:
             payload["expected_run_id"] = run.run_id
         result = self.request("POST", "/transition", payload)
         return result.get("card", result)
+
+    def review_artifacts(self, run):
+        return self.request("POST", "/review-artifacts", {
+            "card_id": run.card_id, "run_id": run.run_id,
+            "expected_run_id": run.run_id, "expected_version": run.claimed_version,
+            "files": run.review_bundle["files"]})["files"]
+
+    def backfill_review(self, run, message):
+        return self.request("POST", "/review-handoff", {
+            "card_id": run.card_id, "run_id": run.run_id,
+            "expected_run_id": run.run_id, "expected_version": run.claimed_version,
+            "message": message})
+
 
 
 def prompt_for(card):
@@ -267,10 +284,36 @@ class Runtime:
         raise TimeoutError(f"Worker exceeded {timeout} seconds")
 
     @staticmethod
-    def read(container, filename):
+    def read(container, filename, max_bytes=None):
         stream, _ = container.get_archive(filename)
-        with tarfile.open(fileobj=io.BytesIO(b"".join(stream))) as archive:
-            return archive.extractfile(archive.getmembers()[0]).read().decode()
+        chunks, size = [], 0
+        for chunk in stream:
+            size += len(chunk)
+            if max_bytes is not None and size > max_bytes + 65536:
+                raise ValueError("Worker artifact archive exceeds limit")
+            chunks.append(chunk)
+        with tarfile.open(fileobj=io.BytesIO(b"".join(chunks))) as archive:
+            content = archive.extractfile(archive.getmembers()[0]).read(
+                max_bytes + 1 if max_bytes is not None else -1)
+            if max_bytes is not None and len(content) > max_bytes:
+                raise ValueError("Worker artifact JSON exceeds limit")
+            return content.decode()
+
+    def collect_review_artifacts(self, run, base=None, head=None, event=None):
+        container = self.container(run)
+        if container is None:
+            raise RuntimeError("Review artifact worker is missing")
+        self.put(container, "/run/review_artifacts.py",
+                 Path(__file__).with_name("review_artifacts.py").read_bytes(), mode=0o644)
+        base = base or run.base_commit
+        head = head or run.commit
+        self.exec(container, ["sudo", "-u", "discourse", "python3", "/run/review_artifacts.py",
+                              "--repo", "/workspace/discourse", "--base", base,
+                              "--head", head, "--output", "/workspace/review-artifacts.json"],
+                  event or threading.Event(), 120)
+        return validate_bundle(json.loads(self.read(
+            container, "/workspace/review-artifacts.json", max_bytes=MAX_JSON_BYTES)))
+
 
     @staticmethod
     def check_cancel(event):
@@ -337,6 +380,7 @@ class Runtime:
                     self.put(container, "/run/card-images/" + filename, content, mode=0o644)
             self.put(container, "/run/prompt.txt", prompt_for(run.card))
             self.exec(container, ["bash", "-lc", "until test -f /tmp/bot-ready; do sleep 1; done"], event, 600)
+            self.exec(container, ["bash", "-lc", "sudo -u discourse git -C /workspace/discourse rev-parse HEAD > /workspace/review-base.txt"], event, 30)
             try:
                 self.exec(container, ["bash", "-lc", "bash /opt/bot/run.sh > /workspace/run.log 2>&1"], event, self.config.run_timeout)
             finally:
@@ -348,6 +392,8 @@ class Runtime:
             if not (len(commit) == 40 and all(character in "0123456789abcdef" for character in commit)):
                 raise RuntimeError("Worker did not provide a valid commit hash")
             self.check_cancel(event)
+            base = self.read(container, "/workspace/review-base.txt").strip()
+            bundle = self.collect_review_artifacts(run, base, commit, event)
             container.reload()
             port = container.attrs["NetworkSettings"]["Ports"]["3000/tcp"][0]["HostPort"]
             tunnel = self.tunnel(run)
@@ -366,7 +412,7 @@ class Runtime:
                       environment={"PREVIEW_HOST": urlsplit(url).hostname})
             self.health(url, event, timeout=300)
             return {"preview_url": url, "commit": commit,
-                    "base_commit": self.read(container, "/workspace/base.txt").strip(),
+                    "base_commit": base, "review_bundle": bundle,
                     "summary": result["summary"], "tests": result["tests"]}
         except Cancelled:
             self.cleanup(run)
@@ -497,6 +543,7 @@ class Controller:
         if run.run_id in self.jobs:
             self.jobs[run.run_id][1].set()
         run.phase = phase
+        run.review_pending = False
         run.report_pending = False
         run.cleanup_pending = True
         self.save(run)
@@ -516,15 +563,36 @@ class Controller:
         run.preview_url, run.commit = result["preview_url"], result["commit"]
         run.summary, run.tests = result["summary"], result["tests"]
         run.base_commit = result.get("base_commit", "")
+        run.review_bundle = validate_bundle(result["review_bundle"])
+        if run.review_bundle["base"] != run.base_commit or run.review_bundle["head"] != run.commit:
+            raise ValueError("Review bundle does not match the completed coding run")
+        run.review_pending = True
         self.save(run)
-        message = (f"Codex completed this card.\n\n{run.summary}\n\nCommit `{run.commit}`\n\n"
-                   + "\n".join(f"- {test}" for test in run.tests)
-                   + f"\n\n[Admin preview]({run.preview_url}/session/admin-account/become)"
-                   + f"\n\n[User preview]({run.preview_url}/session/user-account/become)")
-        card = self.board.transition("review", run, message)
-        run.claimed_version = card["version"]
+        self.deliver_review(run)
+
+    def deliver_review(self, run, backfill=False):
+        if not run.review_uploads:
+            run.review_uploads = self.board.review_artifacts(run)
+            self.save(run)
+        message = render_review(run, run.review_uploads)
+        if backfill:
+            card = self.board.backfill_review(run, message)
+        else:
+            card = self.board.transition("review", run, message)
+            run.claimed_version = card["version"]
         run.phase = "review"
+        run.review_pending = False
         self.save(run)
+        return card
+
+    def backfill_review(self, run, bundle):
+        if run.phase != "review":
+            raise ValueError("Only a current REVIEW run can be backfilled")
+        run.review_bundle = validate_bundle(bundle)
+        run.review_uploads = []
+        run.review_pending = True
+        self.save(run)
+        self.deliver_review(run, backfill=True)
 
     def report_failure(self, run, current_card):
         command = "review_failed" if current_card["column"] == "REVIEW" else "failed"
@@ -623,6 +691,21 @@ class Controller:
                     run.claim_pending = False
                     cards[run.card_id] = card = claimed
                     self.save(run)
+                else:
+                    self.cancel(run)
+                    continue
+            if run.review_pending and card and not snapshot["archived"]:
+                same_run = (card.get("run") or {}).get("run_id") == run.run_id
+                if same_run and card["column"] in {"IN PROGRESS", "REVIEW"}:
+                    if card["column"] == "REVIEW":
+                        run.claimed_version = card["version"]
+                    try:
+                        card = cards[run.card_id] = self.deliver_review(run, backfill=card["column"] == "REVIEW")
+                    except Conflict:
+                        self.cancel(run)
+                        continue
+                    if run.run_id in self.jobs:
+                        del self.jobs[run.run_id]
                 else:
                     self.cancel(run)
                     continue

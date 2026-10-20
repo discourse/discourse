@@ -9,6 +9,7 @@ from unittest.mock import Mock, patch
 import requests
 import docker
 
+from review_artifacts import artifact
 from controller import Board, Conflict, Controller, Run, Runtime, Store, prompt_for
 
 
@@ -32,6 +33,13 @@ class BoardDouble:
     def move(self, column):
         self.serial += 1
         self.card.update(column=column, version=str(self.serial))
+
+    def review_artifacts(self, run):
+        return [{"path": item["path"], "short_url": "upload://review" + str(index) + ".txt"}
+                for index, item in enumerate(run.review_bundle["files"])]
+
+    def backfill_review(self, run, message):
+        return copy.deepcopy(self.card)
 
     def transition(self, command, run, message=""):
         if self.card["version"] != run.claimed_version:
@@ -102,7 +110,9 @@ class Executor:
 
 
 RESULT = {"preview_url": "https://preview.ngrok.dev", "commit": "a" * 40,
-          "base_commit": "b" * 40, "summary": "Implemented requested feature", "tests": ["Focused spec passes"]}
+          "base_commit": "b" * 40, "summary": "Implemented requested feature", "tests": ["Focused spec passes"],
+          "review_bundle": {"base": "b" * 40, "head": "a" * 40, "omitted": [], "no_changes": False,
+                            "files": [artifact("review.diff", b"diff contents", "diff")]}}
 
 
 class ControllerTests(unittest.TestCase):

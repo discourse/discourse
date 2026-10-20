@@ -110,3 +110,13 @@ The main Redis volume mounts at /shared/redis_data, matching the worker image's 
 When upgrading an existing board without this file, preserve its current Redis SECRET_TOKEN in that path before replacing the container. The previous Redis mount did not cover its actual data directory, so replacing first would discard the key and invalidate existing logins once more. Keep this file private and preserve the main workspace volume.
 
 ARCHIVED follows DONE. Accept a REVIEW card by moving it to DONE. After merging into capybara, deployment, and confirmed publication to the configured PR branch, the bot moves the card to ARCHIVED. Pending confirmation and failed publication stay in DONE. Reopened or superseded cards are not moved. Historical cleanup-only runs are not treated as published. Admin setup creates or repairs the ARCHIVED column order without duplicating it.
+
+Review deliverables
+-------------------
+A successful worker result includes an immutable base/head review bundle. The controller persists the bundle before uploading files or moving the card to REVIEW. Upload or reply failures retry from that saved result after a restart without another coding run.
+
+Review replies contain explicit test results, a persistent review.diff attachment, generated files, and up to 6,500 characters of rendered Markdown. Long documents retain their complete attached originals. Relative links to other attached files point to those uploads. A zero-change run still attaches a diff with an explicit no-change message.
+
+The collector reads Git blobs, never arbitrary worker filesystem paths. Attachments allow md, txt, rst, csv, pdf, docx, pptx, xlsx, zip, png, jpg, jpeg, gif, webp, diff, and patch. Limits are 24 files, 2 MiB per file, and 8 MiB per bundle. Secret-like paths/content, symlinks, submodules, and oversized blobs are omitted from attachments and diff with a visible notice. Unsupported attachment types remain in the diff. A diff exceeding 2 MiB fails collection explicitly.
+
+To retrofit a current REVIEW handoff, load its saved Run and current card version. Use Runtime.collect_review_artifacts(run, base=base_sha, head=head_sha), then Controller.backfill_review(run, bundle). The controller revises the same bot post marked with capybara_bot_run, or creates one supplemental bot post if none exists. Repeating the operation with the same content creates no extra post or revision. A moved card or superseded run is rejected.
