@@ -35,7 +35,6 @@ module DiscourseWorkflows
       URL_CREDENTIALS_TEXT = %r{\b[a-z][a-z0-9+.-]*://[^/\s:@]+:[^/\s@]+@}i
 
       def self.contains_secret?(value, key: nil)
-        return true if key.to_s == "credentials" && value.present?
         return true if SENSITIVE_KEYS.include?(key.to_s.underscore) && value.present?
 
         case value

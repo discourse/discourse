@@ -9,7 +9,7 @@ module DiscourseWorkflows
 
       def self.signature
         {
-          name: name,
+          name:,
           description:
             "Generate and validate an unpublished workflow draft without saving it. Do not include passwords, tokens, API keys, credentials, or other secrets. If clarification is needed, ask the administrator the returned questions and retry with their answers included. Use create_workflow with the returned draft token to request approval to save the exact draft.",
           parameters: [
@@ -34,8 +34,7 @@ module DiscourseWorkflows
       end
 
       def self.available_for_context?(context)
-        context&.user&.admin? && context.user.guardian.can_manage_workflows? &&
-          Capability.status(user: context.user, phase: :visibility) == :available
+        Capability.visible?(context&.user)
       end
 
       def summary
@@ -47,7 +46,7 @@ module DiscourseWorkflows
       end
 
       def invoke
-        if !authorized?
+        if !Capability.authorized?(context.user)
           return error_response(I18n.t("discourse_workflows.admin_assistant.not_allowed"))
         end
         if Capability.status(user: context.user, phase: :generation) != :available
@@ -89,17 +88,17 @@ module DiscourseWorkflows
         return generation_error unless validation[:valid]
 
         draft_attributes = {
-          name: name,
-          operations: operations,
+          name:,
+          operations:,
           script_validations: proposal[:script_validations],
         }.compact
         draft_token = WorkflowDraft.sign(draft_attributes, user: context.user)
         {
           status: "success",
-          name: name,
+          name:,
           summary: proposal[:summary].to_s,
           script_validations: proposal[:script_validations],
-          draft_token: draft_token,
+          draft_token:,
         }.compact
       rescue ActiveRecord::ActiveRecordError, Discourse::InvalidParameters
         generation_error
@@ -108,10 +107,6 @@ module DiscourseWorkflows
       end
 
       private
-
-      def authorized?
-        context.user&.admin? && context.user.guardian.can_manage_workflows?
-      end
 
       def clarification_response(session)
         response = session.latest_response.symbolize_keys
@@ -122,7 +117,7 @@ module DiscourseWorkflows
         if message.blank? || WorkflowDraft.contains_secret_text?(message)
           message = I18n.t("discourse_workflows.admin_assistant.clarification_required")
         end
-        { status: "needs_clarification", message: message, questions: questions }
+        { status: "needs_clarification", message:, questions: }
       end
 
       def create_session(description)
@@ -154,7 +149,7 @@ module DiscourseWorkflows
 
       def validate_draft(name, operations)
         DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch.new(
-          { workflow_name: name, operations: operations },
+          { workflow_name: name, operations: },
           bot_user: Discourse.system_user,
           llm: nil,
           context: DiscourseAi::Agents::BotContext.new(messages: [], user: context.user),

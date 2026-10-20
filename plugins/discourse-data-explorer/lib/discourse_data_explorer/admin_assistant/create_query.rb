@@ -9,7 +9,7 @@ module DiscourseDataExplorer
 
       def self.signature
         {
-          name: name,
+          name:,
           description:
             "Request human approval to save an exact generated Data Explorer query draft. Never invent, alter, or reuse the draft token.",
           parameters: [
@@ -40,8 +40,7 @@ module DiscourseDataExplorer
       end
 
       def self.available_for_context?(context)
-        context&.user&.admin? &&
-          Capability.status(user: context.user, phase: :visibility) == :available
+        Capability.visible?(context&.user)
       end
 
       def summary
@@ -135,7 +134,7 @@ module DiscourseDataExplorer
       end
 
       def draft
-        QueryDraft.read_with_compatibility(parameters[:draft_token])
+        @draft ||= QueryDraft.read_with_compatibility(parameters[:draft_token])
       end
 
       def execution_phase
