@@ -39,7 +39,7 @@ module Jobs
           ::Live::ParticipantTracker.remove(session.room_id, session.user_id)
 
           room = ::Live::Room.find_by(id: session.room_id)
-          if room && ::Live::ParticipantTracker.human_user_ids(room.id).empty?
+          if room && ::Live::ParticipantTracker.vacant?(room.id)
             ::Live::AgentManager.evict_agents_in_room!(room)
           end
 

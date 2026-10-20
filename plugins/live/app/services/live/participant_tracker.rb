@@ -186,6 +186,14 @@ module Live
         [PARTICIPANT_SESSION_RESUME_WINDOW, SiteSetting.live_participant_ttl_seconds.to_i * 2].max
       end
 
+      # No humans present, and none who could still resume a mesh call. LiveKit
+      # reports departures itself, so its rooms ignore resuming members.
+      def vacant?(room_id)
+        return false if human_user_ids(room_id).any?
+
+        pinned_transport(room_id) == "livekit" || resuming_user_ids(room_id).empty?
+      end
+
       # Members whose presence lapsed while their participant session is still
       # resumable: likely cut off from the server rather than gone, so clients
       # keep their existing media connections instead of tearing them down.
@@ -402,9 +410,10 @@ module Live
       # The transport pin ("mesh" | "livekit") holds a room instance to one
       # transport for its whole life: joiners after the first ignore current
       # settings, so a call is never split across transports. `SET NX` makes
-      # the first join win under a race; the short TTL (refreshed by every
-      # join/heartbeat) lets a crashed room self-heal instead of holding a
-      # stale transport.
+      # the first join win under a race. The TTL (refreshed by every
+      # join/heartbeat) matches the participant session so members resuming
+      # after an outage find their transport still pinned; vacant rooms are
+      # unpinned explicitly by the minute sweep.
       def pin_transport!(room_id, transport)
         redis.set(transport_key(room_id), transport, nx: true, ex: transport_pin_ttl)
         refresh_transport_pin(room_id)
@@ -442,7 +451,7 @@ module Live
       end
 
       def transport_pin_ttl
-        SiteSetting.live_participant_ttl_seconds.to_i * 2
+        participant_session_ttl
       end
 
       def touch_recently_active(room_id)

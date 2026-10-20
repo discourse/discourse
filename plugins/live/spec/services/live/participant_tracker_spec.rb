@@ -152,6 +152,32 @@ RSpec.describe Live::ParticipantTracker do
     end
   end
 
+  describe ".vacant?" do
+    def resuming!(user)
+      described_class.update_metadata(room.id, user.id, { role: "participant" })
+      described_class.create_participant_session!(room.id, user.id)
+    end
+
+    it "is false while a mesh member can still resume" do
+      resuming!(user1)
+
+      expect(described_class.vacant?(room.id)).to eq(false)
+    end
+
+    it "ignores resuming members in a LiveKit room" do
+      described_class.pin_transport!(room.id, "livekit")
+      resuming!(user1)
+
+      expect(described_class.vacant?(room.id)).to eq(true)
+    end
+
+    it "is false while a human is present" do
+      described_class.add(room.id, user1.id)
+
+      expect(described_class.vacant?(room.id)).to eq(false)
+    end
+  end
+
   describe ".resuming_user_ids" do
     def lapse_presence(user)
       key = "#{described_class::KEY_NAMESPACE}:#{room.id}:participants"
@@ -226,11 +252,12 @@ RSpec.describe Live::ParticipantTracker do
       expect(described_class.pinned_transport(room.id)).to eq("livekit")
     end
 
-    it "expires on its own so a crashed room self-heals" do
+    it "expires with the participant session so resuming members keep their transport" do
       described_class.pin_transport!(room.id, "livekit")
 
       ttl = Discourse.redis.ttl("#{described_class::KEY_NAMESPACE}:#{room.id}:transport")
-      expect(ttl).to be_between(1, SiteSetting.live_participant_ttl_seconds * 2)
+      expect(ttl).to be > SiteSetting.live_participant_ttl_seconds * 2
+      expect(ttl).to be <= described_class.participant_session_ttl
     end
   end
 

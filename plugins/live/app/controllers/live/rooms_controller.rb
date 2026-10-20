@@ -375,9 +375,7 @@ module Live
       session = close_session_for(@room.id, current_user.id)
       Live::ParticipantTracker.mark_left(@room.id, current_user.id)
       Live::ParticipantTracker.remove(@room.id, current_user.id)
-      if Live::ParticipantTracker.human_user_ids(@room.id).empty?
-        Live::AgentManager.evict_agents_in_room!(@room)
-      end
+      Live::AgentManager.evict_agents_in_room!(@room) if Live::ParticipantTracker.vacant?(@room.id)
       Live::UserStatusManager.clear_live_status(current_user)
       Live::RoomBroadcaster.publish_participants(@room)
       Live::BadgeGranterHooks.on_leave(current_user, session)
