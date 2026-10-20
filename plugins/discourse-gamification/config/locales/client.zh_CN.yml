@@ -106,6 +106,7 @@ zh_CN:
       admin:
         title: "游戏化"
         name: "名称"
+        created_by: "创建者"
         period: "时间段"
     discourse_workflows:
       node_unavailable:

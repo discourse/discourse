@@ -462,7 +462,11 @@ module DiscourseAi
           { stream_completion: { actions: %w[discourse_ai/admin/ai_agents#stream_reply] } },
         )
 
+        plugin.on_enabled_change { |_old_value, new_value| AiAgent.ensure_users! if new_value }
+
         plugin.on(:site_setting_changed) do |name, old_value, new_value|
+          AiAgent.ensure_users! if name == :ai_bot_enabled && new_value
+
           if name == :ai_embeddings_selected_model && DiscourseAi::Embeddings.enabled? &&
                new_value != old_value
             RagDocumentFragment.delete_all

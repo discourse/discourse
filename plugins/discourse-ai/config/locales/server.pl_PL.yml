@@ -79,7 +79,7 @@ pl_PL:
     ai_ask_ai_report_recipient_groups: "Grupy otrzymujące automatyczne cotygodniowe raporty PW i mogą być uwzględniane w ręcznych raportach PW. Raporty zawierają pytania użytkowników. Pozostaw puste, aby automatyczne raporty były widoczne tylko na pulpicie."
     discourse_ai_enabled: "Włącz wtyczkę Discourse AI."
     enable_ai_bot_starred_conversations: "Zezwól użytkownikom na wyróżnianie rozmów botów AI i wyświetlanie ich w sekcji oznaczonej gwiazdką na pasku bocznym."
-    ai_default_llm_model: "Domyślny model LLM do wykorzystania we wszystkich funkcjach AI"
+    ai_default_llm_model: "Domyślny model języka dla funkcji i agentów AI, który nie określa własnego"
     ai_artifact_security: "System artefaktów AI generuje ramki IFRAME z kodem, który można uruchomić. Tryb ścisły wymusza dodatkowe kliknięcie, aby uruchomić kod. Tryb łagodny uruchamia kod natychmiast. Tryb hybrydowy pozwala użytkownikowi na podanie danych w trybie artefakt-sztuczna inteligencja-autorun, aby wyświetlić je natychmiast. Tryb wyłączony wyłącza system artefaktów."
     ai_toxicity_enabled: "Włącz moduł toksyczności."
     ai_toxicity_inference_service_api_endpoint: "Adres URL, pod którym działa interfejs API modułu toksyczności"

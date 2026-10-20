@@ -107,6 +107,7 @@ fr:
       admin:
         title: "Gamification"
         name: "Nom"
+        created_by: "Créé par "
         period: "Période"
     discourse_workflows:
       gamification_score:

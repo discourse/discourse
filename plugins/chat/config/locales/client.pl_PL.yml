@@ -702,7 +702,7 @@ pl_PL:
           alphabetical: "Alfabetycznie"
           recent_activity: "Ostatnia aktywność"
           priority: "Priorytet"
-          priority_description: "Wzmianki, następnie nieprzeczytane, a następnie ostatnia aktywność"
+          priority_description: "Wzmianki, następnie nieprzeczytane, następnie ostatnia aktywność, posortowane alfabetycznie"
         empty:
           filtered: "Żaden kanał nie pasuje do tego filtra."
           show_all: "Pokaż wszystkie kanały"

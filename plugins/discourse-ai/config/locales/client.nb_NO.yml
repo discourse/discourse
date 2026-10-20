@@ -220,6 +220,16 @@ nb_NO:
         delete: "Slett"
         tools_modal:
           required: "Påkrevd"
+      models:
+        name: "Navn"
+        type: "Type"
+        provider: "Tilbyder"
+        edit: "Rediger"
+        select_type: "Velg"
+        types:
+          embedding: "Innbygging"
+        filters:
+          all: "Alle typer"
       llms:
         display_name: "Navn"
         provider: "Tilbyder"

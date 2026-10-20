@@ -1,9 +1,4 @@
-function getCSSColor(varName) {
-  const value = getComputedStyle(document.documentElement)
-    .getPropertyValue(varName)
-    .trim();
-  return value || null;
-}
+import { getCSSColors } from "discourse/lib/css-color";
 
 function generateGradientColors(count, palette) {
   palette = palette || "cool";
@@ -76,13 +71,11 @@ function generateGradientColors(count, palette) {
 }
 
 export function getColors(count, palette) {
-  const cssColors = [];
-  for (let i = 1; i <= count; i++) {
-    const color = getCSSColor(`--poll-pie-color-${i}`);
-    if (color) {
-      cssColors.push(color);
-    }
-  }
+  const names = Array.from(
+    { length: count },
+    (_, i) => `--poll-pie-color-${i + 1}`
+  );
+  const cssColors = Object.values(getCSSColors(names)).filter(Boolean);
 
   if (cssColors.length >= count) {
     return cssColors.slice(0, count);

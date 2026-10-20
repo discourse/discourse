@@ -364,6 +364,16 @@ vi:
         delete: "Xóa"
         tools_modal:
           required: "Bắt buộc"
+      models:
+        name: "Tên"
+        type: "Loại"
+        edit: "Sửa"
+        select_type: "Chọn"
+        types:
+          embedding: "Nhúng"
+        filters:
+          all: "Tất cả các loại"
+          reset: "Đặt lại bộ lọc"
       llms:
         display_name: "Tên"
         vision_modes:

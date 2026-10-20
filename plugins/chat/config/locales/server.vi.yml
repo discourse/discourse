@@ -11,6 +11,10 @@ vi:
     chat_max_direct_message_users: "Người dùng không thể thêm nhiều hơn số lượng người dùng khác này khi tạo một tin nhắn trực tiếp mới. Đặt thành 0 để chỉ cho phép tin nhắn cho chính mình. Nhân viên được miễn cài đặt này."
   chat:
     deleted_chat_username: đã bị xóa
+    crawler:
+      nav_title: "Trò chuyện"
+      thread_replies:
+        other: "%{count} trả lời"
     errors:
       not_accepting_dms: "Xin lỗi, %{username} hiện không chấp nhận tin nhắn."
       over_chat_max_direct_message_users:

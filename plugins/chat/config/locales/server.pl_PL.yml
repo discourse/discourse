@@ -10,8 +10,8 @@ pl_PL:
     chat_enabled: "Włącz czat."
     chat_pinned_messages: "Włącz przypinanie wiadomości na kanałach czatu."
     enable_public_channels: "Włącz kanały publiczne na podstawie kategorii."
-    chat_allowed_groups: "Użytkownicy w tych grupach mogą czatować, z wyjątkiem użytkowników anonimowych, którzy mogą przeglądać czat tylko po dodaniu ich do tego ustawienia. Pamiętaj, że administratorzy i moderatorzy zawsze mają dostęp do czatu."
-    chat_channel_retention_days: "Wiadomości czatu w zwykłych kanałach będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
+    chat_allowed_groups: "Użytkownicy w tych grupach mogą czatować, z wyjątkiem użytkowników anonimowych, którzy mogą przeglądać czat tylko po dodaniu ich do tego ustawienia. Dodanie użytkowników anonimowych pozwala również wyszukiwarkom indeksować kanały publiczne. Należy pamiętać, że administratorzy i moderatorzy zawsze mają dostęp do czatu."
+    chat_channel_retention_days: "Wiadomości czatu w standardowych kanałach będą przechowywane przez tyle dni. Ustaw „0”, aby zachować wiadomości na zawsze. Gdy anonimowi użytkownicy mogą przeglądać czat, usunięte wiadomości z czasem znikają z wyników wyszukiwania, więc krótki czas przechowywania ogranicza liczbę historii czatu, którą można znaleźć za pomocą wyszukiwarki."
     chat_dm_retention_days: "Wiadomości czatu na prywatnych kanałach czatu będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
     chat_auto_silence_duration: "Liczba minut, przez które użytkownicy zostaną wyciszeni, gdy przekroczą limit szybkości tworzenia wiadomości na czacie. Ustaw na '0', aby wyłączyć automatyczne wyciszanie."
     chat_allowed_messages_for_trust_level_0: "Liczba wiadomości, które użytkownicy o poziomie zaufania 0 mogą wysłać w ciągu 30 sekund. Ustaw na '0', aby wyłączyć limit."
@@ -64,6 +64,32 @@ pl_PL:
         Odwiedź kanał pod adresem %{channel_url}, aby spróbować ponownie.
   chat:
     deleted_chat_username: usunięte
+    crawler:
+      directory_title: "Kanały czatu"
+      nav_title: "Czat"
+      last_activity: "Ostatnia aktywność"
+      retention_notice:
+        one: "Wiadomości starsze niż %{count} dzień są usuwane, z wyjątkiem wiadomości przypiętych."
+        few: "Wiadomości starsze niż %{count} dni są usuwane, z wyjątkiem wiadomości przypiętych."
+        many: "Wiadomości starsze niż %{count} dni są usuwane, z wyjątkiem wiadomości przypiętych."
+        other: "Wiadomości starsze niż %{count} dni są usuwane, z wyjątkiem wiadomości przypiętych."
+      messages_count:
+        one: "%{count} wiadomość"
+        few: "%{count} wiadomości"
+        many: "%{count} wiadomości"
+        other: "%{count} wiadomości"
+      members_count:
+        one: "%{count} członek"
+        few: "%{count} członków"
+        many: "%{count} członków"
+        other: "%{count} członków"
+      thread_title: "Wątek w %{channel}"
+      channel_day_title: "%{channel} – %{date}"
+      thread_replies:
+        one: "%{count} odpowiedź"
+        few: "%{count} odpowiedzi"
+        many: "%{count} odpowiedzi"
+        other: "%{count} odpowiedzi"
     errors:
       users_cant_be_added_to_channel: "Użytkownicy nie mogą być dodawani do tego kanału."
       user_cant_be_removed_from_channel: "Użytkownik nie może zostać usunięty z tego kanału"

@@ -7,6 +7,10 @@
 hy:
   chat:
     deleted_chat_username: ջնջված
+    crawler:
+      thread_replies:
+        one: "%{count} պատասխան"
+        other: "%{count} պատասխան"
     errors:
       not_accepting_dms: "Ներողություն, %{username}-ը այս պահին հաղորդագրություններ չի ընդունում:"
     reviewables:

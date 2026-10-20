@@ -37,6 +37,7 @@ ug:
       custom_range_from: "كىمدىن"
       admin:
         name: "ئىسمى"
+        created_by: "قۇرغۇچى"
     discourse_workflows:
       gamification_score:
         username: "ئىشلەتكۈچى"

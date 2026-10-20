@@ -1129,6 +1129,12 @@ importers:
         specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
+  plugins/live:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@*
+        version: link:../../frontend/discourse-types
+
   plugins/poll:
     dependencies:
       discourse:
@@ -1142,12 +1148,6 @@ importers:
         version: link:../../frontend/discourse-types
 
   plugins/styleguide:
-    dependencies:
-      discourse:
-        specifier: workspace:@discourse/types@*
-        version: link:../../frontend/discourse-types
-
-  plugins/voice:
     dependencies:
       discourse:
         specifier: workspace:@discourse/types@*

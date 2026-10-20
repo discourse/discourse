@@ -87,6 +87,7 @@ cs:
       admin:
         title: "Gamifikace"
         name: "Název"
+        created_by: "Vytvořil/a"
         period: "Období"
     discourse_workflows:
       gamification_score:
