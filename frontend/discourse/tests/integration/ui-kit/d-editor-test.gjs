@@ -366,6 +366,26 @@ third line`
     assert.strictEqual(textarea.selectionEnd, 23);
   });
 
+  test("code button fences multiple lines", async function (assert) {
+    this.set("value", "a\nb");
+
+    await render(<template><DEditor @value={{this.value}} /></template>);
+
+    const textarea = find("textarea.d-editor-input");
+    textarea.selectionStart = 0;
+    textarea.selectionEnd = 3;
+
+    await click("button.code");
+    assert.strictEqual(this.value, "```\na\nb\n```");
+
+    this.set("value", "intro a\nb\noutro");
+    textarea.selectionStart = 6;
+    textarea.selectionEnd = 9;
+
+    await click("button.code");
+    assert.strictEqual(this.value, "intro \n```\na\nb\n```\noutro");
+  });
+
   test("code button does not reset undo history", async function (assert) {
     this.set("value", "existing");
 
