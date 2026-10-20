@@ -6565,7 +6565,8 @@ CREATE TABLE public.gamification_score_events (
     points integer NOT NULL,
     description text,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    category_id integer
 );
 
 
@@ -26090,6 +26091,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261020160221'),
 ('20261019105124'),
 ('20261019104439'),
 ('20261018172000'),

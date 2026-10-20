@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseGamification::AdminGamificationScoreEventController do
+  fab!(:category)
+
   let(:current_user) { Fabricate(:admin) }
   let(:another_user) { Fabricate(:user) }
   let(:score_events) { [] }
-  let!(:leaderboard) { Fabricate(:gamification_leaderboard, created_by_id: current_user.id) }
+  let!(:leaderboard) do
+    Fabricate(:gamification_leaderboard, created_by_id: current_user.id)
+  end
 
   before do
     SiteSetting.discourse_gamification_enabled = true
@@ -12,23 +16,23 @@ RSpec.describe DiscourseGamification::AdminGamificationScoreEventController do
     score_events << DiscourseGamification::GamificationScoreEvent.create!(
       user_id: current_user.id,
       date: Date.today,
-      points: 7,
+      points: 7
     )
 
     score_events << DiscourseGamification::GamificationScoreEvent.create!(
       user_id: current_user.id,
       date: Date.yesterday,
-      points: 17,
+      points: 17
     )
 
     score_events << DiscourseGamification::GamificationScoreEvent.create!(
       user_id: another_user.id,
       date: Date.yesterday,
-      points: 27,
+      points: 27
     )
 
     DiscourseGamification::GamificationLeaderboardScore.calculate_all(
-      since_date: 10.days.ago.midnight,
+      since_date: 10.days.ago.midnight
     )
     sign_in(current_user)
   end
@@ -38,7 +42,9 @@ RSpec.describe DiscourseGamification::AdminGamificationScoreEventController do
       get "/admin/plugins/gamification/score_events.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body["events"].length).to eq(score_events.size)
-      expect(response.parsed_body["events"][0]["points"]).to eq(score_events[0].points)
+      expect(response.parsed_body["events"][0]["points"]).to eq(
+        score_events[0].points
+      )
     end
 
     it "returns users and their calculated scores for a specific date" do
@@ -65,7 +71,9 @@ RSpec.describe DiscourseGamification::AdminGamificationScoreEventController do
       get "/admin/plugins/gamification/score_events.json?id=#{score_events.last.id}"
       expect(response.status).to eq(200)
       expect(response.parsed_body["events"].length).to eq(1)
-      expect(response.parsed_body["events"][0]["id"]).to eq(score_events.last.id)
+      expect(response.parsed_body["events"][0]["id"]).to eq(
+        score_events.last.id
+      )
     end
 
     it "affects user scores when a score event is created" do
@@ -73,17 +81,17 @@ RSpec.describe DiscourseGamification::AdminGamificationScoreEventController do
            params: {
              points: 10,
              user_id: another_user.id,
-             date: Date.today,
+             date: Date.today
            }
       expect(response.status).to eq(200)
 
       DiscourseGamification::GamificationLeaderboardScore.calculate_all(
-        since_date: 10.days.ago.midnight,
+        since_date: 10.days.ago.midnight
       )
       user_score =
         DiscourseGamification::GamificationLeaderboardScore.where(
           user_id: another_user.id,
-          leaderboard_id: leaderboard.id,
+          leaderboard_id: leaderboard.id
         ).sum(:score)
       expect(user_score).to eq(37)
     end
@@ -94,20 +102,100 @@ RSpec.describe DiscourseGamification::AdminGamificationScoreEventController do
             id: score_events.last.id,
             points: 13,
             user_id: another_user.id,
-            date: Date.yesterday,
+            date: Date.yesterday
           }
       expect(response.status).to eq(200)
 
       DiscourseGamification::GamificationLeaderboardScore.calculate_all(
-        since_date: 10.days.ago.midnight,
+        since_date: 10.days.ago.midnight
       )
 
       user_score =
         DiscourseGamification::GamificationLeaderboardScore.where(
           user_id: another_user.id,
-          leaderboard_id: leaderboard.id,
+          leaderboard_id: leaderboard.id
         ).sum(:score)
       expect(user_score).to eq(13)
+    end
+  end
+
+  describe "#create" do
+    it "assigns the score event to a category" do
+      post "/admin/plugins/gamification/score_events.json",
+           params: {
+             points: 10,
+             user_id: another_user.id,
+             date: Date.today,
+             category_id: category.id
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["category_id"]).to eq(category.id)
+      expect(
+        DiscourseGamification::GamificationScoreEvent.last.category_id
+      ).to eq(category.id)
+    end
+
+    it "rejects a category that does not exist" do
+      expect {
+        post "/admin/plugins/gamification/score_events.json",
+             params: {
+               points: 10,
+               user_id: another_user.id,
+               date: Date.today,
+               category_id: "abc"
+             }
+      }.not_to change { DiscourseGamification::GamificationScoreEvent.count }
+
+      expect(response.status).to eq(422)
+    end
+  end
+
+  describe "#update" do
+    it "keeps the category when omitted and clears it when blank" do
+      event = score_events.last
+
+      put "/admin/plugins/gamification/score_events.json",
+          params: {
+            id: event.id,
+            points: 13,
+            category_id: category.id
+          }
+
+      expect(response.status).to eq(200)
+      expect(event.reload.category_id).to eq(category.id)
+
+      put "/admin/plugins/gamification/score_events.json",
+          params: {
+            id: event.id,
+            points: 14
+          }
+
+      expect(event.reload.category_id).to eq(category.id)
+
+      put "/admin/plugins/gamification/score_events.json",
+          params: {
+            id: event.id,
+            points: 14,
+            category_id: ""
+          }
+
+      expect(event.reload.category_id).to be_nil
+    end
+
+    it "updates points after the assigned category is deleted" do
+      event = score_events.last
+      event.update!(category_id: category.id)
+      category.destroy!
+
+      put "/admin/plugins/gamification/score_events.json",
+          params: {
+            id: event.id,
+            points: 14
+          }
+
+      expect(response.status).to eq(200)
+      expect(event.reload.points).to eq(14)
     end
   end
 end

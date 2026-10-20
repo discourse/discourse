@@ -18,7 +18,7 @@ RSpec.describe DiscourseWorkflows::Nodes::GamificationScore::V1 do
     resolver =
       DiscourseWorkflows::ExpressionResolver.new(
         { "$json" => item.fetch("json") { {} } },
-        sandbox: sandbox,
+        sandbox: sandbox
       )
     exec_ctx =
       DiscourseWorkflows::Executor::NodeExecutionContext.new(
@@ -28,7 +28,7 @@ RSpec.describe DiscourseWorkflows::Nodes::GamificationScore::V1 do
         parameters: configuration,
         property_schema: described_class.property_schema,
         node_context: {
-        },
+        }
       )
     items = action.execute(exec_ctx)[0]
     items.first["json"]
@@ -39,7 +39,7 @@ RSpec.describe DiscourseWorkflows::Nodes::GamificationScore::V1 do
       config = {
         "username" => user.username,
         "points" => 10,
-        "description" => "Helped in the support forum",
+        "description" => "Helped in the support forum"
       }
 
       result = nil
@@ -66,48 +66,116 @@ RSpec.describe DiscourseWorkflows::Nodes::GamificationScore::V1 do
 
       execute_node(configuration: config)
 
-      expect(DiscourseGamification::GamificationScoreEvent.last.points).to eq(-5)
+      expect(DiscourseGamification::GamificationScoreEvent.last.points).to eq(
+        -5
+      )
     end
 
     it "uses the provided date" do
-      config = { "username" => user.username, "points" => 3, "date" => "2026-01-15" }
+      config = {
+        "username" => user.username,
+        "points" => 3,
+        "date" => "2026-01-15"
+      }
 
       result = execute_node(configuration: config)
 
-      expect(DiscourseGamification::GamificationScoreEvent.last.date).to eq(Date.new(2026, 1, 15))
+      expect(DiscourseGamification::GamificationScoreEvent.last.date).to eq(
+        Date.new(2026, 1, 15)
+      )
       expect(result["date"]).to eq("2026-01-15")
     end
 
     it "stores a nil description when blank" do
-      config = { "username" => user.username, "points" => 3, "description" => "" }
+      config = {
+        "username" => user.username,
+        "points" => 3,
+        "description" => ""
+      }
 
       execute_node(configuration: config)
 
-      expect(DiscourseGamification::GamificationScoreEvent.last.description).to be_nil
+      expect(
+        DiscourseGamification::GamificationScoreEvent.last.description
+      ).to be_nil
     end
 
     it "raises when the user does not exist" do
       config = { "username" => "nonexistent", "points" => 10 }
 
-      expect { execute_node(configuration: config) }.to raise_error(DiscourseWorkflows::NodeError)
+      expect { execute_node(configuration: config) }.to raise_error(
+        DiscourseWorkflows::NodeError
+      )
     end
 
     it "raises when points is zero" do
       config = { "username" => user.username, "points" => 0 }
 
-      expect { execute_node(configuration: config) }.to raise_error(DiscourseWorkflows::NodeError)
+      expect { execute_node(configuration: config) }.to raise_error(
+        DiscourseWorkflows::NodeError
+      )
     end
 
     it "raises when points is not a number" do
       config = { "username" => user.username, "points" => "lots" }
 
-      expect { execute_node(configuration: config) }.to raise_error(DiscourseWorkflows::NodeError)
+      expect { execute_node(configuration: config) }.to raise_error(
+        DiscourseWorkflows::NodeError
+      )
     end
 
     it "raises when the date is invalid" do
-      config = { "username" => user.username, "points" => 5, "date" => "not-a-date" }
+      config = {
+        "username" => user.username,
+        "points" => 5,
+        "date" => "not-a-date"
+      }
 
-      expect { execute_node(configuration: config) }.to raise_error(DiscourseWorkflows::NodeError)
+      expect { execute_node(configuration: config) }.to raise_error(
+        DiscourseWorkflows::NodeError
+      )
+    end
+
+    it "assigns the score event to a category" do
+      category = Fabricate(:category)
+      config = {
+        "username" => user.username,
+        "points" => 5,
+        "category_id" => category.id.to_s
+      }
+
+      result = execute_node(configuration: config)
+
+      expect(
+        DiscourseGamification::GamificationScoreEvent.last.category_id
+      ).to eq(category.id)
+      expect(result["category_id"]).to eq(category.id)
+    end
+
+    it "leaves the category empty when blank" do
+      config = {
+        "username" => user.username,
+        "points" => 5,
+        "category_id" => ""
+      }
+
+      execute_node(configuration: config)
+
+      expect(
+        DiscourseGamification::GamificationScoreEvent.last.category_id
+      ).to be_nil
+    end
+
+    it "raises when the category does not exist" do
+      config = {
+        "username" => user.username,
+        "points" => 5,
+        "category_id" => "-999"
+      }
+
+      expect { execute_node(configuration: config) }.to raise_error(
+        DiscourseWorkflows::NodeError
+      )
     end
   end
 end

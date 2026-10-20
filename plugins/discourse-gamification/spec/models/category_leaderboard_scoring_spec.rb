@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseGamification::GamificationLeaderboardScore, type: :model do
+RSpec.describe DiscourseGamification::GamificationLeaderboardScore,
+               type: :model do
   fab!(:user)
   fab!(:building_category, :category)
   fab!(:building_tools_category, :category)
@@ -13,7 +14,7 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardScore, type: :model
     Fabricate(
       :gamification_leaderboard,
       name: "Builders",
-      scorable_category_ids: [building_category.id, building_tools_category.id],
+      scorable_category_ids: [building_category.id, building_tools_category.id]
     )
   end
   fab!(:help) do
@@ -23,15 +24,15 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardScore, type: :model
       scorable_category_ids: [
         feedback_category.id,
         ux_reports_category.id,
-        general_bugs_category.id,
-      ],
+        general_bugs_category.id
+      ]
     )
   end
   fab!(:support) do
     Fabricate(
       :gamification_leaderboard,
       name: "Support",
-      scorable_category_ids: [support_category.id],
+      scorable_category_ids: [support_category.id]
     )
   end
 
@@ -49,7 +50,11 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardScore, type: :model
     end
   end
 
-  def calculate_and_read_scores(for_user, since_date: Date.current, period: "all_time")
+  def calculate_and_read_scores(
+    for_user,
+    since_date: Date.current,
+    period: "all_time"
+  )
     [builders, help, support].map do |leaderboard|
       described_class.calculate_scores(leaderboard, since_date: since_date)
       cache = DiscourseGamification::LeaderboardCachedView.new(leaderboard)
@@ -69,15 +74,27 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardScore, type: :model
       activity_date = today - 10
       user.topics.update_all(created_at: activity_date)
       user.posts.update_all(created_at: activity_date)
-      Fabricate(:user_visit, user: user, visited_at: today, time_read: 7200, posts_read: 300)
-
-      expect(calculate_and_read_scores(user, since_date: activity_date, period: "weekly")).to eq(
-        [nil, nil, nil],
+      Fabricate(
+        :user_visit,
+        user: user,
+        visited_at: today,
+        time_read: 7200,
+        posts_read: 300
       )
-      expect(calculate_and_read_scores(user, since_date: activity_date)).to eq([10, nil, 140])
+
+      expect(
+        calculate_and_read_scores(
+          user,
+          since_date: activity_date,
+          period: "weekly"
+        )
+      ).to eq([nil, nil, nil])
+      expect(calculate_and_read_scores(user, since_date: activity_date)).to eq(
+        [10, nil, 140]
+      )
     end
 
-    it "excludes visit, reading, and manual points from category leaderboards" do
+    it "excludes visit, reading, and uncategorized manual points from category leaderboards" do
       Fabricate(:user_visit, user: user, time_read: 7200, posts_read: 300)
 
       expect(calculate_and_read_scores(user)).to eq([10, nil, 140])
@@ -85,7 +102,7 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardScore, type: :model
       DiscourseGamification::GamificationScoreEvent.create!(
         user: user,
         date: Date.current,
-        points: 1000,
+        points: 1000
       )
 
       expect(calculate_and_read_scores(user)).to eq([10, nil, 140])
@@ -102,6 +119,42 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardScore, type: :model
       expect(calculate_and_read_scores(visitor)).to eq([nil, nil, nil])
     end
 
+    it "counts manual points only on leaderboards scoped to their category" do
+      [
+        { points: 1000, category_id: nil },
+        { points: 50, category_id: support_category.id },
+        { points: 7, category_id: building_tools_category.id },
+        { points: -3, category_id: building_category.id }
+      ].each do |attrs|
+        DiscourseGamification::GamificationScoreEvent.create!(
+          user: user,
+          date: Date.current,
+          **attrs
+        )
+      end
+
+      expect(calculate_and_read_scores(user)).to eq([14, nil, 190])
+
+      global = Fabricate(:gamification_leaderboard)
+      described_class.calculate_scores(global)
+
+      expect(global.leaderboard_scores.where(user: user).sum(:score)).to eq(
+        1204
+      )
+    end
+
+    it "ignores blank entries in the category list" do
+      support.update!(scorable_category_ids: [support_category.id, nil])
+      DiscourseGamification::GamificationScoreEvent.create!(
+        user: user,
+        date: Date.current,
+        points: 50,
+        category_id: support_category.id
+      )
+
+      expect(calculate_and_read_scores(user).last).to eq(190)
+    end
+
     it "excludes visitors with zero points from category leaderboards" do
       visitor = Fabricate(:user)
       Fabricate(:user_visit, user: visitor, time_read: 60, posts_read: 5)
@@ -114,12 +167,12 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardScore, type: :model
 
     it "excludes invitations, flags, and chat activity even with positive score overrides" do
       SiteSetting.chat_enabled = true
-      stub_request(
-        :get,
-        "http://local.hub:3000/api/customers/-1/account?access_token&admin_count=0&moderator_count=0",
-      ).to_return(status: 200, body: "")
       Fabricate(:invite, invited_by: user, redemption_count: 1)
-      Fabricate(:reviewable, created_by: user, status: Reviewable.statuses[:approved])
+      Fabricate(
+        :reviewable,
+        created_by: user,
+        status: Reviewable.statuses[:approved]
+      )
       other_user = Fabricate(:user)
       message = Fabricate(:chat_message, user: user)
       other_message = Fabricate(:chat_message, user: other_user)
@@ -132,8 +185,8 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardScore, type: :model
             "flag_created" => 100,
             "chat_message_created" => 100,
             "chat_reaction_given" => 100,
-            "chat_reaction_received" => 100,
-          },
+            "chat_reaction_received" => 100
+          }
         )
       end
 
@@ -146,19 +199,23 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardScore, type: :model
       DiscourseGamification::GamificationScoreEvent.create!(
         user: user,
         date: Date.current,
-        points: 1000,
+        points: 1000
       )
 
       global = Fabricate(:gamification_leaderboard)
       described_class.calculate_scores(global)
 
-      expect(global.leaderboard_scores.where(user: user).sum(:score)).to eq(1146)
+      expect(global.leaderboard_scores.where(user: user).sum(:score)).to eq(
+        1146
+      )
       expect(calculate_and_read_scores(user)).to eq([10, nil, 140])
 
       global.update!(scorable_category_ids: [])
       described_class.calculate_scores(global)
 
-      expect(global.leaderboard_scores.where(user: user).sum(:score)).to eq(1156)
+      expect(global.leaderboard_scores.where(user: user).sum(:score)).to eq(
+        1156
+      )
     end
 
     it "clears stale scores when all category-based sources are disabled" do
@@ -170,14 +227,18 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardScore, type: :model
           "like_received" => 0,
           "reaction_given" => 0,
           "reaction_received" => 0,
-          "solution" => 0,
-        },
+          "solution" => 0
+        }
       )
-      help.leaderboard_scores.create!(user: user, date: Date.current, score: 1000)
+      help.leaderboard_scores.create!(
+        user: user,
+        date: Date.current,
+        score: 1000
+      )
       DiscourseGamification::GamificationScoreEvent.create!(
         user: user,
         date: Date.current,
-        points: 1000,
+        points: 1000
       )
 
       described_class.calculate_scores(help)
@@ -188,9 +249,15 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardScore, type: :model
     it "removes historical global points with a full leaderboard recalculation" do
       activity_date = DB.query_single("SELECT CURRENT_DATE").first - 30
       [builders, help, support].each do |leaderboard|
-        leaderboard.leaderboard_scores.create!(user: user, date: activity_date, score: 1000)
+        leaderboard.leaderboard_scores.create!(
+          user: user,
+          date: activity_date,
+          score: 1000
+        )
 
-        Jobs::RecalculateLeaderboardScores.new.execute(leaderboard_id: leaderboard.id)
+        Jobs::RecalculateLeaderboardScores.new.execute(
+          leaderboard_id: leaderboard.id
+        )
       end
 
       scores =

@@ -4,9 +4,14 @@
 
 A leaderboard with its own nonempty **Scorable categories** list counts only
 category-based activity: topics, replies, likes, reactions, and accepted solutions.
-Visits, reading totals, invitations, flags, chat activity, and manual score
-adjustments are excluded because these scoring sources do not filter by category.
-Score overrides do not enable these sources on a category-scoped leaderboard.
+Visits, reading totals, invitations, flags, and chat activity are excluded because
+these scoring sources do not filter by category. Score overrides do not enable these
+sources on a category-scoped leaderboard.
+
+Manual score adjustments count on a category-scoped leaderboard only when they are
+assigned to one of its categories, through `category_id` on the score events API or
+the **Category** field of the workflows "Award score" action. Leaderboards without
+their own category list count every adjustment.
 
 Leaderboards without their own category list retain global scoring behavior. The
 site-wide `scorable_categories` setting filters category-based actions while

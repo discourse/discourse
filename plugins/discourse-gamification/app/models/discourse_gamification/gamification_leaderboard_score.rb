@@ -14,13 +14,20 @@ module DiscourseGamification
     end
 
     def self.scorables_queries(leaderboard:)
-      enabled_scorables(leaderboard:).map { "( #{it.query(leaderboard:)} )" }.join(" UNION ALL ")
+      enabled_scorables(leaderboard:)
+        .map { "( #{it.query(leaderboard:)} )" }
+        .join(" UNION ALL ")
     end
 
-    def self.calculate_scores(leaderboard, since_date: Date.today, only_subclass: nil)
+    def self.calculate_scores(
+      leaderboard,
+      since_date: Date.today,
+      only_subclass: nil
+    )
       queries =
         if only_subclass
-          if !Scorable.category_scoped?(leaderboard:) || only_subclass.supports_category_scoping?
+          if !Scorable.category_scoped?(leaderboard:) ||
+               only_subclass.supports_category_scoping?
             only_subclass.query(leaderboard:)
           end
         else
@@ -30,21 +37,26 @@ module DiscourseGamification
       DB.exec(
         "DELETE FROM gamification_leaderboard_scores WHERE leaderboard_id = :leaderboard_id AND date >= :since",
         since: since_date,
-        leaderboard_id: leaderboard.id,
+        leaderboard_id: leaderboard.id
+      )
+
+      category_ids = leaderboard.scorable_category_ids&.compact
+      score_event_category_filter =
+        "AND category_id IN (:category_ids)" if Scorable.category_scoped?(
+        leaderboard:
       )
 
       score_event_query = <<~SQL
         SELECT user_id, date, SUM(points) AS points
         FROM gamification_score_events
-        WHERE date >= :since
+        WHERE date >= :since #{score_event_category_filter}
         GROUP BY 1, 2
       SQL
 
-      source_queries = [queries.presence].compact
-      source_queries << score_event_query unless Scorable.category_scoped?(leaderboard:)
-      return if source_queries.empty?
+      source_queries = [queries.presence, score_event_query].compact
 
-      DB.exec(<<~SQL, since: since_date, leaderboard_id: leaderboard.id)
+      DB.exec(
+        <<~SQL,
         INSERT INTO gamification_leaderboard_scores (leaderboard_id, user_id, date, score)
         SELECT :leaderboard_id, user_id, date, SUM(points) AS score
         FROM (
@@ -58,6 +70,10 @@ module DiscourseGamification
         ON CONFLICT (leaderboard_id, user_id, date) DO UPDATE
         SET score = EXCLUDED.score;
       SQL
+        since: since_date,
+        leaderboard_id: leaderboard.id,
+        category_ids:
+      )
     end
 
     def self.calculate_all(since_date: Date.today)
