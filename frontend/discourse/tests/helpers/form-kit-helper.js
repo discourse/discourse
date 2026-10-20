@@ -1,4 +1,5 @@
 import { click, fillIn, triggerEvent, waitFor } from "@ember/test-helpers";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -23,6 +24,15 @@ class Field {
     }
 
     if (type === "custom") {
+      const select = this.element.querySelector(
+        ".form-kit__control-custom .d-select"
+      );
+      if (select) {
+        return select.classList.contains("--multiple")
+          ? "d-select-multiple"
+          : "d-select";
+      }
+
       if (
         this.element.querySelector(".form-kit__control-custom .multi-select")
       ) {
@@ -64,6 +74,12 @@ class Field {
     }
 
     throw new Error("Unable to resolve tag chooser selector");
+  }
+
+  get dSelectControl() {
+    return dSelect(
+      this.element.querySelector(".form-kit__control-custom .d-select")
+    );
   }
 
   get tagChooserKit() {
@@ -109,6 +125,9 @@ class Field {
 
   value() {
     switch (this.resolvedControlType) {
+      case "d-select":
+      case "d-select-multiple":
+        return this.dSelectControl.element().dataset.value;
       case "input-number":
         return parseInt(this.inputElement.value, 10);
       // String-based controls fall through to return raw value
@@ -238,6 +257,13 @@ class Field {
 
   async select(value) {
     switch (this.resolvedControlType) {
+      case "d-select":
+      case "d-select-multiple": {
+        const control = this.dSelectControl;
+        await control.select(value);
+        await control.close();
+        break;
+      }
       case "multi-select": {
         const multiSelect = this.element.querySelector(
           ".form-kit__control-custom .multi-select"

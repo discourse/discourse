@@ -22,6 +22,7 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import {
   DefaultHost,
   Host,
@@ -3379,3 +3380,506 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
       );
   });
 });
+
+module(
+  "Integration | ui-kit | select | DSelect test helpers",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    /** Runs `check` with the assert context's results captured instead of recorded. */
+    function captured(assert, check) {
+      const results = [];
+      const original = assert.pushResult;
+      assert.pushResult = (result) => results.push(result);
+      try {
+        check();
+      } finally {
+        assert.pushResult = original;
+      }
+      return results;
+    }
+
+    const SECTIONED = [
+      { id: 1, name: "Apple", section: "fruit" },
+      { id: 2, name: "Beet", section: "root" },
+      { id: 3, name: "Cherry pie", section: "fruit" },
+    ];
+
+    module("actions", function () {
+      for (const variant of ["typeahead", "button", "static"]) {
+        test(`open and close a ${variant} select`, async function (assert) {
+          await render(
+            <template>
+              <DSelect @items={{ITEMS}} @variant={{variant}} />
+            </template>
+          );
+          const select = dSelect(".d-select");
+
+          await select.open();
+          assert.dom("[role='listbox']").exists("open shows the list");
+          assert.dom(".d-select").hasAttribute("aria-expanded", "true");
+
+          await select.close();
+          assert.dom("[role='listbox']").doesNotExist("close hides it");
+          assert.dom(".d-select").hasAttribute("aria-expanded", "false");
+        });
+      }
+
+      test("select picks a row by value, scoped to its own select", async function (assert) {
+        const first = sinon.spy();
+        const second = sinon.spy();
+
+        await render(
+          <template>
+            <div class="first">
+              <DSelect @items={{ITEMS}} @onChange={{first}} />
+            </div>
+            <div class="second">
+              <DSelect @items={{ITEMS}} @onChange={{second}} />
+            </div>
+          </template>
+        );
+
+        await dSelect(".second .d-select").select(3);
+
+        assert.true(second.calledOnceWith(3), "the second select changed");
+        assert.false(first.called, "the first did not");
+      });
+
+      test("select opens a closed select first", async function (assert) {
+        const onChange = sinon.spy();
+
+        await render(
+          <template>
+            <DSelect @items={{ITEMS}} @onChange={{onChange}} />
+          </template>
+        );
+        await dSelect(".d-select").select(2);
+
+        assert.true(onChange.calledOnceWith(2));
+      });
+
+      test("selectByName and selectByIndex", async function (assert) {
+        const onChange = sinon.spy();
+        const groupLabel = (key) => key;
+
+        await render(
+          <template>
+            <DSelect
+              @groupBy="section"
+              @groupLabel={{groupLabel}}
+              @items={{SECTIONED}}
+              @onChange={{onChange}}
+            />
+          </template>
+        );
+        const select = dSelect(".d-select");
+
+        await select.selectByName("Beet");
+        assert.strictEqual(onChange.lastCall.args[0], 2, "by name");
+
+        await select.selectByIndex(1);
+        assert.strictEqual(
+          onChange.lastCall.args[0],
+          3,
+          "by option index, skipping group headers"
+        );
+      });
+
+      test("search replaces a typeahead's held label instead of appending to it", async function (assert) {
+        await render(<template><Host @value={{2}} /></template>);
+        const select = dSelect(".d-select");
+
+        await select.search("cher");
+
+        assert.deepEqual(
+          findAll("[role='option']").map((option) => option.dataset.value),
+          ["3"],
+          "only the typed query filters the list"
+        );
+      });
+
+      test("search uses the panel filter on a button select", async function (assert) {
+        await render(
+          <template><DSelect @items={{ITEMS}} @variant="button" /></template>
+        );
+
+        await dSelect(".d-select").search("ban");
+
+        assert.dom(".d-select__filter").hasValue("ban");
+        assert.deepEqual(
+          findAll("[role='option']").map((option) => option.dataset.value),
+          ["2"]
+        );
+      });
+
+      test("actions work in the mobile modal", async function (assert) {
+        forceMobile();
+        const onChange = sinon.spy();
+
+        await render(
+          <template>
+            <DSelect @items={{ITEMS}} @onChange={{onChange}} />
+          </template>
+        );
+        const select = dSelect(".d-select");
+
+        await select.search("ban");
+        await select.select(2);
+
+        assert.true(onChange.calledOnceWith(2));
+      });
+
+      test("remove takes a chip off a multi-select", async function (assert) {
+        const onChange = sinon.spy();
+        const held = [1, 3];
+
+        await render(
+          <template>
+            <DSelect
+              @items={{ITEMS}}
+              @multiple={{true}}
+              @onChange={{onChange}}
+              @value={{held}}
+            />
+          </template>
+        );
+        await dSelect(".d-select").remove(1);
+
+        assert.deepEqual(onChange.lastCall.args[0], [3]);
+      });
+
+      test("clear empties the selection", async function (assert) {
+        const onChange = sinon.spy();
+
+        await render(
+          <template>
+            <DSelect
+              @clearable={{true}}
+              @items={{ITEMS}}
+              @onChange={{onChange}}
+              @value={{2}}
+              @variant="static"
+            />
+          </template>
+        );
+        await dSelect(".d-select").clear();
+
+        assert.strictEqual(onChange.lastCall.args[0], null);
+      });
+
+      test("a typeahead resolves from the id on its input, and an element works as a root", async function (assert) {
+        await render(
+          <template>
+            <DSelect @id="fruit-picker" @items={{ITEMS}} @value={{2}} />
+          </template>
+        );
+
+        assert.strictEqual(
+          dSelect("#fruit-picker").element(),
+          find(".d-select"),
+          "the id on the inner input resolves to the select"
+        );
+        assert.strictEqual(
+          dSelect(find(".d-select")).element(),
+          find(".d-select"),
+          "an element is used as is"
+        );
+      });
+    });
+
+    module("assertions", function () {
+      test("selection checks pass on the held state", async function (assert) {
+        await render(
+          <template>
+            <div class="held"><DSelect @items={{ITEMS}} @value={{2}} /></div>
+            <div class="empty">
+              <DSelect @items={{ITEMS}} @variant="button" />
+            </div>
+          </template>
+        );
+
+        assert.dSelect(".held .d-select").hasValue("2");
+        assert.dSelect(".held .d-select").hasName("Banana");
+        assert.dSelect(".held .d-select").hasLabel("Banana");
+        assert.dSelect(".empty .d-select").hasNoSelection();
+      });
+
+      test("selection checks fail with a message that names the select", async function (assert) {
+        await render(
+          <template><DSelect @items={{ITEMS}} @value={{2}} /></template>
+        );
+
+        const results = captured(assert, () => {
+          assert.dSelect(".d-select").hasValue("3");
+          assert.dSelect(".d-select").hasName("Cherry pie");
+          assert.dSelect(".d-select").hasLabel("Cherry pie");
+          assert.dSelect(".d-select").hasNoSelection();
+        });
+
+        assert.strictEqual(results.length, 4, "each check records one result");
+        for (const result of results) {
+          assert.false(result.result, `fails: ${result.message}`);
+          assert.true(
+            result.message.includes(".d-select"),
+            `names the select: ${result.message}`
+          );
+        }
+      });
+
+      test("option checks read the open panel", async function (assert) {
+        const items = [...ITEMS, { id: 4, name: "Durian", disabled: true }];
+
+        await render(
+          <template><DSelect @items={{items}} @value={{2}} /></template>
+        );
+        await dSelect(".d-select").open();
+
+        assert.dSelect(".d-select").hasOption(1);
+        assert.dSelect(".d-select").hasNoOption(9);
+        assert.dSelect(".d-select").hasOptionName("Cherry pie");
+        assert.dSelect(".d-select").hasSelectedOption(2);
+        assert.dSelect(".d-select").hasDisabledOption(4);
+        assert.dSelect(".d-select").hasOptions([1, 2, 3, 4]);
+
+        const results = captured(assert, () => {
+          assert.dSelect(".d-select").hasOption(9);
+          assert.dSelect(".d-select").hasNoOption(1);
+          assert.dSelect(".d-select").hasOptionName("Kiwi");
+          assert.dSelect(".d-select").hasSelectedOption(1);
+          assert.dSelect(".d-select").hasDisabledOption(1);
+          assert.dSelect(".d-select").hasOptions([1, 2, 3]);
+        });
+        assert.deepEqual(
+          results.map((result) => result.result),
+          [false, false, false, false, false, false],
+          "each wrong expectation fails"
+        );
+      });
+
+      test("option checks fail on a closed select instead of opening it", async function (assert) {
+        await render(<template><DSelect @items={{ITEMS}} /></template>);
+
+        const results = captured(assert, () =>
+          assert.dSelect(".d-select").hasOption(1)
+        );
+
+        assert.false(results[0].result, "the check fails");
+        assert.true(
+          /closed/i.test(results[0].message),
+          `and says the select is closed: ${results[0].message}`
+        );
+        assert
+          .dom("[role='listbox']")
+          .doesNotExist("it did not open the select");
+      });
+
+      test("option checks are scoped to their own select", async function (assert) {
+        const other = [{ id: 9, name: "Other" }];
+
+        await render(
+          <template>
+            <div class="first"><DSelect @items={{ITEMS}} /></div>
+            <div class="second"><DSelect @items={{other}} /></div>
+          </template>
+        );
+        await dSelect(".first .d-select").open();
+        assert.dSelect(".first .d-select").hasOptions([1, 2, 3]);
+
+        // Opening the second select dismisses the first, so only one panel is open.
+        await dSelect(".second .d-select").open();
+        assert.dSelect(".second .d-select").hasOptions([9]);
+
+        const results = captured(assert, () =>
+          assert.dSelect(".first .d-select").hasOptions([9])
+        );
+        assert.false(
+          results[0].result,
+          "the first select never reads the other select's panel"
+        );
+        assert.true(
+          /closed/i.test(results[0].message),
+          `it reports itself closed: ${results[0].message}`
+        );
+      });
+
+      test("state checks", async function (assert) {
+        await render(
+          <template>
+            <div class="locked">
+              <DSelect @disabled={{true}} @items={{ITEMS}} />
+            </div>
+            <div class="clearable">
+              <DSelect
+                @clearable={{true}}
+                @items={{ITEMS}}
+                @value={{1}}
+                @variant="static"
+              />
+            </div>
+          </template>
+        );
+
+        assert.dSelect(".locked .d-select").isDisabled();
+        assert.dSelect(".locked .d-select").isClosed();
+        assert.dSelect(".clearable .d-select").hasClear();
+
+        await dSelect(".clearable .d-select").open();
+        assert.dSelect(".clearable .d-select").isOpen();
+
+        const results = captured(assert, () => {
+          assert.dSelect(".clearable .d-select").isDisabled();
+          assert.dSelect(".clearable .d-select").isClosed();
+          assert.dSelect(".locked .d-select").isOpen();
+          assert.dSelect(".locked .d-select").hasClear();
+        });
+        assert.deepEqual(
+          results.map((result) => result.result),
+          [false, false, false, false],
+          "each wrong expectation fails"
+        );
+      });
+    });
+
+    for (const variant of ["typeahead", "button", "static"]) {
+      test(`repeated open and close are harmless for ${variant}`, async function (assert) {
+        await render(
+          <template><DSelect @items={{ITEMS}} @variant={{variant}} /></template>
+        );
+        const select = dSelect();
+        await select.close();
+        await select.open();
+        await select.open();
+        assert.dSelect().isOpen();
+        await select.close();
+        await select.close();
+        assert.dSelect().isClosed();
+      });
+    }
+
+    test("close works on mobile", async function (assert) {
+      forceMobile();
+      await render(
+        <template><DSelect @items={{ITEMS}} @value={{2}} /></template>
+      );
+      const select = dSelect();
+      assert.dSelect().hasLabel("Banana");
+      await select.search("ban");
+      assert.dSelect().hasOptions([2]);
+      await select.close();
+      assert.dSelect().isClosed();
+      assert.dom(".d-select__panel").doesNotExist("the modal panel unmounts");
+    });
+
+    test("every closed option check records one named failure", async function (assert) {
+      await render(<template><DSelect @items={{ITEMS}} /></template>);
+      const results = [];
+      const original = assert.pushResult;
+      assert.pushResult = (result) => results.push(result);
+      try {
+        const select = assert.dSelect(find(".d-select"));
+        select.hasOption(1);
+        select.hasNoOption(9);
+        select.hasOptionName("Apple");
+        select.hasSelectedOption(1);
+        select.hasDisabledOption(1);
+        select.hasOptions([]);
+      } finally {
+        assert.pushResult = original;
+      }
+      assert.strictEqual(results.length, 6, "one result per check");
+      for (const result of results) {
+        assert.false(
+          result.result,
+          "closed checks fail even for absence or an empty list"
+        );
+        assert.true(
+          /closed/i.test(result.message),
+          "the message explains the closed state"
+        );
+        assert.true(
+          result.message.includes("d-select"),
+          "the message describes the element"
+        );
+      }
+      assert.dom(".d-select__panel").doesNotExist("no check opened the select");
+    });
+
+    test("hook matching accepts CSS punctuation and reads visible button labels", async function (assert) {
+      const value = 'a"[b]\\c';
+      const name = 'A "quoted" [label]';
+      const items = [
+        { id: value, name },
+        { id: 2, name: "Other" },
+      ];
+      await render(
+        <template>
+          <DefaultHost @items={{items}} @value={{value}} @variant="button" />
+        </template>
+      );
+      assert.dSelect().hasValue(value);
+      assert.dSelect().hasName(name);
+      assert.dSelect().hasLabel(name);
+      await dSelect().open();
+      assert.dSelect().hasOption(value);
+      assert.dSelect().hasOptionName(name);
+      await dSelect().select(2);
+      assert.dSelect().hasValue("2");
+      await dSelect().selectByName(name);
+      assert.dSelect().hasValue(value);
+      await dSelect().select(2);
+      await dSelect().select(value);
+      assert.dSelect().hasValue(value);
+    });
+
+    test("a closed sibling never borrows the open select's panel", async function (assert) {
+      const other = [{ id: 9, name: "Other" }];
+      await render(
+        <template>
+          <div class="first"><DSelect @items={{ITEMS}} /></div>
+          <div class="second"><DSelect @items={{other}} /></div>
+        </template>
+      );
+      await dSelect(".first .d-select").open();
+      assert.dSelect(".first .d-select").hasOptions([1, 2, 3]);
+      await dSelect(".second .d-select").open();
+      assert.dSelect(".second .d-select").hasOptions([9]);
+      assert
+        .dom(".first .d-select")
+        .hasAttribute(
+          "aria-expanded",
+          "false",
+          "clicking the sibling dismisses the first select"
+        );
+      const results = [];
+      const original = assert.pushResult;
+      assert.pushResult = (result) => results.push(result);
+      try {
+        assert.dSelect(".first .d-select").hasOptions([9]);
+      } finally {
+        assert.pushResult = original;
+      }
+      assert.strictEqual(results.length, 1, "one failed check is recorded");
+      assert.false(
+        results[0].result,
+        "the sibling's options cannot satisfy the check"
+      );
+      assert.true(
+        /closed/i.test(results[0].message),
+        "the missing linked panel means closed"
+      );
+    });
+
+    test("labels read custom visible content rather than the name hook", async function (assert) {
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}} @value={{2}} @variant="button">
+            <:selection>Chosen fruit</:selection>
+          </DSelect>
+        </template>
+      );
+      assert.dSelect().hasName("Banana");
+      assert.dSelect().hasLabel("Chosen fruit");
+    });
+  }
+);
