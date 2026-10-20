@@ -61,23 +61,9 @@ class DsaStatementOfRecord::Classify
     end
   end
 
-  def save_note(reviewable:, community_rule:, params:, guardian:)
+  def save_note(reviewable:, statements:, guardian:)
     note = reviewable.reviewable_notes.new
-
-    note.update(
-      user: guardian.user,
-      content:
-        I18n.t(
-          "dsa_statements.classification_note",
-          locale: SiteSetting.default_locale,
-          ground: community_rule["ground"],
-          category:
-            I18n.t(
-              "dsa_statements.categories.#{params.category}",
-              locale: SiteSetting.default_locale,
-            ),
-        ),
-    )
+    note.update(user: guardian.user, content: statements.first.classification_note)
     note
   end
 end

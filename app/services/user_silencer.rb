@@ -45,6 +45,10 @@ class UserSilencer
       end
 
       silence_message_params = Dsa::AppealInstructions.message_options
+      silence_message_params[:silence_notice] = silence_notice if message_type.to_s == "silenced_by_staff"
+      silence_message_params[:notification_context] = @opts[:notification_context] if @opts[
+        :notification_context
+      ]
       DiscourseEvent.trigger(
         :user_silenced,
         user: @user,
@@ -113,6 +117,24 @@ class UserSilencer
   end
 
   private
+
+  def silence_notice
+    locale = @user.effective_locale
+    if @user.silenced_till > 100.years.from_now
+      I18n.t("system_messages.silenced_by_staff.silenced_indefinitely", locale:)
+    else
+      timezone =
+        ActiveSupport::TimeZone[@user.user_option.timezone.presence || "UTC"] ||
+          ActiveSupport::TimeZone["UTC"]
+      local_date = @user.silenced_till.in_time_zone(timezone)
+      I18n.t(
+        "system_messages.silenced_by_staff.silenced_until",
+        locale:,
+        date: I18n.l(local_date, format: :long, locale:),
+        offset: local_date.formatted_offset,
+      )
+    end
+  end
 
   def notify_moderators
     return if !SiteSetting.notify_mods_when_user_silenced

@@ -616,6 +616,33 @@ RSpec.describe Reviewable, type: :model do
     fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
     let(:post) { Fabricate(:post) }
 
+    it "queues no deletion email when the enclosing classified moderation transaction rolls back" do
+      SiteSetting.dsa_reporting_enabled = true
+      rule = { "ground" => "Be respectful", "explanation" => "Personal attacks are not allowed." }
+      SiteSetting.dsa_community_rules = [rule].to_json
+      SiteSetting.contact_email = "support@forum.example"
+      admin = Fabricate(:admin)
+      account = Fabricate(:suspect_user_reviewable)
+      recipient_id = account.target_id
+
+      Reviewable.transaction(requires_new: true) do
+        account.perform(
+          admin,
+          :delete_user,
+          dsa_classification: {
+            community_rule: rule,
+            category: "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+          },
+        )
+        raise ActiveRecord::Rollback
+      end
+
+      expect(User.exists?(recipient_id)).to eq(true)
+      expect(account.reload).to be_pending
+      expect(account.dsa_statement_of_records).to be_empty
+      expect(Jobs::CriticalUserEmail.jobs).to be_empty
+    end
+
     it "hides actions and denies execution for an inaccessible target" do
       reviewable = Fabricate(:reviewable_flagged_post)
       private_category = Fabricate(:private_category, group: Fabricate(:group))

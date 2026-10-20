@@ -4015,7 +4015,127 @@ en:
     one: "This topic is temporarily closed for at least %{count} hour due to a large number of community flags."
     other: "This topic is temporarily closed for at least %{count} hours due to a large number of community flags."
 
+  dsa_notifications:
+    contact_required: "Configure a contact email or contact URL before sending DSA notifications."
+    post_reference_flag: "We reviewed a report about your [post in %{title}, #%{number}](%{url})."
+    post_reference_review: "We reviewed your [post in %{title}, #%{number}](%{url}) during our own moderation."
+    date_with_timezone: "%{date} (UTC%{offset})"
+    source_flag: "We reviewed your post after someone reported it."
+    source_review: "We found your post during our own moderation."
+    detection_automated: "Automated tools identified your post for review."
+    detection_automated_content: "Automated tools identified %{content} for review."
+    content:
+      post: "your post"
+      submission: "your submission"
+      account: "your account"
+      original_post: "the original post"
+      original_account: "the reviewed account"
+      original_submission: "the reviewed submission"
+    source_submission_flag: "We reviewed a report about your submission."
+    source_submission_review: "We reviewed your submission during our own moderation."
+    source_account_flag: "We reviewed a report about your account."
+    source_account_review: "We reviewed your account during our own moderation."
+    source_avatar_flag: "We reviewed a report about your profile picture."
+    source_avatar_review: "We reviewed your profile picture during our own moderation."
+    source_original_post: "We reviewed the original post during our own moderation."
+    content_reference: "[Your post in %{title}, #%{number}](%{url})"
+    submission_reference: "Your submission to **%{title}**"
+    responder_statement: |
+      The original post broke our **%{ground}** rule. %{explanation} To appeal this decision, contact %{general_contact_email}.
+    decisions:
+      post_edited: "Your post was edited by a staff member."
+      post_kept_hidden: "A staff member reviewed your post and decided to keep it hidden."
+      post_kept_deleted: "A staff member reviewed your post and decided to keep it removed."
+      submission_rejected: "Your submission was not approved."
+      avatar_removed: "Your profile picture was removed by a staff member."
+    decisions_automation:
+      AUTOMATED_DECISION_PARTIALLY: "A moderator made this decision with help from automated tools."
+      AUTOMATED_DECISION_FULLY: "This decision was made automatically."
+    post_actions:
+      delete_all: "We have also selected all your posts for removal."
+      edit: "We also edited your post."
+    statement: |
+      This decision follows our **%{ground}** rule. %{explanation} To appeal this decision, contact %{general_contact_email}.
+    account_deleted:
+      title: "Account deleted during own moderation"
+      subject_template: "[%{email_prefix}] Your account has been deleted"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from [%{site_name}](%{base_url}) to let you know that the user account associated with this email address has been deleted by a staff member.
+
+        Please review our [community guidelines](%{base_url}/guidelines) for details.
+    flags_agreed_and_post_deleted_for_responders:
+      title: "Reply removed with a moderated post"
+      preview: "Your reply has been removed."
+      subject_template: "Reply removed by staff"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your reply was removed along with [the post it responded to](%{base_url}%{url}).
+
+        Your reply:
+
+        ``` markdown
+        %{flagged_post_response_raw_content}
+        ```
+
+    post_hidden:
+      title: "Post hidden during own moderation"
+      preview: "Your post has been hidden."
+      subject_template: "Post hidden"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your post was hidden.
+
+        <%{base_url}%{url}>
+
+        **You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden.**
+
+        However, if the post is hidden a second time, it will remain hidden until handled by staff.
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+    post_hidden_again:
+      title: "Post hidden again during own moderation"
+      preview: "Your post has been hidden again."
+      subject_template: "Post hidden again, staff notified"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your post was hidden again.
+
+        <%{base_url}%{url}>
+
+        **Because this post has been hidden more than once, your post will now remain hidden until it is handled by a staff member.**
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+    flags_agreed_and_post_deleted:
+      title: "Post removed during own moderation"
+      preview: "Your post has been removed."
+      subject_template: "Post removed by staff"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was removed.
+
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+
+        Please review our [community guidelines](%{base_url}/guidelines) for details.
+
   system_messages:
+    reviewable_moderation_decision:
+      title: "Reviewable moderation decision"
+      subject_template: "%{decision}"
+      text_body_template: |
+        Hello,
+
+        %{decision}
+
+        %{content_reference}
+
     reviewables_reminder:
       subject_template: "There are items in the review queue that need reviewing"
       text_body_template:
@@ -4708,14 +4828,16 @@ en:
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     silenced_by_staff:
       title: "Silenced by Staff"
-      preview: "Account temporarily placed on hold."
-      subject_template: "Account temporarily on hold"
+      preview: "Your account has been silenced."
+      subject_template: "Your account has been silenced"
+      silenced_until: "Your account has been silenced until %{date} (UTC%{offset})."
+      silenced_indefinitely: "Your account has been silenced until a staff member lifts this restriction."
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your account has been temporarily placed on hold as a precautionary measure.
+        %{silence_notice}
 
-        Please do continue to browse, but you won't be able to reply or create topics until a [staff member](%{base_url}/about) reviews your most recent posts. We apologize for the inconvenience.
+        You can continue to browse, but cannot reply or create topics while silenced.
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 

@@ -10,6 +10,7 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
     :version,
     :reviewable_count,
     :unseen_reviewable_count,
+    :edited_post,
   )
 
   def success
@@ -45,6 +46,14 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
 
   def include_created_post_topic_id?
     object.created_post_topic.present?
+  end
+
+  def edited_post
+    PostSerializer.new(object.post_revision.post, scope:, root: false, add_raw: true).as_json
+  end
+
+  def include_edited_post?
+    object.post_revision.present?
   end
 
   def reviewable_count

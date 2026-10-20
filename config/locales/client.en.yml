@@ -1000,6 +1000,32 @@ en:
         placeholder: "type the message title, url or id here"
 
     dsa_statements:
+      continue_to_editor: "Continue to editor"
+      steps:
+        label: "Moderation steps"
+        action: "1. Action details"
+        classification: "2. DSA classification"
+        continue: "Continue"
+        back: "Back"
+      action:
+        agree_and_suspend: "Suspend @%{username}"
+        agree_and_silence: "Silence @%{username}"
+        reject_and_suspend: "Reject post and suspend @%{username}"
+        reject_and_silence: "Reject post and silence @%{username}"
+      action_button:
+        reject_and_suspend: "Reject and suspend user"
+        reject_and_silence: "Reject and silence user"
+      penalty_action:
+        suspend_delete: "Suspend and remove post"
+        suspend_none: "Suspend and keep post"
+        suspend_edit: "Suspend and edit post"
+        suspend_delete_replies: "Suspend and remove post and replies"
+        suspend_delete_all: "Suspend and remove all posts"
+        silence_delete: "Silence and remove post"
+        silence_none: "Silence and keep post"
+        silence_edit: "Silence and edit post"
+        silence_delete_replies: "Silence and remove post and replies"
+        silence_delete_all: "Silence and remove all posts"
       title: "DSA classification"
       help_title: "About DSA classification"
       help: "Select the community rule and category that explain this moderation decision. These are saved with its Digital Services Act statement of reasons."

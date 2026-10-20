@@ -1118,15 +1118,14 @@ export default class Composer extends RestModel {
     const post = this.post;
     const oldCooked = post.cooked;
     let promise = Promise.resolve();
+    let topicProps;
 
     // Update the topic if we're editing the first post
     if (this.title && post.post_number === 1) {
       const topic = this.topic;
 
       if (topic.details.can_edit) {
-        const topicProps = this.getProperties(
-          Object.keys(_edit_topic_serializer)
-        );
+        topicProps = this.getProperties(Object.keys(_edit_topic_serializer));
         // user clicked "overwrite edits" button
         if (!this.editConflict) {
           topicProps.original_title = this.originalTitle;
@@ -1140,15 +1139,20 @@ export default class Composer extends RestModel {
         delete topicProps.featuredLink;
 
         // If we're editing a shared draft, keep the original category
-        if (this.action === EDIT_SHARED_DRAFT) {
+        if (!opts.savePost && this.action === EDIT_SHARED_DRAFT) {
           const destinationCategoryId = topicProps.categoryId;
           promise = promise.then(() =>
             topic.updateDestinationCategory(destinationCategoryId)
           );
           topicProps.categoryId = topic.get("category.id");
         }
-        promise = promise.then(() => Topic.update(topic, topicProps));
-      } else if (topic.details.can_edit_tags) {
+        if (opts.savePost && Array.isArray(topicProps.tags)) {
+          topicProps.tags = serializeTags(topicProps.tags);
+        }
+        if (!opts.savePost) {
+          promise = promise.then(() => Topic.update(topic, topicProps));
+        }
+      } else if (topic.details.can_edit_tags && !opts.savePost) {
         promise = promise.then(() => topic.updateTags(this.tags));
       }
     }
@@ -1186,7 +1190,14 @@ export default class Composer extends RestModel {
 
     return promise
       .then(() => {
-        return post.save(props).then((result) => {
+        const save = opts.savePost
+          ? opts.savePost({
+              post,
+              postChanges: props,
+              topicChanges: topicProps,
+            })
+          : post.save(props);
+        return save.then((result) => {
           // The server omits `reply_to_user` from the response when it's
           // nil, so the post's in-memory value isn't overwritten when the
           // target is cleared. Mirror the composer's final state onto the

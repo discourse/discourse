@@ -93,7 +93,14 @@ module ReviewableActionBuilder
   end
 
   def perform_delete_user(performed_by, args, &)
-    delete_user(target_user, delete_opts, performed_by) if target_user
+    if target_user
+      delete_user(
+        target_user,
+        delete_opts,
+        performed_by,
+        notification_context: args[:notification_context],
+      )
+    end
     create_result(:success, :rejected, [], false, &)
   end
 
@@ -101,7 +108,14 @@ module ReviewableActionBuilder
     delete_options = delete_opts
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
-    delete_user(target_user, delete_options, performed_by) if target_user
+    if target_user
+      delete_user(
+        target_user,
+        delete_options,
+        performed_by,
+        notification_context: args[:notification_context],
+      )
+    end
     create_result(:success, :rejected, [], false, &)
   end
 
@@ -153,7 +167,14 @@ module ReviewableActionBuilder
         reviewable_id: id,
       )
 
-    service.call(guardian:, params: penalty_params, options: { raise_on_failure: true }) do
+    service.call(
+      guardian:,
+      params: penalty_params,
+      options: {
+        raise_on_failure: true,
+        notification_context: args[:notification_context],
+      },
+    ) do
       on_success { result = create_result(:success) }
       on_failed_contract { |contract| result.errors = contract.errors }
       on_model_not_found(:user) { raise Discourse::NotFound }
@@ -176,13 +197,26 @@ module ReviewableActionBuilder
     }
   end
 
-  def delete_user(user, delete_options, performed_by)
+  def delete_user(user, delete_options, performed_by, notification_context: nil)
     email = user.email
 
-    UserDestroyer.new(performed_by).destroy(user, delete_options.merge(reviewable_id: id))
+    UserDestroyer.new(performed_by).destroy(
+      user,
+      delete_options.merge(reviewable_id: id, preserve_reviewable: notification_context.present?),
+    )
 
-    message = UserNotifications.account_deleted(email, self)
-    Email::Sender.new(message, :account_deleted).send
+    if notification_context
+      Jobs.enqueue(
+        :critical_user_email,
+        type: "account_deleted",
+        user_id: user.id,
+        recipient_email: email,
+        notification_context:,
+      )
+    else
+      message = UserNotifications.account_deleted(email, self)
+      Email::Sender.new(message, :account_deleted).send
+    end
   end
 
   def map_reviewable_status_to_flag_status(status)

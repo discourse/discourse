@@ -153,6 +153,7 @@ export default class ComposerService extends Service {
   linkLookup = null;
 
   #onSaved = null;
+  #savePost = null;
 
   /** @type {boolean | null} */
   @tracked _allowPreview = null;
@@ -1398,7 +1399,11 @@ export default class ComposerService extends Service {
       });
 
     const promise = composer
-      .save({ imageSizes, editReason: this.editReason })
+      .save({
+        imageSizes,
+        editReason: this.editReason,
+        savePost: this.#savePost,
+      })
       .then((result) => {
         this.appEvents.trigger("composer:saved");
 
@@ -1685,6 +1690,7 @@ export default class ComposerService extends Service {
       await this._setModel(composerModel, opts);
 
       this.#onSaved = opts.onSaved ?? null;
+      this.#savePost = opts.savePost ?? null;
     } finally {
       this.skipAutoSave = false;
       this.appEvents.trigger("composer:open", { model: this.model });
@@ -1890,6 +1896,7 @@ export default class ComposerService extends Service {
     this.composerActionState.clear();
 
     this.#onSaved = null;
+    this.#savePost = null;
   }
 
   clearLastValidatedAt() {

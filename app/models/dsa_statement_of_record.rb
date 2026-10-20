@@ -72,6 +72,19 @@ class DsaStatementOfRecord < ActiveRecord::Base
     end
   end
 
+  def classification_note
+    I18n.t(
+      "dsa_statements.classification_note",
+      locale: SiteSetting.default_locale,
+      ground: payload.fetch("incompatible_content_ground"),
+      category:
+        I18n.t(
+          "dsa_statements.categories.#{payload.fetch("category")}",
+          locale: SiteSetting.default_locale,
+        ),
+    )
+  end
+
   def classify!(community_rule:, category:, classified_by:)
     update!(
       payload:

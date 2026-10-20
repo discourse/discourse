@@ -16,6 +16,11 @@ class Admin::EmailTemplatesController < Admin::AdminController
         download_backup_mailer
         dsa_notice_mailer
         dsa_notice_verification
+        dsa_notifications.account_deleted
+        dsa_notifications.flags_agreed_and_post_deleted_for_responders
+        dsa_notifications.flags_agreed_and_post_deleted
+        dsa_notifications.post_hidden
+        dsa_notifications.post_hidden_again
         email_login_code_mailer
         invite_forum_mailer
         invite_mailer
@@ -74,6 +79,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
         system_messages.restore_succeeded
         system_messages.reviewable_queued_post_revise_and_reject
         system_messages.reviewable_queued_post_revise_and_reject_new_topic
+        system_messages.reviewable_moderation_decision
         system_messages.reviewables_reminder
         system_messages.silenced_by_staff
         system_messages.spam_post_blocked

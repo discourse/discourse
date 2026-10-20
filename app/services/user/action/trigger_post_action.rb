@@ -5,6 +5,7 @@ class User::Action::TriggerPostAction < Service::ActionBase
   option :post
   option :params
   option :raise_on_failure, default: -> { false }
+  option :notification_context, default: -> {}
 
   delegate :post_action, :reviewable_id, to: :params, private: true
   delegate :user, to: :guardian, private: true
@@ -21,14 +22,14 @@ class User::Action::TriggerPostAction < Service::ActionBase
   def delete
     guardian.ensure_can_delete_post_or_topic!(post) if raise_on_failure
     return unless guardian.can_delete_post_or_topic?(post)
-    PostDestroyer.new(user, post, reviewable_id: reviewable_id).destroy
+    PostDestroyer.new(user, post, reviewable_id: reviewable_id, notification_context:).destroy
     raise Discourse::InvalidParameters.new(:post_action) if raise_on_failure && !post.trashed?
   end
 
   def delete_replies
     guardian.ensure_can_delete_post_or_topic!(post) if raise_on_failure
     return unless guardian.can_delete_post_or_topic?(post)
-    PostDestroyer.delete_with_replies(user, post, reviewable_id)
+    PostDestroyer.delete_with_replies(user, post, reviewable_id, notification_context:)
   end
 
   def edit

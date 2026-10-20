@@ -32,6 +32,44 @@ RSpec.describe UserSilencer do
       expect(count).to eq(1)
     end
 
+    [false, true].each do |dsa_enabled|
+      it "states the silence end time in the recipient timezone with DSA #{dsa_enabled ? "enabled" : "disabled"}" do
+        SiteSetting.dsa_reporting_enabled = dsa_enabled
+        user.user_option.update!(timezone: "Asia/Singapore")
+        silenced_till = 2.weeks.from_now.change(hour: 4, min: 0, sec: 0)
+
+        UserSilencer.silence(user, admin, silenced_till:)
+
+        notice =
+          Post.joins(:topic).find_by!(
+            topics: {
+              archetype: Archetype.private_message,
+              title: I18n.t("system_messages.silenced_by_staff.subject_template"),
+            },
+          )
+        date = I18n.l(silenced_till.in_time_zone("Asia/Singapore"), format: :long)
+        expect(notice.raw).to include("until #{date} (UTC+08:00)", "cannot reply or create topics")
+      end
+
+      it "states that silence has no end date with DSA #{dsa_enabled ? "enabled" : "disabled"}" do
+        SiteSetting.dsa_reporting_enabled = dsa_enabled
+
+        UserSilencer.silence(user, admin)
+
+        notice =
+          Post.joins(:topic).find_by!(
+            topics: {
+              archetype: Archetype.private_message,
+              title: I18n.t("system_messages.silenced_by_staff.subject_template"),
+            },
+          )
+        expect(notice.raw).to include(
+          "until a staff member lifts this restriction",
+          "cannot reply or create topics",
+        )
+      end
+    end
+
     it "preserves the scheduled expiry in the log after an early unsilencing" do
       freeze_time(Time.zone.now.round)
       UserSilencer.silence(user, admin, silenced_till: 2.days.from_now)

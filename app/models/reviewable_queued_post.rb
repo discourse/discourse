@@ -175,6 +175,9 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def perform_revise_and_reject_post(performed_by, args)
+    args[:revise_custom_reason] = args[:notification_context]["ground"] if args[
+      :notification_context
+    ]
     has_contact_user = SiteSetting.site_contact_username.present?
     is_new_topic = topic.blank?
 
@@ -196,6 +199,7 @@ class ReviewableQueuedPost < Reviewable
       reason: args[:revise_custom_reason].presence || args[:revise_reason],
       feedback: args[:revise_feedback],
       original_post: payload["raw"],
+      notification_context: args[:notification_context],
       site_name: SiteSetting.title,
       edit_instructions: I18n.t(edit_instructions_key, locale: target_created_by.effective_locale),
     }

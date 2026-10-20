@@ -23,26 +23,43 @@ class SystemMessage
     target_group_names = params.delete(:target_group_names)
 
     params = defaults.merge(params)
+    locale = @recipient.effective_locale
+    template_keys =
+      %i[preview subject_template text_body_template].index_with do |part|
+        DsaNotification.template_key(
+          "system_messages.#{type}.#{part}",
+          context: params[:notification_context],
+          locale:,
+        )
+      end
 
-    if I18n.exists?("system_messages.#{type}.preview", @recipient.effective_locale)
-      params[:email_preview] = I18n.t("system_messages.#{type}.preview", params)
+    if I18n.exists?(template_keys[:preview], locale)
+      params[:email_preview] = I18n.t(template_keys[:preview], params)
     end
 
     title =
       params[:message_title] ||
         I18n.with_locale(@recipient.effective_locale) do
-          I18n.t("system_messages.#{type}.subject_template", params)
+          I18n.t(template_keys[:subject_template], params)
         end
     raw =
       params[:message_raw] ||
         I18n.with_locale(@recipient.effective_locale) do
-          I18n.t("system_messages.#{type}.text_body_template", params)
+          I18n.t(template_keys[:text_body_template], params)
         end
 
-    if key = params[:body_suffix_key]
+    key = params[:body_suffix_key]
+    if key && !(params[:notification_context] && key == "system_messages.moderation_appeal_instructions")
       paragraph = I18n.with_locale(@recipient.effective_locale) { I18n.t(key, params) }
       raw = "#{raw.rstrip}\n\n#{paragraph}"
     end
+    raw =
+      DsaNotification.append(
+        raw,
+        params[:notification_context],
+        template: "system_messages.#{type}",
+        recipient: @recipient,
+      )
 
     if from_system
       user = Discourse.system_user

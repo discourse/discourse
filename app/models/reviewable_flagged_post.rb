@@ -7,7 +7,44 @@ class ReviewableFlaggedPost < Reviewable
     def additional_args(params)
       args = ReviewableActionBuilder.penalty_args(params)
 
-      args[:post_version] = params[:post_version] if params[:action_id] == "agree_and_edit"
+      if params[:action_id] == "agree_and_edit"
+        args[:post_version] = params[:post_version]
+        if params[:post_update].present?
+          unless params[:post_update].is_a?(ActionController::Parameters)
+            raise Discourse::InvalidParameters.new(:post_update)
+          end
+          args[:post_update] = params[:post_update].permit(
+            :raw,
+            :original_text,
+            :edit_reason,
+            :locale,
+            :reply_to_post_number,
+            *Post.plugin_permitted_update_params.keys,
+            image_sizes: {
+            },
+          ).to_h
+        end
+        if params[:topic_update].present?
+          topic_update = params[:topic_update]
+          unless topic_update.is_a?(ActionController::Parameters)
+            raise Discourse::InvalidParameters.new(:topic_update)
+          end
+          %i[tags original_tags].each do |field|
+            if topic_update[field].is_a?(ActionController::Parameters)
+              topic_update[field] = topic_update[field].values
+            end
+          end
+          args[:topic_update] = topic_update.permit(
+            :title,
+            :categoryId,
+            :featured_link,
+            :original_title,
+            :locale,
+            tags: %i[id name],
+            original_tags: %i[id name],
+          ).to_h
+        end
+      end
 
       args
     end
@@ -271,6 +308,47 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_agree_and_edit(performed_by, args)
+    if args[:post_update]
+      guardian = performed_by.guardian
+      guardian.ensure_can_edit!(post)
+      changes = args[:post_update].with_indifferent_access
+      expected_raw = changes.delete(:original_text)
+      raise Reviewable::UpdateConflict if expected_raw.present? && expected_raw != post.raw
+      post.image_sizes = changes.delete(:image_sizes) if changes.key?(:image_sizes)
+      if (topic_changes = args[:topic_update]&.with_indifferent_access).present?
+        raise Discourse::InvalidParameters.new(:topic_update) unless post.is_first_post?
+        guardian.ensure_can_edit_topic!(post.topic)
+        if topic_changes[:original_title].present? &&
+             topic_changes[:original_title] != post.topic.title
+          raise Reviewable::UpdateConflict
+        end
+        if topic_changes[:original_tags].present? &&
+             topic_changes[:original_tags].map { |tag| tag[:id].to_i }.sort !=
+               post.topic.tags.pluck(:id).sort
+          raise Reviewable::UpdateConflict
+        end
+        if topic_changes[:categoryId].present? &&
+             topic_changes[:categoryId].to_i != post.topic.category_id
+          category = Category.find_by(id: topic_changes[:categoryId])
+          raise Discourse::InvalidParameters.new(:category) unless category
+          if (draft = post.topic.shared_draft)
+            guardian.ensure_can_publish_topic!(post.topic, category)
+            draft.update!(category:)
+          else
+            guardian.ensure_can_move_topic_to_category!(category)
+            changes[:category_id] = category.id
+          end
+        end
+        changes.merge!(topic_changes.slice(:title, :tags, :featured_link))
+      end
+      revised =
+        PostRevisor.new(post).revise!(performed_by, changes, force_new_version: true, expected_raw:)
+      unless revised
+        raise Reviewable::UpdateConflict if post.errors.of_kind?(:base, :edit_conflict)
+        return create_result(:failure).tap { |result| result.errors = post.errors }
+      end
+      args[:post_version] = post.version
+    end
     post_version = performed_by.staff? ? post.version : post.public_version
     revision = post.revisions.find_by(number: post.version)
     latest_flag_at = reviewable_scores.pending.maximum(:created_at) || created_at
@@ -300,7 +378,9 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_agree_and_hide(performed_by, args)
-    agree(performed_by, args) { |pa| post.hide!(pa.post_action_type_id) }
+    agree(performed_by, args) do |pa|
+      post.hide!(pa.post_action_type_id, notification_context: args[:notification_context])
+    end
   end
 
   def perform_agree_and_restore(performed_by, args)
@@ -356,26 +436,36 @@ class ReviewableFlaggedPost < Reviewable
 
   def perform_delete_and_ignore(performed_by, args)
     result = perform_ignore_and_do_nothing(performed_by, args)
-    destroyer(performed_by, post).destroy
+    destroyer(performed_by, post, notification_context: args[:notification_context]).destroy
     result
   end
 
   def perform_delete_and_ignore_replies(performed_by, args)
     result = perform_ignore_and_do_nothing(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, id)
+    PostDestroyer.delete_with_replies(
+      performed_by,
+      post,
+      id,
+      notification_context: args[:notification_context],
+    )
 
     result
   end
 
   def perform_delete_and_agree(performed_by, args)
     result = agree(performed_by, args)
-    destroyer(performed_by, post).destroy
+    destroyer(performed_by, post, notification_context: args[:notification_context]).destroy
     result
   end
 
   def perform_delete_and_agree_replies(performed_by, args)
     result = agree(performed_by, args)
-    PostDestroyer.delete_with_replies(performed_by, post, id)
+    PostDestroyer.delete_with_replies(
+      performed_by,
+      post,
+      id,
+      notification_context: args[:notification_context],
+    )
     result
   end
 
@@ -490,8 +580,8 @@ class ReviewableFlaggedPost < Reviewable
     end
   end
 
-  def destroyer(performed_by, post)
-    PostDestroyer.new(performed_by, post, reviewable_id: id)
+  def destroyer(performed_by, post, notification_context: nil)
+    PostDestroyer.new(performed_by, post, reviewable_id: id, notification_context:)
   end
 
   def notify_poster(performed_by)

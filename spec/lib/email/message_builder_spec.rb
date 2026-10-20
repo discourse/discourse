@@ -26,6 +26,31 @@ RSpec.describe Email::MessageBuilder do
     expect(builder.subject).to eq(email_subject)
   end
 
+  it "preserves deletion subject language and style when the decision is classified" do
+    SiteSetting.email_prefix = "Example community"
+
+    %i[en fr].each do |locale|
+      I18n.with_locale(locale) do
+        [false, true].each do |simple_subject|
+          SiteSetting.simple_email_subject = simple_subject
+          template = "user_notifications.account_deleted"
+          subject_key = "#{template}.subject_template#{"_improved" if simple_subject}"
+          classified =
+            described_class.new(
+              to_address,
+              template:,
+              notification_context: {
+                "source" => "review",
+                "content_kind" => "account",
+              },
+            )
+
+          expect(classified.subject).to eq(I18n.t(subject_key, email_prefix: "Example community"))
+        end
+      end
+    end
+  end
+
   it "has the body" do
     expect(builder.body).to eq(body)
   end

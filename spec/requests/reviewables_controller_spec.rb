@@ -1845,6 +1845,1007 @@ RSpec.describe ReviewablesController do
   end
 
   describe "#perform" do
+    context "when DSA classification is provided" do
+      fab!(:admin)
+      fab!(:flagged_post, :post)
+      fab!(:reviewable) do
+        Fabricate(
+          :reviewable_flagged_post,
+          target: flagged_post,
+          target_created_by: flagged_post.user,
+        )
+      end
+
+      let(:rule) { { ground: "Be respectful", explanation: "Personal attacks are not allowed." } }
+      let(:classification) do
+        {
+          community_rule: DsaStatementOfRecord.community_rules.first.fetch("id"),
+          category: "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+        }
+      end
+
+      before do
+        SiteSetting.dsa_reporting_enabled = true
+        SiteSetting.dsa_community_rules = [rule].to_json
+        SiteSetting.contact_email = "support@forum.example"
+        sign_in(admin)
+      end
+
+      it "classifies the new statement using the configured rule and records a note" do
+        put "/review/#{reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged_post.reload).to be_trashed
+        statement = reviewable.dsa_statement_of_records.sole
+        expect(statement).to be_ready
+        expect(statement.classified_by_id).to eq(admin.id)
+        expect(statement.payload).to include(
+          "incompatible_content_ground" => rule[:ground],
+          "incompatible_content_explanation" => rule[:explanation],
+          "category" => classification[:category],
+        )
+        expect(reviewable.reviewable_notes.sole.content).to include(rule[:ground])
+      end
+
+      %w[agree_and_hide delete_and_agree agree_and_suspend agree_and_silence].each do |action_id|
+        it "delivers existing notifications with the selected rule for #{action_id}" do
+          freeze_time
+          flagger = Fabricate(:user)
+          Fabricate(
+            :post_action,
+            post: flagged_post,
+            user: flagger,
+            post_action_type_id: PostActionType.types[:inappropriate],
+          )
+          deadline = 2.weeks.from_now.change(usec: 0)
+          post_url = flagged_post.full_url
+          action_params = {
+            version: reviewable.version,
+            dsa_classification: classification,
+            reason: rule[:ground],
+            suspend_until: (action_id == "agree_and_suspend" ? deadline : 3.days.from_now).iso8601,
+            silenced_till: (action_id == "agree_and_silence" ? deadline : 3.days.from_now).iso8601,
+            post_action: "delete",
+          }
+
+          put "/review/#{reviewable.id}/perform/#{action_id}.json", params: action_params
+
+          expect(response).to have_http_status(:ok)
+          if action_id.in?(%w[agree_and_suspend agree_and_silence])
+            penalty_attribute = action_id == "agree_and_suspend" ? :suspended_till : :silenced_till
+            expect(flagged_post.user.reload.public_send(penalty_attribute)).to eq(deadline)
+            flagged_post.user.update!(penalty_attribute => 1000.years.from_now)
+          end
+          Jobs::SendSystemMessage.jobs.each do |job|
+            Jobs::SendSystemMessage.new.execute(job.fetch("args").first.with_indifferent_access)
+          end
+          Jobs::CriticalUserEmail.jobs.each do |job|
+            Jobs::CriticalUserEmail.new.execute(job.fetch("args").first.with_indifferent_access)
+          end
+          messages = Post.joins(:topic).where(topics: { archetype: Archetype.private_message }).to_a
+          bodies =
+            messages.map(&:raw) +
+              ActionMailer::Base.deliveries.map { |mail| (mail.text_part || mail).body.decoded }
+          expect(bodies).not_to be_empty
+          expect(bodies).to all(
+            include(
+              rule[:ground],
+              rule[:explanation],
+              "To appeal this decision, contact",
+              "mailto:#{SiteSetting.contact_email}",
+            ),
+          )
+          expect(bodies.join).not_to include("We also removed your post")
+          if action_id == "delete_and_agree"
+            expect(messages.sole.raw.scan(flagged_post.raw).size).to eq(1)
+          end
+          if action_id.in?(%w[agree_and_suspend agree_and_silence])
+            email = ActionMailer::Base.deliveries.sole
+            expected_date = I18n.l(deadline.in_time_zone("UTC"), format: :long)
+            expect(email.text_part.body.decoded).to include(expected_date, "(UTC+00:00)", post_url)
+          end
+          if action_id == "agree_and_silence"
+            notice =
+              messages.find do |message|
+                message.topic.title == I18n.t("system_messages.silenced_by_staff.subject_template")
+              end
+            expect(notice.raw).to include(
+              I18n.t(
+                "system_messages.silenced_by_staff.silenced_until",
+                date: I18n.l(deadline, format: :long),
+                offset: "+00:00",
+              ),
+            )
+          end
+        end
+      end
+
+      it "keeps the post reference intact when the topic title contains Markdown link syntax" do
+        title = "Notice ](https://example.org) [rest"
+        flagged_post.topic.update!(title:)
+        post_url = flagged_post.full_url
+
+        put "/review/#{reviewable.id}/perform/agree_and_silence.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+              reason: rule[:ground],
+              silenced_till: 2.weeks.from_now.iso8601,
+              post_action: "none",
+            }
+        Jobs::CriticalUserEmail.jobs.each do |job|
+          Jobs::CriticalUserEmail.new.execute(job.fetch("args").first.with_indifferent_access)
+        end
+
+        expect(response).to have_http_status(:ok)
+        notice = Post.joins(:topic).find_by!(topics: { archetype: Archetype.private_message })
+        email = ActionMailer::Base.deliveries.sole
+        [notice.cooked, email.html_part.body.decoded].each do |html|
+          links = Nokogiri::HTML5.fragment(html).css("a")
+          reference = links.find { |link| link.text.include?("post in") }
+          expect(reference["href"]).to eq(post_url)
+          expect(reference.text).to eq("post in #{title}, ##{flagged_post.post_number}")
+          expect(links.map { |link| link["href"] }).not_to include("https://example.org")
+        end
+      end
+
+      %w[suspend silence].each do |penalty|
+        it "delivers the #{penalty} date and customized wrapper in the recipient language" do
+          SiteSetting.allow_user_locale = true
+          flagged_post.user.update!(locale: "fr")
+          deadline = Time.zone.parse("2026-10-30 06:00:00 UTC")
+          freeze_time(Time.zone.parse("2026-10-16 06:00:00 UTC"))
+          date_template =
+            if penalty == "suspend"
+              "user_notifications.account_suspended.date_with_timezone"
+            else
+              "user_notifications.account_silenced.date_with_timezone"
+            end
+          TranslationOverride.upsert!("fr", date_template, "%{date} (heure UTC%{offset})")
+          date_field = penalty == "suspend" ? :suspend_until : :silenced_till
+
+          I18n.with_locale(:en) do
+            put "/review/#{reviewable.id}/perform/agree_and_#{penalty}.json",
+                params: {
+                  :version => reviewable.version,
+                  :dsa_classification => classification,
+                  :reason => rule[:ground],
+                  date_field => deadline.iso8601,
+                  :post_action => "none",
+                }
+            Jobs::CriticalUserEmail.jobs.each do |job|
+              Jobs::CriticalUserEmail.new.execute(job.fetch("args").first.with_indifferent_access)
+            end
+          end
+
+          expect(response).to have_http_status(:ok)
+          email = ActionMailer::Base.deliveries.sole
+          body = email.text_part.body.decoded
+          expected_date = I18n.l(deadline, format: :long, locale: :fr)
+          expect(body).to start_with("Votre compte sur le forum")
+          expect(body).to include("#{expected_date} (heure UTC+00:00)")
+        end
+      end
+
+      it "keeps moderation pending when no review contact is configured" do
+        SiteSetting.contact_email = ""
+        SiteSetting.contact_url = ""
+
+        put "/review/#{reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+            }
+
+        expect(response).to have_http_status(:bad_request)
+        expect(reviewable.reload).to be_pending
+        expect(flagged_post.reload).not_to be_trashed
+        expect(Jobs::SendSystemMessage.jobs).to be_empty
+      end
+
+      it "appends decision details to the customized notification template" do
+        customized_body = "A customized notice about %{url}"
+        TranslationOverride.upsert!(
+          "en",
+          "system_messages.post_hidden.text_body_template",
+          customized_body,
+        )
+        Fabricate(
+          :post_action,
+          post: flagged_post,
+          post_action_type_id: PostActionType.types[:inappropriate],
+        )
+        flagged_post.update_columns(hidden: false)
+
+        put "/review/#{reviewable.id}/perform/agree_and_hide.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+            }
+        Jobs::SendSystemMessage.jobs.each do |job|
+          Jobs::SendSystemMessage.new.execute(job.fetch("args").first.with_indifferent_access)
+        end
+
+        expect(response).to have_http_status(:ok)
+        notice = Post.joins(:topic).find_by!(topics: { archetype: Archetype.private_message })
+        expect(notice.raw).to start_with(customized_body % { url: flagged_post.url })
+        expect(notice.raw).to include(
+          rule[:ground],
+          rule[:explanation],
+          SiteSetting.contact_email,
+          I18n.t("dsa_notifications.source_flag"),
+        )
+      end
+
+      it "discloses automated detection in the delivered notice when used" do
+        Fabricate(
+          :post_action,
+          post: flagged_post,
+          post_action_type_id: PostActionType.types[:inappropriate],
+        )
+        Fabricate(
+          :reviewable_score,
+          reviewable:,
+          user: Discourse.system_user,
+          reason: "watched_word",
+        )
+        flagged_post.update_columns(hidden: false)
+
+        put "/review/#{reviewable.id}/perform/agree_and_hide.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+            }
+        Jobs::SendSystemMessage.jobs.each do |job|
+          Jobs::SendSystemMessage.new.execute(job.fetch("args").first.with_indifferent_access)
+        end
+
+        expect(response).to have_http_status(:ok)
+        notice = Post.joins(:topic).find_by!(topics: { archetype: Archetype.private_message })
+        expect(notice.raw).to include(I18n.t("dsa_notifications.detection_automated"))
+      end
+
+      %w[post_hidden post_hidden_again flags_agreed_and_post_deleted].each do |message_type|
+        it "uses own moderation wording for #{message_type} when only automated checks flagged it" do
+          Fabricate(
+            :post_action,
+            post: flagged_post,
+            user: Discourse.system_user,
+            post_action_type_id: PostActionType.types[:inappropriate],
+          )
+          flagged_post.update_columns(
+            hidden: false,
+            hidden_at: message_type == "post_hidden_again" ? 1.day.ago : nil,
+          )
+          reviewable.reviewable_scores.delete_all
+          Fabricate(
+            :reviewable_score,
+            reviewable:,
+            user: Discourse.system_user,
+            reason: "watched_word",
+          )
+          post_url = flagged_post.url
+          action =
+            message_type == "flags_agreed_and_post_deleted" ? "delete_and_agree" : "agree_and_hide"
+
+          put "/review/#{reviewable.id}/perform/#{action}.json",
+              params: {
+                version: reviewable.version,
+                dsa_classification: classification,
+              }
+          Jobs::SendSystemMessage.jobs.each do |job|
+            Jobs::SendSystemMessage.new.execute(job.fetch("args").first.with_indifferent_access)
+          end
+
+          expect(response).to have_http_status(:ok)
+          notice = Post.joins(:topic).find_by!(topics: { archetype: Archetype.private_message })
+          expected_body =
+            I18n.t(
+              "dsa_notifications.#{message_type}.text_body_template",
+              site_name: SiteSetting.title,
+              base_url: Discourse.base_url,
+              url: post_url,
+              edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
+              flagged_post_raw_content: flagged_post.raw,
+            )
+          expect(notice.topic.title).to eq(
+            I18n.t("dsa_notifications.#{message_type}.subject_template"),
+          )
+          expect(notice.raw).to start_with(expected_body.rstrip)
+          expect(notice.raw).to include(
+            I18n.t("dsa_notifications.source_review"),
+            I18n.t("dsa_notifications.detection_automated"),
+            rule[:ground],
+            rule[:explanation],
+          )
+        end
+      end
+
+      it "preserves customized title and body for a post found through own moderation" do
+        customized_title = "Our custom moderation notice"
+        customized_body = "Our custom notice about %{url}"
+        TranslationOverride.upsert!(
+          "en",
+          "system_messages.post_hidden.subject_template",
+          customized_title,
+        )
+        TranslationOverride.upsert!(
+          "en",
+          "system_messages.post_hidden.text_body_template",
+          customized_body,
+        )
+        Fabricate(
+          :post_action,
+          post: flagged_post,
+          user: Discourse.system_user,
+          post_action_type_id: PostActionType.types[:inappropriate],
+        )
+        flagged_post.update_columns(hidden: false)
+        reviewable.reviewable_scores.delete_all
+        Fabricate(
+          :reviewable_score,
+          reviewable:,
+          user: Discourse.system_user,
+          reason: "watched_word",
+        )
+
+        put "/review/#{reviewable.id}/perform/agree_and_hide.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+            }
+        Jobs::SendSystemMessage.jobs.each do |job|
+          Jobs::SendSystemMessage.new.execute(job.fetch("args").first.with_indifferent_access)
+        end
+
+        expect(response).to have_http_status(:ok)
+        notice = Post.joins(:topic).find_by!(topics: { archetype: Archetype.private_message })
+        expect(notice.topic.title).to eq(customized_title)
+        expect(notice.raw).to start_with(customized_body % { url: flagged_post.url })
+        expect(notice.raw).to include(I18n.t("dsa_notifications.source_review"), rule[:ground])
+      end
+
+      it "edits a flagged post and classifies the decision in one request" do
+        original = flagged_post.raw
+        correction = "A corrected contribution to the discussion."
+
+        put "/review/#{reviewable.id}/perform/agree_and_edit.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+              post_update: {
+                raw: correction,
+                original_text: original,
+              },
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged_post.reload.raw).to eq(correction)
+        expect(reviewable.reload).to be_approved
+        expect(reviewable.dsa_statement_of_records.sole).to be_ready
+        expect(response.parsed_body.dig("reviewable_perform_result", "edited_post", "raw")).to eq(
+          correction,
+        )
+      end
+
+      it "rejects invalid classification and conflicts before editing content" do
+        original = flagged_post.raw
+        [
+          [
+            { dsa_classification: classification.merge(community_rule: "outdated-rule") },
+            :bad_request,
+          ],
+          [
+            {
+              post_update: {
+                raw: "A corrected contribution.",
+                original_text: "A stale version.",
+              },
+            },
+            :conflict,
+          ],
+        ].each do |invalid, status|
+          put "/review/#{reviewable.id}/perform/agree_and_edit.json",
+              params: {
+                version: reviewable.version,
+                dsa_classification: classification,
+                post_update: {
+                  raw: "A corrected contribution.",
+                  original_text: original,
+                },
+              }.merge(invalid)
+
+          expect(response).to have_http_status(status)
+          expect(flagged_post.reload.raw).to eq(original)
+          expect(reviewable.reload).to be_pending
+          expect(reviewable.dsa_statement_of_records).to be_empty
+        end
+      end
+
+      it "delivers a classified deletion email after the recipient has been deleted in their locale" do
+        SiteSetting.allow_user_locale = true
+        flagged_post.user.update!(locale: "fr")
+        reviewable.update!(potential_spam: true)
+        recipient = flagged_post.user
+        email = recipient.email
+        customized = "Votre compte a été supprimé."
+        TranslationOverride.upsert!(
+          "fr",
+          "user_notifications.account_deleted.text_body_template",
+          customized,
+        )
+
+        put "/review/#{reviewable.id}/perform/delete_user.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(User.exists?(recipient.id)).to eq(false)
+        job =
+          Jobs::CriticalUserEmail.jobs.find do |entry|
+            entry.fetch("args").first["type"] == "account_deleted"
+          end
+        expect(job).to be_present
+        I18n.with_locale(:en) do
+          Jobs::CriticalUserEmail.new.execute(job.fetch("args").first.with_indifferent_access)
+        end
+        notice = ActionMailer::Base.deliveries.last
+        expect(notice.to).to eq([email])
+        expect(notice.text_part.body.decoded).to include(
+          customized,
+          rule[:ground],
+          rule[:explanation],
+          "support@forum.example",
+        )
+        expect(reviewable.dsa_statement_of_records.sole).to be_ready
+      end
+
+      [false, true].each do |send_email|
+        it "keeps registration rejection outside DSA with optional email #{send_email}" do
+          SiteSetting.must_approve_users = true
+          recipient = Fabricate(:user, approved: false)
+          registration = Fabricate(:reviewable_user, target: recipient)
+          reason = "Membership is limited to employees."
+
+          put "/review/#{registration.id}/perform/delete_user.json",
+              params: {
+                version: registration.version,
+                reject_reason: reason,
+                send_email:,
+                dsa_classification: classification,
+              }
+
+          expect(response).to have_http_status(:ok)
+          expect(User.exists?(recipient.id)).to eq(false)
+          expect(Jobs::CriticalUserEmail.jobs).to be_empty
+          expect(registration.reload.reject_reason).to eq(reason)
+          expect(registration.dsa_statement_of_records).to be_empty
+          if send_email
+            notice = ActionMailer::Base.deliveries.sole
+            expect(notice.text_part.body.decoded).to include(reason)
+            expect(notice.text_part.body.decoded).not_to include(rule[:explanation])
+          else
+            expect(ActionMailer::Base.deliveries).to be_empty
+          end
+        end
+      end
+
+      it "sends a deletion email for an approved account when registration approval is required" do
+        SiteSetting.must_approve_users = true
+        recipient = Fabricate(:user, approved: true)
+        account_review = Fabricate(:suspect_user_reviewable, target: recipient)
+        email = recipient.email
+
+        put "/review/#{account_review.id}/perform/delete_user.json",
+            params: {
+              version: account_review.version,
+              send_email: false,
+              dsa_classification: classification,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(User.exists?(recipient.id)).to eq(false)
+        job = Jobs::CriticalUserEmail.jobs.sole.fetch("args").first
+        expect(job["type"]).to eq("account_deleted")
+        Jobs::CriticalUserEmail.new.execute(job.with_indifferent_access)
+        notice = ActionMailer::Base.deliveries.sole
+        expect(notice.to).to eq([email])
+        expect(notice.subject).to include("Your account has been deleted")
+        expect(notice.text_part.body.decoded).to include(
+          "has been deleted by a staff member",
+          rule[:ground],
+          rule[:explanation],
+        )
+        expect(account_review.dsa_statement_of_records.sole).to be_ready
+      end
+
+      it "explains when an account with posts cannot be deleted and leaves the decision pending" do
+        recipient = Fabricate(:user)
+        Fabricate(:post, user: recipient)
+        account_review = Fabricate(:suspect_user_reviewable, target: recipient)
+
+        put "/review/#{account_review.id}/perform/delete_user_block.json",
+            params: {
+              version: account_review.version,
+              dsa_classification: classification,
+            }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("user.cannot_delete_has_posts", username: recipient.username, count: 1),
+        )
+        expect(User.exists?(recipient.id)).to eq(true)
+        expect(account_review.reload).to be_pending
+        expect(account_review.dsa_statement_of_records).to be_empty
+        expect(Jobs::CriticalUserEmail.jobs).to be_empty
+        expect(ScreenedEmail.exists?(email: recipient.email)).to eq(false)
+      end
+
+      it "notifies an author when a classified queued submission is rejected" do
+        queued = Fabricate(:reviewable_queued_post_topic)
+
+        put "/review/#{queued.id}/perform/reject_post.json",
+            params: {
+              version: queued.version,
+              dsa_classification: classification,
+            }
+
+        expect(response).to have_http_status(:ok)
+        notice = Post.joins(:topic).find_by!(topics: { archetype: Archetype.private_message })
+        expect(notice.raw).to include(
+          queued.payload["title"],
+          rule[:ground],
+          rule[:explanation],
+          "support@forum.example",
+        )
+        expect(notice.topic.allowed_users).to include(queued.target_created_by)
+        expect(queued.dsa_statement_of_records.sole).to be_ready
+      end
+
+      it "keeps existing revision instructions and uses the classified rule as the revision reason" do
+        queued = Fabricate(:reviewable_queued_post_topic)
+
+        put "/review/#{queued.id}/perform/revise_and_reject_post.json",
+            params: {
+              version: queued.version,
+              dsa_classification: classification,
+            }
+
+        expect(response).to have_http_status(:ok)
+        notice = Post.joins(:topic).find_by!(topics: { archetype: Archetype.private_message })
+        expect(notice.raw).to include(queued.payload["raw"], rule[:ground], rule[:explanation])
+        expect(notice.raw).to include("edit", "submit")
+        expect(queued.dsa_statement_of_records.sole).to be_ready
+      end
+
+      it "notifies an author when review every post deletes their classified post" do
+        review = ReviewablePost.queue_for_review(flagged_post)
+
+        put "/review/#{review.id}/perform/reject_and_delete.json",
+            params: {
+              version: review.version,
+              dsa_classification: classification,
+            }
+        Jobs::SendSystemMessage.jobs.each do |job|
+          Jobs::SendSystemMessage.new.execute(job.fetch("args").first.with_indifferent_access)
+        end
+
+        expect(response).to have_http_status(:ok)
+        notice = Post.joins(:topic).find_by!(topics: { archetype: Archetype.private_message })
+        expect(notice.raw).to include(flagged_post.raw, rule[:ground], rule[:explanation])
+        expect(notice.topic.allowed_users).to include(flagged_post.user)
+        expect(review.dsa_statement_of_records.sole).to be_ready
+      end
+
+      it "notifies the account holder when a classified avatar removal leaves review pending" do
+        recipient = Fabricate(:user, uploaded_avatar: Fabricate(:upload))
+        account = Fabricate(:suspect_user_reviewable, target: recipient)
+
+        put "/review/#{account.id}/perform/remove_avatar.json",
+            params: {
+              version: account.version,
+              dsa_classification: classification,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(recipient.reload.uploaded_avatar_id).to be_nil
+        notice = Post.joins(:topic).find_by!(topics: { archetype: Archetype.private_message })
+        expect(notice.raw).to include(
+          "profile picture",
+          "Automated tools identified your account for review.",
+          rule[:ground],
+          rule[:explanation],
+        )
+        expect(notice.topic.allowed_users).to include(recipient)
+        expect(account.reload).to be_pending
+        expect(account.dsa_statement_of_records.sole).to be_ready
+      end
+
+      it "explains reply removal without assigning the original author's violation to responders" do
+        SiteSetting.notify_users_after_responses_deleted_on_flagged_post = false
+        responder = Fabricate(:user)
+        reply =
+          PostCreator.create!(
+            responder,
+            topic_id: flagged_post.topic_id,
+            reply_to_post_number: flagged_post.post_number,
+            raw: "A constructive reply to the original post.",
+          )
+
+        put "/review/#{reviewable.id}/perform/delete_and_agree_replies.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+            }
+        Jobs::SendSystemMessage.jobs.each do |job|
+          Jobs::SendSystemMessage.new.execute(job.fetch("args").first.with_indifferent_access)
+        end
+
+        expect(response).to have_http_status(:ok)
+        expect(reply.reload).to be_trashed
+        notice =
+          Post.joins(topic: :topic_allowed_users).find_by!(
+            topics: {
+              archetype: Archetype.private_message,
+            },
+            topic_allowed_users: {
+              user_id: responder.id,
+            },
+          )
+        expect(notice.raw).to include(
+          reply.raw,
+          "The original post",
+          rule[:ground],
+          rule[:explanation],
+          "To appeal this decision, contact",
+        )
+        expect(reviewable.dsa_statement_of_records.sole).to be_ready
+      end
+
+      it "saves first post topic changes with the classified edit and rejects stale topic titles" do
+        original_title = flagged_post.topic.title
+        correction = "A corrected contribution to the discussion."
+        title = "A corrected community discussion"
+        category = Fabricate(:category)
+        tag = Fabricate(:tag)
+        original_tag = Fabricate(:tag)
+        flagged_post.topic.update!(tags: [original_tag])
+
+        put "/review/#{reviewable.id}/perform/agree_and_edit.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+              post_update: {
+                raw: correction,
+                original_text: flagged_post.raw,
+              },
+              topic_update: {
+                title:,
+                original_title: "A stale topic title",
+                categoryId: category.id,
+              },
+            }
+
+        expect(response).to have_http_status(:conflict)
+        expect(flagged_post.topic.reload.title).to eq(original_title)
+        expect(reviewable.reload).to be_pending
+
+        put "/review/#{reviewable.id}/perform/agree_and_edit.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+              post_update: {
+                raw: correction,
+                original_text: flagged_post.raw,
+              },
+              topic_update: {
+                title:,
+                original_title:,
+                categoryId: category.id,
+                tags: {
+                  "0" => {
+                    id: tag.id,
+                    name: tag.name,
+                  },
+                },
+                original_tags: {
+                  "0" => {
+                    id: original_tag.id,
+                    name: original_tag.name,
+                  },
+                },
+              },
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged_post.reload.raw).to eq(correction)
+        expect(flagged_post.topic.reload.title).to eq(title)
+        expect(flagged_post.topic.category_id).to eq(category.id)
+        expect(flagged_post.topic.tags).to contain_exactly(tag)
+        expect(reviewable.reload).to be_approved
+        expect(reviewable.dsa_statement_of_records.sole).to be_ready
+      end
+
+      it "edits a shared draft destination atomically without moving the draft topic" do
+        drafts_category = Fabricate(:category)
+        drafts_category.set_permissions(staff: :full)
+        drafts_category.save!
+        SiteSetting.shared_drafts_category = drafts_category.id
+        destination = Fabricate(:category)
+        next_destination = Fabricate(:category)
+        flagged_post.topic.update!(category: drafts_category)
+        draft = Fabricate(:shared_draft, topic: flagged_post.topic, category: destination)
+        original = flagged_post.raw
+
+        put "/review/#{reviewable.id}/perform/agree_and_edit.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+              post_update: {
+                raw: "",
+                original_text: original,
+              },
+              topic_update: {
+                categoryId: next_destination.id,
+              },
+            },
+            as: :json
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(draft.reload.category_id).to eq(destination.id)
+        expect(flagged_post.topic.reload.category_id).to eq(drafts_category.id)
+        expect(flagged_post.reload.raw).to eq(original)
+        expect(reviewable.reload).to be_pending
+
+        correction = "A corrected shared draft contribution."
+        put "/review/#{reviewable.id}/perform/agree_and_edit.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+              post_update: {
+                raw: correction,
+                original_text: original,
+              },
+              topic_update: {
+                categoryId: next_destination.id,
+              },
+            },
+            as: :json
+
+        expect(response).to have_http_status(:ok)
+        expect(draft.reload.category_id).to eq(next_destination.id)
+        expect(flagged_post.topic.reload.category_id).to eq(drafts_category.id)
+        expect(flagged_post.reload.raw).to eq(correction)
+        expect(reviewable.reload).to be_approved
+        expect(reviewable.dsa_statement_of_records.sole).to be_ready
+      end
+
+      it "preserves hidden tags when a classified JSON edit submits no visible original tags" do
+        SiteSetting.tagging_enabled = true
+        moderator = Fabricate(:moderator)
+        hidden_tag = Fabricate(:tag)
+        Fabricate(:tag_group, permissions: { "admins" => 1 }, tag_names: [hidden_tag.name])
+        flagged_post.topic.update!(tags: [hidden_tag])
+        sign_in(moderator)
+        correction = "A corrected contribution to the discussion."
+
+        put "/review/#{reviewable.id}/perform/agree_and_edit.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+              post_update: {
+                raw: correction,
+                original_text: flagged_post.raw,
+              },
+              topic_update: {
+                tags: [],
+                original_tags: [],
+              },
+            },
+            as: :json
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged_post.reload.raw).to eq(correction)
+        expect(flagged_post.topic.reload.tags).to contain_exactly(hidden_tag)
+        expect(reviewable.reload).to be_approved
+        expect(reviewable.dsa_statement_of_records.sole).to be_ready
+      end
+
+      it "renders classified revision instructions in the submission author's language" do
+        SiteSetting.allow_user_locale = true
+        SiteSetting.site_contact_username = ""
+        queued = Fabricate(:reviewable_queued_post_topic)
+        queued.target_created_by.update!(locale: "fr")
+        instructions = "Modifiez votre publication puis soumettez la à nouveau."
+        TranslationOverride.upsert!(
+          "fr",
+          "system_messages.reviewable_queued_post_revise_and_reject_edit_topic_no_reply",
+          instructions,
+        )
+
+        put "/review/#{queued.id}/perform/revise_and_reject_post.json",
+            params: {
+              version: queued.version,
+              dsa_classification: classification,
+            }
+
+        expect(response).to have_http_status(:ok)
+        notice = Post.joins(:topic).find_by!(topics: { archetype: Archetype.private_message })
+        expect(notice.raw).to include(instructions, rule[:ground], rule[:explanation])
+      end
+
+      %w[delete_user delete_user_block].each do |action|
+        it "retains the queued submission and classified decision when its author is deleted with #{action}" do
+          recipient = Fabricate(:user)
+          queued =
+            Fabricate(
+              :reviewable_queued_post_topic,
+              created_by: recipient,
+              target_created_by: recipient,
+            )
+          email = recipient.email
+
+          put "/review/#{queued.id}/perform/#{action}.json",
+              params: {
+                version: queued.version,
+                dsa_classification: classification,
+              }
+
+          expect(response).to have_http_status(:ok)
+          expect(User.exists?(recipient.id)).to eq(false)
+          expect(queued.reload).to be_rejected
+          expect(queued.dsa_statement_of_records.sole).to be_ready
+          expect(queued.reviewable_notes.last.content).to include(rule[:ground])
+          job =
+            Jobs::CriticalUserEmail.jobs.find do |entry|
+              entry.fetch("args").first["type"] == "account_deleted"
+            end
+          Jobs::CriticalUserEmail.new.execute(job.fetch("args").first.with_indifferent_access)
+          expect(ActionMailer::Base.deliveries.last.to).to eq([email])
+          expect(ActionMailer::Base.deliveries.last.text_part.body.decoded).to include(
+            rule[:ground],
+            rule[:explanation],
+          )
+        end
+      end
+
+      it "describes automated detection without attributing the original post to another penalized user" do
+        other_user = Fabricate(:user)
+        reviewable.reviewable_scores.update_all(
+          user_id: Discourse::SYSTEM_USER_ID,
+          reason: "watched_word",
+        )
+
+        put "/review/#{reviewable.id}/perform/agree_and_suspend.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+              reason: rule[:ground],
+              suspend_until: 2.weeks.from_now.iso8601,
+              other_user_ids: [other_user.id],
+              post_action: "none",
+            }
+        expect(response).to have_http_status(:ok)
+        job =
+          Jobs::CriticalUserEmail.jobs.find do |entry|
+            entry.fetch("args").first["user_id"] == other_user.id
+          end
+        Jobs::CriticalUserEmail.new.execute(job.fetch("args").first.with_indifferent_access)
+
+        notice = ActionMailer::Base.deliveries.last
+        expect(notice.to).to eq([other_user.email])
+        expect(notice.text_part.body.decoded).to include(
+          "Automated tools identified the original post for review.",
+          rule[:ground],
+        )
+        expect(notice.text_part.body.decoded).not_to include(flagged_post.full_url)
+      end
+
+      it "rejects malformed classification, outdated rules and invalid categories before moderation" do
+        [
+          "invalid",
+          [classification],
+          classification.merge(community_rule: "outdated-rule"),
+          classification.merge(category: "unknown-category"),
+        ].each do |invalid_classification|
+          put "/review/#{reviewable.id}/perform/delete_and_agree.json",
+              params: {
+                version: reviewable.version,
+                dsa_classification: invalid_classification,
+              }
+
+          expect(response).to have_http_status(:bad_request)
+          expect(reviewable.reload).to be_pending
+          expect(flagged_post.reload).not_to be_trashed
+          expect(reviewable.dsa_statement_of_records).to be_empty
+        end
+      end
+
+      it "preserves optional classification for existing clients" do
+        put "/review/#{reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: reviewable.version,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(flagged_post.reload).to be_trashed
+        expect(reviewable.dsa_statement_of_records.sole).to be_pending
+      end
+
+      it "sends the existing community notification unchanged when reporting is disabled" do
+        SiteSetting.dsa_reporting_enabled = false
+        existing_subject = "Our community moderation notice"
+        existing_body = "Please review our community guidelines."
+        TranslationOverride.upsert!(
+          "en",
+          "system_messages.flags_agreed_and_post_deleted.subject_template",
+          existing_subject,
+        )
+        TranslationOverride.upsert!(
+          "en",
+          "system_messages.flags_agreed_and_post_deleted.text_body_template",
+          existing_body,
+        )
+
+        put "/review/#{reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: reviewable.version,
+            }
+        Jobs::SendSystemMessage.jobs.each do |job|
+          Jobs::SendSystemMessage.new.execute(job.fetch("args").first.with_indifferent_access)
+        end
+
+        expect(response).to have_http_status(:ok)
+        notice =
+          Post.joins(:topic).find_by!(
+            topics: {
+              archetype: Archetype.private_message,
+              title: existing_subject,
+            },
+          )
+        expect(notice.raw).to eq(existing_body)
+      end
+
+      it "rejects classification when reporting has been disabled" do
+        SiteSetting.dsa_reporting_enabled = false
+
+        put "/review/#{reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+            }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(reviewable.reload).to be_pending
+        expect(flagged_post.reload).not_to be_trashed
+      end
+
+      it "keeps classification restricted to staff even when a category moderator can review" do
+        category_moderator = Fabricate(:user)
+        group = Fabricate(:group)
+        group.add(category_moderator)
+        Fabricate(:category_moderation_group, group: group, category: flagged_post.topic.category)
+        SiteSetting.enable_category_group_moderation = true
+        sign_in(category_moderator)
+
+        put "/review/#{reviewable.id}/perform/delete_and_agree.json",
+            params: {
+              version: reviewable.version,
+              dsa_classification: classification,
+            }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(reviewable.reload).to be_pending
+        expect(flagged_post.reload).not_to be_trashed
+      end
+    end
+
     context "when a reviewable targets a private message" do
       include_context "with a private-message reviewable"
 
