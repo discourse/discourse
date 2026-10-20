@@ -199,7 +199,7 @@
   overflow-y: auto;
   padding: var(--space-4);
   border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius-large);
+  border-radius: var(--d-sys-border-radius-lg);
 
   &__title {
     margin: 0 0 var(--space-3);
@@ -288,7 +288,7 @@
     min-width: 1.5em;
     height: 1.5em;
     padding: 0 0.35em;
-    border-radius: var(--d-border-radius-pill);
+    border-radius: var(--d-sys-border-radius-full);
     font-size: var(--font-down-2);
     font-weight: bold;
     line-height: 1;

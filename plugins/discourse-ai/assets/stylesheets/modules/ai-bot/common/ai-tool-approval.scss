@@ -1,6 +1,6 @@
 .ai-tool-approval {
   border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   padding: var(--space-3) var(--space-4);
   margin: var(--space-2) 0;
   background: var(--secondary);
@@ -75,7 +75,7 @@
     align-items: center;
     gap: var(--space-1);
     padding: var(--space-1) var(--space-2);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-1);
     margin-inline-start: var(--space-2);
 

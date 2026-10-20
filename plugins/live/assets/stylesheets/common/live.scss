@@ -566,7 +566,7 @@
     font-size: var(--font-down-2);
     padding: 0.2rem;
     background: var(--tertiary);
-    border-radius: var(--token-radius-full);
+    border-radius: var(--d-sys-border-radius-full);
   }
 
   &__header-content {
@@ -923,7 +923,7 @@
     align-items: center;
     justify-content: center;
     aspect-ratio: 16 / 9;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-very-low);
     overflow: hidden;
 

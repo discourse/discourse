@@ -43,7 +43,7 @@
     padding: 1em;
     background: var(--primary-very-low);
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__card-value {
@@ -81,7 +81,7 @@
   padding: 1em;
   background: var(--primary-very-low);
   border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   &__header {
     display: flex;
@@ -146,7 +146,7 @@
   &__status-badge {
     display: inline-block;
     padding: 0.1em 0.5em;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-1);
 
     &.--recording {

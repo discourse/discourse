@@ -351,7 +351,7 @@
     margin: 0;
     background-color: transparent;
     color: var(--primary-high);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .d-icon {
       color: currentcolor;
@@ -470,7 +470,7 @@
     --translation-preview-padding: 1rem;
     box-sizing: border-box;
     border: var(--d-input-border);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     position: relative;
     overflow: auto;
 
@@ -480,7 +480,7 @@
       font-size: var(--font-down-2);
       background: var(--tertiary-low);
       padding: 0.25rem 0.5rem;
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
     }
   }
 
@@ -495,7 +495,8 @@
     padding-bottom: 0.25rem;
     border-bottom: 1px solid var(--primary-low);
     background: var(--primary-very-low);
-    border-radius: var(--d-border-radius) var(--d-border-radius) 0 0;
+    border-radius: var(--d-sys-border-radius-md) var(--d-sys-border-radius-md) 0
+      0;
 
     &__title {
       display: inline-flex;

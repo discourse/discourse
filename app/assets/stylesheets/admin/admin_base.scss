@@ -285,7 +285,7 @@ $mobile-breakpoint: 700px;
       padding: var(--space-4);
       margin-top: var(--space-2);
       border: 1px solid var(--content-border-color);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       background: var(--primary-very-low);
     }
 
@@ -376,7 +376,7 @@ $mobile-breakpoint: 700px;
 
     &__status {
       padding: var(--space-half) var(--space-2);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       color: var(--primary-high);
       background: var(--primary-very-low);
       font-size: var(--font-down-2);
@@ -400,7 +400,7 @@ $mobile-breakpoint: 700px;
       white-space: pre-wrap;
       background: var(--primary-very-low);
       border: 1px solid var(--content-border-color);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       padding: var(--space-4);
       line-height: var(--line-height-large);
 
@@ -429,7 +429,7 @@ $mobile-breakpoint: 700px;
       max-width: 800px;
       padding: var(--space-4);
       border: 1px solid var(--content-border-color);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       background: var(--primary-very-low);
       margin-bottom: var(--space-5);
 
@@ -517,7 +517,7 @@ $mobile-breakpoint: 700px;
     gap: 0.25em;
     padding: 0.15em 0.5em;
     border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: transparent;
     color: var(--primary-medium);
     font-size: var(--font-down-1);

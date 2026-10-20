@@ -228,7 +228,7 @@
       width: 6em;
       height: 6em;
       object-fit: cover;
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
     }
   }
 }
@@ -245,7 +245,7 @@
   padding: var(--space-4) var(--space-6);
   margin-bottom: var(--space-4);
   border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   .reviewable-filter {
     display: flex;

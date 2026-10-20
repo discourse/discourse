@@ -121,7 +121,7 @@
     align-items: flex-end;
     gap: var(--space-1);
     border: 1px solid var(--d-chat-input-border-color);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     background: var(--d-chat-input-bg-color);
 
     &:focus-within {

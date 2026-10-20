@@ -1,7 +1,7 @@
 .admin-config-area-card {
   padding: var(--space-4);
   border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   background-color: var(--secondary);
   min-width: 0;
 
@@ -121,7 +121,7 @@
 .admin-empty-list {
   padding: 1em;
   border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   &__cta-button {
     display: flex;
@@ -137,7 +137,7 @@
   width: calc(100% - 1em);
   border: 1px solid var(--content-border-color);
   padding: var(--space-4);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   @media (max-width: $mobile-breakpoint) {
     flex-direction: column;
@@ -221,7 +221,7 @@
 
   &__frame {
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     overflow: hidden;
     max-width: 600px;
     background: var(--secondary);

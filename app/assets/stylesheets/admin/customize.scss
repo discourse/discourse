@@ -130,7 +130,8 @@
     margin: 10px 0 0;
     white-space: nowrap;
     overflow-x: auto;
-    border-radius: var(--d-border-radius) var(--d-border-radius) 0 0;
+    border-radius: var(--d-sys-border-radius-md) var(--d-sys-border-radius-md) 0
+      0;
   }
 
   .admin-container {
@@ -427,7 +428,8 @@
       position: relative;
       min-height: unset;
       flex: 1 1 0;
-      border-radius: 0 0 var(--d-border-radius) var(--d-border-radius);
+      border-radius: 0 0 var(--d-sys-border-radius-md)
+        var(--d-sys-border-radius-md);
     }
 
     &.maximized {

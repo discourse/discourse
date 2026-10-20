@@ -31,7 +31,7 @@
     margin-right: auto;
     gap: 0.25rem;
     box-sizing: border-box;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .chat-drawer-outlet & {
       border-radius: 0;

@@ -54,7 +54,7 @@ html:has(.not-found-container) {
   &-search {
     margin-top: 20px;
     background: var(--tertiary-very-low);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     padding: var(--space-8) var(--space-8) var(--space-10);
 
     @include viewport.until(sm) {
@@ -122,7 +122,7 @@ html:has(.not-found-container) {
   flex-basis: 50%;
   max-width: 400px;
   margin-bottom: 40px;
-  border-radius: var(--d-border-radius-large);
+  border-radius: var(--d-sys-border-radius-lg);
   padding: var(--space-4);
 
   @include viewport.until(sm) {

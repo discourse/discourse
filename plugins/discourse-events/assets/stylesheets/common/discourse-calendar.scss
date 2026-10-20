@@ -229,8 +229,8 @@ a.holiday {
     0 0 0 1px var(--primary-300),
     0 0 0 3px var(--primary-100);
 
-  // Makes the outer drop shadow radius equal to --d-border-radius
-  border-radius: calc(var(--d-border-radius) - (3px / 2));
+  // Makes the outer drop shadow radius equal to --d-sys-border-radius-md
+  border-radius: calc(var(--d-sys-border-radius-md) - (3px / 2));
 
   .fc th {
     font-weight: normal;

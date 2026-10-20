@@ -48,7 +48,7 @@
 
   &__inner-content {
     display: flex;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background-color: var(--secondary);
     border: 1px solid var(--content-border-color);
     box-shadow: var(--shadow-dropdown);

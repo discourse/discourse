@@ -123,7 +123,7 @@ $dw-button-default-border: #d3d3d3;
   background: var(--secondary);
   border: 1px solid var(--content-border-color);
   border-inline-end: none;
-  border-start-start-radius: var(--d-border-radius-large);
+  border-start-start-radius: var(--d-sys-border-radius-lg);
   box-shadow: var(--shadow-card);
 
   @include d-animation(design-wizard-slide-in, 0.25s, ease-out);
@@ -140,7 +140,7 @@ $dw-button-default-border: #d3d3d3;
     width: 100%;
     max-height: 65vh;
     border-inline-end: 1px solid var(--content-border-color);
-    border-start-end-radius: var(--d-border-radius-large);
+    border-start-end-radius: var(--d-sys-border-radius-lg);
 
     html[dir="rtl"] & {
       --design-wizard-slide-out: translateY(100%);
@@ -211,7 +211,7 @@ $dw-button-default-border: #d3d3d3;
     font-size: var(--font-down-1);
     color: var(--primary-medium);
     background: var(--primary-100);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__sections {
@@ -253,7 +253,7 @@ $dw-button-default-border: #d3d3d3;
     font-size: var(--font-down-2);
     color: var(--primary-medium);
     background: var(--primary-100);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__theme-cards {
@@ -303,7 +303,7 @@ $dw-button-default-border: #d3d3d3;
     overflow: hidden;
     background: var(--primary-very-low);
     border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     &.--loading::after {
       position: absolute;
@@ -366,7 +366,7 @@ $dw-button-default-border: #d3d3d3;
     font-weight: 700;
     color: var(--secondary);
     background: var(--tertiary);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .d-icon {
       color: currentcolor;
@@ -393,13 +393,13 @@ $dw-button-default-border: #d3d3d3;
     cursor: pointer;
 
     &:first-child {
-      border-start-start-radius: var(--d-border-radius);
-      border-end-start-radius: var(--d-border-radius);
+      border-start-start-radius: var(--d-sys-border-radius-md);
+      border-end-start-radius: var(--d-sys-border-radius-md);
     }
 
     &:last-child {
-      border-start-end-radius: var(--d-border-radius);
-      border-end-end-radius: var(--d-border-radius);
+      border-start-end-radius: var(--d-sys-border-radius-md);
+      border-end-end-radius: var(--d-sys-border-radius-md);
       border-inline-start: none;
     }
 
@@ -425,7 +425,7 @@ $dw-button-default-border: #d3d3d3;
   &__swatch {
     background: none;
     border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     cursor: pointer;
 
     &.--selected {
@@ -449,7 +449,7 @@ $dw-button-default-border: #d3d3d3;
   &__swatch-preview {
     display: block;
     height: 2.5em;
-    border-radius: var(--token-radius-small);
+    border-radius: var(--d-sys-border-radius-sm);
   }
 
   &__swatch-name {
@@ -477,7 +477,7 @@ $dw-button-default-border: #d3d3d3;
     align-items: center;
     padding: var(--space-3);
     border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__switch-row-title {
@@ -509,7 +509,7 @@ $dw-button-default-border: #d3d3d3;
     justify-content: space-between;
     width: 100%;
     padding-block: var(--space-2);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--content-background);
 
     &:hover {
@@ -546,7 +546,7 @@ $dw-button-default-border: #d3d3d3;
     overflow: hidden;
     background: var(--secondary);
     border: 1px solid var(--content-border-color);
-    border-radius: var(--token-radius-small);
+    border-radius: var(--d-sys-border-radius-sm);
 
     &.--topics.--horizon {
       background: var(--primary-very-low);
@@ -590,7 +590,7 @@ $dw-button-default-border: #d3d3d3;
     overflow: hidden;
     background: var(--secondary);
     border: 1px solid var(--content-border-color);
-    border-radius: var(--token-radius-small);
+    border-radius: var(--d-sys-border-radius-sm);
 
     &.--boxes {
       display: grid;
@@ -607,7 +607,7 @@ $dw-button-default-border: #d3d3d3;
     padding-inline: var(--space-5) var(--space-1);
     background: var(--secondary);
     border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .design-wizard__mock-avatar {
       position: absolute;
@@ -621,7 +621,7 @@ $dw-button-default-border: #d3d3d3;
       height: 0.25em;
       margin-block-start: var(--space-1);
       background: var(--tertiary-low);
-      border-radius: var(--token-radius-small);
+      border-radius: var(--d-sys-border-radius-sm);
     }
   }
 
@@ -652,7 +652,7 @@ $dw-button-default-border: #d3d3d3;
   &__mock-line {
     display: block;
     height: 0.25em;
-    border-radius: var(--token-radius-small);
+    border-radius: var(--d-sys-border-radius-sm);
 
     &.--title {
       width: 55%;
@@ -678,7 +678,7 @@ $dw-button-default-border: #d3d3d3;
     flex: none;
     width: 0.5em;
     height: 0.5em;
-    border-radius: var(--token-radius-small);
+    border-radius: var(--d-sys-border-radius-sm);
 
     &.--c1 {
       background: var(--design-wizard-category-1);
@@ -725,7 +725,7 @@ $dw-button-default-border: #d3d3d3;
     background: var(--secondary);
     border: 1px solid var(--content-border-color);
     border-inline-start-width: 3px;
-    border-radius: var(--token-radius-small);
+    border-radius: var(--d-sys-border-radius-sm);
 
     .design-wizard__mock-line.--title {
       width: 65%;
@@ -762,7 +762,7 @@ $dw-button-default-border: #d3d3d3;
     padding: var(--space-2);
     background: none;
     border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     cursor: pointer;
 
     &.--selected {

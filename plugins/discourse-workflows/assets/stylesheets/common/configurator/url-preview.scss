@@ -6,7 +6,7 @@
   box-sizing: border-box;
   background: var(--primary-very-low);
   border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   cursor: pointer;
   transition: border-color 0.15s;
 
@@ -64,7 +64,7 @@
   width: max-content;
   margin-bottom: var(--space-2);
   border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   overflow: hidden;
 
   &__button {

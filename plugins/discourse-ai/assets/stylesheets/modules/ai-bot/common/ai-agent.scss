@@ -123,7 +123,7 @@
       grid-template-columns: 1fr auto;
       border: 1px solid var(--primary-low);
       padding: var(--space-2) var(--space-4) var(--space-4);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
 
       .d-table__cell.--overview,
       .ai-agent-list__name-with-description {
@@ -519,7 +519,7 @@
     padding: var(--space-3);
     background-color: var(--secondary);
     border: 1px solid var(--primary-300);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     box-shadow: var(--shadow-card);
   }
 }
@@ -566,7 +566,7 @@
   &__tool {
     padding: 0.85rem 1rem;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__tool-header {

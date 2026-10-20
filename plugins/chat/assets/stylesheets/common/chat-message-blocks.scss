@@ -8,7 +8,7 @@
 .chat-confirmation {
   background: var(--secondary);
   border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius-large);
+  border-radius: var(--d-sys-border-radius-lg);
   max-width: min(100%, 40em);
   min-width: 0;
   overflow: hidden;
@@ -57,7 +57,7 @@
     overflow-wrap: anywhere;
     min-width: 0;
     padding: var(--space-half) var(--space-1);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__diff-value {
@@ -103,7 +103,7 @@
     flex-shrink: 0;
     vertical-align: middle;
     background: var(--category-badge-color);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__footer {
@@ -159,7 +159,7 @@
     flex-direction: row;
     box-sizing: border-box;
     border-width: 0;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background-color: var(--d-category-box-background-color);
     border-left-width: var(--d-category-border-accent-width);
     border-style: solid;
@@ -178,8 +178,8 @@
     border-left-width: 0;
     border-style: solid;
     border-color: var(--primary-low);
-    border-top-right-radius: var(--d-border-radius);
-    border-bottom-right-radius: var(--d-border-radius);
+    border-top-right-radius: var(--d-sys-border-radius-md);
+    border-bottom-right-radius: var(--d-sys-border-radius-md);
   }
 
   .block__category-heading {

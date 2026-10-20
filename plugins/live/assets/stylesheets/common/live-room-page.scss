@@ -344,13 +344,13 @@ html.discourse-touch .live-call-widget {
     justify-content: center;
     overflow: hidden;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--secondary);
 
     .live-video-tile {
       width: 100%;
       height: 100%;
-      border-radius: calc(var(--d-border-radius) - 1px);
+      border-radius: calc(var(--d-sys-border-radius-md) - 1px);
     }
 
     .live-video-tile.--screen .live-video-tile__video,
@@ -517,7 +517,7 @@ html.discourse-touch .live-call-widget {
     margin: 0;
     padding: 0.25em 0.75em;
     max-width: 100%;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: rgb(0 0 0 / 65%);
     color: #fff;
     text-align: center;
@@ -590,7 +590,7 @@ html.discourse-touch .live-call-widget {
     align-items: center;
     gap: 0.5em;
     padding: 0.25em;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     &.--self {
       background: var(--tertiary-very-low);

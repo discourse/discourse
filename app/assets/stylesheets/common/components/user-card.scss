@@ -9,7 +9,7 @@
   .fk-d-menu__inner-content {
     min-width: 0;
     overflow: visible;
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
   }
 
   @include viewport.until(sm) {
@@ -64,7 +64,7 @@
   background-size: cover;
   position: unset;
   margin: 0;
-  border-radius: var(--d-border-radius-large);
+  border-radius: var(--d-sys-border-radius-lg);
   box-shadow: unset;
   z-index: unset;
 
@@ -78,7 +78,7 @@
     container-type: inline-size;
     padding: 10px;
     background: rgb(var(--secondary-rgb), 0.85);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     border: 5px solid var(--secondary);
 
     &::after {
@@ -456,7 +456,7 @@
       background: var(--primary-very-low);
       border: 1px solid var(--content-border-color);
       color: var(--primary);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
 
       @include viewport.until(sm) {
         display: flex;

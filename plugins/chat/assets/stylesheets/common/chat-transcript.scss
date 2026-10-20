@@ -127,7 +127,7 @@
 .chat-transcript-group {
   margin: 1rem 0;
   border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius-large);
+  border-radius: var(--d-sys-border-radius-lg);
   overflow: hidden;
 
   &__header {
@@ -307,7 +307,7 @@
     min-height: 0;
     background: none;
     border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
 
     > .chat-transcript-group__header {
       margin: -0.5rem -0.75rem 0.5rem;

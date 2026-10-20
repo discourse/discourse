@@ -100,14 +100,14 @@
       right: 0;
       top: unset;
       width: unset;
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
     }
   }
 
   .results {
     display: flex;
     flex-direction: column;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .heading {
       padding: var(--space-2) 0 0 var(--space-4);

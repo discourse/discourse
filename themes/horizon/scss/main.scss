@@ -83,7 +83,7 @@ body:not(.has-full-page-chat, .wizard) {
       width: 100%;
       max-width: unset;
       padding-bottom: var(--space-6);
-      border-radius: var(--d-border-radius-large);
+      border-radius: var(--d-sys-border-radius-lg);
       background-color: var(--d-content-background);
 
       @include viewport.until(lg) {
@@ -133,7 +133,7 @@ aside.onebox {
 
 .no-ember {
   #main-outlet {
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     max-height: calc(100vh - 50px - 1em - var(--main-grid-gap));
   }
 }

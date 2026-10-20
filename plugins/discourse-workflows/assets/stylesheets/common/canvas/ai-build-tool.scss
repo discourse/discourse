@@ -42,7 +42,7 @@
     padding: var(--space-3);
     overflow-y: auto;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--secondary);
     box-shadow: 0 10px 32px rgb(0, 0, 0, 0.16);
 
@@ -173,7 +173,7 @@
     min-height: 11rem;
     box-sizing: border-box;
     resize: vertical;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__ai-panel-actions,
@@ -278,7 +278,7 @@
     gap: var(--space-2);
     padding: var(--space-3);
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-very-low);
 
     h5 {
@@ -302,7 +302,7 @@
     width: 100%;
     padding: var(--space-2);
     border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--secondary);
     color: var(--primary);
     font: inherit;
@@ -350,7 +350,7 @@
     min-height: 4rem;
     box-sizing: border-box;
     resize: vertical;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__ai-progress {
@@ -404,7 +404,7 @@
     padding: var(--space-3);
     overflow-wrap: anywhere;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-very-low);
 
     h4,
@@ -450,7 +450,7 @@
   &__ai-code-preview {
     overflow: hidden;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--secondary);
 
     pre {

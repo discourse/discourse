@@ -12,8 +12,8 @@
     0 0 0 1px var(--onebox-border-color),
     0 0 0 $thickness var(--onebox-shadow-color);
 
-  // Makes the outer drop shadow radius equal to --d-border-radius
-  border-radius: calc(var(--d-border-radius) - ($thickness / 2));
+  // Makes the outer drop shadow radius equal to --d-sys-border-radius-md
+  border-radius: calc(var(--d-sys-border-radius-md) - ($thickness / 2));
 }
 
 a.loading-onebox {
@@ -376,7 +376,7 @@ aside.onebox {
     color: var(--primary-medium);
     background: var(--primary-very-low);
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__icon .d-icon {
@@ -409,7 +409,7 @@ aside.onebox {
     font-family: var(--d-font-family--monospace);
     background: var(--primary-very-low);
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__join {
@@ -1026,7 +1026,7 @@ iframe.reddit-onebox {
   margin: 0 auto;
   overflow: hidden;
   border: 0;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 }
 
 .onebox.githubfolder {
@@ -1146,7 +1146,7 @@ aside.onebox.mixcloud-preview {
     transform: translate(-50%, -50%);
 
     .d-icon-play {
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       color: #fff;
       display: flex;
       filter: drop-shadow(3px 3px 2px rgb(0, 0, 0, 0.25));

@@ -43,7 +43,7 @@
   top: 100%; // directly underneath .panel
   right: 5px;
   max-height: calc(100dvh - var(--header-offset) - 1em);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   .panel-body {
     // improves usability on high zoom levels
@@ -301,7 +301,7 @@
       }
 
       .d-icon {
-        border-radius: var(--d-border-radius);
+        border-radius: var(--d-sys-border-radius-md);
         color: var(--primary-medium);
         padding: 0.5em; // 8px
       }

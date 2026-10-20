@@ -166,7 +166,7 @@ $number-input-width: var(--form-kit-small-input);
   &__delete {
     padding: var(--space-4);
     border: 1px solid var(--danger);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     display: flex;
     justify-content: space-between;
     align-items: center;

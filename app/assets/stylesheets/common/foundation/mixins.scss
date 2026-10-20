@@ -493,7 +493,7 @@ $hpad: 0.65em;
   width: 100%;
   justify-content: flex-start;
   background: rgb(0, 0, 0, 0);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   &:not(.notifications-tracking-btn, .--with-description, .pinned-options-btn) {
     height: var(--d-sidebar-row-height);

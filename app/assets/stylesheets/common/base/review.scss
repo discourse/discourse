@@ -9,7 +9,7 @@
   margin-bottom: var(--space-8);
   position: relative;
   z-index: z("base");
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   &:has(.select-kit.is-expanded) {
     z-index: z("dropdown");
@@ -132,7 +132,7 @@
   }
 
   &__flag-summary {
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__header {
@@ -143,8 +143,8 @@
     background-color: var(--primary);
     padding: var(--space-3) var(--review-item-padding);
     color: var(--secondary);
-    border-radius: calc(var(--d-border-radius) - 1px)
-      calc(var(--d-border-radius) - 1px) 0 0;
+    border-radius: calc(var(--d-sys-border-radius-md) - 1px)
+      calc(var(--d-sys-border-radius-md) - 1px) 0 0;
 
     @include viewport.until(sm) {
       display: grid;
@@ -266,7 +266,7 @@
       transition-delay: 0.5s;
       background: var(--primary-very-low);
       padding: var(--review-item-padding);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
 
       img:not(.avatar, .emoji) {
         max-width: 100%;
@@ -631,7 +631,7 @@
       justify-content: center;
       width: 2rem;
       height: 2rem;
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       color: var(--primary-medium);
       background: transparent;
       border: none;
@@ -671,7 +671,7 @@
 // Reviewable Note Form Styles
 .reviewable-note-form {
   background-color: var(--primary-very-low);
-  border-radius: 0 0 var(--d-border-radius) var(--d-border-radius);
+  border-radius: 0 0 var(--d-sys-border-radius-md) var(--d-sys-border-radius-md);
   padding: var(--space-4);
   margin-bottom: var(--space-4);
 

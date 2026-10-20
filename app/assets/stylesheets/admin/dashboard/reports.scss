@@ -4,7 +4,7 @@
   &__card {
     position: relative;
     border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     padding: var(--space-4);
     box-sizing: border-box;
     background: var(--secondary);
@@ -238,7 +238,7 @@
 
   &__add-report {
     border: 1px dashed var(--content-border-color);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     background: var(--secondary);
     color: var(--primary-medium);
     padding: var(--space-2);

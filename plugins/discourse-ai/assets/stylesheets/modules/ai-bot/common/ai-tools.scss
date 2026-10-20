@@ -108,7 +108,7 @@
   align-items: center;
   gap: 0.25em;
   padding: 0.15em 0.5em;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   font-size: var(--font-down-2);
   line-height: 1.4;
 
@@ -166,7 +166,7 @@
   &__tool {
     padding: 1rem;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__header {
@@ -250,7 +250,7 @@
     margin-bottom: 1rem;
     padding: 1rem;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     h3 {
       margin-top: 0;
@@ -340,7 +340,7 @@
   cursor: pointer;
   width: 100%;
   box-sizing: border-box;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   transition: background-color 0.15s ease-in-out;
 
   &:hover {

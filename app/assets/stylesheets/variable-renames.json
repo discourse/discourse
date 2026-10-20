@@ -1,1 +1,11 @@
-{}
+{
+  "--d-border-radius": "--d-sys-border-radius-md",
+  "--d-border-radius-fixed": "--d-sys-border-radius-md",
+  "--token-radius-normal": "--d-sys-border-radius-md",
+  "--d-border-radius-large": "--d-sys-border-radius-lg",
+  "--token-radius-large": "--d-sys-border-radius-lg",
+  "--d-border-radius-small": "--d-sys-border-radius-sm",
+  "--token-radius-small": "--d-sys-border-radius-sm",
+  "--d-border-radius-pill": "--d-sys-border-radius-full",
+  "--token-radius-full": "--d-sys-border-radius-full"
+}

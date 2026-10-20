@@ -149,7 +149,7 @@
   }
 
   &__control-wrapper[data-supports-expression] {
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     html[data-dragging-variable] & {
       outline: 2px dashed var(--tertiary);
@@ -175,7 +175,7 @@
     position: relative;
     border: 1px dashed var(--primary-low);
     padding: var(--space-5) var(--space-2) var(--space-4);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     background: var(--primary-very-low);
   }
 
@@ -444,7 +444,7 @@
   &__table-wrapper {
     overflow-x: auto;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__table {

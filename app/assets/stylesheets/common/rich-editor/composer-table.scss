@@ -124,7 +124,7 @@
     }
 
     &__grip {
-      border-radius: var(--token-radius-normal);
+      border-radius: var(--d-sys-border-radius-md);
       cursor: grab;
 
       &::after {
@@ -209,7 +209,7 @@
     }
 
     &__append {
-      border-radius: var(--token-radius-normal);
+      border-radius: var(--d-sys-border-radius-md);
 
       .d-icon {
         position: absolute;
@@ -303,7 +303,7 @@
       min-width: 1.25rem;
       padding: var(--space-half) var(--space-1);
       border: var(--token-border-width) solid var(--token-color-border-default);
-      border-radius: var(--token-radius-full);
+      border-radius: var(--d-sys-border-radius-full);
       translate: -50% -50%;
       background-color: var(--token-color-surface);
       box-shadow: 0 2px 5px rgb(var(--primary-rgb), 0.18);
@@ -323,7 +323,7 @@
       z-index: 1;
       display: none;
       border: 1px dashed var(--token-color-border-focused);
-      border-radius: var(--token-radius-normal);
+      border-radius: var(--d-sys-border-radius-md);
       background-color: var(--token-color-background-accent-subtlest);
       background-image: repeating-linear-gradient(
         var(--ghost-flow),
@@ -480,7 +480,7 @@
 .composer-table__drag-avatar {
   position: fixed;
   z-index: z("composer", "dropdown");
-  border-radius: var(--token-radius-normal);
+  border-radius: var(--d-sys-border-radius-md);
   background-color: var(--token-color-background-accent-bolder);
   pointer-events: none;
 
@@ -518,7 +518,7 @@
   .fk-d-menu__inner-content {
     overflow: hidden;
     border-color: var(--token-color-border-default);
-    border-radius: var(--token-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
   }
 }
 

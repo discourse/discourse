@@ -12,7 +12,7 @@
   &__wrap {
     box-sizing: border-box;
     position: relative;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     border: 1px solid var(--content-border-color);
     overflow: hidden;
   }
@@ -160,7 +160,7 @@
     width: 100%;
     padding: var(--space-4);
     border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--secondary);
 
     &:focus-visible,
@@ -203,7 +203,7 @@
     width: 100%;
     padding: var(--space-4);
     border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--secondary);
 
     &:disabled {

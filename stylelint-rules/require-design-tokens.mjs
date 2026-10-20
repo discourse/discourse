@@ -13,8 +13,8 @@ const enforcedProperties = {
   // Font weight — must use --token-font-weight-*
   "font-weight": "--token-font-weight-*",
 
-  // Border radius — must use --token-radius-*
-  "border-radius": "--token-radius-*",
+  // Border radius — must use --d-sys-border-radius-*
+  "border-radius": "--d-sys-border-radius-*",
 };
 
 // Values that are always allowed (inherit, initial, transparent, currentColor, etc.)

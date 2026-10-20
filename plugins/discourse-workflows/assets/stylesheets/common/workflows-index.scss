@@ -58,7 +58,7 @@
     padding: var(--space-8) var(--space-4);
     background: var(--primary-very-low);
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__badge {
@@ -68,7 +68,7 @@
     white-space: nowrap;
     font-size: var(--font-down-1);
     padding: 0.25em 0.6em;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     border: 1px solid var(--primary-low);
     color: var(--primary-high);
 

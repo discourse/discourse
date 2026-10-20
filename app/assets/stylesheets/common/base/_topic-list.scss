@@ -14,7 +14,7 @@
   margin-bottom: var(--space-6);
   padding: var(--space-4);
   border: var(--category-header-border);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 }
 
 .category-heading {
@@ -430,7 +430,7 @@
       font-size: var(--font-down-1-rem);
 
       .alert {
-        border-radius: var(--d-border-radius-large);
+        border-radius: var(--d-sys-border-radius-lg);
       }
     }
   }

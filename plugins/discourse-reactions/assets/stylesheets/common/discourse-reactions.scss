@@ -102,7 +102,7 @@ html.discourse-reactions-no-select {
     margin: 0.25em !important;
     border: 1px solid transparent !important;
     cursor: not-allowed;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .emoji,
     .d-icon {

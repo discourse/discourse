@@ -38,7 +38,7 @@
     width: 100%;
     align-items: center;
     color: var(--d-sidebar-link-color);
-    border-radius: var(--token-radius-normal);
+    border-radius: var(--d-sys-border-radius-md);
     gap: var(--d-sidebar-section-link-prefix-margin-right);
 
     &:focus-visible,
@@ -156,7 +156,7 @@
   .dropdown-menu__item .sidebar-section-link {
     height: var(--d-sidebar-row-height);
     padding-inline: var(--d-sidebar-row-horizontal-padding);
-    border-radius: var(--token-radius-normal);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   .--link-button {
@@ -195,7 +195,7 @@
 
     &.image {
       img {
-        border-radius: var(--token-radius-full);
+        border-radius: var(--d-sys-border-radius-full);
         aspect-ratio: auto 20 / 20;
         width: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
         height: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
@@ -219,7 +219,7 @@
       .prefix-badge {
         position: absolute;
         background-color: transparent;
-        border-radius: var(--token-radius-full);
+        border-radius: var(--d-sys-border-radius-full);
         padding: 2px 2px 3px;
         color: var(--d-sidebar-link-color);
         height: 0.5rem;
@@ -246,7 +246,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: var(--token-radius-full);
+    border-radius: var(--d-sys-border-radius-full);
     background: var(--d-sidebar-prefix-background);
     color: var(--d-sidebar-prefix-color);
     width: calc(var(--d-sidebar-section-link-prefix-width) - 2px);

@@ -40,13 +40,12 @@ intent and already handle light/dark via `light-dark()`:
 - Icons: `--token-color-icon-default`, `--token-color-icon-subtle`, `--token-color-icon-danger`
 - Borders: `--token-color-border-default`, `--token-color-border-focused`, `--token-color-border-input`
 - Surfaces: `--token-color-surface`, `--token-color-surface-hovered`, `--token-color-surface-selected`
-- Sizing: `--token-radius-small|normal|large|full`, `--token-border-width`
+- Sizing: `--d-sys-border-radius-sm|md|lg|full`, `--token-border-width`
 - Weight: `--token-font-weight-regular|medium|semibold|bold`
 
 ## General-purpose `--d-*` design vars
 
-A family of app-wide design constants — `--d-border-radius` (and `--d-border-radius-large`,
-`--d-input-border-radius`), `--d-content-background`, `--d-link-color`, `--d-hover`,
+A family of app-wide design constants — `--d-input-border-radius`, `--d-content-background`, `--d-link-color`, `--d-hover`,
 `--d-selected` — for conventions like the standard corner radius and link color. Prefer these
 over inventing your own constant so a component matches the rest of the UI (and a theme can
 retune them globally).
@@ -64,11 +63,11 @@ exhaustive lists.
 
 ### Rounded corners
 
-`--d-border-radius` is the standard corner radius used across the UI; `--d-border-radius-large`
-is the larger step. Component radii derive from it — `--d-button-border-radius`,
-`--d-input-border-radius`, `--d-nav-pill-border-radius`, `--d-tag-border-radius`. Override
-`--d-border-radius` to round everything consistently; override a component's own var to change
-just that component. (Semantic-token equivalents: `--token-radius-small|normal|large|full`.)
+`--d-sys-border-radius-md` is the standard corner radius used across the UI. `-sm` and `-lg`
+derive from it (half and double), `-full` is for pills. Component radii derive from it too —
+`--d-button-border-radius`, `--d-input-border-radius`, `--d-nav-pill-border-radius`. Override
+`--d-sys-border-radius-md` in `:root` to round everything consistently; override a step or a
+component's own var to change just that.
 
 ### Buttons
 

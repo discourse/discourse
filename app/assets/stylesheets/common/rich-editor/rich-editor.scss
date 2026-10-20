@@ -64,7 +64,7 @@
           max-width: 100%;
         }
         height: auto;
-        border-radius: var(--d-border-radius);
+        border-radius: var(--d-sys-border-radius-md);
         display: block;
         animation: placeholder 1.5s infinite;
       }
@@ -76,7 +76,7 @@
       gap: var(--space-2);
       padding: 0 var(--space-1) 0 0.65em;
       border: 1px solid var(--primary-low-mid);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       color: var(--primary-high);
       font-size: var(--font-down-1-rem);
 
@@ -95,7 +95,7 @@
       padding: 0 var(--space-1) 0 0.65em;
       background: var(--primary-very-low);
       border: 1px solid var(--primary-low-mid);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       color: var(--primary-high);
       font-size: var(--font-down-1-rem);
     }
@@ -203,7 +203,7 @@
     right: 0.25rem;
     top: -0.6rem;
     border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background-color: var(--primary-very-low);
     color: var(--primary-medium);
     font-size: var(--font-down-1-rem);
@@ -215,11 +215,11 @@
 
   .html-block {
     border: 2px dashed var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     &.ProseMirror-selectednode {
       outline-offset: -2px;
-      border-radius: calc(var(--d-border-radius) + 2px);
+      border-radius: calc(var(--d-sys-border-radius-md) + 2px);
     }
 
     &::after {
@@ -232,8 +232,8 @@
       z-index: 1;
       background: var(--secondary-very-high);
       padding: 0 var(--space-1);
-      border-bottom-left-radius: var(--d-border-radius);
-      border-top-right-radius: var(--d-border-radius);
+      border-bottom-left-radius: var(--d-sys-border-radius-md);
+      border-top-right-radius: var(--d-sys-border-radius-md);
     }
   }
 
@@ -245,7 +245,7 @@
     flex-direction: column;
     min-block-size: var(--composer-image-grid-controls-min-block-size, 0);
     border: 2px dashed var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     padding: var(--space-half) var(--space-2) 0 var(--space-2);
     margin-block: var(--space-4);
 
@@ -265,7 +265,7 @@
       padding: var(--space-1) var(--space-2);
       background: var(--secondary);
       border: 0;
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       font-size: var(--font-down-1-rem);
       white-space: nowrap;
       display: flex;
@@ -306,7 +306,7 @@
 
     &.ProseMirror-selectednode {
       outline-offset: -2px;
-      border-radius: calc(var(--d-border-radius) + 2px);
+      border-radius: calc(var(--d-sys-border-radius-md) + 2px);
     }
   }
 
@@ -320,13 +320,13 @@
     position: relative;
     white-space: normal;
     border: 2px dashed var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     padding-inline: var(--space-2);
     margin-block: var(--space-4);
 
     &.ProseMirror-selectednode {
       outline-offset: -2px;
-      border-radius: calc(var(--d-border-radius) + 2px);
+      border-radius: calc(var(--d-sys-border-radius-md) + 2px);
     }
 
     .d-wrap-indicator {
@@ -364,7 +364,7 @@
     position: relative;
     display: grid;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     margin-block: var(--space-4);
     overflow: hidden;
 
@@ -420,7 +420,7 @@
   }
 
   .onebox-loading {
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     padding: 0 0.125rem;
     background: linear-gradient(
       90deg,
@@ -460,7 +460,7 @@
   .toolbar__button {
     background-color: var(--secondary);
     color: var(--primary-medium);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .d-icon {
       color: var(--primary-medium);
@@ -526,7 +526,7 @@
   backdrop-filter: blur(4px);
   color: var(--primary);
   isolation: auto;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   font-size: var(--font-down-1);
   box-shadow: var(--shadow-dropdown);
 
@@ -565,7 +565,7 @@
     display: inline-block;
     height: auto;
     max-width: 100%;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     transition:
       width 0.2s ease,
       height 0.2s ease;
@@ -588,7 +588,7 @@
 .composer-video-node {
   aspect-ratio: 16 / 9;
   background-color: rgb(var(--always-black-rgb));
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   display: grid;
   overflow: hidden;
   place-items: center;
@@ -647,7 +647,7 @@
   &__video {
     display: block;
     height: 100%;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     inset: 0;
     object-fit: contain;
     position: absolute;
@@ -744,7 +744,7 @@
 
 .ProseMirror-selectednode {
   outline: 2px solid var(--tertiary-high);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 }
 
 /* Make sure li selections wrap around markers */
@@ -760,7 +760,7 @@ li.ProseMirror-selectednode::after {
   top: -2px;
   bottom: -2px;
   border: 2px solid var(--tertiary-high);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   pointer-events: none;
 }
 

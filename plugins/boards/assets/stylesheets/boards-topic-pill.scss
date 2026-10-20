@@ -61,7 +61,7 @@
       oklch(from var(--discourse-boards-column-color) 97% calc(c * 0.3) h),
       oklch(from var(--discourse-boards-column-color) 45% calc(c * 0.5) h)
     );
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     color: light-dark(
       oklch(from var(--discourse-boards-column-color) 20% calc(c * 1) h),
       oklch(from var(--discourse-boards-column-color) 100% calc(c * 0.9) h)

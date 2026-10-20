@@ -11,7 +11,7 @@
 
   .alert {
     border: 0;
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     margin: 1rem 0;
     padding: 1rem 1.25rem;
 
@@ -36,7 +36,7 @@
   &__summary {
     background: var(--primary-very-low);
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     margin-bottom: 1.5rem;
     padding: 1.25rem;
   }
@@ -76,7 +76,7 @@
 
   &__redirect {
     background: var(--highlight-bg);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     padding: 1rem 1.25rem;
     margin-bottom: 1.5rem;
   }

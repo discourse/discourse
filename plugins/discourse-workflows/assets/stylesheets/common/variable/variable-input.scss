@@ -3,7 +3,7 @@
   flex-direction: column;
   width: 100%;
   border: 1px solid var(--primary-low-mid);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   background: var(--secondary);
   box-sizing: border-box;
 
@@ -71,7 +71,7 @@
       z-index: z("modal", "tooltip") !important;
       background: var(--secondary);
       border: 1px solid var(--primary-low-mid);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       color: var(--primary);
       font-size: var(--font-down-2);
       box-shadow: var(--shadow-dropdown);
@@ -340,7 +340,7 @@
   .cm-tooltip-hover {
     background: var(--secondary) !important;
     border: 1px solid var(--primary-low-mid) !important;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     box-shadow: var(--shadow-dropdown);
   }
 

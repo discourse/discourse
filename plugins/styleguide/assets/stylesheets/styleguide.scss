@@ -132,7 +132,7 @@
 
 .styleguide-example {
   border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   background-color: var(--secondary);
   padding: var(--space-4);
 
@@ -173,7 +173,7 @@
     margin-inline-end: auto;
     padding: 0 var(--space-2);
     border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     color: var(--primary-medium);
     font-size: var(--font-down-2);
     text-transform: lowercase;
@@ -185,7 +185,7 @@
   &__note code {
     padding: 0 0.2em;
     background: var(--primary-very-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     color: var(--primary);
     font-size: 0.9em;
   }
@@ -249,7 +249,7 @@
     color: var(--primary);
     background: var(--primary-very-low);
     border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     padding: var(--space-2) var(--space-3);
     margin: var(--space-3) 0 0;
   }
@@ -766,7 +766,7 @@
     gap: 0.25em;
     padding: 0.5em;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__separator {
@@ -779,7 +779,7 @@
   &__item {
     padding: 0.25em 0.75em;
     border: 1px solid transparent;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: none;
     color: var(--primary);
     cursor: pointer;
@@ -838,7 +838,7 @@
   &__combobox-trigger {
     padding: 0.35em 0.75em;
     border: 1px solid var(--primary-medium);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--secondary);
     color: var(--primary);
     cursor: pointer;
@@ -856,7 +856,7 @@
     list-style: none;
     min-width: 100%;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--secondary);
   }
 
@@ -882,7 +882,7 @@
     list-style: none;
     max-width: 20em;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__option {
@@ -907,14 +907,14 @@
     gap: 0.25em;
     padding: 0.5em;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     width: fit-content;
   }
 
   &__radio {
     padding: 0.25em 0.75em;
     border: 1px solid transparent;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     cursor: pointer;
 
     &[aria-checked="true"] {
@@ -928,7 +928,7 @@
     padding: 0.5em;
     list-style: none;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__row {
@@ -959,7 +959,7 @@
 .styleguide-reorderable-list {
   max-width: 22em;
   border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   &__label {
     flex: 1 1 auto;
@@ -1184,7 +1184,7 @@
     flex: 0 0 auto;
     padding: var(--space-1) var(--space-3);
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     white-space: nowrap;
   }
 
@@ -1202,7 +1202,7 @@
     gap: 0.75em;
     padding: 1em;
     border: 1px dashed var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-very-low);
     cursor: context-menu;
 

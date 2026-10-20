@@ -31,7 +31,7 @@
   background: var(--secondary);
   margin: 0 auto;
   padding: var(--space-4);
-  border-radius: var(--d-border-radius-large);
+  border-radius: var(--d-sys-border-radius-lg);
   max-width: calc(
     var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
       var(--topic-avatar-width)
@@ -214,7 +214,7 @@
     margin-bottom: 1.5em;
     padding: 1em;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     // Establish a containing block for the absolutely-positioned
     // .read-state dot so it anchors to the post-infos right edge
@@ -408,7 +408,7 @@
     margin-bottom: 1em;
     background: var(--tertiary-very-low);
     border: 1px solid var(--tertiary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-1);
     position: sticky;
     top: var(--header-offset, 0);
@@ -799,7 +799,7 @@
     color: var(--tertiary);
     background: var(--tertiary-very-low);
     border: 1px solid var(--tertiary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     padding: 0.1em 0.4em;
     margin: 0.25em 0.25em 0.25em 0;
     transform: translateY(1px);
@@ -811,7 +811,7 @@
     color: var(--success);
     background: var(--success-low);
     border: 1px solid var(--success-medium);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     padding: 0.1em 0.4em;
     line-height: 1;
   }
@@ -876,7 +876,7 @@
     color: var(--primary-medium);
     font-size: var(--font-down-1);
     cursor: pointer;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     white-space: nowrap;
     align-self: center;
 

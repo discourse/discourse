@@ -230,7 +230,7 @@ Better:
 
 ```scss
 padding: var(--space-3);
-border-radius: var(--d-border-radius);
+border-radius: var(--d-sys-border-radius-md);
 color: var(--primary-medium);
 gap: var(--space-4);
 z-index: z("dropdown");

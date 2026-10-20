@@ -83,7 +83,7 @@
       padding: var(--space-1) var(--space-2);
     }
     border: none;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: transparent;
     color: var(--primary-medium);
     font-size: var(--font-down-1);
@@ -210,7 +210,7 @@
   &__skeleton-username,
   &__skeleton-reaction {
     background: var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     position: relative;
     overflow: hidden;
 

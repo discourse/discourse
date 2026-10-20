@@ -245,7 +245,7 @@
     align-content: flex-start;
     box-sizing: border-box;
     border-width: 0;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background-color: var(--d-category-box-background-color);
     border-left-width: var(--d-category-border-accent-width);
     border-style: solid;
@@ -301,8 +301,8 @@
     border-left-width: 0;
     border-style: solid;
     border-color: var(--primary-low);
-    border-top-right-radius: var(--d-border-radius);
-    border-bottom-right-radius: var(--d-border-radius);
+    border-top-right-radius: var(--d-sys-border-radius-md);
+    border-bottom-right-radius: var(--d-sys-border-radius-md);
   }
 
   &.no-logos {

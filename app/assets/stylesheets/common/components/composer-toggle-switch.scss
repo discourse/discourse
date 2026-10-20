@@ -24,7 +24,7 @@
     height: var(--toggle-switch-height);
     position: relative;
     vertical-align: middle;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     :focus-visible & {
       outline: 2px solid var(--tertiary);
@@ -47,7 +47,7 @@
       width: calc(var(--toggle-switch-height) - var(--space-half));
       height: calc(var(--toggle-switch-height) - var(--space-1));
       top: var(--space-half);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       box-shadow: 0 1px 2px 1px rgb(var(--tertiary-rgb), 0.2);
 
       .--markdown & {

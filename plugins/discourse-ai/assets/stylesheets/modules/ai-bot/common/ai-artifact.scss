@@ -183,7 +183,7 @@ html.ai-artifact-expanded {
     gap: 0.125em;
     padding: 0.25em;
     background: var(--primary-very-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     [aria-pressed="true"] {
       background: var(--secondary);
@@ -197,7 +197,7 @@ html.ai-artifact-expanded {
     padding: 0;
     margin: 0;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__card {
@@ -334,7 +334,7 @@ html.ai-artifact-expanded {
   min-width: 0;
   padding: 0.5em 0.75em;
   border: 1px solid var(--token-color-border-default);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   background: var(--token-color-surface);
 
   &__content {

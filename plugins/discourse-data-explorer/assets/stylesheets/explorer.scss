@@ -112,7 +112,7 @@ table.group-reports {
     display: flex;
     height: 400px;
     border: 1px solid var(--primary-400);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     overflow: hidden;
 
     @include viewport.until(sm) {
@@ -586,7 +586,7 @@ table.group-reports {
   background: var(--primary-very-low);
   border: 1px solid var(--primary-low);
   border-inline-start: 3px solid var(--tertiary);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   &__header {
     display: flex;
@@ -604,7 +604,7 @@ table.group-reports {
     color: var(--tertiary);
     background: var(--secondary);
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius-pill);
+    border-radius: var(--d-sys-border-radius-full);
   }
 
   &__title {
@@ -780,7 +780,7 @@ table.group-reports {
   margin-bottom: 0.75em;
   background: var(--tertiary-very-low);
   border: 1px solid var(--tertiary-low);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   font-size: var(--font-down-1);
   color: var(--tertiary);
 }

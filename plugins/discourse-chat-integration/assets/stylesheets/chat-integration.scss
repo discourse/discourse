@@ -136,7 +136,7 @@
     overflow: auto;
     background: var(--primary-very-low);
     padding: 1rem;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-1);
   }
 }
@@ -160,7 +160,7 @@
 .inline-channel-form {
   background: var(--primary-very-low);
   border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   padding: 1rem;
 
   .form-kit__container {

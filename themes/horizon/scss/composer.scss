@@ -59,7 +59,7 @@
   }
 
   .toolbar-popup-menu-options.is-expanded {
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 }
 
@@ -79,7 +79,7 @@
     padding: 0.25rem 0.75rem;
     background: var(--background-color);
     color: var(--accent-color);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
   }
 
   .topic-title-translator input {

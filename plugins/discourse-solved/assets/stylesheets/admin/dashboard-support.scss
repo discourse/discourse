@@ -64,14 +64,14 @@ $db-bar-height: var(--space-2);
 
   &__track {
     height: $db-bar-height;
-    border-radius: var(--d-border-radius-fixed);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-low);
   }
 
   &__fill {
     display: block;
     height: 100%;
-    border-radius: var(--d-border-radius-fixed);
+    border-radius: var(--d-sys-border-radius-md);
 
     &.--resolved {
       background: var(--success);
@@ -150,14 +150,14 @@ $db-bar-height: var(--space-2);
 
   &__track {
     height: $db-bar-height;
-    border-radius: var(--d-border-radius-fixed);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-low);
   }
 
   &__fill {
     display: block;
     height: 100%;
-    border-radius: var(--d-border-radius-fixed);
+    border-radius: var(--d-sys-border-radius-md);
 
     &.--bucket-lt_1h {
       background: var(--success);

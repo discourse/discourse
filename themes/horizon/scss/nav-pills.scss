@@ -5,8 +5,8 @@
   z-index: z("base") + 1;
   padding: 1rem 0 0 0;
   max-width: unset;
-  border-top-left-radius: var(--d-border-radius-large);
-  border-top-right-radius: var(--d-border-radius-large);
+  border-top-left-radius: var(--d-sys-border-radius-lg);
+  border-top-right-radius: var(--d-sys-border-radius-lg);
 
   .navigation-container {
     gap: 1rem;
@@ -19,7 +19,7 @@
   .combo-box .combo-box-header {
     // needs more specificity than just in the button file
     background-color: var(--secondary);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     border: 1px solid var(--primary-300);
 
     &:hover {
@@ -41,7 +41,7 @@
 }
 
 .select-kit.is-expanded .select-kit-body {
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   background-color: var(--d-content-background);
 }
 

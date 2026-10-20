@@ -10,7 +10,7 @@
   // because you may cause a layout shift on presence appearance
   color: var(--primary-medium);
   display: flex;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   span.presence-text {
     align-items: center;

@@ -1,6 +1,6 @@
 :root {
   // global
-  --d-button-border-radius: var(--d-border-radius);
+  --d-button-border-radius: var(--d-sys-border-radius-md);
   --d-button-transition: none;
   --d-button-border: 1px solid transparent;
 
@@ -316,7 +316,7 @@
 .btn-social {
   color: #000;
   background: #fff;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   &:focus-visible {
     outline: 1px solid #000;

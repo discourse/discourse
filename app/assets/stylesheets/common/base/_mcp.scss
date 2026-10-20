@@ -238,7 +238,7 @@
       flex-wrap: wrap;
       padding: var(--space-3);
       border: 1px solid var(--primary-300);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       background-color: var(--secondary);
       box-shadow: var(--shadow-card);
     }
@@ -259,7 +259,7 @@
   &__primitive-groups {
     padding: var(--space-1);
     border: 1px solid var(--token-color-border-default);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__primitive-group-list {
@@ -284,7 +284,7 @@
     min-width: 0;
     padding: var(--space-2);
     border: 0;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: transparent;
     color: var(--token-color-text-default);
     text-align: start;
@@ -346,7 +346,7 @@
     padding: var(--space-3);
     padding-inline-end: calc(var(--space-3) + 2.5rem);
     border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .form-kit__container-content,
     .form-kit__control-checkbox-label {
@@ -518,7 +518,7 @@
     margin-bottom: var(--space-4);
     padding: var(--space-4);
     border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--secondary);
   }
 }

@@ -74,7 +74,7 @@
           height: min-content;
           padding: var(--space-1);
           font-size: var(--font-down-1);
-          border-radius: var(--d-border-radius);
+          border-radius: var(--d-sys-border-radius-md);
 
           &.selected-choice-color {
             border-bottom: 2px solid transparent;

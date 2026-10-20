@@ -42,13 +42,12 @@
     }
 
     &__badge {
-      --d-border-radius: var(--space-4);
       font-weight: 400;
       font-size: var(--font-down-2);
       background-color: var(--primary-low);
       color: var(--primary-high);
       padding: var(--space-1) var(--space-2);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-full);
 
       & + .admin-plugins-list__badge {
         margin-left: var(--space-1);

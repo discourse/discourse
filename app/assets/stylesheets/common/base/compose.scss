@@ -64,8 +64,8 @@ html.composer-open:not(.has-full-page-chat) {
     min-height 0.2s;
   background-color: var(--secondary);
   box-shadow: var(--shadow-composer);
-  border-top-left-radius: var(--d-border-radius-large);
-  border-top-right-radius: var(--d-border-radius-large);
+  border-top-left-radius: var(--d-sys-border-radius-lg);
+  border-top-right-radius: var(--d-sys-border-radius-lg);
 
   @media screen and (width <= 1200px) {
     min-width: 0;
@@ -221,7 +221,7 @@ html.composer-open:not(.has-full-page-chat) {
         }
       }
       font-size: var(--font-down-1);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
 
       &.--public {
         --d-button-default-text-color: var(--primary-high);
@@ -888,7 +888,7 @@ html.composer-open:not(.has-full-page-chat) {
   overflow-y: auto;
   z-index: z("composer", "dropdown") + 1;
   box-shadow: var(--shadow-dropdown);
-  border-radius: var(--d-border-radius-large);
+  border-radius: var(--d-sys-border-radius-lg);
   background: var(--composer-popup-background);
   display: flex;
   flex-direction: column;

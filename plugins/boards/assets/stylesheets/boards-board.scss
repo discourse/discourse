@@ -5,7 +5,6 @@ html:has(body.discourse-boards-board) {
 }
 
 body.discourse-boards-board {
-  --d-border-radius-small: calc(var(--d-border-radius) / 2);
   --discourse-boards-column-header-height: 25px;
   --discourse-boards-column-card-gap: var(--space-2);
   --discourse-boards-column-padding: var(--space-2);
@@ -148,7 +147,7 @@ body.discourse-boards-board {
     height: 50%;
     padding: 2em 1em;
     border: 1px dashed var(--primary-300);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-50);
     text-align: center;
 
@@ -212,7 +211,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     justify-content: center;
     width: 2.5rem;
     border: 1px dashed var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: transparent;
     color: var(--primary-low-mid);
     cursor: pointer;
@@ -255,7 +254,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
   display: flex;
   flex-direction: column;
   transition: border-color 0.15s ease;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   border: 1px solid
     oklch(
       from var(--discourse-boards-column-color, var(--primary-500)) l c h /
@@ -271,8 +270,8 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     align-items: center;
     height: var(--discourse-boards-column-header-height);
     justify-content: space-between;
-    border-top-right-radius: var(--d-border-radius-small);
-    border-top-left-radius: var(--d-border-radius-small);
+    border-top-right-radius: var(--d-sys-border-radius-sm);
+    border-top-left-radius: var(--d-sys-border-radius-sm);
     color: var(--primary);
     padding: var(--space-2);
   }
@@ -289,7 +288,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     font-weight: 500;
     padding: var(--space-1) var(--space-2);
     background: var(--discourse-boards-column-color, var(--primary-500));
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     max-width: 25ch;
 
     @include ellipsis;
@@ -356,7 +355,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
   &__drop-indicator {
     flex-shrink: 0;
     border: 1px solid var(--discourse-boards-column-color, var(--primary-500));
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: oklch(
       from var(--discourse-boards-column-color, var(--primary-500)) l c h/0.25
     );
@@ -418,7 +417,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     --d-button-default-border--hover: 1px solid transparent;
     width: 100%;
     justify-content: flex-start;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-1);
   }
 
@@ -461,7 +460,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     min-height: 60px;
     resize: vertical;
     margin-bottom: var(--space-2);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__add-card-actions {
@@ -495,7 +494,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
       from var(--discourse-boards-column-color, var(--primary-500)) l c h/0.25
     );
   padding: var(--space-2);
-  border-radius: var(--d-border-radius-small);
+  border-radius: var(--d-sys-border-radius-sm);
   cursor: grab;
 
   &--floater {
@@ -688,7 +687,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     display: inline-block;
     padding: 1px 6px;
     background: var(--primary-very-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: $font-down-2;
     color: var(--primary-high);
   }
@@ -712,7 +711,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     gap: 0.3em;
     padding: 0.15em 0.5em;
     background: var(--primary-very-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-2);
     color: var(--primary-high);
 

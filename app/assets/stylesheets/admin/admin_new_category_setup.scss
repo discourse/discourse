@@ -9,7 +9,7 @@
   &__card {
     position: relative;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     &-select {
       all: unset; // reset browser button styles
@@ -86,7 +86,8 @@
     color: var(--primary);
     padding: var(--space-1) var(--space-2);
     background: var(--highlight-low);
-    border-radius: 0 calc(var(--d-border-radius) - 1px) 0 var(--d-border-radius);
+    border-radius: 0 calc(var(--d-sys-border-radius-md) - 1px) 0
+      var(--d-sys-border-radius-md);
   }
 
   &__ask-admin-message {
@@ -98,7 +99,8 @@
     padding: var(--space-3) var(--space-6);
     background-color: var(--tertiary-very-low);
     color: var(--tertiary);
-    border-radius: 0 0 var(--d-border-radius) var(--d-border-radius);
+    border-radius: 0 0 var(--d-sys-border-radius-md)
+      var(--d-sys-border-radius-md);
     gap: var(--space-6);
 
     .d-icon {

@@ -60,7 +60,7 @@
     &:hover,
     &:focus {
       background: var(--primary-very-low);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       transform: scale(1.25);
     }
   }
@@ -78,7 +78,7 @@
   &__filter {
     width: 100%;
     margin: 0.5rem;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     box-sizing: border-box;
 
     input {
@@ -224,7 +224,7 @@
     background: none;
     margin-right: 0.5rem;
     border: 0;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .d-icon {
       visibility: hidden;

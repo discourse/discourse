@@ -10,8 +10,8 @@
 
     &:first-child {
       border-left-color: var(--primary-300);
-      border-top-left-radius: var(--d-border-radius);
-      border-bottom-left-radius: var(--d-border-radius);
+      border-top-left-radius: var(--d-sys-border-radius-md);
+      border-bottom-left-radius: var(--d-sys-border-radius-md);
     }
 
     &:hover {
