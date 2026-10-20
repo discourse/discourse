@@ -1,5 +1,8 @@
 import { assert } from "@ember/debug";
-import type { SelectPresentationOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
+import type {
+  SelectPresentationOptions,
+  SelectResolvedOptions,
+} from "discourse/ui-kit/select/-internals/engine/customizations";
 import type {
   SelectEngineOptions,
   SelectItem,
@@ -7,7 +10,6 @@ import type {
   SelectLegacyContext,
   SelectLoadOptions,
   SelectLoadResult,
-  SelectSnapshot,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
@@ -42,7 +44,11 @@ export default class SelectOptionsView {
   #readPresentationOptions?: SelectEngineOptions["getOptions"];
 
   /** Attached after customization setup and before source validation. */
-  #readResolvedOptions?: () => Readonly<SelectPresentationOptions>;
+  #readResolvedOptions?: () => SelectResolvedOptions;
+
+  /** Raw recipe values remain upstream of option resolution. */
+  #readKindOptions?: SelectEngineOptions["getKindOptions"];
+  #kindOptions?: SelectEngineOptions["kindOptions"];
   #valueField: string;
   #labelField: string;
   // Whether the consumer declared `valueItems` at all, as opposed to it merely being empty
@@ -63,7 +69,7 @@ export default class SelectOptionsView {
   #allowCreate?: SelectEngineOptions["allowCreate"];
   #createItem?: SelectEngineOptions["createItem"];
   #createUnresolvedItem?: SelectEngineOptions["createUnresolvedItem"];
-  #specialItems?: (snapshot: SelectSnapshot) => SelectItem[];
+  #specialItems?: SelectEngineOptions["specialItems"];
   #groupBy?: SelectEngineOptions["groupBy"];
   #groupLabelFn?: SelectEngineOptions["groupLabel"];
   #readCloseOnSelect: boolean | undefined;
@@ -92,6 +98,8 @@ export default class SelectOptionsView {
     this.#readNoneLabel = opts.getNoneLabel;
     this.#noneLabel = opts.noneLabel;
     this.#readPresentationOptions = opts.getOptions;
+    this.#readKindOptions = opts.getKindOptions;
+    this.#kindOptions = opts.kindOptions;
     this.#valueField = opts.valueField ?? "id";
     this.#labelField = opts.labelField ?? "name";
     // Values are unique by contract (selection identity, row keys), so grouping by the value
@@ -163,6 +171,16 @@ export default class SelectOptionsView {
     return this.#readPresentationOptions?.() ?? {};
   }
 
+  /** Live recipe base values; the customization registry captures their initial keys. */
+  get kindOptions(): Record<string, unknown> | undefined {
+    return this.#readKindOptions ? this.#readKindOptions() : this.#kindOptions;
+  }
+
+  /** The engine's immutable core and recipe snapshot, for downstream consumers only. */
+  get resolvedOptions(): SelectResolvedOptions {
+    return this.#readResolvedOptions!();
+  }
+
   // Multi-only, and `null` for anything below one — which also absorbs `0`, negatives, and
   // `NaN`, all of which mean "no cap" rather than "cap of nothing".
   get maximum(): number | null {
@@ -185,10 +203,7 @@ export default class SelectOptionsView {
     return this.#readValueItems?.() ?? this.#valueItems;
   }
 
-  get allowCreate():
-    | boolean
-    | ((filter: string, items: SelectItem[]) => boolean)
-    | undefined {
+  get allowCreate(): SelectEngineOptions["allowCreate"] {
     return this.#readAllowCreate?.() ?? this.#allowCreate;
   }
 
@@ -296,7 +311,7 @@ export default class SelectOptionsView {
   }
 
   /** Connects engine-owned resolution without making raw option reads depend on it. */
-  attachResolvedOptions(read: () => Readonly<SelectPresentationOptions>): void {
+  attachResolvedOptions(read: () => SelectResolvedOptions): void {
     this.#readResolvedOptions = read;
   }
 

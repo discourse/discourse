@@ -24,6 +24,7 @@ import VariantPresenter, {
   type SelectVariant,
 } from "discourse/ui-kit/select/-internals/coordinators/variant-presenter";
 import WindowedListCoordinator from "discourse/ui-kit/select/-internals/coordinators/windowed-list-coordinator";
+import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
 import keepAboveKeyboard from "discourse/ui-kit/select/-internals/modifiers/keep-above-keyboard";
 import ComboboxQueryInput from "discourse/ui-kit/select/-internals/parts/combobox-query-input";
 import MultiChips from "discourse/ui-kit/select/-internals/parts/multi-chips";
@@ -49,6 +50,8 @@ interface DSelectSignature {
     multiple?: boolean;
     /** The select's recipe or family, fixed at construction. */
     kind?: string;
+    /** Declares recipe option keys and their live base values. Requires `@kind`; core keys are reserved. */
+    kindOptions?: Record<string, unknown>;
     /** The call-site name used for customization and menu identity. */
     identifier?: string;
     /** A recipe's own data, passed to customizations as `context.kindContext`. */
@@ -71,20 +74,18 @@ interface DSelectSignature {
     createUnresolvedItem?: SelectEngineOptions["createUnresolvedItem"];
     specialItems?: SelectEngineOptions["specialItems"];
     /**
-     * Groups the options: a field name or `(item) => key`. A boundary renders as a labeled
+     * Groups the options: a field name or `(item, options) => key`. A boundary renders as a labeled
      * header where `@groupLabel` yields text and as an unlabeled splitter otherwise. Client
      * sources only. Recomputed after filtering, so an empty group draws nothing.
      */
     groupBy?: SelectEngineOptions["groupBy"];
     /**
-     * Maps a group key to its header text. Nullish for a key renders that boundary as an
+     * `(key, options) => text` maps a group key to its header text. Nullish renders an
      * unlabeled splitter; omitted entirely, every boundary is a splitter.
      */
     groupLabel?: SelectEngineOptions["groupLabel"];
-    onChange?: (
-      nextValue: SelectValue,
-      item: SelectItemModel | SelectItemModel[] | null
-    ) => void;
+    /** Receives the next value, resolved items, and metadata including resolved options. */
+    onChange?: SelectEngineOptions["onChange"];
     placeholder?: string;
     searchPlaceholder?: string;
     noResultsLabel?: string;
@@ -201,14 +202,25 @@ interface DSelectSignature {
   };
   Element: HTMLElement;
   Blocks: {
-    item?: [SelectItemModel];
+    /** Custom markup for an option and its resolved options snapshot. */
+    item?: [
+      /** The raw option item. */
+      item: SelectItemModel,
+      /** Resolved core and recipe values. */
+      options: SelectResolvedOptions,
+    ];
     /**
      * Custom markup for the selected item; yields the resolved item. On the button/static
      * triggers it is the persistent selected display. On the typeahead it is the resting (closed)
      * display only: once the menu opens the built-in input shows the editable label text instead,
      * so the block is not a live-while-editing surface.
      */
-    selection?: [SelectItemModel];
+    selection?: [
+      /** The resolved held item. */
+      item: SelectItemModel,
+      /** Resolved core and recipe values. */
+      options: SelectResolvedOptions,
+    ];
     /**
      * Shown in place of a held selection while it resolves: in each chip, or in the single
      * trigger. Without it a plain text bar stands in.
@@ -220,9 +232,19 @@ interface DSelectSignature {
      * (id)", or the name `@createUnresolvedItem` gives), even when `:selection` is supplied, so
      * the state is never lost in custom markup by accident.
      */
-    unresolved?: [SelectItemModel];
+    unresolved?: [
+      /** The fallback for an unresolved held id. */
+      item: SelectItemModel,
+      /** Resolved core and recipe values. */
+      options: SelectResolvedOptions,
+    ];
     /** Consumer override for a group header's content; yields the header item (with its `label`). */
-    groupHeader?: [SelectItemModel];
+    groupHeader?: [
+      /** The synthetic header item. */
+      item: SelectItemModel,
+      /** Resolved core and recipe values. */
+      options: SelectResolvedOptions,
+    ];
     /**
      * One placeholder row, shown while a page of rows loads (the first load, or more rows
      * arriving at the end of the list). Repeated per row, so it should match the shape of `:item`.
@@ -234,7 +256,12 @@ interface DSelectSignature {
      * Content pinned below the option list (labels, links, action buttons). Yields the live
      * dropdown state so the content can react (e.g. a "plus N more" from `total - loadedCount`).
      */
-    footer?: [SelectFooterState];
+    footer?: [
+      /** The live dropdown state. */
+      state: SelectFooterState,
+      /** Resolved core and recipe values. */
+      options: SelectResolvedOptions,
+    ];
     /**
      * Consumer override for the source-error state, replacing the default muted message + retry.
      * Yields the rejection reason and a `retry` action.
@@ -310,15 +337,16 @@ export default class DSelect extends Component<DSelectSignature> {
     kind: this.args.kind,
     identifier: this.args.identifier,
     getKindContext: () => this.args.kindContext,
+    getKindOptions: () => this.args.kindOptions,
     getInstanceContext: () => this.args.instanceContext,
     getMinChars: () => this.args.minChars,
     getMaximum: () => this.args.maximum,
     getMinimum: () => this.args.minimum,
     getNoneLabel: () => this.args.noneLabel,
     getOptions: () => this.args,
-    items: () =>
+    items: (options) =>
       typeof this.args.items === "function"
-        ? this.args.items()
+        ? this.args.items(options)
         : this.args.items,
     load: this.args.load,
     filterBy: this.args.filterBy,
@@ -553,7 +581,7 @@ export default class DSelect extends Component<DSelectSignature> {
         this.interaction.queryActive = false;
       },
     });
-    this.args.onChange?.(nextValue, payload);
+    this.args.onChange?.(nextValue, payload, change);
   }
 
   @action
@@ -674,12 +702,17 @@ export default class DSelect extends Component<DSelectSignature> {
               @showMenu={{menuArgs.show}}
               @value={{@value}}
             >
-              <:selection as |item|>{{yield item to="selection"}}</:selection>
+              <:selection as |item|>{{yield
+                  item
+                  this.engine.resolvedOptions
+                  to="selection"
+                }}</:selection>
               <:selectionLoading>{{yield
                   to="selectionLoading"
                 }}</:selectionLoading>
               <:unresolved as |item|>{{yield
                   item
+                  this.engine.resolvedOptions
                   to="unresolved"
                 }}</:unresolved>
             </MultiChips>
@@ -713,12 +746,17 @@ export default class DSelect extends Component<DSelectSignature> {
               @triggerFocused={{this.interaction.triggerFocused}}
               @value={{@value}}
             >
-              <:selection as |item|>{{yield item to="selection"}}</:selection>
+              <:selection as |item|>{{yield
+                  item
+                  this.engine.resolvedOptions
+                  to="selection"
+                }}</:selection>
               <:selectionLoading>{{yield
                   to="selectionLoading"
                 }}</:selectionLoading>
               <:unresolved as |item|>{{yield
                   item
+                  this.engine.resolvedOptions
                   to="unresolved"
                 }}</:unresolved>
             </SingleTriggerDisplay>
@@ -847,10 +885,14 @@ export default class DSelect extends Component<DSelectSignature> {
               @presenter={{this.presenter}}
               @selectedIcon={{@selectedIcon}}
             >
-              <:item as |item|>{{yield item to="item"}}</:item>
+              <:item as |item|>{{yield
+                  item
+                  this.engine.resolvedOptions
+                  to="item"
+                }}</:item>
               <:loadingItem>{{yield to="loadingItem"}}</:loadingItem>
               <:groupHeader as |item|>
-                {{yield item to="groupHeader"}}
+                {{yield item this.engine.resolvedOptions to="groupHeader"}}
               </:groupHeader>
               <:empty>{{yield to="empty"}}</:empty>
               <:error as |error retry|>{{yield error retry to="error"}}</:error>
@@ -879,6 +921,7 @@ export default class DSelect extends Component<DSelectSignature> {
                   remaining=this.engine.remaining
                   close=menuArgs.close
                 )
+                this.engine.resolvedOptions
                 to="footer"
               }}
             </div>

@@ -5,8 +5,9 @@ import type Owner from "@ember/owner";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import SelectCustomizations, {
-  type SelectCustomizationContext,
   type SelectPresentationOptions,
+  type SelectResolvedContext,
+  type SelectResolvedOptions,
   type SelectRowPresentation,
 } from "discourse/ui-kit/select/-internals/engine/customizations";
 import ListComposer from "discourse/ui-kit/select/-internals/engine/list-composer";
@@ -160,6 +161,8 @@ export function selectItemLabel(
 
 /** Options threaded into a source (`load` / `resolveValue`) call. */
 export interface SelectLoadOptions {
+  /** Resolved core and recipe values, supplied by the select engine. */
+  options?: SelectResolvedOptions;
   /** Maximum page length requested from a paginated source. */
   limit?: number;
   /** Raw source offset for a paginated request. */
@@ -211,7 +214,7 @@ export interface SelectLegacyContext {
 }
 
 /**
- * The live handle for action rows and content, options, and load customizations.
+ * The live handle for action rows and content, options, load, and change customizations.
  * The object stays frozen for the select's life. Its methods are for event time,
  * never for render-time callbacks, and do nothing once the select is destroyed.
  */
@@ -294,14 +297,17 @@ export interface SelectEngineOptions {
   /** Live raw presentation args, read before any items, resolved selection, or lock state. */
   getOptions?: () => Readonly<SelectPresentationOptions>;
 
+  /** Recipe option keys and base values; keys are fixed at construction. Requires `kind`. */
+  kindOptions?: Record<string, unknown>;
+
+  /** Live base values for {@link kindOptions}; the initial keys declare the schema. */
+  getKindOptions?: () => Record<string, unknown> | undefined;
+
   /** Live reader for {@link valueItems}. */
   getValueItems?: () => SelectItem | SelectItem[] | undefined;
 
   /** Live reader for {@link allowCreate}. */
-  getAllowCreate?: () =>
-    | boolean
-    | ((filter: string, items: SelectItem[]) => boolean)
-    | undefined;
+  getAllowCreate?: () => SelectEngineOptions["allowCreate"];
 
   /** The recipe or family name, fixed at construction. */
   kind?: string;
@@ -322,13 +328,15 @@ export interface SelectEngineOptions {
   getInstanceContext?: () => object | undefined;
 
   /**
-   * A static array (or `() => array`) of items — the client-only source. Provide this
+   * A static array (or `(options) => array`) of items — the client-only source. Provide this
    * or `load`, not both.
    */
-  items?: SelectItem[] | (() => SelectItem[] | null | undefined);
+  items?:
+    | SelectItem[]
+    | ((options: SelectResolvedOptions) => SelectItem[] | null | undefined);
 
   /**
-   * `(filter, { signal, offset, limit }) => items | { items, total?, hasMore? }`,
+   * `(filter, { signal, offset, limit, options }) => items | { items, total?, hasMore? }`,
    * synchronously or as a promise. Pagination starts without a limit so the source defines
    * its page size.
    *
@@ -345,10 +353,16 @@ export interface SelectEngineOptions {
   ) => SelectLoadResult | Promise<SelectLoadResult>;
 
   /**
-   * Client-filter field name or `(item, term) => boolean`. Defaults to a substring
+   * Client-filter field name or `(item, term, options) => boolean`. Defaults to a substring
    * match on `labelField`.
    */
-  filterBy?: string | ((item: SelectItem, term: string) => boolean);
+  filterBy?:
+    | string
+    | ((
+        item: SelectItem,
+        term: string,
+        options: SelectResolvedOptions
+      ) => boolean);
 
   /**
    * Minimum filter length before the list searches. `0` (default) searches on any input.
@@ -412,7 +426,7 @@ export interface SelectEngineOptions {
   valueItems?: SelectItem | SelectItem[];
 
   /**
-   * `(value, { signal }) => item | Promise<item>`, used to resolve a value id to its
+   * `(value, { signal, options }) => item | Promise<item>`, used to resolve a value id to its
    * display item when it isn't already known.
    */
   resolveValue?: (
@@ -422,7 +436,7 @@ export interface SelectEngineOptions {
 
   /**
    * Batch counterpart to `resolveValue` for multi-select:
-   * `(values, { signal }) => items | Promise<items>`. The engine calls it once for the uncached
+   * `(values, { signal, options }) => items | Promise<items>`. The engine calls it once for the uncached
    * ids (cached / seeded ids are skipped) so N chips never mean N requests. Omitted or errored
    * ids become fallbacks.
    */
@@ -432,51 +446,68 @@ export interface SelectEngineOptions {
   ) => SelectItem[] | Promise<SelectItem[]>;
 
   /**
-   * Enables the create-on-the-fly item; a function `(filter, items) => boolean` gates it
+   * Enables the create-on-the-fly item; a function `(filter, items, options) => boolean` gates it
    * dynamically.
    */
-  allowCreate?: boolean | ((filter: string, items: SelectItem[]) => boolean);
+  allowCreate?:
+    | boolean
+    | ((
+        filter: string,
+        items: SelectItem[],
+        options: SelectResolvedOptions
+      ) => boolean);
 
   /**
-   * `(filter) => item` producing the synthetic "create" item (conventionally marked
+   * `(filter, options) => item` producing the synthetic "create" item (conventionally marked
    * `__create: true`).
    */
-  createItem?: (filter: string) => SelectItem;
+  createItem?: (filter: string, options: SelectResolvedOptions) => SelectItem;
 
   /**
-   * `(value) => item` producing the fallback for a held id that could not be resolved,
+   * `(value, options) => item` producing the fallback for a held id that could not be resolved,
    * so a recipe can name it (e.g. `Topic #123`) instead of showing the bare id. The
    * engine marks the result `__unresolved` regardless of what the builder returns.
    * Defaults to the id itself on `labelField`.
    */
-  createUnresolvedItem?: (value: SelectItemId) => SelectItem;
+  createUnresolvedItem?: (
+    value: SelectItemId,
+    options: SelectResolvedOptions
+  ) => SelectItem;
 
   /**
-   * `(snapshot) => item[]` prepended to the list (e.g. a "none"/"uncategorized" item).
+   * `(snapshot, options) => item[]` prepended to the list (e.g. a "none"/"uncategorized" item).
    */
-  specialItems?: (snapshot: SelectSnapshot) => SelectItem[];
+  specialItems?: (
+    snapshot: SelectSnapshot,
+    options: SelectResolvedOptions
+  ) => SelectItem[];
 
   /**
-   * Groups the filtered options by a field name or `(item) => key`. Each group's label
+   * Groups the filtered options by a field name or `(item, options) => key`. Each group's label
    * determines whether its boundary is a header or an unlabeled splitter; a leading splitter
    * is suppressed. Client sources only; a source that pages ignores it because a group can
    * span pages.
    */
-  groupBy?: string | ((item: SelectItem) => SelectItemId);
+  groupBy?:
+    | string
+    | ((item: SelectItem, options: SelectResolvedOptions) => SelectItemId);
 
   /**
-   * Maps a group key to its header text. A nullish result renders that boundary as an
+   * `(key, options) => text` maps a group key to its header text. A nullish result renders an
    * unlabeled splitter; when omitted, every boundary is a splitter.
    */
-  groupLabel?: (key: SelectItemId) => string | null | undefined;
+  groupLabel?: (
+    key: SelectItemId,
+    options: SelectResolvedOptions
+  ) => string | null | undefined;
 
   /** Whether choosing an item closes the overlay. Defaults to `!multiple`. */
   closeOnSelect?: boolean;
 
   /**
-   * `(nextValue, item|items) => void`, where `nextValue` is the id(s) and the second arg
+   * `(nextValue, item|items, change) => void`, where `nextValue` is the id(s) and the second arg
    * is the resolved item(s), each matching the arity. The parent applies `nextValue` to
-   * `@value`. The third argument carries internal origin and clear metadata.
+   * `@value`. The third argument carries origin, clear metadata, and resolved options.
    */
   onChange?: (
     nextValue: SelectValue,
@@ -486,6 +517,8 @@ export interface SelectEngineOptions {
       origin?: SelectionOrigin;
       /** Distinguishes a whole-selection clear from removing an item. */
       reason?: "clear";
+      /** The options snapshot shared with the change middleware. */
+      options: SelectResolvedOptions;
     }
   ) => void;
 
@@ -618,7 +651,10 @@ export default class SelectEngine {
       beforeEmit: (origin, value) =>
         this.#selectionUpdates.prepareEmit(origin, value),
       runActionItem: (item) => item.onSelect!(this.#control, item),
-      getExtensionContext: () => this.#extensionContext(),
+      getExtensionContext: () => ({
+        ...this.#extensionContext(),
+        control: this.#control,
+      }),
       cacheResolved: (item) => this.#valueResolver.cacheResolved(item),
       resolveOneSync: (value) => this.#valueResolver.resolveOneSync(value),
       applyLegacyOnChange: (value, payload) =>
@@ -659,10 +695,13 @@ export default class SelectEngine {
           filtered: () => this.filteredItems,
           all: () => localItems(this.#options),
         });
-    this.#customizations = new SelectCustomizations({
-      kind: this.kind,
-      identifier: this.identifier,
-    });
+    this.#customizations = new SelectCustomizations(
+      {
+        kind: this.kind,
+        identifier: this.identifier,
+      },
+      this.#options.kindOptions
+    );
     this.#options.attachResolvedOptions(() => this.resolvedOptions);
     // Catch a both-sources misconfiguration up front (before any menu opens); the same
     // check also runs per load for a live `items` source that turns non-empty later.
@@ -698,7 +737,7 @@ export default class SelectEngine {
 
   /** One reactive options pass shared by the engine, presenter, and every rendered row. */
   @cached
-  get resolvedOptions(): Readonly<SelectPresentationOptions> {
+  get resolvedOptions(): SelectResolvedOptions {
     const args = this.#options.presentationOptions;
     return this.#customizations.resolveOptions(
       {
@@ -713,6 +752,7 @@ export default class SelectEngine {
         noneLabel: args.noneLabel ?? this.#options.baseNoneLabel,
         disabled: args.disabled,
       },
+      this.#options.kindOptions,
       {
         kind: this.kind,
         identifier: this.identifier,
@@ -811,7 +851,7 @@ export default class SelectEngine {
     return this.#options.identifier;
   }
 
-  /** The live handle for action rows and content, options, and load customizations. */
+  /** The live handle for action rows and content, options, load, and change customizations. */
   get control(): SelectControl {
     return this.#control;
   }
@@ -1206,22 +1246,25 @@ export default class SelectEngine {
   }
 
   /** The static names and live data shared by select customizations. */
-  #extensionContext(): SelectCustomizationContext {
+  #extensionContext(): SelectResolvedContext {
     return {
       kind: this.kind,
       identifier: this.identifier,
       kindContext: this.#options.kindContext,
       instanceContext: this.#options.instanceContext,
+      options: this.resolvedOptions,
     };
   }
 
   /** Resolves the loader outside render when a query's first request starts. */
   #resolveLoad(filter: string): NonNullable<SelectEngineOptions["load"]> {
-    return this.#customizations.applyLoad(this.#options.load!, {
+    const load = this.#customizations.applyLoad(this.#options.load!, {
       filter,
       ...this.#extensionContext(),
       control: this.#control,
     });
+    return (query, opts) =>
+      load(query, { ...opts, options: this.resolvedOptions });
   }
 
   // `items` and `load` are mutually exclusive; the construction-time source kind wins.
@@ -1233,7 +1276,7 @@ export default class SelectEngine {
     }
     const local =
       typeof this.#options.items === "function"
-        ? this.#options.items()
+        ? this.#options.items(this.resolvedOptions)
         : this.#options.items;
     if (local != null && (makeArray(local) as SelectItem[]).length > 0) {
       this.#dualSourceWarned = true;

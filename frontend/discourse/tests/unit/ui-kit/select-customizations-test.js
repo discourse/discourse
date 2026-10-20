@@ -1,7 +1,9 @@
 import { tracked } from "@glimmer/tracking";
+import { trackedObject } from "@ember/reactive/collections";
 import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { disableThrowingApplyExceptionOnTests } from "discourse/lib/transformer";
 import SelectEngine from "discourse/ui-kit/select/select-engine";
@@ -919,3 +921,105 @@ module("Unit | ui-kit | select-customizations | options", function (hooks) {
     assert.strictEqual(itemReads, before, "no item reads");
   });
 });
+
+module(
+  "Unit | ui-kit | select-customizations | recipe options",
+  function (hooks) {
+    setupTest(hooks);
+
+    test("declared keys stay fixed while nullish base values stay live", function (assert) {
+      const state = trackedObject({
+        options: { prefix: undefined, suffix: null },
+      });
+      const warn = sinon.stub(console, "warn");
+      const seen = [];
+      customize((selects) =>
+        selects.forKind("recipe", (spec) =>
+          spec.options((current) => {
+            seen.push(current);
+            return { prefix: current.prefix ?? "fallback", added: "ignored" };
+          })
+        )
+      );
+
+      try {
+        const engine = new SelectEngine({
+          kind: "recipe",
+          getKindOptions: () => state.options,
+        });
+        assert.strictEqual(
+          engine.resolvedOptions.prefix,
+          "fallback",
+          "an undefined key can be overridden"
+        );
+        assert.true(
+          Object.hasOwn(seen[0], "prefix"),
+          "undefined stays declared"
+        );
+        assert.true(Object.hasOwn(seen[0], "suffix"), "null stays declared");
+        assert.strictEqual(seen[0].suffix, undefined, "null has no base value");
+
+        state.options = { prefix: "live", added: "new" };
+        assert.strictEqual(
+          engine.resolvedOptions.prefix,
+          "live",
+          "new values are live"
+        );
+        assert.false(
+          Object.hasOwn(engine.resolvedOptions, "added"),
+          "a later key does not extend the declared set"
+        );
+        assert.true(
+          Object.hasOwn(seen[1], "suffix"),
+          "a removed key stays declared"
+        );
+        assert.true(warn.calledWithMatch('"added"'), "an undeclared key warns");
+        assert.false(
+          warn.calledWithMatch('"prefix"'),
+          "a declared key without a value does not"
+        );
+      } finally {
+        warn.restore();
+      }
+    });
+
+    test("a deferred emit keeps its snapshot after live values change", async function (assert) {
+      const state = trackedObject({ prefix: "before" });
+      let resume, context, emitted;
+      customize((selects) =>
+        selects.forKind("recipe", (spec) =>
+          spec.change((next, ctx) => {
+            resume = next;
+            context = ctx;
+          })
+        )
+      );
+      const engine = new SelectEngine({
+        kind: "recipe",
+        getKindOptions: () => ({ prefix: state.prefix }),
+        onChange: (_value, _item, change) => (emitted = change),
+      });
+
+      engine.select({ id: 1 });
+      state.prefix = "after";
+      assert.strictEqual(
+        engine.resolvedOptions.prefix,
+        "after",
+        "the live options moved on"
+      );
+
+      await resume();
+      assert.strictEqual(
+        emitted.options,
+        context.options,
+        "the middleware and the emit share the snapshot"
+      );
+      assert.strictEqual(
+        emitted.options.prefix,
+        "before",
+        "the deferred emit keeps the original values"
+      );
+      assert.true(Object.isFrozen(emitted.options), "the snapshot is frozen");
+    });
+  }
+);

@@ -4,10 +4,7 @@ import type {
   SelectItemId,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
-import type {
-  SelectChangeContext,
-  SelectCustomizationContext,
-} from "./customizations.ts";
+import type { SelectChangeContext } from "./customizations.ts";
 import type SelectOptionsView from "./select-options.ts";
 import type { SelectionOrigin } from "./selection-updates.ts";
 
@@ -25,7 +22,7 @@ export default class SelectionActions {
     value: SelectValue,
     payload: SelectItem | SelectItem[] | null
   ) => void;
-  #getExtensionContext: () => SelectCustomizationContext;
+  #getExtensionContext: () => Omit<SelectChangeContext, "value" | "items">;
 
   /** Runs the once-only change queue around the guarded controlled emit. */
   #runChange: (
@@ -47,7 +44,7 @@ export default class SelectionActions {
       value: SelectValue,
       payload: SelectItem | SelectItem[] | null
     ) => void;
-    getExtensionContext: () => SelectCustomizationContext;
+    getExtensionContext: () => Omit<SelectChangeContext, "value" | "items">;
     /** Applies sealed per-select change declarations. */
     runChange: (
       defaultStep: () => void,
@@ -307,22 +304,24 @@ export default class SelectionActions {
     const nextValue = this.#coerceValue(rawNextValue);
     const items = this.#itemsFor(nextValue);
     const payload = this.#options.multiple ? items : (items[0] ?? null);
+    const context = {
+      value: nextValue,
+      items: payload,
+      ...this.#getExtensionContext(),
+    };
 
     // The selection-side-effect extension point: the default behavior emits the
     // controlled `onChange`; registered change middleware wraps it (and
     // may run `next()` to proceed or skip it).
-    this.#runChange(
-      () => {
-        if (this.#beforeEmit(origin, nextValue)) {
-          this.#options.onChange?.(nextValue, payload, { origin, reason });
-        }
-      },
-      {
-        value: nextValue,
-        items: payload,
-        ...this.#getExtensionContext(),
+    this.#runChange(() => {
+      if (this.#beforeEmit(origin, nextValue)) {
+        this.#options.onChange?.(nextValue, payload, {
+          origin,
+          reason,
+          options: context.options,
+        });
       }
-    );
+    }, context);
 
     // Legacy `modifySelectKit(id).onChange` extensions (side effects only, run after
     // the value has changed — matching the old ordering).

@@ -390,7 +390,11 @@ module(
         "the call-site context is passed"
       );
       assert.strictEqual(seen.value, 2, "the next value is passed");
-      assert.false("control" in seen, "the change context carries no control");
+      assert.strictEqual(
+        typeof seen.control?.reload,
+        "function",
+        "the change context carries the control"
+      );
     });
 
     test("the control is one frozen object for the life of the select", async function (assert) {

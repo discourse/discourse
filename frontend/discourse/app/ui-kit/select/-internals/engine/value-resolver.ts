@@ -257,9 +257,10 @@ export default class ValueResolver {
     values: SelectItemId[],
     opts: SelectLoadOptions
   ): Map<string, SelectItem> | Promise<Map<string, SelectItem>> {
+    const loadOptions = { ...opts, options: this.#options.resolvedOptions };
     if (this.#options.resolveValues) {
       const result = this.#attempt(() =>
-        this.#options.resolveValues!(values, opts)
+        this.#options.resolveValues!(values, loadOptions)
       );
       return this.#isPromise(result)
         ? result.then(
@@ -269,7 +270,9 @@ export default class ValueResolver {
         : this.#toResolvedMap(result);
     }
     const per = values.map((v) => {
-      const result = this.#attempt(() => this.#options.resolveValue?.(v, opts));
+      const result = this.#attempt(() =>
+        this.#options.resolveValue?.(v, loadOptions)
+      );
       return this.#isPromise(result)
         ? result.then(
             (item) => [v, item] as const,
@@ -350,7 +353,12 @@ export default class ValueResolver {
       this.assertCanResolve(value);
     }
     const built = this.#options.createUnresolvedItem
-      ? this.#attempt(() => this.#options.createUnresolvedItem!(value))
+      ? this.#attempt(() =>
+          this.#options.createUnresolvedItem!(
+            value,
+            this.#options.resolvedOptions
+          )
+        )
       : undefined;
     if (built) {
       const item = {

@@ -1,6 +1,13 @@
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { trackedObject } from "@ember/reactive/collections";
-import { click, fillIn, render, settled } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  render,
+  settled,
+  setupOnerror,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -720,6 +727,625 @@ module(
         [1, 1, 1],
         "classes and title come from one run per row"
       );
+    });
+  }
+);
+
+/** Every tier appends to the recipe's `prefix`, so a delivered value proves it was resolved. */
+function customizeRecipe() {
+  customize((selects) =>
+    selects.forKind("recipe", (spec) =>
+      spec.options((current) => ({ prefix: `${current.prefix}+kind` }))
+    )
+  );
+}
+
+module(
+  "Integration | ui-kit | select | DSelect select-customizations | recipe options",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("a recipe key resolves from the call site through every tier", async function (assert) {
+      const seen = [];
+      customize((selects) => {
+        selects.forIdentifier("crumb", (spec) =>
+          spec.options((current) => {
+            seen.push(current.prefix);
+            return { prefix: `${current.prefix}+identifier` };
+          })
+        );
+        selects.forKind("recipe", (spec) =>
+          spec.options((current) => {
+            seen.push(current.prefix);
+            return { prefix: `${current.prefix}+kind` };
+          })
+        );
+        selects.forAll((spec) =>
+          spec.options((current) => {
+            seen.push(current.prefix);
+            return { prefix: `${current.prefix}+all` };
+          })
+        );
+      });
+
+      await render(
+        <template>
+          <DSelect
+            @identifier="crumb"
+            @items={{ITEMS}}
+            @kind="recipe"
+            @kindOptions={{hash prefix="base"}}
+          >
+            <:item as |item options|>{{options.prefix}} {{item.name}}</:item>
+          </DSelect>
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert.deepEqual(
+        seen.slice(0, 3),
+        ["base", "base+all", "base+all+kind"],
+        "each tier sees the call site's value, then the tiers before it"
+      );
+      assert
+        .dom(optionWithText("base+all+kind+identifier Apple"))
+        .exists("the recipe renders the most specific value");
+    });
+
+    test("resolved options reach the items function", async function (assert) {
+      customizeRecipe();
+      const itemsFor = (options) => [{ id: 1, name: `${options?.prefix} one` }];
+
+      await render(
+        <template>
+          <DSelect
+            @items={{itemsFor}}
+            @kind="recipe"
+            @kindOptions={{hash prefix="base"}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert.dom("[role='option']").hasText("base+kind one");
+    });
+
+    test("a zero-argument items function still works", async function (assert) {
+      const itemsFor = () => ITEMS;
+
+      await render(<template><DSelect @items={{itemsFor}} /></template>);
+      await click("[role='combobox']");
+
+      assert.dom("[role='option']").exists({ count: 3 });
+    });
+
+    test("resolved options reach @load, @resolveValue and @resolveValues", async function (assert) {
+      customizeRecipe();
+      const seen = {};
+      const load = (filter, opts) => {
+        seen.load = opts.options?.prefix;
+        return [{ id: 1, name: "One" }];
+      };
+      const resolveValue = (value, opts) => {
+        seen.resolveValue = opts.options?.prefix;
+        return { id: value, name: `Item ${value}` };
+      };
+      const resolveValues = (values, opts) => {
+        seen.resolveValues = opts.options?.prefix;
+        return values.map((id) => ({ id, name: `Item ${id}` }));
+      };
+      const held = [8];
+
+      await render(
+        <template>
+          <div class="single">
+            <DSelect
+              @debounce={{false}}
+              @kind="recipe"
+              @kindOptions={{hash prefix="base"}}
+              @load={{load}}
+              @resolveValue={{resolveValue}}
+              @value={{7}}
+              @variant="static"
+            />
+          </div>
+          <div class="multi">
+            <DSelect
+              @kind="recipe"
+              @kindOptions={{hash prefix="base"}}
+              @load={{load}}
+              @multiple={{true}}
+              @resolveValues={{resolveValues}}
+              @value={{held}}
+            />
+          </div>
+        </template>
+      );
+
+      await click(".single [role='combobox']");
+
+      assert.deepEqual(seen, {
+        load: "base+kind",
+        resolveValue: "base+kind",
+        resolveValues: "base+kind",
+      });
+    });
+
+    test("resolved options reach onChange as part of its third argument", async function (assert) {
+      customizeRecipe();
+      const onChange = sinon.spy();
+
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @kind="recipe"
+            @kindOptions={{hash prefix="base"}}
+            @onChange={{onChange}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      await click(optionWithText("Banana"));
+
+      assert.true(onChange.calledOnce);
+      const [value, item, change] = onChange.firstCall.args;
+      assert.strictEqual(value, 2, "the value keeps its position");
+      assert.strictEqual(item.name, "Banana", "so does the item");
+      assert.strictEqual(change.options?.prefix, "base+kind");
+    });
+
+    test("resolved options reach every recipe callback as the last argument", async function (assert) {
+      customizeRecipe();
+      const seen = {};
+      const record = (name, options) => (seen[name] = options?.prefix);
+      const items = [
+        { id: 1, name: "Apple", section: "fruit" },
+        { id: 2, name: "Beet", section: "root" },
+      ];
+      let snapshot;
+      const allowCreate = (filter, list, options) => {
+        record("allowCreate", options);
+        return true;
+      };
+      const createItem = (filter, options) => {
+        record("createItem", options);
+        return { id: filter, name: `Create ${filter}`, __create: true };
+      };
+      const createUnresolvedItem = (value, options) => {
+        record("createUnresolvedItem", options);
+        return { id: value, name: `Missing ${value}` };
+      };
+      const specialItems = (state, options) => {
+        snapshot = state;
+        record("specialItems", options);
+        return [];
+      };
+      const filterBy = (item, term, options) => {
+        record("filterBy", options);
+        return item.name.toLowerCase().includes(term.toLowerCase());
+      };
+      const groupBy = (item, options) => {
+        record("groupBy", options);
+        return item.section;
+      };
+      const groupLabel = (key, options) => {
+        record("groupLabel", options);
+        return key;
+      };
+
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{allowCreate}}
+            @createItem={{createItem}}
+            @createUnresolvedItem={{createUnresolvedItem}}
+            @filterBy={{filterBy}}
+            @groupBy={{groupBy}}
+            @groupLabel={{groupLabel}}
+            @items={{items}}
+            @kind="recipe"
+            @kindOptions={{hash prefix="base"}}
+            @specialItems={{specialItems}}
+            @value={{99}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      await fillIn("[role='combobox']", "a");
+
+      assert.deepEqual(seen, {
+        allowCreate: "base+kind",
+        createItem: "base+kind",
+        createUnresolvedItem: "base+kind",
+        filterBy: "base+kind",
+        groupBy: "base+kind",
+        groupLabel: "base+kind",
+        specialItems: "base+kind",
+      });
+      assert.deepEqual(
+        Object.keys(snapshot).sort(),
+        ["filter", "hasValue", "value"],
+        "the snapshot argument is unchanged"
+      );
+    });
+
+    test("resolved options reach the blocks as the last parameter", async function (assert) {
+      customizeRecipe();
+      const items = [{ id: 1, name: "Apple", section: "fruit" }];
+      const groupLabel = (key) => key;
+
+      await render(
+        <template>
+          <div class="held">
+            <DSelect
+              @groupBy="section"
+              @groupLabel={{groupLabel}}
+              @items={{items}}
+              @kind="recipe"
+              @kindOptions={{hash prefix="base"}}
+              @value={{1}}
+              @variant="static"
+            >
+              <:item as |item options|>
+                <span class="x-item">{{options.prefix}}</span>
+              </:item>
+              <:selection as |item options|>
+                <span class="x-selection">{{options.prefix}}</span>
+              </:selection>
+              <:groupHeader as |header options|>
+                <span class="x-header">{{options.prefix}}</span>
+              </:groupHeader>
+              <:footer as |state options|>
+                <span class="x-footer">{{options.prefix}}</span>
+              </:footer>
+            </DSelect>
+          </div>
+          <div class="missing">
+            <DSelect
+              @items={{items}}
+              @kind="recipe"
+              @kindOptions={{hash prefix="base"}}
+              @value={{99}}
+              @variant="static"
+            >
+              <:unresolved as |item options|>
+                <span class="x-unresolved">{{options.prefix}}</span>
+              </:unresolved>
+            </DSelect>
+          </div>
+        </template>
+      );
+
+      assert.dom(".x-selection").hasText("base+kind");
+      assert.dom(".x-unresolved").hasText("base+kind");
+
+      await click(".held [role='combobox']");
+      assert.dom(".x-item").hasText("base+kind");
+      assert.dom(".x-header").hasText("base+kind");
+      assert.dom(".x-footer").hasText("base+kind");
+    });
+
+    test("delivered options carry the resolved core keys too", async function (assert) {
+      const itemsFor = (options) => [{ id: 1, name: options?.label }];
+      customize((selects) =>
+        selects.forKind("recipe", (spec) =>
+          spec.options(() => ({ label: "From extension" }))
+        )
+      );
+
+      await render(
+        <template>
+          <DSelect
+            @items={{itemsFor}}
+            @kind="recipe"
+            @kindOptions={{hash prefix="base"}}
+            @label="Call site"
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert.dom("[role='option']").hasText("From extension");
+    });
+
+    test("recipe values stay live", async function (assert) {
+      customizeRecipe();
+      const state = new (class {
+        @tracked prefix = "first";
+      })();
+
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @kind="recipe"
+            @kindOptions={{hash prefix=state.prefix}}
+          >
+            <:item as |item options|>{{options.prefix}} {{item.name}}</:item>
+          </DSelect>
+        </template>
+      );
+      await click("[role='combobox']");
+      assert.dom(optionWithText("first+kind Apple")).exists();
+
+      state.prefix = "second";
+      await settled();
+      assert.dom(optionWithText("second+kind Apple")).exists();
+    });
+
+    test("null in the hash counts as absent, but the key stays declared", async function (assert) {
+      const warn = sinon.stub(console, "warn");
+      let seen;
+      customize((selects) =>
+        selects.forKind("recipe", (spec) =>
+          spec.options((current) => {
+            seen = current;
+            return { prefix: "set" };
+          })
+        )
+      );
+
+      try {
+        await render(
+          <template>
+            <DSelect
+              @items={{ITEMS}}
+              @kind="recipe"
+              @kindOptions={{hash prefix=null}}
+            >
+              <:item as |item options|>{{options.prefix}} {{item.name}}</:item>
+            </DSelect>
+          </template>
+        );
+        await click("[role='combobox']");
+
+        assert.true("prefix" in seen, "the key is declared");
+        assert.strictEqual(seen.prefix, undefined, "with no base value");
+        assert.dom(optionWithText("set Apple")).exists("the override applies");
+        assert.false(warn.calledWithMatch("prefix"), "and it does not warn");
+      } finally {
+        warn.restore();
+      }
+    });
+
+    test("only keys that are neither core nor declared warn", async function (assert) {
+      const warn = sinon.stub(console, "warn");
+      customize((selects) =>
+        selects.forKind("recipe", (spec) =>
+          spec.options(() => ({ prefix: "ok", label: "ok", sufix: "typo" }))
+        )
+      );
+
+      try {
+        await render(
+          <template>
+            <DSelect
+              @items={{ITEMS}}
+              @kind="recipe"
+              @kindOptions={{hash prefix="base"}}
+            />
+          </template>
+        );
+
+        assert.true(warn.calledWithMatch("sufix"), "the typo warns");
+        assert.false(warn.calledWithMatch('"prefix"'), "a recipe key does not");
+        assert.false(warn.calledWithMatch('"label"'), "a core key does not");
+      } finally {
+        warn.restore();
+      }
+    });
+
+    test("@kindOptions without @kind asserts", async function (assert) {
+      let message;
+      setupOnerror((error) => (message ??= error.message));
+
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}} @kindOptions={{hash prefix="base"}} />
+        </template>
+      );
+
+      assert.true(
+        !!message?.includes("@kindOptions"),
+        `the assertion names @kindOptions: ${message}`
+      );
+      assert.true(
+        /@kind(?!Options)/.test(message ?? ""),
+        `and the missing @kind: ${message}`
+      );
+    });
+
+    test("a recipe key named like a core key asserts", async function (assert) {
+      let message;
+      setupOnerror((error) => (message ??= error.message));
+
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @kind="recipe"
+            @kindOptions={{hash label="Mine"}}
+          />
+        </template>
+      );
+
+      assert.true(
+        message?.includes("label"),
+        `the assertion names the colliding key: ${message}`
+      );
+    });
+
+    test("every point's context carries the resolved options", async function (assert) {
+      customizeRecipe();
+      const seen = {};
+      customize((selects) =>
+        selects.forKind("recipe", (spec) => {
+          spec.content((items, context) => {
+            seen.content = context.options;
+            return items;
+          });
+          spec.row((row, context) => {
+            seen.row = context.options;
+          });
+          spec.load((load, context) => {
+            seen.load = context.options;
+            return load;
+          });
+          spec.change((next, context) => {
+            seen.change = context.options;
+            next();
+          });
+        })
+      );
+      const load = () => ITEMS;
+
+      await render(
+        <template>
+          <DSelect
+            @debounce={{false}}
+            @kind="recipe"
+            @kindOptions={{hash prefix="base"}}
+            @load={{load}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      await click(optionWithText("Banana"));
+
+      for (const point of ["content", "row", "load", "change"]) {
+        assert.strictEqual(
+          seen[point]?.prefix,
+          "base+kind",
+          `${point} sees the resolved value`
+        );
+        assert.true(Object.isFrozen(seen[point]), `${point} gets a snapshot`);
+      }
+    });
+
+    test("a change middleware and the emit it lets through share one snapshot", async function (assert) {
+      customizeRecipe();
+      let middlewareOptions;
+      customize((selects) =>
+        selects.forKind("recipe", (spec) =>
+          spec.change((next, context) => {
+            middlewareOptions = context.options;
+            next();
+          })
+        )
+      );
+      const onChange = sinon.spy();
+
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @kind="recipe"
+            @kindOptions={{hash prefix="base"}}
+            @onChange={{onChange}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      await click(optionWithText("Banana"));
+
+      assert.strictEqual(onChange.firstCall.args[2].options, middlewareOptions);
+    });
+
+    test("the change context carries the control", async function (assert) {
+      let contentControl;
+      let changeControl;
+      let reloadedAfterEmit = false;
+      customize((selects) =>
+        selects.forAll((spec) => {
+          spec.content((items, context) => {
+            contentControl = context.control;
+            return items;
+          });
+          spec.change(async (next, context) => {
+            changeControl = context.control;
+            await next();
+            // Guarded so a missing control fails the assertions below, not the whole run.
+            if (context.control) {
+              context.control.reload();
+              reloadedAfterEmit = true;
+            }
+          });
+        })
+      );
+
+      await render(<template><DSelect @items={{ITEMS}} /></template>);
+      await click("[role='combobox']");
+      await click(optionWithText("Banana"));
+
+      assert.strictEqual(changeControl, contentControl, "the same control");
+      assert.true(reloadedAfterEmit, "it can reload after the emit");
+    });
+
+    test("one options callback drives a core and a recipe key from tracked setup state", async function (assert) {
+      customize((selects) =>
+        selects.forKind("recipe", (spec) => {
+          const state = trackedObject({ suggesting: false });
+          spec.options(() =>
+            state.suggesting
+              ? { placeholder: "Suggesting", prefix: "suggest" }
+              : { placeholder: "Browsing", prefix: "browse" }
+          );
+          spec.content((items) => [
+            {
+              id: "toggle",
+              name: "Toggle",
+              onSelect() {
+                state.suggesting = !state.suggesting;
+              },
+            },
+            ...items,
+          ]);
+        })
+      );
+
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @kind="recipe"
+            @kindOptions={{hash prefix="base"}}
+          >
+            <:item as |item options|>{{options.prefix}} {{item.name}}</:item>
+          </DSelect>
+        </template>
+      );
+      await click("[role='combobox']");
+      assert.dom("[role='combobox']").hasAttribute("placeholder", "Browsing");
+      assert.dom(optionWithText("browse Apple")).exists();
+
+      await click(optionWithText("browse Toggle"));
+      assert.dom("[role='combobox']").hasAttribute("placeholder", "Suggesting");
+      assert.dom(optionWithText("suggest Apple")).exists();
+    });
+
+    test("an async select's items function sees resolved options during construction", async function (assert) {
+      customizeRecipe();
+      const calls = [];
+      const itemsFor = (options) => {
+        calls.push(options?.prefix);
+        return [];
+      };
+      const load = () => ITEMS;
+
+      await render(
+        <template>
+          <DSelect
+            @items={{itemsFor}}
+            @kind="recipe"
+            @kindOptions={{hash prefix="base"}}
+            @load={{load}}
+          />
+        </template>
+      );
+
+      assert.true(calls.length > 0, "construction read the items function");
+      assert.strictEqual(calls[0], "base+kind", "with resolved options");
     });
   }
 );

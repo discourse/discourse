@@ -92,11 +92,17 @@ export default class ListComposer {
 
     const createItem = this.#shouldOfferCreate(items)
       ? // `#shouldOfferCreate` already guaranteed a `createItem` is present.
-        this.#options.createItem!(this.#getFilter())
+        this.#options.createItem!(
+          this.#getFilter(),
+          this.#options.resolvedOptions
+        )
       : null;
 
     const consumerSpecial = makeArray(
-      this.#options.specialItems?.(this.#snapshot()) ?? []
+      this.#options.specialItems?.(
+        this.#snapshot(),
+        this.#options.resolvedOptions
+      ) ?? []
     ) as SelectItem[];
     // Sticky rows lead the whole list, ahead of the none row, so they are hoisted out of both the
     // specials and the source rows before grouping, which never reaches them.
@@ -245,7 +251,11 @@ export default class ListComposer {
     }
     const allowed =
       typeof this.#options.allowCreate === "function"
-        ? this.#options.allowCreate(filter, items)
+        ? this.#options.allowCreate(
+            filter,
+            items,
+            this.#options.resolvedOptions
+          )
         : !!this.#options.allowCreate;
     if (!allowed) {
       return false;
@@ -330,12 +340,12 @@ export default class ListComposer {
 
   #groupKey(item: SelectItem): SelectItemId {
     return typeof this.#options.groupBy === "function"
-      ? this.#options.groupBy(item)
+      ? this.#options.groupBy(item, this.#options.resolvedOptions)
       : item[this.#options.groupBy as string];
   }
 
   #groupLabel(key: SelectItemId): string | null | undefined {
-    return this.#options.groupLabel?.(key);
+    return this.#options.groupLabel?.(key, this.#options.resolvedOptions);
   }
 
   /**

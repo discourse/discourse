@@ -23,7 +23,9 @@ export function localItems(options: SelectOptionsView): SelectItem[] {
   // `makeArray` normalizes whatever the source yields — a thunk that returns null, or a
   // non-array value — into a real array, so downstream array reads never see a non-array.
   const resolved =
-    typeof options.items === "function" ? options.items() : options.items;
+    typeof options.items === "function"
+      ? options.items(options.resolvedOptions)
+      : options.items;
   return makeArray(resolved) as SelectItem[];
 }
 
@@ -46,7 +48,7 @@ function matchesFilter(
   term: string
 ): boolean {
   if (typeof options.filterBy === "function") {
-    return options.filterBy(item, term);
+    return options.filterBy(item, term, options.resolvedOptions);
   }
   const field = options.filterBy ?? options.labelField;
   return String(item?.[field] ?? "")

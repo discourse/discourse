@@ -28,7 +28,7 @@ export interface SelectCustomizationContext extends SelectNames {
 }
 
 /** What a content step receives. */
-export interface SelectContentContext extends SelectCustomizationContext {
+export interface SelectContentContext extends SelectResolvedContext {
   /** The current query. */
   filter: string;
   /** The normalized controlled value. */
@@ -68,6 +68,31 @@ export interface SelectPresentationOptions {
   disabled?: boolean;
 }
 
+/** Core and declared recipe values, resolved together into an immutable snapshot. */
+export type SelectResolvedOptions = Readonly<
+  SelectPresentationOptions & Record<string, unknown>
+>;
+
+/** Runtime customization data after options resolution. */
+export interface SelectResolvedContext extends SelectCustomizationContext {
+  /** The resolved core and recipe values at invocation time. */
+  options: SelectResolvedOptions;
+}
+
+/** Core keys reserved from recipe declarations, including keys with no base value. */
+const CORE_OPTION_KEYS = new Set<keyof SelectPresentationOptions>([
+  "caretIcon",
+  "iconOnly",
+  "label",
+  "placeholder",
+  "searchPlaceholder",
+  "icon",
+  "showCaret",
+  "clearable",
+  "noneLabel",
+  "disabled",
+]);
+
 /** Options callbacks read upstream state only, avoiding selection and presentation cycles. */
 export interface SelectOptionsContext extends SelectCustomizationContext {
   /** The normalized controlled value. */
@@ -85,7 +110,7 @@ export interface SelectRowPresentation {
 }
 
 /** State of the option row being presented. */
-export interface SelectRowContext extends SelectCustomizationContext {
+export interface SelectRowContext extends SelectResolvedContext {
   /** The raw item behind the row. */
   item: SelectItem;
   /** Whether the item is held. */
@@ -95,7 +120,7 @@ export interface SelectRowContext extends SelectCustomizationContext {
 }
 
 /** What a load step receives; it runs once per query. */
-export interface SelectLoadContext extends SelectCustomizationContext {
+export interface SelectLoadContext extends SelectResolvedContext {
   /** The query being loaded. */
   filter: string;
   /** The live select handle. */
@@ -103,11 +128,13 @@ export interface SelectLoadContext extends SelectCustomizationContext {
 }
 
 /** The proposed selection, before the controlled consumer is called. */
-export interface SelectChangeContext extends SelectCustomizationContext {
+export interface SelectChangeContext extends SelectResolvedContext {
   /** The proposed value, coerced to the source's id types. */
   value: SelectValue;
   /** Best-effort resolved items, with the select's single/multiple arity. */
   items: SelectItem | SelectItem[] | null;
+  /** The live select handle, shared with content callbacks. */
+  control: SelectControl;
 }
 
 /** A content step replaces the list passed to the following step. */
@@ -119,9 +146,9 @@ type Content = (
 type Row = (row: SelectRowPresentation, context: SelectRowContext) => void;
 /** An options step returns a partial over an immutable snapshot of the values so far. */
 type Options = (
-  current: Readonly<SelectPresentationOptions>,
+  current: SelectResolvedOptions,
   context: SelectOptionsContext
-) => Partial<SelectPresentationOptions> | void;
+) => (Partial<SelectPresentationOptions> & Record<string, unknown>) | void;
 /** The loader a load step receives and returns. */
 type Loader = NonNullable<SelectEngineOptions["load"]>;
 /** A load step wraps or replaces the previous loader. */
@@ -140,7 +167,7 @@ export interface SelectCustomizationSpec {
   content(callback: Content): void;
   /** Appends a row presentation step. */
   row(callback: Row): void;
-  /** Appends a presentation-options step. */
+  /** Appends a step resolving core and declared recipe options. */
   options(callback: Options): void;
   /** Appends a loader step. */
   load(callback: Load): void;
@@ -184,8 +211,22 @@ export default class SelectCustomizations {
   /** Only declarations from successful setups reach the runtime points. */
   #steps = new Declarations();
 
+  /** Recipe schema is captured once; base values are read live during resolution. */
+  #kindOptionKeys: string[];
+
   /** Collects all registrations before running matching setups in tier order. */
-  constructor(names: SelectNames) {
+  constructor(names: SelectNames, kindOptions?: Record<string, unknown>) {
+    assert(
+      "DSelect: @kindOptions requires @kind",
+      !kindOptions || !!names.kind
+    );
+    this.#kindOptionKeys = Object.keys(kindOptions ?? {});
+    for (const key of this.#kindOptionKeys) {
+      assert(
+        `DSelect: @kindOptions key "${key}" collides with a core option`,
+        !CORE_OPTION_KEYS.has(key as keyof SelectPresentationOptions)
+      );
+    }
     const tiers: Setup[][] = [[], [], []];
     let sealed = false;
     const register = (tier: number, setup: Setup, target?: string): void => {
@@ -267,12 +308,22 @@ export default class SelectCustomizations {
     return load;
   }
 
-  /** Resolves core keys in tier order, keeping snapshots immutable and locks additive. */
+  /** Resolves core and recipe keys in tier order, keeping snapshots immutable and locks additive. */
   resolveOptions(
     base: SelectPresentationOptions,
+    kindOptions: Record<string, unknown> | undefined,
     context: SelectOptionsContext
-  ): Readonly<SelectPresentationOptions> {
-    let current = this.#optionsSnapshot(base);
+  ): SelectResolvedOptions {
+    const declared = {
+      ...base,
+      ...Object.fromEntries(
+        this.#kindOptionKeys.map((key) => [
+          key,
+          kindOptions?.[key] ?? undefined,
+        ])
+      ),
+    };
+    let current = this.#optionsSnapshot(declared);
     for (const step of this.#steps.options) {
       const previous = current;
       const partial = withTransformerErrorHandling(
@@ -284,7 +335,7 @@ export default class SelectCustomizations {
       }
       const next = { ...current };
       for (const key of Object.keys(partial)) {
-        if (!Object.hasOwn(base, key)) {
+        if (!Object.hasOwn(declared, key)) {
           if (DEBUG) {
             warn(`DSelect: unknown options customization key "${key}"`, false, {
               id: "discourse.d-select.unknown-option",
@@ -292,13 +343,11 @@ export default class SelectCustomizations {
           }
           continue;
         }
-        // The runtime schema check above narrows the callback's untyped return keys.
-        const option = key as keyof SelectPresentationOptions;
         Object.assign(next, {
-          [option]:
-            option === "disabled"
+          [key]:
+            key === "disabled"
               ? !!current.disabled || !!partial.disabled
-              : partial[option],
+              : partial[key],
         });
       }
       current = this.#optionsSnapshot(next);
@@ -366,8 +415,8 @@ export default class SelectCustomizations {
 
   /** Copies nested caret state so freezing a snapshot never freezes caller-owned data. */
   #optionsSnapshot(
-    options: SelectPresentationOptions
-  ): Readonly<SelectPresentationOptions> {
+    options: SelectPresentationOptions & Record<string, unknown>
+  ): SelectResolvedOptions {
     return Object.freeze({
       ...options,
       caretIcon:
