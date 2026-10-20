@@ -99,7 +99,11 @@ function singleChild(content: Node | Fragment | null | undefined): Node | null {
   return content?.childCount === 1 ? content.firstChild : null;
 }
 
-function flattenSelection(doc: Node, from = 0, to = doc.content.size) {
+function flattenSelection(
+  doc: Node | Fragment,
+  from = 0,
+  to = doc instanceof Fragment ? doc.size : doc.content.size
+) {
   const nodes: Node[] = [];
   const segments: { start: number; end: number; pos: number }[] = [];
   let size = 0;
@@ -770,8 +774,16 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     const { state } = this.view;
     const { from, to } = state.selection;
     const text = this.#selectedMarkdownOr(exampleKey);
-    const tr = this.#surroundRange(state.tr, from, to, text, head, tail, opts);
-    this.#selectInserted(tr, from, to, text);
+    const { tr, prefix } = this.#surroundRange(
+      state.tr,
+      from,
+      to,
+      text,
+      head,
+      tail,
+      opts
+    );
+    this.#selectInserted(tr, from, to, text, prefix);
     this.view.dispatch(tr);
   }
 
@@ -783,7 +795,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     head: string,
     tail: string,
     opts?: SurroundOptions
-  ): Transaction {
+  ): { tr: Transaction; prefix: Fragment } {
     const $from = tr.doc.resolve(from);
     const $to = tr.doc.resolve(to);
     const withinTextblock = $from.sameParent($to) && $from.parent.isTextblock;
@@ -827,7 +839,10 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       ? this.#convertInlineMarkdown(markdown)
       : null;
     if (inlineContent) {
-      return tr.replaceWith(replacementFrom, replacementTo, inlineContent);
+      return {
+        tr: tr.replaceWith(replacementFrom, replacementTo, inlineContent),
+        prefix: this.#surroundPrefix(head, tail, true),
+      };
     }
     const parsed = this.convertFromMarkdown(markdown);
     if (
@@ -847,7 +862,10 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
         replacementTo++;
       }
     }
-    return this.#replaceWithParsed(tr, replacementFrom, replacementTo, parsed);
+    return {
+      tr: this.#replaceWithParsed(tr, replacementFrom, replacementTo, parsed),
+      prefix: this.#surroundPrefix(head, tail),
+    };
   }
 
   // Leading text keeps block rules from claiming the markup, like mid-line
@@ -900,11 +918,32 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       : tr.replaceRange(from, to, new Slice(doc.content, 0, 0));
   }
 
+  #surroundPrefix(head: string, tail: string, inline = false): Fragment {
+    const markdown = head + PROBE_TEXT + tail;
+    const doc = inline
+      ? this.#convertInlineMarkdown(markdown)
+      : this.tryConvertFromMarkdown(markdown);
+    if (!doc) {
+      return Fragment.empty;
+    }
+
+    const { content } = flattenSelection(doc);
+    let prefix = Fragment.empty;
+    content.forEach((node, offset) => {
+      const index = node.isText ? node.text!.indexOf(PROBE_TEXT) : -1;
+      if (index >= 0) {
+        prefix = content.cut(0, offset + index);
+      }
+    });
+    return prefix;
+  }
+
   #selectInserted(
     tr: Transaction,
     from: number,
     to: number,
-    text: string
+    text: string,
+    prefix = Fragment.empty
   ): void {
     // The replace step knows where the content landed, even when it was
     // placed before the selection's textblock.
@@ -920,7 +959,13 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       : Fragment.from(text ? this.schema.text(text) : null);
     const { content, segments } = flattenSelection(tr.doc, start, end);
     const firstNode = expected.firstChild;
-    let match: number | undefined;
+    // A wrapper can repeat the selected text, so prefer the parsed inner boundary.
+    let match: number | undefined =
+      prefix.size > 0 &&
+      content.cut(0, prefix.size).eq(prefix) &&
+      content.cut(prefix.size, prefix.size + expected.size).eq(expected)
+        ? prefix.size
+        : undefined;
     if (firstNode) {
       content.forEach((node, offset) => {
         if (match !== undefined) {
@@ -1033,8 +1078,9 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     const { state } = this.view;
     const { from, to } = state.selection;
     const text = this.#selectedMarkdownOr(exampleKey);
+    const firstHead = head();
     if (opts?.multiline === false) {
-      this.#applySurroundFallback(head(), "", exampleKey, opts);
+      this.#applySurroundFallback(firstHead, "", exampleKey, opts);
       this.focus();
       return;
     }
@@ -1046,7 +1092,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
         if (!opts?.applyEmptyLines && !line.length) {
           return line;
         }
-        previous = head(previous);
+        previous = previous === undefined ? firstHead : head(previous);
         return previous + line;
       })
       .join("\n");
@@ -1058,7 +1104,13 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       this.convertFromMarkdown(result)
     );
 
-    this.#selectInserted(tr, from, to, text);
+    this.#selectInserted(
+      tr,
+      from,
+      to,
+      text,
+      this.#surroundPrefix(firstHead, "")
+    );
 
     this.view.dispatch(tr);
     this.focus();

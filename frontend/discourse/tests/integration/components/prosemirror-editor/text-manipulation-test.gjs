@@ -245,6 +245,80 @@ module(
         .hasText("hello world", "the preceding text is retained");
     });
 
+    for (const [head, tail] of [
+      ["hello ", " suffix"],
+      ["prefix ", " hello"],
+      ["hello ", " hello"],
+    ]) {
+      test(`restores the original content selection with repeated wrapper text (${head}, ${tail})`, async function (assert) {
+        const state = await setupEditor();
+        setContent(state, "hello");
+        selectAll(state);
+
+        state.textManipulation.applySurroundSelection(head, tail, "wrap_text", {
+          multiline: false,
+        });
+
+        const { view } = state.textManipulation;
+        view.dispatch(view.state.tr.insertText("replacement"));
+
+        assert
+          .dom(".ProseMirror p")
+          .hasText(
+            `${head}replacement${tail}`,
+            "typing replaces the original content and preserves the wrapper"
+          );
+      });
+    }
+
+    for (const head of ["# hello ", "> hello "]) {
+      test(`restores the content selection with a repeated inline prefix (${head})`, async function (assert) {
+        const state = await setupEditor();
+        setContent(state, "before hello after");
+        state.textManipulation.selectText(8, 5);
+
+        state.textManipulation.applySurroundSelection(
+          head,
+          " suffix",
+          "wrap_text",
+          { multiline: false }
+        );
+
+        const { view } = state.textManipulation;
+        view.dispatch(view.state.tr.insertText("replacement"));
+
+        assert
+          .dom(".ProseMirror p")
+          .hasText(
+            `before ${head}replacement suffix after`,
+            "typing preserves the literal inline prefix and surrounding text"
+          );
+      });
+    }
+
+    test("restores the content selection with formatted repeated wrapper text", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello");
+      selectAll(state);
+
+      state.textManipulation.applySurroundSelection(
+        "**hello ",
+        " hello**",
+        "wrap_text",
+        { multiline: false }
+      );
+
+      const { view } = state.textManipulation;
+      view.dispatch(view.state.tr.insertText("replacement"));
+
+      assert
+        .dom(".ProseMirror strong")
+        .hasText(
+          "hello replacement hello",
+          "typing replaces the original content inside the formatted wrapper"
+        );
+    });
+
     test("preserves formatting and selection after an inline surround", async function (assert) {
       const state = await setupEditor();
       setContent(state, "hello **world**");
@@ -760,6 +834,28 @@ module(
   "Integration | Component | ProsemirrorEditor | Text manipulation | applyList",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    test("restores the content selection with repeated wrapper text in a list prefix", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello");
+      selectAll(state);
+
+      state.textManipulation.applyList(
+        state.textManipulation.getSelected(),
+        "hello ",
+        "list_item"
+      );
+
+      const { view } = state.textManipulation;
+      view.dispatch(view.state.tr.insertText("replacement"));
+
+      assert
+        .dom(".ProseMirror p")
+        .hasText(
+          "hello replacement",
+          "typing replaces the original content and preserves the list prefix"
+        );
+    });
 
     test("honors inline mode for a custom prefix across paragraphs", async function (assert) {
       const state = await setupEditor();
