@@ -1,40 +1,13 @@
 import Component from "@glimmer/component";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
-import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { i18n } from "discourse-i18n";
 
 export default class UppyBackupUploader extends Component {
-  @service siteSettings;
-
-  uppyUpload = new UppyUpload(this, {
-    id: "uppy-backup-uploader",
-    type: "backup",
-    uploadRootPath: "/admin/backups",
-    uploadUrl: "/admin/backups/upload",
-
-    // local backups
-    useChunkedUploads: this.args.localBackupStorage,
-
-    // direct s3 backups
-    useMultipartUploadsIfAvailable:
-      !this.args.localBackupStorage &&
-      this.siteSettings.enable_direct_s3_uploads,
-
-    validateUploadedFilesOptions: { skipValidation: true },
-
-    // Leaving the tab must not abort a backup upload
-    finishUploadsOnDestroy: true,
-
-    uploadDone: (responseData) => {
-      this.args.done(responseData.file_name);
-    },
-  });
-
   get uploadButtonText() {
-    return this.uppyUpload.uploading
+    return this.args.uppyUpload.uploading
       ? i18n("admin.backups.upload.uploading_progress", {
-          progress: this.uppyUpload.uploadProgress,
+          progress: this.args.uppyUpload.uploadProgress,
         })
       : i18n("admin.backups.upload.label");
   }
@@ -43,17 +16,19 @@ export default class UppyBackupUploader extends Component {
     <span>
       <label
         class="btn btn-small btn-primary admin-backups-upload"
-        disabled={{this.uppyUpload.uploading}}
+        disabled={{@uppyUpload.uploading}}
         title={{i18n "admin.backups.upload.title"}}
         ...attributes
       >
         {{this.uploadButtonText}}
+        {{! Render modifiers don't autotrack, so upload state changes don't rebind the input }}
         <input
           accept=".gz"
           class="hidden-upload-field"
-          disabled={{this.uppyUpload.uploading}}
+          disabled={{@uppyUpload.uploading}}
           type="file"
-          {{didInsert this.uppyUpload.setup}}
+          {{didInsert @uppyUpload.attachFileInput}}
+          {{willDestroy @uppyUpload.detachFileInput}}
         />
       </label>
     </span>
