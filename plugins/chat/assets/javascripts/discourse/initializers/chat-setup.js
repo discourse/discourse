@@ -162,7 +162,7 @@ class ChatSetupInit {
         position: "dropdown",
         action: "toggleEditor",
         displayed() {
-          return !!this.currentUser;
+          return !!this.currentUser && this.canUseRichEditor;
         },
       });
 

@@ -95,8 +95,12 @@ export default class ChatComposer extends Component {
     }
   }
 
+  get canUseRichEditor() {
+    return this.siteSettings.enable_composer_picker_and_rich_chat;
+  }
+
   get useRichEditor() {
-    return !!this.currentUser?.useRichEditor;
+    return this.canUseRichEditor && !!this.currentUser?.useRichEditor;
   }
 
   get editor() {
@@ -264,6 +268,10 @@ export default class ChatComposer extends Component {
 
   @action
   async toggleEditor() {
+    if (!this.canUseRichEditor) {
+      return;
+    }
+
     const preference = this.useRichEditor
       ? USER_OPTION_COMPOSITION_MODES.markdown
       : USER_OPTION_COMPOSITION_MODES.rich;
@@ -563,7 +571,7 @@ export default class ChatComposer extends Component {
       return this.handleEscape(event);
     }
 
-    if (event.key === "m" && event.ctrlKey) {
+    if (event.key === "m" && event.ctrlKey && this.canUseRichEditor) {
       event.preventDefault();
       this.toggleEditor();
       return;
