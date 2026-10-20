@@ -47,7 +47,6 @@ export default function (node, words, opts = {}) {
   let settings = {
     nodeName: "span",
     className: "highlighted",
-    matchCase: false,
   };
 
   settings = { ...settings, ...opts };
@@ -60,15 +59,10 @@ export default function (node, words, opts = {}) {
   }
 
   const pattern = `(\\W|^)(${words.join(" ")})(\\W|$)`;
-  let flag;
-
-  if (!settings.matchCase) {
-    flag = "i";
-  }
 
   highlight(
     node,
-    new RegExp(pattern, flag),
+    new RegExp(pattern, "i"),
     settings.nodeName.toUpperCase(),
     settings.className
   );
