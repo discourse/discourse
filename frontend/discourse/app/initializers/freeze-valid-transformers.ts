@@ -4,7 +4,7 @@ export default {
   before: "inject-discourse-objects",
   after: "discourse-bootstrap",
 
-  initialize() {
+  initialize(): void {
     _freezeValidTransformerNames();
   },
 };

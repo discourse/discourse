@@ -82,6 +82,7 @@ patchedDependencies:
   "ember-source@7.3.0": "patches/ember-source@7.3.0.patch"
   "http-proxy@1.18.1": "patches/http-proxy@1.18.1.patch"
   "pikaday": "patches/pikaday.patch"
+  "xss@1.0.15": "patches/xss@1.0.15.patch"
 peerDependencyRules:
   allowedVersions:
     "@mixer/parallel-prettier>prettier": "*"
