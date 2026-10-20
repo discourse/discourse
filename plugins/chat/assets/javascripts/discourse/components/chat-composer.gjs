@@ -39,7 +39,7 @@ import { cloneJSON } from "discourse/lib/object";
 import optionalService from "discourse/lib/optional-service";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
-import { and, not, or } from "discourse/truth-helpers";
+import { not, or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { isAutocompleteOpen } from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
@@ -104,6 +104,10 @@ export default class ChatComposer extends Component {
 
   get showFormattingBar() {
     return this.canUseRichEditor && this.chatFormattingBar.shown;
+  }
+
+  get showFormattingRow() {
+    return this.showFormattingBar && this.editor && !this.disabled;
   }
 
   get canUseRichEditor() {
@@ -749,31 +753,23 @@ export default class ChatComposer extends Component {
         {{willDestroy this.cancelPersistDraft}}
       >
         <div class="chat-composer__outer-container">
-          {{#if this.site.mobileView}}
-            <ChatComposerDropdown
-              @buttons={{this.dropdownButtons}}
-              @isDisabled={{this.disabled}}
-            />
-          {{/if}}
-
           <div class="chat-composer__inner-container">
-            {{#if (and this.showFormattingBar this.editor (not this.disabled))}}
+            {{#if this.showFormattingRow}}
               <div
                 aria-label={{i18n "chat.composer.formatting"}}
                 class="chat-composer__formatting-bar"
                 role="toolbar"
+                {{on "mousedown" this.trapMouseDown}}
               >
                 <ToolbarButtons @data={{this.formattingToolbar}} />
               </div>
             {{/if}}
 
             <div class="chat-composer__input-row">
-              {{#if this.site.desktopView}}
-                <ChatComposerDropdown
-                  @buttons={{this.dropdownButtons}}
-                  @isDisabled={{this.disabled}}
-                />
-              {{/if}}
+              <ChatComposerDropdown
+                @buttons={{this.dropdownButtons}}
+                @isDisabled={{this.disabled}}
+              />
 
               <div
                 class="chat-composer__input-container"
@@ -830,34 +826,19 @@ export default class ChatComposer extends Component {
                 @outletArgs={{lazyHash composer=this channel=@channel}}
               />
 
-              {{#if this.site.desktopView}}
-                <DButton
-                  class="-send"
-                  disabled={{or this.disabled (not this.sendEnabled)}}
-                  tabindex={{if this.sendEnabled 0 -1}}
-                  title={{i18n "chat.composer.send"}}
-                  @icon="paper-plane"
-                  {{on "click" this.onSend}}
-                  {{on "mousedown" this.trapMouseDown}}
-                  {{on "focus" (fn this.computeIsFocused true)}}
-                  {{on "blur" (fn this.computeIsFocused false)}}
-                />
-              {{/if}}
+              <DButton
+                class="-send"
+                disabled={{or this.disabled (not this.sendEnabled)}}
+                tabindex={{if this.sendEnabled 0 -1}}
+                title={{i18n "chat.composer.send"}}
+                @icon="paper-plane"
+                {{on "click" this.onSend}}
+                {{on "mousedown" this.trapMouseDown}}
+                {{on "focus" (fn this.computeIsFocused true)}}
+                {{on "blur" (fn this.computeIsFocused false)}}
+              />
             </div>
           </div>
-          {{#if this.site.mobileView}}
-            <DButton
-              class="-send"
-              disabled={{or this.disabled (not this.sendEnabled)}}
-              tabindex={{if this.sendEnabled 0 -1}}
-              title={{i18n "chat.composer.send"}}
-              @icon="paper-plane"
-              {{on "click" this.onSend}}
-              {{on "mousedown" this.trapMouseDown}}
-              {{on "focus" (fn this.computeIsFocused true)}}
-              {{on "blur" (fn this.computeIsFocused false)}}
-            />
-          {{/if}}
         </div>
       </div>
 
