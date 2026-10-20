@@ -1,5 +1,7 @@
 import { makeArray } from "discourse/lib/helpers";
 
+export const REVEAL_EVENT = "beforematch";
+
 function highlight(node, pattern, nodeName, className) {
   if (
     ![Node.ELEMENT_NODE, Node.TEXT_NODE].includes(node.nodeType) ||
@@ -85,4 +87,10 @@ export function unhighlightHTML(opts = {}) {
       parentNode.replaceChild(element.firstChild, element);
       parentNode.normalize();
     });
+}
+
+export function reveal(elements) {
+  elements.forEach((element) =>
+    element.dispatchEvent(new Event(REVEAL_EVENT, { bubbles: true }))
+  );
 }
