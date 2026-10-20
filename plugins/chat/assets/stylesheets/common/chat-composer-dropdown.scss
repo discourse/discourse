@@ -28,3 +28,25 @@
   width: 100%;
   justify-content: flex-start;
 }
+
+.chat-composer-dropdown__item.--toggle:not(.--toggle + .--toggle) {
+  border-top: 1px solid var(--content-border-color);
+  margin-top: 0.25rem;
+  padding-top: 0.25rem;
+}
+
+.chat-composer-dropdown__toggle {
+  width: 100%;
+  justify-content: flex-start;
+  cursor: pointer;
+
+  .d-toggle-switch {
+    --toggle-switch-width: 1.75em;
+    --toggle-switch-height: 1em;
+    margin-right: 0.5em;
+  }
+
+  .d-toggle-switch__checkbox-slider .d-icon {
+    display: none;
+  }
+}

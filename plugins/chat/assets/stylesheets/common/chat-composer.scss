@@ -217,13 +217,3 @@
     }
   }
 }
-
-.chat-composer-button.--active {
-  .d-icon,
-  .is-focused & .d-icon {
-    padding: var(--space-1);
-    border-radius: var(--d-border-radius);
-    background: var(--d-selected);
-    color: var(--d-selected-text-color);
-  }
-}

@@ -4,10 +4,19 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DButton from "discourse/ui-kit/d-button";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class ChatComposerDropdown extends Component {
+  get actionButtons() {
+    return this.args.buttons.filter((button) => !this.#isToggle(button));
+  }
+
+  get toggleButtons() {
+    return this.args.buttons.filter((button) => this.#isToggle(button));
+  }
+
   @action
   async onButtonClick(button, closeFn) {
     // Safari requires file input clicks to happen synchronously
@@ -34,6 +43,10 @@ export default class ChatComposerDropdown extends Component {
     uploadButton?.action?.();
   }
 
+  #isToggle(button) {
+    return typeof button.toggled === "boolean";
+  }
+
   <template>
     {{#if @buttons.length}}
       <DMenu
@@ -54,7 +67,7 @@ export default class ChatComposerDropdown extends Component {
         as |menu|
       >
         <ul class="chat-composer-dropdown__list">
-          {{#each @buttons as |button|}}
+          {{#each this.actionButtons as |button|}}
             <li class={{dConcatClass "chat-composer-dropdown__item" button.id}}>
               <DButton
                 class={{dConcatClass
@@ -66,6 +79,34 @@ export default class ChatComposerDropdown extends Component {
                 @icon={{button.icon}}
                 @label={{button.label}}
               />
+            </li>
+          {{/each}}
+          {{#each this.toggleButtons as |button|}}
+            <li
+              class={{dConcatClass
+                "chat-composer-dropdown__item"
+                "--toggle"
+                button.id
+              }}
+            >
+              {{! eslint-disable-next-line ember/template-no-invalid-interactive }}
+              <div
+                class={{dConcatClass
+                  "chat-composer-dropdown__toggle"
+                  "btn"
+                  "btn-transparent"
+                  button.id
+                }}
+                {{on "click" (fn this.onButtonClick button menu.close)}}
+              >
+                <DToggleSwitch
+                  aria-label={{i18n button.label}}
+                  @state={{button.toggled}}
+                />
+                <span class="chat-composer-dropdown__toggle-label">
+                  {{i18n button.label}}
+                </span>
+              </div>
             </li>
           {{/each}}
         </ul>

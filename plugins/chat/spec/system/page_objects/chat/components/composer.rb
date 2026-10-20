@@ -87,10 +87,25 @@ module PageObjects
 
         def toggle_editor
           rich = rich_editor?
-          component.find(".chat-composer-dropdown__trigger-btn").click
-          find(".chat-composer-dropdown__action-btn.toggle-editor").click
+          click_dropdown_toggle("toggle-editor")
           rich ? has_markdown_editor? : has_rich_editor?
           self
+        end
+
+        def toggle_formatting_bar
+          shown = component.has_css?(".chat-composer__formatting-bar", wait: 0)
+          click_dropdown_toggle("toggle-formatting")
+          if shown
+            component.has_no_css?(".chat-composer__formatting-bar")
+          else
+            component.has_css?(".chat-composer__formatting-bar")
+          end
+          self
+        end
+
+        def click_dropdown_toggle(id)
+          component.find(".chat-composer-dropdown__trigger-btn").click
+          find(".chat-composer-dropdown__toggle.#{id}").click
         end
 
         def reply_to_last_message_shortcut

@@ -570,11 +570,9 @@ en:
 
       composer:
         toggle_toolbar: "Toggle toolbar"
-        switch_to_markdown: "Switch to Markdown editor"
         formatting: "Formatting"
-        show_formatting: "Show formatting"
-        hide_formatting: "Hide formatting"
-        switch_to_rich_text: "Switch to rich text editor"
+        formatting_bar: "Formatting bar"
+        rich_text: "Rich text"
         italic_text: "emphasized text"
         bold_text: "strong text"
         code_text: "code text"

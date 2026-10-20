@@ -36,7 +36,7 @@ RSpec.describe "Chat composer formatting" do
 
     it "leaves selections to the formatting bar while it is shown" do
       chat_page.visit_channel(channel_1)
-      find(".chat-composer-button.-toggle-formatting").click
+      channel_page.composer.toggle_formatting_bar
       channel_page.composer.input.send_keys("ship it now")
       channel_page.composer.input.send_keys(*Array.new(3) { %i[shift left] })
 
@@ -64,7 +64,7 @@ RSpec.describe "Chat composer formatting" do
         chat_page.visit_channel(channel_1)
         expect(page).to have_no_css(".chat-composer__formatting-bar")
 
-        find(".chat-composer-button.-toggle-formatting").click
+        channel_page.composer.toggle_formatting_bar
         channel_page.composer.input.send_keys(
           "groceries",
           [SystemHelpers::PLATFORM_KEY_MODIFIER, "a"],
@@ -73,15 +73,14 @@ RSpec.describe "Chat composer formatting" do
 
         expect(channel_page.composer).to have_value("* groceries")
 
-        find(".chat-composer-button.-toggle-formatting").click
+        channel_page.composer.toggle_formatting_bar
 
         expect(page).to have_no_css(".chat-composer__formatting-bar")
       end
 
       it "strikes text and wraps it in a code block" do
         chat_page.visit_channel(channel_1)
-        find(".chat-composer-button.-toggle-formatting").click
-        expect(find(".chat-composer-button.-toggle-formatting")[:class]).to include("--active")
+        channel_page.composer.toggle_formatting_bar
 
         channel_page.composer.input.send_keys("gone", [SystemHelpers::PLATFORM_KEY_MODIFIER, "a"])
         find(".chat-composer__formatting-bar .strikethrough").click
