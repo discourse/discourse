@@ -19,7 +19,7 @@ import AiSearchReferences, {
   citedTopicsFromCooked,
   citedTopicsFromRaw,
 } from "../../lib/ai-search-references.js";
-import { withScope } from "../../lib/ai-search-scope.js";
+import { semanticSearchable, withScope } from "../../lib/ai-search-scope.js";
 import {
   keywordSearch,
   semanticSearch,
@@ -276,12 +276,10 @@ export default class AiSearchConversation extends Component {
 
   async #searchQuestion(question) {
     const scoped = withScope(question, this.args.scope);
-    const semanticInScope = !["topic", "messages"].includes(
-      this.args.scope?.split(":")[0]
-    );
     const [keyword, semantic] = await Promise.all([
       keywordSearch(scoped),
-      this.siteSettings.ai_embeddings_semantic_search_enabled && semanticInScope
+      this.siteSettings.ai_embeddings_semantic_search_enabled &&
+      semanticSearchable(this.args.scope)
         ? semanticSearch(scoped)
         : [],
     ]);

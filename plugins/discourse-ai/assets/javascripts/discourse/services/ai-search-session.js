@@ -6,7 +6,7 @@ import { bind } from "discourse/lib/decorators";
 import { searchForTerm, translateResults } from "discourse/lib/search";
 import { followUpAvailable } from "../lib/ai-follow-up.js";
 import { chooseTab, readsAsQuestion } from "../lib/ai-search-intent.js";
-import { withScope } from "../lib/ai-search-scope.js";
+import { semanticSearchable, withScope } from "../lib/ai-search-scope.js";
 
 // a search this soon after the last one on the same page is still the same hunt
 const SEARCH_AGAIN_WINDOW_MS = 3 * 60 * 1000;
@@ -529,16 +529,11 @@ export default class AiSearchSession extends Service {
         !!this.siteSettings.ai_ask_ai_search_intent_decision_model,
     });
 
-    // The page lists semantic matches when no keywords match. Embeddings
-    // describe public topics, so they cannot rank within one topic or among
-    // messages.
-    const semanticInScope = !["topic", "messages"].includes(
-      this.scope?.key.split(":")[0]
-    );
+    // the page lists semantic matches when no keywords match
     if (
       this.surface === "page" &&
       this.siteSettings.ai_embeddings_semantic_search_enabled &&
-      semanticInScope
+      semanticSearchable(this.scope?.key)
     ) {
       semanticSearch(this.#scoped(query)).then((posts) => {
         if (this.query === query) {

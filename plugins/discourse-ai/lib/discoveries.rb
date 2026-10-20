@@ -94,22 +94,6 @@ module DiscourseAi
         scope.to_s.split(" ").map { |part| scope_part_filter(part) }.join(" ")
       end
 
-      def scope_part_filter(part)
-        type, value = part.split(":", 2)
-        case type
-        when "messages"
-          "in:messages"
-        when "topic"
-          "topic:#{value}"
-        when "category"
-          "category:#{value}"
-        when "tag"
-          "tags:#{value}"
-        when "user"
-          "user:#{value}"
-        end
-      end
-
       def private_message_query?(query)
         query.to_s.match?(PRIVATE_MESSAGE_FILTER)
       end
@@ -167,31 +151,14 @@ module DiscourseAi
       end
 
       # Whether the reader's recent asks show them leaving the answer for the
-      # results, unless they have lately been coming back to it.
+      # results, unless they have lately been coming back to it. A habit moves
+      # slowly, so it is worked out at most every few minutes.
       def prefers_results?(user)
-        opened_on_answer =
-          AskAiLog
-            .where(user_id: user.id, ask_tab_opened: "ask")
-            .order(asked_at: :desc)
-            .limit(PREFERENCE_ASKS)
-            .pluck(:ask_tab_switched_to, :ask_tab_switched_after_ms)
-        return false if opened_on_answer.size < PREFERENCE_MIN_ASKS
-
-        left =
-          opened_on_answer.count do |switched_to, after_ms|
-            switched_to.present? && after_ms < QUICK_SWITCH_MS
+        Discourse
+          .cache
+          .fetch("discourse-ai:discoveries:prefers-results:#{user.id}", expires_in: 5.minutes) do
+            leaves_answers?(user)
           end
-        return false if left * 2 <= opened_on_answer.size
-
-        returned =
-          AskAiLog
-            .where(user_id: user.id)
-            .where.not(ask_tab_opened: ["", "ask"])
-            .order(asked_at: :desc)
-            .limit(PREFERENCE_ASKS)
-            .pluck(:ask_tab_switched_to)
-            .count("ask")
-        returned < 2
       end
 
       # @return [AskAiLog, nil] the new ask's log, or nil when the request was already made
@@ -374,6 +341,48 @@ module DiscourseAi
       end
 
       private
+
+      def leaves_answers?(user)
+        opened_on_answer =
+          AskAiLog
+            .where(user_id: user.id, ask_tab_opened: "ask")
+            .order(asked_at: :desc)
+            .limit(PREFERENCE_ASKS)
+            .pluck(:ask_tab_switched_to, :ask_tab_switched_after_ms)
+        return false if opened_on_answer.size < PREFERENCE_MIN_ASKS
+
+        left =
+          opened_on_answer.count do |switched_to, after_ms|
+            switched_to.present? && after_ms < QUICK_SWITCH_MS
+          end
+        return false if left * 2 <= opened_on_answer.size
+
+        returned =
+          AskAiLog
+            .where(user_id: user.id)
+            .where.not(ask_tab_opened: ["", "ask"])
+            .order(asked_at: :desc)
+            .limit(PREFERENCE_ASKS)
+            .pluck(:ask_tab_switched_to)
+            .count("ask")
+        returned < 2
+      end
+
+      def scope_part_filter(part)
+        type, value = part.split(":", 2)
+        case type
+        when "messages"
+          "in:messages"
+        when "topic"
+          "topic:#{value}"
+        when "category"
+          "category:#{value}"
+        when "tag"
+          "tags:#{value}"
+        when "user"
+          "user:#{value}"
+        end
+      end
 
       def discover_agent
         AiAgent.find_by_id_from_cache(SiteSetting.ai_ask_ai_agent)

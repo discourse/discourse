@@ -47,6 +47,14 @@ export function scopeFilter(key) {
 }
 
 /**
+ * Whether semantic search can rank within a scope. Embeddings describe public
+ * topics, so they cannot rank within one topic or among messages.
+ */
+export function semanticSearchable(key) {
+  return !["topic", "messages"].includes(key?.split(":")[0]);
+}
+
+/**
  * The query as keyword search should see it, within the scope. Closing
  * punctuation is dropped: it adds nothing to the keywords, and a search within
  * a topic finds nothing when the term ends with it.
