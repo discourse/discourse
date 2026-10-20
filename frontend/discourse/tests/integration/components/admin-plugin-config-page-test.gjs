@@ -96,12 +96,8 @@ module("Integration | Component | AdminPluginConfigPage", function (hooks) {
     assert.dom(".d-nav-submenu").doesNotExist();
   });
 
-  test("links tabs to @plugin and highlights only the current tab", async function (assert) {
+  test("links tabs to @plugin and highlights only the settings tab on the settings route", async function (assert) {
     registerAdminPluginConfigNav(PLUGIN_ID, [
-      {
-        route: "adminPlugins.show.settings",
-        label: "admin.plugins.change_settings_short",
-      },
       {
         route: "adminPlugins.show.discourse-test-plugin.one",
         label: "admin.title",
@@ -116,7 +112,6 @@ module("Integration | Component | AdminPluginConfigPage", function (hooks) {
       plugin;
     sinon.stub(getOwner(this).lookup("service:router"), "currentRoute").value({
       name: "adminPlugins.show.settings",
-      params: {},
       parent: { params: { plugin_id: PLUGIN_ID } },
     });
 
@@ -129,11 +124,11 @@ module("Integration | Component | AdminPluginConfigPage", function (hooks) {
     );
 
     assert
-      .dom(".admin-plugin-config-page__top-nav-item a")
-      .hasAttribute("href", `/admin/plugins/${PLUGIN_ID}/settings`);
-    assert
       .dom(".admin-plugin-config-page__top-nav-item.active")
       .exists({ count: 1 })
       .hasText(i18n("admin.plugins.change_settings_short"));
+    assert
+      .dom(".admin-plugin-config-page__top-nav-item.active a")
+      .hasAttribute("href", `/admin/plugins/${PLUGIN_ID}/settings`);
   });
 });
