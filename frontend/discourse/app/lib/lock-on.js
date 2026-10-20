@@ -105,7 +105,7 @@ export default class LockOn {
     if (!this.previousTop && !elementTop) {
       // …but not too long
       if (Date.now() - this.startedAt > LOCK_TIMEOUT_MS) {
-        this.clearLock();
+        return this.clearLock();
       }
 
       this._requestId = window.requestAnimationFrame(this._performLocking);
