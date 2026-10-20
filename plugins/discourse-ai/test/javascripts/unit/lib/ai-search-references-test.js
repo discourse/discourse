@@ -53,7 +53,6 @@ module("Discourse AI | Unit | Lib | ai-search-references", function (hooks) {
     );
     assert.strictEqual(ranked[0].movement, 1, "moved up one place");
     assert.true(ranked[1].isNew, "newly surfaced topic is flagged");
-    assert.true(ranked[0].citedNow);
     assert.strictEqual(ranked[2].movement, -2);
   });
 

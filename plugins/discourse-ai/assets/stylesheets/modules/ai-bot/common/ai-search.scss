@@ -193,26 +193,22 @@
   }
 
   &__list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
     margin: 0;
     list-style: none;
   }
 
   &__item {
-    padding: var(--space-2);
-    border-radius: var(--d-border-radius);
+    padding: var(--space-2) 0;
     transition: background-color 1s;
 
     &.--new,
     &.--up {
       animation: ai-search-highlight 1.6s ease-out;
     }
+  }
 
-    &.--cited-now {
-      box-shadow: inset 3px 0 0 var(--success);
-    }
+  &__item + &__item {
+    border-top: 1px solid var(--content-border-color);
   }
 
   &__link {
@@ -231,20 +227,11 @@
     color: var(--primary-medium);
   }
 
-  &__kind {
+  &__cited {
     padding: 0 var(--space-1);
     border-radius: var(--d-border-radius);
-    background: var(--primary-very-low);
-
-    &.--cited {
-      color: var(--success);
-      background: var(--success-low);
-    }
-
-    &.--semantic {
-      color: var(--tertiary);
-      background: var(--tertiary-very-low);
-    }
+    color: var(--success);
+    background: var(--success-low);
   }
 
   &__movement {

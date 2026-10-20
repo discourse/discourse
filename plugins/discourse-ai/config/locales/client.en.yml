@@ -1909,10 +1909,7 @@ en:
         moved_down:
           one: "Moved down %{count} place"
           other: "Moved down %{count} places"
-        reference_kinds:
-          cited: "Cited"
-          semantic: "Semantic"
-          keyword: "Keyword"
+        reference_cited: "Cited"
         tabs:
           label: "Search results"
           ask: "Ask AI"

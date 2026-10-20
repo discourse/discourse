@@ -17,10 +17,7 @@ export default class AiSearchReferencesPanel extends Component {
         (category) => category.id === reference.categoryId
       ),
       movedBy: Math.abs(reference.movement),
-      kindLabels: reference.kinds.map((kind) => ({
-        kind,
-        label: i18n(`discourse_ai.ai_search.reference_kinds.${kind}`),
-      })),
+      cited: reference.kinds.includes("cited"),
     }));
   }
 
@@ -41,7 +38,6 @@ export default class AiSearchReferencesPanel extends Component {
               (if reference.isNew "--new")
               (if (gt reference.movement 0) "--up")
               (if (lt reference.movement 0) "--down")
-              (if reference.citedNow "--cited-now")
             }}
           >
             <a class="ai-search-references__link" href={{reference.url}}>
@@ -51,11 +47,11 @@ export default class AiSearchReferencesPanel extends Component {
               {{#if reference.category}}
                 {{dCategoryLink reference.category link=false}}
               {{/if}}
-              {{#each reference.kindLabels as |kind|}}
-                <span class="ai-search-references__kind --{{kind.kind}}">
-                  {{kind.label}}
+              {{#if reference.cited}}
+                <span class="ai-search-references__cited">
+                  {{i18n "discourse_ai.ai_search.reference_cited"}}
                 </span>
-              {{/each}}
+              {{/if}}
               {{#if reference.isNew}}
                 <span class="ai-search-references__movement">
                   {{i18n "discourse_ai.ai_search.reference_new"}}

@@ -82,9 +82,6 @@ export default class AiSearchReferences {
         ...entry,
         score: this.#score(entry, currentTurn),
         kinds: [...new Set(entry.signals.map((signal) => signal.kind))],
-        citedNow: entry.signals.some(
-          (signal) => signal.kind === "cited" && signal.turn === currentTurn
-        ),
       }))
       .sort((a, b) => b.score - a.score || a.topicId - b.topicId)
       .slice(0, limit);
