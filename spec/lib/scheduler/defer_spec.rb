@@ -68,14 +68,14 @@ RSpec.describe Scheduler::Defer do
         end
       end
       @defer.later { completed << true }
-      2.times { release_threads << true }
+      release_threads.close
       expect(completed.pop(timeout: 5)).to eq(true)
 
       release_join << true
 
       expect(stopping.join(5)).to eq(stopping)
     ensure
-      2.times { release_threads&.push(true) }
+      release_threads&.close
       release_join&.push(true)
       stopping&.kill
       stopping&.join
