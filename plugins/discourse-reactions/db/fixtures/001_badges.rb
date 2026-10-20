@@ -13,8 +13,7 @@ first_reaction_query = <<~SQL
   WHERE row_number = 1
 SQL
 
-Badge.seed(:name) do |b|
-  b.name = "First Reaction"
+Badge.seed_unless_site_has("First Reaction") do |b|
   b.default_icon = "face-smile"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
@@ -23,5 +22,4 @@ Badge.seed(:name) do |b|
   b.query = first_reaction_query
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
   b.trigger = Badge::Trigger::PostRevision
-  b.system = true
 end

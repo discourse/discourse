@@ -136,6 +136,22 @@ class Badge < ActiveRecord::Base
     UserBadge.ensure_consistency! if saved_change_to_enabled?
   end
 
+  # Seeds a badge shipped with the site as a system badge. Seeding matches on
+  # name, so a name the site already gave a badge of its own would be taken over
+  # and rewritten; leave that badge alone instead.
+  def self.seed_unless_site_has(name, &block)
+    if where(system: false).where("LOWER(name) = ?", name.downcase).exists?
+      Rails.logger.warn("Skipped seeding the #{name.inspect} badge, this site has its own")
+      return
+    end
+
+    seed(:name) do |badge|
+      badge.name = name
+      badge.system = true
+      block.call(badge)
+    end
+  end
+
   # fields that can not be edited on system badges
   def self.protected_system_fields
     %i[name badge_type_id multiple_grant target_posts show_posts query trigger auto_revoke listable]
@@ -271,7 +287,16 @@ class Badge < ActiveRecord::Base
     self.badge_grouping_id = val if !badge_grouping_id || badge_grouping_id <= BadgeGrouping::Other
   end
 
+  # Only badges shipped with the site are translated. A badge created on the
+  # site owns its text outright, so a name matching a translation key must not
+  # pull that translation in over it. A record loaded without the column cannot
+  # say either way, so it keeps its own text rather than raising.
+  def translatable?
+    has_attribute?(:system) && system?
+  end
+
   def display_name
+    return name if !translatable?
     self.class.display_name(name)
   end
 
@@ -280,6 +305,8 @@ class Badge < ActiveRecord::Base
   end
 
   def long_description
+    return self[:long_description] || "" if !translatable?
+
     key = "badges.#{i18n_name}.long_description"
     I18n.t(
       key,
@@ -294,6 +321,8 @@ class Badge < ActiveRecord::Base
   end
 
   def description
+    return self[:description] || "" if !translatable?
+
     key = "badges.#{i18n_name}.description"
     I18n.t(
       key,
