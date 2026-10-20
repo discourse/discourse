@@ -154,6 +154,14 @@ describe "AI combined search" do
     end
   end
 
+  it "sends readers without the combined search to the regular search page" do
+    SiteSetting.enable_ai_combined_search = false
+
+    visit "/discourse-ai/discoveries/search?q=password"
+
+    expect(page).to have_current_path(%r{\A/search})
+  end
+
   it "lists every related topic the answer used" do
     category = Fabricate(:category, name: "Account help")
     more_topics =
