@@ -11,7 +11,7 @@ module DiscourseWorkflows
 
       def self.signature
         {
-          name: name,
+          name:,
           description:
             "Request human approval to save an exact validated workflow draft as unpublished. Never invent, alter, or reuse the draft token.",
           parameters: [
@@ -42,8 +42,7 @@ module DiscourseWorkflows
       end
 
       def self.available_for_context?(context)
-        context&.user&.admin? && context.user.guardian.can_manage_workflows? &&
-          Capability.status(user: context.user, phase: :visibility) == :available
+        Capability.visible?(context&.user)
       end
 
       def summary
@@ -56,22 +55,18 @@ module DiscourseWorkflows
 
       def details
         return I18n.t("discourse_workflows.admin_assistant.invalid_draft") unless draft
-        if WorkflowDraft.contains_secret?(draft.slice(:name, :operations, :script_validations))
+        if WorkflowDraft.contains_secret?(configuration)
           return I18n.t("discourse_workflows.admin_assistant.secret_draft")
         end
 
-        preview =
-          JSON.pretty_generate(
-            kind: PREVIEW_KIND,
-            configuration: draft.slice(:name, :operations, :script_validations),
-          )
+        preview = JSON.pretty_generate(kind: PREVIEW_KIND, configuration:)
         longest_run = preview.scan(/`+/).map(&:length).max.to_i
         fence = "`" * [3, longest_run + 1].max
         "#{fence}admin-assistant-workflow\n#{preview}\n#{fence}\n"
       end
 
       def validation_error
-        if !authorized?
+        if !Capability.authorized?(context.user)
           return error_response(I18n.t("discourse_workflows.admin_assistant.not_allowed"))
         end
         if Capability.status(user: context.user, phase: execution_phase) != :available
@@ -81,7 +76,7 @@ module DiscourseWorkflows
         if draft[:name].blank? || !draft[:operations].is_a?(Array) || draft[:operations].blank?
           return error_response(I18n.t("discourse_workflows.admin_assistant.incomplete_draft"))
         end
-        if WorkflowDraft.contains_secret?(draft.slice(:name, :operations, :script_validations))
+        if WorkflowDraft.contains_secret?(configuration)
           return error_response(I18n.t("discourse_workflows.admin_assistant.secret_draft"))
         end
 
@@ -139,8 +134,8 @@ module DiscourseWorkflows
         error_response(I18n.t("discourse_workflows.admin_assistant.approval_required"))
       end
 
-      def authorized?
-        context.user&.admin? && context.user.guardian.can_manage_workflows?
+      def configuration
+        draft.slice(:name, :operations, :script_validations)
       end
 
       def create_unpublished_workflow!
@@ -161,7 +156,7 @@ module DiscourseWorkflows
           workflow = result[:workflow]
           patch =
             DiscourseWorkflows::Workflow::Action::ApplyPatch.call(
-              workflow: workflow,
+              workflow:,
               operations: draft[:operations],
               persist: true,
               user: context.user,
@@ -174,7 +169,7 @@ module DiscourseWorkflows
       end
 
       def draft
-        WorkflowDraft.read_with_compatibility(parameters[:draft_token])
+        @draft ||= WorkflowDraft.read_with_compatibility(parameters[:draft_token])
       end
 
       def execution_phase

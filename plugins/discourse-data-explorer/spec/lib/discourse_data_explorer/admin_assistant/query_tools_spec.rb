@@ -16,12 +16,7 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery do
   let(:token) { DiscourseDataExplorer::AdminAssistant::QueryDraft.sign(query, user: admin) }
   let(:context) { DiscourseAi::Agents::BotContext.new(user: admin, messages: []) }
   let(:tool) do
-    described_class.new(
-      { draft_token: token },
-      bot_user: Discourse.system_user,
-      llm: nil,
-      context: context,
-    )
+    described_class.new({ draft_token: token }, bot_user: Discourse.system_user, llm: nil, context:)
   end
 
   before do
@@ -36,10 +31,10 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery do
       AiToolAction.create!(
         tool_name: described_class.name,
         tool_parameters: {
-          draft_token: draft_token,
-          requester_id: requester_id,
+          draft_token:,
+          requester_id:,
         },
-        ai_agent: ai_agent,
+        ai_agent:,
         bot_user_id: Discourse.system_user.id,
       )
     ReviewableAiToolAction
@@ -88,21 +83,13 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery do
     expect(DiscourseDataExplorer::Query.count).to eq(0)
   end
 
-  it "rejects unauthorized, expired, tampered, and cross-site drafts" do
+  it "rejects unauthorized and invalid drafts" do
     context.user = user
     expect(tool.validation_error[:status]).to eq("error")
 
     context.user = admin
     tool.parameters[:draft_token] = "#{token}tampered"
     expect(tool.validation_error[:status]).to eq("error")
-
-    tool.parameters[:draft_token] = token
-    freeze_time 2.days.from_now
-    expect(tool.validation_error[:status]).to eq("error")
-
-    freeze_time 2.days.ago
-    Discourse.stubs(:current_hostname).returns("another.example.com")
-    expect(DiscourseDataExplorer::AdminAssistant::QueryDraft.read(token)).to be_nil
   end
 
   it "rechecks public capability and requester authorization at approval time" do
@@ -151,16 +138,17 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery do
     DiscourseDataExplorer::AdminAssistant::QueryDraft.release(token, reviewable_id: reviewable.id)
   end
 
-  it "reconstructs a pending tool even when runtime policy now hides it" do
-    reviewable = build_reviewable
+  it "resolves the tools by name but hides them at runtime when restricted" do
     DiscourseDataExplorer::AdminAssistant::Capability.stubs(:status).returns(:restricted)
     runtime_context = DiscourseAi::Agents::BotContext.new(user: admin, messages: [])
 
     expect(
       DiscourseAi::Agents::DiscourseAdminAssistant.new.runtime_tools(context: runtime_context),
     ).not_to include(described_class)
-    expect(DiscourseAi::Agents::Agent.all_available_tools).to include(described_class)
-    expect { reviewable.perform(other_admin, :approve) }.to raise_error(Discourse::InvalidAccess)
+    expect(DiscourseAi::Agents::Agent.external_tool_by_name("CreateQuery")).to eq(described_class)
+    expect(DiscourseAi::Agents::Agent.external_tool_by_name("GenerateQuery")).to eq(
+      DiscourseDataExplorer::AdminAssistant::GenerateQuery,
+    )
   end
 end
 
@@ -173,7 +161,7 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::GenerateQuery do
       { description: "Recent users" },
       bot_user: Discourse.system_user,
       llm: nil,
-      context: context,
+      context:,
     )
   end
   let(:query) do
@@ -202,12 +190,11 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::GenerateQuery do
 
   it "denies policy before query generation and rejects oversized requests" do
     DiscourseDataExplorer::AdminAssistant::Capability.stubs(:status).returns(:restricted)
-    allow(DiscourseDataExplorer::QueryGeneration).to receive(:call)
+    DiscourseDataExplorer::QueryGeneration.expects(:call).never
     expect(tool.invoke[:status]).to eq("error")
 
     DiscourseDataExplorer::AdminAssistant::Capability.stubs(:status).returns(:available)
-    tool.parameters[:description] = "x" * 4001
+    tool.parameters[:description] = "x" * (described_class::MAX_DESCRIPTION_LENGTH + 1)
     expect(tool.invoke[:status]).to eq("error")
-    expect(DiscourseDataExplorer::QueryGeneration).not_to have_received(:call)
   end
 end

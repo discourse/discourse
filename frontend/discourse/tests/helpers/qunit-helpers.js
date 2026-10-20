@@ -45,6 +45,7 @@ import { resetDragAdoptionForTesting } from "discourse/lib/-internals/drag-and-d
 import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-header-actions";
 import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
+import { resetCategoryTagSearchCache } from "discourse/lib/category-tag-search";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { _clearRegisteredActions } from "discourse/lib/composer/actions-registry";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
@@ -90,6 +91,7 @@ import {
   setTestPresence,
 } from "discourse/lib/user-presence";
 import { resetUserSearchCache } from "discourse/lib/user-search";
+import { destroyUserStatuses } from "discourse/lib/user-status-on-autocomplete";
 import { resetComposerCustomizations } from "discourse/models/composer";
 import { clearAuthMethods } from "discourse/models/login-method";
 import { clearNavItems } from "discourse/models/nav-item";
@@ -236,6 +238,8 @@ export function testCleanup(container, app) {
   resetInlineOneboxCache();
   resetCustomPostMessageCallbacks();
   resetUserSearchCache();
+  resetCategoryTagSearchCache();
+  destroyUserStatuses();
   resetHighestReadCache();
   resetCardClickListenerSelector();
   resetComposerCustomizations();

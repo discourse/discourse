@@ -1002,4 +1002,5 @@ const categoryMultiCache = new MultiCache(async (ids) => {
 
 export function resetCategoryCache() {
   categoryMultiCache.reset();
+  _uncategorized = undefined;
 }

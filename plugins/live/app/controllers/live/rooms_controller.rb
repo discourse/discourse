@@ -375,9 +375,7 @@ module Live
       session = close_session_for(@room.id, current_user.id)
       Live::ParticipantTracker.mark_left(@room.id, current_user.id)
       Live::ParticipantTracker.remove(@room.id, current_user.id)
-      if Live::ParticipantTracker.human_user_ids(@room.id).empty?
-        Live::AgentManager.evict_agents_in_room!(@room)
-      end
+      Live::AgentManager.evict_agents_in_room!(@room) if Live::ParticipantTracker.vacant?(@room.id)
       Live::UserStatusManager.clear_live_status(current_user)
       Live::RoomBroadcaster.publish_participants(@room)
       Live::BadgeGranterHooks.on_leave(current_user, session)
@@ -393,7 +391,18 @@ module Live
 
       ensure_participant_session!
 
-      Live::ParticipantTracker.add(@room.id, current_user.id)
+      # A session can outlive presence (see participant_session_ttl), so a
+      # beat resuming after an outage re-claims a slot like any admission.
+      admission =
+        Live::ParticipantTracker.add_within_capacity(
+          @room.id,
+          current_user.id,
+          @room.effective_max_participants,
+        )
+      if admission == :full
+        Live::ParticipantTracker.revoke_participant_session(@room.id, current_user.id)
+        return render_json_error(I18n.t("live.errors.room_full"), status: 410)
+      end
       Live::ParticipantTracker.refresh_participant_session(@room.id, current_user.id)
 
       metadata = Live::ParticipantTracker.get_metadata(@room.id, current_user.id)

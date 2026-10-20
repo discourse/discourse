@@ -27,6 +27,24 @@ RSpec.describe Jobs::PublishRoomParticipants do
     )
   end
 
+  it "keeps a mesh room pinned while a member can still resume" do
+    Live::ParticipantTracker.pin_transport!(room.id, "mesh")
+    Live::ParticipantTracker.add(room.id, user1.id)
+    Live::ParticipantTracker.update_metadata(room.id, user1.id, { role: "participant" })
+    Live::ParticipantTracker.create_participant_session!(room.id, user1.id)
+    key = "#{Live::ParticipantTracker::KEY_NAMESPACE}:#{room.id}:participants"
+    Discourse.redis.zadd(key, 1.hour.ago.to_f, user1.id)
+
+    job.execute({})
+
+    expect(Live::ParticipantTracker.pinned_transport(room.id)).to eq("mesh")
+
+    Live::ParticipantTracker.revoke_participant_session(room.id, user1.id)
+    job.execute({})
+
+    expect(Live::ParticipantTracker.pinned_transport(room.id)).to be_nil
+  end
+
   it "reflects TTL-expired participants in broadcast" do
     Live::ParticipantTracker.add(room.id, user1.id)
     Live::ParticipantTracker.add(room.id, user2.id)

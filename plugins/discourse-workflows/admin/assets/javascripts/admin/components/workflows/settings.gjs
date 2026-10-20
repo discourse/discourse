@@ -7,8 +7,8 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import { i18n } from "discourse-i18n";
+import confirmDeleteWorkflow from "../../lib/workflows/confirm-delete-workflow.js";
 import ErrorWorkflowChooser from "./error-workflow-chooser.js";
-import InUseDialog from "./in-use-dialog.gjs";
 
 export default class WorkflowSettings extends Component {
   @service router;
@@ -32,33 +32,9 @@ export default class WorkflowSettings extends Component {
 
   @action
   async deleteWorkflow() {
-    await this.dialog.deleteConfirm({
-      message: i18n("discourse_workflows.delete_confirm", {
-        name: this.args.workflow.name,
-      }),
-      didConfirm: async () => {
-        try {
-          await this.args.workflow.destroyRecord();
-          this.router.transitionTo(
-            "adminPlugins.show.discourse-workflows.index"
-          );
-        } catch (e) {
-          const body = e.jqXHR?.responseJSON;
-          if (body?.type === "workflow_called_by_other_workflows") {
-            this.dialog.alert({
-              title: i18n("discourse_workflows.in_use_title"),
-              bodyComponent: InUseDialog,
-              bodyComponentModel: {
-                description: i18n("discourse_workflows.in_use_description"),
-                workflows: body.referencing_workflows,
-                close: () => this.dialog.cancel(),
-              },
-            });
-          } else {
-            popupAjaxError(e);
-          }
-        }
-      },
+    await confirmDeleteWorkflow(this.dialog, this.args.workflow, {
+      onDeleted: () =>
+        this.router.transitionTo("adminPlugins.show.discourse-workflows.index"),
     });
   }
 

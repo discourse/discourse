@@ -12,6 +12,10 @@ module Live
     # Must outlive one client heartbeat interval (10s) plus request latency,
     # so a beat already in flight when the user leaves can't resurrect them.
     LEFT_TOMBSTONE_TTL = 15
+    # How long a client cut off from the server (a deploy, a network blip,
+    # sleep) can stay silent and still resume its call. Mesh media keeps
+    # flowing peer-to-peer meanwhile; leave/kick/takeover revoke explicitly.
+    PARTICIPANT_SESSION_RESUME_WINDOW = 10.minutes.to_i
 
     # Purge-expired, existence check, capacity check, and add in one script:
     # a separate ZCARD followed by ZADD would let concurrent joiners race the
@@ -175,10 +179,35 @@ module Live
         redis.del(participant_session_key(room_id, user_id))
       end
 
-      # 2x the presence TTL (like the transport pin) so a briefly-lapsed
-      # heartbeat can still self-heal presence before the session dies.
+      # Outlives presence so a heartbeat resuming after an outage can
+      # self-heal presence instead of being expelled from a call whose media
+      # never stopped.
       def participant_session_ttl
-        SiteSetting.live_participant_ttl_seconds.to_i * 2
+        [PARTICIPANT_SESSION_RESUME_WINDOW, SiteSetting.live_participant_ttl_seconds.to_i * 2].max
+      end
+
+      # No humans present, and none who could still resume a mesh call. LiveKit
+      # reports departures itself, so its rooms ignore resuming members.
+      def vacant?(room_id)
+        return false if human_user_ids(room_id).any?
+
+        pinned_transport(room_id) == "livekit" || resuming_user_ids(room_id).empty?
+      end
+
+      # Members whose presence lapsed while their participant session is still
+      # resumable: likely cut off from the server rather than gone, so clients
+      # keep their existing media connections instead of tearing them down.
+      def resuming_user_ids(room_id)
+        present = user_ids(room_id).to_set
+        candidates = redis.hkeys(metadata_key(room_id)).map(&:to_i)
+        candidates = candidates.select { |id| id.positive? && present.exclude?(id) }
+        return [] if candidates.empty?
+
+        exists =
+          redis.pipelined do |pipeline|
+            candidates.each { |id| pipeline.exists(participant_session_key(room_id, id)) }
+          end
+        candidates.zip(exists).filter_map { |id, count| id if count.to_i > 0 }
       end
 
       # Short-lived tombstone for a deliberate departure (leave/kick), letting
@@ -361,7 +390,7 @@ module Live
           user_ids(room_id).sort.map do |id|
             [id, (metadata[id] || {}).except(:last_heartbeat_at).sort.to_h]
           end
-        Digest::MD5.hexdigest(payload.to_json)
+        Digest::MD5.hexdigest([payload, resuming_user_ids(room_id).sort].to_json)
       end
 
       # Atomically store the new fingerprint and return the previous one, so a
@@ -381,9 +410,10 @@ module Live
       # The transport pin ("mesh" | "livekit") holds a room instance to one
       # transport for its whole life: joiners after the first ignore current
       # settings, so a call is never split across transports. `SET NX` makes
-      # the first join win under a race; the short TTL (refreshed by every
-      # join/heartbeat) lets a crashed room self-heal instead of holding a
-      # stale transport.
+      # the first join win under a race. The TTL (refreshed by every
+      # join/heartbeat) matches the participant session so members resuming
+      # after an outage find their transport still pinned; vacant rooms are
+      # unpinned explicitly by the minute sweep.
       def pin_transport!(room_id, transport)
         redis.set(transport_key(room_id), transport, nx: true, ex: transport_pin_ttl)
         refresh_transport_pin(room_id)
@@ -421,7 +451,7 @@ module Live
       end
 
       def transport_pin_ttl
-        SiteSetting.live_participant_ttl_seconds.to_i * 2
+        participant_session_ttl
       end
 
       def touch_recently_active(room_id)

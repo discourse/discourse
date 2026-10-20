@@ -684,6 +684,45 @@ RSpec.describe Live::RoomsController do
       expect(Live::ParticipantTracker.user_ids(room.id)).to include(user.id)
     end
 
+    it "returns 410 and revokes the session when the room filled up while presence was lapsed" do
+      room.update!(max_participants: 2)
+      sign_in(user)
+      session_id = establish_presence!(room, user)
+      key = "#{Live::ParticipantTracker::KEY_NAMESPACE}:#{room.id}:participants"
+      Discourse.redis.zadd(key, 1.hour.ago.to_f, user.id)
+      establish_presence!(room, staff)
+      establish_presence!(room, other_participant)
+
+      post "/live/rooms/#{room.id}/heartbeat.json", params: { participant_session_id: session_id }
+
+      expect(response.status).to eq(410)
+      expect(Live::ParticipantTracker.user_ids(room.id)).not_to include(user.id)
+      expect(Live::ParticipantTracker.participant_session?(room.id, user.id)).to eq(false)
+    end
+
+    it "flags lapsed members with a resumable session so peers keep their media" do
+      sign_in(user)
+      session_id = establish_presence!(room, user)
+      establish_presence!(room, other_participant)
+      Live::ParticipantTracker.update_metadata(
+        room.id,
+        other_participant.id,
+        { role: "participant" },
+      )
+      key = "#{Live::ParticipantTracker::KEY_NAMESPACE}:#{room.id}:participants"
+      Discourse.redis.zadd(key, 1.hour.ago.to_f, other_participant.id)
+
+      published = []
+      allow(MessageBus).to receive(:publish) { |channel, data, _opts| published << data }
+
+      post "/live/rooms/#{room.id}/heartbeat.json", params: { participant_session_id: session_id }
+
+      expect(response.status).to eq(204)
+      participants_message = published.find { |data| data[:type] == "participants" }
+      expect(participants_message[:participants].map { |p| p[:id] }).to contain_exactly(user.id)
+      expect(participants_message[:resuming_ids]).to contain_exactly(other_participant.id)
+    end
+
     it "rejects a heartbeat without a participant session and creates no presence" do
       sign_in(user)
 

@@ -144,6 +144,69 @@ RSpec.describe Live::ParticipantTracker do
 
       expect(described_class.valid_participant_session?(room.id, user1.id, session_id)).to eq(false)
     end
+
+    it "outlives presence long enough to resume after a server outage" do
+      expect(described_class.participant_session_ttl).to be >= 10.minutes.to_i
+      expect(described_class.participant_session_ttl).to be >
+        SiteSetting.live_participant_ttl_seconds
+    end
+  end
+
+  describe ".vacant?" do
+    def resuming!(user)
+      described_class.update_metadata(room.id, user.id, { role: "participant" })
+      described_class.create_participant_session!(room.id, user.id)
+    end
+
+    it "is false while a mesh member can still resume" do
+      resuming!(user1)
+
+      expect(described_class.vacant?(room.id)).to eq(false)
+    end
+
+    it "ignores resuming members in a LiveKit room" do
+      described_class.pin_transport!(room.id, "livekit")
+      resuming!(user1)
+
+      expect(described_class.vacant?(room.id)).to eq(true)
+    end
+
+    it "is false while a human is present" do
+      described_class.add(room.id, user1.id)
+
+      expect(described_class.vacant?(room.id)).to eq(false)
+    end
+  end
+
+  describe ".resuming_user_ids" do
+    def lapse_presence(user)
+      key = "#{described_class::KEY_NAMESPACE}:#{room.id}:participants"
+      Discourse.redis.zadd(key, 1.hour.ago.to_f, user.id)
+    end
+
+    it "lists members whose presence lapsed while their session is resumable" do
+      described_class.add(room.id, user1.id)
+      described_class.update_metadata(room.id, user1.id, { role: "participant" })
+      described_class.create_participant_session!(room.id, user1.id)
+      lapse_presence(user1)
+
+      expect(described_class.resuming_user_ids(room.id)).to contain_exactly(user1.id)
+    end
+
+    it "excludes present members, members without a session, and members who left" do
+      [user1, user2].each do |user|
+        described_class.add(room.id, user.id)
+        described_class.update_metadata(room.id, user.id, { role: "participant" })
+        described_class.create_participant_session!(room.id, user.id)
+      end
+      user3 = Fabricate(:user)
+      described_class.update_metadata(room.id, user3.id, { role: "participant" })
+      lapse_presence(user3)
+
+      described_class.remove(room.id, user2.id)
+
+      expect(described_class.resuming_user_ids(room.id)).to be_empty
+    end
   end
 
   describe ".raise_hand" do
@@ -189,11 +252,12 @@ RSpec.describe Live::ParticipantTracker do
       expect(described_class.pinned_transport(room.id)).to eq("livekit")
     end
 
-    it "expires on its own so a crashed room self-heals" do
+    it "expires with the participant session so resuming members keep their transport" do
       described_class.pin_transport!(room.id, "livekit")
 
       ttl = Discourse.redis.ttl("#{described_class::KEY_NAMESPACE}:#{room.id}:transport")
-      expect(ttl).to be_between(1, SiteSetting.live_participant_ttl_seconds * 2)
+      expect(ttl).to be > SiteSetting.live_participant_ttl_seconds * 2
+      expect(ttl).to be <= described_class.participant_session_ttl
     end
   end
 
