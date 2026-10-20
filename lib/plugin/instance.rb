@@ -950,6 +950,19 @@ class Plugin::Instance
     PluginGem.load(path, name, version, opts)
   end
 
+  # Takes a hash of gem name => version requirement, see PluginGem.resolve.
+  def gem_requirements(requirements)
+    PluginGem.resolve(path, requirements)
+  end
+
+  # Declares the plugin's gems through its Gemfile, with the versions from
+  # the Gemfile.lock next to it, see PluginGem.resolve.
+  def gemfile(file = "Gemfile", without: %i[development test])
+    gemfile_path = File.join(File.dirname(path), file)
+    requirements = PluginGem.gemfile_requirements(gemfile_path, without:)
+    PluginGem.resolve(path, requirements, lockfile: "#{gemfile_path}.lock")
+  end
+
   def hide_plugin
     @hidden = true
   end
