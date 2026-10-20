@@ -1,127 +1,3 @@
-@use "lib/viewport";
-
-.ai-search {
-  --ai-search-card-border: 1px solid var(--content-border-color);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  max-width: 46rem;
-  margin: var(--space-6) auto;
-
-  &.--conversation {
-    max-width: 72rem;
-  }
-
-  &__query {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-3);
-    border: var(--ai-search-card-border);
-    border-radius: var(--d-border-radius-large);
-    background: var(--secondary);
-
-    &:focus-within {
-      border-color: var(--tertiary);
-      outline: 2px solid var(--tertiary-low);
-    }
-
-    .d-icon {
-      color: var(--primary-medium);
-    }
-  }
-
-  &__query-input[type="search"] {
-    flex: 1;
-    margin: 0;
-    border: 0;
-    font-size: var(--font-up-1);
-    background: transparent;
-
-    &:focus {
-      outline: none;
-      box-shadow: none;
-    }
-  }
-
-  &__heading {
-    margin-bottom: var(--space-2);
-  }
-
-  &__query-text {
-    margin: 0;
-  }
-
-  &__use-original {
-    display: inline-block;
-    margin-bottom: var(--space-2);
-    font-size: var(--font-down-1);
-  }
-
-  &__keyword-empty {
-    color: var(--primary-medium);
-  }
-
-  &__conversation {
-    display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-    gap: var(--space-4);
-    align-items: start;
-    animation: ai-search-fade-in 0.3s ease-out;
-
-    @include viewport.until(md) {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  }
-
-  &__thread {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
-  &__turn {
-    padding: var(--space-4);
-    border: var(--ai-search-card-border);
-    border-radius: var(--d-border-radius-large);
-    animation: ai-search-fade-in 0.3s ease-out;
-
-    &.--question {
-      display: flex;
-      gap: var(--space-2);
-      align-items: flex-start;
-      background: var(--primary-very-low);
-
-      p {
-        margin: 0;
-      }
-    }
-
-    .cooked > *:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  &__composer {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: var(--space-2);
-    padding: var(--space-3);
-    border: var(--ai-search-card-border);
-    border-radius: var(--d-border-radius-large);
-
-    .expanding-text-area {
-      width: 100%;
-    }
-
-    textarea {
-      width: 100%;
-      margin: 0;
-    }
-  }
-}
-
 // The answer has its own tab, so it grows as it streams; a minimum height
 // keeps the placeholder and the no-answer message in a steady box. Nothing may
 // shrink: the search menu is a height-limited flex column.
@@ -295,19 +171,21 @@
   }
 }
 
+// A conversation continued from a combined search lists its references where
+// the timeline would be; the timeline's own controls are hidden in bot
+// conversations already.
+.topic-navigation:has(.ai-search-references) .timeline-container {
+  display: none;
+}
+
 .ai-search-references {
-  position: sticky;
-  top: calc(var(--header-offset, 0px) + var(--space-4));
-  max-height: calc(100vh - var(--header-offset, 0px) - var(--space-6));
+  box-sizing: border-box;
+  width: clamp(12rem, 20vw, 18rem);
+  max-height: calc(100vh - var(--header-offset, 0px) - var(--space-8));
   overflow-y: auto;
   padding: var(--space-4);
   border: 1px solid var(--content-border-color);
   border-radius: var(--d-border-radius-large);
-
-  @include viewport.until(md) {
-    position: static;
-    max-height: none;
-  }
 
   &__title {
     margin: 0 0 var(--space-3);
@@ -387,13 +265,6 @@
 
   &__empty {
     color: var(--primary-medium);
-  }
-}
-
-@keyframes ai-search-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
   }
 }
 

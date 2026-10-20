@@ -49,7 +49,7 @@ export default apiInitializer((api) => {
     // the session runs the keyword searches, so the menu is switched to
     // showing topics
     aiSearchSession.showTopicsInMenu?.();
-    aiSearchSession.start(query, "menu", aiSearchSession.contextScope, {
+    aiSearchSession.start(query, aiSearchSession.contextScope, {
       trigger,
     });
   };
@@ -207,7 +207,7 @@ export default apiInitializer((api) => {
       // answer tab has the menu to itself. Before then it is the menu's own
       // suggestions for what is being typed.
       if (combinedSearch) {
-        if (aiSearchSession.isShownInMenuFor(query)) {
+        if (aiSearchSession.isActiveFor(query)) {
           return ["topics", "context"].includes(aiSearchSession.selectedTab);
         }
         return value;
@@ -307,7 +307,7 @@ export default apiInitializer((api) => {
           // handling, which would otherwise treat a second enter as "open the
           // full page"
           if (
-            !aiSearchSession.isShownInMenuFor(query) ||
+            !aiSearchSession.isActiveFor(query) ||
             aiSearchSession.answerErrored
           ) {
             startCombined(query, { trigger: "enter" });

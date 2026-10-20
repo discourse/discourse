@@ -66,11 +66,6 @@ module DiscourseAi
         head :no_content
       end
 
-      # the Ember app is served for HTML loads before this runs
-      def search_page
-        head :no_content
-      end
-
       def recent
         render json:
                  success_json.merge(
@@ -91,7 +86,11 @@ module DiscourseAi
             user: current_user,
             discovery_agent: ask_ai_agent,
             follow_up_agent: ask_ai_follow_up_agent,
-          ).call(request_id: params[:request_id].to_s, question: params[:question])
+          ).call(
+            request_id: params[:request_id].to_s,
+            question: params[:question],
+            scope: params[:scope].presence,
+          )
 
         render json: success_json.merge(topic_id:)
       rescue DiscourseAi::Discoveries::ContinueConversation::ResultExpired
@@ -189,8 +188,7 @@ module DiscourseAi
       end
 
       def ask_ai_action?
-        %w[search_page recent clear_recent record_tabs].include?(action_name) ||
-          params[:request_id].present?
+        %w[recent clear_recent record_tabs].include?(action_name) || params[:request_id].present?
       end
 
       def rate_limit_ask

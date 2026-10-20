@@ -67,10 +67,7 @@ export default class AiDiscobotDiscoveries extends Component {
   // tabs and results belong to a search that has run, not to the typing
   // before it, which shows the menu's own suggestions
   get searched() {
-    return (
-      this.aiSearchSession.surface === "menu" &&
-      this.aiSearchSession.isActiveFor(this.term)
-    );
+    return this.aiSearchSession.isActiveFor(this.term);
   }
 
   get tab() {

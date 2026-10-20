@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DiscourseURL from "discourse/lib/url";
 import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
@@ -20,13 +21,13 @@ import { openTopicFromQuery } from "../../lib/open-topic-from-query.js";
 
 /**
  * The answer for the current combined search. It opens to its related topics
- * and a follow-up field, and asking a follow-up continues on the full page.
+ * and a follow-up field, and asking a follow-up continues as a conversation
+ * with the AI bot.
  */
 export default class AiSearchAnswer extends Component {
   @service aiSearchSession;
   @service composer;
   @service currentUser;
-  @service router;
   @service siteSettings;
 
   @tracked followUpValue = "";
@@ -103,14 +104,7 @@ export default class AiSearchAnswer extends Component {
     try {
       const topicId = await this.session.startConversation(question);
       this.args.onNavigate?.();
-      // the conversation keeps looking where the answer was found
-      this.router.transitionTo("discourse-ai-search", {
-        queryParams: {
-          q: null,
-          topic: topicId,
-          scope: this.session.answerScopeKey ?? null,
-        },
-      });
+      DiscourseURL.routeTo(`/t/${topicId}`);
     } catch (error) {
       popupAjaxError(error);
     } finally {

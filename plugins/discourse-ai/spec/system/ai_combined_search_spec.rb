@@ -51,14 +51,18 @@ describe "AI combined search" do
     )
   end
 
-  def wait_for_discoveries_channel
+  def wait_for_channel(channel)
     # updates published before the client knows its position on the channel
     # are skipped, which a real answer never outpaces
     try_until_success(timeout: 10) { expect(page.evaluate_script(<<~JS)).to eq(true) }
         MessageBus.callbacks.some(
-          (callback) => callback.channel === "/discourse-ai/discoveries" && callback.last_id !== -1
+          (callback) => callback.channel === #{channel.to_json} && callback.last_id !== -1
         )
       JS
+  end
+
+  def wait_for_discoveries_channel
+    wait_for_channel("/discourse-ai/discoveries")
   end
 
   def ask(term, input: "#welcome-banner-search-input")
@@ -152,14 +156,6 @@ describe "AI combined search" do
       expect(page).to have_css(".ai-search-answer__related-link", count: 2)
       expect(page).to have_no_css(".ai-search-answer__follow-up")
     end
-  end
-
-  it "sends readers without the combined search to the regular search page" do
-    SiteSetting.enable_ai_combined_search = false
-
-    visit "/discourse-ai/discoveries/search?q=password"
-
-    expect(page).to have_current_path(%r{\A/search})
   end
 
   it "lists every related topic the answer used" do
@@ -683,41 +679,62 @@ describe "AI combined search" do
     end
   end
 
-  context "with the full page" do
+  context "with a conversation continued from a search" do
     fab!(:bot) { Fabricate(:user, username: "answerbot") }
-
-    it "follows the query through history" do
-      visit "/discourse-ai/discoveries/search?q=first"
-      expect(find(".ai-search__query-input").value).to eq("first")
-
-      find(".ai-search__query-input").fill_in(with: "second")
-      find(".ai-search__query-input").send_keys(:enter)
-      expect(page).to have_current_path(/q=second/)
-
-      page.go_back
-
-      expect(page).to have_current_path(/q=first/)
-      expect(find(".ai-search__query-input").value).to eq("first")
+    fab!(:conversation) do
+      Fabricate(:private_message_topic, user:, recipient: bot).tap do |topic|
+        topic.custom_fields[
+          DiscourseAi::Discoveries::ContinueConversation::TOPIC_REQUEST_ID_FIELD
+        ] = "request"
+        topic.save_custom_fields
+      end
     end
 
-    it "keeps a finished answer when its closing stream message is replayed" do
-      conversation = Fabricate(:private_message_topic, user:, recipient: bot)
-      Fabricate(:post, topic: conversation, user:, raw: "How do widgets work?")
-      Fabricate(:post, topic: conversation, user: bot, raw: "Widgets work like this.")
-      Fabricate(:post, topic: conversation, user:, raw: "And gadgets?")
-      reply = Fabricate(:post, topic: conversation, user: bot, raw: "Gadgets are similar.")
+    before do
+      Fabricate(:post, topic: conversation, user:, raw: query)
+      Fabricate(
+        :post,
+        topic: conversation,
+        user: bot,
+        raw: "See [#{topic_1.title}](#{topic_1.url}) for the steps.",
+      )
+    end
 
-      visit "/discourse-ai/discoveries/search?topic=#{conversation.id}"
-      expect(page).to have_css(".ai-search__turn.--answer .cooked", text: "Gadgets are similar")
+    it "lists the topics behind its answers in place of the timeline" do
+      visit conversation.url
 
+      expect(page).to have_css(".ai-search-references__link", text: topic_1.title)
+      expect(page).to have_no_css(".timeline-container")
+    end
+
+    it "adds the topics a new reply cites" do
+      visit conversation.url
+      expect(page).to have_css(".ai-search-references__link", text: topic_1.title)
+      wait_for_channel("discourse-ai/ai-bot/topic/#{conversation.id}")
+
+      reply =
+        Fabricate(
+          :post,
+          topic: conversation,
+          user: bot,
+          raw: "Also try [#{topic_2.title}](#{topic_2.url}).",
+        )
       MessageBus.publish(
         "discourse-ai/ai-bot/topic/#{conversation.id}",
         { post_id: reply.id, post_number: reply.post_number, cooked: reply.cooked, done: true },
         user_ids: [user.id],
       )
 
-      expect(page).to have_css(".ai-search__turn.--answer .cooked", text: "Gadgets are similar")
-      expect(page).to have_css(".ai-search__turn.--question", text: "And gadgets?")
+      expect(page).to have_css(".ai-search-references__link", text: topic_2.title)
+    end
+
+    it "keeps the timeline for readers without the combined search" do
+      SiteSetting.enable_ai_combined_search = false
+
+      visit conversation.url
+
+      expect(page).to have_css(".timeline-container")
+      expect(page).to have_no_css(".ai-search-references")
     end
   end
 

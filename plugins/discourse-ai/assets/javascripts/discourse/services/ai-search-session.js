@@ -3,10 +3,10 @@ import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
-import { searchForTerm, translateResults } from "discourse/lib/search";
+import { searchForTerm } from "discourse/lib/search";
 import { followUpAvailable } from "../lib/ai-follow-up.js";
 import { chooseTab, readsAsQuestion } from "../lib/ai-search-intent.js";
-import { semanticSearchable, withScope } from "../lib/ai-search-scope.js";
+import { withScope } from "../lib/ai-search-scope.js";
 
 // a search this soon after the last one on the same page is still the same hunt
 const SEARCH_AGAIN_WINDOW_MS = 3 * 60 * 1000;
@@ -20,32 +20,10 @@ function findsAsMuch(results, other) {
   );
 }
 
-export async function keywordSearch(query) {
-  try {
-    const results = await ajax("/search", { data: { q: query } });
-    return (await translateResults(results))?.posts || [];
-  } catch {
-    return [];
-  }
-}
-
-export async function semanticSearch(query) {
-  try {
-    const results = await ajax("/discourse-ai/embeddings/semantic-search", {
-      data: { q: query, hyde: false },
-    });
-    return (await translateResults(results))?.posts || [];
-  } catch {
-    return [];
-  }
-}
-
 /**
- * One combined search: an AI answer, keyword results and semantic results for
- * the same query, shared by the header search menu and the full page.
- *
- * In the menu, every kind of result is fetched at once and offered as a tab,
- * opening on the one the query most likely wants.
+ * One combined search in the header search menu: the AI answer and keyword
+ * results for the same query, fetched at once and offered as tabs, opening on
+ * the one the query most likely wants.
  */
 export default class AiSearchSession extends Service {
   @service appEvents;
@@ -57,12 +35,6 @@ export default class AiSearchSession extends Service {
   @service siteSettings;
 
   @tracked query = "";
-  @tracked surface = null;
-  @tracked keywordQuery = "";
-  @tracked keywordPosts = null;
-  @tracked originalKeywordPosts = null;
-  @tracked rewrittenKeywordQuery = "";
-  @tracked semanticPosts = null;
 
   /** @type {import("../lib/ai-search-scope").AiSearchScope|null} */
   @tracked scope = null;
@@ -166,10 +138,6 @@ export default class AiSearchSession extends Service {
     return this.scopeFallback || this.scopeWidened ? null : this.scope?.key;
   }
 
-  get showingRewrittenKeywords() {
-    return Boolean(this.keywordQuery) && this.keywordQuery !== this.query;
-  }
-
   /** The results of the keyword tab on screen, if one is. */
   get shownResults() {
     if (this.selectedTab === "topics") {
@@ -189,58 +157,29 @@ export default class AiSearchSession extends Service {
     return Boolean(query) && this.query === query.trim();
   }
 
-  /** Whether the menu is showing this query's search, rather than the full page. */
-  isShownInMenuFor(query) {
-    return this.surface === "menu" && this.isActiveFor(query);
-  }
-
   /**
    * @param {string} query
-   * @param {"menu"|"page"} surface where the keyword results are shown
    * @param {import("../lib/ai-search-scope").AiSearchScope|null} [scope]
    * @param {Object} [options]
    * @param {string} [options.trigger] what started the search, for the log
    */
-  start(query, surface, scope = null, { trigger = "" } = {}) {
+  start(query, scope = null, { trigger = "" } = {}) {
     this.subscribe();
 
     const searchedAgain = this.#searchedAgain(query);
 
     this.query = query;
     this.answering = true;
-    this.surface = surface;
     this.scope = scope;
     this.scopeFallback = false;
     this.fallbackScopeLabel = null;
     this.scopeWidened = false;
-    this.keywordQuery = query;
-    this.keywordPosts = null;
-    this.originalKeywordPosts = null;
-    this.rewrittenKeywordQuery = "";
-    this.semanticPosts = null;
 
     this.discoveries.dismissDiscovery();
     const asked = this.#ask(query, { trigger });
 
-    if (surface === "menu") {
-      this.#searchMenuTabs(query, { searchedAgain, asked });
-      this.#lastSearch = { query, at: Date.now() };
-    } else {
-      keywordSearch(this.#scoped(query)).then((posts) => {
-        if (this.query !== query) {
-          return;
-        }
-        this.originalKeywordPosts = posts;
-        // a rewrite that landed first stays only if it found as much
-        if (
-          this.keywordQuery === query ||
-          posts.length > (this.keywordPosts?.length ?? 0)
-        ) {
-          this.keywordQuery = query;
-          this.keywordPosts = posts;
-        }
-      });
-    }
+    this.#searchMenuTabs(query, { searchedAgain, asked });
+    this.#lastSearch = { query, at: Date.now() };
   }
 
   /**
@@ -292,17 +231,14 @@ export default class AiSearchSession extends Service {
     this.#showSelectedResults();
   }
 
-  useOriginalKeywords() {
-    this.keywordQuery = this.query;
-    if (this.surface === "page") {
-      this.keywordPosts = this.originalKeywordPosts;
-    }
-  }
-
   async startConversation(question) {
     const result = await ajax("/discourse-ai/discoveries/continue-convo", {
       type: "POST",
-      data: { request_id: this.discoveries.activeRequestId, question },
+      data: {
+        request_id: this.discoveries.activeRequestId,
+        question,
+        scope: this.answerScopeKey,
+      },
     });
     return result.topic_id;
   }
@@ -338,7 +274,6 @@ export default class AiSearchSession extends Service {
   guardMenuResults() {
     const shown = this.#menuDisplay();
     if (
-      this.surface === "menu" &&
       shown &&
       this.search.results !== shown &&
       this.isActiveFor(this.search.activeGlobalSearchTerm)
@@ -372,7 +307,6 @@ export default class AiSearchSession extends Service {
     const empty = { posts: [], resultTypes: [] };
     if (!findsAsMuch(this.topicsResults, topics)) {
       this.topicsResults = topics ?? empty;
-      this.keywordQuery = query;
     }
     if (scopeKey && !findsAsMuch(this.contextResults, context)) {
       this.contextResults = context ?? empty;
@@ -405,11 +339,7 @@ export default class AiSearchSession extends Service {
 
   // a failed answer is a dead end, so the reader is moved to results that exist
   #leaveFailedAnswer() {
-    if (
-      this.surface !== "menu" ||
-      this.selectedTab !== "ask" ||
-      this.#tabChosenByReader
-    ) {
+    if (this.selectedTab !== "ask" || this.#tabChosenByReader) {
       return;
     }
 
@@ -466,7 +396,7 @@ export default class AiSearchSession extends Service {
 
   #showSelectedResults() {
     const shown = this.#menuDisplay();
-    if (!shown || this.surface !== "menu") {
+    if (!shown) {
       return;
     }
     if (this.search.activeGlobalSearchTerm?.trim() !== this.query) {
@@ -481,21 +411,7 @@ export default class AiSearchSession extends Service {
   async #applyRewrite(update) {
     const query = this.query;
     const rewritten = update.keyword_query || "";
-    this.rewrittenKeywordQuery = rewritten;
-
     if (!rewritten || rewritten === query) {
-      return;
-    }
-
-    if (this.surface !== "menu") {
-      const posts = await keywordSearch(this.#scoped(rewritten));
-      if (
-        this.query === query &&
-        posts.length >= (this.originalKeywordPosts?.length || 0)
-      ) {
-        this.keywordQuery = rewritten;
-        this.keywordPosts = posts;
-      }
       return;
     }
 
@@ -510,7 +426,6 @@ export default class AiSearchSession extends Service {
 
     if (findsAsMuch(topics, this.topicsResults)) {
       this.topicsResults = topics;
-      this.keywordQuery = rewritten;
     }
     if (scopeKey && findsAsMuch(context, this.contextResults)) {
       this.contextResults = context;
@@ -525,24 +440,8 @@ export default class AiSearchSession extends Service {
       trigger,
       intentHeuristic: readsAsQuestion(query) ? "answer" : "lookup",
       classifyIntent:
-        this.surface === "menu" &&
         !!this.siteSettings.ai_ask_ai_search_intent_decision_model,
     });
-
-    // the page lists semantic matches when no keywords match
-    if (
-      this.surface === "page" &&
-      this.siteSettings.ai_embeddings_semantic_search_enabled &&
-      semanticSearchable(this.scope?.key)
-    ) {
-      semanticSearch(this.#scoped(query)).then((posts) => {
-        if (this.query === query) {
-          this.semanticPosts = posts;
-        }
-      });
-    } else {
-      this.semanticPosts = [];
-    }
 
     asked.then((reply) => {
       if (this.query === query && reply?.scope_widened) {
@@ -568,9 +467,5 @@ export default class AiSearchSession extends Service {
       new Set(text.toLowerCase().split(/\s+/).filter(Boolean));
     const earlier = words(last.query);
     return [...words(query)].some((word) => earlier.has(word));
-  }
-
-  #scoped(query) {
-    return withScope(query, this.scope?.key);
   }
 }
