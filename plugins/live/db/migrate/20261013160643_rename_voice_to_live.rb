@@ -67,13 +67,24 @@ class RenameVoiceToLive < ActiveRecord::Migration[8.0]
     ].to_h { |name| [name, name.sub(/\Avoice_/, "live_")] }
 
   def up
-    RENAMED_TABLES.each do |old_name, new_name|
-      rename_table(old_name, new_name) if table_exists?(old_name) && !table_exists?(new_name)
-    end
+    Migration::SafeMigrate.disable!
+
+    renamed_tables =
+      RENAMED_TABLES.select do |old_name, new_name|
+        table_exists?(old_name) && !table_exists?(new_name)
+      end
+    renamed_tables.each { |old_name, new_name| rename_table(old_name, new_name) }
 
     RENAMED_TABLES.each do |old_name, new_name|
       rename_table_objects(old_name.to_s, new_name.to_s) if table_exists?(new_name)
     end
+
+    # App servers still running the voice code read these until FinishRenameVoiceToLive runs.
+    renamed_tables.each do |old_name, new_name|
+      execute "CREATE VIEW #{old_name} AS SELECT * FROM #{new_name}"
+    end
+
+    Migration::SafeMigrate.enable!
 
     RENAMED_SETTINGS.each do |old_name, new_name|
       DB.exec(<<~SQL, old_name:, new_name:)

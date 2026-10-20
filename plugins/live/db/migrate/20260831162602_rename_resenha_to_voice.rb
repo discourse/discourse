@@ -14,6 +14,8 @@ class RenameResenhaToVoice < ActiveRecord::Migration[8.0]
   }
 
   def up
+    Migration::SafeMigrate.disable!
+
     RENAMED_TABLES.each do |old_name, new_name|
       rename_table(old_name, new_name) if table_exists?(old_name) && !table_exists?(new_name)
     end
@@ -91,6 +93,8 @@ class RenameResenhaToVoice < ActiveRecord::Migration[8.0]
         SET cooked_version = NULL
         WHERE cooked LIKE '%/resenha/%'
       SQL
+  ensure
+    Migration::SafeMigrate.enable!
   end
 
   def down
