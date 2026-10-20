@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AssetProcessor
+  # Bump only when theme JS output changes; it rebakes every theme on every site. Plugin builds
+  # also key on the processor's digest, so JS changes there rebuild them without a bump.
   BASE_COMPILER_VERSION = 120
 
   BUNDLE =
@@ -155,6 +157,12 @@ class AssetProcessor
 
   def self.ember_version
     v8_call("emberVersion")
+  end
+
+  # Identifies the processor source loaded into the V8 context
+  def self.digest
+    v8
+    BUNDLE.loaded_digest
   end
 
   def initialize(skip_module: false)
