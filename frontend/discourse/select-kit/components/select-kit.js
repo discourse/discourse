@@ -1358,19 +1358,17 @@ export default class SelectKit extends Component {
   }
 
   _deprecateMutations() {
-    if (!this.onChange && !this.actions?.onChange) {
+    this.actions ??= {};
+
+    if (!this.onChange && !this.actions.onChange) {
       this._deprecated(
         "Implicit mutation has been deprecated, please use `onChange` handler"
       );
 
-      // `actions` may come from the class prototype, shared by all instances
-      this.actions = {
-        ...this.actions,
-        onChange:
-          this.onSelect ||
-          this.actions?.onSelect ||
-          ((value) => this.set("value", value)),
-      };
+      this.actions.onChange =
+        this.onSelect ||
+        this.actions.onSelect ||
+        ((value) => this.set("value", value));
     }
   }
 
