@@ -42,7 +42,7 @@ Run ./manage.sh status to inspect the controller, or read http://localhost:8099/
 Run ./manage.sh logs to follow logs. Run ./manage.sh stop to pause polling while review previews stay running.
 Run ./manage.sh up to restart and reconcile. Run ./manage.sh build after changing worker helpers or dependencies.
 Worker image builds use bot/.build/worker-image inside this plugin. Docker Compose keeps the kanban-bot project name and its existing controller-state volume.
-Recreate the controller with Docker Compose up -d --build after changing its code.
+After changing controller code, run ./manage.sh build followed by ./manage.sh up to recreate it.
 The Mac, OrbStack, and native ngrok agent must remain running.
 The control board is the capybara-board Docker container on localhost:3410. Its main tunnel is named command_line.
 PostgreSQL, Redis, uploads, and the Linux board workspace use named capybara-board-* volumes.
@@ -142,3 +142,14 @@ The measured median reduction was 4.07 GiB (76.2%).
 The metric is Docker cgroup usage minus inactive file cache after five seconds idle.
 These are fresh-start preview measurements, not total OrbStack memory or long-term settled usage.
 Compilation still needs temporary build memory. The main board was unchanged.
+
+Automatic build image cleanup
+
+manage.sh build serializes managed builds, snapshots existing worker/controller image IDs,
+and cleans those IDs only after both builds succeed. Cleanup keeps both current :local images
+for future cards, all running and stopped container images, and any image with a reference
+outside discourse-codex-worker or discourse-board-controller. Docker removal is non-forced;
+conflicts and inventory failures warn without failing a successful build. A failed snapshot
+skips cleanup, including on a first build without an existing controller image.
+Unknown dangling images, dependencies, base images, build cache, and volumes are untouched.
+Manual image retagging outside this build lock must not run concurrently with cleanup.

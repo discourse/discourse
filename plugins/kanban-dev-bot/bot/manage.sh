@@ -9,6 +9,33 @@ docker_args=(--host "$docker_endpoint")
 compose_args=(-f "$bot_root/compose.yaml")
 case "${1:-status}" in
   build)
+    mkdir -p "$bot_root/.build"
+    build_lock="$bot_root/.build/build.lock"
+    if command -v shlock >/dev/null 2>&1; then
+      shlock -f "$build_lock" -p "$$" || { echo 'Another bot build is running.' >&2; exit 1; }
+      trap 'rm -f "$build_lock"' EXIT
+    elif command -v flock >/dev/null 2>&1; then
+      exec 9>"$build_lock"
+      flock -n 9 || { echo 'Another bot build is running.' >&2; exit 1; }
+    else
+      echo 'Bot builds require shlock or flock to serialize image promotion and cleanup.' >&2
+      exit 1
+    fi
+    image_cleanup() {
+      "$docker_bin" "${docker_args[@]}" run --pull=never --rm --entrypoint python \
+        --mount "type=bind,source=$bot_root,target=/bot,readonly" \
+        --mount "type=bind,source=$bot_root/.build,target=/state" \
+        --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
+        discourse-board-controller:local /bot/image_cleanup.py "$1" /state/image-snapshot.json
+    }
+    cleanup_ready=false
+    if ! "$docker_bin" "${docker_args[@]}" image inspect discourse-board-controller:local >/dev/null 2>&1; then
+      echo 'No existing controller image; this first build will skip image cleanup.' >&2
+    elif image_cleanup snapshot; then
+      cleanup_ready=true
+    else
+      echo 'Warning: image snapshot failed; this build will skip image cleanup.' >&2
+    fi
     image_context="$bot_root/.build/worker-image"
     mkdir -p "$image_context"
     "$docker_bin" "${docker_args[@]}" run --rm --entrypoint bash \
@@ -25,6 +52,9 @@ case "${1:-status}" in
       '
     "$docker_bin" "${docker_args[@]}" build -t discourse-codex-worker:local "$image_context"
     "$docker_bin" "${docker_args[@]}" compose "${compose_args[@]}" build
+    if "$cleanup_ready"; then
+      image_cleanup clean || echo 'Warning: bot build succeeded, but some image cleanup was skipped; inspect the cleanup report.' >&2
+    fi
     ;;
   up)
     "$docker_bin" "${docker_args[@]}" compose "${compose_args[@]}" up -d
