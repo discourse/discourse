@@ -155,7 +155,7 @@
         "suggested_edit_accepted": {
           "type": "integer"
         },
-        "voice_invitation": {
+        "live_invitation": {
           "type": "integer"
         }
       },

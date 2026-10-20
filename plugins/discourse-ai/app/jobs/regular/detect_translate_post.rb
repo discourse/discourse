@@ -20,25 +20,8 @@ module Jobs
       return if post.blank? || post.raw.blank? || post.deleted_at.present?
 
       force = args[:force] || false
-      return if post.user_id <= 0 && !force && !SiteSetting.ai_translation_include_bot_content
-
-      topic = post.topic
-      return if topic.blank?
-
-      if force
-        # no restrictions
-      elsif topic.archetype == Archetype.private_message
-        case SiteSetting.ai_translation_personal_messages
-        when "all"
-          # allow
-        when "group"
-          return unless TopicAllowedGroup.exists?(topic_id: topic.id)
-        else
-          return
-        end
-      else
-        return if !DiscourseAi::Translation.category_allowed?(topic.category)
-      end
+      return if post.topic.blank?
+      return if !force && !DiscourseAi::Translation.post_translatable?(post)
 
       # the user may fill locale in manually
       if (detected_locale = post.locale).blank?
@@ -78,6 +61,12 @@ module Jobs
         { type: :localized, id: post.id },
         post.topic.secure_audience_publish_messages,
       )
+    ensure
+      # Lets anything waiting on this post's translations stop waiting, even when
+      # some of them weren't produced.
+      if args[:post_id].present?
+        DiscourseEvent.trigger(:post_localizations_finished, args[:post_id].to_i)
+      end
     end
 
     private

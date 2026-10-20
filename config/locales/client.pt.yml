@@ -2850,8 +2850,6 @@ pt:
       uploading: "A enviar…"
       show_preview: "mostrar pré-visualização"
       hide_preview: "ocultar pré-visualização"
-      switch_to_markdown: "Mudar para o editor de Marcação padrão (%{keyboardShortcut})"
-      switch_to_rich_text: "Mudar para o novo editor de texto formatado (%{keyboardShortcut})"
       quote_post_title: "Citar toda a publicação"
       bold_label: "B"
       bold_title: "Negrito"
@@ -2963,6 +2961,8 @@ pt:
       onebox_toolbar:
         copy: "Copiar hiperligação"
         link_copied: "Ligação copiada!"
+      table:
+        default_heading: "Coluna %{number}"
     notifications:
       tooltip:
         regular:
@@ -4582,18 +4582,6 @@ pt:
         type_mismatch:
           default: "Por favor introduza um valor válido."
           email: "Por favor introduza um endereço de email válido."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Entrar"
-      edit:
-        modal:
-          cancel: "cancelar"
-          create: "Guardar"
-          reason: "Porque está a editar?"
-      spreadsheet:
-        show: "Mostrar"
-        about: "Sobre"
     powered_by_discourse: "Alimentado pelo Discourse"
     filter:
       description:

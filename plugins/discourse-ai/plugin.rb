@@ -85,6 +85,7 @@ require_relative "lib/mcp/oauth_flow"
 
 # Other plugins can register features through this register.
 DiscoursePluginRegistry.define_filtered_register(:external_ai_features)
+DiscoursePluginRegistry.define_filtered_register(:external_ai_tools)
 
 DiscourseAi::Configuration::Module::NAMES.each do |module_name|
   register_site_setting_area("ai-features/#{module_name}")
@@ -243,6 +244,10 @@ after_initialize do
 
   on(:post_process_localized_cooked) do |doc, post, post_localization|
     DiscourseAi::PostImageCaptions.process_cooked(doc, post, locale: post_localization.locale)
+  end
+
+  register_modifier(:deliver_push_notification_localization_pending) do |pending, post, user|
+    pending || DiscourseAi::Translation.post_localization_pending?(post, user.effective_locale)
   end
 
   register_modifier(:post_search_index_text) do |text, post_id, cooked, locale|

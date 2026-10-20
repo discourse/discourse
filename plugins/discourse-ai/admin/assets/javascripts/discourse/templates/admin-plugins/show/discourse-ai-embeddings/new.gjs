@@ -4,5 +4,6 @@ export default <template>
   <AiEmbeddingsListEditor
     @currentEmbedding={{@controller.model}}
     @embeddings={{@controller.allEmbeddings}}
+    @preset={{@controller.preset}}
   />
 </template>

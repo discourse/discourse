@@ -3326,10 +3326,6 @@ zh_CN:
       show_preview: "显示预览"
       hide_preview: "隐藏预览"
       resize: "调整编辑器大小"
-      switch_to_markdown: "切换到标准 Markdown 编辑器 (%{keyboardShortcut})"
-      switch_to_rich_text: "切换到新的富文本编辑器 (%{keyboardShortcut})"
-      switch_to_markdown_no_shortcut: "切换到标准 Markdown 编辑器"
-      switch_to_rich_text_no_shortcut: "切换到新的富文本编辑器"
       quote_post_title: "引用整个帖子"
       bold_label: "B"
       bold_title: "粗体"
@@ -3489,6 +3485,7 @@ zh_CN:
         show_source: "显示来源"
         show_preview: "显示预览"
       table:
+        default_heading: "第 %{number} 列"
         add_row: "添加行"
         add_column: "添加列"
         insert_row_above: "在上面插入"
@@ -6017,63 +6014,6 @@ zh_CN:
           other: "输入内容必须大于 %{count}。"
         pattern_mismatch: "请匹配请求的格式。"
         bad_input: "请输入有效的输入内容。"
-    table_builder:
-      title: "表生成器"
-      modal:
-        title: "表生成器"
-        create: "创建表"
-        help:
-          title: "使用电子表格编辑器"
-          enter_key: "Enter"
-          tab_key: "Tab"
-          new_row: "在行末尾插入新行。"
-          new_col: "在列末尾插入新列。"
-          options: "右键点击单元格可访问下拉菜单中的更多选项。"
-        confirm_close: "确定要关闭表格生成器吗？任何未保存的更改都将丢失。"
-      edit:
-        btn_edit: "编辑表"
-        modal:
-          title: "编辑表"
-          cancel: "取消"
-          create: "保存"
-          reason: "为何进行编辑？"
-          trigger_reason: "添加编辑原因"
-        default_edit_reason: "使用表编辑器更新表"
-      default_header:
-        col_1: "第 1 列"
-        col_2: "第 2 列"
-        col_3: "第 3 列"
-        col_4: "第 4 列"
-      spreadsheet:
-        no_records_found: "找不到记录"
-        show: "显示"
-        entries: "个条目"
-        about: "关于"
-        prompts:
-          delete_selected_rows: "确定要删除所选行吗？"
-          delete_selected_cols: "确定要删除所选列吗？"
-          will_destroy_merged_cells: "此操作将破坏任何现有的合并单元格。确定吗？"
-          will_clear_search_results: "此操作将破坏任何现有的合并单元格。确定吗？"
-          conflicts_with_merged_cells: "与另一合并单元格存在冲突"
-        invalid_merge_props: "合并属性无效"
-        cells_already_merged: "单元格已合并"
-        no_cells_selected: "未选择单元格"
-        context_menu:
-          row:
-            before: "在前面插入新行"
-            after: "在后面插入新行"
-            delete: "删除所选行"
-          col:
-            before: "在前面插入新列"
-            after: "在后面插入新列"
-            delete: "删除所选列"
-            rename: "重命名此列"
-          order:
-            ascending: "按升序排序"
-            descending: "按降序排序"
-          copy: "复制…"
-          paste: "粘贴…"
-          save: "另存为…"
     powered_by_discourse: "由 Discourse 提供技术支持"
     safari_15_warning: "您的浏览器很快将与此社区不兼容。要继续参与此社区，请升级您的浏览器或<a href='%{url}'>了解详情</a>。"
     filter:

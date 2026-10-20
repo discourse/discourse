@@ -36,6 +36,7 @@ hy:
       custom_range_from: "Ում կողմից"
       admin:
         name: "Անուն"
+        created_by: "Ստեղծել է՝"
     discourse_workflows:
       gamification_score:
         username: "Օգտատեր"

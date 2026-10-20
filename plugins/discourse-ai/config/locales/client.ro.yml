@@ -78,8 +78,6 @@ ro:
         reject: "Respingere"
         approved: "Aprobat"
         rejected: "Respins"
-      default_llm:
-        title: "Model LLM implicit"
       llm_selector:
         none: "Nimic"
       features:
@@ -273,6 +271,16 @@ ro:
         delete: "Șterge"
         tools_modal:
           required: "Obligatoriu"
+      models:
+        name: "Nume"
+        type: "Tip"
+        provider: "Furnizor"
+        edit: "Editează"
+        types:
+          embedding: "Înglobare"
+        filters:
+          all: "Toate tipurile"
+          reset: "Resetează filtre"
       llms:
         display_name: "Nume"
         provider: "Furnizor"

@@ -250,6 +250,16 @@ da:
         delete: "Slet"
         tools_modal:
           required: "Obligatoriske"
+      models:
+        name: "Navn"
+        type: "Type"
+        provider: "Udbyder"
+        edit: "Rediger"
+        select_type: "Vælg"
+        types:
+          embedding: "Indlejring"
+        filters:
+          all: "Alle typer"
       llms:
         display_name: "Navn"
         vision_modes:

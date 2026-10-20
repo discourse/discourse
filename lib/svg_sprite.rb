@@ -326,6 +326,9 @@ module SvgSprite
         icon_id = prepare_symbol(sym, svg_filename)
         if icon_id.present?
           sym.attributes["id"].value = icon_id
+          # Some glyphs draw outside their viewBox; Firefox and Safari clip a <use> symbol
+          # to its viewBox unless overflow is set on the symbol itself (page CSS can't reach it)
+          sym["overflow"] = "visible"
           sym.css("title").each(&:remove)
           [icon_id, sym.to_xml]
         end

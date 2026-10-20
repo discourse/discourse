@@ -35,10 +35,11 @@ pl_PL:
       error_no_sql_returned: "Sztuczna inteligencja nie zwróciła prawidłowego zapytania SQL. Spróbuj ponownie lub wpisz zapytanie ręcznie."
     errors:
       default_tag_reserved: "Domyślny znacznik jest zarezerwowany dla zapytań systemowych."
+      custom_tag_reserved: "Tag niestandardowy jest zarezerwowany dla zapytań tworzonych przez użytkowników."
       tag_contains_comma: "Tagi nie mogą zawierać przecinków."
       tag_too_long: "Tag może mieć maksymalnie %{max} znaków."
       tool_not_allowed: "Nie masz uprawnień do korzystania z tego narzędzia"
-      too_many_tags: "Zapytanie może mieć maksymalnie %{max} tagów."
+      too_many_tags: "Zapytanie może mieć maksymalnie %{max} tagów, nie licząc tagów automatycznych."
     discourse_workflows:
       sql_action:
         no_query_selected: "Nie wybrano zapytania."

@@ -204,6 +204,15 @@ sr:
         delete: "Obriši"
         tools_modal:
           required: "Potrebno"
+      models:
+        name: "Ime foruma"
+        type: "Tip"
+        edit: "Izmeni"
+        select_type: "Odaberite"
+        types:
+          embedding: "Ugrađivanje"
+        filters:
+          all: "Svi tipovi"
       llms:
         display_name: "Ime foruma"
         vision_modes:
