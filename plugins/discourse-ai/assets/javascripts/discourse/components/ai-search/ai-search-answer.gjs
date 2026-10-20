@@ -10,14 +10,10 @@ import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
-import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dNumber from "discourse/ui-kit/helpers/d-number";
-import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import { openTopicFromQuery } from "../../lib/open-topic-from-query.js";
+import AiSearchTopicRow from "./ai-search-topic-row.gjs";
 
 /**
  * The answer for the current combined search. It opens to its related topics
@@ -188,31 +184,14 @@ export default class AiSearchAnswer extends Component {
             <ul class="ai-search-answer__related-list">
               {{#each this.session.relatedTopics as |topic|}}
                 <li class="ai-search-answer__related-item">
-                  <a class="ai-search-answer__related-link" href={{topic.url}}>
-                    <span class="ai-search-answer__related-title">
-                      {{dReplaceEmoji topic.title}}
-                    </span>
-                    {{#if topic.bumped_at}}
-                      <span class="ai-search-answer__related-date">
-                        {{dFormatDate topic.bumped_at format="tiny"}}
-                      </span>
-                    {{/if}}
-                    {{#if topic.categoryModel}}
-                      <span class="ai-search-answer__related-category">
-                        {{dCategoryLink topic.categoryModel link=false}}
-                      </span>
-                    {{/if}}
-                    <span
-                      class="ai-search-answer__related-replies"
-                      title={{i18n
-                        "discourse_ai.ai_search.related_replies"
-                        count=topic.topic_replies
-                      }}
-                    >
-                      {{dIcon "reply"}}
-                      {{dNumber topic.topic_replies}}
-                    </span>
-                  </a>
+                  <AiSearchTopicRow
+                    class="ai-search-answer__related-link"
+                    @bumpedAt={{topic.bumped_at}}
+                    @category={{topic.categoryModel}}
+                    @replyCount={{topic.topic_replies}}
+                    @title={{topic.title}}
+                    @url={{topic.url}}
+                  />
                 </li>
               {{/each}}
             </ul>

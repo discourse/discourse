@@ -187,12 +187,9 @@ describe "AI combined search" do
 
     expect(page).to have_css(".ai-search-answer__related-heading", text: "Related topics")
     last_row = find(".ai-search-answer__related-link", text: more_topics.last.title)
-    expect(last_row).to have_css(".ai-search-answer__related-date", text: "2d")
-    expect(last_row).to have_css(
-      ".ai-search-answer__related-replies[title='12 replies']",
-      text: "12",
-    )
-    expect(last_row).to have_css(".ai-search-answer__related-category", text: "Account help")
+    expect(last_row).to have_css(".ai-search-topic-row__date", text: "2d")
+    expect(last_row).to have_css(".ai-search-topic-row__replies[title='12 replies']", text: "12")
+    expect(last_row).to have_css(".ai-search-topic-row__category", text: "Account help")
     expect(page).to have_css(".ai-search-answer__related-item", count: 5)
     expect(page).to have_css(".ai-search-answer__related-link", text: more_topics.last.title)
     expect(page).to have_no_css(".ai-search-answer__related-excerpt")
@@ -700,10 +697,12 @@ describe "AI combined search" do
       )
     end
 
-    it "lists the topics behind its answers in place of the timeline" do
+    it "lists the topics its answers cite in place of the timeline" do
       visit conversation.url
 
-      expect(page).to have_css(".ai-search-references__link", text: topic_1.title)
+      cited = find(".ai-search-references__link", text: topic_1.title)
+      expect(cited).to have_css(".ai-search-topic-row__date")
+      expect(cited).to have_css(".ai-search-topic-row__replies")
       expect(page).to have_no_css(".timeline-container")
     end
 

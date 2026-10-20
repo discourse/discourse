@@ -1,11 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { gt, lt } from "discourse/truth-helpers";
-import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import { gt } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
+import AiSearchTopicRow from "./ai-search-topic-row.gjs";
 
 export default class AiSearchReferencesPanel extends Component {
   @service site;
@@ -16,7 +14,6 @@ export default class AiSearchReferencesPanel extends Component {
       category: this.site.categories?.find(
         (category) => category.id === reference.categoryId
       ),
-      movedBy: Math.abs(reference.movement),
     }));
   }
 
@@ -36,42 +33,16 @@ export default class AiSearchReferencesPanel extends Component {
               "ai-search-references__item"
               (if reference.isNew "--new")
               (if (gt reference.movement 0) "--up")
-              (if (lt reference.movement 0) "--down")
             }}
           >
-            <a class="ai-search-references__link" href={{reference.url}}>
-              {{dReplaceEmoji reference.title}}
-            </a>
-            <div class="ai-search-references__meta">
-              {{#if reference.category}}
-                {{dCategoryLink reference.category link=false}}
-              {{/if}}
-              {{#if reference.isNew}}
-                <span class="ai-search-references__movement">
-                  {{i18n "discourse_ai.ai_search.reference_new"}}
-                </span>
-              {{else if (gt reference.movement 0)}}
-                <span
-                  class="ai-search-references__movement"
-                  title={{i18n
-                    "discourse_ai.ai_search.moved_up"
-                    count=reference.movedBy
-                  }}
-                >
-                  {{dIcon "arrow-up"}}{{reference.movedBy}}
-                </span>
-              {{else if (lt reference.movement 0)}}
-                <span
-                  class="ai-search-references__movement"
-                  title={{i18n
-                    "discourse_ai.ai_search.moved_down"
-                    count=reference.movedBy
-                  }}
-                >
-                  {{dIcon "arrow-down"}}{{reference.movedBy}}
-                </span>
-              {{/if}}
-            </div>
+            <AiSearchTopicRow
+              class="ai-search-references__link"
+              @bumpedAt={{reference.bumpedAt}}
+              @category={{reference.category}}
+              @replyCount={{reference.replyCount}}
+              @title={{reference.title}}
+              @url={{reference.url}}
+            />
           </li>
         {{else}}
           <li class="ai-search-references__empty">

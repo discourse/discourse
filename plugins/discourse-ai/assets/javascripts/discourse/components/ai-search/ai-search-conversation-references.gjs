@@ -20,6 +20,8 @@ export default class AiSearchConversationReferences extends Component {
   @tracked references = [];
 
   #ranker = new AiSearchReferences();
+  #lookedUp = new Set();
+  #topics = new Map();
   #currentTurn = 0;
   #loaded = false;
   #rankedPostNumber = 0;
@@ -54,7 +56,7 @@ export default class AiSearchConversationReferences extends Component {
       ? citedTopicsFromCooked(data.cooked)
       : citedTopicsFromRaw(data.raw);
     this.#ranker.add(++this.#currentTurn, "cited", cited);
-    this.references = this.#ranker.rank(this.#currentTurn);
+    this.#showRanked();
   }
 
   async #load() {
@@ -78,7 +80,43 @@ export default class AiSearchConversationReferences extends Component {
     this.#currentTurn = Math.max(replies.length - 1, 0);
     this.#rankedPostNumber = posts.at(-1)?.post_number ?? 0;
     this.#loaded = true;
-    this.references = this.#ranker.rank(this.#currentTurn);
+    this.#showRanked();
+  }
+
+  // A cited link has only a title, so each topic's details are looked up once.
+  // The lookup leaves out muted topics, which are still listed by their title.
+  async #showRanked() {
+    const ranked = this.#ranker.rank(this.#currentTurn);
+    const unknown = ranked
+      .map((reference) => reference.topicId)
+      .filter((id) => !this.#lookedUp.has(id));
+
+    if (unknown.length) {
+      try {
+        const result = await ajax("/filter.json", {
+          data: { q: `topic:${unknown.join(",")}` },
+        });
+        unknown.forEach((id) => this.#lookedUp.add(id));
+        result.topic_list.topics.forEach((topic) =>
+          this.#topics.set(topic.id, topic)
+        );
+      } catch {
+        // listed by title until the next reply looks again
+      }
+    }
+
+    this.references = ranked.map((reference) => {
+      const topic = this.#topics.get(reference.topicId);
+      return topic
+        ? {
+            ...reference,
+            title: topic.title,
+            categoryId: topic.category_id,
+            bumpedAt: topic.bumped_at,
+            replyCount: topic.posts_count - 1,
+          }
+        : reference;
+    });
   }
 
   // the topic comes with only its first chunk of posts

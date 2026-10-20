@@ -1902,13 +1902,6 @@ en:
         ask: "Ask"
         references_title: "Cited topics"
         references_empty: "Topics the answers cite appear here."
-        reference_new: "New"
-        moved_up:
-          one: "Moved up %{count} place"
-          other: "Moved up %{count} places"
-        moved_down:
-          one: "Moved down %{count} place"
-          other: "Moved down %{count} places"
         tabs:
           label: "Search results"
           ask: "Ask AI"

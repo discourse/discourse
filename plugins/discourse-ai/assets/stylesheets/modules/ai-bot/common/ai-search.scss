@@ -80,60 +80,6 @@
     border-top: 1px solid var(--content-border-color);
   }
 
-  &__related-link {
-    display: grid;
-    grid-template:
-      "title date" auto
-      "category replies" auto / minmax(0, 1fr) auto;
-    column-gap: var(--space-3);
-    align-items: baseline;
-    padding: var(--space-2);
-    margin-inline: calc(-1 * var(--space-2));
-    line-height: var(--line-height-medium);
-
-    &:hover {
-      background: var(--d-hover);
-    }
-  }
-
-  &__related-title {
-    grid-area: title;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: var(--tertiary);
-  }
-
-  &__related-category {
-    grid-area: category;
-    min-width: 0;
-    line-height: var(--line-height-medium);
-  }
-
-  // the category badge sets its own size, which these match
-  &__related-date,
-  &__related-replies {
-    justify-self: end;
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
-  }
-
-  &__related-date {
-    grid-area: date;
-  }
-
-  &__related-replies {
-    grid-area: replies;
-    display: inline-flex;
-    gap: var(--space-1);
-    align-items: center;
-
-    .d-icon {
-      font-size: var(--font-down-1);
-      transform: scaleX(-1);
-    }
-  }
-
   &__follow-up {
     display: flex;
     gap: var(--space-2);
@@ -150,6 +96,61 @@
 
     .ai-search-answer__title {
       font-size: var(--font-0);
+    }
+  }
+}
+
+// laid out like a row of a topic list
+.ai-search-topic-row {
+  display: grid;
+  grid-template:
+    "title date" auto
+    "category replies" auto / minmax(0, 1fr) auto;
+  column-gap: var(--space-3);
+  align-items: baseline;
+  padding: var(--space-2);
+  margin-inline: calc(-1 * var(--space-2));
+  line-height: var(--line-height-medium);
+
+  &:hover {
+    background: var(--d-hover);
+  }
+
+  &__title {
+    grid-area: title;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--tertiary);
+  }
+
+  &__category {
+    grid-area: category;
+    min-width: 0;
+    line-height: var(--line-height-medium);
+  }
+
+  // the category badge sets its own size, which these match
+  &__date,
+  &__replies {
+    justify-self: end;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__date {
+    grid-area: date;
+  }
+
+  &__replies {
+    grid-area: replies;
+    display: inline-flex;
+    gap: var(--space-1);
+    align-items: center;
+
+    .d-icon {
+      font-size: var(--font-down-1);
+      transform: scaleX(-1);
     }
   }
 }
@@ -198,7 +199,6 @@
   }
 
   &__item {
-    padding: var(--space-2) 0;
     transition: background-color 1s;
 
     &.--new,
@@ -209,38 +209,6 @@
 
   &__item + &__item {
     border-top: 1px solid var(--content-border-color);
-  }
-
-  &__link {
-    display: block;
-    font-weight: bold;
-    color: var(--tertiary);
-  }
-
-  &__meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-1) var(--space-2);
-    margin-top: var(--space-1);
-    font-size: var(--font-down-2);
-    color: var(--primary-medium);
-  }
-
-  &__movement {
-    font-weight: bold;
-
-    .--up & {
-      color: var(--success);
-    }
-
-    .--down & {
-      color: var(--danger);
-    }
-
-    .--new & {
-      color: var(--tertiary);
-    }
   }
 
   &__empty {
