@@ -12,6 +12,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DUserLink from "discourse/ui-kit/d-user-link";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
@@ -78,6 +79,9 @@ export default class VoiceRoomList extends Component {
                   "voice.admin.room.name"
                 }}</th>
               <th class="d-table__header-cell">{{i18n
+                  "voice.admin.room.creator"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
                   "voice.admin.room.public"
                 }}</th>
               <th class="d-table__header-cell">{{i18n
@@ -85,9 +89,6 @@ export default class VoiceRoomList extends Component {
                 }}</th>
               <th class="d-table__header-cell">{{i18n
                   "voice.admin.room.member_count"
-                }}</th>
-              <th class="d-table__header-cell">{{i18n
-                  "voice.admin.room.creator"
                 }}</th>
               <th class="d-table__header-cell">{{i18n
                   "voice.admin.room.created_at"
@@ -108,6 +109,20 @@ export default class VoiceRoomList extends Component {
                       class="d-table__overview-name"
                     >{{room.name}}</strong>
                   </LinkTo>
+                </td>
+                <td class="d-table__cell --detail voice-rooms__creator">
+                  <div class="d-table__mobile-label">
+                    {{i18n "voice.admin.room.creator"}}
+                  </div>
+                  {{#if room.creator}}
+                    <DUserLink
+                      class="voice-rooms__creator-link"
+                      @user={{room.creator}}
+                    >
+                      {{dAvatar room.creator imageSize="tiny"}}
+                      <span>{{room.creator.username}}</span>
+                    </DUserLink>
+                  {{/if}}
                 </td>
                 <td class="d-table__cell --detail voice-rooms__public">
                   <div class="d-table__mobile-label">
@@ -136,19 +151,6 @@ export default class VoiceRoomList extends Component {
                     {{i18n "voice.admin.room.member_count"}}
                   </div>
                   {{room.member_count}}
-                </td>
-                <td class="d-table__cell --detail voice-rooms__creator">
-                  <div class="d-table__mobile-label">
-                    {{i18n "voice.admin.room.creator"}}
-                  </div>
-                  {{#if room.creator}}
-                    <a
-                      data-user-card={{room.creator.username}}
-                      href={{room.creator.userPath}}
-                    >
-                      {{dAvatar room.creator imageSize="small"}}
-                    </a>
-                  {{/if}}
                 </td>
                 <td class="d-table__cell --detail voice-rooms__created-at">
                   <div class="d-table__mobile-label">
