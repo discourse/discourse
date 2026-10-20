@@ -221,14 +221,14 @@ RSpec.describe UpcomingChanges::Action::TrackStatusChanges do
 
       it "records that the change is displayed on the new status event" do
         result
-        expect(latest_permanent_event.event_data["displayed"]).to eq(true)
+        expect(latest_permanent_event.event_data["was_conditionally_displayed"]).to eq(true)
       end
 
       it "records that the change is hidden when conditional display hides it" do
         UpcomingChanges::ConditionalDisplay.stubs(:should_display?).returns(false)
 
         result
-        expect(latest_permanent_event.event_data["displayed"]).to eq(false)
+        expect(latest_permanent_event.event_data["was_conditionally_displayed"]).to eq(false)
       end
 
       it "updates an existing permanent event when the display state changes" do
@@ -249,7 +249,7 @@ RSpec.describe UpcomingChanges::Action::TrackStatusChanges do
             upcoming_change_name: :enable_upload_debug_mode,
           ).count
         }
-        expect(event.reload.event_data["displayed"]).to eq(false)
+        expect(event.reload.event_data["was_conditionally_displayed"]).to eq(false)
       end
     end
 

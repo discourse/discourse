@@ -200,7 +200,7 @@ module DiscourseUpdates
         status = UpcomingChanges.current_statuses[setting_name] || {}
         retired =
           !SiteSetting.has_setting?(setting_name) && status[:status] == "permanent" &&
-            status[:displayed] != false
+            status[:was_conditionally_displayed] != false
         next false if retired
 
         !permanent_upcoming_change_names.include?(setting_name)

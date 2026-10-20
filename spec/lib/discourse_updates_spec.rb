@@ -597,14 +597,14 @@ RSpec.describe DiscourseUpdates do
         end
       end
 
-      def record_status_change(new_value, displayed: nil)
+      def record_status_change(new_value, was_conditionally_displayed: nil)
         UpcomingChangeEvent.create!(
           event_type: :status_changed,
           upcoming_change_name: upcoming_change_setting_name,
           event_data: {
             "previous_value" => "stable",
             "new_value" => new_value,
-            "displayed" => displayed,
+            "was_conditionally_displayed" => was_conditionally_displayed,
           }.compact,
         )
       end
@@ -613,7 +613,7 @@ RSpec.describe DiscourseUpdates do
         let(:upcoming_change_setting_name) { "enable_removed_feature" }
 
         it "keeps the feed item when the change was permanent and displayed on this site" do
-          record_status_change("permanent", displayed: true)
+          record_status_change("permanent", was_conditionally_displayed: true)
 
           result = described_class.merge_new_features_with_upcoming_changes([feed_feature.deep_dup])
           expect(result.map { |r| r[:upcoming_change_setting_name] }).to include(
@@ -631,7 +631,7 @@ RSpec.describe DiscourseUpdates do
         end
 
         it "excludes the feed item when the change was hidden on this site" do
-          record_status_change("permanent", displayed: false)
+          record_status_change("permanent", was_conditionally_displayed: false)
 
           result = described_class.merge_new_features_with_upcoming_changes([feed_feature.deep_dup])
           expect(result.map { |r| r[:upcoming_change_setting_name] }).not_to include(
@@ -641,7 +641,7 @@ RSpec.describe DiscourseUpdates do
 
         it "keeps the feed item when no upcoming changes are currently permanent" do
           stub_permanent_upcoming_changes!([])
-          record_status_change("permanent", displayed: true)
+          record_status_change("permanent", was_conditionally_displayed: true)
 
           result = described_class.merge_new_features_with_upcoming_changes([feed_feature.deep_dup])
           expect(result.map { |r| r[:upcoming_change_setting_name] }).to include(

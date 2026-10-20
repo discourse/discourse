@@ -109,10 +109,13 @@ class UpcomingChanges::Action::TrackStatusChanges < Service::ActionBase
       event = latest_status_events[change_name.to_s]
       next if event&.event_data&.dig("new_value") != "permanent"
 
-      displayed = UpcomingChanges::ConditionalDisplay.should_display?(change_name)
-      next if event.event_data["displayed"] == displayed
+      was_conditionally_displayed = UpcomingChanges::ConditionalDisplay.should_display?(change_name)
+      next if event.event_data["was_conditionally_displayed"] == was_conditionally_displayed
 
-      event.update!(event_data: event.event_data.merge("displayed" => displayed))
+      event.update!(
+        event_data:
+          event.event_data.merge("was_conditionally_displayed" => was_conditionally_displayed),
+      )
     end
   end
 end

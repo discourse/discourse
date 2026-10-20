@@ -1051,7 +1051,7 @@ RSpec.describe UpcomingChanges do
       result = described_class.current_statuses
 
       expect(result["timeline_status_setting"]).to eq(
-        { status: "stable", changed_at: latest_event.created_at, displayed: nil },
+        { status: "stable", changed_at: latest_event.created_at, was_conditionally_displayed: nil },
       )
     end
 
@@ -1062,13 +1062,16 @@ RSpec.describe UpcomingChanges do
         event_data: {
           "previous_value" => "stable",
           "new_value" => "permanent",
-          "displayed" => false,
+          "was_conditionally_displayed" => false,
         },
       )
 
-      expect(described_class.current_statuses.dig("timeline_status_setting", :displayed)).to eq(
-        false,
-      )
+      expect(
+        described_class.current_statuses.dig(
+          "timeline_status_setting",
+          :was_conditionally_displayed,
+        ),
+      ).to eq(false)
     end
 
     it "caches the result so the SQL runs only once until the cache key is deleted" do
