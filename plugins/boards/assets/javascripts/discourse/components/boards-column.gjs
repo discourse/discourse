@@ -56,6 +56,31 @@ export default class BoardsColumn extends Component {
 
   @tracked showAllCards = false;
 
+  get canReceiveCards() {
+    return (
+      this.args.board.canWrite && this.args.column.can_receive_cards !== false
+    );
+  }
+
+  get canAddCards() {
+    return this.args.board.canWrite && this.args.column.can_add_cards !== false;
+  }
+
+  get cannotClear() {
+    return (
+      !this.cardCount ||
+      this.args.column.can_clear === false ||
+      this.args.column.cards.some((card) => card.can_delete === false)
+    );
+  }
+
+  get cannotDelete() {
+    return (
+      this.args.column.can_delete === false ||
+      this.args.column.cards.some((card) => card.can_delete === false)
+    );
+  }
+
   get cardCount() {
     return this.args.column.cards?.length || 0;
   }
@@ -161,6 +186,9 @@ export default class BoardsColumn extends Component {
 
   @action
   canDropCard({ source }) {
+    if (!this.canReceiveCards) {
+      return false;
+    }
     // Recency columns sort themselves, so reordering within one is meaningless.
     return !(
       this.isRecencySorted && source.data.fromColumnId === this.args.column.id
@@ -368,6 +396,8 @@ export default class BoardsColumn extends Component {
           (hasColumnColor @column.color)
           'discourse-boards-column--has-color'
         }}"
+      data-can-add-cards={{if this.canAddCards "true" "false"}}
+      data-can-receive-cards={{if this.canReceiveCards "true" "false"}}
       data-column-id={{@column.id}}
       data-default-sort={{@column.default_sort}}
       style={{columnColorVariable @column.color}}
@@ -430,7 +460,7 @@ export default class BoardsColumn extends Component {
                   <DButton
                     class="btn-transparent discourse-boards-column__menu-clear"
                     @action={{fn this.clearColumn args.close}}
-                    @disabled={{eq this.cardCount 0}}
+                    @disabled={{this.cannotClear}}
                     @icon="xmark"
                     @label="boards.board.clear_column"
                   />
@@ -439,6 +469,7 @@ export default class BoardsColumn extends Component {
                   <DButton
                     class="btn-transparent btn-danger discourse-boards-column__menu-delete"
                     @action={{fn this.deleteColumn args.close}}
+                    @disabled={{this.cannotDelete}}
                     @icon="trash-can"
                     @label="boards.board.delete_column"
                   />
@@ -491,7 +522,7 @@ export default class BoardsColumn extends Component {
         {{/if}}
       </div>
 
-      {{#if @board.canWrite}}
+      {{#if this.canAddCards}}
         <div class="discourse-boards-column__footer">
           <DMenu
             @icon="plus"

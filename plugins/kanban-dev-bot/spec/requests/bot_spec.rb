@@ -2,6 +2,7 @@
 
 RSpec.describe "Kanban development bot" do
   fab!(:admin)
+  fab!(:bot) { Fabricate(:admin, username: "codex-bot") }
   fab!(:category)
   fab!(:board) do
     Boards::Board.create!(
@@ -17,7 +18,12 @@ RSpec.describe "Kanban development bot" do
     SiteSetting.kanban_dev_bot_enabled = true
     SiteSetting.capybara_enabled = false if SiteSetting.respond_to?(:capybara_enabled)
     SiteSetting.boards_enabled = true
-    Fabricate(:access_control_list_with_users, target: board, permission: "edit", users: [admin])
+    Fabricate(
+      :access_control_list_with_users,
+      target: board,
+      permission: "edit",
+      users: [admin, bot],
+    )
     sign_in(admin)
   end
 
@@ -95,6 +101,8 @@ RSpec.describe "Kanban development bot" do
   end
 
   describe "POST /codex-board-bot/transition" do
+    before { sign_in(bot) }
+
     it "reports integration progress and failures once without treating them as completion" do
       result =
         Boards::CreateCard.call(
@@ -111,7 +119,13 @@ RSpec.describe "Kanban development bot" do
       PluginStore.set(
         KanbanDevBot::STORE,
         "card-#{card.id}",
-        { run_id: "test-run-123", status: "review", version: card.column_changed_at.iso8601(6) },
+        {
+          run_id: "test-run-123",
+          status: "review",
+          accepted_at: Time.now.utc.iso8601(6),
+          accepted_commit: "a" * 40,
+          version: card.column_changed_at.iso8601(6),
+        },
       )
 
       %w[integrating integration_failed done].each do |command|
@@ -183,6 +197,8 @@ RSpec.describe "Kanban development bot" do
   end
 
   describe "POST /codex-board-bot/transition archive" do
+    before { sign_in(bot) }
+
     fab!(:archived_column) { board.columns.create!(title: "ARCHIVED", position: 1) }
     fab!(:topic) { Fabricate(:topic_with_op, user: admin, category: category) }
     fab!(:card) { Fabricate(:boards_topic_card, board: board, column: column, topic: topic) }
@@ -192,7 +208,13 @@ RSpec.describe "Kanban development bot" do
       PluginStore.set(
         KanbanDevBot::STORE,
         "card-#{card.id}",
-        { run_id: "archive-run-123", status: "review", version: card.column_changed_at.iso8601(6) },
+        {
+          run_id: "archive-run-123",
+          status: "review",
+          accepted_at: Time.now.utc.iso8601(6),
+          accepted_commit: "a" * 40,
+          version: card.column_changed_at.iso8601(6),
+        },
       )
     end
 
@@ -213,7 +235,7 @@ RSpec.describe "Kanban development bot" do
         MessageBus.track_publish { post "/codex-board-bot/transition.json", params: original }
       expect(response.status).to eq(200)
       expect(card.reload.column_id).to eq(archived_column.id)
-      expect(response.parsed_body.dig("run", "status")).to eq("done")
+      expect(response.parsed_body.dig("run", "status")).to eq("archived")
       expect(topic.reload).not_to be_closed
       expect(messages.any? { |message| message.channel == "/boards/#{board.id}" }).to eq(true)
       expect(messages.any? { |message| message.channel == "/topic/#{topic.id}" }).to eq(true)

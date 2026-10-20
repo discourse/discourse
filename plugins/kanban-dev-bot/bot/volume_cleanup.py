@@ -6,7 +6,7 @@ import docker
 
 LOG = logging.getLogger("codex-board-bot")
 OWNER = "codex-board-bot"
-PROTECTED_PHASES = {"running", "review", "integrating", "deploying", "publishing", "confirming"}
+PROTECTED_PHASES = {"running", "review", "stopping", "needs_attention", "integrating", "deploying", "publishing", "confirming"}
 
 
 @dataclasses.dataclass(frozen=True)
@@ -22,8 +22,11 @@ def volume_plan(runs, cards, jobs):
     for run in runs:
         card = cards.get(run.card_id)
         current = bool(card and (card.get("run") or {}).get("run_id") == run.run_id)
-        retained = (run.run_id in jobs or run.cleanup_pending or run.phase in PROTECTED_PHASES
-                    or (current and run.phase == "integration_failed")
+        confirmed = (run.phase == "done" and bool(run.integrated_commit)
+                     and run.published_commit == run.integrated_commit and bool(run.pull_request_url))
+        accepted_recovery = (run.accepted_at or run.accepted_commit) and not confirmed
+        retained = (accepted_recovery or run.run_id in jobs or run.cleanup_pending or run.phase in PROTECTED_PHASES
+                    or ((current or run.accepted_commit) and run.phase == "integration_failed")
                     or (current and run.phase == "failed" and card["column"] not in {"DONE", "ARCHIVED"})
                     or run.phase not in PROTECTED_PHASES | {"done", "cancelled", "failed", "integration_failed"})
         for attribute, kind in (("workspace_volume", "workspace"), ("codex_volume", "session"),

@@ -51,6 +51,14 @@ function isRecencyColumnEl(columnEl) {
 }
 
 function moveCard(container, cardId, toColumnId, afterCardId) {
+  const card = document.querySelector(`[data-card-id="${cardId}"]`);
+  const column = document.querySelector(`[data-column-id="${toColumnId}"]`);
+  if (
+    card?.dataset.canMove === "false" ||
+    column?.dataset.canReceiveCards === "false"
+  ) {
+    return Promise.reject("Card movement is locked");
+  }
   const router = container.lookup("service:router");
   const boardId = router.currentRoute?.params?.id;
   if (!boardId) {

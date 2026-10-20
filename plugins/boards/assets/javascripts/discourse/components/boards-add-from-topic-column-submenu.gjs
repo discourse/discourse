@@ -18,7 +18,7 @@ export default class BoardsAddFromTopicColumnSubmenu extends Component {
 
   get availableColumns() {
     return this.args.data.board.columns.filter(
-      (column) => !column.topic_is_member
+      (column) => !column.topic_is_member && column.can_add_cards !== false
     );
   }
 

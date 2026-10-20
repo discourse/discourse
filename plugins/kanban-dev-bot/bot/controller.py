@@ -70,6 +70,11 @@ class Run:
     review_bundle: dict = dataclasses.field(default_factory=dict)
     review_uploads: list = dataclasses.field(default_factory=list)
     review_pending: bool = False
+    action_id: str = ""
+    accepted_commit: str = ""
+    accepted_at: str = ""
+    stop_phase: str = "cancelled"
+    reported_phase: str = ""
 
     @classmethod
     def create(cls, card, board_id, run_id=None):
@@ -159,6 +164,11 @@ class Board:
                    "expected_version": run.claimed_version, "message": message}
         if command != "claim":
             payload["expected_run_id"] = run.run_id
+        if command in {"review", "sync_review"}:
+            payload.update(commit=run.commit, base_commit=run.base_commit)
+        if command in {"stopped", "phase"}:
+            payload.update(expected_action_id=run.action_id, phase=run.phase,
+                           diagnostic=run.error or run.confirmation_diagnostic)
         result = self.request("POST", "/transition", payload)
         return result.get("card", result)
 
@@ -246,6 +256,24 @@ class Runtime:
             errors.append(f"container cleanup: {error}")
         if errors:
             raise RuntimeError("; ".join(errors))
+
+    def reap_stopped(self, runs):
+        retired = {run.container_name: run for run in runs if run.phase in {"cancelled", "done"}}
+        if not retired:
+            return
+        containers = self.client.containers.list(all=True, filters={"label": [
+            f"owner={OWNER}", f"board_id={self.config.board_id}"]})
+        for container in containers:
+            run = retired.get(container.name)
+            if run:
+                self.owned(container, run)
+                container.remove(force=True)
+        names = {run.tunnel_name for run in retired.values()}
+        for tunnel in self.tunnels():
+            if tunnel["name"] in names:
+                response = self.http.delete(f"{self.ngrok}/api/tunnels/{quote(tunnel['name'], safe='')}", timeout=15)
+                if response.status_code != 404:
+                    response.raise_for_status()
 
     def collect_volumes(self, runs, cards, jobs):
         return collect_volumes(self.client, self.config.board_id, runs, cards, jobs)
@@ -543,14 +571,124 @@ class Controller:
             return False
 
     def cancel(self, run, phase="cancelled"):
+        if run.accepted_at or run.accepted_commit:
+            return
         if run.run_id in self.jobs:
             self.jobs[run.run_id][1].set()
-        run.phase = phase
+        run.stop_phase = phase
+        run.phase = "stopping"
         run.review_pending = False
         run.report_pending = False
         run.cleanup_pending = True
         self.save(run)
         self.cleanup(run)
+
+    def drain(self, run):
+        if run.accepted_at or run.accepted_commit:
+            return False
+        job = self.jobs.get(run.run_id)
+        if job:
+            job[1].set()
+            if not job[0].done():
+                return False
+            del self.jobs[run.run_id]
+        # A create request can finish after the first cleanup. Recheck after the producer exits.
+        run.cleanup_pending = True
+        self.save(run)
+        if not self.cleanup(run):
+            return False
+        if run.action_id:
+            try:
+                self.board.transition("stopped", run)
+            except Conflict:
+                return False
+        run.phase = run.stop_phase
+        self.save(run)
+        return True
+
+    def reconcile_operations(self, snapshot, cards):
+        operations = {item["card_id"]: item["run"] for item in snapshot.get("operations", [])}
+        operations.update({identity: card["run"] for identity, card in cards.items() if card.get("run")})
+        for card_id, operation in operations.items():
+            identity = operation.get("run_id")
+            if not identity or operation.get("status") == "archived":
+                continue
+            card = cards.get(card_id)
+            run = self.runs.get(identity)
+            if run is None and (operation.get("accepted_at")
+                    or operation.get("requested_action") in {"cancel", "restart"}
+                    or operation.get("status") in {"running", "review", "failed"}):
+                seed = card or {"id": card_id, "version": operation.get("version", "")}
+                run = Run.create(seed, self.board_id, identity)
+                run.claim_pending = False
+                if operation.get("accepted_at"):
+                    run.phase = "needs_attention"
+                    run.accepted_commit = operation.get("accepted_commit", "")
+                    run.error = "Accepted operation has no local recovery record. Restore controller state before retrying."
+                elif operation.get("requested_action") in {"cancel", "restart"}:
+                    run.phase = "stopping"
+                else:
+                    run.phase = "needs_attention"
+                    run.error = "Coding operation has no local recovery record. Use Restart to rebuild from the latest discussion."
+                self.save(run)
+            if not run:
+                continue
+            if operation.get("accepted_at"):
+                run.accepted_at = operation["accepted_at"]
+                run.accepted_commit = operation.get("accepted_commit") or run.accepted_commit
+                run.review_pending = False
+                if run.phase not in ACTIVE | INTEGRATION | {"integration_failed", "needs_attention", "done"}:
+                    run.phase = "needs_attention"
+                    run.error = "Accepted operation has an inconsistent local recovery phase. Restore controller state before retrying."
+                    self.save(run)
+                if run.phase in ACTIVE:
+                    accepted = operation.get("accepted_commit")
+                    run.accepted_commit = accepted or ""
+                    coding_job = self.jobs.get(identity)
+                    if coding_job and coding_job[0].done():
+                        del self.jobs[identity]
+                        coding_job = None
+                    if coding_job:
+                        coding_job[1].set()
+                    if not accepted or accepted != run.commit or run.integration_version != 1 or coding_job:
+                        run.phase = "needs_attention"
+                        run.error = "Accepted commit does not match the recoverable coding result."
+                    else:
+                        run.phase = "integrating"
+                        run.accepted_commit = accepted
+                        run.preview_url = ""
+                        run.cleanup_pending = True
+                    run.claimed_version = operation.get("version") or (card or {}).get("version", run.claimed_version)
+                self.save(run)
+                if operation.get("requested_action") == "retry" and operation.get("action_id") != run.action_id:
+                    if run.phase == "integration_failed":
+                        run.phase = "integrating"
+                        run.error = ""
+                        run.retry_after = 0
+                    run.action_id = operation["action_id"]
+                    run.reported_phase = ""
+                    self.save(run)
+            elif operation.get("requested_action") in {"cancel", "restart"}:
+                if run.phase != "stopping" or run.action_id != operation.get("action_id"):
+                    run.action_id = operation["action_id"]
+                    self.cancel(run)
+            if run.phase == "stopping":
+                self.drain(run)
+            elif run.phase in INTEGRATION | {"integration_failed", "needs_attention", "done"}:
+                marker = json.dumps([run.phase, run.error, run.confirmation_diagnostic, run.action_id], sort_keys=True)
+                if run.reported_phase != marker:
+                    try:
+                        self.board.transition("phase", run)
+                    except Exception:
+                        LOG.exception("Phase update will retry for %s", run.run_id)
+                    else:
+                        run.reported_phase = marker
+                        self.save(run)
+            elif run.phase == "review" and card and card["column"] == "REVIEW" and not operation.get("commit"):
+                try:
+                    self.board.transition("sync_review", run)
+                except Conflict:
+                    pass
 
     def launch(self, run):
         event = threading.Event()
@@ -599,7 +737,7 @@ class Controller:
 
     def report_failure(self, run, current_card):
         command = "review_failed" if current_card["column"] == "REVIEW" else "failed"
-        card = self.board.transition(command, run, f"Codex run failed. {run.error}\n\nMove this card to TODO to retry from its latest contents.")
+        card = self.board.transition(command, run, f"Codex run failed. {run.error}\n\nUse Restart to retry from the latest discussion.")
         run.claimed_version = card["version"]
         run.report_pending = False
         self.save(run)
@@ -667,7 +805,10 @@ class Controller:
                 break
 
     def poll(self):
-        self.runtime.reconcile()
+        try:
+            self.runtime.reconcile()
+        except Exception:
+            LOG.exception("Main instance recovery will retry; continuing durable operations")
         self.integration_jobs()
         snapshot = self.board.snapshot()
         if snapshot["board_id"] != self.board_id:
@@ -675,6 +816,7 @@ class Controller:
         cards = {card["id"]: card for card in snapshot["cards"]}
         self.last_poll = time.time()
         self.last_error = ""
+        self.reconcile_operations(snapshot, cards)
         for run in list(self.runs.values()):
             if run.cleanup_pending:
                 self.cleanup(run)
@@ -721,23 +863,12 @@ class Controller:
             if run.phase in ACTIVE:
                 expected = "IN PROGRESS" if run.phase == "running" else "REVIEW"
                 if snapshot["archived"] or not self.matches(card, run, expected):
-                    done = card is not None and card["column"] == "DONE"
-                    if (done and not snapshot["archived"] and run.phase == "review"
-                            and run.integration_version == 1 and run.commit
-                            and (card.get("run") or {}).get("run_id") == run.run_id):
-                        run.phase = "integrating"
-                        run.claimed_version = card["version"]
-                        run.cleanup_pending = True
-                        run.preview_url = ""
-                        self.save(run)
-                        self.cleanup(run)
-                    else:
-                        self.cancel(run, "done" if done else "cancelled")
+                    self.cancel(run)
             if (run.phase == "done" and not run.cleanup_pending and card
                     and (card.get("run") or {}).get("run_id") == run.run_id):
                 archive_ready = (run.publication_required and bool(run.integrated_commit)
                                  and run.published_commit == run.integrated_commit and bool(run.pull_request_url))
-                if archive_ready and card["column"] == "ARCHIVED" and card["run"].get("status") == "done":
+                if archive_ready and card["column"] == "ARCHIVED" and card["run"].get("status") in {"done", "archived"}:
                     if run.report_pending:
                         run.report_pending = False
                         run.claimed_version = card["version"]
@@ -755,15 +886,11 @@ class Controller:
                     except Conflict:
                         pass
                     self.save(run)
-            if run.phase == "integration_failed" and (not card or snapshot["archived"] or card["column"] != "DONE"):
-                run.phase = "cancelled"
-                run.report_pending = False
-                self.save(run)
             if run.phase == "integration_failed" and run.report_pending and card and card["column"] == "DONE" and (card.get("run") or {}).get("run_id") == run.run_id:
                 run.claimed_version = card["version"]
                 try:
                     self.board.transition("integration_failed", run,
-                                          f"Capybara integration failed. {run.error}\n\nMove this card to TODO to retry. "
+                                          f"Capybara integration needs attention. {run.error}\n\nUse Retry acceptance to resume this operation. "
                                           "The bot has not reported this card as merged and deployed.")
                 except Conflict:
                     pass
@@ -797,7 +924,7 @@ class Controller:
             if run.phase == "review" and not self.runtime.exists(run):
                 run.phase = "failed"
                 run.report_pending = True
-                run.error = "Review preview resources are missing; move the card to TODO to rebuild"
+                run.error = "Review preview resources are missing; use Restart to rebuild"
                 run.cleanup_pending = True
                 self.save(run)
                 LOG.error("%s: %s", run.run_id, run.error)
@@ -817,13 +944,17 @@ class Controller:
             run = self.runs[identity]
             if run.phase in INTEGRATION:
                 continue
+            if run.phase == "needs_attention" and (run.accepted_at or run.accepted_commit):
+                del self.jobs[identity]
+                continue
             card = cards.get(run.card_id)
             if run.phase == "review" and self.matches(card, run, "REVIEW"):
                 del self.jobs[identity]
                 continue
             if run.phase != "running" or event.is_set() or not self.matches(card, run, "IN PROGRESS"):
-                self.cleanup(run)
-                del self.jobs[identity]
+                if run.phase != "stopping":
+                    self.cancel(run)
+                self.drain(run)
                 continue
             try:
                 result = future.result()
@@ -854,9 +985,16 @@ class Controller:
                 else:
                     run.report_pending = False
                     self.save(run)
+        for run in list(self.runs.values()):
+            if run.phase == "stopping":
+                self.drain(run)
         self.integration_jobs()
+        try:
+            self.runtime.reap_stopped(list(self.runs.values()))
+        except Exception:
+            LOG.exception("Retired resource cleanup will retry")
         self.volume_cleanup = self.runtime.collect_volumes(list(self.runs.values()), cards, set(self.jobs))
-        if snapshot["archived"] or any(run.phase in INTEGRATION or run.phase == "integration_failed" for run in self.runs.values()):
+        if snapshot["archived"] or any(run.phase in INTEGRATION or run.phase in {"integration_failed", "needs_attention"} for run in self.runs.values()):
             return
         for run in list(self.runs.values()):
             if run.phase == "running" and not run.claim_pending and run.run_id not in self.jobs and not run.cleanup_pending:
@@ -868,7 +1006,7 @@ class Controller:
             if len(self.jobs) >= self.concurrency:
                 break
             prior = [run for run in self.runs.values() if run.card_id == card["id"]]
-            if any(run.cleanup_pending or run.run_id in self.jobs or run.phase in ACTIVE for run in prior):
+            if any(run.cleanup_pending or run.run_id in self.jobs or run.phase in ACTIVE | {"stopping", "needs_attention"} for run in prior):
                 continue
             run = Run.create(card, self.board_id)
             self.save(run)
@@ -886,7 +1024,7 @@ class Controller:
             self.launch(run)
 
     def status(self):
-        return {"ok": not bool(self.last_error) and not any(run.phase == "integration_failed" or (run.phase in {"deploying", "publishing", "confirming"} and run.error) for run in self.runs.values()), "board_id": self.board_id,
+        return {"ok": not bool(self.last_error) and not any(run.phase in {"integration_failed", "needs_attention"} or (run.phase in {"deploying", "publishing", "confirming"} and run.error) for run in self.runs.values()), "board_id": self.board_id,
                 "last_poll": self.last_poll, "error": self.last_error, "volume_cleanup": self.volume_cleanup,
                 "runs": [{"card_id": run.card_id, "run_id": run.run_id, "phase": run.phase,
                           "preview_url": run.preview_url, "error": run.error,

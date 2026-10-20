@@ -7,8 +7,10 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicStatus from "discourse/components/topic-status";
 import DMenu from "discourse/float-kit/components/d-menu";
+import lazyHash from "discourse/helpers/lazy-hash";
 import renderTags from "discourse/lib/render-tags";
 import { emojiUnescape } from "discourse/lib/text";
 import DiscourseURL from "discourse/lib/url";
@@ -211,6 +213,14 @@ export default class BoardsCard extends Component {
     return { closed: this.topic?.closed };
   }
 
+  get canMove() {
+    return this.args.board.canWrite && this.args.card.can_move !== false;
+  }
+
+  get canDelete() {
+    return this.args.card.can_delete !== false;
+  }
+
   get canShowActions() {
     return this.args.board.canWrite;
   }
@@ -294,6 +304,8 @@ export default class BoardsCard extends Component {
       .show(BoardsTopicCardDetailModal, {
         model: {
           card: this.args.card,
+          board: this.args.board,
+          onRefreshBoard: this.args.onRefreshBoard,
           columnTitle: this.args.columnTitle,
           columnIcon: this.args.columnIcon,
           columnColor: this.args.columnColor,
@@ -368,7 +380,8 @@ export default class BoardsCard extends Component {
       event.target.closest(".discourse-boards-card__actions-trigger") ||
       event.target.closest(".discourse-boards-card__assign-btn") ||
       event.target.closest("[data-content]") ||
-      event.target.closest("a")
+      event.target.closest("a") ||
+      event.target.closest("[data-card-action]")
     ) {
       return;
     }
@@ -469,6 +482,7 @@ export default class BoardsCard extends Component {
         (if @isDropHighlighted "discourse-boards-card--drop-highlighted")
         (if @isLinkHighlighted "discourse-boards-card--link-highlighted")
       }}
+      data-can-move={{if this.canMove "true" "false"}}
       data-card-id={{@card.id}}
       data-topic-id={{@card.topic_id}}
       role="button"
@@ -476,7 +490,7 @@ export default class BoardsCard extends Component {
       {{dDragAndDropSource
         type="boards-card"
         data=(hash cardId=@card.id fromColumnId=@card.column_id)
-        disabled=(not @board.canWrite)
+        disabled=(not this.canMove)
         onDragEnd=this.dragEnd
         onDragStart=this.dragStart
       }}
@@ -538,10 +552,19 @@ export default class BoardsCard extends Component {
                     />
                   </dropdown.item>
                 {{/unless}}
+                <PluginOutlet
+                  @name="boards-card-actions"
+                  @outletArgs={{lazyHash
+                    card=@card
+                    board=@board
+                    onRefreshBoard=@onRefreshBoard
+                  }}
+                />
                 <dropdown.item>
                   <DButton
                     class="btn-transparent btn-danger"
                     @action={{this.removeCard}}
+                    @disabled={{not this.canDelete}}
                     @icon="trash-can"
                     @label="boards.board.remove_card"
                   />
@@ -558,6 +581,11 @@ export default class BoardsCard extends Component {
           {{/if}}
         {{/unless}}
       </div>
+
+      <PluginOutlet
+        @name="boards-card-status"
+        @outletArgs={{lazyHash card=@card board=@board}}
+      />
 
       {{#if this.tagsHtml}}
         <div class="discourse-boards-card__row discourse-boards-card__tags">

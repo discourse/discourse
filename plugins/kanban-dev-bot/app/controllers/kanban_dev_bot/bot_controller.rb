@@ -46,17 +46,109 @@ class ::KanbanDevBot::BotController < ::ApplicationController
              archived: @board.archived?,
              columns: @board.columns.pluck(:title, :id).to_h,
              cards: cards,
+             operations: KanbanDevBot::Lifecycle.operations,
            }
   end
 
+  def action
+    KanbanDevBot::Lifecycle.lock do
+      card = @board.cards.find(params.require(:card_id))
+      guardian.ensure_can_see!(card.topic) if card.topic?
+      KanbanDevBot::Lifecycle.request!(
+        card,
+        request.request_parameters.fetch("action").to_s,
+        params.require(:expected_run_id).to_s,
+        params[:expected_action_id],
+      )
+      publish_card(card)
+      render json: snapshot_card(card)
+    end
+  end
+
   def transition
-    card = @board.cards.find(params.require(:card_id))
-    guardian.ensure_can_see!(card.topic) if card.topic?
-    original_column_id = nil
-    card.with_lock do
-      original_column_id = card.column_id
-      current_run = PluginStore.get(KanbanDevBot::STORE, "card-#{card.id}") || {}
+    raise Discourse::InvalidAccess unless current_user.username == "codex-bot"
+    KanbanDevBot::Lifecycle.lock do
+      card = @board.cards.find_by(id: params.require(:card_id))
       command = params.require(:command).to_s
+      run_id = params.require(:run_id).to_s
+      raise Discourse::InvalidParameters unless run_id.match?(/\A[a-zA-Z0-9-]{8,80}\z/)
+      state = KanbanDevBot::Lifecycle.run(params[:card_id])
+      if command != "claim" && (state["run_id"] != run_id || params[:expected_run_id] != run_id)
+        return render json: { error: "Run superseded" }, status: :conflict
+      end
+      if command == "stopped"
+        unless params[:expected_action_id].present? &&
+                 params[:expected_action_id] == state["action_id"]
+          return render json: { error: "Action superseded" }, status: :conflict
+        end
+        if state["cleanup_complete"] || state["completed_action_id"] == state["action_id"]
+          return render json: card ? snapshot_card(card) : { deleted: true }
+        end
+        if %w[cancel restart].exclude?(state["requested_action"]) ||
+             KanbanDevBot::Lifecycle.accepted?(state)
+          return render json: { error: "No stop requested" }, status: :conflict
+        end
+        if card
+          target = state["requested_action"] == "restart" ? "TODO" : "BACKLOG"
+          move_card(card, target)
+        end
+        state.merge!(
+          "status" => "stopped",
+          "phase" => "stopped",
+          "requested_action" => nil,
+          "completed_action_id" => state["action_id"],
+          "cleanup_complete" => card.nil?,
+        )
+        state["version"] = card.column_changed_at.iso8601(6) if card
+        KanbanDevBot::Lifecycle.save(params[:card_id], state)
+        publish_card(card) if card
+        return render json: card ? snapshot_card(card) : { deleted: true }
+      end
+      raise Discourse::NotFound unless card
+      guardian.ensure_can_see!(card.topic) if card.topic?
+      version = card.column_changed_at.iso8601(6)
+      if command == "phase"
+        return render json: snapshot_card(card) if state["status"] == "archived"
+        phase = params.require(:phase).to_s
+        reportable =
+          KanbanDevBot::Lifecycle.accepted?(state) ||
+            (phase == "needs_attention" && state["requested_action"].blank?)
+        return render json: { error: "Run not accepted" }, status: :conflict unless reportable
+        raise Discourse::InvalidParameters if KanbanDevBot::Lifecycle::PHASES.exclude?(phase)
+        if params[:expected_action_id].present?
+          matching_action =
+            state["action_id"] == params[:expected_action_id] &&
+              (
+                state["requested_action"] == "retry" ||
+                  state["completed_action_id"] == state["action_id"]
+              )
+          unless matching_action
+            return render json: { error: "Action superseded" }, status: :conflict
+          end
+          state["requested_action"] = nil
+          state["completed_action_id"] = state["action_id"]
+        end
+        state.merge!(
+          "phase" => phase,
+          "status" => phase,
+          "diagnostic" => params[:diagnostic].to_s.first(2000),
+        )
+        KanbanDevBot::Lifecycle.save(card, state)
+        publish_card(card)
+        return render json: snapshot_card(card)
+      end
+      if command == "sync_review"
+        unless card.column.title == "REVIEW" && state["status"] == "review" &&
+                 params[:expected_version] == version
+          return render json: { error: "Card moved" }, status: :conflict
+        end
+        metadata = review_metadata
+        if state["commit"].present? && state["commit"] != metadata["commit"]
+          return render json: { error: "Review commit changed" }, status: :conflict
+        end
+        KanbanDevBot::Lifecycle.save(card, state.merge(metadata))
+        return render json: snapshot_card(card)
+      end
       commands = {
         "claim" => ["TODO", "IN PROGRESS", "running"],
         "review" => ["IN PROGRESS", "REVIEW", "review"],
@@ -65,48 +157,32 @@ class ::KanbanDevBot::BotController < ::ApplicationController
         "integrating" => %w[DONE DONE integrating],
         "integration_failed" => %w[DONE DONE integration_failed],
         "done" => %w[DONE DONE done],
-        "archive" => %w[DONE ARCHIVED done],
+        "archive" => %w[DONE ARCHIVED archived],
       }
       raise Discourse::InvalidParameters unless commands.key?(command)
-      run_id = params.require(:run_id).to_s
-      raise Discourse::InvalidParameters unless run_id.match?(/\A[a-zA-Z0-9-]{8,80}\z/)
-      from_title, target_title, status = commands.fetch(command)
-      version = card.column_changed_at.iso8601(6)
-      if current_run["run_id"] == run_id && current_run["status"] == status &&
-           current_run["version"] == version && card.column.title == target_title
+      from, target, status = commands.fetch(command)
+      if state["run_id"] == run_id && state["status"] == status && state["version"] == version &&
+           card.column.title == target
         return render json: snapshot_card(card)
       end
-      if version != params.require(:expected_version) || card.column.title != from_title
-        return(render json: { error: "Card moved since it was read" }, status: :conflict)
+      if version != params.require(:expected_version) || card.column.title != from ||
+           state["requested_action"].present?
+        return render json: { error: "Card moved or action pending" }, status: :conflict
       end
-      if command != "claim" &&
-           (
-             params.require(:expected_run_id) != current_run["run_id"] ||
-               run_id != current_run["run_id"]
-           )
-        return render json: { error: "Run superseded" }, status: :conflict
+      if from == "DONE" && !KanbanDevBot::Lifecycle.accepted?(state)
+        return render json: { error: "Run not accepted" }, status: :conflict
       end
-      target = @board.columns.find_by!(title: target_title)
-      raw = { "column_id" => target.id }
-      if params.key?(:message) && card.floater?
-        raw["notes"] = card.notes.to_s.split(KanbanDevBot::NOTE_PATTERN, 2).first.to_s +
-          KanbanDevBot::NOTE_SEPARATOR + params[:message].to_s.first(20_000)
-      end
-      result =
-        Boards::UpdateCard.call(
-          guardian: guardian,
-          params: raw.merge("board_id" => @board.id, "id" => card.id),
-          options: {
-            raw_card_params: raw,
-          },
-        )
-      raise Discourse::InvalidParameters unless result.success?
-      card.reload
-      PluginStore.set(
-        KanbanDevBot::STORE,
-        "card-#{card.id}",
-        { run_id: run_id, status: status, version: card.column_changed_at.iso8601(6) },
+      state = {} if command == "claim"
+      state.merge!(review_metadata) if command == "review"
+      old_column = card.column_id
+      move_card(card, target)
+      state.merge!(
+        "run_id" => run_id,
+        "status" => status,
+        "version" => card.column_changed_at.iso8601(6),
       )
+      state["phase"] = status if from == "DONE"
+      KanbanDevBot::Lifecycle.save(card, state)
       if card.topic? && params[:message].present? &&
            status.in?(%w[review failed integrating integration_failed done])
         post =
@@ -119,27 +195,9 @@ class ::KanbanDevBot::BotController < ::ApplicationController
         post.custom_fields["capybara_bot_run"] = run_id
         post.save_custom_fields
       end
+      publish_card(card, old_column)
+      render json: snapshot_card(card)
     end
-    payload = Boards::CardSerializer.new(card, root: false, scope: guardian).as_json
-    if card.column_id != original_column_id
-      Boards::Publisher.publish_card_moved!(
-        @board,
-        payload,
-        original_column_id,
-        acting_user: current_user,
-        client_id: nil,
-      )
-      if card.topic?
-        Boards::Publisher.publish_topic_memberships_changed!(
-          card.topic,
-          client_id: nil,
-          refresh_stream: false,
-        )
-      end
-    else
-      Boards::Publisher.publish_card_updated!(@board, payload, client_id: nil)
-    end
-    render json: snapshot_card(card)
   end
 
   REVIEW_EXTENSIONS = %w[
@@ -296,6 +354,52 @@ class ::KanbanDevBot::BotController < ::ApplicationController
 
   private
 
+  def review_metadata
+    commit = params.require(:commit).to_s
+    base = params.require(:base_commit).to_s
+    unless [commit, base].all? { |value| value.match?(/\A[0-9a-f]{40}\z/) }
+      raise Discourse::InvalidParameters
+    end
+    { "commit" => commit, "base_commit" => base }
+  end
+
+  def move_card(card, title)
+    target = @board.columns.find_by!(title: title)
+    raw = { "column_id" => target.id }
+    KanbanDevBot::Lifecycle.machine do
+      Boards::UpdateCard.call!(
+        guardian: guardian,
+        params: raw.merge("board_id" => @board.id, "id" => card.id),
+        options: {
+          raw_card_params: raw,
+        },
+      )
+    end
+    card.reload
+  end
+
+  def publish_card(card, original_column_id = card.column_id)
+    payload = Boards::CardSerializer.new(card, root: false, scope: guardian).as_json
+    if card.column_id != original_column_id
+      Boards::Publisher.publish_card_moved!(
+        @board,
+        payload,
+        original_column_id,
+        acting_user: current_user,
+        client_id: nil,
+      )
+      if card.topic?
+        Boards::Publisher.publish_topic_memberships_changed!(
+          card.topic,
+          client_id: nil,
+          refresh_stream: false,
+        )
+      end
+    else
+      Boards::Publisher.publish_card_updated!(@board, payload, client_id: nil)
+    end
+  end
+
   def valid_review_path?(path)
     path.present? && path.length <= 240 && !path.start_with?("/") &&
       !path.bytes.any? { |byte| byte < 32 || byte == 92 } &&
@@ -312,7 +416,8 @@ class ::KanbanDevBot::BotController < ::ApplicationController
     raise Discourse::InvalidParameters unless card.topic?
     guardian.ensure_can_see!(card.topic)
     guardian.ensure_can_create_post!(card.topic)
-    card.with_lock do
+    KanbanDevBot::Lifecycle.lock do
+      card.reload
       current_run = PluginStore.get(KanbanDevBot::STORE, "card-#{card.id}") || {}
       run_id = params.require(:run_id).to_s
       raise Discourse::InvalidParameters unless run_id.match?(/\A[a-zA-Z0-9-]{8,80}\z/)
@@ -329,37 +434,39 @@ class ::KanbanDevBot::BotController < ::ApplicationController
   end
 
   def ensure_archived_column
-    @board.with_lock do
-      done = @board.columns.find_by!(title: "DONE")
-      archived = @board.columns.find_by(title: "ARCHIVED")
-      unless archived
-        result =
-          Boards::CreateColumn.call(
-            guardian: guardian,
-            params: {
-              board_id: @board.id,
-              title: "ARCHIVED",
-            },
-          )
-        raise Discourse::InvalidParameters unless result.success?
-        archived = result[:column]
-      end
-      loop do
-        ids = @board.columns.order(:position, :id).pluck(:id)
-        archived_index = ids.index(archived.id)
-        done_index = ids.index(done.id)
-        break if archived_index == done_index + 1
-        direction = archived_index <= done_index ? 1 : -1
-        result =
-          Boards::MoveColumn.call(
-            guardian: guardian,
-            params: {
-              board_id: @board.id,
-              column_id: archived.id,
-              direction: direction,
-            },
-          )
-        raise Discourse::InvalidParameters unless result.success?
+    KanbanDevBot::Lifecycle.machine do
+      @board.with_lock do
+        done = @board.columns.find_by!(title: "DONE")
+        archived = @board.columns.find_by(title: "ARCHIVED")
+        unless archived
+          result =
+            Boards::CreateColumn.call(
+              guardian: guardian,
+              params: {
+                board_id: @board.id,
+                title: "ARCHIVED",
+              },
+            )
+          raise Discourse::InvalidParameters unless result.success?
+          archived = result[:column]
+        end
+        loop do
+          ids = @board.columns.order(:position, :id).pluck(:id)
+          archived_index = ids.index(archived.id)
+          done_index = ids.index(done.id)
+          break if archived_index == done_index + 1
+          direction = archived_index <= done_index ? 1 : -1
+          result =
+            Boards::MoveColumn.call(
+              guardian: guardian,
+              params: {
+                board_id: @board.id,
+                column_id: archived.id,
+                direction: direction,
+              },
+            )
+          raise Discourse::InvalidParameters unless result.success?
+        end
       end
     end
   end
@@ -376,7 +483,7 @@ class ::KanbanDevBot::BotController < ::ApplicationController
         end
       )
     raise Discourse::InvalidAccess unless permitted
-    unless current_user.admin? || current_user.username == "codex-bot"
+    unless action_name == "action" || current_user.admin? || current_user.username == "codex-bot"
       raise Discourse::InvalidAccess
     end
   end
@@ -421,7 +528,8 @@ class ::KanbanDevBot::BotController < ::ApplicationController
       column_id: card.column_id,
       column: card.column.title,
       version: card.column_changed_at.iso8601(6),
-      run: PluginStore.get(KanbanDevBot::STORE, "card-#{card.id}") || {},
+      run: KanbanDevBot::Lifecycle.run(card),
+      kanban_dev_bot: KanbanDevBot::Lifecycle.presentation(card),
     }
   end
 

@@ -153,3 +153,27 @@ conflicts and inventory failures warn without failing a successful build. A fail
 skips cleanup, including on a first build without an existing controller image.
 Unknown dangling images, dependencies, base images, build cache, and volumes are untouched.
 Manual image retagging outside this build lock must not run concurrently with cleanup.
+
+Card lifecycle safeguards
+
+Create cards in BACKLOG or TODO. The bot owns IN PROGRESS, REVIEW, and ARCHIVED.
+While work is active, use Cancel to return to BACKLOG or Restart to queue the latest
+discussion in TODO. The card stays in Stopping until the worker exits and final resource
+cleanup succeeds. Deleting an unaccepted card closes its topic and records durable cleanup.
+Bulk deletion checks the entire selection before changing any card.
+
+Moving a completed REVIEW card to DONE atomically accepts its exact commit. Moves and
+deletion then remain locked through integration, deployment, push, and confirmation.
+A failed integration offers Retry for the same accepted run. Missing or inconsistent
+controller recovery records show Needs attention and require restoring the controller
+state; they never start replacement coding or release recovery volumes. Replies remain
+available during acceptance. The bot archives the card only after publication is confirmed.
+
+The managed board and its workflow columns cannot be deleted, archived, or structurally
+reconfigured while the bot is enabled. The server enforces these rules for API requests,
+bulk operations, topic deletion, and automatic topic synchronization as well as the UI.
+
+PostgreSQL stores action and acceptance intent. Controller SQLite, integration refs, and
+publisher receipts preserve execution progress. After restart, the controller reconciles
+pending intent, retries cleanup and confirmation, and reclaims late resources from retired
+runs. Keep the controller-state volume and recovery workspaces when repairing a failed run.

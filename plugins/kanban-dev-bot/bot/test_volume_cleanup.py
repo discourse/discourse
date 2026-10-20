@@ -48,6 +48,19 @@ class VolumeCleanupTests(unittest.TestCase):
                 self.assertEqual([], self.collect(cards={})["removed"])
         self.assertEqual(3, len(self.volumes))
 
+    def test_accepted_recovery_survives_stale_terminal_phase_without_card(self):
+        self.run.accepted_at = "now"
+        for phase in ("cancelled", "failed", "integration_failed", "done"):
+            with self.subTest(phase=phase):
+                self.run.phase = phase
+                self.assertEqual([], self.collect(cards={})["removed"])
+        self.run.integrated_commit = "a" * 40
+        self.run.published_commit = "b" * 40
+        self.run.pull_request_url = "https://github.com/discourse/discourse/pull/44782"
+        self.assertEqual([], self.collect(cards={})["removed"])
+        self.run.published_commit = self.run.integrated_commit
+        self.assertEqual(3, len(self.collect(cards={})["removed"]))
+
     def test_current_integration_failure_in_done_retains_work(self):
         self.run.phase = "integration_failed"
         self.assertEqual([], self.collect()["removed"])

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Discourse::Application.routes.append do
+  post "/codex-board-bot/action" => "kanban_dev_bot/bot#action"
   get "/codex-board-bot/snapshot" => "kanban_dev_bot/bot#snapshot"
   post "/codex-board-bot/setup" => "kanban_dev_bot/bot#setup"
   post "/codex-board-bot/transition" => "kanban_dev_bot/bot#transition"

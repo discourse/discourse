@@ -807,6 +807,7 @@ export default class BoardsBoardViewer extends Component {
         );
       }
       Object.assign(this.board, result.board || result);
+      return result;
     } catch {
       // Board may have been deleted — no action needed
     }
@@ -1144,6 +1145,8 @@ export default class BoardsBoardViewer extends Component {
     const model = isTopicCard
       ? {
           card,
+          board: this.board,
+          onRefreshBoard: this.refreshBoard,
           columnTitle: column?.fancyTitle,
           columnIcon: column?.icon,
           columnColor: column?.color,

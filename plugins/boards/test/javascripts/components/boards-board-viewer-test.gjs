@@ -148,6 +148,54 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
     sinon.restore();
   });
 
+  test("drops a review card into DONE but rejects bot-controlled destinations", async function (assert) {
+    const card = this.makeCard({
+      id: 101,
+      columnId: 10,
+      title: "Review",
+      position: 0,
+    });
+    card.can_move = true;
+    card.can_delete = true;
+    const done = this.makeColumn({ id: 20, title: "DONE" });
+    done.can_receive_cards = true;
+    done.can_add_cards = false;
+    const progress = this.makeColumn({ id: 30, title: "IN PROGRESS" });
+    progress.can_receive_cards = false;
+    progress.can_add_cards = false;
+    await this.renderBoard([
+      this.makeColumn({ id: 10, title: "REVIEW", cards: [card] }),
+      done,
+      progress,
+    ]);
+    let requests = 0;
+    pretender.put("/boards/api/boards/1/cards/101", (request) => {
+      requests++;
+      assert.strictEqual(
+        parsePostData(request.requestBody).card.column_id,
+        "20"
+      );
+      return response({
+        card: {
+          id: 101,
+          column_id: 20,
+          position: 0,
+          can_move: false,
+          can_delete: false,
+        },
+      });
+    });
+    await this.dragCard(101);
+    await this.dropOnColumn(30);
+    assert.strictEqual(requests, 0);
+    assert.deepEqual(columnCardIds(10), [101]);
+    await this.dragCard(101);
+    await this.dropOnColumn(20);
+    assert.strictEqual(requests, 1);
+    assert.deepEqual(columnCardIds(20), [101]);
+    assert.dom(cardSelector(101)).hasAttribute("data-can-move", "false");
+  });
+
   test("completes a priority drop with the source column from drag start", async function (assert) {
     const sourceCard = this.makeCard({
       id: 101,

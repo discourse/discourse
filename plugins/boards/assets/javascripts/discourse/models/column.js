@@ -9,6 +9,10 @@ export default class Column {
     return new Column(args);
   }
 
+  @tracked can_receive_cards;
+  @tracked can_add_cards;
+  @tracked can_clear;
+  @tracked can_delete;
   @tracked cards;
   @tracked color;
   @tracked default_sort;
@@ -34,6 +38,10 @@ export default class Column {
 
   copy(overrides = {}) {
     return new Column({
+      can_receive_cards: this.can_receive_cards,
+      can_add_cards: this.can_add_cards,
+      can_clear: this.can_clear,
+      can_delete: this.can_delete,
       cards: this.cards,
       color: this.color,
       default_sort: this.default_sort,

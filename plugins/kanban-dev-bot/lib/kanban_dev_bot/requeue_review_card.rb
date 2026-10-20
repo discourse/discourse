@@ -23,7 +23,8 @@ module ::KanbanDevBot
         .find_each do |card|
           original_column_id = nil
           moved = false
-          card.with_lock do
+          KanbanDevBot::Lifecycle.lock do
+            card.reload
             next unless card.column.title == "REVIEW"
             original_column_id = card.column_id
             raw = { "column_id" => target.id }

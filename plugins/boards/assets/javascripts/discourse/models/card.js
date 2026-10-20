@@ -8,6 +8,9 @@ export default class Card {
     return new Card(args);
   }
 
+  @tracked can_move;
+  @tracked can_delete;
+  @tracked kanban_dev_bot;
   @tracked assigned_to;
   @tracked board_id;
   @tracked card_type;
@@ -40,6 +43,9 @@ export default class Card {
 
   copy(overrides = {}) {
     return new Card({
+      can_move: this.can_move,
+      can_delete: this.can_delete,
+      kanban_dev_bot: this.kanban_dev_bot,
       assigned_to: this.assigned_to,
       board_id: this.board_id,
       card_type: this.card_type,

@@ -4,3 +4,24 @@ en:
       site_settings:
         categories:
           kanban_dev_bot: "Kanban development bot"
+  js:
+    kanban_dev_bot:
+      actions:
+        cancel: "Cancel work"
+        restart: "Restart with latest discussion"
+        retry: "Retry publishing workflow"
+      status:
+        running: "Bot is working. Use Cancel or Restart to stop this run safely."
+        review: "Ready for review"
+        stopping: "Stopping work and removing resources…"
+        accepted: "Accepted. Card moves and deletion are locked until publishing finishes."
+        integrating: "Merging and rebasing changes…"
+        deploying: "Updating the main instance…"
+        publishing: "Pushing changes to GitHub…"
+        confirming: "Confirming the published commit…"
+        done: "Published"
+        failed: "Work failed. Restart to try again."
+        integration_failed: "Publishing needs attention. The card remains locked."
+        needs_attention: "Publishing needs attention. The card remains locked."
+        cancelled: "Work cancelled"
+        stopped: "Work stopped"

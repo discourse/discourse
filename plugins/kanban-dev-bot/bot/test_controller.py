@@ -9,6 +9,7 @@ from unittest.mock import Mock, patch
 import requests
 import docker
 
+from volume_cleanup import volume_plan
 from review_artifacts import artifact
 from controller import Board, Conflict, Controller, Run, Runtime, Store, prompt_for
 
@@ -33,6 +34,8 @@ class BoardDouble:
     def move(self, column):
         self.serial += 1
         self.card.update(column=column, version=str(self.serial))
+        if column == "DONE" and self.card.get("run"):
+            self.card["run"].update(accepted_at="now", accepted_commit=self.card["run"].get("commit"), version=self.card["version"])
 
     def review_artifacts(self, run):
         return [{"path": item["path"], "short_url": "upload://review" + str(index) + ".txt"}
@@ -42,7 +45,7 @@ class BoardDouble:
         return copy.deepcopy(self.card)
 
     def transition(self, command, run, message=""):
-        if self.card["version"] != run.claimed_version:
+        if command != "phase" and self.card["version"] != run.claimed_version:
             raise Conflict()
         self.commands.append((command, run.run_id, message))
         if command == "claim":
@@ -54,13 +57,24 @@ class BoardDouble:
                 self.fail_after_claim = False
                 raise requests.ConnectionError("Claim accepted but response lost")
         elif command == "review":
+            self.card["run"].update(commit=run.commit, base_commit=run.base_commit)
             self.move("REVIEW")
             if self.fail_after_review:
                 self.fail_after_review = False
                 raise requests.ConnectionError("Review accepted but response lost")
+        elif command == "sync_review":
+            self.card["run"].update(commit=run.commit, base_commit=run.base_commit)
+        elif command == "stopped":
+            target = "TODO" if self.card["run"].get("requested_action") == "restart" else "BACKLOG"
+            self.card["run"]["requested_action"] = None
+            self.move(target)
+        elif command == "phase":
+            self.card["run"]["phase"] = run.phase
+            if self.card["run"].get("requested_action") == "retry":
+                self.card["run"]["requested_action"] = None
         elif command == "archive":
             self.move("ARCHIVED")
-            self.card["run"] = {"run_id": run.run_id, "status": "done"}
+            self.card["run"] = {"run_id": run.run_id, "status": "archived"}
         elif command in ("failed", "done"):
             self.move(self.card["column"])
         return copy.deepcopy(self.card)
@@ -71,6 +85,9 @@ class RuntimeDouble:
         self.cleaned = []
         self.live = True
         self.cleanup_error = False
+
+    def reap_stopped(self, runs):
+        pass
 
     def collect_volumes(self, runs, cards, jobs):
         return {}
@@ -309,7 +326,7 @@ class ControllerTests(unittest.TestCase):
         self.controller.poll()
         self.assertEqual("failed", self.store.all()[0].phase)
         self.assertEqual("review_failed", self.board.commands[-1][0])
-        self.assertIn("TODO", self.board.commands[-1][2])
+        self.assertIn("Restart", self.board.commands[-1][2])
 
     def test_review_card_edit_keeps_instance(self):
         self.controller.poll()
@@ -325,14 +342,14 @@ class ControllerTests(unittest.TestCase):
         self.board.archived = True
         self.controller.poll()
         self.assertTrue(self.executor.tasks[0][2].is_set())
-        self.assertEqual("cancelled", self.store.all()[0].phase)
+        self.assertEqual("stopping", self.store.all()[0].phase)
         self.assertEqual(1, len(self.runtime.cleaned))
 
     def test_missing_card_cancels_and_cleans(self):
         self.controller.poll()
         self.board.deleted = True
         self.controller.poll()
-        self.assertEqual("cancelled", self.store.all()[0].phase)
+        self.assertEqual("stopping", self.store.all()[0].phase)
         self.assertEqual(1, len(self.runtime.cleaned))
 
     def test_deleted_review_card_retries_cleanup_after_restart(self):
@@ -342,7 +359,7 @@ class ControllerTests(unittest.TestCase):
         self.board.deleted = True
         self.runtime.cleanup_error = True
         self.controller.poll()
-        self.assertEqual("cancelled", self.store.all()[0].phase)
+        self.assertEqual("stopping", self.store.all()[0].phase)
         self.assertTrue(self.store.all()[0].cleanup_pending)
         self.runtime.cleanup_error = False
         self.executor = Executor()
@@ -384,7 +401,7 @@ class ControllerTests(unittest.TestCase):
         self.controller.poll()
         self.assertEqual("done", self.store.all()[0].phase)
         self.assertEqual("c" * 40, self.store.all()[0].published_commit)
-        self.assertEqual(["claim", "review"], [command[0] for command in self.board.commands])
+        self.assertEqual(["claim", "review"], [command[0] for command in self.board.commands if command[0] != "phase"])
 
     def test_transient_snapshot_error_preserves_instance(self):
         self.controller.poll()
@@ -415,6 +432,60 @@ class ControllerTests(unittest.TestCase):
         self.assertEqual([], self.store.all())
         self.assertEqual([], self.board.commands)
 
+    def test_lost_review_ack_then_mismatched_acceptance_preserves_recovery(self):
+        self.controller.poll()
+        self.board.fail_after_review = True
+        with self.assertRaises(requests.ConnectionError):
+            self.complete()
+        self.assertTrue(self.store.all()[0].review_pending)
+        self.board.move("DONE")
+        self.board.card["run"]["accepted_commit"] = "d" * 40
+        self.controller.poll()
+        run = self.store.all()[0]
+        self.assertEqual("needs_attention", run.phase)
+        self.assertFalse(run.review_pending)
+        self.assertEqual("now", run.accepted_at)
+        self.assertEqual([], self.runtime.cleaned)
+        self.controller.cancel(self.controller.runs[run.run_id])
+        self.assertEqual("needs_attention", self.store.all()[0].phase)
+        self.board.deleted = True
+        self.executor = Executor()
+        self.controller = self.build()
+        self.controller.poll()
+        run = self.store.all()[0]
+        self.assertEqual("needs_attention", run.phase)
+        self.assertEqual([], self.executor.tasks)
+        references = volume_plan([run], {}, {})
+        for name in (run.workspace_volume, run.integration_volume, run.codex_volume):
+            self.assertTrue(all(ref.retained for ref in references[name]))
+
+    def test_acceptance_without_commit_cannot_be_cancelled(self):
+        self.controller.poll()
+        self.board.fail_after_review = True
+        with self.assertRaises(requests.ConnectionError):
+            self.complete()
+        self.board.move("DONE")
+        self.board.card["run"]["accepted_commit"] = None
+        self.controller.poll()
+        run = next(iter(self.controller.runs.values()))
+        self.controller.cancel(run)
+        self.assertFalse(self.controller.drain(run))
+        self.assertEqual("needs_attention", self.store.all()[0].phase)
+        self.assertEqual("now", self.store.all()[0].accepted_at)
+        self.assertEqual([], self.runtime.cleaned)
+
+    def test_accepted_operation_repairs_legacy_cancelled_phase(self):
+        self.controller.poll()
+        self.complete()
+        run = next(iter(self.controller.runs.values()))
+        run.phase = "cancelled"
+        self.controller.save(run)
+        self.board.move("DONE")
+        self.controller.poll()
+        self.assertEqual("needs_attention", self.store.all()[0].phase)
+        self.assertEqual([], self.runtime.cleaned)
+        self.assertEqual(1, len(self.executor.tasks))
+
     def test_legacy_done_run_is_not_integrated_on_restart(self):
         self.controller.poll()
         self.complete()
@@ -425,7 +496,7 @@ class ControllerTests(unittest.TestCase):
         self.executor = Executor()
         self.controller = self.build()
         self.controller.poll()
-        self.assertEqual("done", self.store.all()[0].phase)
+        self.assertEqual("needs_attention", self.store.all()[0].phase)
         self.assertEqual([], self.executor.tasks)
 
     def test_restart_replays_integration_with_same_identity(self):
@@ -466,7 +537,8 @@ class ControllerTests(unittest.TestCase):
         self.assertIn("Conflicts remain", self.board.commands[-1][2])
         self.board.move("TODO")
         self.controller.poll()
-        self.assertEqual("running", self.store.all()[-1].phase)
+        self.assertEqual("integration_failed", self.store.all()[-1].phase)
+        self.assertEqual(2, len(self.executor.tasks))
 
     def test_todo_waits_until_accepted_integration_completes(self):
         self.controller.poll()
@@ -488,14 +560,14 @@ class ControllerTests(unittest.TestCase):
         self.assertNotEqual("integrating", self.store.all()[0].phase)
         self.assertEqual(1, len(self.executor.tasks))
 
-    def test_archived_done_never_integrates(self):
+    def test_accepted_operation_survives_board_archival(self):
         self.controller.poll()
         self.complete()
         self.board.move("DONE")
         self.board.archived = True
         self.controller.poll()
-        self.assertNotEqual("integrating", self.store.all()[0].phase)
-        self.assertEqual(1, len(self.executor.tasks))
+        self.assertEqual("integrating", self.store.all()[0].phase)
+        self.assertEqual(2, len(self.executor.tasks))
 
     def test_deployment_failure_retries_after_restart_without_reintegrating(self):
         self.controller.poll()
@@ -676,7 +748,8 @@ class ControllerTests(unittest.TestCase):
         self.assertEqual("DONE", self.board.card["column"])
         self.board.move("TODO")
         self.controller.poll()
-        self.assertEqual("IN PROGRESS", self.board.card["column"])
+        self.assertEqual("TODO", self.board.card["column"])
+        self.assertEqual("needs_attention", self.store.all()[-1].phase)
         self.assertFalse(any(c[0] == "archive" for c in self.board.commands))
 
     def test_deleted_completed_card_is_not_archived(self):

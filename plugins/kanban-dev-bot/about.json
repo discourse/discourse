@@ -1,0 +1,7 @@
+{
+  "tests": {
+    "requiredPlugins": [
+      "https://github.com/discourse/discourse/tree/main/plugins/boards"
+    ]
+  }
+}

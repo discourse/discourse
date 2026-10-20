@@ -1,0 +1,12 @@
+.kanban-dev-bot-card-state {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  align-items: center;
+  margin-block: 0.5em;
+
+  &__status {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+}

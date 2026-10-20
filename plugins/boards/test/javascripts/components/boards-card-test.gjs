@@ -15,6 +15,20 @@ module("Integration | Component | BoardsCard", function (hooks) {
     this.card.board_id = this.board.id;
   });
 
+  test("locked cards cannot start a drag", async function (assert) {
+    this.board.can_write = true;
+    this.card.can_move = false;
+    await render(
+      <template>
+        <BoardsCard @board={{this.board}} @card={{this.card}} />
+      </template>
+    );
+    assert.dom(".discourse-boards-card").hasAttribute("data-can-move", "false");
+    assert
+      .dom(".discourse-boards-card")
+      .doesNotHaveAttribute("data-drag-source");
+  });
+
   test("renders basic card", async function (assert) {
     await render(
       <template>

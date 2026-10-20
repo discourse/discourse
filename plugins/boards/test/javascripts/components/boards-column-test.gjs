@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { render } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import BoardsColumn from "discourse/plugins/boards/discourse/components/boards-column";
@@ -54,6 +54,40 @@ module("Integration | Component | BoardsColumn", function (hooks) {
         </template>
       );
     };
+  });
+
+  test("bot-controlled destinations hide card creation", async function (assert) {
+    this.board.can_write = true;
+    this.column.can_add_cards = false;
+    this.column.can_receive_cards = false;
+    await this.renderColumn();
+    assert
+      .dom(".discourse-boards-column")
+      .hasAttribute("data-can-add-cards", "false");
+    assert.dom(".discourse-boards-column__add-btn").doesNotExist();
+    const copy = this.column.copy();
+    assert.false(copy.can_add_cards);
+  });
+
+  test("DONE exposes its drop capability without offering new card creation", async function (assert) {
+    this.board.can_write = true;
+    this.column.can_add_cards = false;
+    this.column.can_receive_cards = true;
+    await this.renderColumn();
+    assert
+      .dom(".discourse-boards-column")
+      .hasAttribute("data-can-receive-cards", "true");
+    assert.dom(".discourse-boards-column__add-btn").doesNotExist();
+  });
+
+  test("bulk clear and column deletion are disabled when a card is protected", async function (assert) {
+    this.board.can_manage = true;
+    this.board.can_write = true;
+    this.recentCard.can_delete = false;
+    await this.renderColumn();
+    await click(".discourse-boards-column__menu-trigger");
+    assert.dom(".discourse-boards-column__menu-clear").isDisabled();
+    assert.dom(".discourse-boards-column__menu-delete").isDisabled();
   });
 
   test("hides cards outside the recency window", async function (assert) {
