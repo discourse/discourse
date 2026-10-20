@@ -1,6 +1,8 @@
 import { parseAst } from "rolldown/parseAst";
 import { describe, expect, it } from "vitest";
-import discourseWrapTestModules from "./discourse-wrap-test-modules.js";
+import discourseWrapTestModules, {
+  testModuleIdsFor,
+} from "./discourse-wrap-test-modules.js";
 
 const basePath = "discourse/plugins/poll/";
 
@@ -9,11 +11,31 @@ const context = { parse: parseAst };
 
 function transform(code, file, testModules = [file]) {
   const { handler } = discourseWrapTestModules({
-    basePath,
-    testModules,
+    testModuleIds: testModuleIdsFor(basePath, testModules),
   }).transform;
   return handler.call(context, code, `${basePath}${file}`)?.code ?? null;
 }
+
+describe("testModuleIdsFor", () => {
+  it("returns the module ids of test files only", () => {
+    expect(
+      testModuleIdsFor(basePath, [
+        "unit/poll-test.js",
+        "helpers/freeze-time.js",
+        "integration/components/poll-test.gjs",
+      ])
+    ).toEqual(
+      new Set([
+        `${basePath}unit/poll-test.js`,
+        `${basePath}integration/components/poll-test.gjs`,
+      ])
+    );
+  });
+
+  it("returns nothing without a test entrypoint", () => {
+    expect(testModuleIdsFor(basePath, undefined).size).toBe(0);
+  });
+});
 
 describe("discourse-wrap-test-modules", () => {
   it("wraps the body of a test file after its imports", () => {

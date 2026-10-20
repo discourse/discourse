@@ -7,8 +7,11 @@ const basePath = "discourse/plugins/chat/";
 // Stands in for the `this` a transform hook gets.
 const context = { parse: parseAst };
 
-function transform(code, file) {
-  const { handler } = discourseRegisterComponents({ basePath }).transform;
+function transform(code, file, testModuleIds) {
+  const { handler } = discourseRegisterComponents({
+    basePath,
+    testModuleIds,
+  }).transform;
   return handler.call(context, code, `${basePath}${file}`)?.code ?? null;
 }
 
@@ -83,6 +86,14 @@ describe("discourse-register-components", () => {
     expect(
       transform(`export const a = 1;`, "discourse/components/no-default.js")
     ).toBe(null);
+  });
+
+  it("leaves test files alone, even once they are wrapped", () => {
+    const code = `export default function () {}`;
+    const file = "components/channel-icon-test.gjs";
+
+    expect(transform(code, file)).toContain("registerModuleForModifyClass");
+    expect(transform(code, file, new Set([`${basePath}${file}`]))).toBe(null);
   });
 
   it("leaves classic component templates alone", () => {

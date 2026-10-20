@@ -3,18 +3,17 @@ import MagicString from "magic-string";
 // The test entrypoint also lists helpers, which must keep their exports
 const TEST_FILE_REGEX = /-test\.(?:gjs|js|ts|gts)$/;
 
-// Defers each test file's body to a default-exported function, so the test runner can run
-// only the files it selected instead of every test registering on import.
-export default function discourseWrapTestModules({
-  basePath,
-  testModules = [],
-}) {
-  const ids = new Set(
+export function testModuleIdsFor(basePath, testModules = []) {
+  return new Set(
     testModules
       .filter((path) => TEST_FILE_REGEX.test(path))
       .map((path) => `${basePath}${path}`)
   );
+}
 
+// Defers each test file's body to a default-exported function, so the test runner can run
+// only the files it selected instead of every test registering on import.
+export default function discourseWrapTestModules({ testModuleIds }) {
   return {
     name: "discourse-wrap-test-modules",
 
@@ -23,7 +22,7 @@ export default function discourseWrapTestModules({
       order: "post",
 
       handler(code, id) {
-        if (!ids.has(id)) {
+        if (!testModuleIds.has(id)) {
           return null;
         }
 
