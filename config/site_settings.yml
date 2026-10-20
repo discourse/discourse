@@ -4880,6 +4880,14 @@ experimental:
       status: "experimental"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/412529"
+  enable_composer_picker_and_rich_chat:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
   prioritize_recently_used_tags:
     default: false
     client: true

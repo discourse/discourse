@@ -23,3 +23,19 @@ export function buildGifPickHandler({ api, draft, isThread, currentUser }) {
     draftHolder?.resetDraft?.(currentUser);
   };
 }
+
+export function buildChatPickerSelectHandler({ api, composer, currentUser }) {
+  return (value, tab) => {
+    if (tab.id === "emoji") {
+      composer.onSelectEmoji(value);
+      return;
+    }
+
+    return buildGifPickHandler({
+      api,
+      draft: composer.draft,
+      isThread: composer.context === "thread",
+      currentUser,
+    })(value);
+  };
+}
