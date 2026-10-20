@@ -20,7 +20,8 @@ A zero-downtime deploy, like the `/admin/upgrade` upgrader, runs in this order:
 
 1. Pre-deploy migrations (with `SKIP_POST_DEPLOYMENT_MIGRATIONS=1`), then seeds. The old code is still running.
 2. The new code starts.
-3. Post-deploy migrations.
+3. The old code stops.
+4. Post-deploy migrations.
 
 A plain `bin/rake db:migrate` runs both kinds together, sorted by version, and seeds at the end. Migrations have to work either way.
 
