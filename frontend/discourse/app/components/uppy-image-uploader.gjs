@@ -56,6 +56,7 @@ export default class UppyImageUploader extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
+    this.uppyUpload.teardown();
     window.pswp?.close();
   }
 

@@ -20,6 +20,11 @@ export default class TagsUploader extends Component {
     validateUploadedFilesOptions: { csvOnly: true },
   });
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.uppyUpload.teardown();
+  }
+
   get addDisabled() {
     return this.uppyUpload.uploading;
   }

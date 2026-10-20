@@ -40,6 +40,11 @@ export default class CsvUploader extends Component {
     },
   });
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.uppyUpload.teardown();
+  }
+
   get uploadButtonText() {
     return this.uppyUpload.uploading
       ? i18n("uploading")

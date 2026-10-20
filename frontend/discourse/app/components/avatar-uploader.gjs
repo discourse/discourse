@@ -33,6 +33,11 @@ export default class AvatarUploader extends Component {
 
   imageIsNotASquare = false;
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.uppyUpload.teardown();
+  }
+
   @computed("uppyUpload.uploading", "uploadedAvatarId")
   get customAvatarUploaded() {
     return !this.uppyUpload.uploading && !isBlank(this.uploadedAvatarId);

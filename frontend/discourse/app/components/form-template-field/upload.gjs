@@ -35,6 +35,7 @@ export default class FormTemplateFieldUpload extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
+    this.uppyUpload.teardown();
     this.appEvents.off("composer:replace-text", this, this.handleReplaceText);
   }
 

@@ -112,6 +112,7 @@ export default class SiteSettingUpload extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
+    this.uppyUpload.teardown();
     window.pswp?.close();
   }
 

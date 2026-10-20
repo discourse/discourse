@@ -56,6 +56,11 @@ export default class EmojiUploader extends Component {
     },
   });
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.uppyUpload.teardown();
+  }
+
   get buttonLabel() {
     if (this.uppyUpload.uploading) {
       return `${i18n("admin.emoji.uploading")} ${this.uppyUpload.uploadProgress}%`;

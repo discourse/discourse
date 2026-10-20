@@ -45,8 +45,9 @@ export default class RagUploader extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
+    this.uppyUpload.teardown();
     this.appEvents.off(
-      `upload-mixin:${this.uppyUpload.config}:all-uploads-complete`,
+      `upload-mixin:${this.uppyUpload.config.id}:all-uploads-complete`,
       this,
       "_updateTargetWithUploads"
     );

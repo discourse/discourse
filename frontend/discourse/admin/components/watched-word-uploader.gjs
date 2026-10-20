@@ -24,6 +24,11 @@ export default class WatchedWordUploader extends Component {
     },
   });
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.uppyUpload.teardown();
+  }
+
   get addDisabled() {
     return this.uppyUpload?.uploading;
   }

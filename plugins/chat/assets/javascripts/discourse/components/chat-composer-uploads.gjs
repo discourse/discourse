@@ -72,6 +72,11 @@ export default class ChatComposerUploads extends Component {
   existingUploads = null;
   uploadDropZone = null;
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.uppyUpload.teardown();
+  }
+
   get inProgressUploads() {
     return this.uppyUpload.inProgressUploads;
   }

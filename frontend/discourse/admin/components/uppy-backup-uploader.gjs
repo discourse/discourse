@@ -29,6 +29,15 @@ export default class UppyBackupUploader extends Component {
     },
   });
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    // Let a backup upload in progress finish after leaving the tab
+    if (!this.uppyUpload.uploading && !this.uppyUpload.processing) {
+      this.uppyUpload.teardown();
+    }
+  }
+
   get uploadButtonText() {
     return this.uppyUpload.uploading
       ? i18n("admin.backups.upload.uploading_progress", {

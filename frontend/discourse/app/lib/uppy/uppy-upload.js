@@ -135,8 +135,6 @@ export default class UppyUpload {
   }
 
   teardown() {
-    this.messageBus.unsubscribe(`/uploads/${this.config.type}`);
-
     this._fileInputEl?.removeEventListener(
       "change",
       this.#fileInputEventListener
@@ -156,6 +154,8 @@ export default class UppyUpload {
 
   @bind
   setup(fileInputEl) {
+    this.teardown();
+
     if (fileInputEl) {
       this._fileInputEl = fileInputEl;
       this.allowMultipleFiles = this._fileInputEl.multiple;

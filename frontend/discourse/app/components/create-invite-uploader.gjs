@@ -23,6 +23,11 @@ export default class CreateInviteUploader extends Component {
     },
   });
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.uppyUpload.teardown();
+  }
+
   get submitDisabled() {
     return !this.uppyUpload?.filesAwaitingUpload || this.uppyUpload?.uploading;
   }

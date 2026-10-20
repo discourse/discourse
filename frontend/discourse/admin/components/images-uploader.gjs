@@ -17,6 +17,11 @@ export default class ImagesUploader extends Component {
     },
   });
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.uppyUpload.teardown();
+  }
+
   get uploadingOrProcessing() {
     return this.uppyUpload.uploading || this.uppyUpload.processing;
   }
