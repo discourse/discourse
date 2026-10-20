@@ -1,0 +1,9 @@
+en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          lovelace: "Lovelace"
+  js:
+    lovelace:
+      placeholder: placeholder
