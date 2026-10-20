@@ -9,7 +9,7 @@ module DiscourseGamification
 
     validates :category,
               presence: {
-                message: :required
+                message: :required,
               },
               if: -> { !category_id.nil? && will_save_change_to_category_id? }
   end

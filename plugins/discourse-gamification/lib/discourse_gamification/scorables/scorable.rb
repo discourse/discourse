@@ -3,9 +3,7 @@ module DiscourseGamification
   class Scorable
     class << self
       def enabled?(leaderboard: nil)
-        if category_scoped?(leaderboard:) && !supports_category_scoping?
-          return false
-        end
+        return false if category_scoped?(leaderboard:) && !supports_category_scoping?
 
         score_multiplier(leaderboard:) > 0
       end
