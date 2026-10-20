@@ -32,6 +32,12 @@ $composer-picker-panel-height: 420px;
     width: 100%;
     height: 100%;
   }
+
+  .emoji-picker__content {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 0;
+  }
 }
 
 .fk-d-menu-modal.composer-picker-content {
@@ -61,12 +67,6 @@ $composer-picker-panel-height: 420px;
   .composer-picker__panel {
     flex: 1 1 auto;
     height: auto;
-  }
-
-  .emoji-picker__content {
-    flex: 1 1 auto;
-    height: auto;
-    min-height: 0;
   }
 }
 
