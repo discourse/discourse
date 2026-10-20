@@ -63,6 +63,7 @@ module Live
             guardian: Guardian.new(nil),
             metadata: Live::ParticipantTracker.get_all_metadata(room.id),
           ),
+        resuming_ids: Live::ParticipantTracker.resuming_user_ids(room.id),
       }
 
       MessageBus.publish(Live.room_channel(room.id), payload, **room_message_bus_targets)

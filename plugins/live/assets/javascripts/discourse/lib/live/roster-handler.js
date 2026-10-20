@@ -103,6 +103,9 @@ export default class RosterHandler {
     const participantIds = new Set(
       participants.map((participant) => Number(participant.id))
     );
+    // Members the server lost contact with but who can still resume: their
+    // mesh media doesn't depend on the server, so it is left running.
+    const resumingIds = new Set((payload.resuming_ids || []).map(Number));
     const currentUserId = this.#getCurrentUserId();
 
     liveLog.info(
@@ -128,7 +131,10 @@ export default class RosterHandler {
 
       peers?.forEach((pc, remoteUserId) => {
         if (!participantIds.has(remoteUserId)) {
-          if (this.#presencePending.has(roomId, remoteUserId)) {
+          if (
+            this.#presencePending.has(roomId, remoteUserId) ||
+            resumingIds.has(remoteUserId)
+          ) {
             return;
           }
           hasPeerLeft = true;
@@ -189,7 +195,10 @@ export default class RosterHandler {
     }
 
     this.#syncRemoteMediaTracks(roomId, participants);
-    this.#dropDisallowedStreams(roomId, participants, { isStage });
+    this.#dropDisallowedStreams(roomId, participants, {
+      isStage,
+      resumingIds,
+    });
     this.#dropUnentitledMedia(roomId, participants);
 
     if (!this.#isMeshRoom(roomId)) {
@@ -279,7 +288,7 @@ export default class RosterHandler {
   // even when the demotion arrives as a roster refresh rather than a
   // role_change message. The receive-side track policy stops new tracks;
   // this drops the ones already registered.
-  #dropDisallowedStreams(roomId, participants, { isStage }) {
+  #dropDisallowedStreams(roomId, participants, { isStage, resumingIds }) {
     if (!isStage || !this.#isMeshRoom(roomId)) {
       return;
     }
@@ -294,7 +303,7 @@ export default class RosterHandler {
     );
 
     for (const userId of this.#getRemoteUserIds(roomId)) {
-      if (!allowedToPublish.has(userId)) {
+      if (!allowedToPublish.has(userId) && !resumingIds.has(userId)) {
         this.#removeRemoteStream(roomId, userId);
       }
     }

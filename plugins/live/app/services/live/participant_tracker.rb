@@ -12,6 +12,10 @@ module Live
     # Must outlive one client heartbeat interval (10s) plus request latency,
     # so a beat already in flight when the user leaves can't resurrect them.
     LEFT_TOMBSTONE_TTL = 15
+    # How long a client cut off from the server (a deploy, a network blip,
+    # sleep) can stay silent and still resume its call. Mesh media keeps
+    # flowing peer-to-peer meanwhile; leave/kick/takeover revoke explicitly.
+    PARTICIPANT_SESSION_RESUME_WINDOW = 10.minutes.to_i
 
     # Purge-expired, existence check, capacity check, and add in one script:
     # a separate ZCARD followed by ZADD would let concurrent joiners race the
@@ -175,10 +179,27 @@ module Live
         redis.del(participant_session_key(room_id, user_id))
       end
 
-      # 2x the presence TTL (like the transport pin) so a briefly-lapsed
-      # heartbeat can still self-heal presence before the session dies.
+      # Outlives presence so a heartbeat resuming after an outage can
+      # self-heal presence instead of being expelled from a call whose media
+      # never stopped.
       def participant_session_ttl
-        SiteSetting.live_participant_ttl_seconds.to_i * 2
+        [PARTICIPANT_SESSION_RESUME_WINDOW, SiteSetting.live_participant_ttl_seconds.to_i * 2].max
+      end
+
+      # Members whose presence lapsed while their participant session is still
+      # resumable: likely cut off from the server rather than gone, so clients
+      # keep their existing media connections instead of tearing them down.
+      def resuming_user_ids(room_id)
+        present = user_ids(room_id).to_set
+        candidates = redis.hkeys(metadata_key(room_id)).map(&:to_i)
+        candidates = candidates.select { |id| id.positive? && present.exclude?(id) }
+        return [] if candidates.empty?
+
+        exists =
+          redis.pipelined do |pipeline|
+            candidates.each { |id| pipeline.exists(participant_session_key(room_id, id)) }
+          end
+        candidates.zip(exists).filter_map { |id, count| id if count.to_i > 0 }
       end
 
       # Short-lived tombstone for a deliberate departure (leave/kick), letting
@@ -361,7 +382,7 @@ module Live
           user_ids(room_id).sort.map do |id|
             [id, (metadata[id] || {}).except(:last_heartbeat_at).sort.to_h]
           end
-        Digest::MD5.hexdigest(payload.to_json)
+        Digest::MD5.hexdigest([payload, resuming_user_ids(room_id).sort].to_json)
       end
 
       # Atomically store the new fingerprint and return the previous one, so a
