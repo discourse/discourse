@@ -1,5 +1,12 @@
 # Hopper
 
-Discourse plugin scaffolded from discourse/discourse-plugin-skeleton at `9c79225314c80e3a5328730c51ff00fa5c7984c8`.
+Hopper is developed as a bundled Discourse plugin in `plugins/hopper`.
+It currently provides an enable setting and an example JSON endpoint; product
+workflows and a user interface have not been implemented yet.
 
-Development work and documentation for the hopper board belong in `plugins/hopper/`. The development bot runs on the separate `kanban-dev-bot` branch.
+See the [product guide](doc/product-guide.md) for installation, current behavior,
+authorization, architecture, and testing.
+
+## License
+
+[MIT](LICENSE)
