@@ -46,8 +46,9 @@ export default class DNavItem extends Component {
       // for the plugin ID has its own nested routes defined in the plugin.
       if (this.router.currentRoute.name === "adminPlugins.show.settings") {
         return (
+          this.args.route === "adminPlugins.show.settings" &&
           this.router.currentRoute.parent.params.plugin_id ===
-          this.args.routeParam
+            this.args.routeParam
         );
       }
 

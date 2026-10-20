@@ -1,10 +1,12 @@
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import AdminPluginConfigPage from "discourse/admin/components/admin-plugin-config-page";
 import AdminPlugin from "discourse/admin/models/admin-plugin";
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { i18n } from "discourse-i18n";
 
 const PLUGIN_ID = "discourse-test-plugin";
 
@@ -94,7 +96,7 @@ module("Integration | Component | AdminPluginConfigPage", function (hooks) {
     assert.dom(".d-nav-submenu").doesNotExist();
   });
 
-  test("links tabs to @plugin explicitly", async function (assert) {
+  test("links tabs to @plugin and highlights only the current tab", async function (assert) {
     registerAdminPluginConfigNav(PLUGIN_ID, [
       {
         route: "adminPlugins.show.settings",
@@ -112,6 +114,11 @@ module("Integration | Component | AdminPluginConfigPage", function (hooks) {
     });
     getOwner(this).lookup("service:admin-plugin-nav-manager").currentPlugin =
       plugin;
+    sinon.stub(getOwner(this).lookup("service:router"), "currentRoute").value({
+      name: "adminPlugins.show.settings",
+      params: {},
+      parent: { params: { plugin_id: PLUGIN_ID } },
+    });
 
     await render(
       <template>
@@ -124,5 +131,9 @@ module("Integration | Component | AdminPluginConfigPage", function (hooks) {
     assert
       .dom(".admin-plugin-config-page__top-nav-item a")
       .hasAttribute("href", `/admin/plugins/${PLUGIN_ID}/settings`);
+    assert
+      .dom(".admin-plugin-config-page__top-nav-item.active")
+      .exists({ count: 1 })
+      .hasText(i18n("admin.plugins.change_settings_short"));
   });
 });
