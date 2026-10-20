@@ -30,6 +30,7 @@
 # Plugins except for the bundled ones
 /plugins/*
 !/plugins/capybara
+!/plugins/kanban-dev-bot
 !/plugins/discourse-details
 !/plugins/discourse-local-dates
 !/plugins/discourse-narrative-bot

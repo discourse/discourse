@@ -1,0 +1,6 @@
+/gems
+/auto_generated
+__pycache__/
+*.py[cod]
+.DS_Store
+/bot/.build/

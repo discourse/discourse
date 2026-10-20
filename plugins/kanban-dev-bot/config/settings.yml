@@ -1,0 +1,4 @@
+kanban_dev_bot:
+  kanban_dev_bot_enabled:
+    default: true
+    client: false

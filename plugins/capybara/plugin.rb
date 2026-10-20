@@ -14,19 +14,3 @@ module ::DiscourseCapybara
 end
 
 require_relative "lib/discourse_capybara/engine"
-
-module ::CodexBoardBot
-  BOARD_ID = ENV.fetch("CODEX_BOARD_ID", "1").to_i
-  STORE = "codex-board-bot"
-  NOTE_SEPARATOR = "\n\n---\nCodex bot\n"
-  NOTE_PATTERN = /\n{2,}(?:---|\*\s*\*\s*\*|___)\s*\n+Codex bot(?:\s*\n|$)/
-end
-
-after_initialize do
-  require_relative "lib/discourse_capybara/topic_cards"
-  Boards::CreateCard.prepend(DiscourseCapybara::TopicCards)
-  require_relative "lib/discourse_capybara/requeue_review_card"
-  on(:post_created) { |post, options| DiscourseCapybara::RequeueReviewCard.call(post, options) }
-  require_relative "lib/discourse_capybara/deleted_topic_cards"
-  Boards::DestroyCard.prepend(DiscourseCapybara::DeletedTopicCards)
-end
