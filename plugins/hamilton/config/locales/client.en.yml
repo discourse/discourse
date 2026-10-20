@@ -1,0 +1,9 @@
+en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          hamilton: "Hamilton"
+  js:
+    hamilton:
+      placeholder: placeholder
