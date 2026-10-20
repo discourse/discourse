@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-require Rails.root.join("plugins/live/db/post_migrate/20261013160643_rename_voice_to_live.rb")
+require Rails.root.join("plugins/live/db/migrate/20261013160643_rename_voice_to_live.rb")
+require Rails.root.join(
+          "plugins/live/db/post_migrate/20261020161054_finish_rename_voice_to_live.rb",
+        )
 
 RSpec.describe RenameVoiceToLive do
   before do
@@ -19,7 +22,10 @@ RSpec.describe RenameVoiceToLive do
     SQL
   end
 
-  after { ActiveRecord::Migration.verbose = @original_verbose }
+  after do
+    ActiveRecord::Migration.verbose = @original_verbose
+    Migration::SafeMigrate.disable!
+  end
 
   def relation_names(pattern)
     DB.query_single("SELECT relname FROM pg_class WHERE relname ~ ?", pattern)
@@ -28,7 +34,9 @@ RSpec.describe RenameVoiceToLive do
   it "renames the tables and their custom-named indexes and constraints" do
     described_class.new.up
 
-    expect(relation_names("^voice_")).to be_empty
+    expect(relation_names("^voice_")).to match_array(
+      described_class::RENAMED_TABLES.keys.map(&:to_s),
+    )
     expect(relation_names("^live_")).to include(*described_class::RENAMED_TABLES.values.map(&:to_s))
     expect(relation_names("^idx_live_sessions_orphaned$")).to be_present
     expect(
@@ -36,6 +44,21 @@ RSpec.describe RenameVoiceToLive do
         "SELECT conname FROM pg_constraint WHERE conname = 'chk_live_co_presences_user_order'",
       ),
     ).to be_present
+  end
+
+  it "leaves views under the old table names until the post-deploy migration drops them" do
+    described_class.new.up
+
+    expect(
+      DB.query_single("SELECT relname FROM pg_class WHERE relname ~ '^voice_' AND relkind = 'v'"),
+    ).to match_array(described_class::RENAMED_TABLES.keys.map(&:to_s))
+
+    room = Fabricate(:live_room)
+    expect(DB.query_single("SELECT name FROM voice_rooms WHERE id = ?", room.id)).to eq([room.name])
+
+    FinishRenameVoiceToLive.new.up
+
+    expect(relation_names("^voice_")).to be_empty
   end
 
   it "renames the tables' triggers and the functions they call" do
