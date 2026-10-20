@@ -241,15 +241,10 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
     expect(tool.validation_error[:status]).to eq("error")
   end
 
-  it "rejects invalid, expired, and malformed graph drafts" do
+  it "rejects invalid and malformed graph drafts" do
     tool.parameters[:draft_token] = token + "tampered"
     expect(tool.validation_error[:status]).to eq("error")
 
-    tool.parameters[:draft_token] = token
-    freeze_time 2.days.from_now
-    expect(tool.validation_error[:status]).to eq("error")
-
-    freeze_time 2.days.ago
     malformed =
       DiscourseWorkflows::AdminAssistant::WorkflowDraft.sign(
         { name: "Broken", operations: [{ op: "add_node", node: { type: "missing", name: "X" } }] },

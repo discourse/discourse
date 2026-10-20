@@ -22,9 +22,16 @@ RSpec.describe DiscourseAi::Agents::Tools::DraftReference do
     expect(draft_class.read(reference)).to be_nil
   end
 
-  it "rejects malformed, tampered, expired, and oversized drafts" do
+  it "rejects malformed, forged, expired, and oversized drafts" do
     reference = draft_class.sign({ value: "safe" }, user: admin)
     expect(draft_class.read("#{reference}tampered")).to be_nil
+
+    forged = draft_class.sign({ value: "forged" }, user: admin)
+    Discourse.redis.set(
+      "admin-assistant:draft:spec:#{forged}",
+      { value: "forged", user_id: admin.id, site: Discourse.current_hostname }.to_json,
+    )
+    expect(draft_class.read(forged)).to be_nil
 
     freeze_time 2.days.from_now
     expect(draft_class.read(reference)).to be_nil
