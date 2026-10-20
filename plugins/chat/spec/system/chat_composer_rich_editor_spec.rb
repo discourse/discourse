@@ -10,11 +10,23 @@ RSpec.describe "Chat composer rich editor" do
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
 
   before do
+    SiteSetting.enable_composer_picker_and_rich_chat = true
     chat_system_bootstrap
     channel_1.add(current_user)
     channel_1.add(other_user)
     current_user.user_option.update!(composition_mode: UserOption.composition_mode_types[:rich])
     sign_in(current_user)
+  end
+
+  it "keeps the markdown editor while the upcoming change is off" do
+    SiteSetting.enable_composer_picker_and_rich_chat = false
+    chat_page.visit_channel(channel_1)
+
+    expect(channel_page.composer).to have_markdown_editor
+    channel_page.open_action_menu
+    expect(page).to have_css(".chat-composer-dropdown__item")
+    expect(page).to have_no_css(".chat-composer-dropdown__item.toggle-editor")
+    expect(page).to have_no_css(".chat-composer-dropdown__item.toggle-formatting")
   end
 
   it "uses the editor the user prefers" do

@@ -3231,6 +3231,7 @@ en:
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
     rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The {{setting:faq_url}} setting works as before."
     enable_category_hashtag_cards: "Shows a floating category card when a category hashtag is clicked if the user has permission to view that category."
+    enable_composer_picker_and_rich_chat: "Let members write chat messages in the rich text editor, with an optional formatting bar, and combine the emoji and GIF pickers into one tabbed popover on the post and chat composers."
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
     reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."

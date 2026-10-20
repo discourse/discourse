@@ -8,6 +8,7 @@ RSpec.describe "Chat composer formatting" do
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
 
   before do
+    SiteSetting.enable_composer_picker_and_rich_chat = true
     chat_system_bootstrap
     channel_1.add(current_user)
     sign_in(current_user)

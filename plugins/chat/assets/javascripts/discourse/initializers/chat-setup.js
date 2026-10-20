@@ -158,7 +158,7 @@ class ChatSetupInit {
         },
         action: "toggleEditor",
         displayed() {
-          return !!this.currentUser;
+          return !!this.currentUser && this.canUseRichEditor;
         },
       });
 
@@ -171,7 +171,7 @@ class ChatSetupInit {
         },
         action: "toggleFormattingBar",
         displayed() {
-          return !!this.currentUser;
+          return !!this.currentUser && this.canUseRichEditor;
         },
       });
 

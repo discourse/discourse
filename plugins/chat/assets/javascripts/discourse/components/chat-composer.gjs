@@ -103,11 +103,15 @@ export default class ChatComposer extends Component {
   }
 
   get showFormattingBar() {
-    return this.chatFormattingBar.shown;
+    return this.canUseRichEditor && this.chatFormattingBar.shown;
+  }
+
+  get canUseRichEditor() {
+    return this.siteSettings.enable_composer_picker_and_rich_chat;
   }
 
   get useRichEditor() {
-    return !!this.currentUser?.useRichEditor;
+    return this.canUseRichEditor && !!this.currentUser?.useRichEditor;
   }
 
   get editor() {
@@ -181,15 +185,18 @@ export default class ChatComposer extends Component {
       ...shortcutKeymap(this.formattingToolbar, () =>
         buildToolbarEvent(this.editor)
       ),
-      "ctrl+m": () => {
+    };
+
+    if (this.canUseRichEditor) {
+      keymap["ctrl+m"] = () => {
         this.toggleEditor();
         return false;
-      },
-      "mod+shift+f": () => {
+      };
+      keymap["mod+shift+f"] = () => {
         this.toggleFormattingBar();
         return false;
-      },
-    };
+      };
+    }
 
     if (!this.capabilities.isMobileDevice) {
       // handlers return whether they acted
@@ -244,6 +251,10 @@ export default class ChatComposer extends Component {
 
   @action
   async toggleEditor() {
+    if (!this.canUseRichEditor) {
+      return;
+    }
+
     const preference = toggledCompositionMode(this.currentUser);
 
     if (!this.useRichEditor) {
@@ -262,6 +273,10 @@ export default class ChatComposer extends Component {
 
   @action
   toggleFormattingBar() {
+    if (!this.canUseRichEditor) {
+      return;
+    }
+
     this.chatFormattingBar.toggle();
   }
 
