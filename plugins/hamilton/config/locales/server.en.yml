@@ -1,1 +1,3 @@
 en:
+  site_settings:
+    hamilton_enabled: "Enable the Hamilton plugin."
