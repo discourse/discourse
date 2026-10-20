@@ -68,20 +68,6 @@ RSpec.describe "List channels | Drawer" do
 
       it "sorts by urgent, unread messages or threads first when priority is selected" do
         current_user.user_option.update!(chat_channel_list_sort: "priority")
-        Fabricate(
-          :chat_message,
-          chat_channel: channel_1,
-          user: current_user,
-          created_at: 1.day.ago,
-          use_service: true,
-        )
-        Fabricate(
-          :chat_message,
-          chat_channel: channel_2,
-          user: current_user,
-          created_at: 1.hour.ago,
-          use_service: true,
-        )
         drawer_page.visit_index
 
         Fabricate(
@@ -235,7 +221,7 @@ RSpec.describe "List channels | Drawer" do
         Fabricate(:direct_message_channel, users: [current_user, user_3], threading_enabled: true)
       end
 
-      it "sorts unread direct messages before read ones when priority is selected" do
+      it "sorts them by latest activity" do
         current_user.user_option.update!(chat_channel_list_sort_dms: "priority")
 
         Fabricate(
@@ -259,10 +245,7 @@ RSpec.describe "List channels | Drawer" do
 
         expect(drawer_page).to have_channel_at_position(dm_channel_2, 1)
         expect(drawer_page).to have_urgent_channel(dm_channel_2)
-        channel_ids =
-          page.all(".chat-channel-row").map { |channel| channel["data-chat-channel-id"] }
-        expect(channel_ids.index(dm_channel_4.id.to_s)).to be >
-          channel_ids.index(dm_channel_2.id.to_s)
+        expect(drawer_page).to have_channel_at_position(dm_channel_4, 2)
       end
 
       context "with unread threads" do
