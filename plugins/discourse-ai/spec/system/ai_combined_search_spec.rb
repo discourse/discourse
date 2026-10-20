@@ -240,6 +240,30 @@ describe "AI combined search" do
     expect(page).to have_css(".ai-search-tabs")
   end
 
+  context "with more keyword matches than the menu lists" do
+    before do
+      SearchIndexer.enable
+      8.times do |i|
+        topic = Fabricate(:topic, title: "Widget maintenance guide number #{i}")
+        Fabricate(:post, topic:, raw: "Keeping widgets running smoothly, part #{i}")
+        SearchIndexer.index(topic, force: true)
+      end
+    end
+
+    after { SearchIndexer.disable }
+
+    it "opens the full search page on the tab's terms from its more link" do
+      visit "/"
+      wait_for_discoveries_channel
+      ask("widget")
+
+      expect_tab("topics")
+      find(".search-menu__show-more a").click
+
+      expect(page).to have_current_path(%r{/search\?q=widget\z})
+    end
+  end
+
   context "with keyword results" do
     let(:query) { "password" }
 

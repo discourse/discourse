@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 import { searchForTerm } from "discourse/lib/search";
 import { followUpAvailable } from "../lib/ai-follow-up.js";
 import { chooseTab, readsAsQuestion } from "../lib/ai-search-intent.js";
@@ -365,7 +366,10 @@ export default class AiSearchSession extends Service {
 
   async #menuSearch(term) {
     try {
-      const results = await searchForTerm(term);
+      // a tab's "more" opens the full page on the very terms it searched
+      const results = await searchForTerm(term, {
+        fullSearchUrl: () => getURL(`/search?q=${encodeURIComponent(term)}`),
+      });
       // Topics shown through the session are listed by their posts. Left in
       // the topics list, they would have core treat the next keystroke as a
       // full search, logged to recent searches, rather than as typing.
