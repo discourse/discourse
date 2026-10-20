@@ -6,4 +6,6 @@ en:
           hamilton: "Hamilton"
   js:
     hamilton:
-      placeholder: placeholder
+      title: "Hamilton"
+      greeting: "Hello %{value}"
+      docs: "Documentation"

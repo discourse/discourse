@@ -8,8 +8,12 @@
 
 enabled_site_setting :hamilton_enabled
 
+register_asset "stylesheets/common/hamilton.scss"
+
 module ::Hamilton
   PLUGIN_NAME = "hamilton"
 end
 
 require_relative "lib/hamilton/engine"
+
+after_initialize { add_admin_route "hamilton.title", "hamilton", use_new_show_route: true }

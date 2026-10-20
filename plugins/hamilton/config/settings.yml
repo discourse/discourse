@@ -2,3 +2,8 @@ hamilton:
   hamilton_enabled:
     default: true
     client: true
+    hidden: true
+  hamilton_greeting:
+    type: string
+    default: "world"
+    client: true
