@@ -76,11 +76,11 @@ If multiple transformers are registered against a single name, then they will be
 
 ## Finding Transformers
 
-All core transformer names are listed in [lib/registry/transformers.ts](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/registry/transformers.ts), which also declares the value, context, and return types of the hooks that have been typed. For the others, search for the name in the core codebase to find where it's applied, its context and value, and the expected return type. Editors that understand TypeScript complete hook names when you call `applyValueTransformer`, `api.registerValueTransformer`, and their behavior counterparts, including in plain JavaScript files.
+All core transformer names are listed in [lib/registry/transformers.ts](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/registry/transformers.ts). Typed hooks point to a contract declared next to the code that applies them, describing the value, context, and return types. For the others, search for the name in the core codebase to find where it's applied, its context and value, and the expected return type. Editors that understand TypeScript complete hook names when you call `applyValueTransformer`, `api.registerValueTransformer`, and their behavior counterparts, including in plain JavaScript files.
 
 ## Introducing new Transformers
 
-To introduce new transformers, the name first needs to be added to the registry. In core, add it to [lib/registry/transformers.ts](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/registry/transformers.ts).
+To introduce new transformers, the name first needs to be added to the registry. In core, add it to [lib/registry/transformers.ts](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/registry/transformers.ts), in alphabetical order, as `"my-hook": untyped` or, with a contract, as `"my-hook": typed<MyHookTransformer>()`.
 
 To introduce a new transformer via a theme or plugin, create a `pre-initializer` and register the name via the relevant API:
 
@@ -150,7 +150,7 @@ const addClass: ValueTransformerFor<"topic-list-item-class"> = ({ value }) => [
 api.registerValueTransformer("topic-list-item-class", addClass);
 ```
 
-Core hooks without a contract yet are marked `Untyped` and keep the loose typing described below. Value entries have the shape `{ value: V; context: C | undefined; mutable: true | false }`, and behavior entries `{ result: R; context: C | undefined }`. Include `undefined` in `context` when the context is optional, or use `context: undefined` when a hook has none. Entries that don't match these shapes make the hook unusable until they are fixed.
+Core hooks without a contract yet are marked `untyped` and keep the loose typing described below. A core contract is a types-only `.ts` file next to the code that applies the hook, for example `components/topic-list/item-transformers.ts`, referenced from the registry with `typed<Contract>()`. Value contracts have the shape `{ value: V; context: C | undefined; mutable: true | false }`, and behavior contracts `{ result: R; context: C | undefined }`. Include `undefined` in `context` when the context is optional, or use `context: undefined` when a hook has none. Contracts that don't match these shapes make the hook unusable until they are fixed.
 
 A plugin or theme can type its own hooks by adding entries from a TypeScript file. The name still needs `api.addValueTransformerName` or `api.addBehaviorTransformerName` at runtime:
 
