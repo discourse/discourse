@@ -377,7 +377,12 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
   it "registers both workflow tools for the admin assistant and pending replay" do
     tools = DiscourseAi::Agents::DiscourseAdminAssistant.new.tools
     expect(tools).to include(DiscourseWorkflows::AdminAssistant::GenerateWorkflow, described_class)
-    expect(DiscourseAi::Agents::Agent.all_available_tools).to include(described_class)
+    expect(DiscourseAi::Agents::Agent.external_tool_by_name("CreateWorkflow")).to eq(
+      described_class,
+    )
+    expect(DiscourseAi::Agents::Agent.external_tool_by_name("GenerateWorkflow")).to eq(
+      DiscourseWorkflows::AdminAssistant::GenerateWorkflow,
+    )
     prompt =
       DiscourseAi::Agents::DiscourseAdminAssistant.new.craft_prompt(
         DiscourseAi::Agents::BotContext.new(user: admin, messages: []),
