@@ -7,6 +7,7 @@ import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import MultiSelectComponent from "discourse/select-kit/components/multi-select";
 import {
+  deprecateImplicitMutation,
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
@@ -187,6 +188,7 @@ export default class TagChooser extends MultiSelectComponent {
     if (this.onChange) {
       this.onChange(items);
     } else {
+      deprecateImplicitMutation();
       this.set("tags", items);
     }
   }

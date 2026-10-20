@@ -46,6 +46,17 @@ export const MAIN_COLLECTION = "MAIN_COLLECTION";
 export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
 export const FILTER_VISIBILITY_THRESHOLD = 10;
 
+/** Warns callers when a fallback writes back to a bound argument. */
+export function deprecateImplicitMutation() {
+  deprecated(
+    "SelectKit implicit mutation is deprecated. Pass an `onChange` handler instead of relying on the selected value being written back.",
+    {
+      id: "discourse.select-kit.implicit-mutation",
+      since: "2026.10.0",
+    }
+  );
+}
+
 function isDocumentRTL() {
   return document.documentElement.classList.contains("rtl");
 }
@@ -1276,7 +1287,10 @@ export default class SelectKit extends Component {
       this.actions.onChange =
         this.onSelect ||
         this.actions.onSelect ||
-        ((value) => this.set("value", value));
+        ((value) => {
+          deprecateImplicitMutation();
+          return this.set("value", value);
+        });
     }
   }
 
