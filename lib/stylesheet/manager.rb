@@ -18,6 +18,7 @@ class Stylesheet::Manager
 
   MANIFEST_DIR = "#{Rails.root.join("tmp/cache/assets/#{Rails.env}")}"
   VARIABLE_RENAMES_PATH = Rails.root.join("app/assets/stylesheets/variable-renames.json")
+  VARIABLE_RGB_TWINS_PATH = Rails.root.join("app/assets/stylesheets/variable-rgb-twins.json")
   THEME_REGEX = /_theme(_rtl)?\z/
   COLOR_SCHEME_STYLESHEET = "color_definitions"
 
@@ -191,6 +192,7 @@ class Stylesheet::Manager
       "#{Rails.root.join("app/assets/images/**/*.*")}",
       "#{Rails.root.join("lib/stylesheet/*.rb")}",
       VARIABLE_RENAMES_PATH.to_s,
+      VARIABLE_RGB_TWINS_PATH.to_s,
     ]
 
     Discourse.plugins.each do |plugin|

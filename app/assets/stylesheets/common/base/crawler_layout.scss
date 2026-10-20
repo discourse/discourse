@@ -56,10 +56,10 @@ body > noscript {
     box-sizing: border-box;
     width: 100%;
     top: 0;
-    background-color: var(--header_background);
+    background-color: var(--d-comp-Header-color-background);
     padding: 10px;
     box-shadow: none;
-    border-bottom: 1px solid var(--header_primary-medium);
+    border-bottom: 1px solid var(--d-comp-Header-color-border-strong);
   }
 
   .header-buttons {

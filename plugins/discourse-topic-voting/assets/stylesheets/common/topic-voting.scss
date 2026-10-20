@@ -108,11 +108,7 @@
 
 // docked header
 .header-title-voting {
-  --secondary: var(--header_background);
-  --primary-high: var(--header_primary-high);
-  --primary-medium: var(--header_primary-high);
-  --primary-low: var(--header_primary-low);
-  --d-button-default-icon-color: var(--header_primary-high);
+  --d-button-default-icon-color: var(--d-comp-Header-color-icon-strong);
   margin-top: 0.15em; // vertical alignment tweak
   margin-right: var(--space-2);
 
@@ -125,9 +121,30 @@
   }
 
   .voting-wrapper__button {
-    --primary-very-low: var(--header_background);
     width: 100%;
     padding: var(--space-1);
+    background: var(--d-comp-Header-color-background);
+
+    &:focus-visible,
+    .discourse-no-touch &:hover {
+      background: var(--d-comp-Header-color-background-neutral);
+
+      &:not(.btn-success) .d-icon {
+        color: var(--d-comp-Header-color-icon-strong);
+      }
+    }
+
+    &[disabled]:not(.is-loading) {
+      background: var(--d-comp-Header-color-background);
+    }
+  }
+
+  .voting-wrapper__count {
+    background: var(--d-comp-Header-color-background);
+  }
+
+  .voting-wrapper__count-text {
+    color: var(--d-comp-Header-color-text-muted);
   }
 }
 

@@ -7,7 +7,7 @@
 
 .search-menu .search-input,
 .search-menu-container .search-input {
-  border-color: var(--header_primary-low-mid);
+  border-color: var(--d-comp-Header-color-border-strong);
 }
 
 .user-menu .quick-access-panel,
@@ -42,7 +42,7 @@
   .-expanded
   > .d-icon,
 .discourse-no-touch .header-sidebar-toggle button:hover .d-icon {
-  color: var(--header_primary-medium);
+  color: var(--d-comp-HeaderIcons-color-icon-default-hovered);
 }
 
 .discourse-no-touch .interface-color-selector-content {

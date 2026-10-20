@@ -13,13 +13,13 @@ div.profiler-results.profiler-top {
   }
 
   .profiler-button {
-    background-color: var(--header_background);
-    color: var(--header_primary);
-    border-bottom: 1px solid var(--header_primary-low);
+    background-color: var(--d-comp-Header-color-background);
+    color: var(--d-comp-Header-color-text-default);
+    border-bottom: 1px solid var(--d-comp-Header-color-border-default);
 
     .profiler-number,
     .profiler-unit {
-      color: var(--header_primary);
+      color: var(--d-comp-Header-color-text-default);
     }
 
     .profiler-reqs {
@@ -28,11 +28,11 @@ div.profiler-results.profiler-top {
   }
 
   &.profiler-left .profiler-button {
-    border-right: 1px solid var(--header_primary-low);
+    border-right: 1px solid var(--d-comp-Header-color-border-default);
   }
 
   &.profiler-right .profiler-button {
-    border-left: 1px solid var(--header_primary-low);
+    border-left: 1px solid var(--d-comp-Header-color-border-default);
     padding-right: 10px; // Make space for scrollbar
   }
 }

@@ -61,7 +61,6 @@
   --category-boxes-title-font-size: var(--font-up-2);
   --d-category-boxes-margin-top: var(--space-4);
   --d-categories-list-title-margin-bottom: 0em;
-  --d-header-padding-x: 0.67em;
   --d-table-border-top-height: 3px;
   --d-wrap-padding-x: 0.67em;
   --d-post-aside-background: var(--blend-primary-secondary-5);
@@ -679,7 +678,7 @@ textarea {
   box-shadow: 0 0 0 2px var(--secondary);
 
   .d-icon.d-icon-discourse-dnd {
-    color: var(--header_primary-medium) !important;
+    color: var(--d-comp-Header-color-icon-strong) !important;
     font-size: 1em;
     height: 1em;
     width: 1em;

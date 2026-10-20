@@ -26,10 +26,18 @@
 }
 
 .voting.header-title-voting .voting-wrapper {
-  --primary-high: var(--header_primary-high);
+  --d-comp-Header-color-background-neutral: var(--d-selected);
 
   @include viewport.from(lg) {
-    --secondary: var(--background-color);
+    --d-comp-Header-color-background: var(--background-color);
     --content-border-color: var(--d-sidebar-border-color);
+  }
+
+  &__button {
+    background: var(--d-comp-Header-color-background);
+  }
+
+  .discourse-no-touch & button:not(.btn-success) .d-icon {
+    color: var(--d-comp-Header-color-icon-strong);
   }
 }

@@ -1,11 +1,23 @@
 @use "lib/viewport";
 
 :root {
-  --d-header-icon-color: var(--header_primary-low-mid);
-  --d-header-icon-color--hover: var(--header_primary);
-  --d-header-icon-color--active: var(--header_primary-medium);
-  --d-header-icon-background--hover: var(--d-hover);
-  --d-header-icon-background--active: var(--secondary);
+  --d-comp-Header-color-background: var(--header_background);
+  --d-comp-Header-color-background-neutral: var(--header_primary-low);
+  --d-comp-Header-color-text-default: var(--header_primary);
+  --d-comp-Header-color-text-muted: var(--header_primary-high);
+  --d-comp-Header-color-icon-default: var(--header_primary-low-mid);
+  --d-comp-Header-color-icon-strong: var(--header_primary-medium);
+  --d-comp-Header-color-border-default: var(--header_primary-low);
+  --d-comp-Header-color-border-strong: var(--header_primary-low-mid);
+  --d-comp-Header-color-border-strong-hovered: var(--header_primary-medium);
+  --d-comp-Header-space-padding-inline: 0.67em;
+  --d-comp-HeaderIcons-color-icon-default: var(
+    --d-comp-Header-color-icon-default
+  );
+  --d-comp-HeaderIcons-color-icon-default-hovered: var(--header_primary);
+  --d-comp-HeaderIcons-color-icon-default-pressed: var(--header_primary-medium);
+  --d-comp-HeaderIcons-color-background-hovered: var(--d-hover);
+  --d-comp-HeaderIcons-color-background-pressed: var(--secondary);
 }
 
 .d-header-wrap {
@@ -19,8 +31,8 @@
   align-items: center;
   flex-direction: column;
   width: 100%;
-  background-color: var(--header_background);
-  box-shadow: var(--shadow-header);
+  background-color: var(--d-comp-Header-color-background);
+  box-shadow: var(--d-sys-shadow-overflow);
   backface-visibility: hidden; /** do magic for scrolling performance **/
   height: 3.66em;
 
@@ -32,7 +44,7 @@
     box-sizing: border-box;
     width: 100%;
     height: 100%;
-    padding: 0 var(--d-header-padding-x);
+    padding: 0 var(--d-comp-Header-space-padding-inline);
 
     .contents {
       display: flex;
@@ -82,7 +94,7 @@
     a,
     a:visited {
       min-width: 0;
-      color: var(--header_primary);
+      color: var(--d-comp-Header-color-text-default);
     }
 
     &:not(.title--minimized) {
@@ -187,10 +199,10 @@
 
     .discourse-no-touch &:hover,
     .discourse-no-touch &:focus-visible {
-      background-color: var(--d-header-icon-background--hover);
+      background-color: var(--d-comp-HeaderIcons-color-background-hovered);
 
       > .d-icon {
-        color: var(--d-header-icon-color--hover);
+        color: var(--d-comp-HeaderIcons-color-icon-default-hovered);
       }
     }
   }
@@ -199,11 +211,11 @@
     .active .icon,
     .header-color-scheme-toggle .-expanded {
       position: relative;
-      background-color: var(--d-header-icon-background--active);
+      background-color: var(--d-comp-HeaderIcons-color-background-pressed);
       cursor: default;
 
       > .d-icon {
-        color: var(--d-header-icon-color--active);
+        color: var(--d-comp-HeaderIcons-color-icon-default-pressed);
       }
     }
   }
@@ -213,7 +225,7 @@
     font-size: var(--font-up-4);
     line-height: var(--line-height-large);
     display: inline-block;
-    color: var(--d-header-icon-color);
+    color: var(--d-comp-HeaderIcons-color-icon-default);
   }
 
   .notifications {
@@ -225,7 +237,7 @@
   }
 
   .badge-notification {
-    border: 2px solid var(--header_background);
+    border: 2px solid var(--d-comp-Header-color-background);
     position: absolute;
     top: -4px;
     min-width: 0.6em;
@@ -263,12 +275,12 @@
     align-items: center;
 
     &__locale {
-      color: var(--header_primary-high);
+      color: var(--d-comp-Header-color-text-muted);
       font-size: var(--font-down-1);
     }
 
     &-trigger {
-      border: 1px solid var(--header_primary-low-mid);
+      border: 1px solid var(--d-comp-Header-color-border-strong);
       margin-right: var(--space-2);
       gap: var(--space-1);
       padding: var(--space-1) var(--space-2);
@@ -282,21 +294,21 @@
       .d-icon {
         font-size: var(--font-down-2);
         width: 1em;
-        color: var(--d-header-icon-color);
+        color: var(--d-comp-HeaderIcons-color-icon-default);
       }
 
       .discourse-no-touch & {
         &:hover {
-          color: var(--d-header-icon-color--hover);
-          border: 1px solid var(--header_primary-medium);
-          background: var(--d-header-icon-background--hover);
+          color: var(--d-comp-HeaderIcons-color-icon-default-hovered);
+          border: 1px solid var(--d-comp-Header-color-border-strong-hovered);
+          background: var(--d-comp-HeaderIcons-color-background-hovered);
 
           .language-switcher__locale {
-            color: var(--header_primary);
+            color: var(--d-comp-Header-color-text-default);
           }
 
           .d-icon {
-            color: var(--d-header-icon-color--hover);
+            color: var(--d-comp-HeaderIcons-color-icon-default-hovered);
           }
         }
       }
@@ -331,14 +343,14 @@
       font-size: var(--font-up-4);
       line-height: var(--line-height-large);
       display: inline-block;
-      color: var(--header_primary-low-mid);
+      color: var(--d-comp-Header-color-icon-default);
     }
   }
 }
 
 // topic info in the header
 .extra-info-wrapper {
-  --tag-text-color: var(--header_primary-high);
+  --tag-text-color: var(--d-comp-Header-color-text-muted);
   flex: 1 0 0;
   display: flex;
   align-items: center;
@@ -385,7 +397,7 @@
   }
 
   .topic-link {
-    color: var(--title-color--header);
+    color: var(--d-comp-Header-color-text-default);
     display: block;
 
     @include ellipsis;
@@ -393,7 +405,7 @@
 
   .topic-statuses {
     .d-icon {
-      color: var(--header_primary-medium);
+      color: var(--d-comp-Header-color-icon-strong);
     }
 
     .d-icon-envelope {
@@ -426,7 +438,7 @@
     @include ellipsis;
 
     .badge-category {
-      color: var(--header_primary-high);
+      color: var(--d-comp-Header-color-text-muted);
     }
   }
 
@@ -438,7 +450,7 @@
 
     .discourse-tags {
       display: inline;
-      color: var(--header_primary-high);
+      color: var(--d-comp-Header-color-text-muted);
 
       li {
         flex-wrap: nowrap;
@@ -535,7 +547,7 @@ $mobile-avatar-height: 1.532em;
   }
 
   .more-participants {
-    color: var(--header_primary-high);
+    color: var(--d-comp-Header-color-text-muted);
     margin-left: 5px;
   }
 }
@@ -563,8 +575,8 @@ $mobile-avatar-height: 1.532em;
 }
 
 .impersonation-notice {
-  background-color: var(--header_background);
-  color: var(--header_primary);
+  background-color: var(--d-comp-Header-color-background);
+  color: var(--d-comp-Header-color-text-default);
   display: flex;
   align-items: center;
   justify-content: center;

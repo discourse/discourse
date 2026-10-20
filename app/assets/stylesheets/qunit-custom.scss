@@ -173,7 +173,6 @@ body {
     --primary-low-rgb: 49, 49, 49;
     --primary-very-low-rgb: 40, 40, 40;
     --secondary-rgb: 34, 34, 34;
-    --header_background-rgb: 17, 17, 17;
     --tertiary-rgb: 15, 130, 175;
     --highlight-rgb: 168, 113, 55;
     --success-rgb: 28, 165, 81;
@@ -274,7 +273,7 @@ body {
     --shadow-card: 0 4px 14px rgb(0, 0, 0, 0.5);
     --shadow-dropdown: 0 2px 12px 0 rgb(0, 0, 0, 0.25);
     --shadow-menu-panel: var(--shadow-dropdown);
-    --shadow-header: 0 2px 4px -1px rgb(0, 0, 0, 0.45);
+    --d-sys-shadow-overflow: 0 2px 4px -1px rgb(0, 0, 0, 0.45);
     --shadow-footer-nav: 0 0 2px 0 rgb(0, 0, 0, 0.4);
     --shadow-focus-danger: 0 0 6px 0 var(--danger);
     --float-kit-arrow-stroke-color: var(--primary-low);

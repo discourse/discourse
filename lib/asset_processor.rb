@@ -13,6 +13,7 @@ class AssetProcessor
         pnpm-lock.yaml
         frontend/asset-processor/**/*.{js,mjs}
         app/assets/stylesheets/variable-renames.json
+        app/assets/stylesheets/variable-rgb-twins.json
         frontend/discourse/lib/babel-transform-module-renames.js
         frontend/discourse/lib/discourse-source-imports.mjs
         frontend/discourse/config/targets.js

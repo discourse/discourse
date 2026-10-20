@@ -24,7 +24,6 @@
   --primary-low-rgb: #{hexToRGB($primary-low)};
   --primary-very-low-rgb: #{hexToRGB($primary-very-low)};
   --secondary-rgb: #{hexToRGB($secondary)};
-  --header_background-rgb: #{hexToRGB($header_background)};
   --tertiary-rgb: #{hexToRGB($tertiary)};
   --highlight-rgb: #{hexToRGB($highlight)};
   --success-rgb: #{hexToRGB($success)};
@@ -144,14 +143,13 @@
   --d-badge-card-background-color: var(--secondary);
   --mention-background-color: var(--primary-low);
   --title-color: var(--primary);
-  --title-color--header: var(--header_primary);
   --excerpt-color: var(--primary-high);
   --shadow-modal: 0 8px 60px rgba(0, 0, 0, #{$shadow-opacity-modal});
   --shadow-composer: 0 -1px 40px rgba(0, 0, 0, #{$shadow-opacity-composer});
   --shadow-card: 0 4px 14px rgba(0, 0, 0, #{$shadow-opacity-card});
   --shadow-dropdown: 0 2px 12px 0 rgba(0, 0, 0, #{$shadow-opacity-dropdown});
   --shadow-menu-panel: var(--shadow-dropdown);
-  --shadow-header: 0 0 0 1px var(--content-border-color);
+  --d-sys-shadow-overflow: 0 0 0 1px var(--content-border-color);
   --shadow-footer-nav: 0 0 2px 0 rgba(0, 0, 0, #{$shadow-opacity-footer-nav});
   --shadow-focus-danger: 0 0 6px 0 var(--danger);
   --shadow-docked-composer: 0 4px 30px rgb(0, 0, 0, 0.15);

@@ -94,7 +94,7 @@ html.ios-device.has-full-page-chat body #main-outlet {
 
 .header-dropdown-toggle.chat-header-icon .icon {
   .chat-channel-unread-indicator {
-    border: 2px solid var(--header_background);
+    border: 2px solid var(--d-comp-Header-color-background);
     position: absolute;
     top: 0;
     right: 2px;
@@ -118,7 +118,7 @@ html.ios-device.has-full-page-chat body #main-outlet {
 
     &:hover {
       .d-icon {
-        color: var(--header_primary-low-mid);
+        color: var(--d-comp-HeaderIcons-color-icon-default);
       }
       background: none;
     }

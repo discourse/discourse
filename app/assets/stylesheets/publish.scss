@@ -16,7 +16,7 @@
   box-sizing: border-box;
   width: 100%;
   z-index: z("header");
-  background-color: var(--header_background);
+  background-color: var(--d-comp-Header-color-background);
   box-shadow: 0 2px 4px -1px rgb(0, 0, 0, 0.25);
   position: sticky;
   top: 0;
@@ -40,7 +40,7 @@
     }
 
     .published-page-title {
-      color: var(--header_primary);
+      color: var(--d-comp-Header-color-text-default);
       font-size: var(--font-up-5);
       margin: 0;
       line-height: var(--line-height-medium);

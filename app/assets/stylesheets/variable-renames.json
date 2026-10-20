@@ -1,1 +1,10 @@
-{}
+{
+  "--title-color--header": "--d-comp-Header-color-text-default",
+  "--shadow-header": "--d-sys-shadow-overflow",
+  "--d-header-icon-color": "--d-comp-HeaderIcons-color-icon-default",
+  "--d-header-icon-color--hover": "--d-comp-HeaderIcons-color-icon-default-hovered",
+  "--d-header-icon-color--active": "--d-comp-HeaderIcons-color-icon-default-pressed",
+  "--d-header-icon-background--hover": "--d-comp-HeaderIcons-color-background-hovered",
+  "--d-header-icon-background--active": "--d-comp-HeaderIcons-color-background-pressed",
+  "--d-header-padding-x": "--d-comp-Header-space-padding-inline"
+}
