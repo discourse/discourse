@@ -1,10 +1,14 @@
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import GroupManageSaveButton from "discourse/components/group-manage-save-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+
+function updateTags(model, field, tags) {
+  model.set(field, tags);
+}
 
 export default <template>
   <form class="groups-form form-vertical groups-notifications-form">
@@ -29,6 +33,7 @@ export default <template>
       <TagChooser
         @blockedTags={{@controller.selectedTags}}
         @everyTag={{true}}
+        @onChange={{fn updateTags @controller.model "watching_tags"}}
         @options={{hash allowAny=false}}
         @tags={{@controller.model.watching_tags}}
         @unlimitedTagCount={{true}}
@@ -46,6 +51,7 @@ export default <template>
       <TagChooser
         @blockedTags={{@controller.selectedTags}}
         @everyTag={{true}}
+        @onChange={{fn updateTags @controller.model "tracking_tags"}}
         @options={{hash allowAny=false}}
         @tags={{@controller.model.tracking_tags}}
         @unlimitedTagCount={{true}}
@@ -63,6 +69,7 @@ export default <template>
       <TagChooser
         @blockedTags={{@controller.selectedTags}}
         @everyTag={{true}}
+        @onChange={{fn updateTags @controller.model "watching_first_post_tags"}}
         @options={{hash allowAny=false}}
         @tags={{@controller.model.watching_first_post_tags}}
         @unlimitedTagCount={{true}}
@@ -80,6 +87,7 @@ export default <template>
       <TagChooser
         @blockedTags={{@controller.selectedTags}}
         @everyTag={{true}}
+        @onChange={{fn updateTags @controller.model "regular_tags"}}
         @options={{hash allowAny=false}}
         @tags={{@controller.model.regular_tags}}
         @unlimitedTagCount={{true}}
@@ -97,6 +105,7 @@ export default <template>
       <TagChooser
         @blockedTags={{@controller.selectedTags}}
         @everyTag={{true}}
+        @onChange={{fn updateTags @controller.model "muted_tags"}}
         @options={{hash allowAny=false}}
         @tags={{@controller.model.muted_tags}}
         @unlimitedTagCount={{true}}

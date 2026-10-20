@@ -265,7 +265,10 @@ export default class MoveToTopic extends Component {
 
                 {{#if this.canTagMessages}}
                   <label>{{i18n "tagging.tags"}}</label>
-                  <TagChooser @tags={{this.tags}} />
+                  <TagChooser
+                    @onChange={{this.updateTags}}
+                    @tags={{this.tags}}
+                  />
                 {{/if}}
               </form>
             {{/if}}
@@ -425,6 +428,7 @@ export default class MoveToTopic extends Component {
                     <label>{{i18n "tagging.tags"}}</label>
                     <TagChooser
                       @categoryId={{this.categoryId}}
+                      @onChange={{this.updateTags}}
                       @tags={{this.tags}}
                     />
                     <PluginOutlet
@@ -464,7 +468,10 @@ export default class MoveToTopic extends Component {
 
                 {{#if this.canTagMessages}}
                   <label>{{i18n "tagging.tags"}}</label>
-                  <TagChooser @tags={{this.tags}} />
+                  <TagChooser
+                    @onChange={{this.updateTags}}
+                    @tags={{this.tags}}
+                  />
                 {{/if}}
               </form>
             {{/if}}
