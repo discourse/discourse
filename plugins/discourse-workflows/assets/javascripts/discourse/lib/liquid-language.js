@@ -1,6 +1,3 @@
-// Tokenizes Liquid templates for the code editor; registered as the
-// "liquid" language by the plugin's initializer.
-
 const TAG_KEYWORDS = new Set([
   "assign",
   "break",

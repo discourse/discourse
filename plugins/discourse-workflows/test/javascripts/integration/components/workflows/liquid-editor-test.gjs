@@ -9,27 +9,10 @@ import {
   waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { loadCodeEditorLanguage } from "discourse/lib/code-editor-languages";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import LiquidControl from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/liquid-control";
-import VariableInput from "discourse/plugins/discourse-workflows/admin/components/workflows/variable/input";
 import { WORKFLOW_VARIABLE_MIME } from "discourse/plugins/discourse-workflows/admin/lib/workflows/expression-context";
-import buildLiquidExtensions from "discourse/plugins/discourse-workflows/admin/lib/workflows/liquid-extensions";
-
-const INPUT_FIELDS = [
-  { key: "name", id: "$json.name", type: "string" },
-  {
-    key: "topic",
-    id: "$json.topic",
-    type: "object",
-    children: [{ key: "title", id: "$json.topic.title", type: "string" }],
-  },
-];
-
-function liquidExtensions(cmParams) {
-  return buildLiquidExtensions(cmParams, { inputFields: INPUT_FIELDS });
-}
 
 module("Integration | Component | Workflows | Liquid editor", function (hooks) {
   setupRenderingTest(hooks);
@@ -197,17 +180,9 @@ module("Integration | Component | Workflows | Liquid editor", function (hooks) {
     assert.strictEqual(view.state.doc.toString(), "{", "nothing is inserted");
   });
 
-  test("registers liquid as a code editor language", async function (assert) {
-    assert.strictEqual(
-      typeof (await loadCodeEditorLanguage("liquid")),
-      "function",
-      "the shortcut resolves to a builder"
-    );
-  });
-
   test("highlights the template's tags and output", async function (assert) {
     const field = {
-      value: "{% for item in items %}{{ item.name }}{% endfor %}",
+      value: "{% for item in items %}{{ item.name | upcase }}{% endfor %}",
       set() {},
     };
 
@@ -221,23 +196,15 @@ module("Integration | Component | Workflows | Liquid editor", function (hooks) {
     assert.dom(".cm-hl-property").exists("a dotted property is highlighted");
     assert
       .dom(".cm-hl-function")
-      .doesNotExist("nothing is mistaken for a filter");
+      .hasText("upcase", "the filter is highlighted");
   });
 
   test("drops a dragged field as a Liquid output tag", async function (assert) {
-    let view;
-    const onSetup = (editorView) => (view = editorView);
+    const field = { value: "", set() {} };
 
-    await render(
-      <template>
-        <VariableInput
-          @extensions={{liquidExtensions}}
-          @onSetup={{onSetup}}
-          @value=""
-        />
-      </template>
-    );
+    await render(<template><LiquidControl @field={{field}} /></template>);
     await waitFor(".cm-editor");
+    const view = find(".codemirror-editor").codemirrorView;
 
     await triggerEvent(this.element.querySelector(".cm-editor"), "drop", {
       dataTransfer: {
@@ -256,20 +223,11 @@ module("Integration | Component | Workflows | Liquid editor", function (hooks) {
   });
 
   test("drops relative to the enclosing loop variable", async function (assert) {
-    let view;
-    const onSetup = (editorView) => (view = editorView);
-    const value = "{% for row in items %}\n";
+    const field = { value: "{% for row in items %}\n", set() {} };
 
-    await render(
-      <template>
-        <VariableInput
-          @extensions={{liquidExtensions}}
-          @onSetup={{onSetup}}
-          @value={{value}}
-        />
-      </template>
-    );
+    await render(<template><LiquidControl @field={{field}} /></template>);
     await waitFor(".cm-editor");
+    const view = find(".codemirror-editor").codemirrorView;
 
     // Drop coordinates don't resolve in a rendering test, so the drop lands
     // at the end of the document, inside the still-open loop.
@@ -289,19 +247,11 @@ module("Integration | Component | Workflows | Liquid editor", function (hooks) {
   });
 
   test("ignores a field the render context cannot reach", async function (assert) {
-    let view;
-    const onSetup = (editorView) => (view = editorView);
+    const field = { value: "", set() {} };
 
-    await render(
-      <template>
-        <VariableInput
-          @extensions={{liquidExtensions}}
-          @onSetup={{onSetup}}
-          @value=""
-        />
-      </template>
-    );
+    await render(<template><LiquidControl @field={{field}} /></template>);
     await waitFor(".cm-editor");
+    const view = find(".codemirror-editor").codemirrorView;
 
     await triggerEvent(this.element.querySelector(".cm-editor"), "drop", {
       dataTransfer: {

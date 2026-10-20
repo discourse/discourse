@@ -5,6 +5,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import CodeEditor from "discourse/components/code-editor";
+import { loadCodeEditorLanguage } from "discourse/lib/code-editor-languages";
 import { escapeExpression } from "discourse/lib/utilities";
 import { schemaFieldsForNodeInput } from "../../../lib/workflows/data-preview.js";
 import {
@@ -55,7 +56,12 @@ export default class LiquidControl extends Component {
 
   @action
   async loadVariables() {
-    await this.workflowsNodeTypes.loadWorkflowVars();
+    // The grammar too, so its delimiter rules are in place before the first
+    // keystroke.
+    await Promise.all([
+      this.workflowsNodeTypes.loadWorkflowVars(),
+      loadCodeEditorLanguage("liquid"),
+    ]);
     if (!this.isDestroying) {
       this.ready = true;
     }
