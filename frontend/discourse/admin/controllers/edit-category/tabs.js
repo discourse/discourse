@@ -1,15 +1,15 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action, computed, getProperties } from "@ember/object";
+import { action, getProperties } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import getURL from "discourse/lib/get-url";
+import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import DiscourseURL from "discourse/lib/url";
-import { defaultHomepage } from "discourse/lib/utilities";
+import DiscourseURL, { getEditCategoryUrl } from "discourse/lib/url";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
@@ -68,6 +68,23 @@ const SIMPLIFIED_FIELD_LIST = [
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
 const DISCUSSION_TYPE_ID = "discussion";
 
+/**
+ * @typedef {Record<string, unknown> & { name?: string, style_type?: string, emoji?: string | null, icon?: string | null }} CategoryFormData
+ */
+/**
+ * @typedef {Object} CategoryFormApi
+ * @property {(name: string, value: unknown) => Promise<void>} set
+ * @property {(values: Record<string, unknown>) => Promise<void>} setProperties
+ * @property {(name: string) => unknown} get
+ * @property {() => void} commit
+ * @property {(name: string) => void} commitField
+ * @property {(event?: Event) => Promise<void>} submit
+ * @property {(event?: Event) => Promise<void>} reset
+ * @property {(name: string, error: { title?: string, message?: string }) => void} addError
+ * @property {(name: string) => void} removeError
+ * @property {() => void} removeErrors
+ * @property {boolean} isDirty
+ */
 export default class EditCategoryTabsController extends Controller {
   @service dialog;
   @service site;
@@ -76,12 +93,14 @@ export default class EditCategoryTabsController extends Controller {
   @service keyValueStore;
   @service toasts;
 
-  @tracked breadcrumbCategories = this.site.get("categoriesList");
+  @tracked breadcrumbCategories = this.site.categoriesList;
   @tracked
   showAdvancedTabs =
     this.keyValueStore.getItem(SHOW_ADVANCED_TABS_KEY) === "true";
   @tracked formData;
   @tracked selectedTab = "general";
+
+  /** @type {CategoryFormApi | null} */
   @tracked formApi = null;
   @tracked siteTextsLocale = this.siteSettings.default_locale;
   @tracked isLoadingSiteTextsLocale = false;
@@ -91,11 +110,11 @@ export default class EditCategoryTabsController extends Controller {
   saving = false;
   deleting = false;
   showTooltip = false;
-  createdCategory = false;
   expandedMenu = false;
+
+  /** @type {{ slug?: string } | null} */
   parentParams = null;
   validators = [];
-  textColors = ["000000", "FFFFFF"];
 
   /**
    * Callbacks registered by tab components that are invoked when the form
@@ -104,32 +123,8 @@ export default class EditCategoryTabsController extends Controller {
    */
   afterResetCallbacks = [];
 
-  @computed("showTooltip", "model.cannot_delete_reason")
-  get showDeleteReason() {
-    return this.showTooltip && this.model?.cannot_delete_reason;
-  }
-
   get availableLocales() {
     return this.siteSettings.available_locales;
-  }
-
-  @computed("saving", "deleting")
-  get deleteDisabled() {
-    return this.deleting || this.saving || false;
-  }
-
-  @computed("name")
-  get categoryName() {
-    const name = this.name || "";
-    return name.trim().length > 0 ? name : i18n("preview");
-  }
-
-  @computed("saving", "model.id")
-  get saveLabel() {
-    if (this.saving) {
-      return "saving";
-    }
-    return this.model?.id ? "category.save" : "category.create_category";
   }
 
   get baseTitle() {
@@ -180,13 +175,9 @@ export default class EditCategoryTabsController extends Controller {
   }
 
   get _siteTextEntries() {
-    const entries = [];
-    Object.values(this.model?.categoryTypes ?? {}).forEach((categoryType) => {
-      categoryType.configuration_schema.site_texts?.forEach((entry) =>
-        entries.push(entry)
-      );
-    });
-    return entries;
+    return Object.values(this.model?.categoryTypes ?? {}).flatMap(
+      (categoryType) => categoryType.configuration_schema.site_texts ?? []
+    );
   }
 
   @action
@@ -276,10 +267,11 @@ export default class EditCategoryTabsController extends Controller {
    * Both `addError` and `removeError` are passed to validators so they can
    * manage errors bidirectionally.
    *
-   * @param {Object} data - The current form draft data.
-   * @param {Object} helpers
-   * @param {Function} helpers.addError - Adds a validation error for a field.
-   * @param {Function} helpers.removeError - Removes a validation error for a field.
+   * @param {CategoryFormData} data - The current form draft data.
+   * @param {Pick<CategoryFormApi, "addError" | "removeError">} helpers
+   * @param {CategoryFormApi["addError"]} helpers.addError - Adds a validation error for a field.
+   * @param {CategoryFormApi["removeError"]} helpers.removeError - Removes a validation error for a field.
+   * @returns {void}
    */
   @action
   validateForm(data, { addError, removeError }) {
@@ -380,7 +372,7 @@ export default class EditCategoryTabsController extends Controller {
     this.model.setProperties(categoryData);
 
     // Category serialization converts an empty permission list to staff-only access.
-    if (!this.model.permissions || this.model.permissions.length === 0) {
+    if (!this.model.permissions?.length) {
       this.model.set("permissions", []);
     }
 
@@ -414,7 +406,7 @@ export default class EditCategoryTabsController extends Controller {
       updatedModel.setupGroupsAndPermissions();
 
       if (lostAccess) {
-        this.router.transitionTo(`discovery.${defaultHomepage()}`);
+        this.router.transitionTo(homepageNavigationDestination());
         return;
       }
 
@@ -425,12 +417,11 @@ export default class EditCategoryTabsController extends Controller {
         if (this.model.id) {
           window.location.reload();
         } else {
-          window.location = this.router.urlFor(
-            "editCategory",
-            Category.slugFor(updatedModel)
-          );
+          DiscourseURL.redirectAbsolute(getEditCategoryUrl(updatedModel));
         }
-        return;
+
+        // Never resolves: keeps the form busy until the page unloads
+        return new Promise(() => {});
       }
 
       this.set("saving", false);
@@ -496,7 +487,7 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   deleteCategory() {
-    if (this.deleteDisabled) {
+    if (this.deleting || this.saving) {
       return;
     }
 
@@ -521,20 +512,6 @@ export default class EditCategoryTabsController extends Controller {
   }
 
   @action
-  toggleDeleteTooltip() {
-    if (this.deleteDisabled) {
-      return;
-    }
-
-    this.toggleProperty("showTooltip");
-  }
-
-  @action
-  goBack() {
-    DiscourseURL.routeTo(this.model.url);
-  }
-
-  @action
   toggleAdvancedTabs() {
     this.showAdvancedTabs = !this.showAdvancedTabs;
 
@@ -545,23 +522,27 @@ export default class EditCategoryTabsController extends Controller {
     );
 
     // When collapsing, reset to general unless current tab is still visible
-    if (!this.showAdvancedTabs && this.selectedTab !== "general") {
-      const primaryTab = registeredEditCategoryTabs.find(
-        (tab) => tab.id === this.selectedTab && tab.primary
-      );
-      if (!primaryTab) {
-        next(() => {
-          this.selectedTab = "general";
-          if (this.router.currentRouteName?.startsWith("newCategory")) {
-            DiscourseURL.routeTo(getURL("/new-category/general"));
-          } else if (this.parentParams?.slug) {
-            DiscourseURL.routeTo(
-              getURL(`/c/${this.parentParams.slug}/edit/general`)
-            );
-          }
-        });
-      }
+    if (this.showAdvancedTabs || this.selectedTab === "general") {
+      return;
     }
+
+    const primaryTab = registeredEditCategoryTabs.find(
+      (tab) => tab.id === this.selectedTab && tab.primary
+    );
+    if (primaryTab) {
+      return;
+    }
+
+    next(() => {
+      this.selectedTab = "general";
+      if (this.router.currentRouteName?.startsWith("newCategory")) {
+        DiscourseURL.routeTo(getURL("/new-category/general"));
+      } else if (this.parentParams?.slug) {
+        DiscourseURL.routeTo(
+          getURL(`/c/${this.parentParams.slug}/edit/general`)
+        );
+      }
+    });
   }
 
   async #wouldLoseAccess(category = this.model) {

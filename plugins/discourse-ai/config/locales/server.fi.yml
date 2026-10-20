@@ -74,7 +74,6 @@ fi:
     ai_pm_summarization_allowed_groups: "Ryhmät voivat luoda ja tarkastella yhteenvetoja yksityisviesteissä."
     ai_summary_gists_enabled: "Luo lyhyitä yhteenvetoja ketjujen uusimmista vastauksista automaattisesti"
     ai_bot_enabled: "Ota tekoälybottimoduuli käyttöön."
-    ai_bot_allowed_groups: "Kun GPT-botilla on yksityisviestin käyttöoikeus, se vastaa näiden ryhmien jäsenille."
     ai_bot_debugging_allowed_groups: "Salli näiden ryhmien nähdä viesteissä virheenkorjauspainike, joka näyttää raa'an tekoälypyynnön ja vastauksen"
     ai_bot_public_sharing_allowed_groups: "Salli näiden ryhmien jakaa tekoälyn yksityisviestejä yleisölle ainutlaatuisen julkisesti käytettävissä olevan linkin kautta. Huomaa: jos sivustosi edellyttää kirjautumista, myös jaot edellyttävät kirjautumista."
     ai_bot_github_access_token: "GitHubin käyttötunnus käytettäväksi GitHubin tekoälytyökalujen kanssa (vaaditaan haun tukea varten)"
@@ -264,6 +263,26 @@ fi:
       default_pm_prefix: "[Nimetön tekoälybotin yksityisviesti]"
       read_post:
         unknown_post: "viesti"
+      chat_tool_approval:
+        topic_states:
+          open: "Avoinna"
+          closed: "Suljettu"
+          active: "Aktiivinen"
+          deleted: "Poistettu"
+        solution_post: "%{number}. Viesti"
+        duration_label: "Kesto:"
+        user_duration:
+          one: "%{count} päivä"
+          other: "%{count} päivää"
+        posts_label: "Viestit"
+        category_label: "Luokka"
+        category_fields:
+          name: "nimi"
+          description: "kuvaus"
+          color: "väri"
+          text_color: "tekstin väri"
+        approve_label: "Kyllä"
+        reject_label: "Ei"
       agents:
         cannot_have_duplicate_tools: "Ei voi sisältää päällekkäisiä työkaluja"
         github_helper:

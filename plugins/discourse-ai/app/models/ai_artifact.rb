@@ -3,6 +3,7 @@
 class AiArtifact < ActiveRecord::Base
   has_many :versions, class_name: "AiArtifactVersion", dependent: :destroy
   has_many :key_values, class_name: "AiArtifactKeyValue", dependent: :destroy
+  has_many :shares, class_name: "AiArtifactShare", dependent: :destroy
   belongs_to :user
   belongs_to :post
   validates :html, length: { maximum: 65_535 }
@@ -46,6 +47,11 @@ class AiArtifact < ActiveRecord::Base
     else
       url
     end
+  end
+
+  def self.embed_url(id, version = nil)
+    path = "#{Discourse.base_url}/discourse-ai/ai-bot/artifacts/#{id}"
+    version ? "#{path}/#{version}/embed" : "#{path}/embed"
   end
 
   def self.share_publicly(id:, post:)
@@ -95,6 +101,38 @@ class AiArtifact < ActiveRecord::Base
     end
 
     version
+  end
+
+  def available_to?(guardian)
+    if !SiteSetting.discourse_ai_enabled ||
+         !SiteSetting.ai_artifact_security.in?(%w[lax hybrid strict])
+      return false
+    end
+
+    source_post = Post.find_by(id: post_id)
+    return false if source_post.blank? || source_post.topic.blank?
+
+    shared_conversation = SharedAiConversation.find_by(target: source_post.topic) if public?
+    return true if public? && (shared_conversation.blank? || shared_conversation.publicly_visible?)
+
+    guardian.can_see?(source_post)
+  end
+
+  def publicly_embeddable?
+    if !SiteSetting.discourse_ai_enabled ||
+         !SiteSetting.ai_artifact_security.in?(%w[lax hybrid strict])
+      return false
+    end
+
+    source_post = Post.find_by(id: post_id)
+    topic = source_post&.topic
+    return false if !topic || source_post.deleted_at || topic.deleted_at
+    return true if Guardian.new(nil).can_see?(source_post)
+    return false if !public?
+
+    conversation = SharedAiConversation.find_by(target: topic)
+    conversation&.publicly_visible? &&
+      conversation.context.any? { |context_post| context_post["id"] == source_post.id }
   end
 
   def public?

@@ -10,8 +10,8 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import getTagName from "../../lib/utilities";
-import ChannelData from "../channel-data";
+import getTagName from "../../lib/utilities.js";
+import ChannelData from "../channel-data.gjs";
 
 export default class EditRule extends Component {
   @service siteSettings;

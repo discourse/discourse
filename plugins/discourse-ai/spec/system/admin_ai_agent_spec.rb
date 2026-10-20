@@ -191,6 +191,7 @@ RSpec.describe "Admin AI agent configuration" do
     agent_editor_page.visit_edit(source_agent).duplicate
 
     expect(agent_editor_page).to have_no_agent_user
+    form.field("enabled").toggle
 
     form.submit
 

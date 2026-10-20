@@ -34,6 +34,10 @@ ru:
     discourse_events:
       title: "События"
       preferences:
+        reminders:
+          preferences:
+            notification: "Уведомления"
+            none: "Нет"
         all_events_description: "Все события форума"
         my_events_description: "Мероприятия, которые вы собираетесь посетить или которыми вы интересуетесь."
       on_holiday: "Выходные"
@@ -382,6 +386,7 @@ ru:
         filter_placeholder: "Фильтр пользователей"
         remove_invitee: "Удалить приглашенного из списка"
         add_invitee: "Добавить приглашенного в список"
+        this_event: "Это событие"
       bulk_invite_modal:
         confirm: "подтвердить"
         text: "Загрузить CSV-файл"

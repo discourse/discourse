@@ -19,32 +19,48 @@ export default class AskAiReportSubject extends Component {
 
   <template>
     <div class="ask-ai-report-subject">
-      <DButton
-        aria-controls={{this.questionsId}}
-        aria-expanded={{if this.expanded "true" "false"}}
-        class="btn-flat ask-ai-report-subject__toggle"
-        @action={{this.toggle}}
-        @icon={{if this.expanded "chevron-down" "chevron-right"}}
-      >
-        <span class="ask-ai-report-subject__label">
+      {{#if @subject.ask_count}}
+        <DButton
+          aria-controls={{this.questionsId}}
+          aria-expanded={{if this.expanded "true" "false"}}
+          class="btn-flat ask-ai-report-subject__toggle"
+          @action={{this.toggle}}
+          @icon={{if this.expanded "chevron-down" "chevron-right"}}
+        >
+          <span class="ask-ai-report-subject__label">
+            <strong>{{@subject.name}}</strong>
+            <span
+              class="ask-ai-report-subject__description"
+            >{{@subject.description}}</span>
+          </span>
+          <span class="ask-ai-report-subject__count">{{i18n
+              "admin.dashboard.ask_ai.reports.subject_count"
+              count=@subject.ask_count
+            }}</span>
+        </DButton>
+        <div hidden={{unless this.expanded true}} id={{this.questionsId}}>
+          {{#if this.expanded}}
+            <AskAiReportQuestions
+              @reportId={{@reportId}}
+              @subjectId={{@subject.id}}
+            />
+          {{/if}}
+        </div>
+      {{else}}
+        <div class="ask-ai-report-subject__empty">
           <strong>{{@subject.name}}</strong>
+          <span class="ask-ai-report-subject__count">{{i18n
+              "admin.dashboard.ask_ai.reports.subject_count"
+              count=@subject.ask_count
+            }}</span>
           <span
             class="ask-ai-report-subject__description"
           >{{@subject.description}}</span>
-        </span>
-        <span class="ask-ai-report-subject__count">{{i18n
-            "admin.dashboard.ask_ai.reports.subject_count"
-            count=@subject.ask_count
-          }}</span>
-      </DButton>
-      <div hidden={{unless this.expanded true}} id={{this.questionsId}}>
-        {{#if this.expanded}}
-          <AskAiReportQuestions
-            @reportId={{@reportId}}
-            @subjectId={{@subject.id}}
-          />
-        {{/if}}
-      </div>
+          <p class="ask-ai-report-subject__no-valid-questions">{{i18n
+              "admin.dashboard.ask_ai.reports.no_valid_questions"
+            }}</p>
+        </div>
+      {{/if}}
     </div>
   </template>
 }

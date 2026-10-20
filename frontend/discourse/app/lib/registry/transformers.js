@@ -44,6 +44,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
  */
 // eslint-discourse keep-array-sorted
 export const VALUE_TRANSFORMERS = Object.freeze([
+  "admin-dashboard-report-renderer",
   "admin-onboarding-start-posting-options",
   "admin-plugin-icon",
   "admin-reports-show-query-params",
@@ -61,6 +62,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "category-subcategories",
   "category-text-color",
   "category-visibility-private-locked",
+  "code-login-auto-create-account",
   "code-login-user-field-values",
   "composer-actions-content",
   "composer-editing-post",
@@ -148,7 +150,9 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "search-menu-recent-searches",
   "search-menu-search-context-enabled",
   "search-menu-search-shortcuts-enabled",
+  "search-result-entry-class",
   "sidebar-anonymous-default-categories",
+  "sidebar-panel",
   "site-setting-allows-none",
   "small-user-attrs",
   "tag-separator",
@@ -172,4 +176,5 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "user-notes-modal-subtitle",
   "user-path",
   "welcome-banner-display-for-route",
+  "welcome-banner-location",
 ]);

@@ -9,7 +9,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import AiIndicatorWave from "../ai-indicator-wave";
+import AiIndicatorWave from "../ai-indicator-wave.gjs";
 
 export default class SpamTestModal extends Component {
   @tracked testResult;

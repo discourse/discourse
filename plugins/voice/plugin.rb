@@ -158,6 +158,14 @@ after_initialize do
     SiteSetting.voice_livekit_room_policy == "per_room" && Voice::Livekit.configured?
   end
 
+  # Gates the room-form media checkbox: with neither capability granted to any
+  # group, a room-level media toggle would decide nothing. The per-user rights
+  # themselves ride on each room's serialization instead.
+  add_to_serializer(:site, :voice_video_available) do
+    SiteSetting.voice_video_allowed_groups.present? ||
+      SiteSetting.voice_screen_share_allowed_groups.present?
+  end
+
   Voice::DefaultRoomSeeder.ensure! if SiteSetting.voice_enabled?
   Voice::AgentBot.ensure! if SiteSetting.voice_enabled?
 
@@ -169,6 +177,11 @@ after_initialize do
   # event handlers are skipped while the plugin is disabled, which silently
   # covers the disabling transition itself.
   on_enabled_change do |_old_value, new_value|
+    if new_value && SiteSetting.voice_badges_enabled
+      Voice::BadgeGranterHooks.enable_all!
+    else
+      Voice::BadgeGranterHooks.disable_all!
+    end
     Voice::DefaultRoomSeeder.ensure! if new_value
     new_value ? Voice::AgentBot.ensure! : Voice::AgentManager.stop_all!
     clear_all_voice_statuses unless new_value
@@ -190,7 +203,7 @@ after_initialize do
       new_value ? Voice::AgentBot.ensure! : Voice::AgentManager.stop_all!
     end
     if name.to_sym == :voice_badges_enabled
-      if new_value
+      if new_value && SiteSetting.voice_enabled
         Voice::BadgeGranterHooks.enable_all!
       else
         Voice::BadgeGranterHooks.disable_all!

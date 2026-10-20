@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import { basename, relative } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
+import chunkImportMapPlugin from "./lib/chunk-import-map-plugin.mjs";
 import discourseChunkNamesPlugin from "./lib/discourse-chunk-names.mjs";
 import discourseSourceImports from "./lib/discourse-source-imports.mjs";
 import dynamicChunkUrlPlugin from "./lib/dynamic-chunk-url-plugin.mjs";
@@ -56,6 +57,8 @@ export function buildConfig({ devMode } = {}) {
     process.env.NODE_ENV = "development";
   }
 
+  let importMap = {};
+
   return {
     tsconfig: false,
     resolve: {
@@ -74,7 +77,6 @@ export function buildConfig({ devMode } = {}) {
     },
     input: {
       discourse: "discourse.js",
-      vendor: "vendor.js",
       ...(!isProduction || process.env.FORCE_BUILD_TESTS
         ? {
             "test-entrypoint": "tests/test-entrypoint.js",
@@ -83,7 +85,7 @@ export function buildConfig({ devMode } = {}) {
         : undefined),
     },
     output: {
-      minify: isProduction,
+      minify: isProduction || process.env.DISCOURSE_CI_MINIFY === "1",
       dir: "dist",
       sourcemap: true,
       cleanDir: !devMode,
@@ -111,6 +113,31 @@ export function buildConfig({ devMode } = {}) {
       }),
       wrapTestModulesPlugin(),
       discourseChunkNamesPlugin(),
+      chunkImportMapPlugin({
+        root: import.meta.dirname,
+        noImportMap: (chunk) => chunk.facadeModuleId?.includes("/app/workers/"),
+        onImportMap: (map) => (importMap = map),
+      }),
+      {
+        name: "require-relative-import-extensions",
+        resolveId: {
+          filter: { id: /^\.\.?\// },
+          handler(source, importer) {
+            if (
+              !importer ||
+              importer.includes("/node_modules/") ||
+              source.includes("/node_modules/") ||
+              source.includes("?") ||
+              /\.(m?js|c?js|[mc]?ts|gjs|gts|json|s?css|hbs|wasm)$/.test(source)
+            ) {
+              return null;
+            }
+            this.error(
+              `Relative import "${source}" from ${relative(import.meta.dirname, importer)} must include the file extension.`
+            );
+          },
+        },
+      },
       {
         name: "forbid-plugin-imports",
         resolveId: {
@@ -187,6 +214,7 @@ export function buildConfig({ devMode } = {}) {
             entrypoints: {},
             dynamicEntrypoints: {},
             chunks: {},
+            importMap,
           };
 
           for (const [fileName, chunk] of Object.entries(bundle)) {

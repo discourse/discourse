@@ -95,6 +95,146 @@ RSpec.describe TopicEmbed do
       expect(parsed.body.squish).to eq(expected.squish)
     end
 
+    context "with a charset in the Content-Type header" do
+      let(:html) { <<~HTML.b }
+          <html>
+          <head>
+            <title>Iran’s seven-day offer has ‘significant poison pills’</title>
+          </head>
+          <body>
+            <p>The deal has what diplomats call “significant poison pills” built into the text of the offer, and negotiators on both sides say the seven-day window may be shorter than the headline suggests.</p>
+          </body>
+          </html>
+        HTML
+
+      it "decodes the title using the declared charset" do
+        parsed =
+          TopicEmbed.parse_html(
+            html,
+            "https://blog.discourse.com/somepost.html",
+            content_type: "text/html; charset=UTF-8",
+          )
+        expect(parsed.title).to eq("Iran’s seven-day offer has ‘significant poison pills’")
+      end
+
+      it "decodes the body using the declared charset" do
+        parsed =
+          TopicEmbed.parse_html(
+            html,
+            "https://blog.discourse.com/somepost.html",
+            content_type: "text/html; charset=UTF-8",
+          )
+        expect(parsed.body).to include("“significant poison pills”")
+      end
+    end
+
+    context "with a misleading single-byte charset in the header" do
+      it "prefers the page's UTF-8 declaration when the bytes are valid UTF-8" do
+        html = <<~HTML.b
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <title>Iran’s seven-day offer has ‘significant poison pills’</title>
+          </head>
+          <body>
+            <p>The deal has what diplomats call “significant poison pills” built into the text of the offer, and negotiators on both sides say the seven-day window may be shorter than the headline suggests.</p>
+          </body>
+          </html>
+        HTML
+
+        parsed =
+          TopicEmbed.parse_html(
+            html,
+            "https://blog.discourse.com/somepost.html",
+            content_type: "text/html; charset=ISO-8859-1",
+          )
+
+        expect(parsed.title).to eq("Iran’s seven-day offer has ‘significant poison pills’")
+        expect(parsed.body).to include("“significant poison pills”")
+      end
+
+      it "keeps decoding a genuine single-byte page as declared" do
+        html =
+          +"<html><head><title>caf\xE9</title></head><body><p>Diplomats on both sides say the offer may be withdrawn before the weekend.</p></body></html>".b
+
+        parsed =
+          TopicEmbed.parse_html(
+            html,
+            "https://blog.discourse.com/somepost.html",
+            content_type: "text/html; charset=ISO-8859-1",
+          )
+
+        expect(parsed.title).to eq("café")
+      end
+
+      it "keeps the header charset when the page declares none" do
+        html = <<~HTML.b
+          <html>
+          <head>
+            <title>Iran’s seven-day offer has ‘significant poison pills’</title>
+          </head>
+          <body><p>Diplomats on both sides say the offer may be withdrawn before the weekend.</p></body>
+          </html>
+        HTML
+
+        parsed =
+          TopicEmbed.parse_html(
+            html,
+            "https://blog.discourse.com/somepost.html",
+            content_type: "text/html; charset=ISO-8859-1",
+          )
+
+        expect(parsed.title).to eq(
+          "Iranâ\u0080\u0099s seven-day offer has â\u0080\u0098significant poison pillsâ\u0080\u0099",
+        )
+      end
+    end
+
+    it "falls back to a meta charset when no Content-Type header is present" do
+      html = <<~HTML.b
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Iran’s seven-day offer</title>
+        </head>
+        <body><p>Diplomats on both sides say the offer may be withdrawn before the weekend.</p></body>
+        </html>
+      HTML
+
+      parsed = TopicEmbed.parse_html(html, "https://blog.discourse.com/somepost.html")
+
+      expect(parsed.title).to eq("Iran’s seven-day offer")
+    end
+
+    it "degrades to sniffing when the header charset has no UTF-8 converter" do
+      html =
+        +"<html><head><title>News headline</title></head><body><p>Diplomats on both sides say the offer may be withdrawn before the weekend.</p></body></html>".b
+
+      parsed =
+        TopicEmbed.parse_html(
+          html,
+          "https://blog.discourse.com/somepost.html",
+          content_type: "text/html; charset=UTF-7",
+        )
+
+      expect(parsed.title).to eq("News headline")
+    end
+
+    it "sniffs the whole document when the declared charset mis-parses the bytes" do
+      html =
+        +"<html><head><title>News headline</title></head><body><p>The deal has poison pills built into the text of the offer and negotiators say the seven-day window may be shorter.</p></body></html>".b
+
+      parsed =
+        TopicEmbed.parse_html(
+          html,
+          "https://blog.discourse.com/somepost.html",
+          content_type: "text/html; charset=UTF-32BE",
+        )
+
+      expect(parsed.title).to eq("News headline")
+      expect(parsed.body).to include("shorter")
+    end
+
     context "when creating a post" do
       let!(:post) { TopicEmbed.import(user, url, title, contents) }
       let(:topic_embed) { TopicEmbed.find_by(post: post) }
@@ -657,6 +797,28 @@ RSpec.describe TopicEmbed do
       end
     end
 
+    context "with a charset declared in the HTTP Content-Type header" do
+      let(:url) { "http://eviltrout.com/123" }
+      let(:contents) do
+        "<title>Iran’s seven-day offer has ‘significant poison pills’</title><body>some content here</body>"
+      end
+
+      before do
+        stub_request(:get, url).to_return(
+          status: 200,
+          headers: {
+            "Content-Type" => "text/html; charset=UTF-8",
+          },
+          body: contents.b,
+        )
+      end
+
+      it "decodes the title as UTF-8" do
+        response = TopicEmbed.find_remote(url)
+        expect(response.title).to eq("Iran’s seven-day offer has ‘significant poison pills’")
+      end
+    end
+
     context 'with post with allowed classes "foo" and "emoji"' do
       fab!(:user)
       let(:url) { "http://eviltrout.com/123" }
@@ -875,6 +1037,200 @@ RSpec.describe TopicEmbed do
         found_topic_id = TopicEmbed.topic_id_for_embed(original_url)
         expect(found_topic_id).to eq(post.topic_id)
       end
+    end
+  end
+
+  describe ".import_remote" do
+    fab!(:user)
+    fab!(:embeddable_host) { Fabricate(:embeddable_host, host: "example.com") }
+
+    let(:original_url) { "https://example.com/articles/entry?view=full" }
+    let(:canonical_url) { "https://example.com/articles/entry" }
+    let(:content) do
+      "<html><title>Embedded article</title><body><p>Article content</p></body></html>"
+    end
+
+    before do
+      stub_request(:get, original_url).to_return(
+        body: %(<html><head><link rel="canonical" href="#{canonical_url}"></head></html>),
+      )
+      stub_request(:head, canonical_url).to_return(status: 200)
+      stub_request(:get, canonical_url).to_return(body: content)
+    end
+
+    it "finds an imported topic using either the requested or canonical URL" do
+      post = TopicEmbed.import_remote(original_url, user: user)
+
+      expect(post.topic.topic_embed.embed_url).to eq(canonical_url)
+      expect(TopicEmbed.topic_id_for_embed(original_url)).to eq(post.topic_id)
+      expect(TopicEmbed.topic_id_for_embed(canonical_url)).to eq(post.topic_id)
+    end
+
+    it "supports requested URLs longer than the alias index limit" do
+      long_original_url = "https://example.com/articles/entry?source=#{"a" * 1_100}"
+      stub_request(:get, long_original_url).to_return(
+        body: %(<html><head><link rel="canonical" href="#{canonical_url}"></head></html>),
+      )
+
+      post = TopicEmbed.import_remote(long_original_url, user: user)
+
+      expect(TopicEmbedAlias.find_by(topic_embed: post.topic.topic_embed).url_key.length).to be >
+        1_000
+      expect(TopicEmbed.topic_id_for_embed(long_original_url)).to eq(post.topic_id)
+      expect(TopicEmbed.topic_id_for_embed(canonical_url)).to eq(post.topic_id)
+    end
+
+    it "reassigns a requested URL to the latest successfully imported canonical topic" do
+      other_url = "https://example.com/articles/entry?source=other"
+      original_post = TopicEmbed.import_remote(original_url, user: user)
+      original_embed = original_post.topic.topic_embed
+      original_embed.topic_embed_aliases.create!(TopicEmbedAlias.key_attributes(other_url))
+      replacement_url = "https://example.com/articles/replacement"
+      stub_request(:get, original_url).to_return(
+        body: %(<html><head><link rel="canonical" href="#{replacement_url}"></head></html>),
+      )
+      stub_request(:head, replacement_url).to_return(status: 200)
+      stub_request(:get, replacement_url).to_return(body: content)
+
+      replacement_post = TopicEmbed.import_remote(original_url, user: user)
+
+      expect(replacement_post.topic_id).not_to eq(original_post.topic_id)
+      expect(TopicEmbed.topic_id_for_embed(original_url)).to eq(replacement_post.topic_id)
+      expect(TopicEmbed.topic_id_for_embed(canonical_url)).to eq(original_post.topic_id)
+      expect(TopicEmbed.topic_id_for_embed(other_url)).to eq(original_post.topic_id)
+      expect(TopicEmbedAlias.where(TopicEmbedAlias.key_attributes(original_url)).count).to eq(1)
+    end
+
+    it "keeps an existing alias when a later remote import fails" do
+      original_post = TopicEmbed.import_remote(original_url, user: user)
+      stub_request(:get, original_url).to_return(status: 404)
+
+      expect(TopicEmbed.import_remote(original_url, user: user)).to be_nil
+      expect(TopicEmbed.topic_id_for_embed(original_url)).to eq(original_post.topic_id)
+      expect(TopicEmbedAlias.where(TopicEmbedAlias.key_attributes(original_url)).count).to eq(1)
+    end
+
+    it "remembers the requested URL when the canonical topic already exists" do
+      post = TopicEmbed.import_remote(canonical_url, user: user)
+
+      expect { TopicEmbed.import_remote(original_url, user: user) }.not_to change { Topic.count }
+
+      expect(TopicEmbed.topic_id_for_embed(original_url)).to eq(post.topic_id)
+    end
+
+    it "remembers multiple URLs without creating duplicate topics or aliases" do
+      other_url = "https://example.com/articles/entry?format=print"
+      stub_request(:get, other_url).to_return(
+        body: %(<html><head><link rel="canonical" href="#{canonical_url}"></head></html>),
+      )
+      post = TopicEmbed.import_remote(original_url, user: user)
+
+      expect do
+        TopicEmbed.import_remote(other_url, user: user)
+        TopicEmbed.import_remote(original_url, user: user)
+      end.not_to change { Topic.count }
+
+      expect(post.topic.topic_embed.topic_embed_aliases.count).to eq(2)
+      expect(TopicEmbed.topic_id_for_embed(other_url)).to eq(post.topic_id)
+      expect(TopicEmbed.topic_id_for_embed(original_url)).to eq(post.topic_id)
+    end
+
+    it "remembers the requested URL after an HTTP redirect" do
+      destination = "https://example.com/archive/entry"
+      stub_request(:get, original_url).to_return(
+        status: 302,
+        headers: {
+          "Location" => destination,
+        },
+      )
+      stub_request(:get, destination).to_return(body: content)
+
+      post = TopicEmbed.import_remote(original_url, user: user)
+
+      expect(post.topic.topic_embed.embed_url).to eq(destination)
+      expect(TopicEmbed.topic_id_for_embed(original_url)).to eq(post.topic_id)
+    end
+
+    it "does not create an alias when the requested URL is already canonical" do
+      expect { TopicEmbed.import_remote(canonical_url, user: user) }.not_to change {
+        TopicEmbedAlias.count
+      }
+    end
+
+    it "does not create an alias when the remote page cannot be fetched" do
+      stub_request(:get, original_url).to_return(status: 404)
+
+      expect do
+        expect(TopicEmbed.import_remote(original_url, user: user)).to be_nil
+      end.not_to change { TopicEmbedAlias.count }
+    end
+
+    it "does not alias a canonical URL on another host" do
+      destination = "https://other.example.com/articles/entry"
+      stub_request(:get, original_url).to_return(
+        body: %(<html><head><link rel="canonical" href="#{destination}"></head></html>),
+      )
+      stub_request(:head, destination).to_return(status: 200)
+      stub_request(:get, destination).to_return(body: content)
+
+      post = TopicEmbed.import_remote(original_url, user: user)
+
+      expect(post.topic.topic_embed.embed_url).to eq(original_url)
+      expect(TopicEmbed.topic_id_for_embed(original_url)).to eq(post.topic_id)
+      expect(TopicEmbed.topic_id_for_embed(destination)).to be_nil
+      expect(TopicEmbedAlias.count).to eq(0)
+    end
+  end
+
+  describe ".topic_id_for_embed with aliases" do
+    fab!(:topic_embed) { Fabricate(:topic_embed, embed_url: "https://example.com/articles/entry") }
+    let(:original_url) { "https://example.com/entry?view=full" }
+
+    before { topic_embed.topic_embed_aliases.create!(TopicEmbedAlias.key_attributes(original_url)) }
+
+    it "normalizes aliases in the same way as primary embed URLs" do
+      expect(TopicEmbed.topic_id_for_embed("http://EXAMPLE.com/entry?view=full")).to eq(
+        topic_embed.topic_id,
+      )
+    end
+
+    it "does not discard meaningful query parameters" do
+      expect(TopicEmbed.topic_id_for_embed("https://example.com/entry?view=other")).to be_nil
+      expect(TopicEmbed.topic_id_for_embed("https://example.com/entry")).to be_nil
+    end
+
+    it "prefers an existing primary URL over an alias" do
+      direct_embed = Fabricate(:topic_embed, embed_url: original_url)
+
+      expect(TopicEmbed.topic_id_for_embed(original_url)).to eq(direct_embed.topic_id)
+    end
+
+    it "requires the full key to match the stored hash" do
+      lookup_url = "https://example.com/entry?view=collision"
+      stored_url = "https://example.com/entry?view=stored"
+      inconsistent_attributes =
+        TopicEmbedAlias.key_attributes(stored_url).merge(
+          url_hash: TopicEmbedAlias.key_attributes(lookup_url)[:url_hash],
+        )
+      topic_embed.topic_embed_aliases.create!(inconsistent_attributes)
+
+      expect(TopicEmbed.topic_id_for_embed(lookup_url)).to be_nil
+    end
+
+    it "does not resolve deleted embeds and restores aliases when recovered" do
+      topic_embed.trash!
+      expect(TopicEmbed.topic_id_for_embed(original_url)).to be_nil
+
+      topic_embed.recover!
+      expect(TopicEmbed.topic_id_for_embed(original_url)).to eq(topic_embed.topic_id)
+    end
+
+    it "removes aliases when the imported topic is destroyed" do
+      topic_embed.topic.destroy!
+
+      expect(TopicEmbed.topic_id_for_embed(original_url)).to be_nil
+      expect(TopicEmbedAlias.where(topic_embed_id: topic_embed.id)).to be_empty
+      expect(TopicEmbed.where(id: topic_embed.id)).to be_empty
     end
   end
 

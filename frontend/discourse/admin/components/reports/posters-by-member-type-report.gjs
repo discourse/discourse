@@ -12,6 +12,8 @@ import { i18n } from "discourse-i18n";
 
 export default class PostersByMemberTypeReport extends Component {
   @tracked selectedGroupKey = this.args.model?.data?.[0]?.type ?? null;
+
+  /** @type {number | null} */
   @tracked memberCount = null;
 
   get rows() {

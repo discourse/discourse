@@ -311,10 +311,19 @@ module Voice
         return(render_json_error(I18n.t("voice.errors.livekit_room_instance_ended"), status: 410))
       end
 
+      # The reconnect ladder may have outlived presence, but it must still
+      # claim a slot atomically before receiving a new LiveKit join token.
+      admission =
+        Voice::ParticipantTracker.add_within_capacity(
+          @room.id,
+          current_user.id,
+          @room.effective_max_participants,
+        )
+      return render_json_error(I18n.t("voice.errors.room_full"), status: 422) if admission == :full
+
       # The reconnect ladder only runs while the client considers itself in the
-      # call, so an explicit token request voids any leave/kick tombstone.
+      # call, so an admitted explicit token request voids any leave/kick tombstone.
       Voice::ParticipantTracker.clear_left(@room.id, current_user.id)
-      Voice::ParticipantTracker.add(@room.id, current_user.id)
       # The session may have expired along with the lapsed presence — mint a
       # fresh one so heartbeat/state keep working after the reconnect.
       participant_session_id =
@@ -419,17 +428,14 @@ module Voice
 
     def participants
       guardian.ensure_can_join_voice_room!(@room)
-      all_metadata = Voice::ParticipantTracker.get_all_metadata(@room.id)
       render json: {
                participants:
-                 Voice::ParticipantTracker
-                   .list(@room.id)
-                   .map do |user|
-                     BasicUserSerializer
-                       .new(user, scope: guardian, root: false)
-                       .as_json
-                       .merge(all_metadata[user.id] || {})
-                   end,
+                 Voice::RoomBroadcaster.participant_entries(
+                   @room,
+                   Voice::ParticipantTracker.list(@room.id),
+                   guardian: guardian,
+                   metadata: Voice::ParticipantTracker.get_all_metadata(@room.id),
+                 ),
              }
     end
 
@@ -452,11 +458,15 @@ module Voice
       wants_camera = params.key?(:video) && bool.cast(params[:video])
       wants_screen = params.key?(:screen) && bool.cast(params[:screen])
 
-      if wants_camera || wants_screen
-        unless @room.video_allowed? && guardian.can_speak_in_voice_room?(@room)
-          raise Discourse::InvalidAccess.new(I18n.t("voice.errors.video_not_allowed"))
-        end
+      if wants_camera && !guardian.can_publish_video_in_voice_room?(@room)
+        raise Discourse::InvalidAccess.new(I18n.t("voice.errors.video_not_allowed"))
+      end
 
+      if wants_screen && !guardian.can_screen_share_in_voice_room?(@room)
+        raise Discourse::InvalidAccess.new(I18n.t("voice.errors.screen_share_not_allowed"))
+      end
+
+      if wants_camera || wants_screen
         if video_publisher_count(@room, exclude_user_id: current_user.id) >=
              SiteSetting.voice_video_max_publishers
           raise Discourse::InvalidParameters.new(I18n.t("voice.errors.video_publisher_limit"))

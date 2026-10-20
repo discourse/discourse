@@ -72,7 +72,6 @@ sk:
     ai_pm_summarization_allowed_groups: "Skupiny môžu vytvárať a zobrazovať súhrny v PM."
     ai_summary_gists_enabled: "Automatické generovanie stručných zhrnutí najnovších odpovedí v témach"
     ai_bot_enabled: "Povolenie modulu AI Bot."
-    ai_bot_allowed_groups: "Keď má bot GPT prístup k PM, bude odpovedať členom týchto skupín."
     ai_bot_debugging_allowed_groups: "Povoľte týmto skupinám zobrazenie tlačidla na ladenie príspevkov, ktoré zobrazuje nespracovanú požiadavku a odpoveď AI."
     ai_bot_public_sharing_allowed_groups: "Umožnite týmto skupinám zdieľať osobné správy AI s verejnosťou prostredníctvom jedinečného verejne dostupného prepojenia. Poznámka: ak vaša stránka vyžaduje prihlásenie, aj zdieľania budú vyžadovať prihlásenie."
     ai_bot_github_access_token: "Prístupový token GitHub na použitie s nástrojmi AI GitHub (vyžaduje sa pre podporu vyhľadávania)"
@@ -264,6 +263,27 @@ sk:
       default_pm_prefix: "[Bez názvu AI bot PM]"
       read_post:
         unknown_post: "príspevok"
+      chat_tool_approval:
+        topic_states:
+          open: "Zahájiť"
+          closed: "Hlasovanie ukončené"
+          active: "Aktívny"
+        solution_post: "Príspevok #%{number}"
+        duration_label: "Trvanie:"
+        user_duration:
+          one: "%{count} deň"
+          few: "%{count} dni"
+          many: "%{count} dní"
+          other: "%{count} dní"
+        posts_label: "Príspevky"
+        category_label: "Kategória"
+        category_fields:
+          name: "mena"
+          description: "popis"
+          color: "farba"
+          text_color: "farba textu"
+        approve_label: "Áno"
+        reject_label: "Nie"
       agents:
         cannot_have_duplicate_tools: "Nemôže mať duplicitné nástroje"
         github_helper:

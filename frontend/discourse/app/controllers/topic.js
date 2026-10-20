@@ -112,8 +112,14 @@ export default class TopicController extends Controller {
   @tracked model;
 
   @tracked multiSelect = false;
+
+  /** @type {boolean | null} */
   @tracked hasScrolled = null;
+
+  /** @type {string | null} */
   @tracked translationLocale = null;
+
+  /** @type {string | null} */
   @tracked translationTitle = null;
   @tracked editingTopicLocalization = false;
   @autoTrackedArray bookmarks = [];
@@ -122,22 +128,48 @@ export default class TopicController extends Controller {
   queryParams = TOPIC_QUERY_PARAMS;
 
   editingTopic = false;
+
+  /** @type {string | null} */
   enteredAt = null;
+
+  /** @type {number | null | undefined} */
   enteredIndex = null;
   retrying = false;
   userTriggeredProgress = null;
+
+  /** @type {string | null} */
   username_filters = null;
+
+  /** @type {number | string | null} */
   replies_to_post_number = null;
+
+  /** @type {string | null} */
   filter = null;
+
+  /** @type {string | null} */
   sort = null;
+
+  /** @type {string | number | null} */
   context = null;
   collapseReplies = false;
   quoteState = new QuoteState();
+
+  /** @type {number | null} */
   currentPostId = null;
+
+  /** @type {number | null | undefined} */
   userLastReadPostNumber = null;
+
+  /** @type {number | null} */
   highestPostNumber = null;
+
+  /** @type {Promise<{ id: number, topic_id: number, locale: string, title: string, fancy_title: string }> | null} */
   _localizationFetchPromise = null;
+
+  /** @type {string | null} */
   _originalTranslationTitle = null;
+
+  /** @type {number | null} */
   _progressIndex = null;
   _retryInProgress = false;
   _retryRateLimited = false;
@@ -146,6 +178,7 @@ export default class TopicController extends Controller {
   init() {
     super.init(...arguments);
 
+    this.appEvents.on("post:highlight", this, "_highlightPost");
     this.appEvents.on("post:show-revision", this, "_showRevision");
     this.appEvents.on("post:created", this, () =>
       this._removeDeleteOnOwnerReplyBookmarks()
@@ -154,6 +187,7 @@ export default class TopicController extends Controller {
 
   willDestroy() {
     super.willDestroy(...arguments);
+    this.appEvents.off("post:highlight", this, "_highlightPost");
     this.appEvents.off("post:show-revision", this, "_showRevision");
   }
 
@@ -1904,6 +1938,12 @@ export default class TopicController extends Controller {
     if (!isEmpty(title)) {
       // force update lazily loaded titles
       this.send("refreshTitle");
+    }
+  }
+
+  _highlightPost(postNumber, options = {}) {
+    if (options.jump !== false) {
+      this.model?.postStream?.focusPostOnRender(postNumber);
     }
   }
 

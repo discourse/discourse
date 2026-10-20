@@ -64,37 +64,32 @@ module Migrations
           spoiler-alert
         ].freeze
 
-        # Digesting reads the host constants and file globs only, so no V8 boots
-        # here and the host classes stay Rails-free.
+        # Resolve paths against `root` because this can run concurrently and
+        # changing the process working directory is not thread-safe.
         def self.load_or_build(cache_dir: nil)
           root = MarkdownEngine.discourse_root
           cache_dir ||= File.join(root, CACHE_DIR)
-          # rubocop:disable Discourse/NoChdir
-          Dir.chdir(root) do
-            require_host_build_classes(root)
+          require_host_build_classes(root)
+          check_input_files!(root)
 
-            digest = input_digest(root)
-            cache_file = File.join(cache_dir, "markdown-engine-bundle-#{digest}.json")
+          digest = input_digest(root)
+          cache_file = File.join(cache_dir, "markdown-engine-bundle-#{digest}.json")
+          entries = read_cache(cache_file)
+          return new(entries) if entries
+
+          FileUtils.mkdir_p(cache_dir)
+          File.open(File.join(cache_dir, "bundle.lock"), File::CREAT | File::RDWR) do |lock|
+            lock.flock(File::LOCK_EX)
+            # Another process may have built while this one waited.
             entries = read_cache(cache_file)
-            return new(entries) if entries
-
-            FileUtils.mkdir_p(cache_dir)
-            File.open(File.join(cache_dir, "bundle.lock"), File::CREAT | File::RDWR) do |lock|
-              lock.flock(File::LOCK_EX)
-              # Another process may have built while this one waited.
+            unless entries
+              build_in_subprocess(root, cache_file)
               entries = read_cache(cache_file)
-              unless entries
-                build_in_subprocess(root, cache_file)
-                entries = read_cache(cache_file)
-                if entries.nil?
-                  raise BuildError, "bundle build subprocess produced no readable cache"
-                end
-              end
-              cleanup_stale_caches(cache_dir, cache_file)
+              raise BuildError, "bundle build subprocess produced no readable cache" if entries.nil?
             end
-            new(entries)
+            cleanup_stale_caches(cache_dir, cache_file)
           end
-          # rubocop:enable Discourse/NoChdir
+          new(entries)
         end
 
         # Run this only in the separate process that `load_or_build` spawns, for
@@ -196,6 +191,17 @@ module Migrations
                 digest.update(File.read(File.join(root, file)))
               end
           end
+        end
+
+        # A checkout without its frontend dependencies (a fresh worktree, say)
+        # would otherwise fail deep inside the build with a missing file.
+        def self.check_input_files!(root)
+          missing = PLUGIN_VENDOR_FILES.reject { |path| File.exist?(File.join(root, path)) }
+          return if missing.empty?
+
+          raise BuildError,
+                "frontend dependencies are not installed in #{root} " \
+                  "(missing #{missing.join(", ")}); run `pnpm install` there first"
         end
 
         def self.input_files(root)

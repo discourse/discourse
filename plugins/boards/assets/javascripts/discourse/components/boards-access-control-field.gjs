@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import DAccessControlField from "discourse/ui-kit/d-access-control-field";
 import { i18n } from "discourse-i18n";
-import { boardPermissionOptions } from "../lib/boards-access-control";
+import { boardPermissionOptions } from "../lib/boards-access-control.js";
 
 export default class BoardsAccessControlField extends Component {
   get aclTarget() {

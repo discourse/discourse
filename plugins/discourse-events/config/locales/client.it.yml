@@ -27,6 +27,11 @@ it:
               label: ID dell'argomento
     discourse_events:
       title: "Eventi"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notifica"
+            none: "Nessuna"
       on_holiday: "In vacanza"
       disable_holiday: "Disabilita"
       enable_holiday: "Abilita"

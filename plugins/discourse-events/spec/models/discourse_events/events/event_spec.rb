@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseEvents::Events::Event do
+RSpec.describe DiscourseEvents::Events::Event do
   before do
     freeze_time DateTime.parse("2020-04-24 14:10")
     Jobs.run_immediately!
@@ -1160,6 +1160,84 @@ describe DiscourseEvents::Events::Event do
 
     before { freeze_time }
 
+    context "when changing recurring event dates" do
+      subject(:update_dates) do
+        event.update_with_params!(
+          original_starts_at: 2.days.ago,
+          original_ends_at: 2.days.ago + 1.hour,
+        )
+      end
+
+      fab!(:user, :user)
+
+      let(:event) do
+        Fabricate(
+          :event,
+          recurrence: "every_week",
+          original_starts_at: 1.day.ago,
+          original_ends_at: 1.day.ago + 1.hour,
+        )
+      end
+      let(:status) { DiscourseEvents::Events::Invitee.statuses[:going] }
+      let(:recurring) { true }
+      let!(:invitee) { Fabricate(:invitee, event:, user:, status:, notified: true) }
+      let(:reset_attendance) { { "status" => nil, "notified" => false, "recurring" => false } }
+
+      before do
+        # Preserve stored combinations that the invitee save callback would normalize.
+        invitee.update_columns(recurring:)
+      end
+
+      context "with a going recurring invitee" do
+        it "preserves attendance and notification state" do
+          expect { update_dates }.not_to change {
+            invitee.reload.attributes.slice("status", "notified", "recurring")
+          }
+        end
+      end
+
+      context "with a going invitee without recurring attendance" do
+        let(:recurring) { false }
+
+        it "resets attendance and notification state" do
+          expect { update_dates }.to change {
+            invitee.reload.attributes.slice("status", "notified", "recurring")
+          }.to(reset_attendance)
+        end
+      end
+
+      context "with a declined recurring invitee" do
+        let(:status) { DiscourseEvents::Events::Invitee.statuses[:not_going] }
+
+        it "resets attendance and notification state" do
+          expect { update_dates }.to change {
+            invitee.reload.attributes.slice("status", "notified", "recurring")
+          }.to(reset_attendance)
+        end
+      end
+
+      context "with a NULL status and recurring attendance" do
+        let(:status) { nil }
+
+        it "preserves attendance and notification state" do
+          expect { update_dates }.not_to change {
+            invitee.reload.attributes.slice("status", "notified", "recurring")
+          }
+        end
+      end
+
+      context "with a NULL status without recurring attendance" do
+        let(:status) { nil }
+        let(:recurring) { false }
+
+        it "resets notification state" do
+          expect { update_dates }.to change {
+            invitee.reload.attributes.slice("status", "notified", "recurring")
+          }.to(reset_attendance)
+        end
+      end
+    end
+
     context "with a private event" do
       let!(:event_1) do
         Fabricate(
@@ -1338,38 +1416,11 @@ describe DiscourseEvents::Events::Event do
         )
       end
 
-      it "returns nil for starts_at since no future dates can be computed" do
-        expect(expired_recurring_event.starts_at).to be_nil
-      end
-
-      it "returns nil for ends_at since no future dates can be computed" do
-        expect(expired_recurring_event.ends_at).to be_nil
-      end
-
-      it "serializer handles nil starts_at correctly" do
-        serializer =
-          DiscourseEvents::Events::EventSerializer.new(
-            expired_recurring_event,
-            scope: Guardian.new,
-            root: false,
-          )
-        json = JSON.parse(serializer.to_json)
-
-        expect(json["starts_at"]).to be_nil
-        expect(json["ends_at"]).to be_nil
-      end
-
-      it "basic serializer handles expired recurring events correctly" do
-        serializer =
-          DiscourseEvents::Events::BasicEventSerializer.new(
-            expired_recurring_event,
-            root: false,
-            scope: Guardian.new,
-          )
-        json = JSON.parse(serializer.to_json)
-
-        expect(json["starts_at"]).to be_nil
-        expect(json["ends_at"]).to be_nil
+      it "keeps the last known dates" do
+        expect(expired_recurring_event.starts_at).to eq_time(
+          expired_recurring_event.original_starts_at,
+        )
+        expect(expired_recurring_event.ends_at).to eq_time(expired_recurring_event.original_ends_at)
       end
     end
 

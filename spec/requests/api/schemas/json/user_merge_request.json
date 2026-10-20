@@ -1,0 +1,12 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "target_username": {
+      "type": "string",
+      "description": "Username of the user to merge into"
+    }
+  },
+  "required": [
+    "target_username"
+  ]
+}

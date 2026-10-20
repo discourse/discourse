@@ -26,6 +26,7 @@ export default class PenalizeUser extends Component {
 
   @tracked otherUserIds = [];
   @tracked postAction = "delete";
+  @tracked postEdit = this.args.model.postEdit;
   @tracked flash;
   @tracked reason;
   @tracked message;
@@ -37,10 +38,6 @@ export default class PenalizeUser extends Component {
     if (this.postEdit && this.siteSettings.penalty_include_post_message) {
       this.message = `-------------------\n${this.postEdit}\n-------------------`;
     }
-  }
-
-  get postEdit() {
-    return this.args.model.postEdit;
   }
 
   get modalTitle() {
@@ -112,10 +109,14 @@ export default class PenalizeUser extends Component {
 
       if (this.args.model.penaltyType === "suspend") {
         opts.suspend_until = this.penalizeUntil;
-        result = await this.args.model.user.suspend(opts);
+        result = await (this.args.model.perform
+          ? this.args.model.perform(opts)
+          : this.args.model.user.suspend(opts));
       } else if (this.args.model.penaltyType === "silence") {
         opts.silenced_till = this.penalizeUntil;
-        result = await this.args.model.user.silence(opts);
+        result = await (this.args.model.perform
+          ? this.args.model.perform(opts)
+          : this.args.model.user.silence(opts));
       } else {
         // eslint-disable-next-line no-console
         console.error("Unknown penalty type:", this.args.model.penaltyType);
@@ -197,15 +198,17 @@ export default class PenalizeUser extends Component {
           {{/if}}
           <AdminPenaltyReason
             @message={{this.message}}
+            @onChangeMessage={{fn (mut this.message)}}
+            @onChangeReason={{fn (mut this.reason)}}
             @penaltyType={{@model.penaltyType}}
-            @reason={{this.reason}}
           />
           {{#if @model.postId}}
             <AdminPenaltyPostAction
+              @onChangePostAction={{fn (mut this.postAction)}}
+              @onChangePostEdit={{fn (mut this.postEdit)}}
               @onDeleteAllPostsReady={{this.updateReadyToDeleteAll}}
               @postAction={{this.postAction}}
               @postEdit={{this.postEdit}}
-              @postId={{@model.postId}}
               @user={{@model.user}}
             />
           {{/if}}

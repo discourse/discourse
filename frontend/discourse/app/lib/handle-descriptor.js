@@ -1,6 +1,6 @@
 import { computed, get } from "@ember/object";
 import CoreObject from "@ember/object/core";
-import extractValue from "./extract-value";
+import extractValue from "./extract-value.js";
 
 export default function handleDescriptor(target, key, desc, params = []) {
   const val = extractValue(desc);

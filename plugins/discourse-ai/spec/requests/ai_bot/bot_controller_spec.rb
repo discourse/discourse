@@ -14,11 +14,8 @@ RSpec.describe DiscourseAi::AiBot::BotController do
 
   describe "#show_debug_info" do
     fab!(:debug_bot_model) { Fabricate(:llm_model, name: "debug-bot-model") }
-    fab!(:debug_bot_user) do
-      enable_current_plugin
-      toggle_enabled_bots(bots: [debug_bot_model])
-      debug_bot_model.reload.user
-    end
+    fab!(:debug_agent) { Fabricate(:ai_agent, default_llm: debug_bot_model).tap(&:ensure_user!) }
+    fab!(:debug_bot_user) { debug_agent.user }
 
     fab!(:pm_topic) { Fabricate(:private_message_topic, user: user, recipient: debug_bot_user) }
     fab!(:pm_post) { Fabricate(:post, topic: pm_topic, user: debug_bot_user) }
@@ -433,8 +430,8 @@ RSpec.describe DiscourseAi::AiBot::BotController do
 
   describe "#retry_response" do
     fab!(:bot_user, :user)
-    let!(:llm_model) { Fabricate(:llm_model, user: bot_user) }
-    let!(:ai_agent) do
+    fab!(:llm_model)
+    fab!(:ai_agent) do
       Fabricate(
         :ai_agent,
         user: bot_user,
@@ -443,13 +440,15 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       )
     end
     let(:agent) { ai_agent.class_instance.new }
-    let(:bot) { DiscourseAi::Agents::Bot.as(bot_user, agent: agent) }
+    let(:bot) { DiscourseAi::Agents::Bot.as(bot_user, agent: agent, model: llm_model) }
 
-    let!(:prompt_post) do
+    fab!(:prompt_post) do
       Fabricate(:post, topic: pm_topic, user: user, raw: "Hello @#{bot_user.username}")
     end
 
-    let!(:reply_post) do
+    fab!(:reply_post) do
+      prepare_ai_bot_fixtures(bots: [llm_model])
+      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: ai_agent.class_instance.new)
       DiscourseAi::Completions::Llm.with_prepared_responses(["first try"]) do
         DiscourseAi::AiBot::Playground.new(bot).reply_to(prompt_post)
       end
@@ -458,8 +457,8 @@ RSpec.describe DiscourseAi::AiBot::BotController do
     end
 
     before do
+      prepare_ai_bot_fixtures(bots: [llm_model])
       Group.refresh_automatic_groups!
-      SiteSetting.ai_bot_enabled = true
       SiteSetting.ai_bot_allowed_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
       AiAgent.agent_cache.flush!
 
@@ -681,7 +680,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
     end
 
     it "allows retrying if LLM model has a negative id (seeded)" do
-      seeded_llm_model = Fabricate(:llm_model, id: -9999, user: bot_user, name: "second-model")
+      seeded_llm_model = Fabricate(:llm_model, id: -9999, name: "second-model")
 
       bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent, model: seeded_llm_model)
       DiscourseAi::Completions::Llm.with_prepared_responses(["first try"], llm: seeded_llm_model) do
@@ -709,10 +708,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
     end
 
     it "uses the original LLM model when retrying even if agent default changed" do
-      second_bot_user = Fabricate(:user)
-      second_llm_model = Fabricate(:llm_model, user: second_bot_user, name: "second-model")
-
-      pm_topic.topic_allowed_users.find_or_create_by!(user: second_bot_user)
+      second_llm_model = Fabricate(:llm_model, name: "second-model")
 
       original_llm_name = reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD]
       original_llm_id = reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD]
@@ -746,19 +742,11 @@ RSpec.describe DiscourseAi::AiBot::BotController do
   end
 
   describe "#show_bot_username" do
-    it "returns the username_lower of the selected bot" do
-      gpt_35_bot = Fabricate(:llm_model, name: "gpt-3.5-turbo")
+    it "returns gone because models are no longer PM recipients" do
+      get "/discourse-ai/ai-bot/bot-username", params: { username: "gpt-3.5-turbo" }
 
-      SiteSetting.ai_bot_enabled = true
-      toggle_enabled_bots(bots: [gpt_35_bot])
-
-      expected_username =
-        DiscourseAi::AiBot::EntryPoint.find_user_from_model("gpt-3.5-turbo").username_lower
-
-      get "/discourse-ai/ai-bot/bot-username", params: { username: gpt_35_bot.name }
-
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["bot_username"]).to eq(expected_username)
+      expect(response).to have_http_status(:gone)
+      expect(response.parsed_body["errors"]).to be_present
     end
   end
 end

@@ -1,7 +1,7 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import TopicListExample from "../../examples/organisms/topic-list";
+import TopicListExample from "../../examples/organisms/topic-list.gjs";
 import topicListSource from "../../examples/organisms/topic-list?source=file";
-import TopicListWithoutPostersExample from "../../examples/organisms/topic-list-without-posters";
+import TopicListWithoutPostersExample from "../../examples/organisms/topic-list-without-posters.gjs";
 import topicListWithoutPostersSource from "../../examples/organisms/topic-list-without-posters?source=file";
 
 export default <template>

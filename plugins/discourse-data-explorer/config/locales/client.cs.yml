@@ -10,7 +10,6 @@ cs:
       admin_dashboard_card:
         no_results: "Žádné výsledky"
     explorer:
-      default_query: "Výchozí"
       view_query: "Zobrazit"
       or: "nebo"
       create: "Vytvořit"
@@ -40,6 +39,7 @@ cs:
         many: "%{count} výsledky."
         other: "%{count} výsledků."
       query_groups: "Skupiny"
+      query_tags: "Tagy"
       report_name: "Sestava"
       query_description: "Popis"
       query_user: "Vytvořil/a"

@@ -18,6 +18,8 @@ import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
+// TODO (ui-kit-reorderable-list-cleanup) delete this file once
+// `enable_new_reordering_controls` ships; `admin-flag-item-reorderable.gjs` replaces it.
 export default class AdminFlagItem extends Component {
   @service dialog;
   @service router;
@@ -30,7 +32,7 @@ export default class AdminFlagItem extends Component {
   }
 
   get canEdit() {
-    return !Object.values(SYSTEM_FLAG_IDS).includes(this.args.flag.id);
+    return !this.args.flag.system;
   }
 
   get canDelete() {

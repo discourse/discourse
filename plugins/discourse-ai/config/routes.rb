@@ -43,6 +43,7 @@ DiscourseAi::Engine.routes.draw do
   end
 
   scope module: :ai_bot, path: "/ai-bot/shared-ai-conversations" do
+    get "/" => "shared_ai_conversations#index"
     post "/" => "shared_ai_conversations#create"
     delete "/:share_key" => "shared_ai_conversations#destroy"
     get "/:share_key" => "shared_ai_conversations#show"
@@ -56,7 +57,27 @@ DiscourseAi::Engine.routes.draw do
     put "/:topic_id/starred" => "conversations#update_starred"
   end
 
+  scope module: :ai_bot, path: "/ai-bot/artifact-shares" do
+    get "/" => "artifact_shares#index"
+    get "/eligibility/:id" => "artifact_shares#eligibility"
+    post "/:id" => "artifact_shares#create"
+    put "/:share_key" => "artifact_shares#update"
+    delete "/:share_key" => "artifact_shares#destroy"
+    get "/:share_key/metadata" => "artifacts#shared_metadata", :defaults => { format: :json }
+    get "/:share_key/forum" => "artifacts#forum"
+    get "/:share_key" => "artifacts#shared"
+  end
+
+  scope module: :ai_bot, path: "/ai-bot/artifact-share-key-values/:share_key" do
+    get "/" => "artifact_share_key_values#index"
+    post "/" => "artifact_share_key_values#set"
+    delete "/" => "artifact_share_key_values#destroy"
+  end
+
   scope module: :ai_bot, path: "/ai-bot/artifacts" do
+    get "/:id/metadata" => "artifacts#metadata", :defaults => { format: :json }
+    get "/:id/embed" => "artifacts#embed"
+    get "/:id/:version/embed" => "artifacts#embed"
     get "/:id" => "artifacts#show"
     get "/:id/:version" => "artifacts#show"
   end
@@ -106,7 +127,7 @@ Discourse::Application.routes.draw do
         :format => :json
 
     resources :ask_ai_reports,
-              only: %i[index create],
+              only: %i[index show create],
               path: "ask-ai-reports",
               controller: "discourse_ai/admin/ask_ai_reports",
               defaults: {
@@ -169,6 +190,9 @@ Discourse::Application.routes.draw do
     get "/rag-document-fragments/files/status",
         to: "discourse_ai/admin/rag_document_fragments#indexing_status_check"
 
+    get "/ai-models" => "admin/plugins#index"
+    get "/ai-models/new" => "admin/plugins#index"
+
     get "/ai-usage", to: "discourse_ai/admin/ai_usage#show"
     get "/ai-usage-report", to: "discourse_ai/admin/ai_usage#report"
     get "/ai-logs", to: "discourse_ai/admin/ai_logs#index"
@@ -190,6 +214,13 @@ Discourse::Application.routes.draw do
               only: %i[index new create edit update destroy],
               path: "ai-llms",
               controller: "discourse_ai/admin/ai_llms" do
+      collection { post :test }
+    end
+
+    resources :ai_decision_models,
+              only: %i[index new create edit update destroy],
+              path: "ai-decision-models",
+              controller: "discourse_ai/admin/ai_decision_models" do
       collection { post :test }
     end
 

@@ -17,9 +17,17 @@ export default class AdminReportsShowController extends Controller {
     "chart_grouping",
     "mode",
   ]);
+
+  /** @type {string | null} */
   start_date = null;
+
+  /** @type {string | null} */
   end_date = null;
+
+  /** @type {Record<string, unknown> | null} */
   filters = null;
+
+  /** @type {string | null} */
   chart_grouping = null;
 
   @computed("model.type")

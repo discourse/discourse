@@ -172,11 +172,12 @@ th:
         "action:send_chat_message": "ส่งข้อความแชท"
         "action:chat_approval": "การอนุมัติแชท"
       node_descriptions:
-        "action:send_chat_message": "ส่งข้อความไปยังช่องแชท"
         "action:chat_approval": "ส่งคำขอการอนุมัติไปยังช่องแชทและรอการตอบกลับ"
       chat_message_created:
         channel_id: "ช่องทาง"
       send_chat_message:
+        targets:
+          channel: "ช่องทาง"
         channel_id: "ช่องทาง"
         message: "ข้อความ"
       chat_approval:

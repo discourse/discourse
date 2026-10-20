@@ -32,6 +32,8 @@ sv:
         `` text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Händelsepåminnelse"
   site_settings:
     displayed_invitees_limit: "Begränsar antalet inbjudna som visas för ett evenemang."
     display_post_event_date_on_topic_title: "Visar datumet för evenemanget efter ämnesrubriken."
@@ -49,6 +51,12 @@ sv:
     close_to_working_day_hours_extension: "Ställ in förlängningstid i arbetsdagstimmar för att markera tidszonerna."
     events_calendar_categories: "Visa en evenemangskalender högst upp i en kategori."
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} är på väg att börja"
+        ongoing: "%{title} pågår"
+        after: "%{title} har avslutats"
+      guest: "- %{name}"
     category_type:
       default_calendar_view:
         day: "Dag"

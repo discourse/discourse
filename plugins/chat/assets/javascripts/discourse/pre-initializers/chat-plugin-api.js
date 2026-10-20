@@ -5,6 +5,10 @@ import {
 } from "discourse/plugins/chat/discourse/components/chat-message";
 import { registerChatComposerButton } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import { removeChatComposerSecondaryActions } from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
+import {
+  registerTranscriptSourceType,
+  resetTranscriptSourceTypes,
+} from "discourse/plugins/chat/discourse/lib/transcript-source-types";
 import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/services/chat-state-manager";
 
 /**
@@ -16,9 +20,9 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
  * Callback used to decorate a chat message
  *
  * @callback PluginApi~decorateChatMessageCallback
- * @param {ChatMessage} chatMessage - model
  * @param {HTMLElement} messageContainer - DOM node
- * @param {ChatChannel} chatChannel - model
+ * @param {Object} helper - decorated HTML helper
+ * @param {ChatMessage} chatMessage - model
  */
 
 /**
@@ -39,7 +43,7 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
  * @param {PluginApi~decorateChatMessageCallback} decorator
  * @example
  *
- * api.decorateChatMessage((chatMessage, messageContainer) => {
+ * api.decorateChatMessage((messageContainer, _helper, chatMessage) => {
  *   messageContainer.dataset.foo = chatMessage.id;
  * });
  */
@@ -125,6 +129,25 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
  * api.removeChatComposerSecondaryActions("copyLink", "select");
  */
 
+/**
+ * Registers how chat transcripts quoted in posts present a non-channel source,
+ * named by the transcript's `sourceType` attribute
+ *
+ * @memberof PluginApi
+ * @instance
+ * @function registerChatTranscriptSourceType
+ * @param {string} type - value of the `sourceType` attribute
+ * @param {Object} options
+ * @param {string} options.icon - icon shown before the source name
+ * @param {string} [options.label] - translation key for the header label
+ * @example
+ *
+ * api.registerChatTranscriptSourceType("meeting", {
+ *   icon: "users",
+ *   label: "my_plugin.meeting_transcript",
+ * });
+ */
+
 export default {
   name: "chat-plugin-api",
   after: "inject-discourse-objects",
@@ -174,6 +197,18 @@ export default {
         });
       }
 
+      if (!apiPrototype.hasOwnProperty("registerChatTranscriptSourceType")) {
+        Object.defineProperty(
+          apiPrototype,
+          "registerChatTranscriptSourceType",
+          {
+            value(type, options) {
+              registerTranscriptSourceType(type, options);
+            },
+          }
+        );
+      }
+
       if (!apiPrototype.hasOwnProperty("removeChatComposerSecondaryActions")) {
         Object.defineProperty(
           apiPrototype,
@@ -190,5 +225,6 @@ export default {
 
   teardown() {
     resetChatMessageDecorators();
+    resetTranscriptSourceTypes();
   },
 };

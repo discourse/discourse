@@ -1,5 +1,6 @@
 import {
   click,
+  currentURL,
   find,
   triggerEvent,
   triggerKeyEvent,
@@ -8,6 +9,7 @@ import {
 import { test } from "qunit";
 import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   settleGestureFrame,
   stubPointerCapture,
@@ -36,8 +38,15 @@ acceptance("Run Query", function (needs) {
   needs.user();
   needs.settings({ data_explorer_enabled: true });
 
+  let updateParams;
+  let query2Tags;
+  let query2Deletes;
+
   needs.hooks.beforeEach(() => {
     sinon.stub(window, "open");
+    updateParams = null;
+    query2Tags = ["custom", "existing"];
+    query2Deletes = 0;
   });
 
   needs.hooks.afterEach(() => {
@@ -122,6 +131,10 @@ acceptance("Run Query", function (needs) {
       });
     });
 
+    server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
+      helper.response(["default", "existing"])
+    );
+
     server.get("/admin/plugins/discourse-data-explorer/queries", () => {
       return helper.response({
         queries: [
@@ -132,6 +145,7 @@ acceptance("Run Query", function (needs) {
               "returns the top 100 likers for a given monthly period ordered by like_count. It accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
             username: "system",
             group_ids: [],
+            tags: ["default"],
             last_run_at: "2021-02-11T08:29:59.337Z",
             user_id: -1,
             is_default: true,
@@ -142,6 +156,7 @@ acceptance("Run Query", function (needs) {
             description: "",
             username: "system",
             group_ids: [],
+            tags: ["custom", "existing"],
             last_run_at: "2023-05-04T22:16:23.858Z",
             user_id: 1,
             is_default: false,
@@ -169,6 +184,8 @@ acceptance("Run Query", function (needs) {
           created_at: "2021-02-02T12:21:11.449Z",
           username: "system",
           group_ids: [],
+          tags: ["default", "existing"],
+          automatic_tags: ["default"],
           last_run_at: "2021-02-11T08:29:59.337Z",
           hidden: false,
           user_id: -1,
@@ -188,6 +205,8 @@ acceptance("Run Query", function (needs) {
           created_at: "2023-05-04T22:16:06.007Z",
           username: "system",
           group_ids: [],
+          tags: query2Tags,
+          automatic_tags: ["custom"],
           last_run_at: "2023-05-04T22:16:23.858Z",
           hidden: false,
           user_id: 1,
@@ -244,6 +263,57 @@ acceptance("Run Query", function (needs) {
         colrender: {},
         rows: [[0, null, false]],
       });
+    });
+
+    server.put(
+      "/admin/plugins/discourse-data-explorer/queries/2",
+      (request) => {
+        updateParams = new URLSearchParams(request.requestBody);
+        query2Tags = updateParams
+          .getAll("query[tags][]")
+          .map((tag) => tag.toLowerCase());
+        return helper.response({
+          query: {
+            id: 2,
+            sql: 'SELECT 0 zero, null "null", false "false"',
+            name: "What about 0?",
+            description: "",
+            param_info: [],
+            group_ids: [],
+            tags: query2Tags,
+            automatic_tags: ["custom"],
+            hidden: false,
+            user_id: 1,
+          },
+        });
+      }
+    );
+
+    server.put(
+      "/admin/plugins/discourse-data-explorer/queries/-6",
+      (request) => {
+        updateParams = new URLSearchParams(request.requestBody);
+        return helper.response({
+          query: {
+            id: -6,
+            sql: "SELECT 1",
+            name: "Top 100 Likers",
+            description: "",
+            param_info: [],
+            group_ids: [],
+            tags: ["default", "monthly"],
+            automatic_tags: ["default"],
+            hidden: false,
+            user_id: -1,
+            is_default: true,
+          },
+        });
+      }
+    );
+
+    server.delete("/admin/plugins/discourse-data-explorer/queries/2", () => {
+      query2Deletes += 1;
+      return helper.response({ success: true, errors: [] });
     });
 
     server.get("/session/csrf.json", function () {
@@ -429,6 +499,141 @@ acceptance("Run Query", function (needs) {
     assert
       .dom("div.query-results tbody td:nth-child(3)")
       .hasText("false", "renders 'false' values");
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/discourse-data-explorer/queries/2",
+      "running a query without inputs does not add a null params query string"
+    );
+  });
+
+  test("deleting a query asks for confirmation first", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    await click(".query-action-bar__right .btn-danger");
+
+    assert
+      .dom(".dialog-body")
+      .hasText(i18n("explorer.delete_confirm"), "the confirmation is shown");
+    assert.strictEqual(query2Deletes, 0, "opening the dialog does not delete");
+
+    await click(".dialog-footer .btn-default");
+
+    assert.dom(".dialog-body").doesNotExist("cancelling closes the dialog");
+    assert.strictEqual(query2Deletes, 0, "cancelling does not delete");
+
+    await click(".query-action-bar__right .btn-danger");
+    await click(".dialog-footer .btn-danger");
+
+    assert.strictEqual(query2Deletes, 1, "confirming deletes the query");
+    assert
+      .dom(".query-action-bar__right .btn-danger")
+      .doesNotExist("the delete button is gone after deleting");
+    assert
+      .dom(".query-action-bar__right")
+      .includesText(i18n("explorer.recover"), "the undelete button is offered");
+  });
+
+  test("adds a new tag while editing a query", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const tags = selectKit(".query-edit .query-tag-chooser");
+    await tags.expand();
+    assert
+      .dom(".query-tag-chooser .tag-choice.disabled")
+      .hasText("custom", "the custom tag cannot be removed");
+    assert.false(
+      tags.displayedContent().some((row) => row.name === "default"),
+      "the system-only default tag is not offered on user queries"
+    );
+    await tags.fillInFilter("Default");
+    assert.deepEqual(
+      tags.displayedContent(),
+      [],
+      "the default tag cannot be created on user queries"
+    );
+    await tags.emptyFilter();
+    await tags.fillInFilter("Monthly");
+    await tags.selectRowByValue("Monthly");
+
+    assert
+      .dom(".query-run-split__primary span")
+      .hasText(i18n("explorer.saverun"), "changing tags marks the query dirty");
+
+    await click(".query-run-split__primary");
+
+    assert.deepEqual(
+      updateParams.getAll("query[tags][]"),
+      ["custom", "existing", "Monthly"],
+      "the edited tags are saved"
+    );
+    assert.strictEqual(
+      updateParams.get("query[group_ids_present]"),
+      "true",
+      "the group selection is explicitly submitted"
+    );
+    assert.deepEqual(
+      updateParams.getAll("query[group_ids][]"),
+      [],
+      "an empty group selection sends no group IDs"
+    );
+  });
+
+  test("removes the last tag while editing a query", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const tags = selectKit(".query-edit .query-tag-chooser");
+    await tags.expand();
+    await tags.deselectItemByValue("existing");
+    await click(".query-run-split__primary");
+
+    assert.strictEqual(
+      updateParams.get("query[tags_present]"),
+      "true",
+      "the empty tag selection is explicitly submitted"
+    );
+    assert.deepEqual(
+      updateParams.getAll("query[tags][]"),
+      ["custom"],
+      "the removed tag is absent from the request"
+    );
+
+    await visit("/admin/plugins/discourse-data-explorer/queries");
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    assert
+      .dom(".query-edit .query-tag-chooser .selected-choice")
+      .doesNotExist("the removed tag stays absent after reloading the query");
+
+    await tags.expand();
+    assert
+      .dom(".query-edit .query-tag-chooser .tag-choice.disabled")
+      .hasText("custom", "the custom tag remains");
+  });
+
+  test("edits additional tags on a default query", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/-6");
+
+    const tags = selectKit(".query-edit .query-tag-chooser");
+    await tags.expand();
+    assert
+      .dom(".query-tag-chooser .tag-choice.disabled")
+      .hasText("default", "the default tag cannot be removed");
+    assert.false(
+      tags.displayedContent().some((row) => row.name === "custom"),
+      "the custom tag is not offered on default queries"
+    );
+
+    await tags.deselectItemByValue("existing");
+    await tags.fillInFilter("Monthly");
+    await tags.selectRowByValue("Monthly");
+    await click(".query-run-split__primary");
+
+    assert.deepEqual(
+      updateParams.getAll("query[tags][]"),
+      ["default", "Monthly"],
+      "additional tags can be removed and added"
+    );
   });
 
   test("automatically runs query when run query parameter is present", async function (assert) {

@@ -5,8 +5,8 @@ import { action } from "@ember/object";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import decoratePollOption from "../modifiers/decorate-poll-option";
-import PollOptionRankedChoice from "./poll-option-ranked-choice";
+import decoratePollOption from "../modifiers/decorate-poll-option.js";
+import PollOptionRankedChoice from "./poll-option-ranked-choice.gjs";
 
 export default class PollOptionsComponent extends Component {
   isChosen = (option) => {

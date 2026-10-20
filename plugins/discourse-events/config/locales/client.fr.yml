@@ -45,6 +45,10 @@ fr:
           rsvp_to_event_with_link: "Confirmez votre participation à <a href='%{url}'>l'événement</a> pour commencer à discuter"
           rsvp_body: "Échangez avec les autres participants avant, pendant et après l'événement."
       preferences:
+        reminders:
+          preferences:
+            notification: "Notification"
+            none: "Jamais"
         all_events_description: "Tous les événements du forum"
         my_events_description: "Événements auxquels vous participez ou qui vous intéressent"
       on_holiday: "En vacances"
@@ -389,6 +393,7 @@ fr:
         filter_placeholder: "Filtrer les utilisateurs"
         remove_invitee: "Supprimer l'invité de la liste"
         add_invitee: "Ajouter l'invité à la liste"
+        this_event: "Cet événement"
       bulk_invite_modal:
         confirm: "confirmer"
         text: "Téléverser un fichier CSV"

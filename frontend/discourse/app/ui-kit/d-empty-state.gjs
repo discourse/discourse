@@ -31,6 +31,7 @@ const DEmptyState = <template>
           <DButton
             class="btn-primary"
             @action={{@ctaAction}}
+            @disabled={{@ctaDisabled}}
             @href={{@ctaHref}}
             @icon={{@ctaIcon}}
             @route={{@ctaRoute}}

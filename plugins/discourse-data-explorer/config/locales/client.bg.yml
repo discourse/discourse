@@ -7,7 +7,6 @@
 bg:
   js:
     explorer:
-      default_query: "По подразбиране"
       or: "или"
       create: "Създай"
       ai:
@@ -31,6 +30,7 @@ bg:
         one: "%{count} резултат."
         other: "%{count} резултата."
       query_groups: "Групи"
+      query_tags: "Етикети"
       query_description: "Описание"
       reset_params: "Нулиране"
       search_placeholder: "Търсене ... "

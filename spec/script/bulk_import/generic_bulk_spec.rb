@@ -537,6 +537,564 @@ if generic_import_dependencies_available
       end
     end
 
+    describe "#import_category_topic_voting" do
+      fab!(:voting_category, :category)
+      fab!(:other_category, :category)
+
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(
+            :@categories,
+            { 1 => voting_category.id, 2 => other_category.id },
+          )
+        end
+      end
+
+      after { source_db.close }
+
+      context "when the topic voting plugin is installed" do
+        before do
+          skip "requires the topic voting plugin" unless defined?(DiscourseTopicVoting)
+          SiteSetting.topic_voting_enabled = true
+        end
+
+        it "enables voting only on flagged categories, also when run again" do
+          source_db.execute("CREATE TABLE categories (id INTEGER, topic_voting BOOLEAN)")
+          source_db.execute("INSERT INTO categories VALUES (1, 1), (2, NULL), (3, 1)")
+
+          importer.import_category_topic_voting
+          importer.import_category_topic_voting
+
+          expect(DiscourseTopicVoting::CategorySetting.pluck(:category_id)).to contain_exactly(
+            voting_category.id,
+          )
+          expect(Category.can_vote?(voting_category.id)).to eq(true)
+          expect(Category.can_vote?(other_category.id)).to eq(false)
+        end
+
+        it "skips intermediate databases without a topic_voting column" do
+          source_db.execute("CREATE TABLE categories (id INTEGER)")
+          source_db.execute("INSERT INTO categories VALUES (1)")
+
+          expect { importer.import_category_topic_voting }.not_to raise_error
+          expect(DiscourseTopicVoting::CategorySetting.count).to eq(0)
+        end
+      end
+
+      it "skips categories when the plugin is missing" do
+        hide_const("DiscourseTopicVoting")
+        source_db.execute("CREATE TABLE categories (id INTEGER, topic_voting BOOLEAN)")
+        source_db.execute("INSERT INTO categories VALUES (1, 1)")
+
+        expect { importer.import_category_topic_voting }.to output(
+          /plugin is not installed/,
+        ).to_stdout
+      end
+    end
+
+    describe "#import_tags" do
+      fab!(:tag_group)
+
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(:@tag_group_mapping, { 7 => tag_group.id })
+        end
+      end
+
+      after { source_db.close }
+
+      it "adds tags to the group from the single tag_group_id column" do
+        source_db.execute(<<~SQL)
+          CREATE TABLE tags (
+            id INTEGER, name TEXT, description TEXT, tag_group_ids TEXT, tag_group_id INTEGER
+          )
+        SQL
+        source_db.execute("INSERT INTO tags (id, name, tag_group_id) VALUES (1, 'grouped', 7)")
+
+        importer.import_tags
+
+        expect(tag_group.reload.tags.pluck(:name)).to contain_exactly("grouped")
+      end
+    end
+
+    describe "badges without a group" do
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(:@badge_mapping, {})
+        end
+      end
+
+      before do
+        source_db.execute("CREATE TABLE badges (id INTEGER, name TEXT, badge_group TEXT)")
+        source_db.execute(
+          "INSERT INTO badges (id, name, badge_group) VALUES (1, 'Grouped', 'Imported'), (2, 'Ungrouped', NULL)",
+        )
+      end
+
+      after { source_db.close }
+
+      it "puts them into the Other grouping" do
+        badges = []
+        allow(importer).to receive(:create_badges) do |rows, &block|
+          badges = rows.filter_map(&block)
+        end
+
+        importer.import_badge_groupings
+        importer.import_badges
+
+        imported_grouping = BadgeGrouping.find_by!(name: "Imported")
+        expect(badges.map { |badge| badge.slice(:name, :badge_grouping_id) }).to contain_exactly(
+          { name: "Grouped", badge_grouping_id: imported_grouping.id },
+          { name: "Ungrouped", badge_grouping_id: BadgeGrouping::Other },
+        )
+      end
+    end
+
+    describe "events" do
+      fab!(:vienna_post, :post)
+      fab!(:untimed_post, :post)
+      fab!(:invalid_post, :post)
+      fab!(:attendee, :user)
+      fab!(:other_attendee, :user)
+      fab!(:members) { Fabricate(:group, name: "members", users: [attendee]) }
+      fab!(:staff_group) { Fabricate(:group, name: "staff_only") }
+      fab!(:image, :upload)
+
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:import_issue_log_path) { File.join(Dir.mktmpdir, "issues.log") }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(
+            :@posts,
+            { 1 => vienna_post.id, 2 => untimed_post.id, 3 => invalid_post.id },
+          )
+          instance.instance_variable_set(
+            :@topic_id_by_post_id,
+            [vienna_post, untimed_post, invalid_post].to_h { |post| [post.id, post.topic_id] },
+          )
+          instance.instance_variable_set(:@users, { 10 => attendee.id, 11 => other_attendee.id })
+          instance.instance_variable_set(:@groups, { 50 => members.id, 51 => staff_group.id })
+          instance.instance_variable_set(:@uploads_mapping, { "70" => image.id.to_s })
+          instance.instance_variable_set(:@import_issue_log_path, import_issue_log_path)
+          instance.instance_variable_set(
+            :@raw_connection,
+            ActiveRecord::Base.connection.raw_connection,
+          )
+          instance.instance_variable_set(:@encoder, PG::TextEncoder::CopyRow.new)
+        end
+      end
+      let(:public_status) { DiscourseEvents::Events::Event.statuses[:public] }
+      let(:standalone_status) { DiscourseEvents::Events::Event.statuses[:standalone] }
+      let(:private_status) { DiscourseEvents::Events::Event.statuses[:private] }
+
+      before { skip "requires the events plugin" unless defined?(DiscourseEvents::Events) }
+
+      after { source_db.close }
+
+      def create_events_table(new_columns: true)
+        source_db.execute(<<~SQL)
+          CREATE TABLE events (
+            id INTEGER, post_id INTEGER, status INTEGER, starts_at DATETIME, ends_at DATETIME,
+            name TEXT, url TEXT, custom_fields JSON_TEXT
+            #{", location TEXT, timezone TEXT, closed BOOLEAN, image_upload_id TEXT, allowed_group_ids JSON_TEXT" if new_columns}
+          )
+        SQL
+      end
+
+      def insert_event(id, **attributes)
+        row = {
+          id:,
+          post_id: id,
+          status: 0,
+          starts_at: "2026-07-01T08:00:00Z",
+          ends_at: "2026-07-01T09:30:00Z",
+        }.merge(attributes)
+        source_db.execute(
+          "INSERT INTO events (#{row.keys.join(", ")}) VALUES (#{(["?"] * row.size).join(", ")})",
+          row.values,
+        )
+      end
+
+      def event_row(id)
+        source_db.get_first_row("SELECT * FROM events WHERE id = ?", id)
+      end
+
+      def event_bbcode(id)
+        importer.load_event_lookups
+        importer.event_bbcode(event_row(id))
+      end
+
+      def import_issues
+        File.exist?(import_issue_log_path) ? File.read(import_issue_log_path) : ""
+      end
+
+      describe "#import_posts" do
+        it "loads the event lookups before updating delta posts" do
+          create_events_table
+          insert_event(1, image_upload_id: "70")
+          posts =
+            Class
+              .new do
+                def close
+                end
+              end
+              .new
+          allow(importer).to receive_messages(
+            puts: nil,
+            start_delta_entity: nil,
+            finish_delta_entity: nil,
+            create_posts: nil,
+            delta_import?: true,
+          )
+          allow(importer).to receive(:query).and_call_original
+          allow(importer).to receive(:query).with(/FROM posts/).and_return(posts)
+          bbcode = nil
+          allow(importer).to receive(:update_delta_posts) {
+            bbcode = importer.event_bbcode(event_row(1))
+          }
+
+          importer.import_posts
+
+          expect(bbcode).to include(%{ image="#{image.short_url}"})
+        end
+      end
+
+      describe "#event_bbcode" do
+        it "writes start and end as local times in the event's timezone" do
+          create_events_table
+          insert_event(1, timezone: "Europe/Vienna")
+
+          bbcode = event_bbcode(1)
+
+          expect(bbcode).to include(
+            'start="2026-07-01 10:00" end="2026-07-01 11:30" timezone="Europe/Vienna"',
+          )
+          expect(ActiveSupport::TimeZone["Europe/Vienna"].parse("2026-07-01 10:00")).to eq(
+            Time.utc(2026, 7, 1, 8),
+          )
+        end
+
+        it "falls back to UTC for missing and invalid timezones" do
+          create_events_table
+          insert_event(2)
+          insert_event(3, timezone: "+01:00")
+
+          [2, 3].each do |id|
+            expect(event_bbcode(id)).to include(
+              'start="2026-07-01 08:00" end="2026-07-01 09:30" timezone="UTC"',
+            )
+          end
+        end
+
+        it "writes the location as one line of at most 1000 characters" do
+          create_events_table
+          insert_event(1, location: "Town Hall\nRoom 1")
+          insert_event(2, location: "x" * 1200)
+
+          expect(event_bbcode(1)).to include(%{ location="Town Hall Room 1"})
+          expect(event_bbcode(2)).to include(%{ location="#{"x" * 1000}"})
+        end
+
+        it "writes allowed groups of private events, the image and the closed flag" do
+          SiteSetting.discourse_post_event_enabled = true
+          create_events_table
+          insert_event(
+            1,
+            status: private_status,
+            allowed_group_ids: [50, 51, 52].to_json,
+            image_upload_id: "70",
+            closed: 1,
+          )
+          insert_event(2, status: public_status, allowed_group_ids: [50].to_json, closed: 0)
+
+          private_bbcode = event_bbcode(1)
+          public_bbcode = event_bbcode(2)
+
+          expect(
+            DiscourseEvents::Events::Parser.extract_events(
+              Fabricate.build(:post, raw: private_bbcode),
+            ).first,
+          ).to include(
+            "allowed-groups": "members,staff_only",
+            image: image.short_url,
+            closed: "true",
+          )
+          expect(public_bbcode).not_to include("allowed-groups", "image", "closed")
+        end
+
+        it "quotes attributes so the plugin reads them back unchanged" do
+          SiteSetting.discourse_post_event_enabled = true
+          SiteSetting.discourse_post_event_allowed_custom_fields = "room"
+          create_events_table
+          insert_event(
+            1,
+            status: public_status,
+            name: %{The "Old" Town Hall},
+            location: %{The "Old" Town Hall, 'Room' «1»},
+            custom_fields: { room: %{"A" 'B'} }.to_json,
+          )
+
+          bbcode = event_bbcode(1)
+          post = Fabricate.build(:post, raw: bbcode)
+
+          expect(bbcode).to include(%{ location=“The "Old" Town Hall, 'Room' «1»”})
+          expect(DiscourseEvents::Events::Parser.extract_events(post).first).to include(
+            name: %{The "Old" Town Hall},
+            location: %{The "Old" Town Hall, 'Room' «1»},
+            room: CGI.escapeHTML(%{"A" 'B'}),
+          )
+        end
+
+        it "uses UTC and no location when the events table has neither column" do
+          create_events_table(new_columns: false)
+          insert_event(1)
+
+          bbcode = event_bbcode(1)
+
+          expect(bbcode).to include('timezone="UTC"')
+          expect(bbcode).not_to include("location")
+        end
+      end
+
+      describe "#import_post_events" do
+        it "imports valid timezones and logs invalid ones" do
+          create_events_table
+          insert_event(1, timezone: "Europe/Vienna")
+          insert_event(2)
+          insert_event(3, timezone: "+01:00")
+
+          importer.import_post_events
+
+          expect(
+            DiscourseEvents::Events::Event.where(
+              id: [vienna_post.id, untimed_post.id, invalid_post.id],
+            ).pluck(:id, :timezone),
+          ).to contain_exactly(
+            [vienna_post.id, "Europe/Vienna"],
+            [untimed_post.id, "UTC"],
+            [invalid_post.id, "UTC"],
+          )
+          expect(import_issues).to eq("[invalid event timezone, using UTC] +01:00 (event 3)\n")
+        end
+
+        it "imports the location" do
+          create_events_table
+          insert_event(1, location: "Town Hall")
+          insert_event(2)
+          insert_event(3, location: "x" * 1200)
+
+          importer.import_post_events
+
+          expect(
+            DiscourseEvents::Events::Event.where(
+              id: [vienna_post.id, untimed_post.id, invalid_post.id],
+            ).pluck(:id, :location),
+          ).to contain_exactly(
+            [vienna_post.id, "Town Hall"],
+            [untimed_post.id, nil],
+            [invalid_post.id, "x" * 1000],
+          )
+        end
+
+        it "imports events from intermediate databases without the new columns" do
+          create_events_table(new_columns: false)
+          insert_event(1)
+
+          importer.import_post_events
+
+          event = DiscourseEvents::Events::Event.find(vienna_post.id)
+          expect(event.timezone).to eq("UTC")
+          expect(event.location).to be_nil
+        end
+      end
+
+      describe "#import_post_events with groups, image and closed flag" do
+        it "imports them and logs groups that can't be used" do
+          create_events_table
+          insert_event(
+            1,
+            status: private_status,
+            allowed_group_ids: [50, 52].to_json,
+            image_upload_id: "70",
+            closed: 1,
+          )
+          insert_event(2, status: public_status, allowed_group_ids: [51].to_json)
+          insert_event(3, status: standalone_status)
+
+          importer.import_post_events
+          importer.import_event_upload_references
+
+          expect(
+            DiscourseEvents::Events::Event.where(
+              id: [vienna_post.id, untimed_post.id, invalid_post.id],
+            ).pluck(:id, :raw_invitees, :closed, :image_upload_id),
+          ).to contain_exactly(
+            [vienna_post.id, ["members"], true, image.id],
+            [untimed_post.id, [DiscourseEvents::Events::Event::PUBLIC_GROUP], false, nil],
+            [invalid_post.id, [], false, nil],
+          )
+          expect(vienna_post.reload.image_upload_id).to eq(image.id)
+          expect(vienna_post.topic.reload.image_upload_id).to eq(image.id)
+          expect(
+            UploadReference.where(
+              upload: image,
+              target_type: "DiscourseEvents::Events::Event",
+              target_id: vienna_post.id,
+            ),
+          ).to exist
+          expect(import_issues.lines).to contain_exactly(
+            "[event allowed groups not found] 52 (event 1)\n",
+            "[event allowed groups ignored (event isn't private)] event 2\n",
+          )
+        end
+      end
+
+      describe "#import_event_invitees" do
+        def create_invitees_table
+          source_db.execute(<<~SQL)
+            CREATE TABLE event_invitees (
+              event_id INTEGER, user_id INTEGER, status INTEGER, created_at DATETIME
+            )
+          SQL
+        end
+
+        def insert_invitee(event_id, user_id, status: nil, created_at: "2017-03-04T05:06:07Z")
+          source_db.execute(
+            "INSERT INTO event_invitees VALUES (?, ?, ?, ?)",
+            [event_id, user_id, status, created_at],
+          )
+        end
+
+        def imported_invitees
+          DiscourseEvents::Events::Invitee
+            .unscoped
+            .order(:post_id, :user_id)
+            .pluck(:post_id, :user_id, :status, :notified, :created_at)
+        end
+
+        it "imports sign-ups of public events as notified attendees" do
+          going = DiscourseEvents::Events::Invitee.statuses[:going]
+          interested = DiscourseEvents::Events::Invitee.statuses[:interested]
+          create_events_table
+          create_invitees_table
+          # The intermediate event id differs from the post id on purpose.
+          insert_event(101, post_id: 1, status: public_status)
+          insert_invitee(101, 10)
+          insert_invitee(101, 11, status: interested)
+
+          importer.import_post_events
+          importer.import_event_invitees
+          importer.import_event_invitees
+
+          signed_up_at = Time.utc(2017, 3, 4, 5, 6, 7)
+          expect(imported_invitees).to eq(
+            [
+              [vienna_post.id, attendee.id, going, true, signed_up_at],
+              [vienna_post.id, other_attendee.id, interested, true, signed_up_at],
+            ],
+          )
+        end
+
+        it "skips invitees the plugin wouldn't keep" do
+          create_events_table
+          create_invitees_table
+          insert_event(1, status: public_status)
+          insert_event(2, status: standalone_status)
+          insert_event(3, status: private_status, allowed_group_ids: [50].to_json)
+          insert_event(99, status: public_status)
+          insert_invitee(1, 99)
+          insert_invitee(99, 10)
+          insert_invitee(2, 10)
+          insert_invitee(1, 11, status: 42)
+          insert_invitee(3, 10)
+          insert_invitee(3, 11)
+
+          importer.import_post_events
+          importer.import_event_invitees
+
+          expect(imported_invitees.map { |invitee| invitee.first(2) }).to eq(
+            [[invalid_post.id, attendee.id]],
+          )
+          expect(import_issues.lines).to contain_exactly(
+            "[event invitee skipped (standalone event)] user 10 of event 2\n",
+            "[event invitee skipped (unknown status)] status 42 of user 11 in event 1\n",
+            "[event invitee skipped (not in the event's allowed groups)] user 11 of event 3\n",
+          )
+        end
+
+        it "skips intermediate databases without an event_invitees table" do
+          create_events_table(new_columns: false)
+
+          expect { importer.import_event_invitees }.not_to raise_error
+          expect(imported_invitees).to be_empty
+        end
+      end
+
+      describe "#import_event_invitee_topic_tracking" do
+        fab!(:not_going_attendee, :user)
+        fab!(:muting_attendee, :user)
+
+        it "sets the topic tracking like an RSVP, keeping imported subscriptions" do
+          statuses = DiscourseEvents::Events::Invitee.statuses
+          levels = TopicUser.notification_levels
+          signed_up_at = Time.utc(2017, 3, 4, 5, 6, 7)
+          DiscourseEvents::Events::Invitee.insert_all!(
+            [
+              [attendee, :going],
+              [other_attendee, :interested],
+              [not_going_attendee, :not_going],
+              [muting_attendee, :going],
+            ].map do |user, status|
+              {
+                post_id: vienna_post.id,
+                user_id: user.id,
+                status: statuses[status],
+                created_at: signed_up_at,
+                updated_at: signed_up_at,
+              }
+            end,
+          )
+          # Posting history alone would make this attendee track the topic.
+          Fabricate(:post, topic: vienna_post.topic, user: attendee)
+          TopicUser.create!(
+            user: muting_attendee,
+            topic: vienna_post.topic,
+            notification_level: levels[:muted],
+            notifications_reason_id: TopicUser.notification_reasons[:user_changed],
+          )
+
+          importer.import_event_invitee_topic_tracking
+          importer.update_topic_users
+
+          expect(
+            TopicUser
+              .where(topic: vienna_post.topic)
+              .where.not(user: vienna_post.user)
+              .pluck(:user_id, :notification_level, :notifications_reason_id),
+          ).to contain_exactly(
+            [attendee.id, levels[:watching], TopicUser.notification_reasons[:user_changed]],
+            [other_attendee.id, levels[:tracking], TopicUser.notification_reasons[:user_changed]],
+            [
+              not_going_attendee.id,
+              levels[:regular],
+              TopicUser.notification_reasons[:user_changed],
+            ],
+            [muting_attendee.id, levels[:muted], TopicUser.notification_reasons[:user_changed]],
+          )
+          expect(TopicUser.find_by(user: attendee).notifications_changed_at).to eq_time(
+            signed_up_at,
+          )
+        end
+      end
+    end
+
     describe "mapping selection" do
       fab!(:canonical_user, :user)
       fab!(:other_user, :user)
@@ -1586,6 +2144,175 @@ if generic_import_dependencies_available
         source_db&.close
       end
     end
+
+    describe "#update_category_read_restricted" do
+      it "reconciles uploads when imported permissions restrict an existing category" do
+        category = Fabricate(:category)
+        CategoryGroup.create!(
+          category: category,
+          group: Group[:admins],
+          permission_type: CategoryGroup.permission_types[:full],
+        )
+
+        expect_enqueued_with(
+          job: :update_category_upload_security,
+          args: {
+            category_id: category.id,
+          },
+        ) { described_class.allocate.update_category_read_restricted }
+
+        expect(category.reload.read_restricted).to eq(true)
+      end
+    end
+
+    describe "#import_user_associated_groups" do
+      fab!(:employee, :user)
+      fab!(:customer, :user)
+      fab!(:claimed_customer, :user)
+      fab!(:manual_customer, :user)
+      fab!(:employee_group, :group)
+      fab!(:customer_group, :group)
+      fab!(:unlinked_group, :group)
+
+      fab!(:internal_claim) do
+        AssociatedGroup.create!(
+          name: "SailPoint Internal",
+          provider_name: "oidc",
+          provider_id: "SailPoint Internal",
+          last_used: 2.weeks.ago,
+        )
+      end
+      fab!(:employee_claim) do
+        AssociatedGroup.create!(
+          name: "SailPoint Employee",
+          provider_name: "oidc",
+          provider_id: "SailPoint Employee",
+          last_used: 2.weeks.ago,
+        )
+      end
+      fab!(:customer_claim) do
+        AssociatedGroup.create!(
+          name: "Customer",
+          provider_name: "oidc",
+          provider_id: "Customer",
+          last_used: 2.weeks.ago,
+        )
+      end
+      fab!(:saml_claim) do
+        AssociatedGroup.create!(
+          name: "Customer",
+          provider_name: "saml",
+          provider_id: "Customer",
+          last_used: 2.weeks.ago,
+        )
+      end
+
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(
+            :@users,
+            { 10 => employee.id, 20 => customer.id, 30 => claimed_customer.id },
+          )
+          instance.instance_variable_set(
+            :@raw_connection,
+            ActiveRecord::Base.connection.raw_connection,
+          )
+          instance.instance_variable_set(:@encoder, PG::TextEncoder::CopyRow.new)
+        end
+      end
+
+      def claims_for(user)
+        user.associated_groups.reload.order(:provider_id).pluck(:provider_name, :provider_id)
+      end
+
+      before do
+        GroupAssociatedGroup.create!(group: employee_group, associated_group: internal_claim)
+        GroupAssociatedGroup.create!(group: employee_group, associated_group: employee_claim)
+        GroupAssociatedGroup.create!(group: customer_group, associated_group: customer_claim)
+        GroupAssociatedGroup.create!(group: customer_group, associated_group: saml_claim)
+
+        [employee_group, customer_group, unlinked_group].each do |group|
+          group.group_users.delete_all
+        end
+        GroupUser.create!(group: employee_group, user: employee)
+        GroupUser.create!(group: customer_group, user: customer)
+        GroupUser.create!(group: unlinked_group, user: customer)
+        GroupUser.create!(group: customer_group, user: claimed_customer)
+        GroupUser.create!(group: customer_group, user: manual_customer)
+        UserAssociatedGroup.create!(user: claimed_customer, associated_group: customer_claim)
+
+        allow(Discourse).to receive(:enabled_authenticators).and_return(
+          [instance_double(Auth::Authenticator, name: "oidc", provides_groups?: true)],
+        )
+      end
+
+      it "seeds every claim linked to an imported member's groups, once" do
+        expect { importer.import_user_associated_groups }.to change {
+          UserAssociatedGroup.count
+        }.by(3)
+
+        expect(claims_for(employee)).to eq(
+          [%w[oidc SailPoint\ Employee], %w[oidc SailPoint\ Internal]],
+        )
+        expect(claims_for(customer)).to eq([%w[oidc Customer]])
+        expect(claims_for(claimed_customer)).to eq([%w[oidc Customer]])
+        expect(claims_for(manual_customer)).to be_empty
+        expect(saml_claim.reload.users).to be_empty
+
+        expect { importer.import_user_associated_groups }.not_to change {
+          UserAssociatedGroup.count
+        }
+      end
+
+      it "marks the seeded associated groups as used and leaves the others alone" do
+        importer.import_user_associated_groups
+
+        expect(internal_claim.reload.last_used).to be_within(1.minute).of(Time.zone.now)
+        expect(employee_claim.reload.last_used).to be_within(1.minute).of(Time.zone.now)
+        expect(customer_claim.reload.last_used).to be_within(1.minute).of(Time.zone.now)
+        expect(saml_claim.reload.last_used).to be_within(1.minute).of(2.weeks.ago)
+      end
+
+      it "reconciles seeded memberships with the claims returned by subsequent logins" do
+        GroupUser.create!(group: unlinked_group, user: employee)
+        importer.import_user_associated_groups
+
+        result = Auth::Result.new
+        result.user = employee
+        result.authenticator_name = "oidc"
+        result.extra_data = { provider: "oidc" }
+        result.associated_groups = [{ id: employee_claim.provider_id, name: employee_claim.name }]
+        result.apply_associated_attributes!
+
+        expect(employee.associated_groups.reload).to contain_exactly(employee_claim)
+        expect(employee.groups.reload).to include(employee_group, unlinked_group)
+
+        result.associated_groups = []
+        result.apply_associated_attributes!
+
+        expect(employee.associated_groups.reload).to be_empty
+        expect(employee.groups.reload).not_to include(employee_group)
+        expect(employee.groups).to include(unlinked_group)
+      end
+
+      it "does nothing when no enabled authenticator provides group claims" do
+        allow(Discourse).to receive(:enabled_authenticators).and_return(
+          [instance_double(Auth::Authenticator, name: "oidc", provides_groups?: false)],
+        )
+
+        expect { importer.import_user_associated_groups }.not_to change {
+          UserAssociatedGroup.count
+        }
+      end
+
+      it "does nothing when the provider's associated groups grant no Discourse group" do
+        GroupAssociatedGroup.where.not(associated_group: saml_claim).delete_all
+
+        expect { importer.import_user_associated_groups }.not_to change {
+          UserAssociatedGroup.count
+        }
+      end
+    end
   end
 
   RSpec.describe BulkImport::Base do
@@ -1715,8 +2442,8 @@ if generic_import_dependencies_available
     end
 
     describe "#process_user" do
-      def build_user_importer
-        importer = described_class.allocate
+      def build_user_importer(importer_class = described_class)
+        importer = importer_class.allocate
         importer.instance_variable_set(:@usernames_lower, Set.new)
         importer.instance_variable_set(:@last_user_id, 0)
         importer.instance_variable_set(
@@ -1767,6 +2494,186 @@ if generic_import_dependencies_available
         user = importer.process_user(imported_id: 1, username: long_name)
 
         expect(user[:username]).to eq("#{"风" * 58}_1")
+      end
+
+      describe "reserving valid usernames" do
+        def import_usernames(importer, rows)
+          importer.reserve_valid_usernames(rows)
+          rows.map do |row|
+            external_id = JSON.parse(row["sso_record"])["external_id"] if row["sso_record"].present?
+            importer.process_user(
+              imported_id: row["id"],
+              username: row["username"],
+              email: row["email"],
+              external_id: external_id,
+            )
+          end
+        end
+
+        it "suffixes a sanitized username instead of a later valid one" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [{ "id" => 1, "username" => "a_a_" }, { "id" => 2, "username" => "A_A" }],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[a_a_1 A_A])
+        end
+
+        it "skips suffixes that later valid usernames reserve" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [
+                { "id" => 1, "username" => "Alex_R_" },
+                { "id" => 2, "username" => "Alex_R" },
+                { "id" => 3, "username" => "Alex_R_1" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Alex_R_2 Alex_R Alex_R_1])
+        end
+
+        it "reserves unicode usernames that are valid under the unicode setting" do
+          SiteSetting.unicode_usernames = true
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [{ "id" => 1, "username" => "Michał_" }, { "id" => 2, "username" => "Michał" }],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Michał_1 Michał])
+        end
+
+        it "does not reserve unicode usernames that the ASCII setting transliterates" do
+          SiteSetting.unicode_usernames = false
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [{ "id" => 1, "username" => "Michał_" }, { "id" => 2, "username" => "Michał" }],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Michal Michal_1])
+        end
+
+        it "keeps the lowest source ID for valid usernames that differ only in case" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [{ "id" => 1, "username" => "manuel" }, { "id" => 2, "username" => "Manuel" }],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[manuel Manuel_1])
+        end
+
+        it "reserves nothing for rows that map onto an existing user" do
+          importer = build_user_importer(BulkImport::Generic)
+          importer.instance_variable_set(:@emails, { "existing@example.com" => 99 })
+
+          users =
+            import_usernames(
+              importer,
+              [
+                { "id" => 1, "username" => "Bob_" },
+                { "id" => 2, "username" => "Bob", "email" => "existing@example.com" },
+                { "id" => 3, "username" => "Carol_", "email" => "shared@example.com" },
+                { "id" => 4, "username" => "Carol", "email" => "shared@example.com" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Bob Bob Carol Carol])
+          expect(users.map { |user| user[:skip] }).to eq([nil, true, nil, true])
+        end
+
+        it "keeps an email available when an external ID maps an earlier row to an existing user" do
+          importer = build_user_importer(BulkImport::Generic)
+          importer.instance_variable_set(:@external_ids, { "existing-id" => 99 })
+
+          users =
+            import_usernames(
+              importer,
+              [
+                {
+                  "id" => 1,
+                  "username" => "Existing",
+                  "email" => "shared@example.com",
+                  "sso_record" => { external_id: "existing-id" }.to_json,
+                },
+                { "id" => 2, "username" => "Bob_" },
+                { "id" => 3, "username" => "Bob", "email" => "shared@example.com" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Existing Bob_1 Bob])
+          expect(users.map { |user| user[:skip] }).to eq([true, nil, nil])
+        end
+
+        it "keeps an email available when an external ID duplicates an earlier source row" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [
+                {
+                  "id" => 1,
+                  "username" => "First",
+                  "sso_record" => { external_id: "shared-id" }.to_json,
+                },
+                {
+                  "id" => 2,
+                  "username" => "Duplicate",
+                  "email" => "shared@example.com",
+                  "sso_record" => { external_id: "shared-id" }.to_json,
+                },
+                { "id" => 3, "username" => "Bob_" },
+                { "id" => 4, "username" => "Bob", "email" => "shared@example.com" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[First Duplicate Bob_1 Bob])
+          expect(users.map { |user| user[:skip] }).to eq([nil, true, nil, nil])
+        end
+
+        it "reserves usernames for users without SSO records after a user with one" do
+          importer = build_user_importer(BulkImport::Generic)
+
+          users =
+            import_usernames(
+              importer,
+              [
+                {
+                  "id" => 1,
+                  "username" => "Alice",
+                  "sso_record" => { external_id: "alice-id" }.to_json,
+                },
+                { "id" => 2, "username" => "Bob_" },
+                { "id" => 3, "username" => "Bob" },
+              ],
+            )
+
+          expect(users.map { |user| user[:username] }).to eq(%w[Alice Bob_1 Bob])
+          expect(users.map { |user| user[:skip] }).to eq([nil, nil, nil])
+        end
+
+        it "does not let a reservation displace an existing site user" do
+          importer = build_user_importer(BulkImport::Generic)
+          importer.instance_variable_get(:@usernames_lower) << "dana"
+
+          users = import_usernames(importer, [{ "id" => 1, "username" => "Dana" }])
+
+          expect(users.first[:username]).to eq("Dana_1")
+        end
       end
     end
 

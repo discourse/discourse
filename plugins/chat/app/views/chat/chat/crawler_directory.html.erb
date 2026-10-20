@@ -1,0 +1,54 @@
+<div class="chat-crawler">
+  <h1><%= t("chat.crawler.directory_title") %></h1>
+
+  <%= render "chat/chat/crawler_retention_notice" %>
+
+  <% if include_crawler_content? %>
+    <ul class="chat-crawler__channels" itemscope itemtype="http://schema.org/ItemList">
+      <% @crawler_channels.each_with_index do |channel, index| %>
+        <li class="chat-crawler__channel" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <meta itemprop="position" content="<%= @crawler_directory_offset + index + 1 %>">
+          <h2><a href="<%= channel.url %>" itemprop="url"><span itemprop="name"><%= channel.title %></span></a></h2>
+          <% if channel.description.present? %>
+            <p><%= channel.description %></p>
+          <% end %>
+          <div class="chat-crawler__channel-meta">
+            <a href="<%= channel.chatable.url %>"><%= channel.chatable.name %></a>
+            <span><%= t("chat.crawler.messages_count", count: channel.messages_count) %></span>
+            <span><%= t("chat.crawler.members_count", count: channel.user_count) %></span>
+            <% if (last_message = channel.last_message).id.present? %>
+              <span>
+                <%= t("chat.crawler.last_activity") %>
+                <time datetime="<%= last_message.created_at.to_formatted_s(:iso8601) %>"><%= l last_message.created_at, format: :long %></time>
+              </span>
+            <% end %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+    <% if @crawler_prev_page_url || @crawler_next_page_url %>
+      <div role="navigation" class="chat-crawler__pagination crawler-post">
+        <% if @crawler_prev_page_url %>
+          <span><%= link_to t(:prev_page), @crawler_prev_page_url, rel: "prev" %></span>
+        <% end %>
+        <% if @crawler_next_page_url %>
+          <span><b><%= link_to t(:next_page), @crawler_next_page_url, rel: "next" %></b></span>
+        <% end %>
+      </div>
+    <% end %>
+  <% else %>
+    <%= t(:crawler_content_hidden) %>
+  <% end %>
+</div>
+
+<% content_for :head do %>
+  <%= raw crawlable_meta_data(title: t("chat.crawler.directory_title")) %>
+  <% if @crawler_prev_page_url %>
+    <link rel="prev" href="<%= @crawler_prev_page_url %>">
+  <% end %>
+  <% if @crawler_next_page_url %>
+    <link rel="next" href="<%= @crawler_next_page_url %>">
+  <% end %>
+<% end %>
+
+<% content_for(:title) { "#{t("chat.crawler.directory_title")} - #{SiteSetting.title}" } %>

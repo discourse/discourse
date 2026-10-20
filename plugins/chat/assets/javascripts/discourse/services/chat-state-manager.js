@@ -1,10 +1,10 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 import { withoutPrefix } from "discourse/lib/get-url";
+import { discoveryHomepageRoute } from "discourse/lib/homepage-router-overrides";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
-import { defaultHomepage } from "discourse/lib/utilities";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
 import { CHAT_PANEL } from "discourse/plugins/chat/discourse/lib/init-sidebar-state";
 
@@ -85,7 +85,7 @@ export default class ChatStateManager extends Service {
     let url = this._appURL;
 
     if (!url || url === "/") {
-      url = this.router.urlFor(`discovery.${defaultHomepage()}`);
+      url = this.router.urlFor(discoveryHomepageRoute());
     }
 
     return withoutPrefix(url);

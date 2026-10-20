@@ -11,10 +11,10 @@ import {
 import { isEmpty } from "@ember/utils";
 import { setupApplicationTest } from "ember-qunit";
 import $ from "jquery";
+import { resetInlineOneboxCache } from "pretty-text/inline-oneboxer";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
-import { resetAdminDashboardReportRenderers } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { resetAdminDashboardSections } from "discourse/admin/lib/admin-dashboard-sections";
 import { resetAdminReportRelatedItemsRenderers } from "discourse/admin/lib/admin-report-related-items";
 import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
@@ -77,6 +77,7 @@ import { resetLogSearchLinkClickedCallbacks } from "discourse/lib/search";
 import { clearAdditionalAdminSidebarSectionLinks } from "discourse/lib/sidebar/admin-sidebar";
 import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
+import { clearAdditionalUserNavSidebarLinks } from "discourse/lib/sidebar/user-nav-sidebar";
 import {
   resetHighestReadCache,
   setTopicList,
@@ -122,10 +123,10 @@ import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
 import { resetDragSourcesForTesting } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import { resetPointerDragForTesting } from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n from "discourse-i18n";
-import { setupDNativeSelectAssertions } from "./d-native-select-assertions";
-import { setupFormKitAssertions } from "./form-kit-assertions";
-import { setupNotificationsTrackingAssertions } from "./notifications-tracking-assertions";
-import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
+import { setupDNativeSelectAssertions } from "./d-native-select-assertions.js";
+import { setupFormKitAssertions } from "./form-kit-assertions.js";
+import { setupNotificationsTrackingAssertions } from "./notifications-tracking-assertions.js";
+import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper.js";
 
 export function currentUser() {
   return User.create(
@@ -222,7 +223,6 @@ export function testCleanup(container, app) {
   resetMobile();
   noteKeyboardEvidence();
   resetAdditionalReportModes();
-  resetAdminDashboardReportRenderers();
   resetAdminReportRelatedItemsRenderers();
   resetAdminDashboardSections();
   resetDeferredClassModifications();
@@ -233,6 +233,7 @@ export function testCleanup(container, app) {
   resetPluginOutletDecorators();
   resetUsernameDecorators();
   resetOneboxCache();
+  resetInlineOneboxCache();
   resetCustomPostMessageCallbacks();
   resetUserSearchCache();
   resetHighestReadCache();
@@ -282,6 +283,7 @@ export function testCleanup(container, app) {
   resetBeforeAuthCompleteCallbacks();
   clearPopupMenuOptions();
   clearAdditionalAdminSidebarSectionLinks();
+  clearAdditionalUserNavSidebarLinks();
   resetAdminPluginConfigNav();
   resetTransformers();
   rollbackAllPrepends();

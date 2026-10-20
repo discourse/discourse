@@ -84,6 +84,25 @@ module DiscourseAi
           { name: clean_name.presence || parameters[:name] }
         end
 
+        def approval_title
+          I18n.t(
+            "discourse_ai.ai_bot.chat_tool_approval.create_tag_title",
+            name: DiscourseAi::AiBot::ChatToolApproval.format_value(clean_name),
+          )
+        end
+
+        def approval_question
+          I18n.t("discourse_ai.ai_bot.chat_tool_approval.create_tag_question")
+        end
+
+        def approval_show_description?
+          false
+        end
+
+        def approval_parameters
+          super.reject { |parameter| parameter[:label] == "name" || parameter[:value].blank? }
+        end
+
         private
 
         def clean_name

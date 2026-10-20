@@ -667,6 +667,8 @@ class BulkImport::Base
     external_card_background_url
   ]
 
+  USER_ASSOCIATED_GROUP_COLUMNS = %i[user_id associated_group_id created_at updated_at]
+
   USER_ASSOCIATED_ACCOUNT_COLUMNS = %i[
     provider_name
     provider_uid
@@ -942,12 +944,17 @@ class BulkImport::Base
     raw_invitees
     name
     url
+    location
     custom_fields
     reminders
     recurrence
     timezone
     minimal
+    closed
+    image_upload_id
   ]
+
+  POST_EVENT_INVITEE_COLUMNS = %i[post_id user_id status notified recurring created_at updated_at]
 
   POST_EVENT_DATES_COLUMNS = %i[
     event_id
@@ -1137,6 +1144,10 @@ class BulkImport::Base
     create_records(rows, "user_associated_account", USER_ASSOCIATED_ACCOUNT_COLUMNS, &block)
   end
 
+  def create_user_associated_groups(rows, &block)
+    create_records(rows, "user_associated_group", USER_ASSOCIATED_GROUP_COLUMNS, &block)
+  end
+
   def create_user_custom_fields(rows, &block)
     create_records(rows, "user_custom_field", USER_CUSTOM_FIELD_COLUMNS, &block)
   end
@@ -1263,6 +1274,10 @@ class BulkImport::Base
 
   def create_post_events(rows, &block)
     create_records(rows, "discourse_post_event_events", POST_EVENT_COLUMNS, &block)
+  end
+
+  def create_event_invitees(rows, &block)
+    create_records(rows, "discourse_post_event_invitee", POST_EVENT_INVITEE_COLUMNS, &block)
   end
 
   def create_post_event_dates(rows, &block)
@@ -1445,7 +1460,7 @@ class BulkImport::Base
     end
 
     # unique username_lower
-    if user_exist?(user[:username])
+    if username_taken?(user[:username], user[:imported_id])
       i = 0
       candidate = nil
       begin
@@ -1453,7 +1468,7 @@ class BulkImport::Base
         suffix = "_#{i}"
         candidate =
           truncate_name(user[:username], UsernameValidator::MAX_CHARS - suffix.length) + suffix
-      end while user_exist?(candidate)
+      end while username_taken?(candidate, user[:imported_id])
       user[:username] = candidate
     end
 
@@ -1490,6 +1505,14 @@ class BulkImport::Base
     @usernames_lower.add?(username_lowercase).nil?
   end
 
+  # Like user_exist?, but also treats a username reserved for another source
+  # user as taken.
+  def username_taken?(username, imported_id)
+    reserved_by = @reserved_usernames&.dig(User.normalize_username(username))
+    return true if reserved_by && reserved_by != imported_id.to_i
+    user_exist?(username)
+  end
+
   def process_user_email(user_email)
     user_email[:id] = @last_user_email_id += 1
     user_email[:primary] = true
@@ -1507,7 +1530,7 @@ class BulkImport::Base
   end
 
   def process_user_stat(user_stat)
-    user_stat[:user_id] = user_id_from_imported_id(user_email[:imported_user_id])
+    user_stat[:user_id] = user_id_from_imported_id(user_stat[:imported_user_id])
     user_stat[:topics_entered] ||= 0
     user_stat[:time_read] ||= 0
     user_stat[:days_visited] ||= 0
@@ -1602,6 +1625,12 @@ class BulkImport::Base
     account[:created_at] = NOW
     account[:updated_at] = NOW
     account
+  end
+
+  def process_user_associated_group(user_associated_group)
+    user_associated_group[:created_at] = NOW
+    user_associated_group[:updated_at] = NOW
+    user_associated_group
   end
 
   def process_group_user(group_user)
@@ -2073,6 +2102,15 @@ class BulkImport::Base
 
   def process_discourse_post_event_events(post_event)
     post_event
+  end
+
+  def process_discourse_post_event_invitee(invitee)
+    # Imported sign-ups must not trigger invitation notifications.
+    invitee[:notified] = true
+    invitee[:recurring] = false
+    invitee[:created_at] ||= NOW
+    invitee[:updated_at] ||= NOW
+    invitee
   end
 
   def process_discourse_calendar_post_event_dates(post_event_date)

@@ -2,8 +2,8 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
-import ComboBoxField, { DynamicOptionsComboBox } from "./combo-box";
-import ExpressionWrapper from "./expression-wrapper";
+import ComboBoxField, { DynamicOptionsComboBox } from "./combo-box.gjs";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default class DataTableSelect extends ComboBoxField {
   @service router;

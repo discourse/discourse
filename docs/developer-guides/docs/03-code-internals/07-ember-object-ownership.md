@@ -42,5 +42,5 @@ To access e.g. services there a couple of methods at your disposal.
 - …or if you still need the fallback shim (in a non-component/controller/route/widget context) use
 
   ```js
-  import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+  import { getOwnerWithFallback } from "discourse/lib/get-owner";
   ```

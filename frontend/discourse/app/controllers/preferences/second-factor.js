@@ -22,7 +22,11 @@ export default class SecondFactorController extends Controller {
 
   loading = false;
   dirty = false;
+
+  /** @type {string | null} */
   errorMessage = null;
+
+  /** @type {string | null} */
   newUsername = null;
 
   secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;

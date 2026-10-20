@@ -325,12 +325,71 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.resize(from, to, width, height, opts = {})
-    optimize(:optimized_image_resize, from, to, "#{width}x#{height}", opts)
+    if opts[:quality].nil? &&
+         image_extension(path: to, ext_path: to, opts: opts).match?(/\Ajpe?g\z/i)
+      opts = opts.merge(quality: SiteSetting.ImageQuality.image_preview_jpg_quality)
+    end
+
+    if GlobalSetting.enable_vips_image_processing
+      ensure_safe_paths!(from, to)
+      resize_with_vips(from: from, to: to, width: width, height: height, opts: opts)
+    else
+      optimize(:optimized_image_resize, from, to, "#{width}x#{height}", opts)
+    end
   end
 
-  def self.crop(from, to, width, height, opts = {})
-    optimize(:optimized_image_crop, from, to, "#{width}x#{height}", opts)
+  def self.resize_with_vips(from:, to:, width:, height:, opts:)
+    DiscourseVips.thumbnail(
+      input_path: from,
+      output_path: to,
+      input_format: image_extension(path: from, ext_path: to, opts: opts),
+      output_format: image_extension(path: to, ext_path: to, opts: opts),
+      width: width,
+      height: height,
+      size: :both,
+      crop: :centre,
+      sharpen: true,
+      operation: :optimized_image_resize,
+      quality: opts[:quality],
+      strip_metadata: SiteSetting.strip_image_metadata,
+      timeout: MAX_CONVERT_SECONDS,
+    )
+    optimize_image(to: to)
+  rescue => error
+    handle_optimization_error(error: error, to: to, opts: opts)
   end
+  private_class_method :resize_with_vips
+
+  def self.crop(from, to, width, height, opts = {})
+    if GlobalSetting.enable_vips_image_processing
+      ensure_safe_paths!(from, to)
+      crop_with_vips(from: from, to: to, width: width, height: height, opts: opts)
+    else
+      optimize(:optimized_image_crop, from, to, "#{width}x#{height}", opts)
+    end
+  end
+
+  def self.crop_with_vips(from:, to:, width:, height:, opts:)
+    DiscourseVips.thumbnail(
+      input_path: from,
+      output_path: to,
+      input_format: image_extension(path: from, ext_path: to, opts: opts),
+      output_format: image_extension(path: to, ext_path: to, opts: opts),
+      width: width,
+      height: height,
+      crop: :all,
+      gravity: :north,
+      sharpen: true,
+      operation: :optimized_image_crop,
+      quality: opts[:quality],
+      strip_metadata: SiteSetting.strip_image_metadata,
+      timeout: MAX_CONVERT_SECONDS,
+    )
+    optimize_image(to: to)
+  rescue => error
+    handle_optimization_error(error: error, to: to, opts: opts)
+  end
+  private_class_method :crop_with_vips
 
   def self.downsize(from:, to:, scale: nil, width: nil, height: nil, max_pixels: nil, **opts)
     if GlobalSetting.enable_vips_image_processing
@@ -358,17 +417,20 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.downsize_with_vips(from:, to:, scale:, width:, height:, max_pixels:, opts:)
-    DiscourseVips.downsize(
+    DiscourseVips.thumbnail(
       input_path: from,
       output_path: to,
+      input_format: image_extension(path: from, ext_path: to, opts: opts),
+      output_format: image_extension(path: to, ext_path: to, opts: opts),
       scale: scale,
       width: width,
       height: height,
       max_pixels: max_pixels,
+      size: width ? :down : :both,
+      sharpen: true,
+      operation: :optimized_image_downsize,
       strip_metadata: SiteSetting.strip_image_metadata,
       timeout: MAX_CONVERT_SECONDS,
-      read: [from],
-      write: [File.dirname(to)],
     )
     optimize_image(to: to)
   rescue => error
@@ -384,16 +446,20 @@ class OptimizedImage < ActiveRecord::Base
   private_constant :INSTRUCTION_METHODS
 
   def self.optimize(operation, from, to, dimensions, opts = {})
-    instructions = public_send(INSTRUCTION_METHODS.fetch(operation), from, to, dimensions, opts)
+    instructions = nil
     begin
-      ImageMagick.magick(
-        *instructions,
-        operation: operation,
-        read: [from],
-        write: [File.dirname(to)],
-        nice: 10,
-        timeout: MAX_CONVERT_SECONDS,
-      )
+      ImageProcessing::OutputFile.write(to) do |temporary_path|
+        instructions =
+          public_send(INSTRUCTION_METHODS.fetch(operation), from, temporary_path, dimensions, opts)
+        ImageMagick.magick(
+          *instructions,
+          operation: operation,
+          read: [from],
+          write: [temporary_path],
+          nice: 10,
+          timeout: MAX_CONVERT_SECONDS,
+        )
+      end
       optimize_image(to: to)
     rescue => error
       handle_optimization_error(error: error, to: to, opts: opts, instructions: instructions)

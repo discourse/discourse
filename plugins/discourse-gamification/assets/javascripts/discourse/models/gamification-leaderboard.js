@@ -11,6 +11,7 @@ export default class GamificationLeaderboard {
   @tracked createdAt;
   @tracked updatedAt;
   @tracked createdById;
+  @tracked defaultPeriodId;
   @tracked excludedGroupsIds;
   @tracked includedGroupsIds;
   @tracked visibleToGroupsIds;
@@ -28,6 +29,7 @@ export default class GamificationLeaderboard {
     this.createdAt = args.created_at;
     this.updatedAt = args.updated_at;
     this.createdById = args.created_by_id;
+    this.defaultPeriodId = args.default_period;
     this.excludedGroupsIds = args.excluded_groups_ids;
     this.includedGroupsIds = args.included_groups_ids;
     this.visibleToGroupsIds = args.visible_to_groups_ids;

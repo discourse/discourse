@@ -5,8 +5,21 @@
 # https://translate.discourse.org/
 
 fr:
+  markdown_endpoints:
+    latest: "Récents"
+    categories: "Catégories"
+    tags: "Étiquettes"
+    previous_page: "Page précédente"
+    next_page: "Page suivante"
+    replies: "Réponses"
+    last_updated: "Dernière mise à jour "
+    event:
+      location: "Emplacement"
+      link: "Insérer un lien"
+      date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      category_not_found: "Catégorie introuvable"
       draft_too_long: "Le brouillon est trop long"
       post_not_found: "Publication introuvable"
       topic_not_found: "Sujet non trouvé"
@@ -870,6 +883,7 @@ fr:
       description_too_long:
         one: "La description est trop longue (maximum %{count} caractère)."
         other: "La description est trop longue (maximum %{count} caractères)."
+      special_category_permissions: "Cette catégorie est préconfigurée et ses paramètres de sécurité ne peuvent pas être modifiés. Si vous ne souhaitez pas l'utiliser, supprimez-la plutôt que de la réutiliser."
       permission_conflict: "Tout groupe autorisé à accéder à une sous-catégorie doit également avoir accès à la catégorie parente. Les groupes suivants ont accès à une des sous-catégories, mais n'ont pas accès à la catégorie parente : %{group_names}."
       disallowed_topic_tags: "Ce sujet contient des étiquettes qui ne sont pas autorisées dans cette catégorie : %{tags}"
       disallowed_tags_generic: "Ce sujet contient des étiquettes interdites."
@@ -2321,7 +2335,6 @@ fr:
     reviewable_default_visibility: "Ne pas afficher les éléments à examiner à moins qu'ils aient ce niveau de priorité"
     reviewable_low_priority_threshold: "Le filtre de niveau de priorité masque les éléments à examiner dont le score est inférieur au niveau spécifié, sauf lorsque le filtre « (tous) » est appliqué."
     high_trust_flaggers_auto_hide_posts: "Les publications des nouveaux utilisateurs seront automatiquement masquées après avoir été signalées comme contenu indésirable par un utilisateur d'un niveau de confiance 3 et plus"
-    allow_all_users_to_flag_illegal_content: "Les utilisateurs anonymes verront des informations leur indiquant qu'ils doivent envoyer un e-mail aux administrateurs pour signaler du contenu illégal. Ce paramètre est prioritaire sur {{setting:flag_post_allowed_groups}}."
     email_address_to_report_illegal_content: "Si ce champ est laissé vide, l'adresse e-mail par défaut de l'administrateur du site sera utilisée."
     cooldown_hours_until_reflag: "Combien de temps les utilisateurs doivent attendre avant de pouvoir signaler à nouveau un message"
     slow_mode_prevents_editing: "Le mode lent empêche-t-il la modification après {{setting:editing_grace_period}} ?"
@@ -2664,7 +2677,6 @@ fr:
     lazy_load_categories_groups: "Chargez en différé les informations de catégorie uniquement pour les utilisateurs de ces groupes. Cela permet d'améliorer les performances sur les sites comportant de nombreuses catégories."
     enable_auto_grid_images: "Encapsule automatiquement les images dans des balises [grid] lorsque 3 images ou plus sont téléversées dans l'éditeur."
     enable_new_checkbox_style: "Active le nouveau style des cases à cocher FormKit."
-    enable_new_post_reactions_menu: "Active le menu repensé des mentions J'aime et des réactions aux publications, avec défilement infini et expérience mobile native."
     enable_composer_redesign: "Active le panneau d'édition repensé."
     prioritize_recently_used_tags: "Lors de l'ajout d'étiquettes pendant la création ou la modification d'un sujet, affiche en haut de la liste les étiquettes récemment utilisées par le membre sur ses propres sujets, avant les étiquettes les plus populaires du forum."
     experimental_impersonation_time_limit_minutes: "Durée avant la fin automatique d'une session pendant laquelle un administrateur se fait passer pour un autre utilisateur."
@@ -3109,6 +3121,7 @@ fr:
     wrong_invite_code: "Le code d'invitation est invalide."
     reserved_username: "Ce nom d'utilisateur n'est pas autorisé."
     missing_user_field: "Vous n'avez pas rempli tous les champs d'utilisateur obligatoires"
+    missing_username: "Veuillez entrer un nom d'utilisateur"
     missing_full_name: "Saisissez votre nom complet"
     auth_complete: "Authentification terminée."
     click_to_continue: "Cliquez ici pour continuer."
@@ -4616,7 +4629,7 @@ fr:
 
         Pour accéder à votre nouveau compte, vous pouvez utiliser le lien suivant :
 
-        %{base_url}
+        %{login_url}
 
         Dans le cas où le lien ci-dessus ne serait pas utilisable, nous vous invitons à le copier-coller dans la barre d'adresse de votre navigateur.
 
@@ -5564,6 +5577,9 @@ fr:
         title: "Rétablir la publication"
         description: "Rejeter le signalement et restaurer la publication"
         complete: "Publication restaurée."
+      disagree_and_keep_deleted:
+        title: "Conserver la suppression de la publication"
+        complete: "Publication maintenue supprimée."
       disagree_bundle:
         title: "Non"
       disagree:

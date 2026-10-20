@@ -136,6 +136,11 @@ export default class AiSecretEditorForm extends Component {
                     @model={{usage.id}}
                     @route="adminPlugins.show.discourse-ai-embeddings.edit"
                   >{{usage.name}}</LinkTo>
+                {{~else if (eq usage.type "decision_model")~}}
+                  <LinkTo
+                    @model={{usage.id}}
+                    @route="adminPlugins.show.discourse-ai-decision-models.edit"
+                  >{{usage.name}}</LinkTo>
                 {{~else if (eq usage.type "tool")~}}
                   <LinkTo
                     @model={{usage.id}}

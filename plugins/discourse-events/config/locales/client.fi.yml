@@ -27,6 +27,11 @@ fi:
               label: Ketjun tunnus
     discourse_events:
       title: "Tapahtumat"
+      preferences:
+        reminders:
+          preferences:
+            notification: "Ilmoitus"
+            none: "Ei valittu"
       on_holiday: "Lomalla"
       disable_holiday: "Poista käytöstä"
       enable_holiday: "Ota käyttöön"

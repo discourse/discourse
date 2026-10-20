@@ -124,6 +124,7 @@ after_initialize do
 
   if respond_to?(:register_discourse_workflows_node)
     register_discourse_workflows_node { DiscourseWorkflows::Nodes::AiAgent::V1 }
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::Classify::V1 }
   end
 
   add_admin_route("discourse_ai.title", "discourse-ai", { use_new_show_route: true })
@@ -146,6 +147,24 @@ after_initialize do
   register_problem_check ProblemCheck::AiLlmVisionDelegation
   register_problem_check ProblemCheck::AiImageCaptionAgent
 
+  register_modifier(:reviewable_automated_detection) do |automated, reviewable|
+    scores = reviewable.reviewable_scores
+
+    automated ||
+      scores
+        .where(
+          "context LIKE ?",
+          "#{ReviewableScore.sanitize_sql_like(DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX)}%",
+        )
+        .or(
+          scores.where(
+            user_id: SiteSetting.ai_spam_detection_user_id.presence,
+            reviewable_score_type: ReviewableScore.types[:spam],
+          ),
+        )
+        .exists?
+  end
+
   register_reviewable_type ReviewableAiChatMessage
   register_reviewable_type ReviewableAiPost
   register_reviewable_type ReviewableAiToolAction
@@ -159,6 +178,12 @@ after_initialize do
   end
 
   on(:user_destroyed) do |user|
+    AiArtifactKeyValue.where(user_id: user.id).delete_all
+    AiArtifactShareKeyValue.where(
+      ai_artifact_share_id: AiArtifactShare.where(user_id: user.id).select(:id),
+    ).delete_all
+    AiArtifactShareKeyValue.where(user_id: user.id).delete_all
+    AiArtifactShare.where(user_id: user.id).delete_all
     DiscourseAi::AiApiAuditLogCleaner.delete_for_user(user.id)
     DiscourseAi::Discoveries.clear_recent_asks(user_id: user.id)
     AiAgent.detach_user!(user.id)
@@ -227,7 +252,10 @@ after_initialize do
     DiscourseAi::PostImageCaptions.remove_existing_caption_metadata(doc)
   end
 
-  add_api_key_scope(:ai, { update_agents: { actions: %w[discourse_ai/admin/ai_agents#update] } })
+  add_api_key_scope(
+    :ai,
+    { update_agents: { actions: %w[discourse_ai/admin/ai_agents#update], path_params: %i[id] } },
+  )
 
   add_api_key_scope(
     :ai,
@@ -240,12 +268,14 @@ after_initialize do
           discourse_ai/admin/ai_artifacts#update
           discourse_ai/admin/ai_artifacts#destroy
         ],
+        path_params: %i[id],
       },
     },
   )
 
   plugin_icons = %w[
     chart-column
+    scale-balanced
     spell-check
     language
     images

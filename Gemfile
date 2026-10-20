@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-ruby "~> 3.4"
+ruby ">= 3.4", "< 4.1"
 
 source "https://rubygems.org"
 # if there is a super emergency and rubygems is playing up, try
@@ -8,13 +8,13 @@ source "https://rubygems.org"
 
 gem "bootsnap", require: false, platform: :mri
 
-gem "actionmailer", "~> 8.0.0"
-gem "actionpack", "~> 8.0.0"
-gem "actionview", "~> 8.0.0"
-gem "activemodel", "~> 8.0.0"
-gem "activerecord", "~> 8.0.0"
-gem "activesupport", "~> 8.0.0"
-gem "railties", "~> 8.0.0"
+gem "actionmailer", "~> 8.1.0"
+gem "actionpack", "~> 8.1.0"
+gem "actionview", "~> 8.1.0"
+gem "activemodel", "~> 8.1.0"
+gem "activerecord", "~> 8.1.0"
+gem "activesupport", "~> 8.1.0"
+gem "railties", "~> 8.1.0"
 
 gem "propshaft"
 gem "json"
@@ -73,7 +73,6 @@ gem "unf", require: false
 
 gem "email_reply_trimmer"
 
-gem "image_optim"
 gem "multi_json"
 gem "mustache"
 gem "liquid", "5.12.0"
@@ -201,7 +200,7 @@ gem "pitchfork", require: false
 
 # Used by discourse-prometheus to collect socket queue stats.
 # Was previously a transitive dependency of the unicorn gem.
-gem "raindrops", require: false, platform: :ruby
+gem "raindrops", git: "https://github.com/discourse/raindrops", require: false, platform: :ruby
 
 gem "rbtrace", require: false, platform: :mri
 
@@ -236,6 +235,7 @@ gem "sshkey", require: false
 gem "lz4-ruby", require: false, platform: :ruby
 
 gem "sanitize"
+gem "reverse_markdown", "3.0.2", require: false
 
 if ENV["IMPORT"] == "1"
   gem "mysql2"
@@ -244,7 +244,6 @@ if ENV["IMPORT"] == "1"
   # NOTE: in import mode the version of sqlite can matter a lot, so we stick it to a specific one
   gem "sqlite3", "~> 1.3", ">= 1.3.13"
   gem "ruby-bbcode-to-md", git: "https://github.com/nlalonde/ruby-bbcode-to-md"
-  gem "reverse_markdown"
   gem "tiny_tds"
   gem "csv"
 end
@@ -272,6 +271,9 @@ gem "cgi", ">= 0.3.6", require: false
 
 gem "tzinfo-data"
 gem "csv", require: false
+
+# Rails 8.1 drops its own dependency on `benchmark`.
+gem "benchmark", require: false
 
 # dependencies for the automation plugin
 gem "iso8601"

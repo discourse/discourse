@@ -18,6 +18,7 @@ register_svg_icon "angle-left"
 register_svg_icon "circle-exclamation"
 register_svg_icon "info"
 register_svg_icon "pencil"
+register_svg_icon "thumbtack-slash"
 register_svg_icon "upload"
 
 add_admin_route "explorer.title", "discourse-data-explorer", use_new_show_route: true
@@ -33,6 +34,76 @@ end
 require_relative "lib/discourse_data_explorer/engine"
 
 after_initialize do
+  require_relative "lib/discourse_data_explorer/mcp_tools"
+
+  register_mcp_tool(
+    "discourse_get_query",
+    title: "Get Data Explorer query",
+    description:
+      "Returns the definition of a saved Data Explorer query. Requires an admin account.",
+    implementation: DiscourseDataExplorer::McpTools::GetQuery,
+    input_schema: {
+      type: "object",
+      properties: {
+        id: {
+          type: "integer",
+          minimum: 1,
+        },
+      },
+      required: ["id"],
+      additionalProperties: false,
+    },
+    output_schema: DiscourseDataExplorer::McpTools::GetQuery::OUTPUT_SCHEMA,
+    required_scopes: DiscourseDataExplorer::McpTools::GetQuery::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
+    risk: :administration,
+    availability: -> { SiteSetting.data_explorer_enabled },
+  )
+
+  register_mcp_tool(
+    "discourse_run_query",
+    title: "Run Data Explorer query",
+    description: "Runs a saved Data Explorer query that the authenticated user can access.",
+    implementation: DiscourseDataExplorer::McpTools::RunQuery,
+    input_schema: {
+      type: "object",
+      properties: {
+        id: {
+          type: "integer",
+        },
+        params: {
+          type: "object",
+        },
+        limit: {
+          anyOf: [
+            { type: "integer", minimum: 1, maximum: DiscourseDataExplorer::QUERY_RESULT_MAX_LIMIT },
+            { const: "ALL" },
+          ],
+        },
+        explain: {
+          type: "boolean",
+          default: false,
+        },
+      },
+      required: ["id"],
+      additionalProperties: false,
+    },
+    output_schema: DiscourseDataExplorer::McpTools::RunQuery::OUTPUT_SCHEMA,
+    required_scopes: DiscourseDataExplorer::McpTools::RunQuery::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
+    availability: -> { SiteSetting.data_explorer_enabled },
+  )
+
   GlobalSetting.add_default(:max_data_explorer_api_reqs_per_10_seconds, 2)
 
   # Available options:
@@ -82,7 +153,7 @@ after_initialize do
     {
       run_queries: {
         actions: %w[discourse_data_explorer/query#run discourse_data_explorer/query#public_run],
-        params: %i[id],
+        path_params: %i[id],
       },
     },
   )
@@ -210,6 +281,7 @@ after_initialize do
     require_relative "lib/discourse_data_explorer/tools/run_sql"
     require_relative "lib/discourse_data_explorer/tools/submit_query"
     require_relative "lib/discourse_data_explorer/ai_query_generator"
+    require_relative "lib/discourse_data_explorer/query_generation"
 
     DiscourseAi.register_feature(
       module_name: :data_explorer,

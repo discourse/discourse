@@ -3,7 +3,7 @@ import { trustHTML } from "@ember/template";
 import MultiSelect from "discourse/select-kit/components/multi-select";
 import DInputTip from "discourse/ui-kit/d-input-tip";
 import { i18n } from "discourse-i18n";
-import UserFieldBase from "./base";
+import UserFieldBase from "./base.js";
 
 export default class UserFieldMultiselect extends UserFieldBase {
   <template>

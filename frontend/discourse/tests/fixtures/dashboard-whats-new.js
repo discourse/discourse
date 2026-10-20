@@ -1,3 +1,8 @@
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
 const dashboardWhatsNewFixtures = {
   "/admin/whats-new.json": {
     new_features: [

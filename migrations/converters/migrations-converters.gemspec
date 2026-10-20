@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.authors = ["Discourse Team"]
   s.required_ruby_version = ">= 3.4"
 
-  s.files = Dir["lib/**/*"]
+  s.files = Dir["lib/**/*", "config/**/*"]
 
   s.add_dependency "migrations-core"
   s.add_dependency "activesupport"

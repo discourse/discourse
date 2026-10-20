@@ -125,4 +125,45 @@ module("Integration | Component | SelectKit | ComboBox", function (hooks) {
       .dom(`.d-icon-${this.caretUpIcon}`, header)
       .exists("uses the icon provided");
   });
+
+  test("refocuses the header after a change", async function (assert) {
+    setDefaultState(this, { onChange: () => {} });
+
+    await render(
+      <template>
+        <ComboBox
+          @content={{this.content}}
+          @onChange={{this.onChange}}
+          @value={{this.value}}
+        />
+      </template>
+    );
+
+    await this.subject.expand();
+    await this.subject.selectRowByValue(2);
+
+    assert.dom(".select-kit-header").isFocused();
+  });
+
+  test("keeps focus that onChange moved elsewhere", async function (assert) {
+    setDefaultState(this, {
+      onChange: () => document.querySelector(".other-input").focus(),
+    });
+
+    await render(
+      <template>
+        <ComboBox
+          @content={{this.content}}
+          @onChange={{this.onChange}}
+          @value={{this.value}}
+        />
+        <input class="other-input" />
+      </template>
+    );
+
+    await this.subject.expand();
+    await this.subject.selectRowByValue(2);
+
+    assert.dom(".other-input").isFocused();
+  });
 });

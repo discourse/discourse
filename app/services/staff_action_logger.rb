@@ -322,10 +322,24 @@ class StaffActionLogger
   def log_admin_onboarding_step_completed(step, opts = {})
     raise Discourse::InvalidParameters.new(:step) if step.blank?
 
+    topic_option = opts[:topic_option]
+    details = opts[:details]
+    if topic_option.present?
+      details =
+        I18n.t(
+          "staff_action_logs.admin_onboarding_topic_option",
+          option:
+            I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.#{topic_option}.title"),
+          option_id: topic_option,
+        )
+    end
+
     UserHistory.create!(
       params(opts).merge(
         action: UserHistory.actions[:admin_onboarding_step_completed],
         subject: step,
+        new_value: topic_option,
+        details: details,
       ),
     )
   end
@@ -542,6 +556,7 @@ class StaffActionLogger
         action: UserHistory.actions[:suspend_user],
         target_user_id: user.id,
         details: details,
+        expires_at: user.suspended_till,
       )
     args[:post_id] = opts[:post_id] if opts[:post_id]
     UserHistory.create!(args)
@@ -734,7 +749,7 @@ class StaffActionLogger
 
     changed_attributes = category.previous_changes.slice(*category_params.keys)
 
-    if !old_permissions.empty? && (old_permissions != category_params[:permissions].to_h)
+    if old_permissions.present? && (old_permissions != category_params[:permissions].to_h)
       changed_attributes.merge!(
         permissions: [old_permissions.to_json, category_params[:permissions].to_json],
       )
@@ -807,6 +822,7 @@ class StaffActionLogger
         action: UserHistory.actions[:silence_user],
         target_user_id: user.id,
         details: opts[:details],
+        expires_at: user.silenced_till,
       )
     create_args[:post_id] = opts[:post_id] if opts[:post_id]
 

@@ -7,6 +7,7 @@ class TopicEmbed < ActiveRecord::Base
 
   belongs_to :topic
   belongs_to :post
+  has_many :topic_embed_aliases, dependent: :delete_all
   validates :embed_url, presence: true
   validates :embed_url, uniqueness: true
   validates :embed_content_cache, length: { maximum: EMBED_CONTENT_CACHE_MAX_LENGTH }
@@ -191,16 +192,26 @@ class TopicEmbed < ActiveRecord::Base
     return if uri.blank?
 
     begin
-      html = FinalDestination::HTTP.get(uri)
+      response = FinalDestination::HTTP.get_response(uri)
     rescue OpenURI::HTTPError, Net::OpenTimeout, FinalDestination::SSRFDetector::DisallowedIpError
       return
     end
 
-    parse_html(html, uri.to_s)
+    parse_html(response.body, uri.to_s, content_type: response["content-type"])
   end
 
-  def self.parse_html(html, url)
+  def self.parse_html(html, url, content_type: nil)
     require "ruby-readability"
+
+    encoding = Encodings.charset_from_content_type(content_type)
+
+    # A transport-level charset can misrepresent the document. When the response
+    # header declares a non-Unicode charset but the page itself declares UTF-8
+    # and the bytes are valid UTF-8, the page's declaration wins.
+    if encoding.present? && !Encodings.unicode_encoding?(encoding) &&
+         Encodings.charset_from_document(html) == "utf-8" && Encodings.valid_utf8?(html)
+      encoding = "utf-8"
+    end
 
     opts = {
       tags: %w[
@@ -236,12 +247,19 @@ class TopicEmbed < ActiveRecord::Base
     opts[
       :blacklist
     ] = SiteSetting.blocked_embed_selectors if SiteSetting.blocked_embed_selectors.present?
+    opts[:encoding] = encoding if encoding.present?
     allowed_embed_classnames =
       SiteSetting.allowed_embed_classnames if SiteSetting.allowed_embed_classnames.present?
 
     response = FetchResponse.new
 
-    raw_doc = Nokogiri.HTML5(html)
+    raw_doc =
+      begin
+        Nokogiri.HTML5(html, encoding: encoding)
+      rescue ArgumentError, EncodingError
+        opts.delete(:encoding)
+        Nokogiri.HTML5(html)
+      end
 
     response.url = url
 
@@ -320,7 +338,20 @@ class TopicEmbed < ActiveRecord::Base
       embed_url = response.url if original_uri.host == canonical_uri.host
     end
 
-    TopicEmbed.import(import_user, embed_url, response.title, response.body)
+    transaction do
+      post = TopicEmbed.import(import_user, embed_url, response.title, response.body)
+      topic_embed = post&.topic&.topic_embed
+      alias_attributes = TopicEmbedAlias.key_attributes(url)
+
+      if topic_embed && alias_attributes[:url_key] != embed_url_key(topic_embed.embed_url)
+        TopicEmbedAlias.upsert(
+          alias_attributes.merge(topic_embed_id: topic_embed.id),
+          unique_by: :url_hash,
+        )
+      end
+
+      post
+    end
   end
 
   # Convert any relative URLs to absolute. RSS is annoying for this.
@@ -363,7 +394,10 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.topic_embed_by_url(embed_url)
-    with_embed_urls([embed_url]).min_by(&:id)
+    with_embed_urls([embed_url]).min_by(&:id) ||
+      joins(:topic_embed_aliases).find_by(
+        topic_embed_aliases: TopicEmbedAlias.key_attributes(embed_url),
+      )
   end
 
   def self.with_embed_urls(urls)

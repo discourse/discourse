@@ -1,18 +1,16 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import { action, computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import { action } from "@ember/object";
 import ListSetting from "discourse/select-kit/components/list-setting";
 
-@tagName("")
 export default class HostList extends Component {
   tokenSeparator = "|";
-  choices = null;
 
-  @computed("value")
   get settingValue() {
-    return this.value.toString().split(this.tokenSeparator).filter(Boolean);
+    return this.args.value
+      .toString()
+      .split(this.tokenSeparator)
+      .filter(Boolean);
   }
 
   @action
@@ -21,7 +19,7 @@ export default class HostList extends Component {
       return;
     }
 
-    this.set("value", value.join(this.tokenSeparator));
+    this.args.changeValueCallback(value.join(this.tokenSeparator));
   }
 
   <template>
@@ -29,8 +27,8 @@ export default class HostList extends Component {
       <ListSetting
         @choices={{this.settingValue}}
         @onChange={{this.onChange}}
-        @options={{hash allowAny=this.allowAny disabled=@disabled}}
-        @settingName={{this.setting.setting}}
+        @options={{hash allowAny=@allowAny disabled=@disabled}}
+        @settingName={{@setting.setting}}
         @value={{this.settingValue}}
       />
     </div>

@@ -211,7 +211,6 @@ fa_IR:
       sk:
         name: اسلوواکی
     share:
-      topic_html: 'موضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "نوشته #%{postNumber} توسط @%{username}"
       close: "بستن"
       twitter: "هم‌رسانی در X"
@@ -259,6 +258,10 @@ fa_IR:
     topic_admin_menu: "اقدامات موضوع"
     skip_to_main_content: "رفتن به محتوای اصلی"
     skip_user_nav: "پرش به محتوای نمایه"
+    reorder:
+      move_up: "انتقال به بالا"
+      move_down: "انتقال به پایین"
+      position: "%{position} از %{total}"
     emails_are_disabled: "تمام ایمیل‌های خروجی به صورت کلی توسط مدیر قطع شده است. هیچگونه ایمیل اگاه سازی ارسال نخواهد شد."
     emails_are_disabled_non_staff: "ایمیل خروجی برای کاربران غیرهمکار غیرفعال شده است."
     software_update_prompt:
@@ -356,9 +359,6 @@ fa_IR:
     max_of_count:
       one: "حداکثر %{count}"
       other: "حداکثر %{count}"
-    character_count:
-      one: "%{count} نویسه"
-      other: "%{count} نویسه"
     period_chooser:
       aria_label: "فیلتر بر اساس دوره زمانی"
     related_messages:
@@ -606,6 +606,9 @@ fa_IR:
       title:
         search: "جستجو برای یک پیام"
         placeholder: "عنوان پیام، لینک و یا آیدی آن را اینجا وارد کنید"
+    dsa_statements:
+      category: "دسته‌بندی"
+      saving: "در‌حال ذخیره‌سازی..."
     review:
       show_more: "نمایش بیشتر"
       show_less: "نمایش کمتر"
@@ -1721,7 +1724,6 @@ fa_IR:
         upload_title: "تصویرتان را بارگذاری کنید"
         image_is_not_a_square: "اخطار: ما تصویر شما را بریدیم; طول و عرض برابر نبود."
         logo_small: "لوگو کوچک سایت. به طور پیش‌فرض استفاده می‌شود."
-        use_custom: "یا یک آواتار سفارشی بارگذاری کنید:"
       change_profile_background:
         title: "سربرگ نمایه"
         instructions: "سرصفحه های نمایه در مرکز قرار می گیرند و دارای عرض پیش فرض ۱۱۱۰ پیکسل هستند."
@@ -2275,7 +2277,7 @@ fa_IR:
       hide_forever: "نه ممنون"
       hidden_for_session: "بسیار خوب، فردا از شما سؤال می‌کنم. شما همیشه می‌توانید از«ورود به سیستم» نیز برای ساخت یک حساب کاربری استفاده کنید."
       intro: "سلام! :heart_eyes: به نظر میاد شما از بحث لذت می‌برید، اما هنوز برای یک حساب کاربری ثبت نام نکرده‌اید."
-      value_prop: "از پیمایش در پستی که قبلا خوانده‌اید خسته شده اید؟ وقتی یک حساب کاربری ایجاد می‌کنید، همیشه به همان جایی که آن را رها کرده بودید برمی‌گردید. با یک حساب کاربری همچنین می توانید از پاسخ‌های جدید مطلع شوید، نشانک‌ها را ذخیره کنید و از پسندها برای تشکر از دیگران استفاده کنید. همه ما می‌توانیم با هم کار کنیم تا این جامعه عالی شود. :heart:"
+      value_prop: "از پیمایش در پستی که قبلا خوانده‌اید خسته شده اید؟ وقتی یک حساب کاربری ایجاد می‌کنید، همیشه به همان جایی که آن را رها کرده بودید برمی‌گردید. با یک حساب کاربری همچنین می توانید از پاسخ‌های جدید مطلع شوید، نشانک‌ها را ذخیره کنید و از پسندها برای تشکر از دیگران استفاده کنید. همه ما می‌توانیم با هم کار کنیم تا این جامعه عالی شود."
     offline_indicator:
       no_internet: "بدون اتصال به اینترنت"
       refresh_page: "تازه کردن صفحه"
@@ -2653,8 +2655,7 @@ fa_IR:
       edit_shared_draft: "ویرایش درفت مشترک"
       discard: "حذف"
       users_placeholder: "افزودن کاربران یا گروه‌ها"
-      title_placeholder: "در یک جمله‌ی کوتاه بگویید که این موضوع در چه موردی است؟"
-      title_placeholder_redesign: "عنوان"
+      title_placeholder: "عنوان"
       title_or_link_placeholder: "عنوان را بنویسید،یا پیوند را بچسبانید"
       edit_reason_placeholder: "چرا ویرایش می‌کنید؟"
       topic_featured_link_placeholder: "پیوندی که با عنوان نمایش داده می‌شود را وارد کنید."
@@ -4356,9 +4357,6 @@ fa_IR:
       admin:
         title: "مدیر کل"
     badges:
-      earned_n_times:
-        one: "این مدال را %{count} بار به دست آورده"
-        other: "این مدال را %{count} بار به دست آورده"
       granted_on: "اعطا شده %{date}"
       others_count:
         one: "%{count} بار به دیگران اعطا شده است"
@@ -4972,13 +4970,15 @@ fa_IR:
             block: "بستن"
             presets:
               custom: "سفارشی"
+            automatic: "خودکار"
           authorizations:
             user: "کاربر"
             last_used: "آخرین استفاده"
             status: "وضعیت"
             actions: "عملیات"
           activity:
-            rate_limits: "میزان محدودیت‌ها"
+            failed_tool_calls: "فراخوانی‌های ناموفق ابزار"
+            no_latency: "-"
             time: "زمان"
             user: "کاربر"
             duration: "مدت زمان"
@@ -5333,6 +5333,7 @@ fa_IR:
           series:
             anonymous: "ناشناس"
             crawlers: "خزنده‌ها"
+          crawler_learn_more: "بیشتر بدانید"
         period:
           last_7_days: "۷ روز گذشته"
           last_30_days: "۳۰ روز گذشته"
@@ -6165,6 +6166,7 @@ fa_IR:
           select_component: "یک کامپوننت انتخاب کنید..."
           unsaved_changes_alert: "تغییرات‌تان را هنوز ذخیره نکرده‌اید، می‌خواهید آن‌ها را نادیده گرفته و ادامه دهید؟"
           discard: "دور انداختن"
+          leave: "ترک کردن"
           stay: "ماندن"
           edit_css_html: "ویرایش کد"
           delete_upload_confirm: "حذف فایل بارگذاری شده؟ (شاید قالب CSS با مشکل مواجه شود!)"
@@ -7085,13 +7087,13 @@ fa_IR:
           multiselect: "انتخاب چندگانه"
       site_text:
         description: "شما می توانید هر یک از متن های موجود در انجمن خود را سفارشی کنید."
-        search: "جستجو برای متنی که میخواهید ویرایش کنید"
+        search_label: "جستجو"
+        all_themes: "تمام متن‌های وبگاه"
+        theme_disabled: "ازکاراندازی"
+        filters: "فیلترها"
         title: "متن‌های سایت"
         edit: "ویرایش"
-        revert: "بازگردانی تغییرات"
         revert_confirm: "آیا مطمئن هستید که میخواهید تغییرات را بازگردانی کنید؟"
-        go_back: "بازگشت به جستجو"
-        recommended: "ما پیشنهاد میکنیم این متن را بر اساس نیاز های خود ویرایش کنید:"
         show_overriden: "تنها بازنویسی‌شده‌ها را نمایش بده"
         show_outdated: "فقط قدیمی/نامعتبر نمایش داده شود"
         show_untranslated: "فقط ترجمه نشده را نشان داده شود"

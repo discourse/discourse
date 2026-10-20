@@ -181,10 +181,22 @@ export default class DEditor extends Component {
     return this.editorComponent !== TextareaEditor;
   }
 
+  get hiddenToolbarButtons() {
+    if (
+      !this.userToolbarPreferences ||
+      !this.siteSettings.enable_composer_toolbar_customization
+    ) {
+      return [];
+    }
+
+    return this.currentUser?.user_option?.hidden_composer_toolbar_buttons ?? [];
+  }
+
   setupToolbar() {
-    this.toolbar = new Toolbar(
-      this.getProperties("siteSettings", "showLink", "capabilities", "site")
-    );
+    this.toolbar = new Toolbar({
+      ...this.getProperties("siteSettings", "showLink", "capabilities", "site"),
+      hiddenButtons: this.hiddenToolbarButtons,
+    });
     this.toolbar.context = this;
 
     _createCallbacks.forEach((cb) => cb(this.toolbar));
@@ -239,8 +251,8 @@ export default class DEditor extends Component {
    * @property {function} addText - Adds text
    * @property {function} applyList - Applies a list format
    * @property {*} selected - The current selection
-   * @property {Object} commands - Available commands
-   * @property {Object} state - Current editor state (inWrap, inBold, etc.)
+   * @property {import("discourse/lib/composer/text-manipulation").TextManipulation["commands"]} commands - Available commands
+   * @property {import("discourse/lib/composer/text-manipulation").TextManipulation["state"]} state - Current editor state (inWrap, inBold, etc.)
    */
 
   /**
@@ -427,10 +439,16 @@ export default class DEditor extends Component {
 
       this.appEvents.on("composer:replace-toolbar", replaceToolbar);
       this.appEvents.on("composer:reset-toolbar", this, "resetToolbar");
+      this.appEvents.on("composer:refresh-preview", this, "_watchForChanges");
 
       return () => {
         this.appEvents.off("composer:replace-toolbar", replaceToolbar);
         this.appEvents.off("composer:reset-toolbar", this, "resetToolbar");
+        this.appEvents.off(
+          "composer:refresh-preview",
+          this,
+          "_watchForChanges"
+        );
 
         this.appEvents.off(
           "composer:insert-block",
@@ -707,6 +725,7 @@ export default class DEditor extends Component {
         destroyUserStatuses();
         return userSearch({
           term,
+          searchContext: "mention",
           topicId: this.topicId,
           categoryId: this.categoryId,
           includeGroups: true,

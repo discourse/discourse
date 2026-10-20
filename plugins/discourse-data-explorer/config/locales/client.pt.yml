@@ -18,7 +18,6 @@ pt:
       admin_dashboard_card:
         no_results: "Sem resultados"
     explorer:
-      default_query: "Predefinição"
       or: "ou"
       admins_only: "O explorador de dados está disponível apenas para os administradores."
       title: "Explorador de Dados"
@@ -51,6 +50,7 @@ pt:
         one: "%{count} resultado."
         other: "%{count} resultados."
       query_groups: "Grupos"
+      query_tags: "Etiquetas"
       query_description: "Descrição"
       column: "Coluna %{number}"
       reset_params: "Repor"

@@ -32,7 +32,6 @@ import DTooltips from "discourse/float-kit/components/d-tooltips";
 import bodyClass from "discourse/helpers/body-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
-import { eq } from "discourse/truth-helpers";
 import DCustomHtml from "discourse/ui-kit/d-custom-html";
 
 export default <template>
@@ -71,11 +70,7 @@ export default <template>
       <OfflineIndicator />
     {{/if}}
 
-    {{#if
-      (eq @controller.siteSettings.welcome_banner_location "below_site_header")
-    }}
-      <WelcomeBanner />
-    {{/if}}
+    <WelcomeBanner @location="below_site_header" />
 
     <PluginOutlet
       @connectorTagName="div"
@@ -112,14 +107,7 @@ export default <template>
             <AdminOnboardingBanner />
           {{/if}}
 
-          {{#if
-            (eq
-              @controller.siteSettings.welcome_banner_location
-              "above_topic_content"
-            )
-          }}
-            <WelcomeBanner />
-          {{/if}}
+          <WelcomeBanner @location="above_topic_content" />
 
           <div class="container" id="main-container">
             {{#if @controller.showTop}}
@@ -154,6 +142,15 @@ export default <template>
       {{#if @controller.showPoweredBy}}
         <PoweredByDiscourse />
       {{/if}}
+
+      {{! Composer lives inside the grid so themes can place it in a grid
+      column (e.g. Horizon peek mode). It is position:fixed in its default
+      state, so its DOM location here does not affect normal positioning —
+      however this relies on #main-outlet-wrapper never establishing a containing
+      block (no transform/filter/contain/will-change/perspective). }}
+      {{#if @controller.siteSettings.enable_main_outlet_grid_layout_change}}
+        <ComposerContainer />
+      {{/if}}
     </div>
 
     <PluginOutlet
@@ -177,7 +174,9 @@ export default <template>
     <ModalContainer />
     <DesignWizardPanel />
     <DialogHolder />
-    <ComposerContainer />
+    {{#unless @controller.siteSettings.enable_main_outlet_grid_layout_change}}
+      <ComposerContainer />
+    {{/unless}}
     <RenderGlimmerContainer />
 
     {{#if @controller.showFooterNav}}

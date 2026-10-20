@@ -28,26 +28,11 @@ module DiscourseAi
           Errno::ECONNREFUSED,
           Errno::ECONNRESET,
           Errno::ETIMEDOUT,
+          EOFError,
           SocketError,
           OpenSSL::SSL::SSLError,
         ]
 
-        # Read-only context handed to request header providers. Lets plugins
-        # contribute provider-agnostic, per-request HTTP headers (e.g. routing
-        # hints for a proxy) without reaching into endpoint internals.
-        RequestHeaderContext =
-          Struct.new(
-            :llm_model,
-            :feature_name,
-            :feature_context,
-            :has_images,
-            :streaming,
-            keyword_init: true,
-          )
-
-        # Mutated in place (<<, clear) but never reassigned, so the single array
-        # is shared across Base and all endpoint subclasses via constant lookup.
-        REQUEST_HEADERS_PROVIDERS = []
         # 6 minutes
         # Reasoning LLMs can take a very long time to respond, generally it will be under 5 minutes
         # The alternative is to have per LLM timeouts but that would make it extra confusing for people
@@ -94,20 +79,10 @@ module DiscourseAi
             true
           end
 
-          # Register a block that returns a Hash of extra HTTP headers to send
-          # with each completion request. The block receives a
-          # RequestHeaderContext and must not raise (errors are swallowed and
-          # logged so a header bug can never break inference).
+          # Plugins registered header providers here before RequestHeaders also
+          # served decision models; kept so they work across versions.
           def register_request_headers_provider(&block)
-            REQUEST_HEADERS_PROVIDERS << block
-          end
-
-          def request_headers_providers
-            REQUEST_HEADERS_PROVIDERS
-          end
-
-          def reset_request_headers_providers!
-            REQUEST_HEADERS_PROVIDERS.clear
+            RequestHeaders.register(&block)
           end
         end
 
@@ -236,33 +211,86 @@ module DiscourseAi
 
         # Extra HTTP headers contributed by registered providers for this
         # request. Endpoints that want them merge the result into their request
-        # headers. Provider failures are isolated so they can never break a
-        # completion.
+        # headers.
         def extra_request_headers
-          providers = self.class.request_headers_providers
-          return {} if providers.blank?
-
-          context =
-            RequestHeaderContext.new(
-              llm_model: llm_model,
+          RequestHeaders.for(
+            RequestHeaders::Context.new(
+              model: llm_model,
               feature_name: @feature_name,
               feature_context: @feature_context,
               has_images: @request_has_images,
               streaming: @streaming_mode,
-            )
-
-          providers.each_with_object({}) do |provider, headers|
-            result = provider.call(context)
-            headers.merge!(result.stringify_keys) if result.is_a?(Hash)
-          rescue StandardError => e
-            Discourse.warn_exception(
-              e,
-              message: "Discourse AI request header provider raised an error; skipping it",
-            )
-          end
+            ),
+          )
         end
 
         protected
+
+        def output_stop_reason
+          nil
+        end
+
+        def output_limit_reached?
+          false
+        end
+
+        def reported_reasoning_tokens
+          nil
+        end
+
+        def reset_attempt_state!
+          @processor = nil
+          @decoder = nil
+          @json_decoder = nil
+          @visible_output = false
+        end
+
+        def visible_partial?(partial)
+          case partial
+          when Thinking
+            false
+          when String
+            partial.present?
+          when ToolCall
+            true
+          when StructuredOutput
+            partial.content?
+          when Array
+            partial.any? { |item| visible_partial?(item) }
+          else
+            false
+          end
+        end
+
+        def update_completion_state(
+          log,
+          call_status,
+          cancelled: false,
+          response_limit_tripped: false
+        )
+          log.reasoning_tokens = reported_reasoning_tokens
+
+          # A response-limit cut is our own doing: the reply was trimmed to
+          # the caller's visible-response cap and generation aborted.
+          if response_limit_tripped
+            log.stop_reason = "max_response_tokens"
+            log.completion_state = AiApiAuditLog::CompletionState::TRUNCATED if @visible_output
+            return
+          end
+
+          log.stop_reason = output_stop_reason&.to_s&.slice(0, 50).presence
+          # Cancellation is a user action, not an incomplete completion.
+          return if cancelled || call_status != :success
+
+          log.completion_state =
+            if !@visible_output
+              AiApiAuditLog::CompletionState::EMPTY
+            elsif output_limit_reached?
+              AiApiAuditLog::CompletionState::TRUNCATED
+            else
+              AiApiAuditLog::CompletionState::COMPLETE
+            end
+        end
 
         def tokenizer
           llm_model.tokenizer_class
@@ -325,7 +353,12 @@ module DiscourseAi
         end
 
         def provider_model_params(model_params)
-          model_params.except(:thinking_effort, :reserved_output_tokens, :provider_output_tokens)
+          model_params.except(
+            :thinking_effort,
+            :reserved_output_tokens,
+            :provider_output_tokens,
+            :max_tokens_is_total,
+          )
         end
 
         def prepare_request(_payload)
@@ -442,12 +475,14 @@ module DiscourseAi
             )
 
           loop do
+            reset_attempt_state!
             call_status = :error
             response_data = +""
             response_raw = +""
 
             # Needed to response token calculations. Cannot rely on response_data due to function buffering.
             partials_raw = +""
+            attempt_output = GeneratedOutput.new
             structured_output = build_structured_output(model_params)
 
             request = prepare_request(request_body)
@@ -501,7 +536,7 @@ module DiscourseAi
 
                     # Some providers rely on prefill to return structured outputs, so the start
                     # of the JSON won't be included in the response. Supply it to keep JSON valid.
-                    structured_output << +"{" if structured_output && @forced_json_through_prefill
+                    structured_output.prefill if structured_output && @forced_json_through_prefill
 
                     xml_tool_processor = build_xml_tool_processor(dialect, partial_tool_calls)
                     xml_stripper = build_xml_stripper(dialect)
@@ -543,6 +578,7 @@ module DiscourseAi
                         structured_output: structured_output,
                         cancelled: -> { cancelled },
                         on_output_started: -> { response_output_started = true },
+                        attempt_output: attempt_output,
                       )
                     call_status = :success
                     return response_data
@@ -553,7 +589,7 @@ module DiscourseAi
                   Rails.logger.warn(
                     "#{self.class.name}: retryable network error: #{e.class}: #{e.message}",
                   )
-                  if response_output_started
+                  if generation_started?(response_output_started, log)
                     retrying = false
                     raise CompletionFailed, e.message
                   end
@@ -575,6 +611,10 @@ module DiscourseAi
               Rails.logger.warn(
                 "#{self.class.name}: retryable network error: #{e.class}: #{e.message}",
               )
+              if generation_started?(response_output_started, log)
+                retrying = false
+                raise CompletionFailed, e.message
+              end
               retry_status = NETWORK_ERROR_RETRY_STATUS
               retry_delay =
                 retry_delay_for_network_error(retry_count_transient: retry_count_transient)
@@ -610,7 +650,14 @@ module DiscourseAi
 
               raise
             ensure
-              should_log = log && call_status != :cancelled && !retrying
+              if execution_context&.generated_output &&
+                   (
+                     call_status != :success ||
+                       execution_context.generated_output.size(tokenizer).zero?
+                   ) && attempt_output.size(tokenizer) > 0
+                execution_context.generated_output = attempt_output
+              end
+              should_log = log && !retrying && (call_status != :cancelled || partials_raw.present?)
 
               if should_log
                 if retried
@@ -629,6 +676,7 @@ module DiscourseAi
                   partials_raw: partials_raw,
                   request_attempts: request_attempts.presence,
                   call_status: call_status,
+                  cancelled: cancelled,
                   start_time: request_started_at,
                   time_to_first_token_msecs: time_to_first_token_msecs,
                   feature_name: feature_name,
@@ -652,6 +700,13 @@ module DiscourseAi
           end
         rescue IOError, StandardError
           raise if !cancelled
+        end
+
+        def generation_started?(decoded_output_started, log)
+          return true if decoded_output_started
+          return false if !log || log.response_status != 200
+          final_log_update(log)
+          log.response_tokens.to_i > 0
         end
 
         def start_completion_log(
@@ -733,13 +788,14 @@ module DiscourseAi
             if partial.is_a?(String)
               partial = xml_stripper << partial if xml_stripper && !partial.empty?
 
-              if structured_output.present?
+              if partial && structured_output.present?
                 structured_output << partial if !partial.empty?
                 partial = structured_output
               end
             end
             if partial
               record_first_token.call if should_record_first_token
+              @visible_output ||= visible_partial?(partial)
               orig_blk.call(partial)
             end
           end
@@ -754,7 +810,8 @@ module DiscourseAi
           response_raw:,
           structured_output:,
           cancelled:,
-          on_output_started:
+          on_output_started:,
+          attempt_output: nil
         )
           response_data = +""
 
@@ -765,6 +822,9 @@ module DiscourseAi
 
             decode_chunk(chunk).each do |partial|
               break if cancelled.call
+              # Even output buffered before a complete tool/XML block is generated work.
+              on_output_started.call
+              attempt_output&.<<(partial)
               partials_raw << partial.to_s
               response_data << partial if partial.is_a?(String)
               partials = [partial]
@@ -772,10 +832,7 @@ module DiscourseAi
                 partials = (xml_tool_processor << partial)
                 break if xml_tool_processor.should_cancel?
               end
-              partials.each do |inner_partial|
-                on_output_started.call
-                blk.call(inner_partial)
-              end
+              partials.each { |inner_partial| blk.call(inner_partial) }
             end
           end
 
@@ -798,12 +855,12 @@ module DiscourseAi
           structured_output:
         )
           if xml_stripper
-            stripped = xml_stripper.finish
-            if stripped.present?
-              response_data << stripped
-              result = []
-              result = (xml_tool_processor << stripped) if xml_tool_processor
-              result.each { |partial| blk.call(partial) }
+            # Preserve legacy return data without exposing buffered reasoning through the block.
+            unstripped = xml_stripper.finish
+            response_data << unstripped if unstripped.present?
+            stripped = xml_stripper.finish_visible
+            if stripped.present? && xml_tool_processor
+              (xml_tool_processor << stripped).each { |partial| blk.call(partial) }
             end
           end
 
@@ -815,6 +872,7 @@ module DiscourseAi
 
         def finish_structured_output_streaming(structured_output, blk)
           structured_output.finish
+          @visible_output ||= structured_output.content?
           if structured_output.broken?
             # signal last partial output which will get parsed
             # by best effort json parser
@@ -831,6 +889,7 @@ module DiscourseAi
           partials_raw:,
           request_attempts:,
           call_status:,
+          cancelled:,
           start_time:,
           time_to_first_token_msecs:,
           feature_name:,
@@ -840,6 +899,17 @@ module DiscourseAi
           log.raw_response_payload = response_raw
           log.request_attempts = request_attempts if log.has_attribute?(:request_attempts)
           final_log_update(log)
+          update_completion_state(
+            log,
+            call_status,
+            cancelled: cancelled,
+            response_limit_tripped: !!execution_context&.response_limit_tripped,
+          )
+          execution_context&.settle_generation(
+            tokens: log.response_tokens,
+            tokenizer: tokenizer,
+            complete: call_status == :success && !cancelled,
+          )
           log.response_tokens = tokenizer.size(partials_raw) if log.response_tokens.blank?
           log.response_status ||= 200 if call_status == :success
           log.estimated_cost = estimated_cost_for(log)
@@ -848,8 +918,12 @@ module DiscourseAi
           log.duration_msecs = (Time.now - start_time) * 1000
           log.time_to_first_token_msecs = time_to_first_token_msecs
           log.save!
+          execution_context.audit_log_id = log.id if execution_context
 
-          execution_context&.token_usage_tracker&.add_from_audit_log(log)
+          execution_context&.token_usage_tracker&.add_from_audit_log(
+            log,
+            preparation: feature_name == "context_compression",
+          )
 
           AiApiRequestStat.record_from_audit_log(log, llm_model: @llm_model)
           LlmQuota.log_usage(
@@ -1097,12 +1171,22 @@ module DiscourseAi
             end
           end
 
+          # Legacy return values include stripped-only text; audit visibility must not.
+          visible_response_data = response_data
           if xml_stripper
+            visible_response_data = []
             response_data.map! do |partial|
-              stripped = (xml_stripper << partial) if partial.is_a?(String)
-              stripped.presence || partial
+              if partial.is_a?(String)
+                stripped = xml_stripper << partial
+                visible_response_data << stripped
+                stripped.presence || partial
+              else
+                visible_response_data << partial
+                partial
+              end
             end
             response_data << xml_stripper.finish
+            visible_response_data << xml_stripper.finish_visible
           end
 
           response_data.reject!(&:blank?)
@@ -1111,8 +1195,20 @@ module DiscourseAi
             response_data.each { |data| structured_output << data if data.is_a?(String) }
             structured_output.finish
 
+            visible_structured_output = structured_output
+            if xml_stripper
+              visible_structured_output = StructuredOutput.new({})
+              visible_structured_output.prefill if @forced_json_through_prefill
+              visible_response_data.each do |partial|
+                visible_structured_output << partial if partial.is_a?(String)
+              end
+              visible_structured_output.finish
+            end
+            @visible_output = visible_structured_output.content?
             return structured_output
           end
+
+          @visible_output = visible_partial?(visible_response_data)
 
           # this is to keep stuff backwards compatible
           response_data = response_data.first if response_data.length == 1

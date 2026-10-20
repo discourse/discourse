@@ -11,6 +11,8 @@ import FeaturedTopic from "discourse/components/topic-list/featured-topic";
 import categoryVariables from "discourse/helpers/category-variables";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import categoryStyleType from "discourse/lib/category-style-type";
+import { number } from "discourse/lib/formatter";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
@@ -20,8 +22,8 @@ import Topic from "discourse/models/topic";
 import { and, eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 const CATEGORY_HASHTAG_SELECTOR =
@@ -31,17 +33,21 @@ const LATEST_TOPICS_CACHE_MS = 5 * 60 * 1000; // 5 minutes
 
 const CategoryNameLink = <template>
   <a class="category-card__link" href={{@category.url}} ...attributes>
-    <span
-      class="category-card__style
-        {{concat '--style-' (or @category.style_type 'square')}}"
-      style={{categoryVariables @category}}
-    >
-      {{#if (and (eq @category.style_type "icon") @category.icon)}}
-        {{dIcon @category.icon}}
-      {{else if (and (eq @category.style_type "emoji") @category.emoji)}}
-        {{dReplaceEmoji (concat ":" @category.emoji ":")}}
-      {{/if}}
-    </span>
+    {{#let
+      (or (categoryStyleType @category.style_type) "square")
+      as |styleType|
+    }}
+      <span
+        class="category-card__style {{concat '--style-' styleType}}"
+        style={{categoryVariables @category}}
+      >
+        {{#if (and (eq styleType "icon") @category.icon)}}
+          {{dIcon @category.icon}}
+        {{else if (and (eq styleType "emoji") @category.emoji)}}
+          {{dEmoji @category.emoji}}
+        {{/if}}
+      </span>
+    {{/let}}
     <span class="category-card__name">{{@category.name}}</span>
     {{yield}}
   </a>
@@ -57,10 +63,16 @@ export default class CategoryCardContents extends CardContentsBase {
   avatarDataAttrKey = "id";
   avatarSelector = CATEGORY_HASHTAG_SELECTOR;
   canShowWhenUserProfilesHidden = true;
+
+  /** @type {import("discourse/models/category").default | null} */
   category = null;
+
+  /** @type {string | number | null} */
   categoryId = null;
   elementId = "category-card";
   eventPrefix = null;
+
+  /** @type {import("discourse/models/topic").default[] | null} */
   latestTopics = null;
   menuIdentifier = "category-card";
   mentionSelector = CATEGORY_HASHTAG_SELECTOR;
@@ -123,6 +135,16 @@ export default class CategoryCardContents extends CardContentsBase {
         currentUser: this.currentUser,
       }
     );
+  }
+
+  @computed("category.totalTopicCount")
+  get topicCount() {
+    return this.category?.totalTopicCount ?? 0;
+  }
+
+  @computed("topicCount")
+  get showViewAll() {
+    return this.topicCount > LATEST_TOPICS_COUNT;
   }
 
   didInsertElement() {
@@ -357,6 +379,14 @@ export default class CategoryCardContents extends CardContentsBase {
                 <li><FeaturedTopic @topic={{topic}} /></li>
               {{/each}}
             </ul>
+            {{#if this.showViewAll}}
+              <a class="category-card__view-all" href={{this.category.url}}>
+                {{i18n
+                  "category.view_all_topics"
+                  number=(number this.topicCount)
+                }}
+              </a>
+            {{/if}}
           </div>
         {{else if (eq this.latestTopics null)}}
           <DSkeleton class="card-row category-card__latest" @count={{3}} />

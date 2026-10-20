@@ -134,11 +134,9 @@ fr:
     ai_pm_summarization_allowed_groups: "Groupes autorisés à créer et à afficher des résumés dans les MP."
     ai_summary_gists_enabled: "Générez automatiquement de brefs résumés des dernières réponses dans les sujets"
     ai_summary_gists_agent: "Agent utilisé pour générer de courts résumés de sujets. La génération de synthèses utilise toujours l'outil final-summary intégré ; les autres outils et les formats de réponse structurés configurés sur l'agent sont ignorés."
-    ai_summary_backfill_maximum_topics_per_hour: "Nombre de résumés de sujets à traiter rétroactivement par heure. Chaque synthèse localisée est comptabilisée dans cette limite."
     ai_bot_enabled: "Activez le module du robot IA."
     ai_bot_enabled_llms: "LLM pouvant être sélectionnés pour les conversations avec le bot d'IA"
     ai_bot_enable_chat_warning: "Afficher un avertissement lorsqu'un chat par message personnel est lancé. Cet avertissement peut être remplacé en modifiant la chaîne de traduction suivante : discourse_ai.ai_bot.pm_warning"
-    ai_bot_allowed_groups: "Lorsque le robot GPT aura accès aux messages privés, il répondra aux membres de ces groupes."
     ai_bot_debugging_allowed_groups: "Autoriser ces groupes à voir un bouton de débogage sur les publications qui affiche la demande et la réponse brutes de l'IA"
     ai_bot_public_sharing_allowed_groups: "Autorisez ces groupes à partager des messages privés de l'IA avec le public via un lien unique accessible au public. Remarque : si votre site nécessite une connexion, les partages nécessiteront également une connexion."
     ai_bot_add_to_header: "Afficher un bouton dans l'en-tête pour démarrer un message personnel avec un bot d'IA"
@@ -427,6 +425,26 @@ fr:
       read_post:
         unknown_post: "publication"
       chat_tool_approval:
+        topic_states:
+          open: "Ouvert"
+          closed: "Fermé"
+          active: "Actif"
+          deleted: "Supprimés"
+        solution_post: "Publication #%{number}"
+        duration_label: "Durée :"
+        user_duration:
+          one: "%{count} jour"
+          other: "%{count} jours"
+        posts_label: "Publications"
+        category_label: "Catégorie"
+        category_fields:
+          name: "nom"
+          description: "description"
+          color: "couleur"
+          text_color: "couleur du texte"
+        approve_label: "Oui"
+        reject_label: "Non"
+        empty_value: "Vide"
         approved: "Approuvé par @%{username}."
         rejected: "Rejeté par @%{username}."
         failed: "Impossible d'exécuter l'action : %{error}"
@@ -1032,8 +1050,8 @@ fr:
         disable_embeddings: "Vous devez d'abord désactiver « l'intégration de l'IA activée »."
         choose_model: "Définissez d'abord 'ai embeddings selected model'."
         model_test_failed: "Impossible de générer une intégration de test avec ce modèle. Vérifiez qu'il est correctement configuré."
-    secrets:
-      delete_failed_in_use: "Cet identifiant est actuellement utilisé par un ou plusieurs LLM, intégrations ou outils et ne peut pas être supprimé."
+    decision_models:
+      secret_not_found: "L'identifiant sélectionné n'existe pas."
     llm_models:
       missing_provider_param: "%{param} ne peut pas être vide"
       invalid_provider_param: "Le format de %{param} n'est pas valide."

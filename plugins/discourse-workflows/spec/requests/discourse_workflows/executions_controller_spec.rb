@@ -90,6 +90,60 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
       )
     end
 
+    it "returns the trigger node from the stored snapshot and the execution mode" do
+      execution =
+        Fabricate(
+          :discourse_workflows_completed_execution,
+          workflow:,
+          trigger_node_id: "trigger-1",
+          execution_mode: :manual,
+        )
+      Fabricate(
+        :discourse_workflows_execution_data,
+        execution:,
+        workflow_data: {
+          "name" => "Original workflow",
+          "nodes" => [
+            {
+              "id" => "trigger-1",
+              "name" => "When topic created",
+              "type" => "trigger:topic_created",
+            },
+          ],
+          "connections" => {
+          },
+        },
+      )
+
+      get "/admin/plugins/discourse-workflows/executions.json"
+
+      expect(response.parsed_body["executions"][0]).to include(
+        "execution_mode" => "manual",
+        "trigger" => {
+          "name" => "When topic created",
+          "type" => "trigger:topic_created",
+        },
+      )
+    end
+
+    it "falls back to the published trigger node without a stored snapshot" do
+      graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:manual", name: "Run it" }
+      published_workflow =
+        Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
+      Fabricate(
+        :discourse_workflows_completed_execution,
+        workflow: published_workflow,
+        trigger_node_id: "trigger-1",
+      )
+
+      get "/admin/plugins/discourse-workflows/executions.json"
+
+      expect(response.parsed_body["executions"][0]["trigger"]).to eq(
+        "name" => "Run it",
+        "type" => "trigger:manual",
+      )
+    end
+
     it "paginates with cursor param" do
       execution_1 = Fabricate(:discourse_workflows_execution, workflow: workflow)
       execution_2 = Fabricate(:discourse_workflows_execution, workflow: workflow)
@@ -187,6 +241,33 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
       expect(json["execution"]["workflow_name"]).to eq(workflow.name)
       expect(json["execution"]["steps"].length).to eq(1)
       expect(json.dig("meta", "message_bus_last_id")).to be_a(Integer)
+    end
+
+    it "replays the progress backlog of a running execution without stored steps" do
+      running = Fabricate(:discourse_workflows_execution, workflow:, status: :running)
+      channel = DiscourseWorkflows::ExecutionProgressPublisher.execution_channel(running.id)
+      2.times { MessageBus.publish(channel, { type: "execution_progress" }) }
+
+      get "/admin/plugins/discourse-workflows/executions/#{running.id}.json"
+
+      expect(response.parsed_body.dig("meta", "message_bus_last_id")).to eq(
+        [
+          MessageBus.last_id(channel) -
+            DiscourseWorkflows::ExecutionProgressPublisher::MAX_BACKLOG_SIZE,
+          0,
+        ].max,
+      )
+    end
+
+    it "only subscribes to new progress once steps are stored" do
+      channel = DiscourseWorkflows::ExecutionProgressPublisher.execution_channel(execution.id)
+      2.times { MessageBus.publish(channel, { type: "execution_progress" }) }
+
+      get "/admin/plugins/discourse-workflows/executions/#{execution.id}.json"
+
+      expect(response.parsed_body.dig("meta", "message_bus_last_id")).to eq(
+        MessageBus.last_id(channel),
+      )
     end
 
     it "returns caller workflow data for child executions" do

@@ -6,6 +6,8 @@
 
 he:
   js:
+    mcp_oauth_client_id_metadata_policy:
+      disabled: "רישום מנהלים בלבד"
     user_api_key:
       title: 'אישור של „%{application_name}”'
       authorize: "אישור"
@@ -48,6 +50,7 @@ he:
       manage:
         access_permission_editor: "עורכים"
         access_permission_remove: "הסרה"
+        add_group: "הוספת משתמש או קבוצה"
         mandatory: "חובה"
         disallowed: "אסור"
     carousel:
@@ -288,7 +291,7 @@ he:
       pt:
         name: פורטוגלית
       pt_BR:
-        name: פורטוגלית
+        name: פורטוגלית ברזילאית
       ro:
         name: רומנית
       ru:
@@ -324,7 +327,6 @@ he:
       zh_CN:
         name: סינית פשוטה
     share:
-      topic_html: 'נושא: <span class="topic-title">%{topicTitle}</span>'
       post: "פוסט מס׳ %{postNumber} מאת ‎@%{username}"
       close: "סגירה"
       twitter: "שיתוף ב־X"
@@ -378,12 +380,18 @@ he:
     skip_to_last_reply: "דילוג לתגובה האחרונה"
     skip_to_top: "דילוג למעלה"
     skip_user_nav: "דילוג לתוכן הפרופיל"
+    reorder:
+      remove: "הסרת %{label}"
+      removed: "הוסרו %{label}"
+      move_up: "העלאה למעלה"
+      move_down: "הורדה למטה"
+      position: "%{position} מתוך %{total}"
     emails_are_disabled: "כל הדוא״ל היוצא הושבת באופן גורף על ידי הנהלת באתר. שום הודעת דוא״ל, מכל סוג שהוא, לא תישלח."
     emails_are_disabled_no_smtp: "כל הדוא״ל היוצא מושבת כי לא מוגדר שרת SMTP. אי אפשר לשלוח שום הודעות משום סוג."
     emails_are_disabled_non_staff: "דוא״ל יוצא הושבת עבור משתמשים שאינם מהסגל."
     software_update_prompt:
       message: "עדכנו את האתר, <span>נא לרענן</span> כדי שהדברים פה יחזרו לרוץ בצורה חלקה."
-      dismiss: "התעלמות"
+      dismiss: "סילוק"
     notifications_tracking:
       tooltip: "רמת התראה: %{level}"
     back_button: "חזרה"
@@ -505,10 +513,6 @@ he:
       one: "%{count} לכל היותר"
       two: "%{count} לכל היותר"
       other: "%{count} לכל היותר"
-    character_count:
-      one: "תו אחד"
-      two: "%{count} תווים"
-      other: "%{count} תווים"
     period_chooser:
       aria_label: "סינון לפי תקופה"
     related_messages:
@@ -520,30 +524,35 @@ he:
       pill: "מוצע"
       pm_title: "הודעות מוצעות"
     admin_onboarding_banner:
+      launch_in_easy_steps: "הקמת הקהילה שלך"
+      select_theme:
+        title: "התאמת האתר שלך"
+        action: "הצגת האפשרויות"
+        completed: "שינוי האפשרויות"
+        show_light_screenshot: "הצגת צילום מסך בהיר"
+        show_dark_screenshot: "הצגת צילום מסך כהה"
       invite_collaborators:
+        title: "הזמנת משתפי פעולה"
         action: "יצירת הזמנה"
       start_posting:
         action: "הצגת רעיונות"
+        completed: "הצגת רעיונות נוספים"
         choose_option: "איך בא לך להתחיל?"
         predefined_topics: "תבניות שוברות קרח"
         predefined_topics_subtitle: "לספק לחברים חדשים נושא לשיחה, נא לבחור תבנית לעריכה וליצור תבנית משלך."
         predefined_topics_description: "אפשר לבחור מתוך אוסף של פותחי שיחה כדי להניע את השיח"
         use_predefined: "עיון בתבניות"
         back: "חזרה"
-        icebreakers:
-          fun_facts:
-            title: "אילו עובדות משעשעות עליך או עלייך היית רוצה לחלוק עם הקהילה?"
-            body: "היי כולם! מרגש אותי להקים את הקהילה הזאת. כדי להיכנס לעניינים, בואו נשתף עובדות משעשעות על עצמנו. אני אתחיל: התחביב שלי הוא טיולים וחקר מסלולים חדשים! איזו עובדה מעניינת יש עליך או עלייך?"
-          coolest_thing_you_have_seen_today:
-            title: "מה הדבר הכי מגניב שראית היום?"
-            body: "מה הדבר הכי מגניב שראית או חווית היום? זה יכול להיות כל דבר, החל משקיעה יפה ועד מחווה אדיבה אקראית. אני אתחיל: ראיתי כלב שעוזר לאדם מבוגר לחצות את הכביש!"
-          what_is_your_favorite_food:
-            title: "מה המאכל האהוב עליך או עלייך?"
     design_wizard:
+      title: "התאמת האתר שלך"
+      step_label: "מעבר לשלב %{index}"
+      save: "שמירה וסיום"
       back: "חזרה"
       next: "הבא"
+      launch: "אשף עיצוב"
       sections:
-        theme: "תמה"
+        theme: "ערכת עיצוב"
+        colors: "צבע ברירת מחדל"
         fonts: "גופנים"
         homepage: "דף הבית"
         welcome_banner: "כרזת קבלת פנים"
@@ -561,8 +570,23 @@ he:
         categories: "קטגוריות"
         styles:
           boxes: "תיבות"
+          only: "קטגוריות בלבד"
+      welcome_banner:
+        enable: "הצגת כרזת קבלת פנים"
+        location: "מקום כרזה"
+        locations:
+          below_site_header: "מתחת לכותרת האתר"
+          above_topic_content: "מעל לרשימת הנושאים"
+      search:
+        experiences:
+          search_icon:
+            title: "סמל חיפוש"
+            description: "זכוכית מגדלת בכותרת שפותחת את החיפוש."
+          search_field:
+            title: "שדה חיפוש"
+            description: "שדה חיפוש מלא בכותרת, תמיד זמין."
     about:
-      edit: "עריכת עמוד זה"
+      edit: "עריכת העמוד הזה"
       simple_title: "על אודות"
       title: "על %{title}"
       stats: "סטטיסטיקת אתר"
@@ -686,6 +710,9 @@ he:
       topic_bookmark: "נושא"
       post_bookmark: "פוסט מס׳ %{post_number}"
       jump_to_post: "קפיצה למס׳ %{post_number}"
+      bookmark_topic: "סימון נושא"
+      edit_topic_bookmark: "עריכת סימניית נושא"
+      delete_topic_bookmark: "מחיקת סימניית נושא"
       remove_reminder_keep_bookmark: "הסרת תזכורת ושמירת הסימנייה"
       created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}. %{name}"
       created_with_reminder_generic: "סימנת את זה עם תזכורת %{date}. %{name}"
@@ -765,12 +792,14 @@ he:
           other: "+%{count} טיוטות נוספות"
     embed_mode:
       allow_access: "לאפשר גישה"
+      continue_as_guest: "להמשיך כאורח/ת"
       editing_post: "רשומה נערכת"
       reply_placeholder: "כתיבת תגובה…"
       signin_flow:
         share_session_title: "כניסה אל %{site_name}"
         signin_required_title: "כניסה אל %{site_name}"
         open_signin_tab: "פתיחת לשונית כניסה"
+        waiting_title: "בהמתנה לכניסה"
         cancel: "ביטול"
         sign_in_to_reply: "יש להיכנס כדי להגיב"
     topic_count_all:
@@ -834,6 +863,9 @@ he:
       title:
         search: "חיפוש אחר הודעה"
         placeholder: "נא להקליד כאן את כותרת ההודעה, הכתובת או את המזהה"
+    dsa_statements:
+      category: "קטגוריה"
+      saving: "מתבצעת שמירה…"
     review:
       show_more: "להציג יותר"
       show_less: "להציג פחות"
@@ -1323,6 +1355,7 @@ he:
             from_alias_hint: "כינוי בו יש להשתמש בתור כתוב מאת בעת שליחת הודעות SMTP קבוצתיות בדוא״ל. נא לשים לב שאולי חלק מספקי הדוא״ל לא תומכים בזה, נא להיעזר בתיעוד של ספק הדוא״ל שלך."
         membership:
           title: חברות
+          join_method_title: "איך משתמשים יכולים להצטרף?"
           join_method:
             invite: "בהזמנה בלבד"
         categories:
@@ -1673,7 +1706,11 @@ he:
           none: "כבוי"
           all: "פעיל"
         not_supported: "התראות לא נתמכות בדפדפן זה. עמך הסליחה."
+        perm_default: "הפעלת התראות"
+        perm_denied_btn: "ההרשאה נדחתה"
         perm_denied_expl: "דחית הרשאה לקבלת התראות. יש לאפשר התראות בהגדרות הדפדפן שלך."
+        disable: "השבתת התראות"
+        enable: "הפעלת התראות"
         each_browser_note: "הערה: עליך לשנות הגדרה זו בכל דפדפן שמשמש אותך. כל ההודעות יושבתו אם בחרת להשהות התראות מתפריט המשתמש, ללא קשר להגדרה זו."
         consent_prompt: "לקבל התראות חיות כשמתקבלות תגובות לפוסטים שלך?"
       dismiss: "התעלמות"
@@ -1804,14 +1841,26 @@ he:
       automatically_unpin_topics: "ביטול נעיצה אוטומטית של נושאים עם הגעה לתחתית"
       apps: "אפליקציות"
       mcp_authorizations:
+        title: "יישומי MCP"
+        application: "שם היישום"
         endpoint: "משאב"
         scopes: "תחומים"
+        permissions: "הרשאות (%{count})"
         details: "פרטים"
         last_used: "שימוש אחרון"
+        tokens: "אסימונים פעילים"
         never: "לעולם לא"
         status: "מצב"
+        revoke: "שלילת גישה"
+        revoked: "הגישה של שרת ה־MCP נשללה."
+        empty: "אין יישומי MCP שמחוברים לחשבון שלך."
         statuses:
           active: "פעיל"
+          server_disabled: "השרת הושבת"
+          client_blocked: "לקוח נחסם"
+          client_not_approved: "הלקוח לא אושר"
+          access_removed: "גישה הוסרה"
+          user_unavailable: "משתמש לא זמין"
           revoked: "נשל"
       revoke_access: "שלילת גישה"
       undo_revoke_access: "ביטול שלילת גישה"
@@ -2120,7 +2169,6 @@ he:
         upload_title: "העלאת התמונה שלך"
         image_is_not_a_square: "אזהרה: קיצצנו את התמונה שלך; האורך והרוחב לא היו שווים."
         logo_small: "הלוגו הקטן של האתר. משמש כברירת מחדל."
-        use_custom: "או להעלות תמונה ייצוגית משלך:"
       change_profile_background:
         title: "כותרת פרופיל"
         instructions: "כותרות הפרופילים ימורכזו ורוחבן ייקבע ל־1110 פיקסלים כבררת מחדל."
@@ -2711,6 +2759,7 @@ he:
         }.
     learn_more: "מידע נוסף…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>מידע נוסף…</a>"
+    feedback_with_link: "<a href='%{url}' target='_blank'>משוב…</a>"
     mute: השתק
     unmute: ביטול השתקה
     last_post: פורסמו
@@ -2730,7 +2779,7 @@ he:
       hide_forever: "לא תודה"
       hidden_for_session: "סבבה, השאלה תופיע מחר. תמיד ניתן להשתמש ב‚כניסה’ גם כדי ליצור חשבון."
       intro: "שלום! נראה שאתם נהנים מהדיון, אבל לא נרשמתם לחשבון עדיין."
-      value_prop: "נמאס לך לעיין באותם הפוסטים? יצירת חשבון תאפשר לך לחזור בדיוק לנקודה בה עזבת בפעם האחרונה. חשבון מאפשר לך גם לקבל התראות על תגובות חדשות, לשמור סימניות ולהשתמש בלייקים כדי להודות לאחרים. כולנו יכולים לפעול ביחד כדי שהקהילה הזאת תהיה מצוינת. :heart:"
+      value_prop: "נמאס לך לעיין באותם הפוסטים? יצירת חשבון תאפשר לך לחזור בדיוק לנקודה בה עזבת בפעם האחרונה. חשבון מאפשר לך גם לקבל התראות על תגובות חדשות, לשמור סימניות ולהשתמש בלייקים כדי להודות לאחרים. כולנו יכולים לפעול ביחד כדי שהקהילה הזאת תהיה מצוינת."
     offline_indicator:
       no_internet: "אין חיבור לאינטרנט."
       refresh_page: "ריענון עמוד"
@@ -2829,6 +2878,9 @@ he:
       email_label: "דוא״ל"
       continue_button: "המשך"
       verify_button: "המשך"
+      code_resent: "שלחנו קוד חדש."
+      use_different_email: "להשתמש בכתובת דוא״ל חלופית"
+      use_password_instead: "להיכנס עם הסיסמה שלך במקום"
       signup_title: "יצירת חשבון משלך"
       account_ready_continue: "המשך"
       username_label: "שם משתמש"
@@ -2987,6 +3039,7 @@ he:
       enter: "Enter"
       option: "אפשרות"
       period: "פרק זמן"
+      tab: "Tab"
       delete: "מחיקה"
       home: "בית"
     conditional_loading_section:
@@ -3183,8 +3236,7 @@ he:
       cancel_edit: "ביטול עריכה"
       draft_saved: "הטיוטה נשמרה!"
       users_placeholder: "הוספת משתמשים או קבוצות"
-      title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
-      title_placeholder_redesign: "כותרת"
+      title_placeholder: "כותרת"
       title_or_link_placeholder: "הקלידו כותרת, או הדביקו קישור כאן"
       edit_reason_placeholder: "מדוע ערכת?"
       topic_featured_link_placeholder: "הזינו קישור שיוצג עם הכותרת."
@@ -4492,7 +4544,7 @@ he:
         attachment_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות קבצים."
         attachment_download_requires_login: "מצטערים, עליכם להיות מחוברים כדי להוריד את הקבצים המצורפים."
       cancel_composer:
-        confirm: "להתעלם מהפוסט שלך?"
+        confirm: "לסלק את הפוסט שלך?"
         confirm_edit: "להתעלם מהשינויים שלך?"
         discard: "להשליך"
         discard_edit: "התעלמות מהשינויים"
@@ -5265,10 +5317,6 @@ he:
       admin:
         title: "הנהלה"
     badges:
-      earned_n_times:
-        one: "עיטור זה הוענק פעם אחת (%{count})"
-        two: "עיטור זה הוענק %{count} פעמים"
-        other: "עיטור זה הוענק %{count} פעמים"
       granted_on: "הוענק לפני %{date}"
       others_count:
         one: "הוענק לאחרים פעם אחת"
@@ -5396,7 +5444,7 @@ he:
       manage_groups: "ניהול קבוצות תגיות"
       manage_groups_description: "הגדרת קבוצות לארגון תגיות"
       upload: "העלאת תגיות"
-      upload_description: "ניתן להעלות קובץ csv כדי ליצור כמות גדולה של תגיות בבת אחת"
+      upload_description: "ניתן להעלות קובץ csv כדי ליצור כמות גדולה של תגיות במרוכז"
       upload_instructions: "אחת בשורה, אפשר עם קבוצת תגיות בתצורה ‚שם_תגית,קבוצת_תגיות’."
       upload_successful: "התגיות הועלו בהצלחה"
       bulk_create_inline_placeholder: "יצירת תגיות (מופרדות בפסיקים)"
@@ -6067,13 +6115,13 @@ he:
             use_preset: "הגדרה"
             presets:
               custom: "מותאם"
+            automatic: "אוטומטי"
           authorizations:
             user: "משתמש"
             last_used: "שימוש אחרון"
             status: "מצב"
             actions: "פעולות"
           activity:
-            rate_limits: "מגבלות קצב"
             outcome: "תוצאה"
             time: "מועד"
             user: "משתמש"
@@ -6551,7 +6599,7 @@ he:
         title: "לוח בקרה"
         last_updated: "עדכון לוח המחוונים:"
         discourse_last_updated: "עדכון Discourse:"
-        version: "גירסה"
+        version: "גרסה"
         up_to_date: "הכול עדכני!"
         updates_available: "עדכונים מוכנים."
         please_update: "נא לעדכן!"
@@ -6670,6 +6718,7 @@ he:
           series:
             anonymous: "אלמוני"
             crawlers: "סורקי אינטרנט"
+          crawler_learn_more: "מידע נוסף"
         period:
           last_7_days: "7 הימים האחרונים"
           last_30_days: "30 הימים האחרונים"
@@ -7613,8 +7662,8 @@ he:
           upload: "העלאה"
           select_component: "נא לבחור רכיב…"
           unsaved_changes_alert: "עדיין לא שמרת את השינויים שלך, להשליך אותם ולהמשיך הלאה?"
-          unsaved_parent_themes: "לא הקצית את הרכיבים לערכות עיצוב, אפשר לדלג?"
           discard: "להשליך"
+          leave: "לעזוב"
           stay: "להישאר"
           css_html: "קוד מותאם אישית"
           edit_css_html: "עריכת קוד"
@@ -8714,13 +8763,14 @@ he:
           multiselect: "מגוון בחירות"
       site_text:
         description: "אפשר להתאים כל אחד ממקטעי הטקסט בפורום שלך."
-        search: "חיפוש הטקסט שמיועד לעריכה"
+        search_label: "חיפוש"
+        theme_disabled: "כבוי"
+        filters: "מסננים"
+        status:
+          invalid: "שגוי"
         title: "טקסטים של האתר"
         edit: "עריכה"
-        revert: "ביטול שינויים"
         revert_confirm: "לבטל את השינויים שלך?"
-        go_back: "חזרה לחיפוש"
-        recommended: "אנו ממליצים לערוך את הטקסט הבא כדי שיתאים לצרכים שלך:"
         show_overriden: "להציג רק את אלו שנדרסו"
         show_outdated: "להציג רק מיושן/שגוי"
         show_untranslated: "להציג רק לא מתורגמות"

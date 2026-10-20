@@ -12,6 +12,7 @@ import {
 export default class SharedContent extends Service {
   @service appEvents;
 
+  /** @type {{ body: string, files: File[] } | null} */
   @tracked pending = null;
 
   get hasPending() {

@@ -45,12 +45,13 @@ en:
             questions_failed: "Questions could not be loaded."
             more_questions: "Show more questions"
             no_questions: "The original asks are no longer available."
+            no_valid_questions: "No valid questions were linked to this subject."
             loading: "Loading reports…"
             queued: "Queued"
             running: "Generating…"
             failed: "Failed — generate again to retry. If this keeps happening, consider reducing <a href='%{max_asks_url}' target='_blank' rel='noopener noreferrer'>max asks</a>."
-            view_pm: "View full report"
-            view_pm_new_tab: "View full report (opens in a new tab)"
+            view_pm: "View report PM"
+            view_pm_new_tab: "View report PM (opens in a new tab)"
             load_failed: "Reports could not be loaded."
             reload: "Reload reports"
             coverage: "%{count} of %{total} questions analyzed"
@@ -102,6 +103,9 @@ en:
             create_ai_embedding: "Create AI embedding"
             update_ai_embedding: "Update AI embedding"
             delete_ai_embedding: "Delete AI embedding"
+            create_ai_decision_model: "Create AI decision model"
+            update_ai_decision_model: "Update AI decision model"
+            delete_ai_decision_model: "Delete AI decision model"
             create_ai_secret: "Create AI secret"
             update_ai_secret: "Update AI secret"
             delete_ai_secret: "Delete AI secret"
@@ -117,10 +121,13 @@ en:
     discourse_workflows:
       node_unavailable:
         requires_ai: "Requires the AI plugin to be enabled"
+        requires_decision_model: "Requires a decision model"
       nodes:
         "action:ai_agent": "AI Agent"
+        "action:classify": "Classify"
       node_descriptions:
         "action:ai_agent": "Run an AI agent to process data or generate content"
+        "action:classify": "Ask a decision model questions about each item"
     discourse_automation:
       scriptables:
         llm_report:
@@ -338,6 +345,24 @@ en:
           upload_ids_tooltip: "Optional upload IDs to attach to the prompt. Every upload must reach the model or the node fails: images need vision on the agent and the LLM, documents need their file type enabled on the LLM."
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Select an agent..."
+        classify:
+          decision_model_id: "Decision model"
+          text: "Text"
+          text_description: "What the decision model reads for each item."
+          upload_ids: "Images"
+          upload_ids_description: "Upload IDs of images the decision model looks at, such as the post's upload_ids. Other uploads are skipped. Needs a decision model that reads images."
+          questions: "Questions"
+          questions_description: "Each answer is added to the item as classification.NAME, where NAME is the question name."
+          add_question: "Add question"
+          name: "Name"
+          type: "Type"
+          type_yes_no: "Yes/no"
+          type_choice: "Choice"
+          type_score: "Score"
+          instructions: "Question"
+          choices: "Choices"
+          levels: "Levels"
+          levels_description: "From lowest to highest. The answer has the most likely level and a weighted score from 0 (first level) upwards."
 
       bot_chats:
         tab_label: "Bot chats"
@@ -355,12 +380,12 @@ en:
         awaiting_staff: "Awaiting staff approval"
 
       default_llm:
-        title: "Default LLM model"
-        description: "The default LLM model to use for all AI features. This will be used if no LLM is specified in the feature configuration or agent. If no default LLM is specified, the last created LLM will be used."
+        title: "Default language model"
+        description: "Used by any AI feature or agent that doesn't specify its own language model. If none is set, the most recently added language model is used."
 
       llm_selector:
         none: "None"
-        saved: "Default LLM model updated successfully"
+        saved: "Default language model saved"
 
       features:
         short_title: "Features"
@@ -636,6 +661,9 @@ en:
           translate:
             label: "Translate"
             title: "Translate to all supported languages using the selected language as the source"
+            confirm: "Translate from %{language} to:"
+            override_existing: "Also override existing translations"
+            no_targets: "No other target languages are configured. Add languages to the content localization supported locales setting."
             queued: "Translation queued"
             failed: "Failed to queue translation"
         translations_menu:
@@ -769,6 +797,11 @@ en:
         tokens: "Tokens"
         tokens_pair: "%{request} → %{response}"
         tokens_aria: "%{request} input tokens and %{response} output tokens"
+        reasoning_tokens: "Reasoning tokens"
+        stop_reason: "Stop reason"
+        empty: "Empty response"
+        truncated: "Truncated"
+        truncated_description: "Truncated at output limit"
         tokens_unavailable: "Token counts unavailable"
         cache_read_tokens: "Cache read"
         cache_write_tokens: "Cache write"
@@ -882,8 +915,8 @@ en:
         description: "Description"
         no_llm_selected: "No language model selected"
         use_parent_llm: "Use agent's language model"
-        max_turn_tokens: "Max turn tokens"
-        max_turn_tokens_help: "Maximum total tokens (input + output) consumed across all LLM calls during a single bot reply. Leave empty to default to half of the model's context window."
+        max_turn_tokens: "Turn work allowance"
+        max_turn_tokens_help: "Limits new output and tool results per reply, shared with child agents. Previous conversation does not count. This is not a spending limit. Leave empty to use 500,000 tokens."
         compression_threshold: "Compression threshold"
         compression_threshold_help: "Percentage of context usage (20–99) at which automatic compression kicks in. Lower values trigger compression earlier, preserving more headroom."
         vision_enabled: Include image uploads
@@ -1109,7 +1142,7 @@ en:
 
       secrets:
         short_title: "Credentials"
-        description: "Manage authentication credentials shared across LLMs, embeddings, and tools."
+        description: "Manage authentication credentials shared across LLMs, embeddings, decision models, and tools."
         name: "Name"
         secret: "Value"
         select_secret: "Select a credential..."
@@ -1132,8 +1165,45 @@ en:
         tool: "Tool"
         mcp_server: "MCP server"
         mcp_server_oauth_client_secret: "MCP server OAuth client secret"
+        decision_model: "Decision model"
         modal:
           title: "Create new credential"
+
+      decision_models:
+        seeded_description: "Pre-configured model"
+        manage: "Manage decision models"
+        start_from: "Start from"
+        no_preset: "None"
+        preset_descriptions:
+          none: "Settings for any compatible decision model endpoint"
+          jev-latest: "TypeSafe's hosted decision model, text only"
+          jev-latest-vision: "TypeSafe's hosted decision model with experimental image support"
+          vllm-sr-d3: "Open-source multimodal decision model, self-hosted with vLLM"
+          cloudflare-clef: "Cloudflare's open-source multimodal decision model on Workers AI"
+          cloudflare-clef-flash: "Smaller, faster version of Clef on Workers AI"
+          gpt-6-luna: "OpenAI's decision model on the Decisions API, with image support"
+        display_name: "Name"
+        model: "Model"
+        provider: "Provider"
+        url: "Endpoint URL"
+        api_key: "Credential"
+        vision_enabled: "Supports image input"
+        custom_headers:
+          title: "Custom headers"
+          name: "Header name"
+          value: "Header value"
+          add: "Add header"
+          remove: "Remove header"
+        edit: "Edit"
+        delete: "Delete"
+        confirm_delete: "Are you sure you want to delete this decision model? Workflows that use it will stop working."
+        saved: "Decision model saved"
+        test: "Run test"
+        test_success: "The decision model answered the test question (yes: %{percentage}%)."
+        providers:
+          system_one: "System One"
+          typesafe: "TypeSafe"
+          open_ai: "OpenAI Decisions"
 
       mcp_servers:
         short_title: "MCP servers"
@@ -1217,6 +1287,44 @@ en:
           one: "Discovered %{count} tool using protocol %{version}."
           other: "Discovered %{count} tools using protocol %{version}."
 
+      models:
+        short_title: "Models"
+        description: "Connect the models that power AI features and workflows."
+        new: "New model"
+        back: "Back to models"
+        back_to_types: "Back to model types"
+        empty: "You haven't set up any models yet"
+        name: "Name"
+        type: "Type"
+        provider: "Provider"
+        edit: "Edit"
+        choose_type: "What kind of model do you want to add?"
+        select_type: "Select"
+        types:
+          llm: "Large language"
+          embedding: "Embedding"
+          decision: "Decision"
+        type_titles:
+          llm: "Large language model"
+          embedding: "Embedding model"
+          decision: "Decision model"
+        type_descriptions:
+          llm: "Generates text for features like the AI bot, summaries, and the AI helper"
+          embedding: "Turns content into vectors for semantic search and related topics"
+          decision: "Answers typed questions about content (yes/no, choice, score) with probabilities, for use in workflows"
+        type_filters:
+          llm: "Large language models"
+          embedding: "Embedding models"
+          decision: "Decision models"
+        templates:
+          llm: "Choose a language model template"
+          embedding: "Choose an embedding template"
+          decision: "Choose a decision model template"
+        filters:
+          all: "All types"
+          text: "Filter by name or provider"
+          no_results: "No models match your filters"
+          reset: "Reset filters"
       llms:
         short_title: "LLMs"
         no_llms: "No LLMs yet"
@@ -1491,6 +1599,15 @@ en:
         empty: "You haven't setup embeddings yet"
         presets: "Select a preset..."
         configure_manually: "Configure manually"
+        preset_descriptions:
+          manual: "Settings for any embedding service, including self-hosted ones"
+          bge-large-en: "Open-source English-only model, self-hosted"
+          bge-m3: "Open-source multilingual model for longer content, self-hosted"
+          multilingual-e5-large: "Open-source multilingual model, self-hosted"
+          gemini-embedding-001: "Google's hosted multilingual model"
+          text-embedding-3-large: "OpenAI's most accurate embedding model"
+          text-embedding-3-small: "OpenAI's faster, lower-cost embedding model"
+          text-embedding-ada-002: "OpenAI's previous-generation model, superseded by text-embedding-3-small"
         edit: "Edit"
         seeded_warning: "This is pre-configured on your site and cannot be edited."
         tests:
@@ -1551,9 +1668,75 @@ en:
           suffix: "in all topics and posts with AI"
 
       ai_artifact:
+        editor:
+          title: "AI artifact"
+          edit_options: "Edit options"
+          reference: "Reference"
+          share_reference_description: "Share key or a shared artifact link from this site."
+          source_reference_description: "Source artifact ID."
+          version: "Version"
+          version_description: "Leave blank for the base artifact."
+          autorun: "Run automatically"
+          autorun_default_description: "Only applies when artifact security is set to hybrid mode."
+          autorun_strict: "This site requires a click to run."
+          autorun_lax: "This site runs artifacts automatically."
+          height: "Height (px)"
+          height_description: "1–2000 pixels. Leave blank for the default height."
+          seamless: "Seamless display"
+          seamless_description: "Hide the footer when the artifact runs."
+          summary_autorun: "Run automatically: %{value}"
+          summary_height: "Height: %{value}"
+          summary_height_value: "%{height} px"
+          summary_seamless: "Seamless: %{value}"
+          default: "Default"
+          option_on: "On"
+          option_off: "Off"
+          apply: "Apply"
+          invalid_share: "Enter a valid share key or a link to a shared artifact on this site."
+          invalid_source: "Enter a positive source artifact ID (up to 19 digits)."
+          invalid_version: "Enter a positive version number (up to 19 digits), or leave blank."
+          invalid_height: "Enter a height from 1 to 2000 pixels, or leave blank."
         expand_view_label: "Expand view"
         collapse_view_label: "Exit Fullscreen (ESC or Back button)"
         click_to_run_label: "Run Artifact"
+        share: "Share"
+        privacy_notice: "Anyone with the link can view this version. Your conversation stays private."
+        privacy_notice_login_required: "Signed-in users with the link can view this version. Your conversation stays private."
+        create_link: "Create link"
+        version_label: "Version %{version}"
+        copied: "Copied to clipboard"
+        copy_link: "Copy link"
+        copy_embed: "Copy embed"
+        embed_post: "Embed in post"
+        embed_post_title: "Copy the code to embed this artifact in a post"
+        embed_website: "Embed on website"
+        embed_website_title: "Copy the HTML to embed this artifact on a website"
+        new_tab: "Show in new tab"
+        update_pin: "Update pinned version"
+        pin_updated: "Shared version updated"
+        revoke: "Revoke link"
+        revoke_conversation: "Revoke conversation share"
+        confirm_revoke_standalone_title: "Revoke link?"
+        confirm_revoke_standalone_message: "This link and its embeds will stop working. This cannot be undone."
+        confirm_revoke_conversation_title: "Revoke conversation share?"
+        confirm_revoke_conversation_message: "This permanently stops the shared conversation and its artifact embeds. Standalone links are not revoked."
+        shared_artifacts: "Shared AI artifacts"
+        filter_shares: "Filter shares"
+        filter_all: "All"
+        filter_standalone: "Standalone"
+        filter_conversation: "Conversation"
+        standalone: "Standalone share"
+        conversation: "Shared with conversation"
+        empty_shares: "No shared AI artifacts yet."
+        unavailable: "This link is no longer available. You can still revoke it."
+        retry_loading: "Retry loading"
+        newest_first: "Newest first"
+        oldest_first: "Oldest first"
+
+      shared_ai_conversations:
+        title: "Shared AI conversations"
+        empty: "No shared AI conversations yet."
+        unavailable: "This conversation link is no longer available. You can still revoke it."
 
       ai_bot:
         title: "AI bot"
@@ -1631,6 +1814,10 @@ en:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          homepage_option: "AI bot conversations"
+          preview:
+            title: "Log in to ask a question"
+            body: "Get answers from AI, and keep your conversations here to come back to later."
           header: "What can I help with?"
           submit: "Submit question"
           disclaimer: "Generative AI can make mistakes. Verify important information."

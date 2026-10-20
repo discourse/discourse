@@ -64,6 +64,12 @@ ro:
       discourse_workflows:
         ai_agent:
           mode: "Mod"
+        classify:
+          text: "Text"
+          upload_ids: "Imagini"
+          name: "Nume"
+          type: "Tip"
+          type_score: "Scor"
       ai_tool_approval:
         loading: "Se încarcă..."
         tool: "Acțiune"
@@ -248,6 +254,13 @@ ro:
         edit: "Editează"
         delete: "Șterge"
         embedding: "Înglobare"
+      decision_models:
+        no_preset: "Nimic"
+        display_name: "Nume"
+        provider: "Furnizor"
+        edit: "Editează"
+        delete: "Șterge"
+        test: "Rulează test"
       mcp_servers:
         name: "Nume"
         description: "Descriere"
@@ -319,6 +332,15 @@ ro:
         providers:
           google: "Google"
           fake: "Personalizat"
+      ai_artifact:
+        editor:
+          version: "Versiune"
+          default: "Implicit"
+          apply: "Aplică"
+        share: "Partajează"
+        create_link: "Creează legătură"
+        copy_link: "Copiază legătură"
+        filter_all: "Toate"
       ai_bot:
         try_again: "Încearcă din nou"
         exit: "ieșire bot IA"

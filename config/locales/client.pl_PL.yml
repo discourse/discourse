@@ -375,7 +375,6 @@ pl_PL:
       zh_CN:
         name: chiński uproszczony
     share:
-      topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
       post: "wpis #%{postNumber} od @%{username}"
       close: "zamknij"
       twitter: "Udostępnij na X"
@@ -430,6 +429,24 @@ pl_PL:
     skip_to_last_reply: "Przejdź do ostatniej odpowiedzi"
     skip_to_top: "Przejdź do góry"
     skip_user_nav: "Przejdź do treści profilu"
+    reorder:
+      announcement: "Przeniesiono %{label} na pozycję %{position} z %{total}"
+      announcement_cross_list: "Przeniesiono %{label} do %{list}, pozycja %{position} z %{total}"
+      handle: "Zmień kolejność %{label}"
+      handle_description: "Użyj klawiszy strzałek, aby poruszać się między wierszami. Naciśnij Enter, aby wyświetlić opcje przesuwania."
+      handle_description_drag_only: "Przeciągnij, aby przesunąć ten wiersz."
+      remove: "Usuń %{label}"
+      removed: "Usunięto %{label}"
+      move_up: "Przenieś wyżej"
+      move_down: "Przenieś niżej"
+      move_to_top: "Przenieś na górę"
+      move_to_bottom: "Przenieś na dół"
+      move_to_list: "Przenieś do %{list}"
+      position: "%{position} z %{total}"
+      at_start: "%{label} jest już pierwszy"
+      at_end: "%{label} jest już ostatni"
+      move_refused: "Nie można przenieść %{label}"
+      add_item: "Dodaj pozycję"
     emails_are_disabled: "Wszystkie wychodzące wiadomości e-mail zostały globalnie wyłączone przez administratora. Żadne powiadomienia e-mail nie będą wysyłane."
     emails_are_disabled_no_smtp: "Wszystkie wiadomości wychodzące są wyłączone, ponieważ nie skonfigurowano serwera SMTP. Nie można wysyłać żadnych wiadomości e-mail."
     emails_are_disabled_non_staff: "Poczta wychodząca została wyłączona dla użytkowników niebędących pracownikami."
@@ -583,11 +600,6 @@ pl_PL:
       few: "max z %{count}"
       many: "max z %{count}"
       other: "max z %{count}"
-    character_count:
-      one: "%{count} znak"
-      few: "%{count} znaki"
-      many: "%{count} znaków"
-      other: "%{count} znaków"
     period_chooser:
       aria_label: "Filtruj według okresu"
     related_messages:
@@ -628,19 +640,20 @@ pl_PL:
         predefined_topics_description: "Wybierz z kolekcji tematów do rozpoczęcia rozmowy, aby rozpocząć dyskusję"
         use_predefined: "Przeglądaj szablony"
         back: "Wstecz"
+        category_unavailable: "Ta kategoria nie jest dostępna do publikowania."
         icebreakers:
-          fun_facts:
-            title: "Jakie są ciekawostki na Twój temat?"
-            body: "Cześć wszystkim! Cieszę się, że mogę założyć tę nową społeczność. Na początek podzielmy się ciekawostką o nas. Zacznę od siebie: uwielbiam wędrować i odkrywać nowe szlaki! Co w Tobie jest ciekawego?"
-          coolest_thing_you_have_seen_today:
-            title: "Co najfajniejszego dziś widziałeś?"
-            body: "Co najfajniejszego dziś widziałeś lub doświadczyłeś? Może to być cokolwiek, od pięknego zachodu słońca po przypadkowy akt dobroci. Zacznę: widziałem psa pomagającego starszej osobie przejść przez ulicę!"
+          plan_categories:
+            title: "Od jakich kategorii powinniśmy zacząć?"
+            body: "Zastanówmy się, jak to wszystko zorganizować, zanim zaczniemy! O czym ludzie będą chcieli rozmawiać najbardziej? Możemy zacząć od kilku kategorii, a później dodać więcej."
+          plan_invites:
+            title: "Których członków powinniśmy zaprosić przed startem?"
+            body: "Zawsze miło jest dołączyć do społeczności, w której już są osoby. Kogo powinniśmy zaprosić w pierwszej kolejności? Pomyśl o osobach, które lubią rozmawiać, pomagać innym i chętnie zaangażowałyby się jak najszybciej."
           introduce_yourself:
             title: "Przedstaw się"
             body: "Witamy w społeczności! Poznajmy się. Przedstaw się i opowiedz trochę o swoich zainteresowaniach. Zacznę od siebie: pasjonuję się technologią i uwielbiam uczyć innych!"
-          what_is_your_favorite_food:
-            title: "Jakie jest twoje ulubione jedzenie?"
-            body: "Podziel się swoim ulubionym jedzeniem ze społecznością! Zacznę: uwielbiam pizzę, szczególnie z dodatkowym serem i pepperoni."
+          write_your_own:
+            title: "Napisz swój własny"
+            body: "Rozpocznij rozmowę na temat dostosowany do Twojej społeczności."
     design_wizard:
       title: "Dostosuj swoją witrynę"
       subtitle: "Wybierz kolory, czcionki i układ swojej witryny."
@@ -1012,6 +1025,20 @@ pl_PL:
       title:
         search: "Wyszukaj wiadomość"
         placeholder: "tutaj wpisz tytuł wiadomości, adres URL lub id"
+    dsa_statements:
+      title: "Klasyfikacja DSA"
+      help_title: "O klasyfikacji DSA"
+      help: "Wybierz regułę społeczności i kategorię uzasadniającą tę decyzję o moderacji. Zostaną one zapisane wraz z uzasadnieniem zgodnie z Ustawą o usługach cyfrowych."
+      rule: "Zasady społeczności"
+      rule_prompt: "Wybierz regułę społeczności"
+      category: "Kategoria"
+      category_prompt: "Wybierz kategorię"
+      pending: "Oczekiwanie na klasyfikację DSA"
+      confirm_title: "Zapisać klasyfikację DSA?"
+      confirm_message: "Sprawdź regułę społeczności i kategorię. Klasyfikacji tej nie można zmienić po zapisaniu."
+      save: "Zapisz klasyfikację"
+      saving: "Zapisywanie…"
+      saved: "Klasyfikacja zapisana"
     review:
       show_more: "Pokaż więcej"
       show_less: "Pokaż mniej"
@@ -1311,6 +1338,11 @@ pl_PL:
         chars_remaining: "Pozostałe znaki: %{count}"
         delete_note: "Usuń tę uwagę"
         delete: "Usuń"
+        mentions_not_notified:
+          one: "%{usernames} nie zostanie powiadomiony, ponieważ nie ma dostępu do tego elementu podlegającego przeglądowi."
+          few: "%{usernames} nie zostaną powiadomieni, ponieważ nie ma dostępu do tego elementu podlegającego przeglądowi."
+          many: "%{usernames} nie zostanie powiadomionych, ponieważ nie ma dostępu do tego elementu podlegającego przeglądowi."
+          other: "%{usernames} nie zostanie powiadomionych, ponieważ nie ma dostępu do tego elementu podlegającego przeglądowi."
       topic_label: "Temat"
       queued_user: "Użytkownik w kolejce"
       posted_in: "Opublikowano w"
@@ -1992,6 +2024,9 @@ pl_PL:
       external_links_in_new_tab: "Otwórz wszystkie linki zewnętrzne w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       enable_smart_lists: "Włącz inteligentne listy podczas pisania w kompozytorze"
+      composer_toolbar:
+        title: "Pasek narzędzi kompozytora"
+        instructions: "Wybierz, które przyciski będą wyświetlane na pasku narzędzi kompozytora. Skróty klawiaturowe nadal działają dla ukrytych przycisków."
       enable_markdown_monospace_font: "Użyj czcionki o stałej szerokości w trybie Markdown kompozytora"
       automatically_translate: "Automatyczne tłumaczenie tematów i postów w innych językach"
       content_languages:
@@ -2433,10 +2468,12 @@ pl_PL:
         letter_based: "Awatar przyznany przez system"
         uploaded_avatar: "Zwyczajny obrazek"
         uploaded_avatar_empty: "Dodaj zwyczajny obrazek"
+        current_avatar: "Aktualne zdjęcie"
+        associated_account: "Zdjęcie %{provider}"
         upload_title: "Wyślij swoją grafikę"
         image_is_not_a_square: "Uwaga: grafika została przycięta ponieważ jej wysokość i szerokość nie były równe. "
         logo_small: "Małe logo witryny. Używane domyślnie."
-        use_custom: "Lub prześlij własny awatar:"
+        use_custom: "Lub wybierz inne zdjęcie:"
       change_profile_background:
         title: "Nagłówek profilu"
         instructions: "Nagłówki profilu zostaną wyśrodkowane i będą miały domyślną szerokość 1110 pikseli."
@@ -2919,6 +2956,7 @@ pl_PL:
     user_status:
       save: "Zapisz"
       set_custom_status: "Ustaw własny status"
+      edit_status: "Edytuj status"
       what_are_you_doing: "Co robisz?"
       pause_notifications: "Wstrzymaj powiadomienia"
       remove_status: "Usuń status"
@@ -3106,7 +3144,7 @@ pl_PL:
       hide_forever: "nie, dziękuję"
       hidden_for_session: "OK, zapytamy Cię jutro. Zawsze możesz też użyć opcji „Zaloguj się”, aby utworzyć konto."
       intro: "Witaj! Wygląda na to, że zainteresowała Cię ta dyskusja, ale nie masz jeszcze konta."
-      value_prop: "Masz dość przewijania tych samych postów? Kiedy stworzysz konto, zawsze wrócisz do miejsca, w którym przerwałeś. Z kontem możesz również otrzymywać powiadomienia o nowych odpowiedziach, zapisywać zakładki i używać polubień, aby podziękować innym. Wszyscy możemy współpracować, aby ta społeczność była świetna. :heart:"
+      value_prop: "Masz dość przewijania tych samych postów? Kiedy stworzysz konto, zawsze wrócisz do miejsca, w którym przerwałeś. Z kontem możesz również otrzymywać powiadomienia o nowych odpowiedziach, zapisywać zakładki i używać polubień, aby podziękować innym. Wszyscy możemy współpracować, aby ta społeczność była świetna."
     offline_indicator:
       no_internet: "Brak połączenia z internetem."
       refresh_page: "Odśwież stronę"
@@ -3221,9 +3259,14 @@ pl_PL:
       signup_instructions: "Podaj swój adres e-mail, aby dołączyć do tej społeczności. Wyślemy Ci kod potwierdzający i gotowe!"
       user_fields_title: "Prawie gotowe"
       user_fields_instructions: "Jeszcze tylko kilka szczegółów, aby zakończyć tworzenie konta."
-      account_ready_title: "Twoje konto jest gotowe! 🎉"
-      account_ready_edit: "Wybierz swoją nazwę użytkownika i awatar"
+      signup_details_title: "Wybierz swoją nazwę użytkownika i awatar"
       account_ready_continue: "Kontynuuj"
+      account_details_title: "Zakończ tworzenie konta"
+      account_details_instructions: "Zanim prześlesz swoje konto do zatwierdzenia, wybierz sposób, w jaki będziesz widoczny dla społeczności."
+      create_password_optional: "Utwórz hasło (opcjonalnie)"
+      submit_for_approval: "Prześlij do zatwierdzenia"
+      pending_approval_title: "Twoje konto oczekuje na zatwierdzenie."
+      pending_approval_instructions: "Zanim będziesz mógł się zalogować, Twoje konto musi zostać zatwierdzone przez członka personelu. Powiadomimy Cię e-mailem po zatwierdzeniu."
       username_label: "Nazwa użytkownika"
       username_placeholder: "Wybierz nazwę użytkownika"
       regenerate_username: "Zaproponuj losową nazwę użytkownika"
@@ -3742,8 +3785,7 @@ pl_PL:
       cancel_edit: "Anuluj edycję"
       draft_saved: "Szkic zapisany!"
       users_placeholder: "Dodaj użytkowników lub grupy"
-      title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
-      title_placeholder_redesign: "Tytuł"
+      title_placeholder: "Tytuł"
       title_or_link_placeholder: "Tutaj wpisz tytuł lub wklej link"
       edit_reason_placeholder: "Powód edycji?"
       topic_featured_link_placeholder: "Wstaw link pod nazwą "
@@ -5768,6 +5810,7 @@ pl_PL:
       no_description: "Proszę dodaj opis do tej kategorii."
       change_in_category_topic: "Edytuj opis"
       latest_topics: "Ostatnie tematy"
+      view_all_topics: "Wyświetl wszystkie tematy (%{number})"
       description_updated: "Opis zaktualizowano"
       description_expand: "Pokaż więcej"
       description_collapse: "Pokaż mniej"
@@ -6330,11 +6373,6 @@ pl_PL:
         search_open: "Otwórz wyszukiwanie dla interfejsu administratora"
         search_full_page: "Otwórz wyszukiwanie dla interfejsu administratora na całym ekranie"
     badges:
-      earned_n_times:
-        one: "Otrzymano tę odznakę %{count} raz"
-        few: "Otrzymano tą odznakę %{count} razy"
-        many: "Otrzymano tą odznakę %{count} razy"
-        other: "Otrzymano tą odznakę %{count} razy"
       granted_on: "Przyznano %{date}"
       others_count:
         one: "Przyznane innym %{count} raz"
@@ -6359,6 +6397,11 @@ pl_PL:
         few: "%{number} przyznane"
         many: "%{number} przyznanych"
         other: "%{number} przyznanych"
+      granted_times:
+        one: "Przyznano %{number} czasu"
+        few: "Przyznano %{number} czasu"
+        many: "Przyznano %{number} czasu"
+        other: "Przyznano %{number} czasu"
       select_badge_for_title: Wybierz odznakę do użycia jako twój tytuł
       none: "(brak)"
       successfully_granted: "Przyznano %{badge} użytkownikowi %{username}"
@@ -6865,6 +6908,7 @@ pl_PL:
         forum:
           label: Forum
       back_to_forum: "Powrót do forum"
+      back_to_admin: "Powrót do panelu administracyjnego"
       filter_links: "Filtruj linki..."
       clear_filter: "Wyczyść filtr"
       no_results:
@@ -7346,8 +7390,15 @@ pl_PL:
             client_id_description: "Identyfikator tej aplikacji. Wprowadź tę samą wartość podczas konfiguracji klienta."
             redirect_uris: "Przekierowania URI"
             redirect_uris_description: "Miejsce, do którego przeglądarka powraca po zatwierdzeniu dostępu przez użytkownika. Wprowadź jeden dokładny URI w każdym wierszu."
+            management: "Aktualizacje rejestracji"
+            manual: "Zarządzane przez administratorów"
+            automatic: "Automatyczne"
+            manual_description: "Administratorzy zarządzają nazwą tego klienta i adresami URI przekierowań. Odświeżanie metadanych ich nie zmieni, dlatego należy je aktualizować."
+            automatic_description: "Nazwa i identyfikatory URI przekierowania są aktualizowane na podstawie opublikowanych metadanych klienta. Zmiana którejkolwiek z nich powoduje przełączenie obu na zarządzanie administracyjne."
             create: "Dodaj klienta"
             created: "Dodano klienta OAuth."
+            edit: "Edytuj klienta OAuth"
+            updated: "Zaktualizowano klienta OAuth."
             empty: "Nie zarejestrowano żadnych klientów OAuth."
             no_results: "Żaden klient OAuth nie spełnia tego kryterium wyszukiwania."
             detail_title: "Dane klienta"
@@ -7369,11 +7420,12 @@ pl_PL:
             empty: "Żadne autoryzacje MCP nie pasują do tego filtra."
           activity:
             title: "Aktywność i diagnostyka"
-            description: "Przeglądanie aktywności protokołu minimalizującego prywatność i zbiorczej diagnostyki."
+            description: "Przejrzyj aktywność MCP."
             tool_calls: "Wywołania narzędzia"
-            errors: "Błędy"
-            rate_limits: "Ograniczenia szybkości"
+            failed_tool_calls: "Nieudane wywołania narzędzi"
+            rate_limits: "Żądania z ograniczeniem szybkości"
             p95_latency: "95. percentyl opóźnienia"
+            no_latency: "—"
             search_placeholder: "Szukaj według użytkownika, klienta, narzędzia lub dokładnego identyfikatora żądania"
             outcome: "Rezultat"
             time: "Czas"
@@ -8481,6 +8533,7 @@ pl_PL:
             embedded: "Osadzone wyświetlenia stron"
             crawlers: "Boty indeksujące"
           see_details: "Zobacz szczegóły"
+          crawler_learn_more: "Dowiedz się więcej"
         period:
           last_7_days: "Ostatnie 7 dni"
           last_30_days: "Ostatnie 30 dni"
@@ -9469,8 +9522,9 @@ pl_PL:
           upload: "Plik"
           select_component: "Wybierz komponent…"
           unsaved_changes_alert: "Nie zapisałeś/łaś jeszcze zmian, czy chcesz je odrzucić i przejść dalej?"
-          unsaved_parent_themes: "Nie przypisałeś/łaś komponentu do motywów, czy chcesz przejść dalej?"
+          unsaved_parent_themes: "Nie dodałeś tego komponentu do żadnego motywu, więc nie pojawi się nigdzie. Czy nadal chcesz zrezygnować?"
           discard: "Odrzuć"
+          leave: "Opuść"
           stay: "Zostań"
           css_html: "Kod niestandardowy"
           edit_css_html: "Edytuj kod"
@@ -9874,6 +9928,7 @@ pl_PL:
           filter_date_time: "Filtruj datę i godzinę"
           actions:
             permanently_delete_post_revisions: "trwale usuń wersje wpisu"
+            mcp_client_updated: "aktualizacja klienta MCP OAuth"
             delete_user: "usunięcie użytkownika"
             change_trust_level: "zmiana poziomu zaufania"
             change_username: "zmień nazwę użytkownika"
@@ -10283,6 +10338,10 @@ pl_PL:
           all: "Wszyscy użytkownicy"
           activated: "Aktywowane"
           not_activated: "Nie aktywowano"
+        account_type_filter:
+          human: "Konta ludzkie"
+          bot: "Konta botów"
+          all: "Wszystkie konta"
         approved: "Zatwierdzony?"
         titles:
           active: "Aktywni użytkownicy"
@@ -10672,13 +10731,32 @@ pl_PL:
           multiselect: "Wielokrotny wybór"
       site_text:
         description: "Możesz dostosować dowolny tekst na swoim forum."
-        search: "Znajdź etykietę lub tekst który chcesz zmienić"
+        search: "Wyszukaj tekst lub klucze tłumaczeń"
+        search_label: "Szukaj"
+        theme: "Motyw lub komponent"
+        all_themes: "Wszystkie teksty witryny"
+        theme_disabled: "Wyłączone"
+        filters: "Filtry"
+        filters_active:
+          one: "Filtry (%{count})"
+          few: "Filtry (%{count})"
+          many: "Filtry (%{count})"
+          other: "Filtry (%{count})"
+        edit_title: "Edytuj tekst witryny"
+        default_text: "Tekst domyślny"
+        value_label: "Twój tekst · %{language}"
+        invalid_title: "Nieprawidłowe symbole zastępcze interpolacji"
+        invalid_description: "W tym tekście użyto nierozpoznanych symboli zastępczych. Użyj dostępnych poniżej kluczy interpolacji."
+        status:
+          customized: "Dostosowane"
+          outdated: "Nieaktualne"
+          invalid: "Nieprawidłowe"
         title: "Teksty witryny"
         edit: "Edytuj"
-        revert: "Cofnij zmiany"
+        revert: "Przywróć domyślne"
         revert_confirm: "Czy na pewno chcesz wycofać swoje zmiany?"
-        go_back: "Wróć do wyszukiwania"
-        recommended: "Zalecamy zmianę poniższego tekstu, aby lepiej odpowiadał Twoim potrzebom:"
+        go_back: "Powrót do wyników"
+        recommended: "Sugerowane teksty do dostosowania"
         show_overriden: "Pokaż tylko nadpisane"
         show_outdated: "Pokaż tylko nieaktualne/nieprawidłowe"
         show_untranslated: "Pokazuj tylko nieprzetłumaczone"

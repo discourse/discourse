@@ -1,7 +1,7 @@
 import { click, triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import ReactionsTopics from "../fixtures/reactions-topic-fixtures";
+import ReactionsTopics from "../fixtures/reactions-topic-fixtures.js";
 
 acceptance("Custom Emoji Picker", function (needs) {
   needs.user();

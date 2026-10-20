@@ -22,19 +22,12 @@ RSpec.describe Migrations::Importer::PlaceholderLinkages do
       )
     end
 
-    intermediate_db.execute(<<~SQL)
-      CREATE TABLE posts (
-        original_id NUMERIC NOT NULL,
-        topic_id NUMERIC NOT NULL,
-        post_number INTEGER NOT NULL
-      )
-    SQL
     [[100, 20, 2], [101, 21, 3]].each do |original_id, topic_id, post_number|
-      intermediate_db.execute(
-        "INSERT INTO posts (original_id, topic_id, post_number) VALUES (?, ?, ?)",
-        original_id,
-        topic_id,
-        post_number,
+      Migrations::Database::IntermediateDB::Post.create(
+        original_id:,
+        topic_id:,
+        post_number:,
+        raw: "body",
       )
     end
     [[5, 20, 2], [6, 21, 3]].each do |owner_id, topic_id, post_number|

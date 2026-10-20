@@ -1,11 +1,9 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "fileutils"
 require "landlock"
 require "msgpack"
 require "socket"
-require "tempfile"
 require "tmpdir"
 require "vips"
 
@@ -26,7 +24,7 @@ class DiscourseVipsWorker
     DYNAMIC_LINKER_CACHE_PATH = "/etc/ld.so.cache"
     private_constant :DYNAMIC_LINKER_CACHE_PATH
 
-    WARM_OPERATIONS = %w[text gravity flatten pngsave thumbnail].freeze
+    WARM_OPERATIONS = %w[text gravity flatten pngsave thumbnail sharpen].freeze
     private_constant :WARM_OPERATIONS
 
     SVG_DIMENSIONS_RLIMITS = { cpu_seconds: 1, memory_bytes: 1024 * 1024 * 1024 }.freeze
@@ -73,17 +71,22 @@ class DiscourseVipsWorker
         reencode_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
       when "svg-to-png"
         svg_to_png(input_path: arguments[0], output_path: arguments[1])
-
-      when "downsize"
-        downsize(
+      when "thumbnail"
+        thumbnail(
           input_path: arguments[0],
           output_path: arguments[1],
-          format: arguments[2],
-          scale: arguments[3],
-          width: arguments[4],
-          height: arguments[5],
-          max_pixels: arguments[6],
-          strip_metadata: arguments[7],
+          width: arguments[2],
+          height: arguments[3],
+          scale: arguments[4],
+          max_pixels: arguments[5],
+          size: arguments[6],
+          crop: arguments[7],
+          sharpen: arguments[8],
+          quality: arguments[9],
+          strip_metadata: arguments[10],
+          gravity: arguments[11],
+          input_format: arguments[12],
+          output_format: arguments[13],
         )
       else
         raise ArgumentError, "unsupported libvips operation"
@@ -226,10 +229,7 @@ class DiscourseVipsWorker
         block_loaders(allowed: %w[VipsForeignLoadJpeg])
         begin
           image = Vips::Image.jpegload(input_path, access: :random)
-          Tempfile.create(%w[reencoded .jpg]) do |reencoded_file|
-            save_jpeg(image, input_path:, output_path: reencoded_file.path, quality:)
-            FileUtils.copy_file(reencoded_file.path, output_path)
-          end
+          save_jpeg(image, input_path:, output_path:, quality:)
           nil
         rescue Vips::Error => error
           raise InvalidImage, error.message
@@ -244,9 +244,12 @@ class DiscourseVipsWorker
         raise ArgumentError, "JPEG conversion requires separate input and output files"
       end
 
-      image.autorot.jpegsave(
+      image = image.autorot
+      image = image.colourspace(image.bands == 2 ? :b_w : :srgb) if image.has_alpha?
+
+      image.jpegsave(
         output_path,
-        background: [255, 255, 255],
+        background: [255],
         Q: Integer(quality),
         interlace: false,
         # Optimized Huffman coding reduces JPEG size without changing decoded pixels.
@@ -291,65 +294,103 @@ class DiscourseVipsWorker
     end
     private_class_method :svg_to_png
 
-    def self.downsize(
+    def self.thumbnail(
       input_path:,
       output_path:,
-      format:,
-      scale:,
       width:,
       height:,
+      scale:,
       max_pixels:,
-      strip_metadata:
+      size:,
+      crop:,
+      sharpen:,
+      quality:,
+      strip_metadata:,
+      gravity:,
+      input_format:,
+      output_format:
     )
       new do
-        begin
-          if !%w[true false].include?(strip_metadata)
-            raise ArgumentError, "invalid metadata stripping flag"
-          end
+        raise ArgumentError, "invalid sharpening flag" if !%w[true false].include?(sharpen)
+        if !%w[true false].include?(strip_metadata)
+          raise ArgumentError, "invalid metadata stripping flag"
+        end
+        quality = quality.empty? ? nil : Integer(quality)
+
+        loaders = {
+          "jpg" => "VipsForeignLoadJpeg",
+          "jpeg" => "VipsForeignLoadJpeg",
+          "png" => "VipsForeignLoadPng",
+          "gif" => "VipsForeignLoadNsgif",
+          "webp" => "VipsForeignLoadWebp",
+          "avif" => "VipsForeignLoadHeif",
+        }
+        allowed = loaders.values
+        if !input_format.empty?
           loader =
-            {
-              "jpg" => "VipsForeignLoadJpeg",
-              "jpeg" => "VipsForeignLoadJpeg",
-              "png" => "VipsForeignLoadPng",
-              "gif" => "VipsForeignLoadNsgif",
-              "webp" => "VipsForeignLoadWebp",
-              "avif" => "VipsForeignLoadHeif",
-            }.fetch(format) { raise ArgumentError, "unsupported input format" }
-          block_loaders(allowed: [loader])
+            loaders.fetch(input_format.downcase) { raise ArgumentError, "unsupported input format" }
+          allowed = [loader]
+        end
+        block_loaders(allowed: allowed)
 
-          if !width.empty? && !height.empty?
-            width = Integer(width)
-            height = Integer(height)
-            raise ArgumentError, "invalid resize bounds" if !width.positive? || !height.positive?
-
-            image =
-              Vips::Image.thumbnail(input_path, width, height:, size: :down, output_profile: "srgb")
-          else
-            source = Vips::Image.new_from_file(input_path)
-            scale =
-              if max_pixels.empty?
-                Float(scale)
-              else
-                Math.sqrt(Integer(max_pixels).fdiv(source.width * source.height))
-              end
-            raise ArgumentError, "invalid resize scale" if !scale.finite? || !scale.positive?
-
-            edge = [([source.width, source.height].max * scale).round, 1].max
-            image = Vips::Image.thumbnail(input_path, edge, output_profile: "srgb")
+        source =
+          begin
+            Vips::Image.new_from_file(input_path)
+          rescue Vips::Error => error
+            raise InvalidImage, error.message
           end
 
-          options = { strip: strip_metadata == "true" }
-          options[:interlace] = false if %w[.jpg .jpeg .png .gif].include?(
-            File.extname(output_path),
+        if !width.empty? && !height.empty?
+          width = Integer(width)
+          height = Integer(height)
+        else
+          max_pixels = max_pixels.empty? ? nil : Integer(max_pixels)
+          scale =
+            if max_pixels
+              raise ArgumentError, "invalid resize scale" if !max_pixels.positive?
+
+              source = source.autorot
+              Math.sqrt(max_pixels.fdiv(source.width * source.height))
+            else
+              Float(scale)
+            end
+          raise ArgumentError, "invalid resize scale" if !scale.finite? || !scale.positive?
+
+          if max_pixels
+            width = (source.width * scale).floor.clamp(1, max_pixels)
+            height = (source.height * scale).floor.clamp(1, max_pixels)
+          else
+            width = [([source.width, source.height].max * scale).round, 1].max
+            height = width
+          end
+        end
+
+        image =
+          Vips::Image.thumbnail(
+            input_path,
+            width,
+            height: height,
+            size: size.to_sym,
+            crop: crop.to_sym,
+            output_profile: "srgb",
           )
+        image = image.gravity(gravity.to_sym, width, height) if !gravity.empty?
+        image = image.sharpen if sharpen == "true"
+        options = { strip: strip_metadata == "true" }
+        options[:Q] = quality if quality
+        if output_format.empty?
           image.write_to_file(output_path, **options)
-        rescue Vips::Error => error
-          raise InvalidImage, error.message
+        else
+          image.write_to_target(
+            Vips::Target.new_to_file(output_path),
+            ".#{output_format.downcase}",
+            **options,
+          )
         end
         nil
       end
     end
-    private_class_method :downsize
+    private_class_method :thumbnail
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)
@@ -470,7 +511,12 @@ class DiscourseVipsWorker
 
   def run_sandboxed(request:, operation:)
     Dir.mktmpdir("discourse-vips-") do |scratch|
-      sandbox_paths = operation.sandbox_paths(scratch:, read: request.fetch("read"), write: request.fetch("write"))
+      sandbox_paths =
+        operation.sandbox_paths(
+          scratch:,
+          read: request.fetch("read"),
+          write: request.fetch("write"),
+        )
       result =
         Landlock.fork(
           read: sandbox_paths.fetch("read"),
@@ -481,6 +527,7 @@ class DiscourseVipsWorker
           unsetenv_others: true,
           rlimits: operation.sandbox_rlimits(defaults: RLIMITS),
           seccomp_deny_network: LINUX_PLATFORM,
+          seccomp_deny_child_processes: LINUX_PLATFORM,
           on_unsupported: :run_without_landlock,
         ) do |stdout, _stderr|
           apply_nice(request)

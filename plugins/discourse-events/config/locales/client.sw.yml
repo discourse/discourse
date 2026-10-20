@@ -13,6 +13,11 @@ sw:
             topic_id:
               label: Utambulisho wa Mada
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Taarifa"
+            none: "Hakuna"
       disable_holiday: "Sitisha"
       enable_holiday: "Wezesha"
       date: "Tarehe"
