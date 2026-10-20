@@ -5086,6 +5086,7 @@ en:
         %{respond_instructions}
 
     account_suspended:
+      date_with_timezone: "%{date} (UTC%{offset})"
       title: "Account Suspended"
       subject_template: "[%{email_prefix}] Your account has been suspended"
       subject_template_improved: "Your account has been suspended"

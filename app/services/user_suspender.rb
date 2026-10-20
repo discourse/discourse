@@ -82,14 +82,12 @@ class UserSuspender
       suspended_till: @user.suspended_till.iso8601(TIMESTAMP_PRECISION),
     )
 
-    if @message.present?
-      Jobs.enqueue(
-        Jobs::CriticalUserEmail,
-        type: "account_suspended",
-        user_id: @user.id,
-        user_history_id: @user_history.id,
-      )
-    end
+    Jobs.enqueue(
+      Jobs::CriticalUserEmail,
+      type: "account_suspended",
+      user_id: @user.id,
+      user_history_id: @user_history.id,
+    )
 
     DiscourseEvent.trigger(
       :user_suspended,

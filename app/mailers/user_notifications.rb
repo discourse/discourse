@@ -216,22 +216,33 @@ class UserNotifications < ActionMailer::Base
 
     return unless user_history = opts[:user_history]
 
+    locale = user_locale(user)
+
     if user.suspended_forever?
       build_email(
         user.email,
         template: "user_notifications.account_suspended_forever",
-        locale: user_locale(user),
+        locale:,
         reason: user_history.details,
         recipient_user: user,
       )
     else
-      suspended_till = user.suspended_till.in_time_zone(user.user_option.timezone.presence || "UTC")
+      timezone =
+        ActiveSupport::TimeZone[user.user_option.timezone.presence || "UTC"] ||
+          ActiveSupport::TimeZone["UTC"]
+      suspended_till = user.suspended_till.in_time_zone(timezone)
       build_email(
         user.email,
         template: "user_notifications.account_suspended",
-        locale: user_locale(user),
+        locale:,
         reason: user_history.details,
-        suspended_till: I18n.l(suspended_till, format: :long),
+        suspended_till:
+          I18n.t(
+            "user_notifications.account_suspended.date_with_timezone",
+            locale:,
+            date: I18n.l(suspended_till, format: :long, locale:),
+            offset: suspended_till.formatted_offset,
+          ),
         recipient_user: user,
       )
     end
