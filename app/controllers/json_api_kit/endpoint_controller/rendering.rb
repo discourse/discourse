@@ -8,9 +8,11 @@ module JsonApiKit
       included do
         before_action :set_json_format
 
-        rescue_from(Discourse::InvalidAccess) do
+        rescue_from(Discourse::InvalidAccess, Resource::UnreadableAttribute) do
           render_document(Document::Errors.new(Forbidden.new))
         end
+
+        rescue_from(Discourse::NotFound) { render_document(Document::Errors.new(NotFound.new)) }
 
         rescue_from(Request::Invalid) do |error|
           render_document(Document::Errors.new(*error.refusals))

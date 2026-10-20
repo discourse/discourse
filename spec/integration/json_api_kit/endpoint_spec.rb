@@ -232,13 +232,17 @@ RSpec.describe "a JSON:API endpoint", type: :request do
       )
     end
 
-    context "when Discourse answers the error itself" do
+    context "when Discourse reports a missing resource" do
       let(:path) { "/api/missing" }
 
       it { expect(response).to have_http_status(:not_found) }
 
-      it "sends JSON" do
-        expect(response.media_type).to eq("application/json")
+      it "sends the JSON:API media type" do
+        expect(response.media_type).to eq(profile_media_type)
+      end
+
+      it "sends a JSON:API error" do
+        expect(error).to eq(not_found.deep_stringify_keys)
       end
     end
   end
