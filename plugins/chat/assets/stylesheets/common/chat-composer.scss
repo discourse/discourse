@@ -189,6 +189,12 @@
   gap: var(--space-1);
   padding: var(--space-1) var(--space-2);
   border-bottom: 1px solid var(--d-chat-input-border-color);
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  > * {
+    flex: none;
+  }
 
   .toolbar-separator {
     width: 1px;
