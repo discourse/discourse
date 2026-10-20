@@ -1,8 +1,13 @@
 import { tracked } from "@glimmer/tracking";
+import ApplicationInstance from "@ember/application/instance";
 import { warn } from "@ember/debug";
-import { isDestroying, registerDestructor } from "@ember/destroyable";
+import {
+  associateDestroyableChild,
+  isDestroying,
+  registerDestructor,
+} from "@ember/destroyable";
 import EmberObject from "@ember/object";
-import { getOwner } from "@ember/owner";
+import { getOwner, setOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
 import { next, run } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -12,6 +17,7 @@ import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
 import { ajax, updateCsrfToken } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 import getUrl from "discourse/lib/get-url";
 import { deepMerge } from "discourse/lib/object";
 import {
@@ -21,7 +27,6 @@ import {
   rateLimitRetryOptions,
   validateUploadedFile,
 } from "discourse/lib/uploads";
-import attachToParent from "discourse/lib/uppy/attach-to-parent";
 import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
 import UppyWrapper from "discourse/lib/uppy/wrapper";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
@@ -120,10 +125,17 @@ export default class UppyUpload {
    * @param {object} config
    */
   constructor(parent, config) {
-    attachToParent(this, parent, {
-      className: "UppyUpload",
-      id: "discourse.uppy-upload-owner",
-    });
+    if (parent instanceof ApplicationInstance) {
+      deprecated(
+        "Passing an owner to `new UppyUpload()` is deprecated. Pass the component that uses it instead, so it's torn down with that component.",
+        { id: "discourse.uppy-upload-owner", since: "2026.10.0" }
+      );
+      setOwner(this, parent);
+    } else {
+      setOwner(this, getOwner(parent));
+    }
+
+    associateDestroyableChild(parent, this);
     registerDestructor(this, () => {
       // With uploads in progress, #reset() tears down once they finish
       if (

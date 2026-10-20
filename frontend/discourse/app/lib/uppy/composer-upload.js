@@ -1,7 +1,11 @@
+import ApplicationInstance from "@ember/application/instance";
 import { warn } from "@ember/debug";
-import { registerDestructor } from "@ember/destroyable";
+import {
+  associateDestroyableChild,
+  registerDestructor,
+} from "@ember/destroyable";
 import EmberObject from "@ember/object";
-import { getOwner } from "@ember/owner";
+import { getOwner, setOwner } from "@ember/owner";
 import { run } from "@ember/runloop";
 import { service } from "@ember/service";
 import Uppy from "@uppy/core";
@@ -11,6 +15,7 @@ import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
 import { updateCsrfToken } from "discourse/lib/ajax";
 import ComposerVideoThumbnailUppy from "discourse/lib/composer-video-thumbnail-uppy";
 import { bind } from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 import getURL from "discourse/lib/get-url";
 import {
   bindFileInputChangeListener,
@@ -20,7 +25,6 @@ import {
   rateLimitRetryOptions,
   validateUploadedFile,
 } from "discourse/lib/uploads";
-import attachToParent from "discourse/lib/uppy/attach-to-parent";
 import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
 import UppyWrapper from "discourse/lib/uppy/wrapper";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
@@ -81,10 +85,17 @@ export default class UppyComposerUpload {
       fileUploadElementId,
     }
   ) {
-    attachToParent(this, parent, {
-      className: "UppyComposerUpload",
-      id: "discourse.uppy-composer-upload-owner",
-    });
+    if (parent instanceof ApplicationInstance) {
+      deprecated(
+        "Passing an owner to `new UppyComposerUpload()` is deprecated. Pass the component that uses it instead, so it's torn down with that component.",
+        { id: "discourse.uppy-composer-upload-owner", since: "2026.10.0" }
+      );
+      setOwner(this, parent);
+    } else {
+      setOwner(this, getOwner(parent));
+    }
+
+    associateDestroyableChild(parent, this);
     registerDestructor(this, () => this.teardown());
 
     this.uppyWrapper = new UppyWrapper(getOwner(this));
