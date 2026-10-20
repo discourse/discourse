@@ -3,9 +3,18 @@ import { capitalize } from "@ember/string";
 import { isTesting } from "discourse/lib/environment";
 import {
   BEHAVIOR_TRANSFORMERS,
+  type BehaviorTransformerRegistry,
+  type Untyped,
   VALUE_TRANSFORMERS,
+  type ValueTransformerRegistry,
 } from "discourse/lib/registry/transformers";
 import { consolePrefix } from "discourse/lib/source-identifier";
+
+export type {
+  BehaviorTransformerRegistry,
+  Untyped,
+  ValueTransformerRegistry,
+} from "discourse/lib/registry/transformers";
 
 /** The registration category of a transformer. */
 export type TransformerType = "BEHAVIOR" | "VALUE";
@@ -99,6 +108,353 @@ export type BehaviorTransformer<
   /** A shallow copy of the supplied context, shared throughout the chain. */
   context: BehaviorTransformerContext<C>;
 }) => BehaviorTransformerResult<R>;
+
+type ValueName = keyof ValueTransformerRegistry & string;
+type BehaviorName = keyof BehaviorTransformerRegistry & string;
+
+type IsAny<T> = 0 extends 1 & T ? true : false;
+
+type IsUntyped<E> = [E] extends [never]
+  ? false
+  : IsAny<E> extends true
+    ? false
+    : [E] extends [Untyped]
+      ? true
+      : false;
+
+type TypedKeys<R> = {
+  [K in keyof R]: IsUntyped<R[K]> extends true ? never : K;
+}[keyof R];
+
+type TypedName =
+  | TypedKeys<ValueTransformerRegistry>
+  | TypedKeys<BehaviorTransformerRegistry>;
+
+type IsUnion<T, Whole = T> = T extends Whole
+  ? [Whole] extends [T]
+    ? false
+    : true
+  : never;
+
+type IsSingle<T> = [T] extends [never]
+  ? false
+  : IsAny<T> extends true
+    ? false
+    : true extends IsUnion<T>
+      ? false
+      : true;
+
+/** Branded literals must index by the registry's literal key, not by their intersection. */
+type Canonical<K, N extends string> = {
+  [P in N]: [K] extends [P] ? P : never;
+}[N];
+
+declare const invalidTransformerName: unique symbol;
+declare const invalidTransformerEntry: unique symbol;
+
+type InvalidTransformerEntry = {
+  [invalidTransformerEntry]: "The registry entry for this hook is malformed";
+};
+
+type FallbackGuard<K extends string> =
+  IsSingle<K> extends true
+    ? string extends K
+      ? { [invalidTransformerName]: "Use a single untyped hook name" }
+      : [K & TypedName] extends [never]
+        ? unknown
+        : { [invalidTransformerName]: "Use the registered hook contract" }
+    : { [invalidTransformerName]: "Use a single hook name" };
+
+type ValueEntry<K extends string> = ValueTransformerRegistry[Canonical<
+  K,
+  ValueName
+>];
+type BehaviorEntry<K extends string> = BehaviorTransformerRegistry[Canonical<
+  K,
+  BehaviorName
+>];
+
+type ValidValueEntry<E> =
+  IsSingle<E> extends true
+    ? [E] extends [
+        { value: infer V; context: object | undefined; mutable: infer M },
+      ]
+      ? [M] extends [never]
+        ? false
+        : [M] extends [true]
+          ? true
+          : [M] extends [false]
+            ? [V] extends [void]
+              ? [void] extends [V]
+                ? false
+                : true
+              : true
+            : false
+      : false
+    : false;
+
+type ValidBehaviorEntry<E> =
+  IsSingle<E> extends true
+    ? [E] extends [{ result: unknown; context: object | undefined }]
+      ? true
+      : false
+    : false;
+
+type ValueOf<E> = E extends { value: infer V } ? V : never;
+type ContextOf<E> = E extends { context: infer C } ? C : never;
+type ResultOf<E> = E extends { result: infer R } ? R : never;
+
+type ValueContext<C> = undefined extends C ? C | null : C;
+type BehaviorContext<C> = [C] extends [undefined]
+  ? { _unstable_self?: unknown }
+  : undefined extends C
+    ? Partial<Exclude<C, undefined>> & { _unstable_self?: unknown }
+    : C & { _unstable_self?: unknown };
+
+type ContextArguments<C> = undefined extends C
+  ? [context?: C | null]
+  : [context: C];
+
+type RegisteredValueCallback<E> = (args: {
+  value: ValueOf<E>;
+  context: ValueContext<ContextOf<E>>;
+}) => E extends { mutable: true } ? void : ValueOf<E>;
+
+type RegisteredBehaviorCallback<E> = (args: {
+  next: () => BehaviorTransformerResult<ResultOf<E>>;
+  context: BehaviorContext<ContextOf<E>>;
+}) => BehaviorTransformerResult<ResultOf<E>>;
+
+type RegisteredDefaultBehavior<E> = (args: {
+  context: BehaviorContext<ContextOf<E>>;
+}) => ResultOf<E>;
+
+/**
+ * Callback for a single value hook. Its registry entry determines value, context, and mutability.
+ * Unregistered and `Untyped` hooks retain the generic callback contract; malformed entries and unions yield `never`.
+ */
+export type ValueTransformerFor<K extends string> =
+  IsSingle<K> extends true
+    ? [Canonical<K, ValueName>] extends [never]
+      ? unknown extends FallbackGuard<K>
+        ? AnyValueTransformer
+        : never
+      : IsUntyped<ValueEntry<K>> extends true
+        ? AnyValueTransformer
+        : ValidValueEntry<ValueEntry<K>> extends true
+          ? RegisteredValueCallback<ValueEntry<K>>
+          : never
+    : never;
+
+/**
+ * Middleware for a single behavior hook, including the registry's result and copied context.
+ * Unregistered and `Untyped` hooks retain the generic contract; malformed entries and unions yield `never`.
+ */
+export type BehaviorTransformerFor<K extends string> =
+  IsSingle<K> extends true
+    ? [Canonical<K, BehaviorName>] extends [never]
+      ? unknown extends FallbackGuard<K>
+        ? BehaviorTransformer
+        : never
+      : IsUntyped<BehaviorEntry<K>> extends true
+        ? BehaviorTransformer
+        : ValidBehaviorEntry<BehaviorEntry<K>> extends true
+          ? RegisteredBehaviorCallback<BehaviorEntry<K>>
+          : never
+    : never;
+
+type ValueRegistrationArguments<K extends ValueName, T, C extends object> =
+  IsSingle<K> extends true
+    ? IsUntyped<ValueEntry<K>> extends true
+      ? [callback: AnyValueTransformer<T, C>]
+      : ValidValueEntry<ValueEntry<K>> extends true
+        ? [callback: ValueTransformerFor<K>]
+        : [callback: InvalidTransformerEntry]
+    : [callback: never];
+
+type BehaviorRegistrationArguments<
+  K extends BehaviorName,
+  R,
+  C extends object,
+> =
+  IsSingle<K> extends true
+    ? IsUntyped<BehaviorEntry<K>> extends true
+      ? [callback: BehaviorTransformer<R, C>]
+      : ValidBehaviorEntry<BehaviorEntry<K>> extends true
+        ? [callback: BehaviorTransformerFor<K>]
+        : [callback: InvalidTransformerEntry]
+    : [callback: never];
+
+type ValueApplyArguments<
+  K extends ValueName,
+  M extends boolean,
+  T,
+  C extends object,
+> =
+  IsSingle<K> extends true
+    ? IsUntyped<ValueEntry<K>> extends true
+      ? [defaultValue: T, context?: C | null]
+      : ValidValueEntry<ValueEntry<K>> extends true
+        ? ValueEntry<K> extends { mutable: M }
+          ? [
+              defaultValue: ValueOf<ValueEntry<K>>,
+              ...ContextArguments<ContextOf<ValueEntry<K>>>,
+            ]
+          : [
+              defaultValue: {
+                [invalidTransformerEntry]: "Use the apply function matching this hook's mutability";
+              },
+            ]
+        : [defaultValue: InvalidTransformerEntry]
+    : [defaultValue: never];
+
+/** Binding without a concrete name must preserve the generic result; arguments still reject name unions. */
+type ValueApplyResult<K extends ValueName, T> = [
+  Canonical<K, ValueName>,
+] extends [never]
+  ? T
+  : IsUntyped<ValueEntry<K>> extends true
+    ? T
+    : ValueOf<ValueEntry<K>>;
+
+type BehaviorApplyArguments<K extends BehaviorName, R, C extends object> =
+  IsSingle<K> extends true
+    ? IsUntyped<BehaviorEntry<K>> extends true
+      ? [defaultCallback: DefaultBehaviorTransformer<R, C>, context?: C | null]
+      : ValidBehaviorEntry<BehaviorEntry<K>> extends true
+        ? [
+            defaultCallback: RegisteredDefaultBehavior<BehaviorEntry<K>>,
+            ...ContextArguments<ContextOf<BehaviorEntry<K>>>,
+          ]
+        : [defaultCallback: InvalidTransformerEntry]
+    : [defaultCallback: never];
+
+type BehaviorApplyResult<K extends BehaviorName, R> = BehaviorTransformerResult<
+  IsUntyped<BehaviorEntry<K>> extends true ? R : ResultOf<BehaviorEntry<K>>
+>;
+
+/** Registers value callbacks using a name's contract, or generic inference for untyped names. */
+export interface RegisterValueTransformer {
+  /**
+   * Register a transformer to override values defined in Discourse.
+   *
+   * Example: return a static value
+   * ```
+   * api.registerValueTransformer("example-transformer", () => "value");
+   * ```
+   *
+   * Example: transform the current value
+   * ```
+   * api.registerValueTransformer("example-transformer", ({value}) => value * 10);
+   * ```
+   *
+   * Example: transform the current value based on a context property
+   * ```
+   * api.registerValueTransformer("example-transformer", ({value, context}) => {
+   *   if (context.property) {
+   *     return value * 10;
+   *   }
+   *
+   *   return value;
+   * });
+   * ```
+   *
+   * Callbacks receive the current value and context. Return the transformed value without side effects.
+   * For hooks applied with `applyMutableValueTransformer`, mutate the value instead; returns are ignored.
+   *
+   * @returns True if the transformer exists, false otherwise.
+   */
+  <K extends string, T = unknown, C extends object = Record<string, unknown>>(
+    name: K & FallbackGuard<K>,
+    callback: AnyValueTransformer<T, C>
+  ): boolean;
+  /**
+   * Register a value transformer whose registry entry fixes its value, context, and return contract.
+   * See {@link ValueTransformerFor} for the callback type.
+   *
+   * @returns True if the transformer exists, false otherwise.
+   */
+  <
+    K extends ValueName,
+    T = unknown,
+    C extends object = Record<string, unknown>,
+  >(
+    name: K,
+    ...args: ValueRegistrationArguments<K, T, C>
+  ): boolean;
+}
+
+/** Registers behavior middleware using a name's contract, or generic inference for untyped names. */
+export interface RegisterBehaviorTransformer {
+  /**
+   * Register a transformer to override behavior defined in Discourse.
+   *
+   * Example: to perform an action before the expected behavior
+   * ```
+   * api.registerBehaviorTransformer("example-transformer", ({next, context}) => {
+   *   exampleNewAction(); // action performed before the expected behavior
+   *
+   *   next(); //iterates over the transformer queue processing the behaviors
+   * });
+   * ```
+   *
+   * Example: to perform an action after the expected behavior
+   * ```
+   * api.registerBehaviorTransformer("example-transformer", ({next, context}) => {
+   *   next(); //iterates over the transformer queue processing the behaviors
+   *
+   *   exampleNewAction(); // action performed after the expected behavior
+   * });
+   * ```
+   *
+   * Example: to use a value returned by the expected behavior to decide if an action must be performed
+   * ```
+   * api.registerBehaviorTransformer("example-transformer", ({next, context}) => {
+   *   const expected = next(); //iterates over the transformer queue processing the behaviors
+   *
+   *   if (expected === "EXPECTED") {
+   *     exampleNewAction(); // action performed after the expected behavior
+   *   }
+   * });
+   * ```
+   *
+   * Example: to abort the expected behavior based on a condition
+   * ```
+   * api.registerBehaviorTransformer("example-transformer", ({next, context}) => {
+   *   if (context.property) {
+   *     // not calling next() on a behavior transformer aborts executing the expected behavior
+   *
+   *     return;
+   *   }
+   *
+   *   next();
+   * });
+   * ```
+   *
+   * Middleware can call `next()` to run the remaining queue, including the default behavior.
+   * Omitting `next()` completely overrides the default behavior.
+   *
+   * @returns True if the transformer exists, false otherwise.
+   */
+  <K extends string, R = unknown, C extends object = Record<string, unknown>>(
+    name: K & FallbackGuard<K>,
+    callback: BehaviorTransformer<R, C>
+  ): boolean;
+  /**
+   * Register behavior middleware whose registry entry fixes its result and context contract.
+   * See {@link BehaviorTransformerFor} for the callback type.
+   *
+   * @returns True if the transformer exists, false otherwise.
+   */
+  <
+    K extends BehaviorName,
+    R = unknown,
+    C extends object = Record<string, unknown>,
+  >(
+    name: K,
+    ...args: BehaviorRegistrationArguments<K, R, C>
+  ): boolean;
+}
 
 type TransformerSource = "CORE" | "PLUGIN";
 
@@ -249,36 +605,61 @@ export function _addTransformerName(
 }
 
 /**
- * Registers a transformer.
- *
- * INTERNAL API: use pluginApi.registerBehaviorTransformer or pluginApi.registerValueTransformer instead.
- *
- * @typeParam T - The value passed to the callback.
- * @typeParam C - Properties of the optional context object.
- * @param transformerName - the name of the transformer
- * @param transformerType - the type of the transformer being registered
- * @param callback - callback that will transform the value.
+ * Internal value registration; use the Plugin API to register callbacks.
  * @returns True if the transformer exists, false if the name is unknown and the callback was ignored.
  */
-export function _registerTransformer<T, C extends object>(
-  transformerName: string,
+export function _registerTransformer<
+  K extends string,
+  T = unknown,
+  C extends object = Record<string, unknown>,
+>(
+  transformerName: K & FallbackGuard<K>,
   transformerType: "VALUE",
   callback: AnyValueTransformer<T, C>
 ): boolean;
 /**
- * Registers behavior middleware through the internal API.
- * @typeParam R - The expected behavior result, in addition to a possible void result.
- * @typeParam C - Properties supplied in the context before the calling instance is added.
+ * Internal behavior registration; use the Plugin API to register middleware.
+ * @returns True if the transformer exists, false if the name is unknown and the callback was ignored.
  */
-export function _registerTransformer<R, C extends object>(
-  transformerName: string,
+export function _registerTransformer<
+  K extends string,
+  R = unknown,
+  C extends object = Record<string, unknown>,
+>(
+  transformerName: K & FallbackGuard<K>,
   transformerType: "BEHAVIOR",
   callback: BehaviorTransformer<R, C>
+): boolean;
+/**
+ * Registers a value callback according to its hook's contract.
+ * @returns True if the transformer exists, false if the name is unknown and the callback was ignored.
+ */
+export function _registerTransformer<
+  K extends ValueName,
+  T = unknown,
+  C extends object = Record<string, unknown>,
+>(
+  transformerName: K,
+  transformerType: "VALUE",
+  ...args: ValueRegistrationArguments<K, T, C>
+): boolean;
+/**
+ * Registers behavior middleware according to its hook's contract.
+ * @returns True if the transformer exists, false if the name is unknown and the callback was ignored.
+ */
+export function _registerTransformer<
+  K extends BehaviorName,
+  R = unknown,
+  C extends object = Record<string, unknown>,
+>(
+  transformerName: K,
+  transformerType: "BEHAVIOR",
+  ...args: BehaviorRegistrationArguments<K, R, C>
 ): boolean;
 export function _registerTransformer(
   transformerName: string,
   transformerType: TransformerType,
-  callback: (...args: never[]) => unknown
+  callback: unknown
 ): boolean {
   if (!transformerTypes[transformerType]) {
     throw new Error(`Invalid transformer type: ${transformerType}`);
@@ -327,17 +708,45 @@ export function _registerTransformer(
 }
 
 /**
- * Applies middleware in registration order, with the core implementation last.
- * @typeParam R - The result inferred from the default callback; middleware may also return void.
- * @typeParam C - Properties inferred from the supplied context object.
+ * Applies untyped middleware in registration order, with the default implementation last.
+ * @param transformerName - The name of the transformer applied
+ * @param defaultCallback - The default implementation run after the middleware
+ * @param context - The context copied into the behavior chain
+ * @throws If the transformer name does not exist, the callback is not a function, or the context is invalid
  */
+export function applyBehaviorTransformer<
+  K extends string,
+  R = unknown,
+  C extends object = Record<string, unknown>,
+>(
+  this: unknown,
+  transformerName: K & FallbackGuard<K>,
+  defaultCallback: DefaultBehaviorTransformer<R, C>,
+  context?: C | null
+): BehaviorTransformerResult<R>;
+/**
+ * Applies a registered behavior hook with its declared result and context.
+ * @param transformerName - The name of the transformer applied
+ * @param defaultCallback - The default implementation run after the middleware
+ * @param context - The context copied into the behavior chain
+ * @throws If the transformer name does not exist, the callback is not a function, or the context is invalid
+ */
+export function applyBehaviorTransformer<
+  K extends BehaviorName,
+  R = unknown,
+  C extends object = Record<string, unknown>,
+>(
+  this: unknown,
+  transformerName: K,
+  ...args: BehaviorApplyArguments<K, R, C>
+): BehaviorApplyResult<K, R>;
 export function applyBehaviorTransformer<
   R,
   C extends object = Record<string, unknown>,
 >(
   this: unknown,
   transformerName: string,
-  defaultCallback: DefaultBehaviorTransformer<R, C>,
+  defaultCallback: DefaultBehaviorTransformer<R, C> | InvalidTransformerEntry,
   context?: C | null
 ): BehaviorTransformerResult<R> {
   const normalizedTransformerName = _normalizeTransformerName(
@@ -422,17 +831,41 @@ export function applyBehaviorTransformer<
 }
 
 /**
- * Apply a transformer to a value.
- *
- * @typeParam T - The result type, inferred from the default value; specify a wider type when needed.
- * @typeParam C - Properties inferred from the optional context object.
- *
+ * Applies an untyped value hook, inferring its result from the default value.
  * @param transformerName - The name of the transformer applied
  * @param defaultValue - The default value
- * @param context - The optional context to pass to the transformer callbacks
+ * @param context - The context passed to the transformer callbacks
  * @param opts - Options for the transformer
  * @throws If the transformer name does not exist or the context is invalid
  */
+export function applyValueTransformer<
+  K extends string,
+  T = unknown,
+  C extends object = Record<string, unknown>,
+>(
+  transformerName: K & FallbackGuard<K>,
+  defaultValue: T,
+  context?: C | null,
+  opts?: {
+    /** Mutate the original value and ignore callback return values. */
+    mutable?: boolean;
+  } | null
+): T;
+/**
+ * Applies an immutable registered hook with its declared value and context.
+ * @param transformerName - The name of the transformer applied
+ * @param defaultValue - The default value
+ * @param context - The context passed to the transformer callbacks
+ * @throws If the transformer name does not exist or the context is invalid
+ */
+export function applyValueTransformer<
+  K extends ValueName,
+  T = unknown,
+  C extends object = Record<string, unknown>,
+>(
+  transformerName: K,
+  ...args: ValueApplyArguments<K, false, T, C>
+): ValueApplyResult<K, T>;
 export function applyValueTransformer<
   T,
   C extends object = Record<string, unknown>,
@@ -440,10 +873,25 @@ export function applyValueTransformer<
   transformerName: string,
   defaultValue: T,
   context?: C | null,
-  opts: {
-    /** Mutate the original value and ignore callback return values. */
-    mutable?: boolean;
-  } | null = { mutable: false }
+  opts: { mutable?: boolean } | null = { mutable: false }
+): T {
+  return applyValueTransformerInternal(
+    transformerName,
+    defaultValue,
+    context,
+    opts
+  );
+}
+
+/** Shared implementation keeps the mutable option out of registered public signatures. */
+function applyValueTransformerInternal<
+  T,
+  C extends object = Record<string, unknown>,
+>(
+  transformerName: string,
+  defaultValue: T,
+  context: C | null | undefined,
+  opts: { mutable?: boolean } | null
 ): T {
   const normalizedTransformerName = _normalizeTransformerName(
     transformerName,
@@ -514,22 +962,41 @@ export function applyValueTransformer<
 }
 
 /**
- * Apply a transformer to a mutable value.
- * The registered transformers should mutate the value instead of returning it.
- *
- * @typeParam T - The original value's type, preserved in the returned reference.
- * @typeParam C - Properties inferred from the optional context object.
- *
+ * Applies an untyped mutable hook, preserving the original value's type and reference.
  * @param transformerName - The name of the transformer applied
  * @param defaultValue - The default value
- * @param context - The optional context to pass to the transformer callbacks
+ * @param context - The context passed to the transformer callbacks
  * @throws If the transformer name does not exist or the context is invalid
  */
+export function applyMutableValueTransformer<
+  K extends string,
+  T = unknown,
+  C extends object = Record<string, unknown>,
+>(
+  transformerName: K & FallbackGuard<K>,
+  defaultValue: T,
+  context?: C | null
+): T;
+/**
+ * Applies a mutable registered hook; callback return values are ignored.
+ * @param transformerName - The name of the transformer applied
+ * @param defaultValue - The default value
+ * @param context - The context passed to the transformer callbacks
+ * @throws If the transformer name does not exist or the context is invalid
+ */
+export function applyMutableValueTransformer<
+  K extends ValueName,
+  T = unknown,
+  C extends object = Record<string, unknown>,
+>(
+  transformerName: K,
+  ...args: ValueApplyArguments<K, true, T, C>
+): ValueApplyResult<K, T>;
 export function applyMutableValueTransformer<
   T,
   C extends object = Record<string, unknown>,
 >(transformerName: string, defaultValue: T, context?: C | null): T {
-  return applyValueTransformer(transformerName, defaultValue, context, {
+  return applyValueTransformerInternal(transformerName, defaultValue, context, {
     mutable: true,
   });
 }
