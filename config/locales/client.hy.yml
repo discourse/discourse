@@ -3825,18 +3825,6 @@ hy:
         type_mismatch:
           default: "Խնդրում ենք մուտքագրել վավեր արժեք:"
           email: "Խնդրում ենք մուտքագրել վավեր էլ. հասցե."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Մուտք"
-      edit:
-        modal:
-          cancel: "չեղարկել"
-          create: "Պահպանել"
-          reason: "Ո՞րն է խմբագրման պատճառը:"
-      spreadsheet:
-        show: "Ցուցադրել"
-        about: "Մասին"
     filter:
       description:
         yesterday: "Երեկվա"

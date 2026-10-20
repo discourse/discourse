@@ -210,6 +210,14 @@ lv:
         delete: "Dzēst"
         tools_modal:
           required: "Nepieciešams"
+      models:
+        name: "Vārds"
+        type: "Tips"
+        edit: "Labot"
+        types:
+          embedding: "Ieguldīšana"
+        filters:
+          all: "Visi veidi"
       llms:
         display_name: "Vārds"
         vision_modes:

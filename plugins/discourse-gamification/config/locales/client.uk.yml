@@ -109,6 +109,7 @@ uk:
       admin:
         title: "Гейміфікація"
         name: "Імʼя"
+        created_by: "Створено"
         period: "Період"
     discourse_workflows:
       node_unavailable:

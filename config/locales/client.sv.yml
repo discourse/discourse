@@ -2488,6 +2488,8 @@ sv:
         link_copied: "Länken kopierad!"
       onebox_toolbar:
         link_copied: "Länken kopierad!"
+      table:
+        default_heading: "Kolumn %{number}"
     notifications:
       tooltip:
         regular:
@@ -4391,63 +4393,6 @@ sv:
           other: "Inmatningen måste vara mer än %{count}."
         pattern_mismatch: "Matcha det begärda formatet."
         bad_input: "Ange en giltig inmatning."
-    table_builder:
-      title: "Tabellbyggare"
-      modal:
-        title: "Tabellbyggare"
-        create: "Bygg tabell"
-        help:
-          title: "Använda kalkylbladsredigeraren"
-          enter_key: "Retur"
-          tab_key: "Flik"
-          new_row: "i slutet av en rad för att infoga en ny rad."
-          new_col: "i slutet av en kolumn för att infoga en ny kolumn."
-          options: "Högerklicka på cellerna för att komma åt fler alternativ i en rullgardinsmeny."
-        confirm_close: "Är du säker på att du vill stänga tabellbyggaren? Alla osparade ändringar förloras."
-      edit:
-        btn_edit: "Redigera tabell"
-        modal:
-          title: "Redigera tabell"
-          cancel: "avbryt"
-          create: "Spara"
-          reason: "Varför redigerar du?"
-          trigger_reason: "Lägg till orsak till redigering"
-        default_edit_reason: "Uppdatera tabell med tabellredigerare"
-      default_header:
-        col_1: "Kolumn 1"
-        col_2: "Kolumn 2"
-        col_3: "Kolumn 3"
-        col_4: "Kolumn 4"
-      spreadsheet:
-        no_records_found: "Det hittades inga poster"
-        show: "Visa"
-        entries: "poster"
-        about: "Om"
-        prompts:
-          delete_selected_rows: "Är du säker på att du vill radera de valda raderna?"
-          delete_selected_cols: "Är du säker på att du vill radera de valda kolumnerna?"
-          will_destroy_merged_cells: "Denna åtgärd kommer att förstöra alla befintliga sammanslagna celler. Är du säker?"
-          will_clear_search_results: "Denna åtgärd kommer att förstöra alla befintliga sammanslagna celler. Är du säker?"
-          conflicts_with_merged_cells: "Det finns en konflikt med en annan sammanslagen cell"
-        invalid_merge_props: "Ogiltiga sammanslagna egenskaper"
-        cells_already_merged: "Cell redan sammanslagen"
-        no_cells_selected: "Inga celler valda"
-        context_menu:
-          row:
-            before: "Infoga en ny rad före"
-            after: "Infoga en ny rad efter"
-            delete: "Radera markerade rader"
-          col:
-            before: "Infoga en ny kolumn före"
-            after: "Infoga en ny kolumn efter"
-            delete: "Radera markerade kolumner"
-            rename: "Byt namn på den här kolumnen"
-          order:
-            ascending: "Stigande ordning"
-            descending: "Fallande ordning"
-          copy: "Kopiera..."
-          paste: "Klistra in..."
-          save: "Spara som..."
     filter:
       description:
         yesterday: "Igår"

@@ -2060,14 +2060,6 @@ be:
         type_mismatch:
           default: "Увядзіце правільнае значэнне."
           email: "Увядзіце правільны адрас электроннай пошты."
-    table_builder:
-      edit:
-        modal:
-          cancel: "скасаваць"
-          create: "Захаваць"
-          reason: "Чаму вы рэдагуеце допіс?"
-      spreadsheet:
-        about: "Пра сайт"
     filter:
       description:
         yesterday: "Учора"

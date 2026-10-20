@@ -52,7 +52,6 @@ tr_TR:
         description: "AI kullanarak konuları otomatik olarak etiketleyin"
   site_settings:
     discourse_ai_enabled: "Discourse YZ eklentisini etkinleştirin."
-    ai_default_llm_model: "Tüm YZ özellikleri için kullanılacak varsayılan LLM modeli"
     ai_artifact_security: "YZ artifact sistemi, çalıştırılabilir kod içeren IFRAME'ler üretir. Katı mod, kodu çalıştırmak için fazladan bir tıklama gerektirir. Gevşek mod, kodu hemen çalıştırır. Karma mod, kullanıcının veri-yz-artifact-otomatik çalıştırmayı hemen göstermesine olanak tanır. Devre dışı mod, artifact sistemini devre dışı bırakır."
     ai_toxicity_enabled: "Toksiklik modülünü etkinleştirin."
     ai_toxicity_inference_service_api_endpoint: "API'nin toksiklik modülü için çalıştığı URL"

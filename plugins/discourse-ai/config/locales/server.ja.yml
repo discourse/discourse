@@ -48,7 +48,6 @@ ja:
         description: "AI を使用してトピックを自動的にタグ付けします"
   site_settings:
     discourse_ai_enabled: "Discourse AI プラグインを有効にします。"
-    ai_default_llm_model: "すべての AI 機能に使用するデフォルトの LLM モデル"
     ai_artifact_security: "AI アーティファクトシステムは、実行可能なコードを含む IFRAME を生成します。厳格モードでは、コードを実行するためのクリックが追加で必要となります。ハイブリッドモードでは、ユーザーが data-ai-artifact-autorun を指定するとすぐに表示することができます。無効モードでは、アーティファクトシステムが無効になります。"
     ai_toxicity_enabled: "毒コメントモジュールを有効にします。"
     ai_toxicity_inference_service_api_endpoint: "毒コメントモジュールの API が実行している URL"

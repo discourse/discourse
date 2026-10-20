@@ -254,6 +254,13 @@ id:
         save: "Simpan"
         edit: "Ubah"
         delete: "Hapus"
+      models:
+        name: "Nama"
+        type: "Tipe"
+        edit: "Ubah"
+        select_type: "Pilih"
+        filters:
+          all: "Semua tipe"
       llms:
         display_name: "Nama"
         vision_modes:

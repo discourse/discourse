@@ -236,6 +236,16 @@ sv:
         delete: "Ta bort"
         tools_modal:
           required: "Krävs"
+      models:
+        name: "Namn"
+        type: "Typ"
+        provider: "Leverantör"
+        edit: "Redigera"
+        select_type: "Välj"
+        types:
+          embedding: "Inbäddning"
+        filters:
+          all: "Alla typer"
       llms:
         display_name: "Namn"
         provider: "Leverantör"
