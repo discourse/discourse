@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Scheduler::ForkDrain do
+RSpec.describe Discourse::ForkBarrier do
   let(:pool) { Scheduler::ThreadPool.new(min_threads: 0, max_threads: 1) }
 
   after do

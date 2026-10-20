@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require "weakref"
-require_relative "fork_drain"
+require_relative "../discourse/fork_barrier"
 
 module Scheduler
   module Deferrable
@@ -71,20 +71,20 @@ module Scheduler
         stats[:queued] += 1
       end
 
-      ForkDrain.register
+      Discourse::ForkBarrier.register
       if @async
         begin
           start_thread if !@thread&.alive? && !@paused
           @queue.push({ site: db, user: current_user, db: db, job: blk, desc: desc }, force: force)
         rescue Exception
-          ForkDrain.complete
+          Discourse::ForkBarrier.complete
           raise
         end
       else
         begin
           blk.call
         ensure
-          ForkDrain.complete
+          Discourse::ForkBarrier.complete
         end
       end
     end
@@ -188,7 +188,7 @@ module Scheduler
           end
         end
       ensure
-        ForkDrain.complete if job
+        Discourse::ForkBarrier.complete if job
       end
     end
   end

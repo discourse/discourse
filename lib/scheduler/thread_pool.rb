@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "fork_drain"
+require_relative "../discourse/fork_barrier"
 
 module Scheduler
   # ThreadPool manages a pool of worker threads that process tasks from a queue.
@@ -21,7 +21,7 @@ module Scheduler
 
     class << self
       def wait_for_idle(timeout:)
-        ForkDrain.wait_for_idle(timeout: timeout)
+        Discourse::ForkBarrier.wait_for_idle(timeout: timeout)
       end
     end
 
@@ -60,7 +60,7 @@ module Scheduler
       locale = I18n.locale
       wrapped_block = wrap_block(block, db, locale)
 
-      ForkDrain.register
+      Discourse::ForkBarrier.register
       begin
         @mutex.synchronize do
           raise ShutdownError, "Cannot post work to a shutdown ThreadPool" if @shutdown
@@ -70,7 +70,7 @@ module Scheduler
           @new_work.signal
         end
       rescue Exception
-        ForkDrain.complete
+        Discourse::ForkBarrier.complete
         raise
       end
     end
@@ -195,7 +195,7 @@ module Scheduler
             work.call
           ensure
             @mutex.synchronize { @busy_threads.delete(Thread.current) }
-            ForkDrain.complete
+            Discourse::ForkBarrier.complete
           end
         end
       end

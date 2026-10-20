@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Scheduler
-  module ForkDrain
+module Discourse
+  module ForkBarrier
     class << self
       def reset_after_fork
         return if @pid == Process.pid
