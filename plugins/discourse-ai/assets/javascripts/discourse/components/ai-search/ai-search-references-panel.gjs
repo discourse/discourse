@@ -21,6 +21,7 @@ export default class AiSearchReferencesPanel extends Component {
     <aside
       aria-labelledby="ai-search-references-title"
       class="ai-search-references"
+      ...attributes
     >
       <h3 class="ai-search-references__title" id="ai-search-references-title">
         {{i18n "discourse_ai.ai_search.references_title"}}

@@ -214,6 +214,18 @@
   &__empty {
     color: var(--primary-medium);
   }
+
+  // the modal has its own title and frame
+  &.--in-modal {
+    width: auto;
+    max-height: none;
+    padding: 0;
+    border: 0;
+  }
+
+  &.--in-modal &__title {
+    display: none;
+  }
 }
 
 @keyframes ai-search-highlight {

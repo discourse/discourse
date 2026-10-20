@@ -762,6 +762,17 @@ describe "AI combined search" do
       expect(page).to have_css(".ai-search-references__link", text: topic_2.title)
     end
 
+    it "opens the cited topics from beside the progress bar where the timeline does not fit",
+       mobile: true do
+      visit conversation.url
+      find(".ai-search-references-button").click
+
+      expect(page).to have_css(
+        ".ai-search-references-modal .ai-search-references__link",
+        text: topic_1.title,
+      )
+    end
+
     it "keeps the timeline for readers without the combined search" do
       SiteSetting.enable_ai_combined_search = false
 

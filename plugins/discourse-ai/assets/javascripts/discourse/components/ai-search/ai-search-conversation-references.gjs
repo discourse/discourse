@@ -148,6 +148,6 @@ export default class AiSearchConversationReferences extends Component {
   }
 
   <template>
-    <AiSearchReferencesPanel @references={{this.references}} />
+    <AiSearchReferencesPanel ...attributes @references={{this.references}} />
   </template>
 }
