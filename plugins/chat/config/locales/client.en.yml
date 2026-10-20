@@ -671,7 +671,7 @@ en:
           alphabetical: "Alphabetically"
           recent_activity: "Recent activity"
           priority: "Priority"
-          priority_description: "Mentions, then unreads, then recent activity"
+          priority_description: "Mentions, then unreads, then recent activity, each sorted alphabetically"
         empty:
           filtered: "No channels match this filter."
           show_all: "Show all channels"
