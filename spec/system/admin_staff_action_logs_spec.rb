@@ -33,6 +33,64 @@ describe "Admin staff action logs" do
 
   before { sign_in(current_user) }
 
+  it "shows scheduled restrictions alongside their reasons" do
+    user = Fabricate(:user, username: "example_user")
+    created_at = 3.hours.ago
+    suspension =
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:suspend_user],
+        acting_user: current_user,
+        target_user: user,
+        details: "Spamming",
+        created_at: created_at,
+        expires_at: created_at + 7.days,
+      )
+    silence =
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        acting_user: current_user,
+        target_user: user,
+        details: "Advertising",
+        created_at: 2.days.ago,
+        expires_at: 1.day.ago,
+      )
+    indefinite =
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        acting_user: current_user,
+        target_user: user,
+        details: "Repeated spam",
+        created_at: 3.days.ago,
+        expires_at: 1000.years.from_now,
+      )
+    legacy =
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:suspend_user],
+        acting_user: current_user,
+        target_user: user,
+        details: "Spamming",
+        created_at: 5.days.ago,
+      )
+
+    filters = { target_user: user.username }.to_json
+    visit "/admin/logs/staff_action_logs?filters=#{CGI.escape(filters)}"
+
+    expect(staff_action_logs_page.log_row(suspension)).to have_content("Spamming")
+    expect(staff_action_logs_page.log_row(suspension)).to have_content("Scheduled duration: 7 days")
+    expect(staff_action_logs_page.log_row(suspension)).to have_content("Scheduled expiry:")
+    expect(staff_action_logs_page.log_row(silence)).to have_content("Scheduled duration: 1 day")
+    expect(staff_action_logs_page.log_row(indefinite)).to have_content(
+      "Scheduled duration: Indefinite",
+    )
+    expect(staff_action_logs_page.log_row(indefinite)).to have_no_content("Scheduled expiry:")
+    expect(staff_action_logs_page.log_row(legacy)).to have_content("Spamming")
+    expect(staff_action_logs_page.log_row(legacy)).to have_no_content("Scheduled duration:")
+  end
+
   it "shows details for an action" do
     visit "/admin/logs/staff_action_logs"
 

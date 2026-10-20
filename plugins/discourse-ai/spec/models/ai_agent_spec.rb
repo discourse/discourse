@@ -362,7 +362,79 @@ RSpec.describe AiAgent do
     end
   end
 
-  it "provisions a conversational agent idempotently" do
+  describe ".ensure_users!" do
+    [false, true].product([false, true])
+      .each do |ai_enabled, bot_enabled|
+        it "only provisions automatically with both settings enabled (AI: #{ai_enabled}, bot: #{bot_enabled})" do
+          SiteSetting.discourse_ai_enabled = ai_enabled
+          SiteSetting.ai_bot_enabled = bot_enabled
+          agent = Fabricate(:ai_agent)
+          provisioning_enabled = ai_enabled && bot_enabled
+
+          expect(agent.needs_user?).to eq(provisioning_enabled)
+          expect { 2.times { AiAgent.ensure_users! } }.to change(User, :count).by(
+            provisioning_enabled ? 1 : 0,
+          )
+          expect(agent.reload.user.present?).to eq(provisioning_enabled)
+        end
+      end
+
+    it "preserves existing users when automatic provisioning is disabled" do
+      agent = Fabricate(:ai_agent)
+      user = agent.create_user!
+      SiteSetting.ai_bot_enabled = false
+
+      expect { AiAgent.ensure_users! }.not_to change(User, :count)
+      expect(agent.reload.user).to eq(user)
+      expect(user.reload).to be_active
+    end
+
+    it "skips disabled, nonconversational, and unsupported system agents" do
+      SiteSetting.ai_bot_enabled = true
+      disabled_agent = Fabricate(:ai_agent, enabled: false)
+      nonconversational_agent = Fabricate(:ai_agent, allow_personal_messages: false)
+      unsupported_agent =
+        AiAgent.find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::LocaleDetector])
+      unsupported_agent.update!(enabled: true, allow_personal_messages: true)
+      expect(unsupported_agent.needs_user?).to eq(false)
+
+      expect { AiAgent.ensure_users! }.not_to change(User, :count)
+      expect(
+        [disabled_agent, nonconversational_agent, unsupported_agent].map do |agent|
+          agent.reload.user_id
+        end,
+      ).to eq([nil, nil, nil])
+    end
+  end
+
+  describe "#needs_user?" do
+    it "requires a conversational entry point or a forced default model" do
+      SiteSetting.ai_bot_enabled = true
+      basic_agent.allow_personal_messages = false
+
+      expect(basic_agent.needs_user?).to eq(false)
+
+      %i[
+        force_default_llm
+        allow_topic_mentions
+        allow_personal_messages
+        allow_chat_direct_messages
+        allow_chat_channel_mentions
+      ].each do |field|
+        basic_agent.public_send("#{field}=", true)
+        expect(basic_agent.needs_user?).to eq(true), "expected #{field} to require a user"
+        basic_agent.public_send("#{field}=", false)
+      end
+
+      basic_agent.allow_personal_messages = true
+      basic_agent.enabled = false
+      expect(basic_agent.needs_user?).to eq(false)
+    end
+  end
+
+  it "provisions a conversational agent idempotently even when both features are disabled" do
+    SiteSetting.discourse_ai_enabled = false
+    SiteSetting.ai_bot_enabled = false
     agent = Fabricate(:ai_agent, allow_personal_messages: true, default_llm: llm_model)
 
     expect { 2.times { agent.ensure_user! } }.to change { User.count }.by(1)

@@ -46,6 +46,7 @@ pl_PL:
           many: "%{formatted_number} wiadomości czatu"
           other: "%{formatted_number} wiadomości czatu"
     chat:
+      homepage_option: "Kanał czatu"
       edit_category:
         tab_title: "Czat"
         channel: "Kanał"

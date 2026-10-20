@@ -1,6 +1,5 @@
 /* eslint-disable ember/no-jquery */
 import $ from "jquery";
-import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { registerAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
 import { registerAdminReportRelatedItemsRenderer } from "discourse/admin/lib/admin-report-related-items";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
@@ -3246,7 +3245,11 @@ class _PluginApi {
    * @param {Component} componentClass - A Glimmer component that accepts @item, @payload, @filters.
    */
   registerAdminDashboardReportRenderer(source, componentClass) {
-    registerAdminDashboardReportRenderer(source, componentClass);
+    this.registerValueTransformer(
+      "admin-dashboard-report-renderer",
+      ({ value, context }) =>
+        context.source === source ? componentClass : value
+    );
   }
 
   /**

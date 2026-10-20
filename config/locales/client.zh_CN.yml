@@ -853,9 +853,19 @@ zh_CN:
         search: "搜索消息"
         placeholder: "在此处输入消息标题、URL 或 ID"
     dsa_statements:
+      title: "DSA分类"
+      help_title: "关于DSA分类"
+      help: "请选择解释此审核决定的社区规则和类别。这些信息将与《数字服务法案》规定的理由声明一同保存。"
+      rule: "社区规则"
+      rule_prompt: "选择一条社区规则"
       category: "类别"
       category_prompt: "选择一个类别"
+      pending: "DSA分类待定"
+      confirm_title: "保留DSA分类？"
+      confirm_message: "请查看社区规则和类别。保存后无法更改此分类。"
+      save: "保存分类"
       saving: "正在保存…"
+      saved: "分类已保存"
     review:
       show_more: "展开"
       show_less: "收起"
@@ -5516,6 +5526,8 @@ zh_CN:
         other: "其他 (+%{count})"
       awarded:
         other: "已授予 %{number} 个"
+      granted_times:
+        other: "已授予 %{number} 次"
       select_badge_for_title: 选择一个徽章作为您的头衔使用
       none: "（无）"
       successfully_granted: "已成功将“%{badge}”授予 %{username}"

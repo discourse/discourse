@@ -11,10 +11,10 @@ import {
 import { isEmpty } from "@ember/utils";
 import { setupApplicationTest } from "ember-qunit";
 import $ from "jquery";
+import { resetInlineOneboxCache } from "pretty-text/inline-oneboxer";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
-import { resetAdminDashboardReportRenderers } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { resetAdminDashboardSections } from "discourse/admin/lib/admin-dashboard-sections";
 import { resetAdminReportRelatedItemsRenderers } from "discourse/admin/lib/admin-report-related-items";
 import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
@@ -223,7 +223,6 @@ export function testCleanup(container, app) {
   resetMobile();
   noteKeyboardEvidence();
   resetAdditionalReportModes();
-  resetAdminDashboardReportRenderers();
   resetAdminReportRelatedItemsRenderers();
   resetAdminDashboardSections();
   resetDeferredClassModifications();
@@ -234,6 +233,7 @@ export function testCleanup(container, app) {
   resetPluginOutletDecorators();
   resetUsernameDecorators();
   resetOneboxCache();
+  resetInlineOneboxCache();
   resetCustomPostMessageCallbacks();
   resetUserSearchCache();
   resetHighestReadCache();

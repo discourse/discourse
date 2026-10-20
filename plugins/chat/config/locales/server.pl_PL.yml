@@ -28,6 +28,7 @@ pl_PL:
     chat_pinning_messages_allowed_groups: "Użytkownicy w tych grupach mogą przypinać wiadomości czatu w kanałach, do których mają dostęp. Pamiętaj, że administratorzy i moderatorzy zawsze mogą przypinać wiadomości czatu. Każdy członek czatu grupowego lub wiadomości prywatnej może przypinać tam wiadomości."
     max_mentions_per_chat_message: "Maksymalna liczba powiadomień @name, których użytkownik może użyć w wiadomości na czacie."
     chat_max_direct_message_users: "Użytkownicy nie mogą dodać więcej niż ta liczba innych użytkowników podczas tworzenia nowej wiadomości bezpośredniej. Ustaw na 0, aby zezwolić na wysyłanie wiadomości tylko do siebie. Personel jest zwolniony z tego ustawienia."
+    chat_homepage_channel: "Kanał, na którym trafiają osoby, gdy {{setting:default_homepage}} jest ustawione na kanał czatu. Osoby, które nie mają dostępu do kanału, widzą zamiast tego pierwszy element w {{setting:top_menu}} , w tym anonimowi goście, chyba że {{setting:chat_allowed_groups}} obejmuje użytkowników anonimowych."
     chat_allow_archiving_channels: "Zezwól personelowi na archiwizowanie wiadomości w temacie podczas zamykania kanału."
     chat_editing_grace_period: "Przez (n) sekund po wysłaniu wiadomości jej edycja nie będzie pokazywać znacznika „edytowana”."
     chat_editing_grace_period_max_diff_low_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 0 i 1)."

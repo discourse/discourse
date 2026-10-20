@@ -5,11 +5,14 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { escapeExpression } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DUserLink from "discourse/ui-kit/d-user-link";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
@@ -37,25 +40,22 @@ export default class LiveRoomList extends Component {
   }
 
   @action
-  async destroyRoom(room) {
-    room.set("isDeleting", true);
-    try {
-      await this.dialog.deleteConfirm({
-        message: i18n("live.admin.destroy_room.confirm", {
-          name: escapeExpression(room.name),
-        }),
-        didConfirm: async () => {
-          try {
-            await room.destroyRecord();
-            this.args.onDestroy?.(room);
-          } catch (e) {
-            popupAjaxError(e);
-          }
-        },
-      });
-    } finally {
-      room?.set("isDeleting", false);
-    }
+  async destroyRoom(room, closeMenu) {
+    await closeMenu();
+
+    await this.dialog.deleteConfirm({
+      message: i18n("live.admin.destroy_room.confirm", {
+        name: escapeExpression(room.name),
+      }),
+      didConfirm: async () => {
+        try {
+          await room.destroyRecord();
+          this.args.onDestroy?.(room);
+        } catch (e) {
+          popupAjaxError(e);
+        }
+      },
+    });
   }
 
   <template>
@@ -79,6 +79,9 @@ export default class LiveRoomList extends Component {
                   "live.admin.room.name"
                 }}</th>
               <th class="d-table__header-cell">{{i18n
+                  "live.admin.room.creator"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
                   "live.admin.room.public"
                 }}</th>
               <th class="d-table__header-cell">{{i18n
@@ -86,9 +89,6 @@ export default class LiveRoomList extends Component {
                 }}</th>
               <th class="d-table__header-cell">{{i18n
                   "live.admin.room.member_count"
-                }}</th>
-              <th class="d-table__header-cell">{{i18n
-                  "live.admin.room.creator"
                 }}</th>
               <th class="d-table__header-cell">{{i18n
                   "live.admin.room.created_at"
@@ -109,6 +109,20 @@ export default class LiveRoomList extends Component {
                       class="d-table__overview-name"
                     >{{room.name}}</strong>
                   </LinkTo>
+                </td>
+                <td class="d-table__cell --detail live-rooms__creator">
+                  <div class="d-table__mobile-label">
+                    {{i18n "live.admin.room.creator"}}
+                  </div>
+                  {{#if room.creator}}
+                    <DUserLink
+                      class="live-rooms__creator-link"
+                      @user={{room.creator}}
+                    >
+                      {{dAvatar room.creator imageSize="tiny"}}
+                      <span>{{room.creator.username}}</span>
+                    </DUserLink>
+                  {{/if}}
                 </td>
                 <td class="d-table__cell --detail live-rooms__public">
                   <div class="d-table__mobile-label">
@@ -136,19 +150,6 @@ export default class LiveRoomList extends Component {
                   </div>
                   {{room.member_count}}
                 </td>
-                <td class="d-table__cell --detail live-rooms__creator">
-                  <div class="d-table__mobile-label">
-                    {{i18n "live.admin.room.creator"}}
-                  </div>
-                  {{#if room.creator}}
-                    <a
-                      data-user-card={{room.creator.username}}
-                      href={{room.creator.userPath}}
-                    >
-                      {{dAvatar room.creator imageSize="small"}}
-                    </a>
-                  {{/if}}
-                </td>
                 <td class="d-table__cell --detail live-rooms__created-at">
                   <div class="d-table__mobile-label">
                     {{i18n "live.admin.room.created_at"}}
@@ -173,12 +174,26 @@ export default class LiveRoomList extends Component {
                     {{i18n "live.admin.edit"}}
                   </LinkTo>
 
-                  <DButton
-                    class="btn-small btn-danger live-rooms__delete"
-                    @disabled={{room.isDeleting}}
-                    @icon="trash-can"
-                    {{on "click" (fn this.destroyRoom room)}}
-                  />
+                  <DMenu
+                    @icon="ellipsis-vertical"
+                    @identifier="live-rooms-menu"
+                    @placement="bottom-end"
+                    @title={{i18n "more_options"}}
+                    @triggerClass="btn-default btn-small"
+                  >
+                    <:content as |menu|>
+                      <DDropdownMenu as |dropdown|>
+                        <dropdown.item>
+                          <DButton
+                            class="btn-transparent --danger live-rooms__delete"
+                            @action={{fn this.destroyRoom room menu.close}}
+                            @icon="trash-can"
+                            @label="delete"
+                          />
+                        </dropdown.item>
+                      </DDropdownMenu>
+                    </:content>
+                  </DMenu>
                 </td>
               </tr>
             {{/each}}

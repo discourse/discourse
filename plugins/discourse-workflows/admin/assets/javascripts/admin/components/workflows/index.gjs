@@ -19,6 +19,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DMultiSelect from "discourse/ui-kit/d-multi-select";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DUserLink from "discourse/ui-kit/d-user-link";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
@@ -309,13 +310,10 @@ export default class WorkflowsIndex extends Component {
         >
           <:head>
             <th class="d-table__header-cell">{{i18n
-                "discourse_workflows.creator"
-              }}</th>
-            <th class="d-table__header-cell">{{i18n
                 "discourse_workflows.workflow_name"
               }}</th>
             <th class="d-table__header-cell">{{i18n
-                "discourse_workflows.last_editor"
+                "discourse_workflows.creator"
               }}</th>
             <th class="d-table__header-cell">{{i18n
                 "discourse_workflows.last_update"
@@ -328,19 +326,6 @@ export default class WorkflowsIndex extends Component {
               }}</th>
           </:head>
           <:row as |workflow|>
-            <td class="d-table__cell --detail workflows-index__creator">
-              <div class="d-table__mobile-label">
-                {{i18n "discourse_workflows.creator"}}
-              </div>
-              {{#if workflow.createdBy}}
-                <a
-                  class="workflows-index__creator-link"
-                  href={{workflow.createdBy.path}}
-                >
-                  {{dAvatar workflow.createdBy imageSize="tiny"}}
-                </a>
-              {{/if}}
-            </td>
             <td class="d-table__cell --overview workflows-index__name">
               <LinkTo
                 class="d-table__overview-link"
@@ -378,18 +363,18 @@ export default class WorkflowsIndex extends Component {
                 </div>
               {{/if}}
             </td>
-            <td class="d-table__cell --detail workflows-index__last-editor">
+            <td class="d-table__cell --detail workflows-index__creator">
               <div class="d-table__mobile-label">
-                {{i18n "discourse_workflows.last_editor"}}
+                {{i18n "discourse_workflows.creator"}}
               </div>
-              {{#if workflow.updatedBy}}
-                <a
-                  class="workflows-index__last-editor-link"
-                  href={{workflow.updatedBy.path}}
+              {{#if workflow.createdBy}}
+                <DUserLink
+                  class="workflows-index__creator-link"
+                  @user={{workflow.createdBy}}
                 >
-                  {{dAvatar workflow.updatedBy imageSize="tiny"}}
-                  <span>{{workflow.updatedBy.username}}</span>
-                </a>
+                  {{dAvatar workflow.createdBy imageSize="tiny"}}
+                  <span>{{workflow.createdBy.username}}</span>
+                </DUserLink>
               {{/if}}
             </td>
             <td class="d-table__cell --detail workflows-index__last-update">

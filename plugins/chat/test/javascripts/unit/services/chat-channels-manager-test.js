@@ -589,17 +589,30 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
 
     test("sorts urgent, unread, and read channels by priority", function (assert) {
       this.preferences.channelsSort = CHAT_CHANNEL_LIST_SORTS.PRIORITY;
-      this.buildChannel({ id: 1, slug: "read", createdAt: "2026-09-03" });
+      this.buildChannel({ id: 1, slug: "read-zulu", createdAt: "2026-09-03" });
+      this.buildChannel({ id: 4, slug: "read-alpha", createdAt: "2026-09-01" });
       this.buildChannel({
         id: 2,
-        slug: "unread",
+        slug: "unread-zulu",
         createdAt: "2026-09-01",
         unreadCount: 1,
       });
       this.buildChannel({
+        id: 5,
+        slug: "unread-alpha",
+        createdAt: "2026-09-03",
+        unreadCount: 1,
+      });
+      this.buildChannel({
         id: 3,
-        slug: "urgent",
+        slug: "urgent-zulu",
         createdAt: "2026-08-30",
+        mentionCount: 1,
+      });
+      this.buildChannel({
+        id: 6,
+        slug: "urgent-alpha",
+        createdAt: "2026-09-04",
         mentionCount: 1,
       });
 
@@ -607,8 +620,15 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
         this.subject.sidebarPublicMessageChannels.map(
           (channel) => channel.slug
         ),
-        ["urgent", "unread", "read"],
-        "priority groups are ordered"
+        [
+          "urgent-alpha",
+          "urgent-zulu",
+          "unread-alpha",
+          "unread-zulu",
+          "read-alpha",
+          "read-zulu",
+        ],
+        "priority groups are ordered alphabetically"
       );
     });
 
@@ -938,17 +958,30 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
 
     test("sorts urgent, unread, and read channels by priority", function (assert) {
       this.preferences.channelsSort = CHAT_CHANNEL_LIST_SORTS.PRIORITY;
-      this.buildChannel({ id: 1, slug: "read", createdAt: "2026-09-03" });
+      this.buildChannel({ id: 1, slug: "read-zulu", createdAt: "2026-09-03" });
+      this.buildChannel({ id: 4, slug: "read-alpha", createdAt: "2026-09-01" });
       this.buildChannel({
         id: 2,
-        slug: "unread",
+        slug: "unread-zulu",
         createdAt: "2026-09-01",
         unreadCount: 1,
       });
       this.buildChannel({
+        id: 5,
+        slug: "unread-alpha",
+        createdAt: "2026-09-03",
+        unreadCount: 1,
+      });
+      this.buildChannel({
         id: 3,
-        slug: "urgent",
+        slug: "urgent-zulu",
         createdAt: "2026-08-30",
+        mentionCount: 1,
+      });
+      this.buildChannel({
+        id: 6,
+        slug: "urgent-alpha",
+        createdAt: "2026-09-04",
         mentionCount: 1,
       });
 
@@ -956,8 +989,15 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
         this.subject.publicMessageChannelsByPreference.map(
           (channel) => channel.slug
         ),
-        ["urgent", "unread", "read"],
-        "priority places urgent, then unread, then read channels"
+        [
+          "urgent-alpha",
+          "urgent-zulu",
+          "unread-alpha",
+          "unread-zulu",
+          "read-alpha",
+          "read-zulu",
+        ],
+        "priority places each group in alphabetical order"
       );
     });
 
@@ -1467,8 +1507,8 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
 
         assert.deepEqual(
           this.subject.starredChannelsByPreference.map((c) => c.slug),
-          ["zulu", "alpha"],
-          "starred honors its own priority sort"
+          ["alpha", "zulu"],
+          "starred honors its own priority sort alphabetically"
         );
         assert.deepEqual(
           this.subject.publicMessageChannelsByPreference.map((c) => c.slug),
