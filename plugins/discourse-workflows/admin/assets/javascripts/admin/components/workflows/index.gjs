@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
@@ -16,6 +17,7 @@ import DiscourseURL, {
 } from "discourse/lib/url";
 import { eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DMultiSelect from "discourse/ui-kit/d-multi-select";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
@@ -25,11 +27,13 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import confirmDeleteWorkflow from "../../lib/workflows/confirm-delete-workflow.js";
 import AdminTable from "./admin-table.gjs";
 import EmptyState from "./empty-state.gjs";
 
 export default class WorkflowsIndex extends Component {
   @service currentUser;
+  @service dialog;
   @service router;
   @service store;
 
@@ -225,6 +229,29 @@ export default class WorkflowsIndex extends Component {
   }
 
   @action
+  async deleteWorkflow(workflow, closeMenu) {
+    await closeMenu();
+
+    await confirmDeleteWorkflow(this.dialog, workflow, {
+      onDeleted: () => this.removeWorkflow(workflow),
+    });
+  }
+
+  removeWorkflow(workflow) {
+    const index = this.resultSet.content.indexOf(workflow);
+    if (index === -1) {
+      return;
+    }
+
+    this.resultSet.content.splice(index, 1);
+    this.resultSet.totalRows -= 1;
+
+    if (!this.hasActiveFilters) {
+      this.hasWorkflows = this.resultSet.totalRows > 0;
+    }
+  }
+
+  @action
   workflowStatusLabel(workflow) {
     if (workflow.activeVersionId && workflow.hasUnpublishedChanges) {
       return "discourse_workflows.unpublished_changes";
@@ -324,6 +351,7 @@ export default class WorkflowsIndex extends Component {
             <th class="d-table__header-cell">{{i18n
                 "discourse_workflows.status"
               }}</th>
+            <th class="d-table__header-cell"></th>
           </:head>
           <:row as |workflow|>
             <td class="d-table__cell --overview workflows-index__name">
@@ -405,6 +433,38 @@ export default class WorkflowsIndex extends Component {
               >
                 {{i18n (this.workflowStatusLabel workflow)}}
               </span>
+            </td>
+            <td class="d-table__cell --controls">
+              <div class="d-table__cell-actions">
+                <LinkTo
+                  class="btn btn-default btn-text btn-small workflows-index__edit"
+                  @model={{workflow.id}}
+                  @route="adminPlugins.show.discourse-workflows.show"
+                >
+                  {{i18n "discourse_workflows.edit"}}
+                </LinkTo>
+
+                <DMenu
+                  @icon="ellipsis-vertical"
+                  @identifier="workflows-index-menu"
+                  @placement="bottom-end"
+                  @title={{i18n "discourse_workflows.more_options"}}
+                  @triggerClass="btn-default btn-small workflows-index__menu-trigger"
+                >
+                  <:content as |menu|>
+                    <DDropdownMenu as |dropdown|>
+                      <dropdown.item>
+                        <DButton
+                          class="btn-transparent --danger workflows-index__delete"
+                          @action={{fn this.deleteWorkflow workflow menu.close}}
+                          @icon="trash-can"
+                          @label="discourse_workflows.delete"
+                        />
+                      </dropdown.item>
+                    </DDropdownMenu>
+                  </:content>
+                </DMenu>
+              </div>
             </td>
           </:row>
         </AdminTable>
