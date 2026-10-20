@@ -704,6 +704,8 @@ describe "AI combined search" do
     fab!(:bot) { Fabricate(:user, username: "answerbot") }
     fab!(:conversation) do
       Fabricate(:private_message_topic, user:, recipient: bot).tap do |topic|
+        # laid out as a conversation with the AI bot, which hides the progress bar
+        topic.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD] = true
         topic.custom_fields[
           DiscourseAi::Discoveries::ContinueConversation::TOPIC_REQUEST_ID_FIELD
         ] = "request"
@@ -728,6 +730,7 @@ describe "AI combined search" do
       expect(cited).to have_css(".ai-search-topic-row__date")
       expect(cited).to have_css(".ai-search-topic-row__replies")
       expect(page).to have_no_css(".timeline-container")
+      expect(page).to have_no_css(".ai-search-references-button")
     end
 
     it "lists the answer's sources kept beside the conversation" do
@@ -762,8 +765,7 @@ describe "AI combined search" do
       expect(page).to have_css(".ai-search-references__link", text: topic_2.title)
     end
 
-    it "opens the cited topics from beside the progress bar where the timeline does not fit",
-       mobile: true do
+    it "opens the cited topics from the topic map where the timeline does not fit", mobile: true do
       visit conversation.url
       find(".ai-search-references-button").click
 

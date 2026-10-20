@@ -179,6 +179,19 @@
   display: none;
 }
 
+// at the far right of the topic map, where nothing else sits in these
+// conversations
+.topic-map__stats:has(.ai-search-references-button) {
+  .ai-search-references-button {
+    order: 1;
+    margin-left: auto;
+  }
+
+  .topic-map__buttons {
+    margin-left: 0;
+  }
+}
+
 .ai-search-references {
   box-sizing: border-box;
   width: clamp(12rem, 20vw, 18rem);
