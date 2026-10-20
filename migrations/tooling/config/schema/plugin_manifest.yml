@@ -275,7 +275,7 @@ plugin_checksums:
   discourse-cakeday: a5bb91366c8dc8d267088eb0c2679187
   discourse-captcha: 9c98c6231f69399ad711b7ef2b858d87
   discourse-chat-integration: ffa3bf5dba9089491d2fc02971eb96f8
-  discourse-data-explorer: c6b824f9409ce4407895bdcb5563b5a0
+  discourse-data-explorer: b8a25c2772d05fe6a11716352c88bab8
   discourse-events: 5d4a88ec24f58c6ea11f53e76a23bfb8
   discourse-gamification: 633256e241b030fddcc059076f7474f8
   discourse-github: 3bd17b2c09828e232e7565edbf2c746f
