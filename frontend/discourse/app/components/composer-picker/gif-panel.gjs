@@ -33,7 +33,7 @@ export default class GifPanel extends Component {
   }
 
   get gifBaseWidth() {
-    return 150;
+    return 105;
   }
 
   get darkMediaQuery() {
