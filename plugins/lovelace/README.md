@@ -1,5 +1,7 @@
 # Lovelace
 
-Discourse plugin scaffolded from discourse/discourse-plugin-skeleton at `9c79225314c80e3a5328730c51ff00fa5c7984c8`.
+Lovelace is a bundled Discourse plugin. Its current implementation provides an
+enable setting and an example JSON endpoint.
 
-Development work and documentation for the lovelace board belong in `plugins/lovelace/`. The development bot runs on the separate `kanban-dev-bot` branch.
+See the [product guide](doc/lovelace.md) for installation, behavior,
+authorization, architecture, and tests.
