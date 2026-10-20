@@ -30,6 +30,7 @@ import { shortDate } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import loadUppy from "discourse/lib/load-uppy";
 import { buildQuote } from "discourse/lib/quote";
 import { emojiUnescape } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -1985,6 +1986,11 @@ export default class ComposerService extends Service {
   async _setModel(optionalComposerModel, opts) {
     this.set("linkLookup", null);
 
+    // Themes extend the editor and read its uploader as soon as it mounts, so
+    // the editor waits for the upload runtime. A failed load is reported when
+    // someone tries to upload.
+    const uploadRuntimeSettled = loadUppy().catch(() => {});
+
     let composerModel;
     if (opts.draft) {
       composerModel = await loadDraft(this.store, opts);
@@ -1999,6 +2005,8 @@ export default class ComposerService extends Service {
       await model.open(opts);
       composerModel = model;
     }
+
+    await uploadRuntimeSettled;
 
     this.set("model", composerModel);
 

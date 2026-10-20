@@ -1,10 +1,10 @@
 import { setOwner } from "@ember/owner";
 import { debounce } from "@ember/runloop";
 import { service } from "@ember/service";
-import AwsS3 from "@uppy/aws-s3";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { isRateLimitError } from "discourse/lib/ajax-error";
+import { getUppy } from "discourse/lib/load-uppy";
 import { withRateLimitRetry } from "discourse/lib/uploads";
 
 const RETRY_DELAYS = [0, 1000, 3000, 5000];
@@ -23,6 +23,7 @@ export default class UppyS3Multipart {
   }
 
   apply(uppyInstance) {
+    const { AwsS3 } = getUppy();
     this.uppyInstance = uppyInstance;
 
     this.uppyInstance.use(AwsS3, {

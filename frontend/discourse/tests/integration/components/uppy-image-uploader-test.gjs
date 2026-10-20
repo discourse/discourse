@@ -82,11 +82,23 @@ module("Integration | Component | UppyImageUploader", function (hooks) {
       });
       dataTransfer.items.add(file);
 
-      await triggerEvent(target, "dragenter", { dataTransfer });
-      await triggerEvent(target, "dragover", { dataTransfer });
+      await triggerEvent(target, "dragenter", {
+        dataTransfer,
+        clientX: 0,
+        clientY: 0,
+      });
+      await triggerEvent(target, "dragover", {
+        dataTransfer,
+        clientX: 0,
+        clientY: 0,
+      });
 
       return async () => {
-        await triggerEvent(target, "dragleave", { dataTransfer });
+        await triggerEvent(target, "dragleave", {
+          dataTransfer,
+          clientX: 0,
+          clientY: 0,
+        });
       };
     };
 

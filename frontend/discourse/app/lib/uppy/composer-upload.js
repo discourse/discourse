@@ -3,14 +3,16 @@ import EmberObject from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { run } from "@ember/runloop";
 import { service } from "@ember/service";
-import Uppy from "@uppy/core";
-import DropTarget from "@uppy/drop-target";
-import XHRUpload from "@uppy/xhr-upload";
 import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
 import { updateCsrfToken } from "discourse/lib/ajax";
 import ComposerVideoThumbnailUppy from "discourse/lib/composer-video-thumbnail-uppy";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
+import {
+  getUppy,
+  reportUppyLoadFailure,
+  withUppy,
+} from "discourse/lib/load-uppy";
 import {
   bindFileInputChangeListener,
   displayUploadErrors,
@@ -59,6 +61,8 @@ export default class UppyComposerUpload {
   #consecutiveImages = [];
 
   #uploadTargetBound = false;
+  #runtimeReady;
+  #setupAbort;
   #userCancelled = false;
 
   #fileInputEl;
@@ -86,6 +90,8 @@ export default class UppyComposerUpload {
   }
 
   teardown() {
+    this.#setupAbort?.abort();
+
     if (!this.#uploadTargetBound) {
       return;
     }
@@ -138,6 +144,23 @@ export default class UppyComposerUpload {
       capture: true,
     });
 
+    this.#uploadTargetBound = true;
+    this.#bindMobileUploadButton();
+
+    const { signal } = (this.#setupAbort = new AbortController());
+    this.#runtimeReady = withUppy((runtime) => {
+      if (!signal.aborted) {
+        this.#setupUppy(element, runtime);
+      }
+    });
+
+    // Signals that the uploader is bound and ready to accept files via the
+    // `${composerEventPrefix}:add-files` event, e.g. for content shared into
+    // the composer through the Web Share Target.
+    this.appEvents.trigger(`${this.composerEventPrefix}:uploader-ready`);
+  }
+
+  #setupUppy(element, { Uppy, DropTarget }) {
     this.uppyWrapper.uppyInstance = new Uppy({
       id: this.uppyId,
       autoProceed: true,
@@ -393,14 +416,6 @@ export default class UppyComposerUpload {
     this.#setupPreProcessors();
 
     this.uppyWrapper.uppyInstance.use(DropTarget, { target: element });
-
-    this.#uploadTargetBound = true;
-    this.#bindMobileUploadButton();
-
-    // Signals that the uploader is bound and ready to accept files via the
-    // `${composerEventPrefix}:add-files` event, e.g. for content shared into
-    // the composer through the Web Share Target.
-    this.appEvents.trigger(`${this.composerEventPrefix}:uploader-ready`);
   }
 
   #abortAndReset() {
@@ -471,6 +486,7 @@ export default class UppyComposerUpload {
   }
 
   #useXHRUploads() {
+    const { XHRUpload } = getUppy();
     this.uppyWrapper.uppyInstance.use(XHRUpload, {
       endpoint: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
       ...rateLimitRetryOptions,
@@ -595,8 +611,22 @@ export default class UppyComposerUpload {
 
   @bind
   async _addFiles(files, opts = {}) {
+    const signal = this.#setupAbort?.signal;
+
+    if (
+      !this.uppyWrapper.uppyInstance &&
+      (await this.#runtimeReady) === false
+    ) {
+      reportUppyLoadFailure(this.dialog);
+      return;
+    }
+
     if (!this.session.csrfToken) {
       await updateCsrfToken();
+    }
+
+    if (signal?.aborted) {
+      return;
     }
 
     files = Array.isArray(files) ? files : [files];

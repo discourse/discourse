@@ -1,12 +1,14 @@
 import { getOwner } from "@ember/owner";
-import { waitUntil } from "@ember/test-helpers";
+import { settled, waitUntil } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import loadUppy, { resetUppyForTesting } from "discourse/lib/load-uppy";
 import { dialog } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 const UPLOAD_URL = "/uploads.json";
 const REJECTED_FILE = "rejected.png";
@@ -35,6 +37,10 @@ function uploadResponse(fileName) {
 module("Unit | Lib | uppy/uppy-upload", function (hooks) {
   setupTest(hooks);
 
+  hooks.beforeEach(async function () {
+    await loadUppy();
+  });
+
   hooks.beforeEach(function () {
     this.fileInput = document.createElement("input");
     this.fileInput.type = "file";
@@ -45,6 +51,117 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
   hooks.afterEach(function () {
     this.fileInput.remove();
     sinon.restore();
+  });
+
+  function buildUpload(context, config = {}) {
+    return new UppyUpload(getOwner(context), {
+      id: "uppy-upload-test",
+      type: "composer",
+      autoStartUploads: false,
+      uploadDone: () => {},
+      ...config,
+    });
+  }
+
+  module("while the runtime loads", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      resetUppyForTesting();
+    });
+
+    nestedHooks.afterEach(function () {
+      resetUppyForTesting();
+    });
+
+    test("setup binds once the runtime loads", async function (assert) {
+      const upload = buildUpload(this);
+
+      upload.setup(this.fileInput);
+      assert.strictEqual(
+        upload.uppyWrapper.uppyInstance,
+        undefined,
+        "the instance waits for the runtime"
+      );
+
+      await settled();
+      assert.notStrictEqual(
+        upload.uppyWrapper.uppyInstance,
+        undefined,
+        "the instance exists once the runtime loads"
+      );
+
+      upload.teardown();
+    });
+
+    test("files added while loading reach the uploader", async function (assert) {
+      const upload = buildUpload(this);
+
+      upload.setup(this.fileInput);
+      await upload.addFiles([createFile(SIBLING_FILE)], { pasted: true });
+
+      assert.deepEqual(
+        upload.uppyWrapper.uppyInstance.getFiles().map((file) => file.name),
+        [SIBLING_FILE],
+        "the early file is added once the runtime loads"
+      );
+
+      upload.teardown();
+    });
+
+    test("teardown while loading cancels the pending setup", async function (assert) {
+      const upload = buildUpload(this);
+
+      upload.setup(this.fileInput);
+      upload.teardown();
+      await settled();
+
+      assert.strictEqual(
+        upload.uppyWrapper.uppyInstance,
+        undefined,
+        "no instance is created after teardown"
+      );
+    });
+
+    test("files queued for a replaced setup are dropped", async function (assert) {
+      const upload = buildUpload(this);
+
+      upload.setup(this.fileInput);
+      const adding = upload.addFiles([createFile(SIBLING_FILE)]);
+      upload.teardown();
+      upload.setup(this.fileInput);
+      await adding;
+      await settled();
+
+      assert.deepEqual(
+        upload.uppyWrapper.uppyInstance.getFiles(),
+        [],
+        "the replacement uploader does not receive the old files"
+      );
+
+      upload.teardown();
+    });
+
+    test("a failed load is reported once per page", async function (assert) {
+      resetUppyForTesting({
+        importer: () => Promise.reject(new Error("chunk failed")),
+      });
+      const alert = sinon.stub(
+        getOwner(this).lookup("service:dialog"),
+        "alert"
+      );
+      const first = buildUpload(this, { id: "first-upload" });
+      const second = buildUpload(this, { id: "second-upload" });
+
+      first.setup(this.fileInput);
+      second.setup(this.fileInput);
+      await first.addFiles([createFile(SIBLING_FILE)]);
+      await second.addFiles([createFile(SIBLING_FILE)]);
+
+      assert.true(alert.calledOnce, "one notice covers every uploader");
+      assert.true(
+        alert.calledWith(i18n("upload_selector.runtime_load_failed")),
+        "the notice explains how to recover"
+      );
+    });
   });
 
   test("a rejected upload does not cancel the rest of the batch", async function (assert) {

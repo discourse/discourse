@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import loadUppy from "discourse/lib/load-uppy";
 import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
 import pretender, {
   middlewareRateLimit,
@@ -41,6 +42,10 @@ function awsS3Options(context, errorHandler) {
 
 module("Unit | Lib | uppy/s3-multipart", function (hooks) {
   setupTest(hooks);
+
+  hooks.beforeEach(async function () {
+    await loadUppy();
+  });
 
   test("a signing failure reaches the configured error handler", async function (assert) {
     const errorHandler = sinon.spy();

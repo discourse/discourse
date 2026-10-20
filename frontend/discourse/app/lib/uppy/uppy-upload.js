@@ -5,13 +5,14 @@ import { getOwner, setOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
 import { run } from "@ember/runloop";
 import { service } from "@ember/service";
-import AwsS3 from "@uppy/aws-s3";
-import Uppy from "@uppy/core";
-import DropTarget from "@uppy/drop-target";
-import XHRUpload from "@uppy/xhr-upload";
 import { ajax, updateCsrfToken } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";
+import {
+  getUppy,
+  reportUppyLoadFailure,
+  withUppy,
+} from "discourse/lib/load-uppy";
 import { deepMerge } from "discourse/lib/object";
 import {
   bindFileInputChangeListener,
@@ -107,6 +108,8 @@ export default class UppyUpload {
   #bufferedUploadErrors = [];
 
   #fileInputEventListener;
+  #runtimeReady;
+  #setupAbort;
   #usingS3Uploads;
 
   _fileInputEl;
@@ -135,6 +138,7 @@ export default class UppyUpload {
   }
 
   teardown() {
+    this.#setupAbort?.abort();
     this.messageBus.unsubscribe(`/uploads/${this.config.type}`);
 
     this._fileInputEl?.removeEventListener(
@@ -156,12 +160,109 @@ export default class UppyUpload {
 
   @bind
   setup(fileInputEl) {
+    this.#setupAbort?.abort();
+    const { signal } = (this.#setupAbort = new AbortController());
+
     if (fileInputEl) {
       this._fileInputEl = fileInputEl;
       this.allowMultipleFiles = this._fileInputEl.multiple;
       this.#bindFileInputChange();
     }
 
+    this.#runtimeReady = withUppy((runtime) => {
+      if (!signal.aborted) {
+        this.#setupUppy(runtime);
+      }
+    });
+  }
+
+  @bind
+  openPicker() {
+    this._fileInputEl.click();
+  }
+
+  /**
+   * If auto upload is disabled, use this function to start the upload process.
+   */
+  startUpload() {
+    if (!this.filesAwaitingUpload) {
+      return;
+    }
+    if (!this.uppyWrapper.uppyInstance?.getFiles().length) {
+      return;
+    }
+    this.uploading = true;
+    return this.uppyWrapper.uppyInstance?.upload();
+  }
+
+  @bind
+  cancelSingleUpload(data) {
+    if (this.uppyWrapper.uppyInstance.getFile(data.fileId)) {
+      this.uppyWrapper.uppyInstance.removeFile(data.fileId);
+      this.appEvents.trigger(
+        `upload-mixin:${this.config.id}:upload-cancelled`,
+        data.fileId
+      );
+    }
+    this.#removeInProgressUpload(data.fileId);
+    this.#finishBatch();
+  }
+
+  @bind
+  cancelAllUploads() {
+    if (this.uppyWrapper.uppyInstance) {
+      this.uppyWrapper.uppyInstance.cancelAll();
+      this.appEvents.trigger(
+        `upload-mixin:${this.config.id}:uploads-cancelled`
+      );
+    }
+    this.inProgressUploads.length = 0;
+    this.#triggerInProgressUploadsEvent();
+    this.#finishBatch();
+  }
+
+  @bind
+  async addFiles(files, opts = {}) {
+    const signal = this.#setupAbort?.signal;
+
+    if (
+      !this.uppyWrapper.uppyInstance &&
+      (await this.#runtimeReady) === false
+    ) {
+      reportUppyLoadFailure(this.dialog);
+      return;
+    }
+
+    if (!this.session.csrfToken) {
+      await updateCsrfToken();
+    }
+
+    if (signal?.aborted) {
+      return;
+    }
+
+    files = Array.isArray(files) ? files : [files];
+
+    try {
+      this.uppyWrapper.uppyInstance.addFiles(
+        files.map((file) => {
+          return {
+            source: this.config.id,
+            name: file.name,
+            type: file.type,
+            data: file,
+            meta: { pasted: opts.pasted },
+          };
+        })
+      );
+    } catch (err) {
+      warn(`error adding files to uppy: ${err}`, {
+        id: "discourse.upload.uppy-add-files-error",
+      });
+    }
+  }
+
+  #setupUppy({ Uppy, DropTarget }) {
     this.uppyWrapper.uppyInstance = new Uppy({
       id: this.config.id,
       autoProceed: this.config.autoStartUploads,
@@ -376,78 +477,6 @@ export default class UppyUpload {
     });
   }
 
-  @bind
-  openPicker() {
-    this._fileInputEl.click();
-  }
-
-  /**
-   * If auto upload is disabled, use this function to start the upload process.
-   */
-  startUpload() {
-    if (!this.filesAwaitingUpload) {
-      return;
-    }
-    if (!this.uppyWrapper.uppyInstance?.getFiles().length) {
-      return;
-    }
-    this.uploading = true;
-    return this.uppyWrapper.uppyInstance?.upload();
-  }
-
-  @bind
-  cancelSingleUpload(data) {
-    if (this.uppyWrapper.uppyInstance.getFile(data.fileId)) {
-      this.uppyWrapper.uppyInstance.removeFile(data.fileId);
-      this.appEvents.trigger(
-        `upload-mixin:${this.config.id}:upload-cancelled`,
-        data.fileId
-      );
-    }
-    this.#removeInProgressUpload(data.fileId);
-    this.#finishBatch();
-  }
-
-  @bind
-  cancelAllUploads() {
-    if (this.uppyWrapper.uppyInstance) {
-      this.uppyWrapper.uppyInstance.cancelAll();
-      this.appEvents.trigger(
-        `upload-mixin:${this.config.id}:uploads-cancelled`
-      );
-    }
-    this.inProgressUploads.length = 0;
-    this.#triggerInProgressUploadsEvent();
-    this.#finishBatch();
-  }
-
-  @bind
-  async addFiles(files, opts = {}) {
-    if (!this.session.csrfToken) {
-      await updateCsrfToken();
-    }
-
-    files = Array.isArray(files) ? files : [files];
-
-    try {
-      this.uppyWrapper.uppyInstance.addFiles(
-        files.map((file) => {
-          return {
-            source: this.config.id,
-            name: file.name,
-            type: file.type,
-            data: file,
-            meta: { pasted: opts.pasted },
-          };
-        })
-      );
-    } catch (err) {
-      warn(`error adding files to uppy: ${err}`, {
-        id: "discourse.upload.uppy-add-files-error",
-      });
-    }
-  }
-
   #triggerInProgressUploadsEvent() {
     this.config.onProgressUploadsChanged?.(this.inProgressUploads);
     this.appEvents.trigger(
@@ -457,6 +486,7 @@ export default class UppyUpload {
   }
 
   #useXHRUploads() {
+    const { XHRUpload } = getUppy();
     this.uppyWrapper.uppyInstance.use(XHRUpload, {
       endpoint: this.#xhrUploadUrl(),
       ...rateLimitRetryOptions,
@@ -476,6 +506,7 @@ export default class UppyUpload {
   }
 
   #useS3Uploads() {
+    const { AwsS3 } = getUppy();
     this.#usingS3Uploads = true;
     this.uppyWrapper.uppyInstance.use(AwsS3, {
       shouldUseMultipart: false,
