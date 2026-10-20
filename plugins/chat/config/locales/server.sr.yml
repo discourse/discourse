@@ -6,6 +6,11 @@
 
 sr:
   chat:
+    crawler:
+      thread_replies:
+        one: "%{count} odgovor"
+        few: "%{count} odgovora"
+        other: "%{count} odgovora"
     errors:
       not_accepting_dms: "Žao nam je, %{username} trenutno ne prihvata privatne poruke."
     reviewables:

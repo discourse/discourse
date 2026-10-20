@@ -109,6 +109,7 @@ ru:
       admin:
         title: "Геймификация"
         name: "Название"
+        created_by: "Создано"
         period: "Период"
     discourse_workflows:
       gamification_score:

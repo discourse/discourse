@@ -95,6 +95,146 @@ RSpec.describe TopicEmbed do
       expect(parsed.body.squish).to eq(expected.squish)
     end
 
+    context "with a charset in the Content-Type header" do
+      let(:html) { <<~HTML.b }
+          <html>
+          <head>
+            <title>Iran’s seven-day offer has ‘significant poison pills’</title>
+          </head>
+          <body>
+            <p>The deal has what diplomats call “significant poison pills” built into the text of the offer, and negotiators on both sides say the seven-day window may be shorter than the headline suggests.</p>
+          </body>
+          </html>
+        HTML
+
+      it "decodes the title using the declared charset" do
+        parsed =
+          TopicEmbed.parse_html(
+            html,
+            "https://blog.discourse.com/somepost.html",
+            content_type: "text/html; charset=UTF-8",
+          )
+        expect(parsed.title).to eq("Iran’s seven-day offer has ‘significant poison pills’")
+      end
+
+      it "decodes the body using the declared charset" do
+        parsed =
+          TopicEmbed.parse_html(
+            html,
+            "https://blog.discourse.com/somepost.html",
+            content_type: "text/html; charset=UTF-8",
+          )
+        expect(parsed.body).to include("“significant poison pills”")
+      end
+    end
+
+    context "with a misleading single-byte charset in the header" do
+      it "prefers the page's UTF-8 declaration when the bytes are valid UTF-8" do
+        html = <<~HTML.b
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <title>Iran’s seven-day offer has ‘significant poison pills’</title>
+          </head>
+          <body>
+            <p>The deal has what diplomats call “significant poison pills” built into the text of the offer, and negotiators on both sides say the seven-day window may be shorter than the headline suggests.</p>
+          </body>
+          </html>
+        HTML
+
+        parsed =
+          TopicEmbed.parse_html(
+            html,
+            "https://blog.discourse.com/somepost.html",
+            content_type: "text/html; charset=ISO-8859-1",
+          )
+
+        expect(parsed.title).to eq("Iran’s seven-day offer has ‘significant poison pills’")
+        expect(parsed.body).to include("“significant poison pills”")
+      end
+
+      it "keeps decoding a genuine single-byte page as declared" do
+        html =
+          +"<html><head><title>caf\xE9</title></head><body><p>Diplomats on both sides say the offer may be withdrawn before the weekend.</p></body></html>".b
+
+        parsed =
+          TopicEmbed.parse_html(
+            html,
+            "https://blog.discourse.com/somepost.html",
+            content_type: "text/html; charset=ISO-8859-1",
+          )
+
+        expect(parsed.title).to eq("café")
+      end
+
+      it "keeps the header charset when the page declares none" do
+        html = <<~HTML.b
+          <html>
+          <head>
+            <title>Iran’s seven-day offer has ‘significant poison pills’</title>
+          </head>
+          <body><p>Diplomats on both sides say the offer may be withdrawn before the weekend.</p></body>
+          </html>
+        HTML
+
+        parsed =
+          TopicEmbed.parse_html(
+            html,
+            "https://blog.discourse.com/somepost.html",
+            content_type: "text/html; charset=ISO-8859-1",
+          )
+
+        expect(parsed.title).to eq(
+          "Iranâ\u0080\u0099s seven-day offer has â\u0080\u0098significant poison pillsâ\u0080\u0099",
+        )
+      end
+    end
+
+    it "falls back to a meta charset when no Content-Type header is present" do
+      html = <<~HTML.b
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Iran’s seven-day offer</title>
+        </head>
+        <body><p>Diplomats on both sides say the offer may be withdrawn before the weekend.</p></body>
+        </html>
+      HTML
+
+      parsed = TopicEmbed.parse_html(html, "https://blog.discourse.com/somepost.html")
+
+      expect(parsed.title).to eq("Iran’s seven-day offer")
+    end
+
+    it "degrades to sniffing when the header charset has no UTF-8 converter" do
+      html =
+        +"<html><head><title>News headline</title></head><body><p>Diplomats on both sides say the offer may be withdrawn before the weekend.</p></body></html>".b
+
+      parsed =
+        TopicEmbed.parse_html(
+          html,
+          "https://blog.discourse.com/somepost.html",
+          content_type: "text/html; charset=UTF-7",
+        )
+
+      expect(parsed.title).to eq("News headline")
+    end
+
+    it "sniffs the whole document when the declared charset mis-parses the bytes" do
+      html =
+        +"<html><head><title>News headline</title></head><body><p>The deal has poison pills built into the text of the offer and negotiators say the seven-day window may be shorter.</p></body></html>".b
+
+      parsed =
+        TopicEmbed.parse_html(
+          html,
+          "https://blog.discourse.com/somepost.html",
+          content_type: "text/html; charset=UTF-32BE",
+        )
+
+      expect(parsed.title).to eq("News headline")
+      expect(parsed.body).to include("shorter")
+    end
+
     context "when creating a post" do
       let!(:post) { TopicEmbed.import(user, url, title, contents) }
       let(:topic_embed) { TopicEmbed.find_by(post: post) }
@@ -654,6 +794,28 @@ RSpec.describe TopicEmbed do
         )
         response = TopicEmbed.find_remote(url)
         expect(response.title).to eq("Moved permanently")
+      end
+    end
+
+    context "with a charset declared in the HTTP Content-Type header" do
+      let(:url) { "http://eviltrout.com/123" }
+      let(:contents) do
+        "<title>Iran’s seven-day offer has ‘significant poison pills’</title><body>some content here</body>"
+      end
+
+      before do
+        stub_request(:get, url).to_return(
+          status: 200,
+          headers: {
+            "Content-Type" => "text/html; charset=UTF-8",
+          },
+          body: contents.b,
+        )
+      end
+
+      it "decodes the title as UTF-8" do
+        response = TopicEmbed.find_remote(url)
+        expect(response.title).to eq("Iran’s seven-day offer has ‘significant poison pills’")
       end
     end
 

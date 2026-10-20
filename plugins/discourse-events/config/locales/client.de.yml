@@ -393,6 +393,7 @@ de:
         filter_placeholder: "Benutzer filtern"
         remove_invitee: "Eingeladene Person aus der Liste entfernen"
         add_invitee: "Eingeladene Person zur Liste hinzufügen"
+        this_event: "Dieser Termin"
       bulk_invite_modal:
         confirm: "bestätigen"
         text: "CSV-Datei hochladen"

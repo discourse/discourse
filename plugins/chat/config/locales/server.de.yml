@@ -10,8 +10,6 @@ de:
     chat_enabled: "Chat aktivieren."
     chat_pinned_messages: "Angeheftete Nachrichten in Chat-Kanälen aktivieren."
     enable_public_channels: "Öffentliche Kanäle basierend auf Kategorien aktivieren."
-    chat_allowed_groups: "Benutzer in diesen Gruppen können chatten. Beachte, dass Administratoren und Moderatoren immer auf den Chat zugreifen können."
-    chat_channel_retention_days: "Chat-Nachrichten in regulären Kanälen werden so viele Tage lang aufbewahrt. Auf „0“ setzen, um Nachrichten für immer aufzubewahren."
     chat_dm_retention_days: "Chat-Nachrichten in persönlichen Chat-Kanälen werden so viele Tage lang aufbewahrt. Auf „0“ setzen, um Nachrichten für immer aufzubewahren."
     chat_auto_silence_duration: "Anzahl der Minuten, für die Benutzer stummgeschaltet werden, wenn sie das Limit für die Erstellung von Chat-Nachrichten überschreiten. Auf „0“ setzen, um die automatische Stummschaltung zu deaktivieren."
     chat_allowed_messages_for_trust_level_0: "Anzahl der Nachrichten, die Benutzer mit Vertrauensstufe 0 in 30 Sekunden senden dürfen. Auf „0“ setzen, um das Limit zu deaktivieren."
@@ -63,6 +61,15 @@ de:
         Besuche den Kanal unter %{channel_url}, um es erneut zu versuchen.
   chat:
     deleted_chat_username: gelöscht
+    crawler:
+      directory_title: "Chat-Kanäle"
+      nav_title: "Chat"
+      members_count:
+        one: "%{count} Mitglied"
+        other: "%{count} Mitglieder"
+      thread_replies:
+        one: "%{count} Antwort"
+        other: "%{count} Antworten"
     errors:
       users_cant_be_added_to_channel: "Diesem Kanal können keine Benutzer hinzugefügt werden."
       user_cant_be_removed_from_channel: "Der Benutzer kann nicht aus diesem Kanal entfernt werden."

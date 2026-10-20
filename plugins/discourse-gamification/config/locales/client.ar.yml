@@ -111,6 +111,7 @@ ar:
       admin:
         title: "التلعيب"
         name: "الاسم"
+        created_by: "تم إنشاؤه بواسطة"
         period: "الفترة"
     discourse_workflows:
       gamification_score:

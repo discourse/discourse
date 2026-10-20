@@ -2441,15 +2441,6 @@ sw:
         type_mismatch:
           default: "Tafadhali andika thamani sahihi."
           email: "Andika barua pepe iliyo sahihi."
-    table_builder:
-      edit:
-        modal:
-          cancel: "ghairi"
-          create: "Hifadhi"
-          reason: "Kwa nini unahariri?"
-      spreadsheet:
-        show: "Onyesha"
-        about: "Kuhusu"
     filter:
       description:
         yesterday: "Jana"

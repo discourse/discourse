@@ -277,7 +277,7 @@ export default class AiSpam extends Component {
             />
           {{else}}
             <span class="ai-spam__llm-placeholder">
-              <LinkTo @route="adminPlugins.show.discourse-ai-llms.index">
+              <LinkTo @route="adminPlugins.show.discourse-ai-models.new">
                 {{i18n "discourse_ai.spam.no_llms"}}
               </LinkTo>
             </span>

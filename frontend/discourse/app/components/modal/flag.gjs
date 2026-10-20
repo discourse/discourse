@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -242,16 +243,14 @@ export default class Flag extends Component {
           @outletArgs={{lazyHash post=@model.flagModel}}
         />
         <form>
-          <FlagSelection
-            @flags={{this.flagsAvailable}}
-            @nameKey={{this.selected.name_key}}
-            as |f|
-          >
+          <FlagSelection @flags={{this.flagsAvailable}} as |f|>
             <FlagActionType
               @changePostActionType={{this.changePostActionType}}
               @flag={{f}}
               @isConfirmed={{this.isConfirmed}}
               @message={{this.message}}
+              @onChangeConfirmed={{fn (mut this.isConfirmed)}}
+              @onChangeMessage={{fn (mut this.message)}}
               @selectedFlag={{this.selected}}
               @staffFlagsAvailable={{this.staffFlagsAvailable}}
               @username={{@model.flagModel.username}}

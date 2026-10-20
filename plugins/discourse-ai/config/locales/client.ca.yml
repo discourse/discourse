@@ -221,6 +221,15 @@ ca:
         delete: "Suprimeix"
         tools_modal:
           required: "Necessari"
+      models:
+        name: "Nom"
+        type: "Tipus"
+        provider: "Proveïdor"
+        edit: "Edita"
+        types:
+          embedding: "Incrustant"
+        filters:
+          all: "Tots els tipus"
       llms:
         display_name: "Nom"
         provider: "Proveïdor"

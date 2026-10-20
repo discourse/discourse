@@ -43,6 +43,7 @@ zh_CN:
         chat_messages:
           other: "%{formatted_number} 条聊天消息"
     chat:
+      homepage_option: "聊天频道"
       edit_category:
         tab_title: "聊天"
         channel: "频道"
@@ -606,7 +607,6 @@ zh_CN:
           alphabetical: "按字母顺序"
           recent_activity: "近期活动"
           priority: "优先级"
-          priority_description: "提及，然后是未读消息，然后是最近活动"
         empty:
           filtered: "没有频道符合此筛选条件。"
           show_all: "显示所有频道"

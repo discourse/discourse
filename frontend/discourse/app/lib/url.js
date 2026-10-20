@@ -465,16 +465,15 @@ class DiscourseURL extends EmberObject {
             enteredAt: Date.now().toString(),
           });
 
-          this.appEvents.trigger("post:highlight", closest);
+          this.appEvents.trigger("post:highlight", closest, {
+            highlightQuote: routeOpts.highlightQuote,
+          });
           const jumpOpts = {
             skipIfOnScreen: routeOpts.skipIfOnScreen,
             jumpEnd: routeOpts.jumpEnd,
           };
 
-          const anchorMatch = /#(.+)$/.exec(path);
-          if (anchorMatch) {
-            jumpOpts.anchor = anchorMatch[1];
-          }
+          jumpOpts.anchor = routeOpts.anchor ?? /#(.+)$/.exec(path)?.[1];
 
           this.jumpToPost(closest, jumpOpts);
         });
@@ -533,8 +532,13 @@ class DiscourseURL extends EmberObject {
     transition._discourse_anchor = elementId;
     transition._discourse_original_url = path;
 
-    const promise = transition.promise || transition;
-    return promise.then(() => this.jumpToElement(elementId));
+    const promise = transition.followRedirects?.() || transition;
+    return promise.then(() => {
+      if (elementId) {
+        this.replaceState(`#${elementId}`);
+      }
+      this.jumpToElement(elementId);
+    });
   }
 
   jumpToElement(elementId) {

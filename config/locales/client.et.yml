@@ -2767,15 +2767,6 @@ et:
         type_mismatch:
           default: "Palun sisesta korrektne väärtus."
           email: "Sisesta palun korrektne meiliaadress."
-    table_builder:
-      edit:
-        modal:
-          cancel: "tühista"
-          create: "Salvesta"
-          reason: "Miks sa seda muudad?"
-      spreadsheet:
-        show: "Näita"
-        about: "Teave"
     filter:
       description:
         yesterday: "Eile"

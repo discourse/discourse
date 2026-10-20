@@ -36,6 +36,9 @@ class DecisionModel < ActiveRecord::Base
   ].freeze
 
   belongs_to :ai_secret, optional: true
+  has_one :decision_model_credit_allocation, dependent: :destroy
+  has_many :decision_model_feature_credit_costs, dependent: :destroy
+  has_many :decision_model_credit_daily_usages, dependent: :delete_all
 
   validates :display_name, presence: true, length: { maximum: 100 }
   validates :name, presence: true, length: { maximum: 255 }
@@ -104,8 +107,20 @@ class DecisionModel < ActiveRecord::Base
     DiscourseAi::Decisions::Client.new(self).decide(state, **)
   end
 
+  def seeded?
+    id.present? && id < 0
+  end
+
   def api_key
-    ai_secret&.secret
+    if seeded?
+      ENV["DISCOURSE_AI_SEEDED_DECISION_MODEL_API_KEY_#{id.abs}"] || self[:api_key]
+    else
+      ai_secret&.secret
+    end
+  end
+
+  def credit_system_enabled?
+    seeded? && decision_model_credit_allocation.present?
   end
 
   def endpoint_url
@@ -195,6 +210,7 @@ end
 # Table name: decision_models
 #
 #  id             :bigint           not null, primary key
+#  api_key        :string
 #  custom_headers :jsonb            not null
 #  display_name   :string(100)      not null
 #  name           :string(255)      not null

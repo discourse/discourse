@@ -279,7 +279,10 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
     this.view = new EditorView(container, {
       state,
       nodeViews: extractNodeViews(this.extensions, params),
-      attributes: { class: this.args.class ?? "" },
+      attributes: {
+        class: this.args.class ?? "",
+        autocorrect: "on",
+      },
       editable: () => this.args.disabled !== true,
       dispatchTransaction: (tr) => {
         this.view.updateState(this.view.state.apply(tr));

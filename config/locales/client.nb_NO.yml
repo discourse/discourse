@@ -4323,18 +4323,6 @@ nb_NO:
         type_mismatch:
           default: "Skriv inn en gyldig verdi."
           email: "Oppgi en gyldig e-postadresse."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Angi"
-      edit:
-        modal:
-          cancel: "avbryt"
-          create: "Lagre"
-          reason: "Hvorfor endrer du?"
-      spreadsheet:
-        show: "Vis"
-        about: "Om"
     filter:
       description:
         yesterday: "I går"

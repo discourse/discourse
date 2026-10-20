@@ -3997,15 +3997,6 @@ sq:
         type_mismatch:
           default: "Ju lutem shkruani një vlerë të vlefshme."
           email: "Ju lutemi të vendosni një email të vlefshëm."
-    table_builder:
-      edit:
-        modal:
-          cancel: "anulo"
-          create: "Ruaj"
-          reason: "Pse jeni duke e redaktuar?"
-      spreadsheet:
-        show: "Shfaq"
-        about: "Rreth"
     filter:
       description:
         yesterday: "Dje"

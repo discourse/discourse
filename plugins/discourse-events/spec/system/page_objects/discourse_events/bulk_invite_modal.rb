@@ -38,6 +38,11 @@ module PageObjects
           self
         end
 
+        def apply_to_following_events
+          find(".bulk-invite-recurrence .form-kit__control-checkbox-label").click
+          self
+        end
+
         def upload_csv(path)
           find(".csv-bulk-invites input.hidden-upload-field", visible: :all).set(path)
           self

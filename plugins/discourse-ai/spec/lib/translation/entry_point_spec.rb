@@ -252,4 +252,32 @@ describe DiscourseAi::Translation::EntryPoint do
       expect(job_enqueued?(job: :localize_tags)).to eq(false)
     end
   end
+
+  describe "push notifications for new posts" do
+    fab!(:user) { Fabricate(:user, locale: "ja", last_seen_at: 1.hour.ago) }
+    fab!(:post)
+
+    before do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.allow_user_locale = true
+      SiteSetting.content_localization_supported_locales = "en|ja"
+      Fabricate(:push_subscription, user: user)
+    end
+
+    it "holds the push until the translation is stored" do
+      PushNotificationPusher.expects(:push).never
+
+      Jobs::DeliverPushNotification.new.execute(
+        user_id: user.id,
+        payload: {
+          post_id: post.id,
+          topic_id: post.topic_id,
+          excerpt: post.excerpt,
+        },
+      )
+
+      held = Jobs::DeliverPushNotification.jobs.last["args"].first
+      expect(held["localization_wait_token"]).to be_present
+    end
+  end
 end

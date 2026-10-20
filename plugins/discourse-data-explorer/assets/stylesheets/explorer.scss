@@ -1003,6 +1003,13 @@ table.group-reports {
 
     .query-created-by {
       color: var(--primary-high);
+
+      &__link {
+        display: flex;
+        width: fit-content;
+        align-items: center;
+        gap: var(--space-2);
+      }
     }
 
     .query-group-names {
