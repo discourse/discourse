@@ -134,7 +134,7 @@ zh_CN:
       query_name: "查询"
       query_groups: "群组"
       query_tags: "标签"
-      default_tag_mandatory: "无法从捆绑查询中移除默认标签。"
+      automatic_tag_mandatory: "此标签为自动添加，无法删除。"
       link: "链接"
       report_name: "报告"
       query_description: "描述"

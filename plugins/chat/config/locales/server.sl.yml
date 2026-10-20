@@ -7,6 +7,14 @@
 sl:
   chat:
     deleted_chat_username: izbrisano
+    crawler:
+      directory_title: "Kanali klepeta"
+      nav_title: "Klepet"
+      thread_replies:
+        one: "%{count} odgovor"
+        two: "%{count} odgovora"
+        few: "%{count} odgovori"
+        other: "%{count} odgovorov"
     reviewables:
       actions:
         agree:

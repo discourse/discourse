@@ -7,6 +7,11 @@
 lv:
   chat:
     deleted_chat_username: dzēsts
+    crawler:
+      thread_replies:
+        zero: "%{count} atbildes"
+        one: "%{count} atbilde"
+        other: "%{count} atbildes"
     reviewables:
       actions:
         agree_and_suspend:

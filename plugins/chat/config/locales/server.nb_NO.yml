@@ -7,6 +7,10 @@
 nb_NO:
   chat:
     deleted_chat_username: slettet
+    crawler:
+      thread_replies:
+        one: "%{count} svar"
+        other: "%{count} svar"
     errors:
       not_accepting_dms: "Beklager, %{username} ønsker ikke å motta personlige meldinger for øyeblikket."
     reviewables:

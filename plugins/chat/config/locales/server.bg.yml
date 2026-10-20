@@ -7,6 +7,11 @@
 bg:
   chat:
     deleted_chat_username: изтрит
+    crawler:
+      nav_title: "Чат"
+      thread_replies:
+        one: "%{count} отговор"
+        other: "%{count} отговора"
     reviewables:
       actions:
         agree_and_suspend:

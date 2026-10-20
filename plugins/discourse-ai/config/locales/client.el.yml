@@ -367,6 +367,17 @@ el:
         tools_modal:
           required: "Απαιτείται"
         test_result: "Αποτέλεσμα σύνδεσης"
+      models:
+        name: "Όνομα"
+        type: "Τύπος"
+        provider: "Πάροχος"
+        edit: "Επεξεργασία"
+        select_type: "Επιλογή"
+        types:
+          embedding: "Ενσωμάτωση"
+        filters:
+          all: "Όλοι οι τύποι"
+          reset: "Επαναφορά φίλτρων"
       llms:
         no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"

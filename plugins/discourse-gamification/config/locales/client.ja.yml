@@ -84,6 +84,7 @@ ja:
       admin:
         title: "ゲーミフィケーション"
         name: "名前"
+        created_by: "作成者"
         period: "期間"
     discourse_workflows:
       gamification_score:

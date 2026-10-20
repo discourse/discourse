@@ -71,7 +71,6 @@ zh_TW:
   site_settings:
     discourse_ai_enabled: "啟用 Discourse AI 外掛。"
     enable_ai_bot_starred_conversations: "允許使用者將 AI 機器人對話加上星號，並在側邊欄的「已加星號」區段中顯示。"
-    ai_default_llm_model: "所有 AI 功能預設使用的 LLM 模型"
     ai_artifact_security: "AI 成品系統會產生包含可執行程式碼的 IFRAME。嚴格模式會要求額外點擊一次才執行程式碼；寬鬆模式會立即執行程式碼；混合模式允許使用者提供 data-ai-artifact-autorun，使其立即顯示；停用模式則會停用成品系統。"
     ai_toxicity_enabled: "啟用有害內容模組。"
     ai_toxicity_inference_service_api_endpoint: "有害內容模組 API 的執行 URL"

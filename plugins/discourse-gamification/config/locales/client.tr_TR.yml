@@ -107,6 +107,7 @@ tr_TR:
       admin:
         title: "Oyunlaştırma"
         name: "Ad"
+        created_by: "Oluşturan:"
         period: "Dönem"
     discourse_workflows:
       gamification_score:
