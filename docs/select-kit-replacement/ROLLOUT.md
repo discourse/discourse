@@ -266,6 +266,16 @@ customization ports are done.
 
 ## Verification
 
+- **Test model:** a family's tests branch with the flag. Its existing tests keep driving
+  select-kit through `selectKit()` and `SelectKit`, pinned off with `with_select_controls(false)`,
+  and are deleted with the legacy branch. Its port adds flag-on tests in final form on DSelect's own
+  helpers: `dSelect()` and `assert.dSelect()` in QUnit, `UiKit::DSelect.at` in system specs.
+  Both sides are written from one list of the family's call-site scenarios. System specs pin with
+  `with_select_controls`, which holds after promotion
+  (`spec/integrity/select_controls_pin_spec.rb`). QUnit uses raw defaults with no promotion, so
+  off is the default and on is `needs.settings({ enable_new_select_controls: true })` or the
+  site-settings service. Specs and page objects that query select-kit internals directly move
+  with their family.
 - **Per family:** call-site tests and system specs in both modes that assert which implementation
   rendered; state round trips across modes; legacy and new controls mixed on one page; member,
   staff and anonymous paths; Foundation and Horizon, light and dark, mobile (DSelect opens a

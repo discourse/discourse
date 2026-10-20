@@ -27,6 +27,10 @@ The root also always exposes a unique `data-select-id` that stays stable for the
 life. Its `.d-select__panel` carries the same value whenever mounted, including loading,
 empty, error, minimum-query-length and mobile modal states. No panel is mounted while closed.
 
+Tests drive a select through these hooks with `dSelect()` (actions) and `assert.dSelect()`
+(checks) from `discourse/tests/helpers/`, and with `PageObjects::Components::UiKit::DSelect.at`
+in system specs.
+
 ## Architecture
 
 Both public modules are facades over focused collaborators in `-internals/`, organized by

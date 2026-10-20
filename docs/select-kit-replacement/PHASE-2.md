@@ -43,8 +43,13 @@ facade and codemod plan this phase used to carry is superseded.
 - ☑ **Row titles:** `spec.row` sets a row's `title`; an item's own `title` is never a tooltip
   (`dc9d88ce4b5`).
 - ☑ **Recipe options:** recipes declare overridable values with `@kindOptions` (`aef9c15d75c`).
-- ☐ **Test infrastructure** for both implementations: `SelectKit` page object, `selectKit()`
-  helper, `form-kit-helper.js`, and callers that pass `.select-kit` roots. Specs pin the flag.
+- ☑ **Test infrastructure:** tests branch with the flag instead of one test driving both
+  implementations (see `ROLLOUT.md`, Verification). DSelect has stable `data-value`/`data-name`
+  hooks and a `data-select-id` panel link (`1acddc9ddf5`); QUnit gets `dSelect()` and
+  `assert.dSelect()`, and the form-kit helpers drive a DSelect field (`444fad40435`); system specs
+  get `UiKit::DSelect.at` with value-based actions and matchers, and the FormKit page object drives
+  a DSelect field (`458cd7f3783`); `with_select_controls(enabled)` pins the flag for an example
+  group.
 - ☐ **Prep that also works with select-kit:** explicit `onChange` at the two-way sites, stable hooks
   in place of `.select-kit` DOM queries, the wizard's `onChange`.
 - ☑ **Guideline:** DMenu vs DSelect in the ui-kit guide (`e123d0c4fe6`).
@@ -52,4 +57,5 @@ facade and codemod plan this phase used to carry is superseded.
 ## Exit criteria
 
 - Flag and deprecations land with tests; no consumer has joined yet.
-- The test infrastructure passes against a family branched in both modes.
+- The DSelect test helpers pass against every variant, and the flag pin holds whether or not the
+  change is promoted.
