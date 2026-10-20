@@ -119,6 +119,21 @@ const extension = {
           },
         },
         {
+          tag: "div[data-video-src]",
+          getAttrs(dom) {
+            const { origSrc, videoBase62Sha1, videoSrc } = dom.dataset;
+
+            return {
+              src: videoSrc,
+              originalSrc:
+                origSrc ||
+                (videoBase62Sha1 &&
+                  buildUploadShortUrl(videoBase62Sha1, videoSrc)),
+              extras: "video",
+            };
+          },
+        },
+        {
           tag: "div.onebox-placeholder-container[data-orig-src]",
           getAttrs(dom) {
             return {
