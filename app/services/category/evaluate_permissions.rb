@@ -25,6 +25,9 @@ class Category::EvaluatePermissions
 
   # TODO (martin) When categories move to ACL, we will need to update this
   def user_will_have_access(guardian:, params:)
+    # Categories still treat everyone as public, regardless of granular pseudogroup behavior.
+    return true if params.effective_group_ids.include?(Group::AUTO_GROUPS[:everyone])
+
     guardian.is_admin? || guardian.user.in_any_groups?(params.effective_group_ids)
   end
 end

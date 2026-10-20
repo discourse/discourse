@@ -79,7 +79,7 @@ RSpec.describe Category::EvaluatePermissions do
 
       before { SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true }
 
-      it { is_expected.to fail_a_policy(:user_will_have_access) }
+      it { is_expected.to run_successfully }
     end
 
     context "when logged-in users are permitted with granular pseudogroup behavior" do

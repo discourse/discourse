@@ -551,6 +551,33 @@ RSpec.describe CategoriesController do
       expect(response.status).to eq(403)
     end
 
+    context "when a moderator evaluates public permissions" do
+      fab!(:moderator)
+
+      [false, true].each do |granular_permissions|
+        it "retains access with granular pseudogroup behavior #{granular_permissions}" do
+          SiteSetting.granular_anonymous_and_logged_in_groups_permissions = granular_permissions
+          sign_in(moderator)
+          category.set_permissions(everyone: :readonly)
+          category.save!
+
+          expect(moderator.guardian.can_see_category?(category)).to eq(true)
+
+          post "/categories/evaluate_permissions.json",
+               params: {
+                 group_ids: [Group::AUTO_GROUPS[:everyone]],
+               },
+               as: :json
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to include(
+            "success" => "OK",
+            "current_user_will_lose_access" => false,
+          )
+        end
+      end
+    end
+
     context "when logged in" do
       before { sign_in(user) }
 
