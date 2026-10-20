@@ -127,18 +127,18 @@ before_service_worker_ready do |server, service_worker|
     demon_class.start(1, logger: server.logger)
   end
 
-  if Rails.env.development? && !ENV["CI"]
+  if Rails.env.development? && !ENV["CI"] && ENV["DISCOURSE_SKIP_JS_WATCHERS"] != "1"
     Demon::PluginJsWatcher.start(verbose: false, logger: server.logger)
   end
 
   if Rails.env.development?
-    EmberAssets.watch!
+    EmberAssets.watch! if ENV["DISCOURSE_SKIP_JS_WATCHERS"] != "1"
 
     workers = server.worker_processes
     parts = ["#{workers} worker#{"s" if workers != 1}"]
     parts << "#{sidekiqs} sidekiq#{"s" if sidekiqs != 1}" if sidekiqs > 0
     parts.concat(DiscoursePluginRegistry.demon_processes.map(&:prefix))
-    parts << "plugin JS watcher" if !ENV["CI"]
+    parts << "plugin JS watcher" if !ENV["CI"] && ENV["DISCOURSE_SKIP_JS_WATCHERS"] != "1"
     STDOUT.puts "Pitchfork ready on http://localhost:#{ENV["UNICORN_PORT"] || 3000} (#{parts.join(", ")})"
   end
 

@@ -12,6 +12,10 @@ Card coding and conflict resolution both explicitly use gpt-6.1-sol with medium 
 Each TODO attempt starts with a fresh checkout of the committed capybara branch in /Users/joffreyjaffeux/Code/discourse.
 Uncommitted host edits are never copied. Failed work remains available for recovery until it is superseded, deleted, or moved to DONE. A new attempt does not use the previous preview as its starting point.
 
+Review previews build frontend and plugin JavaScript assets once before starting Rails.
+Frontend, plugin JavaScript and CSS watchers stay disabled for those fixed previews.
+Build failures stop preview startup. The main board keeps its existing development startup.
+
 Successful runs move to REVIEW and post a summary, commit, checks, and both preview links in the topic:
 https://<card-preview>/session/admin-account/become
 https://<card-preview>/session/user-account/become
