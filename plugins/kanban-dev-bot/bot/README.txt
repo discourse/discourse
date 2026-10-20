@@ -130,3 +130,15 @@ Review replies contain explicit test results, a persistent review.diff attachmen
 The collector reads Git blobs, never arbitrary worker filesystem paths. Attachments allow md, txt, rst, csv, pdf, docx, pptx, xlsx, zip, png, jpg, jpeg, gif, webp, diff, and patch. Limits are 24 files, 2 MiB per file, and 8 MiB per bundle. Secret-like paths/content, symlinks, submodules, and oversized blobs are omitted from attachments and diff with a visible notice. Unsupported attachment types remain in the diff. A diff exceeding 2 MiB fails collection explicitly.
 
 To retrofit a current REVIEW handoff, load its saved Run and current card version. Use Runtime.collect_review_artifacts(run, base=base_sha, head=head_sha), then Controller.backfill_review(run, bundle). The controller revises the same bot post marked with capybara_bot_run, or creates one supplemental bot post if none exists. Repeating the operation with the same content creates no extra post or revision. A moved card or superseded run is rejected.
+
+Preview memory validation (2026-10-20)
+
+Five alternating watched/static restarts of the same preview used the normal public PREVIEW_HOST,
+two Rails workers and a 6 GiB container limit. Each trial warmed both accounts and served
+76 application JavaScript files and 27 stylesheets successfully, then sampled idle memory five times.
+Watched median: 5.34 GiB, trial range 5.31 to 5.45 GiB.
+Static median: 1.27 GiB, trial range 1.11 to 1.30 GiB.
+The measured median reduction was 4.07 GiB (76.2%).
+The metric is Docker cgroup usage minus inactive file cache after five seconds idle.
+These are fresh-start preview measurements, not total OrbStack memory or long-term settled usage.
+Compilation still needs temporary build memory. The main board was unchanged.
