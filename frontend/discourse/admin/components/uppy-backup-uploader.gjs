@@ -23,7 +23,7 @@ export default class UppyBackupUploader extends Component {
 
     validateUploadedFilesOptions: { skipValidation: true },
 
-    // Leaving the tab mustn't abort a backup upload
+    // Leaving the tab must not abort a backup upload
     finishUploadsOnDestroy: true,
 
     uploadDone: (responseData) => {
