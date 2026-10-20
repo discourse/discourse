@@ -124,6 +124,26 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardScore, type: :model
       expect(global.leaderboard_scores.where(user: user).sum(:score)).to eq(1204)
     end
 
+    it "filters categorized manual points by the site category setting on global leaderboards" do
+      SiteSetting.scorable_categories = support_category.id.to_s
+      [
+        { points: 1000, category_id: nil },
+        { points: 50, category_id: support_category.id },
+        { points: 7, category_id: building_category.id },
+      ].each do |attrs|
+        DiscourseGamification::GamificationScoreEvent.create!(
+          user: user,
+          date: Date.current,
+          **attrs,
+        )
+      end
+
+      global = Fabricate(:gamification_leaderboard)
+      described_class.calculate_scores(global)
+
+      expect(global.leaderboard_scores.where(user: user).sum(:score)).to eq(1190)
+    end
+
     it "ignores blank entries in the category list" do
       support.update!(scorable_category_ids: [support_category.id, nil])
       DiscourseGamification::GamificationScoreEvent.create!(

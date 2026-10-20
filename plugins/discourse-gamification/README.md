@@ -11,7 +11,8 @@ sources on a category-scoped leaderboard.
 Manual score adjustments count on a category-scoped leaderboard only when they are
 assigned to one of its categories, through `category_id` on the score events API or
 the **Category** field of the workflows "Award score" action. Leaderboards without
-their own category list count every adjustment.
+their own category list count uncategorized adjustments, plus categorized ones that
+match the site-wide `scorable_categories` setting when it is set.
 
 Leaderboards without their own category list retain global scoring behavior. The
 site-wide `scorable_categories` setting filters category-based actions while

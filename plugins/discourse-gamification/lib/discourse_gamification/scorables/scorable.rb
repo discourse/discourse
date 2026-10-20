@@ -27,11 +27,15 @@ module DiscourseGamification
       end
 
       def scorable_category_list(leaderboard: nil)
+        scorable_category_ids(leaderboard:).join(", ")
+      end
+
+      def scorable_category_ids(leaderboard: nil)
         categories = leaderboard&.scorable_category_ids
         if categories.nil?
-          SiteSetting.scorable_categories.split("|").map { it.to_i }.join(", ")
+          SiteSetting.scorable_categories.split("|").map { it.to_i }
         else
-          categories.compact.join(", ")
+          categories.compact
         end
       end
     end
