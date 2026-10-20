@@ -1,6 +1,7 @@
 import { warn } from "@ember/debug";
+import { registerDestructor } from "@ember/destroyable";
 import EmberObject from "@ember/object";
-import { getOwner, setOwner } from "@ember/owner";
+import { getOwner } from "@ember/owner";
 import { run } from "@ember/runloop";
 import { service } from "@ember/service";
 import Uppy from "@uppy/core";
@@ -19,6 +20,7 @@ import {
   rateLimitRetryOptions,
   validateUploadedFile,
 } from "discourse/lib/uploads";
+import attachToParent from "discourse/lib/uppy/attach-to-parent";
 import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
 import UppyWrapper from "discourse/lib/uppy/wrapper";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
@@ -64,8 +66,12 @@ export default class UppyComposerUpload {
   #fileInputEl;
   #editorEl;
 
+  /**
+   * @param {object} parent The component (or other destroyable) using this upload. It's torn down when the parent is destroyed.
+   * @param {object} options
+   */
   constructor(
-    owner,
+    parent,
     {
       composerEventPrefix,
       composerModel,
@@ -75,8 +81,13 @@ export default class UppyComposerUpload {
       fileUploadElementId,
     }
   ) {
-    setOwner(this, owner);
-    this.uppyWrapper = new UppyWrapper(owner);
+    attachToParent(this, parent, {
+      className: "UppyComposerUpload",
+      id: "discourse.uppy-composer-upload-owner",
+    });
+    registerDestructor(this, () => this.teardown());
+
+    this.uppyWrapper = new UppyWrapper(getOwner(this));
     this.composerEventPrefix = composerEventPrefix;
     this.composerModel = composerModel;
     this.uploadMarkdownResolvers = uploadMarkdownResolvers;
@@ -265,9 +276,6 @@ export default class UppyComposerUpload {
 
     this.uppyWrapper.uppyInstance.on("upload-progress", (file, progress) => {
       run(() => {
-        if (this.isDestroying) {
-          return;
-        }
         const upload = this.#inProgressUploads.find(
           (upl) => upl.id === file.id
         );
