@@ -4,7 +4,11 @@
 # which the FK made impossible (room destroy raised ForeignKeyViolation).
 class RemoveVoiceSessionsRoomForeignKey < ActiveRecord::Migration[8.0]
   def up
+    Migration::SafeMigrate.disable!
+
     remove_foreign_key :voice_sessions, column: :room_id, if_exists: true
+  ensure
+    Migration::SafeMigrate.enable!
   end
 
   def down
