@@ -26,6 +26,7 @@ import ChatUsage from "discourse/plugins/discourse-rewind/discourse/components/r
 import FBFF from "discourse/plugins/discourse-rewind/discourse/components/reports/fbff";
 import RewindHeader from "discourse/plugins/discourse-rewind/discourse/components/reports/header";
 import Invites from "discourse/plugins/discourse-rewind/discourse/components/reports/invites";
+import LiveUsage from "discourse/plugins/discourse-rewind/discourse/components/reports/live-usage";
 import MostViewedCategories from "discourse/plugins/discourse-rewind/discourse/components/reports/most-viewed-categories";
 import MostViewedTags from "discourse/plugins/discourse-rewind/discourse/components/reports/most-viewed-tags";
 import NewUserInteractions from "discourse/plugins/discourse-rewind/discourse/components/reports/new-user-interactions";
@@ -33,7 +34,6 @@ import Reactions from "discourse/plugins/discourse-rewind/discourse/components/r
 import ReadingTime from "discourse/plugins/discourse-rewind/discourse/components/reports/reading-time";
 import TimeOfDayActivity from "discourse/plugins/discourse-rewind/discourse/components/reports/time-of-day-activity";
 import TopWords from "discourse/plugins/discourse-rewind/discourse/components/reports/top-words";
-import VoiceUsage from "discourse/plugins/discourse-rewind/discourse/components/reports/voice-usage";
 import WritingAnalysis from "discourse/plugins/discourse-rewind/discourse/components/reports/writing-analysis";
 
 const REPORT_COMPONENTS = {
@@ -52,7 +52,7 @@ const REPORT_COMPONENTS = {
   "reading-time": ReadingTime,
   "time-of-day-activity": TimeOfDayActivity,
   "top-words": TopWords,
-  "voice-usage": VoiceUsage,
+  "live-usage": LiveUsage,
   "writing-analysis": WritingAnalysis,
 };
 

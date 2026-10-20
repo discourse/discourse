@@ -275,11 +275,11 @@ module DiscourseWorkflows
           when "get"
             wrap(node_proxy.get_many_rows_and_count(row_query_options(config))[:data])
           when "update"
-            wrap(node_proxy.update_rows(row_mutation_options(config)))
+            wrap(node_proxy.update_rows(row_mutation_options(config))[:data])
           when "delete"
-            wrap(node_proxy.delete_rows(row_delete_options(config)))
+            wrap(node_proxy.delete_rows(row_delete_options(config))[:data])
           when "upsert"
-            wrap(node_proxy.upsert_row(row_mutation_options(config)))
+            wrap(node_proxy.upsert_row(row_mutation_options(config))[:data])
           when "row_exists", "row_not_exists"
             row_existence_items(config, item, operation_name, node_proxy)
           else

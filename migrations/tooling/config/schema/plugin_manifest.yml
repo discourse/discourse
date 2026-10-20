@@ -249,20 +249,20 @@ plugins:
       - discourse_workflows_workflow_versions
       - discourse_workflows_workflows
     columns: {}
+  live:
+    tables:
+      - live_co_presences
+      - live_invites
+      - live_recordings
+      - live_room_memberships
+      - live_rooms
+      - live_sessions
+    columns: {}
   poll:
     tables:
       - poll_options
       - poll_votes
       - polls
-    columns: {}
-  voice:
-    tables:
-      - voice_co_presences
-      - voice_invites
-      - voice_recordings
-      - voice_room_memberships
-      - voice_rooms
-      - voice_sessions
     columns: {}
 plugin_checksums:
   automation: d168107063ed75d7e568f1c1250866f8
@@ -275,7 +275,7 @@ plugin_checksums:
   discourse-cakeday: a5bb91366c8dc8d267088eb0c2679187
   discourse-captcha: 9c98c6231f69399ad711b7ef2b858d87
   discourse-chat-integration: ffa3bf5dba9089491d2fc02971eb96f8
-  discourse-data-explorer: c6b824f9409ce4407895bdcb5563b5a0
+  discourse-data-explorer: b8a25c2772d05fe6a11716352c88bab8
   discourse-events: 5d4a88ec24f58c6ea11f53e76a23bfb8
   discourse-gamification: 633256e241b030fddcc059076f7474f8
   discourse-github: 3bd17b2c09828e232e7565edbf2c746f
@@ -299,8 +299,8 @@ plugin_checksums:
   discourse-user-notes: 4c1e04fac5708b51c1b09bd8ed0d786c
   discourse-workflows: af0c2fc0b7e1f38cf57abe16633ab2a1
   discourse-zendesk-plugin: b78b305590ffedda38455574a19fdd38
+  live: 4dc04fc7516e9509dc986ff3b102572a
   poll: e481f2cfa0e7c22778dee12a1e9c33c6
   styleguide: 0fd92e5ef0c99ee047f206961a587544
-  voice: 2a524af29a649ac652323ae1bc977a82
 failed_plugins: []
 incomplete: false

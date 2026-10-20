@@ -184,6 +184,8 @@ sk:
         reject: "Zamietnuť"
         approved: "Schválený"
         rejected: "Zamietnuté"
+      default_llm:
+        title: "Predvolený jazykový model"
       llm_selector:
         none: "Žiadny"
       features:
@@ -605,6 +607,18 @@ sk:
         tools_modal:
           parameters: "Parametre"
           required: "Povinné"
+      models:
+        new: "Nový model"
+        name: "Meno"
+        type: "Typ"
+        provider: "Poskytovateľ"
+        edit: "Upraviť"
+        select_type: "Vyberte"
+        types:
+          embedding: "Vkladám"
+        filters:
+          all: "Všetky typy"
+          reset: "Obnovenie filtrov"
       llms:
         short_title: "LLM"
         no_llms: "Zatiaľ žiadne LLM"

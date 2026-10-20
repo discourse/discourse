@@ -176,6 +176,7 @@ patchedDependencies:
   http-proxy@1.18.1: 3032f3a47f33911d5c278ec6f2d4e0e4afc8f977baea1012613b13de23831c73
   licensee: 566956dc682db703e899e5b01c65b129e434ad9f0848f5b9f62c3c28afd086e9
   pikaday: ab597bca99e3c8cc091cd804d003516de8a3744472e0a4b881e598a38b51dc83
+  xss@1.0.15: c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf
 
 importers:
 
@@ -792,8 +793,8 @@ importers:
         specifier: ^0.12.5
         version: 0.12.5
       xss:
-        specifier: ^1.0.15
-        version: 1.0.15
+        specifier: 1.0.15
+        version: 1.0.15(patch_hash=c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf)
 
   frontend/discourse-i18n:
     dependencies:
@@ -825,8 +826,8 @@ importers:
         specifier: workspace:1.0.0
         version: link:../pretty-text
       xss:
-        specifier: ^1.0.15
-        version: 1.0.15
+        specifier: 1.0.15
+        version: 1.0.15(patch_hash=c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf)
 
   frontend/discourse-types:
     devDependencies:
@@ -858,8 +859,8 @@ importers:
         specifier: workspace:1.0.0
         version: link:../discourse-i18n
       xss:
-        specifier: ^1.0.15
-        version: 1.0.15
+        specifier: 1.0.15
+        version: 1.0.15(patch_hash=c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf)
     devDependencies:
       ember-source:
         specifier: ~7.3.0
@@ -886,8 +887,8 @@ importers:
         specifier: 1.2.7
         version: 1.2.7
       xss:
-        specifier: ^1.0.15
-        version: 1.0.15
+        specifier: 1.0.15
+        version: 1.0.15(patch_hash=c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf)
 
   plugins/automation:
     dependencies:
@@ -1129,6 +1130,12 @@ importers:
         specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
+  plugins/live:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@*
+        version: link:../../frontend/discourse-types
+
   plugins/poll:
     dependencies:
       discourse:
@@ -1142,12 +1149,6 @@ importers:
         version: link:../../frontend/discourse-types
 
   plugins/styleguide:
-    dependencies:
-      discourse:
-        specifier: workspace:@discourse/types@*
-        version: link:../../frontend/discourse-types
-
-  plugins/voice:
     dependencies:
       discourse:
         specifier: workspace:@discourse/types@*
@@ -16874,7 +16875,7 @@ snapshots:
 
   xmlcreate@2.0.4: {}
 
-  xss@1.0.15:
+  xss@1.0.15(patch_hash=c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf):
     dependencies:
       commander: 2.20.3
       cssfilter: 0.0.10

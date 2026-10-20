@@ -65,7 +65,7 @@ export default class AdminEditLeaderboard extends Component {
       included_groups_ids: this.args.leaderboard.includedGroupsIds,
       excluded_groups_ids: this.args.leaderboard.excludedGroupsIds,
       visible_to_groups_ids: this.args.leaderboard.visibleToGroupsIds,
-      default_period: this.args.leaderboard.defaultPeriod,
+      default_period: this.args.leaderboard.defaultPeriodId,
       period_filter_disabled: this.args.leaderboard.periodFilterDisabled,
       scorable_category_ids: this.args.leaderboard.scorableCategoryIds,
     };

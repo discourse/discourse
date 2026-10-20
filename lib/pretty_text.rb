@@ -510,21 +510,14 @@ module PrettyText
     doc
       .css("a[href]")
       .each do |a|
-        href = a["href"].to_s
-        next if href.blank?
-        next if href.start_with?("mailto:")
-        next if href.start_with?(Discourse.base_url)
-        next if URI(href).host.present?
+        href = a["href"]
+        next if href.blank? || href.start_with?("mailto:") || URI(href).host.present?
 
-        a["href"] = (
-          if href.start_with?(Discourse.base_path)
-            "#{Discourse.base_url_no_prefix}#{href}"
-          else
-            "#{Discourse.base_url}#{href}"
-          end
-        )
+        prefix =
+          href.start_with?(Discourse.base_path) ? Discourse.base_url_no_prefix : Discourse.base_url
+        a["href"] = "#{prefix}#{href}"
       rescue URI::Error
-        # leave it
+        nil
       end
   end
 
@@ -537,20 +530,26 @@ module PrettyText
     doc.css(".video-onebox,video").remove
   end
 
+  def self.replace_diagrams(doc, post, selector = "pre[data-code-wrap='mermaid']")
+    doc
+      .css(selector)
+      .each do |node|
+        node.replace(link_paragraph(doc, post.full_url, I18n.t("emails.view_diagram")))
+      end
+  end
+
   def self.convert_vimeo_iframes(doc)
     doc
       .css("iframe[src*='player.vimeo.com']")
       .each do |iframe|
         vimeo_url = vimeo_url_from_iframe(iframe)
-        next if vimeo_url.blank?
-
-        paragraph = doc.document.create_element("p")
-        link = doc.document.create_element("a")
-        link["href"] = vimeo_url
-        link.content = vimeo_url
-        paragraph.add_child(link)
-        iframe.replace(paragraph)
+        iframe.replace(link_paragraph(doc, vimeo_url, vimeo_url)) if vimeo_url
       end
+  end
+
+  def self.link_paragraph(doc, href, text)
+    document = doc.document
+    document.create_element("p") { |p| p << document.create_element("a", text, href: href) }
   end
 
   def self.vimeo_url_from_iframe(iframe)
@@ -563,15 +562,10 @@ module PrettyText
     uri = UrlHelper.relaxed_parse(iframe["src"].to_s)
     return nil if uri.nil? || uri.host&.downcase != VIMEO_PLAYER_HOST
 
-    video_id = VIMEO_PLAYER_PATH.match(uri.path.to_s)&.[](:id)
+    video_id = uri.path.to_s[VIMEO_PLAYER_PATH, :id]
     return nil if video_id.nil?
 
-    unlisted_hash = vimeo_unlisted_hash(uri.query)
-    if unlisted_hash
-      "https://vimeo.com/#{video_id}/#{unlisted_hash}"
-    else
-      "https://vimeo.com/#{video_id}"
-    end
+    ["https://vimeo.com", video_id, vimeo_unlisted_hash(uri.query)].compact.join("/")
   end
 
   def self.vimeo_unlisted_hash(query)
@@ -590,42 +584,13 @@ module PrettyText
       .each do |a|
         next if !Upload.secure_uploads_url?(a["href"])
 
-        non_image_media = %w[video audio].include?(a&.parent&.name)
-        target = non_image_media ? a.parent : a
-        if target.to_s.include?("stripped-secure-view-media") ||
-             target.to_s.include?("stripped-secure-view-upload")
-          next
-        end
-
-        next if a.css("img[src]").empty? && !non_image_media
-
-        if a.classes.include?("lightbox")
-          img = a.css("img[src]").first
-          srcset = img&.attributes&.[]("srcset")&.value
-          if srcset
-            # if available, use the first image from the srcset here
-            # so we get the optimized image instead of the possibly huge original
-            url = srcset.split(",").first
-          else
-            url = img["src"]
-          end
-          a.add_next_sibling secure_uploads_placeholder(
-                               doc,
-                               url,
-                               width: img["width"],
-                               height: img["height"],
-                             )
-          a.remove
-        else
-          width = non_image_media ? nil : a.at_css("img").attr("width")
-          height = non_image_media ? nil : a.at_css("img").attr("height")
-          target.add_next_sibling secure_uploads_placeholder(
-                                    doc,
-                                    a["href"],
-                                    width: width,
-                                    height: height,
-                                  )
-          target.remove
+        if %w[video audio].include?(a.parent&.name)
+          a.parent.replace(secure_uploads_placeholder(doc, a["href"]))
+        elsif (img = a.at_css("img[src]"))
+          url = a.classes.include?("lightbox") ? optimized_src(img) : a["href"]
+          a.replace(
+            secure_uploads_placeholder(doc, url, width: img["width"], height: img["height"]),
+          )
         end
       end
 
@@ -633,50 +598,39 @@ module PrettyText
     doc
       .css("img[src]")
       .each do |img|
-        url =
-          if img.parent.classes.include?("aspect-image") && img.attributes["srcset"].present?
-            # we are using the first image from the srcset here so we get the
-            # optimized image instead of the original, because an optimized
-            # image may be used for the onebox thumbnail
-            srcset = img.attributes["srcset"].value
-            srcset.split(",").first
-          else
-            img["src"]
-          end
+        # an optimized image may be used for the onebox thumbnail
+        url = img.parent.classes.include?("aspect-image") ? optimized_src(img) : img["src"]
+        next if !Upload.secure_uploads_url?(url)
 
         width = img["width"]
         height = img["height"]
         onebox_type = nil
 
-        if img.ancestors.css(".onebox-body").any?
-          if img.classes.include?("onebox-avatar-inline")
-            onebox_type = "avatar-inline"
-          else
-            onebox_type = "thumbnail"
-          end
-        end
-
-        # we always want this to be tiny and without any special styles
         if img.classes.include?("site-icon")
-          onebox_type = nil
-          width = 16
-          height = 16
+          # we always want this to be tiny and without any special styles
+          width = height = 16
+        elsif img.ancestors(".onebox-body").any?
+          onebox_type = img.classes.include?("onebox-avatar-inline") ? "avatar-inline" : "thumbnail"
         end
 
-        if Upload.secure_uploads_url?(url)
-          img.add_next_sibling secure_uploads_placeholder(
-                                 doc,
-                                 url,
-                                 onebox_type: onebox_type,
-                                 width: width,
-                                 height: height,
-                               )
-          img.remove
-        end
+        img.replace(
+          secure_uploads_placeholder(
+            doc,
+            url,
+            onebox_type: onebox_type,
+            width: width,
+            height: height,
+          ),
+        )
       end
   end
 
-  def self.secure_uploads_placeholder(doc, url, onebox_type: false, width: nil, height: nil)
+  # The first srcset candidate is optimized, unlike the possibly huge original in src
+  def self.optimized_src(img)
+    img["srcset"].present? ? img["srcset"].split(",").first : img["src"]
+  end
+
+  def self.secure_uploads_placeholder(doc, url, onebox_type: nil, width: nil, height: nil)
     notice = doc.document.create_element("div")
     notice["class"] = "secure-upload-notice"
     notice["data-stripped-secure-upload"] = url.to_s
@@ -709,6 +663,7 @@ module PrettyText
     DiscourseEvent.trigger(:reduce_cooked, doc, post)
     strip_secure_uploads(doc) if post&.should_secure_uploads?
     strip_image_wrapping(doc)
+    replace_diagrams(doc, post) if post
     convert_vimeo_iframes(doc)
     make_all_links_absolute(doc)
     doc.to_html

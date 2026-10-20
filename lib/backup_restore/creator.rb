@@ -315,12 +315,13 @@ module BackupRestore
       @s3_store = FileStore::S3Store.new
       @upload_directory = Discourse.store.upload_path
       @download_stats = { downloaded: 0, hardlinked: 0, copied: 0 }
+      @stats_mutex = Mutex.new
 
       uploads_by_sha1 = group_remote_uploads_by_sha1
       @total_uploads = uploads_by_sha1.values.sum(&:size)
       log "Found #{uploads_by_sha1.size} unique files from #{@total_uploads} total uploads"
 
-      uploads_by_sha1.each_value { |upload_group| process_upload_group(upload_group) }
+      download_upload_groups(uploads_by_sha1.values)
 
       log "Finished processing uploads: #{@download_stats[:downloaded]} downloaded, #{@download_stats[:hardlinked]} hardlinked, #{@download_stats[:copied]} copied"
 
@@ -339,6 +340,57 @@ module BackupRestore
       if @download_stats[:downloaded] == 0 && @download_stats[:hardlinked] == 0 &&
            @download_stats[:copied] == 0
         log "No uploads found on S3. Skipping archiving of uploads stored on S3..."
+      end
+    end
+
+    def download_upload_groups(upload_groups)
+      concurrency = [GlobalSetting.backup_s3_download_concurrency.to_i, 1].max
+      log "Downloading upload groups with #{concurrency} worker(s)"
+
+      if concurrency == 1
+        upload_groups.each { |group| process_upload_group(group) }
+        return
+      end
+
+      return if upload_groups.empty?
+
+      concurrency = [concurrency, upload_groups.size].min
+
+      # Initialize the shared client and bucket in the originating site's context.
+      @s3_store.s3_helper.object("")
+      queue = Queue.new
+      upload_groups.each { |group| queue << group }
+      queue.close
+      workers = []
+      errors = Queue.new
+
+      begin
+        # Defer cancellation until every started worker has been registered.
+        Thread.handle_interrupt(Exception => :never) do
+          concurrency.times do
+            workers << Thread.new do
+              Thread.handle_interrupt(Exception => :immediate) do
+                RailsMultisite::ConnectionManagement.with_connection(@current_db) do
+                  while (group = queue.pop)
+                    process_upload_group(group)
+                  end
+                end
+              end
+            rescue Exception => error
+              # Propagate worker failures on the backup thread after workers finish.
+              queue.clear
+              errors << error
+            ensure
+              ActiveRecord::Base.connection_handler.clear_active_connections!
+            end
+          end
+        end
+        workers.each(&:join)
+        raise errors.pop unless errors.empty?
+      ensure
+        # Finish active downloads, but leave queued groups untouched on cancellation.
+        queue.clear
+        workers.each(&:join)
       end
     end
 
@@ -390,7 +442,8 @@ module BackupRestore
 
     def download_upload_to_file(upload_data, filename)
       FileUtils.mkdir_p(File.dirname(filename))
-      @s3_store.download_file(upload_data, filename)
+      # Avoid a HEAD request for every file; backup workers already parallelize downloads.
+      @s3_store.download_file(upload_data, filename, mode: "single_request")
       increment_and_log_progress(:downloaded)
       true
     rescue StandardError => ex
@@ -420,12 +473,14 @@ module BackupRestore
     end
 
     def increment_and_log_progress(type)
-      @download_stats[type] += 1
-      processed = @download_stats.values.sum
-      return if processed % 1000 != 0
+      @stats_mutex.synchronize do
+        @download_stats[type] += 1
+        processed = @download_stats.values.sum
+        return if processed % 1000 != 0
 
-      percentage = processed * 100 / @total_uploads
-      log "#{processed}/#{@total_uploads} (#{percentage}%) files processed (#{@download_stats[:downloaded]} downloaded, #{@download_stats[:hardlinked]} hardlinked, #{@download_stats[:copied]} copied). Still processing..."
+        percentage = processed * 100 / @total_uploads
+        log "#{processed}/#{@total_uploads} (#{percentage}%) files processed (#{@download_stats[:downloaded]} downloaded, #{@download_stats[:hardlinked]} hardlinked, #{@download_stats[:copied]} copied). Still processing..."
+      end
     end
 
     def upload_archive

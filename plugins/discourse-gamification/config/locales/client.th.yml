@@ -39,6 +39,7 @@ th:
       custom_range_from: "จาก"
       admin:
         name: "ชื่อ"
+        created_by: "สร้างโดย"
     discourse_workflows:
       gamification_score:
         username: "ผู้ใช้"

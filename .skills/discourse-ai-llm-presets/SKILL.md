@@ -91,7 +91,9 @@ Every preset model needs a one-line description in `config/locales/client.en.yml
 <provider_id>-<model_name>
 ```
 
-…with `.`, `/`, and `:` all replaced by `-` (handled in JS by `llm.id.replace(/[.:\/]/g, "-")` in `ai-llms-list-editor.gjs`).
+…with `.`, `/`, and `:` all replaced by `-` (handled in JS by `id.replace(/[.:\/]/g, "-")` in `ai-model-new.gjs`).
+
+Embedding and decision model presets (`EmbeddingDefinition.presets`, `DecisionModel.presets`) use the same pattern, keyed by `preset_id` under `discourse_ai.embeddings.preset_descriptions` and `discourse_ai.decision_models.preset_descriptions`. When any of those preset lists change, add/remove the matching keys too.
 
 Examples:
 | Provider | Model `name` | i18n key |

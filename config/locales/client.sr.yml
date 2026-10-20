@@ -2807,15 +2807,6 @@ sr:
         type_mismatch:
           default: "Molimo unesite validnu vrednost"
           email: "Molimo unesite validnu e-mail adresu."
-    table_builder:
-      edit:
-        modal:
-          cancel: "otkaži"
-          create: "Sačuvaj"
-          reason: "Zašto izmenjujete?"
-      spreadsheet:
-        show: "Pokaži"
-        about: "O nama"
     filter:
       description:
         yesterday: "Juče"

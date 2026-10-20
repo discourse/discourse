@@ -3478,18 +3478,6 @@ bg:
         type_mismatch:
           default: "Моля, въведете валидна стойност."
           email: "Моля, въведете валиден имейл адрес."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Въведете"
-      edit:
-        modal:
-          cancel: "прекрати"
-          create: "Запази "
-          reason: "Защо редактирате ?"
-      spreadsheet:
-        show: "Покажи"
-        about: "Относно"
     filter:
       description:
         yesterday: "Вчера"

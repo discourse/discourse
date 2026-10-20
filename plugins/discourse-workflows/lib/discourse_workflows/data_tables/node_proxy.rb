@@ -8,7 +8,6 @@ module DiscourseWorkflows
 
       def initialize(facade)
         @facade = facade
-        reset_columns_resolver
       end
 
       def update_data_table(options)
@@ -40,7 +39,7 @@ module DiscourseWorkflows
       end
 
       def delete_column(column_id)
-        @columns_resolver.validate_column!(column_id)
+        columns_resolver.validate_column!(column_id)
         @facade.drop_column!(column_id)
         reset_columns_resolver
         true
@@ -49,9 +48,7 @@ module DiscourseWorkflows
       def get_many_rows_and_count(options = {})
         options = normalize_options(options)
         query = build_query(options, optional_filter: true)
-        result = @facade.query(query)
-
-        { count: result[:count], data: result[:rows] }
+        with_count(@facade.query(query))
       end
 
       def insert_rows(rows, return_type)
@@ -68,7 +65,7 @@ module DiscourseWorkflows
         when "count"
           { "success" => true, "insertedRows" => inserted_rows.size }
         else
-          raise ArgumentError, "Unsupported data table insert return type: #{return_type.inspect}"
+          raise InvalidInput, "Unsupported data table insert return type: #{return_type.inspect}"
         end
       end
 
@@ -76,37 +73,32 @@ module DiscourseWorkflows
         options = normalize_options(options)
         query = build_query(options, optional_filter: false)
         row_input = build_row_input(options["data"])
-        rows = @facade.query(query)[:rows]
 
-        return dry_run_update_rows(rows, row_input) if options["dry_run"]
-
-        update_matching_rows(rows, row_input)
+        update_matching_rows(query, row_input, options)
       end
 
       def upsert_row(options)
         options = normalize_options(options)
         query = build_query(options, optional_filter: false)
         row_input = build_row_input(options["data"])
-        matching_rows = @facade.query(query)[:rows]
 
-        if matching_rows.present?
-          return dry_run_update_rows(matching_rows, row_input) if options["dry_run"]
+        result = update_matching_rows(query, row_input, options)
+        return result if result[:count] > 0
 
-          update_matching_rows(matching_rows, row_input)
-        else
-          ensure_insertable!(row_input)
-          [options["dry_run"] ? dry_run_insert_row(row_input) : @facade.insert(row_input)]
-        end
+        insert_row_input(row_input, options)
+      end
+
+      def insert_row(options)
+        options = normalize_options(options)
+        insert_row_input(build_row_input(options["data"]), options)
       end
 
       def delete_rows(options)
         options = normalize_options(options)
         query = build_query(options, optional_filter: false)
-        rows = @facade.query(query)[:rows]
-        return rows if options["dry_run"]
-
-        @facade.delete(query:)
-        rows
+        with_count(
+          options["dry_run"] ? @facade.query(query) : @facade.delete(query:, returning: :rows),
+        )
       end
 
       private
@@ -115,8 +107,12 @@ module DiscourseWorkflows
         options.respond_to?(:to_h) ? options.to_h.deep_stringify_keys : {}
       end
 
+      def columns_resolver
+        @columns_resolver ||= ColumnsResolver.new(@facade.data_table)
+      end
+
       def reset_columns_resolver
-        @columns_resolver = ColumnsResolver.new(@facade.data_table)
+        @columns_resolver = nil
       end
 
       def serialize_column(column, index)
@@ -131,22 +127,22 @@ module DiscourseWorkflows
       end
 
       def validate_column_definition!(name, type)
-        raise ArgumentError, "Column name is required" if name.blank?
-        raise ArgumentError, "Column type is required" if type.blank?
+        raise InvalidInput, "Column name is required" if name.blank?
+        raise InvalidInput, "Column type is required" if type.blank?
         unless DiscourseWorkflows::DataTable::COLUMN_NAME_FORMAT.match?(name)
-          raise ArgumentError,
+          raise InvalidInput,
                 "Column name must start with a letter or underscore and contain only letters, numbers, and underscores"
         end
         if name.length > DiscourseWorkflows::DataTable::MAX_COLUMN_NAME_LENGTH
-          raise ArgumentError,
+          raise InvalidInput,
                 "Column name must be #{DiscourseWorkflows::DataTable::MAX_COLUMN_NAME_LENGTH} characters or fewer"
         end
-        raise ArgumentError, "Column name is reserved" if Types.system_column?(name)
+        raise InvalidInput, "Column name is reserved" if Types.system_column?(name)
         if DiscourseWorkflows::DataTable::VALID_COLUMN_TYPES.exclude?(type)
-          raise ArgumentError, "Unsupported column type: #{type.inspect}"
+          raise InvalidInput, "Unsupported column type: #{type.inspect}"
         end
         if get_columns.any? { |c| c[:name] == name }
-          raise ArgumentError, "Column name already exists"
+          raise InvalidInput, "Column name already exists"
         end
       end
 
@@ -167,7 +163,7 @@ module DiscourseWorkflows
 
       def build_row_input(data)
         row_input =
-          @facade.build_row_input(data: @columns_resolver.resolve(data), fill_missing: false)
+          @facade.build_row_input(data: columns_resolver.resolve(data), fill_missing: false)
         raise_invalid(:row, row_input) if row_input.invalid?
         row_input
       end
@@ -175,23 +171,36 @@ module DiscourseWorkflows
       def ensure_insertable!(row_input)
         return if row_input.columns.present?
 
-        raise ArgumentError, I18n.t("discourse_workflows.errors.data_table.no_columns_to_insert")
+        raise InvalidInput, I18n.t("discourse_workflows.errors.data_table.no_columns_to_insert")
       end
 
       # Nothing to write still counts as a match, so the rows flow on unchanged.
-      def update_matching_rows(rows, row_input)
-        return rows if row_input.columns.empty?
+      def update_matching_rows(query, row_input, options)
+        return dry_run_update_rows(@facade.query(query), row_input) if options["dry_run"]
+        return with_count(@facade.query(query)) if row_input.columns.empty?
 
-        rows.filter_map { |row| @facade.update_row(row_id: row.fetch("id"), row_input:) }
+        with_count(@facade.update(query:, row_input:, returning: :rows))
       end
 
-      def dry_run_update_rows(rows, row_input)
-        rows.flat_map do |row|
-          [
-            row.merge("dryRunState" => "before"),
-            row.merge(row_input.columns).merge("dryRunState" => "after"),
-          ]
-        end
+      def with_count(result)
+        { data: result[:rows], count: result[:count] }
+      end
+
+      def dry_run_update_rows(result, row_input)
+        pairs =
+          result[:rows].flat_map do |row|
+            [
+              row.merge("dryRunState" => "before"),
+              row.merge(row_input.columns).merge("dryRunState" => "after"),
+            ]
+          end
+        with_count(result.merge(rows: pairs))
+      end
+
+      def insert_row_input(row_input, options)
+        ensure_insertable!(row_input)
+        row = options["dry_run"] ? dry_run_insert_row(row_input) : @facade.insert(row_input)
+        { data: [row], count: 1 }
       end
 
       def dry_run_insert_row(row_input)
@@ -201,7 +210,7 @@ module DiscourseWorkflows
       end
 
       def raise_invalid(type, value)
-        raise ArgumentError,
+        raise InvalidInput,
               I18n.t(
                 "discourse_workflows.errors.data_table.invalid_#{type}",
                 errors: value.errors.full_messages.join(", "),
