@@ -63,7 +63,7 @@ module Live
       ttl = SiteSetting.live_ephemeral_room_ttl_minutes.minutes
 
       Live::Room.ephemeral.find_each do |room|
-        if Live::ParticipantTracker.human_user_ids(room.id).any?
+        if !Live::ParticipantTracker.vacant?(room.id)
           room.update_column(:last_occupied_at, Time.current)
         elsif (room.last_occupied_at || room.created_at) < ttl.ago
           destroy!(room)

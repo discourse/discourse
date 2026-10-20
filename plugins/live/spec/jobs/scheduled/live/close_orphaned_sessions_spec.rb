@@ -61,6 +61,18 @@ RSpec.describe Jobs::Live::CloseOrphanedSessions do
     expect(session.left_at).to be_nil
   end
 
+  it "keeps sessions open while a lapsed participant can still resume" do
+    session =
+      Fabricate(:live_session, user: user1, room: room, joined_at: 50.minutes.ago, left_at: nil)
+
+    set_stale_participant(room, user1, last_heartbeat: 2.minutes.ago)
+    Live::ParticipantTracker.create_participant_session!(room.id, user1.id)
+
+    job.execute({})
+
+    expect(session.reload.left_at).to be_nil
+  end
+
   it "cleans up stale Redis entries after closing" do
     Fabricate(:live_session, user: user1, room: room, joined_at: 50.minutes.ago, left_at: nil)
 
