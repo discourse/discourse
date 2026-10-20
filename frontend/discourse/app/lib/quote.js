@@ -6,7 +6,12 @@ import { stripQuotationMarks } from "discourse-markdown-it/features/bbcode-block
 const WHITESPACE = /\s/;
 const WORD_CHARACTER = /[\p{L}\p{N}_]/u;
 const MIN_PARTIAL_MATCH_LENGTH = 20;
+const MEDIA_START = "\uE000";
+const MEDIA_END = "\uE001";
+const SKIPPED = "img.emoji, .lightbox-wrapper .meta, aside.quote > .title";
 const HIGHLIGHT_CLASS = "quote-highlight";
+const UPLOAD_SHA1 = /[0-9a-f]{40}/;
+const URL_ORIGIN = /^([a-z]+:)?\/\/[^/]+/i;
 
 export const QUOTE_HIGHLIGHT_ID = "quote-highlight-start";
 
@@ -102,10 +107,47 @@ function findLongestPrefix(haystack, needle, isBoundary) {
   return best;
 }
 
+function mediaSource(element) {
+  if (element.matches("img")) {
+    const src = element.getAttribute("src") ?? "";
+    return (
+      src.match(UPLOAD_SHA1)?.[0] ??
+      element.dataset.base62Sha1 ??
+      src.replace(URL_ORIGIN, "")
+    );
+  }
+
+  if (element.matches("aside.onebox")) {
+    return element.dataset.oneboxSrc;
+  }
+
+  if (
+    element.matches("a.inline-onebox, a.inline-onebox-loading") ||
+    (element.matches("a") &&
+      element.textContent === element.getAttribute("href"))
+  ) {
+    return element.getAttribute("href");
+  }
+
+  if (element.matches("[data-video-src]")) {
+    return element.dataset.videoSrc;
+  }
+}
+
 function collectText(node, visit) {
   for (const child of node.childNodes) {
     if (child.nodeType === Node.TEXT_NODE) {
       visit(child, child.data);
+      continue;
+    }
+
+    if (child.nodeType !== Node.ELEMENT_NODE || child.matches(SKIPPED)) {
+      continue;
+    }
+
+    const source = mediaSource(child);
+    if (source) {
+      visit(child, `${MEDIA_START}${source}${MEDIA_END}`);
       continue;
     }
 
@@ -142,6 +184,15 @@ function indexText(node) {
 }
 
 function wrapMatch(target, from, to) {
+  if (target.nodeType === Node.ELEMENT_NODE) {
+    const visible =
+      getComputedStyle(target).display === "none"
+        ? target.parentElement
+        : target;
+    visible.classList.add(HIGHLIGHT_CLASS);
+    return visible;
+  }
+
   const parent = target.parentElement;
   if (
     parent.classList.contains(HIGHLIGHT_CLASS) &&
