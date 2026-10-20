@@ -5,10 +5,12 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { escapeExpression } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
@@ -37,25 +39,22 @@ export default class VoiceRoomList extends Component {
   }
 
   @action
-  async destroyRoom(room) {
-    room.set("isDeleting", true);
-    try {
-      await this.dialog.deleteConfirm({
-        message: i18n("voice.admin.destroy_room.confirm", {
-          name: escapeExpression(room.name),
-        }),
-        didConfirm: async () => {
-          try {
-            await room.destroyRecord();
-            this.args.onDestroy?.(room);
-          } catch (e) {
-            popupAjaxError(e);
-          }
-        },
-      });
-    } finally {
-      room?.set("isDeleting", false);
-    }
+  async destroyRoom(room, closeMenu) {
+    await closeMenu();
+
+    await this.dialog.deleteConfirm({
+      message: i18n("voice.admin.destroy_room.confirm", {
+        name: escapeExpression(room.name),
+      }),
+      didConfirm: async () => {
+        try {
+          await room.destroyRecord();
+          this.args.onDestroy?.(room);
+        } catch (e) {
+          popupAjaxError(e);
+        }
+      },
+    });
   }
 
   <template>
@@ -175,12 +174,26 @@ export default class VoiceRoomList extends Component {
                     {{i18n "voice.admin.edit"}}
                   </LinkTo>
 
-                  <DButton
-                    class="btn-small btn-danger voice-rooms__delete"
-                    @disabled={{room.isDeleting}}
-                    @icon="trash-can"
-                    {{on "click" (fn this.destroyRoom room)}}
-                  />
+                  <DMenu
+                    @icon="ellipsis-vertical"
+                    @identifier="voice-rooms-menu"
+                    @placement="bottom-end"
+                    @title={{i18n "more_options"}}
+                    @triggerClass="btn-default btn-small"
+                  >
+                    <:content as |menu|>
+                      <DDropdownMenu as |dropdown|>
+                        <dropdown.item>
+                          <DButton
+                            class="btn-transparent --danger voice-rooms__delete"
+                            @action={{fn this.destroyRoom room menu.close}}
+                            @icon="trash-can"
+                            @label="delete"
+                          />
+                        </dropdown.item>
+                      </DDropdownMenu>
+                    </:content>
+                  </DMenu>
                 </td>
               </tr>
             {{/each}}
