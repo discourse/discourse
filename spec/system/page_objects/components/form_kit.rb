@@ -40,6 +40,8 @@ module PageObjects
         when "multi-select"
           picker = PageObjects::Components::SelectKit.new(component)
           picker.value
+        when "d-select", "d-select-multi"
+          component.find(".d-select")["data-value"]
         when "tag-chooser"
           picker = PageObjects::Components::SelectKit.new(tag_chooser_selector)
           picker.value
@@ -113,7 +115,9 @@ module PageObjects
 
         return type if type != "custom"
 
-        if component.has_css?(".multi-select")
+        if component.has_css?(".d-select", wait: 0)
+          component.has_css?(".d-select.--multiple", wait: 0) ? "d-select-multi" : "d-select"
+        elsif component.has_css?(".multi-select")
           "multi-select"
         elsif component.has_css?("textarea")
           "textarea"
@@ -156,6 +160,9 @@ module PageObjects
           picker = PageObjects::Components::DIconGridPicker.new(component)
           picker.expand
           picker.select_icon(value)
+        when "d-select", "d-select-multi"
+          select_id = Capybara::Selector::CSS.escape(component.find(".d-select")["data-select-id"])
+          UiKit::DSelect.at(".d-select[data-select-id=\"#{select_id}\"]").select_value(value)
         when "multi-select"
           selector = component.find(".form-kit__control-custom > .multi-select")["id"]
           picker = PageObjects::Components::SelectKit.new("#" + selector)

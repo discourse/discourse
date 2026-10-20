@@ -16,6 +16,8 @@ import CursorPagedSelectExample from "../../examples/molecules/select/data/curso
 import cursorPagedSelectSource from "../../examples/molecules/select/data/cursor-paged?source=file";
 import DebounceSelectExample from "../../examples/molecules/select/data/debounce.gjs";
 import debounceSelectSource from "../../examples/molecules/select/data/debounce?source=file";
+import FormFieldSelectExample from "../../examples/molecules/select/data/form-field.gjs";
+import formFieldSelectSource from "../../examples/molecules/select/data/form-field?source=file";
 import MinimumCharactersSelectExample from "../../examples/molecules/select/data/minimum-characters.gjs";
 import minimumCharactersSelectSource from "../../examples/molecules/select/data/minimum-characters?source=file";
 import PagedSelectExample from "../../examples/molecules/select/data/paged.gjs";
@@ -171,6 +173,18 @@ export default class Select extends Component {
             </div>
           </:default>
           <:note>{{i18n "styleguide.sections.select.paged_cursor_note"}}</:note>
+        </StyleguideExample>
+        <StyleguideExample
+          @code={{formFieldSelectSource}}
+          @description={{i18n
+            "styleguide.sections.select.form_field_description"
+          }}
+          @title={{i18n "styleguide.sections.select.form_field_example"}}
+          @tryThis={{i18n "styleguide.sections.select.form_field_try_this"}}
+        >
+          <div class="select-examples__control" data-test-select-form>
+            <FormFieldSelectExample />
+          </div>
         </StyleguideExample>
       </Group>
 

@@ -3,16 +3,21 @@
 module PageObjects
   module Components
     module UiKit
-      # Drives the ui-kit `DSelect` combobox (rendered as a typeahead). Scoped to one
-      # instance by its trigger element, so the same page can host several.
+      # Drives a ui-kit DSelect through its trigger and portaled panel.
       class DSelect < PageObjects::Components::Base
         # @param root [String] a CSS selector for the instance's `.d-select__trigger`.
         # @param panel [String, nil] a CSS selector for the instance's overlay. Without it
         #   panel lookups fall back to the whole document, which is only correct when a single
         #   overlay can be open at a time.
-        def initialize(root, panel: nil)
+        def initialize(root, panel: nil, root_mode: false)
           @root = root
           @panel = panel
+          @root_mode = root_mode
+        end
+
+        # Lazily resolves selectors so the driver survives visits and trigger replacement.
+        def self.at(root_selector)
+          new(root_selector, root_mode: true)
         end
 
         # Identifiers reach both CSS attribute selectors (single-quoted) and double-quoted JS
@@ -23,8 +28,7 @@ module PageObjects
 
         # Scopes an instance by the `@identifier` it passes to `DMenu`. float-kit stamps that
         # identifier on the trigger *and* on the portaled overlay — on desktop through
-        # `DFloatBody`, on mobile through `DModal` — so this is the only construction that
-        # reaches the right panel on both.
+        # `DFloatBody`, on mobile through `DModal` — so the scope reaches both surfaces.
         #
         # Note this scopes *lookups*; it does not make every method mobile-capable. `open` still
         # clicks an input inside the trigger, which on mobile lives in the modal instead — use
@@ -41,7 +45,10 @@ module PageObjects
         end
 
         def trigger
-          find(@root)
+          element = find(@root)
+          return element unless @root_mode
+
+          element.matches_css?(".d-select", wait: 0) ? element : element.ancestor(".d-select")
         end
 
         # `wait: 0` for the same reason as `press_in_controller`: a predicate on an
@@ -53,6 +60,8 @@ module PageObjects
         # Opens through the trigger itself rather than the query input — the `button` and
         # `static` variants have no input to click.
         def open_trigger
+          return self if @root_mode && trigger["aria-expanded"] == "true"
+
           trigger.click
           self
         end
@@ -74,7 +83,96 @@ module PageObjects
         # never reads another one's panel. Falls back to the bare selector when the instance
         # was built without a panel root.
         def in_panel(selector)
+          return "#{linked_panel_selector} #{selector}" if @root_mode
+
           @panel ? "#{@panel} #{selector}" : selector
+        end
+
+        def select_value(value)
+          select_hook("value", value)
+        end
+
+        def select_name(name)
+          select_hook("name", name)
+        end
+
+        def search(text)
+          open_for_value
+          filter.fill_in(with: text.to_s)
+          self
+        end
+
+        def close
+          controller.send_keys(:escape) if trigger["aria-expanded"] == "true"
+          page.assert_selector("#{root_selector}[aria-expanded='false']")
+          self
+        end
+
+        def clear
+          trigger.find(".d-select__clear").click
+          self
+        end
+
+        def remove(value)
+          trigger
+            .find(".d-select__chip#{hook_selector("value", value)}")
+            .find(".d-select__chip-remove")
+            .click
+          self
+        end
+
+        def value
+          trigger["data-value"]
+        end
+
+        def option_values
+          open_for_value
+          panel = linked_panel_selector
+          values = {}
+          each_option_window(panel) do
+            values.merge!(page.evaluate_script(<<~JS, find(panel)).to_h)
+              Array.from(arguments[0].querySelectorAll('[role="option"][data-value]'),
+                option => [Number(option.dataset.index), option.dataset.value])
+            JS
+            false
+          end
+          values.sort.map(&:last)
+        end
+
+        def has_selected_value?(value)
+          page.has_css?("#{root_selector}#{hook_selector("value", value)}")
+        end
+
+        def has_no_selected_value?(value)
+          page.has_no_css?("#{root_selector}#{hook_selector("value", value)}")
+        end
+
+        def has_selected_name?(name)
+          page.has_css?("#{root_selector}#{hook_selector("name", name)}")
+        end
+
+        def has_no_selected_name?(name)
+          page.has_no_css?("#{root_selector}#{hook_selector("name", name)}")
+        end
+
+        def has_option_value?(value)
+          option_match?("value", value)
+        end
+
+        def has_no_option_value?(value)
+          option_match?("value", value, negative: true)
+        end
+
+        def has_option_name?(name)
+          option_match?("name", name)
+        end
+
+        def has_no_option_name?(name)
+          option_match?("name", name, negative: true)
+        end
+
+        def has_disabled_option?(value)
+          option_match?("value", value, disabled: true)
         end
 
         # Keeps the `[role='listbox']` ancestor the pre-scoping selector had: a panel may host
@@ -465,6 +563,84 @@ module PageObjects
             raise "the active option never moved from #{previous.inspect}" if Time.now > deadline
             sleep 0.05
           end
+        end
+
+        private
+
+        def hook_selector(hook, value)
+          string = value.to_s
+          escaped = string.empty? ? "" : Capybara::Selector::CSS.escape(string)
+          "[data-#{hook}=\"#{escaped}\"]"
+        end
+
+        def root_selector
+          ".d-select#{hook_selector("select-id", trigger["data-select-id"])}"
+        end
+
+        def linked_panel_selector
+          ".d-select__panel#{hook_selector("select-id", trigger["data-select-id"])}"
+        end
+
+        def open_for_value
+          open_trigger unless trigger["aria-expanded"] == "true"
+          page.assert_selector(linked_panel_selector)
+        end
+
+        def filter
+          trigger.first(".d-select__input", minimum: 0, wait: 0) ||
+            find("#{linked_panel_selector} .d-select__filter")
+        end
+
+        def controller
+          trigger.first(".d-select__input", minimum: 0, wait: 0) ||
+            first("#{linked_panel_selector} .d-select__filter", minimum: 0, wait: 0) || trigger
+        end
+
+        def select_hook(hook, value)
+          open_for_value
+          panel = linked_panel_selector
+          selector = "#{panel} [role='option'][data-value]#{hook_selector(hook, value)}"
+          page.assert_selector(panel) { option_in_windows?(panel, selector) }
+          find(selector).click
+          self
+        end
+
+        def option_match?(hook, value, negative: false, disabled: false)
+          open_for_value
+          panel = linked_panel_selector
+          selector = "#{panel} [role='option'][data-value]#{hook_selector(hook, value)}"
+          selector += "[aria-disabled='true']" if disabled
+          matcher = negative ? :has_no_css? : :has_css?
+          page.public_send(matcher, panel) { option_in_windows?(panel, selector) }
+        end
+
+        def option_in_windows?(panel, selector)
+          return true if page.has_css?(selector, wait: 0)
+
+          each_option_window(panel) { page.has_css?(selector, wait: 0) }
+        end
+
+        # Start at the top so a previous lookup cannot hide earlier, unmounted rows.
+        def each_option_window(panel)
+          viewport = first("#{panel} .d-virtual-list", minimum: 0, wait: 0)
+          scroll_window(viewport, reset: true) if viewport
+          loop do
+            return true if yield
+            break unless viewport && scroll_window(viewport)
+          end
+          false
+        end
+
+        # Wait for scroll-driven rendering before inspecting the next window.
+        def scroll_window(viewport, reset: false)
+          page.evaluate_async_script(<<~JS, viewport, reset)
+            const [viewport, reset, done] = arguments;
+            const before = viewport.scrollTop;
+            viewport.scrollTop = reset ? 0 : before + viewport.clientHeight;
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+              done(viewport.scrollTop !== before);
+            }));
+          JS
         end
       end
     end
