@@ -41,6 +41,51 @@ RSpec.describe Scheduler::Defer do
         expect(completed.pop).to eq(:after_stop)
       end
     end
+
+    it "keeps new work running while the previous reactor stops" do
+      completed = Queue.new
+      reactor_stopping = Queue.new
+      release_reactor = Queue.new
+      release_job = Queue.new
+      original_stop = nil
+      gate_armed = true
+      @defer.later { completed << :before_stop }
+      expect(completed.pop(timeout: 5)).to eq(:before_stop)
+
+      allow_any_instance_of(MessageBus::TimerThread).to receive(
+        :stop,
+      ).and_wrap_original do |original|
+        if gate_armed
+          gate_armed = false
+          original_stop = original
+          reactor_stopping << true
+          release_reactor.pop
+        end
+        original.call
+      end
+      stopping = Thread.new { @defer.stop!(finish_work: true) }
+      expect(reactor_stopping.pop(timeout: 5)).to eq(true)
+
+      @defer.later do
+        completed << :during_stop
+        release_job.pop
+      end
+      expect(completed.pop(timeout: 5)).to eq(:during_stop)
+      release_reactor << true
+      expect(stopping.join(5)).to eq(stopping)
+      release_job << true
+
+      @defer.later { completed << :after_stop }
+
+      expect(completed.pop(timeout: 5)).to eq(:after_stop)
+    ensure
+      release_job&.push(true)
+      release_reactor&.push(true)
+      stopping&.join(5)
+      stopping&.kill
+      stopping&.join
+      original_stop&.call
+    end
   end
 
   it "can finish work properly without crashing" do

@@ -79,11 +79,15 @@ module Scheduler
         @queue.push({ finish: true }, force: true)
         @thread&.join
       end
-      @thread.kill if @thread&.alive?
-      @thread = nil
-      @reactor&.stop
-      @reactor = nil
-      @finish = false
+      reactor = nil
+      @mutex.synchronize do
+        @thread.kill if @thread&.alive?
+        @thread = nil
+        reactor = @reactor
+        @reactor = nil
+        @finish = false
+      end
+      reactor&.stop
     end
 
     # test only
