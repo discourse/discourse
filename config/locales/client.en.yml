@@ -3764,7 +3764,6 @@ en:
       strikethrough_title: "Strikethrough"
       strikethrough_text: "strikethrough text"
       code_title: "Preformatted text"
-      code_block_title: "Code block"
       code_text: "indent preformatted text by 4 spaces"
       paste_code_text: "type or paste code here"
       upload_title: "Upload"

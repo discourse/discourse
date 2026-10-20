@@ -36,12 +36,14 @@ RSpec.describe "Chat | composer | shortcuts | channel" do
   end
 
   context "when using meta + e" do
-    it "adds preformatted text" do
+    it "starts a code block on an empty line" do
       chat.visit_channel(channel_1)
 
       channel_page.composer.indented_text_shortcut
 
-      expect(channel_page.composer.value).to eq("`Preformatted text`")
+      expect(channel_page.composer.value).to eq(
+        "```\n#{I18n.t("js.composer.paste_code_text")}\n```",
+      )
     end
   end
 

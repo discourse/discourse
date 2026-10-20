@@ -78,7 +78,7 @@ RSpec.describe "Chat composer formatting" do
         expect(page).to have_no_css(".chat-composer__formatting-bar")
       end
 
-      it "strikes text and wraps it in a code block" do
+      it "strikes text and wraps lines in a code block" do
         chat_page.visit_channel(channel_1)
         channel_page.composer.toggle_formatting_bar
 
@@ -91,11 +91,13 @@ RSpec.describe "Chat composer formatting" do
           [SystemHelpers::PLATFORM_KEY_MODIFIER, "a"],
           :backspace,
           "x = 1",
+          %i[shift enter],
+          "y = 2",
           [SystemHelpers::PLATFORM_KEY_MODIFIER, "a"],
         )
-        find(".chat-composer__formatting-bar .code-block").click
+        find(".chat-composer__formatting-bar .code").click
 
-        expect(channel_page.composer).to have_value("```\nx = 1\n```")
+        expect(channel_page.composer).to have_value("```\nx = 1\ny = 2\n```")
       end
     end
   end

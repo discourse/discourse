@@ -58,11 +58,7 @@ export default class ChatFormattingToolbar extends ToolbarBase {
       formattingButtons.bulletList({ group: "lists" }),
       // chat doesn't bind the post composer's quote shortcut
       formattingButtons.blockquote({ group: "blocks", shortcut: undefined }),
-      formattingButtons.code({
-        group: "blocks",
-        perform: (e) => e.applySurround("`", "`", "code_title"),
-      }),
-      formattingButtons.codeBlock({ group: "blocks" }),
+      formattingButtons.code({ group: "blocks" }),
     ];
 
     buttons

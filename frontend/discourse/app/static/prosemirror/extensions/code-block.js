@@ -308,21 +308,6 @@ const extension = {
     "Shift-Tab": indentCodeBlock(true),
   }),
   commands: ({ schema }) => ({
-    toggleCodeBlock() {
-      return (state, dispatch) => {
-        const { selection } = state;
-
-        if (selection.$from.parent.type === schema.nodes.code_block) {
-          return convertCodeBlockToParagraphs(schema)(state, dispatch);
-        }
-
-        if (selection.empty) {
-          return setBlockType(schema.nodes.code_block)(state, dispatch);
-        }
-
-        return convertSelectionToCodeBlock(schema)(state, dispatch);
-      };
-    },
     formatCode() {
       return (state, dispatch) => {
         const { selection } = state;

@@ -283,21 +283,6 @@ export function buildToolbarEvent(
   };
 }
 
-/** Turns the selection into a code block, or toggles an existing one. */
-export function applyCodeBlock(toolbarEvent: ToolbarEvent): void {
-  if (
-    !toolbarEvent.commands?.toggleCodeBlock ||
-    !toolbarEvent.commands.toggleCodeBlock()
-  ) {
-    const { pre, post } = toolbarEvent.selected;
-    const head = pre && !pre.endsWith("\n") ? "\n```\n" : "```\n";
-    const tail = post && !post.startsWith("\n") ? "\n```\n" : "\n```";
-    toolbarEvent.applySurround(head, tail, "paste_code_text", {
-      multiline: false,
-    });
-  }
-}
-
 /** Turns the selection into a bulleted list, or toggles an existing one. */
 export function applyBulletList(toolbarEvent: ToolbarEvent): void {
   if (
@@ -394,15 +379,6 @@ export const formattingButtons = {
     active: ({ state }) => state.inCode || state.inCodeBlock,
     // code would turn the preview back into a bare url
     disabled: ({ state }) => !!state.inOnebox,
-    ...attrs,
-  }),
-
-  codeBlock: (attrs: ToolbarButtonAttrs = {}): ToolbarButtonAttrs => ({
-    id: "code-block",
-    icon: "file-code",
-    title: "composer.code_block_title",
-    perform: applyCodeBlock,
-    active: ({ state }) => state.inCodeBlock,
     ...attrs,
   }),
 

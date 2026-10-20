@@ -112,7 +112,7 @@ module(
           )
         )
       );
-      codeBlock.commands({ schema: view.state.schema }).toggleCodeBlock()(
+      codeBlock.commands({ schema: view.state.schema }).formatCode()(
         view.state,
         view.dispatch
       );
