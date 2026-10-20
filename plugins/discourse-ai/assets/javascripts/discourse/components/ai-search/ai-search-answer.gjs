@@ -104,9 +104,12 @@ export default class AiSearchAnswer extends Component {
       const topicId = await this.session.startConversation(question);
       this.args.onNavigate?.();
       // the conversation keeps looking where the answer was found
-      const scope = this.session.scopeFallback ? null : this.session.scope?.key;
       this.router.transitionTo("discourse-ai-search", {
-        queryParams: { q: null, topic: topicId, scope: scope ?? null },
+        queryParams: {
+          q: null,
+          topic: topicId,
+          scope: this.session.answerScopeKey ?? null,
+        },
       });
     } catch (error) {
       popupAjaxError(error);

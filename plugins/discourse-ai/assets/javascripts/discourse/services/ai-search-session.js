@@ -4,6 +4,7 @@ import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { searchForTerm, translateResults } from "discourse/lib/search";
+import { followUpAvailable } from "../lib/ai-follow-up.js";
 import { chooseTab, readsAsQuestion } from "../lib/ai-search-intent.js";
 import { withScope } from "../lib/ai-search-scope.js";
 
@@ -70,6 +71,9 @@ export default class AiSearchSession extends Service {
   @tracked scopeFallback = false;
   @tracked fallbackScopeLabel = null;
 
+  /** Set when the search was judged to be about the whole site, so it was answered from there. */
+  @tracked scopeWidened = false;
+
   /** The scope the menu is currently in, which the next search starts from. */
   @tracked contextScope = null;
 
@@ -130,6 +134,15 @@ export default class AiSearchSession extends Service {
     );
   }
 
+  /** Whether the answer broke down, rather than finding nothing to say. */
+  get answerErrored() {
+    return (
+      this.answerSettled &&
+      (Boolean(this.discoveries.errorMessage) ||
+        this.discoveries.discoveryTimedOut)
+    );
+  }
+
   get relatedTopics() {
     return (this.discoveries.sources || []).map((source) => ({
       ...source,
@@ -141,27 +154,16 @@ export default class AiSearchSession extends Service {
 
   get canFollowUp() {
     return (
-      this.#followUpAllowed &&
+      followUpAvailable(this.siteSettings, this.currentUser) &&
       this.answerSettled &&
       !this.answerFailed &&
       Boolean(this.discoveries.activeRequestId)
     );
   }
 
-  /** Mirrors the server's check, since a follow-up continues as a bot conversation. */
-  get #followUpAllowed() {
-    if (
-      !this.siteSettings.ai_bot_enabled ||
-      !this.currentUser?.ai_enabled_chat_bots
-    ) {
-      return false;
-    }
-
-    const agentId = parseInt(this.siteSettings.ai_ask_ai_follow_up_agent, 10);
-    const agent = this.currentUser.ai_enabled_agents?.find(
-      (enabledAgent) => enabledAgent.id === agentId
-    );
-    return Boolean(agent?.allow_personal_messages && agent.has_default_llm);
+  /** Where the answer was found, which a conversation continuing it keeps to. */
+  get answerScopeKey() {
+    return this.scopeFallback || this.scopeWidened ? null : this.scope?.key;
   }
 
   get showingRewrittenKeywords() {
@@ -187,6 +189,11 @@ export default class AiSearchSession extends Service {
     return Boolean(query) && this.query === query.trim();
   }
 
+  /** Whether the menu is showing this query's search, rather than the full page. */
+  isShownInMenuFor(query) {
+    return this.surface === "menu" && this.isActiveFor(query);
+  }
+
   /**
    * @param {string} query
    * @param {"menu"|"page"} surface where the keyword results are shown
@@ -205,6 +212,7 @@ export default class AiSearchSession extends Service {
     this.scope = scope;
     this.scopeFallback = false;
     this.fallbackScopeLabel = null;
+    this.scopeWidened = false;
     this.keywordQuery = query;
     this.keywordPosts = null;
     this.originalKeywordPosts = null;
@@ -223,7 +231,12 @@ export default class AiSearchSession extends Service {
           return;
         }
         this.originalKeywordPosts = posts;
-        if (this.keywordQuery === query) {
+        // a rewrite that landed first stays only if it found as much
+        if (
+          this.keywordQuery === query ||
+          posts.length > (this.keywordPosts?.length ?? 0)
+        ) {
+          this.keywordQuery = query;
           this.keywordPosts = posts;
         }
       });
@@ -535,6 +548,12 @@ export default class AiSearchSession extends Service {
     } else {
       this.semanticPosts = [];
     }
+
+    asked.then((reply) => {
+      if (this.query === query && reply?.scope_widened) {
+        this.scopeWidened = true;
+      }
+    });
 
     return asked;
   }

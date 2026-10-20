@@ -42,7 +42,9 @@ module DiscourseAi
 
     # Tag and user names follow their own configurable rules, so they are only
     # held to being one token: that is what keeps a scope from adding filters.
-    SCOPE_PATTERN = /\A(?:messages|topic:\d{1,12}|category:\d{1,12}|tag:\S{1,100}|user:\S{1,60})\z/
+    # a tag page within a category scopes to both, as "category:12 tag:a+b"
+    SCOPE_PATTERN =
+      /\A(?:messages|topic:\d{1,12}|category:\d{1,12}|tag:\S{1,100}|user:\S{1,60}|category:\d{1,12} tag:\S{1,100})\z/
 
     # what set off an Ask AI request and why, recorded so the choice of when to
     # answer can be tuned against what readers do with the answers
@@ -89,7 +91,11 @@ module DiscourseAi
       def scope_filter(scope)
         return if scope.blank? || !valid_scope?(scope)
 
-        type, value = scope.to_s.split(":", 2)
+        scope.to_s.split(" ").map { |part| scope_part_filter(part) }.join(" ")
+      end
+
+      def scope_part_filter(part)
+        type, value = part.split(":", 2)
         case type
         when "messages"
           "in:messages"
@@ -163,10 +169,9 @@ module DiscourseAi
       # Whether the reader's recent asks show them leaving the answer for the
       # results, unless they have lately been coming back to it.
       def prefers_results?(user)
-        logs = AskAiLog.where(user_id: user.id).where.not(ask_tab_opened: "")
         opened_on_answer =
-          logs
-            .where(ask_tab_opened: "ask")
+          AskAiLog
+            .where(user_id: user.id, ask_tab_opened: "ask")
             .order(asked_at: :desc)
             .limit(PREFERENCE_ASKS)
             .pluck(:ask_tab_switched_to, :ask_tab_switched_after_ms)
@@ -179,8 +184,9 @@ module DiscourseAi
         return false if left * 2 <= opened_on_answer.size
 
         returned =
-          logs
-            .where.not(ask_tab_opened: "ask")
+          AskAiLog
+            .where(user_id: user.id)
+            .where.not(ask_tab_opened: ["", "ask"])
             .order(asked_at: :desc)
             .limit(PREFERENCE_ASKS)
             .pluck(:ask_tab_switched_to)
@@ -199,6 +205,9 @@ module DiscourseAi
         intent_heuristic: ""
       )
         return if bind_request(user_id: user.id, request_id:, query:) != :created
+
+        # lets the caller narrow or widen the scope once the request is its own
+        scope = yield(scope) if block_given?
 
         asked_at = Time.current
         ask_log =

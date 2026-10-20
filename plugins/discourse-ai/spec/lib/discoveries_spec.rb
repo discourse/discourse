@@ -71,6 +71,8 @@ describe DiscourseAi::Discoveries do
       expect(described_class.scope_filter("tag:how-to")).to eq("tags:how-to")
       expect(described_class.scope_filter("tag:node.js")).to eq("tags:node.js")
       expect(described_class.scope_filter("user:sam.s")).to eq("user:sam.s")
+      expect(described_class.scope_filter("tag:how-to+faq")).to eq("tags:how-to+faq")
+      expect(described_class.scope_filter("category:3 tag:how-to")).to eq("category:3 tags:how-to")
     end
 
     it "ignores anything that is not a scope" do

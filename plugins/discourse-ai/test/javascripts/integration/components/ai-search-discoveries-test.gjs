@@ -26,6 +26,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     this.siteSettings.ai_ask_ai_summary_detail = "balanced";
     this.siteSettings.ai_ask_ai_related_count = 2;
     this.currentUser.can_use_ask_ai = true;
+    // present only for readers the AI bot is enabled for
+    this.currentUser.ai_enabled_chat_bots = [];
 
     this.closeSearchMenuCalled = false;
     this.closeSearchMenu = () => {

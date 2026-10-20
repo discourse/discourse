@@ -23,6 +23,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
+import { followUpAvailable } from "../lib/ai-follow-up.js";
 import { openTopicFromQuery } from "../lib/open-topic-from-query.js";
 import AiBlinkingAnimation from "./ai-blinking-animation.gjs";
 import AiIndicatorWave from "./ai-indicator-wave.gjs";
@@ -144,28 +145,14 @@ export default class AiSearchDiscoveries extends Component {
   }
 
   get canContinueConversation() {
-    const agents = this.currentUser?.ai_enabled_agents;
-    if (!this.siteSettings.ai_bot_enabled || !agents) {
-      return false;
-    }
-
     if (this.discobotDiscoveries.discoveryTimedOut) {
       return false;
     }
 
-    const followUpAgent = agents.find(
-      (agent) =>
-        agent.id === parseInt(this.siteSettings?.ai_ask_ai_follow_up_agent, 10)
-    );
-    const followUpAgentCanReceiveMessages =
-      followUpAgent?.allow_personal_messages &&
-      followUpAgent?.username &&
-      followUpAgent?.has_default_llm;
-
     return (
       (this.discobotDiscoveries.discovery?.length > 0 || this.hasSources) &&
       !this.discobotDiscoveries.isStreaming &&
-      followUpAgentCanReceiveMessages
+      followUpAvailable(this.siteSettings, this.currentUser)
     );
   }
 
@@ -180,9 +167,9 @@ export default class AiSearchDiscoveries extends Component {
     return this.discobotDiscoveries.suggestedFollowUp || "";
   }
 
-  // offered once an answer has settled, so it isn't what a screen reader meets
-  // while waiting for one
-  // the combined search picks the tab itself, so there is no default to set
+  // Offered once an answer has settled, so it isn't what a screen reader meets
+  // while waiting for one. The combined search picks the tab itself, so there
+  // is no default to set.
   get showAskAiDefaultToggle() {
     return (
       Boolean(this.currentUser) &&

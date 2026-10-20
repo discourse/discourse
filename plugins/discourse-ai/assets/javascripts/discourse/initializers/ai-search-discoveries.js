@@ -4,6 +4,7 @@ import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
 import { SEARCH_TYPE_DEFAULT } from "discourse/controllers/full-page-search";
 import { apiInitializer } from "discourse/lib/api";
 import { i18n } from "discourse-i18n";
+import { contextPlace } from "../lib/ai-search-scope.js";
 import { SEARCH_TYPE_ASK_AI } from "../lib/full-page-search-types.js";
 import { isScopedSearch } from "../lib/search-discoveries-context.js";
 import shortcutLabel from "../lib/shortcut-label.js";
@@ -56,10 +57,7 @@ export default apiInitializer((api) => {
   if (combinedSearch) {
     aiSearchSession.subscribe();
 
-    const contextKey = () => {
-      const context = search.searchContext;
-      return context ? `${context.type}:${context.id}` : null;
-    };
+    const contextKey = () => contextPlace(search.searchContext)?.key ?? null;
     let lastContextKey = contextKey();
 
     api.onPageChange(() => {
@@ -209,7 +207,7 @@ export default apiInitializer((api) => {
       // answer tab has the menu to itself. Before then it is the menu's own
       // suggestions for what is being typed.
       if (combinedSearch) {
-        if (aiSearchSession.isActiveFor(query)) {
+        if (aiSearchSession.isShownInMenuFor(query)) {
           return ["topics", "context"].includes(aiSearchSession.selectedTab);
         }
         return value;
@@ -267,14 +265,15 @@ export default apiInitializer((api) => {
 
   // each remembered item repeats as the kind of search its icon shows
   api.addSearchMenuAssistantSelectCallback((args) => {
-    // a remembered search is set rather than typed, so it starts the combined
-    // search itself
+    // A remembered search is set rather than typed, so it starts the combined
+    // search itself. The term is set without the menu's own search, which would
+    // race it, and the scope stays as the reader left it.
     if (
       combinedSearch &&
       ["recent-search", "recent-ask"].includes(args.usage) &&
       args.updatedTerm
     ) {
-      args.searchTermChanged(args.updatedTerm);
+      search.activeGlobalSearchTerm = args.updatedTerm;
       startCombined(args.updatedTerm, { trigger: "recent" });
       return false;
     }
@@ -304,12 +303,12 @@ export default apiInitializer((api) => {
       if (combinedSearch) {
         if (!event.shiftKey && query) {
           // a search already on screen for this term is not run again, unless
-          // its answer failed; returning false skips the menu's own enter
+          // its answer broke down; returning false skips the menu's own enter
           // handling, which would otherwise treat a second enter as "open the
           // full page"
           if (
-            !aiSearchSession.isActiveFor(query) ||
-            aiSearchSession.answerFailed
+            !aiSearchSession.isShownInMenuFor(query) ||
+            aiSearchSession.answerErrored
           ) {
             startCombined(query, { trigger: "enter" });
           }

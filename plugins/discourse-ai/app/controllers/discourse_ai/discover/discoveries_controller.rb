@@ -44,31 +44,35 @@ module DiscourseAi
         end
 
         judge =
-          if params[:classify_intent].to_s == "true"
+          if params[:classify_intent].to_s == "true" &&
+               DiscourseAi::Discoveries.combined_search_for?(current_user)
             DiscourseAi::Discoveries::Intent.new(user: current_user)
           end
 
-        # A scoped search is judged before its answer is queued, so the answer can
-        # leave a scope the search is not about.
-        intent = judge.call(query, scope:) if judge && scope
-        answer_scope = DiscourseAi::Discoveries::Intent.about_site?(intent) ? nil : scope
-
+        intent = nil
         ask_log =
           DiscourseAi::Discoveries.enqueue_reply(
             user: current_user,
             request_id:,
             query:,
-            scope: answer_scope,
+            scope:,
             trigger:,
             trigger_reason:,
             intent_heuristic:,
-          )
+          ) do |asked_scope|
+            # A scoped search is judged before its answer is queued, so the answer
+            # can leave a scope the search is not about.
+            next asked_scope if !judge || !asked_scope
+            intent = judge.call(query, scope: asked_scope)
+            DiscourseAi::Discoveries::Intent.about_site?(intent) ? nil : asked_scope
+          end
 
         DiscourseAi::Discoveries.record_recent_ask(user_id: current_user.id, query:)
 
         # otherwise it is judged after, so it does not hold the answer up
         intent = judge.call(query) if judge && !scope && ask_log
         record_judgement(ask_log, scope:, intent:) if ask_log && (scope || intent)
+        scope_widened = true if scope && DiscourseAi::Discoveries::Intent.about_site?(intent)
 
         prefers_results =
           (
@@ -78,7 +82,13 @@ module DiscourseAi
             end
           )
 
-        render json: { request_id:, ask_log_id: ask_log&.id, intent:, prefers_results: }.compact,
+        render json: {
+                 request_id:,
+                 ask_log_id: ask_log&.id,
+                 intent:,
+                 prefers_results:,
+                 scope_widened:,
+               }.compact,
                status: :ok
       rescue DiscourseAi::Discoveries::RequestConflict
         render_json_error(

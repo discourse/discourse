@@ -31,15 +31,19 @@ const FILTERS = {
 
 /**
  * The search filter a scope key stands for, mirroring the server's reading of
- * the same key.
+ * the same key. A key can join a category and tags with a space, as a tag page
+ * within a category does.
  */
 export function scopeFilter(key) {
   if (!key) {
     return null;
   }
 
-  const [type, value] = key.split(/:(.*)/s);
-  return FILTERS[type]?.(value) ?? null;
+  const filters = key.split(" ").map((part) => {
+    const [type, value] = part.split(/:(.*)/s);
+    return FILTERS[type]?.(value);
+  });
+  return filters.every(Boolean) ? filters.join(" ") : null;
 }
 
 /**
@@ -62,14 +66,11 @@ export function withScope(query, key) {
  * @returns {AiSearchScope|null}
  */
 export function contextScope(search, { inPMInboxContext }) {
-  const context = search.searchContext;
+  const place = contextPlace(search.searchContext);
 
-  if (context?.type === "topic") {
-    return {
-      key: `topic:${context.id}`,
-      label: i18n("discourse_ai.ai_search.scope.this_topic"),
-      tabLabel: i18n("discourse_ai.ai_search.tabs.this_topic"),
-    };
+  // a topic is always offered as a tab of its own
+  if (place?.key.startsWith("topic:")) {
+    return place;
   }
 
   if (inPMInboxContext) {
@@ -80,17 +81,47 @@ export function contextScope(search, { inPMInboxContext }) {
     };
   }
 
+  return place;
+}
+
+/**
+ * The place a search context stands for, whether or not the menu searches
+ * within it.
+ *
+ * @param {Object|null} context the search service's search context
+ * @returns {AiSearchScope|null}
+ */
+export function contextPlace(context) {
   switch (context?.type) {
+    case "topic":
+      return {
+        key: `topic:${context.id}`,
+        label: i18n("discourse_ai.ai_search.scope.this_topic"),
+        tabLabel: i18n("discourse_ai.ai_search.tabs.this_topic"),
+      };
     case "category": {
       const name = context.category?.name ?? context.id;
       return { key: `category:${context.id}`, label: name, tabLabel: name };
     }
     case "tag":
     case "tagIntersection": {
-      const name = context.tagId ?? context.name ?? context.id;
-      return name
-        ? { key: `tag:${name}`, label: `#${name}`, tabLabel: `#${name}` }
-        : null;
+      const tags = [
+        context.tagId ?? context.name ?? context.id,
+        ...(context.additionalTags ?? []),
+      ].filter(Boolean);
+      if (!tags.length) {
+        return null;
+      }
+
+      const tagNames = tags.map((tag) => `#${tag}`).join(" ");
+      const name = context.category
+        ? `${context.category.name} ${tagNames}`
+        : tagNames;
+      const tagKey = `tag:${tags.join("+")}`;
+      const key = context.categoryId
+        ? `category:${context.categoryId} ${tagKey}`
+        : tagKey;
+      return { key, label: name, tabLabel: name };
     }
     case "user": {
       const name = `@${context.user?.username ?? context.id}`;

@@ -237,15 +237,26 @@ export default class AiSearchConversation extends Component {
     }
   }
 
+  // Every question is searched at once, then added in turn order as if each
+  // had been searched as it was asked.
   async #rankHistory(answerPost, turns) {
-    this.#ranker.add(0, "cited", citedTopicsFromCooked(answerPost?.cooked));
-    await this.#rankQuestion(this.query, 0, { rank: false });
+    const questionText = (turn) =>
+      new DOMParser().parseFromString(turn.cooked, "text/html").body
+        .textContent;
+    const [firstMatches, ...turnMatches] = await Promise.all([
+      this.#searchQuestion(this.query),
+      ...turns.map((turn) =>
+        turn.kind === "question"
+          ? this.#searchQuestion(questionText(turn))
+          : null
+      ),
+    ]);
 
-    for (const turn of turns) {
+    this.#ranker.add(0, "cited", citedTopicsFromCooked(answerPost?.cooked));
+    this.#addMatches(0, firstMatches);
+    turns.forEach((turn, index) => {
       if (turn.kind === "question") {
-        const text = new DOMParser().parseFromString(turn.cooked, "text/html")
-          .body.textContent;
-        await this.#rankQuestion(text, turn.turn, { rank: false });
+        this.#addMatches(turn.turn, turnMatches[index]);
       } else {
         this.#ranker.add(
           turn.turn,
@@ -253,12 +264,17 @@ export default class AiSearchConversation extends Component {
           citedTopicsFromCooked(turn.cooked)
         );
       }
-    }
+    });
 
     this.references = this.#ranker.rank(this.#currentTurn);
   }
 
-  async #rankQuestion(question, turn, { rank = true } = {}) {
+  async #rankQuestion(question, turn) {
+    this.#addMatches(turn, await this.#searchQuestion(question));
+    this.references = this.#ranker.rank(this.#currentTurn);
+  }
+
+  async #searchQuestion(question) {
     const scoped = withScope(question, this.args.scope);
     const semanticInScope = !["topic", "messages"].includes(
       this.args.scope?.split(":")[0]
@@ -269,11 +285,12 @@ export default class AiSearchConversation extends Component {
         ? semanticSearch(scoped)
         : [],
     ]);
+    return { keyword, semantic };
+  }
+
+  #addMatches(turn, { keyword, semantic }) {
     this.#ranker.add(turn, "keyword", keyword.map(referenceFromPost));
     this.#ranker.add(turn, "semantic", semantic.map(referenceFromPost));
-    if (rank) {
-      this.references = this.#ranker.rank(this.#currentTurn);
-    }
   }
 
   #replaceTurn(updated) {

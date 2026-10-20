@@ -241,6 +241,7 @@ describe DiscourseAi::Discover::DiscoveriesController do
       Group.refresh_automatic_groups!
       SiteSetting.ai_ask_ai_agent = ai_agent.id
       SiteSetting.ai_ask_ai_search_intent_decision_model = decision_model.id
+      SiteSetting.enable_ai_combined_search = true
     end
 
     it "returns the decision model's judgement and logs it beside the heuristic's" do
@@ -289,6 +290,7 @@ describe DiscourseAi::Discover::DiscoveriesController do
         "scope" => "site",
         "scope_probability" => 0.9,
       )
+      expect(response.parsed_body["scope_widened"]).to eq(true)
       expect(AskAiLog.last).to have_attributes(
         ask_scope: "topic:#{topic.id}",
         ask_scope_model: "site",
@@ -313,8 +315,42 @@ describe DiscourseAi::Discover::DiscoveriesController do
       end
     end
 
+    it "does not judge for readers without the combined search" do
+      SiteSetting.enable_ai_combined_search = false
+
+      DiscourseAi::Decisions.with_canned_answers(intent: "answer") do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query: "password reset",
+               request_id:,
+               classify_intent: true,
+             }
+      end
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).not_to have_key("intent")
+      expect(AskAiLog.last).to have_attributes(ask_intent_model: "")
+    end
+
+    it "does not judge a scoped search again when its request is repeated" do
+      topic = Fabricate(:topic)
+      params = {
+        query: "disk space",
+        request_id:,
+        scope: "topic:#{topic.id}",
+        classify_intent: true,
+      }
+      DiscourseAi::Decisions.with_canned_answers(intent: "lookup", scope: "here") do
+        post("/discourse-ai/discoveries/reply", params:)
+        post("/discourse-ai/discoveries/reply", params:)
+      end
+
+      expect(response.status).to eq(200)
+      expect(AskAiLog.where(user:).count).to eq(1)
+      expect(response.parsed_body).not_to have_key("intent")
+    end
+
     it "says when the reader prefers results in the combined search" do
-      SiteSetting.enable_ai_combined_search = true
       4.times do
         AskAiLog.create!(
           user:,

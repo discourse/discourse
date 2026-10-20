@@ -29,8 +29,9 @@ module DiscourseAi
       }.freeze
       # below this the model is no surer than the rules it would replace
       CONFIDENT_PROBABILITY = 0.7
-      # the menu waits on this before choosing a tab, so a slow model is skipped
-      TIMEOUT_SECONDS = 2
+      # The menu waits a second on the verdict before choosing a tab. This applies
+      # to each of connecting, sending and reading, not to the call as a whole.
+      TIMEOUT_SECONDS = 1
 
       def self.about_site?(judgement)
         judgement.present? && judgement[:scope] == "site" &&
@@ -91,8 +92,9 @@ module DiscourseAi
       end
 
       # Personal messages are left out: their titles are private to a few people.
+      # a category with tags is described by its category
       def searched_place(scope)
-        type, id = scope.to_s.split(":", 2)
+        type, id = scope.to_s.split(" ").first.to_s.split(":", 2)
         case type
         when "topic"
           topic = Topic.find_by(id:)

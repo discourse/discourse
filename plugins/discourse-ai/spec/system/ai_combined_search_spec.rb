@@ -28,9 +28,9 @@ describe "AI combined search" do
     # the answer is streamed from the spec instead, one phase at a time
     allow(DiscourseAi::Discoveries).to receive(
       :enqueue_reply,
-    ) do |user:, query:, request_id:, scope: nil, trigger: "", trigger_reason: "", intent_heuristic: "", **|
+    ) do |user:, query:, request_id:, scope: nil, trigger: "", trigger_reason: "", intent_heuristic: "", **, &adjust_scope|
       request_ids << request_id
-      scopes << scope
+      scopes << (adjust_scope ? adjust_scope.call(scope) : scope)
       triggers << [trigger, trigger_reason]
       AskAiLog.create!(
         user:,
