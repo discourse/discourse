@@ -350,6 +350,18 @@ describe DiscourseAi::Discover::DiscoveriesController do
       expect(response.parsed_body).not_to have_key("intent")
     end
 
+    it "says the ask failed, rather than answering nothing, when its answer cannot be queued" do
+      allow(Jobs).to receive(:enqueue).and_raise(StandardError, "queue unavailable")
+
+      post "/discourse-ai/discoveries/reply", params: { query: "password reset", request_id: }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to contain_exactly(
+        I18n.t("discourse_ai.ai_bot.discoveries.errors.processing_failed"),
+      )
+      expect(AskAiLog.last).to be_ask_outcome_failed
+    end
+
     it "says when the reader prefers results in the combined search" do
       4.times do
         AskAiLog.create!(

@@ -5,96 +5,46 @@ module DiscourseAi
     class DiscoveriesController < ::ApplicationController
       include AiCreditLimitHandler
 
-      MAX_QUERY_LENGTH = 1000
-
       requires_plugin PLUGIN_NAME
       requires_login
       before_action :check_permissions!
+      before_action :rate_limit_ask, only: :reply, if: -> { params[:request_id].present? }
 
       def reply
         return legacy_reply if params[:request_id].blank?
 
-        query = normalized_query
-        request_id = params[:request_id].to_s
-        if !DiscourseAi::Discoveries.valid_request_id?(request_id)
-          render_json_error(
-            I18n.t("discourse_ai.ai_bot.discoveries.errors.invalid_request_id"),
-            status: :bad_request,
-          )
-          return
-        end
-
-        RateLimiter.new(current_user, "ai_discover_#{current_user.id}", 8, 1.minute).performed!
-
-        scope = params[:scope].presence
-        if scope && !DiscourseAi::Discoveries.valid_scope?(scope)
-          raise Discourse::InvalidParameters.new(:scope)
-        end
-
-        trigger = params[:trigger].to_s
-        trigger = "" if DiscourseAi::Discoveries::TRIGGERS.exclude?(trigger)
-        trigger_reason = params[:trigger_reason].to_s
-        if !trigger_reason.match?(DiscourseAi::Discoveries::TRIGGER_REASON_PATTERN)
-          trigger_reason = ""
-        end
-
-        intent_heuristic = params[:intent_heuristic].to_s
-        if DiscourseAi::Discoveries::Intent::CHOICES.exclude?(intent_heuristic)
-          intent_heuristic = ""
-        end
-
-        judge =
-          if params[:classify_intent].to_s == "true" &&
-               DiscourseAi::Discoveries.combined_search_for?(current_user)
-            DiscourseAi::Discoveries::Intent.new(user: current_user)
+        DiscourseAi::AskAi::Ask.call(service_params) do |result|
+          on_success do
+            render json: DiscourseAi::AskAi::AskSerializer.new(result, root: false).as_json
           end
-
-        intent = nil
-        ask_log =
-          DiscourseAi::Discoveries.enqueue_reply(
-            user: current_user,
-            request_id:,
-            query:,
-            scope:,
-            trigger:,
-            trigger_reason:,
-            intent_heuristic:,
-          ) do |asked_scope|
-            # A scoped search is judged before its answer is queued, so the answer
-            # can leave a scope the search is not about.
-            next asked_scope if !judge || !asked_scope
-            intent = judge.call(query, scope: asked_scope)
-            DiscourseAi::Discoveries::Intent.about_site?(intent) ? nil : asked_scope
-          end
-
-        DiscourseAi::Discoveries.record_recent_ask(user_id: current_user.id, query:)
-
-        # otherwise it is judged after, so it does not hold the answer up
-        intent = judge.call(query) if judge && !scope && ask_log
-        record_judgement(ask_log, scope:, intent:) if ask_log && (scope || intent)
-        scope_widened = true if scope && DiscourseAi::Discoveries::Intent.about_site?(intent)
-
-        prefers_results =
-          (
-            if DiscourseAi::Discoveries.combined_search_for?(current_user) &&
-                 DiscourseAi::Discoveries.prefers_results?(current_user)
-              true
+          on_failed_contract do |contract|
+            if contract.errors.include?(:query)
+              raise Discourse::InvalidParameters.new(invalid_query_message)
+            elsif contract.errors.include?(:request_id)
+              render_json_error(
+                I18n.t("discourse_ai.ai_bot.discoveries.errors.invalid_request_id"),
+                status: :bad_request,
+              )
+            else
+              raise Discourse::InvalidParameters.new(:scope)
             end
-          )
-
-        render json: {
-                 request_id:,
-                 ask_log_id: ask_log&.id,
-                 intent:,
-                 prefers_results:,
-                 scope_widened:,
-               }.compact,
-               status: :ok
-      rescue DiscourseAi::Discoveries::RequestConflict
-        render_json_error(
-          I18n.t("discourse_ai.ai_bot.discoveries.errors.request_conflict"),
-          status: :conflict,
-        )
+          end
+          on_failed_policy(:can_ask_ai) { raise Discourse::InvalidAccess }
+          on_failed_policy(:request_id_matches_query) do
+            render_json_error(
+              I18n.t("discourse_ai.ai_bot.discoveries.errors.request_conflict"),
+              status: :conflict,
+            )
+          end
+          # a step that raised, such as the answer job failing to queue
+          on_failure do
+            Rails.logger.error("Discourse AI ask failed\n#{result.inspect_steps}")
+            render_json_error(
+              I18n.t("discourse_ai.ai_bot.discoveries.errors.processing_failed"),
+              status: :unprocessable_entity,
+            )
+          end
+        end
       end
 
       def record_tabs
@@ -168,7 +118,7 @@ module DiscourseAi
         end
 
         query = normalized_query
-        RateLimiter.new(current_user, "ai_discover_#{current_user.id}", 8, 1.minute).performed!
+        rate_limit_ask
         Jobs.enqueue(:stream_discover_reply, user_id: current_user.id, query:)
         render json: {}, status: :ok
       end
@@ -238,34 +188,35 @@ module DiscourseAi
         raise Discourse::InvalidAccess if guardian.is_silenced?
       end
 
-      # logged beside the heuristic's guess so the two can be compared
-      def record_judgement(ask_log, scope:, intent:)
-        ask_log.update!(
-          ask_scope: scope.to_s,
-          ask_intent_model: intent&.dig(:intent).to_s,
-          ask_intent_probability: intent&.dig(:probability) || 0,
-          ask_scope_model: intent&.dig(:scope).to_s,
-          ask_scope_probability: intent&.dig(:scope_probability) || 0,
-        )
-      end
-
       def ask_ai_action?
         %w[search_page recent clear_recent record_tabs].include?(action_name) ||
           params[:request_id].present?
       end
 
+      def rate_limit_ask
+        RateLimiter.new(
+          current_user,
+          "ai_discover_#{current_user.id}",
+          DiscourseAi::Discoveries::ASK_RATE_LIMIT,
+          1.minute,
+        ).performed!
+      end
+
       def normalized_query
         query = params[:query].to_s.strip
-        if query.blank? || query.length > MAX_QUERY_LENGTH || query.include?("\0")
-          raise Discourse::InvalidParameters.new(
-                  I18n.t(
-                    "discourse_ai.ai_bot.discoveries.errors.invalid_query",
-                    max: MAX_QUERY_LENGTH,
-                  ),
-                )
+        if query.blank? || query.length > DiscourseAi::Discoveries::MAX_QUERY_LENGTH ||
+             query.include?("\0")
+          raise Discourse::InvalidParameters.new(invalid_query_message)
         end
 
         query
+      end
+
+      def invalid_query_message
+        I18n.t(
+          "discourse_ai.ai_bot.discoveries.errors.invalid_query",
+          max: DiscourseAi::Discoveries::MAX_QUERY_LENGTH,
+        )
       end
     end
   end

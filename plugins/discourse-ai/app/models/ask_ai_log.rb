@@ -10,6 +10,18 @@ class AskAiLog < ActiveRecord::Base
     where.not(user_id: GroupUser.where(group_id: group_ids).select(:user_id))
   end
 
+  # The search's scope and the decision model's verdicts, kept beside the
+  # heuristic's guess so the two can be compared.
+  def record_judgement!(scope:, judgement:)
+    update!(
+      ask_scope: scope.to_s,
+      ask_intent_model: judgement&.intent.to_s,
+      ask_intent_probability: judgement&.probability || 0,
+      ask_scope_model: judgement&.scope.to_s,
+      ask_scope_probability: judgement&.scope_probability || 0,
+    )
+  end
+
   enum :ask_outcome, { answered: 0, no_answer: 1, failed: 2, cancelled: 3 }, prefix: true
   enum :failure_stage, { rewrite: 0, retrieval: 1, synthesis: 2 }, prefix: true
 end

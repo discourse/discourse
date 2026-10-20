@@ -28,9 +28,9 @@ describe "AI combined search" do
     # the answer is streamed from the spec instead, one phase at a time
     allow(DiscourseAi::Discoveries).to receive(
       :enqueue_reply,
-    ) do |user:, query:, request_id:, scope: nil, trigger: "", trigger_reason: "", intent_heuristic: "", **, &adjust_scope|
+    ) do |user:, query:, request_id:, scope: nil, trigger: "", trigger_reason: "", intent_heuristic: "", **|
       request_ids << request_id
-      scopes << (adjust_scope ? adjust_scope.call(scope) : scope)
+      scopes << scope
       triggers << [trigger, trigger_reason]
       AskAiLog.create!(
         user:,
@@ -419,7 +419,7 @@ describe "AI combined search" do
         slow_intent = instance_double(DiscourseAi::Discoveries::Intent)
         allow(slow_intent).to receive(:call) do
           sleep 1.5
-          { intent: "answer", probability: 0.95 }
+          DiscourseAi::Discoveries::Intent::Judgement.new(intent: "answer", probability: 0.95)
         end
         allow(DiscourseAi::Discoveries::Intent).to receive(:new).and_return(slow_intent)
 

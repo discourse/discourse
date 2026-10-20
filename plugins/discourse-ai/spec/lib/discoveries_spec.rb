@@ -198,9 +198,9 @@ describe DiscourseAi::Discoveries do
       expect(
         described_class.bind_request(user_id: user.id, request_id:, query: "猫   search"),
       ).to eq(:existing)
-      expect {
-        described_class.bind_request(user_id: user.id, request_id:, query: "dogs")
-      }.to raise_error(DiscourseAi::Discoveries::RequestConflict)
+      expect(described_class.bind_request(user_id: user.id, request_id:, query: "dogs")).to eq(
+        :conflict,
+      )
     end
 
     it "makes the newest request active without allowing an old retry to reclaim ownership" do

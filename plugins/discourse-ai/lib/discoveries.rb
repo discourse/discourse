@@ -56,8 +56,8 @@ module DiscourseAi
     PREFERENCE_ASKS = 10
     PREFERENCE_MIN_ASKS = 4
 
-    class RequestConflict < StandardError
-    end
+    MAX_QUERY_LENGTH = 1000
+    ASK_RATE_LIMIT = 8
 
     class << self
       def enabled_for_user?(user)
@@ -161,7 +161,8 @@ module DiscourseAi
           end
       end
 
-      # @return [AskAiLog, nil] the new ask's log, or nil when the request was already made
+      # Queues the answer to a request already bound with `bind_request`.
+      # @return [AskAiLog] the new ask's log
       def enqueue_reply(
         user:,
         request_id:,
@@ -171,11 +172,6 @@ module DiscourseAi
         trigger_reason: "",
         intent_heuristic: ""
       )
-        return if bind_request(user_id: user.id, request_id:, query:) != :created
-
-        # lets the caller narrow or widen the scope once the request is its own
-        scope = yield(scope) if block_given?
-
         asked_at = Time.current
         ask_log =
           AskAiLog.create!(
@@ -249,8 +245,9 @@ module DiscourseAi
 
         return :created if result == 1
         return :existing if result == 0
+        # the id was already used for another query
+        return :conflict if result == -1
 
-        raise RequestConflict if result == -1
         raise "Unexpected Discoveries request binding result: #{result.inspect}"
       end
 

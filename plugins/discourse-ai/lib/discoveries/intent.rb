@@ -33,9 +33,27 @@ module DiscourseAi
       # to each of connecting, sending and reading, not to the call as a whole.
       TIMEOUT_SECONDS = 1
 
-      def self.about_site?(judgement)
-        judgement.present? && judgement[:scope] == "site" &&
-          judgement[:scope_probability] >= CONFIDENT_PROBABILITY
+      # What the model chose for a search, each verdict with its probability.
+      # Either verdict can be missing when the model refused it.
+      Judgement =
+        Data.define(:intent, :probability, :scope, :scope_probability) do
+          def initialize(intent: nil, probability: nil, scope: nil, scope_probability: nil)
+            super
+          end
+
+          # a search confidently about the forum in general, not where it was made
+          def about_site?
+            scope == "site" && scope_probability >= CONFIDENT_PROBABILITY
+          end
+
+          def as_json(*)
+            to_h.compact
+          end
+        end
+
+      # Only readers of the combined search are judged, and only when they ask.
+      def self.for(user, requested:)
+        new(user:) if requested && Discoveries.combined_search_for?(user)
       end
 
       def self.decision_model
@@ -49,8 +67,8 @@ module DiscourseAi
       end
 
       # @param scope [String, nil] the scope key the search was made in
-      # @return [Hash, nil] the intent and, for a topic or category, the scope, each
-      #   with the probability the model gives it; nil when nothing was decided
+      # @return [Judgement, nil] the intent and, for a topic or category, the scope;
+      #   nil when nothing was decided
       def call(query, scope: nil)
         return if @decision_model.nil?
 
@@ -68,14 +86,14 @@ module DiscourseAi
           )
         result = client.decide(state, questions:, feature_name: FEATURE_NAME, user: @user)
 
-        judgement = {}
+        verdicts = {}
         if (intent = chosen(result[QUESTION[:name]]))
-          judgement.merge!(intent: intent[0], probability: intent[1])
+          verdicts.merge!(intent: intent[0], probability: intent[1])
         end
         if place && (scope_choice = chosen(result[SCOPE_QUESTION[:name]]))
-          judgement.merge!(scope: scope_choice[0], scope_probability: scope_choice[1])
+          verdicts.merge!(scope: scope_choice[0], scope_probability: scope_choice[1])
         end
-        judgement.presence
+        Judgement.new(**verdicts) if verdicts.present?
       rescue DiscourseAi::Decisions::Error => e
         Rails.logger.warn("Discourse AI search intent failed: #{e.class}")
         nil

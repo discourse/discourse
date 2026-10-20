@@ -28,7 +28,10 @@ RSpec.describe DiscourseAi::Discoveries::Intent do
           "lookup" => 0.2,
         },
       ) do |canned|
-        expect(intent.call("how do I reset my password")).to eq(intent: "answer", probability: 0.8)
+        expect(intent.call("how do I reset my password").as_json).to eq(
+          intent: "answer",
+          probability: 0.8,
+        )
         expect(canned.calls.sole).to include(
           state: {
             query: "how do I reset my password",
@@ -51,7 +54,7 @@ RSpec.describe DiscourseAi::Discoveries::Intent do
             "site" => 0.8,
           },
         ) do |canned|
-          expect(intent.call("install discourse", scope: "topic:#{topic.id}")).to eq(
+          expect(intent.call("install discourse", scope: "topic:#{topic.id}").as_json).to eq(
             intent: "answer",
             probability: 1.0,
             scope: "site",
@@ -80,7 +83,7 @@ RSpec.describe DiscourseAi::Discoveries::Intent do
 
       it "keeps one verdict when the other is refused" do
         DiscourseAi::Decisions.with_canned_answers(intent: :refusal, scope: "here") do
-          expect(intent.call("backups", scope: "topic:#{topic.id}")).to eq(
+          expect(intent.call("backups", scope: "topic:#{topic.id}").as_json).to eq(
             scope: "here",
             scope_probability: 1.0,
           )
