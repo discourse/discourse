@@ -14,14 +14,46 @@ bg:
         image_generation_custom:
           name: "По избор"
     ai_bot:
+      navigation:
+        users:
+          title: "Потребители"
+        groups:
+          title: "Групи"
+        categories:
+          title: "Категории"
+        tags:
+          title: "Етикети"
+        backups:
+          title: "Бекъпи"
       read_post:
         unknown_post: "публикация"
+      chat_tool_approval:
+        topic_states:
+          open: "Отвори"
+          closed: "Затворена"
+          active: "Активни"
+          deleted: "Изтрита"
+        solution_post: "Публикации #%{number}"
+        duration_label: "Продължителност:"
+        user_duration:
+          one: "%{count} ден"
+          other: "%{count} дни"
+        posts_label: "Публикации"
+        category_label: "Категория"
+        category_fields:
+          name: "име"
+          description: "описание"
+          color: "цвят"
+        approve_label: "Да"
+        reject_label: "Не"
       tool_summary:
         suspend_user: "Спиране на потребителя"
         silence_user: "Заглушаване на потребителя"
         search: "Търсене"
         time: "Време "
         summarize: "Обобщаване"
+      tool_help:
+        create_category: "Създай нова категория"
       close_topic:
         errors:
           not_found: "Темата не е намерена."
@@ -31,10 +63,10 @@ bg:
       delete_topic:
         errors:
           not_found: "Темата не е намерена."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Темата не е намерена."
-      edit_category:
+      change_topic_category:
         errors:
           not_found: "Темата не е намерена."
       set_topic_timer:

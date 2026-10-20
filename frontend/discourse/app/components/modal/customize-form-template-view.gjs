@@ -52,23 +52,23 @@ export default class CustomizeFormTemplateViewModal extends Component {
 
   <template>
     <DModal
-      @title={{@model.name}}
-      @closeModal={{@closeModal}}
       class="customize-form-template-view-modal"
+      @closeModal={{@closeModal}}
+      @title={{@model.name}}
     >
       <:body>
         <div class="control-group">
           <DToggleSwitch
             class="form-templates__preview-toggle"
-            @state={{this.showPreview}}
             @label="admin.form_templates.view_template.toggle_preview"
+            @state={{this.showPreview}}
             {{on "click" this.togglePreview}}
           />
         </div>
         {{#if this.showPreview}}
           <Wrapper @id={{@model.id}} />
         {{else}}
-          <DHighlightedCode @lang="yaml" @code={{@model.template}} />
+          <DHighlightedCode @code={{@model.template}} @lang="yaml" />
         {{/if}}
       </:body>
 

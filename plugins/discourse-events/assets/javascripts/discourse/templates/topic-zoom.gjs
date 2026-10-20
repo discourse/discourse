@@ -1,3 +1,7 @@
-import LivestreamZoomPage from "../components/livestream/zoom-page";
+import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
+import LivestreamZoomPage from "../components/livestream/zoom-page.gjs";
 
-export default <template><LivestreamZoomPage @topic={{@model}} /></template>
+export default <template>
+  {{hideApplicationSidebar}}
+  <LivestreamZoomPage @topic={{@model}} />
+</template>

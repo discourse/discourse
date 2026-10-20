@@ -89,6 +89,17 @@ function testDataAttribute(forTag, name, value) {
   });
 }
 
+export function isAllowListedAttr(forTag, name, value) {
+  const forAttr = forTag[name];
+
+  return !!(
+    (forAttr && (forAttr.includes("*") || forAttr.includes(value))) ||
+    (!name.includes("data-html-") &&
+      name.startsWith("data-") &&
+      (forTag["data-*"] || testDataAttribute(forTag, name, value)))
+  );
+}
+
 export function sanitize(text, allowLister) {
   if (!text) {
     return "";
@@ -119,13 +130,8 @@ export function sanitize(text, allowLister) {
     onIgnoreTagAttr(tag, name, value) {
       const forTag = allowList.attrList[tag];
       if (forTag) {
-        const forAttr = forTag[name];
-
         if (
-          (forAttr && (forAttr.includes("*") || forAttr.includes(value))) ||
-          (!name.includes("data-html-") &&
-            name.startsWith("data-") &&
-            (forTag["data-*"] || testDataAttribute(forTag, name, value))) ||
+          isAllowListedAttr(forTag, name, value) ||
           (tag === "a" &&
             name === "href" &&
             hrefAllowed(value, extraHrefMatchers)) ||
@@ -138,14 +144,19 @@ export function sanitize(text, allowLister) {
               } catch {
                 return false;
               }
+              const iframeUrls = [decoded];
+              iframeUrls.push(value);
               return (
-                !decoded.match(/\/\.+\//) &&
+                !decoded.match(/\/\.+(?:[\/\\?#]|$)/) &&
                 allowedIframes.some((i) => {
                   const regex = i
                     // escape regex, keeping *
                     .replace(/[.+?^${}()|[\]\\]/g, "\\$&")
-                    .replace(/\*/g, "[^/]+");
-                  return new RegExp(`^${regex}.*$`, "i").test(decoded);
+                    .replace(/\*/g, "[^/?#\\\\]+");
+                  const allowedIframe = new RegExp(`^${regex}.*$`, "i");
+                  return iframeUrls.every((iframeUrl) =>
+                    allowedIframe.test(iframeUrl)
+                  );
                 })
               );
             })())

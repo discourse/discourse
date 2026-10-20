@@ -5,6 +5,30 @@
 # https://translate.discourse.org/
 
 be:
+  markdown_endpoints:
+    latest: "Апошняя"
+    categories: "катэгорыі"
+    tags: "Цэтлікі"
+    replies: "Адказы"
+    event:
+      location: "Месцазнаходжанне"
+      link: "Спасылка"
+  mcp:
+    errors:
+      category_not_found: "Катэгорыя не знойдзена"
+      topic_not_found: "Тэма не знойдзена"
+    oauth:
+      approve: "Аўтарызаваць"
+  llms_txt:
+    links:
+      search:
+        label: "Пошук"
+      categories:
+        label: "катэгорыі"
+      about:
+        label: "Пра тэму"
+      guidelines:
+        label: "Рэкамендацыі"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D МММ, YYYY"
@@ -453,6 +477,7 @@ be:
       windows: "Microsoft Windows,"
       unknown: "невядомая аперацыйная сістэма"
   admin_site_traffic_explorer:
+    unknown: "Невядома"
     traffic_types:
       anonymous: "ананімны"
   change_email:
@@ -538,7 +563,7 @@ be:
     title: "Налады электроннай пошты абноўлены!"
     private_topic_description: "Каб аднавіць падпіску, выкарыстоўвайце кантроль паведамлення ў ніжняй або справа ад тэмы."
   unsubscribe:
-    title: "Адмовіцца ад падпіскі"
+    unsubscribe: "Адмовіцца ад падпіскі"
     mailing_list_mode: "Выключыць рэжым спісу рассылання"
     different_user_description: "Вы ў цяперашні час ўвайшлі ў сістэму як іншы карыстальнік, чым той, які мы па электроннай пошце. Калі ласка, выйдзіце з сістэмы, або ўвесці ананімны рэжым і паспрабуйце ізноў."
     log_out: "выхад"
@@ -652,6 +677,11 @@ be:
         share: "Абагуліць"
       types:
         staff: "Персанал"
+    posters_by_member_type_members:
+      labels:
+        user: "Карыстальнік"
+        count: "Допісаў"
+        share: "Абагуліць"
     trust_level_pipeline:
       labels:
         count: "Члены"
@@ -1142,7 +1172,6 @@ be:
     topic_view_duration_hours: "Граф новага віду тэмы адзін раз у IP"
     user_profile_view_duration_hours: "Граф новы від профіляў карыстальнікаў адзін раз у IP"
     levenshtein_distance_spammer_emails: "Пры супастаўленні спамерскіх лістоў, колькасць знакаў розніцы, што будзе па-ранейшаму дазваляе невыразны матч."
-    min_ban_entries_for_roll_up: "Пры націску на кнопку Roll Up, створыць новую запіс аб забароне падсеткі, калі ёсць па меншай меры (N) запісаў."
     max_age_unmatched_emails: "Выдаліць няпарнага Экранаваныя запісу па электроннай пошце пасля (N) дзён."
     max_age_unmatched_ips: "Выдаліць няпарнага Экранаваныя запісу IP пасля (N) дзён."
     num_flaggers_to_close_topic: "Мінімальная колькасць унікальных сігнальшчыкам, што патрабуецца, каб аўтаматычна прыпыніць тэму ўмяшання"
@@ -1936,8 +1965,6 @@ be:
     signup_after_approval:
       title: "Рэгістрацыя Пасля зацвярджэння"
       subject_template: "Вы былі зацверджаны на %{site_name}!"
-      text_body_template: |
-        Сардэчна запрашаем у% {site_name}!Супрацоўнік зацвердзіў свой кошт на% {SITE_NAME}.Цяпер вы можаце атрымаць доступ да новага рахунку, увайшоўшы на сайт:% {Base_url}Калі вышэй ссылка не клікабельнасць, паспрабуйце скапіяваць і ўставіць яго ў адрасную радок вашага браўзэра.% {New_user_tips}Мы лічым, што ў [цывілізаванае паводзіны супольнасці] (% {base_url}
     signup:
       title: "Зарэгістравацца"
       subject_template: "[%{email_prefix}] Пацвердзіце новы рахунак"
@@ -2326,6 +2353,12 @@ be:
       disabled: "Адключана"
     missing_version: "Вам трэба будзе падаць параметр версіі"
     conflict: "Быў абнаўленне канфлікт перашкаджае вам рабіць гэта."
+    reasons:
+      fast_typer_time:
+        one: "%{count} секунду"
+        few: "%{count}секунд"
+        many: "%{count}секунды"
+        other: "%{count}секунды"
     actions:
       agree:
         title: "ды"

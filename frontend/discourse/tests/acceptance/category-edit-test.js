@@ -9,7 +9,7 @@ import pretender, {
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { NO_VALUE_OPTION } from "discourse/ui-kit/d-select";
+import { NO_VALUE_OPTION } from "discourse/ui-kit/d-native-select";
 import { i18n } from "discourse-i18n";
 
 function latestCategorySavePayload() {
@@ -615,7 +615,7 @@ acceptance(
       await visit("/c/bug/edit/images");
 
       assert
-        .dselect("[data-name='sort_order'] .d-select")
+        .dnativeselect("[data-name='sort_order'] .d-native-select")
         .hasSelectedOption(
           { value: "votes", label: "votes" },
           "renders and selects a stored value the core list doesn't provide"
@@ -632,3 +632,26 @@ acceptance(
     });
   }
 );
+
+acceptance("Category Edit - emoji disabled", function (needs) {
+  needs.user();
+  needs.settings({ enable_emoji: false });
+  needs.pretender((server, helper) => {
+    server.get("/c/bug/find_by_slug.json", () =>
+      helper.response(200, {
+        category: seededCategory({ style_type: "emoji", emoji: "wave" }),
+      })
+    );
+  });
+
+  test("hides the emoji style and shows emoji categories as square", async function (assert) {
+    await visit("/c/bug/edit/general");
+
+    assert
+      .dom(".form-kit__control-radio[value='emoji']")
+      .doesNotExist("emoji style isn't offered");
+    assert
+      .dom(".form-kit__control-radio[value='square']")
+      .isChecked("emoji category resolves to square");
+  });
+});

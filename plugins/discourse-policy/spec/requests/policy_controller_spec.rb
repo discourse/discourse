@@ -327,4 +327,69 @@ describe DiscoursePolicy::PolicyController do
       )
     end
   end
+
+  describe "policy validation" do
+    fab!(:admin)
+    fab!(:editor, :trust_level_4)
+    fab!(:audience_group, :group)
+    fab!(:target_group, :group)
+    fab!(:post) { Fabricate(:post, user: admin, raw: "Original content") }
+
+    before do
+      audience_group.add(editor)
+      target_group.add_owner(admin)
+    end
+
+    it "rejects an HTML policy from an editor without policy permissions" do
+      raw = <<~HTML
+        <div class="policy" data-group="#{audience_group.name}" data-add-users-to-group="#{target_group.name}">
+        I agree
+        </div>
+      HTML
+
+      sign_in(editor)
+      put "/posts/#{post.id}.json", params: { post: { raw: raw } }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(
+        I18n.t("discourse_policy.errors.no_policy_permission"),
+      )
+      expect(post.reload.raw).to eq("Original content")
+      expect(post.post_policy).to be_nil
+    end
+  end
+
+  describe "wiki policy posts" do
+    fab!(:admin)
+
+    let(:policy_post) { create_post(user: admin, raw: raw) }
+
+    it "rejects making a policy post a wiki while allowing quoted policy markup" do
+      sign_in(admin)
+
+      put "/posts/#{policy_post.id}/wiki.json", params: { wiki: "true" }
+
+      aggregate_failures do
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("discourse_policy.errors.policy_cannot_be_wiki"),
+        )
+        expect(policy_post.reload).not_to be_wiki
+      end
+
+      quoted_policy_post = create_post(user: admin, raw: <<~MD)
+        [quote="someone, post:1, topic:1"]
+        #{raw}
+        [/quote]
+      MD
+
+      put "/posts/#{quoted_policy_post.id}/wiki.json", params: { wiki: "true" }
+
+      aggregate_failures do
+        expect(response.status).to eq(200)
+        expect(response.body).to be_blank
+        expect(quoted_policy_post.reload).to be_wiki
+      end
+    end
+  end
 end

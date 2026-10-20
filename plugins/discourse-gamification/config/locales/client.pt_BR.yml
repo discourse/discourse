@@ -100,6 +100,7 @@ pt_BR:
       admin:
         title: "Gamificação"
         name: "Nome"
+        created_by: "Criado(a) por"
         period: "Período"
     discourse_workflows:
       gamification_score:

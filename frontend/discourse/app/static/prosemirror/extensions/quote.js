@@ -94,6 +94,7 @@ function createQuoteNodeView({ getContext }) {
 
       const title = document.createElement("div");
       title.className = "title";
+      title.contentEditable = false;
 
       const avatarTemplate =
         postNumber &&

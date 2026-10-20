@@ -1,14 +1,14 @@
 import { not } from "discourse/truth-helpers";
-import ExpressionWrapper from "./expression-wrapper";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default <template>
   <ExpressionWrapper
-    @field={{@field}}
-    @schema={{@schema}}
-    @supportsExpression={{@supportsExpression}}
-    @placeholder={{@placeholder}}
     @dynamicValueHint={{@dynamicValueHint}}
+    @field={{@field}}
+    @placeholder={{@placeholder}}
+    @schema={{@schema}}
     @session={{@session}}
+    @supportsExpression={{@supportsExpression}}
   >
     <@field.Control @allowClear={{not @schema.required}} />
   </ExpressionWrapper>

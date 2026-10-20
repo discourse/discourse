@@ -6,10 +6,18 @@
 
 zh_TW:
   solved: "已解決"
+  unsolved: "未解決"
   posted: "發表於"
+  by_username: "由 @%{username}"
+  replied: "已回覆"
   vote_count:
     other: "%{count} 票"
   like_count:
     other: "%{count}個讚"
   reply_count:
     other: "%{count}個回覆"
+  theme_metadata:
+    description: "簡潔優美的佈景主題，可改善 Discourse 網站的預設使用體驗。"
+    settings:
+      topic_card_high_context:
+        description: "啟用時會在主題卡片顯示額外脈絡資訊，包括標籤、摘要、解決狀態、指派使用者及票數。"

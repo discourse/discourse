@@ -146,6 +146,7 @@ sv:
     discourse_workflows:
       nodes:
         "trigger:assigned": "Tilldelat"
+        "trigger:unassigned": "Otilldelat"
       assign_topic:
         resource: "Resurs"
         resources:

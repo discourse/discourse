@@ -18,12 +18,12 @@ RSpec.describe "Livestream channel list serialization" do
   def create_livestream_channel
     topic = Fabricate(:topic, category:)
     post = Fabricate(:post, topic:)
-    DiscoursePostEvent::Event.create!(
+    DiscourseEvents::Events::Event.create!(
       id: post.id,
       original_starts_at: 1.hour.from_now,
       original_ends_at: 2.hours.from_now,
       location: "https://www.youtube.com/live/abc123",
-      status: DiscoursePostEvent::Event.statuses[:private],
+      status: DiscourseEvents::Events::Event.statuses[:private],
       raw_invitees: [group.name],
       livestream: true,
     )
@@ -60,13 +60,13 @@ RSpec.describe "Livestream channel list serialization" do
     channel = create_livestream_channel
     event = channel.livestream_topic_chat_channel.topic.first_post.event
     event.create_invitees(
-      [{ user_id: user.id, status: DiscoursePostEvent::Invitee.statuses[:going] }],
+      [{ user_id: user.id, status: DiscourseEvents::Events::Invitee.statuses[:going] }],
     )
     group.remove(user)
-    DiscoursePostEvent::Invitee
+    DiscourseEvents::Events::Invitee
       .unscoped
       .find_or_create_by!(post_id: event.id, user_id: user.id) do |invitee|
-        invitee.status = DiscoursePostEvent::Invitee.statuses[:going]
+        invitee.status = DiscourseEvents::Events::Invitee.statuses[:going]
       end
 
     get "/chat/api/channels.json", params: { filter: "" }

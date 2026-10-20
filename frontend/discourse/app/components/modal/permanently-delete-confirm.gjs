@@ -54,12 +54,12 @@ export default class PermanentlyDeleteConfirm extends Component {
 
   <template>
     <DModal
-      @title={{i18n "permanently_delete.title"}}
-      @closeModal={{@closeModal}}
       class={{dConcatClass
         "permanently-delete-confirm-modal"
         (if this.showEasterEgg "--fire-easter-egg-modal")
       }}
+      @closeModal={{@closeModal}}
+      @title={{i18n "permanently_delete.title"}}
     >
       <:body>
         <div class="permanently-delete-confirm-modal__message">{{trustHTML
@@ -73,11 +73,11 @@ export default class PermanentlyDeleteConfirm extends Component {
               )
             }}</span>
           <input
-            {{on "input" this.onInput}}
-            name="confirmationPhrase"
-            type="text"
             class="confirmation-phrase"
+            name="confirmationPhrase"
             placeholder={{@model.confirmPhrase}}
+            type="text"
+            {{on "input" this.onInput}}
           />
 
           {{#if this.showEasterEgg}}
@@ -88,10 +88,10 @@ export default class PermanentlyDeleteConfirm extends Component {
       </:body>
       <:footer>
         <DButton
+          class="btn-danger"
           @action={{this.confirm}}
           @disabled={{not this.phraseMatches}}
           @label="permanently_delete.controls.delete"
-          class="btn-danger"
         />
         <DModalCancel @close={{@closeModal}} />
       </:footer>

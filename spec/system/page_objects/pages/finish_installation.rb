@@ -100,8 +100,21 @@ module PageObjects
         has_no_css?(".wizard-container__field.invalid")
       end
 
+      def container_padding
+        computed_style(".wizard-container", "padding-top")
+      end
+
       def redirected_to_confirm_email?
         has_current_path?("/finish-installation/confirm-email")
+      end
+
+      private
+
+      def computed_style(selector, property)
+        page.evaluate_script(<<~JS)
+          getComputedStyle(document.querySelector(#{selector.to_json}))
+            .getPropertyValue(#{property.to_json})
+        JS
       end
     end
   end

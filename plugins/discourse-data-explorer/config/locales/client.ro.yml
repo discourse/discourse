@@ -13,7 +13,6 @@ ro:
         title: "Creează o interogare pentru Exploratorul de date"
         description: "Scrie o interogare SQL personalizată pentru a scoate la iveală orice aspect specific comunității tale."
     explorer:
-      default_query: "Implicit"
       or: "sau"
       create: "Creează"
       ai:
@@ -33,6 +32,7 @@ ro:
       undo: "Renunță la modificări"
       delete: "Șterge"
       query_groups: "Grupuri"
+      query_tags: "Etichete"
       report_name: "Raport"
       query_description: "Descriere"
       query_time: "Ultima rulare"

@@ -15,8 +15,8 @@ describe "Admin Site Texts Page" do
     expect(site_texts_page).to have_translation_key("js.skip_to_main_content")
     expect(site_texts_page).to have_translation_value(I18n.t("js.skip_to_main_content"))
 
-    site_texts_page.visit
     site_texts_page.search("js.skip_to_main_content")
+    expect(site_texts_page).to have_highlighted_translation_key("js.skip_to_main_content")
     expect(site_texts_page).to have_translation_key("js.skip_to_main_content")
     expect(site_texts_page).to have_translation_value(I18n.t("js.skip_to_main_content"))
   end
@@ -27,8 +27,8 @@ describe "Admin Site Texts Page" do
     expect(site_texts_page).to have_translation_key("themes.other_error")
     expect(site_texts_page).to have_translation_value(I18n.t("themes.other_error"))
 
-    site_texts_page.visit
     site_texts_page.search("themes.other_error")
+    expect(site_texts_page).to have_highlighted_translation_key("themes.other_error")
     expect(site_texts_page).to have_translation_key("themes.other_error")
     expect(site_texts_page).to have_translation_value(I18n.t("themes.other_error"))
   end
@@ -42,9 +42,8 @@ describe "Admin Site Texts Page" do
       I18n.t("js.skip_to_main_content", locale: "it"),
     )
 
-    site_texts_page.visit
-    site_texts_page.select_locale("it")
     site_texts_page.search("js.skip_to_main_content")
+    expect(site_texts_page).to have_highlighted_translation_key("js.skip_to_main_content")
     expect(site_texts_page).to have_translation_key("js.skip_to_main_content")
     expect(site_texts_page).to have_translation_value(
       I18n.t("js.skip_to_main_content", locale: "it"),
@@ -124,6 +123,58 @@ describe "Admin Site Texts Page" do
     site_texts_page.click_replace_text_button
 
     expect(page.all(".d-modal label span").map(&:text)).to eq(["Uncategorized"])
+  end
+
+  it "can filter, edit, and revert a component translation in the selected language" do
+    theme = Fabricate(:theme, component: true, enabled: false)
+    duplicate = Fabricate(:theme, component: true, name: theme.name)
+    theme.set_field(
+      target: :translations,
+      name: "en",
+      value: "en:\n  resource_intro: Explore resources",
+    )
+    theme.set_field(
+      target: :translations,
+      name: "it",
+      value: "it:\n  resource_intro: Esplora le risorse",
+    )
+    theme.save!
+    key = "js.theme_translations.#{theme.id}.resource_intro"
+
+    site_texts_page.visit
+    expect(site_texts_page).to have_no_theme_filter
+    site_texts_page.open_theme_filter
+    expect(site_texts_page).to have_theme_option(theme, disabled: true)
+    expect(site_texts_page).to have_theme_option(duplicate)
+    page.send_keys(:escape)
+    site_texts_page.select_theme(theme)
+    site_texts_page.select_locale("it")
+    site_texts_page.search("resource_intro")
+    expect(site_texts_page).to have_translation_value("Esplora le risorse")
+    expect(page).to have_current_path(
+      "/admin/customize/site_texts?locale=it&q=resource_intro&theme_id=#{theme.id}",
+    )
+    page.refresh
+    expect(site_texts_page).to have_translation_key(key)
+    expect(site_texts_page).to have_selected_theme(theme)
+
+    site_texts_page.edit_translation(key, locale: "it", theme_id: theme.id)
+    site_texts_page.override_translation("Le nostre risorse")
+    site_texts_page.back_to_results
+    expect(page).to have_current_path(
+      "/admin/customize/site_texts?locale=it&q=resource_intro&theme_id=#{theme.id}",
+    )
+    expect(site_texts_page).to have_translation_value("Le nostre risorse")
+    page.refresh
+    expect(site_texts_page).to have_translation_value("Le nostre risorse")
+
+    site_texts_page.edit_translation(key, locale: "it", theme_id: theme.id)
+    site_texts_page.revert_translation
+    site_texts_page.back_to_results
+    expect(site_texts_page).to have_translation_value("Esplora le risorse")
+    site_texts_page.reset_filters
+    expect(site_texts_page).to have_all_site_texts_selected
+    expect(page).to have_current_path("/admin/customize/site_texts?locale=it&q=resource_intro")
   end
 
   it "can load more results" do

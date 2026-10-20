@@ -191,6 +191,7 @@ sk:
     discourse_workflows:
       nodes:
         "trigger:assigned": "Priradené"
+        "trigger:unassigned": "Nepriradené"
       assign_topic:
         resource: "Zdroje"
         resources:

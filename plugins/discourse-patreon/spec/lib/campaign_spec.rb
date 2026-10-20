@@ -4,7 +4,7 @@ require_relative "../spec_helper"
 
 RSpec.describe Patreon::Campaign do
   shared_examples "campaign sync" do
-    it "should update campaigns and group users data" do
+    it "updates campaigns and group membership data" do
       expect { described_class.update! }.to change { Group.count }.by(1)
 
       expect(Group.find_by(name: "patrons")).to be_present
@@ -58,6 +58,7 @@ RSpec.describe Patreon::Campaign do
 
   context "with API v2" do
     let(:expected_rewards_count) { 4 }
+    let(:members_response) { JSON.parse(get_patreon_response("members.json")) }
 
     before do
       campaigns_url =
@@ -69,14 +70,46 @@ RSpec.describe Patreon::Campaign do
       stub_request(:get, campaigns_url).to_return(
         content.merge(body: get_patreon_response("campaigns.json")),
       )
-      stub_request(:get, members_url).to_return(
-        content.merge(body: get_patreon_response("members.json")),
-      )
+      stub_request(:get, members_url).to_return { content.merge(body: members_response.to_json) }
       SiteSetting.patreon_enabled = true
       SiteSetting.patreon_api_version = "2"
       SiteSetting.patreon_declined_pledges_grace_period_days = 7
     end
 
     include_examples "campaign sync"
+
+    it "syncs an unlinked user when emails are only present on member records" do
+      members_response["included"].each do |entry|
+        entry["attributes"]["email"] = nil if entry["type"] == "user"
+      end
+      members_response["data"].first["attributes"]["email"] = "Foo@bar.com"
+      user = Fabricate(:user, email: "foo@bar.com")
+      group = Fabricate(:group)
+      Patreon.set("filters", group.id.to_s => ["0"])
+
+      Patreon::Patron.update!
+
+      expect(Patreon::Patron.all).to eq(
+        "111111" => "foo@bar.com",
+        "111112" => "boo@far.com",
+        "111113" => "roo@aar.com",
+      )
+      expect(group.users).to contain_exactly(user)
+      expect(user.reload.custom_fields["patreon_id"]).to eq("111111")
+    end
+
+    it "prefers member emails and falls back to included user emails" do
+      members_response["data"].first["attributes"]["email"] = "Member@example.com"
+      members_response["data"][1]["attributes"]["email"] = nil
+      members_response["data"][2]["attributes"]["email"] = ""
+
+      described_class.update!
+
+      expect(Patreon::Patron.all).to eq(
+        "111111" => "member@example.com",
+        "111112" => "boo@far.com",
+        "111113" => "roo@aar.com",
+      )
+    end
   end
 end

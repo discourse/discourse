@@ -32,6 +32,12 @@ acceptance(
         "the wrapper buttons should not be in the cooked post's flow"
       );
 
+      const table = find(`${postWithLargeTable} table`);
+      let tableCellClicked = false;
+      table.querySelector("td").addEventListener("click", () => {
+        tableCellClicked = true;
+      });
+
       await click(
         `${postWithLargeTable} .fullscreen-table-wrapper .btn-expand-table`
       );
@@ -43,7 +49,19 @@ acceptance(
         .dom(".fullscreen-table-modal table")
         .exists("The table is present inside the modal");
 
+      await click(".fullscreen-table-modal td");
+      assert.true(
+        tableCellClicked,
+        "interactions attached to the table remain active in the modal"
+      );
+
       await click(".fullscreen-table-modal .modal-close");
+      assert.strictEqual(
+        find(`${postWithLargeTable} table`),
+        table,
+        "the table is restored to the post when the modal closes"
+      );
+
       await click(
         `${postWithLargeTable} .fullscreen-table-wrapper .btn-expand-table svg`
       );

@@ -1,6 +1,31 @@
 # frozen_string_literal: true
 
 RSpec.describe UserAvatarsController do
+  describe "#refresh_gravatar" do
+    fab!(:user)
+    fab!(:upload) { Fabricate(:upload, user: user) }
+
+    before do
+      sign_in(user)
+      user.update!(uploaded_avatar: upload)
+      user.user_avatar.update!(gravatar_upload: upload)
+      stub_request(:get, %r{https://www.gravatar.com/avatar/}).to_return(
+        body: File.binread(file_from_fixtures("logo.png")),
+      )
+    end
+
+    %i[auth_overrides_avatar discourse_connect_overrides_avatar].each do |setting|
+      it "rejects refreshing the selected Gravatar when #{setting} is enabled" do
+        SiteSetting.public_send("#{setting}=", true)
+
+        post "/user_avatar/#{user.username}/refresh_gravatar.json"
+
+        expect(response).to be_forbidden
+        expect(user.reload.uploaded_avatar_id).to eq(upload.id)
+      end
+    end
+  end
+
   describe "#show_proxy_letter" do
     it "returns not found if external avatar is set somewhere else" do
       SiteSetting.external_system_avatars_url = "https://somewhere.else.com/avatar.png"
@@ -86,7 +111,35 @@ RSpec.describe UserAvatarsController do
   end
 
   describe "#show" do
-    context "when invalid" do
+    it "serves a retained associated account picture when another avatar is selected" do
+      user = Fabricate(:user, uploaded_avatar: Fabricate(:upload))
+      upload =
+        File.open(file_from_fixtures("cropped.png")) do |file|
+          UploadCreator.new(file, "provider-avatar.png", type: "avatar").create_for(user.id)
+        end
+      Fabricate(:user_associated_account, user: user, avatar_upload_id: upload.id)
+
+      get "/user_avatar/default/#{user.username}/50/#{upload.id}.png"
+
+      expect(response).to be_successful
+      expect(response.media_type).to eq("image/png")
+      expect(OptimizedImage.exists?(upload_id: upload.id, width: 50, height: 50)).to eq(true)
+    end
+
+    it "redirects requests for another user's retained provider picture to the current avatar" do
+      current_upload = Fabricate(:upload)
+      user = Fabricate(:user, uploaded_avatar: current_upload)
+      provider_upload = Fabricate(:upload)
+      Fabricate(:user_associated_account, avatar_upload_id: provider_upload.id)
+
+      get "/user_avatar/default/#{user.username}/50/#{provider_upload.id}.png"
+
+      expect(response).to redirect_to(
+        UserAvatar.local_avatar_url("default", user.username_lower, current_upload.id, 50),
+      )
+    end
+
+    shared_examples "avatar extension correction" do
       after { FileUtils.rm(Discourse.store.path_for(upload)) }
 
       let :upload do
@@ -102,7 +155,7 @@ RSpec.describe UserAvatarsController do
         user
       end
 
-      it "automatically corrects bad avatar extensions" do
+      it "corrects a PNG avatar mislabeled as JPEG" do
         orig = Discourse.store.path_for(upload)
 
         upload.update_columns(
@@ -124,6 +177,18 @@ RSpec.describe UserAvatarsController do
         upload.reload
         expect(upload.extension).to eq("png")
       end
+    end
+
+    context "when an avatar has an incorrect extension with libvips disabled" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "avatar extension correction"
+    end
+
+    context "when an avatar has an incorrect extension with libvips enabled" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      include_examples "avatar extension correction"
     end
 
     it "serves sanitized SVG avatars without DTD entities" do

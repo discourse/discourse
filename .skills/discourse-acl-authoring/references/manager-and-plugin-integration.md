@@ -12,7 +12,7 @@ AccessControlListManager.call(
   params: {
     target: board,
     flattened_acl: flattened_acl,
-    owner: DiscourseKanban::PLUGIN_NAME,
+    owner: Boards::PLUGIN_NAME,
   },
 ) do |result|
   on_success do |previous_permissions:, new_permissions:|
@@ -30,6 +30,8 @@ Behavior:
 - validates `target` and `owner`
 - fetches previous target permissions
 - injects mandatory ACLs into `flattened_acl`
+- resolves the target class's `ACL_PERMISSIONS` constant, including inherited declarations; a missing declaration raises `NameError`
+- fails `has_valid_permissions` if any final flattened ACL permission is absent from `ACL_PERMISSIONS.values`
 - fails `has_no_banned_acl` if any final flattened ACL entry matches the target class's `banned_acl`
 - fails `has_at_least_one_acl` if the final ACL list is empty
 - destroys all current ACL rows for the target
@@ -66,7 +68,7 @@ Plugin target classes must include `AclTarget` and be registered after initializ
 
 ```ruby
 after_initialize do
-  DiscoursePluginRegistry.register_acl_target_class(DiscourseKanban::Board, self)
+  DiscoursePluginRegistry.register_acl_target_class(Boards::Board, self)
 end
 ```
 
@@ -83,12 +85,12 @@ Shape:
 ```ruby
 {
   mandatory_acl: {
-    "DiscourseKanban::Board" => [
+    "Boards::Board" => [
       { type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" },
     ],
   },
   banned_acl: {
-    "DiscourseKanban::Board" => [
+    "Boards::Board" => [
       { type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "edit" },
     ],
   },
@@ -166,6 +168,6 @@ When migrating legacy permission columns into ACLs:
 ## Current Limitations
 
 - `AccessControlList.expand_list_for_bulk_insert`, `flattened_list`, `preload_allowed`, lookup objects, matching scopes, and cleanup jobs now handle both group and user ACL rows.
-- `DAccessControl` remains group-first: it does not yet provide user picking or complete user ACL editing, even though backend rows can contain `allowed_user_ids`.
+- `DAccessControl` supports user/group search and user grants. Mandatory ACL injection remains group-first; targets with mandatory user grants need explicit UI support.
 - `flattened_list` skips missing groups, missing users, and unknown target classes defensively. Validate group and user IDs at the service/contract boundary where user input enters; do not rely on read-path skipping as data hygiene.
 - The manager has caller-side authorization. Future core work may add a target policy hook; until then, do not expose it directly to untrusted callers.

@@ -70,7 +70,7 @@ acceptance(`DFP Ads`, function (needs) {
     updateCurrentUser({
       staff: false,
       trust_level: 3,
-      groups: [
+      visibleGroups: [
         AUTO_GROUPS.trust_level_1,
         AUTO_GROUPS.trust_level_2,
         AUTO_GROUPS.trust_level_3,
@@ -86,7 +86,7 @@ acceptance(`DFP Ads`, function (needs) {
     updateCurrentUser({
       staff: false,
       trust_level: 1,
-      groups: [groupFixtures["/groups/discourse.json"].group],
+      visibleGroups: [groupFixtures["/groups/discourse.json"].group],
     });
     await visit("/t/280");
     assert

@@ -45,9 +45,9 @@ export default class CategoryTypeCards extends Component {
           }}
         >
           <button
-            type="button"
             class="category-type-cards__card-select"
             disabled={{unless (availableCategoryType type) true}}
+            type="button"
             {{on "click" (fn this.selectType type)}}
           >
             <span class="category-type-cards__card-icon">
@@ -80,8 +80,8 @@ export default class CategoryTypeCards extends Component {
             >
               {{#if (showAskAdminMessage type)}}
                 <button
-                  type="button"
                   class="btn category-type-cards__ask-admin-message"
+                  type="button"
                   {{on "click" (fn this.messageAdmin type)}}
                 >
                   <span class="category-type-cards__ask-admin-message-text">

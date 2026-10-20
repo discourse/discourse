@@ -48,7 +48,7 @@ RSpec.describe "Events Category Type Setup" do
     fab!(:category)
 
     before do
-      DiscourseCalendar::Categories::Types::Events.configure_category(
+      DiscourseEvents::Categories::Types::Events.configure_category(
         category,
         guardian: admin.guardian,
       )
@@ -82,7 +82,7 @@ RSpec.describe "Events Category Type Setup" do
     end
 
     it "preloads stored category_settings values onto the edit form" do
-      DiscourseCalendar::Categories::Types::Events.configure_category(
+      DiscourseEvents::Categories::Types::Events.configure_category(
         category,
         guardian: admin.guardian,
         configuration_values: {

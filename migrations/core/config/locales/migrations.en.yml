@@ -28,6 +28,9 @@ en:
 
   converter:
     default_step_title: "Converting %{type}"
+    log:
+      item_failed: "Failed to process item"
+      batch_failed: "Failed to process batch"
     max_progress_calculation: "Calculating items took %{duration}"
     errors:
       header: "The conversion finished with errors:"

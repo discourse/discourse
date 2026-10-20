@@ -78,6 +78,7 @@ ca:
     discourse_workflows:
       nodes:
         "trigger:assigned": "Assignat"
+        "trigger:unassigned": "No assignat"
       assign_topic:
         resources:
           topic: "Tema"

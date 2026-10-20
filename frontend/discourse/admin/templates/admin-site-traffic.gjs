@@ -2,19 +2,25 @@ import SiteTrafficExplorer from "discourse/admin/components/site-traffic-explore
 
 export default <template>
   <SiteTrafficExplorer
-    @traffic={{@controller.traffic}}
-    @loading={{@controller.loading}}
+    @activeFilters={{@controller.activeFilters}}
+    @applyFilters={{@controller.applyFilters}}
+    @applyModalFilters={{@controller.applyModalFilters}}
+    @clearAllFilters={{@controller.clearAllFilters}}
+    @clearFilter={{@controller.clearFilter}}
+    @endDate={{@controller.endDate}}
     @fetchError={{@controller.fetchError}}
     @hasPageviews={{@controller.hasPageviews}}
+    @hasPendingFilters={{@controller.hasPendingFilters}}
+    @isFilterSelected={{@controller.isFilterSelected}}
+    @pendingFilterCount={{@controller.pendingFilterCount}}
     @period={{@controller.safePeriod}}
-    @startDate={{@controller.startDate}}
-    @endDate={{@controller.endDate}}
-    @activeFilters={{@controller.activeFilters}}
-    @trafficTypes={{@controller.selectedTrafficTypes}}
-    @setPeriod={{@controller.setPeriod}}
+    @removeFilterValue={{@controller.removeFilterValue}}
     @setCustomDateRange={{@controller.setCustomDateRange}}
-    @setFilter={{@controller.setFilter}}
+    @setPeriod={{@controller.setPeriod}}
+    @startDate={{@controller.startDate}}
+    @toggleFilter={{@controller.toggleFilter}}
     @toggleTrafficType={{@controller.toggleTrafficType}}
-    @removeFilter={{@controller.removeFilter}}
+    @traffic={{@controller.traffic}}
+    @trafficTypes={{@controller.selectedTrafficTypes}}
   />
 </template>

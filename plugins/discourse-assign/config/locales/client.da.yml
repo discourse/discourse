@@ -95,6 +95,7 @@ da:
     discourse_workflows:
       nodes:
         "trigger:assigned": "Tildelt"
+        "trigger:unassigned": "Ikke tildelt"
       assign_topic:
         resource: "Ressource"
         resources:

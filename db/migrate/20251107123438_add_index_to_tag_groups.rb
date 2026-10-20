@@ -10,6 +10,7 @@ class AddIndexToTagGroups < ActiveRecord::Migration[8.0]
 
     add_index :tag_groups, "lower(name)", unique: true
   end
+
   def down
     raise ActiveRecord::IrreversibleMigration
   end

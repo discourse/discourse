@@ -7,6 +7,18 @@
 pl_PL:
   js:
     discourse_captcha:
+      title: "CAPTCHA"
+      configuration_test:
+        tab_title: "Testuj"
+        title: "Test konfiguracji"
+        description: "Przetestuj zapisane klucze CAPTCHA."
+        start: "Konfiguracja testowa"
+        retry: "Przetestuj ponownie"
+        complete_challenge: "Ukończ wyzwanie, aby zweryfikować zapisane klucze."
+        verifying: "Weryfikacja u dostawcy CAPTCHA…"
+        not_configured: "Wybierz dostawcę CAPTCHA i zapisz klucz witryny oraz klucz tajny w Ustawieniach przed rozpoczęciem testowania."
+        challenge_failed: "Nie udało się załadować CAPTCHA. Sprawdź klucze i ustawienia dostawcy."
+        expired: "Wyzwanie wygasło. Rozpocznij nowy test i ukończ go ponownie."
       missing_token: "Wypełnij zadanie CAPTCHA."
       verification_failed: "Weryfikacja CAPTCHA nie powiodła się. Spróbuj jeszcze raz."
       placeholder: symbol zastępczy

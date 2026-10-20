@@ -20,7 +20,7 @@ describe Topic do
             raw: "The boat market is quite active lately.",
           )
 
-        expect(DiscoursePostEvent::Event).to_not exist(id: post_with_date.id)
+        expect(DiscourseEvents::Events::Event).to_not exist(id: post_with_date.id)
       end
     end
   end

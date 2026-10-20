@@ -4,24 +4,27 @@ TopicStatusUpdater =
   Struct.new(:topic, :user) do
     def update!(status, enabled, opts = {})
       status = Status.new(status, enabled)
+      previous_pin = topic.slice(:pinned_at, :pinned_globally, :pinned_until) if status.pinned? ||
+        status.pinned_globally?
 
       @topic_timer = topic.public_topic_timer
 
-      updated = nil
-      Topic.transaction do
+      Topic.transaction(requires_new: true) do
         updated = change(status, opts)
-        if updated
-          highest_post_number = topic.highest_post_number
-          create_moderator_post_for(status, opts)
-          update_read_state_for(
-            status,
-            highest_post_number,
-            silent_tracking: opts[:silent_tracking],
-          )
-        end
-      end
+        create_moderator_post_for(status, opts) if updated
 
-      updated
+        changed = previous_pin ? previous_pin != topic.slice(*previous_pin.keys) : updated
+        event_status = status.name
+        if previous_pin && status.disabled?
+          event_status = previous_pin["pinned_globally"] ? "pinned_globally" : "pinned"
+        end
+
+        if changed
+          DiscourseEvent.trigger(:topic_status_updated, topic, event_status, status.enabled?)
+        end
+
+        updated
+      end
     end
 
     private
@@ -78,11 +81,12 @@ TopicStatusUpdater =
       end
 
       if @topic_timer
-        if status.manually_closing_topic? || status.closing_topic?
-          topic.delete_topic_timer(TopicTimer.types[:close])
-          topic.delete_topic_timer(TopicTimer.types[:silent_close])
-        elsif status.manually_opening_topic? || status.opening_topic?
-          topic.delete_topic_timer(TopicTimer.types[:open])
+        reason = status.autoclosed? ? :completed : :cancelled
+        if status.closing_topic?
+          topic.delete_topic_timer(TopicTimer.types[:close], by_user: user, reason: reason)
+          topic.delete_topic_timer(TopicTimer.types[:silent_close], by_user: user, reason: reason)
+        elsif status.opening_topic?
+          topic.delete_topic_timer(TopicTimer.types[:open], by_user: user, reason: reason)
           topic.inherit_auto_close_from_category
         end
       end
@@ -104,29 +108,6 @@ TopicStatusUpdater =
       message = opts[:message]
       topic.add_moderator_post(user, message || message_for(status), options_for(status, opts))
       topic.reload
-    end
-
-    def update_read_state_for(status, old_highest_read, silent_tracking: false)
-      if (status.autoclosed? && status.enabled?) || (status.closed? && silent_tracking)
-        # let's pretend all the people that read up to the autoclose message
-        # actually read the topic
-        PostTiming.pretend_read(topic.id, old_highest_read, topic.highest_post_number)
-      end
-
-      if status.closed? && status.enabled?
-        sql_query = <<-SQL
-          SELECT DISTINCT post_timings.user_id
-          FROM post_timings
-          JOIN user_options ON user_options.user_id = post_timings.user_id
-          WHERE post_timings.topic_id = :topic_id
-            AND user_options.topics_unread_when_closed = 'f'
-        SQL
-        user_ids = DB.query_single(sql_query, topic_id: topic.id)
-
-        if user_ids.present?
-          PostTiming.pretend_read(topic.id, old_highest_read, topic.highest_post_number, user_ids)
-        end
-      end
     end
 
     def message_for(status)
@@ -208,10 +189,6 @@ TopicStatusUpdater =
 
         def manually_closing_topic?
           closed? && enabled?
-        end
-
-        def manually_opening_topic?
-          closed? && disabled?
         end
       end
   end

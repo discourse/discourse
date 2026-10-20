@@ -80,6 +80,7 @@ ko:
     discourse_workflows:
       nodes:
         "trigger:assigned": "할당됨"
+        "trigger:unassigned": "미 할당"
       assign_topic:
         resource: "자원"
         resources:

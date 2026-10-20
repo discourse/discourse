@@ -14,6 +14,7 @@ RSpec.describe S3CorsRulesets do
 
     context "when S3 is set up with global settings" do
       let(:use_db_s3_config) { false }
+
       before do
         global_setting :s3_use_iam_profile, true
         global_setting :s3_bucket, "s3-upload-bucket"

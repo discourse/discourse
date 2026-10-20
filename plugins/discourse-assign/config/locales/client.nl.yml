@@ -203,6 +203,7 @@ nl:
     discourse_workflows:
       nodes:
         "trigger:assigned": "Toegewezen"
+        "trigger:unassigned": "Niet toegewezen"
       assign_topic:
         resource: "Bron"
         resources:

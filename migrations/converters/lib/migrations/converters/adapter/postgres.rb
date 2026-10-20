@@ -12,12 +12,18 @@ module Migrations
         end
 
         def initialize(settings)
-          @connection = PG::Connection.new(settings)
-          @connection.type_map_for_results = PG::BasicTypeMapForResults.new(@connection)
-          @connection.field_name_type = :symbol
-          configure_connection
-
           @fork_hook = ForkManager.after_fork_child { discard! }
+
+          begin
+            @connection = PG::Connection.new(settings)
+            @connection.type_map_for_results = PG::BasicTypeMapForResults.new(@connection)
+            @connection.field_name_type = :symbol
+            configure_connection
+          rescue StandardError
+            ForkManager.remove_after_fork_child(@fork_hook)
+            @fork_hook = nil
+            raise
+          end
         end
 
         def exec(sql)

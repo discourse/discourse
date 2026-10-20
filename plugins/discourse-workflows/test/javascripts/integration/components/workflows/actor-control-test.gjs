@@ -53,6 +53,26 @@ module("Integration | Component | workflows actor control", function (hooks) {
     );
   });
 
+  test("can exclude the anonymous kind", async function (assert) {
+    this.field = fieldFor("system");
+    this.schema = { control_options: { allow_anonymous: false } };
+
+    await render(
+      <template>
+        <ActorControl
+          @field={{this.field}}
+          @schema={{this.schema}}
+          @supportsExpression={{false}}
+        />
+      </template>
+    );
+
+    const kind = selectKit(".workflows-actor-control__kind");
+    await kind.expand();
+
+    assert.false(kind.rowByValue("anonymous").exists());
+  });
+
   test("renders the user chooser for a specific username", async function (assert) {
     this.field = fieldFor("alice");
 

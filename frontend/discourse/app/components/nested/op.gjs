@@ -34,6 +34,14 @@ export default class NestedOp extends Component {
     return nestedPostUrl(this.args.topic, this.args.post.post_number);
   }
 
+  get canCreatePost() {
+    return this.currentUser && this.args.topic?.details?.can_create_post;
+  }
+
+  get selected() {
+    return this.args.multiSelect && this.args.postSelected?.(this.args.post);
+  }
+
   @action
   copyLink() {
     if (this.site.mobileView) {
@@ -85,14 +93,6 @@ export default class NestedOp extends Component {
         popupAjaxError(e);
       }
     }
-  }
-
-  get canCreatePost() {
-    return this.currentUser && this.args.topic?.details?.can_create_post;
-  }
-
-  get selected() {
-    return this.args.multiSelect && this.args.postSelected?.(this.args.post);
   }
 
   @action
@@ -154,11 +154,11 @@ export default class NestedOp extends Component {
                       @outletArgs={{postOutletArgs}}
                     >
                       <PostMetaData
-                        @post={{@post}}
                         @editPost={{fn @editPost @post}}
                         @multiSelect={{@multiSelect}}
-                        @selected={{this.selected}}
+                        @post={{@post}}
                         @selectBelow={{this.selectBelow}}
+                        @selected={{this.selected}}
                         @selectReplies={{this.selectReplies}}
                         @showHistory={{fn @showHistory @post}}
                         @togglePostSelection={{this.togglePostSelection}}
@@ -177,32 +177,32 @@ export default class NestedOp extends Component {
                         class="nested-view__op-menu post-menu-area clearfix"
                       >
                         <PostMenu
-                          @post={{@post}}
-                          @nestedReplyView={{true}}
                           @canCreatePost={{this.canCreatePost}}
-                          @copyLink={{this.copyLink}}
-                          @replyToPost={{@replyToPost}}
-                          @deletePost={{fn @deletePost @post}}
-                          @editPost={{fn @editPost @post}}
-                          @recoverPost={{fn @recoverPost @post}}
-                          @showFlags={{fn @showFlags @post}}
                           @changeNotice={{fn @changeNotice @post}}
                           @changePostOwner={{fn @changePostOwner @post}}
+                          @copyLink={{this.copyLink}}
+                          @deletePost={{fn @deletePost @post}}
+                          @editPost={{fn @editPost @post}}
                           @grantBadge={{fn @grantBadge @post}}
                           @lockPost={{fn @lockPost @post}}
-                          @unlockPost={{fn @unlockPost @post}}
+                          @nestedReplyView={{true}}
                           @permanentlyDeletePost={{fn
                             @permanentlyDeletePost
                             @post
                           }}
+                          @post={{@post}}
                           @rebakePost={{fn @rebakePost @post}}
+                          @recoverPost={{fn @recoverPost @post}}
+                          @replyToPost={{@replyToPost}}
+                          @share={{this.share}}
+                          @showFlags={{fn @showFlags @post}}
+                          @showLogin={{this.showLogin}}
                           @showPagePublish={{@showPagePublish}}
+                          @toggleLike={{this.toggleLike}}
                           @togglePostType={{fn @togglePostType @post}}
                           @toggleWiki={{fn @toggleWiki @post}}
                           @unhidePost={{fn @unhidePost @post}}
-                          @share={{this.share}}
-                          @toggleLike={{this.toggleLike}}
-                          @showLogin={{this.showLogin}}
+                          @unlockPost={{fn @unlockPost @post}}
                         />
                       </section>
                     {{/if}}
@@ -222,8 +222,8 @@ export default class NestedOp extends Component {
         <div class="nested-view__topic-map topic-map">
           <TopicMap
             @model={{@topic}}
-            @topicDetails={{@topic.details}}
             @showPMMap={{@topic.isPrivateMessage}}
+            @topicDetails={{@topic.details}}
           />
         </div>
       </div>

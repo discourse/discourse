@@ -9,7 +9,9 @@ module DiscourseAi
         rval = Hash.new { |h, k| h[k] = [] }
 
         if SiteSetting.ai_bot_enabled
-          LlmModel.enabled_chat_bot_ids.each { |llm_id| rval[llm_id] << { type: :ai_bot } }
+          LlmModel.enabled_chat_bot_ids.each do |llm_id|
+            rval[llm_id] << { type: :ai_bot, id: DiscourseAi::Configuration::Module::BOT_ID }
+          end
         end
 
         # this is unconditional, so it is clear that we always signal configuration
@@ -43,7 +45,11 @@ module DiscourseAi
             next if agent.blank? || agent.default_llm_id.blank?
 
             model_id = agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
-            rval[model_id] << { type: :ai_helper, name: helper_type }
+            rval[model_id] << {
+              type: :ai_helper,
+              name: helper_type,
+              id: DiscourseAi::Configuration::Module::AI_HELPER_ID,
+            }
           end
         end
 
@@ -53,7 +59,10 @@ module DiscourseAi
           if image_caption_agent.present?
             model_id = image_caption_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
 
-            rval[model_id] << { type: :ai_image_caption }
+            rval[model_id] << {
+              type: :ai_image_caption,
+              id: DiscourseAi::Configuration::Module::IMAGE_CAPTION_ID,
+            }
           end
         end
 
@@ -61,22 +70,28 @@ module DiscourseAi
           summarization_agent = AiAgent.find_by(id: SiteSetting.ai_summarization_agent)
           model_id = summarization_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
 
-          rval[model_id] << { type: :ai_summarization }
+          rval[model_id] << {
+            type: :ai_summarization,
+            id: DiscourseAi::Configuration::Module::SUMMARIZATION_ID,
+          }
         end
 
         if SiteSetting.ai_embeddings_semantic_search_enabled
           search_agent = AiAgent.find_by(id: SiteSetting.ai_embeddings_semantic_search_hyde_agent)
           model_id = search_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
 
-          rval[model_id] << { type: :ai_embeddings_semantic_search }
+          rval[model_id] << {
+            type: :ai_embeddings_semantic_search,
+            id: DiscourseAi::Configuration::Module::EMBEDDINGS_ID,
+          }
         end
 
         if SiteSetting.ai_spam_detection_enabled && AiModerationSetting.spam.present?
           model_id = AiModerationSetting.spam[:llm_model_id]
-          rval[model_id] << { type: :ai_spam }
+          rval[model_id] << { type: :ai_spam, id: DiscourseAi::Configuration::Module::SPAM_ID }
         end
 
-        if defined?(DiscourseAutomation::Automation)
+        if defined?(DiscourseAutomation::Automation) && SiteSetting.discourse_automation_enabled
           DiscourseAutomation::Automation
             .joins(:fields)
             .where(script: %w[llm_report llm_triage])

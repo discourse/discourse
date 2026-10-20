@@ -19,6 +19,16 @@ nl:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "AI vragen"
+        ask_ai:
+          title: "AI vragen"
+          reports:
+            retry_questions: "Opnieuw proberen"
+          date: "Datum"
+          outcomes:
+            failed: "Mislukt"
         emotion:
           title: "Emotie"
         reports:
@@ -228,10 +238,24 @@ nl:
               description: "Taggen van berichten die zijn gemaakt door de systeemgebruiker toestaan."
     discourse_ai:
       title: "AI"
+      copied: "Gekopieerd"
+      ai_decoded_transcript:
+        thinking: "Denken"
+        tool: "Tool"
+        arguments: "Argumenten"
+        type: "Type"
+        error: "Fout"
+        response: "Antwoord"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
           mode: "Modus"
+        classify:
+          text: "Tekst"
+          upload_ids: "Afbeeldingen"
+          name: "Naam"
+          type: "Type"
+          type_score: "Score"
       ai_tool_approval:
         loading: "Laden..."
         agent: "Agent"
@@ -242,11 +266,9 @@ nl:
         approved: "Goedgekeurd"
         rejected: "Geweigerd"
       default_llm:
-        title: "Standaard LLM-model"
-        description: "Het standaard LLM-model dat voor alle AI-functies wordt gebruikt. Dit model wordt gebruikt als er geen LLM is opgegeven in de functieconfiguratie of agent. Als er geen standaard-LLM is opgegeven, wordt de laatst gemaakte LLM gebruikt."
+        title: "Standaard taalmodel"
       llm_selector:
         none: "Geen"
-        saved: "Standaard LLM-model bijgewerkt"
       features:
         short_title: "Functies"
         description: "Dit zijn de AI-functies die beschikbaar zijn voor bezoekers van je site. Deze kunnen worden geconfigureerd voor specifieke agenten en LLM's en de toegang kan per groep worden beheerd."
@@ -297,9 +319,11 @@ nl:
         search:
           name: "Zoeken"
           description: "Verbetert de zoekervaring door AI-gegenereerde antwoorden op vragen te bieden"
-          discoveries: "Ontdekkingen"
+          ask_ai: "AI vragen"
           setting_groups:
             settings: "Basisinstellingen"
+            agents: "Agenten"
+            access_control: "Toegangsbeheer"
         embeddings:
           name: "Insluitingen"
           description: "Ondersteunt functies zoals gerelateerde topics en AI-zoeken door semantische representaties van tekst te genereren"
@@ -535,11 +559,10 @@ nl:
         retry: "Opnieuw proberen"
         apply: "Toepassen"
         all_models: "Alle modellen"
+        all_features: "Alle functies"
         successful: "Gelukt"
         failed: "Mislukt"
         unknown: "Onbekend"
-        topic_id: "Topic-ID"
-        post_id: "Bericht-ID"
         time: "Tijd"
         when: "Wanneer"
         outcome: "Resultaat"
@@ -555,8 +578,7 @@ nl:
         duration: "Duur"
         cost: "Kosten"
         actions: "Acties"
-        filters:
-          period: "Tijdsperiode"
+        view_details: "Details"
         periods:
           hour: "Afgelopen uur"
           day: "Afgelopen 24 uur"
@@ -617,7 +639,6 @@ nl:
         create_user: Gebruiker maken
         create_user_help: Je kunt optioneel een gebruiker aan deze agent koppelen. Als je dat doet, gebruikt de AI deze gebruiker om op verzoeken te antwoorden.
         default_llm: Standaard taalmodel
-        default_llm_help: Het te gebruiken standaard taalmodel voor deze agent. Vereist als je de agent wilt vermelden in openbare berichten.
         system_prompt: Systeemprompt
         forced_tool_strategy: Gedwongen toolstrategie
         allow_chat_direct_messages: "Directe chatberichten toestaan"
@@ -790,7 +811,6 @@ nl:
           result: "Testresultaat"
       secrets:
         short_title: "Aanmeldgegevens"
-        description: "Beheer verificatieaanmeldingsgegevens die worden gedeeld door LLM's, insluitingen en tools."
         name: "Naam"
         secret: "Waarde"
         select_secret: "Selecteer aanmeldingsgegevens..."
@@ -815,6 +835,15 @@ nl:
         mcp_server_oauth_client_secret: "OAuth-clientgeheim MCP-server"
         modal:
           title: "Nieuwe aanmeldingsgegevens maken"
+      decision_models:
+        no_preset: "Geen"
+        display_name: "Naam"
+        model: "Model"
+        provider: "Provider"
+        api_key: "Aanmeldgegevens"
+        edit: "Bewerken"
+        delete: "Verwijderen"
+        test: "Test uitvoeren"
       mcp_servers:
         short_title: "MCP-servers"
         new: "Nieuwe MCP-server"
@@ -896,6 +925,18 @@ nl:
         test_summary:
           one: "%{count} tool ontdekt met protocol %{version}."
           other: "%{count} tools ontdekt met protocol %{version}."
+      models:
+        new: "Nieuw model"
+        name: "Naam"
+        type: "Type"
+        provider: "Provider"
+        edit: "Bewerken"
+        select_type: "Selecteren"
+        types:
+          embedding: "Insluiting"
+        filters:
+          all: "Alle typen"
+          reset: "Filters resetten"
       llms:
         short_title: "LLM's"
         no_llms: "Nog geen LLM's"
@@ -959,11 +1000,6 @@ nl:
           other: "Dit model wordt momenteel gebruikt door de volgende: %{settings}. Als het onjuist is geconfigureerd, werken functies niet zoals verwacht. "
         model_description:
           none: "Algemene instellingen die werken voor de meeste taalmodellen"
-          anthropic-claude-opus-4-7: "Het intelligentste model van Antropic"
-          anthropic-claude-sonnet-4-6: "Optimale balans tussen snelheid en kosten"
-          anthropic-claude-haiku-4-5: "Snel en kosteneffectief"
-          google-gemini-3-1-pro-preview: "Het intelligentste model van Google"
-          open_router-moonshotai-kimi-k2-6: "Het multimodale model van Moonshot met zichtmogelijkheden"
         preseeded_model_description: "Voorgeconfigureerd open-source model met %{model}"
         configured:
           title: "Geconfigureerde LLM's"
@@ -1143,17 +1179,10 @@ nl:
         provider_fields:
           model_name: "Modelnaam"
         semantic_search: "Topics (semantisch)"
-        semantic_search_results:
-          toggle: "AI-resultaten"
-          unavailable: "AI-resultaten niet beschikbaar"
-          zero_results_expanded: "Geen resultaten gevonden, %{count} AI-resultaten weergegeven"
         semantic_search_tooltips:
           results_explanation: "Als dit is ingeschakeld, worden hieronder extra AI-zoekresultaten toegevoegd."
-          invalid_sort: "Zoekresultaten moeten worden gesorteerd op Relevantie om AI-resultaten weer te geven"
           not_submitted: "Dien een zoekopdracht in om AI-resultaten in te schakelen"
           no_results: "Geen AI-resultaten voor deze zoekopdracht gevonden"
-        semantic_search_unavailable_tooltip: "Zoekresultaten moeten worden gesorteerd op Relevantie om AI-resultaten weer te geven"
-        ai_generated_result: "Zoekresultaat gevonden met AI"
         ai_results_notice:
           no_results: "Geen exacte overeenkomsten, maar hier zijn enkele gerelateerde resultaten."
           few_results:
@@ -1162,9 +1191,24 @@ nl:
         quick_search:
           suffix: "in alle topics en berichten met AI"
       ai_artifact:
+        editor:
+          version: "Versie"
+          default: "Standaard"
+          option_on: "Aan"
+          option_off: "Uit"
+          apply: "Toepassen"
         expand_view_label: "Weergave uitvouwen"
         collapse_view_label: "Volledig scherm verlaten (ESC of knop Terug)"
         click_to_run_label: "Artefact uitvoeren"
+        share: "Delen"
+        create_link: "Link maken"
+        copied: "Gekopieerd naar klembord"
+        copy_link: "Link kopiëren"
+        copy_embed: "Insluiting kopiëren"
+        new_tab: "Weergeven in nieuw tabblad"
+        filter_all: "Alles"
+        filter_standalone: "Losstaand"
+        filter_conversation: "Conversatie"
       ai_bot:
         title: "AI-bot"
         agent: "Agent:"
@@ -1295,20 +1339,29 @@ nl:
             expanded: "Uitgebreid"
             expanded_description: "met AI-samenvattingen"
       discobot_discoveries:
-        main_title: "Discobot-ontdekkingen"
-        regular_results: "Topics"
-        tell_me_more: "Vertel me meer..."
-        continue_convo: "Conversatie voortzetten..."
+        main_title: "AI vragen"
         loading_convo: "Conversatie laden"
-        collapse: "Samenvouwen"
-        timed_out: "Discobot kon geen ontdekkingen vinden. Er is iets misgegaan."
         user_setting: "AI-zoekontdekkingen inschakelen"
-        tooltip:
-          header: "AI-gestuurd zoeken"
-          content: "Zoeken in natuurlijke taal, aangestuurd door %{model}"
-          actions:
-            info: "Hoe werkt het?"
-            disable: "Uitschakelen"
+        legacy:
+          main_title: "Discobot-ontdekkingen"
+          regular_results: "Topics"
+          tell_me_more: "Vertel me meer..."
+          continue_convo: "Conversatie voortzetten..."
+          loading_convo: "Conversatie laden"
+          collapse: "Samenvouwen"
+          timed_out: "Discobot kon geen ontdekkingen vinden. Er is iets misgegaan."
+          tooltip:
+            header: "AI-gestuurd zoeken"
+            content: "Zoeken in natuurlijke taal, aangestuurd door %{model}"
+            actions:
+              info: "Hoe werkt het?"
+              disable: "Uitschakelen"
+        search_type: "AI"
+        search_all_topics: "Alle topics"
+        search_messages: "Berichten"
+        ask_ai: "AI"
+        sources:
+          related_discussions: "Gerelateerde topics"
       user_preferences:
         empty: "Er zijn op dit moment geen relevante instellingen beschikbaar"
     review:

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-DiscoursePostEvent::Engine.routes.draw do
+# URL paths keep their original `discourse-post-event` / `discourse-calendar`
+# spellings: they are a public API surface, unlike the Ruby namespaces.
+DiscourseEvents::Engine.routes.draw do
   get "/discourse-post-event/events" => "events#index",
       :constraints => {
         format: /(json|ics)/,
@@ -21,17 +23,13 @@ DiscoursePostEvent::Engine.routes.draw do
   get "/upcoming-events" => "upcoming_events#index"
   get "/upcoming-events/mine/:view/:year/:month/:day" => "upcoming_events#index"
   get "/upcoming-events/mine" => "upcoming_events#index"
-end
-
-DiscourseCalendar::Engine.routes.draw do
   get "/discourse-calendar/livestream/zoom/signature" => "livestream#prepare_zoom_signature",
       :format => :json
   get "/discourse-calendar/livestream/zoom/frame" => "livestream#zoom_frame"
 end
 
 Discourse::Application.routes.draw do
-  mount DiscourseCalendar::Engine, at: "/"
-  mount DiscoursePostEvent::Engine, at: "/"
+  mount DiscourseEvents::Engine, at: "/"
 
   get "t/:slug/:topic_id/zoom" => "topics#show", :constraints => { topic_id: /\d+/ }
 
@@ -40,10 +38,8 @@ Discourse::Application.routes.draw do
     get "/admin/plugins/discourse-events" => "admin/plugins#index"
     get "/admin/plugins/discourse-events/holidays" => "admin/plugins#index"
     get "/admin/discourse-calendar/holiday-regions/:region_code/holidays" =>
-          "admin/discourse_calendar/admin_holidays#index"
-    post "/admin/discourse-calendar/holidays/disable" =>
-           "admin/discourse_calendar/admin_holidays#disable"
-    delete "/admin/discourse-calendar/holidays/enable" =>
-             "admin/discourse_calendar/admin_holidays#enable"
+          "admin/discourse_events/holidays#index"
+    post "/admin/discourse-calendar/holidays/disable" => "admin/discourse_events/holidays#disable"
+    delete "/admin/discourse-calendar/holidays/enable" => "admin/discourse_events/holidays#enable"
   end
 end

@@ -1,5 +1,8 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
+import DiscourseURL from "discourse/lib/url";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   updateCurrentUser,
@@ -30,6 +33,60 @@ acceptance("User Preferences - Security", function (needs) {
     server.put("/u/eviltrout/remove-password", () => {
       return helper.response({ success: "Ok" });
     });
+  });
+
+  test("changes a password using an email code", async function (assert) {
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+    pretender.post("/session/forgot_password.json", () =>
+      response({ success: "OK", email_code: true })
+    );
+    pretender.post("/session/password-reset-code/verify", () =>
+      response({ success: "OK", redirect_url: "/u/password-reset/reset-token" })
+    );
+
+    await visit("/u/eviltrout/preferences/security");
+    await click("#change-password-button");
+
+    assert
+      .dom(".forgot-password-modal .d-otp-input")
+      .exists("opens code entry");
+    assert
+      .dom("#username-or-email")
+      .doesNotExist("uses the code already requested");
+
+    await fillIn(".d-otp-input", "123456");
+
+    assert.true(
+      redirect.calledOnceWithExactly("/u/password-reset/reset-token"),
+      "loads the password reset page after verification"
+    );
+  });
+
+  test("opens code entry from the confirm-session dialog", async function (assert) {
+    this.siteSettings.enable_passkeys = true;
+    pretender.post("/session/forgot_password.json", () =>
+      response({ success: "OK", email_code: true })
+    );
+
+    await visit("/u/eviltrout/preferences/security");
+    await click(".pref-passkeys__add .btn");
+    await click(".dialog-body .confirm-session__reset-btn");
+
+    assert
+      .dom(".dialog-body .confirm-session")
+      .doesNotExist("dismisses the confirmation dialog");
+    assert
+      .dom(".forgot-password-modal .d-otp-input")
+      .exists("opens code entry for the requested reset");
+
+    await click(".code-login-form__change-email");
+
+    assert
+      .dom("#username-or-email")
+      .hasValue(
+        this.owner.lookup("service:current-user").email || "eviltrout",
+        "keeps the current account when returning to the request step"
+      );
   });
 
   test("recently connected devices", async function (assert) {

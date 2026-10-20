@@ -1,26 +1,29 @@
-source_db_path: "/path/to/your/db.sqlite3"
-output_db_path: "/path/to/your/uploads.sqlite3"
+# The IntermediateDB the converter produced; its `upload_sources` are read from here.
+intermediate_db: "/shared/import/intermediate.db"
+
+# The files database this run writes its results to (the same file `import.yml`
+# calls `files_db`).
+files_db: "/shared/import/files.db"
 
 root_paths:
-  - "/path/to/your/files"
-  - "/path/to/more/files"
+  - "/shared/import/uploads"
+  - "/shared/import/more-uploads"
 
 # Files that are downloaded from URLs are cached in this directory.
-download_cache_path: "/path/to/downloaded/files"
+download_cache_path: "/shared/import/upload-cache"
 
 # The number of threads to use for processing uploads is calculated as:
 #   thread_count = [number of cores] * [thread_count_factor]
 # The thread count will be doubled if uploads are stored on S3 because there's a higher latency.
 thread_count_factor: 1.5
 
-# Delete uploads from the output database that are not found in the source database.
+# Delete uploads from files.db that are not found in the IntermediateDB.
 delete_surplus_uploads: false
 
-# Delete uploads from the output database that do not have a Discourse upload record.
+# Delete uploads from files.db that do not have a Discourse upload record.
 delete_missing_uploads: false
 
-# Check if files are missing in the upload store and update the database accordingly.
-# Set to false and re-run the script afterwards if you want to create new uploads for missing files.
+# Check for files missing from the upload store and recreate them during this run.
 fix_missing: false
 
 # Create optimized images for post uploads and avatars.
@@ -30,6 +33,13 @@ site_settings:
   authorized_extensions: "*"
   max_attachment_size_kb: 102_400
   max_image_size_kb: 102_400
+
+  # Largest image the importer will accept without downsizing (in megapixels).
+  max_image_megapixels: 150
+  # Set to true when importing into a site that has secure uploads enabled.
+  secure_uploads: false
+  # Set to true when the S3 bucket uses object ACLs and tags for access control.
+  s3_enable_access_control_tags: true
 
   enable_s3_uploads: true
   s3_upload_bucket: "your-bucket-name"

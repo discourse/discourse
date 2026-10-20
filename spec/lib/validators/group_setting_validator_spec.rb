@@ -15,16 +15,16 @@ RSpec.describe GroupSettingValidator do
       expect(validator.valid_value?(group.id.to_s)).to eq(true)
     end
 
-    it "returns true if value matches an existing group name" do
-      expect(validator.valid_value?(group.name)).to eq(true)
+    it "returns false if value matches a group name rather than an id" do
+      expect(validator.valid_value?(group.name)).to eq(false)
     end
 
     it "returns false if value does not match a group id" do
-      expect(validator.valid_value?("-9999")).to eq(false)
+      expect(validator.valid_value?("999999999")).to eq(false)
     end
 
-    it "returns false for a non-numeric value that does not match a group name" do
-      expect(validator.valid_value?("notagroup")).to eq(false)
+    it "does not read a group id out of a value that merely starts with a digit" do
+      expect(validator.valid_value?("0#{group.name}")).to eq(false)
     end
   end
 end

@@ -28,6 +28,7 @@ export default class AdminPluginsShowDiscourseAiAgentsNew extends DiscourseRoute
     record.set("allowed_group_ids", [AUTO_GROUPS.trust_level_0.id]);
     record.set("tools", []);
     record.set("rag_uploads", []);
+    record.set("rag_document_sources", []);
     record.set("subagent_ids", []);
     // these match the defaults on the table
     record.set("rag_chunk_tokens", 374);
@@ -38,6 +39,14 @@ export default class AdminPluginsShowDiscourseAiAgentsNew extends DiscourseRoute
     return record;
   }
 
+  setupController(controller, model) {
+    super.setupController(controller, model);
+    controller.set(
+      "allAgents",
+      this.modelFor("adminPlugins.show.discourse-ai-agents")
+    );
+  }
+
   #findSourceAgent(copyFrom) {
     if (!copyFrom) {
       return;
@@ -46,14 +55,6 @@ export default class AdminPluginsShowDiscourseAiAgentsNew extends DiscourseRoute
     const id = parseInt(copyFrom, 10);
     return this.modelFor("adminPlugins.show.discourse-ai-agents").content.find(
       (agent) => agent.id === id
-    );
-  }
-
-  setupController(controller, model) {
-    super.setupController(controller, model);
-    controller.set(
-      "allAgents",
-      this.modelFor("adminPlugins.show.discourse-ai-agents")
     );
   }
 }

@@ -28,4 +28,19 @@ RSpec.describe PrettyText do
 
     expect(PrettyText.format_for_email(cooked_html, post)).to match_html(email_formatted)
   end
+
+  it "preserves lazy video titles as link text in emails" do
+    video_title = 'Video <img src=x onerror="alert(1)">'
+    cooked_html = <<~HTML
+      <div class="vimeo-onebox lazy-video-container"
+        data-video-title="Video &lt;img src=x onerror=&quot;alert(1)&quot;&gt;">
+        <a href="https://vimeo.com/123456789"></a>
+      </div>
+    HTML
+
+    fragment = Nokogiri::HTML5.fragment(PrettyText.format_for_email(cooked_html, post))
+
+    expect(fragment.css("img[onerror]")).to be_empty
+    expect(fragment.at_css("a").text).to eq(video_title)
+  end
 end

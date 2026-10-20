@@ -65,6 +65,11 @@ zh_CN:
       weekly: "每周"
       monthly: "每月"
       quarterly: "每季度"
+    discourse_workflows:
+      assign_topic:
+        error: "指定失败： %{reason}"
+      check_assignment:
+        unknown_target_type: "未知指定目标类型： %{target_type}"
   assign_mailer:
     title: "指定邮件程序"
     subject_template: "[%{email_prefix}] %{assignee_name} 将您指定至 '%{topic_title}'！"

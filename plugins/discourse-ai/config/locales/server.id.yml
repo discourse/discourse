@@ -48,11 +48,35 @@ id:
       prompts:
         custom_prompt: "Perintah Khusus"
     ai_bot:
+      navigation:
+        users:
+          title: "Pengguna"
+        groups:
+          title: "Grup"
+        categories:
+          title: "Kategori"
+        tags:
+          title: "Label"
       default_pm_prefix: "[PM bot AI tanpa judul]"
       read_post:
         unknown_post: "post"
-      agents:
-        default_llm_required: "Model LLM default diperlukan sebelum mengaktifkan Obrolan"
+      chat_tool_approval:
+        topic_states:
+          open: "Buka"
+          closed: "Tertutup"
+          active: "Aktif"
+          deleted: "Dihapus"
+        solution_post: "Post #%{number}"
+        duration_label: "Durasi:"
+        user_duration:
+          other: "%{count} hari"
+        posts_label: "Pos"
+        category_label: "Kategori"
+        category_fields:
+          name: "nama"
+          description: "deskripsi"
+        approve_label: "Ya"
+        reject_label: "Tidak"
       tool_options:
         search:
           search_private:
@@ -80,10 +104,13 @@ id:
       delete_topic:
         errors:
           not_found: "Tidak ada topik."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Tidak ada topik."
       edit_category:
+        errors:
+          not_found: "Kategori tidak ditemukan."
+      change_topic_category:
         errors:
           not_found: "Tidak ada topik."
           category_not_found: "Kategori tidak ditemukan."

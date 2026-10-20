@@ -6,8 +6,8 @@ import ActivationControls from "discourse/components/activation-controls";
 import { resendActivationEmail } from "discourse/lib/user-activation";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import ActivationEdit from "./activation-edit";
-import ActivationResent from "./activation-resent";
+import ActivationEdit from "./activation-edit.gjs";
+import ActivationResent from "./activation-resent.gjs";
 
 export default class NotActivated extends Component {
   @service modal;
@@ -33,17 +33,17 @@ export default class NotActivated extends Component {
 
   <template>
     <DModal
+      class="not-activated-modal"
       @closeModal={{@closeModal}}
       @title={{i18n "log_in"}}
-      class="not-activated-modal"
     >
       <:body>
         {{trustHTML (i18n "login.not_activated" sentTo=@model.sentTo)}}
       </:body>
       <:footer>
         <ActivationControls
-          @sendActivationEmail={{this.sendActivationEmail}}
           @editActivationEmail={{this.editActivationEmail}}
+          @sendActivationEmail={{this.sendActivationEmail}}
         />
       </:footer>
     </DModal>

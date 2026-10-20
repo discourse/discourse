@@ -207,6 +207,11 @@ module Chat
       @user.in_any_groups?(SiteSetting.chat_message_flag_allowed_groups_map)
     end
 
+    # Illegal content must be reportable by anyone, regardless of flagging permissions.
+    def can_only_flag_chat_messages_as_illegal?
+      SiteSetting.allow_all_users_to_flag_illegal_content && !can_flag_chat_messages?
+    end
+
     def can_flag_in_chat_channel?(chat_channel, post_allowed_category_ids: nil)
       return false if !can_modify_channel_message?(chat_channel)
 
@@ -220,11 +225,16 @@ module Chat
       return false if chat_message.user.staff? && !SiteSetting.allow_flagging_staff
       return false if chat_message.user_id == @user.id
 
-      can_flag_chat_messages? && can_flag_in_chat_channel?(chat_message.chat_channel)
+      (can_flag_chat_messages? || SiteSetting.allow_all_users_to_flag_illegal_content) &&
+        can_flag_in_chat_channel?(chat_message.chat_channel)
     end
 
     def can_flag_message_as?(chat_message, flag_type_id, opts)
       return false if !is_staff? && (opts[:take_action] || opts[:queue_for_review])
+
+      if can_only_flag_chat_messages_as_illegal? && flag_type_id != ReviewableScore.types[:illegal]
+        return false
+      end
 
       if flag_type_id == ReviewableScore.types[:notify_user]
         is_warning = ActiveRecord::Type::Boolean.new.deserialize(opts[:is_warning])
@@ -238,10 +248,9 @@ module Chat
     def can_delete_chat?(message, chatable)
       return false if @user.silenced?
       return false if !can_modify_channel_message?(message.chat_channel)
+      return false if !is_admin? && !can_preview_chat_channel?(message.chat_channel)
 
       if message.user_id == current_user.id
-        return false if !can_preview_chat_channel?(message.chat_channel)
-
         can_delete_own_chats?(chatable)
       else
         can_delete_other_chats?(chatable)
@@ -262,11 +271,11 @@ module Chat
     end
 
     def can_restore_chat?(message, chatable)
+      return false if @user.silenced?
       return false if !can_modify_channel_message?(message.chat_channel)
+      return false if !is_admin? && !can_preview_chat_channel?(message.chat_channel)
 
       if message.user_id == current_user.id
-        return false if !can_preview_chat_channel?(message.chat_channel)
-
         case chatable
         when Category
           return message.deleted_by_id == current_user.id || can_moderate_chat?(chatable)

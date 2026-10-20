@@ -197,6 +197,7 @@ ru:
     discourse_workflows:
       nodes:
         "trigger:assigned": "Назначенные"
+        "trigger:unassigned": "Неназначенные"
       assign_topic:
         resource: "Ресурс"
         resources:

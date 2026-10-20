@@ -48,11 +48,13 @@ module DiscourseAi
           )
 
         result = +""
-        bot.reply(context) do |partial|
-          next if partial.strip.blank?
+        bot.reply(context) do |partial, _, type|
+          next if type == :thinking || partial.strip.blank?
+
           result << partial
         end
 
+        result = result.strip.delete_suffix("\\")
         result.match?(LANGUAGE_TAG_REGEXP) ? result : nil
       end
     end

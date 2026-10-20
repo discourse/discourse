@@ -180,9 +180,14 @@ id:
         sort:
           latest: "Terbaru"
       direct_messages:
+        close: "Tutup kanal"
         cannot_create: "Maaf, Anda tidak dapat mengirim pesan langsung."
       channel_list:
         title: "Kanal"
+        options:
+          filter: "Filter"
+        filter:
+          mentions: "Balasan-balasan"
       incoming_webhooks:
         description: "Deskripsi"
         delete: "Hapus"
@@ -256,6 +261,7 @@ id:
         "action:send_chat_message": "Kirim pesan obrolan"
       send_chat_message:
         message: "pesan"
+        actor_username: "Pengirim"
       chat_approval:
         message: "pesan"
         buttons: "Tombol"

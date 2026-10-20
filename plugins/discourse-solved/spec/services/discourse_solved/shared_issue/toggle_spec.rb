@@ -22,7 +22,6 @@ RSpec.describe DiscourseSolved::SharedIssue::Toggle do
 
     before do
       SiteSetting.solved_enabled = true
-      SiteSetting.enable_solved_shared_issues = true
       DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
     end
 
@@ -39,7 +38,7 @@ RSpec.describe DiscourseSolved::SharedIssue::Toggle do
     end
 
     context "when user cannot create a shared issue for the topic" do
-      context "when the feature flag is disabled" do
+      context "when shared issues are disabled" do
         before { SiteSetting.enable_solved_shared_issues = false }
 
         it { is_expected.to fail_a_policy(:can_create_shared_issue) }

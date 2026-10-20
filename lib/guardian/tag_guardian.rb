@@ -3,6 +3,7 @@
 module TagGuardian
   def can_see_tag?(tag)
     return false if !SiteSetting.tagging_enabled
+    return false if !tag
     return false if hidden_tag_names.include?(tag.name)
     true
   end
@@ -37,6 +38,10 @@ module TagGuardian
 
   def can_admin_tag_groups?
     is_staff? && SiteSetting.tagging_enabled
+  end
+
+  def visible_tag_ids
+    @visible_tag_ids ||= DiscourseTagging.visible_tags(self).pluck(:id).to_set
   end
 
   def hidden_tag_names

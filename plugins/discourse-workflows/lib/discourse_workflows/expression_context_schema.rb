@@ -3,10 +3,16 @@
 module DiscourseWorkflows
   class ExpressionContextSchema
     ENVIRONMENT_SYMBOLS = {
+      "$helpers" => {
+        type: :object,
+      },
       "$site_settings" => {
         type: :object,
       },
       "$vars" => {
+        type: :object,
+      },
+      "$workflow_vars" => {
         type: :object,
       },
       "$current_user" => {

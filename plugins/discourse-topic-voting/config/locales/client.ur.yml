@@ -9,7 +9,7 @@ ur:
     admin:
       site_settings:
         categories:
-          discourse_topic_voting: "Discourse عنوانات کی ووٹنگ"
+          discourse_topic_voting: "Discourse موضوع کی ووٹنگ"
   js:
     category:
       sort_options:
@@ -19,7 +19,7 @@ ur:
         vote_released: "ووٹ کی واپسی"
         voting_closed: "ووٹنگ بند"
       hot_nav_help: "سرفہرست حالیہ عنوانات، بشمول حالیہ ووٹ"
-      voted: "آپ نے اِس ٹاپک پر ووٹ کیا"
+      voted: "آپ نے اِس موضوع پر ووٹ کیا"
       vote_title: "ووٹ"
       vote_title_plural: "ووٹ"
       voting_closed_description: "اس موضوع کے لیے ووٹنگ بند ہے"
@@ -28,11 +28,11 @@ ur:
       votes:
         one: "%{count} ووٹ"
         other: "%{count} ووٹ"
-      remove_vote: "ووٹ ہٹا دیں"
+      remove_vote: "ووٹ ہٹائیں"
       watch_topic: "مجھے نئے دھاگوں کے بارے میں مطلع کریں"
       no_votes_yet: "اسے ابھی تک کسی نے ووٹ نہیں دیا"
       and_more_voters: "اور %{count} مزید۔۔۔"
-      show_voters: "دکھایں جنہوں نے ووٹ دیا"
+      show_voters: "دکھائیں جنہوں نے ووٹ دیا"
       vote_count_thousands: "%{count} هزار"
       no_votes_title_self: "آپ نے ابھی تک کسی موضوع کو ووٹ نہیں دیا"
       no_votes_title_others: "%{username} نے ابھی تک کسی موضوع کو ووٹ نہیں دیا"
@@ -48,12 +48,12 @@ ur:
     admin:
       web_hooks:
         voting_event:
-          group_name: "موضوع ووٹنگ ایونٹ"
-          topic_upvote: "جب رکن کسی موضوع پر ووٹ دیتا ہے"
-          topic_unvote: "جب رکن کسی موضوع پر ووٹ نہیں ڈالتا ہے"
+          group_name: "موضوع کی ووٹنگ کا واقعہ"
+          topic_upvote: "جب صارف کسی موضوع پر ووٹ دیتا ہے"
+          topic_unvote: "جب صارف کسی موضوع پر ووٹ نہیں دیتا ہے"
     discourse_workflows:
       node_unavailable:
-        requires_topic_voting: "موضوع کی ووٹنگ کو فعال ہونی چاہیے"
+        requires_topic_voting: "موضوع کی ووٹنگ فعال ہونی چاہیے"
       nodes:
         "trigger:topic_received_vote": "موضوع کو ووٹ ملا"
       node_descriptions:
@@ -61,4 +61,4 @@ ur:
       topic_received_vote:
         category_ids_description: "صرف ان زمروں میں عنوانات کے لیے آگاہی دیں۔ تمام زمروں کے لیے خالی چھوڑ دیں۔"
         tag_names: "ٹیگز"
-        tag_names_description: "صرف ان عنوانات کے لیے آگاہی دیں جن میں کم از کم ان میں سے ایک ٹیگ ہو۔"
+        tag_names_description: "صرف ان موضوعات کے لیے آگاہی دیں جن میں کم از کم ان میں سے ایک ٹیگ ہو۔"

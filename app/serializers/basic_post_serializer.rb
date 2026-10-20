@@ -34,12 +34,8 @@ class BasicPostSerializer < ApplicationSerializer
         I18n.t("flagging.user_must_edit")
       end
     else
-      cooked = object.filter_quotes(@parent_post)
-
-      translated_cooked =
-        object.get_localization&.cooked if ContentLocalization.show_translated_post?(object, scope)
-
-      translated_cooked || cooked
+      ContentLocalization.translated_post_cooked(object, scope) ||
+        object.filter_quotes(@parent_post)
     end
   end
 

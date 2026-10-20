@@ -1,5 +1,5 @@
-import { readDiscourseImportMode } from "./discourse-import-attribute";
-import rollupVirtualImports from "./rollup-virtual-imports";
+import { readDiscourseImportMode } from "./discourse-import-attribute.js";
+import rollupVirtualImports from "./rollup-virtual-imports.js";
 
 export default function (babel) {
   const { types: t } = babel;

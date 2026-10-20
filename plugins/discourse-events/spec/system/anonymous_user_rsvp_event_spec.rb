@@ -5,7 +5,7 @@ describe "Anonymous user RSVPing to an event" do
   fab!(:user) { Fabricate(:user, username: "testuser", password: "supersecurepassword") }
   fab!(:topic) { Fabricate(:topic, user: admin) }
 
-  let(:post_event_page) { PageObjects::Pages::DiscourseCalendar::PostEvent.new }
+  let(:post_event_page) { PageObjects::Pages::DiscourseEvents::PostEvent.new }
   let(:login_page) { PageObjects::Pages::Login.new }
 
   before do
@@ -36,8 +36,8 @@ describe "Anonymous user RSVPing to an event" do
   end
 
   it "overwrites an existing RSVP when an anon clicks a different status and logs in" do
-    event = DiscoursePostEvent::Event.find(topic.first_post.id)
-    DiscoursePostEvent::Invitee.create_attendance!(user.id, event.id, :not_going)
+    event = DiscourseEvents::Events::Event.find(topic.first_post.id)
+    DiscourseEvents::Events::Invitee.create_attendance!(user.id, event.id, :not_going)
 
     visit(topic.url)
     post_event_page.going
@@ -48,8 +48,8 @@ describe "Anonymous user RSVPing to an event" do
     expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
     expect(post_event_page).to have_going_status
 
-    invitee = DiscoursePostEvent::Invitee.find_by(user_id: user.id, post_id: event.id)
-    expect(invitee.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
+    invitee = DiscourseEvents::Events::Invitee.find_by(user_id: user.id, post_id: event.id)
+    expect(invitee.status).to eq(DiscourseEvents::Events::Invitee.statuses[:going])
   end
 
   context "when the site is invite-only without login required" do

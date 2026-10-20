@@ -9,8 +9,8 @@ import { or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import ArgsTable from "../shared/args-table";
-import devToolsState from "../state";
+import ArgsTable from "../shared/args-table.gjs";
+import devToolsState from "../state.js";
 
 // Outlets matching these patterns will be displayed with an icon only.
 // Feel free to add more if it improves the layout.
@@ -61,18 +61,6 @@ export default class OutletInfoComponent extends Component {
 
   get displayName() {
     return this.partOfWrapper ? this.baseName : this.args.outletName;
-  }
-
-  @action
-  checkIsWrapper(element) {
-    const parent = element.parentElement;
-    this.partOfWrapper = [
-      this.baseName,
-      `${this.baseName}__before`,
-      `${this.baseName}__after`,
-    ].every((name) =>
-      parent.querySelector(`:scope > [data-outlet-name="${name}"]`)
-    );
   }
 
   get isWrapper() {
@@ -131,6 +119,18 @@ export default class OutletInfoComponent extends Component {
     return this.partOfWrapper ? "--wrapper-outlet" : "--plugin-outlet";
   }
 
+  @action
+  checkIsWrapper(element) {
+    const parent = element.parentElement;
+    this.partOfWrapper = [
+      this.baseName,
+      `${this.baseName}__before`,
+      `${this.baseName}__after`,
+    ].every((name) =>
+      parent.querySelector(`:scope > [data-outlet-name="${name}"]`)
+    );
+  }
+
   <template>
     <div
       class={{dConcatClass
@@ -138,14 +138,14 @@ export default class OutletInfoComponent extends Component {
         (if this.partOfWrapper "--wrapper")
         (if this.isHidden "hidden")
       }}
-      {{didInsert this.checkIsWrapper}}
       data-outlet-name={{@outletName}}
+      {{didInsert this.checkIsWrapper}}
     >
       <DTooltip
         @identifier="plugin-outlet-info"
         @interactive={{true}}
-        @placement="bottom-start"
         @maxWidth={{600}}
+        @placement="bottom-start"
         @triggers={{hash mobile=(array "click") desktop=(array "hover")}}
         @untriggers={{hash mobile=(array "click") desktop=(array "click")}}
       >
@@ -177,8 +177,8 @@ export default class OutletInfoComponent extends Component {
               <a
                 class="github-link"
                 href="https://github.com/search?q=repo%3Adiscourse%2Fdiscourse%20@name=%22{{this.displayName}}%22&type=code"
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
                 title={{i18n "js.dev_tools.plugin_outlet_debug.find_on_github"}}
               >{{dIcon "fab-github"}}</a>
             </div>

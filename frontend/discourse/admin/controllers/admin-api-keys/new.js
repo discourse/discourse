@@ -7,8 +7,17 @@ import { isBlank } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
-import ApiKeyUrlsModal from "../../components/modal/api-key-urls";
+import ApiKeyUrlsModal from "../../components/modal/api-key-urls.gjs";
 
+/**
+ * @typedef {Object} ApiKeyScope
+ * @property {string} scope_id
+ * @property {string} key
+ * @property {string} name
+ * @property {string[] | null} params
+ * @property {string[]} urls
+ * @property {boolean} [selected]
+ */
 export default class AdminApiKeysNewController extends Controller {
   @service router;
 
@@ -25,7 +34,11 @@ export default class AdminApiKeysNewController extends Controller {
     { id: "read_only", name: i18n("admin.api.scopes.read_only") },
     { id: "global", name: i18n("admin.api.scopes.global") },
   ];
+
+  /** @type {ApiKeyScope[] | null} */
   globalScopes = null;
+
+  /** @type {Record<string, ApiKeyScope[]> | null} */
   scopes = null;
 
   init() {

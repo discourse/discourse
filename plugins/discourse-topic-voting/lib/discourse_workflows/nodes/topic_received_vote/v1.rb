@@ -13,7 +13,7 @@ if defined?(DiscourseWorkflows)
               color: "purple",
             },
             group: "discourse_triggers",
-            events: [:topic_voting_vote_created],
+            event: :topic_voting_vote_created,
             available: -> { SiteSetting.topic_voting_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_topic_voting",
             output_contracts: [
@@ -22,34 +22,7 @@ if defined?(DiscourseWorkflows)
               },
             ],
             properties: {
-              category_ids: {
-                type: :array,
-                required: false,
-                ui: {
-                  control: :category,
-                  multiple: true,
-                },
-              },
-              include_subcategories: {
-                type: :boolean,
-                required: false,
-                default: true,
-                ui: {
-                  control: :checkbox,
-                },
-                display_options: {
-                  show: {
-                    category_ids: [{ condition: { exists: true } }],
-                  },
-                },
-              },
-              tag_names: {
-                type: :string,
-                required: false,
-                ui: {
-                  control: :tags,
-                },
-              },
+              **TOPIC_SCOPE_FILTER_PROPERTIES,
             },
           )
 
@@ -75,11 +48,7 @@ if defined?(DiscourseWorkflows)
           end
 
           def matches?(trigger_ctx)
-            matches_category_ids?(
-              topic.category_id,
-              category_ids_parameter(trigger_ctx),
-              include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-            ) && matches_tags?(normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
+            matches_topic_filters?(topic, trigger_ctx)
           end
 
           private
@@ -90,10 +59,6 @@ if defined?(DiscourseWorkflows)
 
           def voter
             @voter ||= @vote&.user
-          end
-
-          def matches_tags?(tag_names)
-            tag_names.empty? || (topic.tags.pluck(:name) & tag_names).any?
           end
         end
       end

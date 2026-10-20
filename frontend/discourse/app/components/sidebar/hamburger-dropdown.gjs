@@ -7,15 +7,23 @@ import DeferredRender from "discourse/components/deferred-render";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { or } from "discourse/truth-helpers";
-import ApiPanels from "./api-panels";
-import Footer from "./footer";
-import Sections from "./sections";
+import ApiPanels from "./api-panels.gjs";
+import Footer from "./footer.gjs";
+import Sections from "./sections.gjs";
 
 export default class SidebarHamburgerDropdown extends Component {
   @service appEvents;
   @service currentUser;
   @service site;
   @service sidebarState;
+
+  get collapsableSections() {
+    if (this.site.mobileView || this.site.narrowDesktopView) {
+      return true;
+    } else {
+      return this.args.collapsableSections;
+    }
+  }
 
   @action
   triggerRenderedAppEvent() {
@@ -32,20 +40,12 @@ export default class SidebarHamburgerDropdown extends Component {
     });
   }
 
-  get collapsableSections() {
-    if (this.site.mobileView || this.site.narrowDesktopView) {
-      return true;
-    } else {
-      return this.args.collapsableSections;
-    }
-  }
-
   <template>
     <div class="hamburger-panel">
       <div
-        {{didInsert this.triggerRenderedAppEvent}}
-        data-max-width="320"
         class="revamped menu-panel drop-down"
+        data-max-width="320"
+        {{didInsert this.triggerRenderedAppEvent}}
       >
         <div class="panel-body">
           <div class="panel-body-contents">
@@ -64,16 +64,17 @@ export default class SidebarHamburgerDropdown extends Component {
                   (or this.sidebarState.showMainPanel @forceMainSidebarPanel)
                 }}
                   <Sections
-                    @currentUser={{this.currentUser}}
                     @collapsableSections={{this.collapsableSections}}
-                    @panel={{this.sidebarState.currentPanel}}
+                    @currentUser={{this.currentUser}}
                     @hideApiSections={{@forceMainSidebarPanel}}
+                    @panel={{this.sidebarState.currentPanel}}
                     @toggleNavigationMenu={{@toggleNavigationMenu}}
                   />
                 {{else}}
                   <ApiPanels
-                    @currentUser={{this.currentUser}}
                     @collapsableSections={{this.collapsableSections}}
+                    @currentUser={{this.currentUser}}
+                    @toggleNavigationMenu={{@toggleNavigationMenu}}
                   />
                 {{/if}}
                 <PluginOutlet @name="after-sidebar-sections" />

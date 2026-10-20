@@ -34,11 +34,11 @@ export default class NotificationLevelWhenAssigned extends Component {
         <label>{{i18n "user.notification_level_when_assigned.label"}}</label>
         <ComboBox
           @content={{this.notificationLevelsWhenAssigned}}
-          @value={{@outletArgs.model.user_option.notification_level_when_assigned}}
-          @valueProperty="value"
           @onChange={{fn
             (mut @outletArgs.model.user_option.notification_level_when_assigned)
           }}
+          @value={{@outletArgs.model.user_option.notification_level_when_assigned}}
+          @valueProperty="value"
         />
       </div>
     {{/if}}

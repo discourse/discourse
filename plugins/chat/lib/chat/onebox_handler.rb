@@ -19,7 +19,7 @@ module Chat
         thread = chat_channel.threads.find_by(id: route[:thread_id]) if route[:thread_id]
       end
 
-      return if !Guardian.new.can_preview_chat_channel?(chat_channel)
+      return if !Guardian.new.can_preview_anonymous_public_chat_channel?(chat_channel)
 
       args = build_args(url, chat_channel)
 
@@ -40,6 +40,7 @@ module Chat
       {
         channel_id: chat_channel.id,
         channel_name: chat_channel.name,
+        base_path: Discourse.base_path,
         color: chat_channel.chatable.color,
         channel_badge: build_channel_badge(chat_channel),
       }

@@ -63,6 +63,7 @@
 
   &__filters {
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-start; // aligned to top to provide alignment when subcat checkbox is in play
     gap: var(--space-2);
     margin-bottom: var(--space-4);

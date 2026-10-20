@@ -185,6 +185,7 @@ ja:
     discourse_workflows:
       nodes:
         "trigger:assigned": "割り当て完了"
+        "trigger:unassigned": "未割り当て"
       assign_topic:
         resource: "リソース"
         resources:

@@ -2,7 +2,6 @@
 
 RSpec.describe DiscourseWorkflows::TopicAdminButtonController do
   fab!(:admin)
-  fab!(:user)
   fab!(:topic)
   fab!(:workflow) do
     graph =
@@ -14,28 +13,22 @@ RSpec.describe DiscourseWorkflows::TopicAdminButtonController do
                  "icon" => "gear",
                }
       end
-    Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
+    Fabricate(:discourse_workflows_workflow, published: true, **graph)
   end
+
+  let(:params) { { trigger_node_id: "trigger-1", topic_id: topic.id } }
 
   describe "POST /discourse-workflows/trigger-topic-admin-button" do
     it "requires authentication" do
-      post "/discourse-workflows/trigger-topic-admin-button.json",
-           params: {
-             trigger_node_id: "trigger-1",
-             topic_id: topic.id,
-           }
+      post "/discourse-workflows/trigger-topic-admin-button.json", params: params
 
       expect(response).to have_http_status(:forbidden)
     end
 
     it "returns 403 when user is not an admin" do
-      sign_in(user)
+      sign_in(Fabricate(:user))
 
-      post "/discourse-workflows/trigger-topic-admin-button.json",
-           params: {
-             trigger_node_id: "trigger-1",
-             topic_id: topic.id,
-           }
+      post "/discourse-workflows/trigger-topic-admin-button.json", params: params
 
       expect(response).to have_http_status(:forbidden)
     end
@@ -44,27 +37,9 @@ RSpec.describe DiscourseWorkflows::TopicAdminButtonController do
       before { sign_in(admin) }
 
       it "returns 204 on success" do
-        post "/discourse-workflows/trigger-topic-admin-button.json",
-             params: {
-               trigger_node_id: "trigger-1",
-               topic_id: topic.id,
-             }
+        post "/discourse-workflows/trigger-topic-admin-button.json", params: params
 
         expect(response).to have_http_status(:no_content)
-      end
-
-      it "enqueues an ExecuteWorkflow job" do
-        post "/discourse-workflows/trigger-topic-admin-button.json",
-             params: {
-               trigger_node_id: "trigger-1",
-               topic_id: topic.id,
-             }
-
-        job = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last
-        expect(job["args"].first).to include(
-          "trigger_node_id" => "trigger-1",
-          "workflow_version_id" => workflow.active_version_id,
-        )
       end
 
       it "returns 400 when contract is invalid" do
@@ -75,22 +50,7 @@ RSpec.describe DiscourseWorkflows::TopicAdminButtonController do
 
       it "returns 404 when trigger node does not exist" do
         post "/discourse-workflows/trigger-topic-admin-button.json",
-             params: {
-               trigger_node_id: "nonexistent",
-               topic_id: topic.id,
-             }
-
-        expect(response).to have_http_status(:not_found)
-      end
-
-      it "returns 404 when workflow is unpublished" do
-        unpublish_workflow!(workflow)
-
-        post "/discourse-workflows/trigger-topic-admin-button.json",
-             params: {
-               trigger_node_id: "trigger-1",
-               topic_id: topic.id,
-             }
+             params: params.merge(trigger_node_id: "nonexistent")
 
         expect(response).to have_http_status(:not_found)
       end

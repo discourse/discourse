@@ -24,6 +24,19 @@ module DiscourseAi
         @done = false
       end
 
+      def content?
+        raw = @raw_response.strip
+        return false if raw.empty? || raw.match?(/\A\{\s*\}\z/)
+        return false if raw == "{" && (@prefilled || !finished?)
+
+        true
+      end
+
+      def prefill
+        @prefilled = true
+        self << "{"
+      end
+
       def to_s
         # we may want to also normalize the JSON here for the broken case
         @raw_response.to_s

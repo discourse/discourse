@@ -8,6 +8,10 @@ hr:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Datum"
+          outcomes:
+            failed: "Neuspješno"
         reports:
           filters:
             sort_by:
@@ -36,9 +40,20 @@ hr:
             canned_reply:
               label: "Odgovor"
     discourse_ai:
+      copied: "Kopirano"
+      ai_decoded_transcript:
+        type: "Tip"
+        error: "Greška"
+        response: "Odgovor"
       discourse_workflows:
         ai_agent:
           mode: "Modus"
+        classify:
+          text: "Tekst"
+          upload_ids: "Slike"
+          name: "Ime"
+          type: "Tip"
+          type_score: "Ocjena"
       ai_tool_approval:
         loading: "Očitavanje..."
         tool: "Akcija"
@@ -130,8 +145,6 @@ hr:
         successful: "Uspješno"
         failed: "Neuspješno"
         unknown: "Nepoznato"
-        topic_id: "ID teme"
-        post_id: "ID objave"
         time: "Vrijeme"
         when: "Kada"
         request: "Zahtjev"
@@ -143,6 +156,7 @@ hr:
         post_short: "Objava %{id}"
         duration: "Trajanje"
         actions: "Akcije"
+        view_details: "Detalji"
         periods:
           hour: "Posljednji sat"
           day: "Posljednja 24 sata"
@@ -206,6 +220,12 @@ hr:
         edit: "Uredi"
         delete: "Izbriši"
         embedding: "Ugrađivanje"
+      decision_models:
+        no_preset: "Ništa"
+        display_name: "Ime"
+        provider: "Pružatelj usluga"
+        edit: "Uredi"
+        delete: "Izbriši"
       mcp_servers:
         name: "Ime"
         description: "Opis"
@@ -219,6 +239,17 @@ hr:
         delete: "Izbriši"
         tools_modal:
           required: "Potrebno"
+      models:
+        name: "Ime"
+        type: "Tip"
+        provider: "Pružatelj usluga"
+        edit: "Uredi"
+        select_type: "Odaberite"
+        types:
+          embedding: "Ugrađivanje"
+        filters:
+          all: "Svi tipovi"
+          reset: "Poništi filtere"
       llms:
         display_name: "Ime"
         provider: "Pružatelj usluga"
@@ -273,6 +304,15 @@ hr:
         providers:
           google: "Google"
           fake: "Posebna"
+      ai_artifact:
+        editor:
+          version: "Inačica"
+          default: "Zadano"
+          apply: "Primijeni"
+        share: "Podijeli"
+        create_link: "Kreirajte poveznicu"
+        copy_link: "Kopirajte poveznicu"
+        filter_all: "Sve"
       ai_bot:
         debug_ai_modal:
           duration_label: "Trajanje:"
@@ -307,8 +347,11 @@ hr:
             few: "Posljednja %{count} sata"
             other: "Posljednjih %{count} sati"
       discobot_discoveries:
-        regular_results: "Tema"
-        collapse: "Sakrij"
-        tooltip:
-          actions:
-            disable: "Onemogući"
+        legacy:
+          regular_results: "Tema"
+          collapse: "Sakrij"
+          tooltip:
+            actions:
+              disable: "Onemogući"
+        search_all_topics: "Sve teme"
+        search_messages: "Poruke"

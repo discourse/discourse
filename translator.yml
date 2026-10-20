@@ -24,6 +24,13 @@ files:
     destination_path: error_pages/503.html
     label: core
 
+  - source_path: plugins/boards/config/locales/client.en.yml
+    destination_path: plugins/boards/client.yml
+    label: boards
+  - source_path: plugins/boards/config/locales/server.en.yml
+    destination_path: plugins/boards/server.yml
+    label: boards
+
   - source_path: plugins/chat/config/locales/client.en.yml
     destination_path: plugins/chat/client.yml
     label: chat

@@ -18,6 +18,10 @@ $max_video_height: 250px;
     overflow: hidden;
   }
 
+  iframe.youtube-onebox {
+    max-width: calc(#{$max_video_height} / 9 * 16);
+  }
+
   .onebox {
     &:not(img) {
       container-type: inline-size;
@@ -72,6 +76,10 @@ $max_video_height: 250px;
         }
       }
     }
+  }
+
+  .youtube-onebox {
+    margin-top: var(--space-1);
   }
 
   .onebox.twitterstatus {

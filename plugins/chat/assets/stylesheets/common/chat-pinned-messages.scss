@@ -48,16 +48,45 @@
 }
 
 .chat-pinned-message {
-  display: block;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
   margin-inline: 1rem 0.75rem;
   border-bottom: 1px solid var(--content-border-color);
 
-  &,
-  &:hover,
-  &:visited,
-  &:active {
-    color: var(--primary);
-    text-decoration: none;
+  &__link {
+    flex: 1;
+    min-width: 0;
+
+    &,
+    &:hover,
+    &:visited,
+    &:active {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    // stretch the click target across the whole row, under the unpin button
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+    }
+  }
+
+  &__unpin {
+    position: relative;
+    z-index: 1;
+    margin-block-start: 0.25em;
+
+    .discourse-no-touch & {
+      opacity: 0;
+    }
+
+    .discourse-no-touch .chat-pinned-message:hover &,
+    &:focus-visible {
+      opacity: 1;
+    }
   }
 
   .chat-message-container {

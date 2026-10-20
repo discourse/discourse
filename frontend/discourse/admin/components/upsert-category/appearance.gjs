@@ -47,25 +47,6 @@ export default class UpsertCategoryAppearance extends Component {
     return this.args.category.isParent || !parentCategoryId;
   }
 
-  @action
-  async onSortOrderSet(value, { name, set }) {
-    await set(name, value);
-
-    if (!value) {
-      await set("sort_ascending", null);
-    }
-  }
-
-  @action
-  onUploadDone(field, upload) {
-    this.args.form.set(field, { url: upload.url, id: upload.id });
-  }
-
-  @action
-  onUploadDeleted(field) {
-    this.args.form.set(field, { id: null, url: null });
-  }
-
   get subcategoryListStyles() {
     const styles = [
       { name: i18n("category.subcategory_list_styles.rows"), value: "rows" },
@@ -147,64 +128,83 @@ export default class UpsertCategoryAppearance extends Component {
     ];
   }
 
+  @action
+  async onSortOrderSet(value, { name, set }) {
+    await set(name, value);
+
+    if (!value) {
+      await set("sort_ascending", null);
+    }
+  }
+
+  @action
+  onUploadDone(field, upload) {
+    this.args.form.set(field, { url: upload.url, id: upload.id });
+  }
+
+  @action
+  onUploadDeleted(field) {
+    this.args.form.set(field, { id: null, url: null });
+  }
+
   <template>
     <@form.Container
+      @format="full"
+      @subtitle={{i18n "category.logo_description"}}
       @title={{i18n "category.logo"}}
-      @subtitle={{i18n "category.logo_description"}}
-      @format="full"
     >
       <UppyImageUploader
-        @imageUrl={{this.logoImageUrl}}
-        @onUploadDone={{fn this.onUploadDone "uploaded_logo"}}
-        @onUploadDeleted={{fn this.onUploadDeleted "uploaded_logo"}}
-        @type="category_logo"
+        class="no-repeat contain-image"
         @id="category-logo-uploader"
-        class="no-repeat contain-image"
+        @imageUrl={{this.logoImageUrl}}
+        @onUploadDeleted={{fn this.onUploadDeleted "uploaded_logo"}}
+        @onUploadDone={{fn this.onUploadDone "uploaded_logo"}}
+        @type="category_logo"
       />
     </@form.Container>
 
     <@form.Container
-      @title={{i18n "category.logo_dark"}}
+      @format="full"
       @subtitle={{i18n "category.logo_description"}}
-      @format="full"
+      @title={{i18n "category.logo_dark"}}
     >
       <UppyImageUploader
-        @imageUrl={{this.logoDarkImageUrl}}
-        @onUploadDone={{fn this.onUploadDone "uploaded_logo_dark"}}
-        @onUploadDeleted={{fn this.onUploadDeleted "uploaded_logo_dark"}}
-        @type="category_logo_dark"
-        @id="category-dark-logo-uploader"
         class="no-repeat contain-image"
+        @id="category-dark-logo-uploader"
+        @imageUrl={{this.logoDarkImageUrl}}
+        @onUploadDeleted={{fn this.onUploadDeleted "uploaded_logo_dark"}}
+        @onUploadDone={{fn this.onUploadDone "uploaded_logo_dark"}}
+        @type="category_logo_dark"
       />
     </@form.Container>
 
-    <@form.Container @title={{i18n "category.background_image"}} @format="full">
+    <@form.Container @format="full" @title={{i18n "category.background_image"}}>
       <UppyImageUploader
-        @imageUrl={{this.backgroundImageUrl}}
-        @onUploadDone={{fn this.onUploadDone "uploaded_background"}}
-        @onUploadDeleted={{fn this.onUploadDeleted "uploaded_background"}}
-        @type="category_background"
         @id="category-background-uploader"
+        @imageUrl={{this.backgroundImageUrl}}
+        @onUploadDeleted={{fn this.onUploadDeleted "uploaded_background"}}
+        @onUploadDone={{fn this.onUploadDone "uploaded_background"}}
+        @type="category_background"
       />
     </@form.Container>
 
     <@form.Container
-      @title={{i18n "category.background_image_dark"}}
       @format="full"
+      @title={{i18n "category.background_image_dark"}}
     >
       <UppyImageUploader
-        @imageUrl={{this.backgroundDarkImageUrl}}
-        @onUploadDone={{fn this.onUploadDone "uploaded_background_dark"}}
-        @onUploadDeleted={{fn this.onUploadDeleted "uploaded_background_dark"}}
-        @type="category_background_dark"
         @id="category-dark-background-uploader"
+        @imageUrl={{this.backgroundDarkImageUrl}}
+        @onUploadDeleted={{fn this.onUploadDeleted "uploaded_background_dark"}}
+        @onUploadDone={{fn this.onUploadDone "uploaded_background_dark"}}
+        @type="category_background_dark"
       />
     </@form.Container>
 
     <@form.Field
+      @format="max"
       @name="text_color"
       @title={{i18n "category.foreground_color"}}
-      @format="max"
       @type="color"
       as |field|
     >
@@ -212,9 +212,9 @@ export default class UpsertCategoryAppearance extends Component {
     </@form.Field>
 
     <@form.Field
+      @format="max"
       @name="default_view"
       @title={{i18n "category.default_view"}}
-      @format="max"
       @type="select"
       as |field|
     >
@@ -231,9 +231,9 @@ export default class UpsertCategoryAppearance extends Component {
     </@form.Field>
 
     <@form.Field
+      @format="max"
       @name="default_top_period"
       @title={{i18n "category.default_top_period"}}
-      @format="max"
       @type="select"
       as |field|
     >
@@ -248,11 +248,11 @@ export default class UpsertCategoryAppearance extends Component {
     </@form.Field>
 
     <@form.Field
-      @name="sort_order"
-      @title={{i18n "category.sort_order"}}
       @format="max"
-      @type="select"
+      @name="sort_order"
       @onSet={{this.onSortOrderSet}}
+      @title={{i18n "category.sort_order"}}
+      @type="select"
       as |field|
     >
       <field.Control
@@ -267,9 +267,9 @@ export default class UpsertCategoryAppearance extends Component {
 
     {{#unless this.isDefaultSortOrder}}
       <@form.Field
+        @format="max"
         @name="sort_ascending"
         @title={{i18n "category.sort_direction"}}
-        @format="max"
         @type="select"
         as |field|
       >
@@ -287,9 +287,9 @@ export default class UpsertCategoryAppearance extends Component {
     {{/unless}}
 
     <@form.Field
+      @format="max"
       @name="default_list_filter"
       @title={{i18n "category.default_list_filter"}}
-      @format="max"
       @type="select"
       as |field|
     >
@@ -305,9 +305,9 @@ export default class UpsertCategoryAppearance extends Component {
 
     {{#if this.isParentCategory}}
       <@form.Field
+        @format="max"
         @name="show_subcategory_list"
         @title={{i18n "category.show_subcategory_list"}}
-        @format="max"
         @type="checkbox"
         as |field|
       >
@@ -316,9 +316,9 @@ export default class UpsertCategoryAppearance extends Component {
 
       {{#if @transientData.show_subcategory_list}}
         <@form.Field
+          @format="max"
           @name="subcategory_list_style"
           @title={{i18n "category.subcategory_list_style"}}
-          @format="max"
           @type="select"
           as |field|
         >
@@ -334,9 +334,9 @@ export default class UpsertCategoryAppearance extends Component {
     {{/if}}
 
     <@form.Field
+      @format="max"
       @name="read_only_banner"
       @title={{i18n "category.read_only_banner"}}
-      @format="max"
       @type="input"
       as |field|
     >

@@ -8,7 +8,6 @@ id:
   site_settings:
     chat_enabled: "Aktifkan obrolan."
     enable_public_channels: "Aktifkan saluran publik berdasarkan kategori."
-    chat_channel_retention_days: "Pesan obrolan di kanal reguler akan disimpan selama beberapa hari ini. Setel ke '0' untuk mempertahankan pesan selamanya."
     chat_dm_retention_days: "Pesan obrolan di kanal obrolan pribadi akan dipertahankan selama beberapa hari ini. Setel ke '0' untuk mempertahankan pesan selamanya."
     chat_auto_silence_duration: "Jumlah menit pengguna akan disenyapkan ketika mereka melebihi batas tingkat pembuatan pesan obrolan. Setel ke '0' untuk menonaktifkan senyap otomatis."
     chat_allowed_messages_for_trust_level_0: "Jumlah pesan yang diizinkan untuk dikirim oleh pengguna trust level 0 dalam 30 detik. Setel ke '0' untuk menonaktifkan batas."
@@ -49,6 +48,12 @@ id:
         Kunjungi kanal di %{channel_url} untuk mencoba lagi.
   chat:
     deleted_chat_username: dihapus
+    crawler:
+      nav_title: "Obrolan"
+      members_count:
+        other: "%{count} anggota"
+      thread_replies:
+        other: "%{count} balasan"
     errors:
       channel_exists_for_category: "Kanal sudah ada untuk kategori dan nama ini"
       channel_new_message_disallowed:

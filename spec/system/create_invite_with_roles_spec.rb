@@ -12,7 +12,13 @@ describe "Creating invites with roles" do
   let(:invite_form) { PageObjects::Pages::InviteForm.new }
   let(:cdp) { PageObjects::CDP.new }
 
-  before { SiteSetting.enable_invite_modal_with_roles = true }
+  before do
+    SiteSetting.enable_invite_modal_with_roles = true
+
+    # Redemption here goes through the password invite form, which the email
+    # code flow replaces when enable_local_logins_via_code is on.
+    SiteSetting.enable_local_logins_via_code = false
+  end
 
   def open_invite_modal_for(current_user)
     user_invited_pending_page.visit(current_user)
@@ -101,6 +107,7 @@ describe "Creating invites with roles" do
       open_invite_modal_for(admin)
 
       modal.select_role("admin")
+      modal.toggle_advanced_options
       modal.form.field("domain").fill_in("example.com")
       modal.save_button.click
 
@@ -124,7 +131,6 @@ describe "Creating invites with roles" do
 
       modal.toggle_advanced_options
       screenshot_marker(label: "invite-members-advanced", only: :desktop)
-      modal.toggle_advanced_options
 
       modal.form.field("domain").fill_in("example.com")
       modal.save_button.click

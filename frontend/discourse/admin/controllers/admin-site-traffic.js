@@ -8,7 +8,7 @@ import {
   VALID_PERIODS,
 } from "discourse/admin/lib/dashboard-date-range";
 import { countryName } from "discourse/admin/lib/format-country";
-import { ajax } from "discourse/lib/ajax";
+import { languageName } from "discourse/admin/lib/format-language";
 import { i18n } from "discourse-i18n";
 
 const FILTER_KEYS = [
@@ -19,10 +19,12 @@ const FILTER_KEYS = [
   "country",
   "network",
   "browser",
+  "language",
   "ip",
 ];
 
 const TRAFFIC_TYPES = ["logged_in", "anonymous", "likely_crawler"];
+const DIMENSION_LIMIT = 50;
 const TRAFFIC_TYPE_LABEL_KEYS = {
   logged_in: "logged_in_human",
   anonymous: "anonymous_human",
@@ -36,28 +38,75 @@ const DIMENSION_KEYS = {
   country: "countries",
   network: "networks",
   browser: "browsers",
+  language: "languages",
   ip: "ip_addresses",
 };
 
+/**
+ * @typedef {Object} SiteTrafficDimension
+ * @property {string} value
+ * @property {string} label
+ * @property {number} pageviews
+ */
+/**
+ * @typedef {Object} SiteTraffic
+ * @property {{ reason: string, available_start_date?: string, pageview_limit?: number, pageview_limit_start_at?: string } | null} partial_data
+ * @property {{ pageviews: number, distinct_sessions: number, logged_in_share: number, bounce_rate: number, average_session_duration_seconds: number }} summary
+ * @property {{ date: string, pageviews: number, logged_in_human_pageviews: number, anonymous_human_pageviews: number, likely_crawler_pageviews: number }[]} series
+ * @property {Record<"logged_in_human_pageviews" | "anonymous_human_pageviews" | "likely_crawler_pageviews", string>} series_colors
+ * @property {Record<"top_urls" | "entry_urls" | "referrers" | "countries" | "networks" | "browsers" | "languages" | "ip_addresses", SiteTrafficDimension[]>} dimensions
+ * @property {{ key: string, value: string, label: string }[]} [active_filters]
+ * @property {string} chart_start_date
+ * @property {string} chart_end_date
+ */
 export default class AdminSiteTrafficController extends Controller {
   @tracked range = DEFAULT_PERIOD;
+
+  /** @type {string | null} */
   @tracked start_date = null;
+
+  /** @type {string | null} */
   @tracked end_date = null;
+
+  /** @type {string | null} */
   @tracked traffic_type = null;
+
+  /** @type {string | null} */
   @tracked top_url = null;
+
+  /** @type {string | null} */
   @tracked entry_url = null;
+
+  /** @type {string | null} */
   @tracked referrer = null;
+
+  /** @type {string | null} */
   @tracked country = null;
+
+  /** @type {string | null} */
   @tracked network = null;
+
+  /** @type {string | null} */
   @tracked browser = null;
+
+  /** @type {string | null} */
+  @tracked language = null;
+
+  /** @type {string | null} */
   @tracked ip = null;
+
+  /** @type {SiteTraffic | null} */
   @tracked traffic = null;
-  @tracked loading = false;
+
+  /** @type {"timeout" | "unexpected" | null} */
   @tracked fetchError = null;
 
-  queryParams = ["range", "start_date", "end_date", ...FILTER_KEYS];
+  /** @type {Record<string, string[]>} */
+  @tracked draftFilters = Object.fromEntries(
+    FILTER_KEYS.map((key) => [key, []])
+  );
 
-  #fetchId = 0;
+  queryParams = ["range", "start_date", "end_date", ...FILTER_KEYS];
 
   get safePeriod() {
     if (!VALID_PERIODS.includes(this.range)) {
@@ -90,51 +139,143 @@ export default class AdminSiteTrafficController extends Controller {
   }
 
   get activeFilters() {
-    return FILTER_KEYS.flatMap((key) => {
-      const values =
-        key === "traffic_type"
-          ? this.traffic_type === null
-            ? []
-            : this.selectedTrafficTypes
-          : [this[key]];
+    const pending = this.hasPendingFilters;
 
-      return values
-        .filter((value) => value !== null)
-        .map((value) => {
-          const rows = this.traffic?.dimensions?.[DIMENSION_KEYS[key]] ?? [];
-          const activeFilter = this.traffic?.active_filters?.find(
-            (filter) => filter.key === key && filter.value === value
-          );
-          const label =
-            activeFilter?.label ??
-            rows.find((row) => row.value === value)?.label;
-
-          return {
-            key,
-            value,
-            label:
-              label ??
-              (key === "traffic_type"
-                ? i18n(
-                    `admin.site_traffic_explorer.series.${TRAFFIC_TYPE_LABEL_KEYS[value]}`
-                  )
-                : key === "referrer" && value === ""
-                  ? i18n("admin.site_traffic_explorer.direct_or_unknown")
-                  : value),
-          };
-        });
-    });
+    return FILTER_KEYS.filter((key) => this.draftFilters[key].length).map(
+      (key) => ({
+        key,
+        pending,
+        values: this.draftFilters[key].map((value) => ({
+          value,
+          label: this.#filterLabel(key, value),
+        })),
+      })
+    );
   }
 
   get selectedTrafficTypes() {
-    if (this.traffic_type === null) {
+    const values = this.draftFilters.traffic_type;
+    if (values.length === 0) {
       return TRAFFIC_TYPES;
     }
 
-    const selected = this.traffic_type.split(",");
-    return TRAFFIC_TYPES.filter((trafficType) =>
-      selected.includes(trafficType)
+    return TRAFFIC_TYPES.filter((trafficType) => values.includes(trafficType));
+  }
+
+  get hasPendingFilters() {
+    return FILTER_KEYS.some(
+      (key) =>
+        !this.#sameValues(this.draftFilters[key], this.#appliedValues(key))
     );
+  }
+
+  get pendingFilterCount() {
+    return FILTER_KEYS.reduce(
+      (count, key) => count + this.draftFilters[key].length,
+      0
+    );
+  }
+
+  loadTraffic(model) {
+    this.#resetDraftFilters();
+    this.traffic = model.traffic ? this.#decorateTraffic(model.traffic) : null;
+    this.fetchError = model.fetchError;
+    this.#reconcileFilters(this.traffic?.active_filters ?? []);
+  }
+
+  @action
+  setPeriod(period) {
+    this.#resetDraftFilters();
+    this.range = period;
+    this.start_date = null;
+    this.end_date = null;
+  }
+
+  @action
+  setCustomDateRange(startDate, endDate) {
+    this.#resetDraftFilters();
+    this.range = PERIOD_CUSTOM;
+    this.start_date = moment(startDate).format("YYYY-MM-DD");
+    this.end_date = moment(endDate).format("YYYY-MM-DD");
+  }
+
+  @action
+  toggleFilter(key, row) {
+    const values = this.draftFilters[key];
+    this.#setDraftValues(
+      key,
+      values.includes(row.value)
+        ? values.filter((value) => value !== row.value)
+        : [...values, row.value]
+    );
+  }
+
+  @action
+  toggleTrafficType(trafficType) {
+    const selectedTrafficTypes = this.selectedTrafficTypes;
+    const nextTrafficTypes = selectedTrafficTypes.includes(trafficType)
+      ? selectedTrafficTypes.filter((selected) => selected !== trafficType)
+      : [...selectedTrafficTypes, trafficType];
+
+    this.#setDraftValues(
+      "traffic_type",
+      nextTrafficTypes.length === TRAFFIC_TYPES.length ? [] : nextTrafficTypes
+    );
+  }
+
+  @action
+  removeFilterValue(key, value) {
+    this.#setDraftValues(
+      key,
+      this.draftFilters[key].filter((item) => item !== value)
+    );
+  }
+
+  @action
+  clearFilter(key) {
+    this.#setDraftValues(key, []);
+  }
+
+  @action
+  clearAllFilters() {
+    this.draftFilters = Object.fromEntries(FILTER_KEYS.map((key) => [key, []]));
+
+    for (const key of FILTER_KEYS) {
+      this[key] = null;
+    }
+  }
+
+  @action
+  applyFilters() {
+    for (const key of FILTER_KEYS) {
+      this[key] = this.#serializeValues(this.draftFilters[key]);
+    }
+  }
+
+  @action
+  applyModalFilters(key, rows) {
+    this.#setDraftValues(
+      key,
+      rows.map((row) => row.value)
+    );
+  }
+
+  @action
+  isFilterSelected(key, value) {
+    return this.draftFilters[key].includes(value);
+  }
+
+  @action
+  resetState() {
+    this.range = DEFAULT_PERIOD;
+    this.start_date = null;
+    this.end_date = null;
+    for (const key of FILTER_KEYS) {
+      this[key] = null;
+    }
+    this.#resetDraftFilters();
+    this.traffic = null;
+    this.fetchError = null;
   }
 
   #customDate(value, edge) {
@@ -146,138 +287,155 @@ export default class AdminSiteTrafficController extends Controller {
     return parsed.isValid() ? parsed[edge]("day").toDate() : null;
   }
 
-  #requestParams() {
-    const params = {
-      start_date: moment(this.startDate).format("YYYY-MM-DD"),
-      end_date: moment(this.endDate).format("YYYY-MM-DD"),
+  #decorateTraffic(traffic) {
+    const countries = traffic.dimensions?.countries ?? [];
+    const languages = traffic.dimensions?.languages ?? [];
+    const activeFilters = (traffic.active_filters ?? []).map((filter) => {
+      if (filter.key === "country") {
+        return { ...filter, label: countryName(filter.value) };
+      }
+      if (filter.key === "language") {
+        return {
+          ...filter,
+          label: languageName(filter.value) || filter.label,
+        };
+      }
+      return filter;
+    });
+    const dimensions = {
+      ...traffic.dimensions,
+      countries: countries.map((row) => ({
+        ...row,
+        label: countryName(row.value),
+      })),
+      languages: languages.map((row) => ({
+        ...row,
+        label: languageName(row.value) || row.label,
+      })),
     };
 
-    for (const key of FILTER_KEYS) {
-      if (this[key] !== null) {
-        params[key] = this[key];
+    for (const [filterKey, dimensionKey] of Object.entries(DIMENSION_KEYS)) {
+      const rows = dimensions[dimensionKey] ?? [];
+      const activeRows = activeFilters.filter(
+        (filter) => filter.key === filterKey
+      );
+      if (activeRows.length === 0) {
+        continue;
       }
+
+      const activeValues = new Set(activeRows.map((filter) => filter.value));
+      const rowsByValue = new Map(rows.map((row) => [row.value, row]));
+      dimensions[dimensionKey] = [
+        ...activeRows.map(
+          (filter) =>
+            rowsByValue.get(filter.value) ?? {
+              value: filter.value,
+              label: filter.label,
+              pageviews: 0,
+            }
+        ),
+        ...rows.filter((row) => !activeValues.has(row.value)),
+      ].slice(0, DIMENSION_LIMIT);
     }
-
-    return params;
-  }
-
-  #localizeCountryLabels(traffic) {
-    const countries = traffic.dimensions?.countries ?? [];
-    const activeFilters = traffic.active_filters ?? [];
 
     return {
       ...traffic,
-      dimensions: {
-        ...traffic.dimensions,
-        countries: countries.map((row) => ({
-          ...row,
-          label: countryName(row.value),
-        })),
-      },
-      active_filters: activeFilters.map((filter) =>
-        filter.key === "country"
-          ? { ...filter, label: countryName(filter.value) }
-          : filter
-      ),
+      dimensions,
+      active_filters: activeFilters,
     };
   }
 
-  @action
-  async fetchTraffic() {
-    const fetchId = ++this.#fetchId;
-    this.loading = true;
-    this.fetchError = null;
+  #appliedValues(key) {
+    const value = this[key];
+    if (value === null) {
+      return [];
+    }
 
-    try {
-      const traffic = await ajax(
-        "/admin/dashboard/site-traffic-explorer.json",
-        {
-          data: this.#requestParams(),
+    if (value.startsWith("[")) {
+      try {
+        const values = JSON.parse(value);
+        if (
+          Array.isArray(values) &&
+          values.every((item) => typeof item === "string")
+        ) {
+          return values;
         }
-      );
-
-      if (fetchId === this.#fetchId) {
-        this.traffic = this.#localizeCountryLabels(traffic);
-      }
-    } catch (error) {
-      if (fetchId === this.#fetchId) {
-        this.fetchError =
-          error.jqXHR?.responseJSON?.error_type === "traffic_query_timeout"
-            ? "timeout"
-            : "unexpected";
-      }
-    } finally {
-      if (fetchId === this.#fetchId) {
-        this.loading = false;
+      } catch {
+        // The server will validate malformed values when the request runs.
       }
     }
+
+    return key === "traffic_type" ? value.split(",") : [value];
   }
 
-  @action
-  setPeriod(period) {
-    this.range = period;
-    this.start_date = null;
-    this.end_date = null;
-  }
-
-  @action
-  setCustomDateRange(startDate, endDate) {
-    this.range = PERIOD_CUSTOM;
-    this.start_date = moment(startDate).format("YYYY-MM-DD");
-    this.end_date = moment(endDate).format("YYYY-MM-DD");
-  }
-
-  @action
-  setFilter(key, row) {
-    this[key] = row.value;
-  }
-
-  @action
-  toggleTrafficType(trafficType) {
-    const selectedTrafficTypes = this.selectedTrafficTypes;
-    const nextTrafficTypes = selectedTrafficTypes.includes(trafficType)
-      ? selectedTrafficTypes.filter((selected) => selected !== trafficType)
-      : [...selectedTrafficTypes, trafficType];
-
-    this.#setTrafficTypes(nextTrafficTypes);
-  }
-
-  @action
-  removeFilter(key, value) {
-    if (key === "traffic_type") {
-      const remainingTrafficTypes = this.selectedTrafficTypes.filter(
-        (trafficType) => trafficType !== value
-      );
-      this.#setTrafficTypes(remainingTrafficTypes);
-      return;
-    }
-
-    this[key] = null;
-  }
-
-  @action
-  resetState() {
-    this.#fetchId++;
-    this.range = DEFAULT_PERIOD;
-    this.start_date = null;
-    this.end_date = null;
-    for (const key of FILTER_KEYS) {
-      this[key] = null;
-    }
-    this.traffic = null;
-    this.loading = false;
-    this.fetchError = null;
-  }
-
-  #setTrafficTypes(trafficTypes) {
-    const orderedTrafficTypes = TRAFFIC_TYPES.filter((trafficType) =>
-      trafficTypes.includes(trafficType)
+  #filterLabel(key, value) {
+    const rows = this.traffic?.dimensions?.[DIMENSION_KEYS[key]] ?? [];
+    const activeFilter = this.traffic?.active_filters?.find(
+      (filter) => filter.key === key && filter.value === value
     );
+    const label =
+      activeFilter?.label ?? rows.find((row) => row.value === value)?.label;
 
-    this.traffic_type =
-      orderedTrafficTypes.length === 0 ||
-      orderedTrafficTypes.length === TRAFFIC_TYPES.length
-        ? null
-        : orderedTrafficTypes.join(",");
+    if (label) {
+      return label;
+    }
+    if (key === "traffic_type") {
+      return i18n(
+        `admin.site_traffic_explorer.series.${TRAFFIC_TYPE_LABEL_KEYS[value]}`
+      );
+    }
+    if (key === "referrer" && value === "") {
+      return i18n("admin.site_traffic_explorer.direct_or_unknown");
+    }
+    return value;
+  }
+
+  #resetDraftFilters() {
+    this.draftFilters = Object.fromEntries(
+      FILTER_KEYS.map((key) => [key, [...this.#appliedValues(key)]])
+    );
+  }
+
+  #reconcileFilters(activeFilters) {
+    const filters = Object.fromEntries(FILTER_KEYS.map((key) => [key, []]));
+
+    for (const filter of activeFilters) {
+      filters[filter.key].push(filter.value);
+    }
+    for (const key of FILTER_KEYS) {
+      if (!this.#sameValues(filters[key], this.#appliedValues(key))) {
+        this[key] = this.#serializeValues(filters[key]);
+      }
+    }
+
+    this.draftFilters = filters;
+  }
+
+  #setDraftValues(key, values) {
+    this.draftFilters = { ...this.draftFilters, [key]: values };
+
+    const hasDraftFilters = FILTER_KEYS.some(
+      (filterKey) => this.draftFilters[filterKey].length
+    );
+    const hasAppliedFilters = FILTER_KEYS.some(
+      (filterKey) => this.#appliedValues(filterKey).length
+    );
+    if (!hasDraftFilters && hasAppliedFilters) {
+      this.applyFilters();
+    }
+  }
+
+  #sameValues(first, second) {
+    return (
+      first.length === second.length &&
+      first.every((value, index) => value === second[index])
+    );
+  }
+
+  #serializeValues(values) {
+    if (values.length === 0) {
+      return null;
+    }
+    return values.length === 1 ? values[0] : JSON.stringify(values);
   }
 }

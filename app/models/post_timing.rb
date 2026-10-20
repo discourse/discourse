@@ -78,19 +78,22 @@ class PostTiming < ActiveRecord::Base
     last_read = post_number - 1
 
     PostTiming.transaction do
-      PostTiming.where(
-        "topic_id = ? AND user_id = ? AND post_number > ?",
-        topic.id,
-        user.id,
-        last_read,
-      ).delete_all
+      destroyed_count =
+        PostTiming.where(
+          "topic_id = ? AND user_id = ? AND post_number > ?",
+          topic.id,
+          user.id,
+          last_read,
+        ).delete_all
       last_read = nil if last_read < 1
 
+      # the TopicUser reset below must still run without timing rows;
+      # only the read count must not go negative
       TopicUser.where(user_id: user.id, topic_id: topic.id).update_all(
         last_read_post_number: last_read,
       )
 
-      topic.posts.find_by(post_number: post_number).decrement!(:reads)
+      topic.posts.find_by(post_number: post_number)&.decrement!(:reads) if destroyed_count > 0
 
       if topic.private_message?
         set_minimum_first_unread_pm!(topic: topic, user_id: user.id, date: topic.updated_at)

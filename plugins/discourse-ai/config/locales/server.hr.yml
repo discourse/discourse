@@ -16,12 +16,52 @@ hr:
     spam_detection:
       logging_subject: "Otkrivanje neželjene pošte"
     ai_bot:
+      navigation:
+        settings:
+          title: "Postavke web-mjesta"
+        users:
+          title: "Korisnika"
+        groups:
+          title: "Grupe"
+        review:
+          title: "Red čekanja za pregled"
+        categories:
+          title: "Kategorije"
+        tags:
+          title: "Oznake"
+        themes:
+          title: "Teme"
+        backups:
+          title: "Sigurnosne kopije"
       read_post:
         unknown_post: "Objava"
+      chat_tool_approval:
+        topic_states:
+          open: "Otvori"
+          closed: "🔐"
+          active: "Aktivno"
+          deleted: "Izbrisao"
+        solution_post: "Članak #%{number}"
+        duration_label: "Trajanje:"
+        user_duration:
+          one: "%{count} dan"
+          few: "%{count} dana"
+          other: "%{count} dana"
+        posts_label: "Postovi"
+        category_label: "Kategorija"
+        category_fields:
+          name: "ime"
+          description: "opis"
+          color: "boja"
+          text_color: "boja teksta"
+        approve_label: "Da"
+        reject_label: "Ne"
       tool_summary:
         search: "Pretraživanje"
         time: "Vrijeme"
         summarize: "Rezimirati"
+      tool_help:
+        create_category: "Stvorite novu kategoriju"
       close_topic:
         errors:
           not_found: "Tema nije pronađena."
@@ -31,10 +71,13 @@ hr:
       delete_topic:
         errors:
           not_found: "Tema nije pronađena."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Tema nije pronađena."
       edit_category:
+        errors:
+          not_found: "Kategorija nije pronađena."
+      change_topic_category:
         errors:
           not_found: "Tema nije pronađena."
           category_not_found: "Kategorija nije pronađena."

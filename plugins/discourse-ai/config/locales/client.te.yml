@@ -8,6 +8,10 @@ te:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "తేదీ"
+          outcomes:
+            failed: "విఫలం"
         reports:
           filters:
             sort_by:
@@ -36,6 +40,17 @@ te:
             canned_reply:
               label: "ప్రత్యుత్తరం ఇవ్వండి"
     discourse_ai:
+      ai_decoded_transcript:
+        type: "రకం"
+        error: "లోపం"
+        response: "ప్రతిస్పందన"
+      discourse_workflows:
+        classify:
+          text: "వచనం"
+          upload_ids: "చిత్రాలు"
+          name: "పేరు"
+          type: "రకం"
+          type_score: "స్కోర్"
       ai_tool_approval:
         loading: "లోడవుతోంది..."
         tool: "చర్య"
@@ -111,8 +126,6 @@ te:
         apply: "దరఖాస్తు చేసుకోండి"
         successful: "విజయవంతమైంది"
         failed: "విఫలం"
-        topic_id: "విషయపు ఐడీ"
-        post_id: "పోస్ట్ ఐడీ"
         time: "కాలం"
         when: "ఎప్పుడు"
         request: "అభ్యర్థన"
@@ -123,6 +136,7 @@ te:
         post_short: "పోస్ట్ %{id}"
         duration: "వ్యవధి"
         actions: "చర్యలు"
+        view_details: "వివరాలు"
         periods:
           custom: "అనురూప"
         detail:
@@ -176,6 +190,11 @@ te:
         edit: "సవరించండి"
         delete: "తొలగించు"
         embedding: "పొందుపరచడం"
+      decision_models:
+        no_preset: "ఏదీ లేదు"
+        display_name: "పేరు"
+        edit: "సవరించండి"
+        delete: "తొలగించు"
       mcp_servers:
         name: "పేరు"
         description: "వివరణ"
@@ -187,6 +206,13 @@ te:
         delete: "తొలగించండి"
         tools_modal:
           required: "అవసరం"
+      models:
+        name: "పేరు"
+        type: "రకం"
+        edit: "సవరించండి"
+        select_type: "ఎంచుకోండి"
+        types:
+          embedding: "పొందుపరచడం"
       llms:
         display_name: "పేరు"
         vision_modes:
@@ -233,6 +259,13 @@ te:
         providers:
           google: "గూగుల్"
           fake: "అనుకూల"
+      ai_artifact:
+        editor:
+          version: "సంస్కరణ"
+          default: "అప్రమేయ"
+          apply: "దరఖాస్తు చేసుకోండి"
+        share: "షేర్ చేయండి"
+        filter_all: "అన్నీ"
       ai_bot:
         debug_ai_modal:
           duration_label: "వ్యవధి:"
@@ -257,8 +290,11 @@ te:
           table:
             total_count: "మొత్తం"
       discobot_discoveries:
-        regular_results: "విషయాలు"
-        collapse: "కుదించండి"
-        tooltip:
-          actions:
-            disable: "నిలిపివేయండి"
+        legacy:
+          regular_results: "విషయాలు"
+          collapse: "కుదించండి"
+          tooltip:
+            actions:
+              disable: "నిలిపివేయండి"
+        search_all_topics: "అన్ని విషయాలు"
+        search_messages: "సందేశాలు"

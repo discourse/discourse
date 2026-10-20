@@ -165,7 +165,6 @@ nb_NO:
       be:
         name: Hviterussisk
     share:
-      topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "innlegg #%{postNumber} av @%{username}"
       close: "lukk"
       facebook: "Del på Facebook"
@@ -212,12 +211,16 @@ nb_NO:
     topic_admin_menu: "emnehandlinger"
     skip_to_main_content: "Gå til hovedinnhold"
     skip_user_nav: "Gå til profilinnhold"
+    reorder:
+      removed: "Fjernet %{label}"
+      position: "%{position} av %{total}"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     emails_are_disabled_non_staff: "Utgående e-post er deaktivert for brukere som ikke er blant staben."
     software_update_prompt:
       message: "Vi har oppdatert denne siden, <span>vennligst oppdater siden</span> for å sikre at alt fungerer som det skal."
       dismiss: "Avslå"
     back_button: "Forrige"
+    confirm_button: "Bekreft"
     welcome_banner:
       header:
         anonymous_members: "Velkommen til %{site_name}!"
@@ -306,9 +309,6 @@ nb_NO:
     max_of_count:
       one: "maksimum av %{count}"
       other: "maksimum av %{count}"
-    character_count:
-      one: "%{count} tegn"
-      other: "%{count} tegn"
     period_chooser:
       aria_label: "Filtrer etter periode"
     related_messages:
@@ -328,6 +328,7 @@ nb_NO:
       sections:
         theme: "Drakt"
         homepage: "Hjemmeside"
+        search: "Søk"
       colors:
         light: "Lys"
         dark: "Mørk"
@@ -533,6 +534,9 @@ nb_NO:
       title:
         search: "Søk etter melding"
         placeholder: "Skriv tittel, URL eller ID her"
+    dsa_statements:
+      category: "Kategori"
+      saving: "Lagrer…"
     review:
       show_more: "Vis mer"
       show_less: "Vis mindre"
@@ -703,6 +707,9 @@ nb_NO:
       user_label: "Bruker"
       timeline:
         target_deleted: "Post slettet"
+      author_penalty:
+        toast:
+          undo: "Angre"
       notes:
         delete: "Slett"
       topic_label: "Emne"
@@ -1283,7 +1290,6 @@ nb_NO:
       admin: "%{user} er en admin"
       moderator_tooltip: "Denne brukeren er en moderator"
       admin_tooltip: "Denne brukeren er en administrator"
-      silenced_tooltip: "Denne brukeren er dempet"
       suspended_notice: "Denne brukeren er utestengt til %{date}."
       suspended_permanently: "Denne brukeren er utestengt."
       suspended_reason: "Begrunnelse: "
@@ -1341,6 +1347,12 @@ nb_NO:
       tracked_topics_link: "Vis"
       automatically_unpin_topics: "Fjern feste for et emne automatisk når jeg når bunnen"
       apps: "Programmer"
+      mcp_authorizations:
+        details: "Detaljer"
+        never: "Aldri"
+        status: "Status"
+        statuses:
+          active: "Aktiv"
       revoke_access: "Trekk tilbake tilgang"
       undo_revoke_access: "Angre tilbaketrekking av tilgang"
       api_approved: "Godkjent:"
@@ -1605,7 +1617,6 @@ nb_NO:
         upload_title: "Last opp bilde"
         image_is_not_a_square: "Vi har beskåret bildet ditt, høyde og bredde er ikke lik"
         logo_small: "Nettstedets lille logo. Brukes som standard."
-        use_custom: "Eller last opp en egendefinert avatar:"
       change_profile_background:
         title: "bakgrunns bildet"
         instructions: "Profiloverskrifter vil være sentrert og har en standardbredde på 1110 piksler."
@@ -1780,7 +1791,6 @@ nb_NO:
         after_10_minutes: "etter 10 minutt"
       notification_level_when_replying:
         do_nothing: "ikke gjør noe"
-      topics_unread_when_closed: "Betrakt emner som ulest når de er lukket"
       invited:
         title: "invitasjoner"
         pending_tab: "På vent"
@@ -2115,7 +2125,6 @@ nb_NO:
       hide_forever: "nei takk"
       hidden_for_session: "OK, vi vil spørre deg i morgen. Du kan alltid bruke «Logg inn» for å opprette en konto."
       intro: "Hei! Ser ut som du liker diskusjonen, men du har ikke registrert deg for en konto ennå."
-      value_prop: "Lei av å bla gjennom de samme innleggene? Når du oppretter en konto, kommer du alltid tilbake til hvor du slapp. Med en konto kan du også bli varslet om nye svar, lagre bokmerker og bruke likeklikk for å takke andre. Vi kan alle jobbe sammen for å gjøre dette fellesskapet flott :heart:"
     offline_indicator:
       no_internet: "Ingen internettforbindelse."
       refresh_page: "Oppdater siden"
@@ -2331,6 +2340,8 @@ nb_NO:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Angi"
+      delete: "Slett"
+      home: "Hjem"
     conditional_loading_section:
       loading: Laster…
     category_row:
@@ -2470,11 +2481,9 @@ nb_NO:
       create_whisper: "Hvisk"
       create_shared_draft: "Opprett delt utkast"
       edit_shared_draft: "Rediger delt utkast"
-      title: "Eller trykk %{modifier}Enter"
       discard: "Forkast"
       users_placeholder: "Legg til brukere eller grupper"
-      title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
-      title_placeholder_redesign: "Tittel"
+      title_placeholder: "Tittel"
       title_or_link_placeholder: "Skriv inn tittel eller lim inn en lenke her"
       edit_reason_placeholder: "Hvorfor endrer du?"
       topic_featured_link_placeholder: "Skriv inn lenke vist med tittel."
@@ -2743,10 +2752,9 @@ nb_NO:
       recent: "Nylige søk"
       clear_recent: "Fjern nylige søk"
       type:
-        default: "Emner/innlegg"
+        default: "Innlegg"
         users: "Brukere"
         categories: "Kategorier"
-        categories_and_tags: "Kategorier/stikkord"
       context:
         user: "Søk i innleggene av @%{username}"
         category: "Søk i kategorien #%{category}"
@@ -2759,7 +2767,6 @@ nb_NO:
         in: "filtrerer etter metadata (f.eks. in:title, in:personal, in:pinned)"
         status: "filtrerer etter emnestatus"
         full_search: "starter helsidesøk"
-        full_search_key: "%{modifier} + Enter"
         me: "viser bare innleggene dine"
       advanced:
         title: Avanserte filtre
@@ -3416,7 +3423,6 @@ nb_NO:
       reply_as_new_private_message: "Svar som ny melding til de samme mottakerne"
       continue_discussion: "Fortsetter diskusjonen fra %{postLink}:"
       follow_quote: "gå til det siterte innlegget"
-      show_full: "Vis hele innlegget"
       show_hidden: "Vis ignorert innhold."
       deleted_by_author_simple: "(innlegg slettet av forfatter)"
       collapse: "fold sammen"
@@ -3702,6 +3708,7 @@ nb_NO:
       delete_confirm: "Er du sikker på at du vil slette denne kategorien?"
       delete_error: "Det oppstod en feil ved å slette denne kategorien."
       no_description: "Legg til en beskrivelse for denne kategorien."
+      latest_topics: "Siste emner"
       description_expand: "Vis mer"
       description_collapse: "Vis mindre"
       already_used: "Denne fargen er i bruk av en annen kategori"
@@ -3926,6 +3933,7 @@ nb_NO:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       filter:
+        reset: "tilbakestill"
         button:
           label: "Filtrer"
       latest:
@@ -4014,11 +4022,8 @@ nb_NO:
       image_load_error: '<a href="%url%">Bildet</a> kunne ikke lastes.'
     cannot_render_video: Denne videoen kan ikke lages fordi nettleseren din ikke støtter koden.
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} eller %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Tastatursnarveier"
       description_header: "Beskrivelse"
       search_aliases:
@@ -4068,9 +4073,6 @@ nb_NO:
       admin:
         title: "Admin"
     badges:
-      earned_n_times:
-        one: "Har gjort seg fortjent til dette merket"
-        other: "Har gjort seg fortjent til dette merket %{count} ganger"
       granted_on: "Tildelt %{date}"
       title: Merker
       allow_title: "Du kan bruke dette merket som tittel"
@@ -4321,18 +4323,6 @@ nb_NO:
         type_mismatch:
           default: "Skriv inn en gyldig verdi."
           email: "Oppgi en gyldig e-postadresse."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Angi"
-      edit:
-        modal:
-          cancel: "avbryt"
-          create: "Lagre"
-          reason: "Hvorfor endrer du?"
-      spreadsheet:
-        show: "Vis"
-        about: "Om"
     filter:
       description:
         yesterday: "I går"
@@ -4358,6 +4348,11 @@ nb_NO:
         group_traffic: "Trafikk"
         group_members: "Medlemmer"
         group_other: "Annet"
+        related_items:
+          users:
+            title: "Brukere"
+          labels:
+            user: "Bruker"
       config_sections:
         account:
           title: "Konto"
@@ -4396,6 +4391,61 @@ nb_NO:
       config:
         developer:
           title: "Utvikler"
+        mcp:
+          tabs:
+            access: "Tilgang"
+            activity: "Aktivitet"
+          overview:
+            status: "Status"
+          access:
+            title: "Tilgang"
+            group: "Gruppe"
+            groups: "Grupper"
+            actions: "Handlinger"
+            edit: "Rediger"
+            delete: "Slett"
+          primitives:
+            group_by_options:
+              provider: "Tilbyder"
+              kind: "Type"
+            provider: "Tilbyder"
+            kind: "Type"
+          clients:
+            actions: "Handlinger"
+            block: "Blokker"
+            presets:
+              custom: "Egendefinert"
+            automatic: "Automatisk"
+          authorizations:
+            user: "Bruker"
+            status: "Status"
+            actions: "Handlinger"
+          activity:
+            time: "Tid"
+            user: "Bruker"
+            duration: "Varighet"
+          values:
+            server_status:
+              disabled: "Deaktivert"
+            client_trust:
+              approved: "Godkjent"
+            authorization_status:
+              active: "Aktiv"
+            activity_outcome:
+              success: "Suksess"
+              error: "Feil"
+            primitive_state:
+              enabled: "Aktivert"
+              disabled: "Deaktivert"
+            primitive_kind:
+              all: "Alle typer"
+            primitive_risk:
+              moderation: "Moderering"
+            filter:
+              all: "Alle"
+          never: "Aldri"
+          actions:
+            revoke: "Trekk tilbake"
         emojis:
           title: "Emoji"
         flags:
@@ -4524,16 +4574,11 @@ nb_NO:
       search:
         title: "Søk"
       site_traffic_explorer:
-        pageviews: "Sidevisninger"
+        metric_information: "Om %{metric}"
+        apply: "Bruk"
         view_more: "Vis mer"
-        columns:
-          top_urls: "URL"
-          ip_addresses: "IP-adresse"
         filters:
           ip: "IP-adresse"
-        metrics:
-          pageviews:
-            label: "Sidevisninger"
         series:
           anonymous_human: "Anonym"
       dashboard:
@@ -4600,6 +4645,8 @@ nb_NO:
               share: "Del"
             whos_posting:
               staff: "Stab"
+              modal:
+                apply: "Lagre"
             trust_level_pipeline:
               trust_levels:
                 "0": "Ny"
@@ -4612,6 +4659,11 @@ nb_NO:
             table:
               searches: "Søk"
               status: "Status"
+          system:
+            title: "System"
+            status: "Status"
+            discourse_updated: "Diskurs oppdatert"
+            dashboard_updated: "Dashbord oppdatert"
         reports_section:
           header_action: "Behandle"
           no_data: "Ingen data å vise"
@@ -4622,6 +4674,7 @@ nb_NO:
         site_traffic:
           series:
             anonymous: "Anonym"
+          crawler_learn_more: "Finn ut mer"
         period:
           last_7_days: "Siste 7 dager"
           last_30_days: "Siste 30 dager"
@@ -4649,6 +4702,13 @@ nb_NO:
           average_for_sample: "Gjennomsnitt for eksempel"
           total: "Totalt siden starten"
           no_data: "Ingen data å vise."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} bruker"
+              other: "%{count} brukere"
+            posts_count:
+              one: "%{count} innlegg"
+              other: "%{count} innlegg"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Logg for søk</a>'
             disabled: 'Rapporten for trending av søk er deaktivert. Aktiver <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">logging av søkeord</a> for å samle inn data.'
@@ -5076,6 +5136,7 @@ nb_NO:
             must_be_unique: "Ugyldig variabelnavn. Må være unikt."
           upload: "Last opp"
           discard: "Forkast"
+          leave: "Forlat"
           delete_upload_confirm: "Slett denne opplastingen? (Draktens CSS kan slutte å virke!)"
           import_web_tip: "Pakkebrønn inneholdende drakt"
           is_private: "Drakten er i et privat git repository"
@@ -5664,12 +5725,11 @@ nb_NO:
           confirm: "Bekreftelse"
           dropdown: "Nedtrekk"
       site_text:
-        search: "Søk etter tekst du ønsker å endre"
+        search_label: "Søk"
+        theme_disabled: "Deaktivert"
+        filters: "Filter"
         edit: "Endre"
-        revert: "Tilbakestill endringer"
         revert_confirm: "Er du sikker på at du ønsker å tilbakestille dine endringer?"
-        go_back: "Tilbake til søk"
-        recommended: "Skreddersøm av følgende tekst for å kle dine behov anbefales:"
         show_overriden: "Bare vis overstyrte"
         outdated:
           dismiss: "Avslå"

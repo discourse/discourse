@@ -24,31 +24,31 @@ export default <template>
 
   <div class="watched-word-controls">
     <DButton
-      @href={{@controller.downloadLink}}
+      class="btn-default download-link"
       @action={{@controller.downloadAction}}
+      @href={{@controller.downloadLink}}
       @icon="download"
       @label="admin.watched_words.download"
-      class="btn-default download-link"
     />
 
     <WatchedWordUploader
-      @uploading={{@controller.uploading}}
       @actionKey={{@controller.actionNameKey}}
       @done={{@controller.uploadComplete}}
+      @uploading={{@controller.uploading}}
     />
 
     <DButton
-      @label="admin.watched_words.test.button_label"
-      @icon="far-eye"
-      @action={{@controller.test}}
       class="btn-default watched-word-test"
+      @action={{@controller.test}}
+      @icon="far-eye"
+      @label="admin.watched_words.test.button_label"
     />
 
     <DButton
-      @label="admin.watched_words.clear_all"
-      @icon="trash-can"
-      @action={{@controller.clearAll}}
       class="btn-danger clear-all"
+      @action={{@controller.clearAll}}
+      @icon="trash-can"
+      @label="admin.watched_words.clear_all"
     />
   </div>
 
@@ -63,17 +63,17 @@ export default <template>
   {{/if}}
 
   <WatchedWordForm
-    @actionKey={{@controller.actionNameKey}}
     @action={{@controller.recordAdded}}
+    @actionKey={{@controller.actionNameKey}}
     @filteredContent={{@controller.currentActionFiltered.words}}
   />
 
   {{#if @controller.currentActionFiltered.words}}
     <label class="show-words-checkbox">
       <Input
-        @type="checkbox"
-        @checked={{@controller.adminWatchedWords.showWords}}
         disabled={{@controller.adminWatchedWords.disableShowWords}}
+        @checked={{@controller.adminWatchedWords.showWords}}
+        @type="checkbox"
       />
       {{i18n
         "admin.watched_words.show_words"
@@ -87,9 +87,9 @@ export default <template>
       {{#each @controller.currentActionFiltered.words as |word|}}
         <div class="watched-word-box">
           <AdminWatchedWord
+            @action={{@controller.recordRemoved}}
             @actionKey={{@controller.actionNameKey}}
             @word={{word}}
-            @action={{@controller.recordRemoved}}
           />
         </div>
       {{/each}}

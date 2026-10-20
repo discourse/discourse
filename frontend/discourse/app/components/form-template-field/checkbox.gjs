@@ -7,11 +7,11 @@ const Checkbox = <template>
   <div class="control-group form-template-field" data-field-type="checkbox">
     <label class="form-template-field__label">
       <Input
-        name={{@id}}
         class="form-template-field__checkbox"
+        name={{@id}}
+        required={{if @validations.required "required" ""}}
         @checked={{@value}}
         @type="checkbox"
-        required={{if @validations.required "required" ""}}
         {{on "input" @onChange}}
       />
       {{@attributes.label}}

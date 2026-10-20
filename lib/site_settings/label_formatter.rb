@@ -148,6 +148,10 @@ module SiteSettings
         expand_setting_links(desc)
       end
 
+      def setting_markers(settings)
+        Array(settings).map { "{{setting:#{it}}}" }.join(", ")
+      end
+
       def settings_filter_href(filter)
         "#{Discourse.base_path}/admin/site_settings/category/all_results?filter=#{CGI.escape(filter)}"
       end

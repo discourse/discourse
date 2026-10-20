@@ -7,6 +7,16 @@
     <meta name="color-scheme" content="light dark">
 
     <%- if @has_test_bundle %>
+      <%# Browsers may ignore an import map that appears after any module script has started loading %>
+      <%= render "layouts/plugin_js",
+        opts: {
+          include_disabled: true,
+          include_admin_asset: true,
+          include_test_assets_for: @testing_plugins,
+          only: @required_plugins
+        }
+      %>
+
       <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
       <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>
       <%= preload_script_url ExtraLocalesController.url("admin"), type_module: true %>
@@ -27,22 +37,7 @@
         };
       </script>
 
-      <%= tag.iframe srcdoc: tag.script(
-        src: script_asset_path(EmberAssets.script_chunks["qunit-live-reload"].first),
-        nonce: csp_nonce_placeholder,
-        type: "module",
-      ), style: "display: none;" %>
-
       <%= preload_script "test-support" %>
-
-      <%= render "layouts/plugin_js",
-        opts: {
-          include_disabled: true,
-          include_admin_asset: true,
-          include_test_assets_for: @testing_plugins,
-          only: @required_plugins
-        }
-      %>
 
       <%= theme_lookup("head_tag") %>
       <%= theme_tests %>
@@ -59,7 +54,7 @@
       <link rel="canonical" href="/">
 
       <style>
-        <%= File.read("#{Rails.root}/frontend/discourse/node_modules/qunit/qunit/qunit.css").html_safe %>
+        <%= File.read(VendoredAssets.path("qunit/qunit.css")).html_safe %>
 
         #ember-testing * {
           -webkit-transition: none !important;
@@ -95,8 +90,16 @@
       </script>
 
       <%= preload_script "test-entrypoint", type_module: true %>
+
+      <%# Kept out of the head: an iframe there ends head parsing early and demotes every later stylesheet to the body, where it no longer blocks the entrypoint. %>
+      <%= tag.iframe srcdoc: tag.script(
+        src: script_asset_path(EmberAssets.script_chunks["qunit-live-reload"].first),
+        nonce: csp_nonce_placeholder,
+        type: "module",
+      ), style: "display: none;" %>
     <%- end %>
 
+    <%# Stays last on purpose: the test runner injects its own stylesheet into the head at runtime, and this one must follow it in the cascade to restyle the runner. %>
     <%= discourse_stylesheet_link_tag("qunit-custom", theme_id: nil) %>
   </body>
 </html>

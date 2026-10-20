@@ -19,32 +19,32 @@ module(
       ],
       "quote with username": [
         `[quote="User"]\nQuoted text.\n\n[/quote]`,
-        `<aside class="quote" data-username="User" data-full="false"><div class="title">User:</div><blockquote><p>Quoted text.</p></blockquote></aside>`,
+        `<aside class="quote" data-username="User" data-full="false"><div class="title" contenteditable="false">User:</div><blockquote><p>Quoted text.</p></blockquote></aside>`,
         `[quote="User"]\nQuoted text.\n\n[/quote]\n\n`,
       ],
       "quote with topic ID": [
         `[quote="User, topic:456"]\nQuoted from a topic.\n\n[/quote]`,
-        `<aside class="quote" data-username="User" data-topic="456" data-full="false"><div class="title">User:</div><blockquote><p>Quoted from a topic.</p></blockquote></aside>`,
+        `<aside class="quote" data-username="User" data-topic="456" data-full="false"><div class="title" contenteditable="false">User:</div><blockquote><p>Quoted from a topic.</p></blockquote></aside>`,
         `[quote="User, topic:456"]\nQuoted from a topic.\n\n[/quote]\n\n`,
       ],
       "quote with topic ID and post number": [
         `[quote="User, post:123, topic:456"]\nFull quote example.\n\n[/quote]`,
-        `<aside class="quote" data-username="User" data-post="123" data-topic="456" data-full="false"><div class="title">User:</div><blockquote><p>Full quote example.</p></blockquote></aside>`,
+        `<aside class="quote" data-username="User" data-post="123" data-topic="456" data-full="false"><div class="title" contenteditable="false">User:</div><blockquote><p>Full quote example.</p></blockquote></aside>`,
         `[quote="User, post:123, topic:456"]\nFull quote example.\n\n[/quote]\n\n`,
       ],
       "quote with display name and username": [
         `[quote="Full Name, post:123, topic:456, username:user123"]\nQuoted with display name.\n\n[/quote]`,
-        `<aside class="quote" data-username="user123" data-post="123" data-topic="456" data-full="false" data-display-name="Full Name"><div class="title">Full Name:</div><blockquote><p>Quoted with display name.</p></blockquote></aside>`,
+        `<aside class="quote" data-username="user123" data-post="123" data-topic="456" data-full="false" data-display-name="Full Name"><div class="title" contenteditable="false">Full Name:</div><blockquote><p>Quoted with display name.</p></blockquote></aside>`,
         `[quote="Full Name, post:123, topic:456, username:user123"]\nQuoted with display name.\n\n[/quote]\n\n`,
       ],
       "quote with display name containing comma": [
         `[quote="Last, First, post:123, topic:456, username:user123"]\nComma name.\n\n[/quote]`,
-        `<aside class="quote" data-username="user123" data-post="123" data-topic="456" data-full="false" data-display-name="Last, First"><div class="title">Last, First:</div><blockquote><p>Comma name.</p></blockquote></aside>`,
+        `<aside class="quote" data-username="user123" data-post="123" data-topic="456" data-full="false" data-display-name="Last, First"><div class="title" contenteditable="false">Last, First:</div><blockquote><p>Comma name.</p></blockquote></aside>`,
         `[quote="Last, First, post:123, topic:456, username:user123"]\nComma name.\n\n[/quote]\n\n`,
       ],
       "quote with full:true": [
         `[quote="User, post:1, topic:2, full:true"]\nFull quote.\n\n[/quote]`,
-        `<aside class="quote" data-username="User" data-post="1" data-topic="2" data-full="true"><div class="title">User:</div><blockquote><p>Full quote.</p></blockquote></aside>`,
+        `<aside class="quote" data-username="User" data-post="1" data-topic="2" data-full="true"><div class="title" contenteditable="false">User:</div><blockquote><p>Full quote.</p></blockquote></aside>`,
         `[quote="User, post:1, topic:2, full:true"]\nFull quote.\n\n[/quote]\n\n`,
       ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
@@ -196,7 +196,7 @@ module(
       await testMarkdown(
         assert,
         `[quote="User"]\nQuoted text.\n\n[/quote]`,
-        `<aside class="quote" data-username="User" data-full="false"><div class="title">User:</div><blockquote><p>Quoted text.</p></blockquote></aside>`,
+        `<aside class="quote" data-username="User" data-full="false"><div class="title" contenteditable="false">User:</div><blockquote><p>Quoted text.</p></blockquote></aside>`,
         `[quote="User"]\nQuoted text.\n\n[/quote]\n\n`,
         { multiToggle: true }
       );

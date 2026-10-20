@@ -13,21 +13,11 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
-import formatChatDate from "../../../helpers/format-chat-date";
+import formatChatDate from "../../../helpers/format-chat-date.js";
 
 export default class ChatMessageInfo extends Component {
   @service site;
   @service siteSettings;
-
-  @bind
-  trackStatus() {
-    this.#user?.statusManager.trackStatus();
-  }
-
-  @bind
-  stopTrackingStatus() {
-    this.#user?.statusManager.stopTrackingStatus();
-  }
 
   get usernameClasses() {
     const user = this.#user;
@@ -105,6 +95,16 @@ export default class ChatMessageInfo extends Component {
     }
   }
 
+  @bind
+  trackStatus() {
+    this.#user?.statusManager.trackStatus();
+  }
+
+  @bind
+  stopTrackingStatus() {
+    this.#user?.statusManager.stopTrackingStatus();
+  }
+
   <template>
     {{#if @show}}
       <div
@@ -139,9 +139,9 @@ export default class ChatMessageInfo extends Component {
           >
             {{#if this.interactive}}
               <button
-                type="button"
                 class="chat-message-info__username__name"
                 data-user-card={{@message.user.username}}
+                type="button"
               >{{this.name}}</button>
             {{else}}
               <span
@@ -183,7 +183,7 @@ export default class ChatMessageInfo extends Component {
         {{#if this.isFlagged}}
           <span class="chat-message-info__flag">
             {{#if @message.reviewableId}}
-              <LinkTo @route="review.show" @model={{@message.reviewableId}}>
+              <LinkTo @model={{@message.reviewableId}} @route="review.show">
                 {{dIcon "flag" title="chat.flagged"}}
               </LinkTo>
             {{else}}
@@ -194,9 +194,9 @@ export default class ChatMessageInfo extends Component {
 
         {{#if (and @threadContext @message.isOriginalThreadMessage)}}
           <LinkTo
-            @route={{this.route}}
-            @models={{this.routeModels}}
             class="chat-message-info__original-message"
+            @models={{this.routeModels}}
+            @route={{this.route}}
           >
             <span class="chat-message-info__original-message__text">
               {{i18n "chat.see_in"}}
@@ -214,9 +214,9 @@ export default class ChatMessageInfo extends Component {
       excluded: it names its author in its own text. }}
       <div class="chat-message-info -author-only sr-only">
         <button
-          type="button"
           class="chat-message-info__username__name"
           data-user-card={{@message.user.username}}
+          type="button"
         >{{this.name}}</button>
       </div>
     {{/if}}

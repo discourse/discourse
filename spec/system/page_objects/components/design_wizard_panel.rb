@@ -55,6 +55,26 @@ module PageObjects
         find("#{WIZARD_SELECTOR}__homepage-card[data-homepage='#{key}']").click
       end
 
+      def toggle_welcome_banner
+        welcome_banner_switch.toggle
+      end
+
+      def has_welcome_banner_enabled?
+        welcome_banner_switch.checked?
+      end
+
+      def has_no_welcome_banner_enabled?
+        welcome_banner_switch.unchecked?
+      end
+
+      def select_welcome_banner_location(key)
+        find("#{WIZARD_SELECTOR}__option-row[data-welcome-banner-location='#{key}']").click
+      end
+
+      def select_search_experience(key)
+        find("#{WIZARD_SELECTOR}__option-row[data-search-experience='#{key}']").click
+      end
+
       def select_body_font(font_key)
         groups = all("#{WIZARD_SELECTOR}__font-group")
         groups[0].find("#{WIZARD_SELECTOR}__font-select").click
@@ -105,7 +125,13 @@ module PageObjects
 
       def user_selectable_switch
         PageObjects::Components::DToggleSwitch.new(
-          "#{WIZARD_SELECTOR}__user-selectable [role='switch']",
+          "#{WIZARD_SELECTOR}__switch-row [aria-labelledby='design-wizard-user-selectable-title']",
+        )
+      end
+
+      def welcome_banner_switch
+        PageObjects::Components::DToggleSwitch.new(
+          "#{WIZARD_SELECTOR}__switch-row [aria-labelledby='design-wizard-welcome-banner-title']",
         )
       end
     end

@@ -10,7 +10,7 @@ describe "Composer - Create event action" do
   before do
     SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
-    DiscourseCalendar::Categories::Types::Events.configure_category(
+    DiscourseEvents::Categories::Types::Events.configure_category(
       events_category,
       guardian: admin.guardian,
     )
@@ -39,9 +39,9 @@ describe "Composer - Create event action" do
     expect(page).to have_current_path(%r{/t/team-offsite-kickoff/})
     topic = Topic.find_by(title: "Team offsite kickoff")
     expect(topic).to be_present
-    event = DiscoursePostEvent::Event.find_by(id: topic.first_post.id)
+    event = DiscourseEvents::Events::Event.find_by(id: topic.first_post.id)
     expect(event).to be_present
-    expect(event.status).to eq(DiscoursePostEvent::Event.statuses[:public])
+    expect(event.status).to eq(DiscourseEvents::Events::Event.statuses[:public])
     expect(event.starts_at).to be_present
   end
 

@@ -47,3 +47,33 @@
   cursor: pointer;
   margin-top: 0.5em;
 }
+
+.composer-local-date {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-half);
+
+  // keeps the button clear of the node-selection outline drawn at this edge
+  padding-inline-end: var(--space-half);
+
+  &__edit-button {
+    padding: var(--space-half);
+    line-height: 1;
+    border: none;
+    border-radius: var(--d-border-radius);
+    background: none;
+    color: var(--primary-low-mid);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--primary);
+    }
+
+    // a fill rather than a ring: the chip already carries a blue outline when selected
+    &:focus-visible {
+      outline: none;
+      background: var(--d-hover);
+      color: var(--primary);
+    }
+  }
+}

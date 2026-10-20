@@ -29,7 +29,7 @@ class AccessControlListsController < ApplicationController
       on_failed_contract { |contract| render_json_error(contract.errors.full_messages) }
       on_model_not_found(:target_type_klass) { raise Discourse::InvalidParameters }
       on_failed_policy(:user_will_not_lose_permission) do |params:, target_type_klass:|
-        # NOTE: The target type class (e.g. a Kanban::Board, or Category) will need to define
+        # NOTE: The target type class (e.g. a Boards::Board, or Category) will need to define
         # the translation key here in server.en.yml
         suffix =
           if params.target_id.present?

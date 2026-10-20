@@ -187,6 +187,14 @@ export class BlockCondition {
   declare static validArgKeys: readonly string[];
 
   /**
+   * Default source value when `source` parameter is not provided.
+   * Override in subclasses to provide a fallback (e.g., currentUser, siteSettings).
+   */
+  get defaultSource(): unknown {
+    return undefined;
+  }
+
+  /**
    * Resolves the `source` parameter value based on the condition's `sourceType`.
    *
    * - `sourceType: "outletArgs"`: Extracts the property path from `@outletArgs.path.to.value`
@@ -222,14 +230,6 @@ export class BlockCondition {
       return getByPath(context?.outletArgs, path);
     }
 
-    return undefined;
-  }
-
-  /**
-   * Default source value when `source` parameter is not provided.
-   * Override in subclasses to provide a fallback (e.g., currentUser, siteSettings).
-   */
-  get defaultSource(): unknown {
     return undefined;
   }
 

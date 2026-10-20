@@ -1,7 +1,8 @@
+import type { Axis } from "discourse/lib/geometry";
 import { headerOffset } from "discourse/lib/offset-calculator";
 
 /** The axis a resize runs along. */
-export type ResizeAxis = "vertical" | "horizontal";
+export type ResizeAxis = Axis;
 
 /**
  * Floor for a box whose minimum does not resolve to pixels, per axis.

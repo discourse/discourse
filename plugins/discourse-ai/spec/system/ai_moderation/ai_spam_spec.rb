@@ -24,6 +24,7 @@ RSpec.describe "AI Spam Configuration" do
       expect(toggle.unchecked?).to eq(true)
     end
   end
+
   context "when LLMs are configured" do
     fab!(:llm_model)
     it "can properly configure spam settings" do
@@ -42,7 +43,7 @@ RSpec.describe "AI Spam Configuration" do
 
       expect(AiModerationSetting.spam.custom_instructions).to eq("Test spam detection instructions")
 
-      visit "/admin/plugins/discourse-ai/ai-llms"
+      visit "/admin/plugins/discourse-ai/ai-models"
 
       expect(find(".ai-llm-list-editor__usages")).to have_content(
         I18n.t("js.discourse_ai.llms.usage.ai_spam"),

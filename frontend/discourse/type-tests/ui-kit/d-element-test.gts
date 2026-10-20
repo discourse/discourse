@@ -22,10 +22,10 @@ const Dynamic = dElement(dynamicTag);
 const Test = <template>
   {{! Per-tag attributes are accepted on the matching element }}
   <Anchor href="/x">ok</Anchor>
-  <Button type="submit" disabled={{true}}>ok</Button>
+  <Button disabled={{true}} type="submit">ok</Button>
 
   {{! A union wrapper accepts attributes valid on either arm }}
-  <AnchorOrButton href="/x" type="submit" disabled={{true}}>ok</AnchorOrButton>
+  <AnchorOrButton disabled={{true}} href="/x" type="submit">ok</AnchorOrButton>
 
   {{! The pass-through and dynamic fallbacks accept global attributes }}
   <Passthrough class="c">ok</Passthrough>

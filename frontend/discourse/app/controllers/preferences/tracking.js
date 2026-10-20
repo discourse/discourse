@@ -90,6 +90,7 @@ export default class extends Controller {
     return this.currentUser.id === this.model.id;
   }
 
+  /** @returns {Array<{ id: number, name: string, slug?: string }>} */
   @computed(
     "model.watched_tags.[]",
     "model.watching_first_post_tags.[]",
@@ -123,6 +124,7 @@ export default class extends Controller {
     return show;
   }
 
+  /** @returns {import("discourse/models/category").default[]} */
   @computed(
     "model.watchedCategories",
     "model.watchedFirstPostCategories",
@@ -170,7 +172,6 @@ export default class extends Controller {
       "tracked_category_ids",
       "watched_first_post_category_ids",
       "watched_precedence_over_muted",
-      "topics_unread_when_closed",
     ];
 
     if (this.siteSettings.tagging_enabled) {

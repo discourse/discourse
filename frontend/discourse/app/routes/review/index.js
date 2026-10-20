@@ -4,6 +4,10 @@ import { bind } from "discourse/lib/decorators";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class ReviewIndex extends DiscourseRoute {
+  get _reviewableCountsChannel() {
+    return `/reviewable_counts/${this.currentUser.id}`;
+  }
+
   model(params) {
     if (params.sort_order === null) {
       if (params.status === "reviewed" || params.status === "all") {
@@ -70,19 +74,15 @@ export default class ReviewIndex extends DiscourseRoute {
     );
   }
 
+  @action
+  refreshRoute() {
+    this.refresh();
+  }
+
   @bind
   _updateReviewables(data) {
     if (data.updates) {
       this.controller.updateStatuses(data.updates);
     }
-  }
-
-  get _reviewableCountsChannel() {
-    return `/reviewable_counts/${this.currentUser.id}`;
-  }
-
-  @action
-  refreshRoute() {
-    this.refresh();
   }
 }

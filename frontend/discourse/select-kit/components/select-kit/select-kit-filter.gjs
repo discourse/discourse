@@ -141,8 +141,8 @@ export default class SelectKitFilter extends Component {
       (!this.selectKit.highlighted || this.selectKit.enterDisabled)
     ) {
       this.element.querySelector("input").focus();
+      event.preventDefault();
       if (this.selectKit.enterDisabled) {
-        event.preventDefault();
         event.stopImmediatePropagation();
       }
       return false;
@@ -156,16 +156,16 @@ export default class SelectKitFilter extends Component {
       {{! filter-input-search prevents 1password from attempting autocomplete }}
 
       <Input
-        tabindex={{0}}
-        class="filter-input"
-        placeholder={{this.placeholder}}
+        autocapitalize="off"
         autocomplete="off"
         autocorrect="off"
-        autocapitalize="off"
+        class="filter-input"
         name="filter-input-search"
+        placeholder={{this.placeholder}}
         spellcheck={{false}}
-        @value={{readonly this.selectKit.filter}}
+        tabindex={{0}}
         @type="search"
+        @value={{readonly this.selectKit.filter}}
         {{on "paste" this.onPaste}}
         {{on "keydown" this.onKeydown}}
         {{on "keyup" this.onKeyup}}

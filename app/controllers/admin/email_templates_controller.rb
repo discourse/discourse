@@ -20,6 +20,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
         invite_password_instructions
         new_version_mailer
         new_version_mailer_with_notes
+        password_reset_code_mailer
         system_messages.backup_failed
         system_messages.backup_succeeded
         system_messages.bulk_invite_failed
@@ -88,6 +89,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
         system_messages.welcome_user
         test_mailer
         unsubscribe_mailer
+        user_notifications.account_associated
         user_notifications.account_created
         user_notifications.account_deleted
         user_notifications.account_exists

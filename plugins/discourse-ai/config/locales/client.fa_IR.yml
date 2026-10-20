@@ -11,6 +11,10 @@ fa_IR:
         categories:
           discourse_ai: "هوش مصنوعی دیسکورس"
       dashboard:
+        ask_ai:
+          date: "تاریخ"
+          outcomes:
+            failed: "ناموفق"
         reports:
           filters:
             sort_by:
@@ -60,6 +64,19 @@ fa_IR:
               label: "پاسخ کاربر"
     discourse_ai:
       title: "هوش مصنوعی"
+      copied: "کپی شد"
+      ai_decoded_transcript:
+        tool: "ابزار"
+        type: "نوع"
+        error: "خطا"
+        response: "پاسخ"
+      discourse_workflows:
+        classify:
+          text: "متن"
+          upload_ids: "تصاویر"
+          name: "نام"
+          type: "نوع"
+          type_score: "امتیاز"
       ai_tool_approval:
         loading: "بارگذاری..."
         tool: "عمل"
@@ -154,8 +171,6 @@ fa_IR:
         successful: "موفق"
         failed: "ناموفق"
         unknown: "ناشناس"
-        topic_id: "شناسه موضوع"
-        post_id: "شناسه نوشته"
         time: "زمان"
         when: "وقتی‌که"
         model: "مدل"
@@ -168,6 +183,7 @@ fa_IR:
         post_short: "نوشته %{id}"
         duration: "مدت زمان"
         actions: "عملیات"
+        view_details: "جزئیات"
         periods:
           day: "۲۴ ساعت گذشته"
           week: "۷ روز گذشته"
@@ -233,6 +249,14 @@ fa_IR:
         delete: "حذف"
         embedding: "جاسازی"
         tool: "ابزار"
+      decision_models:
+        no_preset: "هیچ‌کدام"
+        display_name: "نام"
+        model: "مدل"
+        provider: "ارائه‌دهنده"
+        edit: "ویرایش"
+        delete: "حذف"
+        test: "اجرا کردن تست"
       mcp_servers:
         name: "نام"
         description: "توضیح"
@@ -246,6 +270,16 @@ fa_IR:
         delete: "حذف"
         tools_modal:
           required: "مورد نیاز"
+      models:
+        name: "نام"
+        type: "نوع"
+        provider: "ارائه‌دهنده"
+        edit: "ویرایش"
+        select_type: "انتخاب"
+        types:
+          embedding: "جاسازی"
+        filters:
+          all: "همه نوع‌ها"
       llms:
         display_name: "نام"
         provider: "ارائه‌دهنده"
@@ -320,6 +354,15 @@ fa_IR:
         provider_fields:
           model_name: "نام مدل"
         semantic_search: "موضوعات (معنایی)"
+      ai_artifact:
+        editor:
+          version: "نسخه"
+          default: "پیش‌فرض"
+          apply: "اعمال کردن"
+        share: "اشتراک‌گذاری"
+        create_link: "ایجاد پیوند"
+        copy_link: "رونوشت پیوند"
+        filter_all: "همه"
       ai_bot:
         llm: "مدل:"
         cancel_streaming: "توقف پاسخ"
@@ -358,8 +401,14 @@ fa_IR:
         chat:
           summarize: "خلاصه کن"
       discobot_discoveries:
-        regular_results: "موضوعات"
-        collapse: "جمع کردن"
-        tooltip:
-          actions:
-            disable: "غیرفعال کردن"
+        create_topic: "ایجاد موضوع"
+        legacy:
+          regular_results: "موضوعات"
+          collapse: "جمع کردن"
+          tooltip:
+            actions:
+              disable: "غیرفعال کردن"
+        search_type: "هوش مصنوعی"
+        search_all_topics: "همه موضوعات"
+        search_messages: "پیام‌ها"
+        ask_ai: "هوش مصنوعی"

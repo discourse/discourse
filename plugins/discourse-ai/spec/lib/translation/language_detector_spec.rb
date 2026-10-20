@@ -18,48 +18,65 @@ describe DiscourseAi::Translation::LanguageDetector do
     it "creates the correct prompt" do
       expected_system_prompt = DiscourseAi::Agents::LocaleDetector.new.system_prompt
 
-      allow(DiscourseAi::Completions::Prompt).to receive(:new).with(
-        expected_system_prompt,
-        messages: [
-          { type: :user, content: "Can you tell me what '私の世界で一番好きな食べ物はちらし丼です' means?" },
-          { type: :model, content: "en" },
-          {
-            type: :user,
-            content:
-              "[quote]\nNon smettere mai di credere nella bellezza dei tuoi sogni. Anche quando tutto sembra perduto, c'è sempre una luce che aspetta di essere trovata.\nOgni passo, anche il più piccolo, ti avvicina a ciò che desideri. La forza che cerchi è già dentro di te.\n[/quote]\n¿Cuál es el mensaje principal de esta cita?",
-          },
-          { type: :model, content: "es" },
-          { type: :user, content: "meow" },
-        ],
-        post_id: nil,
-        topic_id: nil,
-      ).and_call_original
+      expected_messages = [
+        { type: :user, content: "Can you tell me what '私の世界で一番好きな食べ物はちらし丼です' means?" },
+        { type: :model, content: "en" },
+        {
+          type: :user,
+          content:
+            "[quote]\nNon smettere mai di credere nella bellezza dei tuoi sogni. Anche quando tutto sembra perduto, c'è sempre una luce che aspetta di essere trovata.\nOgni passo, anche il più piccolo, ti avvicina a ciò che desideri. La forza che cerchi è già dentro di te.\n[/quote]\n¿Cuál es el mensaje principal de esta cita?",
+        },
+        { type: :model, content: "es" },
+        { type: :user, content: "meow" },
+      ]
 
-      DiscourseAi::Completions::Llm.with_prepared_responses([llm_response]) do
-        locale_detector.detect
+      DiscourseAi::Completions::Llm.with_prepared_responses([llm_response]) do |_, _, prompts|
+        expect(locale_detector.detect).to eq(llm_response)
+        expect(prompts.first.system_message_text).to eq(expected_system_prompt)
+        expect(prompts.first.messages.drop(1)).to eq(expected_messages)
+        expect([prompts.first.post_id, prompts.first.topic_id]).to eq([nil, nil])
       end
     end
 
-    it "returns the language from the llm's response in the language tag" do
-      DiscourseAi::Completions::Llm.with_prepared_responses([llm_response]) do
-        locale_detector.detect
-      end
-    end
-
-    [
-      ["not a language code", nil],
-      ["", nil],
-      ["1234", nil],
-      ["en-US-INCORRECT", nil],
-      %w[en-US en-US],
-      %w[en en],
-      %w[sr-Latn sr-Latn],
-    ].each do |llm_response, expected_locale|
-      it "returns #{expected_locale.inspect} when the llm responds with #{llm_response.inspect}" do
-        DiscourseAi::Completions::Llm.with_prepared_responses([llm_response]) do
-          expect(locale_detector.detect).to eq(expected_locale)
+    it "rejects malformed locale responses" do
+      ["not a language code", "", "1234", "en-US-INCORRECT"].each do |response|
+        DiscourseAi::Completions::Llm.with_prepared_responses([response]) do
+          expect(described_class.new("meow").detect).to be_nil
         end
       end
+    end
+
+    it "accepts language, regional and script locale tags" do
+      %w[en en-US sr-Latn].each do |response|
+        DiscourseAi::Completions::Llm.with_prepared_responses([response]) do
+          expect(described_class.new("meow").detect).to eq(response)
+        end
+      end
+    end
+
+    it "returns the language when the streamed response has a trailing backslash" do
+      bot = instance_double(DiscourseAi::Agents::Bot)
+      allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(bot)
+      allow(bot).to receive(:reply) { |_, &blk| blk.call("nl\\") }
+
+      expect(locale_detector.detect).to eq("nl")
+    end
+
+    it "returns the language when the streamed response includes thinking" do
+      thinking =
+        DiscourseAi::Completions::Thinking.new(message: "Determining Dutch context", partial: false)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([[thinking, "nl"]]) do
+        expect(locale_detector.detect).to eq("nl")
+      end
+    end
+
+    it "returns the language when the streamed response has surrounding whitespace" do
+      bot = instance_double(DiscourseAi::Agents::Bot)
+      allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(bot)
+      allow(bot).to receive(:reply) { |_, &blk| blk.call(" nl\n") }
+
+      expect(locale_detector.detect).to eq("nl")
     end
 
     it "skips detection when provided blank text" do

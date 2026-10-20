@@ -13,6 +13,9 @@ sk:
   js:
     styleguide:
       title: "Sprievodca štýlom"
+      example:
+        kind:
+          component: "Komponent"
       categories:
         syntax: Syntax
         atoms: Atómy
@@ -29,8 +32,18 @@ sk:
           title: "Pole pre dátum a čas"
         menus:
           title: "Menu"
+        context_menu:
+          actions:
+            duplicate: "Duplikát"
+            delete: "Odstrániť"
         multi_select:
           title: "Viacnásobný výber"
+        reorderable_list:
+          policies_pinned: "Pripnutý"
+          policies_required: "Povinné"
+          table_field: "Pole"
+          table_type: "Typ"
+          cross_list_primary: "Primárne"
         toasts:
           title: "Toasty"
         font_scale:
@@ -88,6 +101,24 @@ sk:
           title: "Viac tém"
         post_menu:
           title: "Ponuka príspevkov"
+        roving_focus:
+          toolbar:
+            copy: "Kopírovať"
+          adjacent:
+            label: "Filtre"
+            field: "Hľadať"
+            open: "Zahájiť"
+            recent: "Nedávne"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "Denne"
+            weekly: "Týždenne"
+            monthly: "Mesačne"
+            never: "Nikdy"
+          tree:
+            components: "Komponenty"
+            select: "Vyberte"
         modal:
           title: "Okno"
           header: "Nadpis okna"

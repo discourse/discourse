@@ -14,6 +14,7 @@ module Reports
         return false if Report.hidden?(type, guardian:)
         return false if plugin_report? && plugin_disabled?
         return false if Report::LEGACY_REPORTS.include?(type)
+        return false if Report::INTERNAL_REPORT_TYPES.include?(type)
 
         true
       end

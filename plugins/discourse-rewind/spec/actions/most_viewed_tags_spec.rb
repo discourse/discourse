@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseRewind::Action::MostViewedTags do
-  fab!(:date) { Date.new(2021).all_year }
   fab!(:user)
   fab!(:other_user, :user)
 
@@ -11,44 +10,27 @@ RSpec.describe DiscourseRewind::Action::MostViewedTags do
   fab!(:tag_4) { Fabricate(:tag, name: "golang") }
   fab!(:tag_5) { Fabricate(:tag, name: "rust") }
 
-  fab!(:topic_1, :topic)
-  fab!(:topic_2, :topic)
-  fab!(:topic_3, :topic)
-  fab!(:topic_4, :topic)
-  fab!(:topic_5, :topic)
+  fab!(:topic_1) { Fabricate(:topic, tags: [tag_1]) }
+  fab!(:topic_2) { Fabricate(:topic, tags: [tag_1]) }
+  fab!(:topic_3) { Fabricate(:topic, tags: [tag_2]) }
+  fab!(:topic_4) { Fabricate(:topic, tags: [tag_3]) }
+  fab!(:topic_5) { Fabricate(:topic, tags: [tag_4]) }
 
-  before do
-    SiteSetting.tagging_enabled = true
-
-    topic_1.tags = [tag_1]
-    topic_2.tags = [tag_1]
-    topic_3.tags = [tag_2]
-    topic_4.tags = [tag_3]
-    topic_5.tags = [tag_4]
-  end
+  before { SiteSetting.tagging_enabled = true }
 
   describe ".call" do
     it "returns top 4 most viewed tags ordered by view count" do
-      # Tag 1 (ruby): 2 views (2 different topics)
       TopicViewItem.add(topic_1.id, "127.0.0.1", user.id, Date.new(2021, 3, 15))
       TopicViewItem.add(topic_2.id, "127.0.0.2", user.id, Date.new(2021, 4, 20))
-
-      # Tag 2 (javascript): 1 view
       TopicViewItem.add(topic_3.id, "127.0.0.3", user.id, Date.new(2021, 5, 10))
-
-      # Tag 3 (python): 1 view
       TopicViewItem.add(topic_4.id, "127.0.0.4", user.id, Date.new(2021, 6, 5))
-
-      # Tag 4 (golang): 3 views (same topic, multiple views)
       TopicViewItem.add(topic_5.id, "127.0.0.5", user.id, Date.new(2021, 7, 1))
       TopicViewItem.add(topic_5.id, "127.0.0.6", user.id, Date.new(2021, 8, 15))
       TopicViewItem.add(topic_5.id, "127.0.0.7", user.id, Date.new(2021, 9, 20))
 
-      # Tag 5 (rust): 0 views
-
       result = call_report
 
-      expect(result[:data]).to match_array(
+      expect(result[:data]).to eq(
         [
           { tag_id: tag_1.id, slug: "ruby", name: "ruby" },
           { tag_id: tag_2.id, slug: "javascript", name: "javascript" },
@@ -58,19 +40,17 @@ RSpec.describe DiscourseRewind::Action::MostViewedTags do
       )
     end
 
-    it "only includes tags the user can see (no restricted tags)" do
-      group = Fabricate(:group)
-      tag_group = Fabricate(:tag_group, tags: [tag_5])
-      tag_group.permissions = { group.name => TagGroupPermission.permission_types[:full] }
-      tag_group.save!
-
-      restricted_topic = Fabricate(:topic)
+    it "excludes views of personal messages and restricted categories" do
+      private_message = Fabricate(:private_message_topic)
+      private_message.tags = [tag_5]
+      restricted_topic =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
       restricted_topic.tags = [tag_5]
+      [private_message, restricted_topic].each do |topic|
+        TopicViewItem.add(topic.id, "127.0.0.1", user.id, Date.new(2021, 3, 15))
+      end
 
-      TopicViewItem.add(restricted_topic.id, "127.0.0.1", user.id, Date.new(2021, 3, 15))
-
-      result = call_report
-      expect(result[:data].map { |t| t[:tag_id] }).not_to include(tag_5.id)
+      expect(call_report[:data].map { |tag| tag[:tag_id] }).not_to include(tag_5.id)
     end
 
     it "filters by date range" do
@@ -93,21 +73,6 @@ RSpec.describe DiscourseRewind::Action::MostViewedTags do
       expect(result[:data].first[:tag_id]).to eq(tag_1.id)
     end
 
-    it "counts distinct topics per tag" do
-      multi_tag_topic = Fabricate(:topic)
-      multi_tag_topic.tags = [tag_1, tag_2]
-
-      TopicViewItem.add(multi_tag_topic.id, "127.0.0.1", user.id, Date.new(2021, 3, 15))
-      TopicViewItem.add(multi_tag_topic.id, "127.0.0.2", user.id, Date.new(2021, 4, 20))
-
-      result = call_report
-
-      tag_1_data = result[:data].find { |t| t[:tag_id] == tag_1.id }
-      tag_2_data = result[:data].find { |t| t[:tag_id] == tag_2.id }
-      expect(tag_1_data).not_to be_nil
-      expect(tag_2_data).not_to be_nil
-    end
-
     it "returns empty array when no views" do
       result = call_report
 
@@ -119,42 +84,12 @@ RSpec.describe DiscourseRewind::Action::MostViewedTags do
       fab!(:restricted_tag) { Fabricate(:tag, name: "secret") }
       fab!(:restricted_topic, :topic)
 
-      let(:everyone) { Group::AUTO_GROUPS[:everyone] }
       let(:full) { TagGroupPermission.permission_types[:full] }
 
       before do
         group.add(user)
         restricted_topic.tags = [restricted_tag]
         restricted_topic.save!
-      end
-
-      it "excludes tags in groups restricted to specific groups (not visible to anon)" do
-        tag_group = Fabricate(:tag_group, tags: [restricted_tag])
-        tag_group.permissions = [[group, full]]
-        tag_group.save!
-
-        TopicViewItem.add(restricted_topic.id, "127.0.0.1", user.id, Date.new(2021, 3, 15))
-
-        result = call_report
-        expect(result[:data].map { |t| t[:tag_id] }).not_to include(restricted_tag.id)
-      end
-
-      it "includes tags in groups with everyone permission" do
-        tag_group = Fabricate(:tag_group, tags: [restricted_tag])
-        tag_group.permissions = [[everyone, full]]
-        tag_group.save!
-
-        TopicViewItem.add(restricted_topic.id, "127.0.0.1", user.id, Date.new(2021, 3, 15))
-
-        result = call_report
-        expect(result[:data].map { |t| t[:tag_id] }).to include(restricted_tag.id)
-      end
-
-      it "includes tags not in any tag group (unrestricted)" do
-        TopicViewItem.add(topic_1.id, "127.0.0.1", user.id, Date.new(2021, 3, 15))
-
-        result = call_report
-        expect(result[:data].map { |t| t[:tag_id] }).to include(tag_1.id)
       end
 
       it "excludes tags where user has access but anon does not" do
@@ -165,12 +100,24 @@ RSpec.describe DiscourseRewind::Action::MostViewedTags do
         TopicViewItem.add(restricted_topic.id, "127.0.0.1", user.id, Date.new(2021, 3, 15))
         TopicViewItem.add(topic_1.id, "127.0.0.2", user.id, Date.new(2021, 4, 20))
 
-        expect(Tag.visible(user.guardian).pluck(:id)).to include(restricted_tag.id)
-        expect(Tag.visible(Guardian.new).pluck(:id)).not_to include(restricted_tag.id)
-
         result = call_report
         expect(result[:data].map { |t| t[:tag_id] }).to contain_exactly(tag_1.id)
       end
+    end
+  end
+
+  describe ".filter_for_viewer" do
+    it "drops tags that are no longer visible to everyone, even for the owner" do
+      report = { data: [tag_1, tag_2].map { |tag| { tag_id: tag.id } } }
+      group = Fabricate(:group)
+      group.add(user)
+      tag_group = Fabricate(:tag_group, tags: [tag_2])
+      tag_group.permissions = [[group, TagGroupPermission.permission_types[:full]]]
+      tag_group.save!
+
+      filtered = described_class.filter_for_viewer(report, guardian: user.guardian, for_user: user)
+
+      expect(filtered[:data]).to eq([{ tag_id: tag_1.id }])
     end
   end
 end

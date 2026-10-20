@@ -1,16 +1,18 @@
 import { hash } from "@ember/helper";
 import { isBlank } from "@ember/utils";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
-import DSelect, { DSelectOption } from "discourse/ui-kit/d-select";
+import DNativeSelect, {
+  DNativeSelectOption,
+} from "discourse/ui-kit/d-native-select";
 
 const SelectOption = <template>
-  <DSelectOption
-    @value={{@value}}
-    @selected={{@selected}}
+  <DNativeSelectOption
     class="form-kit__control-option"
+    @selected={{@selected}}
+    @value={{@value}}
   >
     {{yield}}
-  </DSelectOption>
+  </DNativeSelectOption>
 </template>;
 
 export default class FKControlSelect extends FKBaseControl {
@@ -27,20 +29,20 @@ export default class FKControlSelect extends FKBaseControl {
   }
 
   <template>
-    <DSelect
+    <DNativeSelect
+      aria-describedby={{@field.describedBy}}
+      aria-invalid={{if @field.error "true"}}
       class="form-kit__control-select"
       disabled={{@field.disabled}}
-      @value={{@field.value}}
-      @onChange={{@field.set}}
-      @includeNone={{this.includeNone}}
-      @nonePlaceholder={{@nonePlaceholder}}
       id={{@field.id}}
       name={{@field.name}}
-      aria-invalid={{if @field.error "true"}}
-      aria-describedby={{@field.describedBy}}
       ...attributes
+      @includeNone={{this.includeNone}}
+      @nonePlaceholder={{@nonePlaceholder}}
+      @onChange={{@field.set}}
+      @value={{@field.value}}
     >
       {{yield (hash Option=(component SelectOption selected=@field.value))}}
-    </DSelect>
+    </DNativeSelect>
   </template>
 }

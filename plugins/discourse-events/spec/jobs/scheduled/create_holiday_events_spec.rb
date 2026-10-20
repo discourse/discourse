@@ -6,11 +6,9 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
   let(:calendar_post) { create_post(raw: "[calendar]\n[/calendar]") }
 
   let(:frenchy) do
-    Fabricate(:user, custom_fields: { DiscourseCalendar::REGION_CUSTOM_FIELD => "fr" })
+    Fabricate(:user, custom_fields: { DiscourseEvents::REGION_CUSTOM_FIELD => "fr" })
   end
-  let(:aussie) do
-    Fabricate(:user, custom_fields: { DiscourseCalendar::REGION_CUSTOM_FIELD => "au" })
-  end
+  let(:aussie) { Fabricate(:user, custom_fields: { DiscourseEvents::REGION_CUSTOM_FIELD => "au" }) }
 
   before do
     Jobs.run_immediately!
@@ -25,7 +23,7 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
     freeze_time Time.zone.local(2019, 8, 1)
     job.execute(nil)
 
-    expect(CalendarEvent.where(user_id: frenchy.id).count).to eq(0)
+    expect(DiscourseEvents::Calendar::Event.where(user_id: frenchy.id).count).to eq(0)
   end
 
   it "adds all holidays in the next 6 months" do
@@ -33,7 +31,9 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
     freeze_time Time.zone.local(2019, 8, 1)
     job.execute(nil)
 
-    expect(CalendarEvent.pluck(:region, :description, :start_date, :user_id)).to match_array(
+    expect(
+      DiscourseEvents::Calendar::Event.pluck(:region, :description, :start_date, :user_id),
+    ).to match_array(
       [
         ["fr", "Assomption", Date.parse("2019-08-15"), frenchy.id],
         ["fr", "Toussaint", Date.parse("2019-11-01"), frenchy.id],
@@ -50,7 +50,9 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
     job.execute(nil)
 
     # The "Australia Day" is always observed on a Monday
-    expect(CalendarEvent.pluck(:region, :description, :start_date, :user_id)).to match_array(
+    expect(
+      DiscourseEvents::Calendar::Event.pluck(:region, :description, :start_date, :user_id),
+    ).to match_array(
       [
         ["au", "Australia Day", Date.parse("2020-01-27"), aussie.id],
         ["au", "Good Friday", Date.parse("2020-04-10"), aussie.id],
@@ -65,7 +67,9 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
     job.execute(nil)
 
     # The "Fête Nationale" is on July 14th but it's on a Sunday in 2019
-    expect(CalendarEvent.pluck(:region, :description, :start_date, :user_id)).to match_array(
+    expect(
+      DiscourseEvents::Calendar::Event.pluck(:region, :description, :start_date, :user_id),
+    ).to match_array(
       [
         ["fr", "Assomption", Date.parse("2019-08-15"), frenchy.id],
         ["fr", "Toussaint", Date.parse("2019-11-01"), frenchy.id],
@@ -80,13 +84,13 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
     freeze_time Time.zone.local(2019, 8, 1)
 
     robot =
-      Fabricate(:user, id: -100, custom_fields: { DiscourseCalendar::REGION_CUSTOM_FIELD => "fr" })
+      Fabricate(:user, id: -100, custom_fields: { DiscourseEvents::REGION_CUSTOM_FIELD => "fr" })
     inactive =
       Fabricate(
         :user,
         active: false,
         custom_fields: {
-          DiscourseCalendar::REGION_CUSTOM_FIELD => "fr",
+          DiscourseEvents::REGION_CUSTOM_FIELD => "fr",
         },
       )
     suspended =
@@ -94,7 +98,7 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
         :user,
         suspended_till: 1.year.from_now,
         custom_fields: {
-          DiscourseCalendar::REGION_CUSTOM_FIELD => "fr",
+          DiscourseEvents::REGION_CUSTOM_FIELD => "fr",
         },
       )
     silenced =
@@ -102,34 +106,36 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
         :user,
         silenced_till: 1.year.from_now,
         custom_fields: {
-          DiscourseCalendar::REGION_CUSTOM_FIELD => "fr",
+          DiscourseEvents::REGION_CUSTOM_FIELD => "fr",
         },
       )
 
     job.execute(nil)
 
-    expect(CalendarEvent.pluck(:region, :description, :start_date, :user_id)).to eq([])
+    expect(
+      DiscourseEvents::Calendar::Event.pluck(:region, :description, :start_date, :user_id),
+    ).to eq([])
   end
 
   it "does not create duplicates when username is changed" do
     frenchy
     job.execute(nil)
-    created_event = CalendarEvent.last
+    created_event = DiscourseEvents::Calendar::Event.last
     expect(created_event.username).to eq(frenchy.username)
     frenchy.update!(username: "new_username")
 
-    expect { job.execute(nil) }.not_to change { CalendarEvent.count }
+    expect { job.execute(nil) }.not_to change { DiscourseEvents::Calendar::Event.count }
     expect(created_event.reload.username).to eq("new_username")
   end
 
   it "does not create duplicates when timezone is changed" do
     frenchy
     job.execute(nil)
-    created_event = CalendarEvent.last
+    created_event = DiscourseEvents::Calendar::Event.last
     expect(created_event.timezone).to eq(frenchy.user_option.timezone)
     frenchy.user_option.update!(timezone: "Asia/Taipei")
 
-    expect { job.execute(nil) }.not_to change { CalendarEvent.count }
+    expect { job.execute(nil) }.not_to change { DiscourseEvents::Calendar::Event.count }
     expect(created_event.reload.timezone).to eq("Asia/Taipei")
   end
 
@@ -138,14 +144,14 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
     freeze_time Time.zone.local(2019, 8, 1)
     job.execute(nil)
 
-    expect(CalendarEvent.exists?(user_id: frenchy.id)).to eq(true)
+    expect(DiscourseEvents::Calendar::Event.exists?(user_id: frenchy.id)).to eq(true)
 
     frenchy.active = false
     frenchy.save!
 
     job.execute(nil)
 
-    expect(CalendarEvent.exists?(user_id: frenchy.id)).to eq(false)
+    expect(DiscourseEvents::Calendar::Event.exists?(user_id: frenchy.id)).to eq(false)
   end
 
   it "cleans up holidays from users who changed their region" do
@@ -153,9 +159,9 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
     freeze_time Time.zone.local(2019, 8, 1)
     job.execute(nil)
 
-    expect(CalendarEvent.exists?(user_id: frenchy.id)).to eq(true)
+    expect(DiscourseEvents::Calendar::Event.exists?(user_id: frenchy.id)).to eq(true)
 
-    frenchy.custom_fields[DiscourseCalendar::REGION_CUSTOM_FIELD] = "au"
+    frenchy.custom_fields[DiscourseEvents::REGION_CUSTOM_FIELD] = "au"
     frenchy.save!
 
     freeze_time Time.zone.local(2020, 1, 1)
@@ -164,7 +170,7 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
 
     # Past 'fr' holidays should not be removed
     expect(
-      CalendarEvent
+      DiscourseEvents::Calendar::Event
         .where(user: frenchy)
         .where(region: "fr")
         .where("start_date <= ?", Date.today)
@@ -173,7 +179,7 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
 
     # Future 'fr' holidays should be removed
     expect(
-      CalendarEvent
+      DiscourseEvents::Calendar::Event
         .where(user: frenchy)
         .where(region: "fr")
         .where("start_date > ?", Date.today)
@@ -182,7 +188,7 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
 
     # Future 'au' holidays should be added
     expect(
-      CalendarEvent
+      DiscourseEvents::Calendar::Event
         .where(user: frenchy)
         .where(region: "au")
         .where("start_date > ?", Date.today)
@@ -195,8 +201,8 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
     let(:france_toussaint) { { holiday_name: "Toussaint", region_code: "fr" } }
 
     before do
-      DiscourseCalendar::DisabledHoliday.create!(france_assomption)
-      DiscourseCalendar::DisabledHoliday.create!(france_toussaint)
+      DiscourseEvents::Holidays::DisabledHoliday.create!(france_assomption)
+      DiscourseEvents::Holidays::DisabledHoliday.create!(france_toussaint)
     end
 
     it "only adds enabled holidays to the calendar" do
@@ -204,7 +210,9 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
       freeze_time Time.zone.local(2019, 7, 1)
       job.execute(nil)
 
-      expect(CalendarEvent.pluck(:region, :description, :start_date, :user_id)).to match_array(
+      expect(
+        DiscourseEvents::Calendar::Event.pluck(:region, :description, :start_date, :user_id),
+      ).to match_array(
         [
           ["fr", "Armistice 1918", Date.parse("2019-11-11"), frenchy.id],
           ["fr", "Noël", Date.parse("2019-12-25"), frenchy.id],
@@ -218,8 +226,12 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
       freeze_time Time.zone.local(2019, 7, 1)
       job.execute(nil)
 
-      expect(CalendarEvent.pluck(:description)).not_to include(france_assomption[:holiday_name])
-      expect(CalendarEvent.pluck(:description)).not_to include(france_toussaint[:holiday_name])
+      expect(DiscourseEvents::Calendar::Event.pluck(:description)).not_to include(
+        france_assomption[:holiday_name],
+      )
+      expect(DiscourseEvents::Calendar::Event.pluck(:description)).not_to include(
+        france_toussaint[:holiday_name],
+      )
     end
   end
 
@@ -229,7 +241,7 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
       freeze_time Time.zone.local(2019, 8, 1)
       job.execute(nil)
 
-      calendar_event = CalendarEvent.first
+      calendar_event = DiscourseEvents::Calendar::Event.first
       expect(calendar_event.region).to eq("fr")
       expect(calendar_event.description).to eq("Assomption")
       expect(calendar_event.start_date).to eq("2019-08-15T00:00:00+02:00")
@@ -248,7 +260,7 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
         freeze_time Time.zone.local(2019, 8, 1)
         job.execute(nil)
 
-        calendar_event = CalendarEvent.first
+        calendar_event = DiscourseEvents::Calendar::Event.first
         expect(calendar_event.region).to eq("fr")
         expect(calendar_event.description).to eq("Assomption")
         expect(calendar_event.start_date).to eq("2019-08-15T06:00:00+02:00")
@@ -261,13 +273,13 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
   it "skips invalid regions and continues processing valid ones" do
     frenchy
     invalid_region_user =
-      Fabricate(:user, custom_fields: { DiscourseCalendar::REGION_CUSTOM_FIELD => "invalid_xx" })
+      Fabricate(:user, custom_fields: { DiscourseEvents::REGION_CUSTOM_FIELD => "invalid_xx" })
 
     freeze_time Time.zone.local(2019, 8, 1)
 
     expect { job.execute(nil) }.not_to raise_error
 
-    expect(CalendarEvent.where(user_id: frenchy.id).count).to be > 0
-    expect(CalendarEvent.where(user_id: invalid_region_user.id).count).to eq(0)
+    expect(DiscourseEvents::Calendar::Event.where(user_id: frenchy.id).count).to be > 0
+    expect(DiscourseEvents::Calendar::Event.where(user_id: invalid_region_user.id).count).to eq(0)
   end
 end

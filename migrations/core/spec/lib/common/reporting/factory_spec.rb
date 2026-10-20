@@ -10,6 +10,7 @@ RSpec.describe Migrations::Reporting::Factory do
       def io.tty?
         true
       end
+
       def io.winsize
         [24, 80]
       end

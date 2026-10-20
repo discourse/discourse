@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { logOnboardingEvent } from "discourse/lib/admin-onboarding";
@@ -41,9 +42,14 @@ export default class OnboardingStep extends Component {
     throw new Error("performAction is required for OnboardingStep");
   }
 
+  // Steps whose action needs slow-to-arrive data can warm it up here, so the
+  // work overlaps with the admin reaching for the button.
+  @action
+  prefetch() {}
+
   // Awaits the audit write so callers that reload the page on completion can't
   // cancel it in flight.
-  async markAsCompleted() {
+  async markAsCompleted(options = {}) {
     // app events backing some steps can fire more than once, so only audit the
     // first transition into the completed state
     const alreadyCompleted = this.completed;
@@ -56,7 +62,11 @@ export default class OnboardingStep extends Component {
     this.appEvents.trigger(`onboarding-step:completed`, this.name);
 
     if (!alreadyCompleted) {
-      await logOnboardingEvent("step_completed", this.name);
+      await logOnboardingEvent(
+        "step_completed",
+        this.name,
+        options?.topicOption
+      );
     }
 
     return this.args.onCompleted?.(this.name);
@@ -82,12 +92,14 @@ export default class OnboardingStep extends Component {
       </div>
       <div class="onboarding-step__action">
         <DButton
-          @label={{this.buttonLabel}}
-          @action={{this.performAction}}
           class={{dConcatClass
             "btn-transparent btn-small btn-link"
             (if this.completed "--completed")
           }}
+          @action={{this.performAction}}
+          @label={{this.buttonLabel}}
+          {{on "pointerenter" this.prefetch}}
+          {{on "focus" this.prefetch}}
         />
 
       </div>

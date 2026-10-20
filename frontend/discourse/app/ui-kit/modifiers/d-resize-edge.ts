@@ -1,6 +1,9 @@
+import { assert } from "@ember/debug";
 import { registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import Modifier, { type ArgsFor } from "ember-modifier";
+import type { Side } from "discourse/lib/geometry";
+import type { ResizeAxis } from "discourse/lib/resize-measurements";
 import {
   type DPointerDragArgs,
   registerPointerDrag,
@@ -8,6 +11,11 @@ import {
 
 /** How far a single arrow key press moves the edge, in pixels. */
 const KEYBOARD_STEP = 16;
+
+/** `Number.isFinite` that also narrows, so a measurement checked here is a `number` after. */
+function isFiniteNumber(value: unknown): value is number {
+  return Number.isFinite(value);
+}
 
 /**
  * What produced a size report. A consumer that mirrors the size for assistive
@@ -55,7 +63,7 @@ interface DResizeEdgeSignature {
        * should carry: that describes the separator itself, which lies across
        * the axis it moves along.
        */
-      axis?: "horizontal" | "vertical";
+      axis?: ResizeAxis;
 
       /**
        * Which edge the resized element is docked against, in logical terms.
@@ -67,7 +75,7 @@ interface DResizeEdgeSignature {
        * Changing this or `axis` mid-gesture measures the new orientation against
        * an origin captured in the old one, so the result is undefined.
        */
-      side?: "start" | "end";
+      side?: Side;
 
       /**
        * A class held on `document.body` for the length of a gesture, for a cursor
@@ -179,7 +187,7 @@ interface DResizeEdgeSignature {
  */
 export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> {
   /** The options from the most recent invocation, set by `modify`. */
-  #named: DResizeEdgeSignature["Args"]["Named"];
+  #namedArgs?: DResizeEdgeSignature["Args"]["Named"];
 
   #onDragStart = (event: PointerEvent) => {
     // A pointer taking over closes any key still being held, so the two inputs
@@ -187,7 +195,7 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     this.#endKeyboardGesture();
 
     const startValue = this.#read(this.#named.value);
-    if (!Number.isFinite(startValue)) {
+    if (!isFiniteNumber(startValue)) {
       // Nothing to resize from. Vetoing hands the press back rather than
       // starting a gesture whose first report would be `null + delta` clamped
       // to a bound, which moves the box somewhere nobody dragged it.
@@ -270,7 +278,7 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
 
     // A jump with no bound has nowhere to land. Leave the key to whatever else
     // would act on it, as the size check below does.
-    let jumpTarget;
+    let jumpTarget: number | undefined;
     if (event.key === "Home" || event.key === "End") {
       jumpTarget = this.#read(
         event.key === "Home" ? this.#named.min : this.#named.max
@@ -284,7 +292,7 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
       const startValue = this.#read(this.#named.value);
       // Checked before the key is claimed: with no size to step from there is
       // nothing to handle, so the key belongs to whatever else would act on it.
-      if (!Number.isFinite(startValue)) {
+      if (!isFiniteNumber(startValue)) {
         return;
       }
 
@@ -299,16 +307,12 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
 
     let next;
 
-    switch (event.key) {
-      case shrinkKey:
-        next = this.#keyboardValue - KEYBOARD_STEP * this.#growthDirection;
-        break;
-      case growKey:
-        next = this.#keyboardValue + KEYBOARD_STEP * this.#growthDirection;
-        break;
-      default:
-        next = jumpTarget;
-        break;
+    if (jumpTarget !== undefined) {
+      next = jumpTarget;
+    } else if (event.key === shrinkKey) {
+      next = this.#keyboardValue - KEYBOARD_STEP * this.#growthDirection;
+    } else {
+      next = this.#keyboardValue + KEYBOARD_STEP * this.#growthDirection;
     }
 
     this.#keyboardValue = this.#clamp(next);
@@ -321,6 +325,7 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
 
     this.#endKeyboardGesture();
   };
+
   /**
    * The keyup would land on whatever took focus, so without this the gesture
    * would stay open and never commit. Bound to the window as well as the
@@ -328,7 +333,7 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
    * the keyup with it without the element ever seeing a blur.
    */
   #onBlur = () => this.#endKeyboardGesture();
-  #element: HTMLElement;
+  #element?: HTMLElement;
   #frame?: number;
 
   /** The key holding the current keyboard gesture open, if any. */
@@ -372,64 +377,18 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
    * The gesture args handed to `registerPointerDrag`. Typed from the engine's own
    * args rather than restated, so narrowing one of them cannot leave this behind.
    */
-  #gestureArgs: DPointerDragArgs;
+  #gestureArgs?: DPointerDragArgs;
 
   constructor(owner: Owner, args: ArgsFor<DResizeEdgeSignature>) {
     super(owner, args);
     registerDestructor(this, (instance) => instance.cleanup());
   }
 
-  modify(
-    element: HTMLElement,
-    _positional: [],
-    named: DResizeEdgeSignature["Args"]["Named"]
-  ) {
-    this.#element = element;
-    this.#named = named;
-
-    this.#gestureArgs = {
-      onDragStart: this.#onDragStart,
-      onDrag: this.#onDrag,
-      onDragEnd: this.#onDragEnd,
-      // An OS-interrupted resize keeps the size the user dragged to rather than
-      // snapping back, so cancellation commits.
-      cancelCommits: true,
-      // A touch drag would otherwise be claimed by the browser as a scroll and
-      // abort the resize through `pointercancel`. An edge is small enough that
-      // suppressing every touch gesture on it costs the user nothing.
-      touchAction: "none",
-      bodyClass: named.bodyClass,
-    };
-
-    // The gesture engine owns pointer identity, capture, and the primary-button
-    // gate; this modifier keeps the value semantics and the keyboard path.
-    this.#releaseGesture ??= registerPointerDrag(
-      element,
-      () => this.#gestureArgs
-    );
-
-    element.addEventListener("keydown", this.#onKeyDown);
-    element.addEventListener("keyup", this.#onKeyUp);
-    element.addEventListener("blur", this.#onBlur);
-    window.addEventListener("blur", this.#onBlur);
-    window.addEventListener("pagehide", this.#onBlur);
-  }
-
-  cleanup() {
-    this.#cancelFrame();
-
-    this.#releaseGesture?.();
-    this.#releaseGesture = null;
-    // Dropped rather than committed: the element is going away, so a caller
-    // undoing gesture state has nothing left to undo it on.
-    this.#keyboardKey = null;
-    this.#keyboardValue = null;
-    this.#pointerActive = false;
-    this.#element?.removeEventListener("keydown", this.#onKeyDown);
-    this.#element?.removeEventListener("keyup", this.#onKeyUp);
-    this.#element?.removeEventListener("blur", this.#onBlur);
-    window.removeEventListener("blur", this.#onBlur);
-    window.removeEventListener("pagehide", this.#onBlur);
+  /** Set by `modify`; every handler that reads it runs after the first invocation. */
+  get #named(): DResizeEdgeSignature["Args"]["Named"] {
+    const named = this.#namedArgs;
+    assert("dResizeEdge: args are read before `modify`", named);
+    return named;
   }
 
   /**
@@ -456,9 +415,67 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
     // every read forces a style recalculation. `side` and `axis` above stay live
     // reads — only the writing direction is held, and it is not something that
     // changes while a pointer is down.
-    this.#rtl ??= getComputedStyle(this.#element).direction === "rtl";
+    const element = this.#element;
+    assert("dResizeEdge: a gesture ran before `modify`", element);
+    this.#rtl ??= getComputedStyle(element).direction === "rtl";
 
     return logical * (this.#rtl ? -1 : 1);
+  }
+
+  modify(
+    element: HTMLElement,
+    _positional: [],
+    named: DResizeEdgeSignature["Args"]["Named"]
+  ) {
+    this.#element = element;
+    this.#namedArgs = named;
+
+    this.#gestureArgs = {
+      onDragStart: this.#onDragStart,
+      onDrag: this.#onDrag,
+      onDragEnd: this.#onDragEnd,
+      // An OS-interrupted resize keeps the size the user dragged to rather than
+      // snapping back, so cancellation commits.
+      cancelCommits: true,
+      // A touch drag would otherwise be claimed by the browser as a scroll and
+      // abort the resize through `pointercancel`. An edge is small enough that
+      // suppressing every touch gesture on it costs the user nothing.
+      touchAction: "none",
+      bodyClass: named.bodyClass,
+    };
+
+    // The gesture engine owns pointer identity, capture, and the primary-button
+    // gate; this modifier keeps the value semantics and the keyboard path.
+    this.#releaseGesture ??= registerPointerDrag(element, () => {
+      assert(
+        "dResizeEdge: gesture args are read before `modify`",
+        this.#gestureArgs
+      );
+      return this.#gestureArgs;
+    });
+
+    element.addEventListener("keydown", this.#onKeyDown);
+    element.addEventListener("keyup", this.#onKeyUp);
+    element.addEventListener("blur", this.#onBlur);
+    window.addEventListener("blur", this.#onBlur);
+    window.addEventListener("pagehide", this.#onBlur);
+  }
+
+  cleanup() {
+    this.#cancelFrame();
+
+    this.#releaseGesture?.();
+    this.#releaseGesture = null;
+    // Dropped rather than committed: the element is going away, so a caller
+    // undoing gesture state has nothing left to undo it on.
+    this.#keyboardKey = null;
+    this.#keyboardValue = null;
+    this.#pointerActive = false;
+    this.#element?.removeEventListener("keydown", this.#onKeyDown);
+    this.#element?.removeEventListener("keyup", this.#onKeyUp);
+    this.#element?.removeEventListener("blur", this.#onBlur);
+    window.removeEventListener("blur", this.#onBlur);
+    window.removeEventListener("pagehide", this.#onBlur);
   }
 
   /**
@@ -519,7 +536,7 @@ export default class DResizeEdgeModifier extends Modifier<DResizeEdgeSignature> 
    * @param arg - A size, or a function returning one.
    * @returns The size in pixels.
    */
-  #read(arg: number | (() => number)) {
+  #read<T extends number | null>(arg: T | (() => T)): T {
     return typeof arg === "function" ? arg() : arg;
   }
 

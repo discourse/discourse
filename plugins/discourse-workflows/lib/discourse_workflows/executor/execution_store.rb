@@ -19,6 +19,7 @@ module DiscourseWorkflows
         @execution_mode = execution_mode
         @options = options
         @workflow_snapshot = nil
+        @duplicate_job = false
         @existing_run_data = {}
         @last_execution_run_data = {}
       end
@@ -36,10 +37,24 @@ module DiscourseWorkflows
           @workflow_snapshot.to_h["nodes"],
           workflow_name: @workflow_snapshot.workflow_name,
         )
-        @execution = create_execution!
+        persist_execution!(status: :running, trigger_data:)
+        return false if @duplicate_job
+
         reset_collaborators!
         restore_seeded_run_data!
         @execution
+      end
+
+      def find_job_execution
+        return if @options.job_id.blank?
+
+        @execution = Execution.find_by(job_id: @options.job_id)
+        @duplicate_job = @execution.present?
+        @execution
+      end
+
+      def owns_execution?
+        execution&.persisted? && !@duplicate_job
       end
 
       def resume!(execution)
@@ -50,16 +65,10 @@ module DiscourseWorkflows
       end
 
       def finish!(steps:)
-        save!(steps)
-        execution.update!(
-          status: :success,
-          finished_at: Time.current,
-          run_time_ms: Execution.compute_run_time_ms(steps),
-          resume_token: nil,
-          waiting_node_id: nil,
-          waiting_until: nil,
-          timeout_action: nil,
-        )
+        unless persist_if_active!(steps, status: :success, **finished_attributes(steps))
+          return execution
+        end
+
         publish_execution_run_data
         publish_progress(refresh: true)
         if @options.workflow_call_child?
@@ -69,18 +78,14 @@ module DiscourseWorkflows
       end
 
       def fail!(error:, steps: [])
-        save!(steps)
-        execution.update!(
+        attributes = {
           status: :error,
           error: error.message.to_s.truncate(1000),
-          finished_at: Time.current,
-          run_time_ms: Execution.compute_run_time_ms(steps),
-          resume_token: nil,
-          waiting_node_id: nil,
-          waiting_until: nil,
-          timeout_action: nil,
-        )
-        trigger_error_workflow(error, steps)
+          **finished_attributes(steps),
+        }
+        return execution unless persist_if_active!(steps, **attributes)
+
+        execution.trigger_error_workflow(error, steps:)
         publish_execution_run_data(
           force: @options.draft_execution || @options.workflow_snapshot.present?,
         )
@@ -91,65 +96,103 @@ module DiscourseWorkflows
         execution
       end
 
-      def create_execution_with_status(status, trigger_data: self.trigger_data)
-        persist_execution!(status: status, trigger_data: trigger_data, finished_at: Time.current)
+      def create_execution_with_status(status, trigger_data: self.trigger_data, error: nil)
+        persist_execution!(status:, trigger_data:, finished_at: Time.current, error:)
       end
 
-      def create_rate_limited_execution
-        create_execution_with_status(:rate_limited, trigger_data: { "rate_limited" => true })
+      def create_rate_limited_execution(error:)
+        create_execution_with_status(
+          :rate_limited,
+          trigger_data: {
+            "rate_limited" => true,
+          },
+          error:,
+        )
       end
 
       def pause_waiting_execution!(node:, waiting_until: nil, timeout_action: nil, steps: [])
-        execution.update!(
+        attributes = {
           status: :waiting,
           waiting_node_id: node.id,
-          waiting_until: waiting_until,
+          waiting_until:,
           resume_token: @execution_context.resume_token,
-          timeout_action: timeout_action,
-        )
-        save!(steps)
+          timeout_action:,
+        }
+        return unless persist_if_active!(steps, **attributes)
+
         publish_waiting_form_notification(node)
         publish_progress(refresh: true)
         execution
       end
 
       def clear_waiting_execution!
-        execution.update!(
-          status: :running,
-          waiting_node_id: nil,
-          waiting_until: nil,
-          resume_token: nil,
-          timeout_action: nil,
-        )
+        execution.update!(status: :running, **Execution::CLEARED_WAIT_STATE)
       end
 
       def publish_progress(step: nil, refresh: false)
-        ExecutionProgressPublisher.publish(execution, step: step, refresh: refresh)
+        ExecutionProgressPublisher.publish(execution, step:, refresh:)
       end
 
       private
 
-      def create_execution!
-        persist_execution!(status: :running, trigger_data: trigger_data)
+      def persist_if_active!(steps, **attributes)
+        execution.transaction do
+          if Execution.where(id: execution.id, status: %i[running waiting]).lock.exists?
+            save!(steps)
+            execution.update!(attributes)
+            true
+          else
+            Rails.logger.warn(
+              "discourse-workflows: execution #{execution.id} is no longer active, " \
+                "discarding its #{attributes[:status]} update",
+            )
+            false
+          end
+        end
       end
 
-      def persist_execution!(status:, trigger_data:, finished_at: nil)
-        @execution = @options.existing_execution || DiscourseWorkflows::Execution.new
+      def finished_attributes(steps)
+        {
+          finished_at: Time.current,
+          run_time_ms: Execution.compute_run_time_ms(steps),
+          **Execution::CLEARED_WAIT_STATE,
+        }
+      end
+
+      def persist_execution!(status:, trigger_data:, finished_at: nil, error: nil)
+        @execution = @options.existing_execution || Execution.new
         created = @execution.new_record?
         @execution_context.execution = @execution if @options.existing_execution
-        @execution.update!(
+        attributes = {
           workflow_id: workflow.id,
           workflow_version_id: execution_workflow_version_id,
           trigger_node_id: @trigger_node_id,
-          status: status,
-          trigger_data: trigger_data,
+          status:,
+          trigger_data:,
           execution_mode: @execution_mode,
           started_at: @execution.started_at || Time.current,
-          finished_at: finished_at,
-        )
+          finished_at:,
+          **{ error: }.compact,
+        }
+
+        if @options.job_id.present?
+          @execution =
+            Execution.create_or_find_by!(job_id: @options.job_id) do |execution|
+              execution.assign_attributes(attributes)
+            end
+          @duplicate_job = !@execution.previously_new_record?
+          return @execution if @duplicate_job
+        else
+          @execution.update!(attributes)
+        end
+
         attach_workflow_call_run!
         if created
-          ExecutionProgressPublisher.publish_created(@execution, workflow_name: workflow.name)
+          ExecutionProgressPublisher.publish_created(
+            @execution,
+            workflow_name: workflow.name,
+            trigger_node: @workflow_snapshot&.find_node(@trigger_node_id),
+          )
         end
         @execution
       end
@@ -401,7 +444,7 @@ module DiscourseWorkflows
               "inputs" => ports_to_item_groups(run["inputs"]),
               "outputs" => ports_to_item_groups(run["outputs"]),
               "input_sources" => input_sources(run["inputs"]),
-            }
+            }.tap { |restored| restored["metadata"] = run["metadata"] if run["metadata"].present? }
           end
         end
       end
@@ -430,6 +473,7 @@ module DiscourseWorkflows
           "node_type" => step&.node_type,
           "status" => step&.status,
           "run_index" => run_index,
+          "metadata" => run["metadata"],
           "inputs" =>
             serialize_ports(
               run["inputs"] || run[:inputs],
@@ -475,15 +519,6 @@ module DiscourseWorkflows
 
       def compact_run_ports(ports)
         Array(ports).map { |port| port.except("items").merge("items" => [], "truncated" => true) }
-      end
-
-      def trigger_error_workflow(error, steps)
-        ErrorWorkflowTrigger.new(
-          workflow,
-          steps,
-          execution: execution,
-          execution_mode: @options.execution_mode,
-        ).trigger_error_workflow(error)
       end
 
       def publish_waiting_form_notification(node)

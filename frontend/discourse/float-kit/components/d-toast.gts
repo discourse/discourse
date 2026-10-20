@@ -28,6 +28,23 @@ interface DToastSignature {
 export default class DToast extends Component<DToastSignature> {
   @tracked progressBar?: HTMLElement;
 
+  get duration() {
+    const duration = this.args.toast.options.duration;
+
+    if (duration === "long") {
+      return 5000;
+    } else if (duration === "short") {
+      return 3000;
+    } else {
+      deprecated(
+        "Using an integer for the duration property of the d-toast component is deprecated. Use `short` or `long` instead.",
+        { id: "float-kit.d-toast.duration" }
+      );
+
+      return duration;
+    }
+  }
+
   @action
   registerProgressBar(element: HTMLElement) {
     this.progressBar = element;
@@ -56,23 +73,6 @@ export default class DToast extends Component<DToastSignature> {
     }
   }
 
-  get duration() {
-    const duration = this.args.toast.options.duration;
-
-    if (duration === "long") {
-      return 5000;
-    } else if (duration === "short") {
-      return 3000;
-    } else {
-      deprecated(
-        "Using an integer for the duration property of the d-toast component is deprecated. Use `short` or `long` instead.",
-        { id: "float-kit.d-toast.duration" }
-      );
-
-      return duration;
-    }
-  }
-
   async #close(element: HTMLElement) {
     await this.#closeWrapperAnimation(element);
     this.args.toast.close();
@@ -93,8 +93,9 @@ export default class DToast extends Component<DToastSignature> {
 
   <template>
     <output
-      role={{if @toast.options.autoClose "status" "log"}}
       class={{dConcatClass "fk-d-toast" @toast.options.class}}
+      data-test-duration={{this.duration}}
+      role={{if @toast.options.autoClose "status" "log"}}
       {{autoCloseToast
         close=@toast.close
         duration=this.duration
@@ -102,16 +103,15 @@ export default class DToast extends Component<DToastSignature> {
         enabled=@toast.options.autoClose
       }}
       {{dSwipe onDidSwipe=this.didSwipe onDidEndSwipe=this.didEndSwipe}}
-      data-test-duration={{this.duration}}
     >
       <@toast.options.component
-        @data={{@toast.options.data}}
         @close={{@toast.close}}
+        @data={{@toast.options.data}}
+        @onRegisterProgressBar={{this.registerProgressBar}}
         @showProgressBar={{and
           @toast.options.showProgressBar
           @toast.options.autoClose
         }}
-        @onRegisterProgressBar={{this.registerProgressBar}}
       />
     </output>
   </template>

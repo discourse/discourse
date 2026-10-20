@@ -39,6 +39,13 @@ export default class BasicTopicList extends Component {
     }
   }
 
+  @computed("topics")
+  get showUnreadIndicator() {
+    return this.topics.some(
+      (topic) => typeof topic.unread_by_group_member !== "undefined"
+    );
+  }
+
   @observes("topicList.[]")
   _topicListChanged() {
     this._initFromTopicList(this.topicList);
@@ -51,29 +58,22 @@ export default class BasicTopicList extends Component {
     }
   }
 
-  @computed("topics")
-  get showUnreadIndicator() {
-    return this.topics.some(
-      (topic) => typeof topic.unread_by_group_member !== "undefined"
-    );
-  }
-
   <template>
     <DConditionalLoadingSpinner @condition={{this.loading}}>
       {{#if this.topics}}
         <List
-          @showPosters={{this.showPosters}}
-          @hideCategory={{this.hideCategory}}
-          @topics={{this.topics}}
-          @expandExcerpts={{this.expandExcerpts}}
+          @ascending={{this.ascending}}
           @bulkSelectHelper={{this.bulkSelectHelper}}
           @canBulkSelect={{this.canBulkSelect}}
-          @tagsForUser={{this.tagsForUser}}
           @changeSort={{this.changeSort}}
-          @order={{this.order}}
-          @ascending={{this.ascending}}
+          @expandExcerpts={{this.expandExcerpts}}
           @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
+          @hideCategory={{this.hideCategory}}
           @listContext={{this.listContext}}
+          @order={{this.order}}
+          @showPosters={{this.showPosters}}
+          @tagsForUser={{this.tagsForUser}}
+          @topics={{this.topics}}
         />
       {{else}}
         {{#unless this.loadingMore}}

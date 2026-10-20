@@ -2,11 +2,11 @@
 
 module DiscourseWorkflows
   class EventListener
-    def self.handle(trigger_class, *args)
+    def self.handle(trigger_class, *args, event_name: nil)
       return unless SiteSetting.enable_discourse_workflows
       return if WorkflowDependency.active_node_types.exclude?(trigger_class.identifier)
 
-      trigger = trigger_class.new(*args)
+      trigger = trigger_class.from_event(event_name, *args)
       return unless trigger.valid?
 
       trigger_data = nil
@@ -14,13 +14,10 @@ module DiscourseWorkflows
 
       WorkflowDependency
         .cached_published_triggers(trigger_class.identifier)
-        .select do |published_trigger|
-          trigger.matches?(
-            DiscourseWorkflows::TriggerNodeContext.from_published_trigger(published_trigger),
-          )
-        end
         .each do |published_trigger|
-          DiscourseWorkflows::TriggerDispatcher.enqueue(
+          next if !trigger.matches?(TriggerNodeContext.from_published_trigger(published_trigger))
+
+          TriggerDispatcher.enqueue(
             published_trigger,
             trigger_data: (trigger_data ||= trigger.output),
             user_id: user_id,
@@ -31,6 +28,10 @@ module DiscourseWorkflows
               "for workflow #{published_trigger.workflow_id}: #{e.message}",
           )
         end
+    rescue => e
+      Rails.logger.error(
+        "discourse-workflows: trigger #{trigger_class.identifier} failed: #{e.message}",
+      )
     end
   end
 end

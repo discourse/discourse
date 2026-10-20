@@ -109,6 +109,7 @@ pl_PL:
       admin:
         title: "Grywalizacja"
         name: "Nazwa"
+        created_by: "Stworzono przez"
         period: "Okres"
     discourse_workflows:
       node_unavailable:

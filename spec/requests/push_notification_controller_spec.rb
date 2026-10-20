@@ -4,7 +4,7 @@ RSpec.describe PushNotificationController do
   fab!(:user)
 
   context "when logged out" do
-    it "should not allow subscribe" do
+    it "does not allow subscribing" do
       post "/push_notifications/subscribe.json",
            params: {
              username: "test",
@@ -25,7 +25,7 @@ RSpec.describe PushNotificationController do
   context "when logged in" do
     before { sign_in(user) }
 
-    it "should subscribe" do
+    it "subscribes the user" do
       post "/push_notifications/subscribe.json",
            params: {
              username: user.username,
@@ -85,7 +85,7 @@ RSpec.describe PushNotificationController do
       PushSubscription.skip_callback(:create, :after, invalidate_session) if invalidate_session
     end
 
-    it "should fix duplicate subscriptions" do
+    it "repairs duplicate subscriptions" do
       subscription = { endpoint: "endpoint", keys: { p256dh: "256dh", auth: "auth" } }
       PushSubscription.create user: user, data: subscription.to_json
       post "/push_notifications/subscribe.json",
@@ -99,7 +99,7 @@ RSpec.describe PushNotificationController do
       expect(user.push_subscriptions.count).to eq(1)
     end
 
-    it "should not create duplicate subscriptions" do
+    it "does not create duplicate subscriptions" do
       2.times do
         post "/push_notifications/subscribe.json",
              params: {
@@ -119,7 +119,7 @@ RSpec.describe PushNotificationController do
       expect(user.push_subscriptions.count).to eq(1)
     end
 
-    it "should unsubscribe with existing subscription" do
+    it "unsubscribes an existing subscription" do
       sub = { endpoint: "endpoint", keys: { p256dh: "256dh", auth: "auth" } }
       PushSubscription.create!(user: user, data: sub.to_json)
 
@@ -147,7 +147,7 @@ RSpec.describe PushNotificationController do
       expect(user.push_subscriptions.count).to eq(1)
     end
 
-    it "should unsubscribe without subscription" do
+    it "handles unsubscribing without a subscription" do
       post "/push_notifications/unsubscribe.json",
            params: {
              username: user.username,

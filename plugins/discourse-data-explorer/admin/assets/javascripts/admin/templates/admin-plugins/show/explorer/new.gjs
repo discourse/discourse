@@ -3,6 +3,7 @@ import AceEditor from "discourse/components/ace-editor";
 import BackButton from "discourse/components/back-button";
 import DSegmentedControl from "discourse/components/d-segmented-control";
 import Form from "discourse/components/form";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
@@ -13,19 +14,20 @@ import { i18n } from "discourse-i18n";
 import ExplorerSchema from "discourse/plugins/discourse-data-explorer/discourse/components/explorer-schema";
 import QueryModeSwitch from "discourse/plugins/discourse-data-explorer/discourse/components/query-mode-switch";
 import QueryResult from "discourse/plugins/discourse-data-explorer/discourse/components/query-result";
+import QueryTagChooser from "discourse/plugins/discourse-data-explorer/discourse/components/query-tag-chooser";
 
 export default <template>
   <div class="admin-detail">
     <div class="query-new__top-bar">
       <BackButton
-        @route="adminPlugins.show.explorer.index"
         @label="explorer.queries"
+        @route="adminPlugins.show.explorer.index"
       />
 
       {{#if @controller.aiQueriesEnabled}}
         <QueryModeSwitch
-          @value={{@controller.mode}}
           @onChange={{@controller.setMode}}
+          @value={{@controller.mode}}
         />
       {{/if}}
     </div>
@@ -43,29 +45,29 @@ export default <template>
           </p>
 
           <DTextarea
+            class="query-new__ai-textarea"
+            disabled={{@controller.aiGenerating}}
+            placeholder={{i18n "explorer.ai.description_placeholder"}}
             @value={{@controller.aiDescription}}
             {{on "input" @controller.updateAiDescription}}
             {{on "keydown" @controller.handleKeydown}}
-            placeholder={{i18n "explorer.ai.description_placeholder"}}
-            class="query-new__ai-textarea"
-            disabled={{@controller.aiGenerating}}
           />
 
           <div class="query-new__ai-actions">
             {{#if @controller.hasGenerated}}
               <DButton
+                class="btn-default query-new__regenerate-btn"
                 @action={{@controller.generate}}
+                @disabled={{@controller.aiGenerating}}
                 @icon="discourse-sparkles"
                 @label="explorer.ai.regenerate"
-                @disabled={{@controller.aiGenerating}}
-                class="btn-default query-new__regenerate-btn"
               />
             {{else}}
               <DButton
-                @action={{@controller.generate}}
-                @label="explorer.ai.generate"
-                @disabled={{@controller.aiGenerating}}
                 class="btn-primary query-new__generate-btn"
+                @action={{@controller.generate}}
+                @disabled={{@controller.aiGenerating}}
+                @label="explorer.ai.generate"
               />
             {{/if}}
 
@@ -90,12 +92,12 @@ export default <template>
             {{/if}}
 
             <DSegmentedControl
-              @name="query-result-view"
-              @value={{@controller.view}}
+              class="query-results-modes"
               @items={{@controller.viewItems}}
+              @name="query-result-view"
               @onSelect={{@controller.setView}}
               @translatedLabel={{i18n "explorer.view.label"}}
-              class="query-results-modes"
+              @value={{@controller.view}}
             />
           </div>
 
@@ -103,8 +105,8 @@ export default <template>
             <div class="query-new__sql-editor">
               <AceEditor
                 @content={{@controller.generatedSql}}
-                @onChange={{@controller.updateSql}}
                 @mode="sql"
+                @onChange={{@controller.updateSql}}
                 @resizable={{true}}
               />
             </div>
@@ -115,10 +117,10 @@ export default <template>
               {{else if @controller.previewSucceeded}}
                 <QueryResult
                   @content={{@controller.previewResults}}
-                  @view={{@controller.view}}
-                  @onSetView={{@controller.setView}}
                   @hideHeaderActions={{true}}
+                  @onSetView={{@controller.setView}}
                   @showDownloads={{false}}
+                  @view={{@controller.view}}
                 />
               {{else if @controller.showPreview}}
                 {{#each @controller.previewResults.errors as |err|}}
@@ -133,9 +135,9 @@ export default <template>
               {{i18n "explorer.query_name"}}
             </label>
             <DTextField
-              @value={{@controller.generatedName}}
-              @onChange={{@controller.updateName}}
               class="query-new__name-input"
+              @onChange={{@controller.updateName}}
+              @value={{@controller.generatedName}}
             />
 
             <label class="query-new__field-label">
@@ -145,54 +147,116 @@ export default <template>
               </span>
             </label>
             <DTextarea
+              class="query-new__description-input"
               @value={{@controller.generatedDescription}}
               {{on "input" @controller.updateDescription}}
-              class="query-new__description-input"
             />
+
+            <div class="query-new__access-fields">
+              <div class="query-new__access-field">
+                <label class="query-new__field-label">
+                  {{i18n "explorer.allow_groups"}}
+                </label>
+                <GroupChooser
+                  class="query-group-select"
+                  @content={{@controller.groupOptions}}
+                  @onChange={{@controller.updateAiGroupIds}}
+                  @value={{@controller.aiGroupIds}}
+                />
+              </div>
+
+              <div class="query-new__access-field">
+                <label class="query-new__field-label">
+                  {{i18n "explorer.query_tags"}}
+                </label>
+                <QueryTagChooser
+                  @availableTags={{@controller.availableTags}}
+                  @onChange={{@controller.updateAiTags}}
+                  @value={{@controller.aiTags}}
+                />
+              </div>
+            </div>
           </div>
 
           <div class="query-new__actions">
             <DButton
+              class="btn-default query-new__run-btn"
               @action={{@controller.runPreview}}
+              @disabled={{@controller.previewDisabled}}
               @icon="play"
               @label="explorer.run"
-              @disabled={{@controller.previewDisabled}}
-              class="btn-default query-new__run-btn"
             />
             <DButton
-              @action={{@controller.saveQuery}}
-              @label="explorer.ai.save_query"
-              @disabled={{@controller.aiGenerating}}
               class="btn-primary query-new__save-btn"
+              @action={{@controller.saveQuery}}
+              @disabled={{@controller.aiGenerating}}
+              @label="explorer.ai.save_query"
             />
           </div>
         {{/if}}
       {{else}}
         <Form
+          class="query-new__manual-form"
           @data={{@controller.manualFormData}}
           @onSubmit={{@controller.create}}
-          class="query-new__manual-form"
           as |form|
         >
           <form.Field
+            @format="full"
             @name="name"
             @title={{i18n "explorer.query_name"}}
-            @validation="required"
-            @format="full"
             @type="input"
+            @validation="required"
             as |field|
           >
             <field.Control />
           </form.Field>
           <form.Field
+            @format="full"
             @name="description"
             @title={{i18n "explorer.description_placeholder"}}
-            @format="full"
             @type="textarea"
             as |field|
           >
             <field.Control />
           </form.Field>
+          <form.Row as |row|>
+            <row.Col @size={{6}}>
+              <form.Field
+                @format="full"
+                @name="groupIds"
+                @title={{i18n "explorer.allow_groups"}}
+                @type="custom"
+                as |field|
+              >
+                <field.Control>
+                  <GroupChooser
+                    class="query-group-select"
+                    @content={{@controller.groupOptions}}
+                    @onChange={{field.set}}
+                    @value={{field.value}}
+                  />
+                </field.Control>
+              </form.Field>
+            </row.Col>
+            <row.Col @size={{6}}>
+              <form.Field
+                @format="full"
+                @name="tags"
+                @title={{i18n "explorer.query_tags"}}
+                @type="custom"
+                as |field|
+              >
+                <field.Control>
+                  <QueryTagChooser
+                    @availableTags={{@controller.availableTags}}
+                    @onChange={{field.set}}
+                    @value={{field.value}}
+                  />
+                </field.Control>
+              </form.Field>
+            </row.Col>
+          </form.Row>
           <label class="query-new__sql-label">
             {{i18n "explorer.ai.sql_label"}}
           </label>
@@ -201,14 +265,14 @@ export default <template>
               <div class="editor-panel">
                 <AceEditor
                   @content={{@controller.manualSql}}
-                  @onChange={{@controller.updateManualSql}}
                   @mode="sql"
+                  @onChange={{@controller.updateManualSql}}
                 />
               </div>
               <div class="right-panel">
                 <ExplorerSchema
-                  @schema={{@controller.schema}}
                   @hideSchema={{@controller.hideSchema}}
+                  @schema={{@controller.schema}}
                   @updateHideSchema={{@controller.updateHideSchema}}
                 />
               </div>
@@ -216,7 +280,7 @@ export default <template>
             <div class="clear"></div>
           </div>
           <form.Actions>
-            <form.Submit @label="explorer.create" @icon="plus" />
+            <form.Submit @icon="plus" @label="explorer.create" />
           </form.Actions>
         </Form>
       {{/if}}

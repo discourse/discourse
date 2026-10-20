@@ -4,9 +4,9 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import MultiSelect from "discourse/select-kit/components/multi-select";
-import BaseField from "./da-base-field";
-import DAFieldDescription from "./da-field-description";
-import DAFieldLabel from "./da-field-label";
+import BaseField from "./da-base-field.gjs";
+import DAFieldDescription from "./da-field-description.gjs";
+import DAFieldLabel from "./da-field-label.gjs";
 
 export default class GroupField extends BaseField {
   @service store;
@@ -16,16 +16,16 @@ export default class GroupField extends BaseField {
   <template>
     <section class="field group-field" {{didInsert this.loadUserFields}}>
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <MultiSelect
-            @value={{@field.metadata.value}}
             @content={{this.allCustomFields}}
-            @onChange={{this.mutValue}}
             @nameProperty={{null}}
-            @valueProperty={{null}}
+            @onChange={{this.mutValue}}
             @options={{hash allowAny=false disabled=@field.isDisabled}}
+            @value={{@field.metadata.value}}
+            @valueProperty={{null}}
           />
           <DAFieldDescription @description={{@description}} />
         </div>

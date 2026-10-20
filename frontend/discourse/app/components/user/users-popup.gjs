@@ -15,7 +15,7 @@ const PAGE_SIZE = 30;
 const FALLBACK_SKELETON_ROWS = 3;
 
 const SkeletonRow = <template>
-  <div class="users-popup__item users-popup__skeleton-item" aria-hidden="true">
+  <div aria-hidden="true" class="users-popup__item users-popup__skeleton-item">
     <div class="users-popup__skeleton-avatar"></div>
     <div class="users-popup__user-info">
       <div class="users-popup__skeleton-name"></div>
@@ -34,6 +34,8 @@ export default class UsersPopup extends Component {
   @tracked users = [];
   @tracked loading = false;
   @tracked canLoadMore = true;
+
+  /** @type {number | null} */
   @tracked bodyMinHeight = null;
 
   displayName = (user) => {
@@ -135,8 +137,8 @@ export default class UsersPopup extends Component {
     <div
       class="users-popup"
       tabindex="-1"
-      {{didInsert this.autofocus}}
       ...attributes
+      {{didInsert this.autofocus}}
     >
       <div class="users-popup__sticky-header">
         {{#if this.site.mobileView}}
@@ -162,20 +164,20 @@ export default class UsersPopup extends Component {
               {{#if (has-block "avatar")}}
                 {{yield user to="avatar"}}
               {{else}}
-                <DUserAvatar @user={{user}} @size="small" />
+                <DUserAvatar @size="small" @user={{user}} />
               {{/if}}
               <div class="users-popup__user-info">
                 <DUserLink
-                  @username={{user.username}}
                   class="users-popup__name"
+                  @username={{user.username}}
                 >
                   {{this.displayName user}}
                 </DUserLink>
                 {{#unless this.siteSettings.prioritize_username_in_ux}}
                   <DUserLink
+                    class="users-popup__username"
                     @ariaHidden={{true}}
                     @username={{user.username}}
-                    class="users-popup__username"
                   >
                     @{{this.displayUsername user}}
                   </DUserLink>

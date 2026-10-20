@@ -25,13 +25,13 @@ RSpec.describe TagSerializer do
   end
 
   describe "#topic_count" do
-    it "should return the value of `Tag#public_topic_count` for a non-staff user" do
+    it "returns the public topic count for non-staff users" do
       serialized = described_class.new(tag, scope: Guardian.new(user), root: false).as_json
 
       expect(serialized[:topic_count]).to eq(1)
     end
 
-    it "should return the value of `Tag#topic_count` for a staff user" do
+    it "returns the total topic count for staff" do
       serialized = described_class.new(tag, scope: Guardian.new(admin), root: false).as_json
 
       expect(serialized[:topic_count]).to eq(2)

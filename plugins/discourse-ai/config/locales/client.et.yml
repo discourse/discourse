@@ -8,6 +8,10 @@ et:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Kuupäev"
+          outcomes:
+            failed: "Ebaõnnestunud"
         reports:
           filters:
             sort_by:
@@ -34,6 +38,18 @@ et:
             canned_reply:
               label: "Vasta"
     discourse_ai:
+      copied: "Kopeeritud"
+      ai_decoded_transcript:
+        type: "Tüüp"
+        error: "Viga"
+        response: "Vastus"
+      discourse_workflows:
+        classify:
+          text: "Tekst"
+          upload_ids: "Pildid"
+          name: "Nimi"
+          type: "Tüüp"
+          type_score: "Skoor"
       ai_tool_approval:
         loading: "Laadimine..."
         tool: "Tegevus"
@@ -112,8 +128,6 @@ et:
         successful: "Edukas"
         failed: "Ebaõnnestunud"
         unknown: "Teadmata"
-        topic_id: "Teema ID"
-        post_id: "Postituse ID"
         time: "Aeg"
         when: "Millal"
         request: "Taotle"
@@ -124,6 +138,7 @@ et:
         post: "Postitus"
         post_short: "Postitus %{id}"
         actions: "Tegevused"
+        view_details: "Üksikasjad"
         periods:
           custom: "Individuaalne"
         detail:
@@ -175,6 +190,12 @@ et:
         edit: "Muuda"
         delete: "Kustuta"
         embedding: "Sängitamine"
+      decision_models:
+        no_preset: "Pole"
+        display_name: "Nimi"
+        provider: "Teenusepakkuja"
+        edit: "Muuda"
+        delete: "Kustuta"
       mcp_servers:
         name: "Nimi"
         description: "Kirjeldus"
@@ -186,6 +207,13 @@ et:
         delete: "Kustuta"
         tools_modal:
           required: "Nõutud"
+      models:
+        name: "Nimi"
+        type: "Tüüp"
+        provider: "Teenusepakkuja"
+        edit: "Muuda"
+        types:
+          embedding: "Sängitamine"
       llms:
         display_name: "Nimi"
         provider: "Teenusepakkuja"
@@ -232,6 +260,13 @@ et:
         providers:
           google: "Google"
           fake: "Individuaalne"
+      ai_artifact:
+        editor:
+          version: "Versioon"
+          default: "Vaikimisi"
+          apply: "Rakenda"
+        share: "Jaga"
+        filter_all: "Kõik"
       ai_bot:
         debug_ai_modal:
           request: "Taotle"
@@ -254,8 +289,10 @@ et:
           table:
             total_count: "Kokku"
       discobot_discoveries:
-        regular_results: "Teemasid"
-        collapse: "Ahenda"
-        tooltip:
-          actions:
-            disable: "Keela"
+        legacy:
+          regular_results: "Teemasid"
+          collapse: "Ahenda"
+          tooltip:
+            actions:
+              disable: "Lülita välja"
+        search_messages: "Sõnumid"

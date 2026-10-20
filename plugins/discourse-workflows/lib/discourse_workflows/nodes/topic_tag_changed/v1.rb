@@ -24,30 +24,10 @@ module DiscourseWorkflows
             color: "deep-orange",
           },
           group: "discourse_triggers",
-          events: [:topic_tags_changed],
+          event: :topic_tags_changed,
           output_contracts: [{ schema: OUTPUT_SCHEMA }],
           properties: {
-            category_ids: {
-              type: :array,
-              required: false,
-              ui: {
-                control: :category,
-                multiple: true,
-              },
-            },
-            include_subcategories: {
-              type: :boolean,
-              required: false,
-              default: true,
-              ui: {
-                control: :checkbox,
-              },
-              display_options: {
-                show: {
-                  category_ids: [{ condition: { exists: true } }],
-                },
-              },
-            },
+            **CATEGORY_FILTER_PROPERTIES,
           },
         )
 
@@ -74,11 +54,7 @@ module DiscourseWorkflows
         end
 
         def matches?(trigger_ctx)
-          matches_category_ids?(
-            @topic.category_id,
-            category_ids_parameter(trigger_ctx),
-            include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
-          )
+          matches_topic_filters?(@topic, trigger_ctx)
         end
 
         private

@@ -8,7 +8,7 @@ import { rovingButtonBar } from "discourse/lib/roving-button-bar";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import { isTopLevel } from "discourse-markdown-it/features/onebox";
-import { oneboxPluginKey, oneboxTypeAtPos } from "./onebox";
+import { oneboxPluginKey, oneboxTypeAtPos } from "./onebox.js";
 
 const AUTO_LINKS = ["autolink", "linkify"];
 const MENU_OFFSET = 12;
@@ -131,6 +131,15 @@ class LinkToolbarPluginView {
     if (!this.#menuInstance?.content?.contains(document.activeElement)) {
       this.#resetToolbar();
     }
+  }
+
+  /**
+   * ProseMirror view destroy handler
+   */
+  destroy() {
+    this.#menuInstance?.destroy();
+    this.#menuInstance = null;
+    this.#linkToolbar = null;
   }
 
   #resetToolbar() {
@@ -384,15 +393,6 @@ class LinkToolbarPluginView {
     } finally {
       this.#calculatingCoords = false;
     }
-  }
-
-  /**
-   * ProseMirror view destroy handler
-   */
-  destroy() {
-    this.#menuInstance?.destroy();
-    this.#menuInstance = null;
-    this.#linkToolbar = null;
   }
 }
 

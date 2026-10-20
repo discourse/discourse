@@ -29,17 +29,17 @@ export default class SolvedRemovalConfirmationModal extends Component {
 
   <template>
     <DModal
+      class="solved-removal-confirmation-modal"
       @closeModal={{this.cancel}}
       @title={{i18n "solved.confirm_solved_removal_title"}}
-      class="solved-removal-confirmation-modal"
     >
       <:body>
         <p>{{i18n "solved.confirm_solved_removal"}}</p>
         <div class="control-group">
           <label class="checkbox-label solved-removal-dont-show-again">
             <input
-              type="checkbox"
               checked={{this.dontShowAgain}}
+              type="checkbox"
               {{on "change" this.toggleDontShowAgain}}
             />
             {{i18n "solved.dont_show_again"}}
@@ -48,14 +48,14 @@ export default class SolvedRemovalConfirmationModal extends Component {
       </:body>
       <:footer>
         <DButton
+          class="btn-primary"
           @action={{this.confirm}}
           @label="solved.confirm_solved_removal_confirm"
-          class="btn-primary"
         />
         <DButton
+          class="btn-transparent"
           @action={{this.cancel}}
           @label="solved.confirm_solved_removal_cancel"
-          class="btn-transparent"
         />
       </:footer>
     </DModal>

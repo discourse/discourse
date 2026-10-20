@@ -5,14 +5,247 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    chat_integration_enabled: '啟用 discourse-chat-integration 外掛'
+    chat_integration_discourse_username: '擷取內容時要以其身分操作的使用者名稱。'
+    chat_integration_delay_seconds: '貼文建立後，等待多少秒才傳送聊天通知'
+    chat_integration_slack_username: "機器人在 Slack 發文時使用的使用者名稱"
+    chat_integration_slack_enabled: '啟用 Slack 聊天整合服務提供者'
+    chat_integration_slack_access_token: '用於向 Slack 驗證身分的 OAuth 存取權杖'
+    chat_integration_slack_incoming_webhook_token: '用於驗證傳入要求的驗證權杖'
+    chat_integration_slack_excerpt_length: 'Slack 貼文摘要長度'
+    chat_integration_slack_icon_url: '在 Slack 發文時使用的圖示（預設為論壇標誌）'
+    chat_integration_slack_outbound_webhook_url: "使用 Slack 的「Incoming Webhook」系統而非 OAuth API。不建議使用。"
+    chat_integration_slack_transcript_quote: 是否以 [quote] 標籤包住 Slack 文字記錄？
+    errors:
+      chat_integration_slack_api_configs_are_empty: "必須輸入傳出 Webhook URL 或存取權杖"
+      chat_integration_telegram_api_base_url_invalid: "Telegram API 基底 URL 必須是有效的 HTTPS URL，且不得包含認證資訊、查詢字串或片段"
+    chat_integration_telegram_enabled: "啟用 Telegram 聊天整合服務提供者"
+    chat_integration_telegram_access_token: "從 Telegram BotFather 取得的機器人存取權杖"
+    chat_integration_telegram_api_base_url: "用於 Telegram Bot API 要求的基底 URL。只有在透過受信任的 HTTPS 代理伺服器路由要求時才變更此設定。私人網路上的主機也必須加入允許的內部主機網站設定。"
+    chat_integration_telegram_excerpt_length: "Telegram 貼文摘要長度"
+    chat_integration_telegram_enable_slash_commands: "允許使用「斜線指令」管理 Telegram 訂閱"
+    chat_integration_discord_enabled: "啟用 Discord 聊天整合服務提供者"
+    chat_integration_discord_message_content: "傳送通知至 Discord 時，要包含在摘要上方的訊息"
+    chat_integration_discord_excerpt_length: "Discord 貼文摘要長度"
+    chat_integration_guilded_enabled: "啟用 Guilded 聊天整合服務提供者"
+    chat_integration_guilded_excerpt_length: "Guilded 貼文摘要長度"
+    chat_integration_mattermost_enabled: "啟用 Mattermost 聊天整合服務提供者"
+    chat_integration_mattermost_webhook_url: 'Mattermost Webhook 的 URL'
+    chat_integration_mattermost_incoming_webhook_token: '用於驗證傳入要求的驗證權杖'
+    chat_integration_mattermost_icon_url: "Mattermost 貼文使用的圖示（預設為論壇標誌）"
+    chat_integration_mattermost_excerpt_length: "Mattermost 貼文摘要長度"
+    chat_integration_matrix_enabled: "啟用 Matrix 聊天整合服務提供者"
+    chat_integration_matrix_homeserver: "要連線的主伺服器。請務必包含通訊協定"
+    chat_integration_matrix_access_token: "Matrix 機器人帳號的存取權杖"
+    chat_integration_matrix_excerpt_length: "Matrix 貼文摘要長度"
+    chat_integration_matrix_use_notice: "使用通知訊息而非一般訊息"
+    chat_integration_zulip_enabled: "啟用 Zulip 聊天整合服務提供者"
+    chat_integration_zulip_server: "Zulip 伺服器的基底 URL。請務必包含 http(s)://"
+    chat_integration_zulip_bot_email_address: "與 Zulip 機器人關聯的電子郵件地址"
+    chat_integration_zulip_bot_api_key: "Zulip 機器人的 API 金鑰"
+    chat_integration_zulip_excerpt_length: "Zulip 貼文摘要長度"
+    chat_integration_rocketchat_enabled: "啟用 Rocket.Chat 聊天整合服務提供者"
+    chat_integration_rocketchat_webhook_url: "Rocket.Chat 整合 Webhook 的 URL"
+    chat_integration_rocketchat_excerpt_length: "Rocket.Chat 貼文摘要長度"
+    chat_integration_gitter_enabled: "啟用 Gitter 聊天整合服務提供者"
+    chat_integration_groupme_enabled: "啟用 GroupMe 聊天整合服務提供者"
+    chat_integration_groupme_excerpt_length: "GroupMe 貼文摘要長度"
+    chat_integration_groupme_bot_ids: "*必填* 機器人 ID，如有多個請以「,」分隔"
+    chat_integration_groupme_instance_names: "*必填* GroupMe 聊天名稱，如有多個請以「,」分隔（順序須與機器人 ID 相同）"
+    chat_integration_teams_enabled: "啟用 Microsoft Teams 聊天整合服務提供者"
+    chat_integration_teams_excerpt_length: "Microsoft Teams 貼文摘要長度"
+    chat_integration_powerautomate_enabled: "啟用 Microsoft Power Automate 整合服務提供者"
+    chat_integration_powerautomate_excerpt_length: "Microsoft Power Automate 貼文摘要長度"
+    chat_integration_webex_enabled: "啟用 Webex Teams 聊天整合服務提供者"
+    chat_integration_webex_excerpt_length: "Webex Teams 貼文摘要長度"
+    chat_integration_google_enabled: "啟用「Google Chat」聊天整合服務提供者"
+    chat_integration_google_excerpt_length: "Google Chat 貼文摘要長度"
+  dashboard:
+    problem:
+      channel_errors: "部分聊天整合頻道發生錯誤。請前往 <a href='%{base_path}/admin/plugins/discourse-chat-integration'>聊天整合區段</a> 瞭解詳情。"
+  discourse_automation:
+    scriptables:
+      send_slack_message:
+        title: 傳送 Slack 訊息
+      send_chat_integration_message:
+        title: 傳送 Chat Integration 訊息
+  discourse_workflows:
+    errors:
+      send_chat_integration_message:
+        channel_not_found: "找不到頻道：%{channel_id}"
+        provider_disabled: "聊天整合服務提供者已停用或不存在：%{provider}"
+        provider_failed: "%{provider} 服務提供者無法傳送訊息"
+        provider_failed_with_details: "%{provider} 服務提供者無法傳送訊息：%{details}"
+        message_required: "必須提供訊息"
   chat_integration:
     all_categories: "(所有分類)"
+    deleted_category: "（已刪除的分類）"
+    deleted_group: "（已刪除的群組）"
+    group_mention_template: "提及：@%{name}"
+    group_message_template: "傳送訊息至：@%{name}"
     topic_tag_changed:
+      added_and_removed: "已新增 %{added} 並移除 %{removed}"
       added: "已新增 %{added}"
       removed: "已移除 %{removed}"
+    errors:
+      provider_already_enabled: "服務提供者「%{name}」已啟用"
+      provider_not_found: "找不到服務提供者「%{name}」"
+      setting_update_failed: "無法更新設定：%{errors}"
     provider:
       slack:
+        errors:
+          auth_error: "提供的驗證權杖無效"
+          action_prohibited: "機器人沒有在該頻道發文的權限"
+          channel_not_found: "指定的頻道不存在於 Slack"
+        status:
+          header: |
+            *此頻道的規則*
+            （若有多條規則符合貼文，將執行最上方的規則）
+          no_rules: "尚未為此頻道設定規則。請執行 `/discourse help` 以查看說明。"
+          rule_string: "*%{index})* *%{category}* 中的 *%{filter}* 貼文"
+          rule_string_tags_suffix: "標籤：*%{tags}*"
+        parse_error: "抱歉，我無法理解。請執行 `/discourse help` 以查看說明。"
+        create:
+          created: "已成功建立規則"
+          updated: "已成功更新規則"
+          error: "抱歉，建立該規則時發生錯誤。"
+        delete:
+          success: "已成功刪除規則"
+          error: "抱歉，刪除該規則時發生錯誤。請執行 `/discourse status` 以查看規則清單。"
+        not_found:
+          tag: "找不到 *%{name}* 標籤。"
+          category: "找不到 *%{name}* 分類。可用分類：*%{list}*"
+        help: |
+          *新增規則：* `/discourse [thread|watch|follow|mute] [category] [tag:name]`
+          （你必須指定規則類型，以及至少一個分類或標籤）
+          - *thread* – 有新主題時通知此頻道，並盡可能以討論串回覆
+          - *watch* – 有新主題與新回覆時通知此頻道
+          - *follow* – 有新主題時通知此頻道
+          - *mute* – 封鎖傳送至此頻道的通知
+
+          *移除規則：* `/discourse remove [rule number]`
+          （執行 `/discourse status` 可找到 `[rule number]`）
+
+          *列出規則：* `/discourse status`
+
+          *[實驗性] 發佈文字記錄：* `/discourse post [n]`
+          在 Discourse 建立草稿主題，其中包含此頻道最近 `n` 則貼文
+
+          *說明：* `/discourse help`
+        transcript:
+          modal_title: "建立文字記錄"
+          modal_description: "討論串中的所有訊息將合併成一篇論壇貼文。發佈前你可以編輯文字記錄。"
+          transcript_ready: "文字記錄已準備好"
+          continue_on_discourse: "在論壇上繼續"
+          error: "建立文字記錄時發生問題，抱歉！"
+          post_to_discourse: "按這裡使用文字記錄在 Discourse 建立貼文草稿"
+          api_required: "抱歉，此整合未設定為支援發佈文字記錄。"
+          view_on_slack: "在 Slack 的 %{name} 中檢視"
+          first_message_pretext: "起始於 %{n} 則訊息之前："
+          last_message_pretext: "結束於 %{n} 則訊息之前："
+          posted_in: "發佈於 %{name}"
+          change_first_message: "變更第一則訊息……"
+          change_last_message: "變更最後一則訊息……"
+          loading: "正在載入文字記錄……"
+          error_users: "錯誤：無法從 Slack 擷取使用者"
+          error_history: "錯誤：無法從 Slack 擷取頻道記錄"
+          error_ts: "錯誤：無法從 Slack 擷取要求的訊息"
         messaging:
           topic_tag_changed:
+            added_and_removed: "已新增 %{added} 並移除 %{removed}"
             added: "已新增 %{added}"
             removed: "已移除 %{removed}"
+      telegram:
+        unknown_chat: "此聊天尚未在 %{site_title} 上設定。請要求管理員新增「聊天 ID」為 %{chat_id} 的頻道。"
+        known_chat: "此聊天已在 %{site_title} 上設定。請在管理面板中設定。（聊天 ID：%{chat_id}）"
+        message: |-
+          <b>%{user}</b> 發佈於 <a href="%{post_url}">%{title}</a>
+
+          <pre>%{post_excerpt}</pre>
+        status:
+          header: |
+            <b>此頻道的規則</b>
+            （若有多條規則符合貼文，將執行最上方的規則）
+          no_rules: "尚未為此頻道設定規則。請執行 <code>/help</code> 以查看說明。"
+          rule_string: "<b>%{index})</b> <b>%{category}</b> 中的 <b>%{filter}</b> 貼文"
+          rule_string_tags_suffix: "標籤：<b>%{tags}</b>"
+        parse_error: "抱歉，我無法理解。請執行 <code>/help</code> 以查看說明。"
+        create:
+          created: "已成功建立規則"
+          updated: "已成功更新規則"
+          error: "抱歉，建立該規則時發生錯誤。"
+        delete:
+          success: "已成功刪除規則"
+          error: "抱歉，刪除該規則時發生錯誤。請執行 <code>/status</code> 以查看規則清單。"
+        not_found:
+          tag: "找不到 <b>%{name}</b> 標籤。"
+          category: "找不到 <b>%{name}</b> 分類。可用分類：<b>%{list}</b>"
+        help: |
+          <b>新增規則：</b> <code>/[watch|follow|mute] [category] [tag:name]</code>
+          （你必須指定規則類型，以及至少一個分類或標籤）
+          - <b>watch</b> – 有新主題與新回覆時通知此頻道
+          - <b>follow</b> – 有新主題時通知此頻道
+          - <b>mute</b> – 封鎖傳送至此頻道的通知
+
+          <b>移除規則：</b> <code>/remove [rule number]</code>
+          （執行 <code>/status</code> 可找到 <code>[rule number]</code>）
+
+          <b>列出規則：</b> <code>/status</code>
+
+          <b>說明：</b> <code>/help</code>
+      hipchat:
+        message: <b>%{user}</b> 發佈於 <a href="%{post_url}">%{title}</a>
+      mattermost:
+        status:
+          header: |
+            *此頻道的規則*
+            （若有多條規則符合貼文，將執行最上方的規則）
+          no_rules: "尚未為此頻道設定規則。請執行 `/discourse help` 以查看說明。"
+          rule_string: "*%{index})* *%{category}* 中的 *%{filter}* 貼文"
+          rule_string_tags_suffix: "標籤：*%{tags}*"
+        parse_error: "抱歉，我無法理解。請執行 `/discourse help` 以查看說明。"
+        create:
+          created: "已成功建立規則"
+          updated: "已成功更新規則"
+          error: "抱歉，建立該規則時發生錯誤。"
+        delete:
+          success: "已成功刪除規則"
+          error: "抱歉，刪除該規則時發生錯誤。請執行 `/discourse status` 以查看規則清單。"
+        not_found:
+          tag: "找不到 *%{name}* 標籤。"
+          category: "找不到 *%{name}* 分類。可用分類：*%{list}*"
+        help: |
+          *新增規則：* `/discourse [watch|follow|mute] [category] [tag:name]`
+          （你必須指定規則類型，以及至少一個分類或標籤）
+          - *watch* – 有新主題與新回覆時通知此頻道
+          - *follow* – 有新主題時通知此頻道
+          - *mute* – 封鎖傳送至此頻道的通知
+
+          *移除規則：* `/discourse remove [rule number]`
+          （執行 `/discourse status` 可找到 `[rule number]`）
+
+          *列出規則：* `/discourse status`
+
+          *說明：* `/discourse help`
+      matrix:
+        text_message: "%{user} 發佈於 %{title} - %{post_url}"
+        formatted_message: |
+          <b>%{user}</b> 發佈於 <b><a href='%{post_url}'>%{title}</a></b>
+          <blockquote>
+          %{excerpt}
+          </blockquote>
+      zulip:
+        message: |
+          **%{user}** 發佈於 **[%{title}](%{post_url})**
+          ~~~quote
+          %{excerpt}
+          ~~~
+      google:
+        new_post: "%{site_title} 上的新貼文"
+        new_topic: "%{site_title} 上的新主題"
+        author: "作者：@%{username}"
+        link: "在 %{site_title} 上檢視"
+      groupme:
+        errors:
+          instance_names_issue: "執行個體名稱格式不正確或未提供"

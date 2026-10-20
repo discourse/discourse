@@ -59,18 +59,34 @@ class PostAlerter
               payload,
               user,
             )
-          MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+
+          live_payload = payload
+          if SiteSetting.content_localization_enabled
+            translated =
+              I18n.with_locale(user.effective_locale) do
+                ContentLocalization.translated_notification_fields(
+                  topic: post.topic,
+                  post: post,
+                  scope: user.guardian,
+                )
+              end
+            translated.delete(:excerpt) if excerpt
+            live_payload = payload.merge(translated)
+          end
+
+          MessageBus.publish("/notification-alert/#{user.id}", live_payload, user_ids: [user.id])
         end
       end
 
-      push_notification(user, payload)
+      # A caller-provided excerpt isn't the post's text, so its translation doesn't apply.
+      push_notification(user, payload, keep_excerpt: excerpt.present?)
 
       # deprecated. use push_notification instead
       DiscourseEvent.trigger(:post_notification_alert, user, payload)
     end
   end
 
-  def self.push_notification(user, payload)
+  def self.push_notification(user, payload, keep_excerpt: false)
     return if user.do_not_disturb?
 
     # This DiscourseEvent needs to be independent of the push_notification_filters for some use cases.
@@ -91,10 +107,13 @@ class PostAlerter
       delay = (push_window - (Time.now - user.last_seen_at) / 60)
     end
 
+    job_args = { user_id: user.id, payload: payload }
+    job_args[:keep_excerpt] = true if keep_excerpt
+
     if delay.present?
-      Jobs.enqueue_in(delay.minutes, :deliver_push_notification, user_id: user.id, payload: payload)
+      Jobs.enqueue_in(delay.minutes, :deliver_push_notification, **job_args)
     else
-      Jobs.enqueue(:deliver_push_notification, user_id: user.id, payload: payload)
+      Jobs.enqueue(:deliver_push_notification, **job_args)
     end
   end
 
@@ -138,7 +157,7 @@ class PostAlerter
       (post.post_type == Post.types[:whisper] && post.action_code.nil?)
   end
 
-  def after_save_post(post, new_record = false)
+  def after_save_post(post, new_record = false, added_mentions: nil)
     notified = [post.user, post.last_editor].uniq
 
     DiscourseEvent.trigger(:post_alerter_before_mentions, post, new_record, notified)
@@ -160,12 +179,18 @@ class PostAlerter
       end
 
       if mentioned_users
+        if added_mentions
+          mentioned_users =
+            mentioned_users.select { |user| added_mentions.include?(user.username_lower) }
+        end
         mentioned_users = only_allowed_users(mentioned_users, post)
         mentioned_users = mentioned_users - pm_watching_users(post)
         notified += notify_users(mentioned_users - notified, :mentioned, post, mentioned_opts)
       end
 
       expand_group_mentions(mentioned_groups, post) do |group, users|
+        next if added_mentions && !added_mentions.include?(group.name.downcase)
+
         users = only_allowed_users(users, post)
         to_notify =
           DiscoursePluginRegistry.apply_modifier(
@@ -178,7 +203,7 @@ class PostAlerter
           notify_users(to_notify, :group_mentioned, post, mentioned_opts.merge(group: group))
       end
 
-      if mentioned_here
+      if mentioned_here && (!added_mentions || added_mentions.include?(SiteSetting.here_mention))
         users = expand_here_mention(post, exclude_ids: notified.map(&:id))
         users = only_allowed_users(users, post)
         notified += notify_users(users - notified, :mentioned, post, mentioned_opts)
@@ -672,7 +697,7 @@ class PostAlerter
       notification_data[:consolidated_count] = consolidated_count if consolidated_count
     end
 
-    if display_name = opts[:display_name] || post.user.name
+    if SiteSetting.enable_names? && (display_name = opts[:display_name] || post.user.name)
       notification_data[:display_name] = display_name
     end
 
@@ -738,8 +763,8 @@ class PostAlerter
     )
   end
 
-  def push_notification(user, payload)
-    self.class.push_notification(user, payload)
+  def push_notification(user, payload, keep_excerpt: false)
+    self.class.push_notification(user, payload, keep_excerpt:)
   end
 
   def expand_group_mentions(groups, post)

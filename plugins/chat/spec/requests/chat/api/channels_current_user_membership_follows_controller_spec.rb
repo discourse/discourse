@@ -14,7 +14,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
     describe "for a category channel" do
       fab!(:channel_1, :category_channel)
 
-      it "works" do
+      it "unfollows the category channel" do
         delete "/chat/api/channels/#{channel_1.id}/memberships/me/follows"
 
         expect(response.status).to eq(200)
@@ -23,6 +23,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
 
       context "when channel is not found" do
         before { channel_1.destroy! }
+
         it "returns a 404" do
           delete "/chat/api/channels/-999/memberships/me/follows"
 
@@ -38,7 +39,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
         Fabricate(:direct_message_channel, users: [current_user, other_user_1, other_user_2])
       end
 
-      it "works" do
+      it "unfollows the multi-user direct message channel" do
         delete "/chat/api/channels/#{channel_1.id}/memberships/me/follows"
 
         expect(response.status).to eq(200)
@@ -50,7 +51,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
       fab!(:other_user_1, :user)
       fab!(:channel_1) { Fabricate(:direct_message_channel, users: [current_user, other_user_1]) }
 
-      it "works" do
+      it "unfollows the direct message channel" do
         delete "/chat/api/channels/#{channel_1.id}/memberships/me/follows"
 
         expect(response.status).to eq(200)

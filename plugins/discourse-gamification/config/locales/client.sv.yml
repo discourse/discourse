@@ -60,6 +60,7 @@ sv:
       admin:
         title: "Gamification"
         name: "Namn"
+        created_by: "Skapat av"
         period: "Period"
     discourse_workflows:
       gamification_score:

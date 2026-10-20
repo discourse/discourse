@@ -172,7 +172,6 @@ he:
           assigns:
             one: "בוודאות? יש לך התראת הקצאה %{count}."
             two: "בוודאות? יש לך %{count} התראות הקצאה."
-            many: "בוודאות? יש לך %{count} התראות הקצאה."
             other: "בוודאות? יש לך %{count} התראות הקצאה."
     user_menu:
       view_all_assigned: "הצגת כל ההקצאות"
@@ -181,7 +180,6 @@ he:
         assign_list_with_unread:
           one: "רשימת הקצאות - הקצאה %{count} שלא נקראה"
           two: "רשימת הקצאות - %{count} הקצאות שלא נקראו"
-          many: "רשימת הקצאות - %{count} הקצאות שלא נקראו"
           other: "רשימת הקצאות - %{count} הקצאות שלא נקראו"
     edit_assignments_modal:
       title: "עריכת הקצאות"
@@ -190,6 +188,7 @@ he:
     discourse_workflows:
       nodes:
         "trigger:assigned": "מוקצה"
+        "trigger:unassigned": "לא מוקצה"
       assign_topic:
         resource: "משאב"
         resources:

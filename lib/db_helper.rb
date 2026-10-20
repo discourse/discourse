@@ -190,13 +190,21 @@ class DbHelper
         parts[:length_constrained_columns] << "#{column[:name]}(#{column[:max_length]})"
       end
 
-      # Build SQL update statements for each column
-      parts[:updates] << %|"#{column[:name]}" = #{replace}|
-
       # Build the base SQL condition clause for each column
       basic_condition = transforms[:condition].call(column[:name])
 
       if skip_max_length_violations && column[:max_length].present?
+        # Per-column protection: preserve the original value when the transformed
+        # value would exceed the column length limit. Without this, a row that
+        # matches on any short column still assigns overflowing values to its
+        # other constrained columns and triggers PG::StringDataRightTruncation.
+        parts[:updates] << <<~SQL.strip
+          "#{column[:name]}" = CASE
+            WHEN LENGTH(#{replace}) <= #{column[:max_length]} THEN #{replace}
+            ELSE "#{column[:name]}"
+          END
+        SQL
+
         # Extend base condition to skip updates that would violate the column length constraint
         parts[
           :conditions
@@ -213,6 +221,7 @@ class DbHelper
           ) AS #{column[:name]}_skipped
         SQL
       else
+        parts[:updates] << %|"#{column[:name]}" = #{replace}|
         parts[:conditions] << "(#{basic_condition})"
       end
     end

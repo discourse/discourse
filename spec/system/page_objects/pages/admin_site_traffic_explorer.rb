@@ -5,7 +5,6 @@ module PageObjects
     class AdminSiteTrafficExplorer < PageObjects::Pages::Base
       PATH = "/admin/dashboard/site-traffic-explorer"
       METRIC_KEYS = {
-        "Pageviews" => "pageviews",
         "Distinct sessions" => "distinct_sessions",
         "Logged-in share" => "logged_in_share",
         "Bounce rate" => "bounce_rate",
@@ -19,6 +18,7 @@ module PageObjects
         "country" => "Country",
         "network" => "Network",
         "browser" => "Browser",
+        "language" => "Language",
         "ip" => "IP address",
       }.freeze
 
@@ -73,6 +73,35 @@ module PageObjects
         has_no_css?("[data-test-traffic-series='#{label}']", visible: :all)
       end
 
+      def toggle_chart_legend(label:)
+        page.evaluate_async_script(<<~JAVASCRIPT, label)
+          const label = arguments[0];
+          const done = arguments[1];
+
+          require("discourse/lib/load-chart-js").default().then((Chart) => {
+            const chart = Chart.getChart(
+              document.querySelector(".admin-report-stacked-chart canvas")
+            );
+            const legendItem = chart.legend.legendItems.find(
+              (item) => item.text === label
+            );
+
+            chart.options.plugins.legend.onClick(null, legendItem, chart.legend);
+            done();
+          });
+        JAVASCRIPT
+
+        self
+      end
+
+      def has_selected_legend_item?(label:)
+        has_css?(".admin-report-stacked-chart canvas") { legend_item_selected?(label:) }
+      end
+
+      def has_deselected_legend_item?(label:)
+        has_css?(".admin-report-stacked-chart canvas") { legend_item_selected?(label:) == false }
+      end
+
       def has_partial_data_warning?(reason:)
         selector = "[data-test-site-traffic-partial-warning]"
 
@@ -105,6 +134,22 @@ module PageObjects
         end
       end
 
+      def has_rows?(card:, rows:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          return false unless has_css?("[data-test-site-traffic-row]", count: rows.size)
+
+          actual_rows =
+            all("[data-test-site-traffic-row]").map do |row|
+              {
+                label: row.find(".site-traffic-explorer__dimension-text").text,
+                count: row.find(".site-traffic-explorer__row-count").text,
+              }
+            end
+
+          actual_rows == rows
+        end
+      end
+
       def has_url_link?(card:, label:, href:)
         within("[data-test-site-traffic-card='#{card}']") do
           has_css?("a[href='#{href}']", exact_text: label)
@@ -113,21 +158,48 @@ module PageObjects
 
       def filter_row(card:, label:)
         within("[data-test-site-traffic-card='#{card}']") do
-          find("button[aria-label^='Filter by #{label},']").click
+          find("input[type='checkbox'][aria-label^='Filter by #{label},']").click
+        end
+        find("[data-test-site-traffic-apply-filters]").click
+        self
+      end
+
+      def filter_by_clicking_row(card:, label:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          within("[data-test-site-traffic-row]", text: label) do
+            find(".site-traffic-explorer__row-checkbox").click
+          end
+        end
+        find("[data-test-site-traffic-apply-filters]").click
+        self
+      end
+
+      def select_filter_row(card:, label:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          find("input[type='checkbox'][aria-label^='Filter by #{label},']").click
         end
         self
       end
 
+      def has_filter_row_selected?(card:, label:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          has_css?("input[type='checkbox'][aria-label^='Filter by #{label},']:checked")
+        end
+      end
+
+      def has_filter_row_unselected?(card:, label:)
+        within("[data-test-site-traffic-card='#{card}']") do
+          has_css?("input[type='checkbox'][aria-label^='Filter by #{label},']:not(:checked)")
+        end
+      end
+
       def has_filter_pill?(dimension:, label:)
         selector = "[data-test-site-traffic-filter-pill='#{dimension}']"
-        remove_label =
-          if dimension == "traffic_type"
-            "Remove #{label} traffic filter"
-          else
-            "Remove #{FILTER_LABELS.fetch(dimension)} filter"
-          end
+        remove_label = "Remove #{FILTER_LABELS.fetch(dimension)} filter"
+        expected_text = "#{FILTER_LABELS.fetch(dimension)}: #{label}".gsub(/\s+/, "")
 
-        has_css?(selector, text: "#{FILTER_LABELS.fetch(dimension)} is #{label}", count: 1) &&
+        has_css?(selector, count: 1) &&
+          find(selector).text.gsub(/\s+/, "").include?(expected_text) &&
           has_css?("#{selector} button[aria-label='#{remove_label}']")
       end
 
@@ -135,14 +207,77 @@ module PageObjects
         has_no_css?("[data-test-site-traffic-filter-pill]")
       end
 
+      def has_grouped_filter_pill?(dimension:, label:)
+        selector = "[data-test-site-traffic-filter-pill='#{dimension}'] .fk-d-menu__trigger"
+
+        has_css?(selector, count: 1) &&
+          find(selector).text.gsub(/\s+/, "").include?(label.gsub(/\s+/, ""))
+      end
+
+      def expand_filter_pill(dimension)
+        within("[data-test-site-traffic-filter-pill='#{dimension}']") do
+          find(".fk-d-menu__trigger").click
+        end
+        self
+      end
+
+      def has_filter_dropdown?(values:)
+        row_selector = "[data-test-site-traffic-filter-dropdown-value]"
+        value_selector = "#{row_selector} .d-button-label"
+
+        has_css?(row_selector, count: values.length) &&
+          values.all? { |value| has_css?(value_selector, exact_text: value, count: 1) }
+      end
+
+      def has_no_filter_dropdown?
+        has_no_css?("[data-test-site-traffic-filter-dropdown]")
+      end
+
+      def remove_filter_value(value)
+        within("[data-test-site-traffic-filter-dropdown]") { find_button("Remove #{value}").click }
+        self
+      end
+
+      def has_apply_filters?(count:)
+        selector = "[data-test-site-traffic-apply-filters]"
+
+        has_css?(selector, count: 1) &&
+          has_css?("#{selector} .d-button-label", exact_text: "Apply", count: 1) &&
+          has_css?(
+            "#{selector} .site-traffic-explorer__filter-apply-pending-count",
+            exact_text: count.to_s,
+            count: 1,
+          )
+      end
+
+      def has_no_apply_filters?
+        has_no_css?("[data-test-site-traffic-apply-filters]")
+      end
+
+      def apply_filters
+        find("[data-test-site-traffic-apply-filters]").click
+        self
+      end
+
+      def clear_all
+        find_button("Clear all", exact: true).click
+        self
+      end
+
       def remove_filter(name, label: nil)
-        remove_label =
-          if name == "traffic_type"
-            "Remove #{label} traffic filter"
-          else
-            "Remove #{FILTER_LABELS.fetch(name)} filter"
+        remove_label = "Remove #{FILTER_LABELS.fetch(name)} filter"
+        selector = "[data-test-site-traffic-filter-pill='#{name}']"
+        if label && has_css?("#{selector} .fk-d-menu__trigger", wait: 0)
+          within(selector) { find(".fk-d-menu__trigger").click }
+          within("[data-test-site-traffic-filter-dropdown]") do
+            find_button("Remove #{label}").click
           end
-        find("button[aria-label='#{remove_label}']").click
+        else
+          find("button[aria-label='#{remove_label}']").click
+        end
+        if has_css?("[data-test-site-traffic-apply-filters]", wait: 0)
+          find("[data-test-site-traffic-apply-filters]").click
+        end
         self
       end
 
@@ -151,11 +286,9 @@ module PageObjects
         self
       end
 
-      def has_expanded_table?(title:, column:)
+      def has_expanded_breakdown?(title:)
         selector = ".site-traffic-breakdown-modal[role='dialog']"
-        has_css?(selector, text: title) &&
-          has_css?("#{selector} .d-table__header-cell", exact_text: column) &&
-          has_css?("#{selector} .d-table__body .d-table__row")
+        has_css?(selector, text: title) && has_css?("#{selector} [data-test-site-traffic-row]")
       end
 
       def has_expanded_url_link?(label:)
@@ -163,14 +296,23 @@ module PageObjects
         has_css?("#{selector} a[href='#{label}']", exact_text: label)
       end
 
-      def filter_expanded_row(label:)
+      def select_expanded_filter_row(label:)
         within(".site-traffic-breakdown-modal[role='dialog']") do
-          within("tr", text: label) { find("button[aria-label^='Filter by #{label},']").click }
+          within("[data-test-site-traffic-row]", text: label) do
+            find("input[type='checkbox'][aria-label^='Filter by #{label},']").click
+          end
         end
         self
       end
 
-      def has_no_expanded_table?
+      def apply_expanded_filters
+        within(".site-traffic-breakdown-modal[role='dialog']") do
+          find_button("Apply filters", exact: true).click
+        end
+        self
+      end
+
+      def has_no_expanded_breakdown?
         has_no_css?(".site-traffic-breakdown-modal[role='dialog']")
       end
 
@@ -179,6 +321,28 @@ module PageObjects
       end
 
       private
+
+      def legend_item_selected?(label:)
+        page.evaluate_async_script(<<~JAVASCRIPT, label)
+          const label = arguments[0];
+          const done = arguments[1];
+
+          require("discourse/lib/load-chart-js").default().then((Chart) => {
+            const chart = Chart.getChart(
+              document.querySelector(".admin-report-stacked-chart canvas")
+            );
+            const legendItem = chart?.legend?.legendItems.find(
+              (item) => item.text === label
+            );
+
+            done(
+              legendItem
+                ? chart.isDatasetVisible(legendItem.datasetIndex)
+                : null
+            );
+          });
+        JAVASCRIPT
+      end
 
       def open_date_range
         find(".db-date-range__trigger").click

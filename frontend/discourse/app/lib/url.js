@@ -13,6 +13,7 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Session from "discourse/models/session";
+import Site from "discourse/models/site";
 
 const rewrites = [];
 export const TOPIC_URL_REGEXP = /\/t\/([^\/]*[^\d\/][^\/]*)\/(\d+)\/?(\d+)?/;
@@ -90,6 +91,28 @@ let _transitioning = false;
 let lockOn = null;
 
 class DiscourseURL extends EmberObject {
+  // This has been extracted so it can be tested.
+  get origin() {
+    const prefix = getURL("/");
+    return window.location.origin + (prefix === "/" ? "" : prefix);
+  }
+
+  get isComposerOpen() {
+    return this.container.lookup("service:composer")?.visible;
+  }
+
+  get router() {
+    return this.container.lookup("router:main");
+  }
+
+  get routerService() {
+    return this.container.lookup("service:router");
+  }
+
+  get appEvents() {
+    return this.container.lookup("service:app-events");
+  }
+
   isJumpScheduled() {
     return _transitioning || _jumpScheduled;
   }
@@ -268,10 +291,17 @@ class DiscourseURL extends EmberObject {
       return this.redirectTo(path);
     }
 
-    const pathnameWithoutPrefix = withoutPrefix(pathname);
-    const serverSide = SERVER_SIDE_ONLY.some((r) =>
-      pathnameWithoutPrefix.match(r)
-    );
+    const pathnameWithoutPrefix = withoutPrefix(pathname).split(/[?#]/, 1)[0];
+    const registeredServerSidePath = Site.current()
+      ?.homepage_options?.filter(({ server_side }) => server_side)
+      .some(
+        ({ path: homepagePath }) =>
+          pathnameWithoutPrefix === homepagePath ||
+          pathnameWithoutPrefix.startsWith(`${homepagePath}/`)
+      );
+    const serverSide =
+      registeredServerSidePath ||
+      SERVER_SIDE_ONLY.some((r) => pathnameWithoutPrefix.match(r));
     if (serverSide) {
       this.redirectTo(path);
       return;
@@ -435,16 +465,15 @@ class DiscourseURL extends EmberObject {
             enteredAt: Date.now().toString(),
           });
 
-          this.appEvents.trigger("post:highlight", closest);
+          this.appEvents.trigger("post:highlight", closest, {
+            highlightQuote: routeOpts.highlightQuote,
+          });
           const jumpOpts = {
             skipIfOnScreen: routeOpts.skipIfOnScreen,
             jumpEnd: routeOpts.jumpEnd,
           };
 
-          const anchorMatch = /#(.+)$/.exec(path);
-          if (anchorMatch) {
-            jumpOpts.anchor = anchorMatch[1];
-          }
+          jumpOpts.anchor = routeOpts.anchor ?? /#(.+)$/.exec(path)?.[1];
 
           this.jumpToPost(closest, jumpOpts);
         });
@@ -472,28 +501,6 @@ class DiscourseURL extends EmberObject {
       (path === "/" || path === "/" + homepage) &&
       (oldPath === "/" || oldPath === "/" + homepage)
     );
-  }
-
-  // This has been extracted so it can be tested.
-  get origin() {
-    const prefix = getURL("/");
-    return window.location.origin + (prefix === "/" ? "" : prefix);
-  }
-
-  get isComposerOpen() {
-    return this.container.lookup("service:composer")?.visible;
-  }
-
-  get router() {
-    return this.container.lookup("router:main");
-  }
-
-  get routerService() {
-    return this.container.lookup("service:router");
-  }
-
-  get appEvents() {
-    return this.container.lookup("service:app-events");
   }
 
   /**
@@ -525,8 +532,13 @@ class DiscourseURL extends EmberObject {
     transition._discourse_anchor = elementId;
     transition._discourse_original_url = path;
 
-    const promise = transition.promise || transition;
-    return promise.then(() => this.jumpToElement(elementId));
+    const promise = transition.followRedirects?.() || transition;
+    return promise.then(() => {
+      if (elementId) {
+        this.replaceState(`#${elementId}`);
+      }
+      this.jumpToElement(elementId);
+    });
   }
 
   jumpToElement(elementId) {

@@ -7,7 +7,6 @@
 lt:
   js:
     explorer:
-      default_query: "Numatytasis"
       or: "arba"
       create: "Sukurti"
       ai:
@@ -25,6 +24,12 @@ lt:
           no: "Ne"
       save: "Išsaugoti pakeitimus"
       delete: "Pašalinti"
+      dashboard:
+        add: "Pridėti prie skydelio"
+        remove: "Pašalinti iš skydelio"
+        added: "Užklausa pridėta prie skydelio"
+        removed: "Užklausa pašalinta iš skydelio"
+        unmountable: "Užklausos su privalomais parametrais, kurie neturi numatytosios reikšmės, negali būti rodomos skydelyje"
       chart:
         form:
           bar: "Juosta"
@@ -34,10 +39,13 @@ lt:
         many: "%{count} rezultatai."
         other: "%{count} rezultatai."
       query_groups: "Grupės"
+      query_tags: "Žymos"
       query_description: "Aprašymas"
       query_user: "Sukurta"
       reset_params: "Atstatyti"
       search_placeholder: "Paieška..."
+      filter_by_tag: "Filtruoti pagal žymą"
+      filter_by_this_tag: "Filtruoti sąrašą pagal šią žymą"
     group:
       reports: "Pranešimai"
     discourse_workflows:

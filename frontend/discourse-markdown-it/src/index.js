@@ -1,7 +1,7 @@
-import { cook as cookIt } from "./engine";
-import DEFAULT_FEATURES from "./features";
-import buildOptions from "./options";
-import setup from "./setup";
+import { cook as cookIt } from "./engine.js";
+import DEFAULT_FEATURES from "./features/index.js";
+import buildOptions from "./options.js";
+import setup from "./setup.js";
 
 function NOOP(ident) {
   return ident;
@@ -50,6 +50,14 @@ export default class DiscourseMarkdownIt {
     this.options = options;
   }
 
+  get allowLister() {
+    return this.options.allowLister;
+  }
+
+  get linkify() {
+    return this.options.engine.linkify;
+  }
+
   disableSanitizer() {
     this.options.sanitizer = this.options.discourse.sanitizer = NOOP;
   }
@@ -76,9 +84,5 @@ export default class DiscourseMarkdownIt {
 
   sanitize(html) {
     return this.options.sanitizer(html).trim();
-  }
-
-  get linkify() {
-    return this.options.engine.linkify;
   }
 }

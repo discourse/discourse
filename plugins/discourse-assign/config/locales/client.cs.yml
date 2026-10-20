@@ -193,6 +193,7 @@ cs:
     discourse_workflows:
       nodes:
         "trigger:assigned": "Přiděleno"
+        "trigger:unassigned": "Nepřiděleno"
       assign_topic:
         resource: "Zdroj"
         resources:

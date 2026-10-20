@@ -12,7 +12,12 @@ lv:
           fields:
             topic_id:
               label: Tēmas ID
-    discourse_calendar:
+    discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Paziņojumi"
+            none: "Nav"
       disable_holiday: "Atslēgt"
       enable_holiday: "Ieslēgt"
       date: "Datums"
@@ -26,6 +31,9 @@ lv:
         year: "Gada"
     group_timezones:
       search: "Meklēt..."
+    discourse_workflows:
+      post_event:
+        topic_id: "Tēmas ID"
     discourse_post_event:
       bulk_invite_modal:
         success: "Fails veiksmīgi lejuplādēts, jums paziņos, kad process beidzies."

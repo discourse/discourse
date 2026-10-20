@@ -37,10 +37,10 @@ export default class Results extends Component {
     <span class="topic">
       <span class="first-line">
         <TopicStatus
-          @topic={{@result.topic}}
-          @disableActions={{true}}
           @context="topic-view-title"
+          @disableActions={{true}}
           @showPrivateMessageIcon={{this.shouldShowPrivateMessageIcon}}
+          @topic={{@result.topic}}
         />
         <span class="topic-title" data-topic-id={{@result.topic.id}}>
           <MaybeAnchor @href={{if @withTopicUrl @result.url}}>

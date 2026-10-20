@@ -126,8 +126,34 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTags::V1 do
       )
     end
 
+    it "preserves operation expressions in version one" do
+      topic.tags << tag
+      config = {
+        "operation" => "={{ $json.operation }}",
+        "topic_id" => topic.id,
+        "tag_names" => "={{ $json.tags }}",
+      }
+      input_items = [
+        { "json" => { "operation" => "add", "tags" => [tag_2.name] } },
+        { "json" => { "operation" => "remove", "tags" => [tag.name] } },
+      ]
+
+      result = execute_node_output(configuration: config, input_items: input_items).first
+
+      expect(result.map { |output| output["json"]["tag_names"] }).to eq([[tag_2.name], [tag.name]])
+      expect(topic.reload.tags).to contain_exactly(tag_2)
+    end
+
     it "raises when no tag names are provided" do
-      config = { "operation" => "add", "topic_id" => topic.id.to_s, "tag_names" => "" }
+      admin = Fabricate(:admin)
+      personal_message = Fabricate(:private_message_topic)
+      SiteSetting.pm_tags_allowed_for_groups = ""
+      config = {
+        "operation" => "add",
+        "topic_id" => personal_message.id.to_s,
+        "tag_names" => "",
+        "actor_username" => admin.username,
+      }
 
       expect { execute_node(configuration: config, item: item) }.to raise_error(
         DiscourseWorkflows::NodeError,
@@ -135,8 +161,26 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTags::V1 do
       )
     end
 
+    it "explains how to grant the actor permission to tag personal messages" do
+      admin = Fabricate(:admin)
+      personal_message = Fabricate(:private_message_topic)
+      SiteSetting.pm_tags_allowed_for_groups = ""
+      config = {
+        "operation" => "add",
+        "topic_id" => personal_message.id.to_s,
+        "tag_names" => "onboarding-initiated",
+        "actor_username" => admin.username,
+      }
+
+      expect { execute_node(configuration: config, item: item) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        "'#{admin.username}' cannot tag personal messages. Add one of their groups to the " \
+          "'pm_tags_allowed_for_groups' site setting.",
+      )
+    end
+
     context "with restricted tags" do
-      fab!(:regular_user, :user)
+      fab!(:regular_user, :trust_level_1)
       fab!(:admin)
       fab!(:staff_tag_group) do
         Fabricate(
@@ -153,6 +197,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTags::V1 do
       end
 
       it "prevents adding staff-only tags when actor_username is a regular user" do
+        topic.update!(user: regular_user)
         config = {
           "operation" => "add",
           "topic_id" => topic.id.to_s,

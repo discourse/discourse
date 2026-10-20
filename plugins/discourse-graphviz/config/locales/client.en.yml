@@ -2,5 +2,6 @@ en:
   js:
     graphviz:
       composer_title: "Insert Graphviz graph"
+      fullscreen: "Expand diagram"
     composer:
       graphviz_sample: "digraph G {\n  a -> b;\n  b -> c;\n  a -> c;\n}"

@@ -14,12 +14,26 @@ import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import { i18n } from "discourse-i18n";
 
+/** @typedef {import("discourse/lib/theme-selector").SelectableTheme} SelectableTheme */
+/**
+ * @typedef {{
+ *   setting: string,
+ *   default: unknown,
+ *   description: string,
+ *   humanized_name: string,
+ *   themes: Array<{ theme_id: number, theme_name: string, value: unknown }>
+ * } & Record<string, unknown>} ThemeSiteSettingOverrides
+ */
 export default class ThemeSiteSettings extends Component {
   @service site;
 
+  /** @type {Record<string, ThemeSiteSettingOverrides> | null} */
   @tracked themesWithSiteSettingOverrides = null;
+
+  /** @type {Array<{ name: undefined, value: string }> | null} */
   @tracked themeableSiteSettings = null;
 
+  /** @returns {SelectableTheme[] | null} */
   get themes() {
     return listThemes(this.site);
   }
@@ -28,6 +42,7 @@ export default class ThemeSiteSettings extends Component {
     return currentThemeId();
   }
 
+  /** @returns {SelectableTheme | undefined} */
   get currentTheme() {
     return this.themes.find((theme) => {
       return eq(theme.id, this.currentThemeIdValue);
@@ -94,15 +109,15 @@ export default class ThemeSiteSettings extends Component {
         <:content as |content|>
           <DFilterControls
             @array={{this.filterableSettings content}}
+            @inputPlaceholder={{i18n "admin.theme_site_settings.filter"}}
+            @noResultsMessage={{i18n
+              "admin.theme_site_settings.filter_no_results"
+            }}
             @searchableProps={{array
               "humanized_name"
               "name"
               "description"
               "themeNames"
-            }}
-            @inputPlaceholder={{i18n "admin.theme_site_settings.filter"}}
-            @noResultsMessage={{i18n
-              "admin.theme_site_settings.filter_no_results"
             }}
           >
             <:content as |filteredSettings|>
@@ -134,10 +149,10 @@ export default class ThemeSiteSettings extends Component {
                           <DTooltip>
                             <:trigger>
                               <LinkTo
-                                @route="adminCustomizeThemes.show"
-                                @models={{array "themes" theme.theme_id}}
                                 class="theme-link"
                                 data-theme-id={{theme.theme_id}}
+                                @models={{array "themes" theme.theme_id}}
+                                @route="adminCustomizeThemes.show"
                               >
                                 {{theme.theme_name}}
                               </LinkTo>

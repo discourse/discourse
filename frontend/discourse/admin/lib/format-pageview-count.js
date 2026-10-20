@@ -1,16 +1,40 @@
 import I18n from "discourse-i18n";
 
+function truncateToUnit(value, unit) {
+  return Math.floor(value / unit) * unit;
+}
+
 export function formatPageviewCount(value) {
   if (value >= 1_000_000) {
-    const formatted = I18n.toNumber(value / 1_000_000, { precision: 1 });
+    const truncated = truncateToUnit(value, 100_000);
+    const formatted = I18n.toNumber(truncated / 1_000_000, { precision: 1 });
     return `${formatted.replace(/[,.]0$/, "")}M`;
   }
 
+  if (value >= 10_000) {
+    const truncated = truncateToUnit(value, 1_000);
+    return `${I18n.toNumber(truncated / 1_000, { precision: 0 })}K`;
+  }
+
   if (value >= 1_000) {
-    return `${I18n.toNumber(Math.round(value / 1_000), { precision: 0 })}K`;
+    const truncated = truncateToUnit(value, 100);
+    const formatted = I18n.toNumber(truncated / 1_000, { precision: 1 });
+    return `${formatted.replace(/[,.]0$/, "")}K`;
   }
 
   return I18n.toNumber(value, { precision: 0 });
+}
+
+export function isPageviewCountRounded(value) {
+  if (value >= 1_000_000) {
+    return value % 100_000 !== 0;
+  }
+
+  if (value >= 10_000) {
+    return value % 1_000 !== 0;
+  }
+
+  return value >= 1_000 && value % 100 !== 0;
 }
 
 export function formatExactPageviewCount(value) {

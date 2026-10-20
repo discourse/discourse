@@ -7,7 +7,19 @@
 te:
   js:
     styleguide:
+      example:
+        kind:
+          component: "భాగం"
       sections:
+        context_menu:
+          actions:
+            duplicate: "నకిలీ చేయండి"
+            delete: "తొలగించండి"
+        reorderable_list:
+          policies_pinned: "పిన్ చేయబడింది"
+          policies_required: "అవసరం"
+          table_type: "రకం"
+          cross_list_primary: "ప్రాథమిక"
         colors:
           title: "రంగులు"
         categories:
@@ -20,6 +32,20 @@ te:
           title: "పోస్ట్"
         more_topics:
           title: "మరిన్ని విషయాలు"
+        roving_focus:
+          toolbar:
+            copy: "నకలు"
+          adjacent:
+            field: "శోధించండి"
+            recent: "తాజా"
+          combobox:
+            daily: "రోజువారీ"
+            weekly: "వారానికోసారి"
+            monthly: "నెలవారీ"
+            never: "ఎప్పటికీ వద్దు"
+          tree:
+            components: "భాగాలు"
+            select: "ఎంచుకోండి"
         tooltips:
           description: "వివరణ"
           header: "హెడర్"

@@ -424,7 +424,6 @@ ar:
       zh_CN:
         name: الصينية المبسطة
     share:
-      topic_html: 'الموضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "المنشور #%{postNumber} بواسطة @%{username}"
       close: "إغلاق"
       twitter: "المشاركة على X"
@@ -479,6 +478,12 @@ ar:
     skip_to_last_reply: "الانتقال إلى الرد الأخير"
     skip_to_top: "تخطي إلى الأعلى"
     skip_user_nav: "التخطي إلى محتوى الملف الشخصي"
+    reorder:
+      remove: "إزالة %{label}"
+      removed: "تمت إزالة %{label}"
+      move_up: "التحريك لأعلى"
+      move_down: "التحريك لأسفل"
+      position: "%{position} من %{total}"
     emails_are_disabled: "أوقف أحد المسؤولين البريد الصادر بشكلٍ عام. ولن يتم إرسال إشعارات عبر البريد الإلكتروني أيًا كان نوعها."
     emails_are_disabled_no_smtp: "تم إيقاف جميع رسائل البريد الإلكتروني الصادرة نظرًا لعدم وجود خادم SMTP تم تكوينه. لا يمكن إرسال أي نوع من الرسائل الإلكترونية."
     emails_are_disabled_non_staff: "تم إيقاف البريد الإلكتروني الصادر للمستخدمين من خارج فريق العمل."
@@ -488,6 +493,7 @@ ar:
     notifications_tracking:
       tooltip: "مستوى الإشعارات: %{level}"
     back_button: "الرجوع"
+    confirm_button: "تأكيد"
     welcome_banner:
       header:
         new_members: "مرحبًا بك، %{preferred_display_name}!"
@@ -632,13 +638,6 @@ ar:
       few: "%{count} كحدٍ أقصى"
       many: "%{count} كحدٍ أقصى"
       other: "%{count} كحدٍ أقصى"
-    character_count:
-      zero: "%{count} حرف"
-      one: "حرف واحد (%{count})"
-      two: "حرفان (%{count})"
-      few: "%{count} أحرف"
-      many: "%{count} حرفًا"
-      other: "%{count} حرف"
     period_chooser:
       aria_label: "التصفية حسب الفترة"
     related_messages:
@@ -668,18 +667,9 @@ ar:
         use_predefined: "تصفح القوالب"
         back: "رجوع"
         icebreakers:
-          fun_facts:
-            title: "اذكر بعض الحقائق الممتعة عنك"
-            body: "مرحبًا بالجميع! أنا متحمسٌ جدًا للبدء في تأسيس هذا المجتمع الجديد. ولإطلاق شرارة البداية، دعونا نتشارك حقيقةً ممتعةً عن أنفسنا. سأبدأ أنا أولاً: أنا أعشق التنزه سيرًا على الأقدام واستكشاف مسارات جديدة! فما هو الشيء المثير للاهتمام بخصوصكم؟"
-          coolest_thing_you_have_seen_today:
-            title: "ما أروع شيء رأيته اليوم؟"
-            body: "ما أروع شيء رأيته أو عشته اليوم؟ يمكن أن يكون أي شيء، بدءًا من غروب شمس بديع، وصولًا إلى عمل إنساني عفوي. سأبدأ أنا أولًا: لقد رأيت كلبًا يساعد شخصًا مسنًا على عبور الشارع!"
           introduce_yourself:
             title: "عرّف بنفسك"
             body: "أهلاً بكم في هذا المجتمع! دعونا نبدأ بالتعرف على بعضنا بعضًا؛ يُرجى تقديم أنفسكم ومشاركتنا نبذة يسيرة عن اهتماماتكم. سأبدأ أنا أولاً: أنا شغوفٌ جدًا بعالم التكنولوجيا وأعشق تعليم الآخرين!"
-          what_is_your_favorite_food:
-            title: "ما طعامك المفضل؟"
-            body: "شارك طعامك المفضل مع المجتمع! سأبدأ: أنا أحب البيتزا، وخاصة مع إضافة الجبن والبيبروني."
     design_wizard:
       title: "تخصيص موقعك"
       back: "رجوع"
@@ -688,6 +678,8 @@ ar:
         theme: "السمة"
         fonts: "الخطوط"
         homepage: "الصفحة الرئيسية"
+        welcome_banner: "بانر الترحيب"
+        search: "البحث"
       theme:
         selected: "محدَّدة"
       colors:
@@ -1056,6 +1048,9 @@ ar:
       title:
         search: "البحث عن رسالة"
         placeholder: "اكتب عنوان الرسالة أو عنوان URL أو المُعرِّف هنا"
+    dsa_statements:
+      category: "الفئة"
+      saving: "جارٍ الحفظ…"
     review:
       show_more: "عرض المزيد"
       show_less: "عرض أقل"
@@ -1345,6 +1340,9 @@ ar:
         note_added: "ملاحظة المشرف"
         note_added_by: "ملاحظة المشرف من قِبل %{username} · %{relativeDate}"
         no_events: "لا توجد أحداث زمنية متاحة للعرض"
+      author_penalty:
+        toast:
+          undo: "تراجع"
       notes:
         add_note_description: "أضف ملاحظة لتوضيح السياق للمشرفين الآخرين."
         add_note_button: "أضف ملاحظة"
@@ -2089,7 +2087,6 @@ ar:
       admin: "‏%{user} مسؤول في الموقع"
       moderator_tooltip: "هذا المستخدم مشرف في الموقع"
       admin_tooltip: "هذا المستخدم مسؤول في الموقع"
-      silenced_tooltip: "أُسكت هذا العضو"
       suspended_notice: "هذا المستخدم معلَّق حتى تاريخ %{date}."
       suspended_permanently: "هذا المستخدم معلَّق."
       suspended_reason: "السبب: "
@@ -2148,6 +2145,16 @@ ar:
       tracked_topics_link: "إظهار"
       automatically_unpin_topics: "إلغاء تثبيت الموضوعات تلقائيًا عند وصولي إلى نهايتها"
       apps: "التطبيقات"
+      mcp_authorizations:
+        endpoint: "المورد"
+        scopes: "النطاقات"
+        details: "التفاصيل"
+        last_used: "آخر استخدام"
+        never: "أبدًا"
+        status: "الحالة"
+        statuses:
+          active: "نشطة"
+          revoked: "سُحب"
       revoke_access: "إلغاء الوصول"
       undo_revoke_access: "التراجع عن إلغاء الوصول"
       api_approved: "تمت الموافقة عليها:"
@@ -2513,7 +2520,6 @@ ar:
         upload_title: "تحميل صورتك"
         image_is_not_a_square: "تحذير: لقد قصصنا صورتك؛ لأن عرضها وارتفاعها لم يكونا متساويين."
         logo_small: "شعار الموقع الصغير. يتم استخدامه بشكلٍ افتراضي."
-        use_custom: "أو حمِّل صورة رمزية مخصَّصة:"
       change_profile_background:
         title: "رأس الملف الشخصي"
         instructions: "سيتم توسيط رؤوس الملفات الشخصية وسيكون عرضها الافتراضي 1110 بكسل."
@@ -2700,7 +2706,6 @@ ar:
         watch_topic: "مراقبة الموضوع"
         track_topic: "تتبع الموضوع"
         do_nothing: "عدم اتخاذ أي إجراء"
-      topics_unread_when_closed: "اعتبار الموضوعات غير مقروءة عندما تكون مغلقة"
       invited:
         title: "الدعوات"
         pending_tab: "قيد الانتظار"
@@ -3215,7 +3220,7 @@ ar:
       hide_forever: "لا، شكرًا"
       hidden_for_session: "حسنًا، سنسألك غدًا. يمكنك دائمًا استخدام \"تسجيل الدخول\" لإنشاء حساب أيضًا."
       intro: "مرحبًا! يبدو أنك تستمتع بالمناقشة، لكنك لم تشترك للحصول على حساب حتى الآن."
-      value_prop: "هل سئمت من التمرير عبر المنشورات نفسها؟ عندما تُنشئ حسابًا، فستستأنف دائمًا من حيث توقفت. عند إنشاء حساب، ستتمكن أيضًا من تلقي إشعارات بالردود الجديدة وحفظ الإشارات المرجعية وتسجيل الإعجاب لشكر الآخرين. يمكننا جميعًا العمل معًا للارتقاء بهذا المجتمع. :heart:"
+      value_prop: "هل سئمت من التمرير عبر المنشورات نفسها؟ عندما تُنشئ حسابًا، فستستأنف دائمًا من حيث توقفت. عند إنشاء حساب، ستتمكن أيضًا من تلقي إشعارات بالردود الجديدة وحفظ الإشارات المرجعية وتسجيل الإعجاب لشكر الآخرين. يمكننا جميعًا العمل معًا للارتقاء بهذا المجتمع."
     offline_indicator:
       no_internet: "لا يتوفَّر اتصال بالإنترنت."
       refresh_page: "تحديث الصفحة"
@@ -3333,8 +3338,6 @@ ar:
       signup_instructions: "أدخل عنوان بريدك الإلكتروني للانضمام إلى هذا المجتمع. سنرسل إليك رمزًا لتأكيده وستصبح جاهزًا للانطلاق!"
       user_fields_title: "أوشكت على الانتهاء"
       user_fields_instructions: "بضع تفاصيل إضافية للانتهاء من إنشاء حسابك."
-      account_ready_title: "حسابك جاهز! 🎉"
-      account_ready_edit: "اختر اسم المستخدم الخاص بك وصورتك الرمزية"
       account_ready_continue: "متابعة"
       username_label: "اسم المستخدم"
       username_placeholder: "اختر اسم مستخدم"
@@ -3505,6 +3508,11 @@ ar:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      option: "الخيار"
+      period: "الفترة"
+      tab: "مفتاح Tab"
+      delete: "حذف"
+      home: "الصفحة الرئيسية"
     conditional_loading_section:
       loading: جارٍ التحميل…
     category_row:
@@ -3834,14 +3842,12 @@ ar:
       create_whisper: "همس"
       create_shared_draft: "إنشاء مسودة مشتركة"
       edit_shared_draft: "تعديل المسودة المشتركة"
-      title: "أو اضغط على %{modifier}Enter"
       save_and_close: "حفظ وإغلاق"
       discard: "تجاهل"
       cancel_edit: "ألغِ تعديل"
       draft_saved: "حُفظت المسودة!"
       users_placeholder: "إضافة مستخدمين أو مجموعات"
-      title_placeholder: "ما موضوع هذه المناقشة في جملة واحدة مختصرة؟"
-      title_placeholder_redesign: "العنوان"
+      title_placeholder: "العنوان"
       title_or_link_placeholder: "اكتب عنوانًا أو الصق رابطًا هنا"
       edit_reason_placeholder: "ما سبب التعديل؟"
       topic_featured_link_placeholder: "أدخِل الرابط الموضَّح مع العنوان."
@@ -3859,8 +3865,6 @@ ar:
       show_preview: "إظهار المعاينة"
       hide_preview: "إخفاء المعاينة"
       resize: "تغيير حجم أداة الإنشاء"
-      switch_to_markdown: "التحويل إلى محرر Markdown القياسي باستخدام الاختصار (%{keyboardShortcut})"
-      switch_to_rich_text: "التحويل إلى المحرر الجديد للنصوص المنسقة باستخدام الاختصار (%{keyboardShortcut})"
       quote_post_title: "اقتباس المنشور بأكمله"
       bold_label: "B"
       bold_title: "غامق"
@@ -4012,6 +4016,8 @@ ar:
         visit: "افتح الرابط"
         remove_preview: "إزالة المعاينة"
         link_copied: "تم نسخ الرابط!"
+      table:
+        default_heading: "العمود %{number}"
       unsupported_token: "لا يدعم محرر النص المنسق جميع الميزات المستخدمة في هذا المنشور؛ مما يحولك إلى محرر Markdown."
     notifications:
       tooltip:
@@ -4282,10 +4288,10 @@ ar:
         search_field: "حقل البحث في رأس الموقع"
         search_icon: "أيقونة البحث الموجودة بجوار صورة الملف الشخصي"
       type:
-        default: "الموضوعات/المنشورات"
+        default: "المنشورات"
         users: "المستخدمون"
         categories: "الفئات"
-        categories_and_tags: "الفئات/الوسوم"
+        categories_and_tags: "الفئات والوسوم"
       context:
         user: "البحث عن المنشورات باسم المستخدم @%{username}"
         category: "البحث في الفئة #%{category}"
@@ -4298,7 +4304,6 @@ ar:
         in: "يقوم بالتصفية حسب البيانات الوصفية (مثلًا: in:title، in:personal، in:pinned)"
         status: "يقوم بالتصفية حسب حالة الموضوع"
         full_search: "يشغِّل البحث في الصفحة بأكملها"
-        full_search_key: "%{modifier} + Enter"
         me: "يعرض منشوراتك فقط"
       advanced:
         title: عوامل تصفية متقدمة
@@ -4775,7 +4780,6 @@ ar:
           missing_to: "مطلوب تحديد وسم بديل"
       delete_topics:
         name: "حذف"
-        description: "احذف الموضوعات المحدَّدة نهائيًا. لا يمكن التراجع عن هذا الإجراء."
       update_category:
         name: "تحديث الفئة"
         description: "انقل جميع الموضوعات المحدَّدة إلى الفئة التالية:"
@@ -5470,7 +5474,6 @@ ar:
       reply_as_new_private_message: "الرد في رسالة جديدة إلى المستلمين أنفسهم"
       continue_discussion: "متابعة المناقشة من %{postLink}:"
       follow_quote: "انتقل إلى المنشور الذي تم اقتباسه"
-      show_full: "عرض المنشور الكامل"
       show_hidden: "عرض المحتوى الذي تم تجاهله"
       deleted_by_author_simple: "(تم حذف المنشور بواسطة الكاتب)"
       collapse: "طي"
@@ -5995,6 +5998,7 @@ ar:
       list: "إدراج الفئات"
       no_description: "يُرجى إضافة وصف لهذه الفئة."
       change_in_category_topic: "عدّل الوصف"
+      latest_topics: "أحدث الموضوعات"
       description_updated: "تم تحديث الوصف"
       description_expand: "عرض المزيد"
       description_collapse: "عرض أقل"
@@ -6331,6 +6335,7 @@ ar:
       with_category: "موضوعات %{filter} في %{category}"
       filter:
         title: "تمت تصفية النتائج حسب %{filter}"
+        reset: "إعادة التعيين"
         button:
           label: "المرشح"
       latest:
@@ -6467,12 +6472,8 @@ ar:
     invalid_video_url: لا يمكن تشغيل هذا الفيديو لأن عنوان URL غير صالح أو غير متاح.
     keyboard_shortcuts_help:
       search_placeholder: "ابحث عن اختصار باستخدام الوصف أو مجموعة المفاتيح"
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} أو %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "اختصارات لوحة المفاتيح"
       short_title: "الاختصارات"
       search_ctrl_f_tip: "يمكنك البحث في جميع محتويات المنتدى بالضغط على <kbd>/</kbd>"
@@ -6590,13 +6591,6 @@ ar:
         search_open: "فتح مربع البحث في واجهة المسؤول"
         search_full_page: "فتح صفحة البحث الكاملة في واجهة المسؤول"
     badges:
-      earned_n_times:
-        zero: "تم منحك هذه الشارة %{count} مرة"
-        one: "تم منحك هذه الشارة مرة واحدة (%{count})"
-        two: "تم منحك هذه الشارة مرتين (%{count})"
-        few: "تم منحك هذه الشارة %{count} مرات"
-        many: "تم منحك هذه الشارة %{count} مرة"
-        other: "تم منحك هذه الشارة %{count} مرة"
       granted_on: "تم منحه بتاريخ %{date}"
       others_count:
         zero: "تم منحها للآخرين %{count} مرة"
@@ -6647,16 +6641,18 @@ ar:
       favorite_max_not_reached: "وضع علامة على هذه الشارة كمفضَّلة"
       favorite_count: "تم وضع علامة على %{count}/%{max} شارة كمفضَّلة"
     download_calendar:
-      title: "تنزيل التقويم"
+      title: "إضافة إلى التقويم"
+      calendar: "التقويم"
       save_ics: "تنزيل ملف .ics"
       save_google: "إضافة إلى تقويم Google"
       remember: "لا تسألني مرة أخرى"
-      remember_explanation: "(يمكنك تغيير هذا التفضيل في تفضيلات المستخدم لديك)"
       download: "تنزيل"
       default_calendar: "التقويم الافتراضي"
       default_calendar_instruction: "حدِّد التقويم الذي ينبغي استخدامه عند حفظ التواريخ"
       add_to_calendar: "إضافة إلى التقويم"
       google: "تقويم Google"
+      outlook: "Microsoft Outlook"
+      apple: "Apple Calendar"
       ics: "ICS"
       default_title: "حدث مجدول"
     tagging:
@@ -7219,63 +7215,6 @@ ar:
           other: "يجب ان يكون الإدخال أطول من %{count}."
         pattern_mismatch: "يُرجى مطابقة التنسيق المطلوب."
         bad_input: "يُرجى إدخال قيمة صالحة."
-    table_builder:
-      title: "أداة إنشاء الجداول"
-      modal:
-        title: "أداة إنشاء الجداول"
-        create: "إنشاء جدول"
-        help:
-          title: "استخدام محرر جداول البيانات"
-          enter_key: "مفتاح Enter"
-          tab_key: "مفتاح Tab"
-          new_row: "في نهاية الصف لإدراج صف جديد."
-          new_col: "في نهاية العمود لإدراج عمود جديد."
-          options: "انقر بزر الماوس الأيمن على الخلايا للوصول إلى خيارات إضافية في قائمة منسدلة."
-        confirm_close: "هل تريد بالتأكيد إغلاق أداة إنشاء الجداول؟ سيتم فقدان أي تغييرات غير محفوظة."
-      edit:
-        btn_edit: "تعديل الجدول"
-        modal:
-          title: "تعديل الجدول"
-          cancel: "إلغاء"
-          create: "حفظ"
-          reason: "ما سبب التعديل؟"
-          trigger_reason: "أضِف سبب التعديل"
-        default_edit_reason: "تحديث الجدول باستخدام محرر الجداول"
-      default_header:
-        col_1: "العمود 1"
-        col_2: "العمود 2"
-        col_3: "العمود 3"
-        col_4: "العمود 4"
-      spreadsheet:
-        no_records_found: "لم يتم العثور على سجلات"
-        show: "إظهار"
-        entries: "إدخالات"
-        about: "نبذة"
-        prompts:
-          delete_selected_rows: "هل تريد بالتأكيد حذف الصفوف المحدَّدة؟"
-          delete_selected_cols: "هل تريد بالتأكيد حذف الأعمدة المحدَّدة؟"
-          will_destroy_merged_cells: "سيؤدي هذا الإجراء إلى تدمير أي خلايا مدمجة موجودة. هل أنت متأكد؟"
-          will_clear_search_results: "سيؤدي هذا الإجراء إلى تدمير أي خلايا مدمجة موجودة. هل أنت متأكد؟"
-          conflicts_with_merged_cells: "هناك تعارض مع خلية مدمجة أخرى"
-        invalid_merge_props: "خصائص الدمج غير صالحة"
-        cells_already_merged: "تم دمج الخلية بالفعل"
-        no_cells_selected: "لم يتم تحديد أي خلايا"
-        context_menu:
-          row:
-            before: "إدراج صف جديد قبله"
-            after: "إدراج صف جديد بعده"
-            delete: "حذف الصفوف المحدَّدة"
-          col:
-            before: "إدراج عمود جديد قبله"
-            after: "إدراج عمود جديد بعده"
-            delete: "حذف الأعمدة المحدَّدة"
-            rename: "إعادة تسمية هذا العمود"
-          order:
-            ascending: "ترتيب تصاعدي"
-            descending: "ترتيب تنازلي"
-          copy: "نسخ..."
-          paste: "لصق..."
-          save: "الحفظ باسم..."
     powered_by_discourse: "بدعم من Discourse"
     safari_15_warning: "سيُصبح متصفّحك غير متوافق مع هذا المجتمع قريبًا. للاستمرار في المشاركة هنا، يُرجى ترقية متصفّحك أو <a href='%{url}'>معرفة المزيد</a>."
     filter:
@@ -7381,6 +7320,11 @@ ar:
         legacy_warning: "هذا تقرير قديم، وسيتم إيقافه قريبًا. يرجى الاتصال بالدعم الفني إذا كنت بحاجة إلى مساعدة في إيجاد بديل."
         chart:
           total: "الإجمالي: %{count}"
+        related_items:
+          users:
+            title: "المستخدمون"
+          labels:
+            user: "المستخدم"
       config_sections:
         account:
           title: "الحساب"
@@ -7491,6 +7435,79 @@ ar:
         developer:
           title: "المطور"
           header_description: "إعدادات المطوّر للتحكم في الوضع الآمن والميزات المتقدمة الأخرى"
+        mcp:
+          title: "خادم MCP"
+          tabs:
+            access: "الوصول"
+            activity: "النشاط"
+          overview:
+            status: "الحالة"
+            tools: "الأدوات"
+          access:
+            title: "الوصول"
+            group: "المجموعة"
+            groups: "المجموعات"
+            actions: "الإجراءات"
+            edit: "تعديل"
+            delete: "حذف"
+          primitives:
+            group_by: "التجميع حسب"
+            group_by_options:
+              scope: "المجال"
+              provider: "مقدِّم الخدمة"
+              kind: "النوع"
+            provider: "مقدِّم الخدمة"
+            kind: "النوع"
+            scope: "المجال"
+            state: "الحالة"
+            scopes: "النطاقات"
+          clients:
+            actions: "الإجراءات"
+            block: "حظر"
+            use_preset: "إعداد"
+            presets:
+              custom: "مخصَّصة"
+            automatic: "تلقائية"
+          authorizations:
+            user: "المستخدم"
+            scopes: "المجالات الممنوحة"
+            last_used: "آخر استخدام"
+            status: "الحالة"
+            actions: "الإجراءات"
+          activity:
+            outcome: "النتيجة"
+            time: "الوقت"
+            user: "المستخدم"
+            duration: "المدة"
+          values:
+            server_status:
+              available: "متوفر"
+              disabled: "متوقفة"
+            client_trust:
+              approved: "تمت الموافقة"
+            authorization_status:
+              active: "نشطة"
+              revoked: "سُحب"
+            activity_outcome:
+              success: "تم بنجاح"
+              error: "خطأ"
+            primitive_state:
+              enabled: "مفعَّلة"
+              disabled: "متوقفة"
+              unavailable: "غير متوفر"
+            primitive_kind:
+              all: "كل الأنواع"
+              tool: "أداة"
+              resource: "المورد"
+              prompt: "الأمر"
+            primitive_risk:
+              read: "للقراءة فقط"
+              moderation: "الإشراف"
+            filter:
+              all: "الكل"
+          never: "أبدًا"
+          actions:
+            revoke: "إلغاء"
         experimental:
           title: "تجريبي"
           header_description: "تفعيل/إيقاف الميزات التجريبية إلى وضع التشغيل أو الإيقاف لموقعك، ويمكن التحكم في معظم تلك الميزات بشكلٍ جماعي"
@@ -7722,7 +7739,6 @@ ar:
           header_description: "تكوين إعدادات البحث، بما في ذلك التسجيل والترميز للغتَين الصينية واليابانية"
         search_everything:
           title: "البحث"
-          header_description: "اعثر على أي شيء في واجهة المسؤول هنا. يمكنك تصفية النتائج أدناه، وسيتم تذكر تفضيلاتك. لفتح هذا البحث في أي مكان ضمن واجهة المسؤول، اضغط %{shortcutHTML}."
         security:
           title: "الأمان"
           header_description: "تكوين إعدادات الأمان، بما في ذلك المصادقة الثنائية، وامتيازات المشرف، وسياسات أمان المحتوى"
@@ -7970,25 +7986,21 @@ ar:
         title: "ما الجديد؟"
         check_for_updates: "تحقَّق من وجود تحديثات"
       site_traffic_explorer:
-        pageviews: "مرات عرض الصفحة"
+        metric_information: "نبذة عن %{metric}"
+        remove_filter_value: "إزالة %{value}"
+        clear_all: "مسح الكل"
+        apply: "تطبيق"
         view_more: "عرض المزيد"
         cards:
           pages: "صفحتان"
           visitors: "الزوار"
-        columns:
-          referrers: "المُحيل"
-          countries: "البلد"
-          top_urls: "عنوان URL"
-          browsers: "المتصفح"
-          ip_addresses: "عنوان IP"
         filters:
           referrer: "المُحيل"
           country: "البلد"
           browser: "المتصفح"
+          language: "اللغة"
           ip: "عنوان IP"
         metrics:
-          pageviews:
-            label: "مرات عرض الصفحة"
           logged_in_share:
             label: "نسبة المسجَّلين الدخول"
           bounce_rate:
@@ -8117,6 +8129,14 @@ ar:
               staff: "فريق العمل"
               empty: "لا يوجد منشورات خلال الفترة المحدَّدة."
               save_error: "تعذَّر حفظ تحديدك للمرة القادمة."
+              add_group: "إضافة مجموعة"
+              modal:
+                apply: "حفظ"
+                enable: "تفعيل %{title}"
+                disable: "إيقاف %{title}"
+                move_up: "تحريك %{title} لأعلى"
+                move_down: "تحريك %{title} لأسفل"
+                footer_note: "ستنطبق هذه التغييرات على جميع المستخدمين."
             trust_level_pipeline:
               title: "تدرُّج مستويات الثقة"
               trust_levels:
@@ -8205,6 +8225,11 @@ ar:
                 no_match_tooltip: "مصطلحات البحث ذات معدَّل نقر (CTR) 0%."
                 poor_match: "تطابق ضعيف"
                 poor_match_tooltip: "مصطلحات البحث ذات معدَّل نقر (CTR) بين 1-20%."
+          system:
+            title: "النظام"
+            status: "الحالة"
+            discourse_updated: "تحديث Discourse"
+            dashboard_updated: "تم تحديث لوحة المعلومات"
         reports_section:
           header_action: "إدارة"
           description: "قم بتثبيت التقارير القياسية أو استعلامات مستكشف البيانات لتتبُّع ما يهم مجتمعك."
@@ -8327,6 +8352,7 @@ ar:
             embedded: "مشاهدات الصفحات المضمَّنة"
             crawlers: "زاحفات الويب"
           see_details: "عرض التفاصيل"
+          crawler_learn_more: "معرفة المزيد"
         period:
           last_7_days: "آخر 7 أيام"
           last_30_days: "آخر 30 يومًا"
@@ -8381,6 +8407,21 @@ ar:
           average_for_sample: "متوسط العينة"
           total: "إجمالي الوقت الكلي"
           no_data: "لا توجد بيانات لعرضها."
+          posters_by_member_type_members:
+            users_count:
+              zero: "%{count} مستخدمين"
+              one: "مستخدم واحد (%{count})"
+              two: "%{count} مستخدمًا"
+              few: "%{count} مستخدمًا"
+              many: "%{count} مستخدمين"
+              other: "%{count} مستخدمًا"
+            posts_count:
+              zero: "منشوران %{count})"
+              one: "منشور %{count}"
+              two: "منشوران %{count})"
+              few: "منشوران %{count})"
+              many: "منشوران %{count})"
+              other: "منشوران %{count})"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">سجلات البحث</a>'
             disabled: 'تقرير عبارات البحث الرائجة متوقف. قم بتفعيل <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">تسجيل استعلامات البحث</a> لجمع البيانات.'
@@ -9317,8 +9358,8 @@ ar:
           upload: "تحميل"
           select_component: "تحديد مكوِّن…"
           unsaved_changes_alert: "لم تحفظ تغييراتك بعد، هل تريد تجاهلها والمضي قدمًا؟"
-          unsaved_parent_themes: "لم تخصِّص المكوِّن للسمات، هل تريد المضي قدمًا؟"
           discard: "تجاهل"
+          leave: "مغادرة"
           stay: "البقاء"
           css_html: "رمز مخصّص"
           edit_css_html: "تعديل الرمز"
@@ -10551,13 +10592,14 @@ ar:
           multiselect: "حقل اختيارات متعددة"
       site_text:
         description: "يمكنك تخصيص أي نص في المنتدى الخاص بك."
-        search: "البحث عن النص الذي تريد تعديله"
+        search_label: "البحث"
+        theme_disabled: "متوقفة"
+        filters: "المرشحات"
+        status:
+          invalid: "غير صالح"
         title: "نصوص الموقع"
         edit: "تعديل"
-        revert: "التراجع عن التغييرات"
         revert_confirm: "هل تريد بالتأكيد التراجع عن التغييرات؟"
-        go_back: "العودة إلى البحث"
-        recommended: "نوصيك بتخصيص النص التالي ليلائم احتياجاتك:"
         show_overriden: "إظهار النصوص المخصَّصة فقط"
         show_outdated: "عرض القديمة/غير الصالحة فقط"
         show_untranslated: "إظهار غير المترجمة فقط"

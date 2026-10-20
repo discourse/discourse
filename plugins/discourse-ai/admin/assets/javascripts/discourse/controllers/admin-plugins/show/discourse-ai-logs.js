@@ -9,10 +9,8 @@ export default class DiscourseAiLogsController extends Controller {
     "has_retries",
     { selectedModel: "model" },
     "feature",
-    "username",
+    "search",
     "unattributed",
-    "id_type",
-    "id_value",
     "details",
   ];
 
@@ -23,9 +21,7 @@ export default class DiscourseAiLogsController extends Controller {
   has_retries = null;
   selectedModel = null;
   feature = null;
-  username = null;
+  search = null;
   unattributed = null;
-  id_type = null;
-  id_value = null;
   details = null;
 }

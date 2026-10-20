@@ -187,6 +187,7 @@ fi:
     discourse_workflows:
       nodes:
         "trigger:assigned": "Osoitettu"
+        "trigger:unassigned": "Osoittamattomat"
       assign_topic:
         resource: "Resurssi"
         resources:

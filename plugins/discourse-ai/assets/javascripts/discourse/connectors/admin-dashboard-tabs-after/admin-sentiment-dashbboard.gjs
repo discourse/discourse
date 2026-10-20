@@ -9,7 +9,7 @@ export default class AISentimentDashboard extends Component {
 
   <template>
     <li class="navigation-item sentiment">
-      <LinkTo @route="admin.dashboardSentiment" class="navigation-link">
+      <LinkTo class="navigation-link" @route="admin.dashboardSentiment">
         {{i18n "discourse_ai.sentiments.dashboard.title"}}
       </LinkTo>
     </li>

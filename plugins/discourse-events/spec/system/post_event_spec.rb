@@ -6,9 +6,9 @@ describe "Post event" do
   fab!(:group)
 
   let(:composer) { PageObjects::Components::Composer.new }
-  let(:post_event_page) { PageObjects::Pages::DiscourseCalendar::PostEvent.new }
-  let(:post_event_form_page) { PageObjects::Pages::DiscourseCalendar::PostEventForm.new }
-  let(:bulk_invite_modal_page) { PageObjects::Pages::DiscourseCalendar::BulkInviteModal.new }
+  let(:post_event_page) { PageObjects::Pages::DiscourseEvents::PostEvent.new }
+  let(:post_event_form_page) { PageObjects::Pages::DiscourseEvents::PostEventForm.new }
+  let(:bulk_invite_modal_page) { PageObjects::Pages::DiscourseEvents::BulkInviteModal.new }
 
   before do
     SiteSetting.discourse_events_enabled = true
@@ -34,6 +34,29 @@ describe "Post event" do
       expect(post_event_page).to have_location("123 Main St, Brisbane, Australia example.com")
       expect(page).to have_css(".event-location a[href='http://example.com']")
     end
+  end
+
+  it "shows the event hosts" do
+    first_host = Fabricate(:user, username: "event_host_maya")
+    second_host = Fabricate(:user, username: "event_host_noah")
+    raw = <<~EVENT
+      [event start='2222-02-22 14:22' hosts='#{admin.username},#{first_host.username},#{second_host.username}']
+      [/event]
+    EVENT
+    post = PostCreator.create!(admin, title: "Community meetup", raw:)
+
+    visit(post.topic.url)
+
+    expect(post_event_page).to have_hosts([first_host, second_host], cohosted: true)
+  end
+
+  it "joins the creator and host roles for the same user" do
+    raw = "[event start='2222-02-22 14:22' hosts='#{admin.username}']\n[/event]"
+    post = PostCreator.create!(admin, title: "Community meetup", raw:)
+
+    visit(post.topic.url)
+
+    expect(post_event_page).to have_creator_host(admin)
   end
 
   context "with description" do
@@ -125,16 +148,15 @@ describe "Post event" do
       expect(composer).to have_value(/end=2024-06-03/)
     end
 
-    context "when showLocalTime is set and the event crosses midnight relative to the viewer",
-            timezone: "Australia/Brisbane" do
+    context "when showLocalTime is set and the event crosses midnight relative to the viewer" do
       it "renders the preview badge in the event timezone, not the viewer's" do
-        # 2025-09-07 22:30 Europe/Paris == 2025-09-08 06:30 Australia/Brisbane,
-        # so without showLocalTime the viewer would see "Sep 8" in the badge.
+        # 2025-09-07 00:30 Europe/Paris == 2025-09-06 22:30 UTC,
+        # so without showLocalTime the viewer would see "Sep 6" in the badge.
         # With showLocalTime, the preview must stay anchored to the event timezone.
         visit("/new-topic")
         composer.fill_title("Local time preview test")
         composer.fill_content <<~MD
-          [event start='2025-09-07 22:30' timezone='Europe/Paris' showLocalTime='true' status='public']
+          [event start='2025-09-07 00:30' timezone='Europe/Paris' showLocalTime='true' status='public']
           [/event]
         MD
 
@@ -185,7 +207,7 @@ describe "Post event" do
     end
   end
 
-  context "when showing local time", timezone: "Australia/Brisbane" do
+  context "when showing local time" do
     it "correctly shows month/day" do
       page.driver.with_playwright_page do |pw_page|
         pw_page.clock.install(time: Time.new(2025, 6, 5, 22, 0, 0))
@@ -193,7 +215,7 @@ describe "Post event" do
 
       title = "My FR test meetup event"
       raw = <<~MD
-        [event showLocalTime='true' start='2025-09-07 17:30' timezone='Europe/Paris']
+        [event showLocalTime='true' start='2025-09-07 00:30' timezone='Europe/Paris']
         [/event]
       MD
       post = PostCreator.create(admin, title:, raw:)
@@ -292,8 +314,8 @@ describe "Post event" do
 
       expect(post_event_page).to have_going_status
       expect(post_event_page).to have_selected_status(:going)
-      invitee = DiscoursePostEvent::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
-      expect(invitee.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
+      invitee = DiscourseEvents::Events::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
+      expect(invitee.status).to eq(DiscourseEvents::Events::Invitee.statuses[:going])
       expect(invitee.recurring).to eq(true)
     end
 
@@ -306,8 +328,8 @@ describe "Post event" do
 
       expect(post_event_page).to have_going_status
       expect(post_event_page).to have_selected_status(:going)
-      invitee = DiscoursePostEvent::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
-      expect(invitee.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
+      invitee = DiscourseEvents::Events::Invitee.find_by(user_id: rsvp_user.id, post_id: post.id)
+      expect(invitee.status).to eq(DiscourseEvents::Events::Invitee.statuses[:going])
       expect(invitee.recurring).to eq(false)
     end
 
@@ -355,20 +377,27 @@ describe "Post event" do
     end
   end
 
-  it "shows '-' for expired recurring events instead of dates" do
-    title = "An expired recurring event"
+  it "keeps showing the last occurrence of an expired recurring event" do
+    freeze_time Time.utc(2026, 8, 31)
     raw = <<~MD
-      [event start='2024-01-01 10:00' recurrenceUntil='2025-07-31' recurrence='every_week']
+      [event start='2026-09-01 10:00' end='2026-09-01 11:00' recurrence='every_week' recurrenceUntil='2026-09-22 23:59']
       [/event]
     MD
-    post = PostCreator.create!(admin, title:, raw:)
+    post = PostCreator.create!(admin, title: "An expired recurring event", raw:)
+    PostCreator.create!(admin, topic_id: post.topic_id, raw: "Minutes of the last meeting")
 
+    [1, 8, 15, 22].each do |day|
+      freeze_time Time.utc(2026, 9, day, 11, 1)
+      Jobs::DiscourseCalendar::MonitorEventDates.new.execute({})
+    end
+
+    freeze_time Time.utc(2026, 9, 24)
     visit(post.topic.url)
 
-    expect(page).to have_css(".discourse-post-event")
-    expect(page).to have_css(".event-date .month", text: "-")
-    expect(page).to have_css(".event-date .day", text: "-")
-    expect(page).to have_css(".event-dates", text: "-")
+    expect(page).to have_css(".event-date .month", text: "SEP")
+    expect(page).to have_css(".event-date .day", text: "22")
+    expect(page).to have_css(".event-dates .discourse-local-date")
+    expect(page).to have_css("#post_2", text: "Minutes of the last meeting")
   end
 
   context "with DST handling for recurring events" do
@@ -393,8 +422,8 @@ describe "Post event" do
         MD
         post = PostCreator.create!(admin, title:, raw:)
 
-        event = DiscoursePostEvent::Event.find_by(post:)
-        event.set_next_date
+        event = DiscourseEvents::Events::Event.find_by(post:)
+        event.set_next_recurrent_event_date
 
         sign_in(viewer)
 
@@ -478,7 +507,7 @@ describe "Post event" do
 
     form = PageObjects::Components::FormKit.new(".d-modal form")
     form.field("eventType").select("private")
-    find(".group-selector").click
+    form.field("rawInvitees").component.find(".group-selector").click
     find(".d-multi-select__search-input").send_keys(group.name)
     find(".d-multi-select__result", text: group.name).click
     form.field("customFields.custom").fill_in("custom value")
@@ -494,7 +523,12 @@ describe "Post event" do
 
     form = PageObjects::Components::FormKit.new(".d-modal form")
     expect(form.field("eventType")).to have_value("private")
-    expect(find(".group-selector .d-multi-select-trigger__selection")).to have_text(group.name)
+    expect(
+      form
+        .field("rawInvitees")
+        .component
+        .find(".group-selector .d-multi-select-trigger__selection"),
+    ).to have_text(group.name)
     expect(form.field("customFields.custom")).to have_value("custom value")
     expect(page).to have_selector(".d-modal .recurrence-until .date-picker") do |input|
       input.value == "#{1.year.from_now.year}-12-30"
@@ -502,11 +536,14 @@ describe "Post event" do
   end
 
   context "when using bulk inline invite" do
+    before { Jobs.run_immediately! }
+
     let!(:post) do
       PostCreator.create(
         admin,
         title: "My test meetup event",
-        raw: "[event name='cool-event' status='public' start='2222-02-22 00:00' ]\n[/event]",
+        raw:
+          "[event name='cool-event' status='public' start='2222-02-22 00:00' recurrence='every_week']\n[/event]",
       )
     end
 
@@ -524,6 +561,20 @@ describe "Post event" do
         .send_invites
 
       expect(bulk_invite_modal_page).to be_closed
+    end
+
+    it "can apply bulk attendance to every following occurrence" do
+      visit(post.topic.url)
+
+      post_event_page.open_bulk_invite_modal
+      bulk_invite_modal_page
+        .set_invitee_at_row(invitable_user_1.username, "going", 1)
+        .apply_to_following_events
+        .send_invites
+
+      expect(
+        DiscourseEvents::Events::Invitee.find_by(user_id: invitable_user_1.id, post_id: post.id),
+      ).to be_recurring
     end
 
     it "keeps a single row when removing the last invitee" do
@@ -545,15 +596,22 @@ describe "Post event" do
       visit(post.topic.url)
 
       post_event_page.open_bulk_invite_modal
-      bulk_invite_modal_page.upload_csv(
-        "#{Rails.root.join("plugins/discourse-events/spec/fixtures/csv/bulk_invite.csv")}",
-      )
-      PageObjects::Components::Dialog.new.click_yes
+      bulk_invite_modal_page.apply_to_following_events
+
+      Tempfile.create(%w[bulk-invite .csv]) do |file|
+        file.write("#{invitable_user_1.username},going\n")
+        file.flush
+        bulk_invite_modal_page.upload_csv(file.path)
+        PageObjects::Components::Dialog.new.click_yes
+      end
 
       expect(bulk_invite_modal_page).to be_closed
       expect(PageObjects::Components::Toasts.new).to have_success(
         I18n.t("js.discourse_post_event.bulk_invite_modal.success"),
       )
+      expect(
+        DiscourseEvents::Events::Invitee.find_by(user_id: invitable_user_1.id, post_id: post.id),
+      ).to be_recurring
     end
   end
 

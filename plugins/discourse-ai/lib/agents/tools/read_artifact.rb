@@ -191,11 +191,11 @@ module DiscourseAi
         end
 
         def update_custom_html(artifact)
-          self.custom_raw = <<~HTML
+          self.custom_raw = <<~MD
             ### Artifact created successfully
 
-            <div class="ai-artifact" data-ai-artifact-id="#{artifact.id}"></div>
-          HTML
+            [ai-artifact id="#{artifact.id}"]
+          MD
         end
 
         def fetch_page(uri)

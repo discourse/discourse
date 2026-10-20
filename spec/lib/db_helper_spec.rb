@@ -7,7 +7,7 @@ RSpec.describe DbHelper do
   let(:long_sidebar_url_name) { "a" * (sidebar_url_name_limit + 1) }
 
   describe ".remap" do
-    it "should remap columns properly" do
+    it "remaps the columns" do
       post = Fabricate(:post, cooked: "this is a specialcode that I included")
       post_attributes = post.reload.attributes
 
@@ -86,11 +86,30 @@ RSpec.describe DbHelper do
         expect(sidebar_url1.name).to eq("short-sidebar-url")
         expect(sidebar_url2.name).to eq("another-sidebar-url")
       end
+
+      it "protects each length-constrained column independently on the same row" do
+        value_limit = SidebarUrl.columns_hash["value"].limit
+        # name(80) will fit after remap, value(1000) will overflow.
+        row =
+          SidebarUrl.create!(
+            icon: "link",
+            name: "TOK-name",
+            value: "TOK" + ("x" * (value_limit - 3)),
+          )
+
+        expect {
+          DbHelper.remap("TOK", "TOKENEXPANDED", skip_max_length_violations: true)
+        }.not_to raise_error
+
+        row.reload
+        expect(row.name).to eq("TOKENEXPANDED-name")
+        expect(row.value).to eq("TOK" + ("x" * (value_limit - 3)))
+      end
     end
   end
 
   describe ".regexp_replace" do
-    it "should remap columns correctly" do
+    it "remaps the columns" do
       post = Fabricate(:post, raw: "this is a [img]test[/img] post")
 
       DbHelper.regexp_replace("\\[img\\]test\\[/img\\]", "[img]something[/img]")
@@ -137,6 +156,24 @@ RSpec.describe DbHelper do
 
         expect(sidebar_url1.name).to eq("short-sidebar-url")
         expect(sidebar_url2.name).to eq("another-sidebar-url")
+      end
+
+      it "protects each length-constrained column independently on the same row" do
+        value_limit = SidebarUrl.columns_hash["value"].limit
+        row =
+          SidebarUrl.create!(
+            icon: "link",
+            name: "TOK-name",
+            value: "TOK" + ("x" * (value_limit - 3)),
+          )
+
+        expect {
+          DbHelper.regexp_replace("TOK", "TOKENEXPANDED", skip_max_length_violations: true)
+        }.not_to raise_error
+
+        row.reload
+        expect(row.name).to eq("TOKENEXPANDED-name")
+        expect(row.value).to eq("TOK" + ("x" * (value_limit - 3)))
       end
     end
   end

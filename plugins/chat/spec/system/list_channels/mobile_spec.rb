@@ -62,7 +62,7 @@ RSpec.describe "List channels | mobile", mobile: true do
         channel_4.add(current_user)
       end
 
-      it "sorts them by mentions, unread, then by slug" do
+      it "sorts channels alphabetically by default even with mentions and unreads" do
         Jobs.run_immediately!
 
         Fabricate(
@@ -88,16 +88,17 @@ RSpec.describe "List channels | mobile", mobile: true do
 
         visit("/chat/channels")
 
-        # channel with mentions should be first
         expect(page.find("#public-channels a:nth-child(1)")["data-chat-channel-id"]).to eq(
-          channel_4.id.to_s,
-        )
-        # channels with unread messages are next
-        expect(page.find("#public-channels a:nth-child(2)")["data-chat-channel-id"]).to eq(
           channel_1.id.to_s,
         )
-        expect(page.find("#public-channels a:nth-child(3)")["data-chat-channel-id"]).to eq(
+        expect(page.find("#public-channels a:nth-child(2)")["data-chat-channel-id"]).to eq(
           channel_2.id.to_s,
+        )
+        expect(page.find("#public-channels a:nth-child(3)")["data-chat-channel-id"]).to eq(
+          channel_3.id.to_s,
+        )
+        expect(page.find("#public-channels a:nth-child(4)")["data-chat-channel-id"]).to eq(
+          channel_4.id.to_s,
         )
       end
 
@@ -327,9 +328,10 @@ RSpec.describe "List channels | mobile", mobile: true do
     end
   end
 
-  it "has a new dm channel button" do
+  it "has a new dm channel option in the options menu" do
     visit("/chat/direct-messages")
-    find(".c-navbar__new-dm-button").click
+    find(".chat-channel-list-options-button").click
+    find('[data-menu-option-id="startDm"]').click
 
     expect(chat.message_creator).to be_opened
   end

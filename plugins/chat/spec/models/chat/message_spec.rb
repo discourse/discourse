@@ -116,6 +116,10 @@ describe Chat::Message do
             "value at `/0/type` is not one of: [\"informative\"]",
             "value at `/0/elements/0/type` is not one of: [\"category\"]",
             "object at `/0/elements/0` is missing required properties: title, color",
+            "value at `/0/type` is not one of: [\"confirmation\"]",
+            "value at `/0/elements/0/type` is not one of: [\"button\"]",
+            "object at `/0/elements/0` is missing required properties: text",
+            "object at `/0` is missing required properties: title, question, parameters",
           ],
         )
       end
@@ -537,14 +541,14 @@ describe Chat::Message do
         <div class="chat-transcript-messages">
         <p>this is the first message</p></div>
         </div>
-        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}" data-chained="true">
+        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}" data-chained="true" data-channel-id="#{chat_channel.id}">
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
         <img alt="" width="24" height="24" src="#{avatar_src2}" class="avatar"></div>
         <div class="chat-transcript-username">
         otherbbcodeuser</div>
         <div class="chat-transcript-datetime">
-        <span title="#{msg2.created_at.iso8601}"></span></div>
+        <a href="/chat/c/-/#{chat_channel.id}/#{msg2.id}" title="#{msg2.created_at.iso8601}"></a></div>
         </div>
         <div class="chat-transcript-messages">
         <p>and another cool one</p></div>
@@ -683,6 +687,33 @@ describe Chat::Message do
       expect(message.build_excerpt).to eq "cat.gif"
     end
 
+    it "escapes upload filenames in excerpts" do
+      upload = Fabricate(:upload, original_filename: "<svg onload=alert(1)>.png")
+      message = Fabricate(:chat_message, message: "", uploads: [upload])
+
+      expect(message.build_excerpt).to eq "&lt;svg onload=alert(1)&gt;.png"
+    end
+
+    it "bounds escaped upload filenames before saving excerpts" do
+      upload = Fabricate(:upload, original_filename: "#{"&" * 250}.png")
+      message = Fabricate(:chat_message, message: "", cooked: "", uploads: [upload])
+      excerpt = message.build_excerpt
+
+      message.update!(excerpt:)
+
+      expect(excerpt.length).to be <= 1000
+      expect(excerpt).to eq("&amp;" * described_class::EXCERPT_LENGTH)
+      expect(message.reload.excerpt).to eq(excerpt)
+    end
+
+    it "escapes persisted upload filenames for display" do
+      upload = Fabricate(:upload, original_filename: "<svg onload=alert(1)>.png")
+      message = Fabricate(:chat_message, message: "", cooked: "", uploads: [upload])
+      message.update!(excerpt: upload.original_filename)
+
+      expect(message.excerpt_for_display).to eq "&lt;svg onload=alert(1)&gt;.png"
+    end
+
     it "supports autolink with <>" do
       cooked = described_class.cook("<https://github.com/discourse/discourse-chat/pull/468>")
 
@@ -787,6 +818,7 @@ describe Chat::Message do
 
   describe "blocking duplicate messages" do
     let(:message) { "this is duplicate" }
+
     fab!(:chat_channel)
     fab!(:user)
 

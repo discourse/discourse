@@ -131,7 +131,13 @@ module BackupRestore
 
     def remap(from, to)
       log "Remapping '#{from}' to '#{to}'"
-      DbHelper.remap(from, to, verbose: true, excluded_tables: ["backup_metadata"])
+      DbHelper.remap(
+        from,
+        to,
+        verbose: true,
+        excluded_tables: ["backup_metadata"],
+        skip_max_length_violations: true,
+      )
     end
 
     def remap_s3(old_s3_base_url, uploads_folder)
@@ -143,6 +149,7 @@ module BackupRestore
           uploads_folder,
           verbose: true,
           excluded_tables: ["backup_metadata"],
+          skip_max_length_violations: true,
         )
       else
         remap(old_s3_base_url, uploads_folder)

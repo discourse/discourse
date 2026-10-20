@@ -70,14 +70,7 @@ module DiscourseWorkflows
                 none: "discourse_workflows.badge.badge_id_placeholder",
               },
             },
-            actor_username: {
-              type: :string,
-              required: false,
-              default: "system",
-              ui: {
-                control: :actor,
-              },
-            },
+            **actor_property,
           },
         )
 

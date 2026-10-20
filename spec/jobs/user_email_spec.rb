@@ -37,6 +37,62 @@ RSpec.describe Jobs::UserEmail do
     fab!(:user) { Fabricate(:user, last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago) }
     fab!(:popular_topic) { Fabricate(:topic, user: Fabricate(:admin), created_at: 1.hour.ago) }
 
+    it "records a digest attempt after delivering content selected by a plugin" do
+      freeze_time
+      reply = Fabricate(:post, topic: popular_topic, post_number: 2)
+      plugin = Plugin::Instance.new
+      modifier = proc { |content| content.merge(topics: [], posts: [reply]) }
+      DiscoursePluginRegistry.register_modifier(plugin, :user_digest_content, &modifier)
+
+      Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
+
+      expect(ActionMailer::Base.deliveries.last.to).to eq([user.email])
+      expect(ActionMailer::Base.deliveries.last.text_part.body.to_s).to include(reply.raw)
+      expect(user.user_stat.reload.digest_attempted_at).to eq_time(Time.zone.now)
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, :user_digest_content, &modifier)
+    end
+
+    it "delivers translated digests according to each recipient's language preferences" do
+      SiteSetting.allow_user_locale = true
+      SiteSetting.content_localization_enabled = true
+      popular_topic.update!(locale: "en")
+      post = Fabricate(:post, topic: popular_topic, locale: "en", raw: "Original digest post")
+      post_translation = Fabricate(:post_localization, post: post)
+      topic_translation = Fabricate(:topic_localization, topic: popular_topic)
+      french_post_translation =
+        Fabricate(:post_localization, post: post, locale: "fr", raw: "Contenu traduit")
+      french_topic_translation =
+        Fabricate(:topic_localization, topic: popular_topic, locale: "fr", title: "Sujet traduit")
+      user.update!(locale: "ja")
+      french_user =
+        Fabricate(:user, locale: "fr", last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago)
+      english_reader =
+        Fabricate(:user, locale: "ja", last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago)
+      english_reader.user_option.update!(understood_languages: ["en"])
+      english_user =
+        Fabricate(:user, locale: "en", last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago)
+
+      recipients = [
+        [user, topic_translation.title, post_translation.raw],
+        [french_user, french_topic_translation.title, french_post_translation.raw],
+        [english_reader, popular_topic.title, post.raw],
+        [english_user, popular_topic.title, post.raw],
+      ]
+      content = recipients.flat_map { |recipient, title, raw| [title, raw] }.uniq
+      recipients.each do |recipient, title, raw|
+        Jobs::UserEmail.new.execute(type: :digest, user_id: recipient.id)
+        mail = ActionMailer::Base.deliveries.last
+        expect(mail.to).to eq([recipient.email])
+        renderer = Email::Renderer.new(mail)
+        [renderer.html, renderer.text].each do |body|
+          expect(body).to include(title, raw)
+          expect(body).not_to include(*(content - [title, raw]))
+        end
+      end
+      expect(ActionMailer::Base.deliveries.size).to eq(4)
+    end
+
     it "doesn't call the mailer when the user is missing" do
       Jobs::UserEmail.new.execute(type: :digest, user_id: User.last.id + 10_000)
       expect(ActionMailer::Base.deliveries).to eq([])
@@ -388,6 +444,7 @@ RSpec.describe Jobs::UserEmail do
 
     context "with confirm_new_email" do
       let(:email_token) { Fabricate(:email_token, user: user) }
+
       before do
         EmailChangeRequest.create!(
           user: user,
@@ -400,6 +457,7 @@ RSpec.describe Jobs::UserEmail do
 
       context "when the change was requested by admin" do
         let(:requested_by) { Fabricate(:admin) }
+
         it "passes along true for the requested_by_admin param which changes the wording in the email" do
           Jobs::UserEmail.new.execute(
             type: :confirm_new_email,
@@ -413,6 +471,7 @@ RSpec.describe Jobs::UserEmail do
 
       context "when the change was requested by the user" do
         let(:requested_by) { user }
+
         it "passes along false for the requested_by_admin param which changes the wording in the email" do
           Jobs::UserEmail.new.execute(
             type: :confirm_new_email,
@@ -426,6 +485,7 @@ RSpec.describe Jobs::UserEmail do
 
       context "when requested_by record is not present" do
         let(:requested_by) { nil }
+
         it "passes along false for the requested_by_admin param which changes the wording in the email" do
           Jobs::UserEmail.new.execute(
             type: :confirm_new_email,
@@ -487,6 +547,7 @@ RSpec.describe Jobs::UserEmail do
               data: { original_post_id: post.id }.to_json,
             )
           end
+
           fab!(:moderator)
           fab!(:regular_user, :user)
 

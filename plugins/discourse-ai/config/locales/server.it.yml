@@ -25,7 +25,6 @@ it:
         description: "Report periodico basato su LLM"
   site_settings:
     discourse_ai_enabled: "Abilita il plugin Discourse AI."
-    ai_default_llm_model: "Il modello LLM predefinito da utilizzare per tutte le funzionalità AI"
     ai_artifact_security: "l sistema di artefatti IA genera IFRAME con codice eseguibile. La modalità Strict impone un clic extra per eseguire il codice. La modalità Lax esegue il codice direttamente. La modalità Hybrid permette all'utente di immettere data-ai-artifact-autorun per vedere subito il risultato. La modalità Disabled disabilita il sistema di artefatti."
     ai_toxicity_enabled: "Abilita il modulo tossicità."
     ai_toxicity_inference_service_api_endpoint: "URL in cui l'API è in esecuzione per il modulo tossicità"
@@ -62,7 +61,6 @@ it:
     ai_helper_automatic_chat_thread_title: "Imposta automaticamente i titoli dei thread della chat in base ai contenuti del thread."
     post_ai_helper_allowed_groups: "Gruppi di utenti autorizzati ad accedere alle funzionalità dell'assistente IA nei post"
     ai_embeddings_selected_model: "Usa il modello selezionato per generare le integrazioni."
-    ai_embeddings_generate_for_pms: "Genera integrazioni per messaggi personali."
     ai_embeddings_semantic_related_topics_enabled: "Usa la ricerca semantica per argomenti correlati."
     ai_embeddings_semantic_related_topics: "Numero massimo di argomenti da mostrare nella sezione degli argomenti correlati."
     ai_embeddings_backfill_batch_size: "Numero di embedding da riempire ogni 15 minuti."
@@ -75,7 +73,6 @@ it:
     ai_pm_summarization_allowed_groups: "Gruppi autorizzati a creare e visualizzare riepiloghi nei messaggi privati."
     ai_summary_gists_enabled: "Genera automaticamente brevi riepiloghi delle ultime risposte negli argomenti"
     ai_bot_enabled: "Abilita il modulo Bot IA."
-    ai_bot_allowed_groups: "Quando il bot GPT ha accesso a un MP, risponderà ai membri di questi gruppi."
     ai_bot_debugging_allowed_groups: "Consenti a questi gruppi di vedere un pulsante di debug sui post che mostra la richiesta e la risposta IA non elaborate"
     ai_bot_public_sharing_allowed_groups: "Consenti a questi gruppi di condividere messaggi personali dell'IA con il pubblico tramite un link univoco disponibile al pubblico. Nota: se il tuo sito richiede l'accesso, anche le condivisioni richiederanno l'accesso."
     ai_bot_github_access_token: "Token di accesso GitHub da utilizzare con gli strumenti GitHub IA (richiesto per il supporto della ricerca)"
@@ -242,12 +239,50 @@ it:
       configuration_missing: "Nessuna configurazione per il rilevamento IA dello spam trovata. Prima di abilitare l'opzione, aggiungi la configurazione in \"Amministrazione > Plugin > Discourse AI > Spam\"."
       logging_subject: "Rilevamento spam"
     ai_bot:
+      navigation:
+        settings:
+          title: "Impostazioni del sito"
+        users:
+          title: "Utenti"
+        groups:
+          title: "Gruppi"
+        review:
+          title: "Coda di revisione"
+        categories:
+          title: "Categorie"
+        tags:
+          title: "Etichette"
+        themes:
+          title: "Temi"
+        authentication:
+          title: "Accesso e autenticazione"
+        backups:
+          title: "Backup"
       reply_error: "Spiacenti, il nostro sistema ha riscontrato un problema imprevisto durante il tentativo di risposta.\n\n[details='Dettagli errore']\n%{details}\n[/details]"
       default_pm_prefix: "[MP di bot IA senza titolo]"
       read_post:
         unknown_post: "messaggio"
+      chat_tool_approval:
+        topic_states:
+          open: "Aperta"
+          closed: "Chiuso"
+          active: "Attivo"
+          deleted: "Eliminato"
+        solution_post: "Messaggio #%{number}"
+        duration_label: "Durata:"
+        user_duration:
+          one: "%{count} giorno"
+          other: "%{count} giorni"
+        posts_label: "Messaggi"
+        category_label: "Categoria"
+        category_fields:
+          name: "nome"
+          description: "descrizione"
+          color: "colore"
+          text_color: "colore del testo"
+        approve_label: "Sì"
+        reject_label: "No"
       agents:
-        default_llm_required: "Il modello LLM predefinito è obbligatorio prima di abilitare la chat"
         cannot_have_duplicate_tools: "Non sono ammessi strumenti duplicati"
         github_helper:
           name: "Assistente GitHub"
@@ -426,6 +461,7 @@ it:
         random_picker: "Scegli un numero casuale o un elemento casuale di una lista"
         categories: "Elenca tutte le categorie visibili pubblicamente sul forum"
         delete_topic: "Elimina un argomento"
+        create_category: "Crea una nuova categoria"
         search: "Cerca tutti gli argomenti pubblici sul forum"
         tags: "Elenca tutte le etichette sul forum"
         time: "Trova l'ora in diversi fusi orari"
@@ -485,10 +521,6 @@ it:
         search_settings:
           one: "Trovato %{count} risultato per '%{query}'"
           other: "Trovati %{count} risultati per '%{query}'"
-      discoveries:
-        continue_conversation:
-          title: "Conversazioni scoperte: cerca %{query}"
-          raw: "Nella mia ricerca di %{query} mi hai mostrato le seguenti informazioni:\n\n%{context}\n\nProseguiamo la conversazione."
       close_topic:
         errors:
           not_found: "Argomento non trovato."
@@ -498,10 +530,13 @@ it:
       delete_topic:
         errors:
           not_found: "Argomento non trovato."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Argomento non trovato."
       edit_category:
+        errors:
+          not_found: "Categoria non trovata."
+      change_topic_category:
         errors:
           not_found: "Argomento non trovato."
           category_not_found: "Categoria non trovata."

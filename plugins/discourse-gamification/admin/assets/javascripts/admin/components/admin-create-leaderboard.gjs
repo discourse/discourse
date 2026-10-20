@@ -55,19 +55,19 @@ export default class AdminCreateLeaderboard extends Component {
   <template>
     <div class="new-leaderboard-container">
       <Form
+        class="new-leaderboard-form"
         @data={{this.formData}}
         @onSubmit={{this.createNewLeaderboard}}
-        class="new-leaderboard-form"
         as |form|
       >
         <form.Row>
           <form.Field
-            @name="name"
-            @title={{i18n "gamification.leaderboard.name"}}
-            @showTitle={{false}}
             class="new-leaderboard__name"
-            @validation="required"
+            @name="name"
+            @showTitle={{false}}
+            @title={{i18n "gamification.leaderboard.name"}}
             @type="input"
+            @validation="required"
             as |field|
           >
             <field.Control
@@ -80,8 +80,8 @@ export default class AdminCreateLeaderboard extends Component {
           <form.Submit />
 
           <form.Button
-            @action={{@onCancel}}
             class="new-leaderboard__cancel form-kit__button btn-default"
+            @action={{@onCancel}}
             @label="gamification.cancel"
             @title="gamification.cancel"
           />

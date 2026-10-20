@@ -5,6 +5,33 @@
 # https://translate.discourse.org/
 
 lv:
+  markdown_endpoints:
+    latest: "Pēdējais"
+    categories: "Sadaļas"
+    tags: "Birkas"
+    previous_page: "Iepriekšējo lapu"
+    next_page: "Nākošo lapu"
+    replies: "Atbildes"
+    last_updated: "Pēdējoreiz atjaunots"
+    event:
+      location: "Atrašanās vieta"
+  mcp:
+    errors:
+      topic_not_found: "Tēma nav atrasta "
+    oauth:
+      deny: "Atteikt"
+  llms_txt:
+    sections:
+      optional: "Pēc izvēles"
+    links:
+      search:
+        label: "Meklēt"
+      categories:
+        label: "Sadaļas"
+      about:
+        label: "Par"
+      guidelines:
+        label: "Vadlīnijas"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -211,6 +238,7 @@ lv:
   password_reset:
     title: "Atjaunot paroli"
   admin_site_traffic_explorer:
+    unknown: "Nezināms"
     traffic_types:
       anonymous: "Anonīmi"
   reviewable_score_types:
@@ -291,6 +319,11 @@ lv:
         share: "Dalīties"
       types:
         staff: "Personāls"
+    posters_by_member_type_members:
+      labels:
+        user: "Lietotājs"
+        count: "Ieraksti"
+        share: "Dalīties"
     trust_level_pipeline:
       labels:
         count: "Dalībnieki"
@@ -492,6 +525,7 @@ lv:
     admin_not_allowed_from_ip_address: "Jūs nevarat ieiet kā administrators no šīs IP adreses."
     not_available: "Nav pieejams. Mēģiniet %{suggestion}?"
     omniauth_confirm_button: "Turpināt"
+    missing_username: "Lūdzu, ievadiet lietotājvārdu"
     second_factor_title: "Divu faktoru autentifikācija"
     second_factor_backup_description: "Lūdzu, ievadiet vienu no saviem rezerves kodiem:"
     second_factor_toggle:
@@ -630,8 +664,6 @@ lv:
         title: "Jā"
       approve_and_unhide:
         title: "Jā"
-      delete_post:
-        complete: "Ieraksts dzēsts"
       delete_user:
         complete: "Lietotājs dzēsts"
   fallback_username: "lietotājs"

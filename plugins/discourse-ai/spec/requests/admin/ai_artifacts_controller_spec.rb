@@ -49,6 +49,34 @@ RSpec.describe DiscourseAi::Admin::AiArtifactsController, type: :request do
   end
 
   describe "POST #create" do
+    it "keeps form-encoded private artifacts inaccessible to anonymous users" do
+      private_topic = Fabricate(:private_message_topic, user: user)
+      private_post = Fabricate(:post, topic: private_topic, user: user)
+      private_html = "<div>Private artifact source</div>"
+
+      post "/admin/plugins/discourse-ai/ai-artifacts.json",
+           params: {
+             ai_artifact: {
+               user_id: admin.id,
+               post_id: private_post.id,
+               name: "Private artifact",
+               html: private_html,
+               metadata: {
+                 public: false,
+               },
+             },
+           }
+
+      expect(response).to have_http_status(:created)
+      artifact = AiArtifact.find(response.parsed_body.dig("ai_artifact", "id"))
+
+      delete "/session/#{admin.username}.json"
+      get "/discourse-ai/ai-bot/artifacts/#{artifact.id}"
+
+      expect(response.body).not_to include(ERB::Util.html_escape(private_html))
+      expect(response).to have_http_status(:not_found)
+    end
+
     it "creates an artifact" do
       params = {
         ai_artifact: {

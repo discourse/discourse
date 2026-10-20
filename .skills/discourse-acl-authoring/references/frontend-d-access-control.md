@@ -28,7 +28,7 @@ Arguments:
 - `@acl`: flattened ACL entries from the backend or form state. The backend can emit group and user entries, and this component can add groups from the preloaded `@groups` list plus user/group search results from the ACL grantee search endpoint.
 - `@onChange`: called with the next flattened ACL array when the user adds/removes/changes a row.
 - `@aclTarget`: optional object with `type`, `id`, and `name`. `type` identifies the registered Ruby target class, `id` identifies an existing target when present, and `name` is used in validation copy. The component uses `type` to load mandatory and banned ACL metadata.
-- `@transformPermissionOptions`: optional callback to customize default permission labels/descriptions or add target-specific permissions.
+- `@transformPermissionOptions`: optional callback to customize default permission labels/descriptions or add target-specific permissions whose IDs are declared in the target's server-side `ACL_PERMISSIONS`.
 
 Example target descriptor:
 
@@ -87,6 +87,8 @@ transformPermissionOptions(options) {
   return options;
 }
 ```
+
+Every permission option added by `transformPermissionOptions(options)` must have an `id` that exactly matches a string in the target's server-side `ACL_PERMISSIONS.values`. For the example above, the target must declare `ACL_PERMISSIONS = Acl::Permissions.new(:view, :edit, :manage)`. Adding an option in JavaScript does not register a permission on the server: `AccessControlListManager` rejects unsupported IDs before changing ACL rows. The `remove` option is a UI action that deletes a grant, not a persisted permission, so do not add it to `ACL_PERMISSIONS`.
 
 Keep permission copy aligned with backend semantics. If a displayed `manage` role also requires a global site setting or staff gate, make that clear in the surrounding UI or choose a different label.
 
@@ -164,7 +166,7 @@ Core component tests live in `frontend/discourse/tests/integration/components/d-
 
 Consumer tests should cover:
 
-- target-specific permission options are present
+- target-specific permission options are present and their IDs match the server's `ACL_PERMISSIONS`
 - `@aclTarget` renders mandatory rows from `site.access_control`
 - `@aclTarget` filters banned permissions from `site.access_control` for the matching grantee only
 - mandatory rows are locked and not duplicated

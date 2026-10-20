@@ -104,17 +104,17 @@ export default class NestedRepliesSettingsUpsert extends Component {
   <template>
     {{#let @outletArgs.form as |form|}}
       <form.Section
-        @title={{i18n "nested_replies.nested_view"}}
         class="category-custom-settings-outlet nested-replies-category-settings"
+        @title={{i18n "nested_replies.nested_view"}}
       >
         <form.Object @name="category_setting" as |categorySetting|>
           <categorySetting.Field
-            @type="checkbox"
             @name="nested_replies_default"
+            @onSet={{this.onToggle}}
             @title={{i18n
               "nested_replies.category_settings.default_nested_view"
             }}
-            @onSet={{this.onToggle}}
+            @type="checkbox"
             as |field|
           >
             <field.Control />
@@ -123,15 +123,15 @@ export default class NestedRepliesSettingsUpsert extends Component {
 
         {{#if this.showSaveFirstMessage}}
           <form.Alert
-            @type="info"
             class="nested-replies-category-settings__notice"
+            @type="info"
           >
             {{i18n "nested_replies.category_settings.save_first"}}
           </form.Alert>
         {{else if this.conversionCompleted}}
           <form.Alert
-            @type="success"
             class="nested-replies-category-settings__notice"
+            @type="success"
           >
             {{i18n
               "nested_replies.category_settings.convert_existing_complete"
@@ -139,8 +139,8 @@ export default class NestedRepliesSettingsUpsert extends Component {
           </form.Alert>
         {{else if this.canConvertExistingTopics}}
           <form.Alert
-            @type="info"
             class="nested-replies-category-settings__notice"
+            @type="info"
           >
             {{i18n
               "nested_replies.category_settings.convert_existing_description"
@@ -148,11 +148,11 @@ export default class NestedRepliesSettingsUpsert extends Component {
           </form.Alert>
 
           <DButton
+            class="btn-default nested-replies-category-settings__convert-button"
             @action={{this.convertExistingTopics}}
             @disabled={{this.converting}}
             @isLoading={{this.converting}}
             @label="nested_replies.category_settings.convert_existing"
-            class="btn-default nested-replies-category-settings__convert-button"
           />
         {{/if}}
       </form.Section>

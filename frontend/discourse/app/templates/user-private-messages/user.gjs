@@ -15,18 +15,18 @@ export default <template>
 
   <MessagesSecondaryNav>
     <DNavigationItem
-      @route="userPrivateMessages.user.index"
-      @ariaCurrentContext="subNav"
       class="user-nav__messages-latest"
+      @ariaCurrentContext="subNav"
+      @route="userPrivateMessages.user.index"
     >
       {{dIcon "envelope"}}
       <span>{{i18n "categories.latest"}}</span>
     </DNavigationItem>
 
     <DNavigationItem
-      @route="userPrivateMessages.user.sent"
-      @ariaCurrentContext="subNav"
       class="user-nav__messages-sent"
+      @ariaCurrentContext="subNav"
+      @route="userPrivateMessages.user.sent"
     >
       {{dIcon "reply"}}
       <span>{{i18n "user.messages.sent"}}</span>
@@ -34,18 +34,18 @@ export default <template>
 
     {{#if @controller.viewingSelf}}
       <DNavigationItem
-        @route="userPrivateMessages.user.new"
-        @ariaCurrentContext="subNav"
         class="user-nav__messages-new"
+        @ariaCurrentContext="subNav"
+        @route="userPrivateMessages.user.new"
       >
         {{dIcon "circle-exclamation"}}
         <span>{{@controller.newLinkText}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="userPrivateMessages.user.unread"
-        @ariaCurrentContext="subNav"
         class="user-nav__messages-unread"
+        @ariaCurrentContext="subNav"
+        @route="userPrivateMessages.user.unread"
       >
         {{dIcon "circle-plus"}}
         <span>{{@controller.unreadLinkText}}</span>
@@ -53,9 +53,9 @@ export default <template>
     {{/if}}
 
     <DNavigationItem
-      @route="userPrivateMessages.user.archive"
-      @ariaCurrentContext="subNav"
       class="user-nav__messages-archive"
+      @ariaCurrentContext="subNav"
+      @route="userPrivateMessages.user.archive"
     >
       {{dIcon "box-archive"}}
       <span>{{i18n "user.messages.archive"}}</span>

@@ -6,7 +6,9 @@ module SvgSprite
         a
         address-book
         address-card
+        align-center
         align-left
+        align-right
         anchor
         angle-down
         angle-left
@@ -82,6 +84,7 @@ module SvgSprite
         cubes
         desktop
         diagram-project
+        dice
         discourse-amazon
         discourse-bell-exclamation
         discourse-bell-one
@@ -323,6 +326,9 @@ module SvgSprite
         icon_id = prepare_symbol(sym, svg_filename)
         if icon_id.present?
           sym.attributes["id"].value = icon_id
+          # Some glyphs draw outside their viewBox; Firefox and Safari clip a <use> symbol
+          # to its viewBox unless overflow is set on the symbol itself (page CSS can't reach it)
+          sym["overflow"] = "visible"
           sym.css("title").each(&:remove)
           [icon_id, sym.to_xml]
         end
@@ -339,6 +345,15 @@ module SvgSprite
       core_svgs_files.reduce({}) do |symbols, path|
         symbols.merge!(symbols_for(File.basename(path, ".svg"), File.read(path), strict: true))
       end
+  end
+
+  def self.legacy_icon_ids
+    @legacy_icon_ids ||=
+      core_svgs_files
+        .select { |path| File.basename(File.dirname(path)) == FontAwesomeSync::LEGACY_DIRECTORY }
+        .flat_map do |path|
+          symbols_for(File.basename(path, ".svg"), File.read(path), strict: true).keys
+        end
   end
 
   # Just used in tests
@@ -417,6 +432,7 @@ module SvgSprite
         .new()
         .merge(settings_icons)
         .merge(plugin_icons)
+        .merge(plugin_icon_sources)
         .merge(badge_icons)
         .merge(group_icons)
         .merge(theme_icons(theme_id))
@@ -498,7 +514,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
       symbols = svgs_for(theme_id)
       in_sprite = all_icons(theme_id).select { |id| symbols.key?(id) }
 
-      only_available ? in_sprite : in_sprite + (symbols.keys - in_sprite).sort
+      # Legacy names still render where already used, but aren't offered for new picks
+      only_available ? in_sprite : in_sprite + (symbols.keys - in_sprite - legacy_icon_ids).sort
     end
   end
 
@@ -534,8 +551,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 
   def self.settings_icons
     get_set_cache("settings_icons") do
-      # includes svg_icon_subset, icon type settings, and any settings containing
-      # _icon (incl. plugin settings)
+      # includes svg_icon_subset, icon type settings, icon properties of objects
+      # type settings, and any settings containing _icon (incl. plugin settings)
       site_setting_icons = []
 
       SiteSetting.settings_hash.each do |key, value|
@@ -543,6 +560,9 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 
         if key.to_s.include?("_icon") || SiteSetting.type_supervisor.get_type(key) == :icon
           site_setting_icons |= value.split("|")
+        elsif SiteSetting.type_supervisor.get_type(key) == :objects && value.present?
+          schema = SiteSetting.type_supervisor.type_hash(key)[:schema]
+          site_setting_icons |= objects_setting_icons(schema, JSON.parse(value)) if schema
         end
       end
 
@@ -552,6 +572,10 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 
   def self.plugin_icons
     DiscoursePluginRegistry.svg_icons
+  end
+
+  def self.plugin_icon_sources
+    DiscoursePluginRegistry.svg_icon_sources.flat_map { |source| Array(source.call) }
   end
 
   def self.badge_icons
@@ -576,10 +600,13 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
         type_info = settings["theme_setting_type_info"] || {}
 
         settings.each do |key, value|
-          next unless String === value
-
-          if key.to_s.include?("_icon") || type_info.dig(key, :type) == "icon"
-            theme_icon_settings |= value.split("|")
+          if String === value
+            if key.to_s.include?("_icon") || type_info.dig(key, :type) == "icon"
+              theme_icon_settings |= value.split("|")
+            end
+          elsif type_info.dig(key, :type) == "objects" && value.is_a?(Array)
+            schema = type_info.dig(key, :schema)
+            theme_icon_settings |= objects_setting_icons(schema, value) if schema
           end
         end
       end
@@ -587,6 +614,12 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     theme_icon_settings |= ThemeModifierHelper.new(theme_ids: theme_ids).svg_icons
 
     theme_icon_settings
+  end
+
+  def self.objects_setting_icons(schema, objects)
+    SchemaSettingsObjectValidator.property_values_of_type(schema:, objects:, type: "icon").grep(
+      String,
+    )
   end
 
   def self.custom_icons(theme_id)

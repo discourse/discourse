@@ -13,6 +13,7 @@ import ThemeTranslation from "discourse/admin/components/theme-translation";
 import SiteSetting from "discourse/admin/models/site-setting";
 import ThemeSettings from "discourse/admin/models/theme-settings";
 import ThemeSiteSettings from "discourse/admin/models/theme-site-settings";
+import Site from "discourse/models/site";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, {
   parsePostData,
@@ -307,6 +308,78 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.dom(".form-kit__control-password").hasAttribute("type", "text");
   });
 
+  test("an enum setting renders its preview and keeps it in sync", async function (assert) {
+    await renderSetting({
+      setting: "tag_style",
+      value: "simple",
+      type: "enum",
+      preview: '<span class="tag-preview">{{value}}</span>',
+      valid_values: [
+        { name: "Simple", value: "simple" },
+        { name: "Box", value: "box" },
+      ],
+    });
+
+    assert.dom(".preview .tag-preview").hasText("simple");
+
+    await fillIn(".form-kit__control-select", "box");
+
+    assert.dom(".preview .tag-preview").hasText("box");
+  });
+
+  test("a category setting selects the stored category", async function (assert) {
+    const category = Site.current().categories[0];
+
+    await renderSetting({
+      setting: "shared_drafts_category",
+      value: String(category.id),
+      default: "",
+      type: "category",
+    });
+
+    assert
+      .dom(".category-chooser .selected-name")
+      .hasAttribute(
+        "data-name",
+        category.name,
+        "the header names the stored category instead of its id"
+      );
+
+    await selectKit(".category-chooser").expand();
+
+    assert
+      .dom(`.category-row[data-value="${category.id}"]`)
+      .hasClass("is-selected", "the stored category is highlighted");
+  });
+
+  test("an unset category setting offers a none option", async function (assert) {
+    await renderSetting({
+      setting: "shared_drafts_category",
+      value: "",
+      default: "",
+      type: "category",
+    });
+
+    assert
+      .dom(".category-chooser .selected-name")
+      .hasText(
+        i18n("category.none"),
+        "an unset category setting offers a none option rather than uncategorized"
+      );
+  });
+
+  test("a disabled tag list setting cannot be edited", async function (assert) {
+    await renderSetting({
+      setting: "digest_suppress_tags",
+      value: "dog",
+      default: "",
+      type: "tag_list",
+      disabled: true,
+    });
+
+    assert.dom(".tag-chooser").hasClass("is-disabled");
+  });
+
   test("a secret setting that is also a textarea stays readable", async function (assert) {
     await renderSetting({
       setting: "test_setting",
@@ -453,8 +526,8 @@ module("Integration | Component | SiteSetting", function (hooks) {
     await render(
       <template>
         <ThemeSiteSettingEditor
-          @setting={{this.themeSetting}}
           @model={{this.theme}}
+          @setting={{this.themeSetting}}
         />
       </template>
     );
@@ -487,8 +560,8 @@ module("Integration | Component | SiteSetting", function (hooks) {
     await render(
       <template>
         <ThemeTranslation
-          @translation={{this.translation}}
           @model={{this.theme}}
+          @translation={{this.translation}}
         />
       </template>
     );
@@ -508,10 +581,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
       ],
     });
 
-    const selector = selectKit(".select-kit");
-
-    await selector.expand();
-    await selector.selectRowByValue("1");
+    await fillIn(".form-kit__control-select", "1");
 
     assert
       .dom(".setting-controls__ok")
@@ -520,8 +590,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
       .dom(".setting-controls__cancel")
       .exists("the cancel button is shown after changing the value");
 
-    await selector.expand();
-    await selector.selectRowByValue("2");
+    await fillIn(".form-kit__control-select", "2");
 
     assert
       .dom(".setting-controls__ok")
@@ -617,6 +686,23 @@ module(
           "/admin/site_settings/category/all_results?filter=parent_setting"
         )
         .hasText("Parent setting");
+    });
+
+    test("uses value-based copy for settings that depend on another setting's value", async function (assert) {
+      await renderSetting({
+        setting: "dependent_setting",
+        value: "1",
+        type: "integer",
+        depends_on: ["parent_setting"],
+        depends_on_humanized_names: ["Parent setting"],
+        depends_on_values: { parent_setting: ["include"] },
+      });
+
+      assert
+        .dom(".setting-depends-on-notice__text")
+        .includesText(
+          "This setting only applies when Parent setting is set to a compatible value."
+        );
     });
 
     test("does not show the depends_on notice when setting has no dependencies", async function (assert) {

@@ -7,11 +7,39 @@ describe CategoriesController do
   before do
     SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
-    DiscourseCalendar::Categories::Types::Events.configure_category(
+    DiscourseEvents::Categories::Types::Events.configure_category(
       category,
       guardian: admin.guardian,
     )
     sign_in(admin)
+  end
+
+  describe "#index" do
+    it "includes event dates on featured topics" do
+      freeze_time(Time.utc(2020, 4, 24, 14, 10))
+      Jobs.run_immediately!
+      topic = Fabricate(:topic, category:)
+      post = Fabricate(:post, topic:)
+      DiscourseEvents::Events::Event.create!(
+        id: post.id,
+        original_starts_at: 1.hour.from_now,
+        original_ends_at: 2.hours.from_now,
+      )
+      CategoryFeaturedTopic.feature_topics
+
+      get "/categories.json?include_topics=true"
+
+      expect(response.status).to eq(200)
+      categories = response.parsed_body["category_list"]["categories"]
+      serialized_category = categories.find { |serialized| serialized["id"] == category.id }
+      expect(serialized_category["topics"]).to include(
+        a_hash_including(
+          "id" => topic.id,
+          "event_starts_at" => "2020-04-24T15:10:00.000Z",
+          "event_ends_at" => "2020-04-24T16:10:00.000Z",
+        ),
+      )
+    end
   end
 
   describe "#update" do
@@ -40,7 +68,7 @@ describe CategoriesController do
     end
 
     it "preserves unspecified category_type_settings when only one key is sent" do
-      DiscourseCalendar::Categories::Types::Events.configure_category(
+      DiscourseEvents::Categories::Types::Events.configure_category(
         category,
         guardian: admin.guardian,
         configuration_values: {

@@ -58,6 +58,18 @@ RSpec.describe DiscourseWorkflows::JsSandbox do
     end
   end
 
+  describe "$helpers.absoluteUrl" do
+    it "prefixes a root-relative path with the site's base URL" do
+      result = sandbox.eval('$helpers.absoluteUrl("/t/some-slug/123/4")')
+      expect(result).to eq("#{Discourse.base_url}/t/some-slug/123/4")
+    end
+
+    it "returns an already-absolute URL unchanged" do
+      result = sandbox.eval('$helpers.absoluteUrl("https://example.com/foo")')
+      expect(result).to eq("https://example.com/foo")
+    end
+  end
+
   describe "private node names" do
     it "returns empty object for underscore-prefixed node names" do
       context = { "_internal" => [{ "json" => { "secret" => "data" } }] }

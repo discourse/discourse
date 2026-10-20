@@ -8,9 +8,15 @@ import getURL from "discourse/lib/get-url";
 import { eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DCopyButton from "discourse/ui-kit/d-copy-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import AiDecodedTranscript from "discourse/plugins/discourse-ai/discourse/components/ai-decoded-transcript";
 import AiPayloadViewer from "discourse/plugins/discourse-ai/discourse/components/ai-payload-viewer";
+import {
+  decodedResponseText,
+  isDecodedResponse,
+} from "discourse/plugins/discourse-ai/discourse/lib/decoded-response";
 
 export default class AiLogDetailModal extends Component {
   @tracked log;
@@ -18,35 +24,11 @@ export default class AiLogDetailModal extends Component {
   @tracked failed = false;
   @tracked notFound = false;
   @tracked activeTab = "request";
+  @tracked showRawResponse = false;
 
   constructor() {
     super(...arguments);
     next(() => this.load());
-  }
-
-  @action
-  async load() {
-    this.loading = true;
-    this.failed = false;
-    this.notFound = false;
-
-    try {
-      const log = await ajax(
-        `/admin/plugins/discourse-ai/ai-logs/${this.args.model.logId}.json`
-      );
-      if (!this.isDestroying && !this.isDestroyed) {
-        this.log = log;
-      }
-    } catch (error) {
-      if (!this.isDestroying && !this.isDestroyed) {
-        this.failed = true;
-        this.notFound = error.jqXHR?.status === 404;
-      }
-    } finally {
-      if (!this.isDestroying && !this.isDestroyed) {
-        this.loading = false;
-      }
-    }
   }
 
   get tabs() {
@@ -82,10 +64,62 @@ export default class AiLogDetailModal extends Component {
       : this.log?.raw_response_payload_truncated;
   }
 
+  get hasDecodedResponse() {
+    return isDecodedResponse(this.log?.decoded_response);
+  }
+
+  get showDecodedResponse() {
+    return (
+      this.activeTab === "response" &&
+      !this.showRawResponse &&
+      this.hasDecodedResponse
+    );
+  }
+
+  get showResponseToggle() {
+    return this.activeTab === "response" && this.hasDecodedResponse;
+  }
+
+  get copyPayload() {
+    if (this.activeTab === "context") {
+      return this.contextPayload;
+    }
+
+    if (this.showDecodedResponse) {
+      return decodedResponseText(this.log.decoded_response);
+    }
+
+    if (this.activeTab === "request" || this.activeTab === "response") {
+      return this.activePayload;
+    }
+
+    return null;
+  }
+
   get activeCopyLabel() {
-    return this.activeTab === "request"
-      ? i18n("discourse_ai.logs.detail.copy_request")
-      : i18n("discourse_ai.logs.detail.copy_response");
+    if (this.activeTab === "context") {
+      return i18n("discourse_ai.logs.detail.copy_context");
+    }
+
+    if (this.activeTab === "request") {
+      return i18n("discourse_ai.logs.detail.copy_request");
+    }
+
+    if (!this.hasDecodedResponse) {
+      return i18n("discourse_ai.logs.detail.copy_response");
+    }
+
+    return i18n(
+      `discourse_ai.logs.detail.${
+        this.showRawResponse ? "copy_raw_response" : "copy_response"
+      }`
+    );
+  }
+
+  get responseToggleLabel() {
+    return i18n(
+      `discourse_ai.${this.showRawResponse ? "view_decoded" : "view_raw"}`
+    );
   }
 
   get contextPayload() {
@@ -95,13 +129,7 @@ export default class AiLogDetailModal extends Component {
   }
 
   get formattedOutcome() {
-    const successful =
-      (this.log?.response_status >= 200 && this.log?.response_status <= 299) ||
-      (this.log?.response_status == null &&
-        Number(this.log?.response_tokens || 0) > 0);
-    const outcome = i18n(
-      `discourse_ai.logs.${successful ? "successful" : "failed"}`
-    );
+    const outcome = i18n(`discourse_ai.logs.${this.log.outcome}`);
 
     return this.log?.response_status == null
       ? outcome
@@ -109,6 +137,10 @@ export default class AiLogDetailModal extends Component {
           outcome,
           status: this.log.response_status,
         });
+  }
+
+  get hasReasoningTokens() {
+    return this.log?.reasoning_tokens != null;
   }
 
   get formattedCreatedAt() {
@@ -135,10 +167,6 @@ export default class AiLogDetailModal extends Component {
     return this.log?.time_to_first_token_msecs != null;
   }
 
-  seconds(milliseconds) {
-    return (milliseconds / 1000).toFixed(1);
-  }
-
   get hasCost() {
     return Number(this.log?.spending) > 0;
   }
@@ -158,6 +186,36 @@ export default class AiLogDetailModal extends Component {
   }
 
   @action
+  async load() {
+    this.loading = true;
+    this.failed = false;
+    this.notFound = false;
+    this.showRawResponse = false;
+
+    try {
+      const log = await ajax(
+        `/admin/plugins/discourse-ai/ai-logs/${this.args.model.logId}.json`
+      );
+      if (!this.isDestroying) {
+        this.log = log;
+      }
+    } catch (error) {
+      if (!this.isDestroying) {
+        this.failed = true;
+        this.notFound = error.jqXHR?.status === 404;
+      }
+    } finally {
+      if (!this.isDestroying) {
+        this.loading = false;
+      }
+    }
+  }
+
+  seconds(milliseconds) {
+    return (milliseconds / 1000).toFixed(1);
+  }
+
+  @action
   attemptStatus(attempt) {
     return attempt.status === 0
       ? i18n("discourse_ai.logs.detail.network_error")
@@ -167,6 +225,12 @@ export default class AiLogDetailModal extends Component {
   @action
   selectTab(tab) {
     this.activeTab = tab;
+    this.showRawResponse = false;
+  }
+
+  @action
+  toggleResponseView() {
+    this.showRawResponse = !this.showRawResponse;
   }
 
   @action
@@ -178,8 +242,8 @@ export default class AiLogDetailModal extends Component {
   <template>
     <DModal
       class="ai-log-detail-modal"
-      @title={{i18n "discourse_ai.logs.detail.title" id=@model.logId}}
       @closeModal={{this.close}}
+      @title={{i18n "discourse_ai.logs.detail.title" id=@model.logId}}
     >
       <:body>
         {{#if this.loading}}
@@ -203,6 +267,16 @@ export default class AiLogDetailModal extends Component {
               >{{this.formattedCreatedAt}}</dd></div>
             <div><dt>{{i18n "discourse_ai.logs.outcome"}}</dt><dd
               >{{this.formattedOutcome}}</dd></div>
+            {{#if this.log.stop_reason}}
+              <div class="ai-log-detail-modal__metadata-stop-reason"><dt>{{i18n
+                    "discourse_ai.logs.stop_reason"
+                  }}</dt><dd>{{this.log.stop_reason}}</dd></div>
+            {{/if}}
+            {{#if this.hasReasoningTokens}}
+              <div class="ai-log-detail-modal__metadata-reasoning"><dt>{{i18n
+                    "discourse_ai.logs.reasoning_tokens"
+                  }}</dt><dd>{{this.log.reasoning_tokens}}</dd></div>
+            {{/if}}
             <div><dt>{{i18n "discourse_ai.logs.feature"}}</dt><dd>{{or
                   this.log.feature_name
                   "—"
@@ -255,45 +329,69 @@ export default class AiLogDetailModal extends Component {
             {{/if}}
           </dl>
 
-          <nav
-            class="ai-log-detail-modal__tabs"
-            aria-label={{i18n "discourse_ai.logs.detail.tabs_label"}}
-          >
-            {{#each this.tabs as |tab|}}
-              <DButton
-                class={{if
-                  (eq this.activeTab tab.id)
-                  "btn-primary"
-                  "btn-default"
-                }}
-                @action={{fn this.selectTab tab.id}}
-                @ariaPressed={{eq this.activeTab tab.id}}
-                @translatedLabel={{tab.label}}
-              />
-            {{/each}}
-          </nav>
+          <div class="ai-log-detail-modal__tabs">
+            <nav
+              aria-label={{i18n "discourse_ai.logs.detail.tabs_label"}}
+              class="ai-log-detail-modal__tab-list"
+            >
+              {{#each this.tabs as |tab|}}
+                <DButton
+                  class={{if
+                    (eq this.activeTab tab.id)
+                    "btn-primary"
+                    "btn-default"
+                  }}
+                  @action={{fn this.selectTab tab.id}}
+                  @ariaPressed={{eq this.activeTab tab.id}}
+                  @translatedLabel={{tab.label}}
+                />
+              {{/each}}
+            </nav>
+            {{#if this.copyPayload}}
+              <div class="ai-log-detail-modal__actions">
+                {{#if this.showResponseToggle}}
+                  <DButton
+                    class="btn-default ai-log-detail-modal__response-toggle"
+                    @action={{this.toggleResponseView}}
+                    @translatedLabel={{this.responseToggleLabel}}
+                  />
+                {{/if}}
+                <DCopyButton
+                  @copyClass="btn-default ai-log-detail-modal__copy"
+                  @translatedLabel={{this.activeCopyLabel}}
+                  @translatedLabelAfterCopy={{i18n "discourse_ai.copied"}}
+                  @value={{this.copyPayload}}
+                />
+              </div>
+            {{/if}}
+          </div>
 
-          {{#if
+          {{#if this.showDecodedResponse}}
+            <AiDecodedTranscript
+              class="ai-log-detail-modal__preview"
+              @response={{this.log.decoded_response}}
+            />
+          {{else if
             (or (eq this.activeTab "request") (eq this.activeTab "response"))
           }}
             <AiPayloadViewer
-              @payload={{this.activePayload}}
-              @truncated={{this.activePayloadTruncated}}
-              @copyLabel={{this.activeCopyLabel}}
               @emptyMessage={{i18n
                 "discourse_ai.logs.detail.payload_unavailable"
               }}
+              @payload={{this.activePayload}}
+              @truncated={{this.activePayloadTruncated}}
               @truncatedMessage={{i18n
                 "discourse_ai.logs.detail.payload_truncated"
               }}
+              @unbounded={{true}}
             />
           {{else if (eq this.activeTab "context")}}
             <AiPayloadViewer
-              @payload={{this.contextPayload}}
-              @copyLabel={{i18n "discourse_ai.logs.detail.copy_context"}}
               @emptyMessage={{i18n
                 "discourse_ai.logs.detail.payload_unavailable"
               }}
+              @payload={{this.contextPayload}}
+              @unbounded={{true}}
             />
           {{else}}
             <ol class="ai-log-detail-modal__attempts">

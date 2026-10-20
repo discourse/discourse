@@ -18,6 +18,10 @@ ur:
         toggle_code: "کوڈ کا نمونہ دیکھیں"
         try_this: "اسے آزمائیں:"
         code_region: "ماخذ کا ٹکڑا: %{title}"
+        kind:
+          component: "جزو"
+          modifier: "ترمیم کرنے والا"
+          service: "سروس"
       categories:
         syntax: نحو
         atoms: ایٹم
@@ -34,8 +38,18 @@ ur:
           title: "تاریخ / وقت کی معلومات"
         menus:
           title: "مینوز"
+        context_menu:
+          actions:
+            duplicate: "نقل"
+            delete: "مٹائیں"
         multi_select:
           title: "ملٹی سلیکٹ"
+        reorderable_list:
+          policies_pinned: "پن کیا ہوا"
+          policies_required: "درکار"
+          table_field: "حلقہ"
+          table_type: "قِسم"
+          cross_list_primary: "بنیادی"
         toasts:
           title: "ٹکیاں"
         font_scale:
@@ -44,6 +58,8 @@ ur:
           title: "رنگ"
         dialog:
           title: "ڈائیلاگ"
+        drag_and_drop:
+          title: "کھینچیں اور چھوڑیں"
         icons:
           title: "آئیکن"
           full_list: "فونٹ آسم آئیکن کی مکمل فہرست ملاحظہ کریں"
@@ -99,6 +115,28 @@ ur:
           title: "مزید ٹاپک"
         post_menu:
           title: "پوسٹ فہرست"
+        roving_focus:
+          toolbar:
+            copy: "کاپی"
+          tags:
+            remove: "%{tag} ہٹائیں"
+            support: "تعاون"
+          adjacent:
+            label: "فِلٹر"
+            field: "تلاش کریں"
+            placeholder: "موضوعات تلاش کریں"
+            open: "کھولیں"
+            recent: "حالیہ"
+          listbox:
+            apple: "ایپل"
+          combobox:
+            daily: "روزانہ"
+            weekly: "ہفتہ وار"
+            monthly: "ماہانہ"
+            never: "کبھی نہیں"
+          tree:
+            components: "اجزاء"
+            select: "منتخب"
         docked_composer:
           title: "نصب شدہ کمپوزر"
         modal:

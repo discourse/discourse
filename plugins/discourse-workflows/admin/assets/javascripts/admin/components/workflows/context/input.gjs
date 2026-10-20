@@ -9,24 +9,27 @@ import {
   outputSummaryForNode,
   schemaFieldsForNodeInput,
   schemaFieldsForNodeOutput,
-} from "../../../lib/workflows/data-preview";
+} from "../../../lib/workflows/data-preview.js";
 import {
   inputFieldPrefixForConnection,
   inputIndexForConnection,
   nodeOutputJsonPath,
   outputIndexForConnection,
-} from "../../../lib/workflows/expression-paths";
-import processFields from "../../../lib/workflows/field-processors";
-import { nodeTypeColor, nodeTypeIcon } from "../../../lib/workflows/node-types";
-import { schemaFieldsForItems } from "../../../lib/workflows/schema-fields";
+} from "../../../lib/workflows/expression-paths.js";
+import processFields from "../../../lib/workflows/field-processors.js";
+import {
+  nodeTypeColor,
+  nodeTypeIcon,
+} from "../../../lib/workflows/node-types.js";
+import { schemaFieldsForItems } from "../../../lib/workflows/schema-fields.js";
 import {
   ancestorOutputNodes,
   inputConnectionsForNode,
   previousNodeForConnection,
   resolveDeclaredOutputSchemas,
-} from "../../../lib/workflows/schema-graph";
-import DragDropHint from "./drag-drop-hint";
-import SchemaField from "./schema-field";
+} from "../../../lib/workflows/schema-graph.js";
+import DragDropHint from "./drag-drop-hint.gjs";
+import SchemaField from "./schema-field.gjs";
 
 function ancestorIconStyle(type) {
   return trustHTML(`color: ${nodeTypeColor(type)}`);
@@ -56,7 +59,26 @@ function fieldVisible(fieldDef, nodes) {
   );
 }
 
-function schemaFieldToEntry(key, def, nodes) {
+const WORKFLOW_VARIABLE_TYPE_SCHEMAS = {
+  integer: "integer",
+  category: "integer",
+  group: "integer",
+  boolean: "boolean",
+  category_list: "array",
+  group_list: "array",
+  tag_list: "array",
+  simple_list: "array",
+};
+
+function workflowVariableEntries(workflowVariables) {
+  return (workflowVariables || []).map((field) => ({
+    key: field.key,
+    type: WORKFLOW_VARIABLE_TYPE_SCHEMAS[field.variable_type] || "string",
+    id: field.key,
+  }));
+}
+
+function schemaFieldToEntry(key, def, nodes, workflowVariables) {
   const displayKey = key.replace(/^\$/, "");
   const entry = {
     key: displayKey,
@@ -64,7 +86,9 @@ function schemaFieldToEntry(key, def, nodes) {
     id: key,
   };
 
-  if (def.fields) {
+  if (key === "$workflow_vars") {
+    entry.children = workflowVariableEntries(workflowVariables);
+  } else if (def.fields) {
     entry.children = Object.entries(def.fields)
       .filter(([, childDef]) => fieldVisible(childDef, nodes))
       .map(([childKey, childDef]) => ({
@@ -86,7 +110,12 @@ function triggerProvidesCurrentUser(nodes, nodeTypesService) {
   return nodeType?.capabilities?.provides_current_user ?? false;
 }
 
-function environmentFields(expressionContext, nodes, nodeTypesService) {
+function environmentFields(
+  expressionContext,
+  nodes,
+  nodeTypesService,
+  workflowVariables
+) {
   const env = expressionContext.environment;
   if (!env) {
     return [];
@@ -101,7 +130,9 @@ function environmentFields(expressionContext, nodes, nodeTypesService) {
       }
       return true;
     })
-    .map(([symbol, def]) => schemaFieldToEntry(symbol, def, nodes));
+    .map(([symbol, def]) =>
+      schemaFieldToEntry(symbol, def, nodes, workflowVariables)
+    );
 }
 
 export default class InputContext extends Component {
@@ -131,24 +162,6 @@ export default class InputContext extends Component {
 
   get runData() {
     return this.args.session?.lastExecutionRunData || {};
-  }
-
-  itemCountLabel(summary) {
-    if (!summary?.itemCount) {
-      return null;
-    }
-
-    return i18n("discourse_workflows.configurator.schema_item_count", {
-      count: summary.itemCount,
-    });
-  }
-
-  emptyMessage(summary) {
-    if (summary?.itemCount > 0) {
-      return i18n("discourse_workflows.configurator.no_input_fields");
-    }
-
-    return i18n("discourse_workflows.configurator.no_input_context");
   }
 
   get inputSections() {
@@ -205,21 +218,12 @@ export default class InputContext extends Component {
       .filter(Boolean);
   }
 
-  inputConnectionLabel(inputIndex) {
-    if (this.inputConnections.length < 2 && inputIndex === 0) {
-      return null;
-    }
-
-    return i18n("discourse_workflows.configurator.schema_input_label", {
-      number: inputIndex + 1,
-    });
-  }
-
   get environmentFields() {
     return environmentFields(
       this.workflowsNodeTypes.expressionContext,
       this.args.nodes || [],
-      this.workflowsNodeTypes
+      this.workflowsNodeTypes,
+      this.args.session?.variables
     );
   }
 
@@ -269,6 +273,34 @@ export default class InputContext extends Component {
       .filter((ancestor) => ancestor.fields.length);
   }
 
+  itemCountLabel(summary) {
+    if (!summary?.itemCount) {
+      return null;
+    }
+
+    return i18n("discourse_workflows.configurator.schema_item_count", {
+      count: summary.itemCount,
+    });
+  }
+
+  emptyMessage(summary) {
+    if (summary?.itemCount > 0) {
+      return i18n("discourse_workflows.configurator.no_input_fields");
+    }
+
+    return i18n("discourse_workflows.configurator.no_input_context");
+  }
+
+  inputConnectionLabel(inputIndex) {
+    if (this.inputConnections.length < 2 && inputIndex === 0) {
+      return null;
+    }
+
+    return i18n("discourse_workflows.configurator.schema_input_label", {
+      number: inputIndex + 1,
+    });
+  }
+
   <template>
     <div class="workflows-context-panel">
       {{#if @hasConfiguration}}
@@ -295,7 +327,7 @@ export default class InputContext extends Component {
           {{#if section.fields.length}}
             <ul class="workflows-schema-field-list">
               {{#each section.fields as |field|}}
-                <SchemaField @field={{field}} @draggable={{true}} />
+                <SchemaField @draggable={{true}} @field={{field}} />
               {{/each}}
             </ul>
           {{else}}
@@ -314,7 +346,7 @@ export default class InputContext extends Component {
 
         <ul class="workflows-schema-field-list">
           {{#each this.environmentFields as |field|}}
-            <SchemaField @field={{field}} @draggable={{true}} />
+            <SchemaField @draggable={{true}} @field={{field}} />
           {{/each}}
         </ul>
       </div>
@@ -335,7 +367,7 @@ export default class InputContext extends Component {
 
           <ul class="workflows-schema-field-list">
             {{#each ancestor.fields as |field|}}
-              <SchemaField @field={{field}} @draggable={{true}} />
+              <SchemaField @draggable={{true}} @field={{field}} />
             {{/each}}
           </ul>
         </div>

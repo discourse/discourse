@@ -8,7 +8,7 @@ module Jobs
       url = args[:url]
       return if url.blank?
 
-      event = DiscoursePostEvent::Event.find_by(id: args[:event_id])
+      event = DiscourseEvents::Events::Event.find_by(id: args[:event_id])
       return if event.blank? || event.livestream_url != url
       event.warm_livestream_onebox!
     end

@@ -37,6 +37,34 @@ export default class DCopyButton extends Component {
     return this.showCopied ? this.args.translatedLabelAfterCopy : "";
   }
 
+  @action
+  async copy() {
+    let value = this.args.value;
+
+    if (value === undefined) {
+      if (!this.args.selector) {
+        return;
+      }
+
+      const target = document.querySelector(this.args.selector);
+      if (!target) {
+        return;
+      }
+
+      value = target.value ?? target.textContent;
+    }
+
+    if (value == null) {
+      return;
+    }
+
+    try {
+      await clipboardCopy(value);
+      this.args.copied?.();
+      this._showCopied();
+    } catch {}
+  }
+
   _showCopied() {
     this.showCopied = true;
 
@@ -45,39 +73,24 @@ export default class DCopyButton extends Component {
 
   @bind
   _restoreButton() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
     this.showCopied = false;
   }
 
-  @action
-  async copy() {
-    const target = document.querySelector(this.args.selector);
-
-    if (!target) {
-      return;
-    }
-
-    try {
-      await clipboardCopy(target.value ?? target.textContent);
-      this.args.copied?.();
-      this._showCopied();
-    } catch {}
-  }
-
   <template>
     <DButton
-      @icon={{this.copyIcon}}
-      @action={{this.copy}}
       class="copy-button {{this.copyClass}}"
+      @action={{this.copy}}
       @ariaLabel={{@ariaLabel}}
+      @icon={{this.copyIcon}}
       @translatedLabel={{this.copyTranslatedLabel}}
     />
     <span
-      class="sr-only"
       aria-live="polite"
+      class="sr-only"
       {{this.watchExternalCopy @isCopied}}
     >{{this.announcement}}</span>
   </template>

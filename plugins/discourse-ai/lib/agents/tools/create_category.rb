@@ -1,0 +1,166 @@
+# frozen_string_literal: true
+
+module DiscourseAi
+  module Agents
+    module Tools
+      class CreateCategory < Tool
+        def self.signature
+          {
+            name: name,
+            description:
+              "Creates a new category and returns its ID and full URL to link to it. Copy the returned URL unchanged; it already includes the category ID, so never append an ID or number. Create parent categories before their subcategories, and use list_categories to find parent category IDs.",
+            parameters: [
+              {
+                name: "name",
+                description: "The display name for the new category",
+                type: "string",
+                required: true,
+              },
+              {
+                name: "description",
+                description: "A description for the new category",
+                type: "string",
+              },
+              {
+                name: "parent_category_id",
+                description: "The ID of the parent category, when creating a subcategory",
+                type: "integer",
+              },
+              {
+                name: "color",
+                description:
+                  "The background color, as a 6 digit hex code (e.g. 0088CC). Defaults to the site default when omitted.",
+                type: "string",
+              },
+              {
+                name: "text_color",
+                description: "The text color, as a 6 digit hex code (e.g. FFFFFF)",
+                type: "string",
+              },
+              {
+                name: "reason",
+                description: "Short explanation of why the category is being created",
+                type: "string",
+                required: true,
+              },
+            ],
+          }
+        end
+
+        def self.name
+          "create_category"
+        end
+
+        def self.requires_approval?
+          true
+        end
+
+        def self.attribute_to_approver?
+          true
+        end
+
+        def invoke
+          if (error = validation_error)
+            return error
+          end
+          perform_create
+        end
+
+        def validation_error
+          if parameters[:name].blank?
+            return error_response(I18n.t("discourse_ai.ai_bot.create_category.errors.no_name"))
+          end
+
+          if parameters[:parent_category_id].present? && parent_category.blank?
+            return(
+              error_response(I18n.t("discourse_ai.ai_bot.create_category.errors.parent_not_found"))
+            )
+          end
+
+          if parameters[:description].present? &&
+               parameters[:description].size > CategoryCreator::MAX_DESCRIPTION_LENGTH
+            return(
+              error_response(
+                I18n.t(
+                  "category.errors.description_too_long",
+                  count: CategoryCreator::MAX_DESCRIPTION_LENGTH,
+                ),
+              )
+            )
+          end
+
+          if reason.blank?
+            return error_response(I18n.t("discourse_ai.ai_bot.create_category.errors.no_reason"))
+          end
+
+          # Model validations (duplicate name, name length, color format) run
+          # against the unsaved candidate so an invalid request is rejected
+          # before it is queued for approval.
+          candidate = Category.new(category_attributes.merge(user: guardian.user))
+          return error_response(candidate.errors.full_messages.to_sentence) if !candidate.valid?
+
+          nil
+        end
+
+        def description_args
+          { name: parameters[:name] }
+        end
+
+        def approval_title
+          I18n.t(
+            "discourse_ai.ai_bot.chat_tool_approval.create_category_title",
+            name: DiscourseAi::AiBot::ChatToolApproval.format_value(parameters[:name]),
+          )
+        end
+
+        def approval_question
+          I18n.t("discourse_ai.ai_bot.chat_tool_approval.create_category_question")
+        end
+
+        def approval_show_description?
+          false
+        end
+
+        def approval_parameters
+          super.reject { |parameter| parameter[:label] == "name" || parameter[:value].blank? }
+        end
+
+        private
+
+        def parent_category
+          @parent_category ||= Category.find_by(id: parameters[:parent_category_id])
+        end
+
+        def category_attributes
+          attributes = {
+            name: parameters[:name],
+            description: parameters[:description].presence,
+            parent_category_id: parent_category&.id,
+          }
+          %i[color text_color].each do |param|
+            value = parameters[param]
+            attributes[param] = value.to_s.delete_prefix("#") if value.present?
+          end
+          attributes
+        end
+
+        def perform_create
+          category = CategoryCreator.create(guardian, category_attributes)
+
+          if category.persisted?
+            {
+              status: "success",
+              category_id: category.id,
+              url: "#{Discourse.base_url_no_prefix}#{category.url}",
+              message: I18n.t("discourse_ai.ai_bot.create_category.success", name: category.name),
+            }
+          else
+            error_response(category.errors.full_messages.to_sentence)
+          end
+        rescue Discourse::InvalidAccess
+          error_response(I18n.t("discourse_ai.ai_bot.create_category.errors.not_allowed"))
+        end
+      end
+    end
+  end
+end

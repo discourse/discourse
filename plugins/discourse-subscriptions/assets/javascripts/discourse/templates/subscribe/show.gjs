@@ -1,15 +1,16 @@
 import { Input } from "@ember/component";
+import { fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import DButton from "discourse/ui-kit/d-button";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
-import LoginRequired from "../../components/login-required";
-import PaymentOptions from "../../components/payment-options";
-import SubscribeCaProvinceSelect from "../../components/subscribe-ca-province-select";
-import SubscribeCard from "../../components/subscribe-card";
-import SubscribeCountrySelect from "../../components/subscribe-country-select";
-import SubscribeUsStateSelect from "../../components/subscribe-us-state-select";
+import LoginRequired from "../../components/login-required.gjs";
+import PaymentOptions from "../../components/payment-options.gjs";
+import SubscribeCaProvinceSelect from "../../components/subscribe-ca-province-select.js";
+import SubscribeCard from "../../components/subscribe-card.gjs";
+import SubscribeCountrySelect from "../../components/subscribe-country-select.js";
+import SubscribeUsStateSelect from "../../components/subscribe-us-state-select.js";
 
 export default <template>
   <div class="discourse-subscriptions-section-columns">
@@ -34,6 +35,7 @@ export default <template>
         <hr />
 
         <PaymentOptions
+          @onSelectPlan={{fn (mut @controller.selectedPlan)}}
           @plans={{@controller.model.plans}}
           @selectedPlan={{@controller.selectedPlan}}
         />
@@ -48,83 +50,83 @@ export default <template>
           <LoginRequired />
         {{else}}
           <Input
-            @type="text"
+            class="subscribe-name"
             name="cardholder_name"
             placeholder={{i18n
               "discourse_subscriptions.subscribe.cardholder_name"
             }}
+            @type="text"
             @value={{@controller.cardholderName}}
-            class="subscribe-name"
           />
           <div class="address-fields">
             <SubscribeCountrySelect
-              @value={{@controller.cardholderAddress.country}}
               @onChange={{@controller.changeCountry}}
+              @value={{@controller.cardholderAddress.country}}
             />
             <Input
-              @type="text"
+              class="subscribe-address-postal-code"
               name="cardholder_postal_code"
               placeholder={{i18n
                 "discourse_subscriptions.subscribe.cardholder_address.postal_code"
               }}
+              @type="text"
               @value={{@controller.cardholderAddress.postalCode}}
-              class="subscribe-address-postal-code"
             />
           </div>
           <Input
-            @type="text"
+            class="subscribe-address-line1"
             name="cardholder_line1"
             placeholder={{i18n
               "discourse_subscriptions.subscribe.cardholder_address.line1"
             }}
+            @type="text"
             @value={{@controller.cardholderAddress.line1}}
-            class="subscribe-address-line1"
           />
           <div class="address-fields">
             <Input
-              @type="text"
+              class="subscribe-address-city"
               name="cardholder_city"
               placeholder={{i18n
                 "discourse_subscriptions.subscribe.cardholder_address.city"
               }}
+              @type="text"
               @value={{@controller.cardholderAddress.city}}
-              class="subscribe-address-city"
             />
             {{#if @controller.isCountryUS}}
               <SubscribeUsStateSelect
-                @value={{@controller.cardholderAddress.state}}
                 @onChange={{@controller.changeState}}
+                @value={{@controller.cardholderAddress.state}}
               />
             {{else if @controller.isCountryCA}}
               <SubscribeCaProvinceSelect
-                @value={{@controller.cardholderAddress.state}}
                 @onChange={{@controller.changeState}}
+                @value={{@controller.cardholderAddress.state}}
               />
             {{else}}
               <Input
-                @type="text"
+                class="subscribe-address-state"
                 name="cardholder_state"
                 placeholder={{i18n
                   "discourse_subscriptions.subscribe.cardholder_address.state"
                 }}
+                @type="text"
                 @value={{@controller.cardholderAddress.state}}
-                class="subscribe-address-state"
               />
             {{/if}}
           </div>
 
           <Input
-            @type="text"
+            class="subscribe-promo-code"
             name="promo_code"
             placeholder={{i18n "discourse_subscriptions.subscribe.promo_code"}}
+            @type="text"
             @value={{@controller.promoCode}}
-            class="subscribe-promo-code"
           />
 
           <DButton
-            @disabled={{@controller.loading}}
-            @action={{@controller.stripePaymentHandler}}
             class="btn btn-primary btn-payment"
+            @action={{@controller.stripePaymentHandler}}
+            @disabled={{@controller.loading}}
             @label="discourse_subscriptions.plans.payment_button"
           />
         {{/if}}
@@ -132,9 +134,9 @@ export default <template>
         <h2>{{i18n "discourse_subscriptions.subscribe.already_purchased"}}</h2>
 
         <LinkTo
-          @route="user.billing.subscriptions"
-          @model={{@controller.currentUser.username}}
           class="btn btn-primary"
+          @model={{@controller.currentUser.username}}
+          @route="user.billing.subscriptions"
         >
           {{i18n "discourse_subscriptions.subscribe.go_to_billing"}}
         </LinkTo>

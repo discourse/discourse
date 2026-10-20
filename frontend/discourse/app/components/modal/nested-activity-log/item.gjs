@@ -8,7 +8,7 @@ import {
 } from "discourse/components/post/small-action";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
-import { userPath } from "discourse/lib/url";
+import { groupPath, userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 import DUserAvatar from "discourse/ui-kit/d-user-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -39,9 +39,9 @@ function mentionLinkFor(code, who) {
     GROUP_ACTION_CODES.includes(code) ||
     customGroupActionCodes.includes(code)
   ) {
-    return `<a class="mention-group" href="/g/${encodeURIComponent(who)}">@${escaped}</a>`;
+    return `<a class="mention-group" href="${groupPath(encodeURIComponent(who))}">@${escaped}</a>`;
   }
-  return `<a class="mention" href="${userPath(who)}">@${escaped}</a>`;
+  return `<a class="mention" href="${userPath(encodeURIComponent(who))}">@${escaped}</a>`;
 }
 
 export default class NestedActivityLogItem extends Component {
@@ -72,7 +72,7 @@ export default class NestedActivityLogItem extends Component {
       }}
     >
       {{#if this.isSynthetic}}
-        <span class="nested-activity-log-modal__icon" aria-hidden="true">
+        <span aria-hidden="true" class="nested-activity-log-modal__icon">
           {{dIcon "plus"}}
         </span>
         <div class="nested-activity-log-modal__content">
@@ -90,10 +90,10 @@ export default class NestedActivityLogItem extends Component {
       {{else}}
         <PostSmallAction
           class="nested-activity-log-modal__post"
+          @deletePost={{fn @deletePost @action}}
+          @editPost={{fn @editPost @action}}
           @elementId="nested-activity-log-post-{{@action.id}}"
           @post={{@action}}
-          @editPost={{fn @editPost @action}}
-          @deletePost={{fn @deletePost @action}}
           @recoverPost={{fn @recoverPost @action}}
         />
       {{/if}}

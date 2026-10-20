@@ -7,7 +7,7 @@ describe "Upcoming Events" do
 
   let(:composer) { PageObjects::Components::Composer.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
-  let(:upcoming_events) { PageObjects::Pages::DiscourseCalendar::UpcomingEvents.new }
+  let(:upcoming_events) { PageObjects::Pages::DiscourseEvents::UpcomingEvents.new }
 
   before do
     SiteSetting.discourse_events_enabled = true
@@ -35,7 +35,8 @@ describe "Upcoming Events" do
   describe "popup invitees on recurring events" do
     fab!(:going_recurring_user, :user)
     fab!(:going_once_user, :user)
-    let(:post_event_page) { PageObjects::Pages::DiscourseCalendar::PostEvent.new }
+    let(:post_event_page) { PageObjects::Pages::DiscourseEvents::PostEvent.new }
+    let(:invitees_modal) { PageObjects::Modals::DiscourseEvents::Invitees.new }
 
     it "filters non-recurring goings out of future occurrences",
        time: Time.utc(2026, 5, 12, 12, 0) do
@@ -46,16 +47,17 @@ describe "Upcoming Events" do
           user: admin,
           category:,
           title: "Weekly stand-up event",
-          raw: "[event status='public' start='2026-05-14 14:00' recurrence='every_week']\n[/event]",
+          raw:
+            "[event status='public' start='2026-05-14 14:00' timezone='Australia/Brisbane' showLocalTime=true recurrence='every_week']\n[/event]",
         )
-      event = DiscoursePostEvent::Event.find(post.id)
-      DiscoursePostEvent::Invitee.create_attendance!(
+      event = DiscourseEvents::Events::Event.find(post.id)
+      DiscourseEvents::Events::Invitee.create_attendance!(
         going_recurring_user.id,
         event.id,
         :going,
         recurring: true,
       )
-      DiscoursePostEvent::Invitee.create_attendance!(going_once_user.id, event.id, :going)
+      DiscourseEvents::Events::Invitee.create_attendance!(going_once_user.id, event.id, :going)
 
       upcoming_events.visit("/discuss")
       upcoming_events.click_event_on("2026-05-14")
@@ -71,6 +73,15 @@ describe "Upcoming Events" do
       expect(post_event_page).to have_going_count(1)
       expect(post_event_page).to have_invitee_avatar(going_recurring_user.username)
       expect(post_event_page).to have_no_invitee_avatar(going_once_user.username)
+
+      post_event_page.open_invitees_modal
+      expect(invitees_modal).to have_attendee(going_recurring_user)
+      expect(invitees_modal).to have_no_attendee(going_once_user)
+      expect(invitees_modal).to have_selected_scope(:this_event)
+
+      invitees_modal.show_first_event_only
+      expect(invitees_modal).to have_attendee(going_once_user)
+      expect(invitees_modal).to have_no_attendee(going_recurring_user)
     end
   end
 
@@ -85,9 +96,14 @@ describe "Upcoming Events" do
           raw:
             "[event status='public' start='2026-06-11 18:00' end='2026-06-11 18:30' recurrence='every_day']\n[/event]",
         )
-      event = DiscoursePostEvent::Event.find(post.id)
+      event = DiscourseEvents::Events::Event.find(post.id)
 
-      DiscoursePostEvent::Invitee.create_attendance!(admin.id, event.id, :going, recurring: false)
+      DiscourseEvents::Events::Invitee.create_attendance!(
+        admin.id,
+        event.id,
+        :going,
+        recurring: false,
+      )
 
       visit("/upcoming-events/mine/month/2026/6/1")
 
@@ -98,7 +114,7 @@ describe "Upcoming Events" do
   end
 
   describe "event description in popup" do
-    let(:post_event_page) { PageObjects::Pages::DiscourseCalendar::PostEvent.new }
+    let(:post_event_page) { PageObjects::Pages::DiscourseEvents::PostEvent.new }
 
     it "shows clamped description with expand toggle", time: Time.utc(2025, 9, 10, 12, 0) do
       long_description =
@@ -229,7 +245,7 @@ describe "Upcoming Events" do
       end
     end
 
-    describe "recurring events" do
+    describe "recurring events shown in local time" do
       describe "with local time enabled" do
         it "displays multiple occurrences with correct local time",
            timezone: "Australia/Brisbane",
@@ -362,7 +378,7 @@ describe "Upcoming Events" do
       end
     end
 
-    describe "recurring events" do
+    describe "recurring events with an end date" do
       it "displays recurring events until the specified end date",
          time: Time.utc(2025, 6, 2, 19, 00) do
         post =
@@ -415,7 +431,7 @@ describe "Upcoming Events" do
         title: "Non attending post event",
         raw: "[event start=\"2025-06-12 08:05\"]\n[/event]",
       )
-      DiscoursePostEvent::Event.find(attending_event.id).create_invitees(
+      DiscourseEvents::Events::Event.find(attending_event.id).create_invitees(
         [{ user_id: admin.id, status: 0 }],
       )
 
@@ -443,6 +459,8 @@ describe "Upcoming Events" do
         end
 
         context "in different timezone", timezone: "Europe/London" do
+          fab!(:admin) { Fabricate(:admin, timezone: "Europe/London") }
+
           it "navigates to current date in day view", time: Time.utc(2025, 6, 2, 19, 00) do
             visit("/upcoming-events/day/2025/8/1")
 
@@ -473,6 +491,8 @@ describe "Upcoming Events" do
         end
 
         context "in different timezone", timezone: "Europe/London" do
+          fab!(:admin) { Fabricate(:admin, timezone: "Europe/London") }
+
           it "navigates to next day" do
             visit("/upcoming-events/day/2025/8/4")
 
@@ -522,6 +542,8 @@ describe "Upcoming Events" do
         end
 
         context "in different timezone", timezone: "Europe/London" do
+          fab!(:admin) { Fabricate(:admin, timezone: "Europe/London") }
+
           it "navigates to previous day" do
             visit("/upcoming-events/day/2025/8/1")
 

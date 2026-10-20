@@ -1,3 +1,4 @@
+import { registerDestructor } from "@ember/destroyable";
 import NarrowDesktop from "discourse/lib/narrow-desktop";
 
 export default {
@@ -12,12 +13,17 @@ export default {
     // even when the user zooms the page.
     const mediaQuery = window.matchMedia("(min-width: 48rem)");
 
-    mediaQuery.addEventListener("change", () => {
+    const onChange = () => {
       if (owner.isDestroyed) {
         return;
       }
 
       NarrowDesktop.update(owner, !mediaQuery.matches);
-    });
+    };
+
+    mediaQuery.addEventListener("change", onChange);
+    registerDestructor(owner, () =>
+      mediaQuery.removeEventListener("change", onChange)
+    );
   },
 };

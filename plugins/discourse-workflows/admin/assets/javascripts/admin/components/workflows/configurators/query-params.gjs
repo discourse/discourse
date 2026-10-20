@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { service } from "@ember/service";
-import Field from "./field";
+import Field from "./field.gjs";
 
 const PARAM_SCHEMA = { type: "string", ui: { expression: true } };
 
@@ -53,11 +53,11 @@ export default class QueryParams extends Component {
         <@form.Object @name={{@fieldName}} as |object|>
           {{#each this.params key="identifier" as |param|}}
             <Field
+              @configuration={{this.paramsConfiguration}}
+              @fieldName={{param.identifier}}
               @form={{object}}
               @formApi={{@formApi}}
-              @fieldName={{param.identifier}}
               @formApiPath={{concat @fieldName "." param.identifier}}
-              @configuration={{this.paramsConfiguration}}
               @label={{param.identifier}}
               @schema={{PARAM_SCHEMA}}
               @session={{@session}}

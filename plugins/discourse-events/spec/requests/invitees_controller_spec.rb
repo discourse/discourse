@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module DiscoursePostEvent
-  describe InviteesController do
+module DiscourseEvents::Events
+  describe DiscourseEvents::InviteesController do
     before do
       Jobs.run_immediately!
       SiteSetting.discourse_events_enabled = true
@@ -57,7 +57,7 @@ module DiscoursePostEvent
           Fabricate(
             :event,
             post: public_post,
-            status: DiscoursePostEvent::Event.statuses[:private],
+            status: DiscourseEvents::Events::Event.statuses[:private],
             raw_invitees: [restricted_group.name],
           )
         end
@@ -153,6 +153,72 @@ module DiscoursePostEvent
                 type: "nonexistent",
               }
           expect(response.status).to eq(400)
+        end
+      end
+
+      context "for a recurring event" do
+        fab!(:single_occurrence_user, :user)
+        fab!(:series_user, :user)
+        let!(:recurring_event) do
+          Fabricate(
+            :event,
+            post: post_1,
+            original_starts_at: Time.utc(2026, 9, 29, 18, 30),
+            recurrence: "every_weekday",
+            timezone: "Europe/Madrid",
+          )
+        end
+
+        before do
+          Invitee.create_attendance!(single_occurrence_user.id, recurring_event.id, :going)
+          Invitee.create_attendance!(series_user.id, recurring_event.id, :going, recurring: true)
+        end
+
+        it "returns all going attendees for the current occurrence" do
+          get "/discourse-post-event/events/#{recurring_event.id}/invitees.json",
+              params: {
+                type: "going",
+                occurrence_starts_at: recurring_event.starts_at.iso8601,
+              }
+
+          expect(
+            response.parsed_body["invitees"].map { |invitee| invitee.dig("user", "username") },
+          ).to contain_exactly(single_occurrence_user.username, series_user.username)
+        end
+
+        it "returns only recurring going attendees for a later occurrence" do
+          get "/discourse-post-event/events/#{recurring_event.id}/invitees.json",
+              params: {
+                type: "going",
+                occurrence_starts_at: (recurring_event.starts_at + 1.day).iso8601,
+                recurrence_scope: "this_event",
+              }
+
+          expect(
+            response.parsed_body["invitees"].map { |invitee| invitee.dig("user", "username") },
+          ).to contain_exactly(series_user.username)
+        end
+
+        it "filters going attendees by explicit recurrence scope" do
+          get "/discourse-post-event/events/#{recurring_event.id}/invitees.json",
+              params: {
+                type: "going",
+                recurrence_scope: "first_event_only",
+              }
+
+          expect(
+            response.parsed_body["invitees"].map { |invitee| invitee.dig("user", "username") },
+          ).to contain_exactly(single_occurrence_user.username)
+
+          get "/discourse-post-event/events/#{recurring_event.id}/invitees.json",
+              params: {
+                type: "going",
+                recurrence_scope: "this_and_following",
+              }
+
+          expect(
+            response.parsed_body["invitees"].map { |invitee| invitee.dig("user", "username") },
+          ).to contain_exactly(series_user.username)
         end
       end
     end
@@ -417,10 +483,10 @@ module DiscoursePostEvent
     fab!(:event) { Fabricate(:event, post: post_1) }
     fab!(:invitee_user, :user)
     fab!(:invitee) do
-      DiscoursePostEvent::Invitee.create!(
+      DiscourseEvents::Events::Invitee.create!(
         post_id: post_1.id,
         user_id: invitee_user.id,
-        status: DiscoursePostEvent::Invitee.statuses[:going],
+        status: DiscourseEvents::Events::Invitee.statuses[:going],
       )
     end
 
@@ -462,14 +528,14 @@ module DiscoursePostEvent
         Fabricate(
           :event,
           post: private_event_post,
-          status: DiscoursePostEvent::Event.statuses[:private],
+          status: DiscourseEvents::Events::Event.statuses[:private],
           raw_invitees: [restricted_group.name],
         )
       end
 
       before do
         private_event.create_invitees(
-          [{ user_id: invitee_user.id, status: DiscoursePostEvent::Invitee.statuses[:going] }],
+          [{ user_id: invitee_user.id, status: DiscourseEvents::Events::Invitee.statuses[:going] }],
         )
       end
 

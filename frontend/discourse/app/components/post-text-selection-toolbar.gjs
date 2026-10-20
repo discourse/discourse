@@ -94,26 +94,26 @@ export default class PostTextSelectionToolbar extends Component {
     <div class={{dConcatClass "quote-button" "visible"}}>
       <div class="buttons">
         <PluginOutlet
-          @name="post-text-buttons"
           @defaultGlimmer={{true}}
+          @name="post-text-buttons"
           @outletArgs={{lazyHash data=@data post=this.post}}
         >
           {{#if this.embedQuoteButton}}
             <DButton
+              class="btn-flat insert-quote"
+              @action={{@data.insertQuote}}
               @icon="quote-left"
               @label="post.quote_reply"
               @title="post.quote_reply_shortcut"
-              class="btn-flat insert-quote"
-              @action={{@data.insertQuote}}
             />
           {{/if}}
 
           {{#if @data.canEditPost}}
             <DButton
+              class="btn-flat quote-edit-label"
               @icon="pencil"
               @label="post.quote_edit"
               @title="post.quote_edit_shortcut"
-              class="btn-flat quote-edit-label"
               {{on
                 "click"
                 (fn @data.toggleFastEdit this.quoteState @data.supportsFastEdit)
@@ -123,33 +123,33 @@ export default class PostTextSelectionToolbar extends Component {
 
           {{#if @data.canCopyQuote}}
             <DButton
+              class="btn-flat copy-quote"
               @icon="copy"
               @label="post.quote_copy"
               @title="post.quote_copy"
-              class="btn-flat copy-quote"
               {{on "click" this.copyQuoteToClipboard}}
             />
           {{/if}}
 
           <PluginOutlet
-            @name="quote-share-buttons-before"
             @connectorTagName="span"
+            @name="quote-share-buttons-before"
             @outletArgs={{lazyHash data=@data}}
           />
 
           {{#if this.quoteSharingEnabled}}
             {{#each this.quoteSharingSources as |source|}}
               <DButton
-                @action={{fn this.share source}}
-                @translatedTitle={{source.title}}
-                @icon={{source.icon}}
                 class="btn-flat"
+                @action={{fn this.share source}}
+                @icon={{source.icon}}
+                @translatedTitle={{source.title}}
               />
             {{/each}}
 
             <PluginOutlet
-              @name="quote-share-buttons-after"
               @connectorTagName="span"
+              @name="quote-share-buttons-after"
               @outletArgs={{lazyHash data=@data}}
             />
           {{/if}}
@@ -157,7 +157,7 @@ export default class PostTextSelectionToolbar extends Component {
       </div>
 
       <div class="extra">
-        <PluginOutlet @name="quote-button-after" @connectorTagName="div" />
+        <PluginOutlet @connectorTagName="div" @name="quote-button-after" />
       </div>
     </div>
   </template>

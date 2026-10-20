@@ -1,0 +1,48 @@
+.dsa-classification {
+  min-width: 0;
+  overflow-wrap: anywhere;
+
+  &__heading {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-block-end: 0.5em;
+  }
+
+  h2 {
+    font-size: var(--font-up-2);
+    margin: 0;
+  }
+}
+
+.dsa-classification-confirmation {
+  &__label {
+    font-weight: bold;
+  }
+
+  &__value {
+    margin: 0 0 var(--space-4);
+    overflow-wrap: anywhere;
+  }
+}
+
+.review-item__aside.--dsa-classification {
+  padding-block-start: 0;
+}
+
+.review-item__classify {
+  margin-block-end: var(--space-4);
+  margin-inline-start: var(--review-item-padding);
+
+  &.--pending-notice {
+    inline-size: calc(100% - 2 * var(--review-item-padding));
+    justify-content: flex-start;
+    background: var(--highlight-low);
+    color: var(--primary);
+    border: 1px solid var(--highlight-medium);
+  }
+}
+
+.dsa-classification-modal__help {
+  margin-inline-end: auto;
+}

@@ -5,6 +5,33 @@
 # https://translate.discourse.org/
 
 th:
+  markdown_endpoints:
+    latest: "ล่าสุด"
+    categories: "หมวดหมู่"
+    tags: "ป้าย"
+    previous_page: "หน้าก่อนหน้า"
+    next_page: "หน้าถัดไป"
+    replies: "ตอบ"
+    event:
+      location: "ที่อยู่"
+      link: "ลิงก์"
+  mcp:
+    errors:
+      topic_not_found: "ไม่พบกระทู้"
+    oauth:
+      deny: "ปฏิเสธ"
+  llms_txt:
+    sections:
+      optional: "ทางเลือก"
+    links:
+      search:
+        label: "ค้นหา"
+      categories:
+        label: "หมวดหมู่"
+      about:
+        label: "เกี่ยวกับ"
+      guidelines:
+        label: "คู่มือ"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -170,6 +197,7 @@ th:
   password_reset:
     title: "รีเซ็ทรหัสผ่าน"
   admin_site_traffic_explorer:
+    unknown: "ไม่ทราบ"
     traffic_types:
       anonymous: "ไม่ระบุชื่อ"
   reviewable_score_types:
@@ -240,6 +268,11 @@ th:
         share: "แบ่งปัน"
       types:
         staff: "ทีมงาน"
+    posters_by_member_type_members:
+      labels:
+        user: "ผู้ใช้"
+        count: "โพส"
+        share: "แบ่งปัน"
     trust_level_pipeline:
       labels:
         count: "สมาชิก"
@@ -363,6 +396,7 @@ th:
     admin_not_allowed_from_ip_address: "คุณไม่สามารถเข้าสู่ระบบด้วยผู้ดูแลระบบด้วยไอพีนี้"
     not_available: "ใช้การไม่ได้ ลอง%{suggestion}?"
     omniauth_confirm_button: "ดำเนินการต่อ"
+    missing_username: "กรุณากรอกชื่อผู้ใช้"
   admin:
     email:
       sent_test: "ส่งแล้ว!"
@@ -622,8 +656,6 @@ th:
         title: "ใช่"
       approve_and_unhide:
         title: "ใช่"
-      delete_post:
-        complete: "โพสต์ถูกลบ"
       delete_user:
         complete: "ผู้ใช้ถูกลบ"
   fallback_username: "ผู้ใช้"

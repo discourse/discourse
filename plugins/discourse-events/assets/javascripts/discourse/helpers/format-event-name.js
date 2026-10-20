@@ -18,7 +18,7 @@ export function formatEventName(event, userTimezone) {
     event.timezone &&
     !sameTimezoneOffset(event.timezone, userTimezone)
   ) {
-    output += ` (${i18n("discourse_calendar.local_time")})`;
+    output += ` (${i18n("discourse_events.local_time")})`;
   }
 
   return output;

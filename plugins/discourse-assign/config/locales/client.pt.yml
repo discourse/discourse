@@ -161,6 +161,7 @@ pt:
     discourse_workflows:
       nodes:
         "trigger:assigned": "Atribuído(a)"
+        "trigger:unassigned": "Não atribuído(a)"
       assign_topic:
         resource: "Recurso"
         resources:

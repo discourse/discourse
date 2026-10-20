@@ -12,6 +12,7 @@ import { cook } from "discourse/lib/text";
 export default class DCookText extends Component {
   @service siteSettings;
 
+  /** @type {import("@ember/template").TrustedHTML | null} */
   @tracked cooked = null;
 
   constructor(owner, args) {
@@ -23,7 +24,7 @@ export default class DCookText extends Component {
   async loadCookedText() {
     const rawText = this.args.rawText;
     const cooked = await waitForPromise(cook(rawText));
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
     if (this.args.rawText !== rawText) {

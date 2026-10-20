@@ -6,11 +6,13 @@ RSpec.describe User::Suspend do
     it { is_expected.to validate_presence_of(:reason) }
     it { is_expected.to validate_presence_of(:suspend_until) }
     it { is_expected.to validate_length_of(:reason).is_at_most(300) }
+
     it do
       is_expected.to validate_length_of(:other_user_ids).as_array.is_at_most(
         User::MAX_SIMILAR_USERS,
       )
     end
+
     it do
       is_expected.to validate_inclusion_of(:post_action).in_array(
         %w[delete delete_replies delete_all edit none],
@@ -61,20 +63,18 @@ RSpec.describe User::Suspend do
     end
 
     context "when everything's ok" do
-      before { allow(User::Action::TriggerPostAction).to receive(:call) }
-
       it "suspends all provided users" do
         result
         expect([user, other_user].map(&:reload)).to all be_suspended
       end
 
-      it "triggers a post action" do
+      it "deletes the selected post" do
+        post = Fabricate(:post, user:)
+        params.merge!(post_id: post.id, post_action: "delete")
+
         result
-        expect(User::Action::TriggerPostAction).to have_received(:call).with(
-          guardian:,
-          post: nil,
-          params: result[:params],
-        )
+
+        expect(post.reload).to be_trashed
       end
 
       it "exposes the full reason in the result object" do

@@ -14,11 +14,11 @@ export default <template>
         </h2>
 
         <DashboardPeriodSelector
+          @endDate={{@controller.endDate}}
           @period={{@controller.period}}
+          @setCustomDateRange={{@controller.setCustomDateRange}}
           @setPeriod={{@controller.setPeriod}}
           @startDate={{@controller.startDate}}
-          @endDate={{@controller.endDate}}
-          @setCustomDateRange={{@controller.setCustomDateRange}}
         />
       </div>
     </div>
@@ -34,7 +34,7 @@ export default <template>
           <div class="header">
             <ul class="breadcrumb">
               <li class="item report">
-                <LinkTo @route="adminReports" class="report-url">
+                <LinkTo class="report-url" @route="adminReports">
                   {{i18n "admin.dashboard.emotion.title"}}
                 </LinkTo>
                 <DTooltip @interactive="true">
@@ -67,10 +67,10 @@ export default <template>
               </div>
               {{#each @controller.emotions as |metric|}}
                 <AdminReport
-                  @showHeader={{false}}
+                  @dataSourceName="emotion_{{metric}}"
                   @filters={{@controller.emotionFilters}}
                   @forcedModes="emotion"
-                  @dataSourceName="emotion_{{metric}}"
+                  @showHeader={{false}}
                 />
               {{/each}}
             </div>

@@ -57,7 +57,7 @@ module("Unit | Events | ICS Generation", function () {
       icsData.includes("DTEND;TZID=America/Los_Angeles:"),
       "contains end time with TZID"
     );
-    assert.false(icsData.includes("DTSTART:"), "no UTC start time");
+    assert.false(/^DTSTART:\d{8}T\d{6}Z$/m.test(icsData), "no UTC start time");
     assert.false(icsData.includes("20251201T120000Z"), "no Z suffix on times");
     assert.true(icsData.includes("END:VEVENT"), "closes VEVENT");
     assert.true(icsData.includes("END:VCALENDAR"), "closes VCALENDAR");

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module DiscourseCalendar
+module DiscourseEvents
   describe LivestreamController do
     fab!(:current_user, :user)
     fab!(:tag) { Fabricate(:tag, name: "livestream") }
@@ -179,6 +179,12 @@ module DiscourseCalendar
 
           expect(response.status).to eq(200)
           expect(response.body).to include("zoomFrameConfig")
+        end
+
+        it "joins the meeting with chat disabled" do
+          get "/discourse-calendar/livestream/zoom/frame", params: { topic_id: topic.id }
+
+          expect(response.body).to include("isSupportChat: false")
         end
 
         it "points the page at the signature for its own topic" do

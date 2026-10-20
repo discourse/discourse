@@ -10,12 +10,17 @@ module DiscourseAi
       MAX_RETENTION_DAYS = 36_500
       MAX_PAYLOAD_BYTES = 1.megabyte
       MIN_PAYLOAD_CHARACTERS = MAX_PAYLOAD_BYTES / 4
+      MAX_SEARCH_LENGTH = 200
+      MAX_ID = 2**63 - 1
       DETAIL_COLUMNS = %i[
         id
         provider_id
         user_id
         request_tokens
         response_tokens
+        completion_state
+        reasoning_tokens
+        stop_reason
         created_at
         topic_id
         post_id
@@ -43,6 +48,7 @@ module DiscourseAi
         post_id
         request_tokens
         response_tokens
+        completion_state
         response_status
         duration_msecs
       ].freeze
@@ -56,13 +62,7 @@ module DiscourseAi
         end
         logs =
           logs
-            .select(
-              *LIST_COLUMNS,
-              Arel.sql("request_attempts IS NOT NULL AS has_retries"),
-              Arel.sql(
-                "CASE WHEN #{AiApiAuditLog::SUCCESS_CONDITION} THEN 'successful' ELSE 'failed' END AS outcome",
-              ),
-            )
+            .select(*LIST_COLUMNS, Arel.sql("request_attempts IS NOT NULL AS has_retries"))
             .order(id: :desc)
             .limit(limit + 1)
             .preload(:user, :llm_model)
@@ -81,6 +81,7 @@ module DiscourseAi
           meta: {
             next_cursor: has_more ? logs.last&.id : nil,
             has_more:,
+            max_id: AiApiAuditLog.maximum(:id),
           },
         }
 
@@ -99,6 +100,12 @@ module DiscourseAi
         end
 
         render json: response
+      end
+
+      def new_logs
+        since_id = since_id_param
+        count = filtered_logs.where("ai_api_audit_logs.id > ?", since_id).count
+        render json: { new_logs_count: count }
       end
 
       def show
@@ -183,17 +190,22 @@ module DiscourseAi
 
         if id_filters.one?
           name = id_filters.first
-          return scope.where(name => positive_integer!(name))
+          scope = scope.where(name => positive_integer!(name))
         end
 
         scope = apply_date_filters(scope)
         scope = apply_outcome_filter(scope)
         scope = scope.where.not(request_attempts: nil) if boolean_param(:has_retries)
-        scope = scope.where(llm_id: positive_integer!(:llm_id)) if params[:llm_id].present?
+        scope = scope.where(llm_id: params[:llm_id]) if params[:llm_id].present?
         scope = scope.where(feature_name: params[:feature].to_s) if params[:feature].present?
+        scope = apply_search_filter(scope) if params[:search].present?
+
+        if boolean_param(:unattributed) &&
+             (params[:user_id].present? || params[:username].present? || search_usernames.any?)
+          raise Discourse::InvalidParameters.new(:unattributed)
+        end
 
         if params[:user_id].present? || params[:username].present?
-          raise Discourse::InvalidParameters.new(:unattributed) if boolean_param(:unattributed)
           user_id =
             if params[:user_id].present?
               positive_integer!(:user_id)
@@ -246,6 +258,68 @@ module DiscourseAi
         raise Discourse::InvalidParameters.new(name)
       end
 
+      def apply_search_filter(scope)
+        parsed = parsed_search
+
+        parsed[:ids].each { |column, value| scope = scope.where(column => value) }
+
+        parsed[:numerics].each do |value|
+          scope =
+            scope.where(
+              "ai_api_audit_logs.id = ? OR ai_api_audit_logs.topic_id = ? OR ai_api_audit_logs.post_id = ?",
+              value,
+              value,
+              value,
+            )
+        end
+
+        if parsed[:usernames].any?
+          clause = Array.new(parsed[:usernames].length, "users.username ILIKE ?").join(" AND ")
+          values = parsed[:usernames].map { |value| "%#{value}%" }
+          scope = scope.joins(:user).where(clause, *values)
+        end
+
+        scope
+      end
+
+      def search_usernames
+        params[:search].present? ? parsed_search[:usernames] : []
+      end
+
+      def parsed_search
+        return @parsed_search if @parsed_search
+
+        search = params[:search].to_s.strip
+        raise Discourse::InvalidParameters.new(:search) if search.length > MAX_SEARCH_LENGTH
+
+        id_columns = { "log" => "id", "topic" => "topic_id", "post" => "post_id" }
+        parsed = { ids: [], numerics: [], usernames: [] }
+
+        search
+          .split(/\s+/)
+          .each do |token|
+            if (match = token.match(/\A(log|topic|post):(\d+)\z/))
+              parsed[:ids] << [id_columns.fetch(match[1]), bounded_positive_id!(match[2])]
+            elsif token.match?(/\A\d+\z/)
+              parsed[:numerics] << bounded_positive_id!(token)
+            else
+              username = token.delete_prefix("@")
+              if username.present?
+                parsed[:usernames] << username.gsub(/[\\%_]/) { |char| "\\#{char}" }
+              end
+            end
+          end
+
+        @parsed_search = parsed
+      end
+
+      def bounded_positive_id!(value)
+        parsed = Integer(value, exception: false)
+        raise Discourse::InvalidParameters.new(:search) if !positive_id?(parsed)
+
+        parsed
+      end
+
       def apply_outcome_filter(scope)
         case params[:outcome]
         when nil, ""
@@ -254,6 +328,10 @@ module DiscourseAi
           scope.successful_requests
         when "failed"
           scope.failed_requests
+        when "empty"
+          scope.empty_responses
+        when "truncated"
+          scope.truncated_responses
         else
           raise Discourse::InvalidParameters.new(:outcome)
         end
@@ -279,15 +357,29 @@ module DiscourseAi
 
       def positive_integer!(name)
         value = Integer(params[name], exception: false)
-        raise Discourse::InvalidParameters.new(name) if !value || value <= 0
+        raise Discourse::InvalidParameters.new(name) if !positive_id?(value)
 
         value
+      end
+
+      # anything wider than a bigint overflows the column comparison in Postgres
+      def positive_id?(value)
+        value&.positive? && value <= MAX_ID
       end
 
       def non_negative_integer!(name)
         value = Integer(params[name], exception: false)
         if !value || value.negative? || value > MAX_RETENTION_DAYS
           raise Discourse::InvalidParameters.new(name)
+        end
+
+        value
+      end
+
+      def since_id_param
+        value = Integer(params[:since_id], exception: false)
+        if !value || value.negative? || value > MAX_ID
+          raise Discourse::InvalidParameters.new(:since_id)
         end
 
         value

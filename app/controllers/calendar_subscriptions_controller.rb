@@ -8,7 +8,15 @@ class CalendarSubscriptionsController < ApplicationController
   before_action :rate_limit_create, only: :create
 
   def show
-    render json: { has_subscription: find_calendar_api_key.present?, feeds: feed_names }
+    key = find_calendar_api_key
+    scopes = key ? key.scopes.map(&:name) : []
+    generated_feeds =
+      plugin_feeds.select { |feed| scopes.include?(feed[:scope].to_s) }.map { |feed| feed[:name] }
+    render json: {
+             has_subscription: key.present?,
+             feeds: feed_names,
+             generated_feeds: generated_feeds,
+           }
   end
 
   def create

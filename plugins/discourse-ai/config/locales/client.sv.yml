@@ -8,6 +8,10 @@ sv:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Datum"
+          outcomes:
+            failed: "Misslyckad"
         reports:
           filters:
             sort_by:
@@ -36,6 +40,18 @@ sv:
             canned_reply:
               label: "Svara"
     discourse_ai:
+      copied: "Kopierad"
+      ai_decoded_transcript:
+        type: "Typ"
+        error: "Fel"
+        response: "Svar"
+      discourse_workflows:
+        classify:
+          text: "Text"
+          upload_ids: "Bilder"
+          name: "Namn"
+          type: "Typ"
+          type_score: "Poäng"
       ai_tool_approval:
         loading: "Laddar..."
         tool: "Åtgärd"
@@ -124,8 +140,6 @@ sv:
         successful: "Lyckad"
         failed: "Misslyckad"
         unknown: "Okänd"
-        topic_id: "Ämnes-ID"
-        post_id: "Inläggs-ID"
         time: "Tid"
         when: "När"
         request: "Förfrågning"
@@ -137,6 +151,7 @@ sv:
         post_short: "Inlägg %{id}"
         duration: "Varaktighet"
         actions: "Åtgärder"
+        view_details: "Detaljer"
         periods:
           hour: "Senaste timmen"
           day: "Senaste 24 timmarna"
@@ -200,6 +215,12 @@ sv:
         edit: "Redigera"
         delete: "Radera"
         embedding: "Inbäddning"
+      decision_models:
+        no_preset: "Ingen"
+        display_name: "Namn"
+        provider: "Leverantör"
+        edit: "Redigera"
+        delete: "Radera"
       mcp_servers:
         name: "Namn"
         description: "Beskrivning"
@@ -215,6 +236,16 @@ sv:
         delete: "Ta bort"
         tools_modal:
           required: "Krävs"
+      models:
+        name: "Namn"
+        type: "Typ"
+        provider: "Leverantör"
+        edit: "Redigera"
+        select_type: "Välj"
+        types:
+          embedding: "Inbäddning"
+        filters:
+          all: "Alla typer"
       llms:
         display_name: "Namn"
         provider: "Leverantör"
@@ -271,6 +302,14 @@ sv:
         providers:
           google: "Google"
           fake: "Anpassad"
+      ai_artifact:
+        editor:
+          version: "Version"
+          default: "Standard"
+          apply: "Tillämpa"
+        share: "Dela"
+        filter_all: "Alla"
+        filter_standalone: "Fristående"
       ai_bot:
         debug_ai_modal:
           duration_label: "Varaktighet:"
@@ -307,8 +346,11 @@ sv:
         topic:
           title: "Sammanfattning av ämne"
       discobot_discoveries:
-        regular_results: "Ämnen"
-        collapse: "Förminska"
-        tooltip:
-          actions:
-            disable: "Inaktivera"
+        legacy:
+          regular_results: "Ämnen"
+          collapse: "Förminska"
+          tooltip:
+            actions:
+              disable: "Inaktivera"
+        search_all_topics: "Alla ämnen"
+        search_messages: "Meddelanden"

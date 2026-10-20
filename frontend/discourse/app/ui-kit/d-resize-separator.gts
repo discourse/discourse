@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import type Owner from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { modifier } from "ember-modifier";
+import type { Side } from "discourse/lib/geometry";
 import {
   measuredMax,
   measuredMin,
@@ -26,9 +27,8 @@ type Measurement = number | null | (() => number | null);
  * A bound, which unlike a size is expected to be known. There is nothing to clamp
  * against until it is, so a consumer with no limit should leave the arg off.
  *
- * `strictNullChecks` is off repo-wide, so a nullable measurement still type-checks
- * here. The gesture holds the line instead. It skips a bound that does not
- * resolve, rather than reading it as zero.
+ * Untyped consumers can still pass a nullable measurement, so the gesture skips
+ * a bound that does not resolve, rather than reading it as zero.
  */
 type Bound = number | (() => number);
 
@@ -120,7 +120,7 @@ interface DResizeSeparatorSignature {
      * the one that moves: a handle at the top of a bottom-docked box is `"end"`.
      * Defaults to `"start"`.
      */
-    side?: "start" | "end";
+    side?: Side;
 
     /**
      * The box being resized. Given this, the separator measures its own size and
@@ -267,8 +267,8 @@ export default class DResizeSeparator extends Component<DResizeSeparatorSignatur
   @tracked
   _announced: {
     now: number | undefined;
-    min: number | undefined;
-    max: number | undefined;
+    min: number | null | undefined;
+    max: number | null | undefined;
   } | null = null;
 
   constructor(owner: Owner, args: DResizeSeparatorSignature["Args"]) {
@@ -499,13 +499,13 @@ export default class DResizeSeparator extends Component<DResizeSeparatorSignatur
       class="d-resize-separator"
       tabindex="0"
       ...attributes
-      role="separator"
-      data-resize-axis={{this.axis}}
-      aria-orientation={{this.orientation}}
       aria-label={{@label}}
-      aria-valuenow={{this.valueNow}}
-      aria-valuemin={{this.valueMin}}
+      aria-orientation={{this.orientation}}
       aria-valuemax={{this.valueMax}}
+      aria-valuemin={{this.valueMin}}
+      aria-valuenow={{this.valueNow}}
+      data-resize-axis={{this.axis}}
+      role="separator"
       {{! Before the refresh below, which reads the box this resolves. }}
       {{measureBox this @measure}}
       {{didInsert this.refresh}}

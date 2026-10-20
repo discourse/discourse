@@ -7,24 +7,20 @@ module DiscourseRssPolling
         option :feed_items
 
         def call
-          keys = feed_items.index_with { |feed_item| embed_key(feed_item.url) }
-          topic_urls = topic_urls_by_key(keys.values)
-
-          keys.each_with_object({}) do |(feed_item, key), imported|
-            imported[feed_item] = topic_urls[key] if key && topic_urls.key?(key)
-          end
+          topic_urls = topic_urls_by_key(feed_items.map(&:url))
+          feed_items.index_with { |feed_item| topic_urls[embed_key(feed_item.url)] }.compact
         end
 
         private
 
-        def topic_urls_by_key(keys)
-          keys = keys.compact.uniq
-          return {} if keys.empty?
-
-          patterns = keys.map { |key| "^https?://#{Regexp.escape(key)}$" }
+        def topic_urls_by_key(urls)
+          urls = urls.compact_blank.uniq
+          return {} if urls.empty?
 
           TopicEmbed
-            .where("embed_url ~* ANY(ARRAY[?])", patterns)
+            .with_embed_urls(urls)
+            .select(:id, :embed_url, :topic_id)
+            .order(:id)
             .includes(:topic)
             .each_with_object({}) do |embed, topic_urls|
               next if embed.topic.nil?
@@ -36,7 +32,7 @@ module DiscourseRssPolling
         def embed_key(url)
           return if url.blank?
 
-          TopicEmbed.normalize_url(url).sub(%r{\Ahttps?://}, "")
+          TopicEmbed.embed_url_key(url)
         end
       end
     end

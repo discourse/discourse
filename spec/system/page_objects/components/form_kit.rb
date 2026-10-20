@@ -48,7 +48,7 @@ module PageObjects
         when "menu"
           component.find(".fk-d-menu__trigger")["data-value"]
         when "select"
-          PageObjects::Components::DSelect.new(component.find("select")).value
+          PageObjects::Components::DNativeSelect.new(component.find("select")).value
         when "radio-group"
           component.find("input[type='radio']:checked", visible: :all).value
         when "composer", "textarea"
@@ -63,28 +63,18 @@ module PageObjects
       end
 
       def uncheck
-        if control_type == "checkbox" && SiteSetting.enable_new_checkbox_style
+        if control_type == "checkbox"
           return unless value
 
           component.find(".form-kit__control-checkbox-checkmark").click
-          return
-        end
-
-        within component do
-          uncheck("input[type='checkbox']", visible: :all)
         end
       end
 
       def check
-        if control_type == "checkbox" && SiteSetting.enable_new_checkbox_style
+        if control_type == "checkbox"
           return if value
 
           component.find(".form-kit__control-checkbox-checkmark").click
-          return
-        end
-
-        within component do
-          check("input[type='checkbox']", visible: :all)
         end
       end
 
@@ -135,11 +125,7 @@ module PageObjects
       def toggle
         case control_type
         when "checkbox"
-          if SiteSetting.enable_new_checkbox_style
-            component.find(".form-kit__control-checkbox-checkmark").click
-          else
-            component.find("input[type='checkbox']").click
-          end
+          component.find(".form-kit__control-checkbox-checkmark").click
         when "password"
           component.find(".form-kit__control-password-toggle").click
         when "toggle"
@@ -184,9 +170,9 @@ module PageObjects
           picker.select_row_by_name(value)
           picker.collapse
         when "select"
-          PageObjects::Components::DSelect.new(component.find(".form-kit__control-select")).select(
-            value,
-          )
+          PageObjects::Components::DNativeSelect.new(
+            component.find(".form-kit__control-select"),
+          ).select(value)
         when "menu"
           trigger = component.find(".fk-d-menu__trigger.form-kit__control-menu-trigger")
           trigger.click
@@ -204,12 +190,12 @@ module PageObjects
       end
 
       def select_none
-        select(PageObjects::Components::DSelect::NO_VALUE_OPTION)
+        select(PageObjects::Components::DNativeSelect::NO_VALUE_OPTION)
       end
 
       def has_no_value?
         if control_type == "select"
-          PageObjects::Components::DSelect.new(
+          PageObjects::Components::DNativeSelect.new(
             component.find(".form-kit__control-select"),
           ).has_no_value?
         else
@@ -310,6 +296,10 @@ module PageObjects
 
       def has_no_field_with_name?(name)
         has_no_css?(".form-kit__field[data-name='#{name}']")
+      end
+
+      def has_no_enabled_field_with_name?(name)
+        has_no_css?(".form-kit__field[data-name='#{name}']:not([data-disabled])")
       end
 
       def container(name)

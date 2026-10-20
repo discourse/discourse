@@ -7,36 +7,36 @@ import { i18n } from "discourse-i18n";
 const AdminEmojisTemplate = <template>
   <div class="admin-emoji admin-config-page">
     <DPageHeader
-      @titleLabel={{i18n "admin.config.emoji.title"}}
       @descriptionLabel={{i18n "admin.config.emoji.header_description"}}
       @hideTabs={{@controller.hideTabs}}
       @shouldDisplay={{not @controller.hideTabs}}
+      @titleLabel={{i18n "admin.config.emoji.title"}}
     >
       <:breadcrumbs>
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
         <DBreadcrumbsItem
-          @path="/admin/config/emoji"
           @label={{i18n "admin.config.emoji.title"}}
+          @path="/admin/config/emoji"
         />
       </:breadcrumbs>
       <:actions as |actions|>
-        <actions.Primary @route="adminEmojis.new" @label="admin.emoji.add" />
+        <actions.Primary @label="admin.emoji.add" @route="adminEmojis.new" />
         <actions.Default
-          @route="adminEmojis.import"
-          @label="admin.emoji.import"
           class="admin-emoji__import"
+          @label="admin.emoji.import"
+          @route="adminEmojis.import"
         />
       </:actions>
       <:tabs>
         <DNavItem
-          @route="adminEmojis.settings"
-          @label="settings"
           class="admin-emoji-tabs__settings"
+          @label="settings"
+          @route="adminEmojis.settings"
         />
         <DNavItem
-          @route="adminEmojis.index"
-          @label="admin.emoji.title"
           class="admin-emoji-tabs__emoji"
+          @label="admin.emoji.title"
+          @route="adminEmojis.index"
         />
       </:tabs>
     </DPageHeader>

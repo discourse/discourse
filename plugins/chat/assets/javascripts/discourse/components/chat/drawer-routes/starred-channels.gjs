@@ -12,7 +12,7 @@ export default class ChatDrawerRoutesStarredChannels extends Component {
   <template>
     <div class="c-drawer-routes --starred-channels">
       <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
-        <navbar.Title @title={{i18n "chat.starred"}} />
+        <navbar.Title @title={{i18n "chat.heading"}} />
         <navbar.Actions as |a|>
           <a.ToggleDrawerButton />
           <a.FullPageButton />

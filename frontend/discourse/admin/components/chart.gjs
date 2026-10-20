@@ -31,7 +31,7 @@ export default class ChartComponent extends Component {
   <template>
     <div ...attributes>
       <div class="chart-canvas-container">
-        <canvas {{this.renderChart}} class="chart-canvas"></canvas>
+        <canvas class="chart-canvas" {{this.renderChart}}></canvas>
       </div>
     </div>
   </template>

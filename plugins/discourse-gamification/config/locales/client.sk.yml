@@ -87,6 +87,7 @@ sk:
       admin:
         title: "Gamifikácia"
         name: "Meno"
+        created_by: "Vytvoril"
         period: "Obdobie"
     discourse_workflows:
       gamification_score:

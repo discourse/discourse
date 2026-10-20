@@ -31,7 +31,7 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
     end
   end
 
-  Stylesheet::Manager.clear_color_scheme_cache! if %i[base_font heading_font].include?(name)
+  Stylesheet::Manager.cache.clear if %i[base_font heading_font default_theme_id].include?(name)
 
   Report.clear_cache(:storage_stats) if %i[backup_location s3_backup_bucket].include?(name)
 
@@ -39,7 +39,10 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
     Scheduler::Defer.later("Null topic slug") { Topic.update_all(slug: nil) }
   end
 
-  SvgSprite.expire_cache if name.to_s.include?("_icon")
+  if name.to_s.include?("_icon") ||
+       %i[icon objects].include?(SiteSetting.type_supervisor.get_type(name))
+    SvgSprite.expire_cache
+  end
 
   SiteIconManager.ensure_optimized! if SiteIconManager::WATCHED_SETTINGS.include?(name)
 

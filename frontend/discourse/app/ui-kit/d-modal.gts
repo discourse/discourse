@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -190,7 +191,7 @@ export default class DModal extends Component<DModalSignature> {
 
   @tracked animating = false;
   registerModalContainer = modifierFn((el: HTMLElement) => {
-    this.#modalContainer = el;
+    this.#modalContainerElement = el;
   });
   setupModalBody = modifierFn((el: HTMLElement) => {
     if (this.site.desktopView) {
@@ -222,9 +223,16 @@ export default class DModal extends Component<DModalSignature> {
       }
     };
   });
-  #modalContainer: HTMLElement;
+  #modalContainerElement?: HTMLElement;
   #lockedScrollY?: number;
   @tracked _wrapperElement?: HTMLElement;
+
+  /** Registered on insert; every reader runs after the modal has rendered. */
+  get #modalContainer(): HTMLElement {
+    const element = this.#modalContainerElement;
+    assert("DModal: the container is read before it was registered", element);
+    return element;
+  }
 
   get autofocus() {
     return this.args.autofocus ?? true;
@@ -542,22 +550,28 @@ export default class DModal extends Component<DModalSignature> {
     {{! eslint-disable ember/template-no-invalid-interactive }}
 
     <DConditionalInElement
+      @append={{true}}
       @element={{this.modal.containerElement}}
       @inline={{@inline}}
-      @append={{true}}
     >
       {{#unless @inline}}
         {{htmlClass "modal-open"}}
       {{/unless}}
       <this.dynamicElement
+        {{! The title element lives in the header, so hiding the header leaves this pointing at
+            nothing. A dangling reference is dropped when the accessible name is computed, which
+            leaves the dialog unnamed. Such a modal should supply its own label attribute. }}
+        aria-labelledby={{if
+          (and @title (not @hideHeader))
+          "discourse-modal-title"
+        }}
+        aria-modal="true"
         class={{dConcatClass
           "modal d-modal"
           (if this.animating "is-animating")
         }}
         data-keyboard="false"
-        aria-modal="true"
         role="dialog"
-        aria-labelledby={{if @title "discourse-modal-title"}}
         ...attributes
         {{didInsert this.setupModal}}
         {{willDestroy this.cleanupModal}}
@@ -603,10 +617,10 @@ export default class DModal extends Component<DModalSignature> {
               }}
                 <div class="d-modal__dismiss-action">
                   <DButton
-                    @label="cancel"
-                    @action={{this.handleCloseButton}}
-                    @title="modal.close"
                     class="btn-transparent d-modal__dismiss-action-button"
+                    @action={{this.handleCloseButton}}
+                    @label="cancel"
+                    @title="modal.close"
                   />
                 </div>
               {{/if}}
@@ -614,8 +628,8 @@ export default class DModal extends Component<DModalSignature> {
               {{#if @title}}
                 <div class="d-modal__title">
                   <h1
-                    id="discourse-modal-title"
                     class="d-modal__title-text"
+                    id="discourse-modal-title"
                   >{{@title}}</h1>
 
                   {{#if @subtitle}}
@@ -635,10 +649,10 @@ export default class DModal extends Component<DModalSignature> {
                 </div>
               {{else if this.dismissable}}
                 <DButton
-                  @icon="xmark"
-                  @action={{this.handleCloseButton}}
-                  @title="modal.close"
                   class="btn-transparent modal-close"
+                  @action={{this.handleCloseButton}}
+                  @icon="xmark"
+                  @title="modal.close"
                 />
               {{/if}}
             </div>

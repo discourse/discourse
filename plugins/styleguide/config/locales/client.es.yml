@@ -13,6 +13,9 @@ es:
   js:
     styleguide:
       title: "Guía de estilos"
+      example:
+        kind:
+          component: "Componente"
       categories:
         syntax: Sintaxis
         atoms: Átomos
@@ -29,8 +32,18 @@ es:
           title: "Campos de entrada de fecha/hora"
         menus:
           title: "Menús"
+        context_menu:
+          actions:
+            duplicate: "Duplicar"
+            delete: "Eliminar"
         multi_select:
           title: "Selección múltiple"
+        reorderable_list:
+          policies_pinned: "Anclado"
+          policies_required: "Obligatorio"
+          table_field: "Campo"
+          table_type: "Tipo"
+          cross_list_primary: "Principal"
         toasts:
           title: "Ventanas emergentes"
         font_scale:
@@ -39,6 +52,8 @@ es:
           title: "Colores"
         dialog:
           title: "Diálogo"
+        drag_and_drop:
+          locked: "Bloqueado"
         icons:
           title: "Iconos"
           full_list: "Ver la lista completa de iconos de Font Awesome"
@@ -94,6 +109,29 @@ es:
           title: "Más temas"
         post_menu:
           title: "Menú de la publicación"
+        roving_focus:
+          toolbar:
+            copy: "Copiar"
+          tags:
+            remove: "Quitar %{tag}"
+            design: "Diseño"
+            support: "Soporte"
+          adjacent:
+            label: "Filtros"
+            field: "Buscar"
+            placeholder: "Buscar temas"
+            open: "Abierto"
+            recent: "Recientes"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "Diariamente"
+            weekly: "Semanalmente"
+            monthly: "Mensualmente"
+            never: "Nunca"
+          tree:
+            components: "Componentes"
+            select: "Seleccionar"
         modal:
           title: "Modal"
           header: "Título de la ventana modal"

@@ -12,9 +12,9 @@ import { i18n } from "discourse-i18n";
 
 const PermalinkEmptyList = <template>
   <AdminConfigAreaEmptyList
+    @ctaClass="admin-permalinks__add-permalink"
     @ctaLabel="admin.permalink.add"
     @ctaRoute="adminPermalinks.new"
-    @ctaClass="admin-permalinks__add-permalink"
     @emptyLabel="admin.permalink.no_permalinks"
   />
 </template>;
@@ -24,10 +24,10 @@ export default <template>
     <DFilterControls
       @array={{@controller.model}}
       @inputPlaceholder={{i18n "admin.permalink.form.filter"}}
-      @noResultsMessage={{i18n "search.no_results"}}
-      @onTextFilterChange={{@controller.onFilterChange}}
-      @onResetFilters={{@controller.onResetFilters}}
       @loading={{@controller.loading}}
+      @noResultsMessage={{i18n "search.no_results"}}
+      @onResetFilters={{@controller.onResetFilters}}
+      @onTextFilterChange={{@controller.onFilterChange}}
     >
       <:aboveContent>
         <DConditionalLoadingSpinner @condition={{@controller.loading}} />
@@ -61,14 +61,14 @@ export default <template>
                   >
                     <td class="d-table__cell --overview">
                       <DButton
-                        @title="admin.permalink.copy_to_clipboard"
-                        @icon="far-clipboard"
-                        @action={{fn @controller.copyUrl pl}}
                         class="btn-flat"
+                        @action={{fn @controller.copyUrl pl}}
+                        @icon="far-clipboard"
+                        @title="admin.permalink.copy_to_clipboard"
                       />
                       <span
-                        id="admin-permalink-{{pl.id}}"
                         class="admin-permalink-item__url"
+                        id="admin-permalink-{{pl.id}}"
                         title={{pl.url}}
                       >{{pl.url}}</span>
                     </td>
@@ -100,25 +100,25 @@ export default <template>
                       <div class="d-table__cell-actions">
                         <DButton
                           class="btn-default btn-small admin-permalink-item__edit"
+                          @label="admin.config_areas.permalinks.edit"
                           @route="adminPermalinks.edit"
                           @routeModels={{pl}}
-                          @label="admin.config_areas.permalinks.edit"
                         />
 
                         <DMenu
-                          @identifier="permalink-menu"
-                          @title={{i18n "admin.permalink.more_options"}}
                           @icon="ellipsis-vertical"
+                          @identifier="permalink-menu"
                           @onRegisterApi={{@controller.onRegisterApi}}
+                          @title={{i18n "admin.permalink.more_options"}}
                           @triggerClass="btn-default"
                         >
                           <:content>
                             <DDropdownMenu as |dropdown|>
                               <dropdown.item>
                                 <DButton
+                                  class="btn-transparent --danger admin-permalink-item__delete"
                                   @action={{fn @controller.destroyRecord pl}}
                                   @icon="trash-can"
-                                  class="btn-transparent --danger admin-permalink-item__delete"
                                   @label="admin.config_areas.permalinks.delete"
                                 />
                               </dropdown.item>

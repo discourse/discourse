@@ -8,9 +8,9 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { i18n } from "discourse-i18n";
-import HouseAdsCategorySelector from "./house-ads-category-selector";
-import HouseAdsRouteSelector from "./house-ads-route-selector";
-import Preview from "./modal/preview";
+import HouseAdsCategorySelector from "./house-ads-category-selector.gjs";
+import HouseAdsRouteSelector from "./house-ads-route-selector.gjs";
+import Preview from "./modal/preview.gjs";
 
 export default class HouseAdForm extends Component {
   @service router;
@@ -37,10 +37,6 @@ export default class HouseAdForm extends Component {
     return i18n("admin.adplugin.house_ads.category_chooser_description");
   }
 
-  previewDisabled(data) {
-    return !data.html;
-  }
-
   get formData() {
     const model = this.args.model;
     return {
@@ -53,6 +49,10 @@ export default class HouseAdForm extends Component {
       group_ids: model.groups || [],
       routes: model.routes || [],
     };
+  }
+
+  previewDisabled(data) {
+    return !data.html;
   }
 
   @action
@@ -164,31 +164,31 @@ export default class HouseAdForm extends Component {
 
   <template>
     <Form
-      @onSubmit={{this.save}}
-      @data={{this.formData}}
       class="house-ad-form"
+      @data={{this.formData}}
+      @onSubmit={{this.save}}
       as |form data|
     >
       <form.Field
+        @format="large"
         @name="name"
         @title={{i18n "admin.adplugin.house_ads.name"}}
-        @validation="required"
-        @format="large"
         @type="input"
+        @validation="required"
         as |field|
       >
         <field.Control />
       </form.Field>
 
       <form.Field
+        @format="full"
         @name="html"
         @title={{i18n "admin.adplugin.house_ads.html"}}
-        @validation="required"
-        @format="full"
         @type="code"
+        @validation="required"
         as |field|
       >
-        <field.Control @lang="html" @height={{270}} />
+        <field.Control @height={{270}} @lang="html" />
       </form.Field>
 
       <form.Field
@@ -210,57 +210,57 @@ export default class HouseAdForm extends Component {
       </form.Field>
 
       <form.Field
-        @name="categories"
-        @title={{i18n "admin.adplugin.house_ads.categories"}}
         @description={{this.categoryDescription}}
         @format="large"
+        @name="categories"
+        @title={{i18n "admin.adplugin.house_ads.categories"}}
         @type="custom"
         as |field|
       >
         <field.Control>
           <HouseAdsCategorySelector
             @categories={{this.site.categories}}
-            @selectedCategories={{field.value}}
             @onChange={{field.set}}
+            @selectedCategories={{field.value}}
           />
         </field.Control>
       </form.Field>
 
       {{#if this.routesEnabled}}
         <form.Field
-          @name="routes"
-          @title={{i18n "admin.adplugin.house_ads.routes"}}
           @description={{i18n
             "admin.adplugin.house_ads.route_chooser_description"
           }}
           @format="large"
+          @name="routes"
+          @title={{i18n "admin.adplugin.house_ads.routes"}}
           @type="custom"
           as |field|
         >
           <field.Control>
             <HouseAdsRouteSelector
-              @value={{field.value}}
               @onChange={{field.set}}
+              @value={{field.value}}
             />
           </field.Control>
         </form.Field>
       {{/if}}
 
       <form.Field
-        @name="group_ids"
-        @title={{i18n "admin.adplugin.house_ads.groups"}}
         @description={{i18n
           "admin.adplugin.house_ads.group_chooser_description"
         }}
         @format="large"
+        @name="group_ids"
+        @title={{i18n "admin.adplugin.house_ads.groups"}}
         @type="custom"
         as |field|
       >
         <field.Control>
           <GroupChooser
             @content={{this.site.groups}}
-            @value={{field.value}}
             @onChange={{field.set}}
+            @value={{field.value}}
           />
         </field.Control>
       </form.Field>
@@ -274,9 +274,9 @@ export default class HouseAdForm extends Component {
         />
         {{#unless this.isNew}}
           <form.Button
+            class="btn-danger"
             @action={{this.delete}}
             @label="admin.adplugin.house_ads.delete"
-            class="btn-danger"
           />
         {{/unless}}
       </form.Actions>

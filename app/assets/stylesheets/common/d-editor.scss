@@ -334,8 +334,6 @@
   padding-block: var(--space-1);
   overflow-x: auto;
   overflow-y: hidden;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
   max-width: 100%;
 
   // the toolbar can be rendered outside .d-editor-textarea-wrapper, so the
@@ -343,10 +341,6 @@
   &.--disabled {
     opacity: 0.5;
     pointer-events: none;
-  }
-
-  &::-webkit-scrollbar {
-    display: none;
   }
 
   .btn:focus-visible {
