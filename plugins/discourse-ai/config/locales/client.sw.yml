@@ -196,6 +196,13 @@ sw:
         delete: "Futa"
         tools_modal:
           required: "Muhimu na Inahitajika"
+      models:
+        name: "Jina"
+        type: "Aina"
+        provider: "Mkimu"
+        edit: "Hariri"
+        types:
+          embedding: "Ambatanisha"
       llms:
         display_name: "Jina"
         provider: "Mkimu"

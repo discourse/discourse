@@ -31,6 +31,22 @@ en:
           description: "AI-assisted workflow authoring"
           workflow_authoring: "Workflow authoring"
     discourse_workflows:
+      admin_assistant:
+        preview:
+          label: "Workflow preview"
+          exact_configuration: "Exact configuration"
+          read_only: "Read-only preview"
+          script_validation_warning: "Some Code nodes failed syntax or mode checks. Review the errors in Exact configuration before approving."
+          connects_to: "Connects to %{nodes}"
+          branch: "Branch %{number}"
+          node_count:
+            one: "%{count} node"
+            other: "%{count} nodes"
+          connection_count:
+            one: "%{count} connection"
+            other: "%{count} connections"
+          cycle: "Includes a cycle"
+          unavailable: "This workflow is too complex to draw safely here. Review the exact configuration before approving."
       actor:
         system: "System user"
         anonymous: "Anonymous user"
@@ -128,7 +144,6 @@ en:
       keep_editing: "Keep editing"
       workflow_name: "Workflow name"
       creator: "Creator"
-      last_editor: "Last editor"
       last_update: "Last update"
       last_run: "Last run"
       status: "Status"

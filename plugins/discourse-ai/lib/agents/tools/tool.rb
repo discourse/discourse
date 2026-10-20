@@ -51,6 +51,10 @@ module DiscourseAi
             false
           end
 
+          def available_for_context?(_context)
+            true
+          end
+
           # When true, the replayed tool (after approval) is given the
           # approving moderator as context.user, so guardian checks and
           # downstream audit logs (StaffActionLogger, UserHistory) credit

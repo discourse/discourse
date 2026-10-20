@@ -10,15 +10,15 @@
     "core-js": "^3.50.0",
     "discourse": "workspace:0.0.0",
     "discourse-markdown-it": "workspace:*",
-    "markdown-it": "^15.0.1",
+    "markdown-it": "^15.0.2",
     "pretty-text": "workspace:*",
     "rolldown": "1.2.7",
-    "xss": "^1.0.15"
+    "xss": "1.0.15"
   },
   "engines": {
     "node": ">= 20",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": "^10"
+    "pnpm": "^12"
   }
 }

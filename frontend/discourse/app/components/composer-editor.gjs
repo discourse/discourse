@@ -672,10 +672,12 @@ export default class ComposerEditor extends Component {
     const loaded = loadOneboxes(
       preview,
       ajax,
-      this.get("composer.topic.id"),
-      this.get("composer.category.id"),
+      this.get("composer.model.topic.id"),
+      this.get("composer.model.category.id"),
       this.siteSettings.max_oneboxes_per_post,
-      refresh
+      refresh,
+      false,
+      (onebox) => onebox && this.appEvents.trigger("composer:refresh-preview")
     );
 
     if (refresh && loaded > 0) {

@@ -12,7 +12,7 @@ if defined?(DiscourseWorkflows)
             name: "action:classify",
             version: "1.0",
             defaults: {
-              icon: "chart-simple",
+              icon: "scale-balanced",
               color: "violet",
             },
             group: "ai",
@@ -41,7 +41,7 @@ if defined?(DiscourseWorkflows)
                   control: :combo_box,
                 },
                 control_options: {
-                  action_icon: "chart-simple",
+                  action_icon: "scale-balanced",
                   action_label: "discourse_ai.decision_models.manage",
                   action_route: "adminPlugins.show.discourse-ai-decision-models",
                   action_route_models: ["discourse-ai"],

@@ -259,6 +259,16 @@ ug:
         delete: "ئۆچۈر"
         tools_modal:
           required: "زۆرۈر"
+      models:
+        name: "ئىسمى"
+        type: "تىپى"
+        edit: "تەھرىر"
+        select_type: "تاللا"
+        types:
+          embedding: "سىڭدۈرمە"
+        filters:
+          all: "ھەممە تىپ"
+          reset: "سۈزگۈچنى ئەسلىگە قايتۇرىدۇ"
       llms:
         display_name: "ئىسمى"
         vision_modes:

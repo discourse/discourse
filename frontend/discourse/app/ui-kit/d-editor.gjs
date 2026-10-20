@@ -439,10 +439,16 @@ export default class DEditor extends Component {
 
       this.appEvents.on("composer:replace-toolbar", replaceToolbar);
       this.appEvents.on("composer:reset-toolbar", this, "resetToolbar");
+      this.appEvents.on("composer:refresh-preview", this, "_watchForChanges");
 
       return () => {
         this.appEvents.off("composer:replace-toolbar", replaceToolbar);
         this.appEvents.off("composer:reset-toolbar", this, "resetToolbar");
+        this.appEvents.off(
+          "composer:refresh-preview",
+          this,
+          "_watchForChanges"
+        );
 
         this.appEvents.off(
           "composer:insert-block",
@@ -719,6 +725,7 @@ export default class DEditor extends Component {
         destroyUserStatuses();
         return userSearch({
           term,
+          searchContext: "mention",
           topicId: this.topicId,
           categoryId: this.categoryId,
           includeGroups: true,

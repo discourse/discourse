@@ -9,7 +9,9 @@ import DMultiSelect from "discourse/ui-kit/d-multi-select";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
 import DTableHeaderToggle from "discourse/ui-kit/d-table-header-toggle";
+import DUserLink from "discourse/ui-kit/d-user-link";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ShareReport from "discourse/plugins/discourse-data-explorer/discourse/components/share-report";
@@ -171,15 +173,14 @@ export default <template>
                         <div class="d-table__mobile-label">
                           {{i18n "explorer.query_user"}}
                         </div>
-                        {{#if query.username}}
-                          <div>
-                            <LinkTo
-                              @model={{query.username}}
-                              @route="user.summary"
-                            >
-                              {{query.username}}
-                            </LinkTo>
-                          </div>
+                        {{#if query.user}}
+                          <DUserLink
+                            class="query-created-by__link"
+                            @user={{query.user}}
+                          >
+                            {{dAvatar query.user imageSize="tiny"}}
+                            <span>{{query.user.username}}</span>
+                          </DUserLink>
                         {{/if}}
                       </td>
                       <td class="d-table__cell --detail query-group-names">

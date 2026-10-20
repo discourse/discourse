@@ -261,6 +261,17 @@ hu:
         delete: "Törlés"
         tools_modal:
           required: "Kötelező"
+      models:
+        name: "Név"
+        type: "Típus"
+        provider: "Szolgáltató"
+        edit: "Szerkesztés"
+        select_type: "Válasszon"
+        types:
+          embedding: "Beágyazás"
+        filters:
+          all: "Összes típus"
+          reset: "Szűrők visszaállítása"
       llms:
         display_name: "Név"
         provider: "Szolgáltató"

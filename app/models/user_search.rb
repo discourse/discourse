@@ -24,6 +24,7 @@ class UserSearch
     @user_ids = opts[:user_ids]
     @can_review = opts[:can_review] || false
     @search_custom_fields = opts[:search_custom_fields] || false
+    @search_context = opts[:search_context]
 
     @topic = Topic.find(@topic_id) if @topic_id
     @category = Category.find(@category_id) if @category_id
@@ -66,7 +67,11 @@ class UserSearch
           .where("users.admin OR categories.id = ?", @topic.category_id)
     end
 
-    users
+    DiscoursePluginRegistry.apply_modifier(
+      :user_search_scoped_users,
+      users,
+      { search_context: @search_context, category: @category, topic: @topic, guardian: @guardian },
+    )
   end
 
   def filtered_by_term_users

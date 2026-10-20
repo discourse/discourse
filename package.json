@@ -4,17 +4,18 @@
   "author": "Discourse",
   "license": "GPL-2.0-only",
   "devDependencies": {
-    "@discourse/lint-configs": "^3.8.0",
+    "@discourse/lint-configs": "^3.8.2",
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "7.3.1",
-    "@glint/ember-tsc": "^1.11.4",
-    "@glint/tsserver-plugin": "^2.7.7",
+    "@glint/ember-tsc": "^1.11.6",
+    "@glint/tsserver-plugin": "^2.7.9",
     "@rdil/parallel-prettier": "^3.0.0",
-    "concurrently": "^10.0.5",
+    "concurrently": "^10.0.6",
+    "ember-content-mapper": "^0.3.1",
     "eslint": "10.6.0",
-    "execa": "^10.0.1",
+    "execa": "^10.1.0",
     "jsdoc": "^4.0.5",
-    "lefthook": "^2.1.12",
+    "lefthook": "^2.2.1",
     "licensee": "^12.0.2",
     "lint-to-the-future": "^3.2.0",
     "lint-to-the-future-eslint": "^4.0.0",
@@ -22,9 +23,10 @@
     "postcss-value-parser": "^4.2.0",
     "prettier": "3.8.1",
     "stylelint": "17.5.0",
-    "typescript": "^6.0.3"
+    "typescript": "7.1.0-dev.20260930.4"
   },
   "scripts": {
+    "prepare": "pnpm types:generate",
     "dev": "bin/dev",
     "lint": "concurrently \"pnpm:lint:*(!fix)\" --names \"lint:\"",
     "lint:fix": "concurrently \"pnpm:lint:*:fix\" --names \"fix:\"",
@@ -34,9 +36,9 @@
     "lint:js:fix": "eslint --fix ./frontend $(script/list_bundled_plugins) ./themes --no-error-on-unmatched-pattern",
     "lint:prettier": "pnpm pprettier --list-different 'app/assets/stylesheets/**/*.scss' 'frontend/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs,css}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/{assets,admin/assets,test}/javascripts/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs}') 'themes/**/*.{js,gjs,ts,gts,cjs,mjs,scss}'",
     "lint:prettier:fix": "pnpm prettier -w --no-error-on-unmatched-pattern 'app/assets/stylesheets/**/*.scss' 'frontend/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs,css}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/{assets,admin/assets,test}/javascripts/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs}') 'themes/**/*.{js,gjs,ts,gts,cjs,mjs,scss}'",
-    "lint:types": "NODE_OPTIONS=--max-old-space-size=8192 ember-tsc -b",
-    "types:generate": "pnpm --dir=frontend/discourse-i18n ember-tsc && pnpm --dir=frontend/discourse-types generate-external",
-    "types:watch": "pnpm types:generate && NODE_OPTIONS=--max-old-space-size=8192 pnpm ember-tsc -b --watch --preserveWatchOutput",
+    "lint:types": "tsc -b --runExternalCode",
+    "types:generate": "pnpm --dir=frontend/discourse-i18n tsc && pnpm --dir=frontend/discourse-types generate-external",
+    "types:watch": "pnpm types:generate && tsc -b --runExternalCode --watch --preserveWatchOutput",
     "lttf:ignore": "lint-to-the-future ignore",
     "lttf:output": "lint-to-the-future output -o ./lint-progress/",
     "lint-progress": "pnpm lttf:output && npx html-pages ./lint-progress --no-cache",
@@ -49,7 +51,7 @@
     "node": ">= 20",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": "^10"
+    "pnpm": "^12"
   },
-  "packageManager": "pnpm@10.34.5"
+  "packageManager": "pnpm@12.11.2"
 }

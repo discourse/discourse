@@ -9,7 +9,6 @@ sq:
     chat_separate_sidebar_mode: "Shfaq mënyra të veçanta të shiritit anësor për forumin dhe bisedën."
     chat_enabled: "Aktivizo bisedën."
     enable_public_channels: "Aktivizo kanalet publike duke u bazuar në kategori."
-    chat_channel_retention_days: "Mesazhet e bisedës në kanalet e rregullta do të mbahen për kaq shumë ditë. Cakto në '0' për të ruajtur mesazhet përgjithmonë."
     chat_dm_retention_days: "Mesazhet e bisedës në kanalet personale të bisedës do të ruhen për disa ditë. Kliko tek '0' për të ruajtur mesazhet në mënyrë të përhershme."
     chat_auto_silence_duration: "Numri i minutave për të cilat përdoruesi do të ndërpritet kur tejkalon kufirin e normës së krijimit të mesazheve të bisedës. Kliko tek '0' për të çaktivizuar ndërprerjen automatike."
     chat_allowed_messages_for_trust_level_0: "Numri i mesazheve që u lejohet përdoruesve të nivelit 0 të dërgojnë në 30 sekonda. Kliko tek '0' për të çaktivizuar limitin."
@@ -55,6 +54,15 @@ sq:
         Vizitoni kanalin në %{channel_url} për të provuar përsëri.
   chat:
     deleted_chat_username: deleted
+    crawler:
+      directory_title: "Kanalet e bisedës"
+      nav_title: "Biseda"
+      members_count:
+        one: "%{count} anëtar"
+        other: "%{count} anëtarët"
+      thread_replies:
+        one: "%{count} përgjigje"
+        other: "%{count} përgjigje"
     errors:
       users_cant_be_added_to_channel: "Përdoruesit nuk mund të shtohen në këtë kanal."
       channel_new_message_disallowed:

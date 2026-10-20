@@ -224,28 +224,38 @@ if defined?(DiscourseWorkflows)
               },
             )
 
-            return [[run_once_for_all_items(exec_ctx, agent)]] if mode == RUN_ONCE_FOR_ALL_ITEMS
-
-            items =
-              exec_ctx.input_items.map.with_index do |item, item_index|
-                result =
-                  run_agent(
-                    agent,
-                    item_config(exec_ctx, item_index),
-                    exec_ctx.log,
-                    runner(exec_ctx, item_index),
-                  )
-
-                wrap(result, paired_item: exec_ctx.paired_item_for(item))
+            with_cancel_manager(exec_ctx.deadline) do |cancel_manager|
+              if mode == RUN_ONCE_FOR_ALL_ITEMS
+                next [[run_once_for_all_items(exec_ctx, agent, cancel_manager)]]
               end
 
-            [items]
+              items =
+                exec_ctx.input_items.map.with_index do |item, item_index|
+                  result = run_agent(agent, exec_ctx, item_index, cancel_manager)
+                  wrap(result, paired_item: exec_ctx.paired_item_for(item))
+                end
+
+              [items]
+            end
           end
 
           private
 
-          def run_once_for_all_items(exec_ctx, agent)
-            result = run_agent(agent, item_config(exec_ctx, 0), exec_ctx.log, runner(exec_ctx, 0))
+          def with_cancel_manager(deadline)
+            cancel_manager = DiscourseAi::Completions::CancelManager.new
+            if deadline
+              timer =
+                Concurrent::ScheduledTask.execute([deadline - Time.current, 0].max) do
+                  cancel_manager.cancel!
+                end
+            end
+            yield cancel_manager
+          ensure
+            timer&.cancel
+          end
+
+          def run_once_for_all_items(exec_ctx, agent, cancel_manager)
+            result = run_agent(agent, exec_ctx, 0, cancel_manager)
 
             wrap(
               result,
@@ -370,7 +380,10 @@ if defined?(DiscourseWorkflows)
             I18n.t("discourse_ai.discourse_workflows.uploads.#{key}", **args)
           end
 
-          def run_agent(agent, config, log, runner)
+          def run_agent(agent, exec_ctx, item_index, cancel_manager)
+            config = item_config(exec_ctx, item_index)
+            runner = runner(exec_ctx, item_index)
+            log = exec_ctx.log
             agent_record = agent[:record]
             llm_model = agent[:llm_model]
             prompt = config["prompt"].to_s
@@ -391,9 +404,11 @@ if defined?(DiscourseWorkflows)
                 messages: [{ type: :user, content: content }],
                 feature_name: "workflow",
                 execution_context: execution_context,
+                cancel_manager: cancel_manager,
               )
 
             result, structured = collect_reply(agent[:bot], bot_context, log)
+            raise DiscourseWorkflows::Executor::ExecutionTimedOut if cancel_manager.cancelled?
 
             skipped =
               execution_context.upload_skips.map { |skip| upload_error_text("skipped", **skip) }

@@ -46,6 +46,31 @@ describe Jobs::DetectTranslatePost do
     job.execute({ post_id: post.id })
   end
 
+  describe "finishing with a post" do
+    it "reports it is done after translating the post" do
+      post.update!(locale: "en")
+      DiscourseAi::Translation::PostLocalizer.stubs(:localize)
+
+      events =
+        DiscourseEvent.track_events(:post_localizations_finished) do
+          job.execute({ post_id: post.id })
+        end
+
+      expect(events.map { |e| e[:params] }).to eq([[post.id]])
+    end
+
+    it "reports it is done when it skips the post" do
+      SiteSetting.discourse_ai_enabled = false
+
+      events =
+        DiscourseEvent.track_events(:post_localizations_finished) do
+          job.execute({ post_id: post.id })
+        end
+
+      expect(events.map { |e| e[:params] }).to eq([[post.id]])
+    end
+  end
+
   it "detects locale" do
     allow(DiscourseAi::Translation::PostLocaleDetector).to receive(:detect_locale).with(
       post,

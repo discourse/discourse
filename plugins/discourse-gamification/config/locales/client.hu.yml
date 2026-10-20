@@ -85,6 +85,7 @@ hu:
       admin:
         title: "Gamifikáció"
         name: "Név"
+        created_by: "Létrehozta:"
         period: "Időszak"
     discourse_workflows:
       gamification_score:
