@@ -737,6 +737,129 @@ module("Integration | ui-kit | DModal", function (hooks) {
     );
   });
 
+  module("enter on a combobox", function (innerHooks) {
+    innerHooks.beforeEach(function () {
+      this.actionCalled = false;
+      this.someAction = () => (this.actionCalled = true);
+    });
+
+    test("a closed select-only combobox keeps the key, since Enter opens it", async function (assert) {
+      await render(
+        <template>
+          <DModal @inline={{true}}>
+            <:body>
+              <div
+                aria-expanded="false"
+                class="body-combobox"
+                role="combobox"
+                tabindex="0"
+              >Apple</div>
+            </:body>
+            <:footer>
+              <DButton
+                class="btn-primary"
+                @action={{this.someAction}}
+                @translatedLabel="Perform action"
+              />
+            </:footer>
+          </DModal>
+        </template>
+      );
+
+      await focus(".body-combobox");
+      await triggerKeyEvent(".body-combobox", "keydown", "Enter");
+
+      assert.false(this.actionCalled, "the modal does not submit");
+    });
+
+    test("an open select-only combobox keeps the key, since Enter picks an option", async function (assert) {
+      await render(
+        <template>
+          <DModal @inline={{true}}>
+            <:body>
+              <div
+                aria-expanded="true"
+                class="body-combobox"
+                role="combobox"
+                tabindex="0"
+              >Apple</div>
+            </:body>
+            <:footer>
+              <DButton
+                class="btn-primary"
+                @action={{this.someAction}}
+                @translatedLabel="Perform action"
+              />
+            </:footer>
+          </DModal>
+        </template>
+      );
+
+      await focus(".body-combobox");
+      await triggerKeyEvent(".body-combobox", "keydown", "Enter");
+
+      assert.false(this.actionCalled, "the modal does not submit");
+    });
+
+    test("an open text-entry combobox keeps the key, since Enter picks an option", async function (assert) {
+      await render(
+        <template>
+          <DModal @inline={{true}}>
+            <:body>
+              <input
+                aria-expanded="true"
+                class="body-combobox"
+                role="combobox"
+                type="text"
+              />
+            </:body>
+            <:footer>
+              <DButton
+                class="btn-primary"
+                @action={{this.someAction}}
+                @translatedLabel="Perform action"
+              />
+            </:footer>
+          </DModal>
+        </template>
+      );
+
+      await focus(".body-combobox");
+      await triggerKeyEvent(".body-combobox", "keydown", "Enter");
+
+      assert.false(this.actionCalled, "the modal does not submit");
+    });
+
+    test("a closed text-entry combobox still submits the modal, like any text field", async function (assert) {
+      await render(
+        <template>
+          <DModal @inline={{true}}>
+            <:body>
+              <input
+                aria-expanded="false"
+                class="body-combobox"
+                role="combobox"
+                type="text"
+              />
+            </:body>
+            <:footer>
+              <DButton
+                class="btn-primary"
+                @action={{this.someAction}}
+                @translatedLabel="Perform action"
+              />
+            </:footer>
+          </DModal>
+        </template>
+      );
+
+      await focus(".body-combobox");
+      await triggerKeyEvent(".body-combobox", "keydown", "Enter");
+
+      assert.true(this.actionCalled, "the modal submits");
+    });
+  });
+
   test("does not swallow keystrokes aimed at a modal stacked above it", async function (assert) {
     await render(
       <template>
