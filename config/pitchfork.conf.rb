@@ -165,31 +165,24 @@ before_service_worker_ready do |server, service_worker|
     STDOUT.puts "Pitchfork ready on http://localhost:#{ENV["UNICORN_PORT"] || 3000} (#{parts.join(", ")})"
   end
 
-  check_demon =
-    lambda do |&check|
-      check.call
-    rescue => e
-      Rails.logger.warn("Error in demon processes heartbeat check: #{e}\n#{e.backtrace.join("\n")}")
-    end
-
   Thread.new do
     while true
-      sleep 60
+      begin
+        sleep 60
 
-      if sidekiqs > 0
-        check_demon.call do
+        if sidekiqs > 0
           Demon::Sidekiq.ensure_running
           Demon::Sidekiq.heartbeat_check
           Demon::Sidekiq.rss_memory_check
         end
-      end
 
-      if GlobalSetting.enable_vips_image_processing
-        check_demon.call { Demon::DiscourseVips.ensure_running }
-      end
+        Demon::DiscourseVips.ensure_running if GlobalSetting.enable_vips_image_processing
 
-      DiscoursePluginRegistry.demon_processes.each do |demon_class|
-        check_demon.call { demon_class.ensure_running }
+        DiscoursePluginRegistry.demon_processes.each { |demon_class| demon_class.ensure_running }
+      rescue => e
+        Rails.logger.warn(
+          "Error in demon processes heartbeat check: #{e}\n#{e.backtrace.join("\n")}",
+        )
       end
     end
   end
