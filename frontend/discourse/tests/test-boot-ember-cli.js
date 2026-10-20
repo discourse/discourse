@@ -100,6 +100,13 @@ export async function startTests() {
         const module = requirejs(name);
         if (module?.__discourseTestModule) {
           availableModules[name] = module.default;
+        } else if (module?.__discourseTestModuleError) {
+          availableModules[name] = () =>
+            QUnit.module(name, () =>
+              QUnit.test("is a valid test module", () => {
+                throw new Error(module.__discourseTestModuleError);
+              })
+            );
         }
       }
     }

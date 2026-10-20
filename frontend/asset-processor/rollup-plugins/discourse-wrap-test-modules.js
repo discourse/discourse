@@ -1,5 +1,8 @@
 import MagicString from "magic-string";
-import { wrapTestModuleBody } from "../../discourse/lib/wrap-test-module-body.mjs";
+import {
+  TEST_MODULE_EXPORTS_ERROR,
+  wrapTestModuleBody,
+} from "../../discourse/lib/wrap-test-module-body.mjs";
 
 // Helpers share the test entrypoint and must keep their exports.
 const TEST_FILE_REGEX = /-test\.(?:gjs|js|ts|gts)$/;
@@ -27,10 +30,16 @@ export default function discourseWrapTestModules({ testModuleIds }) {
 
         const magic = new MagicString(code);
 
-        wrapTestModuleBody(this.parse(code).body, magic);
-
-        // The runner must distinguish tests from app modules also named "*-test".
-        magic.append("export const __discourseTestModule = true;\n");
+        if (wrapTestModuleBody(this.parse(code).body, magic)) {
+          // The runner must distinguish tests from app modules also named "*-test".
+          magic.append("export const __discourseTestModule = true;\n");
+        } else {
+          // Throwing would fail the whole plugin build, app code included. Left eager, the
+          // module keeps its importers linking, and the runner reports this as a failing test.
+          magic.append(
+            `export const __discourseTestModuleError = ${JSON.stringify(TEST_MODULE_EXPORTS_ERROR)};\n`
+          );
+        }
 
         return {
           code: magic.toString(),

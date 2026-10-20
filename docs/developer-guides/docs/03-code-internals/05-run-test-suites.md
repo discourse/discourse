@@ -57,16 +57,13 @@ bin/rake "plugin:qunit[discourse-chat-integration]" # Run a single plugin's quni
 
 ### Test module registration
 
-Core and plugin files ending in `-test.js`, `-test.gjs`, `-test.ts`, or `-test.gts`
-defer their bodies until the runner selects them. Top-level `await` is supported;
-the runner waits for registration to finish before starting the tests.
+Core and plugin `*-test.{js,gjs,ts,gts}` files run their bodies only when the runner selects them, so path filters register only the matching tests. Top-level `await` is supported.
 
-These test modules cannot contain exports. Move shared helpers into separate files
-under `tests/helpers` in core or `test/javascripts/helpers` in a plugin, and import
-them from the test modules. Imports and helper modules still execute when the
-bundle loads, so keep test registration in the test modules themselves.
+Test modules cannot contain exports. Put shared helpers in `tests/helpers` (core) or `test/javascripts/helpers` (plugins) and import them. Imports run when the bundle loads, so register tests only in the test modules themselves.
 
-Theme tests retain their existing eager registration behavior.
+In core, an export fails the build. A plugin test module with exports runs eagerly, ignoring path filters, and fails an "is a valid test module" test when selected.
+
+Theme tests always register eagerly.
 
 ### Themes
 
