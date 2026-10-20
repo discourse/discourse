@@ -1,4 +1,31 @@
 en:
+  dsa_notice:
+    subject: "[%{reference}] Report of potentially illegal content"
+    summary: "**Report reference: %{reference}**\n\n**Email address:** %{reporter_email}\n\n**Full name or organization name:** %{reporter_name}\n\n**Exact URL of the content:** %{content_url}\n\n**Why do you believe this content is illegal?**\n\n%{explanation}"
+    verification_invalid: "The email verification code is incorrect or has expired. Check the code or request a new one."
+    invalid_parameters: "The report contains invalid values."
+    invalid_url: "must be a valid HTTP or HTTPS URL without login credentials"
+    invalid_email: "must be a valid email address"
+  dsa_notice_verification:
+    subject_template: "[%{email_prefix}] Your report verification code"
+    text_body_template: |
+      Use this code to verify your email for reporting illegal content on %{site_title}:
+
+      ## %{verification_code}
+
+      This code expires in %{expires_in_minutes} minutes. If you didn’t request it, you can safely ignore this email.
+  dsa_notice_mailer:
+    subject_template: "[%{email_prefix}] Your report of potentially illegal content %{reference}"
+    text_body_template: |
+      %{site_title} has received your report.
+
+      The reviewing team will email you the outcome. This receipt does not mean that a decision has been made or that the content has been removed.
+
+      %{summary}
+
+      **Declaration:**
+
+      I confirm that I have a bona fide belief that the information and allegations in this notice are accurate and complete.
   dsa_statements:
     classification_note: "Classified this moderation decision for DSA reporting.\nCommunity rule: %{ground}\nCategory: %{category}"
     errors:
@@ -2117,6 +2144,7 @@ en:
     unavailable: "A random username could not be generated. Check the random username word lists in your site settings."
 
   site_settings:
+    dsa_notice_group: "Group receiving illegal content notices when {{setting:dsa_reporting_enabled}} is enabled. Members can read notices and reporter contact details. Defaults to admins, which also receives notices if the selected group is missing or empty."
     dsa_community_rules: "Community rules available for DSA classification when {{setting:dsa_reporting_enabled}} is enabled. Each rule needs an exact contractual reference (up to 500 characters) and an explanation (up to 2000 characters). Leave empty to disable classification."
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
     disabled: "disabled"

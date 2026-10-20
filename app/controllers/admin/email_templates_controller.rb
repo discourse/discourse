@@ -14,6 +14,8 @@ class Admin::EmailTemplatesController < Admin::AdminController
         custom_invite_forum_mailer
         custom_invite_mailer
         download_backup_mailer
+        dsa_notice_mailer
+        dsa_notice_verification
         email_login_code_mailer
         invite_forum_mailer
         invite_mailer
