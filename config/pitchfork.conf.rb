@@ -79,7 +79,6 @@ after_mold_fork do |server, mold|
   Discourse.preload_rails!
   Discourse.apply_db_variables_overrides(web: false)
 
-
   supervisor = ENV["UNICORN_SUPERVISOR_PID"].to_i
 
   if supervisor > 0
@@ -105,9 +104,7 @@ after_worker_fork do |server, worker|
   Discourse.apply_db_variables_overrides(web: true)
   Discourse.after_fork
   SignalTrapLogger.instance.after_fork
-
 end
-
 
 before_worker_exit do |_server, _worker|
   Discourse.resume_after_fork

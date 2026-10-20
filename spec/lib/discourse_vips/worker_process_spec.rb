@@ -5,7 +5,7 @@ require "demon/base"
 RSpec.describe DiscourseVips::WorkerProcess do
   describe "#initialize" do
     it "stops its worker when the owning process is killed" do
-      shared_worker = DiscourseVips::Client.instance_variable_get(:@shared_worker)
+      shared_worker = DiscourseVips::Client.shared_worker?
       Dir.mktmpdir do |directory|
         socket_path = File.join(directory, "worker", "socket")
         DiscourseVips::WorkerProcess.stubs(:shared_socket_path).returns(socket_path)
@@ -41,7 +41,11 @@ RSpec.describe DiscourseVips::WorkerProcess do
         end
       end
     ensure
-      DiscourseVips::Client.instance_variable_set(:@shared_worker, shared_worker)
+      if shared_worker
+        DiscourseVips::Client.use_shared_worker
+      else
+        DiscourseVips::Client.use_private_worker
+      end
     end
   end
 end

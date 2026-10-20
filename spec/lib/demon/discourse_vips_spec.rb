@@ -8,10 +8,14 @@ RSpec.describe Demon::DiscourseVips do
   let(:demon) { described_class.new(0, rails_root: "#{directory}/") }
 
   around do |example|
-    shared_worker = DiscourseVips::Client.instance_variable_get(:@shared_worker)
+    shared_worker = DiscourseVips::Client.shared_worker?
     example.run
   ensure
-    DiscourseVips::Client.instance_variable_set(:@shared_worker, shared_worker)
+    if shared_worker
+      DiscourseVips::Client.use_shared_worker
+    else
+      DiscourseVips::Client.use_private_worker
+    end
   end
 
   before do
@@ -37,8 +41,10 @@ RSpec.describe Demon::DiscourseVips do
       socket_address = Addrinfo.unix(socket_path)
       allow(Addrinfo).to receive(:unix).with(socket_path).and_return(socket_address)
       allow(socket_address).to receive(:connect).and_raise(Errno::ECONNREFUSED)
-      stub_const(DiscourseVips::Client, :SHARED_WORKER_RETRY_SECONDS, 0) do
-        expect { described_class.start }.to raise_error(DiscourseVips::WorkerUnavailable)
+      stub_const(DiscourseVips::Client, :DEFAULT_TIMEOUT_SECONDS, 0.1) do
+        stub_const(DiscourseVips::Client, :WORKER_GRACE_SECONDS, 0) do
+          expect { described_class.start }.to raise_error(DiscourseVips::WorkerUnavailable)
+        end
       end
       allow(socket_address).to receive(:connect).and_call_original
 
@@ -58,8 +64,10 @@ RSpec.describe Demon::DiscourseVips do
       socket_address = Addrinfo.unix(socket_path)
       allow(Addrinfo).to receive(:unix).with(socket_path).and_return(socket_address)
       allow(socket_address).to receive(:connect).and_raise(Errno::ECONNREFUSED)
-      stub_const(DiscourseVips::Client, :SHARED_WORKER_RETRY_SECONDS, 0) do
-        expect { demon.ensure_running }.to raise_error(DiscourseVips::WorkerUnavailable)
+      stub_const(DiscourseVips::Client, :DEFAULT_TIMEOUT_SECONDS, 0.1) do
+        stub_const(DiscourseVips::Client, :WORKER_GRACE_SECONDS, 0) do
+          expect { demon.ensure_running }.to raise_error(DiscourseVips::WorkerUnavailable)
+        end
       end
       allow(socket_address).to receive(:connect).and_call_original
 
