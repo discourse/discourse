@@ -494,6 +494,7 @@ export default class PluginsExplorerController extends Controller {
       this.showResults = false;
       await this.store.destroyRecord("query", this.model);
       this.model.set("destroyed", true);
+      this.dashboardMounted = false;
     } catch (error) {
       popupAjaxError(error);
     } finally {

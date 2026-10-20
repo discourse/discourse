@@ -446,6 +446,29 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.status).to eq(200)
         expect(query.reload.hidden).to eq(true)
       end
+
+      it "frees the query's dashboard slot so another report can take it" do
+        query = make_query("SELECT 1 as value")
+        AdminDashboardReport.create!(source: "data_explorer_query", identifier: query.id.to_s)
+        (AdminDashboardReport::VISIBLE_CAP - AdminDashboardReport.count).times do |i|
+          AdminDashboardReport.create!(source: "data_explorer_query", identifier: "-#{i + 1}")
+        end
+        other_query = make_query("SELECT 2 as value")
+
+        delete "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+
+        expect(
+          AdminDashboardReport.exists?(source: "data_explorer_query", identifier: query.id.to_s),
+        ).to eq(false)
+
+        post "/admin/dashboard/reports/mount.json",
+             params: {
+               source: "data_explorer_query",
+               identifier: other_query.id.to_s,
+             }
+
+        expect(response.status).to eq(201)
+      end
     end
 
     describe "#run" do
