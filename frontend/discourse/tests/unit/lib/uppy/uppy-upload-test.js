@@ -246,4 +246,56 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
 
     upload.teardown();
   });
+
+  test("teardown destroys the Uppy instance", function (assert) {
+    const upload = new UppyUpload(getOwner(this), {
+      id: "uppy-upload-teardown-test",
+      type: "composer",
+      uploadDone: () => {},
+    });
+
+    upload.setup(this.fileInput);
+    const destroy = sinon.spy(upload.uppyWrapper.uppyInstance, "destroy");
+    upload.teardown();
+
+    assert.true(destroy.calledOnce, "destroys the instance");
+  });
+
+  test("teardown is a no-op before setup", function (assert) {
+    const unsubscribe = sinon.spy(
+      getOwner(this).lookup("service:message-bus"),
+      "unsubscribe"
+    );
+    const upload = new UppyUpload(getOwner(this), {
+      id: "uppy-upload-early-teardown-test",
+      type: "composer",
+      uploadDone: () => {},
+    });
+
+    upload.teardown();
+
+    assert.false(unsubscribe.called, "doesn't unsubscribe from MessageBus");
+  });
+
+  test("setup destroys the previous Uppy instance", function (assert) {
+    const upload = new UppyUpload(getOwner(this), {
+      id: "uppy-upload-setup-again-test",
+      type: "composer",
+      uploadDone: () => {},
+    });
+
+    upload.setup(this.fileInput);
+    const previous = upload.uppyWrapper.uppyInstance;
+    const destroy = sinon.spy(previous, "destroy");
+    upload.setup(this.fileInput);
+
+    assert.true(destroy.calledOnce, "destroys the previous instance");
+    assert.notStrictEqual(
+      upload.uppyWrapper.uppyInstance,
+      previous,
+      "creates a new instance"
+    );
+
+    upload.teardown();
+  });
 });
