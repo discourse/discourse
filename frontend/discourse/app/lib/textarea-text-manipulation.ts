@@ -911,8 +911,8 @@ export default class TextareaTextManipulation implements TextManipulation {
       if (isFourSpacesIndent) {
         return this.applySurround(sel, "    ", "", "code_text");
       } else {
-        const preNewline = sel.pre && !sel.pre.endsWith("\n") ? "\n" : "";
-        const postNewline = sel.post && !sel.post.startsWith("\n") ? "\n" : "";
+        const preNewline = sel.pre[-1] !== "\n" && sel.pre !== "" ? "\n" : "";
+        const postNewline = sel.post[0] !== "\n" ? "\n" : "";
         return this.addText(
           sel,
           `${preNewline}\`\`\`\n${sel.value}\n\`\`\`${postNewline}`

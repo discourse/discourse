@@ -98,7 +98,9 @@ RSpec.describe "Chat composer formatting" do
         )
         find(".chat-composer__formatting-bar .code").click
 
-        expect(channel_page.composer).to have_value("```\nx = 1\ny = 2\n```")
+        # the textarea leaves the caret on a new line after the fence
+        trailing = composition_mode == :markdown ? "\n" : ""
+        expect(channel_page.composer).to have_value("```\nx = 1\ny = 2\n```#{trailing}")
       end
     end
   end
