@@ -367,15 +367,6 @@ export default class SignupPageController extends Controller {
     }
   }
 
-  @bind
-  selectKitFocus(event) {
-    const target = document.getElementById(event.target.getAttribute("for"));
-    if (target?.classList.contains("select-kit")) {
-      event.preventDefault();
-      target.querySelector(".select-kit-header").click();
-    }
-  }
-
   @action
   updateCodeSignupStep(step) {
     this.codeSignupStep = step;
