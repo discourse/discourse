@@ -2094,6 +2094,28 @@ RSpec.describe PrettyText do
     end
   end
 
+  it "uses concise subcategory hashtag text without losing the full reference" do
+    SiteSetting.enable_category_hashtag_cards = true
+    parent_category = Fabricate(:category, name: "Silly Land", slug: "fun")
+    category =
+      Fabricate(:category, name: "Random", slug: "random", parent_category: parent_category)
+
+    cooked = PrettyText.cook("#fun:random")
+
+    expect(cooked).to have_tag(
+      "a",
+      text: "Random",
+      with: {
+        class: "hashtag-cooked",
+        href: category.url,
+        "data-type": "category",
+        "data-slug": "random",
+        "data-ref": "fun:random",
+        "data-id": category.id,
+      },
+    )
+  end
+
   it "does not fight with the autolinker" do
     expect(PrettyText.cook(" http://somewhere.com/#known")).not_to include("hashtag")
     expect(PrettyText.cook(" http://somewhere.com/?#known")).not_to include("hashtag")
