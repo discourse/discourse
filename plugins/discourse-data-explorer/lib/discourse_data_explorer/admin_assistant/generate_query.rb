@@ -11,7 +11,7 @@ module DiscourseDataExplorer
 
       def self.signature
         {
-          name: name,
+          name:,
           description:
             "Generate and test a Data Explorer query draft without saving it. Use create_data_explorer_query with the returned draft token to request approval to save the exact draft. For revisions, describe the complete revised request.",
           parameters: [
@@ -36,8 +36,7 @@ module DiscourseDataExplorer
       end
 
       def self.available_for_context?(context)
-        context&.user&.admin? &&
-          Capability.status(user: context.user, phase: :visibility) == :available
+        Capability.visible?(context&.user)
       end
 
       def summary

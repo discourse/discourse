@@ -32,7 +32,7 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
       { "op" => "add_connection", "from" => "manual", "to" => "log" },
     ]
   end
-  let(:draft_attributes) { { name: "Manual log", operations: operations } }
+  let(:draft_attributes) { { name: "Manual log", operations: } }
   let(:agent_operations) do
     [
       {
@@ -76,12 +76,7 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
   end
   let(:context) { DiscourseAi::Agents::BotContext.new(user: admin, messages: []) }
   let(:tool) do
-    described_class.new(
-      { draft_token: token },
-      bot_user: Discourse.system_user,
-      llm: nil,
-      context: context,
-    )
+    described_class.new({ draft_token: token }, bot_user: Discourse.system_user, llm: nil, context:)
   end
 
   before do
@@ -96,10 +91,10 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
       AiToolAction.create!(
         tool_name: described_class.name,
         tool_parameters: {
-          draft_token: draft_token,
+          draft_token:,
           requester_id: admin.id,
         },
-        ai_agent: ai_agent,
+        ai_agent:,
         bot_user_id: Discourse.system_user.id,
       )
     item =
@@ -159,7 +154,7 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
         { draft_token: unsafe_token },
         bot_user: Discourse.system_user,
         llm: nil,
-        context: context,
+        context:,
       )
 
     cooked = Nokogiri::HTML5.fragment(PrettyText.cook(unsafe_tool.details))
@@ -203,7 +198,7 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
         { draft_token: agent_token },
         bot_user: Discourse.system_user,
         llm: nil,
-        context: context,
+        context:,
       )
 
     expect { initial_tool.validation_error }.not_to change { AiAgent.count }
@@ -250,9 +245,7 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
     tool.parameters[:draft_token] = token + "tampered"
     expect(tool.validation_error[:status]).to eq("error")
 
-    expired = token
-    tool.parameters[:draft_token] = expired
-    tool.instance_variable_set(:@draft, nil)
+    tool.parameters[:draft_token] = token
     freeze_time 2.days.from_now
     expect(tool.validation_error[:status]).to eq("error")
 
@@ -267,7 +260,7 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
         { draft_token: malformed },
         bot_user: Discourse.system_user,
         llm: nil,
-        context: context.tap { |value| value.user = admin },
+        context:,
       )
     expect(broken_tool.validation_error[:error]).to eq(
       I18n.t("discourse_workflows.admin_assistant.invalid_graph"),
@@ -299,7 +292,7 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
         { draft_token: unsafe },
         bot_user: Discourse.system_user,
         llm: nil,
-        context: context,
+        context:,
       )
 
     expect(unsafe_tool.validation_error[:error]).to eq(
@@ -365,7 +358,7 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
     context = DiscourseAi::Agents::BotContext.new(user: admin, messages: [])
     assistant = DiscourseAi::Agents::DiscourseAdminAssistant.new
 
-    expect(assistant.runtime_tools(context: context)).not_to include(
+    expect(assistant.runtime_tools(context:)).not_to include(
       DiscourseWorkflows::AdminAssistant::GenerateWorkflow,
       described_class,
     )
@@ -404,7 +397,7 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::GenerateWorkflow do
       { description: "Create a manual workflow that logs Hello" },
       bot_user: Discourse.system_user,
       llm: nil,
-      context: context,
+      context:,
     )
   end
   let(:proposal) do
@@ -495,7 +488,7 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::GenerateWorkflow do
           { draft_token: result[:draft_token] },
           bot_user: Discourse.system_user,
           llm: nil,
-          context: context,
+          context:,
         )
       code = Nokogiri::HTML5.fragment(PrettyText.cook(creator.details)).at_css("pre code")
       expect(JSON.parse(code.text).dig("configuration", "script_validations")).to eq(validations)
@@ -569,7 +562,7 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::GenerateWorkflow do
     expect(result).to eq(
       status: "needs_clarification",
       message: "I need the topic scope.",
-      questions: questions,
+      questions:,
     )
     expect(DiscourseWorkflows::AiAuthoringSession.count).to eq(0)
   end

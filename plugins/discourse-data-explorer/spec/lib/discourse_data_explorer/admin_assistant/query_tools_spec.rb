@@ -16,12 +16,7 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery do
   let(:token) { DiscourseDataExplorer::AdminAssistant::QueryDraft.sign(query, user: admin) }
   let(:context) { DiscourseAi::Agents::BotContext.new(user: admin, messages: []) }
   let(:tool) do
-    described_class.new(
-      { draft_token: token },
-      bot_user: Discourse.system_user,
-      llm: nil,
-      context: context,
-    )
+    described_class.new({ draft_token: token }, bot_user: Discourse.system_user, llm: nil, context:)
   end
 
   before do
@@ -36,10 +31,10 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery do
       AiToolAction.create!(
         tool_name: described_class.name,
         tool_parameters: {
-          draft_token: draft_token,
-          requester_id: requester_id,
+          draft_token:,
+          requester_id:,
         },
-        ai_agent: ai_agent,
+        ai_agent:,
         bot_user_id: Discourse.system_user.id,
       )
     ReviewableAiToolAction
@@ -174,7 +169,7 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::GenerateQuery do
       { description: "Recent users" },
       bot_user: Discourse.system_user,
       llm: nil,
-      context: context,
+      context:,
     )
   end
   let(:query) do
@@ -203,12 +198,11 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::GenerateQuery do
 
   it "denies policy before query generation and rejects oversized requests" do
     DiscourseDataExplorer::AdminAssistant::Capability.stubs(:status).returns(:restricted)
-    allow(DiscourseDataExplorer::QueryGeneration).to receive(:call)
+    DiscourseDataExplorer::QueryGeneration.expects(:call).never
     expect(tool.invoke[:status]).to eq("error")
 
     DiscourseDataExplorer::AdminAssistant::Capability.stubs(:status).returns(:available)
-    tool.parameters[:description] = "x" * 4001
+    tool.parameters[:description] = "x" * (described_class::MAX_DESCRIPTION_LENGTH + 1)
     expect(tool.invoke[:status]).to eq("error")
-    expect(DiscourseDataExplorer::QueryGeneration).not_to have_received(:call)
   end
 end

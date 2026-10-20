@@ -6,14 +6,11 @@ module DiscourseDataExplorer
       FEATURE = :data_explorer_query_authoring
 
       def self.status(user:, phase:)
-        access =
-          DiscourseAi::Agents::AdminAssistantAccess.check(
-            feature: FEATURE,
-            user: user,
-            phase: phase,
-          )
-        return :restricted if !access.allowed
-        public_status
+        access(user:, phase:).allowed ? public_status : :restricted
+      end
+
+      def self.visible?(user)
+        user&.admin? && status(user:, phase: :visibility) == :available
       end
 
       def self.public_status
@@ -36,18 +33,17 @@ module DiscourseDataExplorer
       private_class_method :public_status
 
       def self.message(user:, phase:)
-        access =
-          DiscourseAi::Agents::AdminAssistantAccess.check(
-            feature: FEATURE,
-            user: user,
-            phase: phase,
-          )
+        access = access(user:, phase:)
         return access.message if !access.allowed && access.message.present?
 
-        I18n.t(
-          "discourse_data_explorer.admin_assistant.availability.#{status(user: user, phase: phase)}",
-        )
+        key = access.allowed ? public_status : :restricted
+        I18n.t("discourse_data_explorer.admin_assistant.availability.#{key}")
       end
+
+      def self.access(user:, phase:)
+        DiscourseAi::Agents::AdminAssistantAccess.check(feature: FEATURE, user:, phase:)
+      end
+      private_class_method :access
     end
   end
 end
