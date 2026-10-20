@@ -1443,7 +1443,19 @@ CREATE TABLE public.ask_ai_logs (
     asked_at timestamp(6) without time zone NOT NULL,
     time_to_first_answer_ms integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    ask_trigger character varying DEFAULT ''::character varying NOT NULL,
+    ask_trigger_reason character varying DEFAULT ''::character varying NOT NULL,
+    ask_intent_heuristic character varying DEFAULT ''::character varying NOT NULL,
+    ask_intent_model character varying DEFAULT ''::character varying NOT NULL,
+    ask_intent_probability double precision DEFAULT 0.0 NOT NULL,
+    ask_tab_opened character varying DEFAULT ''::character varying NOT NULL,
+    ask_tab_opened_reason character varying DEFAULT ''::character varying NOT NULL,
+    ask_tab_switched_to character varying DEFAULT ''::character varying NOT NULL,
+    ask_tab_switched_after_ms integer DEFAULT 0 NOT NULL,
+    ask_scope character varying DEFAULT ''::character varying NOT NULL,
+    ask_scope_model character varying DEFAULT ''::character varying NOT NULL,
+    ask_scope_probability double precision DEFAULT 0.0 NOT NULL
 );
 
 
@@ -26093,6 +26105,9 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20261020161054'),
 ('20261020160221'),
+('20261019232249'),
+('20261019213757'),
+('20261019213116'),
 ('20261019105124'),
 ('20261019104439'),
 ('20261018172000'),
@@ -26119,6 +26134,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261006113418'),
 ('20261005091527'),
 ('20261005091447'),
+('20261002200029'),
 ('20261001073226'),
 ('20260930114733'),
 ('20260928103925'),

@@ -57,6 +57,66 @@ describe DiscourseAi::Discover::DiscoveriesController do
         group.add(user)
       end
 
+      it "passes the scope the question was asked from to the job" do
+        expect_enqueued_with(
+          job: :stream_discover_reply,
+          args: {
+            user_id: user.id,
+            request_id:,
+            scope: "category:12",
+          },
+        ) do
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query: "What is Discourse?",
+                 request_id:,
+                 scope: "category:12",
+               }
+        end
+
+        expect(response.status).to eq(200)
+      end
+
+      it "records what set off the request" do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query: "What is Discourse?",
+               request_id:,
+               trigger: "pause",
+               trigger_reason: "after_skip:places",
+             }
+
+        expect(response.status).to eq(200)
+        expect(AskAiLog.last).to have_attributes(
+          ask_trigger: "pause",
+          ask_trigger_reason: "after_skip:places",
+        )
+      end
+
+      it "ignores a trigger it does not know rather than failing the request" do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query: "What is Discourse?",
+               request_id:,
+               trigger: "telepathy",
+               trigger_reason: "<script>",
+             }
+
+        expect(response.status).to eq(200)
+        expect(AskAiLog.last).to have_attributes(ask_trigger: "", ask_trigger_reason: "")
+      end
+
+      it "rejects a scope that is not one" do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query: "What is Discourse?",
+               request_id:,
+               scope: "category:12 in:all",
+             }
+
+        expect(response.status).to eq(400)
+      end
+
       it "returns a 200 and queues a job to reply" do
         SiteSetting.ai_ask_ai_summary_detail = "detailed"
         SiteSetting.ai_ask_ai_related_count = 5
@@ -165,6 +225,252 @@ describe DiscourseAi::Discover::DiscoveriesController do
     end
   end
 
+  describe "#reply with search intent" do
+    fab!(:decision_model)
+    fab!(:llm_model)
+    fab!(:ai_agent) do
+      Fabricate(
+        :ai_agent,
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        default_llm_id: llm_model.id,
+      )
+    end
+    let(:request_id) { SecureRandom.uuid }
+
+    before do
+      Group.refresh_automatic_groups!
+      SiteSetting.ai_ask_ai_agent = ai_agent.id
+      SiteSetting.ai_ask_ai_search_intent_decision_model = decision_model.id
+      SiteSetting.enable_ai_combined_search = true
+    end
+
+    it "returns the decision model's judgement and logs it beside the heuristic's" do
+      DiscourseAi::Decisions.with_canned_answers(intent: { "answer" => 0.3, "lookup" => 0.7 }) do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query: "password reset",
+               request_id:,
+               intent_heuristic: "answer",
+               classify_intent: true,
+             }
+      end
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["intent"]).to eq("intent" => "lookup", "probability" => 0.7)
+      expect(response.parsed_body["ask_log_id"]).to eq(AskAiLog.last.id)
+      expect(AskAiLog.last).to have_attributes(
+        ask_intent_heuristic: "answer",
+        ask_intent_model: "lookup",
+        ask_intent_probability: 0.7,
+      )
+    end
+
+    it "answers a scoped search from the whole site when the model says it is about the site" do
+      topic = Fabricate(:topic, title: "Upgrading to PostgreSQL 18")
+
+      DiscourseAi::Decisions.with_canned_answers(
+        intent: "answer",
+        scope: {
+          "here" => 0.1,
+          "site" => 0.9,
+        },
+      ) do
+        expect_enqueued_with(job: :stream_discover_reply, args: { scope: nil }) do
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query: "install discourse",
+                 request_id:,
+                 scope: "topic:#{topic.id}",
+                 classify_intent: true,
+               }
+        end
+      end
+
+      expect(response.parsed_body["intent"]).to include(
+        "scope" => "site",
+        "scope_probability" => 0.9,
+      )
+      expect(AskAiLog.last).to have_attributes(
+        ask_scope: "topic:#{topic.id}",
+        ask_scope_model: "site",
+        ask_scope_probability: 0.9,
+        ask_intent_model: "answer",
+      )
+    end
+
+    it "keeps the scope for a search about the place it was made in" do
+      topic = Fabricate(:topic, title: "Upgrading to PostgreSQL 18")
+
+      DiscourseAi::Decisions.with_canned_answers(intent: "lookup", scope: "here") do
+        expect_enqueued_with(job: :stream_discover_reply, args: { scope: "topic:#{topic.id}" }) do
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query: "disk space",
+                 request_id:,
+                 scope: "topic:#{topic.id}",
+                 classify_intent: true,
+               }
+        end
+      end
+    end
+
+    it "does not judge for readers without the combined search" do
+      SiteSetting.enable_ai_combined_search = false
+
+      DiscourseAi::Decisions.with_canned_answers(intent: "answer") do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query: "password reset",
+               request_id:,
+               classify_intent: true,
+             }
+      end
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).not_to have_key("intent")
+      expect(AskAiLog.last).to have_attributes(ask_intent_model: "")
+    end
+
+    it "does not judge a scoped search again when its request is repeated" do
+      topic = Fabricate(:topic)
+      params = {
+        query: "disk space",
+        request_id:,
+        scope: "topic:#{topic.id}",
+        classify_intent: true,
+      }
+      DiscourseAi::Decisions.with_canned_answers(intent: "lookup", scope: "here") do
+        post("/discourse-ai/discoveries/reply", params:)
+        post("/discourse-ai/discoveries/reply", params:)
+      end
+
+      expect(response.status).to eq(200)
+      expect(AskAiLog.where(user:).count).to eq(1)
+      expect(response.parsed_body).not_to have_key("intent")
+    end
+
+    it "says the ask failed, rather than answering nothing, when its answer cannot be queued" do
+      allow(Jobs).to receive(:enqueue).and_raise(StandardError, "queue unavailable")
+
+      post "/discourse-ai/discoveries/reply", params: { query: "password reset", request_id: }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to contain_exactly(
+        I18n.t("discourse_ai.ai_bot.discoveries.errors.processing_failed"),
+      )
+      expect(AskAiLog.last).to be_ask_outcome_failed
+    end
+
+    it "says when the reader prefers results in the combined search" do
+      4.times do
+        AskAiLog.create!(
+          user:,
+          query: "q",
+          asked_at: 1.hour.ago,
+          ask_tab_opened: "ask",
+          ask_tab_switched_to: "topics",
+          ask_tab_switched_after_ms: 1000,
+        )
+      end
+
+      post "/discourse-ai/discoveries/reply", params: { query: "password reset", request_id: }
+
+      expect(response.parsed_body["prefers_results"]).to eq(true)
+    end
+
+    it "logs only the heuristic when no judgement is asked for" do
+      post "/discourse-ai/discoveries/reply",
+           params: {
+             query: "password reset",
+             request_id:,
+             intent_heuristic: "lookup",
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).not_to have_key("intent")
+      expect(AskAiLog.last).to have_attributes(ask_intent_heuristic: "lookup", ask_intent_model: "")
+    end
+
+    it "ignores an unknown heuristic and a missing decision model" do
+      SiteSetting.ai_ask_ai_search_intent_decision_model = ""
+
+      post "/discourse-ai/discoveries/reply",
+           params: {
+             query: "password reset",
+             request_id:,
+             intent_heuristic: "whatever",
+             classify_intent: true,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).not_to have_key("intent")
+      expect(AskAiLog.last).to have_attributes(ask_intent_heuristic: "", ask_intent_model: "")
+    end
+  end
+
+  describe "#record_tabs" do
+    fab!(:llm_model)
+    fab!(:ai_agent) do
+      Fabricate(
+        :ai_agent,
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        default_llm_id: llm_model.id,
+      )
+    end
+    fab!(:ask_log) { AskAiLog.create!(user:, query: "password reset", asked_at: Time.current) }
+
+    before do
+      Group.refresh_automatic_groups!
+      SiteSetting.ai_ask_ai_agent = ai_agent.id
+    end
+
+    it "records the opened tab and the first switch, keeping each first report" do
+      put "/discourse-ai/discoveries/tabs",
+          params: {
+            ask_log_id: ask_log.id,
+            tab_opened: "topics",
+            tab_opened_reason: "topic_results",
+          }
+      expect(response.status).to eq(204)
+
+      put "/discourse-ai/discoveries/tabs",
+          params: {
+            ask_log_id: ask_log.id,
+            tab_switched_to: "ask",
+            tab_switched_after_ms: 1200,
+          }
+      put "/discourse-ai/discoveries/tabs",
+          params: {
+            ask_log_id: ask_log.id,
+            tab_switched_to: "context",
+            tab_switched_after_ms: 5000,
+          }
+
+      expect(ask_log.reload).to have_attributes(
+        ask_tab_opened: "topics",
+        ask_tab_opened_reason: "topic_results",
+        ask_tab_switched_to: "ask",
+        ask_tab_switched_after_ms: 1200,
+      )
+    end
+
+    it "rejects an unknown tab" do
+      put "/discourse-ai/discoveries/tabs", params: { ask_log_id: ask_log.id, tab_opened: "nope" }
+
+      expect(response.status).to eq(400)
+      expect(ask_log.reload.ask_tab_opened).to eq("")
+    end
+
+    it "does not touch another user's ask" do
+      other_log = AskAiLog.create!(user: Fabricate(:user), query: "x", asked_at: Time.current)
+
+      put "/discourse-ai/discoveries/tabs", params: { ask_log_id: other_log.id, tab_opened: "ask" }
+
+      expect(response.status).to eq(404)
+      expect(other_log.reload.ask_tab_opened).to eq("")
+    end
+  end
+
   describe "#continue_convo" do
     fab!(:group)
     fab!(:llm_model)
@@ -209,6 +515,26 @@ describe DiscourseAi::Discover::DiscoveriesController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["topic_id"]).to be_present
+      end
+
+      it "marks the conversation as continued from a search for the topic view" do
+        post "/discourse-ai/discoveries/continue-convo", params: { request_id: }
+        get "/t/#{response.parsed_body["topic_id"]}.json"
+
+        expect(response.parsed_body["ai_search_conversation"]).to eq(true)
+      end
+
+      it "leaves the sources to the sidebar for readers of the combined search" do
+        SiteSetting.enable_ai_combined_search = true
+
+        post "/discourse-ai/discoveries/continue-convo", params: { request_id: }
+        topic = Topic.find(response.parsed_body["topic_id"])
+
+        expect(topic.posts.find_by(post_number: 2).raw).to eq(context)
+        get "/t/#{topic.id}.json"
+        expect(response.parsed_body.dig("ai_search_cited_topics", "topics")).to contain_exactly(
+          include("topic_id" => source_post.topic_id, "title" => source_post.topic.title),
+        )
       end
 
       it "limits the private message title to the configured maximum" do

@@ -63,6 +63,26 @@ describe DiscourseAi::Discoveries do
     end
   end
 
+  describe ".scope_filter" do
+    it "turns a scope into the search filter it stands for" do
+      expect(described_class.scope_filter("messages")).to eq("in:messages")
+      expect(described_class.scope_filter("topic:12")).to eq("topic:12")
+      expect(described_class.scope_filter("category:3")).to eq("category:3")
+      expect(described_class.scope_filter("tag:how-to")).to eq("tags:how-to")
+      expect(described_class.scope_filter("tag:node.js")).to eq("tags:node.js")
+      expect(described_class.scope_filter("user:sam.s")).to eq("user:sam.s")
+      expect(described_class.scope_filter("tag:how-to+faq")).to eq("tags:how-to+faq")
+      expect(described_class.scope_filter("category:3 tag:how-to")).to eq("category:3 tags:how-to")
+    end
+
+    it "ignores anything that is not a scope" do
+      expect(described_class.scope_filter(nil)).to be_nil
+      expect(described_class.scope_filter("category:3 in:all")).to be_nil
+      expect(described_class.scope_filter("order:latest")).to be_nil
+      expect(described_class.scope_filter("topic:abc")).to be_nil
+    end
+  end
+
   describe ".enqueue_reply" do
     it "records a failed ask if the job cannot be queued" do
       allow(Jobs).to receive(:enqueue).and_raise(StandardError, "queue unavailable")
@@ -86,6 +106,66 @@ describe DiscourseAi::Discoveries do
       SiteSetting.ai_ask_ai_related_count = 5
 
       expect(described_class.result_settings).to eq(summary_detail: :detailed, related_count: 5)
+    end
+
+    it "asks for the most related topics for readers with the combined search" do
+      SiteSetting.ai_ask_ai_related_count = 2
+      SiteSetting.enable_ai_combined_search = true
+
+      expect(described_class.result_settings(user)[:related_count]).to eq(
+        described_class::MAX_RELATED_DISCUSSIONS,
+      )
+    end
+
+    it "keeps the shared count for readers outside the combined search's groups" do
+      SiteSetting.ai_ask_ai_related_count = 2
+      SiteSetting.enable_ai_combined_search = true
+      Fabricate(
+        :site_setting_group,
+        name: "enable_ai_combined_search",
+        group_ids: Fabricate(:group).id.to_s,
+      )
+
+      expect(described_class.result_settings(user)[:related_count]).to eq(2)
+    end
+  end
+
+  describe ".prefers_results?" do
+    def ask(opened:, switched_to: "", after_ms: 0, at: Time.current)
+      AskAiLog.create!(
+        user:,
+        query: "q",
+        asked_at: at,
+        ask_tab_opened: opened,
+        ask_tab_switched_to: switched_to,
+        ask_tab_switched_after_ms: after_ms,
+      )
+    end
+
+    it "is true when the reader mostly leaves the answer quickly" do
+      3.times { ask(opened: "ask", switched_to: "topics", after_ms: 2000) }
+      ask(opened: "ask")
+
+      expect(described_class.prefers_results?(user)).to eq(true)
+    end
+
+    it "needs enough asks opened on the answer to judge" do
+      3.times { ask(opened: "ask", switched_to: "topics", after_ms: 2000) }
+
+      expect(described_class.prefers_results?(user)).to eq(false)
+    end
+
+    it "ignores switches made after reading the answer for a while" do
+      4.times { ask(opened: "ask", switched_to: "topics", after_ms: 30_000) }
+
+      expect(described_class.prefers_results?(user)).to eq(false)
+    end
+
+    it "is false once the reader keeps coming back to the answer" do
+      4.times { ask(opened: "ask", switched_to: "topics", after_ms: 2000, at: 1.day.ago) }
+      2.times { ask(opened: "topics", switched_to: "ask", after_ms: 2000) }
+
+      expect(described_class.prefers_results?(user)).to eq(false)
     end
   end
 
@@ -118,9 +198,9 @@ describe DiscourseAi::Discoveries do
       expect(
         described_class.bind_request(user_id: user.id, request_id:, query: "猫   search"),
       ).to eq(:existing)
-      expect {
-        described_class.bind_request(user_id: user.id, request_id:, query: "dogs")
-      }.to raise_error(DiscourseAi::Discoveries::RequestConflict)
+      expect(described_class.bind_request(user_id: user.id, request_id:, query: "dogs")).to eq(
+        :conflict,
+      )
     end
 
     it "makes the newest request active without allowing an old retry to reclaim ownership" do
