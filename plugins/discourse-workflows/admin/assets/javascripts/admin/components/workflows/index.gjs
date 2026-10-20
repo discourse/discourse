@@ -310,13 +310,10 @@ export default class WorkflowsIndex extends Component {
         >
           <:head>
             <th class="d-table__header-cell">{{i18n
-                "discourse_workflows.creator"
-              }}</th>
-            <th class="d-table__header-cell">{{i18n
                 "discourse_workflows.workflow_name"
               }}</th>
             <th class="d-table__header-cell">{{i18n
-                "discourse_workflows.last_editor"
+                "discourse_workflows.creator"
               }}</th>
             <th class="d-table__header-cell">{{i18n
                 "discourse_workflows.last_update"
@@ -329,19 +326,6 @@ export default class WorkflowsIndex extends Component {
               }}</th>
           </:head>
           <:row as |workflow|>
-            <td class="d-table__cell --detail workflows-index__creator">
-              <div class="d-table__mobile-label">
-                {{i18n "discourse_workflows.creator"}}
-              </div>
-              {{#if workflow.createdBy}}
-                <DUserLink
-                  class="workflows-index__creator-link"
-                  @user={{workflow.createdBy}}
-                >
-                  {{dAvatar workflow.createdBy imageSize="tiny"}}
-                </DUserLink>
-              {{/if}}
-            </td>
             <td class="d-table__cell --overview workflows-index__name">
               <LinkTo
                 class="d-table__overview-link"
@@ -379,17 +363,17 @@ export default class WorkflowsIndex extends Component {
                 </div>
               {{/if}}
             </td>
-            <td class="d-table__cell --detail workflows-index__last-editor">
+            <td class="d-table__cell --detail workflows-index__creator">
               <div class="d-table__mobile-label">
-                {{i18n "discourse_workflows.last_editor"}}
+                {{i18n "discourse_workflows.creator"}}
               </div>
-              {{#if workflow.updatedBy}}
+              {{#if workflow.createdBy}}
                 <DUserLink
-                  class="workflows-index__last-editor-link"
-                  @user={{workflow.updatedBy}}
+                  class="workflows-index__creator-link"
+                  @user={{workflow.createdBy}}
                 >
-                  {{dAvatar workflow.updatedBy imageSize="tiny"}}
-                  <span>{{workflow.updatedBy.username}}</span>
+                  {{dAvatar workflow.createdBy imageSize="tiny"}}
+                  <span>{{workflow.createdBy.username}}</span>
                 </DUserLink>
               {{/if}}
             </td>
