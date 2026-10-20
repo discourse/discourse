@@ -42,6 +42,45 @@ RSpec.describe Scheduler::Defer do
       end
     end
 
+    it "finishes stopping when new work starts before joining the worker" do
+      finish_queued = Queue.new
+      release_join = Queue.new
+      release_threads = Queue.new
+      completed = Queue.new
+
+      allow_any_instance_of(WorkQueue::ThreadSafeWrapper).to receive(
+        :push,
+      ).and_wrap_original do |original, work, **options|
+        result = original.call(work, **options)
+        if work[:finish]
+          finish_queued << true
+          release_join.pop
+        end
+        result
+      end
+      stopping = Thread.new { @defer.stop!(finish_work: true) }
+      expect(finish_queued.pop(timeout: 5)).to eq(true)
+
+      allow(Thread).to receive(:new).and_wrap_original do |constructor, &block|
+        constructor.call do
+          release_threads.pop
+          block.call
+        end
+      end
+      @defer.later { completed << true }
+      2.times { release_threads << true }
+      expect(completed.pop(timeout: 5)).to eq(true)
+
+      release_join << true
+
+      expect(stopping.join(5)).to eq(stopping)
+    ensure
+      2.times { release_threads&.push(true) }
+      release_join&.push(true)
+      stopping&.kill
+      stopping&.join
+    end
+
     it "keeps new work running while the previous reactor stops" do
       completed = Queue.new
       reactor_stopping = Queue.new
