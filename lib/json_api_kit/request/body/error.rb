@@ -24,6 +24,11 @@ module JsonApiKit
               "409",
               ->(error, _) { "type must be #{error.options[:count]} for this endpoint." },
             ),
+          [:"data.id", :equal_to] =>
+            Rule.new(
+              "409",
+              ->(error, _) { "id must be #{error.options[:count]} for this endpoint." },
+            ),
           [:"data.id", :unsupported] =>
             Rule.new("403", ->(*) { "This endpoint does not accept client-generated IDs." }),
           %i[errors incompatible] =>

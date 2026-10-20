@@ -9,8 +9,8 @@ module JsonApiKit
         def detail = "The request body must contain valid JSON."
       end
 
-      def self.parse(json, resource:)
-        new(JSON.parse(json), resource:)
+      def self.parse(json, **options)
+        new(JSON.parse(json), **options)
       rescue JSON::ParserError
         raise Unreadable
       end
@@ -38,9 +38,12 @@ module JsonApiKit
       delegate :edition, :type, to: :resource
       delegate :glossary, to: :edition
 
-      def contract = @contract ||= Contract.new(document, type: glossary.member_type(type))
+      def contract = @contract ||= Contract::Create.new(document, type: glossary.member_type(type))
 
-      def attributes = @attributes ||= Attributes.new(document, glossary:)
+      def attributes =
+        @attributes ||= Attributes.new(document, glossary:, existing: existing_values)
+
+      def existing_values = ExistingValues::None
     end
   end
 end
