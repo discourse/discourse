@@ -32,7 +32,13 @@ module PageObjects
       end
 
       def delete_leaderboard(leaderboard)
-        find("#leaderboard-admin__row-#{leaderboard.id} .leaderboard-admin__delete").click
+        menu =
+          PageObjects::Components::DMenu.new(
+            "#leaderboard-admin__row-#{leaderboard.id} .leaderboard-admin-menu-trigger",
+            "leaderboard-admin-menu",
+          )
+        menu.expand
+        menu.option(".leaderboard-admin__delete").click
       end
     end
   end
