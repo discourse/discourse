@@ -20,9 +20,9 @@
   "dependencies": {
     "@embroider/addon-shim": "^1.10.3",
     "discourse-i18n": "workspace:1.0.0",
-    "markdown-it": "^15.0.1",
+    "markdown-it": "^15.0.2",
     "pretty-text": "workspace:1.0.0",
-    "xss": "^1.0.15",
+    "xss": "1.0.15",
     "discourse": "workspace:0.0.0"
   },
   "peerDependencies": {
@@ -34,7 +34,7 @@
     "node": ">= 20",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": "^10"
+    "pnpm": "^12"
   },
   "ember": {
     "edition": "octane"

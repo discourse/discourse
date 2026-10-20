@@ -11,6 +11,26 @@ en:
             type_options:
               enum_choices_required: "must include at least one choice for an enum field"
   discourse_workflows:
+    admin_assistant:
+      generating: "Generating and validating an unpublished workflow draft"
+      create_summary: "Save this workflow as an unpublished draft?"
+      not_allowed: "Only administrators who can manage workflows can create workflows."
+      invalid_request: "The workflow request is empty, contains a secret, or is too long. Please provide a shorter description without secrets."
+      invalid_draft: "This workflow draft reference is invalid, unavailable, or expired. Please generate a new draft."
+      incomplete_draft: "The generated workflow draft is incomplete. Please generate a new draft."
+      invalid_graph: "The generated workflow graph is no longer valid. Please generate a new draft."
+      secret_draft: "Workflow drafts cannot contain raw secrets or embedded credentials. Store credentials separately and generate a new draft that references them safely."
+      requester_not_admin: "The administrator who requested this workflow no longer has permission to manage workflows. Please request a new draft from an authorized administrator."
+      approval_required: "Saving this workflow requires human approval."
+      draft_used: "This workflow draft has already been used or is being saved. Please generate a new draft."
+      generation_failed: "The workflow could not be generated and validated. Please try again or refine your request."
+      clarification_required: "More information is needed before the workflow can be generated."
+      creation_failed: "The workflow could not be saved. No workflow was created."
+      availability:
+        available: "Workflow creation is available. Saving requires explicit approval."
+        restricted: "Workflow creation is unavailable on this site."
+        disabled: "Workflow authoring or Discourse AI is disabled. An administrator needs to enable the required features before creating workflows."
+        unconfigured: "The workflow-authoring AI model is not configured or usable."
     ai:
       default_code_node_name: "Code"
       error_agent_not_configured: "The workflow authoring agent is not configured."
@@ -56,6 +76,12 @@ en:
         invalid_value: "is not valid for this field's type"
         incompatible_value_for_new_type: "has a current value that is not valid for the new type. Update or clear the value first."
       approval_timed_out: "Approval timed out"
+      run_timed_out:
+        one: "Execution ran for more than %{count} minute without pausing"
+        other: "Execution ran for more than %{count} minutes without pausing"
+      queue_timed_out:
+        one: "Execution was queued for more than %{count} minute without starting"
+        other: "Execution was queued for more than %{count} minutes without starting"
       rate_limited:
         global:
           one: "This workflow wasn't run because %{count} workflow execution already started in the last minute across all workflows, which is the most allowed. Runs will go through again once fewer workflow executions have started in the last minute."
@@ -267,6 +293,9 @@ en:
         search_chat_channels: "Searches chat channel names and IDs for workflow parameters"
         search_chat_integration_channels: "Searches external chat integration channel labels and IDs for workflow parameters"
         workflow_validate_script: "Runs workflow Code node JavaScript with test data"
+        data_table_schema: "Lists workflow data tables with their columns"
+        data_table_query: "Reads rows from a workflow data table"
+        data_table_write: "Inserts, updates, upserts or deletes workflow data table rows"
       tool_summary:
         workflow_node_catalog: "Reading workflow node catalog"
         workflow_ai_agent_catalog: "Reading AI agent catalog"
@@ -278,6 +307,9 @@ en:
         search_chat_channels: "Searching chat channels"
         search_chat_integration_channels: "Searching external chat integration channels"
         workflow_validate_script: "Testing script"
+        data_table_schema: "Reading data table schema"
+        data_table_query: "Querying data table"
+        data_table_write: "Writing to data table"
       tool_description:
         workflow_node_catalog: "Read workflow node catalog"
         workflow_ai_agent_catalog: "Read AI agent catalog"
@@ -289,6 +321,22 @@ en:
         search_chat_channels: "Searched chat channels"
         search_chat_integration_channels: "Searched external chat integration channels"
         workflow_validate_script: "Tested script"
+        data_table_schema: "Read data table schema"
+        data_table_query: "Queried data table"
+        data_table_write: "Wrote to data table"
+      tool_options:
+        data_table_schema:
+          allowed_tables:
+            name: "Allowed tables"
+            description: "Comma-separated data table names or ids this agent may use. Leave empty to allow all tables."
+        data_table_query:
+          allowed_tables:
+            name: "Allowed tables"
+            description: "Comma-separated data table names or ids this agent may use. Leave empty to allow all tables."
+        data_table_write:
+          allowed_tables:
+            name: "Allowed tables"
+            description: "Comma-separated data table names or ids this agent may use. Leave empty to allow all tables."
   reviewables:
     reasons:
       workflow_flagged_user: "A workflow added this user to the review queue."

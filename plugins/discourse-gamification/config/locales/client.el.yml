@@ -93,6 +93,7 @@ el:
       custom_range_from: "Από"
       admin:
         name: "Όνομα"
+        created_by: "Δημιουργήθηκε από"
     discourse_workflows:
       gamification_score:
         username: "Χρήστης"

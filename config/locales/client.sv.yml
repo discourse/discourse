@@ -9,13 +9,18 @@ sv:
     user_api_key:
       authorize: "Godkänn"
       deny: "Avbryt"
+      permissions_header: 'Detta ger ”%{application_name}” tillåtelse att:'
+      copy_key: "Kopiera nyckel"
       copied: "Kopierad!"
       otp_description: 'Vill du tillåta att "%{application_name}" får tillträde till din sida?'
       no_trust_level: "Tyvärr har du inte den nödvändiga förtroendenivån för att få tillgång till användar-API:n"
       generic_error: "Tyvärr kan vi inte utfärda API-nycklar, denna funktion har kanske inaktiverats av administratören"
       device:
+        enter_code: "Ange koden som visas i din applikation."
         code: "Kod"
         continue: "Fortsätt"
+        invalid_code: "Tyvärr, den koden är ogiltig. Kontrollera koden och försök igen."
+        expiry_notice: "Upphör att gälla: %{expires_at}"
     blocks:
       ghost:
         status: "Status"
@@ -26,6 +31,8 @@ sv:
       manage:
         access_permission_editor: "Redigerare"
         access_permission_remove: "Ta bort"
+    carousel:
+      go_to_slide: "Gå till bild %{index}"
     number:
       format:
         separator: "."
@@ -165,6 +172,36 @@ sv:
         last_3_months: "Senaste 3 månaderna"
         last_6_months: "Senaste 6 månaderna"
     languages:
+      ar:
+        name: Arabiska
+      be:
+        name: Vitryska
+      bg:
+        name: Bulgariska
+      bs_BA:
+        name: Bosniska
+      ca:
+        name: Katalanska
+      cs:
+        name: Tjeckiska
+      da:
+        name: Danska
+      de:
+        name: Tyska
+      el:
+        name: Grekiska
+      en:
+        name: Engelska
+      en_GB:
+        name: Engelska (Storbritannien)
+      es:
+        name: Spanska
+      et:
+        name: Estniska
+      fa_IR:
+        name: Persiska
+      fi:
+        name: Finska
       ur:
         name: Urdu
       vi:
@@ -228,6 +265,8 @@ sv:
     confirm_button: "Bekräfta"
     welcome_banner:
       header:
+        new_members: "Välkommen, %{preferred_display_name}!"
+        logged_in_members: "Välkommen tillbaka, %{preferred_display_name}!"
         anonymous_members: "Välkommen till %{site_name}!"
       search_placeholder: "Sök"
     themes:
@@ -363,7 +402,10 @@ sv:
       post_count: "Inlägg"
       user_count: "Registreringar"
       active_user_count: "Aktiva användare"
+      visitor_count: "Besökare"
       contact: "Kontakta oss"
+      view_more: "Visa mer"
+      view_less: "Visa mindre"
       activities:
         topics:
           one: "%{formatted_number} ämne"
@@ -445,8 +487,16 @@ sv:
       remove_confirmation: "Är du säker på att du vill ta bort detta utkast?"
       new_topic: "Nytt utkast för ämne"
       new_private_message: "Nytt utkast för personligt meddelande"
+      dropdown:
+        untitled: "Namnlöst utkast"
+        view_all: "visa alla utkast"
     embed_mode:
+      continue_as_guest: "Fortsätt som gäst"
+      replying_to: "Svarar till %{username}"
+      editing_post: "Redigerar inlägg"
+      reply_placeholder: "Skriv ett svar..."
       signin_flow:
+        share_session_title: "Logga in på %{site_name}"
         cancel: "Avbryt"
     topic_count_all:
       one: "Visa %{count} nytt ämne"
@@ -1194,6 +1244,7 @@ sv:
           none: "Inaktiverad"
           all: "Aktiverad"
         not_supported: "Aviseringar stöds tyvärr inte i den här webbläsaren."
+        perm_default: "Aktivera aviseringar"
         perm_denied_expl: "Du nekade tillåtelse för aviseringar. Tillåt aviseringar via din webbläsares inställningar."
         each_browser_note: "Obs: Du måste ändra den här inställningen i varje webbläsare du använder. Alla aviseringar kommer att inaktiveras om du pausar aviseringar från användarmenyn, oavsett denna inställning."
         consent_prompt: "Vill du ha realtidsaviseringar när personer svarar på dina inlägg?"
@@ -2437,6 +2488,8 @@ sv:
         link_copied: "Länken kopierad!"
       onebox_toolbar:
         link_copied: "Länken kopierad!"
+      table:
+        default_heading: "Kolumn %{number}"
     notifications:
       tooltip:
         regular:
@@ -4340,63 +4393,6 @@ sv:
           other: "Inmatningen måste vara mer än %{count}."
         pattern_mismatch: "Matcha det begärda formatet."
         bad_input: "Ange en giltig inmatning."
-    table_builder:
-      title: "Tabellbyggare"
-      modal:
-        title: "Tabellbyggare"
-        create: "Bygg tabell"
-        help:
-          title: "Använda kalkylbladsredigeraren"
-          enter_key: "Retur"
-          tab_key: "Flik"
-          new_row: "i slutet av en rad för att infoga en ny rad."
-          new_col: "i slutet av en kolumn för att infoga en ny kolumn."
-          options: "Högerklicka på cellerna för att komma åt fler alternativ i en rullgardinsmeny."
-        confirm_close: "Är du säker på att du vill stänga tabellbyggaren? Alla osparade ändringar förloras."
-      edit:
-        btn_edit: "Redigera tabell"
-        modal:
-          title: "Redigera tabell"
-          cancel: "avbryt"
-          create: "Spara"
-          reason: "Varför redigerar du?"
-          trigger_reason: "Lägg till orsak till redigering"
-        default_edit_reason: "Uppdatera tabell med tabellredigerare"
-      default_header:
-        col_1: "Kolumn 1"
-        col_2: "Kolumn 2"
-        col_3: "Kolumn 3"
-        col_4: "Kolumn 4"
-      spreadsheet:
-        no_records_found: "Det hittades inga poster"
-        show: "Visa"
-        entries: "poster"
-        about: "Om"
-        prompts:
-          delete_selected_rows: "Är du säker på att du vill radera de valda raderna?"
-          delete_selected_cols: "Är du säker på att du vill radera de valda kolumnerna?"
-          will_destroy_merged_cells: "Denna åtgärd kommer att förstöra alla befintliga sammanslagna celler. Är du säker?"
-          will_clear_search_results: "Denna åtgärd kommer att förstöra alla befintliga sammanslagna celler. Är du säker?"
-          conflicts_with_merged_cells: "Det finns en konflikt med en annan sammanslagen cell"
-        invalid_merge_props: "Ogiltiga sammanslagna egenskaper"
-        cells_already_merged: "Cell redan sammanslagen"
-        no_cells_selected: "Inga celler valda"
-        context_menu:
-          row:
-            before: "Infoga en ny rad före"
-            after: "Infoga en ny rad efter"
-            delete: "Radera markerade rader"
-          col:
-            before: "Infoga en ny kolumn före"
-            after: "Infoga en ny kolumn efter"
-            delete: "Radera markerade kolumner"
-            rename: "Byt namn på den här kolumnen"
-          order:
-            ascending: "Stigande ordning"
-            descending: "Fallande ordning"
-          copy: "Kopiera..."
-          paste: "Klistra in..."
-          save: "Spara som..."
     filter:
       description:
         yesterday: "Igår"

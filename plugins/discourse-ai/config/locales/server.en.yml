@@ -71,7 +71,7 @@ en:
     ai_ask_ai_report_recipient_groups: "Groups that receive automatic weekly report PMs and can be included in manual report PMs. Reports include users’ questions. Leave empty to keep automatic reports on the dashboard only."
     discourse_ai_enabled: "Enable the discourse AI plugin."
     enable_ai_bot_starred_conversations: "Allow users to star AI bot conversations and show them in a Starred sidebar section."
-    ai_default_llm_model: "The default LLM model to use for all AI features"
+    ai_default_llm_model: "The default language model for AI features and agents that don't specify their own"
     ai_artifact_security: "The AI artifact system generates IFRAMEs with runnable code. Strict mode forces an extra click to run code. Lax mode runs code immediately. Hybrid mode allows user to supply data-ai-artifact-autorun to show right away. Disabled mode disables the artifact system."
     ai_toxicity_enabled: "Enable the toxicity module."
     ai_toxicity_inference_service_api_endpoint: "URL where the API is running for the toxicity module"
@@ -1407,6 +1407,8 @@ en:
       invalid_url: "must be an http:// or https:// URL, or an srv:// URL without a port"
       test_refused: "The decision model declined to answer the test question."
       test_image_not_read: "The decision model did not recognise the test image. Untick \"Supports image input\" if it cannot read images."
+      credit_limit_exceeded: "%{model_name} has used all of today's AI credits. Credits reset in %{reset_time}."
+      cannot_modify_seeded: "Pre-configured decision models cannot be edited or deleted."
 
     secrets:
       delete_failed_in_use: "This credential is currently in use by one or more LLMs, embeddings, decision models, or tools and cannot be deleted."

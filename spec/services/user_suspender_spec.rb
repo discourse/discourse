@@ -47,6 +47,21 @@ RSpec.describe UserSuspender do
       }.from(0).to(1)
     end
 
+    it "preserves the scheduled expiry in the log after an early unsuspension" do
+      freeze_time(Time.zone.now.round)
+      suspend_user
+
+      history = user.user_histories.find_by!(action: UserHistory.actions[:suspend_user])
+      expect(history.expires_at).to eq_time(user.reload.suspended_till)
+
+      UserSuspender.unsuspend(user, by_user: admin)
+
+      expect(history.reload.expires_at).to eq_time(5.hours.from_now)
+      expect(
+        user.user_histories.find_by!(action: UserHistory.actions[:unsuspend_user]).expires_at,
+      ).to be_nil
+    end
+
     it "links the staff action log to the reviewable when passed via opts" do
       reviewable = Fabricate(:reviewable_flagged_post, target_created_by: user)
       suspender =

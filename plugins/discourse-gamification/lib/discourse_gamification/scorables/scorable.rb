@@ -3,7 +3,17 @@ module DiscourseGamification
   class Scorable
     class << self
       def enabled?(leaderboard: nil)
+        return false if category_scoped?(leaderboard:) && !supports_category_scoping?
+
         score_multiplier(leaderboard:) > 0
+      end
+
+      def supports_category_scoping?
+        false
+      end
+
+      def category_scoped?(leaderboard:)
+        Array(leaderboard&.scorable_category_ids).compact.present?
       end
 
       def scorable_key
@@ -17,11 +27,15 @@ module DiscourseGamification
       end
 
       def scorable_category_list(leaderboard: nil)
+        scorable_category_ids(leaderboard:).join(", ")
+      end
+
+      def scorable_category_ids(leaderboard: nil)
         categories = leaderboard&.scorable_category_ids
         if categories.nil?
-          SiteSetting.scorable_categories.split("|").map { it.to_i }.join(", ")
+          SiteSetting.scorable_categories.split("|").map { it.to_i }
         else
-          categories.join(", ")
+          categories.compact
         end
       end
     end

@@ -1,4 +1,5 @@
 import { Input } from "@ember/component";
+import { fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import DButton from "discourse/ui-kit/d-button";
@@ -34,6 +35,7 @@ export default <template>
         <hr />
 
         <PaymentOptions
+          @onSelectPlan={{fn (mut @controller.selectedPlan)}}
           @plans={{@controller.model.plans}}
           @selectedPlan={{@controller.selectedPlan}}
         />

@@ -502,6 +502,7 @@ end
 #  custom_type    :string
 #  details        :text
 #  email          :string
+#  expires_at     :datetime
 #  ip_address     :string
 #  new_value      :text
 #  previous_value :text

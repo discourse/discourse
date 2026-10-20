@@ -7,6 +7,7 @@ RSpec.describe "Managing decision models" do
 
   before do
     enable_current_plugin
+    SiteSetting.enable_discourse_workflows = true
     sign_in(admin)
   end
 
@@ -37,9 +38,11 @@ RSpec.describe "Managing decision models" do
 
   it "creates from a preset and tests the model" do
     DiscourseAi::Decisions.with_canned_answers(greeting: 0.97, red_image: 0.99) do
-      visit "/admin/plugins/discourse-ai/ai-decision-models"
-      find(".ai-decision-models-list-editor__empty-new-btn").click
-      form.field("preset").select("vllm-sr-d3")
+      visit "/admin/plugins/discourse-ai/ai-models"
+      find(".ai-models-list__new-button").click
+      find("[data-model-type='decision'] button").click
+      find("[data-template-id='vllm-sr-d3'] button").click
+      expect(form.field("preset")).to have_value("vllm-sr-d3")
       form.field("url").fill_in("https://d3.example.com/v1/systemone")
       form.submit
 
@@ -58,7 +61,7 @@ RSpec.describe "Managing decision models" do
         text: "yes: 97%",
       )
       find(".back-button").click
-      expect(page).to have_css(".ai-decision-models-list-editor__row", text: "d3")
+      expect(page).to have_css(".ai-models-list__row[data-model-type='decision']", text: "d3")
     end
   end
 end

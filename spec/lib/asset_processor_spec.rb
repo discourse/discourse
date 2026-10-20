@@ -658,6 +658,12 @@ RSpec.describe AssetProcessor do
     expect(AssetProcessor.ember_version).to match(/\A\d+\.\d+\.\d+\z/)
   end
 
+  it "identifies the loaded processor source by the digest in its bundle path" do
+    expect(AssetProcessor::BUNDLE.path.basename.to_s).to eq(
+      "asset-processor-#{AssetProcessor.digest}.js",
+    )
+  end
+
   it "errors on missing relative imports for a plugin without a hyphenated name" do
     mod_1 = <<~JS.chomp
       import SomeModule from "../some-module";

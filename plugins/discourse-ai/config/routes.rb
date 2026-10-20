@@ -190,6 +190,9 @@ Discourse::Application.routes.draw do
     get "/rag-document-fragments/files/status",
         to: "discourse_ai/admin/rag_document_fragments#indexing_status_check"
 
+    get "/ai-models" => "admin/plugins#index"
+    get "/ai-models/new" => "admin/plugins#index"
+
     get "/ai-usage", to: "discourse_ai/admin/ai_usage#show"
     get "/ai-usage-report", to: "discourse_ai/admin/ai_usage#report"
     get "/ai-logs", to: "discourse_ai/admin/ai_logs#index"

@@ -23,6 +23,12 @@ el:
       subject_template: "Η αρχειοθέτηση καναλιού συνομιλίας απέτυχε."
   chat:
     deleted_chat_username: διεγράφη
+    crawler:
+      directory_title: "Κανάλια συνομιλίας"
+      nav_title: "Συνομιλία"
+      thread_replies:
+        one: "%{count} απάντηση"
+        other: "%{count} απαντήσεις"
     errors:
       users_cant_be_added_to_channel: "Δεν είναι δυνατή η προσθήκη χρηστών σε αυτό το κανάλι."
       user_cant_be_removed_from_channel: "Δεν είναι δυνατή η αφαίρεση του χρήστη από αυτό το κανάλι"

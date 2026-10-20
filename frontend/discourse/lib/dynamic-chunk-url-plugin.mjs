@@ -40,7 +40,7 @@ export default function dynamicChunkUrlPlugin() {
           preserveSignature: "strict",
         });
         return {
-          code: `export default import.meta.ROLLUP_FILE_URL_${refId};`,
+          code: `export default import.meta.resolve(import.meta.ROLLUP_FILE_URL_${refId});`,
           moduleType: "js",
         };
       },

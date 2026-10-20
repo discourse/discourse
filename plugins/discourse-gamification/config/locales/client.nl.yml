@@ -107,6 +107,7 @@ nl:
       admin:
         title: "Gamificatie"
         name: "Naam"
+        created_by: "Gemaakt door"
         period: "Periode"
     discourse_workflows:
       gamification_score:

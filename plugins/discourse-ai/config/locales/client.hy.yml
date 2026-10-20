@@ -211,6 +211,15 @@ hy:
         delete: "Ջնջել"
         tools_modal:
           required: "Պարտադիր"
+      models:
+        name: "Անուն"
+        type: "Տիպ"
+        provider: "Մատակարար"
+        edit: "Խմբագրել"
+        types:
+          embedding: "Զետեղում"
+        filters:
+          all: "Բոլոր տեսակները"
       llms:
         display_name: "Անուն"
         provider: "Մատակարար"

@@ -16,5 +16,10 @@
         "./test/javascripts/*.gts"
       ]
     }
-  }
+  },
+  "references": [
+    {
+      "path": "../../frontend/discourse"
+    }
+  ]
 }

@@ -4,10 +4,10 @@ import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { userPath } from "discourse/lib/url";
 import { clipboardCopy } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DUserLink from "discourse/ui-kit/d-user-link";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import { i18n } from "discourse-i18n";
 import AdminTable from "../admin-table.gjs";
@@ -149,13 +149,13 @@ export default class VariablesManager extends PaginatedListManager {
           <div class="d-table__mobile-label">
             {{i18n "discourse_workflows.variables.creator"}}
           </div>
-          <a
+          <DUserLink
             class="workflows-variables__creator"
-            href={{userPath variable.created_by.username}}
+            @user={{variable.created_by}}
           >
             {{dAvatar variable.created_by imageSize="tiny"}}
             <span>{{variable.created_by.username}}</span>
-          </a>
+          </DUserLink>
         </td>
         <td class="d-table__cell --detail">
           <div class="d-table__mobile-label">

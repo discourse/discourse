@@ -1324,6 +1324,7 @@ class UsersController < ApplicationController
       topic_allowed_users: topic_allowed_users,
       searching_user: current_user,
       groups: @groups,
+      search_context: params[:search_context],
     }
 
     options[:include_staged_users] = !!ActiveModel::Type::Boolean.new.cast(

@@ -1030,6 +1030,7 @@ sv:
     device:
       code: "Kod"
       continue: "Fortsätt"
+      invalid_code: "Tyvärr, den koden är ogiltig. Kontrollera koden och försök igen."
     invalid_public_key: "Tyvärr är den offentliga nyckeln ogiltig."
     invalid_auth_redirect: "Tyvärr är denna auth_redirect-värd inte tillåten."
     invalid_token: "Saknat, ogiltigt eller utgånget bevis."

@@ -3430,18 +3430,6 @@ gl:
         type_mismatch:
           default: "Introduza un valor correcto."
           email: "Introduza un enderezo de correo electrónico correcto."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Intro"
-      edit:
-        modal:
-          cancel: "cancelar"
-          create: "Gardar"
-          reason: "Por que o está editando?"
-      spreadsheet:
-        show: "Amosar"
-        about: "Verbo de"
     filter:
       description:
         yesterday: "Onte"

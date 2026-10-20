@@ -283,6 +283,17 @@ ur:
         delete: "حذف کریں"
         tools_modal:
           required: "درکار"
+      models:
+        name: "نام"
+        type: "قِسم"
+        provider: "پرووَائیڈر"
+        edit: "ترمیم کریں"
+        select_type: "منتخب"
+        types:
+          embedding: "اَیمبَیڈ کرنا"
+        filters:
+          all: "تمام اقسام"
+          reset: "فلٹرز ری سیٹ کریں"
       llms:
         display_name: "نام"
         provider: "پرووَائیڈر"

@@ -10,7 +10,6 @@ import { Promise } from "rsvp";
 import ChangeReplyTo from "discourse/components/modal/change-reply-to";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
-import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
 import TopicReplyChoiceDialog from "discourse/components/topic-reply-choice-dialog";
 import WrapAttributesModal from "discourse/components/wrap-attributes-modal";
 import {
@@ -553,7 +552,7 @@ export default class ComposerService extends Service {
       options.push(
         this._setupPopupMenuOption({
           name: "toggle-spreadsheet",
-          action: "toggleSpreadsheet",
+          action: "insertTable",
           icon: "table",
           label: "composer.insert_table",
         })
@@ -1017,13 +1016,19 @@ export default class ComposerService extends Service {
   }
 
   @action
-  toggleSpreadsheet() {
-    this.modal.show(SpreadsheetEditor, {
-      model: {
-        toolbarEvent: this.toolbarEvent,
-        tableTokens: null,
-      },
-    });
+  insertTable() {
+    const headings = [1, 2, 3, 4].map((number) =>
+      i18n("composer.table.default_heading", { number })
+    );
+
+    this.appEvents.trigger(
+      "composer:insert-block",
+      [
+        `| ${headings.join(" | ")} |`,
+        `|${" --- |".repeat(headings.length)}`,
+        `|${"  |".repeat(headings.length)}`,
+      ].join("\n")
+    );
   }
 
   @action
