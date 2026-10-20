@@ -3,9 +3,8 @@
 # name: hamilton
 # about: Hamilton plugin
 # version: 0.0.1
-# authors: Discourse
-# url: https://github.com/discourse/hamilton-bot/tree/hamilton/plugins/hamilton
-# required_version: 2.7.0
+# authors: Discourse Team
+# url: https://github.com/discourse/discourse/tree/main/plugins/hamilton
 
 enabled_site_setting :hamilton_enabled
 
