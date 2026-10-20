@@ -10,6 +10,23 @@ what `@onChange` reports.
 See the arg reference in `d-select.gts` (`Args` block) and the option reference in
 `select-engine.ts` (`SelectEngineOptions`).
 
+### Test and styling hooks
+
+These attributes are a stable contract for tests and styling. Option rows expose
+`data-value` as the descriptor value converted to a string and `data-name` as the configured
+label. The none row has an empty value; a create row uses the typed text as its value and
+its label as its name. Resolved chips expose their held item's `data-value` and `data-name`;
+loading skeleton chips carry neither attribute.
+
+The `.d-select` root always exposes `data-value` and `data-name` as comma-separated held ids
+and selection labels in held order, or empty strings when nothing is held. Unresolved ids
+retain their values and use the engine's fallback selection labels. Both attributes follow
+the selection reactively without starting additional async resolution.
+
+The root also always exposes a unique `data-select-id` that stays stable for the instance's
+life. Its `.d-select__panel` carries the same value whenever mounted, including loading,
+empty, error, minimum-query-length and mobile modal states. No panel is mounted while closed.
+
 ## Architecture
 
 Both public modules are facades over focused collaborators in `-internals/`, organized by

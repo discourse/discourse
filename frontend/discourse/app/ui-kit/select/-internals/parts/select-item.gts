@@ -60,6 +60,16 @@ export default class SelectItem extends Component<SelectItemSignature> {
     return this.#resolvePresentation(this.args.engine, this.args.descriptor);
   }
 
+  /** The option label from the engine's configured label field. */
+  get name(): string {
+    return this.args.engine.getItemLabel(this.args.descriptor.item);
+  }
+
+  /** The descriptor id as a DOM attribute, including an empty value for the none row. */
+  get value(): string {
+    return String(this.args.descriptor.value ?? "");
+  }
+
   /**
    * Activates the item unless the control is locked or the row itself is disabled (the
    * modifier already skips disabled items for the keyboard; this guards the pointer path).
@@ -109,6 +119,8 @@ export default class SelectItem extends Component<SelectItemSignature> {
           (if @descriptor.flags.__none "--none")
           row.classes
         }}
+        data-name={{this.name}}
+        data-value={{this.value}}
         role="option"
         title={{row.title}}
         ...attributes

@@ -2907,3 +2907,475 @@ module("Integration | ui-kit | select | DSelect (refilter)", function (hooks) {
     );
   });
 });
+
+module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
+  setupRenderingTest(hooks);
+
+  function option(text) {
+    return findAll("[role='option']").find(
+      (element) => element.textContent.trim() === text
+    );
+  }
+
+  test("options carry their value and name", async function (assert) {
+    await render(<template><DSelect @items={{ITEMS}} /></template>);
+    await click("[role='combobox']");
+
+    assert
+      .dom(option("Banana"))
+      .hasAttribute("data-value", "2", "the value is the id as a string")
+      .hasAttribute("data-name", "Banana", "the name is the label");
+    assert.deepEqual(
+      findAll("[role='option']").map((element) => element.dataset.value),
+      ["1", "2", "3"],
+      "every option carries one"
+    );
+  });
+
+  test("the none row has an empty value", async function (assert) {
+    await render(
+      <template><DSelect @items={{ITEMS}} @noneLabel="None" /></template>
+    );
+    await click("[role='combobox']");
+
+    assert
+      .dom("[role='option'].--none")
+      .hasAttribute("data-value", "")
+      .hasAttribute("data-name", "None");
+  });
+
+  test("a create row carries the typed text as its value", async function (assert) {
+    const createItem = (filter) => ({
+      id: filter,
+      name: `Create ${filter}`,
+      __create: true,
+    });
+
+    await render(
+      <template>
+        <DSelect
+          @allowCreate={{true}}
+          @createItem={{createItem}}
+          @items={{ITEMS}}
+        />
+      </template>
+    );
+    await click("[role='combobox']");
+    await fillIn("[role='combobox']", "kiwi");
+
+    assert
+      .dom("[role='option'].--create")
+      .hasAttribute("data-value", "kiwi")
+      .hasAttribute("data-name", "Create kiwi");
+  });
+
+  test("the root carries the held value and name", async function (assert) {
+    await render(
+      <template>
+        <div class="held"><DSelect @items={{ITEMS}} @value={{2}} /></div>
+        <div class="empty"><DSelect @items={{ITEMS}} /></div>
+      </template>
+    );
+
+    assert
+      .dom(".held .d-select")
+      .hasAttribute("data-value", "2")
+      .hasAttribute("data-name", "Banana");
+    assert
+      .dom(".empty .d-select")
+      .hasAttribute("data-value", "", "nothing held reads as empty")
+      .hasAttribute("data-name", "");
+  });
+
+  test("a multi-select root and its chips carry the held values", async function (assert) {
+    const held = [1, 3];
+
+    await render(
+      <template>
+        <DSelect @items={{ITEMS}} @multiple={{true}} @value={{held}} />
+      </template>
+    );
+
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-value", "1,3", "ids joined with commas")
+      .hasAttribute("data-name", "Apple,Cherry pie", "labels joined too");
+    assert.deepEqual(
+      findAll(".d-select__chip").map((chip) => [
+        chip.dataset.value,
+        chip.dataset.name,
+      ]),
+      [
+        ["1", "Apple"],
+        ["3", "Cherry pie"],
+      ],
+      "each chip carries its own value and name"
+    );
+  });
+
+  test("an unresolved held id keeps its id and fallback name", async function (assert) {
+    const createUnresolvedItem = (value) => ({
+      id: value,
+      name: `Missing ${value}`,
+    });
+
+    await render(
+      <template>
+        <DSelect
+          @createUnresolvedItem={{createUnresolvedItem}}
+          @items={{ITEMS}}
+          @value={{99}}
+          @variant="static"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-value", "99")
+      .hasAttribute("data-name", "Missing 99");
+  });
+
+  test("the root's hooks follow the value", async function (assert) {
+    const held = tracked(1);
+
+    await render(
+      <template><DSelect @items={{ITEMS}} @value={{held.value}} /></template>
+    );
+    assert.dom(".d-select").hasAttribute("data-value", "1");
+
+    held.value = 3;
+    await settled();
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-value", "3")
+      .hasAttribute("data-name", "Cherry pie");
+  });
+
+  test("the root and its panel share a link that is unique per select", async function (assert) {
+    await render(
+      <template>
+        <div class="first"><DSelect @items={{ITEMS}} /></div>
+        <div class="second"><DSelect @items={{ITEMS}} /></div>
+      </template>
+    );
+    const first = find(".first .d-select").dataset.selectId;
+    const second = find(".second .d-select").dataset.selectId;
+
+    assert.true(!!first, "the root carries a link while closed");
+    assert.notStrictEqual(first, second, "each select has its own");
+    assert
+      .dom(".d-select__panel")
+      .doesNotExist("no panel is mounted while closed");
+
+    await click(".first [role='combobox']");
+    assert
+      .dom(`.d-select__panel[data-select-id='${first}']`)
+      .exists("the open panel carries the same link");
+  });
+
+  test("the panel carries the link in its empty, error and below-minimum states", async function (assert) {
+    const failing = () => Promise.reject(new Error("load failed"));
+
+    await render(
+      <template>
+        <div class="empty"><DSelect @items={{ITEMS}} /></div>
+        <div class="error">
+          <DSelect @debounce={{false}} @load={{failing}} @variant="button" />
+        </div>
+        <div class="minimum"><DSelect @items={{ITEMS}} @minChars={{2}} /></div>
+      </template>
+    );
+
+    for (const [host, open] of [
+      [
+        "empty",
+        async () => {
+          await click(".empty [role='combobox']");
+          await fillIn(".empty [role='combobox']", "zzz");
+        },
+      ],
+      ["error", () => click(".error .d-select__trigger")],
+      ["minimum", () => click(".minimum [role='combobox']")],
+    ]) {
+      await open();
+      const link = find(`.${host} .d-select`).dataset.selectId;
+      assert
+        .dom(`.d-select__panel[data-select-id='${link}']`)
+        .exists(`the ${host} panel carries the link`);
+    }
+  });
+
+  test("the mobile modal's panel carries the link", async function (assert) {
+    forceMobile();
+
+    await render(<template><DSelect @items={{ITEMS}} /></template>);
+    await click(".d-select__trigger");
+    const link = find(".d-select").dataset.selectId;
+
+    assert
+      .dom(`.d-select__panel[data-select-id='${link}']`)
+      .exists("the panel inside the modal carries the link");
+  });
+
+  test("custom fields preserve falsy ids and labels across options, chips and the root", async function (assert) {
+    const items = [
+      { key: 0, title: "Zero" },
+      { key: false, title: "False" },
+    ];
+    const held = tracked([false, 0]);
+
+    await render(
+      <template>
+        <DSelect
+          @items={{items}}
+          @labelField="title"
+          @multiple={{true}}
+          @value={{held.value}}
+          @valueField="key"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-value", "false,0", "held order is preserved");
+    assert
+      .dom(".d-select")
+      .hasAttribute(
+        "data-name",
+        "False,Zero",
+        "custom labels follow held order"
+      );
+    assert.deepEqual(
+      findAll(".d-select__chip").map((chip) => [
+        chip.dataset.value,
+        chip.dataset.name,
+      ]),
+      [
+        ["false", "False"],
+        ["0", "Zero"],
+      ],
+      "chips use the configured fields"
+    );
+    await click("[role='combobox']");
+    assert.deepEqual(
+      findAll("[role='option']").map((row) => [
+        row.dataset.value,
+        row.dataset.name,
+      ]),
+      [
+        ["0", "Zero"],
+        ["false", "False"],
+      ],
+      "option hooks stringify falsy ids"
+    );
+
+    held.value = [0, false];
+    await settled();
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-value", "0,false", "reordering updates the ids");
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-name", "Zero,False", "reordering updates the names");
+    held.value = [];
+    await settled();
+    assert
+      .dom(".d-select")
+      .hasAttribute(
+        "data-value",
+        "",
+        "empty multi retains its value attribute"
+      );
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-name", "", "empty multi retains its name attribute");
+  });
+
+  test("synchronous fallbacks and late value items share the selection label", async function (assert) {
+    const items = tracked([]);
+    const resolveValues = sinon.spy(() => []);
+    const createUnresolvedItem = (id) => ({ id, name: `Missing ${id}` });
+    const held = [99, 1];
+
+    await render(
+      <template>
+        <DSelect
+          @createUnresolvedItem={{createUnresolvedItem}}
+          @items={{ITEMS}}
+          @multiple={{true}}
+          @resolveValues={{resolveValues}}
+          @value={{held}}
+          @valueItems={{items.value}}
+        />
+      </template>
+    );
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-value", "99,1", "unresolved ids stay held");
+    assert
+      .dom(".d-select")
+      .hasAttribute(
+        "data-name",
+        "Missing 99,Apple",
+        "the root reads the synchronous fallback"
+      );
+    assert
+      .dom(".d-select__chip")
+      .hasAttribute(
+        "data-name",
+        "Missing 99",
+        "the unresolved chip shares its label"
+      );
+    assert.strictEqual(
+      resolveValues.callCount,
+      1,
+      "root hooks do not resolve a second time"
+    );
+
+    items.value = [{ id: 99, name: "Found" }];
+    await settled();
+    assert
+      .dom(".d-select")
+      .hasAttribute(
+        "data-name",
+        "Found,Apple",
+        "late value items update the root"
+      );
+    assert
+      .dom(".d-select__chip")
+      .hasAttribute("data-name", "Found", "late value items update the chip");
+    assert.strictEqual(
+      resolveValues.callCount,
+      1,
+      "late labels require no extra resolver call"
+    );
+  });
+
+  test("async labels update hooks without extra resolution and skeleton chips have no item hooks", async function (assert) {
+    let complete;
+    const response = new Promise((resolve) => {
+      complete = resolve;
+    });
+    const resolveValues = sinon.spy(() => response);
+    const rendering = render(
+      <template>
+        <DSelect
+          @multiple={{true}}
+          @resolveValues={{resolveValues}}
+          @value={{array 7 8}}
+        />
+      </template>
+    );
+    try {
+      await waitFor(".d-select__chip .d-skeleton");
+      assert
+        .dom(".d-select")
+        .hasAttribute("data-value", "7,8", "pending ids remain available");
+      assert
+        .dom(".d-select__chip")
+        .exists({ count: 2 }, "pending selections render skeleton chips");
+      assert
+        .dom(".d-select__chip[data-value]")
+        .doesNotExist("skeletons have no value hook");
+      assert
+        .dom(".d-select__chip[data-name]")
+        .doesNotExist("skeletons have no name hook");
+      assert.strictEqual(
+        resolveValues.callCount,
+        1,
+        "only the trigger starts resolution"
+      );
+    } finally {
+      complete([
+        { id: 8, name: "Eight" },
+        { id: 7, name: "Seven" },
+      ]);
+      await rendering;
+    }
+    assert
+      .dom(".d-select")
+      .hasAttribute(
+        "data-name",
+        "Seven,Eight",
+        "async labels follow held order"
+      );
+    assert.deepEqual(
+      findAll(".d-select__chip").map((chip) => [
+        chip.dataset.value,
+        chip.dataset.name,
+      ]),
+      [
+        ["7", "Seven"],
+        ["8", "Eight"],
+      ],
+      "resolved chips carry item hooks"
+    );
+    await click("[role='combobox']");
+    assert.strictEqual(
+      resolveValues.callCount,
+      1,
+      "opening does not refetch labels for hooks"
+    );
+  });
+
+  test("default unresolved labels match the displayed selection", async function (assert) {
+    await render(
+      <template>
+        <DSelect @items={{ITEMS}} @value={{99}} @variant="static" />
+      </template>
+    );
+    assert
+      .dom(".d-select")
+      .hasAttribute(
+        "data-name",
+        find(".d-select__unresolved").textContent.trim(),
+        "the default fallback uses the engine selection label"
+      );
+  });
+
+  test("the panel link survives closing, reopening and loading", async function (assert) {
+    let complete;
+    const load = sinon.stub();
+    load.onFirstCall().returns(
+      new Promise((resolve) => {
+        complete = resolve;
+      })
+    );
+    load.returns([]);
+    await render(
+      <template>
+        <DSelect @debounce={{false}} @load={{load}} @variant="button" />
+      </template>
+    );
+    const link = find(".d-select").dataset.selectId;
+    const opening = click(".d-select__trigger");
+    try {
+      await waitFor(".d-select__skeleton");
+      assert
+        .dom(".d-select__panel")
+        .hasAttribute(
+          "data-select-id",
+          link,
+          "the loading panel has the root link"
+        );
+    } finally {
+      complete([]);
+      await opening;
+    }
+    await triggerKeyEvent(".d-select__filter", "keydown", "Escape");
+    assert.dom(".d-select__panel").doesNotExist("closing unmounts the panel");
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-select-id", link, "closing preserves root identity");
+    await click(".d-select__trigger");
+    assert
+      .dom(".d-select__panel")
+      .hasAttribute(
+        "data-select-id",
+        link,
+        "reopening preserves the panel link"
+      );
+  });
+});

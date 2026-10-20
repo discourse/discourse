@@ -10,6 +10,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import DMenu from "discourse/float-kit/components/d-menu";
 import type { MenuOptions } from "discourse/float-kit/lib/constants";
 import type Menu from "discourse/float-kit/services/menu";
@@ -413,6 +414,28 @@ export default class DSelect extends Component<DSelectSignature> {
       this.presenter.isStatic && this.presenter.overlayIsModal,
   });
 
+  /**
+   * Reads selection labels after the trigger records synchronous resolution outcomes.
+   * Sync cache reads track async arrivals without starting another resolution.
+   */
+  selectionHooks = modifier((element: HTMLElement) => {
+    const value = this.engine.value;
+    const values: unknown[] = Array.isArray(value)
+      ? value
+      : value == null
+        ? []
+        : [value];
+    element.setAttribute("data-value", values.map(String).join(","));
+    element.setAttribute(
+      "data-name",
+      values
+        .map((id) =>
+          this.engine.getSelectionLabel(this.engine.resolveSingleSync(id))
+        )
+        .join(",")
+    );
+  });
+
   #listboxId = `d-select-listbox-${guidFor(this)}`;
 
   constructor(owner: Owner, args: DSelectSignature["Args"]) {
@@ -600,6 +623,7 @@ export default class DSelect extends Component<DSelectSignature> {
       aria-label={{this.presenter.triggerRootLabel}}
       aria-readonly={{this.presenter.triggerRootReadonly}}
       class="d-select"
+      data-select-id={{this.listboxId}}
       data-unresolved={{if this.presenter.hasUnresolvedSelection "true"}}
       {{! Identity and description follow the combobox role, which lives here only on the
         variants without a query input; the typeahead carries them on its input instead. Applied
@@ -653,6 +677,7 @@ export default class DSelect extends Component<DSelectSignature> {
         this.presenter.isTypeahead
         this.interaction.emptyTriggers
       }}
+      {{this.selectionHooks}}
       {{on "keydown" this.interaction.handleTriggerRootKeydown}}
       {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
       {{on "mousedown" this.interaction.preventTriggerBlur}}
@@ -767,6 +792,7 @@ export default class DSelect extends Component<DSelectSignature> {
       <:content as |menuArgs|>
         <div
           class="d-select__panel"
+          data-select-id={{this.listboxId}}
           {{didInsert
             this.feedback.trackLoadFeedback
             this.engine.serverPending

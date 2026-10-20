@@ -125,6 +125,11 @@ export default class MultiChips extends Component<MultiChipsSignature> {
     return Array.from({ length: count }, (_, key) => ({ key }));
   }
 
+  /** Converts a held item's id to its chip attribute value. */
+  chipValue(chip: SelectDescriptor): string {
+    return String(chip.value ?? "");
+  }
+
   /**
    * Returns focus to the query input when the roving cursor steps off the input-side end of the
    * chip group. At the other end (`backward`) it stays on the first chip.
@@ -261,7 +266,11 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           </:loading>
           <:content as |chips|>
             {{#each chips key="key" as |chip index|}}
-              <li class="d-select__chip">
+              <li
+                class="d-select__chip"
+                data-name={{@engine.getSelectionLabel chip.item}}
+                data-value={{this.chipValue chip}}
+              >
                 {{! Hidden from assistive tech: the remove button's accessible name
                   already carries this label (via aria-labelledby), so exposing the
                   text again would double every chip during item-by-item navigation. }}
