@@ -59,6 +59,9 @@ export default class PostStream extends Component {
     body.focus({ preventScroll: true });
   });
 
+  quoteHighlightFor = (post) =>
+    this.args.postStream.quoteHighlights.get(post.post_number);
+
   constructor() {
     super(...arguments);
 
@@ -386,6 +389,7 @@ export default class PostStream extends Component {
                 @permanentlyDeletePost={{fn @permanentlyDeletePost post}}
                 @post={{post}}
                 @prevPost={{previousPost}}
+                @quoteHighlight={{this.quoteHighlightFor post}}
                 @rebakePost={{fn @rebakePost post}}
                 @recoverPost={{fn @recoverPost post}}
                 @removeAllowedGroup={{@removeAllowedGroup}}

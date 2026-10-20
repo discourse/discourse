@@ -126,6 +126,26 @@ module("Unit | Model | post-stream", function (hooks) {
     );
   });
 
+  test("highlightQuoteOnRender keeps only the latest quote", function (assert) {
+    const postStream = buildStream.call(this, 1232);
+
+    postStream.highlightQuoteOnRender(3, "first quote");
+    postStream.highlightQuoteOnRender(4);
+    assert.strictEqual(
+      postStream.quoteHighlights.get(3).quote,
+      "first quote",
+      "keeps the quote when a jump has nothing to highlight"
+    );
+
+    postStream.highlightQuoteOnRender(5, "second quote");
+    assert.false(postStream.quoteHighlights.has(3), "drops the previous quote");
+    assert.strictEqual(
+      postStream.quoteHighlights.get(5).quote,
+      "second quote",
+      "stores the latest quote"
+    );
+  });
+
   test("closestPostNumberFor", function (assert) {
     const postStream = buildStream.call(this, 1231);
     const store = getOwner(this).lookup("service:store");

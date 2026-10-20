@@ -1980,6 +1980,11 @@ span.highlighted {
   background-color: var(--highlight-bg);
 }
 
+.quote-highlight {
+  background-color: var(--highlight-bg);
+  scroll-margin-top: 3lh;
+}
+
 .pausable-animated-image {
   position: relative;
   display: inline-block;

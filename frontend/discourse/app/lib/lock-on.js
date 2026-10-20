@@ -50,7 +50,8 @@ export default class LockOn {
       }
     }
 
-    return offset - headerOffset();
+    const scrollMargin = parseFloat(getComputedStyle(element).scrollMarginTop);
+    return offset - headerOffset() - scrollMargin;
   }
 
   clearLock() {
