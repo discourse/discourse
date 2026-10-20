@@ -244,6 +244,10 @@ after_initialize do
     DiscourseAi::PostImageCaptions.process_cooked(doc, post, locale: post_localization.locale)
   end
 
+  register_modifier(:deliver_push_notification_localization_pending) do |pending, post, user|
+    pending || DiscourseAi::Translation.post_localization_pending?(post, user.effective_locale)
+  end
+
   register_modifier(:post_search_index_text) do |text, post_id, cooked, locale|
     DiscourseAi::PostImageCaptions.append_to_search_text(text, post_id, cooked, locale: locale)
   end
