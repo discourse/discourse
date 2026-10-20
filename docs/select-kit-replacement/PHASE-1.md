@@ -61,6 +61,15 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     `preventPointerBlur` acting only for the typeahead; `legacy.getElement` returning the trigger
     (desktop and mobile). The unkeyed `{{#each}}` nit moved to `main` with
     `d-roving-focus-test.gjs` (#42381) and is no longer this branch's.
+  - ☑ **Mobile keyboard trigger** (2026-10-20): the closed mobile typeahead root was a `<div>`
+    with no role or tab stop, so only a tap could open it, and the field's id, description and
+    invalid state rendered nowhere. It is now a `role="button"` disclosure
+    (`aria-haspopup="dialog"`, named like the other control roots). Enter, Space and the arrow
+    keys open the modal, Escape returns focus to it, and readonly is announced as
+    `aria-disabled`. It carries the field wiring. `triggerIsControl` is unchanged, so `--control`
+    and `iconOnly` stay off every typeahead. Checked against five planted defects. The ring
+    still shows after a tap-then-close: focus returns from the modal's text input, which the
+    browser treats as keyboard focus, as it does on desktop.
 - ◐ **Trigger & list state model** (Decision 1b):
   - ☑ Item **normalization** — `buildItems` returns `{ key, value, item, flags }` descriptors
     (final render step; raw items unchanged upstream). The listbox keys on `descriptor.key`

@@ -1129,6 +1129,302 @@ module(
         .dom(".d-select__presentation")
         .hasText("Banana", "mobile has the same block-free fallback");
     });
+
+    test("the closed root is a focusable button naming the field and its value", async function (assert) {
+      await render(
+        <template>
+          <DSelect class="kt" @items={{ITEMS}} @label="Fruit" @value={{2}} />
+        </template>
+      );
+
+      assert
+        .dom(".kt")
+        .hasAttribute("role", "button")
+        .hasAria("haspopup", "dialog", "it opens a dialog")
+        .hasAria("expanded", "false")
+        .hasAria("label", "Fruit, Banana")
+        .hasAttribute("tabindex", "0", "it is a tab stop");
+
+      await focus(".kt");
+      assert.dom(".kt").isFocused("it takes keyboard focus");
+    });
+
+    for (const [key, name] of [
+      ["Enter", "Enter"],
+      [" ", "Space"],
+      ["ArrowDown", "ArrowDown"],
+    ]) {
+      test(`${name} opens the modal with focus in its query input`, async function (assert) {
+        await render(
+          <template><DSelect class="kt" @items={{ITEMS}} /></template>
+        );
+
+        await focus(".kt");
+        await triggerKeyEvent(".kt", "keydown", key);
+
+        assert.dom(".fk-d-menu-modal").exists("the modal opens");
+        assert
+          .dom(".fk-d-menu-modal [role='combobox']")
+          .isFocused("focus lands in the modal's query input");
+      });
+    }
+
+    test("Escape closes the modal and returns focus to the root", async function (assert) {
+      await render(
+        <template><DSelect class="kt" @items={{ITEMS}} /></template>
+      );
+
+      await focus(".kt");
+      await triggerKeyEvent(".kt", "keydown", "Enter");
+      await triggerKeyEvent(
+        ".fk-d-menu-modal [role='combobox']",
+        "keydown",
+        "Escape"
+      );
+
+      assert.dom(".fk-d-menu-modal").doesNotExist("the modal closes");
+      assert.dom(".kt").isFocused("focus returns to the trigger");
+    });
+
+    test("a disabled root is announced unavailable and stays shut", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            class="kt"
+            @disabled={{true}}
+            @items={{ITEMS}}
+            @value={{2}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".kt")
+        .hasAttribute("role", "button")
+        .hasAria("disabled", "true")
+        .doesNotHaveAttribute("tabindex", "disabled leaves the tab order");
+
+      await triggerKeyEvent(".kt", "keydown", "Enter");
+      assert.dom(".fk-d-menu-modal").doesNotExist("Enter opens nothing");
+    });
+
+    test("a readonly root stays focusable, is announced unavailable, and stays shut", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            class="kt"
+            @items={{ITEMS}}
+            @readonly={{true}}
+            @value={{2}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".kt")
+        .hasAttribute("tabindex", "0", "readonly stays focusable")
+        .hasAria("disabled", "true", "a button has no readonly state")
+        .doesNotHaveAttribute("aria-readonly");
+
+      await focus(".kt");
+      await triggerKeyEvent(".kt", "keydown", "Enter");
+      assert.dom(".fk-d-menu-modal").doesNotExist("Enter opens nothing");
+    });
+
+    test("the field's id, description and invalid state land on the root", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            class="kt"
+            @describedBy="fruit-help"
+            @id="fruit-field"
+            @invalid={{true}}
+            @items={{ITEMS}}
+          />
+        </template>
+      );
+
+      assert
+        .dom("#fruit-field")
+        .exists({ count: 1 }, "one element owns the id");
+      assert
+        .dom(".kt")
+        .hasAttribute("id", "fruit-field")
+        .hasAria("invalid", "true");
+      assert.true(
+        find(".kt")
+          .getAttribute("aria-describedby")
+          ?.split(" ")
+          .includes("fruit-help"),
+        "the field description describes the root"
+      );
+    });
+
+    test("a multi root is a focusable button, and its chip keys stay with the chip", async function (assert) {
+      await render(
+        <template>
+          <DefaultHost @multiple={{true}} @value={{array 1 2}} />
+        </template>
+      );
+
+      assert
+        .dom(".d-select")
+        .hasAttribute("role", "button")
+        .hasAttribute("tabindex", "0");
+
+      await triggerKeyEvent(".d-select__chip-remove", "keydown", "Enter");
+      assert
+        .dom(".fk-d-menu-modal")
+        .doesNotExist("a key on a chip's remove button does not open");
+
+      await focus(".d-select");
+      await triggerKeyEvent(".d-select", "keydown", "Enter");
+      assert.dom(".fk-d-menu-modal").exists("Enter on the root opens");
+    });
+
+    test("icon-only and control styling stay off a mobile typeahead", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            class="kt"
+            @icon="gear"
+            @iconOnly={{true}}
+            @items={{ITEMS}}
+            @label="Settings"
+            @value={{2}}
+          />
+        </template>
+      );
+
+      assert.dom(".kt").doesNotHaveClass("--icon-only");
+      assert.dom(".kt").doesNotHaveClass("--control");
+    });
+
+    test("ArrowUp opens the modal and focuses its query input", async function (assert) {
+      await render(<template><DSelect @items={{ITEMS}} /></template>);
+
+      await focus(".d-select");
+      await triggerKeyEvent(".d-select", "keydown", "ArrowUp");
+
+      assert.dom(".fk-d-menu-modal").exists("ArrowUp opens the modal");
+      assert
+        .dom(".fk-d-menu-modal [role='combobox']")
+        .isFocused("the modal query takes focus");
+    });
+
+    test("aria-controls references the listbox only while open", async function (assert) {
+      await render(<template><DSelect @items={{ITEMS}} /></template>);
+
+      assert
+        .dom(".d-select")
+        .doesNotHaveAttribute(
+          "aria-controls",
+          "a closed root has no reference"
+        );
+
+      await focus(".d-select");
+      await triggerKeyEvent(".d-select", "keydown", "Enter");
+
+      assert
+        .dom(".d-select")
+        .hasAttribute(
+          "aria-controls",
+          find(".fk-d-menu-modal [role='listbox']").id,
+          "the open root references its rendered listbox"
+        );
+
+      await triggerKeyEvent(
+        ".fk-d-menu-modal [role='combobox']",
+        "keydown",
+        "Escape"
+      );
+
+      assert
+        .dom(".d-select")
+        .doesNotHaveAttribute("aria-controls", "closing removes the reference");
+    });
+
+    for (const multiple of [false, true]) {
+      for (const key of ["Backspace", "Delete"]) {
+        test(`${key} clears the closed ${multiple ? "multi" : "single"} root without a clear button`, async function (assert) {
+          const value = tracked(multiple ? [1, 2] : 2);
+          const onChange = (next) => (value.value = next);
+
+          await render(
+            <template>
+              <DSelect
+                @clearable={{false}}
+                @items={{ITEMS}}
+                @multiple={{multiple}}
+                @onChange={{onChange}}
+                @value={{value.value}}
+              />
+            </template>
+          );
+
+          assert
+            .dom(".d-select__clear")
+            .doesNotExist(
+              "keyboard clearing is independent of the clear button"
+            );
+
+          await focus(".d-select");
+          await triggerKeyEvent(".d-select", "keydown", key);
+
+          assert.deepEqual(
+            value.value,
+            multiple ? [] : null,
+            "the entire selection is cleared"
+          );
+          assert.dom(".d-select").isFocused("focus stays on the trigger");
+          assert
+            .dom(".fk-d-menu-modal")
+            .doesNotExist("clearing does not open the modal");
+        });
+      }
+    }
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (typeahead, desktop root)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("a desktop typeahead root stays a plain wrapper around its input", async function (assert) {
+      await render(
+        <template>
+          <DSelect class="kt" @id="fruit-field" @items={{ITEMS}} />
+        </template>
+      );
+
+      assert
+        .dom(".kt")
+        .doesNotHaveAttribute("role")
+        .doesNotHaveAttribute("tabindex")
+        .doesNotHaveAttribute("id");
+      assert
+        .dom(".kt [role='combobox']")
+        .hasAttribute("id", "fruit-field", "the input keeps the field id");
+    });
+
+    test("icon-only stays off a desktop typeahead", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            class="kt"
+            @icon="gear"
+            @iconOnly={{true}}
+            @items={{ITEMS}}
+            @label="Settings"
+            @value={{2}}
+          />
+        </template>
+      );
+
+      assert.dom(".kt").doesNotHaveClass("--icon-only");
+      assert.dom(".kt").doesNotHaveClass("--control");
+    });
   }
 );
 

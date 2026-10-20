@@ -11,8 +11,8 @@ facade and codemod plan this phase used to carry is superseded.
 
 - ◐ **Modal Enter bug** (`28f9c5153fb`): `DModal` submitted on Enter inside a `DSelect` because its
   exemption covered `.select-kit` but not `role="combobox"`. Fixed here with five `DSelect`
-  tests, each failing before the fix; two weaker fixes were planted and caught. Still to do: a
-  standalone PR on `main` with ARIA-markup tests (no `DSelect` there).
+  tests, each failing before the fix; two weaker fixes were planted and caught. The standalone
+  PR on `main`, with ARIA-markup tests (no `DSelect` there), is open as #44869.
 - ☑ **Flag** `enable_new_select_controls`: conceptual, impact `other,all_members`, read live from
   `siteSettings` like `enable_new_reordering_controls`. No rollout service and no runtime family
   list; a family joins when its converted call sites merge. `body_class` waits for the first family

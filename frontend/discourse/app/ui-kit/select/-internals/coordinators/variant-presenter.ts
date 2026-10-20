@@ -101,11 +101,27 @@ export default class VariantPresenter {
     return this.isStatic || this.isPanelSearchable;
   }
 
+  /**
+   * Whether the root is a disclosure button: the panel-searchable variant, and the mobile
+   * typeahead, whose query input lives in the modal the root opens.
+   */
+  get triggerIsButton(): boolean {
+    return this.isPanelSearchable || this.isMobileTypeahead;
+  }
+
+  /**
+   * Whether the root is the keyboard stop. Only the desktop typeahead keeps focus on an input in
+   * the trigger; everywhere else the root is the only thing to Tab to before the overlay opens.
+   */
+  get triggerTakesFocus(): boolean {
+    return this.triggerIsControl || this.isMobileTypeahead;
+  }
+
   get triggerRootRole(): string | undefined {
     if (this.isStatic) {
       return "combobox";
     }
-    if (this.isPanelSearchable) {
+    if (this.triggerIsButton) {
       return "button";
     }
     return undefined;
@@ -116,7 +132,7 @@ export default class VariantPresenter {
     if (this.isDisabled) {
       return undefined;
     }
-    return this.triggerIsControl ? "0" : undefined;
+    return this.triggerTakesFocus ? "0" : undefined;
   }
 
   /**
@@ -136,28 +152,28 @@ export default class VariantPresenter {
   }
 
   /**
-   * `aria-haspopup` names what the trigger opens, and the two control variants open different
+   * `aria-haspopup` names what the trigger opens, and the control variants open different
    * things.
    *
    * `static` is a select-only combobox: its `aria-controls` points at the listbox, and the
    * listbox is what a reader is being sent to — so `listbox` is both correct and consistent
    * with that reference.
    *
-   * `button` is a disclosure. What it opens is the panel dialog, and that dialog holds a filter
-   * input as well as the list. Calling it a listbox told a reader to expect a list and hid the
-   * input they actually land on.
+   * A button trigger is a disclosure. What it opens is a dialog (the panel, or the mobile
+   * typeahead's modal), and that dialog holds a query input as well as the list. Calling it a
+   * listbox told a reader to expect a list and hid the input they actually land on.
    */
   get triggerRootHasPopup(): string | undefined {
     if (this.isStatic) {
       return "listbox";
     }
-    return this.isPanelSearchable ? "dialog" : undefined;
+    return this.triggerIsButton ? "dialog" : undefined;
   }
 
   /**
-   * The accessible name for the control-variant trigger root — the `role` lives on the `<div>`,
-   * so the name must too. The typeahead/multi variants name their inner `role="combobox"` input
-   * instead (via `ComboboxQueryInput @label`), so the root stays unnamed there.
+   * The accessible name for a focusable trigger root — the `role` lives on the `<div>`, so the
+   * name must too. The desktop typeahead names its inner `role="combobox"` input instead (via
+   * `ComboboxQueryInput @label`), so the root stays unnamed there.
    *
    * An author-supplied name REPLACES name-from-contents, so naming the root with the field label
    * alone made the held value unspeakable: a category picker showing "Support" announced only
@@ -168,7 +184,7 @@ export default class VariantPresenter {
    * one label, and folding them into a single string would fight the per-chip remove controls.
    */
   get triggerRootLabel(): string | undefined {
-    if (!this.triggerIsControl) {
+    if (!this.triggerTakesFocus) {
       return undefined;
     }
     if (this.#getArgs().multiple || !this.#engine.hasValue) {
@@ -181,29 +197,29 @@ export default class VariantPresenter {
   }
 
   get triggerRootControls(): string | undefined {
-    return this.triggerIsControl && this.#isExpanded()
+    return this.triggerTakesFocus && this.#isExpanded()
       ? this.#activeListboxId()
       : undefined;
   }
 
   /**
-   * `aria-disabled` / `aria-readonly` on the control-variant trigger root (the
-   * `role="combobox"`/`role="button"` `<div>`). The typeahead/multi input carries the native
+   * `aria-disabled` / `aria-readonly` on a focusable trigger root (the
+   * `role="combobox"`/`role="button"` `<div>`). The desktop typeahead input carries the native
    * `disabled`/`readonly` attributes instead — a roleless `<div>`'s native attrs mean nothing.
    * A `role="button"` has no `aria-readonly` state, so a readonly button is announced
    * unavailable with `aria-disabled` instead.
    */
   get triggerRootDisabled(): string | undefined {
-    const readonlyButton = this.isReadonly && this.isPanelSearchable;
-    return this.triggerIsControl && (this.isDisabled || readonlyButton)
+    const readonlyButton = this.isReadonly && this.triggerIsButton;
+    return this.triggerTakesFocus && (this.isDisabled || readonlyButton)
       ? "true"
       : undefined;
   }
 
   get triggerRootReadonly(): string | undefined {
-    // Only the `role="combobox"` static trigger: `aria-readonly` is not a valid state for the
-    // `role="button"` panel-searchable trigger (a button announces unavailability with
-    // `aria-disabled`), so it is never emitted there.
+    // Only the `role="combobox"` static trigger: `aria-readonly` is not a valid state for a
+    // `role="button"` trigger (a button announces unavailability with `aria-disabled`), so it is
+    // never emitted there.
     return this.isStatic && this.isReadonly ? "true" : undefined;
   }
 

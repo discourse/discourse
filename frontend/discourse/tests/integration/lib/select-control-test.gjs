@@ -93,6 +93,7 @@ module("Integration | Lib | select-control", function (hooks) {
     assert.dom(".d-select .d-select__input").doesNotExist();
     assert.strictEqual(selectControl(root), root, "from the root");
     assert.strictEqual(selectControl(find(".host")), root, "from a container");
+    assertFocusable(assert, root, root);
   });
 
   test("returns null when there is no select", async function (assert) {

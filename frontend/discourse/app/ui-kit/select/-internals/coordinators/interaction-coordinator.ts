@@ -224,7 +224,7 @@ export default class InteractionCoordinator {
   @action
   handleTriggerRootKeydown(event: KeyboardEvent): void {
     if (
-      !this.#presenter.triggerIsControl ||
+      !this.#presenter.triggerTakesFocus ||
       this.isExpanded ||
       this.#presenter.isLocked ||
       event.isComposing
@@ -250,7 +250,7 @@ export default class InteractionCoordinator {
       this.#menu?.show();
       return;
     }
-    // Keyboard clear for the control variants: they have no text input, so the closed trigger
+    // Keyboard clear for a focusable root: it has no text input, so the closed trigger
     // IS their empty-query state and Backspace/Delete empties the selection. Not gated on
     // `@clearable` — that governs the visible × control only — for the same reason the typeahead
     // path is not: the family this replaces clears from an empty filter unconditionally, and

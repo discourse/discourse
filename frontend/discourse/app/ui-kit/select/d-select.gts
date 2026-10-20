@@ -616,19 +616,21 @@ export default class DSelect extends Component<DSelectSignature> {
     <DMenu
       aria-busy={{if this.engine.pending "true"}}
       aria-controls={{this.presenter.triggerRootControls}}
-      aria-describedby={{unless this.presenter.isTypeahead @describedBy}}
+      aria-describedby={{unless this.presenter.isDesktopTypeahead @describedBy}}
       aria-disabled={{this.presenter.triggerRootDisabled}}
       aria-haspopup={{this.presenter.triggerRootHasPopup}}
-      aria-invalid={{unless this.presenter.isTypeahead (if @invalid "true")}}
+      aria-invalid={{unless
+        this.presenter.isDesktopTypeahead
+        (if @invalid "true")
+      }}
       aria-label={{this.presenter.triggerRootLabel}}
       aria-readonly={{this.presenter.triggerRootReadonly}}
       class="d-select"
       data-select-id={{this.listboxId}}
       data-unresolved={{if this.presenter.hasUnresolvedSelection "true"}}
-      {{! Identity and description follow the combobox role, which lives here only on the
-        variants without a query input; the typeahead carries them on its input instead. Applied
-        unconditionally would give a typeahead two elements with the same id. }}
-      id={{unless this.presenter.isTypeahead @id}}
+      {{! Desktop typeahead owns the field id on its input; every other surface needs it on
+        the root because no trigger input renders there. }}
+      id={{unless this.presenter.isDesktopTypeahead @id}}
       role={{this.presenter.triggerRootRole}}
       tabindex={{this.presenter.triggerRootTabIndex}}
       ...attributes
@@ -665,8 +667,8 @@ export default class DSelect extends Component<DSelectSignature> {
       @placement={{@placement}}
       @trapTab={{false}}
       @triggerClass={{this.presenter.triggerClass}}
-      {{! Control variants put ARIA and keyboard behavior on the root; input variants put
-        them on their inner input. }}
+      {{! Desktop typeahead puts ARIA and keyboard behavior on its input; other surfaces use
+        the root. }}
       @triggerComponent={{dElement "div"}}
       {{! Typeahead: keep DMenu's default click-to-open (the whole trigger root opens the
         overlay) but disable close-on-click so clicking the already-open trigger/input does
