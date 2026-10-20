@@ -950,6 +950,11 @@ class Plugin::Instance
     PluginGem.load(path, name, version, opts)
   end
 
+  # Takes a hash of gem name => version requirement, see PluginGem.resolve.
+  def gem_requirements(requirements, require: false)
+    PluginGem.resolve(path, requirements, require:)
+  end
+
   def hide_plugin
     @hidden = true
   end
