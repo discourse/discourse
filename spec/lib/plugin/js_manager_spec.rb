@@ -73,4 +73,65 @@ RSpec.describe Plugin::JsManager do
       expect(bundle_for("chat")).to eq(nil)
     end
   end
+
+  describe "#compile_js_bundle" do
+    let(:plugin_dir) { Dir.mktmpdir }
+    let(:plugin) do
+      instance_double(
+        Plugin::Instance,
+        name: "digest-test",
+        directory: plugin_dir,
+        directory_name: "js_manager_spec_#{SecureRandom.hex(4)}",
+        about_json_metadata: nil,
+      )
+    end
+    let(:js_dir) { Rails.root.join("app/assets/generated/#{plugin.directory_name}/js/plugins") }
+    let(:compilations) { [] }
+
+    before do
+      FileUtils.mkdir_p("#{plugin_dir}/assets/javascripts")
+      File.write("#{plugin_dir}/assets/javascripts/main.js", "export default 1;")
+
+      allow(AssetProcessor).to receive(:ember_version).and_return("6.0.0")
+      allow(AssetProcessor).to receive(:digest).and_return("processor-a")
+
+      allow(Plugin::JsCompiler).to receive(:new) do |_name, filename_prefix:, filename_suffix:, **|
+        compilations << filename_suffix
+        file_name = "#{filename_prefix}main.Ab12Cd#{filename_suffix}.js"
+        instance_double(
+          Plugin::JsCompiler,
+          compile!: {
+            file_name => {
+              "name" => "main",
+              "isEntry" => true,
+              "code" => "",
+            },
+          },
+        )
+      end
+    end
+
+    after do
+      FileUtils.rm_rf(Rails.root.join("app/assets/generated/#{plugin.directory_name}"))
+      FileUtils.rm_rf(plugin_dir)
+    end
+
+    it "reuses the existing build when its inputs are unchanged" do
+      2.times { described_class.new.compile_js_bundle(plugin) }
+
+      expect(compilations.size).to eq(1)
+    end
+
+    it "rebuilds under a new filename when the asset processor changes" do
+      described_class.new.compile_js_bundle(plugin)
+
+      allow(AssetProcessor).to receive(:digest).and_return("processor-b")
+      described_class.new.compile_js_bundle(plugin)
+
+      expect(compilations.uniq.size).to eq(2)
+      expect(Dir.children(js_dir)).to contain_exactly(
+        "#{plugin.directory_name}_main.Ab12Cd#{compilations.last}.js",
+      )
+    end
+  end
 end
