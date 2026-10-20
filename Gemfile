@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-ruby "~> 3.4"
+ruby ">= 3.4", "< 4.1"
 
 source "https://rubygems.org"
 # if there is a super emergency and rubygems is playing up, try
@@ -198,7 +198,7 @@ gem "pitchfork", require: false
 
 # Used by discourse-prometheus to collect socket queue stats.
 # Was previously a transitive dependency of the unicorn gem.
-gem "raindrops", require: false, platform: :ruby
+gem "raindrops", git: "https://github.com/discourse/raindrops", require: false, platform: :ruby
 
 gem "rbtrace", require: false, platform: :mri
 
