@@ -45,7 +45,7 @@ intent and already handle light/dark via `light-dark()`:
 
 ## General-purpose `--d-*` design vars
 
-A family of app-wide design constants — `--d-input-border-radius`, `--d-content-background`, `--d-link-color`, `--d-hover`,
+A family of app-wide design constants — `--d-comp-Input-border-radius`, `--d-content-background`, `--d-link-color`, `--d-hover`,
 `--d-selected` — for conventions like the standard corner radius and link color. Prefer these
 over inventing your own constant so a component matches the rest of the UI (and a theme can
 retune them globally).
@@ -65,7 +65,7 @@ exhaustive lists.
 
 `--d-sys-border-radius-md` is the standard corner radius used across the UI. `-sm` and `-lg`
 derive from it (half and double), `-full` is for pills. Component radii derive from it too —
-`--d-button-border-radius`, `--d-input-border-radius`, `--d-nav-pill-border-radius`. Override
+`--d-comp-DButton-border-radius`, `--d-comp-Input-border-radius`, `--d-comp-NavPills-border-radius`. Override
 `--d-sys-border-radius-md` in `:root` to round everything consistently; override a step or a
 component's own var to change just that.
 
@@ -82,13 +82,13 @@ component's own var to change just that.
 }
 ```
 
-Plus globals `--d-button-border-radius`, `--d-button-border`, `--d-button-transition`. Override
+Plus globals `--d-comp-DButton-border-radius`, `--d-button-border`, `--d-button-transition`. Override
 these to restyle every button of a variant without touching `.btn` selectors.
 
 ### Inputs & form elements
 
 `common/base/discourse.scss` defines input hooks: `--d-input-bg-color`, `--d-input-border`,
-`--d-input-text-color`, `--d-input-focused-color`, `--d-input-border-radius` (each with a
+`--d-input-text-color`, `--d-input-focused-color`, `--d-comp-Input-border-radius` (each with a
 `--disabled` variant where relevant). For FormKit layout (gutters, input widths), see the
 `--form-kit-*` vars in `common/form-kit/_variables.scss` (`--form-kit-gutter-x/y`,
 `--form-kit-max-input`, `--form-kit-{small,medium,large}-input`).

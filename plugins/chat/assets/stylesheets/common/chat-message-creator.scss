@@ -124,7 +124,7 @@
     gap: 0.5rem;
     border: var(--d-input-border);
     box-sizing: border-box;
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
 
     &:focus-within {
       @include default-focus;
@@ -276,7 +276,7 @@
     box-sizing: border-box;
     height: var(--d-control-height);
     padding: 0 0.5rem;
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
 
     &:focus,
     &:focus-within {

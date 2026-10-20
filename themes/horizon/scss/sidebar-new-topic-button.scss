@@ -72,8 +72,8 @@
     .topic-drafts-menu-trigger {
       flex: 0 1 auto;
       margin: 0;
-      border-radius: 0 var(--d-button-border-radius)
-        var(--d-button-border-radius) 0;
+      border-radius: 0 var(--d-comp-DButton-border-radius)
+        var(--d-comp-DButton-border-radius) 0;
 
       &:focus-visible,
       &:hover {
@@ -94,8 +94,8 @@
 
       .fk-d-tooltip__trigger {
         background: var(--accent-color);
-        border-radius: 0 var(--d-button-border-radius)
-          var(--d-button-border-radius) 0;
+        border-radius: 0 var(--d-comp-DButton-border-radius)
+          var(--d-comp-DButton-border-radius) 0;
         padding-right: 0.65em;
 
         .d-icon {

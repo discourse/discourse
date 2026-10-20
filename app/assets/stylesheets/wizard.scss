@@ -346,7 +346,7 @@ body.wizard {
   &__text-input,
   input[type="text"] {
     --accent-color: var(--wizard-primary);
-    --d-input-border-radius: var(--wizard-input-radius);
+    --d-comp-Input-border-radius: var(--wizard-input-radius);
     --d-input-border: 1px solid var(--primary-300);
     width: 100%;
     margin: 0;

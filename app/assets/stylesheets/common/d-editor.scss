@@ -37,7 +37,7 @@
   background-color: var(--secondary);
   position: relative;
   border: var(--d-input-border);
-  border-radius: var(--d-input-border-radius);
+  border-radius: var(--d-comp-Input-border-radius);
   min-height: 0;
 
   textarea {
@@ -517,7 +517,7 @@
         color: var(--d-nav-color);
         background-color: var(--d-nav-bg-color);
         transition: var(--d-button-transition);
-        border-radius: var(--d-nav-pill-border-radius);
+        border-radius: var(--d-comp-NavPills-border-radius);
 
         &:hover:not(.active) {
           color: var(--d-nav-color--hover);

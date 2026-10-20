@@ -359,7 +359,7 @@
 }
 
 :root {
-  --d-post-control-border-radius: var(--d-button-border-radius);
+  --d-comp-PostMenu-button-border-radius: var(--d-comp-DButton-border-radius);
   --d-post-control-text-color: var(--primary-low-mid);
   --d-post-control-text-color--hover: var(--primary);
   --d-post-control-icon-color: var(--primary-low-mid);
@@ -457,13 +457,13 @@ nav.post-controls {
         margin-inline: 0;
 
         &:first-child {
-          border-radius: var(--d-post-control-border-radius) 0 0
-            var(--d-post-control-border-radius);
+          border-radius: var(--d-comp-PostMenu-button-border-radius) 0 0
+            var(--d-comp-PostMenu-button-border-radius);
         }
 
         &:last-child {
-          border-radius: 0 var(--d-post-control-border-radius)
-            var(--d-post-control-border-radius) 0;
+          border-radius: 0 var(--d-comp-PostMenu-button-border-radius)
+            var(--d-comp-PostMenu-button-border-radius) 0;
         }
 
         &:nth-child(2) {
@@ -471,7 +471,7 @@ nav.post-controls {
         }
 
         &:first-child:last-child {
-          border-radius: var(--d-post-control-border-radius);
+          border-radius: var(--d-comp-PostMenu-button-border-radius);
         }
 
         &.has-like {
@@ -599,7 +599,7 @@ nav.post-controls {
     color: var(--primary-medium);
     display: flex;
     align-items: center;
-    border-radius: var(--d-button-border-radius);
+    border-radius: var(--d-comp-DButton-border-radius);
 
     &[aria-expanded="true"] {
       background: var(--primary-low);

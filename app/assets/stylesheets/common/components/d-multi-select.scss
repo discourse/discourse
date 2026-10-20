@@ -1,7 +1,7 @@
 .d-multi-select-trigger {
   @include form-item-sizing;
   display: inline-flex;
-  border-radius: var(--d-input-border-radius);
+  border-radius: var(--d-comp-Input-border-radius);
   cursor: pointer;
   align-items: center;
   gap: 0.25em;

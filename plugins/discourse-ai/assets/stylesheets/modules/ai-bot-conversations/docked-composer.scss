@@ -106,7 +106,7 @@ body.has-ai-bot-docked-composer {
   flex-direction: column-reverse;
   border: var(--d-input-border);
   border-color: var(--content-border-color);
-  border-radius: var(--d-input-border-radius);
+  border-radius: var(--d-comp-Input-border-radius);
 
   // Match the chat input's light grey, but composited over an opaque base so
   // topic content doesn't show through the input while scrolling (the docked
@@ -128,7 +128,7 @@ body.has-ai-bot-docked-composer {
       inset: -1px;
       z-index: 1;
       border: 2px solid var(--d-input-focused-color);
-      border-radius: var(--d-input-border-radius);
+      border-radius: var(--d-comp-Input-border-radius);
       pointer-events: none;
     }
   }
@@ -151,7 +151,8 @@ body.has-ai-bot-docked-composer {
   opacity: 1;
   margin: 0;
   border-top: 1px solid var(--primary-low);
-  border-radius: 0 0 var(--d-input-border-radius) var(--d-input-border-radius);
+  border-radius: 0 0 var(--d-comp-Input-border-radius)
+    var(--d-comp-Input-border-radius);
   background: var(--primary-very-low);
   transition:
     max-height 0.25s ease,
@@ -186,7 +187,7 @@ body.has-ai-bot-docked-composer {
   min-width: auto;
   min-height: auto;
   padding: 0.35em 0.5em;
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-comp-DButton-border-radius);
   background: transparent !important;
 
   .d-icon {

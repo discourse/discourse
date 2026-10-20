@@ -832,7 +832,7 @@ table.group-reports {
   .query-results-modes {
     display: inline-flex;
     border: 1px solid var(--primary-low);
-    border-radius: var(--d-button-border-radius, 0.25em);
+    border-radius: var(--d-comp-DButton-border-radius, 0.25em);
     overflow: hidden;
 
     .btn {
@@ -882,7 +882,7 @@ table.group-reports {
     color: var(--primary-medium);
     text-align: center;
     border: 1px dashed var(--primary-low);
-    border-radius: var(--d-button-border-radius, 0.25em);
+    border-radius: var(--d-comp-DButton-border-radius, 0.25em);
 
     .query-chart-empty-state__icon {
       font-size: 2em;

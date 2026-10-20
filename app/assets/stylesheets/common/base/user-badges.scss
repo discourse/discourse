@@ -165,8 +165,8 @@
     right: 0;
     bottom: 0;
     z-index: 1;
-    border-radius: var(--d-button-border-radius) 0 var(--d-button-border-radius)
-      0;
+    border-radius: var(--d-comp-DButton-border-radius) 0
+      var(--d-comp-DButton-border-radius) 0;
   }
 
   .badge-contents {

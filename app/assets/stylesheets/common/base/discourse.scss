@@ -53,7 +53,7 @@
   --d-tag-horizontal-padding: 0em;
   --d-tag-font-weight: initial;
   --d-tag-font-size: var(--font-0);
-  --d-tag-border-radius: 0px;
+  --d-comp-DDiscourseTag-border-radius: 0px;
   --d-tag-background-color: transparent;
   --category-badge-title-color: currentcolor;
   --category-boxes-description-text-color: var(--primary-med-or-secondary-high);
@@ -395,7 +395,7 @@ input {
     color: var(--d-input-text-color);
     background-color: var(--d-input-bg-color);
     border: var(--d-input-border);
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
     color-scheme: var(--scheme-type);
 
     &:focus {
@@ -405,7 +405,7 @@ input {
 
   &[type="color"] {
     border: var(--d-input-border);
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
     cursor: pointer;
     padding: 0;
     margin-bottom: 0;

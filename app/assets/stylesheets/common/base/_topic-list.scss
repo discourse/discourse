@@ -368,8 +368,8 @@
       }
 
       .topic-dismiss-buttons__button {
-        border-top-right-radius: var(--d-button-border-radius);
-        border-bottom-right-radius: var(--d-button-border-radius);
+        border-top-right-radius: var(--d-comp-DButton-border-radius);
+        border-bottom-right-radius: var(--d-comp-DButton-border-radius);
         border-right: var(--d-button-default-border);
       }
     }

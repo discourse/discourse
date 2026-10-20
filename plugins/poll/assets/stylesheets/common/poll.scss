@@ -566,7 +566,7 @@ div.poll-outer,
           margin-right: 0.75em;
           left: 0.2em;
           background: var(--primary-high);
-          border-radius: var(--d-button-border-radius);
+          border-radius: var(--d-comp-DButton-border-radius);
           border: none;
         }
 
@@ -576,7 +576,7 @@ div.poll-outer,
           height: 1.125em;
           width: 1.125em;
           background: var(--primary-low);
-          border-radius: var(--d-button-border-radius);
+          border-radius: var(--d-comp-DButton-border-radius);
         }
       }
     }

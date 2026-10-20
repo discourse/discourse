@@ -954,7 +954,7 @@ html.composer-open:not(.has-full-page-chat) {
     font-size: var(--font-0);
     align-self: end;
     background: var(--composer-popup-background);
-    border-radius: 0 0 0 var(--d-button-border-radius);
+    border-radius: 0 0 0 var(--d-comp-DButton-border-radius);
 
     .d-icon {
       color: currentcolor;

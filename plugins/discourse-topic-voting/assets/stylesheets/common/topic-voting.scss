@@ -30,7 +30,8 @@
 }
 
 .voting-wrapper__button {
-  border-radius: var(--d-button-border-radius) var(--d-button-border-radius) 0 0;
+  border-radius: var(--d-comp-DButton-border-radius)
+    var(--d-comp-DButton-border-radius) 0 0;
   padding: var(--space-1) var(--space-3);
   background: var(--secondary);
   border: 1px solid var(--content-border-color);
@@ -68,7 +69,8 @@
   border: 1px solid var(--content-border-color);
   border-top: 0;
   background: var(--secondary);
-  border-radius: 0 0 var(--d-button-border-radius) var(--d-button-border-radius);
+  border-radius: 0 0 var(--d-comp-DButton-border-radius)
+    var(--d-comp-DButton-border-radius);
   font-size: var(--font-down-2);
   padding: var(--space-half) var(--space-2);
   text-align: center;

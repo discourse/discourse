@@ -1,7 +1,7 @@
 @use "lib/viewport";
 
 .voting .voting-wrapper {
-  --d-button-border-radius: var(--d-sys-border-radius-sm);
+  --d-comp-DButton-border-radius: var(--d-sys-border-radius-sm);
   --primary-100: var(--d-selected);
   --primary-low: var(--d-selected);
 

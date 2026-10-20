@@ -259,7 +259,7 @@
 .d-table-badge {
   display: flex;
   font-size: var(--font-down-2);
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-comp-DButton-border-radius);
   color: var(--primary-very-high);
   background: var(--tertiary-very-low);
   letter-spacing: 0.25px;
@@ -285,8 +285,8 @@
 
   &__info {
     border-left: 1px solid var(--secondary);
-    border-radius: 0 var(--d-button-border-radius) var(--d-button-border-radius)
-      0;
+    border-radius: 0 var(--d-comp-DButton-border-radius)
+      var(--d-comp-DButton-border-radius) 0;
     padding: var(--space-half) var(--space-1);
   }
 

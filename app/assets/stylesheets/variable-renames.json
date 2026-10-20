@@ -7,5 +7,11 @@
   "--d-border-radius-small": "--d-sys-border-radius-sm",
   "--token-radius-small": "--d-sys-border-radius-sm",
   "--d-border-radius-pill": "--d-sys-border-radius-full",
-  "--token-radius-full": "--d-sys-border-radius-full"
+  "--token-radius-full": "--d-sys-border-radius-full",
+  "--d-button-border-radius": "--d-comp-DButton-border-radius",
+  "--d-input-border-radius": "--d-comp-Input-border-radius",
+  "--d-nav-pill-border-radius": "--d-comp-NavPills-border-radius",
+  "--d-post-control-border-radius": "--d-comp-PostMenu-button-border-radius",
+  "--d-tag-border-radius": "--d-comp-DDiscourseTag-border-radius",
+  "--category-badge-border-radius": "--d-comp-DCategoryBadge-border-radius"
 }

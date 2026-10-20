@@ -1,6 +1,6 @@
 :root {
   // global
-  --d-button-border-radius: var(--d-sys-border-radius-md);
+  --d-comp-DButton-border-radius: var(--d-sys-border-radius-md);
   --d-button-transition: none;
   --d-button-border: 1px solid transparent;
 
@@ -258,7 +258,7 @@
 /* Default button */
 .btn-default {
   border: var(--d-button-default-border);
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-comp-DButton-border-radius);
 
   @include hover {
     border: var(--d-button-default-border--hover);
@@ -277,7 +277,7 @@
     $border: var(--d-button-primary-border),
     $hover-border: var(--d-button-primary-border--hover)
   );
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-comp-DButton-border-radius);
 }
 
 /* Danger button */
@@ -293,7 +293,7 @@
     $border: var(--d-button-danger-border),
     $hover-border: var(--d-button-danger-border--hover)
   );
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-comp-DButton-border-radius);
 }
 
 /* Success button */
@@ -309,7 +309,7 @@
     $border: var(--d-button-success-border),
     $hover-border: var(--d-button-success-border--hover)
   );
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-comp-DButton-border-radius);
 }
 
 /* Social buttons */
@@ -429,7 +429,7 @@
     $hover-bg-color: var(--d-button-flat-bg-color--hover),
     $hover-icon-color: var(--d-button-flat-icon-color--hover)
   );
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-comp-DButton-border-radius);
 
   .discourse-no-touch & {
     &:focus-visible {

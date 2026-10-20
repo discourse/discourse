@@ -6,7 +6,7 @@
 // --------------------------------------------------
 :root {
   --category-badge-size: 0.75em;
-  --category-badge-border-radius: 2px;
+  --d-comp-DCategoryBadge-border-radius: 2px;
 }
 
 %badge {
@@ -41,7 +41,7 @@
       flex: 0 0 auto;
       width: var(--category-badge-size);
       height: var(--category-badge-size);
-      border-radius: var(--category-badge-border-radius);
+      border-radius: var(--d-comp-DCategoryBadge-border-radius);
     }
 
     &.--style-emoji,
