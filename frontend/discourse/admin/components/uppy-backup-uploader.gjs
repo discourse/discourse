@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
@@ -8,7 +7,7 @@ import { i18n } from "discourse-i18n";
 export default class UppyBackupUploader extends Component {
   @service siteSettings;
 
-  uppyUpload = new UppyUpload(getOwner(this), {
+  uppyUpload = new UppyUpload(this, {
     id: "uppy-backup-uploader",
     type: "backup",
     uploadRootPath: "/admin/backups",
@@ -24,19 +23,13 @@ export default class UppyBackupUploader extends Component {
 
     validateUploadedFilesOptions: { skipValidation: true },
 
+    // Leaving the tab mustn't abort a backup upload
+    finishUploadsOnDestroy: true,
+
     uploadDone: (responseData) => {
       this.args.done(responseData.file_name);
     },
   });
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-
-    // Let a backup upload in progress finish after leaving the tab
-    if (!this.uppyUpload.uploading && !this.uppyUpload.processing) {
-      this.uppyUpload.teardown();
-    }
-  }
 
   get uploadButtonText() {
     return this.uppyUpload.uploading

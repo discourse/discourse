@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
-import { getOwner, setOwner } from "@ember/owner";
+import { setOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isVideo } from "discourse/lib/uploads";
@@ -121,7 +121,7 @@ export default class ComposerVideoThumbnailUppy {
               }
 
               try {
-                this._uppyUpload = new UppyUpload(getOwner(this), {
+                this._uppyUpload = new UppyUpload(this, {
                   id: "video-thumbnail",
                   type: "thumbnail",
                   useMultipartUploadsIfAvailable: true,

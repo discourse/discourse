@@ -1,4 +1,6 @@
-import { getOwner } from "@ember/owner";
+import { destroy } from "@ember/destroyable";
+import { getOwner, setOwner } from "@ember/owner";
+import { run } from "@ember/runloop";
 import { waitUntil } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
@@ -40,6 +42,9 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
     this.fileInput.type = "file";
     this.fileInput.multiple = true;
     document.body.appendChild(this.fileInput);
+
+    this.parent = {};
+    setOwner(this.parent, getOwner(this));
   });
 
   hooks.afterEach(function () {
@@ -67,7 +72,7 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       return uploadResponse(fileName);
     });
 
-    const upload = new UppyUpload(getOwner(this), {
+    const upload = new UppyUpload(this.parent, {
       id: "uppy-upload-test",
       type: "composer",
       uploadDone: ({ file_name }) => completed.push(file_name),
@@ -108,7 +113,7 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       uploadResponse(request.requestBody.get("file").name)
     );
 
-    const upload = new UppyUpload(getOwner(this), {
+    const upload = new UppyUpload(this.parent, {
       id: "uppy-upload-success-test",
       type: "composer",
       uploadDone: ({ file_name }) => completed.push(file_name),
@@ -144,7 +149,7 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
 
   test("explicit single-file cancellation is reported", async function (assert) {
     const cancellations = [];
-    const upload = new UppyUpload(getOwner(this), {
+    const upload = new UppyUpload(this.parent, {
       id: "uppy-upload-cancel-single-test",
       type: "composer",
       autoStartUploads: false,
@@ -179,7 +184,7 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
 
   test("explicit cancel all is reported as cancelled", async function (assert) {
     const cancellations = [];
-    const upload = new UppyUpload(getOwner(this), {
+    const upload = new UppyUpload(this.parent, {
       id: "uppy-upload-cancel-all-test",
       type: "composer",
       autoStartUploads: false,
@@ -218,7 +223,7 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       await new Promise(() => {});
     });
 
-    const upload = new UppyUpload(getOwner(this), {
+    const upload = new UppyUpload(this.parent, {
       id: "uppy-upload-cancel-test",
       type: "composer",
       uploadDone: () => {},
@@ -248,17 +253,66 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
   });
 
   test("teardown destroys the Uppy instance", function (assert) {
-    const upload = new UppyUpload(getOwner(this), {
+    const upload = new UppyUpload(this.parent, {
       id: "uppy-upload-teardown-test",
       type: "composer",
       uploadDone: () => {},
     });
 
     upload.setup(this.fileInput);
-    const destroy = sinon.spy(upload.uppyWrapper.uppyInstance, "destroy");
+    const uppyDestroy = sinon.spy(upload.uppyWrapper.uppyInstance, "destroy");
     upload.teardown();
 
-    assert.true(destroy.calledOnce, "destroys the instance");
+    assert.true(uppyDestroy.calledOnce, "destroys the instance");
+  });
+
+  test("destroying the parent tears down", function (assert) {
+    const upload = new UppyUpload(this.parent, {
+      id: "uppy-upload-parent-test",
+      type: "composer",
+      uploadDone: () => {},
+    });
+
+    upload.setup(this.fileInput);
+    const uppyDestroy = sinon.spy(upload.uppyWrapper.uppyInstance, "destroy");
+    run(() => destroy(this.parent));
+
+    assert.true(uppyDestroy.calledOnce, "destroys the Uppy instance");
+  });
+
+  test("finishUploadsOnDestroy lets an upload in progress finish", async function (assert) {
+    const completed = [];
+    let requested = false;
+    let respond;
+    const responded = new Promise((resolve) => (respond = resolve));
+
+    pretender.post(UPLOAD_URL, async (request) => {
+      requested = true;
+      await responded;
+      return uploadResponse(request.requestBody.get("file").name);
+    });
+
+    const upload = new UppyUpload(this.parent, {
+      id: "uppy-upload-finish-test",
+      type: "composer",
+      finishUploadsOnDestroy: true,
+      uploadDone: ({ file_name }) => completed.push(file_name),
+    });
+
+    upload.setup(this.fileInput);
+    const uppyDestroy = sinon.spy(upload.uppyWrapper.uppyInstance, "destroy");
+
+    await upload.addFiles([createFile(SIBLING_FILE)]);
+    await waitUntil(() => requested, { timeout: 5000 });
+    run(() => destroy(this.parent));
+
+    assert.false(uppyDestroy.called, "keeps the upload going");
+
+    respond();
+    await waitUntil(() => uppyDestroy.called, { timeout: 5000 });
+
+    assert.deepEqual(completed, [SIBLING_FILE], "finishes the upload");
+    assert.true(uppyDestroy.calledOnce, "tears down once idle");
   });
 
   test("teardown is a no-op before setup", function (assert) {
@@ -266,7 +320,7 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       getOwner(this).lookup("service:message-bus"),
       "unsubscribe"
     );
-    const upload = new UppyUpload(getOwner(this), {
+    const upload = new UppyUpload(this.parent, {
       id: "uppy-upload-early-teardown-test",
       type: "composer",
       uploadDone: () => {},
@@ -278,7 +332,7 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
   });
 
   test("setup destroys the previous Uppy instance", function (assert) {
-    const upload = new UppyUpload(getOwner(this), {
+    const upload = new UppyUpload(this.parent, {
       id: "uppy-upload-setup-again-test",
       type: "composer",
       uploadDone: () => {},
@@ -286,10 +340,10 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
 
     upload.setup(this.fileInput);
     const previous = upload.uppyWrapper.uppyInstance;
-    const destroy = sinon.spy(previous, "destroy");
+    const uppyDestroy = sinon.spy(previous, "destroy");
     upload.setup(this.fileInput);
 
-    assert.true(destroy.calledOnce, "destroys the previous instance");
+    assert.true(uppyDestroy.calledOnce, "destroys the previous instance");
     assert.notStrictEqual(
       upload.uppyWrapper.uppyInstance,
       previous,
