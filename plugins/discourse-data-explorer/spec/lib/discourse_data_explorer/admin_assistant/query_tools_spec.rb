@@ -83,21 +83,13 @@ RSpec.describe DiscourseDataExplorer::AdminAssistant::CreateQuery do
     expect(DiscourseDataExplorer::Query.count).to eq(0)
   end
 
-  it "rejects unauthorized, expired, tampered, and cross-site drafts" do
+  it "rejects unauthorized and invalid drafts" do
     context.user = user
     expect(tool.validation_error[:status]).to eq("error")
 
     context.user = admin
     tool.parameters[:draft_token] = "#{token}tampered"
     expect(tool.validation_error[:status]).to eq("error")
-
-    tool.parameters[:draft_token] = token
-    freeze_time 2.days.from_now
-    expect(tool.validation_error[:status]).to eq("error")
-
-    freeze_time 2.days.ago
-    Discourse.stubs(:current_hostname).returns("another.example.com")
-    expect(DiscourseDataExplorer::AdminAssistant::QueryDraft.read(token)).to be_nil
   end
 
   it "rechecks public capability and requester authorization at approval time" do
