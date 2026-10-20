@@ -8,7 +8,7 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves* and *Promotion*. Re-sequenced 2026-10-14
 
 ## Tasks
 
-- ☐ **Wave 5:** port the 19 bundled plugin subclasses (e.g. chat channel chooser,
+- ☐ **Wave 5:** port the 20 bundled plugin subclasses (e.g. chat channel chooser,
   discourse-assign, discourse-workflows, discourse-adplugin, discourse-subscriptions), the
   remaining plugin SCSS, and the remaining customer ports.
 - ☐ **Beta**, once every gate in `ROLLOUT.md` holds. Beta is the production rollout.

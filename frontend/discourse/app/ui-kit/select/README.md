@@ -81,6 +81,10 @@ you.
 `:error` is yielded `reload` alongside the error, so a block that wants its own recovery control
 can render one; the component's retry is shown only when no block is supplied.
 
+`:item`, `:selection`, `:unresolved`, `:groupHeader` and `:footer` also yield the select's resolved
+options as their last parameter, so a recipe can render values extensions override (see
+[Recipes](#recipes)).
+
 ### Blocks that interact
 
 Two behaviours only appear once blocks are used together, and both are easy to get wrong:
@@ -120,59 +124,165 @@ Worked examples of every point above live on the styleguide's select page, under
 
 ## Extension points
 
-Plugins and themes customize a select through four transformers, all keyed on `@identifiers`:
+Plugins and themes customize selects through one value transformer, `select-customizations`.
+Its value is a registry, and each registration targets selects explicitly:
 
-- `select-content` (value transformer) receives the item list and returns a new one. Its context
-  is `{identifiers, filter, value, kind, instance, control}`. Set `sticky: true` on an option
-  to keep an action such as "Suggest" visible at the top while the list scrolls. Sticky options
-  lead the none row and specials, stay outside groups, and keep their relative order. Headers
-  and dividers ignore `sticky`. Bottom actions belong in `:footer`.
-- `select-item-class` (value transformer) starts with a fresh `[]` and returns an array of class
-  names added to option rows, including none, create, and action rows. It does not apply to group
-  headers, dividers, chips, or the trigger. Its context is
-  `{identifiers, item, selected, disabled, kind, instance}`. `item` is the raw row item,
-  `selected` reports whether it is held, and `disabled` includes selection-cap restrictions.
-  The active highlight is not exposed. It has no `control`: it runs at render time, where the
-  control's verbs must not be called. To style a row from the select's state, such as
-  `control.pending`, change the row in `select-content` instead.
-- `select-load` (value transformer) receives the `@load` function and must return a function.
-  Its context is `{identifiers, filter, kind, instance, control}`. It runs once per query when
-  its first page starts, outside render, and may update the extension's own state. The returned
-  loader handles every reveal of that query. It runs only for `@load` selects. A filter change
-  starts a new query. A mode flip without a filter change needs `control.reload()`; otherwise
-  it applies at the next query.
-- `select-on-change` (behavior transformer) wraps the controlled `@onChange`; call `next()` to
-  proceed. Its context is `{identifiers, value, items, kind, instance}`, where `value` and `items`
-  are the change being made.
+- `forAll(setup)` reaches every select.
+- `forKind(kind, setup)` reaches selects whose `@kind` matches. A kind names what a select is,
+  such as `"tag-chooser"`. Recipes set it.
+- `forIdentifier(identifier, setup)` reaches selects whose `@identifier` matches. An identifier
+  names one call site, such as `"composer-tags"`.
+
+Names match exactly, and there is no inheritance or fan-out. A select has at most one kind and
+one identifier, both fixed when it is created. `@identifier` is also the menu's identifier, so
+selects that share one cannot be open together, and an identifier equal to another menu's closes
+that menu when the select opens. Name kinds after the family (the select-kit component name for
+converted families) and identifiers as `<surface>-<role>`.
 
 ```js
-api.registerValueTransformer("select-item-class", ({ value, context }) => {
-  if (context.identifiers.includes("choices") && context.item.featured) {
-    return [...value, "is-featured"];
-  }
-  return value;
+import { trackedObject } from "@ember/reactive/collections";
+
+api.registerValueTransformer("select-customizations", ({ value: selects }) => {
+  selects.forKind("tag-chooser", (spec) => {
+    // One state object per select: setup runs once for each matching select.
+    const state = trackedObject({ suggesting: false });
+
+    spec.content((items, { filter }) => {
+      if (filter) {
+        return items;
+      }
+      const toggle = {
+        id: "suggestion-mode",
+        name: i18n(state.suggesting ? "back" : "suggest"),
+        onSelect(control) {
+          state.suggesting = !state.suggesting;
+          control.reload();
+        },
+      };
+      return [toggle, ...items];
+    });
+
+    spec.load((load, { filter }) => {
+      if (filter) {
+        state.suggesting = false;
+      }
+      return state.suggesting ? loadSuggestions : load;
+    });
+  });
+
+  selects.forIdentifier("composer-tags", (spec) =>
+    spec.options((current, { instanceContext }) => ({
+      disabled: instanceContext.locked,
+    }))
+  );
 });
 ```
 
-Changes from `select-content` are reflected in `aria-setsize` and the announced count. On paged
-sources, the set is the declared total plus the transformers' net change. Two reveals in a row
-that add no visible rows stop paging for that query. The set is then sized by the rows shown,
-and the footer's `total` becomes undefined. Otherwise, footer `total` and `loadedCount` remain
-source counts.
+In this example `loadSuggestions` follows the same contract as `@load`, and the translation keys
+name the Suggest and Back rows.
 
-Core keys sit at the top level of the context. Data from outside core lives in two namespaces, so
-a key core adds later never collides with one a customization relies on:
+### Setup
 
-- `kind` comes from `@kindContext`, which a recipe sets with its own data, such as its scope.
-  `identifiers` already says which recipe a select is.
-- `instance` comes from `@instanceContext`, which a call site sets, such as the topic being
-  edited. A recipe forwards the one it was given.
+- A matching setup runs once per select, when the select is created, as
+  `setup(spec, { kind, identifier })`. Variables it declares belong to that select.
+- Setups run from general to specific: `forAll`, then `forKind`, then `forIdentifier`, each in
+  registration order. A call-site customization therefore overrides a kind-wide one.
+- Setup only declares. It is synchronous and gets no control and no context data. A setup that
+  throws or returns a promise is reported and skipped as a whole.
+- The registry and each `spec` are sealed once setup ends, so a stored one throws when called
+  later. Reading an unknown `spec` member throws.
+- Register at boot, before any select is created. A select never sees a registration made after
+  it was created.
 
-Both default to a frozen empty object, so `context.kind.scope` is always safe to read.
+### The points
 
-`control` is the select's handle. Action rows receive it as `onSelect(control, item)`. It is the
-same frozen object for the select's whole life, so a transformer can key per-select state on it,
-for example in a `WeakMap`. It exposes:
+Each method on `spec` appends a callback. Callbacks for the same point compose in setup order.
+
+| Method | Runs | Callback |
+|---|---|---|
+| `content(fn)` | when the list is built | `(items, ctx) => items`. Returns the next list. |
+| `row(fn)` | for each option row | `(row, ctx) => void`. Mutates `row.classes` and `row.title`. |
+| `options(fn)` | when presentation is read | `(current, ctx) => partial`. Returns overrides. |
+| `load(fn)` | once per query, `@load` selects only | `(load, ctx) => load`. Must return a function. |
+| `change(fn)` | on each selection change | `(next, ctx)`. Call `next()` to continue. |
+
+**`content`** returns a new list. Set `sticky: true` on an option to keep an action such as
+"Suggest" visible at the top while the list scrolls. Sticky options lead the none row and
+specials, stay outside groups, and keep their relative order. Headers and dividers ignore
+`sticky`, and bottom actions belong in `:footer`. A result that is not an array is a development
+assertion and otherwise leaves the list unchanged. Content changes are reflected in
+`aria-setsize` and the announced count. On paged sources, the set is the declared total plus the
+customizations' net change. Two reveals in a row that add no visible rows stop paging for that
+query. The set is then sized by the rows shown, and the footer's `total` becomes undefined.
+Otherwise, footer `total` and `loadedCount` remain source counts. Legacy `modifySelectKit` content
+runs after every `content` callback.
+
+**`row`** gets a fresh `{ classes: [], title: undefined }` for each row. Classes are added after
+the core classes, and falsy entries are ignored. `title` renders only when a callback sets it; an
+item's own `title` field is never a tooltip. Rows include none, create and action rows, but not
+group headers, dividers, chips or the trigger. The context adds `item` (the raw row item),
+`selected` and `disabled` (which includes selection-cap restrictions). It has no `control`.
+
+**`options`** overrides presentation. The core keys are `caretIcon` (a string or
+`{ open, closed }`), `iconOnly`, `label`, `placeholder`, `searchPlaceholder`, `icon`, `showCaret`,
+`clearable`, `noneLabel` and `disabled`, plus the keys a recipe declares (see
+[Recipes](#recipes)). `current` holds the values so far, starting from the call site's arguments.
+Every key is last-wins except `disabled`, which can add a lock but never lift one. `iconOnly`
+needs a label: without one it is ignored with a warning. A key that is neither core nor declared
+warns in development and is ignored, and a non-object result is skipped. The values resolve once
+per change in what they read, not once per row. The context has `value` and `control`, and no
+`options`, because options cannot depend on themselves.
+
+**`load`** receives the loader for a new query and returns the one to use. It runs when the
+query's first page starts, outside render, and the returned loader handles every reveal of that
+query. A filter change starts a new query. A mode flip without a filter change needs
+`control.reload()`; otherwise it applies at the next query.
+
+**`change`** wraps the controlled `@onChange`. Not calling `next()` vetoes the change, and calling
+it later defers it. A deferred `next()` still checks whether the change was superseded, and a
+second call does nothing. A middleware may be async, for example to `await next()` and then
+`control.reload()`. The context adds `value` and `items`, the change being made, and `control`.
+Legacy `modifySelectKit` `onChange` callbacks run as soon as the middleware chain returns, so a
+deferred `next()` emits after them.
+
+### Contexts
+
+Every callback gets `kind` and `identifier`, the select's names (`undefined` when absent), and two
+namespaces of outside data, so a key core adds later never collides with one a customization
+relies on:
+
+- `kindContext` comes from `@kindContext`, the recipe's raw state, such as its scope.
+- `instanceContext` comes from `@instanceContext`, which a call site sets, such as the topic
+  being edited. A recipe forwards the one it was given.
+
+Both default to a frozen empty object, so `context.kindContext.scope` is always safe to read.
+Derived values such as labels are recipe options, not `kindContext`.
+
+`content`, `row`, `load` and `change` contexts also carry `options`, a frozen snapshot of the
+resolved core and recipe values. A change middleware and the emit it lets through share one
+snapshot, so a deferred `next()` emits the values the middleware saw.
+
+`content`, `row` and `options` run while the list renders, so they must be pure. They must not
+write tracked state or call `update()` or any control or scope verbs. Those are for event time,
+such as a row's `onSelect`. A callback that reads tracked state runs again when that state
+changes. `load` runs outside render and may update its own state, such as leaving a mode when the
+query has a filter. Read `control.pending` in `content` to return a reactive loading row, for
+example with `name: control.pending ? i18n("suggesting") : i18n("suggest")` and
+`disabled: control.pending`.
+
+### Errors
+
+Every setup and callback runs through the transformer error handling: a failure is reported and
+rethrown in tests. In production a failing setup is skipped, `content` and `load` keep the
+previous value, `row` keeps what was already set, `options` skips that result, and a failing
+`change` middleware falls through to `next()` unless it already called it. An error thrown by the
+consumer's `@onChange` is never treated as a broken customization: it reaches the caller.
+
+### The control
+
+`control` is the select's handle. Action rows receive it as `onSelect(control, item)`, and the
+`content`, `options`, `load` and `change` contexts carry it. It is the same frozen object for the
+select's whole life. It exposes:
 
 - `value`, `filter`, and tracked `pending` (whether async update work is in flight).
 - `close()` to close the overlay.
@@ -187,7 +297,7 @@ The scope has a pure `current` reader and `select(item)`, `deselect(item)`, and 
 It has no `close()`, `reload()`, or `update()`. Inside `work`, call the scope's selection verbs.
 Calling `control.select()`, `control.deselect()`, or `control.clear()` expresses external
 selection intent and supersedes your own update. Scope writes use the normal selection rules,
-including caps, transformers, resolved-item caching, `@onChange`, and close-on-select;
+including caps, `change` customizations, resolved-item caching, `@onChange`, and close-on-select;
 they do nothing while locked or after the scope loses authority.
 
 ```js
@@ -212,59 +322,68 @@ a closed panel, a parent value change, or destruction supersedes the scope. Clos
 resets and reloads do not. A parent value change is checked when reading `scope.current` or
 writing through the scope; a reordered multi value counts as a change. An A-to-B-to-A round trip
 between checks cannot be detected. Once work ends, its scope is no longer current. A deferred
-transformer commit may still finish after a normal end, but cannot commit after supersession.
+`change` commit may still finish after a normal end, but cannot commit after supersession.
 
 While async work is pending, the trigger shows selection loading feedback and a spinner.
 Synchronous work has no loading flash. Programmatic single sets and re-picks are announced;
 multi adds and removals keep their item announcements, and clear announces "Selection cleared".
 No-change and superseded work announce no outcome, so extensions should announce their own
-no-change result alongside a toast.
-
-`select-content` and `select-item-class` run while the list renders, so both must be pure. They
-must not write tracked state or call `update()` or any control or scope verbs. Those are for event
-time, such as a row's `onSelect`. A transformer that reads tracked state runs again when that
-state changes. `select-load` runs outside render and may update its own extension state, such
-as leaving a mode when the query has a filter. Read `control.pending` in `select-content` to
-return a reactive loading row, for example with
-`name: control.pending ? i18n("suggesting") : i18n("suggest")` and
-`disabled: control.pending`. Control methods do nothing once the select is destroyed.
-
-A suggester can keep its mode per control and use action rows to switch sources. In this
-example, `loadSuggestions` follows the same contract as `@load`, and the translation keys name
-Suggest and Back rows:
-
-```js
-const modes = new WeakMap();
-
-api.registerValueTransformer("select-content", ({ value, context }) => {
-  if (!context.identifiers.includes("choices")) return value;
-  const suggesting = modes.get(context.control) === true;
-  return [
-    {
-      id: "suggestion-mode",
-      name: i18n(suggesting ? "back" : "suggest"),
-      onSelect(control) {
-        if (suggesting) modes.delete(control);
-        else modes.set(control, true);
-        control.reload();
-      },
-    },
-    ...value,
-  ];
-});
-
-api.registerValueTransformer("select-load", ({ value, context }) => {
-  if (!context.identifiers.includes("choices")) return value;
-  if (context.filter) modes.delete(context.control);
-  return modes.get(context.control) ? loadSuggestions : value;
-});
-```
+no-change result alongside a toast. Control methods do nothing once the select is destroyed.
 
 ### Recipes
 
 A recipe is a specialized `DSelect` for one kind of value, such as categories or tags. Recipes are
-meant to live in `ui-kit/select/recipes/`. A recipe passes `@kindContext` and forwards
-`@instanceContext`, and its `:item` block draws any action rows it offers.
+meant to live in `ui-kit/select/recipes/`. A recipe:
+
+- sets `@kind`, and passes `@kindContext` with its raw state;
+- forwards the call site's `@identifier`, `@instanceContext`, `@items`, `@load` and `@onChange`,
+  and its `:item`, `:selection` and `:footer` blocks;
+- never sets its own `@identifier`, which would take the call-site tier away from its callers.
+
+A variant that only changes configuration, such as a chooser used by advanced search, is the same
+kind with its own `@identifier`, not a new kind.
+
+A recipe declares the values extensions may override with `@kindOptions`, a hash of its keys and
+their base values:
+
+```gjs
+<DSelect
+  @identifier={{@identifier}}
+  @items={{this.items}}
+  @kind="category-drop"
+  @kindContext={{this.kindContext}}
+  @kindOptions={{hash
+    allCategoriesUrl=(or @allCategoriesUrl "/categories")
+    allCategoriesShortcut=(or @allCategoriesShortcut "selected")
+  }}
+  @onChange={{this.route}}
+>
+  <:item as |category options|>…</:item>
+</DSelect>
+```
+
+- `@kindOptions` requires `@kind`, and a key named like a core key asserts. A `null` value counts
+  as absent, but the key stays declared.
+- The keys are fixed when the select is created; their values stay live.
+- Extensions override them with the same `spec.options` as core keys, through `forKind` (or
+  `forIdentifier` for one call site). `current` starts from the recipe's base value.
+
+The resolved options, core and recipe keys together, reach the recipe as a new last argument, so
+existing arguments keep their positions:
+
+- `@items` as a function is called as `items(options)`. A zero-argument function still works.
+- `@load`, `@resolveValue` and `@resolveValues` get `options` on their second argument.
+- `@onChange` gets `options` on its third argument, `{ origin, reason, options }`.
+- `allowCreate`, `createItem`, `createUnresolvedItem`, `specialItems` (after its snapshot),
+  `filterBy`, `groupBy` and `groupLabel` get it as their last argument.
+- The `:item`, `:selection`, `:unresolved`, `:groupHeader` and `:footer` blocks yield it as their
+  last parameter.
+
+Code outside `DSelect`, such as markup around it, cannot read the resolved values.
+
+A multi-only chooser used with `maximum=1` to pick one value is not a capability gap. Its recipe
+renders a single select (`@multiple={{false}}`) and converts between `[id]` and `id` at its
+boundary, so call sites keep storing arrays.
 
 ## Capability parity & gaps
 
@@ -300,8 +419,9 @@ by mechanism.
 - Selected-row indicator (`@selectedIcon`): shown always in multi-select (default check) and, in
   single-select, when the arg is set.
 - Trigger variants (`@variant`: typeahead / button / static); a leading `@icon`; a label-less
-  icon-only trigger on the button/static variants (`@iconOnly`, which requires `@label` for the
-  accessible name — drive `@icon` from `@value` for a selection-reactive glyph); caret swap
+  icon-only trigger on the button/static variants (`@iconOnly`, which needs a resolved label for
+  the accessible name and is ignored with a warning without one; drive `@icon` from `@value` for
+  a selection-reactive glyph); caret swap
   (`@caretIcon`) and caret suppression (`@showCaret={{false}}`); `@clearable`; `@disabled` /
   `@readonly`; overlay placement (`@placement` / `@offset`); `@onShow` / `@onClose`.
 - Custom row and selection markup (`:item` / `:selection` blocks; on the typeahead variant the
@@ -320,11 +440,11 @@ by mechanism.
   state only, never blocks removal — the consuming form owns submit-time enforcement). A built-in
   limit message renders in a dedicated top zone of the panel (never stacking with the footer or an
   error body), and the limit state is exposed on the engine and yielded to `:footer`.
-- Value transformers and behavior hooks keyed on `@identifiers` (`select-content` /
-  `select-item-class` / `select-load` / `select-on-change`, see
-  [Extension points](#extension-points)), plus richer screen-reader announcements than the legacy
-  family.
-- Groups via `@groupBy` (a field name or `(item) => key`). The engine segments the filtered
+- Customization through one `select-customizations` transformer targeting `@kind` or
+  `@identifier` (content, rows, presentation options, loading and change, see
+  [Extension points](#extension-points)); recipe options through `@kindOptions`; plus richer
+  screen-reader announcements than the legacy family.
+- Groups via `@groupBy` (a field name or `(item, options) => key`). The engine segments the filtered
   options and renders a structural boundary before each segment, and the boundary's presentation
   is label-driven: where `@groupLabel` yields text the boundary is a non-selectable header
   (custom markup via the `:groupHeader` block); where it yields nullish — or when `@groupLabel`

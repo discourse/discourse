@@ -11,17 +11,19 @@ A family joins only once the ports for its rows are done.
 
 | Kind | Sites | Targets today | Supported route | Status |
 |---|---|---|---|---|
-| Caret icons | 9 | `category-drop`, `tag-drop`, direct `DropdownSelectBox` uses | `select-options` transformer returning `caretIcon` | Planned (wave 0) |
-| Hiding the title text | 2 | `category-drop`, direct `DropdownSelectBox` uses | `select-options` transformer returning `iconOnly` | Planned (wave 0) |
-| None-row label | 1 | `category-drop` (one parent's subcategory drop) | `select-options` transformer returning `noneLabel` | Planned (wave 0) |
-| Disabling a select from an outside flow | 1 | `form-template-chooser`, plus the composer's category and tag choosers through DOM queries | `select-options` transformer returning `disabled` | Planned (wave 0) |
-| Row tooltips | 1 | every select-kit row | `select-content` sets `title` on items; DSelect renders it on the option | Planned (wave 0) |
-| Filtering the category list | 2 | `category-chooser` | `select-content` (the current-category variant needs the call site's `@instanceContext`) | Available |
-| Shortcut rows with their own change routing | 1 | `category-drop` | `select-content` for the rows, `select-on-change` (without calling `next()`) for the routing | Available |
+| Caret icons | 10 | `category-drop`, `tag-drop`, direct `DropdownSelectBox` uses (one site applies `selectKitOptions` to the classes directly instead of `modifyClass`) | `spec.options` returning `caretIcon`, through `forKind` | Available |
+| Hiding the title text | 2 | `category-drop`, direct `DropdownSelectBox` uses | `spec.options` returning `iconOnly`; the recipe or call site passes `@label` | Available |
+| Empty-selection trigger text | 1 | `category-drop` (one parent's subcategory drop; the drop has no none row, the patch changes the trigger's no-selection text and title) | `spec.options` returning `placeholder`, through `forIdentifier`; the trigger title has no route yet | Available (text) |
+| Disabling a select from an outside flow | 1 | `form-template-chooser`, plus the composer's category and tag choosers through DOM queries | `spec.options` returning `disabled`, through `forIdentifier` | Available |
+| Row tooltips | 1 | every select-kit row | `spec.row` setting `title` | Available |
+| Filtering the category list | 2 | `category-chooser` | `spec.content` through `forKind("category-chooser")` (the current-category variant needs the call site's `@instanceContext`) | Available |
+| Shortcut rows with their own change routing | 1 | `category-drop` | recipe options for the shortcut and its URL, or `spec.content` for the rows and `spec.change` (without calling `next()`) for the routing | Available |
+| Reordering notification levels | 1 | `notifications-button` (group settings); the same patch also overrides opening the menu | Depends on the notification-level route (open decision, `ROLLOUT.md`) | Open |
 
-`select-options` is a value transformer keyed on `identifiers`, like `select-content`. It receives
-the select's presentation options and returns overrides, so an extension can change what only a
-call site could set before. Its exact contract is settled when it is built.
+Every route is a setup on the `select-customizations` value transformer, registered with
+`forKind` (what the select is) or `forIdentifier` (one call site). `spec.options` overrides
+presentation that only a call site could set before. The contract is in the DSelect README
+(`frontend/discourse/app/ui-kit/select/README.md`, Extension points).
 
 ## Other live patches
 
@@ -36,7 +38,7 @@ call site could set before. Its exact contract is settled when it is built.
 
 ## Not ported
 
-- **Dead today** (11 sites): they override members that no longer exist, live in files whose
+- **Dead today** (10 sites): they override members that no longer exist, live in files whose
   imports no longer resolve, or patch classes core no longer renders. Nothing to port.
 - **Out of scope** (1 site): discourse-assign's patch on `topic-notifications-button`, a wrapper
   around the DMenu-based `NotificationsTracking`.

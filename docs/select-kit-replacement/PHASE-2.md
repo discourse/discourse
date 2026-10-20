@@ -31,14 +31,18 @@ facade and codemod plan this phase used to carry is superseded.
   `isLoading` that drives the pending state, and facade `content` and `value`. The per-callback
   opt-out moves to wave 1 with the discourse-ai port; per-use telemetry is dropped, since
   reporting once per select per plugin already measures use. Row `classNames` is not bridged:
-  callers move to the `select-item-class` transformer when they are ported.
+  callers move to `spec.row` classes when they are ported.
 - ☑ **Patch replacement matrix** ([`PATCH-MATRIX.md`](PATCH-MATRIX.md)), from a verified audit
   (see `ROLLOUT.md`, blast radius). Its per-repo list names customer repos, so it is kept outside
   the repository.
-- ☐ **`select-options` transformer:** lets an extension override a select's caret icon, icon-only
-  trigger, none-row label and disabled state, which only call sites can set today.
-- ☐ **Row titles:** DSelect renders an item's `title` on its option, so `select-content` can add
-  tooltips.
+- ☑ **Customization API:** one `select-customizations` transformer targeting `@kind` or
+  `@identifier` replaces the four per-point transformers (`2a8637024a4`).
+- ☑ **Presentation options:** `spec.options` overrides a select's caret icon, icon-only trigger,
+  placeholders, label, none-row label, disabled state and more, which only call sites could set
+  before (`dc9d88ce4b5`).
+- ☑ **Row titles:** `spec.row` sets a row's `title`; an item's own `title` is never a tooltip
+  (`dc9d88ce4b5`).
+- ☑ **Recipe options:** recipes declare overridable values with `@kindOptions` (`aef9c15d75c`).
 - ☐ **Test infrastructure** for both implementations: `SelectKit` page object, `selectKit()`
   helper, `form-kit-helper.js`, and callers that pass `.select-kit` roots. Specs pin the flag.
 - ☐ **Prep that also works with select-kit:** explicit `onChange` at the two-way sites, stable hooks

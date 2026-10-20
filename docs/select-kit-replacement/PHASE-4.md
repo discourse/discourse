@@ -10,8 +10,9 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
 ### Wave 3: menu-shaped value selects and action menus
 
 - ☐ **DSelect:** the group dropdown, and value-type `DropdownSelectBox` uses (composer
-  translation selector, sidebar edit filter). The select-kit notifications-button family is not
-  rendered by core any more and needs no conversion.
+  translation selector, sidebar edit filter). The notification-level family (group settings'
+  `NotificationsButton` and its plugin and theme subclasses) waits on the route decision in
+  `ROLLOUT.md`.
 - ☐ **DMenu:** the 10 `DropdownSelectBox` subclasses, user deletion, reviewable bundled actions,
   category and tag admin dropdowns, bulk-select bookmarks. Callbacks registered on their
   `modifySelectKit` identifiers keep running. (composer-actions is excluded; it is replaced

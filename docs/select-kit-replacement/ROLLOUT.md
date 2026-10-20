@@ -35,8 +35,8 @@ Paths are relative to the repository root.
   selector and its row. `ComboBox` alone has 76 invocations in 51 files.
 - **Core SCSS:** 80 files under `app/assets/stylesheets` reference `select-kit`, 27 of them in
   `common/select-kit/`. The rest are layout rules in the composer, modals, admin and sidebar.
-- **Bundled plugins:** 82 files import select-kit (172 mention it, tests included), 19 subclasses
-  in 9 plugins, 4 `modifySelectKit` calls (all discourse-ai), 31 SCSS files.
+- **Bundled plugins:** 82 files import select-kit (172 mention it, tests included), 20 subclasses
+  in 10 plugins (verified 2026-10-19), 4 `modifySelectKit` calls (all discourse-ai), 31 SCSS files.
 - **FormKit and native selects:** 37 files with 64 `@type="select"` fields, 6 direct
   `DNativeSelect` consumers, and the FormKit `tag-chooser` control
   (`frontend/discourse/app/form-kit/components/fk/control/tag-chooser.gjs:15`). Both controls are
@@ -48,10 +48,12 @@ Paths are relative to the repository root.
   `frontend/discourse/tests/helpers/form-kit-helper.js:52` builds a `.select-kit` selector.
 - **`api.modifyClass` on select-kit, across all repos: 30 calls in 17 repos**, from a verified
   audit on 2026-10-16. Each call was checked against what core renders today.
-  - 15 calls, in 9 repos, change core's selects today.
+  - 16 calls, in 10 repos, change core's selects today. One of them, a customer patch on
+    `notifications-button`, was first counted dead: core still renders that class in group
+    settings (`frontend/discourse/app/components/groups-form-interaction-fields.gjs:162`).
   - 2 change only the patching plugin's own selects.
   - 1 only does harm: it skips a lifecycle `super`.
-  - 11 are already dead: they override removed members, sit in files whose imports no longer
+  - 10 are already dead: they override removed members, sit in files whose imports no longer
     resolve, or patch classes core no longer renders.
   - discourse-assign's patch on `topic-notifications-button`
     (`plugins/discourse-assign/assets/javascripts/discourse/initializers/extend-for-assigns.js:330`)
@@ -64,6 +66,16 @@ Paths are relative to the repository root.
   `DropdownSelectBox` invocations, not subclasses that declare their own options. An earlier count
   gave 29 calls in 16 repos; its list was not kept, so the difference is unattributed. The per-repo
   list names customer repos, so it is kept outside the repository.
+- **Decorators applied to core classes:** one customer theme imports `CategoryDrop` and `TagDrop`
+  and applies `selectKitOptions(...)` to them directly to change their carets. The decorator
+  appends to the class's option list (`frontend/discourse/select-kit/components/select-kit.js:75`),
+  so this reaches core's selects without `modifyClass`. The `modifyClass` audit didn't search this
+  channel; a follow-up search found no other site.
+- **Subclasses across all repos: 89** (86 direct, 3 through plugin-local subclasses), verified
+  2026-10-19: 86 live, 3 dead. Live: 61 value selects, 8 action menus, 17 rows, headers and
+  selected-choice parts. Each customizes only its own render, so none needs an extension point;
+  the ports are plain `DSelect`, a core recipe with call-site arguments and blocks, or `DMenu`.
+  The per-class list names customer repos, so it is kept outside the repository.
 - **`api.modifySelectKit`, across all repos:** discourse-ai (bundled) and one customer plugin,
   which reads `component.content`, `elementId`, `value` and `selectKit.options`, beyond what the
   bridge facade offers today.
@@ -119,8 +131,8 @@ Paths are relative to the repository root.
   and the category components' own members. Reporting stays once per select per plugin. A ported
   plugin keeps its legacy callbacks for the flag-off branch, so the bridge needs a per-callback
   opt-out to avoid doubled rows; it is designed with the discourse-ai port in wave 1. Row
-  `classNames` is not bridged: its one known user moves to the `select-item-class` transformer
-  when it is ported.
+  `classNames` is not bridged: its one known user moves to `spec.row` classes when it is
+  ported.
 - **`modifyClass` deprecation** (`frontend/discourse/app/lib/select-kit-modify-class-deprecation.ts`).
   After `modifyClass` or `modifyClassStatic` applies a patch, it fires
   `discourse.select-kit-rollout.modify-class` when the patched class is exactly the default export
@@ -189,10 +201,14 @@ Applied to the ambiguous consumers:
   category and tag admin dropdowns, and bulk-select bookmarks. These still have to run
   `modifySelectKit` callbacks registered on their identifiers, since DMenu has no bridge.
 - **Per registration:** `registerTopicFooterDropdown` gets an opt-in key.
-- **No conversion needed:** the select-kit notifications-button family (`NotificationsButton` and
-  its topic, group, category and tag subclasses). Core no longer renders any of them: topic
-  notifications use the DMenu-based `NotificationsTracking`
-  (`frontend/discourse/app/components/notifications-tracking.gjs`).
+- **Open decision: the notification-level family.** Topic, category and tag notifications, and a
+  group's messages, use the DMenu-based `NotificationsTracking`
+  (`frontend/discourse/app/components/notifications-tracking.gjs`). Group settings still render the
+  select-kit `NotificationsButton` for the default level
+  (`frontend/discourse/app/components/groups-form-interaction-fields.gjs:162`), and plugins and
+  themes subclass it. Two themes show the level's `label` in the trigger, which
+  `NotificationsTracking` doesn't. The choice is between reusing `NotificationsTracking` and a
+  notification-level `DSelect` recipe.
 
 ## Waves
 
@@ -230,7 +246,7 @@ customization ports are done.
   `frontend/discourse/app/ui-kit/d-filter-controls.gjs:259,409`), the period chooser and the
   notifications filter. FormKit controls are global types, so this wave decides between new control
   types and a switch inside the shared control.
-- **Wave 5, bundled plugin subclasses** (19), the remaining plugin SCSS, and the remaining
+- **Wave 5, bundled plugin subclasses** (20), the remaining plugin SCSS, and the remaining
   customer ports.
 
 ## Promotion
