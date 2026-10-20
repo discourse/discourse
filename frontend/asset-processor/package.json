@@ -16,7 +16,7 @@
     "@babel/preset-env": "^7.29.2",
     "@csstools/postcss-light-dark-function": "^3.0.7",
     "@glimmer/syntax": "^0.95.0",
-    "@rollup/browser": "^4.64.5",
+    "@rollup/browser": "^4.64.6",
     "@rollup/plugin-babel": "^7.0.0",
     "autoprefixer": "^10.6.1",
     "babel-plugin-ember-template-compilation": "^4.0.1",
