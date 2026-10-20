@@ -213,7 +213,7 @@ export default {
       labelFor(opts)
     );
 
-    // The test runner finds test modules through requirejs.entries, so they're imported eagerly.
+    // Test wrappers must be imported eagerly for discovery through requirejs.entries.
     if (entrypointName === "test" || !frontendConfig?.staticModules) {
       const { lines, identifiers } = renderImports(records);
 

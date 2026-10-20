@@ -39,7 +39,7 @@ export default function discourseRegisterComponents({
       order: "post",
 
       handler(code, id) {
-        // A test file's default export is the wrapper that defers its tests, not a component
+        // Test registration functions must stay out of the component registry.
         if (testModuleIds.has(id)) {
           return null;
         }

@@ -1,6 +1,6 @@
 /**
- * Moves a test module's body into a default-exported async function, so a test runner can run only the
- * modules it selected instead of every test registering on import.
+ * Shared by the core test build and the plugin asset processor, which use different
+ * bundlers and code editors. Both defer registration until the runner selects a file.
  *
  * @param {Array<object>} body - The module's top-level ESTree statements
  * @param {object} magic - An editor over the module's code with `move`, `prependRight` and `append`
@@ -20,7 +20,7 @@ export function wrapTestModuleBody(body, magic) {
     if (node.type !== "ImportDeclaration") {
       inBody = true;
     } else if (inBody) {
-      // Nor can an import, e.g. the one appended to `.js.es6` files
+      // Generated imports can follow statements but must stay outside the wrapper.
       magic.move(node.start, node.end, wrapStart);
     } else {
       wrapStart = node.end;

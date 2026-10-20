@@ -1,7 +1,7 @@
 import MagicString from "magic-string";
 import { wrapTestModuleBody } from "../../discourse/lib/wrap-test-module-body.mjs";
 
-// The test entrypoint also lists helpers, which must keep their exports
+// Helpers share the test entrypoint and must keep their exports.
 const TEST_FILE_REGEX = /-test\.(?:gjs|js|ts|gts)$/;
 
 export function testModuleIdsFor(basePath, testModules = []) {
@@ -17,7 +17,7 @@ export default function discourseWrapTestModules({ testModuleIds }) {
     name: "discourse-wrap-test-modules",
 
     transform: {
-      // After the gjs and babel transforms, so this parses plain JS.
+      // Parse after template and syntax transforms produce plain JS.
       order: "post",
 
       handler(code, id) {
@@ -29,7 +29,7 @@ export default function discourseWrapTestModules({ testModuleIds }) {
 
         wrapTestModuleBody(this.parse(code).body, magic);
 
-        // App modules can end in "-test" too, so the runner needs a marker to tell them apart
+        // The runner must distinguish tests from app modules also named "*-test".
         magic.append("export const __discourseTestModule = true;\n");
 
         return {
