@@ -86,6 +86,22 @@ describe DiscourseDataExplorer::QueryController do
         expect(response_json["queries"][1]["name"]).to eq("B")
       end
 
+      it "includes the query creator" do
+        DiscourseDataExplorer::Query.destroy_all
+        query = make_query("SELECT 1 as value")
+        query.update!(user: admin)
+
+        get "/admin/plugins/discourse-data-explorer/queries.json"
+
+        expect(response.status).to eq(200)
+        serialized = response_json["queries"].find { |q| q["id"] == query.id }
+        expect(serialized["user"]).to include(
+          "id" => admin.id,
+          "username" => admin.username,
+          "avatar_template" => admin.avatar_template,
+        )
+      end
+
       it "doesn't show hidden/deleted queries" do
         DiscourseDataExplorer::Query.destroy_all
         make_query("SELECT 1 as value", name: "A", hidden: false)
