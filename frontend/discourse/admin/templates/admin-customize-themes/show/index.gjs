@@ -21,6 +21,10 @@ import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+function updateColorScheme(controller, field, value) {
+  controller.set(field, value);
+}
+
 export default <template>
   <div class="metadata control-unit">
     {{#if @controller.model.remote_theme}}
@@ -164,6 +168,7 @@ export default <template>
               <ColorPalettePicker
                 @content={{@controller.filteredColorSchemes}}
                 @icon="paintbrush"
+                @onChange={{fn updateColorScheme @controller "colorSchemeId"}}
                 @options={{hash
                   filterable=true
                   translatedNone=(unless
@@ -219,6 +224,11 @@ export default <template>
               <ColorPalettePicker
                 @content={{@controller.filteredColorSchemes}}
                 @icon="paintbrush"
+                @onChange={{fn
+                  updateColorScheme
+                  @controller
+                  "darkColorSchemeId"
+                }}
                 @options={{hash
                   filterable=true
                   translatedNone=(unless
