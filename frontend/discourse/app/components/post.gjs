@@ -562,6 +562,7 @@ export default class Post extends Component {
                           @decoratorState={{this.decoratorState}}
                           @highlightTerm={{@highlightTerm}}
                           @post={{@post}}
+                          @quoteHighlight={{@quoteHighlight}}
                           @streamElement={{@streamElement}}
                         />
                       </PluginOutlet>

@@ -187,7 +187,7 @@ it:
         approved: "Approvato"
         rejected: "Rifiutata"
       default_llm:
-        title: "Modello LLM predefinito"
+        title: "Modello linguistico predefinito"
       llm_selector:
         none: "Nessuna"
       features:
@@ -604,6 +604,18 @@ it:
         tools_modal:
           parameters: "Parametri"
           required: "Obbligatorie"
+      models:
+        new: "Nuovo modello"
+        name: "Nome"
+        type: "Tipo"
+        provider: "Fornitore"
+        edit: "Modifica"
+        select_type: "Seleziona"
+        types:
+          embedding: "Integrazione"
+        filters:
+          all: "Tutti i tipi"
+          reset: "Reimposta i filtri"
       llms:
         short_title: "LLM"
         no_llms: "Ancora nessun LLM"

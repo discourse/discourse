@@ -40,7 +40,6 @@ lt:
         other: "%{count} rezultatai."
       query_groups: "Grupės"
       query_tags: "Žymos"
-      default_tag_mandatory: "Numatytoji žymė negali būti pašalinta iš susietų užklausų."
       query_description: "Aprašymas"
       query_user: "Sukurta"
       reset_params: "Atstatyti"

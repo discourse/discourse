@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
@@ -16,19 +17,23 @@ import DiscourseURL, {
 } from "discourse/lib/url";
 import { eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DMultiSelect from "discourse/ui-kit/d-multi-select";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DUserLink from "discourse/ui-kit/d-user-link";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import confirmDeleteWorkflow from "../../lib/workflows/confirm-delete-workflow.js";
 import AdminTable from "./admin-table.gjs";
 import EmptyState from "./empty-state.gjs";
 
 export default class WorkflowsIndex extends Component {
   @service currentUser;
+  @service dialog;
   @service router;
   @service store;
 
@@ -224,6 +229,29 @@ export default class WorkflowsIndex extends Component {
   }
 
   @action
+  async deleteWorkflow(workflow, closeMenu) {
+    await closeMenu();
+
+    await confirmDeleteWorkflow(this.dialog, workflow, {
+      onDeleted: () => this.removeWorkflow(workflow),
+    });
+  }
+
+  removeWorkflow(workflow) {
+    const index = this.resultSet.content.indexOf(workflow);
+    if (index === -1) {
+      return;
+    }
+
+    this.resultSet.content.splice(index, 1);
+    this.resultSet.totalRows -= 1;
+
+    if (!this.hasActiveFilters) {
+      this.hasWorkflows = this.resultSet.totalRows > 0;
+    }
+  }
+
+  @action
   workflowStatusLabel(workflow) {
     if (workflow.activeVersionId && workflow.hasUnpublishedChanges) {
       return "discourse_workflows.unpublished_changes";
@@ -309,13 +337,10 @@ export default class WorkflowsIndex extends Component {
         >
           <:head>
             <th class="d-table__header-cell">{{i18n
-                "discourse_workflows.creator"
-              }}</th>
-            <th class="d-table__header-cell">{{i18n
                 "discourse_workflows.workflow_name"
               }}</th>
             <th class="d-table__header-cell">{{i18n
-                "discourse_workflows.last_editor"
+                "discourse_workflows.creator"
               }}</th>
             <th class="d-table__header-cell">{{i18n
                 "discourse_workflows.last_update"
@@ -326,21 +351,9 @@ export default class WorkflowsIndex extends Component {
             <th class="d-table__header-cell">{{i18n
                 "discourse_workflows.status"
               }}</th>
+            <th class="d-table__header-cell"></th>
           </:head>
           <:row as |workflow|>
-            <td class="d-table__cell --detail workflows-index__creator">
-              <div class="d-table__mobile-label">
-                {{i18n "discourse_workflows.creator"}}
-              </div>
-              {{#if workflow.createdBy}}
-                <a
-                  class="workflows-index__creator-link"
-                  href={{workflow.createdBy.path}}
-                >
-                  {{dAvatar workflow.createdBy imageSize="tiny"}}
-                </a>
-              {{/if}}
-            </td>
             <td class="d-table__cell --overview workflows-index__name">
               <LinkTo
                 class="d-table__overview-link"
@@ -378,18 +391,18 @@ export default class WorkflowsIndex extends Component {
                 </div>
               {{/if}}
             </td>
-            <td class="d-table__cell --detail workflows-index__last-editor">
+            <td class="d-table__cell --detail workflows-index__creator">
               <div class="d-table__mobile-label">
-                {{i18n "discourse_workflows.last_editor"}}
+                {{i18n "discourse_workflows.creator"}}
               </div>
-              {{#if workflow.updatedBy}}
-                <a
-                  class="workflows-index__last-editor-link"
-                  href={{workflow.updatedBy.path}}
+              {{#if workflow.createdBy}}
+                <DUserLink
+                  class="workflows-index__creator-link"
+                  @user={{workflow.createdBy}}
                 >
-                  {{dAvatar workflow.updatedBy imageSize="tiny"}}
-                  <span>{{workflow.updatedBy.username}}</span>
-                </a>
+                  {{dAvatar workflow.createdBy imageSize="tiny"}}
+                  <span>{{workflow.createdBy.username}}</span>
+                </DUserLink>
               {{/if}}
             </td>
             <td class="d-table__cell --detail workflows-index__last-update">
@@ -420,6 +433,38 @@ export default class WorkflowsIndex extends Component {
               >
                 {{i18n (this.workflowStatusLabel workflow)}}
               </span>
+            </td>
+            <td class="d-table__cell --controls">
+              <div class="d-table__cell-actions">
+                <LinkTo
+                  class="btn btn-default btn-text btn-small workflows-index__edit"
+                  @model={{workflow.id}}
+                  @route="adminPlugins.show.discourse-workflows.show"
+                >
+                  {{i18n "discourse_workflows.edit"}}
+                </LinkTo>
+
+                <DMenu
+                  @icon="ellipsis-vertical"
+                  @identifier="workflows-index-menu"
+                  @placement="bottom-end"
+                  @title={{i18n "discourse_workflows.more_options"}}
+                  @triggerClass="btn-default btn-small workflows-index__menu-trigger"
+                >
+                  <:content as |menu|>
+                    <DDropdownMenu as |dropdown|>
+                      <dropdown.item>
+                        <DButton
+                          class="btn-transparent --danger workflows-index__delete"
+                          @action={{fn this.deleteWorkflow workflow menu.close}}
+                          @icon="trash-can"
+                          @label="discourse_workflows.delete"
+                        />
+                      </dropdown.item>
+                    </DDropdownMenu>
+                  </:content>
+                </DMenu>
+              </div>
             </td>
           </:row>
         </AdminTable>

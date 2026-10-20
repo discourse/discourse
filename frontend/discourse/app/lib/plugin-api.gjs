@@ -1,6 +1,5 @@
 /* eslint-disable ember/no-jquery */
 import $ from "jquery";
-import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { registerAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
 import { registerAdminReportRelatedItemsRenderer } from "discourse/admin/lib/admin-report-related-items";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
@@ -64,6 +63,7 @@ import { registerComposerAction } from "discourse/lib/composer/actions-registry"
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { addImageWrapperButton } from "discourse/lib/composer/image-controls";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import { registerComposerPickerTab } from "discourse/lib/composer-picker";
 import {
   _INTERNAL_SOURCE_KEY,
   CORE_SOURCE,
@@ -427,7 +427,7 @@ class _PluginApi {
    *   },
    * };
    *
-   * @param name the name of the new transformer
+   * @param {string} name the name of the new transformer
    *
    */
   addBehaviorTransformerName(name) {
@@ -479,12 +479,12 @@ class _PluginApi {
    * });
    * ```
    *
+   * @template [R=unknown] - The expected behavior result; middleware may also return void.
+   * @template {object} [C=Record<string, unknown>] - Properties of the context supplied when applying the hook.
    * @param {string} transformerName the name of the transformer
-   * @param {function({next, context})} behaviorCallback callback to be used to transform or override the behavior.
-   * @param {*} behaviorCallback.next callback that executes the remaining transformer queue producing the expected
-   * behavior. Notice that this includes the default behavior and if next() is not called in your transformer's callback
-   * the default behavior will be completely overridden
-   * @param {*} [behaviorCallback.context] the optional context in which the behavior is being transformed
+   * @param {import("discourse/lib/transformer").BehaviorTransformer<R, C>} behaviorCallback
+   * Middleware which can call next() to run the remaining queue, including the default behavior. If the callback
+   * doesn't call next(), the default behavior is completely overridden.
    * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerBehaviorTransformer(transformerName, behaviorCallback) {
@@ -516,7 +516,7 @@ class _PluginApi {
    *   },
    * };
    *
-   * @param name the name of the new transformer
+   * @param {string} name the name of the new transformer
    *
    */
   addValueTransformerName(name) {
@@ -547,12 +547,14 @@ class _PluginApi {
    * });
    * ```
    *
+   * @template [T=unknown] - The value passed to the callback.
+   * @template {object} [C=Record<string, unknown>] - Properties of the context supplied when applying the hook.
    * @param {string} transformerName the name of the transformer
-   * @param {function({value, context})} valueCallback callback to be used to transform the value. To avoid potential
-   * errors or unexpected behavior the callback must be a pure function, i.e. return the transform value instead of
-   * mutating the input value, return the same output for the same input and not have any side effects.
-   * @param {*} valueCallback.value the value to be transformed
-   * @param {*} [valueCallback.context] the optional context in which the value is being transformed
+   * @param {import("discourse/lib/transformer").AnyValueTransformer<T, C>} valueCallback
+   * Receives the current value and context. To avoid potential errors or unexpected behavior the callback must be a
+   * pure function, i.e. return the transformed value instead of mutating the input value, return the same output for
+   * the same input and not have any side effects. Only hooks applied with `applyMutableValueTransformer` expect the
+   * callback to mutate the value instead; their return value is ignored.
    * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerValueTransformer(transformerName, valueCallback) {
@@ -1486,6 +1488,28 @@ class _PluginApi {
    **/
   registerTopicFooterButton(buttonOptions) {
     registerTopicFooterButton(buttonOptions);
+  }
+
+  /**
+   * Register a tab in the composer picker (the tabbed emoji/GIF popover used
+   * by the post and chat composers). Use this to add media tabs such as
+   * stickers or animated images alongside the built-in emoji and GIF tabs.
+   *
+   * ```javascript
+   * api.registerComposerPickerTab({
+   *   id: "stickers",
+   *   icon: "sticker",
+   *   title: "my_plugin.stickers.tab",
+   *   // Panel receives @onSelect, @close, @context, @term. Call @onSelect(value)
+   *   // when the user picks something; the host inserts/sends it like the GIF tab.
+   *   component: MyStickerPanel,
+   *   priority: 80,
+   *   enabled: ({ siteSettings }) => siteSettings.my_plugin_stickers_enabled,
+   * });
+   * ```
+   **/
+  registerComposerPickerTab(tab) {
+    registerComposerPickerTab(tab);
   }
 
   /**
@@ -3253,7 +3277,11 @@ class _PluginApi {
    * @param {Component} componentClass - A Glimmer component that accepts @item, @payload, @filters.
    */
   registerAdminDashboardReportRenderer(source, componentClass) {
-    registerAdminDashboardReportRenderer(source, componentClass);
+    this.registerValueTransformer(
+      "admin-dashboard-report-renderer",
+      ({ value, context }) =>
+        context.source === source ? componentClass : value
+    );
   }
 
   /**

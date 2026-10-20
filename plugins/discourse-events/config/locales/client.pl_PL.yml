@@ -427,6 +427,8 @@ pl_PL:
         filter_placeholder: "Filtruj użytkowników"
         remove_invitee: "Usuń zaproszonego z listy"
         add_invitee: "Dodaj zaproszonego do listy"
+        this_event: "To wydarzenie"
+        first_event_only: "Tylko pierwsze wydarzenie"
       bulk_invite_modal:
         confirm: "potwierdź"
         text: "Prześlij plik CSV"
@@ -442,6 +444,7 @@ pl_PL:
         group_selector_placeholder: "Wybierz grupę..."
         user_selector_placeholder: "Wybierz użytkownika..."
         attendance_label: "Obecność"
+        recurring: "Zastosuj obecność do tego wydarzenia i wszystkich kolejnych wydarzeń"
         inline_title: "Zaproszenie zbiorcze w trybie inline"
         csv_title: "Zaproszenie zbiorcze CSV"
       upcoming_events:

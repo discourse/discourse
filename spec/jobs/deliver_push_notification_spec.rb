@@ -90,8 +90,10 @@ RSpec.describe Jobs::DeliverPushNotification do
   end
 
   describe "content localization" do
-    fab!(:topic) { Fabricate(:topic, title: "Original topic title") }
-    fab!(:localized_post) { Fabricate(:post, topic: topic, raw: "Original post content") }
+    fab!(:topic) { Fabricate(:topic, title: "Original topic title", locale: "en") }
+    fab!(:localized_post) do
+      Fabricate(:post, topic: topic, raw: "Original post content", locale: "en")
+    end
 
     let(:localizable_payload) do
       {
@@ -185,6 +187,212 @@ RSpec.describe Jobs::DeliverPushNotification do
         .once
 
       Jobs::DeliverPushNotification.new.execute(user_id: user.id, payload: localizable_payload)
+    end
+
+    it "keeps the original excerpt when the translation is for an older version of the post" do
+      Fabricate(:push_subscription, user: user)
+      Fabricate(
+        :post_localization,
+        post: localized_post,
+        locale: "ja",
+        post_version: localized_post.version - 1,
+        cooked: "<p>古い翻訳</p>",
+      )
+
+      PushNotificationPusher.expects(:push).with { |_, p| p[:excerpt] == "Original post content" }
+
+      Jobs::DeliverPushNotification.new.execute(user_id: user.id, payload: localizable_payload)
+    end
+
+    it "keeps the original content when the user turned off automatic translation" do
+      user.user_option.update!(automatically_translate: false)
+      Fabricate(:push_subscription, user: user)
+      Fabricate(:post_localization, post: localized_post, locale: "ja", cooked: "<p>翻訳</p>")
+
+      PushNotificationPusher.expects(:push).with { |_, p| p[:excerpt] == "Original post content" }
+
+      Jobs::DeliverPushNotification.new.execute(user_id: user.id, payload: localizable_payload)
+    end
+
+    it "keeps a caller-provided excerpt" do
+      Fabricate(:push_subscription, user: user)
+      Fabricate(:topic_localization, topic: topic, locale: "ja", title: "ローカライズされたトピック")
+      Fabricate(:post_localization, post: localized_post, locale: "ja", cooked: "<p>翻訳</p>")
+
+      PushNotificationPusher
+        .expects(:push)
+        .with do |_, p|
+          p[:topic_title] == "ローカライズされたトピック" && p[:excerpt] == "Original post content"
+        end
+
+      Jobs::DeliverPushNotification.new.execute(
+        user_id: user.id,
+        payload: localizable_payload,
+        keep_excerpt: true,
+      )
+    end
+
+    describe "when a translation is still pending" do
+      let(:plugin) { Plugin::Instance.new }
+      let(:pending) { [true] }
+      let(:pending_modifier) { Proc.new { |_pending, _post, _user| pending.first } }
+
+      before do
+        Fabricate(:push_subscription, user: user)
+        DiscoursePluginRegistry.register_modifier(
+          plugin,
+          :deliver_push_notification_localization_pending,
+          &pending_modifier
+        )
+      end
+
+      after do
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :deliver_push_notification_localization_pending,
+          &pending_modifier
+        )
+      end
+
+      def deliver(**args)
+        Jobs::DeliverPushNotification.new.execute(
+          user_id: user.id,
+          payload: localizable_payload,
+          **args,
+        )
+      end
+
+      def held_token
+        Jobs::DeliverPushNotification.jobs.last.dig("args", 0, "localization_wait_token")
+      end
+
+      it "holds the push until the wait limit at most" do
+        SiteSetting.push_notification_localization_max_wait_mins = 3
+        PushNotificationPusher.expects(:push).never
+
+        expect_enqueued_with(job: :deliver_push_notification, at: 3.minutes.from_now) { deliver }
+        expect(held_token).to be_present
+      end
+
+      it "sends the held push once it is released by a stored translation" do
+        PushNotificationPusher.expects(:push).with { |_, p| p[:excerpt] == "ローカライズされた投稿" }.once
+
+        deliver
+        token = held_token
+        Jobs::DeliverPushNotification.jobs.clear
+
+        pending[0] = false
+        Fabricate(
+          :post_localization,
+          post: localized_post,
+          locale: "ja",
+          cooked: "<p>ローカライズされた投稿</p>",
+        )
+
+        released = Jobs::DeliverPushNotification.jobs.map { |job| job["args"].first }
+        expect(released.map { |a| a["localization_wait_token"] }).to eq([token])
+
+        # The release and the wait limit both deliver the held push; only one sends it.
+        2.times { deliver(localization_wait_token: token) }
+      end
+
+      it "still sends a held push whose wait state has expired" do
+        deliver
+        token = held_token
+        Discourse.redis.del("push_notification_localization_wait:#{localized_post.id}")
+
+        PushNotificationPusher.expects(:push).once
+
+        deliver(localization_wait_token: token)
+      end
+
+      it "lets another delivery send a held push when one fails" do
+        deliver
+        token = held_token
+
+        PushNotificationPusher.stubs(:push).raises(StandardError).then.returns(nil)
+
+        expect { deliver(localization_wait_token: token) }.to raise_error(StandardError)
+
+        PushNotificationPusher.expects(:push).once
+        deliver(localization_wait_token: token)
+      end
+
+      it "sends the held push at the wait limit even when the translation never came" do
+        deliver
+        token = held_token
+
+        PushNotificationPusher.expects(:push).with { |_, p| p[:excerpt] == "Original post content" }
+
+        deliver(localization_wait_token: token)
+      end
+
+      it "does not leave a held push behind for its retry to duplicate when holding fails" do
+        Post.any_instance.stubs(:reload).raises(ActiveRecord::ConnectionNotEstablished)
+        PushNotificationPusher.expects(:push).never
+
+        expect { deliver }.to raise_error(ActiveRecord::ConnectionNotEstablished)
+
+        deliver(localization_wait_token: held_token)
+      end
+
+      it "does not release pushes held for other locales" do
+        deliver
+        Jobs::DeliverPushNotification.jobs.clear
+
+        Fabricate(:post_localization, post: localized_post, locale: "de")
+
+        expect(Jobs::DeliverPushNotification.jobs).to be_empty
+      end
+
+      it "releases every held push when the translator is done with the post" do
+        deliver
+        token = held_token
+        Jobs::DeliverPushNotification.jobs.clear
+
+        DiscourseEvent.trigger(:post_localizations_finished, localized_post.id)
+
+        released = Jobs::DeliverPushNotification.jobs.map { |job| job["args"].first }
+        expect(released.map { |a| a["localization_wait_token"] }).to eq([token])
+      end
+
+      it "does not hold the push once the translator is done with the post" do
+        PushNotificationLocalizationWait.finish(localized_post.id)
+        PushNotificationPusher.expects(:push).once
+
+        expect_not_enqueued_with(job: :deliver_push_notification) { deliver }
+      end
+
+      it "sends right away when the translation was stored while holding the push" do
+        PushNotificationLocalizationWait
+          .stubs(:hold)
+          .with do
+            pending[0] = false
+            true
+          end
+          .returns("token")
+        PushNotificationLocalizationWait
+          .expects(:claim)
+          .with(localized_post.id, "token")
+          .returns(true)
+        PushNotificationPusher.expects(:push).once
+
+        deliver
+      end
+
+      it "does not wait when the wait limit is 0" do
+        SiteSetting.push_notification_localization_max_wait_mins = 0
+        PushNotificationPusher.expects(:push).once
+
+        expect_not_enqueued_with(job: :deliver_push_notification) { deliver }
+      end
+
+      it "does not wait when the user understands the language of the post" do
+        user.user_option.update!(understood_languages: ["en"])
+        PushNotificationPusher.expects(:push).once
+
+        expect_not_enqueued_with(job: :deliver_push_notification) { deliver }
+      end
     end
   end
 end

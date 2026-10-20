@@ -19,6 +19,7 @@ zh_CN:
     discourse_reactions_enabled_reactions: "定义启用的回应列表，此处允许使用任何表情符号。"
     discourse_reactions_desaturated_reaction_panel: "通过在悬停前显示不饱和的回应，减少回应的视觉噪音。"
     discourse_reactions_excluded_from_like: "不计为“赞”的回应。任何不在此列表中的回应都将计为“赞”，用于徽章、报告和其他目的。"
+    discourse_reactions_like_sync_enabled: "启用此功能后，系统将为历史记录创建匹配的“赞”记录，但 {{setting:discourse_reactions_excluded_from_like}}中定义的反应除外。此同步将在后台每日进行，并在您更改 {{setting:discourse_reactions_excluded_from_like}} 或启用此设置时自动同步。"
     discourse_reactions_allow_any_emoji: "如果启用此设置，将添加一个按钮，允许用户在回应选择器中选择任意表情符号。成员将被允许选择任何表情符号，包括自定义表情符号，用于回应。要限制可用回应，请使用 {{setting:emoji_deny_list}} 站点设置。"
     enable_discourse_reactions_by_default: "启用此即将进行的更改时，将 {{setting:discourse_reactions_enabled}} 设置的默认值从禁用更改为启用。"
     errors:

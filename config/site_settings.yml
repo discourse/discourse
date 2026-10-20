@@ -493,6 +493,10 @@ basic:
     default: 1
     min: 0
     area: "notifications"
+  push_notification_localization_max_wait_mins:
+    default: 3
+    min: 0
+    hidden: true
   short_title:
     default: ""
     max: 12

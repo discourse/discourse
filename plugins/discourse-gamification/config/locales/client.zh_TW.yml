@@ -106,6 +106,7 @@ zh_TW:
       admin:
         title: "今天還可重新計算 %{count} 次"
         name: "名稱"
+        created_by: "創建者"
         period: "遊戲化"
     discourse_workflows:
       node_unavailable:

@@ -296,6 +296,7 @@ export default class GifsModal extends Component {
                 @loading={{this.loading}}
                 @loadMore={{this.loadMore}}
                 @pick={{this.pick}}
+                @root=".gifs-modal__content"
               />
             </div>
           </div>

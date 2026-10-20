@@ -951,6 +951,9 @@ RSpec.describe DiscourseAi::Agents::Bot do
       tool =
         DiscourseAi::Agents::Tools::CloseTopic.new(
           { topic_id: topic.id, closed: true, reason: "Off-topic" },
+          agent_options: {
+            "max_closes" => "1",
+          },
           bot_user: test_bot_user,
           llm: bot.llm,
         )
@@ -961,7 +964,12 @@ RSpec.describe DiscourseAi::Agents::Bot do
 
       expect(result[:status]).to eq("pending_approval")
       expect(topic.reload.closed).to eq(false)
-      expect(AiToolAction.last.tool_name).to eq("close_topic")
+      expect(AiToolAction.last).to have_attributes(
+        tool_name: "close_topic",
+        tool_options: {
+          "max_closes" => "1",
+        },
+      )
       expect(ReviewableAiToolAction.count).to eq(1)
     end
 

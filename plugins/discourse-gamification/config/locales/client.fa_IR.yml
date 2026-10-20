@@ -55,6 +55,7 @@ fa_IR:
       admin:
         title: "بازی‌وارسازی"
         name: "نام"
+        created_by: "ایجاد شده توسط"
         period: "دوره زمانی"
     discourse_workflows:
       gamification_score:

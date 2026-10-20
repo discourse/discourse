@@ -142,6 +142,7 @@ export default class TextareaEditor extends Component {
       }}
       @aria-label={{@placeholder}}
       @autocomplete="off"
+      @autocorrect="on"
       @disabled={{@disabled}}
       @focusIn={{@focusIn}}
       @focusOut={{@focusOut}}

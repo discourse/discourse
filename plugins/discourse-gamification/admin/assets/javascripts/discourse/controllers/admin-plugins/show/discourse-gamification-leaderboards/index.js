@@ -20,7 +20,9 @@ export default class AdminPluginsShowDiscourseGamificationLeaderboardsIndexContr
   }
 
   @action
-  destroyLeaderboard(leaderboard) {
+  async destroyLeaderboard(leaderboard, closeMenu) {
+    await closeMenu();
+
     this.dialog.deleteConfirm({
       message: i18n("gamification.leaderboard.confirm_destroy"),
       didConfirm: () => {

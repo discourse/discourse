@@ -489,4 +489,353 @@ RSpec.describe Chat::ChatController do
       EXPECTED
     end
   end
+
+  describe "#respond" do
+    let(:crawler_headers) { { "HTTP_USER_AGENT" => "Googlebot" } }
+    let(:day) { message_0.created_at.utc.to_date.iso8601 }
+
+    before do
+      SiteSetting.chat_allowed_groups =
+        "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+    end
+
+    it "renders the latest day of channel messages for crawlers" do
+      get chat_channel.relative_url, headers: crawler_headers
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(message_0.cooked, message_49.cooked)
+      expect(response.body).not_to include(message_50.cooked)
+      expect(response.body).to include(
+        %(<link rel="canonical" href="#{chat_channel.url}?date=#{day}" />),
+      )
+      expect(response.body).to include(
+        %(<link rel="next" href="#{chat_channel.url}?date=#{day}&amp;page=2">),
+      )
+
+      postings =
+        Nokogiri.HTML5(response.body).css('[itemtype="http://schema.org/DiscussionForumPosting"]')
+      expect(postings.size).to eq(50)
+      expect(postings.first.at_css('link[itemprop="url"]')["href"]).to eq(
+        "#{Discourse.base_url}#{message_0.url}",
+      )
+      expect(postings.first.at_css('[itemprop="author"] [itemprop="name"]').text).to eq(
+        other_user.username,
+      )
+      expect(postings.first.at_css('[itemprop="text"]').inner_html.strip).to eq(message_0.cooked)
+    end
+
+    it "explains message retention when old messages are deleted" do
+      SiteSetting.chat_channel_retention_days = 30
+      get chat_channel.relative_url, headers: crawler_headers
+
+      expect(response.body).to include(I18n.t("chat.crawler.retention_notice", count: 30))
+
+      SiteSetting.chat_channel_retention_days = 0
+      get chat_channel.relative_url, headers: crawler_headers
+
+      expect(response.body).not_to include("chat-crawler__retention")
+    end
+
+    it "tells search engines when retention will remove a day page" do
+      SiteSetting.chat_channel_retention_days = 30
+      expected_expiry = (message_0.created_at.utc.to_date + 31).to_time(:utc).iso8601
+      robots_meta = %(<meta name="robots" content="unavailable_after: #{expected_expiry}">)
+
+      get "#{chat_channel.relative_url}?date=#{day}&page=2", headers: crawler_headers
+      expect(response.body).to include(robots_meta)
+
+      get chat_channel.relative_url, headers: crawler_headers
+      expect(response.body).not_to include("unavailable_after")
+
+      Fabricate(:chat_pinned_message, chat_message: message_0)
+      get "#{chat_channel.relative_url}?date=#{day}", headers: crawler_headers
+      expect(response.body).not_to include("unavailable_after")
+
+      get "#{chat_channel.relative_url}?date=#{day}&page=2", headers: crawler_headers
+      expect(response.body).to include(robots_meta)
+    end
+
+    it "counts each user who reacted to a message as one like" do
+      Fabricate(:chat_message_reaction, chat_message: message_0, user:, emoji: "+1")
+      Fabricate(:chat_message_reaction, chat_message: message_0, user:, emoji: "heart")
+      Fabricate(:chat_message_reaction, chat_message: message_0, user: admin, emoji: "+1")
+
+      get chat_channel.relative_url, headers: crawler_headers
+
+      posting = Nokogiri.HTML5(response.body).at_css("#chat-message-#{message_0.id}")
+      expect(
+        posting.at_css('[itemprop="interactionStatistic"] meta[itemprop="userInteractionCount"]')[
+          "content"
+        ],
+      ).to eq("2")
+      expect(posting.css(".chat-crawler__reaction").map { |reaction| reaction.text.squish }).to eq(
+        ["#{Emoji.lookup_unicode("+1")} 2", "#{Emoji.lookup_unicode("heart")} 1"],
+      )
+    end
+
+    it "renders later pages of a day and 404s past the last one" do
+      get "#{chat_channel.relative_url}?date=#{day}&page=2", headers: crawler_headers
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(message_50.cooked, message_69.cooked)
+      expect(response.body).not_to include(message_49.cooked)
+      expect(response.body).to include(%(<link rel="prev" href="#{chat_channel.url}?date=#{day}">))
+
+      get "#{chat_channel.relative_url}?date=#{day}&page=3", headers: crawler_headers
+
+      expect(response.status).to eq(404)
+    end
+
+    it "links between days that have messages" do
+      old_message =
+        Fabricate(:chat_message, chat_channel:, user: other_user, created_at: 3.days.ago)
+      old_day = old_message.created_at.utc.to_date
+
+      get "#{chat_channel.relative_url}?date=#{old_day.iso8601}", headers: crawler_headers
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(old_message.cooked)
+      expect(response.body).not_to include(message_0.cooked)
+      expect(response.body).to include(I18n.l(old_day, format: :date_only))
+      expect(response.body).to include(%(<link rel="next" href="#{chat_channel.url}?date=#{day}">))
+
+      get chat_channel.relative_url, headers: crawler_headers
+
+      expect(response.body).not_to include(old_message.cooked)
+      expect(response.body).to include(
+        %(<link rel="prev" href="#{chat_channel.url}?date=#{old_day.iso8601}">),
+      )
+    end
+
+    it "404s for invalid or empty days and missing messages" do
+      get "#{chat_channel.relative_url}?date=not-a-date", headers: crawler_headers
+      expect(response.status).to eq(404)
+
+      get "#{chat_channel.relative_url}?date=2001-01-01", headers: crawler_headers
+      expect(response.status).to eq(404)
+
+      message_1.trash!
+      get "#{chat_channel.relative_url}/#{message_1.id}", headers: crawler_headers
+      expect(response.status).to eq(404)
+    end
+
+    it "renders the page containing a linked message with that page as canonical" do
+      get "#{chat_channel.relative_url}/#{message_60.id}", headers: crawler_headers
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(message_60.cooked)
+      expect(response.body).to include(
+        %(<link rel="canonical" href="#{chat_channel.url}?date=#{day}&amp;page=2" />),
+      )
+    end
+
+    it "links thread replies from the channel and renders them on the thread page" do
+      chat_channel.update!(threading_enabled: true)
+      thread = Fabricate(:chat_thread, channel: chat_channel, original_message: message_0)
+      reply = Fabricate(:chat_message, chat_channel: chat_channel, thread:, message: "a reply")
+      thread.update!(replies_count: 1)
+
+      get chat_channel.relative_url, headers: crawler_headers
+
+      expect(response.body).to include(%(href="#{thread.url}"))
+      expect(response.body).not_to include(reply.cooked)
+
+      channel_posting = Nokogiri.HTML5(response.body).at_css("#chat-message-#{message_0.id}")
+      expect(channel_posting.at_css('link[itemprop="url"]')["href"]).to eq(thread.url)
+      expect(channel_posting.at_css('meta[itemprop="commentCount"]')["content"]).to eq("1")
+
+      get thread.relative_url, headers: crawler_headers
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(message_0.cooked, reply.cooked)
+      expect(response.body).not_to include(message_1.cooked)
+
+      thread_posting =
+        Nokogiri.HTML5(response.body).css('[itemtype="http://schema.org/DiscussionForumPosting"]')
+      expect(thread_posting.size).to eq(1)
+      expect(thread_posting.first.at_css('link[itemprop="url"]')["href"]).to eq(thread.url)
+      expect(
+        thread_posting.first.at_css('[itemprop="author"] meta[itemprop="name"]')["content"],
+      ).to eq(other_user.username)
+      expect(
+        thread_posting.first.css('[itemprop="comment"]').map { |comment| comment["id"] },
+      ).to eq(["chat-message-#{reply.id}"])
+    end
+
+    it "redirects channel permalinks of thread replies to the thread" do
+      chat_channel.update!(threading_enabled: true)
+      thread = Fabricate(:chat_thread, channel: chat_channel, original_message: message_0)
+      reply = Fabricate(:chat_message, chat_channel: chat_channel, thread:)
+
+      get "#{chat_channel.relative_url}/#{reply.id}", headers: crawler_headers
+
+      expect(response).to redirect_to(reply.url)
+      expect(response.status).to eq(301)
+
+      get reply.url, headers: crawler_headers
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(reply.cooked)
+    end
+
+    it "links forced threads when threading is off and 404s other threads" do
+      forced_thread =
+        Fabricate(:chat_thread, channel: chat_channel, original_message: message_0, force: true)
+      Fabricate(:chat_message, chat_channel: chat_channel, thread: forced_thread)
+      forced_thread.update!(replies_count: 1)
+      thread = Fabricate(:chat_thread, channel: chat_channel, original_message: message_1)
+
+      get chat_channel.relative_url, headers: crawler_headers
+
+      expect(response.body).to include(%(href="#{forced_thread.url}"))
+
+      get forced_thread.relative_url, headers: crawler_headers
+      expect(response.status).to eq(200)
+
+      get thread.relative_url, headers: crawler_headers
+      expect(response.status).to eq(404)
+    end
+
+    it "handles malformed pagination params without erroring" do
+      get "#{chat_channel.relative_url}?date=#{"1" * 200}", headers: crawler_headers
+      expect(response.status).to eq(404)
+
+      get "#{chat_channel.relative_url}?page[]=2", headers: crawler_headers
+      expect(response.status).to eq(200)
+      expect(response.body).to include(message_0.cooked)
+    end
+
+    it "renders the app shell for signed-in users on the crawler layout" do
+      restricted_channel =
+        Fabricate(
+          :category_channel,
+          chatable: Fabricate(:private_category, group: Fabricate(:group)),
+        )
+      restricted_message = Fabricate(:chat_message, chat_channel: restricted_channel)
+      sign_in(admin)
+
+      get "#{restricted_channel.relative_url}?print=true"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(restricted_message.cooked)
+    end
+
+    it "404s for channels anonymous users cannot see" do
+      restricted_channel =
+        Fabricate(
+          :category_channel,
+          chatable: Fabricate(:private_category, group: Fabricate(:group)),
+        )
+      restricted_message = Fabricate(:chat_message, chat_channel: restricted_channel)
+      dm_message = Fabricate(:chat_message, chat_channel: dm_chat_channel, user:)
+
+      get restricted_channel.relative_url, headers: crawler_headers
+
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(restricted_message.cooked)
+
+      get dm_chat_channel.relative_url, headers: crawler_headers
+
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(dm_message.cooked)
+    end
+
+    it "404s channels and renders an empty index when anonymous users are not allowed to chat" do
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+
+      get chat_channel.relative_url, headers: crawler_headers
+
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(message_0.cooked)
+
+      get "/chat", headers: crawler_headers
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(chat_channel.url)
+    end
+
+    it "renders no messages for regular browsers" do
+      get chat_channel.relative_url
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(message_0.cooked)
+    end
+
+    it "lists public channels in the directory for crawlers" do
+      restricted_channel =
+        Fabricate(
+          :category_channel,
+          name: "Secret plans",
+          chatable: Fabricate(:private_category, group: Fabricate(:group)),
+        )
+
+      chat_channel.update!(last_message: message_69, messages_count: 70)
+
+      get "/chat/browse", headers: crawler_headers
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(
+        %(<link rel="canonical" href="#{Discourse.base_url}/chat" />),
+      )
+
+      listed_channels =
+        Nokogiri.HTML5(response.body).css(
+          '[itemtype="http://schema.org/ItemList"] [itemprop="itemListElement"]',
+        )
+      expect(listed_channels.map { |item| item.at_css('[itemprop="url"]')["href"] }).to eq(
+        [chat_channel.url],
+      )
+      expect(listed_channels.first.to_html).to include(
+        category.name,
+        I18n.t("chat.crawler.messages_count", count: 70),
+        message_69.created_at.to_formatted_s(:iso8601),
+      )
+      expect(response.body).not_to include(restricted_channel.url)
+    end
+
+    it "paginates the directory" do
+      stub_const(Chat::ChatController, :DIRECTORY_PAGE_SIZE, 1) do
+        other_channel =
+          Fabricate(:category_channel, name: "Zebra talk", chatable: Fabricate(:category))
+        chat_channel.update!(name: "Aardvark talk")
+
+        get "/chat", headers: crawler_headers
+
+        expect(response.body).to include(chat_channel.url)
+        expect(response.body).not_to include(other_channel.url)
+        expect(response.body).to include(
+          %(<link rel="next" href="#{Discourse.base_url}/chat?page=2">),
+        )
+
+        get "/chat?page=2", headers: crawler_headers
+
+        expect(response.body).to include(other_channel.url)
+        expect(response.body).to include(%(<link rel="prev" href="#{Discourse.base_url}/chat">))
+        expect(response.body).to include(
+          %(<link rel="canonical" href="#{Discourse.base_url}/chat?page=2" />),
+        )
+
+        get "/chat?page=3", headers: crawler_headers
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
+  describe "crawler footer" do
+    before do
+      SiteSetting.chat_allowed_groups =
+        "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+    end
+
+    it "links to chat when anonymous users can view chat" do
+      get "/latest", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+      expect(response.body).to include(%(href='/chat' itemprop="url"))
+
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      get "/latest", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+      expect(response.body).not_to include(%(href='/chat' itemprop="url"))
+    end
+  end
 end

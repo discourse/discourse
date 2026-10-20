@@ -79,7 +79,7 @@ pl_PL:
     ai_ask_ai_report_recipient_groups: "Grupy otrzymujące automatyczne cotygodniowe raporty PW i mogą być uwzględniane w ręcznych raportach PW. Raporty zawierają pytania użytkowników. Pozostaw puste, aby automatyczne raporty były widoczne tylko na pulpicie."
     discourse_ai_enabled: "Włącz wtyczkę Discourse AI."
     enable_ai_bot_starred_conversations: "Zezwól użytkownikom na wyróżnianie rozmów botów AI i wyświetlanie ich w sekcji oznaczonej gwiazdką na pasku bocznym."
-    ai_default_llm_model: "Domyślny model LLM do wykorzystania we wszystkich funkcjach AI"
+    ai_default_llm_model: "Domyślny model języka dla funkcji i agentów AI, który nie określa własnego"
     ai_artifact_security: "System artefaktów AI generuje ramki IFRAME z kodem, który można uruchomić. Tryb ścisły wymusza dodatkowe kliknięcie, aby uruchomić kod. Tryb łagodny uruchamia kod natychmiast. Tryb hybrydowy pozwala użytkownikowi na podanie danych w trybie artefakt-sztuczna inteligencja-autorun, aby wyświetlić je natychmiast. Tryb wyłączony wyłącza system artefaktów."
     ai_toxicity_enabled: "Włącz moduł toksyczności."
     ai_toxicity_inference_service_api_endpoint: "Adres URL, pod którym działa interfejs API modułu toksyczności"
@@ -1396,6 +1396,8 @@ pl_PL:
       invalid_url: "musi to być adres URL http:// lub https:// albo adres URL srv:// bez portu"
       test_refused: "Model decyzyjny odmówił odpowiedzi na pytanie testowe."
       test_image_not_read: "Model decyzyjny nie rozpoznał obrazu testowego. Odznacz opcję „Obsługuje obraz wejściowy”, jeśli nie może odczytać obrazów."
+      credit_limit_exceeded: "%{model_name} wykorzystał wszystkie dzisiejsze kredyty AI. Kredyty resetują się za %{reset_time}."
+      cannot_modify_seeded: "Wstępnie skonfigurowanych modeli decyzyjnych nie można edytować ani usuwać."
     secrets:
       delete_failed_in_use: "Te dane uwierzytelniające są obecnie używane przez co najmniej jeden program LLM, osadzenia, modele decyzyjne lub narzędzia i nie można ich usunąć."
     llm_models:

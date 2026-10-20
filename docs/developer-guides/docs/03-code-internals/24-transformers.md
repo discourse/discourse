@@ -76,11 +76,11 @@ If multiple transformers are registered against a single name, then they will be
 
 ## Finding Transformers
 
-At the moment there is no centralized documentation for transformers. However, a list of all core transformers can be found in the code [here](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/transformer/registry.js). You can then search for those names in the core codebase to find where they're called, the context/value, and the expected return type.
+At the moment there is no centralized documentation for transformers. However, a list of all core transformers can be found in the code [here](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/registry/transformers.ts). You can then search for those names in the core codebase to find where they're called, the context/value, and the expected return type.
 
 ## Introducing new Transformers
 
-To introduce new transformers, the name first needs to be added to the registry. In core, add it to [lib/transformer/registry.js](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/transformer/registry.js).
+To introduce new transformers, the name first needs to be added to the registry. In core, add it to [lib/registry/transformers.ts](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/registry/transformers.ts).
 
 To introduce a new transformer via a theme or plugin, create a `pre-initializer` and register the name via the relevant API:
 
@@ -124,3 +124,11 @@ applyBehaviorTransformer(
   context
 );
 ```
+
+## TypeScript
+
+The transformer pipeline exports `ValueTransformer`, `MutableValueTransformer`, `AnyValueTransformer`, `BehaviorTransformer`, and `DefaultBehaviorTransformer` callback types from `discourse/lib/transformer`. Value callbacks take value and context type parameters: `ValueTransformer<T, C>` returns `T`, while `MutableValueTransformer<T, C>` mutates the value and returns `void`. `registerValueTransformer` accepts `AnyValueTransformer<T, C>`, which allows either kind but still rejects a callback returning something other than `T`. Behavior callbacks take return and context type parameters. Context types can be interfaces without an index signature. Hook names remain strings so plugins and themes can introduce hooks.
+
+`applyValueTransformer` and `applyMutableValueTransformer` infer their result type from the default value. Supply an explicit type argument when a hook can return a broader type than its default, for example `applyValueTransformer<string | null>("custom-label", null)`. Registration and application must agree on a hook's value, context, and return types; the string registry does not enforce a shared contract between separate calls.
+
+Behavior callbacks receive a shallow copy of the context. `next()` and `applyBehaviorTransformer` can return `void` when middleware stops the chain or calls `next()` after the queue is exhausted. Promise results pass through unchanged, and async middleware that awaits `next()` resolves to the awaited result or `undefined`; `BehaviorTransformerResult<R>` describes the full result type.
