@@ -22,6 +22,27 @@ RSpec.describe Scheduler::Defer do
     Discourse.reset_catch_job_exceptions!
   end
 
+  describe "#stop!" do
+    it "allows new work when the restarted thread runs before enqueueing" do
+      completed = Queue.new
+      @defer.later { completed << :before_stop }
+      expect(completed.pop(timeout: 5)).to eq(:before_stop)
+      @defer.stop!(finish_work: true)
+
+      Timeout.timeout(5) do
+        allow(Thread).to receive(:new).and_wrap_original do |constructor, &block|
+          thread = constructor.call(&block)
+          Thread.pass until thread.stop?
+          thread
+        end
+
+        @defer.later { completed << :after_stop }
+
+        expect(completed.pop).to eq(:after_stop)
+      end
+    end
+  end
+
   it "can finish work properly without crashing" do
     @defer.later {}
     sleep 0.005

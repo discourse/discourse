@@ -109,6 +109,7 @@ module Scheduler
 
     def start_thread
       @mutex.synchronize do
+        @finish = false
         @reactor = MessageBus::TimerThread.new if !@reactor
         @thread =
           Thread.new do
