@@ -1,6 +1,6 @@
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import AiSearchConversationReferences from "../ai-search/ai-search-conversation-references.gjs";
+import AiSearchReferencesPanel from "../ai-search/ai-search-references-panel.gjs";
 
 const AiSearchReferencesModal = <template>
   <DModal
@@ -9,9 +9,9 @@ const AiSearchReferencesModal = <template>
     @title={{i18n "discourse_ai.ai_search.references_title"}}
   >
     <:body>
-      <AiSearchConversationReferences
+      <AiSearchReferencesPanel
         class="--in-modal"
-        @topic={{@model.topic}}
+        @references={{@model.citedTopics.references}}
       />
     </:body>
   </DModal>

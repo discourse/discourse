@@ -228,11 +228,12 @@
     color: var(--primary-medium);
   }
 
-  // the modal has its own title and frame
+  // The modal has its own title and frame. Rows reach into the padding to
+  // highlight, so some is kept to hold them inside the modal.
   &.--in-modal {
     width: auto;
     max-height: none;
-    padding: 0;
+    padding: 0 var(--space-2);
     border: 0;
   }
 

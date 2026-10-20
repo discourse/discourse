@@ -1,9 +1,12 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import TrackedMediaQuery from "discourse/lib/tracked-media-query";
 import DButton from "discourse/ui-kit/d-button";
 import AiSearchReferencesModal from "../../components/modal/ai-search-references-modal.gjs";
+import AiSearchCitedTopics from "../../lib/ai-search-cited-topics.js";
 import { combinedSearchActive } from "../../lib/ai-search-scope.js";
 
 // matches the width below which core shows no timeline, and so no cited topics
@@ -24,11 +27,21 @@ export default class AiSearchConversationReferencesButton extends Component {
   @service modal;
   @service site;
 
+  // loaded once the button shows, so the modal opens on the full list
+  loadCitedTopics = modifier(() => {
+    this.#citedTopics ??= new AiSearchCitedTopics(
+      getOwner(this),
+      this.args.outletArgs.topic
+    );
+  });
+  #citedTopics = null;
+
   #wideQuery = new TrackedMediaQuery(`(min-width: ${TIMELINE_MIN_WIDTH}px)`);
 
   willDestroy() {
     super.willDestroy(...arguments);
     this.#wideQuery.teardown();
+    this.#citedTopics?.teardown();
   }
 
   get timelineFits() {
@@ -38,17 +51,18 @@ export default class AiSearchConversationReferencesButton extends Component {
   @action
   showReferences() {
     this.modal.show(AiSearchReferencesModal, {
-      model: { topic: this.args.outletArgs.topic },
+      model: { citedTopics: this.#citedTopics },
     });
   }
 
   <template>
     {{#unless this.timelineFits}}
       <DButton
-        class="btn-default ai-search-references-button"
+        class="btn-default btn-small ai-search-references-button"
         @action={{this.showReferences}}
-        @icon="link"
+        @icon="far-file-lines"
         @label="discourse_ai.ai_search.references_title"
+        {{this.loadCitedTopics}}
       />
     {{/unless}}
   </template>
