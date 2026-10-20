@@ -453,7 +453,13 @@ class AiAgent < ActiveRecord::Base
     end
   end
 
+  def self.automatic_user_provisioning_enabled?
+    SiteSetting.discourse_ai_enabled && SiteSetting.ai_bot_enabled
+  end
+
   def self.ensure_users!
+    return if !automatic_user_provisioning_enabled?
+
     where(enabled: true).find_each { |agent| agent.ensure_user! if agent.needs_user? }
   end
 
@@ -475,7 +481,7 @@ class AiAgent < ActiveRecord::Base
   end
 
   def needs_user?
-    enabled? && supports_bot_user? &&
+    self.class.automatic_user_provisioning_enabled? && enabled? && supports_bot_user? &&
       (
         force_default_llm? || allow_topic_mentions? || allow_personal_messages? ||
           allow_chat_direct_messages? || allow_chat_channel_mentions?

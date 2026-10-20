@@ -10,6 +10,7 @@ RSpec.describe ReviewableAiToolAction do
   before do
     enable_current_plugin
     SiteSetting.ai_bot_enabled = true
+    ai_agent.reload
   end
 
   def create_tool_action(tool_name: "close_topic", params: nil, post_id: nil)
@@ -174,7 +175,7 @@ RSpec.describe ReviewableAiToolAction do
     end
 
     it "creates a category from an approval card authored by the agent's user" do
-      agent_user = ai_agent.create_user!
+      agent_user = ai_agent.user
       source_post = Fabricate(:post, topic: topic)
       tool_action =
         create_tool_action(
@@ -201,7 +202,6 @@ RSpec.describe ReviewableAiToolAction do
     end
 
     it "rejects an approval card copied by an unrelated agent" do
-      ai_agent.create_user!
       other_agent_user = Fabricate(:ai_agent).create_user!
       source_post = Fabricate(:post, topic: topic)
       reviewable = create_reviewable(create_tool_action(post_id: source_post.id))
@@ -221,7 +221,7 @@ RSpec.describe ReviewableAiToolAction do
     end
 
     it "rejects an agent's approval card copied to another topic" do
-      agent_user = ai_agent.create_user!
+      agent_user = ai_agent.user
       source_post = Fabricate(:post, topic: topic)
       reviewable = create_reviewable(create_tool_action(post_id: source_post.id))
       copied_post =
@@ -470,7 +470,7 @@ RSpec.describe ReviewableAiToolAction do
     end
 
     it "accepts inline rejection from the agent's user" do
-      agent_user = ai_agent.create_user!
+      agent_user = ai_agent.user
       source_post = Fabricate(:post, topic: topic)
       reviewable = create_reviewable(create_tool_action(post_id: source_post.id))
       approval_post =
