@@ -14,6 +14,8 @@ module DiscourseAi
           ) { object.ai_ask_ai_default }
         end
 
+        plugin.register_topic_custom_field_type(ContinueConversation::TOPIC_SOURCES_FIELD, :json)
+
         # A conversation continued from a combined search lists the topics it
         # cites in place of the timeline.
         plugin.add_to_serializer(
@@ -24,6 +26,15 @@ module DiscourseAi
               object.topic.custom_fields[ContinueConversation::TOPIC_REQUEST_ID_FIELD].present?
           end,
         ) { true }
+
+        plugin.add_to_serializer(
+          :topic_view,
+          :ai_search_sources,
+          include_condition: -> do
+            object.topic.private_message? &&
+              object.topic.custom_fields[ContinueConversation::TOPIC_SOURCES_FIELD].present?
+          end,
+        ) { object.topic.custom_fields[ContinueConversation::TOPIC_SOURCES_FIELD] }
       end
     end
   end

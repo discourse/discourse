@@ -730,6 +730,17 @@ describe "AI combined search" do
       expect(page).to have_no_css(".timeline-container")
     end
 
+    it "lists the answer's sources kept beside the conversation" do
+      conversation.custom_fields[
+        DiscourseAi::Discoveries::ContinueConversation::TOPIC_SOURCES_FIELD
+      ] = [{ topic_id: topic_2.id, title: topic_2.title, url: topic_2.url }]
+      conversation.save_custom_fields
+
+      visit conversation.url
+
+      expect(page).to have_css(".ai-search-references__link", text: topic_2.title)
+    end
+
     it "adds the topics a new reply cites" do
       visit conversation.url
       expect(page).to have_css(".ai-search-references__link", text: topic_1.title)

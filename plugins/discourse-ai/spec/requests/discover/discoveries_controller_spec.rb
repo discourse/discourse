@@ -524,6 +524,19 @@ describe DiscourseAi::Discover::DiscoveriesController do
         expect(response.parsed_body["ai_search_conversation"]).to eq(true)
       end
 
+      it "leaves the sources to the sidebar for readers of the combined search" do
+        SiteSetting.enable_ai_combined_search = true
+
+        post "/discourse-ai/discoveries/continue-convo", params: { request_id: }
+        topic = Topic.find(response.parsed_body["topic_id"])
+
+        expect(topic.posts.find_by(post_number: 2).raw).to eq(context)
+        get "/t/#{topic.id}.json"
+        expect(response.parsed_body["ai_search_sources"]).to contain_exactly(
+          include("topic_id" => source_post.topic_id, "title" => source_post.topic.title),
+        )
+      end
+
       it "limits the private message title to the configured maximum" do
         long_query = "猫" * 1000
         DiscourseAi::Discoveries.store_result(

@@ -73,6 +73,13 @@ export default class AiSearchConversationReferences extends Component {
     const replies = posts.filter(
       (post) => post.user_id !== this.currentUser.id
     );
+    // the answer's sources are kept beside the conversation rather than in it
+    const sources = (this.args.topic.ai_search_sources || []).map((source) => ({
+      topicId: source.topic_id,
+      title: source.title,
+      url: source.url,
+    }));
+    this.#ranker.add(0, "cited", sources);
     replies.forEach((post, turn) => {
       this.#ranker.add(turn, "cited", citedTopicsFromCooked(post.cooked));
     });
