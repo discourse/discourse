@@ -615,6 +615,12 @@ class Controller:
                 continue
             card = cards.get(card_id)
             run = self.runs.get(identity)
+            if (not card and not operation.get("accepted_at")
+                    and operation.get("requested_action") not in {"cancel", "restart"}):
+                if run and run.phase == "needs_attention" and not (run.accepted_at or run.accepted_commit):
+                    self.cancel(run)
+                    self.drain(run)
+                continue
             if run is None and (operation.get("accepted_at")
                     or operation.get("requested_action") in {"cancel", "restart"}
                     or operation.get("status") in {"running", "review", "failed"}):
@@ -674,7 +680,7 @@ class Controller:
                     self.cancel(run)
             if run.phase == "stopping":
                 self.drain(run)
-            elif run.phase in INTEGRATION | {"integration_failed", "needs_attention", "done"}:
+            elif card and run.phase in INTEGRATION | {"integration_failed", "needs_attention", "done"}:
                 marker = json.dumps([run.phase, run.error, run.confirmation_diagnostic, run.action_id], sort_keys=True)
                 if run.reported_phase != marker:
                     try:
