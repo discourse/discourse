@@ -80,7 +80,26 @@ describe "AI combined search" do
     expect_tab(kind)
   end
 
+  def allow_follow_ups
+    SiteSetting.ai_bot_enabled = true
+    SiteSetting.ai_bot_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
+    assign_agent_to(:ai_ask_ai_follow_up_agent, [Group::AUTO_GROUPS[:admins]]).create_user!
+  end
+
+  def complete_answer
+    publish(
+      done: true,
+      phase: "complete",
+      answerable: true,
+      ai_discover_title: "Resetting your password",
+      ai_discover_reply: "Use the **forgot password** link on the login screen.",
+      ai_discover_follow_up: "What if I no longer have access to my email?",
+      sources:,
+    )
+  end
+
   it "streams the answer in full, adding its related topics once it is done" do
+    allow_follow_ups
     visit "/"
     wait_for_discoveries_channel
     ask(query)
@@ -121,6 +140,18 @@ describe "AI combined search" do
     end
     expect(page).to have_no_css(".ai-search-answer__expand")
     expect(page).to have_no_text("Keywords")
+  end
+
+  it "leaves out the follow-up when the reader cannot talk to the AI bot" do
+    visit "/"
+    wait_for_discoveries_channel
+    ask(query)
+    complete_answer
+
+    within(".ai-search-answer__more") do
+      expect(page).to have_css(".ai-search-answer__related-link", count: 2)
+      expect(page).to have_no_css(".ai-search-answer__follow-up")
+    end
   end
 
   it "lists every related topic the answer used" do

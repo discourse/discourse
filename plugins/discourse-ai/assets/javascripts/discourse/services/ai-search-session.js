@@ -48,6 +48,7 @@ export async function semanticSearch(query) {
  */
 export default class AiSearchSession extends Service {
   @service appEvents;
+  @service currentUser;
   @service discobotDiscoveries;
   @service messageBus;
   @service search;
@@ -140,10 +141,27 @@ export default class AiSearchSession extends Service {
 
   get canFollowUp() {
     return (
+      this.#followUpAllowed &&
       this.answerSettled &&
       !this.answerFailed &&
       Boolean(this.discoveries.activeRequestId)
     );
+  }
+
+  /** Mirrors the server's check, since a follow-up continues as a bot conversation. */
+  get #followUpAllowed() {
+    if (
+      !this.siteSettings.ai_bot_enabled ||
+      !this.currentUser?.ai_enabled_chat_bots
+    ) {
+      return false;
+    }
+
+    const agentId = parseInt(this.siteSettings.ai_ask_ai_follow_up_agent, 10);
+    const agent = this.currentUser.ai_enabled_agents?.find(
+      (enabledAgent) => enabledAgent.id === agentId
+    );
+    return Boolean(agent?.allow_personal_messages && agent.has_default_llm);
   }
 
   get showingRewrittenKeywords() {
