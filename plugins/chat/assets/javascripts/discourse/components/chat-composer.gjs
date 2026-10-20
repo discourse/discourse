@@ -306,6 +306,10 @@ export default class ChatComposer extends Component {
 
   @action
   toggleFormattingBar() {
+    if (!this.canUseRichEditor) {
+      return;
+    }
+
     this.showFormattingBar = !this.showFormattingBar;
     store.setObject({ key: "formatting_bar", value: this.showFormattingBar });
   }
@@ -1001,7 +1005,14 @@ export default class ChatComposer extends Component {
         {{willDestroy this.teardown}}
         {{willDestroy this.cancelPersistDraft}}
       >
-        {{#if (and this.showFormattingBar this.editor (not this.disabled))}}
+        {{#if
+          (and
+            this.canUseRichEditor
+            this.showFormattingBar
+            this.editor
+            (not this.disabled)
+          )
+        }}
           <div
             aria-label={{i18n "chat.composer.formatting"}}
             class="chat-composer__formatting-bar"

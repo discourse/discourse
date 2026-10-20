@@ -169,7 +169,7 @@ class ChatSetupInit {
         },
         action: "toggleFormattingBar",
         displayed() {
-          return !!this.currentUser;
+          return !!this.currentUser && this.canUseRichEditor;
         },
       });
 
