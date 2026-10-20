@@ -2175,6 +2175,8 @@ sl:
         link_copied: "Povezava kopirana!"
       onebox_toolbar:
         link_copied: "Povezava kopirana!"
+      table:
+        default_heading: "Stolpec %{number}"
     notifications:
       tooltip:
         regular:
@@ -3730,36 +3732,6 @@ sl:
           two: "Vnos mora biti večji od %{count}."
           few: "Vnos mora biti večji od %{count}."
           other: "Vnos mora biti večji od %{count}."
-    table_builder:
-      title: "Oblikovalec tabel"
-      modal:
-        title: "Oblikovalec tabel"
-        create: "Oblikuj tabelo"
-        help:
-          title: "Uporaba urejevalnika preglednic"
-          enter_key: "Enter"
-          tab_key: "Zavihek"
-          new_row: "na koncu vrstice vstavite novo vrstico."
-          new_col: "na koncu stolpca vstavite nov stolpec."
-          options: "Z desnim klikom na celice dostopate do več možnosti v spustnem meniju."
-        confirm_close: "Ali ste prepričani, da želite zapreti oblikovalca tabel? Neshranjene spremembe bodo izgubljene."
-      edit:
-        btn_edit: "Uredi tabelo"
-        modal:
-          title: "Uredi tabelo"
-          cancel: "prekliči"
-          create: "Shrani"
-          reason: "Zakaj spreminjate prispevek?"
-          trigger_reason: "Dodaj razlog za urejanje"
-        default_edit_reason: "Posodobitev tabele z oblikovalcem tabel"
-      default_header:
-        col_1: "1. stolpec"
-        col_2: "2. stolpec"
-        col_3: "3. stolpec"
-        col_4: "4. stolpec"
-      spreadsheet:
-        show: "Prikaži"
-        about: "O nas"
     filter:
       description:
         yesterday: "Včeraj"

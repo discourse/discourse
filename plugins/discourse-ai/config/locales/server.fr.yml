@@ -63,7 +63,6 @@ fr:
   site_settings:
     discourse_ai_enabled: "Activez l'extension IA de Discourse."
     enable_ai_bot_starred_conversations: "Autoriser les utilisateurs à ajouter les conversations avec le bot d'IA aux favoris et à les afficher dans une section « Favoris » de la barre latérale."
-    ai_default_llm_model: "Le modèle LLM par défaut à utiliser pour toutes les fonctionnalités d'IA"
     ai_artifact_security: "Le système d'artefacts d'IA génère des iFrames avec du code exécutable. Le mode strict force un clic supplémentaire pour exécuter le code. Le mode Lax exécute le code immédiatement. Le mode hybride permet à l'utilisateur de fournir des data-ai-artifact-autorun à afficher immédiatement. Le mode désactivé désactive le système d'artefacts."
     ai_toxicity_enabled: "Activez le module de toxicité."
     ai_toxicity_inference_service_api_endpoint: "Adresse URL où s'exécute l'API pour le module de toxicité"

@@ -13,7 +13,7 @@
     "markdown-it": "^15.0.2",
     "pretty-text": "workspace:*",
     "rolldown": "1.2.7",
-    "xss": "^1.0.15"
+    "xss": "1.0.15"
   },
   "engines": {
     "node": ">= 20",

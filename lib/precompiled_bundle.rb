@@ -5,6 +5,9 @@
 class PrecompiledBundle
   attr_reader :dependency_globs
 
+  # The digest of the source most recently returned by `load_or_build`
+  attr_reader :loaded_digest
+
   def initialize(dir:, filename_prefix:, dependency_globs:, &build)
     @dir = dir
     @filename_prefix = filename_prefix
@@ -12,7 +15,7 @@ class PrecompiledBundle
     @build = build
   end
 
-  def path
+  def path(digest = self.digest)
     Rails.root.join(@dir, "#{@filename_prefix}-#{digest}.js")
   end
 
@@ -21,7 +24,8 @@ class PrecompiledBundle
   end
 
   def load_or_build
-    cache_path = path
+    @loaded_digest = digest
+    cache_path = path(@loaded_digest)
     return File.read(cache_path) if File.exist?(cache_path)
 
     with_lock do

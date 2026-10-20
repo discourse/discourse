@@ -76,7 +76,6 @@ zh_CN:
     ai_ask_ai_report_recipient_groups: "接收每周自动发送的报告私信的群组，也可添加到手动发送的报告私信中。报告包含用户提出的问题。留空则仅在仪表盘上显示自动报告。"
     discourse_ai_enabled: "启用 Discourse AI 插件。"
     enable_ai_bot_starred_conversations: "允许用户为 AI 机器人对话添加星标，并在“星标”边栏部分显示。"
-    ai_default_llm_model: "用于所有 AI 功能的默认 LLM 模型"
     ai_artifact_security: "AI 工件系统会生成包含可运行代码的 iframe。严格模式将强制额外点击才能运行代码。宽松模式则立即运行代码。混合模式允许用户提供 data-ai-artifact-autorun 来立即显示。禁用模式则会禁用工件系统。"
     ai_toxicity_enabled: "启用毒性模块。"
     ai_toxicity_inference_service_api_endpoint: "为毒性模块运行 API 的 URL"

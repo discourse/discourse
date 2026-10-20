@@ -106,6 +106,7 @@ vi:
       admin:
         title: "Trò chơi hóa"
         name: "Tên"
+        created_by: "Tạo bởi"
         period: "Giai đoạn"
     discourse_workflows:
       gamification_score:

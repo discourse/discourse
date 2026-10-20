@@ -207,6 +207,13 @@ et:
         delete: "Kustuta"
         tools_modal:
           required: "Nõutud"
+      models:
+        name: "Nimi"
+        type: "Tüüp"
+        provider: "Teenusepakkuja"
+        edit: "Muuda"
+        types:
+          embedding: "Sängitamine"
       llms:
         display_name: "Nimi"
         provider: "Teenusepakkuja"

@@ -2,6 +2,62 @@
 
 describe DiscourseAi::AiBot::EntryPoint do
   describe "#inject_into" do
+    describe "automatic agent user provisioning" do
+      before do
+        SiteSetting.discourse_ai_enabled = false
+        SiteSetting.ai_bot_enabled = false
+      end
+
+      %i[discourse_ai_enabled ai_bot_enabled].each do |first_setting|
+        it "provisions users only after enabling both settings, starting with #{first_setting}" do
+          agent = Fabricate(:ai_agent)
+          second_setting =
+            first_setting == :discourse_ai_enabled ? :ai_bot_enabled : :discourse_ai_enabled
+
+          expect { SiteSetting.public_send("#{first_setting}=", true) }.not_to change(User, :count)
+          expect(agent.reload.user_id).to be_nil
+
+          SiteSetting.public_send("#{second_setting}=", true)
+
+          user = agent.reload.user
+          expect(user).to be_present
+          expect(user).to be_bot
+
+          expect do
+            SiteSetting.public_send("#{first_setting}=", false)
+            SiteSetting.public_send("#{first_setting}=", true)
+          end.not_to change(User, :count)
+          expect(agent.reload.user).to eq(user)
+        end
+      end
+
+      it "leaves users unprovisioned on unrelated changes and disablement" do
+        SiteSetting.discourse_ai_enabled = true
+        SiteSetting.ai_bot_enabled = true
+        agent = Fabricate(:ai_agent)
+
+        expect do
+          SiteSetting.ai_bot_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
+          SiteSetting.ai_bot_enabled = false
+          SiteSetting.discourse_ai_enabled = false
+        end.not_to change(User, :count)
+        expect(agent.reload.user_id).to be_nil
+      end
+
+      it "does not provision when settings are refreshed from the provider" do
+        agent = Fabricate(:ai_agent)
+        SiteSetting.provider.save(:discourse_ai_enabled, "t", SiteSetting.types[:bool])
+        SiteSetting.provider.save(:ai_bot_enabled, "t", SiteSetting.types[:bool])
+
+        expect { SiteSetting.refresh! }.not_to change(User, :count)
+        expect(agent.reload.user_id).to be_nil
+
+        AiAgent.ensure_users!
+
+        expect(agent.reload.user).to be_present
+      end
+    end
+
     describe "registers conversations as a homepage option" do
       fab!(:user)
       fab!(:bot_allowed_group, :group)

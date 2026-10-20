@@ -10,8 +10,6 @@ zh_CN:
     chat_enabled: "启用聊天。"
     chat_pinned_messages: "在聊天频道中启用置顶消息。"
     enable_public_channels: "基于类别启用公开频道。"
-    chat_allowed_groups: "这些群组中的用户可以聊天，但匿名用户除外，他们只有在被添加到此设置后才能查看聊天。请注意，管理员和版主可以随时访问聊天。"
-    chat_channel_retention_days: "常规频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
     chat_dm_retention_days: "个人聊天频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
     chat_auto_silence_duration: "用户超过聊天消息创建速率限值时将被禁言的分钟数。设置为 0 将禁用自动禁言。"
     chat_allowed_messages_for_trust_level_0: "信任级别 0 用户在 30 秒内可以发送的消息数。设置为 0 将禁用限制。"
@@ -64,6 +62,13 @@ zh_CN:
         访问 %{channel_url} 下的频道以重试。
   chat:
     deleted_chat_username: 已删除
+    crawler:
+      directory_title: "聊天频道"
+      nav_title: "聊天"
+      members_count:
+        other: "%{count} 个成员"
+      thread_replies:
+        other: "%{count} 条回复"
     errors:
       users_cant_be_added_to_channel: "无法将用户添加到此频道。"
       user_cant_be_removed_from_channel: "无法将用户从此频道中移除"

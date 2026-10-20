@@ -210,6 +210,14 @@ bs_BA:
         delete: "Delete"
         tools_modal:
           required: "Required"
+      models:
+        name: "Ime"
+        type: "Tip"
+        edit: "Izmijeni"
+        types:
+          embedding: "Embedding"
+        filters:
+          all: "Sve vrste"
       llms:
         display_name: "Ime"
         vision_modes:

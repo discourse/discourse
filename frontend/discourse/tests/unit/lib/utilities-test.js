@@ -17,6 +17,7 @@ import {
   initializeDefaultHomepage,
   mergeSortedLists,
   selectedHTML,
+  selectedText,
   setCaretPosition,
   setDefaultHomepage,
   slugify,
@@ -25,7 +26,11 @@ import {
   unicodeSlugify,
 } from "discourse/lib/utilities";
 import Site from "discourse/models/site";
-import { chromeTest } from "discourse/tests/helpers/qunit-helpers";
+import {
+  chromeTest,
+  fixture,
+  selectText,
+} from "discourse/tests/helpers/qunit-helpers";
 import {
   disableRaiseOnDeprecation,
   enableRaiseOnDeprecation,
@@ -411,6 +416,30 @@ module("Unit | Utilities | selectedHTML", function (hooks) {
       window.getSelection().removeAllRanges();
       container.remove();
     }
+  });
+
+  test("quotes videos as video markdown", async function (assert) {
+    const container = document.createElement("div");
+    container.classList.add("cooked");
+    container.innerHTML =
+      "<p>Before</p><div class='video-placeholder-container' data-video-src='/uploads/clip.mp4' data-video-base62-sha1='abc'></div><div class='video-placeholder-container' data-video-src='/uploads/old.mp4'></div><div class='video-container' data-video-src='/uploads/played.mp4' data-video-base62-sha1='def'><video><source src='/uploads/played.mp4'></video></div><p>After</p>";
+    fixture().append(container);
+
+    await selectText(container);
+    const markdown = await selectedText();
+
+    assert.true(
+      markdown.includes("![|video](upload://abc.mp4)"),
+      `keeps the video as markdown (got: ${markdown})`
+    );
+    assert.true(
+      markdown.includes("![|video](/uploads/old.mp4)"),
+      `falls back to the video path (got: ${markdown})`
+    );
+    assert.true(
+      markdown.includes("![|video](upload://def.mp4)"),
+      `keeps played videos as markdown (got: ${markdown})`
+    );
   });
 
   test("does not trim when the selection ends mid-content", function (assert) {

@@ -1842,6 +1842,8 @@ ca:
         unknown_user: "Usuari"
       ignore: "Ignora"
       image: "imatge"
+      table:
+        default_heading: "Columna %{number}"
     notifications:
       tooltip:
         regular:
@@ -3108,18 +3110,6 @@ ca:
         type_mismatch:
           default: "Introduïu un valor vàlid."
           email: "Introduïu una adreça vàlida de correu electrònic."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Retorn"
-      edit:
-        modal:
-          cancel: "cancel·la"
-          create: "Desa"
-          reason: "Per què ho editeu?"
-      spreadsheet:
-        show: "Mostra"
-        about: "Quant a"
     filter:
       description:
         yesterday: "Ahir"

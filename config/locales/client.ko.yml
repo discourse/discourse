@@ -3819,18 +3819,6 @@ ko:
       errors:
         type_mismatch:
           default: "유효한 값을 입력하십시오."
-    table_builder:
-      modal:
-        help:
-          enter_key: "시작하다"
-      edit:
-        modal:
-          cancel: "취소"
-          create: "저장"
-          reason: "왜 편집 중입니까?"
-      spreadsheet:
-        show: "보기"
-        about: "소개"
     filter:
       description:
         yesterday: "어제"
