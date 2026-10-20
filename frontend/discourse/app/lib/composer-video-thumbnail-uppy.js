@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
+import { destroy } from "@ember/destroyable";
 import { setOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -44,7 +45,11 @@ export default class ComposerVideoThumbnailUppy {
     const cleanup = () => {
       URL.revokeObjectURL(objectUrl);
       // Deferred because this can run inside one of Uppy's own event handlers
-      next(() => this._uppyUpload?.teardown());
+      next(() => {
+        if (this._uppyUpload) {
+          destroy(this._uppyUpload);
+        }
+      });
     };
 
     // These attributes are needed for thumbnail generation on mobile.

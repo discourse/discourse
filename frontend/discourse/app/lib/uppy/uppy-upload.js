@@ -1,7 +1,9 @@
 import { tracked } from "@glimmer/tracking";
+import ApplicationInstance from "@ember/application/instance";
 import { warn } from "@ember/debug";
 import {
   associateDestroyableChild,
+  isDestroying,
   registerDestructor,
 } from "@ember/destroyable";
 import EmberObject from "@ember/object";
@@ -114,7 +116,6 @@ export default class UppyUpload {
   #bufferedUploadErrors = [];
 
   #fileInputEventListener;
-  #teardownWhenIdle = false;
   #usingS3Uploads;
 
   _fileInputEl;
@@ -124,7 +125,7 @@ export default class UppyUpload {
    * @param {object} config
    */
   constructor(parent, config) {
-    if (typeof parent.lookup === "function") {
+    if (parent instanceof ApplicationInstance) {
       deprecated(
         "Passing an owner to `new UppyUpload()` is deprecated. Pass the component that uses it instead, so it's torn down with that component.",
         { id: "discourse.uppy-upload-owner", since: "2026.10.0" }
@@ -132,18 +133,20 @@ export default class UppyUpload {
       setOwner(this, parent);
     } else {
       setOwner(this, getOwner(parent));
-      associateDestroyableChild(parent, this);
-      registerDestructor(this, () => {
-        if (
-          this.config.finishUploadsOnDestroy &&
-          (this.uploading || this.processing)
-        ) {
-          this.#teardownWhenIdle = true;
-        } else {
-          this.teardown();
-        }
-      });
     }
+
+    associateDestroyableChild(parent, this);
+    registerDestructor(this, () => {
+      // With uploads in progress, #reset() tears down once they finish
+      if (
+        this.config.finishUploadsOnDestroy &&
+        (this.uploading || this.processing)
+      ) {
+        return;
+      }
+
+      this.teardown();
+    });
 
     this.uppyWrapper = new UppyWrapper(getOwner(this));
     this.config = lazyMergeConfig(config);
@@ -181,6 +184,7 @@ export default class UppyUpload {
         this.cancelSingleUpload
       );
       this.uppyWrapper.uppyInstance.destroy();
+      this.uppyWrapper.uppyInstance = null;
     }
   }
 
@@ -531,7 +535,7 @@ export default class UppyUpload {
           data,
         })
           .then((response) => {
-            this.uppyWrapper.uppyInstance.setFileMeta(file.id, {
+            this.uppyWrapper.uppyInstance?.setFileMeta(file.id, {
               uniqueUploadIdentifier: response.unique_identifier,
             });
 
@@ -601,7 +605,7 @@ export default class UppyUpload {
       this._fileInputEl.value = "";
     }
 
-    if (this.#teardownWhenIdle) {
+    if (this.config.finishUploadsOnDestroy && isDestroying(this)) {
       // Deferred because this can run inside one of Uppy's own event handlers
       next(this, this.teardown);
     }
@@ -617,10 +621,6 @@ export default class UppyUpload {
   }
 
   #allUploadsComplete() {
-    if (this.isDestroying) {
-      return;
-    }
-
     this.appEvents.trigger(
       `upload-mixin:${this.config.id}:all-uploads-complete`
     );

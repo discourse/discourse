@@ -272,6 +272,7 @@ export default class DockedComposer extends Component {
     // Each showing of the container creates a new upload, so don't wait for the component
     if (this.uppyUpload) {
       destroy(this.uppyUpload);
+      this.uppyUpload = null;
     }
     this.#rootElement = null;
   }

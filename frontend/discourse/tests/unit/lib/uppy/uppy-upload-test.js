@@ -5,6 +5,7 @@ import { waitUntil } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { dialog } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import pretender from "discourse/tests/helpers/create-pretender";
@@ -48,6 +49,7 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
   });
 
   hooks.afterEach(function () {
+    run(() => destroy(this.parent));
     this.fileInput.remove();
     sinon.restore();
   });
@@ -101,8 +103,6 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       alert.calledOnceWith("upload failed"),
       "the rejection is reported once, with the server's own message"
     );
-
-    upload.teardown();
   });
 
   test("a successful upload is not reported as cancelled", async function (assert) {
@@ -143,8 +143,6 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       [],
       "the finished upload is not reported as cancelled"
     );
-
-    upload.teardown();
   });
 
   test("explicit single-file cancellation is reported", async function (assert) {
@@ -178,8 +176,6 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       [],
       "the cancelled file is removed"
     );
-
-    upload.teardown();
   });
 
   test("explicit cancel all is reported as cancelled", async function (assert) {
@@ -206,8 +202,6 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       ["uploads-cancelled"],
       "explicit cancel all reports one cancellation"
     );
-
-    upload.teardown();
   });
 
   test("a batch drained by a cancel still reports the failure", async function (assert) {
@@ -248,8 +242,6 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       alert.calledOnceWith("upload failed"),
       "the buffered failure is reported once the cancel drains the batch"
     );
-
-    upload.teardown();
   });
 
   test("teardown destroys the Uppy instance", function (assert) {
@@ -278,6 +270,23 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
     run(() => destroy(this.parent));
 
     assert.true(uppyDestroy.calledOnce, "destroys the Uppy instance");
+  });
+
+  test("still accepts an owner", function (assert) {
+    const owner = getOwner(this);
+    const upload = withSilencedDeprecations(
+      "discourse.uppy-upload-owner",
+      () =>
+        new UppyUpload(owner, {
+          id: "uppy-upload-owner-test",
+          type: "composer",
+          uploadDone: () => {},
+        })
+    );
+
+    upload.setup(this.fileInput);
+
+    assert.strictEqual(getOwner(upload), owner, "uses it as the owner");
   });
 
   test("finishUploadsOnDestroy lets an upload in progress finish", async function (assert) {
@@ -349,7 +358,5 @@ module("Unit | Lib | uppy/uppy-upload", function (hooks) {
       previous,
       "creates a new instance"
     );
-
-    upload.teardown();
   });
 });
