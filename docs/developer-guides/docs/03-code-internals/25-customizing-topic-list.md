@@ -154,10 +154,10 @@ A number of [Transformers](24-transformers.md) allow small, targeted changes to 
 
 - **`topic-list-columns`** (mutable context: `{ listContext, category, filter }`) - mutate the desktop column DAG
 - **`topic-list-class`** (context: `{ topics, listContext }`) - return classes to add to the topic list `<table>`
-- **`topic-list-item-class`** (context: `{ topic, index, listContext }`) - return classes to add to each topic row
-- **`topic-list-item-style`** (context: `{ topic, index, listContext }`) - return an array of `htmlSafe` CSS declarations to be joined into the row's inline `style`
-- **`topic-list-item-expand-pinned`** (context: `{ topic, mobileView }`) - control whether the topic excerpt is displayed
-- **`topic-list-item-mobile-layout`** (context: `{ topic, listContext }`) - choose whether a row uses the mobile layout
+- **`topic-list-item-class`** (context: `{ topic, index, listContext, category }`) - return classes to add to each topic row
+- **`topic-list-item-style`** (context: `{ topic, index, listContext, category }`) - return an array of `htmlSafe` CSS declarations to be joined into the row's inline `style`
+- **`topic-list-item-expand-pinned`** (context: `{ topic, index, listContext, category, mobileView }`) - control whether the topic excerpt is displayed
+- **`topic-list-item-mobile-layout`** (context: `{ topic, index, listContext, category }`) - choose whether a row uses the mobile layout
 - **`topic-list-header-sortable-column`** - override whether header cells are sortable, for example based on the current category
 
 There is also a **behavior transformer** for row clicks:

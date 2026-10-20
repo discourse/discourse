@@ -76,7 +76,7 @@ If multiple transformers are registered against a single name, then they will be
 
 ## Finding Transformers
 
-At the moment there is no centralized documentation for transformers. However, a list of all core transformers can be found in the code [here](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/registry/transformers.ts). You can then search for those names in the core codebase to find where they're called, the context/value, and the expected return type.
+All core transformer names are listed in [lib/registry/transformers.ts](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/registry/transformers.ts), which also declares the value, context, and return types of the hooks that have been typed. For the others, search for the name in the core codebase to find where it's applied, its context and value, and the expected return type. Editors that understand TypeScript complete hook names when you call `applyValueTransformer`, `api.registerValueTransformer`, and their behavior counterparts, including in plain JavaScript files.
 
 ## Introducing new Transformers
 
@@ -127,8 +127,53 @@ applyBehaviorTransformer(
 
 ## TypeScript
 
-The transformer pipeline exports `ValueTransformer`, `MutableValueTransformer`, `AnyValueTransformer`, `BehaviorTransformer`, and `DefaultBehaviorTransformer` callback types from `discourse/lib/transformer`. Value callbacks take value and context type parameters: `ValueTransformer<T, C>` returns `T`, while `MutableValueTransformer<T, C>` mutates the value and returns `void`. `registerValueTransformer` accepts `AnyValueTransformer<T, C>`, which allows either kind but still rejects a callback returning something other than `T`. Behavior callbacks take return and context type parameters. Context types can be interfaces without an index signature. Hook names remain strings so plugins and themes can introduce hooks.
+The transformer pipeline exports callback types from `discourse/lib/transformer`: `ValueTransformer<T, C>` returns the transformed value, `MutableValueTransformer<T, C>` mutates the value and returns `void`, and `BehaviorTransformer<R, C>` is behavior middleware. `T` is the value, `R` the behavior result, and `C` the context, which can be an interface without an index signature.
 
-`applyValueTransformer` and `applyMutableValueTransformer` infer their result type from the default value. Supply an explicit type argument when a hook can return a broader type than its default, for example `applyValueTransformer<string | null>("custom-label", null)`. Registration and application must agree on a hook's value, context, and return types; the string registry does not enforce a shared contract between separate calls.
+### Typed hooks
 
-Behavior callbacks receive a shallow copy of the context. `next()` and `applyBehaviorTransformer` can return `void` when middleware stops the chain or calls `next()` after the queue is exhausted. Promise results pass through unchanged, and async middleware that awaits `next()` resolves to the awaited result or `undefined`; `BehaviorTransformerResult<R>` describes the full result type.
+Each hook can declare its contract in a registry, keyed by name: `ValueTransformerRegistry` for value hooks and `BehaviorTransformerRegistry` for behavior hooks. Once a hook is typed, its name alone determines every signature:
+
+- `applyValueTransformer`, `applyMutableValueTransformer`, and `applyBehaviorTransformer` check the default value or callback and the context against the entry, and return the entry's type.
+- `api.registerValueTransformer` and `api.registerBehaviorTransformer` type the callback's `value`, `context`, and return from the entry, so inline callbacks need no annotations.
+- A hook applied with `applyMutableValueTransformer` must be registered with `mutable: true`, and the reverse.
+
+Use `ValueTransformerFor<"name">` or `BehaviorTransformerFor<"name">` to type a callback declared ahead of time:
+
+```ts
+import type { ValueTransformerFor } from "discourse/lib/transformer";
+
+const addClass: ValueTransformerFor<"topic-list-item-class"> = ({ value }) => [
+  ...value,
+  "my-class",
+];
+
+api.registerValueTransformer("topic-list-item-class", addClass);
+```
+
+Core hooks without a contract yet are marked `Untyped` and keep the loose typing described below. Value entries have the shape `{ value: V; context: C | undefined; mutable: true | false }`, and behavior entries `{ result: R; context: C | undefined }`. Include `undefined` in `context` when the context is optional, or use `context: undefined` when a hook has none. Entries that don't match these shapes make the hook unusable until they are fixed.
+
+A plugin or theme can type its own hooks by adding entries from a TypeScript file. The name still needs `api.addValueTransformerName` or `api.addBehaviorTransformerName` at runtime:
+
+```ts
+declare module "discourse/lib/transformer" {
+  interface ValueTransformerRegistry {
+    "my-plugin-label": {
+      value: string | null;
+      context: { userId: number };
+      mutable: false;
+    };
+  }
+}
+```
+
+### Untyped and unregistered hooks
+
+`applyValueTransformer` and `applyMutableValueTransformer` infer the result type from the default value. When a hook can return a broader type than its default, widen the default rather than passing a type argument, for example `applyValueTransformer("custom-label", null as string | null)`. Explicit type arguments describe the hook name, so `applyValueTransformer<string | null>(…)` doesn't compile, and `applyValueTransformer<"custom-label">(…)` returns `unknown`. Registration and application of an untyped hook must agree on its value, context, and return types by convention, because nothing checks them against each other.
+
+### Hook names
+
+In TypeScript, a hook name must be a single string literal. A name held in a `string` variable, a union of names, or a template literal type is rejected, because it could hide a typed hook behind the loose signature. Calling the apply functions through `.call` or pre-binding the name with `.bind(thisArg, name)` isn't supported; call them directly, use `.bind(thisArg)`, or wrap them in a function.
+
+### Behavior results
+
+Behavior callbacks receive a shallow copy of the context. `next()` and `applyBehaviorTransformer` can return `void` when middleware stops the chain or calls `next()` after the queue is exhausted. Promise results pass through unchanged, and async middleware that awaits `next()` resolves to the awaited result or `undefined`; `BehaviorTransformerResult<R>` describes the full result type. A typed hook whose result is `void` accepts middleware with any return value, since that value is ignored.

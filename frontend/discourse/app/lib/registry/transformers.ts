@@ -1,3 +1,226 @@
+import type Category from "discourse/models/category";
+import type Topic from "discourse/models/topic";
+import type UserDraft from "discourse/models/user-draft";
+
+/** Opaque marker for a known hook that retains generic value and context inference. */
+declare const untyped: unique symbol;
+
+/** Marks a known hook whose value, context, and mutability are not yet specified. */
+export type Untyped = { readonly [untyped]: true };
+
+export type PreferencesPage =
+  | "account"
+  | "emails"
+  | "interface"
+  | "navigation-menu"
+  | "notifications"
+  | "profile"
+  | "tags"
+  | "tracking"
+  | "users";
+
+/**
+ * Value hook contracts, augmented through `discourse/lib/transformer`.
+ * Entries require `value`, `context` (use `undefined` when absent), and literal `mutable: true` or `false`.
+ * Immutable values cannot be `void`; callbacks must return the transformed value.
+ */
+export interface ValueTransformerRegistry {
+  "admin-dashboard-report-renderer": Untyped;
+  "admin-onboarding-start-posting-options": Untyped;
+  "admin-plugin-icon": Untyped;
+  "admin-reports-show-query-params": Untyped;
+  "admin-theme-card-show-full-controls": Untyped;
+  "bulk-select-in-nav-controls": Untyped;
+  "can-create-topic-button": Untyped;
+  "category-available-views": Untyped;
+  "category-default-colors": Untyped;
+  "category-description-text": Untyped;
+  "category-display-name": Untyped;
+  "category-list-attributes": Untyped;
+  "category-list-request": Untyped;
+  "category-list-subcategories": Untyped;
+  "category-sort-orders": Untyped;
+  "category-subcategories": Untyped;
+  "category-text-color": Untyped;
+  "category-visibility-private-locked": Untyped;
+  "code-login-auto-create-account": Untyped;
+  "code-login-user-field-values": Untyped;
+  "composer-actions-content": Untyped;
+  "composer-editing-post": Untyped;
+  "composer-editor-quoted-post-avatar-template": Untyped;
+  "composer-editor-reply-placeholder": Untyped;
+  "composer-force-editor-mode": Untyped;
+  "composer-message-components": Untyped;
+  "composer-minimum-post-length": Untyped;
+  "composer-reply-options-user-avatar-template": Untyped;
+  "composer-reply-options-user-link-name": Untyped;
+  "composer-save-button-label": Untyped;
+  "composer-service-cannot-submit-post": Untyped;
+  "composer-toggles-class": Untyped;
+  "composer-user": Untyped;
+  "create-topic-button-class": Untyped;
+  "create-topic-button-draft-menu-class": Untyped;
+  "create-topic-icon": Untyped;
+  "create-topic-label": Untyped;
+  "draft-icon": {
+    value: string;
+    context: { draft: UserDraft };
+    mutable: false;
+  };
+  "flag-button-disabled-state": Untyped;
+  "flag-button-dynamic-class": Untyped;
+  "flag-button-render-decision": Untyped;
+  "flag-custom-placeholder": Untyped;
+  "flag-description": Untyped;
+  "flag-formatted-name": Untyped;
+  "full-page-refresh-on-navigation": Untyped;
+  "full-page-search-button-icon": Untyped;
+  "full-page-search-button-label": Untyped;
+  "full-page-search-no-results-enabled": Untyped;
+  "full-page-search-types": Untyped;
+  "group-members-request": Untyped;
+  "hamburger-dropdown-click-outside-exceptions": Untyped;
+  "header-notifications-avatar-size": Untyped;
+  "home-logo-href": Untyped;
+  "home-logo-image-url": Untyped;
+  "home-logo-minimized": {
+    value: boolean;
+    context: {
+      /** Null when no topic page is open. */
+      topicInfo: Topic | null;
+      sidebarEnabled: boolean;
+      showSidebar: boolean;
+    };
+    mutable: false;
+  };
+  "invite-simple-mode-topic": Untyped;
+  "latest-topic-list-item-class": Untyped;
+  "like-button-render-decision": Untyped;
+  "mentions-class": Untyped;
+  "more-topics-tabs": Untyped;
+  "move-to-topic-merge-options": Untyped;
+  "move-to-topic-move-options": Untyped;
+  "navigation-bar-dropdown-icon": Untyped;
+  "navigation-bar-dropdown-mode": Untyped;
+  "navigation-items": Untyped;
+  "notifications-tracking-description": Untyped;
+  "parent-category-row-class": Untyped;
+  "parent-category-row-class-mobile": Untyped;
+  "post-article-class": Untyped;
+  "post-avatar-class": Untyped;
+  "post-avatar-size": Untyped;
+  "post-avatar-template": Untyped;
+  "post-can-edit": Untyped;
+  "post-class": Untyped;
+  "post-event-listener": Untyped;
+  "post-flag-available-flags": Untyped;
+  "post-flag-title": Untyped;
+  "post-is-small-action": Untyped;
+  "post-language-selector-priority": Untyped;
+  "post-menu-buttons": Untyped;
+  "post-menu-collapsed": Untyped;
+  "post-menu-like-button-icon": Untyped;
+  "post-meta-data-edits-indicator-label": Untyped;
+  "post-meta-data-infos": Untyped;
+  "post-meta-data-poster-name-suppress-similar-name": Untyped;
+  "post-notice-component": Untyped;
+  "post-show-topic-map": Untyped;
+  "post-small-action-class": Untyped;
+  "post-small-action-custom-component": Untyped;
+  "post-small-action-icon": Untyped;
+  "poster-name-class": Untyped;
+  "poster-name-icons": Untyped;
+  "poster-name-user-title": Untyped;
+  "preferences-save-attributes": {
+    value: string[];
+    context: { page: PreferencesPage };
+    mutable: false;
+  };
+  "quote-params": Untyped;
+  "reviewable-component": Untyped;
+  "route-to-url": Untyped;
+  "search-advanced-icon-enabled": Untyped;
+  "search-menu-advanced-button-enabled": Untyped;
+  "search-menu-full-search-params": Untyped;
+  "search-menu-indexed-results-enabled": Untyped;
+  "search-menu-input-placeholder": Untyped;
+  "search-menu-input-wrapper-classes": Untyped;
+  "search-menu-recent-searches": Untyped;
+  "search-menu-search-context-enabled": Untyped;
+  "search-menu-search-shortcuts-enabled": {
+    value: boolean;
+    context: { location?: string };
+    mutable: false;
+  };
+  "search-result-entry-class": Untyped;
+  "sidebar-anonymous-default-categories": Untyped;
+  "sidebar-panel": Untyped;
+  "site-setting-allows-none": Untyped;
+  "small-user-attrs": Untyped;
+  "tag-separator": Untyped;
+  "topic-escaped-excerpt": Untyped;
+  "topic-list-class": Untyped;
+  "topic-list-columns": Untyped;
+  "topic-list-header-sortable-column": Untyped;
+  /** Index and list context depend on the renderer; category is absent outside a category filter. */
+  "topic-list-item-class": {
+    value: string[];
+    context: {
+      topic: Topic;
+      index?: number;
+      listContext?: string;
+      category?: Category | null;
+    };
+    mutable: false;
+  };
+  "topic-list-item-expand-pinned": Untyped;
+  "topic-list-item-mobile-layout": Untyped;
+  "topic-list-item-style": Untyped;
+  "topic-list-topics-from": Untyped;
+  "topic-navigation-render-timeline": Untyped;
+  "topic-reply-count": Untyped;
+  "topic-show-footer-buttons": Untyped;
+  "user-field-components": Untyped;
+  "user-list-display-name": Untyped;
+  "user-list-display-username": Untyped;
+  "user-location": Untyped;
+  "user-menu-notification-item-acting-user-avatar": Untyped;
+  "user-notes-modal-subtitle": Untyped;
+  "user-path": Untyped;
+  "welcome-banner-display-for-route": Untyped;
+  "welcome-banner-location": Untyped;
+}
+
+/**
+ * Behavior hook contracts, augmented through `discourse/lib/transformer`.
+ * Entries require `result` and `context` (use `undefined` when absent).
+ * A `void` result intentionally ignores middleware return values.
+ */
+export interface BehaviorTransformerRegistry {
+  "admin-user-unsilence": Untyped;
+  "admin-user-unsuspend": Untyped;
+  "apply-local-dates": Untyped;
+  "category-visibility-change": Untyped;
+  "composer-actions-on-select": Untyped;
+  "composer-apply-topic-template": Untyped;
+  "composer-open": Untyped;
+  "composer-position:correct-scroll-position": Untyped;
+  "composer-position:editor-touch-move": Untyped;
+  "create-account": Untyped;
+  "create-topic-button-click": Untyped;
+  "custom-homepage-model": Untyped;
+  "discovery-topic-list-load-more": Untyped;
+  "full-page-search-load-more": Untyped;
+  "post-menu-toggle-like-action": Untyped;
+  "post-stream-error-loading": Untyped;
+  "post-stream-suggested-topics": Untyped;
+  "post-stream-update-from-json": Untyped;
+  "search-menu-clear-recent-searches": Untyped;
+  "topic-controller:finished-editing": Untyped;
+  "topic-list-item-click": Untyped;
+  "topic-update-from-json": Untyped;
+}
+
 /**
  * Registry of available behavior transformers in the application.
  * Behavior transformers allow plugins and themes to modify or enhance the specific behaviors and interactions.
@@ -30,7 +253,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   "topic-controller:finished-editing",
   "topic-list-item-click",
   "topic-update-from-json",
-]);
+] as const satisfies readonly (keyof BehaviorTransformerRegistry)[]);
 
 /**
  * Registry of available value transformers in the application.
@@ -174,4 +397,4 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "user-path",
   "welcome-banner-display-for-route",
   "welcome-banner-location",
-]);
+] as const satisfies readonly (keyof ValueTransformerRegistry)[]);

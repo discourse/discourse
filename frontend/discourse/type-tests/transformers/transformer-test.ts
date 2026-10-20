@@ -16,6 +16,11 @@ interface HookContext {
   categoryId: number;
 }
 
+type CountArgs = Parameters<ValueTransformer<number, HookContext>>[0];
+type LabelArgs = Parameters<MutableValueTransformer<string[], HookContext>>[0];
+
+const reg = _registerTransformer;
+const VALUE = transformerTypes.VALUE;
 const context: HookContext = { categoryId: 42 };
 const labels: string[] = [];
 expectTypeOf(applyValueTransformer("labels", labels, context)).toEqualTypeOf<
@@ -25,7 +30,7 @@ expectTypeOf(
   applyMutableValueTransformer("labels", labels, context)
 ).toEqualTypeOf<string[]>();
 expectTypeOf(
-  applyValueTransformer<string | false>("label", "default")
+  applyValueTransformer("label", "default" as string | false)
 ).toEqualTypeOf<string | false>();
 expectTypeOf(
   applyValueTransformer("label", "default", null, null)
@@ -49,12 +54,8 @@ const mutableCallback: MutableValueTransformer<string[], HookContext> = ({
   value.push("added");
 };
 _registerTransformer("labels", transformerTypes.VALUE, mutableCallback);
-_registerTransformer<number, HookContext>(
-  "count",
-  // @ts-expect-error a value callback must return the hook's value type; overload errors are reported here
-  transformerTypes.VALUE,
-  () => "wrong"
-);
+// @ts-expect-error a value callback must return the hook's value type
+reg("count", VALUE, (args: CountArgs) => `${args.value}`);
 
 const behaviorCallback: BehaviorTransformer<Promise<number>, HookContext> = ({
   next,
@@ -116,32 +117,19 @@ withPluginApi((api) => {
     api.registerBehaviorTransformer("load", behaviorCallback)
   ).toEqualTypeOf<boolean>();
   api.registerValueTransformer("labels", mutableCallback);
-  api.registerValueTransformer<number, HookContext>(
+  api.registerValueTransformer(
     "count",
-    ({ value, context: hookContext }) => {
+    ({ value, context: hookContext }: CountArgs) => {
       expectTypeOf(value).toEqualTypeOf<number>();
       expectTypeOf(hookContext).toEqualTypeOf<HookContext | null | undefined>();
       return value;
     }
   );
-  api.registerValueTransformer<string[], HookContext>("labels", ({ value }) => {
+  api.registerValueTransformer("labels", ({ value }: LabelArgs) => {
     value.push("added");
   });
-  api.registerValueTransformer<number, HookContext>(
-    "count",
-    // @ts-expect-error a value callback must return the hook's value type
-    () => "wrong"
-  );
-  api.registerBehaviorTransformer<Promise<number>, HookContext>(
-    "load",
-    ({ next, context: hookContext }) => {
-      expectTypeOf(next()).toEqualTypeOf<
-        Promise<number> | Promise<number | void> | void
-      >();
-      expectTypeOf(hookContext.categoryId).toEqualTypeOf<number>();
-      return next();
-    }
-  );
+  // @ts-expect-error a value callback must return the hook's value type
+  api.registerValueTransformer("count", (args: CountArgs) => `${args.value}`);
 });
 
 expectTypeOf<
