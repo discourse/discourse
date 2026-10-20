@@ -44,5 +44,15 @@ RSpec.describe "Hamilton greeting and documentation" do
 
     visit "/hamilton/docs"
     expect(hamilton).to have_readme
+
+    hamilton.open_roadmap
+    expect(page).to have_current_path("/hamilton/docs/roadmap")
+    expect(hamilton).to have_roadmap
+
+    page.refresh
+    expect(hamilton).to have_roadmap
+
+    hamilton.open_docs
+    expect(hamilton).to have_readme
   end
 end

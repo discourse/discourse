@@ -25,6 +25,15 @@ module PageObjects
         find(".hamilton__docs a", text: "Hamilton guide").click
       end
 
+      def open_roadmap
+        find(".hamilton__docs a", text: "Roadmap", exact_text: true).click
+      end
+
+      def has_roadmap?
+        has_css?(".hamilton__docs h1", text: "Roadmap", exact_text: true) &&
+          has_css?(".hamilton__docs h2", text: "Milestones", exact_text: true)
+      end
+
       def has_guide?
         has_css?(".hamilton__docs h1", text: "Hamilton guide", exact_text: true)
       end

@@ -4,6 +4,7 @@ Hamilton::Engine.routes.draw do
   get "/" => "pages#index"
   get "/docs" => "pages#docs"
   get "/docs/guide" => "pages#guide"
+  get "/docs/roadmap" => "pages#roadmap"
   get "/examples" => "examples#index"
 end
 

@@ -16,8 +16,9 @@ and documentation pages.
 ## Documentation and authorization
 
 `/hamilton/docs` renders the plugin README as Markdown. Its guide link opens this
-guide at `/hamilton/docs/guide`. These pages are public, including for anonymous
-visitors on sites with `login_required` enabled. Future user-facing product guides
+guide at `/hamilton/docs/guide`. The README also links to the high-level roadmap
+at `/hamilton/docs/roadmap`, covering planned goals and milestones. These pages are
+public, including for anonymous visitors on sites with `login_required` enabled. Future user-facing product guides
 belong in `doc/` and should be linked from the README.
 
 The greeting follows Discourse's normal login requirements. Signed-in users have no
@@ -54,10 +55,10 @@ RAILS_ENV=test bin/rspec plugins/hamilton/spec/system
 ```
 
 Request specs cover page loading, public documentation on login-required sites,
-README and guide content, disabled-plugin behavior, administrative setting access,
-and the existing example endpoint. System specs cover the default greeting,
-navigation to documentation, admin greeting changes, literal HTML display, and
-Discourse's shared core-feature checks.
+README, guide, and roadmap content, disabled-plugin behavior, administrative
+setting access, and the existing example endpoint. System specs cover the default greeting,
+navigation to documentation and the roadmap (including direct page reloads),
+admin greeting changes, literal HTML display, and Discourse's shared core-feature checks.
 
 After changing JavaScript or templates, build assets before system tests:
 

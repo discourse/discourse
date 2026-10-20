@@ -9,3 +9,4 @@ en:
       title: "Hamilton"
       greeting: "Hello %{value}"
       docs: "Documentation"
+      roadmap: "Roadmap"

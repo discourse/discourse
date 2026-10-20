@@ -8,3 +8,5 @@ Hamilton adds a configurable greeting and public product documentation to Discou
 
 See the [Hamilton guide](doc/hamilton.md) for installation, authorization,
 architecture, and tests.
+
+See the [Roadmap](doc/roadmap.md) for Hamilton’s goals and planned milestones.
