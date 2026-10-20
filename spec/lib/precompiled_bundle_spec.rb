@@ -18,6 +18,9 @@ RSpec.describe PrecompiledBundle do
   before do
     FileUtils.mkdir_p(File.dirname(source_path))
     File.write(source_path, "v1")
+
+    # The build is a plain block, so it doesn't need the installed node_modules
+    allow(bundle).to receive(:verify_node_modules!)
   end
 
   after { FileUtils.rm_rf(Rails.root.join(root)) }
