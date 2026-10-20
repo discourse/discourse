@@ -80,7 +80,6 @@ loaderShim("ember-curry-component", () => importSync("ember-curry-component"));
 loaderShim("ember-modifier", () => importSync("ember-modifier"));
 loaderShim("ember-route-template", () => importSync("ember-route-template"));
 loaderShim("jquery", () => importSync("jquery"));
-loaderShim("js-yaml", () => importSync("js-yaml"));
 loaderShim("moment", () => importSync("moment"));
 loaderShim("rsvp", () => importSync("rsvp"));
 loaderShim("discourse/truth-helpers", () =>
