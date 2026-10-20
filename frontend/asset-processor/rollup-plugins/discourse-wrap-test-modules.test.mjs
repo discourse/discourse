@@ -1,23 +1,39 @@
+import MagicString from "magic-string";
+import { RolldownMagicString } from "rolldown";
 import { parseAst } from "rolldown/parseAst";
 import { describe, expect, it } from "vitest";
+import { wrapTestModuleBody } from "../../discourse/lib/wrap-test-module-body.mjs";
 import discourseWrapTestModules, {
   testModuleIdsFor,
 } from "./discourse-wrap-test-modules.js";
 
 const basePath = "discourse/plugins/poll/";
 
-let warnings;
-
 // Stands in for the `this` a transform hook gets.
-const context = { parse: parseAst, warn: (message) => warnings.push(message) };
+const context = { parse: parseAst };
 
 function transform(code, file, testModules = [file]) {
-  warnings = [];
   const { handler } = discourseWrapTestModules({
     testModuleIds: testModuleIdsFor(basePath, testModules),
   }).transform;
   return handler.call(context, code, `${basePath}${file}`)?.code ?? null;
 }
+
+describe("wrapTestModuleBody", () => {
+  it("wraps the same way with rolldown's native magic string, which core's build uses", () => {
+    const code =
+      `import { test } from "qunit";\nconst label = "zażółć 🎉";\n` +
+      `test(label, () => {});\nimport x from "./x";\nx();\n`;
+    const { body } = parseAst(code);
+    const magic = new MagicString(code);
+    const native = new RolldownMagicString(code);
+
+    wrapTestModuleBody(body, magic);
+    wrapTestModuleBody(body, native);
+
+    expect(native.toString()).toBe(magic.toString());
+  });
+});
 
 describe("testModuleIdsFor", () => {
   it("returns nothing without a test entrypoint", () => {
@@ -34,14 +50,14 @@ describe("discourse-wrap-test-modules", () => {
 
     expect(out).toBe(
       `import { test } from "qunit";\nimport x from "./x";\n` +
-        `export default function () {\n\ntest("a", () => x());\n}\n` +
+        `export default async function () {\n\ntest("a", () => x());\n}\n` +
         `export const __discourseTestModule = true;\n`
     );
   });
 
   it("wraps a test file without imports", () => {
     expect(transform(`test("a", () => {});`, "unit/poll-test.js")).toBe(
-      `\nexport default function () {\ntest("a", () => {});\n}\n` +
+      `\nexport default async function () {\ntest("a", () => {});\n}\n` +
         `export const __discourseTestModule = true;\n`
     );
   });
@@ -56,19 +72,23 @@ describe("discourse-wrap-test-modules", () => {
 
     expect(out).toBe(
       `import { test } from "qunit";import deprecated from "discourse/lib/deprecated";\n` +
-        `export default function () {\n\ntest("a", () => {});\n\ndeprecated("es6");\n\n}\n` +
+        `export default async function () {\n\ntest("a", () => {});\n\ndeprecated("es6");\n\n}\n` +
         `export const __discourseTestModule = true;\n`
     );
   });
 
-  it("leaves a test file with exports alone, with a warning", () => {
-    expect(
-      transform(
-        `test("a", () => {});\nexport function helper() {}`,
-        "unit/poll-test.js"
-      )
-    ).toBeNull();
-    expect(warnings).toHaveLength(1);
+  it.each([
+    "export function helper() {}",
+    "export default function helper() {}",
+    'export { helper } from "./helper";',
+    'export * from "./helper";',
+    "export {};",
+  ])("rejects exports with helper migration guidance: %s", (statement) => {
+    expect(() =>
+      transform(`test("a", () => {});\n${statement}`, "unit/poll-test.js")
+    ).toThrow(
+      "Test modules cannot contain exports. Move shared helpers into a separate helper module and import them."
+    );
   });
 
   it("leaves helpers listed in the entrypoint alone", () => {
@@ -80,6 +100,20 @@ describe("discourse-wrap-test-modules", () => {
   it("leaves modules outside the test entrypoint alone", () => {
     expect(
       transform(`test("a", () => {});`, "unit/poll-test.js", [])
+    ).toBeNull();
+  });
+
+  it("leaves theme tests eager when there is no test entrypoint", () => {
+    const { handler } = discourseWrapTestModules({
+      testModuleIds: testModuleIdsFor("theme-1/", undefined),
+    }).transform;
+
+    expect(
+      handler.call(
+        context,
+        'test("theme", () => {}); export const helper = true;',
+        "theme-1/unit/theme-test.js"
+      )
     ).toBeNull();
   });
 });
