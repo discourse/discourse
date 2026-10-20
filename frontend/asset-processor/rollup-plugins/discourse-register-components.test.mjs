@@ -1,6 +1,7 @@
 import { parseAst } from "rolldown/parseAst";
 import { describe, expect, it } from "vitest";
 import discourseRegisterComponents from "./discourse-register-components.js";
+import { testModuleIdsFor } from "./discourse-wrap-test-modules.js";
 
 const basePath = "discourse/plugins/chat/";
 
@@ -93,7 +94,9 @@ describe("discourse-register-components", () => {
     const file = "components/channel-icon-test.gjs";
 
     expect(transform(code, file)).toContain("registerModuleForModifyClass");
-    expect(transform(code, file, new Set([`${basePath}${file}`]))).toBe(null);
+    expect(transform(code, file, testModuleIdsFor(basePath, [file]))).toBe(
+      null
+    );
   });
 
   it("leaves classic component templates alone", () => {

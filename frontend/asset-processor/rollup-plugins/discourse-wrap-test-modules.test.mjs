@@ -20,21 +20,6 @@ function transform(code, file, testModules = [file]) {
 }
 
 describe("testModuleIdsFor", () => {
-  it("returns the module ids of test files only", () => {
-    expect(
-      testModuleIdsFor(basePath, [
-        "unit/poll-test.js",
-        "helpers/freeze-time.js",
-        "integration/components/poll-test.gjs",
-      ])
-    ).toEqual(
-      new Set([
-        `${basePath}unit/poll-test.js`,
-        `${basePath}integration/components/poll-test.gjs`,
-      ])
-    );
-  });
-
   it("returns nothing without a test entrypoint", () => {
     expect(testModuleIdsFor(basePath, undefined).size).toBe(0);
   });

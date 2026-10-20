@@ -28,7 +28,6 @@ export default function discourseWrapTestModules({ testModuleIds }) {
 
         const { body } = this.parse(code);
 
-        // An export can't move into the wrapper, so the module has to stay as it is
         if (body.some((node) => node.type.startsWith("Export"))) {
           this.warn(
             "A test file with exports can't be wrapped, so its tests always run"
@@ -36,18 +35,18 @@ export default function discourseWrapTestModules({ testModuleIds }) {
           return null;
         }
 
-        const statementIndex = body.findIndex(
-          (node) => node.type !== "ImportDeclaration"
-        );
-        const leadingImports =
-          statementIndex === -1 ? body : body.slice(0, statementIndex);
-        const wrapStart = leadingImports.at(-1)?.end ?? 0;
         const magic = new MagicString(code);
+        let wrapStart = 0;
+        let inBody = false;
 
-        // Imports can't go inside the wrapper either, e.g. the one appended to `.js.es6` files
-        for (const node of body.slice(leadingImports.length)) {
-          if (node.type === "ImportDeclaration") {
+        for (const node of body) {
+          if (node.type !== "ImportDeclaration") {
+            inBody = true;
+          } else if (inBody) {
+            // Imports can't go inside the wrapper, e.g. the one appended to `.js.es6` files
             magic.move(node.start, node.end, wrapStart);
+          } else {
+            wrapStart = node.end;
           }
         }
 
