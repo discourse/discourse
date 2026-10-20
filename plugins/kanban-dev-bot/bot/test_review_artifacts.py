@@ -1,15 +1,17 @@
 import base64
 import copy
+import json
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import requests
 
-from controller import Controller
-from review_artifacts import artifact, collect_bundle, render_review, validate_bundle
+from controller import Controller, Run, Runtime
+from review_artifacts import ProductScopeViolation, artifact, collect_bundle, render_review, validate_bundle
 import test_controller
 from test_controller import RESULT
 
@@ -41,6 +43,94 @@ class BundleTests(unittest.TestCase):
         self.git("add", "--all")
         self.git("commit", "-qm", "Change")
         return self.git("rev-parse", "HEAD")
+
+    def write_file(self, path, content):
+        target = self.repo / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(content)
+        return target
+
+    def test_bot_changes_are_refused_for_creation_modification_deletion_and_moves(self):
+        path = "plugins/kanban-dev-bot/README.md"
+        target = self.write_file(path, "original")
+        created = self.commit()
+        target.write_text("changed")
+        modified = self.commit()
+        target.unlink()
+        deleted = self.commit()
+        for base, head in [(self.base, created), (created, modified), (modified, deleted)]:
+            with self.subTest(base=base, head=head), self.assertRaisesRegex(ProductScopeViolation, path):
+                collect_bundle(self.repo, base, head)
+        target = self.write_file(path, "moved")
+        before_move = self.commit()
+        target.rename(self.repo / "moved.md")
+        after_move = self.commit()
+        for base, head in [(before_move, after_move), (after_move, before_move)]:
+            with self.subTest(base=base, head=head), self.assertRaises(ProductScopeViolation):
+                collect_bundle(self.repo, base, head)
+
+    def test_bot_path_guard_precedes_unsafe_file_omission(self):
+        self.write_file("plugins/kanban-dev-bot/.env", "private")
+        with self.assertRaises(ProductScopeViolation):
+            collect_bundle(self.repo, self.base, self.commit())
+
+    def test_product_markdown_rejects_new_tooling_markers_case_insensitively(self):
+        for marker in ["kanban-dev-bot", "/CODEX-BOARD-BOT", "++kanban-dev-bot"]:
+            with self.subTest(marker=marker):
+                self.write_file("plugins/capybara/doc/guide.MD", "# Product\n" + marker + "\n")
+                with self.assertRaisesRegex(ProductScopeViolation, "tooling references"):
+                    collect_bundle(self.repo, self.base, self.commit())
+
+    def test_product_markdown_rejects_tooling_markers_when_attributes_disable_diff(self):
+        self.write_file(".gitattributes", "*.md -diff\n")
+        self.write_file("plugins/capybara/doc/guide.md", "# Product\nkanban-dev-bot operations\n")
+        with self.assertRaisesRegex(ProductScopeViolation, "tooling references"):
+            collect_bundle(self.repo, self.base, self.commit())
+
+    def test_product_markdown_rejects_tooling_markers_in_nul_containing_content(self):
+        self.write_file("plugins/capybara/doc/guide.md", "# Product\n\0kanban-dev-bot operations\n")
+        with self.assertRaisesRegex(ProductScopeViolation, "tooling references"):
+            collect_bundle(self.repo, self.base, self.commit())
+
+    def test_product_and_core_edits_allow_ordinary_terms_and_unchanged_tooling_markers(self):
+        path = "plugins/capybara/doc/guide.md"
+        self.write_file(path, "# Product\nHistorical kanban-dev-bot reference.\n")
+        base = self.commit()
+        self.write_file(path, "# Product\nHistorical kanban-dev-bot reference.\nDocker, TODO and Codex are ordinary terms.\n")
+        self.write_file("app/models/product.rb", "product change\n")
+        bundle = validate_bundle(collect_bundle(self.repo, base, self.commit()))
+        self.assertIn(path, [item["path"] for item in bundle["files"]])
+        self.assertIn(b"app/models/product.rb", base64.b64decode(bundle["files"][0]["content_base64"]))
+
+    def test_scope_refusal_cli_returns_structured_reason_and_runtime_propagates_it(self):
+        self.write_file("plugins/kanban-dev-bot/README.md", "wrong target")
+        output = self.repo / "bundle.json"
+        subprocess.run([sys.executable, str(Path(__file__).with_name("review_artifacts.py")),
+                        "--repo", str(self.repo), "--base", self.base, "--head", self.commit(),
+                        "--output", str(output)], check=True)
+        result = json.loads(output.read_text())
+        self.assertIn("scope_error", result)
+        self.assertIn("plugins/kanban-dev-bot/README.md", result["scope_error"])
+        runtime = Runtime.__new__(Runtime)
+        runtime.container = Mock(return_value=Mock())
+        runtime.put = Mock()
+        runtime.exec = Mock()
+        runtime.read = Mock(return_value=output.read_text())
+        run = Run(card_id=50, run_id="scope", claimed_version="1", card={}, base_commit=self.base,
+                  commit=self.git("rev-parse", "HEAD"))
+        with self.assertRaisesRegex(RuntimeError, "Product scope violation"):
+            runtime.collect_review_artifacts(run)
+
+    def test_historical_bundle_remains_readable_and_normal_collector_cli_succeeds(self):
+        legacy = copy.deepcopy(RESULT["review_bundle"])
+        legacy["files"].append(artifact("plugins/kanban-dev-bot/README.md", b"Historical guide"))
+        self.assertIs(legacy, validate_bundle(legacy))
+        self.write_file("plugins/capybara/doc/guide.md", "# Capybara product\n")
+        output = self.repo / "bundle.json"
+        subprocess.run([sys.executable, str(Path(__file__).with_name("review_artifacts.py")),
+                        "--repo", str(self.repo), "--base", self.base, "--head", self.commit(),
+                        "--output", str(output)], check=True)
+        self.assertIn("files", validate_bundle(json.loads(output.read_text())))
 
     def test_collects_committed_markdown_binary_and_code_diff_without_worktree_changes(self):
         (self.repo / "guide.md").write_text("# Guide\n\nComplete instructions.\n")

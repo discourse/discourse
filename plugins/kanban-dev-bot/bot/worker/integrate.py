@@ -284,8 +284,10 @@ class Integrator:
                 os.chown(path, account.pw_uid, account.pw_gid)
         prompt = (f"Resolve the {operation} conflicts in {self.repo}. Preserve the intended behavior of both "
                   "the accepted card and official upstream. Inspect related code and tests to resolve correctly. "
-                  "Capybara product changes belong in plugins/capybara. Automation and operational documentation "
-                  "belong in plugins/kanban-dev-bot. Do not discard either side wholesale. "
+                  "The accepted card develops the Capybara product in plugins/capybara, including its product documentation. "
+                  "Do not turn product guides into kanban-dev-bot operating instructions. "
+                  "Preserve legitimate tooling changes already present in the integration or upstream history. "
+                  "Do not discard either side wholesale. "
                   "Stage resolved files with git add. Do not commit, "
                   "continue or abort the operation, or touch /source. Run focused checks for changed behavior. "
                   "If resolution cannot be justified, stop and leave unresolved files. Conflicted paths are "

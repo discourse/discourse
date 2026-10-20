@@ -62,7 +62,11 @@ Run logs include run.log, codex.jsonl, result.json, base.txt and commit.txt in t
 Use Docker to run test_controller.py, test_integration.py and test_images.py.
 The kanban-dev-bot plugin's Rails specs cover topic cards, discussion, uploads, permissions and integration status messages.
 The bot plugin is tracked at plugins/kanban-dev-bot. Its bot/ directory contains the versioned bot package.
-Capybara product changes belong in plugins/capybara. Automation and its operational documentation belong in plugins/kanban-dev-bot.
+Every board card targets the Capybara product in plugins/capybara, including documentation requests.
+Product guides live under plugins/capybara/doc/ and link from the product README. Unknown product requirements stay open questions.
+Trusted prompts exclude the bot's operating workflow from product guides. Before REVIEW, the collector rejects changes to plugins/kanban-dev-bot and newly added explicit tooling identifiers in product Markdown.
+Existing unchanged references and legitimate core Discourse changes are allowed. This guard catches known scope violations; the reviewer still checks the guide's subject.
+Maintain automation and its documentation separately in plugins/kanban-dev-bot, outside this board's coding jobs.
 The installed runtime copy is /Users/joffreyjaffeux/Documents/Codex/2026-10-19/ok/outputs/kanban-bot.
 
 Restricted GitHub publishing

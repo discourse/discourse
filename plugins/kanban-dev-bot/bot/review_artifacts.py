@@ -11,6 +11,23 @@ from urllib.parse import unquote, urlsplit
 import subprocess
 import zipfile
 
+PRODUCT_SCOPE_INSTRUCTIONS = """This board develops the Capybara product plugin in plugins/capybara.
+All cards, including documentation cards, concern that product unless trusted controller instructions say otherwise.
+Product guides belong in plugins/capybara/doc/ and should be linked from its README.
+Document the product's architecture, constraints, installation, authorization and tests where relevant.
+Distinguish implemented behavior from future requirements. Record unknown product requirements or deployment choices as open questions.
+The kanban-dev-bot plugin is development tooling, not the subject of this board. Do not change plugins/kanban-dev-bot.
+Exclude bot operating workflows, board/card lifecycle, Codex worker orchestration, bot credentials and models, PR publishing, ngrok and impersonation links from product guides.
+Core Discourse changes required by the product are allowed. Follow the latest card within this product scope.
+"""
+BOT_PLUGIN_PATH = "plugins/kanban-dev-bot"
+PRODUCT_DOC_TOOLING = re.compile(rb"kanban-dev-bot|/codex-board-bot", re.I)
+
+
+class ProductScopeViolation(ValueError):
+    pass
+
+
 MAX_FILES = 24
 MAX_FILE_BYTES = 2 * 1024 * 1024
 MAX_TOTAL_BYTES = 8 * 1024 * 1024
@@ -88,6 +105,19 @@ def collect_bundle(repo, base, head):
             raise ValueError("Unexpected Git diff record")
         old_mode, new_mode, old_oid, new_oid, status = metadata
         changed.append(path)
+        if path == BOT_PLUGIN_PATH or path.startswith(BOT_PLUGIN_PATH + "/"):
+            raise ProductScopeViolation(
+                f"Product scope violation: {path} changes kanban-dev-bot tooling. "
+                "This board develops plugins/capybara; remove the tooling changes before REVIEW.")
+        if path.startswith("plugins/capybara/") and PurePosixPath(path).suffix.lower() == ".md":
+            patch = git(repo, "diff", "--text", "--no-ext-diff", "--no-textconv", "--no-renames", "--unified=0",
+                        base, head, "--", path)
+            hunks = patch.split(b"\n@@", 1)
+            if len(hunks) == 2 and any(PRODUCT_DOC_TOOLING.search(line[1:])
+                                       for line in hunks[1].splitlines() if line.startswith(b"+")):
+                raise ProductScopeViolation(
+                    f"Product scope violation: {path} introduces kanban-dev-bot tooling references. "
+                    "Keep product documentation focused on Capybara before REVIEW.")
         if not safe_path(path) or new_mode not in {"100644", "100755", "000000"} or old_mode.lstrip(":") not in {"100644", "100755", "000000"}:
             omitted.append(path + " (unsafe path or non-regular file)")
             continue
@@ -233,7 +263,10 @@ def main():
     parser.add_argument("--head", required=True)
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
-    bundle = validate_bundle(collect_bundle(args.repo, args.base, args.head))
+    try:
+        bundle = validate_bundle(collect_bundle(args.repo, args.base, args.head))
+    except ProductScopeViolation as error:
+        bundle = {"scope_error": str(error)}
     with open(args.output, "w") as output:
         json.dump(bundle, output)
 

@@ -21,7 +21,7 @@ import requests
 
 from auth import configure_board_auth, load_board_credentials
 from volume_cleanup import collect_volumes
-from review_artifacts import MAX_JSON_BYTES, render_review, validate_bundle
+from review_artifacts import MAX_JSON_BYTES, PRODUCT_SCOPE_INSTRUCTIONS, render_review, validate_bundle
 
 LOG = logging.getLogger("codex-board-bot")
 OWNER = "codex-board-bot"
@@ -178,11 +178,9 @@ class Board:
 
 def prompt_for(card):
     request = {"title": card["title"], "notes": card["notes"], "discussion": card["discussion"], "attachments": card.get("attachments", [])}
-    return """Implement the latest complete card below in /workspace/discourse.
+    return PRODUCT_SCOPE_INSTRUCTIONS + """Implement the latest complete card below in /workspace/discourse.
 All coding, tests, and commands must run inside this Docker container.
 Read and follow the repository AGENTS.md. The prior card workspace and commits may exist.
-Capybara product changes belong in plugins/capybara.
-Automation and operational documentation belong in plugins/kanban-dev-bot.
 Inspect them and apply this complete latest request. Do not edit /seed or publish externally.
 Do not access the Docker daemon. Do not commit credentials or other secrets.
 Run meaningful tests. Leave the changes uncommitted. The runner lints and commits them.
@@ -313,8 +311,11 @@ class Runtime:
                               "--repo", "/workspace/discourse", "--base", base,
                               "--head", head, "--output", "/workspace/review-artifacts.json"],
                   event or threading.Event(), 120)
-        return validate_bundle(json.loads(self.read(
-            container, "/workspace/review-artifacts.json", max_bytes=MAX_JSON_BYTES)))
+        bundle = json.loads(self.read(
+            container, "/workspace/review-artifacts.json", max_bytes=MAX_JSON_BYTES))
+        if isinstance(bundle, dict) and "scope_error" in bundle:
+            raise RuntimeError(bundle["scope_error"])
+        return validate_bundle(bundle)
 
 
     @staticmethod
