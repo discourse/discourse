@@ -60,7 +60,9 @@ const behaviorCallback: BehaviorTransformer<Promise<number>, HookContext> = ({
   next,
   context: hookContext,
 }) => {
-  expectTypeOf(next()).toEqualTypeOf<Promise<number> | void>();
+  expectTypeOf(next()).toEqualTypeOf<
+    Promise<number> | Promise<number | void> | void
+  >();
   expectTypeOf(hookContext).toEqualTypeOf<
     BehaviorTransformerContext<HookContext>
   >();
@@ -69,6 +71,24 @@ const behaviorCallback: BehaviorTransformer<Promise<number>, HookContext> = ({
 };
 _registerTransformer("load", transformerTypes.BEHAVIOR, behaviorCallback);
 _registerTransformer("stop", transformerTypes.BEHAVIOR, () => {});
+
+const awaitingCallback: BehaviorTransformer<Promise<number>> = async ({
+  next,
+}) => await next();
+const awaitingUnionCallback: BehaviorTransformer<
+  Promise<number> | Promise<string>
+> = async ({ next }) => await next();
+const awaitingMixedCallback: BehaviorTransformer<
+  number | Promise<string>
+> = async ({ next }) => await next();
+// @ts-expect-error a synchronous hook can't take async middleware
+const asyncSync: BehaviorTransformer<number> = async ({ next }) => next();
+export {
+  asyncSync,
+  awaitingCallback,
+  awaitingMixedCallback,
+  awaitingUnionCallback,
+};
 
 expectTypeOf(
   applyBehaviorTransformer(
@@ -79,7 +99,7 @@ expectTypeOf(
     },
     context
   )
-).toEqualTypeOf<Promise<number> | void>();
+).toEqualTypeOf<Promise<number> | Promise<number | void> | void>();
 expectTypeOf(applyBehaviorTransformer("stop", () => {})).toEqualTypeOf<void>();
 
 withPluginApi((api) => {
@@ -115,7 +135,9 @@ withPluginApi((api) => {
   api.registerBehaviorTransformer<Promise<number>, HookContext>(
     "load",
     ({ next, context: hookContext }) => {
-      expectTypeOf(next()).toEqualTypeOf<Promise<number> | void>();
+      expectTypeOf(next()).toEqualTypeOf<
+        Promise<number> | Promise<number | void> | void
+      >();
       expectTypeOf(hookContext.categoryId).toEqualTypeOf<number>();
       return next();
     }

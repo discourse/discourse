@@ -71,6 +71,21 @@ export type DefaultBehaviorTransformer<
 }) => R;
 
 /**
+ * The result of a behavior chain. Middleware can stop the chain and return `void`, and async middleware that awaits
+ * `next()` resolves to `Awaited<R> | void`.
+ *
+ * The check is not distributive, so a union of promise results gets a single combined promise.
+ *
+ * @typeParam R - The default implementation's result.
+ */
+export type BehaviorTransformerResult<R> =
+  | R
+  | void
+  | ([Extract<R, Promise<unknown>>] extends [never]
+      ? never
+      : Promise<Awaited<R> | void>);
+
+/**
  * Behavior middleware may continue the chain or replace the default behavior.
  * @typeParam R - The expected behavior result; middleware and next() may also return void.
  * @typeParam C - Properties supplied in the context before the calling instance is added.
@@ -80,10 +95,10 @@ export type BehaviorTransformer<
   C extends object = Record<string, unknown>,
 > = (args: {
   /** Runs the remaining middleware and default behavior; an exhausted chain returns undefined. */
-  next: () => R | void;
+  next: () => BehaviorTransformerResult<R>;
   /** A shallow copy of the supplied context, shared throughout the chain. */
   context: BehaviorTransformerContext<C>;
-}) => R | void;
+}) => BehaviorTransformerResult<R>;
 
 type TransformerSource = "CORE" | "PLUGIN";
 
@@ -324,7 +339,7 @@ export function applyBehaviorTransformer<
   transformerName: string,
   defaultCallback: DefaultBehaviorTransformer<R, C>,
   context?: C | null
-): R | void {
+): BehaviorTransformerResult<R> {
   const normalizedTransformerName = _normalizeTransformerName(
     transformerName,
     transformerTypes.BEHAVIOR
@@ -369,7 +384,7 @@ export function applyBehaviorTransformer<
 
   const callbackQueue = [...transformers, defaultCallback];
 
-  function nextCallback(): R | void {
+  function nextCallback(): BehaviorTransformerResult<R> {
     const currentCallback = callbackQueue.shift();
 
     if (!currentCallback) {

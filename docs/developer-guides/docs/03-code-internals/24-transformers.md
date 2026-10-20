@@ -131,4 +131,4 @@ The transformer pipeline exports `ValueTransformer`, `MutableValueTransformer`, 
 
 `applyValueTransformer` and `applyMutableValueTransformer` infer their result type from the default value. Supply an explicit type argument when a hook can return a broader type than its default, for example `applyValueTransformer<string | null>("custom-label", null)`. Registration and application must agree on a hook's value, context, and return types; the string registry does not enforce a shared contract between separate calls.
 
-Behavior callbacks receive a shallow copy of the context. `next()` and `applyBehaviorTransformer` can return `void` when middleware stops the chain or calls `next()` after the queue is exhausted. Promise results pass through unchanged.
+Behavior callbacks receive a shallow copy of the context. `next()` and `applyBehaviorTransformer` can return `void` when middleware stops the chain or calls `next()` after the queue is exhausted. Promise results pass through unchanged, and async middleware that awaits `next()` resolves to the awaited result or `undefined`; `BehaviorTransformerResult<R>` describes the full result type.
