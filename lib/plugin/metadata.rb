@@ -8,7 +8,18 @@ class Plugin::Metadata
   # from config/official_plugins.json
   OFFICIAL_PLUGINS = Set.new(JSON.load_file(Rails.root.join("config/official_plugins.json").to_s))
 
-  FIELDS = %i[name about version authors contact_emails url required_version meta_topic_id label]
+  FIELDS = %i[
+    name
+    about
+    version
+    authors
+    contact_emails
+    url
+    required_version
+    meta_topic_id
+    label
+    gemfile
+  ]
   attr_accessor(*FIELDS)
 
   MAX_FIELD_LENGTHS = {
@@ -27,6 +38,20 @@ class Plugin::Metadata
       rescue StandardError
         nil
       end
+  end
+
+  # `# gemfile: true` resolves the Gemfile next to plugin.rb together with
+  # those of the other plugins and the application's bundle, before any
+  # plugin.rb runs; see PluginGem.activate_gemfiles. Gems are activated, not
+  # required, so `require:` options have no effect. The plugin's
+  # Gemfile.lock is required and pins every gem the application doesn't have
+  # (the highest version any plugin locks wins), and downloads are verified
+  # against its checksums; a conflict with the application or another plugin
+  # fails the boot. Gems must come from the application's gem sources or a
+  # path; a git gem
+  # keeps its version across commits, so a lock can't pin it.
+  def gemfile=(value)
+    @gemfile = value == "true"
   end
 
   def self.parse(text)
