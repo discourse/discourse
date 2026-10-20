@@ -17,7 +17,6 @@ export default class AiSearchReferencesPanel extends Component {
         (category) => category.id === reference.categoryId
       ),
       movedBy: Math.abs(reference.movement),
-      cited: reference.kinds.includes("cited"),
     }));
   }
 
@@ -46,11 +45,6 @@ export default class AiSearchReferencesPanel extends Component {
             <div class="ai-search-references__meta">
               {{#if reference.category}}
                 {{dCategoryLink reference.category link=false}}
-              {{/if}}
-              {{#if reference.cited}}
-                <span class="ai-search-references__cited">
-                  {{i18n "discourse_ai.ai_search.reference_cited"}}
-                </span>
               {{/if}}
               {{#if reference.isNew}}
                 <span class="ai-search-references__movement">

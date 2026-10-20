@@ -290,7 +290,6 @@ describe DiscourseAi::Discover::DiscoveriesController do
         "scope" => "site",
         "scope_probability" => 0.9,
       )
-      expect(response.parsed_body["scope_widened"]).to eq(true)
       expect(AskAiLog.last).to have_attributes(
         ask_scope: "topic:#{topic.id}",
         ask_scope_model: "site",
@@ -518,33 +517,11 @@ describe DiscourseAi::Discover::DiscoveriesController do
         expect(response.parsed_body["topic_id"]).to be_present
       end
 
-      it "keeps the answer's scope on the conversation, which the topic view lists references in" do
-        category = Fabricate(:category)
-
-        post "/discourse-ai/discoveries/continue-convo",
-             params: {
-               request_id:,
-               scope: "category:#{category.id}",
-             }
-        topic_id = response.parsed_body["topic_id"]
-        get "/t/#{topic_id}.json"
-
-        expect(response.parsed_body).to include(
-          "ai_search_conversation" => true,
-          "ai_search_scope" => "category:#{category.id}",
-        )
-      end
-
-      it "ignores a scope that is not one" do
-        post "/discourse-ai/discoveries/continue-convo",
-             params: {
-               request_id:,
-               scope: "order:latest",
-             }
+      it "marks the conversation as continued from a search for the topic view" do
+        post "/discourse-ai/discoveries/continue-convo", params: { request_id: }
         get "/t/#{response.parsed_body["topic_id"]}.json"
 
         expect(response.parsed_body["ai_search_conversation"]).to eq(true)
-        expect(response.parsed_body).not_to have_key("ai_search_scope")
       end
 
       it "limits the private message title to the configured maximum" do

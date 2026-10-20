@@ -1900,8 +1900,8 @@ en:
         follow_up_label: "Ask a follow-up question"
         follow_up_placeholder: "Ask a follow-up…"
         ask: "Ask"
-        references_title: "References"
-        references_empty: "References appear as the conversation continues."
+        references_title: "Cited topics"
+        references_empty: "Topics the answers cite appear here."
         reference_new: "New"
         moved_up:
           one: "Moved up %{count} place"
@@ -1909,7 +1909,6 @@ en:
         moved_down:
           one: "Moved down %{count} place"
           other: "Moved down %{count} places"
-        reference_cited: "Cited"
         tabs:
           label: "Search results"
           ask: "Ask AI"

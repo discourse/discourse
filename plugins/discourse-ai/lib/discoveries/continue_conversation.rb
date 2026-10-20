@@ -5,8 +5,6 @@ module DiscourseAi
     class ContinueConversation
       MAX_QUESTION_LENGTH = 1000
       TOPIC_REQUEST_ID_FIELD = "ai_discovery_request_id"
-      # where the answer was found, which the conversation's references keep to
-      TOPIC_SCOPE_FIELD = "ai_discovery_scope"
 
       class ResultExpired < StandardError
       end
@@ -18,7 +16,7 @@ module DiscourseAi
         @guardian = Guardian.new(user)
       end
 
-      def call(request_id:, question:, scope: nil)
+      def call(request_id:, question:)
         if !DiscourseAi::Discoveries.valid_request_id?(request_id)
           raise Discourse::InvalidParameters.new(
                   I18n.t("discourse_ai.ai_bot.discoveries.errors.invalid_request_id"),
@@ -55,7 +53,7 @@ module DiscourseAi
 
           RateLimiter.new(@user, "ai_discover_#{@user.id}_continue_convo", 3, 1.minute).performed!
 
-          topic_id = create_conversation(result, route, question, request_id, scope).id
+          topic_id = create_conversation(result, route, question, request_id).id
           Discourse.redis.set(
             topic_key(request_id),
             topic_id,
@@ -99,7 +97,7 @@ module DiscourseAi
         nil
       end
 
-      def create_conversation(result, route, question, request_id, scope)
+      def create_conversation(result, route, question, request_id)
         query = result.fetch("query")
         topic = nil
         question_post = nil
@@ -123,7 +121,7 @@ module DiscourseAi
                   DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD => route.agent_id,
                   DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD => route.llm_model_id,
                   TOPIC_REQUEST_ID_FIELD => request_token(request_id),
-                }.merge(scope_field(scope)),
+                },
               },
               custom_fields: {
                 DiscourseAi::AiBot::Playground::BYPASS_AI_REPLY_CUSTOM_FIELD => true,
@@ -174,10 +172,6 @@ module DiscourseAi
         end
 
         topic
-      end
-
-      def scope_field(scope)
-        DiscourseAi::Discoveries.valid_scope?(scope) ? { TOPIC_SCOPE_FIELD => scope } : {}
       end
 
       def model_turn(result)

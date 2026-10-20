@@ -86,11 +86,7 @@ module DiscourseAi
             user: current_user,
             discovery_agent: ask_ai_agent,
             follow_up_agent: ask_ai_follow_up_agent,
-          ).call(
-            request_id: params[:request_id].to_s,
-            question: params[:question],
-            scope: params[:scope].presence,
-          )
+          ).call(request_id: params[:request_id].to_s, question: params[:question])
 
         render json: success_json.merge(topic_id:)
       rescue DiscourseAi::Discoveries::ContinueConversation::ResultExpired

@@ -5,7 +5,7 @@ module DiscourseAi
     # What the search needs from an ask to choose its tab, given the result of
     # `DiscourseAi::AskAi::Ask`.
     class AskSerializer < ApplicationSerializer
-      attributes :request_id, :ask_log_id, :intent, :prefers_results, :scope_widened
+      attributes :request_id, :ask_log_id, :intent, :prefers_results
 
       def request_id
         object.params.request_id
@@ -33,15 +33,6 @@ module DiscourseAi
 
       def include_prefers_results?
         object.prefers_results.present?
-      end
-
-      # the answer was found across the site rather than where the search was made
-      def scope_widened
-        true
-      end
-
-      def include_scope_widened?
-        object.params.scope.present? && object.judgement&.about_site?
       end
     end
   end

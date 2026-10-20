@@ -43,9 +43,6 @@ export default class AiSearchSession extends Service {
   @tracked scopeFallback = false;
   @tracked fallbackScopeLabel = null;
 
-  /** Set when the search was judged to be about the whole site, so it was answered from there. */
-  @tracked scopeWidened = false;
-
   /** The scope the menu is currently in, which the next search starts from. */
   @tracked contextScope = null;
 
@@ -133,11 +130,6 @@ export default class AiSearchSession extends Service {
     );
   }
 
-  /** Where the answer was found, which a conversation continuing it keeps to. */
-  get answerScopeKey() {
-    return this.scopeFallback || this.scopeWidened ? null : this.scope?.key;
-  }
-
   /** The results of the keyword tab on screen, if one is. */
   get shownResults() {
     if (this.selectedTab === "topics") {
@@ -173,7 +165,6 @@ export default class AiSearchSession extends Service {
     this.scope = scope;
     this.scopeFallback = false;
     this.fallbackScopeLabel = null;
-    this.scopeWidened = false;
 
     this.discoveries.dismissDiscovery();
     const asked = this.#ask(query, { trigger });
@@ -234,11 +225,7 @@ export default class AiSearchSession extends Service {
   async startConversation(question) {
     const result = await ajax("/discourse-ai/discoveries/continue-convo", {
       type: "POST",
-      data: {
-        request_id: this.discoveries.activeRequestId,
-        question,
-        scope: this.answerScopeKey,
-      },
+      data: { request_id: this.discoveries.activeRequestId, question },
     });
     return result.topic_id;
   }
@@ -435,21 +422,13 @@ export default class AiSearchSession extends Service {
 
   #ask(query, { trigger }) {
     // a fresh request every time, so the rewrite is always published
-    const asked = this.discoveries.triggerDiscovery(query, {
+    return this.discoveries.triggerDiscovery(query, {
       scope: this.scope?.key,
       trigger,
       intentHeuristic: readsAsQuestion(query) ? "answer" : "lookup",
       classifyIntent:
         !!this.siteSettings.ai_ask_ai_search_intent_decision_model,
     });
-
-    asked.then((reply) => {
-      if (this.query === query && reply?.scope_widened) {
-        this.scopeWidened = true;
-      }
-    });
-
-    return asked;
   }
 
   // a second search here, sharing a word with the last, suggests its results
