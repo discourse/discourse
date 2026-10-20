@@ -21,7 +21,6 @@ export default class ChatComposerPicker extends Component {
   get showUnifiedPicker() {
     return (
       this.siteSettings.enable_composer_picker_and_rich_chat &&
-      this.site.desktopView &&
       composerPickerTabs(getOwner(this)).length > 0
     );
   }
@@ -52,7 +51,9 @@ export default class ChatComposerPicker extends Component {
         @onSelect={{this.onSelect}}
       />
 
-      <ChatComposerSeparator />
+      {{#if this.site.desktopView}}
+        <ChatComposerSeparator />
+      {{/if}}
     {{else if this.showEmojiPicker}}
       <EmojiPicker
         @btnClass="chat-composer-button btn-transparent --emoji"

@@ -1,6 +1,5 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import ComposerPickerDetached from "discourse/components/composer-picker/detached";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import GifsModal from "discourse/components/modal/gifs";
 import { bind } from "discourse/lib/decorators";
@@ -10,10 +9,7 @@ import { replaceIcon } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
-import {
-  buildChatPickerSelectHandler,
-  buildGifPickHandler,
-} from "discourse/plugins/chat/discourse/lib/gif-pick-handler";
+import { buildGifPickHandler } from "discourse/plugins/chat/discourse/lib/gif-pick-handler";
 import groupChatTranscripts from "discourse/plugins/chat/discourse/lib/group-chat-transcripts";
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
 import richEditorExtension from "../../lib/rich-editor-extension.js";
@@ -122,7 +118,11 @@ class ChatSetupInit {
 
       api.registerHashtagType("channel", new ChannelHashtagType(owner));
 
-      if (this.siteSettings.enable_emoji) {
+      // the composer picker has an inline button on every device
+      const unifiedPicker =
+        this.siteSettings.enable_composer_picker_and_rich_chat;
+
+      if (this.siteSettings.enable_emoji && !unifiedPicker) {
         api.registerChatComposerButton({
           label: "chat.emoji",
           id: "emoji",
@@ -166,61 +166,28 @@ class ChatSetupInit {
         },
       });
 
-      if (this.siteSettings.enable_gifs) {
-        if (this.siteSettings.enable_composer_picker_and_rich_chat) {
-          api.registerChatComposerButton({
-            id: "gifs",
-            label: "gifs.composer_title",
-            icon: "gif",
-            position: "dropdown",
-            // desktop opens the picker from its inline button
-            displayed() {
-              return this.site.mobileView;
-            },
-            action() {
-              const menu = owner.lookup("service:menu");
-              const currentUser = owner.lookup("service:current-user");
+      if (this.siteSettings.enable_gifs && !unifiedPicker) {
+        api.registerChatComposerButton({
+          id: "gifs",
+          label: "gifs.composer_title",
+          icon: "gif",
+          position: "dropdown",
+          action(context) {
+            const modal = owner.lookup("service:modal");
+            const currentUser = owner.lookup("service:current-user");
 
-              menu.show(document.body, {
-                identifier: "composer-picker",
-                groupIdentifier: "composer-picker",
-                component: ComposerPickerDetached,
-                modalForMobile: true,
-                data: {
-                  context: "chat",
-                  initialTab: "gifs",
-                  onSelect: buildChatPickerSelectHandler({
-                    api,
-                    composer: this,
-                    currentUser,
-                  }),
-                },
-              });
-            },
-          });
-        } else {
-          api.registerChatComposerButton({
-            id: "gifs",
-            label: "gifs.composer_title",
-            icon: "gif",
-            position: "dropdown",
-            action(context) {
-              const modal = owner.lookup("service:modal");
-              const currentUser = owner.lookup("service:current-user");
-
-              modal.show(GifsModal, {
-                model: {
-                  customPickHandler: buildGifPickHandler({
-                    api,
-                    draft: this.draft,
-                    isThread: context === "thread",
-                    currentUser,
-                  }),
-                },
-              });
-            },
-          });
-        }
+            modal.show(GifsModal, {
+              model: {
+                customPickHandler: buildGifPickHandler({
+                  api,
+                  draft: this.draft,
+                  isThread: context === "thread",
+                  currentUser,
+                }),
+              },
+            });
+          },
+        });
       }
 
       if (this.siteSettings.discourse_local_dates_enabled) {
