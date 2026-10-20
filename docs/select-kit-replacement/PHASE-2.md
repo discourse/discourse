@@ -50,8 +50,11 @@ facade and codemod plan this phase used to carry is superseded.
   get `UiKit::DSelect.at` with value-based actions and matchers, and the FormKit page object drives
   a DSelect field (`458cd7f3783`); `with_select_controls(enabled)` pins the flag for an example
   group.
-- ☐ **Prep that also works with select-kit:** explicit `onChange` at the two-way sites, stable hooks
-  in place of `.select-kit` DOM queries, the wizard's `onChange`.
+- ☑ **Prep that also works with select-kit:** writing a value back without `onChange` emits
+  `discourse.select-kit.implicit-mutation`, which core and bundled plugin tests raise on
+  (`a29213b026c`); explicit `onChange` at the 19 core two-way sites and the wizard (`db1667d9232`)
+  and the 10 bundled plugin sites (`c9e8b5cb55c`); `selectControl` replaces the `.select-kit-header`
+  queries (`07e7bece2e9`).
 - ☑ **Guideline:** DMenu vs DSelect in the ui-kit guide (`e123d0c4fe6`).
 
 ## Exit criteria

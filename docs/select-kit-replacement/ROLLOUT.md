@@ -79,14 +79,18 @@ Paths are relative to the repository root.
 - **`api.modifySelectKit`, across all repos:** discourse-ai (bundled) and one customer plugin,
   which reads `component.content`, `elementId`, `value` and `selectKit.options`, beyond what the
   bridge facade offers today.
-- **Core code coupled to select-kit markup:** `frontend/discourse/app/controllers/signup.js:371-375`,
-  `frontend/discourse/app/components/user-fields/base.js:28`,
-  `frontend/discourse/app/components/composer-user-selector.gjs:22`,
-  `frontend/discourse/admin/routes/admin-customize-themes/show/index.js:80`,
-  `frontend/discourse/app/ui-kit/d-modal.gts:469`, `frontend/discourse/app/lib/roving-button-bar.js:51`,
-  and the prosemirror onebox and link toolbars.
-- **Implicit two-way binding** (no `onChange`): about 15 sites, plus the wizard's dynamic
-  `{{component}}` (`frontend/discourse/app/static/wizard/components/fields/dropdown.gjs:87-120`).
+- **Core code coupled to select-kit markup:** the theme parent-themes focus, the composer
+  recipients autofocus and the user-field validation target now find their element through
+  `selectControl` (`frontend/discourse/app/lib/select-control.ts`), which knows both
+  implementations. `frontend/discourse/app/ui-kit/d-modal.gts:469` exempts both from Enter.
+  `frontend/discourse/app/lib/roving-button-bar.js:51` and the prosemirror onebox and link
+  toolbars still name `.select-kit`, but no select renders there in core, and a focusable DSelect
+  root already matches their generic selectors; they are revisited at cleanup.
+- **Implicit two-way binding** (no `onChange`): verified 2026-10-20 by reading all 423 select-kit
+  invocations in core and bundled plugins: 29 template sites (19 core, 10 bundled plugins) plus the
+  wizard's dynamic `{{component}}`. All now pass an explicit `onChange`. The write-back emits
+  `discourse.select-kit.implicit-mutation`, which is not silenced, so core and bundled plugin tests
+  fail on any new two-way site; third-party code only logs it.
 
 ## Rollout architecture
 
