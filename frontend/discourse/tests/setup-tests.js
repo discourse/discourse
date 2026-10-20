@@ -17,6 +17,8 @@ import {
 } from "@ember/test-helpers";
 import $ from "jquery";
 import "message-bus-client";
+// Captures `setTimeout` when evaluated, so it must load before a test can fake timers
+import "pikaday";
 import * as FakerModule from "@faker-js/faker";
 import QUnit from "qunit";
 import sinon from "sinon";
