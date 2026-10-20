@@ -126,10 +126,12 @@ export class SubscribeUserNotificationsInit {
 
     this._lastPushReconciliationAt = Date.now();
 
-    // Until reconciliation reports back, the stored intent is the only evidence
-    // there is. Assuming push delivers keeps a notification arriving during the
-    // round trip from being shown twice.
-    if (this.desktopNotifications.pushIntent === "subscribed") {
+    // Before the first reconciliation, use stored intent to avoid duplicate
+    // notifications while the round trip is pending.
+    if (
+      this.desktopNotifications.pushIntent === "subscribed" &&
+      this.desktopNotifications.pushSubscriptionConfirmed !== false
+    ) {
       setPushTransport("delivering");
     }
     const transportEpoch = currentPushTransportEpoch();

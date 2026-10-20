@@ -294,6 +294,46 @@ module("Unit | Service | desktop-notifications", function (hooks) {
     );
   });
 
+  test("a failed reconciliation cannot override a later successful enable", async function (assert) {
+    let rejectSubscription;
+    let subscriptionReadStarted;
+    const readingSubscription = new Promise((resolve) => {
+      subscriptionReadStarted = resolve;
+    });
+    const subscription = { toJSON: () => ({ endpoint: "enabled" }) };
+    sinon.stub(Notification, "permission").get(() => "granted");
+    sinon.stub(navigator.serviceWorker, "ready").get(() =>
+      Promise.resolve({
+        pushManager: {
+          getSubscription: () =>
+            new Promise((resolve, reject) => {
+              rejectSubscription = reject;
+              subscriptionReadStarted();
+            }),
+          subscribe: () => Promise.resolve(subscription),
+        },
+      })
+    );
+    pretender.post("/push_notifications/subscribe", () =>
+      response({ success: "OK" })
+    );
+
+    const reconciliation = this.service.reconcilePushSubscription();
+    await readingSubscription;
+    assert.true(await this.service.enable(), "the later enable succeeds");
+
+    rejectSubscription(new Error("subscription read failed"));
+    await reconciliation;
+
+    assert.true(this.service.isSubscribed, "the toggle remains enabled");
+    assert.false(this.service.pushNeedsAttention, "no repair is needed");
+    assert.strictEqual(
+      getPushTransport(),
+      "delivering",
+      "push remains the active transport"
+    );
+  });
+
   test("the consent prompt dismissal is recorded against the current user", async function (assert) {
     const { keyValueStore } = await import("discourse/lib/push-notifications");
     const userId = this.owner.lookup("service:current-user").id;

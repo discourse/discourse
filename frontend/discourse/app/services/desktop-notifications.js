@@ -58,6 +58,8 @@ export default class DesktopNotificationsService extends Service {
   @tracked pushSubscriptionConfirmed = null;
   @tracked consentPromptDismissed = false;
 
+  #pushSubscriptionRevision = 0;
+
   constructor() {
     super(...arguments);
 
@@ -146,6 +148,7 @@ export default class DesktopNotificationsService extends Service {
       return false;
     }
 
+    this.#pushSubscriptionRevision++;
     const intent = value ? "subscribed" : "off";
     setSubscriptionIntent(this.currentUser, intent);
     this.pushIntent = intent;
@@ -180,10 +183,15 @@ export default class DesktopNotificationsService extends Service {
 
   // Reconciles stored intent with platform/server state for transport and UI.
   async reconcilePushSubscription() {
+    const revision = this.#pushSubscriptionRevision;
     const result = await reconcileSubscription(this.currentUser, {
       resubscribe: this.isPushNotificationsPreferred,
       applicationServerKey: this.siteSettings.vapid_public_key_bytes,
     });
+
+    if (revision !== this.#pushSubscriptionRevision) {
+      return null;
+    }
 
     if (result === "subscribed") {
       this.pushIntent = "subscribed";

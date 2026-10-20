@@ -1,16 +1,20 @@
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { SubscribeUserNotificationsInit } from "discourse/instance-initializers/subscribe-user-notifications";
 import {
   context,
   getPushTransport,
+  init,
   setPushTransport,
 } from "discourse/lib/desktop-notifications";
 import KeyValueStore from "discourse/lib/key-value-store";
+import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
 module(
   "Unit | Instance Initializer | subscribe-user-notifications",
   function (hooks) {
+    setupTest(hooks);
     const keyValueStore = new KeyValueStore(context);
     const currentUser = { get: (key) => (key === "id" ? 42 : undefined) };
 
@@ -132,6 +136,37 @@ module(
         getPushTransport(),
         "delivering",
         "successful retry suppresses the in-tab fallback"
+      );
+    });
+
+    test("a failed push retry displays the alert through the active fallback", async function (assert) {
+      logIn(this.owner);
+      sinon.stub(Notification, "permission").get(() => "granted");
+      init({ clientId: "fallback-retry-test" });
+      window.dispatchEvent(new Event("focus"));
+      const notification = sinon.stub(window, "Notification").callsFake(() => ({
+        addEventListener() {},
+      }));
+      const instance = build(null);
+      instance.desktopNotifications.pushSubscriptionConfirmed = false;
+      instance._lastPushReconciliationAt = Date.now() - 60_001;
+      setPushTransport("fallback");
+      const onAlert = Object.getOwnPropertyDescriptor(
+        SubscribeUserNotificationsInit.prototype,
+        "onAlert"
+      ).get.call(instance);
+
+      await onAlert({ translated_title: "A new reply", excerpt: "Reply text" });
+      await instance.pushReconciliation;
+
+      assert.true(
+        notification.calledOnce,
+        "the alert is displayed while push restoration is retried"
+      );
+      assert.strictEqual(
+        getPushTransport(),
+        "fallback",
+        "the failed retry keeps the fallback active"
       );
     });
 
