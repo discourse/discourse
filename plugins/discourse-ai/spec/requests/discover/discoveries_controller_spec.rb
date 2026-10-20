@@ -532,7 +532,7 @@ describe DiscourseAi::Discover::DiscoveriesController do
 
         expect(topic.posts.find_by(post_number: 2).raw).to eq(context)
         get "/t/#{topic.id}.json"
-        expect(response.parsed_body["ai_search_sources"]).to contain_exactly(
+        expect(response.parsed_body.dig("ai_search_cited_topics", "topics")).to contain_exactly(
           include("topic_id" => source_post.topic_id, "title" => source_post.topic.title),
         )
       end

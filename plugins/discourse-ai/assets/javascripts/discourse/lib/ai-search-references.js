@@ -67,7 +67,14 @@ export default class AiSearchReferences {
       entry.url ||= item.url;
       entry.categoryId ??= item.categoryId;
       entry.excerpt ||= item.excerpt;
-      entry.signals.push({ turn, kind, rank: index + 1 });
+      // the same evidence counts once, so a reply can be added again as it grows
+      if (
+        !entry.signals.some(
+          (signal) => signal.turn === turn && signal.kind === kind
+        )
+      ) {
+        entry.signals.push({ turn, kind, rank: index + 1 });
+      }
       this.#entries.set(item.topicId, entry);
     });
   }

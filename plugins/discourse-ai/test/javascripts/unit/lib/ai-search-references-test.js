@@ -56,6 +56,19 @@ module("Discourse AI | Unit | Lib | ai-search-references", function (hooks) {
     assert.strictEqual(ranked[2].movement, -2);
   });
 
+  test("a reply added again as it grows counts its topics once", function (assert) {
+    const references = new AiSearchReferences();
+    references.add(0, "cited", [item(1)]);
+    references.add(0, "cited", [item(1), item(2)]);
+    references.add(1, "cited", [item(2)]);
+
+    assert.deepEqual(
+      references.rank(1).map((entry) => entry.topicId),
+      [2, 1],
+      "cited again in a later reply, it rises"
+    );
+  });
+
   test("excluded topics never rank", function (assert) {
     const references = new AiSearchReferences();
     references.exclude(2);

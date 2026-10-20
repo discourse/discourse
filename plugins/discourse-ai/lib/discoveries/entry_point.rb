@@ -27,14 +27,15 @@ module DiscourseAi
           end,
         ) { true }
 
+        # sent with the conversation, so the list shows without loading it
         plugin.add_to_serializer(
           :topic_view,
-          :ai_search_sources,
+          :ai_search_cited_topics,
           include_condition: -> do
             object.topic.private_message? &&
-              object.topic.custom_fields[ContinueConversation::TOPIC_SOURCES_FIELD].present?
+              object.topic.custom_fields[ContinueConversation::TOPIC_REQUEST_ID_FIELD].present?
           end,
-        ) { object.topic.custom_fields[ContinueConversation::TOPIC_SOURCES_FIELD] }
+        ) { CitedTopics.new(topic: object.topic, guardian: scope).as_json }
       end
     end
   end
