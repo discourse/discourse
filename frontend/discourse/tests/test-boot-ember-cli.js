@@ -99,7 +99,7 @@ export async function startTests() {
     for (const name of Object.keys(requirejs.entries)) {
       if (name.startsWith("discourse/plugins/") && name.endsWith("-test")) {
         const module = requirejs(name);
-        if (module.__discourseTestModule) {
+        if (module?.__discourseTestModule) {
           availableModules[name] = module.default;
         }
       }

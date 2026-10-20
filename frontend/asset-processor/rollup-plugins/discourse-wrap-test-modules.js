@@ -26,15 +26,33 @@ export default function discourseWrapTestModules({ testModuleIds }) {
           return null;
         }
 
-        const lastImport = this.parse(code)
-          .body.filter((node) => node.type === "ImportDeclaration")
-          .at(-1);
+        const { body } = this.parse(code);
+
+        // An export can't move into the wrapper, so the module has to stay as it is
+        if (body.some((node) => node.type.startsWith("Export"))) {
+          this.warn(
+            "A test file with exports can't be wrapped, so its tests always run"
+          );
+          return null;
+        }
+
+        const statementIndex = body.findIndex(
+          (node) => node.type !== "ImportDeclaration"
+        );
+        const leadingImports =
+          statementIndex === -1 ? body : body.slice(0, statementIndex);
+        const wrapStart = leadingImports.at(-1)?.end ?? 0;
         const magic = new MagicString(code);
 
-        magic.appendLeft(
-          lastImport?.end ?? 0,
-          "\nexport default function () {\n"
-        );
+        // Imports can't go inside the wrapper either, e.g. the one appended to `.js.es6` files
+        for (const node of body.slice(leadingImports.length)) {
+          if (node.type === "ImportDeclaration") {
+            magic.move(node.start, node.end, wrapStart);
+          }
+        }
+
+        // `prependRight` keeps the moved imports ahead of the wrapper
+        magic.prependRight(wrapStart, "\nexport default function () {\n");
         // App modules can end in "-test" too, so the runner needs a marker to tell them apart
         magic.append("\n}\nexport const __discourseTestModule = true;\n");
 

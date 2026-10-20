@@ -6,10 +6,13 @@ import discourseWrapTestModules, {
 
 const basePath = "discourse/plugins/poll/";
 
+let warnings;
+
 // Stands in for the `this` a transform hook gets.
-const context = { parse: parseAst };
+const context = { parse: parseAst, warn: (message) => warnings.push(message) };
 
 function transform(code, file, testModules = [file]) {
+  warnings = [];
   const { handler } = discourseWrapTestModules({
     testModuleIds: testModuleIdsFor(basePath, testModules),
   }).transform;
@@ -56,6 +59,31 @@ describe("discourse-wrap-test-modules", () => {
       `\nexport default function () {\ntest("a", () => {});\n}\n` +
         `export const __discourseTestModule = true;\n`
     );
+  });
+
+  it("moves imports that follow the body ahead of the wrapper", () => {
+    // As in a `.js.es6` file, which gets a deprecation import appended
+    const out = transform(
+      `import { test } from "qunit";\ntest("a", () => {});\n` +
+        `import deprecated from "discourse/lib/deprecated";\ndeprecated("es6");\n`,
+      "unit/poll-test.js"
+    );
+
+    expect(out).toBe(
+      `import { test } from "qunit";import deprecated from "discourse/lib/deprecated";\n` +
+        `export default function () {\n\ntest("a", () => {});\n\ndeprecated("es6");\n\n}\n` +
+        `export const __discourseTestModule = true;\n`
+    );
+  });
+
+  it("leaves a test file with exports alone, with a warning", () => {
+    expect(
+      transform(
+        `test("a", () => {});\nexport function helper() {}`,
+        "unit/poll-test.js"
+      )
+    ).toBeNull();
+    expect(warnings).toHaveLength(1);
   });
 
   it("leaves helpers listed in the entrypoint alone", () => {
