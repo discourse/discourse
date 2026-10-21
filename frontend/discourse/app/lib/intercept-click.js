@@ -26,10 +26,6 @@ export default function interceptClick(e) {
     return;
   }
 
-  if (target.target === "_blank") {
-    return;
-  }
-
   if (wantsNewWindow(e)) {
     return;
   }
