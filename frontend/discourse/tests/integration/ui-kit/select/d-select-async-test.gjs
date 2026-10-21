@@ -10,15 +10,22 @@ import {
   findAll,
   render,
   resetOnerror,
+  settled,
   setupOnerror,
+  triggerKeyEvent,
   waitFor,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import { forceMobile } from "discourse/lib/mobile";
 import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { ITEMS } from "discourse/tests/helpers/d-select-hosts";
+import {
+  EngineProbe,
+  ITEMS,
+  probedEngine,
+} from "discourse/tests/helpers/d-select-hosts";
 import DSelect from "discourse/ui-kit/select/d-select";
 
 const resolveNone = () => Promise.resolve([]);
@@ -1050,3 +1057,308 @@ module("Integration | ui-kit | select | DSelect (async)", function () {
     }
   });
 });
+
+module(
+  "Integration | ui-kit | select | DSelect (async) loading inputs",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    /** Dispatches without waiting for an unresolved source's test waiter. */
+    function press(key, selector = "[role='combobox']") {
+      find(selector).dispatchEvent(
+        new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true })
+      );
+    }
+
+    test("own key counts and nested identity determine reloads", async function (assert) {
+      const inherited = { ignored: 1 };
+      const reference = {};
+      const context = tracked(
+        Object.assign(Object.create(inherited), { reference })
+      );
+      const calls = [];
+      const load = (_filter, opts) => {
+        calls.push(opts.context);
+        return ITEMS;
+      };
+
+      await render(
+        <template>
+          <DSelect @load={{load}} @loadContext={{context.value}} />
+        </template>
+      );
+      await click("[role='combobox']");
+      const initial = calls.length;
+
+      context.value = { reference };
+      await settled();
+      assert.strictEqual(calls.length, initial, "inherited keys are ignored");
+
+      context.value = { reference, extra: undefined };
+      await settled();
+      assert.strictEqual(
+        calls.length,
+        initial + 1,
+        "an added undefined key counts"
+      );
+
+      context.value = { reference };
+      await settled();
+      assert.strictEqual(
+        calls.length,
+        initial + 2,
+        "removing that key counts too"
+      );
+
+      context.value = { reference: {} };
+      await settled();
+      assert.strictEqual(
+        calls.length,
+        initial + 3,
+        "nested objects compare by identity"
+      );
+    });
+
+    test("every page uses the first request's context snapshot", async function (assert) {
+      const context = { categoryId: 1 };
+      const requests = [];
+      const load = (_filter, opts) => {
+        requests.push(opts.context);
+        return {
+          items: Array.from({ length: 50 }, (_, i) => ({
+            id: (opts.offset ?? 0) + i,
+            name: `Row ${(opts.offset ?? 0) + i}`,
+          })),
+          total: 150,
+        };
+      };
+      await render(
+        <template>
+          <EngineProbe @load={{load}} @loadContext={{context}} />
+        </template>
+      );
+      await click("[role='combobox']");
+      const snapshot = requests[0];
+      context.categoryId = 2;
+      probedEngine().revealMore();
+      await settled();
+      assert.true(requests.length > 1, "another page was requested");
+      assert.true(
+        requests.every(
+          (request) => request === snapshot && request.categoryId === 1
+        ),
+        "all pages share the original snapshot, despite mutation of the caller's object"
+      );
+
+      press("Escape");
+      await settled();
+      await click("[role='combobox']");
+      assert.strictEqual(
+        requests.at(-1).categoryId,
+        2,
+        "the next open notices mutation"
+      );
+      assert.notStrictEqual(
+        requests.at(-1),
+        snapshot,
+        "the new query owns a new snapshot"
+      );
+    });
+
+    test("retained rows hold keyboard activation before the skeleton", async function (assert) {
+      let resolve;
+      let requested = false;
+      let activeId;
+      const pending = new Promise((r) => (resolve = r));
+      const changes = [];
+      const load = (filter) => {
+        if (filter) {
+          // Run before the shortened feedback timer replaces the retained rows in tests.
+          press("ArrowDown");
+          activeId = find("[role='combobox']").getAttribute(
+            "aria-activedescendant"
+          );
+          press("Enter");
+          requested = true;
+          return pending;
+        }
+        return ITEMS;
+      };
+      const onChange = (value) => changes.push(value);
+      await render(
+        <template>
+          <DSelect @debounce={{false}} @load={{load}} @onChange={{onChange}} />
+        </template>
+      );
+      await click("[role='combobox']");
+      const typing = fillIn("[role='combobox']", "ba");
+      try {
+        await waitUntil(() => requested);
+        assert.true(
+          Boolean(activeId),
+          "the pending query's Enter targeted a retained active row"
+        );
+        assert.deepEqual(changes, [], "the retained active row cannot emit");
+      } finally {
+        resolve([{ id: 99, name: "Bacon" }]);
+        await typing;
+      }
+      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+      assert.deepEqual(
+        changes,
+        [99],
+        "settled results are activated only by a fresh Enter"
+      );
+    });
+
+    test("repeated skeleton Enter is delivered again in the mobile modal", async function (assert) {
+      forceMobile();
+      disableClearA11yAnnouncementsInTests();
+      let resolve;
+      const pending = new Promise((r) => (resolve = r));
+      const load = () => pending;
+      const a11y = this.owner.lookup("service:a11y");
+      const reports = () =>
+        a11y.announcementHistory.filter(
+          (record) =>
+            record.text.includes("Still loading") && !record.superseded
+        );
+      await render(
+        <template><A11yLiveRegions /><DSelect @load={{load}} /></template>
+      );
+      const opening = click(".d-select__trigger");
+      try {
+        await waitUntil(() => find(".d-select__panel input"));
+        press("Enter", ".d-select__panel input");
+        await waitUntil(() => reports().length === 1);
+        assert.dom("#a11y-announcements-polite").includesText("Still loading");
+        press("Enter", ".d-select__panel input");
+        await waitUntil(
+          () =>
+            reports().length === 2 &&
+            a11y.politeMessage?.includes("Still loading")
+        );
+        assert.strictEqual(
+          reports().length,
+          2,
+          "both presses reached the polite region"
+        );
+      } finally {
+        resolve(ITEMS);
+        await opening;
+      }
+    });
+
+    test("Enter during reveal still activates an existing row", async function (assert) {
+      let resolve;
+      let requested = false;
+      const pending = new Promise((r) => (resolve = r));
+      const changes = [];
+      const load = (_filter, { offset = 0 }) => {
+        if (offset) {
+          requested = true;
+          return pending;
+        }
+        return {
+          items: Array.from({ length: 50 }, (_, id) => ({
+            id,
+            name: `Row ${id}`,
+          })),
+          total: 100,
+        };
+      };
+      const onChange = (value) => changes.push(value);
+      await render(
+        <template>
+          <EngineProbe @load={{load}} @onChange={{onChange}} />
+        </template>
+      );
+      await click("[role='combobox']");
+      await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+      const active = Number(find("[role='option'].--active").dataset.value);
+      probedEngine().revealMore();
+      try {
+        await waitUntil(() => requested);
+        press("Enter");
+        assert.deepEqual(
+          changes,
+          [active],
+          "a reveal does not hold the visible row"
+        );
+      } finally {
+        resolve({ items: [], hasMore: false });
+        await settled();
+      }
+    });
+
+    test("a context reload announces even an unchanged result count", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      const context = tracked({ categoryId: 1 });
+      const load = () => ITEMS;
+      const a11y = this.owner.lookup("service:a11y");
+      const counts = () =>
+        a11y.announcementHistory.filter((r) => r.text === "3 results");
+      await render(
+        <template>
+          <A11yLiveRegions /><DSelect
+            @load={{load}}
+            @loadContext={{context.value}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      assert.strictEqual(
+        counts().length,
+        1,
+        "opening announces the initial count"
+      );
+      context.value = { categoryId: 2 };
+      await settled();
+      assert.strictEqual(
+        counts().length,
+        2,
+        "a new context is news even with the same count"
+      );
+    });
+
+    test("below minChars keeps the typing hint instead of announcing loading", async function (assert) {
+      let resolve;
+      let requested = false;
+      const pending = new Promise((r) => (resolve = r));
+      const load = () => {
+        requested = true;
+        return pending;
+      };
+      const a11y = this.owner.lookup("service:a11y");
+      await render(
+        <template>
+          <A11yLiveRegions /><DSelect @load={{load}} @minChars={{2}} />
+        </template>
+      );
+      await click("[role='combobox']");
+      const typing = fillIn("[role='combobox']", "ab");
+      let clearing;
+      try {
+        await waitUntil(() => requested);
+        clearing = fillIn("[role='combobox']", "a");
+        await waitUntil(() => find(".d-select__min-chars"));
+        press("Enter");
+        const delivery = a11y.announce("Typing hint check", "polite");
+        await waitUntil(() =>
+          a11y.announcementHistory.some((r) => r.delivered.includes(delivery))
+        );
+        assert.false(
+          a11y.announcementHistory.some((r) =>
+            r.text.includes("Still loading")
+          ),
+          "below the threshold stays silent about loading"
+        );
+      } finally {
+        resolve(ITEMS);
+        await typing;
+        await clearing;
+      }
+    });
+  }
+);

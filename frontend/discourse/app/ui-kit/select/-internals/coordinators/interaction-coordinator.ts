@@ -43,6 +43,9 @@ export default class InteractionCoordinator {
    */
   emptyTriggers: string[] = [];
 
+  /** Identifies an open session for deferred context checks. */
+  session = 0;
+
   shouldCorrectKeyboardOcclusion = () =>
     this.#capabilities.isIOS && this.triggerFocused;
 
@@ -201,6 +204,7 @@ export default class InteractionCoordinator {
     this.#resetQueryOnClose();
     this.#announcer.releaseSession();
     if (wasExpanded) {
+      this.session++;
       this.#onClose();
     }
   }
@@ -216,9 +220,35 @@ export default class InteractionCoordinator {
       this.#focusTriggerInput();
     }
     if (!wasExpanded) {
+      this.session++;
+      this.#engine.reloadIfContextChanged();
       this.#engine.supersedeUpdate();
       this.#onShow();
     }
+  }
+
+  /** Covers Enter before a listbox or active row exists; active rows use activateElement. */
+  @action
+  handleControllerKeydown(event: KeyboardEvent): void {
+    if (
+      event.key !== "Enter" ||
+      event.isComposing ||
+      event.target !== this.filterInput ||
+      !this.isExpanded ||
+      this.#presenter.isLocked ||
+      this.#engine.belowMinChars ||
+      !this.#engine.serverPending ||
+      this.#engine.serverRevealPending
+    ) {
+      return;
+    }
+    const activeId = this.filterInput?.getAttribute("aria-activedescendant");
+    if (activeId && document.getElementById(activeId)) {
+      return;
+    }
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this.#announcer.announceStillLoading();
   }
 
   @action

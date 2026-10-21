@@ -163,6 +163,8 @@ export function selectItemLabel(
 export interface SelectLoadOptions {
   /** Resolved core and recipe values, supplied by the select engine. */
   options?: SelectResolvedOptions;
+  /** Shallow snapshot of `@loadContext`, shared by every page of this query. */
+  context?: Readonly<Record<string, unknown>>;
   /** Maximum page length requested from a paginated source. */
   limit?: number;
   /** Raw source offset for a paginated request. */
@@ -336,7 +338,7 @@ export interface SelectEngineOptions {
     | ((options: SelectResolvedOptions) => SelectItem[] | null | undefined);
 
   /**
-   * `(filter, { signal, offset, limit, options }) => items | { items, total?, hasMore? }`,
+   * `(filter, { signal, offset, limit, context, options }) => items | { items, total?, hasMore? }`,
    * synchronously or as a promise. Pagination starts without a limit so the source defines
    * its page size.
    *
@@ -345,12 +347,22 @@ export interface SelectEngineOptions {
    * its first page is ever shown.
    *
    * Called after the current render, never inside it, so it may write tracked state. State it
-   * reads is not tracked: a change to it never re-asks the source; call `reload()` for that.
+   * reads is not tracked: a change to it never re-asks the source. Supply `loadContext`
+   * for reactive inputs, or call `reload()` explicitly.
    */
   load?: (
     filter: string,
     opts: SelectLoadOptions
   ) => SelectLoadResult | Promise<SelectLoadResult>;
+
+  /** The loader inputs whose own keys and values determine whether the list reloads. */
+  loadContext?: Readonly<Record<string, unknown>>;
+
+  /** Live reader for {@link loadContext}. */
+  getLoadContext?: () => SelectEngineOptions["loadContext"];
+
+  /** Called when a list reload invalidates result announcements. */
+  onReloadList?: () => void;
 
   /**
    * Client-filter field name or `(item, term, options) => boolean`. Defaults to a substring
@@ -628,6 +640,10 @@ export default class SelectEngine {
   #listComposer: ListComposer;
   #source!: SelectSource;
   #control: SelectControl;
+  #getLoadContext: () => SelectEngineOptions["loadContext"];
+  #onReloadList?: () => void;
+  #requestContextQuery?: string;
+  #requestLoadContext?: Readonly<Record<string, unknown>>;
 
   /** Sealed declarations collected once, before source validation. */
   #customizations: SelectCustomizations;
@@ -637,6 +653,8 @@ export default class SelectEngine {
    *   {@link SelectEngineOptions}.
    */
   constructor(opts: SelectEngineOptions = {}) {
+    this.#getLoadContext = opts.getLoadContext ?? (() => opts.loadContext);
+    this.#onReloadList = opts.onReloadList;
     this.#options = new SelectOptionsView(opts);
     this.#control = new EngineControl(this);
     this.#valueResolver = new ValueResolver({
@@ -721,6 +739,11 @@ export default class SelectEngine {
   /** Identifies a query across its pages, including explicit reloads of the same filter. */
   get queryKey(): string {
     return JSON.stringify([this.#state.nonce, this.#state.filter]);
+  }
+
+  /** The most recently started query's loader inputs, distinct from retained displayed rows. */
+  get requestLoadContext(): Readonly<Record<string, unknown>> | undefined {
+    return this.#requestLoadContext;
   }
 
   /**
@@ -947,10 +970,8 @@ export default class SelectEngine {
   }
 
   /**
-   * Whether a **reload** of an already-settled list is in flight — a new query, a
-   * `reload()`, or a reveal — which is what `aria-busy` on the retained listbox reports.
-   * The *initial* load is deliberately not pending: the listbox does not exist yet then,
-   * its loading block does.
+   * Whether a server load is in flight, including the first page, a new query, a
+   * reload, or a reveal.
    *
    * Derived from tracked state rather than an imperative flag, because the flag would have
    * to be raised synchronously inside `loadItems`, which runs during render, and so could
@@ -1232,8 +1253,27 @@ export default class SelectEngine {
   @bind
   reload(): void {
     this.#valueResolver.evictUnresolved();
-    this.#source.reset();
-    this.#state.nonce++;
+    this.#reloadList();
+  }
+
+  /** Checks live loader inputs at event time; never call during render. */
+  reloadIfContextChanged(): void {
+    if (isDestroying(this) || this.#requestContextQuery !== this.queryKey) {
+      return;
+    }
+    const context = this.#getLoadContext() ?? {};
+    const snapshot = this.#requestLoadContext ?? {};
+    const keys = Reflect.ownKeys(context);
+    if (
+      keys.length !== Reflect.ownKeys(snapshot).length ||
+      keys.some(
+        (key) =>
+          !Object.hasOwn(snapshot, key) ||
+          !Object.is(Reflect.get(context, key), Reflect.get(snapshot, key))
+      )
+    ) {
+      this.#reloadList();
+    }
   }
 
   /**
@@ -1256,15 +1296,35 @@ export default class SelectEngine {
     };
   }
 
+  /** Reloads only the list, preserving held-value fallbacks and pending update authority. */
+  #reloadList(): void {
+    this.#onReloadList?.();
+    this.#source.reset();
+    this.#state.nonce++;
+  }
+
   /** Resolves the loader outside render when a query's first request starts. */
   #resolveLoad(filter: string): NonNullable<SelectEngineOptions["load"]> {
+    const context = this.#getLoadContext() ?? {};
+    const snapshot: Readonly<Record<string, unknown>> = Object.freeze(
+      Object.fromEntries(
+        Reflect.ownKeys(context).map((key) => [key, Reflect.get(context, key)])
+      )
+    );
+    this.#requestLoadContext = snapshot;
+    this.#requestContextQuery = this.queryKey;
     const load = this.#customizations.applyLoad(this.#options.load!, {
+      loadContext: snapshot,
       filter,
       ...this.#extensionContext(),
       control: this.#control,
     });
     return (query, opts) =>
-      load(query, { ...opts, options: this.resolvedOptions });
+      load(query, {
+        ...opts,
+        context: snapshot,
+        options: this.resolvedOptions,
+      });
   }
 
   // `items` and `load` are mutually exclusive; the construction-time source kind wins.

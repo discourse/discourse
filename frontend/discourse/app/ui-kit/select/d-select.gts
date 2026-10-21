@@ -9,6 +9,7 @@ import Owner, { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -64,6 +65,8 @@ interface DSelectSignature {
     instanceContext?: object;
     items?: SelectEngineOptions["items"];
     load?: SelectEngineOptions["load"];
+    /** Loader inputs, compared by own keys and value identity to reload the list. */
+    loadContext?: SelectEngineOptions["loadContext"];
     filterBy?: SelectEngineOptions["filterBy"];
     valueField?: string;
     labelField?: string;
@@ -350,6 +353,8 @@ export default class DSelect extends Component<DSelectSignature> {
         ? this.args.items(options)
         : this.args.items,
     load: this.args.load,
+    getLoadContext: () => this.args.loadContext,
+    onReloadList: () => this.announcer.reloadList(),
     filterBy: this.args.filterBy,
     valueField: this.args.valueField,
     labelField: this.args.labelField,
@@ -409,6 +414,7 @@ export default class DSelect extends Component<DSelectSignature> {
   listbox = new WindowedListCoordinator({
     engine: this.engine,
     feedback: this.feedback,
+    onStillLoading: () => this.announcer.announceStillLoading(),
     getListboxId: () => this.listboxId,
     isStaticModal: () =>
       this.presenter.isStatic && this.presenter.overlayIsModal,
@@ -434,6 +440,26 @@ export default class DSelect extends Component<DSelectSignature> {
         )
         .join(",")
     );
+  });
+
+  /** Defers context checks so a reactive argument never writes state during render. */
+  watchLoadContext = modifier(() => {
+    const context = this.args.loadContext ?? {};
+    // Reading each entry subscribes the modifier to it.
+    for (const key of Reflect.ownKeys(context)) {
+      Reflect.get(context, key);
+    }
+    const session = this.interaction.session;
+    const check = schedule("afterRender", () => {
+      if (
+        !this.isDestroying &&
+        this.interaction.isExpanded &&
+        this.interaction.session === session
+      ) {
+        this.engine.reloadIfContextChanged();
+      }
+    });
+    return () => cancel(check);
   });
 
   #listboxId = `d-select-listbox-${guidFor(this)}`;
@@ -540,8 +566,13 @@ export default class DSelect extends Component<DSelectSignature> {
       ? rawItems.then((items) => ({
           rawItems: items,
           query: this.engine.queryKey,
+          context: this.engine.requestLoadContext,
         }))
-      : { rawItems, query: this.engine.queryKey };
+      : {
+          rawItems,
+          query: this.engine.queryKey,
+          context: this.engine.requestLoadContext,
+        };
   }
 
   /**
@@ -680,6 +711,7 @@ export default class DSelect extends Component<DSelectSignature> {
         this.interaction.emptyTriggers
       }}
       {{this.selectionHooks}}
+      {{on "keydown" this.interaction.handleControllerKeydown capture=true}}
       {{on "keydown" this.interaction.handleTriggerRootKeydown}}
       {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
       {{on "mousedown" this.interaction.preventTriggerBlur}}
@@ -795,6 +827,7 @@ export default class DSelect extends Component<DSelectSignature> {
         <div
           class="d-select__panel"
           data-select-id={{this.listboxId}}
+          {{this.watchLoadContext}}
           {{didInsert
             this.feedback.trackLoadFeedback
             this.engine.serverPending
@@ -823,6 +856,11 @@ export default class DSelect extends Component<DSelectSignature> {
               @filterAction={{this.onFilterInput}}
               @icons={{hash left="magnifying-glass"}}
               @value={{this.engine.filter}}
+              {{on
+                "keydown"
+                this.interaction.handleControllerKeydown
+                capture=true
+              }}
               {{didInsert this.interaction.captureFilter}}
             />
           {{else if this.presenter.isMobileTypeahead}}
@@ -845,6 +883,11 @@ export default class DSelect extends Component<DSelectSignature> {
               @registerInput={{this.interaction.captureFilter}}
               {{keepAboveKeyboard
                 this.interaction.shouldCorrectKeyboardOcclusion
+              }}
+              {{on
+                "keydown"
+                this.interaction.handleControllerKeydown
+                capture=true
               }}
               {{on "keydown" this.interaction.handleInputKeydown}}
             />

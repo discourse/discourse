@@ -1349,3 +1349,42 @@ module(
     });
   }
 );
+
+module(
+  "Integration | ui-kit | select | DSelect select-customizations load context",
+  function (hooks) {
+    setupRenderingTest(hooks);
+    setupLegacyBridgeCallbacks(hooks);
+
+    test("spec.load sees the load context", async function (assert) {
+      const seen = [];
+      customize((selects) =>
+        selects.forKind("recipe", (spec) =>
+          spec.load((load, context) => {
+            seen.push(context.loadContext);
+            return load;
+          })
+        )
+      );
+      const load = () => ITEMS;
+
+      await render(
+        <template>
+          <DSelect
+            @kind="recipe"
+            @load={{load}}
+            @loadContext={{hash categoryId=7}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      assert.strictEqual(
+        seen.at(-1)?.categoryId,
+        7,
+        "the load customization context carries loadContext"
+      );
+    });
+  }
+);

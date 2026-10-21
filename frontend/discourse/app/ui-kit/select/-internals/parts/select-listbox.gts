@@ -23,6 +23,8 @@ import SelectEngine, {
 import { i18n } from "discourse-i18n";
 
 export interface SelectListContent {
+  /** Loader inputs for these displayed rows, retained independently of the next request. */
+  context?: Readonly<Record<string, unknown>>;
   rawItems: SelectItemModel[];
   /**
    * The query these rows answer, captured when the load resolved. `@retainWhileReloading` keeps

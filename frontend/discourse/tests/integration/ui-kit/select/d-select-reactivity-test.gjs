@@ -1,9 +1,23 @@
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { click, fillIn, findAll, render, settled } from "@ember/test-helpers";
+import { array, hash } from "@ember/helper";
+import {
+  click,
+  fillIn,
+  find,
+  findAll,
+  render,
+  settled,
+  triggerKeyEvent,
+  waitUntil,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import { forceMobile } from "discourse/lib/mobile";
+import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import DSelect from "discourse/ui-kit/select/d-select";
 
 const INITIAL_ITEMS = [
@@ -389,3 +403,476 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
     // must not rely on a runtime update even if another rendering layer happens to reflect it.
   });
 });
+
+/** A promise whose settlement the test controls. */
+function deferred() {
+  let resolve;
+  const promise = new Promise((done) => (resolve = done));
+  return { promise, resolve };
+}
+
+/** Rows named after the category a loader was asked about. */
+function rowsFor(context) {
+  const id = context?.categoryId;
+  return [
+    { id: `${id}-a`, name: `Cat ${id} A` },
+    { id: `${id}-b`, name: `Cat ${id} B` },
+  ];
+}
+
+class ContextState {
+  @tracked categoryId = 1;
+  @tracked tick = 0;
+}
+
+module(
+  "Integration | ui-kit | select | DSelect @loadContext",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("the loader receives the load context", async function (assert) {
+      const state = new ContextState();
+      const load = sinon.spy((filter, opts) => rowsFor(opts.context));
+
+      await render(
+        <template>
+          <DSelect
+            @load={{load}}
+            @loadContext={{hash categoryId=state.categoryId}}
+            @variant="button"
+          />
+        </template>
+      );
+      await dSelect().open();
+
+      assert.strictEqual(
+        load.lastCall.args[1].context.categoryId,
+        1,
+        "opts.context carries the caller's values"
+      );
+      assert.deepEqual(
+        optionLabels(),
+        ["Cat 1 A", "Cat 1 B"],
+        "the rows come from that context"
+      );
+    });
+
+    test("a context change while closed re-queries on the next open", async function (assert) {
+      const state = new ContextState();
+      const load = sinon.spy((filter, opts) => rowsFor(opts.context));
+
+      await render(
+        <template>
+          <DSelect
+            @load={{load}}
+            @loadContext={{hash categoryId=state.categoryId}}
+            @variant="button"
+          />
+        </template>
+      );
+      await dSelect().open();
+      await dSelect().close();
+
+      state.categoryId = 2;
+      await settled();
+      await dSelect().open();
+
+      assert.deepEqual(
+        optionLabels(),
+        ["Cat 2 A", "Cat 2 B"],
+        "reopening shows the new context's rows, not the settled ones"
+      );
+      assert.strictEqual(
+        load.lastCall.args[1].context.categoryId,
+        2,
+        "the new query was asked with the new context"
+      );
+    });
+
+    test("an equal context with a new identity reuses the settled list", async function (assert) {
+      const state = new ContextState();
+      const load = sinon.spy((filter, opts) => rowsFor(opts.context));
+
+      class EqualContextHost extends Component {
+        get loadContext() {
+          // A fresh object on every tick, with the same values.
+          const { categoryId, tick } = state;
+          return { categoryId, counted: tick >= 0 };
+        }
+
+        <template>
+          <DSelect
+            @load={{load}}
+            @loadContext={{this.loadContext}}
+            @variant="button"
+          />
+        </template>
+      }
+
+      await render(<template><EqualContextHost /></template>);
+      await dSelect().open();
+      await dSelect().close();
+      const calls = load.callCount;
+
+      state.tick++;
+      await settled();
+      await dSelect().open();
+
+      assert.strictEqual(
+        load.callCount,
+        calls,
+        "values compared key by key: no new query"
+      );
+      assert.deepEqual(optionLabels(), ["Cat 1 A", "Cat 1 B"]);
+    });
+
+    test("a context change while open re-queries the open list", async function (assert) {
+      const state = new ContextState();
+      const load = sinon.spy((filter, opts) => rowsFor(opts.context));
+
+      await render(
+        <template>
+          <DSelect
+            @load={{load}}
+            @loadContext={{hash categoryId=state.categoryId}}
+            @variant="button"
+          />
+        </template>
+      );
+      await dSelect().open();
+      await fillIn(".d-select__filter", "cat");
+
+      state.categoryId = 3;
+      await settled();
+
+      assert.dom(".d-select__panel").exists("the panel stays open");
+      assert.deepEqual(
+        optionLabels(),
+        ["Cat 3 A", "Cat 3 B"],
+        "the open list shows the new context's rows"
+      );
+      assert.strictEqual(
+        load.lastCall.args[0],
+        "cat",
+        "the re-query keeps the current filter"
+      );
+      assert.strictEqual(load.lastCall.args[1].context.categoryId, 3);
+      const offset = load.lastCall.args[1].offset ?? 0;
+      assert.strictEqual(offset, 0, "the re-query starts from the first page");
+    });
+
+    test("a context reload does not retry an unavailable chip", async function (assert) {
+      const state = new ContextState();
+      const load = (filter, opts) => rowsFor(opts.context);
+      const resolveValues = sinon.spy(() => []);
+
+      await render(
+        <template>
+          <DSelect
+            @load={{load}}
+            @loadContext={{hash categoryId=state.categoryId}}
+            @multiple={{true}}
+            @resolveValues={{resolveValues}}
+            @value={{array 99}}
+            @variant="button"
+          />
+        </template>
+      );
+      await dSelect().open();
+      const resolutions = resolveValues.callCount;
+
+      state.categoryId = 2;
+      await settled();
+
+      assert.deepEqual(optionLabels(), ["Cat 2 A", "Cat 2 B"]);
+      assert.strictEqual(
+        resolveValues.callCount,
+        resolutions,
+        "unlike reload(), a context reload keeps held-value resolution as it was"
+      );
+    });
+
+    test("a context change does not supersede an in-flight update", async function (assert) {
+      const state = new ContextState();
+      const gate = deferred();
+      const onChange = sinon.spy();
+      const contexts = [];
+      const load = (filter, opts) => {
+        contexts.push(opts.context?.categoryId);
+        return rowsFor(opts.context);
+      };
+      const specialItems = () => [
+        {
+          id: "act",
+          name: "Act later",
+          onSelect(control) {
+            control.update(async (scope) => {
+              await gate.promise;
+              scope.select({ id: "late", name: "Late" });
+            });
+          },
+        },
+      ];
+
+      await render(
+        <template>
+          <DSelect
+            @load={{load}}
+            @loadContext={{hash categoryId=state.categoryId}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @specialItems={{specialItems}}
+            @variant="button"
+          />
+        </template>
+      );
+      await dSelect().open();
+      const picking = click(
+        findAll("[role='option']").find((row) =>
+          row.textContent.includes("Act later")
+        )
+      );
+      try {
+        state.categoryId = 2;
+        await waitUntil(() => contexts.includes(2), {
+          timeout: 3000,
+          timeoutMessage: "the context change never re-queried",
+        });
+      } finally {
+        gate.resolve();
+        await picking;
+        await settled();
+      }
+
+      assert.true(onChange.calledOnce, "the pending update still emits");
+      assert.deepEqual(
+        onChange.lastCall?.args[0],
+        ["late"],
+        "with the value it chose"
+      );
+    });
+
+    test("a context reload while open announces the new list", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      const state = new ContextState();
+      const load = (filter, opts) =>
+        opts.context.categoryId === 1
+          ? rowsFor(opts.context)
+          : [...rowsFor(opts.context), { id: "x", name: "Extra" }];
+
+      await render(
+        <template>
+          <A11yLiveRegions />
+          <DSelect
+            @load={{load}}
+            @loadContext={{hash categoryId=state.categoryId}}
+            @variant="button"
+          />
+        </template>
+      );
+      await dSelect().open();
+
+      state.categoryId = 2;
+      await settled();
+
+      assert
+        .dom("#a11y-announcements-polite")
+        .hasText("3 results", "the same query, reloaded, is counted again");
+    });
+  }
+);
+
+/** Presses a key synchronously, without waiting for the pending load to settle. */
+function pressKey(selector, key) {
+  find(selector).dispatchEvent(
+    new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true })
+  );
+}
+
+function pressEnter(selector) {
+  pressKey(selector, "Enter");
+}
+
+/** Waits for the polite region to say something, without settling. */
+async function politeIncludes(text) {
+  await waitUntil(
+    () =>
+      document
+        .querySelector("#a11y-announcements-polite")
+        ?.textContent.includes(text),
+    { timeout: 3000, timeoutMessage: `polite region never said "${text}"` }
+  );
+}
+
+module(
+  "Integration | ui-kit | select | DSelect Enter while loading",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("Enter during a pending query selects nothing and says so", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      const pending = deferred();
+      const onChange = sinon.spy();
+      const asked = [];
+      const load = (filter) => {
+        asked.push(filter);
+        return filter === "ba"
+          ? pending.promise
+          : [
+              { id: 1, name: "Apple" },
+              { id: 2, name: "Banana" },
+            ];
+      };
+
+      await render(
+        <template>
+          <A11yLiveRegions />
+          <DSelect @load={{load}} @onChange={{onChange}} />
+        </template>
+      );
+      await click("[role='combobox']");
+      const typing = fillIn("[role='combobox']", "ba");
+      try {
+        // The arrow-onto-a-retained-row case is pinned deterministically by the static-root
+        // test below; here no row is active, so the controller's own hold answers.
+        await waitUntil(() => asked.includes("ba"));
+        pressEnter("[role='combobox']");
+
+        assert.true(onChange.notCalled, "a retained row is never selected");
+        await politeIncludes("Still loading");
+        assert.true(true, "the held Enter is announced");
+      } finally {
+        pending.resolve([{ id: 3, name: "Bacon" }]);
+        await typing;
+        await settled();
+      }
+
+      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+      assert.true(onChange.calledOnce, "Enter works once the query settles");
+      assert.strictEqual(
+        onChange.lastCall.args[0],
+        3,
+        "and picks the row now shown"
+      );
+    });
+
+    test("the button variant's filter holds Enter while loading", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      const pending = deferred();
+      const onChange = sinon.spy();
+      const asked = [];
+      const load = (filter) => {
+        asked.push(filter);
+        return filter === "ba" ? pending.promise : [{ id: 1, name: "Apple" }];
+      };
+
+      await render(
+        <template>
+          <A11yLiveRegions />
+          <DSelect @load={{load}} @onChange={{onChange}} @variant="button" />
+        </template>
+      );
+      await dSelect().open();
+      const typing = fillIn(".d-select__filter", "ba");
+      try {
+        await waitUntil(() => asked.includes("ba"));
+        pressEnter(".d-select__filter");
+        assert.true(onChange.notCalled, "nothing is picked");
+        await politeIncludes("Still loading");
+        assert.true(true, "the held Enter is announced");
+      } finally {
+        pending.resolve([]);
+        await typing;
+        await settled();
+      }
+    });
+
+    test("the static root holds Enter during a context reload", async function (assert) {
+      const state = new ContextState();
+      const pending = deferred();
+      const onChange = sinon.spy();
+      const contexts = [];
+      const load = (filter, opts) => {
+        contexts.push(opts.context?.categoryId);
+        return opts.context?.categoryId === 2
+          ? pending.promise
+          : rowsFor({ categoryId: 1 });
+      };
+
+      await render(
+        <template>
+          <DSelect
+            @load={{load}}
+            @loadContext={{hash categoryId=state.categoryId}}
+            @onChange={{onChange}}
+            @variant="static"
+          />
+        </template>
+      );
+      await dSelect().open();
+      await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+      assert
+        .dom("[role='option'].--active")
+        .exists("precondition: a row is highlighted");
+
+      state.categoryId = 2;
+      try {
+        await waitUntil(() => contexts.includes(2), {
+          timeout: 3000,
+          timeoutMessage: "the context change never re-queried",
+        });
+        pressEnter("[role='combobox']");
+        assert.true(
+          onChange.notCalled,
+          "a row from the old context is not picked"
+        );
+      } finally {
+        pending.resolve(rowsFor({ categoryId: 2 }));
+        await settled();
+      }
+    });
+
+    test("Enter before the first page lands says it is still loading", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      const pending = deferred();
+      const onChange = sinon.spy();
+      const load = () => pending.promise;
+
+      await render(
+        <template>
+          <A11yLiveRegions />
+          <DSelect @load={{load}} @onChange={{onChange}} />
+        </template>
+      );
+      const opening = click("[role='combobox']");
+      try {
+        await waitUntil(() => find(".d-select__panel"));
+        pressEnter("[role='combobox']");
+        assert.true(onChange.notCalled);
+        await politeIncludes("Still loading");
+        assert.true(true, "even with no row to hold");
+      } finally {
+        pending.resolve([{ id: 1, name: "Apple" }]);
+        await opening;
+        await settled();
+      }
+    });
+
+    test("a local source never holds Enter", async function (assert) {
+      const onChange = sinon.spy();
+      const items = [
+        { id: 1, name: "Apple" },
+        { id: 2, name: "Banana" },
+      ];
+
+      await render(
+        <template><DSelect @items={{items}} @onChange={{onChange}} /></template>
+      );
+      await click("[role='combobox']");
+      await fillIn("[role='combobox']", "ban");
+      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+
+      assert.strictEqual(onChange.lastCall?.args[0], 2, "Banana is picked");
+    });
+  }
+);

@@ -36,6 +36,7 @@ interface WindowedListCoordinatorOptions {
   feedback: LoadFeedbackTracker;
   getListboxId: () => string;
   isStaticModal: () => boolean;
+  onStillLoading: () => void;
 }
 
 export default class WindowedListCoordinator {
@@ -170,6 +171,7 @@ export default class WindowedListCoordinator {
   #feedback: LoadFeedbackTracker;
   #getListboxId: () => string;
   #isStaticModal: () => boolean;
+  #onStillLoading: () => void;
   #listboxApi: DVirtualListApi | null = null;
   #listboxRoving: DRovingFocusApi | null = null;
   #jumpTimer?: ReturnType<typeof nextRunloop>;
@@ -196,11 +198,13 @@ export default class WindowedListCoordinator {
     feedback,
     getListboxId,
     isStaticModal,
+    onStillLoading,
   }: WindowedListCoordinatorOptions) {
     this.#engine = engine;
     this.#feedback = feedback;
     this.#getListboxId = getListboxId;
     this.#isStaticModal = isStaticModal;
+    this.#onStillLoading = onStillLoading;
     registerDestructor(this, () => cancel(this.#jumpTimer));
   }
 
@@ -210,6 +214,10 @@ export default class WindowedListCoordinator {
    */
   @action
   activateElement(element: HTMLElement): void {
+    if (this.#engine.serverPending && !this.#engine.serverRevealPending) {
+      this.#onStillLoading();
+      return;
+    }
     element.click();
   }
 

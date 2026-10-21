@@ -121,6 +121,8 @@ export interface SelectRowContext extends SelectResolvedContext {
 
 /** What a load step receives; it runs once per query. */
 export interface SelectLoadContext extends SelectResolvedContext {
+  /** The query's shallow snapshot of the caller's `@loadContext`. */
+  loadContext: Readonly<Record<string, unknown>>;
   /** The query being loaded. */
   filter: string;
   /** The live select handle. */

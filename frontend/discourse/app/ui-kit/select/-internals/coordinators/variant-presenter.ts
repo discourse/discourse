@@ -361,11 +361,11 @@ export default class VariantPresenter {
    * The reconcile key for a non-typeahead surface, where re-running on every render would reset
    * the user's arrow position. Typeahead keys on its freshly rebuilt items array instead (it
    * re-seeds on each keystroke), but a `button`/`static` list only needs to re-reconcile when the
-   * navigable set changes: the filter, or the cap closing off the unselected options. Keying on
-   * the cap state is what drops a stale `aria-activedescendant` off a now-disabled row.
+   * navigable set changes: the filter, reload nonce, or cap closing off unselected options.
+   * Keying on the cap state is what drops a stale `aria-activedescendant` off a now-disabled row.
    */
   get rovingNonTypeaheadKey(): string {
-    return `${this.#engine.filter}::${this.#engine.atMaximum}`;
+    return `${this.#engine.queryKey}::${this.#engine.atMaximum}`;
   }
 
   /**

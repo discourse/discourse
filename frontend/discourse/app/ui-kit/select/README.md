@@ -31,6 +31,33 @@ Tests drive a select through these hooks with `dSelect()` (actions) and `assert.
 (checks) from `discourse/tests/helpers/`, and with `PageObjects::Components::UiKit::DSelect.at`
 in system specs.
 
+## Loading inputs and keyboard activation
+
+Keep `@load` stable for the component's lifetime. Pass its reactive inputs in a plain object
+through `@loadContext`, for example `@loadContext={{hash categoryId=this.categoryId}}`.
+The loader receives a shallow, frozen snapshot as `opts.context` alongside `opts.options`;
+`spec.load` customizations receive that same snapshot as `context.loadContext`. Every page and
+retry of one query uses the same snapshot. Nested values are compared by identity, not deeply.
+
+The engine compares all own keys and their values with the current query's request snapshot,
+including the key count. A new object with equal entries reuses the settled list. Changed
+entries reload while open, or on the next open when closed. Open-list checks run after render
+and recheck the session and live context before acting. Retained content keeps the context of
+its displayed rows separately from the request being made.
+
+A context change reloads the list: it resets the source, restarts at the first page, and
+increments the reload nonce so an already-settled answer cannot be reused. It also resets result
+announcement deduplication and the non-typeahead roving seed. It preserves pending `update()`
+authority and unavailable held-value fallbacks. Explicit `control.reload()` performs the same
+list reload and additionally evicts unavailable fallbacks so their resolution is retried;
+successfully resolved held items stay cached.
+
+While a server query or context reload is pending, keyboard activation is held, including the
+debounce window and the skeleton before any row is mounted. Each Enter press politely announces
+“Still loading…” and selects nothing; press Enter again after results arrive. Activation is not
+queued. Revealing another page leaves activation available, and local sources are unaffected.
+Below `@minChars`, the keep-typing hint takes precedence over the loading announcement.
+
 ## Architecture
 
 Both public modules are facades over focused collaborators in `-internals/`, organized by
@@ -256,8 +283,9 @@ per change in what they read, not once per row. The context has `value` and `con
 
 **`load`** receives the loader for a new query and returns the one to use. It runs when the
 query's first page starts, outside render, and the returned loader handles every reveal of that
-query. A filter change starts a new query. A mode flip without a filter change needs
-`control.reload()`; otherwise it applies at the next query.
+query. Its context includes `loadContext`, the query's snapshot of `@loadContext`. A filter
+change starts a new query. A mode flip without a filter change needs a changed `@loadContext`
+entry or `control.reload()`; otherwise it applies at the next query.
 
 **`change`** wraps the controlled `@onChange`. Not calling `next()` vetoes the change, and calling
 it later defers it. A deferred `next()` still checks whether the change was superseded, and a

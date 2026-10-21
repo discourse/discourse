@@ -13,7 +13,19 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
 - ☐ **Category family:** chooser, drop, selector, search and report choosers. Rows reuse
   `categoryBadgeHTML`.
 - ☐ **Tag family:** tag chooser, mini tag chooser, tag drop, tag group, intersection, and FormKit's
-  `tag-chooser` control. Rows reuse `dDiscourseTag` / `renderTag`.
+  `tag-chooser` control. Rows reuse `dDiscourseTag` / `renderTag`. Engine prerequisites, generic
+  and usable by every family:
+  - ☑ **`@loadContext`:** the loader's inputs; a changed entry reloads the list (closed or open)
+    without superseding pending updates. Keyboard activation is held, with a polite "Still
+    loading…", while a non-reveal server load is pending.
+  - ☐ **Create row:** first in the list, tied to the query on screen, a key-collision duplicate
+    rule and an engine-owned "Create …" name.
+  - ☐ **Disabled rows** reachable by arrow keys and announced as unavailable, with a visible
+    description.
+  - ☐ **Bulk add:** `selectMany` and `@parsePaste`.
+  - ☐ **Selection strip** in the mobile modal, and the modal's accessible name.
+  - ☐ **Compact and overflow** (`@maxVisibleChips`); display-only chips on button, static and
+    mobile triggers.
 - ☐ **Composer:** tag and category pickers write the same `model.tags` / category shape in both
   modes; drafts round-trip across modes.
 - ☐ **discourse-ai** suggesters and the customer `modifySelectKit` plugin work through the bridge.

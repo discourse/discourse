@@ -288,7 +288,7 @@ export class PagedSource implements SelectSource {
 
   pending(): boolean {
     const completed = this.#state.serverCompletedKey;
-    return completed != null && completed !== this.#loadKey;
+    return completed !== this.#loadKey;
   }
 
   revealPending(): boolean {

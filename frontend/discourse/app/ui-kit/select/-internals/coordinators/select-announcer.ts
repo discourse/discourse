@@ -323,6 +323,11 @@ export default class SelectAnnouncer {
     this.announceLimit(element, args);
   }
 
+  /** Announces that keyboard activation is held until the replacement results arrive. */
+  announceStillLoading(): void {
+    this.#a11y.announce(i18n("d_select.still_loading"), "polite");
+  }
+
   /**
    * Drops the dedupe keys whose subject is the open session rather than a mounted node, so a
    * reopened panel is a fresh context.
@@ -344,6 +349,15 @@ export default class SelectAnnouncer {
     this.#narrowAnnouncedFor = null;
     // A "loading more" interrupted by a close otherwise leaves its debt standing, and the next
     // open's first pending→settled transition pays it as a completion nobody started.
+    this.#revealAnnounced = false;
+  }
+
+  /** Invalidates reports about the previous list without ending the open session. */
+  reloadList(): void {
+    this.#cancelPendingCount();
+    this.#knownTotalQuery = null;
+    this.#lastAnnouncedCount = null;
+    this.#suppressNextCount = false;
     this.#revealAnnounced = false;
   }
 
