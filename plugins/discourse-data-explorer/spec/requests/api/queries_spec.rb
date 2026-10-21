@@ -98,6 +98,9 @@ RSpec.describe "JSON:API queries", type: :request do
             "createdAt" => query.created_at.as_json,
             "lastRunAt" => query.last_run_at.as_json,
             "tags" => ["custom"],
+            "automaticTags" => ["custom"],
+            "dashboardMountable" => true,
+            "dashboardMounted" => false,
           },
           "links" => {
             "self" => "#{base}/queries/#{query.id}",
@@ -181,6 +184,130 @@ RSpec.describe "JSON:API queries", type: :request do
       end
     end
 
+    context "when the request filters by tags" do
+      fab!(:monthly_query, :query)
+
+      let(:query_parameters) { super().merge(filter: { tag: %w[staff monthly] }) }
+      let(:query_ids) { parsed_body.fetch("data").map { it.fetch("id").to_i } }
+      let(:second_page) { JSON.parse(response.body) }
+      let(:second_page_ids) { second_page.fetch("data").map { it.fetch("id").to_i } }
+
+      before do
+        DiscourseDataExplorer::QueryTag.sync!(query: oldest, names: %w[staff monthly])
+        DiscourseDataExplorer::QueryTag.sync!(query: newest, names: %w[staff monthly])
+        DiscourseDataExplorer::QueryTag.sync!(query: middle, names: %w[staff])
+        DiscourseDataExplorer::QueryTag.sync!(query: monthly_query, names: %w[monthly])
+        get(path, headers:, params: query_parameters)
+      end
+
+      it "returns queries that match every selected tag" do
+        expect(query_ids).to contain_exactly(oldest.id, newest.id)
+      end
+
+      context "when the request supplies one tag as a string" do
+        let(:query_parameters) { super().merge(filter: { tag: "staff" }) }
+
+        it "returns queries with that tag" do
+          expect(query_ids).to contain_exactly(oldest.id, middle.id, newest.id)
+        end
+      end
+
+      context "when tag names contain whitespace, duplicates, or different casing" do
+        let(:query_parameters) do
+          super().merge(filter: { tag: [" STAFF ", "", "Monthly", "staff"] })
+        end
+
+        it "matches the normalized tags" do
+          expect(query_ids).to contain_exactly(oldest.id, newest.id)
+        end
+      end
+
+      context "when a selected tag does not exist" do
+        let(:query_parameters) { super().merge(filter: { tag: %w[staff unknown] }) }
+
+        it "returns no queries" do
+          expect(query_ids).to be_empty
+        end
+      end
+
+      context "when the results span multiple pages" do
+        let(:query_parameters) { super().merge(page: { size: 1 }) }
+
+        it "preserves every tag in the next page request", :aggregate_failures do
+          expect(query_ids).to eq([newest.id])
+
+          get(parsed_body.fetch("links").fetch("next"), headers:)
+
+          expect(second_page_ids).to eq([oldest.id])
+          expect(second_page.dig("links", "next")).to be_nil
+        end
+      end
+    end
+
+    context "when queries have dashboard reports" do
+      let!(:default_query) { DiscourseDataExplorer::Query.find(-1).tap(&:save!) }
+      let(:query_parameters) do
+        super().merge(sort: "name", fields: { queries: "name,dashboardMounted" })
+      end
+      let(:sql_queries) { [] }
+      let(:dashboard_queries) { sql_queries.grep(/FROM "admin_dashboard_reports"/) }
+      let(:dashboard_status) do
+        parsed_body
+          .fetch("data")
+          .to_h { [it.fetch("id"), it.fetch("attributes").fetch("dashboardMounted")] }
+      end
+      let(:expected_status) do
+        { oldest.id.to_s => true, middle.id.to_s => false, newest.id.to_s => false, "-1" => true }
+      end
+
+      before do
+        [oldest, default_query].each do |query|
+          Fabricate(
+            :admin_dashboard_report,
+            source: "data_explorer_query",
+            identifier: query.id.to_s,
+          )
+        end
+        sql_queries.concat(track_sql_queries { get(path, headers:, params: query_parameters) })
+      end
+
+      it "returns dashboard status for default and custom queries" do
+        expect(dashboard_status).to eq(expected_status)
+      end
+
+      it "loads dashboard reports in one query" do
+        expect(dashboard_queries.size).to eq(1)
+      end
+
+      context "when the request sorts by the author" do
+        let(:query_parameters) { super().merge(sort: "user.username") }
+
+        it "loads dashboard reports in one query", :aggregate_failures do
+          expect(dashboard_status).to eq(expected_status)
+          expect(dashboard_queries.size).to eq(1)
+        end
+      end
+
+      context "when the request sorts by nullable run timestamps" do
+        let(:query_parameters) { super().merge(sort: "-lastRunAt") }
+
+        it "loads dashboard reports in at most two queries", :aggregate_failures do
+          expect(dashboard_status).to eq(expected_status)
+          expect(dashboard_queries.size).to be <= 2
+        end
+      end
+
+      context "when the fieldset omits dashboard status" do
+        let(:query_parameters) { super().merge(fields: { queries: "name" }) }
+        let(:attribute_names) { parsed_body.fetch("data").map { it.fetch("attributes").keys } }
+
+        it "omits dashboard status without loading reports", :aggregate_failures do
+          expect(attribute_names).to all(eq(["name"]))
+          expect(dashboard_queries).to be_empty
+        end
+      end
+    end
+
     context "when default queries are synchronized" do
       include_context "with synchronized default queries"
 
@@ -200,6 +327,14 @@ RSpec.describe "JSON:API queries", type: :request do
 
         expect(first_page_ids + second_page_ids).to eq(query_ids)
         expect(second_page.dig("links", "next")).to be_nil
+      end
+
+      context "when the request filters by automatic and manual tags" do
+        let(:query_parameters) { super().merge(filter: { tag: %w[default staff] }) }
+
+        it "returns the matching default query" do
+          expect(first_page_ids).to contain_exactly(existing_query.id)
+        end
       end
 
       context "when a default query is hidden" do
@@ -234,6 +369,9 @@ RSpec.describe "JSON:API queries", type: :request do
               "createdAt" => middle.created_at.as_json,
               "lastRunAt" => middle.last_run_at.as_json,
               "tags" => ["custom"],
+              "automaticTags" => ["custom"],
+              "dashboardMountable" => true,
+              "dashboardMounted" => false,
             },
             "links" => {
               "self" => "#{base}/queries/#{middle.id}",
@@ -258,6 +396,49 @@ RSpec.describe "JSON:API queries", type: :request do
       end
     end
 
+    context "when a dashboard report has the query's identifier" do
+      let(:report_source) { "data_explorer_query" }
+      let!(:dashboard_report) do
+        Fabricate(:admin_dashboard_report, source: report_source, identifier: middle.id.to_s)
+      end
+
+      before { get(path, headers:, params: query_parameters) }
+
+      it "reports the query as mounted" do
+        expect(parsed_body.dig("data", "attributes").fetch("dashboardMounted")).to be(true)
+      end
+
+      context "when the report belongs to another source" do
+        let(:report_source) { "core_report" }
+
+        it "reports the query as unmounted" do
+          expect(parsed_body.dig("data", "attributes").fetch("dashboardMounted")).to be(false)
+        end
+      end
+    end
+
+    context "when the query has required parameters" do
+      let!(:query) { Fabricate(:query, sql:) }
+      let(:sql) { "-- [params]\n-- int :topic_id\nSELECT :topic_id AS value" }
+      let(:path) { "/api/data-explorer/queries/#{query.id}" }
+
+      before { get(path, headers:, params: query_parameters) }
+
+      it "reports that the query cannot be mounted" do
+        expect(parsed_body.dig("data", "attributes").fetch("dashboardMountable")).to be(false)
+      end
+
+      context "when the dashboard supplies the required parameters" do
+        let(:sql) do
+          "-- [params]\n-- date :start_date\n-- date :end_date\nSELECT :start_date, :end_date"
+        end
+
+        it "reports that the query can be mounted" do
+          expect(parsed_body.dig("data", "attributes").fetch("dashboardMountable")).to be(true)
+        end
+      end
+    end
+
     context "when default queries are synchronized" do
       include_context "with synchronized default queries"
 
@@ -274,6 +455,7 @@ RSpec.describe "JSON:API queries", type: :request do
               "sql" => definition.fetch("sql"),
               "isDefault" => true,
               "tags" => %w[default users staff],
+              "automaticTags" => %w[default users],
             ),
         )
       end
