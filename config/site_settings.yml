@@ -4805,7 +4805,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       allow_enabled_for:
         - everyone
