@@ -2,7 +2,10 @@ import { cancel } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import discourseLater from "discourse/lib/later";
 import { i18n } from "discourse-i18n";
-import { claimChatAlert } from "discourse/plugins/chat/discourse/lib/chat-alert-dedup";
+import {
+  chatAlertPlayed,
+  confirmChatAlert,
+} from "discourse/plugins/chat/discourse/lib/chat-alert-dedup";
 import { messageAnnouncementText } from "discourse/plugins/chat/discourse/lib/chat-message-announcement";
 import { DEFAULT_SOUND_NAME } from "discourse/plugins/chat/discourse/services/chat-audio-manager";
 
@@ -73,7 +76,7 @@ export default class ChatNewMessageAnnouncer extends Service {
     this.a11y.announce(announcement, "polite");
   }
 
-  #maybePlaySound(message, active) {
+  async #maybePlaySound(message, active) {
     if (
       !active ||
       !this.currentUser?.user_option?.chat_new_message_sound ||
@@ -89,7 +92,7 @@ export default class ChatNewMessageAnnouncer extends Service {
 
     // opening a channel replays messages that arrived while it was closed,
     // which may already have played as a background alert
-    if (!claimChatAlert(message.id)) {
+    if (chatAlertPlayed(message.id)) {
       return;
     }
 
@@ -98,6 +101,12 @@ export default class ChatNewMessageAnnouncer extends Service {
     // fall back to the default when no sound is selected.
     const sound = this.currentUser.chat_sound || DEFAULT_SOUND_NAME;
     // throttle false so this doesn't consume the shared chat-audio throttle
-    this.chatAudioManager.play(sound, { throttle: false });
+    const handled = await this.chatAudioManager.play(sound, {
+      throttle: false,
+    });
+
+    if (handled) {
+      confirmChatAlert(message.id);
+    }
   }
 }

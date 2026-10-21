@@ -4,6 +4,7 @@ import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   claimChatAlert,
+  confirmChatAlert,
   resetChatAlerts,
 } from "discourse/plugins/chat/discourse/lib/chat-alert-dedup";
 
@@ -29,10 +30,18 @@ module("Unit | Service | chat-new-message-announcer", function (hooks) {
   });
 
   test("skips a message that already played as a background alert", function (assert) {
-    claimChatAlert(2);
+    confirmChatAlert(2);
 
     this.subject.notify({ id: 2, user: {} }, { active: true });
 
     assert.true(this.play.notCalled);
+  });
+
+  test("plays a message that another tab claimed without playing", function (assert) {
+    claimChatAlert(3);
+
+    this.subject.notify({ id: 3, user: {} }, { active: true });
+
+    assert.true(this.play.calledOnce);
   });
 });

@@ -3,6 +3,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import KeyValueStore from "discourse/lib/key-value-store";
 import {
+  chatAlertPlayed,
   claimChatAlert,
   confirmChatAlert,
   releaseChatAlert,
@@ -88,5 +89,13 @@ module("Unit | chat-alert-dedup", function (hooks) {
       "other-tab",
       "the other tab's release can no longer drop it"
     );
+  });
+
+  test("only confirmed alerts count as played", function (assert) {
+    claimChatAlert(1);
+    assert.false(chatAlertPlayed(1), "a claim alone isn't played");
+
+    confirmChatAlert(1);
+    assert.true(chatAlertPlayed(1), "a confirmed alert is played");
   });
 });

@@ -50,8 +50,14 @@ export function confirmChatAlert(key) {
   }
 
   const entries = readEntries().filter((entry) => entry.key !== key);
-  entries.push({ key, at: Date.now(), tab: TAB_ID });
+  entries.push({ key, at: Date.now(), tab: TAB_ID, played: true });
   writeEntries(entries);
+}
+
+// a claim alone doesn't mean a sound played, a visible tab claims alerts for
+// its open channel silently
+export function chatAlertPlayed(key) {
+  return readEntries().some((entry) => entry.key === key && entry.played);
 }
 
 // for claims that turned out to be unplayable in this tab (e.g. suspended
