@@ -23,7 +23,7 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☑ **Disabled rows** reachable by arrow keys and announced as unavailable, with a visible
     description.
   - ☑ **Bulk add:** `selectMany` and `@parsePaste`.
-  - ☐ **Selection strip** in the mobile modal, and the modal's accessible name.
+  - ☑ **Selection strip** in the mobile modal, and the modal's accessible name.
   - ☐ **Compact and overflow** (`@maxVisibleChips`); display-only chips on button, static and
     mobile triggers.
 - ☐ **Composer:** tag and category pickers write the same `model.tags` / category shape in both

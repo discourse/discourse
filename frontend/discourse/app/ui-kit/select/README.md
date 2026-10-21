@@ -52,6 +52,36 @@ block creation; `@allowCreate` can impose additional rules.
 renders `d_select.create_item` ("Create “%{label}”") around that label. The `data-name` hook
 remains the item label, and a consumer `:item` block overrides the row's content.
 
+## Mobile selection strip
+
+Every mobile multi-select with held items renders a labelled “Selected items” list in the
+modal: after the query input and limit message, before the results. Static modals have no
+query input. The modal is named after the field. The strip resolves every held value in
+order through the trigger's resolver cache, renders button-free skeletons while labels
+load, and keeps unresolved values removable. Custom `:selection` and `:unresolved` markup
+is shared with the trigger.
+
+The strip has one Tab stop. Left/Right move between its remove buttons; Enter, Space,
+Backspace and Delete remove the focused item and announce “Removed X”. Focus moves to
+the previous item, otherwise the next, then the connected query input or the static
+modal's first option when the strip empties. Pointer presses preserve query focus so the
+software keyboard stays open. Touch button names say “Remove X”; keyboard names lead
+with the label and include the existing removal hint. While strip focus is visible, the
+list's active-row indicator is suppressed.
+
+The strip has its own capped scroll area (`--d-select-strip-max-height`, default `8em`)
+and remove targets of at least 44px in the modal. The whole panel has a height budget
+(`--d-select-panel-max-height`, default `min(32em, 70dvh)`); the results shrink into the
+remaining space and remeasure when the strip resizes. Its roving group is independent
+of the trigger chips, allowing the part to be reused by desktop panels later.
+
+Closing clears only a panel/modal input captured for that session; persistent desktop
+controllers remain registered. Escape from the panel returns focus to the connected
+desktop typeahead trigger input, or the focusable trigger root for other variants, never
+a panel input.
+Existing desktop trigger chips retain focus across Escape. Closing because focus left the
+field preserves the outside control's focus.
+
 ## Loading inputs and keyboard activation
 
 Keep `@load` stable for the component's lifetime. Pass its reactive inputs in a plain object
@@ -98,9 +128,10 @@ entirely on `d-select.gts` and `select-engine.ts`.
   sticky rows, and jump navigation), `interaction-coordinator.ts` (open/close, focus, and
   pointer session), `load-feedback.ts` (loading timers and skeleton sizing).
 - `-internals/parts/` — the rendering subcomponents: trigger pieces (`trigger-frame`,
-  `combobox-query-input`, `multi-chips`, `single-trigger-display`, `selection-label`) and
-  the list (`select-listbox`, `select-item`). Parts receive the stable helper objects
-  (`@engine`, `@presenter`, …) plus per-slot inputs; they add no wrapper DOM.
+  `combobox-query-input`, `multi-chips`, `single-trigger-display`, `selection-label`),
+  the list (`select-listbox`, `select-item`), and the overlay selection strip
+  (`selection-strip`). Parts receive the stable helper objects (`@engine`, `@presenter`, …)
+  plus per-slot inputs; they add no wrapper DOM.
 - `-internals/modifiers/` — element-attached behavior (`keep-above-keyboard.ts`, the iOS
   keyboard-occlusion correction).
 - `-internals/modify-select-kit-bridge.ts` — the deprecated legacy compatibility bridge,
@@ -625,8 +656,6 @@ by mechanism.
   select.
 - **Server-side grouping** — `@groupBy` covers client sources first; a group that spans fetched
   pages is deferred.
-- **Mobile multi-select chip keyboard** — chip keyboard navigation is desktop-only; the mobile
-  trigger has no inline input to enter the chips from.
 - **Full component overrides** — swapping the trigger, filter, or per-row component wholesale is
   intentionally not offered; customization is the headless engine plus the `:item` / `:selection`
   blocks.

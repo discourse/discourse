@@ -151,10 +151,75 @@
   flex-direction: column;
   width: 100%;
   min-width: 0;
+  min-height: 0;
+  max-height: var(--d-select-panel-max-height, min(32em, 70dvh));
+
+  > :not(.d-virtual-list, .d-select__listbox--loading) {
+    flex-shrink: 0;
+  }
+
+  &:has(> .d-select__strip:focus-within) .d-select__option.--active {
+    outline: none;
+  }
 }
 
 .d-select__filter {
   width: 100%;
+}
+
+.d-select__strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25em;
+  box-sizing: border-box;
+  max-height: var(--d-select-strip-max-height, 8em);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+  margin: 0;
+  padding: 0.5em 0.75em;
+  border-bottom: 1px solid var(--primary-low);
+}
+
+.d-select__strip-item {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.d-select__strip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0.25em 0.5em;
+  border: none;
+  border-radius: var(--d-input-border-radius);
+  background: var(--primary-low);
+  color: var(--primary);
+  font: inherit;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--tertiary);
+    outline-offset: -2px;
+  }
+
+  .discourse-no-touch &:hover {
+    background: var(--primary-low-mid);
+  }
+
+  .fk-d-menu-modal & {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+.d-select__strip-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .d-select__listbox {
@@ -169,6 +234,8 @@
 // a plain ul that scrolls itself.
 .d-select__panel .d-virtual-list,
 .d-select__listbox--loading {
+  flex: 0 1 auto;
+  min-height: 0;
   max-height: 20em;
   overflow-y: auto;
   overscroll-behavior: contain;

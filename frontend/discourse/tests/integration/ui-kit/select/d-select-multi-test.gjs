@@ -1098,3 +1098,275 @@ module(
     });
   }
 );
+
+/** A controlled multi host for the strip tests. */
+class StripHost extends Component {
+  @tracked value = this.args.value ?? [];
+
+  @action
+  onChange(value) {
+    this.args.onChange?.(value);
+    this.value = value;
+  }
+
+  <template>
+    <A11yLiveRegions />
+    <DSelect
+      @items={{ITEMS}}
+      @label="Fruit"
+      @multiple={{@multiple}}
+      @onChange={{this.onChange}}
+      @value={{this.value}}
+      @variant={{@variant}}
+    />
+  </template>
+}
+
+const MODAL = ".fk-d-menu-modal";
+
+/** An element's accessible name from aria-labelledby, aria-label or its text. */
+function accessibleName(element) {
+  const ids = element?.getAttribute("aria-labelledby");
+  if (ids) {
+    return ids
+      .split(/\s+/)
+      .map((id) => document.getElementById(id)?.textContent.trim() ?? "")
+      .join(" ")
+      .trim();
+  }
+  return (
+    element?.getAttribute("aria-label") ??
+    element?.textContent ??
+    ""
+  ).trim();
+}
+
+/** Whether `first` precedes `second` in document order. */
+function isBefore(first, second) {
+  const ordered = [...document.querySelectorAll("*")];
+  return ordered.indexOf(first) < ordered.indexOf(second);
+}
+
+/** The strip's remove buttons, in order. */
+function stripButtons() {
+  return findAll(`${MODAL} .d-select__strip button`);
+}
+
+module(
+  "Integration | ui-kit | select | DSelect (selection strip)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      forceMobile();
+    });
+
+    test("the mobile modal lists held items below the input", async function (assert) {
+      await render(
+        <template>
+          <StripHost @multiple={{true}} @value={{array 1 2}} />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      const strip = find(`${MODAL} .d-select__strip`);
+      assert.dom(strip).exists("a multi-select shows its strip in the modal");
+      assert
+        .dom(strip.matches("ul") ? strip : strip.querySelector("ul"))
+        .hasAttribute("aria-label", "Selected items");
+      const names = stripButtons().map(accessibleName);
+      assert.strictEqual(names.length, 2, "one remove button per held item");
+      assert.true(
+        names[0].startsWith("Apple"),
+        `named for its item: ${names[0]}`
+      );
+      assert.true(names[1].startsWith("Banana"), `in held order: ${names[1]}`);
+
+      const input = find(`${MODAL} [role='combobox']`);
+      const listbox = find(`${MODAL} [role='listbox']`);
+      assert.true(
+        isBefore(input, strip),
+        "the strip comes after the query input"
+      );
+      assert.true(isBefore(strip, listbox), "and before the list");
+    });
+
+    test("the strip is one tab stop roved with the arrow keys", async function (assert) {
+      await render(
+        <template>
+          <StripHost @multiple={{true}} @value={{array 1 2 3}} />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      const buttons = stripButtons();
+      assert.deepEqual(
+        buttons.map((button) => button.tabIndex),
+        [0, -1, -1],
+        "only one chip is a tab stop"
+      );
+      buttons[0].focus();
+      await triggerKeyEvent(buttons[0], "keydown", "ArrowRight");
+      assert.strictEqual(
+        document.activeElement,
+        stripButtons()[1],
+        "ArrowRight moves to the next chip"
+      );
+    });
+
+    test("Delete removes a chip, announces it and keeps focus in the strip", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          <StripHost
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{array 1 2 3}}
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      stripButtons()[1].focus();
+      await triggerKeyEvent(stripButtons()[1], "keydown", "Delete");
+
+      assert.deepEqual(onChange.lastCall?.args[0], [1, 3], "Banana is removed");
+      assert
+        .dom("#a11y-announcements-polite")
+        .includesText("Removed Banana", "the removal is announced");
+      assert.true(
+        accessibleName(document.activeElement).startsWith("Apple"),
+        "focus moves to the previous chip"
+      );
+    });
+
+    test("removing the first chip focuses the next one", async function (assert) {
+      await render(
+        <template>
+          <StripHost @multiple={{true}} @value={{array 1 2}} />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      stripButtons()[0].focus();
+      await triggerKeyEvent(stripButtons()[0], "keydown", "Backspace");
+
+      assert.true(
+        accessibleName(document.activeElement).startsWith("Banana"),
+        "focus moves to the next chip"
+      );
+    });
+
+    test("removing the last held item hands focus to the query input", async function (assert) {
+      await render(
+        <template><StripHost @multiple={{true}} @value={{array 1}} /></template>
+      );
+      await click(".d-select__trigger");
+
+      stripButtons()[0].focus();
+      await triggerKeyEvent(stripButtons()[0], "keydown", "Delete");
+
+      assert
+        .dom(`${MODAL} .d-select__strip`)
+        .doesNotExist("an empty strip goes away");
+      assert.strictEqual(
+        document.activeElement,
+        find(`${MODAL} [role='combobox']`),
+        "focus lands on the query input, never the body"
+      );
+    });
+
+    test("in the static modal, removing the last item focuses the list", async function (assert) {
+      await render(
+        <template>
+          <StripHost @multiple={{true}} @value={{array 1}} @variant="static" />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      stripButtons()[0].focus();
+      await triggerKeyEvent(stripButtons()[0], "keydown", "Delete");
+
+      assert.notStrictEqual(
+        document.activeElement,
+        document.body,
+        "never the body"
+      );
+      assert.true(
+        Boolean(document.activeElement?.closest(`${MODAL} [role='listbox']`)),
+        "focus lands in the list"
+      );
+    });
+
+    test("a pointer removal works and the strip follows the value", async function (assert) {
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          <StripHost
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{array 1 2}}
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      await click(stripButtons()[0]);
+
+      assert.deepEqual(onChange.lastCall?.args[0], [2]);
+      assert.strictEqual(stripButtons().length, 1);
+    });
+
+    test("a single select has no strip", async function (assert) {
+      await render(<template><StripHost @value={{1}} /></template>);
+      await click(".d-select__trigger");
+
+      assert.dom(`${MODAL} .d-select__strip`).doesNotExist();
+    });
+
+    test("a multi-select holding nothing has no strip", async function (assert) {
+      await render(<template><StripHost @multiple={{true}} /></template>);
+      await click(".d-select__trigger");
+
+      assert.dom(`${MODAL} .d-select__strip`).doesNotExist();
+    });
+
+    test("the mobile modal is named after the field", async function (assert) {
+      await render(<template><StripHost @multiple={{true}} /></template>);
+      await click(".d-select__trigger");
+
+      assert
+        .dom(MODAL)
+        .hasAttribute("aria-label", "Fruit", "the dialog has a name");
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (Escape focus)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("Escape from a panel control returns focus to the typeahead input", async function (assert) {
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}}>
+            <:footer>
+              <button class="test-footer-btn" type="button">Act</button>
+            </:footer>
+          </DSelect>
+        </template>
+      );
+      await click("[role='combobox']");
+      find(".test-footer-btn").focus();
+      await triggerKeyEvent(".test-footer-btn", "keydown", "Escape");
+
+      assert.dom("[role='listbox']").doesNotExist("the panel closes");
+      assert.strictEqual(
+        document.activeElement,
+        find("[role='combobox']"),
+        "focus returns to the input, not the body"
+      );
+    });
+  }
+);

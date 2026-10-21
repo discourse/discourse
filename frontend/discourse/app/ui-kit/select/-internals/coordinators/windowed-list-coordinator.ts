@@ -261,6 +261,13 @@ export default class WindowedListCoordinator {
     });
   }
 
+  /** Hands focus from an emptied static-modal strip to the first list option. */
+  @action
+  focusFirstOption(): void {
+    this.#listboxRoving?.focusFirst();
+    this.handleJump(0, "backward");
+  }
+
   @action
   handleJump(target: number, direction: "forward" | "backward"): void {
     cancel(this.#jumpTimer);

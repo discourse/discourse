@@ -3537,6 +3537,8 @@ en:
         other: "Select at least %{count} items."
       remove_hint: "Press Backspace or Delete to remove"
       selected_items: "Selected items"
+      selected_items_list: "Selected items"
+      remove_item: "Remove %{item}"
       chips_hint: "Press Left arrow to reach selected items."
       updating_selection: "Updating selection…"
       item_selected: "Selected %{item}"

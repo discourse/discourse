@@ -57,6 +57,12 @@ export default class InteractionCoordinator {
   // so a plain field rather than tracked; `null` while unregistered (mobile / single).
   #chipRoving: DRovingFocusApi | null = null;
 
+  /** Independent of the trigger chips, which can mount alongside the strip. */
+  #stripRoving: DRovingFocusApi | null = null;
+
+  /** The session input; persistent desktop controllers must survive close. */
+  #capturedFilter: HTMLElement | null = null;
+
   #engine: SelectEngine;
   #isMultiple: () => boolean | undefined;
 
@@ -145,7 +151,39 @@ export default class InteractionCoordinator {
 
   @action
   focusInput(): void {
-    this.filterInput?.focus();
+    if (this.filterInput?.isConnected) {
+      this.filterInput.focus();
+    }
+  }
+
+  /** Moves focus within the overlay's selection strip, independently of trigger chips. */
+  @action
+  focusStrip(index: number): boolean {
+    return this.#stripRoving?.focusIndex(index) ?? false;
+  }
+
+  /** Registers the strip's roving controls; teardown never clears the trigger's group. */
+  @action
+  registerStripRoving(api: DRovingFocusApi | null): void {
+    this.#stripRoving = api;
+  }
+
+  /** Preserves trigger-chip focus; otherwise resolves close focus to the persistent trigger. */
+  @action
+  focusTarget(): HTMLElement | null {
+    const trigger = this.#menu?.triggerElement;
+    const active = document.activeElement;
+    if (
+      this.#presenter.isDesktopTypeahead &&
+      active?.classList.contains("d-select__chip-remove") &&
+      trigger?.contains(active)
+    ) {
+      return null;
+    }
+    const target = this.#presenter.isDesktopTypeahead
+      ? trigger?.querySelector<HTMLInputElement>('input[role="combobox"]')
+      : trigger;
+    return target?.isConnected ? target : null;
   }
 
   /**
@@ -166,6 +204,7 @@ export default class InteractionCoordinator {
    */
   @action
   captureFilter(element: HTMLElement): void {
+    this.#capturedFilter = element;
     this.filterInput = element;
     element.focus({ preventScroll: true });
   }
@@ -201,6 +240,10 @@ export default class InteractionCoordinator {
     // consumers can then treat `@onClose` as exactly one notification per close.
     const wasExpanded = this.isExpanded;
     this.isExpanded = false;
+    if (this.filterInput === this.#capturedFilter) {
+      this.filterInput = null;
+    }
+    this.#capturedFilter = null;
     this.#resetQueryOnClose();
     this.#announcer.releaseSession();
     if (wasExpanded) {
@@ -305,7 +348,10 @@ export default class InteractionCoordinator {
       return;
     }
     this.#engine.clear();
-    (this.filterInput ?? this.#menu?.triggerElement)?.focus();
+    const target = this.filterInput?.isConnected
+      ? this.filterInput
+      : this.focusTarget();
+    target?.focus();
   }
 
   @action
@@ -405,7 +451,7 @@ export default class InteractionCoordinator {
   handleTriggerBlur(event: FocusEvent): void {
     if (this.#focusEscapedWidget(event.relatedTarget)) {
       this.triggerFocused = false;
-      this.#menu?.close();
+      this.#menu?.close({ focusTrigger: false });
     }
   }
 

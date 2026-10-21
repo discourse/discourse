@@ -33,6 +33,7 @@ import MultiChips from "discourse/ui-kit/select/-internals/parts/multi-chips";
 import SelectListbox, {
   type SelectListContent,
 } from "discourse/ui-kit/select/-internals/parts/select-listbox";
+import SelectionStrip from "discourse/ui-kit/select/-internals/parts/selection-strip";
 import SingleTriggerDisplay from "discourse/ui-kit/select/-internals/parts/single-trigger-display";
 import TriggerFrame from "discourse/ui-kit/select/-internals/parts/trigger-frame";
 import SelectEngine, {
@@ -652,6 +653,16 @@ export default class DSelect extends Component<DSelectSignature> {
       | Promise<SelectItemModel>;
   }
 
+  /** Returns strip focus to the connected query, or the static modal's options. */
+  @action
+  focusAfterStrip(): void {
+    if (this.interaction.filterInput?.isConnected) {
+      this.interaction.focusInput();
+    } else {
+      this.listbox.focusFirstOption();
+    }
+  }
+
   @action
   handleChange(
     nextValue: SelectValue,
@@ -744,11 +755,13 @@ export default class DSelect extends Component<DSelectSignature> {
       {{! The d-select__content class floors the overlay min-width in CSS: matchTriggerWidth pins
         it to the trigger, which is unusably narrow for a compact icon-only trigger, and the
         min-width floor overrides that (it also gives the windowed option list a real width). }}
+      @ariaLabel={{this.presenter.ariaLabelText}}
       @contentClass="d-select__content"
       @contentRole={{this.presenter.panelContentRole}}
       {{! DMenu vetoes its own trigger open while locked, reactively. Keyboard/edit open + all
         mutate paths are gated separately in this component (they are not DMenu listeners). }}
       @disabled={{this.presenter.isLocked}}
+      @focusTarget={{this.interaction.focusTarget}}
       @identifier={{@identifier}}
       {{! The panel is portaled away from the trigger, so Tab follows the portal's place in the
         document instead of the field's. Both directions need it, for different variants: the
@@ -995,6 +1008,36 @@ export default class DSelect extends Component<DSelectSignature> {
                 {{this.presenter.limitMessage}}
               </div>
             {{/unless}}
+          {{/if}}
+
+          {{#if @multiple}}
+            {{#if this.presenter.overlayIsModal}}
+              {{#if this.engine.hasValue}}
+                <SelectionStrip
+                  @engine={{this.engine}}
+                  @focusFallback={{this.focusAfterStrip}}
+                  @focusStrip={{this.interaction.focusStrip}}
+                  @hasSelectionBlock={{has-block "selection"}}
+                  @hasUnresolvedBlock={{has-block "unresolved"}}
+                  @locked={{this.presenter.isLocked}}
+                  @onRegisterRoving={{this.interaction.registerStripRoving}}
+                  @onResize={{this.listbox.remeasureListbox}}
+                  @resolveSelection={{this.resolveMulti}}
+                  @value={{@value}}
+                >
+                  <:selection as |item|>{{yield
+                      item
+                      this.engine.resolvedOptions
+                      to="selection"
+                    }}</:selection>
+                  <:unresolved as |item|>{{yield
+                      item
+                      this.engine.resolvedOptions
+                      to="unresolved"
+                    }}</:unresolved>
+                </SelectionStrip>
+              {{/if}}
+            {{/if}}
           {{/if}}
 
           {{#if this.engine.belowMinChars}}

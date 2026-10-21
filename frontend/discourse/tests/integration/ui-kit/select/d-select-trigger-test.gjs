@@ -12,11 +12,14 @@ import {
   focus,
   render,
   resetOnerror,
+  settled,
   setupOnerror,
   triggerKeyEvent,
+  waitFor,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { Host, ITEMS } from "discourse/tests/helpers/d-select-hosts";
 import DSelect from "discourse/ui-kit/select/d-select";
@@ -1191,6 +1194,376 @@ module(
         1,
         "the reader is told the value is gone"
       );
+    });
+  }
+);
+
+/** Controlled selection with asynchronous and variant inputs for strip coverage. */
+class SupplementalStripHost extends Component {
+  @tracked value = this.args.value ?? [];
+
+  @action
+  onChange(value) {
+    this.value = value;
+  }
+
+  <template>
+    <DSelect
+      @clearable={{true}}
+      @items={{@items}}
+      @label="Fruit"
+      @maximum={{@maximum}}
+      @multiple={{true}}
+      @onChange={{this.onChange}}
+      @resolveValues={{@resolveValues}}
+      @value={{this.value}}
+      @variant={{@variant}}
+    />
+  </template>
+}
+
+module(
+  "Integration | ui-kit | select | DSelect (selection strip details)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    for (const key of ["Enter", " "]) {
+      test(`${key === " " ? "Space" : key} removes once and focuses the previous chip`, async function (assert) {
+        forceMobile();
+        await render(
+          <template>
+            <SupplementalStripHost @items={{ITEMS}} @value={{array 1 2 3}} />
+          </template>
+        );
+        await click(".d-select__trigger");
+        const buttons = findAll(".d-select__strip button");
+        buttons[2].focus();
+        await triggerKeyEvent(buttons[2], "keydown", key);
+        assert
+          .dom(".d-select__strip button")
+          .exists({ count: 2 }, "one item was removed");
+        assert
+          .dom(document.activeElement.closest("li"))
+          .hasAttribute("data-value", "2", "the previous chip takes focus");
+      });
+    }
+
+    test("pointer removal keeps query focus", async function (assert) {
+      forceMobile();
+      await render(
+        <template>
+          <SupplementalStripHost @items={{ITEMS}} @value={{array 1 2}} />
+        </template>
+      );
+      await click(".d-select__trigger");
+      const input = find(".fk-d-menu-modal input");
+      input.focus();
+      await click(".d-select__strip button");
+      assert.strictEqual(
+        document.activeElement,
+        input,
+        "the keyboard's input keeps focus"
+      );
+      assert
+        .dom(".d-select__strip button")
+        .exists({ count: 1 }, "the pointer removed the item");
+    });
+
+    for (const closeFirst of [false, true]) {
+      test(`desktop blur preserves outside focus after ${closeFirst ? "Escape" : "opening"}`, async function (assert) {
+        await render(
+          <template>
+            <Host @value={{1}} /><button
+              class="outside"
+              type="button"
+            >Outside</button>
+          </template>
+        );
+        await fillIn("[role='combobox']", "ban");
+        if (closeFirst) {
+          await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+        }
+        await focus(".outside");
+        assert.strictEqual(
+          document.activeElement,
+          find(".outside"),
+          "closing on blur cannot reclaim focus"
+        );
+        assert
+          .dom(".d-select__presentation")
+          .hasText(
+            "Apple",
+            "the unfocused field restores its selection markup"
+          );
+        assert.dom("[role='listbox']").doesNotExist("the menu is closed");
+      });
+    }
+
+    test("Escape preserves focus already on a persistent trigger chip", async function (assert) {
+      await render(
+        <template>
+          <SupplementalStripHost @items={{ITEMS}} @value={{array 1 2 3}} />
+        </template>
+      );
+      await click(".d-select__trigger");
+      const input = find("[role='combobox']");
+      input.setSelectionRange(0, 0);
+      await triggerKeyEvent(input, "keydown", "ArrowLeft");
+      const chip = document.activeElement;
+      assert
+        .dom(chip)
+        .hasClass("d-select__chip-remove", "focus entered the trigger chips");
+      await triggerKeyEvent(chip, "keydown", "Escape");
+      assert.dom("[role='listbox']").doesNotExist("Escape closes the menu");
+      assert.strictEqual(
+        document.activeElement,
+        chip,
+        "a surviving focused trigger chip retains focus"
+      );
+    });
+
+    test("button clear after close focuses its connected trigger", async function (assert) {
+      await render(
+        <template>
+          <SupplementalStripHost
+            @items={{ITEMS}}
+            @value={{array 1}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      await triggerKeyEvent(".d-select__filter", "keydown", "Escape");
+      await click(".d-select__clear");
+      assert.strictEqual(
+        document.activeElement,
+        find(".d-select__trigger"),
+        "clear cannot focus the detached panel input"
+      );
+    });
+
+    for (const variant of ["typeahead", "static"]) {
+      test(`desktop ${variant} keeps its controller after close`, async function (assert) {
+        await render(
+          <template>
+            <SupplementalStripHost
+              @items={{ITEMS}}
+              @value={{array 1}}
+              @variant={{variant}}
+            />
+          </template>
+        );
+        await click(".d-select__trigger");
+        await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+        await click(".d-select__clear");
+        assert.strictEqual(
+          document.activeElement,
+          find("[role='combobox']"),
+          "the persistent controller still receives focus"
+        );
+        await click(".d-select__trigger");
+        await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+        assert
+          .dom("[role='combobox']")
+          .hasAttribute(
+            "aria-activedescendant",
+            /.+/,
+            "the controller still drives list navigation"
+          );
+        assert
+          .dom(".d-select__strip")
+          .doesNotExist("U1e adds no desktop strip");
+      });
+    }
+
+    test("button modal orders its limit, strip and results", async function (assert) {
+      forceMobile();
+      await render(
+        <template>
+          <SupplementalStripHost
+            @items={{ITEMS}}
+            @maximum={{1}}
+            @value={{array 1}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      const panel = find(".fk-d-menu-modal .d-select__panel");
+      assert.true(
+        Boolean(panel.children[0].querySelector(".d-select__filter")),
+        "the query is first"
+      );
+      assert.true(
+        panel.children[1].matches(".d-select__limit"),
+        "then the limit"
+      );
+      assert.true(
+        panel.children[2].matches(".d-select__strip"),
+        "then the strip"
+      );
+      assert.true(
+        Boolean(panel.children[3].querySelector("[role='listbox']")),
+        "then the list"
+      );
+    });
+
+    test("an empty static result set retains modal focus after the last removal", async function (assert) {
+      forceMobile();
+      await render(
+        <template>
+          <SupplementalStripHost
+            @items={{array}}
+            @value={{array 99}}
+            @variant="static"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      find(".d-select__strip button").focus();
+      await triggerKeyEvent(".d-select__strip button", "keydown", "Delete");
+      assert
+        .dom(".d-select__strip")
+        .doesNotExist("the final unresolved item was removed");
+      assert.true(
+        Boolean(document.activeElement.closest(".fk-d-menu-modal")),
+        "focus stays in the modal even without an option"
+      );
+    });
+
+    test("touch removal names omit the keyboard hint", async function (assert) {
+      forceMobile();
+      sinon
+        .stub(this.owner.lookup("service:capabilities"), "touch")
+        .get(() => true);
+      await render(
+        <template>
+          <SupplementalStripHost @items={{ITEMS}} @value={{array 1}} />
+        </template>
+      );
+      await click(".d-select__trigger");
+      assert
+        .dom(".d-select__strip button")
+        .hasAttribute(
+          "aria-label",
+          "Remove Apple",
+          "touch users hear the item action"
+        );
+      assert
+        .dom(".d-select__strip button")
+        .doesNotHaveAttribute(
+          "aria-labelledby",
+          "the keyboard hint does not override the touch name"
+        );
+    });
+
+    test("long strips scroll within the panel budget and keep mobile tap targets", async function (assert) {
+      forceMobile();
+      const items = Array.from({ length: 40 }, (_, id) => ({
+        id,
+        name: `Held item ${id}`,
+      }));
+      const value = items.map((item) => item.id);
+      await render(
+        <template>
+          <SupplementalStripHost @items={{items}} @value={{value}} />
+        </template>
+      );
+      await click(".d-select__trigger");
+      const strip = find(".d-select__strip");
+      const panel = find(".fk-d-menu-modal .d-select__panel");
+      const button = find(".d-select__strip button");
+      assert.true(
+        strip.scrollHeight > strip.clientHeight,
+        "the strip overflows its own viewport"
+      );
+      assert.strictEqual(
+        getComputedStyle(strip).overflowY,
+        "auto",
+        "the strip owns its scroll"
+      );
+      assert.true(
+        button.offsetHeight >= 44,
+        "tap target is at least 44px high"
+      );
+      assert.true(button.offsetWidth >= 44, "tap target is at least 44px wide");
+      assert.true(
+        panel.offsetHeight <= parseFloat(getComputedStyle(panel).maxHeight) + 1,
+        "input, strip and list fit the panel budget"
+      );
+    });
+
+    test("strip focus suppresses the active option's second indicator", async function (assert) {
+      forceMobile();
+      await render(
+        <template>
+          <SupplementalStripHost @items={{ITEMS}} @value={{array 1}} />
+        </template>
+      );
+      await click(".d-select__trigger");
+      const option = find(".d-select__option.--active");
+      assert.true(Boolean(option), "the query has an active result");
+      find(".d-select__strip button").focus();
+      assert.strictEqual(
+        getComputedStyle(option).outlineStyle,
+        "none",
+        "only the strip shows the focus indicator"
+      );
+      find(".fk-d-menu-modal [role='combobox']").focus();
+      assert.notStrictEqual(
+        getComputedStyle(option).outlineStyle,
+        "none",
+        "the result indicator returns with query focus"
+      );
+    });
+
+    test("pending strip items have no buttons and unresolved items remain removable", async function (assert) {
+      forceMobile();
+      let resolve;
+      const response = new Promise((done) => (resolve = done));
+      const resolveValues = () => response;
+      const rendering = render(
+        <template>
+          <SupplementalStripHost
+            @items={{array}}
+            @resolveValues={{resolveValues}}
+            @value={{array 99 100}}
+          />
+        </template>
+      );
+      try {
+        await waitFor(".d-select__trigger");
+        const opening = click(".d-select__trigger");
+        await waitFor(".d-select__strip .d-skeleton");
+        assert
+          .dom(".d-select__strip li")
+          .exists({ count: 2 }, "one skeleton per held value");
+        assert
+          .dom(".d-select__strip button")
+          .doesNotExist("pending labels cannot be removed");
+        resolve([]);
+        await rendering;
+        await opening;
+        await settled();
+        assert
+          .dom(".d-select__strip .d-select__unresolved")
+          .exists({ count: 2 }, "missing values get fallback labels");
+        findAll(".d-select__strip button")[1].focus();
+        await triggerKeyEvent(document.activeElement, "keydown", "Delete");
+        assert
+          .dom(".d-select__strip button")
+          .exists({ count: 1 }, "unresolved values can be removed");
+        assert
+          .dom(document.activeElement.closest("li"))
+          .hasAttribute(
+            "data-value",
+            "99",
+            "focus stays on the remaining unresolved item"
+          );
+      } finally {
+        resolve([]);
+        await rendering;
+      }
     });
   }
 );
