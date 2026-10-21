@@ -384,11 +384,36 @@ export default class SelectAnnouncer {
     }, LOADING_FEEDBACK_DELAY);
   }
 
+  /** Prevents a batch or its query reset from being followed by a result-count report. */
+  suppressCount(): void {
+    this.#cancelPendingCount();
+    this.#suppressNextCount = true;
+    nextRunloop(() => (this.#suppressNextCount = false));
+  }
+
   valueChanged(
     oldValues: SelectValue,
     nextValues: SelectValue,
     { onAddedWithQuery, origin, reason }: ValueChangedOptions
   ): void {
+    if (origin?.bulk) {
+      const { added, held, limit } = origin.bulk;
+      let message = i18n("d_select.items_added", { count: added });
+      for (const [key, count] of [
+        ["items_not_added_held", held],
+        ["items_not_added_limit", limit],
+      ] as const) {
+        if (count > 0) {
+          message = i18n("d_select.bulk_add_summary", {
+            added: message,
+            not_added: i18n(`d_select.${key}`, { count }),
+          });
+        }
+      }
+      this.suppressCount();
+      this.#a11y.announce(message, "polite");
+      return;
+    }
     if (reason === "clear" && this.#engine.hasValue) {
       this.#a11y.announce(i18n("d_select.selection_cleared"), "polite");
       return;

@@ -78,6 +78,8 @@ interface MultiChipsSignature {
     shouldSelectOnFocus: () => boolean;
     /** Handles query editing. */
     onEdit: () => void;
+    /** Handles parsed pastes on the desktop query input. */
+    onPaste: (event: ClipboardEvent) => void | Promise<void>;
     /** Captures the desktop query input. */
     registerInput: (element: HTMLElement) => void;
     /** Handles focus leaving the desktop query input. */
@@ -344,6 +346,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           @readonly={{@presenter.isReadonly}}
           @registerInput={{@registerInput}}
           @shouldSelectOnFocus={{@shouldSelectOnFocus}}
+          {{on "paste" @onPaste}}
           {{keepAboveKeyboard @shouldCorrectKeyboardOcclusion}}
           {{on "keydown" @onInputKeydown}}
         />

@@ -245,6 +245,59 @@ export default class SelectionActions {
     }
   }
 
+  /** Adds a batch without losing its update authority during middleware or deferred emits. */
+  selectMany(items: readonly SelectItem[], origin?: SelectionOrigin): void {
+    this.#onIntent(origin);
+    if (this.#options.locked) {
+      return;
+    }
+
+    const seen = new Set<string>();
+    const additions: SelectItem[] = [];
+    let held = 0;
+    let limit = 0;
+    const remaining = this.remaining;
+    for (const item of items) {
+      if (item.disabled || item.onSelect || item.__header || item.__divider) {
+        continue;
+      }
+      const key = this.#options.valueKey(this.#options.itemValue(item));
+      if (key == null) {
+        continue;
+      }
+      if (this.isSelected(item) || seen.has(key)) {
+        held++;
+        continue;
+      }
+      seen.add(key);
+      if (!this.#options.multiple) {
+        this.select(item, origin);
+        return;
+      }
+      if (remaining !== undefined && additions.length >= remaining) {
+        limit++;
+        continue;
+      }
+      additions.push(item);
+    }
+    if (additions.length === 0) {
+      return;
+    }
+    for (const item of additions) {
+      this.#cacheResolved(item);
+    }
+    this.#emitChange(
+      [
+        ...this.#valueArray,
+        ...additions.map((item) => this.#options.itemValue(item)),
+      ],
+      {
+        ...(origin ?? { programmatic: true }),
+        bulk: { added: additions.length, held, limit },
+      }
+    );
+  }
+
   /**
    * Removes an item from the selection (emits the next value).
    */

@@ -357,15 +357,21 @@ select's whole life. It exposes:
 - `value`, `filter`, and tracked `pending` (whether async update work is in flight).
 - `close()` to close the overlay.
 - `select(item)` to set a single value or add a multi value.
+- `selectMany(items)` to add a batch with one `change` middleware run and one `@onChange`.
+  It skips disabled, action, structural, already-held and duplicate items, and truncates to
+  the remaining `@maximum` capacity. It caches added items for display. Empty and locked
+  batches emit nothing; even an all-held or fully capped batch supersedes older update work.
+  On a single-select it selects the first new eligible item.
 - `deselect(item)` to remove a multi value, or clear a single value only if that item is held.
 - `clear()` to clear a nonempty selection.
 - `reload()` to start a new query, even with the same filter. It does not supersede a pending
   `update()`.
 - `update(work)` to run synchronous or asynchronous work with a selection update scope.
 
-The scope has a pure `current` reader and `select(item)`, `deselect(item)`, and `clear()` verbs.
+The scope has a pure `current` reader and `select(item)`, `selectMany(items)`, `deselect(item)`,
+and `clear()` verbs.
 It has no `close()`, `reload()`, or `update()`. Inside `work`, call the scope's selection verbs.
-Calling `control.select()`, `control.deselect()`, or `control.clear()` expresses external
+Calling `control.select()`, `control.selectMany()`, `control.deselect()`, or `control.clear()` expresses external
 selection intent and supersedes your own update. Scope writes use the normal selection rules,
 including caps, `change` customizations, resolved-item caching, `@onChange`, and close-on-select;
 they do nothing while locked or after the scope loses authority.
@@ -397,8 +403,37 @@ between checks cannot be detected. Once work ends, its scope is no longer curren
 While async work is pending, the trigger shows selection loading feedback and a spinner.
 Synchronous work has no loading flash. Programmatic single sets and re-picks are announced;
 multi adds and removals keep their item announcements, and clear announces "Selection cleared".
+A batch announces one combined polite message: “3 added”, with “2 not added: already selected”
+and/or “1 not added: over the limit” when applicable. Repeated batch items count as already
+selected. Disabled, action and structural rows are silently skipped. Bulk feedback replaces
+single-item feedback and suppresses the trailing result count.
 No-change and superseded work announce no outcome, so extensions should announce their own
 no-change result alongside a toast. Control methods do nothing once the select is destroyed.
+
+### Parsing pastes
+
+`@parsePaste(text, context)` receives plain clipboard text and a snapshot of `{ filter,
+options, value }`. It runs on the desktop and mobile typeahead query inputs and the button
+variant's filter. Return `null` or `undefined` to leave native paste untouched (for example,
+for a single token), or an array of items to prevent native paste and call `selectMany`.
+An accepted array clears the original query, including when the batch adds nothing.
+
+```gjs
+<DSelect
+  @items={{this.items}}
+  @multiple={{true}}
+  @onChange={{this.onChange}}
+  @parsePaste={{this.parsePaste}}
+  @value={{this.value}}
+/>
+```
+
+The parser may return a promise of an array or a nullish result. A promise prevents native
+paste immediately and runs through `control.update()`, so a hand pick or newer selection
+intent supersedes the parser. Parsing and batch middleware share one update scope, including
+synchronous parsers. Query cleanup rechecks the scope after middleware and only clears the
+same query in the same open session. Newer typing is preserved even if the batch still lands.
+An asynchronous nullish result makes no selection change and leaves the query intact.
 
 ### Recipes
 

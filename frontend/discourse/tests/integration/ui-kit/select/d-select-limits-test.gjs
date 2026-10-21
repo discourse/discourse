@@ -1453,3 +1453,187 @@ module(
     });
   }
 );
+
+/** Dispatches a cancellable native paste without waiting for pending parser work. */
+function pasteBulk(text) {
+  const clipboardData = new DataTransfer();
+  clipboardData.setData("text/plain", text);
+  const event = new ClipboardEvent("paste", {
+    clipboardData,
+    bubbles: true,
+    cancelable: true,
+  });
+  find("input[role='combobox']").dispatchEvent(event);
+  return event;
+}
+
+/** Lets each test finish its parser without awaiting settled while it is pending. */
+function pendingParse() {
+  let resolve;
+  const promise = new Promise((done) => (resolve = done));
+  return { promise, resolve };
+}
+
+module(
+  "Integration | ui-kit | select | DSelect (bulk add and paste)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+    hooks.beforeEach(function () {
+      this.emptyValue = [];
+    });
+
+    test("mobile typeahead consumes a parsed paste with context", async function (assert) {
+      forceMobile();
+      const onChange = sinon.spy();
+      const parsePaste = sinon.spy(() => [ITEMS[0], ITEMS[1]]);
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @parsePaste={{parsePaste}}
+            @value={{this.emptyValue}}
+          />
+        </template>
+      );
+      await click(".d-select");
+      await fillIn("input[role='combobox']", "query");
+      const event = pasteBulk("one|two");
+      await settled();
+      assert.true(event.defaultPrevented, "mobile paste is consumed");
+      assert.strictEqual(onChange.callCount, 1, "the batch emits once");
+      const [text, context] = parsePaste.firstCall.args;
+      assert.strictEqual(text, "one|two", "the parser receives plain text");
+      assert.strictEqual(
+        context.filter,
+        "query",
+        "the parser receives the current query"
+      );
+      assert.deepEqual(
+        context.value,
+        [],
+        "the parser receives the current value"
+      );
+      assert.true(
+        Boolean(context.options),
+        "the parser receives resolved options"
+      );
+      assert
+        .dom("input[role='combobox']")
+        .hasValue("", "the mobile query clears");
+    });
+
+    test("async parsing preserves newer typing even when the batch still lands", async function (assert) {
+      const gate = pendingParse();
+      const onChange = sinon.spy();
+      const parsePaste = () => gate.promise;
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @parsePaste={{parsePaste}}
+            @value={{this.emptyValue}}
+          />
+        </template>
+      );
+      await click("input[role='combobox']");
+      await fillIn("input[role='combobox']", "old");
+      try {
+        pasteBulk("one|two");
+        const input = find("input[role='combobox']");
+        input.value = "new";
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      } finally {
+        gate.resolve([ITEMS[0], ITEMS[1]]);
+        await settled();
+      }
+      assert.strictEqual(
+        onChange.callCount,
+        1,
+        "typing alone does not revoke selection authority"
+      );
+      assert
+        .dom("input[role='combobox']")
+        .hasValue("new", "the parser leaves newer typing intact");
+    });
+
+    test("synchronous change middleware can supersede paste cleanup", async function (assert) {
+      withPluginApi((api) => {
+        api.registerValueTransformer(
+          "select-customizations",
+          ({ value: selects }) =>
+            selects.forAll((spec) =>
+              spec.change((next, context) => {
+                context.control.clear();
+              })
+            )
+        );
+      });
+      const onChange = sinon.spy();
+      const parsePaste = () => [ITEMS[0]];
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @parsePaste={{parsePaste}}
+            @value={{this.emptyValue}}
+          />
+        </template>
+      );
+      await click("input[role='combobox']");
+      await fillIn("input[role='combobox']", "keep");
+      const event = pasteBulk("one|two");
+      await settled();
+      assert.true(event.defaultPrevented, "the parser consumed the paste");
+      assert.strictEqual(onChange.callCount, 0, "middleware vetoes the batch");
+      assert
+        .dom("input[role='combobox']")
+        .hasValue("keep", "the revoked paste cannot clear the query");
+    });
+
+    test("bulk feedback combines held and limit reasons and suppresses trailing counts", async function (assert) {
+      const a11y = this.owner.lookup("service:a11y");
+      const announce = sinon.spy(a11y, "announce");
+      const onChange = sinon.spy();
+      const parsePaste = () => [ITEMS[0], ITEMS[1], ITEMS[2]];
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @maximum={{2}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @parsePaste={{parsePaste}}
+            @value={{array 1}}
+          />
+        </template>
+      );
+      await click("input[role='combobox']");
+      await fillIn("input[role='combobox']", "A");
+      announce.resetHistory();
+      pasteBulk("one|two|three");
+      await settled();
+      assert.strictEqual(
+        announce.callCount,
+        1,
+        "only one announcement, including after the query reset"
+      );
+      const [message, priority] = announce.firstCall.args;
+      assert.true(message.includes("1 added"), "the addition count is spoken");
+      assert.true(
+        message.includes("1 not added: already selected"),
+        "the held reason is spoken"
+      );
+      assert.true(
+        message.includes("1 not added: over the limit"),
+        "the limit reason is spoken"
+      );
+      assert.strictEqual(priority, "polite", "bulk feedback is polite");
+    });
+  }
+);

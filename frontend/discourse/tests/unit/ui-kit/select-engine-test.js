@@ -2180,3 +2180,147 @@ module("Unit | ui-kit | SelectEngine | sticky rows", function (hooks) {
     );
   });
 });
+
+module("Unit | ui-kit | SelectEngine | selectMany", function (hooks) {
+  setupTest(hooks);
+
+  const A = { id: 1, name: "A" };
+  const B = { id: 2, name: "B" };
+  const C = { id: 3, name: "C" };
+
+  test("batch filters structural and action rows, caches new items and runs middleware once", function (assert) {
+    const middleware = sinon.spy((next) => next());
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "select-customizations",
+        ({ value: selects }) =>
+          selects.forAll((spec) => spec.change(middleware))
+      );
+    });
+    const action = sinon.spy();
+    const { engine, changes } = controlled({
+      multiple: true,
+      value: ["1"],
+      maximum: 3,
+    });
+    engine.control.selectMany([
+      A,
+      { ...B, disabled: true },
+      { ...B, __header: true },
+      { ...B, __divider: true },
+      { ...B, onSelect: action },
+      B,
+      { ...B, id: "2" },
+      C,
+      { id: 4 },
+    ]);
+    assert.deepEqual(
+      changes,
+      [
+        [
+          ["1", 2, 3],
+          [B, C],
+        ],
+      ],
+      "one batch with only eligible items"
+    );
+    assert.strictEqual(middleware.callCount, 1, "one middleware invocation");
+    assert.strictEqual(action.callCount, 0, "action rows are skipped");
+    assert.strictEqual(engine.resolveSingleSync(2), B, "new items are cached");
+    assert.strictEqual(
+      engine.resolveSingleSync(3),
+      C,
+      "every new item is cached"
+    );
+  });
+
+  test("single select chooses the first new eligible item", function (assert) {
+    const { engine, changes } = controlled({ value: 1 });
+    engine.selectMany([A, { ...B, disabled: true }, C, B]);
+    assert.deepEqual(
+      changes,
+      [[3, C]],
+      "single select emits its first new item only"
+    );
+  });
+
+  test("locked batches and empty batches emit nothing", function (assert) {
+    const { engine, changes } = controlled({
+      multiple: true,
+      getLocked: () => true,
+    });
+    engine.selectMany([A, B]);
+    assert.strictEqual(changes.length, 0, "locked batches do not emit");
+    const empty = controlled({ multiple: true });
+    empty.engine.selectMany([]);
+    assert.strictEqual(empty.changes.length, 0, "empty batches do not emit");
+  });
+
+  test("fully capped batches supersede pending work before truncation", async function (assert) {
+    const { engine, changes } = controlled({
+      multiple: true,
+      value: [1],
+      maximum: 1,
+    });
+    const gate = deferred();
+    let scope;
+    const done = engine.control.update(async (current) => {
+      scope = current;
+      await gate.promise;
+      current.clear();
+    });
+    try {
+      engine.control.selectMany([B, C]);
+      assert.false(
+        scope.current,
+        "even a capped batch revokes the older scope"
+      );
+    } finally {
+      gate.resolve();
+      await done;
+    }
+    assert.strictEqual(changes.length, 0, "the old clear cannot land");
+  });
+
+  test("scoped batches retain authority and deferred commits are revoked by a newer batch", async function (assert) {
+    const queued = [];
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "select-customizations",
+        ({ value: selects }) =>
+          selects.forAll((spec) => spec.change((next) => queued.push(next)))
+      );
+    });
+    const own = controlled({ multiple: true });
+    await own.engine.control.update((scope) => {
+      scope.selectMany([A, B]);
+      assert.true(
+        scope.current,
+        "the batch preserves its scope during middleware"
+      );
+    });
+    queued.shift()();
+    assert.deepEqual(
+      own.changes.at(-1)[0],
+      [1, 2],
+      "a normal end preserves the deferred batch"
+    );
+
+    const stale = controlled({ multiple: true });
+    const gate = deferred();
+    const done = stale.engine.control.update(async (scope) => {
+      scope.selectMany([A, B]);
+      await gate.promise;
+    });
+    stale.engine.control.selectMany([C]);
+    queued.shift()();
+    queued.shift()();
+    gate.resolve();
+    await done;
+    assert.deepEqual(
+      stale.changes.map(([value]) => value),
+      [[3]],
+      "a newer batch blocks the old deferred emit"
+    );
+  });
+});

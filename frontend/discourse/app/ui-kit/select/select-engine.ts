@@ -238,6 +238,8 @@ export interface SelectControl {
   close(): void;
   /** Selects an item, exactly as picking its row would. */
   select(item: SelectItem): void;
+  /** Adds eligible items in one change; single-select chooses the first new item. */
+  selectMany(items: readonly SelectItem[]): void;
   /** Removes an item if held; single-select clears its held item. */
   deselect(item: SelectItem): void;
   /** Clears a nonempty selection. */
@@ -256,6 +258,8 @@ export interface SelectUpdateScope {
   readonly current: boolean;
   /** Selects an item while current and unlocked. */
   select(item: SelectItem): void;
+  /** Adds eligible items in one change; single-select chooses the first new item. */
+  selectMany(items: readonly SelectItem[]): void;
   /** Removes a held item while current and unlocked. */
   deselect(item: SelectItem): void;
   /** Clears a nonempty selection while current and unlocked. */
@@ -610,6 +614,13 @@ class EngineControl implements SelectControl {
   select(item: SelectItem): void {
     if (!isDestroying(this.#engine)) {
       this.#engine.select(item, { programmatic: true });
+    }
+  }
+
+  /** Adds a batch while the select is alive. */
+  selectMany(items: readonly SelectItem[]): void {
+    if (!isDestroying(this.#engine)) {
+      this.#engine.selectMany(items, { programmatic: true });
     }
   }
 
@@ -1226,6 +1237,16 @@ export default class SelectEngine {
   @bind
   select(item: SelectItem, origin?: SelectionOrigin): void {
     this.#selectionActions.select(item, origin);
+  }
+
+  /**
+   * Adds eligible items with one middleware run and emit, up to the remaining capacity.
+   * Skips held, duplicate, disabled, action and structural items. Single-select picks
+   * the first new eligible item. Even an empty batch supersedes older update intent.
+   */
+  @bind
+  selectMany(items: readonly SelectItem[], origin?: SelectionOrigin): void {
+    this.#selectionActions.selectMany(items, origin);
   }
 
   /**

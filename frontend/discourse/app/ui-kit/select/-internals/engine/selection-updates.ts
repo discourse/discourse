@@ -10,9 +10,20 @@ import type { SelectState } from "./select-sources.ts";
 import type SelectionActions from "./selection-actions.ts";
 
 /** Distinguishes one update's writes from external selection intent. */
-export type SelectionOrigin =
+export type SelectionOrigin = (
   | { record: UpdateRecord; programmatic?: never }
-  | { programmatic: true; record?: never };
+  | { programmatic: true; record?: never }
+) & {
+  /** Counts for one combined bulk-add announcement. */
+  bulk?: {
+    /** Items added after filtering and truncation. */
+    added: number;
+    /** Already-held or repeated items. */
+    held: number;
+    /** Eligible items excluded by the selection cap. */
+    limit: number;
+  };
+};
 
 /**
  * One update: its scope, the `done` barrier the trigger waits on, and the value keys it still
@@ -168,6 +179,8 @@ export default class SelectionUpdates {
       },
       select: (item) =>
         this.#write(record, () => this.#actions.select(item, { record })),
+      selectMany: (items) =>
+        this.#write(record, () => this.#actions.selectMany(items, { record })),
       deselect: (item) =>
         this.#write(record, () => this.#actions.deselect(item, { record })),
       clear: () => this.#write(record, () => this.#actions.clear({ record })),

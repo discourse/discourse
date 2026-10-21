@@ -3541,6 +3541,16 @@ en:
       updating_selection: "Updating selection…"
       item_selected: "Selected %{item}"
       item_added: "Added %{item}"
+      items_added:
+        one: "%{count} added"
+        other: "%{count} added"
+      items_not_added_held:
+        one: "%{count} not added: already selected"
+        other: "%{count} not added: already selected"
+      items_not_added_limit:
+        one: "%{count} not added: over the limit"
+        other: "%{count} not added: over the limit"
+      bulk_add_summary: "%{added}, %{not_added}"
       item_removed: "Removed %{item}"
       expand: "Show options"
       load_error: "Couldn't load results."

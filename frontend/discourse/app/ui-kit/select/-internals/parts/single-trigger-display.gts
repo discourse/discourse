@@ -67,6 +67,8 @@ interface SingleTriggerDisplaySignature {
     onBlur: (event: FocusEvent) => void;
     /** Handles query editing. */
     onEdit: () => void;
+    /** Handles parsed pastes on the desktop query input. */
+    onPaste: (event: ClipboardEvent) => void | Promise<void>;
     /** Captures the desktop query input. */
     registerInput: (element: HTMLElement) => void;
     /** Handles selection-removal keys on the query input. */
@@ -228,6 +230,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
           @registerInput={{@registerInput}}
           @selectLabelOnAppear={{@hasSelectionBlock}}
           @shouldSelectOnFocus={{@shouldSelectOnFocus}}
+          {{on "paste" @onPaste}}
           {{keepAboveKeyboard @shouldCorrectKeyboardOcclusion}}
           {{on "keydown" @onInputKeydown}}
           {{on "focus" @onFocus}}

@@ -4,6 +4,7 @@ import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import {
   click,
+  fillIn,
   find,
   findAll,
   focus,
@@ -13,9 +14,12 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import {
   DefaultHost,
   ITEMS,
@@ -802,6 +806,295 @@ module(
       assert
         .dom(`${TRIGGER} .d-select__placeholder`)
         .doesNotExist("with no second copy beside it");
+    });
+  }
+);
+
+/** A promise whose settlement the test controls. */
+function deferred() {
+  let resolve;
+  const promise = new Promise((done) => (resolve = done));
+  return { promise, resolve };
+}
+
+/** Dispatches a paste carrying `text` on the element. */
+function paste(selector, text) {
+  const data = new DataTransfer();
+  data.setData("text", text);
+  data.setData("text/plain", text);
+  const event = new ClipboardEvent("paste", {
+    clipboardData: data,
+    bubbles: true,
+    cancelable: true,
+  });
+  find(selector).dispatchEvent(event);
+  return event;
+}
+
+const FRUIT = [
+  { id: 1, name: "Apple" },
+  { id: 2, name: "Banana" },
+  { id: 3, name: "Cherry" },
+  { id: 4, name: "Damson", disabled: true },
+];
+
+/** The option whose text includes `name`. */
+function optionNamed(name) {
+  return findAll("[role='option']").find((row) =>
+    row.textContent.includes(name)
+  );
+}
+
+/** An action row that hands `batch` to `control.selectMany`. */
+function bulkRow(batch) {
+  return () => [
+    {
+      id: "bulk",
+      name: "Add several",
+      onSelect(control) {
+        control.selectMany?.(batch);
+      },
+    },
+  ];
+}
+
+module(
+  "Integration | ui-kit | select | DSelect (multi bulk add)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("selectMany adds a batch in one change", async function (assert) {
+      const onChange = sinon.spy();
+      const specialItems = bulkRow([FRUIT[0], FRUIT[1], FRUIT[2]]);
+
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUIT}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @specialItems={{specialItems}}
+            @value={{(array)}}
+            @variant="button"
+          />
+        </template>
+      );
+      await dSelect().open();
+      await dSelect().selectByName("Add several");
+
+      assert.true(onChange.calledOnce, "one emit");
+      assert.deepEqual(onChange.lastCall.args[0], [1, 2, 3]);
+    });
+
+    test("selectMany skips held, disabled and repeated items", async function (assert) {
+      const onChange = sinon.spy();
+      const specialItems = bulkRow([FRUIT[0], FRUIT[1], FRUIT[1], FRUIT[3]]);
+
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUIT}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @specialItems={{specialItems}}
+            @value={{array 1}}
+            @variant="button"
+          />
+        </template>
+      );
+      await dSelect().open();
+      await dSelect().selectByName("Add several");
+
+      assert.true(onChange.calledOnce);
+      assert.deepEqual(onChange.lastCall.args[0], [1, 2], "only Banana is new");
+    });
+
+    test("selectMany stops at the cap and says what was left out", async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      const onChange = sinon.spy();
+      const specialItems = bulkRow([FRUIT[1], FRUIT[2]]);
+
+      await render(
+        <template>
+          <A11yLiveRegions />
+          <DSelect
+            @items={{FRUIT}}
+            @maximum={{2}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @specialItems={{specialItems}}
+            @value={{array 1}}
+            @variant="button"
+          />
+        </template>
+      );
+      await dSelect().open();
+      await dSelect().selectByName("Add several");
+
+      assert.deepEqual(
+        onChange.lastCall.args[0],
+        [1, 2],
+        "truncated to the cap"
+      );
+      const polite = find("#a11y-announcements-polite").textContent;
+      assert.true(/1 added/.test(polite), `reports the addition: ${polite}`);
+      assert.true(/1 not added/.test(polite), `reports the skip: ${polite}`);
+    });
+
+    test("a batch that adds nothing still cancels an older update", async function (assert) {
+      const gate = deferred();
+      const onChange = sinon.spy();
+      const specialItems = () => [
+        {
+          id: "slow",
+          name: "Slow add",
+          onSelect(control) {
+            control.update(async (scope) => {
+              await gate.promise;
+              scope.select(FRUIT[2]);
+            });
+          },
+        },
+        {
+          id: "bulk",
+          name: "Add held",
+          onSelect(control) {
+            control.selectMany?.([FRUIT[0]]);
+          },
+        },
+      ];
+
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUIT}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @specialItems={{specialItems}}
+            @value={{array 1}}
+            @variant="button"
+          />
+        </template>
+      );
+      await dSelect().open();
+      try {
+        optionNamed("Slow add").click();
+        optionNamed("Add held").click();
+      } finally {
+        gate.resolve();
+        await settled();
+      }
+
+      assert.true(onChange.notCalled, "the newer, empty intent wins");
+    });
+
+    test("a parsed paste adds every item and clears the query", async function (assert) {
+      const onChange = sinon.spy();
+      const parsePaste = (text) =>
+        text.includes("|")
+          ? text.split("|").map((name) => FRUIT.find((f) => f.name === name))
+          : null;
+
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUIT}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @parsePaste={{parsePaste}}
+            @value={{(array)}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      await fillIn("[role='combobox']", "x");
+      const event = paste("[role='combobox']", "Apple|Cherry");
+      await settled();
+
+      assert.true(event.defaultPrevented, "the paste is consumed");
+      assert.true(onChange.calledOnce);
+      assert.deepEqual(onChange.lastCall.args[0], [1, 3]);
+      assert.dom("[role='combobox']").hasValue("", "the query is cleared");
+    });
+
+    test("a paste the parser declines is left alone", async function (assert) {
+      const onChange = sinon.spy();
+      const parsePaste = () => null;
+
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUIT}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @parsePaste={{parsePaste}}
+            @value={{(array)}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      const event = paste("[role='combobox']", "Apple");
+      await settled();
+
+      assert.false(event.defaultPrevented, "default paste proceeds");
+      assert.true(onChange.notCalled);
+    });
+
+    test("an async parse is superseded by a hand pick", async function (assert) {
+      const parsed = deferred();
+      const onChange = sinon.spy();
+      const parsePaste = () => parsed.promise;
+
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUIT}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @parsePaste={{parsePaste}}
+            @value={{(array)}}
+            @variant="button"
+          />
+        </template>
+      );
+      await dSelect().open();
+      try {
+        paste(".d-select__filter", "Apple|Cherry");
+        optionNamed("Banana").click();
+      } finally {
+        parsed.resolve([FRUIT[0], FRUIT[2]]);
+        await settled();
+      }
+
+      assert.deepEqual(
+        onChange.args.map(([value]) => value),
+        [[2]],
+        "only the hand pick lands"
+      );
+    });
+
+    test("the button variant's filter takes a parsed paste", async function (assert) {
+      const onChange = sinon.spy();
+      const parsePaste = (text) =>
+        text.split("|").map((name) => FRUIT.find((f) => f.name === name));
+
+      await render(
+        <template>
+          <DSelect
+            @items={{FRUIT}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @parsePaste={{parsePaste}}
+            @value={{(array)}}
+            @variant="button"
+          />
+        </template>
+      );
+      await dSelect().open();
+      paste(".d-select__filter", "Apple|Banana");
+      await settled();
+
+      assert.deepEqual(onChange.lastCall?.args[0], [1, 2]);
     });
   }
 );

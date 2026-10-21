@@ -46,10 +46,33 @@ import { i18n } from "discourse-i18n";
 
 export type { SelectVariant } from "discourse/ui-kit/select/-internals/coordinators/variant-presenter";
 
+/** Snapshot supplied to a paste parser before its asynchronous work begins. */
+export interface SelectPasteContext {
+  /** The current query text. */
+  filter: string;
+  /** The select's resolved presentation and recipe options. */
+  options: SelectResolvedOptions;
+  /** The current controlled selection. */
+  value: SelectValue;
+}
+
 interface DSelectSignature {
   Args: {
     value?: SelectValue;
     multiple?: boolean;
+    /**
+     * Parses pasted text into a batch. Nullish results preserve native paste; arrays
+     * add eligible items and clear the original query. Async results lose authority
+     * to newer selection intent; newer typing and sessions keep their query.
+     */
+    parsePaste?: (
+      text: string,
+      context: SelectPasteContext
+    ) =>
+      | readonly SelectItemModel[]
+      | null
+      | undefined
+      | Promise<readonly SelectItemModel[] | null | undefined>;
     /** The select's recipe or family, fixed at construction. */
     kind?: string;
     /** Declares recipe option keys and their live base values. Requires `@kind`; core keys are reserved. */
@@ -647,6 +670,50 @@ export default class DSelect extends Component<DSelectSignature> {
     this.args.onChange?.(nextValue, payload, change);
   }
 
+  /** Consumes parsed pastes while keeping selection and query cleanup under one authority. */
+  @action
+  handlePaste(event: ClipboardEvent): void | Promise<void> {
+    if (this.presenter.isLocked || !this.args.parsePaste) {
+      return;
+    }
+    const session = this.interaction.session;
+    const query = this.engine.queryKey;
+    const result = this.args.parsePaste(
+      event.clipboardData?.getData("text/plain") ?? "",
+      {
+        filter: this.engine.filter,
+        options: this.engine.resolvedOptions,
+        value: this.engine.value,
+      }
+    );
+    if (result == null) {
+      return;
+    }
+    event.preventDefault();
+    return this.engine.control.update((scope) => {
+      const apply = (items: readonly SelectItemModel[] | null | undefined) => {
+        if (items == null || !scope.current) {
+          return;
+        }
+        scope.selectMany(items);
+        // Middleware may synchronously replace the selection intent or edit the query.
+        if (
+          scope.current &&
+          this.interaction.session === session &&
+          this.engine.queryKey === query
+        ) {
+          this.announcer.suppressCount();
+          this.engine.setFilter("");
+          this.interaction.queryActive = false;
+        }
+      };
+      if (result instanceof Promise) {
+        return result.then(apply);
+      }
+      apply(result);
+    });
+  }
+
   @action
   onFilterInput(event: Event): void {
     this.engine.setFilter((event.target as HTMLInputElement).value);
@@ -760,6 +827,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @onBlur={{this.interaction.handleTriggerBlur}}
               @onEdit={{this.interaction.beginQuery}}
               @onInputKeydown={{this.interaction.handleInputKeydown}}
+              @onPaste={{this.handlePaste}}
               @onRegisterChipRoving={{this.interaction.registerChipRoving}}
               @pending={{this.engine.pending}}
               @presenter={{this.presenter}}
@@ -802,6 +870,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @onEdit={{this.interaction.beginQuery}}
               @onFocus={{this.interaction.handleTriggerFocus}}
               @onInputKeydown={{this.interaction.handleInputKeydown}}
+              @onPaste={{this.handlePaste}}
               @pending={{this.engine.pending}}
               @placeholder={{this.presenter.placeholder}}
               @presenter={{this.presenter}}
@@ -870,6 +939,7 @@ export default class DSelect extends Component<DSelectSignature> {
                 this.interaction.handleControllerKeydown
                 capture=true
               }}
+              {{on "paste" this.handlePaste}}
               {{didInsert this.interaction.captureFilter}}
             />
           {{else if this.presenter.isMobileTypeahead}}
@@ -890,6 +960,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @placeholder={{this.presenter.searchPlaceholderText}}
               @readonly={{this.presenter.isReadonly}}
               @registerInput={{this.interaction.captureFilter}}
+              {{on "paste" this.handlePaste}}
               {{keepAboveKeyboard
                 this.interaction.shouldCorrectKeyboardOcclusion
               }}

@@ -22,7 +22,7 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     rule and an engine-owned "Create …" name.
   - ☑ **Disabled rows** reachable by arrow keys and announced as unavailable, with a visible
     description.
-  - ☐ **Bulk add:** `selectMany` and `@parsePaste`.
+  - ☑ **Bulk add:** `selectMany` and `@parsePaste`.
   - ☐ **Selection strip** in the mobile modal, and the modal's accessible name.
   - ☐ **Compact and overflow** (`@maxVisibleChips`); display-only chips on button, static and
     mobile triggers.
