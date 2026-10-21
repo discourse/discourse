@@ -11,6 +11,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { optionalRequire } from "discourse/lib/utilities";
 import { and } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -256,7 +258,7 @@ export default class VoiceChatPanel extends Component {
   <template>
     <section
       aria-label={{i18n "voice.chat.title"}}
-      class="voice-chat"
+      class={{dConcatClass "voice-chat" (if this.unavailable "is-unavailable")}}
       {{didInsert this.loadSession}}
     >
       <header class="voice-chat__header">
@@ -303,22 +305,24 @@ export default class VoiceChatPanel extends Component {
             <this.chatThread @thread={{thread}} />
           {{/each}}
         {{else if this.unavailable}}
-          <div class="voice-chat__empty">
-            {{dIcon "far-comment"}}
-            <p class="voice-chat__empty-title">
-              {{i18n "voice.chat.unavailable"}}
-            </p>
-          </div>
+          <DEmptyState @svgContent={{dIcon "comment-slash"}} @title="Zoinks!">
+            <:tip>
+              <div class="empty-state__tip-text">
+                {{i18n "voice.chat.unavailable"}}
+              </div>
+            </:tip>
+          </DEmptyState>
         {{else}}
-          <div class="voice-chat__empty">
-            {{dIcon "far-comment"}}
-            <p class="voice-chat__empty-title">
-              {{i18n "voice.chat.empty_title"}}
-            </p>
-            <p class="voice-chat__empty-body">
-              {{i18n "voice.chat.empty_body"}}
-            </p>
-          </div>
+          <DEmptyState
+            @svgContent={{dIcon "d-chat"}}
+            @title={{i18n "voice.chat.empty_title"}}
+          >
+            <:tip>
+              <div class="empty-state__tip-text">
+                {{i18n "voice.chat.empty_body"}}
+              </div>
+            </:tip>
+          </DEmptyState>
           <footer class="voice-chat__composer">
             <div class="voice-chat__composer-inner">
               <EmojiPicker

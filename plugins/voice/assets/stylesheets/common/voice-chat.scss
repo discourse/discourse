@@ -86,27 +86,8 @@
     }
   }
 
-  &__empty {
+  .empty-state__container {
     margin: auto;
-    padding: var(--space-4);
-    text-align: center;
-    color: var(--primary-medium);
-
-    .d-icon {
-      font-size: 2rem;
-      color: var(--primary-low-mid);
-    }
-  }
-
-  &__empty-title {
-    margin: var(--space-2) 0 var(--space-1);
-    color: var(--primary-high);
-    font-weight: 600;
-  }
-
-  &__empty-body {
-    margin: 0;
-    font-size: var(--font-down-1);
   }
 
   // Only the session's very first message goes through this starter composer;
@@ -149,6 +130,20 @@
 
   &__send {
     flex: 0 0 auto;
+  }
+}
+
+.empty-state {
+  .voice-chat & {
+    .d-icon {
+      color: var(--tertiary);
+    }
+  }
+
+  .is-unavailable & {
+    .d-icon {
+      color: var(--danger);
+    }
   }
 }
 

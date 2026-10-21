@@ -53,6 +53,9 @@ en:
         recording_stopped_toast: "The recording has stopped."
       room_page:
         empty: "No one is here yet — join to get things started."
+        participant_count:
+          one: "%{count} in room"
+          other: "%{count} in room"
       widget:
         title: "Active voice room: %{room}"
         open_chat: "Open room chat"
