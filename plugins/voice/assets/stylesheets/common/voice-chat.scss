@@ -1,49 +1,11 @@
 .voice-chat {
-  // border-box so the 22rem min-width (set by the room sidebar) includes the
-  // borders — content-box would make the panel 2px wider than the sidebar,
-  // whose overflow: hidden then clips the right border off.
-  box-sizing: border-box;
   display: flex;
-  flex: 1;
   flex-direction: column;
   min-height: 0;
   width: 100%;
   overflow: hidden;
-  border: 1px solid var(--primary-low);
-  border-radius: 0.75rem;
   background: var(--secondary);
-
-  &__header {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-3);
-    border-block-end: 1px solid var(--primary-low);
-  }
-
-  &__title {
-    margin: 0;
-    font-size: var(--font-0);
-    font-weight: 600;
-  }
-
-  &__open-in-chat {
-    margin-inline-start: auto;
-  }
-
-  &__close {
-    margin-inline-start: auto;
-
-    // The chat toggle in the room's control bar is the close affordance; only
-    // the narrow-viewport layout needs an X of its own, because there the
-    // panel becomes a drawer overlaying that control bar. Breakpoint matches
-    // the sidebar drawer in voice-room-page.scss.
-    display: none;
-
-    @media (width <= 1000px) {
-      display: inline-flex;
-    }
-  }
+  height: 100%;
 
   &__body {
     display: flex;
@@ -91,6 +53,7 @@
   }
 }
 
+// chat component overrules
 .empty-state {
   .voice-chat & {
     .d-icon {
@@ -114,6 +77,12 @@
     &__inner-container {
       padding-inline-start: var(--space-4);
     }
+  }
+}
+
+.c-navbar__title-text {
+  .d-icon {
+    color: var(--primary-high);
   }
 }
 

@@ -24,7 +24,6 @@ $voice-widget-z: z("header") + 1;
   // a content-driven box would chase its own layout.
   height: min(21rem, 60vh);
   padding: var(--space-3);
-  border: 1px solid var(--primary-low);
   border-radius: 0.75rem;
   background: var(--secondary);
   box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 20%);
@@ -237,41 +236,11 @@ html.discourse-touch .voice-call-widget {
 }
 
 .voice-room-page {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-
-  // A definite height (not just a floor) so the flex chain below actually
-  // constrains: without it a transiently oversized video tile stretches the
-  // whole page and pushes the control bar below the fold.
-  height: calc(100dvh - var(--header-offset, 4em) - 6em);
-
-  &__title-row {
-    display: flex;
-    align-items: center;
-    gap: 0.75em;
-    min-width: 0;
-  }
-
-  &__title {
-    margin: 0;
-  }
-
-  &__description {
-    margin: 0;
-    color: var(--primary-high);
-    overflow-wrap: anywhere;
-  }
-
-  // The video column and the chat sidebar sit side by side; the column flexes
-  // and the sidebar takes a fixed width. min-height: 0 lets the grid and the
-  // chat message list scroll instead of pushing the page taller.
-  &__body {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    gap: var(--space-4);
-  }
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  height: 100%;
+  min-height: 0;
+  border-right: 1px solid var(--content-border-color);
 
   &__main {
     flex: 1;
@@ -279,15 +248,16 @@ html.discourse-touch .voice-call-widget {
     min-height: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
   }
 
-  &__sidebar {
+  .chat-side-panel {
     flex: 0 0 22rem;
     width: 22rem;
+    min-width: 0;
     min-height: 0;
     display: flex;
     overflow: hidden;
+    border-inline-start: 1px solid var(--content-border-color);
 
     // Animating the width (not just fading in place) makes the whole layout
     // ease — the video column and controls resize smoothly instead of
@@ -311,12 +281,6 @@ html.discourse-touch .voice-call-widget {
     }
   }
 
-  &__chat-toggle {
-    &.--active {
-      color: var(--tertiary);
-    }
-  }
-
   // Meet-style column: the video grid fills the space with tiles centered,
   // and the control bar sits on the bottom row, level with the chat panel's
   // composer next door.
@@ -326,6 +290,7 @@ html.discourse-touch .voice-call-widget {
     display: flex;
     flex-direction: column;
     row-gap: 0.75em;
+    padding: var(--space-2);
   }
 
   &__presentation {
@@ -454,6 +419,44 @@ html.discourse-touch .voice-call-widget {
       color: var(--tertiary);
     }
   }
+}
+
+// fallbacks when chat plugin isn't enabled
+.voice-room-header {
+  &__badge,
+  &__participants {
+    color: var(--primary-medium);
+  }
+
+  &__participants {
+    font-size: var(--font-down-1);
+  }
+
+  &__fallback {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    border-block-end: 1px solid var(--content-border-color);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--font-up-1);
+  }
+
+  &__actions {
+    display: flex;
+    margin-inline-start: auto;
+  }
+}
+
+#main-outlet-wrapper:has(.voice-room-header) {
+  gap: 0;
+}
+
+#main-outlet:has(.voice-room-header) {
+  padding-top: 0;
 }
 
 // Split "combo" button (mic/camera) shared by VoiceCallControls in both the
@@ -649,7 +652,7 @@ html.discourse-touch .voice-call-widget {
     padding-block-end: 1px;
   }
 
-  .voice-room-page__sidebar {
+  .voice-room-page .chat-side-panel {
     position: fixed;
     inset-block: var(--header-offset, 4em) 0;
     inset-inline: 0;

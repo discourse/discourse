@@ -29,17 +29,15 @@ import {
   DEFAULT_TILE_ASPECT,
   trackGridSize,
 } from "../../lib/voice/video-grid-layout.js";
-import VoiceInviteUsersModal from "../modal/voice-invite-users.gjs";
 import VoiceRoomInfoModal from "../modal/voice-room-info.gjs";
 import VoiceInviteAgentButton from "../voice-invite-agent-button.gjs";
 import VoiceCallControls from "./call-controls.gjs";
 import VoiceCallSubmenu from "./call-submenu.gjs";
 import VoiceCaptionOverlay from "./caption-overlay.gjs";
 import VoiceChatPanel from "./chat-panel.gjs";
-import VoiceRecordingBadge from "./recording-badge.gjs";
 import VoiceRingingTile from "./ringing-tile.gjs";
+import VoiceRoomHeader from "./room-header.gjs";
 import VoiceSpeakQueue from "./speak-queue.gjs";
-import VoiceTranscriptBadge from "./transcript-badge.gjs";
 import VoiceVideoTile from "./video-tile.gjs";
 
 const ROOM_MENU = "voice-room-menu";
@@ -252,8 +250,8 @@ export default class VoiceRoomPage extends Component {
     return this.chatOpen && this.joined && this.chatAvailable;
   }
 
-  get chatToggleTitle() {
-    return this.chatOpen ? i18n("voice.chat.close") : i18n("voice.chat.open");
+  get canOpenChat() {
+    return this.joined && this.chatAvailable && !this.chatVisible;
   }
 
   get chatRendered() {
@@ -426,8 +424,8 @@ export default class VoiceRoomPage extends Component {
   }
 
   @action
-  toggleChat() {
-    this.setChatOpen(!this.chatOpen);
+  openChat() {
+    this.setChatOpen(true);
   }
 
   @action
@@ -471,21 +469,9 @@ export default class VoiceRoomPage extends Component {
   }
 
   @action
-  openInviteModal(closeMenu) {
-    closeMenu?.();
-    this.modal.show(VoiceInviteUsersModal, { model: { room: this.room } });
-  }
-
-  @action
   dockAndClose(closeMenu) {
     closeMenu?.();
     this.dockRoom();
-  }
-
-  @action
-  toggleChatFromMenu(closeMenu) {
-    closeMenu?.();
-    this.toggleChat();
   }
 
   @action
@@ -565,269 +551,234 @@ export default class VoiceRoomPage extends Component {
       {{didInsert this.autoJoinIfRequested}}
       {{didUpdate this.reconcileSpotlight this.participants}}
     >
-      <div class="voice-room-page__body">
-        <div class="voice-room-page__main">
-          <header class="voice-room-page__header">
-            <div class="voice-room-page__title-row">
-              <h1 class="voice-room-page__title">{{this.room.name}}</h1>
-              <VoiceRecordingBadge @room={{this.room}} />
-              <VoiceTranscriptBadge @room={{this.room}} />
-            </div>
-            {{#if this.room.description_excerpt}}
-              <p class="voice-room-page__description">
-                {{this.room.description_excerpt}}
-              </p>
-            {{/if}}
-          </header>
 
-          <div class="voice-room-page__stage">
-            {{#if this.tiles.length}}
-              {{#if this.presentationLayout}}
-                <div class="voice-room-page__presentation">
-                  <div class="voice-room-page__presentation-main">
-                    <VoiceVideoTile
-                      @isSelf={{this.presentationTile.isSelf}}
-                      @onAspect={{this.reportTileAspect}}
-                      @onSpotlight={{this.toggleSpotlight}}
-                      @participant={{this.presentationTile.participant}}
-                      @room={{this.room}}
-                      @showVideo={{this.presentationTile.showVideo}}
-                      @spotlighted={{this.presentationTile.spotlighted}}
-                    />
+      <div class="voice-room-page__main">
+        <VoiceRoomHeader
+          @canOpenChat={{this.canOpenChat}}
+          @onOpenChat={{this.openChat}}
+          @room={{this.room}}
+        />
+
+        <div class="voice-room-page__stage">
+          {{#if this.tiles.length}}
+            {{#if this.presentationLayout}}
+              <div class="voice-room-page__presentation">
+                <div class="voice-room-page__presentation-main">
+                  <VoiceVideoTile
+                    @isSelf={{this.presentationTile.isSelf}}
+                    @onAspect={{this.reportTileAspect}}
+                    @onSpotlight={{this.toggleSpotlight}}
+                    @participant={{this.presentationTile.participant}}
+                    @room={{this.room}}
+                    @showVideo={{this.presentationTile.showVideo}}
+                    @spotlighted={{this.presentationTile.spotlighted}}
+                  />
+                </div>
+
+                {{#if
+                  (or
+                    this.presentationRailTiles.length this.ringingEntries.length
+                  )
+                }}
+                  <div class="voice-room-page__presentation-rail">
+                    {{#each
+                      this.presentationRailTiles key="participant.id"
+                      as |tile|
+                    }}
+                      <VoiceVideoTile
+                        @isSelf={{tile.isSelf}}
+                        @onAspect={{this.reportTileAspect}}
+                        @onSpotlight={{this.toggleSpotlight}}
+                        @participant={{tile.participant}}
+                        @room={{this.room}}
+                        @showVideo={{tile.showVideo}}
+                        @spotlighted={{tile.spotlighted}}
+                      />
+                    {{/each}}
+                    {{#each this.ringingEntries key="user.id" as |entry|}}
+                      <VoiceRingingTile @user={{entry.user}} />
+                    {{/each}}
                   </div>
-
-                  {{#if
-                    (or
-                      this.presentationRailTiles.length
-                      this.ringingEntries.length
-                    )
-                  }}
-                    <div class="voice-room-page__presentation-rail">
-                      {{#each
-                        this.presentationRailTiles key="participant.id"
-                        as |tile|
-                      }}
-                        <VoiceVideoTile
-                          @isSelf={{tile.isSelf}}
-                          @onAspect={{this.reportTileAspect}}
-                          @onSpotlight={{this.toggleSpotlight}}
-                          @participant={{tile.participant}}
-                          @room={{this.room}}
-                          @showVideo={{tile.showVideo}}
-                          @spotlighted={{tile.spotlighted}}
-                        />
-                      {{/each}}
-                      {{#each this.ringingEntries key="user.id" as |entry|}}
-                        <VoiceRingingTile @user={{entry.user}} />
-                      {{/each}}
-                    </div>
-                  {{/if}}
-                </div>
-              {{else}}
-                <div
-                  class="voice-room-page__grid"
-                  style={{this.gridStyle}}
-                  {{didInsert this.registerGrid}}
-                  {{this.trackGridSize this.updateGridSize}}
-                  {{this.trackFullscreen this.setGridFullscreen}}
-                >
-                  <button
-                    aria-label={{this.gridFullscreenTitle}}
-                    class="btn btn-icon no-text voice-room-page__fullscreen"
-                    title={{this.gridFullscreenTitle}}
-                    type="button"
-                    {{on "click" this.toggleGridFullscreen}}
-                  >
-                    {{dIcon (if this.gridFullscreen "compress" "expand")}}
-                  </button>
-
-                  {{#each this.tiles key="participant.id" as |tile|}}
-                    <VoiceVideoTile
-                      @isSelf={{tile.isSelf}}
-                      @onAspect={{this.reportTileAspect}}
-                      @onSpotlight={{this.toggleSpotlight}}
-                      @participant={{tile.participant}}
-                      @room={{this.room}}
-                      @showVideo={{tile.showVideo}}
-                      @spotlighted={{tile.spotlighted}}
-                    />
-                  {{/each}}
-                  {{#each this.ringingEntries key="user.id" as |entry|}}
-                    <VoiceRingingTile @user={{entry.user}} />
-                  {{/each}}
-                </div>
-              {{/if}}
+                {{/if}}
+              </div>
             {{else}}
-              <div class="voice-room-page__empty">
-                {{i18n "voice.room_page.empty"}}
+              <div
+                class="voice-room-page__grid"
+                style={{this.gridStyle}}
+                {{didInsert this.registerGrid}}
+                {{this.trackGridSize this.updateGridSize}}
+                {{this.trackFullscreen this.setGridFullscreen}}
+              >
+                <button
+                  aria-label={{this.gridFullscreenTitle}}
+                  class="btn btn-icon no-text voice-room-page__fullscreen"
+                  title={{this.gridFullscreenTitle}}
+                  type="button"
+                  {{on "click" this.toggleGridFullscreen}}
+                >
+                  {{dIcon (if this.gridFullscreen "compress" "expand")}}
+                </button>
+
+                {{#each this.tiles key="participant.id" as |tile|}}
+                  <VoiceVideoTile
+                    @isSelf={{tile.isSelf}}
+                    @onAspect={{this.reportTileAspect}}
+                    @onSpotlight={{this.toggleSpotlight}}
+                    @participant={{tile.participant}}
+                    @room={{this.room}}
+                    @showVideo={{tile.showVideo}}
+                    @spotlighted={{tile.spotlighted}}
+                  />
+                {{/each}}
+                {{#each this.ringingEntries key="user.id" as |entry|}}
+                  <VoiceRingingTile @user={{entry.user}} />
+                {{/each}}
               </div>
             {{/if}}
-            {{#if this.joined}}
-              <VoiceCaptionOverlay @room={{this.room}} />
-            {{/if}}
+          {{else}}
+            <div class="voice-room-page__empty">
+              {{i18n "voice.room_page.empty"}}
+            </div>
+          {{/if}}
+          {{#if this.joined}}
+            <VoiceCaptionOverlay @room={{this.room}} />
+          {{/if}}
 
-            <footer class="voice-room-page__controls">
-              {{#if this.joined}}
-                <VoiceCallControls @room={{this.room}} />
-                {{#if this.isStageRoom}}
-                  <DMenu
-                    @ariaLabel={{i18n "voice.stage.queue_title"}}
-                    @identifier="voice-speak-queue-menu"
-                    @modalForMobile={{true}}
-                    @placement="top-end"
-                    @title={{i18n "voice.stage.queue_title"}}
-                    @triggerClass="btn-default voice-speak-queue-trigger"
-                  >
-                    <:trigger>
-                      {{dIcon "list-ol"}}
-                      {{#if this.speakQueueCount}}
-                        <span
-                          class="voice-speak-queue-trigger__count"
-                        >{{this.speakQueueCount}}</span>
-                      {{/if}}
-                    </:trigger>
-                    <:content>
-                      <VoiceSpeakQueue @room={{this.room}} />
-                    </:content>
-                  </DMenu>
-                {{/if}}
+          <footer class="voice-room-page__controls">
+            {{#if this.joined}}
+              <VoiceCallControls @room={{this.room}} />
+              {{#if this.isStageRoom}}
                 <DMenu
-                  @ariaLabel={{i18n "voice.room.more"}}
-                  @icon="ellipsis-vertical"
-                  @identifier="voice-room-menu"
+                  @ariaLabel={{i18n "voice.stage.queue_title"}}
+                  @identifier="voice-speak-queue-menu"
                   @modalForMobile={{true}}
                   @placement="top-end"
-                  @title={{i18n "voice.room.more"}}
-                  @triggerClass="btn-default"
+                  @title={{i18n "voice.stage.queue_title"}}
+                  @triggerClass="btn-default voice-speak-queue-trigger"
                 >
-                  <:content as |roomMenu|>
-                    <DDropdownMenu as |dropdown|>
-                      <VoiceInviteAgentButton
-                        @closeMenu={{roomMenu.close}}
-                        @item={{dropdown.item}}
-                        @room={{this.room}}
-                      />
-                      {{#if this.chatAvailable}}
-                        <dropdown.item>
-                          <DButton
-                            class="btn-transparent"
-                            @action={{fn
-                              this.toggleChatFromMenu
-                              roomMenu.close
-                            }}
-                            @icon={{if
-                              this.chatVisible
-                              "comment-slash"
-                              "far-comment"
-                            }}
-                            @translatedLabel={{this.chatToggleTitle}}
-                          />
-                        </dropdown.item>
-                      {{/if}}
-                      <dropdown.item>
-                        <DButton
-                          class="btn-transparent voice-room-page__layout-trigger"
-                          @action={{this.openLayoutMenu}}
-                          @forwardEvent={{true}}
-                          @icon={{this.layoutIcon}}
-                          @label="voice.room.layout"
-                          @suffixIcon="angle-right"
-                        />
-                      </dropdown.item>
-                      <dropdown.item>
-                        <DButton
-                          class="btn-transparent"
-                          @action={{fn this.dockAndClose roomMenu.close}}
-                          @icon="compress"
-                          @label="voice.room.widget_mode"
-                        />
-                      </dropdown.item>
-                      {{#if this.room.can_invite}}
-                        <dropdown.item>
-                          <DButton
-                            class="btn-transparent"
-                            @action={{fn this.openInviteModal roomMenu.close}}
-                            @icon="user-plus"
-                            @label="voice.invite.menu"
-                          />
-                        </dropdown.item>
-                      {{/if}}
-                      {{#if this.transcriptAvailable}}
-                        <dropdown.item>
-                          <DButton
-                            class={{dConcatClass
-                              "btn-transparent voice-room-page__transcript-toggle"
-                              (if this.transcribing "--recording")
-                            }}
-                            @action={{fn
-                              this.toggleTranscriptFromMenu
-                              roomMenu.close
-                            }}
-                            @icon={{if
-                              this.transcribing
-                              "stop"
-                              "closed-captioning"
-                            }}
-                            @translatedLabel={{this.transcriptToggleTitle}}
-                          />
-                        </dropdown.item>
-                        {{#if this.transcriptDraftable}}
-                          <dropdown.item>
-                            <DButton
-                              class="btn-transparent voice-room-page__transcript-draft"
-                              @action={{fn
-                                this.draftTranscriptTopic
-                                roomMenu.close
-                              }}
-                              @icon="far-file-lines"
-                              @translatedLabel={{this.transcriptDraftLabel}}
-                            />
-                          </dropdown.item>
-                        {{/if}}
-                      {{/if}}
-                      <dropdown.item>
-                        <DButton
-                          class="btn-transparent"
-                          @action={{fn this.openRoomInfo roomMenu.close}}
-                          @icon="circle-info"
-                          @label="voice.room.info"
-                        />
-                      </dropdown.item>
-                    </DDropdownMenu>
+                  <:trigger>
+                    {{dIcon "list-ol"}}
+                    {{#if this.speakQueueCount}}
+                      <span
+                        class="voice-speak-queue-trigger__count"
+                      >{{this.speakQueueCount}}</span>
+                    {{/if}}
+                  </:trigger>
+                  <:content>
+                    <VoiceSpeakQueue @room={{this.room}} />
                   </:content>
                 </DMenu>
-                <DButton
-                  class="btn-danger voice-room-page__leave"
-                  @action={{this.leaveRoom}}
-                  @icon="phone-slash"
-                  @label="voice.room.leave"
-                />
-              {{else}}
-                <DButton
-                  class="btn-primary voice-room-page__join"
-                  @action={{this.joinRoom}}
-                  @disabled={{this.connecting}}
-                  @icon="phone"
-                  @isLoading={{this.connecting}}
-                  @label="voice.room.join"
-                />
               {{/if}}
-            </footer>
-          </div>
+              <DMenu
+                @ariaLabel={{i18n "voice.room.more"}}
+                @icon="ellipsis-vertical"
+                @identifier="voice-room-menu"
+                @modalForMobile={{true}}
+                @placement="top-end"
+                @title={{i18n "voice.room.more"}}
+                @triggerClass="btn-default"
+              >
+                <:content as |roomMenu|>
+                  <DDropdownMenu as |dropdown|>
+                    <VoiceInviteAgentButton
+                      @closeMenu={{roomMenu.close}}
+                      @item={{dropdown.item}}
+                      @room={{this.room}}
+                    />
+                    <dropdown.item>
+                      <DButton
+                        class="btn-transparent voice-room-page__layout-trigger"
+                        @action={{this.openLayoutMenu}}
+                        @forwardEvent={{true}}
+                        @icon={{this.layoutIcon}}
+                        @label="voice.room.layout"
+                        @suffixIcon="angle-right"
+                      />
+                    </dropdown.item>
+                    <dropdown.item>
+                      <DButton
+                        class="btn-transparent"
+                        @action={{fn this.dockAndClose roomMenu.close}}
+                        @icon="compress"
+                        @label="voice.room.widget_mode"
+                      />
+                    </dropdown.item>
+                    {{#if this.transcriptAvailable}}
+                      <dropdown.item>
+                        <DButton
+                          class={{dConcatClass
+                            "btn-transparent voice-room-page__transcript-toggle"
+                            (if this.transcribing "--recording")
+                          }}
+                          @action={{fn
+                            this.toggleTranscriptFromMenu
+                            roomMenu.close
+                          }}
+                          @icon={{if
+                            this.transcribing
+                            "stop"
+                            "closed-captioning"
+                          }}
+                          @translatedLabel={{this.transcriptToggleTitle}}
+                        />
+                      </dropdown.item>
+                      {{#if this.transcriptDraftable}}
+                        <dropdown.item>
+                          <DButton
+                            class="btn-transparent voice-room-page__transcript-draft"
+                            @action={{fn
+                              this.draftTranscriptTopic
+                              roomMenu.close
+                            }}
+                            @icon="far-file-lines"
+                            @translatedLabel={{this.transcriptDraftLabel}}
+                          />
+                        </dropdown.item>
+                      {{/if}}
+                    {{/if}}
+                    <dropdown.item>
+                      <DButton
+                        class="btn-transparent"
+                        @action={{fn this.openRoomInfo roomMenu.close}}
+                        @icon="circle-info"
+                        @label="voice.room.info"
+                      />
+                    </dropdown.item>
+                  </DDropdownMenu>
+                </:content>
+              </DMenu>
+              <DButton
+                class="btn-danger voice-room-page__leave"
+                @action={{this.leaveRoom}}
+                @icon="phone-slash"
+                @label="voice.room.leave"
+              />
+            {{else}}
+              <DButton
+                class="btn-primary voice-room-page__join"
+                @action={{this.joinRoom}}
+                @disabled={{this.connecting}}
+                @icon="phone"
+                @isLoading={{this.connecting}}
+                @label="voice.room.join"
+              />
+            {{/if}}
+          </footer>
         </div>
-
-        {{#if this.chatRendered}}
-          <aside
-            class={{dConcatClass
-              "voice-room-page__sidebar"
-              (if this.chatClosing "--closing")
-            }}
-            {{on "animationend" this.chatAnimationEnded}}
-          >
-            <VoiceChatPanel @onClose={{this.closeChat}} @room={{this.room}} />
-          </aside>
-        {{/if}}
       </div>
+
+      {{#if this.chatRendered}}
+        <aside
+          class={{dConcatClass
+            "chat-side-panel"
+            (if this.chatClosing "--closing")
+          }}
+          {{on "animationend" this.chatAnimationEnded}}
+        >
+          <VoiceChatPanel @onClose={{this.closeChat}} @room={{this.room}} />
+        </aside>
+      {{/if}}
+
     </section>
   </template>
 }
