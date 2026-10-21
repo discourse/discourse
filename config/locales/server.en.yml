@@ -509,6 +509,7 @@ en:
         unsubscribe_not_allowed: "Happens when unsubscribing via email is not allowed for this user."
         email_not_allowed: "Happens when the email address is not on the allowlist or is on the blocklist."
         email_alias_not_allowed: "Happens when the sender's address is an alias of an address already registered to an account, and normalized emails are required to be unique."
+        site_archived_error: "Happens when the site is in archive mode."
       unrecognized_error: "Unrecognized Error"
     secure_uploads_placeholder: "Redacted: This site has secure uploads enabled, visit the topic or click View Media to see the attached uploads."
     view_redacted_media: "View Media"
@@ -4620,6 +4621,15 @@ en:
         You attempted to email more than %{max_recipients_count} people and our system automatically tagged your email as spam.
 
         If you believe this is an error, [contact a staff member](%{base_url}/about).
+
+    email_reject_site_archived:
+      title: "Email Reject Site Archived"
+      subject_template: "[%{email_prefix}] Email issue -- Site Archived"
+      subject_template_improved: "%{email_prefix}: Email issue -- site archived"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        This site is archived and doesn't accept new posts.
 
     email_error_notification:
       title: "Email Error Notification"

@@ -52,6 +52,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
         system_messages.email_reject_reply_user_not_matching
         system_messages.email_reject_screened_email
         system_messages.email_reject_silenced_user
+        system_messages.email_reject_site_archived
         system_messages.email_reject_strangers_not_allowed
         system_messages.email_reject_too_many_recipients
         system_messages.email_reject_topic_closed
