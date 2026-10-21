@@ -16,11 +16,16 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import UserPreferencesTags from "discourse/components/user-preferences/tags";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import DiscourseURL from "discourse/lib/url";
 import GroupManageTags from "discourse/templates/group/manage/tags";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import DMiniTagChooser from "discourse/ui-kit/select/recipes/tags/d-mini-tag-chooser";
 import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
+import DTagDrop from "discourse/ui-kit/select/recipes/tags/d-tag-drop";
+import DTagDropdown from "discourse/ui-kit/select/recipes/tags/d-tag-dropdown";
+import DTagsIntersectionChooser from "discourse/ui-kit/select/recipes/tags/d-tags-intersection-chooser";
+import { i18n } from "discourse-i18n";
 
 const ROWS = [
   { id: 1, name: "bug", text: "bug", count: 4 },
@@ -454,6 +459,158 @@ module(
       assert.true(
         /2/.test(described),
         `the requirement is described: ${described}`
+      );
+    });
+  }
+);
+
+const TOP_TAGS = [
+  { id: 3, name: "zeta", slug: "zeta", count: 1 },
+  { id: 1, name: "alpha", slug: "alpha", count: 5 },
+];
+
+module("Integration | ui-kit | select | recipes | DTagDrop", function (hooks) {
+  setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.siteSettings.tagging_enabled = true;
+    this.siteSettings.max_tags_in_filter_list = 30;
+    this.siteSettings.max_tag_search_results = 5;
+    this.siteSettings.tags_sort_alphabetically = false;
+    getOwner(this).lookup("service:site").set("top_tags", TOP_TAGS);
+    this.routeToUrl = sinon.stub(DiscourseURL, "routeToUrl");
+  });
+
+  test("it is a tag-drop single select with the legacy classes", async function (assert) {
+    await render(<template><DTagDrop /></template>);
+
+    assert.dom(".d-select.tag-drop").exists();
+    assert.dom(".d-select.tag-drop").hasClass("tag_all", "no tag selected");
+    assert
+      .dom(".d-select")
+      .hasAttribute("data-name", i18n("tagging.selector_tags"));
+  });
+
+  test("the empty list shows the shortcuts, then the top tags", async function (assert) {
+    const tag = { id: 1, name: "alpha", slug: "alpha" };
+    await render(<template><DTagDrop @tag={{tag}} /></template>);
+    await click(".d-select__trigger");
+
+    const names = findAll("[role='option']").map((row) =>
+      row.textContent.trim()
+    );
+    assert.true(names[0].includes(i18n("tagging.selector_remove_filter")));
+    assert.true(names[1].includes(i18n("tagging.selector_no_tags")));
+    assert.true(names[2].includes("zeta"), "top tags keep their order");
+    assert.dom(".d-select.tag-drop").hasClass("tag-alpha");
+  });
+
+  test("picking a tag routes to its filtered list", async function (assert) {
+    await render(<template><DTagDrop /></template>);
+    await click(".d-select__trigger");
+    await click(optionNamed("alpha"));
+
+    assert.true(this.routeToUrl.calledOnce);
+    assert.true(
+      /\/tag\/alpha/.test(this.routeToUrl.lastCall.args[0]),
+      this.routeToUrl.lastCall.args[0]
+    );
+  });
+
+  test("the no-tags shortcut routes to untagged topics", async function (assert) {
+    await render(<template><DTagDrop /></template>);
+    await click(".d-select__trigger");
+    await click(optionNamed(i18n("tagging.selector_no_tags")));
+
+    assert.true(
+      /none/.test(this.routeToUrl.lastCall.args[0]),
+      this.routeToUrl.lastCall.args[0]
+    );
+  });
+
+  test("typing searches all tags", async function (assert) {
+    const requests = stubSearch();
+    await render(<template><DTagDrop /></template>);
+    await click(".d-select__trigger");
+    await fillIn(".d-select__filter, [role='combobox']", "bu");
+
+    assert.strictEqual(requests.at(-1).q, "bu");
+    assert.notStrictEqual(optionNamed("bug"), undefined);
+  });
+
+  test("a call site can supply its own tags and handler", async function (assert) {
+    const onChange = sinon.spy();
+    const items = [{ id: "local", name: "local", count: 2 }];
+    await render(
+      <template><DTagDrop @items={{items}} @onChange={{onChange}} /></template>
+    );
+    await click(".d-select__trigger");
+    await click(optionNamed("local"));
+
+    assert.true(onChange.calledOnce, "the call site's handler runs");
+    assert.true(this.routeToUrl.notCalled, "instead of routing");
+  });
+});
+
+module(
+  "Integration | ui-kit | select | recipes | DTagsIntersectionChooser",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.siteSettings.tagging_enabled = true;
+      this.routeTo = sinon.stub(DiscourseURL, "routeTo");
+      stubSearch();
+    });
+
+    test("it holds the main and additional tags and routes to their intersection", async function (assert) {
+      const mainTag = { id: 2, name: "ui", slug: "ui" };
+      const additionalTags = ["perf"];
+      await render(
+        <template>
+          <DTagsIntersectionChooser
+            @additionalTags={{additionalTags}}
+            @mainTag={{mainTag}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".d-select.tags-intersection-chooser")
+        .hasAttribute("data-name", "ui,perf");
+      await click(".d-select__trigger");
+      await click(optionNamed("bug"));
+
+      assert.strictEqual(
+        this.routeTo.lastCall.args[0],
+        "/tags/intersection/ui/perf/bug"
+      );
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | recipes | DTagDropdown",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("picking a tag opens its settings", async function (assert) {
+      const routeToUrl = sinon.stub(DiscourseURL, "routeToUrl");
+      const tags = [
+        { id: 1, name: "alpha" },
+        { id: 2, name: "beta" },
+      ];
+      await render(
+        <template><DTagDropdown @tags={{tags}} @value="alpha" /></template>
+      );
+
+      assert.dom(".d-select.tag-dropdown").hasAttribute("data-name", "alpha");
+      await click(".d-select__trigger");
+      await click(optionNamed("beta"));
+
+      assert.strictEqual(
+        routeToUrl.lastCall.args[0],
+        "/tag/beta/2/edit/general"
       );
     });
   }

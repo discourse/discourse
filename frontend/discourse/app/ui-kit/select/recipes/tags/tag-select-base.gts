@@ -16,6 +16,7 @@ import {
 import type Site from "discourse/models/site";
 import type SiteSettingsService from "discourse/services/site-settings";
 import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
 import DSelect from "discourse/ui-kit/select/d-select";
 import {
@@ -122,6 +123,16 @@ function synonymName(item: SelectItem): string | undefined {
     : undefined;
 }
 
+/** An item's display name, narrowed for templates. */
+export function tagItemName(item: SelectItem): string {
+  return typeof item.name === "string" ? item.name : String(item.name ?? "");
+}
+
+/** Narrows optional action icons at the rendering boundary. */
+function actionIcon(item: SelectItem): string | undefined {
+  return typeof item.icon === "string" ? item.icon : undefined;
+}
+
 /** Default option content shared with forwarding recipes. */
 export const TagOption: TemplateOnlyComponent<{
   Args: {
@@ -129,7 +140,10 @@ export const TagOption: TemplateOnlyComponent<{
     item: SelectItem;
   };
 }> = <template>
-  {{#if @item.isNew}}
+  {{#if @item.onSelect}}
+    {{#if (actionIcon @item)}}{{dIcon (actionIcon @item)}}{{/if}}
+    {{tagItemName @item}}
+  {{else if @item.isNew}}
     {{i18n "d_select.create_item" label=@item.name}}
   {{else}}
     {{dDiscourseTag @item.name noHref=true tagName="span"}}

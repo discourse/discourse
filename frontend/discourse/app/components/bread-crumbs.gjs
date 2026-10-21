@@ -9,6 +9,8 @@ import CategoryDrop from "discourse/select-kit/components/category-drop";
 import TagDrop from "discourse/select-kit/components/tag-drop";
 import TagsIntersectionChooser from "discourse/select-kit/components/tags-intersection-chooser";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import DTagDropControl from "discourse/ui-kit/select/recipes/tags/d-tag-drop";
+import DTagsIntersectionChooser from "discourse/ui-kit/select/recipes/tags/d-tags-intersection-chooser";
 import deprecatedOutletArgument from "../helpers/deprecated-outlet-argument.js";
 
 export default class BreadCrumbs extends Component {
@@ -115,20 +117,39 @@ export default class BreadCrumbs extends Component {
       {{#if this.showTagsSection}}
         {{#if @additionalTags}}
           <li>
-            <TagsIntersectionChooser
-              @additionalTags={{@additionalTags}}
-              @currentCategory={{@category}}
-              @mainTag={{@tag}}
-              @options={{hash categoryId=@category.id}}
-            />
+            {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DTagsIntersectionChooser
+                @additionalTags={{@additionalTags}}
+                @categoryId={{@category.id}}
+                @currentCategory={{@category}}
+                @mainTag={{@tag}}
+              />
+            {{else}}
+              <TagsIntersectionChooser
+                @additionalTags={{@additionalTags}}
+                @currentCategory={{@category}}
+                @mainTag={{@tag}}
+                @options={{hash categoryId=@category.id}}
+              />
+            {{/if}}
           </li>
         {{else}}
           <li>
-            <TagDrop
-              @currentCategory={{@category}}
-              @noSubcategories={{@noSubcategories}}
-              @tag={{@tag}}
-            />
+            {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DTagDropControl
+                @currentCategory={{@category}}
+                @noSubcategories={{@noSubcategories}}
+                @tag={{@tag}}
+              />
+            {{else}}
+              <TagDrop
+                @currentCategory={{@category}}
+                @noSubcategories={{@noSubcategories}}
+                @tag={{@tag}}
+              />
+            {{/if}}
           </li>
         {{/if}}
       {{/if}}

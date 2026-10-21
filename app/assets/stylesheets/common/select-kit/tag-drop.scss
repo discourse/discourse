@@ -45,3 +45,20 @@
     }
   }
 }
+
+.d-tag-drop__selection {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--primary-high);
+}
+
+.d-tag-drop__shortcut {
+  color: var(--tertiary);
+  font-weight: 700;
+}
+
+.d-tag-drop__filter-for-more {
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+}

@@ -1,3 +1,9 @@
+/** Shared shortcut key for clearing a tag filter. */
+export const ALL_TAGS_ID = "all-tags";
+
+/** Shared shortcut key for topics without tags. */
+export const NO_TAG_ID = "no-tags";
+
 /** A tag held by a consumer, including name-only and newly created tags. */
 export interface TagObject {
   id?: number | string | null;

@@ -562,7 +562,9 @@
 
 // new inline AI helper
 .select-kit.mini-tag-chooser .select-kit-row,
-.select-kit.category-chooser .select-kit-row {
+.select-kit.category-chooser .select-kit-row,
+.d-select__option.ai-tag-suggest-row,
+.d-select__option.ai-tag-exit-row {
   &.ai-category-suggest-row,
   &.ai-tag-suggest-row,
   &.ai-tag-exit-row {
@@ -596,8 +598,10 @@
     color: var(--primary-medium);
     font-style: italic;
 
-    .d-icon-spinner {
-      animation: spin 1s linear infinite;
+    @media (prefers-reduced-motion: no-preference) {
+      .d-icon-spinner {
+        animation: spin 1s linear infinite;
+      }
     }
   }
 }

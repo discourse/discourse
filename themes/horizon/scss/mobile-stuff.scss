@@ -48,11 +48,13 @@
             ); // 2px is width of the outline
           }
 
-          .select-kit-header-wrapper {
+          .select-kit-header-wrapper,
+          .d-tag-drop__selection {
             gap: 0.25em;
           }
 
-          .select-kit-header {
+          .select-kit-header,
+          .d-select.tag-drop .d-select__trigger {
             background: var(--d-content-background);
           }
         }

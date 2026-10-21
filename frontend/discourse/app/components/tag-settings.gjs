@@ -19,6 +19,7 @@ import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import DMiniTagChooser from "discourse/ui-kit/select/recipes/tags/d-mini-tag-chooser";
+import DTagDropdown from "discourse/ui-kit/select/recipes/tags/d-tag-dropdown";
 import { i18n } from "discourse-i18n";
 
 export default class TagSettings extends Component {
@@ -264,11 +265,20 @@ export default class TagSettings extends Component {
               "tagging.settings.edit_tag_prefix"
             }}</span>
           <span class="tag-settings-title__dropdown">
-            <TagDropdown
-              aria-label={{i18n "tagging.settings.select_tag"}}
-              @tags={{this.tags}}
-              @value={{@tag.name}}
-            />
+            {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DTagDropdown
+                @label={{i18n "tagging.settings.select_tag"}}
+                @tags={{this.tags}}
+                @value={{@tag.name}}
+              />
+            {{else}}
+              <TagDropdown
+                aria-label={{i18n "tagging.settings.select_tag"}}
+                @tags={{this.tags}}
+                @value={{@tag.name}}
+              />
+            {{/if}}
           </span>
         </:title>
         <:actions as |actions|>

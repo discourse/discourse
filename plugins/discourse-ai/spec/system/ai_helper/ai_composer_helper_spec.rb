@@ -519,6 +519,101 @@ RSpec.describe "AI Composer helper" do
     end
   end
 
+  context "when suggesting tags with the new select controls" do
+    with_select_controls(true)
+
+    let(:edit_tag_chooser) do
+      PageObjects::Components::UiKit::DSelect.at(".edit-tags__wrapper .mini-tag-chooser")
+    end
+    let(:composer_tag_chooser) do
+      PageObjects::Components::UiKit::DSelect.at(".tags-input .mini-tag-chooser")
+    end
+
+    before do
+      SiteSetting.ai_embeddings_selected_model = embedding_definition.id
+      SiteSetting.ai_embeddings_enabled = true
+      stub_request(:post, embedding_definition.url).to_return(
+        status: 200,
+        body: JSON.dump([[0.0038493] * embedding_definition.dimensions]),
+      )
+    end
+
+    it "suggests tags in topic edit without the ones already on the topic" do
+      response =
+        [cloud, feedback, review, video, music].map { |t| { id: t.id, name: t.name, count: 1 } }
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+
+      edit_tag_chooser.open
+      edit_tag_chooser.select_value("ai-tag-suggest")
+
+      expect(edit_tag_chooser).to have_option_name(cloud.name)
+      expect(edit_tag_chooser).to have_no_option_name(video.name)
+      expect(edit_tag_chooser).to have_no_option_name(music.name)
+    end
+
+    it "applies a suggested tag in topic edit and stops offering it" do
+      response = [cloud, feedback].map { |t| { id: t.id, name: t.name, count: 1 } }
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+
+      edit_tag_chooser.open
+      edit_tag_chooser.select_value("ai-tag-suggest")
+      edit_tag_chooser.select_name(cloud.name)
+
+      expect(page).to have_css(
+        ".edit-tags__wrapper .mini-tag-chooser .d-select__chip",
+        text: cloud.name,
+      )
+      expect(edit_tag_chooser).to have_no_option_name(cloud.name)
+      expect(edit_tag_chooser).to have_option_name(feedback.name)
+    end
+
+    it "offers no suggestion when embeddings are disabled" do
+      SiteSetting.ai_embeddings_enabled = false
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+      edit_tag_chooser.open
+
+      expect(edit_tag_chooser).to have_no_option_value("ai-tag-suggest")
+    end
+
+    it "suggests tags in the composer and applies the selected one" do
+      response = [{ id: cloud.id, name: cloud.name, count: 1 }]
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
+
+      visit("/latest")
+      page.find("#create-topic").click
+      composer.fill_content(input)
+
+      composer_tag_chooser.open
+      composer_tag_chooser.select_value("ai-tag-suggest")
+      composer_tag_chooser.select_name(cloud.name)
+
+      expect(composer_tag_chooser).to have_selected_name(cloud.name)
+    end
+
+    it "shows a toast when the composer gets no tag suggestions" do
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns([])
+
+      visit("/latest")
+      page.find("#create-topic").click
+      composer.fill_content(input)
+
+      composer_tag_chooser.open
+      composer_tag_chooser.select_value("ai-tag-suggest")
+
+      expect(toasts).to have_error(
+        I18n.t("js.discourse_ai.ai_helper.suggest_errors.no_suggestions"),
+      )
+    end
+  end
+
   context "when AI helper is disabled" do
     before { SiteSetting.ai_helper_enabled = false }
 

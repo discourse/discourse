@@ -2,10 +2,14 @@ import Component from "@glimmer/component";
 import { array, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
 import TagGroupChooser from "discourse/select-kit/components/tag-group-chooser";
+import DTagGroupChooserControl from "discourse/ui-kit/select/recipes/tags/d-tag-group-chooser";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategoryTags extends Component {
+  @service siteSettings;
+
   get allowedTags() {
     return this.args.transientData?.allowed_tags;
   }
@@ -70,11 +74,20 @@ export default class UpsertCategoryTags extends Component {
         (i18n "category.tags_allowed_tag_groups_new_category")
       }}
     >
-      <TagGroupChooser
-        @id="category-allowed-tag-groups"
-        @onChange={{this.onAllowedTagGroupsChange}}
-        @tagGroups={{this.allowedTagGroups}}
-      />
+      {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+      {{#if this.siteSettings.enable_new_select_controls}}
+        <DTagGroupChooserControl
+          @id="category-allowed-tag-groups"
+          @onChange={{this.onAllowedTagGroupsChange}}
+          @tagGroups={{this.allowedTagGroups}}
+        />
+      {{else}}
+        <TagGroupChooser
+          @id="category-allowed-tag-groups"
+          @onChange={{this.onAllowedTagGroupsChange}}
+          @tagGroups={{this.allowedTagGroups}}
+        />
+      {{/if}}
       <LinkTo class="manage-tag-groups" @route="tagGroups">
         {{i18n "category.manage_tag_groups_link"}}
       </LinkTo>
@@ -119,14 +132,27 @@ export default class UpsertCategoryTags extends Component {
               as |field|
             >
               <field.Control>
-                <TagGroupChooser
-                  @onChange={{fn this.onTagGroupFieldChange field}}
-                  @options={{hash
-                    maximum=1
-                    filterPlaceholder="category.required_tag_group.placeholder"
-                  }}
-                  @tagGroups={{if field.value (array field.value) (array)}}
-                />
+                {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                {{#if this.siteSettings.enable_new_select_controls}}
+                  <DTagGroupChooserControl
+                    @disabled={{field.disabled}}
+                    @maximum={{1}}
+                    @onChange={{fn this.onTagGroupFieldChange field}}
+                    @placeholder={{i18n
+                      "category.required_tag_group.placeholder"
+                    }}
+                    @tagGroups={{if field.value (array field.value) (array)}}
+                  />
+                {{else}}
+                  <TagGroupChooser
+                    @onChange={{fn this.onTagGroupFieldChange field}}
+                    @options={{hash
+                      maximum=1
+                      filterPlaceholder="category.required_tag_group.placeholder"
+                    }}
+                    @tagGroups={{if field.value (array field.value) (array)}}
+                  />
+                {{/if}}
               </field.Control>
             </collection.Field>
           </row.Col>

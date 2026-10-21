@@ -35,3 +35,18 @@
     }
   }
 }
+
+.d-select__option {
+  .discourse-tag-count {
+    margin-inline-start: var(--space-1);
+  }
+
+  .synonym-hint {
+    margin-inline-start: var(--space-2);
+    color: var(--primary-medium);
+  }
+
+  &[aria-disabled="true"] .discourse-tag {
+    opacity: 0.5;
+  }
+}

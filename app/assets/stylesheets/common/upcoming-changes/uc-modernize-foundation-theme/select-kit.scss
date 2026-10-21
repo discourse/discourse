@@ -7,7 +7,8 @@
     font-size: var(--font-down-1);
   }
 
-  .list-controls .combo-box .combo-box-header {
+  .list-controls .combo-box .combo-box-header,
+  .list-controls .d-select.tag-drop .d-select__trigger {
     &:hover {
       background-color: var(--primary-100);
     }
@@ -27,6 +28,10 @@
   .select-kit.combo-box.tag-drop .selected-name,
   .select-kit.combo-box.tag-drop .caret-icon,
   .select-kit.combo-box.solved-status-filter .selected-name {
+    color: var(--primary);
+  }
+
+  .d-tag-drop__selection {
     color: var(--primary);
   }
 

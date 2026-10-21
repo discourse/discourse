@@ -1,9 +1,13 @@
 import { getOwner } from "@ember/owner";
+import { trackedObject } from "@ember/reactive/collections";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
-import { chooserSuggestionContext } from "../lib/chooser-suggestion-context.js";
+import {
+  chooserSuggestionContext,
+  chooserSuggestionContextFromInstance,
+} from "../lib/chooser-suggestion-context.js";
 import { showComposerAiHelper } from "../lib/show-ai-helper.js";
 
 const SUGGEST_ID = "ai-tag-suggest";
@@ -50,7 +54,7 @@ async function loadSuggestions(component, selectKit, context) {
   selectKit.triggerSearch();
 
   try {
-    const { assistant } = await ajax("/discourse-ai/ai-helper/suggest_tags", {
+    const suggestions = await ajax("/discourse-ai/ai-helper/suggest_tags", {
       method: "POST",
       data,
     });
@@ -59,7 +63,7 @@ async function loadSuggestions(component, selectKit, context) {
       return;
     }
 
-    state.suggestions = assistant || [];
+    state.suggestions = suggestions || [];
     state.mode = state.suggestions.length ? "results" : "idle";
 
     if (!state.suggestions.length) {
@@ -125,6 +129,121 @@ function enabledFor(context, siteSettings, currentUser) {
 function initInlineTagSuggester(api) {
   const currentUser = api.getCurrentUser();
   const siteSettings = api.container.lookup("service:site-settings");
+  const toasts = api.container.lookup("service:toasts");
+
+  api.registerValueTransformer(
+    "select-customizations",
+    ({ value: selects }) => {
+      for (const identifier of ["composer-tags", "topic-edit-tags"]) {
+        selects.forIdentifier(identifier, (spec) => {
+          const state = trackedObject({ mode: "idle", suggestions: [] });
+
+          spec.load((load, { filter, instanceContext }) => {
+            const context =
+              chooserSuggestionContextFromInstance(instanceContext);
+            if (filter || !enabledFor(context, siteSettings, currentUser)) {
+              state.mode = "idle";
+              state.suggestions = [];
+            }
+            if (state.mode === "results") {
+              return () =>
+                state.suggestions
+                  .filter((tag) => !context.selectedTagNames.includes(tag.name))
+                  .map((tag) => ({ ...tag, id: Number(tag.id) }));
+            }
+            return state.mode === "loading" ? () => [] : load;
+          });
+
+          spec.content((items, { filter, instanceContext }) => {
+            const context =
+              chooserSuggestionContextFromInstance(instanceContext);
+            if (filter || !enabledFor(context, siteSettings, currentUser)) {
+              return items;
+            }
+            if (state.mode === "loading") {
+              return [{ ...loadingRow(), sticky: true, disabled: true }];
+            }
+            if (state.mode === "results") {
+              return [
+                {
+                  id: EXIT_ID,
+                  icon: "xmark",
+                  name: i18n("discourse_ai.ai_helper.suggestions"),
+                  sticky: true,
+                  onSelect(control) {
+                    state.mode = "idle";
+                    state.suggestions = [];
+                    control.reload();
+                  },
+                },
+                ...items,
+              ];
+            }
+            if (!context.available) {
+              return items;
+            }
+            return [
+              {
+                id: SUGGEST_ID,
+                icon: "discourse-sparkles",
+                name: i18n("discourse_ai.ai_helper.suggest"),
+                sticky: true,
+                async onSelect(control) {
+                  const data = context.tagRequestData();
+                  if (!data) {
+                    return;
+                  }
+                  state.mode = "loading";
+                  control.reload();
+                  try {
+                    state.suggestions = await ajax(
+                      "/discourse-ai/ai-helper/suggest_tags",
+                      {
+                        method: "POST",
+                        data,
+                      }
+                    );
+                    state.mode = state.suggestions.length ? "results" : "idle";
+                    if (!state.suggestions.length) {
+                      toasts.error({
+                        duration: "short",
+                        data: {
+                          message: i18n(
+                            "discourse_ai.ai_helper.suggest_errors.no_suggestions"
+                          ),
+                        },
+                      });
+                    }
+                  } catch (error) {
+                    state.mode = "idle";
+                    popupAjaxError(error);
+                  } finally {
+                    control.reload();
+                  }
+                },
+              },
+              ...items,
+            ];
+          });
+
+          spec.row((row, { item }) => {
+            if (item.id === SUGGEST_ID || item.id === EXIT_ID) {
+              row.classes.push(
+                item.id === EXIT_ID ? "ai-tag-exit-row" : "ai-tag-suggest-row"
+              );
+            }
+          });
+
+          spec.change(async (next, { control }) => {
+            await next();
+            if (state.mode === "results") {
+              control.reload();
+            }
+          });
+        });
+      }
+    }
+  );
 
   api
     .modifySelectKit("mini-tag-chooser", { bridge: false })
