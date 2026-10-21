@@ -5120,36 +5120,52 @@ en:
       subject_template: "[%{email_prefix}] Your account has been suspended"
       subject_template_improved: "Your account has been suspended"
       text_body_template: |
-        You have been suspended from the forum until %{suspended_till}.
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your account has been suspended until %{suspended_till}.
 
         Reason - %{reason}
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     account_suspended_forever:
       title: "Account Suspended"
       subject_template: "[%{email_prefix}] Your account has been suspended"
       subject_template_improved: "Your account has been suspended"
       text_body_template: |
-        You have been suspended from the forum.
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your account has been suspended.
 
         Reason - %{reason}
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     account_silenced:
       title: "Account Silenced"
       subject_template: "[%{email_prefix}] Your account has been silenced"
       subject_template_improved: "Your account has been silenced"
       text_body_template: |
-        You have been silenced from the forum until %{silenced_till}.
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your account has been silenced until %{silenced_till}.
 
         Reason - %{reason}
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     account_silenced_forever:
       title: "Account Silenced"
       subject_template: "[%{email_prefix}] Your account has been silenced"
       subject_template_improved: "Your account has been silenced"
       text_body_template: |
-        You have been silenced from the forum.
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your account has been silenced.
 
         Reason - %{reason}
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     account_deleted:
       title: "Account Deleted"
