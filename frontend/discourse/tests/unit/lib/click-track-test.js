@@ -75,6 +75,10 @@ module("Unit | Utility | click-track", function (hooks) {
           <a class="prefix-url" href="/forum/thing">prefix link</a>
           <a class="abs-prefix-url" href="${window.location.origin}/forum/thing">prefix link</a>
           <a class="diff-prefix-url" href="/thing">diff prefix link</a>
+          <svg>
+            <a id="svg-link" href="http://www.google.ch"><text>google.ch</text></a>
+            <a id="svg-link-blank" href="http://www.google.ch" target="_blank"><text>google.ch</text></a>
+          </svg>
         </article>
       </div>`;
   });
@@ -210,6 +214,17 @@ module("Unit | Utility | click-track", function (hooks) {
 
     assert.false(track(generateClickEventOn("a")));
     assert.true(window.open.calledWith("http://www.google.com/", "_blank"));
+  });
+
+  test("opens SVG links in a new tab when external links open in new tab", async function (assert) {
+    User.currentProp("user_option.external_links_in_new_tab", true);
+
+    assert.false(track(generateClickEventOn("#svg-link")));
+    assert.true(window.open.calledWith("http://www.google.ch", "_blank"));
+  });
+
+  test("lets the browser open SVG links with target=_blank", async function (assert) {
+    assert.true(track(generateClickEventOn("#svg-link-blank")));
   });
 
   test("does not track clicks on lightboxes", async function (assert) {
