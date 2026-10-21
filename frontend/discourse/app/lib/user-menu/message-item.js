@@ -13,7 +13,7 @@ export default class UserMenuMessageItem extends UserMenuBaseItem {
   get className() {
     let classNames = ["message"];
 
-    classNames.push(this.message.unread ? "unread" : "read");
+    classNames.push(this.message.unread_posts ? "unread" : "read");
 
     return classNames.join(" ");
   }
