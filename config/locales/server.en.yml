@@ -5142,6 +5142,7 @@ en:
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     account_silenced:
+      date_with_timezone: "%{date} (UTC%{offset})"
       title: "Account Silenced"
       subject_template: "[%{email_prefix}] Your account has been silenced"
       subject_template_improved: "Your account has been silenced"
