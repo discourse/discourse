@@ -1203,7 +1203,7 @@ RSpec.describe Search do
       expect(results.posts).to eq([])
 
       user.groups << whisperers_group
-      results = Search.execute("tiger", guardian: Guardian.new(user))
+      results = Search.execute("tiger", guardian: Guardian.new(user.reload))
       expect(results.posts).to eq([post])
     end
 
