@@ -73,6 +73,25 @@ export default class WorkflowsIndex extends Component {
     return this.filteredResultSet ?? this.args.workflows;
   }
 
+  get workflowSections() {
+    const items = this.resultSet.content;
+    const sections = [
+      {
+        id: "regular",
+        items: items.filter((workflow) => !workflow.managed_by),
+      },
+      {
+        id: "managed",
+        title: "discourse_workflows.managed.list_title",
+        items: items.filter((workflow) => workflow.managed_by),
+      },
+    ].filter((section) => section.items.length);
+    return sections.map((section, index) => ({
+      ...section,
+      canLoadMore: index === sections.length - 1 && this.resultSet.canLoadMore,
+    }));
+  }
+
   get hasActiveFilters() {
     return Boolean(this.nameFilter) || this.tagFilter.length > 0;
   }
@@ -327,147 +346,177 @@ export default class WorkflowsIndex extends Component {
       </div>
 
       {{#if this.resultSet.content.length}}
-        <AdminTable
-          @canLoadMore={{this.resultSet.canLoadMore}}
-          @isLoading={{this.filtering}}
-          @items={{this.resultSet.content}}
-          @loadingMore={{this.loading}}
-          @loadMore={{this.loadMore}}
-          @rowClass="workflows-index__row"
-        >
-          <:head>
-            <th class="d-table__header-cell">{{i18n
-                "discourse_workflows.workflow_name"
-              }}</th>
-            <th class="d-table__header-cell">{{i18n
-                "discourse_workflows.creator"
-              }}</th>
-            <th class="d-table__header-cell">{{i18n
-                "discourse_workflows.last_update"
-              }}</th>
-            <th class="d-table__header-cell">{{i18n
-                "discourse_workflows.last_run"
-              }}</th>
-            <th class="d-table__header-cell">{{i18n
-                "discourse_workflows.status"
-              }}</th>
-            <th class="d-table__header-cell"></th>
-          </:head>
-          <:row as |workflow|>
-            <td class="d-table__cell --overview workflows-index__name">
-              <LinkTo
-                class="d-table__overview-link"
-                @model={{workflow.id}}
-                @route="adminPlugins.show.discourse-workflows.show"
-              >
-                <strong
-                  class="d-table__overview-name"
-                >{{workflow.name}}</strong>
-                {{#if (eq workflow.lastExecutionStatus "error")}}
-                  <span
-                    aria-label={{i18n
-                      "discourse_workflows.last_execution_failed"
-                    }}
-                    class="workflows-index__warning"
-                    role="img"
-                    title={{i18n "discourse_workflows.last_execution_failed"}}
-                  >
-                    {{dIcon "triangle-exclamation"}}
-                  </span>
-                {{/if}}
-              </LinkTo>
-              {{#if workflow.tags.length}}
-                <div class="d-table__badges workflows-index__tags">
-                  {{#each workflow.tags as |tag|}}
-                    <a
-                      class="d-table-badge"
-                      href={{this.tagFilterHref tag}}
-                      title={{i18n "discourse_workflows.tags.filter_by"}}
-                      {{on "click" (fn this.addTagFilter tag)}}
-                    >
-                      <span class="d-table-badge__content">{{tag}}</span>
-                    </a>
-                  {{/each}}
-                </div>
-              {{/if}}
-            </td>
-            <td class="d-table__cell --detail workflows-index__creator">
-              <div class="d-table__mobile-label">
-                {{i18n "discourse_workflows.creator"}}
-              </div>
-              {{#if workflow.createdBy}}
-                <DUserLink
-                  class="workflows-index__creator-link"
-                  @user={{workflow.createdBy}}
-                >
-                  {{dAvatar workflow.createdBy imageSize="tiny"}}
-                  <span>{{workflow.createdBy.username}}</span>
-                </DUserLink>
-              {{/if}}
-            </td>
-            <td class="d-table__cell --detail workflows-index__last-update">
-              <div class="d-table__mobile-label">
-                {{i18n "discourse_workflows.last_update"}}
-              </div>
-              {{dFormatDate workflow.updatedAt format="medium"}}
-            </td>
-            <td class="d-table__cell --detail workflows-index__last-run">
-              <div class="d-table__mobile-label">
-                {{i18n "discourse_workflows.last_run"}}
-              </div>
-              {{#if workflow.lastExecutionAt}}
-                {{dFormatDate workflow.lastExecutionAt format="medium"}}
-              {{else}}
-                {{i18n "discourse_workflows.last_execution_never"}}
-              {{/if}}
-            </td>
-            <td class="d-table__cell --detail">
-              <div class="d-table__mobile-label">
-                {{i18n "discourse_workflows.status"}}
-              </div>
-              <span
-                class={{dConcatClass
-                  "workflows-index__badge"
-                  (this.workflowStatusClass workflow)
-                }}
-              >
-                {{i18n (this.workflowStatusLabel workflow)}}
-              </span>
-            </td>
-            <td class="d-table__cell --controls">
-              <div class="d-table__cell-actions">
+        {{#each this.workflowSections key="id" as |section|}}
+          {{#if section.title}}
+            <div class="workflows-index__section-heading">
+              <DPageSubheader @titleLabel={{i18n section.title}} />
+            </div>
+          {{/if}}
+          <AdminTable
+            data-test-workflow-section={{section.id}}
+            @canLoadMore={{section.canLoadMore}}
+            @isLoading={{this.filtering}}
+            @items={{section.items}}
+            @loadingMore={{this.loading}}
+            @loadMore={{this.loadMore}}
+            @rowClass="workflows-index__row"
+          >
+            <:head>
+              <th class="d-table__header-cell">{{i18n
+                  "discourse_workflows.workflow_name"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "discourse_workflows.creator"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "discourse_workflows.last_update"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "discourse_workflows.last_run"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "discourse_workflows.status"
+                }}</th>
+              <th class="d-table__header-cell"></th>
+            </:head>
+            <:row as |workflow|>
+              <td class="d-table__cell --overview workflows-index__name">
                 <LinkTo
-                  class="btn btn-default btn-text btn-small workflows-index__edit"
+                  class="d-table__overview-link"
                   @model={{workflow.id}}
                   @route="adminPlugins.show.discourse-workflows.show"
                 >
-                  {{i18n "discourse_workflows.edit"}}
+                  <strong
+                    class="d-table__overview-name"
+                  >{{workflow.name}}</strong>
+                  {{#if (eq workflow.lastExecutionStatus "error")}}
+                    <span
+                      aria-label={{i18n
+                        "discourse_workflows.last_execution_failed"
+                      }}
+                      class="workflows-index__warning"
+                      role="img"
+                      title={{i18n "discourse_workflows.last_execution_failed"}}
+                    >
+                      {{dIcon "triangle-exclamation"}}
+                    </span>
+                  {{/if}}
                 </LinkTo>
-
-                <DMenu
-                  @icon="ellipsis-vertical"
-                  @identifier="workflows-index-menu"
-                  @placement="bottom-end"
-                  @title={{i18n "discourse_workflows.more_options"}}
-                  @triggerClass="btn-default btn-small workflows-index__menu-trigger"
+                {{#if workflow.managed_by}}
+                  <div class="d-table__badges">
+                    <span
+                      class="d-table-badge"
+                      data-test-workflow-owner={{workflow.id}}
+                    >
+                      <span class="d-table-badge__content">
+                        {{dIcon "lock"}}
+                        {{i18n
+                          "discourse_workflows.managed.list_label"
+                          name=workflow.managed_by.name
+                        }}
+                      </span>
+                    </span>
+                  </div>
+                {{/if}}
+                {{#if workflow.tags.length}}
+                  <div class="d-table__badges workflows-index__tags">
+                    {{#each workflow.tags as |tag|}}
+                      <a
+                        class="d-table-badge"
+                        href={{this.tagFilterHref tag}}
+                        title={{i18n "discourse_workflows.tags.filter_by"}}
+                        {{on "click" (fn this.addTagFilter tag)}}
+                      >
+                        <span class="d-table-badge__content">{{tag}}</span>
+                      </a>
+                    {{/each}}
+                  </div>
+                {{/if}}
+              </td>
+              <td class="d-table__cell --detail workflows-index__creator">
+                <div class="d-table__mobile-label">
+                  {{i18n "discourse_workflows.creator"}}
+                </div>
+                {{#if workflow.createdBy}}
+                  <DUserLink
+                    class="workflows-index__creator-link"
+                    @user={{workflow.createdBy}}
+                  >
+                    {{dAvatar workflow.createdBy imageSize="tiny"}}
+                    <span>{{workflow.createdBy.username}}</span>
+                  </DUserLink>
+                {{/if}}
+              </td>
+              <td class="d-table__cell --detail workflows-index__last-update">
+                <div class="d-table__mobile-label">
+                  {{i18n "discourse_workflows.last_update"}}
+                </div>
+                {{dFormatDate workflow.updatedAt format="medium"}}
+              </td>
+              <td class="d-table__cell --detail workflows-index__last-run">
+                <div class="d-table__mobile-label">
+                  {{i18n "discourse_workflows.last_run"}}
+                </div>
+                {{#if workflow.lastExecutionAt}}
+                  {{dFormatDate workflow.lastExecutionAt format="medium"}}
+                {{else}}
+                  {{i18n "discourse_workflows.last_execution_never"}}
+                {{/if}}
+              </td>
+              <td class="d-table__cell --detail">
+                <div class="d-table__mobile-label">
+                  {{i18n "discourse_workflows.status"}}
+                </div>
+                <span
+                  class={{dConcatClass
+                    "workflows-index__badge"
+                    (this.workflowStatusClass workflow)
+                  }}
                 >
-                  <:content as |menu|>
-                    <DDropdownMenu as |dropdown|>
-                      <dropdown.item>
-                        <DButton
-                          class="btn-transparent --danger workflows-index__delete"
-                          @action={{fn this.deleteWorkflow workflow menu.close}}
-                          @icon="trash-can"
-                          @label="discourse_workflows.delete"
-                        />
-                      </dropdown.item>
-                    </DDropdownMenu>
-                  </:content>
-                </DMenu>
-              </div>
-            </td>
-          </:row>
-        </AdminTable>
+                  {{i18n (this.workflowStatusLabel workflow)}}
+                </span>
+              </td>
+              <td class="d-table__cell --controls">
+                <div class="d-table__cell-actions">
+                  <LinkTo
+                    class="btn btn-default btn-text btn-small workflows-index__edit"
+                    @model={{workflow.id}}
+                    @route="adminPlugins.show.discourse-workflows.show"
+                  >
+                    {{i18n "discourse_workflows.edit"}}
+                  </LinkTo>
+
+                  {{#unless workflow.managed_by}}
+                    <DMenu
+                      @icon="ellipsis-vertical"
+                      @identifier="workflows-index-menu"
+                      @placement="bottom-end"
+                      @title={{i18n "discourse_workflows.more_options"}}
+                      @triggerClass="btn-default btn-small workflows-index__menu-trigger"
+                    >
+                      <:content as |menu|>
+                        <DDropdownMenu as |dropdown|>
+                          <dropdown.item>
+                            <DButton
+                              class="btn-transparent --danger workflows-index__delete"
+                              @action={{fn
+                                this.deleteWorkflow
+                                workflow
+                                menu.close
+                              }}
+                              @icon="trash-can"
+                              @label="discourse_workflows.delete"
+                            />
+                          </dropdown.item>
+                        </DDropdownMenu>
+                      </:content>
+                    </DMenu>
+                  {{/unless}}
+                </div>
+              </td>
+            </:row>
+          </AdminTable>
+        {{/each}}
       {{else if this.hasActiveFilters}}
         <div class="d-filter-controls__no-results workflows-index__no-results">
           <p>{{i18n "discourse_workflows.no_workflows_found"}}</p>

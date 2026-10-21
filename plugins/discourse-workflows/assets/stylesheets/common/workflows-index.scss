@@ -1,4 +1,8 @@
 .workflows-index {
+  &__section-heading {
+    margin-block-start: var(--space-8);
+  }
+
   &__tabs {
     display: flex;
     border-bottom: 2px solid var(--primary-low);

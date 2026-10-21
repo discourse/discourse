@@ -4,6 +4,26 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
   describe "#execute" do
     let(:item) { { "json" => {} } }
 
+    it "simulates a request without contacting the destination" do
+      request = stub_request(:post, "https://api.example.com/data")
+      result =
+        execute_node(
+          configuration: {
+            "method" => "POST",
+            "url" => "https://api.example.com/data",
+            "dry_run" => true,
+          },
+          item: item,
+        )
+
+      expect(result).to eq(
+        "simulated" => true,
+        "method" => "POST",
+        "url" => "https://api.example.com/data",
+      )
+      expect(request).not_to have_been_requested
+    end
+
     it "makes a GET request and returns parsed JSON response" do
       stub_request(:get, "https://api.example.com/data").to_return(
         status: 200,

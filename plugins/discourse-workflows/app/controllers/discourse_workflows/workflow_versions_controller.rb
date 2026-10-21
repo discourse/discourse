@@ -4,6 +4,9 @@ module DiscourseWorkflows
   class WorkflowVersionsController < ::Admin::AdminController
     requires_plugin DiscourseWorkflows::PLUGIN_NAME
 
+    include ManagedWorkflowGuard
+    before_action :ensure_workflow_editable, only: %i[restore]
+
     def index
       DiscourseWorkflows::WorkflowVersion::List.call(service_params) do |result|
         on_success do |workflow:, versions:, total_rows:, load_more_url:|

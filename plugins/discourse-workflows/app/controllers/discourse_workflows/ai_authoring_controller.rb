@@ -4,6 +4,9 @@ module DiscourseWorkflows
   class AiAuthoringController < ::Admin::AdminController
     requires_plugin DiscourseWorkflows::PLUGIN_NAME
 
+    include ManagedWorkflowGuard
+    before_action :ensure_workflow_editable, only: %i[create apply]
+
     def create
       rate_limit! if DiscourseWorkflows::AiAuthoringEnqueuer.enabled?
 
