@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array } from "@ember/helper";
+import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -331,34 +331,54 @@ export default class VoiceChatPanel extends Component {
               </div>
             </:tip>
           </DEmptyState>
-          <footer class="voice-chat__composer">
-            <div class="voice-chat__composer-inner">
-              <EmojiPicker
-                @btnClass="btn-transparent voice-chat__emoji"
-                @context="voice-chat"
-                @didSelectEmoji={{this.insertEmoji}}
-              />
-              <textarea
-                aria-label={{i18n "voice.chat.composer_placeholder"}}
-                class="voice-chat__input"
-                placeholder={{i18n "voice.chat.composer_placeholder"}}
-                rows="1"
-                {{didInsert this.registerTextarea}}
-                {{on "input" this.updateDraft}}
-                {{on "keydown" this.onKeydown}}
-              ></textarea>
-              <button
-                aria-label={{i18n "voice.chat.send"}}
-                class="btn btn-transparent btn-icon no-text voice-chat__send"
-                disabled={{this.sendDisabled}}
-                title={{i18n "voice.chat.send"}}
-                type="button"
-                {{on "click" this.sendFirstMessage}}
-              >
-                {{dIcon "paper-plane"}}
-              </button>
+          <div class="chat-composer__wrapper --voice">
+            <div
+              aria-label={{i18n "chat.aria_roles.composer"}}
+              class={{dConcatClass
+                "chat-composer is-enabled"
+                (if this.composerFocused "is-focused")
+                (if this.sending "is-sending")
+                (if this.sendDisabled "is-send-disabled" "is-send-enabled")
+              }}
+              role="region"
+            >
+              <div class="chat-composer__outer-container">
+                <div class="chat-composer__inner-container">
+                  <div class="chat-composer__input-container">
+                    <textarea
+                      aria-label={{i18n "voice.chat.composer_placeholder"}}
+                      class="chat-composer__input"
+                      placeholder={{i18n "voice.chat.composer_placeholder"}}
+                      rows="1"
+                      {{didInsert this.registerTextarea}}
+                      {{on "input" this.updateDraft}}
+                      {{on "keydown" this.onKeydown}}
+                      {{on "focusin" (fn this.setComposerFocused true)}}
+                      {{on "focusout" (fn this.setComposerFocused false)}}
+                    ></textarea>
+                  </div>
+                  <EmojiPicker
+                    @btnClass="chat-composer-button btn-transparent --emoji"
+                    @context="voice-chat"
+                    @didSelectEmoji={{this.insertEmoji}}
+                  />
+                  <div class="chat-composer-separator"></div>
+                  <div class="chat-composer-button__wrapper">
+                    <button
+                      aria-label={{i18n "voice.chat.send"}}
+                      class="chat-composer-button -send"
+                      disabled={{this.sendDisabled}}
+                      title={{i18n "voice.chat.send"}}
+                      type="button"
+                      {{on "click" this.sendFirstMessage}}
+                    >
+                      {{dIcon "paper-plane"}}
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-          </footer>
+          </div>
         {{/if}}
       </div>
     </section>
