@@ -302,14 +302,17 @@ export default apiInitializer((api) => {
 
       if (combinedSearch) {
         if (!event.shiftKey && query) {
-          // a search already on screen for this term is not run again, unless
-          // its answer broke down; returning false skips the menu's own enter
-          // handling, which would otherwise treat a second enter as "open the
-          // full page"
+          // A search already on screen for this term is not run again, unless
+          // its answer broke down. Enter on it opens the full page instead, as
+          // a second enter does in the menu, whose own handling is skipped
+          // because the menu never saw the first.
           if (
-            !aiSearchSession.isActiveFor(query) ||
-            aiSearchSession.answerErrored
+            aiSearchSession.isActiveFor(query) &&
+            !aiSearchSession.answerErrored
           ) {
+            searchTerm.args.fullSearch();
+            searchTerm.args.closeSearchMenu();
+          } else {
             startCombined(query, { trigger: "enter" });
           }
           return false;

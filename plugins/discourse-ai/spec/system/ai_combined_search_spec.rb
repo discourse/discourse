@@ -275,6 +275,33 @@ describe "AI combined search" do
 
     after { SearchIndexer.disable }
 
+    it "opens the full search page on a second enter" do
+      visit "/"
+      wait_for_discoveries_channel
+      ask(query)
+
+      expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
+      find("#welcome-banner-search-input").send_keys(:enter)
+
+      expect(page).to have_current_path(%r{/search\?q=password\z})
+      expect(request_ids.size).to eq(1)
+    end
+
+    it "shows the search's topics again when the menu is reopened" do
+      visit "/about"
+      wait_for_discoveries_channel
+      find("#search-button").click
+      ask(query, input: "#icon-search-input")
+
+      expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
+      find("#icon-search-input").send_keys(:escape)
+      expect(page).to have_no_css("#icon-search-input")
+
+      find("#search-button").click
+      expect(page).to have_css(".search-menu .search-result-topic", text: topic_1.title)
+      expect(request_ids.size).to eq(1)
+    end
+
     it "opens a lookup on its topics, with every tab fetched at once" do
       visit "/"
       wait_for_discoveries_channel
