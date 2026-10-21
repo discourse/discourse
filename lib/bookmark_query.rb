@@ -24,7 +24,7 @@ class BookmarkQuery
     end
   end
 
-  attr_reader :guardian, :count
+  attr_reader :guardian
 
   def initialize(user:, guardian: nil, search_term: nil, page: nil, per_page: nil)
     @user = user
@@ -32,17 +32,16 @@ class BookmarkQuery
     @guardian = guardian || Guardian.new(@user)
     @page = page ? page.to_i : 0
     @per_page = per_page ? per_page.to_i : 20
-    @count = 0
   end
 
   def count_all
-    queries = build_list_queries
+    queries = list_queries
     return 0 if queries.empty?
     Bookmark.from("(#{queries.join(" UNION ")}) AS bookmarks").count
   end
 
   def list_all(&blk)
-    queries = build_list_queries
+    queries = list_queries
     return [] if queries.empty?
 
     results =
@@ -51,8 +50,6 @@ class BookmarkQuery
           "(CASE WHEN bookmarks.pinned THEN 0 ELSE 1 END), bookmarks.reminder_at ASC, bookmarks.updated_at DESC",
         ),
       )
-
-    @count = results.count
 
     results = results.offset(@page * @per_page) if @page.positive?
     results = blk&.call(results) || results
@@ -80,10 +77,14 @@ class BookmarkQuery
 
   private
 
+  def list_queries
+    @list_queries ||= build_list_queries
+  end
+
   def build_list_queries
     Bookmark.registered_bookmarkables.filter_map do |bookmarkable|
       query = bookmarkable.perform_list_query(@user, @guardian)
-      next if query.blank?
+      next if query.nil?
       query = apply_search_filter(bookmarkable, query) if @search_term.present?
       query.to_sql
     end
