@@ -465,6 +465,18 @@ module(
 
       assert.dom("li.message .item-label").hasText("Mix Tape");
     });
+
+    test("item is unread when the message has unread posts", async function (assert) {
+      const item = getMessage(
+        { unread_posts: 3 },
+        this.siteSettings,
+        this.site
+      );
+
+      await render(<template><MenuItem @item={{item}} /></template>);
+
+      assert.dom("li.message").hasClass("unread");
+    });
   }
 );
 
