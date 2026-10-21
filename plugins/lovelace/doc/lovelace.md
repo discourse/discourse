@@ -82,9 +82,24 @@ original public/private-site behavior and returns `{"hello":"world"}`.
 
 The isolated Rails engine exposes the API under `/lovelace`. The checklist is
 stored as one ordered configuration in Discourse’s PluginStore, with a revision
-and a distributed mutex to serialize writes. The server validates fields, limits,
-link destination types, and URL schemes and supplies fixed paths for settings
-links. No plugin tables, migrations, or background jobs are needed.
+and a distributed mutex to serialize writes. `ChecklistsController` handles HTTP
+responses and delegates updates to `Lovelace::Checklist::Update`, a Discourse
+service. The service enforces the enabled-plugin and administrator policies,
+validates and normalizes items through `Checklist.normalize`, and saves the next
+revision. Reads continue to use `Checklist.read`. The server validates fields,
+limits, link destination types, and URL schemes and supplies fixed paths for
+settings links. No plugin tables, migrations, or background jobs are needed.
+
+The revision check alone cannot prevent simultaneous overwrites: two requests
+could both read revision 3, both pass the check, and both save revision 4. The
+service’s `lock` step uses Discourse’s Redis-backed `DistributedMutex` to keep
+reading the current checklist, checking its revision, and saving the replacement
+inside one critical section. The second request reads the newly saved revision
+and fails with HTTP 409 rather than overwriting it. The lock covers all checklist
+updates across Discourse processes; a Ruby mutex would protect only one process.
+Validation happens before acquiring the lock, and rendering happens after it is
+released, keeping the critical section small. A database transaction alone would
+not serialize this read/check/write sequence in PluginStore.
 
 The plugin registers a standard admin plugin tab and page subheader. FormKit
 owns validation and unsaved draft checks, and is mounted only while adding or
@@ -99,6 +114,7 @@ Run from the Discourse repository root:
 
 ```sh
 LOAD_PLUGINS=1 RAILS_ENV=test bin/rspec plugins/lovelace/spec/requests
+LOAD_PLUGINS=1 RAILS_ENV=test bin/rspec plugins/lovelace/spec/services
 pnpm --dir frontend/discourse build
 LOAD_PLUGINS=1 bin/rake assets:precompile:build_plugins
 LOAD_PLUGINS=1 RAILS_ENV=test bin/rspec plugins/lovelace/spec/system/configure_member_onboarding_spec.rb
@@ -106,6 +122,8 @@ LOAD_PLUGINS=1 RAILS_ENV=test bin/rspec plugins/lovelace/spec/system/configure_m
 
 Request specs cover authorization, disabled-plugin behavior, persistence,
 reordering, removal, supported destinations, invalid payloads, and stale writes.
+Service specs cover direct-call authorization, checklist normalization, invalid
+input, revision conflicts, and saving or clearing the configuration.
 The onboarding system spec covers adding and editing items, compact saved rows,
 temporary toasts, preview progress, navigation warnings, reordering, removal, and
 persistence after refresh. The existing core-features system spec checks normal

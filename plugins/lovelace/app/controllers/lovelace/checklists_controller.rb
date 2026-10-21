@@ -11,20 +11,17 @@ module ::Lovelace
     end
 
     def update
-      raw_items = params[:items]
-      raise Discourse::InvalidParameters.new(:items) unless raw_items.is_a?(Array)
-      items =
-        Checklist.normalize(
-          raw_items.map { |item| item.respond_to?(:to_unsafe_h) ? item.to_unsafe_h : item },
-        )
-      DistributedMutex.synchronize("lovelace-checklist") do
-        current = Checklist.read
-        if params[:revision].to_s != current["revision"].to_s
-          return render json: { errors: [I18n.t("lovelace.checklist_conflict")] }, status: :conflict
+      Checklist::Update.call(service_params) do
+        on_success { |checklist:| render json: checklist }
+        on_failed_policy(:plugin_enabled) { raise Discourse::NotFound }
+        on_failed_policy(:can_configure_checklist) { raise Discourse::InvalidAccess }
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.first.message)
         end
-        result = { "items" => items, "revision" => current["revision"] + 1 }
-        PluginStore.set(PLUGIN_NAME, "checklist", result)
-        render json: result
+        on_failed_policy(:revision_matches) do
+          render json: { errors: [I18n.t("lovelace.checklist_conflict")] }, status: :conflict
+        end
+        on_failure { render json: failed_json, status: :unprocessable_entity }
       end
     end
   end
