@@ -9122,6 +9122,14 @@ RSpec.describe UsersController do
         end
       end
 
+      it "looks up acting users of unread and read notifications at once" do
+        SiteSetting.show_user_menu_avatars = true
+
+        queries = track_sql_queries { get "/u/#{user.username}/user-menu-private-messages" }
+        expect(response.status).to eq(200)
+        expect(queries.grep(/username_lower/).size).to eq(1)
+      end
+
       it "sends an array of read group_message_summary notifications" do
         read_group_message_summary_notification2 =
           Fabricate(
