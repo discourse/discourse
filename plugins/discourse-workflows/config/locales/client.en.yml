@@ -48,8 +48,8 @@ en:
           cycle: "Includes a cycle"
           unavailable: "This workflow is too complex to draw safely here. Review the exact configuration before approving."
       managed:
-        list_title: "Plugin-managed workflows"
-        list_label: "Managed by %{name}"
+        plugin_heading: "%{name} plugin"
+        list_description: "These workflows are read-only. Edit their configuration in the plugin, or duplicate a workflow to create an editable copy."
         title: "Managed by %{name}"
         description: "This workflow is read-only. Edit its configuration in the plugin, or duplicate it to make an independent, editable copy."
         configure: "Edit plugin configuration"

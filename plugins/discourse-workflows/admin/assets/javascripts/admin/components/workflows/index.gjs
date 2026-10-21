@@ -75,16 +75,28 @@ export default class WorkflowsIndex extends Component {
 
   get workflowSections() {
     const items = this.resultSet.content;
+    const plugins = new Map();
+    for (const workflow of items) {
+      if (workflow.managed_by) {
+        const name = workflow.managed_by.name;
+        if (!plugins.has(name)) {
+          plugins.set(name, []);
+        }
+        plugins.get(name).push(workflow);
+      }
+    }
     const sections = [
       {
         id: "regular",
         items: items.filter((workflow) => !workflow.managed_by),
       },
-      {
-        id: "managed",
-        title: "discourse_workflows.managed.list_title",
-        items: items.filter((workflow) => workflow.managed_by),
-      },
+      ...[...plugins.keys()]
+        .sort((a, b) => a.localeCompare(b))
+        .map((name) => ({
+          id: `managed:${name}`,
+          title: name,
+          items: plugins.get(name),
+        })),
     ].filter((section) => section.items.length);
     return sections.map((section, index) => ({
       ...section,
@@ -349,7 +361,15 @@ export default class WorkflowsIndex extends Component {
         {{#each this.workflowSections key="id" as |section|}}
           {{#if section.title}}
             <div class="workflows-index__section-heading">
-              <DPageSubheader @titleLabel={{i18n section.title}} />
+              <DPageSubheader
+                @descriptionLabel={{i18n
+                  "discourse_workflows.managed.list_description"
+                }}
+                @titleLabel={{i18n
+                  "discourse_workflows.managed.plugin_heading"
+                  name=section.title
+                }}
+              />
             </div>
           {{/if}}
           <AdminTable
@@ -402,22 +422,6 @@ export default class WorkflowsIndex extends Component {
                     </span>
                   {{/if}}
                 </LinkTo>
-                {{#if workflow.managed_by}}
-                  <div class="d-table__badges">
-                    <span
-                      class="d-table-badge"
-                      data-test-workflow-owner={{workflow.id}}
-                    >
-                      <span class="d-table-badge__content">
-                        {{dIcon "lock"}}
-                        {{i18n
-                          "discourse_workflows.managed.list_label"
-                          name=workflow.managed_by.name
-                        }}
-                      </span>
-                    </span>
-                  </div>
-                {{/if}}
                 {{#if workflow.tags.length}}
                   <div class="d-table__badges workflows-index__tags">
                     {{#each workflow.tags as |tag|}}

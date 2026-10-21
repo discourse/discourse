@@ -17,7 +17,12 @@ The HTTP request node's `dry_run` option returns the planned method and URL with
 `simulated: true`; it does not send an HTTP request or resolve credentials. This
 can be used for published integration demonstrations. It defaults to `false`.
 
-The workflow list separates managed workflows into a second table below regular
-workflows. Search and tag filters apply to both sections, and pagination continues
-loading the shared result set from the bottom table. Editable duplicates remain
+The workflow list groups managed workflows by plugin name in separate tables below
+regular workflows. Plugin headings are alphabetically ordered. Search and tag
+filters apply to all sections, and pagination continues loading the shared result
+set from the bottom table. Editable duplicates remain
 in the regular table.
+
+Each plugin table uses a “Name plugin” heading and a shared explanation of its
+read-only workflows, configuration editing, and editable duplication. Ownership
+is shown at section level rather than repeated on every row.
