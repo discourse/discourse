@@ -124,6 +124,9 @@ RSpec.describe "Glimmer Header" do
     find("##{header.active_element_id}").send_keys(:down)
     expect(header.active_element_id).to eq("user-menu-button-replies")
 
+    find("##{header.active_element_id}").send_keys(:down)
+    expect(header.active_element_id).to eq("user-menu-button-mentions")
+
     4.times { find("##{header.active_element_id}").send_keys(:down) }
     expect(header.active_element_id).to eq("user-menu-button-profile")
 
