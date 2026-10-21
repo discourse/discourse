@@ -161,6 +161,17 @@ module Migrations
 
           THEME_SCREENSHOT_FIELD_TYPE = "7"
 
+          # A permalink has exactly one of these set.
+          PERMALINK_TARGET_COLUMNS = %w[
+            topic_id
+            post_id
+            category_id
+            tag_id
+            user_id
+            external_url
+          ].freeze
+          PERMALINK_RECORD_KINDS = %w[topic post tag user].freeze
+
           # Not a column: the category's group permissions as a whole.
           CATEGORY_PERMISSIONS = "permissions"
 
@@ -223,6 +234,31 @@ module Migrations
               return { "target" => "migrated", "note" => "imported category" } if info[:imported]
 
               { "target" => "template", "note" => "created on this site; created if missing" }
+            end
+
+            # Removals don't need the record any more: the old permalink is
+            # deleted by url.
+            def permalink(row, facts, remove: false)
+              return { "target" => "template" } if row["external_url"].present?
+
+              if row["category_id"].present?
+                info = facts.category(row["category_id"].to_i)
+                if info.nil?
+                  return remove ? { "target" => "migrated" } : skip("category no longer exists")
+                end
+                if info[:imported]
+                  return { "target" => "migrated", "note" => "redirects to an imported category" }
+                end
+                return { "target" => "template", "note" => "redirects to a category" }
+              end
+
+              kind = PERMALINK_RECORD_KINDS.find { |k| row["#{k}_id"].present? }
+              return skip("has no target") if kind.nil?
+              if !remove && !facts.record_exists?(kind.to_sym, row["#{kind}_id"].to_i)
+                return skip("#{kind} no longer exists")
+              end
+
+              { "target" => "migrated", "note" => "redirects to a #{kind}" }
             end
 
             # The UI saves empty fields as "" where they were NULL before.

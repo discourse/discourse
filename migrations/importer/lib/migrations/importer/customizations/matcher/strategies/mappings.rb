@@ -7,7 +7,13 @@ module Migrations
         module Strategies
           # Ids recorded by the importer in its MappingsDB.
           class Mappings
-            TYPES = { category: MappingType::CATEGORIES, group: MappingType::GROUPS }.freeze
+            TYPES = {
+              category: MappingType::CATEGORIES,
+              group: MappingType::GROUPS,
+              topic: MappingType::TOPICS,
+              user: MappingType::USERS,
+              tag: MappingType::TAGS,
+            }.freeze
 
             def initialize(mappings_db)
               @mappings_db = mappings_db
@@ -17,15 +23,19 @@ module Migrations
               "mappings_db"
             end
 
+            # Posts have no mapping type.
             def keys_for(kind, record)
-              { "original_id" => @mappings_db.original_id(TYPES.fetch(kind), record.id) }
+              type = TYPES[kind]
+              return {} if type.nil?
+
+              { "original_id" => @mappings_db.original_id(type, record.id) }
             end
 
             def find_id(kind, keys)
-              return if keys["original_id"].nil?
+              type = TYPES[kind]
+              return if type.nil? || keys["original_id"].nil?
 
-              id = @mappings_db.discourse_id(TYPES.fetch(kind), keys["original_id"])
-              id&.to_i
+              @mappings_db.discourse_id(type, keys["original_id"])&.to_i
             end
 
             def close

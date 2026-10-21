@@ -17,6 +17,7 @@ module Migrations
           groups
           categories
           translation_overrides
+          permalinks
         ].freeze
         TARGETS = %w[template migrated skip].freeze
         APPLY_TARGETS = %w[template migrated].freeze
@@ -97,6 +98,8 @@ module Migrations
             if item["locale"].blank? || item["key"].blank?
               raise Error, "#{where}: locale and key are required"
             end
+          when "permalinks"
+            raise Error, "#{where}: url is required" if item["url"].blank?
           end
 
           if item.key?("attributes") && !item["attributes"].is_a?(Array)

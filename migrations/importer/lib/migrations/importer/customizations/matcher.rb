@@ -3,9 +3,9 @@
 module Migrations
   module Importer
     module Customizations
-      # Finds imported categories and groups again although their ids differ
-      # between test migrations. Strategies are tried in order; export records
-      # the keys of all of them so apply can use whichever works on the target.
+      # Finds imported records again although their ids differ between test
+      # migrations. Strategies are tried in order; export records the keys of
+      # all of them so apply can use whichever works on the target.
       class Matcher
         Match = Data.define(:id, :strategy)
 
@@ -23,7 +23,7 @@ module Migrations
           @strategies = strategies
         end
 
-        # @param kind [Symbol] :category or :group
+        # @param kind [Symbol] :category, :group, :topic, :post, :user or :tag
         def keys_for(kind, record)
           @strategies.each_with_object({}) do |strategy, keys|
             keys.merge!(strategy.keys_for(kind, record).compact)

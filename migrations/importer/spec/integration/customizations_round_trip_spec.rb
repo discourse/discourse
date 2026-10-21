@@ -106,6 +106,31 @@ RSpec.describe "customizations export and apply", :rails do
     end
   end
 
+  let!(:imported_topic) do
+    Fabricate(:topic).tap do |topic|
+      TopicCustomField.create!(topic_id: topic.id, name: "import_id", value: "t-7")
+    end
+  end
+  let!(:first_post) { Fabricate(:post, topic: imported_topic) }
+  let!(:reply) { Fabricate(:post, topic: imported_topic) }
+  let!(:permalink_user) { Fabricate(:user, username: "permalink_user") }
+  let!(:permalink_tag) { Fabricate(:tag, name: "permalink-tag") }
+  let(:encoded_url) { "t%C3%A4st/old-thread" }
+
+  let(:permalink_urls) do
+    %w[old/external old/category old/topic old/reply old/user old/tag] + [encoded_url]
+  end
+
+  def create_permalinks!
+    Permalink.create!(url: "old/external", external_url: "https://example.com/elsewhere")
+    Permalink.create!(url: "old/category", category_id: category.id)
+    Permalink.create!(url: "old/topic", topic_id: imported_topic.id)
+    Permalink.create!(url: "old/reply", post_id: reply.id)
+    Permalink.create!(url: "old/user", user_id: permalink_user.id)
+    Permalink.create!(url: "old/tag", tag_id: permalink_tag.id)
+    Permalink.create!(url: "täst/old-thread", topic_id: imported_topic.id)
+  end
+
   let(:plan) do
     customizations::Plan.new(
       "format_version" => 1,
@@ -146,6 +171,16 @@ RSpec.describe "customizations export and apply", :rails do
       "translation_overrides" => [
         { "locale" => "en", "key" => "js.topic.create", "target" => "template" },
       ],
+      "permalinks" => [
+        { "url" => "old/external", "target" => "template" },
+        { "url" => "old/category", "target" => "template" },
+        { "url" => "old/topic", "target" => "migrated" },
+        { "url" => "old/reply", "target" => "migrated" },
+        { "url" => "old/user", "target" => "migrated" },
+        { "url" => "old/tag", "target" => "migrated" },
+        { "url" => encoded_url, "target" => "migrated" },
+        { "url" => "old/removed", "target" => "migrated", "remove" => true },
+      ],
     )
   end
 
@@ -156,6 +191,7 @@ RSpec.describe "customizations export and apply", :rails do
     SiteSetting.logo = logo
     SiteSetting.github_client_secret = secret_value
     TranslationOverride.upsert!("en", "js.topic.create", "Start a discussion")
+    create_permalinks!
   end
 
   def matcher
@@ -195,6 +231,23 @@ RSpec.describe "customizations export and apply", :rails do
     category.update!(color: "000000", uploaded_logo_id: nil)
     TranslationOverride.revert!("en", ["js.topic.create"])
     Upload.where(id: [logo.id, flair.id, category_logo.id, background.id]).delete_all
+    Permalink.delete_all
+    Permalink.create!(url: "old/removed", external_url: "https://example.com/removed")
+  end
+
+  def permalink_targets
+    Permalink
+      .where(url: permalink_urls)
+      .to_h do |permalink|
+        [
+          permalink.url,
+          permalink.slice(*customizations::Plan::Rules::PERMALINK_TARGET_COLUMNS).compact,
+        ]
+      end
+  end
+
+  def message(report, label)
+    report.entries.find { |entry| entry.label == label }.message
   end
 
   def exported_manifest
@@ -224,6 +277,7 @@ RSpec.describe "customizations export and apply", :rails do
   end
 
   it "restores everything on the template and migrated targets, and is idempotent" do
+    expect(Permalink.exists?(url: encoded_url)).to eq(true)
     export!
     wipe!
 
@@ -270,6 +324,16 @@ RSpec.describe "customizations export and apply", :rails do
     expect(
       TranslationOverride.find_by(locale: "en", translation_key: "js.topic.create").value,
     ).to eq("Start a discussion")
+    expect(permalink_targets).to eq(
+      "old/external" => {
+        "external_url" => "https://example.com/elsewhere",
+      },
+      "old/category" => {
+        "category_id" => category.id,
+      },
+    )
+    expect(message(report, "old/category")).to eq("created, matched by natural_key")
+    expect(Permalink.exists?(url: "old/removed")).to eq(true)
 
     migrated_report = apply!("migrated")
     expect(migrated_report.failed?).to eq(false), output.string
@@ -279,6 +343,37 @@ RSpec.describe "customizations export and apply", :rails do
     expect(migrated_report.entries.find { |e| e.label == "imported_group" }.message).to eq(
       "matched by import_id",
     )
+
+    expect(permalink_targets).to eq(
+      "old/external" => {
+        "external_url" => "https://example.com/elsewhere",
+      },
+      "old/category" => {
+        "category_id" => category.id,
+      },
+      "old/topic" => {
+        "topic_id" => imported_topic.id,
+      },
+      "old/reply" => {
+        "post_id" => reply.id,
+      },
+      "old/user" => {
+        "user_id" => permalink_user.id,
+      },
+      "old/tag" => {
+        "tag_id" => permalink_tag.id,
+      },
+      encoded_url => {
+        "topic_id" => imported_topic.id,
+      },
+    )
+    expect(message(migrated_report, "old/topic")).to eq("created, matched by import_id")
+    expect(message(migrated_report, "old/reply")).to eq("created, matched by topic and post_number")
+    expect(message(migrated_report, "old/user")).to eq("created, matched by natural_key")
+    expect(message(migrated_report, "old/tag")).to eq("created, matched by natural_key")
+    expect(statuses(migrated_report)["permalinks: old/removed"]).to eq(:changed)
+    expect(Permalink.exists?(url: "old/removed")).to eq(false)
+    expect(Permalink.where("url LIKE ?", "%st/old-thread").pluck(:url)).to eq([encoded_url])
 
     again = apply!("template")
     expect(again.entries.map(&:status).uniq).to eq([:unchanged]), output.string
@@ -362,13 +457,16 @@ RSpec.describe "customizations export and apply", :rails do
   it "skips imported records it can't find and secrets it isn't given" do
     export!(include_secrets: false)
     imported_group.destroy!
+    imported_topic.destroy!
 
     report = apply!("migrated")
 
     expect(statuses(report)).to include(
       "groups: imported_group" => :skipped,
       "site_settings: github_client_secret" => :skipped,
+      "permalinks: old/topic" => :skipped,
     )
+    expect(message(report, "old/topic")).to eq("no matching topic found (tried import_id)")
     expect(report.failed?).to eq(false)
   end
 

@@ -14,6 +14,7 @@ module Migrations
           end
 
           MODELS = { "groups" => "Group", "categories" => "Category" }.freeze
+          RECORD_MODELS = { topic: "Topic", post: "Post", user: "User", tag: "Tag" }.freeze
 
           def initialize(matcher)
             @matcher = matcher
@@ -69,6 +70,11 @@ module Migrations
 
             match = @matcher.keys_for(:category, category)
             { name: category.name, imported: imported?(match), match: }
+          end
+
+          # Trashed topics and posts count as missing.
+          def record_exists?(kind, id)
+            RECORD_MODELS.fetch(kind).constantize.exists?(id:)
           end
 
           def default_value?(table, column, value)

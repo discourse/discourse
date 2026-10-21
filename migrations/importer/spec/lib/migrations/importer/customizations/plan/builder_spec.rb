@@ -174,12 +174,21 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
       def default_value?(_table, _column, value)
         value.nil? || value == "f" || value == "0"
       end
+
+      def record_exists?(kind, id)
+        { topic: [40], post: [41], user: [42], tag: [43] }.fetch(kind).include?(id)
+      end
     end
   end
   let(:facts) { facts_class.new }
 
   def setting_row(id, name, value)
     { "id" => id.to_s, "name" => name, "data_type" => "1", "value" => value }
+  end
+
+  def permalink_row(id, url, target)
+    columns = %w[topic_id post_id category_id tag_id user_id external_url].index_with { nil }
+    { "id" => id.to_s, "url" => url, "updated_at" => "a" }.merge(columns).merge(target)
   end
 
   let(:diff) do
@@ -364,6 +373,38 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
             },
           ],
         },
+        "permalinks" => {
+          "added" => [
+            permalink_row(1, "external", "external_url" => "https://example.com"),
+            permalink_row(2, "old-topic", "topic_id" => "40"),
+            permalink_row(3, "deleted-post", "post_id" => "99"),
+            permalink_row(4, "imported-category", "category_id" => "20"),
+            permalink_row(5, "local-category", "category_id" => "21"),
+            permalink_row(6, "renamed-new", "user_id" => "42"),
+          ],
+          "removed" => [
+            permalink_row(7, "gone", "topic_id" => "98"),
+            permalink_row(8, "renamed-old", "user_id" => "42"),
+          ],
+          "changed" => [
+            {
+              "key" => ["9"],
+              "diffs" => {
+                "topic_id" => ["40", nil],
+                "tag_id" => [nil, "43"],
+                "updated_at" => %w[a b],
+              },
+              "after" => permalink_row(9, "retargeted", "tag_id" => "43"),
+            },
+            {
+              "key" => ["10"],
+              "diffs" => {
+                "updated_at" => %w[a b],
+              },
+              "after" => permalink_row(10, "touched", "topic_id" => "40"),
+            },
+          ],
+        },
         "badges" => {
           "added" => [],
           "removed" => [],
@@ -541,6 +582,37 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
       },
       { "locale" => "en", "key" => "js.topic.title", "target" => "template" },
     )
+  end
+
+  it "classifies permalinks by what they redirect to" do
+    expect(plan["permalinks"]).to eq(
+      [
+        { "url" => "deleted-post", "target" => "skip", "note" => "post no longer exists" },
+        { "url" => "external", "target" => "template" },
+        {
+          "url" => "gone",
+          "remove" => true,
+          "target" => "migrated",
+          "note" => "redirects to a topic",
+        },
+        {
+          "url" => "imported-category",
+          "target" => "migrated",
+          "note" => "redirects to an imported category",
+        },
+        { "url" => "local-category", "target" => "template", "note" => "redirects to a category" },
+        { "url" => "old-topic", "target" => "migrated", "note" => "redirects to a topic" },
+        { "url" => "renamed-new", "target" => "migrated", "note" => "redirects to a user" },
+        {
+          "url" => "renamed-old",
+          "remove" => true,
+          "target" => "migrated",
+          "note" => "redirects to a user",
+        },
+        { "url" => "retargeted", "target" => "migrated", "note" => "redirects to a tag" },
+      ],
+    )
+    expect(trailer.join("\n")).not_to include("permalinks")
   end
 
   it "lists unhandled tables in the trailer" do

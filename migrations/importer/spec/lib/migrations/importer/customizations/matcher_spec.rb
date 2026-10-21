@@ -31,10 +31,13 @@ RSpec.describe Migrations::Importer::Customizations::Matcher do
         )
       SQL
       db.execute(
-        "INSERT INTO ids VALUES (7, ?, 30), (8, ?, 31), ('abc', ?, 40)",
+        "INSERT INTO ids VALUES (7, ?, 30), (8, ?, 31), ('abc', ?, 40), (11, ?, 30), (12, ?, 30), ('t-1', ?, 30)",
         types::CATEGORIES,
         types::GROUPS,
         types::GROUPS,
+        types::TOPICS,
+        types::USERS,
+        types::TAGS,
       )
       db.close
       example.run
@@ -59,6 +62,18 @@ RSpec.describe Migrations::Importer::Customizations::Matcher do
       expect(mappings.find_id(:group, "original_id" => "abc")).to eq(40)
       expect(mappings.find_id(:group, "original_id" => 7)).to be_nil
       expect(mappings.find_id(:group, {})).to be_nil
+    end
+
+    it "maps topics, users and tags, but has no mapping type for posts" do
+      expect(mappings.keys_for(:topic, record)).to eq("original_id" => 11)
+      expect(mappings.keys_for(:user, record)).to eq("original_id" => 12)
+      expect(mappings.keys_for(:tag, record)).to eq("original_id" => "t-1")
+      expect(mappings.keys_for(:post, record)).to eq({})
+
+      expect(mappings.find_id(:topic, "original_id" => "11")).to eq(30)
+      expect(mappings.find_id(:user, "original_id" => 12)).to eq(30)
+      expect(mappings.find_id(:tag, "original_id" => "t-1")).to eq(30)
+      expect(mappings.find_id(:post, "original_id" => 11)).to be_nil
     end
 
     it "opens the database read-only" do
