@@ -45,7 +45,8 @@ class UserSilencer
       end
 
       silence_message_params = Dsa::AppealInstructions.message_options
-      silence_message_params[:silence_notice] = silence_notice if message_type.to_s == "silenced_by_staff"
+      silence_message_params[:silence_notice] = silence_notice if message_type.to_s ==
+        "silenced_by_staff"
       silence_message_params[:notification_context] = @opts[:notification_context] if @opts[
         :notification_context
       ]

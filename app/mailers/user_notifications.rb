@@ -960,12 +960,13 @@ class UserNotifications < ActionMailer::Base
         ActiveSupport::TimeZone[user.user_option.timezone.presence || "UTC"] ||
           ActiveSupport::TimeZone["UTC"]
       local_date = until_date.in_time_zone(timezone)
-      date = I18n.t(
-        "#{template}.date_with_timezone",
-        date: I18n.l(local_date, format: :long, locale:),
-        offset: local_date.formatted_offset,
-        locale:,
-      )
+      date =
+        I18n.t(
+          "#{template}.date_with_timezone",
+          date: I18n.l(local_date, format: :long, locale:),
+          offset: local_date.formatted_offset,
+          locale:,
+        )
       values[:"#{penalty}_till"] = date
     end
     build_email(user.email, values)

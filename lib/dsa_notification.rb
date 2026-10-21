@@ -50,7 +50,8 @@ class DsaNotification
   end
 
   def self.context(reviewable:, action_id:, args:, automated_detection:, automated_decision:)
-    if SiteSetting.contact_email.blank? && SiteSetting.contact_url.blank?
+    appeal_email = SiteSetting.dsa_moderation_appeal_email.presence || SiteSetting.contact_email
+    if appeal_email.blank?
       raise Discourse::InvalidParameters.new(I18n.t("dsa_notifications.contact_required"))
     end
 
@@ -115,8 +116,8 @@ class DsaNotification
         ),
       "automated_detection" => automated_detection == "Yes",
       "automated_decision" => automated_decision,
-      "contact" => SiteSetting.contact_email.presence || SiteSetting.contact_url,
-      "contact_email" => SiteSetting.contact_email.present?,
+      "contact" => appeal_email,
+      "contact_email" => true,
       "penalty_until" => penalty_until&.iso8601,
       "post_action" => args[:post_action].presence || "none",
     }

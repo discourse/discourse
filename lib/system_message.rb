@@ -49,7 +49,8 @@ class SystemMessage
         end
 
     key = params[:body_suffix_key]
-    if key && !(params[:notification_context] && key == "system_messages.moderation_appeal_instructions")
+    if key &&
+         !(params[:notification_context] && key == "system_messages.moderation_appeal_instructions")
       paragraph = I18n.with_locale(@recipient.effective_locale) { I18n.t(key, params) }
       raw = "#{raw.rstrip}\n\n#{paragraph}"
     end

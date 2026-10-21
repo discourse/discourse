@@ -237,7 +237,10 @@ module Email
       end
 
       key = @template_args[:body_suffix_key]
-      if key && !(@opts[:notification_context] && key == "system_messages.moderation_appeal_instructions")
+      if key &&
+           !(
+             @opts[:notification_context] && key == "system_messages.moderation_appeal_instructions"
+           )
         paragraph = I18n.t(key, @template_args)
         body = "#{body.rstrip}\n\n#{paragraph}"
       end

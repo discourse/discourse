@@ -1935,7 +1935,7 @@ RSpec.describe ReviewablesController do
             include(
               rule[:ground],
               rule[:explanation],
-              "To appeal this decision, contact",
+              "If you believe this decision was made in error, you can appeal by emailing",
               "mailto:#{SiteSetting.contact_email}",
             ),
           )
@@ -1999,13 +1999,18 @@ RSpec.describe ReviewablesController do
           flagged_post.user.update!(locale: "fr")
           deadline = Time.zone.parse("2026-10-30 06:00:00 UTC")
           freeze_time(Time.zone.parse("2026-10-16 06:00:00 UTC"))
-          date_template =
-            if penalty == "suspend"
-              "user_notifications.account_suspended.date_with_timezone"
-            else
-              "user_notifications.account_silenced.date_with_timezone"
-            end
-          TranslationOverride.upsert!("fr", date_template, "%{date} (heure UTC%{offset})")
+          penalty_template = penalty == "suspend" ? "account_suspended" : "account_silenced"
+          date_placeholder = penalty == "suspend" ? :suspended_till : :silenced_till
+          TranslationOverride.upsert!(
+            "fr",
+            "user_notifications.#{penalty_template}.date_with_timezone",
+            "%{date} (heure UTC%{offset})",
+          )
+          TranslationOverride.upsert!(
+            "fr",
+            "user_notifications.#{penalty_template}.text_body_template",
+            "Avis de modération : %{#{date_placeholder}}",
+          )
           date_field = penalty == "suspend" ? :suspend_until : :silenced_till
 
           I18n.with_locale(:en) do
@@ -2026,14 +2031,45 @@ RSpec.describe ReviewablesController do
           email = ActionMailer::Base.deliveries.sole
           body = email.text_part.body.decoded
           expected_date = I18n.l(deadline, format: :long, locale: :fr)
-          expect(body).to start_with("Votre compte sur le forum")
+          expect(body).to start_with("Avis de modération :")
           expect(body).to include("#{expected_date} (heure UTC+00:00)")
+        end
+      end
+
+      %w[delete_and_agree agree_and_suspend].each do |action_id|
+        it "uses the configured appeal email for #{action_id}" do
+          SiteSetting.dsa_moderation_appeal_email = "appeals@forum.example"
+          SiteSetting.contact_email = "" if action_id == "agree_and_suspend"
+
+          put "/review/#{reviewable.id}/perform/#{action_id}.json",
+              params: {
+                version: reviewable.version,
+                dsa_classification: classification,
+                reason: "Repeated personal attacks.",
+                suspend_until: 2.weeks.from_now.iso8601,
+                post_action: "none",
+              }
+
+          expect(response).to have_http_status(:ok)
+          Jobs::SendSystemMessage.jobs.each do |job|
+            Jobs::SendSystemMessage.new.execute(job.fetch("args").first.with_indifferent_access)
+          end
+          Jobs::CriticalUserEmail.jobs.each do |job|
+            Jobs::CriticalUserEmail.new.execute(job.fetch("args").first.with_indifferent_access)
+          end
+          bodies =
+            Post.joins(:topic).where(topics: { archetype: Archetype.private_message }).map(&:raw) +
+              ActionMailer::Base.deliveries.map { |mail| (mail.text_part || mail).body.decoded }
+
+          expect(bodies).not_to be_empty
+          expect(bodies).to all(include("[appeals@forum.example](mailto:appeals@forum.example)"))
+          expect(bodies.map { |body| body.scan("appeals@forum.example").size }).to all(eq(2))
         end
       end
 
       it "keeps moderation pending when no review contact is configured" do
         SiteSetting.contact_email = ""
-        SiteSetting.contact_url = ""
+        SiteSetting.contact_url = "https://forum.example/contact"
 
         put "/review/#{reviewable.id}/perform/delete_and_agree.json",
             params: {
@@ -2503,7 +2539,7 @@ RSpec.describe ReviewablesController do
           "The original post",
           rule[:ground],
           rule[:explanation],
-          "To appeal this decision, contact",
+          "If you believe this decision was made in error, you can appeal by emailing",
         )
         expect(reviewable.dsa_statement_of_records.sole).to be_ready
       end

@@ -2148,7 +2148,7 @@ en:
 
   site_settings:
     dsa_notice_group: "Group receiving illegal content notices when {{setting:dsa_reporting_enabled}} is enabled. Members can read notices and reporter contact details. Defaults to admins, which also receives notices if the selected group is missing or empty."
-    dsa_moderation_appeal_email: "Users can appeal moderation decisions by emailing this address. Leave blank to omit appeal instructions. Requires {{setting:dsa_reporting_enabled}} to be turned on."
+    dsa_moderation_appeal_email: "Users can appeal moderation decisions by emailing this address. For classified decisions, leave blank to use {{setting:contact_email}}. Other moderation notices omit appeal instructions when blank. Requires {{setting:dsa_reporting_enabled}} to be turned on."
     dsa_community_rules: "Community rules available for DSA classification when {{setting:dsa_reporting_enabled}} is enabled. Each rule needs an exact contractual reference (up to 500 characters) and an explanation (up to 2000 characters). Leave empty to disable classification."
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
     disabled: "disabled"
@@ -4016,7 +4016,7 @@ en:
     other: "This topic is temporarily closed for at least %{count} hours due to a large number of community flags."
 
   dsa_notifications:
-    contact_required: "Configure a contact email or contact URL before sending DSA notifications."
+    contact_required: "Configure an appeal email or contact email before sending DSA notifications."
     post_reference_flag: "We reviewed a report about your [post in %{title}, #%{number}](%{url})."
     post_reference_review: "We reviewed your [post in %{title}, #%{number}](%{url}) during our own moderation."
     date_with_timezone: "%{date} (UTC%{offset})"
@@ -4041,7 +4041,7 @@ en:
     content_reference: "[Your post in %{title}, #%{number}](%{url})"
     submission_reference: "Your submission to **%{title}**"
     responder_statement: |
-      The original post broke our **%{ground}** rule. %{explanation} To appeal this decision, contact %{general_contact_email}.
+      The original post broke our **%{ground}** rule. %{explanation} If you believe this decision was made in error, you can appeal by emailing %{general_contact_email}.
     decisions:
       post_edited: "Your post was edited by a staff member."
       post_kept_hidden: "A staff member reviewed your post and decided to keep it hidden."
@@ -4055,7 +4055,7 @@ en:
       delete_all: "We have also selected all your posts for removal."
       edit: "We also edited your post."
     statement: |
-      This decision follows our **%{ground}** rule. %{explanation} To appeal this decision, contact %{general_contact_email}.
+      This decision follows our **%{ground}** rule. %{explanation} If you believe this decision was made in error, you can appeal by emailing %{general_contact_email}.
     account_deleted:
       title: "Account deleted during own moderation"
       subject_template: "[%{email_prefix}] Your account has been deleted"
