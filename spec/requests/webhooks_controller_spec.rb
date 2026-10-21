@@ -794,6 +794,7 @@ RSpec.describe WebhooksController do
     let(:topic_arn) { "arn:aws:sns:us-east-1:123456789012:discourse-bounces" }
     let(:other_topic_arn) { "arn:aws:sns:us-east-1:999999999999:attacker-topic" }
     let(:bounce_status) { "5.1.1" }
+    let(:ses_message_id) { "0000014644fe5ef6-9a483358-9170-4cb4-a269-f5dcdf415321-000000" }
     let(:payload) do
       {
         "Type" => "Notification",
@@ -823,7 +824,7 @@ RSpec.describe WebhooksController do
             "sourceIp" => "127.0.3.0",
             "sendingAccountId" => "123456789012",
             "callerIdentity" => "IAM_user_or_role_name",
-            "messageId" => message_id,
+            "messageId" => ses_message_id,
             "destination" => [email, "jane@example.com", "mary@example.com", "richard@example.com"],
             "headersTruncated" => false,
             "headers" => [
@@ -833,7 +834,7 @@ RSpec.describe WebhooksController do
                 "value" =>
                   "\"Test\" <#{email}>, \"Jane Doe\" <jane@example.com>, \"Mary Doe\" <mary@example.com>, \"Richard Doe\" <richard@example.com>",
               },
-              { "name" => "Message-ID", "value" => message_id },
+              { "name" => "Message-ID", "value" => "<#{message_id}>" },
               { "name" => "Subject", "value" => "Hello" },
               { "name" => "Content-Type", "value" => "text/plain; charset=\"UTF-8\"" },
               { "name" => "Content-Transfer-Encoding", "value" => "base64" },
@@ -845,7 +846,7 @@ RSpec.describe WebhooksController do
               "to" => [
                 "\"Test\" <#{email}>, Jane Doe <jane@example.com>, Mary Doe <mary@example.com>, Richard Doe <richard@example.com>",
               ],
-              "messageId" => message_id,
+              "messageId" => "<#{message_id}>",
               "subject" => "Hello",
             },
           },
@@ -883,7 +884,22 @@ RSpec.describe WebhooksController do
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
     end
 
-    it "does not bounce an email log with a different SES message id" do
+    it "falls back to the SES message id when the original headers are not included" do
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: ses_message_id, to_address: email)
+
+      notification = JSON.parse(payload)
+      message = JSON.parse(notification["Message"])
+      message["mail"].except!("headers", "headersTruncated", "commonHeaders")
+      notification["Message"] = message.to_json
+
+      post "/webhooks/aws.json", headers: { "RAW_POST_DATA" => notification.to_json }
+      expect(response.status).to eq(200)
+
+      expect(email_log.reload.bounced).to eq(true)
+    end
+
+    it "does not bounce an email log with a different message id" do
       user = Fabricate(:user, email: email)
       email_log =
         Fabricate(:email_log, user: user, message_id: "other-message-id", to_address: email)
