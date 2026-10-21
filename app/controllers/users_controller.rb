@@ -2109,8 +2109,10 @@ class UsersController < ApplicationController
         Notification.filter_inaccessible_topic_notifications(guardian, read_notifications)
     end
 
+    notifications = unread_notifications + read_notifications.to_a
+    Notification.populate_acting_user(notifications) if notifications.present?
+
     if unread_notifications.present?
-      Notification.populate_acting_user(unread_notifications)
       serialized_unread_notifications =
         ActiveModel::ArraySerializer.new(
           unread_notifications,
@@ -2122,7 +2124,6 @@ class UsersController < ApplicationController
     serialized_messages = serialize_data(messages, UserMenuMessageSerializer) if messages
 
     if read_notifications.present?
-      Notification.populate_acting_user(read_notifications)
       serialized_read_notifications =
         ActiveModel::ArraySerializer.new(
           read_notifications,
