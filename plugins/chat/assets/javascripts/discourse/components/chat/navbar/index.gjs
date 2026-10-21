@@ -5,10 +5,10 @@ import { action } from "@ember/object";
 import noop from "discourse/helpers/noop";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
-import Actions from "./actions";
-import BackButton from "./back-button";
-import ChannelTitle from "./channel-title";
-import Title from "./title";
+import Actions from "./actions.gjs";
+import BackButton from "./back-button.gjs";
+import ChannelTitle from "./channel-title.gjs";
+import Title from "./title.gjs";
 
 export default class ChatNavbar extends Component {
   @action

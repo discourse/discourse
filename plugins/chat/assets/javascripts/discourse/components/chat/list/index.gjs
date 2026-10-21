@@ -6,8 +6,8 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
-import EmptyState from "./empty-state";
-import Item from "./item";
+import EmptyState from "./empty-state.gjs";
+import Item from "./item.gjs";
 
 export default class List extends Component {
   loadMore = modifier((element) => {
@@ -54,15 +54,15 @@ export default class List extends Component {
   }
 
   async debouncedLoadCollection() {
-    await this.args.collection.load({ limit: 10 });
+    await this.args.collection.load({ limit: 10 }).catch(() => {});
   }
 
   <template>
     <div class="c-list">
       <div
         class={{if @collection.fetchedOnce "--loaded"}}
-        {{this.fill}}
         ...attributes
+        {{this.fill}}
       >
         {{#each this.collectionItemsMaybeFiltered as |item|}}
           {{yield (hash Item=(component this.itemComponent item=item))}}

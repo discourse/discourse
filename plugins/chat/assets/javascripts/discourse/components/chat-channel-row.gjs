@@ -97,6 +97,47 @@ export default class ChatChannelRow extends Component {
     cancel(this._removeClickSuppressorHandler);
   }
 
+  get shouldHandleSwipe() {
+    // layout mode, not viewport width: the swipe styles and animations only
+    // exist in the mobile stylesheet bundle
+    if (!this.capabilities.touch || !this.site.mobileView) {
+      return false;
+    }
+
+    return this.args.channel.isDirectMessageChannel || this.channelHasUnread;
+  }
+
+  get isSwipeToClearNotifications() {
+    return !this.args.channel.isDirectMessageChannel;
+  }
+
+  get leaveDirectMessageLabel() {
+    return i18n("chat.direct_messages.close");
+  }
+
+  get leaveChannelLabel() {
+    return i18n("chat.channel_settings.leave_channel");
+  }
+
+  get channelHasUnread() {
+    return (
+      this.args.channel.tracking.unreadCount > 0 ||
+      this.args.channel.unreadThreadsCountSinceLastViewed > 0
+    );
+  }
+
+  get shouldRenderLastMessage() {
+    return (
+      this.site.mobileView &&
+      this.args.channel.isDirectMessageChannel &&
+      this.args.channel.lastMessage
+    );
+  }
+
+  get #firstDirectMessageUser() {
+    return this.args.channel?.chatable?.users?.[0];
+  }
+
   @bind
   onSwipeStart(event) {
     this._initialX = event.changedTouches[0].screenX;
@@ -138,23 +179,6 @@ export default class ChatChannelRow extends Component {
       }
     } else {
       this.shouldReset = true;
-    }
-  }
-
-  #clearNotifications() {
-    const channel = this.args.channel;
-    if (!channel.currentUserMembership) {
-      return;
-    }
-
-    const lastMessageId = channel.lastMessage?.id;
-    channel.tracking.reset();
-    channel.updateLastViewedAt();
-
-    if (lastMessageId) {
-      this.chatApi
-        .markChannelAsRead(channel.id, lastMessageId)
-        .catch(popupAjaxError);
     }
   }
 
@@ -208,47 +232,6 @@ export default class ChatChannelRow extends Component {
     });
   }
 
-  get shouldHandleSwipe() {
-    // layout mode, not viewport width: the swipe styles and animations only
-    // exist in the mobile stylesheet bundle
-    if (!this.capabilities.touch || !this.site.mobileView) {
-      return false;
-    }
-
-    return this.args.channel.isDirectMessageChannel || this.channelHasUnread;
-  }
-
-  get isSwipeToClearNotifications() {
-    return !this.args.channel.isDirectMessageChannel;
-  }
-
-  get leaveDirectMessageLabel() {
-    return i18n("chat.direct_messages.close");
-  }
-
-  get leaveChannelLabel() {
-    return i18n("chat.channel_settings.leave_channel");
-  }
-
-  get channelHasUnread() {
-    return (
-      this.args.channel.tracking.unreadCount > 0 ||
-      this.args.channel.unreadThreadsCountSinceLastViewed > 0
-    );
-  }
-
-  get shouldRenderLastMessage() {
-    return (
-      this.site.mobileView &&
-      this.args.channel.isDirectMessageChannel &&
-      this.args.channel.lastMessage
-    );
-  }
-
-  get #firstDirectMessageUser() {
-    return this.args.channel?.chatable?.users?.[0];
-  }
-
   @action
   startTrackingStatus() {
     this.#firstDirectMessageUser?.statusManager.trackStatus();
@@ -259,10 +242,25 @@ export default class ChatChannelRow extends Component {
     this.#firstDirectMessageUser?.statusManager.stopTrackingStatus();
   }
 
+  #clearNotifications() {
+    const channel = this.args.channel;
+    if (!channel.currentUserMembership) {
+      return;
+    }
+
+    const lastMessageId = channel.lastMessage?.id;
+    channel.tracking.reset();
+    channel.updateLastViewedAt();
+
+    if (lastMessageId) {
+      this.chatApi
+        .markChannelAsRead(channel.id, lastMessageId)
+        .catch(popupAjaxError);
+    }
+  }
+
   <template>
     <LinkTo
-      @route="chat.channel"
-      @models={{@channel.routeModels}}
       class={{dConcatClass
         "chat-channel-row"
         (if @channel.focused "focused")
@@ -272,8 +270,10 @@ export default class ChatChannelRow extends Component {
         (if this.channelHasUnread "has-unread")
         (if this.isLongPressing "is-long-pressed")
       }}
-      tabindex="0"
       data-chat-channel-id={{@channel.id}}
+      tabindex="0"
+      @models={{@channel.routeModels}}
+      @route="chat.channel"
       {{didInsert this.startTrackingStatus}}
       {{willDestroy this.stopTrackingStatus}}
       {{(if this.shouldRemoveChannel (modifier this.onRemoveChannel))}}
@@ -289,10 +289,10 @@ export default class ChatChannelRow extends Component {
           (if @channel.isCategoryChannel "is-category" "is-dm")
           (if this.shouldReset "-animate-reset")
         }}
+        style={{this.rowStyle}}
         {{(if this.shouldHandleSwipe (modifier this.registerSwipableRow))}}
         {{(if this.shouldHandleSwipe (modifier this.handleSwipe))}}
         {{(if this.shouldReset (modifier this.onReset))}}
-        style={{this.rowStyle}}
       >
         <ChannelIcon @channel={{@channel}} />
         <div class="chat-channel-row__info">

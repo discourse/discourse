@@ -101,20 +101,14 @@ module DiscourseEvents
       end
 
       def reminders
-        (object.reminders || "")
-          .split(",")
-          .map do |reminder|
-            unit, value, type = reminder.split(".").reverse
-            type ||= "notification"
-
-            value = value.to_i
-            {
-              value: value.to_i.abs,
-              unit: unit,
-              period: value > 0 ? "before" : "after",
-              type: type,
-            }
-          end
+        object.parsed_reminders.map do |reminder|
+          {
+            value: reminder[:value].abs,
+            unit: reminder[:unit],
+            period: reminder[:value] > 0 ? "before" : "after",
+            type: reminder[:type],
+          }
+        end
       end
 
       def is_expired
@@ -203,8 +197,8 @@ module DiscourseEvents
       end
 
       def should_display_invitees
-        (object.public? && object.invitees.count > 0) ||
-          (object.private? && can_display_invitee_details? && Array(object.raw_invitees).count > 0)
+        (object.public? && object.invitees.exists?) ||
+          (object.private? && can_display_invitee_details? && Array(object.raw_invitees).any?)
       end
 
       def include_url?

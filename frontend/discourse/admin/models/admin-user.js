@@ -16,7 +16,7 @@ export default class AdminUser extends User {
    * @param {string|number} user_id - The ID of the user to be retrieved.
    * @param {Object} [opts] - Options to customize the result format.
    * @param {boolean} [opts.raw=false] - If true, returns the raw response instead of formatting it using AdminUser.create.
-   * @return {Promise<Object|AdminUser>} A promise that resolves with either the raw response object or an instance of AdminUser.
+   * @return {Promise<Record<string, unknown>|AdminUser>} A promise that resolves with either the raw response object or an instance of AdminUser.
    */
   static async find(user_id, opts = { raw: false }) {
     const result = await ajax(`/admin/users/${user_id}.json`);
@@ -103,6 +103,35 @@ export default class AdminUser extends User {
   @computed
   get bounceLink() {
     return getURL("/admin/email-logs/bounced");
+  }
+
+  @computed("suspended_till", "suspended_at")
+  get suspendDuration() {
+    const suspendedAt = moment(this.suspended_at);
+    const suspendedTill = moment(this.suspended_till);
+    return suspendedAt.format("L") + " - " + suspendedTill.format("L");
+  }
+
+  @computed("tl3_requirements")
+  get tl3Requirements() {
+    if (this.tl3_requirements) {
+      return this.store.createRecord("tl3Requirements", this.tl3_requirements);
+    }
+  }
+
+  @computed("suspended_by")
+  get suspendedBy() {
+    return this.suspended_by ? AdminUser.create(this.suspended_by) : null;
+  }
+
+  @computed("silenced_by")
+  get silencedBy() {
+    return this.silenced_by ? AdminUser.create(this.silenced_by) : null;
+  }
+
+  @computed("approved_by")
+  get approvedBy() {
+    return this.approved_by ? AdminUser.create(this.approved_by) : null;
   }
 
   resetBounceScore() {
@@ -259,13 +288,6 @@ export default class AdminUser extends User {
     });
   }
 
-  @computed("suspended_till", "suspended_at")
-  get suspendDuration() {
-    const suspendedAt = moment(this.suspended_at);
-    const suspendedTill = moment(this.suspended_till);
-    return suspendedAt.format("L") + " - " + suspendedTill.format("L");
-  }
-
   suspend(data) {
     return ajax(`/admin/users/${this.id}/suspend`, {
       type: "PUT",
@@ -412,28 +434,6 @@ export default class AdminUser extends User {
     this.setProperties(userProperties);
 
     return this;
-  }
-
-  @computed("tl3_requirements")
-  get tl3Requirements() {
-    if (this.tl3_requirements) {
-      return this.store.createRecord("tl3Requirements", this.tl3_requirements);
-    }
-  }
-
-  @computed("suspended_by")
-  get suspendedBy() {
-    return this.suspended_by ? AdminUser.create(this.suspended_by) : null;
-  }
-
-  @computed("silenced_by")
-  get silencedBy() {
-    return this.silenced_by ? AdminUser.create(this.silenced_by) : null;
-  }
-
-  @computed("approved_by")
-  get approvedBy() {
-    return this.approved_by ? AdminUser.create(this.approved_by) : null;
   }
 
   deleteSSORecord() {

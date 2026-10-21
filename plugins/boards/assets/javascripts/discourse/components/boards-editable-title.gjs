@@ -58,15 +58,15 @@ class BoardsEditableTitleUi extends Component {
   <template>
     {{#if this.isEditing}}
       <input
-        type="text"
-        value={{@field.value}}
-        placeholder={{@placeholder}}
+        aria-describedby={{if @field.error @field.errorId}}
+        aria-invalid={{if @field.error "true"}}
         class="discourse-boards-editable-title__input"
+        disabled={{@field.disabled}}
         id={{@field.id}}
         name={{@field.name}}
-        disabled={{@field.disabled}}
-        aria-invalid={{if @field.error "true"}}
-        aria-describedby={{if @field.error @field.errorId}}
+        placeholder={{@placeholder}}
+        type="text"
+        value={{@field.value}}
         {{dAutoFocus selectText=true}}
         {{on "input" this.onInput}}
         {{on "blur" this.finishEditing}}
@@ -84,11 +84,11 @@ class BoardsEditableTitleUi extends Component {
     {{/if}}
     {{#if @showClose}}
       <DButton
-        @action={{@onClose}}
-        @icon="xmark"
-        @ariaLabel="modal.close"
-        @title="modal.close"
         class="btn-flat discourse-boards-editable-title__close"
+        @action={{@onClose}}
+        @ariaLabel="modal.close"
+        @icon="xmark"
+        @title="modal.close"
       />
     {{/if}}
   </template>
@@ -106,22 +106,22 @@ export default class BoardsEditableTitle extends Component {
   <template>
     <div class="discourse-boards-editable-title">
       <@form.Field
+        @disabled={{@disabled}}
+        @format="full"
         @name={{@name}}
+        @showTitle={{false}}
         @title={{@title}}
         @type="custom"
-        @validation={{this.validation}}
-        @showTitle={{false}}
-        @disabled={{@disabled}}
         @validate={{@validate}}
-        @format="full"
+        @validation={{this.validation}}
         as |field|
       >
         <field.Control>
           <BoardsEditableTitleUi
             @field={{field}}
+            @onClose={{@onClose}}
             @placeholder={{@placeholder}}
             @showClose={{@showClose}}
-            @onClose={{@onClose}}
           />
         </field.Control>
       </@form.Field>

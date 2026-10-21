@@ -1,5 +1,5 @@
-import GraphvizDiagram from "./graphviz-diagram";
+import GraphvizDiagram from "./graphviz-diagram.gjs";
 
 export default <template>
-  <GraphvizDiagram @src={{@source}} @engine={{@node.attrs.engine}} />
+  <GraphvizDiagram @engine={{@node.attrs.engine}} @src={{@source}} />
 </template>

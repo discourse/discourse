@@ -127,17 +127,17 @@ export default class DTooltip<Data = unknown> extends Component<
 
   <template>
     <span
-      {{this.registerTrigger this.allowedProperties}}
+      aria-expanded={{if this.tooltipInstance.expanded "true" "false"}}
       class={{dConcatClass
         "fk-d-tooltip__trigger"
         (if this.tooltipInstance.expanded "-expanded")
       }}
-      role="button"
-      id={{this.tooltipInstance.id}}
       data-identifier={{this.options.identifier}}
       data-trigger
-      aria-expanded={{if this.tooltipInstance.expanded "true" "false"}}
+      id={{this.tooltipInstance.id}}
+      role="button"
       ...attributes
+      {{this.registerTrigger this.allowedProperties}}
     >
       <span class="fk-d-tooltip__trigger-container">
         {{~#if (has-block "trigger")~}}
@@ -155,15 +155,15 @@ export default class DTooltip<Data = unknown> extends Component<
       </span></span>
     {{~#if this.tooltipInstance.expanded~}}
       <DFloatBody
+        @inline={{this.options.inline}}
+        @innerClass="fk-d-tooltip__inner-content"
         @instance={{this.tooltipInstance}}
-        @trapTab={{and this.options.interactive this.options.trapTab}}
         @mainClass={{dConcatClass
           "fk-d-tooltip__content"
           (concat this.options.identifier "-content")
         }}
-        @innerClass="fk-d-tooltip__inner-content"
         @role="tooltip"
-        @inline={{this.options.inline}}
+        @trapTab={{and this.options.interactive this.options.trapTab}}
       >
         {{#if (has-block)}}
           {{yield this.componentArgs}}
@@ -171,8 +171,8 @@ export default class DTooltip<Data = unknown> extends Component<
           {{yield this.componentArgs to="content"}}
         {{else if this.options.component}}
           <this.options.component
-            @data={{this.options.data}}
             @close={{this.tooltipInstance.close}}
+            @data={{this.options.data}}
           />
         {{else if this.options.content}}
           {{this.options.content}}

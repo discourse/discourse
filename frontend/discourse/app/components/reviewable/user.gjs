@@ -153,10 +153,10 @@ export default class ReviewableUser extends Component {
                 <div class="name">{{i18n "review.user.avatar"}}</div>
                 <div class="value">
                   <img
-                    class="reviewable-user-avatar"
-                    src={{this.reviewable.payload.avatar_url}}
                     alt={{i18n "review.user.avatar"}}
+                    class="reviewable-user-avatar"
                     loading="lazy"
+                    src={{this.reviewable.payload.avatar_url}}
                   />
                 </div>
               </div>
@@ -186,8 +186,8 @@ export default class ReviewableUser extends Component {
                 <div class="value">
                   <a
                     href={{this.reviewable.payload.website}}
-                    target="_blank"
                     rel="noopener noreferrer"
+                    target="_blank"
                   >{{this.reviewable.payload.website}}</a>
                 </div>
               </div>

@@ -4,8 +4,8 @@ import { i18n } from "discourse-i18n";
 const StartPostingOptions = <template>
   <DModal
     class="start-posting-options-modal"
-    @title={{i18n "admin_onboarding_banner.start_posting.choose_option"}}
     @closeModal={{@closeModal}}
+    @title={{i18n "admin_onboarding_banner.start_posting.choose_option"}}
   >
     <:body>
       <div class="modal-options">

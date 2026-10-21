@@ -286,7 +286,6 @@ nl:
       zh_CN:
         name: Chinees Vereenvoudigd
     share:
-      topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "bericht %{postNumber} van @%{username}"
       close: "sluiten"
       twitter: "Delen op X"
@@ -340,6 +339,12 @@ nl:
     skip_to_last_reply: "Overslaan tot laatste bericht"
     skip_to_top: "Overslaan tot boven"
     skip_user_nav: "Overslaan naar profielcontent"
+    reorder:
+      remove: "%{label} verwijderen"
+      removed: "%{label} verwijderd"
+      move_up: "Omhoog verplaatsen"
+      move_down: "Omlaag verplaatsen"
+      position: "%{position} van %{total}"
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er wordt geen enkele e-mailmelding gestuurd."
     emails_are_disabled_no_smtp: "Alle uitgaande e-mail is uitgeschakeld omdat er geen SMTP-server is geconfigureerd. Er kan geen enkele e-mail worden verzonden."
     emails_are_disabled_non_staff: "Uitgaande e-mail is uitgeschakeld voor niet-medewerkers."
@@ -349,6 +354,7 @@ nl:
     notifications_tracking:
       tooltip: "Meldingsniveau: %{level}"
     back_button: "Terug"
+    confirm_button: "Bevestigen"
     welcome_banner:
       header:
         new_members: "Welkom, %{preferred_display_name}!"
@@ -464,9 +470,6 @@ nl:
     max_of_count:
       one: "max. %{count}"
       other: "max. %{count}"
-    character_count:
-      one: "%{count} teken"
-      other: "%{count} tekens"
     period_chooser:
       aria_label: "Filteren op periode"
     related_messages:
@@ -492,18 +495,9 @@ nl:
         use_predefined: "Sjablonen bekijken"
         back: "Terug"
         icebreakers:
-          fun_facts:
-            title: "Wat zijn leuke weetjes over jou?"
-            body: "Hoi allemaal! Ik heb veel zin om deze nieuwe community te starten. Laten we om te beginnen een leuk weetje over onszelf delen. Ik begin: ik ben dol op wandelen en nieuwe paden ontdekken! Wat is iets interessants over jou?"
-          coolest_thing_you_have_seen_today:
-            title: "Wat is het gaafste dat je vandaag hebt gezien?"
-            body: "Wat is het gaafste dat je vandaag hebt gezien of meegemaakt? Het kan van alles zijn, van een prachtige zonsondergang tot een en spontaan gebaar van vriendelijkheid. Ik begin: ik zag een hond een oudere helpen de straat over te steken!"
           introduce_yourself:
             title: "Stel jezelf voor"
             body: "Welkom bij de community! Laten we elkaar leren kennen. Stel jezelf alsjeblieft voor en vertel iets over je interesses. Ik begin: ik hou van technologie en vind het heerlijk om les te geven!"
-          what_is_your_favorite_food:
-            title: "Wat is je favoriete eten?"
-            body: "Deel je favoriete eten met de community! Ik begin: ik hou van pizza, vooral met extra kaas en pepperoni."
     design_wizard:
       back: "Terug"
       next: "Volgende"
@@ -773,6 +767,10 @@ nl:
       title:
         search: "Zoeken naar een bericht"
         placeholder: "typ hier de titel, URL of ID van het bericht"
+    dsa_statements:
+      category: "Categorie"
+      category_prompt: "Kies een categorie"
+      saving: "Opslaan…"
     review:
       show_more: "Meer weergeven"
       show_less: "Minder weergeven"
@@ -1029,6 +1027,9 @@ nl:
         note_added: "Moderatoropmerking"
         note_added_by: "Moderatoropmerking door %{username} · %{relativeDate}"
         no_events: "Geen tijdlijngebeurtenissen om weer te geven"
+      author_penalty:
+        toast:
+          undo: "Ongedaan maken"
       notes:
         add_note_description: "Voeg een notitie toe voor context aan andere moderators."
         add_note_button: "Opmerking toevoegen"
@@ -1675,7 +1676,6 @@ nl:
       admin: "%{user} is een beheerder"
       moderator_tooltip: "Deze gebruiker is een moderator"
       admin_tooltip: "Deze gebruiker is een beheerder"
-      silenced_tooltip: "Deze gebruiker is gedempt"
       suspended_notice: "Deze gebruiker is geschorst tot %{date}."
       suspended_permanently: "Deze gebruiker is geschorst."
       suspended_reason: "Reden: "
@@ -1734,6 +1734,16 @@ nl:
       tracked_topics_link: "Weergeven"
       automatically_unpin_topics: "Topics automatisch losmaken als ik de onderkant bereik"
       apps: "Apps"
+      mcp_authorizations:
+        endpoint: "Bron"
+        scopes: "Scopes"
+        details: "Details"
+        last_used: "Laatst gebruikt"
+        never: "Nooit"
+        status: "Status"
+        statuses:
+          active: "Actief"
+          revoked: "Ingetrokken"
       revoke_access: "Toegang intrekken"
       undo_revoke_access: "Toegang intrekken ongedaan maken"
       api_approved: "Goedgekeurd:"
@@ -2029,7 +2039,6 @@ nl:
         upload_title: "Upooad je afbeelding"
         image_is_not_a_square: "Waarschuwing: we hebben je afbeelding bijgesneden; de breedte en hoogte waren niet gelijk."
         logo_small: "Het kleine logo van de website. Standaard gebruikt."
-        use_custom: "Of upload een eigen avatar:"
       change_profile_background:
         title: "Profielkoptekst"
         instructions: "Profielkopteksten worden gecentreerd en hebben een standaardbreedte van 1110 pixels."
@@ -2611,7 +2620,7 @@ nl:
       hide_forever: "nee, bedankt"
       hidden_for_session: "OK, we vragen het je morgen. Je kunt ook altijd 'Aanmelden' gebruiken om een account te maken."
       intro: "Hallo! Zo te zien heb je plezier aan de discussie, maar heb je je nog niet geregistreerd voor een account."
-      value_prop: "Ben je het zat om door dezelfde berichten te scrollen? Wanneer je een account maakt, kom je altijd terug waar je was gebleven. Met een account kun je ook op de hoogte worden gehouden van nieuwe antwoorden, bladwijzers opslaan en likes gebruiken om anderen te bedanken. We kunnen allemaal samenwerken om deze community geweldig te maken. :heart:"
+      value_prop: "Ben je het zat om door dezelfde berichten te scrollen? Wanneer je een account maakt, kom je altijd terug waar je was gebleven. Met een account kun je ook op de hoogte worden gehouden van nieuwe antwoorden, bladwijzers opslaan en likes gebruiken om anderen te bedanken. We kunnen allemaal samenwerken om deze community geweldig te maken."
     offline_indicator:
       no_internet: "Geen internetverbinding."
       refresh_page: "Pagina vernieuwen"
@@ -3057,8 +3066,7 @@ nl:
       cancel_edit: "Bewerken annuleren"
       draft_saved: "Concept opgeslagen!"
       users_placeholder: "Voeg gebruikers of groepen toe"
-      title_placeholder: "Waar gaat deze discussie over in één korte zin?"
-      title_placeholder_redesign: "Titel"
+      title_placeholder: "Titel"
       title_or_link_placeholder: "Typ de titel of plak hier een link"
       edit_reason_placeholder: "Waarom bewerk je?"
       topic_featured_link_placeholder: "Voer de weergegeven link in met titel."
@@ -3076,8 +3084,6 @@ nl:
       show_preview: "voorbeeld weergeven"
       hide_preview: "voorbeeld verbergen"
       resize: "Grootte editor wijzigen"
-      switch_to_markdown: "Overschakelen naar standaard Markdown-editor (%{keyboardShortcut})"
-      switch_to_rich_text: "Overschakelen naar nieuwe rich text editor (%{keyboardShortcut})"
       quote_post_title: "Hele bericht citeren"
       bold_label: "B"
       bold_title: "Vet"
@@ -3218,6 +3224,8 @@ nl:
         visit: "Link openen"
         remove_preview: "Voorbeeld verwijderen"
         link_copied: "Link gekopieerd!"
+      table:
+        default_heading: "Kolom %{number}"
       unsupported_token: "De rich text-editor ondersteunt niet alle functies die in dit bericht worden gebruikt, schakel over naar de Markdown-editor."
     notifications:
       tooltip:
@@ -4655,6 +4663,7 @@ nl:
       list: "Categorieën weergeven"
       no_description: "Voeg een beschrijving toe voor deze categorie."
       change_in_category_topic: "Beschrijving bewerken"
+      latest_topics: "Nieuwste topics"
       description_updated: "Beschrijving bijgewerkt"
       description_expand: "Meer weergeven"
       description_collapse: "Minder weergeven"
@@ -4950,6 +4959,7 @@ nl:
       with_category: "%{filter} topics in %{category}"
       filter:
         title: "Gefilterde resultaten voor %{filter}"
+        reset: "resetten"
         button:
           label: "Filter"
       latest:
@@ -5125,9 +5135,6 @@ nl:
       admin:
         title: "Beheerder"
     badges:
-      earned_n_times:
-        one: "Deze badge is %{count} keer verdiend"
-        other: "Deze badge is %{count} keer verdiend"
       granted_on: "Toegekend op %{date}"
       others_count:
         one: "%{count} keer toegekend aan anderen"
@@ -5162,16 +5169,18 @@ nl:
       favorite_max_not_reached: "Deze badge markeren als favoriet"
       favorite_count: "%{count}/%{max} badges gemarkeerd als favoriet"
     download_calendar:
-      title: "Agenda downloaden"
+      title: "Toevoegen aan agenda"
+      calendar: "Kalender"
       save_ics: ".ics-bestand downloaden"
       save_google: "Toevoegen aan Google-agenda"
       remember: "Niet meer vragen"
-      remember_explanation: "(je kunt deze voorkeur wijzigen in je gebruikersvoorkeuren)"
       download: "Downloaden"
       default_calendar: "Standaardagenda"
       default_calendar_instruction: "Bepaal welke agenda moet worden gebruikt wanneer datums worden opgeslagen"
       add_to_calendar: "Toevoegen aan agenda"
       google: "Google-agenda"
+      outlook: "Microsoft Outlook"
+      apple: "Apple Agenda"
       ics: "ICS"
       default_title: "Geplande gebeurtenis"
     tagging:
@@ -5618,63 +5627,6 @@ nl:
           other: "De invoer moet groter zijn dan %{count}."
         pattern_mismatch: "Zorg dat je de gevraagde notatie gebruikt."
         bad_input: "Voer een geldige invoer in."
-    table_builder:
-      title: "Tabelbouwer"
-      modal:
-        title: "Tabelbouwer"
-        create: "Tabel bouwen"
-        help:
-          title: "Gebruik van de spreadsheeteditor"
-          enter_key: "Enter"
-          tab_key: "Tab"
-          new_row: "aan het einde van een rij om een nieuwe rij in te voegen."
-          new_col: "aan het einde van een kolom om een nieuwe kolom in te voegen."
-          options: "Rechtsklik op cellen voor meer opties in een vervolgkeuzemenu."
-        confirm_close: "Weet je zeker dat je de tabelbouwer wilt sluiten? Niet-opgeslagen wijzigingen gaan verloren."
-      edit:
-        btn_edit: "Tabel bewerken"
-        modal:
-          title: "Tabel bewerken"
-          cancel: "annuleren"
-          create: "Opslaan"
-          reason: "Waarom bewerk je?"
-          trigger_reason: "Reden voor bewerking toevoegen"
-        default_edit_reason: "Tabel bijwerken met tabeleditor"
-      default_header:
-        col_1: "Kolom 1"
-        col_2: "Kolom 2"
-        col_3: "Kolom 3"
-        col_4: "Kolom 4"
-      spreadsheet:
-        no_records_found: "Geen records gevonden"
-        show: "Weergeven"
-        entries: "vermeldingen"
-        about: "Over"
-        prompts:
-          delete_selected_rows: "Weet je zeker dat je de geselecteerde rijen wilt verwijderen?"
-          delete_selected_cols: "Weet je zeker dat je de geselecteerde kolommen wilt verwijderen?"
-          will_destroy_merged_cells: "Hierdoor worden alle bestaande samengevoegde cellen vernietigd. Weet je het zeker?"
-          will_clear_search_results: "Hierdoor worden alle bestaande samengevoegde cellen vernietigd. Weet je het zeker?"
-          conflicts_with_merged_cells: "Er is een conflict met een andere samengevoegde cel"
-        invalid_merge_props: "Ongeldige samengevoegde eigenschappen"
-        cells_already_merged: "Cel is al samengevoegd"
-        no_cells_selected: "Geen cellen geselecteerd"
-        context_menu:
-          row:
-            before: "Nieuwe rij invoegen voor"
-            after: "Nieuwe rij invoegen na"
-            delete: "Geselecteerde rijen verwijderen"
-          col:
-            before: "Nieuwe kolom invoegen voor"
-            after: "Nieuwe kolom invoegen na"
-            delete: "Geselecteerde kolommen verwijderen"
-            rename: "Deze kolom hernoemen"
-          order:
-            ascending: "Oplopend sorteren"
-            descending: "Aflopend sorteren"
-          copy: "Kopiëren..."
-          paste: "Plakken..."
-          save: "Opslaan als..."
     powered_by_discourse: "Mogelijk gemaakt door Discourse"
     safari_15_warning: "Je browser is binnenkort niet meer compatibel met deze community. Om eraan te blijven deelnemen, kun je je browser bijwerken of <a href='%{url}'>meer informatie vinden</a>."
     filter:
@@ -5887,6 +5839,76 @@ nl:
         developer:
           title: "Ontwikkelaar"
           header_description: "Ontwikkelaarsinstellingen om de veilige modus en andere geavanceerde functies te beheren"
+        mcp:
+          title: "MCP-server"
+          tabs:
+            access: "Toegang"
+            activity: "Activiteit"
+          overview:
+            status: "Status"
+            tools: "Tools"
+          access:
+            title: "Toegang"
+            group: "Groep"
+            groups: "Groepen"
+            actions: "Acties"
+            edit: "Bewerken"
+            delete: "Verwijderen"
+          primitives:
+            group_by: "Groeperen op"
+            group_by_options:
+              scope: "Bereik"
+              provider: "Provider"
+              kind: "Type"
+            provider: "Provider"
+            kind: "Type"
+            scope: "Bereik"
+            state: "Staat"
+            scopes: "Scopes"
+          clients:
+            actions: "Acties"
+            block: "Blokkeren"
+            use_preset: "Instellen"
+            presets:
+              custom: "Aangepast"
+            automatic: "Automatisch"
+          authorizations:
+            user: "Gebruiker"
+            scopes: "Toegekende bereiken"
+            last_used: "Laatst gebruikt"
+            status: "Status"
+            actions: "Acties"
+          activity:
+            outcome: "Resultaat"
+            time: "Tijd"
+            user: "Gebruiker"
+            duration: "Duur"
+          values:
+            server_status:
+              disabled: "Uitgeschakeld"
+            client_trust:
+              approved: "Goedgekeurd"
+            authorization_status:
+              active: "Actief"
+              revoked: "Ingetrokken"
+            activity_outcome:
+              success: "Succes"
+              error: "Fout"
+            primitive_state:
+              enabled: "Ingeschakeld"
+              disabled: "Uitgeschakeld"
+            primitive_kind:
+              all: "Alle typen"
+              tool: "Tool"
+              resource: "Bron"
+            primitive_risk:
+              read: "Alleen-lezen"
+              moderation: "Moderatie"
+            filter:
+              all: "Alles"
+          never: "Nooit"
+          actions:
+            revoke: "Intrekken"
         experimental:
           title: "Experimenteel"
           header_description: "Schakel experimentele functies voor je site in of uit. De meeste hiervan kunnen op groepsbasis worden beheerd."
@@ -6452,6 +6474,7 @@ nl:
           series:
             anonymous: "Anoniem"
             crawlers: "Crawlers"
+          crawler_learn_more: "Meer info"
         period:
           last_7_days: "Afgelopen 7 dagen"
           last_30_days: "Afgelopen 30 dagen"
@@ -7389,8 +7412,8 @@ nl:
           upload: "Upload"
           select_component: "Selecteer een onderdeel…"
           unsaved_changes_alert: "Je hebt je wijzigingen nog niet opgeslagen. Wil je ze negeren en verder gaan?"
-          unsaved_parent_themes: "Je hebt het onderdeel niet toegewezen aan thema's. Wil je verder gaan?"
           discard: "Weggooien"
+          leave: "Verlaten"
           stay: "Blijven"
           css_html: "Aangepaste code"
           edit_css_html: "Code bewerken"
@@ -8499,13 +8522,14 @@ nl:
           multiselect: "Meervoudige selectie"
       site_text:
         description: "Je kunt elke tekst op je forum aanpassen."
-        search: "Zoek de tekst die je wilt bewerken"
+        search_label: "Zoeken"
+        theme_disabled: "Uitgeschakeld"
+        filters: "Filters"
+        status:
+          invalid: "Ongeldig"
         title: "Siteteksten"
         edit: "Bewerken"
-        revert: "Wijzigingen ongedaan maken"
         revert_confirm: "Weet je zeker dat je je wijzigingen ongedaan wilt maken?"
-        go_back: "Terug naar Zoeken"
-        recommended: "We raden aan de volgende tekst naar wens aan te passen:"
         show_overriden: "Alleen aangepaste weergeven"
         show_outdated: "Alleen verouderd/ongeldig weergeven"
         show_untranslated: "Alleen onvertaalde weergeven"

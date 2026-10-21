@@ -21,8 +21,6 @@ sv:
     patreon_donation_prompt_enabled: "Aktivera donationsuppmaning?"
     patreon_donation_prompt_show_after_topics: "Visa donationsuppmaning efter n ämnen"
     patreon_donation_prompt_campaign_url: "Donationsuppmaningskampanj-URL"
-    errors:
-      patreon_creator_username_not_set: "Du måste ange inställningen för Patreon-skaparens Discourse-användarnamn innan du aktiverar Patreon-inloggning."
   patreon:
     error:
       invalid_response: "Ogiltigt svar från Patreon-API"

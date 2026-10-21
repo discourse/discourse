@@ -49,7 +49,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowAiAgentCatalog do
   end
 
   context "when disabled agents are included" do
-    let(:query) { "old" }
+    let(:query) { disabled_agent.name }
     let(:include_disabled) { true }
 
     it "returns disabled matches for awareness", :aggregate_failures do

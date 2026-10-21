@@ -39,8 +39,9 @@ export function defineTrackedProperty(target, key, value) {
  * 1. Registers `setCustomTagFor` so `tagForProperty()` bypasses `setupMandatorySetter`
  * 2. Intercepts `set` to also call `dirtyTagFor()` for classic chain tag invalidation
  *
- * @param {Object} obj - The object to wrap in a tracked proxy.
- * @returns {Proxy} A proxy that supports both native autotracking and classic `@computed` chains.
+ * @template {object} T
+ * @param {T} obj - The object to wrap in a tracked proxy.
+ * @returns {T} A proxy that supports both native autotracking and classic `@computed` chains.
  */
 export function trackedObjectWithComputedSupport(obj) {
   const inner = trackedObject(obj);
@@ -171,6 +172,14 @@ export class DeferredTrackedSet {
     this.#set = trackedSet(value);
   }
 
+  get size() {
+    return this.#set.size;
+  }
+
+  get [Symbol.toStringTag]() {
+    return this.#set[Symbol.toStringTag];
+  }
+
   has(value) {
     return this.#set.has(value);
   }
@@ -191,16 +200,8 @@ export class DeferredTrackedSet {
     return this.#set.forEach(fn);
   }
 
-  get size() {
-    return this.#set.size;
-  }
-
   [Symbol.iterator]() {
     return this.#set[Symbol.iterator]();
-  }
-
-  get [Symbol.toStringTag]() {
-    return this.#set[Symbol.toStringTag];
   }
 
   add(value) {
@@ -269,10 +270,10 @@ function ensureTrackedArray(value, propertyName) {
  * @decorator
  * Same as `@tracked`, but initializes the value as a TrackedArray.
  *
- * @param {Object} target - The target object
- * @param {string|Symbol} key - The property key
- * @param {Object} desc - The property descriptor
- * @returns {Object} Modified property descriptor that wraps arrays in TrackedArray
+ * @param {object} target - The target object
+ * @param {string|symbol} key - The property key
+ * @param {{ initializer?: () => unknown, get?: () => unknown, set?: (value: unknown) => void, value?: unknown, writable?: boolean, enumerable?: boolean, configurable?: boolean }} desc - The property descriptor
+ * @returns {{ get: () => unknown, set: (value: unknown) => void, enumerable: boolean, configurable: boolean, isTracked: boolean }} Modified property descriptor that wraps arrays in TrackedArray
  *
  * @example
  * class TodoList {
@@ -356,7 +357,7 @@ export { autoTrackedArray as trackedArray };
  * **Warning:** This function uses Ember internal APIs (`peekMeta`, `TrackedDescriptor`)
  * which are not part of the public API and may change without notice in future Ember versions.
  *
- * @param {Object} obj - The object instance to enumerate tracked keys from
+ * @param {object | null | undefined} obj - The object instance to enumerate tracked keys from
  * @returns {Array<string>} An array of tracked property keys.
  *                          Returns an empty array if the object has no prototype or no tracked properties.
  *
@@ -404,8 +405,8 @@ export function enumerateTrackedKeys(obj) {
  * **Warning:** This function uses Ember internal APIs (`peekMeta`, `TrackedDescriptor`)
  * which are not part of the public API and may change without notice in future Ember versions.
  *
- * @param {Object} obj - The object instance to enumerate tracked entries from
- * @returns {Array<[string, any]>} An array of [key, value] pairs for all tracked properties.
+ * @param {object | null | undefined} obj - The object instance to enumerate tracked entries from
+ * @returns {Array<[string, unknown]>} An array of [key, value] pairs for all tracked properties.
  *                                  Returns an empty array if the object has no prototype or no tracked properties.
  *
  * @example
@@ -423,3 +424,16 @@ export function enumerateTrackedEntries(obj) {
   const keys = enumerateTrackedKeys(obj);
   return keys.map((key) => [key, obj[key]]);
 }
+
+/**
+ * A no-op function which is used to signal the intent of consuming a getter
+ * for autotracking purposes. The actual autotracking happens when you call
+ * the getter, but would trip the `no-unused-expressions` line rule without this
+ * wrapper.
+ *
+ * Consuming state you do not use is generally a violation of Ember's declarative
+ * patterns, so reach for this only when absolutely necessary.
+ *
+ * @type {(value: unknown) => void}
+ */
+export function manuallyTrack() {}

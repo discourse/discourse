@@ -171,9 +171,12 @@ class Theme < ActiveRecord::Base
 
     reload
     settings_field&.ensure_baked! # Other fields require setting to be **baked**
+
+    stale_extra_js =
+      theme_fields.any? { |f| f.extra_js_field? && f.compiler_version != Theme.compiler_version }
     theme_fields.each(&:ensure_baked!)
 
-    update_javascript_cache! if any_extra_js_fields_changed
+    update_javascript_cache! if any_extra_js_fields_changed || stale_extra_js
 
     remove_from_cache!
     ColorScheme.hex_cache.clear

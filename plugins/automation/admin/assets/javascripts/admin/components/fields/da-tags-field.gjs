@@ -2,9 +2,9 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { isBlank } from "@ember/utils";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
-import BaseField from "./da-base-field";
-import DAFieldDescription from "./da-field-description";
-import DAFieldLabel from "./da-field-label";
+import BaseField from "./da-base-field.gjs";
+import DAFieldDescription from "./da-field-description.gjs";
+import DAFieldLabel from "./da-field-label.gjs";
 
 export default class TagsField extends BaseField {
   @action
@@ -21,15 +21,15 @@ export default class TagsField extends BaseField {
   <template>
     <section class="field tags-field">
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <TagChooser
-            @tags={{readonly @field.metadata.value}}
             @everyTag={{true}}
-            @unlimitedTagCount={{true}}
-            @options={{hash allowAny=false disabled=@field.isDisabled}}
             @onChange={{this.onChangeTags}}
+            @options={{hash allowAny=false disabled=@field.isDisabled}}
+            @tags={{readonly @field.metadata.value}}
+            @unlimitedTagCount={{true}}
           />
 
           <DAFieldDescription @description={{@description}} />

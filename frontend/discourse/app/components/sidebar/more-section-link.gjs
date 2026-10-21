@@ -1,9 +1,10 @@
 import { or } from "discourse/truth-helpers";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
-import SectionLink from "./section-link";
+import SectionLink from "./section-link.gjs";
 
 const SidebarMoreSectionLink = <template>
   <SectionLink
+    ...attributes
     @badgeText={{@sectionLink.badgeText}}
     @content={{dReplaceEmoji @sectionLink.text}}
     @currentWhen={{@sectionLink.currentWhen}}
@@ -22,7 +23,6 @@ const SidebarMoreSectionLink = <template>
     @suffixValue={{@sectionLink.suffixValue}}
     @title={{@sectionLink.title}}
     @toggleNavigationMenu={{@toggleNavigationMenu}}
-    ...attributes
   />
 </template>;
 

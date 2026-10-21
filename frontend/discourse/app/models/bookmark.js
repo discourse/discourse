@@ -20,7 +20,7 @@ import { applyModelTransformations } from "discourse/lib/model-transformers";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
-import Category from "./category";
+import Category from "./category.js";
 
 export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,
@@ -85,36 +85,10 @@ export default class Bookmark extends RestCompatModel {
     return getURL(`/bookmarks/${this.id}`);
   }
 
-  attachedTo() {
-    return {
-      target: this.bookmarkable_type.toLowerCase(),
-      targetId: this.bookmarkable_id,
-    };
-  }
-
-  togglePin() {
-    if (this.newBookmark) {
-      return Promise.resolve();
-    }
-    return warpStore().request(togglePinBookmark(this.id));
-  }
-
-  pinAction() {
-    return this.pinned ? "unpin" : "pin";
-  }
-
   get lastPostUrl() {
     return this.topic_id
       ? this.urlForPostNumber(this.highest_post_number)
       : this.bookmarkable_url;
-  }
-
-  urlForPostNumber(postNumber) {
-    let url = getURL(`/t/${this.topic_id}`);
-    if (postNumber > 0) {
-      url += `/${postNumber}`;
-    }
-    return url;
   }
 
   get bumpedAt() {
@@ -204,6 +178,32 @@ export default class Bookmark extends RestCompatModel {
 
   get hasMetadata() {
     return this.reminder_at || this.name;
+  }
+
+  attachedTo() {
+    return {
+      target: this.bookmarkable_type.toLowerCase(),
+      targetId: this.bookmarkable_id,
+    };
+  }
+
+  togglePin() {
+    if (this.newBookmark) {
+      return Promise.resolve();
+    }
+    return warpStore().request(togglePinBookmark(this.id));
+  }
+
+  pinAction() {
+    return this.pinned ? "unpin" : "pin";
+  }
+
+  urlForPostNumber(postNumber) {
+    let url = getURL(`/t/${this.topic_id}`);
+    if (postNumber > 0) {
+      url += `/${postNumber}`;
+    }
+    return url;
   }
 }
 

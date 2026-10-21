@@ -183,7 +183,8 @@ RSpec.describe DiscourseAi::Utils::DiffUtils::HunkDiff do
     context "without markers" do
       let(:original_text) { "hello" }
       let(:diff) { "world" }
-      it "will append to the end" do
+
+      it "appends to the end" do
         expect(apply_hunk).to eq("hello\nworld")
       end
     end

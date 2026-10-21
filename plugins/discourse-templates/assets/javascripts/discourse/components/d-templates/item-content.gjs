@@ -8,8 +8,8 @@ const ItemContent = <template>
   <div class="templates-content">
     <LinkTo
       class="template-item-source-link"
-      @route="topic"
       @models={{array @template.slug @template.id}}
+      @route="topic"
     >
       {{dIcon "crosshairs"}}
       {{i18n "templates.source"}}

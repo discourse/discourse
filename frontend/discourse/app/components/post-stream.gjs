@@ -4,6 +4,7 @@ import { concat, fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostFilteredNotice from "discourse/components/post/filtered-notice";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -13,13 +14,13 @@ import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-
 import { and, not } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import Post from "./post";
-import PostGap from "./post/gap";
-import PostLoadMoreAccessible from "./post/load-more-accessible";
-import PostPlaceholder from "./post/placeholder";
-import PostSmallAction from "./post/small-action";
-import PostTimeGap from "./post/time-gap";
-import PostVisitedLine from "./post/visited-line";
+import Post from "./post.gjs";
+import PostGap from "./post/gap.gjs";
+import PostLoadMoreAccessible from "./post/load-more-accessible.gjs";
+import PostPlaceholder from "./post/placeholder.gjs";
+import PostSmallAction from "./post/small-action.gjs";
+import PostTimeGap from "./post/time-gap.gjs";
+import PostVisitedLine from "./post/visited-line.gjs";
 
 const DAY_MS = 1000 * 60 * 60 * 24;
 
@@ -37,6 +38,29 @@ export default class PostStream extends Component {
   @tracked suppressLoadAbove = false;
 
   viewportTracker = new PostStreamViewportTracker();
+
+  /**
+   * Focuses the post requested via `PostStream#focusPostOnRender` once its
+   * content exists, which may be several renders after the request.
+   */
+  focusWhenRendered = modifier((element, [postNumber, cloaked, target]) => {
+    if (cloaked || target?.done || target?.postNumber !== postNumber) {
+      return;
+    }
+
+    const body = element.querySelector(".topic-body, .small-action-desc");
+    if (!body) {
+      return;
+    }
+
+    target.done = true;
+    body.setAttribute("tabindex", "0");
+    // jumpToPost owns scrolling; letting focus scroll too makes the page jump
+    body.focus({ preventScroll: true });
+  });
+
+  quoteHighlightFor = (post) =>
+    this.args.postStream.quoteHighlights.get(post.post_number);
 
   constructor() {
     super(...arguments);
@@ -88,6 +112,15 @@ export default class PostStream extends Component {
       .filter((num) => !isNaN(num));
   }
 
+  get shouldShowFilteredNotice() {
+    return (
+      this.args.streamFilters &&
+      Object.keys(this.args.streamFilters).length &&
+      (Object.keys(this.gapsBefore).length > 0 ||
+        Object.keys(this.gapsAfter).length > 0)
+    );
+  }
+
   // Indexed rather than wrapped: a per-render wrapper is a new value each
   // recompute, invalidating `@post` and rebuilding unchanged cooked HTML.
   @bind
@@ -98,15 +131,6 @@ export default class PostStream extends Component {
   @bind
   nextPost(index) {
     return this.posts[index + 1] ?? null;
-  }
-
-  get shouldShowFilteredNotice() {
-    return (
-      this.args.streamFilters &&
-      Object.keys(this.args.streamFilters).length &&
-      (Object.keys(this.gapsBefore).length > 0 ||
-        Object.keys(this.gapsAfter).length > 0)
-    );
   }
 
   isPlaceholder(post) {
@@ -316,9 +340,9 @@ export default class PostStream extends Component {
             {{#let (get this.gapsBefore post.id) as |gap|}}
               {{#if gap}}
                 <PostGap
-                  @post={{post}}
-                  @gap={{gap}}
                   @fillGap={{fn @fillGapBefore (hash post=post gap=gap)}}
+                  @gap={{gap}}
+                  @post={{post}}
                 />
               {{/if}}
             {{/let}}
@@ -340,23 +364,20 @@ export default class PostStream extends Component {
             }}
               {{! eslint-disable ember/template-no-duplicate-id }}
               <PostComponent
-                id={{postId}}
                 class={{dConcatClass
                   (if cloakingData.active "post-stream--cloaked")
                   (if keyboardSelected "selected")
                 }}
+                id={{postId}}
                 style={{cloakingData.style}}
-                @cloaked={{cloakingData.active}}
-                @elementId={{postId}}
-                @post={{post}}
-                @prevPost={{previousPost}}
-                @nextPost={{nextPost}}
-                @canCreatePost={{@canCreatePost}}
                 @cancelFilter={{fn @cancelFilter post}}
+                @canCreatePost={{@canCreatePost}}
                 @changeNotice={{fn @changeNotice post}}
                 @changePostOwner={{fn @changePostOwner post}}
+                @cloaked={{cloakingData.active}}
                 @deletePost={{fn @deletePost post}}
                 @editPost={{fn @editPost post}}
+                @elementId={{postId}}
                 @expandHidden={{fn @expandHidden post}}
                 @filteringRepliesToPostNumber={{@filteringRepliesToPostNumber}}
                 @grantBadge={{fn @grantBadge post}}
@@ -364,15 +385,19 @@ export default class PostStream extends Component {
                 @keyboardSelected={{keyboardSelected}}
                 @lockPost={{fn @lockPost post}}
                 @multiSelect={{@multiSelect}}
+                @nextPost={{nextPost}}
                 @permanentlyDeletePost={{fn @permanentlyDeletePost post}}
+                @post={{post}}
+                @prevPost={{previousPost}}
+                @quoteHighlight={{this.quoteHighlightFor post}}
                 @rebakePost={{fn @rebakePost post}}
                 @recoverPost={{fn @recoverPost post}}
                 @removeAllowedGroup={{@removeAllowedGroup}}
                 @removeAllowedUser={{@removeAllowedUser}}
                 @replyToPost={{fn @replyToPost post}}
                 @selectBelow={{fn @selectBelow post}}
-                @selectReplies={{fn @selectReplies post}}
                 @selected={{if @multiSelect (@postSelected post)}}
+                @selectReplies={{fn @selectReplies post}}
                 @showFlags={{fn @showFlags post}}
                 @showHistory={{fn @showHistory post}}
                 @showInvite={{fn @showInvite post}}
@@ -390,15 +415,20 @@ export default class PostStream extends Component {
                 @unlockPost={{fn @unlockPost post}}
                 @updateTopicPageQueryParams={{@updateTopicPageQueryParams}}
                 {{this.viewportTracker.registerPost post}}
+                {{this.focusWhenRendered
+                  post.post_number
+                  cloakingData.active
+                  @postStream.focusTarget
+                }}
               />
             {{/let}}
 
             {{#let (get this.gapsAfter post.id) as |gap|}}
               {{#if gap}}
                 <PostGap
-                  @post={{post}}
-                  @gap={{gap}}
                   @fillGap={{fn @fillGapAfter (hash post=post gap=gap)}}
+                  @gap={{gap}}
+                  @post={{post}}
                 />
               {{/if}}
             {{/let}}
@@ -437,10 +467,10 @@ export default class PostStream extends Component {
 
       {{#if this.shouldShowFilteredNotice}}
         <PostFilteredNotice
-          @posts={{this.posts}}
           @cancelFilter={{@cancelFilter}}
-          @streamFilters={{@streamFilters}}
           @filteredPostsCount={{@filteredPostsCount}}
+          @posts={{this.posts}}
+          @streamFilters={{@streamFilters}}
         />
       {{/if}}
     </div>

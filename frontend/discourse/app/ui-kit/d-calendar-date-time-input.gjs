@@ -14,6 +14,8 @@ export default class DCalendarDateTimeInput extends Component {
   _timeFormat = this.args.timeFormat || "HH:mm:ss";
   _dateFormat = this.args.dateFormat || "YYYY-MM-DD";
   _dateTimeFormat = this.args.dateTimeFormat || "YYYY-MM-DD HH:mm:ss";
+
+  /** @type {{ setDate: (date: Date | string | null, preventOnSelect?: boolean) => void, setMinDate: (date: Date | null) => void, destroy: () => void } | null} */
   _picker = null;
 
   @tracked _time;
@@ -28,7 +30,7 @@ export default class DCalendarDateTimeInput extends Component {
   @action
   setupPikaday(element) {
     this.#setupPicker(element).then((picker) => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -134,11 +136,11 @@ export default class DCalendarDateTimeInput extends Component {
       <div class="time-pickers">
         {{dIcon "far-clock"}}
         <Input
+          class="time-picker"
           maxlength={{5}}
           placeholder="hh:mm"
           @type="time"
           @value={{this._time}}
-          class="time-picker"
           {{on "input" this.onChangeTime}}
         />
       </div>

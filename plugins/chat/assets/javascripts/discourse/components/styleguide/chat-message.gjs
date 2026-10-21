@@ -112,7 +112,7 @@ export default class ChatStyleguideChatMessage extends Component {
   <template>
     <StyleguideExample @title="<ChatMessage>">
       <StyleguideComponent>
-        <ChatMessage @message={{this.message}} @context="channel" />
+        <ChatMessage @context="channel" @message={{this.message}} />
       </StyleguideComponent>
 
       <Controls>

@@ -1,0 +1,44 @@
+@use "sass:color";
+
+.event-calendar-prompt {
+  border-top: 1px solid var(--primary-low);
+  padding: 1em;
+  background: var(--success-very-low);
+
+  &__heading {
+    display: grid;
+    grid-template-columns: 1em minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75em;
+  }
+
+  &__heading p {
+    margin: 0;
+  }
+
+  &__icon {
+    color: var(--success);
+  }
+
+  &__dismiss {
+    padding: 0.25em;
+    color: var(--primary-high);
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75em 1em;
+    margin-top: 0.75em;
+  }
+
+  &__settings {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+}
+
+.event-reminder-preferences {
+  margin-bottom: 2em;
+}

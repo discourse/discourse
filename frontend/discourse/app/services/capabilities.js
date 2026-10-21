@@ -95,6 +95,11 @@ class _Capabilities {
   wasLaunchedFromDiscourseHub =
     window.location.search.includes("discourse_app=1");
   isAppWebview = window.ReactNativeWebView !== undefined;
+  // Set by the Discourse Hub app via `injectedJavaScriptBeforeContentLoaded`
+  // once it ships a WebView message handler for `{ type: "download" }`.
+  // Lets us feature-detect support instead of assuming every app webview
+  // build understands the bridge protocol (older installed builds won't).
+  hubDownloadBridgeSupported = window.__discourseHubDownloadBridge === true;
 
   /**
    * Defines the responsive viewport breakpoints and their media queries.

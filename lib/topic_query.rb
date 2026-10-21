@@ -119,6 +119,7 @@ class TopicQuery
   self.results_filter_callbacks = []
 
   attr_accessor :options, :user, :guardian
+  attr_reader :invalid_filters
 
   def self.add_custom_filter(key, &blk)
     @custom_filters ||= {}
@@ -146,6 +147,7 @@ class TopicQuery
     @options = options.dup
     @user = user
     @guardian = options[:guardian] || Guardian.new(@user)
+    @invalid_filters = []
   end
 
   def joined_topic_user(list = nil)
@@ -310,6 +312,7 @@ class TopicQuery
       query = "#{query} in:#{@options[:subset]}"
     end
     results, topics_filter = filter_results(query)
+    @invalid_filters = topics_filter.invalid_filters
     results = apply_ordering(results) if results.order_values.empty?
 
     list =
@@ -465,8 +468,7 @@ class TopicQuery
     col_name = whisperer ? "highest_staff_post_number" : "highest_post_number"
 
     list.where("tu.last_read_post_number < topics.#{col_name}").where(
-      "COALESCE(tu.notification_level, :regular) >= :tracking",
-      regular: TopicUser.notification_levels[:regular],
+      "tu.notification_level >= :tracking",
       tracking: TopicUser.notification_levels[:tracking],
     )
   end

@@ -16,6 +16,29 @@ RSpec.describe SiteSerializer do
     end
   end
 
+  describe "post_action_types" do
+    it "marks flags as system when they come from registered flag settings" do
+      # Plugins can replace flag settings, which makes the payload serialize
+      # PostActionType records instead of Flag records. The admin UI keys
+      # editability off `system`, so it has to be present on both paths.
+      settings = FlagSettings.new
+      settings.add(4, :inappropriate)
+      settings.add(99, :custom_plugin_flag, name: "Custom plugin flag")
+      PostActionType.replace_flag_settings(settings)
+      # Expire the cached payload without resetting the settings we just registered.
+      PostActionType.new.expire_cache
+      Site.clear_cache
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized[:post_action_types]).to be_present
+      expect(serialized[:post_action_types].map { |type| type[:system] }.uniq).to eq([true])
+    ensure
+      PostActionType.replace_flag_settings(nil)
+      Flag.reset_flag_settings!
+    end
+  end
+
   describe "#homepage_choices" do
     around do |example|
       registrations = DiscoursePluginRegistry._raw_homepage_options.dup
@@ -47,6 +70,143 @@ RSpec.describe SiteSerializer do
         server_side: false,
       )
     end
+
+    it "only resolves a callable homepage path for the homepage in use" do
+      calls = 0
+      plugin = Plugin::Instance.new
+      plugin.stubs(:enabled?).returns(true)
+      plugin.register_homepage(
+        "dynamic",
+        name: "plugin.dynamic",
+        path: -> { calls += 1 and "/dynamic" },
+        route: "plugin#index",
+        anonymous: true,
+      )
+      SiteSetting.top_menu = "latest|categories"
+      SiteSetting.default_homepage = "latest"
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(calls).to eq(0)
+      expect(serialized[:homepage_options]).to include(id: "dynamic", path: nil, server_side: false)
+
+      SiteSetting.default_homepage = "dynamic"
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(calls).to eq(1)
+      expect(serialized[:homepage_options]).to include(
+        id: "dynamic",
+        path: "/dynamic",
+        server_side: false,
+      )
+    end
+
+    it "omits a callable homepage path when the homepage is unavailable to the visitor" do
+      plugin = Plugin::Instance.new
+      plugin.stubs(:enabled?).returns(true)
+      plugin.register_homepage(
+        "dynamic",
+        name: "plugin.dynamic",
+        path: -> { "/dynamic/private" },
+        route: "plugin#index",
+        available: ->(guardian:, request:) { guardian.is_admin? },
+      )
+      SiteSetting.default_homepage = "dynamic"
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:homepage_options]).to include(id: "dynamic", path: nil, server_side: false)
+
+      admin_guardian = Fabricate(:admin).guardian
+      serialized =
+        described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
+      expect(serialized[:homepage_options]).to include(
+        id: "dynamic",
+        path: "/dynamic/private",
+        server_side: false,
+      )
+    end
+
+    it "omits a member-only callable homepage path for anonymous visitors" do
+      plugin = Plugin::Instance.new
+      plugin.stubs(:enabled?).returns(true)
+      plugin.register_homepage(
+        "dynamic",
+        name: "plugin.dynamic",
+        path: -> { "/private/secret-slug" },
+        route: "plugin#index",
+      )
+      SiteSetting.top_menu = "latest|categories"
+      SiteSetting.default_homepage = "dynamic"
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:homepage_options]).to include(id: "dynamic", path: nil, server_side: false)
+
+      member_guardian = Fabricate(:user).guardian
+      serialized =
+        described_class.new(Site.new(member_guardian), scope: member_guardian, root: false).as_json
+      expect(serialized[:homepage_options]).to include(
+        id: "dynamic",
+        path: "/private/secret-slug",
+        server_side: false,
+      )
+    end
+
+    it "omits a server side callable homepage path when it is unavailable to the visitor" do
+      plugin = Plugin::Instance.new
+      plugin.stubs(:enabled?).returns(true)
+      plugin.register_homepage(
+        "dynamic",
+        name: "plugin.dynamic",
+        path: -> { "/dynamic/private" },
+        route: "plugin#index",
+        server_side: true,
+        available: ->(guardian:, request:) { false },
+      )
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized[:homepage_options]).to include(id: "dynamic", path: nil, server_side: true)
+    end
+
+    it "omits a callable homepage path that raises" do
+      plugin = Plugin::Instance.new
+      plugin.stubs(:enabled?).returns(true)
+      plugin.register_homepage(
+        "dynamic",
+        name: "plugin.dynamic",
+        path: -> { raise "boom" },
+        route: "plugin#index",
+        anonymous: true,
+      )
+      SiteSetting.default_homepage = "dynamic"
+      Discourse.expects(:warn_exception).once
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized[:homepage_options]).to include(id: "dynamic", path: nil, server_side: false)
+    end
+
+    it "resolves a registered homepage path that depends on settings" do
+      plugin = Plugin::Instance.new
+      plugin.stubs(:enabled?).returns(true)
+      plugin.register_homepage(
+        "dynamic",
+        name: "plugin.dynamic",
+        path: -> { "/dynamic/#{SiteSetting.title.parameterize}" },
+        route: "plugin#index",
+        anonymous: true,
+      )
+      SiteSetting.title = "Great Site"
+      SiteSetting.default_homepage = "dynamic"
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized[:homepage_options]).to include(
+        id: "dynamic",
+        path: "/dynamic/great-site",
+        server_side: false,
+      )
+    end
   end
 
   describe "#anonymous_list_filters" do
@@ -57,6 +217,21 @@ RSpec.describe SiteSerializer do
       expect(serialized[:anonymous_list_filters]).not_to include("unread")
       # an anonymous menu item, but not a list filter
       expect(serialized[:anonymous_list_filters]).not_to include("categories")
+    end
+  end
+
+  describe "#can_search" do
+    it "exposes whether the current user can search" do
+      SiteSetting.allow_anonymous_search = false
+
+      anonymous_payload =
+        described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      user_guardian = Guardian.new(Fabricate(:user))
+      user_payload =
+        described_class.new(Site.new(user_guardian), scope: user_guardian, root: false).as_json
+
+      expect(anonymous_payload[:can_search]).to eq(false)
+      expect(user_payload[:can_search]).to eq(true)
     end
   end
 
@@ -97,6 +272,12 @@ RSpec.describe SiteSerializer do
       end
     end
 
+    around do |example|
+      stub_const(target_class, :ACL_PERMISSIONS, Acl::Permissions.new(:edit, :manage)) do
+        example.run
+      end
+    end
+
     after { DiscoursePluginRegistry.reset_register!(:acl_target_classes) }
 
     it "includes mandatory ACLs by target class" do
@@ -124,22 +305,21 @@ RSpec.describe SiteSerializer do
     end
 
     it "includes plugin-registered target classes" do
-      Object.const_set(:SiteSerializerSpecTarget, target_class)
-      AclTarget.loaded_target_classes.delete(target_class)
-      DiscoursePluginRegistry.register_acl_target_class(
-        "SiteSerializerSpecTarget",
-        Plugin::Instance.new,
-      )
+      stub_const(Object, :SiteSerializerSpecTarget, target_class) do
+        AclTarget.loaded_target_classes.delete(target_class)
+        DiscoursePluginRegistry.register_acl_target_class(
+          "SiteSerializerSpecTarget",
+          Plugin::Instance.new,
+        )
 
-      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+        serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
-      expect(serialized.dig(:access_control, :mandatory_acl)).to include(
-        "SiteSerializerSpecTarget" => [
-          { type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" },
-        ],
-      )
-    ensure
-      Object.send(:remove_const, :SiteSerializerSpecTarget) if defined?(SiteSerializerSpecTarget)
+        expect(serialized.dig(:access_control, :mandatory_acl)).to include(
+          "SiteSerializerSpecTarget" => [
+            { type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" },
+          ],
+        )
+      end
     end
   end
 
@@ -474,7 +654,7 @@ RSpec.describe SiteSerializer do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
     end
 
-    it "should return the site's top tags as the default tags for sidebar" do
+    it "returns the site's top tags as default sidebar tags" do
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
       expect(serialized[:navigation_menu_site_top_tags]).to eq(
@@ -504,7 +684,7 @@ RSpec.describe SiteSerializer do
       )
     end
 
-    it "should not be serialized if `tagging_enabled` site setting is set to false" do
+    it "is not serialized when tagging is disabled" do
       SiteSetting.set(:tagging_enabled, false)
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
@@ -512,7 +692,7 @@ RSpec.describe SiteSerializer do
       expect(serialized[:navigation_menu_site_top_tags]).to eq(nil)
     end
 
-    it "should use slug_for_url for tags with empty slugs" do
+    it "uses slug_for_url for tags with empty slugs" do
       numeric_tag =
         Fabricate(:tag, name: "1").tap { |tag| Fabricate.times(10, :topic, tags: [tag]) }
 
@@ -525,7 +705,7 @@ RSpec.describe SiteSerializer do
       expect(numeric_entry[:slug]).to eq("#{numeric_tag.id}-tag")
     end
 
-    it "should return an empty array if site has no top tags" do
+    it "returns an empty array when the site has no top tags" do
       Tag.delete_all
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json

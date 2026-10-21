@@ -15,10 +15,10 @@ export default class AiSearchDiscoveries extends Component {
   <template>
     <fieldset class="control-group ai-preferences">
       <PreferenceCheckbox
-        @labelKey="discourse_ai.discobot_discoveries.user_setting"
-        @checked={{@outletArgs.model.user_option.ai_search_discoveries}}
-        data-setting-name="ai-search-discoveries"
         class="pref-ai-search-discoveries"
+        data-setting-name="ai-search-discoveries"
+        @checked={{@outletArgs.model.user_option.ai_search_discoveries}}
+        @labelKey="discourse_ai.discobot_discoveries.user_setting"
       />
     </fieldset>
   </template>

@@ -46,14 +46,6 @@ function assertCoversViewportFromZero(assert, indices, label) {
   );
 }
 
-class Harness {
-  @tracked items;
-
-  constructor(items) {
-    this.items = items;
-  }
-}
-
 function buildRows(count) {
   return Array.from({ length: count }, (_, index) => ({
     id: index,
@@ -104,10 +96,10 @@ module(
             }
           </style>
           <DVirtualList
-            @items={{items}}
             @estimateSize={{estimate}}
-            @pinnedIndices={{garbagePins}}
+            @items={{items}}
             @overscan={{0}}
+            @pinnedIndices={{garbagePins}}
             as |item|
           >
             <div class="row" style="height: 40px">{{item.text}}</div>
@@ -136,7 +128,7 @@ module(
     // the rows between were never mounted. The window must track the element's
     // real (browser-clamped) offset after the set changes, leaving no gap.
     test("a pinned row leaves no gap after the item set shrinks then grows", async function (assert) {
-      const h = new Harness(buildRows(30));
+      const items = tracked(buildRows(30));
       const pinFirst = () => [0];
 
       await render(
@@ -149,9 +141,9 @@ module(
             }
           </style>
           <DVirtualList
-            @items={{h.items}}
-            @key="id"
             @estimateSize={{estimate}}
+            @items={{items.value}}
+            @key="id"
             @pinnedIndices={{pinFirst}}
             as |item|
           >
@@ -163,9 +155,9 @@ module(
       // Scroll away from the pinned row, then filter down to a single match and
       // widen it again — the sequence that stranded the stale offset.
       await scrollTo(ROW_PX * 8);
-      h.items = buildRows(1);
+      items.value = buildRows(1);
       await settled();
-      h.items = buildRows(15);
+      items.value = buildRows(15);
       await settled();
 
       assertCoversViewportFromZero(
@@ -180,7 +172,7 @@ module(
     // mounted while scrolled away, and a shrink→grow must leave no hole between
     // any pin and the window.
     test("multiple pinned rows stay mounted and leave no gaps after shrink then grow", async function (assert) {
-      const h = new Harness(buildRows(60));
+      const items = tracked(buildRows(60));
       const pinPair = () => [0, 3];
 
       await render(
@@ -193,11 +185,11 @@ module(
             }
           </style>
           <DVirtualList
-            @items={{h.items}}
-            @key="id"
             @estimateSize={{estimate}}
-            @pinnedIndices={{pinPair}}
+            @items={{items.value}}
+            @key="id"
             @overscan={{0}}
+            @pinnedIndices={{pinPair}}
             as |item|
           >
             <div class="row" style="height: 40px">{{item.text}}</div>
@@ -225,9 +217,9 @@ module(
         "the second row between the pins is not dragged along"
       );
 
-      h.items = buildRows(1);
+      items.value = buildRows(1);
       await settled();
-      h.items = buildRows(15);
+      items.value = buildRows(15);
       await settled();
 
       assertCoversViewportFromZero(

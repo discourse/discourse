@@ -19,6 +19,11 @@ ug:
               label: تېما كىملىكى
     discourse_events:
       title: "پائالىيەت"
+      preferences:
+        reminders:
+          preferences:
+            notification: "ئۇقتۇرۇش"
+            none: "يوق"
       disable_holiday: "چەكلە"
       enable_holiday: "قوزغات"
       date: "چېسلا"

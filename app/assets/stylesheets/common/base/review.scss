@@ -329,9 +329,14 @@
   &__insights {
     padding-inline: var(--review-item-padding);
 
+    // The border goes on the nav, not the ul: the ul is the strip's scroller
+    // and its edge fade would mask a border painted there.
+    .horizontal-overflow-nav {
+      border-bottom: 1px solid var(--content-border-color);
+    }
+
     .nav-pills.action-list {
       margin-bottom: 0;
-      border-bottom: 1px solid var(--content-border-color);
     }
   }
 
@@ -495,6 +500,14 @@
   }
 }
 
+.review-item__secondary-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--content-border-color);
+}
+
 .review-resources {
   &__list {
     @include unstyled-list;
@@ -589,6 +602,9 @@
     }
 
     &__description {
+      &.--note {
+        white-space: pre-line;
+      }
       color: var(--primary-high);
       font-size: var(--font-down-1);
       overflow-wrap: anywhere;

@@ -14,8 +14,8 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DEmptyState from "discourse/ui-kit/d-empty-state";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 function channelColorStyle(channel) {
@@ -23,7 +23,7 @@ function channelColorStyle(channel) {
 }
 
 function channelIcon(channel) {
-  return channel.emoji ? dReplaceEmoji(`:${channel.emoji}:`) : dIcon("d-chat");
+  return (channel.emoji && dEmoji(channel.emoji)) || dIcon("d-chat");
 }
 
 function isSubcategoryChannel(channel, categoryId) {
@@ -132,9 +132,9 @@ export default class EditCategoryChat extends Component {
                     class="d-table__cell edit-category-chat__channel-actions d-table__cell-actions"
                   >
                     <LinkTo
-                      @route="chat.channel.info.settings"
-                      @models={{array (or channel.slug "-") channel.id}}
                       class="btn btn-default btn-small"
+                      @models={{array (or channel.slug "-") channel.id}}
+                      @route="chat.channel.info.settings"
                     >
                       {{i18n "chat.edit_category.settings"}}
                     </LinkTo>
@@ -145,13 +145,13 @@ export default class EditCategoryChat extends Component {
           </table>
         {{else}}
           <DEmptyState
-            @title={{i18n "chat.edit_category.no_channels"}}
             @body={{trustHTML
               (i18n
                 "chat.edit_category.no_channels_body"
                 chatBrowseUrl=(getURL "/chat/browse/open")
               )
             }}
+            @title={{i18n "chat.edit_category.no_channels"}}
           />
         {{/if}}
       </DConditionalLoadingSpinner>

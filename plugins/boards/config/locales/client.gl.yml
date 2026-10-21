@@ -6,7 +6,21 @@
 
 gl:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Título"
+        icon: "Icona"
+        color: "Cor"
+        tag_name: "Etiqueta"
+      create_board:
+        name: "Nome"
+        slug: "Localizador abreviado"
+        tag_names: "Etiquetas"
+        category_ids: "Categorías"
     boards:
+      status:
+        all: "Todas"
+        open: "Abrir"
       board:
         remove_card: "Retirar"
         title: "Título"

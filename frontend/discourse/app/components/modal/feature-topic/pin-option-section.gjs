@@ -51,15 +51,15 @@ export default class PinOptionSection extends Component {
 
   <template>
     <Form
+      class="feature-section"
       @data={{this.formData}}
       @onSubmit={{this.handleSubmit}}
-      class="feature-section"
       as |form|
     >
       <div class="feature-section__description">
         {{#if @statsMessage}}
           <p>
-            <DConditionalLoadingSpinner @size="small" @condition={{@loading}}>
+            <DConditionalLoadingSpinner @condition={{@loading}} @size="small">
               {{trustHTML @statsMessage}}
             </DConditionalLoadingSpinner>
           </p>
@@ -71,11 +71,11 @@ export default class PinOptionSection extends Component {
 
         <form.Field
           @name="pinUntil"
-          @title={{i18n "topic.feature_topic.pin_until"}}
+          @onSet={{this.handleDateSet}}
           @showTitle={{false}}
+          @title={{i18n "topic.feature_topic.pin_until"}}
           @type="custom"
           @validate={{this.validatePinUntil}}
-          @onSet={{this.handleDateSet}}
           as |field|
         >
           <field.Control>

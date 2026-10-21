@@ -362,6 +362,47 @@ RSpec.describe "Message notifications - with sidebar" do
             expect(page).to have_css(".sidebar-row.channel-#{dm_channel.id} .urgent")
           end
         end
+
+        context "with category channel replies (threading disabled)" do
+          fab!(:channel) { Fabricate(:category_channel, threading_enabled: false) }
+          fab!(:first_message) do
+            Fabricate(:chat_message_with_service, chat_channel: channel, user: current_user)
+          end
+
+          before do
+            channel.add(current_user)
+            channel.add(other_user)
+            channel.membership_for(current_user).mark_read!(first_message.id)
+          end
+
+          def reply_to_first_message
+            Chat::CreateMessage.call(
+              guardian: other_user.guardian,
+              params: {
+                chat_channel_id: channel.id,
+                message: "This is a reply",
+                in_reply_to_id: first_message.id,
+              },
+            )
+          end
+
+          it "shows the unread indicator when someone replies to the user's message" do
+            visit("/")
+            expect(page).to have_no_css(".sidebar-row.channel-#{channel.id} .unread")
+
+            reply_to_first_message
+
+            expect(page).to have_css(".sidebar-row.channel-#{channel.id} .unread")
+          end
+
+          it "shows the unread indicator on a fresh page load after the reply" do
+            reply_to_first_message
+
+            visit("/")
+
+            expect(page).to have_css(".sidebar-row.channel-#{channel.id} .unread")
+          end
+        end
       end
     end
   end

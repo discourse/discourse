@@ -3,11 +3,11 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import CONTROL_REGISTRY from "../../../lib/workflows/control-registry";
+import CONTROL_REGISTRY from "../../../lib/workflows/control-registry.js";
 import {
   resolveNodeTypeVersion,
   typeVersionForNode,
-} from "../../../lib/workflows/node-types";
+} from "../../../lib/workflows/node-types.js";
 import {
   credentialSlotAnchorField,
   credentialSlotVisible,
@@ -16,9 +16,9 @@ import {
   fieldVisible,
   findNodeType,
   normalizeSchema,
-} from "../../../lib/workflows/property-engine";
-import CredentialControl from "./credential";
-import Field from "./field";
+} from "../../../lib/workflows/property-engine.js";
+import CredentialControl from "./credential.gjs";
+import Field from "./field.gjs";
 
 function credentialSlotLabel(slot) {
   return i18n(slot.label_key || "discourse_workflows.credentials.type");
@@ -83,31 +83,31 @@ export default class PropertyEngineConfigurator extends Component {
         {{#let (this.controlEntry field) as |entry|}}
           {{#if (eq entry.kind "structural")}}
             <entry.renderer
-              @form={{@form}}
-              @formApi={{@formApi}}
               @configuration={{@configuration}}
               @connections={{@connections}}
               @credentials={{@credentials}}
               @fieldName={{field.name}}
+              @form={{@form}}
+              @formApi={{@formApi}}
               @node={{@node}}
               @nodeDefinition={{this.nodeDefinition}}
               @nodeParameters={{this.nodeParameters}}
-              @nodeType={{this.nodeType}}
               @nodes={{@nodes}}
+              @nodeType={{this.nodeType}}
               @nodeTypes={{@nodeTypes}}
+              @onBeforeStartTestSession={{@onBeforeStartTestSession}}
+              @onChange={{@onChange}}
               @schema={{field}}
               @session={{@session}}
-              @onChange={{@onChange}}
-              @onBeforeStartTestSession={{@onBeforeStartTestSession}}
             />
           {{else}}
             <Field
-              @form={{@form}}
-              @formApi={{@formApi}}
               @configuration={{@configuration}}
               @connections={{@connections}}
               @credentials={{@credentials}}
               @fieldName={{field.name}}
+              @form={{@form}}
+              @formApi={{@formApi}}
               @metadata={{this.metadata}}
               @node={{@node}}
               @nodeDefinition={{this.nodeDefinition}}
@@ -115,9 +115,9 @@ export default class PropertyEngineConfigurator extends Component {
               @nodes={{@nodes}}
               @nodeType={{this.nodeType}}
               @nodeTypes={{@nodeTypes}}
+              @onBeforeStartTestSession={{@onBeforeStartTestSession}}
               @schema={{field}}
               @session={{@session}}
-              @onBeforeStartTestSession={{@onBeforeStartTestSession}}
             />
           {{/if}}
         {{/let}}

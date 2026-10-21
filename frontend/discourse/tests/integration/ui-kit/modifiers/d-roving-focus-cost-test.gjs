@@ -236,9 +236,7 @@ module(
     setupRenderingTest(hooks);
 
     test("rovingCost M5 tabStop=false performs no per-item forced reads on modify", async function (assert) {
-      const state = new (class {
-        @tracked key = 0;
-      })();
+      const key = tracked(0);
 
       await render(
         <template>
@@ -248,7 +246,7 @@ module(
               orientation="vertical"
               itemSelector="[role=option]"
               tabStop=false
-              itemsKey=state.key
+              itemsKey=key.value
             }}
           >
             {{#each SMALL_GROUP_ITEMS as |index|}}
@@ -259,7 +257,7 @@ module(
       );
 
       const reads = await measureForcedReads(async () => {
-        state.key++;
+        key.value++;
         await settled();
       });
 
@@ -273,21 +271,19 @@ module(
     });
 
     test("rovingCost M5 modify preserves at most one tab stop with author-supplied zeros", async function (assert) {
-      const state = new (class {
-        @tracked items = authorItems("initial");
-      })();
+      const items = tracked(authorItems("initial"));
 
       await render(
         <template>
           <div
             role="listbox"
-            {{dRovingFocus itemSelector="[role=option]" itemsKey=state.items}}
+            {{dRovingFocus itemSelector="[role=option]" itemsKey=items.value}}
           >
-            {{#each state.items key="id" as |item|}}
+            {{#each items.value key="id" as |item|}}
               <button
                 class="author-item"
-                role="option"
                 data-id={{item.id}}
+                role="option"
                 tabindex={{item.tabindex}}
               >{{item.label}}</button>
             {{/each}}
@@ -301,7 +297,7 @@ module(
         "initial modify collapses three author-supplied zeros to one tab stop"
       );
 
-      state.items = authorItems("rerendered");
+      items.value = authorItems("rerendered");
       await settled();
 
       assert.strictEqual(
@@ -320,8 +316,8 @@ module(
             {{dRovingFocus itemSelector="[role=option]"}}
           >
             <button role="option">First</button>
-            <button role="option" aria-current="page">Current</button>
-            <button role="option" aria-selected="true">Selected</button>
+            <button aria-current="page" role="option">Current</button>
+            <button aria-selected="true" role="option">Selected</button>
             <button class="established" role="option" tabindex="0">
               Established
             </button>
@@ -332,8 +328,8 @@ module(
             {{dRovingFocus itemSelector="[role=option]"}}
           >
             <button role="option">First</button>
-            <button role="option" aria-current="page">Current</button>
-            <button class="selected" role="option" aria-selected="true">
+            <button aria-current="page" role="option">Current</button>
+            <button aria-selected="true" class="selected" role="option">
               Selected
             </button>
           </div>
@@ -343,7 +339,7 @@ module(
             {{dRovingFocus itemSelector="[role=option]"}}
           >
             <button role="option">First</button>
-            <button class="current" role="option" aria-current="page">
+            <button aria-current="page" class="current" role="option">
               Current
             </button>
           </div>
@@ -531,9 +527,7 @@ module(
     test("rovingCost M5 replacement and repeated steps preserve one tab stop", async function (assert) {
       let api;
       const registerApi = (registeredApi) => (api = registeredApi);
-      const state = new (class {
-        @tracked items = authorItems("initial-sequence");
-      })();
+      const items = tracked(authorItems("initial-sequence"));
 
       await render(
         <template>
@@ -542,15 +536,15 @@ module(
             {{dRovingFocus
               orientation="vertical"
               itemSelector="[role=option]"
-              itemsKey=state.items
+              itemsKey=items.value
               onRegisterApi=registerApi
             }}
           >
-            {{#each state.items key="id" as |item|}}
+            {{#each items.value key="id" as |item|}}
               <button
                 class="replacement-item"
-                role="option"
                 data-id={{item.id}}
+                role="option"
                 tabindex={{item.tabindex}}
               >{{item.label}}</button>
             {{/each}}
@@ -560,7 +554,7 @@ module(
 
       assert.true(api.focusIndex(2), "the old item set establishes a holder");
 
-      state.items = authorItems("replacement-sequence");
+      items.value = authorItems("replacement-sequence");
       await settled();
 
       assert.strictEqual(
@@ -593,10 +587,10 @@ module(
             {{#each NON_BLOCKING_INPUT_TYPES as |type|}}
               <div class="item">
                 <input
-                  data-input-type={{type}}
-                  type={{type}}
                   alt={{type}}
+                  data-input-type={{type}}
                   src="data:image/gif;base64,R0lGODlhAQABAAAAACw="
+                  type={{type}}
                 />
               </div>
               <button class="item" data-target-type={{type}}>

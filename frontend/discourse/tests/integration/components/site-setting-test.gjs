@@ -526,8 +526,8 @@ module("Integration | Component | SiteSetting", function (hooks) {
     await render(
       <template>
         <ThemeSiteSettingEditor
-          @setting={{this.themeSetting}}
           @model={{this.theme}}
+          @setting={{this.themeSetting}}
         />
       </template>
     );
@@ -560,8 +560,8 @@ module("Integration | Component | SiteSetting", function (hooks) {
     await render(
       <template>
         <ThemeTranslation
-          @translation={{this.translation}}
           @model={{this.theme}}
+          @translation={{this.translation}}
         />
       </template>
     );
@@ -686,6 +686,23 @@ module(
           "/admin/site_settings/category/all_results?filter=parent_setting"
         )
         .hasText("Parent setting");
+    });
+
+    test("uses value-based copy for settings that depend on another setting's value", async function (assert) {
+      await renderSetting({
+        setting: "dependent_setting",
+        value: "1",
+        type: "integer",
+        depends_on: ["parent_setting"],
+        depends_on_humanized_names: ["Parent setting"],
+        depends_on_values: { parent_setting: ["include"] },
+      });
+
+      assert
+        .dom(".setting-depends-on-notice__text")
+        .includesText(
+          "This setting only applies when Parent setting is set to a compatible value."
+        );
     });
 
     test("does not show the depends_on notice when setting has no dependencies", async function (assert) {

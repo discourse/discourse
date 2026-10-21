@@ -20,29 +20,13 @@ export default class GroupManageSaveButton extends Component {
   @service router;
   @service groupAutomaticMembersDialog;
 
+  /** @type {boolean | null} */
   saving = null;
   disabled = false;
 
   @computed("saving")
   get savingText() {
     return this.saving ? i18n("saving") : i18n("save");
-  }
-
-  _wouldLoseAccess() {
-    if (this.currentUser.admin) {
-      return false;
-    }
-
-    const group = this.model;
-
-    if (
-      group.visibility_level === GROUP_VISIBILITY_LEVELS.owners ||
-      group.members_visibility_level === GROUP_VISIBILITY_LEVELS.owners
-    ) {
-      return !group.is_group_owner_display;
-    }
-
-    return false;
   }
 
   @action
@@ -115,16 +99,33 @@ export default class GroupManageSaveButton extends Component {
     this.save(updateExistingUsers);
   }
 
+  _wouldLoseAccess() {
+    if (this.currentUser.admin) {
+      return false;
+    }
+
+    const group = this.model;
+
+    if (
+      group.visibility_level === GROUP_VISIBILITY_LEVELS.owners ||
+      group.members_visibility_level === GROUP_VISIBILITY_LEVELS.owners
+    ) {
+      return !group.is_group_owner_display;
+    }
+
+    return false;
+  }
+
   <template>
     <div ...attributes>
       <GroupFlairVisibilityWarning @model={{this.model}} />
 
       <div class="control-group buttons group-manage-save-button">
         <DButton
+          class="btn-primary group-manage-save"
           @action={{this.save}}
           @disabled={{or this.disabled this.saving}}
           @translatedLabel={{this.savingText}}
-          class="btn-primary group-manage-save"
         />
         {{#if this.saved}}
           <span>{{i18n "saved"}}</span>

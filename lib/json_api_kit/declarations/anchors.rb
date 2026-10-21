@@ -11,7 +11,7 @@ module JsonApiKit
       end
 
       def locate(anchoring, scope:, order:)
-        fetch(anchoring.name).locate(scope, value: anchoring.value, order:, guardian:)
+        fetch(anchoring.name).locate(anchoring, scope:, order:, guardian:)
       end
 
       private

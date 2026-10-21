@@ -10,11 +10,11 @@ import AdminCommunitySection from "discourse/lib/sidebar/user/community-section/
 import { and, eq, not, or } from "discourse/truth-helpers";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
-import MoreSectionLink from "../more-section-link";
-import MoreSectionLinks from "../more-section-links";
-import SectionComponent from "../section";
-import SectionLink from "../section-link";
-import SectionLinkButton from "../section-link-button";
+import MoreSectionLink from "../more-section-link.gjs";
+import MoreSectionLinks from "../more-section-links.gjs";
+import SectionComponent from "../section.gjs";
+import SectionLink from "../section-link.gjs";
+import SectionLinkButton from "../section-link-button.gjs";
 
 export default class SidebarCustomSection extends Component {
   @service capabilities;
@@ -73,18 +73,18 @@ export default class SidebarCustomSection extends Component {
 
   <template>
     <SectionComponent
-      @sectionName={{this.section.slug}}
       @activeLink={{this.activeLink}}
-      @expandWhenActive={{@expandActiveSection}}
-      @headerLinkText={{this.section.decoratedTitle}}
-      @indicatePublic={{this.section.indicatePublic}}
       @collapsable={{@collapsable}}
+      @expandWhenActive={{@expandActiveSection}}
       @headerActions={{this.section.headerActions}}
       @headerActionsIcon={{this.section.headerActionIcon}}
+      @headerLinkText={{this.section.decoratedTitle}}
       @hideSectionHeader={{this.section.hideSectionHeader}}
+      @indicatePublic={{this.section.indicatePublic}}
       @linkDropEnabled={{and @enableLinkDrop this.section.canAcceptLinkDrop}}
       @onLinkDrop={{this.section.dropLink}}
       @onLinkMove={{this.section.moveLink}}
+      @sectionName={{this.section.slug}}
       as |linkDrop|
     >
       {{#each this.section.links as |link index|}}
@@ -147,10 +147,10 @@ export default class SidebarCustomSection extends Component {
           {{/if}}
         {{else}}
           <MoreSectionLinks
-            @sectionLinks={{this.section.moreLinks}}
             @moreButtonAction={{this.section.moreSectionButtonAction}}
-            @moreButtonText={{this.section.moreSectionButtonText}}
             @moreButtonIcon={{this.section.moreSectionButtonIcon}}
+            @moreButtonText={{this.section.moreSectionButtonText}}
+            @sectionLinks={{this.section.moreLinks}}
             @toggleNavigationMenu={{@toggleNavigationMenu}}
           />
         {{/if}}

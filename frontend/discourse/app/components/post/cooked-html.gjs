@@ -12,6 +12,7 @@ import decorateLinkCounts from "discourse/lib/post-cooked-html-decorators/link-c
 import decorateLocalizedOneboxes from "discourse/lib/post-cooked-html-decorators/localized-oneboxes";
 import decorateMentions from "discourse/lib/post-cooked-html-decorators/mentions";
 import decorateQuoteControls from "discourse/lib/post-cooked-html-decorators/quote-controls";
+import decorateQuoteHighlight from "discourse/lib/post-cooked-html-decorators/quote-highlight";
 import decorateSearchHighlight from "discourse/lib/post-cooked-html-decorators/search-highlight";
 import decorateSelectionBarrier from "discourse/lib/post-cooked-html-decorators/selection-barrier";
 import decorateStatefulHtmlElements from "discourse/lib/post-cooked-html-decorators/stateful-html-elements";
@@ -29,6 +30,7 @@ const POST_COOKED_DECORATORS = [
   decorateQuoteControls,
   decorateLinkCounts,
   decorateSearchHighlight,
+  decorateQuoteHighlight,
   decorateMentions,
 ];
 
@@ -51,6 +53,37 @@ export default class PostCookedHtml extends Component {
 
   get shouldAddSelectionBarrier() {
     return this.args.selectionBarrier ?? true;
+  }
+
+  get className() {
+    return this.args.className ?? "cooked";
+  }
+
+  get cooked() {
+    if (this.isIgnored) {
+      return i18n("post.ignored");
+    }
+
+    return this.args.cooked ?? this.args.post.cooked;
+  }
+
+  get highlightTerm() {
+    return this.args.highlightTerm;
+  }
+
+  get extraDecorators() {
+    return makeArray(this.args.extraDecorators);
+  }
+
+  get ignoredUsers() {
+    return this.currentUser?.ignored_users;
+  }
+
+  get isIgnored() {
+    return (
+      (this.args.post.firstPost || this.args.embeddedPost) &&
+      this.ignoredUsers?.includes?.(this.args.post.username)
+    );
   }
 
   @bind
@@ -116,6 +149,7 @@ export default class PostCookedHtml extends Component {
           isIgnored: args.isIgnored,
           owner,
           post: this.args.post,
+          quoteHighlight: args.quoteHighlight,
           renderGlimmer: helper.renderGlimmer,
           renderNestedPostCookedHtml,
           streamElement: this.isStreamElement,
@@ -145,37 +179,6 @@ export default class PostCookedHtml extends Component {
     this.#pendingDecoratorCleanup.push(...cleanUpFns);
   }
 
-  get className() {
-    return this.args.className ?? "cooked";
-  }
-
-  get cooked() {
-    if (this.isIgnored) {
-      return i18n("post.ignored");
-    }
-
-    return this.args.cooked ?? this.args.post.cooked;
-  }
-
-  get highlightTerm() {
-    return this.args.highlightTerm;
-  }
-
-  get extraDecorators() {
-    return makeArray(this.args.extraDecorators);
-  }
-
-  get ignoredUsers() {
-    return this.currentUser?.ignored_users;
-  }
-
-  get isIgnored() {
-    return (
-      (this.args.post.firstPost || this.args.embeddedPost) &&
-      this.ignoredUsers?.includes?.(this.args.post.username)
-    );
-  }
-
   #cleanupDecorations() {
     this.#pendingDecoratorCleanup.forEach((teardown) => teardown());
     this.#pendingDecoratorCleanup = [];
@@ -193,9 +196,11 @@ export default class PostCookedHtml extends Component {
         highlightTerm=this.highlightTerm
         isIgnored=this.isIgnored
         ignoredUsers=this.ignoredUsers
+        quoteHighlight=@quoteHighlight
       }}
       @html={{trustHTML this.cooked}}
       @model={{@post}}
+      @preservePointerTarget={{true}}
     />
   </template>
 }

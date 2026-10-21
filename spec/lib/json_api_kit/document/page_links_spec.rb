@@ -11,8 +11,8 @@ RSpec.describe JsonApiKit::Document::PageLinks do
 
     it "returns a link to the page at each end" do
       expect(links).to eq(
-        prev: "https://example.com/api/topics?page%5Bbefore%5D=read-back-here",
-        next: "https://example.com/api/topics?page%5Bafter%5D=read-on-here",
+        prev: "https://example.com/api/topics?page[before]=read-back-here",
+        next: "https://example.com/api/topics?page[after]=read-on-here",
       )
     end
 
@@ -30,7 +30,7 @@ RSpec.describe JsonApiKit::Document::PageLinks do
       it "returns a next link only" do
         expect(links).to eq(
           prev: nil,
-          next: "https://example.com/api/topics?page%5Bafter%5D=read-on-here",
+          next: "https://example.com/api/topics?page[after]=read-on-here",
         )
       end
     end

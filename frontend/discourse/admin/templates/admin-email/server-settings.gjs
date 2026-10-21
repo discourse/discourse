@@ -27,15 +27,15 @@ export default <template>
             {{i18n "admin.email.sending_test"}}
           {{else}}
             <DTextField
-              @value={{@controller.testEmailAddress}}
               @placeholderKey="admin.email.test_email_address"
+              @value={{@controller.testEmailAddress}}
             />
             <DButton
+              class="btn-primary"
+              type="submit"
               @action={{@controller.sendTestEmail}}
               @disabled={{@controller.sendTestEmailDisabled}}
               @label="admin.email.send_test"
-              type="submit"
-              class="btn-primary"
             />
             {{#if @controller.sentTestEmailMessage}}
               <span

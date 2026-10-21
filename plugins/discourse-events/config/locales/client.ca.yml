@@ -13,6 +13,11 @@ ca:
             topic_id:
               label: ID de tema
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Notificació"
+            none: "Cap"
       disable_holiday: "Desactiva"
       enable_holiday: "Activa"
       date: "Data"

@@ -11,29 +11,13 @@ import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translatio
 import DUserLink from "discourse/ui-kit/d-user-link";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import setAcceptedSolutions from "../lib/set-accepted-solutions";
+import setAcceptedSolutions from "../lib/set-accepted-solutions.js";
 
 export default class SolvedUnacceptAnswerButton extends Component {
   @service appEvents;
   @service siteSettings;
 
   @tracked saving = false;
-
-  @action
-  async unacceptAnswer() {
-    const post = this.args.post;
-
-    this.saving = true;
-    try {
-      await unacceptPost(post);
-
-      this.appEvents.trigger("discourse-solved:solution-toggled", post);
-    } catch (e) {
-      popupAjaxError(e);
-    } finally {
-      this.saving = false;
-    }
-  }
 
   get answerInfo() {
     return this.args.post.topic.accepted_answers?.find(
@@ -56,6 +40,22 @@ export default class SolvedUnacceptAnswerButton extends Component {
     const username = this.answerInfo?.accepter_username;
     const name = this.answerInfo?.accepter_name;
     return this.siteSettings.display_name_on_posts && name ? name : username;
+  }
+
+  @action
+  async unacceptAnswer() {
+    const post = this.args.post;
+
+    this.saving = true;
+    try {
+      await unacceptPost(post);
+
+      this.appEvents.trigger("discourse-solved:solution-toggled", post);
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.saving = false;
+    }
   }
 
   <template>

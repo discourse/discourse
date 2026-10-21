@@ -3,9 +3,9 @@ import EmailGroupUserChooser from "discourse/select-kit/components/email-group-u
 const UserListInput = <template>
   <@Control id={{@field.id}}>
     <EmailGroupUserChooser
-      @value={{@field.value}}
-      @onChange={{@field.set}}
       name={{@info.identifier}}
+      @onChange={{@field.set}}
+      @value={{@field.value}}
     />
   </@Control>
 </template>;

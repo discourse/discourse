@@ -11,7 +11,7 @@ import { LinkTo } from "@ember/routing";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { isEmpty, isNone } from "@ember/utils";
+import { isEmpty } from "@ember/utils";
 import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
 import SettingBool from "discourse/admin/components/site-settings/bool";
 import SettingCategory from "discourse/admin/components/site-settings/category";
@@ -108,11 +108,18 @@ export default class SiteSettingComponent extends Component {
   @service messageBus;
   @service site;
 
+  /** @type {boolean | null | undefined} */
   @tracked isSecret = null;
+
+  /** @type {"enqueued" | "completed" | null} */
   @tracked status = null;
+
+  /** @type {string | null | undefined} */
   @tracked progress = null;
   updateExistingUsers = null;
   trackChanges = true;
+
+  /** @type {{ get: (name: string) => unknown, set: (name: string, value: unknown) => Promise<void>, submit: (event?: Event) => Promise<void> } | null} */
   formApi = null;
 
   #formKitData;
@@ -140,19 +147,6 @@ export default class SiteSettingComponent extends Component {
     }
   }
 
-  @action
-  syncFormValue(_element, [wireValue]) {
-    scheduleOnce("afterRender", this, this.applyFormValue, wireValue);
-  }
-
-  applyFormValue(wireValue) {
-    const name = this.setting.setting;
-
-    if (this.toWire(this.formApi.get(name)) !== wireValue) {
-      this.formApi.set(name, this.fromWire(wireValue));
-    }
-  }
-
   get canSubscribeToSettingsJobs() {
     const settingName = this.setting?.setting;
 
@@ -164,22 +158,6 @@ export default class SiteSettingComponent extends Component {
 
   get defaultTheme() {
     return this.site.user_themes.find((theme) => theme.default);
-  }
-
-  @bind
-  async onMessage(membership) {
-    this.status = membership.status;
-    this.progress = membership.progress;
-  }
-
-  @action
-  async _handleKeydown(event) {
-    if (
-      event.key === "Enter" &&
-      event.target.classList.contains("input-setting-string")
-    ) {
-      await this.save();
-    }
   }
 
   get resolvedComponent() {
@@ -205,14 +183,6 @@ export default class SiteSettingComponent extends Component {
     );
   }
 
-  settingIsOverridden(setting) {
-    return !this.#valuesEqual(
-      setting.default,
-      setting.buffered.get("value"),
-      setting
-    );
-  }
-
   get displayDescription() {
     return this.componentType !== "bool";
   }
@@ -230,7 +200,8 @@ export default class SiteSettingComponent extends Component {
   }
 
   get showDependsOnNotice() {
-    return this.setting.depends_on?.length > 0;
+    // Inline dependents only appear under their parent once it is satisfied.
+    return !this.args.inline && this.setting.depends_on?.length > 0;
   }
 
   get dependsOnNoticeText() {
@@ -318,35 +289,6 @@ export default class SiteSettingComponent extends Component {
     return [this.setting, ...this.inlineDependentSettings].filter((setting) =>
       this.settingIsDirty(setting)
     );
-  }
-
-  settingIsDirty(setting) {
-    let bufferVal = this.buffered.get("value");
-    let settingVal = setting?.value;
-
-    if (setting !== this.setting) {
-      bufferVal = setting.buffered.get("value");
-    }
-
-    if (isNone(bufferVal)) {
-      bufferVal = "";
-    }
-
-    if (isNone(settingVal)) {
-      settingVal = "";
-    }
-
-    const dirty = !this.#valuesEqual(bufferVal, settingVal, setting);
-
-    if (this.trackChanges) {
-      if (dirty) {
-        this.siteSettingChangeTracker.add(setting);
-      } else {
-        this.siteSettingChangeTracker.remove(setting);
-      }
-    }
-
-    return dirty;
   }
 
   get preview() {
@@ -512,6 +454,47 @@ export default class SiteSettingComponent extends Component {
     } else {
       return false;
     }
+  }
+
+  @action
+  syncFormValue(_element, [wireValue]) {
+    scheduleOnce("afterRender", this, this.applyFormValue, wireValue);
+  }
+
+  applyFormValue(wireValue) {
+    const name = this.setting.setting;
+
+    if (this.toWire(this.formApi.get(name)) !== wireValue) {
+      this.formApi.set(name, this.fromWire(wireValue));
+    }
+  }
+
+  @bind
+  async onMessage(membership) {
+    this.status = membership.status;
+    this.progress = membership.progress;
+  }
+
+  settingIsOverridden(setting) {
+    return !this.#valuesEqual(
+      setting.default,
+      setting.buffered.get("value"),
+      setting
+    );
+  }
+
+  settingIsDirty(setting) {
+    const dirty = setting.hasPendingChanges;
+
+    if (this.trackChanges) {
+      if (dirty) {
+        this.siteSettingChangeTracker.add(setting);
+      } else {
+        this.siteSettingChangeTracker.remove(setting);
+      }
+    }
+
+    return dirty;
   }
 
   @action
@@ -689,6 +672,24 @@ export default class SiteSettingComponent extends Component {
     this.setting.validationMessage = null;
   }
 
+  #valuesEqual(a, b, setting = this.setting) {
+    if (setting.json_schema || setting.schema || setting.objects_schema) {
+      return deepEqual(a, b);
+    } else {
+      return a?.toString() === b?.toString();
+    }
+  }
+
+  @action
+  async _handleKeydown(event) {
+    if (
+      event.key === "Enter" &&
+      event.target.classList.contains("input-setting-string")
+    ) {
+      await this.save();
+    }
+  }
+
   _save(settings) {
     if (settings.length === 1) {
       const setting = settings[0].buffered;
@@ -708,23 +709,15 @@ export default class SiteSettingComponent extends Component {
     return SiteSetting.bulkUpdate(params);
   }
 
-  #valuesEqual(a, b, setting = this.setting) {
-    if (setting.json_schema || setting.schema || setting.objects_schema) {
-      return deepEqual(a, b);
-    } else {
-      return a?.toString() === b?.toString();
-    }
-  }
-
   <template>
     <div
-      data-setting={{this.setting.setting}}
       class="row setting
         {{this.typeClass}}
         {{if this.overridden 'overridden'}}
         {{if this.isDisabled 'disabled'}}
         {{if this.isDisabledByDependency 'disabled-by-dependency'}}
         {{if @inline 'inline-dependent-setting'}}"
+      data-setting={{this.setting.setting}}
       ...attributes
     >
       <div class="setting-label">
@@ -733,10 +726,10 @@ export default class SiteSettingComponent extends Component {
 
           {{#if this.staffLogFilter}}
             <LinkTo
-              @route="adminLogs.staffActionLogs"
-              @query={{hash filters=this.staffLogFilter force_refresh=true}}
               class="staff-action-log-link"
               title={{i18n "admin.settings.history"}}
+              @query={{hash filters=this.staffLogFilter force_refresh=true}}
+              @route="adminLogs.staffActionLogs"
             >
               <span class="history-icon">
                 {{dIcon "clock-rotate-left"}}
@@ -762,47 +755,47 @@ export default class SiteSettingComponent extends Component {
       <div class="setting-value">
         {{#if this.settingEditButton}}
           <DButton
+            class="btn-default setting-value-edit-button"
             @action={{this.settingEditButton.action}}
             @icon={{this.settingEditButton.icon}}
             @label={{this.settingEditButton.label}}
-            class="btn-default setting-value-edit-button"
           />
 
           <Description @description={{this.setting.description}} />
-          <JobStatus @status={{this.status}} @progress={{this.progress}} />
+          <JobStatus @progress={{this.progress}} @status={{this.status}} />
         {{else}}
           {{#if this.useFormKit}}
             <Form
               @data={{this.formKitData}}
+              @onRegisterApi={{this.registerFormApi}}
               @onSet={{this.onFormSet}}
               @onSubmit={{this.update}}
-              @onRegisterApi={{this.registerFormApi}}
               {{didUpdate this.syncFormValue this.buffered.value}}
               {{linkifySettingLinks this.formInlineDescription}}
               as |form|
             >
               <SettingDefinitionField
                 @definition={{this.definition}}
+                @disabled={{this.isDisabled}}
                 @form={{form}}
                 @format="full"
-                @showTitle={{false}}
                 @showControlTitle={{false}}
                 @showDescription={{false}}
-                @disabled={{this.isDisabled}}
+                @showTitle={{false}}
               />
             </Form>
             {{this.preview}}
           {{else}}
             <this.resolvedComponent
-              {{on "keydown" this._handleKeydown}}
-              @disabled={{this.isDisabled}}
-              @setting={{this.setting}}
-              @value={{this.buffered.value}}
-              @preview={{this.preview}}
-              @isSecret={{this.isSecret}}
               @allowAny={{this.allowAny}}
               @changeValueCallback={{this.changeValueCallback}}
+              @disabled={{this.isDisabled}}
+              @isSecret={{this.isSecret}}
+              @preview={{this.preview}}
+              @setting={{this.setting}}
               @setValidationMessage={{this.setValidationMessage}}
+              @value={{this.buffered.value}}
+              {{on "keydown" this._handleKeydown}}
             />
           {{/if}}
           <SettingValidationMessage
@@ -810,14 +803,14 @@ export default class SiteSettingComponent extends Component {
           />
           {{#if this.displayDescription}}
             <Description @description={{this.setting.description}} />
-            <JobStatus @status={{this.status}} @progress={{this.progress}} />
+            <JobStatus @progress={{this.progress}} @status={{this.status}} />
           {{/if}}
           {{#if this.inlineDependentSettings.length}}
             <div class="inline-dependent-settings">
               {{#each this.inlineDependentSettings as |dependentSetting|}}
                 <this.siteSettingComponent
-                  @setting={{dependentSetting}}
                   @inline={{true}}
+                  @setting={{dependentSetting}}
                 />
               {{/each}}
             </div>
@@ -858,27 +851,27 @@ export default class SiteSettingComponent extends Component {
       {{#if (and this.groupedDirty this.canUpdate (not @inline))}}
         <div class="setting-controls">
           <DButton
+            class="ok setting-controls__ok"
             @action={{this.submit}}
+            @ariaLabel="admin.settings.save"
             @icon="check"
             @isLoading={{this.disableControls}}
-            @ariaLabel="admin.settings.save"
-            class="ok setting-controls__ok"
           />
           <DButton
+            class="cancel setting-controls__cancel"
             @action={{this.cancel}}
+            @ariaLabel="admin.settings.cancel"
             @icon="xmark"
             @isLoading={{this.disableControls}}
-            @ariaLabel="admin.settings.cancel"
-            class="cancel setting-controls__cancel"
           />
         </div>
       {{else if (and this.groupedOverridden this.canUpdate (not @inline))}}
         {{#if (and this.setting.secret (not this.useFormKit))}}
           <DButton
-            @action={{this.toggleSecret}}
-            @icon={{if this.isSecret "far-eye" "far-eye-slash"}}
-            @ariaLabel="admin.settings.unmask"
             class="btn-default setting-toggle-secret"
+            @action={{this.toggleSecret}}
+            @ariaLabel="admin.settings.unmask"
+            @icon={{if this.isSecret "far-eye" "far-eye-slash"}}
           />
         {{/if}}
 

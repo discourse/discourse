@@ -7,21 +7,21 @@ export default <template>
     <DHorizontalOverflowNav class="activity-nav">
       {{#if @controller.model.can_see_members}}
         <GroupActivityFilter
-          @filter="posts"
           @categoryId={{@controller.category_id}}
+          @filter="posts"
         />
         <GroupActivityFilter
-          @filter="topics"
           @categoryId={{@controller.category_id}}
+          @filter="topics"
         />
       {{/if}}
       {{#if @controller.siteSettings.enable_mentions}}
         <GroupActivityFilter
-          @filter="mentions"
           @categoryId={{@controller.category_id}}
+          @filter="mentions"
         />
       {{/if}}
-      <PluginOutlet @name="group-activity-bottom" @connectorTagName="li" />
+      <PluginOutlet @connectorTagName="li" @name="group-activity-bottom" />
     </DHorizontalOverflowNav>
   </section>
   <section class="user-content" id="user-content">

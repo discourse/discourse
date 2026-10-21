@@ -1101,6 +1101,23 @@ RSpec.describe UserApiKeysController do
       expect(Discourse.redis.get("otp_#{otp}")).to eq(user.username)
     end
 
+    it "preserves callback query parameters when returning an OTP" do
+      auth_redirect = "#{otp_args[:auth_redirect]}?state=return-to-client"
+      SiteSetting.allowed_user_api_auth_redirects = auth_redirect
+      user = Fabricate(:user, refresh_auto_groups: true)
+      sign_in(user)
+
+      post "/user-api-key/otp.json", params: otp_args.merge(auth_redirect: auth_redirect)
+
+      expect(response.status).to eq(200)
+      redirect_uri = URI.parse(response.parsed_body["redirect_url"])
+      query = Rack::Utils.parse_query(redirect_uri.query)
+      expect(query).to include("state" => "return-to-client", "oneTimePassword" => be_present)
+
+      otp = decrypt_payload(Base64.decode64(query["oneTimePassword"]))
+      expect(Discourse.redis.get("otp_#{otp}")).to eq(user.username)
+    end
+
     it "encrypts OTP with OAEP padding when requested" do
       SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
       user = Fabricate(:user, refresh_auto_groups: true)

@@ -12,6 +12,7 @@ describe "Reactions | Post reactions" do
   let(:reactions_list) do
     PageObjects::Components::PostReactionsList.new("#post_#{post_2.post_number}")
   end
+  let(:popup) { PageObjects::Components::PostReactionsPopup.new }
 
   before do
     SiteSetting.discourse_reactions_enabled = true
@@ -69,6 +70,34 @@ describe "Reactions | Post reactions" do
     expect(reactions_list).to have_reaction("laughing")
   end
 
+  context "when emojis are disabled" do
+    fab!(:other_user, :user)
+    fab!(:laughing) { Fabricate(:reaction, post: post_2, reaction_value: "laughing") }
+
+    before do
+      SiteSetting.enable_emoji = false
+      Fabricate(:reaction_user, reaction: laughing, user: other_user, post: post_2)
+    end
+
+    it "degrades reactions to likes" do
+      visit post_2.url
+      expect(reactions_list).to have_reaction_icon("heart", "d-liked")
+      expect(reactions_list).to have_no_reaction("laughing")
+
+      reactions_button.hover_like_button(post_2.id)
+      expect(reactions_button).to have_no_expanded_reactions_picker(post_2.id)
+
+      reactions_button.click_like_button(post_2.id)
+      page.refresh
+      expect(reactions_list).to have_reaction_icon("heart", "d-liked")
+
+      reactions_list.click_counter
+      expect(popup).to have_no_filters
+      expect(popup).to have_user_reaction_icon(current_user, "d-liked")
+      expect(popup).to have_user_reaction_icon(other_user, "d-liked")
+    end
+  end
+
   it "does not show emoji_deny_list emojis for post reactions" do
     SiteSetting.emoji_deny_list = "middle_finger"
     visit post_2.url
@@ -111,7 +140,6 @@ describe "Reactions | Post reactions" do
 
   context "when clicking a reaction whose value contains a URL-reserved character" do
     fab!(:other_user, :user)
-    let(:popup) { PageObjects::Components::PostReactionsPopup.new }
 
     before do
       DiscourseReactions::ReactionManager.new(

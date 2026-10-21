@@ -289,7 +289,6 @@ tr_TR:
       zh_CN:
         name: Basitleştirilmiş Çince
     share:
-      topic_html: 'Konu: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username} adlı kullanıcının #%{postNumber}. gönderisi"
       close: "kapat"
       twitter: "X'te paylaş"
@@ -344,6 +343,12 @@ tr_TR:
     skip_to_last_reply: "Son cevaba atla"
     skip_to_top: "En üste atla"
     skip_user_nav: "Profil içeriğine atla"
+    reorder:
+      remove: "%{label} öğesini kaldır"
+      removed: "%{label} kaldırıldı"
+      move_up: "Yukarı taşı"
+      move_down: "Aşağı taşı"
+      position: "%{position} / %{total}"
     emails_are_disabled: "Giden tüm e-postalar bir yönetici tarafından devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
     emails_are_disabled_no_smtp: "SMTP sunucusu yapılandırılmadığı için giden tüm e-postalar devre dışı bırakılmıştır. Hiçbir tür e-posta gönderilemez."
     emails_are_disabled_non_staff: "Giden e-posta, personel olmayan kullanıcılar için devre dışı bırakıldı."
@@ -353,6 +358,7 @@ tr_TR:
     notifications_tracking:
       tooltip: "Bildirim seviyesi: %{level}"
     back_button: "Geri"
+    confirm_button: "Onayla"
     welcome_banner:
       header:
         new_members: "Hoş geldiniz, %{preferred_display_name}!"
@@ -477,9 +483,6 @@ tr_TR:
     max_of_count:
       one: "maksimum %{count}"
       other: "maksimum %{count}"
-    character_count:
-      one: "%{count} karakter"
-      other: "%{count} karakter"
     period_chooser:
       aria_label: "Döneme göre filtrele"
     related_messages:
@@ -505,18 +508,9 @@ tr_TR:
         use_predefined: "Şablonlara göz atın"
         back: "Geri"
         icebreakers:
-          fun_facts:
-            title: "Hakkında ilginç bilgiler nelerdir?"
-            body: "Herkese merhaba! Bu yeni topluluğu başlatmaktan dolayı çok heyecanlıyım. Başlangıç olarak, kendimizle ilgili eğlenceli bir bilgi paylaşalım. Ben başlayayım: Yürüyüş yapmayı ve yeni parkurları keşfetmeyi seviyorum! Sizinle ilgili ilginç bir şey nedir?"
-          coolest_thing_you_have_seen_today:
-            title: "Bugün gördüğün en havalı şey neydi?"
-            body: "Bugün gördüğün veya yaşadığın en havalı şey neydi? Güzel bir gün batımı ya da rastgele bir iyilik hareketi gibi herhangi bir şey olabilir. Ben başlayayım: Bir köpeğin yaşlı bir insana karşıdan karşıya geçmesine yardım ettiğini gördüm!"
           introduce_yourself:
             title: "Kendinizi tanıtın"
             body: "Topluluğa hoş geldiniz! Birbirimizi tanıyalım. Lütfen kendinizi tanıtın ve ilgi alanlarınız hakkında biraz bilgi paylaşın. Ben başlayayım: Teknolojiye tutkuyla bağlıyım ve başkalarına öğretmeyi çok seviyorum!"
-          what_is_your_favorite_food:
-            title: "En sevdiğin yemek nedir?"
-            body: "En sevdiğiniz yiyecekleri toplulukla paylaşın! Ben başlayayım: Pizza severim, özellikle ekstra peynir ve sucuklu olanı."
     design_wizard:
       back: "Geri"
       next: "Sonraki"
@@ -786,6 +780,10 @@ tr_TR:
       title:
         search: "Mesaj Arama"
         placeholder: "mesaj başlığını, url'yi veya kimliği buraya yazın"
+    dsa_statements:
+      category: "Kategori"
+      category_prompt: "Kategori seçin"
+      saving: "Kaydediliyor…"
     review:
       show_more: "Daha fazla göster"
       show_less: "Daha az göster"
@@ -1042,6 +1040,9 @@ tr_TR:
         note_added: "Moderatör notu"
         note_added_by: "%{username} tarafından moderatör notu · %{relativeDate}"
         no_events: "Gösterilecek zaman çizelgesi etkinliği yok"
+      author_penalty:
+        toast:
+          undo: "Geri Al"
       notes:
         add_note_description: "Diğer moderatörlere bağlam sağlamak için bir not ekleyin."
         add_note_button: "Not ekle"
@@ -1688,7 +1689,6 @@ tr_TR:
       admin: "%{user} bir yönetici"
       moderator_tooltip: "Bu kullanıcı bir moderatör"
       admin_tooltip: "Bu kullanıcı bir yönetici"
-      silenced_tooltip: "Bu kullanıcı susturuldu"
       suspended_notice: "Bu kullanıcı %{date} tarihine kadar uzaklaştırıldı."
       suspended_permanently: "Bu kullanıcı uzaklaştırıldı."
       suspended_reason: "Sebep: "
@@ -1747,6 +1747,16 @@ tr_TR:
       tracked_topics_link: "Göster"
       automatically_unpin_topics: "En alta geldiğimde tüm konuların sabitlemesini kaldır"
       apps: "Uygulamalar"
+      mcp_authorizations:
+        endpoint: "Kaynak"
+        scopes: "Kapsamlar"
+        details: "Detaylar"
+        last_used: "Son kullanılan"
+        never: "Asla"
+        status: "Durum"
+        statuses:
+          active: "Aktif"
+          revoked: "İptal edildi"
       revoke_access: "Erişimi İptal Et"
       undo_revoke_access: "Erişim İptalini Geri Al"
       api_approved: "Onaylandı:"
@@ -2042,7 +2052,6 @@ tr_TR:
         upload_title: "Resminizi yükleyin"
         image_is_not_a_square: "Uyarı: Genişliği ve yüksekliği eşit olmadığı için görseli kırptık."
         logo_small: "Sitenin küçük logosu. Varsayılan olarak kullanılır."
-        use_custom: "Veya özel bir avatar yükleyin:"
       change_profile_background:
         title: "Profil Başlığı"
         instructions: "Profil başlıkları ortalanır ve varsayılan olarak 1110 px boyutunda olur."
@@ -2625,7 +2634,7 @@ tr_TR:
       hide_forever: "hayır teşekkürler"
       hidden_for_session: "Tamam, yarın yine sorarız. Hesap oluşturmak için dilediğiniz zaman \"Giriş Yap\"ı da kullanabilirsiniz."
       intro: "Merhaba! Tartışmanın tadını çıkarıyor gibisiniz, ancak henüz bir hesap açmadınız."
-      value_prop: "Aynı gönderiler arasında gezinmekten bıktınız mı? Hesap oluşturduğunuzda kaldığınız yere geri dönebilirsiniz. Ayrıca hesabınız olursa yeni yanıtlar için bildirim alabilir, yer imlerini kaydedebilir ve başkalarına teşekkür etmek için beğenileri kullanabilirsiniz. Bu topluluğu harika kılmak için hep birlikte çalışabiliriz. :heart:"
+      value_prop: "Aynı gönderiler arasında gezinmekten bıktınız mı? Hesap oluşturduğunuzda kaldığınız yere geri dönebilirsiniz. Ayrıca hesabınız olursa yeni yanıtlar için bildirim alabilir, yer imlerini kaydedebilir ve başkalarına teşekkür etmek için beğenileri kullanabilirsiniz. Bu topluluğu harika kılmak için hep birlikte çalışabiliriz."
     offline_indicator:
       no_internet: "İnternet bağlantısı yok."
       refresh_page: "Sayfayı yenileyin"
@@ -3080,8 +3089,7 @@ tr_TR:
       cancel_edit: "Düzenlemeyi iptal et"
       draft_saved: "Taslak kaydedildi!"
       users_placeholder: "Kullanıcı veya grup ekleyin"
-      title_placeholder: "Tek cümleyle açıklamak gerekirse bu tartışmanın konusu nedir?"
-      title_placeholder_redesign: "Başlık"
+      title_placeholder: "Başlık"
       title_or_link_placeholder: "Buraya başlık yazın veya bir bağlantı yapıştırın"
       edit_reason_placeholder: "Neden düzenleme yapıyorsunuz?"
       topic_featured_link_placeholder: "Başlıkla gösterilen bağlantıyı girin."
@@ -3099,8 +3107,6 @@ tr_TR:
       show_preview: "ön izlemeyi göster"
       hide_preview: "ön izlemeyi gizle"
       resize: "Composer'ın boyutunu değiştir"
-      switch_to_markdown: "Standart Markdown düzenleyicisine geçin (%{keyboardShortcut})"
-      switch_to_rich_text: "Yeni zengin metin düzenleyicisine geçin (%{keyboardShortcut})"
       quote_post_title: "Tüm gönderiyi alıntıla"
       bold_label: "B"
       bold_title: "Güçlü"
@@ -3241,6 +3247,8 @@ tr_TR:
         visit: "Bağlantıyı aç"
         remove_preview: "Önizlemeyi kaldır"
         link_copied: "Bağlantı kopyalandı!"
+      table:
+        default_heading: "%{number}. sütun"
       unsupported_token: "Zengin metin düzenleyici bu yazıda kullanılan tüm özellikleri desteklemiyor; sizi Markdown düzenleyicisine yönlendiriyor."
     notifications:
       tooltip:
@@ -4681,6 +4689,7 @@ tr_TR:
       list: "Kategorileri listele"
       no_description: "Lütfen bu kategori için bir açıklama ekleyin."
       change_in_category_topic: "Açıklamayı düzenle"
+      latest_topics: "En son konular"
       description_updated: "Açıklama güncellendi"
       description_expand: "Daha fazla göster"
       description_collapse: "Daha az göster"
@@ -4976,6 +4985,7 @@ tr_TR:
       with_category: "%{filter} %{category} konular"
       filter:
         title: "%{filter} için filtrelenmiş sonuçlar"
+        reset: "sıfırla"
         button:
           label: "Filtrele"
       latest:
@@ -5151,9 +5161,6 @@ tr_TR:
       admin:
         title: "Yönetici"
     badges:
-      earned_n_times:
-        one: "Bu rozeti %{count} kez kazandı"
-        other: "Bu rozeti %{count} kez kazandı"
       granted_on: "%{date} tarihinde verildi"
       others_count:
         one: "Başkalarına %{count} kez verildi"
@@ -5188,16 +5195,18 @@ tr_TR:
       favorite_max_not_reached: "Bu rozeti favori olarak işaretle"
       favorite_count: "%{count}/%{max} rozet favori olarak işaretlendi"
     download_calendar:
-      title: "Takvimi indir"
+      title: "Takvime ekle"
+      calendar: "Takvim"
       save_ics: ".ics dosyasını indir"
       save_google: "Google takvime ekle"
       remember: "Bir daha sorma"
-      remember_explanation: "(bu tercihi kullanıcı tercihlerinizden değiştirebilirsiniz)"
       download: "İndir"
       default_calendar: "Varsayılan takvim"
       default_calendar_instruction: "Tarihler kaydedildiğinde hangi takvimin kullanılması gerektiğini belirleyin"
       add_to_calendar: "Takvime ekle"
       google: "Google Takvim"
+      outlook: "Microsoft Outlook"
+      apple: "Apple Takvimi"
       ics: "ICS"
       default_title: "Planlanmış Etkinlik"
     tagging:
@@ -5644,63 +5653,6 @@ tr_TR:
           other: "Girdi en az %{count} olmalıdır."
         pattern_mismatch: "Lütfen istenen formata uyun."
         bad_input: "Lütfen geçerli bir girdi girin."
-    table_builder:
-      title: "Tablo Oluşturucu"
-      modal:
-        title: "Tablo Oluşturucu"
-        create: "Tablo oluştur"
-        help:
-          title: "Elektronik Tablo Düzenleyiciyi kullanma"
-          enter_key: "Enter"
-          tab_key: "Sekme"
-          new_row: "yeni bir satır eklemek için bir satırın sonuna."
-          new_col: "yeni bir sütun eklemek için bir sütunun sonunda."
-          options: "Açılır menüde daha fazla seçeneğe erişmek için hücrelere sağ tıklayın."
-        confirm_close: "Tablo oluşturucuyu kapatmak istediğinizden emin misiniz? Kaydedilmemiş değişiklikler kaybedilir."
-      edit:
-        btn_edit: "Tabloyu düzenle"
-        modal:
-          title: "Tabloyu düzenle"
-          cancel: "iptal et"
-          create: "Kaydet"
-          reason: "Neden düzenleme yapıyorsunuz?"
-          trigger_reason: "Düzenleme nedeni ekleyin"
-        default_edit_reason: "Tablo Düzenleyiciyle Tabloyu güncelle"
-      default_header:
-        col_1: "Sütun 1"
-        col_2: "Sütun 2"
-        col_3: "Sütun 3"
-        col_4: "Sütun 4"
-      spreadsheet:
-        no_records_found: "Kayıt bulunamadı"
-        show: "Göster"
-        entries: "girdiler"
-        about: "Hakkında"
-        prompts:
-          delete_selected_rows: "Seçili satırları silmek istediğinizden emin misiniz?"
-          delete_selected_cols: "Seçili sütunları silmek istediğinizden emin misiniz?"
-          will_destroy_merged_cells: "Bu eylem mevcut birleştirilmiş hücreleri yok edecek. Emin misiniz?"
-          will_clear_search_results: "Bu eylem mevcut birleştirilmiş hücreleri yok edecek. Emin misiniz?"
-          conflicts_with_merged_cells: "Birleştirilmiş başka bir hücre ile çakışma var"
-        invalid_merge_props: "Geçersiz birleştirilmiş özellikler"
-        cells_already_merged: "Hücre zaten birleştirildi"
-        no_cells_selected: "Hücre seçilmedi"
-        context_menu:
-          row:
-            before: "Öncesine yeni bir satır ekle"
-            after: "Sonrasına yeni bir satır ekle"
-            delete: "Seçili satırları sil"
-          col:
-            before: "Öncesine yeni bir sütun ekle"
-            after: "Sonrasına yeni bir sütun ekle"
-            delete: "Seçili sütunları sil"
-            rename: "Bu sütunu yeniden adlandır"
-          order:
-            ascending: "Artan sıralama"
-            descending: "Azalan sıralama"
-          copy: "Kopyala..."
-          paste: "Yapıştır..."
-          save: "Farklı kaydet..."
     powered_by_discourse: "Discourse tarafından desteklenmektedir"
     safari_15_warning: "Tarayıcınız yakında bu toplulukla uyumsuz hâle gelecek. Burada katılımınızı sürdürmek için lütfen tarayıcınızı yükseltin veya <a href='%{url}'>daha fazla bilgi edinin</a>."
     filter:
@@ -5913,6 +5865,76 @@ tr_TR:
         developer:
           title: "Geliştirici"
           header_description: "Güvenli modu ve diğer gelişmiş özellikleri yönetmek için geliştirici ayarları"
+        mcp:
+          title: "MCP sunucusu"
+          tabs:
+            access: "Erişim"
+            activity: "Aktivite"
+          overview:
+            status: "Durum"
+            tools: "Araçlar"
+          access:
+            title: "Erişim"
+            group: "Grup"
+            groups: "Gruplar"
+            actions: "Eylemler"
+            edit: "Düzenle"
+            delete: "Sil"
+          primitives:
+            group_by: "Gruplama ölçütü"
+            group_by_options:
+              scope: "Kapsam"
+              provider: "Sağlayıcı"
+              kind: "Tür"
+            provider: "Sağlayıcı"
+            kind: "Tür"
+            scope: "Kapsam"
+            state: "Eyalet"
+            scopes: "Kapsamlar"
+          clients:
+            actions: "Eylemler"
+            block: "Engelle"
+            use_preset: "Kur"
+            presets:
+              custom: "Özel"
+            automatic: "Otomatik"
+          authorizations:
+            user: "Kullanıcı"
+            scopes: "Verilen kapsamlar"
+            last_used: "Son kullanılan"
+            status: "Durum"
+            actions: "Eylemler"
+          activity:
+            outcome: "Sonuç"
+            time: "Saat"
+            user: "Kullanıcı"
+            duration: "Süre"
+          values:
+            server_status:
+              disabled: "Devre Dışı"
+            client_trust:
+              approved: "Onaylandı"
+            authorization_status:
+              active: "Aktif"
+              revoked: "İptal edildi"
+            activity_outcome:
+              success: "Başarılı"
+              error: "Hata"
+            primitive_state:
+              enabled: "Etkin mi"
+              disabled: "Devre Dışı"
+            primitive_kind:
+              all: "Bütün türler"
+              tool: "Araç"
+              resource: "Kaynak"
+            primitive_risk:
+              read: "Salt okunur"
+              moderation: "Moderasyon"
+            filter:
+              all: "Tümü"
+          never: "Asla"
+          actions:
+            revoke: "İptal Et"
         experimental:
           title: "Deneysel"
           header_description: "Siteniz için deneysel özellikleri açın veya kapatın, bunların çoğu grup bazında kontrol edilebilir"
@@ -6478,6 +6500,7 @@ tr_TR:
           series:
             anonymous: "Anonim"
             crawlers: "Gezginler"
+          crawler_learn_more: "Daha fazla bilgi edin"
         period:
           last_7_days: "Son 7 gün"
           last_30_days: "Son 30 gün"
@@ -7415,8 +7438,8 @@ tr_TR:
           upload: "Yükle"
           select_component: "Bileşen seçin…"
           unsaved_changes_alert: "Değişikliklerinizi henüz kaydetmediniz, bunları silip devam etmek istiyor musunuz?"
-          unsaved_parent_themes: "Bileşeni temalara atamadınız, devam etmek istiyor musunuz?"
           discard: "Kapat"
+          leave: "Ayrıl"
           stay: "Kal"
           css_html: "Özel Kod"
           edit_css_html: "Kodu düzenle"
@@ -8525,13 +8548,14 @@ tr_TR:
           multiselect: "Çoklu seçim"
       site_text:
         description: "Forumunuzdaki herhangi bir metni özelleştirebilirsiniz."
-        search: "Düzenlemek istediğiniz metni arayın"
+        search_label: "Ara"
+        theme_disabled: "Devre Dışı"
+        filters: "Filtreler"
+        status:
+          invalid: "Geçersiz"
         title: "Site metinleri"
         edit: "Düzenle"
-        revert: "Değişiklikleri Geri Al"
         revert_confirm: "Değişikliklerinizi geri almak istediğinizden emin misiniz?"
-        go_back: "Aramaya geri dön"
-        recommended: "Aşağıdaki metni ihtiyaçlarınıza göre özelleştirmenizi öneririz:"
         show_overriden: "Yalnızca geçersiz kılınanları göster"
         show_outdated: "Yalnızca eski/geçersiz olanları göster"
         show_untranslated: "Yalnızca çevrilmemişleri göster"

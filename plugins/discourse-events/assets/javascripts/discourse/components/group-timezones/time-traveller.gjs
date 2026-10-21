@@ -3,7 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
-import roundTime from "../../lib/round-time";
+import roundTime from "../../lib/round-time.js";
 
 export default class TimeTraveller extends Component {
   get localTimeWithOffset() {
@@ -37,12 +37,12 @@ export default class TimeTraveller extends Component {
       <span class="discourse-group-timezones-slider-wrapper">
         <input
           class="group-timezones-slider"
-          {{on "input" this.sliderMoved}}
-          step="1"
-          value="0"
-          type="range"
-          min="-48"
           max="48"
+          min="-48"
+          step="1"
+          type="range"
+          value="0"
+          {{on "input" this.sliderMoved}}
         />
       </span>
 

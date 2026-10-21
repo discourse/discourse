@@ -182,9 +182,10 @@ module PageObjects
       end
 
       def toggle_section(id)
-        within(".db-configure__row[data-section-id='#{id}']") do
-          find(".d-toggle-switch__label").click
-        end
+        within(
+          ".db-configure__row[data-section-id='#{id}'], " \
+            ".db-configure__row[data-reorderable-key='#{id}']",
+        ) { find(".d-toggle-switch__label").click }
         self
       end
 
@@ -192,6 +193,48 @@ module PageObjects
         within(".db-configure__row[data-section-id='#{id}']") do
           find(".db-configure__arrow:last-child").click
         end
+        self
+      end
+
+      # Methods for when the enable_new_reordering_controls upcoming change is
+
+      # enabled. move_section_up/down above keep main's arrow-button behaviour.
+
+      #
+
+      # TODO (ui-kit-reorderable-list-cleanup) fold these over them once the change
+
+      # ships.
+
+      def configure_reorderable(id)
+        PageObjects::Components::ReorderableList.new(
+          ".db-configure__row[data-reorderable-key='#{id}']",
+        )
+      end
+
+      def move_section_up_via_list(id)
+        configure_reorderable(id).move(:up)
+
+        self
+      end
+
+      def move_section_down_via_list(id)
+        configure_reorderable(id).move(:down)
+
+        self
+      end
+
+      def drag_section(source_id, target_id)
+        drag_and_drop(
+          source:
+            ".db-configure__row[data-reorderable-key='#{source_id}'] .d-reorderable-list__handle",
+          target: ".db-configure__row[data-reorderable-key='#{target_id}']",
+          target_position: {
+            x: 100,
+            y: 1,
+          },
+        )
+
         self
       end
 

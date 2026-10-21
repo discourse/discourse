@@ -4,8 +4,14 @@ module JsonApiKit
   class Sideloads
     def self.for(relationships, paths:, rows:, request:, schema:)
       new(
-        relationships.map do
-          Sideload.new(it, paths: paths.next_for(it.name), rows:, request:, schema:)
+        relationships.map do |relationship|
+          Sideload.new(
+            relationship,
+            paths: paths.next_for(relationship.name),
+            rows:,
+            request:,
+            schema:,
+          )
         end,
       )
     end

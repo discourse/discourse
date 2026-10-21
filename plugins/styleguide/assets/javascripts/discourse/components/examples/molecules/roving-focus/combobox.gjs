@@ -102,12 +102,12 @@ export default class RovingFocusComboboxExample extends Component {
   <template>
     <div class="roving-demo__combobox">
       <button
-        type="button"
+        aria-controls={{if this.expanded "roving-demo-combobox-listbox"}}
+        aria-expanded={{if this.expanded "true" "false"}}
+        aria-label={{i18n "styleguide.sections.roving_focus.combobox.label"}}
         class="roving-demo__combobox-trigger"
         role="combobox"
-        aria-expanded={{if this.expanded "true" "false"}}
-        aria-controls={{if this.expanded "roving-demo-combobox-listbox"}}
-        aria-label={{i18n "styleguide.sections.roving_focus.combobox.label"}}
+        type="button"
         {{didInsert this.captureController}}
         {{on "click" this.toggle}}
         {{on "keydown" this.handleTriggerKeydown}}
@@ -115,8 +115,8 @@ export default class RovingFocusComboboxExample extends Component {
 
       {{#if this.expanded}}
         <ul
-          id="roving-demo-combobox-listbox"
           class="roving-demo__combobox-listbox"
+          id="roving-demo-combobox-listbox"
           role="listbox"
           {{on "click" this.handleListboxClick}}
           {{! eslint-disable ember/template-no-pointer-down-event-binding }}
@@ -132,10 +132,10 @@ export default class RovingFocusComboboxExample extends Component {
         >
           {{#each this.rows key="id" as |row|}}
             <li
-              class="roving-demo__combobox-option"
-              role="option"
-              data-option-id={{row.id}}
               aria-selected={{row.selected}}
+              class="roving-demo__combobox-option"
+              data-option-id={{row.id}}
+              role="option"
             >
               {{row.label}}
             </li>

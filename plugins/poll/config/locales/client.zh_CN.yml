@@ -127,6 +127,7 @@ zh_CN:
       error_while_fetching_voters: "抱歉，显示投票人时出错。"
       error_while_exporting_results: "抱歉，导出投票结果时出错。"
       ui_builder:
+        edit: 编辑投票
         title: 构建投票
         insert: 插入投票
         help:
@@ -164,6 +165,7 @@ zh_CN:
           label: 允许在发布后添加或删除选项
         poll_title:
           label: 标题（可选）
+          placeholder: 投票标题
         poll_options:
           label: 选项（每行一个）
           add: 添加选项

@@ -14,7 +14,7 @@ export default <template>
     <section class="event__section event-image">
       {{#if @linkToPost}}
         <a href={{getURL @postUrl}} rel="noopener noreferrer">
-          <img src={{@imageUpload.url}} alt={{@alt}} />
+          <img alt={{@alt}} src={{@imageUpload.url}} />
         </a>
       {{else}}
         <a
@@ -22,7 +22,7 @@ export default <template>
           href={{@imageUpload.url}}
           {{setupLightbox post=@post}}
         >
-          <img src={{@imageUpload.url}} alt={{@alt}} />
+          <img alt={{@alt}} src={{@imageUpload.url}} />
         </a>
       {{/if}}
     </section>

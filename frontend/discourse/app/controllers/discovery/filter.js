@@ -5,9 +5,10 @@ import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 
 export default class extends Controller {
   @tracked q = "";
+  @tracked query_label = "";
   @tracked subset = null;
 
-  queryParams = ["q", "subset"];
+  queryParams = ["q", "subset", "query_label"];
   bulkSelectHelper = new BulkSelectHelper(this);
 
   get canBulkSelect() {

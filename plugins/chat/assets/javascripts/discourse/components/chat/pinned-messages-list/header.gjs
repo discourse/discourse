@@ -30,7 +30,7 @@ export default class ChatPinnedMessagesListHeader extends Component {
         />
       {{/if}}
 
-      <navbar.Title @title={{this.title}} @icon="thumbtack" />
+      <navbar.Title @icon="thumbtack" @title={{this.title}} />
 
       <navbar.Actions as |action|>
         <action.ClosePinsButton @channel={{@channel}} />

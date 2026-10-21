@@ -3,8 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import LegacyAiSearchDiscoveries from "../../components/legacy-ai-search-discoveries";
-import LegacyAiSearchDiscoveriesTooltip from "../../components/legacy-ai-search-discoveries-tooltip";
+import LegacyAiSearchDiscoveries from "../../components/legacy-ai-search-discoveries.gjs";
+import LegacyAiSearchDiscoveriesTooltip from "../../components/legacy-ai-search-discoveries-tooltip.gjs";
 
 export default class LegacyAiDiscobotDiscoveries extends Component {
   static shouldRender(args, { siteSettings, currentUser }) {
@@ -32,6 +32,10 @@ export default class LegacyAiDiscobotDiscoveries extends Component {
     this._checkCredits();
   }
 
+  get shouldShow() {
+    return this.creditCheckComplete && this.creditsAvailable;
+  }
+
   async _checkCredits() {
     try {
       this.creditsAvailable =
@@ -40,10 +44,6 @@ export default class LegacyAiDiscobotDiscoveries extends Component {
       this.creditsAvailable = true;
     }
     this.creditCheckComplete = true;
-  }
-
-  get shouldShow() {
-    return this.creditCheckComplete && this.creditsAvailable;
   }
 
   <template>
@@ -61,9 +61,9 @@ export default class LegacyAiDiscobotDiscoveries extends Component {
         {{/if}}
 
         <LegacyAiSearchDiscoveries
-          @searchTerm={{@outletArgs.searchTerm}}
-          @discoveryPreviewLength={{50}}
           @closeSearchMenu={{@outletArgs.closeSearchMenu}}
+          @discoveryPreviewLength={{50}}
+          @searchTerm={{@outletArgs.searchTerm}}
         />
 
         {{#if this.search.results.topics.length}}

@@ -108,16 +108,16 @@ export default class SiteTrafficExplorerFilterPills extends Component {
         {{dOnResize this.updateMaxVisibleValues}}
       >
         <div
+          aria-label={{i18n "admin.site_traffic_explorer.active_filters"}}
           class="site-traffic-explorer__filters"
           role="group"
-          aria-label={{i18n "admin.site_traffic_explorer.active_filters"}}
         >
           {{#each @filters key="key" as |filter|}}
             <span
               class="site-traffic-explorer__filter-pill
                 {{if filter.pending 'is-pending'}}"
-              id={{this.filterId filter}}
               data-test-site-traffic-filter-pill={{filter.key}}
+              id={{this.filterId filter}}
             >
               {{#if (gt filter.values.length 1)}}
                 <DMenu
@@ -156,11 +156,11 @@ export default class SiteTrafficExplorerFilterPills extends Component {
                           data-test-site-traffic-filter-dropdown-value
                         >
                           <DButton
-                            @suffixIcon="xmark"
-                            @translatedLabel={{value.label}}
-                            @translatedAriaLabel={{this.removeValueLabel value}}
-                            @translatedTitle={{this.removeValueLabel value}}
                             @action={{fn this.removeFilterValue filter value}}
+                            @suffixIcon="xmark"
+                            @translatedAriaLabel={{this.removeValueLabel value}}
+                            @translatedLabel={{value.label}}
+                            @translatedTitle={{this.removeValueLabel value}}
                           />
                         </dropdown.item>
                       {{/each}}
@@ -169,8 +169,8 @@ export default class SiteTrafficExplorerFilterPills extends Component {
 
                       <dropdown.item>
                         <DButton
-                          @label="admin.site_traffic_explorer.clear_all"
                           @action={{fn @clearFilter filter.key}}
+                          @label="admin.site_traffic_explorer.clear_all"
                         />
                       </dropdown.item>
                     </DDropdownMenu>
@@ -186,9 +186,9 @@ export default class SiteTrafficExplorerFilterPills extends Component {
               {{/if}}
               <DButton
                 class="btn-flat btn-small site-traffic-explorer__filter-remove"
+                @action={{fn @clearFilter filter.key}}
                 @icon="xmark"
                 @translatedAriaLabel={{this.removeLabel filter}}
-                @action={{fn @clearFilter filter.key}}
               />
             </span>
           {{/each}}
@@ -198,17 +198,17 @@ export default class SiteTrafficExplorerFilterPills extends Component {
           {{#if (gt @filters.length 0)}}
             <DButton
               class="btn-transparent --primary"
-              @label="admin.site_traffic_explorer.clear_all"
               @action={{@clearAllFilters}}
+              @label="admin.site_traffic_explorer.clear_all"
             />
           {{/if}}
 
           {{#if @hasPendingFilters}}
             <DButton
               class="btn-primary site-traffic-explorer__filter-apply"
-              @translatedAriaLabel={{this.applyLabel}}
-              @action={{@applyFilters}}
               data-test-site-traffic-apply-filters
+              @action={{@applyFilters}}
+              @translatedAriaLabel={{this.applyLabel}}
             >
               <span class="d-button-label">{{i18n
                   "admin.site_traffic_explorer.apply"

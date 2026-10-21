@@ -68,8 +68,8 @@ module("Integration | Component | AiToolListEditor", function (hooks) {
     await render(
       <template>
         <AiToolListEditor
-          @tools={{this.tools}}
           @mcpServers={{this.mcpServers}}
+          @tools={{this.tools}}
         />
       </template>
     );

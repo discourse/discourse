@@ -175,7 +175,7 @@ module DiscourseAi
         end
 
         def log_document_conversion_failure(skips, upload, extension, message)
-          record_skip(skips, upload, message)
+          record_upload_skip(skips, upload, message)
 
           Rails.logger.warn(
             "Discourse AI: Failed to convert .#{extension} upload to text " \
@@ -184,7 +184,7 @@ module DiscourseAi
         end
 
         def log_document_upload_skip(skips, upload, extension, message)
-          record_skip(skips, upload, message)
+          record_upload_skip(skips, upload, message)
 
           Rails.logger.warn(
             "Discourse AI: Skipping .#{extension} upload " \

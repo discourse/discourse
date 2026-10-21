@@ -10,7 +10,7 @@ RSpec.describe TopicRetriever do
   end
 
   describe "#retrieve" do
-    context "when host is invalid" do
+    context "when the URL itself is invalid" do
       before { topic_retriever.stubs(:invalid_url?).returns(true) }
 
       it "does not perform_retrieve" do
@@ -57,6 +57,16 @@ RSpec.describe TopicRetriever do
         topic_retriever.expects(:perform_retrieve).never
         topic_retriever.retrieve
       end
+    end
+
+    it "does not fetch an already imported URL alias" do
+      url = "https://example.com/articles/entry?view=full"
+      Fabricate(:embeddable_host, host: "example.com")
+      topic_embed = Fabricate(:topic_embed, embed_url: "https://example.com/articles/entry")
+      topic_embed.topic_embed_aliases.create!(TopicEmbedAlias.key_attributes(url))
+
+      expect { TopicRetriever.new(url, no_throttle: true).retrieve }.not_to change { Topic.count }
+      expect(WebMock).not_to have_requested(:get, url)
     end
 
     it "works with URLs with whitespaces" do

@@ -24,16 +24,35 @@ export default class UserInvitedShowController extends Controller {
   @tracked canLoadMore = true;
   @tracked hasLoadedInitialInvites = false;
   @tracked invitesLoading = false;
+
+  /** @type {string | null} */
   @tracked filter = null;
 
+  /** @type {import("discourse/models/user").default | null} */
   user = null;
+
+  /** @type {import("@ember/object").default & { invites: import("discourse/models/invite").default[], can_see_invite_details: boolean, counts?: { pending: number, redeemed: number, expired: number, total: number }, error?: string } | null | undefined} */
   model = null;
+
+  /** @type {{ pending: number, redeemed: number, expired: number, total: number } | null | undefined} */
   invitesCount = null;
 
   reinvitedAll = false;
   searchTerm = "";
 
   @tracked _canInviteToForumOverride;
+
+  @computed("currentUser.can_invite_to_forum", "user.profile_hidden")
+  get canInviteToForum() {
+    if (this._canInviteToForumOverride !== undefined) {
+      return this._canInviteToForumOverride;
+    }
+    return this.currentUser?.can_invite_to_forum && !this.user?.profile_hidden;
+  }
+
+  set canInviteToForum(value) {
+    this._canInviteToForumOverride = value;
+  }
 
   @dependentKeyCompat
   get inviteRedeemed() {
@@ -48,18 +67,6 @@ export default class UserInvitedShowController extends Controller {
   @dependentKeyCompat
   get invitePending() {
     return this.filter === "pending";
-  }
-
-  @computed("currentUser.can_invite_to_forum", "user.profile_hidden")
-  get canInviteToForum() {
-    if (this._canInviteToForumOverride !== undefined) {
-      return this._canInviteToForumOverride;
-    }
-    return this.currentUser?.can_invite_to_forum && !this.user?.profile_hidden;
-  }
-
-  set canInviteToForum(value) {
-    this._canInviteToForumOverride = value;
   }
 
   @computed("user.id", "currentUser.id")
@@ -85,18 +92,6 @@ export default class UserInvitedShowController extends Controller {
     );
   }
 
-  @observes("searchTerm")
-  searchTermChanged() {
-    this._searchTermChanged();
-  }
-
-  @debounce(INPUT_DELAY)
-  _searchTermChanged() {
-    Invite.findInvitedBy(this.user, this.filter, this.searchTerm).then(
-      (invites) => this.set("model", invites)
-    );
-  }
-
   @computed("model")
   get hasEmailInvites() {
     return this.model.invites.some((invite) => {
@@ -112,6 +107,11 @@ export default class UserInvitedShowController extends Controller {
   @computed("invitesCount", "filter")
   get showSearch() {
     return this.invitesCount[this.filter] > 5;
+  }
+
+  @observes("searchTerm")
+  searchTermChanged() {
+    this._searchTermChanged();
   }
 
   @action
@@ -203,5 +203,12 @@ export default class UserInvitedShowController extends Controller {
         this.hasLoadedInitialInvites = true;
       }
     }
+  }
+
+  @debounce(INPUT_DELAY)
+  _searchTermChanged() {
+    Invite.findInvitedBy(this.user, this.filter, this.searchTerm).then(
+      (invites) => this.set("model", invites)
+    );
   }
 }

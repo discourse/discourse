@@ -3,25 +3,26 @@ import Layout from "discourse/components/discovery/layout";
 import Topics from "discourse/components/discovery/topics";
 
 export default <template>
-  <Layout @model={{@controller.model}} @listClass="--filter --topic-list">
+  <Layout @listClass="--filter --topic-list" @model={{@controller.model}}>
     <:navigation>
       <FilterNavigation
+        @bulkSelectHelper={{@controller.bulkSelectHelper}}
+        @canBulkSelect={{@controller.canBulkSelect}}
+        @queryLabel={{@controller.query_label}}
         @queryString={{@controller.q}}
         @subset={{@controller.subset}}
-        @updateTopicsListQueryParams={{@controller.updateTopicsListQueryParams}}
-        @canBulkSelect={{@controller.canBulkSelect}}
-        @bulkSelectHelper={{@controller.bulkSelectHelper}}
         @tips={{@controller.model.topic_list.filter_option_info}}
+        @updateTopicsListQueryParams={{@controller.updateTopicsListQueryParams}}
       />
     </:navigation>
     <:list>
       <Topics
-        @period={{@controller.period}}
-        @expandAllPinned={{@controller.expandAllPinned}}
-        @expandAllGloballyPinned={{@controller.expandAllGloballyPinned}}
-        @model={{@controller.model}}
-        @canBulkSelect={{@controller.canBulkSelect}}
         @bulkSelectHelper={{@controller.bulkSelectHelper}}
+        @canBulkSelect={{@controller.canBulkSelect}}
+        @expandAllGloballyPinned={{@controller.expandAllGloballyPinned}}
+        @expandAllPinned={{@controller.expandAllPinned}}
+        @model={{@controller.model}}
+        @period={{@controller.period}}
       />
     </:list>
   </Layout>

@@ -38,18 +38,18 @@ module("Integration | ui-kit | DVirtualList | rendering", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{items}}
-          @estimateSize={{estimate}}
           @as="ul"
-          @role="listbox"
+          @estimateSize={{estimate}}
+          @items={{items}}
           @ownedRow={{true}}
+          @role="listbox"
           as |item row|
         >
           {{! eslint-disable ember/template-require-context-role }}
           <li
             class="row"
-            role="option"
             data-index={{row.index}}
+            role="option"
             style="height: 40px"
             {{row.place row.start row.index}}
           >
@@ -108,18 +108,18 @@ module("Integration | ui-kit | DVirtualList | rendering", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{items}}
-          @estimateSize={{estimate}}
           @as="ul"
-          @role="listbox"
+          @estimateSize={{estimate}}
+          @items={{items}}
           @ownedRow={{true}}
+          @role="listbox"
           as |item row|
         >
           {{! eslint-disable ember/template-require-context-role }}
           <li
             class="row"
-            role="option"
             data-index={{row.index}}
+            role="option"
             style="height: 40px"
             {{row.place row.start row.index}}
           >
@@ -156,19 +156,19 @@ module("Integration | ui-kit | DVirtualList | rendering", function (hooks) {
     await render(
       <template>
         <DVirtualList
-          @items={{items}}
-          @estimateSize={{estimate}}
-          @as="ul"
-          @role="listbox"
-          @ownedRow={{true}}
           id="my-listbox"
+          @as="ul"
+          @estimateSize={{estimate}}
+          @items={{items}}
+          @ownedRow={{true}}
+          @role="listbox"
           as |item row|
         >
 
           <li
             class="row"
-            role="option"
             data-index={{row.index}}
+            role="option"
             {{row.place row.start row.index}}
           >
             {{item.text}}
@@ -202,7 +202,7 @@ module("Integration | ui-kit | DVirtualList | rendering", function (hooks) {
   test("leaves the viewport's tab behaviour to the browser by default", async function (assert) {
     await render(
       <template>
-        <DVirtualList @items={{items}} @estimateSize={{estimate}} as |item|>
+        <DVirtualList @estimateSize={{estimate}} @items={{items}} as |item|>
           {{item.text}}
         </DVirtualList>
       </template>
@@ -220,8 +220,8 @@ module("Integration | ui-kit | DVirtualList | rendering", function (hooks) {
     await render(
       <template>
         <DVirtualList
-          @items={{items}}
           @estimateSize={{estimate}}
+          @items={{items}}
           @viewportTabbable={{false}}
           as |item|
         >

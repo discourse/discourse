@@ -312,7 +312,6 @@ fr:
       zh_CN:
         name: Chinois simplifié
     share:
-      topic_html: 'Sujet : <span class="topic-title">%{topicTitle}</span>'
       post: "publication #%{postNumber} par @%{username}"
       close: "fermer"
       twitter: "Partager sur X"
@@ -367,6 +366,12 @@ fr:
     skip_to_last_reply: "Passer à la dernière réponse"
     skip_to_top: "Retour en haut de page"
     skip_user_nav: "Passer au contenu du profil"
+    reorder:
+      remove: "Supprimer %{label}"
+      removed: "Suppression de %{label}"
+      move_up: "Déplacer vers le haut"
+      move_down: "Déplacer vers le bas"
+      position: "%{position} sur %{total}"
     emails_are_disabled: "L'e-mail sortant a été désactivé par un administrateur. Aucune notification par e-mail ne sera envoyée."
     emails_are_disabled_no_smtp: "Tous les e-mails sortants sont désactivés, car aucun serveur SMTP n'a été configuré. Aucun e-mail d'aucune sorte ne peut être envoyé."
     emails_are_disabled_non_staff: "L'envoi d'e-mail est désactivé pour les utilisateurs ne faisant pas partie des responsables."
@@ -376,6 +381,7 @@ fr:
     notifications_tracking:
       tooltip: "Niveau de notification : %{level}"
     back_button: "Retour"
+    confirm_button: "Confirmer"
     welcome_banner:
       header:
         new_members: "Bienvenue, %{preferred_display_name}!"
@@ -504,9 +510,6 @@ fr:
     max_of_count:
       one: "maximum sur %{count}"
       other: "maximum sur %{count}"
-    character_count:
-      one: "%{count} caractère"
-      other: "%{count} caractères"
     period_chooser:
       aria_label: "Filtrer par période"
     related_messages:
@@ -536,18 +539,9 @@ fr:
         use_predefined: "Parcourir les modèles"
         back: "Retour"
         icebreakers:
-          fun_facts:
-            title: "Avez-vous des faits amusants à partager à votre sujet ?"
-            body: "Bonjour tout le monde ! C'est un plaisir de créer cette nouvelle communauté. Pour commencer, partageons une anecdote amusante à propos de nous. Je vais commencer : j'adore faire de la randonnée et explorer de nouveaux sentiers ! Et vous, quelle est votre particularité ?"
-          coolest_thing_you_have_seen_today:
-            title: "Quelle est la chose la plus cool que vous ayez vue aujourd'hui ?"
-            body: "Quelle est la chose la plus incroyable que vous ayez vue ou vécue aujourd'hui ? Ça peut être n'importe quoi, d'un magnifique coucher de soleil à un geste de gentillesse spontané. Je commence : j'ai vu un chien aider une personne âgée à traverser la rue !"
           introduce_yourself:
             title: "Présentez-vous"
             body: "Bienvenue dans la communauté ! Faisons connaissance. Présentez-vous et parlez-nous un peu de vos centres d'intérêt. Je commence : j'ai une passion pour la technologie et j'adore partager mes connaissances !"
-          what_is_your_favorite_food:
-            title: "Quel est votre plat préféré ?"
-            body: "Partagez vos plats préférés avec la communauté ! Je commence : j'adore la pizza, surtout avec un supplément de fromage et de pepperoni."
     design_wizard:
       title: "Personnalisez votre site"
       back: "Retour"
@@ -826,6 +820,10 @@ fr:
       title:
         search: "Rechercher un message"
         placeholder: "saisissez ici l'intitulé du sujet, son URL ou son ID"
+    dsa_statements:
+      category: "Catégorie"
+      category_prompt: "Choisir une catégorie"
+      saving: "Enregistrement…"
     review:
       show_more: "Afficher plus"
       show_less: "Afficher moins"
@@ -1083,6 +1081,9 @@ fr:
         note_added: "Note du modérateur"
         note_added_by: "Note du modérateur par %{username} · %{relativeDate}"
         no_events: "Aucun événement de la chronologie à afficher"
+      author_penalty:
+        toast:
+          undo: "Annuler"
       notes:
         add_note_description: "Ajoutez une note pour fournir plus de contexte aux autres modérateurs."
         add_note_button: "Ajouter une note"
@@ -1743,7 +1744,6 @@ fr:
       admin: "%{user} a le rôle d'administrateur(rice)"
       moderator_tooltip: "Cet utilisateur a le rôle de modérateur(rice)"
       admin_tooltip: "Cet utilisateur a le rôle d'administrateur(rice)"
-      silenced_tooltip: "Cet utilisateur est mis en sourdine"
       suspended_notice: "L'utilisateur est suspendu jusqu'au %{date}."
       suspended_permanently: "Cet utilisateur est suspendu."
       suspended_reason: "Raison : "
@@ -1802,6 +1802,16 @@ fr:
       tracked_topics_link: "Afficher"
       automatically_unpin_topics: "Désépingler automatiquement les sujets quand j'atteins la fin de la liste"
       apps: "Applications"
+      mcp_authorizations:
+        endpoint: "Ressource"
+        scopes: "Permissions"
+        details: "Détails"
+        last_used: "Dernière utilisation"
+        never: "Jamais"
+        status: "Statut"
+        statuses:
+          active: "Actif"
+          revoked: "Révoquée"
       revoke_access: "Révoquer l'accès"
       undo_revoke_access: "Annuler la révocation d'accès"
       api_approved: "Approuvé :"
@@ -2097,7 +2107,6 @@ fr:
         upload_title: "Envoyer votre photo"
         image_is_not_a_square: "Attention : nous avons découpé votre image. La largeur et la hauteur n'étaient pas égales."
         logo_small: "Logo du site en petit format. Sera utilisé par défaut."
-        use_custom: "Ou téléversez un avatar personnalisé :"
       change_profile_background:
         title: "Arrière-plan du profil"
         instructions: "Les arrière-plans du profil seront centrés avec une largeur par défaut de 1110 pixels."
@@ -2700,7 +2709,7 @@ fr:
       hide_forever: "non merci"
       hidden_for_session: "Très bien, nous vous le demanderons demain. Vous pouvez aussi utiliser le bouton « Se connecter » pour vous créer un compte."
       intro: "Bonjour ! Vous semblez apprécier la discussion, mais n'avez pas encore créé de compte."
-      value_prop: "Vous en avez assez de faire défiler les mêmes messages ? En créant un compte, vous pourrez toujours revenir là où vous en étiez. Avec un compte, vous pouvez aussi recevoir des notifications de nouvelles réponses, enregistrer des signets et utiliser des cœurs pour remercier les autres utilisateurs. Nous pouvons travailler ensemble pour rendre cette communauté formidable. :heart:"
+      value_prop: "Vous en avez assez de faire défiler les mêmes messages ? En créant un compte, vous pourrez toujours revenir là où vous en étiez. Avec un compte, vous pouvez aussi recevoir des notifications de nouvelles réponses, enregistrer des signets et utiliser des cœurs pour remercier les autres utilisateurs. Nous pouvons travailler ensemble pour rendre cette communauté formidable."
     offline_indicator:
       no_internet: "Aucune connexion à Internet."
       refresh_page: "Actualiser la page"
@@ -2810,9 +2819,9 @@ fr:
       signup_instructions: "Saisissez votre adresse e-mail pour rejoindre cette communauté. Nous vous enverrons un code de confirmation et vous pourrez ensuite commencer !"
       user_fields_title: "Presque terminé"
       user_fields_instructions: "Encore quelques détails pour finaliser la création de votre compte."
-      account_ready_title: "Votre compte est prêt ! 🎉"
-      account_ready_edit: "Choisissez votre nom d'utilisateur et votre avatar."
       account_ready_continue: "Continuer"
+      pending_approval_title: "Votre compte est en attente d'approbation."
+      pending_approval_instructions: "Un membre de notre équipe doit approuver votre compte avant que vous puissiez vous connecter. Nous vous enverrons un courriel une fois votre compte approuvé."
       username_label: "Nom d'utilisateur"
       username_placeholder: "Choisissez un nom d'utilisateur"
       change_avatar: "Changer d'avatar"
@@ -3261,8 +3270,7 @@ fr:
       cancel_edit: "Annuler la modification"
       draft_saved: "Brouillon enregistré !"
       users_placeholder: "Ajouter des utilisateurs ou des groupes"
-      title_placeholder: "Pouvez-vous résumer le sujet en une courte phrase ?"
-      title_placeholder_redesign: "Titre"
+      title_placeholder: "Titre"
       title_or_link_placeholder: "Saisissez un titre ou copiez un lien ici"
       edit_reason_placeholder: "Quelle est la raison de la modification ?"
       topic_featured_link_placeholder: "Saisissez le lien à afficher avec le titre."
@@ -3280,8 +3288,6 @@ fr:
       show_preview: "afficher l'aperçu"
       hide_preview: "masquer l'aperçu"
       resize: "Redimensionner le panneau d'édition"
-      switch_to_markdown: "Passer à l'éditeur Markdown standard (%{keyboardShortcut})"
-      switch_to_rich_text: "Passer au nouvel éditeur de texte enrichi (%{keyboardShortcut})"
       quote_post_title: "Citer le message en entier"
       bold_label: "G"
       bold_title: "Gras"
@@ -3433,6 +3439,8 @@ fr:
         visit: "Ouvrir le lien"
         remove_preview: "Supprimer l'aperçu"
         link_copied: "Lien copié !"
+      table:
+        default_heading: "Colonne %{number}"
       unsupported_token: "L'éditeur de texte enrichi ne prend pas en charge toutes les fonctionnalités utilisées dans cette publication. Vous allez passer à l'éditeur Markdown."
     notifications:
       tooltip:
@@ -4989,6 +4997,7 @@ fr:
       list: "Répertorier les catégories"
       no_description: "Veuillez ajouter une description pour cette catégorie."
       change_in_category_topic: "Modifier la description"
+      latest_topics: "Sujets récents"
       description_updated: "Description mise à jour"
       description_expand: "Afficher plus"
       description_collapse: "Afficher moins"
@@ -5286,6 +5295,7 @@ fr:
       with_category: "Sujets %{filter} sur %{category}"
       filter:
         title: "Résultats filtrés pour %{filter}"
+        reset: "rétablir"
         button:
           label: "Filtrer"
       latest:
@@ -5517,9 +5527,6 @@ fr:
         search_open: "Ouvrir la recherche pour l'interface d'administration"
         search_full_page: "Ouvrir la recherche d'administration en pleine page"
     badges:
-      earned_n_times:
-        one: "A reçu ce badge %{count} fois"
-        other: "A reçu ce badge %{count} fois"
       granted_on: "Attribué le %{date}"
       others_count:
         one: "Accordé aux autres %{count} fois"
@@ -5554,16 +5561,18 @@ fr:
       favorite_max_not_reached: "Faire de ce badge un de mes préférés"
       favorite_count: "%{count} badge(s) sur %{max} préféré(s)"
     download_calendar:
-      title: "Télécharger le calendrier"
+      title: "Ajouter au calendrier"
+      calendar: "Calendrier"
       save_ics: "Télécharger le fichier .ics"
       save_google: "Ajouter à Google Agenda"
       remember: "Ne plus me le proposer"
-      remember_explanation: "(vous pouvez changer ce réglage dans vos préférences utilisateur)"
       download: "Télécharger"
       default_calendar: "Calendrier par défaut"
       default_calendar_instruction: "Définir le calendrier à utiliser lorsqu'une date est enregistrée"
       add_to_calendar: "Ajouter au calendrier"
       google: "Google Agenda"
+      outlook: "Microsoft Outlook"
+      apple: "Calendrier d'Apple"
       ics: "ICS"
       default_title: "Événement programmé"
     tagging:
@@ -6026,63 +6035,6 @@ fr:
           other: "La saisie doit être supérieure à %{count}."
         pattern_mismatch: "Veuillez respecter le format demandé."
         bad_input: "Veuillez saisir une entrée valide."
-    table_builder:
-      title: "Éditeur de tableaux"
-      modal:
-        title: "Éditeur de tableaux"
-        create: "Créer un tableau"
-        help:
-          title: "Utiliser l'éditeur de tableaux"
-          enter_key: "Entrée"
-          tab_key: "Tabulation"
-          new_row: "à la fin d'une ligne pour en insérer une nouvelle."
-          new_col: "à la fin d'une colonne pour en insérer une nouvelle."
-          options: "Clic droit sur une cellule pour afficher des options contextuelles."
-        confirm_close: "Voulez-vous vraiment fermer le générateur de tableaux ? Toutes les modifications non enregistrées seront perdues."
-      edit:
-        btn_edit: "Modifier le tableau"
-        modal:
-          title: "Modifier le tableau"
-          cancel: "annuler"
-          create: "Enregistrer"
-          reason: "Quelle est la raison de la modification ?"
-          trigger_reason: "Ajouter la raison de la modification"
-        default_edit_reason: "Modifier avec l'éditeur de tableaux"
-      default_header:
-        col_1: "Colonne 1"
-        col_2: "Colonne 2"
-        col_3: "Colonne 3"
-        col_4: "Colonne 4"
-      spreadsheet:
-        no_records_found: "Aucun enregistrement trouvé"
-        show: "Afficher"
-        entries: "entrées"
-        about: "À propos"
-        prompts:
-          delete_selected_rows: "Voulez-vous vraiment supprimer les lignes sélectionnées ?"
-          delete_selected_cols: "Voulez-vous vraiment supprimer les colonnes sélectionnées ?"
-          will_destroy_merged_cells: "Cette action détruira toutes les cellules fusionnées existantes. Voulez-vous continuer ?"
-          will_clear_search_results: "Cette action détruira toutes les cellules fusionnées existantes. Voulez-vous continuer ?"
-          conflicts_with_merged_cells: "Il y a un conflit avec une autre cellule fusionnée"
-        invalid_merge_props: "Propriétés fusionnées invalides"
-        cells_already_merged: "Cellule déjà fusionnée"
-        no_cells_selected: "Aucune cellule sélectionnée"
-        context_menu:
-          row:
-            before: "Insérer une nouvelle ligne avant"
-            after: "Insérer une nouvelle ligne après"
-            delete: "Supprimer les lignes sélectionnées"
-          col:
-            before: "Insérer une nouvelle colonne avant"
-            after: "Insérer une nouvelle colonne après"
-            delete: "Supprimer les colonnes sélectionnées"
-            rename: "Renommer cette colonne"
-          order:
-            ascending: "Ordre croissant"
-            descending: "Ordre décroissant"
-          copy: "Copier..."
-          paste: "Coller..."
-          save: "Enregistrer sous..."
     powered_by_discourse: "Alimenté par Discourse"
     safari_15_warning: "Votre navigateur sera bientôt incompatible avec cette communauté. Pour continuer à participer, veuillez mettre à jour votre navigateur ou <a href='%{url}'>cliquez ici pour en savoir plus</a>."
     filter:
@@ -6299,6 +6251,79 @@ fr:
         developer:
           title: "Développeur"
           header_description: "Paramètres des développeurs permettant de contrôler le mode sans échec et d'autres fonctionnalités avancées"
+        mcp:
+          title: "Serveur MCP"
+          tabs:
+            access: "Accès"
+            activity: "Activité"
+          overview:
+            status: "Statut"
+            tools: "Outils"
+          access:
+            title: "Accès"
+            group: "Groupe"
+            groups: "Groupes"
+            actions: "Actions"
+            edit: "Modifier"
+            delete: "Supprimer"
+          primitives:
+            group_by: "Grouper par"
+            group_by_options:
+              scope: "Portée"
+              provider: "Fournisseur"
+              kind: "Type"
+            provider: "Fournisseur"
+            kind: "Type"
+            scope: "Portée"
+            state: "État"
+            scopes: "Permissions"
+          clients:
+            actions: "Actions"
+            block: "Bloquer"
+            use_preset: "Configurer"
+            presets:
+              custom: "Personnalisé"
+            automatic: "Automatique"
+          authorizations:
+            user: "Utilisateur"
+            scopes: "Portées accordées"
+            last_used: "Dernière utilisation"
+            status: "Statut"
+            actions: "Actions"
+          activity:
+            outcome: "Résultat"
+            time: "Heure"
+            user: "Utilisateur"
+            duration: "Durée "
+          values:
+            server_status:
+              available: "Disponible"
+              disabled: "Désactivées"
+            client_trust:
+              approved: "Approuvé"
+            authorization_status:
+              active: "Actif"
+              revoked: "Révoquée"
+            activity_outcome:
+              success: "Succès"
+              error: "Erreur"
+            primitive_state:
+              enabled: "Activées"
+              disabled: "Désactivées"
+              unavailable: "Indisponible"
+            primitive_kind:
+              all: "Tous les types"
+              tool: "Outil"
+              resource: "Ressource"
+              prompt: "Instruction"
+            primitive_risk:
+              read: "Lecture seule"
+              moderation: "Modération"
+            filter:
+              all: "Tout"
+          never: "Jamais"
+          actions:
+            revoke: "Révoquer"
         experimental:
           title: "Expérimental"
           header_description: "Activez ou désactivez les fonctionnalités expérimentales de votre site. La plupart d'entre elles peuvent être contrôlées par groupe."
@@ -7078,6 +7103,7 @@ fr:
             embedded: "Pages vues intégrées"
             crawlers: "Robots d'indexation"
           see_details: "Voir les détails"
+          crawler_learn_more: "En savoir plus…"
         period:
           last_7_days: "Ces 7 derniers jours"
           last_30_days: "30 derniers jours"
@@ -8028,8 +8054,8 @@ fr:
           upload: "Envoyer"
           select_component: "Sélectionnez un composant…"
           unsaved_changes_alert: "Vous n'avez pas encore enregistré vos modifications, souhaitez-vous les abandonner et passer à autre chose ?"
-          unsaved_parent_themes: "Vous n'avez assigné le composant à aucun thème, voulez-vous continuer ?"
           discard: "Abandonner"
+          leave: "Quitter"
           stay: "Rester"
           css_html: "Code personnalisé"
           edit_css_html: "Modifier le code"
@@ -9183,13 +9209,14 @@ fr:
           multiselect: "Sélection multiple"
       site_text:
         description: "Vous pouvez personnaliser n'importe quel texte de votre forum."
-        search: "Recherchez le texte que vous souhaitez modifier"
+        search_label: "Recherche"
+        theme_disabled: "Désactivées"
+        filters: "Filtres"
+        status:
+          invalid: "Invalide"
         title: "Textes du site"
         edit: "Modifier"
-        revert: "Annuler les modifications"
         revert_confirm: "Voulez-vous vraiment annuler vos modifications ?"
-        go_back: "Retour à la recherche"
-        recommended: "Nous vous recommandons de personnaliser le texte suivant selon vos besoins :"
         show_overriden: "Afficher uniquement les textes modifiés"
         show_outdated: "Afficher uniquement les données périmées/invalides"
         show_untranslated: "Afficher uniquement les versions non traduites"

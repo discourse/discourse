@@ -1,0 +1,119 @@
+# frozen_string_literal: true
+
+module JsonApiKit
+  class Glossary
+    class Correction < StandardError
+      attr_reader :name
+
+      def initialize(name)
+        @name = name
+        super("Use #{name}.")
+      end
+    end
+
+    class NotAMemberName < BadParameter
+      attr_reader :raw, :member
+
+      def initialize(raw, member, parameter: nil)
+        @raw = raw
+        @member = member
+        super("Use #{member}, not #{raw}.", parameter:)
+      end
+
+      def title = "Invalid member name"
+
+      private
+
+      def arguments = [raw, member]
+    end
+
+    class BadValue < BadParameter
+      def initialize(names, parameter: nil)
+        @names = names
+        super("This version cannot convert the value of #{names.join(", ")}.", parameter:)
+      end
+
+      def title = "Invalid value"
+
+      private
+
+      attr_reader :names
+
+      def arguments = [names]
+    end
+
+    def self.kit = new([CasingRule])
+
+    def initialize(rules)
+      @rules = rules
+      @declared_names = {}
+      @member_names = {}
+    end
+
+    def declared_attributes(attributes)
+      attributes.each_key { declared_names(it) }
+      rules
+        .each_with_index
+        .reduce(attributes) do |result, (rule, index)|
+          rule.declared_attributes(result)
+        rescue VersionChange::Converter::Failure => failure
+          raise BadValue.new(member_names_before(failure.names, index))
+        end
+    end
+
+    def declared_name(name) = declared_names(name).sole
+
+    def declared_names(name)
+      @declared_names[name] ||= declare_names(name, rules)
+    rescue Correction => correction
+      raise NotAMemberName.new(name, member_name(correction.name))
+    end
+
+    def member_name(name)
+      member_names[name] ||= rules
+        .reverse_each
+        .reduce(name) { |result, rule| rule.member_name(result) }
+    end
+
+    def member_type(type) = member_name(Name::Type.new(value: type)).value
+
+    def declared_relationship(member:, type:)
+      declared_name(Name::Relationship.new(value: member, type: member_type(type))).value
+    end
+
+    def member_relationship(declared:, type:)
+      member_name(Name::Relationship.new(value: declared, type:)).value
+    end
+
+    def unscoped_member(declared:)
+      member_name(Name::Member.new(value: declared)).value
+    end
+
+    def member_attributes(attributes)
+      rules.reverse_each.reduce(attributes) { |result, rule| rule.member_attributes(result) }
+    end
+
+    private
+
+    attr_reader :rules, :member_names
+
+    def member_names_before(names, rule_index)
+      rules
+        .take(rule_index)
+        .reverse_each
+        .reduce(names) { |result, rule| result.map { rule.member_name(it) } }
+    end
+
+    def declare_names(name, remaining_rules)
+      remaining_rules
+        .each_with_index
+        .reduce([name]) do |names, (rule, index)|
+          names.flat_map { rule.declared_names(it) }.uniq
+        rescue Correction => correction
+          raise Correction.new(
+                  declare_names(correction.name, remaining_rules.drop(index + 1)).first,
+                )
+        end
+    end
+  end
+end

@@ -5,23 +5,13 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import getURL from "discourse/lib/get-url";
 import { excerpt } from "discourse/lib/text";
-import { colorToHex, contrastColor, stringToColor } from "../lib/colors";
-import FullCalendar from "./full-calendar";
+import { colorToHex, contrastColor, stringToColor } from "../lib/colors.js";
+import FullCalendar from "./full-calendar.gjs";
 
 export default class PostCalendar extends Component {
   @service siteSettings;
   @service capabilities;
   @service postCalendar;
-
-  @action
-  registerPostCalendar() {
-    this.postCalendar.registerComponent(this);
-  }
-
-  @action
-  teardownPostCalendar() {
-    this.postCalendar.teardownComponent();
-  }
 
   get isStatic() {
     return this.args.options.calendarType === "static";
@@ -29,19 +19,6 @@ export default class PostCalendar extends Component {
 
   get isFullDay() {
     return this.args.options.calendarFullDay === "true";
-  }
-
-  @action
-  loadEvents() {
-    const events = [];
-
-    if (this.isStatic) {
-      events.push(...(this.args.staticEvents ?? []));
-    } else {
-      events.push(...(this.dynamicEvents ?? []));
-    }
-
-    return events;
   }
 
   get dynamicEvents() {
@@ -113,6 +90,39 @@ export default class PostCalendar extends Component {
         events.push(event);
       });
     });
+
+    return events;
+  }
+
+  get leftHeaderToolbar() {
+    return this.capabilities.viewport.sm
+      ? "prev,next today"
+      : "prev,next title";
+  }
+
+  get centerHeaderToolbar() {
+    return this.capabilities.viewport.sm ? "title" : "";
+  }
+
+  @action
+  registerPostCalendar() {
+    this.postCalendar.registerComponent(this);
+  }
+
+  @action
+  teardownPostCalendar() {
+    this.postCalendar.teardownComponent();
+  }
+
+  @action
+  loadEvents() {
+    const events = [];
+
+    if (this.isStatic) {
+      events.push(...(this.args.staticEvents ?? []));
+    } else {
+      events.push(...(this.dynamicEvents ?? []));
+    }
 
     return events;
   }
@@ -273,29 +283,19 @@ export default class PostCalendar extends Component {
     return event;
   }
 
-  get leftHeaderToolbar() {
-    return this.capabilities.viewport.sm
-      ? "prev,next today"
-      : "prev,next title";
-  }
-
-  get centerHeaderToolbar() {
-    return this.capabilities.viewport.sm ? "title" : "";
-  }
-
   <template>
     <div
+      class="post-calendar"
       {{didInsert this.registerPostCalendar}}
       {{willDestroy this.teardownPostCalendar}}
-      class="post-calendar"
     >
       <FullCalendar
-        @leftHeaderToolbar={{this.leftHeaderToolbar}}
         @centerHeaderToolbar={{this.centerHeaderToolbar}}
-        @rightHeaderToolbar="timeGridDay,timeGridWeek,dayGridMonth,listYear"
-        @onLoadEvents={{this.loadEvents}}
         @height={{@height}}
+        @leftHeaderToolbar={{this.leftHeaderToolbar}}
+        @onLoadEvents={{this.loadEvents}}
         @refreshKey={{@post.id}}
+        @rightHeaderToolbar="timeGridDay,timeGridWeek,dayGridMonth,listYear"
       />
     </div>
   </template>

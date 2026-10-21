@@ -40,8 +40,24 @@ module DiscourseAi
       return 1
     LUA
 
-    class RequestConflict < StandardError
-    end
+    # Tag and user names follow their own configurable rules, so they are only
+    # held to being one token: that is what keeps a scope from adding filters.
+    # a tag page within a category scopes to both, as "category:12 tag:a+b"
+    SCOPE_PATTERN =
+      /\A(?:messages|topic:\d{1,12}|category:\d{1,12}|tag:\S{1,100}|user:\S{1,60}|category:\d{1,12} tag:\S{1,100})\z/
+
+    # what set off an Ask AI request and why, recorded so the choice of when to
+    # answer can be tuned against what readers do with the answers
+    TRIGGERS = %w[enter pause page scope recent].freeze
+    TRIGGER_REASON_PATTERN = /\A[a-z_:]{0,60}\z/
+    SEARCH_TABS = %w[ask topics context].freeze
+    # leaving the answer this soon means it was not what the reader came for
+    QUICK_SWITCH_MS = 10_000
+    PREFERENCE_ASKS = 10
+    PREFERENCE_MIN_ASKS = 4
+
+    MAX_QUERY_LENGTH = 1000
+    ASK_RATE_LIMIT = 8
 
     class << self
       def enabled_for_user?(user)
@@ -53,12 +69,9 @@ module DiscourseAi
         return false if !SiteSetting.discourse_ai_enabled || !SiteSetting.ai_ask_ai_enabled
         return false if !user.in_any_groups?(SiteSetting.ai_ask_ai_allowed_groups_map)
         return false if Guardian.new(user).is_silenced?
-        return false if !retrieval_configured?
 
         agent = discover_agent
-        if agent.nil? || !agent.enabled? || !user.in_any_groups?(agent.allowed_group_ids.to_a)
-          return false
-        end
+        return false if agent.nil? || !user.in_any_groups?(agent.allowed_group_ids.to_a)
 
         llm_model_id = agent.default_llm_id.presence || SiteSetting.ai_default_llm_model
         llm_model_id.present? && LlmModel.exists?(id: llm_model_id)
@@ -66,6 +79,19 @@ module DiscourseAi
 
       def valid_request_id?(request_id)
         request_id.to_s.match?(REQUEST_ID_PATTERN)
+      end
+
+      # A scope is where the question was asked from. It narrows retrieval
+      # without being part of the question, so the question can still be
+      # rewritten and searched semantically.
+      def valid_scope?(scope)
+        scope.to_s.match?(SCOPE_PATTERN)
+      end
+
+      def scope_filter(scope)
+        return if scope.blank? || !valid_scope?(scope)
+
+        scope.to_s.split(" ").map { |part| scope_part_filter(part) }.join(" ")
       end
 
       def private_message_query?(query)
@@ -105,11 +131,104 @@ module DiscourseAi
         "discourse-ai:discoveries:recent-asks:2:#{user_id}"
       end
 
-      def result_settings
+      def combined_search_for?(user)
+        UpcomingChanges.enabled_for_user?(:enable_ai_combined_search, user)
+      end
+
+      def result_settings(user = nil)
         {
           summary_detail: SiteSetting.ai_ask_ai_summary_detail.to_sym,
-          related_count: SiteSetting.ai_ask_ai_related_count,
+          # the combined search lists its related topics compactly, so it can show the most
+          related_count:
+            (
+              if combined_search_for?(user)
+                MAX_RELATED_DISCUSSIONS
+              else
+                SiteSetting.ai_ask_ai_related_count
+              end
+            ),
         }
+      end
+
+      # Whether the reader's recent asks show them leaving the answer for the
+      # results, unless they have lately been coming back to it. A habit moves
+      # slowly, so it is worked out at most every few minutes.
+      def prefers_results?(user)
+        Discourse
+          .cache
+          .fetch("discourse-ai:discoveries:prefers-results:#{user.id}", expires_in: 5.minutes) do
+            leaves_answers?(user)
+          end
+      end
+
+      # Queues the answer to a request already bound with `bind_request`.
+      # @return [AskAiLog] the new ask's log
+      def enqueue_reply(
+        user:,
+        request_id:,
+        query:,
+        scope: nil,
+        trigger: "",
+        trigger_reason: "",
+        intent_heuristic: ""
+      )
+        asked_at = Time.current
+        ask_log =
+          AskAiLog.create!(
+            user:,
+            query:,
+            asked_at:,
+            ask_trigger: trigger,
+            ask_trigger_reason: trigger_reason,
+            ask_intent_heuristic: intent_heuristic,
+          )
+        settings = result_settings(user)
+        Jobs.enqueue(
+          :stream_discover_reply,
+          user_id: user.id,
+          query:,
+          request_id:,
+          ask_ai_log_id: ask_log.id,
+          queued_at: asked_at.to_f,
+          summary_detail: settings[:summary_detail].to_s,
+          related_count: settings[:related_count],
+          scope:,
+        )
+        ask_log
+      rescue StandardError
+        ask_log&.update!(ask_outcome: :failed)
+        raise
+      end
+
+      # Records which tab the search menu opened an ask on, and the first one the
+      # reader switched to. Each is kept from its first report only.
+      def record_tabs(
+        user:,
+        ask_log_id:,
+        opened: nil,
+        opened_reason: "",
+        switched_to: nil,
+        switched_after_ms: 0
+      )
+        ask_log = AskAiLog.find_by(id: ask_log_id, user_id: user.id)
+        raise Discourse::NotFound if ask_log.nil?
+
+        updates = {}
+        if opened.present? && ask_log.ask_tab_opened.blank?
+          raise Discourse::InvalidParameters.new(:tab_opened) if SEARCH_TABS.exclude?(opened)
+          opened_reason = "" if !opened_reason.to_s.match?(TRIGGER_REASON_PATTERN)
+          updates.merge!(ask_tab_opened: opened, ask_tab_opened_reason: opened_reason.to_s)
+        end
+        if switched_to.present? && ask_log.ask_tab_switched_to.blank?
+          if SEARCH_TABS.exclude?(switched_to)
+            raise Discourse::InvalidParameters.new(:tab_switched_to)
+          end
+          updates.merge!(
+            ask_tab_switched_to: switched_to,
+            ask_tab_switched_after_ms: switched_after_ms.to_i.clamp(0, 1.hour.in_milliseconds),
+          )
+        end
+        ask_log.update!(updates) if updates.present?
       end
 
       def bind_request(user_id:, request_id:, query:)
@@ -126,8 +245,9 @@ module DiscourseAi
 
         return :created if result == 1
         return :existing if result == 0
+        # the id was already used for another query
+        return :conflict if result == -1
 
-        raise RequestConflict if result == -1
         raise "Unexpected Discoveries request binding result: #{result.inspect}"
       end
 
@@ -219,6 +339,48 @@ module DiscourseAi
 
       private
 
+      def leaves_answers?(user)
+        opened_on_answer =
+          AskAiLog
+            .where(user_id: user.id, ask_tab_opened: "ask")
+            .order(asked_at: :desc)
+            .limit(PREFERENCE_ASKS)
+            .pluck(:ask_tab_switched_to, :ask_tab_switched_after_ms)
+        return false if opened_on_answer.size < PREFERENCE_MIN_ASKS
+
+        left =
+          opened_on_answer.count do |switched_to, after_ms|
+            switched_to.present? && after_ms < QUICK_SWITCH_MS
+          end
+        return false if left * 2 <= opened_on_answer.size
+
+        returned =
+          AskAiLog
+            .where(user_id: user.id)
+            .where.not(ask_tab_opened: ["", "ask"])
+            .order(asked_at: :desc)
+            .limit(PREFERENCE_ASKS)
+            .pluck(:ask_tab_switched_to)
+            .count("ask")
+        returned < 2
+      end
+
+      def scope_part_filter(part)
+        type, value = part.split(":", 2)
+        case type
+        when "messages"
+          "in:messages"
+        when "topic"
+          "topic:#{value}"
+        when "category"
+          "category:#{value}"
+        when "tag"
+          "tags:#{value}"
+        when "user"
+          "user:#{value}"
+        end
+      end
+
       def discover_agent
         AiAgent.find_by_id_from_cache(SiteSetting.ai_ask_ai_agent)
       end
@@ -241,10 +403,6 @@ module DiscourseAi
 
       def work_token(user_id, request_id)
         "#{user_id}:#{request_id.downcase}"
-      end
-
-      def retrieval_configured?
-        SiteSetting.ai_embeddings_enabled && SiteSetting.ai_embeddings_semantic_search_enabled
       end
     end
   end

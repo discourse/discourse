@@ -42,7 +42,6 @@ he:
         description: "לתייג נושאים אוטומטית באמצעות בינה מלאכותית"
   site_settings:
     discourse_ai_enabled: "הפעלת תוסף הבינה המלאכותית של Discourse."
-    ai_default_llm_model: "מודל ה־LLM/מש״ג כברירת מחדל לשימוש ליכולות בינה מלאכותית"
     ai_artifact_security: "מערכת התוצרים של הבינה המלאכותית מייצרת חלוניות (IFRAME) עם קוד שניתן להריץ. מצב נוקשה מאלץ לחיצה נוספת כדי להריץ קוד. מצב Lax מריץ קוד ישירות. מצב משולב מאפשר למשתמש לספק data-ai-artifact-autorun שיופיע מיידית. מצב מושבת משבית את מערכת התוצרים."
     ai_toxicity_enabled: "הפעלת מודול הרעילות."
     ai_toxicity_inference_service_api_endpoint: "הכתובת בה נמצא ה־API הפעיל עבור מודול הרעילות"
@@ -90,7 +89,6 @@ he:
     ai_pm_summarization_allowed_groups: "קבוצות שמורשות ליצור ולצפות בתקצירים בהודעות פרטיות."
     ai_summary_gists_enabled: "יצירת תקצירים של התגובות האחרונות בנושאים אוטומטית"
     ai_bot_enabled: "הפעלת מודול בוט הבינה המלאכותית."
-    ai_bot_allowed_groups: "כאשר לבוט של GPT יש גישה להודעות הפרטיות, הוא יגיב לחברים בקבוצות האלה."
     ai_bot_debugging_allowed_groups: "לאפשר לקבוצות האלו לצפות בכפתור ניפוי שיאות שמציג את בקשת ותגובה הבינה המלאכותית באופן גולמי"
     ai_bot_public_sharing_allowed_groups: "לאפשר לקבוצות האלה לשתף הודעות אישיות של בינה למאכותית עם הציבור באמצעות קישור ייחודי גלוי לציבור. הערה: אם האתר שלך דורש כניסה, גם שיתופים ידרשו כניסה."
     ai_bot_add_to_header: "הצגת כפתור בכותרת כדי לפתוח הודעה פרטית עם בוט בינה מלאכותית"
@@ -270,10 +268,53 @@ he:
       configuration_missing: "הגדרות זיהוי ספאם עם בינה מלאכותית חסרות. יש להוסיף הגדרות דרך ‚ניהול > תוספים > בינה מלאכותית ב־Dicsourse > ספאם’ לפני הפעלת האפשרות הזאת."
       logging_subject: "זיהוי זבל"
     ai_bot:
+      navigation:
+        settings:
+          title: "הגדרות האתר"
+        users:
+          title: "משתמשים"
+        groups:
+          title: "קבוצות"
+        review:
+          title: "תור סקירה"
+        categories:
+          title: "קטגוריות"
+        tags:
+          title: "תגיות"
+        themes:
+          title: "תמות"
+        authentication:
+          title: "כניסה ואימות"
+        backups:
+          title: "גיבויים"
       reply_error: "נראה שהמערכת שלך נתקלה בקשיים לא צפויים בעת הניסיון להשיב, עמך הסליחה.\n\n[details='פרטי השגיאה']\n%{details}\n[/details]"
       default_pm_prefix: "[הודעה פרטית של בינה מלאכותית ללא כותרת]"
       read_post:
         unknown_post: "פרסום"
+      chat_tool_approval:
+        topic_states:
+          open: "פתוח"
+          closed: "סגור"
+          active: "פעיל"
+          deleted: "נמחק"
+        solution_post: "פוסט מס׳ %{number}"
+        duration_label: "משך:"
+        user_duration:
+          one: "יום"
+          two: "יומיים"
+          other: "%{count} יום"
+        post_states:
+          locked: "נעול"
+        posts_label: "פרסומים"
+        category_label: "קטגוריה"
+        category_fields:
+          name: "שם"
+          description: "תיאור"
+          color: "צבע"
+          text_color: "צבע הטקסט"
+        approve_label: "כן"
+        reject_label: "לא"
+        empty_value: "ריק"
       agents:
         cannot_have_duplicate_tools: "לא יכולים להיות כלים כפולים"
         github_helper:
@@ -564,6 +605,7 @@ he:
         reject:
           title: "לדחות"
     summarization:
+      published_summary_heading: "סיכום מבוסס בינה מלאכותית"
       configuration_hint:
         one: "יש להגדיר את ההגדרה `%{setting}` תחילה."
         two: "יש להגדיר את ההגדרות האלו תחילה: %{settings}."

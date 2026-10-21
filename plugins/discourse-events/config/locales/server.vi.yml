@@ -13,7 +13,12 @@ vi:
     currently_away:
       labels:
         username: Tên tài khoản
+  system_messages:
+    discourse_post_event_reminder:
+      title: "Nhắc nhở sự kiện"
   discourse_events:
+    reminder:
+      guest: "- %{name}"
     category_type:
       default_calendar_view:
         day: "Ngày"

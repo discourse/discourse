@@ -30,12 +30,12 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
-          @axis="vertical"
-          @value={{size}}
-          @min={{min}}
-          @max={{max}}
-          @label="Resize the thing"
           class="my-handle"
+          @axis="vertical"
+          @label="Resize the thing"
+          @max={{max}}
+          @min={{min}}
+          @value={{size}}
         />
       </template>
     );
@@ -65,12 +65,12 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
-          @axis="vertical"
-          @value={{size}}
-          @min={{100}}
-          @max={{500}}
-          @label="Resize the thing"
           class="my-handle"
+          @axis="vertical"
+          @label="Resize the thing"
+          @max={{500}}
+          @min={{100}}
+          @value={{size}}
         />
       </template>
     );
@@ -96,12 +96,12 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
-          @axis="horizontal"
-          @value={{size}}
-          @min={{100}}
-          @max={{500}}
-          @label="Resize the panel"
           class="my-handle"
+          @axis="horizontal"
+          @label="Resize the panel"
+          @max={{500}}
+          @min={{100}}
+          @value={{size}}
         />
       </template>
     );
@@ -122,12 +122,12 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
-          @axis="horizontal"
-          @value={{size}}
-          @min={{0}}
-          @max={{800}}
-          @label="Resize the panel"
           class="my-handle"
+          @axis="horizontal"
+          @label="Resize the panel"
+          @max={{800}}
+          @min={{0}}
+          @value={{size}}
         />
       </template>
     );
@@ -146,12 +146,12 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
-          @axis="vertical"
-          @value={{unmeasured}}
-          @min={{100}}
-          @max={{500}}
-          @label="Resize the thing"
           class="my-handle"
+          @axis="vertical"
+          @label="Resize the thing"
+          @max={{500}}
+          @min={{100}}
+          @value={{unmeasured}}
         />
       </template>
     );
@@ -175,15 +175,15 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
+          class="my-handle"
           @axis="vertical"
-          @side="end"
-          @value={{size}}
-          @min={{100}}
-          @max={{500}}
           @label="Resize the thing"
+          @max={{500}}
+          @min={{100}}
           @onResize={{onResize}}
           @onResizeEnd={{onResizeEnd}}
-          class="my-handle"
+          @side="end"
+          @value={{size}}
         />
       </template>
     );
@@ -233,12 +233,12 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
-          @axis="vertical"
-          @value={{size}}
-          @min={{100}}
-          @max={{500}}
-          @label="Resize the thing"
           class="my-handle"
+          @axis="vertical"
+          @label="Resize the thing"
+          @max={{500}}
+          @min={{100}}
+          @value={{size}}
         ><span class="my-grip">grip</span></DResizeSeparator>
       </template>
     );
@@ -258,14 +258,14 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
+          class="my-handle"
           @axis="vertical"
+          @label="Resize the thing"
+          @max={{500}}
+          @min={{100}}
+          @onResize={{onResize}}
           @side="end"
           @value={{size}}
-          @min={{100}}
-          @max={{500}}
-          @label="Resize the thing"
-          @onResize={{onResize}}
-          class="my-handle"
         />
       </template>
     );
@@ -304,12 +304,12 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
-          @axis="vertical"
-          @value={{size}}
-          @min={{100}}
-          @max={{500}}
-          @label="Resize the thing"
           class="my-handle"
+          @axis="vertical"
+          @label="Resize the thing"
+          @max={{500}}
+          @min={{100}}
+          @value={{size}}
         />
       </template>
     );
@@ -344,12 +344,12 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
-          @axis="horizontal"
-          @value={{size}}
-          @min={{100}}
-          @max={{500}}
-          @label="Resize the panel"
           class="my-handle"
+          @axis="horizontal"
+          @label="Resize the panel"
+          @max={{500}}
+          @min={{100}}
+          @value={{size}}
         />
       </template>
     );
@@ -377,14 +377,14 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
+          class="my-handle"
           @axis="vertical"
+          @label="Resize the thing"
+          @max={{500}}
+          @min={{100}}
+          @onResize={{onResize}}
           @side="end"
           @value={{size}}
-          @min={{100}}
-          @max={{500}}
-          @label="Resize the thing"
-          @onResize={{onResize}}
-          class="my-handle"
         />
       </template>
     );
@@ -416,14 +416,14 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
+          class="my-handle"
           @axis="vertical"
+          @label="Resize the thing"
+          @max={{500}}
+          @min={{100}}
+          @onResize={{onResize}}
           @side="end"
           @value={{size}}
-          @min={{100}}
-          @max={{500}}
-          @label="Resize the thing"
-          @onResize={{onResize}}
-          class="my-handle"
         />
       </template>
     );
@@ -455,13 +455,13 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
       <template>
         <div class="the-box" style="height: 300px">
           <DResizeSeparator
-            @axis="vertical"
-            @value={{size}}
-            @min={{100}}
-            @max={{500}}
-            @label="Resize the thing"
-            @measure={{resolve}}
             class="my-handle"
+            @axis="vertical"
+            @label="Resize the thing"
+            @max={{500}}
+            @measure={{resolve}}
+            @min={{100}}
+            @value={{size}}
           />
         </div>
       </template>
@@ -481,19 +481,17 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
   });
 
   test("a plain value is announced as it changes, without waiting for a gesture", async function (assert) {
-    const state = new (class {
-      @tracked ceiling = 400;
-    })();
+    const ceiling = tracked(400);
 
     await render(
       <template>
         <DResizeSeparator
-          @axis="vertical"
-          @value={{120}}
-          @min={{0}}
-          @max={{state.ceiling}}
-          @label="Resize the thing"
           class="my-handle"
+          @axis="vertical"
+          @label="Resize the thing"
+          @max={{ceiling.value}}
+          @min={{0}}
+          @value={{120}}
         />
       </template>
     );
@@ -503,7 +501,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     // A number given directly is already reactive, so it is read straight through
     // rather than mirrored: snapshotting it would freeze it until something else
     // happened to trigger a re-read.
-    state.ceiling = 900;
+    ceiling.value = 900;
     await settled();
 
     assert.dom(".my-handle").hasAttribute("aria-valuemax", "900");
@@ -517,12 +515,12 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
-          @axis="vertical"
-          @value={{size}}
-          @min={{100}}
-          @max={{max}}
-          @label="Resize the thing"
           class="my-handle"
+          @axis="vertical"
+          @label="Resize the thing"
+          @max={{max}}
+          @min={{100}}
+          @value={{size}}
         />
       </template>
     );
@@ -539,22 +537,20 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
   });
 
   test("starts observing a box that only exists after the first render", async function (assert) {
-    const state = new (class {
-      @tracked target = null;
-    })();
+    const target = tracked(null);
     const size = () => find(".late-box")?.clientHeight ?? null;
 
     await render(
       <template>
         <div class="late-box" style="height: 200px"></div>
         <DResizeSeparator
-          @axis="vertical"
-          @value={{size}}
-          @min={{100}}
-          @max={{500}}
-          @label="Resize the thing"
-          @measure={{state.target}}
           class="my-handle"
+          @axis="vertical"
+          @label="Resize the thing"
+          @max={{500}}
+          @measure={{target.value}}
+          @min={{100}}
+          @value={{size}}
         />
       </template>
     );
@@ -565,7 +561,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     assert.dom(".my-handle").hasAttribute("aria-valuenow", "200");
 
     // A consumer that builds its own box after render hands it over once it exists.
-    state.target = find(".late-box");
+    target.value = find(".late-box");
     await settled();
 
     find(".late-box").style.height = "340px";
@@ -584,15 +580,15 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
+          class="my-handle"
           @axis="vertical"
-          @side="end"
-          @value={{unmeasured}}
-          @min={{100}}
-          @max={{500}}
           @label="Resize the thing"
+          @max={{500}}
+          @min={{100}}
           @onResize={{record}}
           @onResizeEnd={{record}}
-          class="my-handle"
+          @side="end"
+          @value={{unmeasured}}
         />
       </template>
     );
@@ -625,14 +621,14 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
+          class="my-handle"
           @axis="vertical"
-          @value={{unmeasured}}
-          @min={{100}}
-          @max={{500}}
           @label="Resize the thing"
+          @max={{500}}
+          @min={{100}}
           @onResize={{record}}
           @onResizeEnd={{record}}
-          class="my-handle"
+          @value={{unmeasured}}
         />
       </template>
     );
@@ -662,16 +658,16 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
+          class="my-handle"
           @axis="vertical"
-          @side="end"
-          @value={{size}}
-          @min={{100}}
-          @max={{500}}
           @label="Resize the thing"
-          @onResizeStart={{onResizeStart}}
+          @max={{500}}
+          @min={{100}}
           @onResize={{onResize}}
           @onResizeEnd={{onResizeEnd}}
-          class="my-handle"
+          @onResizeStart={{onResizeStart}}
+          @side="end"
+          @value={{size}}
         />
       </template>
     );
@@ -723,14 +719,14 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
           {{didInsert this.registerBox}}
         ></div>
         <DResizeSeparator
+          class="my-handle"
           @axis="vertical"
+          @label="Resize the thing"
+          @max={{500}}
+          @min={{100}}
+          @onResize={{this.onResize}}
           @side="end"
           @value={{this.measure}}
-          @min={{100}}
-          @max={{500}}
-          @label="Resize the thing"
-          @onResize={{this.onResize}}
-          class="my-handle"
         />
       </template>
     }
@@ -765,12 +761,12 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
-          @axis="vertical"
-          @value={{500}}
-          @min={{100}}
-          @max={{shrinkingMax}}
-          @label="Resize the thing"
           class="my-handle"
+          @axis="vertical"
+          @label="Resize the thing"
+          @max={{shrinkingMax}}
+          @min={{100}}
+          @value={{500}}
         />
       </template>
     );
@@ -800,13 +796,13 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
             style="height: 300px; min-height: 100px; max-height: 500px"
           ></div>
           <DResizeSeparator
+            class="my-handle"
             @axis="vertical"
-            @side="end"
-            @measure={{findBox}}
             @label="Resize the thing"
+            @measure={{findBox}}
             @onResize={{preview}}
             @onResizeEnd={{commit}}
-            class="my-handle"
+            @side="end"
           />
         </div>
       </template>
@@ -853,14 +849,14 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
         <div class="fixture">
           <div class="box" style="height: 300px; min-height: 100px"></div>
           <DResizeSeparator
+            class="my-handle"
             @axis="vertical"
-            @side="end"
-            @measure={{findBox}}
-            @max={{900}}
             @label="Resize the thing"
+            @max={{900}}
+            @measure={{findBox}}
             @onResize={{apply}}
             @onResizeEnd={{commit}}
-            class="my-handle"
+            @side="end"
           />
         </div>
       </template>
@@ -905,15 +901,15 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
             style="height: 300px; min-height: 20px; max-height: 700px"
           ></div>
           <DResizeSeparator
-            @axis="vertical"
-            @side="end"
-            @measure={{findBox}}
-            @value={{size}}
-            @min={{0}}
-            @max={{800}}
-            @label="Resize the thing"
-            @onResizeEnd={{record}}
             class="my-handle"
+            @axis="vertical"
+            @label="Resize the thing"
+            @max={{800}}
+            @measure={{findBox}}
+            @min={{0}}
+            @onResizeEnd={{record}}
+            @side="end"
+            @value={{size}}
           />
         </div>
       </template>
@@ -955,10 +951,10 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
               height: 300px; min-height: 111px; max-height: 999px"
           ></div>
           <DResizeSeparator
-            @axis="horizontal"
-            @measure={{findBox}}
-            @label="Resize the panel"
             class="my-handle"
+            @axis="horizontal"
+            @label="Resize the panel"
+            @measure={{findBox}}
           />
         </div>
       </template>
@@ -987,10 +983,10 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
         <div class="fixture">
           <div class="box" style="width: 220px; height: 300px"></div>
           <DResizeSeparator
-            @axis="horizontal"
-            @measure={{findBox}}
-            @label="Resize the panel"
             class="my-handle"
+            @axis="horizontal"
+            @label="Resize the panel"
+            @measure={{findBox}}
           />
         </div>
       </template>
@@ -1019,10 +1015,10 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
             to a plausible number, so only checking the unit catches it. }}
           <div class="box" style="height: 300px; min-height: 50%"></div>
           <DResizeSeparator
-            @axis="vertical"
-            @measure={{findBox}}
-            @label="Resize the thing"
             class="my-handle"
+            @axis="vertical"
+            @label="Resize the thing"
+            @measure={{findBox}}
           />
         </div>
       </template>
@@ -1051,10 +1047,10 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
         <div class="fixture">
           <div class="box" style="width: 220px; height: 300px"></div>
           <DResizeSeparator
-            @axis="horizontal"
-            @measure={{findBox}}
-            @label="Resize the panel"
             class="my-handle"
+            @axis="horizontal"
+            @label="Resize the panel"
+            @measure={{findBox}}
           />
         </div>
       </template>
@@ -1077,14 +1073,14 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
+          class="my-handle"
           @axis="vertical"
+          @label="Resize the thing"
+          @max={{500}}
+          @min={{100}}
+          @onResizeEnd={{record}}
           @side="end"
           @value={{size}}
-          @min={{100}}
-          @max={{500}}
-          @label="Resize the thing"
-          @onResizeEnd={{record}}
-          class="my-handle"
         />
       </template>
     );
@@ -1116,14 +1112,14 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
     await render(
       <template>
         <DResizeSeparator
+          class="my-handle"
           @axis="vertical"
+          @label="Resize the thing"
+          @max={{500}}
+          @min={{100}}
+          @onResizeEnd={{record}}
           @side="end"
           @value={{size}}
-          @min={{100}}
-          @max={{500}}
-          @label="Resize the thing"
-          @onResizeEnd={{record}}
-          class="my-handle"
         />
       </template>
     );

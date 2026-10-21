@@ -59,10 +59,10 @@ module("Integration | ui-kit | DShortcut", function (hooks) {
 
     await render(
       <template>
-        <DShortcut @keys="mod+k" class="gated" />
-        <DShortcut @keys="mod+k" @always={{true}} class="documented" />
+        <DShortcut class="gated" @keys="mod+k" />
+        <DShortcut class="documented" @always={{true}} @keys="mod+k" />
         <DShortcut @keys="mod+enter" as |shortcut|>
-          <button type="button" aria-keyshortcuts={{shortcut.aria}}>
+          <button aria-keyshortcuts={{shortcut.aria}} type="button">
             Save
             <shortcut.Kbd />
           </button>
@@ -89,9 +89,9 @@ module("Integration | ui-kit | DShortcut", function (hooks) {
       <template>
         <DShortcut @keys="mod+enter" as |shortcut|>
           <button
-            type="button"
             aria-keyshortcuts={{shortcut.aria}}
             data-label={{shortcut.label}}
+            type="button"
           >
             Save
             <shortcut.Kbd class="inside" />
@@ -116,7 +116,7 @@ module("Integration | ui-kit | DShortcut", function (hooks) {
     await render(
       <template>
         <DShortcut as |shortcut|>
-          <button type="button" aria-keyshortcuts={{shortcut.aria}}>
+          <button aria-keyshortcuts={{shortcut.aria}} type="button">
             Save
             <shortcut.Kbd />
           </button>

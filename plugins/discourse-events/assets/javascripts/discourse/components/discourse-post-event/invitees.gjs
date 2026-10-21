@@ -4,22 +4,11 @@ import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import PostEventInvitees from "../modal/post-event-invitees";
-import Invitee from "./invitee";
+import PostEventInvitees from "../modal/post-event-invitees/index.gjs";
+import Invitee from "./invitee.gjs";
 
 export default class DiscoursePostEventInvitees extends Component {
   @service modal;
-
-  @action
-  showInvitees() {
-    this.modal.show(PostEventInvitees, {
-      model: {
-        event: this.args.event,
-        title: this.args.event.title,
-        extraClass: this.args.event.extraClass,
-      },
-    });
-  }
 
   get hasAttendees() {
     return this.args.event.stats.going > 0;
@@ -32,6 +21,18 @@ export default class DiscoursePostEventInvitees extends Component {
   get inviteesTitle() {
     return i18n("discourse_post_event.models.invitee.status.going_count", {
       count: this.args.event.stats.going,
+    });
+  }
+
+  @action
+  showInvitees() {
+    this.modal.show(PostEventInvitees, {
+      model: {
+        event: this.args.event,
+        isRecurring: Boolean(this.args.event.recurrence),
+        title: this.args.event.title,
+        extraClass: this.args.event.extraClass,
+      },
     });
   }
 

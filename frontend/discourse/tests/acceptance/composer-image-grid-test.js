@@ -92,6 +92,96 @@ and a second group of images
     );
   });
 
+  test("Grid button counts only images in the same block", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    await fillIn(
+      ".d-editor-input",
+      `- ![outer|10x10](upload://outer.png)\n  - ![nested|20x20](upload://nested.png)`
+    );
+
+    assert
+      .dom(".wrap-image-grid-button")
+      .doesNotExist("a nested list item is a block of its own");
+
+    await fillIn(
+      ".d-editor-input",
+      `- ![first|10x10](upload://first.png) ![second|20x20](upload://second.png)`
+    );
+
+    assert
+      .dom(".wrap-image-grid-button")
+      .hasAttribute("data-image-count", "2", "two images share the list item");
+
+    await fillIn(
+      ".d-editor-input",
+      `- ![outer|10x10](upload://outer.png)\n  # ![heading|20x20](upload://heading.png)`
+    );
+
+    assert
+      .dom(".wrap-image-grid-button")
+      .doesNotExist("a heading is a block of its own");
+
+    await fillIn(
+      ".d-editor-input",
+      `# ![first|10x10](upload://first.png) ![second|20x20](upload://second.png)`
+    );
+
+    assert
+      .dom(".wrap-image-grid-button")
+      .hasAttribute("data-image-count", "2", "two images share the heading");
+
+    await fillIn(
+      ".d-editor-input",
+      `- ![outer|10x10](upload://outer.png)\n  # Heading\n  ![after|20x20](upload://after.png)`
+    );
+
+    assert
+      .dom(".wrap-image-grid-button")
+      .doesNotExist("a heading in between ends the run");
+
+    await fillIn(
+      ".d-editor-input",
+      `- ![first|10x10](upload://first.png) ![second|20x20](upload://second.png)\n  # Heading\n  ![after|20x20](upload://after.png)`
+    );
+
+    assert
+      .dom(".wrap-image-grid-button")
+      .hasAttribute("data-image-count", "2", "the run stops at the heading");
+
+    await fillIn(
+      ".d-editor-input",
+      `- ![first|10x10](upload://first.png) <span>\n  # ![inner|20x20](upload://inner.png)\n  </span> ![last|30x30](upload://last.png)`
+    );
+
+    assert
+      .dom(".wrap-image-grid-button")
+      .doesNotExist("an inline wrapper holding a block ends the run");
+
+    await fillIn(
+      ".d-editor-input",
+      `- <!-- a comment -->\n  ![first|10x10](upload://first.png) ![second|20x20](upload://second.png)`
+    );
+
+    assert
+      .dom(".wrap-image-grid-button")
+      .hasAttribute("data-image-count", "2", "a comment does not open a block");
+
+    await fillIn(
+      ".d-editor-input",
+      `![first|10x10](upload://first.png)<script>![gone|20x20](upload://gone.png)</script>![last|30x30](upload://last.png)`
+    );
+
+    assert
+      .dom(".wrap-image-grid-button")
+      .hasAttribute(
+        "data-image-count",
+        "3",
+        "the count follows the markdown, not the sanitized preview"
+      );
+  });
+
   test("Image Grid Preview", async function (assert) {
     await visit("/");
 

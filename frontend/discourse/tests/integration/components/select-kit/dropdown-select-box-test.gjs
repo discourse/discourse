@@ -41,7 +41,7 @@ module(
 
       await render(
         <template>
-          <DropdownSelectBox @value={{this.value}} @content={{this.content}} />
+          <DropdownSelectBox @content={{this.content}} @value={{this.value}} />
         </template>
       );
 
@@ -65,13 +65,13 @@ module(
       await render(
         <template>
           <DropdownSelectBox
-            @value={{this.value}}
             @content={{this.content}}
             @options={{hash
               icon="xmark"
               showFullTitle=this.showFullTitle
               none=this.none
             }}
+            @value={{this.value}}
           />
         </template>
       );
@@ -95,9 +95,9 @@ module(
       await render(
         <template>
           <DropdownSelectBox
-            @value={{this.value}}
             @content={{this.content}}
             @options={{hash showFullTitle=this.showFullTitle}}
+            @value={{this.value}}
           />
         </template>
       );

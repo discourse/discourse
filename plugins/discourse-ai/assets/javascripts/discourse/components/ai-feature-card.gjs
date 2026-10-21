@@ -60,8 +60,8 @@ class ExpandableList extends Component {
     {{#if this.hasMore}}
       <DButton
         class="btn-flat ai-expanded-list__toggle-button"
-        @translatedLabel={{this.expandToggleLabel}}
         @action={{this.toggleExpanded}}
+        @translatedLabel={{this.expandToggleLabel}}
       />
     {{/if}}
   </template>
@@ -115,9 +115,9 @@ export default class AiFeatureCard extends Component {
               as |agent index isLastItem|
             >
               <LinkTo
-                @route="adminPlugins.show.discourse-ai-agents.edit"
-                @model={{agent.id}}
                 class="ai-feature-card__agent-link"
+                @model={{agent.id}}
+                @route="adminPlugins.show.discourse-ai-agents.edit"
               >
                 {{concat agent.name (unless (isLastItem index) ", ")}}
               </LinkTo>
@@ -142,9 +142,9 @@ export default class AiFeatureCard extends Component {
               as |llm index isLastItem|
             >
               <LinkTo
-                @route="adminPlugins.show.discourse-ai-llms.edit"
-                @model={{llm.id}}
                 class="ai-feature-card__llm-link"
+                @model={{llm.id}}
+                @route="adminPlugins.show.discourse-ai-llms.edit"
               >
                 {{concat llm.name (unless (isLastItem index) ", ")}}
               </LinkTo>
@@ -166,9 +166,9 @@ export default class AiFeatureCard extends Component {
                   {{#each (this.groupList @feature) as |group|}}
                     <li>
                       <GroupLink
-                        @name={{group.name}}
-                        @href={{groupPath group.name}}
                         class="mention-group"
+                        @href={{groupPath group.name}}
+                        @name={{group.name}}
                       >
                         {{group.name}}
                       </GroupLink>

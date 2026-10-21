@@ -73,9 +73,9 @@ module(
       await render(
         <template>
           <VariableInput
-            @value=""
             @onChange={{onChange}}
             @onSetup={{onSetup}}
+            @value=""
           />
         </template>
       );

@@ -23,7 +23,7 @@ export default class ComposerVideoThumbnailUppy {
   }
 
   get uploading() {
-    this._uppyUpload.uploading;
+    return this._uppyUpload.uploading;
   }
 
   generateVideoThumbnail(videoFile, uploadUrl, callback) {

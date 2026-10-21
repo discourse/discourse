@@ -114,7 +114,11 @@ export default class ChatMessageActionsDesktop extends Component {
   }
 
   get shouldRenderFavoriteReactions() {
-    return this.size === FULL && this.message.channel?.isFollowing;
+    return (
+      this.size === FULL &&
+      this.message.channel?.isFollowing &&
+      this.messageInteractor.canReact
+    );
   }
 
   // A bookmark's reminder makes a useful name once one is set, but the button needs one
@@ -148,17 +152,15 @@ export default class ChatMessageActionsDesktop extends Component {
   <template>
     {{#if (and this.site.desktopView @message.persisted)}}
       <div
-        {{didInsert this.setSize}}
         class={{dConcatClass
           "chat-message-actions-container"
           (concat "is-size-" this.size)
         }}
         data-id={{this.message.id}}
+        {{didInsert this.setSize}}
       >
         <div
-          role="toolbar"
           aria-label={{i18n "chat.message_actions"}}
-          {{this.rovingToolbar this.size}}
           class={{dConcatClass
             "chat-message-actions"
             (unless
@@ -166,6 +168,8 @@ export default class ChatMessageActionsDesktop extends Component {
               "has-no-secondary-actions"
             )
           }}
+          role="toolbar"
+          {{this.rovingToolbar this.size}}
         >
           {{#if this.shouldRenderFavoriteReactions}}
             {{#each
@@ -173,31 +177,31 @@ export default class ChatMessageActionsDesktop extends Component {
               as |reaction|
             }}
               <ChatMessageReaction
-                @reaction={{reaction}}
-                @onReaction={{this.messageInteractor.react}}
-                @message={{this.message}}
-                @showCount={{false}}
                 @disableTooltip={{true}}
+                @message={{this.message}}
+                @onReaction={{this.messageInteractor.react}}
+                @reaction={{reaction}}
+                @showCount={{false}}
               />
             {{/each}}
           {{/if}}
 
-          {{#if this.messageInteractor.canInteractWithMessage}}
+          {{#if this.messageInteractor.canReact}}
             <DButton
+              class="btn-flat react-btn"
               @action={{this.openEmojiPicker}}
               @forwardEvent={{true}}
               @icon="discourse-emojis"
               @title="chat.react"
-              class="btn-flat react-btn"
             />
           {{/if}}
 
           {{#if this.messageInteractor.canBookmark}}
             <DButton
-              @action={{this.messageInteractor.toggleBookmark}}
               class="btn-flat bookmark-btn"
-              @translatedTitle={{this.bookmarkLabel}}
+              @action={{this.messageInteractor.toggleBookmark}}
               @translatedAriaLabel={{this.bookmarkLabel}}
+              @translatedTitle={{this.bookmarkLabel}}
             >
               <BookmarkIcon @bookmark={{this.message.bookmark}} />
             </DButton>
@@ -205,10 +209,10 @@ export default class ChatMessageActionsDesktop extends Component {
 
           {{#if this.messageInteractor.canReply}}
             <DButton
+              class="btn-flat reply-btn"
               @action={{this.messageInteractor.reply}}
               @icon="reply"
               @title="chat.reply"
-              class="btn-flat reply-btn"
             />
           {{/if}}
 
@@ -219,6 +223,9 @@ export default class ChatMessageActionsDesktop extends Component {
             )
           }}
             <DropdownSelectBox
+              class="more-buttons secondary-actions more-actions-chat"
+              @content={{this.messageInteractor.secondaryActions}}
+              @onChange={{this.messageInteractor.handleSecondaryActions}}
               @options={{hash
                 icon="ellipsis-vertical"
                 placement="left"
@@ -226,9 +233,6 @@ export default class ChatMessageActionsDesktop extends Component {
                 btnCustomClasses="btn-flat"
                 headerAriaLabel=(i18n "chat.more_message_actions")
               }}
-              @content={{this.messageInteractor.secondaryActions}}
-              @onChange={{this.messageInteractor.handleSecondaryActions}}
-              class="more-buttons secondary-actions more-actions-chat"
             />
           {{/if}}
         </div>

@@ -45,6 +45,10 @@ ar:
           rsvp_to_event_with_link: "أكِّد حضورك <a href='%{url}'>للحدث</a> لبدء الدردشة"
           rsvp_body: "تواصل مع الحضور الآخرين قبل الحدث وأثنائه وبعده."
       preferences:
+        reminders:
+          preferences:
+            notification: "الإشعارات"
+            none: "لا يوجد"
         all_events_description: "جميع أحداث المنتدى"
         my_events_description: "الأحداث التي ستحضرها أو المهتم بها"
       on_holiday: "في عطلة"
@@ -390,6 +394,7 @@ ar:
         filter_placeholder: "تصفية المستخدمين"
         remove_invitee: "إزالة المدعو من القائمة"
         add_invitee: "إضافة مدعو إلى القائمة"
+        this_event: "هذا الحدث"
       bulk_invite_modal:
         confirm: "تأكيد"
         text: "تحميل ملف CSV"

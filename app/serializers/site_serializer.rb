@@ -22,6 +22,7 @@ class SiteSerializer < ApplicationSerializer
     :post_action_types,
     :topic_flag_types,
     :can_create_tag,
+    :can_search,
     :can_tag_topics,
     :can_tag_pms,
     :tags_filter_regexp,
@@ -235,7 +236,13 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def homepage_options
-    DiscoursePluginRegistry.homepage_options.map { |option| option.slice(:id, :path, :server_side) }
+    DiscoursePluginRegistry.homepage_options.map do |option|
+      {
+        id: option[:id],
+        path: HomepageHelper.option_path(option, scope),
+        server_side: option[:server_side],
+      }
+    end
   end
 
   def periods
@@ -260,6 +267,10 @@ class SiteSerializer < ApplicationSerializer
 
   def can_create_tag
     scope.can_create_tag?
+  end
+
+  def can_search
+    scope.can_search?
   end
 
   def can_tag_topics

@@ -1,159 +1,159 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import AlertExample from "../../examples/atoms/forms/alert";
+import AlertExample from "../../examples/atoms/forms/alert.gjs";
 import alertSource from "../../examples/atoms/forms/alert?source=file";
-import CheckboxGroupExample from "../../examples/atoms/forms/checkbox-group";
+import CheckboxGroupExample from "../../examples/atoms/forms/checkbox-group.gjs";
 import checkboxGroupSource from "../../examples/atoms/forms/checkbox-group?source=file";
-import CodeExample from "../../examples/atoms/forms/code";
+import CodeExample from "../../examples/atoms/forms/code.gjs";
 import codeSource from "../../examples/atoms/forms/code?source=file";
-import CollectionExample from "../../examples/atoms/forms/collection";
+import CollectionExample from "../../examples/atoms/forms/collection.gjs";
 import collectionSource from "../../examples/atoms/forms/collection?source=file";
-import ColorExample from "../../examples/atoms/forms/color";
+import ColorExample from "../../examples/atoms/forms/color.gjs";
 import colorSource from "../../examples/atoms/forms/color?source=file";
-import ColorNamedExample from "../../examples/atoms/forms/color-named";
+import ColorNamedExample from "../../examples/atoms/forms/color-named.gjs";
 import colorNamedSource from "../../examples/atoms/forms/color-named?source=file";
-import ColorPrefixHexExample from "../../examples/atoms/forms/color-prefix-hex";
+import ColorPrefixHexExample from "../../examples/atoms/forms/color-prefix-hex.gjs";
 import colorPrefixHexSource from "../../examples/atoms/forms/color-prefix-hex?source=file";
-import ColorSwatchesExample from "../../examples/atoms/forms/color-swatches";
+import ColorSwatchesExample from "../../examples/atoms/forms/color-swatches.gjs";
 import colorSwatchesSource from "../../examples/atoms/forms/color-swatches?source=file";
-import ComposerExample from "../../examples/atoms/forms/composer";
+import ComposerExample from "../../examples/atoms/forms/composer.gjs";
 import composerSource from "../../examples/atoms/forms/composer?source=file";
-import IconExample from "../../examples/atoms/forms/icon";
+import IconExample from "../../examples/atoms/forms/icon.gjs";
 import iconSource from "../../examples/atoms/forms/icon?source=file";
-import ImageExample from "../../examples/atoms/forms/image";
+import ImageExample from "../../examples/atoms/forms/image.gjs";
 import imageSource from "../../examples/atoms/forms/image?source=file";
-import InputExample from "../../examples/atoms/forms/input";
+import InputExample from "../../examples/atoms/forms/input.gjs";
 import inputSource from "../../examples/atoms/forms/input?source=file";
-import InputGroupExample from "../../examples/atoms/forms/input-group";
+import InputGroupExample from "../../examples/atoms/forms/input-group.gjs";
 import inputGroupSource from "../../examples/atoms/forms/input-group?source=file";
-import MenuExample from "../../examples/atoms/forms/menu";
+import MenuExample from "../../examples/atoms/forms/menu.gjs";
 import menuSource from "../../examples/atoms/forms/menu?source=file";
-import MultilineExample from "../../examples/atoms/forms/multiline";
+import MultilineExample from "../../examples/atoms/forms/multiline.gjs";
 import multilineSource from "../../examples/atoms/forms/multiline?source=file";
-import QuestionExample from "../../examples/atoms/forms/question";
+import QuestionExample from "../../examples/atoms/forms/question.gjs";
 import questionSource from "../../examples/atoms/forms/question?source=file";
-import RadioGroupExample from "../../examples/atoms/forms/radio-group";
+import RadioGroupExample from "../../examples/atoms/forms/radio-group.gjs";
 import radioGroupSource from "../../examples/atoms/forms/radio-group?source=file";
-import RowColExample from "../../examples/atoms/forms/row-col";
+import RowColExample from "../../examples/atoms/forms/row-col.gjs";
 import rowColSource from "../../examples/atoms/forms/row-col?source=file";
-import SectionExample from "../../examples/atoms/forms/section";
+import SectionExample from "../../examples/atoms/forms/section.gjs";
 import sectionSource from "../../examples/atoms/forms/section?source=file";
-import SelectExample from "../../examples/atoms/forms/select";
+import SelectExample from "../../examples/atoms/forms/select.gjs";
 import selectSource from "../../examples/atoms/forms/select?source=file";
-import TagChooserExample from "../../examples/atoms/forms/tag-chooser";
+import TagChooserExample from "../../examples/atoms/forms/tag-chooser.gjs";
 import tagChooserSource from "../../examples/atoms/forms/tag-chooser?source=file";
-import TextareaExample from "../../examples/atoms/forms/textarea";
+import TextareaExample from "../../examples/atoms/forms/textarea.gjs";
 import textareaSource from "../../examples/atoms/forms/textarea?source=file";
-import ToggleExample from "../../examples/atoms/forms/toggle";
+import ToggleExample from "../../examples/atoms/forms/toggle.gjs";
 import toggleSource from "../../examples/atoms/forms/toggle?source=file";
-import ValidationExample from "../../examples/atoms/forms/validation";
+import ValidationExample from "../../examples/atoms/forms/validation.gjs";
 import validationSource from "../../examples/atoms/forms/validation?source=file";
 
 export default <template>
   <h2>Controls</h2>
 
-  <StyleguideExample @title="Input" @code={{inputSource}}>
+  <StyleguideExample @code={{inputSource}} @title="Input">
     <InputExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Question" @code={{questionSource}}>
+  <StyleguideExample @code={{questionSource}} @title="Question">
     <QuestionExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Toggle" @code={{toggleSource}}>
+  <StyleguideExample @code={{toggleSource}} @title="Toggle">
     <ToggleExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Composer" @code={{composerSource}}>
+  <StyleguideExample @code={{composerSource}} @title="Composer">
     <ComposerExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Code" @code={{codeSource}}>
+  <StyleguideExample @code={{codeSource}} @title="Code">
     <CodeExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Textarea" @code={{textareaSource}}>
+  <StyleguideExample @code={{textareaSource}} @title="Textarea">
     <TextareaExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Select" @code={{selectSource}}>
+  <StyleguideExample @code={{selectSource}} @title="Select">
     <SelectExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="CheckboxGroup" @code={{checkboxGroupSource}}>
+  <StyleguideExample @code={{checkboxGroupSource}} @title="CheckboxGroup">
     <CheckboxGroupExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Image" @code={{imageSource}}>
+  <StyleguideExample @code={{imageSource}} @title="Image">
     <ImageExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Icon" @code={{iconSource}}>
+  <StyleguideExample @code={{iconSource}} @title="Icon">
     <IconExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="TagChooser" @code={{tagChooserSource}}>
+  <StyleguideExample @code={{tagChooserSource}} @title="TagChooser">
     <TagChooserExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Menu" @code={{menuSource}}>
+  <StyleguideExample @code={{menuSource}} @title="Menu">
     <MenuExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="RadioGroup" @code={{radioGroupSource}}>
+  <StyleguideExample @code={{radioGroupSource}} @title="RadioGroup">
     <RadioGroupExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Color" @code={{colorSource}}>
+  <StyleguideExample @code={{colorSource}} @title="Color">
     <ColorExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Color with swatches" @code={{colorSwatchesSource}}>
+  <StyleguideExample @code={{colorSwatchesSource}} @title="Color with swatches">
     <ColorSwatchesExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="Color with named colors"
     @code={{colorNamedSource}}
+    @title="Color with named colors"
   >
     <ColorNamedExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="Color with # prefix in value"
     @code={{colorPrefixHexSource}}
+    @title="Color with # prefix in value"
   >
     <ColorPrefixHexExample />
   </StyleguideExample>
 
   <h2>Layout</h2>
 
-  <StyleguideExample @title="Section" @code={{sectionSource}}>
+  <StyleguideExample @code={{sectionSource}} @title="Section">
     <SectionExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Alert" @code={{alertSource}}>
+  <StyleguideExample @code={{alertSource}} @title="Alert">
     <AlertExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="InputGroup" @code={{inputGroupSource}}>
+  <StyleguideExample @code={{inputGroupSource}} @title="InputGroup">
     <InputGroupExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Collection" @code={{collectionSource}}>
+  <StyleguideExample @code={{collectionSource}} @title="Collection">
     <CollectionExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Row/Col" @code={{rowColSource}}>
+  <StyleguideExample @code={{rowColSource}} @title="Row/Col">
     <RowColExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="Multiline" @code={{multilineSource}}>
+  <StyleguideExample @code={{multilineSource}} @title="Multiline">
     <MultilineExample />
   </StyleguideExample>
 
   <h2>Validation</h2>
 
-  <StyleguideExample @title="Input" @code={{validationSource}}>
+  <StyleguideExample @code={{validationSource}} @title="Input">
     <ValidationExample />
   </StyleguideExample>
 </template>

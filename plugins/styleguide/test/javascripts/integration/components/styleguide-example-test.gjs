@@ -26,8 +26,8 @@ module("Integration | Component | <StyleguideExample />", function (hooks) {
     await render(
       <template>
         <StyleguideExample
-          @title="Buttons"
           @headingLevel={{3}}
+          @title="Buttons"
         >demo</StyleguideExample>
       </template>
     );
@@ -52,8 +52,8 @@ module("Integration | Component | <StyleguideExample />", function (hooks) {
     await render(
       <template>
         <StyleguideExample
-          @title="Buttons"
           @code={{SOURCE}}
+          @title="Buttons"
         >demo</StyleguideExample>
       </template>
     );
@@ -81,8 +81,8 @@ module("Integration | Component | <StyleguideExample />", function (hooks) {
     await render(
       <template>
         <StyleguideExample
-          @title="Buttons"
           @code={{SOURCE}}
+          @title="Buttons"
         >demo</StyleguideExample>
       </template>
     );
@@ -122,10 +122,10 @@ module("Integration | Component | <StyleguideExample />", function (hooks) {
   test("two cards on a page get distinct region ids", async function (assert) {
     await render(
       <template>
-        <StyleguideExample @title="First" @code={{SOURCE}}>a</StyleguideExample>
+        <StyleguideExample @code={{SOURCE}} @title="First">a</StyleguideExample>
         <StyleguideExample
-          @title="Second"
           @code={{SOURCE}}
+          @title="Second"
         >b</StyleguideExample>
       </template>
     );
@@ -156,8 +156,8 @@ module("Integration | Component | <StyleguideExample />", function (hooks) {
     await render(
       <template>
         <StyleguideExample
-          @title="Buttons"
           @description="never mutates `@value`"
+          @title="Buttons"
         >
           demo
         </StyleguideExample>
@@ -170,7 +170,7 @@ module("Integration | Component | <StyleguideExample />", function (hooks) {
   test("a named block wins over the string arg", async function (assert) {
     await render(
       <template>
-        <StyleguideExample @title="Buttons" @description="from the arg">
+        <StyleguideExample @description="from the arg" @title="Buttons">
           <:description><em class="from-block">from the block</em></:description>
           <:default>demo</:default>
         </StyleguideExample>
@@ -187,9 +187,9 @@ module("Integration | Component | <StyleguideExample />", function (hooks) {
     await render(
       <template>
         <StyleguideExample
+          @note="It counts every press"
           @title="Buttons"
           @tryThis="Press it twice"
-          @note="It counts every press"
         >demo</StyleguideExample>
       </template>
     );
@@ -204,7 +204,7 @@ module("Integration | Component | <StyleguideExample />", function (hooks) {
   test("try-this and note accept blocks, which win over the args", async function (assert) {
     await render(
       <template>
-        <StyleguideExample @title="Buttons" @tryThis="arg try" @note="arg note">
+        <StyleguideExample @note="arg note" @title="Buttons" @tryThis="arg try">
           <:tryThis><em class="block-try">block try</em></:tryThis>
           <:note><ul class="block-note"><li>block note</li></ul></:note>
           <:default>demo</:default>
@@ -233,7 +233,7 @@ module("Integration | Component | <StyleguideExample />", function (hooks) {
   test("passes through plain HTML attributes", async function (assert) {
     await render(
       <template>
-        <StyleguideExample @title="Buttons" class="--wide" data-flavour="x">
+        <StyleguideExample class="--wide" data-flavour="x" @title="Buttons">
           demo
         </StyleguideExample>
       </template>

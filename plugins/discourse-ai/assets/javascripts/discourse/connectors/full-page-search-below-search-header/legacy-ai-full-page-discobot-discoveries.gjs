@@ -5,8 +5,8 @@ import bodyClass from "discourse/helpers/body-class";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import LegacyAiSearchDiscoveries from "../../components/legacy-ai-search-discoveries";
-import LegacyAiSearchDiscoveriesTooltip from "../../components/legacy-ai-search-discoveries-tooltip";
+import LegacyAiSearchDiscoveries from "../../components/legacy-ai-search-discoveries.gjs";
+import LegacyAiSearchDiscoveriesTooltip from "../../components/legacy-ai-search-discoveries-tooltip.gjs";
 
 export default class LegacyAiFullPageDiscobotDiscoveries extends Component {
   static shouldRender(args, { siteSettings, currentUser }) {
@@ -34,16 +34,6 @@ export default class LegacyAiFullPageDiscobotDiscoveries extends Component {
     this.#checkCredits();
   }
 
-  async #checkCredits() {
-    try {
-      this.creditsAvailable =
-        await this.aiCredits.isFeatureCreditAvailable("discoveries");
-    } catch {
-      this.creditsAvailable = true;
-    }
-    this.creditCheckComplete = true;
-  }
-
   get shouldShow() {
     return this.creditCheckComplete && this.creditsAvailable;
   }
@@ -54,6 +44,16 @@ export default class LegacyAiFullPageDiscobotDiscoveries extends Component {
     } else {
       return 10000;
     }
+  }
+
+  async #checkCredits() {
+    try {
+      this.creditsAvailable =
+        await this.aiCredits.isFeatureCreditAvailable("discoveries");
+    } catch {
+      this.creditsAvailable = true;
+    }
+    this.creditCheckComplete = true;
   }
 
   <template>

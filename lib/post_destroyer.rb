@@ -395,7 +395,13 @@ class PostDestroyer
 
   def agree(reviewable)
     notify_deletion(reviewable)
-    result = reviewable.perform(@user, :agree_and_keep, post_was_deleted: true)
+    result =
+      reviewable.perform(
+        @user,
+        :agree_and_keep,
+        post_was_deleted: true,
+        guardian: Discourse.system_user.guardian,
+      )
     reviewable.transition_to(result.transition_to, @user)
   end
 
@@ -405,6 +411,8 @@ class PostDestroyer
   end
 
   def handle_reviewable_after_deletion
+    return if @user.id == @post.user_id
+
     if @opts[:reviewable_id]
       handle_explicit_reviewable
     elsif @post.reviewable_flag

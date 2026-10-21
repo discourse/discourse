@@ -16,6 +16,13 @@ export default class CsvUploader extends Component {
     autoStartUploads: false,
     uploadUrl: this.args.uploadUrl,
     preventDirectS3Uploads: true,
+    perFileData: () => {
+      if (typeof this.args.additionalParams === "function") {
+        return this.args.additionalParams() || {};
+      }
+
+      return this.args.additionalParams || {};
+    },
     uppyReady: () => {
       this.uppyUpload.uppyWrapper.uppyInstance.on("file-added", () => {
         this.dialog.confirm({
@@ -49,11 +56,11 @@ export default class CsvUploader extends Component {
       <label class="btn" disabled={{this.uploadButtonDisabled}}>
         {{dIcon "upload"}}&nbsp;{{this.uploadButtonText}}
         <input
-          {{didInsert this.uppyUpload.setup}}
+          accept=".csv"
           class="hidden-upload-field"
           disabled={{this.uppyUpload.uploading}}
           type="file"
-          accept=".csv"
+          {{didInsert this.uppyUpload.setup}}
         />
       </label>
       {{#if (or this.uppyUpload.uploading this.uppyUpload.processing)}}

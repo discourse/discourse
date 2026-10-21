@@ -33,8 +33,8 @@ module("Integration | Component | RagDocumentSources", function (hooks) {
       <template>
         <RagDocumentSources
           @form={{this.form}}
-          @sources={{this.sources}}
           @isNew={{false}}
+          @sources={{this.sources}}
         />
       </template>
     );
@@ -58,8 +58,8 @@ module("Integration | Component | RagDocumentSources", function (hooks) {
       <template>
         <RagDocumentSources
           @form={{this.form}}
-          @sources={{this.sources}}
           @isNew={{true}}
+          @sources={{this.sources}}
         />
       </template>
     );
@@ -74,8 +74,8 @@ module("Integration | Component | RagDocumentSources", function (hooks) {
       <template>
         <RagDocumentSources
           @form={{this.form}}
-          @sources={{this.sources}}
           @isNew={{false}}
+          @sources={{this.sources}}
         />
       </template>
     );

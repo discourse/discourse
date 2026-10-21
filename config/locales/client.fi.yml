@@ -267,7 +267,6 @@ fi:
       zh_CN:
         name: Kiina (yksinkertaistettu)
     share:
-      topic_html: 'Ketju: <span class="topic-title">%{topicTitle}</span>'
       post: "viesti %{postNumber} käyttäjältä @%{username}"
       close: "sulje"
       twitter: "Jaa X:ssä"
@@ -315,12 +314,18 @@ fi:
     topic_admin_menu: "ketjun toiminnot"
     skip_to_main_content: "Siirry pääsisältöön"
     skip_user_nav: "Siirry profiilin sisältöön"
+    reorder:
+      removed: "Poistettiin %{label}"
+      move_up: "Siirrä ylös"
+      move_down: "Siirrä alas"
+      position: "%{position}/%{total}"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
     emails_are_disabled_non_staff: "Lähtevät sähköpostit on poistettu käytöstä muilta kuin henkilökunnan käyttäjiltä."
     software_update_prompt:
       message: "Olemme päivittäneet tämän sivuston, <span>päivitä</span> sivu, jotta asiat toimivat sujuvasti."
       dismiss: "Sulje"
     back_button: "Takaisin"
+    confirm_button: "Vahvista"
     welcome_banner:
       header:
         logged_in_members: "Tervetuloa takaisin, %{preferred_display_name}!"
@@ -417,9 +422,6 @@ fi:
     max_of_count:
       one: "korkeintaan %{count}"
       other: "korkeintaan %{count}"
-    character_count:
-      one: "%{count} merkki"
-      other: "%{count} merkkiä"
     period_chooser:
       aria_label: "Suodata ajanjakson mukaan"
     related_messages:
@@ -679,6 +681,10 @@ fi:
       title:
         search: "Hae viestiä"
         placeholder: "Syötä viestin otsikko, url tai tunnus tähän"
+    dsa_statements:
+      category: "Luokka"
+      category_prompt: "Valitse alue"
+      saving: "Tallennetaan…"
     review:
       show_more: "Näytä lisää"
       show_less: "Näytä vähemmän"
@@ -897,6 +903,9 @@ fi:
         note_added: "Valvojan huomautus"
         note_added_by: "%{username} lisäsi valvojan huomautuksen · %{relativeDate}"
         no_events: "Ei näytettäviä aikajanan tapahtumia"
+      author_penalty:
+        toast:
+          undo: "Kumoa"
       notes:
         add_note_button: "Lisää huomautus"
         placeholder: "Kirjoita huomautuksesi tähän..."
@@ -1511,7 +1520,6 @@ fi:
       admin: "%{user} on ylläpitäjä"
       moderator_tooltip: "Tämä käyttäjä on valvoja"
       admin_tooltip: "Tämä käyttäjä on ylläpitäjä"
-      silenced_tooltip: "Käyttäjä on hiljennetty"
       suspended_notice: "Tämä käyttäjätili on estetty %{date} asti."
       suspended_permanently: "Käyttäjä on hyllytetty."
       suspended_reason: "Syy: "
@@ -1570,6 +1578,16 @@ fi:
       tracked_topics_link: "Näytä"
       automatically_unpin_topics: "Poista kiinnitetyn ketjun kiinnitys automaattisesti, kun olen selannut sen loppuun"
       apps: "Sovellukset"
+      mcp_authorizations:
+        endpoint: "Resurssi"
+        scopes: "Näkyvyysalueet"
+        details: "Tiedot"
+        last_used: "Viimeksi käytetty"
+        never: "Ei koskaan"
+        status: "Tila"
+        statuses:
+          active: "Aktiivinen"
+          revoked: "Peruttu"
       revoke_access: "Peru käyttöoikeus"
       undo_revoke_access: "Peru käyttöoikeuden peruminen"
       api_approved: "Sallittu:"
@@ -1843,7 +1861,6 @@ fi:
         upload_title: "Lataa oma kuva"
         image_is_not_a_square: "Varoitus: olemme rajanneet kuvaasti; korkeus ja leveys eivät olleet samoja"
         logo_small: "Sivuston pieni logo. Käytetään oletuksena."
-        use_custom: "Tai lataa mukautettu avatar:"
       change_profile_background:
         title: "Profiilin yläkuva"
         instructions: "Profiilin yläkuva keskitetään, ja sen oletusleveys on 1 110 px."
@@ -2411,7 +2428,7 @@ fi:
       hide_forever: "ei kiitos"
       hidden_for_session: "OK, kysymme sinulta huomenna. Voit myös aina käyttää 'Kirjaudu sisään' -linkkiä tilin luomiseen."
       intro: "Hei! Vaikuttaa siltä, että olet pitänyt keskusteluista, muttet ole luonut käyttäjätiliä."
-      value_prop: "Oletko kyllästynyt selaamaan samoja viestejä? Kun luot tilin, palaat aina siihen, mihin jäit. Tilin avulla voit myös saada ilmoituksia uusista vastauksista, tallentaa kirjanmerkkejä ja käyttää tykkäyksiä kiittääksesi muita. Voimme kaikki työskennellä yhdessä tehdäksemme tästä yhteisöstä mahtavan. :heart:"
+      value_prop: "Oletko kyllästynyt selaamaan samoja viestejä? Kun luot tilin, palaat aina siihen, mihin jäit. Tilin avulla voit myös saada ilmoituksia uusista vastauksista, tallentaa kirjanmerkkejä ja käyttää tykkäyksiä kiittääksesi muita. Voimme kaikki työskennellä yhdessä tehdäksemme tästä yhteisöstä mahtavan."
     offline_indicator:
       no_internet: "Ei Internet-yhteyttä."
       refresh_page: "Päivitä sivu"
@@ -2825,8 +2842,7 @@ fi:
       edit_shared_draft: "Muokkaa jaettua luonnosta"
       discard: "Hylkää"
       users_placeholder: "Lisää käyttäjiä tai ryhmiä"
-      title_placeholder: "Kuvaile lyhyesti mistä tässä keskustelussa on kyse?"
-      title_placeholder_redesign: "Otsikko"
+      title_placeholder: "Otsikko"
       title_or_link_placeholder: "Kirjoita otsikko tai liitä linkki tähän"
       edit_reason_placeholder: "Miksi muokkaat viestiä?"
       topic_featured_link_placeholder: "Kirjoita otsikossa näkyvä linkki."
@@ -2843,8 +2859,6 @@ fi:
       uploading: "Ladataan…"
       show_preview: "näytä esikatselu"
       hide_preview: "piilota esikatselu"
-      switch_to_markdown: "Vaihda tavalliseen Markdown-editoriin (%{keyboardShortcut})"
-      switch_to_rich_text: "Vaihda uuteen muotoilutekstieditoriin (%{keyboardShortcut})"
       quote_post_title: "Lainaa koko viestiä"
       bold_label: "B"
       bold_title: "Lihavoitu"
@@ -2954,6 +2968,8 @@ fi:
       onebox_toolbar:
         copy: "Kopioi linkki"
         link_copied: "Linkki kopioitu!"
+      table:
+        default_heading: "Sarake %{number}"
     notifications:
       tooltip:
         regular:
@@ -4178,6 +4194,7 @@ fi:
       list: "Listaa alueet"
       no_description: "Lisää alueelle kuvaus."
       change_in_category_topic: "Muokkaa kuvausta"
+      latest_topics: "Tuoreimmat ketjut"
       description_expand: "Näytä lisää"
       description_collapse: "Näytä vähemmän"
       already_used: "Tämä väri on jo käytössä toisella alueella"
@@ -4436,6 +4453,7 @@ fi:
       with_category: "%{filter} %{category} ketjut"
       filter:
         title: "Suodatetut tulokset suodattimella %{filter}"
+        reset: "palauta"
         button:
           label: "Suodatin"
       latest:
@@ -4604,9 +4622,6 @@ fi:
       admin:
         title: "Ylläpitäjä"
     badges:
-      earned_n_times:
-        one: "On ansainnut tämän kunniamerkin %{count} kerran"
-        other: "On ansainnut tämän kunniamerkin %{count} kertaa"
       granted_on: "Myönnetty %{date}"
       others_count:
         one: "Myönnetty muille %{count} kerran"
@@ -4641,11 +4656,11 @@ fi:
       favorite_max_not_reached: "Merkitse tämä kunniamerkki suosikiksi"
       favorite_count: "%{count}/%{max} kunniamerkkiä merkitty suosikeiksi"
     download_calendar:
-      title: "Lataa kalenteri"
+      title: "Lisää kalenteriin"
+      calendar: "Kalenteri"
       save_ics: "Lataa .ics-tiedosto"
       save_google: "Lisää Google-kalenteriin"
       remember: "Älä kysy uudelleen"
-      remember_explanation: "(voit muuttaa tätä asetusta käyttäjäasetuksissasi)"
       download: "Lataa"
       default_calendar: "Oletuskalenteri"
       default_calendar_instruction: "Määritä, mitä kalenteria käytetään, kun päivämäärät tallennetaan"
@@ -5058,63 +5073,6 @@ fi:
           other: "Syötteen täytyy olla enemmän kuin %{count}."
         pattern_mismatch: "Noudata pyydettyä muotoa."
         bad_input: "Anna kelvollinen syöte."
-    table_builder:
-      title: "Taulukkotyökalu"
-      modal:
-        title: "Taulukkotyökalu"
-        create: "Luo taulukko"
-        help:
-          title: "Laskentataulukkoeditorin käyttäminen"
-          enter_key: "Enter"
-          tab_key: "Sarkain"
-          new_row: "rivin lopussa uuden rivin lisäämiseksi."
-          new_col: "sarakkeen lopussa lisätäksesi uuden sarakkeen."
-          options: "Napsauta soluja hiiren kakkospainikkeella nähdäksesi lisää vaihtoehtoja avattavassa valikossa."
-        confirm_close: "Haluatko varmasti sulkea taulukonluontityökalun? Kaikki tallentamattomat muutokset menetetään."
-      edit:
-        btn_edit: "Muokkaa taulukkoa"
-        modal:
-          title: "Muokkaa taulukkoa"
-          cancel: "peruuta"
-          create: "Tallenna"
-          reason: "Miksi muokkaat viestiä?"
-          trigger_reason: "Lisää muokkauksen syy"
-        default_edit_reason: "Päivitä taulukko taulukkoeditorilla"
-      default_header:
-        col_1: "Sarake 1"
-        col_2: "Sarake 2"
-        col_3: "Sarake 3"
-        col_4: "Sarake 4"
-      spreadsheet:
-        no_records_found: "Tietueita ei löydy"
-        show: "Näytä"
-        entries: "merkintää"
-        about: "Tietoja"
-        prompts:
-          delete_selected_rows: "Oletko varma, että haluat poistaa valitut rivit?"
-          delete_selected_cols: "Oletko varma, että haluat poistaa valitut sarakkeet?"
-          will_destroy_merged_cells: "Tämä toiminto tuhoaa olemassa olevat yhdistetyt solut. Oletko varma?"
-          will_clear_search_results: "Tämä toiminto tuhoaa olemassa olevat yhdistetyt solut. Oletko varma?"
-          conflicts_with_merged_cells: "Ristiriita toisen yhdistetyn solun kanssa"
-        invalid_merge_props: "Virheelliset yhdistetyt ominaisuudet"
-        cells_already_merged: "Solu on jo yhdistetty"
-        no_cells_selected: "Ei valittuja soluja"
-        context_menu:
-          row:
-            before: "Lisää uusi rivi ennen"
-            after: "Lisää uusi rivi perään"
-            delete: "Poista valitut rivit"
-          col:
-            before: "Lisää uusi sarake ennen"
-            after: "Lisää uusi sarake perään"
-            delete: "Poista valitut sarakkeet"
-            rename: "Nimeä tämä sarake uudelleen"
-          order:
-            ascending: "Nouseva järjestys"
-            descending: "Laskeva järjestys"
-          copy: "Kopioi..."
-          paste: "Liitä..."
-          save: "Tallenna nimellä..."
     powered_by_discourse: "Voimanlähteenä Discourse"
     safari_15_warning: "Selaimesi on pian yhteensopimaton tämän yhteisön kanssa. Jos haluat jatkaa osallistumista täällä, päivitä selaimesi tai <a href='%{url}'>lue lisää</a>."
     filter:
@@ -5265,6 +5223,74 @@ fi:
           header_description: "Anna tässä tietoja tästä sivustosta ja tiimistäsi, jotta ihmiset voivat oppia, mistä yhteisöstäsi on kyse, kuka sen takana on ja miten sinuun voi ottaa yhteyttä ongelmatilanteissa. Näytetään sivustosi <a href='%{basePath}/about'>Tietoa-sivulla</a>."
         developer:
           title: "Kehittäjä"
+        mcp:
+          tabs:
+            access: "Käyttöoikeudet"
+            activity: "Toiminta"
+          overview:
+            status: "Tila"
+            tools: "Työkalut"
+          access:
+            title: "Käyttöoikeudet"
+            group: "Ryhmä"
+            groups: "Ryhmät"
+            actions: "Toiminnot"
+            edit: "Muokkaa"
+            delete: "Poista"
+          primitives:
+            group_by: "Ryhmittely"
+            group_by_options:
+              scope: "Soveltamisala"
+              provider: "Palveluntarjoaja"
+              kind: "Tyyppi"
+            provider: "Palveluntarjoaja"
+            kind: "Tyyppi"
+            scope: "Soveltamisala"
+            state: "Osavaltio"
+            scopes: "Näkyvyysalueet"
+          clients:
+            actions: "Toiminnot"
+            block: "Estä"
+            use_preset: "Määritä"
+            presets:
+              custom: "Mukautettu"
+            automatic: "Automaattiset"
+          authorizations:
+            user: "Käyttäjä"
+            last_used: "Viimeksi käytetty"
+            status: "Tila"
+            actions: "Toiminnot"
+          activity:
+            outcome: "Tulos"
+            time: "Aika"
+            user: "Käyttäjä"
+            duration: "Kesto"
+          values:
+            server_status:
+              disabled: "Pois käytöstä"
+            client_trust:
+              approved: "Hyväksytty"
+            authorization_status:
+              active: "Aktiivinen"
+              revoked: "Peruttu"
+            activity_outcome:
+              success: "Onnistui"
+              error: "Virhe"
+            primitive_state:
+              enabled: "Käytössä"
+              disabled: "Pois käytöstä"
+            primitive_kind:
+              all: "Kaikki tyypit"
+              tool: "Työkalu"
+              resource: "Resurssi"
+            primitive_risk:
+              read: "Vain luku"
+              moderation: "Valvonta"
+            filter:
+              all: "Kaikki"
+          never: "Ei koskaan"
+          actions:
+            revoke: "Peru"
         experimental:
           title: "Kokeellinen"
           header_description: "Ota sivustosi kokeellisia ominaisuukssia käyttöön tai poista niitä käytöstä. Useimpia niistä voi hallita ryhmäkohtaisesti."
@@ -5757,6 +5783,7 @@ fi:
           series:
             anonymous: "Anonyymeja"
             crawlers: "Hakurobotit"
+          crawler_learn_more: "Lue lisää"
         period:
           last_7_days: "Viimeiset 7 päivää"
           last_30_days: "Viimeiset 30 päivää"
@@ -6670,8 +6697,8 @@ fi:
           upload: "Lataa"
           select_component: "Valitse komponentti…"
           unsaved_changes_alert: "Et ole tallentanut tekemiäsi muutoksia. Haluatko hylätä ne ja siirtyä muualle?"
-          unsaved_parent_themes: "Et ole osoittanut komponenttia millekään teemalle. Haluatko siirtyä eteenpäin?"
           discard: "Hylkää"
+          leave: "Poistu"
           stay: "Jää"
           css_html: "Mukautettu koodi"
           edit_css_html: "Muokkaa koodia"
@@ -7725,13 +7752,14 @@ fi:
           multiselect: "Monivalinta"
       site_text:
         description: "Voit mukauttaa mitä tahansa tekstiä foorumillasi."
-        search: "Hae tekstiä, jota haluaisit muokata"
+        search_label: "Haku"
+        theme_disabled: "Pois käytöstä"
+        filters: "Suodattimet"
+        status:
+          invalid: "Virheellinen"
         title: "Sivuston tekstit"
         edit: "Muokkaa"
-        revert: "Palauta muutokset"
         revert_confirm: "Haluatko varmasti palauttaa muutokset?"
-        go_back: "Takaisin hakuun"
-        recommended: "On suositeltavaa muokata seuraavaa tekstiä tarpeidesi mukaan:"
         show_overriden: "Näytä vain korvatut"
         show_outdated: "Näytä vain vanhentuneet/virheelliset"
         show_untranslated: "Näytä vain kääntämättömät"

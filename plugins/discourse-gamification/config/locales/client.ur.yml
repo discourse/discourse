@@ -90,6 +90,7 @@ ur:
       admin:
         title: "کھیل اور کھلاڑی"
         name: "نام"
+        created_by: "نے بنایا"
         period: "مدت"
     discourse_workflows:
       gamification_score:

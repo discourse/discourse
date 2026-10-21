@@ -19,22 +19,22 @@ export default class Logo extends Component {
   <template>
     {{#if (and @darkUrl (notEq @url @darkUrl))}}
       <picture>
-        <source srcset={{getURL @darkUrl}} media={{this.darkMediaQuery}} />
+        <source media={{this.darkMediaQuery}} srcset={{getURL @darkUrl}} />
         <img
-          id="site-logo"
+          alt={{@title}}
           class={{@key}}
+          id="site-logo"
           src={{getURL @url}}
           width={{if (eq @key "logo-small") "36"}}
-          alt={{@title}}
         />
       </picture>
     {{else}}
       <img
-        id="site-logo"
+        alt={{@title}}
         class={{@key}}
+        id="site-logo"
         src={{getURL @url}}
         width={{if (eq @key "logo-small") "36"}}
-        alt={{@title}}
       />
     {{/if}}
   </template>

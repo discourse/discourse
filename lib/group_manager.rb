@@ -62,7 +62,7 @@ class GroupManager
   end
 
   def decrease_group_user_count(removed_user_ids)
-    Group.update_counters(@group.id, user_count: -removed_user_ids.size)
+    Group.update_counters(@group.id, user_count: -counted_user_ids(removed_user_ids).size)
   end
 
   private
@@ -238,7 +238,11 @@ class GroupManager
   end
 
   def increase_group_user_count(added_user_ids)
-    Group.update_counters(@group.id, user_count: added_user_ids.size)
+    Group.update_counters(@group.id, user_count: counted_user_ids(added_user_ids).size)
+  end
+
+  def counted_user_ids(user_ids)
+    @group.hides_bot_members? ? user_ids.select(&:positive?) : user_ids
   end
 
   def grant_other_available_title(removed_user_ids)

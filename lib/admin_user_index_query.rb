@@ -91,6 +91,19 @@ class AdminUserIndexQuery
     end
   end
 
+  def filter_by_account_type
+    return unless params[:query] == "staff"
+
+    case params[:account_type]
+    when "all"
+      @query
+    when "bot"
+      @query.bot_users
+    else
+      @query.human_users
+    end
+  end
+
   def filter_by_query_classification
     case params[:query]
     when "staff"
@@ -243,6 +256,7 @@ class AdminUserIndexQuery
   def find_users_query
     append filter_by_trust
     append filter_by_query_classification
+    append filter_by_account_type
     append filter_by_activation
     append filter_by_ip
     append filter_by_same_ip_user

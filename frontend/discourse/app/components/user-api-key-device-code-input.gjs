@@ -14,20 +14,20 @@ export default class UserApiKeyDeviceCodeInput extends Component {
 
   <template>
     <DOtp
-      @slots={{8}}
-      @groupSize={{4}}
-      @inputMode="text"
-      @autocomplete="off"
-      @normalizeInput={{this.normalizeCode}}
-      @onChange={{@onChange}}
-      @onFill={{@onFill}}
       aria-label={{i18n "user_api_key.device.code"}}
       class="authorize-api-key__code-input"
       data-1p-ignore="true"
-      data-lpignore="true"
       data-bwignore="true"
       data-form-type="other"
+      data-lpignore="true"
       ...attributes
+      @autocomplete="off"
+      @groupSize={{4}}
+      @inputMode="text"
+      @normalizeInput={{this.normalizeCode}}
+      @onChange={{@onChange}}
+      @onFill={{@onFill}}
+      @slots={{8}}
     />
   </template>
 }

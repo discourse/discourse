@@ -10,9 +10,9 @@ import PMTagSectionLink from "discourse/lib/sidebar/user/tags-section/pm-tag-sec
 import TagSectionLink from "discourse/lib/sidebar/user/tags-section/tag-section-link";
 import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AllTagsSectionLink from "../common/all-tags-section-link";
-import Section from "../section";
-import SectionLink from "../section-link";
+import AllTagsSectionLink from "../common/all-tags-section-link.gjs";
+import Section from "../section.gjs";
+import SectionLink from "../section-link.gjs";
 
 export default class SidebarUserTagsSection extends Component {
   @service router;
@@ -92,10 +92,9 @@ export default class SidebarUserTagsSection extends Component {
 
   <template>
     <Section
-      @sectionName="tags"
       @activeLink={{this.activeLink}}
+      @collapsable={{@collapsable}}
       @expandWhenActive={{@expandActiveSection}}
-      @headerLinkText={{i18n "sidebar.sections.tags.header_link_text"}}
       @headerActions={{array
         (hash
           action=this.showModal
@@ -103,27 +102,28 @@ export default class SidebarUserTagsSection extends Component {
         )
       }}
       @headerActionsIcon="pencil"
-      @collapsable={{@collapsable}}
+      @headerLinkText={{i18n "sidebar.sections.tags.header_link_text"}}
+      @sectionName="tags"
     >
       {{#each this.sectionLinks as |sectionLink|}}
         <SectionLink
+          data-tag-name={{sectionLink.tagName}}
+          @badgeText={{sectionLink.badgeText}}
+          @content={{sectionLink.text}}
+          @currentWhen={{sectionLink.currentWhen}}
+          @models={{sectionLink.models}}
+          @prefixColor={{sectionLink.prefixColor}}
+          @prefixType={{sectionLink.prefixType}}
+          @prefixValue={{sectionLink.prefixValue}}
+          @route={{sectionLink.route}}
           @scrollIntoView={{and
             @scrollActiveLinkIntoView
             (eq sectionLink.name this.activeLink.name)
           }}
-          @route={{sectionLink.route}}
-          @title={{sectionLink.title}}
-          @content={{sectionLink.text}}
-          @currentWhen={{sectionLink.currentWhen}}
-          @prefixType={{sectionLink.prefixType}}
-          @prefixValue={{sectionLink.prefixValue}}
-          @prefixColor={{sectionLink.prefixColor}}
-          @badgeText={{sectionLink.badgeText}}
-          @models={{sectionLink.models}}
           @suffixCSSClass={{sectionLink.suffixCSSClass}}
-          @suffixValue={{sectionLink.suffixValue}}
           @suffixType={{sectionLink.suffixType}}
-          data-tag-name={{sectionLink.tagName}}
+          @suffixValue={{sectionLink.suffixValue}}
+          @title={{sectionLink.title}}
         />
       {{/each}}
 
@@ -133,13 +133,13 @@ export default class SidebarUserTagsSection extends Component {
 
       {{#if this.shouldDisplayDefaultConfig}}
         <SectionLink
-          @linkName="configure-default-navigation-menu-tags"
           @content={{i18n "sidebar.sections.tags.configure_defaults"}}
+          @linkName="configure-default-navigation-menu-tags"
+          @model="sidebar"
           @prefixType="icon"
           @prefixValue="wrench"
-          @route="adminSiteSettingsCategory"
-          @model="sidebar"
           @query={{hash filter="default_navigation_menu_tags"}}
+          @route="adminSiteSettingsCategory"
         />
       {{/if}}
     </Section>

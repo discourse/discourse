@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import AiTitleSuggester from "../../components/suggestion-menus/ai-title-suggester";
-import { showComposerAiHelper } from "../../lib/show-ai-helper";
+import AiTitleSuggester from "../../components/suggestion-menus/ai-title-suggester.gjs";
+import { showComposerAiHelper } from "../../lib/show-ai-helper.js";
 
 export default class AiTitleSuggestion extends Component {
   static shouldRender(args, context) {

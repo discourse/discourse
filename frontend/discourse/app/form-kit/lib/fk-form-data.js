@@ -22,7 +22,7 @@ export default class FKFormData {
 
   /**
    * The errors associated with the changeset.
-   * @type {Object}
+   * @type {Record<string, { title: string, messages: string[] }>}
    */
   @tracked errors = {};
 

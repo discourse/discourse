@@ -3,6 +3,7 @@
 RSpec.describe DiscourseAi::Agents::Tools::CreateArtifact do
   fab!(:llm_model)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
+
   fab!(:post)
 
   before do
@@ -109,7 +110,7 @@ RSpec.describe DiscourseAi::Agents::Tools::CreateArtifact do
         [/details]
 
         ### Preview
-        <div class="ai-artifact" data-ai-artifact-id="#{artifact_id}"></div>
+        [ai-artifact id="#{artifact_id}"]
       MD
       expect(tool.custom_raw.strip).to eq(expected.strip)
     end

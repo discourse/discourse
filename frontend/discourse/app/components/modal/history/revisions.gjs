@@ -1,11 +1,9 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import EmberObject from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
 import LinksRedirect from "discourse/components/links-redirect";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -24,48 +22,47 @@ function tagClasses(tagChanges, state, className) {
   }, {});
 }
 
-@tagName("")
 export default class Revisions extends Component {
   @service languageNameLookup;
 
   get fakePreviousTagsTopic() {
     // discourseTags expects a topic structure
     return EmberObject.create({
-      tags: (this.get("previousTagChanges") || []).map((tag) => tag.name),
+      tags: (this.args.previousTagChanges || []).map((tag) => tag.name),
     });
   }
 
   get previousTagClassesMap() {
-    return tagClasses(this.get("previousTagChanges"), "deleted", "diff-del");
+    return tagClasses(this.args.previousTagChanges, "deleted", "diff-del");
   }
 
   get fakeCurrentTagsTopic() {
     return EmberObject.create({
-      tags: (this.get("currentTagChanges") || []).map((tag) => tag.name),
+      tags: (this.args.currentTagChanges || []).map((tag) => tag.name),
     });
   }
 
   get currentTagClassesMap() {
-    return tagClasses(this.get("currentTagChanges"), "inserted", "diff-ins");
+    return tagClasses(this.args.currentTagChanges, "inserted", "diff-ins");
   }
 
   get previousLocale() {
-    const locale = this.get("model.locale_changes.previous");
+    const locale = this.args.model?.locale_changes?.previous;
     const language = this.languageNameLookup.getLanguageName(locale);
     return language || i18n("post.revisions.locale.no_locale_set");
   }
 
   get currentLocale() {
-    const locale = this.get("model.locale_changes.current");
+    const locale = this.args.model?.locale_changes?.current;
     const language = this.languageNameLookup.getLanguageName(locale);
     return language || i18n("post.revisions.locale.locale_removed");
   }
 
   <template>
     <div
-      id="revisions"
-      data-post-id={{@model.post_id}}
       class={{@hiddenClasses}}
+      data-post-id={{@model.post_id}}
+      id="revisions"
       ...attributes
     >
       {{#if @model.locale_changes}}
@@ -214,8 +211,8 @@ export default class Revisions extends Component {
 
       <span>
         <PluginOutlet
-          @name="post-revisions"
           @connectorTagName="div"
+          @name="post-revisions"
           @outletArgs={{lazyHash model=@model}}
         />
       </span>
@@ -227,9 +224,9 @@ export default class Revisions extends Component {
         </div>
       {{else}}
         <LinksRedirect
+          class="row body-diff"
           {{didInsert @calculateBodyDiff @bodyDiffHTML}}
           {{didUpdate @calculateBodyDiff @bodyDiffHTML}}
-          class="row body-diff"
         >
           {{trustHTML @bodyDiff}}
         </LinksRedirect>

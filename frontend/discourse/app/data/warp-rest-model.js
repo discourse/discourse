@@ -1,3 +1,4 @@
+import { dependentKeyCompat } from "@ember/object/compat";
 import {
   exposeExtraAttributes,
   extraAttributesFor,
@@ -14,9 +15,33 @@ export function warpStore() {
 //   static type             — schema type, e.g. "badge"
 //   static normalize        — rooted JSON → JSON:API document
 //   static builders         — { list(opts), one(id), save(record, data), delete(id) }
+/**
+ * A request object built by the helpers in `discourse/data/builders/helpers`.
+ *
+ * @typedef {object} WarpRequest
+ * @property {string} url
+ * @property {string} method
+ * @property {string} op
+ * @property {{ type: string, id: string }} [data]
+ * @property {{ body?: unknown, normalize?: (payload: Record<string, unknown> | null | undefined) => import("@warp-drive/core/types/spec/json-api-raw").JsonApiDocument }} [options]
+ */
+
+/**
+ * @typedef {object} WarpRestBuilders
+ * @property {(opts?: Record<string, unknown>) => WarpRequest} [list]
+ * @property {(id: string | number) => WarpRequest} [one]
+ * @property {(record: WarpRestModel, data: Record<string, unknown>) => WarpRequest} [save]
+ * @property {(id: string | number) => WarpRequest} [delete]
+ */
+
 export default class WarpRestModel {
+  /** @type {string | null} */
   static type = null;
+
+  /** @type {((payload: Record<string, unknown> | null | undefined) => import("@warp-drive/core/types/spec/json-api-raw").JsonApiDocument) | null} */
   static normalize = null;
+
+  /** @type {WarpRestBuilders | null} */
   static builders = null;
 
   static findAll(opts) {
@@ -60,6 +85,37 @@ export default class WarpRestModel {
     return this.#resource;
   }
 
+  updateFromJson(json) {
+    if (json == null) {
+      return this;
+    }
+    const Klass = this.constructor;
+    const document = Klass.normalize(json);
+    if (!document || Array.isArray(document.data)) {
+      return this;
+    }
+    warpStore().push(document);
+    this._adoptResource(document.data?.id);
+    return this;
+  }
+
+  async save(data) {
+    const Klass = this.constructor;
+    const store = warpStore();
+    const result = await store.request(Klass.builders.save(this, data));
+    this._adoptResource(result.content?.data?.id);
+    return this;
+  }
+
+  async destroy() {
+    const Klass = this.constructor;
+    const id = this.id;
+    if (id == null) {
+      return;
+    }
+    await warpStore().request(Klass.builders.delete(id));
+  }
+
   // Attributes the schema doesn't declare never reach the cache; re-attach the
   // ones normalization retained for this identity. Called on construction and
   // whenever the wrapper adopts a cached record — subclasses with their own
@@ -90,37 +146,6 @@ export default class WarpRestModel {
       this.#resource = cached;
     }
     this._applyExtraAttributes(id);
-  }
-
-  updateFromJson(json) {
-    if (json == null) {
-      return this;
-    }
-    const Klass = this.constructor;
-    const document = Klass.normalize(json);
-    if (!document || Array.isArray(document.data)) {
-      return this;
-    }
-    warpStore().push(document);
-    this._adoptResource(document.data?.id);
-    return this;
-  }
-
-  async save(data) {
-    const Klass = this.constructor;
-    const store = warpStore();
-    const result = await store.request(Klass.builders.save(this, data));
-    this._adoptResource(result.content?.data?.id);
-    return this;
-  }
-
-  async destroy() {
-    const Klass = this.constructor;
-    const id = this.id;
-    if (id == null) {
-      return;
-    }
-    await warpStore().request(Klass.builders.delete(id));
   }
 }
 
@@ -193,6 +218,11 @@ export function defineFieldForwarders(Klass, schema) {
         }
       };
     }
-    Object.defineProperty(proto, name, descriptor);
+    // Classic computed consumers observe the wrapper, not the cached record.
+    Object.defineProperty(
+      proto,
+      name,
+      dependentKeyCompat(proto, name, descriptor)
+    );
   }
 }

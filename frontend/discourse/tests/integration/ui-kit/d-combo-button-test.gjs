@@ -34,8 +34,8 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
           <combo.Button @translatedLabel="Action" />
           <combo.Menu
             @inline={{true}}
-            @visibilityOptimizer="none"
             @placement="bottom-start"
+            @visibilityOptimizer="none"
           >
             content
           </combo.Menu>
@@ -65,7 +65,7 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
       <template>
         <DComboButton @hasMenu={{true}} as |combo|>
           <combo.Button @translatedLabel="Action" />
-          <combo.Menu @inline={{true}} @icon="gear">content</combo.Menu>
+          <combo.Menu @icon="gear" @inline={{true}}>content</combo.Menu>
         </DComboButton>
       </template>
     );
@@ -106,13 +106,11 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
   });
 
   test("toggling @hasMenu moves the class and the menu together", async function (assert) {
-    const state = new (class {
-      @tracked hasMenu = false;
-    })();
+    const hasMenu = tracked(false);
 
     await render(
       <template>
-        <DComboButton @hasMenu={{state.hasMenu}} as |combo|>
+        <DComboButton @hasMenu={{hasMenu.value}} as |combo|>
           <combo.Button @translatedLabel="Action" />
           <combo.Menu @inline={{true}}>content</combo.Menu>
         </DComboButton>
@@ -122,13 +120,13 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
     assert.dom(".d-combo-button").doesNotHaveClass("--has-menu");
     assert.dom(".d-combo-button-menu").doesNotExist();
 
-    state.hasMenu = true;
+    hasMenu.value = true;
     await rerender();
 
     assert.dom(".d-combo-button").hasClass("--has-menu");
     assert.dom(".d-combo-button-menu").exists();
 
-    state.hasMenu = false;
+    hasMenu.value = false;
     await rerender();
 
     assert.dom(".d-combo-button").doesNotHaveClass("--has-menu");
@@ -138,7 +136,7 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
   test("@btnTypeClass reaches both halves", async function (assert) {
     await render(
       <template>
-        <DComboButton @hasMenu={{true}} @btnTypeClass="btn-default" as |combo|>
+        <DComboButton @btnTypeClass="btn-default" @hasMenu={{true}} as |combo|>
           <combo.Button @translatedLabel="Action" />
           <combo.Menu @inline={{true}}>content</combo.Menu>
         </DComboButton>
@@ -152,9 +150,9 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
   test("a per-half class is kept alongside @btnTypeClass", async function (assert) {
     await render(
       <template>
-        <DComboButton @hasMenu={{true}} @btnTypeClass="btn-default" as |combo|>
-          <combo.Button @translatedLabel="Action" class="dismiss-read" />
-          <combo.Menu @inline={{true}} class="dismiss-menu">content</combo.Menu>
+        <DComboButton @btnTypeClass="btn-default" @hasMenu={{true}} as |combo|>
+          <combo.Button class="dismiss-read" @translatedLabel="Action" />
+          <combo.Menu class="dismiss-menu" @inline={{true}}>content</combo.Menu>
         </DComboButton>
       </template>
     );
@@ -166,13 +164,11 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
   });
 
   test("--has-menu survives a consumer's dynamic class changing", async function (assert) {
-    const state = new (class {
-      @tracked extra = "first";
-    })();
+    const extra = tracked("first");
 
     await render(
       <template>
-        <DComboButton @hasMenu={{true}} class={{state.extra}} as |combo|>
+        <DComboButton class={{extra.value}} @hasMenu={{true}} as |combo|>
           <combo.Button @translatedLabel="Action" />
           <combo.Menu @inline={{true}}>content</combo.Menu>
         </DComboButton>
@@ -182,7 +178,7 @@ module("Integration | ui-kit | DComboButton", function (hooks) {
     assert.dom(".d-combo-button").hasClass("--has-menu");
     assert.dom(".d-combo-button").hasClass("first");
 
-    state.extra = "second";
+    extra.value = "second";
     await rerender();
 
     assert

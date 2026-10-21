@@ -2,27 +2,27 @@
 
 module JsonApiKit
   class Document
-    def self.build(parameters, resource:, urls:)
-      contract_class
-        .new(
-          **parameters.to_hash.deep_dup,
-          options: {
-            resource:,
-            raw_parameters: parameters.with_indifferent_access,
-          },
-        )
-        .then do |contract|
-          next Errors.new(*Request::Contract::Mapper.new(contract.errors).to_a) if contract.invalid?
-          new(yield(contract.to_hash), urls:).tap(&:to_h)
-        end
-    rescue Error => error
-      Errors.new(error)
-    end
-    private_class_method :build
+    class << self
+      private
 
-    def initialize(query, urls:)
+      def build(raw, resource:, client:)
+        resource = resource.new(guardian: client.guardian, edition: client.edition)
+        input = input_class.new(raw, resource:, edition: client.edition)
+        return Errors.new(*input.refusals) if input.invalid?
+        assemble(new(yield(input.to_h, resource), client:, fieldsets: input.fieldsets))
+      rescue Error => error
+        Errors.new(error)
+      end
+
+      def assemble(document) = document.tap(&:to_h)
+    end
+
+    delegate :urls, to: :client, private: true
+
+    def initialize(query, client:, fieldsets:)
       @query = query
-      @urls = urls
+      @client = client
+      @fieldsets = fieldsets
     end
 
     def to_h = @to_h ||= { data:, included:, links: }
@@ -31,12 +31,14 @@ module JsonApiKit
 
     private
 
-    attr_reader :query, :urls
+    attr_reader :query, :client, :fieldsets
 
     def contents = @contents ||= Contents.new(primary_records, query.included)
 
     def links = { self: { href: urls.current.to_s, type: Pagination::Profile::MEDIA_TYPE } }
 
-    def included = contents.related.map { ResourceObject.new(it, urls:).to_h }
+    def included
+      contents.related.map { ResourceObject.new(it, client:, fieldsets:).to_h }
+    end
   end
 end

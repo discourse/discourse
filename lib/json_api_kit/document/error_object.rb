@@ -15,7 +15,7 @@ module JsonApiKit
 
       attr_reader :error
 
-      def links = error.type&.then { { type: it } }
+      def links = error.type.try { { type: it } }
     end
   end
 end

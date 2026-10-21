@@ -20,7 +20,7 @@ export default class ChatOnAnimationEnd extends Modifier {
 
   @bind
   handleAnimationEnd() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 

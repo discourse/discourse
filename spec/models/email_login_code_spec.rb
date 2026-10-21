@@ -25,6 +25,26 @@ RSpec.describe EmailLoginCode do
       expect(described_class.all).to contain_exactly(other_record, new_record)
     end
 
+    it "keeps login and password reset codes active for the same email" do
+      login_code = described_class.generate!(email: "foo@example.com")
+      reset_code = described_class.generate!(email: "FOO@example.com", purpose: :password_reset)
+
+      expect(described_class.active).to contain_exactly(login_code, reset_code)
+      expect(login_code).to be_login
+      expect(reset_code).to be_password_reset
+    end
+
+    it "only replaces codes for the requested purpose when resending" do
+      login_code = described_class.generate!(email: "foo@example.com")
+      described_class.generate!(email: "foo@example.com", purpose: :password_reset)
+
+      reset_code = described_class.generate!(email: "FOO@example.com", purpose: :password_reset)
+      expect(described_class.active).to contain_exactly(login_code, reset_code)
+
+      replacement_login_code = described_class.generate!(email: "FOO@example.com")
+      expect(described_class.active).to contain_exactly(replacement_login_code, reset_code)
+    end
+
     it "expires the code after 10 minutes" do
       freeze_time
 

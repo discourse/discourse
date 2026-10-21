@@ -32,8 +32,18 @@ pt_BR:
           title: "Entradas de data/hora"
         menus:
           title: "Menus"
+        context_menu:
+          actions:
+            duplicate: "Duplicado(a)"
+            delete: "Excluir"
         multi_select:
           title: "Múltipla escolha"
+        reorderable_list:
+          policies_pinned: "Fixada"
+          policies_required: "Necessário(a)"
+          table_field: "Campo"
+          table_type: "Tipo"
+          cross_list_primary: "Primário"
         toasts:
           title: "Barra de notificação"
         font_scale:

@@ -58,27 +58,27 @@ export default class FKControlPassword extends FKBaseControl {
       }}
     >
       <input
-        type={{this.type}}
-        value={{@field.value}}
+        aria-describedby={{@field.describedBy}}
+        aria-invalid={{if @field.error "true"}}
+        autocomplete="new-password"
         class="form-kit__control-password"
         disabled={{@field.disabled}}
         id={{@field.id}}
         name={{@field.name}}
-        autocomplete="new-password"
-        aria-invalid={{if @field.error "true"}}
-        aria-describedby={{@field.describedBy}}
         placeholder={{@field.placeholder}}
+        type={{this.type}}
+        value={{@field.value}}
         ...attributes
         {{on "input" this.handleInput}}
         {{this.focusState}}
       />
 
       <DButton
+        aria-checked={{eq this.type TYPES.text}}
         class="btn-transparent form-kit__control-password-toggle"
+        role="switch"
         @action={{this.toggleVisibility}}
         @icon={{this.iconForType}}
-        role="switch"
-        aria-checked={{eq this.type TYPES.text}}
       />
     </div>
   </template>

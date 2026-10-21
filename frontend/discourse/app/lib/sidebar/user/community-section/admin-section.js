@@ -9,6 +9,16 @@ export default class extends CommonCommunitySection {
   @service modal;
   @service navigationMenu;
 
+  get moreSectionButtonText() {
+    return i18n(
+      `sidebar.sections.community.edit_section.${this.navigationMenu.displayMode}`
+    );
+  }
+
+  get moreSectionButtonIcon() {
+    return "pencil";
+  }
+
   @action
   async moreSectionButtonAction() {
     const json = await ajax(`/sidebar_sections/${this.section.id}.json`);
@@ -19,15 +29,5 @@ export default class extends CommonCommunitySection {
         section: json.sidebar_section,
       },
     });
-  }
-
-  get moreSectionButtonText() {
-    return i18n(
-      `sidebar.sections.community.edit_section.${this.navigationMenu.displayMode}`
-    );
-  }
-
-  get moreSectionButtonIcon() {
-    return "pencil";
   }
 }

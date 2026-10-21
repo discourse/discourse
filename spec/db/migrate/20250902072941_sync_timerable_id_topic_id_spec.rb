@@ -10,7 +10,7 @@ RSpec.describe SyncTimerableIdTopicId do
 
   after { ActiveRecord::Migration.verbose = @original_verbose }
 
-  it "works" do
+  it "syncs timerable_id to topic_id" do
     DB.exec("DROP TRIGGER IF EXISTS topic_timers_topic_id_trigger ON topic_timers")
     Migration::ColumnDropper.drop_readonly(:topic_timers, :topic_id)
     DB.exec("ALTER TABLE topic_timers ALTER COLUMN timerable_id DROP NOT NULL")

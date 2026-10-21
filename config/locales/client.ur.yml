@@ -6,6 +6,8 @@
 
 ur:
   js:
+    mcp_oauth_client_id_metadata_policy:
+      disabled: "صرف انتظامی رجسٹریشن"
     ace_editor:
       resize: "کوڈ ایڈیٹر کا سائز تبدیل کریں"
     user_api_key:
@@ -315,7 +317,6 @@ ur:
       zh_CN:
         name: چینی آسان
     share:
-      topic_html: 'موضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "دھاگہ #%{postNumber} بذریعہ @%{username}"
       close: "بند کریں"
       twitter: "X پر شیئر کریں۔"
@@ -370,6 +371,19 @@ ur:
     skip_to_last_reply: "آخری جواب پر جائیں۔"
     skip_to_top: "اوپر جائیں"
     skip_user_nav: "سکپ کریں پروفائل کے مواد کیلیے"
+    reorder:
+      remove: "%{label} ہٹائیں"
+      removed: "%{label} ہٹا دیا گیا"
+      move_up: "اوپر جائیں"
+      move_down: "نیچے جائیں"
+      move_to_top: "اوپر جائیں"
+      move_to_bottom: "نیچے جائیں"
+      move_to_list: "%{list} میں منتقل کریں"
+      position: "%{total} میں سے %{position}"
+      at_start: "%{label} پہلے ہی پہلا ہے"
+      at_end: "%{label} پہلے ہی آخری ہے"
+      move_refused: "%{label} منتقل نہیں ہوسکا"
+      add_item: "ایک آئٹم شامل کریں"
     emails_are_disabled: "ای میل کو منتظم کی طرف سے غیر فعال کر دیا گیا ہے. کسی بھی قسم کی ای میل نہیں بھیجی جائیں گی۔"
     emails_are_disabled_no_smtp: "تمام باہر جانے والی ای میل غیر فعال ہیں کیونکہ کوئی SMTP سرور ترتیب نہیں دیا گیا۔ کسی بھی قسم کی ای میل نہیں بھیجی جا سکتی۔"
     emails_are_disabled_non_staff: "جانے والی ای میل اراکین جوعملہ میں نہیں، کے لیے غیر فعال کر دی گئی ہیں"
@@ -379,6 +393,7 @@ ur:
     notifications_tracking:
       tooltip: "اطلاع کی سطح: %{level}"
     back_button: "واپس"
+    confirm_button: "تصدیق کریں"
     welcome_banner:
       header:
         new_members: "خوش آمدید، %{preferred_display_name}!"
@@ -508,9 +523,6 @@ ur:
     max_of_count:
       one: "زیادہ سے زیادہ %{count}"
       other: "زیادہ سے زیادہ %{count}"
-    character_count:
-      one: "%{count} حرف"
-      other: "%{count} حروف"
     period_chooser:
       aria_label: "مدت کے لحاظ سے فلٹر کریں"
     related_messages:
@@ -551,19 +563,20 @@ ur:
         predefined_topics_description: "بحث کو آگے بڑھانے کے لیے گفتگو شروع کرنے والے موضوعات میں سے انتخاب کریں"
         use_predefined: "سانچے پرکھیں"
         back: "واپس"
+        category_unavailable: "اس زمرے میں پوسٹ کرنا ممکن نہیں ہے۔"
         icebreakers:
-          fun_facts:
-            title: "اپنے بارے میں کچھ دلچسپ حقائق درج کریں؟"
-            body: "سب کوآداب! میں اس نئی کمیونٹی کے آغاز پر بہت پرجوش ہوں۔ شروعات کرنے کے لیے، آئیے اپنے بارے میں کچھ دلچسپ شیئر کریں۔ میں پہل کرتا ہوں: مجھے پیدل سفر کرنا اور نئے راستے دریافت کرنا بہت پسند ہے! آپ کے بارے میں دلچسپ بات کیا ہے؟"
-          coolest_thing_you_have_seen_today:
-            title: "آج آپ نے سب سے زبردست چیز دیکھی ہو وہ کیا ہے؟"
-            body: "آج آپ نے سب سے شاندار چیز دیکھی یا کوئی تجربہ ہوا، وہ کیا ہے؟ یہ کسی خوبصورت غروب آفتاب سے لے کر کسی بے لوث نیکی تک کچھ بھی ہو سکتا ہے۔ میں شروع کرتا ہوں: میں نے ایک کتے کو ایک بوڑھے شخص کو سڑک پار کرنے میں مدد کرتے ہوئے دیکھا!"
+          plan_categories:
+            title: "ہمیں کون سی زمروں سے آغاز کرنا چاہیے؟"
+            body: "آئیے لانچ کرنے سے پہلے چیزوں کو منظم کرنے کا طریقہ طے کریں! لوگ سب سے زیادہ کس موضوع پر بات کرنا چاہیں گے؟ ہم صرف چند زمروں سے آغاز کر سکتے ہیں اور بعد میں مزید شامل کر سکتے ہیں۔"
+          plan_invites:
+            title: "شروعات سے پہلے ہمیں کون سے ارکان کو مدعو کرنا چاہیے؟"
+            body: "ایک ایسی کمیونٹی میں شامل ہونا ہمیشہ بہتر ہوتا ہے جس میں پہلے ہی کچھ لوگ موجود ہوں۔ ہمیں سب سے پہلے کسے مدعو کرنا چاہیے؟ ایسے لوگوں کے بارے میں سوچیں جو بات چیت کرنا پسند کرتے ہیں، دوسروں کی مدد کرتے ہیں، اور جلد شامل ہونے کے لیے پرجوش ہوں۔"
           introduce_yourself:
             title: "اپنا تعارف کروائیں"
             body: "کمیونٹی میں خوش آمدید! آئیے ایک دوسرے کو جانیں۔ براہِ کرم اپنا تعارف کروائیں اور اپنی دلچسپیوں کو رقم کریں۔ میں پہل کرتا ہوں: مجھے ٹیکنالوجی کا بہت شوق ہے اور دوسروں کو سکھانا پسند ہے!"
-          what_is_your_favorite_food:
-            title: "آپ کا پسندیدہ کھانا کیا ہے؟"
-            body: "فورم کو اپنے پسندیدہ کھانے کے بارے بتائیں! میں شروع کروں: مجھے پیزا پسند ہے، خاص طور پر اضافی پنیر اور پیپرونی کے ساتھ۔"
+          write_your_own:
+            title: "اپنی طرف سے لکھیں"
+            body: "اپنی کمیونٹی کے مطابق بنائے گئے موضوع کے ساتھ بات چیت شروع کریں۔"
     design_wizard:
       title: "اپنی سائٹ کو تخصیص کریں"
       subtitle: "رنگ، خط اور آپ کے فورم کی ترتیب کا انتخاب کریں۔"
@@ -884,6 +897,20 @@ ur:
       title:
         search: "پیغام کے لئے تلاش کریں"
         placeholder: "پیغام کا عنوان، یو آر ایل یا آئی ڈی یہاں ٹائپ کریں"
+    dsa_statements:
+      title: "DSA درجہ بندی"
+      help_title: "DSA کی درجہ بندی کے متعلق"
+      help: "اس ماڈریشن کے فیصلے کی وضاحت کرنے والا کمیونٹی کا قاعدہ اور زمرہ منتخب کریں۔ یہ اس کے ڈیجیٹل سروسز ایکٹ کے وجوہات کے بیان کے ساتھ محفوظ کیے جاتے ہیں۔"
+      rule: "کمیونٹی کا قانون"
+      rule_prompt: "ایک کمیونٹی کا قاعدہ منتخب کریں"
+      category: "زُمرَہ"
+      category_prompt: "ایک زمرہ منتخب کریں"
+      pending: "DSA کی درجہ بندی زیر التواء ہے"
+      confirm_title: "DSA درجہ بندی محفوظ کریں؟"
+      confirm_message: "کمیونٹی کا قاعدہ اور زمرہ چیک کریں۔ اس درجہ بندی کو محفوظ کرنے کے بعد تبدیل نہیں کیا جا سکتا۔"
+      save: "درجہ بندی محفوظ کریں"
+      saving: "محفوظ کیا جا رہا۔۔۔"
+      saved: "درجہ بندی محفوظ ہو گئی"
     review:
       show_more: "مزید دکھائیں"
       show_less: "کم دکھائیں"
@@ -1139,6 +1166,9 @@ ur:
         note_added: "نگران کا نوٹ"
         note_added_by: "نگران کا نوٹ بذریعہ %{username} · %{relativeDate}"
         no_events: "ظاہر کرنے کے لیے کوئی ٹائم لائن ایونٹس نہیں"
+      author_penalty:
+        toast:
+          undo: "کالعدم کریں"
       notes:
         add_note_description: "دیگر نگرانوں کو سیاق و سباق فراہم کرنے کے لیے ایک نوٹ شامل کریں۔"
         add_note_button: "نوٹ کا اضافہ"
@@ -1711,7 +1741,7 @@ ur:
       collapse_profile: "بند کریں"
       sr_collapse_profile: "پروفائل کی تفصیلات کو سکیڑیں"
       bookmarks: "بُکمارکس"
-      bio: "سائٹ کے بارے میں"
+      bio: "میرے بارے میں"
       timezone: "خطہ کے وقت"
       invited_by: "کی طرف سے مدعو کیا گیا:"
       trust_level: "فعالیت کا درجہ"
@@ -1799,7 +1829,6 @@ ur:
       admin: "%{user} ایک منتظم ہے"
       moderator_tooltip: "یہ رکن ایک نگران ہے"
       admin_tooltip: "یہ رکن ایک منتظم ہے"
-      silenced_tooltip: "یہ رکن خاموش ہے"
       suspended_notice: "یہ رکن %{date} تک معطل ہے۔"
       suspended_permanently: "یہ رکن معطل ہے۔"
       suspended_reason: "وجہ: "
@@ -1858,6 +1887,16 @@ ur:
       tracked_topics_link: "دیکھیں"
       automatically_unpin_topics: "جب میں نیچے پہنچ جاوں تو خودکار طور پر موضوعات کو اَن پِن کردیں"
       apps: "اپلیکیشنز"
+      mcp_authorizations:
+        endpoint: "وسائل"
+        scopes: "اسکوپس"
+        details: "تفصیلات"
+        last_used: "آخری بار استعمال ہوا۔"
+        never: "کبھی نہیں"
+        status: "حیثیت"
+        statuses:
+          active: "فعال"
+          revoked: "منسوخ"
       revoke_access: "رسائی مٹائیں"
       undo_revoke_access: "رسائی مٹانے کو منسوخ کریں"
       api_approved: "منظورشدہ"
@@ -2144,10 +2183,11 @@ ur:
         letter_based: "سسٹم تفویض کردہ پروفائل تصویر"
         uploaded_avatar: "اپنی مرضی کی تصویر"
         uploaded_avatar_empty: "اپنی مرضی کی تصویر شامل کریں"
+        current_avatar: "موجودہ تصویر"
+        associated_account: "%{provider} تصویر"
         upload_title: "آپنی تصویر اَپ لوڈ کریں"
         image_is_not_a_square: "انتباہ: ہم نے آپ کی تصویر کو کراپ کیا ہے؛ چوڑائی اور اونچائی برابر نہیں تھے۔"
         logo_small: "سائٹ کے چھوٹے لوگو کو طے شدہ طور پر استعمال کیا جاتا ہے۔"
-        use_custom: "یا حسب ضرورت اوتار اپ لوڈ کریں:"
       change_profile_background:
         title: "پروفائل ہیڈر"
         instructions: "پروفائل ہیڈرز درمیان میں ہوں گے اور ان کی طے شدہ چوڑائی 1110px ہوگی۔"
@@ -2601,6 +2641,7 @@ ur:
     user_status:
       save: "محفوظ کریں"
       set_custom_status: "حسب ضرورت حیثیت"
+      edit_status: "حیثیت میں ترمیم کریں"
       what_are_you_doing: "آپ کیا کر رہے ہو؟"
       pause_notifications: "اطلاعات کو روکیں"
       remove_status: "حیثیت ہٹا دیں"
@@ -2758,7 +2799,6 @@ ur:
       hide_forever: "نہیں شکریہ"
       hidden_for_session: "ٹھیک ہے ، ہم کل آپ سے پوچھیں گے۔ آپ ہمیشہ بھی ایک اکاؤنٹ بنانے کے لئے 'لاگ ان' کا استعمال کرسکتے ہیں۔"
       intro: "ہیلو! ایسا لگتا ہے کہ آپ بحث سے لطف اندوز ہو رہے ہیں، لیکن آپ نے اکاؤنٹ کے لئے سائن اَپ نہیں کیا۔"
-      value_prop: "ایک جیسی پوسٹس کو سکرول کر کے تھک گئے ہیں؟ جب آپ ایک اکاؤنٹ بناتے ہیں تو آپ ہمیشہ وہیں واپس آجائیں گے جہاں آپ نے چھوڑا تھا۔ اکاؤنٹ کے ساتھ آپ کو نئے جوابات کے بارے میں بھی مطلع کیا جا سکتا ہے، بُک مارکس کو محفوظ کیا جا سکتا ہے، اور دوسروں کا شکریہ ادا کرنے کے لیے لائکس کا استعمال کیا جا سکتا ہے۔ ہم سب مل کر اس کمیونٹی کو عظیم بنانے کے لیے کام کر سکتے ہیں۔ :heart:"
     offline_indicator:
       no_internet: "انٹرنیٹ کنکشن نہیں۔"
       refresh_page: "صفحہ ریفریش"
@@ -2817,7 +2857,7 @@ ur:
     search_hint: "اسم صارف یا ای میل (جدا کرنے کے لیے کامہ یا خالی جگہ)، یا ایک آئی پی"
     create_account:
       header_title: "خوش آمدید!"
-      disclaimer: "رجسٹر کرنے پر آپ <a href='%{privacy_link}' target='blank'>پردہ داری کی پالیسی</a> اور <a href='%{tos_link}' target='blank'>سروس کی شرائط</a> سے اتفاق کرتے ہیں۔"
+      disclaimer: "رجسٹر کرنے پر آپ <a href='%{privacy_link}' target='blank'> راز داری کی پالیسی</a> اور <a href='%{tos_link}' target='blank'>سروس کی شرائط</a> سے اتفاق کرتے ہیں۔"
       title: "سائن اپ"
       failed: "کچھ غلط ہو گیا، شاید یہ ای میل پہلے ہی سے رجسٹرڈ ہے، پاسورڈ بھول جانے والا رابطہ استعمال کر کے دیکھیں"
       associate: "پہلے سے ہی اکاؤنٹ ہے؟ <a href='%{associate_link}'>اپنے %{provider} اکاؤنٹ کو جوڈنے کرنے کے لیے</a> لاگ ان کریں۔"
@@ -2874,8 +2914,6 @@ ur:
       signup_instructions: "اس فورم میں شمولیت کے لیے اپنا ای میل درج کریں۔ ہم آپ کو تصدیق کے لیے ایک کوڈ بھیجیں گے جس سے آپ کی شروعات ہو جائے گی!"
       user_fields_title: "تقریباً مکمل"
       user_fields_instructions: "چند مزید تفصیلات، آپ کے اکاؤنٹ کی تخلیق کو انجام دینے کے لیے۔"
-      account_ready_title: "آپ کا اکاؤنٹ تیار ہے! 🎉"
-      account_ready_edit: "اپنا اسم صارف اور اوتار منتخب کریں"
       account_ready_continue: "جاری رکھیں"
       username_label: "اسمِ صارف"
       username_placeholder: "ایک اسم صارف منتخب کریں"
@@ -3289,8 +3327,7 @@ ur:
       cancel_edit: "ترمیم منسوخ کریں"
       draft_saved: "مسودہ محفوظ ہو گیا!"
       users_placeholder: "اراکین یا گروپس شامل"
-      title_placeholder: "ایک مختصر جملہ میں بتائیے کہ یہ بحث کس چیز کے بارے میں ہے؟"
-      title_placeholder_redesign: "عنوان"
+      title_placeholder: "عنوان"
       title_or_link_placeholder: "عنوان کو ٹائپ کریں، یا ایک رابطہ یہاں چسپاں کریں"
       edit_reason_placeholder: "آپ ترمیم کیوں کر رہے ہیں؟"
       topic_featured_link_placeholder: "عنوان کے ساتھ دکھایا گیا رابطہ درج کریں۔"
@@ -3308,8 +3345,6 @@ ur:
       show_preview: "جھلک دکھائیں"
       hide_preview: "جھلک چھپائیں"
       resize: "کمپوزر کا سائز تبدیل کریں"
-      switch_to_markdown: "معیاری مارک ڈاؤن ایڈیٹر پر سوئچ کریں (%{keyboardShortcut})"
-      switch_to_rich_text: "نئے رچ ٹیکسٹ ایڈیٹر پر جائیں (%{keyboardShortcut})"
       quote_post_title: "پوری پوسٹ کا اقتباس کریں"
       bold_label: "B"
       bold_title: "گہرا"
@@ -4968,6 +5003,7 @@ ur:
       list: "زمرہ جات کی فہرست دیکھیں"
       no_description: "براہ مہربانی اس زمرہ کی تفصیل شامل کریں۔"
       change_in_category_topic: "تفصیل میں ترمیم کریں"
+      latest_topics: "تازہ ترین ٹاپک"
       description_updated: "تفصیل اپ ڈیٹ ہو گئی"
       description_expand: "مزید دکھائیں"
       description_collapse: "کم دکھائیں"
@@ -5255,6 +5291,7 @@ ur:
       with_category: "%{filter} %{category} ٹاپک"
       filter:
         title: "%{filter}کے لیے فلٹر شدہ نتائج"
+        reset: "ری سیٹ"
         button:
           label: "فِلٹر"
       latest:
@@ -5462,9 +5499,6 @@ ur:
       admin:
         title: "منتظم"
     badges:
-      earned_n_times:
-        one: "یہ تمغہ %{count} دفعہ حاصل کیا"
-        other: "یہ تمغہ %{count} مرتبہ حاصل کیا"
       granted_on: "عطا کیا گیا %{date}"
       others_count:
         one: "دوسروں کو %{count} دفعہ نوازا"
@@ -5499,16 +5533,18 @@ ur:
       favorite_max_not_reached: "اس تمغہ کو پسندیدہ کے بطور نشان زد کریں"
       favorite_count: "%{max} تمغات کو پسندیدہ کے طور پر %{count}نشان زد کیا گیا"
     download_calendar:
-      title: "کیلنڈر ڈاؤن لوڈ کریں"
+      title: "کیلنڈر میں شامل کریں"
+      calendar: "کیلنڈر"
       save_ics: ".ics فائل ڈاؤن لوڈ کریں"
       save_google: "گوگل کیلنڈر میں شامل کریں"
       remember: "مجھے دوبارہ مت پوچھیں"
-      remember_explanation: "(آپ اس ترجیح کو اپنے رکن کی ترجیحات میں تبدیل کر سکتے ہیں)"
       download: "ڈاؤن لوڈ"
       default_calendar: "ڈیفالٹ کیلنڈر"
       default_calendar_instruction: "تعین کریں کہ تاریخیں محفوظ ہونے پر کون سا کیلنڈر استعمال کیا جائے"
       add_to_calendar: "کیلنڈر میں شامل کریں"
       google: "گوگل کیلنڈر"
+      outlook: "مائیکروسافٹ آؤٹ لک"
+      apple: "ایپل کیلنڈر"
       ics: "ICS"
       default_title: "طے شدہ ایونٹس"
     tagging:
@@ -5799,7 +5835,7 @@ ur:
                 one: "عنوان %{count} حرف سے چھوٹا ہونا چاہیے"
                 other: "عنوان %{count} حروف سے چھوٹا ہونا چاہیے۔"
         about:
-          header_link_text: "بارے میں"
+          header_link_text: "فورم کے متعلق"
         messages:
           header_link_text: "پیغامات"
           header_action_title: "ایک ذاتی پیغام بنائیں"
@@ -5829,7 +5865,7 @@ ur:
             header_dropdown: "مرضی کے مطابق بنائیں"
           links:
             about:
-              content: "بارے میں"
+              content: "فورم کے متعلق"
               title: "اس سائٹ کے بارے میں مزید تفصیلات"
             admin:
               content: "منتظم"
@@ -5935,63 +5971,6 @@ ur:
           other: "ان پٹ %{count}سے زیادہ ہونا چاہیے۔"
         pattern_mismatch: "براہ کرم درخواست کردہ فارمیٹ سے مماثل ہوں۔"
         bad_input: "براہ کرم ایک درست ان پٹ درج کریں۔"
-    table_builder:
-      title: "ٹیبل بنانے والا"
-      modal:
-        title: "ٹیبل بنانے والا"
-        create: "ٹیبل بنائیں"
-        help:
-          title: "اسپریڈشیٹ ایڈیٹر کا استعمال"
-          enter_key: "اَینٹر"
-          tab_key: "ٹیب"
-          new_row: "ایک قطار کے آخر میں ایک نئی قطار داخل کرنے کے لیے۔"
-          new_col: "ایک نیا کالم داخل کرنے کے لیے کالم کے آخر میں۔"
-          options: "ڈراپ ڈاؤن مینو میں مزید اختیارات تک رسائی کے لیے سیلز پر دائیں کلک کریں۔"
-        confirm_close: "کیا آپ واقعی ٹیبل بلڈر کو بند کرنا چاہتے ہیں؟ کوئی بھی غیر محفوظ شدہ تبدیلیاں ضائع ہو جائیں گی۔"
-      edit:
-        btn_edit: "ٹیبل میں ترمیم"
-        modal:
-          title: "ٹیبل میں ترمیم"
-          cancel: "منسوخ"
-          create: "محفوظ کریں"
-          reason: "آپ ترمیم کیوں کر رہے ہیں؟"
-          trigger_reason: "ترمیم کی وجہ شامل کریں"
-        default_edit_reason: "ٹیبل ایڈیٹر کے ساتھ ٹیبل کو اپ ڈیٹ کریں"
-      default_header:
-        col_1: "کالم 1"
-        col_2: "کالم 2"
-        col_3: "کالم 3"
-        col_4: "کالم 4"
-      spreadsheet:
-        no_records_found: "کوئی ریکارڈ نہیں ملا"
-        show: "دکھائیں"
-        entries: "اندراجات"
-        about: "بارے میں"
-        prompts:
-          delete_selected_rows: "کیا آپ واقعی منتخب قطاروں کو حذف کرنا چاہتے ہیں؟"
-          delete_selected_cols: "کیا آپ واقعی منتخب کالموں کو حذف کرنا چاہتے ہیں؟"
-          will_destroy_merged_cells: "یہ عمل کسی بھی موجودہ ضم شدہ سیل کو ختم کر دے گا۔ کیا آپ کو یقین ہے؟"
-          will_clear_search_results: "یہ عمل کسی بھی موجودہ ضم شدہ سیل کو ختم کر دے گا۔ کیا آپ کو یقین ہے؟"
-          conflicts_with_merged_cells: "دوسرے ضم شدہ سیل کے ساتھ تنازعہ ہے"
-        invalid_merge_props: "غلط ضم شدہ خصوصیات"
-        cells_already_merged: "سیل پہلے ہی ضم ہو چکا"
-        no_cells_selected: "کوئی سیل منتخب نہیں"
-        context_menu:
-          row:
-            before: "اس سے پہلے ایک نئی قطار داخل کریں"
-            after: "اس کے بعد ایک نئی قطار داخل کریں"
-            delete: "منتخب قطاروں کو حذف کریں"
-          col:
-            before: "اس سے پہلے ایک نیا کالم داخل کریں"
-            after: "اس کے بعد ایک نیا کالم داخل کریں"
-            delete: "منتخب کالموں کو حذف کریں"
-            rename: "اس کالم کا نام تبدیل کریں"
-          order:
-            ascending: "چڑھتے ہوئے ترتیب دیں"
-            descending: "نزولی ترتیب"
-          copy: "کاپی۔۔۔"
-          paste: "چسپاں۔۔۔"
-          save: "محفوظ کرنا۔۔۔"
     powered_by_discourse: "تقویت بذریعہ Discourse"
     safari_15_warning: "آپ کا براؤزر جلد ہی اس کمیونٹی کے ساتھ مطابقت کھو دے گا۔ یہاں شرکت جاری رکھنے کے لیے، براہ کرم اپنا براؤزر اپ گریڈ کریں یا <a href='%{url}'>مزید جانیں</a>۔"
     filter:
@@ -6172,6 +6151,72 @@ ur:
           header_description: "اس سائٹ اور اپنی ٹیم کے بارے میں یہاں معلومات فراہم کریں تاکہ لوگ جان سکیں کہ آپ کی کمیونٹی کیا ہے، اس کے پیچھے کون ہے، اور کوئی مسئلہ ہونے کی صورت میں آپ تک کیسے پہنچنا ہے۔ آپ کی سائٹ کے <a href='%{basePath}/about'>کے بارے میں صفحہ</a>پر دکھایا گیا ہے۔"
         developer:
           title: "ڈیولپر"
+        mcp:
+          tabs:
+            access: "رسائی"
+            activity: "سرگرمی"
+          overview:
+            status: "حیثیت"
+          access:
+            title: "رسائی"
+            group: "گروپ"
+            groups: "گروپس"
+            actions: "عمل"
+            edit: "ترمیم کریں"
+            delete: "مٹائیں"
+          primitives:
+            group_by: "گروہ بذریعہ"
+            group_by_options:
+              scope: "دائرہ کار"
+              provider: "پرووَائیڈر"
+              kind: "قِسم"
+            provider: "پرووَائیڈر"
+            kind: "قِسم"
+            scope: "دائرہ کار"
+            scopes: "اسکوپس"
+          clients:
+            actions: "عمل"
+            block: "بلاک کریں"
+            presets:
+              custom: "اپنی مرضی کا"
+            automatic: "خود کار طریقے سے"
+          authorizations:
+            user: "رکن"
+            last_used: "آخری بار استعمال ہوا۔"
+            status: "حیثیت"
+            actions: "عمل"
+          activity:
+            outcome: "نتیجہ"
+            time: "وقت"
+            user: "رکن"
+            duration: "دورانیہ"
+          values:
+            server_status:
+              available: "دستیاب"
+              disabled: "غیر فعال"
+            client_trust:
+              approved: "منظورشدہ"
+            authorization_status:
+              active: "فعال"
+              revoked: "منسوخ"
+            activity_outcome:
+              success: "کامیابی"
+              error: "خرابی"
+            primitive_state:
+              enabled: "فعال شدہ"
+              disabled: "غیر فعال"
+              unavailable: "دستیاب نہیں"
+            primitive_kind:
+              all: "تمام اقسام"
+              resource: "وسائل"
+            primitive_risk:
+              read: "صرف پڑھنے کیلے"
+              moderation: "ماڈریٹر کا کام"
+            filter:
+              all: "تمام"
+          never: "کبھی نہیں"
+          actions:
+            revoke: "منسوخ کریں"
         experimental:
           title: "تجرباتی"
           header_description: "اپنی سائٹ کے لیے تجرباتی خصوصیات کو آن یا آف کریں، ان میں سے زیادہ تر کو گروپ کی بنیاد پر کنٹرول کیا جا سکتا ہے"
@@ -6187,7 +6232,7 @@ ur:
           header_description: "وہ ترتیبات جو فائل کے سائز اور قسم کی حدود، اوتار کے سائز اور ذرائع، فائل اسٹوریج، تصویر کا معیار اور کمپریشن وغیرہ کو کنٹرول کرتی ہیں"
         legal:
           title: "قانونی"
-          header_description: "قانونی ترتیبات کو ترتیب دیں، جیسے سروس کی شرائط، پردہ داری کی پالیسی، رابطے کی تفصیلات، اور EU کے مخصوص تحفظات"
+          header_description: "قانونی ترتیبات کو ترتیب دیں، جیسے سروس کی شرائط، راز داری کی پالیسی، رابطے کی تفصیلات، اور EU کے مخصوص تحفظات"
         theme_site_settings:
           title: "سائٹ تھیم کی ترتیبات"
           header_description: "سائٹ تھیم کی تمام ترتیبات اور تھیمز دکھاتا ہے جو فی الحال ان کو اوور رائیڈ کر رہے"
@@ -6734,8 +6779,61 @@ ur:
                   other: "-%{count} گرا"
               stable_aria: "کوئی حرکت نہیں"
             headline:
+              titles:
+                stickiness_and_daily_engagement_increased: "منتخب مدت میں مخلصی اور روزانہ کی مصروفیت میں اضافہ ہوا۔"
+                stickiness_and_new_signups_increased: "منتخب مدت میں مخلصی اور نئے سائن اپ میں اضافہ ہوا۔"
+                stickiness_increased: "منتخب مدت میں مخلصی بڑھ گئی۔"
+              summaries:
+                all_metrics_improved: "مخلصی، روزانہ کی مصروفیت، اور نئے سائن اپس سب میں بہتری آئی ہے، جس سے ظاہر ہوتا ہے کہ آپ کے فورم میں مزید صارفین شامل ہو رہے ہیں اور بحث میں حصہ لے رہے ہیں۔"
+                stickiness_and_daily_engagement_up_new_signups_down: "مخلصی اور روزانہ کی مصروفیت بڑھ گئی، لیکن نئے سائن اپ کم ہیں۔"
+                stickiness_and_daily_engagement_up_new_signups_flat: "مخلصی اور روزانہ کی مصروفیت بڑھ گئی، لیکن نئے سائن اپ میں بہتری نہیں۔"
+                stickiness_and_daily_engagement_up: "مخلصی اور روزانہ کی مصروفیت بڑھ گئی۔"
+                stickiness_and_new_signups_up_daily_engagement_down: "مخلصی اور نئے سائن اپ ہو رہے ہیں، لیکن روزانہ کی مصروفیت کم ہے۔"
+                stickiness_up_daily_engagement_and_new_signups_down: "مخلصی بہتر ہے، لیکن روزانہ کی مصروفیات اور نئے سائن اپ کم ہیں۔"
+                stickiness_up_daily_engagement_down: "مخلصی بہتر ہے، لیکن روزانہ کی مصروفیت کم ہے۔"
+                stickiness_and_new_signups_up_daily_engagement_flat: "مخلصی اور نئے سائن اپ بڑھ رہے ہیں، لیکن روزانہ کی مصروفیت میں بہتری نہیں۔"
+                stickiness_up_new_signups_down: "مخلصی بہتر ہوئی، لیکن نئے سائن اپ کم ہیں۔"
+                stickiness_up_daily_engagement_and_new_signups_flat: "مخلصی بہتر ہے، لیکن روزانہ کی مصروفیات اور نئے سائن اپ بہتر نہیں۔"
+                stickiness_up_daily_engagement_flat: "مخلصی بہتر ہے، لیکن روزانہ کی مصروفیت بہتر نہیں۔"
+                stickiness_and_new_signups_up: "مخلصی اور نئے سائن اپ بہتر ہو رہے ہیں۔"
+                stickiness_up_new_signups_flat: "مخلصی بہتر ہوئی، لیکن نئے سائن اپ بہتر نہیں۔"
+                stickiness_up: "مخلصی بڑھ گئی۔"
+                daily_engagement_and_new_signups_up_stickiness_down: "روزانہ کی مصروفیت اور نئے سائن اپ ہوتے ہیں، لیکن مخلصی کم ہے۔"
+                daily_engagement_up_stickiness_and_new_signups_down: "روزانہ کی مصروفیت بڑھ رہی ہے، لیکن مخلصی اور نئے سائن اپ کم ہیں۔"
+                daily_engagement_up_stickiness_down: "روزانہ مصروفیت بڑھ گئی ہے، لیکن مخلصی کم ہے۔"
+                new_signups_up_stickiness_and_daily_engagement_down: "نئے سائن اپ بہتر ہیں، لیکن مخلصی اور روزانہ کی مصروفیت کم ہے۔"
+                all_metrics_down: "مخلصی، روزانہ کی مصروفیت، اور نئے سائن اپس سب گر رہے ہیں۔"
+                stickiness_and_daily_engagement_down_new_signups_steady: "مخلصی اور روزانہ کی مصروفیت کم ہے، لیکن نئے سائن اپ مستحکم ہیں۔"
+                stickiness_and_daily_engagement_down: "مخلصی اور روزانہ کی مصروفیت گر گئی۔"
+                new_signups_up_stickiness_down: "نئے سائن اپ بہتر ہیں، لیکن مخلصی کم ہے۔"
+                stickiness_and_new_signups_down_daily_engagement_steady: "مخلصی اور نئے سائن اپ کم ہیں، لیکن روزانہ کی مصروفیت مستحکم ہے۔"
+                stickiness_down_daily_engagement_and_new_signups_steady: "مخلصی کم ہے، لیکن روزانہ کی مصروفیت اور نئے سائن اپ مستحکم ہیں۔"
+                stickiness_down_daily_engagement_steady: "مخلصی کم ہے، لیکن روزانہ کی مصروفیت مستحکم ہے۔"
+                stickiness_and_new_signups_down: "مخلصی اور نئے سائن اپ گر رہے ہیں۔"
+                stickiness_down_new_signups_steady: "مخلصی کم ہے، لیکن نئے سائن اپ مستحکم ہیں۔"
+                stickiness_down: "مخلصی کم ہے۔"
+                daily_engagement_and_new_signups_up_stickiness_flat: "روزانہ کی مصروفیت اور نئے سائن اپ ہوتے ہیں، لیکن مخلصی بہتر نہیں ہے۔"
+                daily_engagement_up_new_signups_down: "روزانہ مصروفیت بڑھ رہی ہے، لیکن نئے سائن اپ کم ہیں۔"
+                daily_engagement_up_stickiness_and_new_signups_flat: "روزانہ کی مصروفیت بڑھ رہی ہے، لیکن مخلصی اور نئے سائن اپ بہتر نہیں۔"
+                daily_engagement_up_stickiness_flat: "روزانہ مصروفیت بڑھ گئی ہے، لیکن مخلصی بہتر نہیں۔"
+                new_signups_up_daily_engagement_down: "نئے سائن اپ بڑھے، لیکن روزانہ کی مصروفیت کم ہے۔"
+                daily_engagement_and_new_signups_down_stickiness_steady: "روزانہ کی مصروفیت اور نئے سائن اپ کم ہیں، لیکن مخلصی مستحکم ہے۔"
+                daily_engagement_down_stickiness_and_new_signups_steady: "روزانہ کی مصروفیت کم ہے، لیکن مخلصی اور نئے سائن اپ مستحکم ہیں۔"
+                daily_engagement_down_stickiness_steady: "روزانہ کی مصروفیت کم ہے، لیکن مخلصی مستحکم ہے۔"
+                new_signups_up_stickiness_and_daily_engagement_flat: "نئے سائن اپ بڑھے، لیکن مخلصی اور روزانہ کی مصروفیت بہتر نہیں۔"
+                new_signups_down_stickiness_and_daily_engagement_steady: "نئے سائن اپ کم ہیں، لیکن مخلصی اور روزانہ کی مصروفیت مستحکم ہے۔"
+                all_metrics_steady: "مخلصی، روزانہ کی مصروفیت، یا نئے سائن اپ میں کوئی معنی خیز تبدیلی نہیں۔"
+                stickiness_and_daily_engagement_steady: "مخلصی اور روزمرہ کی مصروفیات میں کوئی معنی خیز تبدیلی نہیں۔"
+                new_signups_up_stickiness_flat: "نئے سائن اپ بڑھے، لیکن مخلصی بہتر نہیں۔"
+                new_signups_down_stickiness_steady: "نئے سائن اپ کم ہیں، لیکن مخلصی مستحکم ہے۔"
+                stickiness_and_new_signups_steady: "مخلصی اور نئے سائن اپ میں کوئی معنی خیز تبدیلی نہیں۔"
+                stickiness_steady: "مخلصی میں کوئی معنی خیز تبدیلی نہیں۔"
+                daily_engagement_and_new_signups_up: "روزانہ کی مصروفیت اور نئے سائن اپ بڑھے ہیں۔"
+                daily_engagement_up_new_signups_flat: "روزانہ مصروفیت بڑھی ہے، لیکن نئے سائن اپ بہتر نہیں۔"
+                daily_engagement_up: "روزمرہ کی مصروفیت بڑھی ہے۔"
               metrics:
                 new_signups: "نئے جڑنے والے"
+                dau_mau: "مخلصی DAU / MAU"
                 daily_engaged_users: "روزانہ کی شراکت"
           search:
             title: "تلاش کریں"
@@ -6758,7 +6856,8 @@ ur:
                 no_match: "مماثلت نہیں"
                 poor_match: "ناقص مماثلت"
           system:
-            title: "سِسٹَم"
+            title: "نظام"
+            storage: "سٹوریج"
             status: "حیثیت"
             discourse_updated: "Discourse اَپ ڈیٹ کیا گیا"
             dashboard_updated: "ڈیش بورڈ کو اپ ڈیٹ کیا گیا"
@@ -6848,6 +6947,7 @@ ur:
             anonymous: "گمنام"
             crawlers: "کرالرز"
           see_details: "تفصیلات دیکھیں"
+          crawler_learn_more: "مزید جانیں"
         period:
           last_7_days: "پچھلے 7 دن"
           last_30_days: "پچھلے 30 دن"
@@ -7355,10 +7455,10 @@ ur:
           site_contact_group_help: |
             وہ گروپ جو خود بخود بھیجے گئے تمام ذاتی پیغامات میں مدعو کیا جاتا ہے۔
           your_organization: "آپ کی تنظیم"
-          your_organization_description: "ہم اس معلومات کو سروس کی شرائط اور پردہ داری کے نوٹس میں استعمال کریں گے تاکہ یہ ظاہر کیا جا سکے کہ سائٹ کون چلاتا ہے اور کس کے دائرہ اختیار میں ہے۔"
+          your_organization_description: "ہم اس معلومات کو سروس کی شرائط اور راز داری کے نوٹس میں استعمال کریں گے تاکہ یہ ظاہر کیا جا سکے کہ سائٹ کون چلاتا ہے اور کس کے دائرہ اختیار میں ہے۔"
           company_name: "نام"
           company_name_warning: |
-            اگر خالی چھوڑ دیا جائے تو، کوئی بوائلر پلیٹ سروس کی شرائط یا پردہ داری کا نوٹس فراہم نہیں کیا جائے گا۔
+            اگر خالی چھوڑ دیا جائے تو، کوئی بوائلر پلیٹ سروس کی شرائط یا راز داری کا نوٹس فراہم نہیں کیا جائے گا۔
           company_url: "ویب سائٹ"
           company_url_placeholder: "https://example-co.com"
           governing_law: "گورنمنٹ قانون"
@@ -7744,8 +7844,8 @@ ur:
           upload: "اَپ لوڈ"
           select_component: "ایک جزو منتخب کریں…"
           unsaved_changes_alert: "آپ نے ابھی تک اپنی تبدیلیوں کو محفوظ نہیں کیا ہے، کیا آپ ان کو رد کر کہ آگے جانا چاہتے ہیں؟"
-          unsaved_parent_themes: "آپ نے تھیمز کے لیے جزو تفویض نہیں کیا ہے، کیا آپ آگے بڑھنا چاہتے ہیں؟"
           discard: "منسوخ"
+          leave: "چھوڑ دیں"
           stay: "ادھر رہیں"
           edit_css_html: "کوڈ میں ترمیم کریں"
           edit_css_html_help: "آپ نے ابھی تک کسی کوڈ میں ترمیم نہیں کی۔"
@@ -8693,13 +8793,12 @@ ur:
           multiselect: "کثیر الانتخاب"
       site_text:
         description: "آپ اپنے فورم پر کسی بھی متن کو اپنی مرضی کے مطابق بنا سکتے ہیں"
-        search: "وہ متن تلاش کریں جس میں آپ ترمیم کرنا چاہتے ہیں۔"
+        search_label: "تلاش"
+        theme_disabled: "غیر فعال"
+        filters: "فِلٹر"
         title: "سائٹ کے متون"
         edit: "ترمیم کریں"
-        revert: "تبدیلیاں لوٹائیں"
         revert_confirm: "کیا آپ واقعی تبدیلیاں لوٹانا چاہتے ہیں؟"
-        go_back: "واپس سَرچ پر"
-        recommended: "اَپنی ضروریات کے مطابق کرنے کے لئے ہم مندرجہ ذیل ٹَیکسٹ کو اپنی مرضی کے حساب سے تبدیل کرنے کی تجویز دیں گے:"
         show_overriden: "صرف اووَر رائیڈ ہوئے دکھائیں"
         show_outdated: "صرف پرانا/غلط دکھائیں"
         show_untranslated: "صرف بغیر ترجمہ والی دکھائیں"

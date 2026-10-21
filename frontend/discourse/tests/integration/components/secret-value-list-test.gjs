@@ -14,9 +14,9 @@ module("Integration | Component | SecretValueList", function (hooks) {
     await render(
       <template>
         <SecretValueList
-          @values={{this.values}}
-          @setValidationMessage={{this.setValidationMessage}}
           @changeValueCallback={{this.changeValueCallback}}
+          @setValidationMessage={{this.setValidationMessage}}
+          @values={{this.values}}
         />
       </template>
     );
@@ -69,9 +69,9 @@ module("Integration | Component | SecretValueList", function (hooks) {
     await render(
       <template>
         <SecretValueList
-          @values={{this.values}}
-          @setValidationMessage={{this.setValidationMessage}}
           @changeValueCallback={{this.changeValueCallback}}
+          @setValidationMessage={{this.setValidationMessage}}
+          @values={{this.values}}
         />
       </template>
     );
@@ -104,9 +104,9 @@ module("Integration | Component | SecretValueList", function (hooks) {
     await render(
       <template>
         <SecretValueList
-          @values={{this.values}}
-          @setValidationMessage={{this.setValidationMessage}}
           @changeValueCallback={{this.changeValueCallback}}
+          @setValidationMessage={{this.setValidationMessage}}
+          @values={{this.values}}
         />
       </template>
     );
@@ -146,9 +146,9 @@ module("Integration | Component | SecretValueList", function (hooks) {
     await render(
       <template>
         <SecretValueList
-          @values={{this.values}}
-          @setValidationMessage={{this.setValidationMessage}}
           @changeValueCallback={{this.changeValueCallback}}
+          @setValidationMessage={{this.setValidationMessage}}
+          @values={{this.values}}
         />
       </template>
     );

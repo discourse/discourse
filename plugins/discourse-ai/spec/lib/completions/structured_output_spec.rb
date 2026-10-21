@@ -28,6 +28,40 @@ RSpec.describe DiscourseAi::Completions::StructuredOutput do
 
   before { enable_current_plugin }
 
+  describe "#content?" do
+    it "ignores whitespace and empty objects" do
+      ["", " \n", "{  }"].each do |raw|
+        output = described_class.new(message: { type: "string" })
+        output << raw
+        expect(output.content?).to eq(false)
+      end
+    end
+
+    it "distinguishes synthetic prefill from a broken brace-only provider response" do
+      structured_output << "{"
+      expect(structured_output.content?).to eq(false)
+      structured_output.finish
+      expect(structured_output.content?).to eq(true)
+
+      prefilled = described_class.new(message: { type: "string" })
+      prefilled.prefill
+      prefilled << " "
+      prefilled.finish
+      expect(prefilled.content?).to eq(false)
+    end
+
+    it "counts false, zero, and broken content without consuming property cursors" do
+      %w[{"bool":false} {"number":0} {broken].each do |raw|
+        output = described_class.new(bool: { type: "boolean" }, number: { type: "integer" })
+        output << raw
+        expect(output.content?).to eq(true)
+      end
+      structured_output << '{"message":"Answer"}'
+      expect(structured_output.content?).to eq(true)
+      expect(structured_output.read_buffered_property(:message)).to eq("Answer")
+    end
+  end
+
   describe "#read_buffered_property_chunk" do
     it "yields non-empty chunks, including whitespace-only ones" do
       yielded = []

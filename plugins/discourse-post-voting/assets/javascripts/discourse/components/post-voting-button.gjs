@@ -50,15 +50,15 @@ export default class PostVotingButton extends Component {
 
   <template>
     <DButton
-      {{on "click" this.onClick}}
-      @disabled={{this.disabled}}
-      @icon={{this.iconName}}
-      @title={{this.ariaLabel}}
-      @ariaLabel={{this.ariaLabel}}
       class={{dConcatClass
         "btn-transparent post-voting-button"
         this.buttonClasses
       }}
+      @ariaLabel={{this.ariaLabel}}
+      @disabled={{this.disabled}}
+      @icon={{this.iconName}}
+      @title={{this.ariaLabel}}
+      {{on "click" this.onClick}}
     />
   </template>
 }

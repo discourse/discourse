@@ -5,27 +5,27 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
-    @hideTabs={{true}}
-    @titleLabel={{i18n "admin.config.spam.title"}}
     @descriptionLabel={{i18n "admin.config.spam.header_description"}}
+    @hideTabs={{true}}
     @learnMoreUrl="https://meta.discourse.org/t/tips-for-preventing-spam/264020"
+    @titleLabel={{i18n "admin.config.spam.title"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/config/spam"
         @label={{i18n "admin.config.spam.title"}}
+        @path="/admin/config/spam"
       />
     </:breadcrumbs>
   </DPageHeader>
 
   <div class="admin-config-page__main-area">
     <AdminAreaSettings
-      @showBreadcrumb={{false}}
-      @categories="spam"
-      @path="/admin/config/spam"
-      @filter={{@controller.filter}}
       @adminSettingsFilterChangedCallback={{@controller.adminSettingsFilterChangedCallback}}
+      @categories="spam"
+      @filter={{@controller.filter}}
+      @path="/admin/config/spam"
+      @showBreadcrumb={{false}}
     />
   </div>
 </template>

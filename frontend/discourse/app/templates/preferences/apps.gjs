@@ -7,8 +7,8 @@ export default <template>
 
   <span>
     <PluginOutlet
-      @name="user-preferences-apps"
       @connectorTagName="div"
+      @name="user-preferences-apps"
       @outletArgs={{lazyHash model=@controller.model}}
     />
   </span>

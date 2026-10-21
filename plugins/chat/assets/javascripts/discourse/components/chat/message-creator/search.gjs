@@ -9,11 +9,11 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import { MODES } from "./constants";
-import ChatablesLoader from "./lib/chatables-loader";
-import List from "./list";
-import ListHandler from "./list-handler";
-import SearchInput from "./search-input";
+import { MODES } from "./constants.js";
+import ChatablesLoader from "./lib/chatables-loader.js";
+import List from "./list.gjs";
+import ListHandler from "./list-handler.gjs";
+import SearchInput from "./search-input.gjs";
 
 export default class ChatMessageCreatorSearch extends Component {
   @service chat;
@@ -135,8 +135,8 @@ export default class ChatMessageCreatorSearch extends Component {
 
   <template>
     <ListHandler
-      @items={{this.items}}
       @highlightedItem={{this.highlightedChatable}}
+      @items={{this.items}}
       @onHighlight={{this.highlightChatable}}
       @onSelect={{this.selectChatable}}
       @onShifSelect={{this.prefillAddMembers}}
@@ -151,16 +151,16 @@ export default class ChatMessageCreatorSearch extends Component {
 
             <DButton
               class="btn-flat chat-message-creator__search-input__cancel-button"
-              @icon="xmark"
               @action={{@close}}
+              @icon="xmark"
             />
           </div>
 
           <List
-            @items={{this.items}}
             @highlightedItem={{this.highlightedChatable}}
-            @onSelect={{this.selectChatable}}
+            @items={{this.items}}
             @onHighlight={{this.highlightChatable}}
+            @onSelect={{this.selectChatable}}
             @onShiftSelect={{this.prefillAddMembers}}
           />
         </div>

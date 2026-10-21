@@ -1,6 +1,6 @@
 import { classNames } from "@ember-decorators/component";
 import MultiSelectComponent from "discourse/select-kit/components/multi-select";
-import { HOUSE_AD_ROUTES } from "../lib/house-ad-routes";
+import { HOUSE_AD_ROUTES } from "../lib/house-ad-routes.js";
 
 @classNames("route-selector")
 export default class HouseAdsRouteSelector extends MultiSelectComponent {

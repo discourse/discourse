@@ -36,9 +36,9 @@ export default <template>
           <div class="header">
             {{#unless @report.showNotFoundError}}
               <DPageSubheader
+                @learnMoreUrl={{@report.model.description_link}}
                 @titleLabel={{@report.model.title}}
                 @titleUrl={{@report.model.reportUrl}}
-                @learnMoreUrl={{@report.model.description_link}}
               />
 
               {{#if @report.showDescriptionInTooltip}}
@@ -52,10 +52,10 @@ export default <template>
                     <:content>
                       {{#if @report.model.description_link}}
                         <a
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          href={{@report.model.description_link}}
                           class="info"
+                          href={{@report.model.description_link}}
+                          rel="noopener noreferrer"
+                          target="_blank"
                         >
                           {{@report.model.description}}
                         </a>
@@ -97,11 +97,11 @@ export default <template>
 
                 <DSegmentedControl
                   class="chart-groupings"
-                  @name="chart-grouping-{{@report.model.type}}"
-                  @label="admin.dashboard.reports.chart_group_period"
                   @items={{@report.chartGroupingSegmentItems}}
-                  @value={{@report.options.chartGrouping}}
+                  @label="admin.dashboard.reports.chart_group_period"
+                  @name="chart-grouping-{{@report.model.type}}"
                   @onSelect={{@report.changeGrouping}}
+                  @value={{@report.options.chartGrouping}}
                 />
               {{/if}}
 
@@ -109,10 +109,10 @@ export default <template>
                 <div class="chart__dates">
                   <DDateTimeInputRange
                     @from={{@report.startDate}}
-                    @to={{@report.endDate}}
                     @onChange={{@report.onChangeDateRange}}
                     @showFromTime={{false}}
                     @showToTime={{false}}
+                    @to={{@report.endDate}}
                   />
                 </div>
               {{/if}}
@@ -180,8 +180,8 @@ export default <template>
 
                   {{#if @report.model.relatedReport}}
                     <AdminReport
-                      @showFilteringUI={{false}}
                       @dataSourceName={{@report.model.relatedReport.type}}
+                      @showFilteringUI={{false}}
                     />
                   {{/if}}
                 {{/if}}
@@ -195,7 +195,7 @@ export default <template>
                   <div class="alert alert-info report-alert no-data">
                     {{dIcon "chart-pie"}}
                     {{#if @report.model.reportUrl}}
-                      <a href={{@report.model.reportUrl}} class="report-url">
+                      <a class="report-url" href={{@report.model.reportUrl}}>
                         <span>
                           {{#if @report.model.title}}
                             {{@report.model.title}}
@@ -218,9 +218,9 @@ export default <template>
                 <div class="chart__modes">
                   {{#each @report.displayedModes as |displayedMode|}}
                     <DButton
+                      class={{displayedMode.cssClass}}
                       @action={{fn @report.onChangeMode displayedMode.mode}}
                       @icon={{displayedMode.icon}}
-                      class={{displayedMode.cssClass}}
                     />
                   {{/each}}
                 </div>
@@ -228,10 +228,10 @@ export default <template>
               <div class="control">
                 <div class="input">
                   <DButton
-                    @action={{@report.exportCsv}}
-                    @label="admin.export_csv.button_text"
-                    @icon="download"
                     class="btn-default export-csv-btn"
+                    @action={{@report.exportCsv}}
+                    @icon="download"
+                    @label="admin.export_csv.button_text"
                   />
                 </div>
               </div>
@@ -240,10 +240,10 @@ export default <template>
                 <div class="control">
                   <div class="input">
                     <DButton
-                      @action={{@report.refreshReport}}
-                      @label="admin.dashboard.reports.refresh_report"
-                      @icon="arrows-rotate"
                       class="refresh-report-btn btn-default"
+                      @action={{@report.refreshReport}}
+                      @icon="arrows-rotate"
+                      @label="admin.dashboard.reports.refresh_report"
                     />
                   </div>
                 </div>
@@ -253,10 +253,10 @@ export default <template>
         </div>
         {{#if (and @report.isChartMode @report.hasRelatedItems)}}
           <AdminReportRelatedItems
+            @endDate={{@report.endDate}}
             @relatedItems={{@report.model.related_items}}
             @relatedItemsTotals={{@report.model.related_items_totals}}
             @startDate={{@report.startDate}}
-            @endDate={{@report.endDate}}
             @type={{@report.model.type}}
           />
         {{/if}}

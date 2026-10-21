@@ -31,6 +31,7 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
   let(:user_guardian) { user.guardian }
 
   before { SiteSetting.data_explorer_enabled = true }
+
   let(:query_ids_to_invalidate) { [visible_query.id] }
 
   after do
@@ -294,6 +295,24 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
       expect(payload[:empty]).to eq(false)
     end
 
+    it "does not serve relations cached under another user's guardian" do
+      pm = Fabricate(:private_message_topic)
+      moderator = Fabricate(:moderator)
+      group.add(moderator)
+      query = Fabricate(:query, sql: "SELECT #{pm.id} AS topic_id", user: admin)
+      DiscourseDataExplorer::QueryGroup.create!(query: query, group: group)
+      query_ids_to_invalidate << query.id
+      DiscourseDataExplorer::QueryRunner.run(query, {}, current_user: admin)
+
+      payload =
+        described_class.fetch_many([query.id.to_s], guardian: moderator.guardian).fetch(
+          query.id.to_s,
+        )
+
+      expect(payload[:rows]).to eq([[pm.id]])
+      expect(payload[:relations][:topic].as_json).to be_blank
+    end
+
     it "runs queries when their cached results are over an hour old" do
       now = Time.now
       freeze_time(now)
@@ -365,7 +384,8 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
         },
       )
 
-      cached = DiscourseDataExplorer::QueryRunner.cached_result(visible_query, {})
+      cached =
+        DiscourseDataExplorer::QueryRunner.cached_result(visible_query, {}, current_user: admin)
       expect(cached).to be_present
     end
 
@@ -377,7 +397,8 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
       freeze_time(now + 30.minutes)
       described_class.prewarm([visible_query.id.to_s], guardian: admin_guardian)
 
-      cached = DiscourseDataExplorer::QueryRunner.cached_result(visible_query, {})
+      cached =
+        DiscourseDataExplorer::QueryRunner.cached_result(visible_query, {}, current_user: admin)
       expect(cached[:cached_at]).to eq((now + 30.minutes).utc.iso8601)
     end
 
@@ -408,7 +429,9 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
 
       described_class.prewarm([visible_query.id.to_s], guardian: admin_guardian)
 
-      expect(DiscourseDataExplorer::QueryRunner.cached_result(visible_query, {})).to be_nil
+      expect(
+        DiscourseDataExplorer::QueryRunner.cached_result(visible_query, {}, current_user: admin),
+      ).to be_nil
     end
 
     it "skips queries with required parameters outside the dashboard filters" do
@@ -428,7 +451,9 @@ RSpec.describe DiscourseDataExplorer::AdminDashboardReportProvider do
         },
       )
 
-      expect(DiscourseDataExplorer::QueryRunner.cached_result(query, {})).to be_nil
+      expect(
+        DiscourseDataExplorer::QueryRunner.cached_result(query, {}, current_user: admin),
+      ).to be_nil
     end
   end
 

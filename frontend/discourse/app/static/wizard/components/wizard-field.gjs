@@ -5,7 +5,7 @@ import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { or } from "discourse/truth-helpers";
-import fields from "./fields";
+import fields from "./fields/index.js";
 
 export default class WizardFieldComponent extends Component {
   get field() {
@@ -63,10 +63,10 @@ export default class WizardFieldComponent extends Component {
 
       <div class="wizard-container__input">
         <this.component
-          @wizard={{@wizard}}
-          @step={{@step}}
           @field={{@field}}
           @fieldClass={{this.fieldClass}}
+          @step={{@step}}
+          @wizard={{@wizard}}
         />
       </div>
 

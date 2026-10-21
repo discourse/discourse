@@ -5,8 +5,8 @@ import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { optionalRequire } from "discourse/lib/utilities";
-import { eventHasLivestream } from "../../lib/livestream-utils";
-import LivestreamZoomEntry from "../livestream/zoom-entry";
+import { eventHasLivestream } from "../../lib/livestream-utils.js";
+import LivestreamZoomEntry from "../livestream/zoom-entry.gjs";
 
 // Renders the event's livestream as a playable video at the bottom of the event
 // card, from the cooked onebox served on the event (EventSerializer#livestream_
@@ -86,8 +86,8 @@ export default class Livestream extends Component {
         {{else if this.hasLivestreamOnebox}}
           {{#if this.videoAttributes}}
             <this.lazyVideo
-              @videoAttributes={{this.videoAttributes}}
               @onLoadedVideo={{this.preventCloak}}
+              @videoAttributes={{this.videoAttributes}}
             />
           {{else}}
             {{this.oneboxHtml}}

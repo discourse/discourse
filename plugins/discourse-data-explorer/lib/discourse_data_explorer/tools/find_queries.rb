@@ -31,10 +31,6 @@ module DiscourseDataExplorer
         }
       end
 
-      def self.custom?
-        true
-      end
-
       def self.name
         "find_queries"
       end

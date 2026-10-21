@@ -163,6 +163,7 @@ RSpec.describe TagGroup do
 
   describe "tag_names=" do
     let(:tag_group) { Fabricate(:tag_group) }
+
     fab!(:tag)
 
     before { SiteSetting.tagging_enabled = true }

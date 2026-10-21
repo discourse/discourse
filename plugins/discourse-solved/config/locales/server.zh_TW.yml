@@ -50,7 +50,6 @@ zh_TW:
     prioritize_solved_topics_in_search: "在搜尋結果中優先顯示已解決主題。"
     enable_support_category_type_setup: "在分類建立設定中啟用「支援」分類類型選項。"
     enable_solved_shared_issues: "在支援分類的未解決主題新增「我也是」按鈕，讓成員表示自己也遇到相同問題，並選擇接收主題解答通知。"
-    enable_solved_badges: "啟用 Solved 徽章，當成員為其他人的問題提供解答時授予。"
     show_who_marked_solved: "顯示誰將主題標示為已解決。會在主題第一篇貼文與解答貼文的工具提示中顯示。"
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"

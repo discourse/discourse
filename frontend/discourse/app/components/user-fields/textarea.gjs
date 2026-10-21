@@ -3,16 +3,16 @@ import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import DInputTip from "discourse/ui-kit/d-input-tip";
 import { i18n } from "discourse-i18n";
-import UserFieldBase from "./base";
+import UserFieldBase from "./base.js";
 
 export default class UserFieldTextArea extends UserFieldBase {
   <template>
     <div class="controls">
       <Textarea
-        id={{concat "user-" this.elementId}}
-        @value={{this.value}}
         class="form-template-field__textarea"
+        id={{concat "user-" this.elementId}}
         maxlength={{this.site.user_field_max_length}}
+        @value={{this.value}}
       />
       <label
         class="control-label alt-placeholder"

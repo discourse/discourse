@@ -10,7 +10,7 @@ describe Chat::MessageSerializer do
 
   let(:guardian) { Guardian.new(guardian_user) }
 
-  describe "#mentioned_users" do
+  describe "#mentioned_users with a configured mention limit" do
     it "is limited by max_mentions_per_chat_message setting" do
       Fabricate.times(2, :user_chat_mention, chat_message: message_1)
       SiteSetting.max_mentions_per_chat_message = 1
@@ -20,6 +20,42 @@ describe Chat::MessageSerializer do
   end
 
   describe "#blocks" do
+    it "serializes confirmation cards and cooks the question using the message author's permissions" do
+      private_category = Fabricate(:private_category, group: Group[:staff])
+      message_1.update!(
+        user: Fabricate(:admin),
+        blocks: [
+          {
+            type: "confirmation",
+            title: "Editing category: ##{private_category.slug_ref}::category",
+            description_label: "Duration:",
+            question: "Change ##{private_category.slug_ref}::category?",
+            parameters: [{ label: "name", value: "<new name>" }],
+            elements: [{ type: "button", text: { type: "plain_text", text: "Yes" } }],
+          },
+        ],
+      )
+
+      card = serializer.as_json[:blocks].first
+
+      title = Nokogiri::HTML5.fragment(card[:cooked_title])
+      expect(title.at_css("a.hashtag-cooked")["data-id"]).to eq(private_category.id.to_s)
+      expect(card[:description_label]).to eq("Duration:")
+      expect(card[:parameters]).to eq([{ "label" => "name", "value" => "<new name>" }])
+      question = Nokogiri::HTML5.fragment(card[:cooked_question])
+      expect(question.at_css("a.hashtag-cooked")["data-id"]).to eq(private_category.id.to_s)
+
+      message_1.blocks.first["status"] = "Approved by @#{message_1.user.username}."
+      message_1.blocks.first["elements"] = []
+      message_1.save!
+      resolved =
+        Chat::MessageSerializer.new(message_1, scope: guardian, root: false).as_json[:blocks].first
+
+      expect(resolved[:elements]).to be_empty
+      status = Nokogiri::HTML5.fragment(resolved[:cooked_status])
+      expect(status.at_css("a.mention").text).to eq("@#{message_1.user.username}")
+    end
+
     it "serializes button presentation without its private value" do
       message_1.update!(
         blocks: [
@@ -224,6 +260,29 @@ describe Chat::MessageSerializer do
         expect(serialized[:available_flags]).to be_empty
       end
 
+      context "when allow_all_users_to_flag_illegal_content is enabled" do
+        before do
+          SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
+          SiteSetting.allow_all_users_to_flag_illegal_content = true
+        end
+
+        it "returns only the illegal flag for silenced users" do
+          guardian.user.update!(silenced_till: 1.month.from_now)
+
+          serialized = described_class.new(message_1, options).as_json
+
+          expect(serialized[:available_flags]).to contain_exactly(:illegal)
+        end
+
+        it "returns only the illegal flag for users outside the allowed groups" do
+          SiteSetting.chat_message_flag_allowed_groups = ""
+
+          serialized = described_class.new(message_1, options).as_json
+
+          expect(serialized[:available_flags]).to contain_exactly(:illegal)
+        end
+      end
+
       it "returns an empty list if the message was deleted" do
         message_1.trash!
 
@@ -284,7 +343,7 @@ describe Chat::MessageSerializer do
     end
   end
 
-  describe "#mentioned_users" do
+  describe "#mentioned_users after a mentioned user is deleted" do
     it "doesn't fail if mentioned user was deleted" do
       mentioned_user = Fabricate(:user)
       message =

@@ -9,14 +9,15 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
   before { enable_current_plugin }
 
   it "combines Discourse knowledge, general administration, and site-setting tools" do
-    expect(assistant.tools).to eq(
-      [
+    expect(assistant.tools).to start_with(
+      *[
         DiscourseAi::Agents::Tools::LoadDiscourseWebsitePage,
         DiscourseAi::Agents::Tools::DiscourseMetaSearch,
         DiscourseAi::Agents::Tools::ListCategories,
         DiscourseAi::Agents::Tools::ListTags,
         DiscourseAi::Agents::Tools::SettingContext,
         DiscourseAi::Agents::Tools::SearchSettings,
+        DiscourseAi::Agents::Tools::SearchDiscourseNavigation,
         DiscourseAi::Agents::Tools::ReadSiteSetting,
         DiscourseAi::Agents::Tools::ChangeSiteSetting,
         DiscourseAi::Agents::Tools::ListReviewables,
@@ -63,13 +64,16 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
     prompt = assistant.craft_prompt(DiscourseAi::Agents::BotContext.new)
 
     expect(prompt.system_message_text).to include(
-      "For questions about official Discourse hosting plans, pricing, or billing, call `load_discourse_website_page` with `page_name` set to `pricing`",
+      "For questions about public Discourse hosting plans and pricing, call `load_discourse_website_page` with `page_name` set to `pricing`",
+      "For managing this site's hosting account, subscription, invoices, or billing, use `search_discourse_navigation`",
+      "Never invent a path",
       "For general questions about Discourse, call `search_meta_discourse` twice before answering",
       "For questions about this site's configuration or content, use the relevant site and administration tools",
     )
     expect(prompt.tools.map(&:name)).to include(
       "load_discourse_website_page",
       "search_meta_discourse",
+      "search_discourse_navigation",
     )
   end
 

@@ -11,15 +11,64 @@ RSpec.describe "Discourse Workflows" do
     sign_in(admin)
   end
 
-  it "creates a workflow with trigger and action" do
+  it "creates a workflow and switches between modifying and replacing topic tags" do
+    topic = Fabricate(:topic)
+    tag = Fabricate(:tag)
+
     editor_page.visit_new
     editor_page.click_empty_state_add_node
     editor_page.select_node_type("trigger:topic_closed")
     editor_page.click_add_node
-    editor_page.select_node_type("action:topic_tags", operation: "add")
+    editor_page.select_node_type("action:topic_tags")
+    editor_page.double_click_node(1)
+
+    expect(editor_page).to have_combined_topic_tag_fields
+
+    editor_page.set_tagged_topic(topic)
+    editor_page.select_topic_tag_mode("Replace all")
+    expect(editor_page).to have_replacement_topic_tag_fields
+    editor_page.add_replacement_tag(tag)
+    expect(editor_page).to have_saved_node_configuration
+
+    page.refresh
+    expect(editor_page).to have_replacement_topic_tag_fields
+    expect(editor_page).to have_replacement_tag(tag)
+
+    editor_page.select_topic_tag_mode("Modify")
+    expect(editor_page).to have_combined_topic_tag_fields
+
+    editor_page.close_node_configurator
 
     workflows_page.visit_index
     expect(workflows_page).to have_workflow("My workflow")
+  end
+
+  it "keeps the operation expression and tag picker for existing topic tag nodes" do
+    node_id = "topic-tags"
+    topic = Fabricate(:topic)
+    tag = Fabricate(:tag)
+    workflow =
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        nodes: [
+          {
+            "id" => node_id,
+            "type" => "action:topic_tags",
+            "typeVersion" => "1.0",
+            "name" => "Legacy topic tags",
+            "parameters" => {
+              "operation" => "={{ $json.operation }}",
+              "topic_id" => topic.id.to_s,
+              "tag_names" => [tag.name],
+            },
+          },
+        ],
+      )
+
+    editor_page.visit_node(workflow, node_id)
+
+    expect(editor_page).to have_legacy_topic_tag_fields
   end
 
   it "creates a workflow with condition node" do
@@ -31,6 +80,79 @@ RSpec.describe "Discourse Workflows" do
 
     workflows_page.visit_index
     expect(workflows_page).to have_workflow("My workflow")
+  end
+
+  it "lets an admin scope a post trigger to specific topics" do
+    topic = Fabricate(:post).topic
+    workflow =
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        nodes: [
+          {
+            "id" => "post-created",
+            "type" => "trigger:post_created",
+            "typeVersion" => "1.0",
+            "name" => "Post created",
+            "parameters" => {
+            },
+          },
+        ],
+      )
+
+    editor_page.visit_node(workflow, "post-created")
+    editor_page.filter_by_topic(topic)
+    expect(editor_page).to have_saved_node_configuration
+    page.refresh
+    expect(editor_page).to have_topic_filter(topic)
+  end
+
+  it "lets an admin add fixed event triggers while keeping existing status filters editable" do
+    category = Fabricate(:category)
+    node_id = "existing-status"
+    workflow =
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        nodes: [
+          {
+            "id" => node_id,
+            "type" => "trigger:topic_status_changed",
+            "typeVersion" => "1.0",
+            "name" => "Topic status changed",
+            "parameters" => {
+              "statuses" => ["closed"],
+            },
+          },
+        ],
+      )
+
+    editor_page.visit_node(workflow, node_id)
+    expect(editor_page).to have_status_filter("Closed")
+    editor_page.add_status_filter("reopened")
+    expect(editor_page).to have_saved_node_configuration
+    page.refresh
+    expect(editor_page).to have_status_filter("Reopened")
+
+    editor_page.close_node_configurator
+    editor_page.click_add_node
+    editor_page.select_node_type("trigger:topic_reopened")
+    editor_page.double_click_node(1)
+    editor_page.filter_topics_by_category(category)
+    expect(editor_page).to have_saved_node_configuration
+    page.refresh
+    expect(editor_page).to have_node_configurator(name: "Topic reopened")
+    expect(editor_page).to have_fixed_topic_filters(category)
+
+    editor_page.close_node_configurator
+    editor_page.click_add_node
+    editor_page.select_node_type("trigger:reviewable_rejected")
+    editor_page.double_click_node(2)
+    editor_page.filter_reviewable_type("ReviewableQueuedPost")
+    expect(editor_page).to have_saved_node_configuration
+    page.refresh
+    expect(editor_page).to have_node_configurator(name: "Review item rejected")
+    expect(editor_page).to have_fixed_reviewable_filter("Reviewable queued post")
   end
 
   it "renders the failed-run warning icon based on the most recent execution" do
@@ -57,6 +179,40 @@ RSpec.describe "Discourse Workflows" do
 
     expect(workflows_page).to have_failed_workflow(failed_workflow)
     expect(workflows_page).to have_no_failed_workflow(recovered_workflow)
+  end
+
+  it "opens a user card from the creator" do
+    creator = Fabricate(:user)
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: creator)
+    user_card = PageObjects::Components::UserCard.new
+
+    workflows_page.visit_index
+
+    workflows_page.click_creator(workflow)
+    expect(user_card).to be_showing_user(creator.username)
+  end
+
+  it "opens a workflow from the edit button" do
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
+
+    workflows_page.visit_index
+    workflows_page.click_edit(workflow)
+
+    expect(page).to have_current_path("/admin/plugins/discourse-workflows/workflows/#{workflow.id}")
+  end
+
+  it "deletes a workflow from the row menu" do
+    workflow = Fabricate(:discourse_workflows_workflow, name: "Doomed", created_by: admin)
+    Fabricate(:discourse_workflows_workflow, name: "Survivor", created_by: admin)
+    dialog = PageObjects::Components::Dialog.new
+
+    workflows_page.visit_index
+    workflows_page.click_delete(workflow)
+    dialog.click_danger
+
+    expect(workflows_page).to have_no_workflow("Doomed")
+    expect(workflows_page).to have_workflow("Survivor")
+    expect(DiscourseWorkflows::Workflow.exists?(workflow.id)).to eq(false)
   end
 
   context "with workflow tags" do

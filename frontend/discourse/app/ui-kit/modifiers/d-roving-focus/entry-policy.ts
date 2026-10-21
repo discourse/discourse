@@ -1,4 +1,4 @@
-import type { DRovingFocusConfig } from "./config";
+import type { DRovingFocusConfig } from "./config.ts";
 
 function hasCurrentToken(item: HTMLElement): boolean {
   const current = item.getAttribute("aria-current");
@@ -11,6 +11,15 @@ export function prefersSelected(config: DRovingFocusConfig): boolean {
     config.entryFocus === "selected-or-first" ||
     config.entryFocus === "selected-or-none"
   );
+}
+
+/**
+ * Returns whether the Tab stop belongs to the marked item rather than to whatever focus reached.
+ * The stop is then re-derived on every seed, so a cursor left elsewhere never becomes the entry
+ * point.
+ */
+export function anchorsToSelection(config: DRovingFocusConfig): boolean {
+  return config.tabStopAnchor === "selection";
 }
 
 /** Returns whether entry may fall back to the first eligible item. */

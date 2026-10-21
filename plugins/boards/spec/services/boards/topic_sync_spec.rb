@@ -56,7 +56,7 @@ RSpec.describe Boards::TopicSync do
     expect(card.column_changed_at).to be_present
   end
 
-  it "publishes created topic cards to board ACL groups" do
+  it "publishes board updates for created topic cards to board ACL groups" do
     tagged_topic = Fabricate(:topic, tags: [tag_a])
     board =
       Boards::Board.create!(
@@ -83,11 +83,11 @@ RSpec.describe Boards::TopicSync do
       MessageBus.track_publish("/boards/#{board.id}") { described_class.sync_topic(tagged_topic) }
 
     expect(messages.size).to eq(1)
-    expect(messages.first.data[:type]).to eq("card_created")
+    expect(messages.first.data).to eq(type: "board_updated", client_id: nil)
     expect(messages.first.group_ids).to contain_exactly(read_group.id, write_group.id)
   end
 
-  it "publishes created topic cards without group restrictions for anonymous board ACLs" do
+  it "publishes board updates for created topic cards without group restrictions for anonymous board ACLs" do
     tagged_topic = Fabricate(:topic, tags: [tag_a])
     board =
       Boards::Board.create!(
@@ -108,7 +108,7 @@ RSpec.describe Boards::TopicSync do
       MessageBus.track_publish("/boards/#{board.id}") { described_class.sync_topic(tagged_topic) }
 
     expect(messages.size).to eq(1)
-    expect(messages.first.data[:type]).to eq("card_created")
+    expect(messages.first.data).to eq(type: "board_updated", client_id: nil)
     expect(messages.first.group_ids).to be_nil
   end
 
@@ -307,14 +307,13 @@ RSpec.describe Boards::TopicSync do
         created_by_id: admin.id,
       )
     column = board.columns.create!(title: "Backlog", position: 0)
-    card =
-      board.cards.create!(
-        topic_id: topic.id,
-        card_type: :topic,
-        column_id: column.id,
-        position: 0,
-        created_by_id: admin.id,
-      )
+    board.cards.create!(
+      topic_id: topic.id,
+      card_type: :topic,
+      column_id: column.id,
+      position: 0,
+      created_by_id: admin.id,
+    )
     Fabricate(
       :access_control_list_with_groups,
       target: board,
@@ -326,8 +325,7 @@ RSpec.describe Boards::TopicSync do
       MessageBus.track_publish("/boards/#{board.id}") { described_class.remove_topic(topic.id) }
 
     expect(messages.size).to eq(1)
-    expect(messages.first.data[:type]).to eq("card_deleted")
-    expect(messages.first.data[:card_id]).to eq(card.id)
+    expect(messages.first.data).to eq(type: "board_updated", client_id: nil)
     expect(messages.first.group_ids).to contain_exactly(read_group.id)
   end
 
@@ -487,6 +485,30 @@ RSpec.describe Boards::TopicSync do
   end
 
   describe ".backfill_board" do
+    context "when the board is archived" do
+      subject(:result) { described_class.backfill_board(board) }
+
+      fab!(:board) do
+        Fabricate(
+          :boards_board,
+          slug: "archived-board",
+          archived: true,
+          category_ids: [category.id],
+        )
+      end
+      fab!(:column) { Fabricate(:boards_column, board:, tag_id: tag_a.id) }
+
+      it "preserves archived cards and avoids adding matching topics even with a stale board instance" do
+        board.archived = false
+        card = Fabricate(:boards_topic_card, board:, column:, topic:)
+        Fabricate(:topic, category:, tags: [tag_a])
+
+        result
+
+        expect(board.cards.pluck(:id)).to eq([card.id])
+      end
+    end
+
     it "creates cards for matching topics in tagged columns" do
       tagged_topic = Fabricate(:topic, category: category, tags: [tag_a])
 
@@ -735,6 +757,45 @@ RSpec.describe Boards::TopicSync do
 
       expect(post).to be_persisted
       expect(post.topic).to be_persisted
+    end
+  end
+
+  describe ".sync_topic" do
+    subject(:result) { described_class.sync_topic(topic) }
+
+    fab!(:board) do
+      Fabricate(:boards_board, slug: "archived-board", archived: true, category_ids: [category.id])
+    end
+    fab!(:column) { Fabricate(:boards_column, board:, tag_id: tag_a.id) }
+
+    let(:messages) { MessageBus.track_publish("/boards/#{board.id}") { result } }
+
+    it "skips automatic placement in archived boards" do
+      topic.tags = [tag_a]
+
+      expect(messages).to be_empty
+      expect(board.cards).to be_empty
+    end
+
+    it "preserves existing archived cards when a topic stops matching" do
+      card = Fabricate(:boards_topic_card, board:, column:, topic:)
+
+      expect(messages).to be_empty
+      expect(board.cards.pluck(:id)).to eq([card.id])
+    end
+  end
+
+  describe ".remove_topic" do
+    subject(:result) { described_class.remove_topic(topic.id) }
+
+    fab!(:board) { Fabricate(:boards_board, slug: "archived-board", archived: true) }
+    fab!(:card) { Fabricate(:boards_topic_card, board:, topic:) }
+
+    let(:messages) { MessageBus.track_publish("/boards/#{board.id}") { result } }
+
+    it "preserves the archived card without publishing a removal" do
+      expect(messages).to be_empty
+      expect(board.cards.pluck(:id)).to eq([card.id])
     end
   end
 end

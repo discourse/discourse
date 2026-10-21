@@ -14,11 +14,11 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import DiscoursePostEvent from "discourse/plugins/discourse-events/discourse/components/discourse-post-event";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
-import zoomFrameUrl from "../../lib/zoom-frame-url";
-import { isWithinEventTimeframe } from "../../models/discourse-post-event-event";
-import dismissKeyboardOnChatSend from "../../modifiers/dismiss-keyboard-on-chat-send";
-import zoomPageViewportFit from "../../modifiers/zoom-page-viewport-fit";
-import EmbeddableChatChannel from "./embeddable-chat-channel";
+import zoomFrameUrl from "../../lib/zoom-frame-url.js";
+import { isWithinEventTimeframe } from "../../models/discourse-post-event-event.js";
+import dismissKeyboardOnChatSend from "../../modifiers/dismiss-keyboard-on-chat-send.js";
+import zoomPageViewportFit from "../../modifiers/zoom-page-viewport-fit.js";
+import EmbeddableChatChannel from "./embeddable-chat-channel.gjs";
 
 const FRAME_MESSAGE_SOURCE = "discourse-zoom-frame";
 
@@ -211,24 +211,24 @@ export default class LivestreamZoomPage extends Component {
 
             <DButton
               @href={{this.zoomUrl}}
-              @label="discourse_events.livestream.zoom.open_in_zoom"
               @icon="up-right-from-square"
+              @label="discourse_events.livestream.zoom.open_in_zoom"
             />
 
             <DButton
-              @action={{this.retryZoom}}
-              @label="discourse_events.livestream.zoom.join"
-              @icon="video"
               class="btn-primary"
+              @action={{this.retryZoom}}
+              @icon="video"
+              @label="discourse_events.livestream.zoom.join"
             />
           </div>
         {{/if}}
 
         <iframe
+          allow="camera; microphone; autoplay; display-capture; fullscreen"
           class="discourse-calendar-livestream-zoom-page__frame"
           src={{this.frameUrl}}
           title={{i18n "discourse_events.livestream.zoom.frame_title"}}
-          allow="camera; microphone; autoplay; display-capture; fullscreen"
           {{this.listenForFrame}}
         ></iframe>
       {{else}}
@@ -236,8 +236,8 @@ export default class LivestreamZoomPage extends Component {
           <p class="discourse-calendar-livestream-zoom-page__waiting">
             {{i18n "discourse_events.livestream.zoom.too_early"}}
             <a
-              href={{this.topicUrl}}
               class="raw-link"
+              href={{this.topicUrl}}
               {{on "click" this.viewTopic}}
             >
               {{i18n "discourse_events.livestream.zoom.view_topic"}}
@@ -246,8 +246,8 @@ export default class LivestreamZoomPage extends Component {
 
           <DiscoursePostEvent
             @event={{this.event}}
-            @post={{this.post}}
             @hideLivestreamVideo={{true}}
+            @post={{this.post}}
           />
         </div>
 

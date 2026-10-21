@@ -9,20 +9,20 @@ import { i18n } from "discourse-i18n";
 const UserNav = <template>
   <section class="user-navigation user-navigation-primary">
     <DHorizontalOverflowNav
-      @ariaLabel="User primary"
       class="main-nav nav user-nav"
+      @ariaLabel="User primary"
     >
       {{#unless @user.profile_hidden}}
-        <DNavigationItem @route="user.summary" class="user-nav__summary">
+        <DNavigationItem class="user-nav__summary" @route="user.summary">
           {{dIcon "user"}}
           <span>{{i18n "user.summary.title"}}</span>
         </DNavigationItem>
 
         {{#if @showActivityTab}}
           <DNavigationItem
-            @route="userActivity"
-            @ariaCurrentContext="parentNav"
             class="user-nav__activity"
+            @ariaCurrentContext="parentNav"
+            @route="userActivity"
           >
             {{dIcon "bars-staggered"}}
             <span>{{i18n "user.activity_stream"}}</span>
@@ -32,9 +32,9 @@ const UserNav = <template>
 
       {{#if @showNotificationsTab}}
         <DNavigationItem
-          @route="userNotifications"
-          @ariaCurrentContext="parentNav"
           class="user-nav__notifications"
+          @ariaCurrentContext="parentNav"
+          @route="userNotifications"
         >
           {{dIcon "bell" class="glyph"}}
           <span>{{i18n "user.notifications"}}</span>
@@ -43,9 +43,9 @@ const UserNav = <template>
 
       {{#if @showPrivateMessages}}
         <DNavigationItem
-          @route="userPrivateMessages"
-          @ariaCurrentContext="parentNav"
           class="user-nav__personal-messages"
+          @ariaCurrentContext="parentNav"
+          @route="userPrivateMessages"
         >
           {{dIcon "envelope"}}
           <span>{{i18n "user.private_messages"}}</span>
@@ -54,9 +54,9 @@ const UserNav = <template>
 
       {{#if @canInviteToForum}}
         <DNavigationItem
-          @route="userInvited"
-          @ariaCurrentContext="parentNav"
           class="user-nav__invites"
+          @ariaCurrentContext="parentNav"
+          @route="userInvited"
         >
           {{dIcon "user-plus"}}
           <span>{{i18n "user.invited.title"}}</span>
@@ -64,23 +64,23 @@ const UserNav = <template>
       {{/if}}
 
       {{#if @showBadges}}
-        <DNavigationItem @route="user.badges" class="user-nav__badges">
+        <DNavigationItem class="user-nav__badges" @route="user.badges">
           {{dIcon "certificate"}}
           <span>{{i18n "badges.title"}}</span>
         </DNavigationItem>
       {{/if}}
 
       <PluginOutlet
-        @name="user-main-nav"
         @connectorTagName="li"
+        @name="user-main-nav"
         @outletArgs={{lazyHash model=@user}}
       />
 
       {{#if @user.can_edit}}
         <DNavigationItem
-          @route="preferences"
-          @ariaCurrentContext="parentNav"
           class="user-nav__preferences"
+          @ariaCurrentContext="parentNav"
+          @route="preferences"
         >
           {{dIcon "gear"}}
           <span>{{i18n "user.preferences.title"}}</span>

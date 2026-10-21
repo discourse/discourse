@@ -5,6 +5,22 @@
 # https://translate.discourse.org/
 
 ur:
+  markdown_endpoints:
+    latest: "تازہ ترین"
+    categories: "زمرہ جات"
+    tags: "ٹیگز"
+    replies: "جوابات"
+    last_updated: "آخری اپ ڈیٹ"
+    event:
+      location: "مقام"
+      link: "رابطہ"
+  mcp:
+    errors:
+      category_not_found: "زُمرہ نہیں ملا"
+      topic_not_found: "موضوع نہیں ملا"
+    oauth:
+      deny: "انکار"
+      approve: "مجاز بنائیں"
   llms_txt:
     sections:
       optional: "اختیاری"
@@ -929,7 +945,7 @@ ur:
   uploads:
     marked_insecure_from_theme_component_reason: "تھیم جزو میں استعمال شدہ اپ لوڈ"
   unsubscribe:
-    title: "غیر سَبسکرائب"
+    unsubscribe: "غیر سَبسکرائب"
     stop_watching_topic: "اس ٹاپک کو دیکھنا چھوڑ دیں، %{link}"
     mute_topic: "اِس ٹاپک کیلئے تمام اطلاعات کو خاموش کر دیں، %{link}"
     unwatch_category: "%{category} میں تمام ٹاپکس کو دیکھنا چھوڑ دیں"
@@ -1066,6 +1082,7 @@ ur:
         count: "دھاگے"
         share: "اشتراک"
       types:
+        new_members: "نئے اراکین"
         returning: "دوبارہ جڑنے والے"
         staff: "عملہ"
     posters_by_member_type_members:
@@ -1125,6 +1142,7 @@ ur:
         page_view_other: "دیگر ٹریفک"
       yaxis: "دن"
     dau_by_mau:
+      title: "DAU / MAU"
       xaxis: "دن"
       yaxis: "DAU/MAU"
     daily_engaged_users:
@@ -1205,7 +1223,7 @@ ur:
       yaxis: "پیغامات کی تعداد"
       description: "تمام نئے ذاتی پیغامات اور جوابات کی تعداد۔"
     system_private_messages:
-      title: "سِسٹَم"
+      title: "نظام"
       xaxis: "دن"
       yaxis: "پیغامات کی تعداد"
       description: "سِسٹم کے ذریعہ خود کار طریقہ سے بھیجے جانے والے ذاتی پیغامات کی تعداد۔"
@@ -1417,12 +1435,6 @@ ur:
       host_names: "آپ کی config/database.yml فائل ڈیفالٹ localhost نام استعمال کر رہا ہے۔ اِسے اپنے سائیٹ ہوسٹ کے نام پر اپ ڈیٹ کریں۔"
       queue_size: "قطار میں لگی جوبز کی تعداد %{queue_size}ہے، جو زیادہ ہے۔ یہ Sidekiq کے عمل (وں) کے ساتھ کسی مسئلے کی نشاندہی کر سکتا ہے، یا آپ کو Sidekiq کے مزید کارکنوں کو شامل کرنے کی ضرورت پڑ سکتی ہے۔"
       ram: "آپ کا سرور مجموعی طور پر 1 GB سے کم میموری کے ساتھ چل رہا ہے۔ کم ازکم 1 GB میموری تجویز کی گئی ہے۔"
-      google_oauth2_config: 'سرور کو گوگل OAuth2 (enable_google_oauth2_logins) کے ساتھ سائن اپ اور لاگ ان کی اجازت دینے کے لیے کنفیگر کیا گیا ہے، لیکن کلائنٹ آئی ڈی اور کلائنٹ کی خفیہ اقدار سیٹ نہیں ہیں۔ <a href="%{base_path}/admin/site_settings">سائٹ سیٹنگز</a> پر جائیں اور سیٹنگز کو اپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">مزید جاننے کے لیے یہ گائیڈ دیکھیں</a>۔'
-      facebook_config: 'سرور کو فیس بک کے ساتھ سائن اپ اور لاگ ان (enable_facebook_logins) کی اجازت دینے کے لیے ترتیب دیا گیا ہے، لیکن ایپ آئی ڈی اور ایپ کی خفیہ اقدار سیٹ نہیں ہیں۔ <a href="%{base_path}/admin/site_settings">سائٹ سیٹنگز</a> پر جائیں اور سیٹنگز کو اپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">مزید جاننے کے لیے یہ گائیڈ دیکھیں</a>۔'
-      twitter_config: 'سرور کو ٹویٹر کے ساتھ سائن اپ اور لاگ ان کرنے کی اجازت دینے کے لیے ترتیب دیا گیا ہے (enable_twitter_logins)، لیکن چابی اور خفیہ اقدار سیٹ نہیں۔ <a href="%{base_path}/admin/site_settings">سائٹ سیٹنگز</a> پر جائیں اور سیٹنگز کو اپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">مزید جاننے کے لیے یہ ہِدایَات دیکھیں</a>۔'
-      github_config: 'سرور کو گٹ ہب (enable_github_logins) کے ساتھ سائن اپ اور لاگ ان کی اجازت دینے کے لیے ترتیب دیا گیا ہے، لیکن کلائنٹ آئی ڈی اور خفیہ اقدار سیٹ نہیں ہیں۔ <a href="%{base_path}/admin/site_settings">سائٹ سیٹنگز</a> پر جائیں اور سیٹنگز کو اپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">مزید جاننے کے لیے یہ گائیڈ دیکھیں</a>۔'
-      s3_upload_config: 'سرور کو S3 پر فائلوں کو اَپ لوڈ کرنے کیلئے ترتیب دیا گیا ہے، لیکن کم از کم ایک درج ذیل ترتیب سَیٹ نہیں کی گئی ہے: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket۔ <a href="%{base_path}/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">مزید جاننے کے لئے "S3 پر تصویر اپ لوڈز کیسے سَیٹ کریں؟" ملاحظہ کریں</a>۔'
-      s3_backup_config: 'سرور کو S3 پر بیک اَپس اَپ لوڈ کرنے کیلئے ترتیب دیا گیا ہے، لیکن کم از کم ایک درج ذیل ترتیب سَیٹ نہیں کی گئی ہے: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket۔ <a href="%{base_path}/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">مزید جاننے کے لئے "S3 پر تصویر اپ لوڈز کیسے سَیٹ کریں؟" ملاحظہ کریں</a>۔'
       s3_cdn: 'سرور کو S3 پر فائلیں اپ لوڈ کرنے کے لیے کنفیگر کیا گیا ہے، لیکن کوئی S3 CDN کنفیگر نہیں ہے۔ یہ مہنگے S3 اخراجات اور سائٹ کی سست کارکردگی کا باعث بن سکتا ہے۔ <a href="https://meta.discourse.org/t/-/148916" target="_blank">مزید جاننے کے لیے "اپ لوڈز کے لیے آبجیکٹ اسٹوریج کا استعمال" دیکھیں</a>۔'
       image_magick: 'سرور کو بڑی تصاویر کے تھَمب نَیل تخلیق کرنے کیلئے ترتیب دیا گیا ہے، لیکن ImageMagick اِنسٹال نہیں ہے۔ اپنے پسندیدہ پیکیج مینیجر کا استعمال کرکے ImageMagick اِنسٹال کریں یا <a href="https://www.imagemagick.org/script/download.php" target="_blank">تازہ ترین ورژن ڈاؤن لوڈ کریں</a>۔'
       failing_emails: 'ناکام ہونے والی %{num_failed_jobs} ای میل ہیں۔ اپنا app.yml چیک کریں اور یقینی بنائیں کہ میل سرور کی ترتیبات درست ہیں۔ <a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq میں ناکامیاں دیکھیں</a>۔'
@@ -1746,7 +1758,7 @@ ur:
     topic_post_like_heat_high: "جب لائیکس:پوسٹ تناسب اِس تناسب سے زیادہ ہو جاتا ہے، تو پوسٹ شمار فیلڈ زور کے ساتھ اُجاگر کر دی جاتی ہے۔"
     faq_url: "اگر آپ کے پاس ایک FAQ کسی اور جگہ پر ہَوسٹ کیا ہوا ہے جو آپ استعمال کرنا چاہتے ہیں، تو یہاں مکمل URL فراہم کریں۔"
     tos_url: "اگر آپ کے پاس ایک سروس کی شرائط کی دستاویز کسی اور جگہ پر ہَوسٹ کی ہوئی ہے جو آپ استعمال کرنا چاہتے ہیں، تو یہاں مکمل URL فراہم کریں۔"
-    privacy_policy_url: "اگر آپ کے پاس پردہ داری کی پالیسی کی دستاویز جو کہیں اور ہوسٹ کی گئی ہے اور آپ اسے استعمال کرنا چاہتے ہیں، تو پورا URL یہاں فراہم کریں۔"
+    privacy_policy_url: "اگر آپ کے پاس راز داری کی پالیسی کی دستاویز جو کہیں اور ہوسٹ کی گئی ہے اور آپ اسے استعمال کرنا چاہتے ہیں، تو پورا URL یہاں فراہم کریں۔"
     newuser_spam_host_threshold: "ایک نیا صارف کتنی دفعہ ایک ہی ہَوسٹ کا لِنک اپنی `newuser_spam_host_threshold` پوسٹس کے اندر شائع کر سکتا ہے، اِس سے پہلے کہ وہ سپَیم سمجھا جائے۔"
     allowed_spam_host_domains: "ڈومَینز کی فہرست جو سپیم ہَوسٹ کی جانچ پڑتال سے خارج ہے۔ نئے صارفین کو اِن ڈومینز کے لِنکس کے ساتھ پوسٹ بنانے سے کبھی روکا نہیں جائے گا۔"
     topic_view_duration_hours: "ہر ن گھنٹوں پر فی IP/صارف ایک نیا ٹاپک وِیو شمار کریں"
@@ -1914,8 +1926,8 @@ ur:
     suppress_overlapping_tags_in_list: "اگر ٹَیگز ٹاپک عنوانات میں موجود مکمل الفاظ سے مَیچ کرتے ہوں، تو ٹَیگ مت دکھائیں"
     remove_muted_tags_from_latest: "تازہ ترین ٹاپک فہرست میں صرف خاموش شدہ ٹَیگز کے ساتھ ٹَیگ کردہ ٹاپکس مت دکھائیں۔"
     force_lowercase_tags: "تمام نئے ٹیگز کو مکمل طور پر لَوئر کَیس ہونے پر مجبور کریں۔"
-    company_name: "آپ کی کمپنی یا تنظیم کا نام۔ اگر خالی چھوڑ دیا جائے تو، کوئی بوائلر پلیٹ سروس کی شرائط یا پردہ داری کا نوٹس فراہم نہیں کیا جائے گا۔"
-    governing_law: "اس دائرہ اختیار کی وضاحت کریں جو سائٹ کے قانونی پہلوؤں کو کنٹرول کرتا ہے، بشمول سروس کی شرائط اور پردہ داری کی پالیسی۔ یہ عام طور پر وہ ملک یا ریاست ہے جہاں سائٹ کو چلانے والی کمپنی رجسٹرڈ ہے یا کاروبار کرتی ہے۔"
+    company_name: "آپ کی کمپنی یا تنظیم کا نام۔ اگر خالی چھوڑ دیا جائے تو، کوئی بوائلر پلیٹ سروس کی شرائط یا راز داری کا نوٹس فراہم نہیں کیا جائے گا۔"
+    governing_law: "اس دائرہ اختیار کی وضاحت کریں جو سائٹ کے قانونی پہلوؤں کو کنٹرول کرتا ہے، بشمول سروس کی شرائط اور راز داری کی پالیسی۔ یہ عام طور پر وہ ملک یا ریاست ہے جہاں سائٹ کو چلانے والی کمپنی رجسٹرڈ ہے یا کاروبار کرتی ہے۔"
     shared_drafts_category: "موضوع کے مسودوں کے لیے ایک زمرہ متعین کرکے مشترکہ مسودات کی خصوصیت کو فعال کریں۔ اس زمرے کے موضوعات کو عملے کے لیے موضوعات کی فہرستوں سے دبا دیا جائے گا۔"
     dashboard_general_tab_activity_metrics: "جنرل ٹیب پر سرگرمی میٹریکس کے طور پر ظاہر ہونے والی رپورٹیں منتخب کریں۔"
     use_email_for_username_and_name_suggestions: "رکن نام اور نام کی تجاویز کے لیے ای میل پتوں کا پہلا حصہ استعمال کریں۔ انتباہ: یہ برے اداکاروں کے لیے آپ کے اراکین کے ای میل ایڈریس کو دریافت کرنا آسان بنا سکتا ہے (کیونکہ بہت سے لوگ عام ای میل فراہم کنندگان جیسے `gmail.com` استعمال کرتے ہیں)۔"
@@ -2114,6 +2126,7 @@ ur:
     password_too_long: "پاسورڈ 200 حروف تک محدود ہیں۔"
     email_too_long: "آپ کا فراہم کردہ ای میل بہت طویل ہے۔ میل باکس نام 254 حروف سے زیادہ نہیں ہونے چاہئیں، اور ڈَومین نام 253 حروف سے زیادہ نہیں ہونے چاہئیں۔"
     reserved_username: "اُس اسمِ صارف کی اجازت نہیں ہے۔"
+    missing_username: "براہ کرم اسم صارف درج کریں"
     auth_complete: "تصدیق مکمل ہوگئی ہے۔"
     click_to_continue: "جاری رکھنے کیلئے یہاں کلِک کریں۔"
     second_factor_title: "دو عنصری تصدیق"
@@ -3112,7 +3125,7 @@ ur:
         ایک سٹاف ممبر نے %{site_name} پر آپ کے اکاؤنٹ کو منظور کیا۔
 
         اَب آپ لاگ اِن کرکے اپنے نئے اکاؤنٹ تک رسائی حاصل کرسکتے ہیں:
-        %{base_url}
+        %{login_url}
 
         اگر اوپر والا لِنک کلک نہیں ہوتا ہو، تو اپنے ویب براؤزر کے ایڈریس بار میں کاپی اور پَیسٹ کرنے کی کوشش کریں۔
 
@@ -3330,7 +3343,7 @@ ur:
   tos_topic:
     title: "سروس کی شرائط"
   privacy_topic:
-    title: "پردہ داری کی پالیسی"
+    title: "راز داری کی پالیسی"
   badges:
     editor:
       name: ترمیم کنندہ
@@ -3742,9 +3755,6 @@ ur:
         title: "جی ہاں"
       approve_and_unhide:
         title: "جی ہاں"
-      delete_post:
-        title: "پوسٹ کو حذف"
-        complete: "دھاگہ مٹا دیا"
       delete_user:
         complete: "صارف مٹادیا گیا"
         reason: "بذریعہ نظر ثانی قطار کے حذف کر دیا گیا"

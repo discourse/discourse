@@ -23,81 +23,10 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
-import { tagNames, tagSuggestionParams } from "../lib/ai-helper-suggestions";
-import { showComposerAiHelper } from "../lib/show-ai-helper";
-import AiBlinkingAnimation from "./ai-blinking-animation";
-import AiIndicatorWave from "./ai-indicator-wave";
-
-async function requestSuggestion(url, data) {
-  try {
-    return await ajax(url, { type: "POST", data });
-  } catch {
-    return null;
-  }
-}
-
-async function enrichNewTopic({
-  model,
-  query,
-  suggestTitle,
-  suggestTaxonomy,
-  canTagTopics,
-  maxTitleLength,
-}) {
-  const initialTitle = model.title;
-  const initialCategoryId = model.categoryId;
-  const initialTags = tagNames(model.tags);
-  const titleRequest = suggestTitle
-    ? requestSuggestion("/discourse-ai/ai-helper/suggest_title", {
-        text: query,
-      })
-    : null;
-  const categoryRequest = suggestTaxonomy
-    ? requestSuggestion("/discourse-ai/ai-helper/suggest_category", {
-        text: query,
-      })
-    : null;
-  const [titleResult, categoryResult] = await Promise.all([
-    titleRequest,
-    categoryRequest,
-  ]);
-
-  const suggestedTitle = titleResult?.suggestions?.[0]?.trim();
-  if (suggestedTitle && model.title === initialTitle) {
-    model.set("title", suggestedTitle.slice(0, maxTitleLength));
-  }
-
-  const suggestedCategory = categoryResult?.assistant?.[0];
-  if (suggestedCategory && model.categoryId === initialCategoryId) {
-    model.set("categoryId", suggestedCategory.id);
-  }
-
-  if (
-    !suggestTaxonomy ||
-    !canTagTopics ||
-    tagNames(model.tags).join("\0") !== initialTags.join("\0")
-  ) {
-    return;
-  }
-
-  const tagResult = await requestSuggestion(
-    "/discourse-ai/ai-helper/suggest_tags",
-    {
-      text: query,
-      ...tagSuggestionParams(model.categoryId, model.tags),
-    }
-  );
-  const suggestedTags = tagResult?.assistant
-    ?.map((tag) => tag.name)
-    .filter(Boolean);
-
-  if (
-    suggestedTags?.length &&
-    tagNames(model.tags).join("\0") === initialTags.join("\0")
-  ) {
-    model.set("tags", suggestedTags);
-  }
-}
+import { followUpAvailable } from "../lib/ai-follow-up.js";
+import { openTopicFromQuery } from "../lib/open-topic-from-query.js";
+import AiBlinkingAnimation from "./ai-blinking-animation.gjs";
+import AiIndicatorWave from "./ai-indicator-wave.gjs";
 
 export default class AiSearchDiscoveries extends Component {
   @service search;
@@ -131,29 +60,6 @@ export default class AiSearchDiscoveries extends Component {
       "full-page-search:trigger-search",
       this,
       this.triggerDiscovery
-    );
-  }
-
-  @bind
-  async _updateDiscovery(update) {
-    if (this.query === update.query) {
-      this.discobotDiscoveries.onDiscoveryUpdate(update);
-    }
-  }
-
-  @bind
-  unsubscribe() {
-    this.messageBus.unsubscribe(
-      "/discourse-ai/discoveries",
-      this._updateDiscovery
-    );
-  }
-
-  @bind
-  subscribe() {
-    this.messageBus.subscribe(
-      "/discourse-ai/discoveries",
-      this._updateDiscovery
     );
   }
 
@@ -202,6 +108,12 @@ export default class AiSearchDiscoveries extends Component {
     return this.siteSettings.ai_ask_ai_summary_detail !== "quiet";
   }
 
+  get answerLabel() {
+    return this.showAnswerTitle && this.discobotDiscoveries.discoveryTitle
+      ? this.discobotDiscoveries.discoveryTitle
+      : i18n("discourse_ai.discobot_discoveries.answer_label");
+  }
+
   get relatedCount() {
     return this.siteSettings.ai_ask_ai_related_count;
   }
@@ -227,36 +139,20 @@ export default class AiSearchDiscoveries extends Component {
 
   get fullSearchUrl() {
     const topicFilter = `topic:${this.candidateTopicIds.join(",")}`;
-    return getURL(`/filter?q=${encodeURIComponent(topicFilter)}`);
+    return getURL(
+      `/filter?q=${encodeURIComponent(topicFilter)}&query_label=${encodeURIComponent(this.query)}`
+    );
   }
 
   get canContinueConversation() {
-    const agents = this.currentUser?.ai_enabled_agents;
-    if (!this.siteSettings.ai_bot_enabled || !agents) {
-      return false;
-    }
-
     if (this.discobotDiscoveries.discoveryTimedOut) {
       return false;
     }
 
-    const followUpAgent = agents.find(
-      (agent) =>
-        agent.id === parseInt(this.siteSettings?.ai_ask_ai_follow_up_agent, 10)
-    );
-    const hasEnabledLlmBot = this.currentUser.ai_enabled_chat_bots?.some(
-      (bot) => !bot.is_agent && bot.username
-    );
-    const hasConversationRecipient = followUpAgent?.force_default_llm
-      ? followUpAgent.username
-      : hasEnabledLlmBot || followUpAgent?.username;
-    const followUpAgentCanReceiveMessages =
-      followUpAgent?.allow_personal_messages && hasConversationRecipient;
-
     return (
       (this.discobotDiscoveries.discovery?.length > 0 || this.hasSources) &&
       !this.discobotDiscoveries.isStreaming &&
-      followUpAgentCanReceiveMessages
+      followUpAvailable(this.siteSettings, this.currentUser)
     );
   }
 
@@ -271,10 +167,16 @@ export default class AiSearchDiscoveries extends Component {
     return this.discobotDiscoveries.suggestedFollowUp || "";
   }
 
+  // Offered once an answer has settled, so it isn't what a screen reader meets
+  // while waiting for one. The combined search picks the tab itself, so there
+  // is no default to set.
   get showAskAiDefaultToggle() {
     return (
       Boolean(this.currentUser) &&
+      !this.siteSettings.enable_ai_combined_search &&
       !this.hasNoContent &&
+      !this.discobotDiscoveries.loadingDiscoveries &&
+      !this.discobotDiscoveries.isStreaming &&
       !this.askAiDefaultDismissed
     );
   }
@@ -293,6 +195,35 @@ export default class AiSearchDiscoveries extends Component {
     }
 
     return "discourse_ai.discobot_discoveries.follow_up.submit";
+  }
+
+  get askAiDefaultDismissKey() {
+    return `ask-ai-default-dismissed-${this.currentUser?.id}`;
+  }
+
+  get askAiDefaultDismissed() {
+    // the stored value is not tracked, so the dismissal this session is what
+    // takes the control off screen without waiting for a reload
+    return (
+      this.dismissedAskAiDefault ||
+      Boolean(this.keyValueStore.get(this.askAiDefaultDismissKey))
+    );
+  }
+
+  @bind
+  unsubscribe() {
+    this.messageBus.unsubscribe(
+      "/discourse-ai/discoveries",
+      this._updateDiscovery
+    );
+  }
+
+  @bind
+  subscribe() {
+    this.messageBus.subscribe(
+      "/discourse-ai/discoveries",
+      this._updateDiscovery
+    );
   }
 
   @action
@@ -326,19 +257,6 @@ export default class AiSearchDiscoveries extends Component {
     if (this.args.closeSearchMenu) {
       this.args.closeSearchMenu();
     }
-  }
-
-  get askAiDefaultDismissKey() {
-    return `ask-ai-default-dismissed-${this.currentUser?.id}`;
-  }
-
-  get askAiDefaultDismissed() {
-    // the stored value is not tracked, so the dismissal this session is what
-    // takes the control off screen without waiting for a reload
-    return (
-      this.dismissedAskAiDefault ||
-      Boolean(this.keyValueStore.get(this.askAiDefaultDismissKey))
-    );
   }
 
   @action
@@ -432,25 +350,19 @@ export default class AiSearchDiscoveries extends Component {
       this.args.closeSearchMenu();
     }
 
-    await this.composer.openNewTopic({ title: this.query });
-
-    const model = this.composer.model;
-    const suggestionsEnabled = showComposerAiHelper(
-      model,
-      this.siteSettings,
-      this.currentUser,
-      "suggestions"
-    );
-
-    await enrichNewTopic({
-      model,
+    await openTopicFromQuery({
+      composer: this.composer,
+      currentUser: this.currentUser,
       query: this.query,
-      suggestTitle: suggestionsEnabled,
-      suggestTaxonomy:
-        suggestionsEnabled && this.siteSettings.ai_embeddings_enabled,
-      canTagTopics: this.currentUser.can_tag_topics,
-      maxTitleLength: this.siteSettings.max_topic_title_length,
+      siteSettings: this.siteSettings,
     });
+  }
+
+  @bind
+  async _updateDiscovery(update) {
+    if (this.query === update.query) {
+      this.discobotDiscoveries.onDiscoveryUpdate(update);
+    }
   }
 
   <template>
@@ -482,31 +394,44 @@ export default class AiSearchDiscoveries extends Component {
         {{else if this.discobotDiscoveries.discoveryTimedOut}}
           {{i18n "discourse_ai.discobot_discoveries.timed_out"}}
         {{else if this.noAnswer}}
-          <div class="ai-search-discoveries__no-answer">
+          {{! eslint-disable-next-line ember/template-no-invalid-interactive }}
+          <div
+            class="ai-search-discoveries__no-answer"
+            {{on "keydown" this.search.handleArrowUpOrDown}}
+          >
             <p class="ai-search-discoveries__no-answer-message">
               {{i18n "discourse_ai.discobot_discoveries.no_answer"}}
             </p>
             {{#if this.currentUser.can_create_topic}}
               <DButton
-                @label="discourse_ai.discobot_discoveries.create_topic"
-                @action={{this.createTopic}}
                 class="btn-primary btn-small ai-search-discoveries__create-topic"
+                data-search-menu-navigation-item
+                @action={{this.createTopic}}
+                @label="discourse_ai.discobot_discoveries.create_topic"
               />
             {{/if}}
           </div>
         {{else}}
           {{! eslint-disable ember/template-no-invalid-interactive }}
+          {{! a stop in the search menu's arrow and tab order, rather than only
+              reachable by a screen reader's virtual cursor; on the full page it
+              is already in reading order }}
           <article
+            aria-busy={{if this.discobotDiscoveries.isStreaming "true"}}
+            aria-label={{this.answerLabel}}
             class={{dConcatClass
               "ai-search-discoveries__discovery"
               (if this.discobotDiscoveries.isStreaming "streaming")
               "streamable-content"
             }}
+            data-search-menu-navigation-item={{unless @fullPage true}}
+            tabindex={{unless @fullPage "0"}}
             {{on "click" this.handleDiscoveryClick}}
+            {{on "keydown" this.search.handleArrowUpOrDown}}
           >
             <DCookText
-              @rawText={{this.discobotDiscoveries.streamedText}}
               class="cooked"
+              @rawText={{this.discobotDiscoveries.streamedText}}
             />
           </article>
 
@@ -516,13 +441,13 @@ export default class AiSearchDiscoveries extends Component {
       {{#if @showSources}}
         {{#if this.hasSources}}
           <section
-            class="ai-discovery-sources"
             aria-labelledby="ai-discovery-sources-title"
+            class="ai-discovery-sources"
           >
             <header class="ai-discovery-sources__header">
               <h4
-                id="ai-discovery-sources-title"
                 class="ai-discovery-sources__title"
+                id="ai-discovery-sources-title"
               >
                 {{i18n
                   "discourse_ai.discobot_discoveries.sources.related_discussions"
@@ -545,10 +470,15 @@ export default class AiSearchDiscoveries extends Component {
             <ul
               class="ai-discovery-sources__list"
               {{on "click" this.handleDiscoveryClick}}
+              {{on "keydown" this.search.handleArrowUpOrDown}}
             >
               {{#each this.visibleSources as |source|}}
                 <li class="ai-discovery-sources__item">
-                  <a class="ai-discovery-source" href={{source.url}}>
+                  <a
+                    class="ai-discovery-source"
+                    data-search-menu-navigation-item
+                    href={{source.url}}
+                  >
                     {{#if (and this.showSourceAvatars source.avatar_template)}}
                       <span class="ai-discovery-source__avatar">
                         {{dAvatar source imageSize="medium"}}
@@ -593,28 +523,30 @@ export default class AiSearchDiscoveries extends Component {
           {{on "submit" this.continueConversation}}
         >
           <input
+            aria-label={{i18n
+              "discourse_ai.discobot_discoveries.follow_up.label"
+            }}
             class="ai-search-discoveries__follow-up-input"
-            type="text"
-            value={{this.followUpValue}}
+            data-search-menu-navigation-item
+            disabled={{this.loadingConversationTopic}}
             maxlength="1000"
             placeholder={{i18n
               "discourse_ai.discobot_discoveries.follow_up.placeholder"
             }}
-            aria-label={{i18n
-              "discourse_ai.discobot_discoveries.follow_up.label"
-            }}
-            disabled={{this.loadingConversationTopic}}
+            type="text"
+            value={{this.followUpValue}}
             {{on "focus" this.clearSuggestedFollowUp}}
             {{on "input" this.updateFollowUpQuestion}}
+            {{on "keydown" this.search.handleArrowUpOrDown}}
           />
           <DButton
-            @type="submit"
-            @label={{this.continueConvoBtnLabel}}
+            class="btn-primary btn-small ai-search-discoveries__follow-up-submit"
             @disabled={{or
               this.loadingConversationTopic
               (not this.canSubmitFollowUp)
             }}
-            class="btn-primary btn-small ai-search-discoveries__follow-up-submit"
+            @label={{this.continueConvoBtnLabel}}
+            @type="submit"
           >
             <AiIndicatorWave @loading={{this.loadingConversationTopic}} />
           </DButton>
@@ -624,16 +556,20 @@ export default class AiSearchDiscoveries extends Component {
       {{#if this.showAskAiDefaultToggle}}
         <div class="ai-search-discoveries__default-preference">
           <DToggleSwitch
-            @state={{this.askAiIsDefault}}
-            @label="discourse_ai.discobot_discoveries.make_default"
-            {{on "click" this.toggleAskAiDefault}}
             class="ai-search-discoveries__default-toggle"
+            data-search-menu-navigation-item
+            @label="discourse_ai.discobot_discoveries.make_default"
+            @state={{this.askAiIsDefault}}
+            {{on "click" this.toggleAskAiDefault}}
+            {{on "keydown" this.search.handleArrowUpOrDown}}
           />
           <DButton
+            class="btn-transparent ai-search-discoveries__dismiss-default"
+            data-search-menu-navigation-item
+            @action={{this.dismissAskAiDefaultToggle}}
             @icon="xmark"
             @title="discourse_ai.discobot_discoveries.dismiss_default_preference"
-            @action={{this.dismissAskAiDefaultToggle}}
-            class="btn-transparent ai-search-discoveries__dismiss-default"
+            {{on "keydown" this.search.handleArrowUpOrDown}}
           />
         </div>
       {{/if}}

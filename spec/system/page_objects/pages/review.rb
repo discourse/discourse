@@ -56,6 +56,12 @@ module PageObjects
         page.has_no_css?(REVIEWABLE_ACTION_DROPDOWN)
       end
 
+      def has_no_reviewable_actions?(reviewable)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_no_css?(".reviewable-action, #{REVIEWABLE_ACTION_DROPDOWN}")
+        end
+      end
+
       def has_reviewable_items?(count:)
         page.has_css?(".review-item", count: count)
       end
@@ -69,10 +75,6 @@ module PageObjects
 
       def has_scrub_button?(reviewable)
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".user-scrub") }
-      end
-
-      def has_no_scrub_button?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_no_css?(".user-scrub") }
       end
 
       def click_scrub_user_button
@@ -164,6 +166,10 @@ module PageObjects
 
       def has_history_items?(count:)
         page.has_css?(".timeline-event", count: count)
+      end
+
+      def has_note?(content)
+        page.has_css?(".timeline-event__description", text: content, normalize_ws: true)
       end
 
       def has_claimed_history_item?(user)

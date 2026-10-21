@@ -13,6 +13,7 @@ export default class MobileNav extends Component {
   @service router;
   @service site;
 
+  /** @type {string | null} */
   @tracked selectedHtml = null;
   @tracked expanded = false;
 
@@ -74,13 +75,13 @@ export default class MobileNav extends Component {
   <template>
     <ul
       class={{this.rootClass}}
-      {{dCloseOnClickOutside this.collapse}}
       ...attributes
+      {{dCloseOnClickOutside this.collapse}}
     >
       {{#if this.site.mobileView}}
         {{#if this.selectedHtml}}
           <li>
-            <a href {{on "click" this.toggleExpanded}} class="expander">
+            <a class="expander" href {{on "click" this.toggleExpanded}}>
               <span class="selection">{{trustHTML this.selectedHtml}}</span>
               {{dIcon "angle-down"}}
             </a>

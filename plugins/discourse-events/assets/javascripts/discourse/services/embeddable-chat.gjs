@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 import optionalService from "discourse/lib/optional-service";
-import { isPastEventTimeframe } from "../models/discourse-post-event-event";
+import { isPastEventTimeframe } from "../models/discourse-post-event-event.js";
 
 export default class EmbeddableChat extends Service {
   @service siteSettings;
@@ -42,31 +42,6 @@ export default class EmbeddableChat extends Service {
         currentURL === normalized || currentURL.startsWith(`${normalized}/`)
       );
     });
-  }
-
-  canRenderChatChannel(mobileViewAllowed = false) {
-    if (
-      this.isMobileViewport === mobileViewAllowed &&
-      this.siteSettings.chat_enabled &&
-      this.currentUser &&
-      this.userCanChat
-    ) {
-      if (this.isPathAllowed && this.chatChannelId) {
-        return !this.isChannelOpenInDrawer;
-      }
-    }
-
-    return false;
-  }
-
-  @action
-  toggleChatVisibility() {
-    this.isMobileChatVisible = !this.isMobileChatVisible;
-  }
-
-  @action
-  closeChatVisibility() {
-    this.isMobileChatVisible = false;
   }
 
   get isMobileModal() {
@@ -133,5 +108,30 @@ export default class EmbeddableChat extends Service {
       this.useLivestreamLayout &&
       (this.canRenderChatChannel(false) || this.canRenderChatChannel(true))
     );
+  }
+
+  canRenderChatChannel(mobileViewAllowed = false) {
+    if (
+      this.isMobileViewport === mobileViewAllowed &&
+      this.siteSettings.chat_enabled &&
+      this.currentUser &&
+      this.userCanChat
+    ) {
+      if (this.isPathAllowed && this.chatChannelId) {
+        return !this.isChannelOpenInDrawer;
+      }
+    }
+
+    return false;
+  }
+
+  @action
+  toggleChatVisibility() {
+    this.isMobileChatVisible = !this.isMobileChatVisible;
+  }
+
+  @action
+  closeChatVisibility() {
+    this.isMobileChatVisible = false;
   }
 }

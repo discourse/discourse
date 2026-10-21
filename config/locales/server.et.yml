@@ -5,6 +5,22 @@
 # https://translate.discourse.org/
 
 et:
+  markdown_endpoints:
+    latest: "Värskeimad"
+    categories: "Liigid"
+    tags: "Sildid"
+    previous_page: "Eelmine leht"
+    next_page: "Järgmine leht"
+    replies: "Vastused"
+    event:
+      location: "Asukoht"
+  mcp:
+    errors:
+      category_not_found: "Kategooriat ei leitud"
+      draft_too_long: "Mustand on liiga pikk"
+      topic_not_found: "Teemat ei leitud"
+    oauth:
+      approve: "Autoriseeri"
   llms_txt:
     sections:
       optional: "Valikuline"
@@ -520,7 +536,7 @@ et:
     banner:
       title: "Teema Bänneriks"
   unsubscribe:
-    title: "Tühista tellimus"
+    unsubscribe: "Tühista tellimus"
     mailing_list_mode: "Lülita postiloendi režiim välja"
     log_out: "Logi välja"
     digest_frequency:
@@ -1184,8 +1200,6 @@ et:
         title: "Jah"
       approve_and_unhide:
         title: "Jah"
-      delete_post:
-        complete: "Postitus kustutatud"
       delete_user:
         complete: "Kasutaja kustutatud"
   fallback_username: "kasutaja"

@@ -1,6 +1,7 @@
 import { click, fillIn, triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -137,6 +138,35 @@ acceptance(`flagging`, function (needs) {
 
     await click(".perform-penalize");
     assert.dom(".d-modal__body").doesNotExist();
+  });
+
+  test("Take action hides the post once the flag is created", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await openFlagModal();
+    await click("#radio_inappropriate");
+    await selectKit(".reviewable-action-dropdown").expand();
+    await click("[data-value='agree_and_hide']");
+
+    assert
+      .dom(".topic-post[data-post-number='1']")
+      .hasClass("post--hidden", "hides the flagged post");
+  });
+
+  test("Take action leaves the post visible when the flag is rejected", async function (assert) {
+    pretender.post("/post_actions", () =>
+      response(422, { errors: ["The flag was rejected"] })
+    );
+
+    await visit("/t/internationalization-localization/280");
+    await openFlagModal();
+    await click("#radio_inappropriate");
+    await selectKit(".reviewable-action-dropdown").expand();
+    await click("[data-value='agree_and_hide']");
+
+    assert.dom(".dialog-body").exists("shows the error");
+    assert
+      .dom(".topic-post[data-post-number='1']")
+      .doesNotHaveClass("post--hidden", "does not hide the post");
   });
 
   test("Message appears in penalty modal", async function (assert) {

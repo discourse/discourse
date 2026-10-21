@@ -47,6 +47,14 @@ end
 
 require_relative "lib/chat/engine"
 after_initialize do
+  original_message_bus_group_ids_lookup = MessageBus.group_ids_lookup
+  MessageBus.group_ids_lookup do |env|
+    host = RailsMultisite::ConnectionManagement.host(env)
+    RailsMultisite::ConnectionManagement.with_hostname(host) do
+      Chat.message_bus_group_ids_for(original_message_bus_group_ids_lookup&.call(env))
+    end
+  end
+
   register_seedfu_fixtures(Rails.root.join("plugins/chat/db/fixtures"))
 
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
@@ -91,6 +99,12 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:ignore_channel_wide_mention)
   UserUpdater::OPTION_ATTR.push(:show_thread_title_prompts)
   UserUpdater::OPTION_ATTR.push(:chat_announce_new_messages)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_filter)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_filter_starred)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_filter_dms)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_sort)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_sort_starred)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_sort_dms)
   UserUpdater::OPTION_ATTR.push(:chat_new_message_sound)
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
   UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
@@ -310,6 +324,46 @@ after_initialize do
 
   add_to_serializer(:user_option, :chat_announce_new_messages) { object.chat_announce_new_messages }
 
+  add_to_serializer(:user_option, :chat_channel_list_filter) { object.chat_channel_list_filter }
+
+  add_to_serializer(:current_user_option, :chat_channel_list_filter) do
+    object.chat_channel_list_filter
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_sort) { object.chat_channel_list_sort }
+
+  add_to_serializer(:current_user_option, :chat_channel_list_sort) { object.chat_channel_list_sort }
+
+  add_to_serializer(:user_option, :chat_channel_list_sort_starred) do
+    object.chat_channel_list_sort_starred
+  end
+
+  add_to_serializer(:current_user_option, :chat_channel_list_sort_starred) do
+    object.chat_channel_list_sort_starred
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_sort_dms) { object.chat_channel_list_sort_dms }
+
+  add_to_serializer(:current_user_option, :chat_channel_list_sort_dms) do
+    object.chat_channel_list_sort_dms
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_filter_starred) do
+    object.chat_channel_list_filter_starred
+  end
+
+  add_to_serializer(:current_user_option, :chat_channel_list_filter_starred) do
+    object.chat_channel_list_filter_starred
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_filter_dms) do
+    object.chat_channel_list_filter_dms
+  end
+
+  add_to_serializer(:current_user_option, :chat_channel_list_filter_dms) do
+    object.chat_channel_list_filter_dms
+  end
+
   add_to_serializer(:current_user_option, :chat_announce_new_messages) do
     object.chat_announce_new_messages
   end
@@ -387,6 +441,29 @@ after_initialize do
   on(:group_destroyed) do |group, _user_ids|
     Chat::AutoLeaveChannels.call(params: { group_id: group.id, event: :group_destroyed })
   end
+
+  homepage_channel = -> { Chat::Channel.find_by(id: SiteSetting.chat_homepage_channel.presence) }
+
+  register_homepage(
+    "chat",
+    name: "chat.homepage_option",
+    path: -> { homepage_channel.call&.relative_url&.delete_prefix(Discourse.base_path) || "/chat" },
+    route: "chat/chat#respond",
+    anonymous: true,
+    enabled: -> { SiteSetting.enable_public_channels },
+    available: ->(guardian:, request:) do
+      channel = homepage_channel.call
+      next false if channel.nil? || channel.archived? || !channel.public_channel?
+      next false if CrawlerDetection.crawler_layout_request?(request)
+
+      if guardian.anonymous?
+        guardian.can_preview_anonymous_public_chat_channel?(channel)
+      else
+        guardian.can_chat? && guardian.user.user_option&.chat_enabled &&
+          guardian.can_preview_chat_channel?(channel)
+      end
+    end,
+  )
 
   register_presence_channel_prefix("chat") do |channel_name|
     next if channel_name != "/chat/online"
@@ -541,7 +618,7 @@ after_initialize do
     {
       create_message: {
         actions: %w[chat/api/channel_messages#create],
-        params: %i[chat_channel_id],
+        path_params: %i[chat_channel_id],
       },
     },
   )
@@ -567,6 +644,7 @@ after_initialize do
 
   # Make sure to update spec/system/hashtag_autocomplete_spec.rb when changing this.
   register_hashtag_data_source(Chat::ChannelHashtagDataSource)
+  register_hashtag_content_store(Chat::MessageHashtagStore)
   register_hashtag_type_priority_for_context("channel", "chat-composer", 200)
   register_hashtag_type_priority_for_context("category", "chat-composer", 100)
   register_hashtag_type_priority_for_context("tag", "chat-composer", 50)
@@ -599,4 +677,100 @@ after_initialize do
   if Rails.env.local?
     DiscoursePluginRegistry.discourse_dev_populate_reviewable_types.add DiscourseDev::ReviewableMessage
   end
+end
+
+after_initialize do
+  require_relative "lib/chat/mcp_tools"
+
+  register_mcp_tool(
+    "chat_channel_list",
+    title: "List chat channels",
+    description:
+      "Lists chat channels followed by the authenticated user, including direct-message channels.",
+    implementation: Chat::McpTools::ListChannels,
+    output_schema: Chat::McpTools::ListChannels::OUTPUT_SCHEMA,
+    required_scopes: Chat::McpTools::ListChannels::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+    },
+    availability: -> { SiteSetting.chat_enabled },
+  )
+  register_mcp_tool(
+    "discourse_get_chat_messages",
+    title: "Get chat messages",
+    description: "Reads a bounded page of messages from a visible chat channel.",
+    implementation: Chat::McpTools::ListMessages,
+    input_schema: {
+      type: "object",
+      properties: {
+        channel_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        page_size: {
+          type: "integer",
+          minimum: 1,
+          maximum: 50,
+          default: 50,
+        },
+        target_message_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        direction: {
+          type: "string",
+          enum: %w[past future],
+        },
+        target_date: {
+          type: "string",
+          format: "date-time",
+        },
+      },
+      required: ["channel_id"],
+      additionalProperties: false,
+    },
+    output_schema: Chat::McpTools::ListMessages::OUTPUT_SCHEMA,
+    required_scopes: Chat::McpTools::ListMessages::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+    },
+    availability: -> { SiteSetting.chat_enabled },
+  )
+  register_mcp_tool(
+    "chat_message_create",
+    title: "Create chat message",
+    description: "Creates a message in a chat channel as the authenticated user.",
+    implementation: Chat::McpTools::CreateMessage,
+    input_schema: {
+      type: "object",
+      properties: {
+        channel_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        message: {
+          type: "string",
+          minLength: 1,
+        },
+        thread_id: {
+          type: "integer",
+        },
+        reply_to_message_id: {
+          type: "integer",
+        },
+      },
+      required: %w[channel_id message],
+      additionalProperties: false,
+    },
+    output_schema: Chat::McpTools::CreateMessage::OUTPUT_SCHEMA,
+    required_scopes: Chat::McpTools::CreateMessage::REQUIRED_SCOPES,
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+    },
+    risk: :write,
+    availability: -> { SiteSetting.chat_enabled },
+  )
 end

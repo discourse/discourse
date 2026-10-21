@@ -4,32 +4,31 @@ import { registerDestructor } from "@ember/destroyable";
 import { guidFor } from "@ember/object/internals";
 import type Owner from "@ember/owner";
 import Modifier, { type ArgsFor } from "ember-modifier";
-import { createRovingFocusApi } from "./d-roving-focus/api";
-import { apiStep } from "./d-roving-focus/api-navigation";
+import ItemScope from "discourse/ui-kit/-internals/cursor/item-scope";
+import { createRovingFocusApi } from "./d-roving-focus/api.ts";
+import { apiStep } from "./d-roving-focus/api-navigation.ts";
 import {
   type DRovingFocusConfig,
   normalizeConfig,
-} from "./d-roving-focus/config";
-import createRovingFocusDiagnostics from "./d-roving-focus/diagnostics";
-import ItemScope from "./d-roving-focus/item-scope";
-import KeyboardRouter from "./d-roving-focus/keyboard";
-import ActiveDescendantStrategy from "./d-roving-focus/strategies/active-descendant";
-import RovingTabindexStrategy from "./d-roving-focus/strategies/roving-tabindex";
+} from "./d-roving-focus/config.ts";
+import createRovingFocusDiagnostics from "./d-roving-focus/diagnostics.ts";
+import KeyboardRouter from "./d-roving-focus/keyboard.ts";
+import ActiveDescendantStrategy from "./d-roving-focus/strategies/active-descendant.ts";
+import RovingTabindexStrategy from "./d-roving-focus/strategies/roving-tabindex.ts";
 import type {
   DRovingFocusApi,
   DRovingFocusArgs,
   DRovingFocusSignature,
   DRovingFocusStrategy,
-} from "./d-roving-focus/types";
+} from "./d-roving-focus/types.ts";
 
 export type {
   DRovingFocusApi,
   DRovingFocusAxis,
-  DRovingFocusDisabledItems,
   DRovingFocusEntry,
   DRovingFocusStepResult,
   DRovingFocusStrategy,
-} from "./d-roving-focus/types";
+} from "./d-roving-focus/types.ts";
 
 /**
  * Keyboard navigation for a one-dimensional list or a two-dimensional grid of
@@ -57,7 +56,8 @@ export type {
  *
  * - `"roving-tabindex"` (the default) — exactly one item is reachable with Tab
  *   (`tabindex="0"`) and the rest are set to `tabindex="-1"`; with `tabStop=false` every item is
- *   set to `-1`. Arrow keys move real DOM focus between items and update tabindex along with it.
+ *   set to `-1`. Arrow keys move real DOM focus between items and, unless `tabStopAnchor` pins the
+ *   stop to the marked item, update tabindex along with it.
  *   Use this when the active item should itself hold focus (a tile grid, a toolbar).
  * - `"active-descendant"` — DOM focus stays on a separate controller
  *   element (typically a text input); arrow keys move a *virtual* highlight through

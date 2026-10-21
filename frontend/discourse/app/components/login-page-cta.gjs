@@ -8,14 +8,14 @@ const LoginPageCta = <template>
       {{#if @canLoginLocal}}
         {{#unless @showSecurityKey}}
           <DButton
-            @action={{@login}}
+            class="btn-large btn-primary login-page-cta__login"
+            form="login-form"
+            id="login-button"
+            tabindex={{unless @showSecondFactor "2"}}
             @disabled={{@loginDisabled}}
             @isLoading={{@loggingIn}}
             @label={{@loginButtonLabel}}
-            id="login-button"
-            form="login-form"
-            class="btn-large btn-primary login-page-cta__login"
-            tabindex={{unless @showSecondFactor "2"}}
+            @type="submit"
           />
         {{/unless}}
 
@@ -24,17 +24,17 @@ const LoginPageCta = <template>
             {{i18n "create_account.no_account_yet"}}
           </span>
           <DButton
-            @action={{@createAccount}}
-            @disabled={{@loggingIn}}
-            @label="create_account.title"
             class="btn-large btn-flat login-page-cta__signup"
             id="new-account-link"
             tabindex="3"
+            @action={{@createAccount}}
+            @disabled={{@loggingIn}}
+            @label="create_account.title"
           />
         {{/if}}
       {{/if}}
     </div>
-    <PluginOutlet @name="login-after-modal-footer" @connectorTagName="div" />
+    <PluginOutlet @connectorTagName="div" @name="login-after-modal-footer" />
   </div>
 </template>;
 

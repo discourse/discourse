@@ -14,11 +14,6 @@ export default class AdminNavManager extends Service {
     this.resetNavMap();
   }
 
-  resetNavMap() {
-    this.#adminNavMap = cloneJSON(ADMIN_NAV_MAP);
-    this.#filteredNavMap = null;
-  }
-
   get filteredNavMap() {
     if (this.#filteredNavMap) {
       return this.#filteredNavMap;
@@ -40,6 +35,11 @@ export default class AdminNavManager extends Service {
     this.#filteredNavMap = navConfig;
 
     return this.#filteredNavMap;
+  }
+
+  resetNavMap() {
+    this.#adminNavMap = cloneJSON(ADMIN_NAV_MAP);
+    this.#filteredNavMap = null;
   }
 
   findSection(sectionName) {

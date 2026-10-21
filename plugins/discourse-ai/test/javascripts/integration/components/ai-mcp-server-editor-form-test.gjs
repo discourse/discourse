@@ -52,8 +52,8 @@ module("Integration | Component | AiMcpServerEditorForm", function (hooks) {
     await render(
       <template>
         <AiMcpServerEditorForm
-          @model={{this.model}}
           @mcpServers={{this.mcpServers}}
+          @model={{this.model}}
           @secrets={{this.secrets}}
         />
       </template>
@@ -75,8 +75,8 @@ module("Integration | Component | AiMcpServerEditorForm", function (hooks) {
     await render(
       <template>
         <AiMcpServerEditorForm
-          @model={{this.model}}
           @mcpServers={{this.mcpServers}}
+          @model={{this.model}}
           @secrets={{this.secrets}}
         />
       </template>

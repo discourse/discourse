@@ -69,9 +69,9 @@ export default class SecondFactorBackupEdit extends Component {
 
   <template>
     <DModal
-      @title={{i18n "user.second_factor_backup.title"}}
-      @closeModal={{@closeModal}}
       class="second-factor-backup-edit-modal"
+      @closeModal={{@closeModal}}
+      @title={{i18n "user.second_factor_backup.title"}}
     >
       <:body>
         {{#if this.successMessage}}
@@ -91,8 +91,8 @@ export default class SecondFactorBackupEdit extends Component {
             <h3>{{i18n "user.second_factor_backup.codes.title"}}</h3>
             <p>{{i18n "user.second_factor_backup.codes.description"}}</p>
             <BackupCodes
-              @copyBackupCode={{this.copyBackupCode}}
               @backupCodes={{this.backupCodes}}
+              @copyBackupCode={{this.copyBackupCode}}
             />
           {{/if}}
         </DConditionalLoadingSection>
@@ -113,19 +113,19 @@ export default class SecondFactorBackupEdit extends Component {
           {{#if this.backupEnabled}}
             <DButton
               class="btn-primary"
-              @icon="arrow-rotate-right"
               @action={{this.generateSecondFactorCodes}}
-              @type="submit"
+              @icon="arrow-rotate-right"
               @isLoading={{this.loading}}
               @label="user.second_factor_backup.regenerate"
+              @type="submit"
             />
           {{else}}
             <DButton
               class="btn-primary"
               @action={{this.generateSecondFactorCodes}}
-              @type="submit"
               @disabled={{this.loading}}
               @label="user.second_factor_backup.enable"
+              @type="submit"
             />
           {{/if}}
         </div>

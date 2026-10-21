@@ -13,6 +13,11 @@ id:
             topic_id:
               label: ID Topik
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Pemberitahuan"
+            none: "Tidak ada"
       on_holiday: "Saat Liburan"
       disable_holiday: "Nonaktifkan"
       enable_holiday: "Aktifkan"

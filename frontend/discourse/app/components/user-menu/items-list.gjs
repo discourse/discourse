@@ -67,6 +67,13 @@ export default class UserMenuItemsList extends Component {
     await this.#load();
   }
 
+  @action
+  dismissButtonClick() {
+    throw new Error(
+      `dismissButtonClick must be implemented in ${this.constructor.name}.`
+    );
+  }
+
   async #load() {
     const cached = this.#getCachedItems();
     if (cached?.length) {
@@ -103,13 +110,6 @@ export default class UserMenuItemsList extends Component {
     }
   }
 
-  @action
-  dismissButtonClick() {
-    throw new Error(
-      `dismissButtonClick must be implemented in ${this.constructor.name}.`
-    );
-  }
-
   <template>
     <PluginOutlet
       @name="before-panel-body"
@@ -122,7 +122,7 @@ export default class UserMenuItemsList extends Component {
     {{else if this.items.length}}
       <ul aria-labelledby={{@ariaLabelledby}} class={{@class}}>
         {{#each this.items as |item|}}
-          <MenuItem @item={{item}} @closeUserMenu={{@closeUserMenu}} />
+          <MenuItem @closeUserMenu={{@closeUserMenu}} @item={{item}} />
         {{/each}}
       </ul>
       <div class="panel-body-bottom">
@@ -138,9 +138,9 @@ export default class UserMenuItemsList extends Component {
         {{/if}}
         {{#if this.showDismiss}}
           <button
-            type="button"
             class="btn btn-default notifications-dismiss btn-icon-text"
             title={{this.dismissTitle}}
+            type="button"
             {{on "click" this.dismissButtonClick}}
           >
             {{dIcon "check"}}

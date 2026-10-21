@@ -20,10 +20,10 @@ export default class ChatNavbarOpenDrawerButton extends Component {
   <template>
     {{#if this.site.desktopView}}
       <DButton
-        @icon="discourse-compress"
-        @title="chat.close_full_page"
         class="c-navbar__open-drawer-button btn-transparent"
         @action={{this.openDrawer}}
+        @icon="discourse-compress"
+        @title="chat.close_full_page"
       />
     {{/if}}
   </template>

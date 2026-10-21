@@ -42,11 +42,11 @@ export default class TagsUploader extends Component {
         {{dIcon "upload"}}
         {{i18n "admin.watched_words.form.upload"}}
         <input
-          {{didInsert this.uppyUpload.setup}}
+          accept="text/plain,text/csv"
           class="hidden-upload-field"
           disabled={{this.addDisabled}}
           type="file"
-          accept="text/plain,text/csv"
+          {{didInsert this.uppyUpload.setup}}
         />
       </label>
       <span class="instructions">{{i18n "tagging.upload_instructions"}}</span>

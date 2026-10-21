@@ -5,37 +5,37 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
-    @titleLabel={{i18n "admin.config.email_logs.title"}}
     @descriptionLabel={{i18n "admin.config.email_logs.header_description"}}
     @shouldDisplay={{true}}
+    @titleLabel={{i18n "admin.config.email_logs.title"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/email-logs"
         @label={{i18n "admin.config.email_logs.title"}}
+        @path="/admin/email-logs"
       />
     </:breadcrumbs>
     <:tabs>
       <DNavItem
-        @route="adminEmailLogs.sent"
         @label="admin.config.email_logs.sub_pages.sent.title"
+        @route="adminEmailLogs.sent"
       />
       <DNavItem
-        @route="adminEmailLogs.skipped"
         @label="admin.config.email_logs.sub_pages.skipped.title"
+        @route="adminEmailLogs.skipped"
       />
       <DNavItem
-        @route="adminEmailLogs.bounced"
         @label="admin.config.email_logs.sub_pages.bounced.title"
+        @route="adminEmailLogs.bounced"
       />
       <DNavItem
-        @route="adminEmailLogs.received"
         @label="admin.config.email_logs.sub_pages.received.title"
+        @route="adminEmailLogs.received"
       />
       <DNavItem
-        @route="adminEmailLogs.rejected"
         @label="admin.config.email_logs.sub_pages.rejected.title"
+        @route="adminEmailLogs.rejected"
       />
     </:tabs>
   </DPageHeader>

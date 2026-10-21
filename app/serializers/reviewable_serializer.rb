@@ -26,6 +26,17 @@ class ReviewableSerializer < ApplicationSerializer
 
   attribute :status_for_database, key: :status
 
+  attribute :dsa_classification
+
+  def dsa_classification
+    { statement_ids: object.dsa_statement_of_records.select(&:pending?).map(&:id) }
+  end
+
+  def include_dsa_classification?
+    scope.is_staff? && DsaStatementOfRecord.classification_enabled? &&
+      object.dsa_statement_of_records.present?
+  end
+
   has_one :target_created_by, root: "users"
   has_one :created_by, serializer: UserWithCustomFieldsSerializer, root: "users"
   has_one :target_deleted_by, serializer: BasicUserSerializer, root: "users"
@@ -40,6 +51,17 @@ class ReviewableSerializer < ApplicationSerializer
 
   # Used to keep track of our payload attributes
   class_attribute :_payload_for_serialization
+
+  def initialize(object, options = {})
+    if SiteSetting.enable_mentions
+      options =
+        options.merge(
+          reviewable_note_mention_usernames:
+            PlaintextMentions.known_usernames(object.reviewable_notes.map(&:content)),
+        )
+    end
+    super(object, options)
+  end
 
   def bundled_actions
     args = {}

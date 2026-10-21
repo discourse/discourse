@@ -6,7 +6,22 @@
 
 ug:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "ئاتاق"
+        icon: "سىنبەلگە"
+        color: "رەڭ"
+        tag_name: "بەلگە"
+      create_board:
+        name: "ئىسمى"
+        slug: "قىسقارتما"
+        tag_names: "بەلگە"
+        category_ids: "سەھىپە"
     boards:
+      status:
+        all: "ھەممىسى"
+        open: "ئاچ"
+        archived: "ئارخىپلاشتۇرۇلغان"
       board:
         remove_card: "چىقىرىۋەت"
         new_topic: "يېڭى تېما..."

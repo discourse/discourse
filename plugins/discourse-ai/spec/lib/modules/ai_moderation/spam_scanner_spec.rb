@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::AiModeration::SpamScanner do
+  fab!(:flagging_user) do
+    described_class.ensure_flagging_user!
+    described_class.flagging_user
+  end
   fab!(:moderator)
   fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
   fab!(:topic)
@@ -17,6 +21,7 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
   end
 
   before do
+    SiteSetting.ai_spam_detection_user_id = flagging_user.id
     enable_current_plugin
     SiteSetting.ai_spam_detection_enabled = true
   end
@@ -133,6 +138,18 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
           [{ spam: true, reason: "spam detected" }],
         ) { described_class.perform_scan!(post) }
       end.to change { AiSpamLog.count }.by(1)
+    end
+
+    it "uses the configured agent's updated default model for spam scans" do
+      updated_model = Fabricate(:fake_model)
+      spam_setting.ai_agent.update!(default_llm_id: updated_model.id)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ spam: false }],
+        llm: updated_model,
+      ) { described_class.perform_scan!(post) }
+
+      expect(AiSpamLog.find_by!(post: post).llm_model_id).to eq(updated_model.id)
     end
 
     it "does nothing when disabled" do
@@ -332,6 +349,7 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
   describe "integration test" do
     fab!(:llm_model)
     let(:api_audit_log) { Fabricate(:api_audit_log) }
+
     fab!(:post_with_uploaded_image)
 
     before { Jobs.run_immediately! }

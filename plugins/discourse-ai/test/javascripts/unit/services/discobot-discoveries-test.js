@@ -237,6 +237,32 @@ module("Unit | Service | discobot-discoveries", function (hooks) {
     );
   });
 
+  test("announces that asking has started", async function (assert) {
+    const announcements = [];
+    this.owner.register(
+      "service:a11y",
+      class extends Service {
+        announce(message, priority) {
+          announcements.push({ message, priority });
+        }
+      }
+    );
+    pretender.post("/discourse-ai/discoveries/reply", (request) =>
+      response(200, {
+        request_id: new URLSearchParams(request.requestBody).get("request_id"),
+      })
+    );
+    const service = getOwner(this).lookup("service:discobot-discoveries");
+
+    await service.triggerDiscovery("What is Discourse?");
+
+    assert.deepEqual(
+      announcements,
+      [{ message: "Asking AI…", priority: "polite" }],
+      "the wait for an answer is not silent"
+    );
+  });
+
   test("announces a completed answer", async function (assert) {
     const announcements = [];
     this.owner.register(

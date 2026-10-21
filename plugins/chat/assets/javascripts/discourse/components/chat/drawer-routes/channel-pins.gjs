@@ -25,11 +25,11 @@ export default class ChatDrawerRoutesChannelPins extends Component {
       {{#if @model}}
         <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
           <navbar.BackButton
-            @title={{this.backLinkTitle}}
             @route="chat.channel"
             @routeModels={{@model.channel.routeModels}}
+            @title={{this.backLinkTitle}}
           />
-          <navbar.Title @title={{this.title}} @icon="thumbtack" />
+          <navbar.Title @icon="thumbtack" @title={{this.title}} />
           <navbar.Actions as |a|>
             <a.ToggleDrawerButton />
             <a.FullPageButton />

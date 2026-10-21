@@ -8,8 +8,8 @@ export function preventDecimal(event) {
 
 export default <template>
   <@field.Control
-    min={{@definition.min}}
     max={{@definition.max}}
+    min={{@definition.min}}
     {{on "keydown" preventDecimal}}
   />
 </template>

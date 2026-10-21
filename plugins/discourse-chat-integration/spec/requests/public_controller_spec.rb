@@ -4,7 +4,7 @@ RSpec.describe "Public Controller", type: :request do
   before { SiteSetting.chat_integration_enabled = true }
 
   describe "loading a transcript" do
-    it "should be able to load a transcript" do
+    it "loads a saved transcript" do
       key = DiscourseChatIntegration::Helper.save_transcript("Some content here")
 
       get "/chat-transcript/#{key}.json"
@@ -14,7 +14,7 @@ RSpec.describe "Public Controller", type: :request do
       expect(response.body).to eq('{"content":"Some content here"}')
     end
 
-    it "should 404 for non-existent transcript" do
+    it "returns 404 for a missing transcript" do
       key = "abcdefghijk"
       get "/chat-transcript/#{key}.json"
 

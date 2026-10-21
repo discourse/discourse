@@ -1,8 +1,14 @@
-import { NOTIFICATION_TYPES } from "./concerns/notification-types";
+import { NOTIFICATION_TYPES } from "./concerns/notification-types.js";
 
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
 const siteFixtures = {
   "site.json": {
     site: {
+      can_search: true,
       default_archetype: "regular",
       shared_drafts_category_id: 24,
       notification_types: NOTIFICATION_TYPES,

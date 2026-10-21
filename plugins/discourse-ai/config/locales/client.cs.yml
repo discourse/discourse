@@ -8,6 +8,16 @@ cs:
   admin_js:
     admin:
       dashboard:
+        sections:
+          ask_ai:
+            title: "Zeptejte se AI"
+        ask_ai:
+          title: "Zeptejte se AI"
+          reports:
+            retry_questions: "Zkuste znovu"
+          date: "Datum"
+          outcomes:
+            failed: "Neúspěšný"
         reports:
           filters:
             sort_by:
@@ -47,6 +57,12 @@ cs:
       discourse_workflows:
         ai_agent:
           mode: "Režim"
+        classify:
+          text: "Text"
+          upload_ids: "Obrázky"
+          name: "Jméno"
+          type: "Typ"
+          type_score: "Skóre"
       ai_tool_approval:
         loading: "Načítá se..."
         tool: "Akce"
@@ -244,6 +260,13 @@ cs:
         delete: "Smazat"
         embedding: "Zabudování"
         tool: "Nástroj"
+      decision_models:
+        no_preset: "Žádný"
+        display_name: "Jméno"
+        model: "Model"
+        edit: "Upravit"
+        delete: "Smazat"
+        test: "Spustit test"
       mcp_servers:
         name: "Název"
         description: "Popis"
@@ -260,6 +283,16 @@ cs:
         delete: "Smazat"
         tools_modal:
           required: "Povinné"
+      models:
+        name: "Jméno"
+        type: "Typ"
+        edit: "Upravit"
+        select_type: "Vybrat"
+        types:
+          embedding: "Zabudování"
+        filters:
+          all: "Všechny typy"
+          reset: "Odstranit filtry"
       llms:
         display_name: "Název"
         vision_modes:
@@ -367,7 +400,18 @@ cs:
         quick_search:
           suffix: "ve všech tématech a příspěvcích s AI"
       ai_artifact:
+        editor:
+          version: "Verze"
+          default: "Výchozí"
+          option_on: "Zapnuto"
+          option_off: "Vypnuto"
+          apply: "Použít"
         collapse_view_label: "Ukončení celé obrazovky (ESC nebo tlačítko Zpět)"
+        share: "Sdílet"
+        create_link: "Vytvořit odkaz"
+        copy_link: "Kopírovat odkaz"
+        filter_all: "Vše"
+        filter_standalone: "Samostatná"
       ai_bot:
         llm: "Model:"
         pm_warning: "Zprávy chatbotů s umělou inteligencí jsou pravidelně monitorovány moderátory."

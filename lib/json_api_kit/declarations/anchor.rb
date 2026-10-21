@@ -20,33 +20,19 @@ module JsonApiKit
 
       IDENTITY = "id"
 
+      class << self
+        def for(name, &condition)
+          return Computed.new(name, &condition) if condition
+          return Identity.new(name) if name.to_s == IDENTITY
+          Attribute.new(name)
+        end
+      end
+
       attr_reader :name
 
-      def initialize(name, &condition)
+      def initialize(name)
         @name = name.to_s
-        @condition = condition
       end
-
-      def locatable_in?(order) = computed? || order.leading.named?(name) || identity?
-
-      def locate(scope, value:, order:, guardian:)
-        kind_for(order.leading, value, guardian).locate(scope, order:)
-      end
-
-      private
-
-      attr_reader :condition
-
-      def kind_for(key, value, guardian)
-        return Computed.new(condition, guardian) if computed?
-        return Value.new(key, value) if key.named?(name)
-        return Identity.new(name, value) if identity?
-        raise ArgumentError, "The anchor is #{name}, but this request sorts by #{key}."
-      end
-
-      def computed? = condition.present?
-
-      def identity? = name == IDENTITY
     end
   end
 end

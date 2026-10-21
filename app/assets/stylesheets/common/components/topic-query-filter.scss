@@ -6,6 +6,46 @@
   width: 100%;
   gap: var(--space-2);
 
+  &__query {
+    @include form-item-sizing;
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    gap: var(--space-3);
+    padding-inline: 2.25em 0.75em;
+    color: var(--primary);
+    background: var(--d-input-bg-color);
+    border: var(--d-input-border);
+    border-color: var(--primary-low-mid);
+    border-radius: var(--d-input-border-radius);
+    transition:
+      border-color 0.15s,
+      box-shadow 0.15s;
+
+    &:hover {
+      color: var(--primary);
+    }
+
+    &:focus-visible {
+      border-color: var(--tertiary);
+      outline: 2px solid var(--tertiary);
+      outline-offset: 1px;
+      box-shadow: inset 0 0 0 1px var(--tertiary);
+    }
+  }
+
+  &__query-text {
+    overflow-wrap: anywhere;
+  }
+
+  &__reset {
+    margin-inline-start: auto;
+    flex-shrink: 0;
+    color: var(--primary-medium);
+  }
+
   &__label {
     background-color: var(--primary-low);
     display: flex;

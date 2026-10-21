@@ -10,6 +10,8 @@ nb_NO:
       labels:
         username: Brukernavn
   discourse_events:
+    reminder:
+      guest: "- %{name}"
     category_type:
       default_calendar_view:
         day: "Dag"

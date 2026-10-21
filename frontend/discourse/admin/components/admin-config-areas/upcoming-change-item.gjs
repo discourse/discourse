@@ -38,6 +38,7 @@ export default class UpcomingChangeItem extends Component {
   @tracked savingEnabledFor = false;
   @tracked bufferedGroupsDirty = false;
 
+  /** @type {import("discourse/float-kit/lib/d-menu-instance").default | null} */
   registeredMenu = null;
 
   applyLightbox = modifier((element) => lightbox(element));
@@ -344,12 +345,12 @@ export default class UpcomingChangeItem extends Component {
             >
               {{#if @change.upcoming_change.image.url}}
                 <a
-                  href={{@change.upcoming_change.image.url}}
                   class="lightbox upcoming-change__image-preview"
-                  rel="nofollow ugc noopener"
-                  data-target-width={{@change.upcoming_change.image.width}}
-                  data-target-height={{@change.upcoming_change.image.height}}
                   data-large-src={{@change.upcoming_change.image.url}}
+                  data-target-height={{@change.upcoming_change.image.height}}
+                  data-target-width={{@change.upcoming_change.image.width}}
+                  href={{@change.upcoming_change.image.url}}
+                  rel="nofollow ugc noopener"
                 >{{dIcon "far-image"}}
                   {{i18n "admin.upcoming_changes.preview"}}</a>
               {{/if}}
@@ -390,11 +391,11 @@ export default class UpcomingChangeItem extends Component {
         </div>
 
         <DNativeSelect
-          @value={{this.bufferedEnabledFor}}
-          @onChange={{this.enabledForChanged}}
-          @includeNone={{false}}
           class="upcoming-change__enabled-for"
           disabled={{this.enabledForDisabled}}
+          @includeNone={{false}}
+          @onChange={{this.enabledForChanged}}
+          @value={{this.bufferedEnabledFor}}
           as |select|
         >
           {{#each this.enabledForOptions as |option|}}
@@ -407,8 +408,8 @@ export default class UpcomingChangeItem extends Component {
         {{#if this.showDependentSettingsLink}}
           <div class="upcoming-change__dependents">
             <LinkTo
-              @route="adminSiteSettings"
               @query={{hash filter="all_results" dependsOn=@change.setting}}
+              @route="adminSiteSettings"
             >
               {{i18n "admin.upcoming_changes.show_related_settings"}}
             </LinkTo>
@@ -418,8 +419,8 @@ export default class UpcomingChangeItem extends Component {
         {{#if this.showDefaultOverrideSettingLink}}
           <div class="upcoming-change__default-override-setting">
             <LinkTo
-              @route="adminSiteSettings"
               @query={{hash filter=this.defaultOverrideSettingFilter}}
+              @route="adminSiteSettings"
             >
               {{i18n "admin.upcoming_changes.show_related_settings"}}
             </LinkTo>
@@ -454,9 +455,9 @@ export default class UpcomingChangeItem extends Component {
                 <:trigger>
                   <DButton
                     class="upcoming-change__save-groups btn-primary"
+                    @disabled={{true}}
                     @icon="check"
                     @size="small"
-                    @disabled={{true}}
                     {{on "click" this.saveGroups}}
                   />
                 </:trigger>

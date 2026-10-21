@@ -10,7 +10,10 @@ import { consumeOptimisticPostUpdate } from "discourse/lib/optimistic-post-updat
 import { cook } from "discourse/lib/text";
 import Post from "discourse/models/post";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { checklistSyntax } from "discourse/plugins/checklist/discourse/initializers/checklist";
+import {
+  activeChecklistOperationCountForTesting,
+  checklistSyntax,
+} from "discourse/plugins/checklist/discourse/initializers/checklist";
 
 let decoratorCleanup;
 let decoratedElement;
@@ -18,6 +21,7 @@ let failHeldRequest;
 let holdHydration;
 let holdRequest;
 let hydrationRequests;
+let hydrationResponse;
 let initialRaw;
 let postModel;
 let releaseHydration;
@@ -28,6 +32,7 @@ let respondWithError;
 let responseRevised;
 let responseSequence;
 let responseUpdatedAts;
+let responseCookeds;
 
 function applyToggleToRaw(raw, toggle) {
   if (toggle.checkbox_source) {
@@ -74,6 +79,10 @@ async function decorate(raw, { legacy = false } = {}) {
       discourse_local_dates_enabled: true,
     },
   });
+  return decorateCooked(cooked.toString(), { legacy });
+}
+
+function decorateCooked(cooked, { legacy = false } = {}) {
   const decoratorHelper = { getModel: () => postModel };
   decoratedElement = document.createElement("div");
   decoratedElement.innerHTML = cooked.toString();
@@ -117,8 +126,9 @@ acceptance("checklist", function (needs) {
       hydrationRequests += 1;
       const response = helper.response({
         id: 42,
-        raw: initialRaw,
-        updated_at: "2026-08-27T08:00:00.000Z",
+        raw: hydrationResponse?.raw ?? initialRaw,
+        cooked: hydrationResponse?.cooked,
+        updated_at: hydrationResponse?.updatedAt ?? "2026-08-27T08:00:00.000Z",
       });
       if (holdHydration) {
         return new Promise((resolve) => {
@@ -145,8 +155,12 @@ acceptance("checklist", function (needs) {
         });
       }
 
+      if (respondWithError === "network") {
+        request.onerror();
+        return helper.response(0, {});
+      }
       if (respondWithError) {
-        return helper.response(respondWithError === "network" ? 0 : 422, {});
+        return helper.response(422, {});
       }
 
       const updatedAt = nextUpdatedAt();
@@ -155,7 +169,8 @@ acceptance("checklist", function (needs) {
         body.expected_raw
       );
       const response = {
-        cooked: `authoritative cooked ${responseSequence}`,
+        cooked:
+          responseCookeds.shift() ?? `authoritative cooked ${responseSequence}`,
         last_editor_id: 1,
         raw,
         revised: responseRevised,
@@ -188,6 +203,7 @@ acceptance("checklist", function (needs) {
     holdHydration = false;
     holdRequest = false;
     hydrationRequests = 0;
+    hydrationResponse = null;
     initialRaw = null;
     postModel = null;
     releaseHydration = null;
@@ -198,13 +214,217 @@ acceptance("checklist", function (needs) {
     responseRevised = true;
     responseSequence = 0;
     responseUpdatedAts = [];
+    responseCookeds = [];
   });
 
-  needs.hooks.afterEach(function () {
+  needs.hooks.afterEach(async function (assert) {
     decoratorCleanup?.();
     releaseHydration?.();
     releaseRequest?.();
+    await settled();
+    assert.strictEqual(
+      activeChecklistOperationCountForTesting(),
+      0,
+      "no coordinator survives test teardown"
+    );
     document.querySelector("#ember-testing").innerHTML = "";
+  });
+
+  test("adopts pending state after raw-less hydration completes", async function (assert) {
+    holdRequest = true;
+    const [first, second] = await prepare("[ ] first\n[ ] second", {
+      includeRaw: false,
+    });
+    first.click();
+    await waitUntil(() => releaseRequest);
+    second.click();
+    decoratorCleanup();
+    decoratedElement.remove();
+    const [replacementFirst, replacementSecond] = decorateCooked(
+      postModel.cooked
+    );
+    assert
+      .dom(replacementFirst)
+      .hasClass("checked", "in-flight state is adopted after hydration");
+    assert
+      .dom(replacementSecond)
+      .hasClass("checked", "the second click is retained");
+    holdRequest = false;
+    releaseRequest();
+    releaseRequest = null;
+    await settled();
+    assert.strictEqual(
+      postModel.raw,
+      "[x] first\n[x] second",
+      "both changes persist"
+    );
+  });
+
+  test("a late raw-less rendering joins the hydrated queue", async function (assert) {
+    holdRequest = true;
+    const [first] = await prepare("[ ] first\n[ ] second", {
+      includeRaw: false,
+    });
+    const firstCleanup = decoratorCleanup;
+    const [, second] = await decorate("[ ] first\n[ ] second");
+    first.click();
+    await waitUntil(() => releaseRequest);
+    second.click();
+    holdRequest = false;
+    releaseRequest();
+    releaseRequest = null;
+    await settled();
+    firstCleanup();
+    assert.strictEqual(
+      postModel.raw,
+      "[x] first\n[x] second",
+      "the late rendering shares validated hydration"
+    );
+  });
+
+  test("an idle raw-less rendering revalidates after the coordinator retires", async function (assert) {
+    const [first] = await prepare("[ ] first\n[ ] second", {
+      includeRaw: false,
+    });
+    const firstCleanup = decoratorCleanup;
+    const [, second] = await decorate("[ ] first\n[ ] second");
+    await click(first);
+    hydrationResponse = {
+      raw: postModel.raw,
+      cooked: (await cook(postModel.raw)).toString(),
+      updatedAt: postModel.updated_at,
+    };
+    await click(second);
+    firstCleanup();
+    assert.strictEqual(
+      postModel.raw,
+      "[x] first\n[x] second",
+      "old cooked is validated before reusing its coordinates"
+    );
+  });
+
+  test("hydration merges colliding generations without losing presentations", async function (assert) {
+    holdHydration = true;
+    const [first] = await prepare("[ ] first", { includeRaw: false });
+    const firstCleanup = decoratorCleanup;
+    first.click();
+    await waitUntil(() => releaseHydration);
+    postModel.raw = "[ ] first";
+    const [replacement] = await decorate("[ ] first");
+    replacement.click();
+    replacement.click();
+    holdHydration = false;
+    releaseHydration();
+    releaseHydration = null;
+    await settled();
+    firstCleanup();
+    assert.strictEqual(
+      postModel.raw,
+      "[ ] first",
+      "the newer desired state wins on generation merge"
+    );
+    assert
+      .dom(replacement)
+      .doesNotHaveAttribute("aria-busy", "the newer rendering settles");
+  });
+
+  test("a failed hydrated generation merge does not resend the rejected change", async function (assert) {
+    holdHydration = true;
+    respondWithError = true;
+    const [first] = await prepare("[ ] first", { includeRaw: false });
+    const firstCleanup = decoratorCleanup;
+    first.click();
+    await waitUntil(() => releaseHydration);
+    postModel.raw = "[ ] first";
+    const [replacement] = await decorate("[ ] first");
+    replacement.click();
+    holdHydration = false;
+    releaseHydration();
+    releaseHydration = null;
+    await settled();
+    firstCleanup();
+
+    assert.strictEqual(
+      requests.length,
+      1,
+      "a non-retryable failure is not sent twice"
+    );
+    assert
+      .dom(replacement)
+      .doesNotHaveAttribute("aria-busy", "the merged rendering settles");
+    assert
+      .dom(replacement)
+      .doesNotHaveClass("checked", "the rejected change is reverted");
+  });
+
+  test("uncertain baseline survives cooked replacement without deleting raw", async function (assert) {
+    respondWithError = "network";
+    const [first] = await prepare("[ ] first");
+    await click(first);
+    decoratorCleanup();
+    decoratedElement.remove();
+    const [replacement] = decorateCooked(postModel.cooked);
+    respondWithError = false;
+    await click(replacement);
+    assert.strictEqual(
+      hydrationRequests,
+      1,
+      "the replacement revalidates the uncertain model baseline"
+    );
+    assert.strictEqual(postModel.raw, "[x] first", "recovered work is saved");
+  });
+
+  test("limits coalesced requests to the server batch size", async function (assert) {
+    const boxes = await prepare(
+      Array.from({ length: 51 }, (_, i) => `[ ] task ${i}`).join("\n")
+    );
+    boxes.forEach((box) => box.click());
+    await settled();
+    assert.deepEqual(
+      requests.map(({ toggles }) => toggles.length),
+      [50, 1],
+      "oversized work is split into serialized batches"
+    );
+    assert.true(
+      postModel.raw.split("\n").every((line) => line.startsWith("[x]")),
+      "all changes persist"
+    );
+  });
+
+  test("network failure preserves raw while requiring a fresh baseline", async function (assert) {
+    respondWithError = "network";
+    const [checkbox] = await prepare("[ ] first");
+    await click(checkbox);
+    assert.strictEqual(
+      postModel.raw,
+      "[ ] first",
+      "transport failure does not erase shared model data"
+    );
+    respondWithError = false;
+    await click(checkbox);
+    assert.strictEqual(
+      hydrationRequests,
+      1,
+      "a later operation revalidates the uncertain baseline"
+    );
+  });
+
+  test("retires the coordinator after its work drains", async function (assert) {
+    const [checkbox] = await prepare("[ ] first");
+
+    checkbox.click();
+
+    assert.strictEqual(
+      activeChecklistOperationCountForTesting(),
+      1,
+      "the active post has one coordinator"
+    );
+    await settled();
+    assert.strictEqual(
+      activeChecklistOperationCountForTesting(),
+      0,
+      "the idle post retains no coordinator"
+    );
   });
 
   test("sends the direct source location without a redundant count", async function (assert) {
@@ -359,7 +579,28 @@ Actual checkboxes:
     );
   });
 
-  test("preserves intent when a raw-less post rebinds during hydration", async function (assert) {
+  test("rejects raw-less work when hydration finds a structural change", async function (assert) {
+    hydrationResponse = {
+      raw: "[ ] second\n[ ] first",
+      updatedAt: "2026-08-27T08:00:01.000Z",
+    };
+    const [checkbox] = await prepare("[ ] first\n[ ] second", {
+      includeRaw: false,
+    });
+
+    await click(checkbox);
+
+    assert.strictEqual(hydrationRequests, 1, "the current raw is fetched once");
+    assert.strictEqual(requests.length, 0, "no stale target is submitted");
+    assert
+      .dom(checkbox)
+      .doesNotHaveClass("checked", "the optimistic state is reverted");
+    assert
+      .dom(checkbox)
+      .doesNotHaveAttribute("aria-busy", "the stale control is no longer busy");
+  });
+
+  test("continues a raw-less operation across teardown", async function (assert) {
     holdHydration = true;
     const [first, second] = await prepare("[ ] first\n[ ] second", {
       includeRaw: false,
@@ -379,13 +620,16 @@ Actual checkboxes:
 
     assert
       .dom(firstReplacement)
-      .doesNotHaveClass("checked", "the latest first intent survives");
+      .doesNotHaveClass("checked", "the latest first state is adopted");
+    assert
+      .dom(firstReplacement)
+      .hasClass("is-pending", "the latest first state remains pending");
     assert
       .dom(secondReplacement)
-      .hasClass("checked", "the queued second intent survives");
+      .hasClass("checked", "the queued second state is adopted");
     assert
       .dom(secondReplacement)
-      .hasClass("is-pending", "the replacement remains pending");
+      .hasClass("is-pending", "the queued second state remains pending");
 
     holdHydration = false;
     releaseHydration();
@@ -400,7 +644,7 @@ Actual checkboxes:
     );
   });
 
-  test("discards reordered raw-less sourced intent", async function (assert) {
+  test("keeps accepted raw-less work independent of another rendering", async function (assert) {
     holdHydration = true;
     const [first] = await prepare("[ ] first\n[ ] second", {
       includeRaw: false,
@@ -415,43 +659,10 @@ Actual checkboxes:
 
     assert
       .dom(replacement)
-      .doesNotHaveClass("checked", "intent does not move to another item");
+      .doesNotHaveClass("checked", "the replacement uses its rendered state");
     assert
       .dom(replacement)
-      .doesNotHaveClass("is-pending", "unverifiable intent is discarded");
-
-    holdHydration = false;
-    releaseHydration();
-    releaseHydration = null;
-    await settled();
-
-    assert.strictEqual(requests.length, 0, "no stale source is submitted");
-  });
-
-  test("discards unverifiable legacy intent during raw-less rebind", async function (assert) {
-    holdHydration = true;
-    const [checkbox] = await prepare("[ ] first", {
-      includeRaw: false,
-      legacyCooked: true,
-    });
-
-    checkbox.click();
-    await waitUntil(() => releaseHydration);
-
-    decoratorCleanup();
-    decoratorCleanup = null;
-    decoratedElement.remove();
-    const [replacement] = await decorate("[ ] first");
-
-    assert
-      .dom(replacement)
-      .doesNotHaveClass(
-        "checked",
-        "unverifiable legacy intent is not migrated"
-      );
-    assert
-      .dom(replacement)
-      .doesNotHaveClass("is-pending", "unverifiable legacy work is discarded");
+      .doesNotHaveClass("is-pending", "the replacement has no pending work");
 
     holdHydration = false;
     releaseHydration();
@@ -460,8 +671,13 @@ Actual checkboxes:
 
     assert.strictEqual(
       requests.length,
-      0,
-      "no positional legacy request is sent"
+      1,
+      "the accepted operation is submitted"
+    );
+    assert.strictEqual(
+      requests[0].toggles[0].checkbox_source,
+      "0:0",
+      "the operation retains its original target"
     );
   });
 
@@ -509,7 +725,7 @@ Actual checkboxes:
     );
   });
 
-  test("preserves legacy intent when sourced cooked replaces it", async function (assert) {
+  test("continues a legacy operation when sourced cooked appears", async function (assert) {
     holdRequest = true;
     const [checkbox] = await prepare("[ ] first", { legacyCooked: true });
 
@@ -523,22 +739,20 @@ Actual checkboxes:
 
     assert
       .dom(replacement)
-      .hasClass("checked", "legacy intent migrates to the sourced checkbox");
+      .doesNotHaveClass("checked", "the new rendering uses cooked state");
     assert
       .dom(replacement)
-      .hasClass("is-pending", "the migrated checkbox remains pending");
+      .doesNotHaveClass("is-pending", "pending UI is not transferred");
 
     releaseRequest();
     releaseRequest = null;
     await settled();
 
-    assert
-      .dom(replacement)
-      .hasClass("checked", "the migrated intent remains after persistence");
-    await waitUntil(() => !replacement.classList.contains("is-pending"));
-    assert
-      .dom(replacement)
-      .doesNotHaveClass("is-pending", "the migrated pulse clears normally");
+    assert.strictEqual(
+      postModel.raw,
+      "[x] first",
+      "the accepted legacy operation is persisted"
+    );
   });
 
   test("does not migrate legacy intent across a structural edit", async function (assert) {
@@ -609,6 +823,28 @@ Actual checkboxes:
         "invalid intent is discarded immediately"
       );
     assert.strictEqual(requests.length, 0, "no invalid baseline is submitted");
+  });
+
+  test("rejects a stale rendering after the post structure changes", async function (assert) {
+    const [oldFirst] = await prepare("[ ] first\n[ ] second");
+    postModel.raw = "[ ] second\n[ ] first";
+    postModel.updated_at = "2026-08-27T08:00:01.000Z";
+
+    await click(oldFirst);
+
+    assert.strictEqual(requests.length, 0, "no stale target is submitted");
+    assert
+      .dom(oldFirst)
+      .doesNotHaveClass("checked", "the stale optimistic state is reverted");
+    assert
+      .dom(oldFirst)
+      .doesNotHaveClass("is-interactive", "the stale control is deactivated");
+    assert
+      .dom(oldFirst)
+      .hasAttribute("aria-readonly", "true", "the stale state is communicated");
+    assert
+      .dom(oldFirst)
+      .doesNotHaveAttribute("tabindex", "the stale control leaves tab order");
   });
 
   test("does not rebase sourced intent across a structural edit", async function (assert) {
@@ -691,7 +927,7 @@ Actual checkboxes:
     );
   });
 
-  test("shows a pulse on only the pending checkbox", async function (assert) {
+  test("shows pending state on only the changed checkbox", async function (assert) {
     holdRequest = true;
     const [first, second] = await prepare("[ ] first [x] second");
     const initialWidth = first.getBoundingClientRect().width;
@@ -718,7 +954,7 @@ Actual checkboxes:
       );
     assert
       .dom(first)
-      .hasClass("is-pending", "the pending checkbox gets the pulse state");
+      .hasClass("is-pending", "the changed checkbox gets the pending state");
     assert
       .dom(second)
       .doesNotHaveClass(
@@ -738,8 +974,8 @@ Actual checkboxes:
     );
     assert.strictEqual(
       getComputedStyle(first).animationName,
-      "checklist-pending-pulse",
-      "the neutral plate pulses behind the existing glyph"
+      "none",
+      "the pending treatment does not flash"
     );
     assert
       .dom(".checklist-spinner")
@@ -754,53 +990,10 @@ Actual checkboxes:
     await waitUntil(() => !first.classList.contains("is-pending"));
     assert
       .dom(first)
-      .doesNotHaveClass("is-pending", "the pulse clears after its minimum");
+      .doesNotHaveClass("is-pending", "pending state clears after saving");
     assert
       .dom(first)
       .hasClass("checked", "the optimistic state remains after saving");
-  });
-
-  test("keeps a fast pulse visible without blocking another click", async function (assert) {
-    const [checkbox] = await prepare("[ ] first");
-
-    checkbox.click();
-    await waitUntil(() => requests.length === 1);
-    await waitUntil(() => !checkbox.hasAttribute("aria-busy"));
-
-    assert
-      .dom(checkbox)
-      .hasClass("is-pending", "a fast save retains its visual feedback");
-    assert
-      .dom(checkbox)
-      .doesNotHaveAttribute(
-        "aria-disabled",
-        "the minimum display time does not disable the checkbox"
-      );
-
-    const secondClickAt = performance.now();
-    checkbox.click();
-    await waitUntil(() => requests.length === 2);
-    await waitUntil(() => !checkbox.hasAttribute("aria-busy"));
-
-    assert
-      .dom(checkbox)
-      .doesNotHaveClass(
-        "checked",
-        "a click during the visual tail is accepted"
-      );
-    assert
-      .dom(checkbox)
-      .hasClass(
-        "is-pending",
-        "the new click restarts the minimum display time"
-      );
-
-    await waitUntil(() => !checkbox.classList.contains("is-pending"));
-
-    assert.true(
-      performance.now() - secondClickAt >= 190,
-      "the pulse remains visible for approximately 200ms after the latest click"
-    );
   });
 
   test("persists repeat activation while a request is pending", async function (assert) {
@@ -880,53 +1073,6 @@ Actual checkboxes:
       "[x] first",
       "the model stores the latest persisted state"
     );
-  });
-
-  test("preserves latest intent across an intermediate cooked replacement", async function (assert) {
-    holdRequest = true;
-    const [checkbox] = await prepare("[ ] first");
-
-    checkbox.click();
-    await waitUntil(() => requests.length === 1);
-    checkbox.click();
-
-    releaseRequest();
-    releaseRequest = null;
-    await waitUntil(() => requests.length === 2 && releaseRequest);
-    checkbox.click();
-
-    decoratorCleanup();
-    decoratorCleanup = null;
-    decoratedElement.remove();
-    const [replacement] = await decorate("[ ] first");
-
-    assert
-      .dom(replacement)
-      .hasClass("checked", "local intent overlays intermediate cooked content");
-    assert
-      .dom(replacement)
-      .hasClass("is-pending", "pending state survives cooked replacement");
-    assert
-      .dom(replacement)
-      .hasAttribute("aria-busy", "true", "the replacement remains busy");
-
-    holdRequest = false;
-    releaseRequest();
-    releaseRequest = null;
-    await waitUntil(() => requests.length === 3);
-    await settled();
-
-    assert.deepEqual(
-      requests.map((request) => request.toggles[0].checked),
-      [true, false, true],
-      "the latest state is persisted after replacement"
-    );
-    assert
-      .dom(replacement)
-      .hasClass("checked", "the replacement never regresses visually");
-    assert
-      .dom(replacement)
-      .doesNotHaveAttribute("aria-busy", "the final save clears busy state");
   });
 
   test("preserves ABA intent after the original request fails", async function (assert) {
@@ -1032,6 +1178,43 @@ Actual checkboxes:
     );
   });
 
+  test("coalesces a rapid sequence before sending", async function (assert) {
+    const boxes = await prepare(
+      "[ ] first\n[ ] second\n[ ] third\n[ ] fourth\n[ ] fifth\n[ ] sixth"
+    );
+
+    boxes.forEach((box) => box.click());
+    await settled();
+
+    assert.strictEqual(requests.length, 1, "the sequence sends one request");
+    assert.deepEqual(
+      requests[0].toggles.map(({ checkbox_index }) => checkbox_index),
+      [0, 1, 2, 3, 4, 5],
+      "all six changes share the request"
+    );
+    boxes.forEach((box) =>
+      assert.dom(box).hasClass("checked", "each change remains visible")
+    );
+  });
+
+  test("drops a coalesced change that returns to its confirmed state", async function (assert) {
+    const [checkbox] = await prepare("[ ] first");
+
+    checkbox.click();
+    checkbox.click();
+    await settled();
+
+    assert.strictEqual(requests.length, 0, "no redundant request is sent");
+    assert.strictEqual(
+      activeChecklistOperationCountForTesting(),
+      0,
+      "the empty coordinator retires immediately"
+    );
+    assert
+      .dom(checkbox)
+      .doesNotHaveClass("checked", "the confirmed state remains visible");
+  });
+
   test("waits for the active request before sending another checkbox", async function (assert) {
     holdRequest = true;
     const [first, second, third] = await prepare(
@@ -1069,7 +1252,7 @@ Actual checkboxes:
         request.toggles.map((toggle) => toggle.checkbox_index)
       ),
       [[0], [1, 2]],
-      "the first change is immediate and the backlog is one batch"
+      "the in-flight change finishes before the batched backlog"
     );
     assert.strictEqual(
       requests[1].expected_raw,
@@ -1081,6 +1264,53 @@ Actual checkboxes:
       "2026-08-27T08:00:01.000Z",
       "the second request uses the first response's revision token"
     );
+  });
+
+  test("preserves queued state across an intermediate cooked replacement", async function (assert) {
+    holdRequest = true;
+    const [first, second] = await prepare("[ ] first\n[ ] second");
+
+    responseCookeds = [(await cook("[x] first\n[ ] second")).toString()];
+
+    first.click();
+    await waitUntil(() => releaseRequest);
+    second.click();
+
+    releaseRequest();
+    releaseRequest = null;
+    await waitUntil(() => requests.length === 2 && releaseRequest);
+
+    decoratorCleanup();
+    decoratorCleanup = null;
+    decoratedElement.remove();
+    const [replacementFirst, replacementSecond] = decorateCooked(
+      postModel.cooked
+    );
+
+    assert
+      .dom(replacementFirst)
+      .hasClass("checked", "the saved state comes from intermediate cooked");
+    assert
+      .dom(replacementSecond)
+      .hasClass("checked", "the queued state overlays intermediate cooked");
+    assert
+      .dom(replacementSecond)
+      .hasClass("is-pending", "the replacement adopts pending presentation");
+    assert
+      .dom(replacementSecond)
+      .hasAttribute("aria-busy", "true", "the replacement remains busy");
+
+    holdRequest = false;
+    releaseRequest();
+    releaseRequest = null;
+    await settled();
+
+    assert
+      .dom(replacementSecond)
+      .hasClass("checked", "the queued state remains after persistence");
+    assert
+      .dom(replacementSecond)
+      .doesNotHaveClass("is-pending", "the pending state clears after saving");
   });
 
   test("continues queued work after the decorated content is destroyed", async function (assert) {
@@ -1106,15 +1336,14 @@ Actual checkboxes:
     holdRequest = false;
     releaseRequest();
     releaseRequest = null;
-    await waitUntil(() => requests.length === 2);
     await settled();
 
     assert.deepEqual(
       requests.map((request) =>
         request.toggles.map((toggle) => toggle.checkbox_index)
       ),
-      [[0], [1]],
-      "detached controls do not discard queued changes"
+      [[0, 1]],
+      "detached controls do not discard the coalesced changes"
     );
     assert.strictEqual(
       postModel.raw,
@@ -1123,7 +1352,7 @@ Actual checkboxes:
     );
     assert.strictEqual(
       postModel.cooked,
-      "authoritative cooked 2",
+      "authoritative cooked 1",
       "the detached model receives the final cooked content"
     );
   });
@@ -1198,7 +1427,7 @@ Actual checkboxes:
     first.click();
     second.click();
     third.click();
-    await waitUntil(() => requests.length === 3);
+    await waitUntil(() => requests.length === 2);
     await waitUntil(() =>
       [first, second, third].every(
         (checkbox) => !checkbox.classList.contains("is-pending")
@@ -1209,8 +1438,11 @@ Actual checkboxes:
       requests.map((request) =>
         request.toggles.map((toggle) => toggle.checkbox_index)
       ),
-      [[0], [0], [1, 2]],
-      "the failed batch is retried before the accumulated backlog"
+      [
+        [0, 1, 2],
+        [0, 1, 2],
+      ],
+      "the coalesced batch is retried together"
     );
     assert.strictEqual(
       requests[1].expected_raw,
@@ -1230,8 +1462,8 @@ Actual checkboxes:
     assert
       .dom(first)
       .hasClass("checked", "the retried optimistic state is retained");
-    assert.dom(second).hasClass("checked", "the backlog is retained");
-    assert.dom(third).hasClass("checked", "the backlog remains batched");
+    assert.dom(second).hasClass("checked", "the coalesced state is retained");
+    assert.dom(third).hasClass("checked", "the coalesced state is retained");
     assert
       .dom(first)
       .doesNotHaveAttribute(
@@ -1254,7 +1486,7 @@ Actual checkboxes:
       .doesNotHaveAttribute("aria-busy", "pending state is cleared");
   });
 
-  test("recovers after a network error invalidates raw", async function (assert) {
+  test("recovers after a network error makes the baseline uncertain", async function (assert) {
     respondWithError = "network";
     const [checkbox] = await prepare("[ ] first");
 
@@ -1293,6 +1525,17 @@ Actual checkboxes:
       .dom(checkbox)
       .hasAttribute("aria-label", "Buy milk", "the task labels the control");
 
+    checkbox.dispatchEvent(
+      new KeyboardEvent("keydown", {
+        bubbles: true,
+        cancelable: true,
+        key: " ",
+        repeat: true,
+      })
+    );
+    assert.dom(checkbox).doesNotHaveClass("checked", "key repeat is ignored");
+    assert.strictEqual(requests.length, 0, "key repeat schedules no save");
+
     await triggerKeyEvent(checkbox, "keydown", " ");
     assert
       .dom(checkbox)
@@ -1305,8 +1548,10 @@ Actual checkboxes:
       .hasAttribute("aria-checked", "false", "Enter unchecks the item");
   });
 
-  test("redecorating the same controls does not duplicate listeners", async function (assert) {
+  test("redecorating cleaned controls does not duplicate listeners", async function (assert) {
     const [checkbox] = await prepare("[ ] first");
+    decoratorCleanup();
+    decoratorCleanup = null;
     const replacementCleanup = checklistSyntax(decoratedElement, {
       getModel: () => postModel,
     });
@@ -1317,6 +1562,119 @@ Actual checkboxes:
     assert.dom(checkbox).hasClass("checked", "one activation toggles once");
 
     replacementCleanup();
+  });
+
+  test("keeps simultaneous renderings independently interactive", async function (assert) {
+    const [firstCheckbox] = await prepare("[ ] first");
+    const secondElement = document.createElement("div");
+    secondElement.innerHTML = postModel.cooked;
+    const secondCleanup = checklistSyntax(secondElement, {
+      getModel: () => postModel,
+    });
+    document.querySelector("#ember-testing").append(secondElement);
+
+    await click(firstCheckbox);
+
+    assert.strictEqual(
+      requests.length,
+      1,
+      "decorating another rendering does not disable the first"
+    );
+
+    secondCleanup();
+  });
+
+  test("coalesces simultaneous renderings through one coordinator", async function (assert) {
+    const [firstCheckbox] = await prepare("[ ] first\n[ ] second");
+    const secondElement = document.createElement("div");
+    secondElement.innerHTML = postModel.cooked;
+    const secondCleanup = checklistSyntax(secondElement, {
+      getModel: () => postModel,
+    });
+    const secondCheckbox = secondElement.querySelectorAll(".chcklst-box")[1];
+    document.querySelector("#ember-testing").append(secondElement);
+
+    firstCheckbox.click();
+    secondCheckbox.click();
+    await settled();
+
+    assert.strictEqual(requests.length, 1, "one coalesced request is sent");
+    assert.deepEqual(
+      requests[0].toggles.map(({ checkbox_index }) => checkbox_index),
+      [0, 1],
+      "changes from both renderings share one batch"
+    );
+    assert.strictEqual(
+      postModel.raw,
+      "[x] first\n[x] second",
+      "both render-local changes are persisted"
+    );
+
+    secondCleanup();
+  });
+
+  test("serializes later changes from simultaneous renderings", async function (assert) {
+    holdRequest = true;
+    const [firstCheckbox] = await prepare("[ ] first\n[ ] second");
+    const secondElement = document.createElement("div");
+    secondElement.innerHTML = postModel.cooked;
+    const secondCleanup = checklistSyntax(secondElement, {
+      getModel: () => postModel,
+    });
+    const secondCheckbox = secondElement.querySelectorAll(".chcklst-box")[1];
+    document.querySelector("#ember-testing").append(secondElement);
+
+    firstCheckbox.click();
+    await waitUntil(() => requests.length === 1);
+    secondCheckbox.click();
+
+    assert.strictEqual(
+      requests.length,
+      1,
+      "the second rendering waits for the active request"
+    );
+
+    holdRequest = false;
+    releaseRequest();
+    releaseRequest = null;
+    await waitUntil(() => requests.length === 2);
+    await settled();
+
+    assert.strictEqual(
+      requests[1].expected_raw,
+      "[x] first\n[ ] second",
+      "the second rendering uses the coordinated baseline"
+    );
+    assert.strictEqual(
+      postModel.raw,
+      "[x] first\n[x] second",
+      "both serialized changes are persisted"
+    );
+
+    secondCleanup();
+  });
+
+  test("cleans up simultaneous renderings independently", async function (assert) {
+    await prepare("[ ] first");
+    const secondElement = document.createElement("div");
+    secondElement.innerHTML = postModel.cooked;
+    const secondCleanup = checklistSyntax(secondElement, {
+      getModel: () => postModel,
+    });
+    const secondCheckbox = secondElement.querySelector(".chcklst-box");
+    document.querySelector("#ember-testing").append(secondElement);
+
+    decoratorCleanup();
+    decoratorCleanup = null;
+    await click(secondCheckbox);
+
+    assert.strictEqual(
+      requests.length,
+      1,
+      "cleaning one rendering leaves the other interactive"
+    );
+
+    secondCleanup();
   });
 
   test("labels multiple controls from their own task text", async function (assert) {

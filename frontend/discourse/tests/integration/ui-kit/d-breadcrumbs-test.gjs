@@ -12,8 +12,8 @@ module("Integration | ui-kit | DBreadcrumbs", function (hooks) {
     await render(
       <template>
         <DBreadcrumbsContainer />
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
-        <DBreadcrumbsItem @path="/about" @label={{i18n "about.simple_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
+        <DBreadcrumbsItem @label={{i18n "about.simple_title"}} @path="/about" />
       </template>
     );
 
@@ -26,10 +26,10 @@ module("Integration | ui-kit | DBreadcrumbs", function (hooks) {
     await render(
       <template>
         <DBreadcrumbsContainer
-          @additionalLinkClasses="some-class"
           @additionalItemClasses="other-class"
+          @additionalLinkClasses="some-class"
         />
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       </template>
     );
 
@@ -45,9 +45,9 @@ module("Integration | ui-kit | DBreadcrumbs", function (hooks) {
     await render(
       <template>
         <DBreadcrumbsContainer />
-        <DBreadcrumbsItem @path="/admin" @label="Admin" />
-        <DBreadcrumbsItem @path="/admin/backups" @label="Backups" />
-        <DBreadcrumbsItem @path="/admin/backups/logs" @label="Logs" />
+        <DBreadcrumbsItem @label="Admin" @path="/admin" />
+        <DBreadcrumbsItem @label="Backups" @path="/admin/backups" />
+        <DBreadcrumbsItem @label="Logs" @path="/admin/backups/logs" />
       </template>
     );
 
@@ -60,7 +60,7 @@ module("Integration | ui-kit | DBreadcrumbs", function (hooks) {
       <template>
         <DBreadcrumbsContainer />
         <DBreadcrumbsContainer />
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       </template>
     );
 

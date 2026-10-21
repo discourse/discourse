@@ -1,7 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Site from "discourse/models/site";
-import NestedRootAd from "../components/nested-root-ad";
-import PostBottomAd from "../components/post-bottom-ad";
+import NestedRootAd from "../components/nested-root-ad.gjs";
+import PostBottomAd from "../components/post-bottom-ad.gjs";
 
 export default {
   name: "initialize-ad-plugin",

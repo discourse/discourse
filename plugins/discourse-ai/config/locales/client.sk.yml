@@ -16,6 +16,16 @@ sk:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Spýtajte sa AI"
+        ask_ai:
+          title: "Spýtajte sa AI"
+          reports:
+            retry_questions: "Skúsiť znova"
+          date: "Dátum"
+          outcomes:
+            failed: "Nepodarilo sa"
         emotion:
           title: "Emócia"
         reports:
@@ -159,6 +169,13 @@ sk:
         type: "Typ"
         error: "Chyba"
         response: "Odpoveď"
+      discourse_workflows:
+        classify:
+          text: "Text"
+          upload_ids: "Obrázky"
+          name: "Meno"
+          type: "Typ"
+          type_score: "Skóre"
       ai_tool_approval:
         loading: "Prebieha načítavanie..."
         tool: "Akcia"
@@ -167,6 +184,8 @@ sk:
         reject: "Zamietnuť"
         approved: "Schválený"
         rejected: "Zamietnuté"
+      default_llm:
+        title: "Predvolený jazykový model"
       llm_selector:
         none: "Žiadny"
       features:
@@ -564,6 +583,14 @@ sk:
         delete: "Odstrániť"
         embedding: "Vkladám"
         tool: "Nástroj"
+      decision_models:
+        no_preset: "Žiadny"
+        display_name: "Meno"
+        model: "Model"
+        provider: "Poskytovateľ"
+        edit: "Upraviť"
+        delete: "Odstrániť"
+        test: "Spustiť test"
       mcp_servers:
         name: "Meno"
         description: "Popis"
@@ -580,6 +607,18 @@ sk:
         tools_modal:
           parameters: "Parametre"
           required: "Povinné"
+      models:
+        new: "Nový model"
+        name: "Meno"
+        type: "Typ"
+        provider: "Poskytovateľ"
+        edit: "Upraviť"
+        select_type: "Vyberte"
+        types:
+          embedding: "Vkladám"
+        filters:
+          all: "Všetky typy"
+          reset: "Obnovenie filtrov"
       llms:
         short_title: "LLM"
         no_llms: "Zatiaľ žiadne LLM"
@@ -793,9 +832,23 @@ sk:
         quick_search:
           suffix: "vo všetkých témach a príspevkoch s AI"
       ai_artifact:
+        editor:
+          version: "Verzia"
+          default: "Predvolené"
+          option_on: "Zapnuté"
+          option_off: "Vypnuté"
+          apply: "Použi"
         expand_view_label: "Rozbaliť zobrazenie"
         collapse_view_label: "Ukončiť režim celej obrazovky (tlačidlo ESC alebo Späť)"
         click_to_run_label: "Spustiť artefakt"
+        share: "Zdieľať"
+        create_link: "Vytvorte odkaz"
+        copied: "Skopírované do schránky"
+        copy_link: "Kopírovať odkaz"
+        copy_embed: "Kopírovať vloženie"
+        new_tab: "Zobraziť na novej karte"
+        filter_all: "Všetky"
+        filter_standalone: "Samostatný"
       ai_bot:
         title: "AI bot"
         llm: "Model:"

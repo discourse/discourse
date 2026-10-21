@@ -71,7 +71,6 @@ zh_TW:
   site_settings:
     discourse_ai_enabled: "啟用 Discourse AI 外掛。"
     enable_ai_bot_starred_conversations: "允許使用者將 AI 機器人對話加上星號，並在側邊欄的「已加星號」區段中顯示。"
-    ai_default_llm_model: "所有 AI 功能預設使用的 LLM 模型"
     ai_artifact_security: "AI 成品系統會產生包含可執行程式碼的 IFRAME。嚴格模式會要求額外點擊一次才執行程式碼；寬鬆模式會立即執行程式碼；混合模式允許使用者提供 data-ai-artifact-autorun，使其立即顯示；停用模式則會停用成品系統。"
     ai_toxicity_enabled: "啟用有害內容模組。"
     ai_toxicity_inference_service_api_endpoint: "有害內容模組 API 的執行 URL"
@@ -143,11 +142,9 @@ zh_TW:
     ai_pm_summarization_allowed_groups: "允許在私人訊息中建立及查看摘要的群組。"
     ai_summary_gists_enabled: "自動為主題中的最新回覆產生簡短摘要"
     ai_summary_gists_agent: "用於產生簡短主題摘要的代理程式。摘要產生一律使用內建的 final-summary 工具；代理程式上設定的其他工具和結構化回應格式將被忽略。"
-    ai_summary_backfill_maximum_topics_per_hour: "每小時要回填的主題摘要數量。每個在地化摘要都會計入此限制。"
     ai_bot_enabled: "啟用 AI 機器人模組。"
     ai_bot_enabled_llms: "可供 AI 機器人對話選擇的 LLM"
     ai_bot_enable_chat_warning: "發起私人訊息聊天時顯示警告。可編輯翻譯字串 discourse_ai.ai_bot.pm_warning 來覆寫"
-    ai_bot_allowed_groups: "當 GPT 機器人可存取私人訊息時，它會回覆這些群組的成員。"
     ai_bot_debugging_allowed_groups: "允許這些群組在貼文上看到偵錯按鈕，以顯示原始 AI 請求與回應"
     ai_bot_public_sharing_allowed_groups: "允許這些群組透過唯一的公開連結，向大眾分享 AI 私人訊息。注意：若網站要求登入，分享內容也會要求登入。"
     ai_bot_add_to_header: "在頁首顯示按鈕，以開始與 AI 機器人的私人訊息"
@@ -413,13 +410,29 @@ zh_TW:
       configuration_missing: "缺少 AI 垃圾內容偵測設定。啟用前，請在「管理 > 外掛 > Discourse AI > 垃圾內容」中新增設定。"
       logging_subject: "垃圾內容偵測"
     ai_bot:
+      navigation:
+        settings:
+          title: "網站設定"
+        users:
+          title: "使用者"
+        groups:
+          title: "群組"
+        review:
+          title: "審核佇列"
+        categories:
+          title: "分類"
+        tags:
+          title: "標簽"
+        themes:
+          title: "佈景主題"
+        backups:
+          title: "備份"
       errors:
-        invalid_agent_id: "指定的 AI 代理程式不存在，或你沒有存取權"
         cannot_send_pm_to_agent: "你無法向此 AI 代理程式傳送私人訊息"
+        invalid_agent_id: "指定的 AI 代理程式不存在，或你沒有存取權"
       reply_error: "很抱歉，系統嘗試回覆時似乎遇到未預期的問題。\n\n[details='錯誤詳細資料']\n%{details}\n[/details]"
       default_pm_prefix: "[未命名的 AI 機器人私人訊息]"
       thinking: "思考中"
-      tool_pending_approval: "執行此動作前需要版主核准。"
       spawn_agent:
         description: "將獨立完整的提示詞委派給其中一個允許的代理程式，並傳回其回應"
         prompt_description: "傳送給所選代理程式並顯示於思考區塊中的完整獨立提示詞"
@@ -442,11 +455,31 @@ zh_TW:
         missing_model: "要求的子代理程式沒有可用的語言模型。"
         call_limit: "已達委派呼叫次數上限。"
         completion_limit: "已達委派完成次數上限。"
-        token_limit: "已達委派權杖預算上限。"
         cancelled: "委派的工作已取消。"
         execution_failed: "委派的工作失敗。"
         approval_unavailable: "委派執行時無法使用需要核准的工具。"
       chat_tool_approval:
+        topic_states:
+          open: "開放"
+          closed: "已關閉"
+          active: "啟用"
+          deleted: "已刪除"
+        solution_post: "第 %{number} 則貼文"
+        duration_label: "持續時間："
+        user_duration:
+          other: "%{count} 天"
+        post_states:
+          locked: "已鎖定"
+          unlocked: "已解鎖"
+        posts_label: "新發表的貼文"
+        category_label: "分類"
+        category_fields:
+          name: "名稱"
+          description: "描述"
+          color: "顏色"
+          text_color: "文字顏色"
+        approve_label: "是"
+        reject_label: "否"
         approved: "已由 @%{username} 核准。"
         rejected: "已由 @%{username} 拒絕。"
         failed: "無法完成此動作：%{error}"
@@ -807,7 +840,6 @@ zh_TW:
         create_tag: "正在建立標籤 %{name}"
         edit_tag: "正在編輯標籤 %{name}（%{fields}）"
         create_category: "正在建立分類 %{name}"
-        edit_category: "正在編輯分類 %{category_id}（%{fields}）"
         change_topic_category: "正在將主題 %{topic_id} 移至分類 %{category_id}"
         set_topic_timer: "正在為主題 %{topic_id} 設定 %{timer_type} 計時器（%{duration_hours} 小時）"
         set_slow_mode: "正在為主題 %{topic_id} 設定慢速模式（%{slow_mode_seconds} 秒）"
@@ -1111,8 +1143,8 @@ zh_TW:
         disable_embeddings: "你必須先停用「ai embeddings enabled」。"
         choose_model: "請先設定「ai embeddings selected model」。"
         model_test_failed: "無法使用此模型產生測試嵌入。請確認模型設定正確。"
-    secrets:
-      delete_failed_in_use: "一或多個 LLM、嵌入模型或工具正在使用此憑證，因此無法刪除。"
+    decision_models:
+      secret_not_found: "所選的憑證不存在"
     llm_models:
       missing_provider_param: "%{param} 不得空白"
       invalid_provider_param: "%{param} 的格式無效"

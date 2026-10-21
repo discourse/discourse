@@ -1,25 +1,25 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import TopicNotificationsButtonExample from "../../examples/molecules/topic-notifications-button";
+import TopicNotificationsButtonExample from "../../examples/molecules/topic-notifications-button.gjs";
 import topicNotificationsButtonSource from "../../examples/molecules/topic-notifications-button?source=file";
 
 export default <template>
   <StyleguideExample
-    @title="<TopicNotificationsButton> expanded"
     @code={{topicNotificationsButtonSource}}
+    @title="<TopicNotificationsButton> expanded"
   >
     <TopicNotificationsButtonExample
-      @topic={{@dummy.topic}}
       @expanded={{true}}
+      @topic={{@dummy.topic}}
     />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<TopicNotificationsButton>"
     @code={{topicNotificationsButtonSource}}
+    @title="<TopicNotificationsButton>"
   >
     <TopicNotificationsButtonExample
-      @topic={{@dummy.topic}}
       @expanded={{false}}
+      @topic={{@dummy.topic}}
     />
   </StyleguideExample>
 </template>

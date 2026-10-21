@@ -18,11 +18,11 @@ export default class AdminSearchModal extends Component {
 
   <template>
     <DModal
-      @closeModal={{@closeModal}}
       class="admin-search-modal --quick-palette"
-      @title="admin.search.modal_title"
-      @inline={{@inline}}
+      @closeModal={{@closeModal}}
       @hideHeader={{true}}
+      @inline={{@inline}}
+      @title="admin.search.modal_title"
     >
       <AdminSearch />
     </DModal>

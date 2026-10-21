@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { get, set } from "@ember/object";
+import categoryStyleType from "discourse/lib/category-style-type";
 import { bind } from "discourse/lib/decorators";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
@@ -114,55 +115,8 @@ export default class CategorySectionLink {
     this.refreshCounts();
   }
 
-  #countables() {
-    const countables = [];
-
-    if (this.#unifiedNewEnabled) {
-      countables.push(UNREAD_AND_NEW_COUNTABLE);
-    } else {
-      countables.push(...DEFAULT_COUNTABLES);
-    }
-
-    if (customCountables.length > 0) {
-      customCountables.forEach((customCountable) => {
-        if (
-          !customCountable.shouldRegister ||
-          customCountable.shouldRegister({ category: this.category })
-        ) {
-          if (
-            customCountable?.prioritizeOverDefaults({
-              category: this.category,
-              currentUser: this.currentUser,
-            })
-          ) {
-            countables.unshift(customCountable);
-          } else {
-            countables.push(customCountable);
-          }
-        }
-      });
-    }
-
-    return countables;
-  }
-
   get showCount() {
     return this.currentUser?.sidebarShowCountOfNewItems;
-  }
-
-  @bind
-  refreshCounts() {
-    this.countables = this.#countables();
-
-    this.activeCountable = this.countables.find((countable) => {
-      const count = countable.refreshCountFunction({
-        topicTrackingState: this.topicTrackingState,
-        category: this.category,
-      });
-
-      set(this, countable.propertyName, count);
-      return count > 0;
-    });
   }
 
   get name() {
@@ -195,7 +149,7 @@ export default class CategorySectionLink {
       return customPrefixType;
     }
 
-    return this.category.styleType;
+    return categoryStyleType(this.category.styleType);
   }
 
   get prefixValue() {
@@ -206,7 +160,7 @@ export default class CategorySectionLink {
       return customPrefixValue;
     }
 
-    const styleType = this.category.styleType;
+    const styleType = categoryStyleType(this.category.styleType);
 
     if (styleType === "icon") {
       return this.category.icon;
@@ -288,5 +242,52 @@ export default class CategorySectionLink {
 
   get #unifiedNewEnabled() {
     return !!this.currentUser?.unified_new_enabled;
+  }
+
+  @bind
+  refreshCounts() {
+    this.countables = this.#countables();
+
+    this.activeCountable = this.countables.find((countable) => {
+      const count = countable.refreshCountFunction({
+        topicTrackingState: this.topicTrackingState,
+        category: this.category,
+      });
+
+      set(this, countable.propertyName, count);
+      return count > 0;
+    });
+  }
+
+  #countables() {
+    const countables = [];
+
+    if (this.#unifiedNewEnabled) {
+      countables.push(UNREAD_AND_NEW_COUNTABLE);
+    } else {
+      countables.push(...DEFAULT_COUNTABLES);
+    }
+
+    if (customCountables.length > 0) {
+      customCountables.forEach((customCountable) => {
+        if (
+          !customCountable.shouldRegister ||
+          customCountable.shouldRegister({ category: this.category })
+        ) {
+          if (
+            customCountable?.prioritizeOverDefaults({
+              category: this.category,
+              currentUser: this.currentUser,
+            })
+          ) {
+            countables.unshift(customCountable);
+          } else {
+            countables.push(customCountable);
+          }
+        }
+      });
+    }
+
+    return countables;
   }
 }

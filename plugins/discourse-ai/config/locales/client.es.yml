@@ -19,6 +19,16 @@ es:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Preguntar a la IA"
+        ask_ai:
+          title: "Preguntar a la IA"
+          reports:
+            retry_questions: "Reintentar"
+          date: "Fecha"
+          outcomes:
+            failed: "Falló"
         emotion:
           title: "Emoción"
         reports:
@@ -239,6 +249,12 @@ es:
         ai_agent:
           agent_id: "Agente"
           mode: "Modo"
+        classify:
+          text: "Texto"
+          upload_ids: "Imágenes"
+          name: "Nombre"
+          type: "Tipo"
+          type_score: "Puntuación"
       ai_tool_approval:
         loading: "Cargando..."
         agent: "Agente"
@@ -249,11 +265,9 @@ es:
         approved: "Aprobado"
         rejected: "Rechazados"
       default_llm:
-        title: "Modelo LLM por defecto"
-        description: "El modelo LLM por defecto que se utilizará para todas las características de IA. Se usará si no se especifica ningún LLM en la configuración de características o en el agente. Si no se especifica ningún LLM por defecto, se usará el último LLM creado."
+        title: "Modelo lingüístico por defecto"
       llm_selector:
         none: "Ninguna"
-        saved: "El modelo LLM por defecto se ha actualizado correctamente"
       features:
         short_title: "Características"
         description: "Estas son las características de IA disponibles para los visitantes de tu sitio. Se pueden configurar para usar agentes y LLM específicos, y los grupos pueden controlar su acceso."
@@ -793,7 +807,6 @@ es:
           result: "Resultado de la prueba"
       secrets:
         short_title: "Credenciales"
-        description: "Gestionar las credenciales de autenticación compartidas entre LLM, integraciones y herramientas."
         name: "Nombre"
         secret: "Valor"
         select_secret: "Selecciona una credencial..."
@@ -818,6 +831,15 @@ es:
         mcp_server_oauth_client_secret: "Secreto del cliente OAuth del servidor MCP"
         modal:
           title: "Crear nueva credencial"
+      decision_models:
+        no_preset: "Ninguna"
+        display_name: "Nombre"
+        model: "Modelo"
+        provider: "Proveedor"
+        api_key: "Credencial"
+        edit: "Editar"
+        delete: "Eliminar"
+        test: "Ejecutar prueba"
       mcp_servers:
         short_title: "Servidores MCP"
         new: "Nuevo servidor MCP"
@@ -899,6 +921,18 @@ es:
         test_summary:
           one: "Se ha descubierto %{count} herramienta usando el protocolo %{version}."
           other: "Se han descubierto %{count} herramientas usando el protocolo %{version}."
+      models:
+        new: "Nuevo modelo"
+        name: "Nombre"
+        type: "Tipo"
+        provider: "Proveedor"
+        edit: "Editar"
+        select_type: "Seleccionar"
+        types:
+          embedding: "Incrustado"
+        filters:
+          all: "Todos los tipos"
+          reset: "Restablecer filtros"
       llms:
         short_title: "LLM"
         no_llms: "Aún no hay LLM"
@@ -1153,9 +1187,23 @@ es:
         quick_search:
           suffix: "en todos los temas y publicaciones con IA"
       ai_artifact:
+        editor:
+          version: "Versión"
+          default: "Por defecto"
+          option_on: "Activado"
+          option_off: "Desactivado"
+          apply: "Aplicar"
         expand_view_label: "Ampliar vista"
         collapse_view_label: "Salir de la pantalla completa (ESC o botón Atrás)"
         click_to_run_label: "Ejecutar Artefacto"
+        share: "Compartir"
+        create_link: "Crear enlace"
+        copied: "Copiado al portapapeles"
+        copy_link: "Copiar enlace"
+        copy_embed: "Copiar incrustación"
+        new_tab: "Mostrar en una pestaña nueva"
+        filter_all: "Todo"
+        filter_standalone: "Independiente"
       ai_bot:
         title: "Bot de IA"
         agent: "Agente:"
