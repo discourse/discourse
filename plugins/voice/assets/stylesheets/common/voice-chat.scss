@@ -89,48 +89,6 @@
   .empty-state__container {
     margin: auto;
   }
-
-  // Only the session's very first message goes through this starter composer;
-  // once the thread exists the native chat composer replaces it.
-  &__composer {
-    padding: var(--space-2) var(--space-3);
-    border-block-start: 1px solid var(--primary-low);
-  }
-
-  &__composer-inner {
-    display: flex;
-    align-items: flex-end;
-    gap: var(--space-1);
-    border: 1px solid var(--d-chat-input-border-color);
-    border-radius: var(--d-border-radius-large);
-    background: var(--d-chat-input-bg-color);
-
-    &:focus-within {
-      box-shadow: var(--d-chat-input-focused-shadow);
-    }
-  }
-
-  &__input {
-    flex: 1;
-    min-width: 0;
-    max-height: 8rem;
-    margin: 0;
-    padding: var(--space-2) 0;
-    border: 0;
-    background: transparent;
-    line-height: 1.3;
-    resize: none;
-
-    // The wrapper's focus-within shadow is the focus indicator (matching
-    // chat's own composer), not core's default textarea outline.
-    &:focus {
-      outline: none;
-    }
-  }
-
-  &__send {
-    flex: 0 0 auto;
-  }
 }
 
 .empty-state {
@@ -143,6 +101,18 @@
   .is-unavailable & {
     .d-icon {
       color: var(--danger);
+    }
+  }
+}
+
+.chat-composer {
+  .voice-chat:not(:has(.chat-replying-indicator-container)) & {
+    &__wrapper {
+      margin-bottom: var(--space-4);
+    }
+
+    &__inner-container {
+      padding-inline-start: var(--space-4);
     }
   }
 }

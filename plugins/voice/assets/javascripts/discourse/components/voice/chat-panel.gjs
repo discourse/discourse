@@ -29,6 +29,7 @@ export default class VoiceChatPanel extends Component {
   @tracked draft = "";
   @tracked sending = false;
   @tracked hideSkeleton = false;
+  @tracked composerFocused = false;
 
   // Resolved at runtime rather than statically imported: cross-plugin static
   // imports aren't resolvable in the compiled plugin bundle and break the
@@ -120,6 +121,11 @@ export default class VoiceChatPanel extends Component {
   @action
   registerTextarea(element) {
     this.textareaElement = element;
+  }
+
+  @action
+  setComposerFocused(focused) {
+    this.composerFocused = focused;
   }
 
   @action
