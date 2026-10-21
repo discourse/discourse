@@ -165,6 +165,7 @@ class GroupsController < ApplicationController
 
     group_attributes = group_params(automatic: group.automatic, group:)
     reset_group_email_settings_if_disabled!(group, group_attributes)
+    return render_json_error(group) if !valid_flair_upload?(group, group_attributes)
 
     categories, tags = []
     if !group.automatic || current_user.admin
@@ -823,6 +824,18 @@ class GroupsController < ApplicationController
     if notify && added_user_ids.present?
       Jobs.enqueue(:notify_users_added_to_group, user_ids: added_user_ids, group_id: group.id)
     end
+  end
+
+  def valid_flair_upload?(group, group_attributes)
+    return true if !group_attributes.key?(:flair_upload_id)
+
+    upload_id = group_attributes[:flair_upload_id].presence
+    return true if upload_id.blank?
+    return true if upload_id.to_i == group.flair_upload_id
+    return true if guardian.can_use_flair_upload?(upload_id)
+
+    group.errors.add(:base, I18n.t("groups.errors.flair_upload_not_owned"))
+    false
   end
 
   def group_params(automatic: false, group: nil)
