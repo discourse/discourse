@@ -38,3 +38,4 @@ sq:
       gamification_score:
         username: "User"
         description: "Përshkrimi"
+        category_id: "Kategori"

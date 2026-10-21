@@ -6,6 +6,9 @@
 
 nl:
   js:
+    dsa_notice:
+      title: "Illegale content melden"
+      email: "E-mailadres"
     user_api_key:
       title: '''%{application_name}'' autoriseren'
       authorize: "Autoriseren"

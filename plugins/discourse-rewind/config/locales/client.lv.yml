@@ -15,7 +15,7 @@ lv:
         chat_usage:
           author: Tu
           author_others: "%{username}"
-        voice_usage:
+        live_usage:
           minutes:
             zero: "%{count} minūtes"
             one: "%{count} minūtes"

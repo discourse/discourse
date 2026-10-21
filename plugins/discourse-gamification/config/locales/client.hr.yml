@@ -58,3 +58,4 @@ hr:
         username: "Korisnik"
         date: "Datum"
         description: "Opis"
+        category_id: "Kategorija"

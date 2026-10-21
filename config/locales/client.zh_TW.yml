@@ -6,6 +6,10 @@
 
 zh_TW:
   js:
+    dsa_notice:
+      title: "檢舉非法內容"
+      email: "電子郵件地址"
+      resend_email_code: "重新傳送代碼"
     ace_editor:
       resize: "調整程式碼編輯器大小"
     user_api_key:

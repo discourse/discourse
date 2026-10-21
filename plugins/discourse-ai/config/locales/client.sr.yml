@@ -282,6 +282,14 @@ sr:
             category: "Kategorija"
           table:
             total_count: "Ukupno"
+      ai_search:
+        related_replies:
+          one: "%{count} odgovor"
+          few: "%{count} odgovora"
+          other: "%{count} odgovora"
+        tabs:
+          topics: "Teme"
+          messages: "Poruke"
       discobot_discoveries:
         legacy:
           regular_results: "Teme"

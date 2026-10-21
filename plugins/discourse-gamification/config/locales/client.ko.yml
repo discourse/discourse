@@ -45,3 +45,4 @@ ko:
         username: "사용자"
         date: "날짜"
         description: "내용"
+        category_id: "카테고리"

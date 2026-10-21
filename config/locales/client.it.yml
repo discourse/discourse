@@ -6,6 +6,9 @@
 
 it:
   js:
+    dsa_notice:
+      title: "Segnala contenuti illegali"
+      email: "Indirizzo e-mail"
     user_api_key:
       authorize: "Autorizza"
       deny: "Annulla"

@@ -92,3 +92,4 @@ es:
         username: "Usuario"
         date: "Fecha"
         description: "Descripción"
+        category_id: "Categoría"

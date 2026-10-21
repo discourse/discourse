@@ -309,6 +309,13 @@ gl:
             tag: "Etiqueta"
           table:
             total_count: "Total"
+      ai_search:
+        related_replies:
+          one: "%{count} resposta"
+          other: "%{count} repostas"
+        tabs:
+          topics: "Temas"
+          messages: "Mensaxes"
       discobot_discoveries:
         legacy:
           regular_results: "Temas"

@@ -542,6 +542,7 @@ vi:
     post_template: "%{replace_paragraph}\n\nSử dụng những đoạn sau để viết mô tả dài, hướng dẫn sử dụng hoặc điều luật sử dụng:\n\n- Mục đích sử dụng của category này là gì?\n\n- Category này khác với những cái khác như thế nào?\n\n- Những topic trong category này thường có nội dung gì?\n\n- Chúng ta có thể ghép với category khác không?\n"
     errors:
       not_found: "Không tìm thấy chuyên mục!"
+      self_lockout: "Bạn sắp thay đổi quyền truy cập chuyên mục theo cách sẽ loại bỏ quyền truy cập của chính bạn. Bạn có chắc muốn tiếp tục?"
       uncategorized_parent: "Mục \"Chưa được phân loại\" không thể có một chuyên mục chính"
       self_parent: "Chuyên mục chính của chuyên mục phụ không thể nào là chính nó"
       depth: "Bạn không thể để một chuyên mục phụ trong một chuyên mục phụ khác."

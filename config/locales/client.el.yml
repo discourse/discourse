@@ -6,6 +6,9 @@
 
 el:
   js:
+    dsa_notice:
+      title: "Αναφορά παράνομου περιεχομένου"
+      email: "Διεύθυνση email"
     user_api_key:
       title: 'Εξουσιοδότηση "%{application_name}"'
       authorize: "Εξουσιοδότηση"

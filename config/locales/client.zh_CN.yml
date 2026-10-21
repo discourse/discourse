@@ -6,6 +6,10 @@
 
 zh_CN:
   js:
+    dsa_notice:
+      title: "举报非法内容"
+      email: "电子邮件地址"
+      resend_email_code: "重新发送验证码"
     mcp_oauth_client_id_metadata_policy:
       disabled: "仅限管理员注册"
       approved_domains: "来自已批准域的 CIMD"

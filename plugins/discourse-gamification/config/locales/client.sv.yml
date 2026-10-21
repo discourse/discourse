@@ -67,3 +67,4 @@ sv:
         username: "Användare"
         date: "Datum"
         description: "Beskrivning"
+        category_id: "Kategori"

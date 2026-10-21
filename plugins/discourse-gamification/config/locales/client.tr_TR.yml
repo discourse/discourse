@@ -54,7 +54,6 @@ tr_TR:
         scoring_configuration: "Puanlama yapılandırması"
         scoring_configuration_description: "Bu liderlik tablosu için genel puanlama kurallarını geçersiz kılın. Genel varsayılan ayarları kullanmak için alanları boş bırakın."
         scorable_categories: "Puanlanabilir kategoriler"
-        scorable_categories_help: "Puanlamaya dahil edilecek kategoriler. Genel ayarı kullanmak için bu alanı boş bırakın."
         score_overrides: "Puan ağırlıkları"
         score_overrides_help: "Her eylem için puan değerlerini geçersiz kılın. Genel varsayılan değeri kullanmak için boş bırakın. Devre dışı bırakmak için 0 olarak ayarlayın."
         weight:
@@ -114,3 +113,4 @@ tr_TR:
         username: "Kullanıcı"
         date: "Tarih"
         description: "Açıklama"
+        category_id: "Kategori"

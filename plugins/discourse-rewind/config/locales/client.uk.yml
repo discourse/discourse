@@ -160,7 +160,7 @@ uk:
           message_4: "Середня довжина вашого повідомлення становила <strong>%{length}</strong> символів"
           message_5: "Ваші улюблені канали:"
           dancing_baby_alt: "Танцююча дитина"
-        voice_usage:
+        live_usage:
           minutes:
             one: "%{count} хвилина"
             few: "%{count} хвилини"

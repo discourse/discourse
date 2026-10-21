@@ -509,6 +509,17 @@ cs:
             compact: "Kompaktní"
             expanded: "Rozšířený"
             expanded_description: "se souhrny AI"
+      ai_search:
+        related_topics: "Související témata"
+        related_replies:
+          one: "%{count} odpověď"
+          few: "%{count} odpovědí"
+          many: "%{count} odpovědí"
+          other: "%{count} odpovědí"
+        tabs:
+          ask: "Zeptejte se AI"
+          topics: "Témata"
+          messages: "Zprávy"
       discobot_discoveries:
         main_title: "Zeptejte se AI"
         legacy:

@@ -45,3 +45,4 @@ sl:
         username: "Uporabnik"
         date: "Datum"
         description: "Opis"
+        category_id: "Kategorija"

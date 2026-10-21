@@ -841,6 +841,7 @@ tr_TR:
     post_template: "%{replace_paragraph}\n\nDaha uzun bir açıklama için veya kategori yönergeleri ya da kuralları oluşturmak için aşağıdaki paragrafları kullanın:\n\n- İnsanlar neden bu kategoriyi kullanmalı? Bu kategori ne için?\n\n- Bu kategorinin halihazırda sahip olduğumuz diğer kategorilerden tam olarak farkı nedir?\n\n- Bu kategorideki konular genel olarak neleri içermelidir?\n\n- Bu kategoriye ihtiyacımız var mı? Başka bir kategori veya alt kategori ile birleştirebilir miyiz?\n"
     errors:
       not_found: "Kategori bulunamadı!"
+      self_lockout: "Kendi erişiminizi kaldıracak şekilde kategori izinlerini değiştirmek üzeresiniz. Devam etmek istediğinizden emin misiniz?"
       uncategorized_parent: "Kategorize edilmemişin bir üst kategorisi olamaz"
       self_parent: "Alt kategorinin üst kategorisi kendisi olamaz"
       depth: "Bir alt kategori başka bir alt kategorinin altında yer alamaz"
@@ -2495,7 +2496,6 @@ tr_TR:
     experimental_impersonation_time_limit_minutes: "Taklit oturumu otomatik olarak sonlandırılmadan önce geçen süre."
     page_loading_indicator: "Discourse içinde sayfa geçişleri sırasında görünen yükleme göstergesini yapılandırın. \"Spinner\" bir tam sayfa göstergesidir. \"Slider\" ekranın üst kısmındaki dar bir çubuğu gösterir."
     show_user_menu_avatars: "Kullanıcı menüsünde kullanıcı avatarlarını göster"
-    about_page_hidden_groups: "Belirli grupların üyelerini /about (hakkında) sayfasında göstermeyin."
     about_page_extra_groups: "Moderatörlerin altındaki \"hakkında\" sayfasında gösterilecek gruplar."
     about_page_extra_groups_initial_members: "Hakkında sayfasındaki her grupta genişletilecek üye sayısı."
     about_page_extra_groups_show_description: "Grup açıklamalarının hakkında sayfasına dâhil edilip edilmeyeceği."
@@ -4095,34 +4095,18 @@ tr_TR:
       title: "Hesap Askıya Alındı"
       subject_template: "[%{email_prefix}] Hesabınız askıya alındı"
       subject_template_improved: "Hesabınız askıya alınmıştır"
-      text_body_template: |
-        Forumda %{suspended_till} tarihine kadar askıya alındınız.
-
-        Sebep - %{reason}
     account_suspended_forever:
       title: "Hesap Askıya Alındı"
       subject_template: "[%{email_prefix}] Hesabınız askıya alındı"
       subject_template_improved: "Hesabınız askıya alınmıştır"
-      text_body_template: |
-        Forumda askıya alındınız.
-
-        Sebep - %{reason}
     account_silenced:
       title: "Hesap Susturuldu"
       subject_template: "[%{email_prefix}] Hesabınız susturuldu"
       subject_template_improved: "Hesabınız susturuldu"
-      text_body_template: |
-        Forumda %{silenced_till} tarihine kadar susturuldunuz.
-
-        Sebep - %{reason}
     account_silenced_forever:
       title: "Hesap Susturuldu"
       subject_template: "[%{email_prefix}] Hesabınız susturuldu"
       subject_template_improved: "Hesabınız susturuldu"
-      text_body_template: |
-        Forumda susturuldunuz.
-
-        Sebep - %{reason}
     account_deleted:
       title: "Hesap Silindi"
       subject_template: "[%{email_prefix}] Hesabınız silindi"

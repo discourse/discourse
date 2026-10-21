@@ -6,6 +6,9 @@
 
 fa_IR:
   js:
+    dsa_notice:
+      title: "گزارش محتوای ناقض قانون"
+      email: "آدرس ایمیل"
     user_api_key:
       authorize: "اجازه دادن"
       deny: "لغو"

@@ -299,6 +299,13 @@ hy:
             category: "Կատեգորիա"
           table:
             total_count: "Ամբողջ"
+      ai_search:
+        related_replies:
+          one: "%{count} պատասխան"
+          other: "%{count} պատասխան"
+        tabs:
+          topics: "Թեմաներ"
+          messages: "Հաղորդագրություն"
       discobot_discoveries:
         legacy:
           regular_results: "Թեմաներ"

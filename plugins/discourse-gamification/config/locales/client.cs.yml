@@ -94,3 +94,4 @@ cs:
         username: "Uživatel"
         date: "Datum"
         description: "Popis"
+        category_id: "Kategorie"

@@ -17,7 +17,7 @@ sw:
         chat_usage:
           author: Wewe
           author_others: "%{username}"
-        voice_usage:
+        live_usage:
           minutes:
             one: "dakika %{count}"
             other: "dakika %{count} "

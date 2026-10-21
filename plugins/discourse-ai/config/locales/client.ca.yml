@@ -305,6 +305,13 @@ ca:
             category: "Categoria"
           table:
             total_count: "Total"
+      ai_search:
+        related_replies:
+          one: "%{count} resposta"
+          other: "%{count} respostes"
+        tabs:
+          topics: "Temes"
+          messages: "Missatges"
       discobot_discoveries:
         legacy:
           regular_results: "Temes"

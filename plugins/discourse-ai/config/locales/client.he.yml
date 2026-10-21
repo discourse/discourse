@@ -1023,6 +1023,16 @@ he:
             compact: "מצומצם"
             expanded: "מורחב"
             expanded_description: "עם סיכוי בינה מלאכותית"
+      ai_search:
+        related_topics: "נושאים קשורים"
+        related_replies:
+          one: "תגובה"
+          two: "שתי תגובות"
+          other: "שתי תגובות"
+        tabs:
+          ask: "לשאול בינה מלאכותית"
+          topics: "נושאים"
+          messages: "הודעות"
       discobot_discoveries:
         main_title: "לשאול בינה מלאכותית"
         loading_convo: "הדיון נטען"
