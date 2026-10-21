@@ -1,7 +1,7 @@
 # Customizations transfer
 
 Moves site customizations (settings, themes, palettes, group and category
-looks, translation overrides) from one Discourse site to others. It finds the
+looks, translation overrides, permalinks) from one Discourse site to others. It finds the
 changes, puts them into one ZIP, and applies each part where it belongs:
 
 - `template`: the template site, applied once.
@@ -91,6 +91,13 @@ translation_overrides:
   - locale: en
     key: js.login.oidc.title
     target: migrated
+permalinks:
+  - url: old-forum/thread-123   # the stored url; what it points to is read at export time
+    target: migrated
+    note: redirects to a topic
+  - url: old-forum/gone
+    remove: true                 # deleted on the source, so delete it on the destination
+    target: migrated
 ```
 
 Only the listed group and category `attributes` are written, so unrelated
@@ -112,13 +119,19 @@ list and isn't removed by backup cleanup, so delete it when you're done.
 
 ## Finding imported records
 
-Ids differ between test migrations. Imported groups and categories are found
-with these strategies, in order:
+Ids differ between test migrations. Imported groups, categories and the
+targets of permalinks (topics, posts, users, tags) are found with these
+strategies, in order:
 
 1. the importer's MappingsDB (`--mappings-db`), via the original id
 2. the `import_id` custom field written by `script/import_scripts` and
    `script/bulk_import` (e.g. `generic_bulk.rb`)
-3. the group name or the category slug path (`parent/child`)
+3. a natural key: the group name, the category slug path (`parent/child`),
+   the username, the tag name, or for a post its topic plus post number
+
+Topics have no natural key, so a permalink to a topic needs one of the first
+two. Posts aren't in the MappingsDB; without an `import_id` they are found
+through their topic and post number.
 
 `--mappings-db` is only needed for imports done with `disco import`. Leave it
 out for the other importers.
@@ -148,6 +161,12 @@ On the `migrated` target, an item that matches nothing is skipped. On the
 - Themes and palettes go to `template`. Palettes owned by a theme travel with
   that theme.
 - Translation overrides for login providers go to `migrated`, others to `template`.
+- Permalinks with an external URL go to `template`; those redirecting to a
+  category follow the category's rule; everything else (topics, posts, users,
+  tags) goes to `migrated`. A permalink whose target no longer exists is
+  skipped. Permalinks deleted on the source become `remove: true` items.
+  Imports of large sites can leave more permalinks than `diff` compares
+  (`MAX_ROWS`); then narrow it down, e.g. `--where "permalinks=created_at > '2026-10-01'"`.
 - Changes in tables the tool doesn't handle are listed as comments at the end
   of the plan. Review them by hand.
 

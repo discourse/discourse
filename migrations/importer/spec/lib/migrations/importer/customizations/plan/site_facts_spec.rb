@@ -42,6 +42,21 @@ RSpec.describe Migrations::Importer::Customizations::Plan::SiteFacts, :rails do
     )
   end
 
+  it "tells whether permalink targets still exist" do
+    post = Fabricate(:post)
+    trashed = Fabricate(:topic)
+    trashed.trash!
+    user = Fabricate(:user)
+    tag = Fabricate(:tag)
+
+    expect(facts.record_exists?(:topic, post.topic_id)).to eq(true)
+    expect(facts.record_exists?(:post, post.id)).to eq(true)
+    expect(facts.record_exists?(:user, user.id)).to eq(true)
+    expect(facts.record_exists?(:tag, tag.id)).to eq(true)
+    expect(facts.record_exists?(:topic, trashed.id)).to eq(false)
+    expect(facts.record_exists?(:user, -9999)).to eq(false)
+  end
+
   it "compares diff values with column defaults" do
     expect(facts.default_value?("groups", "primary_group", "f")).to eq(true)
     expect(facts.default_value?("groups", "primary_group", "t")).to eq(false)

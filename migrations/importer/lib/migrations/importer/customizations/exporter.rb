@@ -38,6 +38,7 @@ module Migrations
               "groups" => Export::Groups.new(values, @matcher),
               "categories" => Export::Categories.new(values, @matcher),
               "translation_overrides" => Export::TranslationOverrides.new,
+              "permalinks" => Export::Permalinks.new(@matcher),
             }
 
             items =

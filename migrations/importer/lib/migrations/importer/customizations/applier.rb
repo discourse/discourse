@@ -43,6 +43,8 @@ module Migrations
             run_section("groups") { |entry| @groups.call(entry) }
             run_section("categories") { |entry| @categories.call(entry) }
             run_section("translation_overrides") { |entry| @translation_overrides.call(entry) }
+            # Last, so template permalinks find categories created above.
+            run_section("permalinks") { |entry| @permalinks.call(entry) }
           end
 
           @report.print_summary
@@ -64,6 +66,7 @@ module Migrations
           @groups = Apply::Groups.new(values, @matcher, target: @target, dry_run: @dry_run)
           @categories = Apply::Categories.new(values, @matcher, target: @target, dry_run: @dry_run)
           @translation_overrides = Apply::TranslationOverrides.new(dry_run: @dry_run)
+          @permalinks = Apply::Permalinks.new(@matcher, lookup, target: @target, dry_run: @dry_run)
         end
 
         def run_section(section, label: section)

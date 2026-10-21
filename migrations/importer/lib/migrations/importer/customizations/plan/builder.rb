@@ -31,6 +31,7 @@ module Migrations
                 groups
                 categories
                 translation_overrides
+                permalinks
               ] + THEME_ID_TABLES
             ).freeze
 
@@ -50,6 +51,7 @@ module Migrations
               "groups" => groups,
               "categories" => categories,
               "translation_overrides" => translation_overrides,
+              "permalinks" => permalinks,
             }
             [plan, trailer_lines]
           end
@@ -199,6 +201,27 @@ module Migrations
             end
 
             items.sort_by { |item| [item["locale"], item["key"]] }
+          end
+
+          # A changed url is reported as one permalink removed and one added.
+          def permalinks
+            after = added_and_changed("permalinks").index_by { |row| row["url"] }
+            before = removed_and_before("permalinks").index_by { |row| row["url"] }
+            columns = Rules::PERMALINK_TARGET_COLUMNS
+
+            items =
+              after.filter_map do |url, row|
+                next if before.key?(url) && before[url].slice(*columns) == row.slice(*columns)
+                { "url" => url }.merge(Rules.permalink(row, @facts))
+              end
+
+            (before.keys - after.keys).each do |url|
+              items << { "url" => url, "remove" => true }.merge(
+                Rules.permalink(before[url], @facts, remove: true),
+              )
+            end
+
+            items.sort_by { |item| item["url"] }
           end
 
           # @return [Array<Array(Integer, Array<String>)>] id and plan attribute names

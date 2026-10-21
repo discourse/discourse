@@ -9,6 +9,8 @@ module Migrations
           case section
           when "translation_overrides"
             "#{item["locale"]}: #{item["key"]}"
+          when "permalinks"
+            item["url"]
           when "categories"
             item["name"].presence || item.dig("match", "slug_path") || item["match"].to_s
           else
