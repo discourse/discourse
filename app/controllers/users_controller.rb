@@ -2086,10 +2086,10 @@ class UsersController < ApplicationController
       exclude_topic_ids = unread_notifications.filter_map(&:topic_id).uniq
       limit = USER_MENU_LIST_LIMIT - unread_notifications.size
 
-      messages_list =
+      messages =
         TopicQuery
           .new(current_user, per_page: limit)
-          .list_private_messages_direct_and_groups(
+          .private_messages_direct_and_groups(
             current_user,
             groups_messages_notification_level: :watching,
           ) do |query|
@@ -2119,9 +2119,7 @@ class UsersController < ApplicationController
         )
     end
 
-    if messages_list
-      serialized_messages = serialize_data(messages_list.topics, UserMenuMessageSerializer)
-    end
+    serialized_messages = serialize_data(messages, UserMenuMessageSerializer) if messages
 
     if read_notifications.present?
       Notification.populate_acting_user(read_notifications)
