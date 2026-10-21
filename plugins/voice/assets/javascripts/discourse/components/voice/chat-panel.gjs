@@ -10,6 +10,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { optionalRequire } from "discourse/lib/utilities";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -42,6 +43,9 @@ export default class VoiceChatPanel extends Component {
   // instead of a spinner flashing into a skeleton.
   chatSkeleton = optionalRequire(
     "discourse/plugins/chat/discourse/components/chat-skeleton"
+  );
+  chatNavbar = optionalRequire(
+    "discourse/plugins/chat/discourse/components/chat/navbar"
   );
 
   textareaElement = null;
@@ -267,33 +271,31 @@ export default class VoiceChatPanel extends Component {
       class={{dConcatClass "voice-chat" (if this.unavailable "is-unavailable")}}
       {{didInsert this.loadSession}}
     >
-      <header class="voice-chat__header">
-        <h2 class="voice-chat__title">
-          {{i18n "voice.chat.title"}}
-        </h2>
-        {{#if this.canOpenInChat}}
-          <button
-            aria-label={{i18n "voice.chat.open_in_chat"}}
-            class="btn btn-transparent btn-icon no-text voice-chat__open-in-chat"
-            title={{i18n "voice.chat.open_in_chat"}}
-            type="button"
-            {{on "click" this.openInChat}}
-          >
-            {{dIcon "up-right-from-square"}}
-          </button>
-        {{/if}}
-        {{#if @onClose}}
-          <button
-            aria-label={{i18n "voice.chat.close"}}
-            class="btn btn-icon no-text voice-chat__close"
-            title={{i18n "voice.chat.close"}}
-            type="button"
-            {{on "click" @onClose}}
-          >
-            {{dIcon "xmark"}}
-          </button>
-        {{/if}}
-      </header>
+      {{#if this.chatNavbar}}
+        <this.chatNavbar as |navbar|>
+          <navbar.Title @icon="comment" @title={{i18n "voice.chat.title"}} />
+          <navbar.Actions>
+            {{#if this.canOpenInChat}}
+              <DButton
+                class="btn-transparent voice-chat__open-in-chat"
+                @action={{this.openInChat}}
+                @ariaLabel="voice.chat.open_in_chat"
+                @icon="up-right-from-square"
+                @title="voice.chat.open_in_chat"
+              />
+            {{/if}}
+            {{#if @onClose}}
+              <DButton
+                class="btn-transparent voice-chat__close"
+                @action={{@onClose}}
+                @ariaLabel="voice.chat.close"
+                @icon="xmark"
+                @title="voice.chat.close"
+              />
+            {{/if}}
+          </navbar.Actions>
+        </this.chatNavbar>
+      {{/if}}
 
       {{! eslint-disable ember/template-no-invalid-interactive }}
       <div
