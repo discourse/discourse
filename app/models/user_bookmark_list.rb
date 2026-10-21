@@ -6,7 +6,7 @@ class UserBookmarkList
   PER_PAGE = 20
 
   attr_reader :bookmarks, :per_page, :has_more
-  attr_accessor :more_bookmarks_url, :bookmark_serializer_opts
+  attr_accessor :more_bookmarks_url
 
   def initialize(user:, guardian:, search_term: nil, per_page: nil, page: 0)
     @user = user
@@ -19,7 +19,6 @@ class UserBookmarkList
     @page = page.to_i
 
     @bookmarks = []
-    @bookmark_serializer_opts = {}
   end
 
   def load(&blk)

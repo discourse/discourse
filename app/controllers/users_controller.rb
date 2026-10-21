@@ -2017,7 +2017,9 @@ class UsersController < ApplicationController
     end
 
     reminder_notifications =
-      BookmarkQuery.new(user: current_user).unread_notifications(limit: USER_MENU_LIST_LIMIT)
+      BookmarkQuery.new(user: current_user, guardian:).unread_notifications(
+        limit: USER_MENU_LIST_LIMIT,
+      )
     if reminder_notifications.size < USER_MENU_LIST_LIMIT
       exclude_bookmark_ids =
         reminder_notifications.filter_map { |notification| notification.data_hash[:bookmark_id] }
@@ -2045,11 +2047,7 @@ class UsersController < ApplicationController
     end
 
     if bookmark_list
-      bookmark_list.bookmark_serializer_opts = { link_to_first_unread_post: true }
-      serialized_bookmarks =
-        serialize_data(bookmark_list, UserBookmarkListSerializer, scope: guardian, root: false)[
-          :bookmarks
-        ]
+      serialized_bookmarks = serialize_data(bookmark_list.bookmarks, UserMenuBookmarkSerializer)
     end
 
     render json: {
