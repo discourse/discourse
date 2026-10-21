@@ -196,7 +196,7 @@ describe("virtual:entrypoint", () => {
       "helpers/chat-fixtures.js",
     ];
 
-    it("eagerly imports every module despite staticModules", () => {
+    it("imports helpers eagerly and test files lazily, despite staticModules", () => {
       const output = entrypoint(
         TEST_MODULES,
         { frontendConfig: { staticModules: true, exports: {} } },
@@ -205,11 +205,38 @@ describe("virtual:entrypoint", () => {
 
       for (const filename of TEST_MODULES) {
         const importPath = filename.replace(/\.\w+$/, "");
-        expect(output, filename).toContain(`from "./${importPath}"`);
+
+        if (importPath.endsWith("-test")) {
+          expect(output, filename).not.toContain(`from "./${importPath}"`);
+          expect(output, filename).toContain(
+            `"${importPath}": () => import("./${importPath}"),`
+          );
+        } else {
+          expect(output, filename).toContain(`from "./${importPath}"`);
+        }
       }
 
       expect(output).toContain("export default compatModules;");
       expect(output).not.toContain("pluginExports");
+    });
+
+    it("imports the other entrypoints so their modules are not split by test file", () => {
+      const output = entrypoint(
+        TEST_MODULES,
+        { entrypoints: { main: {}, admin: {}, test: {} } },
+        "test"
+      );
+
+      expect(output).toContain('import "virtual:entrypoint:main";');
+      expect(output).toContain('import "virtual:entrypoint:admin";');
+      expect(output).not.toContain('import "virtual:entrypoint:test";');
+    });
+
+    it("keeps app modules named like tests eager outside the test entrypoint", () => {
+      const output = entrypoint(["discourse/components/ab-test.gjs"]);
+
+      expect(output).toContain('from "./discourse/components/ab-test"');
+      expect(output).not.toContain("import(");
     });
 
     it("still tree-shakes the same modules for a non-test entrypoint", () => {

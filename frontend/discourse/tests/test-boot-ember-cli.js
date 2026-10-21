@@ -93,6 +93,17 @@ export async function startTests() {
     for (const [key, value] of Object.entries(rawModules)) {
       availableModules[key] = value.default;
     }
+  } else if (!hasThemeJs) {
+    availableModules = {};
+    for (const name of Object.keys(requirejs.entries)) {
+      if (name.startsWith("discourse/plugins/") && name.endsWith("-test")) {
+        const module = requirejs(name);
+        // Plugin test files are registered as loaders; app modules named "*-test" are namespaces.
+        if (typeof module === "function") {
+          availableModules[name] = module;
+        }
+      }
+    }
   }
 
   await awaitVisualReadiness();
