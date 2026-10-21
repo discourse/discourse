@@ -30,6 +30,10 @@ module DiscourseDataExplorer
              class_name: "DiscourseDataExplorer::QueryTag",
              through: :query_tag_mappings,
              source: :query_tag
+    has_one :dashboard_report,
+            -> { where(source: AdminDashboardReportProvider.source_name) },
+            class_name: "::AdminDashboardReport",
+            foreign_key: :identifier
     belongs_to :user
     validates :name, presence: true
 
