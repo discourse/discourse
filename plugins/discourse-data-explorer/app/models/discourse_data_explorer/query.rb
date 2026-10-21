@@ -130,7 +130,7 @@ module DiscourseDataExplorer
 
     def self.unpersisted_defaults(search: nil, tags: nil, tag: nil)
       selected_tags = QueryTag.normalize_all(tags || tag)
-      persisted_ids = where(hidden: false).where("id < 0").pluck(:id).to_set
+      persisted_ids = where("id < 0").pluck(:id).to_set
       query_text = search&.downcase
 
       Queries.default.filter_map do |_, attributes|
