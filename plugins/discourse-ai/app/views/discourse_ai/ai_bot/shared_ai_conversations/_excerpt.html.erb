@@ -1,0 +1,11 @@
+<% excerpt_length = 0 %>
+<% conversation.populated_context.each do |post| %>
+  <% paragraph = capture do %><p><b><%= post.user.username %></b>: <%= PrettyText.excerpt(post.cooked, 400, strip_links: true, strip_details: true).html_safe %></p><% end %>
+  <%= paragraph %>
+  <% excerpt_length += paragraph.length %>
+  <% if excerpt_length > 1000 %>
+    <p>...</p>
+    <% break %>
+  <% end %>
+<% end %>
+<a href="<%= conversation.url %>"><%= I18n.t("discourse_ai.share_ai.read_more") %></a>

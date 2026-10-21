@@ -1,0 +1,13 @@
+<div>
+  <aside class="onebox allowlistedgeneric" data-onebox-src="<%= conversation.url %>">
+    <header class="source">
+      <span class="onebox-ai-llm-title"><%= I18n.t("discourse_ai.share_ai.onebox_title", llm_name: conversation.llm_name) %></span>
+      <a href="<%= conversation.url %>" target="_blank" rel="nofollow ugc noopener" tabindex="-1"><%= Discourse.base_uri %></a>
+    </header>
+    <article class="onebox-body">
+      <h3><a href="<%= conversation.url %>" rel="nofollow ugc noopener" tabindex="-1"><%= conversation.title %></a></h3>
+      <%= render partial: "discourse_ai/ai_bot/shared_ai_conversations/excerpt", locals: { conversation: conversation } %>
+    </article>
+    <div style="clear: both"></div>
+  </aside>
+</div>
