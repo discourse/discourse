@@ -43,6 +43,8 @@ module PageObjects
         when "d-select", "d-select-multi"
           component.find(".d-select")["data-value"]
         when "tag-chooser"
+          return tag_chooser_d_select.value if tag_chooser_d_select?
+
           picker = PageObjects::Components::SelectKit.new(tag_chooser_selector)
           picker.value
         when "checkbox"
@@ -171,6 +173,14 @@ module PageObjects
           picker.select_row_by_name(value)
           picker.collapse
         when "tag-chooser"
+          if tag_chooser_d_select?
+            picker = tag_chooser_d_select
+            picker.search(value)
+            picker.select_name(value)
+            picker.close
+            return
+          end
+
           picker = PageObjects::Components::SelectKit.new(tag_chooser_selector)
           picker.expand
           picker.search(value)
@@ -238,7 +248,11 @@ module PageObjects
 
       def has_selected_names?(*names)
         if control_type == "tag-chooser"
-          PageObjects::Components::SelectKit.new(tag_chooser_selector).has_selected_names?(*names)
+          if tag_chooser_d_select?
+            tag_chooser_d_select.trigger["data-name"].to_s.split(",").sort == names.map(&:to_s).sort
+          else
+            PageObjects::Components::SelectKit.new(tag_chooser_selector).has_selected_names?(*names)
+          end
         else
           raise "'has_selected_names?' is only supported for control type: tag-chooser"
         end
@@ -253,6 +267,14 @@ module PageObjects
       end
 
       private
+
+      def tag_chooser_d_select?
+        component.has_css?(".form-kit__control-tag-chooser.d-select", wait: 0)
+      end
+
+      def tag_chooser_d_select
+        UiKit::DSelect.at(tag_chooser_selector)
+      end
 
       def tag_chooser_selector
         "[data-name='#{component["data-name"]}'] .form-kit__control-tag-chooser"

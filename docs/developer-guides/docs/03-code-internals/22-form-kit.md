@@ -1031,7 +1031,7 @@ By default, Select includes a "none" option when the field is blank or when the 
 
 ## Tag Chooser
 
-Renders a `<TagChooser />` component.
+Renders a `<DTagChooser />` when `enable_new_select_controls` is enabled, and a legacy `<TagChooser />` otherwise. Both controls submit tag objects. The new control uses the field's title, description, error state, and disabled state for accessibility, and translates the `@placeholder` key. It ignores `@mobilePlacement`, including the manage-tags replacement row's placement override, because DSelect manages its mobile presentation.
 
 Common control arguments:
 

@@ -285,7 +285,9 @@ export function applyLegacySelectKitContent(
   const facade = facadeFor(engine);
   facade.content = items;
   report(facade, "content", kind, contentCallbackSources(targets));
-  const result: SelectItem[] = applyContentPluginApiCallbacks(items, facade);
+  const result: SelectItem[] = applyContentPluginApiCallbacks(items, facade, {
+    bridgeOnly: true,
+  });
 
   // A no-op run returns the same array reference; only adapt when it actually changed.
   if (result === items) {
@@ -318,5 +320,5 @@ export function applyLegacySelectKitOnChange(
   const facade = facadeFor(engine);
   report(facade, "onChange", kind, onChangeCallbackSources(targets));
 
-  applyOnChangePluginApiCallbacks(value, items, facade);
+  applyOnChangePluginApiCallbacks(value, items, facade, { bridgeOnly: true });
 }

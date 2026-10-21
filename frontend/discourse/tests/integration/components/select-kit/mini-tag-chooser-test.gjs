@@ -1,6 +1,7 @@
 import { hash } from "@ember/helper";
 import { click, findAll, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { serializeTags } from "discourse/lib/serialize-tags";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -410,6 +411,52 @@ module(
           "Search…",
           "Placeholder is back to default when there is no selection"
         );
+    });
+  }
+);
+
+module(
+  "Integration | Component | SelectKit | MiniTagChooser held names",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.set("subject", selectKit());
+    });
+
+    test("several name-only tags from a draft stay distinct", async function (assert) {
+      this.set("value", [{ name: "alpha" }, { name: "beta" }]);
+
+      await render(
+        <template><MiniTagChooser @value={{this.value}} /></template>
+      );
+
+      assert.strictEqual(
+        this.subject.header().name(),
+        "alpha,beta",
+        "both new tags show, not the first twice"
+      );
+    });
+
+    test("a held tag named 5 is never sent as tag id 5", async function (assert) {
+      let emitted;
+      this.set("value", ["5"]);
+      this.set("onChange", (tags) => (emitted = tags));
+
+      await render(
+        <template>
+          <MiniTagChooser @onChange={{this.onChange}} @value={{this.value}} />
+        </template>
+      );
+      await this.subject.expand();
+      await this.subject.selectRowByName("monkey");
+
+      const serialized = serializeTags(emitted);
+      assert.deepEqual(
+        serialized[0],
+        { name: "5" },
+        `the held name stays a name: ${JSON.stringify(serialized)}`
+      );
     });
   }
 );

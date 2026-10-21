@@ -126,55 +126,65 @@ function initInlineTagSuggester(api) {
   const currentUser = api.getCurrentUser();
   const siteSettings = api.container.lookup("service:site-settings");
 
-  api.modifySelectKit("mini-tag-chooser").prependContent((component) => {
-    const context = chooserSuggestionContext(component);
-    if (!enabledFor(context, siteSettings, currentUser)) {
-      return;
-    }
+  api
+    .modifySelectKit("mini-tag-chooser", { bridge: false })
+    .prependContent((component) => {
+      const context = chooserSuggestionContext(component);
+      if (!enabledFor(context, siteSettings, currentUser)) {
+        return;
+      }
 
-    if (component.selectKit.filter) {
-      reset(component);
-      return;
-    }
+      if (component.selectKit.filter) {
+        reset(component);
+        return;
+      }
 
-    if (stateFor(component).mode === "idle" && context.available) {
-      return triggerRow(component, context);
-    }
-  });
+      if (stateFor(component).mode === "idle" && context.available) {
+        return triggerRow(component, context);
+      }
+    });
 
-  api.modifySelectKit("mini-tag-chooser").replaceContent((component) => {
-    const context = chooserSuggestionContext(component);
-    if (!enabledFor(context, siteSettings, currentUser)) {
-      return;
-    }
+  api
+    .modifySelectKit("mini-tag-chooser", { bridge: false })
+    .replaceContent((component) => {
+      const context = chooserSuggestionContext(component);
+      if (!enabledFor(context, siteSettings, currentUser)) {
+        return;
+      }
 
-    if (component.selectKit.filter) {
-      return;
-    }
+      if (component.selectKit.filter) {
+        return;
+      }
 
-    const state = stateFor(component);
+      const state = stateFor(component);
 
-    if (state.mode === "loading") {
-      return [loadingRow()];
-    }
+      if (state.mode === "loading") {
+        return [loadingRow()];
+      }
 
-    if (state.mode === "results") {
-      const taken = context.selectedTagNames;
-      const remaining = state.suggestions.filter(
-        (s) => !taken.includes(s.name)
-      );
-      return [
-        exitRow(component),
-        ...remaining.map((s) => ({ id: s.name, name: s.name, count: s.count })),
-      ];
-    }
-  });
+      if (state.mode === "results") {
+        const taken = context.selectedTagNames;
+        const remaining = state.suggestions.filter(
+          (s) => !taken.includes(s.name)
+        );
+        return [
+          exitRow(component),
+          ...remaining.map((s) => ({
+            id: s.name,
+            name: s.name,
+            count: s.count,
+          })),
+        ];
+      }
+    });
 
-  api.modifySelectKit("mini-tag-chooser").onChange((component) => {
-    if (stateFor(component).mode === "results") {
-      component.selectKit.triggerSearch();
-    }
-  });
+  api
+    .modifySelectKit("mini-tag-chooser", { bridge: false })
+    .onChange((component) => {
+      if (stateFor(component).mode === "results") {
+        component.selectKit.triggerSearch();
+      }
+    });
 }
 
 export default {

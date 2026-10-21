@@ -1788,6 +1788,11 @@ class _PluginApi {
    *
    * Access SelectKit plugin api
    *
+   * @param {string} pluginApiKey - The select-kit identifier to customize.
+   * @param {object} [options]
+   * @param {boolean} [options.bridge=true] - Also apply callbacks to DSelect.
+   *   Set false for callbacks that require a legacy component instance.
+   *
    * Example:
    *
    * api.modifySelectKit("topic-footer-mobile-dropdown").appendContent(() => [{
@@ -1795,8 +1800,12 @@ class _PluginApi {
    *   id: 1
    * }])
    */
-  modifySelectKit(pluginApiKey) {
-    return modifySelectKit(pluginApiKey, noticeSourceFor(this.#source));
+  modifySelectKit(pluginApiKey, options) {
+    return modifySelectKit(
+      pluginApiKey,
+      noticeSourceFor(this.#source),
+      options
+    );
   }
 
   /**

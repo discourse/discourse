@@ -176,3 +176,163 @@ module(
     });
   }
 );
+
+module(
+  "Integration | Component | FormKit | Controls | TagChooser (new select controls)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.siteSettings.enable_new_select_controls = true;
+    });
+
+    test("the control renders DSelect and submits tag objects", async function (assert) {
+      let data = { foo: null };
+      const mutateData = (x) => (data = x);
+
+      await render(
+        <template>
+          <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+            <form.Field @name="foo" @title="Foo" @type="tag-chooser" as |field|>
+              <field.Control />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert.dom(".form-kit__control-tag-chooser.d-select").exists();
+      assert.dom(".form-kit__control-tag-chooser.select-kit").doesNotExist();
+
+      await formKit().field("foo").selectByName("monkey");
+      await formKit().submit();
+
+      assert.strictEqual(data.foo[0].name, "monkey");
+    });
+
+    test("the field's title names the control", async function (assert) {
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field
+              @description="Pick some"
+              @name="foo"
+              @title="Foo"
+              @type="tag-chooser"
+              as |field|
+            >
+              <field.Control />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      const input = document.querySelector(
+        ".form-kit__control-tag-chooser [role='combobox']"
+      );
+      const labelledBy = input.getAttribute("aria-labelledby");
+      const name = labelledBy
+        ? labelledBy
+            .split(/\s+/)
+            .map((id) => document.getElementById(id)?.textContent.trim())
+            .join(" ")
+        : (input.getAttribute("aria-label") ??
+          document
+            .querySelector(`label[for='${input.id}']`)
+            ?.textContent.trim());
+      assert.true(/Foo/.test(name ?? ""), `named by the field title: ${name}`);
+
+      const described = (input.getAttribute("aria-describedby") ?? "")
+        .split(/\s+/)
+        .map((id) => document.getElementById(id)?.textContent.trim() ?? "")
+        .join(" ");
+      assert.true(described.includes("Pick some"), `described: ${described}`);
+    });
+
+    test("the placeholder key is translated", async function (assert) {
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field @name="foo" @title="Foo" @type="tag-chooser" as |field|>
+              <field.Control @placeholder="tagging.choose_for_topic" />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert
+        .dom(".form-kit__control-tag-chooser [role='combobox']")
+        .hasAttribute("placeholder", i18n("tagging.choose_for_topic"));
+    });
+
+    test("disabled fields lock the control", async function (assert) {
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field
+              @disabled={{true}}
+              @name="foo"
+              @title="Foo"
+              @type="tag-chooser"
+              as |field|
+            >
+              <field.Control />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert
+        .dom(".form-kit__control-tag-chooser.d-select__trigger")
+        .hasClass("--disabled");
+    });
+
+    test("search props reach the tag search", async function (assert) {
+      let queryParams;
+      pretender.get("/tags/filter/search", (request) => {
+        queryParams = request.queryParams;
+        return response({
+          results: [{ id: 1, name: "monkey", slug: "monkey", count: 1 }],
+        });
+      });
+
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field @name="foo" @title="Foo" @type="tag-chooser" as |field|>
+              <field.Control
+                @categoryId={{123}}
+                @excludeSynonyms={{true}}
+                @excludeTagsWithSynonyms={{true}}
+                @showAllTags={{true}}
+              />
+            </form.Field>
+          </Form>
+        </template>
+      );
+      await formKit().field("foo").selectByName("monkey");
+
+      assert.strictEqual(queryParams.categoryId, "123");
+      assert.strictEqual(queryParams.excludeSynonyms, "true");
+      assert.strictEqual(queryParams.excludeHasSynonyms, "true");
+      assert.strictEqual(queryParams.filterForInput, undefined);
+    });
+
+    test("the helpers deselect and report values", async function (assert) {
+      const data = { foo: [{ id: 1, name: "monkey" }] };
+
+      await render(
+        <template>
+          <Form @data={{data}} as |form|>
+            <form.Field @name="foo" @title="Foo" @type="tag-chooser" as |field|>
+              <field.Control />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert.form().field("foo").hasValue("1");
+      await formKit().field("foo").deselectByName("monkey");
+      assert.form().field("foo").hasValue("");
+    });
+  }
+);

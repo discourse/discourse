@@ -29,6 +29,7 @@ const DTagChooser: TemplateOnlyComponent<DTagChooserSignature> = <template>
     @id={{@id}}
     @identifier={{@identifier}}
     @instanceContext={{@instanceContext}}
+    @invalid={{@invalid}}
     @items={{@items}}
     @kind="tag-chooser"
     @kindContext={{hash

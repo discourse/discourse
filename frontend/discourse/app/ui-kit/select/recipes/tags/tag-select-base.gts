@@ -79,6 +79,8 @@ export interface TagSelectSignature {
     load?: SelectSignature["Args"]["load"];
     /** Prevents opening the control or changing its selection. */
     disabled?: boolean;
+    /** Marks a selection invalid when validation belongs to the surrounding form. */
+    invalid?: boolean;
     /** Id of the combobox element, for an external label. */
     id?: string;
     /** Translated text displayed when no tags are selected. */
@@ -366,6 +368,7 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
       @id={{@id}}
       @identifier={{@identifier}}
       @instanceContext={{@instanceContext}}
+      @invalid={{@invalid}}
       @items={{@items}}
       @kind={{@kind}}
       @kindContext={{@kindContext}}

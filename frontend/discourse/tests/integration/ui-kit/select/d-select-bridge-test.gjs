@@ -17,6 +17,7 @@ import sinon from "sinon";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { applyContentPluginApiCallbacks } from "discourse/select-kit/lib/plugin-api";
 import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
@@ -2607,6 +2608,85 @@ module(
         "the filter is the typed query"
       );
       assert.false(rowNames().includes("Banana"), "the filtered row stays out");
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (bridge opt-out)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+    setupLegacyBridgeCallbacks(hooks);
+
+    test("a callback registered with bridge false never reaches DSelect", async function (assert) {
+      const changes = [];
+      withPluginApi((api) => {
+        api
+          .modifySelectKit("test-select", { bridge: false })
+          .prependContent(() => ({ id: 99, name: "Legacy only" }))
+          .onChange(() => changes.push("legacy-only"));
+      });
+
+      await render(<template><Host /></template>);
+      await click("[role='combobox']");
+
+      assert
+        .dom("[role='listbox']")
+        .doesNotIncludeText("Legacy only", "opted-out content stays out");
+      await click(optionWithText("Apple"));
+      assert.deepEqual(changes, [], "opted-out onChange never runs");
+    });
+
+    test("a default registration still bridges", async function (assert) {
+      withPluginApi((api) => {
+        api
+          .modifySelectKit("test-select")
+          .prependContent(() => ({ id: 99, name: "Bridged" }));
+        api
+          .modifySelectKit("test-select", { bridge: false })
+          .prependContent(() => ({ id: 98, name: "Legacy only" }));
+      });
+
+      await render(<template><Host /></template>);
+      await click("[role='combobox']");
+
+      assert.dom("[role='listbox']").includesText("Bridged");
+      assert.dom("[role='listbox']").doesNotIncludeText("Legacy only");
+    });
+
+    test("an opted-out onChange is skipped beside a bridged one", async function (assert) {
+      const changes = [];
+      withPluginApi((api) => {
+        api
+          .modifySelectKit("test-select")
+          .onChange(() => changes.push("bridged"));
+        api
+          .modifySelectKit("test-select", { bridge: false })
+          .onChange(() => changes.push("legacy-only"));
+      });
+
+      await render(<template><Host /></template>);
+      await click("[role='combobox']");
+      await click(optionWithText("Apple"));
+
+      assert.deepEqual(changes, ["bridged"]);
+    });
+
+    test("opted-out callbacks still run in select-kit", async function (assert) {
+      withPluginApi((api) => {
+        api
+          .modifySelectKit("test-select", { bridge: false })
+          .appendContent(() => ({ id: 99, name: "Legacy only" }));
+      });
+
+      const content = applyContentPluginApiCallbacks([], {
+        pluginApiIdentifiers: ["test-select"],
+      });
+      assert.deepEqual(
+        content.map((row) => row.name),
+        ["Legacy only"],
+        "the legacy component keeps applying it"
+      );
     });
   }
 );

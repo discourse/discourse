@@ -2,6 +2,10 @@ import { isNone } from "@ember/utils";
 import { makeArray } from "discourse/lib/helpers";
 
 let _appendContentCallbacks = {};
+
+/** Callbacks that must run only on legacy select-kit components. */
+let _bridgeOptOutCallbacks = new WeakSet();
+
 function appendContent(pluginApiIdentifiers, contentFunction) {
   if (isNone(_appendContentCallbacks[pluginApiIdentifiers])) {
     _appendContentCallbacks[pluginApiIdentifiers] = [];
@@ -37,15 +41,25 @@ function replaceContent(pluginApiIdentifiers, contentFunction) {
   _replaceContentCallbacks[pluginApiIdentifiers].push(contentFunction);
 }
 
-export function applyContentPluginApiCallbacks(content, component) {
+export function applyContentPluginApiCallbacks(
+  content,
+  component,
+  { bridgeOnly = false } = {}
+) {
   makeArray(component.pluginApiIdentifiers).forEach((key) => {
     (_prependContentCallbacks[key] || []).forEach((c) => {
+      if (bridgeOnly && _bridgeOptOutCallbacks.has(c)) {
+        return;
+      }
       const prependedContent = c(component, content);
       if (prependedContent) {
         content = makeArray(prependedContent).concat(content);
       }
     });
     (_appendContentCallbacks[key] || []).forEach((c) => {
+      if (bridgeOnly && _bridgeOptOutCallbacks.has(c)) {
+        return;
+      }
       const appendedContent = c(component, content);
       if (appendedContent) {
         content = content.concat(makeArray(appendedContent));
@@ -53,6 +67,9 @@ export function applyContentPluginApiCallbacks(content, component) {
     });
 
     (_replaceContentCallbacks[key] || []).forEach((c) => {
+      if (bridgeOnly && _bridgeOptOutCallbacks.has(c)) {
+        return;
+      }
       const replacementContent = c(component, content);
       if (replacementContent) {
         content = makeArray(replacementContent);
@@ -63,27 +80,41 @@ export function applyContentPluginApiCallbacks(content, component) {
   return content;
 }
 
-export function applyOnChangePluginApiCallbacks(value, items, component) {
+export function applyOnChangePluginApiCallbacks(
+  value,
+  items,
+  component,
+  { bridgeOnly = false } = {}
+) {
   makeArray(component.pluginApiIdentifiers).forEach((key) => {
-    (_onChangeCallbacks[key] || []).forEach((c) => c(component, value, items));
+    (_onChangeCallbacks[key] || []).forEach((c) => {
+      if (!bridgeOnly || !_bridgeOptOutCallbacks.has(c)) {
+        c(component, value, items);
+      }
+    });
   });
 }
 
-// Whether any prepend/append/replace-content callback is registered for any of the
-// given identifiers. Read-only; lets the ui-kit compat bridge skip building a facade
-// (and emitting a deprecation) when nothing would fire.
+/** Whether any content callback for these identifiers participates in the bridge. */
 export function hasContentPluginApiCallbacks(identifiers) {
-  return makeArray(identifiers).some(
-    (key) =>
-      _prependContentCallbacks[key]?.length ||
-      _appendContentCallbacks[key]?.length ||
-      _replaceContentCallbacks[key]?.length
+  return makeArray(identifiers).some((key) =>
+    [
+      _prependContentCallbacks,
+      _appendContentCallbacks,
+      _replaceContentCallbacks,
+    ].some((table) =>
+      table[key]?.some((callback) => !_bridgeOptOutCallbacks.has(callback))
+    )
   );
 }
 
-// Whether any onChange callback is registered for any of the given identifiers.
+/** Whether any onChange callback for these identifiers participates in the bridge. */
 export function hasOnChangePluginApiCallbacks(identifiers) {
-  return makeArray(identifiers).some((key) => _onChangeCallbacks[key]?.length);
+  return makeArray(identifiers).some((key) =>
+    _onChangeCallbacks[key]?.some(
+      (callback) => !_bridgeOptOutCallbacks.has(callback)
+    )
+  );
 }
 
 /** The plugin or theme that registered each callback, for attributing its deprecation. */
@@ -104,6 +135,9 @@ function callbackSources(tables, identifiers) {
   makeArray(identifiers).forEach((key) => {
     tables.forEach((table) => {
       (table[key] || []).forEach((callback) => {
+        if (_bridgeOptOutCallbacks.has(callback)) {
+          return;
+        }
         const source = _callbackSources.get(callback);
         sources.set(sourceKey(source), source);
       });
@@ -113,7 +147,7 @@ function callbackSources(tables, identifiers) {
 }
 
 /**
- * The distinct sources of the content callbacks registered on any of the given identifiers,
+ * The distinct sources of bridge-enabled content callbacks for the given identifiers,
  * keyed by a stable string (`plugin:<name>`, `theme:<id>` or `unattributed`).
  *
  * @param {string|string[]} identifiers
@@ -144,14 +178,23 @@ export function onChangeCallbackSources(identifiers) {
  * @param {string} targetedIdentifier
  * @param {object} [source] - The plugin or theme registering the callbacks, in the shape
  *   `deprecated()` takes as `options.source`.
+ * @param {object} [options]
+ * @param {boolean} [options.bridge=true] - Whether callbacks also run on DSelect.
  */
-export function modifySelectKit(targetedIdentifier, source) {
+export function modifySelectKit(
+  targetedIdentifier,
+  source,
+  { bridge = true } = {}
+) {
   const register = (add) => (callback) => {
     if (source) {
       _callbackSources.set(callback, source);
     }
+    if (!bridge) {
+      _bridgeOptOutCallbacks.add(callback);
+    }
     add(targetedIdentifier, callback);
-    return modifySelectKit(targetedIdentifier, source);
+    return modifySelectKit(targetedIdentifier, source, { bridge });
   };
 
   return {
@@ -168,4 +211,5 @@ export function clearCallbacks() {
   _onChangeCallbacks = {};
   _replaceContentCallbacks = {};
   _callbackSources = new WeakMap();
+  _bridgeOptOutCallbacks = new WeakSet();
 }

@@ -153,7 +153,12 @@ class FieldHelper {
         );
       }
       case "tag-chooser": {
-        return this.element.querySelector(".select-kit-header")?.dataset?.value;
+        const select = this.element.querySelector(
+          ".form-kit__control-tag-chooser.d-select"
+        );
+        return select
+          ? select.dataset.value
+          : this.element.querySelector(".select-kit-header")?.dataset?.value;
       }
     }
   }
