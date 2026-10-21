@@ -4287,6 +4287,38 @@ RSpec.describe PostsController do
       expect(response.body).to include("123456789", "abcdefghij")
     end
 
+    context "with a hidden post revision" do
+      before do
+        SiteSetting.edit_history_visible_to_public = true
+        SiteSetting.editing_grace_period = 0
+      end
+
+      it "prevents anonymous access while allowing staff to fetch a visible raw revision after a hidden revision" do
+        post = Fabricate(:post, raw: "Initial public version")
+        hidden_raw = "moderator-redacted secret"
+        visible_raw = "Visible version"
+        post.revise(post.user, raw: hidden_raw)
+        hidden_revision = post.revisions.find_by(number: 2)
+        hidden_revision.hide!
+        post.revise(post.user, raw: visible_raw)
+
+        get "/raw/#{post.topic_id}/#{post.post_number}", params: { revision: 3 }
+
+        aggregate_failures do
+          expect(response).to be_forbidden
+          expect(response.body).not_to include(hidden_raw)
+        end
+
+        sign_in(moderator)
+        get "/raw/#{post.topic_id}/#{post.post_number}", params: { revision: 3 }
+
+        aggregate_failures do
+          expect(response).to have_http_status(:ok)
+          expect(response.body).to eq(visible_raw)
+        end
+      end
+    end
+
     context "with a hidden post" do
       fab!(:topic)
       fab!(:visible_post) do
