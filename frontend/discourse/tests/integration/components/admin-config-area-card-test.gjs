@@ -56,6 +56,33 @@ module("Integration | Component | AdminConfigAreaCard", function (hooks) {
     assert.dom(".admin-config-area-card__content").doesNotExist();
   });
 
+  test("toggles collapsed content from the title", async function (assert) {
+    await render(
+      <template>
+        <AdminConfigAreaCard
+          @collapsable={{true}}
+          @collapsed={{true}}
+          @translatedHeading="Advanced: workflows"
+        ><:content>Workflow details</:content></AdminConfigAreaCard>
+      </template>
+    );
+
+    assert
+      .dom(".admin-config-area-card__title-toggle")
+      .hasAttribute("aria-expanded", "false", "starts collapsed");
+    await click(".admin-config-area-card__title-toggle");
+    assert
+      .dom(".admin-config-area-card__content")
+      .exists("title expands the content");
+    assert
+      .dom(".admin-config-area-card__title-toggle")
+      .hasAttribute("aria-expanded", "true", "announces expanded state");
+    await click(".admin-config-area-card__title-toggle");
+    assert
+      .dom(".admin-config-area-card__content")
+      .doesNotExist("title collapses the content");
+  });
+
   test("renders admin config area card with header action", async function (assert) {
     await render(
       <template>

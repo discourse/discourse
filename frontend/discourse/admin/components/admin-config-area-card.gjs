@@ -2,7 +2,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { or } from "discourse/truth-helpers";
+import { not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -53,9 +53,18 @@ export default class AdminConfigAreaCard extends Component {
       }}
         <div class="admin-config-area-card__header-wrapper">
           {{#if this.hasHeading}}
-            <h3
-              class="admin-config-area-card__title"
-            >{{this.computedHeading}}</h3>
+            <h3 class="admin-config-area-card__title">
+              {{#if @collapsable}}
+                <DButton
+                  aria-expanded={{not this.collapsed}}
+                  class="admin-config-area-card__title-toggle btn-transparent"
+                  @action={{this.toggleCardDisplay}}
+                  @translatedLabel={{this.computedHeading}}
+                />
+              {{else}}
+                {{this.computedHeading}}
+              {{/if}}
+            </h3>
           {{else}}
             {{#if (has-block "header")}}
               <h3 class="admin-config-area-card__title">{{yield
@@ -71,6 +80,7 @@ export default class AdminConfigAreaCard extends Component {
 
           {{#if @collapsable}}
             <DButton
+              aria-expanded={{not this.collapsed}}
               class="admin-config-area-card__toggle-button btn-transparent"
               @action={{this.toggleCardDisplay}}
               @title="sidebar.toggle_section"
