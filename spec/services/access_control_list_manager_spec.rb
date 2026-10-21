@@ -24,12 +24,14 @@ RSpec.describe AccessControlListManager do
     it { is_expected.to validate_presence_of(:target) }
     it { is_expected.to validate_presence_of(:owner) }
     it { is_expected.to validate_length_of(:owner).is_at_most(100) }
+    it { is_expected.to validate_presence_of(:owner_user_id) }
   end
 
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:admin)
+    fab!(:target_owner, :user)
     fab!(:group)
     fab!(:other_group, :group)
     fab!(:target) do
@@ -39,10 +41,11 @@ RSpec.describe AccessControlListManager do
       cat
     end
 
-    let(:params) { { target:, flattened_acl:, owner: } }
+    let(:params) { { target:, flattened_acl:, owner:, owner_user_id: } }
     let(:dependencies) { { guardian: } }
     let(:guardian) { admin.guardian }
     let(:owner) { "test_owner" }
+    let(:owner_user_id) { admin.id }
 
     let(:flattened_acl) do
       [
@@ -51,16 +54,41 @@ RSpec.describe AccessControlListManager do
       ]
     end
 
-    context "when the contract is invalid" do
-      let(:owner) { "" }
+    context "when owner_user_id is missing" do
+      fab!(:existing_acl) do
+        Fabricate(:access_control_list_with_groups, target:, permission: "manage", groups: [group])
+      end
 
-      it { is_expected.to fail_a_contract }
+      let(:owner_user_id) { nil }
+
+      it "fails the contract without changing ACLs" do
+        expect { result }.not_to change { AccessControlList.where(target:).map(&:attributes) }
+        expect(result).to fail_a_contract
+      end
     end
 
-    context "when no ACLs are provided" do
+    context "when owner_user_id does not identify a user" do
+      fab!(:existing_acl) do
+        Fabricate(:access_control_list_with_groups, target:, permission: "manage", groups: [group])
+      end
+
+      let(:owner_user_id) { 0 }
+
+      it "fails to find the owner without changing ACLs" do
+        expect { result }.not_to change { AccessControlList.where(target:).map(&:attributes) }
+        expect(result).to fail_to_find_a_model(:owner_user)
+      end
+    end
+
+    context "when only an owner is provided for a new target" do
       let(:flattened_acl) { [] }
 
-      it { is_expected.to fail_a_policy(:has_at_least_one_acl) }
+      it "persists the authoritative owner" do
+        expect(result).to run_successfully
+        expect(AccessControlList.where(target:).flattened_list).to contain_exactly(
+          include(type: :user, id: owner_user_id, permission: "owner", mandatory: true),
+        )
+      end
     end
 
     context "when the target has no permission declaration" do
@@ -80,6 +108,7 @@ RSpec.describe AccessControlListManager do
         expect(AccessControlList.where(target:).pluck(:permission)).to contain_exactly(
           "view",
           "edit",
+          "owner",
         )
       end
     end
@@ -143,12 +172,15 @@ RSpec.describe AccessControlListManager do
       it { is_expected.to run_successfully }
 
       it "creates one access control list per permission for the target" do
-        expect { result }.to change { AccessControlList.where(target: target).count }.from(0).to(2)
+        expect { result }.to change { AccessControlList.where(target: target).count }.from(0).to(3)
 
         view_acl = AccessControlList.find_by(target: target, permission: "view")
         edit_acl = AccessControlList.find_by(target: target, permission: "edit")
         expect(view_acl.allowed_group_ids).to contain_exactly(group.id)
         expect(edit_acl.allowed_group_ids).to contain_exactly(other_group.id)
+        expect(AccessControlList.find_by(target:, permission: "owner").allowed_user_ids).to(
+          contain_exactly(owner_user_id),
+        )
       end
 
       it "stamps the records with the given owner" do
@@ -188,6 +220,7 @@ RSpec.describe AccessControlListManager do
         expect(AccessControlList.where(target: target).pluck(:permission)).to contain_exactly(
           "view",
           "edit",
+          "owner",
         )
         expect(AccessControlList.find_by(id: existing_id)).to be_nil
       end
@@ -209,6 +242,7 @@ RSpec.describe AccessControlListManager do
 
           expect(AccessControlList.where(target: target).pluck(:permission)).to contain_exactly(
             "edit",
+            "owner",
             "view",
           )
         end
@@ -228,6 +262,7 @@ RSpec.describe AccessControlListManager do
             "view",
             "edit",
             "manage",
+            "owner",
           )
 
           manage_acl = AccessControlList.find_by(target: target, permission: "manage")
@@ -267,6 +302,7 @@ RSpec.describe AccessControlListManager do
 
           expect(AccessControlList.where(target: target).pluck(:permission)).to contain_exactly(
             "edit",
+            "owner",
             "view",
           )
         end
@@ -280,6 +316,48 @@ RSpec.describe AccessControlListManager do
         end
 
         it { is_expected.to fail_a_policy(:has_no_banned_acl) }
+      end
+    end
+
+    describe "owner ACL" do
+      fab!(:existing_owner_acl) do
+        Fabricate(
+          :access_control_list_with_users,
+          target:,
+          permission: "owner",
+          users: [target_owner],
+        )
+      end
+
+      it "preserves an existing owner when the submitted ACL omits it" do
+        expect(result).to run_successfully
+
+        owner_acl = AccessControlList.find_by(target:, permission: "owner")
+        expect(owner_acl.allowed_user_ids).to contain_exactly(target_owner.id)
+      end
+
+      it "rejects a submitted user who is not an existing owner" do
+        flattened_acl << { type: "user", id: owner_user_id, permission: "owner" }
+
+        expect(result).to fail_a_policy(:has_valid_owner_entries)
+        expect(existing_owner_acl.reload.allowed_user_ids).to contain_exactly(target_owner.id)
+      end
+
+      it "rejects a group owner" do
+        flattened_acl << { type: "group", id: group.id, permission: "owner" }
+
+        expect(result).to fail_a_policy(:has_valid_owner_entries)
+        expect(existing_owner_acl.reload.allowed_user_ids).to contain_exactly(target_owner.id)
+      end
+
+      it "removes owners from lower direct user grants" do
+        flattened_acl << { type: "user", id: target_owner.id, permission: "manage" }
+
+        expect(result).to run_successfully
+        expect(AccessControlList.find_by(target:, permission: "manage")).to be_nil
+        expect(AccessControlList.find_by(target:, permission: "owner").allowed_user_ids).to(
+          contain_exactly(target_owner.id),
+        )
       end
     end
   end

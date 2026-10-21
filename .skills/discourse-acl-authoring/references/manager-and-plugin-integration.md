@@ -13,6 +13,7 @@ AccessControlListManager.call(
     target: board,
     flattened_acl: flattened_acl,
     owner: Boards::PLUGIN_NAME,
+    owner_user_id: board.created_by_id,
   },
 ) do |result|
   on_success do |previous_permissions:, new_permissions:|
@@ -29,6 +30,9 @@ Behavior:
 
 - validates `target` and `owner`
 - fetches previous target permissions
+- resolves `owner_user_id` to a user model, then preserves existing user owner grants or creates the initial owner grant from that user
+- rejects submitted owner entries that do not match the authoritative owner set
+- removes owners from lower direct user grants so one grantee does not render multiple ACL rows
 - injects mandatory ACLs into `flattened_acl`
 - resolves the target class's `ACL_PERMISSIONS` constant, including inherited declarations; a missing declaration raises `NameError`
 - fails `has_valid_permissions` if any final flattened ACL permission is absent from `ACL_PERMISSIONS.values`
@@ -40,6 +44,8 @@ Behavior:
 - reloads the target after the transaction so `AclTarget#permission_acl` is rebuilt on the caller's instance
 
 Important: the manager destructively replaces target ACL rows and does not currently authorize the actor itself. Authorize before calling it.
+
+The manager's `owner` string is ACL row provenance, not target ownership. Pass the authoritative initial target owner's id separately as `owner_user_id`; the manager resolves the user model internally. Existing owner rows take precedence on later replacement writes, which keeps ordinary ACL editing from removing or transferring ownership.
 
 ## Write Path Rules
 
@@ -56,7 +62,8 @@ For new target records with mandatory ACLs:
 1. Authorize resource creation with a domain Guardian method.
 2. Create the target.
 3. Call `AccessControlListManager` with `flattened_acl: raw["acl"] || []`.
-4. Fail the service if ACL creation fails.
+4. Pass the authenticated creator's id as `owner_user_id`; do not trust an owner entry from `raw["acl"]`.
+5. Fail the service if ACL creation fails.
 
 This ensures mandatory ACL rows are inserted for API callers that omit `acl`.
 
@@ -164,10 +171,13 @@ When migrating legacy permission columns into ACLs:
 - Union mandatory ACL values into migrated rows; raw site setting rows may not include `mandatory_values`.
 - Use `Group::AUTO_GROUPS` values or stable numeric IDs only when loading the Rails constants is unsafe in the migration context.
 - Cover blank legacy arrays, customized group lists, and default setting fallbacks in migration specs when possible.
+- Backfill a user `owner` row from the target's authoritative legacy owner field.
+- Remove that user id from lower direct user grants, deleting rows only when both user and group arrays become empty.
+- Prefer a post-deploy backfill when old application code does not recognize the new `owner` permission. New code must tolerate and repair legacy targets without owner rows until that backfill runs.
 
 ## Current Limitations
 
 - `AccessControlList.expand_list_for_bulk_insert`, `flattened_list`, `preload_allowed`, lookup objects, matching scopes, and cleanup jobs now handle both group and user ACL rows.
-- `DAccessControl` supports user/group search and user grants. Mandatory ACL injection remains group-first; targets with mandatory user grants need explicit UI support.
+- `DAccessControl` supports user/group search and user grants. Persisted owner rows render first as mandatory with a disabled Owner control. Class-level mandatory ACL injection remains group-first; targets with other mandatory user grants need explicit UI support.
 - `flattened_list` skips missing groups, missing users, and unknown target classes defensively. Validate group and user IDs at the service/contract boundary where user input enters; do not rely on read-path skipping as data hygiene.
 - The manager has caller-side authorization. Future core work may add a target policy hook; until then, do not expose it directly to untrusted callers.

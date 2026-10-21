@@ -97,10 +97,12 @@ Target-specific options added via `@transformPermissionOptions` can still be ban
 ## Row Behavior
 
 - Rows are sorted with mandatory rows first, then by group name.
+- Owner rows are sorted before all other rows, display the mandatory badge, and use a disabled Owner permission control.
 - Mandatory rows show a lock icon, are styled with `--mandatory`, and have their permission select disabled.
 - A mandatory ACL replaces an existing row for the same type/id in the component's display list.
 - Banned permissions are filtered per row only when the banned entry's `type`, `id`, and `permission` match the row.
 - The remove action remains available unless the row is mandatory.
+- The reserved `owner` permission is not offered for ordinary rows. Ownership changes require a dedicated authorized operation rather than `@transformPermissionOptions`.
 - Newly added regular groups default to `edit`.
 - Read-only default auto groups (`anonymous_users`, `everyone`, `trust_level_0`) default to `view`.
 - Already selected grantees are removed from the add-group chooser's preloaded and remote results.
@@ -170,6 +172,7 @@ Consumer tests should cover:
 - `@aclTarget` renders mandatory rows from `site.access_control`
 - `@aclTarget` filters banned permissions from `site.access_control` for the matching grantee only
 - mandatory rows are locked and not duplicated
+- owner rows are first, user-only, locked, labelled Owner, and unavailable as a selectable permission for other rows
 - `@onChange` updates parent/form state when the user changes a row
 - default ACL construction for new records includes expected groups, if the consumer builds defaults
 - selectors use `.d-access-control__row[data-row-type="group"][data-row-id="..."]` for row assertions

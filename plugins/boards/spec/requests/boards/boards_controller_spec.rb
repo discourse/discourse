@@ -608,7 +608,11 @@ RSpec.describe Boards::Api::BoardsController do
         ["view", [read_group.id]],
         ["edit", [write_group.id]],
         ["manage", [manage_group.id, Group::AUTO_GROUPS[:admins]]],
+        ["owner", []],
       )
+      expect(
+        AccessControlList.find_by!(target: board, permission: "owner").allowed_user_ids,
+      ).to contain_exactly(manager.id)
     end
 
     it "rejects an invalid permission name without creating a board, columns, or ACLs" do
@@ -634,6 +638,26 @@ RSpec.describe Boards::Api::BoardsController do
           AccessControlList.count,
           Boards::BoardHistory.count,
         ]
+      }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["failed"]).to eq("FAILED")
+    end
+
+    it "rejects an ACL payload that assigns ownership to another user" do
+      sign_in(manager)
+
+      expect do
+        post "/boards/api/boards.json",
+             params: {
+               board: {
+                 name: "Spoofed owner",
+                 slug: "spoofed-owner",
+                 acl: [{ type: "user", id: outsider.id, permission: "owner" }],
+               },
+             }
+      end.not_to change {
+        [Boards::Board.count, AccessControlList.count, Boards::BoardHistory.count]
       }
 
       expect(response.status).to eq(422)
@@ -708,7 +732,11 @@ RSpec.describe Boards::Api::BoardsController do
         ["view", [read_group.id]],
         ["edit", [write_group.id]],
         ["manage", [manage_group.id, Group::AUTO_GROUPS[:admins]]],
+        ["owner", []],
       )
+      expect(
+        AccessControlList.find_by!(target: acl_board, permission: "owner").allowed_user_ids,
+      ).to contain_exactly(admin.id)
     end
 
     it "rejects an invalid permission name and preserves the board and its existing ACLs" do
@@ -735,6 +763,30 @@ RSpec.describe Boards::Api::BoardsController do
       expect(AccessControlList.where(target: acl_board).order(:id).map(&:attributes)).to eq(
         previous_acls,
       )
+    end
+
+    it "rejects an ACL payload that replaces the existing owner" do
+      sign_in(manager)
+      previous_acls = AccessControlList.where(target: acl_board).order(:id).map(&:attributes)
+
+      expect do
+        put "/boards/api/boards/#{acl_board.id}.json",
+            params: {
+              board: {
+                acl: [
+                  { type: "group", id: manage_group.id, permission: "manage" },
+                  { type: "user", id: outsider.id, permission: "owner" },
+                ],
+              },
+            }
+      end.not_to change { Boards::BoardHistory.count }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["failed"]).to eq("FAILED")
+      expect(AccessControlList.where(target: acl_board).order(:id).map(&:attributes)).to eq(
+        previous_acls,
+      )
+      expect(acl_board.reload.created_by_id).to eq(admin.id)
     end
 
     it "updates board attributes for users in the manage group" do

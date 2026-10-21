@@ -20,6 +20,7 @@ RSpec.describe Boards::UpdateBoard do
         permission: "manage",
         groups: [manage_group],
       )
+      Fabricate(:access_control_list_with_users, target: board, permission: "owner", users: [admin])
       board
     end
     fab!(:column) { board.columns.create!(title: "Col", position: 0) }
@@ -84,6 +85,8 @@ RSpec.describe Boards::UpdateBoard do
 
         manage_acl = AccessControlList.find_by!(target: board, permission: "manage")
         expect(manage_acl.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:admins])
+        owner_acl = AccessControlList.find_by!(target: board, permission: "owner")
+        expect(owner_acl.allowed_user_ids).to contain_exactly(admin.id)
       end
 
       it "does not delete topic cards on unconstrained boards" do
@@ -181,11 +184,19 @@ RSpec.describe Boards::UpdateBoard do
                   "group_ids" => [manage_group.id],
                   "user_ids" => [],
                 },
+                "owner" => {
+                  "group_ids" => [],
+                  "user_ids" => [admin.id],
+                },
               },
               "new_permissions" => {
                 "manage" => {
                   "group_ids" => [new_group.id, Group::AUTO_GROUPS[:admins]],
                   "user_ids" => [],
+                },
+                "owner" => {
+                  "group_ids" => [],
+                  "user_ids" => [admin.id],
                 },
               },
             },

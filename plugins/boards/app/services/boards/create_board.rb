@@ -51,14 +51,13 @@ module Boards
       raw = context[:raw_board_params] || {}
       flattened_acl = raw["acl"] || []
 
-      # TODO (martin) We need to add the current user as Owner here
-      # when we have the user functionality ready for ACLs
       AccessControlListManager.call(
         guardian:,
         params: {
           target: board,
           flattened_acl: flattened_acl,
           owner: Boards::PLUGIN_NAME,
+          owner_user_id: guardian.user.id,
         },
       ) do |result|
         on_failure do

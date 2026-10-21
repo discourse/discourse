@@ -699,6 +699,99 @@ module("Integration | Component | DAccessControl", function (hooks) {
       .isDisabled("the mandatory row's permission select is disabled");
   });
 
+  test("renders the owner as the first mandatory user row", async function (assert) {
+    const state = controlledState([
+      {
+        type: "group",
+        id: 999,
+        permission: "view",
+        display_name: "Alpha Group",
+        mandatory: true,
+      },
+      {
+        type: "user",
+        id: 7,
+        permission: "owner",
+        username: "martin",
+        name: "Martin Brennan",
+        display_name: "martin",
+        avatar_template: "/letter_avatar_proxy/v4/letter/m/{size}.png",
+      },
+    ]);
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+
+    const ownerRow =
+      '.d-access-control__row[data-row-type="user"][data-row-id="7"]';
+    const rows = findAll(".d-access-control__row");
+
+    assert
+      .dom(rows[0])
+      .hasAttribute("data-row-id", "7", "renders the owner row first");
+    assert.dom(ownerRow).hasClass("--owner", "identifies the row as the owner");
+    assert
+      .dom(`${ownerRow} .d-access-control__item-name`)
+      .includesText("martin", "renders the owner's identity");
+    assert.dom(`${ownerRow} .avatar`).exists("renders the owner's avatar");
+    assert
+      .dom(`${ownerRow} .d-access-control__tooltip`)
+      .hasText(
+        i18n("access_control.manage.mandatory"),
+        "marks the owner as mandatory"
+      );
+    assert
+      .dom(`${ownerRow} .d-access-control__permission`)
+      .hasText(
+        i18n("access_control.manage.access_permission_owner"),
+        "labels the permission as Owner"
+      )
+      .isDisabled("prevents changing or removing the owner");
+  });
+
+  test("does not offer owner as a permission for ordinary rows", async function (assert) {
+    const state = controlledState([
+      {
+        type: "group",
+        id: 999,
+        permission: "view",
+        display_name: "Some Group",
+      },
+    ]);
+    const transformPermissionOptions = (permissions) => [
+      ...permissions,
+      {
+        id: "owner",
+        level: 3,
+        name: "Owner",
+      },
+    ];
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+          @transformPermissionOptions={{transformPermissionOptions}}
+        />
+      </template>
+    );
+
+    await expandPermissionMenu();
+
+    assert
+      .dom(permissionOptionSelector("owner"))
+      .doesNotExist("keeps the reserved owner permission out of the menu");
+  });
+
   test("sorts rows by mandatory status, type, and name", async function (assert) {
     const state = controlledState([
       {

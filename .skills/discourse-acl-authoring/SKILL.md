@@ -20,6 +20,8 @@ Use this skill before adding or reviewing ACL-backed resource permissions in Dis
 
 - Define or inherit `ACL_PERMISSIONS = Acl::Permissions.new(...)` on every ACL target. Use its named readers in permission declarations; the manager validates final grants against its values before replacing rows.
 - Every permission option added by `transformPermissionOptions(options)` must have an ID matching the target's server-side `ACL_PERMISSIONS`. Adding a UI option does not declare a server permission.
+- Treat `owner` as a reserved, user-only permission supplied through an authoritative write-path argument. Never allow ordinary ACL params or permission menus to assign ownership.
+- Preserve owner grants during destructive ACL replacement. An owner implicitly satisfies every other permission check for the target, including target-id scopes.
 - Put authorization at the caller boundary before `AccessControlListManager.call`; the manager is a destructive replacement service and currently assumes the caller already authorized the actor.
 - Always call `AccessControlListManager` for writes, including empty submitted ACL arrays, so mandatory ACLs are injected and old rows are replaced intentionally.
 - Treat `AccessControlList.flattened_list` as the API shape for UI/client payloads and `AccessControlList.expand_list_for_bulk_insert` as the DB insert shape.
@@ -29,7 +31,7 @@ Use this skill before adding or reviewing ACL-backed resource permissions in Dis
 - Define `loss_warning_permissions` as permission strings whose loss by the current actor requires confirmation. Provide the target-specific server translation used by `AccessControlList::EvaluateModification`.
 - Prefer `DAccessControlField` inside FormKit. It owns required-permission validation, evaluates the proposed ACL, and uses FormKit's `preventSubmit` to cancel a submission without manufacturing a validation error.
 - Keep the default class-name `acl_target_key` when using `DAccessControlField`; its `@aclTarget.type` currently serves as both the Ruby class identifier and frontend metadata key.
-- User grants are supported by backend storage/lookups and the frontend user/group search picker. Mandatory user ACL display still needs explicit UI support; the component's mandatory injection remains group-first.
+- User grants are supported by backend storage/lookups and the frontend user/group search picker. Owner rows are serialized as mandatory and rendered first with a disabled Owner control. Other mandatory user ACL display still needs explicit UI support; the component's class-level mandatory injection remains group-first.
 
 ## Local Anchors
 

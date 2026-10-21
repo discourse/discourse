@@ -229,6 +229,14 @@ RSpec.describe AccessControlList do
       )
     end
 
+    it "marks owner entries as mandatory" do
+      Fabricate(:access_control_list_with_users, target: target, permission: "owner", users: [user])
+
+      owner_entry = described_class.where(target: target, permission: "owner").flattened_list.first
+
+      expect(owner_entry).to include(type: :user, id: user.id, permission: "owner", mandatory: true)
+    end
+
     it "returns an empty array when there are no acls" do
       expect(described_class.where(target: Fabricate(:category)).flattened_list).to eq([])
     end

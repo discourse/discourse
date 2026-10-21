@@ -76,6 +76,7 @@ en:
       manage:
         access_permission_editor: "Editor"
         access_permission_editor_description: "Can create and edit content for this entity"
+        access_permission_owner: "Owner"
         access_permission_viewer: "Viewer"
         access_permission_viewer_description: "Can view content for this entity"
         access_permission_remove: "Remove"

@@ -52,6 +52,14 @@ RSpec.describe Boards::CreateBoard do
         expect(manage_acl.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:admins])
       end
 
+      it "makes the creator the board owner" do
+        board = result[:board]
+
+        owner_acl = AccessControlList.find_by!(target: board, permission: "owner")
+        expect(owner_acl.allowed_user_ids).to contain_exactly(manager.id)
+        expect(owner_acl.allowed_group_ids).to be_empty
+      end
+
       it "creates mandatory ACLs when ACL params are empty" do
         raw["acl"] = []
 
