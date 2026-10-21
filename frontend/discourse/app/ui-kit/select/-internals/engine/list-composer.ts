@@ -229,7 +229,7 @@ export default class ListComposer {
         const ordinal = optionOrdinal++;
         return {
           ...descriptor,
-          logicalIndex: descriptor.flags.disabled ? undefined : logicalIndex++,
+          logicalIndex: logicalIndex++,
           groupOrdinal: descriptor.flags.__create
             ? undefined
             : currentGroupOrdinal,
@@ -290,6 +290,12 @@ export default class ListComposer {
     // values, and `activate` short-circuits on `onSelect` before any path that consults it.
     const selected =
       this.#isSelected(item) && typeof item.onSelect !== "function";
+    const reasonDisabled = !!item.disabled;
+    const capDisabled =
+      atMaximum &&
+      !selected &&
+      !this.#isStructural(item) &&
+      typeof item.onSelect !== "function";
     return {
       // A value-less synthetic row (e.g. a null-id special) has no natural key; fall back to
       // its position, which is stable within the ordered special/create prefix.
@@ -302,12 +308,9 @@ export default class ListComposer {
         // At the cap only rows that could actually grow the selection are closed off. A
         // selected row stays open (deselecting it is how the user gets back under the cap), and
         // so do action rows and structural rows, neither of which ever becomes a value.
-        disabled:
-          !!item.disabled ||
-          (atMaximum &&
-            !selected &&
-            !this.#isStructural(item) &&
-            typeof item.onSelect !== "function"),
+        disabled: reasonDisabled || capDisabled,
+        reasonDisabled,
+        capDisabled,
         group: !!item.__header,
         divider: !!item.__divider,
         __create: isCreate || !!item.__create,

@@ -4044,3 +4044,143 @@ module(
     });
   }
 );
+
+module(
+  "Integration | ui-kit | Modifier | dRovingFocus | entry seeds skip disabled items",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    for (const strategy of ["active-descendant", "roving-tabindex"]) {
+      for (const entry of ["first", "selected-or-first", "selected-or-none"]) {
+        test(`${strategy}: ${entry} skips disabled entry candidates but navigation reaches them`, async function (assert) {
+          let api;
+          const register = (value) => (api = value);
+          const reset = tracked(0);
+          const onActivate = sinon.spy();
+
+          await render(
+            <template>
+              <div
+                aria-controls="u1c-list"
+                class="controller"
+                role="combobox"
+                tabindex="0"
+              ></div>
+              <div
+                id="u1c-list"
+                role="listbox"
+                {{dRovingFocus
+                  focusStrategy=strategy
+                  controllerElement=".controller"
+                  orientation="vertical"
+                  disabledItems="focusable"
+                  entryFocus=entry
+                  resetKey=reset.value
+                  itemSelector="[role=option]"
+                  activeClass="--active"
+                  onActivate=onActivate
+                  onRegisterApi=register
+                }}
+              >
+                <button
+                  aria-disabled="true"
+                  aria-selected="true"
+                  class="disabled"
+                  role="option"
+                >Disabled selected</button>
+                <button class="enabled" role="option">Enabled</button>
+                <button aria-disabled="true" class="last" role="option">Disabled
+                  last</button>
+              </div>
+            </template>
+          );
+
+          const enabled = find(".enabled");
+          const expected = entry === "selected-or-none" ? null : enabled;
+          assert.strictEqual(
+            api.currentItem(),
+            expected,
+            "only enabled rows can seed entry"
+          );
+          api.focusElement(enabled);
+          const controller =
+            strategy === "active-descendant" ? find(".controller") : enabled;
+          await triggerKeyEvent(controller, "keydown", "ArrowUp");
+          assert.strictEqual(
+            api.currentItem(),
+            find(".disabled"),
+            "arrows reach the disabled selected row"
+          );
+          await triggerKeyEvent(
+            strategy === "active-descendant" ? controller : find(".disabled"),
+            "keydown",
+            "Enter"
+          );
+          assert.true(
+            onActivate.notCalled,
+            "disabled entry candidates remain inoperable"
+          );
+
+          reset.value++;
+          await settled();
+          assert.strictEqual(
+            strategy === "active-descendant"
+              ? api.currentItem()
+              : find('[role=option][tabindex="0"]'),
+            expected,
+            "reset applies the seed rule again"
+          );
+        });
+      }
+    }
+
+    test("active-descendant: all-disabled results stay seedless until deliberate navigation", async function (assert) {
+      const items = tracked([]);
+      let api;
+      const register = (value) => (api = value);
+      await render(
+        <template>
+          <div
+            aria-controls="u1c-list"
+            class="controller"
+            role="combobox"
+            tabindex="0"
+          ></div>
+          <div
+            id="u1c-list"
+            role="listbox"
+            {{dRovingFocus
+              focusStrategy="active-descendant"
+              controllerElement=".controller"
+              activeClass="--active"
+              disabledItems="focusable"
+              entryFocus="first"
+              itemSelector="[role=option]"
+              itemsKey=items.value
+              onRegisterApi=register
+            }}
+          >
+            {{#each items.value as |item|}}<div
+                aria-disabled="true"
+                role="option"
+              >{{item}}</div>{{/each}}
+          </div>
+        </template>
+      );
+      items.value = ["Unavailable A", "Unavailable B"];
+      await settled();
+      assert.strictEqual(
+        api.currentItem(),
+        null,
+        "async arrival does not seed a disabled row"
+      );
+      await triggerKeyEvent(".controller", "keydown", "ArrowDown");
+      assert
+        .dom(api.currentItem())
+        .hasText(
+          "Unavailable A",
+          "deliberate navigation reaches the first row"
+        );
+    });
+  }
+);

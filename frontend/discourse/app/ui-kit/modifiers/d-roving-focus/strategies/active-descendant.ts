@@ -165,7 +165,9 @@ export default class ActiveDescendantStrategy {
       return { kind: "preserved" };
     }
 
-    const seed = activeSeed(items, this.#config);
+    const seed = activeSeed(items, this.#config, (item) =>
+      this.#scope.isActivatable(item)
+    );
     if (seed) {
       this.disarmPendingSeed();
       return { kind: "activate", target: seed };

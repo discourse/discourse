@@ -236,6 +236,18 @@
   }
 }
 
+.d-select__option-content {
+  min-width: 0;
+}
+
+.d-select__option-description {
+  display: block;
+  color: var(--token-color-text-subtle);
+  font-size: var(--font-down-1);
+  font-weight: normal;
+  overflow-wrap: anywhere;
+}
+
 .d-select__option-selected-icon {
   flex: none;
   visibility: hidden;

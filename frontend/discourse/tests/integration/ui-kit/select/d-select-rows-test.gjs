@@ -19,6 +19,10 @@ import {
   MultiLimitsHost,
   optionWithText,
 } from "discourse/tests/helpers/d-select-hosts";
+import {
+  disableVirtualization,
+  enableVirtualization,
+} from "discourse/ui-kit/-internals/windowing/virtualizer";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 
@@ -874,3 +878,164 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
       .doesNotExist("the settled exact label no longer offers creation");
   });
 });
+
+module(
+  "Integration | ui-kit | select | DSelect disabled rows and descriptions",
+  function (hooks) {
+    setupRenderingTest(hooks);
+    hooks.beforeEach(() => enableVirtualization());
+    hooks.afterEach(() => disableVirtualization());
+
+    test("group, item description and cap share the option description without changing its name", async function (assert) {
+      const items = [
+        { id: 1, name: "Apple", group: "Fruit" },
+        {
+          id: 2,
+          name: "Banana",
+          group: "Fruit",
+          description: "Requires permission",
+        },
+        {
+          id: 3,
+          name: "Cherry",
+          group: "Fruit",
+          disabled: true,
+          description: "Unavailable today",
+        },
+      ];
+      const groupLabel = (group) => group;
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          <DSelect
+            @groupBy="group"
+            @groupLabel={{groupLabel}}
+            @items={{items}}
+            @maximum={{1}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{array 1}}
+            @variant="static"
+          >
+            <:item as |item|><strong>{{item.name}}</strong></:item>
+          </DSelect>
+        </template>
+      );
+      await click(".d-select__trigger");
+      const banana = optionWithText("Banana");
+      const description = banana.querySelector(".d-select__option-description");
+      assert
+        .dom(description)
+        .isVisible("secondary text is visible with custom row markup")
+        .hasText("Requires permission", "the item description is rendered");
+      const ids = (banana.getAttribute("aria-describedby") ?? "").split(/\s+/);
+      assert.deepEqual(
+        ids.map((id) => document.getElementById(id)?.textContent.trim()),
+        [
+          "Fruit",
+          "Requires permission",
+          find(".d-select__limit").textContent.trim(),
+        ],
+        "all three descriptions resolve in order"
+      );
+      assert
+        .dom(document.getElementById(banana.getAttribute("aria-labelledby")))
+        .hasText("Banana", "the accessible name excludes secondary text");
+      await triggerKeyEvent("[role='combobox']", "keydown", "End");
+      assert
+        .dom("[role='option'].--active")
+        .includesText("Cherry", "End reaches a reason-disabled row at the cap");
+      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+      await click(optionWithText("Cherry"));
+      assert.true(
+        onChange.notCalled,
+        "both activation paths reject a reason-disabled row"
+      );
+    });
+
+    test("virtual jumps retain consecutive positions through disabled rows and group headers", async function (assert) {
+      const items = Array.from({ length: 160 }, (_, index) => ({
+        id: index,
+        name: `Row ${index}`,
+        group: Math.floor(index / 40),
+        disabled: index % 2 === 1,
+      }));
+      const groupLabel = (group) => `Group ${group}`;
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+          <style>
+            .d-virtual-list {
+              height: 200px;
+              overflow-y: auto;
+            }
+          </style>
+          <DSelect
+            @groupBy="group"
+            @groupLabel={{groupLabel}}
+            @items={{items}}
+            @maximum={{1}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{array 0}}
+            @variant="static"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      for (const [key, expected] of [
+        ["End", "159"],
+        ["Home", "0"],
+        ["ArrowDown", "1"],
+      ]) {
+        await triggerKeyEvent("[role='combobox']", "keydown", key);
+        await waitUntil(
+          () => find("[role='option'].--active")?.dataset.value === expected,
+          {
+            timeoutMessage: `${key}: expected ${expected}, got ${find("[role='option'].--active")?.dataset.value}; mounted ${findAll(
+              "[role='option']"
+            )
+              .map((row) => row.dataset.value)
+              .join(",")}`,
+          }
+        );
+        assert
+          .dom("[role='option'].--active")
+          .hasAttribute(
+            "data-logical-index",
+            expected,
+            "logical positions include disabled options and exclude headers"
+          )
+          .hasAttribute(
+            "aria-setsize",
+            "160",
+            "the whole option set is counted"
+          );
+      }
+      const beforePage = findAll("[role='option']").length;
+      assert.true(beforePage < items.length, "only a window is mounted");
+      await triggerKeyEvent("[role='combobox']", "keydown", "PageDown");
+      await waitUntil(
+        () =>
+          find("[role='option'].--active")?.dataset.value ===
+          String(1 + beforePage),
+        {
+          timeoutMessage: `PageDown: expected ${1 + beforePage}, got ${find("[role='option'].--active")?.dataset.value}`,
+        }
+      );
+      assert
+        .dom("[role='option'].--active")
+        .hasAttribute(
+          "aria-disabled",
+          "true",
+          "paging counts cap-disabled mounted options"
+        );
+      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+      assert.true(
+        onChange.notCalled,
+        "a virtual jump never enables activation"
+      );
+    });
+  }
+);

@@ -58,6 +58,8 @@ interface SelectListboxSignature {
     filterInput: HTMLElement | null;
     /** The rendered listbox id. */
     listboxId: string;
+    /** Stable id of the panel's selection-limit message. */
+    limitId: string;
     /** Icon marking selected rows. */
     selectedIcon?: string;
     /** Whether the select accepts multiple values. */
@@ -211,6 +213,7 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
                 "roving-tabindex"
               )
               controllerElement=(if @presenter.usesActiveRoving @filterInput)
+              disabledItems="focusable"
               itemSelector="[role=option]"
               itemsKey=(if
                 @presenter.isTypeahead items @presenter.rovingNonTypeaheadKey
@@ -263,14 +266,15 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
                   ></li>
                 {{else if option}}
                   <SelectItem
-                    aria-describedby={{option.groupHeaderId}}
                     aria-posinset={{option.posInSet}}
                     aria-setsize={{option.setSize}}
                     data-logical-index={{option.logicalIndex}}
                     data-option-key={{option.key}}
                     @active={{eq option.key @listbox.activeOptionKey}}
+                    @describedBy={{option.groupHeaderId}}
                     @descriptor={{option}}
                     @engine={{@engine}}
+                    @limitId={{@limitId}}
                     @locked={{@presenter.isLocked}}
                     @multiple={{@multiple}}
                     @selectedIcon={{@selectedIcon}}

@@ -346,8 +346,8 @@ export default class VariantPresenter {
    * onto the first option (see `focusListboxIfSimple`), and `button` waits for the user to
    * filter or arrow.
    *
-   * Suppressed at the cap: there every unselected option is disabled, so the only navigable rows
-   * are the selected ones, and auto-highlighting one would arm Enter to `deselect` and silently
+   * Suppressed at the cap: every unselected option is disabled, so only selected rows could seed
+   * entry, and auto-highlighting one would arm Enter to `deselect` and silently
    * drop a value — the same hazard {@link shouldActivateSelected} avoids for `multiple`.
    */
   get shouldAutoActivateFirst(): boolean {
@@ -361,8 +361,8 @@ export default class VariantPresenter {
    * The reconcile key for a non-typeahead surface, where re-running on every render would reset
    * the user's arrow position. Typeahead keys on its freshly rebuilt items array instead (it
    * re-seeds on each keystroke), but a `button`/`static` list only needs to re-reconcile when the
-   * navigable set changes: the filter, reload nonce, or cap closing off unselected options.
-   * Keying on the cap state is what drops a stale `aria-activedescendant` off a now-disabled row.
+   * entry policy changes: the filter, reload nonce, or cap state. Reconciliation preserves a
+   * surviving cursor even when the cap disables its row.
    */
   get rovingNonTypeaheadKey(): string {
     return `${this.#engine.queryKey}::${this.#engine.atMaximum}`;

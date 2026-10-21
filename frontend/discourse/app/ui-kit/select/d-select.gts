@@ -167,7 +167,7 @@ interface DSelectSignature {
     minChars?: number;
     /**
      * Hard cap on a multi-select's selection count. At the cap every unselected ordinary option
-     * is disabled (non-interactive and skipped by keyboard navigation) and the limit message
+     * is disabled (navigable, with activation blocked) and the limit message
      * appears. The cap never *newly* disables a selected row, so deselecting one is the way back
      * under it (a row the consumer marked `disabled` stays disabled either way, though its chip
      * remains removable); action rows stay enabled too, since they never become a value. Ignored
@@ -490,6 +490,11 @@ export default class DSelect extends Component<DSelectSignature> {
     associateDestroyableChild(this, this.listbox);
     associateDestroyableChild(this, this.announcer);
     associateDestroyableChild(this, this.interaction);
+  }
+
+  /** Stable id for the panel message describing cap-disabled options. */
+  get limitId(): string {
+    return `${this.#listboxId}-limit`;
   }
 
   /** The listbox id, wiring `aria-controls`/`aria-activedescendant`. */
@@ -905,6 +910,7 @@ export default class DSelect extends Component<DSelectSignature> {
                 service (a mounted live region speaks unreliably); the node stays role=status. }}
               <div
                 class="d-select__limit"
+                id={{this.limitId}}
                 role="status"
                 {{didInsert
                   this.announcer.announceLimitOnEntry
@@ -951,6 +957,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @hasItemBlock={{has-block "item"}}
               @hasLoadingItemBlock={{has-block "loadingItem"}}
               @label={{this.presenter.ariaLabelText}}
+              @limitId={{this.limitId}}
               @listbox={{this.listbox}}
               @listboxId={{this.listboxId}}
               @loadListContent={{this.loadListContent}}

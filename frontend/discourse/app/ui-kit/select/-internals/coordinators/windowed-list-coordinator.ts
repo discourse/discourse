@@ -101,8 +101,8 @@ export default class WindowedListCoordinator {
   estimateRowSize = (): number => ROW_HEIGHT_ESTIMATE;
 
   /**
-   * The count of navigable options — structural headers/dividers, frontier skeletons, and
-   * disabled options are excluded, so this equals the number of rows the roving modifier can
+   * The count of navigable options, including disabled rows. Structural headers/dividers and
+   * frontier skeletons are excluded, so this equals the number of rows the roving modifier can
    * actually land on. Also records the option→raw index map: a logical jump target is translated
    * back to the row's raw array index for the virtualizer scroll.
    */
@@ -359,9 +359,9 @@ export default class WindowedListCoordinator {
 
   /**
    * `dRovingFocus` reports the highlighted option element on every cursor move (and the
-   * initial auto-seed), or `null` when the highlight is cleared — e.g. the active row was
-   * disabled by the cap. We record its `key` so each option renders its own `--active` from
-   * state; a `null` clears it, so no disabled row keeps the highlight. The element carries the
+   * initial auto-seed), or `null` when the highlight is cleared. We record its `key` so each
+   * option renders its own `--active` from state, including rows disabled under the cursor.
+   * The element carries the
    * key via `data-option-key` (stamped in the template).
    */
   @action

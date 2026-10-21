@@ -357,7 +357,7 @@ export interface DRovingFocusArgs {
   fallbackSkipsMarked?: boolean;
   /**
    * Whether the cursor may rest on an item the consumer has marked `aria-disabled="true"`.
-   * Default `"skip"`, which is what a listbox or combobox wants.
+   * Default `"skip"`. Use `"focusable"` to keep disabled options discoverable.
    *
    * The practice page's section on the focusability of disabled controls draws a distinction
    * this collapses by default: `disabled` is for state a reader can infer from context, while
@@ -365,7 +365,8 @@ export interface DRovingFocusArgs {
    * is how a screen reader user finds out it exists at all. Toolbars and menus are the patterns
    * that need it.
    *
-   * `"focusable"` widens where the cursor may LAND, and nothing else. A disabled item is still
+   * `"focusable"` widens where deliberate navigation may land. Entry seeds still skip disabled
+   * items, and a surviving cursor is preserved if its item becomes disabled. A disabled item is
    * never activated, so {@link DRovingFocusArgs.onActivate} does not fire on one under either
    * value. Reachable and operable are separate questions and only the first is opened here.
    *

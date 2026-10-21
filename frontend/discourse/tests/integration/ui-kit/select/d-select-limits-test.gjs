@@ -7,6 +7,7 @@ import {
   click,
   fillIn,
   find,
+  findAll,
   render,
   settled,
   triggerKeyEvent,
@@ -970,7 +971,7 @@ module(
         );
     });
 
-    test("arrow navigation skips disabled options at @maximum", async function (assert) {
+    test("arrow navigation reaches every option at @maximum", async function (assert) {
       const items = [
         ...ITEMS,
         { id: 4, name: "Date" },
@@ -988,34 +989,44 @@ module(
       await click(".d-select__trigger");
 
       const controller = find("[role='combobox']");
-      for (const [key, expected] of [
-        ["ArrowDown", "Apple"],
-        ["ArrowDown", "Cherry pie"],
-        ["ArrowDown", "Elderberry"],
-        ["ArrowUp", "Cherry pie"],
-        ["ArrowUp", "Apple"],
+      for (const [key, expected, disabled] of [
+        ["ArrowDown", "Apple", false],
+        ["ArrowDown", "Banana", true],
+        ["ArrowDown", "Cherry pie", false],
+        ["ArrowUp", "Banana", true],
+        ["ArrowUp", "Apple", false],
       ]) {
         await triggerKeyEvent(controller, "keydown", key);
         const active = find("[role='option'].--active");
 
         assert
           .dom(active)
-          .hasText(expected, `${key} steps to the next enabled selected option`)
-          .doesNotHaveAttribute(
-            "aria-disabled",
-            `${key} never lands on a cap-disabled option`
+          .hasText(
+            expected,
+            `${key} steps to the next option, disabled or not`
           );
+        if (disabled) {
+          assert
+            .dom(active)
+            .hasAttribute(
+              "aria-disabled",
+              "true",
+              `${key} lands on a cap-disabled option, announced as unavailable`
+            );
+        } else {
+          assert.dom(active).doesNotHaveAttribute("aria-disabled");
+        }
         assert
           .dom(controller)
           .hasAttribute(
             "aria-activedescendant",
             active.id,
-            `${key} points the controller at the enabled active option`
+            `${key} points the controller at the active option`
           );
       }
     });
 
-    test("jump keys address only enabled options at @maximum", async function (assert) {
+    test("jump keys address every option at @maximum", async function (assert) {
       const items = Array.from({ length: 8 }, (_, index) => ({
         id: index + 1,
         name: `Item ${index + 1}`,
@@ -1033,24 +1044,17 @@ module(
 
       const controller = find("[role='combobox']");
       for (const [key, expected] of [
-        ["End", "Item 7"],
-        ["Home", "Item 2"],
-        ["PageDown", "Item 7"],
-        ["PageUp", "Item 2"],
+        ["End", "Item 8"],
+        ["Home", "Item 1"],
+        ["PageDown", "Item 8"],
+        ["PageUp", "Item 1"],
       ]) {
         await triggerKeyEvent(controller, "keydown", key);
         const active = find("[role='option'].--active");
 
         assert
           .dom(active)
-          .hasText(
-            expected,
-            `${key} resolves against the enabled logical option set`
-          )
-          .doesNotHaveAttribute(
-            "aria-disabled",
-            `${key} never lands on a cap-disabled row`
-          );
+          .hasText(expected, `${key} resolves against the whole option set`);
         assert
           .dom(controller)
           .hasAttribute(
@@ -1123,10 +1127,12 @@ module(
           "lowering back to the cap immediately re-disables the option"
         );
       assert
-        .dom("[role='option'][aria-disabled='true'].--active")
-        .doesNotExist(
-          "lowering the cap does not leave the roving highlight on a disabled row"
-        );
+        .dom("[role='option'].--active")
+        .hasText(
+          "Banana",
+          "lowering the cap keeps the cursor where the reader left it"
+        )
+        .hasAttribute("aria-disabled", "true", "now announced as unavailable");
     });
   }
 );
@@ -1309,6 +1315,141 @@ module(
       assert
         .dom(".footer-remaining")
         .hasText("0", "remaining reaches zero at the cap");
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (disabled rows)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    const REASONED = [
+      { id: 1, name: "Apple" },
+      {
+        id: 2,
+        name: "Banana",
+        disabled: true,
+        description: "Requires the fruit tag",
+      },
+      { id: 3, name: "Cherry" },
+    ];
+
+    test("arrow keys reach a row disabled for a reason", async function (assert) {
+      const onChange = sinon.spy();
+
+      await render(
+        <template>
+          <DSelect
+            @items={{REASONED}}
+            @onChange={{onChange}}
+            @variant="static"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      await triggerKeyEvent("[role='combobox']", "keydown", "Home");
+      await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+
+      assert
+        .dom("[role='option'].--active")
+        .hasText(/Banana/, "the disabled row is reachable")
+        .hasAttribute("aria-disabled", "true");
+
+      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+      assert.true(onChange.notCalled, "but it cannot be picked");
+    });
+
+    test("a disabled row's reason is its visible description", async function (assert) {
+      await render(
+        <template><DSelect @items={{REASONED}} @variant="static" /></template>
+      );
+      await click(".d-select__trigger");
+
+      const banana = findAll("[role='option']").find((row) =>
+        row.textContent.includes("Banana")
+      );
+      const ids = (banana.getAttribute("aria-describedby") ?? "").split(/\s+/);
+      const described = ids
+        .map((id) => document.getElementById(id)?.textContent.trim())
+        .filter(Boolean);
+      assert.true(
+        described.includes("Requires the fruit tag"),
+        "the reason describes the option"
+      );
+      assert
+        .dom(banana)
+        .includesText("Requires the fruit tag", "and is visible");
+    });
+
+    test("End reaches a disabled last row", async function (assert) {
+      const items = [
+        { id: 1, name: "Apple" },
+        { id: 2, name: "Banana", disabled: true },
+      ];
+
+      await render(
+        <template><DSelect @items={{items}} @variant="static" /></template>
+      );
+      await click(".d-select__trigger");
+      await triggerKeyEvent("[role='combobox']", "keydown", "End");
+
+      assert.dom("[role='option'].--active").hasText("Banana");
+    });
+
+    test("at the cap every row stays reachable and positions never vanish", async function (assert) {
+      const items = [
+        { id: 1, name: "Apple" },
+        { id: 2, name: "Banana" },
+        { id: 3, name: "Cherry" },
+      ];
+      const onChange = sinon.spy();
+
+      await render(
+        <template>
+          <DSelect
+            @items={{items}}
+            @maximum={{1}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{array 1}}
+            @variant="static"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      await triggerKeyEvent("[role='combobox']", "keydown", "Home");
+
+      const seen = [];
+      for (let step = 0; step < 3; step++) {
+        seen.push(
+          find("[role='option'].--active")?.getAttribute("aria-posinset")
+        );
+        await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+      }
+      assert.deepEqual(
+        seen,
+        ["1", "2", "3"],
+        "every position is visited in order"
+      );
+
+      const banana = findAll("[role='option']").find((row) =>
+        row.textContent.includes("Banana")
+      );
+      assert.dom(banana).hasAttribute("aria-disabled", "true");
+      const limit = find(".d-select__limit");
+      assert.true(
+        (banana.getAttribute("aria-describedby") ?? "")
+          .split(/\s+/)
+          .includes(limit?.id),
+        "a cap-disabled row is described by the limit message"
+      );
+
+      await click(banana);
+      assert.true(
+        onChange.notCalled,
+        "a cap-disabled row still cannot be picked"
+      );
     });
   }
 );

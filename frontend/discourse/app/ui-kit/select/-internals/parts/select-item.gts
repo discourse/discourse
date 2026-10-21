@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { createCache, getValue } from "@glimmer/tracking/primitives/cache";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { guidFor } from "@ember/object/internals";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import type { SelectRowPresentation } from "discourse/ui-kit/select/-internals/engine/customizations";
@@ -16,6 +17,10 @@ interface SelectItemSignature {
     descriptor: SelectDescriptor;
     multiple?: boolean;
     selectedIcon?: string;
+    /** Additional descriptions, such as the option's group header. */
+    describedBy?: string;
+    /** Stable id of the limit message describing cap-disabled options. */
+    limitId?: string;
     /**
      * The roving highlight, driven from `DSelect` tracked state rather than the modifier's
      * imperative class, so it is rendered by the template and survives a re-render (the
@@ -48,6 +53,9 @@ interface SelectItemSignature {
  * roving highlight via `activeClass`. This part is internal to the select family.
  */
 export default class SelectItem extends Component<SelectItemSignature> {
+  descriptionId = `d-select-option-description-${guidFor(this)}`;
+  labelId = `d-select-option-label-${guidFor(this)}`;
+
   /** Descriptor wrappers are rebuilt by the list even when row customization inputs are unchanged. */
   #presentation?: {
     engine: SelectEngine;
@@ -65,14 +73,25 @@ export default class SelectItem extends Component<SelectItemSignature> {
     return this.args.engine.getItemLabel(this.args.descriptor.item);
   }
 
+  get describedBy(): string | undefined {
+    return (
+      [
+        this.args.describedBy,
+        this.args.descriptor.item.description ? this.descriptionId : undefined,
+        this.args.descriptor.flags.capDisabled ? this.args.limitId : undefined,
+      ]
+        .filter(Boolean)
+        .join(" ") || undefined
+    );
+  }
+
   /** The descriptor id as a DOM attribute, including an empty value for the none row. */
   get value(): string {
     return String(this.args.descriptor.value ?? "");
   }
 
   /**
-   * Activates the item unless the control is locked or the row itself is disabled (the
-   * modifier already skips disabled items for the keyboard; this guards the pointer path).
+   * Guards pointer activation as well as the modifier's keyboard activation check.
    */
   @action
   handleClick(): void {
@@ -107,7 +126,9 @@ export default class SelectItem extends Component<SelectItemSignature> {
   <template>
     {{#let this.presentation as |row|}}
       <li
+        aria-describedby={{this.describedBy}}
         aria-disabled={{if @descriptor.flags.disabled "true"}}
+        aria-labelledby={{if @descriptor.item.description this.labelId}}
         aria-selected={{if @descriptor.flags.selected "true" "false"}}
         class={{dConcatClass
           "d-select__option"
@@ -142,7 +163,19 @@ export default class SelectItem extends Component<SelectItemSignature> {
             class="d-select__option-selected-icon --checkbox"
           }}
         {{/if}}
-        {{yield @descriptor.item}}
+        {{#if @descriptor.item.description}}
+          <span class="d-select__option-content">
+            <span id={{this.labelId}}>{{yield @descriptor.item}}</span>
+            <span
+              class="d-select__option-description"
+              id={{this.descriptionId}}
+            >
+              {{@descriptor.item.description}}
+            </span>
+          </span>
+        {{else}}
+          {{yield @descriptor.item}}
+        {{/if}}
       </li>
     {{/let}}
   </template>

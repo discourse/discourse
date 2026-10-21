@@ -57,16 +57,22 @@ export function findMarked(
   );
 }
 
-/** Chooses the active-descendant entry target under the configured fallback policy. */
+/**
+ * Chooses the active-descendant entry target under the configured fallback policy.
+ *
+ * @param eligible - Entry eligibility, independent of whether navigation can reach an item.
+ */
 export function activeSeed(
   items: HTMLElement[],
-  config: DRovingFocusConfig
+  config: DRovingFocusConfig,
+  eligible: (item: HTMLElement) => boolean
 ): HTMLElement | undefined {
-  const selected = prefersSelected(config) ? findMarked(items) : undefined;
+  const candidates = items.filter(eligible);
+  const selected = prefersSelected(config) ? findMarked(candidates) : undefined;
   if (selected || !fallsBackToFirst(config)) {
     return selected;
   }
   return config.fallbackSkipsMarked
-    ? items.find((item) => !isMarked(item))
-    : items[0];
+    ? candidates.find((item) => !isMarked(item))
+    : candidates[0];
 }

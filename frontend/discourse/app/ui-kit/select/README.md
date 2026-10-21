@@ -481,7 +481,13 @@ by mechanism.
 - Multi-select value-type coercion: each emitted id is normalized to its source item's native type
   (so a URL-typed `"5"` and a freshly-picked `3` never emit as a mixed `["5", 3]`); an unresolved id
   passes through unchanged, and `@value` is never mutated (the engine only emits via `@onChange`).
-- Per-item `disabled`; per-item action rows (`onSelect(control, item)`, which run instead of
+- Per-item `disabled`: arrow keys, Home/End and PageUp/PageDown reach every option, including
+  item-disabled and cap-disabled rows. They keep `aria-disabled="true"` and cannot be activated
+  by Enter or click. Entry seeding and typeahead auto-highlight still skip disabled rows.
+- Per-item `description` (string): visible secondary text inside the option, referenced through
+  `aria-describedby` alongside its group header. It is excluded from the option's accessible
+  name and also renders with a custom `:item` block.
+- Per-item action rows (`onSelect(control, item)`, which run instead of
   selecting and keep the overlay open unless the row calls `control.close()`).
 - Per-item `sticky: true` for leading rows that stay visible while scrolling, such as a
   "Suggest" action. They remain options in the same listbox and participate in keyboard
@@ -509,7 +515,9 @@ by mechanism.
   seeded over the cap is displayed and removable, never trimmed. `@minimum` is advisory (message +
   state only, never blocks removal — the consuming form owns submit-time enforcement). A built-in
   limit message renders in a dedicated top zone of the panel (never stacking with the footer or an
-  error body), and the limit state is exposed on the engine and yielded to `:footer`.
+  error body). Cap-disabled options also reference this message through `aria-describedby`,
+  alongside any item description and group header. The limit state is exposed on the engine and
+  yielded to `:footer`.
 - Customization through one `select-customizations` transformer targeting `@kind` or
   `@identifier` (content, rows, presentation options, loading and change, see
   [Extension points](#extension-points)); recipe options through `@kindOptions`; plus richer

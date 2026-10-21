@@ -62,6 +62,9 @@ export interface SelectItem {
   /** When true, the item cannot be activated (guards both pointer and keyboard). */
   disabled?: boolean;
 
+  /** Visible secondary text, exposed as the option's description rather than its name. */
+  description?: string;
+
   /** Marks the synthetic create-on-the-fly item. */
   __create?: boolean;
 
@@ -112,6 +115,10 @@ export interface SelectDescriptor {
     sticky: boolean;
     /** Whether the row cannot be activated (guards both pointer and keyboard). */
     disabled: boolean;
+    /** Whether the consumer marked the item disabled. */
+    reasonDisabled: boolean;
+    /** Whether the selection cap prevents adding this option. */
+    capDisabled: boolean;
     /**
      * A group-header row: structural, so it is skipped by selection, navigation, and the
      * option-position math (no `posInSet`/`setSize`). Rendered outside the option set.
@@ -127,8 +134,8 @@ export interface SelectDescriptor {
     __none: boolean;
   };
   /**
-   * Zero-based position among navigable list options. Structural and disabled rows leave it
-   * undefined, as does the trigger/chip descriptor path.
+   * Zero-based position among all list options, including disabled rows. Structural rows and
+   * trigger/chip descriptors leave it undefined.
    */
   logicalIndex?: number;
   /**
