@@ -153,6 +153,7 @@ class ChatSetupInit {
         id: "toggle-editor",
         label: "chat.composer.rich_text",
         position: "dropdown",
+        shortcut: "ctrl+m",
         toggled() {
           return this.useRichEditor;
         },
@@ -166,6 +167,7 @@ class ChatSetupInit {
         id: "toggle-formatting",
         label: "chat.composer.formatting_bar",
         position: "dropdown",
+        shortcut: "mod+shift+f",
         toggled() {
           return this.showFormattingBar;
         },
