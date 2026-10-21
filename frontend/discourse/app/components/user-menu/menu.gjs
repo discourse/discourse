@@ -17,6 +17,7 @@ import { NO_REMINDER_ICON } from "discourse/models/bookmark";
 import { i18n } from "discourse-i18n";
 import UserMenuBookmarksList from "./bookmarks-list.js";
 import UserMenuLikesNotificationsList from "./likes-notifications-list.js";
+import UserMenuMentionsNotificationsList from "./mentions-notifications-list.js";
 import UserMenuMessagesList from "./messages-list.js";
 import UserMenuNotificationsList from "./notifications-list.js";
 import UserMenuOtherNotificationsList from "./other-notifications-list.js";
@@ -64,6 +65,21 @@ const CORE_TOP_TABS = [
 
     get linkWhenActive() {
       return `${this.currentUser.path}/notifications/responses`;
+    }
+  },
+
+  class extends UserMenuTab {
+    id = "mentions";
+    icon = "at";
+    panelComponent = UserMenuMentionsNotificationsList;
+    notificationTypes = ["mentioned"];
+
+    get count() {
+      return this.getUnreadCountForType("mentioned");
+    }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/notifications/mentions`;
     }
   },
 
