@@ -132,6 +132,8 @@ class UserAvatar < ActiveRecord::Base
         type: "avatar",
       ).create_for(user.id)
 
+    return unless upload&.persisted?
+
     user.create_user_avatar! unless user.user_avatar
 
     if !user.user_avatar.contains_upload?(upload.id)
