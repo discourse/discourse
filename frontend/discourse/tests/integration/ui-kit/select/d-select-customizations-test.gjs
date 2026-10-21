@@ -910,7 +910,7 @@ module(
       };
       const createItem = (filter, options) => {
         record("createItem", options);
-        return { id: filter, name: `Create ${filter}`, __create: true };
+        return { id: filter, name: filter, __create: true };
       };
       const createUnresolvedItem = (value, options) => {
         record("createUnresolvedItem", options);

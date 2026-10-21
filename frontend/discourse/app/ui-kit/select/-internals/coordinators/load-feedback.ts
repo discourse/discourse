@@ -176,11 +176,18 @@ export default class LoadFeedbackTracker {
       this._loadFeedbackDue = false;
       return;
     }
-    this.#loadFeedbackTimer = discourseLater(
-      this,
-      () => (this._loadFeedbackDue = true),
-      this._loadFeedbackDelay
-    );
+    const debounce = this._loadFeedbackDelay - LOADING_FEEDBACK_DELAY;
+    // Keep debounce and source feedback as separate phases so shortened timers still leave
+    // a retention window after the request starts.
+    if (debounce) {
+      this.#loadFeedbackTimer = discourseLater(
+        this,
+        () => this.#scheduleFeedback(),
+        debounce
+      );
+    } else {
+      this.#scheduleFeedback();
+    }
   }
 
   /**
@@ -204,5 +211,13 @@ export default class LoadFeedbackTracker {
   @action
   recordRowCount(_element: HTMLElement, [count]: [number]): void {
     this._lastRenderedRowCount = count;
+  }
+
+  #scheduleFeedback(): void {
+    this.#loadFeedbackTimer = discourseLater(
+      this,
+      () => (this._loadFeedbackDue = true),
+      LOADING_FEEDBACK_DELAY
+    );
   }
 }

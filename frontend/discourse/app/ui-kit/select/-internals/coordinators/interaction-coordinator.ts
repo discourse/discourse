@@ -237,7 +237,7 @@ export default class InteractionCoordinator {
       !this.isExpanded ||
       this.#presenter.isLocked ||
       this.#engine.belowMinChars ||
-      !this.#engine.serverPending ||
+      !(this.#engine.serverPending || this.#engine.serverAwaitingFirstPage) ||
       this.#engine.serverRevealPending
     ) {
       return;

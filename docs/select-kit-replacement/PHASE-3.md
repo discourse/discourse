@@ -18,7 +18,7 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☑ **`@loadContext`:** the loader's inputs; a changed entry reloads the list (closed or open)
     without superseding pending updates. Keyboard activation is held, with a polite "Still
     loading…", while a non-reveal server load is pending.
-  - ☐ **Create row:** first in the list, tied to the query on screen, a key-collision duplicate
+  - ☑ **Create row:** first in the list, tied to the query on screen, a key-collision duplicate
     rule and an engine-owned "Create …" name.
   - ☐ **Disabled rows** reachable by arrow keys and announced as unavailable, with a visible
     description.

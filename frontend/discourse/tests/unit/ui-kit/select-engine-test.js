@@ -321,7 +321,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       );
     });
 
-    test("appends a create item when allowed and there is no exact match", function (assert) {
+    test("prepends a create item when allowed and there is no exact match", function (assert) {
       const engine = new SelectEngine({
         allowCreate: true,
         createItem: (filter) => ({ id: filter, name: filter, __create: true }),
@@ -329,11 +329,8 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       engine.setFilter("new-tag");
 
       const items = engine.buildItems([{ id: 1, name: "existing" }]);
-      assert.true(
-        items.at(-1).flags.__create,
-        "the last item is the create item"
-      );
-      assert.strictEqual(items.at(-1).item.name, "new-tag");
+      assert.true(items[0].flags.__create, "the first item is the create item");
+      assert.strictEqual(items[0].item.name, "new-tag");
     });
 
     test("does not offer create when an exact match already exists", function (assert) {

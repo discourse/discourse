@@ -14,8 +14,8 @@ See the arg reference in `d-select.gts` (`Args` block) and the option reference 
 
 These attributes are a stable contract for tests and styling. Option rows expose
 `data-value` as the descriptor value converted to a string and `data-name` as the configured
-label. The none row has an empty value; a create row uses the typed text as its value and
-its label as its name. Resolved chips expose their held item's `data-value` and `data-name`;
+label. The none row has an empty value; a create row uses the item returned by `@createItem`
+for its value and name. Resolved chips expose their held item's `data-value` and `data-name`;
 loading skeleton chips carry neither attribute.
 
 The `.d-select` root always exposes `data-value` and `data-name` as comma-separated held ids
@@ -30,6 +30,27 @@ empty, error, minimum-query-length and mobile modal states. No panel is mounted 
 Tests drive a select through these hooks with `dSelect()` (actions) and `assert.dSelect()`
 (checks) from `discourse/tests/helpers/`, and with `PageObjects::Components::UiKit::DSelect.at`
 in system specs.
+
+## Creating items
+
+`@allowCreate` and `@createItem` enable creation from the query. The create row always comes
+after sticky, none and special rows, before the source rows and their group headers. With
+ordinary source rows, typing a partial match and pressing Enter creates the typed text
+(for example, "jav" creates "jav"), matching the legacy select behavior.
+
+The create row, its `@allowCreate` check and its duplicate checks use the query whose rows
+are on screen. While a new query is pending, retained rows keep the previous query's create
+proposal, including for debounced local sources. The live `@minChars` gate still hides the
+list below the minimum.
+
+Creation is suppressed when a loaded row's label matches the typed text case-insensitively,
+or when `valueKey(itemValue(createItem(filter)))` matches a loaded row's key. Comparing keys
+normalizes numeric and string ids. The typed text matching a row's raw value alone does not
+block creation; `@allowCreate` can impose additional rules.
+
+`@createItem` should name the item by its value text, without a "Create" prefix. The engine
+renders `d_select.create_item` ("Create “%{label}”") around that label. The `data-name` hook
+remains the item label, and a consumer `:item` block overrides the row's content.
 
 ## Loading inputs and keyboard activation
 

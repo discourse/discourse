@@ -132,6 +132,7 @@ export interface SelectSource {
   canRevealMore(): boolean;
   atCapWithMore(): boolean;
   pending(): boolean;
+  awaitingFirstPage(): boolean;
   revealPending(): boolean;
   queryPending(): boolean;
   revealMore(): boolean;
@@ -173,6 +174,10 @@ export class LocalSource implements SelectSource {
   }
 
   pending(): boolean {
+    return false;
+  }
+
+  awaitingFirstPage(): boolean {
     return false;
   }
 
@@ -288,7 +293,12 @@ export class PagedSource implements SelectSource {
 
   pending(): boolean {
     const completed = this.#state.serverCompletedKey;
-    return completed !== this.#loadKey;
+    return completed != null && completed !== this.#loadKey;
+  }
+
+  /** Whether no load has finished yet, so the first page is still on its way. */
+  awaitingFirstPage(): boolean {
+    return this.#state.serverCompletedKey == null;
   }
 
   revealPending(): boolean {

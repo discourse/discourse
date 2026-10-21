@@ -54,18 +54,26 @@ export default class WindowedListCoordinator {
    * so the pending page reads as "more coming" in the list. Gated on `showRevealPlaceholder`,
    * which also carries the fast-source delay (no flash) and excludes a re-query (which
    * replaces the set rather than extending it). `buildItems` is recomputed per render on
-   * purpose — its output reflects live selection/create/special state, not just `rawItems`.
+   * purpose — its output reflects live selection/special state as well as the displayed query.
+   *
+   * @param rawItems - The displayed source rows.
+   * @param filter - The query that produced those rows.
    */
   buildListItems = (
-    rawItems: SelectItemModel[] | undefined
+    rawItems: SelectItemModel[] | undefined,
+    filter: string | undefined
   ): readonly ListRow[] => {
     // The list source always resolves to an object carrying `rawItems`; the async
     // content wrapper's yield type just can't express that.
     assert("The list content resolves before its rows are built", rawItems);
+    assert(
+      "The list content carries its displayed filter",
+      filter !== undefined
+    );
 
     const listboxId = this.#getListboxId();
     const items: OptionRow[] = this.#engine
-      .buildItems(rawItems)
+      .buildItems(rawItems, filter)
       .map((descriptor) => {
         if (descriptor.flags.group) {
           return {

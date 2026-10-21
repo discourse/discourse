@@ -26,6 +26,8 @@ export interface SelectListContent {
   /** Loader inputs for these displayed rows, retained independently of the next request. */
   context?: Readonly<Record<string, unknown>>;
   rawItems: SelectItemModel[];
+  /** The filter that produced these rows, retained with them for create checks during a reload. */
+  readonly filter: string;
   /**
    * The query these rows answer, captured when the load resolved. `@retainWhileReloading` keeps
    * the previous rows mounted while a new query is in flight, so `engine.queryKey` is the query
@@ -131,7 +133,10 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
     </:loading>
 
     <:content as |content|>
-      {{#let (@listbox.buildListItems content.rawItems) as |items|}}
+      {{#let
+        (@listbox.buildListItems content.rawItems content.filter)
+        as |items|
+      }}
         {{#if items.length}}
           <DVirtualList
             {{! A reveal or re-query keeps its rows mounted, so aria-busy reports the
@@ -281,6 +286,13 @@ const SelectListbox: TemplateOnlyComponent<SelectListboxSignature> = <template>
                   >
                     {{#if @hasItemBlock}}
                       {{yield option.item to="item"}}
+                    {{else if option.flags.__create}}
+                      {{i18n
+                        "d_select.create_item"
+                        label=(selectItemLabel
+                          option.item @presenter.labelField
+                        )
+                      }}
                     {{else}}
                       {{selectItemLabel option.item @presenter.labelField}}
                     {{/if}}

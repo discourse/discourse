@@ -563,16 +563,20 @@ export default class DSelect extends Component<DSelectSignature> {
     // Stamped at resolve time, not call time: an aborted-then-superseded load never reaches
     // here, so the query read on resolution is the one these rows were fetched for.
     return rawItems instanceof Promise
-      ? rawItems.then((items) => ({
-          rawItems: items,
-          query: this.engine.queryKey,
-          context: this.engine.requestLoadContext,
-        }))
-      : {
+      ? rawItems.then((items) =>
+          Object.freeze({
+            rawItems: items,
+            filter: this.engine.filter,
+            query: this.engine.queryKey,
+            context: this.engine.requestLoadContext,
+          })
+        )
+      : Object.freeze({
           rawItems,
+          filter: this.engine.filter,
           query: this.engine.queryKey,
           context: this.engine.requestLoadContext,
-        };
+        });
   }
 
   /**

@@ -15,6 +15,7 @@ import {
   triggerEvent,
   triggerKeyEvent,
   waitFor,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -2161,7 +2162,7 @@ module(
     test("a create-enabled select offers no create row below @minChars", async function (assert) {
       const createItem = (filter) => ({
         id: filter,
-        name: `Create ${filter}`,
+        name: filter,
         __create: true,
       });
 
@@ -2193,7 +2194,7 @@ module(
     test("a create-enabled select offers a create row when the source has no matches", async function (assert) {
       const createItem = (filter) => ({
         id: filter,
-        name: `Create ${filter}`,
+        name: filter,
         __create: true,
       });
 
@@ -2213,7 +2214,7 @@ module(
       assert
         .dom("[role='option'].--create")
         .exists("the synthetic create row replaces the raw empty state")
-        .hasText("Create dragonfruit", "the row uses the proposed value");
+        .hasText("Create “dragonfruit”", "the row names the proposed value");
       assert
         .dom(".d-select__empty")
         .doesNotExist("the final list is not treated as empty");
@@ -3244,7 +3245,7 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
   test("a create row carries the typed text as its value", async function (assert) {
     const createItem = (filter) => ({
       id: filter,
-      name: `Create ${filter}`,
+      name: filter,
       __create: true,
     });
 
@@ -3263,7 +3264,7 @@ module("Integration | ui-kit | select | DSelect test hooks", function (hooks) {
     assert
       .dom("[role='option'].--create")
       .hasAttribute("data-value", "kiwi")
-      .hasAttribute("data-name", "Create kiwi");
+      .hasAttribute("data-name", "kiwi");
   });
 
   test("the root carries the held value and name", async function (assert) {
@@ -4176,6 +4177,200 @@ module(
       );
       assert.dSelect().hasName("Banana");
       assert.dSelect().hasLabel("Chosen fruit");
+    });
+  }
+);
+
+/** A promise whose settlement the test controls. */
+function deferredLoad() {
+  let resolve;
+  const promise = new Promise((done) => (resolve = done));
+  return { promise, resolve };
+}
+
+/** A create item named only by the typed text; the engine supplies the "Create" wording. */
+const createTyped = (filter) => ({ id: filter, name: filter, __create: true });
+
+/** A create item whose id can never collide with a source row's id. */
+const createKeyed = (filter) => ({
+  id: `new:${filter}`,
+  name: filter,
+  __create: true,
+});
+
+module(
+  "Integration | ui-kit | select | DSelect create row placement",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("the create row leads the source rows", async function (assert) {
+      const items = [
+        { id: 1, name: "Apple" },
+        { id: 2, name: "Apricot" },
+      ];
+
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{true}}
+            @createItem={{createKeyed}}
+            @items={{items}}
+          />
+        </template>
+      );
+      await fillIn("[role='combobox']", "ap");
+
+      const options = findAll("[role='option']");
+      assert.dom(options[0]).hasClass("--create", "create is the first option");
+      assert
+        .dom(options[0])
+        .hasAttribute("aria-posinset", "1")
+        .hasAttribute("aria-setsize", "3");
+      assert
+        .dom(options[2])
+        .hasAttribute("aria-posinset", "3", "source rows follow");
+    });
+
+    test("Enter after a partial match creates the typed text", async function (assert) {
+      const onChange = sinon.spy();
+      const items = [{ id: 1, name: "Apple" }];
+
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{true}}
+            @createItem={{createKeyed}}
+            @items={{items}}
+            @onChange={{onChange}}
+          />
+        </template>
+      );
+      await fillIn("[role='combobox']", "ap");
+      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+
+      assert.strictEqual(
+        onChange.lastCall?.args[0],
+        "new:ap",
+        "as legacy does"
+      );
+    });
+
+    test("the create row says Create once, then the typed text", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{true}}
+            @createItem={{createKeyed}}
+            @items={{ITEMS}}
+          />
+        </template>
+      );
+      await fillIn("[role='combobox']", "dragonfruit");
+
+      const text = find("[role='option'].--create").textContent.trim();
+      assert.true(/^Create\b/.test(text), `starts with Create: ${text}`);
+      assert.true(text.includes("dragonfruit"), "names the typed text");
+      assert.strictEqual(text.match(/Create/g).length, 1, "says Create once");
+    });
+
+    test("a number id does not block creating the same text", async function (assert) {
+      const items = [{ id: 5, name: "Room 5" }];
+
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{true}}
+            @createItem={{createKeyed}}
+            @items={{items}}
+          />
+        </template>
+      );
+      await fillIn("[role='combobox']", "5");
+
+      assert
+        .dom("[role='option'].--create")
+        .exists("a tag named 5 is not tag id 5");
+    });
+
+    test("a create item whose key collides with a row is not offered", async function (assert) {
+      const items = [{ id: 5, name: "Room 5" }];
+
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{true}}
+            @createItem={{createTyped}}
+            @items={{items}}
+          />
+        </template>
+      );
+      await fillIn("[role='combobox']", "5");
+
+      assert
+        .dom("[role='option'].--create")
+        .doesNotExist("two rows can never share one key");
+    });
+
+    test("a label match still blocks create", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{true}}
+            @createItem={{createKeyed}}
+            @items={{ITEMS}}
+          />
+        </template>
+      );
+      await fillIn("[role='combobox']", "apple");
+
+      assert.dom("[role='option'].--create").doesNotExist();
+    });
+
+    test("while a query is pending the create row matches the rows shown", async function (assert) {
+      const pending = deferredLoad();
+      const asked = [];
+      const allowCreate = sinon.spy(() => true);
+      const load = (filter) => {
+        asked.push(filter);
+        return filter === "apx" ? pending.promise : [{ id: 1, name: "Apple" }];
+      };
+
+      await render(
+        <template>
+          <DSelect
+            @allowCreate={{allowCreate}}
+            @createItem={{createKeyed}}
+            @load={{load}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      await fillIn("[role='combobox']", "ap");
+      assert.dom("[role='option'].--create").includesText("ap");
+
+      const typing = fillIn("[role='combobox']", "apx");
+      try {
+        await waitUntil(() => asked.includes("apx"));
+        assert
+          .dom("[role='option'].--create")
+          .exists("the create row stays while loading");
+        assert.false(
+          find("[role='option'].--create").textContent.includes("apx"),
+          "it still offers the shown query's text"
+        );
+        assert.false(
+          allowCreate.args.some(([filter]) => filter === "apx"),
+          "allowCreate is not asked about the pending text"
+        );
+      } finally {
+        pending.resolve([]);
+        await typing;
+        await settled();
+      }
+
+      assert
+        .dom("[role='option'].--create")
+        .includesText("apx", "once settled it offers the new text");
     });
   }
 );

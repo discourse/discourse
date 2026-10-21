@@ -3515,6 +3515,7 @@ en:
       clear: "Clear icon"
 
     d_select:
+      create_item: "Create “%{label}”"
       placeholder: "Select…"
       add_placeholder: "Add…"
       search_placeholder: "Search…"

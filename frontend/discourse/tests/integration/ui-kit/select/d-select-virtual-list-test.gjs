@@ -1053,7 +1053,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
   test("the create row carries no group description", async function (assert) {
     const createItem = (filter) => ({
       id: `new:${filter}`,
-      name: `Create ${filter}`,
+      name: filter,
       __create: true,
     });
 
@@ -1075,7 +1075,7 @@ module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
       .exists("the create row is offered for the unmatched query")
       .doesNotHaveAttribute(
         "aria-describedby",
-        "the trailing create row is not announced as part of the last group"
+        "the create row is not announced as part of a group"
       );
   });
 

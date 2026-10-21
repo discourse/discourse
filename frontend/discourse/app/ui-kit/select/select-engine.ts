@@ -459,7 +459,7 @@ export interface SelectEngineOptions {
 
   /**
    * Enables the create-on-the-fly item; a function `(filter, items, options) => boolean` gates it
-   * dynamically.
+   * dynamically against the displayed query and its loaded rows.
    */
   allowCreate?:
     | boolean
@@ -470,8 +470,8 @@ export interface SelectEngineOptions {
       ) => boolean);
 
   /**
-   * `(filter, options) => item` producing the synthetic "create" item (conventionally marked
-   * `__create: true`).
+   * `(filter, options) => item` producing the synthetic "create" item. Name it by its value
+   * text; the engine marks the row as create and supplies the "Create" wording.
    */
   createItem?: (filter: string, options: SelectResolvedOptions) => SelectItem;
 
@@ -970,8 +970,10 @@ export default class SelectEngine {
   }
 
   /**
-   * Whether a server load is in flight, including the first page, a new query, a
-   * reload, or a reveal.
+   * Whether a **reload** of an already-settled list is in flight — a new query, a
+   * `reload()`, or a reveal — which is what `aria-busy` on the retained listbox reports.
+   * The *initial* load is deliberately not pending: the listbox does not exist yet then,
+   * its loading block does.
    *
    * Derived from tracked state rather than an imperative flag, because the flag would have
    * to be raised synchronously inside `loadItems`, which runs during render, and so could
@@ -980,6 +982,11 @@ export default class SelectEngine {
    */
   get serverPending(): boolean {
     return this.#source.pending();
+  }
+
+  /** Whether a server source has not finished its first page yet. */
+  get serverAwaitingFirstPage(): boolean {
+    return this.#source.awaitingFirstPage();
   }
 
   /**
@@ -1049,15 +1056,18 @@ export default class SelectEngine {
 
   /**
    * Builds the final rendered item list from the source's resolved items: applies
-   * content customizations, groups the options, appends the create-on-the-fly
-   * item, and prepends any special items.
+   * content customizations, groups the options, and prepends special and create items.
    *
    * @param rawItems - The items resolved by the source.
+   * @param filter - The query that produced these rows, retained for create checks during a reload.
    * @returns The frozen list of normalized descriptors to render.
    */
   @bind
-  buildItems(rawItems: SelectItem[] = []): readonly SelectDescriptor[] {
-    return this.#listComposer.buildItems(rawItems);
+  buildItems(
+    rawItems: SelectItem[] = [],
+    filter = this.filter
+  ): readonly SelectDescriptor[] {
+    return this.#listComposer.buildItems(rawItems, filter);
   }
 
   /**

@@ -9,6 +9,7 @@ import {
   findAll,
   render,
   triggerKeyEvent,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -19,6 +20,7 @@ import {
   optionWithText,
 } from "discourse/tests/helpers/d-select-hosts";
 import DSelect from "discourse/ui-kit/select/d-select";
+import { i18n } from "discourse-i18n";
 
 class NoneRowHost extends Component {
   @tracked value = this.args.value ?? null;
@@ -587,3 +589,288 @@ module(
     });
   }
 );
+
+module("Integration | ui-kit | select | DSelect create row", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("create follows sticky and special rows before grouped source rows", async function (assert) {
+    const items = [
+      { id: 1, name: "Apple", group: "Fruit" },
+      { id: 2, name: "Apricot", group: "Fruit" },
+      { id: 3, name: "Maple", group: "Trees" },
+    ];
+    const specialItems = () => [
+      { id: "action", name: "Browse all" },
+      { id: "sticky", name: "Pinned", sticky: true },
+    ];
+    const createItem = (filter) => ({
+      id: `new:${filter}`,
+      name: filter,
+      __create: true,
+    });
+    const groupLabel = (group) => group;
+
+    await render(
+      <template>
+        <DSelect
+          @allowCreate={{true}}
+          @createItem={{createItem}}
+          @groupBy="group"
+          @groupLabel={{groupLabel}}
+          @items={{items}}
+          @noneLabel="None"
+          @specialItems={{specialItems}}
+        />
+      </template>
+    );
+    await fillIn("[role='combobox']", "ap");
+
+    const options = findAll("[role='option']");
+    assert.deepEqual(
+      options.map((option) => option.dataset.name),
+      ["Pinned", "Browse all", "ap", "Apple", "Apricot", "Maple"],
+      "the create row leads both groups after the synthetic prefix"
+    );
+    assert
+      .dom(options[2])
+      .hasText(
+        i18n("d_select.create_item", { label: "ap" }),
+        "the engine names the create action"
+      );
+    assert
+      .dom(options[2])
+      .doesNotHaveAttribute("aria-describedby", "create belongs to no group");
+    assert
+      .dom(options[3])
+      .hasAttribute(
+        "aria-describedby",
+        /-group-0$/,
+        "the source keeps its group description"
+      );
+    options.forEach((option, index) => {
+      assert
+        .dom(option)
+        .hasAttribute(
+          "aria-posinset",
+          String(index + 1),
+          "headers consume no option position"
+        );
+      assert
+        .dom(option)
+        .hasAttribute("aria-setsize", "6", "the set includes every option");
+    });
+  });
+
+  test("create and loaded rows keep prefix positions with an unloaded declared total", async function (assert) {
+    const load = () => ({
+      items: [
+        { id: 1, name: "Apple" },
+        { id: 2, name: "Apricot" },
+      ],
+      total: 20,
+      hasMore: true,
+    });
+    const createItem = (filter) => ({
+      id: `new:${filter}`,
+      name: filter,
+      __create: true,
+    });
+
+    await render(
+      <template>
+        <DSelect
+          @allowCreate={{true}}
+          @createItem={{createItem}}
+          @load={{load}}
+        />
+      </template>
+    );
+    await fillIn("[role='combobox']", "ap");
+
+    const options = findAll("[role='option']");
+    assert
+      .dom(options[0])
+      .hasClass("--create", "create is reachable before more pages");
+    options.forEach((option, index) => {
+      assert
+        .dom(option)
+        .hasAttribute(
+          "aria-posinset",
+          String(index + 1),
+          "loaded rows remain a prefix of the full set"
+        );
+      assert
+        .dom(option)
+        .hasAttribute(
+          "aria-setsize",
+          "21",
+          "the declared total includes create"
+        );
+    });
+  });
+
+  test("duplicate checks use the built item's configured key rather than the typed value", async function (assert) {
+    const items = [{ code: 5, text: "Apple" }];
+    const createItem = (filter) => ({
+      code: "5",
+      text: filter,
+      __create: true,
+    });
+
+    await render(
+      <template>
+        <DSelect
+          @allowCreate={{true}}
+          @createItem={{createItem}}
+          @items={{items}}
+          @labelField="text"
+          @valueField="code"
+        />
+      </template>
+    );
+    await fillIn("[role='combobox']", "ap");
+
+    assert
+      .dom("[role='option'].--create")
+      .doesNotExist(
+        "a constructed string key collides with the loaded numeric key even when the filter does not"
+      );
+  });
+
+  test("a source string value matching the query does not block a distinct create key", async function (assert) {
+    const items = [{ id: "ap", name: "Apple" }];
+    const createItem = (filter) => ({
+      id: `new:${filter}`,
+      name: filter,
+      __create: true,
+    });
+
+    await render(
+      <template>
+        <DSelect
+          @allowCreate={{true}}
+          @createItem={{createItem}}
+          @items={{items}}
+        />
+      </template>
+    );
+    await fillIn("[role='combobox']", "ap");
+
+    assert
+      .dom("[role='option'].--create")
+      .exists("a raw string value is not a duplicate of the built key");
+  });
+
+  test("an item block overrides create wording while data-name stays the item label", async function (assert) {
+    const createItem = (filter) => ({
+      code: `new:${filter}`,
+      text: filter.toUpperCase(),
+      __create: true,
+    });
+
+    await render(
+      <template>
+        <DSelect
+          @allowCreate={{true}}
+          @createItem={{createItem}}
+          @items={{ITEMS}}
+          @labelField="text"
+          @valueField="code"
+        >
+          <:item as |item|>Use {{item.text}}</:item>
+        </DSelect>
+      </template>
+    );
+    await fillIn("[role='combobox']", "kiwi");
+
+    assert
+      .dom("[role='option'].--create")
+      .hasText("Use KIWI", "the consumer controls content")
+      .hasAttribute(
+        "data-name",
+        "KIWI",
+        "the hook uses the configured item label"
+      );
+  });
+
+  test("the engine supplies create wording for an unmarked item with a configured label", async function (assert) {
+    const createItem = (filter) => ({
+      code: `new:${filter}`,
+      text: filter.toUpperCase(),
+    });
+    const items = [];
+
+    await render(
+      <template>
+        <DSelect
+          @allowCreate={{true}}
+          @createItem={{createItem}}
+          @items={{items}}
+          @labelField="text"
+          @valueField="code"
+        />
+      </template>
+    );
+    await fillIn("[role='combobox']", "kiwi");
+
+    assert
+      .dom("[role='option']")
+      .hasText(
+        i18n("d_select.create_item", { label: "KIWI" }),
+        "the wording uses the built item's label"
+      )
+      .hasAttribute("data-name", "KIWI", "the hook remains the value label");
+  });
+
+  test("local debounce retains the displayed query for creation and duplicate checks", async function (assert) {
+    const allowCreate = sinon.spy((filter) => filter === "ap");
+    const createItem = sinon.spy((filter) => ({
+      id: `new:${filter}`,
+      name: filter,
+      __create: true,
+    }));
+
+    await render(
+      <template>
+        <DSelect
+          @allowCreate={{allowCreate}}
+          @createItem={{createItem}}
+          @debounce={{150}}
+          @items={{ITEMS}}
+        />
+      </template>
+    );
+    await fillIn("[role='combobox']", "ap");
+    assert
+      .dom("[role='option'].--create")
+      .hasAttribute("data-name", "ap", "the initial query offers creation");
+
+    allowCreate.resetHistory();
+    createItem.resetHistory();
+    const typing = fillIn("[role='combobox']", "apple");
+    try {
+      await waitUntil(() => allowCreate.called);
+      assert
+        .dom("[role='option'].--create")
+        .hasAttribute(
+          "data-name",
+          "ap",
+          "the retained create row still offers ap"
+        );
+      assert.true(
+        allowCreate.args.every(([filter]) => filter === "ap"),
+        "allowCreate sees only the displayed filter"
+      );
+      assert.true(createItem.called, "the retained proposal is rebuilt");
+      assert.true(
+        createItem.args.every(([filter]) => filter === "ap"),
+        "the factory sees only the displayed filter"
+      );
+    } finally {
+      await typing;
+    }
+    assert
+      .dom("[role='option'].--create")
+      .doesNotExist("the settled exact label no longer offers creation");
+  });
+});

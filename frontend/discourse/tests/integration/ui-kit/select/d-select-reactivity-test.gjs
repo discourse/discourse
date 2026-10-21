@@ -308,7 +308,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
     const state = new TestState();
     const createItem = (filter) => ({
       id: filter,
-      name: `Create ${filter}`,
+      name: filter,
       __create: true,
     });
 
@@ -333,7 +333,7 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
     assert
       .dom("[role='option'].--create")
       .hasText(
-        "Create dragonfruit",
+        "Create “dragonfruit”",
         "enabling creation adds the current proposal"
       );
 

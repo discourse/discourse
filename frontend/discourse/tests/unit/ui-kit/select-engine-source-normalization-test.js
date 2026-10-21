@@ -472,7 +472,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       );
     });
 
-    test("the create row closes the set after the grouped options", function (assert) {
+    test("the create row leads the set before the grouped options", function (assert) {
       const engine = new SelectEngine({
         items: [
           { id: 1, name: "Apple", group: "Fruits" },
@@ -492,18 +492,18 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       const opts = options(rows);
 
       assert.true(
-        rows.at(-1).flags.__create,
-        "the create row is appended after the groups, never inside one"
+        rows[0].flags.__create,
+        "the create row is prepended before the groups, never inside one"
       );
       assert.deepEqual(
         opts.map((option) => option.flags.__create),
-        [false, true],
-        "the surviving option, then the create row"
+        [true, false],
+        "the create row, then the surviving option"
       );
       assert.deepEqual(
         opts.map((option) => option.posInSet),
         [1, 2],
-        "the create row closes the set at the last option position"
+        "the create row opens the set at the first option position"
       );
       opts.forEach((option) =>
         assert.strictEqual(option.setSize, 2, "setSize counts both options")
@@ -618,7 +618,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       );
     });
 
-    test("the create row is never tagged with the last group", function (assert) {
+    test("the create row is never tagged with a group", function (assert) {
       const engine = new SelectEngine({
         items: [
           { id: 1, name: "Apple", group: "Fruits" },
@@ -635,11 +635,11 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       });
       engine.setFilter("Ap");
       const rows = descriptors(engine);
-      const createRow = rows.at(-1);
+      const createRow = rows[0];
 
       assert.true(
         createRow.flags.__create,
-        "the trailing row is the create row"
+        "the leading row is the create row"
       );
       assert.strictEqual(
         createRow.groupOrdinal,
@@ -647,7 +647,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
         "the create row belongs to no group"
       );
       assert.strictEqual(
-        options(rows)[0].groupOrdinal,
+        options(rows)[1].groupOrdinal,
         0,
         "the surviving grouped option keeps its group tagging"
       );

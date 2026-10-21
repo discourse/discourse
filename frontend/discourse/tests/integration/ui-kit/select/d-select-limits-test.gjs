@@ -241,7 +241,7 @@ module(
       const onChange = sinon.spy();
       const createItem = (filter) => ({
         id: filter,
-        name: `Create ${filter}`,
+        name: filter,
         __create: true,
       });
       await render(

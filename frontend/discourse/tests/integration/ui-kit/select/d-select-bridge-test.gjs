@@ -1397,7 +1397,7 @@ module(
       });
       const createItem = (filter) => ({
         id: filter,
-        name: `Create ${filter}`,
+        name: filter,
         __create: true,
       });
 

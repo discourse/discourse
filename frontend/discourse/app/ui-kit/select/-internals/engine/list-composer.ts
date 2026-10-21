@@ -62,13 +62,16 @@ export default class ListComposer {
 
   /**
    * Builds the final rendered item list from the source's resolved items: applies
-   * content customizations, groups the options, appends the create-on-the-fly
-   * item, and prepends any special items.
+   * content customizations, groups the options, and prepends special and create items.
    *
    * @param rawItems - The items resolved by the source.
+   * @param filter - The query that produced these rows, retained for create checks during a reload.
    * @returns The frozen list of normalized descriptors to render.
    */
-  buildItems(rawItems: SelectItem[] = []): readonly SelectDescriptor[] {
+  buildItems(
+    rawItems: SelectItem[] = [],
+    filter = this.#getFilter()
+  ): readonly SelectDescriptor[] {
     let items: SelectItem[] = [...(makeArray(rawItems) as SelectItem[])];
     const inputCount = items.filter((item) => !this.#isStructural(item)).length;
 
@@ -90,13 +93,7 @@ export default class ListComposer {
     ).length;
     this.#noteVisible(visibleCount, inputCount);
 
-    const createItem = this.#shouldOfferCreate(items)
-      ? // `#shouldOfferCreate` already guaranteed a `createItem` is present.
-        this.#options.createItem!(
-          this.#getFilter(),
-          this.#options.resolvedOptions
-        )
-      : null;
+    const createItem = this.#createItem(items, filter);
 
     const consumerSpecial = makeArray(
       this.#options.specialItems?.(
@@ -114,8 +111,7 @@ export default class ListComposer {
       (item) => !this.#isStructural(item)
     ).length;
 
-    // Group the source options before appending create, so the create row is never grouped
-    // and headers never enter the option count.
+    // Only source options are grouped; the create row belongs to no group.
     const grouped = this.#shouldGroup() ? this.#groupItems(items) : items;
 
     const noneRow = this.#noneRow();
@@ -126,7 +122,7 @@ export default class ListComposer {
       ? [...sticky, noneRow, ...scrollingSpecial]
       : [...sticky, ...scrollingSpecial];
     const finalItems = createItem
-      ? [...specialItems, ...grouped, createItem]
+      ? [...specialItems, createItem, ...grouped]
       : [...specialItems, ...grouped];
 
     // Only option rows count toward the set; a special that is itself structural (a seam
@@ -142,7 +138,7 @@ export default class ListComposer {
       specialCount,
       sourceCount,
       inputCount,
-      createItem ? 1 : 0
+      createItem
     );
   }
 
@@ -160,9 +156,9 @@ export default class ListComposer {
   }
 
   /**
-   * Normalizes the list rows — specials, then source rows (with any injected group headers),
-   * then create — and stamps each OPTION with its position in the whole result set. Positions
-   * come from the engine's own totals rather than the DOM index, so they stay correct while
+   * Normalizes specials, create, then grouped source rows, and stamps each OPTION with its
+   * position in the whole result set. Positions come from the engine's own totals rather
+   * than the DOM index, so they stay correct while
    * only a window is mounted, and they count options only: an interleaved header/divider
    * shifts no option's `posInSet` and never enters `setSize`.
    */
@@ -171,7 +167,7 @@ export default class ListComposer {
     specialCount: number,
     sourceCount: number,
     inputCount: number,
-    createCount: number
+    createItem: SelectItem | null
   ): readonly SelectDescriptor[] {
     const total = this.#getTotal();
     // `aria-setsize` describes the complete set rather than the rendered rows, so a source that
@@ -190,10 +186,7 @@ export default class ListComposer {
       !this.#options.isAsync || total == null
         ? sourceCount
         : Math.max(total + sourceCount - inputCount, sourceCount);
-    const setSize = specialCount + sourceTotal + createCount;
-
-    // Loaded source rows are a prefix, so their positions hold whatever sizes the set.
-    const lastOptionOrdinal = specialCount + sourceCount;
+    const setSize = specialCount + sourceTotal + (createItem ? 1 : 0);
 
     // Hoisted: the cap is a property of the selection, not of a row, and `#atMaximum` reads the
     // deduped value array — so evaluating it per row would repeat that work for every option.
@@ -205,7 +198,12 @@ export default class ListComposer {
     let currentGroupOrdinal: number | undefined;
     return Object.freeze(
       items.map((item, index) => {
-        const descriptor = this.#normalize(item, index, atMaximum);
+        const descriptor = this.#normalize(
+          item,
+          index,
+          atMaximum,
+          item === createItem
+        );
         if (descriptor.flags.group) {
           currentGroupOrdinal = nextGroupOrdinal++;
           // A structural row carries no ARIA position and does not advance the option count.
@@ -236,18 +234,15 @@ export default class ListComposer {
             ? undefined
             : currentGroupOrdinal,
           setSize,
-          // The create row is appended after the source rows, so it closes the set wherever the
-          // window ends.
-          posInSet: ordinal < lastOptionOrdinal ? ordinal + 1 : setSize,
+          posInSet: ordinal + 1,
         };
       })
     );
   }
 
-  #shouldOfferCreate(items: SelectItem[]): boolean {
-    const filter = this.#getFilter();
+  #createItem(items: SelectItem[], filter: string): SelectItem | null {
     if (!filter || !this.#options.createItem) {
-      return false;
+      return null;
     }
     const allowed =
       typeof this.#options.allowCreate === "function"
@@ -258,21 +253,35 @@ export default class ListComposer {
           )
         : !!this.#options.allowCreate;
     if (!allowed) {
-      return false;
+      return null;
     }
-    // Don't offer to create a value that already exists (by label or value).
     const term = filter.toLowerCase();
-    return !items.some(
-      (item) =>
-        String(this.#options.itemLabel(item) ?? "").toLowerCase() === term ||
-        String(this.#options.itemValue(item) ?? "").toLowerCase() === term
+    if (
+      items.some(
+        (item) =>
+          String(this.#options.itemLabel(item) ?? "").toLowerCase() === term
+      )
+    ) {
+      return null;
+    }
+    const item = this.#options.createItem(
+      filter,
+      this.#options.resolvedOptions
     );
+    const key = this.#options.valueKey(this.#options.itemValue(item));
+    return items.some(
+      (loaded) =>
+        this.#options.valueKey(this.#options.itemValue(loaded)) === key
+    )
+      ? null
+      : item;
   }
 
   #normalize(
     item: SelectItem,
     index: number,
-    atMaximum: boolean
+    atMaximum: boolean,
+    isCreate = false
   ): SelectDescriptor {
     const value = this.#options.itemValue(item);
     // An action row runs a callback and never becomes a value, so it cannot be the selection even
@@ -301,7 +310,7 @@ export default class ListComposer {
             typeof item.onSelect !== "function"),
         group: !!item.__header,
         divider: !!item.__divider,
-        __create: !!item.__create,
+        __create: isCreate || !!item.__create,
         __unresolved: !!item.__unresolved,
         __none: !!item.__none,
       },

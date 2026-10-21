@@ -298,7 +298,7 @@ module(
       });
     });
 
-    test("the create row closes a set sized by what has loaded", async function (assert) {
+    test("the create row leads a set sized by what has loaded", async function (assert) {
       // A source actively mid-paging: it has told us more exists without saying how much.
       const load = () => ({ items: buildItems(2), hasMore: true });
       const createItem = (filter) => ({ id: `new:${filter}`, name: filter });
@@ -315,19 +315,23 @@ module(
       );
       await fillIn("[role='combobox']", "Something new");
 
-      const createRow = findAll(OPTION_SELECTOR).at(-1);
-      assert.dom(createRow).hasText(/Something new/, "the create row is last");
-      // Sizing by the loaded rows gives the appended row a slot it could not derive from an
-      // unsized set, so it closes the set the reader can currently reach rather than dropping
-      // its position.
+      const options = findAll(OPTION_SELECTOR);
       assert
-        .dom(createRow)
+        .dom(options[0])
+        .hasText(/Something new/, "the create row is first");
+      // Sizing by the loaded rows gives every row a slot it could not derive from an unsized
+      // set, so the create row keeps position 1 while more pages arrive.
+      assert
+        .dom(options[0])
         .hasAttribute(
           "aria-setsize",
           "3",
           "two loaded rows plus the create row"
         )
-        .hasAttribute("aria-posinset", "3", "the create row closes that set");
+        .hasAttribute("aria-posinset", "1", "the create row opens that set");
+      assert
+        .dom(options[2])
+        .hasAttribute("aria-posinset", "3", "the loaded rows follow it");
     });
 
     test("a partially-loaded server response reports the declared total as its set size", async function (assert) {
@@ -528,7 +532,7 @@ module(
       ];
       const createItem = (filter) => ({
         id: `create-${filter}`,
-        name: `Create ${filter}`,
+        name: filter,
         __create: true,
       });
 
@@ -544,7 +548,7 @@ module(
       );
       await fillIn("[role='combobox']", "Item");
 
-      // Two specials, all five source rows, then the create row: 8 rows, all rendered.
+      // Two specials, the create row, then all five source rows: 8 rows, all rendered.
       const options = findAll(OPTION_SELECTOR);
       assert.strictEqual(
         options.length,
@@ -558,24 +562,28 @@ module(
         .hasAttribute("aria-setsize", "8", "synthetic rows join the true set");
       assert
         .dom(options[2])
-        .hasText("Item 1", "source rows follow the specials")
-        .hasAttribute(
-          "aria-posinset",
-          "3",
-          "the source offset includes specials"
-        );
-      assert
-        .dom(options[7])
-        .hasClass("--create", "the create row is appended last")
-        .hasAttribute(
-          "aria-posinset",
-          "8",
-          "the create row owns the true final slot"
-        )
+        .hasClass("--create", "the create row follows the specials")
+        .hasAttribute("aria-posinset", "3", "after the special rows' slots")
         .hasAttribute(
           "aria-setsize",
           "8",
           "the create row shares the true set size"
+        );
+      assert
+        .dom(options[3])
+        .hasText("Item 1", "source rows follow the create row")
+        .hasAttribute(
+          "aria-posinset",
+          "4",
+          "the source offset includes specials and create"
+        );
+      assert
+        .dom(options[7])
+        .hasText("Item 5")
+        .hasAttribute(
+          "aria-posinset",
+          "8",
+          "the last source row closes the set"
         );
     });
 
