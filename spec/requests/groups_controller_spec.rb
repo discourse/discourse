@@ -1421,6 +1421,36 @@ RSpec.describe GroupsController do
         expect(group.flair_bg_color).to eq("FFF")
       end
 
+      it "does not allow a group owner to set the flair to an upload they do not own" do
+        secret_upload = Fabricate(:secure_upload, user: admin)
+
+        put "/groups/#{group.id}.json", params: { group: { flair_upload_id: secret_upload.id } }
+
+        expect(response.status).to eq(422)
+        expect(group.reload.flair_upload_id).to be_nil
+        expect(group.flair_url).to be_nil
+        expect(UploadReference.exists?(upload: secret_upload, target: group)).to eq(false)
+      end
+
+      it "allows a group owner to set the flair to an upload they own" do
+        own_upload = Fabricate(:upload, user: user)
+
+        put "/groups/#{group.id}.json", params: { group: { flair_upload_id: own_upload.id } }
+
+        expect(response.status).to eq(200)
+        expect(group.reload.flair_upload_id).to eq(own_upload.id)
+      end
+
+      it "allows a group owner to set the flair to a deduplicated upload they uploaded" do
+        shared_upload = Fabricate(:upload, user: admin)
+        Fabricate(:user_upload, upload: shared_upload, user: user)
+
+        put "/groups/#{group.id}.json", params: { group: { flair_upload_id: shared_upload.id } }
+
+        expect(response.status).to eq(200)
+        expect(group.reload.flair_upload_id).to eq(shared_upload.id)
+      end
+
       it "does not allow a group owner to modify the title" do
         group.update!(title: "Original Title")
 
