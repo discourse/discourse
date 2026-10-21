@@ -14,12 +14,14 @@ import TagChooser from "discourse/select-kit/components/tag-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import DTextField from "discourse/ui-kit/d-text-field";
+import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class TagGroupsForm extends Component {
   @service dialog;
   @service site;
+  @service siteSettings;
 
   // All but the "everyone" group
   allGroups = this.site.groups.filter(
@@ -147,33 +149,61 @@ export default class TagGroupsForm extends Component {
 
     <section class="group-tags-list">
       <label>{{i18n "tagging.groups.tags_label"}}</label><br />
-      <TagChooser
-        @everyTag={{true}}
-        @excludeSynonyms={{true}}
-        @onChange={{fn this.updateTags "tags"}}
-        @options={{hash
-          allowAny=true
-          filterPlaceholder="tagging.groups.tags_placeholder"
-        }}
-        @tags={{this.buffered.tags}}
-        @unlimitedTagCount={{true}}
-      />
+      {{! TODO (select-kit-replacement-cleanup) }}
+      {{#if this.siteSettings.enable_new_select_controls}}
+        <DTagChooser
+          @allowCreate={{true}}
+          @everyTag={{true}}
+          @excludeSynonyms={{true}}
+          @onChange={{fn this.updateTags "tags"}}
+          @placeholder={{i18n "tagging.groups.tags_placeholder"}}
+          @tags={{this.buffered.tags}}
+          @unlimitedTagCount={{true}}
+        />
+      {{else}}
+        {{! TODO (select-kit-replacement-cleanup) }}
+        <TagChooser
+          @everyTag={{true}}
+          @excludeSynonyms={{true}}
+          @onChange={{fn this.updateTags "tags"}}
+          @options={{hash
+            allowAny=true
+            filterPlaceholder="tagging.groups.tags_placeholder"
+          }}
+          @tags={{this.buffered.tags}}
+          @unlimitedTagCount={{true}}
+        />
+      {{/if}}
     </section>
 
     <section class="parent-tag-section">
       <label>{{i18n "tagging.groups.parent_tag_label"}}</label>
       <div>
-        <TagChooser
-          @everyTag={{true}}
-          @excludeSynonyms={{true}}
-          @onChange={{fn this.updateTags "parent_tag"}}
-          @options={{hash
-            allowAny=true
-            filterPlaceholder="tagging.groups.parent_tag_placeholder"
-            maximum=1
-          }}
-          @tags={{this.buffered.parent_tag}}
-        />
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DTagChooser
+            @allowCreate={{true}}
+            @everyTag={{true}}
+            @excludeSynonyms={{true}}
+            @maximum={{1}}
+            @onChange={{fn this.updateTags "parent_tag"}}
+            @placeholder={{i18n "tagging.groups.parent_tag_placeholder"}}
+            @tags={{this.buffered.parent_tag}}
+          />
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <TagChooser
+            @everyTag={{true}}
+            @excludeSynonyms={{true}}
+            @onChange={{fn this.updateTags "parent_tag"}}
+            @options={{hash
+              allowAny=true
+              filterPlaceholder="tagging.groups.parent_tag_placeholder"
+              maximum=1
+            }}
+            @tags={{this.buffered.parent_tag}}
+          />
+        {{/if}}
       </div>
       <div class="description">{{i18n
           "tagging.groups.parent_tag_description"

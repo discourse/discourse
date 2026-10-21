@@ -2,6 +2,7 @@
 import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
@@ -11,10 +12,13 @@ import TagChooser from "discourse/select-kit/components/tag-chooser";
 import WatchedWords from "discourse/select-kit/components/watched-words";
 import DButton from "discourse/ui-kit/d-button";
 import DTextField from "discourse/ui-kit/d-text-field";
+import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class WatchedWordForm extends Component {
+  @service siteSettings;
+
   formSubmitted = false;
   actionKey = null;
   showMessage = false;
@@ -183,14 +187,28 @@ export default class WatchedWordForm extends Component {
           <label for="watched-tag">{{i18n
               "admin.watched_words.form.tag_label"
             }}</label>
-          <TagChooser
-            class="watched-word-input-field"
-            @everyTag={{true}}
-            @id="watched-tag"
-            @onChange={{this.changeSelectedTags}}
-            @options={{hash allowAny=true disabled=this.formSubmitted}}
-            @tags={{this.selectedTags}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DTagChooser
+              class="watched-word-input-field"
+              @allowCreate={{true}}
+              @disabled={{this.formSubmitted}}
+              @everyTag={{true}}
+              @id="watched-tag"
+              @onChange={{this.changeSelectedTags}}
+              @tags={{this.selectedTags}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <TagChooser
+              class="watched-word-input-field"
+              @everyTag={{true}}
+              @id="watched-tag"
+              @onChange={{this.changeSelectedTags}}
+              @options={{hash allowAny=true disabled=this.formSubmitted}}
+              @tags={{this.selectedTags}}
+            />
+          {{/if}}
         </div>
       {{/if}}
 

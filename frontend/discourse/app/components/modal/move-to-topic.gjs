@@ -21,11 +21,13 @@ import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import DTextField from "discourse/ui-kit/d-text-field";
+import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
 import { i18n } from "discourse-i18n";
 
 export default class MoveToTopic extends Component {
   @service currentUser;
   @service site;
+  @service siteSettings;
 
   @tracked topicName;
   @tracked saving = false;
@@ -265,10 +267,19 @@ export default class MoveToTopic extends Component {
 
                 {{#if this.canTagMessages}}
                   <label>{{i18n "tagging.tags"}}</label>
-                  <TagChooser
-                    @onChange={{this.updateTags}}
-                    @tags={{this.tags}}
-                  />
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DTagChooser
+                      @onChange={{this.updateTags}}
+                      @tags={{this.tags}}
+                    />
+                  {{else}}
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    <TagChooser
+                      @onChange={{this.updateTags}}
+                      @tags={{this.tags}}
+                    />
+                  {{/if}}
                 {{/if}}
               </form>
             {{/if}}
@@ -426,11 +437,21 @@ export default class MoveToTopic extends Component {
                 {{#if this.canAddTags}}
                   <div class="control-group">
                     <label>{{i18n "tagging.tags"}}</label>
-                    <TagChooser
-                      @categoryId={{this.categoryId}}
-                      @onChange={{this.updateTags}}
-                      @tags={{this.tags}}
-                    />
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    {{#if this.siteSettings.enable_new_select_controls}}
+                      <DTagChooser
+                        @categoryId={{this.categoryId}}
+                        @onChange={{this.updateTags}}
+                        @tags={{this.tags}}
+                      />
+                    {{else}}
+                      {{! TODO (select-kit-replacement-cleanup) }}
+                      <TagChooser
+                        @categoryId={{this.categoryId}}
+                        @onChange={{this.updateTags}}
+                        @tags={{this.tags}}
+                      />
+                    {{/if}}
                     <PluginOutlet
                       @name="split-new-topic-tag-after"
                       @outletArgs={{lazyHash
@@ -468,10 +489,19 @@ export default class MoveToTopic extends Component {
 
                 {{#if this.canTagMessages}}
                   <label>{{i18n "tagging.tags"}}</label>
-                  <TagChooser
-                    @onChange={{this.updateTags}}
-                    @tags={{this.tags}}
-                  />
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DTagChooser
+                      @onChange={{this.updateTags}}
+                      @tags={{this.tags}}
+                    />
+                  {{else}}
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    <TagChooser
+                      @onChange={{this.updateTags}}
+                      @tags={{this.tags}}
+                    />
+                  {{/if}}
                 {{/if}}
               </form>
             {{/if}}

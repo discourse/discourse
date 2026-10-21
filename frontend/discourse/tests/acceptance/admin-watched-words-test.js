@@ -6,6 +6,11 @@ import {
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import pretender, {
+  parsePostData,
+  response,
+} from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -139,6 +144,40 @@ acceptance("Admin - Watched Words", function (needs) {
 
     assert.dom(".d-modal__body li .match").hasText("Hi");
     assert.dom(".d-modal__body li .replacement").hasText("hello");
+  });
+
+  test("watched words submit selected tags in the legacy shape", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/admin/customize/watched_words/action/tag");
+    assert.dom(".watched-word-form .d-select").exists("renders DSelect");
+    assert
+      .dom(".watched-word-form .select-kit.tag-chooser")
+      .doesNotExist("replaces the legacy tag chooser");
+
+    await click("#watched-words .select-kit-header");
+    await fillIn(".select-kit-filter input", "poutine");
+    await triggerKeyEvent(".select-kit-filter input", "keydown", "Enter");
+
+    const tags = dSelect(".watched-word-form .d-select");
+    await tags.selectByName("monkey");
+    await tags.close();
+    let data;
+    pretender.post("/admin/customize/watched_words.json", (request) => {
+      data = parsePostData(request.requestBody);
+      return response({ words: [] });
+    });
+    await click(".watched-word-form .btn-primary");
+
+    assert.strictEqual(
+      data.replacement_tags["0.id"],
+      "1",
+      "submits the chosen tag id"
+    );
+    assert.strictEqual(
+      data.replacement_tags["0.name"],
+      "monkey",
+      "submits the chosen tag name"
+    );
   });
 
   test("test modal - tag", async function (assert) {

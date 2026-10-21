@@ -1,12 +1,16 @@
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
+import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
 import BaseField from "./da-base-field.gjs";
 import DAFieldDescription from "./da-field-description.gjs";
 import DAFieldLabel from "./da-field-label.gjs";
 
 export default class TagsField extends BaseField {
+  @service siteSettings;
+
   @action
   onChangeTags(tags) {
     if (isBlank(tags)) {
@@ -24,13 +28,26 @@ export default class TagsField extends BaseField {
         <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
-          <TagChooser
-            @everyTag={{true}}
-            @onChange={{this.onChangeTags}}
-            @options={{hash allowAny=false disabled=@field.isDisabled}}
-            @tags={{readonly @field.metadata.value}}
-            @unlimitedTagCount={{true}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DTagChooser
+              @allowCreate={{false}}
+              @disabled={{@field.isDisabled}}
+              @everyTag={{true}}
+              @onChange={{this.onChangeTags}}
+              @tags={{readonly @field.metadata.value}}
+              @unlimitedTagCount={{true}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <TagChooser
+              @everyTag={{true}}
+              @onChange={{this.onChangeTags}}
+              @options={{hash allowAny=false disabled=@field.isDisabled}}
+              @tags={{readonly @field.metadata.value}}
+              @unlimitedTagCount={{true}}
+            />
+          {{/if}}
 
           <DAFieldDescription @description={{@description}} />
         </div>

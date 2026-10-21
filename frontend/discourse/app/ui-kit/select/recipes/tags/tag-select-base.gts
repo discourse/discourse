@@ -77,6 +77,12 @@ export interface TagSelectSignature {
     items?: SelectSignature["Args"]["items"];
     /** Optional source override forwarded to the engine. */
     load?: SelectSignature["Args"]["load"];
+    /** Prevents opening the control or changing its selection. */
+    disabled?: boolean;
+    /** Id of the combobox element, for an external label. */
+    id?: string;
+    /** Translated text displayed when no tags are selected. */
+    placeholder?: string;
     /** Accessible control label. */
     label?: string;
     /** Additional persistent help element ids. */
@@ -356,6 +362,8 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
       @allowCreate={{this.allowCreate}}
       @createItem={{this.createItem}}
       @describedBy={{this.describedBy}}
+      @disabled={{@disabled}}
+      @id={{@id}}
       @identifier={{@identifier}}
       @instanceContext={{@instanceContext}}
       @items={{@items}}
@@ -370,7 +378,11 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
       @minimum={{@minimum}}
       @multiple={{true}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "tagging.choose_for_topic"}}
+      @placeholder={{if
+        @placeholder
+        @placeholder
+        (i18n "tagging.choose_for_topic")
+      }}
       @value={{this.value}}
       @valueItems={{this.valueItems}}
       {{this.resolveHeldNames}}

@@ -20,6 +20,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DDateInput from "discourse/ui-kit/d-date-input";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
 import { i18n } from "discourse-i18n";
 
 const REGEXP_BLOCKS = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
@@ -121,6 +122,7 @@ export function addAdvancedSearchOptions(options) {
 @tagName("")
 export default class SearchAdvancedOptions extends Component {
   @service appEvents;
+  @service siteSettings;
 
   @tracked isExpanded = false;
   @tracked submittedFilterCount = 0;
@@ -868,19 +870,33 @@ export default class SearchAdvancedOptions extends Component {
                   {{i18n "search.advanced.with_tags.label"}}
                 </label>
                 <div class="controls">
-                  <TagChooser
-                    @everyTag={{true}}
-                    @id="search-with-tags"
-                    @onChange={{this.onChangeSearchTermForTags}}
-                    @options={{hash
-                      allowAny=false
-                      headerAriaLabel=(i18n
-                        "search.advanced.with_tags.aria_label"
-                      )
-                    }}
-                    @tags={{this.searchedTerms.tags}}
-                    @unlimitedTagCount={{true}}
-                  />
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DTagChooser
+                      @allowCreate={{false}}
+                      @everyTag={{true}}
+                      @id="search-with-tags"
+                      @label={{i18n "search.advanced.with_tags.aria_label"}}
+                      @onChange={{this.onChangeSearchTermForTags}}
+                      @tags={{this.searchedTerms.tags}}
+                      @unlimitedTagCount={{true}}
+                    />
+                  {{else}}
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    <TagChooser
+                      @everyTag={{true}}
+                      @id="search-with-tags"
+                      @onChange={{this.onChangeSearchTermForTags}}
+                      @options={{hash
+                        allowAny=false
+                        headerAriaLabel=(i18n
+                          "search.advanced.with_tags.aria_label"
+                        )
+                      }}
+                      @tags={{this.searchedTerms.tags}}
+                      @unlimitedTagCount={{true}}
+                    />
+                  {{/if}}
                   {{#if this.showAllTagsCheckbox}}
                     <section class="field">
                       <label>

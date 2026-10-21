@@ -2,6 +2,7 @@
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { action, computed, set } from "@ember/object";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import ChooseTopic from "discourse/components/choose-topic";
@@ -10,6 +11,7 @@ import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { and } from "discourse/truth-helpers";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import DTextField from "discourse/ui-kit/d-text-field";
+import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
 import { i18n } from "discourse-i18n";
 
 export const NEW_TOPIC_SELECTION = "new_topic";
@@ -18,6 +20,8 @@ export const NEW_MESSAGE_SELECTION = "new_message";
 
 @tagName("")
 export default class ChatToTopicSelector extends Component {
+  @service siteSettings;
+
   newTopicSelection = NEW_TOPIC_SELECTION;
   existingTopicSelection = EXISTING_TOPIC_SELECTION;
   newMessageSelection = NEW_MESSAGE_SELECTION;
@@ -144,12 +148,22 @@ export default class ChatToTopicSelector extends Component {
 
           {{#if this.canAddTags}}
             <label>{{i18n "tagging.tags"}}</label>
-            <TagChooser
-              @categoryId={{this.categoryId}}
-              @filterable={{true}}
-              @onChange={{this.changeTags}}
-              @tags={{this.tags}}
-            />
+            {{! TODO (select-kit-replacement-cleanup) }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DTagChooser
+                @categoryId={{this.categoryId}}
+                @onChange={{this.changeTags}}
+                @tags={{this.tags}}
+              />
+            {{else}}
+              {{! TODO (select-kit-replacement-cleanup) }}
+              <TagChooser
+                @categoryId={{this.categoryId}}
+                @filterable={{true}}
+                @onChange={{this.changeTags}}
+                @tags={{this.tags}}
+              />
+            {{/if}}
           {{/if}}
         </form>
       {{/if}}
@@ -180,11 +194,17 @@ export default class ChatToTopicSelector extends Component {
 
           {{#if this.canTagMessages}}
             <label>{{i18n "tagging.tags"}}</label>
-            <TagChooser
-              @filterable={{true}}
-              @onChange={{this.changeTags}}
-              @tags={{this.tags}}
-            />
+            {{! TODO (select-kit-replacement-cleanup) }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DTagChooser @onChange={{this.changeTags}} @tags={{this.tags}} />
+            {{else}}
+              {{! TODO (select-kit-replacement-cleanup) }}
+              <TagChooser
+                @filterable={{true}}
+                @onChange={{this.changeTags}}
+                @tags={{this.tags}}
+              />
+            {{/if}}
           {{/if}}
         </form>
       {{/if}}

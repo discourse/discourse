@@ -1,9 +1,13 @@
+import { service } from "@ember/service";
 import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
 import SchemaSettingTypeModels from "discourse/admin/components/schema-setting/types/models";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { and, not } from "discourse/truth-helpers";
+import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
 
 export default class SchemaSettingTypeTags extends SchemaSettingTypeModels {
+  @service siteSettings;
+
   type = "tags";
 
   get tagChooserOption() {
@@ -18,13 +22,26 @@ export default class SchemaSettingTypeTags extends SchemaSettingTypeModels {
   }
 
   <template>
-    <TagChooser
-      class={{if this.validationErrorMessage "--invalid"}}
-      @everyTag={{@spec.every_tag}}
-      @onChange={{this.onInput}}
-      @options={{this.tagChooserOption}}
-      @tags={{this.value}}
-    />
+    {{! TODO (select-kit-replacement-cleanup) }}
+    {{#if this.siteSettings.enable_new_select_controls}}
+      <DTagChooser
+        class={{if this.validationErrorMessage "--invalid"}}
+        @allowCreate={{false}}
+        @everyTag={{@spec.every_tag}}
+        @maximum={{this.max}}
+        @onChange={{this.onInput}}
+        @tags={{this.value}}
+      />
+    {{else}}
+      {{! TODO (select-kit-replacement-cleanup) }}
+      <TagChooser
+        class={{if this.validationErrorMessage "--invalid"}}
+        @everyTag={{@spec.every_tag}}
+        @onChange={{this.onInput}}
+        @options={{this.tagChooserOption}}
+        @tags={{this.value}}
+      />
+    {{/if}}
 
     <div class="schema-field__input-supporting-text">
       {{#if (and @description (not this.validationErrorMessage))}}
