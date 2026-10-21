@@ -125,6 +125,16 @@ module ApplicationHelper
       imports[real_url.sub(File.basename(real), File.basename(stable))] = real_url
     end
 
+    if (analysis = EmberAssets.bundle_analysis_asset)
+      imports["discourse/bundle-analysis"] = ActionController::Base.helpers.asset_path(analysis)
+    end
+
+    if (analysis = Plugin::JsManager.bundle_analysis_asset)
+      imports["discourse/bundle-analysis-plugins"] = ActionController::Base.helpers.asset_path(
+        analysis,
+      )
+    end
+
     JSON.pretty_generate({ imports: }).html_safe
   end
 
