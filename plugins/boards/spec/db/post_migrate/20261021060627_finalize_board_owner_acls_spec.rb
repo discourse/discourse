@@ -22,6 +22,12 @@ RSpec.describe FinalizeBoardOwnerAcls do
   before do
     @original_verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false
+    connection = ActiveRecord::Base.connection
+    unless connection.column_exists?(:access_control_lists, :source)
+      connection.add_column(:access_control_lists, :source, :string, limit: 100)
+    end
+    connection.change_column_null(:access_control_lists, :source, true)
+    connection.change_column_null(:access_control_lists, :owner, true)
     DB.exec("UPDATE schema_migration_details SET created_at = NOW() - INTERVAL '2 hours'")
     Discourse.clear_site_creation_date_cache
   end
@@ -34,27 +40,27 @@ RSpec.describe FinalizeBoardOwnerAcls do
   it "backfills owners and removes their redundant direct grants idempotently" do
     AccessControlList.create!(
       target: board,
-      owner: "boards",
+      source: "boards",
       permission: "owner",
       allowed_user_ids: [existing_owner.id],
     )
     AccessControlList.create!(
       target: board,
-      owner: "boards",
+      source: "boards",
       permission: "manage",
       allowed_user_ids: [creator.id, existing_owner.id],
     )
     edit_acl =
       AccessControlList.create!(
         target: board,
-        owner: "boards",
+        source: "boards",
         permission: "edit",
         allowed_user_ids: [creator.id, existing_owner.id, member.id],
       )
     view_acl =
       AccessControlList.create!(
         target: board,
-        owner: "boards",
+        source: "boards",
         permission: "view",
         allowed_user_ids: [creator.id],
         allowed_group_ids: [group.id],
@@ -73,7 +79,7 @@ RSpec.describe FinalizeBoardOwnerAcls do
     manager_acl =
       AccessControlList.create!(
         target: board,
-        owner: "boards",
+        source: "boards",
         permission: "manage",
         allowed_user_ids: [creator.id, member.id],
       )
@@ -91,7 +97,7 @@ RSpec.describe FinalizeBoardOwnerAcls do
     manager_acl =
       AccessControlList.create!(
         target: board,
-        owner: "boards",
+        source: "boards",
         permission: "manage",
         allowed_user_ids: [creator.id],
       )

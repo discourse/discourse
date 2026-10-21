@@ -22,8 +22,8 @@ RSpec.describe AccessControlListManager do
 
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:target) }
-    it { is_expected.to validate_presence_of(:owner) }
-    it { is_expected.to validate_length_of(:owner).is_at_most(100) }
+    it { is_expected.to validate_presence_of(:source) }
+    it { is_expected.to validate_length_of(:source).is_at_most(100) }
     it { is_expected.to validate_presence_of(:owner_user_id) }
   end
 
@@ -41,10 +41,10 @@ RSpec.describe AccessControlListManager do
       cat
     end
 
-    let(:params) { { target:, flattened_acl:, owner:, owner_user_id: } }
+    let(:params) { { target:, flattened_acl:, source:, owner_user_id: } }
     let(:dependencies) { { guardian: } }
     let(:guardian) { admin.guardian }
-    let(:owner) { "test_owner" }
+    let(:source) { "test_source" }
     let(:owner_user_id) { admin.id }
 
     let(:flattened_acl) do
@@ -183,10 +183,10 @@ RSpec.describe AccessControlListManager do
         )
       end
 
-      it "stamps the records with the given owner" do
+      it "stamps the records with the given source" do
         result
 
-        expect(AccessControlList.where(target: target).pluck(:owner).uniq).to eq(["test_owner"])
+        expect(AccessControlList.where(target: target).pluck(:source).uniq).to eq(["test_source"])
       end
 
       it "logs the permission change as a staff action" do

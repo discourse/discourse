@@ -12,7 +12,7 @@ Important columns:
 - `permission`: string ID declared by the target's `ACL_PERMISSIONS`, such as `view`, `edit`, `manage`, or the built-in `owner`. The manager enforces this vocabulary; direct bulk inserts bypass that policy.
 - `allowed_group_ids`: bigint array of groups that hold the permission.
 - `allowed_user_ids`: bigint array of users that hold the permission. Backend storage/lookups and the frontend search picker support user grants; mandatory user ACL display still needs explicit UI support.
-- `owner`: string identifying the owning subsystem, usually `"core"` or a plugin name. This provenance column is unrelated to the `owner` permission.
+- `source`: string identifying the subsystem that produced the ACL row, usually `"core"` or a plugin name. This provenance column is unrelated to the `owner` permission.
 
 `owner` is a reserved, user-only permission automatically included by `Acl::Permissions`. Owners implicitly satisfy every other permission lookup for their target. Do not grant it to groups or expose it through an ordinary permission picker.
 
@@ -29,7 +29,7 @@ The frontend and service params use flattened entries:
 ]
 ```
 
-`AccessControlList.expand_list_for_bulk_insert(list, target, owner)` groups those entries by permission and returns rows suitable for `insert_all!`. It fills both `allowed_group_ids` and `allowed_user_ids`.
+`AccessControlList.expand_list_for_bulk_insert(list, target, source)` groups those entries by permission and returns rows suitable for `insert_all!`. It fills both `allowed_group_ids` and `allowed_user_ids`.
 
 `AccessControlList.where(target: target).flattened_list` returns one entry per group or user per permission. Group entries include group metadata:
 

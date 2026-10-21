@@ -12,7 +12,7 @@ AccessControlListManager.call(
   params: {
     target: board,
     flattened_acl: flattened_acl,
-    owner: Boards::PLUGIN_NAME,
+    source: Boards::PLUGIN_NAME,
     owner_user_id: board.created_by_id,
   },
 ) do |result|
@@ -28,7 +28,7 @@ end
 
 Behavior:
 
-- validates `target` and `owner`
+- validates `target` and `source`
 - fetches previous target permissions
 - resolves `owner_user_id` to a user model, then preserves existing user owner grants or creates the initial owner grant from that user
 - rejects submitted owner entries that do not match the authoritative owner set
@@ -45,13 +45,13 @@ Behavior:
 
 Important: the manager destructively replaces target ACL rows and does not currently authorize the actor itself. Authorize before calling it.
 
-The manager's `owner` string is ACL row provenance, not target ownership. Pass the authoritative initial target owner's id separately as `owner_user_id`; the manager resolves the user model internally. Existing owner rows take precedence on later replacement writes, which keeps ordinary ACL editing from removing or transferring ownership.
+The manager's `source` string is ACL row provenance, not target ownership. Pass the authoritative initial target owner's id separately as `owner_user_id`; the manager resolves the user model internally. Existing owner rows take precedence on later replacement writes, which keeps ordinary ACL editing from removing or transferring ownership.
 
 ## Write Path Rules
 
 - Call the manager even when the submitted ACL array is empty. Empty means "replace with mandatory ACLs if any"; skipping the manager leaves stale ACLs or creates ACL-less records.
 - Do not mutate ACL rows manually from controllers. Use the manager from a service step.
-- Pass a stable owner string, usually the plugin name constant.
+- Pass a stable source string, usually the plugin name constant.
 - Keep side effects such as history rows, events, or MessageBus publishes outside the transaction unless they must roll back with the ACL write.
 - When using `Service::Base`, follow `.skills/discourse-service-authoring`.
 

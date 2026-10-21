@@ -43,7 +43,7 @@ module Boards
         params: {
           target: board,
           flattened_acl: flattened_acl,
-          owner: Boards::PLUGIN_NAME,
+          source: Boards::PLUGIN_NAME,
           owner_user_id: board.created_by_id,
         },
       ) do |result|

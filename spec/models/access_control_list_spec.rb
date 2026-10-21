@@ -7,6 +7,12 @@ RSpec.describe AccessControlList do
   fab!(:user) { Fabricate(:user, name: "User One") }
   fab!(:other_user) { Fabricate(:user, name: "User Two") }
 
+  it "defaults the source to core" do
+    access_control_list = Fabricate(:access_control_list, source: nil, target:, permission: "view")
+
+    expect(access_control_list.source).to eq("core")
+  end
+
   describe ".expand_list_for_bulk_insert" do
     it "collapses multiple groups sharing a permission into one record" do
       list = [
@@ -24,7 +30,7 @@ RSpec.describe AccessControlList do
         allowed_user_ids: [],
         target_type: "Category",
         target_id: target.id,
-        owner: "core",
+        source: "core",
       )
     end
 
@@ -42,13 +48,13 @@ RSpec.describe AccessControlList do
       )
     end
 
-    it "accepts a symbol type and a custom owner" do
+    it "accepts a symbol type and a custom source" do
       list = [{ type: :group, id: group.id, permission: "view" }]
 
       result = described_class.expand_list_for_bulk_insert(list, target, "chat")
 
       expect(result.first[:allowed_group_ids]).to contain_exactly(group.id)
-      expect(result.first[:owner]).to eq("chat")
+      expect(result.first[:source]).to eq("chat")
     end
 
     it "collapses users and groups sharing a permission into one record" do
@@ -67,7 +73,7 @@ RSpec.describe AccessControlList do
           allowed_user_ids: contain_exactly(user.id, other_user.id),
           target_type: "Category",
           target_id: target.id,
-          owner: "core",
+          source: "core",
         },
       )
     end

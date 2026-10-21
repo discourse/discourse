@@ -6,11 +6,11 @@ class AccessControlListManager
   params do
     attribute :target
     attribute :flattened_acl, :array
-    attribute :owner, :string
+    attribute :source, :string
     attribute :owner_user_id, :integer
 
     validates :target, presence: true
-    validates :owner, presence: true, length: { maximum: 100 }
+    validates :source, presence: true, length: { maximum: 100 }
     validates :owner_user_id, presence: true
   end
 
@@ -112,7 +112,7 @@ class AccessControlListManager
       AccessControlList.expand_list_for_bulk_insert(
         flattened_acl_with_mandatory,
         params.target,
-        params.owner,
+        params.source,
       )
     @context[:new_permissions] = Acl::Target.new(flattened_acl_with_mandatory).permission_lookup
     AccessControlList.insert_all!(bulk_insert_list)
