@@ -3,6 +3,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
 import { i18n } from "discourse-i18n";
 
 function updateTags(model, field, tags) {
@@ -17,14 +18,26 @@ const Tags = <template>
       <div class="controls tracking-controls tracking-controls__watched-tags">
         <label>{{dIcon "d-watching" class="icon watching"}}
           {{i18n "user.watched_tags"}}</label>
-        <TagChooser
-          @blockedTags={{@selectedTags}}
-          @everyTag={{true}}
-          @onChange={{fn updateTags @model "watched_tags"}}
-          @options={{hash allowAny=false}}
-          @tags={{@model.watched_tags}}
-          @unlimitedTagCount={{true}}
-        />
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if @siteSettings.enable_new_select_controls}}
+          <DTagChooser
+            @blockedTags={{@selectedTags}}
+            @everyTag={{true}}
+            @onChange={{fn updateTags @model "watched_tags"}}
+            @tags={{@model.watched_tags}}
+            @unlimitedTagCount={{true}}
+          />
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <TagChooser
+            @blockedTags={{@selectedTags}}
+            @everyTag={{true}}
+            @onChange={{fn updateTags @model "watched_tags"}}
+            @options={{hash allowAny=false}}
+            @tags={{@model.watched_tags}}
+            @unlimitedTagCount={{true}}
+          />
+        {{/if}}
       </div>
 
       <div class="instructions">{{i18n "user.watched_tags_instructions"}}</div>
@@ -32,14 +45,26 @@ const Tags = <template>
       <div class="controls tracking-controls tracking-controls__tracked-tags">
         <label>{{dIcon "d-tracking" class="icon tracking"}}
           {{i18n "user.tracked_tags"}}</label>
-        <TagChooser
-          @blockedTags={{@selectedTags}}
-          @everyTag={{true}}
-          @onChange={{fn updateTags @model "tracked_tags"}}
-          @options={{hash allowAny=false}}
-          @tags={{@model.tracked_tags}}
-          @unlimitedTagCount={{true}}
-        />
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if @siteSettings.enable_new_select_controls}}
+          <DTagChooser
+            @blockedTags={{@selectedTags}}
+            @everyTag={{true}}
+            @onChange={{fn updateTags @model "tracked_tags"}}
+            @tags={{@model.tracked_tags}}
+            @unlimitedTagCount={{true}}
+          />
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <TagChooser
+            @blockedTags={{@selectedTags}}
+            @everyTag={{true}}
+            @onChange={{fn updateTags @model "tracked_tags"}}
+            @options={{hash allowAny=false}}
+            @tags={{@model.tracked_tags}}
+            @unlimitedTagCount={{true}}
+          />
+        {{/if}}
       </div>
 
       <div class="instructions">{{i18n "user.tracked_tags_instructions"}}</div>
@@ -49,14 +74,26 @@ const Tags = <template>
       >
         <label>{{dIcon "d-watching-first" class="icon watching-first-post"}}
           {{i18n "user.watched_first_post_tags"}}</label>
-        <TagChooser
-          @blockedTags={{@selectedTags}}
-          @everyTag={{true}}
-          @onChange={{fn updateTags @model "watching_first_post_tags"}}
-          @options={{hash allowAny=false}}
-          @tags={{@model.watching_first_post_tags}}
-          @unlimitedTagCount={{true}}
-        />
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if @siteSettings.enable_new_select_controls}}
+          <DTagChooser
+            @blockedTags={{@selectedTags}}
+            @everyTag={{true}}
+            @onChange={{fn updateTags @model "watching_first_post_tags"}}
+            @tags={{@model.watching_first_post_tags}}
+            @unlimitedTagCount={{true}}
+          />
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <TagChooser
+            @blockedTags={{@selectedTags}}
+            @everyTag={{true}}
+            @onChange={{fn updateTags @model "watching_first_post_tags"}}
+            @options={{hash allowAny=false}}
+            @tags={{@model.watching_first_post_tags}}
+            @unlimitedTagCount={{true}}
+          />
+        {{/if}}
       </div>
 
       <div class="instructions">
@@ -66,14 +103,26 @@ const Tags = <template>
       <div class="controls tracking-controls tracking-controls__muted-tags">
         <label>{{dIcon "d-muted" class="icon muted"}}
           {{i18n "user.muted_tags"}}</label>
-        <TagChooser
-          @blockedTags={{@selectedTags}}
-          @everyTag={{true}}
-          @onChange={{fn updateTags @model "muted_tags"}}
-          @options={{hash allowAny=false}}
-          @tags={{@model.muted_tags}}
-          @unlimitedTagCount={{true}}
-        />
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if @siteSettings.enable_new_select_controls}}
+          <DTagChooser
+            @blockedTags={{@selectedTags}}
+            @everyTag={{true}}
+            @onChange={{fn updateTags @model "muted_tags"}}
+            @tags={{@model.muted_tags}}
+            @unlimitedTagCount={{true}}
+          />
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <TagChooser
+            @blockedTags={{@selectedTags}}
+            @everyTag={{true}}
+            @onChange={{fn updateTags @model "muted_tags"}}
+            @options={{hash allowAny=false}}
+            @tags={{@model.muted_tags}}
+            @unlimitedTagCount={{true}}
+          />
+        {{/if}}
       </div>
       <div class="instructions">{{i18n "user.muted_tags_instructions"}}</div>
     </div>

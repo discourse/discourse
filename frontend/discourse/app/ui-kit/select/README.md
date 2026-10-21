@@ -496,12 +496,21 @@ An asynchronous nullish result makes no selection change and leaves the query in
 ### Recipes
 
 A recipe is a specialized `DSelect` for one kind of value, such as categories or tags. Recipes are
-meant to live in `ui-kit/select/recipes/`. A recipe:
+meant to live in `ui-kit/select/recipes/`. Recipes in this directory are the domain-specific
+exception to the kit's domain-free primitives. A recipe:
 
 - sets `@kind`, and passes `@kindContext` with its raw state;
 - forwards the call site's `@identifier`, `@instanceContext`, `@items`, `@load` and `@onChange`,
   and its `:item`, `:selection` and `:footer` blocks;
 - never sets its own `@identifier`, which would take the call-site tier away from its callers.
+
+`DTagChooser` accepts controlled `@tags` and emits tag objects through `@onChange`. It resolves
+name-only held and blocked tags when those values change. Search sends only known numeric ids;
+a pending or failed name lookup never holds up search. A completed lookup reloads an open list
+with the resolved ids. Creation requires both `@allowCreate` and the site's permission.
+
+The default tag row renders new items with `d_select.create_item`. A custom `:item` block
+owns that wording too; use the item's `isNew` flag to distinguish creation from existing tags.
 
 A variant that only changes configuration, such as a chooser used by advanced search, is the same
 kind with its own `@identifier`, not a new kind.

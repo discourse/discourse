@@ -6291,13 +6291,16 @@ en:
       selector_no_tags: "no tags"
       selector_remove_filter: "remove filter"
       tags: "Tags"
+      tag_count_hidden:
+        one: "%{count} topic"
+        other: "%{count} topics"
       choose_for_topic: "Optional tags…"
       choose_for_topic_required:
-        one: "select at least %{count} tag…"
-        other: "select at least %{count} tags…"
+        one: "Select at least %{count} tag…"
+        other: "Select at least %{count} tags…"
       choose_for_topic_required_group:
-        one: "select %{count} tag from '%{name}'…"
-        other: "select %{count} tags from '%{name}'…"
+        one: "Select %{count} tag from '%{name}'…"
+        other: "Select %{count} tags from '%{name}'…"
       info: "Show tag info"
       default_info: "This tag isn't restricted to any categories, and has no synonyms."
       staff_info: "To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."

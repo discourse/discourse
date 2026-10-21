@@ -253,3 +253,6 @@ A section should be designed, with multiple examples that each isolate one capab
 - [Drag, resize, and gesture primitives](30-drag-and-gesture-primitives.md) for the modifiers that handle input.
 - [Types](27-types.md) for the Glint and TypeScript conventions the kit follows.
 - [Private modules](32-private-modules.md) for where `-internals` code goes.
+
+Select recipes under `ui-kit/select/recipes/` are a domain-specific exception: they compose
+the domain-free select engine with tag, category, or other domain behavior.
