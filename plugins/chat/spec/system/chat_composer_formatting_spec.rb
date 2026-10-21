@@ -61,6 +61,23 @@ RSpec.describe "Chat composer formatting" do
         )
       end
 
+      it "keeps the menu open while toggling the formatting bar" do
+        chat_page.visit_channel(channel_1)
+        channel_page.composer.open_dropdown
+        toggle = ".chat-composer-dropdown__toggle.toggle-formatting"
+        checkbox = "#{toggle} .d-toggle-switch__checkbox"
+
+        find("#{toggle} .d-toggle-switch__checkbox-slider").click
+
+        expect(page).to have_css(".chat-composer__formatting-bar")
+        expect(page).to have_css("#{checkbox}[aria-checked='true']", visible: :all)
+
+        find("#{toggle} .chat-composer-dropdown__toggle-label").click
+
+        expect(page).to have_no_css(".chat-composer__formatting-bar")
+        expect(page).to have_css("#{checkbox}[aria-checked='false']", visible: :all)
+      end
+
       it "toggles a formatting bar that applies formatting" do
         chat_page.visit_channel(channel_1)
         expect(page).to have_no_css(".chat-composer__formatting-bar")

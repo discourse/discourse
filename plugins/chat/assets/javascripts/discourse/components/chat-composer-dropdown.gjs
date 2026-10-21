@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DButton from "discourse/ui-kit/d-button";
+import DShortcut from "discourse/ui-kit/d-shortcut";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -30,6 +31,21 @@ export default class ChatComposerDropdown extends Component {
       await closeFn();
       await button.action();
     }
+  }
+
+  @action
+  onToggleClick(button, event) {
+    // the switch's label forwards this click to its button, which
+    // arrives here as a second click
+    if (
+      event.target.closest(".d-toggle-switch__label") &&
+      !event.target.matches(".d-toggle-switch__checkbox")
+    ) {
+      return;
+    }
+
+    // stays open so the switch visibly flips
+    button.action();
   }
 
   @action
@@ -97,15 +113,19 @@ export default class ChatComposerDropdown extends Component {
                   "btn-transparent"
                   button.id
                 }}
-                {{on "click" (fn this.onButtonClick button menu.close)}}
+                {{on "click" (fn this.onToggleClick button)}}
               >
-                <DToggleSwitch
-                  aria-label={{i18n button.label}}
-                  @state={{button.toggled}}
-                />
-                <span class="chat-composer-dropdown__toggle-label">
-                  {{i18n button.label}}
-                </span>
+                <DShortcut @keys={{button.shortcut}} as |shortcut|>
+                  <DToggleSwitch
+                    aria-keyshortcuts={{shortcut.aria}}
+                    aria-label={{i18n button.label}}
+                    @state={{button.toggled}}
+                  />
+                  <span class="chat-composer-dropdown__toggle-label">
+                    {{i18n button.label}}
+                  </span>
+                  <shortcut.Kbd class="chat-composer-dropdown__shortcut" />
+                </DShortcut>
               </div>
             </li>
           {{/each}}

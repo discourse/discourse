@@ -103,9 +103,17 @@ module PageObjects
           self
         end
 
-        def click_dropdown_toggle(id)
+        def open_dropdown
           component.find(".chat-composer-dropdown__trigger-btn").click
-          find(".chat-composer-dropdown__toggle.#{id}").click
+        end
+
+        def click_dropdown_toggle(id)
+          trigger = component.find(".chat-composer-dropdown__trigger-btn")
+          trigger.click
+          find(".chat-composer-dropdown__toggle.#{id} .d-toggle-switch__checkbox-slider").click
+          # toggles leave the menu open
+          trigger.click
+          has_no_css?(".chat-composer-dropdown__list")
         end
 
         def reply_to_last_message_shortcut
