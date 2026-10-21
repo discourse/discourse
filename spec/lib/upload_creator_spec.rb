@@ -7,6 +7,38 @@ RSpec.describe UploadCreator do
   fab!(:admin)
 
   describe "#create_for" do
+    describe "when the image is an SVG" do
+      it "removes external use references while preserving local fragments" do
+        xlink_namespace = "http://www.w3.org/1999/xlink"
+        svg = <<~XML
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="#{xlink_namespace}" width="10" height="10">
+        <defs><path id="mark" d="M0 0h10v10H0z" /></defs>
+        <use id="local-href" href="#mark" />
+        <use id="external-href" href="https://example.com/evil.svg#mark" />
+        <use id="data-href" href="data:image/svg+xml,evil" />
+        <use id="local-xlink-href" xlink:href="#mark" />
+        <use id="external-xlink-href" xlink:href="https://example.com/evil.svg#mark" />
+      </svg>
+    XML
+
+        upload =
+          UploadCreator.new(file_from_contents(svg, "image.svg"), "image.svg").create_for(user.id)
+
+        document = Nokogiri.XML(File.read(Discourse.store.path_for(upload)))
+
+        expect(upload).to be_persisted
+        expect(document.at_css("#local-href")["href"]).to eq("#mark")
+        expect(document.at_css("#external-href")["href"]).to eq(nil)
+        expect(document.at_css("#data-href")["href"]).to eq(nil)
+        expect(
+          document.at_css("#local-xlink-href").attribute_with_ns("href", xlink_namespace)&.value,
+        ).to eq("#mark")
+        expect(
+          document.at_css("#external-xlink-href").attribute_with_ns("href", xlink_namespace)&.value,
+        ).to eq(nil)
+      end
+    end
+
     describe "when upload is not an image" do
       before { SiteSetting.authorized_extensions = "txt|long-FileExtension" }
 
