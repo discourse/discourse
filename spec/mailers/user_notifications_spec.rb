@@ -2591,7 +2591,7 @@ RSpec.describe UserNotifications do
 
       email = UserNotifications.account_suspended(user, user_history:)
 
-      expect(email.body.decoded).to include("You have been suspended from the forum.")
+      expect(email.body.decoded).to include("your account has been suspended.")
       expect(email.body.decoded).not_to include("UTC")
     end
 
