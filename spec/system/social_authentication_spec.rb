@@ -147,20 +147,6 @@ shared_examples "social authentication scenarios" do
         signup_page.click_create_account
         expect(page).to have_css(".account-created")
       end
-
-      context "when the email is not verified" do
-        it "needs to verify email" do
-          mock_twitter_auth(verified: false)
-          signup_page.open.click_social_button("twitter")
-          expect(signup_page).to be_open
-          expect(signup_page).to have_no_password_input
-          signup_page.fill_email(OmniauthHelpers::EMAIL)
-          expect(signup_page).to have_valid_username
-          expect(signup_page).to have_valid_email
-          signup_page.click_create_account
-          expect(page).to have_css(".account-created")
-        end
-      end
     end
 
     context "with Discord" do

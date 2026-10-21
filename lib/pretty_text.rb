@@ -4,6 +4,9 @@ require "nokogiri"
 require "erb"
 
 module PrettyText
+  # Amortize forced collection during tests, which repeatedly render short fixture content.
+  LOW_MEMORY_NOTIFICATION_INTERVAL = Rails.env.test? ? 10 : 1
+
   DANGEROUS_BIDI_CHARACTERS = [
     "\u202A",
     "\u202B",
@@ -684,7 +687,13 @@ module PrettyText
     rval = nil
     @mutex.synchronize do
       rval = yield
-      v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
+      if GlobalSetting.mini_racer_single_threaded
+        @operations_since_gc = (@operations_since_gc || 0) + 1
+        if @operations_since_gc >= LOW_MEMORY_NOTIFICATION_INTERVAL
+          v8.low_memory_notification
+          @operations_since_gc = 0
+        end
+      end
     end
     rval
   end
