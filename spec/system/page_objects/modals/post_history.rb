@@ -10,6 +10,11 @@ module PageObjects
         self
       end
 
+      def click_next_revision
+        footer.find("button.next-revision").click
+        self
+      end
+
       def previous_locale
         body.find(".revision__locale .revision-content.--previous")
       end
@@ -25,6 +30,29 @@ module PageObjects
       def hide_revision
         footer.find("button.hide-revision").click
         self
+      end
+
+      def unlist_revision
+        footer.find("button.unlist-revision").click
+        self
+      end
+
+      def show_all_edits
+        PageObjects::Components::DToggleSwitch.new(
+          "#{footer_selector} .show-unlisted-revisions",
+        ).toggle
+        self
+      end
+
+      def has_unlisted_marker?
+        body.has_css?(
+          ".revision-details__unlisted",
+          text: I18n.t("js.post.revisions.unlisted.label"),
+        )
+      end
+
+      def has_no_unlisted_marker?
+        body.has_no_css?(".revision-details__unlisted")
       end
 
       def destroy_revisions
@@ -49,6 +77,10 @@ module PageObjects
 
       def has_body_diff?(text)
         body.has_css?(".body-diff", text: text)
+      end
+
+      def has_no_body_diff?(text)
+        body.has_no_css?(".body-diff", text: text)
       end
 
       def previous_tags

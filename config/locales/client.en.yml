@@ -5415,6 +5415,10 @@ en:
       revisions:
         diff_too_complex: "This edit changed too much of the post at once, so it can't be shown."
         diff_hidden: "Some of this post's edit history has been hidden, so this edit can't be shown."
+        unlisted:
+          label: "Unlisted"
+          description: "This edit is skipped when browsing the edit history, but its content is still public."
+        show_all_edits: "Show all edits"
         locale:
           no_locale_set: "No language set"
           locale_removed: "Language removed"
@@ -5427,6 +5431,8 @@ en:
           last: "Last revision"
           hide: "Hide revision"
           show: "Show revision"
+          unlist: "Unlist revision"
+          relist: "Relist revision"
           destroy: "Delete revisions"
           destroy_confirm: "Are you sure you want to delete all of the revisions on this post? This action is permanent."
           revert: "Revert to revision %{revision}"
@@ -8462,7 +8468,7 @@ en:
               list: List latest posts and private posts. RSS is also supported.
             revisions:
               read: "Get the latest or a specific revision."
-              modify: "Hide, show, or revert revisions."
+              modify: "Hide, show, unlist, relist, or revert revisions."
               permanently_delete: "Permanently delete a revision."
             tags:
               list: List tags.

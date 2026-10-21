@@ -1,7 +1,9 @@
+import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
 import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 
 const TopicFooter = <template>
   <div id="revision-controls">
@@ -45,6 +47,16 @@ const TopicFooter = <template>
   </div>
 
   <div id="revision-footer-buttons">
+    {{#if @showUnlistedToggle}}
+      <DToggleSwitch
+        class="show-unlisted-revisions"
+        disabled={{@loading}}
+        @label="post.revisions.show_all_edits"
+        @state={{@includeUnlisted}}
+        {{on "click" @toggleIncludeUnlisted}}
+      />
+    {{/if}}
+
     {{#if @displayEdit}}
       <DButton
         class="btn-default edit-post"
@@ -74,6 +86,24 @@ const TopicFooter = <template>
           @label="post.revisions.controls.show"
         />
       {{else}}
+        {{#if @model.unlisted}}
+          <DButton
+            class="btn-default relist-revision"
+            @action={{@relistVersion}}
+            @disabled={{@loading}}
+            @icon="list"
+            @label="post.revisions.controls.relist"
+          />
+        {{else}}
+          <DButton
+            class="btn-default unlist-revision"
+            @action={{@unlistVersion}}
+            @disabled={{@loading}}
+            @icon="list"
+            @label="post.revisions.controls.unlist"
+          />
+        {{/if}}
+
         <DButton
           class="btn-danger hide-revision"
           @action={{@hideVersion}}

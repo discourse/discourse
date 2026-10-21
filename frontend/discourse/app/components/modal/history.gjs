@@ -7,6 +7,7 @@ import Revision from "discourse/components/modal/history/revision";
 import Revisions from "discourse/components/modal/history/revisions";
 import TopicFooter from "discourse/components/modal/history/topic-footer";
 import PermanentlyDeleteConfirmModal from "discourse/components/modal/permanently-delete-confirm";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { iconHTML } from "discourse/lib/icon-library";
 import { sanitizeAsync } from "discourse/lib/text";
 import Category from "discourse/models/category";
@@ -40,6 +41,7 @@ export default class History extends Component {
   @tracked bodyDiff;
   @tracked initialLoad = true;
   @tracked error;
+  @tracked includeUnlisted = false;
 
   constructor() {
     super(...arguments);
@@ -79,6 +81,12 @@ export default class History extends Component {
 
   get displayRevisions() {
     return this.postRevision?.version_count > 2;
+  }
+
+  get showUnlistedToggle() {
+    return (
+      !this.currentUser?.staff && this.postRevision?.unlisted_revision_count > 0
+    );
   }
 
   get modalTitleKey() {
@@ -245,7 +253,9 @@ export default class History extends Component {
     this.loading = true;
     this.error = null;
     try {
-      const result = await Post.loadRevision(postId, postVersion);
+      const result = await Post.loadRevision(postId, postVersion, {
+        includeUnlisted: this.includeUnlisted,
+      });
       this.postRevision = result;
       if (result.diff_error) {
         this.error = i18n("post.revisions.diff_too_complex");
@@ -385,6 +395,41 @@ export default class History extends Component {
   }
 
   @action
+  async unlistVersion() {
+    const postId = this.postRevision?.post_id;
+    const postVersion = this.postRevision?.current_revision;
+
+    try {
+      await Post.unlistRevision(postId, postVersion);
+      await this.refresh(postId, postVersion);
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  async relistVersion() {
+    const postId = this.postRevision?.post_id;
+    const postVersion = this.postRevision?.current_revision;
+
+    try {
+      await Post.relistRevision(postId, postVersion);
+      await this.refresh(postId, postVersion);
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  toggleIncludeUnlisted() {
+    this.includeUnlisted = !this.includeUnlisted;
+    this.refresh(
+      this.postRevision?.post_id,
+      this.postRevision?.current_revision
+    );
+  }
+
+  @action
   editPost() {
     this.args.model.editPost(this.args.model.post);
     this.args.closeModal();
@@ -446,6 +491,7 @@ export default class History extends Component {
               @editButtonLabel={{this.editButtonLabel}}
               @editPost={{this.editPost}}
               @hideVersion={{this.hideVersion}}
+              @includeUnlisted={{this.includeUnlisted}}
               @isStaff={{this.currentUser.staff}}
               @loadFirstDisabled={{this.loadFirstDisabled}}
               @loadFirstVersion={{this.loadFirstVersion}}
@@ -458,10 +504,14 @@ export default class History extends Component {
               @loadPreviousVersion={{this.loadPreviousVersion}}
               @model={{this.postRevision}}
               @permanentlyDeleteVersions={{this.permanentlyDeleteVersions}}
+              @relistVersion={{this.relistVersion}}
               @revertToRevisionText={{this.revertToRevisionText}}
               @revertToVersion={{this.revertToVersion}}
               @revisionsText={{this.revisionsText}}
+              @showUnlistedToggle={{this.showUnlistedToggle}}
               @showVersion={{this.showVersion}}
+              @toggleIncludeUnlisted={{this.toggleIncludeUnlisted}}
+              @unlistVersion={{this.unlistVersion}}
             />
           {{/if}}
         {{/if}}
