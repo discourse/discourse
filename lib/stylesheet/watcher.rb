@@ -111,7 +111,7 @@ module Stylesheet
 
     def core_assets_refresh(target)
       if target&.match(/wcag|color_definitions/)
-        Stylesheet::Manager.clear_color_scheme_cache!
+        color_definitions_refresh
         return
       end
 
@@ -120,6 +120,27 @@ module Stylesheet
       message =
         targets.map! { |name| Stylesheet::Manager.new.stylesheet_data(name.to_sym) }.flatten!
       MessageBus.publish "/file-change", message
+
+      # a change without a target may be to a shared partial (variables, mixins,
+      # color transformations) that also feeds the color scheme stylesheets
+      color_definitions_refresh if target.nil?
+    end
+
+    def color_definitions_refresh
+      Stylesheet::Manager.clear_color_scheme_cache!
+
+      default_theme = Theme.find_by(id: SiteSetting.default_theme_id)
+      scheme_ids = [default_theme&.color_scheme_id, default_theme&.dark_color_scheme_id].compact
+      scheme_ids |= ColorScheme.where(user_selectable: true).pluck(:id)
+
+      manager = Stylesheet::Manager.new
+      message = [manager.color_scheme_stylesheet_details(nil, fallback_to_base: true)]
+      scheme_ids.each do |id|
+        message << manager.color_scheme_stylesheet_details(id, fallback_to_base: false)
+      end
+      message = message.compact.uniq.map { |details| details.merge(target: "color_definitions") }
+
+      MessageBus.publish "/file-change", message if message.present?
     end
 
     def plugin_assets_refresh(plugin_name)
