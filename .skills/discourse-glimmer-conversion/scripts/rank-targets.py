@@ -30,7 +30,6 @@ BLOCKED = {
     "frontend/discourse/app/components/discourse-root.js": "root element owning event dispatch; glimmerified once and reverted (27408c7e14b)",
     "frontend/discourse/admin/components/edit-category-panel.gjs": "buildCategoryPanel() factory; convert together with the edit-category-* tabs built from it",
     "frontend/discourse/app/components/avatar-uploader.gjs": "writes uploadedAvatarId/uploadedAvatarTemplate back into callers, three external plugins included; needs @done(upload) and coordinated external updates",
-    "plugins/discourse-ai/assets/javascripts/discourse/components/rag-uploader.gjs": "didReceiveAttrs re-copies @target.rag_uploads on every arg change to stay in sync with the form; needs a single source of truth",
     "frontend/discourse/app/components/second-factor-form.gjs": "secondFactorMethod/Token flow back through four callers, one via LoginModal -> LocalLoginForm; needs callbacks threaded through",
     "plugins/styleguide/assets/javascripts/discourse/components/styleguide-markdown.js": "cooks its own rendered block via innerHTML; needs a markdown arg instead",
     "plugins/chat/assets/javascripts/discourse/components/chat-to-topic-selector.gjs": "topicTitle/categoryId/tags/selection flow back to the archive-channel modal by two-way binding; needs callbacks there",
