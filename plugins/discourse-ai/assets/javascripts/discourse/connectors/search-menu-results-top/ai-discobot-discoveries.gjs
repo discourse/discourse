@@ -29,11 +29,16 @@ export default class AiDiscobotDiscoveries extends Component {
 
   // A search can start from somewhere other than a key press, such as a recent
   // search picked from the menu, so the session is given the menu's own way to
-  // show topics.
+  // show topics. A reopened menu starts without them, so a search still active
+  // for its term switches it back.
   connectMenu = modifier(() => {
-    this.aiSearchSession.showTopicsInMenu = () =>
-      this.args.outletArgs.updateTypeFilter(null);
-    return () => (this.aiSearchSession.showTopicsInMenu = null);
+    const showTopics = () => this.args.outletArgs.updateTypeFilter(null);
+    this.aiSearchSession.showTopicsInMenu = showTopics;
+    const timer = this.searched ? next(showTopics) : null;
+    return () => {
+      cancel(timer);
+      this.aiSearchSession.showTopicsInMenu = null;
+    };
   });
 
   // These are deferred because what they set off updates state this render
