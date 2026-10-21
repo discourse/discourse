@@ -39,11 +39,11 @@ export default class NewListHeaderControls extends Component {
 
   <template>
     <button
+      aria-pressed={{if this.allActive "true" "false"}}
       class={{dConcatClass
         "topics-replies-toggle --all"
         (if this.allActive "active")
       }}
-      aria-pressed={{if this.allActive "true" "false"}}
       title={{i18n "filters.new.all_tooltip"}}
       {{on "click" (fn @changeNewListSubset null)}}
     >
@@ -51,11 +51,11 @@ export default class NewListHeaderControls extends Component {
     </button>
 
     <button
+      aria-pressed={{if this.topicsActive "true" "false"}}
       class={{dConcatClass
         "topics-replies-toggle --topics"
         (if this.topicsActive "active")
       }}
-      aria-pressed={{if this.topicsActive "true" "false"}}
       title={{i18n "filters.new.new_topics_tooltip"}}
       {{on "click" (fn @changeNewListSubset "topics")}}
     >
@@ -63,11 +63,11 @@ export default class NewListHeaderControls extends Component {
     </button>
 
     <button
+      aria-pressed={{if this.repliesActive "true" "false"}}
       class={{dConcatClass
         "topics-replies-toggle --replies"
         (if this.repliesActive "active")
       }}
-      aria-pressed={{if this.repliesActive "true" "false"}}
       title={{i18n "filters.new.new_replies_tooltip"}}
       {{on "click" (fn @changeNewListSubset "replies")}}
     >
