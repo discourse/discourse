@@ -2038,12 +2038,7 @@ class UsersController < ApplicationController
 
     if reminder_notifications.present?
       Notification.populate_acting_user(reminder_notifications)
-      serialized_notifications =
-        ActiveModel::ArraySerializer.new(
-          reminder_notifications,
-          each_serializer: NotificationSerializer,
-          scope: guardian,
-        )
+      serialized_notifications = serialize_data(reminder_notifications, NotificationSerializer)
     end
 
     if bookmark_list
@@ -2111,23 +2106,13 @@ class UsersController < ApplicationController
     Notification.populate_acting_user(notifications) if notifications.present?
 
     if unread_notifications.present?
-      serialized_unread_notifications =
-        ActiveModel::ArraySerializer.new(
-          unread_notifications,
-          each_serializer: NotificationSerializer,
-          scope: guardian,
-        )
+      serialized_unread_notifications = serialize_data(unread_notifications, NotificationSerializer)
     end
 
     serialized_messages = serialize_data(messages, UserMenuMessageSerializer) if messages
 
     if read_notifications.present?
-      serialized_read_notifications =
-        ActiveModel::ArraySerializer.new(
-          read_notifications,
-          each_serializer: NotificationSerializer,
-          scope: guardian,
-        )
+      serialized_read_notifications = serialize_data(read_notifications, NotificationSerializer)
     end
 
     render json: {
