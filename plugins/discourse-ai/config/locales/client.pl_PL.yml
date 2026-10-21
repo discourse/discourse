@@ -1929,6 +1929,33 @@ pl_PL:
             compact: "Kompaktowy"
             expanded: "Rozszerzony"
             expanded_description: "z podsumowaniami AI"
+      ai_search:
+        related_topics: "Powiązane tematy"
+        related_replies:
+          one: "%{count} odpowiedź"
+          few: "%{count} odpowiedzi"
+          many: "%{count} odpowiedzi"
+          other: "%{count} odpowiedzi"
+        answer_label: "Odpowiedź AI"
+        follow_up_label: "Zadaj pytanie uzupełniające"
+        follow_up_placeholder: "Zadaj kolejne pytanie…"
+        ask: "Zapytaj"
+        references_title: "Cytowane tematy"
+        references_empty: "Tutaj pojawiają się tematy, na które powołują się odpowiedzi."
+        tabs:
+          label: "Wyniki wyszukiwania"
+          ask: "Zapytaj AI"
+          topics: "Tematy"
+          this_topic: "Ten temat"
+          messages: "Wiadomości"
+          no_answer: "Nie znaleziono odpowiedzi AI"
+        no_keyword_matches: "Nie znaleziono pasujących słów kluczowych."
+        no_answer: "AI nie znalazła jednoznacznej odpowiedzi. %{askLink}"
+        ask_community: "Zapytaj społeczność."
+        scope:
+          this_topic: "ten temat"
+          messages: "twoje wiadomości"
+          fallback: "Nie znaleziono niczego w %{name}, więc ta odpowiedź pochodzi z całej witryny."
       discobot_discoveries:
         main_title: "Zapytaj AI"
         loading_convo: "Ładowanie rozmowy"

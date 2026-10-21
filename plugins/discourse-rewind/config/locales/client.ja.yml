@@ -118,7 +118,7 @@ ja:
           message_4: "平均メッセージ長は <strong>%{length}</strong> 文字でした"
           message_5: "お気に入りのチャンネル:"
           dancing_baby_alt: "ダンシングベイビー"
-        voice_usage:
+        live_usage:
           minutes:
             other: "%{count} 分"
         invites:

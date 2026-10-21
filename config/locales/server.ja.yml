@@ -779,6 +779,7 @@ ja:
     post_template: "%{replace_paragraph}\n\nより長い説明またはカテゴリのガイドラインやルールを記述するには次の段落を使用してください。\n\n- メンバーはなぜこのカテゴリを使用する必要がありますか？何のために使用されますか？\n\n- これと、ほかの既存のカテゴリでは何が異なりますか？\n\n- このカテゴリには、一般的にどのようなトピックが含まれますか？\n\n- このカテゴリが必要ですか？ほかのカテゴリとマージしたり、サブカテゴリ化することはできませんか？\n"
     errors:
       not_found: "カテゴリが見つかりません！"
+      self_lockout: "カテゴリの権限を変更すると、自身のアクセスが失われます。続行してもよろしいですか？"
       uncategorized_parent: "未分類カテゴリに親カテゴリを設定できません"
       self_parent: "サブカテゴリの親をそのサブカテゴリに設定できません"
       depth: "サブカテゴリの下に別のサブカテゴリを作成することはできません"
@@ -2361,7 +2362,6 @@ ja:
     experimental_impersonation_time_limit_minutes: "代理操作セッションが自動的に終了するまでの時間。"
     page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。「スピナー」はページ全体のインジケーターです。「スライダー」は画面上部に細いバーを表示します。"
     show_user_menu_avatars: "ユーザーメニューにユーザーアバターを表示する"
-    about_page_hidden_groups: "/about ページに特定のグループのメンバーを表示しない。"
     about_page_extra_groups: "モデレーターの下の情報ページに表示されるグループ。"
     about_page_extra_groups_initial_members: "情報ページに展開表示される各グループのメンバーの数。"
     about_page_extra_groups_show_description: "グループの説明を情報ページに含めるかどうかを決定します。"
@@ -3792,31 +3792,15 @@ ja:
     account_suspended:
       title: "アカウントが凍結されました"
       subject_template: "[%{email_prefix}] あなたのアカウントは凍結されました"
-      text_body_template: |
-        あなたは %{suspended_till} までフォーラムから凍結されました。
-
-        理由 - %{reason}
     account_suspended_forever:
       title: "アカウントが凍結されました"
       subject_template: "[%{email_prefix}] あなたのアカウントは凍結されました"
-      text_body_template: |
-        あなたはフォーラムから凍結されました。
-
-        理由 - %{reason}
     account_silenced:
       title: "アカウントが投稿禁止にされました"
       subject_template: "[%{email_prefix}] あなたのアカウントは投稿禁止にされました"
-      text_body_template: |
-        あなたは %{silenced_till} までフォーラムから投稿禁止にされました。
-
-        理由 - %{reason}
     account_silenced_forever:
       title: "アカウントが投稿禁止にされました"
       subject_template: "[%{email_prefix}] あなたのアカウントは投稿禁止にされました"
-      text_body_template: |
-        あなたはフォーラムから投稿禁止にされました。
-
-        理由 - %{reason}
     account_deleted:
       title: "アカウントが削除されました"
       subject_template: "[%{email_prefix}] あなたのアカウントは削除されました"

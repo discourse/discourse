@@ -44,3 +44,4 @@ nb_NO:
         username: "Bruker"
         date: "Dato"
         description: "Beskrivelse"
+        category_id: "Kategori"

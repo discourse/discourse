@@ -1748,6 +1748,19 @@ zh_CN:
             compact: "紧凑"
             expanded: "展开"
             expanded_description: "带 AI 摘要"
+      ai_search:
+        related_topics: "相关话题"
+        related_replies:
+          other: "%{count} 条回复"
+        answer_label: "AI 答案"
+        ask: "提问"
+        tabs:
+          ask: "询问 AI"
+          topics: "话题"
+          this_topic: "话题"
+          messages: "消息"
+        scope:
+          this_topic: "话题"
       discobot_discoveries:
         main_title: "询问 AI"
         loading_convo: "正在加载对话"

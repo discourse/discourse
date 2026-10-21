@@ -92,3 +92,4 @@ it:
         username: "Utente"
         date: "Data"
         description: "Descrizione"
+        category_id: "Categoria"

@@ -89,3 +89,4 @@ he:
         username: "משתמש"
         date: "תאריך"
         description: "תיאור"
+        category_id: "קטגוריה"

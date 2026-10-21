@@ -1642,6 +1642,19 @@ ar:
             compact: "مضغوط"
             expanded: "موسَّع"
             expanded_description: "مع ملخصات الذكاء الاصطناعي"
+      ai_search:
+        related_topics: "الموضوعات ذات الصلة"
+        related_replies:
+          zero: "%{count} من الردود"
+          one: "رد واحد (%{count})"
+          two: "%{count} من الردود"
+          few: "%{count} من الردود"
+          many: "%{count} من الردود"
+          other: "%{count} من الردود"
+        tabs:
+          ask: "اسأل الذكاء الاصطناعي"
+          topics: "الموضوعات"
+          messages: "الرسائل"
       discobot_discoveries:
         main_title: "اسأل الذكاء الاصطناعي"
         loading_convo: "تحميل المحادثة"

@@ -345,6 +345,13 @@ sv:
             other: "Senaste %{count} timmarna"
         topic:
           title: "Sammanfattning av ämne"
+      ai_search:
+        related_replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
+        tabs:
+          topics: "Ämnen"
+          messages: "Meddelanden"
       discobot_discoveries:
         legacy:
           regular_results: "Ämnen"

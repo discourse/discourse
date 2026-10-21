@@ -6,6 +6,8 @@
 
 da:
   js:
+    dsa_notice:
+      email: "E-mail adresse"
     user_api_key:
       authorize: "Autoriser"
       deny: "Annuller"

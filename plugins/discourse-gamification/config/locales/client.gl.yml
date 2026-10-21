@@ -40,3 +40,4 @@ gl:
         username: "Usuario"
         date: "Data"
         description: "Descrición"
+        category_id: "Categoría"

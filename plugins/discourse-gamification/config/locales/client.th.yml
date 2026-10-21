@@ -45,3 +45,4 @@ th:
         username: "ผู้ใช้"
         date: "วันที่"
         description: "รายละเอียด"
+        category_id: "หมวดหมู่"

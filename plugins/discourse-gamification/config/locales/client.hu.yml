@@ -92,3 +92,4 @@ hu:
         username: "Felhasználó"
         date: "Dátum"
         description: "Leírás"
+        category_id: "Kategória"

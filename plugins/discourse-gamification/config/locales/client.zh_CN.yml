@@ -54,7 +54,6 @@ zh_CN:
         scoring_configuration: "评分配置"
         scoring_configuration_description: "覆盖此排行榜的全局评分规则。将字段留空则使用全局默认值。"
         scorable_categories: "可评分类别"
-        scorable_categories_help: "评分中要包括的类别。留空则使用全局设置。"
         score_overrides: "评分权重"
         score_overrides_help: "覆盖每个动作的分值。留空则使用全局默认值。设置为 0 则禁用此功能。"
         weight:
@@ -123,3 +122,4 @@ zh_CN:
         date_description: "积分适用日期格式为（YYYY-MM-DD），默认为今天。"
         description: "描述"
         description_description: "可选注释显示在分数事件旁边。"
+        category_id: "类别"

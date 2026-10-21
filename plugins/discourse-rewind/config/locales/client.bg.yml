@@ -17,7 +17,7 @@ bg:
         chat_usage:
           author: Вие
           author_others: "%{username}"
-        voice_usage:
+        live_usage:
           minutes:
             one: "%{count} минута"
             other: "%{count} минути"

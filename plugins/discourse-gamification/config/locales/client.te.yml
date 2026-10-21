@@ -40,3 +40,4 @@ te:
         username: "సభ్యుడు"
         date: "తేదీ"
         description: "వివరణ"
+        category_id: "వర్గం"

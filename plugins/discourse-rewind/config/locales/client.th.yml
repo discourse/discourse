@@ -15,7 +15,7 @@ th:
         chat_usage:
           author: คุณ
           author_others: "%{username}"
-        voice_usage:
+        live_usage:
           minutes:
             other: "%{count} นาที"
         writing_analysis:

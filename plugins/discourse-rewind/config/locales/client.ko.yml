@@ -17,7 +17,7 @@ ko:
         chat_usage:
           author: 사용자님
           author_others: "%{username}"
-        voice_usage:
+        live_usage:
           minutes:
             other: "%{count}분"
         writing_analysis:

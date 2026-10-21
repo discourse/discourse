@@ -269,6 +269,13 @@ sw:
             category: "Kikundi"
           table:
             total_count: "Jumla"
+      ai_search:
+        related_replies:
+          one: "%{count} jibu"
+          other: "%{count} majibu"
+        tabs:
+          topics: "Mada"
+          messages: "Ujumbe"
       discobot_discoveries:
         legacy:
           regular_results: "Mada"

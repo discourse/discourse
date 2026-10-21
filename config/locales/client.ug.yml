@@ -6,6 +6,9 @@
 
 ug:
   js:
+    dsa_notice:
+      title: "قانۇنسىز مەزمۇننى مەلۇم قىلىدۇ"
+      email: "ئېلخەت ئادرېسى"
     mcp_oauth_client_id_metadata_policy:
       disabled: "باشقۇرغۇچى تىزىملىتىشى ئۈچۈنلا"
       approved_domains: "دەلىللەنگەن تور دائىرىسىدىن كەلگەن CIMD"

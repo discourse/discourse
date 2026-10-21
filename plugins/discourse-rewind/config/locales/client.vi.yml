@@ -22,7 +22,7 @@ vi:
           author: Bạn
           author_others: "%{username}"
           status_online: "● trực tuyến"
-        voice_usage:
+        live_usage:
           minutes:
             other: "%{count} phút"
         writing_analysis:

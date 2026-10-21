@@ -607,6 +607,7 @@ zh_CN:
           alphabetical: "按字母顺序"
           recent_activity: "近期活动"
           priority: "优先级"
+          priority_description_dms: "提及，然后是未读消息，然后是最近活动"
         empty:
           filtered: "没有频道符合此筛选条件。"
           show_all: "显示所有频道"

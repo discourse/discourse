@@ -6,6 +6,9 @@
 
 es:
   js:
+    dsa_notice:
+      title: "Denunciar contenido ilegal"
+      email: "Dirección de correo electrónico"
     user_api_key:
       title: 'Autorizar a «%{application_name}»'
       authorize: "Autorizar"
