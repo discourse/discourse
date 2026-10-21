@@ -76,7 +76,7 @@ export default class TagList extends Component {
           {{/if}}
           {{#if tag.totalCount}}
             <span class="tag-count">
-              x
+              ×
               {{tag.totalCount}}
             </span>
           {{/if}}
