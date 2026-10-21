@@ -209,6 +209,8 @@ end
 
 This is advisory, unlike `mandatory_acl` or `banned_acl`. It does not prevent persistence. `AccessControlList::EvaluateModification` checks the proposed ACL before save and reports when it would not grant the current user every configured permission.
 
+For creation evaluations, where `target_id` is absent, the evaluator includes the current user's prospective `owner` grant. An owner satisfies all loss-warning permissions, matching the authoritative owner record that the target's create service will persist.
+
 The concern provides:
 
 - `.has_loss_warning_permissions?` to detect non-empty configuration.

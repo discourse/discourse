@@ -11,13 +11,14 @@ RSpec.describe AccessControlList::EvaluateModification do
 
     fab!(:current_user, :user)
 
-    let(:params) { { new_acl:, target_type: } }
+    let(:params) { { new_acl:, target_id:, target_type: } }
     let(:dependencies) { { guardian: } }
     let(:guardian) { current_user.guardian }
     let(:new_acl) do
       [{ type: "group", id: Group::AUTO_GROUPS[:logged_in_users], permission: "view" }]
     end
     let(:target) { Fabricate(:post) }
+    let(:target_id) { target.id }
     let(:target_type) { "EvaluateModificationTestTargetClass" }
 
     class EvaluateModificationTestTargetClass < ActiveRecord::Base
@@ -46,6 +47,24 @@ RSpec.describe AccessControlList::EvaluateModification do
       let(:new_acl) { [] }
 
       it { is_expected.to fail_a_policy(:user_will_have_permission) }
+    end
+
+    context "when creating a target with an empty ACL" do
+      let(:new_acl) { [] }
+      let(:target_id) { nil }
+
+      it { is_expected.to run_successfully }
+    end
+
+    context "when creating a target with a loss warning permission" do
+      let(:new_acl) { [] }
+      let(:target_id) { nil }
+
+      before do
+        EvaluateModificationTestTargetClass.stubs(:loss_warning_permissions).returns(["manage"])
+      end
+
+      it { is_expected.to run_successfully }
     end
 
     context "when the new ACL is empty but the target has mandatory ACL entries that cover the current user" do
@@ -88,6 +107,18 @@ RSpec.describe AccessControlList::EvaluateModification do
         end
 
         it { is_expected.to fail_a_policy(:user_will_not_lose_permission) }
+      end
+
+      context "when the current user is a proposed owner" do
+        let(:new_acl) do
+          [{ type: "user", id: current_user.id, permission: Acl::Permissions::OWNER }]
+        end
+
+        before do
+          EvaluateModificationTestTargetClass.stubs(:loss_warning_permissions).returns(["manage"])
+        end
+
+        it { is_expected.to run_successfully }
       end
     end
   end

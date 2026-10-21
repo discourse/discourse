@@ -17,10 +17,12 @@ For `AccessControlList::EvaluateModification`:
 
 - Unknown target types fail model lookup.
 - Requests with a target id use edit wording, while requests without one use creation wording.
+- Creation evaluations include the current user's prospective owner grant, including when the submitted ACL is empty.
 - Mandatory ACL entries are included before evaluating the current user's proposed access.
 - Direct user and group grants applying to the current user are recognized.
 - Losing all access fails `user_will_have_permission`.
 - Losing any configured `loss_warning_permissions` value fails `user_will_not_lose_permission`.
+- An owner grant satisfies every configured `loss_warning_permissions` value.
 - Targets without loss warning permissions can proceed while the current user retains some access.
 
 For Guardian methods:

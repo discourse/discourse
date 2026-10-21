@@ -85,7 +85,7 @@ RSpec.describe AccessControlListsController do
       )
     end
 
-    it "returns creation-specific wording when a new target would lose a warning permission" do
+    it "allows creation with an ACL that omits a loss warning permission" do
       post "/access-control/evaluate.json",
            params: {
              target_type: "EvaluateModificationRequestTestTarget",
@@ -93,16 +93,8 @@ RSpec.describe AccessControlListsController do
            },
            as: :json
 
-      expect(response.status).to eq(422)
-      expect(response.parsed_body).to eq(
-        {
-          "errors" => ["You will not have permission if you create this target. Continue?"],
-          "extras" => {
-            "current_user_will_lose_permission" => true,
-            "loss_warning_permissions" => ["manage"],
-          },
-        },
-      )
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to include("current_user_will_lose_permissions" => false)
     end
 
     it "retains edit wording when an existing target would lose a warning permission" do
@@ -120,7 +112,7 @@ RSpec.describe AccessControlListsController do
       )
     end
 
-    it "returns generic creation wording when a new target would grant no access" do
+    it "allows creation with an empty ACL" do
       EvaluateModificationRequestTestTarget.stubs(:loss_warning_permissions).returns([])
 
       post "/access-control/evaluate.json",
@@ -130,17 +122,8 @@ RSpec.describe AccessControlListsController do
            },
            as: :json
 
-      expect(response.status).to eq(422)
-      expect(response.parsed_body).to eq(
-        {
-          "errors" => [
-            I18n.t("access_control_list.errors.user_will_not_have_permission_on_create"),
-          ],
-          "extras" => {
-            "current_user_will_lose_permission" => true,
-          },
-        },
-      )
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to include("current_user_will_lose_permissions" => false)
     end
   end
 end
