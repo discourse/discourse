@@ -5,7 +5,7 @@ class UserBookmarkList
 
   PER_PAGE = 20
 
-  attr_reader :bookmarks, :per_page, :has_more
+  attr_reader :bookmarks, :per_page
   attr_accessor :more_bookmarks_url
 
   def initialize(user:, guardian:, search_term: nil, per_page: nil, page: 0)
@@ -22,7 +22,7 @@ class UserBookmarkList
   end
 
   def load(&blk)
-    query =
+    @query =
       BookmarkQuery.new(
         user: @user,
         guardian: @guardian,
@@ -31,9 +31,11 @@ class UserBookmarkList
         per_page: @per_page,
       )
 
-    @bookmarks = query.list_all(&blk)
-    @has_more = (@page.to_i + 1) * @per_page < query.count
-    @bookmarks
+    @bookmarks = @query.list_all(&blk)
+  end
+
+  def has_more
+    (@page + 1) * @per_page < @query.count_all
   end
 
   def categories
