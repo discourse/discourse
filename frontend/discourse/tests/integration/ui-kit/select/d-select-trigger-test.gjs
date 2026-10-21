@@ -21,7 +21,11 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { Host, ITEMS } from "discourse/tests/helpers/d-select-hosts";
+import {
+  Host,
+  ITEMS,
+  optionWithText,
+} from "discourse/tests/helpers/d-select-hosts";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 
@@ -1372,7 +1376,7 @@ module(
           );
         assert
           .dom(".d-select__strip")
-          .doesNotExist("U1e adds no desktop strip");
+          .doesNotExist("a local desktop list needs no strip");
       });
     }
 
@@ -1564,6 +1568,289 @@ module(
         resolve([]);
         await rendering;
       }
+    });
+  }
+);
+
+/** An element's accessible name from aria-labelledby, aria-label or its text. */
+function nameOf(element) {
+  const ids = element?.getAttribute("aria-labelledby");
+  if (ids) {
+    return ids
+      .split(/\s+/)
+      .map((id) => document.getElementById(id)?.textContent.trim() ?? "")
+      .join(" ")
+      .trim();
+  }
+  return (
+    element?.getAttribute("aria-label") ??
+    element?.textContent ??
+    ""
+  ).trim();
+}
+
+/** The text of every element an element's aria-describedby points at. */
+function descriptionOf(element) {
+  return (element?.getAttribute("aria-describedby") ?? "")
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((id) => document.getElementById(id)?.textContent.trim() ?? "")
+    .join(" ");
+}
+
+const serverLoad = () => ITEMS;
+const serverResolve = (values) =>
+  ITEMS.filter((item) => values.includes(item.id));
+
+/** A controlled multi host for compact and overflow tests. */
+class CompactHost extends Component {
+  @tracked value = this.args.value ?? [];
+
+  get items() {
+    return this.args.server ? undefined : ITEMS;
+  }
+
+  get load() {
+    return this.args.server ? serverLoad : undefined;
+  }
+
+  get resolveValues() {
+    return this.args.server ? serverResolve : undefined;
+  }
+
+  @action
+  onChange(value) {
+    this.value = value;
+  }
+
+  <template>
+    <DSelect
+      @items={{this.items}}
+      @label="Fruit"
+      @load={{this.load}}
+      @maxVisibleChips={{@maxVisibleChips}}
+      @multiple={{true}}
+      @onChange={{this.onChange}}
+      @resolveValues={{this.resolveValues}}
+      @value={{this.value}}
+      @variant={{@variant}}
+    />
+  </template>
+}
+
+const TRIGGER = ".d-select__trigger";
+
+module(
+  "Integration | ui-kit | select | DSelect (display-only chips)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    for (const variant of ["button", "static"]) {
+      test(`a ${variant} trigger's chips are display-only and readable`, async function (assert) {
+        await render(
+          <template>
+            <CompactHost @value={{array 1 2}} @variant={{variant}} />
+          </template>
+        );
+
+        assert.dom(`${TRIGGER} .d-select__chip`).exists({ count: 2 });
+        assert
+          .dom(`${TRIGGER} button.d-select__chip-remove`)
+          .doesNotExist("no remove buttons nested in the trigger");
+        const described = descriptionOf(find(".d-select"));
+        assert.true(
+          described.includes("Apple"),
+          `describes Apple: ${described}`
+        );
+        assert.true(described.includes("Banana"), "and Banana");
+      });
+    }
+
+    test("a mobile trigger's chips are display-only", async function (assert) {
+      forceMobile();
+      await render(<template><CompactHost @value={{array 1 2}} /></template>);
+
+      assert.dom(`${TRIGGER} .d-select__chip`).exists({ count: 2 });
+      assert.dom(`${TRIGGER} button.d-select__chip-remove`).doesNotExist();
+    });
+
+    test("a desktop typeahead without a cap keeps removable chips", async function (assert) {
+      await render(<template><CompactHost @value={{array 1 2}} /></template>);
+
+      assert
+        .dom(`${TRIGGER} button.d-select__chip-remove`)
+        .exists({ count: 2 }, "nothing changes without @maxVisibleChips");
+    });
+
+    test("a server-backed button panel lists held items in the strip", async function (assert) {
+      await render(
+        <template>
+          <CompactHost
+            @server={{true}}
+            @value={{array 1 2}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(TRIGGER);
+
+      assert.dom(".d-select__strip button").exists({ count: 2 });
+    });
+
+    test("a local button list needs no strip", async function (assert) {
+      await render(
+        <template>
+          <CompactHost @value={{array 1 2}} @variant="button" />
+        </template>
+      );
+      await click(TRIGGER);
+
+      assert
+        .dom(".d-select__strip")
+        .doesNotExist("held rows are checked in the list");
+      assert.dom("[role='option'][aria-selected='true']").exists({ count: 2 });
+    });
+
+    test("picking the first item shows the strip without reopening", async function (assert) {
+      await render(
+        <template><CompactHost @server={{true}} @variant="button" /></template>
+      );
+      await click(TRIGGER);
+      assert.dom(".d-select__strip").doesNotExist();
+
+      await click(optionWithText("Apple"));
+      assert.dom(".d-select__strip button").exists({ count: 1 });
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (compact and overflow)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("compact mode shows a count and names it", async function (assert) {
+      await render(
+        <template>
+          <CompactHost
+            @maxVisibleChips={{0}}
+            @value={{array 1 2}}
+            @variant="button"
+          />
+        </template>
+      );
+
+      assert.dom(`${TRIGGER} .d-select__chip`).doesNotExist();
+      assert
+        .dom(".d-select__chips-more")
+        .hasText("2")
+        .hasAttribute("aria-hidden", "true");
+      assert.strictEqual(nameOf(find(".d-select")), "Fruit, 2 selected");
+    });
+
+    test("overflow shows N chips and the rest as +K", async function (assert) {
+      await render(
+        <template>
+          <CompactHost
+            @maxVisibleChips={{1}}
+            @value={{array 1 2 3}}
+            @variant="button"
+          />
+        </template>
+      );
+
+      assert.dom(`${TRIGGER} .d-select__chip`).exists({ count: 1 });
+      assert.dom(`${TRIGGER} .d-select__chip`).hasText("Apple");
+      assert.dom(".d-select__chips-more").hasText("+2");
+      assert.strictEqual(nameOf(find(".d-select")), "Fruit, 3 selected");
+    });
+
+    test("overflow on a local button list relies on the checked list", async function (assert) {
+      await render(
+        <template>
+          <CompactHost
+            @maxVisibleChips={{1}}
+            @value={{array 1 2 3}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(TRIGGER);
+
+      assert
+        .dom(".d-select__strip button")
+        .doesNotExist("local lists show every held item checked, so no strip");
+    });
+
+    test("the desktop typeahead compacts and lists held items in its panel", async function (assert) {
+      await render(
+        <template>
+          <CompactHost @maxVisibleChips={{0}} @value={{array 1 2}} />
+        </template>
+      );
+
+      assert.dom(`${TRIGGER} button.d-select__chip-remove`).doesNotExist();
+      assert.strictEqual(
+        nameOf(find("[role='combobox']")),
+        "Fruit, 2 selected",
+        "the input carries the count"
+      );
+      assert
+        .dom(TRIGGER)
+        .doesNotIncludeText(
+          "Press Left arrow",
+          "no hint about chips that are not there"
+        );
+
+      await click("[role='combobox']");
+      assert.dom(".d-select__strip button").exists({ count: 2 });
+    });
+
+    test("ArrowLeft from the compact input reaches the strip", async function (assert) {
+      await render(
+        <template>
+          <CompactHost @maxVisibleChips={{0}} @value={{array 1 2}} />
+        </template>
+      );
+      await focus("[role='combobox']");
+      await triggerKeyEvent("[role='combobox']", "keydown", "ArrowLeft");
+
+      assert.dom(".d-select__strip").exists("the panel opens");
+      assert.true(
+        nameOf(document.activeElement).startsWith("Banana"),
+        "focus lands on the last held item"
+      );
+    });
+
+    test("removing from the strip updates the count", async function (assert) {
+      await render(
+        <template>
+          <CompactHost
+            @maxVisibleChips={{0}}
+            @server={{true}}
+            @value={{array 1 2}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(TRIGGER);
+      await click(findAll(".d-select__strip button")[0]);
+
+      assert.strictEqual(nameOf(find(".d-select")), "Fruit, 1 selected");
+      assert.dom(".d-select__chips-more").hasText("1");
+    });
+
+    test("a mobile trigger compacts too", async function (assert) {
+      forceMobile();
+      await render(
+        <template>
+          <CompactHost @maxVisibleChips={{0}} @value={{array 1 2}} />
+        </template>
+      );
+
+      assert.dom(`${TRIGGER} .d-select__chip`).doesNotExist();
+      assert.dom(".d-select__chips-more").hasText("2");
+      assert.strictEqual(nameOf(find(".d-select")), "Fruit, 2 selected");
     });
   }
 );

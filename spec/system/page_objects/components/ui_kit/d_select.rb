@@ -114,10 +114,28 @@ module PageObjects
         end
 
         def remove(value)
-          trigger
-            .find(".d-select__chip#{hook_selector("value", value)}")
-            .find(".d-select__chip-remove")
-            .click
+          button =
+            trigger.first(
+              ".d-select__chip#{hook_selector("value", value)} .d-select__chip-remove",
+              minimum: 0,
+              wait: 0,
+            )
+          if button
+            button.click
+          else
+            open_for_value
+            strip_button =
+              first(
+                in_panel(".d-select__strip-item#{hook_selector("value", value)} button"),
+                minimum: 0,
+                wait: 0,
+              )
+            if strip_button
+              strip_button.click
+            else
+              select_value(value)
+            end
+          end
           self
         end
 

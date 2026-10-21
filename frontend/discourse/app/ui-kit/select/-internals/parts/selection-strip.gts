@@ -51,6 +51,8 @@ interface SelectionStripSignature {
     focusStrip: (index: number) => boolean;
     /** Focuses the query or list when no chip remains. */
     focusFallback: () => void;
+    /** Returns desktop typeahead navigation from the strip to its query input. */
+    returnToInput?: () => void;
     /** Remeasures the results when the strip's height changes. */
     onResize: () => void;
   };
@@ -85,10 +87,21 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
   /** Handles removal keys before the roving group's activation handler. */
   @action
   handleKeydown(item: SelectItem, index: number, event: KeyboardEvent): void {
+    if (event.isComposing) {
+      return;
+    }
     if (
-      !event.isComposing &&
-      ["Enter", " ", "Backspace", "Delete"].includes(event.key)
+      this.args.returnToInput &&
+      (event.key === "ArrowUp" ||
+        event.key === "ArrowDown" ||
+        (event.key === "Tab" && event.shiftKey))
     ) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.args.returnToInput();
+      return;
+    }
+    if (["Enter", " ", "Backspace", "Delete"].includes(event.key)) {
       event.preventDefault();
       event.stopPropagation();
       this.#remove(item, index, true);

@@ -17,6 +17,7 @@ import type { MenuOptions } from "discourse/float-kit/lib/constants";
 import type Menu from "discourse/float-kit/services/menu";
 import type A11y from "discourse/services/a11y";
 import type { CapabilitiesService } from "discourse/services/capabilities";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import InteractionCoordinator from "discourse/ui-kit/select/-internals/coordinators/interaction-coordinator";
@@ -61,6 +62,11 @@ interface DSelectSignature {
   Args: {
     value?: SelectValue;
     multiple?: boolean;
+    /**
+     * Maximum chips displayed in a multi trigger. Zero shows only the held count;
+     * positive values show the first N chips and a +K badge. Removal moves to the panel.
+     */
+    maxVisibleChips?: number;
     /**
      * Parses pasted text into a batch. Nullish results preserve native paste; arrays
      * add eligible items and clear the original query. Async results lose authority
@@ -486,6 +492,22 @@ export default class DSelect extends Component<DSelectSignature> {
     return () => cancel(check);
   });
 
+  /** Records eligibility after render; the session latch survives later presentation changes. */
+  watchSelectionStrip = modifier(() => {
+    const eligible = this.presenter.selectionStripEligible;
+    const session = this.interaction.session;
+    const check = schedule("afterRender", () => {
+      if (
+        !this.isDestroying &&
+        eligible &&
+        this.interaction.session === session
+      ) {
+        this.interaction.latchSelectionStrip();
+      }
+    });
+    return () => cancel(check);
+  });
+
   #listboxId = `d-select-listbox-${guidFor(this)}`;
 
   constructor(owner: Owner, args: DSelectSignature["Args"]) {
@@ -519,6 +541,21 @@ export default class DSelect extends Component<DSelectSignature> {
   /** Stable id for the panel message describing cap-disabled options. */
   get limitId(): string {
     return `${this.#listboxId}-limit`;
+  }
+
+  /** Description for every display-only trigger, merged with consumer help. */
+  get triggerDescribedBy(): string | undefined {
+    return this.describedBy(
+      this.presenter.describeHeldLabels && this.engine.hasValue
+        ? this.heldLabelsId
+        : undefined,
+      this.args.describedBy
+    );
+  }
+
+  /** Stable association for the complete list of held labels. */
+  get heldLabelsId(): string {
+    return `${this.#listboxId}-held-labels`;
   }
 
   /** The listbox id, wiring `aria-controls`/`aria-activedescendant`. */
@@ -734,7 +771,10 @@ export default class DSelect extends Component<DSelectSignature> {
     <DMenu
       aria-busy={{if this.engine.pending "true"}}
       aria-controls={{this.presenter.triggerRootControls}}
-      aria-describedby={{unless this.presenter.isDesktopTypeahead @describedBy}}
+      aria-describedby={{unless
+        this.presenter.isDesktopTypeahead
+        this.triggerDescribedBy
+      }}
       aria-disabled={{this.presenter.triggerRootDisabled}}
       aria-haspopup={{this.presenter.triggerRootHasPopup}}
       aria-invalid={{unless
@@ -825,7 +865,7 @@ export default class DSelect extends Component<DSelectSignature> {
             <MultiChips
               @closeMenu={{menuArgs.close}}
               @composeDescribedBy={{this.describedBy}}
-              @describedBy={{@describedBy}}
+              @describedBy={{this.triggerDescribedBy}}
               @editing={{this.interaction.queryActive}}
               @engine={{this.engine}}
               @expanded={{menuArgs.expanded}}
@@ -918,6 +958,8 @@ export default class DSelect extends Component<DSelectSignature> {
         <div
           class="d-select__panel"
           data-select-id={{this.listboxId}}
+          {{on "focusout" this.interaction.handlePanelFocusOut}}
+          {{this.watchSelectionStrip}}
           {{this.watchLoadContext}}
           {{didInsert
             this.feedback.trackLoadFeedback
@@ -1010,34 +1052,34 @@ export default class DSelect extends Component<DSelectSignature> {
             {{/unless}}
           {{/if}}
 
-          {{#if @multiple}}
-            {{#if this.presenter.overlayIsModal}}
-              {{#if this.engine.hasValue}}
-                <SelectionStrip
-                  @engine={{this.engine}}
-                  @focusFallback={{this.focusAfterStrip}}
-                  @focusStrip={{this.interaction.focusStrip}}
-                  @hasSelectionBlock={{has-block "selection"}}
-                  @hasUnresolvedBlock={{has-block "unresolved"}}
-                  @locked={{this.presenter.isLocked}}
-                  @onRegisterRoving={{this.interaction.registerStripRoving}}
-                  @onResize={{this.listbox.remeasureListbox}}
-                  @resolveSelection={{this.resolveMulti}}
-                  @value={{@value}}
-                >
-                  <:selection as |item|>{{yield
-                      item
-                      this.engine.resolvedOptions
-                      to="selection"
-                    }}</:selection>
-                  <:unresolved as |item|>{{yield
-                      item
-                      this.engine.resolvedOptions
-                      to="unresolved"
-                    }}</:unresolved>
-                </SelectionStrip>
-              {{/if}}
-            {{/if}}
+          {{#if this.interaction.showSelectionStrip}}
+            <SelectionStrip
+              @engine={{this.engine}}
+              @focusFallback={{this.focusAfterStrip}}
+              @focusStrip={{this.interaction.focusStrip}}
+              @hasSelectionBlock={{has-block "selection"}}
+              @hasUnresolvedBlock={{has-block "unresolved"}}
+              @locked={{this.presenter.isLocked}}
+              @onRegisterRoving={{this.interaction.registerStripRoving}}
+              @onResize={{this.listbox.remeasureListbox}}
+              @resolveSelection={{this.resolveMulti}}
+              @returnToInput={{if
+                this.presenter.isDesktopTypeahead
+                this.interaction.focusInput
+              }}
+              @value={{@value}}
+            >
+              <:selection as |item|>{{yield
+                  item
+                  this.engine.resolvedOptions
+                  to="selection"
+                }}</:selection>
+              <:unresolved as |item|>{{yield
+                  item
+                  this.engine.resolvedOptions
+                  to="unresolved"
+                }}</:unresolved>
+            </SelectionStrip>
           {{/if}}
 
           {{#if this.engine.belowMinChars}}
@@ -1101,7 +1143,6 @@ export default class DSelect extends Component<DSelectSignature> {
               aria-label={{i18n "d_select.footer_label"}}
               class="d-select__footer"
               role="group"
-              {{on "focusout" this.interaction.handleFooterFocusOut}}
             >
               {{yield
                 (hash
@@ -1125,5 +1166,18 @@ export default class DSelect extends Component<DSelectSignature> {
         </div>
       </:content>
     </DMenu>
+    {{#if this.presenter.describeHeldLabels}}
+      {{#if this.engine.hasValue}}
+        <DAsyncContent @asyncData={{this.resolveMulti}} @context={{@value}}>
+          <:content as |chips|>
+            <ul class="sr-only" id={{this.heldLabelsId}}>
+              {{#each chips key="key" as |chip|}}
+                <li>{{this.engine.getSelectionLabel chip.item}}</li>
+              {{/each}}
+            </ul>
+          </:content>
+        </DAsyncContent>
+      {{/if}}
+    {{/if}}
   </template>
 }

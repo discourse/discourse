@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import type { DRovingFocusApi } from "discourse/ui-kit/modifiers/d-roving-focus";
@@ -50,8 +51,8 @@ export default class InteractionCoordinator {
     this.#capabilities.isIOS && this.triggerFocused;
 
   #announcer: SelectAnnouncer;
-  #capabilities: CapabilitiesService;
 
+  #capabilities: CapabilitiesService;
   // Controls for moving focus into the multi-select chip group, registered by the
   // chips' `dRovingFocus` (desktop only). Read imperatively from the keyboard handlers,
   // so a plain field rather than tracked; `null` while unregistered (mobile / single).
@@ -60,20 +61,22 @@ export default class InteractionCoordinator {
   /** Independent of the trigger chips, which can mount alongside the strip. */
   #stripRoving: DRovingFocusApi | null = null;
 
+  #stripFocusRequested = false;
+
   /** The session input; persistent desktop controllers must survive close. */
   #capturedFilter: HTMLElement | null = null;
 
   #engine: SelectEngine;
-  #isMultiple: () => boolean | undefined;
 
+  #isMultiple: () => boolean | undefined;
   // The DMenu instance, captured on register so the engine can close the overlay and
   // the compat bridge can reach the trigger element.
   #menu: DMenuInstance | null = null;
 
   #onClose: () => void;
+
   #onShow: () => void;
   #presenter: VariantPresenter;
-
   // True only for the synchronous span of a programmatic focus whose caret is owned by
   // something other than the select-on-focus rule (opening from a pointer, or a label
   // activation), so the query input can tell those from a genuine keyboard focus (Tab-in,
@@ -95,6 +98,9 @@ export default class InteractionCoordinator {
       this.filterInput?.blur();
     }
   };
+
+  /** Remembers eligibility for this open session, independently of the held count. */
+  @tracked _stripLatched = false;
 
   constructor({
     engine,
@@ -134,6 +140,22 @@ export default class InteractionCoordinator {
     return this.#menu?.triggerElement ?? null;
   }
 
+  /** An empty strip unmounts only after removal has handed focus back. */
+  get showSelectionStrip(): boolean {
+    return (
+      this.#engine.hasValue &&
+      (this._stripLatched || this.#presenter.selectionStripEligible)
+    );
+  }
+
+  /** Called after render so selecting the first item can latch without backtracking. */
+  @action
+  latchSelectionStrip(): void {
+    if (this.isExpanded && this.#presenter.selectionStripEligible) {
+      this._stripLatched = true;
+    }
+  }
+
   /**
    * Captures the DMenu instance so the engine can close the overlay on select.
    *
@@ -166,6 +188,18 @@ export default class InteractionCoordinator {
   @action
   registerStripRoving(api: DRovingFocusApi | null): void {
     this.#stripRoving = api;
+    if (this.#stripFocusRequested && api) {
+      // The menu must register its content before input blur checks containment.
+      schedule("afterRender", () => {
+        if (
+          this.#stripFocusRequested &&
+          this.#stripRoving === api &&
+          api.focusLast()
+        ) {
+          this.#stripFocusRequested = false;
+        }
+      });
+    }
   }
 
   /** Preserves trigger-chip focus; otherwise resolves close focus to the persistent trigger. */
@@ -240,6 +274,8 @@ export default class InteractionCoordinator {
     // consumers can then treat `@onClose` as exactly one notification per close.
     const wasExpanded = this.isExpanded;
     this.isExpanded = false;
+    this._stripLatched = false;
+    this.#stripFocusRequested = false;
     if (this.filterInput === this.#capturedFilter) {
       this.filterInput = null;
     }
@@ -259,6 +295,7 @@ export default class InteractionCoordinator {
     // transition. The input still re-focuses on every click, which is the desired behavior.
     const wasExpanded = this.isExpanded;
     this.isExpanded = true;
+    this.latchSelectionStrip();
     if (this.#presenter.isTypeahead) {
       this.#focusTriggerInput();
     }
@@ -304,12 +341,8 @@ export default class InteractionCoordinator {
     ) {
       return;
     }
-    // This listener sits on the DMenu trigger, which CONTAINS the chip list. A chip's remove
-    // button is a genuine tab stop on the control variants (the `tabindex="-1"` seeding is gated
-    // on desktop typeahead), so its keys bubble to here. Treating them as trigger keys both
-    // swallows the button's own activation — `preventDefault()` below cancels the native click —
-    // and lets Backspace clear the entire selection instead of acting on the focused chip. Only
-    // a key aimed at the trigger itself is a trigger key.
+    // Trigger chips are display-only on these roots. Keep descendant controls, such as
+    // the clear button, from inheriting the root's keyboard activation and clear gestures.
     if (event.target !== event.currentTarget) {
       return;
     }
@@ -469,14 +502,14 @@ export default class InteractionCoordinator {
   }
 
   /**
-   * A focusable footer control lost focus. Mirrors {@link handleTriggerBlur} — close when focus
+   * A panel control lost focus. Mirrors {@link handleTriggerBlur} — close when focus
    * leaves the whole widget — but DESKTOP ONLY: on mobile the overlay is a modal that owns its
    * dismissal (and whose `content` is undefined, so the containment guard can't run), and closes
    * with `focusTrigger: false` so a Tab-forward off the last footer control lands on the next page
    * control rather than being yanked back to the trigger.
    */
   @action
-  handleFooterFocusOut(event: FocusEvent): void {
+  handlePanelFocusOut(event: FocusEvent): void {
     if (this.#presenter.overlayIsModal) {
       return;
     }
@@ -521,11 +554,8 @@ export default class InteractionCoordinator {
       }
     }
 
-    // Desktop multi: ArrowLeft at the very start of the query moves focus into the chip
-    // group (the chip nearest the input). Only the desktop trigger hosts the chips inline;
-    // the mobile input lives in the modal, so entering the trigger chips would break out of
-    // it. `preventDefault` only when a chip actually took focus, so an empty control (or a
-    // loading re-flash) leaves ArrowLeft as a plain no-op caret move.
+    // Compact typeaheads open into the strip; uncapped typeaheads enter trigger chips.
+    // Mobile query navigation stays inside its modal.
     if (
       this.#presenter.isDesktopTypeahead &&
       event.key === "ArrowLeft" &&
@@ -533,9 +563,18 @@ export default class InteractionCoordinator {
       input.selectionStart === 0 &&
       input.selectionEnd === 0 &&
       this.#engine.hasValue &&
-      this.#chipRoving?.focusLast()
+      !this.#presenter.isLocked
     ) {
-      event.preventDefault();
+      if (!this.#presenter.triggerChipsInteractive) {
+        event.preventDefault();
+        this.#stripFocusRequested = true;
+        this.#menu?.show();
+        if (this.#stripRoving?.focusLast()) {
+          this.#stripFocusRequested = false;
+        }
+      } else if (this.#chipRoving?.focusLast()) {
+        event.preventDefault();
+      }
     }
   }
 

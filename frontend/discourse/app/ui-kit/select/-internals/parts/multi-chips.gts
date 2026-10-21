@@ -127,6 +127,37 @@ export default class MultiChips extends Component<MultiChipsSignature> {
     return Array.from({ length: count }, (_, key) => ({ key }));
   }
 
+  /** The decorative count of held values beyond the visible chips. */
+  get moreLabel(): string | undefined {
+    const maximum = this.args.presenter.maxVisibleChips;
+    const value = this.args.engine.value;
+    const count = Array.isArray(value) ? value.length : 0;
+    if (maximum === undefined || count <= maximum) {
+      return undefined;
+    }
+    return maximum === 0 ? String(count) : `+${count - maximum}`;
+  }
+
+  /** Display-only chips describe the panel instead of advertising trigger-chip removal. */
+  get chipHint(): string | undefined {
+    if (!this.args.engine.hasValue) {
+      return undefined;
+    }
+    return i18n(
+      this.args.presenter.triggerChipsInteractive
+        ? "d_select.chips_hint"
+        : "d_select.selected_items_hint"
+    );
+  }
+
+  /** Restricts both resolved chips and loading placeholders to the trigger budget. */
+  @action
+  visibleChips<T>(chips: readonly T[] | undefined): readonly T[] {
+    return this.args.presenter.maxVisibleChips === undefined
+      ? (chips ?? [])
+      : (chips ?? []).slice(0, this.args.presenter.maxVisibleChips);
+  }
+
   /** Converts a held item's id to its chip attribute value. */
   chipValue(chip: SelectDescriptor): string {
     return String(chip.value ?? "");
@@ -242,7 +273,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
         aria-label={{i18n "d_select.selected_items"}}
         class="d-select__chip-list"
         {{(if
-          @presenter.isDesktopTypeahead
+          @presenter.triggerChipsInteractive
           (modifier
             dRovingFocus
             tabStop=false
@@ -256,7 +287,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
       >
         <DAsyncContent @asyncData={{@resolveSelection}} @context={{@value}}>
           <:loading>
-            {{#each this.chipSkeletons key="key" as |row|}}
+            {{#each (this.visibleChips this.chipSkeletons) key="key" as |row|}}
               <li class="d-select__chip" data-key={{row.key}}>
                 {{#if @hasSelectionLoadingBlock}}
                   {{yield to="selectionLoading"}}
@@ -267,17 +298,16 @@ export default class MultiChips extends Component<MultiChipsSignature> {
             {{/each}}
           </:loading>
           <:content as |chips|>
-            {{#each chips key="key" as |chip index|}}
+            {{#each (this.visibleChips chips) key="key" as |chip index|}}
               <li
                 class="d-select__chip"
                 data-name={{@engine.getSelectionLabel chip.item}}
                 data-value={{this.chipValue chip}}
               >
-                {{! Hidden from assistive tech: the remove button's accessible name
-                  already carries this label (via aria-labelledby), so exposing the
-                  text again would double every chip during item-by-item navigation. }}
+                {{! Interactive chips are named through the remove button; display-only
+                  chips expose their own label text. }}
                 <span
-                  aria-hidden="true"
+                  aria-hidden={{if @presenter.triggerChipsInteractive "true"}}
                   class="d-select__chip-label"
                   id="{{this.chipIdPrefix}}-{{index}}-label"
                 >
@@ -293,39 +323,44 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                     <SelectionLabel @engine={{@engine}} @item={{chip.item}} />
                   {{/if}}
                 </span>
-                <button
-                  {{! Name leads with the item, then how to remove it (e.g. "Orange, Press
+                {{#if @presenter.triggerChipsInteractive}}
+                  <button
+                    {{! Name leads with the item, then how to remove it (e.g. "Orange, Press
                     Backspace or Delete to remove") so it reads as a selected item rather
                     than a bare action. }}
-                  aria-labelledby="{{this.chipIdPrefix}}-{{index}}-label {{this.chipIdPrefix}}-{{index}}-remove"
-                  class="d-select__chip-remove"
-                  disabled={{@presenter.isLocked}}
-                  {{! Desktop: never a tab stop — reached by arrow-roving from the input.
-                    A static -1 keeps every newly-rendered chip out of the tab order with
-                    no dependence on the modifier re-seeding. Mobile keeps native tab stops. }}
-                  tabindex={{if @presenter.isDesktopTypeahead "-1"}}
-                  type="button"
-                  {{on "click" (fn this.removeItem chip.item)}}
-                  {{on "keydown" (fn this.handleChipKeydown chip.item index)}}
-                >
-                  <span
-                    class="sr-only"
-                    id="{{this.chipIdPrefix}}-{{index}}-remove"
+                    aria-labelledby="{{this.chipIdPrefix}}-{{index}}-label {{this.chipIdPrefix}}-{{index}}-remove"
+                    class="d-select__chip-remove"
+                    disabled={{@presenter.isLocked}}
+                    tabindex="-1"
+                    type="button"
+                    {{on "click" (fn this.removeItem chip.item)}}
+                    {{on "keydown" (fn this.handleChipKeydown chip.item index)}}
                   >
-                    {{i18n "d_select.remove_hint"}}
-                  </span>
-                  {{dIcon "xmark"}}
-                </button>
+                    <span
+                      class="sr-only"
+                      id="{{this.chipIdPrefix}}-{{index}}-remove"
+                    >
+                      {{i18n "d_select.remove_hint"}}
+                    </span>
+                    {{dIcon "xmark"}}
+                  </button>
+                {{/if}}
               </li>
             {{/each}}
           </:content>
         </DAsyncContent>
       </ul>
+      {{#if this.moreLabel}}
+        <span
+          aria-hidden="true"
+          class="d-select__chips-more"
+        >{{this.moreLabel}}</span>
+      {{/if}}
       {{#if @presenter.isDesktopTypeahead}}
         <ComboboxQueryInput
           aria-busy={{if @pending "true"}}
           aria-describedby={{@composeDescribedBy
-            (if @engine.hasValue this.chipHintId)
+            (if this.chipHint this.chipHintId)
             @describedBy
           }}
           aria-invalid={{if @invalid "true"}}
@@ -336,7 +371,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           @editing={{@editing}}
           @engine={{@engine}}
           @expanded={{@expanded}}
-          @label={{@presenter.ariaLabelText}}
+          @label={{@presenter.selectionLabel}}
           @listboxId={{@listboxId}}
           @onBlur={{@onBlur}}
           @onEdit={{@onEdit}}
@@ -350,9 +385,9 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           {{keepAboveKeyboard @shouldCorrectKeyboardOcclusion}}
           {{on "keydown" @onInputKeydown}}
         />
-        {{#if @engine.hasValue}}
+        {{#if this.chipHint}}
           <span class="sr-only" id={{this.chipHintId}}>
-            {{i18n "d_select.chips_hint"}}
+            {{this.chipHint}}
           </span>
         {{/if}}
       {{else if @presenter.queryPlaceholder}}

@@ -25,6 +25,8 @@ export type SelectVariant =
 interface VariantPresenterArgs extends SelectPresentationOptions {
   value?: SelectValue;
   multiple?: boolean;
+  /** Maximum trigger chips; zero renders only the selected count. */
+  maxVisibleChips?: number;
   labelField?: string;
   variant?: SelectVariant;
   readonly?: boolean;
@@ -180,15 +182,14 @@ export default class VariantPresenter {
    * "Options, button". The value is composed in rather than dropped, because the label still has
    * to say what the control is FOR — the visible text alone would not.
    *
-   * Single-select only. A multi trigger renders chips, which are their own subtree rather than
-   * one label, and folding them into a single string would fight the per-chip remove controls.
+   * Multi-select held labels are exposed through a separate description.
    */
   get triggerRootLabel(): string | undefined {
     if (!this.triggerTakesFocus) {
       return undefined;
     }
     if (this.#getArgs().multiple || !this.#engine.hasValue) {
-      return this.ariaLabelText;
+      return this.selectionLabel;
     }
     return i18n("d_select.label_with_value", {
       label: this.ariaLabelText,
@@ -320,6 +321,43 @@ export default class VariantPresenter {
   /** Desktop typeahead: the query input lives in the trigger (host DOM). */
   get isDesktopTypeahead(): boolean {
     return this.isTypeahead && !this.overlayIsModal;
+  }
+
+  /** Only uncapped desktop typeaheads offer removal in the trigger. */
+  get triggerChipsInteractive(): boolean {
+    return this.isDesktopTypeahead && this.maxVisibleChips === undefined;
+  }
+
+  /** The trigger's chip budget; undefined preserves all chips. */
+  get maxVisibleChips(): number | undefined {
+    const count = this.#getArgs().maxVisibleChips;
+    return count === undefined ? undefined : Math.max(0, Math.floor(count));
+  }
+
+  /** Held labels describe display-only triggers, including locked fields. */
+  get describeHeldLabels(): boolean {
+    return !!this.#getArgs().multiple && !this.triggerChipsInteractive;
+  }
+
+  /** Local control lists already expose held rows with checked states. */
+  get selectionStripEligible(): boolean {
+    return (
+      this.describeHeldLabels &&
+      this.#engine.hasValue &&
+      (this.overlayIsModal || this.isDesktopTypeahead || this.#engine.isAsync)
+    );
+  }
+
+  /** Compact and overflow controls announce the entire held count. */
+  get selectionLabel(): string {
+    if (this.#getArgs().multiple && this.maxVisibleChips !== undefined) {
+      const value = this.#engine.value;
+      return i18n("d_select.label_with_count", {
+        label: this.ariaLabelText,
+        count: Array.isArray(value) ? value.length : 0,
+      });
+    }
+    return this.ariaLabelText;
   }
 
   /** Mobile typeahead: the query input lives inside the modal (the trigger only shows the value). */

@@ -609,36 +609,16 @@ module(
       </template>
     }
 
-    test("Enter on a chip's remove button does not open the menu", async function (assert) {
+    test("a static trigger's chips are display-only", async function (assert) {
       await render(<template><ChipHost /></template>);
 
       assert
         .dom(".d-select__chip")
         .exists({ count: 2 }, "the held values render as chips");
-
-      const remove = findAll(".d-select__chip-remove")[0];
-      await focus(remove);
-      await triggerKeyEvent(remove, "keydown", "Enter");
-
       assert
-        .dom("[role='listbox']")
+        .dom(".d-select__trigger button.d-select__chip-remove")
         .doesNotExist(
-          "activating a chip's remove button is not a trigger activation"
-        );
-    });
-
-    test("Backspace on a chip's remove button does not clear the whole selection", async function (assert) {
-      await render(<template><ChipHost /></template>);
-
-      const remove = findAll(".d-select__chip-remove")[0];
-      await focus(remove);
-      await triggerKeyEvent(remove, "keydown", "Backspace");
-
-      assert
-        .dom(".d-select__chip")
-        .exists(
-          { count: 2 },
-          "a key aimed at one chip never empties the selection"
+          "no remove buttons are nested in the select-only combobox"
         );
     });
   }

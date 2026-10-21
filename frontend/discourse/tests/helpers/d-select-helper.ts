@@ -39,17 +39,32 @@ export class DSelect {
     }
   }
 
-  /** Removes the chip matching the literal string form of the value. */
+  /** Removes through an interactive trigger chip, the strip, or a checked local row. */
   async remove(value: unknown): Promise<void> {
     const chip = Array.from(
       this.element().querySelectorAll<HTMLElement>(".d-select__chip")
     ).find((element) => element.dataset.value === String(value));
-    await click(
-      this.#required(
-        chip?.querySelector(".d-select__chip-remove"),
-        `remove button for ${String(value)}`
-      )
-    );
+    const button = chip?.querySelector(".d-select__chip-remove");
+    if (button) {
+      await click(button);
+      return;
+    }
+    await this.open();
+    const stripItem = Array.from(
+      this.#dom.panel?.querySelectorAll<HTMLElement>(".d-select__strip-item") ??
+        []
+    ).find((element) => element.dataset.value === String(value));
+    if (stripItem) {
+      await click(
+        this.#required(
+          stripItem.querySelector("button"),
+          `strip button for ${String(value)}`
+        )
+      );
+    } else {
+      // Desktop local control lists expose selection through their checked rows.
+      await this.select(value);
+    }
   }
 
   /** Replaces the query, including a typeahead's resting selection label. */

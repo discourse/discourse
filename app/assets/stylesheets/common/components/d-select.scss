@@ -458,6 +458,13 @@
   display: contents;
 }
 
+.d-select__chips-more {
+  padding-inline: 0.4em;
+  border-radius: var(--d-input-border-radius);
+  background: var(--primary-low);
+  color: var(--primary);
+}
+
 .d-select__chip {
   display: inline-flex;
   align-items: center;

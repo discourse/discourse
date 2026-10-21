@@ -1261,7 +1261,7 @@ module(
       );
     });
 
-    test("a multi root is a focusable button, and its chip keys stay with the chip", async function (assert) {
+    test("a multi root is a focusable button with display-only chips", async function (assert) {
       await render(
         <template>
           <DefaultHost @multiple={{true}} @value={{array 1 2}} />
@@ -1272,11 +1272,9 @@ module(
         .dom(".d-select")
         .hasAttribute("role", "button")
         .hasAttribute("tabindex", "0");
-
-      await triggerKeyEvent(".d-select__chip-remove", "keydown", "Enter");
       assert
-        .dom(".fk-d-menu-modal")
-        .doesNotExist("a key on a chip's remove button does not open");
+        .dom(".d-select__trigger button.d-select__chip-remove")
+        .doesNotExist("no remove buttons are nested in the button root");
 
       await focus(".d-select");
       await triggerKeyEvent(".d-select", "keydown", "Enter");

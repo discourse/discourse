@@ -52,9 +52,33 @@ block creation; `@allowCreate` can impose additional rules.
 renders `d_select.create_item` ("Create “%{label}”") around that label. The `data-name` hook
 remains the item label, and a consumer `:item` block overrides the row's content.
 
-## Mobile selection strip
+## Compact triggers and the selection strip
 
-Every mobile multi-select with held items renders a labelled “Selected items” list in the
+`@maxVisibleChips={{N}}` limits a multi-select trigger on every variant and device.
+Zero shows the held count; a positive N shows the first N chips followed by `+K` for
+those hidden. The badge is decorative (`aria-hidden`) and clicking it opens the panel
+through the trigger. The controller's accessible name becomes “Label, K selected”,
+including zero; desktop typeahead puts that name on its input, other variants on the root.
+
+Button, static and mobile trigger chips are always display-only. Desktop typeahead
+chips stay removable unless `@maxVisibleChips` is set. Display-only chip labels remain
+exposed to assistive technology. Every display-only trigger references a visually hidden
+list of **all** held labels in `aria-describedby`, merged with `@describedBy`, even when
+locked. The list sits outside the named root so disabled fields still expose their labels.
+
+On desktop the strip appears for a multi-select with held items and display-only trigger
+chips. Button and static selects with a local `@items` source are the exception: their
+held rows are checked in the list. Server-backed button/static selects and capped
+typeaheads use the strip even when every held chip fits in the trigger. Once eligible in
+an open session, the strip stays eligible until close. It unmounts at zero held values
+after removal has handed focus back; picking the first item while open shows it again.
+
+For a capped desktop typeahead, ArrowLeft at the start of the input opens the panel and
+focuses the strip's last chip. Tab from the input enters its single Tab stop through the
+panel's inline tab order; Up/Down or Shift+Tab return to the input. Only interactive
+trigger chips advertise “Press Left arrow to reach selected items”.
+
+Every mobile multi-select with held items, including local sources, renders a labelled “Selected items” list in the
 modal: after the query input and limit message, before the results. Static modals have no
 query input. The modal is named after the field. The strip resolves every held value in
 order through the trigger's resolver cache, renders button-free skeletons while labels
@@ -73,7 +97,9 @@ The strip has its own capped scroll area (`--d-select-strip-max-height`, default
 and remove targets of at least 44px in the modal. The whole panel has a height budget
 (`--d-select-panel-max-height`, default `min(32em, 70dvh)`); the results shrink into the
 remaining space and remeasure when the strip resizes. Its roving group is independent
-of the trigger chips, allowing the part to be reused by desktop panels later.
+of the trigger chips. Desktop strips follow the filter (button) or lead the panel
+(typeahead/static), after any limit message and before the results. Desktop remove
+targets are at least 24px.
 
 Closing clears only a panel/modal input captured for that session; persistent desktop
 controllers remain registered. Escape from the panel returns focus to the connected
@@ -202,8 +228,9 @@ Two behaviours only appear once blocks are used together, and both are easy to g
 - Icons rendered through the icon helper are `aria-hidden` by default. Do not give one an
   `aria-label` in a row whose text already names it.
 - Avatars and other decorative images need an empty `alt`, or the row's name is doubled.
-- In a multi-select, a chip's accessible name is built from what `:selection` renders (the label
-  span is hidden and pulled back in by the remove button). An icon-only or image-only chip is
+- In an interactive multi-select chip, the accessible name is built from what `:selection`
+  renders (the label span is hidden and pulled back in by the remove button). Display-only
+  chips expose the label directly. An icon-only or image-only chip is
   announced as a bare remove button.
 - Never render a trailing bare number; it is announced as part of the option's name ("performance
   871"). Use a phrase, or hide the visual figure and supply one.

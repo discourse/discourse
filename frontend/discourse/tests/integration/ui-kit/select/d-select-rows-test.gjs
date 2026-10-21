@@ -8,12 +8,15 @@ import {
   find,
   findAll,
   render,
+  settled,
   triggerKeyEvent,
   waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import {
   ITEMS,
   MultiLimitsHost,
@@ -1035,6 +1038,321 @@ module(
       assert.true(
         onChange.notCalled,
         "a virtual jump never enables activation"
+      );
+    });
+  }
+);
+
+/** Controlled values and live presentation options for the strip's session behavior. */
+class CompactStripHost extends Component {
+  @tracked value = this.args.value ?? [];
+
+  @action
+  onChange(value) {
+    this.value = value;
+  }
+
+  <template>
+    <DSelect
+      @describedBy="u1f-help"
+      @disabled={{@disabled}}
+      @items={{@items}}
+      @label="Fruit"
+      @load={{@load}}
+      @maximum={{@maximum}}
+      @maxVisibleChips={{@cap.value}}
+      @multiple={{true}}
+      @onChange={{this.onChange}}
+      @resolveValues={{@resolveValues}}
+      @value={{this.value}}
+      @variant={{@variant}}
+    />
+    <span id="u1f-help">Pick fruit</span>
+    <button class="u1f-outside" type="button">Outside</button>
+  </template>
+}
+
+module(
+  "Integration | ui-kit | select | DSelect (compact chips and strip details)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    const load = () => ITEMS;
+    const resolveValues = (values) =>
+      ITEMS.filter((item) => values.includes(item.id));
+
+    for (const variant of ["typeahead", "button", "static"]) {
+      test(`${variant} describes every held label and exposes display-only text`, async function (assert) {
+        const cap = tracked(1);
+        await render(
+          <template>
+            <CompactStripHost
+              @cap={{cap}}
+              @items={{ITEMS}}
+              @value={{array 1 2 3}}
+              @variant={{variant}}
+            />
+          </template>
+        );
+        const controller = find(".d-select__input") ?? find(".d-select");
+        const descriptions = controller
+          .getAttribute("aria-describedby")
+          .split(/\s+/)
+          .map((id) => document.getElementById(id).textContent)
+          .join(" ");
+        for (const text of ["Apple", "Banana", "Cherry pie", "Pick fruit"]) {
+          assert.true(
+            descriptions.includes(text),
+            `description includes ${text}`
+          );
+        }
+        assert
+          .dom(".d-select__chip-label")
+          .doesNotHaveAttribute("aria-hidden", "visible label stays exposed");
+        await click(".d-select__chips-more");
+        assert
+          .dom("[role='listbox']")
+          .exists("badge click bubbles to the trigger");
+        assert
+          .dom(".d-select__trigger .d-select__chip-remove")
+          .doesNotExist("display-only trigger has no remove buttons");
+      });
+    }
+
+    test("disabled compact labels remain outside the named root", async function (assert) {
+      const cap = tracked(0);
+      await render(
+        <template>
+          <CompactStripHost
+            @cap={{cap}}
+            @disabled={{true}}
+            @items={{ITEMS}}
+            @value={{array 1 2}}
+            @variant="button"
+          />
+        </template>
+      );
+      const root = find(".d-select");
+      const labels = root
+        .getAttribute("aria-describedby")
+        .split(/\s+/)
+        .map((id) => document.getElementById(id))
+        .find((element) => element.textContent.includes("Apple"));
+      assert.false(
+        root.contains(labels),
+        "disabled labels can be read outside the unfocusable root"
+      );
+      assert.dom(labels).hasClass("sr-only", "held labels are visually hidden");
+    });
+
+    test("desktop strip latches eligibility until close and unmounts at zero", async function (assert) {
+      const cap = tracked(1);
+      await render(
+        <template>
+          <CompactStripHost
+            @cap={{cap}}
+            @items={{ITEMS}}
+            @value={{array 1 2}}
+          />
+        </template>
+      );
+      await click(".d-select__input");
+      const strip = find(".d-select__strip");
+      assert.dom(strip).exists("overflow enables the strip");
+      cap.value = undefined;
+      await settled();
+      assert.strictEqual(
+        find(".d-select__strip"),
+        strip,
+        "the session keeps its strip after eligibility changes"
+      );
+      await triggerKeyEvent(".d-select__input", "keydown", "Escape");
+      await click(".d-select__input");
+      assert
+        .dom(".d-select__strip")
+        .doesNotExist("a new interactive-chip session clears the latch");
+      cap.value = 0;
+      await settled();
+      const buttons = findAll(".d-select__strip button");
+      buttons[1].focus();
+      await triggerKeyEvent(buttons[1], "keydown", "Delete");
+      await triggerKeyEvent(".d-select__strip button", "keydown", "Delete");
+      assert
+        .dom(".d-select__strip")
+        .doesNotExist("zero held items unmount after focus leaves");
+      assert.strictEqual(
+        document.activeElement,
+        find(".d-select__input"),
+        "the final removal returns focus to the input"
+      );
+      assert
+        .dom(".d-select__input")
+        .hasAttribute(
+          "aria-label",
+          "Fruit, 0 selected",
+          "the empty count stays in the name"
+        );
+      await click(optionWithText("Banana"));
+      assert
+        .dom(".d-select__strip button")
+        .exists({ count: 1 }, "picking again restores the latched strip");
+    });
+
+    for (const key of ["ArrowUp", "ArrowDown", "Tab"]) {
+      test(`${key} returns from the compact strip to the input`, async function (assert) {
+        const cap = tracked(0);
+        await render(
+          <template>
+            <CompactStripHost
+              @cap={{cap}}
+              @items={{ITEMS}}
+              @value={{array 1 2}}
+            />
+          </template>
+        );
+        await click(".d-select__input");
+        await triggerKeyEvent(".d-select__input", "keydown", "Tab");
+        assert
+          .dom(document.activeElement)
+          .hasClass(
+            "d-select__strip-remove",
+            "inline Tab order reaches the strip"
+          );
+        await triggerKeyEvent(document.activeElement, "keydown", key, {
+          shiftKey: key === "Tab",
+        });
+        assert.strictEqual(
+          document.activeElement,
+          find(".d-select__input"),
+          "the query regains focus"
+        );
+        assert
+          .dom("[role='listbox']")
+          .exists("returning to the query keeps the panel open");
+      });
+    }
+
+    test("strip focus suppresses the row indicator and outside focus closes", async function (assert) {
+      const cap = tracked(0);
+      await render(
+        <template>
+          <CompactStripHost @cap={{cap}} @items={{ITEMS}} @value={{array 1}} />
+        </template>
+      );
+      await click(".d-select__input");
+      const active = find(".d-select__option.--active");
+      assert.dom(active).exists("an unheld option is active");
+      await triggerKeyEvent(".d-select__input", "keydown", "ArrowLeft");
+      assert.strictEqual(
+        getComputedStyle(active).outlineStyle,
+        "none",
+        "only the strip shows a focus indicator"
+      );
+      find(".u1f-outside").focus();
+      await settled();
+      assert
+        .dom(".d-select__panel")
+        .doesNotExist("focus leaving the strip dismisses the panel");
+      assert.strictEqual(
+        document.activeElement,
+        find(".u1f-outside"),
+        "outside focus is preserved"
+      );
+    });
+
+    test("static server strips and local exceptions are symmetric across desktop and mobile", async function (assert) {
+      await render(
+        <template>
+          <CompactStripHost
+            @load={{load}}
+            @resolveValues={{resolveValues}}
+            @value={{array 1 2}}
+            @variant="static"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      assert
+        .dom(".d-select__panel > .d-select__strip:first-child")
+        .exists("a server static strip leads its panel");
+      await dSelect().remove(2);
+      assert
+        .dom(".d-select")
+        .hasAttribute(
+          "data-value",
+          "1",
+          "the helper removes through the strip"
+        );
+      forceMobile();
+      await render(
+        <template>
+          <CompactStripHost
+            @items={{ITEMS}}
+            @value={{array 1 2}}
+            @variant="static"
+          />
+        </template>
+      );
+      await dSelect().remove(1);
+      assert
+        .dom(".d-select__strip button")
+        .exists({ count: 1 }, "mobile local sources keep a strip");
+    });
+
+    test("desktop limit, strip and results share a height budget", async function (assert) {
+      const items = Array.from({ length: 60 }, (_, id) => ({
+        id,
+        name: `Fruit ${id}`,
+      }));
+      const value = items.slice(0, 40).map((item) => item.id);
+      const server = () => items;
+      const resolve = () => items.slice(0, 40);
+      await render(
+        <template>
+          <CompactStripHost
+            @load={{server}}
+            @maximum={{40}}
+            @resolveValues={{resolve}}
+            @value={{value}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      const panel = find(".d-select__panel");
+      assert.true(
+        Boolean(panel.children[0].querySelector(".d-select__filter")),
+        "filter comes first"
+      );
+      assert
+        .dom(panel.children[1])
+        .hasClass("d-select__limit", "then the limit");
+      assert
+        .dom(panel.children[2])
+        .hasClass("d-select__strip", "then the strip");
+      const strip = find(".d-select__strip");
+      assert.true(
+        strip.scrollHeight > strip.clientHeight,
+        "long strips scroll internally"
+      );
+      assert.strictEqual(
+        getComputedStyle(strip).overflowY,
+        "auto",
+        "strip owns its scroll"
+      );
+      const button = find(".d-select__strip button");
+      assert.true(button.offsetHeight >= 24, "desktop targets are 24px tall");
+      assert.true(button.offsetWidth >= 24, "and 24px wide");
+      assert.true(
+        panel.offsetHeight <= parseFloat(getComputedStyle(panel).maxHeight) + 1,
+        "the whole panel stays within its budget"
+      );
+      const list = find(".d-select__panel .d-virtual-list");
+      assert.true(list.clientHeight > 0, "results retain a viewport");
+      assert.true(
+        list.getBoundingClientRect().bottom <=
+          panel.getBoundingClientRect().bottom + 1,
+        "the results fit in the remaining space"
       );
     });
   }
