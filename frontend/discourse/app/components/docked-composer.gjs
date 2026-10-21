@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { destroy } from "@ember/destroyable";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import { getOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -238,7 +238,7 @@ export default class DockedComposer extends Component {
     this.args.onRegisterApi?.({ setReply: this.setReply, focus: this.focus });
     this.loadDraft();
 
-    this.uppyUpload = new UppyUpload(getOwner(this), {
+    this.uppyUpload = new UppyUpload(this, {
       id: this.uploaderId,
       type: this.uploadType,
       useMultipartUploadsIfAvailable: true,
@@ -269,7 +269,10 @@ export default class DockedComposer extends Component {
       true
     );
     this.inputElement?.removeEventListener("paste", this.#handlePaste);
-    this.uppyUpload?.teardown();
+    if (this.uppyUpload) {
+      destroy(this.uppyUpload);
+      this.uppyUpload = null;
+    }
     this.#rootElement = null;
   }
 
