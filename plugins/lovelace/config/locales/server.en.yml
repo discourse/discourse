@@ -1,3 +1,5 @@
 en:
   site_settings:
     lovelace_enabled: "Enable the Lovelace plugin."
+  lovelace:
+    checklist_conflict: "Another administrator changed the checklist. Reload the page before saving again."

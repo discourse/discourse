@@ -6,4 +6,30 @@ en:
           lovelace: "Lovelace"
   js:
     lovelace:
-      placeholder: placeholder
+      title: "Lovelace"
+      onboarding:
+        title: "Member onboarding"
+        description: "Welcome new members with a checklist tailored to your community."
+        items: "Checklist items"
+        preview: "Member preview"
+        add_item: "Add checklist item"
+        save_item: "Save item"
+        saved: "Checklist saved."
+        empty: "Add your first checklist item to welcome new members."
+        progress: "%{count} of %{total} complete"
+        remove_confirm: 'Remove “%{title}” from the checklist?'
+        url_help: "Use a community path such as /c/general/1, /t/welcome/123, or /chat/c/general/1. Custom links also accept full https:// or http:// URLs."
+        fields:
+          title: "Title"
+          description: "Description"
+          link_type: "Link destination"
+          url: "Link"
+          button_text: "Button text"
+        links:
+          custom: "Custom URL"
+          category: "Category"
+          topic: "Topic"
+          chat: "Chat channel"
+          profile: "Member’s profile settings"
+          notifications: "Member’s notification settings"
+          account: "Member’s account settings"
