@@ -183,14 +183,10 @@ if ARGV.include?("--compress")
     *Dir.glob("app/assets/generated/**/*.{js,wasm}"),
   ]
   Parallel.map(files, in_threads: 4) do |file|
-    next if File.exist?("#{file}.gz") && File.exist?("#{file}.br")
+    next if File.exist?("#{file}.br")
 
     start = Time.now
-
     system("brotli", "-f", "--quality=11", "-o", "#{file}.br", file, exception: true)
-    IO.popen(["gzip", "-f", "-9", "-c", file], "rb") { |io| File.write("#{file}.gz", io.read) }
-    raise "gzip failed for #{file}" unless $?.success?
-
     puts "Compressed #{file} in #{(Time.now - start).round(2)}s"
   end
 end
