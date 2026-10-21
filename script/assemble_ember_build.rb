@@ -9,7 +9,6 @@ require "open3"
 require "json"
 require "time"
 require "parallel"
-require "etc"
 
 require_relative "../lib/version"
 
@@ -53,14 +52,6 @@ def core_tree_hash
 
     capture(env, "git", "write-tree").strip
   end
-end
-
-def node_heap_size_limit
-  capture("node", "-e", "console.log(v8.getHeapStatistics().heap_size_limit/1024/1024)").to_f
-end
-
-def low_memory_environment?
-  node_heap_size_limit < 2048
 end
 
 def resolved_ember_env
@@ -144,18 +135,6 @@ end
 
 build_cmd = %w[pnpm build]
 build_env = { "CI" => "1", "SKIP_DB_AND_REDIS" => "1" }
-
-if Etc.nprocessors > 2
-  # Anything more than 2 doesn't seem to improve build times
-  build_env["JOBS"] ||= "2"
-end
-
-if low_memory_environment?
-  log "Node.js heap_size_limit is less than 2048MB. Setting --max-old-space-size=2048 and CHEAP_SOURCE_MAPS=1"
-  build_env["NODE_OPTIONS"] = "--max_old_space_size=2048"
-  build_env["CHEAP_SOURCE_MAPS"] = "1"
-  build_env["JOBS"] = "1"
-end
 
 core_build_reusable =
   existing_core_build_usable? ||
