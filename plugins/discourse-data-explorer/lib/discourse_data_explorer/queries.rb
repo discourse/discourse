@@ -15,10 +15,7 @@ module DiscourseDataExplorer
       # WARNING: Edit the query hash carefully
       # For each query, add id, name, description and optional tags here and add sql below
       # Feel free to add new queries at the bottom of the hash in numerical order
-      # If any query has been run on an instance, it is then saved in the local db
-      # Locally stored queries are updated from the below data only when they are run again
-      # eg. If you update a query with id=-1 in this file and the query has been run on a site,
-      #     you must run the query with id=-1 on the site again to update these changes in the site db
+      # The seed task synchronizes these definitions without changing local query state.
 
       queries = {
         "most-common-likers": {

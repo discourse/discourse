@@ -36,8 +36,6 @@ RSpec.describe "JSON:API queries", type: :request do
 
   fab!(:analysts) { Fabricate(:group, name: "analysts") }
 
-  before { [oldest, middle, newest].each { Fabricate(:query_group, query: it, group: analysts) } }
-
   let(:base) { "http://test.localhost/api/data-explorer" }
   let(:root) { "http://test.localhost/api" }
   let(:query_parameters) { {} }
@@ -47,8 +45,23 @@ RSpec.describe "JSON:API queries", type: :request do
 
   before do
     SiteSetting.data_explorer_enabled = true
+    host! Discourse.current_hostname
     sign_in(user)
-    get path, headers:, params: query_parameters
+    [oldest, middle, newest].each { Fabricate(:query_group, query: it, group: analysts) }
+  end
+
+  shared_context "with synchronized default queries" do
+    let!(:existing_query) do
+      Fabricate(:query, id: -1, name: "Old definition", hidden:, last_run_at: 2.days.ago)
+    end
+    let(:hidden) { false }
+    let(:definition) { DiscourseDataExplorer::Queries.default.fetch("-1") }
+
+    before do
+      existing_query.groups = [analysts]
+      DiscourseDataExplorer::QueryTag.sync!(query: existing_query, names: ["staff"])
+      DiscourseDataExplorer::DefaultQuerySync.execute
+    end
   end
 
   shared_examples "a request only for admins" do
@@ -103,64 +116,98 @@ RSpec.describe "JSON:API queries", type: :request do
       }
     end
 
-    it_behaves_like "a request only for admins"
+    context "when queries are custom" do
+      before { get(path, headers:, params: query_parameters) }
 
-    it "sends the first page of queries" do
-      expect(parsed_body).to eq("data" => data, "included" => [], "links" => links)
-    end
+      it_behaves_like "a request only for admins"
 
-    context "when the request filters by a word in the name" do
-      let(:query_parameters) { { filter: { search: "NEVER POSTED" } } }
+      it "sends the first page of queries" do
+        expect(parsed_body).to eq("data" => data, "included" => [], "links" => links)
+      end
 
-      it "sends the queries that match, whatever the case" do
-        expect(parsed_body["data"].map { it["attributes"]["name"] }).to eq(
-          ["Users who never posted"],
-        )
+      context "when the request filters by a word in the name" do
+        let(:query_parameters) { { filter: { search: "NEVER POSTED" } } }
+
+        it "sends the queries that match, whatever the case" do
+          expect(parsed_body["data"].map { it["attributes"]["name"] }).to eq(
+            ["Users who never posted"],
+          )
+        end
+      end
+
+      context "when the request filters by a word in the description" do
+        let(:query_parameters) { { filter: { search: "seven days" } } }
+
+        it "sends the queries that match" do
+          expect(parsed_body["data"].map { it["attributes"]["name"] }).to eq(["Posts of the week"])
+        end
+      end
+
+      context "when the filter value holds a wildcard character" do
+        let(:query_parameters) { { filter: { search: "%" } } }
+
+        it "reads it as a plain character" do
+          expect(parsed_body["data"]).to be_empty
+        end
+      end
+
+      context "when the request includes the author and the groups" do
+        let(:query_parameters) { { include: "user,groups" } }
+
+        it "sends every related record under its own namespace" do
+          expect(parsed_body["included"]).to contain_exactly(
+            {
+              "type" => "users",
+              "id" => author.id.to_s,
+              "attributes" => {
+                "username" => "query_author",
+              },
+              "links" => {
+                "self" => "#{root}/users/#{author.id}",
+              },
+            },
+            {
+              "type" => "groups",
+              "id" => analysts.id.to_s,
+              "attributes" => {
+                "name" => "analysts",
+              },
+              "links" => {
+                "self" => "#{root}/groups/#{analysts.id}",
+              },
+            },
+          )
+        end
       end
     end
 
-    context "when the request filters by a word in the description" do
-      let(:query_parameters) { { filter: { search: "seven days" } } }
+    context "when default queries are synchronized" do
+      include_context "with synchronized default queries"
 
-      it "sends the queries that match" do
-        expect(parsed_body["data"].map { it["attributes"]["name"] }).to eq(["Posts of the week"])
+      let(:query_parameters) { super().merge(sort: "name") }
+      let(:query_ids) { DiscourseDataExplorer::Query.where(hidden: false).order(:name).pluck(:id) }
+      let(:first_page) { JSON.parse(response.body) }
+      let(:second_page) { JSON.parse(response.body) }
+      let(:first_page_ids) { first_page.fetch("data").map { it["id"].to_i } }
+      let(:second_page_ids) { second_page.fetch("data").map { it["id"].to_i } }
+
+      before { get(path, headers:, params: query_parameters) }
+
+      it "paginates default and custom queries together", :aggregate_failures do
+        expect(first_page_ids.size).to eq(50)
+
+        get(first_page.fetch("links").fetch("next"), headers:)
+
+        expect(first_page_ids + second_page_ids).to eq(query_ids)
+        expect(second_page.dig("links", "next")).to be_nil
       end
-    end
 
-    context "when the filter value holds a wildcard character" do
-      let(:query_parameters) { { filter: { search: "%" } } }
+      context "when a default query is hidden" do
+        let(:hidden) { true }
 
-      it "reads it as a plain character" do
-        expect(parsed_body["data"]).to be_empty
-      end
-    end
-
-    context "when the request includes the author and the groups" do
-      let(:query_parameters) { { include: "user,groups" } }
-
-      it "sends every related record under its own namespace" do
-        expect(parsed_body["included"]).to contain_exactly(
-          {
-            "type" => "users",
-            "id" => author.id.to_s,
-            "attributes" => {
-              "username" => "query_author",
-            },
-            "links" => {
-              "self" => "#{root}/users/#{author.id}",
-            },
-          },
-          {
-            "type" => "groups",
-            "id" => analysts.id.to_s,
-            "attributes" => {
-              "name" => "analysts",
-            },
-            "links" => {
-              "self" => "#{root}/groups/#{analysts.id}",
-            },
-          },
-        )
+        it "excludes the query from the list" do
+          expect(first_page_ids).not_to include(existing_query.id)
+        end
       end
     end
   end
@@ -168,43 +215,76 @@ RSpec.describe "JSON:API queries", type: :request do
   describe "GET /show" do
     let(:path) { "/api/data-explorer/queries/#{middle.id}" }
 
-    it_behaves_like "a request only for admins"
+    context "when queries are custom" do
+      before { get(path, headers:, params: query_parameters) }
 
-    it "sends one query" do
-      expect(parsed_body).to eq(
-        "data" => {
-          "type" => "queries",
-          "id" => middle.id.to_s,
-          "attributes" => {
-            "name" => middle.name,
-            "description" => middle.description,
-            "sql" => middle.sql,
-            "paramInfo" => [],
-            "isDefault" => false,
-            "createdAt" => middle.created_at.as_json,
-            "lastRunAt" => middle.last_run_at.as_json,
-            "tags" => ["custom"],
+      it_behaves_like "a request only for admins"
+
+      it "sends one query" do
+        expect(parsed_body).to eq(
+          "data" => {
+            "type" => "queries",
+            "id" => middle.id.to_s,
+            "attributes" => {
+              "name" => middle.name,
+              "description" => middle.description,
+              "sql" => middle.sql,
+              "paramInfo" => [],
+              "isDefault" => false,
+              "createdAt" => middle.created_at.as_json,
+              "lastRunAt" => middle.last_run_at.as_json,
+              "tags" => ["custom"],
+            },
+            "links" => {
+              "self" => "#{base}/queries/#{middle.id}",
+            },
           },
+          "included" => [],
           "links" => {
-            "self" => "#{base}/queries/#{middle.id}",
+            "self" => {
+              "href" => "#{base}/queries/#{middle.id}",
+              "type" => JsonApiKit::Pagination::Profile::MEDIA_TYPE,
+            },
           },
-        },
-        "included" => [],
-        "links" => {
-          "self" => {
-            "href" => "#{base}/queries/#{middle.id}",
-            "type" => JsonApiKit::Pagination::Profile::MEDIA_TYPE,
-          },
-        },
-      )
+        )
+      end
+
+      context "when the query is hidden" do
+        fab!(:secret) { Fabricate(:query, name: "Hidden from the listing", hidden: true) }
+
+        let(:path) { "/api/data-explorer/queries/#{secret.id}" }
+
+        it { expect(response).to have_http_status(:not_found) }
+      end
     end
 
-    context "when the query is hidden" do
-      fab!(:secret) { Fabricate(:query, name: "Hidden from the listing", hidden: true) }
+    context "when default queries are synchronized" do
+      include_context "with synchronized default queries"
 
-      let(:path) { "/api/data-explorer/queries/#{secret.id}" }
+      let(:path) { "/api/data-explorer/queries/#{existing_query.id}" }
 
-      it { expect(response).to have_http_status(:not_found) }
+      before { get(path, headers:, params: query_parameters) }
+
+      it "serves the current default definition" do
+        expect(parsed_body.fetch("data")).to include(
+          "id" => existing_query.id.to_s,
+          "attributes" =>
+            a_hash_including(
+              "name" => definition.fetch("name"),
+              "sql" => definition.fetch("sql"),
+              "isDefault" => true,
+              "tags" => %w[default users staff],
+            ),
+        )
+      end
+
+      context "when a default query is hidden" do
+        let(:hidden) { true }
+
+        it "returns not found for the query" do
+          expect(response).to have_http_status(:not_found)
+        end
+      end
     end
   end
 end
