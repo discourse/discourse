@@ -2,45 +2,111 @@
 
 ## Installation and configuration
 
-Lovelace lives in `plugins/lovelace/` in the Discourse source tree and loads with
-Discourse. Use the containing Discourse installation and its dependencies; the
-plugin has no separate Ruby bundle or JavaScript dependency installation.
+Lovelace loads from `plugins/lovelace/` with the containing Discourse installation.
+It uses Discourse’s Ruby and JavaScript dependencies and needs no separate
+installation or database migration. Enable the `lovelace_enabled` site setting
+(default: enabled).
 
-Administrators can enable or disable it with the `lovelace_enabled` site setting,
-which defaults to `true` and is exposed to the client.
+Open **Admin → Plugins → Lovelace → Member onboarding**, or visit
+`/admin/plugins/lovelace/member-onboarding` directly. The standard Settings tab
+contains the plugin enable setting. All administrators can configure the
+checklist; there is no subscription plan restriction or upgrade requirement.
 
-## Implemented behavior and authorization
+## Checklist configuration
 
-The current implementation is a minimal foundation. `GET /lovelace/examples.json`
-returns HTTP 200 with `{"hello":"world"}` when the plugin is enabled. It is accessible
-to anonymous visitors on public sites and signed-in users. When the site requires
-login, anonymous JSON requests receive HTTP 403 through Discourse's application
-controller. Disabling the plugin causes
-signed-in requests to the endpoint to return HTTP 404. There are no additional
-Lovelace roles, write operations, or product UI yet.
+The page presents checklist items and a member preview side by side, stacking
+these sections on narrow screens. The checklist starts empty.
+
+Choose **Add checklist item** to open a form. Each item has a title, description,
+link destination, and button text. Title and button text are required. Limits are
+120 characters for titles, 1,000 for descriptions, 80 for button text, 2,048 for
+links, and 50 items per checklist.
+
+Link destinations include:
+
+- Category: enter a community path such as `/c/general/1`.
+- Topic: enter a community path such as `/t/welcome/123`.
+- Chat channel: enter a community path such as `/chat/c/general/1`.
+- Profile, notification, or account settings: the link automatically targets the
+  corresponding `/my/preferences/…` page for the signed-in member.
+- Custom URL: enter a community path beginning with a single `/`, or a full
+  HTTP or HTTPS URL.
+
+Links do not grant access to their destination. Choose destinations that intended
+members can access; chat links require an available chat channel. Category,
+topic, and chat fields accept paths rather than providing a resource search.
+
+Choose **Save item** to persist an addition or edit. A successful save closes the
+form and leaves a compact row with its title, description, Edit button, drag
+handle, and removal control. The “Checklist saved.” toast disappears on its own.
+Failed saves keep the form open for correction.
+
+Drag a handle to reorder items. Clicking a handle also offers move options, and
+keyboard users can focus a handle and use Alt+Arrow keys to move an item. Reorders
+save immediately. Removing an item requires confirmation and saves immediately.
+Other list changes are disabled while an item form is open or a save is pending.
+
+Opening a form without changing a field does not trigger a navigation warning.
+Editing an unsaved field prompts before leaving the page or canceling the form.
+Saving closes the form and clears the pending change. Checking preview items or
+following preview links never creates an unsaved configuration change.
+
+## Member preview
+
+The preview shows the saved checklist in order, including descriptions,
+checkboxes, button text, and a completion count. Checkboxes update only this
+page’s temporary progress. Links open in a new tab with the current
+administrator’s permissions. Reloading or leaving the page resets preview
+progress; it does not write member progress.
+
+This implementation provides configuration and an administrator preview. It does
+not yet display a checklist to newly registered members or store their progress.
+
+## Authorization and persistence
+
+Both reading and writing checklist configuration require a signed-in
+administrator. Ordinary members and anonymous visitors cannot access the
+configuration JSON API. Disabling Lovelace makes its endpoints unavailable.
+
+`GET /lovelace/admin/checklist.json` returns items and a revision number.
+`PUT` to the same endpoint accepts `items` and the revision last read. A revision
+conflict returns HTTP 409 with a request to reload, preserving the other
+administrator’s changes. Invalid item fields or unsafe URL schemes return HTTP
+400 without changing the saved checklist. Writes retain Discourse’s CSRF
+protection.
+
+The starter `GET /lovelace/examples.json` endpoint remains available with its
+original public/private-site behavior and returns `{"hello":"world"}`.
 
 ## Architecture
 
-`plugin.rb` declares the plugin metadata, registers the enable setting, and loads
-`Lovelace::Engine`. The isolated Rails engine provides the `Lovelace` namespace;
-`config/routes.rb` mounts it at `/lovelace`. `ExamplesController` inherits from
-Discourse's `ApplicationController` and uses `requires_plugin` to enforce plugin
-availability. There are no plugin database tables or background jobs.
+The isolated Rails engine exposes the API under `/lovelace`. The checklist is
+stored as one ordered configuration in Discourse’s PluginStore, with a revision
+and a distributed mutex to serialize writes. The server validates fields, limits,
+link destination types, and URL schemes and supplies fixed paths for settings
+links. No plugin tables, migrations, or background jobs are needed.
 
-The JavaScript package uses the same workspace dependency on Discourse's types as
-other bundled plugins. Its TypeScript configuration references the local
-`frontend/discourse` project. Linting, formatting, dependencies, and CI are managed
-by the containing Discourse repository.
+The plugin registers a standard admin plugin tab and page subheader. FormKit
+owns validation and unsaved draft checks, and is mounted only while adding or
+editing an item. The preview’s checkbox state is separate from the form and from
+persisted configuration. The shared reorderable list supplies drag, menu, and
+keyboard interactions; the standard toast service supplies temporary save
+feedback. All interface strings are translatable, and item text is escaped.
 
 ## Tests
 
-Run commands from the Discourse repository root:
+Run from the Discourse repository root:
 
 ```sh
-LOAD_PLUGINS=1 RAILS_ENV=test bin/rspec plugins/lovelace/spec/requests/examples_controller_spec.rb
-LOAD_PLUGINS=1 RAILS_ENV=test bin/rspec plugins/lovelace/spec/system/core_features_spec.rb
+LOAD_PLUGINS=1 RAILS_ENV=test bin/rspec plugins/lovelace/spec/requests
+pnpm --dir frontend/discourse build
+LOAD_PLUGINS=1 bin/rake assets:precompile:build_plugins
+LOAD_PLUGINS=1 RAILS_ENV=test bin/rspec plugins/lovelace/spec/system/configure_member_onboarding_spec.rb
 ```
 
-The request specs exercise the endpoint's JSON response, public and private site access, and
-disabled-plugin response. The system spec uses Discourse's shared core-feature
-suite to check that the enabled plugin coexists with normal forum interactions.
+Request specs cover authorization, disabled-plugin behavior, persistence,
+reordering, removal, supported destinations, invalid payloads, and stale writes.
+The onboarding system spec covers adding and editing items, compact saved rows,
+temporary toasts, preview progress, navigation warnings, reordering, removal, and
+persistence after refresh. The existing core-features system spec checks normal
+forum interactions with the plugin enabled.
