@@ -339,7 +339,7 @@ GEM
       railties (>= 4)
       request_store (~> 1.0)
     logstash-event (1.2.02)
-    logster (3.0.0)
+    logster (3.0.1)
     loofah (2.25.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -1123,7 +1123,7 @@ CHECKSUMS
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
   lograge (0.15.1) sha256=b8a6b3d45f15855f3b038ce01019317e783fa9ddf774eb20818c751438c5c761
   logstash-event (1.2.02) sha256=89a7dc60fac67070a5f60ba07409e541b09cb58906c391e90cb74b9f217467ae
-  logster (3.0.0) sha256=e1d15846280950b138a83695dbdac921563d2e2536159042b1c05de0e690ab17
+  logster (3.0.1) sha256=b1667e481260492cdf28e3aebed0034366fd47c7ce72dff56d03a75954a572ce
   loofah (2.25.2) sha256=2007f746959ac65552456e04b433e83deb22759ab38c838b4445c70e43425918
   lru_redux (1.1.0) sha256=ee71d0ccab164c51de146c27b480a68b3631d5b4297b8ffe8eda1c72de87affb
   lz4-ruby (0.3.3) sha256=011be5ee230cfddc8308d4e2e0b05300c7bc755a887de799377ca6c5b6aede89
