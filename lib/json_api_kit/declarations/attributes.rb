@@ -15,7 +15,7 @@ module JsonApiKit
 
       def values_for(record) = readable(record).to_h { [field_name(it), it.value_for(record)] }
 
-      def columns = Columns.for(attributes.map { it.column_for(schema) })
+      def columns = Columns.for(attributes.flat_map { it.columns_for(schema) })
 
       private
 

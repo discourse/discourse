@@ -7,9 +7,10 @@ module JsonApiKit
 
       delegate :readable_by?, :readable_for?, to: :readable
 
-      def initialize(name, readable: Readable::ALWAYS, &value)
+      def initialize(name, readable: Readable::ALWAYS, columns: nil, &value)
         @name = name.to_s
         @readable = Readable.for(readable)
+        @columns = columns
         @value = value
       end
 
@@ -18,14 +19,17 @@ module JsonApiKit
         record.public_send(name)
       end
 
-      def column_for(schema)
-        return if value || readable.per_record?
-        schema.column(name)
+      # `nil` stands for a column it can't name, which selects them all.
+      def columns_for(schema)
+        return [nil] if readable.per_record?
+        return columns if columns
+        return [nil] if value
+        [schema.column(name)]
       end
 
       private
 
-      attr_reader :readable, :value
+      attr_reader :readable, :columns, :value
     end
   end
 end
