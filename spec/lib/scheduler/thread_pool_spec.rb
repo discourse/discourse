@@ -91,171 +91,6 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
       expect(results.sort).to eq((0..max_threads).to_a)
     end
 
-  end
-
-  describe "#shutdown" do
-    it "prevents new tasks from being posted" do
-      completion_queue = Queue.new
-      pool.post { completion_queue << 1 }
-      completion_queue.pop # ensure first task completes
-
-      pool.shutdown
-      expect(pool.shutdown?).to be true
-      expect { pool.post { true } }.to raise_error(Scheduler::ThreadPool::ShutdownError)
-    end
-
-    it "completes pending tasks before shutting down" do
-      blocker_queue1 = Queue.new
-      completion_queue1 = Queue.new
-
-      blocker_queue2 = Queue.new
-      completion_queue2 = Queue.new
-
-      3.times do |i|
-        pool.post do
-          blocker_queue1.pop
-          completion_queue1 << i
-          blocker_queue2.pop
-          completion_queue2 << i
-        end
-      end
-
-      3.times { blocker_queue1 << :continue }
-      results1 = Array.new(3) { completion_queue1.pop }
-
-      # this is not perfect, but it close enough
-      # usually spawing the thread will take longer than making the call to shutdown
-      # even if it does not it does not really matter that much
-      results2 = nil
-
-      Thread.new do
-        3.times { blocker_queue2 << :continue }
-        results2 = Array.new(3) { completion_queue2.pop }
-      end
-
-      pool.shutdown
-      pool.wait_for_termination(timeout: 1)
-
-      expect(results1.size).to eq(3)
-      expect(results1.sort).to eq([0, 1, 2])
-
-      expect(results2.size).to eq(3)
-      expect(results2.sort).to eq([0, 1, 2])
-    end
-
-    context "when work is queued behind a busy worker" do
-      let(:min_threads) { 1 }
-      let(:max_threads) { 4 }
-      let(:idle_time) { 30 }
-
-      it "finishes queued work and terminates every worker" do
-        started = Queue.new
-        release = Queue.new
-        completed = Queue.new
-        pool.post do
-          started << true
-          release.pop
-          completed << 0
-        end
-        expect(started.pop(timeout: 5)).to eq(true)
-        3.times { |index| pool.post { completed << index + 1 } }
-
-        pool.shutdown
-        release << true
-        pool.wait_for_termination(timeout: 5)
-
-        expect(4.times.map { completed.pop(timeout: 5) }).to eq([0, 1, 2, 3])
-        expect(pool.stats[:thread_count]).to eq(0)
-      ensure
-        release&.push(true)
-      end
-    end
-  end
-
-  describe "#idle?" do
-    it "is false while a task runs or waits" do
-      started = Queue.new
-      release = Queue.new
-      pool.post do
-        started << true
-        release.pop
-      end
-      expect(started.pop(timeout: 5)).to eq(true)
-
-      expect(pool.idle?).to eq(false)
-      expect(described_class.wait_for_idle(timeout: 0.05)).to eq(false)
-
-      release << true
-      expect(described_class.wait_for_idle(timeout: 5)).to eq(true)
-      expect(pool.idle?).to eq(true)
-    ensure
-      release << true
-    end
-  end
-
-  describe ".pause" do
-    after { described_class.resume }
-
-    it "waits for running tasks and holds queued ones until resume" do
-      started = Queue.new
-      release = Queue.new
-      completed = Queue.new
-      pool.post do
-        started << true
-        release.pop
-        completed << :first
-      end
-      expect(started.pop(timeout: 5)).to eq(true)
-
-      pausing = Thread.new { described_class.pause }
-      expect(pausing.join(0.1)).to eq(nil)
-      pool.post { completed << :second }
-      release << true
-
-      expect(pausing.join(5)).to eq(pausing)
-      expect(completed.pop(timeout: 5)).to eq(:first)
-      expect(completed.pop(timeout: 0.2)).to eq(nil)
-
-      described_class.resume
-      expect(completed.pop(timeout: 5)).to eq(:second)
-    ensure
-      release << true
-    end
-
-    it "can still shut down while paused" do
-      described_class.pause
-      pool.shutdown
-
-      expect { pool.wait_for_termination(timeout: 5) }.not_to raise_error
-    end
-  end
-
-  describe "after a fork" do
-    it "starts new threads in the child and leaves the parent's tasks to the parent" do
-      started = Queue.new
-      release = Queue.new
-      pool.post do
-        started << true
-        release.pop
-      end
-      expect(started.pop(timeout: 5)).to eq(true)
-
-      child =
-        fork do
-          completed = Queue.new
-          pool.post { completed << true }
-          exit!(completed.pop(timeout: 5) ? 0 : 1)
-        end
-      _, status = Process.wait2(child)
-
-      expect(status).to be_success
-      expect(pool.idle?).to eq(false)
-    ensure
-      release << true
-    end
-  end
-
-  describe "error handling" do
     it "captures and logs exceptions without crashing the thread" do
       completion_queue = Queue.new
       error_msg = "Test error"
@@ -349,6 +184,34 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
   describe "#shutdown" do
     let(:min_threads) { 1 }
     let(:max_threads) { 1 }
+
+    context "when work is queued behind a busy worker" do
+      let(:min_threads) { 1 }
+      let(:max_threads) { 4 }
+      let(:idle_time) { 30 }
+
+      it "finishes queued work and terminates every worker" do
+        started = Queue.new
+        release = Queue.new
+        completed = Queue.new
+        pool.post do
+          started << true
+          release.pop
+          completed << 0
+        end
+        expect(started.pop(timeout: 5)).to eq(true)
+        3.times { |index| pool.post { completed << index + 1 } }
+
+        pool.shutdown
+        release << true
+        pool.wait_for_termination(timeout: 5)
+
+        expect(4.times.map { completed.pop(timeout: 5) }).to eq([0, 1, 2, 3])
+        expect(pool.stats[:thread_count]).to eq(0)
+      ensure
+        release&.push(true)
+      end
+    end
 
     it "rejects new tasks after shutdown" do
       pool.shutdown

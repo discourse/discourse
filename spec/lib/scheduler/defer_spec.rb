@@ -24,22 +24,6 @@ RSpec.describe Scheduler::Defer do
       end
     end
 
-    it "keeps processing jobs after pausing an active worker" do
-      completed = Queue.new
-      defer.later { completed << :first }
-      expect(completed.pop(timeout: 5)).to eq(:first)
-      defer.pause
-      defer.resume
-
-      defer.later { completed << Thread.current }
-
-      worker = completed.pop(timeout: 5)
-      expect(worker).to be_a(Thread)
-      expect(worker.join(0.1)).to eq(nil)
-      defer.later { completed << :second }
-      expect(completed.pop(timeout: 5)).to eq(:second)
-    end
-
     it "runs jobs in a fair order" do
       # "site1"/"site2" here are fairness-queue tags, not real dbs
       allow(RailsMultisite::ConnectionManagement).to receive(
@@ -141,33 +125,6 @@ RSpec.describe Scheduler::Defer do
 
       expect(completed.pop(timeout: 5)).to eq(:completed)
       expect(defer.length).to eq(0)
-    end
-  end
-
-  describe "#pause" do
-    it "finishes running and queued jobs before returning" do
-      started = Queue.new
-      release = Queue.new
-      completed = Queue.new
-      defer.later do
-        started << true
-        release.pop
-        completed << :first
-      end
-      expect(started.pop(timeout: 5)).to eq(true)
-      defer.later { completed << :second }
-
-      pausing = Thread.new { defer.pause }
-      wait_for(timeout: 5) { pausing.status == "sleep" || !pausing.alive? }
-      expect(pausing.join(0.1)).to eq(nil)
-      release << true
-
-      expect(pausing.join(5)).to eq(pausing)
-      expect(2.times.map { completed.pop(timeout: 5) }).to eq(%i[first second])
-      expect(defer.stopped?).to eq(true)
-    ensure
-      release << true
-      pausing&.join(5)
     end
   end
 

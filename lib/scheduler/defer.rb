@@ -42,8 +42,8 @@ module Scheduler
     end
 
     def pause
+      stop!
       @paused = true
-      stop!(finish_work: !!@thread&.alive?)
     end
 
     def resume
@@ -137,7 +137,6 @@ module Scheduler
 
     def start_thread
       @mutex.synchronize do
-        @finish = false
         @reactor = MessageBus::TimerThread.new if !@reactor
         @thread =
           Thread.new do
