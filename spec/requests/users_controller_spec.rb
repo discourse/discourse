@@ -9168,9 +9168,10 @@ RSpec.describe UsersController do
         )
       end
 
-      it "includes the last poster of each message" do
-        get "/u/#{user.username}/user-menu-private-messages"
+      it "includes the last poster of each message without loading posts" do
+        queries = track_sql_queries { get "/u/#{user.username}/user-menu-private-messages" }
         expect(response.status).to eq(200)
+        expect(queries.grep(/FROM "posts"/)).to be_empty
 
         topic =
           response.parsed_body["topics"].find { |t| t["id"] == message_without_notification.id }
