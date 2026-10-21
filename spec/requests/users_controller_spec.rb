@@ -9168,6 +9168,15 @@ RSpec.describe UsersController do
         )
       end
 
+      it "includes the last poster of each message" do
+        get "/u/#{user.username}/user-menu-private-messages"
+        expect(response.status).to eq(200)
+
+        topic =
+          response.parsed_body["topics"].find { |t| t["id"] == message_without_notification.id }
+        expect(topic["last_poster"]["id"]).to eq(message_without_notification.last_post_user_id)
+      end
+
       it "fills up the remaining of the USER_MENU_LIST_LIMIT limit with PM topics" do
         stub_const(UsersController, "USER_MENU_LIST_LIMIT", 3) do
           get "/u/#{user.username}/user-menu-private-messages"

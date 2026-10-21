@@ -96,61 +96,21 @@ const userMenuFixtures = {
     topics: [
       {
         id: 8092,
-        title: "BUG: Can not render emoji properly :/",
-        fancy_title: "BUG: Can not render emoji properly :confused:",
         slug: "bug-can-not-render-emoji-properly",
-        posts_count: 1,
-        reply_count: 0,
-        highest_post_number: 2,
-        image_url: null,
-        created_at: "2019-07-26T01:29:24.008Z",
-        last_posted_at: "2019-07-26T01:29:24.177Z",
-        bumped: true,
+        fancy_title: "BUG: Can not render emoji properly :confused:",
         bumped_at: "2019-07-26T01:29:24.177Z",
-        unseen: false,
+        highest_post_number: 2,
         last_read_post_number: 2,
         unread_posts: 0,
-        pinned: false,
-        unpinned: null,
-        visible: true,
-        closed: false,
-        archived: false,
-        notification_level: 3,
-        bookmarked: false,
-        bookmarks: [],
-        liked: false,
-        views: 5,
-        like_count: 0,
-        has_summary: false,
-        archetype: "private_message",
-        last_poster_username: "mixtape",
-        category_id: null,
-        pinned_globally: false,
-        featured_link: null,
-        posters: [
-          {
-            extras: "latest single",
-            description: "Original Poster, Most Recent Poster",
-            user_id: 13,
-            primary_group_id: null,
-          },
-        ],
-        participants: [
-          {
-            extras: "latest",
-            description: null,
-            user_id: 13,
-            primary_group_id: null,
-          },
-        ],
-      }
+        last_poster: {
+          id: 13,
+          username: "mixtape",
+          name: "Mix Tape",
+          avatar_template: "/letter_avatar_proxy/v4/letter/o/f05b48/{size}.png",
+        },
+      },
     ],
     read_notifications: [],
-    users: [{id: 13,
-        username: "mixtape",
-        name: "Mix Tape",
-        avatar_template: "/letter_avatar_proxy/v4/letter/o/f05b48/{size}.png"
-    }]
   }
 };
 

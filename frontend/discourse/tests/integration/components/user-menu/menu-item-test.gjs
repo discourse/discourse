@@ -10,7 +10,7 @@ import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
 import Notification from "discourse/models/notification";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
-import PrivateMessagesFixture from "discourse/tests/fixtures/private-messages-fixtures";
+import UserMenuFixtures from "discourse/tests/fixtures/user-menu";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
@@ -427,8 +427,7 @@ module(
 function getMessage(overrides = {}, siteSettings, site) {
   const message = deepMerge(
     cloneJSON(
-      PrivateMessagesFixture["/topics/private-messages/eviltrout.json"]
-        .topic_list.topics[0]
+      UserMenuFixtures["/u/:username/user-menu-private-messages"].topics[0]
     ),
     overrides
   );
@@ -456,6 +455,15 @@ module(
       assert
         .dom("li.message .item-description b")
         .hasText("safe", "fancy title is not escaped");
+    });
+
+    test("item label is the last poster's name when prioritizing full names", async function (assert) {
+      this.siteSettings.prioritize_full_name_in_ux = true;
+      const item = getMessage({}, this.siteSettings, this.site);
+
+      await render(<template><MenuItem @item={{item}} /></template>);
+
+      assert.dom("li.message .item-label").hasText("Mix Tape");
     });
   }
 );

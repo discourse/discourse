@@ -79,19 +79,6 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     const topics = data.topics.map((t) => this.store.createRecord("topic", t));
     await Topic.applyTransformations(topics);
 
-    if (
-      this.siteSettings.show_user_menu_avatars ||
-      this.siteSettings.prioritize_full_name_in_ux
-    ) {
-      // Populate avatar_template for lastPoster
-      const usersById = new Map(data.users.map((u) => [u.id, u]));
-      topics.forEach((t) => {
-        const lastPoster = usersById.get(t.lastPoster.user_id);
-        t.last_poster_avatar_template = lastPoster?.avatar_template;
-        t.last_poster_name = lastPoster?.name;
-      });
-    }
-
     const readNotifications = await Notification.initializeNotifications(
       data.read_notifications
     );
