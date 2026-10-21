@@ -104,7 +104,12 @@ export default class LatestTopicListItem extends Component {
             @outletArgs={{lazyHash topic=@topic}}
           >
             {{dCategoryLink @topic.category~}}
-            {{~dDiscourseTags @topic mode="list"}}
+            <PluginOutlet
+              @name="latest-topic-list-item-tags-wrapper"
+              @outletArgs={{lazyHash topic=@topic tags=@topic.visibleListTags}}
+            >
+              {{~dDiscourseTags @topic mode="list"~}}
+            </PluginOutlet>
           </PluginOutlet>
         </div>
       </div>

@@ -112,7 +112,16 @@ export default class TopicCell extends Component {
             @outletArgs={{lazyHash topic=@topic}}
           />
 
-          {{dDiscourseTags @topic mode="list" tagsForUser=@tagsForUser}}
+          <PluginOutlet
+            @name="topic-list-tags-wrapper"
+            @outletArgs={{lazyHash
+              topic=@topic
+              tags=@topic.visibleListTags
+              tagsForUser=@tagsForUser
+            }}
+          >
+            {{dDiscourseTags @topic mode="list" tagsForUser=@tagsForUser}}
+          </PluginOutlet>
 
           {{#if this.participantGroups}}
             <ParticipantGroups @groups={{this.participantGroups}} />
