@@ -6,6 +6,7 @@ import { getOwner } from "@ember/owner";
 import {
   click,
   fillIn,
+  find,
   findAll,
   render,
   settled,
@@ -18,6 +19,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import GroupManageTags from "discourse/templates/group/manage/tags";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import DMiniTagChooser from "discourse/ui-kit/select/recipes/tags/d-mini-tag-chooser";
 import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
 
 const ROWS = [
@@ -389,6 +391,70 @@ module(
 
       assert.dom(".groups-notifications-form .d-select").exists({ count: 5 });
       assert.dom(".groups-notifications-form .select-kit").doesNotExist();
+    });
+  }
+);
+
+/** A controlled mini tag field, as the composer owns it. */
+class MiniTagHost extends Component {
+  @tracked value = this.args.value ?? [];
+
+  @action
+  onChange(tags) {
+    this.args.onChange?.(tags);
+    this.value = tags;
+  }
+
+  <template>
+    <DMiniTagChooser
+      @categoryId={{@categoryId}}
+      @minimum={{@minimum}}
+      @onChange={{this.onChange}}
+      @value={{this.value}}
+    />
+  </template>
+}
+
+module(
+  "Integration | ui-kit | select | recipes | DMiniTagChooser",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.siteSettings.tagging_enabled = true;
+      this.siteSettings.max_tags_per_topic = 5;
+      this.siteSettings.max_tag_search_results = 5;
+      getOwner(this).lookup("service:site").set("can_create_tag", true);
+      stubSearch();
+    });
+
+    test("it is a mini-tag-chooser kind with the legacy family class", async function (assert) {
+      await render(<template><MiniTagHost /></template>);
+
+      assert.dom(".d-select.mini-tag-chooser").exists();
+    });
+
+    test("creation follows the site permission by default", async function (assert) {
+      const onChange = sinon.spy();
+      await render(<template><MiniTagHost @onChange={{onChange}} /></template>);
+      await click(".d-select__trigger");
+      await fillIn("[role='combobox']", "fresh");
+
+      assert.dom("[role='option'].--create").hasText("Create “fresh”");
+    });
+
+    test("a minimum shows as persistent guidance", async function (assert) {
+      await render(<template><MiniTagHost @minimum={{2}} /></template>);
+
+      const input = find("[role='combobox']");
+      const described = (input.getAttribute("aria-describedby") ?? "")
+        .split(/\s+/)
+        .map((id) => document.getElementById(id)?.textContent.trim() ?? "")
+        .join(" ");
+      assert.true(
+        /2/.test(described),
+        `the requirement is described: ${described}`
+      );
     });
   }
 );

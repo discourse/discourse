@@ -18,6 +18,7 @@ import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
+import DMiniTagChooser from "discourse/ui-kit/select/recipes/tags/d-mini-tag-chooser";
 import { i18n } from "discourse-i18n";
 
 export default class TagSettings extends Component {
@@ -371,17 +372,33 @@ export default class TagSettings extends Component {
             as |field|
           >
             <field.Control>
-              <MiniTagChooser
-                @onChange={{this.handleSynonymChange}}
-                @options={{hash
-                  everyTag=true
-                  allowAny=false
-                  blockedTags=this.blockedTags
-                  filterPlaceholder="tagging.settings.add_synonym_placeholder"
-                  maximum=200
-                }}
-                @value={{transientData.synonyms}}
-              />
+              {{#if this.siteSettings.enable_new_select_controls}}
+                {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                <DMiniTagChooser
+                  @blockedTags={{this.blockedTags}}
+                  @everyTag={{true}}
+                  @maximum={{200}}
+                  @onChange={{this.handleSynonymChange}}
+                  @placeholder={{i18n
+                    "tagging.settings.add_synonym_placeholder"
+                  }}
+                  @preventCreate={{true}}
+                  @value={{transientData.synonyms}}
+                />
+              {{else}}
+                {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                <MiniTagChooser
+                  @onChange={{this.handleSynonymChange}}
+                  @options={{hash
+                    everyTag=true
+                    allowAny=false
+                    blockedTags=this.blockedTags
+                    filterPlaceholder="tagging.settings.add_synonym_placeholder"
+                    maximum=200
+                  }}
+                  @value={{transientData.synonyms}}
+                />
+              {{/if}}
             </field.Control>
           </form.Field>
         {{else if (eq @selectedTab "localizations")}}

@@ -33,7 +33,7 @@ import PostLocalization from "discourse/models/post-localization";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
-import { or } from "discourse/truth-helpers";
+import { and, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
@@ -42,6 +42,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
+import DMiniTagChooser from "discourse/ui-kit/select/recipes/tags/d-mini-tag-chooser";
 import { i18n } from "discourse-i18n";
 
 const trackFieldsHeight = modifier((element, [enabled]) => {
@@ -479,20 +480,52 @@ export default class ComposerContainer extends Component {
 
                       {{#if this.composer.canEditTags}}
                         <div class="tags-input">
-                          <MiniTagChooser
-                            @onChange={{fn (mut this.composer.model.tags)}}
-                            @options={{hash
-                              disabled=this.composer.disableTagsChooser
-                              categoryId=this.composer.model.categoryId
-                              minimum=this.composer.model.minimumRequiredTags
-                              icon=(if this.composerRedesign "tag")
-                              prioritizeRecentTags=true
-                              useHeaderSelectedCount=(if
-                                this.composerRedesign true
-                              )
-                            }}
-                            @value={{this.composer.model.tags}}
-                          />
+                          {{#if this.siteSettings.enable_new_select_controls}}
+                            {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                            <DMiniTagChooser
+                              class={{if
+                                this.composer.model.tags.length
+                                "has-selection"
+                              }}
+                              @categoryId={{this.composer.model.categoryId}}
+                              @describedBy={{if
+                                this.composer.tagValidation.failed
+                                "composer-tags-validation"
+                              }}
+                              @disabled={{this.composer.disableTagsChooser}}
+                              @icon={{if this.composerRedesign "tag"}}
+                              @identifier="composer-tags"
+                              @instanceContext={{hash
+                                composer=this.composer.model
+                              }}
+                              @invalid={{this.composer.tagValidation.failed}}
+                              @label={{i18n "tagging.choose_for_topic"}}
+                              @maxVisibleChips={{if
+                                (and this.composerRedesign this.site.mobileView)
+                                0
+                              }}
+                              @minimum={{this.composer.model.minimumRequiredTags}}
+                              @onChange={{fn (mut this.composer.model.tags)}}
+                              @prioritizeRecentTags={{true}}
+                              @value={{this.composer.model.tags}}
+                            />
+                          {{else}}
+                            {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                            <MiniTagChooser
+                              @onChange={{fn (mut this.composer.model.tags)}}
+                              @options={{hash
+                                disabled=this.composer.disableTagsChooser
+                                categoryId=this.composer.model.categoryId
+                                minimum=this.composer.model.minimumRequiredTags
+                                icon=(if this.composerRedesign "tag")
+                                prioritizeRecentTags=true
+                                useHeaderSelectedCount=(if
+                                  this.composerRedesign true
+                                )
+                              }}
+                              @value={{this.composer.model.tags}}
+                            />
+                          {{/if}}
                           <PluginOutlet
                             @name="after-composer-tag-input"
                             @outletArgs={{lazyHash
@@ -500,6 +533,7 @@ export default class ComposerContainer extends Component {
                             }}
                           />
                           <DPopupInputTip
+                            @elementId="composer-tags-validation"
                             @validation={{this.composer.tagValidation}}
                           />
                         </div>

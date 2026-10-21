@@ -104,6 +104,7 @@
 
     .edit-tags__wrapper {
       flex: 1 1 33%;
+      min-width: 0;
 
       .mini-tag-chooser {
         width: 100%;

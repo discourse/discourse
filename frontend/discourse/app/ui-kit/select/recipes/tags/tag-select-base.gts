@@ -65,6 +65,14 @@ export interface TagSelectSignature {
     excludeHasSynonyms?: boolean;
     /** Opt in to creation, also requiring the site's permission. Defaults to false. */
     allowCreate?: boolean;
+    /** Whether creation needs an explicit opt-in or follows the site's permission. */
+    creationPolicy?: "explicit" | "permitted";
+    /** Suppress creation in fields that only accept existing tags. */
+    preventCreate?: boolean;
+    /** Held tags omitted from the visible selection. */
+    hiddenValues?: readonly HeldTag[];
+    /** Prefer recently used tags for an empty search when enabled by the site. */
+    prioritizeRecentTags?: boolean;
     /** Selection cap; zero prevents additions. Overrides the site default. */
     maximum?: number;
     /** Ignore the site default cap. An explicit maximum still applies. */
@@ -79,6 +87,10 @@ export interface TagSelectSignature {
     load?: SelectSignature["Args"]["load"];
     /** Prevents opening the control or changing its selection. */
     disabled?: boolean;
+    /** Icon displayed at the start of the trigger. */
+    icon?: string;
+    /** Visible chip limit; zero shows only the selection count. */
+    maxVisibleChips?: number;
     /** Marks a selection invalid when validation belongs to the surrounding form. */
     invalid?: boolean;
     /** Id of the combobox element, for an external label. */
@@ -159,6 +171,7 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
     tags_sort_alphabetically: boolean;
     max_tag_length: number;
     force_lowercase_tags: boolean;
+    prioritize_recently_used_tags: boolean;
   };
 
   helpId = `${guidFor(this)}-tag-guidance`;
@@ -192,14 +205,18 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
   @tracked private _validation = new Map<string, TagSearchResult>();
 
   get #tags() {
-    return this.args.tags ?? [];
+    const hidden = new Set((this.args.hiddenValues ?? []).map(tagKey));
+    return (this.args.tags ?? []).filter((tag) => !hidden.has(tagKey(tag)));
   }
 
   @cached
   private get _selectionInputs() {
     const ids = new Set<number>();
     const names = new Set<string>();
-    for (const tag of [...this.#tags, ...(this.args.blockedTags ?? [])]) {
+    for (const tag of [
+      ...(this.args.tags ?? []),
+      ...(this.args.blockedTags ?? []),
+    ]) {
       const key = tagKey(tag);
       if (typeof key === "number") {
         ids.add(key);
@@ -225,6 +242,11 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
       everyTag: this.args.everyTag,
       excludeSynonyms: this.args.excludeSynonyms,
       excludeHasSynonyms: this.args.excludeHasSynonyms,
+      prioritizeRecentTags:
+        this.args.prioritizeRecentTags &&
+        this.siteSettings.prioritize_recently_used_tags
+          ? true
+          : undefined,
       selectedTagIds: [...new Set([...ids, ...resolved])],
     };
   }
@@ -274,7 +296,10 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
   async load(filter: string, opts: SelectLoadOptions) {
     const context: TagSearchContext = opts.context ?? {};
     const result = await searchTags(filter, {
-      context,
+      context: {
+        ...context,
+        prioritizeRecentTags: filter ? undefined : context.prioritizeRecentTags,
+      },
       signal: opts.signal,
       siteSettings: this.siteSettings,
     });
@@ -311,8 +336,10 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
     );
     const maximum = this.maximum === 0 ? 0 : options.maximum;
     return !!(
-      this.args.allowCreate &&
-      this.site.can_create_tag &&
+      !this.args.preventCreate &&
+      (this.args.creationPolicy === "permitted"
+        ? this.args.allowCreate || this.site.can_create_tag
+        : this.args.allowCreate && this.site.can_create_tag) &&
       name &&
       validation &&
       !validation.forbidden &&
@@ -365,6 +392,7 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
       @createItem={{this.createItem}}
       @describedBy={{this.describedBy}}
       @disabled={{@disabled}}
+      @icon={{@icon}}
       @id={{@id}}
       @identifier={{@identifier}}
       @instanceContext={{@instanceContext}}
@@ -378,6 +406,7 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
       @load={{if @load @load this.load}}
       @loadContext={{this.loadContext}}
       @maximum={{this.maximum}}
+      @maxVisibleChips={{@maxVisibleChips}}
       @minimum={{@minimum}}
       @multiple={{true}}
       @onChange={{this.onChange}}

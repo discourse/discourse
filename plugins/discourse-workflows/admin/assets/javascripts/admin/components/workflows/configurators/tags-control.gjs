@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
+import DMiniTagChooser from "discourse/ui-kit/select/recipes/tags/d-mini-tag-chooser";
 import ExpressionWrapper from "./expression-wrapper.gjs";
 
 function tagValue(value) {
@@ -14,6 +16,8 @@ function tagValue(value) {
 }
 
 export default class TagsControl extends Component {
+  @service siteSettings;
+
   @action
   handleChange(tags) {
     const names = (tags || []).map((t) =>
@@ -31,10 +35,19 @@ export default class TagsControl extends Component {
       @session={{@session}}
       @supportsExpression={{@supportsExpression}}
     >
-      <MiniTagChooser
-        @onChange={{this.handleChange}}
-        @value={{tagValue @field.value}}
-      />
+      {{#if this.siteSettings.enable_new_select_controls}}
+        {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+        <DMiniTagChooser
+          @onChange={{this.handleChange}}
+          @value={{tagValue @field.value}}
+        />
+      {{else}}
+        {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+        <MiniTagChooser
+          @onChange={{this.handleChange}}
+          @value={{tagValue @field.value}}
+        />
+      {{/if}}
     </ExpressionWrapper>
   </template>
 }

@@ -1,7 +1,15 @@
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { getOwner } from "@ember/owner";
+import {
+  click,
+  currentURL,
+  fillIn,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import Category from "discourse/models/category";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import {
   acceptance,
   updateCurrentUser,
@@ -168,5 +176,95 @@ acceptance("Composer - Tags (PMs)", function (needs) {
     await click("button.compose-pm");
 
     assert.dom(".composer-fields .mini-tag-chooser").exists();
+  });
+});
+
+acceptance("Composer - Tags (new select controls)", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.post("/uploads/lookup-urls", () => helper.response([]));
+    server.get("/tags/list.json", () => helper.response({ list_tags: [] }));
+    server.get("/tags/list", () =>
+      helper.response({
+        list_tags: [
+          { id: "public", name: "public", staff: false },
+          { id: "other", name: "other", staff: false },
+        ],
+      })
+    );
+  });
+  needs.site({ can_tag_topics: true, can_create_tag: true });
+  needs.settings({
+    allow_uncategorized_topics: true,
+    tagging_enabled: true,
+    enable_new_select_controls: true,
+  });
+
+  test("the composer renders the DSelect tag chooser", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    assert.dom(".tags-input .d-select.mini-tag-chooser").exists();
+    assert.dom(".tags-input .select-kit").doesNotExist();
+  });
+
+  test("picking a tag writes the composer's tags", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await dSelect(".tags-input .d-select").selectByName("monkey");
+
+    const tags = getOwner(this).lookup("service:composer").model.tags;
+    assert.deepEqual(
+      tags.map((tag) => (typeof tag === "string" ? tag : tag.name)),
+      ["monkey"]
+    );
+    assert.strictEqual(tags[0].id, 1, "a server tag keeps its id");
+  });
+
+  test("a created tag is written as a new tag", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await dSelect(".tags-input .d-select").search("brandnew");
+    await triggerKeyEvent(".tags-input [role='combobox']", "keydown", "Enter");
+
+    const tags = getOwner(this).lookup("service:composer").model.tags;
+    assert.deepEqual(tags, [{ id: "brandnew", name: "brandnew", isNew: true }]);
+  });
+
+  test("tags from the URL show as held names", async function (assert) {
+    await visit("/new-topic?tags=public");
+
+    assert.dom(".tags-input .d-select").hasAttribute("data-name", "public");
+  });
+});
+
+acceptance("Composer - Tags (compact on mobile)", function (needs) {
+  needs.user();
+  needs.mobileView();
+  needs.pretender((server, helper) => {
+    server.post("/uploads/lookup-urls", () => helper.response([]));
+    server.get("/tags/list.json", () => helper.response({ list_tags: [] }));
+    server.get("/tags/list", () =>
+      helper.response({
+        list_tags: [
+          { id: "public", name: "public", staff: false },
+          { id: "other", name: "other", staff: false },
+        ],
+      })
+    );
+  });
+  needs.site({ can_tag_topics: true });
+  needs.settings({
+    allow_uncategorized_topics: true,
+    tagging_enabled: true,
+    enable_new_select_controls: true,
+    enable_composer_redesign: true,
+  });
+
+  test("the redesigned composer shows a tag count on mobile", async function (assert) {
+    await visit("/new-topic?tags=public,other");
+
+    assert.dom(".tags-input .d-select__chips-more").hasText("2");
+    assert.dom(".tags-input .d-select__trigger .d-select__chip").doesNotExist();
   });
 });

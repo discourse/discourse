@@ -89,6 +89,37 @@
           display: none !important;
         }
       }
+
+      .d-select__placeholder,
+      .d-select__caret {
+        display: none;
+      }
+
+      .d-select__chips {
+        width: auto;
+      }
+
+      .d-select__chips-more {
+        padding: 0;
+        background: transparent;
+        color: var(--primary-medium);
+      }
+    }
+
+    .d-select__trigger {
+      border: 0;
+      border-radius: 0;
+      gap: var(--space-1);
+      padding: var(--space-3) var(--space-4);
+    }
+
+    .d-select__leading-icon {
+      color: var(--primary-low-mid);
+      font-size: var(--font-down-1-rem);
+    }
+
+    .d-select.has-selection .d-select__leading-icon {
+      color: var(--tertiary);
     }
 
     .select-kit-header-wrapper {
