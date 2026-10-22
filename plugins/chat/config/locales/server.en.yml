@@ -4,8 +4,8 @@ en:
     chat_enabled: "Enable chat."
     chat_pinned_messages: "Enable pinned messages in chat channels."
     enable_public_channels: "Enable public channels based on categories."
-    chat_allowed_groups: "Users in these groups can chat, except anonymous users who can only view chat when added to this setting. Note that admins and moderators can always access chat."
-    chat_channel_retention_days: "Chat messages in regular channels will be retained for this many days. Set to '0' to retain messages forever."
+    chat_allowed_groups: "Users in these groups can chat, except anonymous users who can only view chat when added to this setting. Adding anonymous users also lets search engines index public channels. Note that admins and moderators can always access chat."
+    chat_channel_retention_days: "Chat messages in regular channels will be retained for this many days. Set to '0' to retain messages forever. When anonymous users can view chat, deleted messages also drop out of search engine results over time, so short retention limits how much chat history can be found through search."
     chat_dm_retention_days: "Chat messages in personal chat channels will be retained for this many days. Set to '0' to retain messages forever."
     chat_auto_silence_duration: "Number of minutes that users will be silenced for when they exceed the chat message creation rate limit. Set to '0' to disable auto-silencing."
     chat_allowed_messages_for_trust_level_0: "Number of messages that trust level 0 users is allowed to send in 30 seconds. Set to '0' to disable limit."
@@ -59,6 +59,24 @@ en:
 
   chat:
     deleted_chat_username: deleted
+    crawler:
+      directory_title: "Chat channels"
+      nav_title: "Chat"
+      last_activity: "Last activity"
+      retention_notice:
+        one: "Messages older than %{count} day are deleted, except pinned messages."
+        other: "Messages older than %{count} days are deleted, except pinned messages."
+      messages_count:
+        one: "%{count} message"
+        other: "%{count} messages"
+      members_count:
+        one: "%{count} member"
+        other: "%{count} members"
+      thread_title: "Thread in %{channel}"
+      channel_day_title: "%{channel} – %{date}"
+      thread_replies:
+        one: "%{count} reply"
+        other: "%{count} replies"
     errors:
       users_cant_be_added_to_channel: "Users can't be added to this channel."
       user_cant_be_removed_from_channel: "User can't be removed from this channel"
@@ -268,11 +286,13 @@ en:
         recipient_inactive: "'%{username}' hasn't activated their account yet."
         recipient_chat_disabled: "'%{username}' has disabled chat in their preferences."
         recipient_cannot_chat: "'%{username}' can't use chat because they aren't in a group allowed by the 'chat allowed groups' setting."
-        sender_anonymous: "Direct messages can't be sent anonymously. Choose a user as the sender."
+        sender_anonymous: "Chat messages can't be sent anonymously. Choose a user as the sender."
         sender_chat_disabled: "Sender '%{sender}' has disabled chat in their preferences."
         sender_cannot_chat: "Sender '%{sender}' can't use chat because they aren't in a group allowed by the 'chat allowed groups' setting."
         sender_cannot_create_dm: "Sender '%{sender}' isn't allowed to send direct messages (see the 'direct message enabled groups' setting)."
         sender_dms_disabled: "Sender '%{sender}' has disabled personal messages in their preferences."
+        sender_cannot_post: "Sender '%{sender}' isn't allowed to post in channel %{channel_id}."
+        sender_not_member: "Sender '%{sender}' isn't a member of channel %{channel_id}. Join the channel as that user first."
         user_blocked: "'%{sender}' can't send a direct message to '%{username}': %{reason}"
         group_blocked: "'%{sender}' can't send a group direct message to %{usernames}: %{reason}"
       chat_approval:
@@ -296,7 +316,7 @@ en:
         preferences_bypassed: "'%{username}' doesn't accept direct messages from '%{sender}', but the message was delivered because the sender is staff."
     logs:
       send_chat_message:
-        sent_to_channel: "Item %{item_index}: sent message %{message_id} to channel %{channel_id}."
+        sent_to_channel: "Item %{item_index}: '%{sender}' sent message %{message_id} to channel %{channel_id}."
         sent_to_user: "Item %{item_index}: '%{sender}' sent message %{message_id} to '%{username}'."
         sent_to_group: "Item %{item_index}: '%{sender}' sent message %{message_id} to the group direct message with %{usernames}."
 

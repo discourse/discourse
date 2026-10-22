@@ -40,3 +40,4 @@ sr:
       gamification_score:
         username: "Korisnik"
         description: "Opis"
+        category_id: "Kategorija"

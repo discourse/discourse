@@ -640,12 +640,14 @@ module DiscourseEvents::Events
                         { "identifier" => "sam", "attendance" => "interested" },
                         { "identifier" => "the_foo_bar_group", "attendance" => "not_going" },
                       ],
+                      "recurring" => true,
                       "current_user_id" => user.id,
                     },
                   ) do
                     post "/discourse-post-event/events/#{event_1.id}/csv-bulk-invite.json",
                          params: {
                            file: fixture_file_upload(valid_file),
+                           recurring: true,
                          }
                   end
 
@@ -698,6 +700,7 @@ module DiscourseEvents::Events
                         { "identifier" => "sam", "attendance" => "interested" },
                         { "identifier" => "the_foo_bar_group", "attendance" => "not_going" },
                       ],
+                      "recurring" => true,
                       "current_user_id" => user.id,
                     },
                   ) do
@@ -708,6 +711,7 @@ module DiscourseEvents::Events
                              { "identifier" => "sam", "attendance" => "interested" },
                              { "identifier" => "the_foo_bar_group", "attendance" => "not_going" },
                            ],
+                           recurring: true,
                          },
                          as: :json
                   end
@@ -1033,6 +1037,7 @@ module DiscourseEvents::Events
             { "identifier" => user1.username, "attendance" => "going" },
             { "identifier" => user2.username, "attendance" => "going" },
           ],
+          "recurring" => false,
           "current_user_id" => user.id,
         },
       ) do

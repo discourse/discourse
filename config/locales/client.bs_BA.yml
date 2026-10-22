@@ -3161,18 +3161,6 @@ bs_BA:
       errors:
         type_mismatch:
           default: "Molim unesite ispravnu vrijednost."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Naprijed"
-      edit:
-        modal:
-          cancel: "otkaži"
-          create: "Save"
-          reason: "Zašto pravite izmjenu?"
-      spreadsheet:
-        show: "Show"
-        about: "O nama"
     filter:
       description:
         yesterday: "Yesterday"

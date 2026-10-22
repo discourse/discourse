@@ -108,7 +108,7 @@ cs:
           message_4: "Průměrná délka tvé zprávy byla <strong>%{length}</strong> znaků"
           message_5: "Tvé oblíbené kanály:"
           dancing_baby_alt: "Dancing baby"
-        voice_usage:
+        live_usage:
           minutes:
             one: "%{count} minuta"
             few: "%{count} minuty"

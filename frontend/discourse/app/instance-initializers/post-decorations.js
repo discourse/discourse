@@ -1,8 +1,5 @@
 import { schedule } from "@ember/runloop";
 import FullscreenTableModal from "discourse/components/modal/fullscreen-table";
-import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import Columns from "discourse/lib/columns";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import { iconElement, iconHTML } from "discourse/lib/icon-library";
@@ -10,9 +7,7 @@ import setupImageGridCarousel from "discourse/lib/image-grid-carousel";
 import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
 import lightbox from "discourse/lib/lightbox";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { parseAsync } from "discourse/lib/text";
 import { setTextDirections } from "discourse/lib/text-direction";
-import { tokenRange } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 export default {
@@ -160,68 +155,22 @@ export default {
         });
       }
 
-      async function generateSpreadsheetModal() {
-        const { postId, tableIndex } = this;
-
-        try {
-          const post = await ajax(`/posts/${postId}`, { type: "GET" });
-          const tokens = await parseAsync(post.raw);
-          const allTables = tokenRange(tokens, "table_open", "table_close");
-          const tableTokens = allTables[tableIndex];
-
-          modal.show(SpreadsheetEditor, {
-            model: {
-              post,
-              tableIndex,
-              tableTokens,
-            },
-          });
-        } catch (error) {
-          popupAjaxError(error);
-        }
-      }
-
       function generatePopups(tables, post) {
-        tables.forEach((table, index) => {
+        tables.forEach((table) => {
           if (
             table.parentNode.querySelector(".fullscreen-table-wrapper__buttons")
           ) {
             return;
           }
 
-          const buttonWrapper = document.createElement("div");
-          buttonWrapper.classList.add("fullscreen-table-wrapper__buttons");
-
-          const tableEditorBtn = _createButton({
-            classes: ["btn-edit-table"],
-            title: "table_builder.edit.btn_edit",
-            icon: {
-              name: "pencil",
-              class: "edit-table-icon",
-            },
-          });
-
-          table.parentNode.setAttribute("data-table-index", index);
           table.parentNode.classList.add("fullscreen-table-wrapper");
-
-          if (post.can_edit) {
-            table.parentNode.classList.add("--editable");
-            buttonWrapper.append(tableEditorBtn);
-            tableEditorBtn.addEventListener(
-              "click",
-              generateSpreadsheetModal.bind({
-                postId: post.id,
-                tableIndex: index,
-              }),
-              false
-            );
-          }
-
-          table.parentNode.insertBefore(buttonWrapper, table);
 
           if (site.mobileView || !isOverflown(table.parentNode)) {
             return;
           }
+
+          const buttonWrapper = document.createElement("div");
+          buttonWrapper.classList.add("fullscreen-table-wrapper__buttons");
 
           table.parentNode.classList.add("--has-overflow");
 

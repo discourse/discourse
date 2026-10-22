@@ -364,6 +364,16 @@ vi:
         delete: "Xóa"
         tools_modal:
           required: "Bắt buộc"
+      models:
+        name: "Tên"
+        type: "Loại"
+        edit: "Sửa"
+        select_type: "Chọn"
+        types:
+          embedding: "Nhúng"
+        filters:
+          all: "Tất cả các loại"
+          reset: "Đặt lại bộ lọc"
       llms:
         display_name: "Tên"
         vision_modes:
@@ -491,6 +501,14 @@ vi:
             compact: "Gọn gàng"
             expanded: "Mở rộng"
             expanded_description: "Với tóm tắt AI"
+      ai_search:
+        related_topics: "Các chủ đề liên quan"
+        related_replies:
+          other: "%{count} trả lời"
+        tabs:
+          ask: "Hỏi AI"
+          topics: "Các chủ đề"
+          messages: "Tin nhắn"
       discobot_discoveries:
         main_title: "Hỏi AI"
         user_setting: "Bật tính năng tìm kiếm bằng AI"

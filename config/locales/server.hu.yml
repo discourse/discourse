@@ -834,6 +834,7 @@ hu:
     post_template: "%{replace_paragraph}\n\nA következő bekezdések hosszabb leírást adnak, vagy a kategóriákra vonatkozó irányelvek vagy szabályok meghatározására szolgálnak:\n\n- Miért érdemes ezt a kategóriát használni? Mire való?\n\n- Pontosan miben különbözik ez a kategória a már meglévő kategóriáktól?\n\n- Általában mit kell tartalmaznia ennek a kategóriának a témáinak?\n\n- Szükségünk van erre a kategóriára? Összevonható-e egy másik kategóriával vagy alkategóriával?\n"
     errors:
       not_found: "A kategória nem található."
+      self_lockout: "Olyan módon módosítja a kategóriaengedélyeket, amely eltávolítja a saját hozzáférését. Biztosan folytatja?"
       uncategorized_parent: "Nem kategorizált elem nem rendelkezhet szülő kategóriával"
       self_parent: "Alkategória szülője nem lehet önmaga"
       depth: "Nem ágyazhat be egy alkategóriát másik alá"
@@ -2461,7 +2462,6 @@ hu:
     experimental_impersonation_time_limit_minutes: "Mennyi idő múlva ér véget automatikusan a megszemélyesítési munkamenet."
     page_loading_indicator: "A Discourse-on belüli oldalnavigációk során megjelenő betöltési jelző konfigurálása. A 'Spinner' egy teljes oldalas jelző. A 'Slider' egy keskeny sávot jelenít meg a képernyő tetején."
     show_user_menu_avatars: "Felhasználói avatarok megjelenítése a felhasználói menüben"
-    about_page_hidden_groups: "Ne jelenítse meg bizonyos csoportok tagjait a /about oldalon."
     about_page_extra_groups: "Csoportok, amelyek a moderátorok alatt, a névjegy oldalon jelennek meg."
     about_page_extra_groups_initial_members: "Az egyes csoportokban a névjegy oldalon kibontandó tagok száma."
     about_page_extra_groups_show_description: "Megjelenjenek-e a csoportleírások a névjegy oldalon."
@@ -3882,31 +3882,15 @@ hu:
     account_suspended:
       title: "Fiók felfüggesztve"
       subject_template: "[%{email_prefix}] Fiókja fel lett függesztve"
-      text_body_template: |
-        Fel lett függesztve a fórumról idáig: %{suspended_till}.
-
-        Indoklás - %{reason}
     account_suspended_forever:
       title: "Fiók felfüggesztve"
       subject_template: "[%{email_prefix}] Fiókja fel lett függesztve"
-      text_body_template: |
-        Fel lett függesztve a fórumon.
-
-        Indoklás - %{reason}
     account_silenced:
       title: "Fiók elnémítva"
       subject_template: "[%{email_prefix}] Fiókja el lett némítva"
-      text_body_template: |
-        El lett némítva a fórumon idáig: %{silenced_till}.
-
-        Indoklás - %{reason}
     account_silenced_forever:
       title: "Fiók elnémítva"
       subject_template: "[%{email_prefix}] Fiókja el lett némítva"
-      text_body_template: |
-        El lett némítva a fórumon.
-
-        Indoklás - %{reason}
     account_deleted:
       title: "Fiók törölve"
       subject_template: "[%{email_prefix}] A fiókját törölték"

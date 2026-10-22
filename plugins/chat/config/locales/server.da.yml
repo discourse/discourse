@@ -10,6 +10,11 @@ da:
     chat_enabled: "Aktiver chat."
   chat:
     deleted_chat_username: slettet
+    crawler:
+      nav_title: "Chat"
+      thread_replies:
+        one: "%{count} svar"
+        other: "%{count} svar"
     errors:
       duplicate_message: "Det er for kort tid siden, at du oprettede en identisk besked."
       max_reactions_limit_reached: "Nye reaktioner er ikke tilladt på denne besked."

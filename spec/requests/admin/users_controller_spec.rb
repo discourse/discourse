@@ -547,7 +547,7 @@ RSpec.describe Admin::UsersController do
                 suspend_until: 5.hours.from_now,
                 reason: "because I said so",
               }
-        end.not_to change { Jobs::CriticalUserEmail.jobs.size }
+        end.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)
 
         expect(response.status).to eq(200)
 

@@ -40,8 +40,10 @@ da:
       custom_range_from: "Fra"
       admin:
         name: "Navn"
+        created_by: "Oprettet af"
     discourse_workflows:
       gamification_score:
         username: "Bruger"
         date: "Dato"
         description: "Beskrivelse"
+        category_id: "Kategori"

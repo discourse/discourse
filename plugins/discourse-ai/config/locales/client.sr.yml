@@ -204,6 +204,15 @@ sr:
         delete: "Obriši"
         tools_modal:
           required: "Potrebno"
+      models:
+        name: "Ime foruma"
+        type: "Tip"
+        edit: "Izmeni"
+        select_type: "Odaberite"
+        types:
+          embedding: "Ugrađivanje"
+        filters:
+          all: "Svi tipovi"
       llms:
         display_name: "Ime foruma"
         vision_modes:
@@ -273,6 +282,14 @@ sr:
             category: "Kategorija"
           table:
             total_count: "Ukupno"
+      ai_search:
+        related_replies:
+          one: "%{count} odgovor"
+          few: "%{count} odgovora"
+          other: "%{count} odgovora"
+        tabs:
+          topics: "Teme"
+          messages: "Poruke"
       discobot_discoveries:
         legacy:
           regular_results: "Teme"

@@ -6,6 +6,9 @@
 
 tr_TR:
   js:
+    dsa_notice:
+      title: "Yasa dışı içeriği bildirin"
+      email: "E-posta adresi"
     user_api_key:
       title: '"%{application_name}" için yetkilendirme'
       authorize: "Yetkilendir"
@@ -3107,8 +3110,6 @@ tr_TR:
       show_preview: "ön izlemeyi göster"
       hide_preview: "ön izlemeyi gizle"
       resize: "Composer'ın boyutunu değiştir"
-      switch_to_markdown: "Standart Markdown düzenleyicisine geçin (%{keyboardShortcut})"
-      switch_to_rich_text: "Yeni zengin metin düzenleyicisine geçin (%{keyboardShortcut})"
       quote_post_title: "Tüm gönderiyi alıntıla"
       bold_label: "B"
       bold_title: "Güçlü"
@@ -3249,6 +3250,8 @@ tr_TR:
         visit: "Bağlantıyı aç"
         remove_preview: "Önizlemeyi kaldır"
         link_copied: "Bağlantı kopyalandı!"
+      table:
+        default_heading: "%{number}. sütun"
       unsupported_token: "Zengin metin düzenleyici bu yazıda kullanılan tüm özellikleri desteklemiyor; sizi Markdown düzenleyicisine yönlendiriyor."
     notifications:
       tooltip:
@@ -5653,63 +5656,6 @@ tr_TR:
           other: "Girdi en az %{count} olmalıdır."
         pattern_mismatch: "Lütfen istenen formata uyun."
         bad_input: "Lütfen geçerli bir girdi girin."
-    table_builder:
-      title: "Tablo Oluşturucu"
-      modal:
-        title: "Tablo Oluşturucu"
-        create: "Tablo oluştur"
-        help:
-          title: "Elektronik Tablo Düzenleyiciyi kullanma"
-          enter_key: "Enter"
-          tab_key: "Sekme"
-          new_row: "yeni bir satır eklemek için bir satırın sonuna."
-          new_col: "yeni bir sütun eklemek için bir sütunun sonunda."
-          options: "Açılır menüde daha fazla seçeneğe erişmek için hücrelere sağ tıklayın."
-        confirm_close: "Tablo oluşturucuyu kapatmak istediğinizden emin misiniz? Kaydedilmemiş değişiklikler kaybedilir."
-      edit:
-        btn_edit: "Tabloyu düzenle"
-        modal:
-          title: "Tabloyu düzenle"
-          cancel: "iptal et"
-          create: "Kaydet"
-          reason: "Neden düzenleme yapıyorsunuz?"
-          trigger_reason: "Düzenleme nedeni ekleyin"
-        default_edit_reason: "Tablo Düzenleyiciyle Tabloyu güncelle"
-      default_header:
-        col_1: "Sütun 1"
-        col_2: "Sütun 2"
-        col_3: "Sütun 3"
-        col_4: "Sütun 4"
-      spreadsheet:
-        no_records_found: "Kayıt bulunamadı"
-        show: "Göster"
-        entries: "girdiler"
-        about: "Hakkında"
-        prompts:
-          delete_selected_rows: "Seçili satırları silmek istediğinizden emin misiniz?"
-          delete_selected_cols: "Seçili sütunları silmek istediğinizden emin misiniz?"
-          will_destroy_merged_cells: "Bu eylem mevcut birleştirilmiş hücreleri yok edecek. Emin misiniz?"
-          will_clear_search_results: "Bu eylem mevcut birleştirilmiş hücreleri yok edecek. Emin misiniz?"
-          conflicts_with_merged_cells: "Birleştirilmiş başka bir hücre ile çakışma var"
-        invalid_merge_props: "Geçersiz birleştirilmiş özellikler"
-        cells_already_merged: "Hücre zaten birleştirildi"
-        no_cells_selected: "Hücre seçilmedi"
-        context_menu:
-          row:
-            before: "Öncesine yeni bir satır ekle"
-            after: "Sonrasına yeni bir satır ekle"
-            delete: "Seçili satırları sil"
-          col:
-            before: "Öncesine yeni bir sütun ekle"
-            after: "Sonrasına yeni bir sütun ekle"
-            delete: "Seçili sütunları sil"
-            rename: "Bu sütunu yeniden adlandır"
-          order:
-            ascending: "Artan sıralama"
-            descending: "Azalan sıralama"
-          copy: "Kopyala..."
-          paste: "Yapıştır..."
-          save: "Farklı kaydet..."
     powered_by_discourse: "Discourse tarafından desteklenmektedir"
     safari_15_warning: "Tarayıcınız yakında bu toplulukla uyumsuz hâle gelecek. Burada katılımınızı sürdürmek için lütfen tarayıcınızı yükseltin veya <a href='%{url}'>daha fazla bilgi edinin</a>."
     filter:

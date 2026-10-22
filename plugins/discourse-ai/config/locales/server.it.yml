@@ -25,7 +25,6 @@ it:
         description: "Report periodico basato su LLM"
   site_settings:
     discourse_ai_enabled: "Abilita il plugin Discourse AI."
-    ai_default_llm_model: "Il modello LLM predefinito da utilizzare per tutte le funzionalità AI"
     ai_artifact_security: "l sistema di artefatti IA genera IFRAME con codice eseguibile. La modalità Strict impone un clic extra per eseguire il codice. La modalità Lax esegue il codice direttamente. La modalità Hybrid permette all'utente di immettere data-ai-artifact-autorun per vedere subito il risultato. La modalità Disabled disabilita il sistema di artefatti."
     ai_toxicity_enabled: "Abilita il modulo tossicità."
     ai_toxicity_inference_service_api_endpoint: "URL in cui l'API è in esecuzione per il modulo tossicità"

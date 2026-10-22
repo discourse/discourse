@@ -1,7 +1,7 @@
 import { cached, tracked } from "@glimmer/tracking";
 import { get } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { trackedObject } from "@ember/reactive/collections";
+import { trackedMap, trackedObject } from "@ember/reactive/collections";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -98,6 +98,7 @@ export default class PostStream extends RestModel {
   @autoTrackedArray stream = [];
   @autoTrackedArray userFilters = [];
 
+  quoteHighlights = trackedMap();
   _identityMap = {};
   _pendingPostRefreshes = new Map();
 
@@ -310,6 +311,17 @@ export default class PostStream extends RestModel {
     if (postNumber > 1) {
       this.focusTarget = { postNumber, done: false };
     }
+  }
+
+  highlightQuoteOnRender(postNumber, quote) {
+    if (quote === undefined) {
+      return;
+    }
+
+    [...this.quoteHighlights.keys()].forEach((key) =>
+      this.quoteHighlights.delete(key)
+    );
+    this.quoteHighlights.set(postNumber, { quote, revealed: false });
   }
 
   cancelFilter() {

@@ -6,6 +6,10 @@
 
 pt_BR:
   js:
+    dsa_notice:
+      title: "Denunciar conteúdo ilegal"
+      email: "Endereço de e-mail"
+      resend_email_code: "Reenviar código"
     user_api_key:
       title: 'Autorizar "%{application_name}"'
       authorize: "Autorizar"
@@ -3113,8 +3117,6 @@ pt_BR:
       uploading: "Enviando…"
       show_preview: "exibir pré-visualização"
       hide_preview: "ocultar pré-visualização"
-      switch_to_markdown: "Mudar para o editor Markdown padrão (%{keyboardShortcut})"
-      switch_to_rich_text: "Mudar para o novo editor de rich text (%{keyboardShortcut})"
       quote_post_title: "Citar postagem inteira"
       bold_label: "N"
       bold_title: "Negrito"
@@ -3251,6 +3253,8 @@ pt_BR:
       onebox_toolbar:
         copy: "Copiar link"
         link_copied: "Link copiado!"
+      table:
+        default_heading: "Coluna %{number}"
       unsupported_token: "O editor avançado não oferece suporte a todos os recursos usados nesta postagem; mudando para o editor de Markdown."
     notifications:
       tooltip:
@@ -5531,63 +5535,6 @@ pt_BR:
           other: "A entrada deve ser maior que %{count}."
         pattern_mismatch: "Corresponda ao formato solicitado."
         bad_input: "Insira uma entrada válida."
-    table_builder:
-      title: "Construtor de tabela"
-      modal:
-        title: "Construtor de tabela"
-        create: "Construir tabela"
-        help:
-          title: "Usando editor de planilha"
-          enter_key: "Enter"
-          tab_key: "Tab"
-          new_row: "no final de uma linha para inserir uma nova linha."
-          new_col: "no final de uma coluna para inserir uma nova coluna."
-          options: "Clique com o botão direito nas células para acessar mais opções no menu suspenso."
-        confirm_close: "Tem certeza de que deseja fechar o construtor de tabelas? Todas as alterações não salvas serão perdidas."
-      edit:
-        btn_edit: "Editar tabela"
-        modal:
-          title: "Editar tabela"
-          cancel: "cancelar"
-          create: "Salvar"
-          reason: "Por que você está editando?"
-          trigger_reason: "Adicione o motivo para a edição"
-        default_edit_reason: "Atualizar tabela com o editor de tabelas"
-      default_header:
-        col_1: "Coluna 1"
-        col_2: "Coluna 2"
-        col_3: "Coluna 3"
-        col_4: "Coluna 4"
-      spreadsheet:
-        no_records_found: "Nenhum registro encontrado"
-        show: "Exibir"
-        entries: "entradas"
-        about: "Sobre"
-        prompts:
-          delete_selected_rows: "Tem certeza de que deseja excluir as linhas selecionadas?"
-          delete_selected_cols: "Tem certeza de que deseja excluir as colunas selecionadas?"
-          will_destroy_merged_cells: "Esta ação irá desfazer as células mescladas existentes. Tem certeza?"
-          will_clear_search_results: "Esta ação irá desfazer as células mescladas existentes. Tem certeza?"
-          conflicts_with_merged_cells: "Há um conflito com outra célula mesclada"
-        invalid_merge_props: "Propriedades mescladas inválidas"
-        cells_already_merged: "Células já mescladas"
-        no_cells_selected: "Nenhuma célula selecionada"
-        context_menu:
-          row:
-            before: "Inserir nova linha antes"
-            after: "Inserir nova linha depois"
-            delete: "Excluir linhas selecionadas"
-          col:
-            before: "Inserir nova coluna antes"
-            after: "Inserir nova coluna depois"
-            delete: "Excluir colunas selecionadas"
-            rename: "Renomear esta coluna"
-          order:
-            ascending: "Ordem crescente"
-            descending: "Ordem decrescente"
-          copy: "Copiar..."
-          paste: "Colar..."
-          save: "Salvar como..."
     powered_by_discourse: "Com tecnologia Discourse"
     safari_15_warning: "Em breve, seu navegador se tornará incompatível com esta comunidade. Para continuar participando, atualize seu navegador ou <a href='%{url}'>saiba mais</a>."
     filter:

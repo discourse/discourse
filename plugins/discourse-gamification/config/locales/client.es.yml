@@ -85,9 +85,11 @@ es:
       admin:
         title: "Gamification"
         name: "Nombre"
+        created_by: "Creado por"
         period: "Período"
     discourse_workflows:
       gamification_score:
         username: "Usuario"
         date: "Fecha"
         description: "Descripción"
+        category_id: "Categoría"

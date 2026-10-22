@@ -265,11 +265,9 @@ es:
         approved: "Aprobado"
         rejected: "Rechazados"
       default_llm:
-        title: "Modelo LLM por defecto"
-        description: "El modelo LLM por defecto que se utilizará para todas las características de IA. Se usará si no se especifica ningún LLM en la configuración de características o en el agente. Si no se especifica ningún LLM por defecto, se usará el último LLM creado."
+        title: "Modelo lingüístico por defecto"
       llm_selector:
         none: "Ninguna"
-        saved: "El modelo LLM por defecto se ha actualizado correctamente"
       features:
         short_title: "Características"
         description: "Estas son las características de IA disponibles para los visitantes de tu sitio. Se pueden configurar para usar agentes y LLM específicos, y los grupos pueden controlar su acceso."
@@ -923,6 +921,18 @@ es:
         test_summary:
           one: "Se ha descubierto %{count} herramienta usando el protocolo %{version}."
           other: "Se han descubierto %{count} herramientas usando el protocolo %{version}."
+      models:
+        new: "Nuevo modelo"
+        name: "Nombre"
+        type: "Tipo"
+        provider: "Proveedor"
+        edit: "Editar"
+        select_type: "Seleccionar"
+        types:
+          embedding: "Incrustado"
+        filters:
+          all: "Todos los tipos"
+          reset: "Restablecer filtros"
       llms:
         short_title: "LLM"
         no_llms: "Aún no hay LLM"
@@ -1317,6 +1327,15 @@ es:
             compact: "Compacto"
             expanded: "Ampliado"
             expanded_description: "con resúmenes de IA"
+      ai_search:
+        related_topics: "Temas relacionados"
+        related_replies:
+          one: "%{count} respuesta"
+          other: "%{count} respuestas"
+        tabs:
+          ask: "Preguntar a la IA"
+          topics: "Temas"
+          messages: "Mensajes"
       discobot_discoveries:
         main_title: "Preguntar a la IA"
         loading_convo: "Cargando conversación"

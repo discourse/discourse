@@ -44,6 +44,31 @@ RSpec.describe DiscourseAi::Completions::HistorySnapshot do
     )
   end
 
+  it "preserves a snapshot when background onebox processing localizes its favicon" do
+    url = "https://app-eu1.hubspot.com/contacts/123/record/0-1/456"
+    raw = "What are the most recent emails sent to this person?\n#{url}"
+    source.update!(raw: raw)
+    snapshot = post_snapshot(source)
+
+    source.update_columns(cooked: <<~HTML)
+      <p>What are the most recent emails sent to this person?</p>
+      <aside class="onebox">
+        <header><img class="site-icon" src="https://example.com/favicon.png"></header>
+        <a href="#{url}">HubSpot</a>
+      </aside>
+    HTML
+    source.link_post_uploads
+    expect { snapshot.verify! }.not_to raise_error
+
+    upload = Fabricate(:upload)
+    source.update_columns(cooked: source.cooked.sub("https://example.com/favicon.png", upload.url))
+    source.link_post_uploads
+
+    expect(source.reload.raw).to eq(raw)
+    expect(UploadReference.where(target: source).pluck(:upload_id)).to eq([upload.id])
+    expect { snapshot.verify! }.not_to raise_error
+  end
+
   it "captures PM history when category group moderation is enabled" do
     SiteSetting.enable_category_group_moderation = true
 

@@ -326,6 +326,9 @@ module SvgSprite
         icon_id = prepare_symbol(sym, svg_filename)
         if icon_id.present?
           sym.attributes["id"].value = icon_id
+          # Some glyphs draw outside their viewBox; Firefox and Safari clip a <use> symbol
+          # to its viewBox unless overflow is set on the symbol itself (page CSS can't reach it)
+          sym["overflow"] = "visible"
           sym.css("title").each(&:remove)
           [icon_id, sym.to_xml]
         end
@@ -342,6 +345,15 @@ module SvgSprite
       core_svgs_files.reduce({}) do |symbols, path|
         symbols.merge!(symbols_for(File.basename(path, ".svg"), File.read(path), strict: true))
       end
+  end
+
+  def self.legacy_icon_ids
+    @legacy_icon_ids ||=
+      core_svgs_files
+        .select { |path| File.basename(File.dirname(path)) == FontAwesomeSync::LEGACY_DIRECTORY }
+        .flat_map do |path|
+          symbols_for(File.basename(path, ".svg"), File.read(path), strict: true).keys
+        end
   end
 
   # Just used in tests
@@ -502,7 +514,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
       symbols = svgs_for(theme_id)
       in_sprite = all_icons(theme_id).select { |id| symbols.key?(id) }
 
-      only_available ? in_sprite : in_sprite + (symbols.keys - in_sprite).sort
+      # Legacy names still render where already used, but aren't offered for new picks
+      only_available ? in_sprite : in_sprite + (symbols.keys - in_sprite - legacy_icon_ids).sort
     end
   end
 

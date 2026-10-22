@@ -499,6 +499,20 @@ discourse_ai:
     max: 6
     client: true
     area: "ai-features/search"
+  enable_ai_combined_search:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/415171"
+  ai_ask_ai_search_intent_decision_model:
+    type: enum
+    default: ""
+    client: true
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
+    area: "ai-features/search"
   ai_ask_ai_agent:
     default: "-41"
     type: enum

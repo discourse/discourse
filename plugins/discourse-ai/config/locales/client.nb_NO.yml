@@ -220,6 +220,16 @@ nb_NO:
         delete: "Slett"
         tools_modal:
           required: "Påkrevd"
+      models:
+        name: "Navn"
+        type: "Type"
+        provider: "Tilbyder"
+        edit: "Rediger"
+        select_type: "Velg"
+        types:
+          embedding: "Innbygging"
+        filters:
+          all: "Alle typer"
       llms:
         display_name: "Navn"
         provider: "Tilbyder"
@@ -305,6 +315,13 @@ nb_NO:
       summarization:
         chat:
           summarize: "Oppsummer"
+      ai_search:
+        related_replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
+        tabs:
+          topics: "Emner"
+          messages: "Meldinger"
       discobot_discoveries:
         legacy:
           regular_results: "Emner"

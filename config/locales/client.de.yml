@@ -6,6 +6,10 @@
 
 de:
   js:
+    dsa_notice:
+      title: "Illegale Inhalte melden"
+      email: "E-Mail-Adresse"
+      resend_email_code: "Code erneut senden"
     user_api_key:
       title: '„%{application_name}“ autorisieren'
       authorize: "Autorisieren"
@@ -432,6 +436,7 @@ de:
         since: "(seit %{version})"
       toggle_safe_mode: "Abgesicherten Modus umschalten"
       toggle_verbose_localization: "Erweiterte Lokalisierungshinweise umschalten"
+      open_styleguide: "Styleguide öffnen"
       disable_dev_tools: "Entwicklertools deaktivieren"
       toggle_upcoming_changes_debug: "Debuggen von bevorstehenden Änderungen ein-/ ausschalten"
     s3:
@@ -522,8 +527,11 @@ de:
       pm_title: "Vorgeschlagene Nachrichten"
     admin_onboarding_banner:
       congrats_onboarding_complete: "Herzlichen Glückwunsch zum Abschluss des Onboarding-Prozesses!"
+      dismiss: "Einrichtung verwerfen"
       select_theme:
         title: "Passe deine Website an"
+        action: "Optionen anzeigen"
+        completed: "Optionen ändern"
         show_light_screenshot: "Hellen Screenshot anzeigen"
         show_dark_screenshot: "Dunklen Screenshot anzeigen"
       invite_collaborators:
@@ -544,16 +552,25 @@ de:
             body: "Willkommen in der Community! Lasst uns einander kennenlernen. Bitte stelle dich vor und erzähle ein wenig über deine Interessen. Ich fange an: Ich habe eine Leidenschaft für Technik und liebe es, mein Wissen weiterzugeben!"
     design_wizard:
       title: "Passe deine Website an"
+      save: "Speichern und fertigstellen"
       back: "Zurück"
       next: "Weiter"
+      intro:
+        start: "Los geht’s"
+      close:
+        keep: "Änderungen beibehalten"
+        revert: "Änderungen rückgängig machen"
+        continue_editing: "Weiter bearbeiten"
       sections:
         theme: "Theme"
+        colors: "Standardfarbe"
         fonts: "Schriftarten"
         homepage: "Homepage"
         welcome_banner: "Willkommensbanner"
         search: "Suche"
       theme:
         selected: "Ausgewählt"
+        applying: "Wird angewendet…"
       colors:
         light: "Hell"
         dark: "Dunkel"
@@ -565,6 +582,21 @@ de:
         categories: "Kategorien"
         styles:
           boxes: "Boxen"
+          with_topics: "Kategorien mit Themen"
+          only: "Nur Kategorien"
+      welcome_banner:
+        enable: "Einen Willkommensbanner anzeigen"
+        enable_description: "Besuchende mit dem Namen der Website und einem Suchfeld begrüßen"
+        location: "Bannerplatzierung"
+        locations:
+          below_site_header: "Unterhalb der Kopfzeile der Seite"
+          above_topic_content: "Oberhalb der Themenliste"
+      search:
+        experiences:
+          search_icon:
+            title: "Suchsymbol"
+          search_field:
+            title: "Suchfeld"
     about:
       edit: "Diese Seite bearbeiten"
       simple_title: "Über uns"
@@ -833,6 +865,7 @@ de:
       date_filter: "Gepostet zwischen"
       in_reply_to: "Antwort auf"
       filtered_flagged_by: "Gemeldet von"
+      no_component_found: "Keine Komponente für %{type} gefunden"
       unknown:
         title:
           one: "Du hast ausstehende Elemente in der Warteschlange zur Überprüfung von einem deaktivierten Plug-in:"
@@ -2992,9 +3025,14 @@ de:
       enter: "Enter"
       option: "Option"
       period: "Zeitraum"
+      left_bracket: "Linke Klammer"
+      right_bracket: "Rechte Klammer"
+      space: "Leerzeichen"
       tab: "Tab"
+      backspace: "Rücktaste"
       delete: "Löschen"
       home: "Startseite"
+      end: "Ende"
     conditional_loading_section:
       loading: Wird geladen …
     category_row:
@@ -3264,6 +3302,7 @@ de:
       create_whisper: "Flüstern"
       create_shared_draft: "Gemeinsamen Entwurf erstellen"
       edit_shared_draft: "Gemeinsamen Entwurf bearbeiten"
+      submit_shortcut_title: "Oder %{shortcut} drücken"
       save_and_close: "Speichern und schließen"
       discard: "Verwerfen"
       cancel_edit: "Bearbeiten abbrechen"
@@ -3287,10 +3326,6 @@ de:
       show_preview: "Vorschau zeigen"
       hide_preview: "Vorschau ausblenden"
       resize: "Editorgröße anpassen"
-      switch_to_markdown: "Zum Standard-Markdown-Editor wechseln (%{keyboardShortcut})"
-      switch_to_rich_text: "Zum Rich-Text-Editor wechseln (%{keyboardShortcut})"
-      switch_to_markdown_no_shortcut: "Zum Standard Markdown-Editor wechseln"
-      switch_to_rich_text_no_shortcut: "Wechsel zum neuen Rich-Text-Editor"
       quote_post_title: "Ganzen Beitrag zitieren"
       bold_label: "F"
       bold_title: "Fett gedruckt"
@@ -3442,6 +3477,8 @@ de:
         visit: "Link öffnen"
         remove_preview: "Vorschau entfernen"
         link_copied: "Link kopiert!"
+      table:
+        default_heading: "Spalte %{number}"
       unsupported_token: "Der Rich-Text-Editor unterstützt nicht alle Funktionen, die in diesem Beitrag verwendet werden; es wird daher auf den Markdown-Editor ausgewichen."
     notifications:
       tooltip:
@@ -6036,63 +6073,6 @@ de:
           other: "Die Eingabe muss größer als %{count} sein."
         pattern_mismatch: "Bitte beachte das erforderliche Format."
         bad_input: "Bitte stelle eine gültige Eingabe zur Verfügung."
-    table_builder:
-      title: "Tabellenersteller"
-      modal:
-        title: "Tabellenersteller"
-        create: "Tabelle erstellen"
-        help:
-          title: "Verwendung des Tabellenkalkulationseditors"
-          enter_key: "Enter"
-          tab_key: "Tab"
-          new_row: "am Ende einer Zeile, um eine neue Zeile einzufügen."
-          new_col: "am Ende einer Spalte, um eine neue Spalte einzufügen."
-          options: "Klicke mit der rechten Maustaste auf Zellen, um weitere Optionen in einem Drop-down-Menü aufzurufen."
-        confirm_close: "Bist du sicher, dass du den Tabellenersteller schließen willst? Alle nicht gespeicherten Änderungen gehen dann verloren."
-      edit:
-        btn_edit: "Tabelle bearbeiten"
-        modal:
-          title: "Tabelle bearbeiten"
-          cancel: "Abbrechen"
-          create: "Speichern"
-          reason: "Welchen Grund gibt es für die Bearbeitung?"
-          trigger_reason: "Grund für die Bearbeitung hinzufügen"
-        default_edit_reason: "Tabelle per Tabelleneditor aktualisieren"
-      default_header:
-        col_1: "Spalte 1"
-        col_2: "Spalte 2"
-        col_3: "Spalte 3"
-        col_4: "Spalte 4"
-      spreadsheet:
-        no_records_found: "Keine Datensätze gefunden"
-        show: "Anzeigen"
-        entries: "Einträge"
-        about: "Über"
-        prompts:
-          delete_selected_rows: "Bist du sicher, dass du die ausgewählten Zeilen löschen willst?"
-          delete_selected_cols: "Bist du sicher, dass du die ausgewählten Spalten löschen willst?"
-          will_destroy_merged_cells: "Durch diese Aktion werden alle vorhandenen zusammengeführten Zellen zerstört. Bist du sicher?"
-          will_clear_search_results: "Durch diese Aktion werden alle vorhandenen zusammengeführten Zellen zerstört. Bist du sicher?"
-          conflicts_with_merged_cells: "Es liegt ein Konflikt mit einer anderen zusammengeführten Zelle vor"
-        invalid_merge_props: "Ungültige zusammengeführte Eigenschaften"
-        cells_already_merged: "Zelle bereits zusammengeführt"
-        no_cells_selected: "Keine Zellen ausgewählt"
-        context_menu:
-          row:
-            before: "Davor neue Zeile einfügen"
-            after: "Danach neue Zeile einfügen"
-            delete: "Ausgewählte Zeilen löschen"
-          col:
-            before: "Davor neue Spalte einfügen"
-            after: "Danach neue Spalte einfügen"
-            delete: "Ausgewählte Spalten löschen"
-            rename: "Diese Spalte umbenennen"
-          order:
-            ascending: "Reihenfolge aufsteigend"
-            descending: "Reihenfolge absteigend"
-          copy: "Kopieren …"
-          paste: "Einfügen …"
-          save: "Speichern als …"
     powered_by_discourse: "Bereitgestellt von Discourse"
     safari_15_warning: "Dein Browser wird bald nicht mehr mit dieser Community kompatibel sein. Um weiterhin hier teilzunehmen, aktualisiere bitte deinen Browser oder <a href='%{url}'>erfahre mehr</a>."
     filter:

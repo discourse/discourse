@@ -39,8 +39,10 @@ sl:
       custom_range_from: "Od"
       admin:
         name: "Ime"
+        created_by: "Ustvaril"
     discourse_workflows:
       gamification_score:
         username: "Uporabnik"
         date: "Datum"
         description: "Opis"
+        category_id: "Kategorija"

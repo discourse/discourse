@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { get } from "@ember/helper";
-import { applyValueTransformer } from "../lib/transformer.js";
+import { applyValueTransformer } from "../lib/transformer.ts";
 import UserFieldConfirm from "./user-fields/confirm.gjs";
 import UserFieldDate from "./user-fields/date.gjs";
 import UserFieldDropdown from "./user-fields/dropdown.gjs";

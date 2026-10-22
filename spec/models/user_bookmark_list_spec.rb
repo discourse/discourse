@@ -19,7 +19,9 @@ RSpec.describe UserBookmarkList do
   let(:user_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user)) }
 
   it "returns all types of bookmarks" do
-    list.load
+    queries = track_sql_queries { list.load }
+    expect(queries.grep(/SELECT COUNT/)).to be_empty
+    expect(queries.grep(/\ASELECT "bookmarks"\.\* FROM "bookmarks"/)).to be_empty
 
     expect(list.bookmarks.map(&:id)).to match_array(
       [post_bookmark.id, topic_bookmark.id, user_bookmark.id],
@@ -42,6 +44,7 @@ RSpec.describe UserBookmarkList do
       list = UserBookmarkList.new(user: user, guardian: Guardian.new(user), per_page: 1000)
 
       expect(list.load.count).to eq(20)
+      expect(list.has_more).to eq(true)
     end
   end
 end

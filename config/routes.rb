@@ -444,7 +444,6 @@ Discourse::Application.routes.draw do
           put "readonly" => "backups#readonly"
           get "upload" => "backups#check_backup_chunk"
           post "upload" => "backups#upload_backup_chunk"
-          get "upload_url" => "backups#create_upload_url"
         end
       end
 
@@ -684,6 +683,10 @@ Discourse::Application.routes.draw do
     get "password-reset" => "static#show", :id => "password_reset"
     get "privacy" => "static#show", :id => "privacy", :as => "privacy"
     get "tos" => "static#show", :id => "tos", :as => "tos"
+    get "dsa/report-illegal-content" => "dsa_notices#index"
+    post "dsa/report-illegal-content" => "dsa_notices#create"
+    post "dsa/report-illegal-content/verify-email" => "dsa_notices#verify_email"
+    post "dsa/report-illegal-content/verify-code" => "dsa_notices#verify_code"
     get "faq" => "static#show", :id => "faq"
     %w[guidelines rules conduct].each do |guidelines_alias|
       get guidelines_alias => "static#show", :id => "guidelines", :as => guidelines_alias
@@ -1432,6 +1435,7 @@ Discourse::Application.routes.draw do
     get "/c", to: redirect(relative_url_root + "categories")
 
     resources :categories, only: %i[index create update destroy]
+    post "categories/evaluate_permissions" => "categories#evaluate_permissions"
     post "categories/:id/convert_nested_replies" => "categories#convert_nested_replies"
     post "categories/reorder" => "categories#reorder"
     get "categories/types" => "categories#types"

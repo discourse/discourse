@@ -1,11 +1,13 @@
 import Component from "@glimmer/component";
 import Chart from "discourse/admin/components/chart";
 import { buildLegendIcon, dimColor } from "discourse/lib/chart-legend-icon";
+import { getCSSColor } from "discourse/lib/css-color";
 import { remToPx } from "discourse/lib/rem-to-px";
 
 export default class DoughnutChart extends Component {
   get config() {
     const totalScore = this.args.totalScore || "";
+    const textColor = getCSSColor("--primary-high");
 
     return {
       type: "doughnut",
@@ -32,9 +34,6 @@ export default class DoughnutChart extends Component {
               padding: remToPx(1),
               font: { size: remToPx(0.75) },
               generateLabels: (chart) => {
-                const textColor = getComputedStyle(document.documentElement)
-                  .getPropertyValue("--primary-high")
-                  .trim();
                 const backgroundColor =
                   chart.data.datasets[0]?.backgroundColor || [];
                 return chart.data.labels.map((label, index) => {
@@ -59,10 +58,6 @@ export default class DoughnutChart extends Component {
         {
           id: "centerText",
           afterDraw: function (chart) {
-            const cssVarColor =
-              getComputedStyle(document.documentElement).getPropertyValue(
-                "--primary-high"
-              ) || "#000";
             const cssFontSize =
               getComputedStyle(document.documentElement).getPropertyValue(
                 "--font-up-4"
@@ -79,7 +74,7 @@ export default class DoughnutChart extends Component {
             ctx.restore();
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.fillStyle = cssVarColor.trim();
+            ctx.fillStyle = textColor || "#000";
             ctx.font = `bold ${cssFontSize.trim()} ${cssFontFamily.trim()}`;
 
             ctx.fillText(totalScore, centerX, centerY);

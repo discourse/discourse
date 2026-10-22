@@ -6,6 +6,9 @@
 
 it:
   js:
+    dsa_notice:
+      title: "Segnala contenuti illegali"
+      email: "Indirizzo e-mail"
     user_api_key:
       authorize: "Autorizza"
       deny: "Annulla"
@@ -2856,8 +2859,6 @@ it:
       uploading: "Caricamento…"
       show_preview: "mostra anteprima"
       hide_preview: "nascondi anteprima"
-      switch_to_markdown: "Passa all'editor Markdown standard (%{keyboardShortcut})"
-      switch_to_rich_text: "Passa al nuovo editor di rich text (%{keyboardShortcut})"
       quote_post_title: "Cita l'intero messaggio"
       bold_label: "G"
       bold_title: "Grassetto"
@@ -2967,6 +2968,8 @@ it:
       onebox_toolbar:
         copy: "Copia link"
         link_copied: "Link copiato!"
+      table:
+        default_heading: "Colonna %{number}"
     notifications:
       tooltip:
         regular:
@@ -5070,63 +5073,6 @@ it:
           other: "L'input deve essere maggiore di %{count}."
         pattern_mismatch: "Rispetta il formato richiesto."
         bad_input: "Inserisci un input valido."
-    table_builder:
-      title: "Costruttore di tabelle"
-      modal:
-        title: "Costruttore di tabelle"
-        create: "Costruisci tabella"
-        help:
-          title: "Utilizzo dell'editor di fogli di calcolo"
-          enter_key: "Invio"
-          tab_key: "Tab"
-          new_row: "alla fine di una riga per inserire una nuova riga."
-          new_col: "alla fine di una colonna per inserire una nuova colonna."
-          options: "Fai clic con il tasto destro sulle celle per accedere a più opzioni in un menu a discesa."
-        confirm_close: "Vuoi davvero chiudere il generatore di tabelle? Eventuali modifiche non salvate andranno perse."
-      edit:
-        btn_edit: "Modifica tabella"
-        modal:
-          title: "Modifica tabella"
-          cancel: "annulla"
-          create: "Salva"
-          reason: "Perché stai modificando?"
-          trigger_reason: "Aggiungi il motivo della modifica"
-        default_edit_reason: "Aggiorna tabella con l'editor di tabelle"
-      default_header:
-        col_1: "Colonna 1"
-        col_2: "Colonna 2"
-        col_3: "Colonna 3"
-        col_4: "Colonna 4"
-      spreadsheet:
-        no_records_found: "Nessun record trovato"
-        show: "Mostra"
-        entries: "voci"
-        about: "Informazioni"
-        prompts:
-          delete_selected_rows: "Vuoi davvero eliminare le righe selezionate?"
-          delete_selected_cols: "Vuoi davvero eliminare le colonne selezionate?"
-          will_destroy_merged_cells: "Questa azione eliminerà tutte le celle unite esistenti. Continuare?"
-          will_clear_search_results: "Questa azione eliminerà tutte le celle unite esistenti. Continuare?"
-          conflicts_with_merged_cells: "C'è un conflitto con un'altra cella unita"
-        invalid_merge_props: "Proprietà unite non valide"
-        cells_already_merged: "Cella già unita"
-        no_cells_selected: "Nessuna cella selezionata"
-        context_menu:
-          row:
-            before: "Inserisci una nuova riga prima"
-            after: "Inserisci una nuova riga dopo"
-            delete: "Elimina le righe selezionate"
-          col:
-            before: "Inserisci una nuova colonna prima"
-            after: "Inserisci una nuova colonna dopo"
-            delete: "Elimina le colonne selezionate"
-            rename: "Rinomina questa colonna"
-          order:
-            ascending: "Ordine crescente"
-            descending: "Ordine decrescente"
-          copy: "Copia..."
-          paste: "Incolla..."
-          save: "Salva come..."
     powered_by_discourse: "Con tecnologia Discourse"
     safari_15_warning: "Il tuo browser sarà presto incompatibile con questa community. Per continuare a partecipare, aggiorna il tuo browser o scopri di più <a href='%{url}'></a>."
     filter:

@@ -210,6 +210,14 @@ bs_BA:
         delete: "Delete"
         tools_modal:
           required: "Required"
+      models:
+        name: "Ime"
+        type: "Tip"
+        edit: "Izmijeni"
+        types:
+          embedding: "Embedding"
+        filters:
+          all: "Sve vrste"
       llms:
         display_name: "Ime"
         vision_modes:
@@ -278,6 +286,14 @@ bs_BA:
             category: "Kategorija"
           table:
             total_count: "Suma"
+      ai_search:
+        related_replies:
+          one: "%{count} odgovor"
+          few: "%{count} odgovora"
+          other: "%{count} odgovora"
+        tabs:
+          topics: "Topics"
+          messages: "Poruke"
       discobot_discoveries:
         legacy:
           regular_results: "Topics"

@@ -382,11 +382,11 @@ pl_PL:
         rejected: "Odrzucony"
         awaiting_staff: "Oczekiwanie na zatwierdzenie przez personel"
       default_llm:
-        title: "Domyślny model LLM"
-        description: "Domyślny model LLM do użycia dla wszystkich funkcji AI. Będzie on używany, jeśli w konfiguracji funkcji lub agenta nie określono modelu LLM. Jeśli nie określono domyślnego modelu LLM, użyty zostanie ostatnio utworzony model LLM."
+        title: "Domyślny model językowy"
+        description: "Używane przez dowolną funkcję AI lub agenta, który nie określa własnego modelu języka. Jeśli żaden nie jest ustawiony, używany jest ostatnio dodany model języka."
       llm_selector:
         none: "Brak"
-        saved: "Domyślny model LLM został pomyślnie zaktualizowany"
+        saved: "Zapisano domyślny model języka"
       features:
         short_title: "Cechy"
         description: "Są to funkcje AI dostępne dla odwiedzających Twoją witrynę. Można je skonfigurować do korzystania z określonych agentów i LLM, a dostęp do nich może być kontrolowany przez grupy."
@@ -1217,14 +1217,18 @@ pl_PL:
         modal:
           title: "Utwórz nowe poświadczenie"
       decision_models:
-        short_title: "Modele decyzyjne"
-        description: "Modele, które odpowiadają na pytania dotyczące treści (tak/nie, wybór, wynik) z prawdopodobieństwem, szybciej i taniej niż LLM."
-        create_new: "Nowy model decyzyjny"
-        no_decision_models: "Brak jeszcze modeli decyzyjnych"
+        seeded_description: "Model wstępnie skonfigurowany"
         manage: "Zarządzaj modelami decyzyjnymi"
-        back: "Powrót do modeli decyzyjnych"
         start_from: "Zacznij od"
         no_preset: "Brak"
+        preset_descriptions:
+          none: "Ustawienia dla dowolnego zgodnego punktu końcowego modelu decyzyjnego"
+          jev-latest: "Hostowany model decyzyjny TypeSafe, tylko tekst"
+          jev-latest-vision: "Hostowany model decyzyjny TypeSafe z obsługą eksperymentalnych obrazów"
+          vllm-sr-d3: "Model decyzyjny multimodalny typu open source, samodzielnie hostowany za pomocą vLLM"
+          cloudflare-clef: "Otwarty model decyzyjny multimodalny Cloudflare oparty na sztucznej inteligencji pracowników"
+          cloudflare-clef-flash: "Mniejsza, szybsza wersja Clef na platformie Workers AI"
+          gpt-6-luna: "Model decyzyjny OpenAI w API Decisions z obsługą obrazów"
         display_name: "Nazwa"
         model: "Model"
         provider: "Dostawca"
@@ -1334,6 +1338,44 @@ pl_PL:
           few: "Odkryto %{count} narzędzia używające protokołu %{version}."
           many: "Odkryto %{count} narzędzi używających protokołu %{version}."
           other: "Odkryto %{count} narzędzi używających protokołu %{version}."
+      models:
+        short_title: "Modele"
+        description: "Połącz modele, które napędzają funkcje AI i przepływy pracy."
+        new: "Nowy model"
+        back: "Powrót do modeli"
+        back_to_types: "Powrót do typów modeli"
+        empty: "Nie skonfigurowałeś jeszcze żadnych modeli"
+        name: "Nazwa"
+        type: "Typ"
+        provider: "Dostawca"
+        edit: "Edytuj"
+        choose_type: "Jaki rodzaj modelu chcesz dodać?"
+        select_type: "Wybierz"
+        types:
+          llm: "Duży język"
+          embedding: "Osadzanie"
+          decision: "Decyzja"
+        type_titles:
+          llm: "Duży model językowy"
+          embedding: "Model osadzania"
+          decision: "Model decyzyjny"
+        type_descriptions:
+          llm: "Generuje tekst dla funkcji, takich jak bot AI, podsumowania i pomocnik AI"
+          embedding: "Zamienia treść w wektory do wyszukiwania semantycznego i powiązanych tematów"
+          decision: "Odpowiada na pytania dotyczące treści (tak/nie, wybór, wynik) z prawdopodobieństwem, do wykorzystania w przepływach pracy"
+        type_filters:
+          llm: "Duże modele językowe"
+          embedding: "Modele osadzania"
+          decision: "Modele decyzyjne"
+        templates:
+          llm: "Wybierz szablon modelu językowego"
+          embedding: "Wybierz szablon osadzania"
+          decision: "Wybierz szablon modelu decyzyjnego"
+        filters:
+          all: "Wszystkie typy"
+          text: "Filtruj według nazwy lub dostawcy"
+          no_results: "Brak modeli spełniających Twoje filtry"
+          reset: "Zresetuj filtry"
       llms:
         short_title: "LLMs"
         no_llms: "Nie ma jeszcze LLM"
@@ -1598,6 +1640,15 @@ pl_PL:
         empty: "Nie skonfigurowałeś jeszcze osadzeń"
         presets: "Wybierz ustawienie wstępne..."
         configure_manually: "Skonfiguruj ręcznie"
+        preset_descriptions:
+          manual: "Ustawienia dla dowolnej usługi osadzania, w tym usług hostowanych samodzielnie"
+          bge-large-en: "Model open-source wyłącznie w języku angielskim, samodzielnie hostowany"
+          bge-m3: "Model wielojęzyczny z otwartym kodem źródłowym dla dłuższych treści, hostowany samodzielnie"
+          multilingual-e5-large: "Model wielojęzyczny o otwartym kodzie źródłowym, samodzielnie hostowany"
+          gemini-embedding-001: "Hostowany wielojęzyczny model Google"
+          text-embedding-3-large: "Najdokładniejszy model osadzania OpenAI"
+          text-embedding-3-small: "Szybszy i tańszy model osadzania OpenAI"
+          text-embedding-ada-002: "Poprzednia generacja modelu OpenAI została zastąpiona przez osadzanie tekstu w 3 małych czcionkach"
         edit: "Edytuj"
         seeded_warning: "To jest wstępnie skonfigurowane na twojej stronie i nie może być edytowane."
         tests:
@@ -1878,6 +1929,33 @@ pl_PL:
             compact: "Kompaktowy"
             expanded: "Rozszerzony"
             expanded_description: "z podsumowaniami AI"
+      ai_search:
+        related_topics: "Powiązane tematy"
+        related_replies:
+          one: "%{count} odpowiedź"
+          few: "%{count} odpowiedzi"
+          many: "%{count} odpowiedzi"
+          other: "%{count} odpowiedzi"
+        answer_label: "Odpowiedź AI"
+        follow_up_label: "Zadaj pytanie uzupełniające"
+        follow_up_placeholder: "Zadaj kolejne pytanie…"
+        ask: "Zapytaj"
+        references_title: "Cytowane tematy"
+        references_empty: "Tutaj pojawiają się tematy, na które powołują się odpowiedzi."
+        tabs:
+          label: "Wyniki wyszukiwania"
+          ask: "Zapytaj AI"
+          topics: "Tematy"
+          this_topic: "Ten temat"
+          messages: "Wiadomości"
+          no_answer: "Nie znaleziono odpowiedzi AI"
+        no_keyword_matches: "Nie znaleziono pasujących słów kluczowych."
+        no_answer: "AI nie znalazła jednoznacznej odpowiedzi. %{askLink}"
+        ask_community: "Zapytaj społeczność."
+        scope:
+          this_topic: "ten temat"
+          messages: "twoje wiadomości"
+          fallback: "Nie znaleziono niczego w %{name}, więc ta odpowiedź pochodzi z całej witryny."
       discobot_discoveries:
         main_title: "Zapytaj AI"
         loading_convo: "Ładowanie rozmowy"

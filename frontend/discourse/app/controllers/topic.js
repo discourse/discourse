@@ -1945,6 +1945,11 @@ export default class TopicController extends Controller {
     if (options.jump !== false) {
       this.model?.postStream?.focusPostOnRender(postNumber);
     }
+
+    this.model?.postStream?.highlightQuoteOnRender(
+      postNumber,
+      options.highlightQuote
+    );
   }
 
   _showRevision(postNumber, revision) {

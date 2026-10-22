@@ -64,11 +64,7 @@ export function loadOneboxes(
 }
 
 function _loadInlineOneboxes(inline, ajax, topicId, categoryId, onLoad) {
-  applyInlineOneboxes(inline, ajax, {
-    categoryId: topicId,
-    topicId: categoryId,
-    onLoad,
-  });
+  applyInlineOneboxes(inline, ajax, { categoryId, topicId, onLoad });
 }
 
 function _loadOneboxes({

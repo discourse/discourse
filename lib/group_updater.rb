@@ -108,6 +108,7 @@ class GroupUpdater
 
     @attributes = ActionController::Parameters.new(attributes).permit(*permitted_params).to_h
     group_attributes = attributes_without_disabled_email_settings
+    return false if !valid_flair_upload?(group_attributes)
     notification_level, categories, tags = nil
 
     if !group.automatic || guardian.is_admin?
@@ -139,6 +140,18 @@ class GroupUpdater
   def can_admin_group?
     return @can_admin_group if defined?(@can_admin_group)
     @can_admin_group = guardian.can_admin_group?(group)
+  end
+
+  def valid_flair_upload?(group_attributes)
+    return true if !group_attributes.key?(:flair_upload_id)
+
+    upload_id = group_attributes[:flair_upload_id].presence
+    return true if upload_id.blank?
+    return true if upload_id.to_i == group.flair_upload_id
+    return true if guardian.can_use_flair_upload?(upload_id)
+
+    group.errors.add(:base, I18n.t("groups.errors.flair_upload_not_owned"))
+    false
   end
 
   def attributes_without_disabled_email_settings

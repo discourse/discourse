@@ -206,6 +206,13 @@ te:
         delete: "తొలగించండి"
         tools_modal:
           required: "అవసరం"
+      models:
+        name: "పేరు"
+        type: "రకం"
+        edit: "సవరించండి"
+        select_type: "ఎంచుకోండి"
+        types:
+          embedding: "పొందుపరచడం"
       llms:
         display_name: "పేరు"
         vision_modes:
@@ -282,6 +289,13 @@ te:
             tag: "ట్యాగ్"
           table:
             total_count: "మొత్తం"
+      ai_search:
+        related_replies:
+          one: "%{count} ప్రత్యుత్తరం"
+          other: "%{count} ప్రత్యుత్తరాలు"
+        tabs:
+          topics: "విషయాలు"
+          messages: "సందేశాలు"
       discobot_discoveries:
         legacy:
           regular_results: "విషయాలు"
