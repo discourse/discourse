@@ -249,7 +249,7 @@ module PageObjects
       def has_selected_names?(*names)
         if control_type == "tag-chooser"
           if tag_chooser_d_select?
-            tag_chooser_d_select.trigger["data-name"].to_s.split(",").sort == names.map(&:to_s).sort
+            tag_chooser_d_select.has_selected_names?(*names)
           else
             PageObjects::Components::SelectKit.new(tag_chooser_selector).has_selected_names?(*names)
           end

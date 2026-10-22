@@ -11,6 +11,7 @@ import {
   render,
   settled,
   triggerKeyEvent,
+  typeIn,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -226,6 +227,36 @@ module(
       assert.deepEqual(onChange.lastCall.args[0], [
         { id: "newtag", name: "newtag", isNew: true },
       ]);
+    });
+
+    test("fix oracle: pasting pipe-separated names adds each tag", async function (assert) {
+      stubSearch();
+      const onChange = sinon.spy();
+
+      await render(
+        <template>
+          <TagHost @allowCreate={{true}} @onChange={{onChange}} />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      const clipboardData = new DataTransfer();
+      clipboardData.setData("text/plain", "alpha|beta|gamma");
+      const input = find("[role='combobox']");
+      input.dispatchEvent(
+        new ClipboardEvent("paste", {
+          bubbles: true,
+          cancelable: true,
+          clipboardData,
+        })
+      );
+      await settled();
+
+      assert.deepEqual(
+        onChange.lastCall?.args[0].map((tag) => tag.name),
+        ["alpha", "beta", "gamma"]
+      );
+      assert.dom(input).hasValue("", "the pasted text is not left as a query");
     });
 
     test("create needs both the call site and the permission", async function (assert) {
@@ -448,6 +479,33 @@ module(
       assert.dom("[role='option'].--create").hasText("Create “fresh”");
     });
 
+    test("fix oracle: Enter creates a typed tag once the list has changed", async function (assert) {
+      const onChange = sinon.spy();
+      await render(<template><MiniTagHost @onChange={{onChange}} /></template>);
+      await click(".d-select__trigger");
+      assert.notStrictEqual(optionNamed("bug"), undefined, "the first list");
+
+      await typeIn("[role='combobox']", "fresh");
+      const createRow = find("[role='option'].--create");
+      assert.true(Boolean(createRow?.id), "the create row has an id");
+      assert
+        .dom("[role='combobox']")
+        .hasAttribute(
+          "aria-activedescendant",
+          createRow?.id ?? "",
+          "the create row is the active option"
+        );
+
+      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+
+      assert.true(onChange.called, "Enter created the tag");
+      assert.true(
+        onChange.lastCall.args[0].some(
+          (tag) => tag.name === "fresh" && tag.isNew
+        )
+      );
+    });
+
     test("a minimum shows as persistent guidance", async function (assert) {
       await render(<template><MiniTagHost @minimum={{2}} /></template>);
 
@@ -503,6 +561,28 @@ module("Integration | ui-kit | select | recipes | DTagDrop", function (hooks) {
     assert.true(names[1].includes(i18n("tagging.selector_no_tags")));
     assert.true(names[2].includes("zeta"), "top tags keep their order");
     assert.dom(".d-select.tag-drop").hasClass("tag-alpha");
+  });
+
+  test("fix oracle: the shortcuts follow a changed tag", async function (assert) {
+    const currentTag = tracked(null);
+    await render(<template><DTagDrop @tag={{currentTag.value}} /></template>);
+    await click(".d-select__trigger");
+    assert.strictEqual(
+      optionNamed(i18n("tagging.selector_remove_filter")),
+      undefined,
+      "no tag, nothing to remove"
+    );
+    await triggerKeyEvent(".d-select__trigger", "keydown", "Escape");
+
+    currentTag.value = { id: 1, name: "alpha", slug: "alpha" };
+    await settled();
+    await click(".d-select__trigger");
+
+    assert.notStrictEqual(
+      optionNamed(i18n("tagging.selector_remove_filter")),
+      undefined,
+      "the remove filter shortcut appears"
+    );
   });
 
   test("picking a tag routes to its filtered list", async function (assert) {

@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { array } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import {
@@ -25,6 +26,43 @@ const FRUITS = [
 
 module("Integration | ui-kit | DModal", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("fix oracle: opening a second select keeps focus on it", async function (assert) {
+    const onChange = () => {};
+    await render(
+      <template>
+        <DModal @inline={{true}} @title="Manage">
+          <:body>
+            <DSelect
+              class="first-select"
+              @items={{FRUITS}}
+              @multiple={{true}}
+              @onChange={{onChange}}
+              @value={{(array)}}
+            />
+            <DSelect
+              class="second-select"
+              @items={{FRUITS}}
+              @multiple={{true}}
+              @onChange={{onChange}}
+              @value={{(array)}}
+            />
+          </:body>
+        </DModal>
+      </template>
+    );
+
+    await click(".second-select .d-select__input");
+
+    assert.strictEqual(
+      document.activeElement,
+      find(".second-select .d-select__input"),
+      "focus stays on the select that was opened"
+    );
+    assert
+      .dom(".second-select")
+      .hasAttribute("aria-expanded", "true", "the second select opened");
+  });
 
   test("title and subtitle", async function (assert) {
     await render(

@@ -114,29 +114,12 @@ module PageObjects
         end
 
         def remove(value)
-          button =
-            trigger.first(
-              ".d-select__chip#{hook_selector("value", value)} .d-select__chip-remove",
-              minimum: 0,
-              wait: 0,
-            )
-          if button
-            button.click
-          else
-            open_for_value
-            strip_button =
-              first(
-                in_panel(".d-select__strip-item#{hook_selector("value", value)} button"),
-                minimum: 0,
-                wait: 0,
-              )
-            if strip_button
-              strip_button.click
-            else
-              select_value(value)
-            end
-          end
-          self
+          remove_by("value", value)
+        end
+
+        # Removes a held item by its label, for callers that know a tag's name but not its id.
+        def remove_name(name)
+          remove_by("name", name)
         end
 
         def value
@@ -173,6 +156,16 @@ module PageObjects
           page.has_no_css?("#{root_selector}#{hook_selector("name", name)}")
         end
 
+        # Order-insensitive match on a multi-select's whole selection. `has_selected_name?`
+        # compares the root's joined `data-name` verbatim, so it only fits a single selection.
+        # Waits because selection labels can resolve a beat after the value is set.
+        def has_selected_names?(*names)
+          expected = names.map(&:to_s).sort
+          page.has_css?(root_selector) do |element|
+            element["data-name"].to_s.split(",").sort == expected
+          end
+        end
+
         def has_option_value?(value)
           option_match?("value", value)
         end
@@ -191,6 +184,17 @@ module PageObjects
 
         def has_disabled_option?(value)
           option_match?("value", value, disabled: true)
+        end
+
+        # Whether the open panel marks the option labelled `name` as the current selection.
+        def has_selected_option_name?(name)
+          option_match?("name", name, selected: true)
+        end
+
+        # Checks only the mounted window of the list, which covers every row of a short list.
+        def has_no_selected_option?
+          open_for_value
+          page.has_no_css?("#{linked_panel_selector} [role='option'][aria-selected='true']")
         end
 
         # Keeps the `[role='listbox']` ancestor the pre-scoping selector had: a panel may host
@@ -614,6 +618,32 @@ module PageObjects
             first("#{linked_panel_selector} .d-select__filter", minimum: 0, wait: 0) || trigger
         end
 
+        def remove_by(hook, value)
+          button =
+            trigger.first(
+              ".d-select__chip#{hook_selector(hook, value)} .d-select__chip-remove",
+              minimum: 0,
+              wait: 0,
+            )
+          if button
+            button.click
+          else
+            open_for_value
+            strip_button =
+              first(
+                in_panel(".d-select__strip-item#{hook_selector(hook, value)} button"),
+                minimum: 0,
+                wait: 0,
+              )
+            if strip_button
+              strip_button.click
+            else
+              select_hook(hook, value)
+            end
+          end
+          self
+        end
+
         def select_hook(hook, value)
           open_for_value
           panel = linked_panel_selector
@@ -623,11 +653,12 @@ module PageObjects
           self
         end
 
-        def option_match?(hook, value, negative: false, disabled: false)
+        def option_match?(hook, value, negative: false, disabled: false, selected: false)
           open_for_value
           panel = linked_panel_selector
           selector = "#{panel} [role='option'][data-value]#{hook_selector(hook, value)}"
           selector += "[aria-disabled='true']" if disabled
+          selector += "[aria-selected='true']" if selected
           matcher = negative ? :has_no_css? : :has_css?
           page.public_send(matcher, panel) { option_in_windows?(panel, selector) }
         end

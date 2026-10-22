@@ -63,7 +63,7 @@ module PageObjects
 
       def tag_selector(scope)
         selector = "#{ROOT_SELECTOR} #{scope}"
-        if has_css?("#{selector}.d-select", wait: 0)
+        if find(selector).matches_css?(".d-select", wait: 0)
           PageObjects::Components::UiKit::DSelect.at(selector)
         else
           PageObjects::Components::SelectKit.new(selector)

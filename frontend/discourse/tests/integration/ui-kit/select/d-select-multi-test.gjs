@@ -75,6 +75,28 @@ class MultiValueCoercionHost extends Component {
 }
 
 module(
+  "Integration | ui-kit | DSelect | multi narrow field fix oracle",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("fix oracle: the caret stays inside a narrow typeahead trigger", async function (assert) {
+      await render(
+        <template>
+          <div style="width: 200px"><MultiHost /></div>
+        </template>
+      );
+
+      const trigger = find(".d-select__trigger").getBoundingClientRect();
+      const caret = find(".d-select__trigger > svg").getBoundingClientRect();
+      assert.true(
+        caret.right <= trigger.right + 0.5,
+        `caret right ${caret.right} within trigger right ${trigger.right}`
+      );
+    });
+  }
+);
+
+module(
   "Integration | ui-kit | select | DSelect (multi typeahead)",
   function (hooks) {
     setupRenderingTest(hooks);

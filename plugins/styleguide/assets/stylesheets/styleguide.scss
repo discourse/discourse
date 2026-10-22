@@ -406,6 +406,11 @@
     min-width: 0;
   }
 
+  &__description {
+    margin-block: 0 var(--space-3);
+    color: var(--primary-high);
+  }
+
   &__value {
     display: block;
     margin-block-start: var(--space-2);

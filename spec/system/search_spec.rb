@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Search" do
+  with_select_controls(false)
+
   let(:search_page) { PageObjects::Pages::Search.new }
   fab!(:topic)
   fab!(:op) { Fabricate(:post, topic: topic) }
@@ -264,6 +266,25 @@ describe "Search" do
       expect(
         find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .discourse-tags"),
       ).to have_content(tag1.name)
+    end
+
+    context "with the new select controls" do
+      with_select_controls(true)
+
+      it "allows the user to manage tags in bulk on the topic search results with the new select controls" do
+        visit("/search?q=test")
+        expect(page).to have_content(topic.title)
+
+        search_page.bulk_select_result_and_open_dropdown(topic)
+        topic_list_header.click_bulk_button("manage-tags")
+        manage_tags_modal = PageObjects::Modals::ManageTags.new
+        expect(manage_tags_modal.add_tag_selector).to be_a(PageObjects::Components::UiKit::DSelect)
+        manage_tags_modal.add_tags(tag1.name)
+        manage_tags_modal.click_confirm
+        expect(
+          find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .discourse-tags"),
+        ).to have_content(tag1.name)
+      end
     end
 
     it "allows the user to delete posts in bulk" do

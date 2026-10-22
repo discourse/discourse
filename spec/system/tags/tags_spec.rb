@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Tags" do
+  with_select_controls(false)
+
   fab!(:user_tl1) { Fabricate(:user, trust_level: TrustLevel[1]) }
   fab!(:user_tl2) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:user_tl3) { Fabricate(:user, trust_level: TrustLevel[3]) }
@@ -405,6 +407,303 @@ describe "Tags" do
       expect(composer_tag_chooser).to have_option_name("cap-approved")
       expect(composer_tag_chooser).to have_option_name("cap-closed")
       expect(composer_tag_chooser).to have_option_name("cap-open")
+    end
+  end
+
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    let(:discovery) { PageObjects::Pages::Discovery.new }
+    let(:category_page) { PageObjects::Pages::Category.new }
+    let(:tag_page) { PageObjects::Pages::Tag.new }
+    let(:topic_page) { PageObjects::Pages::Topic.new }
+    let(:composer) { PageObjects::Components::Composer.new }
+    let(:composer_tag_chooser) do
+      PageObjects::Components::UiKit::DSelect.at(".tags-input .mini-tag-chooser")
+    end
+    let(:title_tag_chooser) do
+      PageObjects::Components::UiKit::DSelect.at(".edit-tags__wrapper .mini-tag-chooser")
+    end
+
+    describe "topic lists" do
+      fab!(:topic_with_one_tag) do
+        Fabricate(:topic, tags: [tag_one]).tap { |t| Fabricate(:post, topic: t) }
+      end
+      fab!(:topic_with_no_tags) { Fabricate(:topic).tap { |t| Fabricate(:post, topic: t) } }
+      fab!(:topic_in_category_with_tag) do
+        Fabricate(:topic, category: category, tags: [tag_three]).tap do |t|
+          Fabricate(:post, topic: t)
+        end
+      end
+
+      it "uses the tag slug when picking a searched tag from the new select controls tag drop" do
+        rare_tag = Fabricate(:tag, name: "rare-tag")
+        popular_tag = Fabricate(:tag, name: "popular-tag")
+        category_for_tags = Fabricate(:category)
+
+        2.times do
+          Fabricate(:topic, category: category_for_tags, tags: [popular_tag]).tap do |t|
+            Fabricate(:post, topic: t)
+          end
+        end
+        Fabricate(:topic, category: category_for_tags, tags: [rare_tag]).tap do |t|
+          Fabricate(:post, topic: t)
+        end
+        CategoryTagStat.update_topic_counts
+
+        SiteSetting.max_tags_in_filter_list = 1
+
+        sign_in(user_tl1)
+        category_page.visit(category_for_tags)
+
+        discovery.tag_drop.search(rare_tag.name)
+        discovery.tag_drop.select_name(rare_tag.name)
+
+        expect(page).to have_current_path(
+          "/tags/c/#{category_for_tags.slug}/#{category_for_tags.id}/#{rare_tag.slug}/#{rare_tag.id}",
+        )
+      end
+
+      it "filters a category topic list with the new select controls tag drop" do
+        sign_in(user_tl1)
+
+        visit "/latest"
+        expect(discovery.topic_list).to have_topic(topic_with_one_tag)
+        expect(discovery.tag_drop).to have_selected_value("all-tags")
+
+        category_page.visit(category)
+        expect(discovery.topic_list).to have_topic_tag(topic_in_category_with_tag, "tag-three")
+
+        discovery.tag_drop.select_name("tag-three")
+
+        expect(page).to have_current_path(
+          "/tags/c/#{category.slug}/#{category.id}/#{tag_three.slug}/#{tag_three.id}",
+        )
+        expect(discovery.tag_drop).to have_selected_name("tag-three")
+        expect(discovery.topic_list).to have_topic(topic_in_category_with_tag)
+      end
+
+      it "highlights the selected tag in the new select controls tag drop" do
+        ditto = Fabricate(:tag, name: "ditto")
+        bulbasaur = Fabricate(:tag, name: "bulbasaur")
+        sprigatito = Fabricate(:tag, name: "sprigatito")
+        tag_category = Fabricate(:category)
+
+        [ditto, bulbasaur, sprigatito].each do |tag|
+          Fabricate(:topic, category: tag_category, tags: [tag]).tap do |t|
+            Fabricate(:post, topic: t)
+          end
+        end
+        CategoryTagStat.update_topic_counts
+
+        sign_in(user_tl1)
+
+        tag_page.visit_tag(ditto)
+        expect(discovery.tag_drop).to have_selected_option_name("ditto")
+
+        discovery.tag_drop.search(ditto.name)
+        expect(discovery.tag_drop).to have_selected_option_name("ditto")
+
+        discovery.tag_drop.search(bulbasaur.name)
+        expect(discovery.tag_drop).to have_option_name("bulbasaur")
+        expect(discovery.tag_drop).to have_no_selected_option
+
+        discovery.tag_drop.select_name("bulbasaur")
+        expect(page).to have_current_path("/tag/#{bulbasaur.slug}/#{bulbasaur.id}")
+        expect(discovery.tag_drop).to have_selected_option_name("bulbasaur")
+
+        discovery.tag_drop.select_value("all-tags")
+        expect(page).to have_current_path("/")
+        expect(discovery.tag_drop).to have_option_value("no-tags")
+        expect(discovery.tag_drop).to have_no_selected_option
+        discovery.tag_drop.close
+
+        discovery.tag_drop.select_value("no-tags")
+        expect(page).to have_current_path("/tag/none")
+        expect(discovery.tag_drop).to have_option_value("all-tags")
+        expect(discovery.tag_drop).to have_no_selected_option
+      end
+
+      it "filters to untagged topics with the new select controls no-tags shortcut" do
+        sign_in(user_tl1)
+        visit "/latest"
+
+        discovery.tag_drop.select_value("no-tags")
+
+        expect(page).to have_current_path("/tag/none")
+        expect(discovery.topic_list).to have_topic(topic_with_no_tags)
+        expect(discovery.topic_list).to have_no_topic(topic_with_one_tag)
+      end
+    end
+
+    describe "create/edit topics and PMs with tags" do
+      def pick_tags(chooser, *names)
+        chooser.open
+        names.each do |name|
+          chooser.search(name)
+          chooser.select_name(name)
+        end
+        chooser.close
+      end
+
+      it "creates and edits topic tags with the new select controls" do
+        sign_in(user_tl1)
+
+        visit "/new-topic"
+        expect(composer).to be_opened
+
+        composer.fill_title("Topic with tags test")
+        composer.fill_content("This is a test topic with tags")
+        pick_tags(composer_tag_chooser, "tag-one", "tag-two")
+
+        composer.submit
+
+        expect(topic_page).to have_topic_title("Topic with tags test")
+        expect(topic_page.topic_tags).to include("tag-one", "tag-two")
+
+        topic_page.click_topic_edit_title
+        expect(topic_page).to have_topic_title_editor
+
+        title_tag_chooser.remove_name("tag-two")
+        pick_tags(title_tag_chooser, "tag-three")
+        topic_page.click_topic_title_submit_edit
+
+        expect(topic_page).to have_no_topic_title_editor
+        expect(topic_page.topic_tags).to include("tag-one", "tag-three")
+        expect(topic_page.topic_tags).not_to include("tag-two")
+
+        # TL1 users can't create tags
+        topic_page.click_topic_edit_title
+        expect(topic_page).to have_topic_title_editor
+
+        title_tag_chooser.open
+        title_tag_chooser.search("tag-four")
+        expect(title_tag_chooser).to have_no_option_value("tag-name:tag-four")
+        expect(title_tag_chooser).to have_no_option_name("tag-four")
+        title_tag_chooser.close
+
+        topic_url = page.current_url
+        sign_in(user_tl3)
+        visit(topic_url)
+
+        topic_page.click_topic_edit_title
+        expect(topic_page).to have_topic_title_editor
+
+        title_tag_chooser.open
+        title_tag_chooser.search("tag-four")
+        title_tag_chooser.select_value("tag-name:tag-four")
+        title_tag_chooser.close
+
+        topic_page.click_topic_title_submit_edit
+
+        expect(topic_page).to have_no_topic_title_editor
+        expect(topic_page.topic_tags).to include("tag-four")
+        expect(Tag.exists?(name: "tag-four")).to eq(true)
+      end
+
+      it "creates and edits PM tags with the new select controls" do
+        sign_in(user_tl1)
+
+        visit "/new-message"
+        expect(composer).to be_opened
+        expect(page).to have_no_css(".tags-input .mini-tag-chooser")
+
+        sign_in(user_tl2)
+
+        visit "/new-message"
+        expect(composer).to be_opened
+
+        composer.fill_title("PM with tags test")
+        composer.fill_content("This is a test PM with tags")
+        composer.select_pm_user(user_tl1.username)
+        composer.select_pm_user(user_tl3.username)
+        pick_tags(composer_tag_chooser, "tag-one", "tag-two")
+
+        composer.submit
+
+        expect(page).to have_css("#topic-title")
+        expect(topic_page.topic_tags).to include("tag-one", "tag-two")
+
+        topic_page.click_topic_edit_title
+        expect(topic_page).to have_topic_title_editor
+
+        title_tag_chooser.remove_name("tag-two")
+        pick_tags(title_tag_chooser, "tag-three")
+
+        topic_page.click_topic_title_submit_edit
+
+        expect(topic_page).to have_no_topic_title_editor
+        expect(topic_page.topic_tags).to include("tag-one", "tag-three")
+        expect(topic_page.topic_tags).not_to include("tag-two")
+      end
+
+      it "saves the original tags in a draft with the new select controls" do
+        topic = Fabricate(:topic, user: admin, tags: [tag_one, tag_two])
+        Fabricate(:post, topic: topic, user: admin)
+
+        sign_in(admin)
+        visit topic.url
+
+        find("#post_1 .post-controls .edit").click
+        expect(composer).to be_opened
+
+        expect(page).to have_css(".tags-input .mini-tag-chooser .d-select__chip", text: "tag-one")
+
+        composer.fill_content("Updated content for draft test")
+
+        draft = nil
+        try_until_success(reason: "saving a draft") do
+          draft = Draft.find_by(user: admin)
+          expect(draft).to be_present
+        end
+
+        original_tag_ids = JSON.parse(draft.data)["original_tags"].map { |t| t["id"] }
+        expect(original_tag_ids).to contain_exactly(tag_one.id, tag_two.id)
+      end
+
+      it "offers child tags of a selected parent tag in the new select controls" do
+        parent_tag = Fabricate(:tag, name: "cap")
+        child_tags = %w[cap-approved cap-closed cap-open].map { |name| Fabricate(:tag, name:) }
+
+        Fabricate(
+          :tag_group,
+          name: "Corrective Action Plans",
+          parent_tag: parent_tag,
+          one_per_topic: true,
+          tags: child_tags,
+        )
+
+        topic = Fabricate(:topic, user: admin, tags: [parent_tag])
+        Fabricate(:post, topic: topic, user: admin)
+
+        sign_in(admin)
+        visit topic.url
+
+        topic_page.click_topic_edit_title
+        expect(topic_page).to have_topic_title_editor
+
+        title_tag_chooser.open
+        title_tag_chooser.search("cap-")
+
+        expect(title_tag_chooser).to have_option_name("cap-approved")
+        expect(title_tag_chooser).to have_option_name("cap-closed")
+        expect(title_tag_chooser).to have_option_name("cap-open")
+
+        title_tag_chooser.close
+        topic_page.click_topic_title_cancel_edit
+
+        find("#post_1 .post-controls .edit").click
+        expect(composer).to be_opened
+
+        expect(page).to have_css(".tags-input .mini-tag-chooser .d-select__chip", text: "cap")
+
+        composer_tag_chooser.open
+        composer_tag_chooser.search("cap-")
+
+        expect(composer_tag_chooser).to have_option_name("cap-approved")
+        expect(composer_tag_chooser).to have_option_name("cap-closed")
+        expect(composer_tag_chooser).to have_option_name("cap-open")
+      end
     end
   end
 

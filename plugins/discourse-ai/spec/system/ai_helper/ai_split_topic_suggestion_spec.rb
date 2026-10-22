@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "AI Post helper" do
+  with_select_controls(false)
+
   fab!(:user, :admin)
   fab!(:non_member_group, :group)
   fab!(:topic)
@@ -137,6 +139,29 @@ RSpec.describe "AI Post helper" do
         suggestion_menu.select_suggestion_by_value(0)
 
         expect(page).to have_css(".tag-chooser summary[data-name='#{suggestion}']")
+      end
+
+      context "with the new select controls" do
+        with_select_controls(true)
+
+        it "adds the suggested tag to the new select controls" do
+          response =
+            Tag
+              .take(5)
+              .map { |t| { id: t.id, name: t.name, score: rand(0.0...45.0) } }
+              .sort_by { |h| h[:score] }
+          DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
+
+          open_move_topic_modal
+          suggestion_menu.click_suggest_tags_button
+          wait_for { suggestion_menu.has_dropdown? }
+          suggestion = suggestion_menu.suggestion_name(0)
+          suggestion_menu.select_suggestion_by_value(0)
+
+          expect(page).to have_css(
+            ".tag-chooser.d-select .d-select__chip[data-name='#{suggestion}']",
+          )
+        end
       end
     end
   end

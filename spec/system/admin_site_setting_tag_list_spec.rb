@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Admin tag list site setting" do
+  with_select_controls(false)
+
   fab!(:admin)
   fab!(:tag_1, :tag)
   fab!(:tag_2, :tag)
@@ -45,5 +47,52 @@ RSpec.describe "Admin tag list site setting" do
     expect(tag_chooser).to have_selected_names(tag_1.name, tag_2.name)
     expect(settings_page.find_setting("digest_suppress_tags")).to have_css(".setting-controls__ok")
     expect(SiteSetting.digest_suppress_tags).to eq("")
+  end
+
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    it "saves and persists tag selections with the new select controls" do
+      settings_page.visit("digest_suppress_tags")
+
+      tag_chooser = settings_page.tag_list_setting("digest_suppress_tags")
+      tag_chooser.search(tag_1.name)
+      tag_chooser.select_name(tag_1.name)
+      tag_chooser.search(tag_2.name)
+      tag_chooser.select_name(tag_2.name)
+      tag_chooser.close
+
+      expect(settings_page).to have_tags_in_setting("digest_suppress_tags", [tag_1, tag_2])
+
+      settings_page.save_setting("digest_suppress_tags")
+
+      expect(settings_page.find_setting("digest_suppress_tags")).to have_no_css(
+        ".setting-controls__ok",
+      )
+      expect(SiteSetting.digest_suppress_tags.split("|")).to contain_exactly(tag_1.name, tag_2.name)
+
+      page.refresh
+
+      expect(settings_page).to have_tags_in_setting("digest_suppress_tags", [tag_1, tag_2])
+    end
+
+    it "does not save while the admin is still filtering with the new select controls" do
+      settings_page.visit("digest_suppress_tags")
+
+      tag_chooser = settings_page.tag_list_setting("digest_suppress_tags")
+      tag_chooser.search(tag_1.name)
+      tag_chooser.select_name(tag_1.name)
+      tag_chooser.search("no-such-tag")
+      tag_chooser.press_in_controller(:enter)
+
+      tag_chooser.search(tag_2.name)
+      tag_chooser.select_name(tag_2.name)
+
+      expect(tag_chooser).to have_selected_names(tag_1.name, tag_2.name)
+      expect(settings_page.find_setting("digest_suppress_tags")).to have_css(
+        ".setting-controls__ok",
+      )
+      expect(SiteSetting.digest_suppress_tags).to eq("")
+    end
   end
 end

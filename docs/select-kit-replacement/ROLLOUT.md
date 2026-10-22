@@ -26,6 +26,13 @@ Paths are relative to the repository root.
    is cheapest.
 9. **Specialized `DSelect` components are called recipes**, not presets. Earlier documents use the
    old name.
+10. **Recipes reach feature parity in the application, not API parity with select-kit.** Each
+    family's recipe set is designed by purpose: what is picked, from where, and what the call site
+    does with the pick. Recipes that differ only by configuration are one recipe. Arguments,
+    terminology and component names are chosen for the new API rather than copied, and behaviour
+    lives at the layer that owns it (navigation belongs to the call site, not to a picker).
+    Compatibility with third-party customizations (bridge kinds, legacy root classes) is kept by
+    mapping, never by mirroring select-kit's component structure. Decided 2026-10-21.
 
 ## Blast radius
 

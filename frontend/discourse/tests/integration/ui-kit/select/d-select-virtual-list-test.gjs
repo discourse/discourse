@@ -1435,3 +1435,70 @@ module("Integration | ui-kit | select | DSelect sticky rows", function (hooks) {
     );
   });
 });
+
+module(
+  "Integration | ui-kit | select | DSelect windowed create row",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      enableVirtualization();
+    });
+
+    hooks.afterEach(function () {
+      disableVirtualization();
+    });
+
+    test("fix oracle: Enter activates the new create row after the virtual window changes", async function (assert) {
+      const load = async (filter) => (filter ? [] : LOADED_ITEMS);
+      const createItem = (filter) => ({ id: filter, name: filter });
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+          <style>
+            .d-virtual-list {
+              height: 200px;
+              overflow-y: auto;
+            }
+          </style>
+          <DSelect
+            @allowCreate={{true}}
+            @createItem={{createItem}}
+            @load={{load}}
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @variant="typeahead"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      await settledAfterFrame();
+      assert.true(
+        findAll(OPTION_SELECTOR).length < LOADED_ITEMS.length,
+        "the original results occupy a real virtual window"
+      );
+
+      await fillIn("[role='combobox']", "Fresh tag");
+      await settledAfterFrame();
+      const createRow = find("[role='option'].--create");
+      assert.dom(createRow).exists("the new query renders its create row");
+      assert.true(Boolean(createRow.id), "the mounted create row has an id");
+      assert
+        .dom("[role='combobox']")
+        .hasAttribute(
+          "aria-activedescendant",
+          createRow.id,
+          "the cursor points at the mounted row"
+        );
+
+      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+      assert.true(onChange.calledOnce, "Enter selects the create row once");
+      assert.deepEqual(
+        onChange.firstCall?.args[0],
+        ["Fresh tag"],
+        "Enter selects the newly typed value"
+      );
+    });
+  }
+);

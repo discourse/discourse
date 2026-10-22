@@ -142,6 +142,10 @@
   min-width: var(--d-select-menu-min-width, 12em);
 }
 
+.fk-d-menu.d-select__content {
+  z-index: z("modal", "dialog") + 1;
+}
+
 .d-select__content > .fk-d-menu__inner-content {
   width: 100%;
 }
@@ -446,6 +450,7 @@
   align-items: center;
   gap: 0.25em;
   box-sizing: border-box;
+  min-width: 0;
   width: 100%;
 }
 

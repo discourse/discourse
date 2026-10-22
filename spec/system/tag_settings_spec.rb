@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Tag Settings" do
+  with_select_controls(false)
+
   let(:tags_page) { PageObjects::Pages::Tag.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
@@ -172,6 +174,88 @@ describe "Tag Settings" do
 
       expect(toasts).to have_success(I18n.t("js.tagging.settings.saved"))
       expect(tag_settings_page).to have_synonym(tag_2.name)
+    end
+  end
+
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    let(:topic_list) { PageObjects::Components::TopicList.new }
+
+    it "switches to another tag's settings from the new select controls tag dropdown" do
+      sign_in(admin)
+      tag_settings_page.visit(tag_1)
+
+      expect(tag_settings_page.tag_dropdown).to have_selected_value(tag_1.name)
+      tag_settings_page.tag_dropdown.select_name(tag_2.name)
+
+      expect(page).to have_current_path("/tag/#{tag_2.name}/#{tag_2.id}/edit/general")
+      expect(tag_settings_page).to have_name_value(tag_2.name)
+      expect(tag_settings_page.tag_dropdown).to have_selected_value(tag_2.name)
+    end
+
+    it "adds an existing tag as a synonym with the new select controls" do
+      sign_in(admin)
+      tag_settings_page.visit(tag_1)
+      tag_settings_page.add_synonym(tag_2.name)
+      tag_settings_page.click_save
+
+      dialog.click_yes
+
+      expect(toasts).to have_success(I18n.t("js.tagging.settings.saved"))
+      expect(tag_settings_page).to have_synonym(tag_2.name)
+      expect(tag_2.reload.target_tag_id).to eq(tag_1.id)
+    end
+
+    it "removes a synonym with the new select controls" do
+      sign_in(admin)
+      tag_settings_page.visit(tag_1)
+
+      expect(tag_settings_page).to have_synonym(synonym.name)
+      tag_settings_page.remove_synonym(synonym.name)
+      expect(tag_settings_page).to have_no_synonyms
+      tag_settings_page.click_save
+
+      expect(toasts).to have_success(I18n.t("js.tagging.settings.saved"))
+
+      page.refresh
+
+      expect(tag_settings_page).to have_tag_settings_page
+      expect(tag_settings_page).to have_no_synonyms
+      expect(synonym.reload.target_tag_id).to be_nil
+    end
+
+    context "when navigating to a synonym tag" do
+      fab!(:target_tag) { Fabricate(:tag, name: "broccoli") }
+      fab!(:synonym_tag) { Fabricate(:tag, name: "cauliflower", target_tag:) }
+      fab!(:target_tagged_topic) { Fabricate(:topic, tags: [target_tag]) }
+
+      it "redirects to the target tag from the new select controls tag drop" do
+        tags_page.visit_tag(tag_2)
+
+        tags_page.tags_dropdown.search(synonym_tag.name)
+        tags_page.tags_dropdown.select_name(synonym_tag.name)
+
+        expect(topic_list).to have_topic(target_tagged_topic)
+        expect(page).to have_current_path("/tag/#{target_tag.name}/#{target_tag.id}")
+        expect(tags_page.tags_dropdown).to have_selected_name(target_tag.name)
+      end
+
+      it "redirects to the target tag within a category from the new select controls tag drop" do
+        category = Fabricate(:category)
+        target_tagged_topic.update!(category: category)
+
+        page.visit("/tags/c/#{category.slug}/#{category.id}/#{tag_2.name}")
+
+        tags_page.tags_dropdown.search(synonym_tag.name)
+        tags_page.tags_dropdown.select_name(synonym_tag.name)
+
+        expect(topic_list).to have_topic(target_tagged_topic)
+        expect(page).to have_current_path(
+          "/tags/c/#{category.slug}/#{category.id}/#{target_tag.name}/#{target_tag.id}",
+        )
+        expect(tags_page.tags_dropdown).to have_selected_name(target_tag.name)
+      end
     end
   end
 

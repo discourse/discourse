@@ -107,6 +107,8 @@ export default class DTagDrop extends Component<DTagDropSignature> {
       categoryId: (this.args.currentCategory as { id?: number } | undefined)
         ?.id,
       items: this.args.items,
+      tagId: this.args.tag?.id,
+      tagName: this.args.tag?.name,
     };
   }
 

@@ -18,7 +18,9 @@ import type SiteSettingsService from "discourse/services/site-settings";
 import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
-import DSelect from "discourse/ui-kit/select/d-select";
+import DSelect, {
+  type SelectPasteContext,
+} from "discourse/ui-kit/select/d-select";
 import {
   createTagItem,
   emitTags,
@@ -212,11 +214,21 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
     }
   });
 
+  #loadedItems: SelectItem[] = [];
   #resolutionKey: string | undefined;
 
   @tracked private _resolvedNames: { key: string; ids: number[] } | undefined;
 
   @tracked private _validation = new Map<string, TagSearchResult>();
+
+  get #creationAllowed() {
+    return (
+      !this.args.preventCreate &&
+      (this.args.creationPolicy === "permitted"
+        ? this.args.allowCreate || this.site.can_create_tag
+        : this.args.allowCreate && this.site.can_create_tag)
+    );
+  }
 
   get #tags() {
     const hidden = new Set((this.args.hiddenValues ?? []).map(tagKey));
@@ -308,6 +320,16 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
 
   @action
   async load(filter: string, opts: SelectLoadOptions) {
+    if (this.args.load) {
+      const result = await this.args.load(filter, opts);
+      if (!opts.signal?.aborted && !this.isDestroying) {
+        const items = Array.isArray(result) ? result : result.items;
+        this.#loadedItems = opts.offset
+          ? [...this.#loadedItems, ...items]
+          : items;
+      }
+      return result;
+    }
     const context: TagSearchContext = opts.context ?? {};
     const result = await searchTags(filter, {
       context: {
@@ -331,11 +353,17 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
         tagItem(tag).name.toLowerCase()
       )
     );
-    return result.items
+    const items = result.items
       .filter((item) => !blocked.has(item.name.toLowerCase()))
       .map((item) =>
         this.maximum === 0 ? { ...item, disabled: true } : { ...item }
       );
+    if (!opts.signal?.aborted && !this.isDestroying) {
+      this.#loadedItems = opts.offset
+        ? [...this.#loadedItems, ...items]
+        : items;
+    }
+    return items;
   }
 
   @action
@@ -350,10 +378,7 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
     );
     const maximum = this.maximum === 0 ? 0 : options.maximum;
     return !!(
-      !this.args.preventCreate &&
-      (this.args.creationPolicy === "permitted"
-        ? this.args.allowCreate || this.site.can_create_tag
-        : this.args.allowCreate && this.site.can_create_tag) &&
+      this.#creationAllowed &&
       name &&
       validation &&
       !validation.forbidden &&
@@ -374,6 +399,41 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
   @action
   createItem(filter: string) {
     return { ...createTagItem(cleanTagName(filter, this.siteSettings)) };
+  }
+
+  @action
+  parsePaste(text: string, { options }: SelectPasteContext) {
+    const names = text
+      .split("|")
+      .map((name) => name.trim())
+      .filter(Boolean);
+    if (names.length < 2) {
+      return null;
+    }
+    const items =
+      (typeof this.args.items === "function"
+        ? this.args.items(options)
+        : this.args.items) ?? this.#loadedItems;
+    const blocked = new Set(
+      (this.args.blockedTags ?? []).map((tag) =>
+        tagItem(tag).name.toLowerCase()
+      )
+    );
+    return names.flatMap((name) => {
+      if (blocked.has(name.toLowerCase())) {
+        return [];
+      }
+      const existing = items.find(
+        (item) => tagItemName(item).toLowerCase() === name.toLowerCase()
+      );
+      if (existing) {
+        return [existing];
+      }
+      const cleaned = cleanTagName(name, this.siteSettings);
+      return this.#creationAllowed && cleaned && this.maximum !== 0
+        ? [this.createItem(cleaned)]
+        : [];
+    });
   }
 
   @action
@@ -417,13 +477,14 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
       @kindOptions={{@kindOptions}}
       @label={{@label}}
       @labelField="name"
-      @load={{if @load @load this.load}}
+      @load={{this.load}}
       @loadContext={{this.loadContext}}
       @maximum={{this.maximum}}
       @maxVisibleChips={{@maxVisibleChips}}
       @minimum={{@minimum}}
       @multiple={{true}}
       @onChange={{this.onChange}}
+      @parsePaste={{this.parsePaste}}
       @placeholder={{if
         @placeholder
         @placeholder

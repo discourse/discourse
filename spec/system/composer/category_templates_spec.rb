@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Composer Form Templates" do
+  with_select_controls(false)
+
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:form_template_1) do
     Fabricate(

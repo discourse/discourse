@@ -376,3 +376,77 @@ module(
     });
   }
 );
+
+module(
+  "Integration | ui-kit | select | recipes | DTagChooser paste",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.site.set("can_create_tag", true);
+      this.siteSettings.max_tags_per_topic = 5;
+      this.siteSettings.max_tag_length = 20;
+      this.siteSettings.force_lowercase_tags = true;
+    });
+
+    test("fix oracle: pipe paste preserves loaded tags and respects creation permission", async function (assert) {
+      const rows = [
+        { id: 12, name: "Alpha", count: 4 },
+        { id: 13, name: "Beta", count: 2 },
+      ];
+      const load = async () => ({ items: rows, total: rows.length });
+      const tags = tracked([]);
+      const onChange = sinon.spy((next) => (tags.value = next));
+      await render(
+        <template>
+          <DTagChooser
+            @allowCreate={{true}}
+            @load={{load}}
+            @onChange={{onChange}}
+            @tags={{tags.value}}
+          />
+        </template>
+      );
+      await new DSelect().open();
+
+      const paste = async (text) => {
+        const clipboardData = new DataTransfer();
+        clipboardData.setData("text/plain", text);
+        const event = new ClipboardEvent("paste", {
+          bubbles: true,
+          cancelable: true,
+          clipboardData,
+        });
+        find("[role='combobox']").dispatchEvent(event);
+        await settled();
+        return event;
+      };
+      await paste(" ALPHA | | fresh-tag | BETA | ");
+      assert.deepEqual(
+        tags.value,
+        [rows[0], { id: "fresh-tag", name: "fresh-tag", isNew: true }, rows[1]],
+        "trimmed names reuse loaded rows case-insensitively and create only unknown tags"
+      );
+
+      const single = await paste(" just-one | ");
+      assert.false(
+        single.defaultPrevented,
+        "a single token keeps native paste"
+      );
+      assert.true(
+        onChange.calledOnce,
+        "native paste does not change selection"
+      );
+
+      tags.value = [];
+      this.site.set("can_create_tag", false);
+      await settled();
+      await paste("ALPHA|another-new-tag|BETA");
+      assert.deepEqual(
+        tags.value,
+        rows,
+        "without creation permission only the existing rows are selected"
+      );
+    });
+  }
+);

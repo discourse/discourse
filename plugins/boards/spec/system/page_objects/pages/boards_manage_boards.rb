@@ -123,8 +123,16 @@ module PageObjects
 
       def select_modal_column_tag(tag_name)
         modal = column_settings_modal
-        chooser =
-          PageObjects::Components::SelectKit.new("#{modal.full_body_selector} .mini-tag-chooser")
+        selector = "#{modal.full_body_selector} .mini-tag-chooser"
+        if find(selector).matches_css?(".d-select", wait: 0)
+          chooser = PageObjects::Components::UiKit::DSelect.at(selector)
+          chooser.search(tag_name)
+          chooser.select_name(tag_name)
+          chooser.close
+          return self
+        end
+
+        chooser = PageObjects::Components::SelectKit.new(selector)
         chooser.expand
         chooser.search(tag_name)
         chooser.select_row_by_name(tag_name)

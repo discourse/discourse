@@ -109,6 +109,9 @@ export default class SelectComparison extends Component {
         data-pair="tag-chooser"
       >
         <h3>{{i18n "styleguide.sections.select_comparison.tag_chooser"}}</h3>
+        <p class="styleguide-select-comparison__description">{{i18n
+            "styleguide.sections.select_comparison.tag_chooser_description"
+          }}</p>
         <div class="styleguide-select-comparison__controls">
           <div class="styleguide-select-comparison__legacy">
             <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
@@ -146,6 +149,9 @@ export default class SelectComparison extends Component {
         <h3>{{i18n
             "styleguide.sections.select_comparison.mini_tag_chooser"
           }}</h3>
+        <p class="styleguide-select-comparison__description">{{i18n
+            "styleguide.sections.select_comparison.mini_tag_chooser_description"
+          }}</p>
         <div class="styleguide-select-comparison__controls">
           <div class="styleguide-select-comparison__legacy">
             <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
@@ -177,6 +183,9 @@ export default class SelectComparison extends Component {
 
       <section class="styleguide-select-comparison__pair" data-pair="tag-drop">
         <h3>{{i18n "styleguide.sections.select_comparison.tag_drop"}}</h3>
+        <p class="styleguide-select-comparison__description">{{i18n
+            "styleguide.sections.select_comparison.tag_drop_description"
+          }}</p>
         <div class="styleguide-select-comparison__controls">
           <div class="styleguide-select-comparison__legacy">
             <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
@@ -210,6 +219,9 @@ export default class SelectComparison extends Component {
         <h3>{{i18n
             "styleguide.sections.select_comparison.tags_intersection_chooser"
           }}</h3>
+        <p class="styleguide-select-comparison__description">{{i18n
+            "styleguide.sections.select_comparison.tags_intersection_chooser_description"
+          }}</p>
         <div class="styleguide-select-comparison__controls">
           <div class="styleguide-select-comparison__legacy">
             <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
@@ -245,6 +257,9 @@ export default class SelectComparison extends Component {
         data-pair="tag-dropdown"
       >
         <h3>{{i18n "styleguide.sections.select_comparison.tag_dropdown"}}</h3>
+        <p class="styleguide-select-comparison__description">{{i18n
+            "styleguide.sections.select_comparison.tag_dropdown_description"
+          }}</p>
         <div class="styleguide-select-comparison__controls">
           <div class="styleguide-select-comparison__legacy">
             <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
@@ -282,6 +297,9 @@ export default class SelectComparison extends Component {
         <h3>{{i18n
             "styleguide.sections.select_comparison.tag_group_chooser"
           }}</h3>
+        <p class="styleguide-select-comparison__description">{{i18n
+            "styleguide.sections.select_comparison.tag_group_chooser_description"
+          }}</p>
         <div class="styleguide-select-comparison__controls">
           <div class="styleguide-select-comparison__legacy">
             <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
