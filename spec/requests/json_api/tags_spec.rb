@@ -166,5 +166,51 @@ RSpec.describe "JSON:API tags", type: :request do
       expect(names).to eq(%w[bug debugging enhancement])
       expect(parsed_body["data"].map { it["attributes"]["staffTopicCount"] }).to eq([7, 3, 1])
     end
+
+    it "refuses the inputs of the applicable tags, which only that listing reads" do
+      fetch(filter: { held: [bug.id] })
+
+      expect(response).to have_http_status(:bad_request)
+      expect(parsed_body["errors"].sole["title"]).to eq("No such filter")
+    end
+  end
+
+  describe "GET /api/tags/applicable" do
+    fab!(:user)
+    fab!(:category_tag) { Fabricate(:tag, name: "category-tag", public_topic_count: 9) }
+    fab!(:restricted) { Fabricate(:category, tags: [category_tag]) }
+
+    before { sign_in(user) }
+
+    def fetch(params = query_parameters)
+      get "/api/tags/applicable", headers:, params:
+    end
+
+    it "sends the tags the user may apply to a topic without a category, with no input to opt in" do
+      fetch
+
+      expect(response).to have_http_status(:ok)
+      expect(names).to eq(%w[bug debugging enhancement])
+    end
+
+    it "applies the restriction of the topic's category" do
+      fetch(filter: { category: restricted.id })
+
+      expect(names).to eq(["category-tag"])
+    end
+
+    it "leaves out the tags the topic already holds" do
+      fetch(filter: { held: [bug.id] })
+
+      expect(names).to eq(%w[debugging enhancement])
+    end
+
+    it "keeps the inputs in the link to the next page" do
+      fetch(filter: { held: [bug.id] }, page: { size: 1 })
+      expect(names).to eq(["debugging"])
+
+      get parsed_body["links"]["next"], headers: headers
+      expect(names).to eq(["enhancement"])
+    end
   end
 end

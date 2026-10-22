@@ -1787,6 +1787,7 @@ Discourse::Application.routes.draw do
     get "opensearch" => "metadata#opensearch", :constraints => { format: :xml }
 
     get "api/tags" => "json_api/tags#index"
+    get "api/tags/applicable" => "json_api/applicable_tags#index"
     get "api/tags/:id" => "json_api/tags#show"
 
     # Tag Routes - Canonical vs Legacy

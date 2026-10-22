@@ -51,8 +51,9 @@ RSpec.describe TagResource do
   before { SiteSetting.tagging_enabled = true }
 
   def usable_names(guardian, category: nil, held: [], term: nil)
-    filter = { usable_for_input: "true", category: category&.id, exclude: held.presence, term: }
+    filter = { category: category&.id, held: held.presence, term: }
     described_class
+      .collection(:applicable)
       .all({ filter: filter.compact, page: { size: 100 } }, guardian:)
       .records
       .map { it.record.name }
@@ -68,7 +69,7 @@ RSpec.describe TagResource do
     ).map(&:name)
   end
 
-  describe "filtering by usable_for_input" do
+  describe "the applicable collection" do
     it "offers a regular user only the tags they may apply outside any category" do
       expect(usable_names(user.guardian)).to contain_exactly(
         "plain",
@@ -107,10 +108,8 @@ RSpec.describe TagResource do
       exact_names =
         [plain, readonly_tag].map do |tag|
           described_class
-            .all(
-              { filter: { usable_for_input: "true", name: tag.name.upcase } },
-              guardian: user.guardian,
-            )
+            .collection(:applicable)
+            .all({ filter: { name: tag.name.upcase } }, guardian: user.guardian)
             .records
             .map { it.record.name }
         end
