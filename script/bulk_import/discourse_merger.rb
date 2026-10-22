@@ -470,12 +470,16 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     columns = Upload.columns.map(&:name)
     last_id = Upload.unscoped.maximum(:id) || 1
     sql = "COPY uploads (#{columns.map { |c| "\"#{c}\"" }.join(", ")}) FROM STDIN"
+    existing_ids_by_sha1 = Upload.unscoped.where.not(sha1: nil).pluck(:sha1, :id).to_h
 
     @raw_connection.copy_data(sql, @encoder) do
       source_raw_connection
         .exec("SELECT #{columns.map { |c| "\"#{c}\"" }.join(", ")} FROM uploads")
         .each do |row|
-          next if Upload.where(sha1: row["sha1"]).exists?
+          if existing_id = existing_ids_by_sha1[row["sha1"]]
+            @uploads[row["id"].to_s] = existing_id
+            next
+          end
 
           # make sure to get a backup with uploads then convert them to local.
           # when the backup is restored to a site with s3 uploads, it will upload the items
