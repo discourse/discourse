@@ -9,7 +9,7 @@ export function userSubscriptionKey(user) {
 }
 
 function sendSubscriptionToServer(subscription, sendConfirmation) {
-  ajax("/push_notifications/subscribe", {
+  return ajax("/push_notifications/subscribe", {
     type: "POST",
     data: {
       subscription: subscription.toJSON(),
@@ -43,7 +43,7 @@ export function isPushNotificationsEnabled(user) {
     user &&
     !user.isInDoNotDisturb() &&
     isPushNotificationsSupported() &&
-    keyValueStore.getItem(userSubscriptionKey(user))
+    keyValueStore.getItem(userSubscriptionKey(user)) === "subscribed"
   );
 }
 
@@ -75,18 +75,20 @@ export function register(user, router, appEvents, applicationServerKey) {
         const { pushManager } = serviceWorkerRegistration;
         let subscription = await pushManager.getSubscription();
 
-        // Browsers can drop a subscription while keeping the permission
-        if (
-          !subscription &&
+        if (subscription) {
+          sendSubscriptionToServer(subscription, false);
+        } else if (
           keyValueStore.getItem(userSubscriptionKey(user)) === "subscribed"
         ) {
+          // Browsers can drop a subscription while keeping the permission
           subscription = await pushManager.subscribe(
             pushSubscriptionOptions(applicationServerKey)
           );
+          // the new endpoint delivers nothing until the server knows it
+          await sendSubscriptionToServer(subscription, false);
         }
 
         if (subscription) {
-          sendSubscriptionToServer(subscription, false);
           // Resync localStorage
           keyValueStore.setItem(userSubscriptionKey(user), "subscribed");
         }

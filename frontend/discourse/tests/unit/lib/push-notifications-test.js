@@ -3,6 +3,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import {
+  isPushNotificationsEnabled,
   keyValueStore,
   register,
   userSubscriptionKey,
@@ -15,7 +16,10 @@ import pretender, {
 module("Unit | Lib | push-notifications | register", function (hooks) {
   setupTest(hooks);
 
-  const user = { get: (key) => (key === "id" ? 42 : undefined) };
+  const user = {
+    get: (key) => (key === "id" ? 42 : undefined),
+    isInDoNotDisturb: () => false,
+  };
   const router = { transitionTo() {} };
   const appEvents = { trigger() {} };
 
@@ -112,5 +116,23 @@ module("Unit | Lib | push-notifications | register", function (hooks) {
 
     assert.false(registered);
     assert.strictEqual(this.subscribeRequests.length, 0);
+  });
+
+  test("reports a restore the server did not accept", async function (assert) {
+    keyValueStore.setItem(userSubscriptionKey(user), "subscribed");
+    pretender.post("/push_notifications/subscribe", () => response(500, {}));
+    sinon.stub(console, "error");
+
+    const registered = await register(user, router, appEvents, "1|2|3");
+
+    assert.false(registered);
+  });
+
+  test("treats a turned-off subscription as disabled", function (assert) {
+    keyValueStore.setItem(userSubscriptionKey(user), "false");
+    assert.false(isPushNotificationsEnabled(user));
+
+    keyValueStore.setItem(userSubscriptionKey(user), "subscribed");
+    assert.true(isPushNotificationsEnabled(user));
   });
 });

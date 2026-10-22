@@ -74,16 +74,19 @@ class PushNotificationPusher
 
   def self.subscribe(user, push_params, send_confirmation)
     data = push_params.to_json
-    subscriptions = PushSubscription.where(user: user, data: data)
-    subscriptions_count = subscriptions.count
+    subscriptions, other_users_subscriptions =
+      PushSubscription.where(data: data).partition { |s| s.user_id == user.id }
+
+    # A browser endpoint delivers to whoever is signed in there now
+    if other_users_subscriptions.present?
+      PushSubscription.where(id: other_users_subscriptions.map(&:id)).delete_all
+    end
 
     new_subscription =
-      if subscriptions_count > 1
-        subscriptions.destroy_all
+      if subscriptions.size > 1
+        subscriptions.each(&:destroy!)
         PushSubscription.create!(user: user, data: data)
-      elsif subscriptions_count == 0
-        # A browser endpoint delivers to whoever is signed in there now
-        PushSubscription.where(data: data).delete_all
+      elsif subscriptions.empty?
         PushSubscription.create!(user: user, data: data)
       end
 

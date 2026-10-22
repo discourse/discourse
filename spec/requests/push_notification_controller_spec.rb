@@ -93,6 +93,23 @@ RSpec.describe PushNotificationController do
       expect(other_user.push_subscriptions).to be_empty
     end
 
+    it "removes another user's copy of an endpoint the current user already has" do
+      other_user = Fabricate(:user)
+      subscription = { endpoint: "endpoint", keys: { p256dh: "256dh", auth: "auth" } }
+      PushSubscription.create!(user: user, data: subscription.to_json)
+      PushSubscription.create!(user: other_user, data: subscription.to_json)
+
+      post "/push_notifications/subscribe.json",
+           params: {
+             subscription: subscription,
+             send_confirmation: false,
+           }
+
+      expect(response.status).to eq(200)
+      expect(user.push_subscriptions.count).to eq(1)
+      expect(other_user.push_subscriptions).to be_empty
+    end
+
     it "unsubscribes an existing subscription" do
       sub = { endpoint: "endpoint", keys: { p256dh: "256dh", auth: "auth" } }
       PushSubscription.create!(user: user, data: sub.to_json)
