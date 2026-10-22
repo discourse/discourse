@@ -44,12 +44,13 @@ class Plugin::Metadata
   # those of the other plugins and the application's bundle, before any
   # plugin.rb runs; see PluginGem.activate_gemfiles. Gems are activated, not
   # required, so `require:` options have no effect. The plugin's
-  # Gemfile.lock is required and pins every gem the application doesn't have
-  # (the highest version any plugin locks wins), and downloads are verified
-  # against its checksums; a conflict with the application or another plugin
-  # fails the boot. Gems must come from the application's gem sources or a
-  # path; a git gem
-  # keeps its version across commits, so a lock can't pin it.
+  # Gemfile.lock is required. Core's lock takes precedence; otherwise the
+  # highest version any plugin locks wins. Every resolved gem must match a
+  # committed version, platform and source. Downloads must match the locked
+  # SHA256 checksum, and conflicting pins fail the boot. Gems must come from
+  # the application's gem sources or a path with a gemspec. Git gems keep their versions across commits, so a
+  # version lock can't pin them. Each boot reevaluates Gemfiles and gemspecs,
+  # reusing installed gems.
   def gemfile=(value)
     @gemfile = value == "true"
   end

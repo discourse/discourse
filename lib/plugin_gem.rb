@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "digest"
 require "json"
 
 module PluginGem
@@ -60,71 +59,65 @@ module PluginGem
       end
     return if gemfiles.empty?
 
-    manifest = File.join(GEMS_DIR, "activate.json")
-    cached = JSON.parse(File.read(manifest)) if File.exist?(manifest)
-    if !cached || cached["key"] != manifest_key(gemfiles, cached["gemfiles"]) ||
-         !cached["specs"].all? { |path, _directory| File.exist?(path) }
-      cached = in_child_process { install(gemfiles) }
-      cached["key"] = manifest_key(gemfiles, cached["gemfiles"])
-      temporary_manifest = "#{manifest}.#{Process.pid}"
-      File.write(temporary_manifest, JSON.generate(cached))
-      File.rename(temporary_manifest, manifest)
-    end
-    cached["specs"].each do |path, directory|
-      spec = Bundler.load_gemspec(path)
+    # Gemfiles and gemspecs can depend on arbitrary Ruby inputs. Reevaluate
+    # them on every boot, using installed gems before trying remote sources.
+    in_child_process { install(gemfiles) }.each do |gemspec, path, directory|
+      spec = Gem::Specification.from_yaml(gemspec)
+      spec.loaded_from = path
       spec.full_gem_path = directory
       spec.activate
     end
   end
 
-  # Even with nothing to do, bundler takes ~150 ms to find that out. The
-  # active application specs and file contents decide whether the last
-  # result still holds, including when enabled bundle groups change. The
-  # manifest records nested Gemfiles so cached boots need not evaluate them.
-  def self.manifest_key(gemfiles, evaluated_gemfiles)
-    files = [
-      Bundler.default_lockfile,
-      *gemfiles.flat_map { [it, "#{it}.lock"] },
-      *evaluated_gemfiles,
-      LOCKFILE,
-    ].uniq
-    app_specs = Bundler.load.specs.map { [it.full_name, it.full_gem_path] }.sort
-    Digest::SHA1.hexdigest(
-      [
-        RUBY_VERSION,
-        app_specs,
-        *files.flat_map { |file| [file, File.exist?(file) ? File.read(file) : ""] },
-      ].join("\0"),
-    )
-  end
-
-  # Returns activation pairs (dependencies first) and all evaluated Gemfiles.
+  # Returns serialized specs and their locations, dependencies first.
   def self.install(gemfiles)
-    # name => [version, directory of a git or path gem]. Taken before
-    # resolving, which retags the application's spec objects with its sources.
+    # Capture core's versions and locations before resolution retags its specs.
+    # name => [version, path source directory, full name, installed directory].
     pins =
       Bundler.load.specs.to_h do |spec|
         directory = spec.full_gem_path if spec.source.is_a?(Bundler::Source::Path)
-        [spec.name, [spec.version, directory]]
+        [spec.name, [spec.version, directory, spec.full_name, spec.full_gem_path]]
       end
     pins.delete("bundler")
     app_lock = Bundler.definition.locked_gems
-    dependencies = plugin_dependencies(Bundler::Dsl.new, gemfiles)
+    dsl = Bundler::Dsl.new
+    dependencies = plugin_dependencies(dsl, gemfiles)
     locks = gemfiles.to_h { [it, ensure_lock_matches(it)] }
     locks.each { |gemfile, lock| ensure_app_remotes(gemfile, lock, app_lock) }
-    locked = locked_versions(dependencies, pins, locks)
+    locked = locked_versions(dependencies, pins, locks, app_lock)
 
-    # Installed gems first: they are enough after most changes, and offline.
-    attempts = [{ local: true }, {}]
-    attempts.each_with_index do |options, index|
-      return resolve(gemfiles, pins, locked, locks.values, app_lock, options)
-    rescue Bundler::BundlerError => e
-      if index == attempts.size - 1
-        raise resolve_error(e, dependencies.values.flatten + lock_pins(locked), pins)
+    dependencies = dependencies.values.flatten
+    dependencies.each do |dependency|
+      version = locked[dependency.name]
+      dependency.requirement.concat(["= #{version}"]) if version
+    end
+    # The rest of the locked gems are pinned on their own.
+    locked
+      .except(*dependencies.map(&:name), *pins.keys)
+      .each { |name, version| dsl.dependencies << Bundler::Dependency.new(name, "= #{version}") }
+    pins.each do |name, (version, directory)|
+      next unless locked.key?(name)
+      # A git or path gem has no release to pin to; its directory is its source.
+      if directory
+        dsl.path(directory) { dsl.gem(name) }
+      else
+        dsl.dependencies << Bundler::Dependency.new(name, "= #{version}")
       end
     end
+    # Pins last: bundler takes a gem's source from the last dependency naming
+    # it, so a plugin's path gem can't stand in for one of the application's.
+    dsl.dependencies.unshift(*dependencies)
+
+    # Installed gems first: they are enough after most changes, and offline.
+    [{ local: true }, {}].each do |options|
+      specs = resolve(dsl, pins, locked, locks.values, app_lock, options)
+      puts "Resolved #{specs.size} plugin gems from #{gemfiles.size} Gemfiles"
+      return specs
+    rescue Bundler::GemNotFound, Bundler::SolveFailure
+      raise unless options[:local]
+    end
   rescue Bundler::BundlerError => e
-    raise "Resolving plugin gems failed: #{e.message}"
+    raise "Resolving plugin gems failed for #{gemfiles.join(", ")}: #{e.message}"
   end
 
   # Bundler's frozen-mode check; it compares the two files without resolving,
@@ -183,27 +176,7 @@ module PluginGem
     end
   end
 
-  def self.resolve(gemfiles, pins, locked, locks, app_lock, options)
-    dsl = Bundler::Dsl.new
-    dependencies = plugin_dependencies(dsl, gemfiles).values.flatten
-    dependencies.each do |dependency|
-      version, _lockfile = locked[dependency.name]
-      dependency.requirement.concat(["= #{version}"]) if version
-    end
-    # The rest of the locked gems are pinned on their own.
-    dsl.dependencies.concat(lock_pins(locked.except(*dependencies.map(&:name))))
-    pins.each do |name, (version, directory)|
-      # A git or path gem has no release to pin to; its directory is its source.
-      if directory
-        dsl.path(directory) { dsl.gem(name) }
-      else
-        dsl.dependencies << Bundler::Dependency.new(name, "= #{version}")
-      end
-    end
-    # Pins last: bundler takes a gem's source from the last dependency naming
-    # it, so a plugin's path gem can't stand in for one of the application's.
-    dsl.dependencies.unshift(*dependencies)
-
+  def self.resolve(dsl, pins, locked, locks, app_lock, options)
     # This process only exists to install the plugins' bundle, so the
     # application's memoized paths, gem home and bundle settings go.
     Bundler.reset_paths!
@@ -213,6 +186,7 @@ module PluginGem
         path: GEMS_DIR,
         frozen: false,
         deployment: false,
+        disable_checksum_validation: false,
         only: nil,
         with: nil,
         without: nil,
@@ -238,54 +212,72 @@ module PluginGem
               &.merge!(locked_source.checksum_store)
           end
         definition.setup_domain!(options)
-        locked_specs = locks.flat_map(&:specs).map(&:full_name).to_set
+        # Check the complete graph before installing any gems.
+        locked_specs =
+          locks.flat_map(&:specs).group_by(&:name).merge(app_lock.specs.group_by(&:name))
         definition.specs.each do |spec|
-          next if pins.key?(spec.name) || spec.name == "bundler"
-          next if locked.key?(spec.name) && locked_specs.include?(spec.full_name)
-
-          raise "Resolved plugin gem #{spec.full_name} is not in the plugins' Gemfile.lock files; update the locks for #{Bundler.local_platform} and commit them"
-        end
-        Bundler::Installer.install(Bundler.root, definition, options)
-
-        specs =
-          definition.specs.filter_map do |spec|
-            [spec.loaded_from, spec.full_gem_path] unless Gem.loaded_specs.key?(spec.name)
+          next if spec.name == "bundler"
+          if pin = pins[spec.name]
+            unless spec.full_name == pin[2] && spec.full_gem_path == pin[3]
+              raise "Resolved plugin bundle would replace core gem #{pin[2]} with #{spec.full_name} from #{spec.source}"
+            end
+            next
           end
-        puts "Resolved #{specs.size} plugin gems from #{gemfiles.size} Gemfiles"
-        { "specs" => specs, "gemfiles" => definition.gemfiles.map(&:to_s) }
+          if spec.source.is_a?(Bundler::Source::Path) && !File.file?(spec.loaded_from)
+            raise "Plugin path gem #{spec.name} needs a .gemspec file in #{spec.source.path.expand_path(spec.source.root_path)}"
+          end
+          locked_spec =
+            locked_specs
+              .fetch(spec.name, [])
+              .find do |candidate|
+                candidate.full_name == spec.full_name && candidate.source == spec.source
+              end
+          unless locked.key?(spec.name) && locked_spec
+            raise "Resolved plugin gem #{spec.full_name} is not in the committed Gemfile.lock files with the same source; update the locks for #{Bundler.local_platform} and commit them"
+          end
+          if spec.source.is_a?(Bundler::Source::Rubygems) &&
+               !locked_spec.source.checksum_store.to_lock(locked_spec).match?(/(?: |,)sha256=/)
+            raise "Locked gem #{spec.full_name} has no SHA256 checksum; run `bundle lock --add-checksums` and commit it"
+          end
+        end
+        specs = definition.specs.reject { Gem.loaded_specs.key?(it.name) }
+        # Running the installer on a warm boot needlessly reloads core's gemspecs.
+        if specs.all? { it.is_a?(Bundler::StubSpecification) && !it.installation_missing? }
+          Bundler.create_bundle_path
+          definition.lock
+        else
+          # Extension builders must not boot core's bundle in the plugin gem directory.
+          Bundler.unbundle_env!
+          Bundler::Installer.install(Bundler.root, definition, options)
+        end
+
+        # Transfer the validated metadata, without reevaluating gemspecs or
+        # retaining Bundler's source indexes in the application process.
+        specs.map { [it.for_cache.to_yaml, it.loaded_from, it.full_gem_path] }
       end
   end
 
-  # Bundler names one side of a conflict between top-level requirements, and
-  # all of the plugins' and the application's gems are top-level here.
-  def self.resolve_error(error, dependencies, pins)
-    names =
-      (pins.keys + dependencies.map(&:name)).uniq.select do |name|
-        error.message.match?(/'#{Regexp.escape(name)}[ ']/)
-      end
-    sides =
-      dependencies
-        .select { names.include?(it.name) }
-        .map { "#{it.name} (#{it.requirement}) in #{it.gemfile}" }
-    sides += names.filter_map { "#{it} (#{pins[it][0]}) in the application" if pins[it] }
-    ["Resolving plugin gems failed: #{error.message}", *sides].join("\n")
-  end
-
-  # A plugin's Gemfile.lock pins every gem the application doesn't have, so
-  # identical inputs install identical versions. The highest version any
-  # plugin locks wins, so a plugin that never updates its lock doesn't hold
-  # back the others. Only gems reachable from a Gemfile's boot dependencies
-  # count; the rest of a lock is the plugin's tooling or stale.
-  # Returns name => [version, lockfile].
-  def self.locked_versions(dependencies, pins, locks)
+  # Core's lock takes precedence, even for gems outside its active groups.
+  # Plugin locks pin the remaining gems, including transitive dependencies.
+  # The highest version any plugin locks wins, so a plugin that never updates
+  # its lock doesn't hold back the others. Only gems reachable from boot
+  # dependencies count; the rest of a lock is the plugin's tooling or stale.
+  # Returns name => version.
+  def self.locked_versions(dependencies, pins, locks, app_lock)
+    app_specs = app_lock.specs.group_by(&:name)
     dependencies.each_with_object({}) do |(gemfile, gemfile_dependencies), versions|
-      lockfile = "#{gemfile}.lock"
-      specs = locks.fetch(gemfile).specs.group_by(&:name)
+      specs = locks.fetch(gemfile).specs.group_by(&:name).merge(app_specs)
       names = gemfile_dependencies.map(&:name)
       force_ruby = gemfile_dependencies.select(&:force_ruby_platform).map(&:name)
-      # The application's gems bring their own dependencies.
       names.each do |name|
-        next if pins.key?(name) || !specs.key?(name)
+        # Only core gems reachable from plugin dependencies need resolving.
+        if pin = pins[name]
+          versions[name] = pin[0]
+          variants = specs.fetch(name, []).select { it.full_name == pin[2] }
+          names.concat(variants.flat_map { it.dependencies.map(&:name) } - names)
+          next
+        end
+        raise "Plugin dependency #{name} is missing from #{gemfile}.lock" unless specs.key?(name)
 
         variants =
           Bundler::MatchPlatform.select_best_platform_match(
@@ -299,15 +291,8 @@ module PluginGem
 
         variants.each { |spec| names.concat(spec.dependencies.map(&:name) - names) }
         version = variants.first.version
-        versions[name] = [version, lockfile] if versions[name].nil? || version > versions[name][0]
+        versions[name] = version if versions[name].nil? || version > versions[name]
       end
-    end
-  end
-
-  # Attributed to the lock that set the version, for resolve_error.
-  def self.lock_pins(locked)
-    locked.map do |name, (version, lockfile)|
-      Bundler::Dependency.new(name, "= #{version}", "gemfile" => Pathname.new(lockfile))
     end
   end
 
