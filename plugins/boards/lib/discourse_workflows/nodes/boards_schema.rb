@@ -80,6 +80,14 @@ if defined?(DiscourseWorkflows)
             CARD_MOVED_SCHEMA,
             ACTING_USER_SCHEMA,
           )
+
+        CARD_MOVED_V2_OUTPUT_SCHEMA =
+          DiscourseWorkflows::Schema.merge(
+            CARD_SCHEMA,
+            BOARD_SCHEMA,
+            CARD_MOVED_SCHEMA,
+            DiscourseWorkflows::Schema::ACTOR_SCHEMA,
+          )
       end
     end
   end

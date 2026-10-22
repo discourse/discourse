@@ -31,6 +31,13 @@ if defined?(DiscourseWorkflows)
               },
             },
           )
+
+          deprecated(
+            superseded_by: "2.0",
+            changes: {
+              "assignment.assigned_by_user" => "assignment.assigned_by",
+            },
+          )
         end
       end
     end
