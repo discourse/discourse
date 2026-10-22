@@ -1,7 +1,14 @@
-import { click, render, waitFor } from "@ember/test-helpers";
+import {
+  click,
+  render,
+  triggerKeyEvent,
+  waitFor,
+  waitUntil,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
+import { WEBM_BYTES } from "discourse/tests/helpers/media-fixtures";
 import {
   createFile,
   silenceConsoleErrorsMatching,
@@ -43,6 +50,57 @@ function setupUploadPretender() {
 
 module("Component | ChatComposerUploads", function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.afterEach(async function () {
+    if (document.querySelector(".pswp")) {
+      await triggerKeyEvent(".pswp", "keydown", "Escape");
+      await waitUntil(() => !document.querySelector(".pswp"));
+    }
+  });
+
+  test("opens the previewed uploads in a lightbox from the clicked one", async function (assert) {
+    // a video that decodes, so its tile doesn't fall back to the icon
+    const videoUrl = URL.createObjectURL(
+      new Blob([WEBM_BYTES], { type: "video/webm" })
+    );
+    this.existingUploads = [
+      {
+        original_filename: "photo.png",
+        extension: "png",
+        url: "/images/avatar.png",
+      },
+      { original_filename: "clip.webm", extension: "webm", url: videoUrl },
+    ];
+
+    try {
+      await render(
+        <template>
+          <ChatComposerUploads
+            @existingUploads={{this.existingUploads}}
+            @fileUploadElementId="chat-widget-uploader"
+          />
+        </template>
+      );
+
+      await click(
+        ".chat-composer-upload--video .chat-composer-upload__preview-btn"
+      );
+      await waitFor(".pswp--open");
+
+      assert
+        .dom(
+          ".pswp__item[aria-hidden='false'] video.pswp__video",
+          document.body
+        )
+        .hasAttribute("src", new RegExp(`^${videoUrl}`));
+      assert.dom(".pswp__caption-title", document.body).hasText("clip.webm");
+      assert
+        .dom(".pswp__img:not(.pswp__img--placeholder)", document.body)
+        .exists("includes the image upload");
+    } finally {
+      URL.revokeObjectURL(videoUrl);
+    }
+  });
 
   test("loading uploads from an outside source (e.g. draft or editing message)", async function (assert) {
     this.existingUploads = [fakeUpload];

@@ -1,9 +1,16 @@
 import { fn } from "@ember/helper";
-import { clearRender, click, render } from "@ember/test-helpers";
+import {
+  clearRender,
+  click,
+  render,
+  waitFor,
+  waitUntil,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { restoreBaseUri, setupURL } from "discourse/lib/get-url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { PNG_BYTES, WEBM_BYTES } from "discourse/tests/helpers/media-fixtures";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 import ChatComposerUpload from "discourse/plugins/chat/discourse/components/chat-composer-upload";
@@ -47,7 +54,7 @@ module("Component | ChatComposerUpload", function (hooks) {
       extension: ".png",
       progress: 78,
       fileName: "test.png",
-      data: createFile("test.png", "image/png"),
+      data: createFile("test.png", "image/png", PNG_BYTES),
     });
 
     await render(
@@ -66,7 +73,7 @@ module("Component | ChatComposerUpload", function (hooks) {
       extension: ".png",
       progress: 10,
       fileName: "test.png",
-      data: createFile("test.png", "image/png"),
+      data: createFile("test.png", "image/png", PNG_BYTES),
     });
 
     await render(
@@ -81,10 +88,10 @@ module("Component | ChatComposerUpload", function (hooks) {
 
   test("video - uploading in progress with local file previews it", async function (assert) {
     this.set("upload", {
-      extension: ".mp4",
+      extension: ".webm",
       progress: 20,
-      fileName: "clip.mp4",
-      data: createFile("clip.mp4", "video/mp4"),
+      fileName: "clip.webm",
+      data: createFile("clip.webm", "video/webm", WEBM_BYTES),
     });
 
     await render(
@@ -132,6 +139,87 @@ module("Component | ChatComposerUpload", function (hooks) {
       .hasAttribute("src", /^\/uploads\/clip\.mp4/);
     assert.dom(".file-name").doesNotExist();
     assert.dom(".extension-pill").doesNotExist();
+  });
+
+  test("image - falls back to the icon when the preview cannot be decoded", async function (assert) {
+    this.set("upload", {
+      extension: ".heic",
+      progress: 10,
+      fileName: "photo.heic",
+      data: createFile("photo.heic", "image/heic"),
+    });
+
+    await render(
+      <template><ChatComposerUpload @upload={{this.upload}} /></template>
+    );
+
+    await waitFor(".d-icon-far-image");
+
+    assert.dom("img.preview-img").doesNotExist();
+    assert.dom(".d-icon-far-image").exists();
+    assert.dom(".file-name").hasText("photo.heic");
+  });
+
+  test("hands its media element to @onPreview when clicked", async function (assert) {
+    this.set("upload", {
+      original_filename: "photo.png",
+      extension: "png",
+      url: "/images/avatar.png",
+    });
+    this.set("onPreview", sinon.spy());
+
+    await render(
+      <template>
+        <ChatComposerUpload
+          @isDone={{true}}
+          @onPreview={{this.onPreview}}
+          @upload={{this.upload}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".chat-composer-upload__preview-btn")
+      .hasAria("label", i18n("chat.preview_upload", { filename: "photo.png" }));
+
+    await click(".chat-composer-upload__preview-btn");
+
+    assert.true(
+      this.onPreview.calledOnceWith(document.querySelector("img.preview-img"))
+    );
+  });
+
+  test("keeps its local preview alive while a lightbox shows it", async function (assert) {
+    const revoke = sinon.spy(URL, "revokeObjectURL");
+    let closeGallery;
+    const gallery = new Promise((resolve) => (closeGallery = resolve));
+    this.set("activeGallery", () => gallery);
+    this.set("uploading", true);
+    this.set("upload", {
+      extension: ".png",
+      progress: 90,
+      fileName: "test.png",
+      data: createFile("test.png", "image/png", PNG_BYTES),
+    });
+
+    await render(
+      <template>
+        {{#if this.uploading}}
+          <ChatComposerUpload
+            @activeGallery={{this.activeGallery}}
+            @upload={{this.upload}}
+          />
+        {{/if}}
+      </template>
+    );
+
+    const src = document.querySelector("img.preview-img").getAttribute("src");
+    this.set("uploading", false);
+    assert.false(revoke.calledWith(src), "waits while the lightbox is open");
+
+    closeGallery();
+    await waitUntil(() => revoke.calledWith(src));
+    assert.true(revoke.calledWith(src), "revokes once the lightbox closes");
   });
 
   test("image - preprocessing upload in progress", async function (assert) {

@@ -1,5 +1,9 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
 import DButton from "discourse/ui-kit/d-button";
@@ -10,7 +14,14 @@ import { i18n } from "discourse-i18n";
 export default class ChatComposerUpload extends Component {
   @service capabilities;
 
+  registerMedia = modifier((element) => {
+    this.#mediaElement = element;
+  });
+
   #localPreviewUrl = null;
+
+  #mediaElement = null;
+  @tracked _previewFailed = false;
 
   constructor() {
     super(...arguments);
@@ -23,8 +34,19 @@ export default class ChatComposerUpload extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    if (this.#localPreviewUrl) {
-      URL.revokeObjectURL(this.#localPreviewUrl);
+
+    const url = this.#localPreviewUrl;
+    if (!url) {
+      return;
+    }
+
+    // the upload can finish while its local preview is still shown in the lightbox
+    const gallery = this.args.activeGallery?.();
+    if (gallery) {
+      const revoke = () => URL.revokeObjectURL(url);
+      gallery.then(revoke, revoke);
+    } else {
+      URL.revokeObjectURL(url);
     }
   }
 
@@ -64,7 +86,22 @@ export default class ChatComposerUpload extends Component {
   }
 
   get hasPreview() {
-    return this.isMedia && Boolean(this.args.isDone || this.#localPreviewUrl);
+    return (
+      this.isMedia &&
+      !this._previewFailed &&
+      Boolean(this.args.isDone || this.#localPreviewUrl)
+    );
+  }
+
+  // files the browser cannot decode (e.g. HEIC outside Safari) fall back to the icon
+  @action
+  handlePreviewError() {
+    this._previewFailed = true;
+  }
+
+  @action
+  openPreview() {
+    this.args.onPreview?.(this.#mediaElement);
   }
 
   <template>
@@ -78,32 +115,53 @@ export default class ChatComposerUpload extends Component {
           (unless @isDone "chat-composer-upload--in-progress")
         }}
       >
-        <div class="preview">
-          {{#if this.isImage}}
-            {{#if this.hasPreview}}
-              <img class="preview-img" src={{this.previewImageSrc}} />
+        {{#if this.hasPreview}}
+          <DButton
+            class="btn-transparent preview chat-composer-upload__preview-btn"
+            @action={{this.openPreview}}
+            @translatedAriaLabel={{i18n
+              "chat.preview_upload"
+              filename=this.fileName
+            }}
+          >
+            {{#if this.isImage}}
+              <img
+                alt=""
+                class="preview-img"
+                data-file-name={{this.fileName}}
+                src={{this.previewImageSrc}}
+                {{on "error" this.handlePreviewError}}
+                {{this.registerMedia}}
+              />
             {{else}}
-              {{dIcon "far-image"}}
-            {{/if}}
-          {{else if this.isVideo}}
-            {{#if this.hasPreview}}
               <video
                 class="preview-video"
+                data-file-name={{this.fileName}}
                 muted
                 playsinline
                 preload="metadata"
                 src={{this.previewVideoSrc}}
+                {{on "error" this.handlePreviewError}}
+                {{this.registerMedia}}
               ></video>
-              {{dIcon "play" class="preview-video__badge"}}
-            {{else}}
-              {{dIcon "file-video"}}
             {{/if}}
-          {{else if (isAudio this.fileName)}}
-            {{dIcon "file-audio"}}
-          {{else}}
-            {{dIcon "file-lines"}}
+          </DButton>
+          {{#if this.isVideo}}
+            {{dIcon "play" class="preview-video__badge"}}
           {{/if}}
-        </div>
+        {{else}}
+          <div class="preview">
+            {{#if this.isImage}}
+              {{dIcon "far-image"}}
+            {{else if this.isVideo}}
+              {{dIcon "file-video"}}
+            {{else if (isAudio this.fileName)}}
+              {{dIcon "file-audio"}}
+            {{else}}
+              {{dIcon "file-lines"}}
+            {{/if}}
+          </div>
+        {{/if}}
 
         <span class="data">
           {{#unless this.hasPreview}}

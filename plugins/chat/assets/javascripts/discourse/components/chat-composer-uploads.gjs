@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
+import { openLightbox } from "discourse/lib/lightbox";
 import { cloneJSON } from "discourse/lib/object";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
@@ -71,6 +72,8 @@ export default class ChatComposerUploads extends Component {
   existingUploads = null;
   uploadDropZone = null;
 
+  #gallery = null;
+
   get inProgressUploads() {
     return this.uppyUpload.inProgressUploads;
   }
@@ -117,6 +120,30 @@ export default class ChatComposerUploads extends Component {
     this._triggerUploadsChanged();
   }
 
+  @action
+  openPreview(element) {
+    const media = [
+      ...element
+        .closest(".chat-composer-uploads-container")
+        .querySelectorAll(".preview-img, .preview-video"),
+    ];
+
+    this.#gallery = openLightbox(
+      media.map((item) => ({
+        type: item.tagName === "VIDEO" ? "video" : "image",
+        src: item.currentSrc || item.src,
+        element: item,
+        alt: item.dataset.fileName,
+      })),
+      { index: media.indexOf(element) }
+    ).finally(() => (this.#gallery = null));
+  }
+
+  @bind
+  activeGallery() {
+    return this.#gallery;
+  }
+
   @bind
   _pasteEventListener(event) {
     if (document.activeElement !== this.composerInputEl) {
@@ -151,15 +178,19 @@ export default class ChatComposerUploads extends Component {
         <div class="chat-composer-uploads-container">
           {{#each this.uploads as |upload|}}
             <ChatComposerUpload
+              @activeGallery={{this.activeGallery}}
               @isDone={{true}}
               @onCancel={{fn this.removeUpload upload}}
+              @onPreview={{this.openPreview}}
               @upload={{upload}}
             />
           {{/each}}
 
           {{#each this.inProgressUploads as |upload|}}
             <ChatComposerUpload
+              @activeGallery={{this.activeGallery}}
               @onCancel={{fn this.cancelUploading upload}}
+              @onPreview={{this.openPreview}}
               @upload={{upload}}
             />
           {{/each}}
