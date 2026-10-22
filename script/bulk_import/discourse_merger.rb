@@ -347,12 +347,15 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   def fix_category_descriptions
     puts "updating category description topic ids..."
 
-    @categories.each do |new_id|
+    @categories.each_value do |new_id|
       next if !CategoryCustomField.where(category_id: new_id, name: "import_id").exists?
-      category = Category.find(new_id) if new_id.present?
-      if description_topic_id = topic_id_from_imported_id(category&.topic_id)
-        category.topic_id = description_topic_id
-        category.save!
+      category = Category.find_by(id: new_id)
+      next if category&.topic_id.nil?
+
+      # Rows are copied verbatim from the source site and may not pass current
+      # validations, so only the remapped column is written.
+      if description_topic_id = topic_id_from_imported_id(category.topic_id)
+        category.update_columns(topic_id: description_topic_id)
       end
     end
   end
