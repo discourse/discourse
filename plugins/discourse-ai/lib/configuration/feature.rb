@@ -202,6 +202,26 @@ module DiscourseAi
           ]
         end
 
+        def sentiment_features
+          feature_cache[:sentiment] ||= %w[sentiment emotion].map do |type|
+            summary = -> { DiscourseAi::Sentiment::PostClassification.classifier_summary_for(type) }
+
+            new(
+              type,
+              "ai_sentiment_#{type}_agent",
+              DiscourseAi::Configuration::Module::SENTIMENT_ID,
+              DiscourseAi::Configuration::Module::SENTIMENT,
+              enabled_by_setting:
+                type == "sentiment" ? "ai_sentiment_enabled" : "ai_sentiment_emotion_enabled",
+              agent_ids_lookup: -> { summary.call.fetch(:agent_ids, []) },
+              llm_models_lookup: -> { summary.call.fetch(:llm_models, []) },
+              metadata_lookup: -> do
+                summary.call.slice(:backend, :ready, :decision_model, :classification_model)
+              end,
+            )
+          end
+        end
+
         def lookup_bot_agent_ids
           AiAgent
             .where(enabled: true)
@@ -357,6 +377,7 @@ module DiscourseAi
             spam_features,
             embeddings_features,
             admin_dashboard_features,
+            sentiment_features,
             ai_automation_report_scripts,
             ai_automation_triage_scripts,
           ].flatten
@@ -390,6 +411,7 @@ module DiscourseAi
         enabled_by_setting: "",
         agent_ids_lookup: nil,
         llm_models_lookup: nil,
+        metadata_lookup: nil,
         require_enabled_agent: false,
         visible_if: nil
       )
@@ -400,8 +422,13 @@ module DiscourseAi
         @enabled_by_setting = enabled_by_setting
         @agent_ids_lookup = agent_ids_lookup
         @llm_models_lookup = llm_models_lookup
+        @metadata_lookup = metadata_lookup
         @require_enabled_agent = require_enabled_agent
         @visible_if = visible_if
+      end
+
+      def metadata
+        @metadata_lookup ? @metadata_lookup.call : {}
       end
 
       def llm_models
