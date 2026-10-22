@@ -106,7 +106,11 @@ jobs:
       - name: Set PARALLEL_TEST_PROCESSORS for system tests
         if: matrix.build_type == 'system'
         run: |
-          echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2 + 2))" >> $GITHUB_ENV
+          if [ "${{ matrix.target }}" = "core" ]; then
+            echo "PARALLEL_TEST_PROCESSORS=$(nproc)" >> $GITHUB_ENV
+          else
+            echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2 + 2))" >> $GITHUB_ENV
+          fi
 
       - name: Set QUNIT_PARALLEL for QUnit tests
         if: matrix.build_type == 'frontend'
