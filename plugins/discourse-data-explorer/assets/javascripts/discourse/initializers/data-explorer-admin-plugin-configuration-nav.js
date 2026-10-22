@@ -17,7 +17,6 @@ export default {
         {
           label: "explorer.title",
           route: "adminPlugins.show.explorer",
-          description: "explorer.queries_description",
         },
       ]);
       api.addAdminSidebarSectionLink("reports", {

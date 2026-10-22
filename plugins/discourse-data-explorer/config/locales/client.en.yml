@@ -26,7 +26,6 @@ en:
       default_query_notice: "This is a default query, the SQL cannot be edited. To edit the SQL, create a new query."
       view_query: "View"
       queries: "Queries"
-      queries_description: "Write SQL queries against your site's database to build custom reports."
       back_to_queries: "Back to queries"
       query_created: "Query created!"
       mode:

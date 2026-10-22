@@ -17,10 +17,7 @@ import ShareReport from "discourse/plugins/discourse-data-explorer/discourse/com
 
 export default <template>
   <div class="admin-detail">
-    <DPageSubheader
-      @descriptionLabel={{i18n "explorer.queries_description"}}
-      @titleLabel={{i18n "explorer.queries"}}
-    >
+    <DPageSubheader @titleLabel={{i18n "explorer.queries"}}>
       <:actions as |actions|>
         <actions.Primary
           @icon="plus"
