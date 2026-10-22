@@ -381,7 +381,7 @@ acceptance("List Queries", function (needs) {
     await visit("/admin/plugins/discourse-data-explorer/queries");
 
     assert.strictEqual(lastRequestHeaders["Api-Version"], JSON_API_VERSION);
-    assert.strictEqual(lastQueryParams.include, "user,groups");
+    assert.deepEqual(lastQueryParams.include, ["groups", "user"]);
     assert.strictEqual(lastQueryParams.sort, "-lastRunAt");
 
     await click("#table-header-toggle-username");
