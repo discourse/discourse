@@ -83,7 +83,6 @@ en:
       edit: "Edit"
       back: "Back"
       save: "Save"
-      apply: "Apply"
       recalculate: "Recalculate scores"
       recalculating: "Recalculating scores..."
       completed: "Done! The scores have been successfully recalculated."
