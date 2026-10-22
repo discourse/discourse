@@ -37,7 +37,7 @@ module DiscourseWorkflows
       def validate_column!(column_name)
         return if @column_names.include?(column_name)
 
-        raise ArgumentError,
+        raise InvalidInput,
               I18n.t("discourse_workflows.errors.data_table.unknown_column", column: column_name)
       end
 
@@ -48,7 +48,7 @@ module DiscourseWorkflows
       end
 
       def raise_invalid_columns!(fields)
-        raise ArgumentError,
+        raise InvalidInput,
               I18n.t(
                 "discourse_workflows.errors.data_table.invalid_columns",
                 value: fields.to_s.truncate(100),

@@ -6,6 +6,10 @@
 
 fr:
   js:
+    dsa_notice:
+      title: "Signaler un contenu illégal"
+      email: "Adresse e-mail"
+      resend_email_code: "Renvoyer le code"
     user_api_key:
       title: 'Autoriser « %{application_name} »'
       authorize: "Autoriser"
@@ -3288,8 +3292,6 @@ fr:
       show_preview: "afficher l'aperçu"
       hide_preview: "masquer l'aperçu"
       resize: "Redimensionner le panneau d'édition"
-      switch_to_markdown: "Passer à l'éditeur Markdown standard (%{keyboardShortcut})"
-      switch_to_rich_text: "Passer au nouvel éditeur de texte enrichi (%{keyboardShortcut})"
       quote_post_title: "Citer le message en entier"
       bold_label: "G"
       bold_title: "Gras"
@@ -3441,6 +3443,8 @@ fr:
         visit: "Ouvrir le lien"
         remove_preview: "Supprimer l'aperçu"
         link_copied: "Lien copié !"
+      table:
+        default_heading: "Colonne %{number}"
       unsupported_token: "L'éditeur de texte enrichi ne prend pas en charge toutes les fonctionnalités utilisées dans cette publication. Vous allez passer à l'éditeur Markdown."
     notifications:
       tooltip:
@@ -6035,63 +6039,6 @@ fr:
           other: "La saisie doit être supérieure à %{count}."
         pattern_mismatch: "Veuillez respecter le format demandé."
         bad_input: "Veuillez saisir une entrée valide."
-    table_builder:
-      title: "Éditeur de tableaux"
-      modal:
-        title: "Éditeur de tableaux"
-        create: "Créer un tableau"
-        help:
-          title: "Utiliser l'éditeur de tableaux"
-          enter_key: "Entrée"
-          tab_key: "Tabulation"
-          new_row: "à la fin d'une ligne pour en insérer une nouvelle."
-          new_col: "à la fin d'une colonne pour en insérer une nouvelle."
-          options: "Clic droit sur une cellule pour afficher des options contextuelles."
-        confirm_close: "Voulez-vous vraiment fermer le générateur de tableaux ? Toutes les modifications non enregistrées seront perdues."
-      edit:
-        btn_edit: "Modifier le tableau"
-        modal:
-          title: "Modifier le tableau"
-          cancel: "annuler"
-          create: "Enregistrer"
-          reason: "Quelle est la raison de la modification ?"
-          trigger_reason: "Ajouter la raison de la modification"
-        default_edit_reason: "Modifier avec l'éditeur de tableaux"
-      default_header:
-        col_1: "Colonne 1"
-        col_2: "Colonne 2"
-        col_3: "Colonne 3"
-        col_4: "Colonne 4"
-      spreadsheet:
-        no_records_found: "Aucun enregistrement trouvé"
-        show: "Afficher"
-        entries: "entrées"
-        about: "À propos"
-        prompts:
-          delete_selected_rows: "Voulez-vous vraiment supprimer les lignes sélectionnées ?"
-          delete_selected_cols: "Voulez-vous vraiment supprimer les colonnes sélectionnées ?"
-          will_destroy_merged_cells: "Cette action détruira toutes les cellules fusionnées existantes. Voulez-vous continuer ?"
-          will_clear_search_results: "Cette action détruira toutes les cellules fusionnées existantes. Voulez-vous continuer ?"
-          conflicts_with_merged_cells: "Il y a un conflit avec une autre cellule fusionnée"
-        invalid_merge_props: "Propriétés fusionnées invalides"
-        cells_already_merged: "Cellule déjà fusionnée"
-        no_cells_selected: "Aucune cellule sélectionnée"
-        context_menu:
-          row:
-            before: "Insérer une nouvelle ligne avant"
-            after: "Insérer une nouvelle ligne après"
-            delete: "Supprimer les lignes sélectionnées"
-          col:
-            before: "Insérer une nouvelle colonne avant"
-            after: "Insérer une nouvelle colonne après"
-            delete: "Supprimer les colonnes sélectionnées"
-            rename: "Renommer cette colonne"
-          order:
-            ascending: "Ordre croissant"
-            descending: "Ordre décroissant"
-          copy: "Copier..."
-          paste: "Coller..."
-          save: "Enregistrer sous..."
     powered_by_discourse: "Alimenté par Discourse"
     safari_15_warning: "Votre navigateur sera bientôt incompatible avec cette communauté. Pour continuer à participer, veuillez mettre à jour votre navigateur ou <a href='%{url}'>cliquez ici pour en savoir plus</a>."
     filter:

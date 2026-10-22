@@ -196,6 +196,13 @@ sw:
         delete: "Futa"
         tools_modal:
           required: "Muhimu na Inahitajika"
+      models:
+        name: "Jina"
+        type: "Aina"
+        provider: "Mkimu"
+        edit: "Hariri"
+        types:
+          embedding: "Ambatanisha"
       llms:
         display_name: "Jina"
         provider: "Mkimu"
@@ -262,6 +269,13 @@ sw:
             category: "Kikundi"
           table:
             total_count: "Jumla"
+      ai_search:
+        related_replies:
+          one: "%{count} jibu"
+          other: "%{count} majibu"
+        tabs:
+          topics: "Mada"
+          messages: "Ujumbe"
       discobot_discoveries:
         legacy:
           regular_results: "Mada"

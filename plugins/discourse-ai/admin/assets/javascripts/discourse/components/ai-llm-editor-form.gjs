@@ -326,7 +326,7 @@ export default class AiLlmEditorForm extends Component {
           .then(() => {
             removeValueFromArray(this.args.llms.content, this.args.model);
             this.router.transitionTo(
-              "adminPlugins.show.discourse-ai-llms.index"
+              "adminPlugins.show.discourse-ai-models.index"
             );
           })
           .catch(popupAjaxError);

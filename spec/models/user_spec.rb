@@ -3821,12 +3821,19 @@ RSpec.describe User do
 
       group.add(whisperer)
 
-      expect(whisperer.whisperer?).to eq(true)
+      expect(whisperer.reload.whisperer?).to eq(true)
       expect(user.whisperer?).to eq(false)
     end
 
     it "returns false if no whispers groups exist" do
       expect(user.whisperer?).to eq(false)
+    end
+
+    it "looks up whisper group membership once" do
+      SiteSetting.whispers_allowed_groups = "#{group.id}"
+      user.whisperer?
+
+      expect(track_sql_queries { user.whisperer? }).to be_empty
     end
   end
 

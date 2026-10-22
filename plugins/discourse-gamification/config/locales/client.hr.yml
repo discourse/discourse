@@ -52,8 +52,10 @@ hr:
       admin:
         title: "Gamifikacija"
         name: "Ime"
+        created_by: "Napravio"
     discourse_workflows:
       gamification_score:
         username: "Korisnik"
         date: "Datum"
         description: "Opis"
+        category_id: "Kategorija"

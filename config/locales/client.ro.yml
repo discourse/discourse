@@ -6,6 +6,8 @@
 
 ro:
   js:
+    dsa_notice:
+      email: "Adresă email"
     user_api_key:
       title: 'Autorizează „%{application_name}”'
       authorize: "Autorizează"
@@ -2358,10 +2360,6 @@ ro:
       saving: "Se salvează"
       saved: "Salvat!"
       saved_draft: "Postează schița în curs. Atinge pentru a relua."
-      switch_to_markdown: "Comută la editorul standard Markdown (%{keyboardShortcut})"
-      switch_to_rich_text: "Comută la noul editor de text îmbogățit (%{keyboardShortcut})"
-      switch_to_markdown_no_shortcut: "Comută la editorul standard Markdown"
-      switch_to_rich_text_no_shortcut: "Comută la noul editor de text îmbogățit"
       quote_post_title: "Citează întreaga postare"
       bold_label: "B"
       bold_title: "Aldin"
@@ -3897,63 +3895,6 @@ ro:
       errors:
         type_mismatch:
           default: "Introduceţi o valoare validă."
-    table_builder:
-      title: "Constructor de tabel"
-      modal:
-        title: "Constructor de tabel"
-        create: "Construiește tabel"
-        help:
-          title: "Folosind Editorul de foi de calcul"
-          enter_key: "Enter"
-          tab_key: "Filă"
-          new_row: "la sfârșitul unui rând pentru a introduce un rând nou."
-          new_col: "la sfârșitul unei coloane pentru a introduce o coloană nouă."
-          options: "Dă clic dreapta pe celule pentru a accesa mai multe opțiuni într-un meniu derulant."
-        confirm_close: "Sigur vrei să închizi constructorul de tabel? Toate modificările nesalvate vor fi pierdute."
-      edit:
-        btn_edit: "Editează tabel"
-        modal:
-          title: "Editează tabel"
-          cancel: "anulează"
-          create: "Salvează"
-          reason: "De ce editezi?"
-          trigger_reason: "Adăugă motiv pentru editare"
-        default_edit_reason: "Actualizează tabel cu editor de tabele"
-      default_header:
-        col_1: "Coloana 1"
-        col_2: "Coloana 2"
-        col_3: "Coloana 3"
-        col_4: "Coloana 4"
-      spreadsheet:
-        no_records_found: "Nu s-a găsit nicio înregistrare"
-        show: "Arată"
-        entries: "intrări"
-        about: "Despre"
-        prompts:
-          delete_selected_rows: "Sigur vrei să ștergi rândurile selectate?"
-          delete_selected_cols: "Sigur vrei să ștergi coloanele selectate?"
-          will_destroy_merged_cells: "Această acțiune va distruge toate celulele existente fuzionate. Sigur?"
-          will_clear_search_results: "Această acțiune va distruge toate celulele existente fuzionate. Sigur?"
-          conflicts_with_merged_cells: "Există un conflict cu o altă celulă fuzionată"
-        invalid_merge_props: "Proprietăți fuzionate nevalide"
-        cells_already_merged: "Celulă deja fuzionată"
-        no_cells_selected: "Nicio celulă selectată"
-        context_menu:
-          row:
-            before: "Introdu un rând nou înainte"
-            after: "Introdu un rând nou după"
-            delete: "Șterge rândurile selectate"
-          col:
-            before: "Introdu o coloană nouă înainte"
-            after: "Introdu o coloană nouă după"
-            delete: "Șterge coloanele selectate"
-            rename: "Redenumește această coloană"
-          order:
-            ascending: "Ordine crescătoare"
-            descending: "Ordine descrescătoare"
-          copy: "Copiază..."
-          paste: "Lipește..."
-          save: "Salvează ca..."
     powered_by_discourse: "Propulsat de Discourse"
     safari_15_warning: "Navigatorul tău va fi în curând incompatibil cu această comunitate. Pentru a continua să participi aici, te rugăm să-ți actualizezi navigatorul sau <a href='%{url}'>să afli mai multe</a>."
     filter:

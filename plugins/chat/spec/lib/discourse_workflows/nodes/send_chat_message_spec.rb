@@ -104,10 +104,17 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
         ],
       )
       expect([first, second].map(&:message)).to eq(["First message", "Second message"])
+      expect([first, second].map(&:user_id)).to all(eq(Discourse.system_user.id))
       expect(log).to eq(
         [
-          sent_log(:channel, first, channel_id: channel.id),
-          sent_log(:channel, second, item_index: 1, channel_id: channel.id),
+          sent_log(:channel, first, sender: Discourse.system_user.username, channel_id: channel.id),
+          sent_log(
+            :channel,
+            second,
+            item_index: 1,
+            sender: Discourse.system_user.username,
+            channel_id: channel.id,
+          ),
         ],
       )
     end
@@ -167,6 +174,78 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
         ),
       )
       expect(channel.chat_messages).to be_empty
+    end
+  end
+
+  describe "#execute with a channel sender" do
+    fab!(:sender) { Fabricate(:user, username: "alice", refresh_auto_groups: true) }
+
+    def send_to_channel(**parameters, &block)
+      execute_node_output(
+        configuration: {
+          "channel_id" => channel.id.to_s,
+          "message" => "Hello channel",
+          "actor_username" => sender.username,
+        }.merge(parameters.stringify_keys),
+        &block
+      )
+    end
+
+    it "posts the message as the sender when they are a member of the channel" do
+      channel.add(sender)
+      log = nil
+
+      output = send_to_channel { |ctx| log = log_messages(ctx) }
+
+      message = channel.chat_messages.sole
+      expect(output.first.sole["json"]).to eq(
+        "channel_id" => channel.id,
+        "message_id" => message.id,
+        "message" => "Hello channel",
+      )
+      expect(message.user_id).to eq(sender.id)
+      expect(log).to eq(
+        [sent_log(:channel, message, sender: sender.username, channel_id: channel.id)],
+      )
+    end
+
+    it "fails without joining the channel when the sender is not a member" do
+      expect {
+        expect { send_to_channel }.to raise_error(
+          DiscourseWorkflows::NodeError,
+          node_error(:sender_not_member, sender: sender.username, channel_id: channel.id),
+        )
+      }.not_to change { channel.user_chat_channel_memberships.count }
+      expect(channel.chat_messages).to be_empty
+    end
+
+    it "fails when the sender can't post in the channel's category" do
+      group = Fabricate(:group)
+      channel.chatable.set_permissions(group => :full)
+      channel.chatable.save!
+      channel.add(sender)
+
+      expect { send_to_channel }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        node_error(:sender_cannot_post, sender: sender.username, channel_id: channel.id),
+      )
+      expect(channel.chat_messages).to be_empty
+    end
+
+    it "fails when the sender disabled chat" do
+      channel.add(sender)
+      sender.user_option.update!(chat_enabled: false)
+
+      expect { send_to_channel }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        node_error(:sender_chat_disabled, sender: sender.username),
+      )
+    end
+
+    it "fails when the sender is anonymous" do
+      expect {
+        send_to_channel(actor_username: DiscourseWorkflows::AnonymousActor::USERNAME)
+      }.to raise_error(DiscourseWorkflows::NodeError, node_error(:sender_anonymous))
     end
   end
 

@@ -25,7 +25,7 @@ module DiscourseDataExplorer
       order_column = SORTABLE_COLUMNS.include?(params[:order]) ? params[:order] : "last_run_at"
       order_direction = params[:ascending] == "true" ? :asc : :desc
 
-      base_scope = DiscourseDataExplorer::Query.where(hidden: false).includes(:groups, :tags)
+      base_scope = DiscourseDataExplorer::Query.where(hidden: false).includes(:groups, :tags, :user)
 
       if order_column == "username"
         base_scope =
@@ -251,6 +251,10 @@ module DiscourseDataExplorer
     def destroy
       query = Query.find(params[:id])
       query.update!(hidden: true)
+      ::AdminDashboard::Reports::Mounter.unmount(
+        source: AdminDashboardReportProvider::SOURCE_NAME,
+        identifier: query.id.to_s,
+      )
       render json: { success: true, errors: [] }
     end
 

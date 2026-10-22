@@ -493,6 +493,10 @@ basic:
     default: 1
     min: 0
     area: "notifications"
+  push_notification_localization_max_wait_mins:
+    default: 3
+    min: 0
+    hidden: true
   short_title:
     default: ""
     max: 12
@@ -553,7 +557,7 @@ basic:
   about_page_hidden_groups:
     default: ""
     type: group_list
-    disallowed_groups: "4"
+    disallowed_groups: "0|4|5"
     area: "group_permissions"
   about_page_extra_groups:
     client: true
@@ -4905,7 +4909,13 @@ experimental:
   enable_form_templates:
     client: true
     default: true
+  dsa_notice_group:
+    default: "1"
+    type: group
+    hidden: true
+    area: "experimental"
   dsa_reporting_enabled:
+    client: true
     default: false
     hidden: true
     area: "experimental"

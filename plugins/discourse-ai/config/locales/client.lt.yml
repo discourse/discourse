@@ -439,6 +439,15 @@ lt:
         delete: "Pašalinti"
         tools_modal:
           required: "Privalomi"
+      models:
+        name: "Vardas"
+        type: "Tipas"
+        edit: "Redaguoti"
+        select_type: "Pasirinkti"
+        types:
+          embedding: "Įterpimai"
+        filters:
+          all: "Visų rūšių"
       llms:
         display_name: "Vardas"
         vision_modes:
@@ -597,6 +606,16 @@ lt:
       summarization:
         chat:
           summarize: "Apibendrinti"
+      ai_search:
+        related_replies:
+          one: "%{count} atsakymas"
+          few: "%{count} atsakymai"
+          many: "%{count} atsakymai"
+          other: "%{count} atsakymai"
+        tabs:
+          ask: "Paklauskite AI"
+          topics: "Temos"
+          messages: "Žinutės"
       discobot_discoveries:
         main_title: "Paklauskite AI"
         legacy:

@@ -6,6 +6,9 @@
 
 ja:
   js:
+    dsa_notice:
+      title: "違法コンテンツの報告"
+      email: "メールアドレス"
     user_api_key:
       title: '「%{application_name}」の承認'
       authorize: "承認"
@@ -2826,8 +2829,6 @@ ja:
       uploading: "アップロード中…"
       show_preview: "プレビューを表示"
       hide_preview: "プレビューを非表示"
-      switch_to_markdown: "標準の Markdown エディターに切り替える (%{keyboardShortcut})"
-      switch_to_rich_text: "新しいリッチテキストエディターに切り替える (%{keyboardShortcut})"
       quote_post_title: "投稿全体を引用"
       bold_label: "B"
       bold_title: "太字"
@@ -2963,6 +2964,8 @@ ja:
       onebox_toolbar:
         copy: "リンクをコピー"
         link_copied: "リンクがコピーされました！"
+      table:
+        default_heading: "列 %{number}"
       unsupported_token: "リッチテキストエディターではこの投稿で使用されているすべての機能がサポートされていないため、Markdown エディターに切り替えます。"
     notifications:
       tooltip:
@@ -5064,63 +5067,6 @@ ja:
           other: "入力は %{count} 以上である必要があります。"
         pattern_mismatch: "要求されたフォーマットに一致させてください。"
         bad_input: "有効な入力を入力してください。"
-    table_builder:
-      title: "テーブル作成ツール"
-      modal:
-        title: "テーブル作成ツール"
-        create: "テーブルを作成"
-        help:
-          title: "表計算シート作成ツールの使用"
-          enter_key: "Enter"
-          tab_key: "Tab"
-          new_row: "を行の末尾に使用して、新しい行を挿入します。"
-          new_col: "を列の末尾に使用した、新しい列を挿入します。"
-          options: "セルを右クリックすると、ドロップダウンメニューのその他のオプションにアクセスできます。"
-        confirm_close: "テーブル作成ツールを閉じてもよろしいですか？保存されていない変更は失われます。"
-      edit:
-        btn_edit: "テーブルの編集"
-        modal:
-          title: "テーブルの編集"
-          cancel: "キャンセル"
-          create: "保存"
-          reason: "編集する理由は？"
-          trigger_reason: "編集理由を追加してください"
-        default_edit_reason: "テーブル作成ツールでテーブルを更新"
-      default_header:
-        col_1: "列 1"
-        col_2: "列 2"
-        col_3: "列 3"
-        col_4: "列 4"
-      spreadsheet:
-        no_records_found: "レコードが見つかりません"
-        show: "表示"
-        entries: "エントリ"
-        about: "情報"
-        prompts:
-          delete_selected_rows: "選択された行を削除してもよろしいですか？"
-          delete_selected_cols: "選択された列を削除してもよろしいですか？"
-          will_destroy_merged_cells: "この操作によってマージされた既存のセルがすべて破棄されます。よろしいですか？"
-          will_clear_search_results: "この操作によってマージされた既存のセルがすべて破棄されます。よろしいですか？"
-          conflicts_with_merged_cells: "別のマージセルと競合しています"
-        invalid_merge_props: "マージされたプロパティが無効です"
-        cells_already_merged: "セルはすでにマージ済みです"
-        no_cells_selected: "セルが選択されていません"
-        context_menu:
-          row:
-            before: "前に新しい行を挿入"
-            after: "後に新しい行を挿入"
-            delete: "選択行を削除"
-          col:
-            before: "前に新しい列を挿入"
-            after: "後に新しい列を挿入"
-            delete: "選択列を削除"
-            rename: "この列の名前を変更"
-          order:
-            ascending: "昇順で並べ替え"
-            descending: "降順で並べ替え"
-          copy: "コピー..."
-          paste: "貼り付け..."
-          save: "名前を付けて保存..."
     powered_by_discourse: "Discourse 提供"
     safari_15_warning: "お使いのブラウザはまもなくこのコミュニティーに対応しなくなります。引き続き参加するには、ブラウザをアップグレードするか、<a href='%{url}'>詳細</a>をご確認ください。"
     filter:

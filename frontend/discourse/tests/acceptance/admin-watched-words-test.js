@@ -4,8 +4,10 @@ import {
   findAll,
   triggerKeyEvent,
   visit,
+  waitFor,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -79,6 +81,46 @@ acceptance("Admin - Watched Words", function (needs) {
     assert.true(words.includes("poutine"), "has word 'poutine'");
     assert.true(words.includes("cheese"), "has word 'cheese'");
     assert.dom(".watched-words-list .case-sensitive").doesNotExist();
+  });
+
+  test("disables the form while saving", async function (assert) {
+    let release;
+    const held = new Promise((resolve) => (release = resolve));
+    pretender.post("/admin/customize/watched_words.json", async () => {
+      await held;
+      return response({
+        id: 1,
+        word: "poutine",
+        action: "block",
+        case_sensitive: false,
+      });
+    });
+
+    await visit("/admin/customize/watched_words/action/block");
+    await click(".select-kit-header.multi-select-header");
+    await fillIn(".select-kit-filter input", "poutine");
+    await triggerKeyEvent(".select-kit-filter input", "keydown", "Enter");
+
+    const submitted = click(".watched-word-form .btn-primary");
+    await waitFor(".case-sensitivity-checkbox input:disabled");
+
+    assert
+      .dom(".case-sensitivity-checkbox input")
+      .isDisabled("keeps the inputs disabled until the save finishes");
+
+    release();
+    await submitted;
+
+    assert.dom(".case-sensitivity-checkbox input").isNotDisabled();
+    assert
+      .dom(".watched-word-form .success-message")
+      .hasText(i18n("admin.watched_words.form.success"));
+
+    await visit("/admin/customize/watched_words/action/censor");
+
+    assert
+      .dom(".watched-word-form .success-message")
+      .doesNotExist("hides the message on another action's page");
   });
 
   test("add case-sensitive words", async function (assert) {

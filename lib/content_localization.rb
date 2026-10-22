@@ -66,6 +66,36 @@ class ContentLocalization
     topic.get_localization&.fancy_title.presence
   end
 
+  # Expects I18n.locale to be the recipient's locale.
+  # @param topic [Topic, nil]
+  # @param post [Post, nil]
+  # @param scope [Guardian] The recipient's guardian
+  # @return [Hash] translated `:topic_title` and `:excerpt`, for whichever are available
+  def self.translated_notification_fields(topic:, post:, scope:)
+    fields = {}
+
+    if (title = translated_topic_title(topic, scope))
+      fields[:topic_title] = title
+    end
+
+    if show_translated_post?(post, scope)
+      localization = post.get_localization
+      # Stale translations would describe an earlier revision of the post.
+      if localization&.post_version == post.version && localization.cooked.present?
+        fields[:excerpt] = Post.excerpt(
+          localization.cooked,
+          400,
+          text_entities: true,
+          strip_links: true,
+          remap_emoji: true,
+          plain_hashtags: true,
+        )
+      end
+    end
+
+    fields
+  end
+
   # This method returns true when we should try to show the translated category.
   # @param category [Category] The category record
   # @param scope [Object] The serializer scope from which the method is called

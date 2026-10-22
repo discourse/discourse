@@ -380,12 +380,12 @@ en:
         awaiting_staff: "Awaiting staff approval"
 
       default_llm:
-        title: "Default LLM model"
-        description: "The default LLM model to use for all AI features. This will be used if no LLM is specified in the feature configuration or agent. If no default LLM is specified, the last created LLM will be used."
+        title: "Default language model"
+        description: "Used by any AI feature or agent that doesn't specify its own language model. If none is set, the most recently added language model is used."
 
       llm_selector:
         none: "None"
-        saved: "Default LLM model updated successfully"
+        saved: "Default language model saved"
 
       features:
         short_title: "Features"
@@ -1170,15 +1170,18 @@ en:
           title: "Create new credential"
 
       decision_models:
-        short_title: "Decision models"
-        description: "Models that answer typed questions about content (yes/no, choice, score) with probabilities, faster and cheaper than an LLM."
-        create_new: "New decision model"
-        no_decision_models: "No decision models yet"
         seeded_description: "Pre-configured model"
         manage: "Manage decision models"
-        back: "Back to decision models"
         start_from: "Start from"
         no_preset: "None"
+        preset_descriptions:
+          none: "Settings for any compatible decision model endpoint"
+          jev-latest: "TypeSafe's hosted decision model, text only"
+          jev-latest-vision: "TypeSafe's hosted decision model with experimental image support"
+          vllm-sr-d3: "Open-source multimodal decision model, self-hosted with vLLM"
+          cloudflare-clef: "Cloudflare's open-source multimodal decision model on Workers AI"
+          cloudflare-clef-flash: "Smaller, faster version of Clef on Workers AI"
+          gpt-6-luna: "OpenAI's decision model on the Decisions API, with image support"
         display_name: "Name"
         model: "Model"
         provider: "Provider"
@@ -1284,6 +1287,44 @@ en:
           one: "Discovered %{count} tool using protocol %{version}."
           other: "Discovered %{count} tools using protocol %{version}."
 
+      models:
+        short_title: "Models"
+        description: "Connect the models that power AI features and workflows."
+        new: "New model"
+        back: "Back to models"
+        back_to_types: "Back to model types"
+        empty: "You haven't set up any models yet"
+        name: "Name"
+        type: "Type"
+        provider: "Provider"
+        edit: "Edit"
+        choose_type: "What kind of model do you want to add?"
+        select_type: "Select"
+        types:
+          llm: "Large language"
+          embedding: "Embedding"
+          decision: "Decision"
+        type_titles:
+          llm: "Large language model"
+          embedding: "Embedding model"
+          decision: "Decision model"
+        type_descriptions:
+          llm: "Generates text for features like the AI bot, summaries, and the AI helper"
+          embedding: "Turns content into vectors for semantic search and related topics"
+          decision: "Answers typed questions about content (yes/no, choice, score) with probabilities, for use in workflows"
+        type_filters:
+          llm: "Large language models"
+          embedding: "Embedding models"
+          decision: "Decision models"
+        templates:
+          llm: "Choose a language model template"
+          embedding: "Choose an embedding template"
+          decision: "Choose a decision model template"
+        filters:
+          all: "All types"
+          text: "Filter by name or provider"
+          no_results: "No models match your filters"
+          reset: "Reset filters"
       llms:
         short_title: "LLMs"
         no_llms: "No LLMs yet"
@@ -1558,6 +1599,15 @@ en:
         empty: "You haven't setup embeddings yet"
         presets: "Select a preset..."
         configure_manually: "Configure manually"
+        preset_descriptions:
+          manual: "Settings for any embedding service, including self-hosted ones"
+          bge-large-en: "Open-source English-only model, self-hosted"
+          bge-m3: "Open-source multilingual model for longer content, self-hosted"
+          multilingual-e5-large: "Open-source multilingual model, self-hosted"
+          gemini-embedding-001: "Google's hosted multilingual model"
+          text-embedding-3-large: "OpenAI's most accurate embedding model"
+          text-embedding-3-small: "OpenAI's faster, lower-cost embedding model"
+          text-embedding-ada-002: "OpenAI's previous-generation model, superseded by text-embedding-3-small"
         edit: "Edit"
         seeded_warning: "This is pre-configured on your site and cannot be edited."
         tests:
@@ -1841,6 +1891,31 @@ en:
             expanded: "Expanded"
             expanded_description: "with AI summaries"
 
+      ai_search:
+        related_topics: "Related topics"
+        related_replies:
+          one: "%{count} reply"
+          other: "%{count} replies"
+        answer_label: "AI answer"
+        follow_up_label: "Ask a follow-up question"
+        follow_up_placeholder: "Ask a follow-up…"
+        ask: "Ask"
+        references_title: "Cited topics"
+        references_empty: "Topics the answers cite appear here."
+        tabs:
+          label: "Search results"
+          ask: "Ask AI"
+          topics: "Topics"
+          this_topic: "This topic"
+          messages: "Messages"
+          no_answer: "No AI answer found"
+        no_keyword_matches: "No keyword matches found."
+        no_answer: "AI couldn’t find a clear answer. %{askLink}"
+        ask_community: "Ask the community."
+        scope:
+          this_topic: "this topic"
+          messages: "your messages"
+          fallback: "Nothing found in %{name}, so this answer is from the whole site."
       discobot_discoveries:
         main_title: "Ask AI"
         loading_convo: "Loading conversation"

@@ -23,81 +23,10 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
-import { tagNames, tagSuggestionParams } from "../lib/ai-helper-suggestions.js";
-import { showComposerAiHelper } from "../lib/show-ai-helper.js";
+import { followUpAvailable } from "../lib/ai-follow-up.js";
+import { openTopicFromQuery } from "../lib/open-topic-from-query.js";
 import AiBlinkingAnimation from "./ai-blinking-animation.gjs";
 import AiIndicatorWave from "./ai-indicator-wave.gjs";
-
-async function requestSuggestion(url, data) {
-  try {
-    return await ajax(url, { type: "POST", data });
-  } catch {
-    return null;
-  }
-}
-
-async function enrichNewTopic({
-  model,
-  query,
-  suggestTitle,
-  suggestTaxonomy,
-  canTagTopics,
-  maxTitleLength,
-}) {
-  const initialTitle = model.title;
-  const initialCategoryId = model.categoryId;
-  const initialTags = tagNames(model.tags);
-  const titleRequest = suggestTitle
-    ? requestSuggestion("/discourse-ai/ai-helper/suggest_title", {
-        text: query,
-      })
-    : null;
-  const categoryRequest = suggestTaxonomy
-    ? requestSuggestion("/discourse-ai/ai-helper/suggest_category", {
-        text: query,
-      })
-    : null;
-  const [titleResult, categoryResult] = await Promise.all([
-    titleRequest,
-    categoryRequest,
-  ]);
-
-  const suggestedTitle = titleResult?.suggestions?.[0]?.trim();
-  if (suggestedTitle && model.title === initialTitle) {
-    model.set("title", suggestedTitle.slice(0, maxTitleLength));
-  }
-
-  const suggestedCategory = categoryResult?.assistant?.[0];
-  if (suggestedCategory && model.categoryId === initialCategoryId) {
-    model.set("categoryId", suggestedCategory.id);
-  }
-
-  if (
-    !suggestTaxonomy ||
-    !canTagTopics ||
-    tagNames(model.tags).join("\0") !== initialTags.join("\0")
-  ) {
-    return;
-  }
-
-  const tagResult = await requestSuggestion(
-    "/discourse-ai/ai-helper/suggest_tags",
-    {
-      text: query,
-      ...tagSuggestionParams(model.categoryId, model.tags),
-    }
-  );
-  const suggestedTags = tagResult?.assistant
-    ?.map((tag) => tag.name)
-    .filter(Boolean);
-
-  if (
-    suggestedTags?.length &&
-    tagNames(model.tags).join("\0") === initialTags.join("\0")
-  ) {
-    model.set("tags", suggestedTags);
-  }
-}
 
 export default class AiSearchDiscoveries extends Component {
   @service search;
@@ -216,28 +145,14 @@ export default class AiSearchDiscoveries extends Component {
   }
 
   get canContinueConversation() {
-    const agents = this.currentUser?.ai_enabled_agents;
-    if (!this.siteSettings.ai_bot_enabled || !agents) {
-      return false;
-    }
-
     if (this.discobotDiscoveries.discoveryTimedOut) {
       return false;
     }
 
-    const followUpAgent = agents.find(
-      (agent) =>
-        agent.id === parseInt(this.siteSettings?.ai_ask_ai_follow_up_agent, 10)
-    );
-    const followUpAgentCanReceiveMessages =
-      followUpAgent?.allow_personal_messages &&
-      followUpAgent?.username &&
-      followUpAgent?.has_default_llm;
-
     return (
       (this.discobotDiscoveries.discovery?.length > 0 || this.hasSources) &&
       !this.discobotDiscoveries.isStreaming &&
-      followUpAgentCanReceiveMessages
+      followUpAvailable(this.siteSettings, this.currentUser)
     );
   }
 
@@ -252,11 +167,13 @@ export default class AiSearchDiscoveries extends Component {
     return this.discobotDiscoveries.suggestedFollowUp || "";
   }
 
-  // offered once an answer has settled, so it isn't what a screen reader meets
-  // while waiting for one
+  // Offered once an answer has settled, so it isn't what a screen reader meets
+  // while waiting for one. The combined search picks the tab itself, so there
+  // is no default to set.
   get showAskAiDefaultToggle() {
     return (
       Boolean(this.currentUser) &&
+      !this.siteSettings.enable_ai_combined_search &&
       !this.hasNoContent &&
       !this.discobotDiscoveries.loadingDiscoveries &&
       !this.discobotDiscoveries.isStreaming &&
@@ -433,24 +350,11 @@ export default class AiSearchDiscoveries extends Component {
       this.args.closeSearchMenu();
     }
 
-    await this.composer.openNewTopic({ title: this.query });
-
-    const model = this.composer.model;
-    const suggestionsEnabled = showComposerAiHelper(
-      model,
-      this.siteSettings,
-      this.currentUser,
-      "suggestions"
-    );
-
-    await enrichNewTopic({
-      model,
+    await openTopicFromQuery({
+      composer: this.composer,
+      currentUser: this.currentUser,
       query: this.query,
-      suggestTitle: suggestionsEnabled,
-      suggestTaxonomy:
-        suggestionsEnabled && this.siteSettings.ai_embeddings_enabled,
-      canTagTopics: this.currentUser.can_tag_topics,
-      maxTitleLength: this.siteSettings.max_topic_title_length,
+      siteSettings: this.siteSettings,
     });
   }
 

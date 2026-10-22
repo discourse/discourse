@@ -1,5 +1,23 @@
 en:
   js:
+    dsa_notice:
+      title: "Report illegal content"
+      content_url: "Exact URL of the content"
+      explanation: "Why do you believe this content is illegal?"
+      explanation_help: "Describe the facts and why the content may be illegal. You do not need to cite a specific law."
+      name: "Full name or organization name"
+      email: "Email address"
+      declaration_section: "Declaration"
+      declaration: "I confirm that I have a bona fide belief that the information and allegations in this notice are accurate and complete."
+      submit: "Submit report"
+      get_email_code: "Get email code"
+      resend_email_code: "Resend code"
+      email_verified: "Verified"
+      verification_code: "Verification code"
+      received: "Report received"
+      received_description: "%{site} has received your report for review."
+      reference: "Your report reference is <strong>%{reference}</strong>."
+      contact_confirmation: "We will email you a receipt and a copy of your report. The reviewing team will email you the outcome."
     mcp_oauth_client_id_metadata_policy:
       disabled: "Admin registration only"
       approved_domains: "CIMD from approved domains"
@@ -3729,10 +3747,10 @@ en:
       hide_preview: "hide preview"
       resize: "Resize composer"
 
-      switch_to_markdown: "Switch to standard Markdown editor (%{keyboardShortcut})"
-      switch_to_rich_text: "Switch to new rich text editor (%{keyboardShortcut})"
-      switch_to_markdown_no_shortcut: "Switch to standard Markdown editor"
-      switch_to_rich_text_no_shortcut: "Switch to new rich text editor"
+      switch_to_markdown: "Switch to Markdown editor (%{keyboardShortcut})"
+      switch_to_rich_text: "Switch to rich text editor (%{keyboardShortcut})"
+      switch_to_markdown_no_shortcut: "Switch to Markdown editor"
+      switch_to_rich_text_no_shortcut: "Switch to rich text editor"
       quote_post_title: "Quote whole post"
       bold_label: "B"
       bold_title: "Strong"
@@ -3906,6 +3924,7 @@ en:
         show_preview: "Show preview"
 
       table:
+        default_heading: "Column %{number}"
         add_row: "Add row"
         add_column: "Add column"
         insert_row_above: "Insert above"
@@ -6734,63 +6753,6 @@ en:
         pattern_mismatch: "Please match the requested format."
         bad_input: "Please enter a valid input."
 
-    table_builder:
-      title: "Table Builder"
-      modal:
-        title: "Table Builder"
-        create: "Build Table"
-        help:
-          title: "Using the Spreadsheet Editor"
-          enter_key: "Enter"
-          tab_key: "Tab"
-          new_row: "at the end of a row to insert a new row."
-          new_col: "at the end of a column to insert a new column."
-          options: "Right-click on cells to access more options in a dropdown menu."
-        confirm_close: "Are you sure you want to close the table builder? Any unsaved changes will be lost."
-      edit:
-        btn_edit: "Edit Table"
-        modal:
-          title: "Edit Table"
-          cancel: "cancel"
-          create: "Save"
-          reason: "Why are you editing?"
-          trigger_reason: "Add reason for edit"
-        default_edit_reason: "Update Table with Table Editor"
-      default_header:
-        col_1: "Column 1"
-        col_2: "Column 2"
-        col_3: "Column 3"
-        col_4: "Column 4"
-      spreadsheet:
-        no_records_found: "No records found"
-        show: "Show"
-        entries: "entries"
-        about: "About"
-        prompts:
-          delete_selected_rows: "Are you sure you want to delete the selected rows?"
-          delete_selected_cols: "Are you sure you want to delete the selected columns?"
-          will_destroy_merged_cells: "This action will destroy any existing merged cells. Are you sure?"
-          will_clear_search_results: "This action will destroy any existing merged cells. Are you sure?"
-          conflicts_with_merged_cells: "There is a conflict with another merged cell"
-        invalid_merge_props: "Invalid merged properties"
-        cells_already_merged: "Cell already merged"
-        no_cells_selected: "No cells selected"
-        context_menu:
-          row:
-            before: "Insert a new row before"
-            after: "Insert a new row after"
-            delete: "Delete selected rows"
-          col:
-            before: "Insert a new column before"
-            after: "Insert a new column after"
-            delete: "Delete selected columns"
-            rename: "Rename this column"
-          order:
-            ascending: "Order ascending"
-            descending: "Order descending"
-          copy: "Copy..."
-          paste: "Paste..."
-          save: "Save as..."
     powered_by_discourse: "Powered by Discourse"
     safari_15_warning: "Your browser will soon be incompatible with this community. To keep participating here, please upgrade your browser or <a href='%{url}'>learn more</a>."
 
@@ -9630,6 +9592,9 @@ en:
           previous_value: "Previous"
           new_value: "New"
           show: "Show"
+          scheduled_duration: "Scheduled duration"
+          scheduled_expiry: "Scheduled expiry"
+          indefinite: "Indefinite"
           modal_title: "Details"
           no_previous: "There is no previous value."
           deleted: "No new value. The record was deleted."

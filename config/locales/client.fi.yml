@@ -6,6 +6,9 @@
 
 fi:
   js:
+    dsa_notice:
+      title: "Ilmoita laittomasta sisällöstä"
+      email: "Sähköpostiosoite"
     user_api_key:
       authorize: "Anna käyttöoikeus"
       deny: "Peruuta"
@@ -2859,8 +2862,6 @@ fi:
       uploading: "Ladataan…"
       show_preview: "näytä esikatselu"
       hide_preview: "piilota esikatselu"
-      switch_to_markdown: "Vaihda tavalliseen Markdown-editoriin (%{keyboardShortcut})"
-      switch_to_rich_text: "Vaihda uuteen muotoilutekstieditoriin (%{keyboardShortcut})"
       quote_post_title: "Lainaa koko viestiä"
       bold_label: "B"
       bold_title: "Lihavoitu"
@@ -2970,6 +2971,8 @@ fi:
       onebox_toolbar:
         copy: "Kopioi linkki"
         link_copied: "Linkki kopioitu!"
+      table:
+        default_heading: "Sarake %{number}"
     notifications:
       tooltip:
         regular:
@@ -5073,63 +5076,6 @@ fi:
           other: "Syötteen täytyy olla enemmän kuin %{count}."
         pattern_mismatch: "Noudata pyydettyä muotoa."
         bad_input: "Anna kelvollinen syöte."
-    table_builder:
-      title: "Taulukkotyökalu"
-      modal:
-        title: "Taulukkotyökalu"
-        create: "Luo taulukko"
-        help:
-          title: "Laskentataulukkoeditorin käyttäminen"
-          enter_key: "Enter"
-          tab_key: "Sarkain"
-          new_row: "rivin lopussa uuden rivin lisäämiseksi."
-          new_col: "sarakkeen lopussa lisätäksesi uuden sarakkeen."
-          options: "Napsauta soluja hiiren kakkospainikkeella nähdäksesi lisää vaihtoehtoja avattavassa valikossa."
-        confirm_close: "Haluatko varmasti sulkea taulukonluontityökalun? Kaikki tallentamattomat muutokset menetetään."
-      edit:
-        btn_edit: "Muokkaa taulukkoa"
-        modal:
-          title: "Muokkaa taulukkoa"
-          cancel: "peruuta"
-          create: "Tallenna"
-          reason: "Miksi muokkaat viestiä?"
-          trigger_reason: "Lisää muokkauksen syy"
-        default_edit_reason: "Päivitä taulukko taulukkoeditorilla"
-      default_header:
-        col_1: "Sarake 1"
-        col_2: "Sarake 2"
-        col_3: "Sarake 3"
-        col_4: "Sarake 4"
-      spreadsheet:
-        no_records_found: "Tietueita ei löydy"
-        show: "Näytä"
-        entries: "merkintää"
-        about: "Tietoja"
-        prompts:
-          delete_selected_rows: "Oletko varma, että haluat poistaa valitut rivit?"
-          delete_selected_cols: "Oletko varma, että haluat poistaa valitut sarakkeet?"
-          will_destroy_merged_cells: "Tämä toiminto tuhoaa olemassa olevat yhdistetyt solut. Oletko varma?"
-          will_clear_search_results: "Tämä toiminto tuhoaa olemassa olevat yhdistetyt solut. Oletko varma?"
-          conflicts_with_merged_cells: "Ristiriita toisen yhdistetyn solun kanssa"
-        invalid_merge_props: "Virheelliset yhdistetyt ominaisuudet"
-        cells_already_merged: "Solu on jo yhdistetty"
-        no_cells_selected: "Ei valittuja soluja"
-        context_menu:
-          row:
-            before: "Lisää uusi rivi ennen"
-            after: "Lisää uusi rivi perään"
-            delete: "Poista valitut rivit"
-          col:
-            before: "Lisää uusi sarake ennen"
-            after: "Lisää uusi sarake perään"
-            delete: "Poista valitut sarakkeet"
-            rename: "Nimeä tämä sarake uudelleen"
-          order:
-            ascending: "Nouseva järjestys"
-            descending: "Laskeva järjestys"
-          copy: "Kopioi..."
-          paste: "Liitä..."
-          save: "Tallenna nimellä..."
     powered_by_discourse: "Voimanlähteenä Discourse"
     safari_15_warning: "Selaimesi on pian yhteensopimaton tämän yhteisön kanssa. Jos haluat jatkaa osallistumista täällä, päivitä selaimesi tai <a href='%{url}'>lue lisää</a>."
     filter:

@@ -280,15 +280,9 @@ export default <template>
                       <div class="no-results-suggestion">
                         {{i18n "search.cant_find"}}
                         {{#if @controller.canCreateTopic}}
-                          <a
-                            href
-                            {{on
-                              "click"
-                              (fn
-                                @controller.createTopic @controller.searchTerm
-                              )
-                            }}
-                          >{{i18n "search.start_new_topic"}}</a>
+                          <a href {{on "click" @controller.createTopic}}>{{i18n
+                              "search.start_new_topic"
+                            }}</a>
                           {{#unless @controller.siteSettings.login_required}}
                             {{i18n "search.or_search_google"}}
                           {{/unless}}

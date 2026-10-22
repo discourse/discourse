@@ -6,6 +6,9 @@
 
 hu:
   js:
+    dsa_notice:
+      title: "Illegális tartalom bejelentése"
+      email: "E-mail-cím"
     user_api_key:
       title: '"%{application_name}" engedélyezése'
       authorize: "Engedélyezés"
@@ -3038,10 +3041,6 @@ hu:
       uploading: "Feltöltés…"
       show_preview: "előnézet megjelenítése"
       hide_preview: "előnézet elrejtése"
-      switch_to_markdown: "Váltás a szabványos Markdown szerkesztőre (%{keyboardShortcut})"
-      switch_to_rich_text: "Új szövegszerkesztőre váltás (%{keyboardShortcut})"
-      switch_to_markdown_no_shortcut: "Váltson a szabványos Markdown szerkesztőre"
-      switch_to_rich_text_no_shortcut: "Váltson új rich text szerkesztőre"
       quote_post_title: "Teljes bejegyzés idézése"
       bold_label: "B"
       bold_title: "Félkövér"
@@ -3178,6 +3177,8 @@ hu:
       onebox_toolbar:
         copy: "Hivatkozás másolása"
         link_copied: "Hivatkozás másolva!"
+      table:
+        default_heading: "%{number}. oszlop"
       unsupported_token: "A szövegszerkesztő nem támogatja a bejegyzésben használt összes funkciót; a Markdown szerkesztőre váltunk."
     notifications:
       tooltip:
@@ -5456,63 +5457,6 @@ hu:
           other: "A bevitelnek többnek kell lennie mint %{count}."
         pattern_mismatch: "A kért formátumnak meg kell egyeznie."
         bad_input: "Adjon meg egy érvényes bevitelt."
-    table_builder:
-      title: "Táblázatkészítő"
-      modal:
-        title: "Táblázatkészítő"
-        create: "Tábla építése"
-        help:
-          title: "Táblázatszerkesztő használata"
-          enter_key: "Belépés"
-          tab_key: "Lap"
-          new_row: "sor végére új sor beszúrása."
-          new_col: "oszlop végére új oszlop beszúrása."
-          options: "Kattintson a jobb gombbal a cellákra a további lehetőségek eléréséhez a legördülő menüben."
-        confirm_close: "Biztosan bezárja a táblakészítőt? A nem mentett módosítások elvesznek."
-      edit:
-        btn_edit: "Tábla szerkesztése"
-        modal:
-          title: "Tábla szerkesztése"
-          cancel: "mégse"
-          create: "Mentés"
-          reason: "Miért szerkeszti?"
-          trigger_reason: "Add meg a szerkesztés okát"
-        default_edit_reason: "Tábla frissítése táblázatszerkesztővel"
-      default_header:
-        col_1: "1. oszlop"
-        col_2: "2. oszlop"
-        col_3: "3. oszlop"
-        col_4: "4. oszlop"
-      spreadsheet:
-        no_records_found: "Nincs találat"
-        show: "Megjelenítés"
-        entries: "bejegyzések"
-        about: "Névjegy"
-        prompts:
-          delete_selected_rows: "Biztos, hogy törölni szeretné a kiválasztott sorokat?"
-          delete_selected_cols: "Biztos, hogy törölni szeretné a kiválasztott oszlopokat?"
-          will_destroy_merged_cells: "Ez a művelet megsemmisíti a meglévő egyesített cellákat. Biztos benne?"
-          will_clear_search_results: "Ez a művelet megsemmisíti a meglévő egyesített cellákat. Biztos benne?"
-          conflicts_with_merged_cells: "Ütközés van egy másik egyesített cellával"
-        invalid_merge_props: "Érvénytelen egyesített tulajdonságok"
-        cells_already_merged: "A cella már egyesült"
-        no_cells_selected: "Nincs cella kiválasztva"
-        context_menu:
-          row:
-            before: "Szúrjon be egy új sort előtte"
-            after: "Szúrjon be egy új sort utána"
-            delete: "Kijelölt sorok törlése"
-          col:
-            before: "Szúrjon be egy új oszlopot előtte"
-            after: "Szúrjon be egy új oszlopot utána"
-            delete: "Kijelölt oszlopok törlése"
-            rename: "Nevezd át ezt az oszlopot"
-          order:
-            ascending: "Növekvő sorrend"
-            descending: "Csökkenő sorrend"
-          copy: "Másolás..."
-          paste: "Beillesztés..."
-          save: "Mentés másként..."
     powered_by_discourse: "Meghajtja a Discourse"
     safari_15_warning: "Az Ön böngészője hamarosan nem lesz kompatibilis ezzel a közösséggel. Ha továbbra is részt szeretne venni itt, frissítse böngészőjét, vagy <a href='%{url}'>tudjon meg többet</a>."
     filter:

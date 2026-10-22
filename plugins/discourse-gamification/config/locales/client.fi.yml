@@ -85,9 +85,11 @@ fi:
       admin:
         title: "Pelillistäminen"
         name: "Nimi"
+        created_by: "Luonut"
         period: "Jakso"
     discourse_workflows:
       gamification_score:
         username: "Käyttäjä"
         date: "Päivämäärä"
         description: "Kuvaus"
+        category_id: "Luokka"

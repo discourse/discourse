@@ -6,6 +6,9 @@
 
 hr:
   js:
+    dsa_notice:
+      title: "Prijavite ilegalni sadržaj"
+      email: "E-mail adresa"
     user_api_key:
       authorize: "Odobriti"
       deny: "Odustani"
@@ -2995,8 +2998,6 @@ hr:
       uploading: "Prijenos…"
       show_preview: "prikaz pregleda"
       hide_preview: "sakrij pregled"
-      switch_to_markdown: "Prebacite se na standardni Markdown editor (%{keyboardShortcut})"
-      switch_to_rich_text: "Prebacite se na novi rich text editor (%{keyboardShortcut})"
       quote_post_title: "Citiraj cijeli članak"
       bold_label: "B"
       bold_title: "Bold"
@@ -5326,63 +5327,6 @@ hr:
           other: "Unos mora biti veći od %{count}."
         pattern_mismatch: "Molimo uskladite s traženim formatom."
         bad_input: "Unesite valjani unos."
-    table_builder:
-      title: "Alat za izradu tablica"
-      modal:
-        title: "Alat za izradu tablica"
-        create: "Izradite tablicu"
-        help:
-          title: "Korištenje alata za uređivanje proračunskih tablica"
-          enter_key: "Unesi"
-          tab_key: "Kartica"
-          new_row: "na kraju retka za umetanje novog retka."
-          new_col: "na kraju stupca za umetanje novog stupca."
-          options: "Desnom tipkom miša kliknite ćelije za pristup dodatnim opcijama u padajućem izborniku."
-        confirm_close: "Jeste li sigurni da želite zatvoriti alat za izradu tablica? Sve nespremljene promjene bit će izgubljene."
-      edit:
-        btn_edit: "Uredite tablicu"
-        modal:
-          title: "Uredite tablicu"
-          cancel: "otkaži"
-          create: "Spremi"
-          reason: "Zašto uređuješ?"
-          trigger_reason: "Dodajte razlog za uređivanje"
-        default_edit_reason: "Ažuriranje tablice pomoću alata za uređivanje tablica"
-      default_header:
-        col_1: "Stupac 1"
-        col_2: "Stupac 2"
-        col_3: "Stupac 3"
-        col_4: "Stupac 4"
-      spreadsheet:
-        no_records_found: "Nisu pronađeni zapisi"
-        show: "Pokaži"
-        entries: "unosi"
-        about: "O nama"
-        prompts:
-          delete_selected_rows: "Jeste li sigurni da želite izbrisati odabrane retke?"
-          delete_selected_cols: "Jeste li sigurni da želite izbrisati odabrane stupce?"
-          will_destroy_merged_cells: "Ova će radnja uništiti sve postojeće spojene ćelije. Jeste li sigurni?"
-          will_clear_search_results: "Ova će radnja uništiti sve postojeće spojene ćelije. Jeste li sigurni?"
-          conflicts_with_merged_cells: "Postoji sukob s drugom spojenom ćelijom"
-        invalid_merge_props: "Nevažeća spojena svojstva"
-        cells_already_merged: "Ćelija je već spojena"
-        no_cells_selected: "Nema odabranih ćelija"
-        context_menu:
-          row:
-            before: "Umetnite novi redak prije"
-            after: "Umetnite novi redak nakon"
-            delete: "Izbrišite odabrane retke"
-          col:
-            before: "Umetnite novi stupac prije"
-            after: "Umetnite novi stupac nakon"
-            delete: "Brisanje odabranih stupaca"
-            rename: "Preimenujte ovaj stupac"
-          order:
-            ascending: "Redoslijed uzlazno"
-            descending: "Redoslijed silazno"
-          copy: "Kopirati..."
-          paste: "Zalijepiti..."
-          save: "Spremiti kao..."
     powered_by_discourse: "Pokreće Discourse"
     safari_15_warning: "Vaš preglednik uskoro neće biti kompatibilan s ovom zajednicom. Kako biste ovdje nastavili sudjelovati, nadogradite preglednik ili <a href='%{url}'>saznajte više</a>."
     filter:

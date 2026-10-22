@@ -1589,6 +1589,56 @@ RSpec.describe PostAlerter do
       )
     end
 
+    describe "with content localization" do
+      before do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.allow_user_locale = true
+        evil_trout.update!(locale: "ja")
+        post.update_columns(locale: "en")
+        post.topic.update_columns(locale: "en")
+        Fabricate(:topic_localization, topic: post.topic, locale: "ja", title: "翻訳されたタイトル")
+        Fabricate(:post_localization, post: post, locale: "ja", cooked: "<p>翻訳された投稿</p>")
+      end
+
+      def publish_alert(**opts)
+        MessageBus.track_publish("/notification-alert/#{evil_trout.id}") do
+          PostAlerter.create_notification_alert(
+            user: evil_trout,
+            post: post,
+            notification_type: Notification.types[:mentioned],
+            **opts,
+          )
+        end
+      end
+
+      it "sends the translation in the recipient's locale" do
+        messages = publish_alert
+
+        expect(messages.first.data[:topic_title]).to eq("翻訳されたタイトル")
+        expect(messages.first.data[:excerpt]).to eq("翻訳された投稿")
+      end
+
+      it "tells the push to keep an excerpt provided by the caller" do
+        evil_trout.update_columns(last_seen_at: 1.hour.ago)
+        Fabricate(:push_subscription, user: evil_trout)
+
+        expect_enqueued_with(
+          job: :deliver_push_notification,
+          args: {
+            user_id: evil_trout.id,
+            keep_excerpt: true,
+          },
+        ) { publish_alert(excerpt: "You were assigned") }
+      end
+
+      it "keeps an excerpt provided by the caller" do
+        messages = publish_alert(excerpt: "You were assigned")
+
+        expect(messages.first.data[:topic_title]).to eq("翻訳されたタイトル")
+        expect(messages.first.data[:excerpt]).to eq("You were assigned")
+      end
+    end
+
     it "does nothing for suspended users" do
       evil_trout.update_columns(suspended_till: 1.year.from_now)
 

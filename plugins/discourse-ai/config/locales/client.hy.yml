@@ -211,6 +211,15 @@ hy:
         delete: "Ջնջել"
         tools_modal:
           required: "Պարտադիր"
+      models:
+        name: "Անուն"
+        type: "Տիպ"
+        provider: "Մատակարար"
+        edit: "Խմբագրել"
+        types:
+          embedding: "Զետեղում"
+        filters:
+          all: "Բոլոր տեսակները"
       llms:
         display_name: "Անուն"
         provider: "Մատակարար"
@@ -290,6 +299,13 @@ hy:
             category: "Կատեգորիա"
           table:
             total_count: "Ամբողջ"
+      ai_search:
+        related_replies:
+          one: "%{count} պատասխան"
+          other: "%{count} պատասխան"
+        tabs:
+          topics: "Թեմաներ"
+          messages: "Հաղորդագրություն"
       discobot_discoveries:
         legacy:
           regular_results: "Թեմաներ"

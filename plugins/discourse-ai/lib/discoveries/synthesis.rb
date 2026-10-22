@@ -58,7 +58,7 @@ module DiscourseAi
         bot =
           DiscourseAi::Agents::Bot.as(
             Discourse.system_user,
-            agent: @ai_agent.class_instance.new,
+            agent: agent_for(related_count),
             model: @llm_model,
           )
         values = { answerable: nil, source_refs: nil, title: +"", answer: +"", follow_up: +"" }
@@ -109,6 +109,18 @@ module DiscourseAi
       end
 
       private
+
+      # The agent's stored format caps the sources at the shared setting, which
+      # would cut short a request that asks for more, so it follows the request.
+      def agent_for(related_count)
+        agent = @ai_agent.class_instance.new
+        format =
+          agent.response_format&.map do |field|
+            field["key"] == "source_refs" ? field.merge("max_items" => related_count) : field
+          end
+        agent.define_singleton_method(:response_format) { format } if format
+        agent
+      end
 
       def valid_result?(result, candidates:, related_count:)
         return false if result.source_refs.empty?

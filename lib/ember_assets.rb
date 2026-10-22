@@ -38,10 +38,22 @@ class EmberAssets < ActiveSupport::CurrentAttributes
       entrypoints[entry_name.delete_suffix(".js")] = deep_imports_for(
         chunk_filename: entry_filename,
         chunks: manifest["chunks"],
-      ).map { it.delete_prefix("assets/").delete_suffix(".js") }
+      ).map { logical_name(it) }
     end
 
     cache[:script_chunks] = entrypoints
+  end
+
+  # Stable chunk names, as chunks import each other, to the content-hashed files on disk.
+  def self.import_map
+    raise_if_build_error!
+    cache[:import_map] ||= (
+      read_manifest!(exception: true)&.dig("importMap") || {}
+    ).to_h { |stable, real| [logical_name(stable), logical_name(real)] }
+  end
+
+  def self.logical_name(filename)
+    filename.delete_prefix("assets/").delete_suffix(".js")
   end
 
   def self.deep_imports_for(chunk_filename:, chunks:, seen: Set.new)
@@ -124,7 +136,7 @@ class EmberAssets < ActiveSupport::CurrentAttributes
   # caller has opted out of raising. When `exception:` is true and the manifest
   # is missing, raises BuildError so the dev error page is shown.
   def self.read_manifest!(exception:)
-    JSON.parse(File.read("#{dist_dir}/manifest/manifest.json"))
+    cache[:manifest] ||= JSON.parse(File.read("#{dist_dir}/manifest/manifest.json"))
   rescue Errno::ENOENT
     if exception && Rails.env.local?
       raise BuildError.new("status" => "missing", "error" => plain_error(<<~MSG))

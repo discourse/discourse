@@ -67,19 +67,34 @@ module Jobs
       end
       return if !active_request?(user, args[:request_id])
 
+      if !rewritten_queries.failed &&
+           (rewritten_queries.keyword_query != query || rewritten_queries.semantic_query != query)
+        publish_update(
+          user,
+          base.merge(
+            done: false,
+            phase: "rewritten",
+            keyword_query: rewritten_queries.keyword_query,
+            semantic_query: rewritten_queries.semantic_query,
+          ),
+        )
+      end
+
       stage = :retrieval
       retrieval = DiscourseAi::Discoveries::Retrieval.new(user:)
-      retrieval_result =
-        retrieval.call(
-          query,
-          keyword_query: rewritten_queries.keyword_query,
-          semantic_query: rewritten_queries.semantic_query,
-        )
+      retrieval_options = {
+        keyword_query: rewritten_queries.keyword_query,
+        semantic_query: rewritten_queries.semantic_query,
+      }
+      scope_filter = DiscourseAi::Discoveries.scope_filter(args[:scope])
+      retrieval_options[:scope_filter] = scope_filter if scope_filter
+      retrieval_result = retrieval.call(query, **retrieval_options)
       if cancel_manager.cancelled? || Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
         return
       end
       return if !active_request?(user, args[:request_id])
       ask_log.candidate_post_ids = retrieval_result.synthesis_candidates.pluck("post_id") if ask_log
+      base = base.merge(scope_fallback: true) if retrieval_result.scope_fallback
       if retrieval_result.synthesis_candidates.empty?
         ask_log.ask_outcome = :no_answer if ask_log
         publish_no_answer(user, base)
@@ -88,7 +103,7 @@ module Jobs
       candidate_topic_ids = retrieval_result.candidates.pluck("topic_id").uniq
 
       stage = :synthesis
-      result_settings = request_result_settings(args)
+      result_settings = request_result_settings(args, user)
       synthesis =
         DiscourseAi::Discoveries::Synthesis.new(user:, ai_agent:, llm_model:, cancel_manager:)
       selected_sources = nil
@@ -329,8 +344,8 @@ module Jobs
       )
     end
 
-    def request_result_settings(args)
-      configured_settings = DiscourseAi::Discoveries.result_settings
+    def request_result_settings(args, user)
+      configured_settings = DiscourseAi::Discoveries.result_settings(user)
       summary_detail = args[:summary_detail].to_s.to_sym
       if !DiscourseAi::Discoveries::SUMMARY_DETAILS.include?(summary_detail)
         summary_detail = configured_settings[:summary_detail]
@@ -436,6 +451,7 @@ module Jobs
           category: source["category"].presence,
           category_id: source["category_id"],
           topic_replies: source["topic_replies"].to_i,
+          bumped_at: source["topic_bumped_at"],
           username: source["username"],
           name: SiteSetting.enable_names? ? source["name"] : nil,
           avatar_template: source["avatar_template"],

@@ -6,6 +6,9 @@
 
 es:
   js:
+    dsa_notice:
+      title: "Denunciar contenido ilegal"
+      email: "Dirección de correo electrónico"
     user_api_key:
       title: 'Autorizar a «%{application_name}»'
       authorize: "Autorizar"
@@ -3079,8 +3082,6 @@ es:
       uploading: "Subiendo…"
       show_preview: "mostrar vista previa"
       hide_preview: "ocultar vista previa"
-      switch_to_markdown: "Cambiar al editor Markdown estándar (%{keyboardShortcut})"
-      switch_to_rich_text: "Cambiar al nuevo editor de texto enriquecido (%{keyboardShortcut})"
       quote_post_title: "Citar toda la publicación"
       bold_label: "B"
       bold_title: "Negrita"
@@ -3217,6 +3218,8 @@ es:
       onebox_toolbar:
         copy: "Copiar enlace"
         link_copied: "¡Enlace copiado!"
+      table:
+        default_heading: "Columna %{number}"
       unsupported_token: "El editor de texto enriquecido no es compatible con todas las características utilizadas en esta publicación, por lo que deberás utilizar el editor Markdown."
     notifications:
       tooltip:
@@ -5566,63 +5569,6 @@ es:
           other: "La entrada debe ser mayor que %{count}."
         pattern_mismatch: "Utiliza el formato solicitado."
         bad_input: "Introduce una entrada válida."
-    table_builder:
-      title: "Creador de tablas"
-      modal:
-        title: "Creador de tablas"
-        create: "Crear tabla"
-        help:
-          title: "Utilizar el editor de hojas de cálculo"
-          enter_key: "Intro"
-          tab_key: "Tabulador"
-          new_row: "al final de una fila para insertar una nueva fila."
-          new_col: "al final de una columna para insertar una nueva columna."
-          options: "Haz clic con el botón derecho en las celdas para acceder a más opciones en un menú desplegable."
-        confirm_close: "¿Seguro que quieres cerrar el creador de tablas? Cualquier cambio no guardado se perderá."
-      edit:
-        btn_edit: "Editar tabla"
-        modal:
-          title: "Editar tabla"
-          cancel: "cancelar"
-          create: "Guardar"
-          reason: "¿Por qué estás editando?"
-          trigger_reason: "Añadir motivo de la edición"
-        default_edit_reason: "Actualizar tabla con el editor de tablas"
-      default_header:
-        col_1: "Columna 1"
-        col_2: "Columna 2"
-        col_3: "Columna 3"
-        col_4: "Columna 4"
-      spreadsheet:
-        no_records_found: "No se han encontrado registros"
-        show: "Mostrar"
-        entries: "entradas"
-        about: "Acerca de"
-        prompts:
-          delete_selected_rows: "¿Seguro que quieres eliminar las filas seleccionadas?"
-          delete_selected_cols: "¿Seguro que quieres eliminar las columnas seleccionadas?"
-          will_destroy_merged_cells: "Esta acción destruirá cualquier celda fusionada existente. ¿Estás seguro/a?"
-          will_clear_search_results: "Esta acción destruirá cualquier celda fusionada existente. ¿Estás seguro/a?"
-          conflicts_with_merged_cells: "Hay un conflicto con otra celda fusionada."
-        invalid_merge_props: "Propiedades fusionadas no válidas"
-        cells_already_merged: "Celda ya fusionada"
-        no_cells_selected: "No hay celdas seleccionadas"
-        context_menu:
-          row:
-            before: "Insertar una nueva fila antes"
-            after: "Insertar una nueva fila después"
-            delete: "Eliminar filas seleccionadas"
-          col:
-            before: "Insertar una nueva columna antes"
-            after: "Insertar una nueva columna después"
-            delete: "Eliminar columnas seleccionadas"
-            rename: "Cambiar el nombre de esta columna"
-          order:
-            ascending: "Orden ascendente"
-            descending: "Orden descendente"
-          copy: "Copiar..."
-          paste: "Pegar..."
-          save: "Guardar como..."
     powered_by_discourse: "Desarrollado por Discourse"
     safari_15_warning: "Tu navegador pronto será incompatible con esta comunidad. Para seguir participando, actualiza tu navegador u <a href='%{url}'>obtén más información</a>."
     filter:
