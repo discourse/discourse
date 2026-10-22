@@ -1,0 +1,5 @@
+autoInstallPeers: false
+engineStrict: true
+minimumReleaseAgeExclude:
+  - "@discourse/*"
+strictPeerDependencies: true

@@ -1,0 +1,52 @@
+{
+  "extends": "discourse/tsconfig-plugin",
+  "include": [
+    "admin/assets/javascripts/**/*",
+    "assets/javascripts/**/*",
+    "test/javascripts/**/*",
+    "node_modules/discourse/declarations/**/*"
+  ],
+  "compilerOptions": {
+    "paths": {
+      "discourse/plugins/discourse-plugin-skeleton/*": [
+        "./assets/javascripts/*",
+        "./assets/javascripts/*.gjs",
+        "./assets/javascripts/*.gts"
+      ],
+      "discourse/plugins/discourse-plugin-skeleton/admin/*": [
+        "./admin/assets/javascripts/admin/*",
+        "./admin/assets/javascripts/admin/*.gjs",
+        "./admin/assets/javascripts/admin/*.gts"
+      ],
+      "admin/*": [
+        "./node_modules/discourse/declarations/admin/*",
+        "./node_modules/discourse/declarations/admin/*.d.gjs.ts",
+        "./node_modules/discourse/declarations/admin/*.d.gts.ts"
+      ],
+      "float-kit/*": [
+        "./node_modules/discourse/declarations/float-kit/*",
+        "./node_modules/discourse/declarations/float-kit/*.d.gjs.ts",
+        "./node_modules/discourse/declarations/float-kit/*.d.gts.ts"
+      ],
+      "select-kit/*": [
+        "./node_modules/discourse/declarations/select-kit/*",
+        "./node_modules/discourse/declarations/select-kit/*.d.gjs.ts",
+        "./node_modules/discourse/declarations/select-kit/*.d.gts.ts"
+      ],
+      "truth-helpers": [
+        "./node_modules/discourse/declarations/truth-helpers/index.d.ts"
+      ],
+      "truth-helpers/*": [
+        "./node_modules/discourse/declarations/truth-helpers/*",
+        "./node_modules/discourse/declarations/truth-helpers/*.d.gjs.ts",
+        "./node_modules/discourse/declarations/truth-helpers/*.d.gts.ts"
+      ]
+    }
+  },
+  "contentMappers": [
+    {
+      "package": "ember-content-mapper",
+      "extensions": [".gts", ".gjs"]
+    }
+  ]
+}

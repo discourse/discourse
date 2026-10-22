@@ -1,0 +1,4 @@
+jepsen:
+  jepsen_enabled:
+    default: false
+    client: true
