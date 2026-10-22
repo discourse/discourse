@@ -1226,13 +1226,15 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
   def fix_featured_topic
     puts "Updating featured topic ids..."
-    User
-      .where("id >= ?", @first_new_user_id)
-      .find_each do |u|
-        profile = UserProfile.find_by(user_id: u.id)
-        next if profile.nil?
-        profile.featured_topic_id = topic_id_from_imported_id(profile.featured_topic_id)
-        profile.save!
+    # Fixups write only the remapped column because rows are copied verbatim
+    # from the source site and may not pass current validations.
+    UserProfile
+      .where("user_id >= ?", @first_new_user_id)
+      .where.not(featured_topic_id: nil)
+      .find_each do |profile|
+        profile.update_columns(
+          featured_topic_id: topic_id_from_imported_id(profile.featured_topic_id),
+        )
       end
   end
 
@@ -1242,11 +1244,10 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     # Users have a column "uploaded_avatar_id" which needs to be mapped now.
     User
       .where("id >= ?", @first_new_user_id)
+      .where.not(uploaded_avatar_id: nil)
       .find_each do |u|
-        if u.uploaded_avatar_id
-          u.uploaded_avatar_id = upload_id_from_imported_id(u.uploaded_avatar_id)
-          u.save! unless u.uploaded_avatar_id.nil?
-        end
+        new_avatar_id = upload_id_from_imported_id(u.uploaded_avatar_id)
+        u.update_columns(uploaded_avatar_id: new_avatar_id) if new_avatar_id
       end
   end
 end
