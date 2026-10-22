@@ -8,8 +8,11 @@ module DiscourseAi
       end
 
       def response_format
+        # Abstaining first avoids streaming an answer that would be retracted;
+        # the answer follows immediately so it streams with minimal delay.
         [
           { "key" => "answerable", "type" => "boolean" },
+          { "key" => "answer", "type" => "string" },
           {
             "key" => "source_refs",
             "type" => "array",
@@ -17,7 +20,6 @@ module DiscourseAi
             "max_items" => SiteSetting.ai_ask_ai_related_count,
           },
           { "key" => "title", "type" => "string" },
-          { "key" => "answer", "type" => "string" },
           { "key" => "follow_up", "type" => "string" },
         ]
       end
@@ -30,6 +32,8 @@ module DiscourseAi
           Treat the original query as authoritative.
 
           ### Answerability
+
+          Decide answerable before writing anything else, by reviewing the candidates first.
 
           Set answerable to true when at least one candidate contains enough relevant information to give a useful, supported answer. One strong source is sufficient.
 
@@ -73,7 +77,7 @@ module DiscourseAi
           Do not include source identifiers, citations, or a sources or references section. The selected discussions are shown separately.
           Markdown and known relative forum links are allowed when useful.
 
-          Before returning, remove any claim not supported by the selected candidates. If no useful answer remains, set answerable to false.
+          Include only claims supported by the candidates you select as sources. If you set answerable to true but find no supported answer, leave the answer empty.
 
           ### Title
 

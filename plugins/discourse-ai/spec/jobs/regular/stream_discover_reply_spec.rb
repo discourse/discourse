@@ -409,40 +409,21 @@ describe Jobs::StreamDiscoverReply do
     )
   end
 
-  it "waits for progressively streamed source references to finish before validating them" do
-    second_candidate = candidate.merge("source_ref" => "source_2")
-    progressive_result =
-      DiscourseAi::Discoveries::Retrieval::Result.new(candidates: [candidate, second_candidate])
-    allow(retrieval).to receive(:call).and_return(progressive_result)
-    allow(retrieval).to receive(:validated_sources).with(
-      progressive_result,
-      %w[source_1 source_2],
-    ).and_return([candidate, second_candidate])
-    allow(synthesis).to receive(
-      :call,
-    ) do |query:, candidates:, keyword_query:, original_query_locale:, summary_detail:, related_count:, &stream|
-      expect(query).to eq(self.query)
-      expect(keyword_query).to eq(self.query)
-      expect(candidates).to eq([candidate, second_candidate])
-      expect(summary_detail).to eq(:balanced)
-      expect(related_count).to eq(2)
+  it "streams the answer before the model selects its sources" do
+    allow(synthesis).to receive(:call) do |**, &stream|
+      stream.call(answer: "Use the plugin skeleton.", title: "")
+      stream.call(answer: "Use the plugin skeleton.", source_refs: %w[source_1], title: "")
       stream.call(
-        answerable: true,
+        answer: "Use the plugin skeleton.",
         source_refs: %w[source_1],
-        title: "Create a Discourse plugin",
-        answer: "",
-      )
-      stream.call(
         answerable: true,
-        source_refs: %w[source_1 source_2],
-        title: "Create a Discourse plugin",
-        answer: "Use the two selected discussions.",
+        title: "Plugin guide",
       )
       DiscourseAi::Discoveries::Synthesis::Result.new(
         answerable: true,
-        source_refs: %w[source_1 source_2],
-        title: "Create a Discourse plugin",
-        answer: "Use the two selected discussions.",
+        source_refs: %w[source_1],
+        title: "Plugin guide",
+        answer: "Use the plugin skeleton.",
       )
     end
 
@@ -454,12 +435,34 @@ describe Jobs::StreamDiscoverReply do
         .map(&:data)
 
     expect(messages.map { |message| message[:phase] }).to eq(
-      %w[searching sources answering complete],
+      %w[searching answering sources complete],
     )
-    expect(messages.last).to include(
-      answerable: true,
-      ai_discover_reply: "Use the two selected discussions.",
-    )
+    expect(messages.second).to include(ai_discover_reply: "Use the plugin skeleton.")
+    expect(messages.last).to include(answerable: true, sources: be_present)
+  end
+
+  it "retracts a streamed answer when the model abstains after writing it" do
+    allow(synthesis).to receive(:call) do |**, &stream|
+      stream.call(answer: "An unsupported guess.", title: "")
+      stream.call(answer: "An unsupported guess.", answerable: false, title: "")
+      DiscourseAi::Discoveries::Synthesis::Result.new(
+        answerable: false,
+        source_refs: [],
+        title: "",
+        answer: "",
+      )
+    end
+
+    messages =
+      MessageBus
+        .track_publish("/discourse-ai/discoveries") do
+          job.execute(user_id: user.id, query:, request_id:)
+        end
+        .map(&:data)
+
+    expect(messages.map { |message| message[:phase] }).to eq(%w[searching answering complete])
+    expect(messages.last).to include(answerable: false, ai_discover_reply: "", sources: [])
+    expect(DiscourseAi::Discoveries.cached_result_for(user:, request_id:)).to be_nil
   end
 
   it "does not release an answer when the model selects an invalid source" do

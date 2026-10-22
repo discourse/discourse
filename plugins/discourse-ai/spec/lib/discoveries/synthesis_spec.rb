@@ -375,6 +375,56 @@ describe DiscourseAi::Discoveries::Synthesis do
     expect(result).to have_attributes(answerable: false, source_refs: [], title: "", answer: "")
   end
 
+  it "streams source references only once the array is complete when the answer comes first" do
+    candidates =
+      %w[source_4 source_1 source_13].map do |source_ref|
+        { "source_ref" => source_ref, "title" => "Python", "excerpt" => "Use the API." }
+      end
+    chunks = [
+      "{\n  \"answer\": \"Use the REST API.\",",
+      "\n  \"answerable\": true,",
+      "\n  \"source_refs\": [\n    \"source_4",
+      "\",\n    \"source_1",
+      "3\",\n    \"source_1\"",
+      "\n  ],\n  \"title\": \"Python\"\n}",
+    ]
+    output =
+      DiscourseAi::Completions::StructuredOutput.new(
+        answer: {
+          type: "string",
+        },
+        answerable: {
+          type: "boolean",
+        },
+        source_refs: {
+          type: "array",
+        },
+        title: {
+          type: "string",
+        },
+      )
+    bot = instance_double(DiscourseAi::Agents::Bot)
+    allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(bot)
+    allow(bot).to receive(:reply) do |_, &stream|
+      chunks.each do |chunk|
+        output << chunk
+        stream.call(output, nil, :structured_output)
+      end
+      output.finish
+      stream.call(output, nil, :structured_output)
+    end
+    streamed_refs = []
+
+    result =
+      synthesis.call(query: "python", candidates:, related_count: 3) do |update|
+        streamed_refs << update[:source_refs] if update[:source_refs]
+      end
+
+    expect(streamed_refs.uniq).to eq([%w[source_4 source_13 source_1]])
+    expect(result.answerable).to eq(true)
+    expect(result.source_refs).to eq(%w[source_4 source_13 source_1])
+  end
+
   it "keeps every streamed title fragment" do
     candidates = [
       {
@@ -398,6 +448,7 @@ describe DiscourseAi::Discoveries::Synthesis do
       partials.each do |values|
         partial = double
         allow(partial).to receive(:read_buffered_property) { |key| values[key] }
+        allow(partial).to receive(:property_complete?).and_return(true)
         stream.call(partial, nil, :structured_output)
       end
     end
@@ -436,6 +487,7 @@ describe DiscourseAi::Discoveries::Synthesis do
       partials.each do |values|
         partial = double
         allow(partial).to receive(:read_buffered_property) { |key| values[key] }
+        allow(partial).to receive(:property_complete?).and_return(true)
         stream.call(partial, nil, :structured_output)
       end
     end

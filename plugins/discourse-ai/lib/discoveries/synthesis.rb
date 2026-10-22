@@ -69,8 +69,11 @@ module DiscourseAi
           answerable = partial.read_buffered_property(:answerable)
           values[:answerable] = answerable if !answerable.nil?
 
+          # Locking in a partial array would make later updates look like a changed selection.
           source_refs = partial.read_buffered_property(:source_refs)
-          values[:source_refs] = source_refs if !source_refs.nil?
+          if !source_refs.nil? && partial.property_complete?(:source_refs)
+            values[:source_refs] = source_refs
+          end
 
           title = partial.read_buffered_property(:title)
           values[:title] << title if title.present?

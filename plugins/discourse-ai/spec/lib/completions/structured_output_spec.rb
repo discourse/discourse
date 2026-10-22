@@ -81,6 +81,21 @@ RSpec.describe DiscourseAi::Completions::StructuredOutput do
     end
   end
 
+  describe "#property_complete?" do
+    it "treats a property as complete once a later key starts or the response finishes" do
+      structured_output << "{\"list\": [\"source_1"
+      expect(structured_output.property_complete?(:list)).to eq(false)
+
+      structured_output << "3\"], \"bool\": tr"
+      expect(structured_output.property_complete?(:list)).to eq(true)
+      expect(structured_output.property_complete?(:bool)).to eq(false)
+
+      structured_output << "ue}"
+      structured_output.finish
+      expect(structured_output.property_complete?(:bool)).to eq(true)
+    end
+  end
+
   describe "Parsing structured output on the fly" do
     it "acts as a buffer for an streamed JSON" do
       chunks = [

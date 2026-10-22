@@ -107,12 +107,14 @@ module Jobs
       synthesis =
         DiscourseAi::Discoveries::Synthesis.new(user:, ai_agent:, llm_model:, cancel_manager:)
       selected_sources = nil
-      selected_refs = nil
       source_selection_invalid = false
       discovery_title = ""
       last_published_answer = ""
       last_streamed_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
+      # Models emit the response keys in any order, so the answer streams as
+      # soon as it is meaningful and is validated against its sources only when
+      # the reply completes; a rejected reply retracts what was streamed.
       result =
         synthesis.call(
           query:,
@@ -123,35 +125,30 @@ module Jobs
           related_count: result_settings[:related_count],
         ) do |update|
           next if cancel_manager.cancelled? || !active_request?(user, args[:request_id])
+          next if update[:answerable] == false || source_selection_invalid
 
           discovery_title = update[:title].to_s.strip if update[:title].present?
 
-          if update[:answerable] == true && update[:source_refs].present? &&
-               DiscourseAi::Discoveries::Synthesis.meaningful_answer?(update[:answer])
-            streamed_refs = Array(update[:source_refs]).first(result_settings[:related_count])
-            if selected_refs.present? && selected_refs != streamed_refs
+          if selected_sources.nil? && update[:source_refs].present?
+            selected_refs = Array(update[:source_refs]).first(result_settings[:related_count])
+            selected_sources = retrieval.validated_sources(retrieval_result, selected_refs)
+            if selected_sources.empty?
               source_selection_invalid = true
-            elsif selected_refs.nil?
-              selected_refs = streamed_refs
-              selected_sources = retrieval.validated_sources(retrieval_result, selected_refs)
-              source_selection_invalid = true if selected_sources.empty?
-
-              if !source_selection_invalid
-                publish_update(
-                  user,
-                  base.merge(
-                    done: false,
-                    phase: "sources",
-                    ai_discover_title: discovery_title,
-                    sources: serialize_sources(selected_sources),
-                    candidate_topic_ids:,
-                  ),
-                )
-              end
+              next
             end
+
+            publish_update(
+              user,
+              base.merge(
+                done: false,
+                phase: "sources",
+                ai_discover_title: discovery_title,
+                sources: serialize_sources(selected_sources),
+                candidate_topic_ids:,
+              ),
+            )
           end
 
-          next if source_selection_invalid || selected_sources.blank?
           next if !DiscourseAi::Discoveries::Synthesis.meaningful_answer?(update[:answer])
           next if update[:answer] == last_published_answer
 
@@ -189,8 +186,7 @@ module Jobs
       final_sources =
         retrieval.validated_sources(retrieval_result, final_refs) if final_refs.present?
       answerable =
-        result.answerable && !source_selection_invalid && final_sources.present? &&
-          selected_sources.present? && final_refs == selected_refs &&
+        result.answerable && final_sources.present? &&
           DiscourseAi::Discoveries::Synthesis.meaningful_answer?(result.answer)
 
       if answerable
@@ -201,13 +197,12 @@ module Jobs
           suggested_follow_up: result.follow_up,
           source_post_ids: final_sources.pluck("post_id"),
         )
-        selected_sources = final_sources
         DiscourseAi::Discoveries.store_result(
           user_id: user.id,
           request_id: args[:request_id],
           query:,
           answer: result.answer,
-          sources: selected_sources,
+          sources: final_sources,
           agent_id: ai_agent.id,
           follow_up: result.follow_up,
         )
@@ -220,7 +215,7 @@ module Jobs
             ai_discover_title: result.title,
             ai_discover_reply: result.answer,
             ai_discover_follow_up: result.follow_up,
-            sources: serialize_sources(selected_sources),
+            sources: serialize_sources(final_sources),
             candidate_topic_ids:,
           ),
         )
