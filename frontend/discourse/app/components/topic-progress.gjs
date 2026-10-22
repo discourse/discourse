@@ -12,8 +12,11 @@ import { i18n } from "discourse-i18n";
 export default class TopicProgress extends Component {
   elementId = "topic-progress-wrapper";
   docked = false;
+
+  /** @type {number | null} */
   progressPosition = null;
 
+  /** @type {number | string | null} */
   _streamPercentage = null;
 
   @computed("topic.postStream")

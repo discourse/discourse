@@ -2900,18 +2900,6 @@ lv:
         type_mismatch:
           default: "Lūdzu ievadiet derīgu vērtību "
           email: "Lūdzu ievadiet derīgu e-pasta adresi."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Ievadīt"
-      edit:
-        modal:
-          cancel: "atcelt"
-          create: "Saglabāt"
-          reason: "Kāpēc jūs rediģējat?"
-      spreadsheet:
-        show: "Parādīt"
-        about: "Par"
     filter:
       description:
         yesterday: "Vakar"

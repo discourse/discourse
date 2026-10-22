@@ -185,6 +185,13 @@ be:
         delete: "Выдаліць"
         tools_modal:
           required: "Абавязкова"
+      models:
+        name: "Імя"
+        type: "Тып"
+        edit: "Рэдагаваць"
+        select_type: "Выбраць"
+        types:
+          embedding: "Убудоўванне"
       llms:
         display_name: "Імя"
         vision_modes:
@@ -243,6 +250,10 @@ be:
             category: "Катэгорыя"
           table:
             total_count: "агульны"
+      ai_search:
+        tabs:
+          topics: "тэмы"
+          messages: "Паведамленні"
       discobot_discoveries:
         legacy:
           regular_results: "тэмы"

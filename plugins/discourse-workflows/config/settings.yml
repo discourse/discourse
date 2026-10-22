@@ -30,6 +30,11 @@ plugins:
   discourse_workflows_max_executions_per_minute_per_workflow:
     default: 10
     hidden: true
+  discourse_workflows_run_timeout_minutes:
+    default: 60
+    min: 1
+    max: 10080
+    hidden: true
   workflow_executions_retention_days:
     default: 30
     min: 0

@@ -2416,18 +2416,6 @@ id:
           other: "Masukan harus lebih dari %{count}."
         pattern_mismatch: "Harap sesuaikan dengan format yang diminta."
         bad_input: "Harap masukkan masukan yang valid."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Enter"
-      edit:
-        modal:
-          cancel: "batal"
-          create: "Simpan"
-          reason: "Mengapa Anda menyunting?"
-      spreadsheet:
-        show: "Tunjukkan"
-        about: "Tentang"
     discovery:
       headings:
         categories: "Semua kategori"

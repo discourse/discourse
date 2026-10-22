@@ -260,7 +260,10 @@ module DiscourseAi
 
           budget_exhausted = work_budget.remaining <= 0
           if budget_exhausted && context.subagent_depth.to_i > 0
-            raise DiscourseAi::Completions::ContextPreparation::Error.new("turn_budget_exhausted")
+            raise DiscourseAi::Completions::ContextPreparation::Error.new(
+                    "turn_budget_exhausted",
+                    prompt: prompt,
+                  )
           end
           if !final_answer_requested && budget_exhausted
             self.class.inject_token_budget_final_answer_hint(prompt)
@@ -596,6 +599,7 @@ module DiscourseAi
           AiToolAction.create!(
             tool_name: tool.name,
             tool_parameters: tool.parameters,
+            tool_options: tool.agent_options.to_h,
             ai_agent_id: @agent.id,
             bot_user_id: @bot_user.id,
             post_id: context.post_id,

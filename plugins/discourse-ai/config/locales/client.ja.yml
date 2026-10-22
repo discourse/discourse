@@ -233,7 +233,7 @@ ja:
         approved: "承認済み"
         rejected: "拒否"
       default_llm:
-        title: "デフォルトの LLM モデル"
+        title: "デフォルトの言語モデル"
       llm_selector:
         none: "なし"
       features:
@@ -709,6 +709,18 @@ ja:
         tools_modal:
           parameters: "パラメーター"
           required: "必須"
+      models:
+        new: "新しいモデル"
+        name: "名前"
+        type: "タイプ"
+        provider: "プロバイダー"
+        edit: "編集"
+        select_type: "選択"
+        types:
+          embedding: "埋め込み"
+        filters:
+          all: "全タイプ"
+          reset: "フィルタをリセット"
       llms:
         short_title: "LLM"
         no_llms: "まだ LLM がありません"
@@ -1077,6 +1089,14 @@ ja:
             compact: "コンパクト"
             expanded: "展開"
             expanded_description: "AI 要約を使用"
+      ai_search:
+        related_topics: "関連トピック"
+        related_replies:
+          other: "返信: %{count} 件"
+        tabs:
+          ask: "AI に尋ねる"
+          topics: "トピック"
+          messages: "メッセージ"
       discobot_discoveries:
         main_title: "AI に尋ねる"
         loading_convo: "会話を読み込み中"

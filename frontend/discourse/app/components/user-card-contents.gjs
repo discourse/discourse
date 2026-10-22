@@ -58,9 +58,11 @@ export default class UserCardContents extends CardContentsBase {
   mentionSelector = "a.mention";
   ariaLabel = i18n("user.card");
 
+  /** @type {import("discourse/models/user").default | null} */
   user = null;
 
   // If inside a topic
+  /** @type {number | null | undefined} */
   topicPostCount = null;
 
   @computed("topic.postStream")

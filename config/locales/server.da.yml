@@ -2587,27 +2587,15 @@ da:
     account_suspended:
       title: "Konto Suspenderet"
       subject_template: "[%{email_prefix}] Din konto er blevet suspenderet"
-      text_body_template: |
-        Du er blevet suspenderet fra forummet indtil %{suspended_till}.
-
-        Årsag - %{reason}
     account_suspended_forever:
       title: "Konto Suspenderet"
       subject_template: "[%{email_prefix}] Din konto er blevet suspenderet"
-      text_body_template: |
-        Du er blevet suspenderet fra forummet.
-
-        Årsag - %{reason}
     account_silenced:
       title: "Konto gjort tavs"
       subject_template: "[%{email_prefix}] Din konto er blevet bragt til tavshed"
     account_silenced_forever:
       title: "Konto gjort tavs"
       subject_template: "[%{email_prefix}] Din konto er blevet bragt til tavshed"
-      text_body_template: |
-        Du er blevet bragt til tavshed fra forummet.
-
-        Årsag - %{reason}
     account_exists:
       title: "Konto findes allerede"
       subject_template: "[%{email_prefix}] Kontoen findes allerede"

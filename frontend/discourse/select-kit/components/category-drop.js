@@ -48,6 +48,8 @@ export default class CategoryDrop extends ComboBoxComponent {
   noCategoriesLabel = i18n("categories.no_subcategories");
   navigateToEdit = false;
   editingCategory = false;
+
+  /** @type {string | null | undefined} */
   editingCategoryTab = null;
 
   init() {

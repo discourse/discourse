@@ -5,6 +5,50 @@ import { module, test } from "qunit";
 module("Unit | Model | staff-action-log", function (hooks) {
   setupTest(hooks);
 
+  test("shows the scheduled duration and expiry alongside the reason", function (assert) {
+    const model = getOwner(this)
+      .lookup("service:store")
+      .createRecord("staff-action-log", {
+        created_at: "2026-10-01T12:00:00Z",
+        expires_at: "2026-10-08T12:00:00Z",
+        details: "Spamming",
+      });
+
+    assert.true(model.formattedDetails.includes("Spamming"));
+    assert.true(
+      model.formattedDetails.includes("<b>Scheduled duration:</b>  7 days")
+    );
+    assert.true(model.formattedDetails.includes("<b>Scheduled expiry:</b>"));
+
+    model.set("expires_at", null);
+    assert.strictEqual(model.formattedDetails, "Spamming<br/>");
+  });
+
+  test("shows indefinite restrictions without a far-future date", function (assert) {
+    const model = getOwner(this)
+      .lookup("service:store")
+      .createRecord("staff-action-log", {
+        created_at: "2026-10-01T12:00:00Z",
+        expires_at: "3026-10-01T12:00:00Z",
+      });
+
+    assert.true(model.formattedDetails.includes("Indefinite"));
+    assert.false(model.formattedDetails.includes("Scheduled expiry"));
+  });
+
+  test("ignores invalid expiry intervals", function (assert) {
+    const model = getOwner(this)
+      .lookup("service:store")
+      .createRecord("staff-action-log", {
+        created_at: "2026-10-01T12:00:00Z",
+        expires_at: "2026-09-01T12:00:00Z",
+      });
+
+    assert.strictEqual(model.formattedDetails, "");
+    model.set("expires_at", "invalid");
+    assert.strictEqual(model.formattedDetails, "");
+  });
+
   test("create", function (assert) {
     const store = getOwner(this).lookup("service:store");
     assert.true(

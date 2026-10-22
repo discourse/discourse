@@ -1374,281 +1374,215 @@ RSpec.describe PrettyText do
   end
 
   describe "format_for_email" do
-    context "when (sub)domain" do
-      before { Discourse.stubs(:base_path).returns("") }
-
-      it "does not crash" do
-        html = <<~HTML
-          <a href="mailto:michael.brown@discourse.org?subject=Your%20post%20at%20http://try.discourse.org/t/discussion-happens-so-much/127/1000?u=supermathie">test</a>
-        HTML
-
-        expect(described_class.format_for_email(html, post)).to eq <<~HTML
-          <a href="mailto:michael.brown@discourse.org?subject=Your%20post%20at%20http://try.discourse.org/t/discussion-happens-so-much/127/1000?u=supermathie">test</a>
-        HTML
-      end
-
+    describe ".make_all_links_absolute" do
       it "adds base url to relative links" do
-        html = <<~HTML
-          <p><a class="mention" href="/u/wiseguy">@wiseguy</a>, <a class="mention" href="/u/trollol">@trollol</a> what do you guys think?</p>
-        HTML
+        html = %(<a href="/u/wiseguy">@wiseguy</a>)
 
-        expect(described_class.format_for_email(html, post)).to eq <<~HTML
-          <p><a class="mention" href="#{Discourse.base_url}/u/wiseguy">@wiseguy</a>, <a class="mention" href="#{Discourse.base_url}/u/trollol">@trollol</a> what do you guys think?</p>
-        HTML
-      end
-
-      it "doesn't change external absolute links" do
-        html = <<~HTML
-          <p>Check out <a href="http://mywebsite.com/users/boss">this guy</a>.</p>
-        HTML
-
-        expect(described_class.format_for_email(html, post)).to eq(html)
-      end
-
-      it "doesn't change internal absolute links" do
-        html = <<~HTML
-          <p>Check out <a href="#{Discourse.base_url}/users/boss">this guy</a>.</p>
-        HTML
-
-        expect(described_class.format_for_email(html, post)).to eq(html)
-      end
-
-      it "can tolerate invalid URLs" do
-        html = <<~HTML
-          <p>Check out <a href="not a real url">this guy</a>.</p>
-        HTML
-
-        expect(described_class.format_for_email(html, post)).to eq(html)
-      end
-
-      it "doesn't change mailto" do
-        html = <<~HTML
-          <p>Contact me at <a href="mailto:username@me.com">this address</a>.</p>
-        HTML
-
-        expect(described_class.format_for_email(html, post)).to eq(html)
-      end
-
-      it "prefers data-original-href attribute to get Vimeo iframe link and escapes it" do
-        html = <<~HTML
-          <p>Check out this video – <iframe src='https://player.vimeo.com/video/329875646' data-original-href='https://vimeo.com/329875646/> <script>alert(1)</script>'></iframe>.</p>
-        HTML
-
-        expect(described_class.format_for_email(html, post)).to match(
-          Regexp.escape("https://vimeo.com/329875646/%3E%20%3Cscript%3Ealert(1)%3C/script%3E"),
+        expect(described_class.format_for_email(html, post)).to match_html(
+          %(<a href="#{Discourse.base_url}/u/wiseguy">@wiseguy</a>),
         )
       end
 
-      it "creates a valid URL when data-original-href is missing from Vimeo link" do
+      it "leaves absolute, mailto and invalid links unchanged" do
         html = <<~HTML
-          <iframe src="https://player.vimeo.com/video/508864124?h=fcbbcc92fa" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          <a href="http://mywebsite.com/users/boss">external</a>
+          <a href="#{Discourse.base_url}/users/boss">internal</a>
+          <a href="mailto:michael.brown@discourse.org?subject=Your%20post%20at%20http://try.discourse.org/t/127/1000?u=supermathie">mailto</a>
+          <a href="not a real url">invalid</a>
         HTML
 
-        expect(described_class.format_for_email(html, post)).to match(
-          "https://vimeo.com/508864124/fcbbcc92fa",
-        )
+        expect(described_class.format_for_email(html, post)).to eq(html)
       end
 
-      describe "#convert_vimeo_iframes" do
-        it "converts <iframe> to <a>" do
-          html = <<~HTML
-            <p>This is a Vimeo link:</p>
-            <iframe width="640" height="360" src="https://player.vimeo.com/video/1" data-original-href="https://vimeo.com/1" frameborder="0" allowfullscreen="" seamless="seamless" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation"></iframe>
-          HTML
+      context "with a subfolder" do
+        before { set_subfolder "/forum" }
 
-          md = described_class.format_for_email(html, post)
+        it "adds base url to relative links, whether or not they include the subfolder" do
+          html = %(<a href="/forum/u/wiseguy">a</a><a href="/u/trollol">b</a>)
 
-          expect(md).not_to include("<iframe")
-          expect(md).to match_html(<<~HTML)
-            <p>This is a Vimeo link:</p>
-            <p><a href="https://vimeo.com/1">https://vimeo.com/1</a></p>
-          HTML
-        end
-
-        it "leaves a malformed Vimeo source without rendering it as markup" do
-          iframe_source = "https://player.vimeo.com/video/123'></a><img src=x onerror=alert(1)>"
-          html = %(<iframe src="#{iframe_source}"></iframe>)
-
-          fragment = Nokogiri::HTML5.fragment(described_class.format_for_email(html, post))
-
-          aggregate_failures do
-            expect(fragment.css("img")).to be_empty
-            expect(fragment.at_css("iframe")["src"]).to eq(iframe_source)
-          end
-        end
-
-        it "leaves a non-Vimeo iframe containing the player domain unchanged" do
-          iframe_source =
-            "https://www.instagram.com/?x=player.vimeo.com/<img src=x onerror=alert(1)>"
-          html = %(<iframe src="#{iframe_source}"></iframe>)
-
-          fragment = Nokogiri::HTML5.fragment(described_class.format_for_email(html, post))
-
-          aggregate_failures do
-            expect(fragment.css("a")).to be_empty
-            expect(fragment.at_css("iframe")["src"]).to eq(iframe_source)
-          end
-        end
-
-        it "converts an unlisted Vimeo embed using its hash" do
-          html = %(<iframe src="https://player.vimeo.com/video/508864124?h=fcbbcc92fa"></iframe>)
-
-          expect(described_class.format_for_email(html, post)).to match_html(<<~HTML)
-            <p><a href="https://vimeo.com/508864124/fcbbcc92fa">https://vimeo.com/508864124/fcbbcc92fa</a></p>
-          HTML
-        end
-
-        it "leaves an iframe with a non-http data-original-href unchanged" do
-          html =
-            %(<iframe src="https://player.vimeo.com/video/1" data-original-href="javascript:alert(1)"></iframe>)
-
-          fragment = Nokogiri::HTML5.fragment(described_class.format_for_email(html, post))
-
-          aggregate_failures do
-            expect(fragment.css("a")).to be_empty
-            expect(fragment.at_css("iframe")["data-original-href"]).to eq("javascript:alert(1)")
-          end
-        end
-      end
-
-      describe "#strip_secure_uploads" do
-        before do
-          setup_s3
-          SiteSetting.s3_cdn_url = "https://s3.cdn.com"
-          SiteSetting.secure_uploads = true
-          SiteSetting.login_required = true
-        end
-
-        it "replaces secure video content" do
-          html = <<~HTML
-            <video width="100%" height="100%" controls="">
-              <source src="#{Discourse.base_url}/secure-uploads/original/1X/some-video.mp4">
-                <a href="#{Discourse.base_url}/secure-uploads/original/1X/some-video.mp4">Video label</a>
-              </source>
-            </video>
-          HTML
-
-          md = described_class.format_for_email(html, post)
-
-          expect(md).not_to include("<video")
-          expect(md.to_s).to match(I18n.t("emails.secure_uploads_placeholder"))
-          expect(md.to_s).not_to match(SiteSetting.Upload.s3_cdn_url)
-        end
-
-        it "replaces secure audio content" do
-          html = <<~HTML
-            <audio controls>
-              <source src="#{Discourse.base_url}/secure-uploads/original/1X/some-audio.mp3">
-                <a href="#{Discourse.base_url}/secure-uploads/original/1X/some-audio.mp3">Audio label</a>
-              </source>
-            </audio>
-          HTML
-
-          md = described_class.format_for_email(html, post)
-
-          expect(md).not_to include("<audio")
-          expect(md.to_s).to match(I18n.t("emails.secure_uploads_placeholder"))
-          expect(md.to_s).not_to match(SiteSetting.Upload.s3_cdn_url)
-        end
-
-        it "replaces secure uploads within a link with a placeholder, keeping the url in an attribute" do
-          url = "#{Discourse.base_url}\/secure-uploads/original/1X/testimage.png"
-          html = <<~HTML
-            <a href="#{url}"><img src="/secure-uploads/original/1X/testimage.png"></a>
-          HTML
-
-          md = described_class.format_for_email(html, post)
-
-          expect(md).not_to include("<img")
-          expect(md).to include("Redacted")
-          expect(md).to include("data-stripped-secure-upload=\"#{url}\"")
-        end
-
-        it "does not create nested redactions from double processing because of the view media link" do
-          url = "#{Discourse.base_url}\/secure-uploads/original/1X/testimage.png"
-          html = <<~HTML
-            <a href="#{url}"><img src="/secure-uploads/original/1X/testimage.png"></a>
-          HTML
-
-          md = described_class.format_for_email(html, post)
-
-          expect(md.scan(/stripped-secure-view-upload/).length).to eq(1)
-          expect(md.scan(/Redacted/).length).to eq(1)
-        end
-
-        it "replaces secure images with a placeholder, keeping the url in an attribute" do
-          url = "/secure-uploads/original/1X/testimage.png"
-          html = <<~HTML
-            <img src="#{url}" width="20" height="20">
-          HTML
-
-          md = described_class.format_for_email(html, post)
-
-          expect(md).not_to include("<img")
-          expect(md).to include("Redacted")
-          expect(md).to include("data-stripped-secure-upload=\"#{url}\"")
-          expect(md).to include("data-width=\"20\"")
-          expect(md).to include("data-height=\"20\"")
-        end
-
-        it "keeps a crafted secure upload URL as attribute data" do
-          url =
-            %(#{Discourse.base_url}/secure-uploads/original/1X/a"><img src=x onerror=alert(1)>b.png)
-
-          fragment =
-            Nokogiri::HTML5.fragment(described_class.format_for_email(%(<img src='#{url}'>), post))
-          notice = fragment.at_css("div.secure-upload-notice")
-
-          aggregate_failures do
-            expect(fragment.css("img")).to be_empty
-            expect(notice["data-stripped-secure-upload"]).to eq(url)
-          end
-        end
-
-        it "discards non-numeric secure upload dimensions" do
-          html =
-            %(<img src="/secure-uploads/original/1X/testimage.png" width="20 onmouseover=alert(1) x" height="20">)
-
-          notice =
-            Nokogiri::HTML5.fragment(described_class.format_for_email(html, post)).at_css(
-              "div.secure-upload-notice",
-            )
-
-          aggregate_failures do
-            expect(notice.attributes.keys).not_to include("onmouseover", "data-width")
-            expect(notice["data-height"]).to eq("20")
-          end
+          expect(described_class.format_for_email(html, post)).to match_html(
+            %(<a href="#{Discourse.base_url}/u/wiseguy">a</a><a href="#{Discourse.base_url}/u/trollol">b</a>),
+          )
         end
       end
     end
 
-    context "when subfolder" do
-      before { Discourse.stubs(:base_path).returns("/forum") }
+    describe ".replace_diagrams" do
+      let(:html) { <<~HTML }
+        <pre data-code-wrap="mermaid"><code class="lang-mermaid">flowchart LR
+          A --&gt; B
+        </code></pre>
+        <pre data-code-wrap="ruby"><code class="lang-ruby">puts 1</code></pre>
+      HTML
 
-      it "adds base url to relative links" do
-        html = <<~HTML
-          <p><a class="mention" href="/forum/u/wiseguy">@wiseguy</a>, <a class="mention" href="/forum/u/trollol">@trollol</a> what do you guys think?</p>
-        HTML
-
-        expect(described_class.format_for_email(html, post)).to eq <<~HTML
-          <p><a class="mention" href="#{Discourse.base_url}/u/wiseguy">@wiseguy</a>, <a class="mention" href="#{Discourse.base_url}/u/trollol">@trollol</a> what do you guys think?</p>
+      it "replaces diagram code blocks with a link to the post" do
+        expect(described_class.format_for_email(html, post)).to match_html(<<~HTML)
+          <p><a href="#{post.full_url}">#{I18n.t("emails.view_diagram")}</a></p>
+          <pre data-code-wrap="ruby"><code class="lang-ruby">puts 1</code></pre>
         HTML
       end
 
-      it "doesn't change external absolute links" do
-        html = <<~HTML
-          <p>Check out <a href="https://mywebsite.com/users/boss">this guy</a>.</p>
-        HTML
+      it "keeps diagram code blocks when there is no post to link to" do
+        expect(described_class.format_for_email(html)).to include("lang-mermaid")
+      end
+    end
 
-        expect(described_class.format_for_email(html, post)).to eq(html)
+    describe ".convert_vimeo_iframes" do
+      it "converts a Vimeo iframe to a link, ignoring an invalid unlisted hash" do
+        html = %(<p>Video:</p><iframe src="https://player.vimeo.com/video/1?h=not-valid!"></iframe>)
+
+        expect(described_class.format_for_email(html, post)).to match_html(<<~HTML)
+          <p>Video:</p>
+          <p><a href="https://vimeo.com/1">https://vimeo.com/1</a></p>
+        HTML
       end
 
-      it "doesn't change internal absolute links" do
+      it "converts an unlisted Vimeo embed using its hash" do
+        html = %(<iframe src="https://player.vimeo.com/video/508864124?h=fcbbcc92fa"></iframe>)
+
+        expect(described_class.format_for_email(html, post)).to match_html(<<~HTML)
+          <p><a href="https://vimeo.com/508864124/fcbbcc92fa">https://vimeo.com/508864124/fcbbcc92fa</a></p>
+        HTML
+      end
+
+      it "prefers data-original-href to get the Vimeo link and escapes it" do
+        html =
+          "<iframe src='https://player.vimeo.com/video/329875646' data-original-href='https://vimeo.com/329875646/> <script>alert(1)</script>'></iframe>"
+
+        expect(described_class.format_for_email(html, post)).to include(
+          "https://vimeo.com/329875646/%3E%20%3Cscript%3Ealert(1)%3C/script%3E",
+        )
+      end
+
+      it "leaves a malformed Vimeo source without rendering it as markup" do
+        iframe_source = "https://player.vimeo.com/video/123'></a><img src=x onerror=alert(1)>"
+        html = %(<iframe src="#{iframe_source}"></iframe>)
+
+        fragment = Nokogiri::HTML5.fragment(described_class.format_for_email(html, post))
+
+        aggregate_failures do
+          expect(fragment.css("img")).to be_empty
+          expect(fragment.at_css("iframe")["src"]).to eq(iframe_source)
+        end
+      end
+
+      it "leaves a non-Vimeo iframe containing the player domain unchanged" do
+        iframe_source = "https://www.instagram.com/?x=player.vimeo.com/<img src=x onerror=alert(1)>"
+        html = %(<iframe src="#{iframe_source}"></iframe>)
+
+        fragment = Nokogiri::HTML5.fragment(described_class.format_for_email(html, post))
+
+        aggregate_failures do
+          expect(fragment.css("a")).to be_empty
+          expect(fragment.at_css("iframe")["src"]).to eq(iframe_source)
+        end
+      end
+
+      it "leaves an iframe with a non-http data-original-href unchanged" do
+        html =
+          %(<iframe src="https://player.vimeo.com/video/1" data-original-href="javascript:alert(1)"></iframe>)
+
+        fragment = Nokogiri::HTML5.fragment(described_class.format_for_email(html, post))
+
+        aggregate_failures do
+          expect(fragment.css("a")).to be_empty
+          expect(fragment.at_css("iframe")["data-original-href"]).to eq("javascript:alert(1)")
+        end
+      end
+    end
+
+    describe ".strip_secure_uploads" do
+      before do
+        setup_s3
+        SiteSetting.secure_uploads = true
+        SiteSetting.login_required = true
+      end
+
+      it "replaces secure video and audio content" do
         html = <<~HTML
-          <p>Check out <a href="#{Discourse.base_url}/users/boss">this guy</a>.</p>
+          <video controls>
+            <source src="#{Discourse.base_url}/secure-uploads/original/1X/some-video.mp4">
+            <a href="#{Discourse.base_url}/secure-uploads/original/1X/some-video.mp4">Video label</a>
+          </video>
+          <audio controls>
+            <source src="#{Discourse.base_url}/secure-uploads/original/1X/some-audio.mp3">
+            <a href="#{Discourse.base_url}/secure-uploads/original/1X/some-audio.mp3">Audio label</a>
+          </audio>
         HTML
 
-        expect(described_class.format_for_email(html, post)).to eq(html)
+        md = described_class.format_for_email(html, post)
+
+        expect(md).not_to include("<video", "<audio")
+        expect(md.scan(I18n.t("emails.secure_uploads_placeholder")).size).to eq(2)
+      end
+
+      it "replaces secure uploads within a link with a placeholder, idempotently" do
+        url = "#{Discourse.base_url}/secure-uploads/original/1X/testimage.png"
+        html = %(<a href="#{url}"><img src="/secure-uploads/original/1X/testimage.png"></a>)
+
+        md = described_class.format_for_email(described_class.format_for_email(html, post), post)
+
+        expect(md).not_to include("<img")
+        expect(md).to include(%(data-stripped-secure-upload="#{url}"))
+        expect(md.scan("stripped-secure-view-upload").size).to eq(1)
+      end
+
+      it "replaces secure images with a placeholder, keeping the url in an attribute" do
+        url = "/secure-uploads/original/1X/testimage.png"
+        html = %(<img src="#{url}" width="20" height="20">)
+
+        md = described_class.format_for_email(html, post)
+
+        expect(md).not_to include("<img")
+        expect(md).to include(
+          I18n.t("emails.secure_uploads_placeholder"),
+          %(data-stripped-secure-upload="#{url}"),
+          %(data-width="20"),
+          %(data-height="20"),
+        )
+      end
+
+      it "only marks images inside a onebox as onebox images" do
+        html = <<~HTML
+          <aside class="onebox"><div class="onebox-body"><img src="/secure-uploads/original/1X/a.png" class="onebox-avatar-inline"></div></aside>
+          <p><img src="/secure-uploads/original/1X/b.png"></p>
+        HTML
+
+        notices =
+          Nokogiri::HTML5.fragment(described_class.format_for_email(html, post)).css(
+            ".secure-upload-notice",
+          )
+
+        expect(notices.map { |notice| notice["data-onebox-type"] }).to eq(["avatar-inline", nil])
+      end
+
+      it "keeps a crafted secure upload URL as attribute data" do
+        url =
+          %(#{Discourse.base_url}/secure-uploads/original/1X/a"><img src=x onerror=alert(1)>b.png)
+
+        fragment =
+          Nokogiri::HTML5.fragment(described_class.format_for_email(%(<img src='#{url}'>), post))
+        notice = fragment.at_css("div.secure-upload-notice")
+
+        aggregate_failures do
+          expect(fragment.css("img")).to be_empty
+          expect(notice["data-stripped-secure-upload"]).to eq(url)
+        end
+      end
+
+      it "discards non-numeric secure upload dimensions" do
+        html =
+          %(<img src="/secure-uploads/original/1X/testimage.png" width="20 onmouseover=alert(1) x" height="20">)
+
+        notice =
+          Nokogiri::HTML5.fragment(described_class.format_for_email(html, post)).at_css(
+            "div.secure-upload-notice",
+          )
+
+        aggregate_failures do
+          expect(notice.attributes.keys).not_to include("onmouseover", "data-width")
+          expect(notice["data-height"]).to eq("20")
+        end
       end
     end
   end
@@ -2092,6 +2026,28 @@ RSpec.describe PrettyText do
     ) do
       with_tag("span", with: { class: "hashtag-icon-placeholder" })
     end
+  end
+
+  it "uses concise subcategory hashtag text without losing the full reference" do
+    SiteSetting.enable_category_hashtag_cards = true
+    parent_category = Fabricate(:category, name: "Silly Land", slug: "fun")
+    category =
+      Fabricate(:category, name: "Random", slug: "random", parent_category: parent_category)
+
+    cooked = PrettyText.cook("#fun:random")
+
+    expect(cooked).to have_tag(
+      "a",
+      text: "Random",
+      with: {
+        class: "hashtag-cooked",
+        href: category.url,
+        "data-type": "category",
+        "data-slug": "random",
+        "data-ref": "fun:random",
+        "data-id": category.id,
+      },
+    )
   end
 
   it "does not fight with the autolinker" do

@@ -120,6 +120,11 @@ module ApplicationHelper
       end
     end
 
+    EmberAssets.import_map.each do |stable, real|
+      real_url = script_asset_path(real)
+      imports[real_url.sub(File.basename(real), File.basename(stable))] = real_url
+    end
+
     JSON.pretty_generate({ imports: }).html_safe
   end
 
@@ -1075,6 +1080,10 @@ module ApplicationHelper
 
   def rss_creator(user)
     user&.display_name
+  end
+
+  def rss_cdata(value)
+    value.to_s.gsub("]]>", "]]]]><![CDATA[>").html_safe
   end
 
   def anonymous_top_menu_items

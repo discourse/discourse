@@ -411,6 +411,8 @@ class PostDestroyer
   end
 
   def handle_reviewable_after_deletion
+    return if @user.id == @post.user_id
+
     if @opts[:reviewable_id]
       handle_explicit_reviewable
     elsif @post.reviewable_flag

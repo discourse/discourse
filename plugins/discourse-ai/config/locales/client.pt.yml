@@ -95,8 +95,6 @@ pt:
         reject: "Rejeitar"
         approved: "Aprovado"
         rejected: "Rejeitado"
-      default_llm:
-        title: "Modelo de LLM Predefinido"
       llm_selector:
         none: "Nenhuma"
       features:
@@ -323,6 +321,16 @@ pt:
         delete: "Eliminar"
         tools_modal:
           required: "Necessário"
+      models:
+        name: "Nome"
+        type: "Tipo"
+        provider: "Provedor"
+        edit: "Editar"
+        select_type: "Selecionar"
+        types:
+          embedding: "Incorporação"
+        filters:
+          all: "Todos os tipos"
       llms:
         display_name: "Nome"
         provider: "Provedor"
@@ -413,6 +421,13 @@ pt:
           summarize: "Resumir"
         topic:
           regenerate_summaries_option: "Resumos de tópico"
+      ai_search:
+        related_replies:
+          one: "%{count} resposta"
+          other: "%{count} respostas"
+        tabs:
+          topics: "Tópicos"
+          messages: "Mensagens"
       discobot_discoveries:
         legacy:
           regular_results: "Tópicos"

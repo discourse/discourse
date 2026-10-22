@@ -279,6 +279,7 @@ el:
         filter_placeholder: "Φιλτράρισμα χρηστών"
         remove_invitee: "Αφαίρεση προσκεκλημένου από τη λίστα"
         add_invitee: "Προσθήκη προσκεκλημένου στη λίστα"
+        this_event: "Αυτή η εκδήλωση"
       bulk_invite_modal:
         confirm: "επιβεβαίωση"
         text: "Ανέβασμα αρχείου CSV"

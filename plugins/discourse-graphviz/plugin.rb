@@ -11,3 +11,9 @@ enabled_site_setting :discourse_graphviz_enabled
 
 register_svg_icon "diagram-project"
 register_asset "stylesheets/common/graphviz.scss"
+
+after_initialize do
+  on(:reduce_cooked) do |fragment, post|
+    PrettyText.replace_diagrams(fragment, post, "div.graphviz") if post
+  end
+end

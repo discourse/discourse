@@ -221,6 +221,15 @@ gl:
         delete: "Eliminar"
         tools_modal:
           required: "Obrigatorio"
+      models:
+        name: "Nome"
+        type: "Tipo"
+        provider: "Fornecedor"
+        edit: "Editar"
+        types:
+          embedding: "Incorporando"
+        filters:
+          all: "Todos os tipos"
       llms:
         display_name: "Nome"
         provider: "Fornecedor"
@@ -300,6 +309,13 @@ gl:
             tag: "Etiqueta"
           table:
             total_count: "Total"
+      ai_search:
+        related_replies:
+          one: "%{count} resposta"
+          other: "%{count} repostas"
+        tabs:
+          topics: "Temas"
+          messages: "Mensaxes"
       discobot_discoveries:
         legacy:
           regular_results: "Temas"

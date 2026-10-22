@@ -2852,20 +2852,12 @@ gl:
     account_suspended:
       title: "Conta suspendida"
       subject_template: "[%{email_prefix}] A súa conta foi suspendida"
-      text_body_template: |
-        Queda suspendida a súa participación no foro ata %{suspended_till}.
-
-        Razón - %{reason}
     account_suspended_forever:
       title: "Conta suspendida"
       subject_template: "[%{email_prefix}] A súa conta foi suspendida"
     account_silenced:
       title: "Conta silenciada"
       subject_template: "[%{email_prefix}] A súa conta foi silenciada"
-      text_body_template: |
-        Queda silenciado no foro ata %{silenced_till}.
-
-        Razón - %{reason}
     account_silenced_forever:
       title: "Conta silenciada"
       subject_template: "[%{email_prefix}] A súa conta foi silenciada"

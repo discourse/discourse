@@ -184,6 +184,7 @@ module Plugin
             *tree.keys,
             *tree.values,
             AssetProcessor::BASE_COMPILER_VERSION,
+            AssetProcessor.digest,
             AssetProcessor.ember_version,
             minify?.to_s,
             plugin.name,

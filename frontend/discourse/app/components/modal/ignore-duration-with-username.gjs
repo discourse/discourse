@@ -21,6 +21,8 @@ export default class IgnoreDurationModal extends Component {
   @tracked flash;
 
   @tracked loading = false;
+
+  /** @type {string | null} */
   @tracked ignoredUntil = null;
   @tracked ignoredUsername = this.args.model.ignoredUsername;
 

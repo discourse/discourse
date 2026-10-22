@@ -254,6 +254,13 @@ id:
         save: "Simpan"
         edit: "Ubah"
         delete: "Hapus"
+      models:
+        name: "Nama"
+        type: "Tipe"
+        edit: "Ubah"
+        select_type: "Pilih"
+        filters:
+          all: "Semua tipe"
       llms:
         display_name: "Nama"
         vision_modes:
@@ -373,6 +380,13 @@ id:
             other: "%{count} jam terakhir"
         topic:
           title: "Ringkasan topik"
+      ai_search:
+        related_replies:
+          other: "%{count} balasan"
+        tabs:
+          ask: "Tanya AI"
+          topics: "Topik"
+          messages: "Pesan"
       discobot_discoveries:
         main_title: "Tanya AI"
         legacy:

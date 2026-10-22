@@ -210,7 +210,7 @@ export function serializeBBCodeAttr(value, name) {
 /**
  * Builds a BBCode attributes string from an object of key-value pairs.
  *
- * @param {Object} attrs - Object containing attribute key-value pairs
+ * @param {Record<string, unknown>} attrs - Object containing attribute key-value pairs
  * @param {Object} [opts] - Options
  * @param {string[]} [opts.skipAttrs] - Array of attribute names to skip
  * @returns {string} The serialized attributes string (e.g., 'name=value foo="bar baz"')

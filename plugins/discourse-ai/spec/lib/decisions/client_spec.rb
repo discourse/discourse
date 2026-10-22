@@ -569,6 +569,77 @@ RSpec.describe DiscourseAi::Decisions::Client do
     end
   end
 
+  describe "#decide with credits" do
+    fab!(:seeded_model) do
+      Fabricate(:decision_model, id: -1, ai_secret: nil, api_key: "seeded-key")
+    end
+    fab!(:allocation) do
+      Fabricate(
+        :decision_model_credit_allocation,
+        decision_model: seeded_model,
+        daily_credits: 1000,
+      )
+    end
+
+    let(:client) { described_class.new(seeded_model) }
+
+    it "deducts the reported tokens from the seeded model's allocation" do
+      stub_request(:post, seeded_model.url).with(
+        headers: {
+          "Authorization" => "Bearer seeded-key",
+        },
+      ).to_return(body: response_body.to_json)
+
+      client.decide("Hello", questions:, feature_name: "workflow")
+
+      expect(allocation.reload.daily_used).to eq(296)
+    end
+
+    it "estimates tokens per question, counting state and images in each, when the provider omits usage" do
+      seeded_model.update!(vision_enabled: true)
+      stub_request(:post, seeded_model.url).to_return(body: response_body.except(:usage).to_json)
+
+      client.decide(
+        "Hello",
+        questions:,
+        images: %w[data:image/png;base64,AAAA],
+        feature_name: "workflow",
+      )
+
+      per_question_floor =
+        described_class::ESTIMATED_TOKENS_PER_IMAGE + described_class::ESTIMATED_TOKENS_PER_QUESTION
+      expect(allocation.reload.daily_used).to be_between(
+        questions.size * per_question_floor,
+        questions.size * (per_question_floor + 20),
+      )
+    end
+
+    it "does not deduct credits when the request fails" do
+      stub_request(:post, seeded_model.url).to_return(status: 400)
+
+      expect { client.decide("Hello", questions:, feature_name: "workflow") }.to raise_error(
+        DiscourseAi::Decisions::RequestFailed,
+      )
+      expect(allocation.reload.daily_used).to eq(0)
+    end
+
+    it "refuses before transport, even with canned answers, once credits are used up" do
+      DecisionModelCreditAllocation.deduct_credits!(seeded_model, "workflow", 1000)
+      request = stub_request(:post, seeded_model.url)
+
+      expect { client.decide("Hello", questions:, feature_name: "workflow") }.to raise_error(
+        DiscourseAi::Decisions::CreditLimitExceeded,
+      )
+      DiscourseAi::Decisions.with_canned_answers(urgent: true, team: "billing", severity: "low") do
+        expect { client.decide("Hello", questions:, feature_name: "workflow") }.to raise_error(
+          DiscourseAi::Decisions::CreditLimitExceeded,
+        )
+      end
+      expect(request).not_to have_been_requested
+      expect(AiApiAuditLog.count).to eq(0)
+    end
+  end
+
   describe "#decide with TypeSafe" do
     before { decision_model.update!(provider: "typesafe", vision_enabled: true) }
 

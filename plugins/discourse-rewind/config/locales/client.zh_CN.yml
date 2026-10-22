@@ -118,9 +118,20 @@ zh_CN:
           message_4: "您的平均消息长度为 <strong>%{length}</strong> 个字符"
           message_5: "您最喜欢的频道："
           dancing_baby_alt: "跳舞的宝宝"
-        voice_usage:
+        live_usage:
+          title: 电话账单
+          subtitle: 您的语音通话记录
+          subtitle_others: "%{username}的语音通话记录"
+          total_airtime: 总通话时间
+          call_count:
+            other: "在 %{count} 通话中"
+          top_contacts: 最常被提及
+          top_rooms: 最喜欢的房间
+          hours:
+            other: "%{count} 小时"
           minutes:
             other: "%{count} 分钟"
+          amount_due: "应缴金额：免费，通话全部免单"
         invites:
           guest_book_title: 留言簿
           guest_book_subtitle: 您的社区邀请

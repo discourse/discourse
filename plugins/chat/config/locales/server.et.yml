@@ -7,6 +7,11 @@
 et:
   chat:
     deleted_chat_username: kustutatud
+    crawler:
+      nav_title: "Vestlus"
+      thread_replies:
+        one: "%{count} vastus"
+        other: "%{count} vastust"
     errors:
       draft_too_long: "Mustand on liiga pikk."
       not_accepting_dms: "Kahjuks ei aktsepteeri %{username} hetkel sõnumeid."

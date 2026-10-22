@@ -3,6 +3,11 @@
 module DiscourseAi
   module Decisions
     class Client
+      # Billing a provider that omits usage must not make its decisions free. System One
+      # engines evaluate the state once per question, adding a fixed prompt to each pass.
+      ESTIMATED_TOKENS_PER_QUESTION = 85
+      ESTIMATED_TOKENS_PER_IMAGE = 1_000
+
       def initialize(decision_model, timeout: 30, max_attempts: 3)
         @decision_model = decision_model
         @endpoint = Endpoints::Base.for(decision_model)
@@ -13,6 +18,7 @@ module DiscourseAi
       def decide(state, questions:, feature_name:, user: nil, images: [])
         questions = Array.wrap(questions).map { |question| Question.wrap(question) }
         validate!(state, questions, feature_name, images)
+        DecisionModelCreditAllocation.check_credits!(@decision_model, feature_name)
         if (canned = CannedAnswers.current)
           return canned.decide(state:, questions:, feature_name:, user:, images:)
         end
@@ -52,6 +58,15 @@ module DiscourseAi
           log.save!
           AiApiRequestStat.record_from_audit_log(log, llm_model: nil)
         end
+        if @decision_model.credit_system_enabled?
+          input_tokens_for_credits =
+            input_tokens || estimated_input_tokens(state, questions, images)
+          DecisionModelCreditAllocation.deduct_credits!(
+            @decision_model,
+            feature_name,
+            input_tokens_for_credits + output_tokens.to_i,
+          )
+        end
         Result.new(
           answers:,
           provider_model: parsed["model"],
@@ -62,6 +77,18 @@ module DiscourseAi
       end
 
       private
+
+      def estimated_input_tokens(state, questions, images)
+        tokenizer = DiscourseAi::Tokenizer::OpenAiTokenizer
+        state_tokens =
+          tokenizer.size(state.is_a?(String) ? state : state.to_json) +
+            images.size * ESTIMATED_TOKENS_PER_IMAGE
+        questions.sum do |question|
+          criteria = [*question.choices, *question.levels].join(" ")
+          state_tokens + tokenizer.size("#{question.instructions} #{criteria}") +
+            ESTIMATED_TOKENS_PER_QUESTION
+        end
+      end
 
       def validate!(state, questions, feature_name, images)
         raise InvalidRequest, "feature_name is required" if feature_name.blank?

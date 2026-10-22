@@ -6,10 +6,12 @@ export default class TagHashtagType extends HashtagTypeBase {
     return "tag";
   }
 
+  /** @returns {import("discourse/models/tag").default[]} */
   get preloadedData() {
     return [];
   }
 
+  /** @returns {string[]} */
   generateColorCssClasses() {
     return [];
   }

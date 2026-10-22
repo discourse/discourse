@@ -181,6 +181,40 @@ RSpec.describe "Discourse Workflows" do
     expect(workflows_page).to have_no_failed_workflow(recovered_workflow)
   end
 
+  it "opens a user card from the creator" do
+    creator = Fabricate(:user)
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: creator)
+    user_card = PageObjects::Components::UserCard.new
+
+    workflows_page.visit_index
+
+    workflows_page.click_creator(workflow)
+    expect(user_card).to be_showing_user(creator.username)
+  end
+
+  it "opens a workflow from the edit button" do
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
+
+    workflows_page.visit_index
+    workflows_page.click_edit(workflow)
+
+    expect(page).to have_current_path("/admin/plugins/discourse-workflows/workflows/#{workflow.id}")
+  end
+
+  it "deletes a workflow from the row menu" do
+    workflow = Fabricate(:discourse_workflows_workflow, name: "Doomed", created_by: admin)
+    Fabricate(:discourse_workflows_workflow, name: "Survivor", created_by: admin)
+    dialog = PageObjects::Components::Dialog.new
+
+    workflows_page.visit_index
+    workflows_page.click_delete(workflow)
+    dialog.click_danger
+
+    expect(workflows_page).to have_no_workflow("Doomed")
+    expect(workflows_page).to have_workflow("Survivor")
+    expect(DiscourseWorkflows::Workflow.exists?(workflow.id)).to eq(false)
+  end
+
   context "with workflow tags" do
     fab!(:ops_workflow) do
       Fabricate(

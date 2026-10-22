@@ -27,7 +27,7 @@ export default class ConfigureMenu extends Component {
    * normalized both input paths, suppressed no-ops, and announced, so what
    * remains is the owner's own index-based contract.
    *
-   * @param {Object} move - The normalized move.
+   * @param {import("discourse/ui-kit/d-reorderable-list/types").ReorderableMove} move - The normalized move.
    */
   @action
   handleMove(move) {

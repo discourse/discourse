@@ -10,7 +10,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DashboardReports from "discourse/admin/components/dashboard/reports";
-import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
@@ -24,6 +24,12 @@ import { i18n } from "discourse-i18n";
 const FakeReportRenderer = <template>
   <div class="fake-report-renderer">{{@payload.type}}</div>
 </template>;
+
+function registerFakeReportRenderer() {
+  withPluginApi((api) =>
+    api.registerAdminDashboardReportRenderer("test_source", FakeReportRenderer)
+  );
+}
 
 const ITEMS = [
   {
@@ -104,7 +110,7 @@ module("Integration | Component | DashboardReports", function (hooks) {
   });
 
   test("shows a per-card loading spinner, then each card's own success, empty, or error state once the bulk fetch resolves", async function (assert) {
-    registerAdminDashboardReportRenderer("test_source", FakeReportRenderer);
+    registerFakeReportRenderer();
 
     const { resolve } = deferredBulkFetch();
 
@@ -176,7 +182,7 @@ module("Integration | Component | DashboardReports", function (hooks) {
   });
 
   test("shows a loading spinner immediately when the date range changes, instead of the stale chart", async function (assert) {
-    registerAdminDashboardReportRenderer("test_source", FakeReportRenderer);
+    registerFakeReportRenderer();
 
     let resolveSecondFetch;
     let fetchCount = 0;
@@ -246,7 +252,7 @@ module("Integration | Component | DashboardReports", function (hooks) {
   });
 
   test("does not render resize handles for a non-admin viewer", async function (assert) {
-    registerAdminDashboardReportRenderer("test_source", FakeReportRenderer);
+    registerFakeReportRenderer();
 
     pretender.post("/admin/dashboard/reports/bulk", () =>
       response({
@@ -277,7 +283,7 @@ module("Integration | Component | DashboardReports", function (hooks) {
   });
 
   test("toggles a card's width via a plain click on its resize handle and persists it through the layout endpoint", async function (assert) {
-    registerAdminDashboardReportRenderer("test_source", FakeReportRenderer);
+    registerFakeReportRenderer();
 
     pretender.post("/admin/dashboard/reports/bulk", () =>
       response({
@@ -333,7 +339,7 @@ module("Integration | Component | DashboardReports", function (hooks) {
   });
 
   test("applies a resize locally without re-fetching the dashboard or any report's chart data", async function (assert) {
-    registerAdminDashboardReportRenderer("test_source", FakeReportRenderer);
+    registerFakeReportRenderer();
 
     let bulkFetchCount = 0;
     pretender.post("/admin/dashboard/reports/bulk", () => {
@@ -407,7 +413,7 @@ module("Integration | Component | DashboardReports", function (hooks) {
   });
 
   test("persists an earlier resize when a different card is resized afterward", async function (assert) {
-    registerAdminDashboardReportRenderer("test_source", FakeReportRenderer);
+    registerFakeReportRenderer();
 
     pretender.post("/admin/dashboard/reports/bulk", () =>
       response({
@@ -489,7 +495,7 @@ module("Integration | Component | DashboardReports", function (hooks) {
   });
 
   test("grows the card live row by row as a drag crosses each row boundary, reflowing its sibling, then persists on release", async function (assert) {
-    registerAdminDashboardReportRenderer("test_source", FakeReportRenderer);
+    registerFakeReportRenderer();
 
     pretender.post("/admin/dashboard/reports/bulk", () =>
       response({
@@ -636,7 +642,7 @@ module("Integration | Component | DashboardReports", function (hooks) {
   });
 
   test("commits a card to spanning both columns while staying a single row when dragged mostly horizontally", async function (assert) {
-    registerAdminDashboardReportRenderer("test_source", FakeReportRenderer);
+    registerFakeReportRenderer();
 
     pretender.post("/admin/dashboard/reports/bulk", () =>
       response({
@@ -755,7 +761,7 @@ module("Integration | Component | DashboardReports", function (hooks) {
   });
 
   test("renders both bottom corners on a wide card, and each shrinks it while keeping the opposite edge fixed", async function (assert) {
-    registerAdminDashboardReportRenderer("test_source", FakeReportRenderer);
+    registerFakeReportRenderer();
 
     pretender.post("/admin/dashboard/reports/bulk", () =>
       response({
@@ -891,7 +897,7 @@ module("Integration | Component | DashboardReports", function (hooks) {
   });
 
   test("clamps the live row count at the maximum during an extreme drag", async function (assert) {
-    registerAdminDashboardReportRenderer("test_source", FakeReportRenderer);
+    registerFakeReportRenderer();
 
     pretender.post("/admin/dashboard/reports/bulk", () =>
       response({

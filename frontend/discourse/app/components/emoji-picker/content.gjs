@@ -59,6 +59,8 @@ export default class EmojiPicker extends Component {
   @service siteSettings;
 
   @tracked isFiltering = false;
+
+  /** @type {{ name: string, tonable: boolean }[] | null} */
   @tracked filteredEmojis = null;
   @tracked scrollObserverEnabled = true;
   @tracked scrollDirection = "up";

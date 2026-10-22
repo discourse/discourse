@@ -2946,31 +2946,15 @@ ko:
     account_suspended:
       title: "계정이 정지됨"
       subject_template: "[%{email_prefix}] 계정이 정지되었습니다"
-      text_body_template: |
-        %{suspended_till}까지 포럼에서 계정이 정지되었습니다.
-
-        이유 - %{reason}
     account_suspended_forever:
       title: "계정이 정지됨"
       subject_template: "[%{email_prefix}] 계정이 정지되었습니다"
-      text_body_template: |
-        포럼에서 계정이 정지되었습니다.
-
-        이유 - %{reason}
     account_silenced:
       title: "계정이 차단됨"
       subject_template: "[%{email_prefix}] 계정이 차단되었습니다"
-      text_body_template: |
-        %{suspended_till}까지 포럼에서 계정이 차단되었습니다.
-
-        이유 - %{reason}
     account_silenced_forever:
       title: "계정이 차단됨"
       subject_template: "[%{email_prefix}] 계정이 차단되었습니다"
-      text_body_template: |
-        포럼에서 계정이 차단되었습니다.
-
-        이유 - %{reason}
     account_exists:
       title: "계정이 이미 존재함"
       subject_template: "[%{email_prefix}] 계정이 이미 존재합니다"

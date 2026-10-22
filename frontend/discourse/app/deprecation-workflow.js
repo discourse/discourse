@@ -54,7 +54,7 @@ export class DiscourseDeprecationWorkflow {
 
   /**
    * Gets the list of active workflows.
-   * @return {Object[]} Array of active workflow configurations
+   * @returns {Array<{ handler: string[], matchId: string | RegExp, env: string[] }>} Array of active workflow configurations
    */
   get list() {
     return this.#activeWorkflows;
@@ -62,7 +62,7 @@ export class DiscourseDeprecationWorkflow {
 
   /**
    * Gets Ember-specific workflows formatted for Ember CLI.
-   * @return {Object[]} Array of formatted Ember workflow configurations
+   * @returns {Array<{ handler: string, matchId: string | RegExp, env: string[] }>} Array of formatted Ember workflow configurations
    */
   get emberWorkflowList() {
     return this.#activeWorkflows
@@ -80,7 +80,7 @@ export class DiscourseDeprecationWorkflow {
 
   /**
    * Sets the current environment and updates active workflows.
-   * @param {Object} environment - Environment object
+   * @param {{ isProduction: () => boolean, isTesting: () => boolean, isRailsTesting: () => boolean } | null | undefined} environment - Environment object
    */
   setEnvironment(environment) {
     this.#environment = environment;

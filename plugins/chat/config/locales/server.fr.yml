@@ -10,8 +10,6 @@ fr:
     chat_enabled: "Activer la discussion."
     chat_pinned_messages: "Active les messages épinglés dans les canaux de chat."
     enable_public_channels: "Activer les canaux publics en fonction des catégories."
-    chat_allowed_groups: "Les utilisateurs de ces groupes peuvent utiliser le chat, à l'exception des utilisateurs anonymes, qui peuvent uniquement le consulter lorsqu'ils sont ajoutés à ce paramètre. Notez que les administrateurs et les modérateurs peuvent toujours accéder au chat."
-    chat_channel_retention_days: "Les messages de discussion dans les canaux ordinaires seront conservés pendant ce nombre de jours. Fixez cette valeur sur « 0 » pour conserver les messages indéfiniment."
     chat_dm_retention_days: "Les messages de discussion dans les discussions privées seront conservés pendant ce nombre de jours. Fixez cette valeur sur « 0 » pour conserver les messages indéfiniment."
     chat_auto_silence_duration: "Nombre de minutes pendant lesquelles les utilisateurs seront mis en sourdine lorsqu'ils dépasseront la limite de création de messages de discussion. Réglez cette valeur sur « 0 » pour désactiver la mise en sourdine automatique."
     chat_allowed_messages_for_trust_level_0: "Nombre de messages que les utilisateurs de niveau 0 sont autorisés à envoyer en 30 secondes. Réglez cette valeur sur « 0 » pour désactiver la limite."
@@ -63,6 +61,15 @@ fr:
         Visitez le canal à l'adresse %{channel_url} pour réessayer.
   chat:
     deleted_chat_username: supprimé
+    crawler:
+      directory_title: "Canaux de discussion"
+      nav_title: "Discussion"
+      members_count:
+        one: "%{count} membre"
+        other: "%{count} membres"
+      thread_replies:
+        one: "%{count} réponse"
+        other: "%{count} réponses"
     errors:
       users_cant_be_added_to_channel: "Les utilisateurs ne peuvent pas être ajoutés à ce canal."
       user_cant_be_removed_from_channel: "L'utilisateur ne peut pas être supprimé de ce canal"

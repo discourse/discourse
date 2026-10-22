@@ -256,6 +256,7 @@ RSpec.configure do |config|
     if example.metadata[:type] != :system
       EmberAssets.stubs(:read_manifest!).returns(nil)
       EmberAssets.stubs(:script_chunks).returns({})
+      EmberAssets.stubs(:import_map).returns({})
     end
   end
 

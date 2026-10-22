@@ -17,6 +17,9 @@ import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef {{ id: number, post_id: number, post_version: number, locale: string, raw: string, languageName: string, topic_localization?: { id: number, topic_id: number, locale: string, title: string, fancy_title: string } }} PostLocalizationWithLanguage
+ */
 export default class PostTranslationsModal extends Component {
   @service composer;
   @service dialog;
@@ -24,6 +27,7 @@ export default class PostTranslationsModal extends Component {
   @service siteSettings;
   @service toasts;
 
+  /** @type {PostLocalizationWithLanguage[] | null} */
   @tracked postLocalizations = null;
   @tracked loading = false;
   @tracked savingPostLocale = false;

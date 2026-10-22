@@ -671,7 +671,8 @@ en:
           alphabetical: "Alphabetically"
           recent_activity: "Recent activity"
           priority: "Priority"
-          priority_description: "Mentions, then unreads, then recent activity"
+          priority_description: "Mentions, then unreads, then recent activity, each sorted alphabetically"
+          priority_description_dms: "Mentions, then unreads, then recent activity"
         empty:
           filtered: "No channels match this filter."
           show_all: "Show all channels"
@@ -955,7 +956,7 @@ en:
         target_usernames_description: "Users to message. Use an expression such as $trigger.user.username to pick them from each item."
         message: "Message"
         actor_username: "Sender"
-        actor_username_description: "Direct messages are sent as this user, and recipients see them as written by them."
+        actor_username_description: "Messages are sent as this user, and everyone sees them as written by them. When posting to a channel, the user must be a member of it."
       chat_approval:
         message: "Message"
         buttons: "Buttons"

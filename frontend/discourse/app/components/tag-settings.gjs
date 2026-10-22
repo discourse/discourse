@@ -22,6 +22,11 @@ import DMiniTagChooser from "discourse/ui-kit/select/recipes/tags/d-mini-tag-cho
 import DTagDropdown from "discourse/ui-kit/select/recipes/tags/d-tag-dropdown";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef {{ id: number | string, name: string, isNew?: boolean }} TagSynonymChoice
+ * @typedef {{ id?: number, tag_id: number, locale: string, name: string, description: string | null, description_cooked?: string | null }} TagSettingsLocalization
+ * @typedef {{ name: string, locale: string | null | undefined, slug: string, description: string, synonyms: TagSynonymChoice[], new_synonyms: TagSynonymChoice[], removed_synonym_ids: number[], localizations: TagSettingsLocalization[] }} TagSettingsFormData
+ */
 export default class TagSettings extends Component {
   @service router;
   @service dialog;
@@ -30,6 +35,7 @@ export default class TagSettings extends Component {
   @service store;
   @service appEvents;
 
+  /** @type {{ get: (name: string) => unknown, set: (name: string, value: unknown) => Promise<void> } | null} */
   @tracked form = null;
   @tracked tags = [];
 
@@ -42,6 +48,7 @@ export default class TagSettings extends Component {
     return this.tags.map((t) => t.name);
   }
 
+  /** @returns {TagSettingsFormData} */
   get formData() {
     return {
       name: this.args.tag.name,

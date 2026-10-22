@@ -21,6 +21,24 @@ en:
         run_sql: "Ran SQL query"
         submit_query: "Submitted generated query %{name}"
   discourse_data_explorer:
+    admin_assistant:
+      generating: "Generating and testing a query draft"
+      create_summary: "Save this Data Explorer query?"
+      not_allowed: "Only administrators can create Data Explorer queries."
+      invalid_request: "The query request is empty or too long. Please provide a shorter description."
+      invalid_draft: "This query draft reference is invalid, unavailable, or expired. Please generate a new draft."
+      incomplete_draft: "The generated query draft is missing its name or SQL. Please generate a new draft."
+      requester_not_admin: "The administrator who requested this query no longer has admin access. Please request a new draft from an admin account."
+      approval_required: "Saving this query requires human approval."
+      draft_used: "This query draft has already been used or is being saved. Please generate a new draft."
+      generation_failed: "The query could not be generated. Please try again or refine your request."
+      creation_failed: "The query could not be saved. No query was created."
+      availability:
+        available: "Data Explorer query creation is available. Saving requires explicit approval."
+        restricted: "Data Explorer query creation is unavailable on this site."
+        disabled: "Data Explorer or Discourse AI is disabled. An administrator needs to enable the required plugins before creating queries."
+        generation_disabled: "AI query generation is disabled. An administrator needs to enable it before creating queries through chat."
+        unconfigured: "Data Explorer's query-generation AI model is not configured or usable."
     mcp:
       query_failed: "The query could not be run: %{message}"
       query_not_found: "Query not found"
@@ -29,10 +47,11 @@ en:
       error_no_sql_returned: "AI did not return a valid SQL query. Please try again or write the query manually."
     errors:
       default_tag_reserved: "The default tag is reserved for system queries."
+      custom_tag_reserved: "The custom tag is reserved for user-created queries."
       tag_contains_comma: "Tags cannot contain commas."
       tag_too_long: "A tag can have at most %{max} characters."
       tool_not_allowed: "You are not allowed to use this tool"
-      too_many_tags: "A query can have at most %{max} tags."
+      too_many_tags: "A query can have at most %{max} tags, not counting automatic tags."
     discourse_workflows:
       sql_action:
         no_query_selected: "No query selected."

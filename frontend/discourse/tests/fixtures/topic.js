@@ -1,3 +1,8 @@
+/**
+ * Recorded server responses, keyed by request URL.
+ *
+ * @type {Record<string, Record<string, unknown>>}
+ */
 const topicFixtures = {
   "/t/130.json": {
     post_stream: {

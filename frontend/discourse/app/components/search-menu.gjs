@@ -26,7 +26,10 @@ import {
   searchTermScopesToPMs,
   updateRecentSearches,
 } from "discourse/lib/search";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import userSearch from "discourse/lib/user-search";
 import { and } from "discourse/truth-helpers";
@@ -59,7 +62,11 @@ export default class SearchMenu extends Component {
 
   searchInputId = this.args.searchInputId ?? "search-term";
   closeWhenHidden = modifier((_element, [hidden]) => hidden && this.close());
+
+  /** @type {import("@ember/runloop").Timer | null} */
   _debouncer = null;
+
+  /** @type {(Promise<unknown> & { abort: () => void }) | null} */
   _activeSearch = null;
 
   willDestroy() {
@@ -252,9 +259,15 @@ export default class SearchMenu extends Component {
   clearSearch(e) {
     e.stopPropagation();
     e.preventDefault();
-    this.search.activeGlobalSearchTerm = "";
-    this.search.focusSearchInput();
-    this.triggerSearch();
+    applyBehaviorTransformer(
+      "search-menu-clear-search",
+      () => {
+        this.search.activeGlobalSearchTerm = "";
+        this.search.focusSearchInput();
+        this.triggerSearch();
+      },
+      { location: this.args.location }
+    );
   }
 
   @action

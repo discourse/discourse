@@ -1,4 +1,31 @@
 en:
+  dsa_notice:
+    subject: "[%{reference}] Report of potentially illegal content"
+    summary: "**Report reference: %{reference}**\n\n**Email address:** %{reporter_email}\n\n**Full name or organization name:** %{reporter_name}\n\n**Exact URL of the content:** %{content_url}\n\n**Why do you believe this content is illegal?**\n\n%{explanation}"
+    verification_invalid: "The email verification code is incorrect or has expired. Check the code or request a new one."
+    invalid_parameters: "The report contains invalid values."
+    invalid_url: "must be a valid HTTP or HTTPS URL without login credentials"
+    invalid_email: "must be a valid email address"
+  dsa_notice_verification:
+    subject_template: "[%{email_prefix}] Your report verification code"
+    text_body_template: |
+      Use this code to verify your email for reporting illegal content on %{site_title}:
+
+      ## %{verification_code}
+
+      This code expires in %{expires_in_minutes} minutes. If you didn’t request it, you can safely ignore this email.
+  dsa_notice_mailer:
+    subject_template: "[%{email_prefix}] Your report of potentially illegal content %{reference}"
+    text_body_template: |
+      %{site_title} has received your report.
+
+      The reviewing team will email you the outcome. This receipt does not mean that a decision has been made or that the content has been removed.
+
+      %{summary}
+
+      **Declaration:**
+
+      I confirm that I have a bona fide belief that the information and allegations in this notice are accurate and complete.
   dsa_statements:
     classification_note: "Classified this moderation decision for DSA reporting.\nCommunity rule: %{ground}\nCategory: %{category}"
     errors:
@@ -482,9 +509,11 @@ en:
         unsubscribe_not_allowed: "Happens when unsubscribing via email is not allowed for this user."
         email_not_allowed: "Happens when the email address is not on the allowlist or is on the blocklist."
         email_alias_not_allowed: "Happens when the sender's address is an alias of an address already registered to an account, and normalized emails are required to be unique."
+        site_archived_error: "Happens when the site is in archive mode."
       unrecognized_error: "Unrecognized Error"
     secure_uploads_placeholder: "Redacted: This site has secure uploads enabled, visit the topic or click View Media to see the attached uploads."
     view_redacted_media: "View Media"
+    view_diagram: "View diagram"
 
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -858,6 +887,7 @@ en:
         one: "Default notification level can't be set on groups larger than %{count} user. Incorrect group: %{group_name}"
         other: "Default notification level can't be set on groups larger than %{count} users. Incorrect group: %{group_name}"
       grant_trust_level_not_valid: "'%{trust_level}' is not a valid trust level."
+      flair_upload_not_owned: "You can only use an image you have uploaded as the group flair."
       can_not_modify_automatic: "You cannot modify an automatic group"
       member_already_exist:
         one: "'%{username}' is already a member of this group."
@@ -1115,6 +1145,7 @@ en:
     post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, or to establish category guidelines or rules:\n\n- Why should people use this category? What is it for?\n\n- How exactly is this different than the other categories we already have?\n\n- What should topics in this category generally contain?\n\n- Do we need this category? Can we merge with another category, or subcategory?\n"
     errors:
       not_found: "Category not found!"
+      self_lockout: "You are about to change category permissions in a way that will remove your own access. Are you sure you want to proceed?"
       uncategorized_parent: "Uncategorized can't have a parent category"
       self_parent: "A subcategory's parent cannot be itself"
       depth: "You can't nest a subcategory under another"
@@ -2116,6 +2147,7 @@ en:
     unavailable: "A random username could not be generated. Check the random username word lists in your site settings."
 
   site_settings:
+    dsa_notice_group: "Group receiving illegal content notices when {{setting:dsa_reporting_enabled}} is enabled. Members can read notices and reporter contact details. Defaults to admins, which also receives notices if the selected group is missing or empty."
     dsa_community_rules: "Community rules available for DSA classification when {{setting:dsa_reporting_enabled}} is enabled. Each rule needs an exact contractual reference (up to 500 characters) and an explanation (up to 2000 characters). Leave empty to disable classification."
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
     disabled: "disabled"
@@ -3128,6 +3160,7 @@ en:
     push_notifications_icon: "The badge icon that appears in the notification corner. A 96×96 monochromatic PNG with transparency is recommended."
     enable_desktop_push_notifications: "Activate push notifications for the desktop interface. This feature enables real-time alerts from the site directly to your desktop, enhancing engagement and ensuring users are always updated. However, the effectiveness of this feature relies on browser support for push notifications."
     push_notification_time_window_mins: "Wait (n) minutes before sending push notification. Helps prevent push notifications from being sent to an active online user."
+    push_notification_localization_max_wait_mins: "Longest time (in minutes) to hold a push notification for a new post while its translation into the recipient's language is produced. Set to 0 to send without waiting."
 
     base_font: "Base font to use for most text on the site. Themes can override via the `--font-family` CSS custom property."
     heading_font: "Font to use for headings on the site. Themes can override via the `--heading-font-family` CSS custom property."
@@ -3186,7 +3219,7 @@ en:
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
-    about_page_hidden_groups: "Do not show members of specific groups on the /about page."
+    about_page_hidden_groups: "Do not show admins or moderators who are also members of these specific groups on the /about page."
     about_page_extra_groups: "Groups to show on the about page below the moderators."
     about_page_extra_groups_initial_members: "Number of members to expand on each group on the about page."
     about_page_extra_groups_show_description: "Whether to include the group descriptions on the about page."
@@ -4591,6 +4624,15 @@ en:
 
         If you believe this is an error, [contact a staff member](%{base_url}/about).
 
+    email_reject_site_archived:
+      title: "Email Reject Site Archived"
+      subject_template: "[%{email_prefix}] Email issue -- Site Archived"
+      subject_template_improved: "%{email_prefix}: Email issue -- site archived"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        This site is archived and doesn't accept new posts.
+
     email_error_notification:
       title: "Email Error Notification"
       subject_template: "[%{email_prefix}] Email issue -- POP authentication error"
@@ -5085,40 +5127,58 @@ en:
         %{respond_instructions}
 
     account_suspended:
+      date_with_timezone: "%{date} (UTC%{offset})"
       title: "Account Suspended"
       subject_template: "[%{email_prefix}] Your account has been suspended"
       subject_template_improved: "Your account has been suspended"
       text_body_template: |
-        You have been suspended from the forum until %{suspended_till}.
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your account has been suspended until %{suspended_till}.
 
         Reason - %{reason}
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     account_suspended_forever:
       title: "Account Suspended"
       subject_template: "[%{email_prefix}] Your account has been suspended"
       subject_template_improved: "Your account has been suspended"
       text_body_template: |
-        You have been suspended from the forum.
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your account has been suspended.
 
         Reason - %{reason}
 
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
+
     account_silenced:
+      date_with_timezone: "%{date} (UTC%{offset})"
       title: "Account Silenced"
       subject_template: "[%{email_prefix}] Your account has been silenced"
       subject_template_improved: "Your account has been silenced"
       text_body_template: |
-        You have been silenced from the forum until %{silenced_till}.
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your account has been silenced until %{silenced_till}.
 
         Reason - %{reason}
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     account_silenced_forever:
       title: "Account Silenced"
       subject_template: "[%{email_prefix}] Your account has been silenced"
       subject_template_improved: "Your account has been silenced"
       text_body_template: |
-        You have been silenced from the forum.
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your account has been silenced.
 
         Reason - %{reason}
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     account_deleted:
       title: "Account Deleted"

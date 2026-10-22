@@ -2649,18 +2649,6 @@ th:
         type_mismatch:
           default: "กรอกค่าที่ถูกต้อง"
           email: "กรุณาใส่อีเมลที่ถูกต้อง."
-    table_builder:
-      modal:
-        help:
-          enter_key: "เอ็นเทอร์"
-      edit:
-        modal:
-          cancel: "ยกเลิก"
-          create: "บันทึก"
-          reason: "ทำไมคุณถึงแก้ไข"
-      spreadsheet:
-        show: "แสดง"
-        about: "เกี่ยวกับ"
     filter:
       description:
         yesterday: "เมื่อวาน"

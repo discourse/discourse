@@ -6,6 +6,10 @@
 
 zh_TW:
   js:
+    dsa_notice:
+      title: "檢舉非法內容"
+      email: "電子郵件地址"
+      resend_email_code: "重新傳送代碼"
     ace_editor:
       resize: "調整程式碼編輯器大小"
     user_api_key:
@@ -3258,10 +3262,6 @@ zh_TW:
       show_preview: "顯示預覽"
       hide_preview: "隱藏預覽"
       resize: "調整編輯器大小"
-      switch_to_markdown: "切換至標準 Markdown 編輯器（%{keyboardShortcut}）"
-      switch_to_rich_text: "切換至新的富文字編輯器（%{keyboardShortcut}）"
-      switch_to_markdown_no_shortcut: "切換到標準 Markdown 編輯器"
-      switch_to_rich_text_no_shortcut: "切換到新格式化文字編輯器"
       quote_post_title: "引用完整貼文"
       bold_label: "B"
       bold_title: "粗體"
@@ -3421,6 +3421,7 @@ zh_TW:
         show_source: "顯示原始碼"
         show_preview: "顯示預覽"
       table:
+        default_heading: "第 %{number} 欄"
         add_row: "新增列"
         add_column: "新增欄"
         insert_row_above: "在上方插入"
@@ -5954,63 +5955,6 @@ zh_TW:
           other: "輸入內容必須大於 %{count}。"
         pattern_mismatch: "請符合要求的格式。"
         bad_input: "請輸入有效的輸入。"
-    table_builder:
-      title: "表格生成器"
-      modal:
-        title: "表格生成器"
-        create: "建立表格"
-        help:
-          title: "使用試算表編輯器"
-          enter_key: "Enter"
-          tab_key: "Tab"
-          new_row: "在列末尾插入新列。"
-          new_col: "在欄末尾插入新欄。"
-          options: "在儲存格上按滑鼠右鍵，可在下拉式功能表中存取更多選項。"
-        confirm_close: "您確定要關閉表格生成器嗎？任何未儲存的變更都會遺失。"
-      edit:
-        btn_edit: "編輯表格"
-        modal:
-          title: "編輯表格"
-          cancel: "取消"
-          create: "保存"
-          reason: "你為什麼做編輯?"
-          trigger_reason: "新增編輯原因"
-        default_edit_reason: "使用表格編輯器更新表格"
-      default_header:
-        col_1: "第 1 欄"
-        col_2: "第 2 欄"
-        col_3: "第 3 欄"
-        col_4: "第 4 欄"
-      spreadsheet:
-        no_records_found: "找不到任何記錄"
-        show: "顯示"
-        entries: "項目"
-        about: "關於"
-        prompts:
-          delete_selected_rows: "您確定要刪除選取的列嗎？"
-          delete_selected_cols: "您確定要刪除選取的列嗎？"
-          will_destroy_merged_cells: "此操作將破壞所有現有的合併儲存格。你確定嗎？"
-          will_clear_search_results: "此操作將破壞所有現有的合併儲存格。你確定嗎？"
-          conflicts_with_merged_cells: "與另一個合併儲存格存在衝突"
-        invalid_merge_props: "合併屬性無效"
-        cells_already_merged: "儲存格已合併"
-        no_cells_selected: "未選取儲存格"
-        context_menu:
-          row:
-            before: "在前面插入新列"
-            after: "在後面插入新列"
-            delete: "刪除選取的列"
-          col:
-            before: "在前面插入新欄"
-            after: "在後面插入新欄"
-            delete: "刪除選取的欄"
-            rename: "重新命名此欄"
-          order:
-            ascending: "順序遞增"
-            descending: "順序遞減"
-          copy: "複製..."
-          paste: "貼上..."
-          save: "另存為..."
     powered_by_discourse: "由 Discourse 提供支持"
     safari_15_warning: "您的瀏覽器與這個社群站不相容，要持續互動的話，請升級您的瀏覽器或是 <a href='%{url}'>瞭解更多</a>。"
     filter:

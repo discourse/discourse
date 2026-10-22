@@ -14,6 +14,9 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef {{ action?: () => unknown, icon?: string, className?: string, label?: string, translatedLabel?: string, section?: { id: string, label?: string, translatedLabel?: string } }} TopicAdminButton
+ */
 export default class TopicAdminMenu extends Component {
   @service adminTopicMenuButtons;
   @service currentUser;
@@ -27,6 +30,7 @@ export default class TopicAdminMenu extends Component {
       .filter(Boolean);
   }
 
+  /** @returns {{ id: string | null, label: string | null, buttons: TopicAdminButton[] }[]} */
   get extraButtonGroups() {
     const groups = [];
     let currentGroup = null;

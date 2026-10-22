@@ -11,18 +11,16 @@ class TopicQuery
       create_list(:private_messages, {}, list, &blk)
     end
 
-    def list_private_messages_direct_and_groups(user, groups_messages_notification_level: nil, &blk)
-      list =
-        user_personal_and_groups_private_messages(
-          user,
-          groups_messages_notification_level: groups_messages_notification_level,
-        )
-
+    def private_messages_direct_and_groups(user, groups_messages_notification_level: nil)
+      list = user_personal_and_groups_private_messages(user, groups_messages_notification_level:)
       list = not_archived(list, user)
       list = not_archived_in_groups(list)
       list = have_posts_from_others(list, user)
+      list = yield(list) if block_given?
 
-      create_list(:private_messages, {}, list, &blk)
+      topics = list.except(:includes).to_a
+      topic_lookup = TopicUser.lookup_for(user, topics)
+      topics.each { |topic| topic.user_data = topic_lookup[topic.id] }
     end
 
     def list_private_messages_archive(user)

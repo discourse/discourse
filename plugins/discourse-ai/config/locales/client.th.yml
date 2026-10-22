@@ -188,6 +188,14 @@ th:
         delete: "ลบ"
         tools_modal:
           required: "ต้องการ"
+      models:
+        name: "ชื่อ"
+        type: "ชนิด"
+        edit: "แก้ไข"
+        types:
+          embedding: "ฝั่ง"
+        filters:
+          all: "ทุกประเภท"
       llms:
         display_name: "ชื่อ"
         vision_modes:
@@ -253,6 +261,12 @@ th:
             category: "หมวดหมู่"
           table:
             total_count: "ทั้งหมด"
+      ai_search:
+        related_replies:
+          other: "%{count} ตอบ"
+        tabs:
+          topics: "หัวข้อ"
+          messages: "ข้อความ"
       discobot_discoveries:
         legacy:
           regular_results: "หัวข้อ"

@@ -184,6 +184,16 @@ module DiscourseAi
             )
           end
 
+          error =
+            DiscoursePluginRegistry.apply_modifier(
+              :ai_bot_site_setting_change_error,
+              nil,
+              setting_sym,
+              new_value,
+              guardian,
+            )
+          return error_response(error) if error.present?
+
           nil
         end
 

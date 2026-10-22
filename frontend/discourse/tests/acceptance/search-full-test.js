@@ -5,6 +5,7 @@ import {
   SEARCH_TYPE_DEFAULT,
   SEARCH_TYPE_USERS,
 } from "discourse/controllers/full-page-search";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance, selectDate } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -119,6 +120,31 @@ acceptance("Search - Full Page", function (needs) {
     await click(".search-cta");
 
     assert.dom(".fps-topic").exists({ count: 1 }, "has one post");
+  });
+
+  test("starting a new topic from no results opens a fresh draft", async function (assert) {
+    pretender.get("/search", () =>
+      response({
+        grouped_search_result: { term: "none", can_create_topic: true },
+      })
+    );
+
+    await visit("/search?q=none");
+    await click(".no-results-suggestion a");
+
+    assert
+      .dom(".composer-action-create-topic")
+      .exists("opens the composer in new topic mode");
+    const composerModel = this.owner.lookup("service:composer").model;
+    assert.true(
+      /^new_topic_\d+$/.test(composerModel.draftKey),
+      "uses a unique draft key"
+    );
+    assert.strictEqual(
+      composerModel.draftSequence,
+      0,
+      "starts a fresh draft sequence"
+    );
   });
 
   test("unknown search types fall back to post results", async function (assert) {

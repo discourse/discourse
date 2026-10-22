@@ -1030,6 +1030,7 @@ sv:
     device:
       code: "Kod"
       continue: "Fortsätt"
+      invalid_code: "Tyvärr, den koden är ogiltig. Kontrollera koden och försök igen."
     invalid_public_key: "Tyvärr är den offentliga nyckeln ogiltig."
     invalid_auth_redirect: "Tyvärr är denna auth_redirect-värd inte tillåten."
     invalid_token: "Saknat, ogiltigt eller utgånget bevis."
@@ -3183,31 +3184,15 @@ sv:
     account_suspended:
       title: "Konto avstängt"
       subject_template: "[%{email_prefix}] Ditt konto har stängts av"
-      text_body_template: |
-        Du har blivit avstängd från forumet till och med %{suspended_till}.
-
-        Orsak - %{reason}
     account_suspended_forever:
       title: "Konto avstängt"
       subject_template: "[%{email_prefix}] Ditt konto har stängts av"
-      text_body_template: |
-        Du har blivit avstängd från forumet.
-
-        Orsak - %{reason}
     account_silenced:
       title: "Konto tystat"
       subject_template: "[%{email_prefix}] Ditt konto har tystats"
-      text_body_template: |
-        Du har tystats i forumet till och med %{silenced_till}.
-
-        Orsak - %{reason}
     account_silenced_forever:
       title: "Konto tystat"
       subject_template: "[%{email_prefix}] Ditt konto har tystats"
-      text_body_template: |
-        Du har tystats i forumet.
-
-        Orsak - %{reason}
     account_exists:
       title: "Konto finns redan"
       subject_template: "[%{email_prefix}] Konto finns redan"

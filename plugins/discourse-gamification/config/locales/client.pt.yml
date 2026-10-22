@@ -45,3 +45,4 @@ pt:
         username: "Utilizador"
         date: "Data"
         description: "Descrição"
+        category_id: "Categoria"

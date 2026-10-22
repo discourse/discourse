@@ -52,7 +52,6 @@ nl:
         description: "Automatisch topics taggen met AI"
   site_settings:
     discourse_ai_enabled: "Schakel de Discourse-AI-plug-in in."
-    ai_default_llm_model: "Het standaard LLM-model om te gebruiken voor alle AI-functies"
     ai_artifact_security: "Het AI-artefactsysteem genereert IFRAME's met uitvoerbare code. De modus Strikt forceert een extra klik om code uit te voeren. De modus Soepel voert code direct uit. De modus Hybride stelt de gebruiker in staat om data-ai-artifact-autorun op te geven voor directe weergave. De modus Uitgeschakeld schakelt het artefactsysteem uit."
     ai_toxicity_enabled: "Schakel de toxiciteitsmodule in."
     ai_toxicity_inference_service_api_endpoint: "URL waar de API wordt uitgevoerd voor de toxiciteitsmodule"

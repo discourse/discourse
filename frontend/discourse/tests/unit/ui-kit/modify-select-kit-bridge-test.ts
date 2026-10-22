@@ -7,6 +7,7 @@ import { _INTERNAL_SOURCE_KEY } from "discourse/lib/api";
 import { registerDeprecationHandler } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
+import type { SelectCustomizationRegistry } from "discourse/ui-kit/select/-internals/engine/customizations";
 import SelectEngine, {
   type SelectDescriptor,
   type SelectEngineOptions,
@@ -493,7 +494,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     let context: { value: unknown } | undefined;
     let changedTo: unknown;
     withPluginApi((api) => {
-      api.registerValueTransformer(
+      api.registerValueTransformer<SelectCustomizationRegistry>(
         "select-customizations",
         ({ value: selects }) =>
           selects.forAll((spec) =>
@@ -529,7 +530,7 @@ module(
 
     test("hoists prepended and appended actions after content transformation in stable order", function (assert) {
       withPluginApi((api) => {
-        api.registerValueTransformer(
+        api.registerValueTransformer<SelectCustomizationRegistry>(
           "select-customizations",
           ({ value: selects }) =>
             selects.forAll((spec) =>

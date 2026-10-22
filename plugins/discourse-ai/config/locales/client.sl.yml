@@ -227,6 +227,14 @@ sl:
         delete: "Izbriši"
         tools_modal:
           required: "Zahtevano"
+      models:
+        name: "Ime"
+        type: "Tip"
+        edit: "Uredi"
+        types:
+          embedding: "Vdelovanje"
+        filters:
+          all: "Vse vrste"
       llms:
         display_name: "Ime"
         vision_modes:
@@ -307,6 +315,15 @@ sl:
             category: "Kategorija"
           table:
             total_count: "Skupaj"
+      ai_search:
+        related_replies:
+          one: "%{count} odgovor"
+          two: "%{count} odgovora"
+          few: "%{count} odgovori"
+          other: "%{count} odgovorov"
+        tabs:
+          topics: "Tem"
+          messages: "Zasebna sporočila"
       discobot_discoveries:
         legacy:
           regular_results: "Tem"

@@ -32,12 +32,20 @@ const INDEX_KEY = "@index";
 export default class ValueList extends Component {
   @service siteSettings;
 
+  /** @type {string[] | null} */
   @autoTrackedArray collection = null;
 
+  /** @type {string | null} */
   inputDelimiter = null;
+
+  /** @type {"array" | null} */
   inputType = null;
   newValue = "";
+
+  /** @type {string | string[] | null | undefined} */
   values = null;
+
+  /** @type {((values: string[]) => void | Promise<void>) | null} */
   onChange = null;
 
   valueLabel = (value) => value;
@@ -121,7 +129,7 @@ export default class ValueList extends Component {
    * Applies a committed move onto the collection and persists the new order.
    * Wrapping and announcements are the list's own.
    *
-   * @param {Object} move - The normalized move from the list.
+   * @param {import("discourse/ui-kit/d-reorderable-list/types").ReorderableMove<string>} move - The normalized move from the list.
    */
   @action
   handleMove(move) {

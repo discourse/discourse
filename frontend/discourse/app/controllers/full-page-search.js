@@ -32,7 +32,6 @@ import {
 import userSearch from "discourse/lib/user-search";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
-import Composer from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
 
 export const SEARCH_TYPE_DEFAULT = "topics_posts";
@@ -85,6 +84,7 @@ export default class FullPageSearchController extends Controller {
   @tracked searching = false;
   @tracked loading = false;
 
+  /** @type {boolean | null} */
   bulkSelectEnabled = null;
 
   queryParams = [
@@ -97,15 +97,25 @@ export default class FullPageSearchController extends Controller {
   ];
 
   q;
+
+  /** @type {string | number | null} */
   context_id = null;
   search_type = SEARCH_TYPE_DEFAULT;
+
+  /** @type {string | null} */
   context = null;
   sortOrder = 0;
+
+  /** @type {{ name: string, id: number, term?: string, alias?: string }[] | null} */
   sortOrders = null;
   invalidSearch = false;
   page = 1;
+
+  /** @type {number | null} */
   resultCount = null;
   additionalSearchResults = [];
+
+  /** @type {string | null | undefined} */
   error = null;
   _searchOnSortChange = true;
 
@@ -495,20 +505,9 @@ export default class FullPageSearchController extends Controller {
   }
 
   @action
-  createTopic(searchTerm, event) {
+  createTopic(event) {
     event?.preventDefault();
-    let topicCategory;
-    if (searchTerm.includes("category:")) {
-      const match = searchTerm.match(/category:(\S*)/);
-      if (match && match[1]) {
-        topicCategory = match[1];
-      }
-    }
-    this.composer.open({
-      action: Composer.CREATE_TOPIC,
-      draftKey: Composer.NEW_TOPIC_KEY,
-      topicCategory,
-    });
+    this.composer.openNewTopic();
   }
 
   @action

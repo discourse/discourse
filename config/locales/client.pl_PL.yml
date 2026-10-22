@@ -6,6 +6,24 @@
 
 pl_PL:
   js:
+    dsa_notice:
+      title: "Zgłoś nielegalną treść"
+      content_url: "Dokładny adres URL treści"
+      explanation: "Dlaczego uważasz, że ta treść jest nielegalna?"
+      explanation_help: "Opisz fakty i wyjaśnij, dlaczego treść może być nielegalna. Nie musisz cytować konkretnego przepisu."
+      name: "Imię i nazwisko lub nazwa organizacji"
+      email: "Adres e-mail"
+      declaration_section: "Oświadczenie"
+      declaration: "Potwierdzam, że w dobrej wierze uważam, iż informacje i zarzuty zawarte w niniejszym zawiadomieniu są dokładne i kompletne."
+      submit: "Prześlij zgłoszenie"
+      get_email_code: "Pobierz kod przez e-mail"
+      resend_email_code: "Wyślij ponownie kod"
+      email_verified: "Zweryfikowano"
+      verification_code: "Kod weryfikacyjny"
+      received: "Otrzymano zgłoszenie"
+      received_description: "%{site} otrzymał Twoje zgłoszenie do rozpatrzenia."
+      reference: "Numer referencyjny twojego zgłoszenia to <strong>%{reference}</strong>."
+      contact_confirmation: "Wyślemy Ci e-mailem potwierdzenie i kopię zgłoszenia. Zespół weryfikujący wyśle Ci wynik e-mailem."
     mcp_oauth_client_id_metadata_policy:
       disabled: "Tylko rejestracja administratora"
       approved_domains: "CIMD z zatwierdzonych domen"
@@ -3803,10 +3821,10 @@ pl_PL:
       show_preview: "pokaż podgląd"
       hide_preview: "ukryj podgląd"
       resize: "Zmień rozmiar kompozytora"
-      switch_to_markdown: "Przełącz się na standardowy edytor Markdown (%{keyboardShortcut})"
-      switch_to_rich_text: "Przełącz się na nowy edytor tekstu sformatowanego (%{keyboardShortcut})"
-      switch_to_markdown_no_shortcut: "Przełącz na standardowy edytor Markdown"
-      switch_to_rich_text_no_shortcut: "Przełącz się na nowy edytor tekstu sformatowanego"
+      switch_to_markdown: "Przełącz na edytor Markdown (%{keyboardShortcut})"
+      switch_to_rich_text: "Przełącz na edytor tekstu sformatowanego (%{keyboardShortcut})"
+      switch_to_markdown_no_shortcut: "Przełącz na edytor Markdown"
+      switch_to_rich_text_no_shortcut: "Przełącz na edytor tekstu sformatowanego"
       quote_post_title: "Cytuj cały wpis"
       bold_label: "B"
       bold_title: "Pogrubienie"
@@ -3966,6 +3984,7 @@ pl_PL:
         show_source: "Pokaż źródło"
         show_preview: "Pokaż podgląd"
       table:
+        default_heading: "Kolumna %{number}"
         add_row: "Dodaj wiersz"
         add_column: "Dodaj kolumnę"
         insert_row_above: "Wstaw powyżej"
@@ -6975,63 +6994,6 @@ pl_PL:
           other: "Dane wejściowe muszą być większe niż %{count}."
         pattern_mismatch: "Proszę dopasować żądany format."
         bad_input: "Wprowadź prawidłowe dane wejściowe."
-    table_builder:
-      title: "Konstruktor tabeli"
-      modal:
-        title: "Konstruktor tabeli"
-        create: "Skonstruuj tabelę"
-        help:
-          title: "Za pomocą edytora arkusza kalkulacyjnego"
-          enter_key: "Enter"
-          tab_key: "Tab"
-          new_row: "na końcu wiersza, aby wstawić nowy wiersz."
-          new_col: "na końcu kolumny, aby wstawić nową kolumnę."
-          options: "Kliknij komórki prawym przyciskiem myszy, aby uzyskać dostęp do większej liczby opcji w menu rozwijanym."
-        confirm_close: "Czy na pewno chcesz zamknąć narzędzie do tworzenia tabel? Wszelkie niezapisane zmiany zostaną utracone."
-      edit:
-        btn_edit: "Edytuj tabelę"
-        modal:
-          title: "Edytuj tabelę"
-          cancel: "anuluj"
-          create: "Zapisz"
-          reason: "Powód edycji?"
-          trigger_reason: "Dodaj powód edycji"
-        default_edit_reason: "Zaktualizuj tabelę za pomocą edytora tabel"
-      default_header:
-        col_1: "Kolumna 1"
-        col_2: "Kolumna 2"
-        col_3: "Kolumna 3"
-        col_4: "Kolumna 4"
-      spreadsheet:
-        no_records_found: "Nie znaleziono rekordów"
-        show: "Pokaż"
-        entries: "elementy"
-        about: "O stronie"
-        prompts:
-          delete_selected_rows: "Czy na pewno chcesz usunąć wybrane wiersze?"
-          delete_selected_cols: "Czy na pewno chcesz usunąć wybrane kolumny?"
-          will_destroy_merged_cells: "Ta czynność zniszczy wszystkie istniejące scalone komórki. Jesteś pewien?"
-          will_clear_search_results: "Ta czynność zniszczy wszystkie istniejące scalone komórki. Jesteś pewien?"
-          conflicts_with_merged_cells: "Występuje konflikt z inną scaloną komórką"
-        invalid_merge_props: "Nieprawidłowe scalone właściwości"
-        cells_already_merged: "Komórka już scalona"
-        no_cells_selected: "Nie wybrano komórek"
-        context_menu:
-          row:
-            before: "Wstaw nowy wiersz przed"
-            after: "Wstaw nowy wiersz po"
-            delete: "Usuń wybrane wiersze"
-          col:
-            before: "Wstaw nową kolumnę przed"
-            after: "Wstaw nową kolumnę po"
-            delete: "Usuń wybrane kolumny"
-            rename: "Zmień nazwę tej kolumny"
-          order:
-            ascending: "Kolejność rosnąca"
-            descending: "Kolejność malejąca"
-          copy: "Kopiuj..."
-          paste: "Wklej..."
-          save: "Zapisz jako..."
     powered_by_discourse: "Obsługiwane przez Discourse"
     safari_15_warning: "Twoja przeglądarka wkrótce będzie niekompatybilna z tą społecznością. Aby nadal w niej uczestniczyć, zaktualizuj przeglądarkę lub <a href='%{url}'>dowiedz się więcej</a>."
     filter:
@@ -9922,6 +9884,9 @@ pl_PL:
           previous_value: "Poprzedni"
           new_value: "Nowy"
           show: "Pokaż"
+          scheduled_duration: "Zaplanowany czas trwania"
+          scheduled_expiry: "Planowany termin wygaśnięcia"
+          indefinite: "Nieokreślony"
           modal_title: "Szczegóły"
           no_previous: "Nie ma wcześniejszej wartości."
           deleted: "Nie ma nowej wartości. Zapis został usunięty."
