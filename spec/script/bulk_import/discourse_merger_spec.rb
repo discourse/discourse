@@ -495,5 +495,59 @@ if merger_dependencies_available
         )
       end
     end
+
+    describe "#process_topic" do
+      let(:globally_pinned_row) do
+        {
+          "category_id" => "1",
+          "archetype" => "regular",
+          "pinned_globally" => "t",
+          "pinned_at" => "2024-01-01 00:00:00",
+          "pinned_until" => "2030-01-01 00:00:00",
+        }
+      end
+
+      let(:category_pinned_row) do
+        {
+          "category_id" => "1",
+          "archetype" => "regular",
+          "pinned_globally" => "f",
+          "pinned_at" => "2024-01-01 00:00:00",
+          "pinned_until" => nil,
+        }
+      end
+
+      def process(row, ignore_global_pins:)
+        merger = build_merger(users: {}, ignore_global_pins:)
+        merger.process_topic(ActiveSupport::HashWithIndifferentAccess.new(row))
+      end
+
+      context "when IGNORE_GLOBAL_PINS is enabled" do
+        it "unpins globally pinned topics" do
+          topic = process(globally_pinned_row, ignore_global_pins: true)
+
+          expect(topic["pinned_globally"]).to eq("f")
+          expect(topic["pinned_at"]).to be_nil
+          expect(topic["pinned_until"]).to be_nil
+        end
+
+        it "keeps topics pinned within their category" do
+          topic = process(category_pinned_row, ignore_global_pins: true)
+
+          expect(topic["pinned_globally"]).to eq("f")
+          expect(topic["pinned_at"]).to eq("2024-01-01 00:00:00")
+        end
+      end
+
+      context "when IGNORE_GLOBAL_PINS is disabled" do
+        it "keeps globally pinned topics pinned" do
+          topic = process(globally_pinned_row, ignore_global_pins: false)
+
+          expect(topic["pinned_globally"]).to eq("t")
+          expect(topic["pinned_at"]).to eq("2024-01-01 00:00:00")
+          expect(topic["pinned_until"]).to eq("2030-01-01 00:00:00")
+        end
+      end
+    end
   end
 end

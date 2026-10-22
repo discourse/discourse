@@ -14,6 +14,8 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   # SOURCE_BASE_URL: base url of the site being merged. e.g. https://meta.discourse.org
   # SOURCE_CDN: (optional) base url of the CDN of the site being merged.
   #             e.g. https://discourse-cdn-sjc1.com/business4
+  # IGNORE_GLOBAL_PINS: (optional) set to 1 to unpin globally pinned topics of the
+  #                     site being merged. Category pins are kept.
 
   def initialize
     db_password = ENV["DB_PASS"] || "import_password"
@@ -41,6 +43,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     @uploader = ImportScripts::Uploader.new
 
     @source_cdn = ENV["SOURCE_CDN"] if ENV["SOURCE_CDN"]
+    @ignore_global_pins = ENV["IGNORE_GLOBAL_PINS"] == "1"
 
     local_version = @raw_connection.exec("select max(version) from schema_migrations")
     local_version = local_version.first["max"]
@@ -893,6 +896,14 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     topic["featured_user2_id"] = user_id_from_imported_id(topic["featured_user2_id"]) || -1
     topic["featured_user3_id"] = user_id_from_imported_id(topic["featured_user3_id"]) || -1
     topic["featured_user4_id"] = user_id_from_imported_id(topic["featured_user4_id"]) || -1
+
+    # COPY rows hold raw PG text, so booleans arrive as "t"/"f"
+    if @ignore_global_pins && topic["pinned_globally"] == "t"
+      topic["pinned_globally"] = "f"
+      topic["pinned_at"] = nil
+      topic["pinned_until"] = nil
+    end
+
     topic
   end
 
