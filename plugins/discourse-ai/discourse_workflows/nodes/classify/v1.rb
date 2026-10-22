@@ -180,6 +180,7 @@ if defined?(DiscourseWorkflows)
                 properties["level"] = { "type" => "string" }
               end
             end
+            properties.each { |key, property| property["x-optional"] = true if key != "type" }
             { "type" => "object", "properties" => properties }
           end
 

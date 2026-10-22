@@ -57,6 +57,7 @@ module DiscourseWorkflows
         "username": { "type": ["string", "null"], "description": "Username of the topic author" },
         "tags": {
           "type": "array",
+          "x-optional": true,
           "items": {
             "type": "object",
             "properties": {
@@ -68,7 +69,7 @@ module DiscourseWorkflows
         },
         "first_post_id": { "type": ["integer", "null"] },
         "visible": { "type": "boolean" },
-        "visibility_reason_id": { "type": "integer" },
+        "visibility_reason_id": { "type": "integer", "x-optional": true },
         "closed": { "type": "boolean" },
         "archived": { "type": "boolean" },
         "created_at": { "type": "string", "format": "date-time" },
@@ -81,11 +82,11 @@ module DiscourseWorkflows
       {
         "id": { "type": "integer" },
         "raw": { "type": "string" },
-        "raw_truncated": { "type": "boolean" },
-        "raw_original_length": { "type": "integer" },
-        "cooked": { "type": "string" },
-        "cooked_truncated": { "type": "boolean" },
-        "cooked_original_length": { "type": "integer" },
+        "raw_truncated": { "type": "boolean", "x-optional": true },
+        "raw_original_length": { "type": "integer", "x-optional": true },
+        "cooked": { "type": "string", "x-optional": true },
+        "cooked_truncated": { "type": "boolean", "x-optional": true },
+        "cooked_original_length": { "type": "integer", "x-optional": true },
         "post_number": { "type": "integer" },
         "post_type": { "type": "integer" },
         "reply_to_post_number": { "type": ["integer", "null"] },
@@ -304,7 +305,7 @@ module DiscourseWorkflows
             "query": { "type": "object" },
             "method": { "type": "string" },
             "webhook_url": { "type": "string" },
-            "raw_body": { "type": "string" }
+            "raw_body": { "type": "string", "x-optional": true }
           }
         JSON
 
