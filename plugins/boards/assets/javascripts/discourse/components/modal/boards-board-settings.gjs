@@ -285,6 +285,7 @@ export default class BoardsBoardSettings extends Component {
                 }}
                 @description={{i18n "boards.manage.board_access_description"}}
                 @form={{form}}
+                @isNew={{this.isNew}}
                 @onAccessLossConfirmed={{this.accessLossConfirmed}}
                 @onChange={{this.aclChanged}}
                 @title={{i18n "boards.manage.board_access"}}

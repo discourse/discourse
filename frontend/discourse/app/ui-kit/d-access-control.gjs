@@ -404,7 +404,7 @@ export default class DAccessControl extends Component {
       row
     );
 
-    if (row.type === "user" && this.args.canManageOwners) {
+    if (row.type === "user" && this.args.canManageOwners && !this.args.isNew) {
       return [
         ...permissionOptions.filter(
           (permission) => permission.id !== REMOVE_ACTION.id

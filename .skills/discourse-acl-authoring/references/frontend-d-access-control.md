@@ -28,6 +28,7 @@ Arguments:
 - `@acl`: flattened ACL entries from the backend or form state. The backend can emit group and user entries, and this component can add groups from the preloaded `@groups` list plus user/group search results from the ACL grantee search endpoint.
 - `@onChange`: called with the next flattened ACL array when the user adds/removes/changes a row.
 - `@aclTarget`: optional object with `type`, `id`, and `name`. `type` identifies the registered Ruby target class, `id` identifies an existing target when present, and `name` is used in validation copy. The component uses `type` to load mandatory and banned ACL metadata.
+- `@isNew`: prevents ordinary user rows from being promoted to owners during target creation. Initial ownership remains the responsibility of the create service.
 - `@transformPermissionOptions`: optional callback to customize default permission labels/descriptions or add target-specific permissions whose IDs are declared in the target's server-side `ACL_PERMISSIONS`.
 
 Example target descriptor:
@@ -102,7 +103,7 @@ Target-specific options added via `@transformPermissionOptions` can still be ban
 - A mandatory ACL replaces an existing row for the same type/id in the component's display list.
 - Banned permissions are filtered per row only when the banned entry's `type`, `id`, and `permission` match the row.
 - The remove action remains available unless the row is mandatory, except authorized owner rows expose Remove.
-- When `@canManageOwners` is true, user rows expose Owner and owner rows expose only Owner and Remove. Group rows never expose Owner. Ownership still uses a dedicated save payload rather than `@transformPermissionOptions` or ordinary ACL params.
+- When `@canManageOwners` is true, user rows expose Owner unless `@isNew` is true, and owner rows expose only Owner and Remove. Group rows never expose Owner. Ownership still uses a dedicated save payload rather than `@transformPermissionOptions` or ordinary ACL params.
 - Owner options use `@aclTarget.name` in their description, so consumers should provide a translated, sentence-compatible target name such as `board`.
 - Submit the dedicated `owner_user_ids` payload only when editing an existing target and the actor can manage its owners. Omit it during ordinary edits by non-owners, and omit it during creation unless an admin is intentionally choosing the initial owner set. An empty owner array is still an ownership mutation, not "unchanged".
 - Newly added regular groups default to `edit`.
@@ -175,6 +176,7 @@ Consumer tests should cover:
 - `@aclTarget` filters banned permissions from `site.access_control` for the matching grantee only
 - mandatory rows are locked and not duplicated
 - mandatory rows precede owner rows; owner rows are user-only, have no mandatory badge, are locked without owner-management permission, are labelled Owner, and are unavailable as a selectable permission for other rows
+- new targets do not offer Owner for ordinary user rows, even when the actor can manage owners
 - creation and non-owner edit forms omit `owner_user_ids`, while authorized ownership edits submit the complete owner set
 - `@onChange` updates parent/form state when the user changes a row
 - default ACL construction for new records includes expected groups, if the consumer builds defaults

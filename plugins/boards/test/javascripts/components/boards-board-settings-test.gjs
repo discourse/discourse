@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { fillIn, render } from "@ember/test-helpers";
+import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -130,6 +130,34 @@ module(
       assert
         .dom(ownerPermission)
         .isEnabled("enables owner controls with the capability");
+    });
+
+    test("does not offer additional owners while creating a board", async function (assert) {
+      const board = this.fabricators.board();
+      board.acl = [
+        {
+          type: "user",
+          id: 7,
+          permission: "edit",
+          username: "martin",
+          display_name: "martin",
+        },
+      ];
+      this.model = { ...this.model, board };
+
+      await render(
+        <template>
+          <BoardsBoardSettings @inline={{true}} @model={{this.model}} />
+        </template>
+      );
+
+      await click(
+        '.d-access-control__row[data-row-type="user"][data-row-id="7"] .d-access-control__permission'
+      );
+
+      assert
+        .dom('.d-access-control__permission-option[data-permission-id="owner"]')
+        .doesNotExist("does not offer Owner during board creation");
     });
 
     test("splits owner users from ordinary ACL entries when saving", async function (assert) {

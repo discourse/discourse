@@ -31,7 +31,7 @@ Use this skill before adding or reviewing ACL-backed resource permissions in Dis
 - Define `loss_warning_permissions` as permission strings whose loss by the current actor requires confirmation. Provide the target-specific server translation used by `AccessControlList::EvaluateModification`.
 - Prefer `DAccessControlField` inside FormKit. It owns required-permission validation, evaluates the proposed ACL, and uses FormKit's `preventSubmit` to cancel a submission without manufacturing a validation error.
 - Keep the default class-name `acl_target_key` when using `DAccessControlField`; its `@aclTarget.type` currently serves as both the Ruby class identifier and frontend metadata key.
-- User grants are supported by backend storage/lookups and the frontend user/group search picker. Owner rows are distinct from mandatory ACL rows and render after them. Authorized owner managers can add user owners or remove an owner while at least one remains; groups can never own a target. Other mandatory user ACL display still needs explicit UI support; the component's class-level mandatory injection remains group-first.
+- User grants are supported by backend storage/lookups and the frontend user/group search picker. Owner rows are distinct from mandatory ACL rows and render after them. Authorized owner managers can add user owners or remove an owner while at least one remains, except that `DAccessControl` does not offer new owners while `@isNew` is true; groups can never own a target. Other mandatory user ACL display still needs explicit UI support; the component's class-level mandatory injection remains group-first.
 
 ## Local Anchors
 

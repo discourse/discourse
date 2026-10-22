@@ -76,6 +76,7 @@ For `DAccessControl` consumers:
 - Mandatory ACL from `site.access_control.mandatory_acl[targetKey]` appears and is locked.
 - Persisted owner rows appear after mandatory rows with the user identity and Owner label, but no Mandatory badge. The control is disabled without `@canManageOwners`; authorized rows offer only Owner and Remove.
 - Authorized user rows offer Owner, while group rows never do.
+- New targets do not offer Owner for ordinary user rows.
 - Banned ACL from `site.access_control.banned_acl[targetKey]` removes matching permission options for the matching grantee.
 - Existing rows with the same group as a mandatory row are not duplicated.
 - `onChange` writes updated ACL arrays into parent state.

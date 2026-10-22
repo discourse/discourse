@@ -19,6 +19,7 @@ export default class BoardsAccessControlField extends Component {
       @canManageOwners={{@canManageOwners}}
       @description={{@description}}
       @form={{@form}}
+      @isNew={{@isNew}}
       @name={{@name}}
       @onAccessLossConfirmed={{@onAccessLossConfirmed}}
       @onChange={{@onChange}}

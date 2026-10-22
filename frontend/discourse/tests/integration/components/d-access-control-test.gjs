@@ -863,6 +863,38 @@ module("Integration | Component | DAccessControl", function (hooks) {
       .doesNotExist("does not offer Owner for a group");
   });
 
+  test("does not offer ownership for user rows on a new target", async function (assert) {
+    const state = controlledState([
+      {
+        type: "user",
+        id: 7,
+        permission: "edit",
+        username: "martin",
+        display_name: "martin",
+      },
+    ]);
+    const userRow =
+      '.d-access-control__row[data-row-type="user"][data-row-id="7"]';
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @canManageOwners={{true}}
+          @groups={{GROUPS}}
+          @isNew={{true}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+
+    await expandPermissionMenu(userRow);
+
+    assert
+      .dom(permissionOptionSelector("owner"))
+      .doesNotExist("does not offer Owner during target creation");
+  });
+
   test("allows an owner manager to remove their own owner row", async function (assert) {
     const currentUserId = this.currentUser.id;
     const coOwnerId = currentUserId + 1;

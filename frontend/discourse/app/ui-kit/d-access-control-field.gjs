@@ -116,6 +116,7 @@ export default class DAccessControlField extends Component {
           @aclTarget={{@aclTarget}}
           @canManageOwners={{@canManageOwners}}
           @groups={{this.site.groups}}
+          @isNew={{@isNew}}
           @onChange={{or @onChange field.set}}
           @transformPermissionOptions={{@transformPermissionOptions}}
         />
