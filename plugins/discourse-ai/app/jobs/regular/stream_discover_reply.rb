@@ -131,8 +131,8 @@ module Jobs
           summary_detail: result_settings[:summary_detail],
           related_count: result_settings[:related_count],
         ) do |update|
+          # the cancel monitor already stops this once the request is superseded
           next if rejected || cancel_manager.cancelled?
-          next if !active_request?(user, args[:request_id])
           next reject.call if update[:answerable] == false
 
           discovery_title = update[:title].to_s.strip if update[:title].present?

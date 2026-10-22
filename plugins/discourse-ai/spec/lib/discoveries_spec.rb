@@ -270,7 +270,7 @@ describe DiscourseAi::Discoveries do
       expect(described_class.cached_result_for(user:, request_id:)).to be_nil
     end
 
-    it "invalidates follow-up context when a supporting post changes" do
+    it "keeps follow-up context when a supporting post is edited" do
       request_id = SecureRandom.uuid
       described_class.store_result(
         user_id: user.id,
@@ -283,7 +283,30 @@ describe DiscourseAi::Discoveries do
 
       post.update!(raw: "Updated supporting content")
 
-      expect(described_class.cached_result_for(user:, request_id:)).to be_nil
+      expect(described_class.cached_result_for(user:, request_id:)).to include(
+        "answer" => "A useful answer.",
+      )
+    end
+
+    it "drops only the sources the user can no longer see" do
+      other_post = Fabricate(:post)
+      request_id = SecureRandom.uuid
+      described_class.store_result(
+        user_id: user.id,
+        request_id:,
+        query: "plugin setup",
+        answer: "A useful answer.",
+        sources: [
+          { "post_id" => post.id, "topic_id" => post.topic_id },
+          { "post_id" => other_post.id, "topic_id" => other_post.topic_id },
+        ],
+        agent_id: ai_agent.id,
+      )
+
+      other_post.topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+
+      result = described_class.cached_result_for(user:, request_id:)
+      expect(result.fetch("sources").pluck("post_id")).to eq([post.id])
     end
 
     it "keeps follow-up context when topic metadata changes" do

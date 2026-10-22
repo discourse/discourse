@@ -12,7 +12,6 @@ describe DiscourseAi::Discoveries::Retrieval do
   fab!(:post_1) { Fabricate(:post, topic: topic_1, raw: "First useful answer") }
   fab!(:post_2) { Fabricate(:post, topic: topic_2, user: staff_user, raw: "Second useful answer") }
   fab!(:post_3) { Fabricate(:post, topic: topic_3, raw: "Third useful answer") }
-  fab!(:private_post) { Fabricate(:post, topic: private_topic, raw: "Private answer") }
   fab!(:embedding_definition)
 
   before do
@@ -217,15 +216,15 @@ describe DiscourseAi::Discoveries::Retrieval do
       expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq([topic_2.id])
     end
 
-    it "fuses, permission-checks, and assigns request-owned source references" do
+    it "fuses, adds metadata to, and assigns request-owned source references" do
       SiteSetting.tagging_enabled = true
       parent_category = Fabricate(:category)
       category.update!(parent_category:)
       tag = Fabricate(:tag, name: "guide")
       topic_2.tags << tag
       PostActionCreator.like(user, post_2)
-      lexical = [source(post_1), source(post_2), source(private_post)]
-      semantic = [source(post_2), source(post_3), source(private_post)]
+      lexical = [source(post_1), source(post_2)]
+      semantic = [source(post_2), source(post_3)]
 
       result =
         described_class.new(
@@ -293,17 +292,8 @@ describe DiscourseAi::Discoveries::Retrieval do
 
     it "uses keyword and semantic retrieval for personal messages the user can see" do
       personal_message = Fabricate(:private_message_post, recipient: user, raw: "Anime plans")
-      inaccessible_message = Fabricate(:private_message_post, raw: "Hidden anime plans")
-      lexical_retriever =
-        instance_spy(
-          Proc,
-          call: [source(personal_message), source(inaccessible_message), source(post_1)],
-        )
-      semantic_retriever =
-        instance_spy(
-          Proc,
-          call: [source(personal_message), source(inaccessible_message), source(post_1)],
-        )
+      lexical_retriever = instance_spy(Proc, call: [source(personal_message)])
+      semantic_retriever = instance_spy(Proc, call: [source(personal_message)])
 
       result =
         described_class.new(user:, lexical_retriever:, semantic_retriever:).call(
@@ -356,19 +346,6 @@ describe DiscourseAi::Discoveries::Retrieval do
       expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq(
         [matching_message.topic_id],
       )
-    end
-
-    it "excludes personal messages from a regular search" do
-      personal_message = Fabricate(:private_message_post, recipient: user, raw: "Anime plans")
-
-      result =
-        described_class.new(
-          user:,
-          lexical_retriever: ->(_query) { [source(post_1), source(personal_message)] },
-          semantic_retriever: ->(_query) { [] },
-        ).call("anime")
-
-      expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq([topic_1.id])
     end
 
     it "does not broaden explicit search filters through semantic retrieval" do
@@ -457,6 +434,20 @@ describe DiscourseAi::Discoveries::Retrieval do
       expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to contain_exactly(
         parent_post.topic_id,
         child_post.topic_id,
+      )
+    end
+
+    it "excludes personal messages from a regular keyword search" do
+      SiteSetting.ai_embeddings_enabled = false
+      token = "regularneedle#{SecureRandom.hex(6)}"
+      public_post = Fabricate(:post, topic: Fabricate(:topic, category:), raw: token)
+      personal_message = Fabricate(:private_message_post, recipient: user, raw: token)
+      [public_post, personal_message].each { |post| SearchIndexer.index(post, force: true) }
+
+      result = described_class.new(user:).call(token)
+
+      expect(result.candidates.map { |candidate| candidate.fetch("topic_id") }).to eq(
+        [public_post.topic_id],
       )
     end
 

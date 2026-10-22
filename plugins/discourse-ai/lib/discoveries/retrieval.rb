@@ -10,7 +10,7 @@ module DiscourseAi
       SEMANTIC_PRIVATE_MESSAGE_FILTER = /(?:\A|\s)in:(?:messages|personal)(?=\s|\z)/i
 
       Result =
-        Struct.new(:candidates, :private_messages, :scope_fallback, keyword_init: true) do
+        Struct.new(:candidates, :scope_fallback, keyword_init: true) do
           def synthesis_candidates
             candidates.first(Retrieval::SYNTHESIS_LIMIT)
           end
@@ -18,7 +18,6 @@ module DiscourseAi
 
       def initialize(user:, lexical_retriever: nil, semantic_retriever: nil)
         @user = user
-        @guardian = Guardian.new(user)
         @lexical_retriever = lexical_retriever || method(:lexical_sources)
         @semantic_retriever = semantic_retriever
       end
@@ -67,13 +66,13 @@ module DiscourseAi
             retrieve_in_parallel(scoped.(keyword_query), scoped.(semantic_query), private_messages:)
           end
         candidates = reciprocal_rank_fusion(rankings)
-        candidates = revalidate_and_limit(candidates, private_messages:)
+        candidates = with_metadata(candidates)
         candidates =
           candidates.map.with_index do |candidate, index|
             candidate.merge("source_ref" => "source_#{index + 1}")
           end
 
-        Result.new(candidates:, private_messages:)
+        Result.new(candidates:)
       end
 
       def self.explicit_filters?(query)
@@ -230,106 +229,41 @@ module DiscourseAi
         source.slice("post_id", "post_number", "url", "excerpt", "post_updated_at")
       end
 
-      def revalidate_and_limit(candidates, private_messages: false)
-        post_ids =
-          candidates.flat_map do |candidate|
-            candidate.fetch("passages", [candidate]).map { |passage| passage.fetch("post_id") }
-          end
+      # Both retrievers search with the user's guardian, so candidates only need
+      # the metadata synthesis and the sources list show.
+      def with_metadata(candidates)
+        candidates = candidates.first(CANDIDATE_LIMIT)
         posts =
           Post
-            .where(id: post_ids, deleted_at: nil)
+            .where(id: candidates.pluck("post_id"))
             .includes(:user, topic: [{ category: :parent_category }, :tags])
             .index_by(&:id)
         hidden_tags = DiscourseTagging.hidden_tag_names if SiteSetting.tagging_enabled
-        private_message_topic_ids = Set.new
-        if private_messages && @user
-          private_message_topic_ids =
-            Topic
-              .private_messages_for_user(@user)
-              .where(id: candidates.pluck("topic_id"))
-              .pluck(:id)
-              .to_set
+
+        candidates.filter_map do |candidate|
+          post = posts[candidate.fetch("post_id")]
+          topic = post&.topic
+          next if topic.nil?
+
+          search_metadata =
+            DiscourseAi::Utils::Search.format_row(
+              topic:,
+              post:,
+              hidden_tags:,
+              excerpt: plain_text(candidate["excerpt"]),
+            ).stringify_keys
+
+          candidate.merge(
+            search_metadata,
+            "category_id" => topic.category_id,
+            "username" => post.user&.username,
+            "name" => SiteSetting.enable_names? ? post.user&.name : nil,
+            "avatar_template" => post.user&.avatar_template,
+            "author_is_staff" => post.user&.staff? || false,
+            "is_topic_op" => post.post_number == 1,
+            "topic_bumped_at" => topic.bumped_at&.iso8601,
+          )
         end
-        visible_post_types = Topic.visible_post_types(@user)
-
-        candidates
-          .filter_map do |candidate|
-            post = posts[candidate.fetch("post_id")]
-            topic = post&.topic
-            next if topic.nil? || topic.id != candidate.fetch("topic_id")
-            allowed_archetype =
-              if private_messages
-                topic.archetype == Archetype.private_message
-              else
-                topic.archetype == Archetype.default
-              end
-            next if !allowed_archetype
-            next if topic.deleted_at? || !topic.visible?
-            if topic.private_message?
-              next if !private_message_topic_ids.include?(topic.id)
-              next if post.hidden? || !visible_post_types.include?(post.post_type)
-            else
-              next if !@guardian.can_see?(post)
-            end
-            if candidate["post_updated_at"] &&
-                 candidate["post_updated_at"] != post.updated_at.iso8601(6)
-              next
-            end
-            if candidate["topic_updated_at"] &&
-                 candidate["topic_updated_at"] != topic.updated_at.iso8601(6)
-              next
-            end
-
-            candidate_passages = candidate.fetch("passages", [candidate])
-            passages =
-              candidate_passages.filter_map do |passage|
-                passage_post = posts[passage.fetch("post_id")]
-                next if passage_post.nil? || passage_post.topic_id != topic.id
-                if topic.private_message?
-                  if passage_post.hidden? || !visible_post_types.include?(passage_post.post_type)
-                    next
-                  end
-                elsif !@guardian.can_see?(passage_post)
-                  next
-                end
-                if passage["post_updated_at"] &&
-                     passage["post_updated_at"] != passage_post.updated_at.iso8601(6)
-                  next
-                end
-
-                passage_from_source(
-                  passage.merge(
-                    "post_number" => passage_post.post_number,
-                    "url" => passage_post.relative_url,
-                    "post_updated_at" => passage_post.updated_at.iso8601(6),
-                  ),
-                )
-              end
-            next if passages.length != candidate_passages.length
-
-            search_metadata =
-              DiscourseAi::Utils::Search.format_row(
-                topic:,
-                post:,
-                hidden_tags:,
-                excerpt: plain_text(candidate["excerpt"]),
-              ).stringify_keys
-
-            candidate.merge(
-              search_metadata,
-              "category_id" => topic.category_id,
-              "username" => post.user&.username,
-              "name" => SiteSetting.enable_names? ? post.user&.name : nil,
-              "avatar_template" => post.user&.avatar_template,
-              "author_is_staff" => post.user&.staff? || false,
-              "is_topic_op" => post.post_number == 1,
-              "passages" => passages,
-              "post_updated_at" => post.updated_at.iso8601(6),
-              "topic_updated_at" => topic.updated_at.iso8601(6),
-              "topic_bumped_at" => topic.bumped_at&.iso8601,
-            )
-          end
-          .first(CANDIDATE_LIMIT)
       end
 
       def plain_text(value)
