@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 describe "User preferences | Profile" do
-  fab!(:user) { Fabricate(:user, active: true) }
+  fab!(:user) { Fabricate(:user, active: true, refresh_auto_groups: true) }
   let(:user_preferences_profile_page) { PageObjects::Pages::UserPreferencesProfile.new }
   let(:user_preferences_page) { PageObjects::Pages::UserPreferences.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
+  let(:composer) { PageObjects::Components::Composer.new }
 
   before { sign_in(user) }
 
@@ -130,7 +131,7 @@ describe "User preferences | Profile" do
       expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
     end
 
-    it "redirects back to the original destination after filling required fields" do
+    it "resumes topic creation in the requested category after filling required fields" do
       category = Fabricate(:category)
       visit("/new-topic?category_id=#{category.id}")
 
@@ -140,7 +141,9 @@ describe "User preferences | Profile" do
       find(".user-field-updated-terms input").check
       find(".save-button .btn-primary").click
 
-      expect(page).to have_current_path("/new-topic?category_id=#{category.id}")
+      expect(page).to have_current_path("/c/#{category.id}")
+      expect(composer).to be_opened
+      expect(composer.category_chooser).to have_selected_name(category.name)
     end
   end
 end
