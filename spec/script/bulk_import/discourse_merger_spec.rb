@@ -649,6 +649,48 @@ if merger_dependencies_available
           BadgeGrouping.find_by!(name: "Extra").id,
         )
       end
+
+      it "ignores the converter pipeline's processors inherited from Base" do
+        user = Fabricate(:user)
+        topic = Fabricate(:private_message_topic)
+        merger.instance_variable_get(:@users)[21] = user.id
+        merger.instance_variable_get(:@topics)[31] = topic.id
+        created_at = Time.zone.parse("2020-01-02 03:04:05")
+
+        add_source_row(
+          TopicAllowedUser,
+          id: 6,
+          user_id: 21,
+          topic_id: 31,
+          created_at: created_at.to_formatted_s(:db),
+          updated_at: created_at.to_formatted_s(:db),
+        )
+
+        merger.copy_model(TopicAllowedUser)
+
+        expect(TopicAllowedUser.find_by!(topic: topic, user: user).created_at).to eq_time(
+          created_at,
+        )
+      end
+
+      it "still runs processors defined by the merger" do
+        tag = Fabricate(:tag)
+        merger.instance_variable_get(:@tags)[9] = tag.id
+        timestamp = 1.day.ago.to_formatted_s(:db)
+
+        add_source_row(
+          TagGroup,
+          id: 7,
+          name: "Colors",
+          parent_tag_id: 9,
+          created_at: timestamp,
+          updated_at: timestamp,
+        )
+
+        merger.copy_model(TagGroup, mapping: merger.instance_variable_get(:@tag_groups))
+
+        expect(TagGroup.find_by!(name: "Colors").parent_tag_id).to eq(tag.id)
+      end
     end
   end
 end
