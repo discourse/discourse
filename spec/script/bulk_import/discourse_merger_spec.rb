@@ -438,5 +438,62 @@ if merger_dependencies_available
         )
       end
     end
+
+    describe "#copy_uploads" do
+      fab!(:user)
+      fab!(:existing_upload) { Fabricate(:upload, user:) }
+
+      let(:copied_rows) { [] }
+      let(:destination_connection) do
+        rows = copied_rows
+        Class
+          .new do
+            define_method(:copy_data) { |_sql, _encoder, &block| block.call }
+            define_method(:put_copy_data) { |values| rows << values }
+          end
+          .new
+      end
+
+      def upload_row(upload, id:, sha1:)
+        Upload
+          .columns
+          .map(&:name)
+          .index_with { |column| upload.read_attribute_before_type_cast(column)&.to_s }
+          .merge("id" => id.to_s, "sha1" => sha1)
+      end
+
+      it "maps source uploads that already exist in the destination onto the existing upload" do
+        uploads = {}
+        merger =
+          build_merger(
+            raw_connection: destination_connection,
+            encoder: nil,
+            uploads:,
+            users: {
+              user.id => user.id,
+            },
+            sequences: {
+            },
+            uploads_path: "/nonexistent",
+          )
+        allow(FileUtils).to receive(:cp_r)
+        allow(merger).to receive(:source_raw_connection).and_return(
+          source_returning(
+            [
+              upload_row(existing_upload, id: 500, sha1: existing_upload.sha1),
+              upload_row(existing_upload, id: 501, sha1: "new-sha1"),
+            ],
+          ),
+        )
+
+        merger.copy_uploads
+
+        expect(uploads["500"]).to eq(existing_upload.id)
+        expect(uploads["501"]).to be > existing_upload.id
+        expect(copied_rows.map { |values| values[Upload.column_names.index("sha1")] }).to eq(
+          ["new-sha1"],
+        )
+      end
+    end
   end
 end
