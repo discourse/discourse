@@ -105,6 +105,35 @@ RSpec.describe DiscourseEvents::Livestream::ChatTranscriptAudience do
       it { is_expected.not_to be_matches_topic_readers }
     end
 
+    context "when some readers of the category can only read it" do
+      before do
+        SiteSetting.login_required = true
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
+        category.set_permissions(guests => :readonly, members => :full)
+        category.save!
+      end
+
+      it { is_expected.not_to be_matches_topic_readers }
+
+      it "matches once they can post too" do
+        category.set_permissions(guests => :create_post, members => :full)
+        category.save!
+
+        expect(audience).to be_matches_topic_readers
+      end
+    end
+
+    context "when everyone can read the category but only some can post" do
+      before do
+        SiteSetting.login_required = true
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
+        category.set_permissions(:everyone => :readonly, members => :full)
+        category.save!
+      end
+
+      it { is_expected.not_to be_matches_topic_readers }
+    end
+
     context "when the category is restricted by trust level" do
       before do
         category.set_permissions(Group::AUTO_GROUPS[:trust_level_2] => :full)

@@ -78,6 +78,24 @@ RSpec.describe DiscourseEvents::Livestream::ChatTranscript do
       end
     end
 
+    context "when the only message opens a thread" do
+      let(:messages) { channel.chat_messages.where(id: thread.original_message_id) }
+      let(:thread) { Fabricate(:chat_thread, channel:, original_message_user: alice) }
+
+      before do
+        channel.update!(threading_enabled: true)
+        Fabricate(:chat_message, chat_channel: channel, user: bob, thread:, message: "later reply")
+        thread.update!(replies_count: 1)
+      end
+
+      it "leaves out the replies it was not given" do
+        expect(transcript.raw).to include(
+          "quote=\"#{alice.username};#{thread.original_message_id};",
+        )
+        expect(transcript.raw).not_to include("later reply")
+      end
+    end
+
     context "with a message that only has uploads" do
       fab!(:upload)
 

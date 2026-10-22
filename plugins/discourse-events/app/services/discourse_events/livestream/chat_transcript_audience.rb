@@ -7,6 +7,7 @@ class DiscourseEvents::Livestream::ChatTranscriptAudience
   AUTO_GROUPS = Group::AUTO_GROUPS
   ALL_LOGGED_IN_USERS = AUTO_GROUPS.values_at(:everyone, :logged_in_users, :trust_level_0)
   TRUST_LEVEL_GROUPS = AUTO_GROUPS.values_at(*(0..4).map { |level| :"trust_level_#{level}" })
+  POSTING_PERMISSIONS = CategoryGroup.permission_types.values_at(:full, :create_post)
 
   def initialize(event, channel:)
     @event = event
@@ -48,7 +49,7 @@ class DiscourseEvents::Livestream::ChatTranscriptAudience
   def chat_audiences
     audiences = [SiteSetting.chat_allowed_groups_map]
     audiences << invited_group_ids if @event.private?
-    audiences << channel_category_group_ids if channel_category&.read_restricted?
+    audiences << channel_category_group_ids if channel_category
     audiences
   end
 
@@ -56,8 +57,19 @@ class DiscourseEvents::Livestream::ChatTranscriptAudience
     @channel.chatable if @channel.chatable.is_a?(Category)
   end
 
+  # Mirrors `Guardian#can_join_chat_channel?`: members read the chat only when
+  # they can post in its category, while anonymous users read a public
+  # channel as long as they can see the category.
   def channel_category_group_ids
-    channel_category.secure_group_ids
+    category_groups = channel_category.category_groups
+    group_ids =
+      if category_groups.empty?
+        [AUTO_GROUPS[:everyone]]
+      else
+        category_groups.where(permission_type: POSTING_PERMISSIONS).pluck(:group_id)
+      end
+    group_ids << AUTO_GROUPS[:anonymous_users] if !channel_category.read_restricted?
+    group_ids
   end
 
   def invited_group_ids

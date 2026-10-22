@@ -129,6 +129,11 @@ class DiscourseEvents::Livestream::ChatTranscript
         @channel,
         Discourse.system_user,
         messages_or_ids: messages,
+        # Replies outside the given messages may belong to another occurrence,
+        # and would skip the escaping applied to these.
+        opts: {
+          no_thread_expansion: true,
+        },
       ).generate_markdown
 
     "[wrap=#{WRAP_NAME}]\n#{transcript}\n[/wrap]"
