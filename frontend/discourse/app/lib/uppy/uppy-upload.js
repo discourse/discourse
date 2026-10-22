@@ -281,6 +281,7 @@ export default class UppyUpload {
             progress: 0,
             extension: file.extension,
             processing: false,
+            data: file.data,
           })
         );
         this.#triggerInProgressUploadsEvent();

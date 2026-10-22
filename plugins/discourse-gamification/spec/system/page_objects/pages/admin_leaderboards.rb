@@ -36,14 +36,28 @@ module PageObjects
         find("#leaderboard-admin__row-#{leaderboard.id} .leaderboard-admin__edit").click
       end
 
+      def click_leaderboard_name(leaderboard)
+        find("#leaderboard-admin__row-#{leaderboard.id} .d-table__overview-link").click
+      end
+
+      def view_leaderboard(leaderboard)
+        row_menu(leaderboard).option(".leaderboard-admin__view").click
+      end
+
       def delete_leaderboard(leaderboard)
+        row_menu(leaderboard).option(".leaderboard-admin__delete").click
+      end
+
+      private
+
+      def row_menu(leaderboard)
         menu =
           PageObjects::Components::DMenu.new(
             "#leaderboard-admin__row-#{leaderboard.id} .leaderboard-admin-menu-trigger",
             "leaderboard-admin-menu",
           )
         menu.expand
-        menu.option(".leaderboard-admin__delete").click
+        menu
       end
     end
   end

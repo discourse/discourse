@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseDataExplorer::QueryController do
+RSpec.describe DiscourseDataExplorer::QueryController do
   def response_json
     response.parsed_body
   end
@@ -34,6 +34,22 @@ describe DiscourseDataExplorer::QueryController do
            }
     end
 
+    shared_context "with synchronized default queries" do
+      fab!(:group)
+
+      let!(:existing_query) do
+        Fabricate(:query, id: -1, name: "Old definition", hidden:, last_run_at: 2.days.ago)
+      end
+      let(:hidden) { false }
+      let(:definition) { DiscourseDataExplorer::Queries.default.fetch("-1") }
+
+      before do
+        existing_query.groups = [group]
+        DiscourseDataExplorer::QueryTag.sync!(query: existing_query, names: ["staff"])
+        DiscourseDataExplorer::DefaultQuerySync.execute
+      end
+    end
+
     describe "when disabled" do
       before { SiteSetting.data_explorer_enabled = false }
 
@@ -62,6 +78,64 @@ describe DiscourseDataExplorer::QueryController do
     end
 
     describe "#index" do
+      context "when default queries are synchronized" do
+        include_context "with synchronized default queries"
+
+        fab!(:custom_queries) { Fabricate.times(4, :query) }
+
+        let(:query_parameters) { { order: "name", ascending: "true" } }
+        let(:query_ids) do
+          DiscourseDataExplorer::Query.where(hidden: false).order(:name).pluck(:id)
+        end
+        let(:first_page) { response_json }
+        let(:second_page) { response_json }
+        let(:first_page_ids) { first_page.fetch("queries").map { it["id"] } }
+        let(:second_page_ids) { second_page.fetch("queries").map { it["id"] } }
+
+        before do
+          get "/admin/plugins/discourse-data-explorer/queries.json", params: query_parameters
+        end
+
+        it "paginates default and custom queries together", :aggregate_failures do
+          expect(first_page_ids.size).to eq(50)
+          expect(first_page.fetch("total_rows_queries")).to eq(query_ids.size)
+
+          get first_page.fetch("load_more_queries")
+
+          expect(first_page_ids + second_page_ids).to eq(query_ids)
+          expect(second_page).not_to have_key("load_more_queries")
+        end
+
+        context "when the request filters by automatic and local tags" do
+          let(:query_parameters) { super().merge(tags: "default,staff") }
+
+          it "returns the matching default query" do
+            expect(first_page_ids).to contain_exactly(existing_query.id)
+          end
+        end
+
+        context "when queries use the default order" do
+          let(:query_parameters) { super().except(:order, :ascending) }
+          let(:query_ids) do
+            DiscourseDataExplorer::Query.order(last_run_at: :desc, id: :asc).pluck(:id)
+          end
+
+          it "paginates queries with the same last run time" do
+            get first_page.fetch("load_more_queries")
+
+            expect(first_page_ids + second_page_ids).to eq(query_ids)
+          end
+        end
+
+        context "when a default query is hidden" do
+          let(:hidden) { true }
+
+          it "excludes the query from the list" do
+            expect(first_page_ids).not_to include(existing_query.id)
+          end
+        end
+      end
+
       it "behaves nicely with no user created queries" do
         DiscourseDataExplorer::Query.destroy_all
         get "/admin/plugins/discourse-data-explorer/queries.json"
@@ -409,6 +483,31 @@ describe DiscourseDataExplorer::QueryController do
     end
 
     describe "#show" do
+      context "when default queries are synchronized" do
+        include_context "with synchronized default queries"
+
+        before { get "/admin/plugins/discourse-data-explorer/queries/#{existing_query.id}.json" }
+
+        it "serves the current definition with local query state" do
+          expect(response_json.fetch("query")).to include(
+            "id" => existing_query.id,
+            "name" => definition.fetch("name"),
+            "sql" => definition.fetch("sql"),
+            "group_ids" => [group.id],
+            "last_run_at" => existing_query.last_run_at.as_json,
+            "tags" => %w[default users staff],
+          )
+        end
+
+        context "when a default query is hidden" do
+          let(:hidden) { true }
+
+          it "returns not found for the query" do
+            expect(response).to have_http_status(:not_found)
+          end
+        end
+      end
+
       it "reports whether the query can be, and is, on the admin dashboard" do
         query = make_query("SELECT 1 as value")
 
@@ -488,6 +587,17 @@ describe DiscourseDataExplorer::QueryController do
     end
 
     describe "#run" do
+      context "when default queries are synchronized" do
+        include_context "with synchronized default queries"
+
+        it "runs a persisted default query", :aggregate_failures do
+          run_query existing_query.id
+
+          expect(response).to have_http_status(:ok)
+          expect(existing_query.reload.last_run_at).to be_within(1.second).of(Time.current)
+        end
+      end
+
       it "can run queries" do
         query = make_query("SELECT 23 as my_value")
         run_query query.id

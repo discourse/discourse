@@ -10,6 +10,8 @@ zh_CN:
     chat_enabled: "启用聊天。"
     chat_pinned_messages: "在聊天频道中启用置顶消息。"
     enable_public_channels: "基于类别启用公开频道。"
+    chat_allowed_groups: "这些群组中的用户可以聊天，但匿名用户除外，他们只有在被添加到此设置后才能查看聊天记录。添加匿名用户还可以让搜索引擎索引公共频道。请注意，管理员和版主始终可以访问聊天记录。"
+    chat_channel_retention_days: "普通频道中的聊天记录将保留指定天数。设置为“0”则永久保留消息。当匿名用户可以查看聊天记录时，已删除的消息也会随着时间推移从搜索引擎结果中消失，因此较短的保留期限会限制可通过搜索找到的聊天记录数量。"
     chat_dm_retention_days: "个人聊天频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
     chat_auto_silence_duration: "用户超过聊天消息创建速率限值时将被禁言的分钟数。设置为 0 将禁用自动禁言。"
     chat_allowed_messages_for_trust_level_0: "信任级别 0 用户在 30 秒内可以发送的消息数。设置为 0 将禁用限制。"
@@ -65,8 +67,15 @@ zh_CN:
     crawler:
       directory_title: "聊天频道"
       nav_title: "聊天"
+      last_activity: "最近活动"
+      retention_notice:
+        other: "超过 %{count} 天的消息将被删除，置顶消息除外。"
+      messages_count:
+        other: "%{count} 消息"
       members_count:
         other: "%{count} 个成员"
+      thread_title: "%{channel} 中的话题"
+      channel_day_title: "%{channel} – %{date}"
       thread_replies:
         other: "%{count} 条回复"
     errors:

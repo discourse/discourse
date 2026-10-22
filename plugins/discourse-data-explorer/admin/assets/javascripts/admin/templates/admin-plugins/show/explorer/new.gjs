@@ -20,7 +20,7 @@ export default <template>
   <div class="admin-detail">
     <div class="query-new__top-bar">
       <BackButton
-        @label="explorer.queries"
+        @label="explorer.back_to_queries"
         @route="adminPlugins.show.explorer.index"
       />
 
@@ -141,7 +141,7 @@ export default <template>
             />
 
             <label class="query-new__field-label">
-              {{i18n "explorer.description_placeholder"}}
+              {{i18n "explorer.query_description"}}
               <span class="query-new__optional">
                 ({{i18n "explorer.ai.optional"}})
               </span>
@@ -214,7 +214,7 @@ export default <template>
           <form.Field
             @format="full"
             @name="description"
-            @title={{i18n "explorer.description_placeholder"}}
+            @title={{i18n "explorer.query_description"}}
             @type="textarea"
             as |field|
           >
@@ -277,7 +277,6 @@ export default <template>
                 />
               </div>
             </div>
-            <div class="clear"></div>
           </div>
           <form.Actions>
             <form.Submit @icon="plus" @label="explorer.create" />

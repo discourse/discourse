@@ -887,6 +887,7 @@ en:
         one: "Default notification level can't be set on groups larger than %{count} user. Incorrect group: %{group_name}"
         other: "Default notification level can't be set on groups larger than %{count} users. Incorrect group: %{group_name}"
       grant_trust_level_not_valid: "'%{trust_level}' is not a valid trust level."
+      flair_upload_not_owned: "You can only use an image you have uploaded as the group flair."
       can_not_modify_automatic: "You cannot modify an automatic group"
       member_already_exist:
         one: "'%{username}' is already a member of this group."
