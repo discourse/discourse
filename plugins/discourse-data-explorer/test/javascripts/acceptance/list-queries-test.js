@@ -144,6 +144,7 @@ acceptance("List Queries", function (needs) {
           description:
             "returns the top 100 likers for a given monthly period ordered by like_count. It accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
           lastRunAt: "2021-02-11T08:29:59.337Z",
+          isDefault: true,
           tags: ["default", "staff"],
           userId: -1,
           groupIds: [],
@@ -154,6 +155,7 @@ acceptance("List Queries", function (needs) {
           description:
             "based on the number of replies, it accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
           lastRunAt: "2021-02-08T15:37:49.188Z",
+          isDefault: true,
           tags: ["default"],
           userId: -1,
           groupIds: [],
@@ -221,6 +223,13 @@ acceptance("List Queries", function (needs) {
     assert
       .dom(".query-badge")
       .doesNotExist("default queries do not render a separate badge");
+
+    assert
+      .dom(".query-row:nth-child(1) .d-table__cell-actions a")
+      .hasText(i18n("explorer.view_query"), "default queries are view-only");
+    assert
+      .dom(".query-row:nth-child(3) .d-table__cell-actions a")
+      .hasText(i18n("edit"), "custom queries are editable");
 
     assert
       .dom(".query-row:first-child .query-tags .d-table-badge")
