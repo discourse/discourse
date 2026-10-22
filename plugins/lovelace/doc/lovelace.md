@@ -305,3 +305,146 @@ zero progress, and a narrow viewport. Layout checks cover inline desktop rows,
 stacked mobile descriptions, labelled header icons, and keyboard completion.
 Width checks verify alignment with the reading area with the sidebar open or
 closed, when minimized, and on mobile, along with a compact progress bar.
+
+## Onboarding reports and aggregate statistics
+
+Open **Admin → Reports → Member onboarding** at
+`/admin/reports/lovelace_onboarding` for member counts in this default row order:
+
+1. Seen the checklist
+2. Clicked at least one item link
+3. Completed at least one item
+4. Clicked all item links
+5. Completed all items
+6. Dismissed the checklist
+7. Dismissed without completing any items
+
+**Member onboarding item completions** at
+`/admin/reports/lovelace_onboarding_items` has separate **Clicked item link** and
+**Marked item complete** columns counting members for each action on each item.
+Neither report shows “Totals for sample”: members can appear in several rows, so
+summing rows would count the same member more than once. Other Discourse reports
+retain their own totals.
+These use the standard Discourse report table, date selection, export, caching,
+and staff authorization. Anonymous visitors and ordinary members cannot read them.
+
+The selected date range is a **first-display cohort**: members whose widget was
+first rendered during those dates, with their subsequent activity up to now.
+Each member counts once per milestone and once per item, even after repeated
+visits or completing, undoing, and completing an item again. Completing all items
+means the member reached full completion of the configured, nonempty checklist
+at that time. Removing items does not erase historical milestones. Removed items
+appear by ID in the item report; current items use their current titles and
+include zero counts (shown as a dash in standard report tables). Dismissal
+without completion means no item had ever been recorded complete before dismissal, even if a member subsequently undid progress.
+Minimizing or following a link does not count as completing an item. Link clicks
+count independently from checkbox completion, once per member per item, including
+keyboard activation and middle-clicks. The “Clicked all item links” milestone means a
+member activated every item link in the nonempty checklist configured at the time
+of the last click. Later edits or removals do not erase that milestone or recorded
+per-item clicks. Old views and completions do not imply historical clicks.
+
+Impressions start when the member widget renders, including its minimized state.
+Admin pages, the temporary configuration preview, anonymous requests, dismissed
+widgets, empty checklists, and merely serializing or reading member state do not
+create impressions. The authenticated update endpoint accepts a boolean `seen`
+flag and a `clicked_item_id` identifying a currently configured item. Unknown or
+invalid item IDs return HTTP 400. Clicks apply only to the authenticated member;
+login, plugin enablement, and CSRF protection are enforced as for progress changes.
+Link activation sends a request with `keepalive` so leaving the app can still
+record the click. It preserves the normal link destination and navigation, without
+changing completion, minimized state, or dismissal. Widget interactions also send
+the `seen` flag so a fast completion or dismissal can be recorded before the
+initial impression request finishes. Recording an
+impression does not change the member's progress or trigger a celebration.
+A failed impression request leaves the widget usable and can be retried on the
+next display or interaction.
+
+Collection starts with this implementation; no historical views are inferred.
+Existing visible members' saved completion state is captured when they next see
+the widget. Previously dismissed members are not retroactively counted. Members
+can appear in multiple outcome counts, so percentages need not sum to 100%.
+
+The plugin registers `lovelace_onboarding` with Discourse's standard statistics
+collection, available to the existing site statistics/warehouse pipeline rather
+than the public About API. It supplies numeric fields prefixed
+`lovelace_onboarding_`:
+
+- `enabled`: 1 or 0, allowing collection consumers to count enabled sites.
+- `default_<id>`: 1 or 0 for each selected seeded suggestion, including edited
+  suggestions with the same stable ID.
+- `custom_items`: the number of selected items whose IDs are not seeded IDs.
+- `custom_<link_type>`: counts of custom items by category, topic, chat, profile,
+  notifications, account, or custom URL destination. These categories summarize
+  destination types, not the meaning of free text.
+- `seen`, `engaged`, `completed`, `dismissed`,
+  `dismissed_without_completion`, `clicked`, and `clicked_all`: all-time unique
+  member milestone counts.
+- `engaged_percent`, `completed_percent`, and `dismissed_percent`: the respective
+  counts divided by seen, multiplied by 100, rounded to two decimal places.
+  With no impressions these are zero.
+
+Configuration statistics describe the currently selected editable checklist, not
+its suggestion bank or the separate legacy suggestion selection. No item text,
+URLs, usernames, or member IDs are exported by these statistics. The plugin
+provides the collection fields; cross-site aggregation uses the installation's
+existing statistics pipeline. Disabling the feature removes its registered statistics from collection, following
+Discourse’s plugin behavior, while preserving stored history. Collection consumers
+should treat absent fields as a disabled or unavailable feature; installed sites
+with the feature enabled emit `enabled: 1`.
+
+Reporting milestones live alongside each member's existing PluginStore state
+under `reporting`, protected by the same per-member distributed lock. They are
+separate from reversible UI state and are not included in member JSON responses.
+Reports filter first-display timestamps in the database and process rows in
+batches; no migration or new table is required. Standard report caching can delay
+new activity until the cache refreshes. A plugin admin initializer overrides only
+the sample-total visibility for these two report tables; the standard table,
+sorting, date controls, export, and other reports remain available.
+
+`spec/lib/reporting_spec.rb` covers unique milestones, completion reversal,
+configuration removal, cohort dates, zero denominators, private aggregate
+statistics, hidden/legacy state, independent click counts, and click cohort dates.
+`spec/requests/reporting_spec.rb` covers
+report authorization, the impression HTTP contract, click ID validation, disabled
+behavior, and per-account click isolation.
+`spec/system/view_onboarding_reports_spec.rb` exercises member interactions and
+reads their counts in both standard admin report tables, including after reload.
+It also follows links with the mouse and keyboard as an ordinary member, verifies
+both click milestones and the separate completion column as an administrator,
+and checks that only the onboarding reports omit sample totals.
+The existing member
+widget system flow also verifies display tracking and persistence through reload.
+Run them with the request, service, and member-widget checks listed above, adding:
+
+```sh
+LOAD_PLUGINS=1 RAILS_ENV=test bin/rspec plugins/lovelace/spec/lib
+LOAD_PLUGINS=1 RAILS_ENV=test bin/rspec plugins/lovelace/spec/system/view_onboarding_reports_spec.rb
+```
+
+
+### Try member actions against the reports
+
+1. Open `/latest` as a signed-in member whose checklist has not been dismissed.
+   Use a separate browser profile for the administrator if testing with two
+   accounts. The automatic widget above the reading area is the one that records
+   activity; the configuration preview and `/lovelace/checklist` suggestion page
+   do not record its link clicks or checkbox completions.
+2. Follow one item’s action link. Return to `/latest`: the item remains unchecked.
+   As an administrator, open `/admin/reports/lovelace_onboarding_items`, select
+   dates containing the member’s first widget display, and reload the report.
+   That item’s **Clicked item link** count increases once; **Marked item complete**
+   stays unchanged. Counts are community totals, and zeros appear as dashes.
+3. Back on `/latest`, mark that item complete. Reload the report: its completion
+   count increases once. Repeated clicks or unchecking and checking the same item
+   do not add another member to either column.
+4. Follow every configured item link and open
+   `/admin/reports/lovelace_onboarding` as an administrator. After reloading with
+   the same date range, both click rows include this member. “Clicked all item links”
+   does not require checking the items. Neither onboarding report includes
+   “Totals for sample”.
+
+If the member widget is absent, check that Lovelace is enabled and the editable
+checklist is nonempty. An account that previously dismissed it needs another
+undismissed account for this test; visiting the member page does not reset saved
+progress or dismissal.

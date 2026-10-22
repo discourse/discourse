@@ -51,6 +51,10 @@ module PageObjects
         end
       end
 
+      def follow_link_with_keyboard(text)
+        within(".lovelace-member-checklist") { find_link(text, exact: true).send_keys(:enter) }
+      end
+
       def follow_guidelines
         within(".lovelace-member-checklist") { click_link("Read guidelines", exact: true) }
       end

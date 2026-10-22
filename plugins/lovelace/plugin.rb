@@ -30,3 +30,11 @@ after_initialize do
     include_condition: -> { SiteSetting.lovelace_enabled },
   ) { Lovelace::MemberChecklist.for_user(object) }
 end
+
+after_initialize do
+  add_report("lovelace_onboarding") { |report| Lovelace::Reporting.report(report) }
+  add_report("lovelace_onboarding_items") do |report|
+    Lovelace::Reporting.report(report, items: true)
+  end
+  register_stat("lovelace_onboarding") { Lovelace::Reporting.statistics }
+end
