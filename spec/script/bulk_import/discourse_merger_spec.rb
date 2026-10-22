@@ -61,5 +61,40 @@ if merger_dependencies_available
         expect(category.reload.topic_id).to eq(new_description_topic.id)
       end
     end
+
+    describe "#fix_polls" do
+      fab!(:post)
+
+      # Core specs run without plugins loaded, so the poll plugin is stood in for.
+      before do
+        poll = Struct.new(:post_id).new(post.id)
+        poll_model = Class.new { define_singleton_method(:find_by_id) { |id| poll if id == 10 } }
+
+        RSpec::Mocks::ConstantMutator.stub("DiscoursePoll::HAS_POLLS", "has_polls")
+        RSpec::Mocks::ConstantMutator.stub("Poll", poll_model)
+      end
+
+      def has_polls_flag?(post)
+        PostCustomField.exists?(post_id: post.id, name: "has_polls")
+      end
+
+      it "flags the posts of merged polls" do
+        build_merger(polls: { "1" => 10 }).fix_polls
+
+        expect(has_polls_flag?(post)).to eq(true)
+      end
+
+      it "flags polls on deleted posts" do
+        post.trash!
+
+        build_merger(polls: { "1" => 10 }).fix_polls
+
+        expect(has_polls_flag?(post)).to eq(true)
+      end
+
+      it "skips polls that were not copied" do
+        expect { build_merger(polls: { "1" => 11 }).fix_polls }.not_to raise_error
+      end
+    end
   end
 end
