@@ -216,11 +216,31 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       Group,
       mapping: @groups,
       skip_processing: true,
-      select_sql:
-        "SELECT #{Group.columns.map { |c| "\"#{c.name}\"" }.join(", ")} FROM groups WHERE automatic = false",
+      select_sql: merge_same_named_rows(Group, @groups, where: "automatic = false"),
     )
 
     copy_model(GroupUser, skip_if_merged: true)
+  end
+
+  # Maps source rows onto destination rows with the same case-insensitive name,
+  # because copying them would violate the unique name index. Returns the SQL
+  # that selects the remaining source rows for copying.
+  def merge_same_named_rows(klass, mapping, where: "TRUE")
+    existing_ids = klass.unscoped.pluck(:name, :id).to_h { |name, id| [name.downcase, id] }
+    merged_ids = []
+
+    source_raw_connection
+      .exec("SELECT id, name FROM #{klass.table_name} WHERE #{where}")
+      .each do |row|
+        next unless existing_id = existing_ids[row["name"].downcase]
+        mapping[row["id"].to_i] = existing_id
+        merged_ids << row["id"].to_i
+      end
+
+    sql = +"SELECT #{klass.columns.map { |c| "\"#{c.name}\"" }.join(", ")} FROM #{klass.table_name}"
+    sql << " WHERE #{where}"
+    sql << " AND id NOT IN (#{merged_ids.join(", ")})" if merged_ids.any?
+    sql
   end
 
   def category_exists(cat_row)
@@ -428,7 +448,11 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     @sequences[Tag.sequence_name] = last_id + 1
 
     [TagUser, TopicTag, CategoryTag, CategoryTagStat].each { |k| copy_model(k) }
-    copy_model(TagGroup, mapping: @tag_groups)
+    copy_model(
+      TagGroup,
+      mapping: @tag_groups,
+      select_sql: merge_same_named_rows(TagGroup, @tag_groups),
+    )
     [TagGroupMembership, CategoryTagGroup, CategoryRequiredTagGroup].each do |k|
       copy_model(k, skip_processing: true)
     end
