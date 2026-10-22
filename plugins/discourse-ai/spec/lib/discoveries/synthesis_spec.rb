@@ -273,7 +273,7 @@ describe DiscourseAi::Discoveries::Synthesis do
     expect(result).to have_attributes(answerable: false, source_refs: [], title: "", answer: "")
   end
 
-  it "rejects source references outside the supplied candidates" do
+  it "rejects an answer when none of its source references are supplied candidates" do
     candidates = [
       {
         "source_ref" => "source_1",
@@ -295,6 +295,31 @@ describe DiscourseAi::Discoveries::Synthesis do
       ) { synthesis.call(query: "how do I create a plugin", candidates:) }
 
     expect(result).to have_attributes(answerable: false, source_refs: [], title: "", answer: "")
+  end
+
+  it "keeps an answer whose known source references survive alongside invalid ones" do
+    candidates =
+      %w[source_1 source_2 source_3].map do |source_ref|
+        { "source_ref" => source_ref, "title" => "Plugins", "excerpt" => "Use the skeleton." }
+      end
+
+    result =
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [
+          {
+            answerable: true,
+            source_refs: %w[source_9 source_2 source_2 source_1 source_3],
+            title: "Plugin guide",
+            answer: "Use the plugin skeleton.",
+          },
+        ],
+      ) { synthesis.call(query: "how do I create a plugin", candidates:, related_count: 2) }
+
+    expect(result).to have_attributes(
+      answerable: true,
+      source_refs: %w[source_2 source_1],
+      answer: "Use the plugin skeleton.",
+    )
   end
 
   it "returns the suggested follow-up question alongside the answer" do

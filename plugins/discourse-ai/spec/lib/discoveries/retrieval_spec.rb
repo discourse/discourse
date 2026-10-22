@@ -403,8 +403,8 @@ describe DiscourseAi::Discoveries::Retrieval do
     end
   end
 
-  describe "#validated_sources" do
-    it "accepts up to six known source references and rechecks access before publication" do
+  describe "#sources_for" do
+    it "resolves known source references in the model's order, dropping the rest" do
       retrieval =
         described_class.new(
           user:,
@@ -413,42 +413,18 @@ describe DiscourseAi::Discoveries::Retrieval do
         )
       result = retrieval.call("useful answers")
 
-      sources = retrieval.validated_sources(result, %w[source_2 source_1])
+      sources =
+        retrieval.sources_for(
+          result,
+          ["source_2", "unknown", "source_2", nil, { "ref" => 1 }, "source_1"],
+          limit: 6,
+        )
+
       expect(sources.map { |candidate| candidate.fetch("topic_id") }).to eq(
         [topic_2.id, topic_1.id],
       )
-
-      topic_2.update!(category: private_category)
-      expect(retrieval.validated_sources(result, %w[source_2 source_1])).to eq([])
-    end
-
-    it "rejects duplicate, unknown, empty, or excessive source references" do
-      retrieval =
-        described_class.new(
-          user:,
-          lexical_retriever: ->(_query) { [source(post_1)] },
-          semantic_retriever: ->(_query) { [] },
-        )
-      result = retrieval.call("useful answers")
-
-      expect(retrieval.validated_sources(result, [])).to eq([])
-      expect(retrieval.validated_sources(result, %w[source_1 source_1])).to eq([])
-      expect(retrieval.validated_sources(result, %w[source_1 unknown])).to eq([])
-      expect(retrieval.validated_sources(result, %w[a b c d e f g])).to eq([])
-    end
-
-    it "rejects a supporting source that changes after retrieval" do
-      retrieval =
-        described_class.new(
-          user:,
-          lexical_retriever: ->(_query) { [source(post_1)] },
-          semantic_retriever: ->(_query) { [] },
-        )
-      result = retrieval.call("useful answers")
-
-      post_1.update!(raw: "Changed after synthesis began")
-
-      expect(retrieval.validated_sources(result, %w[source_1])).to eq([])
+      expect(retrieval.sources_for(result, %w[source_2 source_1], limit: 1).length).to eq(1)
+      expect(retrieval.sources_for(result, nil, limit: 6)).to eq([])
     end
   end
 

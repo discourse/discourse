@@ -94,6 +94,15 @@ RSpec.describe DiscourseAi::Completions::StructuredOutput do
       structured_output.finish
       expect(structured_output.property_complete?(:bool)).to eq(true)
     end
+
+    it "keeps a property open through a trailing comma and a half-written next key" do
+      structured_output << "{\"list\": [\"a\"],"
+      expect(structured_output.property_complete?(:list)).to eq(false)
+
+      structured_output << " \"bo"
+      expect(structured_output.property_complete?(:list)).to eq(true)
+      expect(structured_output.read_buffered_property(:list)).to eq(["a"])
+    end
   end
 
   describe "Parsing structured output on the fly" do

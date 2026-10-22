@@ -65,9 +65,11 @@ describe Jobs::StreamDiscoverReply do
     )
     allow(DiscourseAi::Discoveries::Retrieval).to receive(:new).with(user:).and_return(retrieval)
     allow(retrieval).to receive(:call).and_return(retrieval_result)
-    allow(retrieval).to receive(:validated_sources).with(retrieval_result, %w[source_1]).and_return(
-      [candidate],
-    )
+    allow(retrieval).to receive(:sources_for).with(
+      retrieval_result,
+      %w[source_1],
+      limit: an_instance_of(Integer),
+    ).and_return([candidate])
     allow(DiscourseAi::Discoveries::Synthesis).to receive(:new) do |arguments|
       expect(arguments).to include(user:, ai_agent:, llm_model:)
       expect(arguments[:cancel_manager]).to be_a(DiscourseAi::Completions::CancelManager)
@@ -195,9 +197,11 @@ describe Jobs::StreamDiscoverReply do
         candidates: [candidate, other_candidate, duplicate_candidate],
       )
     allow(retrieval).to receive(:call).and_return(result)
-    allow(retrieval).to receive(:validated_sources).with(result, %w[source_1]).and_return(
-      [candidate],
-    )
+    allow(retrieval).to receive(:sources_for).with(
+      result,
+      %w[source_1],
+      limit: an_instance_of(Integer),
+    ).and_return([candidate])
     allow(synthesis).to receive(:call) do |**_, &stream|
       stream.call(
         answerable: true,
@@ -284,7 +288,7 @@ describe Jobs::StreamDiscoverReply do
         scope_fallback: true,
       ),
     )
-    allow(retrieval).to receive(:validated_sources).and_return([candidate])
+    allow(retrieval).to receive(:sources_for).and_return([candidate])
 
     messages =
       MessageBus
@@ -465,8 +469,39 @@ describe Jobs::StreamDiscoverReply do
     expect(DiscourseAi::Discoveries.cached_result_for(user:, request_id:)).to be_nil
   end
 
+  it "retracts a streamed answer and stops generating when none of its sources resolve" do
+    allow(retrieval).to receive(:sources_for).and_return([])
+    allow(synthesis).to receive(:call) do |**, &stream|
+      stream.call(answer: "Use the plugin skeleton.", title: "")
+      stream.call(answer: "Use the plugin skeleton.", source_refs: %w[source_9], title: "")
+      stream.call(
+        answer: "Use the plugin skeleton.",
+        source_refs: %w[source_9],
+        answerable: true,
+        title: "Plugin guide",
+      )
+      DiscourseAi::Discoveries::Synthesis::Result.new(
+        answerable: false,
+        source_refs: [],
+        title: "",
+        answer: "",
+      )
+    end
+    expect_any_instance_of(DiscourseAi::Completions::CancelManager).to receive(:cancel!).once
+
+    messages =
+      MessageBus
+        .track_publish("/discourse-ai/discoveries") do
+          job.execute(user_id: user.id, query:, request_id:)
+        end
+        .map(&:data)
+
+    expect(messages.map { |message| message[:phase] }).to eq(%w[searching answering complete])
+    expect(messages.last).to include(answerable: false, ai_discover_reply: "", sources: [])
+  end
+
   it "does not release an answer when the model selects an invalid source" do
-    allow(retrieval).to receive(:validated_sources).and_return([])
+    allow(retrieval).to receive(:sources_for).and_return([])
 
     messages =
       MessageBus
@@ -505,27 +540,6 @@ describe Jobs::StreamDiscoverReply do
 
     expect(messages.map { |message| message[:phase] }).to eq(%w[searching complete])
     expect(messages.last).to include(answerable: false, ai_discover_reply: "", sources: [])
-  end
-
-  it "revalidates selected sources before the final answer" do
-    allow(retrieval).to receive(:validated_sources).and_return([candidate], [])
-
-    messages =
-      MessageBus
-        .track_publish("/discourse-ai/discoveries") do
-          job.execute(user_id: user.id, query:, request_id:)
-        end
-        .map(&:data)
-
-    expect(messages.map { |message| message[:phase] }).to include("sources")
-    expect(messages.last).to include(
-      phase: "complete",
-      done: true,
-      answerable: false,
-      ai_discover_reply: "",
-      sources: [],
-    )
-    expect(DiscourseAi::Discoveries.cached_result_for(user:, request_id:)).to be_nil
   end
 
   it "completes without a model call when retrieval has no candidates" do
@@ -747,7 +761,7 @@ describe Jobs::StreamDiscoverReply do
       allow(retrieval).to receive(:call).and_return(
         DiscourseAi::Discoveries::Retrieval::Result.new(candidates:),
       )
-      allow(retrieval).to receive(:validated_sources).and_return([candidate])
+      allow(retrieval).to receive(:sources_for).and_return([candidate])
       allow(synthesis).to receive(:call) do |**_, &stream|
         stream.call(answerable: true, source_refs: %w[source_1], answer: "Answer")
         DiscourseAi::Discoveries::Synthesis::Result.new(
@@ -797,7 +811,7 @@ describe Jobs::StreamDiscoverReply do
     end
 
     it "does not save rejected references as final sources" do
-      allow(retrieval).to receive(:validated_sources).and_return([])
+      allow(retrieval).to receive(:sources_for).and_return([])
 
       job.execute(args)
 

@@ -107,14 +107,21 @@ module Jobs
       synthesis =
         DiscourseAi::Discoveries::Synthesis.new(user:, ai_agent:, llm_model:, cancel_manager:)
       selected_sources = nil
-      source_selection_invalid = false
+      rejected = false
       discovery_title = ""
       last_published_answer = ""
       last_streamed_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      reject =
+        lambda do
+          rejected = true
+          ask_log.ask_outcome = :no_answer if ask_log
+          publish_no_answer(user, base)
+          cancel_manager.cancel!
+        end
 
       # Models emit the response keys in any order, so the answer streams as
-      # soon as it is meaningful and is validated against its sources only when
-      # the reply completes; a rejected reply retracts what was streamed.
+      # soon as it is meaningful. Once the reply abstains or none of its sources
+      # resolve, anything streamed is retracted and generation stops.
       result =
         synthesis.call(
           query:,
@@ -124,18 +131,20 @@ module Jobs
           summary_detail: result_settings[:summary_detail],
           related_count: result_settings[:related_count],
         ) do |update|
-          next if cancel_manager.cancelled? || !active_request?(user, args[:request_id])
-          next if update[:answerable] == false || source_selection_invalid
+          next if rejected || cancel_manager.cancelled?
+          next if !active_request?(user, args[:request_id])
+          next reject.call if update[:answerable] == false
 
           discovery_title = update[:title].to_s.strip if update[:title].present?
 
           if selected_sources.nil? && update[:source_refs].present?
-            selected_refs = Array(update[:source_refs]).first(result_settings[:related_count])
-            selected_sources = retrieval.validated_sources(retrieval_result, selected_refs)
-            if selected_sources.empty?
-              source_selection_invalid = true
-              next
-            end
+            selected_sources =
+              retrieval.sources_for(
+                retrieval_result,
+                update[:source_refs],
+                limit: result_settings[:related_count],
+              )
+            next reject.call if selected_sources.empty?
 
             publish_update(
               user,
@@ -177,14 +186,18 @@ module Jobs
           end
         end
 
+      return if rejected
       if cancel_manager.cancelled? || Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline ||
            !active_request?(user, args[:request_id])
         return
       end
 
-      final_refs = Array(result.source_refs).first(result_settings[:related_count])
       final_sources =
-        retrieval.validated_sources(retrieval_result, final_refs) if final_refs.present?
+        retrieval.sources_for(
+          retrieval_result,
+          result.source_refs,
+          limit: result_settings[:related_count],
+        )
       answerable =
         result.answerable && final_sources.present? &&
           DiscourseAi::Discoveries::Synthesis.meaningful_answer?(result.answer)

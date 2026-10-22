@@ -6,7 +6,6 @@ module DiscourseAi
       RRF_K = 60
       CANDIDATE_LIMIT = 50
       SYNTHESIS_LIMIT = 50
-      SELECTED_SOURCE_LIMIT = 6
       EXCERPT_LIMIT = 1200
       SEMANTIC_PRIVATE_MESSAGE_FILTER = /(?:\A|\s)in:(?:messages|personal)(?=\s|\z)/i
 
@@ -100,21 +99,16 @@ module DiscourseAi
         explicit_filters?(query.to_s.gsub(SEMANTIC_PRIVATE_MESSAGE_FILTER, " "))
       end
 
-      def validated_sources(result, source_refs)
-        source_refs = Array(source_refs)
-        return [] if source_refs.empty? || source_refs.length > SELECTED_SOURCE_LIMIT
-        return [] if source_refs.any? { |source_ref| !source_ref.is_a?(String) }
-        return [] if source_refs.uniq.length != source_refs.length
-
+      # Candidates were access-checked when retrieved, so the model's refs only
+      # need resolving; unknown or repeated ones are dropped, not fatal.
+      def sources_for(result, source_refs, limit:)
         candidates_by_ref =
           result.synthesis_candidates.index_by { |candidate| candidate["source_ref"] }
-        selected = source_refs.filter_map { |source_ref| candidates_by_ref[source_ref] }
-        return [] if selected.length != source_refs.length
 
-        revalidated = revalidate_and_limit(selected, private_messages: result.private_messages)
-        return [] if revalidated.length != selected.length
-
-        revalidated
+        Array(source_refs)
+          .uniq
+          .filter_map { |source_ref| candidates_by_ref[source_ref] }
+          .first(limit)
       end
 
       private
