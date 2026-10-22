@@ -26,13 +26,35 @@ module JsonApiKit
           self.declared_input_scope = Declarations::InputScope.new(block)
         end
 
-        def verify_input_scope! = declared_input_scope&.verify!(self)
+        def verify_input_scope!
+          declared_input_scope&.verify!(self, names: filter_names, defaults: filter_defaults.keys)
+        end
+      end
+
+      # The input scope a version change retained for this edition, or the current one.
+      def input_scope
+        return @input_scope if defined?(@input_scope)
+        @input_scope =
+          edition.input_scopes.for(type, collection: collection_name).to_a.last&.input_scope ||
+            self.class.input_scope
+      end
+
+      def verify_input_scope!
+        input_scope&.verify!(
+          self.class,
+          names: filter_bindings.keys,
+          defaults: filter_bindings.select { |_name, filter| filter.default? }.keys,
+        )
       end
 
       def apply_input_scope(rows, filtering = {})
-        input_scope = self.class.input_scope
         return rows if input_scope.nil?
-        input_scope.apply(rows, guardian:, values: self.class.filter_defaults.merge(filtering))
+        values = filter_values(filtering)
+        inputs =
+          filter_bindings.each_with_object({}) do |(input, filter), bound|
+            bound[input] = values[filter.name] if values.key?(filter.name)
+          end
+        input_scope.apply(rows, guardian:, values: inputs)
       end
     end
   end

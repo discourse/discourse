@@ -9,9 +9,10 @@ module JsonApiKit
         @default_sorts = []
         @removed_filters = []
         @removed_sorts = []
+        @input_scope_changes = []
       end
 
-      attr_reader :default_sorts, :removed_filters, :removed_sorts
+      attr_reader :default_sorts, :removed_filters, :removed_sorts, :input_scope_changes
 
       def transformations
         @transformations + removed_filters.flat_map(&:transformations) +
@@ -22,6 +23,20 @@ module JsonApiKit
 
       def removed_filter(name, &condition)
         removed_filters << RemovedFilter.new(type, name, &condition)
+      end
+
+      # A removed input of the input scope: requests pinned before the removal may still send it,
+      # and the input scope retained for them reads it.
+      def removed_scope_filter(name, default:)
+        removed_filters << RemovedFilter.new(type, name, default:) { |rows, _value| rows }
+      end
+
+      def changed_input_scope(&block)
+        input_scope_changes << InputScopeChange.new(
+          type.to_s,
+          nil,
+          JsonApiKit::Declarations::InputScope.new(block),
+        )
       end
 
       def removed_sort(name, **options)
@@ -49,6 +64,7 @@ module JsonApiKit
           .then do
             @transformations.concat(it.renames)
             removed_filters.concat(it.removed_filters)
+            input_scope_changes.concat(it.input_scope_changes)
           end
       end
 

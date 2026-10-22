@@ -31,6 +31,8 @@ module JsonApiKit
           self.declared_collections = declared_collections.merge(name => declarations).freeze
         end
 
+        def collection_names = declared_collections.keys
+
         # The name of the collection this class lists, or nil for the resource's own listing.
         def collection_name = nil
 

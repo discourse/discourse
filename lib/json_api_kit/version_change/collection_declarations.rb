@@ -10,12 +10,27 @@ module JsonApiKit
         @collection = collection.to_s
         @renames = []
         @removed_filters = []
+        @input_scope_changes = []
       end
 
-      attr_reader :renames, :removed_filters
+      attr_reader :renames, :removed_filters, :input_scope_changes
 
       def removed_filter(name, &condition)
         removed_filters << RemovedFilter.new(type, name, collection:, &condition)
+      end
+
+      def removed_scope_filter(name, default:)
+        removed_filters << RemovedFilter.new(type, name, collection:, default:) do |rows, _value|
+          rows
+        end
+      end
+
+      def changed_input_scope(&block)
+        input_scope_changes << InputScopeChange.new(
+          type.to_s,
+          collection,
+          JsonApiKit::Declarations::InputScope.new(block),
+        )
       end
 
       def renamed_filter(from:, to:)

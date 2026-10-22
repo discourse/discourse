@@ -22,6 +22,8 @@ module JsonApiKit
 
     def removed_sorts = @removed_sorts ||= RemovedSorts.new(changes)
 
+    def input_scopes = @input_scopes ||= InputScopeHistory.new(changes)
+
     private
 
     attr_reader :changes

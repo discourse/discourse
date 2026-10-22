@@ -12,7 +12,7 @@ module JsonApiKit
         @block = block
       end
 
-      def verify!(resource)
+      def verify!(resource, names:, defaults:)
         block.parameters.each do |kind, name|
           if kind == :keyrest
             raise ArgumentError,
@@ -20,11 +20,11 @@ module JsonApiKit
                     "go unnoticed; name each input as a keyword"
           end
           next if INPUT_KINDS.exclude?(kind)
-          if resource.filter_names.exclude?(name.to_s)
+          if names.exclude?(name.to_s)
             raise ArgumentError,
                   "#{resource}: the input scope reads #{name}, which no filter declares"
           end
-          if kind == :keyreq && !resource.filter_defaults.key?(name.to_s)
+          if kind == :keyreq && defaults.exclude?(name.to_s)
             raise ArgumentError,
                   "#{resource}: the input scope requires #{name}, but its filter has no default"
           end

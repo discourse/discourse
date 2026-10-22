@@ -76,6 +76,16 @@ RSpec.describe JsonApiKit::Resource do
       end
     end
 
+    context "when a current filter with a default reuses the name of a removed one" do
+      let(:changes) { [removal_class.new(__FILE__)] }
+      let(:resource_class) { Class.new(super()) { filter :closed, default: false } }
+      let(:filtering) { {} }
+
+      it "lends its default only to requests the removal does not serve" do
+        expect(kept_ids).to contain_exactly(kept_topic.id, dropped_topic.id)
+      end
+    end
+
     context "when a filter declares a default and the request leaves it out" do
       let(:resource_class) { Class.new(super()) { filter :closed, default: false } }
       let(:filtering) { {} }
@@ -186,6 +196,41 @@ RSpec.describe JsonApiKit::Resource do
 
       it "keeps only the rows it received, so it cannot widen the visible ones" do
         expect(kept_ids).to contain_exactly(open_topic.id, closed_topic.id)
+      end
+    end
+  end
+
+  describe "#verify_input_scope!" do
+    subject(:verify) { resource.verify_input_scope! }
+
+    let(:resource_class) do
+      Class.new(super()) do
+        scope_filter :closed_too, default: false
+        input_scope { |topics, _guardian, closed_too:| topics }
+      end
+    end
+    let(:removal_class) do
+      Class.new(JsonApiKit::VersionChange) do
+        resource(:topics) do
+          removed_scope_filter :mine, default: true
+          changed_input_scope { |topics, _guardian, mine:| topics }
+        end
+      end
+    end
+
+    it "accepts a retained input scope that reads a retained input" do
+      expect { verify }.not_to raise_error
+    end
+
+    context "when the retained input scope reads an input this edition does not have" do
+      let(:removal_class) do
+        Class.new(JsonApiKit::VersionChange) do
+          resource(:topics) { changed_input_scope { |topics, _guardian, secrets:| topics } }
+        end
+      end
+
+      it "refuses it" do
+        expect { verify }.to raise_error(ArgumentError, /secrets/)
       end
     end
   end
