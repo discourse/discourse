@@ -663,6 +663,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     has_custom_fields = CUSTOM_FIELDS.include?(klass.name.downcase)
     imported_ids = []
     last_id = columns.include?("id") ? (klass.unscoped.maximum(:id) || 1) : nil
+    processor = merger_processor_for(klass) unless skip_processing
 
     sql = "COPY #{klass.table_name} (#{columns.map { |c| "\"#{c}\"" }.join(", ")}) FROM STDIN"
     @raw_connection.copy_data(sql, @encoder) do
@@ -807,16 +808,8 @@ class BulkImport::DiscourseMerger < BulkImport::Base
           if skip_processing
             @raw_connection.put_copy_data(row.values)
           else
-            process_method_name = "process_#{klass.name.underscore}"
-
             processed =
-              (
-                if respond_to?(process_method_name)
-                  send(process_method_name, ActiveSupport::HashWithIndifferentAccess.new(row))
-                else
-                  row
-                end
-              )
+              processor ? processor.call(ActiveSupport::HashWithIndifferentAccess.new(row)) : row
 
             @raw_connection.put_copy_data columns.map { |c| processed[c] } if processed
           end
@@ -832,6 +825,16 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         { record_id: send(id_mapping_method_name, imported_id), value: imported_id }
       end
     end
+  end
+
+  # Base's process_* methods belong to the converter pipeline: they expect rows and state
+  # (original_id columns, @imported_records, ...) that a merge never has.
+  def merger_processor_for(klass)
+    name = "process_#{klass.name.underscore}"
+    return unless respond_to?(name)
+
+    processor = method(name)
+    processor if BulkImport::Base.ancestors.exclude?(processor.owner)
   end
 
   def copy_model_user_search_data(
