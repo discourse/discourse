@@ -59,22 +59,16 @@ class GroupUpdater
     end
 
     attributes.push(:visibility_level, :members_visibility_level) if guardian.is_staff?
+    attributes.push(:incoming_email) if guardian.is_staff?
 
     if !group.automatic && guardian.is_staff?
-      attributes.push(
-        :incoming_email,
-        :title,
-        :primary_group,
-        :name,
-        :grant_trust_level,
-        :publish_read_state,
-      )
+      attributes.push(:title, :primary_group, :name, :grant_trust_level, :publish_read_state)
 
       custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
       attributes << { custom_fields: custom_fields } if custom_fields.present?
     end
 
-    if !group.automatic && guardian.is_admin?
+    if guardian.is_admin?
       attributes.push(
         :smtp_server,
         :smtp_port,
