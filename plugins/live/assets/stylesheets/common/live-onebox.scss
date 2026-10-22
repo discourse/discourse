@@ -23,6 +23,32 @@ aside.onebox.live-room-onebox {
   .live-room-onebox__description {
     margin-top: var(--space-2);
   }
+
+  .live-room-onebox__presence {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  .live-room-onebox__presence-dot {
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    background-color: var(--success);
+  }
+
+  .live-room-onebox__presence-avatars {
+    display: flex;
+    gap: var(--space-1);
+
+    .avatar {
+      display: block;
+    }
+  }
 }
 
 // Font Awesome microphone-lines and podcast, the icons the room cards and
