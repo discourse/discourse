@@ -3,9 +3,10 @@
 module DiscourseAssign
   module Workflows
     module AssignmentTrigger
-      def initialize(assignment, *)
+      def initialize(assignment, payload = {})
         super(parameters: {})
         @assignment = assignment
+        @actor = payload[:acting_user]
       end
 
       def valid?
@@ -22,6 +23,7 @@ module DiscourseAssign
           assignment: serialize_assignment,
           post: serialize_post(post),
           topic: serialize_topic_list_item(@assignment.topic),
+          actor: serialize_user(@actor),
         }
       end
 
