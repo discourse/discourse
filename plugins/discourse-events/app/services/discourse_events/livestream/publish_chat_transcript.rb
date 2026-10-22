@@ -24,14 +24,15 @@ class DiscourseEvents::Livestream::PublishChatTranscript
   model :event
   model :topic_chat_channel
 
-  only_if(:chat_audience_matches_topic_readers) do
-    lock(:topic_chat_channel) do
+  lock(:topic_chat_channel) do
+    transaction do
       step :reload_records
-      model :event_post_transcript, :render_event_post_transcript, optional: true
-      model :transcript, :render_transcript
 
-      only_if(:new_chat_messages) do
-        transaction do
+      only_if(:chat_audience_matches_topic_readers) do
+        model :event_post_transcript, :render_event_post_transcript, optional: true
+        model :transcript, :render_transcript
+
+        only_if(:new_chat_messages) do
           only_if(:appending_to_event_post) { step :append_transcript_to_event_post }
           only_if(:replying) { step :reply_with_transcript }
           step :mark_messages_transcribed
@@ -72,8 +73,10 @@ class DiscourseEvents::Livestream::PublishChatTranscript
   end
 
   # Fetched before the lock, so a job that held it may have moved them on.
+  # Locking the topic holds off a move to another category, which would change
+  # who reads the transcript, until it is written.
   def reload_records(event:, topic_chat_channel:)
-    event.post.reload
+    event.post.reload.topic.lock!
     topic_chat_channel.reload
   end
 

@@ -164,6 +164,23 @@ RSpec.describe DiscourseEvents::Livestream::PublishChatTranscript do
         end
       end
 
+      context "when the topic moves to a wider audience while this job waits" do
+        fab!(:public_category, :category)
+
+        before do
+          allow(DistributedMutex).to receive(
+            :synchronize,
+          ).and_wrap_original do |original, *args, **kwargs, &block|
+            topic.update!(category: public_category)
+            original.call(*args, **kwargs, &block)
+          end
+        end
+
+        it "keeps the chat out of the topic" do
+          expect { result }.not_to change { [topic.posts.count, event_post.reload.raw] }
+        end
+      end
+
       context "when the event post is edited while the transcript is rendered" do
         let(:edited_raw) { "#{event_post.raw.rstrip}\n\nRecording: https://example.com/recording" }
 
@@ -176,10 +193,12 @@ RSpec.describe DiscourseEvents::Livestream::PublishChatTranscript do
           end
         end
 
-        it "keeps the edit and asks to render again" do
+        # The edit shares the service's transaction here, so the rollback also
+        # undoes it; what matters is that the transcript does not replace it.
+        it "writes nothing and asks to render again" do
           expect { result }.to raise_error(described_class::EventPostChanged)
 
-          expect(event_post.reload.raw).to eq(edited_raw)
+          expect(event_post.reload.raw).not_to include("Chat transcript")
           expect(topic_chat_channel.reload.last_transcribed_message_id).to be_nil
         end
       end
