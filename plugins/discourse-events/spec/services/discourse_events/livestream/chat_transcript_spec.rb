@@ -157,9 +157,11 @@ RSpec.describe DiscourseEvents::Livestream::ChatTranscript do
       end
 
       it "looks up each message's uploads once however many renders fitting takes" do
+        # Built first, as sizing max_length renders a transcript of its own.
+        transcript
         queries = track_sql_queries { transcript.raw }
 
-        puts queries.grep(/upload_references/)
+        expect(queries.grep(/upload_references/).size).to eq(chat_messages.size)
       end
     end
 
