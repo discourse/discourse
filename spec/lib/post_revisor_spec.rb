@@ -582,6 +582,17 @@ describe PostRevisor do
         post.reload
         expect(post.errors).to be_empty
       end
+
+      it "edits bypassing slow mode are allowed" do
+        post_revisor.revise!(
+          post.user,
+          { raw: "updated body" },
+          revised_at: post.updated_at + 1000.minutes,
+          bypass_slow_mode: true,
+        )
+
+        expect(post.reload.raw).to eq("updated body")
+      end
     end
 
     describe "grace period editing" do
