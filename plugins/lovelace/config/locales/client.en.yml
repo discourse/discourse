@@ -33,6 +33,11 @@ en:
           profile: "Member’s profile settings"
           notifications: "Member’s notification settings"
           account: "Member’s account settings"
+      member:
+        minimize: "Minimize"
+        expand: "Expand"
+        dismiss: "Dismiss checklist"
+        complete: "Well done! You’ve completed your onboarding checklist."
       checklist: "Your onboarding checklist"
       configure: "Onboarding checklist"
       description: "Choose the items members see in their onboarding checklist. Changes are saved automatically."

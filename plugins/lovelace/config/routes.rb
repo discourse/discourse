@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Lovelace::Engine.routes.draw do
+  get "/member-checklist" => "member_checklists#show"
+  put "/member-checklist" => "member_checklists#update"
   get "/checklist" => "checklists#show"
   put "/checklist" => "checklists#update"
   get "/examples" => "examples#index"

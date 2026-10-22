@@ -18,3 +18,15 @@ end
 require_relative "lib/lovelace/engine"
 
 register_asset "stylesheets/common/checklist.scss"
+
+register_asset "stylesheets/common/member-checklist.scss"
+register_svg_icon "far-circle"
+register_svg_icon "circle-check"
+
+after_initialize do
+  add_to_serializer(
+    :current_user,
+    :lovelace_member_checklist,
+    include_condition: -> { SiteSetting.lovelace_enabled },
+  ) { Lovelace::MemberChecklist.for_user(object) }
+end

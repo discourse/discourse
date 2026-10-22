@@ -6,6 +6,10 @@ notification setup from the item bank, and restore removed suggestions with thei
 edits intact. Add custom items, reorder or remove items, and try the checklist in
 an interactive member preview.
 
+Members see a persistent checklist above the welcome banner, with saved progress,
+minimize and dismiss controls, and a celebration when they finish. The widget
+uses the editable configuration.
+
 It also provides a member checklist with ready-made suggestions. Administrators
 choose which suggestions appear and can restore removed items from an item bank.
 The editable preview and the member suggestion selection are saved separately.
