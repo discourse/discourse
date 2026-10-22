@@ -347,12 +347,15 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   def fix_category_descriptions
     puts "updating category description topic ids..."
 
-    @categories.each do |new_id|
+    @categories.each_value do |new_id|
       next if !CategoryCustomField.where(category_id: new_id, name: "import_id").exists?
-      category = Category.find(new_id) if new_id.present?
-      if description_topic_id = topic_id_from_imported_id(category&.topic_id)
-        category.topic_id = description_topic_id
-        category.save!
+      category = Category.find_by(id: new_id)
+      next if category&.topic_id.nil?
+
+      # Rows are copied verbatim from the source site and may not pass current
+      # validations, so only the remapped column is written.
+      if description_topic_id = topic_id_from_imported_id(category.topic_id)
+        category.update_columns(topic_id: description_topic_id)
       end
     end
   end
@@ -767,19 +770,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
           if klass.table_name == "upload_references"
             next unless row["upload_id"]
-            if row["target_type"] == "UserProfile"
-              row["target_id"] = user_id_from_imported_id(row["target_id"])
-            elsif row["target_type"] = "UserAvatar"
-              row["target_id"] = avatar_id_from_imported_id(row["target_id"])
-            elsif row["target_type"] = "User"
-              row["target_id"] = user_id_from_imported_id(row["target_id"])
-            elsif row["target_type"] = "Post"
-              row["target_id"] = post_id_from_imported_id(row["target_id"])
-              # TO-DO: add other target types
-            else
-              next
-            end
-            next unless row["target_id"]
+            next unless remap_upload_reference_target(row)
           end
 
           old_id = row["id"].to_i
@@ -1154,10 +1145,29 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def fix_primary_keys
+    # Later stages insert through ActiveRecord after a table's counter was
+    # captured, so a sequence must never be set below the table's current ids.
+    # Seeded system rows have negative ids and are ignored.
     @sequences.each do |sequence_name, val|
-      sql = "SELECT setval('#{sequence_name}', #{val})"
-      @raw_connection.exec(sql)
+      table_name = sequence_table_name(sequence_name)
+      @raw_connection.exec(<<~SQL)
+        SELECT setval('#{sequence_name}', GREATEST(
+          #{val.to_i},
+          COALESCE((SELECT MAX(id) FROM #{table_name} WHERE id > 0), 0) + 1
+        ))
+      SQL
     end
+  end
+
+  def sequence_table_name(sequence_name)
+    @raw_connection.exec_params(<<~SQL, [sequence_name]).getvalue(0, 0)
+      SELECT refobjid::regclass::text
+      FROM pg_depend
+      WHERE classid = 'pg_class'::regclass
+        AND objid = $1::regclass
+        AND refclassid = 'pg_class'::regclass
+        AND deptype IN ('a', 'i')
+    SQL
   end
 
   def fix_user_columns
@@ -1191,9 +1201,12 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   def fix_polls
     puts "Adding polls custom fields..."
 
-    @polls.each do |old_poll_id, new_poll_id|
-      post_id = Poll.find_by_id(new_poll_id).post_id
-      post = Post.find_by_id(post_id)
+    @polls.each_value do |new_poll_id|
+      post_id = Poll.find_by_id(new_poll_id)&.post_id
+      # Polls on deleted posts are valid, see Poll's post association.
+      post = Post.with_deleted.find_by_id(post_id) if post_id
+      next if post.nil?
+
       post.custom_fields[DiscoursePoll::HAS_POLLS] = true
       post.save_custom_fields(true)
     end
@@ -1201,13 +1214,15 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
   def fix_featured_topic
     puts "Updating featured topic ids..."
-    User
-      .where("id >= ?", @first_new_user_id)
-      .find_each do |u|
-        profile = UserProfile.find_by(user_id: u.id)
-        next if profile.nil?
-        profile.featured_topic_id = topic_id_from_imported_id(profile.featured_topic_id)
-        profile.save!
+    # Fixups write only the remapped column because rows are copied verbatim
+    # from the source site and may not pass current validations.
+    UserProfile
+      .where("user_id >= ?", @first_new_user_id)
+      .where.not(featured_topic_id: nil)
+      .find_each do |profile|
+        profile.update_columns(
+          featured_topic_id: topic_id_from_imported_id(profile.featured_topic_id),
+        )
       end
   end
 
@@ -1217,13 +1232,29 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     # Users have a column "uploaded_avatar_id" which needs to be mapped now.
     User
       .where("id >= ?", @first_new_user_id)
+      .where.not(uploaded_avatar_id: nil)
       .find_each do |u|
-        if u.uploaded_avatar_id
-          u.uploaded_avatar_id = upload_id_from_imported_id(u.uploaded_avatar_id)
-          u.save! unless u.uploaded_avatar_id.nil?
-        end
+        new_avatar_id = upload_id_from_imported_id(u.uploaded_avatar_id)
+        u.update_columns(uploaded_avatar_id: new_avatar_id) if new_avatar_id
       end
+  end
+
+  private
+
+  # Returns nil when the target cannot be remapped and the reference should be skipped.
+  def remap_upload_reference_target(row)
+    # TO-DO: add other target types
+    row["target_id"] = case row["target_type"]
+    when "UserProfile", "User"
+      user_id_from_imported_id(row["target_id"])
+    when "UserAvatar"
+      avatar_id_from_imported_id(row["target_id"])
+    when "Post"
+      post_id_from_imported_id(row["target_id"])
+    end
+
+    row if row["target_id"]
   end
 end
 
-BulkImport::DiscourseMerger.new.start
+BulkImport::DiscourseMerger.new.start if $PROGRAM_NAME == __FILE__
