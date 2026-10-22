@@ -1,38 +1,9 @@
 .leaderboard-admin {
-  &__title {
-    display: inline-block;
-  }
-
-  &__cta-new {
-    display: flex;
-    margin-top: 1rem;
-  }
-
-  &__btn-recalculate {
-    float: right;
-    margin-right: 1rem;
-  }
-
-  &__btn-new {
-    float: right;
-  }
-
-  &__btn-back {
-    margin-bottom: 1rem;
-    padding-left: 0;
-  }
-
   &__creator-link {
     display: flex;
     width: fit-content;
     align-items: center;
     gap: var(--space-2);
-  }
-}
-
-.leaderboard-edit {
-  &__cancel {
-    margin-left: 1rem;
   }
 }
 

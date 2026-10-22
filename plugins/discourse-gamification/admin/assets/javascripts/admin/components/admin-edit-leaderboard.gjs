@@ -154,7 +154,7 @@ export default class AdminEditLeaderboard extends Component {
 
   <template>
     <BackButton
-      @label="gamification.back"
+      @label="gamification.back_to_leaderboards"
       @route="adminPlugins.show.discourse-gamification-leaderboards"
     />
     <Form

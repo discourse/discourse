@@ -81,7 +81,7 @@ en:
       close: "Close"
       delete: "Delete"
       edit: "Edit"
-      back: "Back"
+      back_to_leaderboards: "Back to leaderboards"
       save: "Save"
       apply: "Apply"
       recalculate: "Recalculate scores"

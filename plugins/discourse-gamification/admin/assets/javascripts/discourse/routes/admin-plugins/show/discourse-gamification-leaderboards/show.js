@@ -20,4 +20,8 @@ export default class DiscourseGamificationLeaderboardShow extends DiscourseRoute
       `/admin/plugins/discourse-gamification/leaderboards/${id}`
     ).then((response) => GamificationLeaderboard.create(response.leaderboard));
   }
+
+  titleToken() {
+    return this.currentModel?.name;
+  }
 }

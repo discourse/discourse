@@ -1,5 +1,6 @@
 import { concat, fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
@@ -26,14 +27,12 @@ export default <template>
             @action={{fn (mut @controller.creatingNew) true}}
             @icon="plus"
             @label="gamification.leaderboard.new"
-            @title="gamification.leaderboard.new"
           />
 
           <actions.Default
             class="leaderboard-admin__btn-recalculate"
             @action={{@controller.recalculateScores}}
             @label="gamification.recalculate"
-            @title="gamification.recalculate"
           />
         {{/if}}
       </:actions>
@@ -110,7 +109,7 @@ export default <template>
                       class="btn btn-default leaderboard-admin__edit btn-text btn-small"
                       @model={{leaderboard}}
                       @route="adminPlugins.show.discourse-gamification-leaderboards.show"
-                    >{{i18n "gamification.edit"}} </LinkTo>
+                    >{{i18n "gamification.edit"}}</LinkTo>
 
                     <DMenu
                       @icon="ellipsis-vertical"
@@ -144,14 +143,11 @@ export default <template>
         </table>
       {{else}}
         {{#unless @controller.creatingNew}}
-          <div class="admin-plugin-config-area__empty-list">
-            {{i18n "gamification.leaderboard.none"}}
-            <DButton
-              class="btn-default btn-small leaderboard-admin__cta-new"
-              @action={{fn (mut @controller.creatingNew) true}}
-              @label="gamification.leaderboard.cta"
-            />
-          </div>
+          <AdminConfigAreaEmptyList
+            @ctaAction={{fn (mut @controller.creatingNew) true}}
+            @ctaLabel="gamification.leaderboard.cta"
+            @emptyLabel="gamification.leaderboard.none"
+          />
         {{/unless}}
       {{/if}}
     </div>
