@@ -1448,11 +1448,23 @@
       display: none;
     }
 
+    // Root threads are full-width cards, so the card edge already separates
+    // them; dropping their rail gives every level below one step of indent.
+    // The depth-line stays in the DOM (0-width) for assistive tech, and the
+    // header tap covers touch.
     &.--depth-0 {
+      grid-template-columns: 0 minmax(0, 1fr);
+      column-gap: 0;
       background: var(--secondary);
       border-radius: 0;
-      padding: var(--space-2) var(--space-2) var(--space-2) var(--space-1);
+      padding: var(--space-2);
       margin-top: 0;
+
+      > .nested-post__gutter::after,
+      > .nested-post__gutter .nested-post__depth-line::before,
+      > .nested-post__gutter .nested-post__depth-line::after {
+        content: none;
+      }
     }
 
     // Single-line header: avatar · name · title ········ date

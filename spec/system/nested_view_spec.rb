@@ -492,10 +492,10 @@ RSpec.describe "Nested view" do
       end
     end
 
-    it "collapses a root branch from the depth line", mobile: true do
+    it "collapses a root branch from its header", mobile: true do
       nested_view.visit_nested(topic)
 
-      nested_view.click_depth_line(root_reply)
+      nested_view.click_header_collapse(root_reply)
 
       expect(nested_view).to have_no_mobile_focus
       expect(nested_view).to have_collapsed_bar_for(root_reply)
