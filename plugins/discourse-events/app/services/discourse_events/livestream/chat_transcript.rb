@@ -10,9 +10,10 @@ class DiscourseEvents::Livestream::ChatTranscript
 
   WRAP_NAME = "livestream-chat-transcript"
 
-  # A message closing the quote or wrap around it would have the rest of its
-  # text cooked as part of a post authored by the system user.
-  CLOSING_TAGS = %r{\[/(chat|wrap)\]}i
+  # A message closing the quote or wrap around it, or opening one that takes
+  # their closing tag, would have the rest of its text cooked as part of a post
+  # authored by someone else.
+  CONTAINER_TAGS = %r{\[/?(?:chat|wrap)(?=[\s=\]])}i
 
   # Sizing renders the same messages over and over, and each rendering of a
   # message queries its uploads.
@@ -105,7 +106,7 @@ class DiscourseEvents::Livestream::ChatTranscript
   # so the escaped text can never be saved back to the message.
   def contained(message)
     # An upload-only message has no text.
-    message.message = message.message.to_s.gsub(CLOSING_TAGS) { "\\#{it}" }
+    message.message = message.message.to_s.gsub(CONTAINER_TAGS) { "\\#{it}" }
     message.readonly!
     QuotedMessage.new(message)
   end

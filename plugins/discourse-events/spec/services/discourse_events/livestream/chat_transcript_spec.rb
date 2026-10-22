@@ -78,6 +78,38 @@ RSpec.describe DiscourseEvents::Livestream::ChatTranscript do
       end
     end
 
+    context "when a message opens a tag to swallow its quote's closing one" do
+      let(:messages) { channel.chat_messages.where(id: escaping_message.id) }
+      let(:escaping_message) do
+        Fabricate(
+          :chat_message,
+          chat_channel: channel,
+          user: alice,
+          message: "hi\n\n[poll]\n* a\n* b\n[/poll]\n\n#{opening_tag}",
+        )
+      end
+      let(:opening_tag) { "[chat][wrap=x]" }
+
+      %w[[chat] [CHAT\ quote="bob;1;2026-10-08T19:00:00Z"] [wrap] [wrap=other]].each do |tag|
+        context "with #{tag}" do
+          let(:opening_tag) { tag }
+
+          it "keeps the rest of the message inside the quote" do
+            cooked = PrettyText.cook(transcript.raw)
+
+            expect(cooked).not_to include('class="poll"')
+            expect(cooked).to include(tag[/\A\[\w+/])
+            expect(cooked.scan("d-wrap").size).to eq(1)
+          end
+        end
+      end
+
+      it "escapes each opening tag once however many renders fitting takes" do
+        expect(transcript.raw).to include("\\[chat]", "\\[wrap=x]")
+        expect(transcript.raw).not_to include("\\\\[")
+      end
+    end
+
     context "when the only message opens a thread" do
       let(:messages) { channel.chat_messages.where(id: thread.original_message_id) }
       let(:thread) { Fabricate(:chat_thread, channel:, original_message_user: alice) }
