@@ -9,9 +9,10 @@ module DiscourseAi
 
       def response_format
         # Abstaining first avoids streaming an answer that would be retracted;
-        # the answer follows immediately so it streams with minimal delay.
+        # the short title and then the answer follow so both stream early.
         [
           { "key" => "answerable", "type" => "boolean" },
+          { "key" => "title", "type" => "string" },
           { "key" => "answer", "type" => "string" },
           {
             "key" => "source_refs",
@@ -19,7 +20,6 @@ module DiscourseAi
             "array_type" => "string",
             "max_items" => SiteSetting.ai_ask_ai_related_count,
           },
-          { "key" => "title", "type" => "string" },
           { "key" => "follow_up", "type" => "string" },
         ]
       end
