@@ -45,7 +45,7 @@ module DiscourseAi
               { id: llm_model.id, name: llm_model.display_name }
             end,
           enabled: feature.enabled?,
-        }
+        }.merge(feature.metadata)
       end
 
       def serialize_agent(agent)

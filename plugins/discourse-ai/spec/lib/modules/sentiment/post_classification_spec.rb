@@ -6,6 +6,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
   before do
     enable_current_plugin
     SiteSetting.ai_sentiment_enabled = true
+    SiteSetting.ai_sentiment_emotion_enabled = true
     SiteSetting.ai_sentiment_model_configs =
       "[{\"model_name\":\"SamLowe/roberta-base-go_emotions\",\"endpoint\":\"http://samlowe-emotion.com\",\"api_key\":\"123\"},{\"model_name\":\"j-hartmann/emotion-english-distilroberta-base\",\"endpoint\":\"http://jhartmann-emotion.com\",\"api_key\":\"123\"},{\"model_name\":\"cardiffnlp/twitter-roberta-base-sentiment-latest\",\"endpoint\":\"http://cardiffnlp-sentiment.com\",\"api_key\":\"123\"}]"
   end
@@ -213,12 +214,9 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
         SiteSetting.ai_sentiment_sentiment_agent = agent_without_default_llm.id
 
         classifier =
-          post_classification.send(
-            :agent_classifier,
-            :sentiment,
-            agent_without_default_llm.id,
-            DiscourseAi::Sentiment::Constants::SENTIMENT_AGENT_MODEL,
-          )
+          post_classification.classifiers.find do |entry|
+            entry[:classification_type] == "sentiment"
+          end
 
         expect(classifier[:model]).to eq(newest_llm_model)
       end
