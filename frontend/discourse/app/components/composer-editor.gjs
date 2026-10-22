@@ -130,13 +130,10 @@ export default class ComposerEditor extends Component {
 
   @computed("composer.formTemplateIds")
   get selectedFormTemplateId() {
-    if (this._selectedFormTemplateId) {
-      return this._selectedFormTemplateId;
-    }
-
-    return (
-      this.composer.model.formTemplateId || this.composer.formTemplateIds?.[0]
-    );
+    const ids = this.composer.formTemplateIds || [];
+    const selectedId =
+      this._selectedFormTemplateId || this.composer.model.formTemplateId;
+    return ids.find((id) => String(id) === String(selectedId)) ?? ids[0];
   }
 
   set selectedFormTemplateId(value) {

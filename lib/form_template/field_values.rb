@@ -7,14 +7,14 @@ class FormTemplate::FieldValues
     raise ArgumentError unless answers.is_a?(Hash) && number_formats.is_a?(Hash)
 
     @number_formats = number_formats.stringify_keys
-    @fields = fields
+    @fields = fields.map { |field| field.merge("id" => field.fetch("id").to_s) }
     @answers = answers.stringify_keys
 
-    unknown_ids = @answers.keys - fields.map { |field| field.fetch("id") }
+    unknown_ids = @answers.keys - @fields.map { |field| field.fetch("id") }
     raise ArgumentError, "Unknown field IDs: #{unknown_ids.join(", ")}" if unknown_ids.any?
 
     @number_formats.each do |id, text|
-      field = fields.find { |candidate| candidate["id"] == id }
+      field = @fields.find { |candidate| candidate["id"] == id }
       unless field && field["type"] == "input" && field.dig("validations", "type") == "number" &&
                text.is_a?(String)
         raise ArgumentError
@@ -29,7 +29,7 @@ class FormTemplate::FieldValues
       end
     end
 
-    fields.each do |field|
+    @fields.each do |field|
       id = field.fetch("id")
       next if !@answers.key?(id) || @answers[id].nil?
 
@@ -38,7 +38,7 @@ class FormTemplate::FieldValues
   end
 
   def validate!
-    fields.each do |field|
+    @fields.each do |field|
       value = answers[field.fetch("id")]
       next if field.dig("attributes", "disabled")
 
