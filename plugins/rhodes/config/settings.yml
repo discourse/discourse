@@ -1,0 +1,4 @@
+rhodes:
+  rhodes_enabled:
+    default: false
+    client: true
