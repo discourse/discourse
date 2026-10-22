@@ -83,7 +83,6 @@ export default class AdminCreateLeaderboard extends Component {
             class="new-leaderboard__cancel form-kit__button btn-default"
             @action={{@onCancel}}
             @label="gamification.cancel"
-            @title="gamification.cancel"
           />
         </form.Actions>
       </Form>
