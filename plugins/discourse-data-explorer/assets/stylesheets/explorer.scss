@@ -860,38 +860,6 @@ table.group-reports {
 }
 
 .recent-queries {
-  thead {
-    .created-by {
-      width: 15%;
-    }
-
-    .group-names {
-      width: 15%;
-
-      .group-names-header {
-        position: absolute;
-        bottom: 8px;
-        left: 6px;
-      }
-    }
-
-    .created-at {
-      width: 15%;
-    }
-
-    .heading {
-      position: relative;
-      color: var(--primary-medium);
-      padding: 50px 0 0 0;
-
-      .heading-toggle {
-        bottom: 0;
-        position: absolute;
-        display: inline-block;
-      }
-    }
-  }
-
   .d-table__row.query-row {
     .d-table__overview-link {
       @include viewport.until(md) {
@@ -948,10 +916,6 @@ table.group-reports {
   .query-row:hover {
     background-color: inherit;
   }
-
-  .no-search-results {
-    color: var(--primary-medium);
-  }
 }
 
 .result-about {
@@ -989,10 +953,6 @@ table.group-reports {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-}
-
-.explorer-pad-bottom {
-  margin-bottom: 200px;
 }
 
 .share-report {
