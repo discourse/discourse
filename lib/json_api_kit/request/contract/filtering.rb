@@ -18,22 +18,23 @@ module JsonApiKit
         def check_filter_names
           refuse_unknown(
             :filter,
-            (filter.keys - resource.filter_names).map do |name|
-              Name::Filter.new(value: name.to_s, type: resource.type)
-            end,
+            (filter.keys - resource.filter_names).map { |name| filter_name(name) },
           )
         end
 
         def check_filter_values
           filter.each_key do |name|
             next if comparable?(filter[name]) || listed?(filter[name])
-            errors.add(
-              :filter,
-              :bad_value,
-              name: Name::Filter.new(value: name.to_s, type: resource.type),
-              message: "bad value",
-            )
+            errors.add(:filter, :bad_value, name: filter_name(name), message: "bad value")
           end
+        end
+
+        def filter_name(name)
+          Name::Filter.new(
+            value: name.to_s,
+            type: resource.type,
+            collection: resource.collection_name,
+          )
         end
 
         def listed?(value) = Array.wrap(value).all? { comparable?(it) }

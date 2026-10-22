@@ -596,6 +596,71 @@ RSpec.describe JsonApiKit::Resource do
     it { is_expected.not_to accept_anchor(JsonApiKit::Anchoring.for(:secrets)) }
   end
 
+  describe ".collection" do
+    subject(:archive) { resource_with_archive.collection(:archive) }
+
+    let(:resource_with_archive) do
+      Class.new(topic_resource) do
+        scope { |_guardian| Topic.where(archived: true) }
+        collection(:archive) { filter :visible }
+      end
+    end
+
+    it "lists the same records under the same type and model" do
+      expect([archive.type, archive.model, archive.collection_name]).to eq(
+        ["topics", Topic, "archive"],
+      )
+    end
+
+    it "keeps the resource's scope, sorts and attributes" do
+      expect(
+        [archive.scope_for(Guardian.new).to_sql, archive.sort_names, archive.attribute_names],
+      ).to eq([Topic.where(archived: true).to_sql, %w[created_at ran_at], ["title"]])
+    end
+
+    it "declares its own filters only" do
+      expect([archive.filter_names, resource_with_archive.filter_names]).to eq(
+        [["visible"], ["title"]],
+      )
+    end
+
+    it "returns the same class each time" do
+      expect(resource_with_archive.collection(:archive)).to equal(archive)
+    end
+
+    it "is not a collection of the resource itself" do
+      expect(resource_with_archive.collection_name).to be_nil
+    end
+
+    context "when a resource inherits the collection" do
+      subject(:inherited) do
+        Class.new(resource_with_archive) { type :threads }.collection(:archive)
+      end
+
+      it "lists the records under the inheriting resource's type" do
+        expect([inherited.type, inherited.filter_names]).to eq(["threads", ["visible"]])
+      end
+    end
+
+    it "refuses a name it does not declare" do
+      expect { resource_with_archive.collection(:drafts) }.to raise_error(KeyError, /drafts/)
+    end
+
+    it "refuses a second declaration of the same name" do
+      expect { resource_with_archive.collection(:archive) { filter :closed } }.to raise_error(
+        ArgumentError,
+        /archive/,
+      )
+    end
+
+    it "refuses a collection inside another" do
+      expect { archive.collection(:nested) { filter :closed } }.to raise_error(
+        ArgumentError,
+        /nested/,
+      )
+    end
+  end
+
   describe ".scope_for" do
     subject(:exposed_scope) { topic_resource.scope_for(guardian) }
 

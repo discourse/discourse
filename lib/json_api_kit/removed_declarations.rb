@@ -6,23 +6,23 @@ module JsonApiKit
       @changes = changes
     end
 
-    def for(type) = enum_for(:each_for, type)
+    def for(type, collection: nil) = enum_for(:each_for, type, collection)
 
     private
 
     attr_reader :changes
 
-    def each_for(type)
+    def each_for(type, collection)
       return if changes.empty?
 
       changes
         .reverse_each
         .zip(types_at_changes(type, changes.reverse_each)) do |change, historical_type|
-          each_from(change, historical_type) { yield(it) }
+          each_from(change, historical_type, collection) { yield(it) }
         end
     end
 
-    def each_from(_change, _type)
+    def each_from(_change, _type, _collection)
       raise NotImplementedError, "#{self.class} must implement each_from"
     end
 

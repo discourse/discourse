@@ -39,7 +39,10 @@ module JsonApiKit
         filters.apply(rows, filtering, context)
       end
 
-      def filters = @filters ||= self.class.filters.with(edition.removed_filters.for(type))
+      def filters
+        @filters ||=
+          self.class.filters.with(edition.removed_filters.for(type, collection: collection_name))
+      end
     end
   end
 end

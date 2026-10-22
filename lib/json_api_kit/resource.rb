@@ -10,6 +10,7 @@ module JsonApiKit
     include Fields
     include Including
     include QueryInterface
+    include Collections
 
     def initialize(guardian:, edition: Edition.current)
       @guardian = guardian

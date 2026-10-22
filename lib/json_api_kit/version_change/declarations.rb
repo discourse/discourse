@@ -42,6 +42,16 @@ module JsonApiKit
         declare(Declaration::RenamedName.new(type, [Name::Filter], from:, to:))
       end
 
+      def collection(name, &declarations)
+        CollectionDeclarations
+          .new(type, name)
+          .tap { it.instance_eval(&declarations) }
+          .then do
+            @transformations.concat(it.renames)
+            removed_filters.concat(it.removed_filters)
+          end
+      end
+
       def renamed_relationship(from:, to:)
         declare(Declaration::RenamedName.new(type, [Name::Relationship, Name::Field], from:, to:))
       end

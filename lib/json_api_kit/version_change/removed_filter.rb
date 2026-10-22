@@ -3,12 +3,13 @@
 module JsonApiKit
   class VersionChange
     class RemovedFilter
-      attr_reader :type, :name
+      attr_reader :type, :name, :collection
 
-      delegate :apply, to: :filter
+      delegate :apply, :default?, :default, to: :filter
 
-      def initialize(type, name, &condition)
+      def initialize(type, name, collection: nil, &condition)
         @type = type.to_s
+        @collection = collection&.to_s
         @name = "__removed_filter_#{object_id}"
         @filter = JsonApiKit::Declarations::Filter.new(name, &condition)
       end
@@ -19,6 +20,7 @@ module JsonApiKit
           [Name::Filter],
           from: filter.name,
           to: name,
+          collection:,
         ).transformations
       end
 

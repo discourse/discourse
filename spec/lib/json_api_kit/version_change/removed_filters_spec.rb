@@ -46,6 +46,14 @@ RSpec.describe JsonApiKit::VersionChange do
         expect { verify }.not_to raise_error
       end
     end
+
+    context "when a collection of the resource removes the same filter name" do
+      before { change_class.resource(:topics) { collection(:archive) { removed_filter :closed } } }
+
+      it "accepts the independent declarations" do
+        expect { verify }.not_to raise_error
+      end
+    end
   end
 
   describe "#each_removed_filter" do
@@ -62,6 +70,27 @@ RSpec.describe JsonApiKit::VersionChange do
 
       it "yields no filters" do
         expect(filters).to be_empty
+      end
+    end
+
+    context "when a collection of the resource removes a filter" do
+      subject(:filters) { version_change.enum_for(:each_removed_filter, type, collection).to_a }
+
+      let(:collection) { "archive" }
+      let(:archived) { change_class.removed_filters.find { it.collection == "archive" } }
+
+      before { change_class.resource(:topics) { collection(:archive) { removed_filter :pinned } } }
+
+      it "yields the collection's declaration only" do
+        expect(filters).to contain_exactly(archived)
+      end
+
+      context "when the resource itself is asked" do
+        let(:collection) { nil }
+
+        it "yields the resource's declaration only" do
+          expect(filters).to contain_exactly(change_class.removed_filters.find { it != archived })
+        end
       end
     end
   end

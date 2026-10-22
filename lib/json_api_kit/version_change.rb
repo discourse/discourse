@@ -92,7 +92,8 @@ module JsonApiKit
 
     def current_default_sort(default) = default.convert_names { current_names(it).sole }
 
-    def each_removed_filter(type, &) = removed_filters.each_for(type, &)
+    def each_removed_filter(type, collection = nil, &) =
+      removed_filters.each_for(type, collection, &)
 
     def each_removed_sort(type, &) = removed_sorts.each_for(type, &)
 

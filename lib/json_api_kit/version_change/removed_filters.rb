@@ -4,11 +4,11 @@ module JsonApiKit
   class VersionChange
     class RemovedFilters
       def initialize(filters)
-        @filters = filters.group_by(&:type)
+        @filters = filters.group_by { [it.type, it.collection] }
         @filters.default = [].freeze
       end
 
-      def each_for(type, &) = filters[type].each(&)
+      def each_for(type, collection = nil, &) = filters[[type, collection]].each(&)
 
       private
 

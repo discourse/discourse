@@ -4,7 +4,7 @@ module JsonApiKit
   class RemovedSorts < RemovedDeclarations
     private
 
-    def each_from(change, type, &)
+    def each_from(change, type, _collection, &)
       change.each_removed_sort(type, &)
     end
   end

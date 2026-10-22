@@ -92,6 +92,32 @@ RSpec.describe JsonApiKit::VersionChange do
       end
     end
 
+    context "when a collection of the resource renames a filter" do
+      let(:change_class) do
+        Class.new(described_class) do
+          resource(:things) { collection(:archive) { renamed_filter from: :label, to: :name } }
+        end
+      end
+
+      it "collects a rename scoped to the collection" do
+        expect(transformations.map(&:from)).to contain_exactly(
+          JsonApiKit::Name::Filter.new(value: "label", type: "things", collection: "archive"),
+        )
+      end
+    end
+
+    context "when a collection declares a change that applies to the whole resource" do
+      subject(:declare_resource) do
+        Class
+          .new(described_class)
+          .resource(:things) { collection(:archive) { renamed_sort from: :label, to: :name } }
+      end
+
+      it "refuses it" do
+        expect { declare_resource }.to raise_error(NoMethodError, /renamed_sort/)
+      end
+    end
+
     context "when a rename declares a converter" do
       subject(:declare_resource) { Class.new(described_class).resource(:things, &declarations) }
 
