@@ -1194,9 +1194,12 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   def fix_polls
     puts "Adding polls custom fields..."
 
-    @polls.each do |old_poll_id, new_poll_id|
-      post_id = Poll.find_by_id(new_poll_id).post_id
-      post = Post.find_by_id(post_id)
+    @polls.each_value do |new_poll_id|
+      post_id = Poll.find_by_id(new_poll_id)&.post_id
+      # Polls on deleted posts are valid, see Poll's post association.
+      post = Post.with_deleted.find_by_id(post_id) if post_id
+      next if post.nil?
+
       post.custom_fields[DiscoursePoll::HAS_POLLS] = true
       post.save_custom_fields(true)
     end
