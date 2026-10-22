@@ -14,10 +14,49 @@ class FormTemplate < ActiveRecord::Base
             }
   validates_with FormTemplateYamlValidator, if: ->(ft) { ft.template }
 
+  validates :output_template,
+            length: {
+              maximum: -> { SiteSetting.max_form_template_content_length },
+            },
+            allow_nil: true
+  validate :validate_output_template
+
   has_many :category_form_templates, dependent: :destroy
   has_many :categories, through: :category_form_templates
 
   class NotAllowed < StandardError
+  end
+
+  class InvalidAnswers < StandardError
+  end
+
+  def self.render_submission(payload:, category_id:, guardian:, validate: true)
+    raise Discourse::InvalidAccess unless SiteSetting.enable_form_templates
+    unless payload.is_a?(String) && payload.bytesize <= 1.megabyte
+      raise Discourse::InvalidParameters.new(:form_template_data)
+    end
+
+    data = JSON.parse(payload)
+    raise Discourse::InvalidParameters.new(:form_template_data) unless data.is_a?(Hash)
+    category = Category.find_by(id: category_id)
+    unless category && guardian.can_create_topic_on_category?(category)
+      raise Discourse::InvalidAccess
+    end
+    template = category.form_templates.find_by(id: data["id"])
+    raise Discourse::NotFound unless template
+
+    template.process!(guardian)
+    fields = YAML.safe_load(template.template)
+    values =
+      FieldValues.new(
+        fields:,
+        answers: data.fetch("answers"),
+        number_formats: data.fetch("number_formats", {}),
+      )
+    values.validate! if validate
+    OutputRenderer.render(values, template.output_template)
+  rescue JSON::ParserError, KeyError, ArgumentError
+    raise Discourse::InvalidParameters.new(:form_template_data)
   end
 
   def process!(guardian)
@@ -64,17 +103,26 @@ class FormTemplate < ActiveRecord::Base
     self.template = YAML.dump(parsed_template)
     self
   end
+
+  private
+
+  def validate_output_template
+    OutputRenderer.parse(output_template) if output_template.present?
+  rescue Liquid::Error
+    errors.add(:output_template, I18n.t("form_templates.errors.invalid_output_template"))
+  end
 end
 
 # == Schema Information
 #
 # Table name: form_templates
 #
-#  id         :bigint           not null, primary key
-#  name       :string           not null
-#  template   :text             not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id              :bigint           not null, primary key
+#  name            :string           not null
+#  output_template :text
+#  template        :text             not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 # Indexes
 #

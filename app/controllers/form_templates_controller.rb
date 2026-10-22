@@ -4,6 +4,10 @@ class FormTemplatesController < ApplicationController
   requires_login
   before_action :ensure_form_templates_enabled
 
+  rescue_from FormTemplate::InvalidAnswers do |error|
+    render_json_error(error.message, status: :unprocessable_entity)
+  end
+
   def index
     form_templates = accessible_form_templates.order(:id)
     render_serialized(form_templates, FormTemplateSerializer, root: "form_templates")
@@ -19,6 +23,17 @@ class FormTemplatesController < ApplicationController
     template.process!(guardian)
 
     render_serialized(template, FormTemplateSerializer, root: "form_template")
+  end
+
+  def render_output
+    raw =
+      FormTemplate.render_submission(
+        payload: params.require(:form_template_data),
+        category_id: params.require(:category_id),
+        guardian:,
+        validate: false,
+      )
+    render json: { raw: }
   end
 
   private

@@ -16,11 +16,12 @@ import Wrapper from "discourse/components/form-template-field/wrapper";
 import PostTranslationEditor from "discourse/components/post-translation-editor";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import { setupComposerPosition } from "discourse/lib/composer/composer-position";
 import { decorateImageControls } from "discourse/lib/composer/image-controls";
 import { bind, debounce } from "discourse/lib/decorators";
-import prepareFormTemplateData from "discourse/lib/form-template-validation";
+import renderFormTemplate from "discourse/lib/form-template-validation";
 import {
   fetchUnseenHashtagsInContext,
   linkSeenHashtagsInContext,
@@ -109,6 +110,8 @@ export default class ComposerEditor extends Component {
   composerEventPrefix = "composer";
 
   fileUploadElementId = "file-uploader";
+
+  #formPreviewSequence = 0;
 
   init() {
     super.init(...arguments);
@@ -488,19 +491,9 @@ export default class ComposerEditor extends Component {
   }
 
   @action
-  async updateFormPreview() {
-    const formTemplateData = prepareFormTemplateData(
-      document.querySelector("#form-template-form"),
-      this.composer.selectedFormTemplate,
-      false
-    );
-
-    this.composer.model.set("reply", formTemplateData);
-
-    this.preview = await this.cachedCookAsync(
-      formTemplateData,
-      this.markdownOptions
-    );
+  updateFormPreview() {
+    this.#formPreviewSequence++;
+    this._updateFormPreview();
   }
 
   async cachedCookAsync(text, options) {
@@ -516,6 +509,57 @@ export default class ComposerEditor extends Component {
   @action
   showUploadModal() {
     document.getElementById(this.fileUploadElementId).click();
+  }
+
+  @debounce(300)
+  async _updateFormPreview() {
+    const sequence = this.#formPreviewSequence;
+    const model = this.composer.model;
+    const categoryId = model.categoryId;
+    const templateId = this.selectedFormTemplateId;
+    try {
+      const result = await renderFormTemplate(
+        document.querySelector("#form-template-form"),
+        this.composer.selectedFormTemplate,
+        templateId,
+        categoryId,
+        false
+      );
+      if (
+        !result ||
+        sequence !== this.#formPreviewSequence ||
+        this.isDestroying ||
+        model !== this.composer.model ||
+        categoryId !== model.categoryId ||
+        templateId !== this.selectedFormTemplateId
+      ) {
+        return;
+      }
+      const preview = await this.cachedCookAsync(
+        result.raw,
+        this.markdownOptions
+      );
+      if (
+        sequence === this.#formPreviewSequence &&
+        !this.isDestroying &&
+        model === this.composer.model &&
+        categoryId === model.categoryId &&
+        templateId === this.selectedFormTemplateId
+      ) {
+        model.set("reply", result.raw);
+        this.preview = preview;
+      }
+    } catch (error) {
+      if (
+        sequence === this.#formPreviewSequence &&
+        !this.isDestroying &&
+        model === this.composer.model &&
+        categoryId === model.categoryId &&
+        templateId === this.selectedFormTemplateId
+      ) {
+        popupAjaxError(error);
+      }
+    }
   }
 
   @on("didInsertElement")

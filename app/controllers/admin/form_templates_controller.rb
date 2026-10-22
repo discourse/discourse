@@ -17,9 +17,18 @@ class Admin::FormTemplatesController < Admin::StaffController
 
     if params[:id].present?
       template = FormTemplate.find(params[:id])
-      template.assign_attributes(name: params[:name], template: params[:template])
+      template.assign_attributes(
+        name: params[:name],
+        template: params[:template],
+        **(params.key?(:output_template) ? { output_template: params[:output_template] } : {}),
+      )
     else
-      template = FormTemplate.new(name: params[:name], template: params[:template])
+      template =
+        FormTemplate.new(
+          name: params[:name],
+          template: params[:template],
+          **(params.key?(:output_template) ? { output_template: params[:output_template] } : {}),
+        )
     end
 
     begin
@@ -36,7 +45,12 @@ class Admin::FormTemplatesController < Admin::StaffController
     params.require(:template)
 
     begin
-      template = FormTemplate.create!(name: params[:name], template: params[:template])
+      template =
+        FormTemplate.create!(
+          name: params[:name],
+          template: params[:template],
+          **(params.key?(:output_template) ? { output_template: params[:output_template] } : {}),
+        )
       render_serialized(template, AdminFormTemplateSerializer, root: "form_template")
     rescue FormTemplate::NotAllowed => err
       render_json_error(err.message)
@@ -56,7 +70,11 @@ class Admin::FormTemplatesController < Admin::StaffController
     template = FormTemplate.find(params[:id])
 
     begin
-      template.update!(name: params[:name], template: params[:template])
+      template.update!(
+        name: params[:name],
+        template: params[:template],
+        **(params.key?(:output_template) ? { output_template: params[:output_template] } : {}),
+      )
       render_serialized(template, AdminFormTemplateSerializer, root: "form_template")
     rescue FormTemplate::NotAllowed => err
       render_json_error(err.message)

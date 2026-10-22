@@ -6506,7 +6506,8 @@ CREATE TABLE public.form_templates (
     name character varying NOT NULL,
     template text NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    output_template text
 );
 
 
@@ -26164,6 +26165,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261022152814'),
 ('20261021063131'),
 ('20261021063122'),
 ('20261021061850'),

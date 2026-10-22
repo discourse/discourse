@@ -60,6 +60,7 @@ const CLOSED = "closed",
   // When creating, these fields are moved into the post model from the composer model
   _create_serializer = {
     raw: "reply",
+    form_template_data: "formTemplateData",
     title: "title",
     unlist_topic: "unlistTopic",
     category: "categoryId",

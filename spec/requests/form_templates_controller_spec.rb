@@ -227,4 +227,141 @@ RSpec.describe FormTemplatesController do
       end
     end
   end
+
+  describe "#render_output" do
+    fab!(:render_user) { Fabricate(:user, trust_level: 2) }
+    fab!(:category)
+    fab!(:render_template) do
+      Fabricate(
+        :form_template,
+        template: [
+          {
+            id: "description",
+            type: "composer",
+            attributes: {
+              label: "Details",
+            },
+            validations: {
+              required: true,
+            },
+          },
+          {
+            id: "seats",
+            type: "input",
+            attributes: {
+              label: "Seats",
+            },
+            validations: {
+              type: "number",
+            },
+          },
+        ].as_json.to_yaml,
+      )
+    end
+
+    before do
+      category.form_templates << render_template
+      sign_in(render_user)
+    end
+
+    it "renders the default output and preserves original numeric spelling" do
+      post "/form-templates/render.json",
+           params: {
+             category_id: category.id,
+             form_template_data: {
+               id: render_template.id,
+               answers: {
+                 description: "**Hello**\n\nWorld",
+                 seats: 100,
+               },
+               number_formats: {
+                 seats: "1e2",
+               },
+             }.to_json,
+           }
+      expect(response.status).to eq(200), response.body
+      expect(response.parsed_body["raw"]).to eq("### Details\n**Hello**\n\nWorld\n\n### Seats\n1e2")
+    end
+
+    it "previews incomplete answers through the same custom renderer" do
+      render_template.update!(output_template: "## Invitation\n{{ answers.description }}")
+      post "/form-templates/render.json",
+           params: {
+             category_id: category.id,
+             form_template_data: { id: render_template.id, answers: {} }.to_json,
+           }
+      expect(response.status).to eq(200), response.body
+      expect(response.parsed_body["raw"]).to eq("## Invitation\n")
+    end
+
+    it "rejects stored unsafe output definitions during preview" do
+      render_template.update_column(
+        :output_template,
+        "{% assign indices = (1..answers.seats) %}{% for index in indices %}x{% endfor %}",
+      )
+      post "/form-templates/render.json",
+           params: {
+             category_id: category.id,
+             form_template_data: { id: render_template.id, answers: { seats: 20_000 } }.to_json,
+           }
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(
+        I18n.t("form_templates.errors.invalid_output_template"),
+      )
+    end
+
+    it "rejects templates that do not belong to the selected category" do
+      post "/form-templates/render.json",
+           params: {
+             category_id: Fabricate(:category).id,
+             form_template_data: { id: render_template.id, answers: {} }.to_json,
+           }
+      expect(response.status).to eq(404)
+    end
+
+    it "rejects inaccessible categories" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_category.form_templates << render_template
+      post "/form-templates/render.json",
+           params: {
+             category_id: private_category.id,
+             form_template_data: { id: render_template.id, answers: {} }.to_json,
+           }
+      expect(response.status).to eq(403)
+    end
+
+    it "rejects malformed answers and incompatible numeric formatting" do
+      [
+        "not json",
+        { id: render_template.id, answers: { unknown: "value" } }.to_json,
+        { id: render_template.id, answers: { seats: 1 }, number_formats: { seats: "2" } }.to_json,
+        { id: render_template.id, answers: [] }.to_json,
+      ].each do |payload|
+        post "/form-templates/render.json",
+             params: {
+               category_id: category.id,
+               form_template_data: payload,
+             }
+        expect(response.status).to eq(400)
+      end
+    end
+
+    it "requires authentication and enabled form templates" do
+      SiteSetting.enable_form_templates = false
+      post "/form-templates/render.json",
+           params: {
+             category_id: category.id,
+             form_template_data: "{}",
+           }
+      expect(response.status).to eq(403)
+      SiteSetting.enable_form_templates = true
+      reset!
+      post "/form-templates/render.json",
+           params: {
+             category_id: category.id,
+             form_template_data: "{}",
+           }
+      expect(response.status).to eq(403)
+    end
+  end
 end
