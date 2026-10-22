@@ -13,6 +13,10 @@ export default {
           route: "adminPlugins.show.lovelace-onboarding",
           description: "lovelace.onboarding.description",
         },
+        {
+          label: "lovelace.configure",
+          route: "adminPlugins.show.lovelace-checklist",
+        },
       ]);
     });
   },

@@ -49,7 +49,11 @@ module ::Lovelace
     end
 
     def save_checklist(params:, current_checklist:)
-      checklist = { "items" => params.items, "revision" => current_checklist["revision"] + 1 }
+      checklist = {
+        "items" => params.items,
+        "bank" => Checklist.bank_for(params.items, current_checklist),
+        "revision" => current_checklist["revision"] + 1,
+      }
       PluginStore.set(PLUGIN_NAME, "checklist", checklist)
       checklist
     end

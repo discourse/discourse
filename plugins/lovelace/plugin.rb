@@ -16,3 +16,5 @@ module ::Lovelace
 end
 
 require_relative "lib/lovelace/engine"
+
+register_asset "stylesheets/common/checklist.scss"
