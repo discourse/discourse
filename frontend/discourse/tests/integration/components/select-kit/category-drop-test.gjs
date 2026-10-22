@@ -379,4 +379,108 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
       "builds a correct URL"
     );
   });
+
+  test("category url applies the target category's default list filter", async function (assert) {
+    initCategoriesWithParentCategory(this);
+    sinon.stub(DiscourseURL, "routeTo");
+    const target = Category.findById(26);
+    set(target, "default_list_filter", "none");
+
+    await render(
+      <template>
+        <CategoryDrop
+          @categories={{this.categories}}
+          @category={{this.category}}
+          @parentCategory={{this.parentCategory}}
+        />
+      </template>
+    );
+
+    await this.subject.expand();
+    await this.subject.selectRowByValue(26);
+
+    assert.strictEqual(
+      DiscourseURL.routeTo.firstCall?.args[0],
+      "/c/feature/spec/26",
+      "does not force /all so the route can apply the category default"
+    );
+  });
+
+  test("category url keeps the current tag", async function (assert) {
+    initCategoriesWithParentCategory(this);
+    sinon.stub(DiscourseURL, "routeTo");
+    set(Category.findById(26), "default_list_filter", "none");
+    this.set("tag", { id: 7, slug: "bug" });
+
+    await render(
+      <template>
+        <CategoryDrop
+          @categories={{this.categories}}
+          @category={{this.category}}
+          @parentCategory={{this.parentCategory}}
+          @tag={{this.tag}}
+        />
+      </template>
+    );
+
+    await this.subject.expand();
+    await this.subject.selectRowByValue(26);
+
+    assert.strictEqual(
+      DiscourseURL.routeTo.firstCall?.args[0],
+      "/tags/c/feature/spec/26/bug/7"
+    );
+  });
+
+  test("no subcategories url forces /none", async function (assert) {
+    initCategoriesWithParentCategory(this);
+    sinon.stub(DiscourseURL, "routeTo");
+
+    await render(
+      <template>
+        <CategoryDrop
+          @categories={{this.categories}}
+          @category={{this.category}}
+          @options={{hash parentCategory=this.parentCategory subCategory=true}}
+        />
+      </template>
+    );
+
+    await this.subject.expand();
+    await this.subject.selectRowByValue(NO_CATEGORIES_ID);
+
+    assert.strictEqual(
+      DiscourseURL.routeTo.firstCall?.args[0],
+      `${this.parentCategory.path}/none`
+    );
+  });
+
+  test("remove filter url escapes the parent's default list filter", async function (assert) {
+    initCategoriesWithParentCategory(this);
+    sinon.stub(DiscourseURL, "routeTo");
+    set(this.parentCategory, "default_list_filter", "none");
+
+    await render(
+      <template>
+        <CategoryDrop
+          @categories={{this.categories}}
+          @category={{this.category}}
+          @options={{hash
+            parentCategory=this.parentCategory
+            subCategory=true
+            noSubcategories=true
+          }}
+        />
+      </template>
+    );
+
+    await this.subject.expand();
+    await this.subject.selectRowByValue(ALL_CATEGORIES_ID);
+
+    assert.strictEqual(
+      DiscourseURL.routeTo.firstCall?.args[0],
+      `${this.parentCategory.path}/all`,
+      "forces /all"
+    );
+  });
 });
