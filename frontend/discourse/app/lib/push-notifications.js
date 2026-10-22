@@ -16,6 +16,7 @@ const ADOPTION_IN_PROGRESS = "adopting";
 const CONFIRMED_SUBSCRIPTION_KEY = "active";
 const SUBSCRIPTION_OPERATION_KEY = "operation";
 let nextSubscriptionOperationId = 0;
+let inMemorySubscriptionOperation;
 
 export function userSubscriptionKey(user) {
   return `subscribed-${user.get("id")}`;
@@ -63,6 +64,7 @@ export function setSubscriptionIntent(user, intent) {
 
 function beginSubscriptionOperation(action) {
   const operation = `${action}-${Date.now()}-${++nextSubscriptionOperationId}`;
+  inMemorySubscriptionOperation = operation;
   keyValueStore.setItem(SUBSCRIPTION_OPERATION_KEY, operation);
   return operation;
 }
@@ -72,19 +74,26 @@ function isCurrentSubscriptionOperation(operation) {
 }
 
 function currentSubscriptionOperation() {
-  return keyValueStore.getItem(SUBSCRIPTION_OPERATION_KEY);
+  const operation = keyValueStore.getItem(SUBSCRIPTION_OPERATION_KEY);
+  // A null read means storage is disabled; an absent key returns undefined.
+  return operation === null ? inMemorySubscriptionOperation : operation;
 }
 
 function currentSubscriptionOperationAction() {
   return currentSubscriptionOperation()?.split("-", 1)[0];
 }
 
-function markEndpointConfirmed(user, subscription) {
+function markEndpointConfirmed(
+  user,
+  subscription,
+  operation = currentSubscriptionOperation()
+) {
   pushNotificationConfirmationStore.setObject({
     key: CONFIRMED_SUBSCRIPTION_KEY,
     value: {
       userId: user.get("id"),
       endpoint: subscription.toJSON().endpoint,
+      operation,
     },
   });
 }
@@ -190,12 +199,35 @@ export function listenForPushNotificationMessages(router, appEvents) {
 
 // Scoped to the current user server-side, so it can never drop a row
 // belonging to another account sharing the browser.
-async function retireServerSubscription(user, subscription) {
+async function retireServerSubscription(
+  user,
+  subscription,
+  operation = currentSubscriptionOperation()
+) {
   try {
     await ajax("/push_notifications/unsubscribe", {
       type: "POST",
       data: { user_id: user.get("id"), subscription: subscription.toJSON() },
     });
+
+    const currentOperation = currentSubscriptionOperation();
+    const confirmation = pushNotificationConfirmationStore.getObject(
+      CONFIRMED_SUBSCRIPTION_KEY
+    );
+    if (
+      currentOperation !== operation &&
+      currentSubscriptionOperationAction() === "enable" &&
+      confirmation?.operation === currentOperation &&
+      isEndpointConfirmed(user, subscription) &&
+      getSubscriptionIntent(user) === "subscribed"
+    ) {
+      // A delayed deletion can land after the newer registration succeeded.
+      clearPushSubscriptionConfirmation(user, subscription);
+      if (await resyncSubscriptionWithServer(user, subscription)) {
+        await confirmResync(user, subscription, "subscribed", currentOperation);
+      }
+      return false;
+    }
     return true;
   } catch (e) {
     // eslint-disable-next-line no-console
@@ -245,7 +277,7 @@ async function confirmResync(
   }
 
   setSubscriptionIntent(user, "subscribed");
-  markEndpointConfirmed(user, subscription);
+  markEndpointConfirmed(user, subscription, reconciliationOperation);
   return "subscribed";
 }
 
@@ -435,13 +467,13 @@ export function subscribe(user, callback, applicationServerKey) {
           if (currentSubscriptionOperationAction() === "disable") {
             if (await retireServerSubscription(user, subscription)) {
               clearPushSubscriptionConfirmation(user, subscription);
+              await discardPlatformSubscription(subscription);
             }
-            await discardPlatformSubscription(subscription);
           }
           return false;
         }
 
-        markEndpointConfirmed(user, subscription);
+        markEndpointConfirmed(user, subscription, operation);
         callback?.();
         return true;
       })
@@ -496,7 +528,7 @@ export async function unsubscribe(user, callback) {
       // The row is retired first and unconditionally: `unsubscribe()` resolves
       // false for an already-dropped subscription, and the endpoint is the only
       // handle on that row, so it is kept until the row is actually gone.
-      if (!(await retireServerSubscription(user, subscription))) {
+      if (!(await retireServerSubscription(user, subscription, operation))) {
         return false;
       }
       if (!isCurrentSubscriptionOperation(operation)) {

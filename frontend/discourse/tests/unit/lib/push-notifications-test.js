@@ -907,6 +907,130 @@ module(
       pushNotificationPreferenceStore.remove(userSubscriptionKey(otherUser));
     });
 
+    ["disable", "reconciliation"].forEach((cleanup) => {
+      test(`repairs a registration deleted after a newer enable during ${cleanup}`, async function (assert) {
+        let registered = true;
+        let finishDeletion;
+        pretender.post("/push_notifications/subscribe", () => {
+          registered = true;
+          return response({ success: "OK" });
+        });
+        pretender.post("/push_notifications/unsubscribe", async () => {
+          await new Promise((resolve) => {
+            finishDeletion = resolve;
+          });
+          registered = false;
+          return response({ success: "OK" });
+        });
+        setSubscriptionIntent(user, "off");
+        const retiring =
+          cleanup === "disable"
+            ? unsubscribe(user, () => assert.step("disabled"))
+            : reconcileSubscription(user, { resubscribe: true });
+        await waitUntil(() => finishDeletion);
+
+        assert.true(
+          await subscribe(
+            user,
+            () => {
+              setSubscriptionIntent(user, "subscribed");
+              assert.step("enabled");
+            },
+            applicationServerKey
+          ),
+          "the newer enable succeeds before the delayed deletion"
+        );
+        finishDeletion();
+        await retiring;
+
+        assert.true(registered, "the newer server registration is restored");
+        assert.strictEqual(
+          platformUnsubscribeCalls,
+          0,
+          "the enabled platform subscription remains valid"
+        );
+        assert.strictEqual(
+          getSubscriptionIntent(user),
+          "subscribed",
+          "the newer opt-in is retained"
+        );
+        assert.verifySteps(
+          ["enabled"],
+          "the stale disable never reports success"
+        );
+      });
+    });
+
+    test("superseded enable cleanup preserves a later successful enable", async function (assert) {
+      let registered = false;
+      let finishRegistration;
+      let finishDeletion;
+      let registrations = 0;
+      pretender.post("/push_notifications/subscribe", async () => {
+        if (registrations++ === 0) {
+          await new Promise((resolve) => {
+            finishRegistration = resolve;
+          });
+        }
+        registered = true;
+        return response({ success: "OK" });
+      });
+      pretender.post("/push_notifications/unsubscribe", async () => {
+        await new Promise((resolve) => {
+          finishDeletion = resolve;
+        });
+        registered = false;
+        return response({ success: "OK" });
+      });
+      const superseded = subscribe(user, null, applicationServerKey);
+      await waitUntil(() => finishRegistration);
+      pushManager.subscription = null;
+      await unsubscribe(user);
+      finishRegistration();
+      await waitUntil(() => finishDeletion);
+
+      assert.true(
+        await subscribe(
+          user,
+          () => setSubscriptionIntent(user, "subscribed"),
+          applicationServerKey
+        ),
+        "the latest enable completes before cleanup deletes the row"
+      );
+      finishDeletion();
+      assert.false(await superseded, "the first enable remains superseded");
+      assert.true(registered, "the latest server registration is restored");
+      assert.strictEqual(
+        platformUnsubscribeCalls,
+        0,
+        "cleanup preserves the repaired platform endpoint"
+      );
+    });
+
+    test("completes lifecycle operations without local storage", async function (assert) {
+      sinon.stub(KeyValueStore.prototype, "getItem").returns(null);
+      sinon.stub(KeyValueStore.prototype, "set");
+
+      assert.true(
+        await subscribe(
+          user,
+          () => assert.step("enabled"),
+          applicationServerKey
+        ),
+        "enable succeeds after the server records the endpoint"
+      );
+      assert.true(
+        await unsubscribe(user, () => assert.step("disabled")),
+        "disable succeeds after retiring the endpoint"
+      );
+      assert.strictEqual(
+        platformUnsubscribeCalls,
+        1,
+        "the platform subscription is retired"
+      );
+      assert.verifySteps(["enabled", "disabled"], "both success callbacks run");
+    });
+
     test("reports success once the server has the subscription", async function (assert) {
       const subscribed = await subscribe(user, () => {}, applicationServerKey);
 
