@@ -45,7 +45,8 @@ export const CREATE_TOPIC = "createTopic",
   EDIT = "edit",
   NEW_PRIVATE_MESSAGE_KEY = "new_private_message",
   NEW_TOPIC_KEY = "new_topic",
-  EDIT_TOPIC_KEY = "topic_",
+  EXISTING_TOPIC_KEY = "topic_",
+  EXISTING_POST_KEY = "post_",
   ADD_TRANSLATION = "add_translation";
 
 function isEdit(action) {
@@ -156,7 +157,8 @@ export default class Composer extends RestModel {
   // Draft key
   static NEW_PRIVATE_MESSAGE_KEY = NEW_PRIVATE_MESSAGE_KEY;
   static NEW_TOPIC_KEY = NEW_TOPIC_KEY;
-  static EDIT_TOPIC_KEY = EDIT_TOPIC_KEY;
+  static EXISTING_TOPIC_KEY = EXISTING_TOPIC_KEY;
+  static EXISTING_POST_KEY = EXISTING_POST_KEY;
 
   // TODO: Replace with injection
   static create(args) {
@@ -209,6 +211,10 @@ export default class Composer extends RestModel {
 
   static isEditDraft(draft) {
     return isEdit(draft?.action) && !!draft.postId;
+  }
+
+  static editDraftKey(post) {
+    return `${EXISTING_POST_KEY}${post.id}`;
   }
 
   @service dialog;

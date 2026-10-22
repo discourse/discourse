@@ -353,7 +353,7 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
     assert.dom(".category-card__new-topic .d-icon-plus").exists();
   });
 
-  test("edit description opens the composer on the about topic's first post", async function (assert) {
+  test("edit description opens the composer on the about topic's first post, resuming its edit draft", async function (assert) {
     this.site.set("lazy_load_categories", true);
     this.owner.lookup("service:current-user").set("admin", true);
     const composer = { open: sinon.stub() };
@@ -384,6 +384,12 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
         },
       })
     );
+    pretender.get("/drafts/post_555.json", () =>
+      response({
+        draft: JSON.stringify({ action: "edit", postId: 555, reply: "saved" }),
+        draft_sequence: 2,
+      })
+    );
 
     await render(
       <template>
@@ -407,7 +413,9 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
     const opts = composer.open.firstCall?.args[0];
     assert.strictEqual(opts?.action, "edit");
     assert.strictEqual(opts?.post.id, 555, "edits the first post");
-    assert.strictEqual(opts?.draftKey, "topic_98");
+    assert.strictEqual(opts?.draftKey, "post_555", "uses the post's edit key");
+    assert.strictEqual(opts?.draftSequence, 2);
+    assert.strictEqual(opts?.draft?.reply, "saved", "resumes the saved edit");
     assert.dom(".category-card .card-content").doesNotExist("closes the card");
   });
 
