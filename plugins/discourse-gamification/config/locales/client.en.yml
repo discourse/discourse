@@ -69,7 +69,7 @@ en:
           chat_reaction_given: "Chat reaction given"
           chat_reaction_received: "Chat reaction received"
         period:
-          all_time: "All Time"
+          all_time: "All time"
           yearly: "Yearly"
           quarterly: "Quarterly"
           monthly: "Monthly"
@@ -92,7 +92,7 @@ en:
         last_30_days: "Last 30 days"
         last_90_days: "Last 90 days"
         last_year: "Last year"
-        all_time: "All Time"
+        all_time: "All time"
         custom_date_range: "Custom range"
       custom_range_from: "From"
       daily_update_scores_availability:
