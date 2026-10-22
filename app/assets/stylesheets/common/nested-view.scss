@@ -1566,6 +1566,10 @@
       padding-inline: 0;
     }
 
+    .nested-post__collapsed-avatar {
+      display: flex;
+    }
+
     .nested-post__placeholder--ignored {
       min-height: var(--nested-avatar-size);
       padding-bottom: var(--space-2);

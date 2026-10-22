@@ -27,6 +27,7 @@ import { nativeShare } from "discourse/lib/pwa-utils";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -721,6 +722,13 @@ export default class NestedPost extends Component {
                     "nested_replies.ignored_post_placeholder"
                   }}</span>
               {{else}}
+                {{! Mobile has no gutter avatar, so keep the poster
+                    recognisable once the header is collapsed away. }}
+                {{#if this.isMobile}}
+                  <span class="nested-post__collapsed-avatar">
+                    {{dBoundAvatarTemplate @post.avatar_template "small"}}
+                  </span>
+                {{/if}}
                 <span
                   class="nested-post__collapsed-username"
                 >{{@post.username}}</span>
