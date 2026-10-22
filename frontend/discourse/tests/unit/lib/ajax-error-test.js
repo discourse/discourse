@@ -155,4 +155,20 @@ module("Unit | Lib | ajax-error", function (hooks) {
       "prefers the localized message from the server"
     );
   });
+
+  test("extractError reads the detail of a JSON:API error object", async function (assert) {
+    pretender.get("/json-api-forbidden", () => [
+      403,
+      { "Content-Type": "application/vnd.api+json" },
+      { errors: [{ title: "Forbidden", detail: "Not allowed." }] },
+    ]);
+
+    assert.strictEqual(
+      extractError(await ajaxError("/json-api-forbidden")),
+      i18n("generic_error_with_reason", {
+        error: "Not allowed.",
+      }),
+      "shows the error detail"
+    );
+  });
 });
