@@ -21,6 +21,8 @@ en:
         name: "Name"
         name_placeholder: "Name..."
         new: "New leaderboard"
+        edit: "Edit leaderboard"
+        view: "View leaderboard"
         create_success: "Leaderboard created"
         delete_success: "Leaderboard deleted"
         save_success: "Leaderboard saved"
