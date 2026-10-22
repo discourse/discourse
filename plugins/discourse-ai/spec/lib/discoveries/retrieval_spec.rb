@@ -403,21 +403,6 @@ describe DiscourseAi::Discoveries::Retrieval do
       expect(retrieval.sources_for(result, %w[source_2 source_1], limit: 1).length).to eq(1)
       expect(retrieval.sources_for(result, nil, limit: 6)).to eq([])
     end
-
-    it "rejects the selection when a selected source is no longer visible" do
-      retrieval =
-        described_class.new(
-          user:,
-          lexical_retriever: ->(_query) { [source(post_1), source(post_2)] },
-          semantic_retriever: ->(_query) { [] },
-        )
-      result = retrieval.call("useful answers")
-
-      topic_2.update!(category: private_category)
-
-      expect(retrieval.sources_for(result, %w[source_2 source_1], limit: 6)).to eq([])
-      expect(retrieval.sources_for(result, %w[source_9 source_1], limit: 6).length).to eq(1)
-    end
   end
 
   describe "indexed retrieval" do

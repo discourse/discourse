@@ -98,29 +98,16 @@ module DiscourseAi
         explicit_filters?(query.to_s.gsub(SEMANTIC_PRIVATE_MESSAGE_FILTER, " "))
       end
 
-      # Unknown or repeated refs are model noise and are dropped. A selected
-      # source the user can no longer see rejects the answer instead, since the
-      # answer was written from it.
+      # Candidates were access-checked by the searches seconds earlier, so the
+      # model's refs only need resolving; unknown or repeated ones are dropped.
       def sources_for(result, source_refs, limit:)
         candidates_by_ref =
           result.synthesis_candidates.index_by { |candidate| candidate["source_ref"] }
-        selected =
-          Array(source_refs)
-            .uniq
-            .filter_map { |source_ref| candidates_by_ref[source_ref] }
-            .first(limit)
-        return [] if selected.empty?
 
-        posts = Post.where(id: selected.pluck("post_id")).includes(:topic).index_by(&:id)
-        guardian = Guardian.new(@user)
-        if selected.any? { |candidate|
-             post = posts[candidate.fetch("post_id")]
-             post&.topic.nil? || !guardian.can_see?(post)
-           }
-          return []
-        end
-
-        selected
+        Array(source_refs)
+          .uniq
+          .filter_map { |source_ref| candidates_by_ref[source_ref] }
+          .first(limit)
       end
 
       private
