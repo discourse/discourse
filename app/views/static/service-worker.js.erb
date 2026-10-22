@@ -99,29 +99,49 @@ self.addEventListener('notificationclick', function(event) {
   event.waitUntil(focusOrOpenWindow(event));
 });
 
+function postPushSubscription(action, subscription, csrf) {
+  var json = subscription.toJSON();
+
+  return fetch('<%= Discourse.base_url %>/push_notifications/' + action, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'X-CSRF-Token': csrf
+    },
+    body: new URLSearchParams({
+      "subscription[endpoint]": json.endpoint,
+      "subscription[keys][auth]": json.keys.auth,
+      "subscription[keys][p256dh]": json.keys.p256dh,
+      "send_confirmation": false
+    })
+  });
+}
+
 self.addEventListener('pushsubscriptionchange', function(event) {
+  var oldSubscription = event.oldSubscription;
+
   event.waitUntil(
-    Promise.all(
-      fetch('<%= Discourse.base_url %>/push_notifications/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-        body: new URLSearchParams({
-          "subscription[endpoint]": event.newSubscription.endpoint,
-          "subscription[keys][auth]": event.newSubscription.toJSON().keys.auth,
-          "subscription[keys][p256dh]": event.newSubscription.toJSON().keys.p256dh,
-          "send_confirmation": false
-        })
-      }),
-      fetch('<%= Discourse.base_url %>/push_notifications/unsubscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-        body: new URLSearchParams({
-          "subscription[endpoint]": event.oldSubscription.endpoint,
-          "subscription[keys][auth]": event.oldSubscription.toJSON().keys.auth,
-          "subscription[keys][p256dh]": event.oldSubscription.toJSON().keys.p256dh
-        })
+    Promise.resolve(
+      event.newSubscription ||
+        (oldSubscription && self.registration.pushManager.subscribe(oldSubscription.options))
+    ).then(function(newSubscription) {
+      // without either subscription the next page load restores it instead
+      if (!newSubscription) {
+        return;
+      }
+
+      return fetch('<%= Discourse.base_url %>/session/csrf', {
+        headers: { Accept: 'application/json' }
       })
-    )
+        .then(function(response) { return response.json(); })
+        .then(function(json) {
+          var requests = [postPushSubscription('subscribe', newSubscription, json.csrf)];
+          if (oldSubscription && oldSubscription.endpoint !== newSubscription.endpoint) {
+            requests.push(postPushSubscription('unsubscribe', oldSubscription, json.csrf));
+          }
+          return Promise.all(requests);
+        });
+    })
   );
 });
 

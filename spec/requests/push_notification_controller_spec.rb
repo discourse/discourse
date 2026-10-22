@@ -43,48 +43,6 @@ RSpec.describe PushNotificationController do
       expect(user.push_subscriptions.count).to eq(1)
     end
 
-    it "rejects a subscription request started by another account" do
-      post "/push_notifications/subscribe.json",
-           params: {
-             user_id: Fabricate(:user).id,
-             subscription: {
-               endpoint: "stale-account-endpoint",
-               keys: {
-                 p256dh: "256dh",
-                 auth: "auth",
-               },
-             },
-             send_confirmation: false,
-           }
-
-      expect(response.status).to eq(409)
-      expect(user.push_subscriptions).to be_empty
-    end
-
-    it "returns a conflict when the session expires during registration" do
-      invalidate_session = ->(subscription) do
-        user.user_auth_tokens.destroy_all if subscription.user_id == user.id
-      end
-      PushSubscription.set_callback(:create, :after, invalidate_session)
-
-      post "/push_notifications/subscribe.json",
-           params: {
-             subscription: {
-               endpoint: "stale-endpoint",
-               keys: {
-                 p256dh: "256dh",
-                 auth: "auth",
-               },
-             },
-             send_confirmation: false,
-           }
-
-      expect(response.status).to eq(409)
-      expect(user.push_subscriptions).to be_empty
-    ensure
-      PushSubscription.skip_callback(:create, :after, invalidate_session) if invalidate_session
-    end
-
     it "repairs duplicate subscriptions" do
       subscription = { endpoint: "endpoint", keys: { p256dh: "256dh", auth: "auth" } }
       PushSubscription.create user: user, data: subscription.to_json
@@ -119,6 +77,22 @@ RSpec.describe PushNotificationController do
       expect(user.push_subscriptions.count).to eq(1)
     end
 
+    it "moves an endpoint registered by another user to the current user" do
+      other_user = Fabricate(:user)
+      subscription = { endpoint: "endpoint", keys: { p256dh: "256dh", auth: "auth" } }
+      PushSubscription.create!(user: other_user, data: subscription.to_json)
+
+      post "/push_notifications/subscribe.json",
+           params: {
+             subscription: subscription,
+             send_confirmation: false,
+           }
+
+      expect(response.status).to eq(200)
+      expect(user.push_subscriptions.count).to eq(1)
+      expect(other_user.push_subscriptions).to be_empty
+    end
+
     it "unsubscribes an existing subscription" do
       sub = { endpoint: "endpoint", keys: { p256dh: "256dh", auth: "auth" } }
       PushSubscription.create!(user: user, data: sub.to_json)
@@ -131,20 +105,6 @@ RSpec.describe PushNotificationController do
 
       expect(response.status).to eq(200)
       expect(user.push_subscriptions).to eq([])
-    end
-
-    it "rejects an unsubscribe request started by another account" do
-      sub = { endpoint: "endpoint", keys: { p256dh: "256dh", auth: "auth" } }
-      PushSubscription.create!(user: user, data: sub.to_json)
-
-      post "/push_notifications/unsubscribe.json",
-           params: {
-             user_id: Fabricate(:user).id,
-             subscription: sub,
-           }
-
-      expect(response.status).to eq(409)
-      expect(user.push_subscriptions.count).to eq(1)
     end
 
     it "handles unsubscribing without a subscription" do

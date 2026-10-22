@@ -1,8 +1,12 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { keyValueStore as pushNotificationKeyValueStore } from "discourse/lib/push-notifications";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+
+const userDismissedPromptKey = "dismissed-prompt";
 
 export default class NotificationConsentBanner extends Component {
   @service capabilities;
@@ -10,29 +14,44 @@ export default class NotificationConsentBanner extends Component {
   @service desktopNotifications;
   @service siteSettings;
 
-  get showNotificationPromptBanner() {
-    const pushNeedsAttention = this.desktopNotifications.pushNeedsAttention;
+  @tracked bannerDismissed;
 
+  constructor() {
+    super(...arguments);
+    this.bannerDismissed = pushNotificationKeyValueStore.getItem(
+      userDismissedPromptKey
+    );
+  }
+
+  get showNotificationPromptBanner() {
     return (
       this.siteSettings.push_notifications_prompt &&
       !this.desktopNotifications.isNotSupported &&
       this.currentUser &&
       this.capabilities.isPwa &&
       Notification.permission !== "denied" &&
-      !this.desktopNotifications.consentPromptDismissed &&
-      (!this.desktopNotifications.isEnabled || pushNeedsAttention) &&
-      (Notification.permission !== "granted" || pushNeedsAttention)
+      Notification.permission !== "granted" &&
+      !this.desktopNotifications.isEnabled &&
+      !this.bannerDismissed
+    );
+  }
+
+  setBannerDismissed(value) {
+    pushNotificationKeyValueStore.setItem(userDismissedPromptKey, value);
+    this.bannerDismissed = pushNotificationKeyValueStore.getItem(
+      userDismissedPromptKey
     );
   }
 
   @action
   turnon() {
     this.desktopNotifications.enable();
+    this.setBannerDismissed(true);
   }
 
   @action
   dismiss() {
-    this.desktopNotifications.dismissConsentPrompt();
+    this.setBannerDismissed(false);
   }
 
   <template>

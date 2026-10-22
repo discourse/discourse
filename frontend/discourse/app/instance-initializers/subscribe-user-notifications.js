@@ -4,20 +4,21 @@ import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import {
   alertChannel,
-  currentPushTransportEpoch,
+  disable as disableDesktopNotifications,
   init as initDesktopNotifications,
   onNotification as onDesktopNotification,
-  setPushTransport,
 } from "discourse/lib/desktop-notifications";
 import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
-import { listenForPushNotificationMessages } from "discourse/lib/push-notifications";
+import {
+  isPushNotificationsEnabled,
+  register as registerPushNotifications,
+  unsubscribe as unsubscribePushNotifications,
+} from "discourse/lib/push-notifications";
 import { currentThemeId } from "discourse/lib/theme-selector";
 import Notification from "discourse/models/notification";
 
-const PUSH_RECONCILE_COOLDOWN_MS = 60_000;
-
-export class SubscribeUserNotificationsInit {
+class SubscribeUserNotificationsInit {
   @service appEvents;
   @service capabilities;
   @service currentUser;
@@ -79,9 +80,28 @@ export class SubscribeUserNotificationsInit {
 
       initDesktopNotifications(this.messageBus);
 
-      listenForPushNotificationMessages(this.router, this.appEvents);
+      if (isPushNotificationsEnabled(this.currentUser)) {
+        disableDesktopNotifications();
 
-      this.reconcileTransports();
+        if (this.desktopNotifications.isGrantedPermission) {
+          registerPushNotifications(
+            this.currentUser,
+            this.router,
+            this.appEvents,
+            this.siteSettings.vapid_public_key_bytes
+          )?.then((registered) => {
+            // keep alerting through this tab until a later boot restores push
+            if (registered === false) {
+              this.desktopNotifications.setIsEnabledBrowser(true);
+            }
+          });
+        } else {
+          // the stored subscription can no longer display anything
+          this.desktopNotifications.disable();
+        }
+      } else if (!this.currentUser.isInDoNotDisturb()) {
+        unsubscribePushNotifications(this.currentUser);
+      }
     }
   }
 
@@ -117,52 +137,6 @@ export class SubscribeUserNotificationsInit {
     this.messageBus.unsubscribe("/client_settings", this.onClientSettings);
 
     this.messageBus.unsubscribe(alertChannel(this.currentUser), this.onAlert);
-  }
-
-  reconcileTransports() {
-    if (this.pushReconciliation) {
-      return this.pushReconciliation;
-    }
-
-    this._lastPushReconciliationAt = Date.now();
-
-    // Before the first reconciliation, use stored intent to avoid duplicate
-    // notifications while the round trip is pending.
-    if (
-      this.desktopNotifications.pushIntent === "subscribed" &&
-      this.desktopNotifications.pushSubscriptionConfirmed !== false
-    ) {
-      setPushTransport("delivering");
-    }
-    const transportEpoch = currentPushTransportEpoch();
-
-    this.pushReconciliation = this.desktopNotifications
-      .reconcilePushSubscription()
-      .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        return null;
-      })
-      .then((result) => {
-        let transport = null;
-        if (result === "subscribed" || result === "unconfirmed") {
-          transport = "delivering";
-        } else if (
-          this.desktopNotifications.pushIntent !== "off" &&
-          this.desktopNotifications.isGrantedPermission &&
-          this.desktopNotifications.isPushNotificationsPreferred &&
-          !this.capabilities.isMobileDevice
-        ) {
-          transport = "fallback";
-        }
-
-        setPushTransport(transport, { ifEpoch: transportEpoch });
-
-        return result;
-      })
-      .finally(() => (this.pushReconciliation = null));
-
-    return this.pushReconciliation;
   }
 
   @bind
@@ -322,29 +296,14 @@ export class SubscribeUserNotificationsInit {
 
   @bind
   onAlert(data) {
-    // Avoid retrying every alert when a subscription cannot be repaired.
-    if (
-      this.desktopNotifications.pushIntent !== "off" &&
-      this.desktopNotifications.isGrantedPermission &&
-      this.desktopNotifications.isPushNotificationsPreferred &&
-      this.desktopNotifications.pushSubscriptionConfirmed !== true &&
-      Date.now() - (this._lastPushReconciliationAt ?? 0) >
-        PUSH_RECONCILE_COOLDOWN_MS
-    ) {
-      this.reconcileTransports();
+    if (!this.capabilities.isMobileDevice) {
+      return onDesktopNotification(
+        data,
+        this.siteSettings,
+        this.currentUser,
+        this.appEvents
+      );
     }
-
-    // MessageBus cannot display a mobile notification
-    if (this.capabilities.isMobileDevice) {
-      return;
-    }
-
-    return onDesktopNotification(
-      data,
-      this.siteSettings,
-      this.currentUser,
-      this.appEvents
-    );
   }
 }
 
