@@ -164,6 +164,7 @@ RSpec.describe "JSON:API queries", type: :request do
               "id" => author.id.to_s,
               "attributes" => {
                 "username" => "query_author",
+                "avatarTemplate" => author.avatar_template,
               },
               "links" => {
                 "self" => "#{root}/users/#{author.id}",
