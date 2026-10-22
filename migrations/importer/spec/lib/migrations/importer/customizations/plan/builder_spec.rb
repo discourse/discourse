@@ -190,6 +190,12 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
     { "id" => id.to_s, "name" => name, "data_type" => "1", "value" => value }
   end
 
+  # Real diff output carries every column of the after row, changed ones included.
+  def changed_row(id, diffs, after = {})
+    after = { "id" => id }.merge(after).merge(diffs.transform_values(&:last))
+    { "key" => [id], "diffs" => diffs, "after" => after }
+  end
+
   def permalink_row(id, url, target)
     columns = %w[topic_id post_id category_id tag_id user_id external_url].index_with { nil }
     { "id" => id.to_s, "url" => url, "updated_at" => "a" }.merge(columns).merge(target)
@@ -291,65 +297,36 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
             { "id" => "51", "name" => "local_group", "title" => "Locals", "primary_group" => "f" },
           ],
           "changed" => [
-            {
-              "key" => ["1"],
-              "diffs" => {
+            changed_row(
+              "1",
+              {
                 "bio_raw" => [nil, ""],
                 "flair_icon" => ["", nil],
                 "flair_upload_id" => [nil, "55"],
                 "flair_bg_color" => [nil, "ff0000"],
                 "user_count" => %w[1 2],
               },
-              "after" => {
-                "id" => "1",
-                "name" => "admins",
-              },
-            },
-            {
-              "key" => ["50"],
-              "diffs" => {
-                "title" => [nil, "Members"],
-                "email_password" => %w[a b],
-              },
-              "after" => {
-                "id" => "50",
-                "name" => "imported_group",
-              },
-            },
-            {
-              "key" => ["2"],
-              "diffs" => {
-                "user_count" => %w[1 2],
-              },
-              "after" => {
-                "id" => "2",
-                "name" => "moderators",
-              },
-            },
+              "name" => "admins",
+            ),
+            changed_row(
+              "50",
+              { "title" => [nil, "Members"], "email_password" => %w[a b] },
+              "name" => "imported_group",
+            ),
+            changed_row("2", { "user_count" => %w[1 2] }, "name" => "moderators"),
           ],
         },
         "categories" => {
           "changed" => [
-            {
-              "key" => ["20"],
-              "diffs" => {
+            changed_row(
+              "20",
+              {
                 "color" => %w[aaa bbb],
                 "uploaded_logo_id" => ["4", nil],
                 "topic_count" => %w[1 2],
               },
-              "after" => {
-                "id" => "20",
-              },
-            },
-            {
-              "key" => ["21"],
-              "diffs" => {
-                "text_color" => %w[aaa bbb],
-              },
-              "after" => {
-                "id" => "21",
-              },
-            },
+            ),
+            changed_row("21", { "text_color" => %w[aaa bbb] }),
           ],
         },
         "category_groups" => {
@@ -499,7 +476,7 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
     )
   end
 
-  it "skips palettes owned by a non-system theme" do
+  it "skips palettes exported with a local theme's files" do
     expect(plan["color_schemes"]).to contain_exactly(
       { "name" => "Light palette", "target" => "template" },
       { "name" => "Owned", "target" => "skip", "note" => "comes with theme 'Custom component'" },
@@ -512,6 +489,69 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
 
     expect(categories.keys).to eq(["Local"])
     expect(categories["Local"]["attributes"]).to eq(["permissions"])
+  end
+
+  it "includes administrator-only restrictions without category group changes" do
+    diff["tables"] = {
+      "categories" => {
+        "changed" => [changed_row("21", { "read_restricted" => %w[f t] })],
+      },
+    }
+
+    expect(plan["categories"]).to contain_exactly(
+      include("name" => "Local", "attributes" => ["permissions"]),
+    )
+  end
+
+  it "includes new groups with default attributes but ignores unchanged groups with new ids" do
+    diff["tables"] = {
+      "groups" => {
+        "added" => [
+          { "id" => "51", "name" => "local_group", "title" => nil },
+          { "id" => "50", "name" => "imported_group", "title" => nil },
+        ],
+        "removed" => [{ "id" => "49", "name" => "imported_group", "title" => nil }],
+      },
+    }
+
+    expect(plan["groups"]).to contain_exactly(
+      include("name" => "local_group", "attributes" => [], "target" => "template"),
+    )
+  end
+
+  it "selects surviving themes after fields or translation overrides are removed" do
+    diff["tables"] = {
+      "theme_fields" => {
+        "removed" => [
+          { "theme_id" => "5", "name" => "header" },
+          { "theme_id" => "-2", "name" => "screenshot" },
+        ],
+      },
+      "theme_translation_overrides" => {
+        "removed" => [{ "theme_id" => "6", "translation_key" => "greeting" }],
+      },
+    }
+
+    expect(plan["themes"]).to contain_exactly(
+      include("name" => "Custom component"),
+      include("name" => "Git component"),
+    )
+  end
+
+  it "exports git-owned palette edits and selects their owning theme" do
+    facts.define_singleton_method(:color_scheme) { |_id| { name: "Owned", theme_id: 6 } }
+    diff["tables"] = {
+      "color_scheme_colors" => {
+        "changed" => [
+          { "after" => { "color_scheme_id" => "8" }, "diffs" => { "hex" => %w[ffffff 000000] } },
+        ],
+      },
+    }
+
+    expect(plan["color_schemes"]).to eq(
+      [{ "name" => "Owned", "theme" => { "name" => "Git component" }, "target" => "template" }],
+    )
+    expect(plan["themes"]).to contain_exactly(include("name" => "Git component"))
   end
 
   it "lists only transferable group attributes" do

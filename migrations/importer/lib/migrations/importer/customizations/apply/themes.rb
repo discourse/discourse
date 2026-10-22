@@ -12,35 +12,48 @@ module Migrations
             @values = values
             @lookup = lookup
             @dry_run = dry_run
+            @pending_code = Set.new
           end
 
           def apply_code(entry)
-            case entry["kind"]
-            when "system"
-              @lookup.theme(entry)
-              :unchanged
-            when "git"
-              apply_git(entry)
-            when "local"
-              apply_local(entry)
-            else
-              raise Error, "unknown theme kind: #{entry["kind"].inspect}"
-            end
+            result =
+              case entry["kind"]
+              when "system"
+                @lookup.theme(entry)
+                :unchanged
+              when "git"
+                apply_git(entry)
+              when "local"
+                apply_local(entry)
+              else
+                raise Error, "unknown theme kind: #{entry["kind"].inspect}"
+              end
+            @pending_code << entry["name"] if @dry_run && Array(result).first == :changed
+            result
           end
 
           def apply_relations(entry)
+            if @pending_code.include?(entry["name"])
+              raise PendingDependency, "theme code would be updated before applying settings"
+            end
             theme = @lookup.theme(theme_ref(entry))
             changes = []
             problems = []
+            undefined_settings = []
 
             changes << "attributes" if apply_attributes(theme, entry)
             changes << "children" if apply_children(theme, entry, problems)
-            changes << "settings" if apply_settings(theme, entry, problems)
+            changes << "settings" if apply_settings(theme, entry, undefined_settings)
             changes << "theme site settings" if apply_theme_site_settings(theme, entry)
             changes << "translation overrides" if apply_translation_overrides(theme, entry)
 
             raise Error, problems.join("; ") if problems.any?
-            changes.any? ? [:changed, changes.join(", ")] : :unchanged
+
+            notes = changes.dup
+            if undefined_settings.any?
+              notes << "ignored settings the theme no longer defines: #{undefined_settings.join(", ")}"
+            end
+            [changes.any? ? :changed : :unchanged, notes.join(", ").presence]
           end
 
           private
@@ -53,16 +66,32 @@ module Migrations
             url = entry["remote_url"].to_s
             raise Error, "remote_url is missing" if url.blank?
 
-            existing =
-              ::Theme.joins(:remote_theme).where(remote_themes: { remote_url: url }).exists?
-            return :unchanged if existing
+            existing = ::Theme.joins(:remote_theme).where(remote_themes: { remote_url: url }).to_a
+            if existing.size > 1
+              existing.select! { |theme| theme.name == entry["name"] }
+              unless existing.size == 1
+                raise Error, "multiple themes use #{url}; no unique match for '#{entry["name"]}'"
+              end
+            end
+            branch = entry["branch"].presence
+            if (theme = existing.first)
+              remote = theme.remote_theme
+              same_branch = remote.branch.presence == branch
+              return :unchanged if same_branch && theme.name == entry["name"]
+              return :changed if @dry_run
+
+              unless same_branch
+                remote.update!(branch:)
+                remote.update_from_remote(raise_on_import_error: true)
+              end
+              theme.reload
+              theme.update!(name: entry["name"]) if theme.name != entry["name"]
+              return :changed
+            end
             return :changed, "would be installed" if @dry_run
 
-            ::RemoteTheme.import_theme(
-              url,
-              ::Discourse.system_user,
-              branch: entry["branch"].presence,
-            )
+            theme = ::RemoteTheme.import_theme(url, ::Discourse.system_user, branch:)
+            theme.update!(name: entry["name"]) if theme.name != entry["name"]
             [:changed, "installed"]
           end
 
@@ -133,7 +162,9 @@ module Migrations
             true
           end
 
-          def apply_settings(theme, entry, problems)
+          # A newer theme version can drop a setting; that must not hold back
+          # the rest of the theme.
+          def apply_settings(theme, entry, undefined_settings)
             definitions = theme.settings
             changed = false
 
@@ -141,7 +172,7 @@ module Migrations
               name = setting["name"].to_s
               definition = definitions[name.to_sym]
               if definition.nil?
-                problems << "setting #{name} is not defined by the theme"
+                undefined_settings << name
                 next
               end
 
@@ -213,9 +244,20 @@ module Migrations
           end
 
           def apply_translation_overrides(theme, entry)
-            changed = false
+            return false unless entry.key?("translation_overrides")
 
-            Array(entry["translation_overrides"]).each do |override|
+            changed = false
+            overrides = Array(entry["translation_overrides"])
+            desired_keys =
+              overrides.map { |override| [override["locale"].to_s, override["key"].to_s] }.to_set
+            theme.theme_translation_overrides.each do |record|
+              next if desired_keys.include?([record.locale, record.translation_key])
+
+              changed = true
+              record.destroy! unless @dry_run
+            end
+
+            overrides.each do |override|
               record =
                 ::ThemeTranslationOverride.find_or_initialize_by(
                   theme_id: theme.id,
