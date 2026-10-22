@@ -2,6 +2,7 @@
 
 RSpec.describe TagResource do
   fab!(:admin)
+  fab!(:moderator)
   fab!(:user)
 
   fab!(:plain) { Fabricate(:tag, name: "plain") }
@@ -44,6 +45,20 @@ RSpec.describe TagResource do
       allow_global_tags: true,
       category_required_tag_groups: [
         CategoryRequiredTagGroup.new(tag_group: req_group, min_count: 1),
+      ],
+    )
+  end
+
+  # The first required group still short of its minimum narrows the input, so the order matters.
+  fab!(:first_required) { Fabricate(:tag_group, tags: [Fabricate(:tag, name: "first-req")]) }
+  fab!(:second_required) { Fabricate(:tag_group, tags: [Fabricate(:tag, name: "second-req")]) }
+  fab!(:two_required) do
+    Fabricate(
+      :category,
+      tag_groups: [first_required, second_required],
+      category_required_tag_groups: [
+        CategoryRequiredTagGroup.new(tag_group: second_required, min_count: 1, order: 2),
+        CategoryRequiredTagGroup.new(tag_group: first_required, min_count: 1, order: 1),
       ],
     )
   end
@@ -121,9 +136,10 @@ RSpec.describe TagResource do
       guardians = {
         "anonymous" => Guardian.new,
         "user" => user.guardian,
+        "moderator" => moderator.guardian,
         "admin" => admin.guardian,
       }
-      categories = [nil, open_category, restricted, restricted_global, required]
+      categories = [nil, open_category, restricted, restricted_global, required, two_required]
       held_sets = [[], [parent.id], [linux.id], [req_one.id], [shared.id, cat_only.id]]
       terms = [nil, "a", "req", "linux"]
 
@@ -147,6 +163,41 @@ RSpec.describe TagResource do
           end
 
       expect(mismatches).to eq([])
+    end
+
+    # A fresh guardian per read, as each request builds one. A signed-in user's guardian reads the
+    # categories it may see in two queries, which both the visibility scope and the category input
+    # need; the category then costs one query with its restrictions and required groups.
+    it "reads the tags in one query, plus one for the category when the request names one" do
+      read = ->(person, filter) do
+        described_class
+          .collection(:applicable)
+          .all({ filter:, page: { size: 5 } }, guardian: Guardian.new(person))
+          .records
+          .to_a
+      end
+      counts =
+        {
+          "user" => [user, {}],
+          "user in a restricted category" => [user, { category: restricted.id }],
+          "user in a required category, holding tags" => [
+            user,
+            { category: required.id, held: [linux.id, parent.id] },
+          ],
+          "admin" => [admin, {}],
+          "admin in a restricted category" => [admin, { category: restricted.id }],
+        }.transform_values do |(person, filter)|
+          read.call(person, filter)
+          track_sql_queries { read.call(person, filter) }.size
+        end
+
+      expect(counts).to eq(
+        "user" => 3,
+        "user in a restricted category" => 4,
+        "user in a required category, holding tags" => 4,
+        "admin" => 1,
+        "admin in a restricted category" => 4,
+      )
     end
   end
 
