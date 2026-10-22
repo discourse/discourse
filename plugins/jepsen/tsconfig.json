@@ -8,12 +8,12 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/discourse-plugin-skeleton/*": [
+      "discourse/plugins/jepsen/*": [
         "./assets/javascripts/*",
         "./assets/javascripts/*.gjs",
         "./assets/javascripts/*.gts"
       ],
-      "discourse/plugins/discourse-plugin-skeleton/admin/*": [
+      "discourse/plugins/jepsen/admin/*": [
         "./admin/assets/javascripts/admin/*",
         "./admin/assets/javascripts/admin/*.gjs",
         "./admin/assets/javascripts/admin/*.gts"
