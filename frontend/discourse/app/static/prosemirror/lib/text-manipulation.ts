@@ -1097,7 +1097,7 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
         if (!opts?.applyEmptyLines && !line.length) {
           return line;
         }
-        previous = previous === undefined ? firstHead : head(previous);
+        previous = head(previous);
         return previous + line;
       })
       .join("\n");
