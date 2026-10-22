@@ -229,7 +229,7 @@ customization ports are done.
   that also works with select-kit: explicit `onChange` at the two-way sites, stable hooks in place
   of `.select-kit` DOM queries, and the wizard's `onChange`.
 - **Wave 1, tags and categories, composer included.** Tag and category choosers, drops and
-  selectors, FormKit's `tag-chooser`, and the search and report choosers. Category rows reuse
+  selectors, the tag group chooser, FormKit's `tag-chooser`, and the search and report choosers. Category rows reuse
   `categoryBadgeHTML` (`frontend/discourse/select-kit/components/category-row.gjs:123`); tag rows
   reuse `dDiscourseTag` and `renderTag` (`frontend/discourse/app/ui-kit/helpers/d-discourse-tag.js:5`).
   discourse-ai's suggesters and the customer `modifySelectKit` plugin are ported. Staff skip tag
@@ -237,8 +237,8 @@ customization ports are done.
   non-staff group, and member and anonymous paths are covered before exposure.
 - **Wave 2, entity pickers and ui-kit wrappers.** The user, email-group-user and group choosers (a
   user search recipe, `addUserSearchOption`, `customSearchOptions`, a rewritten
-  `DAccessControlGranteeChooser`), topic, form template, timezone, flair, list setting, tag group,
-  color, font and wizard pickers. The ui-kit wrappers move together as one family:
+  `DAccessControlGranteeChooser`), topic, form template, timezone, flair, list setting, color, font
+  and wizard pickers. The ui-kit wrappers move together as one family:
   `d-time-input`, `d-relative-time-picker`, `d-future-date-input` with its
   `FutureDateInputSelector`, and `d-access-control`.
 - **Wave 3, menu-shaped value selects and action menus.** The group dropdown and value-type

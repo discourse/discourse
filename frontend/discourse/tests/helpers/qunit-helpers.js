@@ -74,6 +74,7 @@ import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-but
 import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
 import { resetLogSearchLinkClickedCallbacks } from "discourse/lib/search";
+import { resetSelectKitLegacyRenderNotices } from "discourse/lib/select-kit-modify-class-deprecation";
 import { clearAdditionalAdminSidebarSectionLinks } from "discourse/lib/sidebar/admin-sidebar";
 import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
@@ -228,6 +229,7 @@ export function testCleanup(container, app) {
   resetAdminReportRelatedItemsRenderers();
   resetAdminDashboardSections();
   resetDeferredClassModifications();
+  resetSelectKitLegacyRenderNotices();
   resetExtraClasses();
   clearOutletCache();
   clearHTMLCache();

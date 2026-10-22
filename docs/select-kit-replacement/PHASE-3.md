@@ -12,8 +12,9 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
 
 - ☐ **Category family:** chooser, drop, selector, search and report choosers. Rows reuse
   `categoryBadgeHTML`.
-- ☐ **Tag family:** tag chooser, mini tag chooser, tag drop, tag group, intersection, and FormKit's
-  `tag-chooser` control. Rows reuse `dDiscourseTag` / `renderTag`. Engine prerequisites, generic
+- ☑ **Tag family:** tag chooser, mini tag chooser, tag drop, tag group, intersection, tag dropdown,
+  and FormKit's `tag-chooser` control. Joined `MIGRATED_SELECT_KIT_MODULES`; the admin tag category
+  dropdown moves with wave 3's menus. Rows reuse `dDiscourseTag` / `renderTag`. Engine prerequisites, generic
   and usable by every family:
   - ☑ **`@loadContext`:** the loader's inputs; a changed entry reloads the list (closed or open)
     without superseding pending updates. Keyboard activation is held, with a polite "Still
@@ -31,7 +32,7 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
 - ☐ **discourse-ai** suggesters and the customer `modifySelectKit` plugin work through the bridge.
 - ☐ **Customer `modifyClass` ports** for category-drop, tag-drop and category-chooser.
 - ☐ SCSS for these families migrated.
-- ☐ **Third-party notice** (render-time): notify when a legacy component of a migrated family
+- ☑ **Third-party notice** (render-time): notify when a legacy component of a migrated family
   renders while the flag is on, attributed from the stack. Design it against this wave's first
   family (see `ROLLOUT.md`).
 - ☐ **Alpha:** staff plus a member group; member and anonymous coverage before exposure.
@@ -42,8 +43,7 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   with `addUserSearchOption` and `customSearchOptions`; rewrite `DAccessControlGranteeChooser`.
 - ☐ **`DTopicSelect`:** the acceptance case for selected-value resolution; fold in the parked
   handoff.
-- ☐ **Long tail:** form template, timezone, flair, list setting, tag group, color, font and wizard
-  pickers.
+- ☐ **Long tail:** form template, timezone, flair, list setting, color, font and wizard pickers.
 - ☐ **ui-kit wrappers** as one family: `d-time-input`, `d-relative-time-picker`,
   `d-future-date-input` with `FutureDateInputSelector`, `d-access-control`.
 

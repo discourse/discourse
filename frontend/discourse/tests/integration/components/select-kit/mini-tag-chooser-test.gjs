@@ -1,10 +1,17 @@
-import { hash } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { click, findAll, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
+import { MIGRATED_SELECT_KIT_MODULES } from "discourse/lib/select-kit-modify-class-deprecation";
 import { serializeTags } from "discourse/lib/serialize-tags";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import DeprecationCounter from "discourse/tests/helpers/deprecation-counter";
+import {
+  disableRaiseOnDeprecation,
+  enableRaiseOnDeprecation,
+} from "discourse/tests/helpers/raise-on-deprecation";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -457,6 +464,97 @@ module(
         { name: "5" },
         `the held name stays a name: ${JSON.stringify(serialized)}`
       );
+    });
+  }
+);
+
+module(
+  "Integration | Component | SelectKit | legacy render notice",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    const ID = "discourse.select-kit-rollout.legacy-render";
+
+    hooks.beforeEach(function () {
+      disableRaiseOnDeprecation();
+      this.warnStub = sinon.stub(console, "warn");
+      this.counterStub = sinon.stub(
+        DeprecationCounter.prototype,
+        "incrementCount"
+      );
+      this.shippedMigrated = [...MIGRATED_SELECT_KIT_MODULES];
+      MIGRATED_SELECT_KIT_MODULES.clear();
+      this.siteSettings.enable_new_select_controls = true;
+      pretender.get("/tags/list.json", () => response({ list_tags: [] }));
+    });
+
+    hooks.afterEach(function () {
+      MIGRATED_SELECT_KIT_MODULES.clear();
+      this.shippedMigrated.forEach((path) =>
+        MIGRATED_SELECT_KIT_MODULES.add(path)
+      );
+      enableRaiseOnDeprecation();
+    });
+
+    const reports = (stub) =>
+      stub.getCalls().filter((call) => call.args[0] === ID).length;
+
+    test("a legacy render of a migrated family is reported once", async function (assert) {
+      MIGRATED_SELECT_KIT_MODULES.add("mini-tag-chooser");
+
+      await render(
+        <template>
+          <MiniTagChooser @value={{(array)}} />
+          <MiniTagChooser @value={{(array)}} />
+        </template>
+      );
+
+      assert.strictEqual(
+        reports(this.counterStub),
+        1,
+        "once per class and source"
+      );
+    });
+
+    test("each class is reported on its own", async function (assert) {
+      MIGRATED_SELECT_KIT_MODULES.add("mini-tag-chooser");
+      class ThirdPartyChooser extends MiniTagChooser {}
+
+      await render(
+        <template>
+          <MiniTagChooser @value={{(array)}} />
+          <ThirdPartyChooser @value={{(array)}} />
+          <ThirdPartyChooser @value={{(array)}} />
+        </template>
+      );
+
+      assert.strictEqual(reports(this.counterStub), 2);
+    });
+
+    test("nothing is reported with the flag off", async function (assert) {
+      MIGRATED_SELECT_KIT_MODULES.add("mini-tag-chooser");
+      this.siteSettings.enable_new_select_controls = false;
+
+      await render(<template><MiniTagChooser @value={{(array)}} /></template>);
+
+      assert.strictEqual(reports(this.counterStub), 0);
+    });
+
+    test("a family that has not migrated is not reported", async function (assert) {
+      await render(<template><MiniTagChooser @value={{(array)}} /></template>);
+
+      assert.strictEqual(reports(this.counterStub), 0);
+    });
+
+    test("a subclass of a migrated component is reported", async function (assert) {
+      MIGRATED_SELECT_KIT_MODULES.add("mini-tag-chooser");
+      class ThirdPartyChooser extends MiniTagChooser {}
+
+      await render(
+        <template><ThirdPartyChooser @value={{(array)}} /></template>
+      );
+
+      assert.strictEqual(reports(this.counterStub), 1);
     });
   }
 );

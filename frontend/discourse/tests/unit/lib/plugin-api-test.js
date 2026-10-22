@@ -544,6 +544,41 @@ module("Unit | Utility | plugin-api", function (hooks) {
       assert.true(true, "checked every shipped entry");
     });
 
+    test("the tag family has joined, rows included", function (assert) {
+      for (const path of [
+        "mini-tag-chooser",
+        "mini-tag-chooser/selected-collection",
+        "tag-chooser",
+        "tag-chooser-row",
+        "tag-drop",
+        "tag-drop/tag-drop-header",
+        "tag-dropdown",
+        "tag-group-chooser",
+        "tag-row",
+        "tags-intersection-chooser",
+      ]) {
+        assert.true(MIGRATED_SELECT_KIT_MODULES.has(path), path);
+      }
+    });
+
+    test("tag selects that stay on select-kit have not joined", function (assert) {
+      for (const path of [
+        "tag-category-admin-dropdown",
+        "tag-notifications-button",
+      ]) {
+        assert.false(MIGRATED_SELECT_KIT_MODULES.has(path), path);
+      }
+    });
+
+    test("a plugin patch on the mini tag chooser is reported", function (assert) {
+      withPluginApi(
+        (api) => api.modifyClass("component:mini-tag-chooser", probePatch),
+        pluginOpts("sk-tag-plugin")
+      );
+
+      assert.true(this.counterStub.calledWith(ID));
+    });
+
     test("throws in development, after applying the patch", function (assert) {
       MIGRATED_SELECT_KIT_MODULES.add("combo-box");
       DeprecationWorkflow.setEnvironment(makeEnv());

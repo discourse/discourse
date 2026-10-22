@@ -27,6 +27,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import deprecated from "discourse/lib/deprecated";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
+import identifySource from "discourse/lib/source-identifier";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { normalize } from "discourse/select-kit/lib/input-utils";
 import {
@@ -209,6 +210,16 @@ export default class SelectKit extends Component {
 
   init() {
     super.init(...arguments);
+
+    // Resolved lazily: the helper's compat modules import subclasses of this base.
+    const {
+      deprecateSelectKitLegacyRender,
+      MIGRATED_SELECT_KIT_MODULES,
+    } = require("discourse/lib/select-kit-modify-class-deprecation");
+    if (MIGRATED_SELECT_KIT_MODULES.size > 0) {
+      // Capture the caller's source before afterRender loses the init stack.
+      deprecateSelectKitLegacyRender(this, identifySource(new Error()));
+    }
 
     this._searchPromise = null;
 

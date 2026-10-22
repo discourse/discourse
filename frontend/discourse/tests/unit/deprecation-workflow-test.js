@@ -486,6 +486,30 @@ module("Unit | deprecation-workflow", function (hooks) {
     });
   });
 
+  module("select-kit legacy render notice", function (nestedHooks) {
+    const ID = "discourse.select-kit-rollout.legacy-render";
+
+    nestedHooks.afterEach(function () {
+      DeprecationWorkflow.setEnvironment(undefined);
+    });
+
+    test("logs in development without throwing", function (assert) {
+      DeprecationWorkflow.setEnvironment(makeEnv());
+
+      assert.true(DeprecationWorkflow.shouldLog(ID));
+      assert.false(DeprecationWorkflow.shouldThrow(ID));
+      assert.false(DeprecationWorkflow.shouldSilence(ID));
+    });
+
+    test("notifies admins in production", function (assert) {
+      DeprecationWorkflow.setEnvironment(makeEnv({ production: true }));
+
+      assert.true(DeprecationWorkflow.shouldNotifyAdmin(ID));
+      assert.false(DeprecationWorkflow.shouldThrow(ID));
+      assert.false(DeprecationWorkflow.shouldSilence(ID));
+    });
+  });
+
   module("modifySelectKit bridge deprecations", function (nestedHooks) {
     const IDS = [
       "discourse.select-kit.modify-select-kit-content",
