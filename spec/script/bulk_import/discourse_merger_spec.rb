@@ -488,8 +488,8 @@ if merger_dependencies_available
 
         merger.copy_uploads
 
-        expect(uploads["500"]).to eq(existing_upload.id)
-        expect(uploads["501"]).to be > existing_upload.id
+        expect(uploads[500]).to eq(existing_upload.id)
+        expect(uploads[501]).to be > existing_upload.id
         expect(copied_rows.map { |values| values[Upload.column_names.index("sha1")] }).to eq(
           ["new-sha1"],
         )
@@ -547,6 +547,107 @@ if merger_dependencies_available
           expect(topic["pinned_at"]).to eq("2024-01-01 00:00:00")
           expect(topic["pinned_until"]).to eq("2030-01-01 00:00:00")
         end
+      end
+    end
+
+    describe "#copy_model" do
+      let(:source_tables) { {} }
+      let(:merger) do
+        build_merger(
+          raw_connection: ActiveRecord::Base.connection.raw_connection,
+          encoder: PG::TextEncoder::CopyRow.new,
+          merged_user_ids: [],
+          sequences: {
+          },
+          users: {
+          },
+          groups: {
+          },
+          categories: {
+          },
+          topics: {
+          },
+          posts: {
+          },
+          tags: {
+          },
+          tag_groups: {
+          },
+          uploads: {
+          },
+          badges: {
+          },
+          badge_groupings: {
+          },
+          polls: {
+          },
+          poll_options: {
+          },
+          auto_group_ids: Group::AUTO_GROUPS.values,
+        )
+      end
+
+      # Rows come back from PG as string-valued hashes in column order.
+      def add_source_row(klass, **values)
+        row = klass.column_names.index_with { nil }
+        row.merge!(values.transform_keys(&:to_s).transform_values { |value| value&.to_s })
+        (source_tables[klass.table_name] ||= []) << row
+      end
+
+      before do
+        source = instance_double(PG::Connection)
+        allow(source).to receive(:exec) do |sql|
+          source_tables[sql[/FROM\s+(\w+)/i, 1]] || []
+        end
+        allow(merger).to receive(:source_raw_connection).and_return(source)
+        allow(merger).to receive(:puts)
+      end
+
+      it "registers mappings that the lookup helpers can resolve" do
+        category = Fabricate(:category)
+        merger.instance_variable_get(:@categories)[42] = category.id
+        timestamp = 1.day.ago.to_formatted_s(:db)
+
+        add_source_row(
+          TagGroup,
+          id: 7,
+          name: "Colors",
+          created_at: timestamp,
+          updated_at: timestamp,
+        )
+        add_source_row(
+          CategoryTagGroup,
+          id: 3,
+          category_id: 42,
+          tag_group_id: 7,
+          created_at: timestamp,
+          updated_at: timestamp,
+        )
+        add_source_row(
+          BadgeGrouping,
+          id: 5,
+          name: "Extra",
+          position: 20,
+          created_at: timestamp,
+          updated_at: timestamp,
+        )
+
+        merger.copy_model(TagGroup, mapping: merger.instance_variable_get(:@tag_groups))
+        merger.copy_model(CategoryTagGroup, skip_processing: true)
+        merger.copy_model(
+          BadgeGrouping,
+          mapping: merger.instance_variable_get(:@badge_groupings),
+          skip_processing: true,
+        )
+
+        tag_group = TagGroup.find_by!(name: "Colors")
+        expect(merger.tag_group_id_from_imported_id("7")).to eq(tag_group.id)
+        expect(CategoryTagGroup.where(category_id: category.id).pluck(:tag_group_id)).to eq(
+          [tag_group.id],
+        )
+        expect(merger.badge_grouping_id_from_imported_id("5")).to eq(
+          BadgeGrouping.find_by!(name: "Extra").id,
+        )
       end
     end
   end
