@@ -221,6 +221,17 @@ module BackupRestore
     def after_restore_hook
       log "Executing the after_restore_hook..."
       DiscourseEvent.trigger(:restore_complete)
+      publish_schema_cache_flush
+    end
+
+    # The restore recreated the database's custom types (enums) under new
+    # OIDs. This process reconnected, but other processes serving this site
+    # still hold column metadata with the old OIDs in their pools' schema
+    # caches. Those keep resolving only until the backup schema is dropped —
+    # after that, loading an enum-backed model from the stale cache raises.
+    # Tell every process to flush now instead.
+    def publish_schema_cache_flush
+      MessageBus.publish("/schema_cache_flush", @current_db)
     end
   end
 end
