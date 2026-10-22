@@ -129,5 +129,59 @@ if merger_dependencies_available
         expect(last_sequence_value).to eq(val)
       end
     end
+
+    describe "#fix_featured_topic" do
+      fab!(:existing_user, :user)
+      fab!(:merged_user, :user)
+      fab!(:old_topic, :topic)
+      fab!(:new_topic, :topic)
+
+      let(:merger) do
+        build_merger(first_new_user_id: merged_user.id, topics: { old_topic.id => new_topic.id })
+      end
+
+      before do
+        existing_user.user_profile.update_columns(featured_topic_id: old_topic.id)
+        merged_user.user_profile.update_columns(featured_topic_id: old_topic.id)
+      end
+
+      it "remaps the featured topic of merged users only" do
+        merger.fix_featured_topic
+
+        expect(merged_user.user_profile.reload.featured_topic_id).to eq(new_topic.id)
+        expect(existing_user.user_profile.reload.featured_topic_id).to eq(old_topic.id)
+      end
+
+      it "remaps profiles whose copied attributes no longer pass validation" do
+        merged_user.user_profile.update_columns(bio_raw: "a" * 3001)
+
+        merger.fix_featured_topic
+
+        expect(merged_user.user_profile.reload.featured_topic_id).to eq(new_topic.id)
+      end
+    end
+
+    describe "#fix_user_upload" do
+      fab!(:merged_user, :user)
+      fab!(:old_upload, :upload)
+      fab!(:new_upload, :upload)
+
+      let(:merger) { build_merger(first_new_user_id: merged_user.id) }
+
+      before do
+        merged_user.update_columns(uploaded_avatar_id: old_upload.id)
+        allow(merger).to receive(:upload_id_from_imported_id).with(old_upload.id).and_return(
+          new_upload.id,
+        )
+      end
+
+      it "remaps the avatar of merged users whose copied attributes no longer pass validation" do
+        merged_user.primary_email.delete
+
+        merger.fix_user_upload
+
+        expect(merged_user.reload.uploaded_avatar_id).to eq(new_upload.id)
+      end
+    end
   end
 end
