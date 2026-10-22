@@ -57,6 +57,27 @@ RSpec.describe Email::Styles do
     end
   end
 
+  describe "custom formatter" do
+    ["a:visited", "a:hover", "a["].each do |selector|
+      it "skips #{selector} while applying supported custom selectors" do
+        SiteSetting.email_custom_css_compiled = <<~CSS
+          p { color: red; }
+          #{selector}, a:first-child { letter-spacing: 3px; }
+          a { background-color: green; }
+        CSS
+
+        frag =
+          html_fragment(
+            '<p>Text</p><div><a href="/">Link</a><a href="/" id="other">Other link</a></div>',
+          )
+
+        expect(frag.at("p")["style"]).to include("color:red")
+        expect(frag.at("a")["style"]).to include("letter-spacing:3px", "background-color:green")
+        expect(frag.at("#other")["style"]).not_to include("letter-spacing:3px")
+      end
+    end
+  end
+
   describe "html template formatter" do
     it "attaches a style to h3 tags" do
       frag = html_fragment("<h3>hello</h3>")

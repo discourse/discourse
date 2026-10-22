@@ -16,12 +16,29 @@ module DiscourseAi
         attr_reader :reason
         attr_accessor :raw_context
 
-        def initialize(reason)
+        def initialize(reason, prompt: nil)
           @reason = reason
-          Rails.logger.warn("DiscourseAi: context_preparation reason=#{reason}")
+          Rails.logger.warn(
+            "DiscourseAi: context_preparation reason=#{reason}#{ContextPreparation.log_context(prompt)}",
+          )
           super(I18n.t("discourse_ai.ai_bot.context_preparation_error", reason: reason))
         end
       end
+
+      def self.log_context(prompt)
+        return "" if !prompt
+
+        context = { topic_id: prompt.topic_id, post_id: prompt.post_id }
+        context[:post_number] = post_number(prompt.post_id) if prompt.post_id
+        context.compact.map { |key, value| " #{key}=#{value}" }.join
+      end
+
+      def self.post_number(post_id)
+        Post.where(id: post_id).pick(:post_number)
+      rescue ActiveRecord::ActiveRecordError
+        nil
+      end
+      private_class_method :post_number
 
       INSTRUCTION = <<~TEXT.strip
         Summarize the conversation evidence supplied as JSON below. This is context
@@ -59,13 +76,16 @@ module DiscourseAi
         prompt.skip_trim = true
         size, capacity = @llm.prompt_capacity(prompt, **options)
         if capacity <= 0
-          raise Error.new(@llm.max_prompt_tokens.to_i <= 0 ? "unknown_capacity" : "hard_overflow")
+          raise Error.new(
+                  @llm.max_prompt_tokens.to_i <= 0 ? "unknown_capacity" : "hard_overflow",
+                  prompt: prompt,
+                )
         end
         return :not_needed if size < capacity * @threshold / 100.0
 
         protected_user_index ||=
           prompt.messages.rindex { |message| message[:type] == :user && !transient_hint?(message) }
-        raise Error.new("missing_current_request") if !protected_user_index
+        raise Error.new("missing_current_request", prompt: prompt) if !protected_user_index
 
         # Prefer complete earlier turns. Never detach provider metadata or a pending
         # call from its batch. A completed current-turn batch can be summarized only
@@ -89,7 +109,7 @@ module DiscourseAi
           end
         end
         if size > capacity && !fits?(prompt, [prompt.messages.first, *tail], **options)
-          raise Error.new("hard_overflow")
+          raise Error.new("hard_overflow", prompt: prompt)
         end
         source = source.reject { |message| transient_hint?(message) }
         attachments = @llm.context_attachments(source)
@@ -118,8 +138,7 @@ module DiscourseAi
               cancel_manager: cancel_manager,
               feature_context: feature_context,
               subagent_execution_state: subagent_execution_state,
-              topic_id: prompt.topic_id,
-              post_id: prompt.post_id,
+              prompt: prompt,
             )
           messages = [
             prompt.messages.first,
@@ -129,8 +148,10 @@ module DiscourseAi
           ]
           candidate = copy_prompt(prompt, messages)
           candidate_size, candidate_capacity = @llm.prompt_capacity(candidate, **options)
-          raise Error.new("summary_not_smaller") if candidate_size >= size
-          raise Error.new("summary_over_capacity") if candidate_size > candidate_capacity
+          raise Error.new("summary_not_smaller", prompt: prompt) if candidate_size >= size
+          if candidate_size > candidate_capacity
+            raise Error.new("summary_over_capacity", prompt: prompt)
+          end
           return :cancelled if cancel_manager&.cancelled?
           @protected_user_index = messages.length - tail.length
           prompt.messages.replace(messages)
@@ -141,7 +162,7 @@ module DiscourseAi
           reason = error.is_a?(Error) ? error.reason : "summary_failed"
           if !error.is_a?(Error)
             Rails.logger.warn(
-              "DiscourseAi: context_preparation reason=#{reason} error=#{error.class}: #{error.message}",
+              "DiscourseAi: context_preparation reason=#{reason} error=#{error.class}: #{error.message}#{self.class.log_context(prompt)}",
             )
           end
           return :cancelled if cancel_manager&.cancelled?
@@ -156,7 +177,7 @@ module DiscourseAi
       # written as a checkpoint so later replies resume after the dropped history.
       # Priority: recent turns, then the previous summary, then dropped attachments.
       def drop_oldest_history!(prompt, history, tail, reason, **options)
-        raise Error.new(reason) if history.empty?
+        raise Error.new(reason, prompt: prompt) if history.empty?
 
         build =
           lambda do |notice, start, attachments = []|
@@ -181,7 +202,7 @@ module DiscourseAi
           starts.bsearch do |candidate|
             fits?(prompt, build.call(HISTORY_DROPPED_NOTICE, candidate), **options)
           end
-        raise Error.new(reason) if start.nil?
+        raise Error.new(reason, prompt: prompt) if start.nil?
 
         notice = HISTORY_DROPPED_NOTICE
         if checkpoint_index
@@ -208,7 +229,7 @@ module DiscourseAi
           end
 
         Rails.logger.warn(
-          "DiscourseAi: context_preparation reason=history_dropped original_reason=#{reason} dropped_history_messages=#{start}",
+          "DiscourseAi: context_preparation reason=history_dropped original_reason=#{reason} dropped_history_messages=#{start}#{self.class.log_context(prompt)}",
         )
         messages = build.call(notice, start, retained)
         @protected_user_index = messages.length - tail.length
@@ -266,7 +287,7 @@ module DiscourseAi
         end
       end
 
-      def summarize(source, **options)
+      def summarize(source, prompt:, **options)
         evidence = @llm.context_evidence(source)
         remaining = evidence.to_json
         offset = 0
@@ -292,8 +313,8 @@ module DiscourseAi
                 Prompt.new(
                   INSTRUCTION,
                   messages: [{ type: :user, content: "#{payload_prefix}#{fragment}" }],
-                  topic_id: options[:topic_id],
-                  post_id: options[:post_id],
+                  topic_id: prompt.topic_id,
+                  post_id: prompt.post_id,
                 )
               probe.skip_trim = true
               probe
@@ -309,7 +330,7 @@ module DiscourseAi
               high = midpoint - 1
             end
           end
-          raise Error.new("summary_input_overflow") if low.zero?
+          raise Error.new("summary_input_overflow", prompt: prompt) if low.zero?
           # Prefer intact literals and lines. A single oversized token still needs a
           # bounded fragment; offsets make that exceptional split explicit.
           if low < remaining.length
@@ -320,13 +341,13 @@ module DiscourseAi
           remaining.slice!(0, low)
           offset += low
           input_size, input_capacity = @llm.prompt_capacity(compression_prompt)
-          raise Error.new("summary_input_overflow") if input_size > input_capacity
+          raise Error.new("summary_input_overflow", prompt: prompt) if input_size > input_capacity
           return if options[:cancel_manager]&.cancelled?
           # Maintenance shares the execution completion limit; latency and estimated
           # token costs must not discard a usable summary or leave evidence uncovered.
           if options[:subagent_execution_state] &&
                !options[:subagent_execution_state].reserve_completion
-            raise Error.new("completion_limit")
+            raise Error.new("completion_limit", prompt: prompt)
           end
           # Uncapped: thinking tokens count against max_tokens and could leave no summary.
           summary = +""
@@ -338,7 +359,7 @@ module DiscourseAi
             execution_context: options[:execution_context],
             cancel_manager: options[:cancel_manager],
           ) { |partial| summary << partial if partial.is_a?(String) }
-          raise Error.new("empty_summary") if summary.blank?
+          raise Error.new("empty_summary", prompt: prompt) if summary.blank?
         end
         summary
       end

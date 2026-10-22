@@ -2433,7 +2433,55 @@ RSpec.describe UserNotifications do
 
       mail = UserNotifications.account_silenced(user, { user_history: user_history })
 
-      expect(mail.body).to include("May 25, 2020,  4:00pm")
+      expect(mail.body).to include("May 25, 2020,  4:00pm (UTC+04:00)")
+    end
+
+    it "uses the offset at the silence end date across daylight saving changes" do
+      user.user_option.timezone = "America/New_York"
+
+      {
+        "2027-01-15T17:00:00Z" => "UTC-05:00",
+        "2027-07-15T17:00:00Z" => "UTC-04:00",
+      }.each do |deadline, offset|
+        user.silenced_till = Time.iso8601(deadline)
+        email = UserNotifications.account_silenced(user, user_history:)
+
+        expect(email.body.decoded).to include(offset)
+      end
+    end
+
+    it "falls back to UTC for an unrecognized timezone" do
+      user.user_option.timezone = "Not/A_Timezone"
+      user.silenced_till = Time.iso8601("2027-01-15T17:00:00Z")
+
+      email = UserNotifications.account_silenced(user, user_history:)
+
+      expect(email.body.decoded).to include("UTC+00:00")
+    end
+
+    it "uses the recipient locale and customized date format and wrapper" do
+      SiteSetting.allow_user_locale = true
+      user.locale = "fr"
+      user.user_option.timezone = "Asia/Kolkata"
+      user.silenced_till = Time.iso8601("2027-01-15T12:00:00Z")
+      TranslationOverride.upsert!(:fr, "time.formats.long", "%d/%m/%Y à %H:%M")
+      TranslationOverride.upsert!(
+        :fr,
+        "user_notifications.account_silenced.date_with_timezone",
+        "%{date} (heure UTC%{offset})",
+      )
+
+      email = UserNotifications.account_silenced(user, user_history:)
+
+      expect(email.body.decoded).to include("15/01/2027 à 17:30 (heure UTC+05:30)")
+    end
+
+    it "keeps permanent silences free of an expiry date" do
+      user.silenced_till = 1000.years.from_now
+
+      email = UserNotifications.account_silenced(user, user_history:)
+
+      expect(email.body.decoded).not_to include("UTC", "until")
     end
 
     context "when user doesn't have timezone set" do
@@ -2449,11 +2497,11 @@ RSpec.describe UserNotifications do
 
         mail = UserNotifications.account_silenced(user, { user_history: user_history })
 
-        expect(mail.body).to include(date)
+        expect(mail.body).to include("#{date} (UTC+00:00)")
       end
     end
 
-    context "when user timezone is invalid" do
+    context "when user timezone is blank" do
       before { user.user_option.timezone = "" }
 
       it "doesn't raise error" do
@@ -2466,7 +2514,7 @@ RSpec.describe UserNotifications do
 
         mail = UserNotifications.account_silenced(user, { user_history: user_history })
 
-        expect(mail.body).to include(date)
+        expect(mail.body).to include("#{date} (UTC+00:00)")
       end
     end
   end
@@ -2549,7 +2597,50 @@ RSpec.describe UserNotifications do
 
       mail = UserNotifications.account_suspended(user, { user_history: user_history })
 
-      expect(mail.body).to include("May 25, 2020,  4:00pm")
+      expect(mail.body).to include("May 25, 2020,  4:00pm (UTC+04:00)")
+    end
+
+    it "uses the offset at the suspension end date across daylight saving changes" do
+      user.user_option.timezone = "America/New_York"
+
+      {
+        "2027-01-15T17:00:00Z" => "UTC-05:00",
+        "2027-07-15T17:00:00Z" => "UTC-04:00",
+      }.each do |deadline, offset|
+        user.suspended_till = Time.iso8601(deadline)
+        email = UserNotifications.account_suspended(user, user_history:)
+        expect(email.body.decoded).to include(offset)
+      end
+    end
+
+    it "falls back to UTC for an unrecognized timezone" do
+      user.user_option.timezone = "Not/A_Timezone"
+      user.suspended_till = Time.iso8601("2027-01-15T17:00:00Z")
+
+      email = UserNotifications.account_suspended(user, user_history:)
+
+      expect(email.body.decoded).to include("UTC+00:00")
+    end
+
+    it "uses the recipient locale and customized date format" do
+      SiteSetting.allow_user_locale = true
+      user.locale = "fr"
+      user.user_option.timezone = "Asia/Kolkata"
+      user.suspended_till = Time.iso8601("2027-01-15T12:00:00Z")
+      TranslationOverride.upsert!(:fr, "time.formats.long", "%d/%m/%Y à %H:%M")
+
+      email = UserNotifications.account_suspended(user, user_history:)
+
+      expect(email.body.decoded).to include("15/01/2027 à 17:30 (UTC+05:30)")
+    end
+
+    it "keeps permanent suspensions free of an expiry date" do
+      user.suspended_till = 1000.years.from_now
+
+      email = UserNotifications.account_suspended(user, user_history:)
+
+      expect(email.body.decoded).to include("your account has been suspended.")
+      expect(email.body.decoded).not_to include("UTC")
     end
 
     context "when user doesn't have timezone set" do
@@ -2565,11 +2656,11 @@ RSpec.describe UserNotifications do
 
         mail = UserNotifications.account_suspended(user, { user_history: user_history })
 
-        expect(mail.body).to include(date)
+        expect(mail.body).to include("#{date} (UTC+00:00)")
       end
     end
 
-    context "when user timezone is invalid" do
+    context "when user timezone is blank" do
       before { user.user_option.timezone = "" }
 
       it "doesn't raise error" do
@@ -2582,7 +2673,7 @@ RSpec.describe UserNotifications do
 
         mail = UserNotifications.account_suspended(user, { user_history: user_history })
 
-        expect(mail.body).to include(date)
+        expect(mail.body).to include("#{date} (UTC+00:00)")
       end
     end
   end

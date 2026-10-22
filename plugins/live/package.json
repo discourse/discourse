@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "scripts": {
+    "live:bots": "node scripts/live-fake-participants.mjs"
+  },
+  "dependencies": {
+    "discourse": "workspace:@discourse/types@*"
+  }
+}

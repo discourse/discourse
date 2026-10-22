@@ -9,7 +9,6 @@ sv:
     chat_separate_sidebar_mode: "Visa separata sidofältslägen för forum och chatt."
     chat_enabled: "Aktivera chatt."
     enable_public_channels: "Aktivera offentliga kanaler baserat på kategorier."
-    chat_channel_retention_days: "Chattmeddelanden i ordinarie kanaler kommer att behållas i så här många dagar. Sätt till '0' för att behålla meddelanden för alltid."
     chat_dm_retention_days: "Chattmeddelanden i personliga chattkanaler kommer att behållas i så här många dagar. Sätt till '0' för att behålla meddelanden för alltid."
     chat_auto_silence_duration: "Antal minuter som användare kommer att tystas när de överskrider antalsgränsen för skapande av chattmeddelanden. Ställ in på '0' för att inaktivera automatisk tystning."
     chat_allowed_messages_for_trust_level_0: "Antal meddelanden som användare på förtroendenivå 0 får skicka inom 30 sekunder. Ange '0' för att inaktivera gränsen."
@@ -54,6 +53,12 @@ sv:
         Besök kanalen på %{channel_url} för att försöka igen.
   chat:
     deleted_chat_username: raderat
+    crawler:
+      directory_title: "Chattkanaler"
+      nav_title: "Chatt"
+      thread_replies:
+        one: "%{count} svar"
+        other: "%{count} svar"
     errors:
       users_cant_be_added_to_channel: "Användare kan inte läggas till i den här kanalen."
       channel_exists_for_category: "En kanal finns redan för denna kategori och namn"

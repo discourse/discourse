@@ -1,0 +1,219 @@
+plugins:
+  live_enabled:
+    default: false
+    client: true
+    hidden: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      allow_enabled_for:
+        - "everyone"
+      learn_more_url: "https://meta.discourse.org/t/-/411337"
+      requires_plugin_enabled: false
+      permanent_warning: false
+  live_verbose_logging:
+    default: false
+    client: true
+  live_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "4|5" # auto groups anonymous_users, logged_in_users
+    allow_any: false
+    refresh: true
+    disallowed_groups: "0"
+    depends_on:
+      - live_enabled
+  live_create_room_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "1|2|12" # auto groups admins, moderators, trust_level_2
+    allow_any: false
+    refresh: true
+    mandatory_values: "1" # auto group admins
+    disallowed_groups: "0|4"
+    depends_on:
+      - live_enabled
+  live_direct_calls_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+    disallowed_groups: "0|4"
+    depends_on:
+      - live_enabled
+  live_max_rooms_per_user:
+    default: 5
+  live_max_invites_per_day:
+    default: 100
+    min: 1
+    max: 5000
+  live_ephemeral_room_ttl_minutes:
+    default: 30
+    min: 5
+    max: 10080
+  live_participant_ttl_seconds:
+    default: 30
+  live_max_room_participants:
+    default: 50
+    min: 2
+    max: 200
+  live_stun_servers:
+    default: "stun:stun.l.google.com:19302|stun:global.stun.twilio.com:3478"
+  live_turn_servers:
+    default: ""
+  live_turn_username:
+    default: ""
+  live_turn_credential:
+    default: ""
+    secret: true
+  live_turn_secret:
+    default: ""
+    secret: true
+  live_turn_secret_servers:
+    default: ""
+    validator: "LiveTurnSecretServersValidator"
+  live_livekit_url:
+    default: ""
+    validator: "LiveLivekitUrlValidator"
+  live_livekit_api_key:
+    default: ""
+  live_livekit_api_secret:
+    default: ""
+    secret: true
+  live_livekit_room_policy:
+    default: "disabled"
+    type: enum
+    choices:
+      - disabled
+      - per_room
+      - all_rooms
+    validator: "LiveLivekitPolicyValidator"
+  live_livekit_room_prefix:
+    default: ""
+  live_livekit_mesh_fallback:
+    default: false
+  live_livekit_agent_enabled:
+    default: false
+    validator: "LiveLivekitAgentValidator"
+    refresh: true
+  live_livekit_agent_invite_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "1" # auto group admins
+    allow_any: false
+    refresh: true
+    mandatory_values: "1" # auto group admins
+    disallowed_groups: "0|4"
+    depends_on:
+      - live_livekit_agent_enabled
+  live_livekit_recording_enabled:
+    default: false
+    client: true
+  live_livekit_recording_filepath:
+    default: "live/{room_name}-{utc}"
+  live_livekit_recording_s3_region:
+    default: "us-east-1"
+  live_livekit_recording_s3_access_key_id:
+    default: ""
+    secret: true
+  live_livekit_recording_s3_secret_access_key:
+    default: ""
+    secret: true
+  live_livekit_recording_s3_endpoint:
+    default: ""
+    regex: '^https://[a-zA-Z0-9.-]+(:[0-9]+)?$'
+  live_livekit_recording_s3_bucket:
+    default: ""
+    regex: '^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$'
+    validator: "LiveLivekitRecordingS3BucketValidator"
+  live_video_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "5" # auto group logged_in_users
+    allow_any: false
+    refresh: true
+    disallowed_groups: "0|4"
+    depends_on:
+      - live_enabled
+  live_screen_share_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "5" # auto group logged_in_users
+    allow_any: false
+    refresh: true
+    disallowed_groups: "0|4"
+    depends_on:
+      - live_enabled
+  live_video_max_publishers:
+    default: 8
+    min: 2
+    max: 16
+    client: true
+  live_video_background_blur_enabled:
+    default: true
+    client: true
+  live_subtitles_enabled:
+    default: false
+    client: true
+  live_stt_model_base_url:
+    default: ""
+    client: true
+  live_max_voice_quality:
+    default: "maximum"
+    type: enum
+    client: true
+    choices:
+      - standard
+      - high
+      - maximum
+  live_max_camera_quality:
+    default: "maximum"
+    type: enum
+    client: true
+    choices:
+      - standard
+      - high
+      - maximum
+  live_max_screen_share_quality:
+    default: "maximum"
+    type: enum
+    client: true
+    choices:
+      - standard
+      - high
+      - maximum
+  live_idle_threshold_minutes:
+    default: 5
+    min: 0
+    max: 60
+    client: true
+  live_afk_auto_mute_threshold_minutes:
+    default: 15
+    min: 0
+    max: 120
+    client: true
+  live_afk_disconnect_threshold_minutes:
+    default: 30
+    min: 0
+    max: 240
+    client: true
+  live_auto_status_enabled:
+    default: true
+    client: true
+  live_mesh_privacy_warning_enabled:
+    default: true
+    client: true
+  live_badges_enabled:
+    default: true
+    depends_on:
+      - live_enabled
+  live_analytics_enabled:
+    default: true
+  live_session_retention_days:
+    default: 1095
+    min: 7
+    max: 3650
+  live_chat_enabled:
+    default: true
+    client: true

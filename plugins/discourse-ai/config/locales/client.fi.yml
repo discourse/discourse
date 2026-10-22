@@ -187,7 +187,7 @@ fi:
         approved: "Hyväksytty"
         rejected: "Hylätty"
       default_llm:
-        title: "Oletusarvoinen LLM-malli"
+        title: "Oletuskielimalli"
       llm_selector:
         none: "Ei valittu"
       features:
@@ -604,6 +604,18 @@ fi:
         tools_modal:
           parameters: "Parametrit"
           required: "Pakollinen"
+      models:
+        new: "Uusi malli"
+        name: "Nimi"
+        type: "Tyyppi"
+        provider: "Palveluntarjoaja"
+        edit: "Muokkaa"
+        select_type: "Valitse"
+        types:
+          embedding: "Upottaminen"
+        filters:
+          all: "Kaikki tyypit"
+          reset: "Palauta suodattimet"
       llms:
         short_title: "LLM:t"
         no_llms: "LLM:iä ei ole vielä"
@@ -943,6 +955,15 @@ fi:
             compact: "Kompakti"
             expanded: "Laajennettu"
             expanded_description: "tekoäly-yhteenvedoilla"
+      ai_search:
+        related_topics: "Liittyvät ketjut"
+        related_replies:
+          one: "%{count} vastaus"
+          other: "%{count} vastausta"
+        tabs:
+          ask: "Kysy tekoälyltä"
+          topics: "Aiheet"
+          messages: "Viestit"
       discobot_discoveries:
         main_title: "Kysy tekoälyltä"
         loading_convo: "Ladataan keskustelua"

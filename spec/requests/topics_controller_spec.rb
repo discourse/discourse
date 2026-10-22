@@ -2301,6 +2301,52 @@ RSpec.describe TopicsController do
       get "/t/id_for/#{pm.slug}.json"
       expect(response).to be_forbidden
     end
+
+    it "returns 404 when no topic matches the slug" do
+      get "/t/id_for/a-slug-that-does-not-exist.json"
+      expect(response).to be_not_found
+    end
+
+    context "with a deleted topic" do
+      it "returns 404" do
+        deleted_topic = Fabricate(:deleted_topic)
+        get "/t/id_for/#{deleted_topic.slug}.json"
+        expect(response).to be_not_found
+      end
+
+      it "returns 200 for staff" do
+        deleted_topic = Fabricate(:deleted_topic)
+        sign_in(admin)
+
+        get "/t/id_for/#{deleted_topic.slug}.json"
+        expect(response).to be_successful
+      end
+
+      it "returns 403 for a deleted topic in a category the user cannot see" do
+        group = Fabricate(:group)
+        category = Fabricate(:category)
+        category.set_permissions(group => :full)
+        category.save!
+        deleted_topic = Fabricate(:topic, category: category, deleted_at: 1.day.ago)
+
+        get "/t/id_for/#{deleted_topic.slug}.json"
+        expect(response).to be_forbidden
+      end
+    end
+
+    context "when a deleted topic and a live topic share a slug" do
+      it "returns the live topic" do
+        deleted_topic = Fabricate(:deleted_topic, title: "Shadowed Topic A")
+        deleted_topic.update_column(:slug, "shadowed-slug")
+        live_topic = Fabricate(:topic, title: "Shadowed Topic B")
+        live_topic.update_column(:slug, "shadowed-slug")
+
+        get "/t/id_for/shadowed-slug.json"
+
+        expect(response).to be_successful
+        expect(response.parsed_body["topic_id"]).to eq(live_topic.id)
+      end
+    end
   end
 
   describe "#update" do

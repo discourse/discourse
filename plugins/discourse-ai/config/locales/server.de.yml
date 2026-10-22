@@ -63,7 +63,6 @@ de:
   site_settings:
     discourse_ai_enabled: "Aktiviere das Discourse-KI-Plug-in."
     enable_ai_bot_starred_conversations: "Ermögliche es Benutzern, Unterhaltungen mit KI-Bots mit einem Sternchen zu markieren und diese in einem dazugehörigen Bereich in der Seitenleiste anzuzeigen."
-    ai_default_llm_model: "Das Standard-LLM-Modell, das für alle KI-Funktionen verwendet wird"
     ai_artifact_security: "Das KI-Artefaktsystem generiert IFRAMEs mit ausführbarem Code. Der strikte Modus erfordert einen zusätzlichen Klick zum Ausführen des Codes. Der laxe Modus führt Code sofort aus. Im Hybridmodus kann der Benutzer data-ai-artifact-autorun angeben, um den Code sofort anzuzeigen. Der deaktivierte Modus deaktiviert das Artefaktsystem."
     ai_toxicity_enabled: "Aktiviere das Toxizitätsmodul."
     ai_toxicity_inference_service_api_endpoint: "URL, unter der die API für das Toxizitätsmodul läuft"

@@ -82,22 +82,22 @@ export function updateCsrfToken() {
   in subfolders.
 **/
 
-export function ajax() {
+export function ajax(...params) {
   let url, args;
   let ajaxObj;
 
-  if (arguments.length === 1) {
-    if (typeof arguments[0] === "string") {
-      url = arguments[0];
+  if (params.length === 1) {
+    if (typeof params[0] === "string") {
+      url = params[0];
       args = {};
     } else {
-      args = arguments[0];
+      args = params[0];
       url = args.url;
       delete args.url;
     }
-  } else if (arguments.length === 2) {
-    url = arguments[0];
-    args = arguments[1];
+  } else if (params.length === 2) {
+    url = params[0];
+    args = params[1];
   }
 
   url = getURL(url);

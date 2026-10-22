@@ -4,6 +4,7 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
 import FilterNavigationMenu from "discourse/components/discovery/filter-navigation-menu";
+import FilterNewNavigation from "discourse/components/discovery/filter-new-navigation";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import { bind } from "discourse/lib/decorators";
@@ -13,6 +14,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class DiscoveryFilterNavigation extends Component {
+  @service currentUser;
   @service site;
 
   @resettableTracked filterQueryString = this.args.queryString;
@@ -75,6 +77,9 @@ export default class DiscoveryFilterNavigation extends Component {
 
         <PluginOutlet @name="after-filter-navigation-menu" />
       </div>
+      {{#if this.currentUser.unified_new_enabled}}
+        <FilterNewNavigation @query={{@queryString}} @subset={{@subset}} />
+      {{/if}}
     </section>
   </template>
 }

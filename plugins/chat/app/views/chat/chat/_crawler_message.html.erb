@@ -1,0 +1,56 @@
+<%# schema: :posting (standalone DiscussionForumPosting), :comment (reply nested in a thread posting), or :original (a thread's first message, whose other properties live on the enclosing posting) %>
+<% u = message.user %>
+<% emit_md = schema != :original %>
+<%
+  item_attributes =
+    case schema
+    when :posting
+      { itemscope: true, itemtype: "http://schema.org/DiscussionForumPosting" }
+    when :comment
+      { itemprop: "comment", itemscope: true, itemtype: "http://schema.org/Comment" }
+    else
+      {}
+    end
+%>
+<div id="chat-message-<%= message.id %>" class="chat-crawler__message" <%= tag.attributes(item_attributes) %>>
+  <% if emit_md %>
+    <link itemprop="url" href="<%= view.posting_url(message) %>">
+  <% end %>
+  <div class="chat-crawler__message-meta">
+    <span class="chat-crawler__message-author" <%= tag.attributes(itemprop: "author", itemscope: true, itemtype: "http://schema.org/Person") if emit_md %>>
+      <a rel="nofollow" href="<%= Discourse.base_url %>/u/<%= u.username %>"><span <%= tag.attributes(itemprop: "name") if emit_md %>><%= u.username %></span></a>
+      <% if emit_md %>
+        <meta itemprop="url" content="<%= Discourse.base_url %>/u/<%= u.username %>">
+      <% end %>
+      <%= "(#{u.name})" if SiteSetting.display_name_on_posts && SiteSetting.enable_names? && u.name.present? %>
+    </span>
+    <time <%= tag.attributes(itemprop: "datePublished") if emit_md %> datetime="<%= message.created_at.to_formatted_s(:iso8601) %>" class="chat-crawler__message-time">
+      <%= l message.created_at, format: :long %>
+    </time>
+    <% if emit_md && (revision = message.revisions.max_by(&:created_at)) %>
+      <meta itemprop="dateModified" content="<%= revision.created_at.to_formatted_s(:iso8601) %>">
+    <% end %>
+  </div>
+  <div class="chat-crawler__message-text post" itemprop="text">
+    <%= message.cooked.html_safe %>
+  </div>
+  <% if (reaction_counts = view.reaction_counts(message)).present? %>
+    <div class="chat-crawler__reactions">
+      <% reaction_counts.each do |emoji, count| %>
+        <span class="chat-crawler__reaction"><%= Emoji.lookup_unicode(emoji) || ":#{emoji}:" %> <%= count %></span>
+      <% end %>
+    </div>
+  <% end %>
+  <% if emit_md %>
+    <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+      <meta itemprop="interactionType" content="http://schema.org/LikeAction">
+      <meta itemprop="userInteractionCount" content="<%= view.like_count(message) %>">
+    </div>
+  <% end %>
+  <% if view.show_thread_link?(message) %>
+    <meta itemprop="commentCount" content="<%= message.thread.replies_count %>">
+    <div class="chat-crawler__thread-link">
+      <a href="<%= message.thread.url %>"><%= t("chat.crawler.thread_replies", count: message.thread.replies_count) %></a>
+    </div>
+  <% end %>
+</div>

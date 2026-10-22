@@ -56,6 +56,58 @@ RSpec.describe DiscourseAi::Summarization::FoldContent do
       expect(result.summarized_text).to eq(summary)
     end
 
+    it "fits the serialized prompt when post text expands during JSON encoding" do
+      SiteSetting.ai_summarization_agent = Fabricate(:ai_agent).id
+      bounded_summarizer = DiscourseAi::Summarization.topic_summary(topic)
+      oversized_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          post_number: 2,
+          raw: "A post with whitespace #{"\n" * 2000}end",
+        )
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          user: user,
+          messages: bounded_summarizer.strategy.as_llm_messages([]),
+        )
+      prompt = bounded_summarizer.bot.agent.craft_prompt(context, llm: bounded_summarizer.bot.llm)
+      input_tokens, _, output_tokens =
+        bounded_summarizer.bot.llm.prompt_capacity(
+          prompt,
+          max_tokens: 256,
+          max_tokens_is_total: true,
+        )
+      llm_model.update!(
+        max_prompt_tokens: input_tokens + output_tokens + 384,
+        max_output_tokens: 256,
+      )
+
+      bounded_summarizer.bot.llm.llm_model.reload
+      result =
+        DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do |spy, _, prompts|
+          bounded_summarizer
+            .summarize(user)
+            .tap do
+              expect(spy.completions).to eq(1)
+              content = prompts.first.messages.last[:content]
+              expect(content).to include(post_1.raw)
+              expect(content).not_to include(oversized_post.raw)
+            end
+        end
+
+      expect(result.summarized_text).to eq(summary)
+    end
+
+    it "rejects a model context that cannot fit the summary instructions" do
+      summarizer.bot.llm.llm_model.update!(max_prompt_tokens: 1)
+
+      expect { summarizer.summarize(user) }.to raise_error(
+        DiscourseAi::Completions::ContextPreparation::Error,
+      ) { |error| expect(error.reason).to eq("hard_overflow") }
+      expect(AiSummary.where(target: topic)).to be_empty
+    end
+
     it "lets a forced-tool gist inspect delegated images before setting the summary" do
       upload =
         UploadCreator.new(

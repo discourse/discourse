@@ -86,6 +86,22 @@ describe DiscourseDataExplorer::QueryController do
         expect(response_json["queries"][1]["name"]).to eq("B")
       end
 
+      it "includes the query creator" do
+        DiscourseDataExplorer::Query.destroy_all
+        query = make_query("SELECT 1 as value")
+        query.update!(user: admin)
+
+        get "/admin/plugins/discourse-data-explorer/queries.json"
+
+        expect(response.status).to eq(200)
+        serialized = response_json["queries"].find { |q| q["id"] == query.id }
+        expect(serialized["user"]).to include(
+          "id" => admin.id,
+          "username" => admin.username,
+          "avatar_template" => admin.avatar_template,
+        )
+      end
+
       it "doesn't show hidden/deleted queries" do
         DiscourseDataExplorer::Query.destroy_all
         make_query("SELECT 1 as value", name: "A", hidden: false)
@@ -144,7 +160,13 @@ describe DiscourseDataExplorer::QueryController do
         expect(response_json["queries"].map { |query| query["name"] }).to eq(
           ["Monthly staff report"],
         )
-        expect(response_json["extras"]["tags"]).to eq(%w[daily default members staff])
+        expect(response_json["extras"]["tags"]).to include(
+          "custom",
+          "daily",
+          "default",
+          "members",
+          "staff",
+        )
       end
 
       it "matches every selected tag" do
@@ -178,7 +200,37 @@ describe DiscourseDataExplorer::QueryController do
 
         expect(response.status).to eq(200)
         expect(response_json["queries"]).to be_present
-        expect(response_json["queries"].flat_map { |query| query["tags"] }.uniq).to eq(["default"])
+        expect(response_json["queries"].map { |query| query["tags"] }).to all(include("default"))
+      end
+
+      it "filters user-created queries by the custom tag" do
+        DiscourseDataExplorer::Query.destroy_all
+        DiscourseDataExplorer::Query.find(-1).save!
+        user_query = make_query("SELECT 1")
+
+        get "/admin/plugins/discourse-data-explorer/queries.json", params: { tag: "custom" }
+
+        expect(response.status).to eq(200)
+        expect(response_json["queries"].map { |query| query["id"] }).to eq([user_query.id])
+        expect(response_json["queries"].first["tags"]).to eq(["custom"])
+      end
+
+      it "filters bundled queries by their automatic tags, persisted or not" do
+        DiscourseDataExplorer::Query.destroy_all
+        DiscourseDataExplorer::Query.find(-20).save!
+
+        get "/admin/plugins/discourse-data-explorer/queries.json", params: { tag: "traffic" }
+
+        expect(response.status).to eq(200)
+        expect(response_json["queries"].map { |query| query["id"] }).to contain_exactly(
+          -20,
+          -42,
+          -43,
+          -44,
+        )
+        expect(response_json["queries"].map { |query| query["tags"] }).to all(
+          eq(%w[default traffic]),
+        )
       end
     end
 
@@ -190,7 +242,9 @@ describe DiscourseDataExplorer::QueryController do
         get "/admin/plugins/discourse-data-explorer/queries/tags.json"
 
         expect(response.status).to eq(200)
-        expect(response_json).to eq(%w[default monthly staff])
+        expect(response_json).to include("custom", "default", "monthly", "staff", "traffic")
+        expect(response_json).not_to include("hidden")
+        expect(response_json).to eq(response_json.sort)
       end
     end
 
@@ -211,7 +265,7 @@ describe DiscourseDataExplorer::QueryController do
 
         expect(response.status).to eq(200)
         expect(response_json["query"]["group_ids"]).to eq([group.id])
-        expect(response_json["query"]["tags"]).to eq(%w[monthly staff])
+        expect(response_json["query"]["tags"]).to eq(%w[custom monthly staff])
       end
 
       it "creates a query without groups when none are given" do
@@ -290,7 +344,7 @@ describe DiscourseDataExplorer::QueryController do
             }
 
         expect(response.status).to eq(200)
-        expect(query.reload.tag_names).to eq(%w[monthly staff])
+        expect(query.reload.tag_names).to eq(%w[custom monthly staff])
         expect(query.groups.pluck(:id)).to eq([group2.id])
       end
 
@@ -305,8 +359,8 @@ describe DiscourseDataExplorer::QueryController do
             }
 
         expect(response.status).to eq(200)
-        expect(response_json["query"]["tags"]).to eq([])
-        expect(query.reload.tag_names).to eq([])
+        expect(response_json["query"]["tags"]).to eq(["custom"])
+        expect(query.reload.tags).to be_empty
         expect(query.groups.pluck(:id)).to eq([group2.id])
       end
 
@@ -326,7 +380,7 @@ describe DiscourseDataExplorer::QueryController do
       end
 
       it "updates additional tags on default queries without removing the default tag" do
-        query = DiscourseDataExplorer::Query.find(-4)
+        query = DiscourseDataExplorer::Query.find(-1)
         query.save!
         DiscourseDataExplorer::QueryTag.sync!(query:, names: %w[Default Staff Monthly])
 
@@ -338,8 +392,8 @@ describe DiscourseDataExplorer::QueryController do
             }
 
         expect(response.status).to eq(200)
-        expect(response_json["query"]["tags"]).to eq(%w[default staff])
-        expect(DiscourseDataExplorer::Query.find(-4).tag_names).to eq(%w[default staff])
+        expect(response_json["query"]["tags"]).to eq(%w[default users staff])
+        expect(DiscourseDataExplorer::Query.find(-1).tag_names).to eq(%w[default users staff])
 
         put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
             params: {
@@ -349,8 +403,8 @@ describe DiscourseDataExplorer::QueryController do
             }
 
         expect(response.status).to eq(200)
-        expect(response_json["query"]["tags"]).to eq(["default"])
-        expect(DiscourseDataExplorer::Query.find(-4).tag_names).to eq(["default"])
+        expect(response_json["query"]["tags"]).to eq(%w[default users])
+        expect(DiscourseDataExplorer::Query.find(-1).tag_names).to eq(%w[default users])
       end
     end
 
@@ -379,6 +433,19 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.status).to eq(200)
         expect(response_json["query"]["dashboard_mountable"]).to eq(false)
       end
+
+      it "returns automatic tags so the editor can lock them" do
+        user_query = make_query("SELECT 1", tags: ["Staff"])
+
+        get "/admin/plugins/discourse-data-explorer/queries/-42.json"
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["automatic_tags"]).to eq(%w[default traffic])
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{user_query.id}.json"
+
+        expect(response_json["query"]["automatic_tags"]).to eq(["custom"])
+      end
     end
 
     describe "#destroy" do
@@ -394,6 +461,29 @@ describe DiscourseDataExplorer::QueryController do
 
         expect(response.status).to eq(200)
         expect(query.reload.hidden).to eq(true)
+      end
+
+      it "frees the query's dashboard slot so another report can take it" do
+        query = make_query("SELECT 1 as value")
+        AdminDashboardReport.create!(source: "data_explorer_query", identifier: query.id.to_s)
+        (AdminDashboardReport::VISIBLE_CAP - AdminDashboardReport.count).times do |i|
+          AdminDashboardReport.create!(source: "data_explorer_query", identifier: "-#{i + 1}")
+        end
+        other_query = make_query("SELECT 2 as value")
+
+        delete "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+
+        expect(
+          AdminDashboardReport.exists?(source: "data_explorer_query", identifier: query.id.to_s),
+        ).to eq(false)
+
+        post "/admin/dashboard/reports/mount.json",
+             params: {
+               source: "data_explorer_query",
+               identifier: other_query.id.to_s,
+             }
+
+        expect(response.status).to eq(201)
       end
     end
 

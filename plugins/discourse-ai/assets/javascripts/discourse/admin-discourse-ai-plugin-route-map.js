@@ -10,6 +10,10 @@ export default {
     });
     this.route("discourse-ai-agents-legacy", { path: "ai-personas/*path" });
 
+    this.route("discourse-ai-models", { path: "ai-models" }, function () {
+      this.route("new");
+    });
+
     this.route("discourse-ai-llms", { path: "ai-llms" }, function () {
       this.route("new");
       this.route("edit", { path: "/:id/edit" });

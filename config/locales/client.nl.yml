@@ -6,6 +6,9 @@
 
 nl:
   js:
+    dsa_notice:
+      title: "Illegale content melden"
+      email: "E-mailadres"
     user_api_key:
       title: '''%{application_name}'' autoriseren'
       authorize: "Autoriseren"
@@ -3084,8 +3087,6 @@ nl:
       show_preview: "voorbeeld weergeven"
       hide_preview: "voorbeeld verbergen"
       resize: "Grootte editor wijzigen"
-      switch_to_markdown: "Overschakelen naar standaard Markdown-editor (%{keyboardShortcut})"
-      switch_to_rich_text: "Overschakelen naar nieuwe rich text editor (%{keyboardShortcut})"
       quote_post_title: "Hele bericht citeren"
       bold_label: "B"
       bold_title: "Vet"
@@ -3226,6 +3227,8 @@ nl:
         visit: "Link openen"
         remove_preview: "Voorbeeld verwijderen"
         link_copied: "Link gekopieerd!"
+      table:
+        default_heading: "Kolom %{number}"
       unsupported_token: "De rich text-editor ondersteunt niet alle functies die in dit bericht worden gebruikt, schakel over naar de Markdown-editor."
     notifications:
       tooltip:
@@ -5627,63 +5630,6 @@ nl:
           other: "De invoer moet groter zijn dan %{count}."
         pattern_mismatch: "Zorg dat je de gevraagde notatie gebruikt."
         bad_input: "Voer een geldige invoer in."
-    table_builder:
-      title: "Tabelbouwer"
-      modal:
-        title: "Tabelbouwer"
-        create: "Tabel bouwen"
-        help:
-          title: "Gebruik van de spreadsheeteditor"
-          enter_key: "Enter"
-          tab_key: "Tab"
-          new_row: "aan het einde van een rij om een nieuwe rij in te voegen."
-          new_col: "aan het einde van een kolom om een nieuwe kolom in te voegen."
-          options: "Rechtsklik op cellen voor meer opties in een vervolgkeuzemenu."
-        confirm_close: "Weet je zeker dat je de tabelbouwer wilt sluiten? Niet-opgeslagen wijzigingen gaan verloren."
-      edit:
-        btn_edit: "Tabel bewerken"
-        modal:
-          title: "Tabel bewerken"
-          cancel: "annuleren"
-          create: "Opslaan"
-          reason: "Waarom bewerk je?"
-          trigger_reason: "Reden voor bewerking toevoegen"
-        default_edit_reason: "Tabel bijwerken met tabeleditor"
-      default_header:
-        col_1: "Kolom 1"
-        col_2: "Kolom 2"
-        col_3: "Kolom 3"
-        col_4: "Kolom 4"
-      spreadsheet:
-        no_records_found: "Geen records gevonden"
-        show: "Weergeven"
-        entries: "vermeldingen"
-        about: "Over"
-        prompts:
-          delete_selected_rows: "Weet je zeker dat je de geselecteerde rijen wilt verwijderen?"
-          delete_selected_cols: "Weet je zeker dat je de geselecteerde kolommen wilt verwijderen?"
-          will_destroy_merged_cells: "Hierdoor worden alle bestaande samengevoegde cellen vernietigd. Weet je het zeker?"
-          will_clear_search_results: "Hierdoor worden alle bestaande samengevoegde cellen vernietigd. Weet je het zeker?"
-          conflicts_with_merged_cells: "Er is een conflict met een andere samengevoegde cel"
-        invalid_merge_props: "Ongeldige samengevoegde eigenschappen"
-        cells_already_merged: "Cel is al samengevoegd"
-        no_cells_selected: "Geen cellen geselecteerd"
-        context_menu:
-          row:
-            before: "Nieuwe rij invoegen voor"
-            after: "Nieuwe rij invoegen na"
-            delete: "Geselecteerde rijen verwijderen"
-          col:
-            before: "Nieuwe kolom invoegen voor"
-            after: "Nieuwe kolom invoegen na"
-            delete: "Geselecteerde kolommen verwijderen"
-            rename: "Deze kolom hernoemen"
-          order:
-            ascending: "Oplopend sorteren"
-            descending: "Aflopend sorteren"
-          copy: "Kopiëren..."
-          paste: "Plakken..."
-          save: "Opslaan als..."
     powered_by_discourse: "Mogelijk gemaakt door Discourse"
     safari_15_warning: "Je browser is binnenkort niet meer compatibel met deze community. Om eraan te blijven deelnemen, kun je je browser bijwerken of <a href='%{url}'>meer informatie vinden</a>."
     filter:

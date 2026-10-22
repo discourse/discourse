@@ -1,6 +1,5 @@
-/* eslint-disable ember/no-classic-components */
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -10,7 +9,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
 import { modifier } from "ember-modifier";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -34,7 +32,6 @@ import AiAgentLlmSelector from "discourse/plugins/discourse-ai/discourse/compone
 import AiBotConversationsLayout from "discourse/plugins/discourse-ai/discourse/components/ai-bot-conversations-layout";
 import { takeConversationDraft } from "discourse/plugins/discourse-ai/discourse/lib/ai-bot-conversation-draft";
 
-@tagName("")
 export default class AiBotConversations extends Component {
   @service aiCredits;
   @service aiBotConversationsHiddenSubmit;
@@ -52,8 +49,6 @@ export default class AiBotConversations extends Component {
   @tracked uploads = trackedArray();
 
   shiftHeldOnEnter = false;
-
-  // Don't track this directly - we'll get it from uppyUpload
 
   textarea = null;
   uppyUpload = null;
@@ -101,10 +96,10 @@ export default class AiBotConversations extends Component {
     }
   };
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
 
-    this.uppyUpload = new UppyUpload(getOwner(this), {
+    this.uppyUpload = new UppyUpload(this, {
       id: "ai-bot-file-uploader",
       type: "ai-bot-conversation",
       useMultipartUploadsIfAvailable: true,
@@ -142,19 +137,12 @@ export default class AiBotConversations extends Component {
       uploadDone: (upload) => {
         this.uploads.push(upload);
       },
-
-      // Fix: Don't try to set inProgressUploads directly
-      onProgressUploadsChanged: () => {
-        // This is just for UI triggers - we're already tracking inProgressUploads
-        this.notifyPropertyChange("inProgressUploads");
-      },
     });
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
     this.textarea?.removeEventListener("paste", this.#handlePaste);
-    this.uppyUpload?.teardown();
     // needed for safety (textarea may not have a autocomplete)
     if (this.textarea.autocomplete) {
       this.textarea.autocomplete("destroy");
@@ -208,12 +196,13 @@ export default class AiBotConversations extends Component {
 
   @action
   onSelectionChanged({ agentName, llmName }) {
-    if (!this.controller) {
+    const controller = this.args.controller;
+    if (!controller) {
       return;
     }
 
-    this.controller.agent = agentName ? slugify(agentName) || agentName : null;
-    this.controller.llm = llmName ? slugify(llmName) || llmName : null;
+    controller.agent = agentName ? slugify(agentName) || agentName : null;
+    controller.llm = llmName ? slugify(llmName) || llmName : null;
   }
 
   @action

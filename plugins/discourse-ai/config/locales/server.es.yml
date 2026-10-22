@@ -52,7 +52,6 @@ es:
         description: "Etiquetar temas automáticamente usando IA"
   site_settings:
     discourse_ai_enabled: "Activar el plugin de IA de Discourse."
-    ai_default_llm_model: "El modelo LLM predeterminado que se utilizará para todas las funciones de IA"
     ai_artifact_security: "El sistema de artefactos de IA genera iFrames con código ejecutable. El modo Estricto fuerza un clic adicional para ejecutar el código. El modo Laxo ejecuta el código inmediatamente. El modo híbrido permite al usuario introducir datos de IA data-ai-artifact-autorun para que se muestren inmediatamente. El modo Desactivado desactiva el sistema de artefactos."
     ai_toxicity_enabled: "Activar el módulo de toxicidad."
     ai_toxicity_inference_service_api_endpoint: "URL donde se ejecuta la API para el módulo de toxicidad"

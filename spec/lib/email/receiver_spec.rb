@@ -25,6 +25,11 @@ RSpec.describe Email::Receiver do
     expect { process(:screened_email) }.to raise_error(Email::Receiver::ScreenedEmailError)
   end
 
+  it "raises a SiteArchivedError when the site is archived" do
+    SiteSetting.site_archived = true
+    expect { process(:new_user) }.to raise_error(Email::Receiver::SiteArchivedError)
+  end
+
   it "raises EmailNotAllowed when email address is not on allowlist" do
     SiteSetting.allowed_email_domains = "example.com|bar.com"
     Fabricate(:group, incoming_email: "some_group@bar.com")

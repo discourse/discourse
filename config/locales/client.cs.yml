@@ -6,6 +6,9 @@
 
 cs:
   js:
+    dsa_notice:
+      title: "Nahlásit protizákonný obsah"
+      email: "E-mailová adresa"
     user_api_key:
       title: 'Autorizovat „%{application_name}“'
       authorize: "Autorizovat"
@@ -3264,10 +3267,6 @@ cs:
       uploading: "Nahrávání…"
       show_preview: "zobrazit náhled"
       hide_preview: "skrýt náhled"
-      switch_to_markdown: "Přepnout na standardní Markdown editor (%{keyboardShortcut})"
-      switch_to_rich_text: "Přepnout na nový textový editor (%{keyboardShortcut})"
-      switch_to_markdown_no_shortcut: "Přepnout na standardní Markdown editor"
-      switch_to_rich_text_no_shortcut: "Přepnout na nový textový editor"
       quote_post_title: "Citovat celý příspěvek"
       bold_label: "B"
       bold_title: "Tučně"
@@ -5889,63 +5888,6 @@ cs:
           other: "Vstup musí mít více než %{count} znaků."
         pattern_mismatch: "Porovnejte prosím požadovaný formát."
         bad_input: "Zadejte prosím platný vstup."
-    table_builder:
-      title: "Tvůrce tabulek"
-      modal:
-        title: "Tvůrce tabulek"
-        create: "Vytvořit tabulku"
-        help:
-          title: "Pomocí editoru tabulek"
-          enter_key: "Enter"
-          tab_key: "Tab"
-          new_row: "na konci řádku pro vložení nového řádku."
-          new_col: "na konec sloupce pro vložení nového sloupce."
-          options: "Klepnutím pravým tlačítkem myši na buňky získáte přístup k dalším možnostem v rozbalovací nabídce."
-        confirm_close: "Jste si jisti, že chcete zavřít tvůrce tabulek? Veškeré neuložené změny budou ztraceny."
-      edit:
-        btn_edit: "Upravit tabulku"
-        modal:
-          title: "Úprava tabulky"
-          cancel: "zrušit"
-          create: "Uložit"
-          reason: "Proč byla nutná úprava?"
-          trigger_reason: "Přidejte důvod úpravy"
-        default_edit_reason: "Aktualizovat tabulku pomocí editoru tabulek"
-      default_header:
-        col_1: "Sloupec 1"
-        col_2: "Sloupec 2"
-        col_3: "Sloupec 3"
-        col_4: "Sloupec 4"
-      spreadsheet:
-        no_records_found: "Nebyly nalezeny žádné záznamy"
-        show: "Zobrazit"
-        entries: "položky"
-        about: "O aplikaci"
-        prompts:
-          delete_selected_rows: "Opravdu chcete odstranit vybrané řádky?"
-          delete_selected_cols: "Opravdu chcete odstranit vybrané sloupce?"
-          will_destroy_merged_cells: "Tato akce zničí všechny existující sloučené buňky. Jsi si jisti?"
-          will_clear_search_results: "Tato akce vyprázdní všechny existující sloučené buňky. Jsi si jisti?"
-          conflicts_with_merged_cells: "Došlo ke konfliktu s jinou sloučenou buňkou"
-        invalid_merge_props: "Neplatné sloučené vlastnosti"
-        cells_already_merged: "Buňka je již sloučena"
-        no_cells_selected: "Nejsou vybrány žádné buňky"
-        context_menu:
-          row:
-            before: "Vložit nový řádek před"
-            after: "Vložit nový řádek za"
-            delete: "Odstranit vybrané řádky"
-          col:
-            before: "Vložit nový sloupec před"
-            after: "Vložit nový sloupec za"
-            delete: "Odstranit vybrané sloupce"
-            rename: "Přejmenovat tento sloupec"
-          order:
-            ascending: "Řadit vzestupně"
-            descending: "Řadit sestupně"
-          copy: "Kopírovat..."
-          paste: "Vložit..."
-          save: "Uložit jako..."
     powered_by_discourse: "Powered by Discourse"
     safari_15_warning: "Váš prohlížeč brzy nebude s touto komunitou kompatibilní. Chcete-li se zde i nadále účastnit, aktualizujte si prosím prohlížeč nebo <a href='%{url}'>zjistěte více</a>."
     filter:

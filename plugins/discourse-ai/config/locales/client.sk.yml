@@ -184,6 +184,8 @@ sk:
         reject: "Zamietnuť"
         approved: "Schválený"
         rejected: "Zamietnuté"
+      default_llm:
+        title: "Predvolený jazykový model"
       llm_selector:
         none: "Žiadny"
       features:
@@ -605,6 +607,18 @@ sk:
         tools_modal:
           parameters: "Parametre"
           required: "Povinné"
+      models:
+        new: "Nový model"
+        name: "Meno"
+        type: "Typ"
+        provider: "Poskytovateľ"
+        edit: "Upraviť"
+        select_type: "Vyberte"
+        types:
+          embedding: "Vkladám"
+        filters:
+          all: "Všetky typy"
+          reset: "Obnovenie filtrov"
       llms:
         short_title: "LLM"
         no_llms: "Zatiaľ žiadne LLM"
@@ -948,6 +962,17 @@ sk:
             compact: "Kompaktné"
             expanded: "Rozšírené"
             expanded_description: "so súhrnmi AI"
+      ai_search:
+        related_topics: "Súvisiace témy"
+        related_replies:
+          one: "%{count} odpoveď"
+          few: "%{count} odpovede"
+          many: "%{count} odpovedí"
+          other: "%{count} odpovedí"
+        tabs:
+          ask: "Spýtajte sa AI"
+          topics: "Témy"
+          messages: "Správy"
       discobot_discoveries:
         main_title: "Spýtajte sa AI"
         loading_convo: "Načítanie konverzácie"

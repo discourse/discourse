@@ -789,7 +789,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.user_menu_list_for(user, limit: 30)
-    list_for(user, limit: limit, status: :pending, include_claimed_by_others: false).to_a
+    list_for(user, limit:, status: :pending, include_claimed_by_others: false, preload: false).to_a
   end
 
   def self.basic_serializers_for_list(reviewables, user)

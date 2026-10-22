@@ -129,7 +129,7 @@ en:
           message_4: "Your average message length was <strong>%{length}</strong> characters"
           message_5: "Your favorite channels:"
           dancing_baby_alt: "Dancing baby"
-        voice_usage:
+        live_usage:
           title: Phone bill
           subtitle: Your voice call statement
           subtitle_others: "%{username}'s voice call statement"

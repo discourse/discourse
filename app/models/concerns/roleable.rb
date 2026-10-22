@@ -20,12 +20,11 @@ module Roleable
   end
 
   def whisperer?
-    @whisperer ||=
-      begin
-        return false if SiteSetting.whispers_allowed_groups_map.empty?
-        return true if admin
-        group_users&.exists?(group_id: SiteSetting.whispers_allowed_groups_map)
-      end
+    return false if SiteSetting.whispers_allowed_groups_map.empty?
+    return true if admin
+    return @whisperer unless @whisperer.nil?
+
+    @whisperer = group_users.exists?(group_id: SiteSetting.whispers_allowed_groups_map)
   end
 
   def category_group_moderator?

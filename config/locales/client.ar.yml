@@ -6,6 +6,10 @@
 
 ar:
   js:
+    dsa_notice:
+      title: "الإبلاغ عن المحتوى غير القانوني"
+      email: "عنوان البريد الإلكتروني"
+      resend_email_code: "إعادة إرسال الرمز"
     user_api_key:
       title: 'تفويض "%{application_name}"'
       authorize: "تفويض"
@@ -3865,8 +3869,6 @@ ar:
       show_preview: "إظهار المعاينة"
       hide_preview: "إخفاء المعاينة"
       resize: "تغيير حجم أداة الإنشاء"
-      switch_to_markdown: "التحويل إلى محرر Markdown القياسي باستخدام الاختصار (%{keyboardShortcut})"
-      switch_to_rich_text: "التحويل إلى المحرر الجديد للنصوص المنسقة باستخدام الاختصار (%{keyboardShortcut})"
       quote_post_title: "اقتباس المنشور بأكمله"
       bold_label: "B"
       bold_title: "غامق"
@@ -4018,6 +4020,8 @@ ar:
         visit: "افتح الرابط"
         remove_preview: "إزالة المعاينة"
         link_copied: "تم نسخ الرابط!"
+      table:
+        default_heading: "العمود %{number}"
       unsupported_token: "لا يدعم محرر النص المنسق جميع الميزات المستخدمة في هذا المنشور؛ مما يحولك إلى محرر Markdown."
     notifications:
       tooltip:
@@ -7215,63 +7219,6 @@ ar:
           other: "يجب ان يكون الإدخال أطول من %{count}."
         pattern_mismatch: "يُرجى مطابقة التنسيق المطلوب."
         bad_input: "يُرجى إدخال قيمة صالحة."
-    table_builder:
-      title: "أداة إنشاء الجداول"
-      modal:
-        title: "أداة إنشاء الجداول"
-        create: "إنشاء جدول"
-        help:
-          title: "استخدام محرر جداول البيانات"
-          enter_key: "مفتاح Enter"
-          tab_key: "مفتاح Tab"
-          new_row: "في نهاية الصف لإدراج صف جديد."
-          new_col: "في نهاية العمود لإدراج عمود جديد."
-          options: "انقر بزر الماوس الأيمن على الخلايا للوصول إلى خيارات إضافية في قائمة منسدلة."
-        confirm_close: "هل تريد بالتأكيد إغلاق أداة إنشاء الجداول؟ سيتم فقدان أي تغييرات غير محفوظة."
-      edit:
-        btn_edit: "تعديل الجدول"
-        modal:
-          title: "تعديل الجدول"
-          cancel: "إلغاء"
-          create: "حفظ"
-          reason: "ما سبب التعديل؟"
-          trigger_reason: "أضِف سبب التعديل"
-        default_edit_reason: "تحديث الجدول باستخدام محرر الجداول"
-      default_header:
-        col_1: "العمود 1"
-        col_2: "العمود 2"
-        col_3: "العمود 3"
-        col_4: "العمود 4"
-      spreadsheet:
-        no_records_found: "لم يتم العثور على سجلات"
-        show: "إظهار"
-        entries: "إدخالات"
-        about: "نبذة"
-        prompts:
-          delete_selected_rows: "هل تريد بالتأكيد حذف الصفوف المحدَّدة؟"
-          delete_selected_cols: "هل تريد بالتأكيد حذف الأعمدة المحدَّدة؟"
-          will_destroy_merged_cells: "سيؤدي هذا الإجراء إلى تدمير أي خلايا مدمجة موجودة. هل أنت متأكد؟"
-          will_clear_search_results: "سيؤدي هذا الإجراء إلى تدمير أي خلايا مدمجة موجودة. هل أنت متأكد؟"
-          conflicts_with_merged_cells: "هناك تعارض مع خلية مدمجة أخرى"
-        invalid_merge_props: "خصائص الدمج غير صالحة"
-        cells_already_merged: "تم دمج الخلية بالفعل"
-        no_cells_selected: "لم يتم تحديد أي خلايا"
-        context_menu:
-          row:
-            before: "إدراج صف جديد قبله"
-            after: "إدراج صف جديد بعده"
-            delete: "حذف الصفوف المحدَّدة"
-          col:
-            before: "إدراج عمود جديد قبله"
-            after: "إدراج عمود جديد بعده"
-            delete: "حذف الأعمدة المحدَّدة"
-            rename: "إعادة تسمية هذا العمود"
-          order:
-            ascending: "ترتيب تصاعدي"
-            descending: "ترتيب تنازلي"
-          copy: "نسخ..."
-          paste: "لصق..."
-          save: "الحفظ باسم..."
     powered_by_discourse: "بدعم من Discourse"
     safari_15_warning: "سيُصبح متصفّحك غير متوافق مع هذا المجتمع قريبًا. للاستمرار في المشاركة هنا، يُرجى ترقية متصفّحك أو <a href='%{url}'>معرفة المزيد</a>."
     filter:

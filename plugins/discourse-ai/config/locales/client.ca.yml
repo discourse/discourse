@@ -221,6 +221,15 @@ ca:
         delete: "Suprimeix"
         tools_modal:
           required: "Necessari"
+      models:
+        name: "Nom"
+        type: "Tipus"
+        provider: "Proveïdor"
+        edit: "Edita"
+        types:
+          embedding: "Incrustant"
+        filters:
+          all: "Tots els tipus"
       llms:
         display_name: "Nom"
         provider: "Proveïdor"
@@ -296,6 +305,13 @@ ca:
             category: "Categoria"
           table:
             total_count: "Total"
+      ai_search:
+        related_replies:
+          one: "%{count} resposta"
+          other: "%{count} respostes"
+        tabs:
+          topics: "Temes"
+          messages: "Missatges"
       discobot_discoveries:
         legacy:
           regular_results: "Temes"

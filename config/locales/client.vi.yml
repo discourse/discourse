@@ -6,6 +6,9 @@
 
 vi:
   js:
+    dsa_notice:
+      title: "Báo cáo nội dung bất hợp pháp"
+      email: "Địa chỉ email"
     user_api_key:
       deny: "Hủy"
       copied: "Đã sao chép!"
@@ -2855,8 +2858,6 @@ vi:
       uploading: "Đang tải lên…"
       show_preview: "Xem trước"
       hide_preview: "Hủy xem trước"
-      switch_to_markdown: "Dùng trình soạn thảo Markdown (%{keyboardShortcut})"
-      switch_to_rich_text: "Dùng trình soạn thảo thường (%{keyboardShortcut})"
       quote_post_title: "Trích dẫn toàn bộ tút"
       bold_label: "B"
       bold_title: "In đậm"
@@ -2992,6 +2993,8 @@ vi:
       onebox_toolbar:
         copy: "Sao chép link"
         link_copied: "Đã sao chép link!"
+      table:
+        default_heading: "Cột %{number}"
       unsupported_token: "Trình soạn thảo rich text không hỗ trợ tất cả các tính năng được sử dụng trong tút này; chuyển sang trình soạn thảo Markdown."
     notifications:
       tooltip:
@@ -5106,63 +5109,6 @@ vi:
           other: "Đầu vào phải lớn hơn %{count}."
         pattern_mismatch: "Vui lòng tuân thủ định dạng được yêu cầu."
         bad_input: "Vui lòng nhập một giá trị hợp lệ."
-    table_builder:
-      title: "Trình tạo bảng"
-      modal:
-        title: "Trình tạo bảng"
-        create: "Tạo bảng"
-        help:
-          title: "Sử dụng Trình chỉnh sửa bảng tính"
-          enter_key: "Nhập"
-          tab_key: "Tab"
-          new_row: "ở cuối hàng để chèn một hàng mới."
-          new_col: "ở cuối cột để chèn một cột mới."
-          options: "Nhấn chuột phải vào các ô để truy cập thêm tùy chọn trong menu thả xuống."
-        confirm_close: "Bạn có chắc muốn đóng trình tạo bảng? Bất kỳ thay đổi nào chưa được lưu sẽ bị mất."
-      edit:
-        btn_edit: "Sửa bảng"
-        modal:
-          title: "Sửa bảng"
-          cancel: "hủy"
-          create: "Lưu lại"
-          reason: "Lý do bạn sửa"
-          trigger_reason: "Thêm lý do chỉnh sửa"
-        default_edit_reason: "Cập nhật bảng bằng Trình chỉnh sửa bảng"
-      default_header:
-        col_1: "Cột 1"
-        col_2: "Cột 2"
-        col_3: "Cột 3"
-        col_4: "Cột 4"
-      spreadsheet:
-        no_records_found: "Không tìm thấy giá trị"
-        show: "Hiển thị"
-        entries: "các mục"
-        about: "Giới thiệu"
-        prompts:
-          delete_selected_rows: "Bạn có chắc muốn xóa các hàng đã chọn?"
-          delete_selected_cols: "Bạn có chắc muốn xóa các cột đã chọn?"
-          will_destroy_merged_cells: "Thao tác này sẽ xóa bỏ mọi ô đã được hợp nhất hiện có. Bạn chắc chứ?"
-          will_clear_search_results: "Hành động này sẽ xóa bỏ tất cả các ô đã gộp hiện có. Bạn chắc chứ?"
-          conflicts_with_merged_cells: "Có xung đột với một ô đã được gộp khác"
-        invalid_merge_props: "Các thuộc tính gộp không hợp lệ"
-        cells_already_merged: "Ô đã được hợp nhất"
-        no_cells_selected: "Không có ô nào được chọn."
-        context_menu:
-          row:
-            before: "Chèn một hàng mới trước"
-            after: "Chèn một hàng mới sau"
-            delete: "Xóa các hàng đã chọn"
-          col:
-            before: "Chèn một cột trước"
-            after: "Chèn một cột sau"
-            delete: "Xóa các cột đã chọn"
-            rename: "Đổi tên cột này"
-          order:
-            ascending: "Sắp xếp thứ tự tăng dần"
-            descending: "Sắp xếp thứ tự giảm dần"
-          copy: "Sao chép..."
-          paste: "Dán..."
-          save: "Lưu dưới dạng..."
     powered_by_discourse: "Vận hành nhờ Discourse"
     safari_15_warning: "Trình duyệt của bạn sắp không còn tương thích với cộng đồng này. Để tiếp tục tham gia, vui lòng cập nhật trình duyệt của bạn hoặc <a href='%{url}'>tìm hiểu thêm</a>."
     filter:

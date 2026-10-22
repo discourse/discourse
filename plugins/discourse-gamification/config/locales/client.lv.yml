@@ -42,3 +42,4 @@ lv:
         username: "Lietotājs"
         date: "Datums"
         description: "Apraksts"
+        category_id: "Sadaļa"

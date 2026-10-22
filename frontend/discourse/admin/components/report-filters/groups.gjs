@@ -19,18 +19,21 @@ export default class Groups extends FilterComponent {
 
     this.modal.show(Modal, {
       model: {
-        currentTokens: this.filter?.default ?? [],
-        onApply: (tokens) => this.applyFilter(this.filter.id, tokens.join(",")),
+        currentTokens: this.args.filter?.default ?? [],
+        onApply: (tokens) =>
+          this.args.applyFilter(this.args.filter.id, tokens.join(",")),
       },
     });
   }
 
   <template>
-    <DButton
-      class="btn-default report-filter-groups__button"
-      @action={{this.openCompareGroups}}
-      @icon="plus"
-      @label="admin.dashboard.sections.engagement.whos_posting.add_group"
-    />
+    <div ...attributes>
+      <DButton
+        class="btn-default report-filter-groups__button"
+        @action={{this.openCompareGroups}}
+        @icon="plus"
+        @label="admin.dashboard.sections.engagement.whos_posting.add_group"
+      />
+    </div>
   </template>
 }

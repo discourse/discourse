@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import EmberObject, { action, computed } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { schedule, throttle } from "@ember/runloop";
@@ -117,7 +116,7 @@ export default class ComposerEditor extends Component {
     this.warnedCannotSeeMentions = [];
     this.warnedGroupMentions = [];
 
-    this.uppyComposerUpload = new UppyComposerUpload(getOwner(this), {
+    this.uppyComposerUpload = new UppyComposerUpload(this, {
       composerEventPrefix: this.composerEventPrefix,
       composerModel: this.composer.model,
       uploadMarkdownResolvers,
@@ -309,11 +308,6 @@ export default class ComposerEditor extends Component {
     return applyValueTransformer("composer-force-editor-mode", null, {
       model: this.composer.model,
     });
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-    this.uppyComposerUpload.teardown();
   }
 
   @observes("composer.focusTarget")
@@ -672,10 +666,12 @@ export default class ComposerEditor extends Component {
     const loaded = loadOneboxes(
       preview,
       ajax,
-      this.get("composer.topic.id"),
-      this.get("composer.category.id"),
+      this.get("composer.model.topic.id"),
+      this.get("composer.model.category.id"),
       this.siteSettings.max_oneboxes_per_post,
-      refresh
+      refresh,
+      false,
+      (onebox) => onebox && this.appEvents.trigger("composer:refresh-preview")
     );
 
     if (refresh && loaded > 0) {

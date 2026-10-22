@@ -2,6 +2,7 @@ import { setupTest } from "ember-qunit";
 import AllowLister from "pretty-text/allow-lister";
 import { hrefAllowed, sanitize } from "pretty-text/sanitizer";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import DiscourseMarkdownIt from "discourse-markdown-it";
 
 function build(options) {
@@ -10,6 +11,47 @@ function build(options) {
 
 module("Unit | Utility | sanitizer", function (hooks) {
   setupTest(hooks);
+
+  test("preserves attribute whitespace normalization", function (assert) {
+    const allowLister = new AllowLister();
+
+    for (const whitespace of ["\t", "\n", "\r", "\f", "\u00a0"]) {
+      assert.strictEqual(
+        sanitize(
+          `<a title="first${whitespace}value" title="second${whitespace}value">link</a>`,
+          allowLister
+        ),
+        `<a title="first${whitespace}value" title="second value">link</a>`,
+        "preserves quoted whitespace before normalization starts"
+      );
+      assert.strictEqual(
+        sanitize(`<a title = "first${whitespace}value">link</a>`, allowLister),
+        '<a title="first value">link</a>',
+        "normalizes quoted whitespace after unquoted whitespace"
+      );
+    }
+  });
+
+  test("does not repeatedly normalize the entire attribute string", function (assert) {
+    const attributes = Array(128).fill('title="value"').join(" ");
+    const input = `<a ${attributes}>link</a>`;
+    const replace = sinon.spy(String.prototype, "replace");
+    let output;
+    let replacements;
+
+    try {
+      output = sanitize(input, new AllowLister());
+      // Count full-input scans instead of asserting a machine-dependent duration.
+      replacements = replace.getCalls().filter((call) => {
+        return call.thisValue === attributes && call.args[0]?.global;
+      }).length;
+    } finally {
+      replace.restore();
+    }
+
+    assert.strictEqual(output, input);
+    assert.strictEqual(replacements, 1, "normalizes the attribute string once");
+  });
 
   test("sanitize", function (assert) {
     const engine = build({
