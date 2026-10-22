@@ -29,7 +29,11 @@ module DiscourseWorkflows
       end
 
       def output
-        { post: serialize_post(@post), topic: topic_data(topic), user: serialize_user(@user) }
+        {
+          post: serialize_post(@post),
+          topic: serialize_topic_list_item(topic),
+          user: serialize_user(@user),
+        }
       end
 
       def matches?(trigger_ctx)

@@ -45,7 +45,7 @@ module DiscourseWorkflows
 
         def output
           {
-            topic: topic_data(@topic),
+            topic: serialize_topic_list_item(@topic),
             old_tags: @old_tag_names,
             new_tags: @new_tag_names,
             added_tags: added_tags,
