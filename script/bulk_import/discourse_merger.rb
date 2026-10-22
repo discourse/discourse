@@ -770,19 +770,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
           if klass.table_name == "upload_references"
             next unless row["upload_id"]
-            if row["target_type"] == "UserProfile"
-              row["target_id"] = user_id_from_imported_id(row["target_id"])
-            elsif row["target_type"] = "UserAvatar"
-              row["target_id"] = avatar_id_from_imported_id(row["target_id"])
-            elsif row["target_type"] = "User"
-              row["target_id"] = user_id_from_imported_id(row["target_id"])
-            elsif row["target_type"] = "Post"
-              row["target_id"] = post_id_from_imported_id(row["target_id"])
-              # TO-DO: add other target types
-            else
-              next
-            end
-            next unless row["target_id"]
+            next unless remap_upload_reference_target(row)
           end
 
           old_id = row["id"].to_i
@@ -1249,6 +1237,23 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         new_avatar_id = upload_id_from_imported_id(u.uploaded_avatar_id)
         u.update_columns(uploaded_avatar_id: new_avatar_id) if new_avatar_id
       end
+  end
+
+  private
+
+  # Returns nil when the target cannot be remapped and the reference should be skipped.
+  def remap_upload_reference_target(row)
+    # TO-DO: add other target types
+    row["target_id"] = case row["target_type"]
+    when "UserProfile", "User"
+      user_id_from_imported_id(row["target_id"])
+    when "UserAvatar"
+      avatar_id_from_imported_id(row["target_id"])
+    when "Post"
+      post_id_from_imported_id(row["target_id"])
+    end
+
+    row if row["target_id"]
   end
 end
 

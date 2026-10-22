@@ -183,5 +183,38 @@ if merger_dependencies_available
         expect(merged_user.reload.uploaded_avatar_id).to eq(new_upload.id)
       end
     end
+
+    describe "#remap_upload_reference_target" do
+      let(:merger) { build_merger }
+
+      before do
+        allow(merger).to receive(:user_id_from_imported_id).with("1").and_return(101)
+        allow(merger).to receive(:avatar_id_from_imported_id).with("1").and_return(201)
+        allow(merger).to receive(:post_id_from_imported_id).with("1").and_return(301)
+        allow(merger).to receive(:post_id_from_imported_id).with("2").and_return(nil)
+      end
+
+      def remap(target_type, target_id = "1")
+        merger.send(
+          :remap_upload_reference_target,
+          { "target_type" => target_type, "target_id" => target_id },
+        )
+      end
+
+      it "remaps each target type through its own mapping" do
+        expect(remap("UserProfile")).to eq("target_type" => "UserProfile", "target_id" => 101)
+        expect(remap("User")).to eq("target_type" => "User", "target_id" => 101)
+        expect(remap("UserAvatar")).to eq("target_type" => "UserAvatar", "target_id" => 201)
+        expect(remap("Post")).to eq("target_type" => "Post", "target_id" => 301)
+      end
+
+      it "skips references whose target was not copied" do
+        expect(remap("Post", "2")).to be_nil
+      end
+
+      it "skips unsupported target types" do
+        expect(remap("Category")).to be_nil
+      end
+    end
   end
 end
