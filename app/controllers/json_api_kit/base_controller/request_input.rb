@@ -11,6 +11,17 @@ module JsonApiKit
 
       def service_params = { params: request_body.parameters, guardian: }
 
+      def render_document(value, **options)
+        super(
+          Document.from(value) { { resource: request_resource, input: request_query, client: } },
+          **options,
+        )
+      end
+
+      def render_validation_errors(errors)
+        render_document(Document::Errors.new(*request_body.validation_errors(errors)))
+      end
+
       def request_inputs
         @request_inputs ||=
           Request::Inputs.new(
