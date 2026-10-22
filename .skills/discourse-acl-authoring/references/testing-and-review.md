@@ -31,22 +31,22 @@ For Guardian methods:
 - Cover target-id list helpers when an index action scopes resources by ACL.
 - If pseudo groups are involved, cover `granular_anonymous_and_logged_in_groups_permissions` behavior when relevant.
 
-For services using `AccessControlListManager`:
+For services using `AccessControlList::Apply`:
 
 - A missing `ACL_PERMISSIONS` declaration raises `NameError`; inherited declarations are accepted.
 - Supported permission IDs succeed. Unknown, blank, or missing IDs fail `has_valid_permissions`, including invalid injected mandatory entries, before any ACL rows are destroyed or inserted.
 - Create/update request specs submit an explicit invalid permission such as `bogus` and assert rejection without partial resource creation or loss of existing ACLs. Test the write endpoints: `/access-control/evaluate.json` previews permission loss and does not enforce the manager's permission vocabulary.
 - Creation with omitted `acl` persists mandatory ACLs.
-- Creation requires an authoritative `owner_user_id`, resolves the user inside the manager, and persists it with the reserved `owner` permission.
-- Replacement preserves existing owners when `owner_user_ids` is omitted. A supplied set replaces ownership only for an owner or admin, may include only existing users, and must retain at least one owner.
+- Creation requires an authoritative `initial_owner_user_id`, resolves the user inside the service, and persists it with the reserved `owner` permission.
+- Replacement preserves existing owners when `owner_user_ids` is omitted. A supplied set replaces ownership only when the actor is a currently stored owner or admin, may include only existing users, and must retain at least one owner. The actor need not remain in the requested set. On an ownerless target, only an admin may supply `owner_user_ids`; `initial_owner_user_id` itself may identify any valid user.
 - Owners may remove themselves when another owner remains; evaluation still warns when doing so removes their final effective permission.
 - Owner user ids are removed from lower direct grants to avoid duplicate grantee rows.
 - Creation with `acl: []` persists mandatory ACLs or fails closed when no mandatory ACL exists.
 - Update with explicit `acl: []` replaces existing ACLs with mandatory ACLs.
 - Submitted ACLs that match the target class's `banned_acl` fail the `has_no_banned_acl` policy.
 - Update with a non-empty ACL replaces old rows and logs/records permission history if the feature has history.
-- After a successful manager call, the target instance has been reloaded and should not retain a stale `permission_acl` cache.
-- Unauthorized actors fail before the manager mutates ACL rows.
+- After a successful replacement, the target instance has been reloaded and should not retain a stale `permission_acl` cache.
+- Unauthorized actors fail before the service mutates ACL rows.
 - Invalid group IDs fail at the service/contract boundary when user input can supply IDs.
 
 For cleanup behavior:
@@ -67,15 +67,6 @@ For lookup objects:
 - `Acl::User#target_ids_with_permission` and `#target_ids_with_any_permissions` return defensive array copies.
 - User owner grants satisfy all target permission checks and target-id queries; group permission checks remain exact.
 
-For migration specs:
-
-- Blank legacy arrays.
-- Existing read/write/manage group values.
-- Default setting fallback when no setting row exists.
-- Raw setting rows that omit mandatory values.
-- Existing direct grants for the legacy owner are removed while unrelated users and groups remain.
-- Existing owner rows are merged idempotently instead of duplicated or overwritten.
-
 ## Frontend Specs
 
 For `DAccessControl` consumers:
@@ -83,7 +74,7 @@ For `DAccessControl` consumers:
 - Rendered permissions match target-specific labels/descriptions.
 - Every option added by `transformPermissionOptions(options)` has an ID in the target's server-side `ACL_PERMISSIONS.values`; the UI-only remove action is not a permission declaration.
 - Mandatory ACL from `site.access_control.mandatory_acl[targetKey]` appears and is locked.
-- Persisted owner rows appear first with the user identity, Mandatory badge, and Owner label. The control is disabled without `@canManageOwners`; authorized rows offer only Owner and Remove.
+- Persisted owner rows appear after mandatory rows with the user identity and Owner label, but no Mandatory badge. The control is disabled without `@canManageOwners`; authorized rows offer only Owner and Remove.
 - Authorized user rows offer Owner, while group rows never do.
 - Banned ACL from `site.access_control.banned_acl[targetKey]` removes matching permission options for the matching grantee.
 - Existing rows with the same group as a mandatory row are not duplicated.
@@ -105,11 +96,11 @@ Use `.skills/discourse-writing-js-tests` for QUnit patterns.
 
 Ask these questions during code review:
 
-- Is every ACL write routed through `AccessControlListManager`?
+- Is every ACL write routed through `AccessControlList::Apply`?
 - Does target creation pass an authoritative user owner separately from editable ACL params?
 - Are persisted owners protected from normal replacement, and does owner imply all other user permission checks and scopes?
 - Does the target define or inherit `ACL_PERMISSIONS`, and do frontend permission option IDs match it?
-- Does the caller authorize the actor before the manager can replace ACL rows?
+- Does the caller authorize the actor before the service can replace ACL rows?
 - Does the service distinguish omitted ACL params from explicit empty ACL params when that matters?
 - Are mandatory ACLs enforced in both backend writes and frontend display?
 - Are banned ACLs enforced in backend writes and filtered from the frontend for matching grantees?
@@ -125,12 +116,11 @@ Ask these questions during code review:
 
 ## Known Sharp Edges
 
-- `AccessControlListManager` currently assumes caller-side authorization.
+- `AccessControlList::Apply` expects caller-side authorization for ordinary permission changes and enforces owner-change authorization itself.
 - Backend storage/lookups and the frontend search picker support user grants. Persisted owner rows are handled explicitly, but other mandatory user ACL display still needs explicit UI support.
 - `DAccessControl` injects mandatory rows for display but does not notify the parent on render.
-- `DAccessControl` filters banned permission options for UX, but hidden options are not authorization. The manager policy is the enforcement point.
+- `DAccessControl` filters banned permission options for UX, but hidden options are not authorization. The replacement service policy is the enforcement point.
 - `DAccessControlField` cancellation leaves the proposed ACL in draft state. `preventSubmit` is not a rollback API.
 - `DAccessControlField` uses `@aclTarget.type` for class lookup and frontend metadata lookup, while site metadata is keyed by `acl_target_key`. A custom key cannot currently satisfy both paths.
 - Loss confirmation is browser UX, not write-path proof. API clients can bypass it unless the write service has a separate confirmation contract.
-- Mandatory ACLs from site settings need extra care in migrations because raw stored settings may omit `mandatory_values`.
 - `flattened_list` skips stale group IDs, stale user IDs, and unknown target classes, so a missing row can disappear from serialized ACL output while cleanup or validation catches up.

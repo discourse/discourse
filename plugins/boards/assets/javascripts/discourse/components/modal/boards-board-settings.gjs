@@ -226,12 +226,13 @@ export default class BoardsBoardSettings extends Component {
         )
         .map((entry) => entry.id);
       const acl = aclEntries.filter((entry) => entry.permission !== "owner");
+      const boardData = { ...data, acl };
 
-      await this.args.model.onSave({
-        ...data,
-        acl,
-        owner_user_ids: ownerUserIds,
-      });
+      if (!this.isNew && this.args.model.board.can_manage_acl_owner) {
+        boardData.owner_user_ids = ownerUserIds;
+      }
+
+      await this.args.model.onSave(boardData);
       this.args.closeModal({ reloadAfterSave: this.reloadAfterSave });
     } catch (error) {
       popupAjaxError(error);

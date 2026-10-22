@@ -69,12 +69,9 @@ RSpec.describe Boards::CreateBoard do
           }
         end
 
-        it "makes the creator and requested users owners" do
-          board = result[:board]
-
-          expect(
-            AccessControlList.find_by!(target: board, permission: "owner").allowed_user_ids,
-          ).to(contain_exactly(manager.id, outsider.id))
+        it "rejects the initial owner set from a non-admin" do
+          expect { result }.not_to change { Boards::Board.count }
+          expect(result).to fail_a_step(:create_acl)
         end
       end
 

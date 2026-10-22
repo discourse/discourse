@@ -45,6 +45,13 @@ module(
       const board = this.fabricators.board();
       board.acl = [
         {
+          type: "user",
+          id: this.currentUser.id,
+          permission: "owner",
+          username: this.currentUser.username,
+          display_name: this.currentUser.username,
+        },
+        {
           type: "group",
           id: group.id,
           permission: "manage",
@@ -183,6 +190,61 @@ module(
           },
         ],
         "keeps only ordinary permissions in the ACL argument"
+      );
+    });
+
+    test("does not submit an owner replacement when creating a board", async function (assert) {
+      pretender.post("/access-control/evaluate.json", () => response({}));
+
+      await render(
+        <template>
+          <BoardsBoardSettings
+            @closeModal={{this.closeModal}}
+            @inline={{true}}
+            @model={{this.model}}
+          />
+        </template>
+      );
+
+      await fillIn(".discourse-boards-editable-title__input", "New board");
+      await formKit().submit();
+
+      assert.false(
+        Object.hasOwn(this.model.onSave.firstCall.args[0], "owner_user_ids"),
+        "leaves initial ownership to the create service"
+      );
+    });
+
+    test("does not submit owners without the ownership capability", async function (assert) {
+      const board = this.fabricators.board();
+      board.acl = [
+        {
+          type: "user",
+          id: 7,
+          permission: "owner",
+          username: "martin",
+          display_name: "martin",
+        },
+      ];
+      board.can_manage_acl_owner = false;
+      this.model = { ...this.model, board, isNew: false };
+      pretender.post("/access-control/evaluate.json", () => response({}));
+
+      await render(
+        <template>
+          <BoardsBoardSettings
+            @closeModal={{this.closeModal}}
+            @inline={{true}}
+            @model={{this.model}}
+          />
+        </template>
+      );
+
+      await formKit().submit();
+
+      assert.false(
+        Object.hasOwn(this.model.onSave.firstCall.args[0], "owner_user_ids"),
+        "does not request an ownership change"
       );
     });
 

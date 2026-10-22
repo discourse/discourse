@@ -51,13 +51,14 @@ module Boards
       raw = context[:raw_board_params] || {}
       flattened_acl = raw["acl"] || []
 
-      AccessControlListManager.call(
+      AccessControlList::Apply.call(
         guardian:,
         params: {
-          target: board,
-          flattened_acl: flattened_acl,
+          acl_target_type: board.class.name,
+          acl_target_id: board.id,
+          acl_entries: flattened_acl,
           source: Boards::PLUGIN_NAME,
-          owner_user_id: guardian.user.id,
+          initial_owner_user_id: guardian.user.id,
           owner_user_ids: raw["owner_user_ids"],
         },
       ) do |result|

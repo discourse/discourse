@@ -699,7 +699,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
       .isDisabled("the mandatory row's permission select is disabled");
   });
 
-  test("renders the owner as the first mandatory user row when ownership cannot be managed", async function (assert) {
+  test("renders an owner after mandatory rows without a mandatory badge when ownership cannot be managed", async function (assert) {
     const state = controlledState([
       {
         type: "group",
@@ -735,18 +735,28 @@ module("Integration | Component | DAccessControl", function (hooks) {
 
     assert
       .dom(rows[0])
-      .hasAttribute("data-row-id", "7", "renders the owner row first");
+      .hasAttribute("data-row-id", "999", "renders the mandatory row first");
+    assert
+      .dom(rows[1])
+      .hasAttribute(
+        "data-row-id",
+        "7",
+        "renders the owner after mandatory rows"
+      );
     assert.dom(ownerRow).hasClass("--owner", "identifies the row as the owner");
+    assert
+      .dom(ownerRow)
+      .doesNotHaveClass(
+        "--mandatory",
+        "does not identify the owner as mandatory"
+      );
     assert
       .dom(`${ownerRow} .d-access-control__item-name`)
       .includesText("martin", "renders the owner's identity");
     assert.dom(`${ownerRow} .avatar`).exists("renders the owner's avatar");
     assert
       .dom(`${ownerRow} .d-access-control__tooltip`)
-      .hasText(
-        i18n("access_control.manage.mandatory"),
-        "marks the owner as mandatory"
-      );
+      .doesNotExist("does not show a mandatory badge for the owner");
     assert
       .dom(`${ownerRow} .d-access-control__permission`)
       .hasText(
@@ -773,6 +783,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
       <template>
         <DAccessControl
           @acl={{state.acl}}
+          @aclTarget={{aclTarget}}
           @canManageOwners={{true}}
           @groups={{GROUPS}}
           @onChange={{state.onChange}}
@@ -789,6 +800,12 @@ module("Integration | Component | DAccessControl", function (hooks) {
     assert
       .dom(permissionOptionSelector("owner"))
       .exists("keeps the current Owner option");
+    assert.dom(permissionOptionDescription("owner")).hasText(
+      i18n("access_control.manage.access_permission_owner_description", {
+        target: aclTarget.name,
+      }),
+      "describes the owner's control over the target"
+    );
     assert
       .dom(permissionOptionSelector("remove"))
       .exists("offers the Remove action");
@@ -923,7 +940,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
       .doesNotExist("keeps the reserved owner permission out of the menu");
   });
 
-  test("sorts rows by mandatory status, type, and name", async function (assert) {
+  test("sorts rows by mandatory and owner status, then type and name", async function (assert) {
     const state = controlledState([
       {
         type: "user",
@@ -957,6 +974,12 @@ module("Integration | Component | DAccessControl", function (hooks) {
         permission: "view",
         display_name: "Apple Group",
       },
+      {
+        type: "user",
+        id: 3,
+        permission: "owner",
+        display_name: "Owner User",
+      },
     ]);
 
     await render(
@@ -971,12 +994,19 @@ module("Integration | Component | DAccessControl", function (hooks) {
 
     assert.deepEqual(
       rowNames(),
-      ["Alpha Group", "Zoe User", "Apple Group", "Beta Group", "Aaron User"],
-      "sorts mandatory rows by name, then groups by name, then users by name"
+      [
+        "Alpha Group",
+        "Zoe User",
+        "Owner User",
+        "Apple Group",
+        "Beta Group",
+        "Aaron User",
+      ],
+      "sorts mandatory rows by name, then owners, groups, and users"
     );
     assert.deepEqual(
       findAll(".d-access-control__row").map((row) => row.dataset.rowType),
-      ["group", "user", "group", "group", "user"],
+      ["group", "user", "user", "group", "group", "user"],
       "keeps regular groups before regular users"
     );
   });

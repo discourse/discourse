@@ -37,10 +37,18 @@ const REMOVE_ACTION = {
     "access_control.manage.access_permission_remove_description"
   ),
 };
-const OWNER_OPTION = {
-  id: OWNER_PERMISSION,
-  name: i18n("access_control.manage.access_permission_owner"),
-};
+
+function ownerOption(target) {
+  return {
+    id: OWNER_PERMISSION,
+    name: i18n("access_control.manage.access_permission_owner"),
+    description: target
+      ? i18n("access_control.manage.access_permission_owner_description", {
+          target,
+        })
+      : undefined,
+  };
+}
 
 export function defaultPermissions() {
   return [
@@ -175,7 +183,7 @@ export default class DAccessControl extends Component {
         avatar_template: hydratedEntry.avatar_template,
         type: hydratedEntry.type,
         mandatory:
-          hydratedEntry.permission === OWNER_PERMISSION ||
+          hydratedEntry.permission !== OWNER_PERMISSION &&
           Boolean(hydratedEntry.mandatory),
         owner: hydratedEntry.permission === OWNER_PERMISSION,
         permission_menu_disabled:
@@ -186,17 +194,17 @@ export default class DAccessControl extends Component {
     });
 
     return mappedAcl.sort((a, b) => {
-      if (a.owner !== b.owner) {
-        return a.owner ? -1 : 1;
-      }
-
       if (a.mandatory !== b.mandatory) {
         return a.mandatory ? -1 : 1;
       }
 
+      if (a.owner !== b.owner) {
+        return a.owner ? -1 : 1;
+      }
+
       const nameSort = (a.sort_name || "").localeCompare(b.sort_name || "");
 
-      if (a.mandatory && b.mandatory) {
+      if ((a.mandatory && b.mandatory) || (a.owner && b.owner)) {
         return nameSort;
       }
 
@@ -383,10 +391,12 @@ export default class DAccessControl extends Component {
 
   @action
   permissionOptionsFor(row) {
+    const ownerOptionForTarget = ownerOption(this.args.aclTarget?.name);
+
     if (row.owner) {
       return this.args.canManageOwners
-        ? [OWNER_OPTION, REMOVE_ACTION]
-        : [OWNER_OPTION];
+        ? [ownerOptionForTarget, REMOVE_ACTION]
+        : [ownerOptionForTarget];
     }
 
     const permissionOptions = this.excludeBannedPermissions(
@@ -399,7 +409,7 @@ export default class DAccessControl extends Component {
         ...permissionOptions.filter(
           (permission) => permission.id !== REMOVE_ACTION.id
         ),
-        OWNER_OPTION,
+        ownerOptionForTarget,
         REMOVE_ACTION,
       ];
     }
@@ -469,13 +479,9 @@ export default class DAccessControl extends Component {
                   {{row.display_name}}
                   {{#if row.mandatory}}
                     <DTooltip
-                      @content={{if
-                        row.owner
-                        (i18n "access_control.manage.owner_acl_tooltip")
-                        (i18n
-                          "access_control.manage.mandatory_acl_tooltip"
-                          name=row.display_name
-                        )
+                      @content={{i18n
+                        "access_control.manage.mandatory_acl_tooltip"
+                        name=row.display_name
                       }}
                     >
                       <:trigger>

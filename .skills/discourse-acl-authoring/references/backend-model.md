@@ -186,13 +186,13 @@ end
 Mandatory entries are consumed by both backend writes and frontend rendering:
 
 - `AccessControlList.inject_mandatory_acl(flattened_acl, target)` appends missing mandatory entries.
-- `AccessControlListManager` calls that method before inserting rows.
+- `AccessControlList::Apply` calls that method before inserting rows.
 - `flattened_list` marks matching entries with `mandatory: true`.
 - `Site#access_control` exposes mandatory ACL metadata for registered targets.
 
 Banned entries are consumed by both backend writes and frontend rendering:
 
-- `AccessControlListManager` rejects submitted ACLs that match the target class's `banned_acl` via the `has_no_banned_acl` policy.
+- `AccessControlList::Apply` rejects submitted ACLs that match the target class's `banned_acl` via the `has_no_banned_acl` policy.
 - `Site#access_control` exposes banned ACL metadata for registered targets.
 - `DAccessControl` filters banned permission options for the matching grantee.
 

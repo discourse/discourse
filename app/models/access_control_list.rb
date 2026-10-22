@@ -222,7 +222,7 @@ class AccessControlList < ActiveRecord::Base
 
     def build_acl_entry(access_control_list, target_klass, type, id, allowed_object, for_target)
       mandatory =
-        access_control_list.permission == Acl::Permissions::OWNER ||
+        access_control_list.permission != Acl::Permissions::OWNER &&
           target_klass.acl_is_mandatory?({ type:, id:, permission: access_control_list.permission })
 
       list_entry = {

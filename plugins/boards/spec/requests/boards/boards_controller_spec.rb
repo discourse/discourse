@@ -615,23 +615,22 @@ RSpec.describe Boards::Api::BoardsController do
       ).to contain_exactly(manager.id)
     end
 
-    it "accepts co-owner ids separately from the ACL payload" do
+    it "rejects initial co-owner ids from a non-admin" do
       sign_in(manager)
 
-      post "/boards/api/boards.json",
-           params: {
-             board: {
-               name: "Co-owned board",
-               slug: "co-owned-board",
-               owner_user_ids: [outsider.id],
-             },
-           }
+      expect do
+        post "/boards/api/boards.json",
+             params: {
+               board: {
+                 name: "Co-owned board",
+                 slug: "co-owned-board",
+                 owner_user_ids: [outsider.id],
+               },
+             }
+      end.not_to change { Boards::Board.count }
 
-      expect(response.status).to eq(201)
-      board = Boards::Board.find(response.parsed_body["board"]["id"])
-      expect(AccessControlList.find_by!(target: board, permission: "owner").allowed_user_ids).to(
-        contain_exactly(manager.id, outsider.id),
-      )
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["failed"]).to eq("FAILED")
     end
 
     it "rejects an invalid permission name without creating a board, columns, or ACLs" do

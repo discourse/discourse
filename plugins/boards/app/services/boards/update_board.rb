@@ -36,21 +36,30 @@ module Boards
     def update_acl(board:, guardian:)
       raw = context[:raw_board_params] || {}
       return if !raw.key?("acl") && !raw.key?("owner_user_ids")
-      flattened_acl = raw["acl"] || AccessControlList.where(target: board).flattened_list
+      flattened_acl =
+        raw["acl"] ||
+          AccessControlList
+            .where(target: board)
+            .flattened_list
+            .reject { |entry| entry[:permission] == Acl::Permissions::OWNER }
 
-      AccessControlListManager.call(
+      AccessControlList::Apply.call(
         guardian:,
         params: {
-          target: board,
-          flattened_acl: flattened_acl,
+          acl_target_type: board.class.name,
+          acl_target_id: board.id,
+          acl_entries: flattened_acl,
           source: Boards::PLUGIN_NAME,
-          owner_user_id: board.created_by_id,
+          initial_owner_user_id: board.created_by_id,
           owner_user_ids: raw["owner_user_ids"],
         },
       ) do |result|
-        on_success do |previous_permissions:, new_permissions:|
+        on_success do |current_acl:, replacement:|
           context[:histories] ||= {}
-          context[:histories][:permissions_changed] = { previous_permissions:, new_permissions: }
+          context[:histories][:permissions_changed] = {
+            previous_permissions: current_acl.permission_lookup,
+            new_permissions: replacement.permissions,
+          }
         end
 
         on_failure do
