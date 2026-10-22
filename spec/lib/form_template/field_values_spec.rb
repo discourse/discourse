@@ -43,6 +43,26 @@ RSpec.describe FormTemplate::FieldValues do
       expect(described_class.new(fields:, answers:).answers).to eq(answers)
     end
 
+    it "matches numeric YAML field IDs to JSON answer keys without changing the schema" do
+      fields = [
+        {
+          "id" => 1,
+          "type" => "input",
+          "validations" => {
+            "type" => "number",
+            "required" => true,
+          },
+        },
+      ]
+      values =
+        described_class.new(fields:, answers: { "1" => 100 }, number_formats: { "1" => "1e2" })
+
+      expect(values.fields.first["id"]).to eq("1")
+      expect(fields.first["id"]).to eq(1)
+      expect { values.validate! }.not_to raise_error
+      expect(FormTemplate::DefaultRenderer.render(values)).to eq("### undefined\n1e2")
+    end
+
     it "rejects unknown fields" do
       expect { described_class.new(fields: [], answers: { "unknown" => "value" }) }.to raise_error(
         ArgumentError,
