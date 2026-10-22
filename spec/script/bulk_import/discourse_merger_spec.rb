@@ -216,5 +216,44 @@ if merger_dependencies_available
         expect(remap("Category")).to be_nil
       end
     end
+
+    def source_returning(rows)
+      instance_double(PG::Connection, exec: rows)
+    end
+
+    describe "#merge_same_named_rows" do
+      fab!(:destination_group) { Fabricate(:group, name: "support_team") }
+      fab!(:other_group, :group)
+
+      it "maps same-named source rows onto the destination row and excludes them from the copy" do
+        groups = {}
+        merger = build_merger(groups:)
+        allow(merger).to receive(:source_raw_connection).and_return(
+          source_returning([{ "id" => other_group.id.to_s, "name" => "Support_Team" }]),
+        )
+
+        sql = merger.merge_same_named_rows(Group, groups, where: "automatic = false")
+
+        expect(groups).to eq(other_group.id => destination_group.id)
+        copied_ids = DB.query_single(sql.sub(/\ASELECT .* FROM/, "SELECT id FROM"))
+        expect(copied_ids).to include(destination_group.id)
+        expect(copied_ids).not_to include(other_group.id)
+        expect(copied_ids).not_to include(*Group::AUTO_GROUPS.values)
+      end
+
+      it "selects every row when no names collide" do
+        tag_group = Fabricate(:tag_group, name: "Staff only")
+        tag_groups = {}
+        merger = build_merger(tag_groups:)
+        allow(merger).to receive(:source_raw_connection).and_return(
+          source_returning([{ "id" => "42", "name" => "Something else" }]),
+        )
+
+        sql = merger.merge_same_named_rows(TagGroup, tag_groups)
+
+        expect(tag_groups).to be_empty
+        expect(DB.query_single(sql.sub(/\ASELECT .* FROM/, "SELECT id FROM"))).to eq([tag_group.id])
+      end
+    end
   end
 end
