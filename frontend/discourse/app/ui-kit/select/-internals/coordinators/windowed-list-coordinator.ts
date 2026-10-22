@@ -29,7 +29,7 @@ interface OptionRow extends SelectDescriptor {
 }
 
 /** A rendered list row: a navigable engine descriptor or a frontier skeleton. */
-type ListRow = OptionRow | SkeletonRow;
+export type ListRow = OptionRow | SkeletonRow;
 
 interface WindowedListCoordinatorOptions {
   engine: SelectEngine;
@@ -329,6 +329,15 @@ export default class WindowedListCoordinator {
     this.#listboxApi = null;
     this.#listboxRoving = null;
     this.#jumpTimer = undefined;
+  }
+
+  /** Cancels cursor work without releasing a list that remains mounted. */
+  clearCursor(): void {
+    cancel(this.#jumpTimer);
+    this.#jumpTimer = undefined;
+    this.#listboxRoving?.clear();
+    this.activeOptionKey = null;
+    this._activeMountedIndex = undefined;
   }
 
   @action

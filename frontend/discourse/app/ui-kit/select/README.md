@@ -1,7 +1,7 @@
 # DSelect
 
-A headless selection engine (`select-engine.ts`) plus one presentational component
-(`d-select.gts`) that together replace the legacy select family. The engine owns state,
+A headless selection engine (`select-engine.ts`) plus two public components
+(`d-select.gts` and `d-select-list.gts`) that together replace the legacy select family. The engine owns state,
 filtering, paging, value resolution, and the normalized render descriptors; the component
 renders a WAI-ARIA combobox/listbox around a virtualized option list and forwards keyboard,
 pointer, and overlay behavior. Consumers stay controlled: the parent owns `@value` and applies
@@ -147,17 +147,22 @@ entirely on `d-select.gts` and `select-engine.ts`.
   option readers with cross-option defaults), `list-composer.ts` (the ordered `buildItems`
   compiler and descriptor stamping), `selection-actions.ts` (selection operations, limits,
   and change-emission ordering), `value-resolver.ts` (value→item resolution and its caches).
-- `-internals/coordinators/` — non-rendering component-side classes constructed once by
-  `DSelect` and configured downward with thunks (never holding a component reference):
+- `-internals/coordinators/` — non-rendering component-side classes, constructed once and
+  configured with thunks (never holding a component reference):
+  `select-host.ts` (engine construction, selection, source context and helper ownership),
+  `select-presenter-base.ts` (shared presentation and the options presenter contract),
   `variant-presenter.ts` (variant/ARIA policy), `select-announcer.ts` (screen-reader
   announcement arbitration), `windowed-list-coordinator.ts` (windowing, keeping rows mounted,
   sticky rows, and jump navigation), `interaction-coordinator.ts` (open/close, focus, and
   pointer session), `load-feedback.ts` (loading timers and skeleton sizing).
 - `-internals/parts/` — the rendering subcomponents: trigger pieces (`trigger-frame`,
   `combobox-query-input`, `multi-chips`, `single-trigger-display`, `selection-label`),
-  the list (`select-listbox`, `select-item`), and the overlay selection strip
-  (`selection-strip`). Parts receive the stable helper objects (`@engine`, `@presenter`, …)
-  plus per-slot inputs; they add no wrapper DOM.
+  the list (`select-options`, `windowed-option-list`, `select-option-row`, `select-item`),
+  and the overlay selection strip (`selection-strip`). The options part owns the async shell
+  and yields composed rows, their resolved content and configured per-list modifiers to its
+  body. The windowed body and shared row part keep their elements and modifier order.
+  Parts receive the stable helper objects (`@engine`, `@presenter`, …) plus per-slot inputs;
+  they add no wrapper DOM.
 - `-internals/modifiers/` — element-attached behavior (`keep-above-keyboard.ts`, the iOS
   keyboard-occlusion correction).
 - `-internals/modify-select-kit-bridge.ts` — the deprecated legacy compatibility bridge,
@@ -697,3 +702,52 @@ by mechanism.
   blocks.
 - **Legacy compatibility bridge** — `-internals/modify-select-kit-bridge.ts` is a migration aid,
   deprecated, and slated for removal, not a kept API.
+
+## DSelectList
+
+Use `DSelectList` for a persistent search and selection surface inside a panel, or for
+several independent selects inside one `DMenu`. It is always multi: pass an array to
+`@value` and replace it with the array from `@onChange(next, items, change)`. It shares
+DSelect's sources, creation, paste parsing, customizations, selection limits and value
+resolution. It has no trigger, overlay lifecycle callbacks or mobile modal.
+
+`@virtualized` defaults to `true`: the windowed body handles large result sets and
+pagination. Set `@virtualized={{false}}` for a short list whose rows need normal flow,
+including wrapping pills. The static body mounts every loaded row and never paginates;
+a paginating source warns in debug and only its first page is shown. Both bodies scroll
+within `--d-select-list-max-height` (default `20em`).
+
+`@hideSelected` leaves held items in the selection strip and omits them from results.
+Removing a chip restores its row without another source request. Rows then drop the
+selection marker, which could only ever read unselected. The `:listHeader`
+block sits between the strip and results, outside the listbox. It yields the same live
+state and resolved options as `:footer`, so a suggested-results heading can show only
+when `state.filter` is empty. This works with async `@load` sources. Neither state has
+a `close` action. Other blocks are `:item`, `:selection`, `:unresolved`, `:empty` and
+`:error`; see the typed signature in `d-select-list.gts` for their yielded values.
+
+Nothing takes focus on render. A row or chip press first focuses this select's search
+and keeps it there, including when another select previously held focus. Up/Down and
+Enter navigate and select from the input; Home/End remain text-caret commands.
+In a static list PageUp/PageDown jump to the first/last option, since every row is mounted. Backspace
+with an empty query removes the last held item. ArrowLeft at caret zero enters the
+strip; Up/Down from the strip returns to the search. Tab visits the search, strip
+when held items exist, footer controls, then the next control. The listbox itself is
+never a Tab stop. Escape is left to the containing panel, including a `DMenu`.
+
+Automatic cursor entry needs focus inside the root, a query and room below the cap.
+Blur clears the cursor and pending jumps while preserving the query; returning with
+a query re-seeds it. List-state speech is restricted to the focused select, with a
+second ownership check for deferred reports. Adds and removals always speak. Empty
+and error content remains visible while unfocused without live-region roles. An
+empty query with no rows renders and speaks no empty-result message.
+
+`@label`, `@placeholder`, `@id`, `@describedBy`, `@invalid`, `@disabled` and `@readonly`
+apply to the search input. Its expanded/controls attributes exist only while a listbox
+renders. The root is `.d-select.--list`, takes `...attributes`, and exposes the same
+`data-select-id`, `data-value` and `data-name` hooks as DSelect. `dSelect()` and
+`PageObjects::Components::UiKit::DSelect.at` accept this root too.
+
+The styleguide's “Two lists in one panel” example uses async tag sources, wrapping
+suggestions, a suggested-results header, and a checkbox that mounts the second list.
+“Clear all” belongs to that containing panel, which owns both controlled selections.

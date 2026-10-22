@@ -17,6 +17,8 @@ interface SelectItemSignature {
     descriptor: SelectDescriptor;
     multiple?: boolean;
     selectedIcon?: string;
+    /** Omits the selection marker, for a list that never shows a held row. */
+    hideSelectionMarker?: boolean;
     /** Additional descriptions, such as the option's group header. */
     describedBy?: string;
     /** Stable id of the limit message describing cap-disabled options. */
@@ -153,7 +155,9 @@ export default class SelectItem extends Component<SelectItemSignature> {
 
         A consumer-supplied glyph keeps the show-when-selected behaviour — there is no unselected
         counterpart to pair it with. }}
-        {{#if @selectedIcon}}
+        {{#if @hideSelectionMarker}}
+          {{! A list that leaves held rows out would only ever show the unselected state. }}
+        {{else if @selectedIcon}}
           {{dIcon @selectedIcon class="d-select__option-selected-icon"}}
         {{else if @multiple}}
           {{! The hollow square pair reads as a checkbox, and the solid variant is absent from

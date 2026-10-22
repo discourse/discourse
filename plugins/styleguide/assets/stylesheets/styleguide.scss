@@ -1769,3 +1769,27 @@
     font-size: var(--font-down-1);
   }
 }
+
+.select-examples__list-panel {
+  width: min(28em, 90vw);
+
+  .form-kit {
+    gap: var(--space-4);
+    padding: var(--space-4);
+  }
+}
+
+.select-examples__tag-list {
+  .d-select__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    padding-block: var(--space-2);
+  }
+
+  .d-select__option {
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--d-input-border-radius);
+    background: var(--primary-low);
+  }
+}

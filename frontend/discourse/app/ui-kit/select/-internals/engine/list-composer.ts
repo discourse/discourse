@@ -93,7 +93,16 @@ export default class ListComposer {
     ).length;
     this.#noteVisible(visibleCount, inputCount);
 
-    const createItem = this.#createItem(items, filter);
+    const createCandidate = this.#createItem(items, filter);
+    const hideSelected = this.#options.hideSelected;
+    const include = (item: SelectItem) =>
+      !hideSelected ||
+      this.#isStructural(item) ||
+      typeof item.onSelect === "function" ||
+      !this.#isSelected(item);
+    const createItem =
+      createCandidate && include(createCandidate) ? createCandidate : null;
+    items = items.filter(include);
 
     const consumerSpecial = makeArray(
       this.#options.specialItems?.(
@@ -101,11 +110,12 @@ export default class ListComposer {
         this.#options.resolvedOptions
       ) ?? []
     ) as SelectItem[];
+    const visibleSpecial = consumerSpecial.filter(include);
     // Sticky rows lead the whole list, ahead of the none row, so they are hoisted out of both the
     // specials and the source rows before grouping, which never reaches them.
     const isSticky = (item: SelectItem) =>
       !!item.sticky && !this.#isStructural(item);
-    const sticky = [...consumerSpecial, ...items].filter(isSticky);
+    const sticky = [...visibleSpecial, ...items].filter(isSticky);
     items = items.filter((item) => !isSticky(item));
     const sourceCount = items.filter(
       (item) => !this.#isStructural(item)
@@ -115,7 +125,7 @@ export default class ListComposer {
     const grouped = this.#shouldGroup() ? this.#groupItems(items) : items;
 
     const noneRow = this.#noneRow();
-    const scrollingSpecial = consumerSpecial.filter((item) => !isSticky(item));
+    const scrollingSpecial = visibleSpecial.filter((item) => !isSticky(item));
     // The none row leads the scrolling specials and flows through the same counting path below,
     // keeping its `posInSet`/`setSize`/`logicalIndex` in lockstep with the rest of the set.
     const specialItems = noneRow

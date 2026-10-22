@@ -21,42 +21,31 @@ import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import InteractionCoordinator from "discourse/ui-kit/select/-internals/coordinators/interaction-coordinator";
-import LoadFeedbackTracker from "discourse/ui-kit/select/-internals/coordinators/load-feedback";
-import SelectAnnouncer from "discourse/ui-kit/select/-internals/coordinators/select-announcer";
+import SelectHost, {
+  type SelectPasteContext,
+} from "discourse/ui-kit/select/-internals/coordinators/select-host";
 import VariantPresenter, {
   type SelectVariant,
 } from "discourse/ui-kit/select/-internals/coordinators/variant-presenter";
-import WindowedListCoordinator from "discourse/ui-kit/select/-internals/coordinators/windowed-list-coordinator";
 import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
 import keepAboveKeyboard from "discourse/ui-kit/select/-internals/modifiers/keep-above-keyboard";
 import ComboboxQueryInput from "discourse/ui-kit/select/-internals/parts/combobox-query-input";
 import MultiChips from "discourse/ui-kit/select/-internals/parts/multi-chips";
-import SelectListbox, {
-  type SelectListContent,
-} from "discourse/ui-kit/select/-internals/parts/select-listbox";
+import SelectOptions from "discourse/ui-kit/select/-internals/parts/select-options";
 import SelectionStrip from "discourse/ui-kit/select/-internals/parts/selection-strip";
 import SingleTriggerDisplay from "discourse/ui-kit/select/-internals/parts/single-trigger-display";
 import TriggerFrame from "discourse/ui-kit/select/-internals/parts/trigger-frame";
-import SelectEngine, {
-  type SelectDescriptor,
-  type SelectEngineOptions,
-  type SelectItem as SelectItemModel,
-  type SelectLoadOptions,
-  type SelectValue,
+import WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowed-option-list";
+import type {
+  SelectEngineOptions,
+  SelectItem as SelectItemModel,
+  SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 export type { SelectVariant } from "discourse/ui-kit/select/-internals/coordinators/variant-presenter";
 
-/** Snapshot supplied to a paste parser before its asynchronous work begins. */
-export interface SelectPasteContext {
-  /** The current query text. */
-  filter: string;
-  /** The select's resolved presentation and recipe options. */
-  options: SelectResolvedOptions;
-  /** The current controlled selection. */
-  value: SelectValue;
-}
+export type { SelectPasteContext } from "discourse/ui-kit/select/-internals/coordinators/select-host";
 
 interface DSelectSignature {
   Args: {
@@ -355,76 +344,40 @@ export default class DSelect extends Component<DSelectSignature> {
   @service declare capabilities: CapabilitiesService;
   @service declare menu: Menu;
 
-  announcer: SelectAnnouncer;
   interaction: InteractionCoordinator;
 
-  // Constructed once from the (stable) args; never exposed to consumers — internal
-  // parts receive it but touch only its public API.
-  engine: SelectEngine = new SelectEngine({
-    // Read lazily so the engine reflects the parent's (reactive) @value — controlled.
-    getValue: () => this.args.value,
-    getLocked: () => this.presenter.isLocked,
-    // Live readers for the reactive inputs, so a runtime change to any of these args
-    // propagates into the engine (which reads them on every access). Static-by-contract
-    // args below are passed by value.
+  host = new SelectHost({
+    owner: getOwner(this),
+    getA11y: () => this.a11y,
+    getArgs: () => this.args,
+    getPresenter: () => this.presenter,
     getMultiple: () => this.args.multiple,
-    kind: this.args.kind,
-    identifier: this.args.identifier,
-    getKindContext: () => this.args.kindContext,
-    getKindOptions: () => this.args.kindOptions,
-    getInstanceContext: () => this.args.instanceContext,
-    getMinChars: () => this.args.minChars,
-    getMaximum: () => this.args.maximum,
-    getMinimum: () => this.args.minimum,
-    getNoneLabel: () => this.args.noneLabel,
-    getOptions: () => this.args,
-    items: (options) =>
-      typeof this.args.items === "function"
-        ? this.args.items(options)
-        : this.args.items,
-    load: this.args.load,
-    getLoadContext: () => this.args.loadContext,
-    onReloadList: () => this.announcer.reloadList(),
-    filterBy: this.args.filterBy,
-    valueField: this.args.valueField,
-    labelField: this.args.labelField,
-    // Passed only when the consumer actually declared the arg. An arg that is present but
-    // still empty is the late-arrival pattern mid-flight; withholding the reader entirely is
-    // what lets the engine tell that apart from "no identity mechanism was ever supplied".
-    getValueItems:
-      "valueItems" in this.args ? () => this.args.valueItems : undefined,
-    resolveValue: this.args.resolveValue,
-    resolveValues: this.args.resolveValues,
-    getAllowCreate: () => this.args.allowCreate,
-    createItem: this.args.createItem,
-    createUnresolvedItem: this.args.createUnresolvedItem,
-    specialItems: this.args.specialItems,
-    groupBy: this.args.groupBy,
-    groupLabel: this.args.groupLabel,
-    onChange: this.handleChange,
-    onReconfirm: (item, origin) => this.announcer.reconfirm(item, origin),
-    onUpdateStart: (isCurrent) => this.announcer.updateStarted(isCurrent),
-    // Gated on the overlay actually being open: `DMenuInstance.close` focuses the trigger by
-    // default, so closing an already-closed menu would steal focus from wherever the user has
-    // moved on to. Reachable from the compat bridge, which exposes both `close()` and a
-    // `select()` that consumers call asynchronously long after dismissing the overlay.
+    isLive: () => !this.isDestroying && this.interaction.isExpanded,
+    session: () => this.interaction.session,
+    clearQuery: () => {
+      this.engine.setFilter("");
+      this.interaction.queryActive = false;
+    },
     requestClose: () => {
+      // Closing an already-closed menu would steal focus back to its trigger.
       if (this.interaction.isExpanded) {
         this.interaction.closeMenu();
       }
     },
-    // Handles for the `modifySelectKit` compat bridge. The element must be the trigger
-    // (which stays in the host DOM) — not the panel, which the overlay portals out — so
-    // legacy callbacks that walk up from it (e.g. `.closest("#reply-control")`) resolve.
-    legacy: {
-      owner: getOwner(this),
-      // The bridge anchor must be a real host-DOM node (legacy callbacks walk up from it,
-      // e.g. `.closest("#reply-control")`). `triggerElement` is the instance's trigger
-      // narrowed to `HTMLElement` (null for a virtual trigger — never our case).
-      getElement: () => this.interaction.triggerElement,
-      isDestroyed: () => this.isDestroying,
-    },
+    // The bridge needs a host-DOM anchor rather than the portaled panel.
+    getElement: () => this.interaction.triggerElement,
+    getListboxId: () => this.listboxId,
+    isStaticModal: () =>
+      this.presenter.isStatic && this.presenter.overlayIsModal,
+    shouldSuppressEntryCount: () =>
+      this.presenter.shouldActivateSelected ||
+      this.presenter.shouldAutoActivateFirst,
   });
+
+  engine = this.host.engine;
+  feedback = this.host.feedback;
+  listbox = this.host.listbox;
+  announcer = this.host.announcer;
 
   presenter: VariantPresenter = new VariantPresenter({
     getArgs: () => this.args,
@@ -433,63 +386,6 @@ export default class DSelect extends Component<DSelectSignature> {
       this.menu.shouldRenderInModal(modalForMobile),
     isExpanded: () => this.interaction.isExpanded,
     activeListboxId: () => this.activeListboxId,
-  });
-
-  feedback = new LoadFeedbackTracker({
-    engine: this.engine,
-    getFilterDebounceDelay: () => this.presenter.filterDebounceDelay,
-    getSkeletonCountArg: () => this.args.skeletonCount,
-  });
-
-  listbox = new WindowedListCoordinator({
-    engine: this.engine,
-    feedback: this.feedback,
-    onStillLoading: () => this.announcer.announceStillLoading(),
-    getListboxId: () => this.listboxId,
-    isStaticModal: () =>
-      this.presenter.isStatic && this.presenter.overlayIsModal,
-  });
-
-  /**
-   * Reads selection labels after the trigger records synchronous resolution outcomes.
-   * Sync cache reads track async arrivals without starting another resolution.
-   */
-  selectionHooks = modifier((element: HTMLElement) => {
-    const value = this.engine.value;
-    const values: unknown[] = Array.isArray(value)
-      ? value
-      : value == null
-        ? []
-        : [value];
-    element.setAttribute("data-value", values.map(String).join(","));
-    element.setAttribute(
-      "data-name",
-      values
-        .map((id) =>
-          this.engine.getSelectionLabel(this.engine.resolveSingleSync(id))
-        )
-        .join(",")
-    );
-  });
-
-  /** Defers context checks so a reactive argument never writes state during render. */
-  watchLoadContext = modifier(() => {
-    const context = this.args.loadContext ?? {};
-    // Reading each entry subscribes the modifier to it.
-    for (const key of Reflect.ownKeys(context)) {
-      Reflect.get(context, key);
-    }
-    const session = this.interaction.session;
-    const check = schedule("afterRender", () => {
-      if (
-        !this.isDestroying &&
-        this.interaction.isExpanded &&
-        this.interaction.session === session
-      ) {
-        this.engine.reloadIfContextChanged();
-      }
-    });
-    return () => cancel(check);
   });
 
   /** Records eligibility after render; the session latch survives later presentation changes. */
@@ -512,16 +408,6 @@ export default class DSelect extends Component<DSelectSignature> {
 
   constructor(owner: Owner, args: DSelectSignature["Args"]) {
     super(owner, args);
-    this.announcer = new SelectAnnouncer({
-      a11y: this.a11y,
-      engine: this.engine,
-      getActiveOptionKey: () => this.listbox.activeOptionKey,
-      reannounceActive: () => this.listbox.reannounceActive(),
-      getNoResultsLabel: () => this.args.noResultsLabel,
-      getShouldSuppressEntryCount: () =>
-        this.presenter.shouldActivateSelected ||
-        this.presenter.shouldAutoActivateFirst,
-    });
     this.interaction = new InteractionCoordinator({
       engine: this.engine,
       presenter: this.presenter,
@@ -531,10 +417,7 @@ export default class DSelect extends Component<DSelectSignature> {
       onClose: () => this.args.onClose?.(),
       isMultiple: () => this.args.multiple,
     });
-    associateDestroyableChild(this, this.engine);
-    associateDestroyableChild(this, this.feedback);
-    associateDestroyableChild(this, this.listbox);
-    associateDestroyableChild(this, this.announcer);
+    associateDestroyableChild(this, this.host);
     associateDestroyableChild(this, this.interaction);
   }
 
@@ -545,7 +428,7 @@ export default class DSelect extends Component<DSelectSignature> {
 
   /** Description for every display-only trigger, merged with consumer help. */
   get triggerDescribedBy(): string | undefined {
-    return this.describedBy(
+    return this.host.describedBy(
       this.presenter.describeHeldLabels && this.engine.hasValue
         ? this.heldLabelsId
         : undefined,
@@ -606,90 +489,6 @@ export default class DSelect extends Component<DSelectSignature> {
     );
   }
 
-  /**
-   * Composes an `aria-describedby` token list from the component's own description ids and the
-   * consumer's `@describedBy`, dropping the empty ones.
-   *
-   * A merge rather than a fallback because both sides are real: the component describes its own
-   * state (the chip-navigation hint, the resting selection) while a form describes the field
-   * (its validation message). Letting either win silently discards the other, and the loss is
-   * inaudible to anyone not using a screen reader.
-   */
-  describedBy(...ids: Array<string | undefined | false>): string | undefined {
-    const tokens = ids.filter(Boolean);
-    return tokens.length ? tokens.join(" ") : undefined;
-  }
-
-  @action
-  loadListContent(
-    context: unknown,
-    opts?: SelectLoadOptions
-  ): SelectListContent | Promise<SelectListContent> {
-    const rawItems = this.engine.loadItems(context, opts);
-    // Stamped at resolve time, not call time: an aborted-then-superseded load never reaches
-    // here, so the query read on resolution is the one these rows were fetched for.
-    return rawItems instanceof Promise
-      ? rawItems.then((items) =>
-          Object.freeze({
-            rawItems: items,
-            filter: this.engine.filter,
-            query: this.engine.queryKey,
-            context: this.engine.requestLoadContext,
-          })
-        )
-      : Object.freeze({
-          rawItems,
-          filter: this.engine.filter,
-          query: this.engine.queryKey,
-          context: this.engine.requestLoadContext,
-        });
-  }
-
-  /**
-   * Resolves the bound ids to chip descriptors for the multi trigger. Narrows to the
-   * array form; an empty value returns `undefined` (→ `:empty`). Uncached ids resolve in a
-   * single batch, and any id that can't resolve becomes an `__unresolved` fallback chip
-   * (never a hole). Normalizing to descriptors here (not in the template) means the chips
-   * are built once per value change and stay referentially stable across re-renders.
-   */
-  @action
-  resolveMulti(
-    value: unknown,
-    opts?: SelectLoadOptions
-  ):
-    | readonly SelectDescriptor[]
-    | Promise<readonly SelectDescriptor[] | undefined>
-    | undefined {
-    const resolved = this.engine.resolveSelection(value as SelectValue, opts);
-    if (resolved == null) {
-      return undefined;
-    }
-    if (resolved instanceof Promise) {
-      return resolved.then((items) =>
-        items === undefined
-          ? undefined
-          : this.engine.describeItems(items as SelectItemModel[])
-      );
-    }
-    return this.engine.describeItems(resolved as SelectItemModel[]);
-  }
-
-  /**
-   * Resolves the single bound value to its one display item for the trigger
-   * `DAsyncContent`. Narrows the engine's arity-union return to the single form; a `null`
-   * value returns `undefined` (routed to `:empty`), while a held value that can't resolve
-   * comes back as an `__unresolved` fallback item rather than `undefined`.
-   */
-  @action
-  resolveSingle(
-    value: unknown,
-    opts?: SelectLoadOptions
-  ): SelectItemModel | Promise<SelectItemModel> {
-    return this.engine.resolveSelection(value as SelectValue, opts) as
-      | SelectItemModel
-      | Promise<SelectItemModel>;
-  }
-
   /** Returns strip focus to the connected query, or the static modal's options. */
   @action
   focusAfterStrip(): void {
@@ -698,68 +497,6 @@ export default class DSelect extends Component<DSelectSignature> {
     } else {
       this.listbox.focusFirstOption();
     }
-  }
-
-  @action
-  handleChange(
-    nextValue: SelectValue,
-    payload: SelectItemModel | SelectItemModel[] | null,
-    change: Parameters<NonNullable<SelectEngineOptions["onChange"]>>[2]
-  ): void {
-    // This must be read before forwarding because the parent applies nextValue synchronously.
-    const oldValues = this.args.value;
-    this.announcer.valueChanged(oldValues, nextValue, {
-      ...change,
-      onAddedWithQuery: () => {
-        this.engine.setFilter("");
-        this.interaction.queryActive = false;
-      },
-    });
-    this.args.onChange?.(nextValue, payload, change);
-  }
-
-  /** Consumes parsed pastes while keeping selection and query cleanup under one authority. */
-  @action
-  handlePaste(event: ClipboardEvent): void | Promise<void> {
-    if (this.presenter.isLocked || !this.args.parsePaste) {
-      return;
-    }
-    const session = this.interaction.session;
-    const query = this.engine.queryKey;
-    const result = this.args.parsePaste(
-      event.clipboardData?.getData("text/plain") ?? "",
-      {
-        filter: this.engine.filter,
-        options: this.engine.resolvedOptions,
-        value: this.engine.value,
-      }
-    );
-    if (result == null) {
-      return;
-    }
-    event.preventDefault();
-    return this.engine.control.update((scope) => {
-      const apply = (items: readonly SelectItemModel[] | null | undefined) => {
-        if (items == null || !scope.current) {
-          return;
-        }
-        scope.selectMany(items);
-        // Middleware may synchronously replace the selection intent or edit the query.
-        if (
-          scope.current &&
-          this.interaction.session === session &&
-          this.engine.queryKey === query
-        ) {
-          this.announcer.suppressCount();
-          this.engine.setFilter("");
-          this.interaction.queryActive = false;
-        }
-      };
-      if (result instanceof Promise) {
-        return result.then(apply);
-      }
-      apply(result);
-    });
   }
 
   @action
@@ -839,7 +576,7 @@ export default class DSelect extends Component<DSelectSignature> {
         this.presenter.isTypeahead
         this.interaction.emptyTriggers
       }}
-      {{this.selectionHooks}}
+      {{this.host.selectionHooks}}
       {{on "keydown" this.interaction.handleControllerKeydown capture=true}}
       {{on "keydown" this.interaction.handleTriggerRootKeydown}}
       {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
@@ -864,7 +601,7 @@ export default class DSelect extends Component<DSelectSignature> {
           {{#if @multiple}}
             <MultiChips
               @closeMenu={{menuArgs.close}}
-              @composeDescribedBy={{this.describedBy}}
+              @composeDescribedBy={{this.host.describedBy}}
               @describedBy={{this.triggerDescribedBy}}
               @editing={{this.interaction.queryActive}}
               @engine={{this.engine}}
@@ -880,12 +617,12 @@ export default class DSelect extends Component<DSelectSignature> {
               @onBlur={{this.interaction.handleTriggerBlur}}
               @onEdit={{this.interaction.beginQuery}}
               @onInputKeydown={{this.interaction.handleInputKeydown}}
-              @onPaste={{this.handlePaste}}
+              @onPaste={{this.host.handlePaste}}
               @onRegisterChipRoving={{this.interaction.registerChipRoving}}
               @pending={{this.engine.pending}}
               @presenter={{this.presenter}}
               @registerInput={{this.interaction.registerTriggerInput}}
-              @resolveSelection={{this.resolveMulti}}
+              @resolveSelection={{this.host.resolveMulti}}
               @shouldCorrectKeyboardOcclusion={{this.interaction.shouldCorrectKeyboardOcclusion}}
               @shouldSelectOnFocus={{this.interaction.shouldSelectOnFocus}}
               @showMenu={{menuArgs.show}}
@@ -908,7 +645,7 @@ export default class DSelect extends Component<DSelectSignature> {
           {{else}}
             <SingleTriggerDisplay
               @closeMenu={{menuArgs.close}}
-              @composeDescribedBy={{this.describedBy}}
+              @composeDescribedBy={{this.host.describedBy}}
               @describedBy={{@describedBy}}
               @editing={{this.interaction.queryActive}}
               @engine={{this.engine}}
@@ -923,12 +660,12 @@ export default class DSelect extends Component<DSelectSignature> {
               @onEdit={{this.interaction.beginQuery}}
               @onFocus={{this.interaction.handleTriggerFocus}}
               @onInputKeydown={{this.interaction.handleInputKeydown}}
-              @onPaste={{this.handlePaste}}
+              @onPaste={{this.host.handlePaste}}
               @pending={{this.engine.pending}}
               @placeholder={{this.presenter.placeholder}}
               @presenter={{this.presenter}}
               @registerInput={{this.interaction.registerTriggerInput}}
-              @resolveSelection={{this.resolveSingle}}
+              @resolveSelection={{this.host.resolveSingle}}
               @selectionId={{this.selectionId}}
               @shouldCorrectKeyboardOcclusion={{this.interaction.shouldCorrectKeyboardOcclusion}}
               @shouldSelectOnFocus={{this.interaction.shouldSelectOnFocus}}
@@ -960,7 +697,7 @@ export default class DSelect extends Component<DSelectSignature> {
           data-select-id={{this.listboxId}}
           {{on "focusout" this.interaction.handlePanelFocusOut}}
           {{this.watchSelectionStrip}}
-          {{this.watchLoadContext}}
+          {{this.host.watchLoadContext}}
           {{didInsert
             this.feedback.trackLoadFeedback
             this.engine.serverPending
@@ -994,7 +731,7 @@ export default class DSelect extends Component<DSelectSignature> {
                 this.interaction.handleControllerKeydown
                 capture=true
               }}
-              {{on "paste" this.handlePaste}}
+              {{on "paste" this.host.handlePaste}}
               {{didInsert this.interaction.captureFilter}}
             />
           {{else if this.presenter.isMobileTypeahead}}
@@ -1015,7 +752,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @placeholder={{this.presenter.searchPlaceholderText}}
               @readonly={{this.presenter.isReadonly}}
               @registerInput={{this.interaction.captureFilter}}
-              {{on "paste" this.handlePaste}}
+              {{on "paste" this.host.handlePaste}}
               {{keepAboveKeyboard
                 this.interaction.shouldCorrectKeyboardOcclusion
               }}
@@ -1062,7 +799,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @locked={{this.presenter.isLocked}}
               @onRegisterRoving={{this.interaction.registerStripRoving}}
               @onResize={{this.listbox.remeasureListbox}}
-              @resolveSelection={{this.resolveMulti}}
+              @resolveSelection={{this.host.resolveMulti}}
               @returnToInput={{if
                 this.presenter.isDesktopTypeahead
                 this.interaction.focusInput
@@ -1102,39 +839,55 @@ export default class DSelect extends Component<DSelectSignature> {
               {{i18n "d_select.min_chars" count=this.engine.remainingMinChars}}
             </div>
           {{else}}
-            <SelectListbox
+            <SelectOptions
               @announcer={{this.announcer}}
               @engine={{this.engine}}
               @feedback={{this.feedback}}
               @filterInput={{this.interaction.filterInput}}
               @hasEmptyBlock={{has-block "empty"}}
               @hasErrorBlock={{has-block "error"}}
-              @hasGroupHeaderBlock={{has-block "groupHeader"}}
-              @hasItemBlock={{has-block "item"}}
               @hasLoadingItemBlock={{has-block "loadingItem"}}
-              @label={{this.presenter.ariaLabelText}}
-              @limitId={{this.limitId}}
               @listbox={{this.listbox}}
-              @listboxId={{this.listboxId}}
-              @loadListContent={{this.loadListContent}}
+              @loadListContent={{this.host.loadListContent}}
               @multiple={{@multiple}}
               @noResultsLabel={{@noResultsLabel}}
-              @onOptionMousedown={{this.interaction.preventPointerBlur}}
               @presenter={{this.presenter}}
-              @selectedIcon={{@selectedIcon}}
             >
-              <:item as |item|>{{yield
-                  item
-                  this.engine.resolvedOptions
-                  to="item"
-                }}</:item>
+              <:body as |items _content modifiers|>
+                <WindowedOptionList
+                  @announcer={{this.announcer}}
+                  @engine={{this.engine}}
+                  @hasGroupHeaderBlock={{has-block "groupHeader"}}
+                  @hasItemBlock={{has-block "item"}}
+                  @hasLoadingItemBlock={{has-block "loadingItem"}}
+                  @items={{items}}
+                  @label={{this.presenter.ariaLabelText}}
+                  @limitId={{this.limitId}}
+                  @listbox={{this.listbox}}
+                  @listboxId={{this.listboxId}}
+                  @modifiers={{modifiers}}
+                  @multiple={{@multiple}}
+                  @onOptionMousedown={{this.interaction.preventPointerBlur}}
+                  @presenter={{this.presenter}}
+                  @selectedIcon={{@selectedIcon}}
+                >
+                  <:item as |item|>{{yield
+                      item
+                      this.engine.resolvedOptions
+                      to="item"
+                    }}</:item>
+                  <:groupHeader as |item|>{{yield
+                      item
+                      this.engine.resolvedOptions
+                      to="groupHeader"
+                    }}</:groupHeader>
+                  <:loadingItem>{{yield to="loadingItem"}}</:loadingItem>
+                </WindowedOptionList>
+              </:body>
               <:loadingItem>{{yield to="loadingItem"}}</:loadingItem>
-              <:groupHeader as |item|>
-                {{yield item this.engine.resolvedOptions to="groupHeader"}}
-              </:groupHeader>
               <:empty>{{yield to="empty"}}</:empty>
               <:error as |error retry|>{{yield error retry to="error"}}</:error>
-            </SelectListbox>
+            </SelectOptions>
           {{/if}}
           {{#if (has-block "footer")}}
             {{! A labeled region pinned below the list (a sibling of the listbox, never inside it).
@@ -1168,7 +921,10 @@ export default class DSelect extends Component<DSelectSignature> {
     </DMenu>
     {{#if this.presenter.describeHeldLabels}}
       {{#if this.engine.hasValue}}
-        <DAsyncContent @asyncData={{this.resolveMulti}} @context={{@value}}>
+        <DAsyncContent
+          @asyncData={{this.host.resolveMulti}}
+          @context={{@value}}
+        >
           <:content as |chips|>
             <ul class="sr-only" id={{this.heldLabelsId}}>
               {{#each chips key="key" as |chip|}}

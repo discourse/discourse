@@ -24,6 +24,8 @@ const EMPTY_CONTEXT: object = Object.freeze({});
  * collaborator applies `valueField`/`labelField` identically.
  */
 export default class SelectOptionsView {
+  #hideSelected?: boolean;
+  #readHideSelected?: SelectEngineOptions["getHideSelected"];
   #readMultiple?: SelectEngineOptions["getMultiple"];
   #readLocked?: SelectEngineOptions["getLocked"];
   #multiple?: SelectEngineOptions["multiple"];
@@ -83,6 +85,8 @@ export default class SelectOptionsView {
 
   constructor(opts: SelectEngineOptions) {
     this.#readMultiple = opts.getMultiple;
+    this.#hideSelected = opts.hideSelected;
+    this.#readHideSelected = opts.getHideSelected;
     this.#readLocked = opts.getLocked;
     this.#multiple = opts.multiple;
     this.#kind = opts.kind;
@@ -138,6 +142,11 @@ export default class SelectOptionsView {
     // parent's `@value` without storing any selection of its own.
     this.#readValue = opts.getValue ?? (() => null);
     this.#isAsync = typeof opts.load === "function";
+  }
+
+  /** Whether composed options omit the held selection. */
+  get hideSelected(): boolean {
+    return this.#readHideSelected?.() ?? this.#hideSelected ?? false;
   }
 
   get multiple(): boolean {

@@ -33,6 +33,8 @@ interface ScheduleReportOptions {
 }
 
 interface SelectAnnouncerOptions {
+  /** Whether list-state reports may speak at this moment. Selection reports remain ungated. */
+  canReport?: () => boolean;
   a11y: A11y;
   engine: SelectEngine;
   getActiveOptionKey: () => string | null;
@@ -49,6 +51,8 @@ interface ValueChangedOptions {
 
 export default class SelectAnnouncer {
   #a11y: A11y;
+  #canReport: () => boolean;
+  #suppressionTimers = new Set<ReturnType<typeof nextRunloop>>();
   #updateTimer?: ReturnType<typeof discourseLater>;
   #engine: SelectEngine;
   #getActiveOptionKey: () => string | null;
@@ -93,6 +97,7 @@ export default class SelectAnnouncer {
 
   constructor({
     a11y,
+    canReport = () => true,
     engine,
     getActiveOptionKey,
     reannounceActive,
@@ -100,15 +105,13 @@ export default class SelectAnnouncer {
     getShouldSuppressEntryCount,
   }: SelectAnnouncerOptions) {
     this.#a11y = a11y;
+    this.#canReport = canReport;
     this.#engine = engine;
     this.#getActiveOptionKey = getActiveOptionKey;
     this.#reannounceActive = reannounceActive;
     this.#getNoResultsLabel = getNoResultsLabel;
     this.#getShouldSuppressEntryCount = getShouldSuppressEntryCount;
-    registerDestructor(this, () => {
-      this.#cancelPendingCount();
-      cancel(this.#updateTimer);
-    });
+    registerDestructor(this, () => this.cancelPending());
   }
 
   /**
@@ -124,6 +127,10 @@ export default class SelectAnnouncer {
     _element: HTMLElement,
     [setSize, total, query]: [number, number | undefined, string?]
   ): void {
+    if (!this.#canReport()) {
+      return;
+    }
+
     // Mid-load the rows on screen are the previous query's and the total is already cleared,
     // so any count now describes stale rows. Settling re-fires this with the real numbers.
     if (this.#engine.serverPending) {
@@ -180,6 +187,10 @@ export default class SelectAnnouncer {
     element: HTMLElement,
     args: [number, number | undefined, string?]
   ): void {
+    if (!this.#canReport()) {
+      return;
+    }
+
     this.#lastAnnouncedCount = null;
     this.#knownTotalQuery = null;
 
@@ -215,6 +226,10 @@ export default class SelectAnnouncer {
    */
   @action
   announceNoResults(_element: HTMLElement, [query]: [string?] = []): void {
+    if (!this.#canReport()) {
+      return;
+    }
+
     // `||`, not `??`, to match the template's `{{or}}`: an empty label is not a label.
     const message = this.#getNoResultsLabel() || i18n("d_select.no_results");
     const settledQuery = query ?? "";
@@ -237,6 +252,10 @@ export default class SelectAnnouncer {
    */
   @action
   announceReveal(): void {
+    if (!this.#canReport()) {
+      return;
+    }
+
     // A new query is also pending and also retains its rows, but it is not more results — its
     // own count announcement covers it when it lands.
     if (this.#engine.serverRevealPending) {
@@ -257,6 +276,10 @@ export default class SelectAnnouncer {
    */
   @action
   announceNarrow(): void {
+    if (!this.#canReport()) {
+      return;
+    }
+
     const filter = this.#engine.filter;
     if (filter === this.#narrowAnnouncedFor) {
       return;
@@ -274,6 +297,10 @@ export default class SelectAnnouncer {
    */
   @action
   announceMinChars(_element: HTMLElement, [remaining]: [number]): void {
+    if (!this.#canReport()) {
+      return;
+    }
+
     if (remaining === this.#lastAnnouncedRemaining) {
       return;
     }
@@ -292,6 +319,10 @@ export default class SelectAnnouncer {
    */
   @action
   announceMinCharsOnEntry(element: HTMLElement, args: [number]): void {
+    if (!this.#canReport()) {
+      return;
+    }
+
     this.#lastAnnouncedRemaining = null;
     this.announceMinChars(element, args);
   }
@@ -304,6 +335,10 @@ export default class SelectAnnouncer {
    */
   @action
   announceLimit(_element: HTMLElement, [message]: [string]): void {
+    if (!this.#canReport()) {
+      return;
+    }
+
     if (message === this.#lastAnnouncedLimit) {
       return;
     }
@@ -319,12 +354,20 @@ export default class SelectAnnouncer {
    */
   @action
   announceLimitOnEntry(element: HTMLElement, args: [string]): void {
+    if (!this.#canReport()) {
+      return;
+    }
+
     this.#lastAnnouncedLimit = null;
     this.announceLimit(element, args);
   }
 
   /** Announces that keyboard activation is held until the replacement results arrive. */
   announceStillLoading(): void {
+    if (!this.#canReport()) {
+      return;
+    }
+
     this.#a11y.announce(i18n("d_select.still_loading"), "polite");
   }
 
@@ -388,7 +431,7 @@ export default class SelectAnnouncer {
   suppressCount(): void {
     this.#cancelPendingCount();
     this.#suppressNextCount = true;
-    nextRunloop(() => (this.#suppressNextCount = false));
+    this.#resetSuppressionNextRunloop();
   }
 
   valueChanged(
@@ -435,7 +478,7 @@ export default class SelectAnnouncer {
         if (this.#engine.filter !== "") {
           this.#suppressNextCount = true;
           onAddedWithQuery();
-          nextRunloop(() => (this.#suppressNextCount = false));
+          this.#resetSuppressionNextRunloop();
         }
       } else if (removed !== undefined) {
         const item = this.#engine.resolveSingleSync(removed);
@@ -458,6 +501,26 @@ export default class SelectAnnouncer {
         this.reconfirm(item, origin);
       }
     }
+  }
+
+  /** Cancels every deferred report, including delayed selection-update feedback. */
+  cancelPending(): void {
+    this.#cancelPendingCount();
+    cancel(this.#updateTimer);
+    this.#updateTimer = undefined;
+    for (const timer of this.#suppressionTimers) {
+      cancel(timer);
+    }
+    this.#suppressionTimers.clear();
+    this.#suppressNextCount = false;
+  }
+
+  #resetSuppressionNextRunloop(): void {
+    const timer = nextRunloop(() => {
+      this.#suppressionTimers.delete(timer);
+      this.#suppressNextCount = false;
+    });
+    this.#suppressionTimers.add(timer);
   }
 
   #cancelPendingCount(): void {
@@ -491,7 +554,7 @@ export default class SelectAnnouncer {
   #resolvePendingCount(): void {
     const pending = this.#pendingCount;
     this.#pendingCount = undefined;
-    if (!pending || isDestroying(this)) {
+    if (!pending || isDestroying(this) || !this.#canReport()) {
       return;
     }
 

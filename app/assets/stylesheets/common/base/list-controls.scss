@@ -97,7 +97,7 @@
   @include viewport.from(sm) {
     // only target the top-level li, not dropdowns
     .select-kit,
-    .d-select {
+    .d-select:not(.--list) {
       align-self: stretch;
       height: 100%;
     }

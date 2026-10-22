@@ -1,6 +1,6 @@
 import { find } from "@ember/test-helpers";
 
-/** Resolves a select's trigger and its linked, potentially portaled panel. */
+/** Resolves a select root and its in-place or potentially portaled options. */
 export default class DSelectDOM {
   /** Selector or element description used in diagnostics. */
   readonly description: string;
@@ -22,6 +22,11 @@ export default class DSelectDOM {
     this.root = root;
   }
 
+  /** Whether this root is a persistent list rather than an overlay trigger. */
+  get isList(): boolean {
+    return this.root.classList.contains("--list");
+  }
+
   /** Static selects use the trigger itself as their keyboard controller. */
   get controller(): HTMLElement {
     return this.filter ?? this.root;
@@ -38,6 +43,9 @@ export default class DSelectDOM {
 
   /** Resolves the linked panel independently of whether it contains a listbox. */
   get panel(): HTMLElement | null {
+    if (this.isList) {
+      return this.root;
+    }
     const id = this.root.dataset.selectId;
     return id
       ? this.root.ownerDocument.querySelector<HTMLElement>(

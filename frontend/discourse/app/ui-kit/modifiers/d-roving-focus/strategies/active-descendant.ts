@@ -236,19 +236,25 @@ export default class ActiveDescendantStrategy {
     if (!container) {
       return;
     }
+    // Rects see the transforms windowed rows are placed with, but they also carry any ancestor
+    // scale, while scrollTop and scroll padding are layout pixels; convert at the boundary.
     const itemRect = target.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
+    const scale =
+      containerRect.height > 0
+        ? container.offsetHeight / containerRect.height
+        : 1;
     const style = getComputedStyle(container);
     const top =
       containerRect.top +
-      padding(style.scrollPaddingTop, container.clientHeight);
+      padding(style.scrollPaddingTop, container.clientHeight) / scale;
     const bottom =
       containerRect.bottom -
-      padding(style.scrollPaddingBottom, container.clientHeight);
+      padding(style.scrollPaddingBottom, container.clientHeight) / scale;
     if (itemRect.top < top) {
-      container.scrollTop -= top - itemRect.top;
+      container.scrollTop -= (top - itemRect.top) * scale;
     } else if (itemRect.bottom > bottom) {
-      container.scrollTop += itemRect.bottom - bottom;
+      container.scrollTop += (itemRect.bottom - bottom) * scale;
     }
   }
 

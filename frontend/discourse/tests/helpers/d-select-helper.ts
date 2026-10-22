@@ -22,7 +22,7 @@ export class DSelect {
 
   /** Closes through the variant's keyboard controller; a closed select is a no-op. */
   async close(): Promise<void> {
-    if (this.#dom.panel) {
+    if (!this.#dom.isList && this.#dom.panel) {
       await triggerKeyEvent(this.#dom.controller, "keydown", "Escape");
     }
   }

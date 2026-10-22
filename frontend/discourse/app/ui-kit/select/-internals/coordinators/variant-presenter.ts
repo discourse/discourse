@@ -1,8 +1,10 @@
 import type { FloatContentRole } from "discourse/float-kit/lib/constants";
 import { bind } from "discourse/lib/decorators";
-import { INPUT_DELAY } from "discourse/lib/environment";
 import type { DRovingFocusEntry } from "discourse/ui-kit/modifiers/d-roving-focus";
-import type { SelectPresentationOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
+import SelectPresenterBase, {
+  type OptionsPresenter,
+  type SelectPresenterArgs,
+} from "discourse/ui-kit/select/-internals/coordinators/select-presenter-base";
 import SelectEngine, {
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -14,24 +16,15 @@ export const SELECT_VARIANTS = {
   static: "static",
 } as const;
 
-/** The filter of a list load context, which `DAsyncContent` hands back untyped. */
-function filterOf(context: unknown): string | undefined {
-  return (context as { filter?: string } | undefined)?.filter;
-}
-
 export type SelectVariant =
   (typeof SELECT_VARIANTS)[keyof typeof SELECT_VARIANTS];
 
-interface VariantPresenterArgs extends SelectPresentationOptions {
+interface VariantPresenterArgs extends SelectPresenterArgs {
   value?: SelectValue;
   multiple?: boolean;
   /** Maximum trigger chips; zero renders only the selected count. */
   maxVisibleChips?: number;
-  labelField?: string;
   variant?: SelectVariant;
-  readonly?: boolean;
-  retryable?: boolean;
-  debounce?: boolean | number;
 }
 
 interface VariantPresenterOptions {
@@ -42,7 +35,10 @@ interface VariantPresenterOptions {
   activeListboxId: () => string | undefined;
 }
 
-export default class VariantPresenter {
+export default class VariantPresenter
+  extends SelectPresenterBase
+  implements OptionsPresenter
+{
   #activeListboxId: () => string | undefined;
   #engine: SelectEngine;
   #getArgs: () => VariantPresenterArgs;
@@ -50,6 +46,7 @@ export default class VariantPresenter {
   #shouldRenderInModal: (modalForMobile: boolean) => boolean;
 
   constructor(options: VariantPresenterOptions) {
+    super(options);
     this.#activeListboxId = options.activeListboxId;
     this.#engine = options.engine;
     this.#getArgs = options.getArgs;
@@ -224,19 +221,6 @@ export default class VariantPresenter {
     return this.isStatic && this.isReadonly ? "true" : undefined;
   }
 
-  /** Whether the resolved disabled option prevents opening or mutation. */
-  get isDisabled(): boolean {
-    return this.#engine.resolvedOptions.disabled ?? false;
-  }
-
-  get isReadonly(): boolean {
-    return this.#getArgs().readonly ?? false;
-  }
-
-  get isLocked(): boolean {
-    return this.isDisabled || this.isReadonly;
-  }
-
   /** The resolved caret icon for the current open/closed state. */
   get caretIcon(): string {
     const arg = this.#engine.resolvedOptions.caretIcon;
@@ -271,16 +255,6 @@ export default class VariantPresenter {
     return this.#engine.resolvedOptions.icon;
   }
 
-  /** The resolved empty-selection text for a single trigger. */
-  get placeholder(): string | undefined {
-    return this.#engine.resolvedOptions.placeholder;
-  }
-
-  /** A source error offers a retry action unless a consumer opts out. */
-  get retryable(): boolean {
-    return this.#getArgs().retryable ?? true;
-  }
-
   /** Whether the clear control renders: opted in, something selected, and not locked. */
   get showClear(): boolean {
     return (
@@ -295,17 +269,6 @@ export default class VariantPresenter {
     return this.#getArgs().multiple
       ? i18n("d_select.clear_all")
       : i18n("d_select.clear");
-  }
-
-  /**
-   * How long a filter change waits before the list asks the source, in milliseconds. Defaults to
-   * the input delay for a server-backed source (`engine.isAsync`), so a client source never
-   * flashes a skeleton; a consumer can force a delay with `true`/a number or disable it with
-   * `false`.
-   */
-  get filterDebounceDelay(): number {
-    const debounce = this.#getArgs().debounce ?? this.#engine.isAsync;
-    return debounce === true ? INPUT_DELAY : debounce || 0;
   }
 
   /**
@@ -407,24 +370,6 @@ export default class VariantPresenter {
   }
 
   /**
-   * The built-in limit hint, or `undefined` when neither bound applies. At-max wins over
-   * below-min so a `minimum > maximum` misconfiguration still reads sensibly. Rendered in the
-   * panel's top zone (a sibling of the list, not inside it), so it never competes with the
-   * footer or an error body for the same edge.
-   */
-  get limitMessage(): string | undefined {
-    if (this.#engine.atMaximum) {
-      return i18n("d_select.max_reached", { count: this.#engine.maximum });
-    }
-    if (this.#engine.belowMinimum) {
-      return i18n("d_select.min_not_reached", {
-        count: this.#engine.minimum,
-      });
-    }
-    return undefined;
-  }
-
-  /**
    * Whether to restore the cursor to the already-selected option on open. This outranks
    * {@link shouldAutoActivateFirst} and so also applies to `button`, whose "wait for the user"
    * rule exists to avoid pre-highlighting an *arbitrary* row — the user's own choice is not one.
@@ -473,10 +418,6 @@ export default class VariantPresenter {
     return this.#engine.getSingleSelectionLabel(value);
   }
 
-  get labelField(): string {
-    return this.#getArgs().labelField ?? "name";
-  }
-
   get queryPlaceholder(): string {
     if (this.#engine.hasValue || this.#engine.pending) {
       return "";
@@ -492,17 +433,9 @@ export default class VariantPresenter {
     );
   }
 
-  /** The combobox/listbox's resolved accessible name, or a default. */
-  get ariaLabelText(): string {
-    return this.#engine.resolvedOptions.label ?? i18n("d_select.label");
-  }
-
-  /**
-   * The list debounce forwarded to `DAsyncContent`. Only a filter change waits: a reveal or a
-   * reload keeps the query the reader is looking at, so it fetches at once.
-   */
+  /** Keeps typeahead reconciliation keyed to the displayed array. */
   @bind
-  debounceFor(previous: unknown, next: unknown): number {
-    return filterOf(previous) !== filterOf(next) ? this.filterDebounceDelay : 0;
+  rovingItemsKey(items: readonly unknown[]): readonly unknown[] | string {
+    return this.isTypeahead ? items : this.rovingNonTypeaheadKey;
   }
 }

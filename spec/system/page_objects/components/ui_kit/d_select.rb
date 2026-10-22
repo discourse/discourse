@@ -51,15 +51,22 @@ module PageObjects
           element.matches_css?(".d-select", wait: 0) ? element : element.ancestor(".d-select")
         end
 
+        # Persistent lists are always multi and have no trigger to open.
+        def list?
+          trigger.matches_css?(".d-select.--list", wait: 0)
+        end
+
         # `wait: 0` for the same reason as `press_in_controller`: a predicate on an
         # already-resolved node, where waiting would only delay a legitimate `false`.
         def multiple?
-          trigger.matches_css?(".--multiple", wait: 0)
+          list? || trigger.matches_css?(".--multiple", wait: 0)
         end
 
         # Opens through the trigger itself rather than the query input — the `button` and
         # `static` variants have no input to click.
         def open_trigger
+          return self if list?
+
           return self if @root_mode && trigger["aria-expanded"] == "true"
 
           trigger.click
@@ -67,7 +74,7 @@ module PageObjects
         end
 
         def input
-          trigger.find(".d-select__input")
+          trigger.find(list? ? ".d-select__filter" : ".d-select__input")
         end
 
         def open
@@ -83,6 +90,8 @@ module PageObjects
         # never reads another one's panel. Falls back to the bare selector when the instance
         # was built without a panel root.
         def in_panel(selector)
+          return "#{root_selector} #{selector}" if list?
+
           return "#{linked_panel_selector} #{selector}" if @root_mode
 
           @panel ? "#{@panel} #{selector}" : selector
@@ -103,6 +112,8 @@ module PageObjects
         end
 
         def close
+          return self if list?
+
           controller.send_keys(:escape) if trigger["aria-expanded"] == "true"
           page.assert_selector("#{root_selector}[aria-expanded='false']")
           self
@@ -600,6 +611,8 @@ module PageObjects
         end
 
         def linked_panel_selector
+          return root_selector if list?
+
           ".d-select__panel#{hook_selector("select-id", trigger["data-select-id"])}"
         end
 
@@ -609,12 +622,12 @@ module PageObjects
         end
 
         def filter
-          trigger.first(".d-select__input", minimum: 0, wait: 0) ||
+          trigger.first(list? ? ".d-select__filter" : ".d-select__input", minimum: 0, wait: 0) ||
             find("#{linked_panel_selector} .d-select__filter")
         end
 
         def controller
-          trigger.first(".d-select__input", minimum: 0, wait: 0) ||
+          trigger.first(list? ? ".d-select__filter" : ".d-select__input", minimum: 0, wait: 0) ||
             first("#{linked_panel_selector} .d-select__filter", minimum: 0, wait: 0) || trigger
         end
 

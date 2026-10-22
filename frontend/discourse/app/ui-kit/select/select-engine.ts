@@ -283,6 +283,12 @@ export interface SelectEngineOptions {
   /** Multi-select when true (drives value shape, chips, and close-on-select). */
   multiple?: boolean;
 
+  /** Omits held options when composing the list. Defaults to false. */
+  hideSelected?: boolean;
+
+  /** Live reader for {@link hideSelected}. */
+  getHideSelected?: () => boolean | undefined;
+
   /**
    * `() => value` — reads the controlled value live (single: an id or `null`; multi: an
    * id array). Defaults to always-`null`.

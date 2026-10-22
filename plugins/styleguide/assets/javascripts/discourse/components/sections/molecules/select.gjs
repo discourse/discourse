@@ -30,6 +30,8 @@ import ClearableMultipleSelectExample from "../../examples/molecules/select/sele
 import clearableMultipleSelectSource from "../../examples/molecules/select/selection/clearable-multiple?source=file";
 import DisabledSelectExample from "../../examples/molecules/select/selection/disabled.gjs";
 import disabledSelectSource from "../../examples/molecules/select/selection/disabled?source=file";
+import ListSelectExample from "../../examples/molecules/select/selection/list.gjs";
+import listSelectSource from "../../examples/molecules/select/selection/list?source=file";
 import MaximumSelectExample from "../../examples/molecules/select/selection/maximum.gjs";
 import maximumSelectSource from "../../examples/molecules/select/selection/maximum?source=file";
 import NoneSelectExample from "../../examples/molecules/select/selection/none.gjs";
@@ -314,6 +316,13 @@ export default class Select extends Component {
       <Group @id="content"><SelectContent /></Group>
 
       <Group @id="selection">
+        <StyleguideExample
+          @code={{listSelectSource}}
+          @description={{i18n "styleguide.sections.select.list_description"}}
+          @title={{i18n "styleguide.sections.select.list_title"}}
+        >
+          <ListSelectExample />
+        </StyleguideExample>
         <StyleguideExample
           @code={{maximumSelectSource}}
           @description={{i18n "styleguide.sections.select.maximum_description"}}
