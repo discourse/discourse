@@ -11,7 +11,8 @@ module JsonApiKit
 
       class_methods do
         def resource(declaration)
-          self.declared_resource = ResourceLookup.resource(declaration, within: self)
+          self.declared_resource =
+            ResourceLookup.resource(declaration, within: self).tap(&:verify_input_scope!)
         end
       end
 

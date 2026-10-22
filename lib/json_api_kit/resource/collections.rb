@@ -53,6 +53,7 @@ module JsonApiKit
             model owner.model
             self.declared_filters = [].freeze
             self.declared_collections = {}.freeze
+            self.declared_input_scope = nil
             define_singleton_method(:collection_name) { name }
             define_singleton_method(:to_s) { "#{owner}[#{name}]" }
             singleton_class.alias_method :inspect, :to_s

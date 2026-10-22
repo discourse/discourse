@@ -62,7 +62,12 @@ module JsonApiKit
 
     def filtered_scope = resource.apply_filters(available_scope, request.filtering)
 
-    def available_scope = request.scope(from: resource.scope_for(guardian))
+    def available_scope
+      resource.apply_input_scope(
+        request.scope(from: resource.scope_for(guardian)),
+        request.filtering,
+      )
+    end
 
     def order = @order ||= resource.order(request.ordering)
   end

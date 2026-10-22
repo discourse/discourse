@@ -11,6 +11,7 @@ module JsonApiKit
     include Including
     include QueryInterface
     include Collections
+    include InputScoping
 
     def initialize(guardian:, edition: Edition.current)
       @guardian = guardian

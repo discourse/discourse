@@ -624,6 +624,12 @@ RSpec.describe JsonApiKit::Resource do
       )
     end
 
+    it "leaves the resource's input scope to the resource" do
+      parent = Class.new(resource_with_archive) { input_scope { |topics, _guardian| topics.none } }
+
+      expect(parent.collection(:archive).input_scope).to be_nil
+    end
+
     it "returns the same class each time" do
       expect(resource_with_archive.collection(:archive)).to equal(archive)
     end
@@ -657,6 +663,70 @@ RSpec.describe JsonApiKit::Resource do
       expect { archive.collection(:nested) { filter :closed } }.to raise_error(
         ArgumentError,
         /nested/,
+      )
+    end
+  end
+
+  describe ".scope_filter" do
+    subject(:resource) { Class.new(topic_resource) { scope_filter :closed_too, default: false } }
+
+    it "declares a filter with a default" do
+      expect([resource.filter_names, resource.filter_defaults]).to eq(
+        [%w[title closed_too], { "closed_too" => false }],
+      )
+    end
+
+    it "leaves the rows to the input scope instead of filtering them" do
+      instance = resource.new(guardian: Guardian.new)
+
+      expect(instance.apply_filters(Topic.all, "closed_too" => true).to_sql).to eq(Topic.all.to_sql)
+    end
+
+    it "requires a default, since an input the request leaves out must still mean something" do
+      expect { Class.new(topic_resource) { scope_filter :closed_too } }.to raise_error(
+        ArgumentError,
+        /default/,
+      )
+    end
+  end
+
+  describe ".verify_input_scope!" do
+    def resource_with(&declarations) = Class.new(topic_resource, &declarations)
+
+    it "accepts keywords that name declared filters" do
+      resource =
+        resource_with do
+          scope_filter :closed_too, default: false
+          input_scope { |topics, _guardian, closed_too:, title: nil| topics }
+        end
+
+      expect { resource.verify_input_scope! }.not_to raise_error
+    end
+
+    it "refuses a keyword that names no filter" do
+      resource = resource_with { input_scope { |topics, _guardian, secrets:| topics } }
+
+      expect { resource.verify_input_scope! }.to raise_error(ArgumentError, /secrets/)
+    end
+
+    it "refuses a required keyword whose filter has no default" do
+      resource = resource_with { input_scope { |topics, _guardian, title:| topics } }
+
+      expect { resource.verify_input_scope! }.to raise_error(ArgumentError, /title/)
+    end
+
+    it "refuses a keyword splat, which would hide a missing input" do
+      resource = resource_with { input_scope { |topics, _guardian, **inputs| topics } }
+
+      expect { resource.verify_input_scope! }.to raise_error(ArgumentError, /inputs/)
+    end
+
+    it "runs when a controller declares the resource it serves" do
+      resource = resource_with { input_scope { |topics, _guardian, secrets:| topics } }
+
+      expect { Class.new(JsonApiKit::BaseController) { resource resource } }.to raise_error(
+        ArgumentError,
+        /secrets/,
       )
     end
   end

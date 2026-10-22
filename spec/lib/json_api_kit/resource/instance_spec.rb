@@ -125,6 +125,71 @@ RSpec.describe JsonApiKit::Resource do
     end
   end
 
+  describe "#apply_input_scope" do
+    subject(:kept_ids) { resource.apply_input_scope(rows, filtering).map(&:id) }
+
+    fab!(:open_topic) { Fabricate(:topic, closed: false) }
+    fab!(:closed_topic) { Fabricate(:topic, closed: true) }
+    fab!(:unlisted_topic, :topic)
+
+    let(:changes) { [] }
+    let(:rows) { Topic.where(id: [open_topic.id, closed_topic.id]) }
+    let(:filtering) { {} }
+
+    it "returns the rows when the resource declares no input scope" do
+      expect(resource.apply_input_scope(rows, filtering)).to be(rows)
+    end
+
+    context "when the resource declares an input scope" do
+      let(:resource_class) do
+        Class.new(super()) do
+          scope_filter :closed_too, default: false
+          input_scope do |topics, _guardian, closed_too:|
+            closed_too == "true" ? topics : topics.where(closed: false)
+          end
+        end
+      end
+
+      it "hands it the default when the request leaves the input out" do
+        expect(kept_ids).to contain_exactly(open_topic.id)
+      end
+
+      context "when the request sends the input" do
+        let(:filtering) { { "closed_too" => "true" } }
+
+        it "hands it the value instead" do
+          expect(kept_ids).to contain_exactly(open_topic.id, closed_topic.id)
+        end
+      end
+    end
+
+    context "when the input scope reads the guardian" do
+      let(:resource_class) do
+        Class.new(super()) do
+          input_scope { |topics, guardian| topics.where(user_id: guardian.user&.id) }
+        end
+      end
+      let(:guardian) { open_topic.user.guardian }
+
+      it "hands it the resource's guardian" do
+        expect(kept_ids).to contain_exactly(open_topic.id)
+      end
+    end
+
+    context "when the input scope returns rows it did not receive" do
+      # The block constrains the same column as the visible rows, which `merge` would replace.
+      let(:resource_class) do
+        Class.new(super()) do
+          input_scope { |_topics, _guardian| Topic.where(id: Topic.select(:id)) }
+        end
+      end
+
+      it "keeps only the rows it received, so it cannot widen the visible ones" do
+        expect(kept_ids).to contain_exactly(open_topic.id, closed_topic.id)
+      end
+    end
+  end
+
   describe "#filter_names" do
     subject(:names) { resource.filter_names }
 
