@@ -12,13 +12,15 @@ import DTableHeaderToggle from "discourse/ui-kit/d-table-header-toggle";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ShareReport from "discourse/plugins/discourse-data-explorer/discourse/components/share-report";
 
 export default <template>
   <div class="admin-detail">
-    <DPageSubheader @titleLabel={{i18n "explorer.queries"}}>
+    <DPageSubheader
+      @descriptionLabel={{i18n "explorer.queries_description"}}
+      @titleLabel={{i18n "explorer.queries"}}
+    >
       <:actions as |actions|>
         <actions.Primary
           @icon="plus"
@@ -48,15 +50,6 @@ export default <template>
       @onResetFilters={{@controller.onResetFilters}}
       @onTextFilterChange={{@controller.onTextFilterChange}}
     >
-      <:aboveFilters>
-        {{#if @controller.othersDirty}}
-          <div class="warning">
-            {{dIcon "triangle-exclamation"}}
-            {{i18n "explorer.others_dirty"}}
-          </div>
-        {{/if}}
-      </:aboveFilters>
-
       <:additionalFilters>
         <DMultiSelect
           class="query-tag-filter"
@@ -77,65 +70,44 @@ export default <template>
           <DLoadMore @action={{@controller.loadMore}}>
             <div class="container discourse-data-explorer-query-list">
               <table class="d-table recent-queries">
-                <thead class="d-table__header heading-container">
-                  <th class="col heading name">
-                    <div
-                      class="heading-toggle"
-                      role="button"
-                      {{on "click" (fn @controller.updateSortProperty "name")}}
-                    >
+                <thead class="d-table__header">
+                  <tr class="d-table__row">
+                    <th class="d-table__header-cell">
                       <DTableHeaderToggle
                         @asc={{not @controller.sortDescending}}
-                        @automatic="true"
+                        @automatic={{true}}
                         @field="name"
                         @labelKey="explorer.query_name"
-                        @order={{@controller.order}}
+                        @onToggle={{@controller.updateSortProperty}}
+                        @order={{@controller.sortByProperty}}
                       />
-                    </div>
-                  </th>
-                  <th class="col heading created-by">
-                    <div
-                      class="heading-toggle"
-                      role="button"
-                      {{on
-                        "click"
-                        (fn @controller.updateSortProperty "username")
-                      }}
-                    >
+                    </th>
+                    <th class="d-table__header-cell">
                       <DTableHeaderToggle
                         @asc={{not @controller.sortDescending}}
-                        @automatic="true"
+                        @automatic={{true}}
                         @field="username"
                         @labelKey="explorer.query_user"
-                        @order={{@controller.order}}
+                        @onToggle={{@controller.updateSortProperty}}
+                        @order={{@controller.sortByProperty}}
                       />
-                    </div>
-                  </th>
-                  <th class="col heading group-names">
-                    <div class="group-names-header">
+                    </th>
+                    <th class="d-table__header-cell">
                       {{i18n "explorer.query_groups"}}
-                    </div>
-                  </th>
-                  <th class="col heading created-at">
-                    <div
-                      class="heading-toggle"
-                      role="button"
-                      {{on
-                        "click"
-                        (fn @controller.updateSortProperty "last_run_at")
-                      }}
-                    >
+                    </th>
+                    <th class="d-table__header-cell">
                       <DTableHeaderToggle
                         @asc={{not @controller.sortDescending}}
-                        @automatic="true"
+                        @automatic={{true}}
                         @field="last_run_at"
                         @labelKey="explorer.query_time"
-                        @order={{@controller.order}}
+                        @onToggle={{@controller.updateSortProperty}}
+                        @order={{@controller.sortByProperty}}
                       />
-                    </div>
-                  </th>
+                    </th>
+                  </tr>
                 </thead>
-                <tbody>
+                <tbody class="d-table__body">
                   {{#each filteredQueries as |query|}}
                     <tr class="d-table__row query-row">
                       <td class="d-table__cell --overview">
@@ -215,7 +187,7 @@ export default <template>
                           -
                         {{/if}}
                       </td>
-                      <td class="d-table__cell-controls">
+                      <td class="d-table__cell --controls">
                         <div class="d-table__cell-actions">
                           <LinkTo
                             class="btn btn-text btn-default btn-small"
@@ -230,14 +202,8 @@ export default <template>
                             {{/if}}
                           </LinkTo>
                         </div>
-
                       </td>
                     </tr>
-                  {{else}}
-                    <br />
-                    <em class="no-search-results">
-                      {{i18n "explorer.no_search_results"}}
-                    </em>
                   {{/each}}
                 </tbody>
               </table>
@@ -247,8 +213,6 @@ export default <template>
           <DConditionalLoadingSpinner
             @condition={{@controller.model.loadingMore}}
           />
-
-          <div class="explorer-pad-bottom"></div>
         {{/if}}
       </:content>
     </DFilterControls>

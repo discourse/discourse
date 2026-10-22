@@ -43,7 +43,7 @@ export default class QueriesEdit extends Component {
     <div class="admin-detail">
       <div class="query-edit__top-bar">
         <BackButton
-          @label="explorer.queries"
+          @label="explorer.back_to_queries"
           @route="adminPlugins.show.explorer.index"
         />
 
