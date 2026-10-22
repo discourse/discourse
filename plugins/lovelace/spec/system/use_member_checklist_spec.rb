@@ -12,12 +12,14 @@ RSpec.describe "Use member checklist" do
   it "lets members resume, minimize, complete, undo and dismiss their checklist" do
     checklist.open
     expect(checklist).to have_progress("0 of 3 complete")
+    try_until_success { expect(Lovelace::Reporting.summary["seen"]).to eq(1) }
     expect(checklist).to have_profile_link
     expect(checklist).to be_above_welcome_banner
     checklist.toggle("Complete your profile")
     expect(checklist).to have_progress("1 of 3 complete")
     page.refresh
     expect(checklist).to have_completed_item("Complete your profile")
+    expect(Lovelace::Reporting.summary["seen"]).to eq(1)
     checklist.minimize
     expect(checklist).to have_minimized_checklist
     page.refresh
@@ -35,6 +37,13 @@ RSpec.describe "Use member checklist" do
     expect(checklist).to have_no_checklist
     page.refresh
     expect(checklist).to have_no_checklist
+    expect(Lovelace::Reporting.summary).to include(
+      "seen" => 1,
+      "engaged" => 1,
+      "completed" => 1,
+      "dismissed" => 1,
+      "dismissed_without_completion" => 0,
+    )
   end
 
   it "lets members use compact rows and labelled icon controls on wide and narrow screens" do
@@ -110,6 +119,11 @@ RSpec.describe "Use member checklist" do
     expect(checklist).to have_no_checklist
     page.refresh
     expect(checklist).to have_no_checklist
+    expect(Lovelace::Reporting.summary).to include(
+      "seen" => 1,
+      "engaged" => 0,
+      "dismissed_without_completion" => 1,
+    )
   ensure
     page.current_window.resize_to(1400, 1000)
   end

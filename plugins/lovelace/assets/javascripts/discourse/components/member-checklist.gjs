@@ -1,9 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { ajax } from "discourse/lib/ajax";
+import { ajax, updateCsrfToken } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
@@ -15,6 +17,7 @@ export default class MemberChecklist extends Component {
   @service a11y;
   @service currentUser;
   @service router;
+  @service session;
   @service siteSettings;
 
   @tracked celebrating = false;
@@ -52,6 +55,44 @@ export default class MemberChecklist extends Component {
   }
 
   @action
+  async recordLinkClick(item, event) {
+    if (event.type === "auxclick" && event.button !== 1) {
+      return;
+    }
+    try {
+      if (!this.session.csrfToken) {
+        await updateCsrfToken();
+      }
+      // Keep the request alive when a link leaves the app without delaying navigation.
+      await fetch(getURL("/lovelace/member-checklist.json"), {
+        method: "PUT",
+        credentials: "same-origin",
+        keepalive: true,
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": this.session.csrfToken,
+        },
+        body: JSON.stringify({ clicked_item_id: item.id, seen: true }),
+      });
+    } catch {
+      // Reporting failures must not interfere with following a link.
+    }
+  }
+
+  @action
+  async recordSeen() {
+    try {
+      await ajax("/lovelace/member-checklist.json", {
+        type: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify({ seen: true }),
+      });
+    } catch {
+      // A failed impression must not interrupt checklist interactions.
+    }
+  }
+
+  @action
   toggleItem(item) {
     return this.#save({ item_id: item.id, completed: !item.complete });
   }
@@ -74,7 +115,7 @@ export default class MemberChecklist extends Component {
       const checklist = await ajax("/lovelace/member-checklist.json", {
         type: "PUT",
         contentType: "application/json",
-        data: JSON.stringify(data),
+        data: JSON.stringify({ ...data, seen: true }),
       });
       this._checklist = checklist;
       this.currentUser.set("lovelace_member_checklist", checklist);
@@ -97,6 +138,7 @@ export default class MemberChecklist extends Component {
         aria-labelledby="lovelace-member-title"
         class="lovelace-member-checklist"
         ...attributes
+        {{didInsert this.recordSeen}}
       >
         <header class="lovelace-member-checklist__header">
           <h2 id="lovelace-member-title">
@@ -168,6 +210,8 @@ export default class MemberChecklist extends Component {
               <a
                 class="btn btn-transparent btn-small btn-link lovelace-member-checklist__action"
                 href={{item.href}}
+                {{on "click" (fn this.recordLinkClick item)}}
+                {{on "auxclick" (fn this.recordLinkClick item)}}
               >{{item.button_text}}</a>
             </li>
           {{/each}}
