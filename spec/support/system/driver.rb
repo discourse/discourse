@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "fileutils"
+require "tmpdir"
+
 # Playwright/Chrome driver setup for system specs: the remote-debugging endpoint,
 # the Chrome launch args, and driver registration.
 CHROME_REMOTE_DEBUGGING_PORT =
@@ -24,6 +27,78 @@ module SystemDrivers
 
   MOBILE_USER_AGENT =
     "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.4 Mobile/15E148 Safari/604.1"
+
+  class PersistentDriver < Capybara::Playwright::Driver
+    def initialize(app, **options)
+      @launch_options = Capybara::Playwright::BrowserOptions.new(options).value
+      @remote_browser =
+        options.values_at(
+          :browser,
+          :playwright_server_endpoint_url,
+          :browser_server_endpoint_url,
+        ).any?
+      super
+    end
+
+    private
+
+    def playwright_browser
+      if @playwright_browser && !@playwright_browser.connected?
+        @playwright_browser = nil
+        remove_profile_directory
+      end
+
+      super
+    end
+
+    def create_playwright_browser
+      original = super
+      if @remote_browser || callback_on_save_screenrecord? || @callback_on_save_trace
+        return original
+      end
+
+      browser_type = original.browser_type
+      original.close
+      @profile_directory = Dir.mktmpdir("discourse-system-browser-")
+      context =
+        browser_type.launch_persistent_context(
+          @profile_directory,
+          **@launch_options,
+          **@page_options.value,
+          serviceWorkers: "block",
+        )
+      browser = context.browser
+      new_context = browser.method(:new_context)
+      default_context = context
+      browser.define_singleton_method(:new_context) do |**options|
+        if default_context
+          default_context.tap { default_context = nil }
+        else
+          new_context.call(**options)
+        end
+      end
+      context.pages.each(&:close)
+      browser
+    rescue StandardError
+      context&.close
+      remove_profile_directory
+      raise
+    end
+
+    def quit
+      super
+    ensure
+      remove_profile_directory
+    end
+
+    def remove_profile_directory
+      return unless @profile_directory
+
+      FileUtils.remove_entry(@profile_directory)
+      @profile_directory = nil
+    end
+  end
+  private_constant :PersistentDriver
 
   def self.allow_network_hosts(example)
     Array(example.metadata[:allow_network]).map(&:to_s).map(&:strip).reject(&:empty?).uniq.sort
@@ -103,9 +178,7 @@ module SystemDrivers
         { viewport: viewport, **hidpi_options(viewport) }
       end
 
-    Capybara.register_driver(name) do |app|
-      Capybara::Playwright::Driver.new(app, **options, **mobile_options)
-    end
+    Capybara.register_driver(name) { |app| PersistentDriver.new(app, **options, **mobile_options) }
   end
 
   # Set CHROME_DEVICE_SCALE_FACTOR=2 to capture screenshots and video at twice
@@ -139,8 +212,9 @@ module SystemDrivers
       --mute-audio
       --remote-allow-origins=*
       --disable-smooth-scrolling
-      --js-flags=--no-enable-lazy-source-positions
     ]
+
+    base_args << "--js-flags=--no-enable-lazy-source-positions --no-script-streaming"
 
     if ENV["PLAYWRIGHT_DEVTOOLS"].presence == "1" || ENV["SELENIUM_DEVTOOLS"].presence == "1"
       base_args << "--auto-open-devtools-for-tabs"
