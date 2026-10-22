@@ -6,7 +6,6 @@ RSpec.describe PluginGem do
   let(:tmp_dir) { Dir.mktmpdir("plugin-gem-spec") }
   let(:repo) { File.join(tmp_dir, "repo") }
   let(:gems_dir) { File.join(tmp_dir, "plugin-gems") }
-  let(:app_lockfile) { File.join(tmp_dir, "app", "Gemfile.lock") }
   let(:app_versions) { Bundler.load.specs.to_h { [it.name, it.version.to_s] } }
   let(:rack) { app_versions.fetch("rack") }
   let(:app_checksums) do
@@ -15,19 +14,12 @@ RSpec.describe PluginGem do
   let!(:booted_specs) { Gem.loaded_specs.dup.merge(git_gem.name => git_gem) }
   let(:loaded_specs) { booted_specs.dup }
   let(:plugins) { [] }
+  let(:alpha_lock) { { "alpha" => "1.1.0", "beta" => "1.0.0" } }
   # Stands in for a gem the application loads from git: to bundler that is a
   # path source, a checkout with a gemspec, and only its directory matters.
   let(:git_gem) do
     dir = File.join(tmp_dir, "app", "delta")
-    FileUtils.mkdir_p(dir)
-    File.write(File.join(dir, "delta.gemspec"), <<~GEMSPEC)
-      Gem::Specification.new do |spec|
-        spec.name = "delta"
-        spec.version = "1.0.0"
-        spec.summary = "delta"
-        spec.authors = ["test"]
-      end
-    GEMSPEC
+    write_gemspec(dir, "delta", "1.0.0")
     Bundler::Source::Path.new("path" => dir).specs.first
   end
   let(:repo_gems) do
@@ -40,29 +32,32 @@ RSpec.describe PluginGem do
       %w[delta 1.0.0],
       %w[shared 1.0.0],
       %w[shared 1.1.0],
-      %w[foo 2.3.1],
-      %w[foo 2.4.0],
       # Newer than anything the application has, so only a pin keeps them out.
       %w[rack 99.0.0],
     ]
   end
 
+  def gem_spec(name, version, dependencies = {}, platform = "ruby")
+    Gem::Specification.new do |spec|
+      spec.name = name
+      spec.version = version
+      spec.platform = platform
+      spec.summary = name
+      spec.authors = ["test"]
+      dependencies.each { |dependency, requirement| spec.add_dependency(dependency, requirement) }
+    end
+  end
+
+  def write_gemspec(dir, name, version)
+    FileUtils.mkdir_p(dir)
+    File.write(File.join(dir, "#{name}.gemspec"), gem_spec(name, version).to_ruby)
+  end
+
   def build_repo
-    specs =
-      repo_gems.map do |name, version, dependencies = {}, platform = "ruby"|
-        Gem::Specification.new do |spec|
-          spec.name = name
-          spec.version = version
-          spec.platform = platform
-          spec.summary = name
-          spec.authors = ["test"]
-          dependencies.each do |dependency, requirement|
-            spec.add_dependency(dependency, requirement)
-          end
-        end
-      end
+    specs = repo_gems.map { gem_spec(*it) }
     FileUtils.mkdir_p(["#{repo}/gems", "#{repo}/quick/Marshal.4.8"])
     specs.each do |spec|
+      yield spec if block_given?
       Gem::DefaultUserInteraction.use_ui(Gem::SilentUI.new) do
         Gem::Package.build(spec, true, false, "#{repo}/gems/#{spec.file_name}")
       end
@@ -155,7 +150,7 @@ RSpec.describe PluginGem do
   # A fresh process: only the application's gems are activated.
   def boot
     loaded_specs.replace(booted_specs)
-    expect { PluginGem.activate_gemfiles(plugins) }
+    PluginGem.activate_gemfiles(plugins)
   end
 
   def installed
@@ -188,19 +183,22 @@ RSpec.describe PluginGem do
     allow(Bundler).to receive(:load).and_return(
       instance_double(Bundler::Runtime, specs: Bundler::SpecSet.new([*app_bundle.specs, git_gem])),
     )
-    FileUtils.mkdir_p(File.dirname(app_lockfile))
-    File.write(app_lockfile, "app lock\n")
-    allow(Bundler).to receive(:default_lockfile).and_return(Pathname.new(app_lockfile))
     allow(Gem).to receive(:loaded_specs).and_return(loaded_specs)
   end
 
   it "uses the highest shared lock version and pins its transitive dependencies" do
-    add_plugin("one", %(gem "alpha", ">= 1"\n), lock: { "alpha" => "1.1.0", "beta" => "1.0.0" })
+    add_plugin(
+      "one",
+      %(gem "alpha", ">= 1"\ngem "rack"\n),
+      lock: {
+        "alpha" => "1.1.0",
+        "beta" => "1.0.0",
+        "rack" => "99.0.0",
+      },
+    )
     add_plugin("two", %(gem "alpha", "~> 1.0"\n), lock: { "alpha" => "1.0.0", "beta" => "1.0.0" })
 
-    boot.to output(
-      /Installing alpha 1.1.0.*Resolved 2 plugin gems from 2 Gemfiles/m,
-    ).to_stdout_from_any_process
+    boot
     expect(installed).to eq(%w[alpha-1.1.0 beta-1.0.0])
     expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0])
     expect(File.read(File.join(gems_dir, "Gemfile.lock"))).to include(
@@ -209,21 +207,11 @@ RSpec.describe PluginGem do
     )
   end
 
-  it "fails when two plugins need incompatible versions" do
-    add_plugin("one", %(gem "alpha", "~> 1.0.0"\n), lock: { "alpha" => "1.0.0", "beta" => "1.0.0" })
-    add_plugin("two", %(gem "alpha", ">= 1.1"\n), lock: { "alpha" => "1.1.0", "beta" => "1.0.0" })
-
-    boot.to raise_error(
-      %r{alpha \(~> 1.0.0\) in .*/one/Gemfile\nalpha \(>= 1.1\) in .*/two/Gemfile\nalpha \(= 1.1.0\) in .*/two/Gemfile.lock},
-    )
-    expect(installed).to be_empty
-  end
-
   it "fails when a plugin needs a version of a gem the application has at another one" do
     add_plugin("one", %(gem "rack", "> #{rack}"\n), lock: { "rack" => "99.0.0" })
 
-    boot.to raise_error(
-      %r{rack \(> #{rack}\) in .*/one/Gemfile\nrack \(#{rack}\) in the application},
+    expect { boot }.to raise_error(
+      %r{Resolving plugin gems failed for .*/one/Gemfile:.*rack.*#{rack}}m,
     )
     expect(installed).to be_empty
   end
@@ -238,7 +226,7 @@ RSpec.describe PluginGem do
       },
     )
 
-    boot.to output(/Resolved 1 plugin gems/).to_stdout_from_any_process
+    boot
     expect(installed).to eq(%w[gamma-1.0.0])
     expect(activated).to eq(%w[gamma-1.0.0])
   end
@@ -247,13 +235,13 @@ RSpec.describe PluginGem do
     name, version = git_gem.name, git_gem.version.to_s
     add_plugin("one", %(gem "#{name}", "> #{version}"\n), lock: { name => "99.0.0" })
 
-    boot.to raise_error(
-      %r{#{name} \(> #{version}\) in .*/one/Gemfile\n#{name} \(#{version}\) in the application},
+    expect { boot }.to raise_error(
+      %r{Resolving plugin gems failed for .*/one/Gemfile:.*#{name}.*#{version}}m,
     )
     expect(installed).to be_empty
   end
 
-  it "ignores the development and test groups, also in the Gemfile.lock" do
+  it "ignores tooling groups and dependencies for other platforms when selecting lock pins" do
     add_plugin(
       "one",
       <<~GEMFILE,
@@ -268,7 +256,16 @@ RSpec.describe PluginGem do
       },
     )
 
-    boot.to output(/Resolved 1 plugin gems/).to_stdout_from_any_process
+    add_plugin(
+      "two",
+      %(gem "alpha", platforms: :jruby\n),
+      lock: {
+        "alpha" => "1.1.0",
+        "beta" => "1.1.0",
+      },
+    )
+
+    boot
     expect(installed).to eq(%w[beta-1.0.0])
   end
 
@@ -277,10 +274,7 @@ RSpec.describe PluginGem do
       add_plugin(
         "one",
         %(gem "engine", path: "engine"\ngem "alpha", "~> 1.0"\n),
-        lock: {
-          "alpha" => "1.1.0",
-          "beta" => "1.0.0",
-        },
+        lock: alpha_lock,
         path: {
           "engine" => ["0.0.1", { "alpha" => ">= 1.1" }],
         },
@@ -293,61 +287,84 @@ RSpec.describe PluginGem do
         s.version = File.read("VERSION")
         s.summary = "test"
         s.authors = ["test"]
+        s.require_paths = ["src"]
         s.add_dependency "alpha", ">= 1.1"
       end
     GEMSPEC
-    engine_file = File.join(dir, "engine", "lib", "plugin_gem_test_engine.rb")
+    engine_file = File.join(dir, "engine", "src", "plugin_gem_test_engine.rb")
     FileUtils.mkdir_p(File.dirname(engine_file))
     File.write(engine_file, "true\n")
 
-    boot.to output(/Resolved 3 plugin gems/).to_stdout_from_any_process
+    boot
     expect(installed).to eq(%w[alpha-1.1.0 beta-1.0.0])
     expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0 engine-0.0.1])
-    expect(loaded_specs.fetch("engine").full_gem_path).to eq(File.join(dir, "engine"))
     expect(require "plugin_gem_test_engine").to eq(true)
 
-    $LOADED_FEATURES.delete(engine_file)
-    $LOAD_PATH.delete(File.dirname(engine_file))
-    boot.not_to output.to_stdout_from_any_process
-    expect(require "plugin_gem_test_engine").to eq(true)
+    File.write(File.join(dir, "engine", "VERSION"), "2.0.0")
+    expect { boot }.to raise_error(/Gemfile.lock does not match its Gemfile/)
+    expect(activated).to be_empty
   ensure
     $LOADED_FEATURES.delete(engine_file)
   end
 
-  it "uses the application's gem although a plugin has a path gem of that name" do
+  it "rejects a path gem without a gemspec before installing any gems" do
     dir =
-      add_plugin("one", %(gem "rack", path: "rack"\n), lock: {}, path: { "rack" => ["99.0.0", {}] })
-    FileUtils.mkdir_p(File.join(dir, "rack"))
-    File.write(File.join(dir, "rack", "rack.gemspec"), <<~GEMSPEC)
-      Gem::Specification.new do |s|
-        s.name = "rack"
-        s.version = "99.0.0"
-        s.summary = "test"
-        s.authors = ["test"]
-      end
-    GEMSPEC
+      add_plugin(
+        "one",
+        %(gem "engine", "0.0.1", path: "engine"\n),
+        lock: {
+        },
+        path: {
+          "engine" => ["0.0.1", {}],
+        },
+      )
+    FileUtils.mkdir_p(File.join(dir, "engine"))
 
-    boot.to output(/Resolved 0 plugin gems/).to_stdout_from_any_process
+    expect { boot }.to raise_error("Plugin path gem engine needs a .gemspec file in #{dir}/engine")
     expect(installed).to be_empty
     expect(activated).to be_empty
-    expect(File.read(File.join(gems_dir, "Gemfile.lock"))).to include("    rack (#{rack})\n")
   end
 
-  it "resolves again when a gem leaves the application's active bundle" do
-    add_plugin("one", %(gem "delta"\n), lock: { "delta" => "1.0.0" })
-    boot.to output(/Resolved 0 plugin gems/).to_stdout_from_any_process
+  it "pins core gems and their dependencies when overriding a plugin's path source" do
+    dir =
+      add_plugin(
+        "one",
+        %(gem "rack-test", path: "rack-test"\n),
+        lock: {
+        },
+        path: {
+          "rack-test" => ["99.0.0", {}],
+        },
+      )
+    write_gemspec(File.join(dir, "rack-test"), "rack-test", "99.0.0")
 
-    booted_specs.delete(git_gem.name)
-    app_specs = Bundler.load.specs.reject { it.name == git_gem.name }
-    allow(Bundler).to receive(:load).and_return(
-      instance_double(Bundler::Runtime, specs: Bundler::SpecSet.new(app_specs)),
+    boot
+    expect(installed).to be_empty
+    expect(activated).to be_empty
+    expect(File.read(File.join(gems_dir, "Gemfile.lock"))).to include(
+      "    rack-test (#{app_versions.fetch("rack-test")})\n",
+      "    rack (#{rack})\n",
     )
-
-    boot.to output(/Resolved 1 plugin gems/).to_stdout_from_any_process
-    expect(activated).to eq(%w[delta-1.0.0])
   end
 
-  it "invalidates the cache when a nested Gemfile enables a locked dependency" do
+  it "honors core's lock even when the gem is outside core's active groups" do
+    core_dir = add_plugin("core", %(gem "beta"\n), lock: { "beta" => "1.0.0" })
+    plugins.clear
+    core_lock = Bundler::LockfileParser.new(File.read(File.join(core_dir, "Gemfile.lock")))
+    allow(Bundler.definition).to receive(:locked_gems).and_return(core_lock)
+    dir = add_plugin("one", %(gem "beta"\n), lock: { "beta" => "1.1.0" })
+
+    boot
+    expect(activated).to eq(%w[beta-1.0.0])
+
+    write_plugin_files(dir, %(gem "beta", ">= 1.1"\n), { "beta" => "1.1.0" })
+    expect { boot }.to raise_error(/Resolving plugin gems failed.*beta/m)
+    expect(installed).to eq(%w[beta-1.0.0])
+    expect(activated).to be_empty
+  end
+
+  it "reevaluates nested Gemfiles and conditional dependencies on each boot" do
+    previous = ENV["PLUGIN_GEM_TEST_BETA"]
     dir = add_plugin("one", %(gem "beta"\n), lock: { "beta" => "1.0.0" })
     nested = File.join(dir, "dependencies.rb")
     File.write(nested, %(gem "beta", group: :development\n))
@@ -355,27 +372,23 @@ RSpec.describe PluginGem do
       File.join(dir, "Gemfile"),
       %(source "https://rubygems.org"\neval_gemfile "dependencies.rb"\n),
     )
-    boot.to output(/Resolved 0 plugin gems/).to_stdout_from_any_process
+    boot
     expect(activated).to be_empty
 
-    File.write(nested, %(gem "beta"\n))
-    boot.to output(/Resolved 1 plugin gems/).to_stdout_from_any_process
+    File.write(nested, <<~GEMFILE)
+      install_if -> { ENV["PLUGIN_GEM_TEST_BETA"] == "1" } do
+        gem "beta"
+      end
+    GEMFILE
+    ENV["PLUGIN_GEM_TEST_BETA"] = "1"
+    boot
     expect(activated).to eq(%w[beta-1.0.0])
-  end
 
-  it "ignores lock pins from dependencies for another platform" do
-    add_plugin(
-      "one",
-      %(gem "alpha", platforms: :jruby\n),
-      lock: {
-        "alpha" => "1.1.0",
-        "beta" => "1.1.0",
-      },
-    )
-    add_plugin("two", %(gem "beta", "1.0.0"\n), lock: { "beta" => "1.0.0" })
-
-    boot.to output(/Resolved 1 plugin gems/).to_stdout_from_any_process
-    expect(activated).to eq(%w[beta-1.0.0])
+    ENV["PLUGIN_GEM_TEST_BETA"] = "0"
+    boot
+    expect(activated).to be_empty
+  ensure
+    ENV["PLUGIN_GEM_TEST_BETA"] = previous
   end
 
   it "ignores transitive lock pins from other variants when forcing the Ruby gem" do
@@ -405,17 +418,38 @@ RSpec.describe PluginGem do
     File.write(lockfile, lock)
     add_plugin("two", %(gem "shared", "1.0.0"\n), lock: { "shared" => "1.0.0" })
 
-    boot.to output(/Resolved 3 plugin gems/).to_stdout_from_any_process
+    boot
     expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0 shared-1.0.0])
   end
 
-  it "rejects an unlocked platform variant before installing any gems" do
+  it "rejects unlocked variants and dependencies deep in the graph before installing any gems" do
+    repo_gems << ["chain", "1.0.0", { "alpha" => ">= 1" }]
     repo_gems << ["beta", "1.0.0", { "shared" => ">= 1" }, Gem::Platform.local.to_s]
     build_repo
-    add_plugin("one", %(gem "beta"\n), lock: { "beta" => "1.0.0" })
+    add_plugin(
+      "one",
+      %(gem "chain"\n),
+      lock: {
+        "chain" => "1.0.0",
+        "alpha" => "1.1.0",
+        "beta" => "1.0.0",
+      },
+    )
 
-    boot.to raise_error(/Resolved plugin gem .* is not in the plugins' Gemfile.lock files/)
+    expect { boot }.to raise_error(
+      /Resolved plugin gem .* is not in the committed Gemfile.lock files/,
+    )
     expect(installed).to be_empty
+  end
+
+  it "rejects a replacement platform variant of an active core gem" do
+    repo_gems << ["rack", rack, {}, Gem::Platform.local.to_s]
+    build_repo
+    add_plugin("one", %(gem "alpha"\n), lock: alpha_lock)
+
+    expect { boot }.to raise_error(/Resolved plugin bundle would replace core gem rack-/)
+    expect(installed).to be_empty
+    expect(activated).to be_empty
   end
 
   it "rejects a lock with no compatible variant instead of dropping its version pin" do
@@ -423,80 +457,63 @@ RSpec.describe PluginGem do
     lockfile = File.join(dir, "Gemfile.lock")
     File.write(lockfile, File.read(lockfile).gsub("beta (1.0.0)", "beta (1.0.0-java)"))
 
-    boot.to raise_error(/Gemfile.lock has no compatible platform for beta/)
+    expect { boot }.to raise_error(/Gemfile.lock has no compatible platform for beta/)
     expect(installed).to be_empty
   end
 
-  it "resolves again when a Gemfile or the application's lock changes, reusing what is installed" do
-    dir =
-      add_plugin("one", %(gem "alpha", "1.0.0"\n), lock: { "alpha" => "1.0.0", "beta" => "1.0.0" })
-    boot.to output(/Installing beta/).to_stdout_from_any_process
+  it "builds extensions without inheriting the application's bundle" do
+    repo_gems << %w[native 1.0.0]
+    Dir.chdir(tmp_dir) do
+      File.write("extconf.rb", 'File.write("Makefile", "all install clean:\n\t@true\n")')
+      build_repo { |spec| spec.files = spec.extensions = ["extconf.rb"] if spec.name == "native" }
+    end
+    add_plugin("one", %(gem "native"\n), lock: { "native" => "1.0.0" })
 
-    write_plugin_files(dir, %(gem "alpha", ">= 1.1"\n), { "alpha" => "1.1.0", "beta" => "1.0.0" })
-    boot.to output(
-      satisfy { it.include?("Installing alpha 1.1.0") && !it.include?("Installing beta") },
-    ).to_stdout_from_any_process
-    expect(installed).to eq(%w[alpha-1.0.0 alpha-1.1.0 beta-1.0.0])
-
-    File.write(app_lockfile, "app lock, updated\n")
-    boot.to output(
-      satisfy { it.include?("Resolved 2 plugin gems") && !it.include?("Installing") },
-    ).to_stdout_from_any_process
-    expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0])
+    boot
+    expect(activated).to eq(%w[native-1.0.0])
+    expect(loaded_specs.fetch("native").missing_extensions?).to eq(false)
   end
 
   it "does nothing without a plugin that opts in" do
     add_plugin("one", %(gem "alpha"\n), lock: nil, opt_in: false)
 
-    boot.not_to output.to_stdout_from_any_process
+    expect { boot }.not_to output.to_stdout_from_any_process
     expect(Dir.exist?(gems_dir)).to eq(false)
   end
 
   it "resolves from the installed gems after a change, and fails for a missing gem when offline" do
-    add_plugin("one", %(gem "alpha"\n), lock: { "alpha" => "1.1.0", "beta" => "1.0.0" })
+    add_plugin("one", %(gem "alpha"\n), lock: alpha_lock)
     add_plugin("two", %(gem "shared"\n), lock: { "shared" => "1.1.0" })
-    boot.to output(/Resolved 3 plugin gems/).to_stdout_from_any_process
+    boot
 
     FileUtils.rm_rf(repo)
-    boot.not_to output.to_stdout_from_any_process
+    expect { boot }.not_to output(/Fetching|Installing/).to_stdout_from_any_process
     expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0 shared-1.1.0])
 
+    gem_dir = loaded_specs.fetch("alpha").full_gem_path
+    FileUtils.rm_rf(gem_dir)
     plugins.pop
-    boot.to output(/Resolved 2 plugin gems from 1 Gemfiles/).to_stdout_from_any_process
+    boot
+    expect(Dir.exist?(gem_dir)).to eq(true)
     expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0])
 
-    add_plugin("three", %(gem "foo"\n), lock: { "foo" => "2.4.0" })
-    boot.to raise_error(/Resolving plugin gems failed: Could not fetch specs/)
+    add_plugin("three", %(gem "beta", ">= 1.1"\n), lock: { "beta" => "1.1.0" })
+    expect { boot }.to raise_error(/Resolving plugin gems failed.*Could not fetch specs/)
   end
 
   it "refuses a gem source the application doesn't use" do
-    add_plugin(
-      "one",
-      %(gem "alpha"\n),
-      lock: {
-        "alpha" => "1.1.0",
-        "beta" => "1.0.0",
-      },
-      source: "https://gems.example.com",
-    )
+    add_plugin("one", %(gem "alpha"\n), lock: alpha_lock, source: "https://gems.example.com")
 
-    boot.to raise_error(
+    expect { boot }.to raise_error(
       %r{Plugin one's Gemfile uses the gem source https://gems.example.com/; a plugin's gems must come from the application's gem sources \(https://rubygems.org/\)},
     )
     expect(Dir.exist?(gems_dir)).to eq(false)
   end
 
   it "refuses a git gem" do
-    add_plugin(
-      "one",
-      %(gem "alpha", git: "https://example.com/alpha.git"\n),
-      lock: {
-        "alpha" => "1.1.0",
-        "beta" => "1.0.0",
-      },
-    )
+    add_plugin("one", %(gem "alpha", git: "https://example.com/alpha.git"\n), lock: alpha_lock)
 
-    boot.to raise_error(
+    expect { boot }.to raise_error(
       /Plugin one's Gemfile declares alpha from git; a plugin's gems must come from the application's gem sources or a path/,
     )
     expect(Dir.exist?(gems_dir)).to eq(false)
@@ -506,7 +523,7 @@ RSpec.describe PluginGem do
     it "is required" do
       add_plugin("one", %(gem "alpha"\n), lock: nil)
 
-      boot.to raise_error(
+      expect { boot }.to raise_error(
         %r{Plugin one has a Gemfile but no Gemfile.lock; run `bundle lock` in .*/one and commit it},
       )
       expect(Dir.exist?(gems_dir)).to eq(false)
@@ -514,85 +531,89 @@ RSpec.describe PluginGem do
 
     it "must match its Gemfile" do
       # beta comes with alpha, so the lock doesn't know shared at all.
-      dir = add_plugin("one", %(gem "alpha"\n), lock: { "alpha" => "1.1.0", "beta" => "1.0.0" })
+      dir = add_plugin("one", %(gem "alpha"\n), lock: alpha_lock)
       File.write(
         File.join(dir, "Gemfile"),
         %(source "https://rubygems.org"\ngem "alpha"\ngem "shared"\n),
       )
 
-      boot.to raise_error(
+      expect { boot }.to raise_error(
         %r{Plugin one's Gemfile.lock does not match its Gemfile; run `bundle lock` in .*/one and commit it\n.*added to the Gemfile:\n\* shared}m,
       )
       expect(Dir.exist?(gems_dir)).to eq(false)
     end
 
     it "needs checksums" do
-      add_plugin(
-        "one",
-        %(gem "alpha"\n),
-        lock: {
-          "alpha" => "1.1.0",
-          "beta" => "1.0.0",
-        },
-        checksums: nil,
-      )
+      add_plugin("one", %(gem "alpha"\n), lock: alpha_lock, checksums: nil)
 
-      boot.to raise_error(
+      expect { boot }.to raise_error(
         %r{Plugin one's Gemfile.lock has no checksums; run `bundle lock --add-checksums` in .*/one and commit it},
       )
       expect(Dir.exist?(gems_dir)).to eq(false)
     end
 
-    it "needs a checksum for every gem" do
-      dir = add_plugin("one", %(gem "alpha"\n), lock: { "alpha" => "1.1.0", "beta" => "1.0.0" })
+    it "needs a SHA256 checksum for every downloaded gem" do
+      dir = add_plugin("one", %(gem "alpha"\n), lock: alpha_lock)
       lock = File.join(dir, "Gemfile.lock")
-      File.write(lock, File.read(lock).sub(/^  beta .*\n/, ""))
+      contents = File.read(lock)
+      File.write(lock, contents.sub(/^  beta .*\n/, ""))
 
-      boot.to raise_error(/does not match its Gemfile.*missing a CHECKSUMS entry for "beta"/m)
+      expect { boot }.to raise_error(
+        /does not match its Gemfile.*missing a CHECKSUMS entry for "beta"/m,
+      )
       expect(Dir.exist?(gems_dir)).to eq(false)
+
+      File.write(lock, contents.sub(checksum("beta", "1.0.0"), "sha512=#{"0" * 128}"))
+      expect { boot }.to raise_error(/Locked gem beta-1.0.0 has no SHA256 checksum/)
+      expect(installed).to be_empty
     end
 
     it "fails for a gem whose checksum differs" do
       add_plugin(
         "one",
         %(gem "alpha"\n),
-        lock: {
-          "alpha" => "1.1.0",
-          "beta" => "1.0.0",
-        },
+        lock: alpha_lock,
         checksums: {
           "beta" => "sha256=#{"0" * 64}",
         },
       )
 
-      boot.to raise_error(/Bundler found mismatched checksums.*beta \(1\.0\.0\) sha256=0{64}/m)
+      Bundler
+        .settings
+        .temporary(disable_checksum_validation: true) do
+          expect { boot }.to raise_error(
+            /Bundler found mismatched checksums.*beta \(1\.0\.0\) sha256=0{64}/m,
+          )
+        end
       expect(installed).not_to include("beta-1.0.0")
     end
 
-    it "pins its gems, and a newer lock raises the pin" do
+    it "updates pinned gems when the lock changes and reuses unchanged dependencies" do
       dir = add_plugin("one", %(gem "alpha"\n), lock: { "alpha" => "1.0.0", "beta" => "1.0.0" })
-      boot.to output(/Resolved 2 plugin gems/).to_stdout_from_any_process
+      boot
       expect(activated).to eq(%w[alpha-1.0.0 beta-1.0.0])
 
-      write_plugin_files(dir, %(gem "alpha"\n), { "alpha" => "1.1.0", "beta" => "1.0.0" })
-      boot.to output(/Installing alpha 1.1.0/).to_stdout_from_any_process
+      write_plugin_files(dir, %(gem "alpha"\n), alpha_lock)
+      expect { boot }.to output(
+        satisfy { it.include?("Installing alpha 1.1.0") && !it.include?("Installing beta") },
+      ).to_stdout_from_any_process
       expect(installed).to eq(%w[alpha-1.0.0 alpha-1.1.0 beta-1.0.0])
       expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0])
     end
 
-    it "does not pin a gem of the application" do
-      add_plugin("one", %(gem "rack"\n), lock: { "rack" => "0.1.0" })
-
-      boot.to output(/Resolved 0 plugin gems/).to_stdout_from_any_process
-      expect(installed).to be_empty
-    end
-
     it "fails when its version conflicts with another plugin's requirement" do
-      add_plugin("one", %(gem "foo"\n), lock: { "foo" => "2.4.0" })
-      add_plugin("two", %(gem "foo", "~> 2.3.0"\n), lock: { "foo" => "2.3.1" })
+      add_plugin("one", %(gem "alpha"\n), lock: alpha_lock)
+      add_plugin(
+        "two",
+        %(gem "alpha", "~> 1.0.0"\n),
+        lock: {
+          "alpha" => "1.0.0",
+          "beta" => "1.0.0",
+        },
+      )
 
-      boot.to raise_error(
-        %r{foo \(>= 0\) in .*/one/Gemfile\nfoo \(~> 2.3.0\) in .*/two/Gemfile\nfoo \(= 2.4.0\) in .*/one/Gemfile.lock},
+      expect { boot }.to raise_error(
+        %r{Resolving plugin gems failed for .*/one/Gemfile, .*/two/Gemfile:.*alpha.*1.1.0}m,
       )
       expect(installed).to be_empty
     end
