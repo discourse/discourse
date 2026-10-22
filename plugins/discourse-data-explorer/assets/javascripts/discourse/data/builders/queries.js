@@ -13,7 +13,7 @@ export function findQueries({ search, tags, sort, descending }) {
       include: ["user", "groups"],
       sort: `${descending ? "-" : ""}${SORT_FIELDS[sort]}`,
       "filter[search]": search,
-      "filter[tag]": tags && tags.split(","),
+      "filter[tag]": tags,
     }),
     { namespace: "api/data-explorer" }
   );

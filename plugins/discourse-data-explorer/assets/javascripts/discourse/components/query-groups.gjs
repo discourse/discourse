@@ -24,18 +24,15 @@ export default class QueryGroups extends Component {
   }
 
   async #loadAll(related) {
-    const url = new URL(related, window.location.origin);
-    url.searchParams.set("page[size]", "100");
-
     try {
-      let { content: page } = await this.warpStore.request({ url: url.href });
+      let { content: page } = await this.warpStore.request({ url: related });
       const groups = [...page.data];
       while (page.links?.next) {
         page = await page.next();
         groups.push(...page.data);
       }
 
-      if (!this.isDestroying && !this.isDestroyed) {
+      if (!this.isDestroying) {
         this.allGroups = groups;
       }
     } catch (e) {

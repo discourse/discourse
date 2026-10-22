@@ -35,7 +35,7 @@ export default class PluginsExplorerController extends Controller {
   get fetchParams() {
     return {
       search: this._currentFilter,
-      tags: this.tags,
+      tags: this.currentTags,
       sort: this.sortByProperty,
       descending: this.sortDescending,
     };
