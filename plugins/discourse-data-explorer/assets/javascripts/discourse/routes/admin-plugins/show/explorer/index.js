@@ -23,7 +23,7 @@ export default class AdminPluginsExplorerIndex extends DiscourseRoute {
       this.warpStore.request(
         findQueries({
           ...controller.fetchParams,
-          tags: transition.to.queryParams.tags,
+          tags: transition.to.queryParams.tags?.split(","),
         })
       ),
       ajax("/admin/plugins/discourse-data-explorer/queries/tags.json"),
