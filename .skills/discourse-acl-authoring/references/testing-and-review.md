@@ -38,6 +38,7 @@ For services using `AccessControlList::Apply`:
 - Create/update request specs submit an explicit invalid permission such as `bogus` and assert rejection without partial resource creation or loss of existing ACLs. Test the write endpoints: `/access-control/evaluate.json` previews permission loss and does not enforce the manager's permission vocabulary.
 - Creation with omitted `acl` persists mandatory ACLs.
 - Creation requires an authoritative `initial_owner_user_id`, resolves the user inside the service, and persists it with the reserved `owner` permission.
+- System-user ownership is accepted for initial and replacement owner sets, including round trips from existing targets; other non-positive IDs remain invalid and every requested owner must still exist.
 - Replacement preserves existing owners when `owner_user_ids` is omitted. A supplied set replaces ownership only when the actor is a currently stored owner or admin, may include only existing users, and must retain at least one owner. The actor need not remain in the requested set. On an ownerless target, only an admin may supply `owner_user_ids`; `initial_owner_user_id` itself may identify any valid user.
 - Owners may remove themselves when another owner remains; evaluation still warns when doing so removes their final effective permission.
 - Owner user ids are removed from lower direct grants to avoid duplicate grantee rows.

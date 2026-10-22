@@ -35,7 +35,10 @@ class AccessControlList::Apply
 
     def owner_user_ids_are_valid
       return if owner_user_ids.nil?
-      return if owner_user_ids.all? { |user_id| user_id&.positive? }
+
+      all_ids_valid =
+        owner_user_ids.all? { |user_id| user_id == Discourse::SYSTEM_USER_ID || user_id&.positive? }
+      return if all_ids_valid
 
       errors.add(:owner_user_ids, :invalid)
     end

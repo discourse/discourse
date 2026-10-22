@@ -16,6 +16,8 @@ Important columns:
 
 `owner` is a reserved, user-only permission automatically included by `Acl::Permissions`. Owners implicitly satisfy every other permission lookup for their target. Do not grant it to groups or expose it through an ordinary permission picker.
 
+The system user is a valid owner even though its ID is negative. Owner contracts may accept `Discourse::SYSTEM_USER_ID` as the sole non-positive user ID, but must still verify that every requested owner resolves to an existing user.
+
 The model has a uniqueness validation and DB index for target + permission. Multiple groups for the same permission collapse into one row.
 
 ## Flattened vs Expanded ACLs

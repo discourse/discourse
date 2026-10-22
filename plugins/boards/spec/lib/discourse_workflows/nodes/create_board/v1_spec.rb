@@ -107,6 +107,9 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoard::V1 do
     board = Boards::Board.find(output.fetch("board_id"))
 
     expect(board).to have_attributes(slug: "project-board", created_by: Discourse.system_user)
+    expect(board.permission_acl.permission_user_ids(Acl::Permissions::OWNER)).to eq(
+      [Discourse::SYSTEM_USER_ID],
+    )
     expect(output).to match_node_output_schema(described_class)
   end
 

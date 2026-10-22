@@ -19,6 +19,9 @@ RSpec.describe AccessControlList::Apply do
     it { is_expected.not_to allow_value(0).for(:acl_target_id) }
     it { is_expected.to validate_presence_of(:source) }
     it { is_expected.to validate_length_of(:source).is_at_most(100) }
+    it { is_expected.to allow_value([Discourse::SYSTEM_USER_ID]).for(:owner_user_ids) }
+    it { is_expected.not_to allow_value([0]).for(:owner_user_ids) }
+    it { is_expected.not_to allow_value([-2]).for(:owner_user_ids) }
   end
 
   describe ".call" do
@@ -81,6 +84,27 @@ RSpec.describe AccessControlList::Apply do
       let(:owner_user_ids) { [co_owner.id, 999_999] }
 
       it { is_expected.to fail_a_policy(:requested_owners_exist) }
+    end
+
+    context "when the system user is the current and requested owner" do
+      fab!(:owner_acl) do
+        Fabricate(
+          :access_control_list_with_users,
+          target:,
+          permission: Acl::Permissions::OWNER,
+          users: [Discourse.system_user],
+        )
+      end
+
+      let(:acl_entries) { [] }
+      let(:owner_user_ids) { [Discourse::SYSTEM_USER_ID] }
+
+      it "preserves the system user as the owner" do
+        expect(result).to run_successfully
+        expect(
+          AccessControlList.find_by!(target:, permission: Acl::Permissions::OWNER).allowed_user_ids,
+        ).to eq([Discourse::SYSTEM_USER_ID])
+      end
     end
 
     context "without an initial owner for an ownerless target" do
