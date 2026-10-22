@@ -6,6 +6,9 @@
 
 he:
   js:
+    dsa_notice:
+      title: "דיווח על תוכן לא חוקי"
+      email: "כתובת דוא״ל"
     mcp_oauth_client_id_metadata_policy:
       disabled: "רישום מנהלים בלבד"
     user_api_key:

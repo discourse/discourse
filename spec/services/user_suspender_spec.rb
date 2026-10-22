@@ -126,8 +126,30 @@ RSpec.describe UserSuspender do
         )
       end
 
-      it "doesn't enqueue a critical user email job" do
-        expect do suspend_user end.not_to change { Jobs::CriticalUserEmail.jobs.size }.from(0)
+      it "delivers a suspension email containing the reason without an optional message" do
+        user.user_option.update!(timezone: "Asia/Singapore")
+
+        expect { suspend_user }.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)
+        job = Jobs::CriticalUserEmail.jobs.sole.fetch("args").first
+        Jobs::CriticalUserEmail.new.execute(job.with_indifferent_access)
+
+        email = ActionMailer::Base.deliveries.sole
+        expect(email.to).to eq([user.email])
+        expect(email.subject).to include("Your account has been suspended")
+        expect(email.text_part.body.decoded).to include("because", "UTC+08:00")
+      end
+
+      it "queues one notification when the optional message is whitespace" do
+        suspender =
+          UserSuspender.new(
+            user,
+            suspended_till: 5.hours.from_now,
+            reason: "because",
+            by_user: admin,
+            message: "   ",
+          )
+
+        expect { suspender.suspend }.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)
       end
     end
   end

@@ -1089,6 +1089,14 @@ ja:
             compact: "コンパクト"
             expanded: "展開"
             expanded_description: "AI 要約を使用"
+      ai_search:
+        related_topics: "関連トピック"
+        related_replies:
+          other: "返信: %{count} 件"
+        tabs:
+          ask: "AI に尋ねる"
+          topics: "トピック"
+          messages: "メッセージ"
       discobot_discoveries:
         main_title: "AI に尋ねる"
         loading_convo: "会話を読み込み中"

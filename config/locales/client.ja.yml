@@ -6,6 +6,9 @@
 
 ja:
   js:
+    dsa_notice:
+      title: "違法コンテンツの報告"
+      email: "メールアドレス"
     user_api_key:
       title: '「%{application_name}」の承認'
       authorize: "承認"

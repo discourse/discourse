@@ -91,6 +91,7 @@ zh_CN:
       run: "运行"
       undo: "舍弃更改"
       delete: "删除"
+      delete_confirm: "您确定要删除此查询吗？"
       recover: "取消删除查询"
       dashboard:
         add: "添加到仪表板"

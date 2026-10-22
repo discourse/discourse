@@ -178,7 +178,12 @@ export default class Info extends Component {
             {{/if}}
 
             <div class="topic-header-extra">
-              {{trustHTML this.tags}}
+              <PluginOutlet
+                @name="header-tags-wrapper"
+                @outletArgs={{lazyHash topic=@topicInfo tags=@topicInfo.tags}}
+              >
+                {{trustHTML this.tags}}
+              </PluginOutlet>
               {{#if this.showPM}}
                 <div class="topic-header-participants">
                   {{#each this.participants as |participant|}}

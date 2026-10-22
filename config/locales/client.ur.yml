@@ -6,6 +6,10 @@
 
 ur:
   js:
+    dsa_notice:
+      title: "غیر قانونی مواد کی اطلاع دیں"
+      email: "ای میل"
+      resend_email_code: "کوڈ دوبارہ بھیجیں"
     mcp_oauth_client_id_metadata_policy:
       disabled: "صرف انتظامی رجسٹریشن"
     ace_editor:

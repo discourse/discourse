@@ -38,3 +38,4 @@ be:
       gamification_score:
         username: "Карыстальнік"
         description: "Апісанне"
+        category_id: "Катэгорыя"

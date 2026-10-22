@@ -6,6 +6,9 @@
 
 vi:
   js:
+    dsa_notice:
+      title: "Báo cáo nội dung bất hợp pháp"
+      email: "Địa chỉ email"
     user_api_key:
       deny: "Hủy"
       copied: "Đã sao chép!"

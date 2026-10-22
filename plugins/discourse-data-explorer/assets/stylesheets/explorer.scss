@@ -92,10 +92,6 @@ table.group-reports {
   }
 }
 
-.https-warning {
-  color: var(--danger);
-}
-
 .query-editor {
   margin-bottom: 15px;
 
@@ -237,10 +233,6 @@ table.group-reports {
         font-weight: bold;
         border-bottom: 1px solid var(--primary-low);
         padding-left: 5px;
-
-        .fa {
-          width: 6px;
-        }
       }
 
       ul {
@@ -255,10 +247,6 @@ table.group-reports {
       dl > div > * {
         padding-top: 2px;
         padding-bottom: 2px;
-      }
-
-      dl > div {
-        clear: both;
       }
 
       dt {
@@ -355,10 +343,6 @@ table.group-reports {
       display: inline-block;
       margin: 0 0.5em 0 0;
       color: var(--primary);
-
-      button .d-icon {
-        color: currentcolor;
-      }
     }
   }
 
@@ -434,13 +418,6 @@ table.group-reports {
     gap: 0.5em;
     flex-wrap: wrap;
   }
-
-  .query-plan {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4em;
-    margin-left: 0.25em;
-  }
 }
 
 .query-action-bar {
@@ -481,15 +458,6 @@ table.group-reports {
   }
 }
 
-.clear {
-  clear: both;
-}
-
-.schema-title {
-  display: block;
-  margin: auto;
-}
-
 .query-params {
   border: 1px solid var(--header_primary-medium);
 
@@ -507,10 +475,6 @@ table.group-reports {
     margin: 9px;
   }
 
-  .invalid input {
-    background-color: var(--danger-low);
-  }
-
   .param {
     display: flex;
     align-items: center;
@@ -524,14 +488,11 @@ table.group-reports {
   }
 }
 
-.disscourse-data-explorer-query-list,
-.query-create,
 .query-edit,
 .query-results,
 .query-params,
 .query-action-bar,
-.result-header,
-.https-warning {
+.result-header {
   margin-bottom: 2em;
 }
 
@@ -658,14 +619,6 @@ table.group-reports {
     font-size: var(--font-down-1);
   }
 
-  .query-new__toggle-link {
-    color: var(--tertiary);
-
-    .d-icon {
-      color: var(--tertiary);
-    }
-  }
-
   .query-new__divider {
     margin: 1.5em 0;
     border-top: 1px solid var(--primary-low-mid);
@@ -772,19 +725,6 @@ table.group-reports {
   }
 }
 
-.query-ai-generating {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-  padding: 0.75em 1em;
-  margin-bottom: 0.75em;
-  background: var(--tertiary-very-low);
-  border: 1px solid var(--tertiary-low);
-  border-radius: var(--d-border-radius);
-  font-size: var(--font-down-1);
-  color: var(--tertiary);
-}
-
 .query-result-export__trigger {
   display: inline-flex;
   align-items: center;
@@ -795,10 +735,6 @@ table.group-reports {
   .query-result-download-buttons {
     display: inline-flex;
     gap: 0.5em;
-
-    .btn {
-      margin: 0;
-    }
   }
 
   .result-header {
@@ -834,12 +770,6 @@ table.group-reports {
     border: 1px solid var(--primary-low);
     border-radius: var(--d-button-border-radius, 0.25em);
     overflow: hidden;
-
-    .btn {
-      margin: 0;
-      border-radius: 0;
-      box-shadow: none;
-    }
   }
 
   section {
@@ -929,25 +859,6 @@ table.group-reports {
   }
 }
 
-.discourse-data-explorer-query-list {
-  .btn-left {
-    margin-right: 0.5em;
-  }
-
-  .btn-right {
-    margin-left: auto;
-    margin-right: 0.5em;
-  }
-
-  li.none {
-    display: none;
-  }
-
-  .import-btn {
-    display: flex;
-  }
-}
-
 .recent-queries {
   thead {
     .created-by {
@@ -972,10 +883,6 @@ table.group-reports {
       position: relative;
       color: var(--primary-medium);
       padding: 50px 0 0 0;
-
-      th.sortable {
-        font-weight: normal;
-      }
 
       .heading-toggle {
         bottom: 0;
@@ -1106,20 +1013,6 @@ table.group-reports {
     padding: 12px;
     z-index: 1;
   }
-}
-
-.left-buttons,
-.right-buttons {
-  display: flex;
-  align-items: flex-start;
-}
-
-.left-buttons .btn {
-  margin-right: 0.5em;
-}
-
-.right-buttons .btn {
-  margin-left: 0.5em;
 }
 
 .query-group-bookmark {

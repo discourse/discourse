@@ -2,13 +2,12 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 
 export default class CreateInviteUploader extends Component {
   @tracked uploaded = false;
 
-  uppyUpload = new UppyUpload(getOwner(this), {
+  uppyUpload = new UppyUpload(this, {
     id: "create-invite-uploader",
     type: "csv",
     autoStartUploads: false,

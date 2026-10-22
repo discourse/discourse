@@ -92,3 +92,4 @@ fi:
         username: "Käyttäjä"
         date: "Päivämäärä"
         description: "Kuvaus"
+        category_id: "Luokka"

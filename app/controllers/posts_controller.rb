@@ -848,6 +848,7 @@ class PostsController < ApplicationController
 
     post_revision.post = post
     guardian.ensure_can_see!(post_revision)
+    guardian.ensure_can_view_post_version!(post, revision)
 
     post_revision
   end

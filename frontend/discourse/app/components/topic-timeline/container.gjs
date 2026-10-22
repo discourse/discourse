@@ -535,7 +535,15 @@ export default class TopicTimelineScrollArea extends Component {
           <div class="topic-header-extra">
             {{#if this.showTags}}
               <div class="list-tags">
-                {{dDiscourseTags @model mode="list" tags=@model.tags}}
+                <PluginOutlet
+                  @name="timeline-tags-wrapper"
+                  @outletArgs={{lazyHash
+                    topic=@model
+                    tags=@model.visibleListTags
+                  }}
+                >
+                  {{dDiscourseTags @model mode="list" tags=@model.tags}}
+                </PluginOutlet>
               </div>
             {{/if}}
             {{#if this.siteSettings.topic_featured_link_enabled}}

@@ -2397,7 +2397,6 @@ fi:
     enable_auto_grid_images: "Lisää automaattisesti kuvat [grid]-tunnisteisiin, kun 3 tai useampia kuvia ladataan kirjoitustilassa."
     page_loading_indicator: "Määritä latausilmaisin, joka näkyy Discoursessa sivujen navigointien aikana. \"Spinner\" on koko sivun ilmaisin. \"Slider\" näyttää kapean palkin ruudun yläosassa."
     show_user_menu_avatars: "Näytä käyttäjien avatarit käyttäjävalikossa"
-    about_page_hidden_groups: "Älä näytä tiettyjen ryhmien jäseniä /about-sivulla."
     about_page_extra_groups: "Ryhmät, jotka näkyvät Tietoja-sivulla valvojien alapuolella."
     about_page_extra_groups_initial_members: "Jäsenten määrä, jota haluat laajentaa kussakin ryhmässä Tietoja-sivulla."
     about_page_extra_groups_show_description: "Sisällytetäänkö ryhmän kuvaukset Tietoja-sivulle."
@@ -3805,31 +3804,15 @@ fi:
     account_suspended:
       title: "Tili hyllytetty"
       subject_template: "[%{email_prefix}] Tilisi on hyllytetty"
-      text_body_template: |
-        Sinut hyllytettiin foorumilta %{suspended_till} asti.
-
-        Syy – %{reason}
     account_suspended_forever:
       title: "Tili hyllytetty"
       subject_template: "[%{email_prefix}] Tilisi on hyllytetty"
-      text_body_template: |
-        Sinut hyllytettiin foorumilta.
-
-        Syy: %{reason}
     account_silenced:
       title: "Tili hiljennetty"
       subject_template: "[%{email_prefix}] Tilisi on hiljennetty"
-      text_body_template: |
-        Sinut hiljennettiin foorumilta %{silenced_till} asti.
-
-        Syy – %{reason}
     account_silenced_forever:
       title: "Tili hiljennetty"
       subject_template: "[%{email_prefix}] Tilisi on hiljennetty"
-      text_body_template: |
-        Sinut hiljennettiin foorumilta.
-
-        Syy: %{reason}
     account_deleted:
       title: "Tili poistettu"
       subject_template: "[%{email_prefix}] Tilisi on poistettu"

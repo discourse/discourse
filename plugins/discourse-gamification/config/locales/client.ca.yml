@@ -45,3 +45,4 @@ ca:
         username: "Usuari"
         date: "Data"
         description: "Descripció"
+        category_id: "Categoria"

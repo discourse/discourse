@@ -336,11 +336,20 @@ export default class BookmarkList extends Component {
                     {{#if bookmark.bookmarkableTopicAlike}}
                       <div class="link-bottom-line">
                         {{dCategoryLink bookmark.category}}
-                        {{dDiscourseTags
-                          bookmark
-                          mode="list"
-                          tagsForUser=@tagsForUser
-                        }}
+                        <PluginOutlet
+                          @name="bookmark-list-tags-wrapper"
+                          @outletArgs={{lazyHash
+                            bookmark=bookmark
+                            tags=bookmark.visibleListTags
+                            tagsForUser=@tagsForUser
+                          }}
+                        >
+                          {{dDiscourseTags
+                            bookmark
+                            mode="list"
+                            tagsForUser=@tagsForUser
+                          }}
+                        </PluginOutlet>
                       </div>
                     {{/if}}
                     {{#if

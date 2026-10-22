@@ -4,7 +4,6 @@ import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { isEmpty } from "@ember/utils";
 import withEventValue from "discourse/helpers/with-event-value";
@@ -24,7 +23,7 @@ export default class EmojiUploader extends Component {
   /** @type {string[] | null} */
   @resettableTracked newEmojiGroups = this.args.emojiGroups;
 
-  uppyUpload = new UppyUpload(getOwner(this), {
+  uppyUpload = new UppyUpload(this, {
     id: "emoji-uploader",
     type: "emoji",
     uploadUrl: "/admin/config/emoji",

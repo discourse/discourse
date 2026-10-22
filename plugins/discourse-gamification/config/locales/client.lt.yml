@@ -43,3 +43,4 @@ lt:
         username: "Narys"
         date: "Data"
         description: "Aprašymas"
+        category_id: "Kategorija"

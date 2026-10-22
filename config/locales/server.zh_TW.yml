@@ -828,6 +828,7 @@ zh_TW:
     post_template: "%{replace_paragraph}\n\n請使用以下段落提供更完整的說明，或訂定分類指南或規則：\n\n- 為什麼大家應該使用此分類？它的用途是什麼？\n\n- 它與我們現有的其他分類究竟有何不同？\n\n- 此分類中的主題通常應包含哪些內容？\n\n- 我們需要這個分類嗎？能否與其他分類或子分類合併？"
     errors:
       not_found: "找不到分類！"
+      self_lockout: "你即將變更分類權限，且這項變更會移除你自己的存取權。確定要繼續嗎？"
       uncategorized_parent: "未分類不能有父分類"
       self_parent: "子分類的父分類不能是它自己。"
       depth: "您不能將一個子分類嵌套在其他子分類下。"
@@ -2637,7 +2638,6 @@ zh_TW:
     experimental_impersonation_time_limit_minutes: "模擬身分工作階段自動結束前的持續時間。"
     page_loading_indicator: "設定在 Discourse 內進行頁面導覽時顯示的載入指示器。「旋轉圖示」是全頁指示器；「滑動列」則在畫面頂端顯示窄條。"
     show_user_menu_avatars: "在使用者選單中顯示使用者大頭貼"
-    about_page_hidden_groups: "不要在 /about 頁面顯示特定群組的成員。"
     about_page_extra_groups: "在「關於」頁面的版主下方顯示的群組。"
     about_page_extra_groups_initial_members: "在「關於」頁面上每個群組展開顯示的成員人數。"
     about_page_extra_groups_show_description: "是否在「關於」頁面包含群組說明。"
@@ -4348,34 +4348,18 @@ zh_TW:
       title: "帳號已停權"
       subject_template: "[%{email_prefix}] 您的帳號已被停權"
       subject_template_improved: "您的帳號已被停權"
-      text_body_template: |
-        您的論壇帳號已被停權至 %{suspended_till}。
-
-        原因－%{reason}
     account_suspended_forever:
       title: "帳號已停權"
       subject_template: "[%{email_prefix}] 您的帳號已被停權"
       subject_template_improved: "您的帳號已被停權"
-      text_body_template: |
-        您的論壇帳號已被停權。
-
-        原因－%{reason}
     account_silenced:
       title: "帳號已禁言"
       subject_template: "[%{email_prefix}] 您的帳號已被禁言"
       subject_template_improved: "您的帳號已被禁言"
-      text_body_template: |
-        您的論壇帳號已被禁言至 %{silenced_till}。
-
-        原因－%{reason}
     account_silenced_forever:
       title: "帳號已禁言"
       subject_template: "[%{email_prefix}] 您的帳號已被禁言"
       subject_template_improved: "您的帳號已被禁言"
-      text_body_template: |
-        您的論壇帳號已被禁言。
-
-        原因－%{reason}
     account_deleted:
       title: "帳號已刪除"
       subject_template: "[%{email_prefix}] 您的帳號已被刪除"

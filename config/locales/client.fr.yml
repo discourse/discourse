@@ -6,6 +6,10 @@
 
 fr:
   js:
+    dsa_notice:
+      title: "Signaler un contenu illégal"
+      email: "Adresse e-mail"
+      resend_email_code: "Renvoyer le code"
     user_api_key:
       title: 'Autoriser « %{application_name} »'
       authorize: "Autoriser"

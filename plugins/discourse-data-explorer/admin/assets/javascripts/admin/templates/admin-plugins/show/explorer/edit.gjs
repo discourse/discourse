@@ -123,8 +123,6 @@ export default class QueriesEdit extends Component {
           </div>
         {{/unless}}
 
-        <div class="clear"></div>
-
         {{#if (eq @controller.mode "ai")}}
           <QueryAiPrompt
             @disabled={{@controller.aiGenerating}}
@@ -163,8 +161,6 @@ export default class QueriesEdit extends Component {
               </div>
 
               <PaneSeparator @controller={{@controller}} />
-
-              <div class="clear"></div>
             {{else}}
               <div class="sql">
                 <CodeView
@@ -299,8 +295,6 @@ export default class QueriesEdit extends Component {
             </div>
 
             <PaneSeparator @controller={{@controller}} />
-
-            <div class="clear"></div>
           {{else}}
             <div class="sql">
               <CodeView

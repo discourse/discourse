@@ -46,3 +46,4 @@ da:
         username: "Bruger"
         date: "Dato"
         description: "Beskrivelse"
+        category_id: "Kategori"

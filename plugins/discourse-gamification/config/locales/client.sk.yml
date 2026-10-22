@@ -94,3 +94,4 @@ sk:
         username: "Používateľ"
         date: "Dátum"
         description: "Popis"
+        category_id: "Kategória"

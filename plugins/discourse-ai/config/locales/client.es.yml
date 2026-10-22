@@ -1327,6 +1327,15 @@ es:
             compact: "Compacto"
             expanded: "Ampliado"
             expanded_description: "con resúmenes de IA"
+      ai_search:
+        related_topics: "Temas relacionados"
+        related_replies:
+          one: "%{count} respuesta"
+          other: "%{count} respuestas"
+        tabs:
+          ask: "Preguntar a la IA"
+          topics: "Temas"
+          messages: "Mensajes"
       discobot_discoveries:
         main_title: "Preguntar a la IA"
         loading_convo: "Cargando conversación"

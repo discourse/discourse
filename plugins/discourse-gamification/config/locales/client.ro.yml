@@ -47,3 +47,4 @@ ro:
         username: "Utilizator"
         date: "Dată"
         description: "Descriere"
+        category_id: "Categorie"

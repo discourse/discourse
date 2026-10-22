@@ -571,6 +571,7 @@ lt:
     post_template: "%{replace_paragraph}\n\nNaudokite šias pastraipas ilgesniam aprašymui arba kategorijų gairėms ar taisyklėms nustatyti:\n\n– Kodėl žmonės turėtų naudoti šią kategoriją? Kam tai?\n\n– Kuo tai skiriasi nuo kitų jau turimų kategorijų?\n\n– Kas apskritai turėtų būti šios kategorijos temose?\n\n– Ar mums reikia šios kategorijos? Ar galime sujungti su kita kategorija ar subkategorija?\n"
     errors:
       not_found: "Kategorijos nėra!"
+      self_lockout: "Ketinate pakeisti kategorijos leidimus taip, kad nebegalėsite pasiekti savo teisių. Ar tikrai norite tęsti?"
       uncategorized_parent: "(Be kategorijos) kategorija negali turėti subkategorijų"
       depth: "Negalite įdėti subkategorijos po kita"
       invalid_email_in: "'%{email}' nėra galiojantis el. pašto adresas."

@@ -74,7 +74,7 @@ ru:
           author: Вы
           author_others: "%{username}"
           status_online: "● онлайн"
-        voice_usage:
+        live_usage:
           minutes:
             one: "%{count} мин"
             few: "%{count} мин"

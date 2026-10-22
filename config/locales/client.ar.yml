@@ -6,6 +6,10 @@
 
 ar:
   js:
+    dsa_notice:
+      title: "الإبلاغ عن المحتوى غير القانوني"
+      email: "عنوان البريد الإلكتروني"
+      resend_email_code: "إعادة إرسال الرمز"
     user_api_key:
       title: 'تفويض "%{application_name}"'
       authorize: "تفويض"

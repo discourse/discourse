@@ -491,7 +491,7 @@ module UpcomingChanges
             GROUP BY upcoming_change_name
             ORDER BY MAX(created_at) DESC
           )
-          SELECT latest_status_changes.upcoming_change_name, latest_status_changes.created_at, upcoming_change_events.event_data->>'new_value' as new_value
+          SELECT latest_status_changes.upcoming_change_name, latest_status_changes.created_at, upcoming_change_events.event_data->>'new_value' as new_value, (upcoming_change_events.event_data->>'was_conditionally_displayed')::boolean as was_conditionally_displayed
           FROM latest_status_changes
           INNER JOIN upcoming_change_events ON upcoming_change_events.upcoming_change_name = latest_status_changes.upcoming_change_name AND upcoming_change_events.created_at = latest_status_changes.created_at
           ORDER BY latest_status_changes.created_at DESC
@@ -501,6 +501,7 @@ module UpcomingChanges
           statuses[result.upcoming_change_name] = {
             status: result.new_value,
             changed_at: result.created_at,
+            was_conditionally_displayed: result.was_conditionally_displayed,
           }
         end
       end
