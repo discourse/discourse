@@ -69,8 +69,11 @@ module DiscourseAi
           answerable = partial.read_buffered_property(:answerable)
           values[:answerable] = answerable if !answerable.nil?
 
+          # Locking in a partial array would make later updates look like a changed selection.
           source_refs = partial.read_buffered_property(:source_refs)
-          values[:source_refs] = source_refs if !source_refs.nil?
+          if !source_refs.nil? && partial.property_complete?(:source_refs)
+            values[:source_refs] = source_refs
+          end
 
           title = partial.read_buffered_property(:title)
           values[:title] << title if title.present?
@@ -91,14 +94,17 @@ module DiscourseAi
         result =
           Result.new(
             answerable: values[:answerable] == true,
-            source_refs: Array(values[:source_refs]),
+            source_refs: known_source_refs(values[:source_refs], candidates:, related_count:),
             title: values[:title].to_s.strip,
             answer: answer_without_source_references(values[:answer]),
             follow_up: values[:follow_up].to_s.strip,
           )
-        return empty_result if !result.answerable
+        if !result.answerable || result.source_refs.empty? ||
+             !self.class.meaningful_answer?(result.answer)
+          return empty_result
+        end
 
-        valid_result?(result, candidates:, related_count:) ? result : empty_result
+        result
       end
 
       def self.meaningful_answer?(answer)
@@ -122,18 +128,12 @@ module DiscourseAi
         agent
       end
 
-      def valid_result?(result, candidates:, related_count:)
-        return false if result.source_refs.empty?
-        return false if result.source_refs.uniq.length != result.source_refs.length
-        return false if result.source_refs.length > related_count
-
+      def known_source_refs(source_refs, candidates:, related_count:)
         candidate_refs = candidates.pluck("source_ref")
-        if result.source_refs.any? { |source_ref| !candidate_refs.include?(source_ref) }
-          return false
-        end
-        return false if !self.class.meaningful_answer?(result.answer)
-
-        true
+        Array(source_refs)
+          .uniq
+          .select { |source_ref| candidate_refs.include?(source_ref) }
+          .first(related_count)
       end
 
       def empty_result
