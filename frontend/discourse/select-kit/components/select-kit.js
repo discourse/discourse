@@ -189,6 +189,9 @@ export default class SelectKit extends Component {
   singleSelect = false;
   multiSelect = false;
 
+  /** Suppresses migration notices for intentional comparisons of legacy controls. */
+  skipLegacyRenderDeprecation = false;
+
   @protoProp tabindex = 0;
   @protoProp content = null;
   @protoProp value = null;
@@ -216,7 +219,10 @@ export default class SelectKit extends Component {
       deprecateSelectKitLegacyRender,
       MIGRATED_SELECT_KIT_MODULES,
     } = require("discourse/lib/select-kit-modify-class-deprecation");
-    if (MIGRATED_SELECT_KIT_MODULES.size > 0) {
+    if (
+      MIGRATED_SELECT_KIT_MODULES.size > 0 &&
+      !this.skipLegacyRenderDeprecation
+    ) {
       // Capture the caller's source before afterRender loses the init stack.
       deprecateSelectKitLegacyRender(this, identifySource(new Error()));
     }

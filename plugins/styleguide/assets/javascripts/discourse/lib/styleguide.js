@@ -28,6 +28,7 @@ import reorderableList from "../components/sections/molecules/reorderable-list.g
 import rovingFocus from "../components/sections/molecules/roving-focus.gjs";
 import segmentedControl from "../components/sections/molecules/segmented-control.gjs";
 import select from "../components/sections/molecules/select.gjs";
+import selectComparison from "../components/sections/molecules/select-comparison.gjs";
 import signupCta from "../components/sections/molecules/signup-cta.gjs";
 import tabs from "../components/sections/molecules/tabs.gjs";
 import toasts from "../components/sections/molecules/toasts.gjs";
@@ -94,6 +95,11 @@ const SECTIONS = [
   { component: postMenu, category: "molecules", id: "post-menu" },
   { component: rovingFocus, category: "molecules", id: "roving-focus" },
   { component: select, category: "molecules", id: "select" },
+  {
+    component: selectComparison,
+    category: "molecules",
+    id: "select-comparison",
+  },
   { component: tooltips, category: "molecules", id: "tooltips" },
   { component: menus, category: "molecules", id: "menus" },
   { component: contextMenu, category: "molecules", id: "context-menu" },

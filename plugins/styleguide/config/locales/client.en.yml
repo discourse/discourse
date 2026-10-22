@@ -61,6 +61,18 @@ en:
             declined: "Last right-click: declined, the browser took it"
         multi_select:
           title: "Multi select"
+        select_comparison:
+          title: "Select comparison"
+          legacy: "Select-kit"
+          new: "DSelect"
+          tag_chooser: "TagChooser and DTagChooser"
+          mini_tag_chooser: "MiniTagChooser and DMiniTagChooser"
+          tag_drop: "TagDrop and DTagDrop"
+          tags_intersection_chooser: "TagsIntersectionChooser and DTagsIntersectionChooser"
+          tag_dropdown: "TagDropdown and DTagDropdown"
+          tag_group_chooser: "TagGroupChooser and DTagGroupChooser"
+          current_value: "Current value: %{value}"
+          form_kit_note: "The FormKit tag field switches controls internally using enable_new_select_controls, so it cannot be shown side by side."
         select:
           title: "Select"
           hero:

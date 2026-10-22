@@ -39,6 +39,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/molecules/reorderable-list", title: "Reorderable list" },
       { href: "/molecules/roving-focus", title: "Roving focus" },
       { href: "/molecules/select", title: "Select" },
+      { href: "/molecules/select-comparison", title: "Select comparison" },
       { href: "/molecules/signup-cta", title: "Signup CTA" },
       { href: "/molecules/multi-select", title: "Multi select" },
       { href: "/molecules/toasts", title: "Toasts" },

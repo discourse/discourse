@@ -391,6 +391,29 @@
   }
 }
 
+.styleguide-select-comparison {
+  display: grid;
+  gap: var(--space-6);
+
+  &__controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    gap: var(--space-4);
+  }
+
+  &__legacy,
+  &__new {
+    min-width: 0;
+  }
+
+  &__value {
+    display: block;
+    margin-block-start: var(--space-2);
+    color: var(--primary-high);
+    overflow-wrap: anywhere;
+  }
+}
+
 .styleguide-icons {
   display: grid;
 
