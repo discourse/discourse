@@ -5,7 +5,6 @@ module JsonApiKit
     class RelationshipObject
       delegate :pages, to: :linkage, private: true
       delegate :urls, :glossary, to: :client, private: true
-      delegate :member_type, to: :glossary, private: true
 
       def initialize(linkage, client:, owner:, name:)
         @linkage = linkage
@@ -23,7 +22,7 @@ module JsonApiKit
       def data = linkage.collapse { identifier(it) }
 
       def identifier(record)
-        { type: member_type(record.type), id: record.id }
+        ResourceIdentifier.new(record, glossary:).to_h
       end
 
       def links = { self: relationship_url.to_s, related: related_url.to_s }.merge(page_links)

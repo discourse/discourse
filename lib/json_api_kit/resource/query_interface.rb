@@ -56,6 +56,14 @@ module JsonApiKit
           ),
         )
       end
+
+      def related_scope(name, owner_id:)
+        schema.association(name.to_sym, [record_for(owner_id)]).related_scope
+      end
+
+      def record_for(id)
+        scope_for(guardian).find_by(schema.primary_key => id) or raise NotFound
+      end
     end
   end
 end

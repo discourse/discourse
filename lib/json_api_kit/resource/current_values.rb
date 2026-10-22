@@ -17,11 +17,7 @@ module JsonApiKit
 
       attr_reader :resource, :id, :values
 
-      delegate :guardian, :schema, to: :resource
-
-      def record
-        @record ||= resource.scope_for(guardian).find_by(schema.primary_key => id) or raise NotFound
-      end
+      def record = @record ||= resource.record_for(id)
 
       def attribute_value(name)
         resource.attribute_value(name, record:)
