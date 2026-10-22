@@ -205,6 +205,20 @@ RSpec.describe DiscourseWorkflows::WorkflowVariablesController do
       expect(workflow.variables.pluck(:key)).to contain_exactly("priority", "notify_categories")
     end
 
+    it "accepts a JSON body with a real variables array" do
+      post "/admin/plugins/discourse-workflows/workflows/#{workflow.id}/variables/import.json",
+           params: { variables: [{ key: "audience", variable_type: "string" }] }.to_json,
+           headers: {
+             "CONTENT_TYPE" => "application/json",
+           }
+
+      expect(response).to have_http_status(:ok)
+      json = response.parsed_body
+      expect(json["imported_count"]).to eq(1)
+      expect(json["skipped_keys"]).to eq([])
+      expect(workflow.variables.pluck(:key)).to contain_exactly("audience")
+    end
+
     it "skips variables whose key already exists on the workflow" do
       Fabricate(
         :discourse_workflows_workflow_variable,

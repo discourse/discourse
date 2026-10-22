@@ -1,0 +1,13 @@
+.import-workflow-modal {
+  &__json-header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__file-name {
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+    margin-bottom: var(--space-1);
+  }
+}

@@ -30,10 +30,12 @@ import { i18n } from "discourse-i18n";
 import confirmDeleteWorkflow from "../../lib/workflows/confirm-delete-workflow.js";
 import AdminTable from "./admin-table.gjs";
 import EmptyState from "./empty-state.gjs";
+import ImportWorkflowModal from "./import-workflow-modal.gjs";
 
 export default class WorkflowsIndex extends Component {
   @service currentUser;
   @service dialog;
+  @service modal;
   @service router;
   @service store;
 
@@ -229,6 +231,71 @@ export default class WorkflowsIndex extends Component {
   }
 
   @action
+  importWorkflow() {
+    this.modal.show(ImportWorkflowModal, {
+      model: {
+        onImport: async (workflow) => {
+          const { staticData, variables, settings, ...graph } = workflow;
+          const payload = { ...graph };
+          if (staticData !== undefined) {
+            payload.static_data = staticData;
+          }
+
+          const result = await ajax(
+            "/admin/plugins/discourse-workflows/workflows.json",
+            {
+              type: "POST",
+              contentType: "application/json",
+              data: JSON.stringify({ workflow: payload }),
+            }
+          );
+
+          // exported workflows carry their variable definitions alongside
+          // the graph; persist them via the dedicated import endpoint.
+          // ImportDefinitions expects variables as an Array of Hashes, so
+          // send JSON (as the create above does) to keep that exact shape.
+          if (variables?.length > 0) {
+            await ajax(
+              `/admin/plugins/discourse-workflows/workflows/${result.workflow.id}/variables/import.json`,
+              {
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ variables }),
+              }
+            );
+          }
+
+          // Workflow::Create has no settings/timezone params, so persist the
+          // exported schedule timezone through the same update endpoint the
+          // settings modal uses. Without this a UTC site would run the
+          // imported schedule in UTC instead of the exported timezone.
+          const settingsTimezone = settings?.timezone;
+          if (
+            typeof settingsTimezone === "string" &&
+            settingsTimezone.trim() !== ""
+          ) {
+            await ajax(
+              `/admin/plugins/discourse-workflows/workflows/${result.workflow.id}.json`,
+              {
+                type: "PUT",
+                contentType: "application/json",
+                data: JSON.stringify({
+                  workflow: { timezone: settingsTimezone },
+                }),
+              }
+            );
+          }
+
+          this.router.transitionTo(
+            "adminPlugins.show.discourse-workflows.show",
+            result.workflow.id
+          );
+        },
+      },
+    });
+  }
+
+  @action
   async deleteWorkflow(workflow, closeMenu) {
     await closeMenu();
 
@@ -282,6 +349,12 @@ export default class WorkflowsIndex extends Component {
             @label="discourse_workflows.new_workflow"
           />
         {{/if}}
+        <actions.Default
+          class="workflows-index__import-btn"
+          @action={{this.importWorkflow}}
+          @icon="upload"
+          @label="discourse_workflows.import_workflow.button_label"
+        />
       </:actions>
     </DPageSubheader>
 
