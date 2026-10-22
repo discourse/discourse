@@ -561,14 +561,30 @@
       width: auto;
       padding-top: 0;
       height: auto;
+    }
+  }
 
-      .avatar-flair {
-        background-size: 12px 12px;
-        width: 12px;
-        height: 12px;
-        right: -3px;
-        bottom: -2px;
-      }
+  // Scale flair to the small avatar wherever it renders (gutter on desktop,
+  // header on mobile); core sizes it for the 45px topic avatar.
+  .topic-avatar .avatar-flair {
+    background-size: 12px 12px;
+    width: 12px;
+    height: 12px;
+    right: -3px;
+    bottom: -2px;
+
+    &.rounded {
+      background-size: 9px 9px;
+      border-radius: 50%;
+      width: 13px;
+      height: 13px;
+      right: -4px;
+      bottom: -3px;
+    }
+
+    .d-icon {
+      width: 8px;
+      height: 8px;
     }
   }
 
