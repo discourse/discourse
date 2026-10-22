@@ -1157,10 +1157,29 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def fix_primary_keys
+    # Later stages insert through ActiveRecord after a table's counter was
+    # captured, so a sequence must never be set below the table's current ids.
+    # Seeded system rows have negative ids and are ignored.
     @sequences.each do |sequence_name, val|
-      sql = "SELECT setval('#{sequence_name}', #{val})"
-      @raw_connection.exec(sql)
+      table_name = sequence_table_name(sequence_name)
+      @raw_connection.exec(<<~SQL)
+        SELECT setval('#{sequence_name}', GREATEST(
+          #{val.to_i},
+          COALESCE((SELECT MAX(id) FROM #{table_name} WHERE id > 0), 0) + 1
+        ))
+      SQL
     end
+  end
+
+  def sequence_table_name(sequence_name)
+    @raw_connection.exec_params(<<~SQL, [sequence_name]).getvalue(0, 0)
+      SELECT refobjid::regclass::text
+      FROM pg_depend
+      WHERE classid = 'pg_class'::regclass
+        AND objid = $1::regclass
+        AND refclassid = 'pg_class'::regclass
+        AND deptype IN ('a', 'i')
+    SQL
   end
 
   def fix_user_columns
