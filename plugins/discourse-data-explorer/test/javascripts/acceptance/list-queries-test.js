@@ -9,7 +9,7 @@ import {
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import { JSON_API_VERSION } from "discourse/data/handlers/json-api";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -43,9 +43,23 @@ const OLDER_QUERY = {
   groupIds: [],
 };
 
+const WIDELY_SHARED_QUERY = {
+  id: 7,
+  name: "Widely shared",
+  description: "",
+  lastRunAt: "2021-01-01T00:00:00.000Z",
+  tags: [],
+  userId: 1,
+  groupIds: [41],
+  groupsLinks: {
+    related: "/api/data-explorer/queries/7/groups",
+    next: "/api/data-explorer/queries/7/relationships/groups?page%5Bafter%5D=abc",
+  },
+};
+
 function toDocument(queries, next) {
   return {
-    data: queries.map(({ id, userId, groupIds, ...attrs }) => ({
+    data: queries.map(({ id, userId, groupIds, groupsLinks, ...attrs }) => ({
       type: "queries",
       id: String(id),
       attributes: attrs,
@@ -56,6 +70,7 @@ function toDocument(queries, next) {
             type: "groups",
             id: String(groupId),
           })),
+          links: groupsLinks,
         },
       },
     })),
@@ -424,5 +439,30 @@ acceptance("List Queries", function (needs) {
       .dom(".recent-queries tbody tr:last-child td")
       .hasText(/^\s*Older query/, "renders the appended query");
     assert.false(controller.canLoadMore, "stops at the last page");
+  });
+
+  test("loads every group of a query whose groups were truncated", async function (assert) {
+    let relatedParams;
+    pretender.get("/api/data-explorer/queries", () =>
+      response(toDocument([WIDELY_SHARED_QUERY], null))
+    );
+    pretender.get("/api/data-explorer/queries/7/groups", (request) => {
+      relatedParams = request.queryParams;
+      return response({
+        data: [
+          { type: "groups", id: "41", attributes: { name: "analysts" } },
+          { type: "groups", id: "42", attributes: { name: "auditors" } },
+        ],
+        links: { next: null },
+      });
+    });
+
+    await visit("/admin/plugins/discourse-data-explorer/queries");
+
+    assert.strictEqual(relatedParams["page[size]"], "100");
+    assert
+      .dom(".query-row .query-group-names")
+      .includesText("analysts")
+      .includesText("auditors", "renders the groups beyond the first page");
   });
 });
