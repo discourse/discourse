@@ -165,6 +165,20 @@ end
 
 Use `TargetClass.with_acl_permission(guardian, permission)` or `TargetClass.with_any_acl_permissions(guardian, permissions)` for index scopes where the user should see targets reachable through ACLs. Use `guardian.target_ids_with_any_acl_permissions(TargetClass, permissions)` only when the id array is the cleaner interface for a custom query.
 
+When an index needs ACL grantee details for every target, flatten one relation for the whole collection and group the result before serialization. Do not query `AccessControlList` from each serializer instance.
+
+```ruby
+owners_by_target_id =
+  AccessControlList
+    .with_permission(targets, Acl::Permissions::OWNER)
+    .flattened_list
+    .group_by { |entry| entry[:target_id] }
+
+serialize_data(targets, TargetSerializer, owners_by_target_id:)
+```
+
+`flattened_list` batch-loads the referenced users and groups. Pass the grouped entries through serializer options so adding targets does not add ACL or grantee queries.
+
 ## Deleted Grantee Cleanup
 
 `Group#clear_acls` and `User#clear_acls` enqueue `Jobs::CleanupAclsForDeleted` after a grantee is destroyed. The job removes the deleted group id from `allowed_group_ids` and/or the deleted user id from `allowed_user_ids`, updates `updated_at`, and deletes ACL rows only when both arrays are empty.

@@ -91,6 +91,25 @@ RSpec.describe Boards::Api::BoardsController do
       slugs = response.parsed_body["boards"].map { |b| b["slug"] }
       expect(slugs).to contain_exactly("editable")
     end
+
+    it "returns owners for every board with one batched ACL lookup" do
+      co_owner = Fabricate(:user)
+      first_board = Fabricate(:boards_board, name: "First", created_by: admin)
+      second_board = Fabricate(:boards_board, name: "Second", created_by: co_owner)
+      AccessControlList.find_by!(target: first_board, permission: Acl::Permissions::OWNER).update!(
+        allowed_user_ids: [admin.id, co_owner.id],
+      )
+
+      sign_in(admin)
+      queries = track_sql_queries { get "/boards/api/boards.json" }
+
+      boards = response.parsed_body["boards"].index_by { |board| board["id"] }
+      expect(boards[first_board.id]["owners"].pluck("id")).to contain_exactly(admin.id, co_owner.id)
+      expect(boards[second_board.id]["owners"].pluck("id")).to contain_exactly(co_owner.id)
+
+      owner_acl_queries = queries.grep(/FROM "access_control_lists".*"target_id" IN .*"permission"/)
+      expect(owner_acl_queries.size).to eq(1)
+    end
   end
 
   describe "GET /boards/api/boards/available" do
@@ -394,7 +413,7 @@ RSpec.describe Boards::Api::BoardsController do
       expect(response.parsed_body["board"]["can_manage"]).to eq(false)
     end
 
-    it "includes the creator's username and avatar_template" do
+    it "includes the owners' usernames and avatar templates" do
       board =
         Fabricate(:boards_board, name: "Creator Test", slug: "creator-test", created_by: admin)
       board.columns.create!(title: "Col", position: 0)
@@ -403,10 +422,9 @@ RSpec.describe Boards::Api::BoardsController do
       get "/boards/api/boards/#{board.id}.json"
 
       expect(response.status).to eq(200)
-      created_by = response.parsed_body["board"]["created_by"]
-      expect(created_by).to be_present
-      expect(created_by["username"]).to eq(admin.username)
-      expect(created_by["avatar_template"]).to eq(admin.avatar_template)
+      owners = response.parsed_body["board"]["owners"]
+      expect(owners.sole["username"]).to eq(admin.username)
+      expect(owners.sole["avatar_template"]).to eq(admin.avatar_template)
     end
 
     it "includes topic details for detailed cards" do

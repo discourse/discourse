@@ -24,7 +24,7 @@ module Boards
 
         boards =
           Boards::Board
-            .includes(:columns, :created_by)
+            .includes(:columns)
             .with_any_acl_permissions(guardian, allowed_permissions)
             .order(:name)
             .to_a
@@ -34,16 +34,7 @@ module Boards
             .pluck(:slug)
             .to_set
         tag_name_map = build_tag_name_map(*boards)
-        render json: {
-                 boards:
-                   serialize_data(
-                     boards,
-                     Boards::BoardSerializer,
-                     root: false,
-                     tag_name_map:,
-                     used_slugs:,
-                   ),
-               }
+        render json: { boards: serialize_boards(boards, tag_name_map:, used_slugs:) }
       end
 
       def available
@@ -367,7 +358,21 @@ module Boards
         )
       end
 
-      def serialize_boards(boards, tag_name_map:)
+      def serialize_boards(boards, tag_name_map:, used_slugs:)
+        owners_by_board_id =
+          AccessControlList
+            .with_permission(boards, Acl::Permissions::OWNER)
+            .flattened_list
+            .group_by { |entry| entry[:target_id] }
+
+        serialize_data(
+          boards,
+          Boards::BoardSerializer,
+          root: false,
+          tag_name_map:,
+          used_slugs:,
+          owners_by_board_id:,
+        )
       end
 
       def preload_all_assignments(cards, visible_topic_ids)

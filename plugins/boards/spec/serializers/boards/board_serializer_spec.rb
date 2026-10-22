@@ -100,15 +100,29 @@ RSpec.describe Boards::BoardSerializer do
     expect(admin_payload).to include(can_manage_acl_owner: true)
   end
 
-  it "serializes the creator username and avatar template" do
+  it "serializes the board owners" do
+    co_owner = Fabricate(:user)
     board = Fabricate(:boards_board, created_by: admin)
+    AccessControlList.find_by!(target: board, permission: Acl::Permissions::OWNER).update!(
+      allowed_user_ids: [admin.id, co_owner.id],
+    )
 
     payload =
       described_class.new(board, root: false, scope: Guardian.new(admin), tag_name_map: {}).as_json
 
-    expect(payload[:created_by]).to eq(
-      username: admin.username,
-      avatar_template: admin.avatar_template,
+    expect(payload[:owners]).to contain_exactly(
+      {
+        id: admin.id,
+        username: admin.username,
+        name: admin.display_name,
+        avatar_template: admin.avatar_template,
+      },
+      {
+        id: co_owner.id,
+        username: co_owner.username,
+        name: co_owner.display_name,
+        avatar_template: co_owner.avatar_template,
+      },
     )
   end
 

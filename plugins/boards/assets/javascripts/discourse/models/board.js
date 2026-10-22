@@ -43,6 +43,7 @@ export default class Board {
   @tracked id;
   @tracked name;
   @tracked old_slug_used;
+  @tracked owners;
   @tracked require_confirmation;
   @tracked show_tags;
   @tracked show_topic_thumbnail;
