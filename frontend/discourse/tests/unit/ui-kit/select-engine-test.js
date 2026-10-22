@@ -1700,6 +1700,74 @@ module("Unit | ui-kit | SelectEngine | async update", function (hooks) {
     );
   });
 
+  test("a locked select ignores direct and control mutations", function (assert) {
+    const { engine, changes } = controlled({
+      items: [A, B, C],
+      multiple: true,
+      value: [1, 2],
+      getLocked: () => true,
+    });
+
+    engine.select(C, { programmatic: true });
+    engine.toggle(A);
+    engine.deselect(A, { programmatic: true });
+    engine.deselectLast();
+    engine.clear();
+    engine.control.select(C);
+    engine.control.deselect(B);
+    engine.control.clear();
+
+    assert.strictEqual(changes.length, 0, "a locked select emits no change");
+  });
+
+  test("a locked single select ignores direct and control mutations", function (assert) {
+    const { engine, changes } = controlled({
+      items: [A, B],
+      value: 1,
+      getLocked: () => true,
+    });
+
+    engine.select(B, { programmatic: true });
+    engine.control.deselect(A);
+    engine.control.clear();
+
+    assert.strictEqual(changes.length, 0, "a locked select emits no change");
+  });
+
+  test("a change deferred by a customization does not commit once the select is locked", function (assert) {
+    const queued = [];
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "select-customizations",
+        ({ value: selects }) =>
+          selects.forAll((spec) => spec.change((next) => queued.push(next)))
+      );
+    });
+
+    let locked = false;
+    const { engine, changes } = controlled({
+      items: [A, B],
+      multiple: true,
+      getLocked: () => locked,
+    });
+
+    engine.select(A, { programmatic: true });
+    assert.strictEqual(
+      queued.length,
+      1,
+      "the customization deferred the change"
+    );
+
+    locked = true;
+    queued[0]();
+
+    assert.strictEqual(
+      changes.length,
+      0,
+      "the deferred change is dropped because the select locked meanwhile"
+    );
+  });
+
   test("scope writes are refused while the select is locked", async function (assert) {
     let locked = false;
     const { engine, changes } = controlled({

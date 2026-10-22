@@ -198,6 +198,9 @@ export default class SelectionActions {
    * Toggles an item: for multi, selects or deselects; for single, selects it.
    */
   toggle(item: SelectItem): void {
+    if (this.#options.locked) {
+      return;
+    }
     if (this.#options.multiple && this.isSelected(item)) {
       this.deselect(item);
     } else {
@@ -212,6 +215,9 @@ export default class SelectionActions {
    */
   select(item: SelectItem, origin?: SelectionOrigin): void {
     this.#onIntent(origin);
+    if (this.#options.locked) {
+      return;
+    }
     if (this.isSelected(item)) {
       if (origin) {
         this.#options.onReconfirm?.(item, origin);
@@ -303,6 +309,9 @@ export default class SelectionActions {
    */
   deselect(item: SelectItem, origin?: SelectionOrigin): void {
     this.#onIntent(origin);
+    if (this.#options.locked) {
+      return;
+    }
     if (!this.#options.multiple) {
       if (origin && !this.isSelected(item)) {
         return;
@@ -320,7 +329,7 @@ export default class SelectionActions {
   /** Removes the last held value from a multi-select selection. */
   deselectLast(origin?: SelectionOrigin): void {
     this.#onIntent(origin);
-    if (!this.#options.multiple) {
+    if (this.#options.locked || !this.#options.multiple) {
       return;
     }
     const values = this.#valueArray;
@@ -335,6 +344,9 @@ export default class SelectionActions {
    */
   clear(origin?: SelectionOrigin): void {
     this.#onIntent(origin);
+    if (this.#options.locked) {
+      return;
+    }
     if (origin && !this.hasValue) {
       return;
     }
@@ -367,18 +379,17 @@ export default class SelectionActions {
     // controlled `onChange`; registered change middleware wraps it (and
     // may run `next()` to proceed or skip it).
     this.#runChange(() => {
-      if (this.#beforeEmit(origin, nextValue)) {
+      if (this.#beforeEmit(origin, nextValue) && !this.#options.locked) {
         this.#options.onChange?.(nextValue, payload, {
           origin,
           reason,
           options: context.options,
         });
+
+        // Legacy extensions run only after the controlled change commits.
+        this.#applyLegacyOnChange(nextValue, payload);
       }
     }, context);
-
-    // Legacy `modifySelectKit(id).onChange` extensions (side effects only, run after
-    // the value has changed — matching the old ordering).
-    this.#applyLegacyOnChange(nextValue, payload);
   }
 
   // Best-effort synchronous resolution of a value to its item(s), from the escape
