@@ -110,6 +110,7 @@ Ask these questions during code review:
 - Does a FormKit ACL editor use `DAccessControlField` or deliberately document why its validation flow differs?
 - Is ACL serialization limited to users who can manage the specific target?
 - Are list/index queries using `Target.with_acl_permission`, `Target.with_any_acl_permissions`, `guardian.target_ids_with_acl_permission`, or `target_ids_with_any_acl_permissions` instead of ad hoc SQL?
+- Do ACL-restricted realtime broadcasts include direct user grants and owners as well as group grants? For bulk publishers, are both audience types loaded in batches?
 - Are group and user IDs validated before persistence when they come from params?
 - Are plugin target classes registered with `DiscoursePluginRegistry.register_acl_target_class`?
 - Do tests cover anonymous users and pseudo-group semantics if `anonymous_users`, `logged_in_users`, or `everyone` can appear in ACLs?
