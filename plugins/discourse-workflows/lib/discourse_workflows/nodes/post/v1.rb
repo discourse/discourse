@@ -34,6 +34,12 @@ module DiscourseWorkflows
           "offset" => 0,
         }.freeze
         MAX_LIMIT = 800
+        REPLY_TO_POST_JOIN = <<~SQL
+          LEFT JOIN posts reply_posts
+            ON reply_posts.topic_id = posts.topic_id
+            AND reply_posts.post_number = posts.reply_to_post_number
+            AND reply_posts.deleted_at IS NULL
+        SQL
 
         def self.list_string_property(control: nil, hidden: false)
           property = {
@@ -425,11 +431,11 @@ module DiscourseWorkflows
         end
 
         def list_posts(exec_ctx, config, item_index)
-          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          guardian = exec_ctx.actor_from_parameter("actor_username", item_index).guardian
           limit = bounded_integer(config["limit"], default: DEFAULT_LIMIT, min: 1, max: MAX_LIMIT)
           offset = bounded_integer(config["offset"], default: 0, min: 0)
           query = query_from_config(config)
-          filter = PostsFilter.new(query, guardian: actor.guardian, limit: limit, offset: offset)
+          filter = PostsFilter.new(query, guardian:, limit: limit, offset: offset)
 
           if filter.invalid_filters.present?
             raise_node_error!(
@@ -440,10 +446,13 @@ module DiscourseWorkflows
             )
           end
 
-          posts = filter.search.includes(:user, topic: %i[category tags])
-          posts.map do |post|
-            { post: serialized_post(post, guardian: actor.guardian, config: config) }
-          end
+          posts =
+            filter
+              .search
+              .joins(REPLY_TO_POST_JOIN)
+              .select("posts.*, reply_posts.id AS reply_to_post_id")
+              .preload(:user, :reply_to_user, :uploads, topic: %i[category tags])
+          posts.map { |post| { post: serialized_post(post, guardian:, config:) } }
         end
 
         def serialized_post(post, guardian:, config:)
