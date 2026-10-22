@@ -57,6 +57,8 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     @encoder = PG::TextEncoder::CopyRow.new
 
     @merged_user_ids = []
+
+    # Keyed by integer source id, like the user/topic/post maps inherited from Base.
     @tags = {}
     @tag_groups = {}
     @uploads = {}
@@ -433,13 +435,13 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         .exec("SELECT #{columns.map { |c| "\"#{c}\"" }.join(", ")} FROM tags")
         .each do |row|
           if existing = Tag.where_name(row["name"]).first
-            @tags[row["id"]] = existing.id
+            @tags[row["id"].to_i] = existing.id
             next
           end
 
-          old_id = row["id"]
+          old_id = row["id"].to_i
           row["id"] = (last_id += 1)
-          @tags[old_id.to_s] = row["id"]
+          @tags[old_id] = row["id"]
           row["target_tag_id"] = row["id"]
 
           @raw_connection.put_copy_data(row.values)
@@ -480,7 +482,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         .exec("SELECT #{columns.map { |c| "\"#{c}\"" }.join(", ")} FROM uploads")
         .each do |row|
           if existing_id = existing_ids_by_sha1[row["sha1"]]
-            @uploads[row["id"].to_s] = existing_id
+            @uploads[row["id"].to_i] = existing_id
             next
           end
 
@@ -496,7 +498,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
           old_id = row["id"]
           if old_id && last_id
             row["id"] = (last_id += 1)
-            @uploads[old_id.to_s] = row["id"]
+            @uploads[old_id.to_i] = row["id"]
           end
 
           old_user_id = row["user_id"].to_i
@@ -576,17 +578,17 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         .exec("SELECT #{columns.map { |c| "\"#{c}\"" }.join(", ")} FROM badges")
         .each do |row|
           if existing = Badge.where(name: row["name"]).first
-            @badges[row["id"]] = existing.id
+            @badges[row["id"].to_i] = existing.id
             next
           end
 
-          old_id = row["id"]
+          old_id = row["id"].to_i
           row["id"] = (last_id += 1)
-          @badges[old_id.to_s] = row["id"]
+          @badges[old_id] = row["id"]
 
-          row["badge_grouping_id"] = @badge_groupings[row["badge_grouping_id"]] if row[
-            "badge_grouping_id"
-          ]
+          row["badge_grouping_id"] = badge_grouping_id_from_imported_id(
+            row["badge_grouping_id"],
+          ) if row["badge_grouping_id"]
 
           row["image_upload_id"] = upload_id_from_imported_id(row["image_upload_id"])
 
@@ -661,6 +663,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     has_custom_fields = CUSTOM_FIELDS.include?(klass.name.downcase)
     imported_ids = []
     last_id = columns.include?("id") ? (klass.unscoped.maximum(:id) || 1) : nil
+    processor = merger_processor_for(klass) unless skip_processing
 
     sql = "COPY #{klass.table_name} (#{columns.map { |c| "\"#{c}\"" }.join(", ")}) FROM STDIN"
     @raw_connection.copy_data(sql, @encoder) do
@@ -795,28 +798,25 @@ class BulkImport::DiscourseMerger < BulkImport::Base
             next unless remap_upload_reference_target(row)
           end
 
-          old_id = row["id"].to_i
-          if old_id && last_id
+          if last_id
+            old_id = row["id"].to_i
+            # Rows the processor skips below still consume an id; the gaps are harmless.
             row["id"] = (last_id += 1)
-            imported_ids << old_id if has_custom_fields
-            mapping[old_id] = row["id"] if mapping
           end
 
           if skip_processing
             @raw_connection.put_copy_data(row.values)
           else
-            process_method_name = "process_#{klass.name.underscore}"
-
             processed =
-              (
-                if respond_to?(process_method_name)
-                  send(process_method_name, ActiveSupport::HashWithIndifferentAccess.new(row))
-                else
-                  row
-                end
-              )
+              processor ? processor.call(ActiveSupport::HashWithIndifferentAccess.new(row)) : row
+            next unless processed
 
-            @raw_connection.put_copy_data columns.map { |c| processed[c] } if processed
+            @raw_connection.put_copy_data columns.map { |c| processed[c] }
+          end
+
+          if last_id
+            imported_ids << old_id if has_custom_fields
+            mapping[old_id] = row["id"] if mapping
           end
         end
     end
@@ -830,6 +830,16 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         { record_id: send(id_mapping_method_name, imported_id), value: imported_id }
       end
     end
+  end
+
+  # Base's process_* methods belong to the converter pipeline: they expect rows and state
+  # (original_id columns, @imported_records, ...) that a merge never has.
+  def merger_processor_for(klass)
+    name = "process_#{klass.name.underscore}"
+    return unless respond_to?(name)
+
+    processor = method(name)
+    processor if BulkImport::Base.ancestors.exclude?(processor.owner)
   end
 
   def copy_model_user_search_data(
@@ -1207,43 +1217,47 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def tag_id_from_imported_id(id)
-    @tags[id.to_s]
+    @tags[id.to_i]
   end
 
   def tag_group_id_from_imported_id(id)
-    @tag_groups[id.to_s]
+    @tag_groups[id.to_i]
   end
 
   def upload_id_from_imported_id(id)
-    @uploads[id.to_s]
+    @uploads[id.to_i]
   end
 
   def post_action_id_from_imported_id(id)
-    @post_actions[id.to_s]
+    @post_actions[id.to_i]
   end
 
   def badge_id_from_imported_id(id)
-    @badges[id.to_s]
+    @badges[id.to_i]
+  end
+
+  def badge_grouping_id_from_imported_id(id)
+    @badge_groupings[id.to_i]
   end
 
   def notification_id_from_imported_id(id)
-    @notifications[id.to_s]
+    @notifications[id.to_i]
   end
 
   def email_token_id_from_imported_id(id)
-    @email_tokens[id.to_s]
+    @email_tokens[id.to_i]
   end
 
   def poll_id_from_imported_id(id)
-    @polls[id.to_s]
+    @polls[id.to_i]
   end
 
   def poll_option_id_from_imported_id(id)
-    @poll_options[id.to_s]
+    @poll_options[id.to_i]
   end
 
   def avatar_id_from_imported_id(id)
-    @avatars[id.to_s]
+    @avatars[id.to_i]
   end
 
   def fix_primary_keys
