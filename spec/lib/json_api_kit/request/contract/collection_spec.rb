@@ -12,7 +12,8 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
       type :users
     end
   end
-  let(:resource) do
+  let(:resource) { resource_class.new(guardian: Guardian.new) }
+  let(:resource_class) do
     users = related
     Class.new(JsonApiKit::Resource) do
       has_one :user, resource: users

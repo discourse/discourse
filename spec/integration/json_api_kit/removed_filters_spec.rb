@@ -44,6 +44,9 @@ RSpec.describe JsonApiKitSpec::RemovedFilterTopicsController, type: :request do
         removed_filter :closed
         removed_filter(:by_author) { |scope, value| scope.where(user_id: value) }
         removed_filter(:matching_title) { |scope, value| scope.where(title: value) }
+        removed_filter(:excluding_viewer) do |scope, _value, context|
+          scope.where.not(user_id: context.guardian.user.id)
+        end
       end
     end
   end
@@ -125,6 +128,14 @@ RSpec.describe JsonApiKitSpec::RemovedFilterTopicsController, type: :request do
 
       it "runs the retained implementation" do
         expect(ids).to eq([closed_topic.id.to_s])
+      end
+    end
+
+    context "when the removed filter reads the request context" do
+      let(:parameters) { { filter: { excludingViewer: "true" } } }
+
+      it "hands the retained implementation the viewer's guardian" do
+        expect(ids).to be_empty
       end
     end
 

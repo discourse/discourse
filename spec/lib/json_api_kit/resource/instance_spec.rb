@@ -39,6 +39,75 @@ RSpec.describe JsonApiKit::Resource do
       expect(kept_ids).to contain_exactly(kept_topic.id)
     end
 
+    context "when a filter reads the guardian from the context" do
+      let(:resource_class) do
+        Class.new(super()) do
+          filter(:mine) { |scope, _value, context| scope.where(user_id: context.guardian.user&.id) }
+        end
+      end
+      let(:filtering) { { "mine" => "true" } }
+      let(:guardian) { kept_topic.user.guardian }
+
+      it "narrows the listing with the resource's guardian" do
+        expect(kept_ids).to contain_exactly(kept_topic.id)
+      end
+
+      context "when the guardian is anonymous" do
+        let(:guardian) { Guardian.new }
+
+        it "keeps no rows" do
+          expect(kept_ids).to be_empty
+        end
+      end
+    end
+
+    context "when a filter reads another filter's value from the context" do
+      let(:resource_class) do
+        Class.new(super()) do
+          filter(:requires_title) do |scope, _value, context|
+            context.filtering.key?("title") ? scope : scope.none
+          end
+        end
+      end
+      let(:filtering) { { "title" => kept_topic.title, "requires_title" => "true" } }
+
+      it "sees every value the request filters by" do
+        expect(kept_ids).to contain_exactly(kept_topic.id)
+      end
+    end
+
+    context "when a filter declares a default and the request leaves it out" do
+      let(:resource_class) { Class.new(super()) { filter :closed, default: false } }
+      let(:filtering) { {} }
+
+      it "narrows the listing with the default" do
+        expect(kept_ids).to contain_exactly(kept_topic.id)
+      end
+
+      context "when the request sends a value" do
+        let(:filtering) { { "closed" => true } }
+
+        it "narrows the listing with that value instead" do
+          expect(kept_ids).to contain_exactly(dropped_topic.id)
+        end
+      end
+
+      context "when another filter reads it from the context" do
+        let(:resource_class) do
+          Class.new(super()) do
+            filter(:open_only) do |scope, _value, context|
+              context.filtering["closed"] == false ? scope : scope.none
+            end
+          end
+        end
+        let(:filtering) { { "open_only" => "true" } }
+
+        it "sees the default as the request's value" do
+          expect(kept_ids).to contain_exactly(kept_topic.id)
+        end
+      end
+    end
+
     context "when a filter is declared before the next request" do
       subject(:kept_ids) { next_resource.apply_filters(Topic.all, filtering).map(&:id) }
 

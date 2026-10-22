@@ -244,6 +244,21 @@ RSpec.describe JsonApiKit::Resource do
     end
   end
 
+  describe ".filter" do
+    it "refuses a second declaration of the same name" do
+      expect { topic_resource.filter(:title) }.to raise_error(ArgumentError, /title/)
+    end
+
+    context "when a resource inherits from another" do
+      it "refuses to redeclare a filter of its parent" do
+        expect { Class.new(topic_resource) { filter :title } }.to raise_error(
+          ArgumentError,
+          /title/,
+        )
+      end
+    end
+  end
+
   describe ".sort" do
     it "lets a request order the listing by the name it declares" do
       expect(topic_resource.order("created_at" => :desc).leading.name).to eq(:created_at)

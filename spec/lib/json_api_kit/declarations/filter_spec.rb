@@ -16,11 +16,75 @@ RSpec.describe JsonApiKit::Declarations::Filter do
     end
   end
 
+  describe "#default" do
+    it "has no default unless one is declared" do
+      expect(filter.default?).to be(false)
+    end
+
+    context "with a declared default" do
+      subject!(:filter) { described_class.new(:tags, default: declared) }
+
+      let(:declared) { ["bug"] }
+
+      it "keeps a frozen copy, so no request can change it for the next one" do
+        declared << "feature"
+
+        expect([filter.default?, filter.default, filter.default.frozen?]).to eq(
+          [true, ["bug"], true],
+        )
+      end
+    end
+
+    context "with nil as the declared default" do
+      subject(:filter) { described_class.new(:category, default: nil) }
+
+      it "still counts as declaring one" do
+        expect([filter.default?, filter.default]).to eq([true, nil])
+      end
+    end
+  end
+
   describe "#apply" do
     subject(:kept_ids) { filter.apply(scope, matching_topic.title).map(&:id) }
 
+    let(:context) do
+      described_class::Context.new(
+        guardian: Guardian.new,
+        edition: JsonApiKit::Edition.current,
+        filtering: {
+          "alias" => matching_topic.title,
+        },
+      )
+    end
+
     it "keeps the rows its declared condition allows" do
       expect(kept_ids).to contain_exactly(matching_topic.id)
+    end
+
+    context "when the condition also takes the request context" do
+      subject(:filter) do
+        described_class.new(:title) do |scope, _value, context|
+          scope.where(title: context.filtering.fetch("alias"))
+        end
+      end
+
+      it "hands the context to the condition" do
+        expect(filter.apply(scope, "ignored", context).map(&:id)).to contain_exactly(
+          matching_topic.id,
+        )
+      end
+    end
+
+    context "when a two-argument lambda condition is applied with a context" do
+      subject(:filter) do
+        described_class.new(:title, &->(scope, value) { scope.where(title: value) })
+      end
+
+      it "calls the condition with the scope and the value only" do
+        expect(filter.apply(scope, matching_topic.title, context).map(&:id)).to contain_exactly(
+          matching_topic.id,
+        )
+      end
     end
 
     context "when the filter declares no condition of its own" do

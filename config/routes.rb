@@ -1786,6 +1786,9 @@ Discourse::Application.routes.draw do
     get ".well-known/apple-app-site-association" => "metadata#app_association_ios", :format => false
     get "opensearch" => "metadata#opensearch", :constraints => { format: :xml }
 
+    get "api/tags" => "json_api/tags#index"
+    get "api/tags/:id" => "json_api/tags#show"
+
     # Tag Routes - Canonical vs Legacy
     #
     # Canonical:

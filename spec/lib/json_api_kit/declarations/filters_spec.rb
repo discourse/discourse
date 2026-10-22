@@ -59,6 +59,31 @@ RSpec.describe JsonApiKit::Declarations::Filters do
       end
     end
 
+    context "when a filter reads a sibling filter's value from the context" do
+      subject(:kept_ids) { filters.apply(scope, filtering, context).map(&:id) }
+
+      let(:declarations) do
+        [
+          filter_class.new(:closed),
+          filter_class.new(:title) do |scope, value, context|
+            context.filtering["closed"] == "false" ? scope.where(title: value) : scope.none
+          end,
+        ]
+      end
+      let(:filtering) { { "closed" => "false", "title" => open_topic.title } }
+      let(:context) do
+        filter_class::Context.new(
+          guardian: Guardian.new,
+          edition: JsonApiKit::Edition.current,
+          filtering:,
+        )
+      end
+
+      it "applies the plain filters and the contextual one together" do
+        expect(kept_ids).to contain_exactly(open_topic.id)
+      end
+    end
+
     context "when there is no filtering" do
       it "returns the same scope" do
         expect(filters.apply(scope)).to be(scope)

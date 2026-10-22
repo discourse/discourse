@@ -5,7 +5,7 @@ module JsonApiKit
     class RemovedSort
       attr_reader :type, :name
 
-      delegate :key, to: :sort
+      delegate :key, :readable_by?, to: :sort
 
       def initialize(type, name, **options)
         @type = type.to_s

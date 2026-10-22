@@ -13,6 +13,8 @@ module JsonApiKit
 
       def names = sorts.keys
 
+      def readable_names(guardian) = sorts.values.select { it.readable_by?(guardian) }.map(&:name)
+
       def with(additional_sorts)
         self.class.new(declarations.chain(additional_sorts), schema:, unique_by:)
       end

@@ -9,6 +9,30 @@ RSpec.describe JsonApiKit::Declarations::Sort do
     it { is_expected.to eq("created_at") }
   end
 
+  describe "#readable_by?" do
+    it "lets anyone sort by default" do
+      expect(sort.readable_by?(Guardian.new)).to be(true)
+    end
+
+    context "with a readable rule" do
+      let(:sort) { described_class.for(:created_at, readable: ->(guardian) { guardian.is_staff? }) }
+
+      it "lets only the guardians the rule allows sort by it" do
+        expect([Guardian.new, Fabricate(:admin).guardian].map { sort.readable_by?(it) }).to eq(
+          [false, true],
+        )
+      end
+    end
+
+    context "with a rule that reads the record" do
+      it "refuses the declaration, since a sort applies to every record at once" do
+        expect {
+          described_class.for(:created_at, readable: ->(_guardian, _record) { true })
+        }.to raise_error(ArgumentError)
+      end
+    end
+  end
+
   describe "#key" do
     subject(:key) { sort.key(schema: JsonApiKit::Schema.new(Topic), direction: :desc) }
 

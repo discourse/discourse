@@ -55,6 +55,9 @@ module JsonApiKit
 
       delegate :names, to: :sorts, prefix: :sort
 
+      # The sorts a request may name, which leaves out the ones the guardian may not use.
+      def readable_sort_names = sorts.readable_names(guardian)
+
       def sorts = @sorts ||= self.class.sorts.with(edition.removed_sorts.for(type))
 
       private
