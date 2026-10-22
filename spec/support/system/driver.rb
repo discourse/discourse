@@ -142,6 +142,8 @@ module SystemDrivers
       --disable-smooth-scrolling
     ]
 
+    base_args << "--js-flags=--no-enable-lazy-source-positions"
+
     if ENV["PLAYWRIGHT_DEVTOOLS"].presence == "1" || ENV["SELENIUM_DEVTOOLS"].presence == "1"
       base_args << "--auto-open-devtools-for-tabs"
     end
