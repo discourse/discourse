@@ -12,7 +12,7 @@ import DUserLink from "discourse/ui-kit/d-user-link";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import { i18n } from "discourse-i18n";
-import ShareReport from "discourse/plugins/discourse-data-explorer/discourse/components/share-report";
+import QueryGroups from "discourse/plugins/discourse-data-explorer/discourse/components/query-groups";
 
 export default <template>
   <div class="admin-detail">
@@ -164,15 +164,7 @@ export default <template>
                           {{i18n "explorer.query_groups"}}
                         </div>
                         <div class="group-names">
-                          {{#each query.groups as |group|}}
-                            <ShareReport
-                              @group={{group.name}}
-                              @query={{query}}
-                            />
-                          {{/each}}
-                          {{#unless query.groups.length}}
-                            -
-                          {{/unless}}
+                          <QueryGroups @query={{query}} />
                         </div>
                       </td>
                       <td class="d-table__cell --detail query-created-at">
