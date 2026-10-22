@@ -1,4 +1,4 @@
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
@@ -10,7 +10,7 @@ import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
 import DTableHeaderToggle from "discourse/ui-kit/d-table-header-toggle";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
-import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import { i18n } from "discourse-i18n";
 import ShareReport from "discourse/plugins/discourse-data-explorer/discourse/components/share-report";
 
@@ -38,7 +38,7 @@ export default <template>
 
     <DFilterControls
       @additionalFiltersActive={{@controller.hasTagFilter}}
-      @array={{@controller.model.content}}
+      @array={{@controller.queries}}
       @initialTextFilter={{@controller.textFilter}}
       @inputPlaceholder={{i18n "explorer.search_placeholder"}}
       @loading={{@controller.searchLoading}}
@@ -60,10 +60,14 @@ export default <template>
       </:additionalFilters>
 
       <:content as |filteredQueries|>
-        {{#if @controller.model.content.length}}
+        {{#if @controller.queries.length}}
           <DConditionalLoadingSpinner @condition={{@controller.loading}} />
 
-          <DLoadMore @action={{@controller.loadMore}}>
+          <DLoadMore
+            @action={{@controller.loadMore}}
+            @enabled={{@controller.canLoadMore}}
+            @isLoading={{@controller.loadingMore}}
+          >
             <div class="container discourse-data-explorer-query-list">
               <table class="d-table recent-queries">
                 <thead class="d-table__header">
@@ -144,9 +148,13 @@ export default <template>
                         {{#if query.user}}
                           <DUserLink
                             class="query-created-by__link"
-                            @user={{query.user}}
+                            @username={{query.user.username}}
                           >
-                            {{dAvatar query.user imageSize="tiny"}}
+                            {{dBoundAvatarTemplate
+                              query.user.avatarTemplate
+                              "tiny"
+                              (hash title=query.user.username)
+                            }}
                             <span>{{query.user.username}}</span>
                           </DUserLink>
                         {{/if}}
@@ -156,10 +164,13 @@ export default <template>
                           {{i18n "explorer.query_groups"}}
                         </div>
                         <div class="group-names">
-                          {{#each query.group_names as |group|}}
-                            <ShareReport @group={{group}} @query={{query}} />
+                          {{#each query.groups as |group|}}
+                            <ShareReport
+                              @group={{group.name}}
+                              @query={{query}}
+                            />
                           {{/each}}
-                          {{#unless query.group_names.length}}
+                          {{#unless query.groups.length}}
                             -
                           {{/unless}}
                         </div>
@@ -168,16 +179,13 @@ export default <template>
                         <div class="d-table__mobile-label">
                           {{i18n "explorer.query_time"}}
                         </div>
-                        {{#if query.last_run_at}}
+                        {{#if query.lastRunAt}}
                           <span>
-                            {{dAgeWithTooltip
-                              query.last_run_at
-                              format="medium"
-                            }}
+                            {{dAgeWithTooltip query.lastRunAt format="medium"}}
                           </span>
-                        {{else if query.created_at}}
+                        {{else if query.createdAt}}
                           <span>
-                            {{dAgeWithTooltip query.created_at format="medium"}}
+                            {{dAgeWithTooltip query.createdAt format="medium"}}
                           </span>
                         {{else}}
                           -
@@ -191,7 +199,7 @@ export default <template>
                             @route="adminPlugins.show.explorer.edit"
                             {{on "click" @controller.scrollTop}}
                           >
-                            {{#if query.is_default}}
+                            {{#if query.isDefault}}
                               {{i18n "explorer.view_query"}}
                             {{else}}
                               {{i18n "edit"}}
@@ -206,9 +214,7 @@ export default <template>
             </div>
           </DLoadMore>
 
-          <DConditionalLoadingSpinner
-            @condition={{@controller.model.loadingMore}}
-          />
+          <DConditionalLoadingSpinner @condition={{@controller.loadingMore}} />
         {{/if}}
       </:content>
     </DFilterControls>
