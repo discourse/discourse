@@ -286,9 +286,6 @@ acceptance("New Query - AI", function (needs) {
     server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
       helper.response(["default", "staff"])
     );
-    server.get("/admin/plugins/discourse-data-explorer/queries", () =>
-      helper.response({ queries: [] })
-    );
 
     server.post(
       "/admin/plugins/discourse-data-explorer/queries/generate.json",

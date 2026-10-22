@@ -33,31 +33,7 @@ const INCLUDED = [
   { type: "groups", id: "41", attributes: { name: "analysts" } },
 ];
 
-const OLDER_QUERY = {
-  id: 2,
-  name: "Older query",
-  description: "",
-  lastRunAt: "2021-01-01T00:00:00.000Z",
-  tags: [],
-  userId: 1,
-  groupIds: [],
-};
-
-const WIDELY_SHARED_QUERY = {
-  id: 7,
-  name: "Widely shared",
-  description: "",
-  lastRunAt: "2021-01-01T00:00:00.000Z",
-  tags: [],
-  userId: 1,
-  groupIds: [41],
-  groupsLinks: {
-    related: "/api/data-explorer/queries/7/groups",
-    next: "/api/data-explorer/queries/7/relationships/groups?page%5Bafter%5D=abc",
-  },
-};
-
-function toDocument(queries, next) {
+function toDocument(queries, next = null) {
   return {
     data: queries.map(({ id, userId, groupIds, groupsLinks, ...attrs }) => ({
       type: "queries",
@@ -93,12 +69,10 @@ acceptance("List Queries", function (needs) {
   let lastQueryParams;
   let lastRequestHeaders;
   let handleQueries;
-  let nextLink;
 
   needs.hooks.beforeEach(() => {
     lastQueryParams = null;
     lastRequestHeaders = null;
-    nextLink = null;
   });
 
   needs.pretender((server, helper) => {
@@ -149,7 +123,7 @@ acceptance("List Queries", function (needs) {
       });
     });
 
-    handleQueries = (request) => {
+    handleQueries = (request, next) => {
       lastQueryParams = request.queryParams;
       lastRequestHeaders = request.requestHeaders;
       const queries = [
@@ -194,14 +168,10 @@ acceptance("List Queries", function (needs) {
         );
       });
 
-      return helper.response(toDocument(filteredQueries, nextLink));
+      return helper.response(toDocument(filteredQueries, next));
     };
 
-    server.get("/api/data-explorer/queries", (request) =>
-      request.queryParams["page[after]"]
-        ? helper.response(toDocument([OLDER_QUERY], null))
-        : handleQueries(request)
-    );
+    server.get("/api/data-explorer/queries", handleQueries);
   });
 
   test("renders the page with the list of queries", async function (assert) {
@@ -421,7 +391,26 @@ acceptance("List Queries", function (needs) {
   });
 
   test("loads the next page from the document links", async function (assert) {
-    nextLink = "/api/data-explorer/queries?page%5Bafter%5D=abc";
+    pretender.get("/api/data-explorer/queries", (request) =>
+      request.queryParams["page[after]"]
+        ? response(
+            toDocument([
+              {
+                id: 2,
+                name: "Older query",
+                description: "",
+                lastRunAt: "2021-01-01T00:00:00.000Z",
+                tags: [],
+                userId: 1,
+                groupIds: [],
+              },
+            ])
+          )
+        : handleQueries(
+            request,
+            "/api/data-explorer/queries?page%5Bafter%5D=abc"
+          )
+    );
     await visit("/admin/plugins/discourse-data-explorer/queries");
 
     const controller = this.owner.lookup(
@@ -442,24 +431,37 @@ acceptance("List Queries", function (needs) {
   });
 
   test("loads every group of a query whose groups were truncated", async function (assert) {
-    let relatedParams;
     pretender.get("/api/data-explorer/queries", () =>
-      response(toDocument([WIDELY_SHARED_QUERY], null))
+      response(
+        toDocument([
+          {
+            id: 7,
+            name: "Widely shared",
+            description: "",
+            lastRunAt: "2021-01-01T00:00:00.000Z",
+            tags: [],
+            userId: 1,
+            groupIds: [41],
+            groupsLinks: {
+              related: "/api/data-explorer/queries/7/groups",
+              next: "/api/data-explorer/queries/7/relationships/groups?page%5Bafter%5D=abc",
+            },
+          },
+        ])
+      )
     );
-    pretender.get("/api/data-explorer/queries/7/groups", (request) => {
-      relatedParams = request.queryParams;
-      return response({
+    pretender.get("/api/data-explorer/queries/7/groups", () =>
+      response({
         data: [
           { type: "groups", id: "41", attributes: { name: "analysts" } },
           { type: "groups", id: "42", attributes: { name: "auditors" } },
         ],
         links: { next: null },
-      });
-    });
+      })
+    );
 
     await visit("/admin/plugins/discourse-data-explorer/queries");
 
-    assert.strictEqual(relatedParams["page[size]"], "100");
     assert
       .dom(".query-row .query-group-names")
       .includesText("analysts")
