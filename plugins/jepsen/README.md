@@ -1,10 +1,10 @@
 # Jepsen
 
-Jepsen is a Discourse product plugin scaffold based on the official
-[Discourse plugin skeleton](https://github.com/discourse/discourse-plugin-skeleton).
+Jepsen is a bundled Discourse product plugin. It currently provides an example
+JSON endpoint at `/jepsen/examples` and the `jepsen_enabled` site setting.
 
-The scaffold includes the `jepsen_enabled` site setting and the skeleton example
-JSON endpoint at `/jepsen/examples`. Product features are not implemented yet.
+See the [product guide](doc/guide.md) for installation, settings, authorization,
+architecture, and tests.
 
 ## License
 
