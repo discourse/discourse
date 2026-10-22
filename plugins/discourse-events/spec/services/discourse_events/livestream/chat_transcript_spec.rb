@@ -105,6 +105,12 @@ RSpec.describe DiscourseEvents::Livestream::ChatTranscript do
         )
         expect(transcript.raw.length).to be <= max_length
       end
+
+      it "looks up each message's uploads once however many renders fitting takes" do
+        queries = track_sql_queries { transcript.raw }
+
+        puts queries.grep(/upload_references/)
+      end
     end
 
     context "when there is no room for any message" do

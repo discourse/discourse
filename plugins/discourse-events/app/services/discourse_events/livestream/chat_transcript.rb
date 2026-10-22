@@ -14,6 +14,14 @@ class DiscourseEvents::Livestream::ChatTranscript
   # text cooked as part of a post authored by the system user.
   CLOSING_TAGS = %r{\[/(chat|wrap)\]}i
 
+  # Sizing renders the same messages over and over, and each rendering of a
+  # message queries its uploads.
+  class QuotedMessage < SimpleDelegator
+    def to_markdown
+      @to_markdown ||= __getobj__.to_markdown
+    end
+  end
+
   def initialize(channel:, messages:, event_date:, max_length:)
     @channel = channel
     @messages = messages
@@ -99,7 +107,7 @@ class DiscourseEvents::Livestream::ChatTranscript
     # An upload-only message has no text.
     message.message = message.message.to_s.gsub(CLOSING_TAGS) { "\\#{it}" }
     message.readonly!
-    message
+    QuotedMessage.new(message)
   end
 
   def earlier_messages_notice(count)

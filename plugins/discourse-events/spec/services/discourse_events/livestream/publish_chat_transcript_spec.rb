@@ -149,6 +149,41 @@ RSpec.describe DiscourseEvents::Livestream::PublishChatTranscript do
         expect(topic.reload.bumped_at).to eq_time(topic.bumped_at)
       end
 
+      context "when another job transcribed the messages while this one waited" do
+        before do
+          allow(DistributedMutex).to receive(
+            :synchronize,
+          ).and_wrap_original do |original, *args, **kwargs, &block|
+            topic_chat_channel.update!(last_transcribed_message_id: messages.last.id)
+            original.call(*args, **kwargs, &block)
+          end
+        end
+
+        it "does not transcribe them again" do
+          expect { result }.not_to change { [topic.posts.count, event_post.reload.raw] }
+        end
+      end
+
+      context "when the event post is edited while the transcript is rendered" do
+        let(:edited_raw) { "#{event_post.raw.rstrip}\n\nRecording: https://example.com/recording" }
+
+        before do
+          allow(DiscourseEvents::Livestream::ChatTranscript).to receive(
+            :new,
+          ).and_wrap_original do |original, **kwargs|
+            event_post.update_columns(raw: edited_raw)
+            original.call(**kwargs)
+          end
+        end
+
+        it "keeps the edit and asks to render again" do
+          expect { result }.to raise_error(described_class::EventPostChanged)
+
+          expect(event_post.reload.raw).to eq(edited_raw)
+          expect(topic_chat_channel.reload.last_transcribed_message_id).to be_nil
+        end
+      end
+
       it "keeps the event post within the length limit" do
         SiteSetting.max_post_length = event_post.raw.length + 120
         result
@@ -203,6 +238,40 @@ RSpec.describe DiscourseEvents::Livestream::PublishChatTranscript do
         it "still closes the chat channel" do
           expect { result }.to change { chat_channel.reload.status }.to("closed")
         end
+      end
+    end
+
+    context "when the job runs once the next occurrence has opened" do
+      let!(:closing_message) do
+        Fabricate(
+          :chat_message,
+          chat_channel:,
+          user: viewer,
+          message: "Thanks everyone",
+          created_at: ends_at + 5.minutes,
+        )
+      end
+      let!(:next_occurrence_message) do
+        Fabricate(
+          :chat_message,
+          chat_channel:,
+          user: viewer,
+          message: "Starting soon?",
+          created_at: starts_at + 1.day - 10.minutes,
+        )
+      end
+
+      before do
+        event.update_columns(recurrence: "every_day")
+        freeze_time(starts_at + 1.day)
+      end
+
+      it "transcribes only the chat of the occurrence that ended" do
+        result
+
+        expect(topic.posts.last.raw).to include("Thanks everyone")
+        expect(topic.posts.last.raw).not_to include("Starting soon?")
+        expect(topic_chat_channel.reload.last_transcribed_message_id).to eq(closing_message.id)
       end
     end
 

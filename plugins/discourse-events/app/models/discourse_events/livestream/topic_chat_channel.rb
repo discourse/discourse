@@ -7,12 +7,14 @@ module DiscourseEvents
       belongs_to :topic
       belongs_to :chat_channel, class_name: "Chat::Channel", dependent: :destroy
 
-      def untranscribed_messages
-        chat_channel
-          .chat_messages
-          .where.not(id: reference_message_id)
-          .where("chat_messages.id > ?", last_transcribed_message_id.to_i)
-          .includes(:user, :chat_channel)
+      def untranscribed_messages(before: nil)
+        messages =
+          chat_channel
+            .chat_messages
+            .where.not(id: reference_message_id)
+            .where("chat_messages.id > ?", last_transcribed_message_id.to_i)
+            .includes(:user, :chat_channel)
+        before ? messages.where("chat_messages.created_at < ?", before) : messages
       end
     end
   end
