@@ -135,6 +135,18 @@ RSpec.describe Theme do
     expect(Theme.lookup_field(theme.id, :desktop, :body_tag)).to match(%r{<b>test</b>})
   end
 
+  it "can set and look up email header and footer fields" do
+    theme.set_field(target: :email_header, name: "email_header", value: "<h1>Header</h1>")
+    theme.set_field(target: :email_footer, name: "email_footer", value: "<p>Footer</p>")
+    theme.save!
+
+    expect(theme.theme_fields.pluck(:type_id)).to eq(
+      [ThemeField.types[:html], ThemeField.types[:html]],
+    )
+    expect(Theme.lookup_field(theme.id, :email_header, "email_header")).to eq("<h1>Header</h1>")
+    expect(Theme.lookup_field(theme.id, :email_footer, "email_footer")).to eq("<p>Footer</p>")
+  end
+
   describe "#switch_to_component!" do
     it "correctly converts a theme to component" do
       theme.add_relative_theme!(:child, child)

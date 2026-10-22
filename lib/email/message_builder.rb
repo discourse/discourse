@@ -193,6 +193,11 @@ module Email
           format: :html,
           locals: {
             html_body: html_override.html_safe,
+            email_theme_renderer:
+              Email::ThemeRenderer.new(
+                unsubscribe_url: @template_args[:unsubscribe_url],
+                locale: @template_args[:locale] || I18n.locale,
+              ),
           },
         )
       html = DiscoursePluginRegistry.apply_modifier(:message_builder_html_part, html, @opts, @to)

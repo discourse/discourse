@@ -79,6 +79,23 @@ RSpec.describe Email::Styles do
   end
 
   describe "html template formatter" do
+    it "uses the requested locale for language and text direction" do
+      styler =
+        described_class.new(
+          '<html><body><div class="with-dir">مرحبا</div></body></html>',
+          locale: "ar",
+        )
+
+      styler.format_html
+      document = Nokogiri::HTML5.parse(styler.to_html)
+
+      html = document.at_css("html")
+      expect(html["lang"]).to eq("ar")
+      expect(styler.to_html).to include('xml:lang="ar"')
+      expect(document.at_css("body")["dir"]).to eq("rtl")
+      expect(document.at_css(".with-dir")["dir"]).to eq("rtl")
+    end
+
     it "attaches a style to h3 tags" do
       frag = html_fragment("<h3>hello</h3>")
       expect(frag.at("h3")["style"]).to be_present

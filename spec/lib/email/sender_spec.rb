@@ -32,6 +32,34 @@ RSpec.describe Email::Sender do
     end
   end
 
+  it "writes theme header and footer content to both email parts" do
+    theme = Fabricate(:theme)
+    theme.set_field(target: :email_header, name: "email_header", value: "<div>Theme header</div>")
+    theme.set_field(target: :email_footer, name: "email_footer", value: "<div>Theme footer</div>")
+    theme.save!
+    SiteSetting.default_theme_id = theme.id
+    SiteSetting.enable_email_theme_header_and_footer = true
+
+    user = Fabricate(:user)
+    message = UserNotifications.signup(user)
+    stub_deliver_response(message)
+
+    Email::Sender.new(message, :signup, user).send
+
+    expect(message.html_part.body.decoded).to include("Theme header", "Theme footer")
+    expect(message.text_part.body.decoded).to include("Theme header", "Theme footer")
+  end
+
+  it "terminates the HTML part with a newline" do
+    message = Mail::Message.new(to: "recipient@example.com", body: "Café")
+    stub_deliver_response(message)
+
+    Email::Sender.new(message, :test_message).send
+
+    expect(message.html_part.body.decoded).to end_with("\n")
+    expect(message.html_part.encoded).to end_with("</body></html>\r\n")
+  end
+
   context "when disable_emails is enabled" do
     fab!(:user)
     fab!(:moderator)

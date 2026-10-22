@@ -45,4 +45,30 @@ module("Unit | Model | theme", function (hooks) {
 
     assert.strictEqual(theme.uploads.length, 1, "expecting an upload");
   });
+
+  test("exposes email header and footer targets and fields", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const theme = store.createRecord("theme", { theme_fields: [] });
+
+    const targetNames = theme.targets.map((target) => target.name);
+    assert.true(
+      targetNames.includes("email_header"),
+      "expecting an email_header target"
+    );
+    assert.true(
+      targetNames.includes("email_footer"),
+      "expecting an email_footer target"
+    );
+
+    assert.deepEqual(
+      theme.fieldNames.email_header,
+      ["email_header"],
+      "expecting an email_header field"
+    );
+    assert.deepEqual(
+      theme.fieldNames.email_footer,
+      ["email_footer"],
+      "expecting an email_footer field"
+    );
+  });
 });

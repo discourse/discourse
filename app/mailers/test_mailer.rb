@@ -6,4 +6,8 @@ class TestMailer < ActionMailer::Base
   def send_test(to_address, opts = {})
     build_email(to_address, template: "test_mailer", **opts)
   end
+
+  def send_template_preview(to_address, subject:, body:, locale:)
+    build_email(to_address, subject:, body:, locale:)
+  end
 end
