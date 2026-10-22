@@ -89,6 +89,27 @@ RSpec.describe Boards::UpdateBoard do
         expect(owner_acl.allowed_user_ids).to contain_exactly(admin.id)
       end
 
+      context "when an owner adds a co-owner without submitting ACL params" do
+        let(:raw) { { "owner_user_ids" => [admin.id, outsider.id] } }
+        let(:dependencies) { { guardian: admin.guardian } }
+
+        it "updates owners while preserving ordinary ACLs" do
+          expect(result).to run_successfully
+          expect(
+            AccessControlList.find_by!(target: board, permission: "owner").allowed_user_ids,
+          ).to(contain_exactly(admin.id, outsider.id))
+          expect(
+            AccessControlList.find_by!(target: board, permission: "manage").allowed_group_ids,
+          ).to(contain_exactly(manage_group.id, Group::AUTO_GROUPS[:admins]))
+        end
+      end
+
+      context "when a non-owner manager changes owners" do
+        let(:raw) { { "owner_user_ids" => [admin.id, outsider.id] } }
+
+        it { is_expected.to fail_a_step(:update_acl) }
+      end
+
       it "does not delete topic cards on unconstrained boards" do
         let_raw = { "name" => "Updated", "columns" => [{ "id" => column.id, "title" => "Col" }] }
         let_params = let_raw.merge("id" => board.id)

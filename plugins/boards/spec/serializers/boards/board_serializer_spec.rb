@@ -86,8 +86,18 @@ RSpec.describe Boards::BoardSerializer do
     writer_payload =
       described_class.new(writable_board, root: false, scope: Guardian.new(writer)).as_json
 
-    expect(manager_payload).to include(can_manage: true)
+    expect(manager_payload).to include(can_manage: true, can_manage_acl_owner: false)
     expect(writer_payload).to include(can_write: true, can_manage: false)
+  end
+
+  it "allows owners and admins to manage owners" do
+    board = Fabricate(:boards_board, created_by: writer)
+
+    owner_payload = described_class.new(board, root: false, scope: writer.guardian).as_json
+    admin_payload = described_class.new(board, root: false, scope: admin.guardian).as_json
+
+    expect(owner_payload).to include(can_manage_acl_owner: true)
+    expect(admin_payload).to include(can_manage_acl_owner: true)
   end
 
   it "serializes the creator username and avatar template" do

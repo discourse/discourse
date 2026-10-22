@@ -17,7 +17,7 @@ RSpec.describe AccessControlList::EvaluateModification do
     let(:new_acl) do
       [{ type: "group", id: Group::AUTO_GROUPS[:logged_in_users], permission: "view" }]
     end
-    let(:target) { Fabricate(:post) }
+    let(:target) { Fabricate(:post).becomes(EvaluateModificationTestTargetClass) }
     let(:target_id) { target.id }
     let(:target_type) { "EvaluateModificationTestTargetClass" }
 
@@ -43,10 +43,35 @@ RSpec.describe AccessControlList::EvaluateModification do
       it { is_expected.to fail_to_find_a_model(:target_type_klass) }
     end
 
-    context "when the new ACL is empty" do
+    context "when an existing owner removes ownership without retaining another grant" do
       let(:new_acl) { [] }
 
+      before do
+        Fabricate(
+          :access_control_list_with_users,
+          target:,
+          permission: Acl::Permissions::OWNER,
+          users: [current_user],
+        )
+      end
+
       it { is_expected.to fail_a_policy(:user_will_have_permission) }
+    end
+
+    context "when an existing owner retains a direct loss warning permission" do
+      let(:new_acl) { [{ type: "user", id: current_user.id, permission: "manage" }] }
+
+      before do
+        Fabricate(
+          :access_control_list_with_users,
+          target:,
+          permission: Acl::Permissions::OWNER,
+          users: [current_user],
+        )
+        EvaluateModificationTestTargetClass.stubs(:loss_warning_permissions).returns(["manage"])
+      end
+
+      it { is_expected.to run_successfully }
     end
 
     context "when creating a target with an empty ACL" do

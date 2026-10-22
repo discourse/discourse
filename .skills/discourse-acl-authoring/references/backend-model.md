@@ -101,6 +101,7 @@ Use the helper methods on `Guardian` instead of reaching into `user.permission_a
 guardian.has_acl_permission?(target, "view")
 guardian.has_any_acl_permission?(target, %w[edit manage])
 guardian.is_acl_owner?(target)
+guardian.can_manage_acl_owner?(target)
 guardian.target_ids_with_acl_permission(TargetClass, "view")
 guardian.target_ids_with_any_acl_permissions(TargetClass, %w[view edit manage])
 ```

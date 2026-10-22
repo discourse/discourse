@@ -699,7 +699,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
       .isDisabled("the mandatory row's permission select is disabled");
   });
 
-  test("renders the owner as the first mandatory user row", async function (assert) {
+  test("renders the owner as the first mandatory user row when ownership cannot be managed", async function (assert) {
     const state = controlledState([
       {
         type: "group",
@@ -754,6 +754,137 @@ module("Integration | Component | DAccessControl", function (hooks) {
         "labels the permission as Owner"
       )
       .isDisabled("prevents changing or removing the owner");
+  });
+
+  test("offers only Owner and Remove for an owner manager", async function (assert) {
+    const state = controlledState([
+      {
+        type: "user",
+        id: 7,
+        permission: "owner",
+        username: "martin",
+        display_name: "martin",
+      },
+    ]);
+    const ownerRow =
+      '.d-access-control__row[data-row-type="user"][data-row-id="7"]';
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @canManageOwners={{true}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(`${ownerRow} .d-access-control__permission`)
+      .isEnabled("allows ownership management");
+
+    await expandPermissionMenu(ownerRow);
+
+    assert
+      .dom(permissionOptionSelector("owner"))
+      .exists("keeps the current Owner option");
+    assert
+      .dom(permissionOptionSelector("remove"))
+      .exists("offers the Remove action");
+    assert
+      .dom(permissionOptionSelector("view"))
+      .doesNotExist("does not allow downgrading the owner to Viewer");
+    assert
+      .dom(permissionOptionSelector("edit"))
+      .doesNotExist("does not allow downgrading the owner to Editor");
+  });
+
+  test("offers ownership only for user rows when ownership can be managed", async function (assert) {
+    const state = controlledState([
+      {
+        type: "group",
+        id: 999,
+        permission: "view",
+        display_name: "Some Group",
+      },
+      {
+        type: "user",
+        id: 7,
+        permission: "edit",
+        username: "martin",
+        display_name: "martin",
+      },
+    ]);
+    const groupRow =
+      '.d-access-control__row[data-row-type="group"][data-row-id="999"]';
+    const userRow =
+      '.d-access-control__row[data-row-type="user"][data-row-id="7"]';
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @canManageOwners={{true}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+
+    await expandPermissionMenu(userRow);
+
+    assert
+      .dom(permissionOptionSelector("owner"))
+      .exists("offers Owner for a user");
+
+    await expandPermissionMenu(userRow);
+    await expandPermissionMenu(groupRow);
+
+    assert
+      .dom(permissionOptionSelector("owner"))
+      .doesNotExist("does not offer Owner for a group");
+  });
+
+  test("allows an owner manager to remove their own owner row", async function (assert) {
+    const currentUserId = this.currentUser.id;
+    const coOwnerId = currentUserId + 1;
+    const state = controlledState([
+      {
+        type: "user",
+        id: currentUserId,
+        permission: "owner",
+        username: this.currentUser.username,
+        display_name: this.currentUser.username,
+      },
+      {
+        type: "user",
+        id: coOwnerId,
+        permission: "owner",
+        username: "co-owner",
+        display_name: "co-owner",
+      },
+    ]);
+    const currentOwnerRow = `.d-access-control__row[data-row-type="user"][data-row-id="${currentUserId}"]`;
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @canManageOwners={{true}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+
+    await selectPermission("remove", currentOwnerRow);
+
+    assert.deepEqual(
+      state.onChangeCalls[0].map((entry) => entry.id),
+      [coOwnerId],
+      "removes the current user while retaining the co-owner"
+    );
   });
 
   test("does not offer owner as a permission for ordinary rows", async function (assert) {
@@ -1026,5 +1157,52 @@ module("Integration | Component | DAccessControlField", function (hooks) {
       [{ permissions: ["manage"] }],
       "the confirmed warning permissions are reported"
     );
+  });
+
+  test("prevents an existing target from submitting without an owner", async function (assert) {
+    this.data = {
+      acl: [
+        {
+          type: "user",
+          id: 7,
+          permission: "owner",
+          username: "martin",
+          display_name: "martin",
+        },
+      ],
+    };
+    this.onSubmit = sinon.spy();
+    pretender.post("/access-control/evaluate.json", () => response({}));
+
+    await render(
+      <template>
+        <Form @data={{this.data}} @onSubmit={{this.onSubmit}} as |form|>
+          <DAccessControlField
+            @aclTarget={{aclTarget}}
+            @canManageOwners={{true}}
+            @form={{form}}
+            @title="Access"
+          />
+          <form.Submit />
+        </Form>
+      </template>
+    );
+
+    await selectPermission(
+      "remove",
+      '.d-access-control__row[data-row-type="user"][data-row-id="7"]'
+    );
+    await formKit().submit();
+
+    assert
+      .form()
+      .field("acl")
+      .hasError(
+        i18n("access_control.manage.owner_required", {
+          typeName: aclTarget.name,
+        }),
+        "explains that the final owner cannot be removed"
+      );
+    assert.false(this.onSubmit.called, "does not submit the ownerless ACL");
   });
 });

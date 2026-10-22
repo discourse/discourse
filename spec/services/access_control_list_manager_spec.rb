@@ -32,6 +32,8 @@ RSpec.describe AccessControlListManager do
 
     fab!(:admin)
     fab!(:target_owner, :user)
+    fab!(:co_owner, :user)
+    fab!(:other_user, :user)
     fab!(:group)
     fab!(:other_group, :group)
     fab!(:target) do
@@ -41,11 +43,12 @@ RSpec.describe AccessControlListManager do
       cat
     end
 
-    let(:params) { { target:, flattened_acl:, source:, owner_user_id: } }
+    let(:params) { { target:, flattened_acl:, source:, owner_user_id:, owner_user_ids: } }
     let(:dependencies) { { guardian: } }
     let(:guardian) { admin.guardian }
     let(:source) { "test_source" }
     let(:owner_user_id) { admin.id }
+    let(:owner_user_ids) { nil }
 
     let(:flattened_acl) do
       [
@@ -88,6 +91,27 @@ RSpec.describe AccessControlListManager do
         expect(AccessControlList.where(target:).flattened_list).to contain_exactly(
           include(type: :user, id: owner_user_id, permission: "owner", mandatory: true),
         )
+      end
+    end
+
+    context "when co-owners are provided for a new target" do
+      let(:flattened_acl) { [] }
+      let(:owner_user_ids) { [target_owner.id, co_owner.id] }
+
+      it "persists the creator and every requested co-owner" do
+        expect(result).to run_successfully
+        expect(AccessControlList.find_by!(target:, permission: "owner").allowed_user_ids).to(
+          contain_exactly(admin.id, target_owner.id, co_owner.id),
+        )
+      end
+    end
+
+    context "when a requested owner does not exist" do
+      let(:owner_user_ids) { [target_owner.id, 0] }
+
+      it "rejects the owner set without changing ACLs" do
+        expect { result }.not_to change { AccessControlList.where(target:).map(&:attributes) }
+        expect(result).to fail_a_policy(:has_valid_owner_users)
       end
     end
 
@@ -196,7 +220,8 @@ RSpec.describe AccessControlListManager do
           ).count
         }.by(1)
 
-        log = UserHistory.last
+        log =
+          UserHistory.find_by!(action: UserHistory.actions[:change_access_control_list_permissions])
         expect(log.subject).to eq("Category (#{target.id})")
         expect(log.new_value).to include("view", "edit")
         expect(log.previous_value).to eq("")
@@ -228,7 +253,8 @@ RSpec.describe AccessControlListManager do
       it "records the previous permissions in the staff action log" do
         result
 
-        log = UserHistory.last
+        log =
+          UserHistory.find_by!(action: UserHistory.actions[:change_access_control_list_permissions])
         expect(log.subject).to eq("Category (#{target.id})")
         expect(log.new_value).to include("view", "edit")
         expect(log.previous_value).to include("manage")
@@ -336,6 +362,63 @@ RSpec.describe AccessControlListManager do
         expect(owner_acl.allowed_user_ids).to contain_exactly(target_owner.id)
       end
 
+      context "when an existing owner adds a co-owner" do
+        let(:guardian) { target_owner.guardian }
+        let(:owner_user_ids) { [target_owner.id, co_owner.id] }
+
+        it "persists both owners" do
+          expect(result).to run_successfully
+          expect(AccessControlList.find_by!(target:, permission: "owner").allowed_user_ids).to(
+            contain_exactly(target_owner.id, co_owner.id),
+          )
+        end
+      end
+
+      context "when an admin replaces the owner set" do
+        let(:owner_user_ids) { [co_owner.id] }
+
+        it "persists the requested owners" do
+          expect(result).to run_successfully
+          expect(AccessControlList.find_by!(target:, permission: "owner").allowed_user_ids).to eq(
+            [co_owner.id],
+          )
+        end
+      end
+
+      context "when a non-owner changes the owner set" do
+        let(:guardian) { other_user.guardian }
+        let(:owner_user_ids) { [target_owner.id, co_owner.id] }
+
+        it "rejects the change without replacing ACLs" do
+          expect { result }.not_to change { AccessControlList.where(target:).map(&:attributes) }
+          expect(result).to fail_a_policy(:can_manage_owner_changes)
+        end
+      end
+
+      context "when an owner removes themselves and another owner remains" do
+        let(:guardian) { target_owner.guardian }
+        let(:owner_user_ids) { [co_owner.id] }
+
+        before { existing_owner_acl.update!(allowed_user_ids: [target_owner.id, co_owner.id]) }
+
+        it "persists the remaining owner" do
+          expect(result).to run_successfully
+          expect(AccessControlList.find_by!(target:, permission: "owner").allowed_user_ids).to eq(
+            [co_owner.id],
+          )
+        end
+      end
+
+      context "when an owner removes the final owner" do
+        let(:guardian) { target_owner.guardian }
+        let(:owner_user_ids) { [] }
+
+        it "rejects the change without replacing ACLs" do
+          expect { result }.not_to change { AccessControlList.where(target:).map(&:attributes) }
+          expect(result).to fail_a_policy(:has_at_least_one_owner)
+        end
+      end
+
       it "rejects a submitted user who is not an existing owner" do
         flattened_acl << { type: "user", id: owner_user_id, permission: "owner" }
 
@@ -358,6 +441,61 @@ RSpec.describe AccessControlListManager do
         expect(AccessControlList.find_by(target:, permission: "owner").allowed_user_ids).to(
           contain_exactly(target_owner.id),
         )
+      end
+
+      context "when a new owner also has a lower direct grant" do
+        let(:owner_user_ids) { [target_owner.id, co_owner.id] }
+        let(:flattened_acl) { super() + [{ type: "user", id: co_owner.id, permission: "manage" }] }
+
+        it "keeps only their owner grant" do
+          expect(result).to run_successfully
+          expect(AccessControlList.find_by(target:, permission: "manage")).to be_nil
+          expect(AccessControlList.find_by!(target:, permission: "owner").allowed_user_ids).to(
+            contain_exactly(target_owner.id, co_owner.id),
+          )
+        end
+      end
+
+      context "when only an owner is added" do
+        let(:flattened_acl) { [] }
+        let(:owner_user_ids) { [target_owner.id, co_owner.id] }
+
+        it "logs the addition without an ordinary permission change" do
+          expect { result }.to change {
+            UserHistory.where(action: UserHistory.actions[:add_access_control_list_owner]).count
+          }.by(1).and not_change {
+                  UserHistory.where(
+                    action: UserHistory.actions[:change_access_control_list_permissions],
+                  ).count
+                }
+
+          expect(UserHistory.last).to have_attributes(
+            subject: "Category (#{target.id})",
+            target_user_id: co_owner.id,
+          )
+        end
+      end
+
+      context "when only an owner is removed" do
+        let(:flattened_acl) { [] }
+        let(:owner_user_ids) { [target_owner.id] }
+
+        before { existing_owner_acl.update!(allowed_user_ids: [target_owner.id, co_owner.id]) }
+
+        it "logs the removal without an ordinary permission change" do
+          expect { result }.to change {
+            UserHistory.where(action: UserHistory.actions[:remove_access_control_list_owner]).count
+          }.by(1).and not_change {
+                  UserHistory.where(
+                    action: UserHistory.actions[:change_access_control_list_permissions],
+                  ).count
+                }
+
+          expect(UserHistory.last).to have_attributes(
+            subject: "Category (#{target.id})",
+            target_user_id: co_owner.id,
+          )
+        end
       end
     end
   end

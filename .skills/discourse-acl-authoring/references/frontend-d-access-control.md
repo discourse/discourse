@@ -97,12 +97,12 @@ Target-specific options added via `@transformPermissionOptions` can still be ban
 ## Row Behavior
 
 - Rows are sorted with mandatory rows first, then by group name.
-- Owner rows are sorted before all other rows, display the mandatory badge, and use a disabled Owner permission control.
+- Owner rows are sorted before all other rows and display the mandatory badge. Their permission control is enabled only when `@canManageOwners` is true.
 - Mandatory rows show a lock icon, are styled with `--mandatory`, and have their permission select disabled.
 - A mandatory ACL replaces an existing row for the same type/id in the component's display list.
 - Banned permissions are filtered per row only when the banned entry's `type`, `id`, and `permission` match the row.
-- The remove action remains available unless the row is mandatory.
-- The reserved `owner` permission is not offered for ordinary rows. Ownership changes require a dedicated authorized operation rather than `@transformPermissionOptions`.
+- The remove action remains available unless the row is mandatory, except authorized owner rows expose Remove.
+- When `@canManageOwners` is true, user rows expose Owner and owner rows expose only Owner and Remove. Group rows never expose Owner. Ownership still uses a dedicated save payload rather than `@transformPermissionOptions` or ordinary ACL params.
 - Newly added regular groups default to `edit`.
 - Read-only default auto groups (`anonymous_users`, `everyone`, `trust_level_0`) default to `view`.
 - Already selected grantees are removed from the add-group chooser's preloaded and remote results.

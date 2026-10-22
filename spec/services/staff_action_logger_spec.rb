@@ -15,6 +15,38 @@ RSpec.describe StaffActionLogger do
     end
   end
 
+  describe "ACL owner changes" do
+    fab!(:target, :category)
+    fab!(:target_user, :user)
+
+    it "logs owner additions and removals as distinct actions" do
+      added = logger.log_add_access_control_list_owner(target, target_user)
+      removed = logger.log_remove_access_control_list_owner(target, target_user)
+
+      expect([added, removed]).to contain_exactly(
+        have_attributes(
+          action: UserHistory.actions[:add_access_control_list_owner],
+          subject: "Category (#{target.id})",
+          target_user_id: target_user.id,
+        ),
+        have_attributes(
+          action: UserHistory.actions[:remove_access_control_list_owner],
+          subject: "Category (#{target.id})",
+          target_user_id: target_user.id,
+        ),
+      )
+    end
+
+    it "rejects an invalid target user" do
+      expect { logger.log_add_access_control_list_owner(target, nil) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+      expect { logger.log_remove_access_control_list_owner(target, target.id) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+  end
+
   describe "log_user_deletion" do
     subject(:log_user_deletion) { described_class.new(admin).log_user_deletion(deleted_user) }
 

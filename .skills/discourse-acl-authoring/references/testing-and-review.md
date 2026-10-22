@@ -38,7 +38,8 @@ For services using `AccessControlListManager`:
 - Create/update request specs submit an explicit invalid permission such as `bogus` and assert rejection without partial resource creation or loss of existing ACLs. Test the write endpoints: `/access-control/evaluate.json` previews permission loss and does not enforce the manager's permission vocabulary.
 - Creation with omitted `acl` persists mandatory ACLs.
 - Creation requires an authoritative `owner_user_id`, resolves the user inside the manager, and persists it with the reserved `owner` permission.
-- Replacement preserves existing owners when the submitted ACL omits them and rejects attempts to submit a different owner.
+- Replacement preserves existing owners when `owner_user_ids` is omitted. A supplied set replaces ownership only for an owner or admin, may include only existing users, and must retain at least one owner.
+- Owners may remove themselves when another owner remains; evaluation still warns when doing so removes their final effective permission.
 - Owner user ids are removed from lower direct grants to avoid duplicate grantee rows.
 - Creation with `acl: []` persists mandatory ACLs or fails closed when no mandatory ACL exists.
 - Update with explicit `acl: []` replaces existing ACLs with mandatory ACLs.
@@ -82,7 +83,8 @@ For `DAccessControl` consumers:
 - Rendered permissions match target-specific labels/descriptions.
 - Every option added by `transformPermissionOptions(options)` has an ID in the target's server-side `ACL_PERMISSIONS.values`; the UI-only remove action is not a permission declaration.
 - Mandatory ACL from `site.access_control.mandatory_acl[targetKey]` appears and is locked.
-- Persisted owner rows appear first with the user identity, Mandatory badge, Owner label, and disabled control.
+- Persisted owner rows appear first with the user identity, Mandatory badge, and Owner label. The control is disabled without `@canManageOwners`; authorized rows offer only Owner and Remove.
+- Authorized user rows offer Owner, while group rows never do.
 - Banned ACL from `site.access_control.banned_acl[targetKey]` removes matching permission options for the matching grantee.
 - Existing rows with the same group as a mandatory row are not duplicated.
 - `onChange` writes updated ACL arrays into parent state.

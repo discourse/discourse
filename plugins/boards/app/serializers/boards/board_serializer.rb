@@ -20,6 +20,7 @@ module Boards
                :can_unarchive,
                :can_write,
                :can_manage,
+               :can_manage_acl_owner,
                :created_by,
                :columns,
                :acl
@@ -59,6 +60,10 @@ module Boards
 
     def can_manage
       scope.can_manage_board?(object)
+    end
+
+    def can_manage_acl_owner
+      scope.can_manage_acl_owner?(object)
     end
 
     def created_by

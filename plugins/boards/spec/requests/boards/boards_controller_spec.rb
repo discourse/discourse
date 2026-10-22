@@ -615,6 +615,25 @@ RSpec.describe Boards::Api::BoardsController do
       ).to contain_exactly(manager.id)
     end
 
+    it "accepts co-owner ids separately from the ACL payload" do
+      sign_in(manager)
+
+      post "/boards/api/boards.json",
+           params: {
+             board: {
+               name: "Co-owned board",
+               slug: "co-owned-board",
+               owner_user_ids: [outsider.id],
+             },
+           }
+
+      expect(response.status).to eq(201)
+      board = Boards::Board.find(response.parsed_body["board"]["id"])
+      expect(AccessControlList.find_by!(target: board, permission: "owner").allowed_user_ids).to(
+        contain_exactly(manager.id, outsider.id),
+      )
+    end
+
     it "rejects an invalid permission name without creating a board, columns, or ACLs" do
       sign_in(manager)
 
@@ -787,6 +806,43 @@ RSpec.describe Boards::Api::BoardsController do
         previous_acls,
       )
       expect(acl_board.reload.created_by_id).to eq(admin.id)
+    end
+
+    it "allows an owner to remove themselves when another owner remains" do
+      board = Fabricate(:boards_board, created_by: manager)
+      AccessControlList.find_by!(target: board, permission: "owner").update!(
+        allowed_user_ids: [manager.id, outsider.id],
+      )
+      sign_in(manager)
+
+      put "/boards/api/boards/#{board.id}.json",
+          params: {
+            board: {
+              owner_user_ids: [outsider.id],
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(AccessControlList.find_by!(target: board, permission: "owner").allowed_user_ids).to eq(
+        [outsider.id],
+      )
+    end
+
+    it "rejects owner changes from a board manager who is not an owner" do
+      sign_in(manager)
+      previous_acls = AccessControlList.where(target: acl_board).order(:id).map(&:attributes)
+
+      put "/boards/api/boards/#{acl_board.id}.json",
+          params: {
+            board: {
+              owner_user_ids: [admin.id, outsider.id],
+            },
+          }
+
+      expect(response.status).to eq(422)
+      expect(AccessControlList.where(target: acl_board).order(:id).map(&:attributes)).to eq(
+        previous_acls,
+      )
     end
 
     it "updates board attributes for users in the manage group" do

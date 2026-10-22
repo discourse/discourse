@@ -86,6 +86,106 @@ module(
       );
     });
 
+    test("uses the board ownership capability for existing owner controls", async function (assert) {
+      const board = this.fabricators.board();
+      board.acl = [
+        {
+          type: "user",
+          id: 7,
+          permission: "owner",
+          username: "martin",
+          display_name: "martin",
+        },
+      ];
+      board.can_manage_acl_owner = false;
+      this.model = { ...this.model, board, isNew: false };
+
+      await render(
+        <template>
+          <BoardsBoardSettings @inline={{true}} @model={{this.model}} />
+        </template>
+      );
+
+      const ownerPermission =
+        '.d-access-control__row[data-row-type="user"][data-row-id="7"] .d-access-control__permission';
+      assert
+        .dom(ownerPermission)
+        .isDisabled("keeps owner controls disabled without the capability");
+
+      board.can_manage_acl_owner = true;
+
+      await render(
+        <template>
+          <BoardsBoardSettings @inline={{true}} @model={{this.model}} />
+        </template>
+      );
+
+      assert
+        .dom(ownerPermission)
+        .isEnabled("enables owner controls with the capability");
+    });
+
+    test("splits owner users from ordinary ACL entries when saving", async function (assert) {
+      const group = this.site.groups[0];
+      const board = this.fabricators.board();
+      board.acl = [
+        {
+          type: "user",
+          id: 7,
+          permission: "owner",
+          username: "martin",
+          display_name: "martin",
+        },
+        {
+          type: "group",
+          id: group.id,
+          permission: "manage",
+          display_name: group.name,
+        },
+        {
+          type: "user",
+          id: 8,
+          permission: "owner",
+          username: "sam",
+          display_name: "sam",
+        },
+      ];
+      board.can_manage_acl_owner = true;
+      this.model = { ...this.model, board, isNew: false };
+      pretender.post("/access-control/evaluate.json", () => response({}));
+
+      await render(
+        <template>
+          <BoardsBoardSettings
+            @closeModal={{this.closeModal}}
+            @inline={{true}}
+            @model={{this.model}}
+          />
+        </template>
+      );
+
+      await formKit().submit();
+
+      const savedBoard = this.model.onSave.firstCall.args[0];
+      assert.deepEqual(
+        savedBoard.owner_user_ids,
+        [7, 8],
+        "sends owner IDs through the dedicated ownership argument"
+      );
+      assert.deepEqual(
+        savedBoard.acl,
+        [
+          {
+            type: "group",
+            id: group.id,
+            permission: "manage",
+            display_name: group.name,
+          },
+        ],
+        "keeps only ordinary permissions in the ACL argument"
+      );
+    });
+
     test("default ACL is created using manage board allowed groups and logged in users", async function (assert) {
       await render(
         <template>

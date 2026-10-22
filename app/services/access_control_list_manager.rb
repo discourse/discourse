@@ -8,6 +8,7 @@ class AccessControlListManager
     attribute :flattened_acl, :array
     attribute :source, :string
     attribute :owner_user_id, :integer
+    attribute :owner_user_ids, :array
 
     validates :target, presence: true
     validates :source, presence: true, length: { maximum: 100 }
@@ -23,6 +24,8 @@ class AccessControlListManager
   model :previous_permissions, optional: true
   model :existing_owner_acl, optional: true
   policy :has_valid_owner_entries
+  policy :has_valid_owner_users
+  policy :can_manage_owner_changes
   model :flattened_acl_with_mandatory, optional: true
   policy :has_at_least_one_owner
   policy :has_valid_permissions
@@ -33,6 +36,7 @@ class AccessControlListManager
     step :destroy_acls
     step :insert_acls
     step :log_permission_changes
+    step :log_owner_changes
   end
 
   step :reload_target
@@ -64,6 +68,28 @@ class AccessControlListManager
     end
   end
 
+  def has_valid_owner_users(params:)
+    return true if params.owner_user_ids.nil?
+
+    owner_user_ids = params.owner_user_ids.map(&:to_i).uniq
+    User.where(id: owner_user_ids).count == owner_user_ids.length
+  end
+
+  def can_manage_owner_changes(params:, existing_owner_acl:, owner_user:, guardian:)
+    return true if params.owner_user_ids.nil?
+
+    existing_owner_ids = existing_owner_acl.map { |acl| acl[:id] }.sort
+    requested_owner_ids = params.owner_user_ids.map(&:to_i).uniq
+    requested_owner_ids << owner_user.id if existing_owner_ids.empty?
+    return true if requested_owner_ids.sort == existing_owner_ids
+
+    if existing_owner_ids.empty?
+      guardian.is_admin? || guardian.user&.id == owner_user.id
+    else
+      guardian.can_manage_acl_owner?(params.target)
+    end
+  end
+
   def destroy_acls(previous_permissions:, params:)
     @context[:previous_permissions] = previous_permissions.target_acl(
       params.target,
@@ -72,10 +98,17 @@ class AccessControlListManager
   end
 
   def fetch_flattened_acl_with_mandatory(params:, existing_owner_acl:, owner_user:)
-    owner_acl = existing_owner_acl
-    if owner_acl.empty?
-      owner_acl = [AccessControlList.flat_acl_for(owner_user, Acl::Permissions::OWNER)]
-    end
+    owner_ids =
+      if params.owner_user_ids.nil?
+        existing_owner_acl.map { |acl| acl[:id] }
+      else
+        params.owner_user_ids.map(&:to_i).uniq
+      end
+    owner_ids << owner_user.id if existing_owner_acl.empty?
+    owner_acl =
+      User
+        .where(id: owner_ids.uniq)
+        .map { |user| AccessControlList.flat_acl_for(user, Acl::Permissions::OWNER) }
 
     owner_ids = owner_acl.map { |acl| acl[:id] }
     editable_acl =
@@ -119,11 +152,29 @@ class AccessControlListManager
   end
 
   def log_permission_changes(guardian:, previous_permissions:, new_permissions:, params:)
+    previous_permissions_without_owners = previous_permissions.except(Acl::Permissions::OWNER)
+    new_permissions_without_owners = new_permissions.except(Acl::Permissions::OWNER)
+    return if previous_permissions_without_owners == new_permissions_without_owners
+
     StaffActionLogger.new(guardian.user).log_access_control_list_permission_change(
       params.target,
-      previous_permissions,
-      new_permissions,
+      previous_permissions_without_owners,
+      new_permissions_without_owners,
     )
+  end
+
+  def log_owner_changes(guardian:, previous_permissions:, new_permissions:, params:)
+    previous_owner_ids = previous_permissions.dig(Acl::Permissions::OWNER, :user_ids) || []
+    new_owner_ids = new_permissions.dig(Acl::Permissions::OWNER, :user_ids) || []
+    logger = StaffActionLogger.new(guardian.user)
+
+    User
+      .where(id: new_owner_ids - previous_owner_ids)
+      .find_each { |user| logger.log_add_access_control_list_owner(params.target, user) }
+
+    User
+      .where(id: previous_owner_ids - new_owner_ids)
+      .find_each { |user| logger.log_remove_access_control_list_owner(params.target, user) }
   end
 
   def reload_target(params:)

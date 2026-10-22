@@ -196,6 +196,10 @@ class Guardian
     has_acl_permission?(target, Acl::Permissions::OWNER)
   end
 
+  def can_manage_acl_owner?(target)
+    authenticated? && (is_admin? || is_acl_owner?(target))
+  end
+
   def target_ids_with_acl_permission(target_klass, permission)
     @user.permission_acl.target_ids_with_permission(target_klass, permission)
   end

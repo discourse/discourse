@@ -16,6 +16,7 @@ export default class BoardsAccessControlField extends Component {
   <template>
     <DAccessControlField
       @aclTarget={{this.aclTarget}}
+      @canManageOwners={{@canManageOwners}}
       @description={{@description}}
       @form={{@form}}
       @name={{@name}}

@@ -60,6 +60,24 @@ RSpec.describe Boards::CreateBoard do
         expect(owner_acl.allowed_group_ids).to be_empty
       end
 
+      context "with co-owners" do
+        let(:raw) do
+          {
+            "name" => "Co-owned board",
+            "slug" => "co-owned-board",
+            "owner_user_ids" => [outsider.id],
+          }
+        end
+
+        it "makes the creator and requested users owners" do
+          board = result[:board]
+
+          expect(
+            AccessControlList.find_by!(target: board, permission: "owner").allowed_user_ids,
+          ).to(contain_exactly(manager.id, outsider.id))
+        end
+      end
+
       it "creates mandatory ACLs when ACL params are empty" do
         raw["acl"] = []
 

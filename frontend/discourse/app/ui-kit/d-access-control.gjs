@@ -178,6 +178,10 @@ export default class DAccessControl extends Component {
           hydratedEntry.permission === OWNER_PERMISSION ||
           Boolean(hydratedEntry.mandatory),
         owner: hydratedEntry.permission === OWNER_PERMISSION,
+        permission_menu_disabled:
+          hydratedEntry.permission === OWNER_PERMISSION
+            ? !this.args.canManageOwners
+            : Boolean(hydratedEntry.mandatory),
       };
     });
 
@@ -380,10 +384,27 @@ export default class DAccessControl extends Component {
   @action
   permissionOptionsFor(row) {
     if (row.owner) {
-      return [OWNER_OPTION];
+      return this.args.canManageOwners
+        ? [OWNER_OPTION, REMOVE_ACTION]
+        : [OWNER_OPTION];
     }
 
-    return this.excludeBannedPermissions(this.permissionOptions, row);
+    const permissionOptions = this.excludeBannedPermissions(
+      this.permissionOptions,
+      row
+    );
+
+    if (row.type === "user" && this.args.canManageOwners) {
+      return [
+        ...permissionOptions.filter(
+          (permission) => permission.id !== REMOVE_ACTION.id
+        ),
+        OWNER_OPTION,
+        REMOVE_ACTION,
+      ];
+    }
+
+    return permissionOptions;
   }
 
   #hydrateDisplayName(entry) {
@@ -448,9 +469,13 @@ export default class DAccessControl extends Component {
                   {{row.display_name}}
                   {{#if row.mandatory}}
                     <DTooltip
-                      @content={{i18n
-                        "access_control.manage.mandatory_acl_tooltip"
-                        name=row.display_name
+                      @content={{if
+                        row.owner
+                        (i18n "access_control.manage.owner_acl_tooltip")
+                        (i18n
+                          "access_control.manage.mandatory_acl_tooltip"
+                          name=row.display_name
+                        )
                       }}
                     >
                       <:trigger>
@@ -463,7 +488,7 @@ export default class DAccessControl extends Component {
                 </span>
               </span>
               <DAccessControlPermissionMenu
-                @disabled={{row.mandatory}}
+                @disabled={{row.permission_menu_disabled}}
                 @onChange={{fn this.onRowPermissionChange row.type row.id}}
                 @options={{this.permissionOptionsFor row}}
                 @value={{row.permission}}

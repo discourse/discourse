@@ -14,6 +14,7 @@ AccessControlListManager.call(
     flattened_acl: flattened_acl,
     source: Boards::PLUGIN_NAME,
     owner_user_id: board.created_by_id,
+    owner_user_ids: raw["owner_user_ids"],
   },
 ) do |result|
   on_success do |previous_permissions:, new_permissions:|
@@ -30,7 +31,9 @@ Behavior:
 
 - validates `target` and `source`
 - fetches previous target permissions
-- resolves `owner_user_id` to a user model, then preserves existing user owner grants or creates the initial owner grant from that user
+- resolves `owner_user_id` to a user model and creates the initial owner grant from that user
+- preserves existing owners when `owner_user_ids` is omitted; when supplied, treats it as the complete desired owner set on updates and as co-owners in addition to the creator on creation
+- validates that every requested owner is a user, at least one owner remains, and the actor passes `Guardian#can_manage_acl_owner?` for ownership changes
 - rejects submitted owner entries that do not match the authoritative owner set
 - removes owners from lower direct user grants so one grantee does not render multiple ACL rows
 - injects mandatory ACLs into `flattened_acl`
@@ -40,12 +43,12 @@ Behavior:
 - fails `has_at_least_one_acl` if the final ACL list is empty
 - destroys all current ACL rows for the target
 - inserts expanded ACL rows
-- logs a staff action with previous and new permission lookup data
+- logs ordinary permission changes separately from owner additions and removals
 - reloads the target after the transaction so `AclTarget#permission_acl` is rebuilt on the caller's instance
 
-Important: the manager destructively replaces target ACL rows and does not currently authorize the actor itself. Authorize before calling it.
+Important: the manager destructively replaces target ACL rows. Authorize ordinary permission changes before calling it; ownership changes are additionally authorized inside the manager.
 
-The manager's `source` string is ACL row provenance, not target ownership. Pass the authoritative initial target owner's id separately as `owner_user_id`; the manager resolves the user model internally. Existing owner rows take precedence on later replacement writes, which keeps ordinary ACL editing from removing or transferring ownership.
+The manager's `source` string is ACL row provenance, not target ownership. Pass the authoritative initial target owner's id separately as `owner_user_id`; the manager resolves the user model internally. Use `owner_user_ids` only as the dedicated ownership mutation channel. Omit it to preserve owners, pass the complete desired set on update, and pass requested co-owner IDs on creation (the creator is always added).
 
 ## Write Path Rules
 
@@ -62,7 +65,7 @@ For new target records with mandatory ACLs:
 1. Authorize resource creation with a domain Guardian method.
 2. Create the target.
 3. Call `AccessControlListManager` with `flattened_acl: raw["acl"] || []`.
-4. Pass the authenticated creator's id as `owner_user_id`; do not trust an owner entry from `raw["acl"]`.
+4. Pass the authenticated creator's id as `owner_user_id`; do not trust an owner entry from `raw["acl"]`. Optional co-owners belong in `owner_user_ids`.
 5. Fail the service if ACL creation fails.
 
 This ensures mandatory ACL rows are inserted for API callers that omit `acl`.

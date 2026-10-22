@@ -159,6 +159,18 @@ RSpec.describe Guardian do
         expect(acl_user.guardian.is_acl_owner?(member_category)).to eq(false)
       end
     end
+
+    describe "#can_manage_acl_owner?" do
+      it "allows target owners and admins to manage ownership" do
+        expect(acl_user.guardian.can_manage_acl_owner?(owned_category)).to eq(true)
+        expect(Fabricate(:admin).guardian.can_manage_acl_owner?(member_category)).to eq(true)
+      end
+
+      it "rejects other users and anonymous guardians" do
+        expect(acl_user.guardian.can_manage_acl_owner?(member_category)).to eq(false)
+        expect(Guardian.new.can_manage_acl_owner?(owned_category)).to eq(false)
+      end
+    end
   end
 
   describe "can_enable_safe_mode" do

@@ -30,7 +30,7 @@ module Boards
       if raw.key?("tag_names")
         raw["tag_ids"] = VisibleTagResolver.resolve_names!(raw.delete("tag_names"), guardian:)
       end
-      board = Board.new(raw.except("columns", "acl"))
+      board = Board.new(raw.except("columns", "acl", "owner_user_ids"))
       board.created_by_id = guardian.user.id
       board.updated_by_id = guardian.user.id
       board.save!
@@ -58,6 +58,7 @@ module Boards
           flattened_acl: flattened_acl,
           source: Boards::PLUGIN_NAME,
           owner_user_id: guardian.user.id,
+          owner_user_ids: raw["owner_user_ids"],
         },
       ) do |result|
         on_failure do

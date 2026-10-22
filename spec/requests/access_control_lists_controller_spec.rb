@@ -112,6 +112,51 @@ RSpec.describe AccessControlListsController do
       )
     end
 
+    it "warns an existing owner who removes their final permission" do
+      target = Fabricate(:post).becomes(EvaluateModificationRequestTestTarget)
+      Fabricate(
+        :access_control_list_with_users,
+        target:,
+        permission: Acl::Permissions::OWNER,
+        users: [current_user],
+      )
+      EvaluateModificationRequestTestTarget.stubs(:loss_warning_permissions).returns([])
+
+      post "/access-control/evaluate.json",
+           params: {
+             target_id: target.id,
+             target_type: "EvaluateModificationRequestTestTarget",
+             new_acl: [],
+           },
+           as: :json
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to contain_exactly(
+        I18n.t("access_control_list.errors.user_will_not_have_permission"),
+      )
+    end
+
+    it "allows an existing owner to retain a direct loss warning permission" do
+      target = Fabricate(:post).becomes(EvaluateModificationRequestTestTarget)
+      Fabricate(
+        :access_control_list_with_users,
+        target:,
+        permission: Acl::Permissions::OWNER,
+        users: [current_user],
+      )
+
+      post "/access-control/evaluate.json",
+           params: {
+             target_id: target.id,
+             target_type: "EvaluateModificationRequestTestTarget",
+             new_acl: [{ type: "user", id: current_user.id, permission: "manage" }],
+           },
+           as: :json
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to include("current_user_will_lose_permissions" => false)
+    end
+
     it "allows creation with an empty ACL" do
       EvaluateModificationRequestTestTarget.stubs(:loss_warning_permissions).returns([])
 
