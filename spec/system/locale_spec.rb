@@ -39,6 +39,7 @@ RSpec.describe "Locale choice" do
   context "with test locales" do
     before do
       JsLocaleHelper.clear_cache!
+      ExtraLocalesController.clear_cache!(all_sites: true)
 
       JsLocaleHelper.set_translations(
         "en",
@@ -65,7 +66,10 @@ RSpec.describe "Locale choice" do
       )
     end
 
-    after { JsLocaleHelper.clear_cache! }
+    after do
+      JsLocaleHelper.clear_cache!
+      ExtraLocalesController.clear_cache!(all_sites: true)
+    end
 
     it "handles fallback correctly" do
       expected = {
@@ -86,13 +90,13 @@ RSpec.describe "Locale choice" do
       expect(page.evaluate_script("I18n.locale")).to eq("uk")
       expect(page.evaluate_script("Object.keys(I18n.translations)")).to contain_exactly("uk", "en")
 
-      expect(page.evaluate_script("I18n.translations.uk.js").keys).to contain_exactly(
+      expect(page.evaluate_script("Object.keys(I18n.translations.uk.js)")).to contain_exactly(
         "all_three",
         "english_and_user",
         "only_user",
         "site_and_user",
       )
-      expect(page.evaluate_script("I18n.translations.en.js").keys).to contain_exactly(
+      expect(page.evaluate_script("Object.keys(I18n.translations.en.js)")).to contain_exactly(
         "only_english",
         "english_and_site",
       )

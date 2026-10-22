@@ -339,9 +339,14 @@ jobs:
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
+          report_test_resources() {
+            cat /sys/fs/cgroup/cpu.stat /sys/fs/cgroup/memory.events
+            awk '{print "peak_memory_bytes " $1}' /sys/fs/cgroup/memory.peak
+          }
+          trap report_test_resources EXIT
+          grep MemTotal /proc/meminfo
           cat /sys/fs/cgroup/cpu.stat
-          time LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
-          cat /sys/fs/cgroup/cpu.stat
+          time LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --verbose --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
