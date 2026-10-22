@@ -1,4 +1,4 @@
-import { readMany } from "discourse/data/builders/helpers";
+import { filterEmpty, query } from "discourse/data/builders/json-api";
 
 const SORT_FIELDS = {
   name: "name",
@@ -7,16 +7,14 @@ const SORT_FIELDS = {
 };
 
 export function findQueries({ search, tags, sort, descending }) {
-  const params = new URLSearchParams({
-    include: "user,groups",
-    sort: `${descending ? "-" : ""}${SORT_FIELDS[sort]}`,
-  });
-  if (search) {
-    params.set("filter[search]", search);
-  }
-  if (tags) {
-    tags.split(",").forEach((tag) => params.append("filter[tag][]", tag));
-  }
-
-  return readMany(`/api/data-explorer/queries?${params}`);
+  return query(
+    "queries",
+    filterEmpty({
+      include: ["user", "groups"],
+      sort: `${descending ? "-" : ""}${SORT_FIELDS[sort]}`,
+      "filter[search]": search,
+      "filter[tag]": tags && tags.split(","),
+    }),
+    { namespace: "api/data-explorer" }
+  );
 }
