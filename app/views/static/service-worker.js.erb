@@ -102,7 +102,7 @@ self.addEventListener('notificationclick', function(event) {
 function postPushSubscription(action, subscription, csrf) {
   var json = subscription.toJSON();
 
-  return fetch('<%= Discourse.base_url %>/push_notifications/' + action, {
+  return fetch('<%= Discourse.base_url %>/push_notifications/' + action + '.json', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
