@@ -237,6 +237,10 @@ module DiscourseWorkflows
         Array.new(max_index + 1) { |index| @input_groups[index] || [] }
       end
 
+      def input_indexes
+        @input_groups.keys.sort
+      end
+
       def input_context
         InputContext.from_node_context(get_context(:node))
       end
