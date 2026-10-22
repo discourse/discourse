@@ -96,5 +96,38 @@ if merger_dependencies_available
         expect { build_merger(polls: { "1" => 11 }).fix_polls }.not_to raise_error
       end
     end
+
+    describe "#fix_primary_keys" do
+      fab!(:post_custom_field) { PostCustomField.create!(post: Fabricate(:post), name: "a") }
+
+      let(:sequence_name) { PostCustomField.sequence_name }
+
+      def last_sequence_value
+        DB.query_single("SELECT last_value FROM #{sequence_name}").first
+      end
+
+      def fix_primary_keys(val)
+        build_merger(
+          raw_connection: ActiveRecord::Base.connection.raw_connection,
+          sequences: {
+            sequence_name => val,
+          },
+        ).fix_primary_keys
+      end
+
+      it "does not move a sequence below the ids already in the table" do
+        fix_primary_keys(1)
+
+        expect(last_sequence_value).to be > post_custom_field.id
+      end
+
+      it "advances a sequence to the counter of the copied rows" do
+        val = post_custom_field.id + 100
+
+        fix_primary_keys(val)
+
+        expect(last_sequence_value).to eq(val)
+      end
+    end
   end
 end
