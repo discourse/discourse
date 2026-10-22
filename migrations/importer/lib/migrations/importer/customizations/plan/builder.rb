@@ -99,7 +99,7 @@ module Migrations
             meaningful_rows("themes").each { |row| ids << row["id"].to_i }
 
             THEME_ID_TABLES.each do |table|
-              meaningful_rows(table).each do |row|
+              meaningful_rows(table, include_removed: true).each do |row|
                 next if table == "theme_fields" && screenshot_noise?(row)
                 ids << row["theme_id"].to_i if row["theme_id"]
               end
@@ -110,8 +110,9 @@ module Migrations
               ids << row["child_theme_id"].to_i
             end
 
-            meaningful_rows("color_schemes").each do |row|
-              ids << row["theme_id"].to_i if row["theme_id"].present?
+            changed_color_scheme_ids.each do |id|
+              owner_id = @facts.color_scheme(id)&.dig(:theme_id)
+              ids << owner_id if owner_id
             end
 
             note_removed("themes")
@@ -127,25 +128,33 @@ module Migrations
           end
 
           def color_schemes
-            ids = Set.new
-            meaningful_rows("color_schemes").each { |row| ids << row["id"].to_i }
-            meaningful_rows("color_scheme_colors").each { |row| ids << row["color_scheme_id"].to_i }
             note_removed("color_schemes")
 
-            ids.sort.filter_map do |id|
+            changed_color_scheme_ids.sort.filter_map do |id|
               info = @facts.color_scheme(id)
               next if info.nil?
 
               item = { "name" => info[:name] }
               owner = info[:theme_id] && @facts.theme(info[:theme_id])
-              if owner && !owner[:system]
+              if owner && !owner[:system] && !owner[:git]
                 item.merge!("target" => "skip", "note" => "comes with theme '#{owner[:name]}'")
               else
-                item["theme"] = { "name" => owner[:name], "system_id" => info[:theme_id] } if owner
+                if owner
+                  item["theme"] = { "name" => owner[:name] }
+                  item["theme"]["system_id"] = info[:theme_id] if owner[:system]
+                end
                 item["target"] = "template"
               end
               item
             end
+          end
+
+          def changed_color_scheme_ids
+            ids = meaningful_rows("color_schemes").map { |row| row["id"].to_i }
+            meaningful_rows("color_scheme_colors", include_removed: true).each do |row|
+              ids << row["color_scheme_id"].to_i
+            end
+            ids.uniq
           end
 
           def groups
@@ -154,6 +163,7 @@ module Migrations
               "groups",
               Rules::GROUP_ATTRIBUTES,
               pair_by: "name",
+              include_added: true,
             ).filter_map do |id, attributes|
               info = @facts.group(id)
               next if info.nil?
@@ -227,7 +237,7 @@ module Migrations
           # @return [Array<Array(Integer, Array<String>)>] id and plan attribute names
           # Pairs before and after rows by `pair_by`. A row whose key exists on
           # both sides has its counterpart in the diff too, unless both are equal.
-          def attribute_changes(table, allowed, pair_by: "id")
+          def attribute_changes(table, allowed, pair_by: "id", include_added: false)
             before = removed_and_before(table).index_by { |row| row[pair_by] }
             data = table_data(table)
             after =
@@ -253,7 +263,7 @@ module Migrations
                       !@facts.default_value?(table, column, row[column])
                     end
                   end
-                [row["id"].to_i, columns] if columns.any?
+                [row["id"].to_i, columns] if columns.any? || (include_added && old.nil?)
               end
               .sort
               .map { |id, columns| [id, columns.map { |c| Rules.plan_attribute_name(c) }] }
@@ -273,9 +283,11 @@ module Migrations
 
             before = permissions.call(removed_and_before("category_groups"))
             after = permissions.call(added_and_changed("category_groups"))
-            (before.keys | after.keys).select do |id|
-              (before[id] || Set.new) != (after[id] || Set.new)
-            end
+            changed =
+              (before.keys | after.keys).select do |id|
+                (before[id] || Set.new) != (after[id] || Set.new)
+              end
+            changed | attribute_changes("categories", ["read_restricted"]).map(&:first)
           end
 
           def table_data(table)
@@ -299,7 +311,7 @@ module Migrations
 
           # Added rows plus changed rows with more than noise columns changed.
           # Changed rows carry their changed column names in `_changed_columns`.
-          def meaningful_rows(table)
+          def meaningful_rows(table, include_removed: false)
             data = table_data(table)
             changed =
               data
@@ -308,7 +320,7 @@ module Migrations
                   columns = change["diffs"].keys - Rules::NOISE_COLUMNS
                   change["after"].merge("_changed_columns" => columns) if columns.any?
                 end
-            data.fetch("added", []) + changed
+            data.fetch("added", []) + changed + (include_removed ? data.fetch("removed", []) : [])
           end
 
           def note_removed(table)

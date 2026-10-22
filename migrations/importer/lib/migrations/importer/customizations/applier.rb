@@ -34,8 +34,8 @@ module Migrations
             @output.puts "Dry run: nothing will be changed." if @dry_run
             setup(bundle)
 
-            run_section("color_schemes") { |entry| @color_schemes.call(entry) }
             run_section("themes") { |entry| @themes.apply_code(entry) }
+            run_section("color_schemes") { |entry| @color_schemes.call(entry) }
             run_section("themes", label: "theme settings") do |entry|
               @themes.apply_relations(entry)
             end

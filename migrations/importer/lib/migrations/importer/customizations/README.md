@@ -158,8 +158,9 @@ On the `migrated` target, an item that matches nothing is skipped. On the
   Changed group permissions are added as a `permissions` attribute (group
   names and permission types); a group missing on the destination fails the item.
 - Attributes that only changed between NULL and an empty string are ignored.
-- Themes and palettes go to `template`. Palettes owned by a theme travel with
-  that theme.
+- Themes and palettes go to `template`. Palettes owned by a local theme travel
+  with its files. Edited palettes owned by git themes are exported separately
+  and applied after their theme is installed, before its settings and relations.
 - Translation overrides for login providers go to `migrated`, others to `template`.
 - Permalinks with an external URL go to `template`; those redirecting to a
   category follow the category's rule; everything else (topics, posts, users,
@@ -187,4 +188,11 @@ it when you're done. With `--no-secrets` they are left out; on apply, a secret
 without a value is then read from `DISCO_SECRET_<SETTING_NAME>`, or asked for
 on a terminal, and skipped otherwise.
 
-Theme children are only added on apply, never removed.
+Git themes retain their exported names and branches, including when updating
+an existing installation. A dry run defers settings validation for themes whose
+code would change, since their new setting definitions are not installed yet.
+
+For each exported theme, translation overrides are a complete snapshot: overrides
+absent from that snapshot are removed on apply, restoring the theme's default
+translations. Deleted fields of local themes are also removed. Theme children are
+only added on apply, never removed.

@@ -491,7 +491,7 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
     )
   end
 
-  it "skips palettes owned by a non-system theme" do
+  it "skips palettes exported with a local theme's files" do
     expect(plan["color_schemes"]).to contain_exactly(
       { "name" => "Light palette", "target" => "template" },
       { "name" => "Owned", "target" => "skip", "note" => "comes with theme 'Custom component'" },
@@ -504,6 +504,69 @@ RSpec.describe Migrations::Importer::Customizations::Plan::Builder do
 
     expect(categories.keys).to eq(["Local"])
     expect(categories["Local"]["attributes"]).to eq(["permissions"])
+  end
+
+  it "includes administrator-only restrictions without category group changes" do
+    diff["tables"] = {
+      "categories" => {
+        "changed" => [{ "after" => { "id" => "21" }, "diffs" => { "read_restricted" => %w[f t] } }],
+      },
+    }
+
+    expect(plan["categories"]).to contain_exactly(
+      include("name" => "Local", "attributes" => ["permissions"]),
+    )
+  end
+
+  it "includes new groups with default attributes but ignores unchanged groups with new ids" do
+    diff["tables"] = {
+      "groups" => {
+        "added" => [
+          { "id" => "51", "name" => "local_group", "title" => nil },
+          { "id" => "50", "name" => "imported_group", "title" => nil },
+        ],
+        "removed" => [{ "id" => "49", "name" => "imported_group", "title" => nil }],
+      },
+    }
+
+    expect(plan["groups"]).to contain_exactly(
+      include("name" => "local_group", "attributes" => [], "target" => "template"),
+    )
+  end
+
+  it "selects surviving themes after fields or translation overrides are removed" do
+    diff["tables"] = {
+      "theme_fields" => {
+        "removed" => [
+          { "theme_id" => "5", "name" => "header" },
+          { "theme_id" => "-2", "name" => "screenshot" },
+        ],
+      },
+      "theme_translation_overrides" => {
+        "removed" => [{ "theme_id" => "6", "translation_key" => "greeting" }],
+      },
+    }
+
+    expect(plan["themes"]).to contain_exactly(
+      include("name" => "Custom component"),
+      include("name" => "Git component"),
+    )
+  end
+
+  it "exports git-owned palette edits and selects their owning theme" do
+    facts.define_singleton_method(:color_scheme) { |_id| { name: "Owned", theme_id: 6 } }
+    diff["tables"] = {
+      "color_scheme_colors" => {
+        "changed" => [
+          { "after" => { "color_scheme_id" => "8" }, "diffs" => { "hex" => %w[ffffff 000000] } },
+        ],
+      },
+    }
+
+    expect(plan["color_schemes"]).to eq(
+      [{ "name" => "Owned", "theme" => { "name" => "Git component" }, "target" => "template" }],
+    )
+    expect(plan["themes"]).to contain_exactly(include("name" => "Git component"))
   end
 
   it "lists only transferable group attributes" do
