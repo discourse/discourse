@@ -21,6 +21,24 @@ module DiscourseWorkflows
         },
       ].freeze
 
+      module V2
+        OUTPUT_CONTRACTS = [
+          {
+            schema:
+              Schema.merge(
+                PostLifecycle::OUTPUT_CONTRACTS.first[:schema],
+                Schema::POST_AUTHOR_SCHEMA,
+              ),
+          },
+        ].freeze
+
+        private
+
+        def subject_user
+          @post.user
+        end
+      end
+
       def initialize(post, opts = nil, actor = nil, *)
         super(parameters: {})
         @post = post
@@ -37,7 +55,7 @@ module DiscourseWorkflows
         {
           post: serialize_post(@post),
           topic: serialize_topic_list_item(topic),
-          user: serialize_user(@actor),
+          user: serialize_user(subject_user),
           actor: serialize_user(@actor),
         }
       end
@@ -48,6 +66,10 @@ module DiscourseWorkflows
       end
 
       private
+
+      def subject_user
+        @actor
+      end
 
       def topic
         return @topic if defined?(@topic)
