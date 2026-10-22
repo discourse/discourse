@@ -99,10 +99,21 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
       first, second = channel.chat_messages.order(:id).last(2)
       expect(output.first.map { |item| item["json"] }).to eq(
         [
-          { "channel_id" => channel.id, "message_id" => first.id, "message" => "First message" },
-          { "channel_id" => channel.id, "message_id" => second.id, "message" => "Second message" },
+          {
+            "channel_id" => channel.id,
+            "message_id" => first.id,
+            "message" => "First message",
+            "thread_id" => nil,
+          },
+          {
+            "channel_id" => channel.id,
+            "message_id" => second.id,
+            "message" => "Second message",
+            "thread_id" => nil,
+          },
         ],
       )
+      expect(output.first.first["json"]).to match_node_output_schema(described_class)
       expect([first, second].map(&:message)).to eq(["First message", "Second message"])
       expect([first, second].map(&:user_id)).to all(eq(Discourse.system_user.id))
       expect(log).to eq(
@@ -117,6 +128,30 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
           ),
         ],
       )
+    end
+
+    it "replies in the given thread" do
+      channel.update!(threading_enabled: true)
+      thread = Fabricate(:chat_thread, channel:)
+
+      output =
+        execute_node_output(
+          configuration: {
+            "channel_id" => channel.id.to_s,
+            "thread_id" => "={{ $json.thread_id }}",
+            "message" => "In thread",
+          },
+          item: {
+            "json" => {
+              "thread_id" => thread.id,
+            },
+          },
+        )
+
+      json = output.first.sole["json"]
+      expect(json["thread_id"]).to eq(thread.id)
+      expect(Chat::Message.find(json["message_id"]).thread_id).to eq(thread.id)
+      expect(json).to match_node_output_schema(described_class)
     end
 
     it "rejects expression-resolved channels outside the selectable channel scope" do
@@ -202,6 +237,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
         "channel_id" => channel.id,
         "message_id" => message.id,
         "message" => "Hello channel",
+        "thread_id" => nil,
       )
       expect(message.user_id).to eq(sender.id)
       expect(log).to eq(
@@ -342,8 +378,10 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
         "channel_id" => message.chat_channel_id,
         "message_id" => message.id,
         "message" => "Hello there",
+        "thread_id" => nil,
         "username" => recipient.username,
       )
+      expect(json).to match_node_output_schema(described_class)
       expect(message).to have_attributes(message: "Hello there", user_id: Discourse.system_user.id)
       expect(dm_user_ids(json["channel_id"])).to contain_exactly(
         Discourse.system_user.id,
@@ -572,6 +610,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatMessage::V1 do
           item = output.first.sole
           channel_id = item["json"]["channel_id"]
           expect(item["json"]).to include("usernames" => usernames, "message" => "Hello there")
+          expect(item["json"]).to match_node_output_schema(described_class)
           expect(item["pairedItem"]).to eq("item" => 0)
           expect(Chat::Channel.find(channel_id).chatable).to be_group
           expect(dm_user_ids(channel_id)).to contain_exactly(
