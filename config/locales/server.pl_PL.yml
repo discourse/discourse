@@ -842,6 +842,7 @@ pl_PL:
         many: "Nie można ustawić domyślnego poziomu powiadomień dla grup większych niż %{count} użytkowników. Nieprawidłowa grupa: %{group_name}"
         other: "Nie można ustawić domyślnego poziomu powiadomień dla grup większych niż %{count} użytkowników. Nieprawidłowa grupa: %{group_name}"
       grant_trust_level_not_valid: "\"%{trust_level}\" nie jest prawidłowym poziomem zaufania."
+      flair_upload_not_owned: "Jako znak rozpoznawczy grupy możesz użyć tylko obrazka, który sam wrzuciłeś."
       can_not_modify_automatic: "Nie można modyfikować automatyczną grupę"
       member_already_exist:
         one: "'%{username}' należy już do tej grupy."
