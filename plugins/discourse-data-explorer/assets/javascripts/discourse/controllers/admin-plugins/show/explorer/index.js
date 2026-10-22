@@ -20,7 +20,6 @@ export default class PluginsExplorerController extends Controller {
 
   @tracked sortByProperty = "last_run_at";
   @tracked sortDescending = true;
-  @tracked params;
   @tracked loading = false;
   @tracked searchLoading = false;
   @tracked queryTags = [];
@@ -29,16 +28,9 @@ export default class PluginsExplorerController extends Controller {
   @tracked loadingMore = false;
 
   queryParams = ["id", "tags"];
-  explain = false;
   acceptedImportFileTypes = ["application/json"];
-  order = null;
-  form = null;
   #latestQueryRequest;
   _currentFilter = "";
-
-  get parsedParams() {
-    return this.params ? JSON.parse(this.params) : null;
-  }
 
   get fetchParams() {
     return {
