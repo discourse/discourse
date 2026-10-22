@@ -140,7 +140,7 @@ export default class ExplorerSchema extends Component {
   <template>
     {{#if @hideSchema}}
       <DButton
-        class="schema__toggle --expand no-text unhide"
+        class="schema__toggle --expand no-text"
         @action={{this.expandSchema}}
         @ariaLabel="explorer.schema.show"
         @icon="chevron-left"
