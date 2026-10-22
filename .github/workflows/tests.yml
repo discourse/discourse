@@ -203,6 +203,13 @@ jobs:
             if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
             run: script/assemble_ember_build.rb
 
+          - name: Install and deploy Playwright
+            if: matrix.build_type == 'system'
+            run: |
+              pnpm playwright-install
+              pnpm deploy --filter @discourse/playwright-runner --prod tmp/playwright
+              echo "PLAYWRIGHT_CLI_EXECUTABLE_PATH=$PWD/tmp/playwright/node_modules/.bin/playwright" >> $GITHUB_ENV
+
           - name: Check Annotations
             if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins')
             env:
@@ -275,19 +282,9 @@ jobs:
             exit 1
           fi
 
-      - name: Install playwright
-        if: matrix.build_type == 'system'
-        run: pnpm playwright-install
-
       - name: Precompile the JS bundles
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         run: bin/rake assets:precompile:asset_processor assets:precompile:pretty_text
-
-      - name: Deploy Playwright outside node_modules
-        if: matrix.build_type == 'system'
-        run: |
-          pnpm deploy --filter @discourse/playwright-runner --prod tmp/playwright
-          echo "PLAYWRIGHT_CLI_EXECUTABLE_PATH=$PWD/tmp/playwright/node_modules/.bin/playwright" >> $GITHUB_ENV
 
       # Drop node_modules to match production
       - name: Remove node_modules
@@ -340,9 +337,15 @@ jobs:
           CHECKOUT_TIMEOUT: 10
         run: |
           report_test_resources() {
+            kill "$resource_sampler_pid" 2>/dev/null || true
+            wait "$resource_sampler_pid" 2>/dev/null || true
+            cat "$resource_log"
             cat /sys/fs/cgroup/cpu.stat /sys/fs/cgroup/memory.events
             awk '{print "peak_memory_bytes " $1}' /sys/fs/cgroup/memory.peak
           }
+          resource_log=tmp/core-system-resources.log
+          vmstat -n -w -t 5 > "$resource_log" &
+          resource_sampler_pid=$!
           trap report_test_resources EXIT
           grep MemTotal /proc/meminfo
           cat /sys/fs/cgroup/cpu.stat
