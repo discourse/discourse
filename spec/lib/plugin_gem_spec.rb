@@ -49,10 +49,11 @@ RSpec.describe PluginGem do
 
   def build_repo
     specs =
-      repo_gems.map do |name, version, dependencies = {}|
+      repo_gems.map do |name, version, dependencies = {}, platform = "ruby"|
         Gem::Specification.new do |spec|
           spec.name = name
           spec.version = version
+          spec.platform = platform
           spec.summary = name
           spec.authors = ["test"]
           dependencies.each do |dependency, requirement|
@@ -78,19 +79,11 @@ RSpec.describe PluginGem do
   # dependencies and checksums from the repo; nil writes no Gemfile.lock.
   # `path` adds path gems: name => [version, dependencies]. `checksums`
   # replaces checksums by name; nil writes no CHECKSUMS.
-  def add_plugin(
-    name,
-    gemfile,
-    lock:,
-    path: {},
-    checksums: {},
-    opt_in: true,
-    source: "https://rubygems.org"
-  )
+  def add_plugin(name, gemfile, lock:, opt_in: true, **options)
     dir = File.join(tmp_dir, "plugins", name)
     FileUtils.mkdir_p(dir)
     File.write(File.join(dir, "plugin.rb"), "# name: #{name}\n# gemfile: #{opt_in}\n")
-    write_plugin_files(dir, gemfile, lock, path:, checksums:, source:)
+    write_plugin_files(dir, gemfile, lock, **options)
     plugins << Plugin::Instance.parse_from_source(File.join(dir, "plugin.rb"))
     dir
   end
@@ -201,9 +194,9 @@ RSpec.describe PluginGem do
     allow(Gem).to receive(:loaded_specs).and_return(loaded_specs)
   end
 
-  it "resolves a gem two plugins share once" do
+  it "uses the highest shared lock version and pins its transitive dependencies" do
     add_plugin("one", %(gem "alpha", ">= 1"\n), lock: { "alpha" => "1.1.0", "beta" => "1.0.0" })
-    add_plugin("two", %(gem "alpha", "~> 1.0"\n), lock: { "alpha" => "1.1.0", "beta" => "1.0.0" })
+    add_plugin("two", %(gem "alpha", "~> 1.0"\n), lock: { "alpha" => "1.0.0", "beta" => "1.0.0" })
 
     boot.to output(
       /Installing alpha 1.1.0.*Resolved 2 plugin gems from 2 Gemfiles/m,
@@ -293,10 +286,11 @@ RSpec.describe PluginGem do
         },
       )
     FileUtils.mkdir_p(File.join(dir, "engine"))
+    File.write(File.join(dir, "engine", "VERSION"), "0.0.1")
     File.write(File.join(dir, "engine", "engine.gemspec"), <<~GEMSPEC)
       Gem::Specification.new do |s|
         s.name = "engine"
-        s.version = "0.0.1"
+        s.version = File.read("VERSION")
         s.summary = "test"
         s.authors = ["test"]
         s.add_dependency "alpha", ">= 1.1"
@@ -339,15 +333,6 @@ RSpec.describe PluginGem do
     expect(File.read(File.join(gems_dir, "Gemfile.lock"))).to include("    rack (#{rack})\n")
   end
 
-  it "only activates on the next boot" do
-    add_plugin("one", %(gem "alpha"\n), lock: { "alpha" => "1.1.0", "beta" => "1.0.0" })
-    boot.to output(/Resolved 2 plugin gems/).to_stdout_from_any_process
-
-    FileUtils.rm_rf(repo)
-    boot.not_to output.to_stdout_from_any_process
-    expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0])
-  end
-
   it "resolves again when a gem leaves the application's active bundle" do
     add_plugin("one", %(gem "delta"\n), lock: { "delta" => "1.0.0" })
     boot.to output(/Resolved 0 plugin gems/).to_stdout_from_any_process
@@ -362,14 +347,18 @@ RSpec.describe PluginGem do
     expect(activated).to eq(%w[delta-1.0.0])
   end
 
-  it "uses the plugin's lock for dependencies declared in a nested Gemfile" do
+  it "invalidates the cache when a nested Gemfile enables a locked dependency" do
     dir = add_plugin("one", %(gem "beta"\n), lock: { "beta" => "1.0.0" })
-    File.write(File.join(dir, "dependencies.rb"), %(gem "beta"\n))
+    nested = File.join(dir, "dependencies.rb")
+    File.write(nested, %(gem "beta", group: :development\n))
     File.write(
       File.join(dir, "Gemfile"),
       %(source "https://rubygems.org"\neval_gemfile "dependencies.rb"\n),
     )
+    boot.to output(/Resolved 0 plugin gems/).to_stdout_from_any_process
+    expect(activated).to be_empty
 
+    File.write(nested, %(gem "beta"\n))
     boot.to output(/Resolved 1 plugin gems/).to_stdout_from_any_process
     expect(activated).to eq(%w[beta-1.0.0])
   end
@@ -389,35 +378,53 @@ RSpec.describe PluginGem do
     expect(activated).to eq(%w[beta-1.0.0])
   end
 
-  ["java", Gem::Platform.local.to_s].each do |platform|
-    it "ignores transitive lock pins from the #{platform} variant when using the Ruby gem" do
-      dir =
-        add_plugin(
-          "one",
-          %(gem "alpha", force_ruby_platform: true\n),
-          lock: {
-            "alpha" => "1.1.0",
-            "beta" => "1.0.0",
-            "shared" => "1.1.0",
-          },
-        )
-      lockfile = File.join(dir, "Gemfile.lock")
-      lock =
-        File.read(lockfile).sub(
-          "    alpha (1.1.0)\n",
-          "    alpha (1.1.0-#{platform})\n      shared (>= 1)\n    alpha (1.1.0)\n",
-        )
+  it "ignores transitive lock pins from other variants when forcing the Ruby gem" do
+    dir =
+      add_plugin(
+        "one",
+        %(gem "alpha", force_ruby_platform: true\n),
+        lock: {
+          "alpha" => "1.1.0",
+          "beta" => "1.0.0",
+          "shared" => "1.1.0",
+        },
+      )
+    lockfile = File.join(dir, "Gemfile.lock")
+    lock = File.read(lockfile)
+    ["java", Gem::Platform.local.to_s].each do |platform|
+      lock.sub!(
+        "    alpha (1.1.0)\n",
+        "    alpha (1.1.0-#{platform})\n      shared (>= 1)\n    alpha (1.1.0)\n",
+      )
       lock.sub!("PLATFORMS\n", "PLATFORMS\n  #{platform}\n")
       lock.sub!(
         "CHECKSUMS\n",
         "CHECKSUMS\n  alpha (1.1.0-#{platform}) #{checksum("alpha", "1.1.0")}\n",
       )
-      File.write(lockfile, lock)
-      add_plugin("two", %(gem "shared", "1.0.0"\n), lock: { "shared" => "1.0.0" })
-
-      boot.to output(/Resolved 3 plugin gems/).to_stdout_from_any_process
-      expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0 shared-1.0.0])
     end
+    File.write(lockfile, lock)
+    add_plugin("two", %(gem "shared", "1.0.0"\n), lock: { "shared" => "1.0.0" })
+
+    boot.to output(/Resolved 3 plugin gems/).to_stdout_from_any_process
+    expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0 shared-1.0.0])
+  end
+
+  it "rejects an unlocked platform variant before installing any gems" do
+    repo_gems << ["beta", "1.0.0", { "shared" => ">= 1" }, Gem::Platform.local.to_s]
+    build_repo
+    add_plugin("one", %(gem "beta"\n), lock: { "beta" => "1.0.0" })
+
+    boot.to raise_error(/Resolved plugin gem .* is not in the plugins' Gemfile.lock files/)
+    expect(installed).to be_empty
+  end
+
+  it "rejects a lock with no compatible variant instead of dropping its version pin" do
+    dir = add_plugin("one", %(gem "beta"\n), lock: { "beta" => "1.0.0" })
+    lockfile = File.join(dir, "Gemfile.lock")
+    File.write(lockfile, File.read(lockfile).gsub("beta (1.0.0)", "beta (1.0.0-java)"))
+
+    boot.to raise_error(/Gemfile.lock has no compatible platform for beta/)
+    expect(installed).to be_empty
   end
 
   it "resolves again when a Gemfile or the application's lock changes, reusing what is installed" do
@@ -431,10 +438,10 @@ RSpec.describe PluginGem do
     ).to_stdout_from_any_process
     expect(installed).to eq(%w[alpha-1.0.0 alpha-1.1.0 beta-1.0.0])
 
-    allow(PluginGem).to receive(:in_child_process).and_call_original
     File.write(app_lockfile, "app lock, updated\n")
-    boot.not_to output(/Installing/).to_stdout_from_any_process
-    expect(PluginGem).to have_received(:in_child_process)
+    boot.to output(
+      satisfy { it.include?("Resolved 2 plugin gems") && !it.include?("Installing") },
+    ).to_stdout_from_any_process
     expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0])
   end
 
@@ -451,6 +458,9 @@ RSpec.describe PluginGem do
     boot.to output(/Resolved 3 plugin gems/).to_stdout_from_any_process
 
     FileUtils.rm_rf(repo)
+    boot.not_to output.to_stdout_from_any_process
+    expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0 shared-1.1.0])
+
     plugins.pop
     boot.to output(/Resolved 2 plugin gems from 1 Gemfiles/).to_stdout_from_any_process
     expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0])
@@ -568,21 +578,6 @@ RSpec.describe PluginGem do
       boot.to output(/Installing alpha 1.1.0/).to_stdout_from_any_process
       expect(installed).to eq(%w[alpha-1.0.0 alpha-1.1.0 beta-1.0.0])
       expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0])
-    end
-
-    it "pins a transitive dependency although the source has a newer version" do
-      add_plugin("one", %(gem "alpha"\n), lock: { "alpha" => "1.1.0", "beta" => "1.0.0" })
-
-      boot.to output(/Resolved 2 plugin gems/).to_stdout_from_any_process
-      expect(installed).to eq(%w[alpha-1.1.0 beta-1.0.0])
-    end
-
-    it "pins a shared gem to the highest version any plugin locks" do
-      add_plugin("one", %(gem "shared"\n), lock: { "shared" => "1.1.0" })
-      add_plugin("two", %(gem "shared"\n), lock: { "shared" => "1.0.0" })
-
-      boot.to output(/Resolved 1 plugin gems/).to_stdout_from_any_process
-      expect(installed).to eq(%w[shared-1.1.0])
     end
 
     it "does not pin a gem of the application" do

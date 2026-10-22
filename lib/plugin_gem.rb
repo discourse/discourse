@@ -62,14 +62,16 @@ module PluginGem
 
     manifest = File.join(GEMS_DIR, "activate.json")
     cached = JSON.parse(File.read(manifest)) if File.exist?(manifest)
-    specs = cached["specs"] if cached&.dig("key") == manifest_key(gemfiles)
-    unless specs&.all? { |path, _directory| File.exist?(path) }
-      specs = in_child_process { install(gemfiles) }
-      File.write("#{manifest}.#{Process.pid}", JSON.generate(key: manifest_key(gemfiles), specs:))
-      File.rename("#{manifest}.#{Process.pid}", manifest)
+    if !cached || cached["key"] != manifest_key(gemfiles, cached["gemfiles"]) ||
+         !cached["specs"].all? { |path, _directory| File.exist?(path) }
+      cached = in_child_process { install(gemfiles) }
+      cached["key"] = manifest_key(gemfiles, cached["gemfiles"])
+      temporary_manifest = "#{manifest}.#{Process.pid}"
+      File.write(temporary_manifest, JSON.generate(cached))
+      File.rename(temporary_manifest, manifest)
     end
-    specs.each do |path, directory|
-      spec = Gem::Specification.load(path)
+    cached["specs"].each do |path, directory|
+      spec = Bundler.load_gemspec(path)
       spec.full_gem_path = directory
       spec.activate
     end
@@ -77,20 +79,26 @@ module PluginGem
 
   # Even with nothing to do, bundler takes ~150 ms to find that out. The
   # active application specs and file contents decide whether the last
-  # result still holds, including when enabled bundle groups change.
-  def self.manifest_key(gemfiles)
-    files = [Bundler.default_lockfile, *gemfiles.flat_map { [it, "#{it}.lock"] }, LOCKFILE]
+  # result still holds, including when enabled bundle groups change. The
+  # manifest records nested Gemfiles so cached boots need not evaluate them.
+  def self.manifest_key(gemfiles, evaluated_gemfiles)
+    files = [
+      Bundler.default_lockfile,
+      *gemfiles.flat_map { [it, "#{it}.lock"] },
+      *evaluated_gemfiles,
+      LOCKFILE,
+    ].uniq
     app_specs = Bundler.load.specs.map { [it.full_name, it.full_gem_path] }.sort
     Digest::SHA1.hexdigest(
       [
         RUBY_VERSION,
         app_specs,
-        *files.map { |file| File.exist?(file) ? File.read(file) : "" },
+        *files.flat_map { |file| [file, File.exist?(file) ? File.read(file) : ""] },
       ].join("\0"),
     )
   end
 
-  # Returns [gemspec path, source directory] pairs to activate, dependencies first.
+  # Returns activation pairs (dependencies first) and all evaluated Gemfiles.
   def self.install(gemfiles)
     # name => [version, directory of a git or path gem]. Taken before
     # resolving, which retags the application's spec objects with its sources.
@@ -109,7 +117,7 @@ module PluginGem
     # Installed gems first: they are enough after most changes, and offline.
     attempts = [{ local: true }, {}]
     attempts.each_with_index do |options, index|
-      return resolve(gemfiles, pins, locked, [app_lock, *locks.values], options)
+      return resolve(gemfiles, pins, locked, locks.values, app_lock, options)
     rescue Bundler::BundlerError => e
       if index == attempts.size - 1
         raise resolve_error(e, dependencies.values.flatten + lock_pins(locked), pins)
@@ -175,7 +183,7 @@ module PluginGem
     end
   end
 
-  def self.resolve(gemfiles, pins, locked, locks, options)
+  def self.resolve(gemfiles, pins, locked, locks, app_lock, options)
     dsl = Bundler::Dsl.new
     dependencies = plugin_dependencies(dsl, gemfiles).values.flatten
     dependencies.each do |dependency|
@@ -220,8 +228,7 @@ module PluginGem
         # a downloaded gem with another checksum fails the install. The
         # application's gems are never downloaded, its lock gives them their
         # entries in LOCKFILE.
-        locks
-          .flat_map(&:sources)
+        [app_lock, *locks].flat_map(&:sources)
           .each do |locked_source|
             definition
               .sources
@@ -230,6 +237,14 @@ module PluginGem
               &.checksum_store
               &.merge!(locked_source.checksum_store)
           end
+        definition.setup_domain!(options)
+        locked_specs = locks.flat_map(&:specs).map(&:full_name).to_set
+        definition.specs.each do |spec|
+          next if pins.key?(spec.name) || spec.name == "bundler"
+          next if locked.key?(spec.name) && locked_specs.include?(spec.full_name)
+
+          raise "Resolved plugin gem #{spec.full_name} is not in the plugins' Gemfile.lock files; update the locks for #{Bundler.local_platform} and commit them"
+        end
         Bundler::Installer.install(Bundler.root, definition, options)
 
         specs =
@@ -237,7 +252,7 @@ module PluginGem
             [spec.loaded_from, spec.full_gem_path] unless Gem.loaded_specs.key?(spec.name)
           end
         puts "Resolved #{specs.size} plugin gems from #{gemfiles.size} Gemfiles"
-        specs
+        { "specs" => specs, "gemfiles" => definition.gemfiles.map(&:to_s) }
       end
   end
 
@@ -278,7 +293,9 @@ module PluginGem
             Bundler.local_platform,
             force_ruby: force_ruby.include?(name),
           )
-        next if variants.empty?
+        if variants.empty?
+          raise "Plugin #{File.basename(File.dirname(gemfile))}'s Gemfile.lock has no compatible platform for #{name}; run `bundle lock --add-platform #{Bundler.local_platform}` and commit it"
+        end
 
         variants.each { |spec| names.concat(spec.dependencies.map(&:name) - names) }
         version = variants.first.version
