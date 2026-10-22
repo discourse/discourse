@@ -4910,6 +4910,10 @@ experimental:
     default: false
     hidden: true
     area: "experimental"
+  dsa_moderation_appeal_email:
+    default: ""
+    type: email
+    hidden: true
   dsa_community_rules:
     type: objects
     default: []

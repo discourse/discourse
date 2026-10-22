@@ -469,6 +469,7 @@ class PostDestroyer
           end
         ),
       message_options: {
+        **Dsa::AppealInstructions.message_options,
         flagged_post_raw_content: notify_responders ? options[:parent_post].raw : @post.raw,
         flagged_post_response_raw_content: @post.raw,
         url: notify_responders ? options[:parent_post].url : @post.url,

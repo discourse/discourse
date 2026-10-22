@@ -1131,6 +1131,21 @@ RSpec.describe PostDestroyer do
 
     before { Jobs::SendSystemMessage.clear }
 
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        SiteSetting.dsa_reporting_enabled = true
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "includes appeal instructions in the deletion notice" do
+        PostDestroyer.new(moderator, second_post).destroy
+        args = Jobs::SendSystemMessage.jobs.last["args"][0].with_indifferent_access
+        Jobs::SendSystemMessage.new.execute(args)
+
+        expect(Post.last.raw).to include("To appeal this decision, contact appeals@example.com")
+      end
+    end
+
     it "deletes public post actions and agrees with flags" do
       url = second_post.url
       PostDestroyer.new(moderator, second_post).destroy

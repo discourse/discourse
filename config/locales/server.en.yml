@@ -2146,6 +2146,7 @@ en:
 
   site_settings:
     dsa_notice_group: "Group receiving illegal content notices when {{setting:dsa_reporting_enabled}} is enabled. Members can read notices and reporter contact details. Defaults to admins, which also receives notices if the selected group is missing or empty."
+    dsa_moderation_appeal_email: "Users can appeal moderation decisions by emailing this address. Leave blank to omit appeal instructions. Requires {{setting:dsa_reporting_enabled}} to be turned on."
     dsa_community_rules: "Community rules available for DSA classification when {{setting:dsa_reporting_enabled}} is enabled. Each rule needs an exact contractual reference (up to 500 characters) and an explanation (up to 2000 characters). Leave empty to disable classification."
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
     disabled: "disabled"
@@ -4021,6 +4022,7 @@ en:
 
     private_topic_title: "Topic #%{id}"
     contents_hidden: "Please visit the post to see its contents."
+    moderation_appeal_instructions: "To appeal this decision, contact %{email}"
 
     post_hidden:
       title: "Post Hidden"
