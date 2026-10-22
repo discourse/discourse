@@ -1,5 +1,10 @@
 import { tracked } from "@glimmer/tracking";
+import { cancel } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
+import discourseDebounce from "discourse/lib/debounce";
+import { deepEqual } from "discourse/lib/object";
+import { serializeConnections } from "../../models/workflow-connection.js";
+import WorkflowNode from "../../models/workflow-node.js";
 import {
   normalizeSourceOutputIndex,
   normalizeTargetInputIndex,
@@ -10,6 +15,8 @@ import {
   latestRunWithOutput,
   outputForRun,
 } from "./run-data.js";
+
+const OUTPUT_SCHEMAS_DEBOUNCE_MS = 300;
 
 function compactObject(object) {
   return Object.fromEntries(
@@ -35,6 +42,11 @@ export default class WorkflowEditorSession {
   @tracked pinData = {};
   @tracked webhookTestListeners = {};
   @tracked variables = [];
+  @tracked outputSchemas = {};
+
+  #outputSchemasData = null;
+  #outputSchemasRequest = 0;
+  #outputSchemasTimer = null;
 
   constructor({
     workflowId = null,
@@ -58,6 +70,59 @@ export default class WorkflowEditorSession {
     this.editingNode = null;
     this.graphNodes = null;
     this.graphConnections = null;
+    this.outputSchemas = {};
+    this.#outputSchemasData = null;
+    this.#outputSchemasRequest++;
+    cancel(this.#outputSchemasTimer);
+  }
+
+  scheduleOutputSchemas(nodes, connections) {
+    this.#outputSchemasTimer = discourseDebounce(
+      this,
+      this.loadOutputSchemas,
+      nodes,
+      connections,
+      OUTPUT_SCHEMAS_DEBOUNCE_MS
+    );
+  }
+
+  async loadOutputSchemas(nodes, connections) {
+    if (!this.editingNode) {
+      return;
+    }
+
+    const data = JSON.stringify({
+      nodes: nodes.map((node) => {
+        const { type, typeVersion, name, parameters } =
+          WorkflowNode.serialize(node);
+        return { id: node.clientId, type, typeVersion, name, parameters };
+      }),
+      connections: serializeConnections(connections, nodes),
+    });
+    if (data === this.#outputSchemasData) {
+      return;
+    }
+
+    this.#outputSchemasData = data;
+    const request = ++this.#outputSchemasRequest;
+    let result;
+
+    try {
+      result = await ajax(
+        "/admin/plugins/discourse-workflows/output-schemas.json",
+        { type: "POST", contentType: "application/json", data }
+      );
+    } catch {
+      this.#outputSchemasData = null;
+      return;
+    }
+
+    if (
+      request === this.#outputSchemasRequest &&
+      !deepEqual(this.outputSchemas, result.output_schemas)
+    ) {
+      this.outputSchemas = result.output_schemas;
+    }
   }
 
   nodeParameterOptionsContext(context = {}) {

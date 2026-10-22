@@ -63,7 +63,15 @@ Renaming or removing an output key, or changing its meaning, breaks saved workfl
 - Actions that mutate a topic also return `topic`.
 - Cap user lists with a named constant (e.g. `PostEventScoping::MAX_GOING_USERNAMES`).
 
+## Secrets
+
+- Never put credential values in output. Password credential fields serialize as `Credential::REDACTED_VALUE`.
+- `WebhookRequest` masks `FILTERED_HEADERS` (`authorization`, `cookie`, `proxy-authorization`) with `FILTERED_VALUE`; `AuthenticateNode` masks the matched `header_auth` header.
+- http_request logs headers through `redact_headers`.
+
 ## Output contracts
+
+Every node declares its output with `output_contracts` in `description`, or derives it from config by overriding `self.output_schemas` (see summarize, data_table, trigger:form, action:form). The editor fetches resolved schemas from the server (`POST /output-schemas`), so there is no JS counterpart.
 
 `node_output_contracts_spec` has a `user_defined_output` opt-out list. A node belongs there only if the user writes its output shape (code, sql, set_fields, workflow_call, manual). If the shape can be derived from config, override `self.output_schemas` instead.
 
