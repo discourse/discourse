@@ -336,6 +336,14 @@ jobs:
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
+          lscpu | grep -E '^Architecture:|^CPU\(s\):|^Model name:|^Thread\(s\) per core:|^Core\(s\) per socket:|^Socket\(s\):'
+          ruby -rbenchmark <<'RUBY'
+          seconds = Benchmark.realtime do
+            value = 0
+            value += 1 while value < 50_000_000
+          end
+          puts "ruby_integer_loop_seconds #{seconds}"
+          RUBY
           report_test_resources() {
             kill "$resource_sampler_pid" 2>/dev/null || true
             wait "$resource_sampler_pid" 2>/dev/null || true
