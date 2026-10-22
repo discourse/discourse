@@ -116,6 +116,21 @@ acceptance("Composer Form Template", function (needs) {
   });
   needs.pretender((server, helper) => {
     server.put("/u/kris.json", () => helper.response({ user: {} }));
+    server.post("/form-templates/render.json", (request) => {
+      const data = parsePostData(request.requestBody);
+      const { answers } = JSON.parse(data.form_template_data);
+      const labels = {
+        "full-name": "Full name",
+        description: "Description",
+        "activity-date": "Activity Date",
+        "md-description": "Description",
+        "other-field": "Other field",
+      };
+      const raw = Object.entries(answers)
+        .map(([id, value]) => (value ? `### ${labels[id]}\n${value}` : ""))
+        .join("\n\n");
+      return helper.response({ raw });
+    });
 
     server.get("/form-templates.json", () => {
       return helper.response({
@@ -330,7 +345,15 @@ acceptance("Composer Form Template", function (needs) {
   test("preserves newlines from a composer field in the generated post body", async function (assert) {
     let capturedRaw;
     pretender.post("/posts", (request) => {
-      capturedRaw = parsePostData(request.requestBody).raw;
+      const data = parsePostData(request.requestBody);
+      capturedRaw = data.raw;
+      const structured = JSON.parse(data.form_template_data);
+      assert.strictEqual(structured.id, 3, "sends the selected template ID");
+      assert.strictEqual(
+        typeof structured.answers["md-description"],
+        "string",
+        "sends the answer independently of rendered raw"
+      );
       return response(200, {
         success: true,
         action: "create_post",

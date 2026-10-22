@@ -23,7 +23,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { isRailsTesting } from "discourse/lib/environment";
-import prepareFormTemplateData, {
+import renderFormTemplate, {
   getFormTemplateObject,
 } from "discourse/lib/form-template-validation";
 import { shortDate } from "discourse/lib/formatter";
@@ -106,6 +106,7 @@ export function addComposerSaveErrorCallback(callback) {
 @disableImplicitInjections
 export default class ComposerService extends Service {
   @service appEvents;
+
   @service capabilities;
   @service composerActionState;
   @service currentUser;
@@ -125,6 +126,7 @@ export default class ComposerService extends Service {
 
   /** @type {number | null} */
   messageCount = null;
+
   showEditReason = false;
 
   /** @type {string | null} */
@@ -141,6 +143,7 @@ export default class ComposerService extends Service {
 
   /** @type {number | null} */
   lastValidatedAt = null;
+
   isUploading = false;
   isProcessingUpload = false;
   isCancellable;
@@ -151,6 +154,8 @@ export default class ComposerService extends Service {
 
   /** @type {import("discourse/lib/link-lookup").default | null} */
   linkLookup = null;
+
+  #renderingForm = false;
 
   #onSaved = null;
 
@@ -750,8 +755,9 @@ export default class ComposerService extends Service {
   }
 
   @action
-  onSelectFormTemplate(formTemplate) {
+  onSelectFormTemplate(formTemplate, id) {
     this.selectedFormTemplate = formTemplate;
+    this.model.set("formTemplateId", id);
   }
 
   @observes("showPreview")
@@ -1247,8 +1253,8 @@ export default class ComposerService extends Service {
     this.toolbarEvent.formatCode();
   }
 
-  save(force, options = {}) {
-    if (this.disableSubmit) {
+  async save(force, options = {}) {
+    if (this.disableSubmit || this.#renderingForm) {
       return;
     }
 
@@ -1265,15 +1271,36 @@ export default class ComposerService extends Service {
       this.set("showPreview", false);
     }
 
+    this.model.set("formTemplateData", null);
     if (this.hasFormTemplate) {
-      const formTemplateData = prepareFormTemplateData(
-        document.querySelector("#form-template-form"),
-        this.selectedFormTemplate
-      );
-      if (formTemplateData) {
-        this.model.set("reply", formTemplateData);
-      } else {
+      const model = this.model;
+      const categoryId = model.categoryId;
+      const templateId = model.formTemplateId || this.formTemplateIds[0];
+      this.#renderingForm = true;
+      try {
+        const result = await renderFormTemplate(
+          document.querySelector("#form-template-form"),
+          this.selectedFormTemplate,
+          templateId,
+          categoryId
+        );
+        if (
+          !result ||
+          model !== this.model ||
+          categoryId !== model.categoryId ||
+          templateId !== (model.formTemplateId || this.formTemplateIds?.[0])
+        ) {
+          return;
+        }
+        model.setProperties({
+          reply: result.raw,
+          formTemplateData: result.payload,
+        });
+      } catch (error) {
+        popupAjaxError(error);
         return;
+      } finally {
+        this.#renderingForm = false;
       }
     }
 

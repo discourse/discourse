@@ -9853,6 +9853,9 @@ en:
           delete: "Delete"
           toggle_preview: "Toggle Preview"
         new_template_form:
+          output:
+            label: "Output template"
+            description: "Optional Markdown with Liquid expressions referencing answers by field ID. Leave blank to use the default headings and answers."
           submit: "Save"
           cancel: "Cancel"
           name:

@@ -1,3 +1,4 @@
+import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
 export function getFormTemplateObject(form) {
@@ -11,58 +12,67 @@ export function getFormTemplateObject(form) {
   return formObject;
 }
 
-export default function prepareFormTemplateData(
+export function collectFormTemplateAnswers(
   form,
-  formTemplate,
+  fields,
   checkFormValidity = true
 ) {
-  const labelMap = formTemplate.reduce((acc, field) => {
-    acc[field.id] = field.attributes.label;
-    return acc;
-  }, {});
-
-  const formData = new FormData(form);
-
-  // Validate the form template
+  if (!form || !fields) {
+    return null;
+  }
   if (checkFormValidity) {
     _validateFormTemplateData(form);
     if (!form.checkValidity()) {
-      return false;
+      return null;
     }
   }
 
-  // Gather form template data
-  const formDetails = [];
-  for (let [key, value] of formData.entries()) {
-    formDetails.push({
-      [key]: value,
-    });
-  }
+  const formData = new FormData(form);
+  const answers = Object.create(null);
+  const numberFormats = Object.create(null);
 
-  const mergedData = [];
-  const mergedKeys = new Set();
-
-  for (const item of formDetails) {
-    const key = Object.keys(item)[0]; // Get the key of the current item
-    if (mergedKeys.has(key)) {
-      // If the key has already been merged, append the value to the existing key
-      mergedData[mergedData.length - 1][key] += "\n" + item[key];
-    } else {
-      mergedData.push(item);
-      mergedKeys.add(key);
+  for (const field of fields) {
+    const values = formData.getAll(field.id);
+    if (field.type === "checkbox") {
+      answers[field.id] = values.length > 0;
+    } else if (values.length > 0) {
+      if (
+        field.type === "multi-select" ||
+        (field.type === "tag-chooser" && field.attributes?.multiple)
+      ) {
+        answers[field.id] = values;
+      } else if (
+        field.type === "input" &&
+        field.validations?.type === "number"
+      ) {
+        numberFormats[field.id] = values[0];
+        answers[field.id] = values[0] === "" ? null : Number(values[0]);
+      } else {
+        answers[field.id] = values[0];
+      }
     }
   }
 
-  // Construct formatted post output
-  const formattedOutput = mergedData.map((item) => {
-    const key = Object.keys(item)[0];
-    const value = item[key];
-    if (value) {
-      return `### ${labelMap[key]}\n${value}`;
-    }
+  return { answers, number_formats: numberFormats };
+}
+
+export default async function renderFormTemplate(
+  form,
+  fields,
+  id,
+  categoryId,
+  checkFormValidity = true
+) {
+  const values = collectFormTemplateAnswers(form, fields, checkFormValidity);
+  if (!values) {
+    return null;
+  }
+  const payload = JSON.stringify({ id, ...values });
+  const { raw } = await ajax("/form-templates/render.json", {
+    type: "POST",
+    data: { category_id: categoryId, form_template_data: payload },
   });
-
-  return formattedOutput.join("\n\n");
+  return { raw, payload };
 }
 
 function _validateFormTemplateData(form) {

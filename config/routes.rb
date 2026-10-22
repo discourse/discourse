@@ -2091,6 +2091,7 @@ Discourse::Application.routes.draw do
     put "/sidebar_sections/:id/reorder" => "sidebar_sections#reorder"
     put "/sidebar_sections/:id/move_link" => "sidebar_sections#move_link"
 
+    post "/form-templates/render" => "form_templates#render_output"
     get "/form-templates/:id" => "form_templates#show"
     get "/form-templates" => "form_templates#index"
 
