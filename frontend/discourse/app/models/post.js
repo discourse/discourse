@@ -106,8 +106,10 @@ export default class Post extends RestModel {
     }).catch(popupAjaxError);
   }
 
-  static loadRevision(postId, version) {
-    return ajax(`/posts/${postId}/revisions/${version}.json`).then((result) => {
+  static loadRevision(postId, version, { includeUnlisted = false } = {}) {
+    return ajax(`/posts/${postId}/revisions/${version}.json`, {
+      data: includeUnlisted ? { include_unlisted: true } : {},
+    }).then((result) => {
       result.categories?.forEach((c) => Site.current().updateCategory(c));
       return EmberObject.create(result);
     });
@@ -127,6 +129,18 @@ export default class Post extends RestModel {
 
   static showRevision(postId, version) {
     return ajax(`/posts/${postId}/revisions/${version}/show`, {
+      type: "PUT",
+    });
+  }
+
+  static unlistRevision(postId, version) {
+    return ajax(`/posts/${postId}/revisions/${version}/unlist`, {
+      type: "PUT",
+    });
+  }
+
+  static relistRevision(postId, version) {
+    return ajax(`/posts/${postId}/revisions/${version}/relist`, {
       type: "PUT",
     });
   }
