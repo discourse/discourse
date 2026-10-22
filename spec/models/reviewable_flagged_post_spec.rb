@@ -272,6 +272,20 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(post).not_to be_hidden
     end
 
+    it "agree_and_keep keeps flags rejected in an earlier review rejected" do
+      reviewable.perform(moderator, :disagree)
+      new_score =
+        PostActionCreator.inappropriate(
+          Fabricate(:user, refresh_auto_groups: true),
+          post,
+        ).reviewable_score
+
+      reviewable.reload.perform(moderator, :agree_and_keep)
+
+      expect(score.reload).to be_disagreed
+      expect(new_score.reload).to be_agreed
+    end
+
     describe "with reviewable claiming enabled" do
       fab!(:claimed) { Fabricate(:reviewable_claimed_topic, topic: post.topic, user: moderator) }
 
