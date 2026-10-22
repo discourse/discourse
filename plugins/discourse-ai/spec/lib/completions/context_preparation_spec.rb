@@ -133,8 +133,11 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
       end
     end
 
-    it "logs empty_summary when compression produces only whitespace" do
+    it "logs the triggering post identifiers when compression produces only whitespace" do
+      post = Fabricate(:private_message_post)
       prompt = history_prompt(repetitions: 600)
+      prompt.topic_id = post.topic_id
+      prompt.post_id = post.id
       original = prompt.messages.deep_dup
       logger =
         track_log_messages do
@@ -145,8 +148,33 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
           end
         end
 
-      expect(logger.warnings).to include("DiscourseAi: context_preparation reason=empty_summary")
+      expect(logger.warnings).to include(
+        "DiscourseAi: context_preparation reason=empty_summary topic_id=#{post.topic_id} post_id=#{post.id} post_number=#{post.post_number}",
+      )
       expect(prompt.messages).to eq(original)
+    end
+
+    it "keeps the original failure diagnostic when the post lookup is unavailable" do
+      post = Fabricate(:private_message_post)
+      prompt = history_prompt(repetitions: 600)
+      prompt.topic_id = post.topic_id
+      prompt.post_id = post.id
+      allow(Post).to receive(:where).with(id: post.id).and_raise(
+        ActiveRecord::ConnectionNotEstablished,
+      )
+
+      logger =
+        track_log_messages do
+          DiscourseAi::Completions::Llm.with_prepared_responses([""]) do
+            expect(described_class.new(model.to_llm, threshold: 20).prepare!(prompt)).to eq(
+              :skipped,
+            )
+          end
+        end
+
+      expect(logger.warnings).to include(
+        "DiscourseAi: context_preparation reason=empty_summary topic_id=#{post.topic_id} post_id=#{post.id}",
+      )
     end
 
     it "logs summary_not_smaller when compression expands the prompt" do

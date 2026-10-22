@@ -5,6 +5,55 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  dsa_notice:
+    subject: "[%{reference}] 举报可能违法的内容"
+    summary: "**举报编号： %{reference}**\n\n**邮箱地址：** %{reporter_email}\n\n**姓名或机构名称：** %{reporter_name}\n\n**内容的完整URL：** %{content_url}\n\n**您认为此内容违法的原因是什么？**\n\n%{explanation}"
+    verification_invalid: "邮件验证码错误或已过期。请检查验证码或申请新的验证码。"
+    invalid_parameters: "该报告包含无效值。"
+    invalid_url: "必须是有效的 HTTP 或 HTTPS URL，无需登录凭据"
+    invalid_email: "必须是有效的电子邮件地址"
+  dsa_notice_verification:
+    subject_template: "[%{email_prefix}] 您的报告验证码"
+    text_body_template: |
+      使用此代码验证您的电子邮件地址，以便举报 %{site_title}上的非法内容：
+
+      ## %{verification_code}
+
+      此代码将在 %{expires_in_minutes} 分钟后过期。如果您未申请此验证，则可以忽略此电子邮件。
+  dsa_notice_mailer:
+    subject_template: "[%{email_prefix}] 您举报的潜在非法内容 %{reference}"
+    text_body_template: |
+      %{site_title} 已收到您的报告。
+
+      审核团队将通过电子邮件告知您审核结果。此收据并不代表已做出决定或内容已被删除。
+
+      %{summary}
+
+      **声明：**
+
+      我确认，我确信本通知中的信息和指控准确完整。
+  dsa_statements:
+    classification_note: "已将此审核决定归类为 DSA 报告。\n社区规则： %{ground}\n类别： %{category}"
+    errors:
+      statements_changed: "本次评测的声明已更改。请刷新页面以查看其最新分类。"
+      failed: "分类结果无法保存，请重试。"
+    categories:
+      STATEMENT_CATEGORY_ANIMAL_WELFARE: "动物福利"
+      STATEMENT_CATEGORY_CONSUMER_INFORMATION: "消费者信息侵权"
+      STATEMENT_CATEGORY_CYBER_VIOLENCE: "网络暴力"
+      STATEMENT_CATEGORY_CYBER_VIOLENCE_AGAINST_WOMEN: "针对女性的网络暴力"
+      STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS: "数据保护和隐私侵权"
+      STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH: "非法或有害言论"
+      STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS: "知识产权侵权"
+      STATEMENT_CATEGORY_NEGATIVE_EFFECTS_ON_CIVIC_DISCOURSE_OR_ELECTIONS: "对公民讨论或选举的负面影响"
+      STATEMENT_CATEGORY_NOT_SPECIFIED_NOTICE: "举报人未具体说明涉嫌非法内容的类型。"
+      STATEMENT_CATEGORY_OTHER_VIOLATION_TC: "其他违反条款和条件的行为"
+      STATEMENT_CATEGORY_PROTECTION_OF_MINORS: "保护未成年人"
+      STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY: "公共安全风险"
+      STATEMENT_CATEGORY_SCAMS_AND_FRAUD: "诈骗和欺诈"
+      STATEMENT_CATEGORY_SELF_HARM: "自我伤害"
+      STATEMENT_CATEGORY_UNSAFE_AND_PROHIBITED_PRODUCTS: "不安全或违禁产品"
+      STATEMENT_CATEGORY_VIOLENCE: "暴力"
   markdown_endpoints:
     latest: "最新"
     categories: "类别"
@@ -410,6 +459,7 @@ zh_CN:
       unrecognized_error: "无法识别的错误"
     secure_uploads_placeholder: "已编辑：此网站已启用安全上传，请访问话题或点击“查看媒体”以查看附加的上传。"
     view_redacted_media: "查看媒体"
+    view_diagram: "查看图表"
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>：%{message}"
@@ -957,6 +1007,7 @@ zh_CN:
     post_template: "%{replace_paragraph}\n\n使用以下段落提供详细描述或者建立类别准则或规则：\n\n- 为什么应使用此类别？它用来做什么？\n\n- 此类别和我们已经有的类别究竟有什么不同？\n\n- 此类别中的话题一般包含什么？\n\n- 我们需要此类别吗？我们可以将其与其他类别或子类别合并吗？"
     errors:
       not_found: "找不到类别！"
+      self_lockout: "您即将更改类别权限，这将移除您自己的访问权限。确定要继续吗？"
       uncategorized_parent: "未分类不能有父类别"
       self_parent: "子类别的父类别不能是它自己。"
       depth: "您不能将一个子类别嵌套在其他子类别下。"
@@ -1896,6 +1947,8 @@ zh_CN:
   random_username:
     unavailable: "无法生成随机用户名。请检查网站设置中的随机用户名词库。"
   site_settings:
+    dsa_notice_group: "启用 {{setting:dsa_reporting_enabled}} 后，群组将收到非法内容通知。成员可以阅读通知和举报人联系方式。默认通知发送给管理员，如果所选群组不存在或为空，管理员也会收到通知。"
+    dsa_community_rules: "启用 {{setting:dsa_reporting_enabled}} 后，即可使用社区规则进行 DSA 分类。每条规则都需要一个准确的合同参考（最多 500 个字符）和一个解释（最多 2000 个字符）。留空则禁用分类。"
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"
     display_local_time_in_user_card: "打开用户卡片时，根据用户的时区显示当地时间。"
@@ -2747,6 +2800,7 @@ zh_CN:
     push_notifications_icon: "出现在通知角的徽章图标。建议使用具有透明度的 96×96 单色 PNG。"
     enable_desktop_push_notifications: "激活桌面界面的推送通知。此功能可将实时警报从网站直接发送到您的桌面，从而增强参与度并确保用户始终获得最新信息。不过，此功能的有效性依赖于浏览器对推送通知的支持。"
     push_notification_time_window_mins: "在发送推送通知前等待 (n) 分钟。有助于避免向活跃的在线用户发送推送通知。"
+    push_notification_localization_max_wait_mins: "在将新帖子翻译成收件人语言之前，推送通知的最长等待时间（以分钟为单位）。设置为 0 则无需等待即可发送。"
     base_font: "用于网站上大多数文本的基础字体。可以通过 `--font-family` CSS 自定义属性替换主题。"
     heading_font: "用于网站上标题的字体。可以通过 `--heading-font-family` CSS 自定义属性替换主题。"
     enable_sitemap: "为您的网站生成网站地图并将其包含在 robots.txt 文件中。"
@@ -2788,13 +2842,14 @@ zh_CN:
     enable_auto_grid_images: "在编辑器中上传 3 张或更多图片后，自动将图片包装在 [grid] 标记中。"
     enable_new_checkbox_style: "为 FormKit 复选框启用重新设计的复选框样式。"
     enable_composer_redesign: "启用重新设计的编辑器。"
+    enable_new_reordering_controls: "在列表设置、管理列表、用户目录列和侧边栏链接上使用共享的重新排序控件，使每个控件都具有相同的拖动手柄、移动菜单和键盘支持。"
     enable_main_outlet_grid_layout_change: "将编辑器放置在主布局网格内，以便主题可以将其定位在网格列中，并使用更窄的侧边栏。"
     enable_composer_toolbar_customization: "允许成员在其界面偏好设置中选择哪些按钮显示在编辑器工具栏中。"
     prioritize_recently_used_tags: "如果在创建或编辑话题时添加标签，会在列表顶部显示该成员最近在自己的话题中使用过的标签，然后再显示论坛最热门的标签。"
     experimental_impersonation_time_limit_minutes: "模拟会话需要多长时间才能自动结束。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     show_user_menu_avatars: "在用户菜单中显示用户头像"
-    about_page_hidden_groups: "不在 /about 页面显示特定群组的成员。"
+    about_page_hidden_groups: "不要在 /about 页面上显示同时也是这些特定群组成员的管理员或版主。"
     about_page_extra_groups: "显示在“关于”页面版主下方的群组。"
     about_page_extra_groups_initial_members: "“关于”页面上每个群组上可以展开的成员数量。"
     about_page_extra_groups_show_description: "是否在“关于”页面中包含群组描述。"
@@ -3294,6 +3349,8 @@ zh_CN:
       must_end_with_alphanumeric: "必须以字母或数字结尾"
       must_not_contain_two_special_chars_in_seq: "不得包含 2 个或更多特殊字符 (.-_) 的序列"
       must_not_end_with_confusing_suffix: "不得以 .json 或 .png 等令人困惑的后缀结尾。"
+      contains_blocked_words:
+        other: "包含屏蔽词： %{words}"
     email:
       blank: "不能为空。"
       invalid: "无效。"
@@ -4520,37 +4577,55 @@ zh_CN:
 
         %{respond_instructions}
     account_suspended:
+      date_with_timezone: "%{date} (UTC%{offset})"
       title: "帐户被封禁"
       subject_template: "[%{email_prefix}] 您的帐户已被封禁"
       subject_template_improved: "您的帐户已被封禁"
       text_body_template: |
-        您的帐户被论坛封禁至 %{suspended_till}。
+        您好，
+
+        这是来自 %{site_name} 的自动消息，通知您您的帐户已被暂停，直至 %{suspended_till}。
 
         原因 - %{reason}
+
+        如需更多帮助，请参阅我们的[社区准则](%{base_url}/guidelines)。
     account_suspended_forever:
       title: "帐户被封禁"
       subject_template: "[%{email_prefix}] 您的帐户已被封禁"
       subject_template_improved: "您的帐户已被封禁"
       text_body_template: |
-        您已被论坛封禁。
+        您好，
+
+        这是来自 %{site_name} 的自动消息，通知您您的帐户已被暂停。
 
         原因 - %{reason}
+
+        如需更多帮助，请参阅我们的[社区准则](%{base_url}/guidelines)。
     account_silenced:
+      date_with_timezone: "%{date} (UTC%{offset})"
       title: "帐户被禁言"
       subject_template: "[%{email_prefix}] 您的帐户已被禁言"
       subject_template_improved: "您的帐户已被禁言"
       text_body_template: |
-        您的帐户被论坛禁言至 %{silenced_till}。
+        您好，
+
+        这是来自 %{site_name} 的自动消息，通知您您的帐户已被禁言，直至 %{silenced_till}。
 
         原因 - %{reason}
+
+        如需更多指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     account_silenced_forever:
       title: "帐户被禁言"
       subject_template: "[%{email_prefix}] 您的帐户已被禁言"
       subject_template_improved: "您的帐户已被禁言"
       text_body_template: |
-        您已被论坛禁言。
+        您好，
+
+        这是来自 %{site_name} 的自动消息，通知您您的帐户已被禁言。
 
         原因 - %{reason}
+
+        如需更多指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     account_deleted:
       title: "帐户已删除"
       subject_template: "[%{email_prefix}] 您的帐户已被删除"

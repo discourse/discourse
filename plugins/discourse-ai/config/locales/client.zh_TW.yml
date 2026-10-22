@@ -301,11 +301,9 @@ zh_TW:
         rejected: "已拒絕"
         awaiting_staff: "等待管理人員審批"
       default_llm:
-        title: "默認 LLM 模型"
-        description: "所有 AI 智能體使用的默認 LLM 模型。如果功能配置或智能體中未指定 LLM，將使用此模型。如果未指定默認 LLM，將使用最后創建的 LLM。"
+        title: "默認語言模型"
       llm_selector:
         none: "無"
-        saved: "默認 LLM 模型更新成功"
       features:
         short_title: "功能"
         description: "這些是您網站的訪客可以使用的 AI 功能。可以將這些功能配置為使用特定的智能體和 LLM，并按群組控制訪問權限。"
@@ -1102,6 +1100,17 @@ zh_TW:
         test_result: "連接結果"
         test_summary:
           other: "使用 %{version} 通訊協定探索到 %{count} 個工具。"
+      models:
+        new: "新建模型"
+        name: "名稱"
+        type: "類型"
+        provider: "服務提供者"
+        edit: "編輯"
+        select_type: "選擇"
+        types:
+          embedding: "嵌入"
+        filters:
+          reset: "重設篩選條件"
       llms:
         short_title: "LLM"
         no_llms: "暫無 LLM"
@@ -1549,6 +1558,14 @@ zh_TW:
             compact: "緊湊"
             expanded: "展開"
             expanded_description: "帶 AI 摘要"
+      ai_search:
+        related_topics: "相關主題"
+        related_replies:
+          other: "%{count} 則回覆"
+        tabs:
+          ask: "詢問 AI"
+          topics: "主題"
+          messages: "訊息"
       discobot_discoveries:
         main_title: "詢問 AI"
         loading_convo: "正在加載對話"

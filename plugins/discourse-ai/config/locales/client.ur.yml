@@ -283,6 +283,17 @@ ur:
         delete: "حذف کریں"
         tools_modal:
           required: "درکار"
+      models:
+        name: "نام"
+        type: "قِسم"
+        provider: "پرووَائیڈر"
+        edit: "ترمیم کریں"
+        select_type: "منتخب"
+        types:
+          embedding: "اَیمبَیڈ کرنا"
+        filters:
+          all: "تمام اقسام"
+          reset: "فلٹرز ری سیٹ کریں"
       llms:
         display_name: "نام"
         provider: "پرووَائیڈر"
@@ -388,6 +399,14 @@ ur:
         topic:
           title: "موضوع کا خلاصہ"
           close: "خلاصہ پینل بند کریں"
+      ai_search:
+        related_topics: "متعلقہ موضوعات"
+        related_replies:
+          one: "%{count} جواب"
+          other: "%{count} جوابات"
+        tabs:
+          topics: "موضوعات"
+          messages: "پیغامات"
       discobot_discoveries:
         create_topic: "موضوع بنائیں"
         legacy:

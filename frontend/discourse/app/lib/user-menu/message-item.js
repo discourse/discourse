@@ -13,7 +13,7 @@ export default class UserMenuMessageItem extends UserMenuBaseItem {
   get className() {
     let classNames = ["message"];
 
-    classNames.push(this.message.unread ? "unread" : "read");
+    classNames.push(this.message.unread_posts ? "unread" : "read");
 
     return classNames.join(" ");
   }
@@ -36,10 +36,10 @@ export default class UserMenuMessageItem extends UserMenuBaseItem {
 
   get label() {
     if (!this.siteSettings.prioritize_full_name_in_ux) {
-      return this.message.last_poster_username;
+      return this.message.last_poster?.username;
     }
 
-    return this.message.last_poster_name || this.message.last_poster_username;
+    return this.message.last_poster?.name || this.message.last_poster?.username;
   }
 
   get description() {
@@ -51,6 +51,6 @@ export default class UserMenuMessageItem extends UserMenuBaseItem {
   }
 
   get avatarTemplate() {
-    return this.message.last_poster_avatar_template;
+    return this.message.last_poster?.avatar_template;
   }
 }

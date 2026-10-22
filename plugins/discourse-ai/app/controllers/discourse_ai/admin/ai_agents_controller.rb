@@ -17,10 +17,9 @@ module DiscourseAi
             .map { |agent| LocalizedAiAgentSerializer.new(agent, root: false) }
 
         tools =
-          (
-            DiscourseAi::Agents::Agent.all_available_tools +
-              DiscourseAi::Agents::Agent.external_tools
-          ).map { |tool| AiToolSerializer.new(tool, root: false) }
+          DiscourseAi::Agents::Agent.all_available_tools.map do |tool|
+            AiToolSerializer.new(tool, root: false)
+          end
 
         AiTool
           .where(enabled: true)

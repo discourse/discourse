@@ -2541,7 +2541,6 @@ sk:
     enable_auto_grid_images: "Automatické zabalenie obrázkov do značiek [grid], keď sú v kompozitore nahrané 3 alebo viac obrázkov."
     page_loading_indicator: "Nakonfigurujte indikátor načítania, ktorý sa zobrazí počas navigácie po stránkach v rámci Discourse. „Spinner“ je indikátor celej strany. „Posuvník“ zobrazuje úzky pruh v hornej časti obrazovky."
     show_user_menu_avatars: "Zobraziť používateľské avatary v používateľskej ponuke"
-    about_page_hidden_groups: "Nezobrazujte členov konkrétnych skupín na stránke /o nás."
     about_page_extra_groups: "Skupiny, ktoré sa zobrazujú na stránke o skupine pod moderátormi."
     about_page_extra_groups_initial_members: "Počet členov na rozšírenie každej skupiny na stránke o skupine."
     about_page_extra_groups_show_description: "Či sa majú popisy skupín uvádzať na stránke o skupine."
@@ -4021,31 +4020,15 @@ sk:
     account_suspended:
       title: "Účet pozastavený"
       subject_template: "[%{email_prefix}] Váš účet bol pozastavený"
-      text_body_template: |
-        Boli ste vylúčený z fóra až do %{suspended_till}.
-
-        Dôvod - %{reason}
     account_suspended_forever:
       title: "Účet pozastavený"
       subject_template: "[%{email_prefix}] Váš účet bol pozastavený"
-      text_body_template: |
-        Boli ste vylúčený z fóra.
-
-        Dôvod - %{reason}
     account_silenced:
       title: "Účet umlčaný"
       subject_template: "[%{email_prefix}] Váš účet bol stíšený"
-      text_body_template: |
-        Boli ste umlčaní z fóra do %{silenced_till}.
-
-        Dôvod - %{reason}
     account_silenced_forever:
       title: "Účet umlčaný"
       subject_template: "[%{email_prefix}] Váš účet bol stíšený"
-      text_body_template: |
-        Boli ste umlčaní na fóre.
-
-        Dôvod - %{reason}
     account_deleted:
       title: "Účet bol odstránený"
       subject_template: "[%{email_prefix}] Vaše konto bolo vymazané"

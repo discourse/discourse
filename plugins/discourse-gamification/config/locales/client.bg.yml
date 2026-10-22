@@ -44,3 +44,4 @@ bg:
         username: "Потребител"
         date: "Дата"
         description: "Описание"
+        category_id: "Категория"

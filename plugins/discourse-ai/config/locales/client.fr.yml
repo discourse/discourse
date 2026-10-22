@@ -291,11 +291,9 @@ fr:
         rejected: "Rejeté"
         awaiting_staff: "En attente de l'approbation d'un responsable"
       default_llm:
-        title: "Modèle LLM par défaut"
-        description: "Modèle LLM par défaut à utiliser pour toutes les fonctionnalités d'IA. Il sera utilisé si aucun LLM n'est indiqué dans la configuration de la fonctionnalité ou de l'agent. Si aucun LLM par défaut n'est défini, le dernier LLM créé sera utilisé."
+        title: "Modèle linguistique par défaut"
       llm_selector:
         none: "Jamais"
-        saved: "Le modèle LLM par défaut a été mis à jour."
       features:
         short_title: "Fonctionnalités"
         description: "Voici les fonctionnalités d'IA accessibles aux visiteurs de votre site. Elles peuvent être configurées pour utiliser des agents et des LLM précis, et leur accès peut être contrôlé par groupe."
@@ -1034,6 +1032,18 @@ fr:
         test_summary:
           one: "Découverte de %{count} outil à l'aide du protocole %{version}."
           other: "Découverte de %{count} outils à l'aide du protocole %{version}."
+      models:
+        new: "Nouveau modèle"
+        name: "Nom"
+        type: "Type"
+        provider: "Fournisseur"
+        edit: "Modifier"
+        select_type: "Sélectionner"
+        types:
+          embedding: "Intégration"
+        filters:
+          all: "Tous les types"
+          reset: "Réinitialiser les filtres"
       llms:
         short_title: "LLM"
         no_llms: "Pas encore de LLM"
@@ -1470,6 +1480,15 @@ fr:
             compact: "Compact"
             expanded: "Étendu"
             expanded_description: "avec des résumés d'IA"
+      ai_search:
+        related_topics: "Sujets connexes"
+        related_replies:
+          one: "%{count} réponse"
+          other: "%{count} réponses"
+        tabs:
+          ask: "Demander à l'IA"
+          topics: "Sujets"
+          messages: "Messages directs"
       discobot_discoveries:
         main_title: "Demander à l'IA"
         loading_convo: "Chargement de la conversation"

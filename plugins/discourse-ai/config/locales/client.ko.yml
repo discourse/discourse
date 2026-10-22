@@ -246,6 +246,16 @@ ko:
         delete: "삭제"
         tools_modal:
           required: "필수"
+      models:
+        name: "그룹명"
+        type: "형식"
+        provider: "공급자"
+        edit: "편집"
+        select_type: "선택"
+        types:
+          embedding: "삽입(Embedding)"
+        filters:
+          all: "모든 유형"
       llms:
         display_name: "그룹명"
         provider: "공급자"
@@ -348,6 +358,12 @@ ko:
           summarize: "요약하기"
           since:
             other: "약 %{count}시간"
+      ai_search:
+        related_replies:
+          other: "%{count} 댓글"
+        tabs:
+          topics: "글"
+          messages: "메시지"
       discobot_discoveries:
         legacy:
           regular_results: "글"

@@ -7,6 +7,19 @@
 lt:
   chat:
     deleted_chat_username: ištrintas
+    crawler:
+      directory_title: "Pokalbių kanalai"
+      nav_title: "Pokalbis"
+      members_count:
+        one: "%{count} narys"
+        few: "%{count} nariai"
+        many: "%{count} narių"
+        other: "%{count} narių"
+      thread_replies:
+        one: "%{count} atsakymas"
+        few: "%{count} atsakymai"
+        many: "%{count} atsakymai"
+        other: "%{count} atsakymai"
     errors:
       not_accepting_dms: "Atsiprašome, %{username} šiuo metu nepriima pranešimų."
     reviewables:

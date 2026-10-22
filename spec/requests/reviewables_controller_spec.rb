@@ -582,8 +582,9 @@ RSpec.describe ReviewablesController do
         reviewable_flagged_post = Fabricate(:reviewable_flagged_post)
         reviewable_queued_post = Fabricate(:reviewable_queued_post)
 
-        get "/review/user-menu-list.json"
+        queries = track_sql_queries { get "/review/user-menu-list.json" }
         expect(response.status).to eq(200)
+        expect(queries.grep(/FROM "reviewable_(scores|notes|histories)"/)).to be_empty
 
         reviewables = response.parsed_body["reviewables"]
 

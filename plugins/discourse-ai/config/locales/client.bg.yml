@@ -215,6 +215,14 @@ bg:
         delete: "Изтрий"
         tools_modal:
           required: "Задъжителни"
+      models:
+        name: "Име"
+        type: "Тип"
+        edit: "Редактирай"
+        types:
+          embedding: "Ембедване"
+        filters:
+          all: "Всички видове"
       llms:
         display_name: "Име"
         vision_modes:
@@ -291,6 +299,13 @@ bg:
       summarization:
         chat:
           summarize: "Обобщаване"
+      ai_search:
+        related_replies:
+          one: "%{count} отговор"
+          other: "%{count} отговора"
+        tabs:
+          topics: "Теми"
+          messages: "Съобщения"
       discobot_discoveries:
         legacy:
           regular_results: "Теми"

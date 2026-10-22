@@ -21,6 +21,13 @@
     margin-bottom: 1rem;
     padding-left: 0;
   }
+
+  &__creator-link {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    gap: var(--space-2);
+  }
 }
 
 .leaderboard-edit {

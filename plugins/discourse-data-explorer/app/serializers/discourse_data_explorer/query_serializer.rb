@@ -6,6 +6,7 @@ module DiscourseDataExplorer
                :name,
                :description,
                :username,
+               :user,
                :group_ids,
                :last_run_at,
                :user_id,
@@ -14,6 +15,11 @@ module DiscourseDataExplorer
 
     def username
       object&.user&.username
+    end
+
+    def user
+      return if object&.user.blank?
+      BasicUserSerializer.new(object.user, root: false).as_json
     end
 
     def group_ids

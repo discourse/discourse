@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { isBlank } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
@@ -11,7 +10,7 @@ import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class AvatarUploader extends Component {
-  uppyUpload = new UppyUpload(getOwner(this), {
+  uppyUpload = new UppyUpload(this, {
     id: "avatar-uploader",
     type: "avatar",
     validateUploadedFilesOptions: {

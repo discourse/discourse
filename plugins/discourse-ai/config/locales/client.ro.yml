@@ -78,8 +78,6 @@ ro:
         reject: "Respingere"
         approved: "Aprobat"
         rejected: "Respins"
-      default_llm:
-        title: "Model LLM implicit"
       llm_selector:
         none: "Nimic"
       features:
@@ -273,6 +271,16 @@ ro:
         delete: "Șterge"
         tools_modal:
           required: "Obligatoriu"
+      models:
+        name: "Nume"
+        type: "Tip"
+        provider: "Furnizor"
+        edit: "Editează"
+        types:
+          embedding: "Înglobare"
+        filters:
+          all: "Toate tipurile"
+          reset: "Resetează filtre"
       llms:
         display_name: "Nume"
         provider: "Furnizor"
@@ -372,6 +380,14 @@ ro:
           title: "Rezumați mesajele"
           description: "Selectați o opțiune de mai jos pentru a rezuma conversația trimisă în intervalul de timp dorit."
           summarize: "Rezumat"
+      ai_search:
+        related_replies:
+          one: "%{count} răspuns"
+          few: "%{count} de răspunsuri"
+          other: "%{count} răspunsuri"
+        tabs:
+          topics: "Discuții"
+          messages: "Mesaje"
       discobot_discoveries:
         user_setting: "Activează descoperirile de căutare IA"
         legacy:

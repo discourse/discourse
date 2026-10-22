@@ -102,6 +102,7 @@ RSpec.describe(DiscourseEvents::Events::CsvBulkInvite) do
           args: {
             event_id: event.id,
             invitees: [{ "identifier" => invited_user.username, "attendance" => "going" }],
+            recurring: false,
             current_user_id: admin.id,
           },
         ) { result }

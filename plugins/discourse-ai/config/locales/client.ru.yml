@@ -261,11 +261,9 @@ ru:
         approved: "Одобренные"
         rejected: "Отклонено"
       default_llm:
-        title: "Модель LLM по умолчанию"
-        description: "Модель LLM по умолчанию для всех ИИ функций. Используется, если в настройке функции или персоны не указана конкретная модель LLM. При отсутствии модели по умолчанию используется последняя добавленная LLM."
+        title: "Языковая модель по умолчанию"
       llm_selector:
         none: "Нет"
-        saved: "Модель LLM по умолчанию успешно обновлена."
       features:
         short_title: "Функции"
         description: "Это функции ИИ, доступные посетителям вашего сайта. Их можно настроить для использования определенных агентов и LLM, а также контролировать доступ к ним для отдельных групп."
@@ -789,6 +787,18 @@ ru:
         tools_modal:
           parameters: "Параметры"
           required: "Обязательный"
+      models:
+        new: "Новая модель"
+        name: "Название"
+        type: "Тип"
+        provider: "Поставщик"
+        edit: "Изменить"
+        select_type: "Выбрать"
+        types:
+          embedding: "Встраивание"
+        filters:
+          all: "Все типы"
+          reset: "Сбросить фильтры"
       llms:
         short_title: "Большие языковые модели"
         no_llms: "Еще нет LLM"
@@ -1161,6 +1171,17 @@ ru:
             compact: "Компактная"
             expanded: "Расширенная"
             expanded_description: "со сводками от AI"
+      ai_search:
+        related_topics: "Связанные темы"
+        related_replies:
+          one: "%{count} ответ"
+          few: "%{count} ответа"
+          many: "%{count} ответов"
+          other: "%{count} ответ"
+        tabs:
+          ask: "Спросить AI"
+          topics: "Новые темы"
+          messages: "Сообщений"
       discobot_discoveries:
         main_title: "Спросить AI"
         loading_convo: "Загрузка разговора"

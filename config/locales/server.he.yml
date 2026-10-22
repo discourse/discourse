@@ -2518,7 +2518,6 @@ he:
     experimental_impersonation_time_limit_minutes: "כמה זמן עד שהפעלת התחזות מסתיימת אוטומטית."
     page_loading_indicator: "הגדרת מחוון הטעינה שמופיע במהלך ניווט בין עמודים ב־Discourse. ‚שבשבת’ הוא מחוון עמוד מלא. ‚מד התקדמות’ מציג סרגל צר בראש המסך."
     show_user_menu_avatars: "הצגת תמונות ייצוגיות של משתמשים בתפריט המשתמש"
-    about_page_hidden_groups: "לא להציג חברים מקבוצות מסוימות בדף ‎/about."
     about_page_extra_groups: "קבוצות להצגה בעמוד ‚על אודות’ מתחת למפקחים."
     about_page_extra_groups_initial_members: "מספר חברים להרחבה על כל קבוצה בעמוד ‚על אודות’."
     about_page_extra_groups_show_description: "האם לכלול את תיאורי הקבוצות בעמוד ‚על אודות’."
@@ -4007,34 +4006,18 @@ he:
       title: "חשבון מושעה"
       subject_template: "[%{email_prefix}] חשבונך הושעה"
       subject_template_improved: "חשבונך הושעה"
-      text_body_template: |
-        הושעית מהפורום עד %{suspended_till}.
-
-        סיבה - %{reason}
     account_suspended_forever:
       title: "חשבון מושעה"
       subject_template: "[%{email_prefix}] חשבונך הושעה"
       subject_template_improved: "חשבונך הושעה"
-      text_body_template: |
-        הושעית מהפורום.
-
-        הסיבה - %{reason}
     account_silenced:
       title: "חשבון מושתק"
       subject_template: "[%{email_prefix}] חשבונך הושתק"
       subject_template_improved: "חשבונך הושתק"
-      text_body_template: |
-        הושתקת בפורום עד %{silenced_till}.
-
-        סיבה - %{reason}
     account_silenced_forever:
       title: "חשבון מושתק"
       subject_template: "[%{email_prefix}] חשבונך הושתק"
       subject_template_improved: "חשבונך הושתק"
-      text_body_template: |
-        הושתקת בפורום.
-
-        הסיבה - %{reason}
     account_deleted:
       title: "החשבון נמחק"
       subject_template: "[%{email_prefix}] החשבון שלך נמחק"

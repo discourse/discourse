@@ -76,7 +76,7 @@ zh_CN:
     ai_ask_ai_report_recipient_groups: "接收每周自动发送的报告私信的群组，也可添加到手动发送的报告私信中。报告包含用户提出的问题。留空则仅在仪表盘上显示自动报告。"
     discourse_ai_enabled: "启用 Discourse AI 插件。"
     enable_ai_bot_starred_conversations: "允许用户为 AI 机器人对话添加星标，并在“星标”边栏部分显示。"
-    ai_default_llm_model: "用于所有 AI 功能的默认 LLM 模型"
+    ai_default_llm_model: "默认语言模型适用于未指定自身语言模型的 AI 特征和代理。"
     ai_artifact_security: "AI 工件系统会生成包含可运行代码的 iframe。严格模式将强制额外点击才能运行代码。宽松模式则立即运行代码。混合模式允许用户提供 data-ai-artifact-autorun 来立即显示。禁用模式则会禁用工件系统。"
     ai_toxicity_enabled: "启用毒性模块。"
     ai_toxicity_inference_service_api_endpoint: "为毒性模块运行 API 的 URL"
@@ -166,6 +166,8 @@ zh_CN:
     ai_ask_ai_enabled: "在搜索中启用 Ask AI"
     ai_ask_ai_summary_detail: "选择在“Ask AI”摘要中包含多少细节。"
     ai_ask_ai_related_count: "设置“Ask AI”为每个答案选择并显示的最大相关讨论数量。"
+    enable_ai_combined_search: "在顶部搜索框中按下回车键，即可使用人工智能搜索答案，并将关键词结果以标签页的形式显示，自动打开最符合搜索意图的结果。后续问题则会在新页面上继续显示。"
+    ai_ask_ai_search_intent_decision_model: "实验性功能：决策模型，用于判断搜索是需要 AI 答案还是关键词结果，从而决定在哪个标签页中打开组合搜索结果。搜索查询将发送给此模型的提供商。留空则根据查询的格式进行判断。"
     ai_ask_ai_agent: "选择来源并撰写 Ask AI 答案的智能体。"
     ai_ask_ai_query_rewriter_agent: "该智能体用于为 Ask AI 准备单独的关键词查询和语义查询。如果该智能体或其模型不可用，Ask AI 将使用用户的原始查询进行搜索。"
     ai_ask_ai_follow_up_agent: "当用户想要跟进“Ask AI”的查询结果时，可以使用此智能体。所选智能体必须已启用、允许发送私人消息，并且对用户可用。"
@@ -299,6 +301,8 @@ zh_CN:
       view_dashboard: "在仪表板上浏览所有主题和问题。"
       disclaimer: "人工智能生成的观察结果描述的是提出的问题，而非答案的质量或实用性。建议的后续问题是可供研究的方向，而非已确认的空白。问题可能出现在多个学科中。"
     ai_artifact:
+      share_version_conflict: "此链接已发布其他版本。请刷新页面并选择“更新置顶版本”进行更改。"
+      uploads_cannot_be_shared: "该资源引用了可能为私有的上传内容。在发布独立链接之前，请先删除这些上传内容的引用。"
       errors:
         max_keys_exceeded:
           other: "只能在工件中使用 %{count} 个密钥。"
@@ -318,6 +322,10 @@ zh_CN:
           llm_not_found: "找不到 ID 为 %{llm_model_id} 的 LLM 模型"
           no_llm_configured: "没有为智能体 '%{agent}' 配置 LLM。请选择一个 LLM 模型，或配置智能体/站点默认 LLM。"
           uploads_not_sent: "代理“%{agent}”未收到所有上传内容"
+      classify:
+        errors:
+          decision_model_not_found: "未找到 ID 为 %{id} 的决策模型"
+          classify_failed: "决策模型“%{decision_model}”无法回答： %{error}"
       uploads:
         not_found: "未找到上传文件 %{upload_id}"
         not_visible: "%{username} 无法查看上传内容 %{upload_id}"
@@ -1321,7 +1329,22 @@ zh_CN:
         choose_model: "首先设置 'ai embeddings selected model'。"
         model_test_failed: "我们无法使用此模型生成测试嵌入向量。请检查配置是否正确。"
     decision_models:
+      custom_headers:
+        invalid_format: "必须是包含标头名称和值对的数组。"
+        too_many: "不能包含超过 %{count} 个条目"
+        unsupported_provider: "仅支持 System One 和 TypeSafe 型号"
+        invalid_name: "必须具有有效的 HTTP 名称，长度最多为 %{name_length} 个字符"
+        invalid_value: "必须具有最多 %{value_length} 个字符的可打印 ASCII 值"
+        reserved_name: "无法覆盖保留的传输或身份验证标头。"
+        duplicate_name: "名称必须唯一（不区分大小写）"
       secret_not_found: "所选凭据不存在"
+      invalid_url: "必须是 http:// 或 https:// 格式的 URL，或者不带端口号的 srv:// 格式 URL。"
+      test_refused: "决策模型拒绝回答测试问题。"
+      test_image_not_read: "决策模型无法识别测试图像。如果模型无法读取图像，请取消勾选“支持图像输入”。"
+      credit_limit_exceeded: "%{model_name} 已用完今天的 AI 积分。积分将于 %{reset_time} 重置。"
+      cannot_modify_seeded: "预配置的决策模型无法编辑或删除。"
+    secrets:
+      delete_failed_in_use: "此凭证目前正被一个或多个LLM、嵌入、决策模型或工具使用，无法删除。"
     llm_models:
       missing_provider_param: "%{param}不能为空"
       invalid_provider_param: "%{param} 格式无效"

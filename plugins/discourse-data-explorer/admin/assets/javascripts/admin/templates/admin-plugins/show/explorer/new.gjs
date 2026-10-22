@@ -277,7 +277,6 @@ export default <template>
                 />
               </div>
             </div>
-            <div class="clear"></div>
           </div>
           <form.Actions>
             <form.Submit @icon="plus" @label="explorer.create" />

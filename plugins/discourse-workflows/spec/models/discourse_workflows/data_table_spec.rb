@@ -11,6 +11,8 @@ RSpec.describe DiscourseWorkflows::DataTable do
     )
   end
 
+  it { is_expected.to validate_uniqueness_of(:name).case_insensitive }
+
   describe "#columns" do
     it "orders user columns by column_order between id and the timestamps" do
       DiscourseWorkflows::DataTables::Facade.new(data_table).add_column!("notes", "string")

@@ -1056,7 +1056,7 @@ acceptance("User menu - avatars", function (needs) {
     await click("#user-menu-button-messages");
 
     assert.dom("li.notification.private-message .icon-avatar").exists();
-    assert.dom("li.message .icon-avatar").exists();
+    assert.dom("li.message .icon-avatar.user-avatar").exists();
   });
 
   test("shows user avatars for bookmark items and bookmark reminder notification items", async function (assert) {

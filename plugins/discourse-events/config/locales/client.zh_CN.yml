@@ -418,6 +418,8 @@ zh_CN:
         filter_placeholder: "筛选用户"
         remove_invitee: "从列表中移除受邀者"
         add_invitee: "将受邀者添加到列表"
+        this_event: "本次活动"
+        first_event_only: "仅限首次活动"
       bulk_invite_modal:
         confirm: "确认"
         text: "上传 CSV 文件"
@@ -433,6 +435,7 @@ zh_CN:
         group_selector_placeholder: "选择群组…"
         user_selector_placeholder: "选择用户…"
         attendance_label: "出席"
+        recurring: "将出席状态应用于本次及后续所有活动"
         inline_title: "内嵌批量邀请"
         csv_title: "CSV 批量邀请"
       upcoming_events:

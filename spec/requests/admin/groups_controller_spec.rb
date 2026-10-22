@@ -199,6 +199,26 @@ RSpec.describe Admin::GroupsController do
           expect(group.membership_request_template).to eq("Testing")
           expect(group.members_visibility_level).to eq(Group.visibility_levels[:staff])
         end
+
+        it "does not allow setting the flair to an upload the moderator does not own" do
+          secret_upload = Fabricate(:secure_upload, user: admin)
+
+          expect do
+            post "/admin/groups.json",
+                 params: {
+                   group: {
+                     name: "flair-group",
+                     flair_upload_id: secret_upload.id,
+                   },
+                 }
+          end.to_not change { Group.count }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(
+            I18n.t("groups.errors.flair_upload_not_owned"),
+          )
+          expect(UploadReference.exists?(upload: secret_upload)).to eq(false)
+        end
       end
 
       context "with moderators_manage_groups disabled" do

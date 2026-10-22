@@ -39,3 +39,4 @@ id:
         username: "Pengguna"
         date: "Tanggal"
         description: "Deskripsi"
+        category_id: "Kategori"
