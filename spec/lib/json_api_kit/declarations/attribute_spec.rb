@@ -29,28 +29,18 @@ RSpec.describe JsonApiKit::Declarations::Attribute do
     end
   end
 
-  describe "#columns_for" do
-    subject(:columns) { attribute.columns_for(JsonApiKit::Schema.new(Topic)) }
+  describe "#column_for" do
+    subject(:column) { attribute.column_for(JsonApiKit::Schema.new(Topic)) }
 
     it "returns the column the field reads" do
-      expect(columns).to eq([:title])
+      expect(column).to eq(:title)
     end
 
     context "when the attribute declares a value of its own" do
       subject(:attribute) { described_class.new(:slug) { |record| record.title.parameterize } }
 
-      it "returns a column it can't name" do
-        expect(columns).to eq([nil])
-      end
-    end
-
-    context "when the attribute names the columns its value reads" do
-      subject(:attribute) do
-        described_class.new(:slug, columns: %i[title closed]) { |record| record.title.parameterize }
-      end
-
-      it "returns those columns" do
-        expect(columns).to eq(%i[title closed])
+      it "returns no column" do
+        expect(column).to be_nil
       end
     end
   end
