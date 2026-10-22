@@ -4,9 +4,12 @@ require "rotp"
 
 shared_examples "login scenarios" do
   let(:login_form) { PageObjects::Pages::Login.new }
+  let(:composer) { PageObjects::Components::Composer.new }
   let(:activate_account) { PageObjects::Pages::ActivateAccount.new }
   let(:user_preferences_security_page) { PageObjects::Pages::UserPreferencesSecurity.new }
-  fab!(:user) { Fabricate(:user, username: "john", password: "supersecurepassword") }
+  fab!(:user) do
+    Fabricate(:user, username: "john", password: "supersecurepassword", refresh_auto_groups: true)
+  end
   fab!(:category)
   fab!(:topic) { Fabricate(:topic, user: user, category: category) }
   fab!(:topic2) { Fabricate(:topic, user: user) }
@@ -166,7 +169,7 @@ shared_examples "login scenarios" do
       expect(page).to have_css(".private_message")
     end
 
-    it "redirects to a route with a query parameters after login and keeps the query parameters" do
+    it "lets the user compose in the requested category after login" do
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
       category = Fabricate(:category)
@@ -174,7 +177,9 @@ shared_examples "login scenarios" do
       visit "/new-topic?category_id=#{category.id}"
       login_form.fill(username: "john", password: "supersecurepassword").click_login
 
-      expect(page).to have_current_path("/new-topic?category_id=#{category.id}")
+      expect(page).to have_current_path("/c/#{category.id}")
+      expect(composer).to be_opened
+      expect(composer.category_chooser).to have_selected_name(category.name)
     end
 
     it "does not leak category metadata if homepage is /categories" do
@@ -222,7 +227,7 @@ shared_examples "login scenarios" do
       expect(page).to have_css("#topic-title")
     end
 
-    it "redirects to a route with a query parameters after login and keeps the query parameters" do
+    it "lets the user compose in the requested category after login" do
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
       category = Fabricate(:category)
@@ -230,7 +235,9 @@ shared_examples "login scenarios" do
       visit "/new-topic?category_id=#{category.id}"
       login_form.fill(username: "john", password: "supersecurepassword").click_login
 
-      expect(page).to have_current_path("/new-topic?category_id=#{category.id}")
+      expect(page).to have_current_path("/c/#{category.id}")
+      expect(composer).to be_opened
+      expect(composer.category_chooser).to have_selected_name(category.name)
     end
 
     context "with user api key and omniauth" do
