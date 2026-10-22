@@ -114,13 +114,24 @@ RSpec.describe Lovelace::Checklist::Update do
 
     context "when the revision is stale" do
       let(:revision) { 3 }
-      let(:saved_checklist) { { "items" => [item.deep_stringify_keys], "revision" => 4 } }
+      let(:items) { [item, *saved_checklist["bank"]] }
+      let(:saved_checklist) do
+        {
+          "items" => [item.deep_stringify_keys],
+          "revision" => 4,
+          "bank" =>
+            Lovelace::Checklist.seeded_items.map do |suggestion|
+              suggestion.merge("title" => "Edited #{suggestion["title"]}")
+            end,
+        }
+      end
 
       before { PluginStore.set(Lovelace::PLUGIN_NAME, "checklist", saved_checklist) }
 
-      it "preserves the current checklist" do
+      it "preserves the current checklist and edited suggestions in its bank" do
         expect(result).to fail_a_policy(:revision_matches)
         expect(Lovelace::Checklist.read).to eq(saved_checklist)
+        expect(PluginStore.get(Lovelace::PLUGIN_NAME, "checklist")).to eq(saved_checklist)
       end
     end
 
@@ -147,6 +158,7 @@ RSpec.describe Lovelace::Checklist::Update do
             ).deep_stringify_keys,
           ],
           "revision" => 1,
+          "bank" => Lovelace::Checklist.seeded_items,
         )
         expect(Lovelace::Checklist.read).to eq(result.checklist)
       end
@@ -166,7 +178,75 @@ RSpec.describe Lovelace::Checklist::Update do
 
       it "accepts a string revision and saves an empty checklist at the next revision" do
         expect(result).to run_successfully
-        expect(result.checklist).to eq("items" => [], "revision" => 5)
+        expect(result.checklist).to eq(
+          "items" => [],
+          "revision" => 5,
+          "bank" => Lovelace::Checklist.seeded_items,
+        )
+        expect(Lovelace::Checklist.read).to eq(result.checklist)
+      end
+    end
+
+    context "when removing an edited seeded suggestion" do
+      let(:items) { [] }
+      let(:revision) { 4 }
+      let(:edited_suggestion) do
+        Lovelace::Checklist.seeded_items.first.merge(
+          "title" => "Complete your community profile",
+          "description" => "Help other members recognize you.",
+          "button_text" => "Edit your picture",
+        )
+      end
+
+      before do
+        PluginStore.set(
+          Lovelace::PLUGIN_NAME,
+          "checklist",
+          { "items" => [edited_suggestion], "revision" => revision },
+        )
+      end
+
+      it "persists its edits in the bank" do
+        expect(result).to run_successfully
+        expect(PluginStore.get(Lovelace::PLUGIN_NAME, "checklist")).to eq(
+          "items" => [],
+          "revision" => 5,
+          "bank" => [edited_suggestion, *Lovelace::Checklist.seeded_items.drop(1)],
+        )
+        expect(Lovelace::Checklist.read).to eq(result.checklist)
+      end
+    end
+
+    context "when restoring an edited seeded suggestion from the bank" do
+      let(:items) { [edited_suggestion] }
+      let(:revision) { 5 }
+      let(:edited_suggestion) do
+        Lovelace::Checklist.seeded_items.first.merge(
+          "title" => "Complete your community profile",
+          "description" => "Help other members recognize you.",
+          "button_text" => "Edit your picture",
+        )
+      end
+
+      before do
+        PluginStore.set(
+          Lovelace::PLUGIN_NAME,
+          "checklist",
+          {
+            "items" => [],
+            "revision" => revision,
+            "bank" => [edited_suggestion, *Lovelace::Checklist.seeded_items.drop(1)],
+          },
+        )
+      end
+
+      it "keeps its edits and removes it from the bank" do
+        expect(result).to run_successfully
+        expect(PluginStore.get(Lovelace::PLUGIN_NAME, "checklist")).to eq(
+          "items" => [edited_suggestion],
+          "revision" => 6,
+          "bank" => Lovelace::Checklist.seeded_items.drop(1),
+        )
         expect(Lovelace::Checklist.read).to eq(result.checklist)
       end
     end

@@ -1,0 +1,20 @@
+.lovelace-checklist {
+  &__items {
+    display: grid;
+    gap: 1em;
+    margin: 0 0 2em;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__item {
+    padding: 1em;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    background: var(--secondary);
+
+    .btn {
+      margin-block: 0.25em;
+    }
+  }
+}

@@ -1,8 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
@@ -13,6 +11,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 import { i18n } from "discourse-i18n";
+import OnboardingItemContent from "./onboarding-item-content.gjs";
 import OnboardingItemEditor from "./onboarding-item-editor.gjs";
 
 const SETTINGS_PATHS = {
@@ -29,6 +28,10 @@ export default class MemberOnboarding extends Component {
   @tracked saved = null;
   @tracked saving = false;
   @tracked completed = [];
+
+  get bank() {
+    return this.configuration.bank;
+  }
 
   get configuration() {
     return this.saved ?? this.args.model;
@@ -71,6 +74,13 @@ export default class MemberOnboarding extends Component {
   }
 
   @action
+  async addSuggestion(item) {
+    if (await this.#save([...this.items, item])) {
+      this.completed = this.completed.filter((id) => id !== item.id);
+    }
+  }
+
+  @action
   editItem(item) {
     this.editing = { ...item };
   }
@@ -105,11 +115,13 @@ export default class MemberOnboarding extends Component {
 
   @action
   async removeItem(item) {
-    const confirmed = await this.dialog.yesNoConfirm({
-      message: i18n("lovelace.onboarding.remove_confirm", {
-        title: item.title,
-      }),
-    });
+    const confirmed =
+      this.configuration.unmodified_seed_ids?.includes(item.id) ||
+      (await this.dialog.yesNoConfirm({
+        message: i18n("lovelace.onboarding.remove_confirm", {
+          title: item.title,
+        }),
+      }));
     if (confirmed) {
       await this.#save(
         this.items.filter((existing) => existing.id !== item.id)
@@ -166,46 +178,71 @@ export default class MemberOnboarding extends Component {
         </:actions>
       </DPageSubheader>
       <div class="lovelace-onboarding__columns">
-        <AdminConfigAreaCard
-          class="lovelace-onboarding__items"
-          @heading="lovelace.onboarding.items"
-        >
-          <:content>
-            {{#if this.items.length}}
-              <DReorderableList
-                @disabled={{this.locked}}
-                @items={{this.items}}
-                @key="id"
-                @label={{this.itemLabel}}
-                @onMove={{this.moveItem}}
-                @onRemove={{this.removeItem}}
-              >
-                <:row as |item|>
-                  <div class="lovelace-onboarding__item">
-                    <strong>{{item.title}}</strong>
-                    <p>{{item.description}}</p>
-                  </div>
-                  <DButton
-                    class="btn-default"
-                    @action={{fn this.editItem item}}
-                    @disabled={{this.locked}}
-                    @label="edit"
-                  />
-                </:row>
-              </DReorderableList>
-            {{else}}
-              <p>{{i18n "lovelace.onboarding.empty"}}</p>
-            {{/if}}
-            {{#if this.editing}}
-              <OnboardingItemEditor
-                @item={{this.editing}}
-                @onCancel={{this.closeEditor}}
-                @onSave={{this.saveItem}}
-                @saving={{this.saving}}
-              />
-            {{/if}}
-          </:content>
-        </AdminConfigAreaCard>
+        <div class="lovelace-onboarding__configuration">
+          <AdminConfigAreaCard
+            class="lovelace-onboarding__items"
+            @heading="lovelace.onboarding.items"
+          >
+            <:content>
+              {{#if this.items.length}}
+                <DReorderableList
+                  @disabled={{this.locked}}
+                  @items={{this.items}}
+                  @key="id"
+                  @label={{this.itemLabel}}
+                  @onMove={{this.moveItem}}
+                  @onRemove={{this.removeItem}}
+                  @rowClass="lovelace-onboarding__row"
+                >
+                  <:row as |item|>
+                    <OnboardingItemContent @item={{item}} />
+                    <DButton
+                      class="btn-default"
+                      @action={{fn this.editItem item}}
+                      @disabled={{this.locked}}
+                      @label="edit"
+                    />
+                  </:row>
+                </DReorderableList>
+              {{else}}
+                <p>{{i18n "lovelace.onboarding.empty"}}</p>
+              {{/if}}
+              {{#if this.editing}}
+                <OnboardingItemEditor
+                  @item={{this.editing}}
+                  @onCancel={{this.closeEditor}}
+                  @onSave={{this.saveItem}}
+                  @saving={{this.saving}}
+                />
+              {{/if}}
+            </:content>
+          </AdminConfigAreaCard>
+          <AdminConfigAreaCard
+            class="lovelace-onboarding__bank"
+            @heading="lovelace.bank"
+          >
+            <:content>
+              <p>{{i18n "lovelace.bank_description"}}</p>
+              <ul class="lovelace-onboarding__list">
+                {{#each this.bank key="id" as |item|}}
+                  <li
+                    class="lovelace-onboarding__row lovelace-onboarding__suggestion"
+                  >
+                    <OnboardingItemContent @item={{item}} />
+                    <DButton
+                      class="btn-default"
+                      @action={{fn this.addSuggestion item}}
+                      @disabled={{this.locked}}
+                      @label="lovelace.add"
+                    />
+                  </li>
+                {{else}}
+                  <li>{{i18n "lovelace.bank_empty"}}</li>
+                {{/each}}
+              </ul>
+            </:content>
+          </AdminConfigAreaCard>
+        </div>
         <AdminConfigAreaCard
           class="lovelace-onboarding__preview"
           @heading="lovelace.onboarding.preview"
@@ -213,25 +250,25 @@ export default class MemberOnboarding extends Component {
           <:content>
             <p class="lovelace-onboarding__progress"><strong
               >{{this.progress}}</strong></p>
-            {{#each this.previewItems key="id" as |item|}}
-              <div class="lovelace-onboarding__preview-item">
-                <p>{{item.description}}</p>
-                <label>
-                  <Input
+            <ul class="lovelace-onboarding__list">
+              {{#each this.previewItems key="id" as |item|}}
+                <li
+                  class="lovelace-onboarding__row lovelace-onboarding__preview-item"
+                >
+                  <OnboardingItemContent
                     @checked={{item.checked}}
-                    @type="checkbox"
-                    {{on "change" (fn this.togglePreview item.id)}}
+                    @item={{item}}
+                    @onToggle={{fn this.togglePreview item.id}}
                   />
-                  {{item.title}}
-                </label>
-                <a
-                  class="btn btn-default"
-                  href={{item.href}}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >{{item.button_text}}</a>
-              </div>
-            {{/each}}
+                  <a
+                    class="btn btn-default"
+                    href={{item.href}}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >{{item.button_text}}</a>
+                </li>
+              {{/each}}
+            </ul>
           </:content>
         </AdminConfigAreaCard>
       </div>

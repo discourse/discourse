@@ -1,12 +1,35 @@
 .lovelace-onboarding {
   &__columns {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     align-items: start;
     gap: 1.5em;
 
-    @media (width <= 900px) {
-      grid-template-columns: minmax(0, 1fr);
+    @media (width > 900px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  &__configuration {
+    display: grid;
+    min-width: 0;
+    gap: 1em;
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding-block: 0.25em;
+
+    > .btn {
+      flex-shrink: 0;
     }
   }
 
@@ -21,6 +44,22 @@
     }
   }
 
+  &__item-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin: 0;
+
+    &:where(label) {
+      font-weight: normal;
+    }
+
+    input[type="checkbox"] {
+      flex-shrink: 0;
+      margin: 0;
+    }
+  }
+
   &__editor {
     margin-top: 1.5em;
   }
@@ -29,20 +68,5 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5em;
-  }
-
-  &__preview-item {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    gap: 0.75em;
-    border-top: 1px solid var(--primary-low);
-    padding-block: 1.25em;
-    overflow-wrap: anywhere;
-
-    p {
-      color: var(--primary-medium);
-      margin: 0;
-    }
   }
 }

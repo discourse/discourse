@@ -3,3 +3,20 @@ en:
     lovelace_enabled: "Enable the Lovelace plugin."
   lovelace:
     checklist_conflict: "Another administrator changed the checklist. Reload the page before saving again."
+    items:
+      profile_picture:
+        title: "Add a profile picture"
+        description: "Add a picture to make your profile stand out."
+        button_text: "Add picture"
+      profile:
+        title: "Complete your profile"
+        description: "Fill out your bio and other details so we can get to know you."
+        button_text: "Complete profile"
+      guidelines:
+        title: "Read community guidelines"
+        description: "Learn about our community and how to participate here."
+        button_text: "Read guidelines"
+      notifications:
+        title: "Set up your notifications"
+        description: "Turn on push notifications to keep up to speed with the community."
+        button_text: "Set up notifications"
