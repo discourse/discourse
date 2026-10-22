@@ -1,4 +1,4 @@
-rhodes:
+plugins:
   rhodes_enabled:
-    default: false
+    default: true
     client: true
