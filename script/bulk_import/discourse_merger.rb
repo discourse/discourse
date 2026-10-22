@@ -1226,4 +1226,4 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 end
 
-BulkImport::DiscourseMerger.new.start
+BulkImport::DiscourseMerger.new.start if $PROGRAM_NAME == __FILE__
