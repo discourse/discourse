@@ -60,18 +60,21 @@ module SystemDrivers
       browser_type = original.browser_type
       original.close
       @profile_directory = Dir.mktmpdir("discourse-system-browser-")
+      context_options = { serviceWorkers: "block" }.merge(@page_options.value)
       context =
         browser_type.launch_persistent_context(
           @profile_directory,
           **@launch_options,
-          **@page_options.value,
-          serviceWorkers: "block",
+          **context_options,
         )
       browser = context.browser
       new_context = browser.method(:new_context)
       default_context = context
       browser.define_singleton_method(:new_context) do |**options|
         if default_context
+          if options != context_options
+            raise ArgumentError, "Persistent browser context options differ from launch options"
+          end
           default_context.tap { default_context = nil }
         else
           new_context.call(**options)
