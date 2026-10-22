@@ -716,22 +716,29 @@ pagination. Set `@virtualized={{false}}` for a short list whose rows need normal
 including wrapping pills. The static body mounts every loaded row and never paginates;
 a paginating source warns in debug and only its first page is shown. Both bodies scroll
 within `--d-select-list-max-height` (default `20em`).
+After the loading-feedback delay, the static body replaces each displayed row with
+an inert `li.d-select__option.--placeholder` containing a text skeleton in the same
+`ul.d-select__options`, marked `aria-busy="true"`. Its first load uses the same row
+markup. Virtualized lists keep the separate skeleton list.
 
 `@hideSelected` leaves held items in the selection strip and omits them from results.
 Removing a chip restores its row without another source request. Rows then drop the
 selection marker, which could only ever read unselected. The `:listHeader`
 block sits between the strip and results, outside the listbox. It yields the same live
 state and resolved options as `:footer`, so a suggested-results heading can show only
-when `state.filter` is empty. This works with async `@load` sources. Neither state has
+when `state.query` is empty. `state.filter` is the current input; `state.query` is the
+filter answered by the displayed results and stays on the previous answer while
+a new query loads. This works with async `@load` sources. Neither state has
 a `close` action. Other blocks are `:item`, `:selection`, `:unresolved`, `:empty` and
 `:error`; see the typed signature in `d-select-list.gts` for their yielded values.
 
 Nothing takes focus on render. A row or chip press first focuses this select's search
 and keeps it there, including when another select previously held focus. Up/Down and
-Enter navigate and select from the input; Home/End remain text-caret commands.
-In a static list PageUp/PageDown jump to the first/last option, since every row is mounted. Backspace
-with an empty query removes the last held item. ArrowLeft at caret zero enters the
-strip; Up/Down from the strip returns to the search. Tab visits the search, strip
+Enter navigate and select from the input; Left/Right/Home/End remain text-caret commands.
+Backspace in the search edits only its text. In a static list PageUp/PageDown jump
+to the first/last option, since every row is mounted. Within the strip, Left/Right
+move between chips; Backspace/Delete/Enter remove the focused chip. Up/Down leave
+focus on the chip. Tab visits the search, strip
 when held items exist, footer controls, then the next control. The listbox itself is
 never a Tab stop. Escape is left to the containing panel, including a `DMenu`.
 

@@ -518,7 +518,14 @@
 .d-select.--list {
   display: flex;
   flex-direction: column;
+  gap: var(--space-2);
   min-width: 0;
+
+  // Every section starts at the root's edge; the containing panel owns the outer padding.
+  > .d-select__strip {
+    padding: 0;
+    border-bottom: 0;
+  }
 
   > .d-virtual-list,
   > .d-select__options,
@@ -541,6 +548,40 @@
   .d-select__list-header {
     color: var(--primary-medium);
     font-size: var(--font-down-1);
+  }
+
+  .d-select__option.--placeholder {
+    position: relative;
+    cursor: default;
+    pointer-events: none;
+
+    > :not(.d-skeleton) {
+      visibility: hidden;
+    }
+
+    // A first load has no row to copy, so the label holds a line of varied width instead.
+    .d-select__placeholder-label:empty {
+      display: inline-block;
+      min-width: var(--space-12);
+
+      &::before {
+        content: "\00a0";
+      }
+    }
+
+    &:nth-child(3n + 2) .d-select__placeholder-label:empty {
+      min-width: var(--space-8);
+    }
+
+    &:nth-child(3n) .d-select__placeholder-label:empty {
+      min-width: calc(var(--space-12) + var(--space-8));
+    }
+
+    .d-skeleton {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+    }
   }
 
   &:not(:focus-within) .d-select__option.--active,

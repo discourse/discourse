@@ -24,6 +24,8 @@ const MIN_RELOAD_SKELETON_COUNT = 1;
 export interface SkeletonRow {
   key: string;
   isSkeleton: true;
+  /** The label of the row a static placeholder stands in for, kept invisible to hold its size. */
+  label?: string;
 }
 
 interface LoadFeedbackTrackerOptions {
@@ -86,6 +88,11 @@ export default class LoadFeedbackTracker {
    */
   get showRevealPlaceholder(): boolean {
     return this._loadFeedbackDue && this.#engine.serverRevealPending;
+  }
+
+  /** Whether the first page has waited long enough for in-flow placeholder rows. */
+  get showInitialPlaceholder(): boolean {
+    return this._loadFeedbackDue && this.#engine.serverAwaitingFirstPage;
   }
 
   /**

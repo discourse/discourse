@@ -3,6 +3,8 @@ import { warn } from "@ember/debug";
 import type { ModifierLike } from "@glint/template";
 import { modifier as createModifier } from "ember-modifier";
 import { or } from "discourse/truth-helpers";
+import DSkeleton from "discourse/ui-kit/d-skeleton";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import type SelectAnnouncer from "discourse/ui-kit/select/-internals/coordinators/select-announcer";
 import type { OptionsPresenter } from "discourse/ui-kit/select/-internals/coordinators/select-presenter-base";
 import WindowedListCoordinator, {
@@ -103,26 +105,43 @@ const StaticOptionList: TemplateOnlyComponent<StaticOptionListSignature> =
       {{@modifiers.roving}}
     >
       {{#each @items key="key" as |descriptor index|}}
-        <SelectOptionRow
-          @descriptor={{descriptor}}
-          @engine={{@engine}}
-          @hasGroupHeaderBlock={{false}}
-          @hasItemBlock={{@hasItemBlock}}
-          @hasLoadingItemBlock={{false}}
-          @hideSelectionMarker={{@hideSelectionMarker}}
-          @index={{index}}
-          @items={{@items}}
-          @limitId={{@limitId}}
-          @listbox={{@listbox}}
-          @measure={{inFlow}}
-          @multiple={{true}}
-          @onOptionMousedown={{@onOptionMousedown}}
-          @place={{inFlow}}
-          @presenter={{@presenter}}
-          @selectedIcon={{@selectedIcon}}
-        >
-          <:item as |item|>{{yield item to="item"}}</:item>
-        </SelectOptionRow>
+        {{#if descriptor.isSkeleton}}
+          {{! The row's own marker slot and label stay in flow but invisible, so the placeholder
+            keeps the row's size and the list does not reflow under the skeleton. }}
+          <li aria-hidden="true" class="d-select__option --placeholder">
+            {{#unless @hideSelectionMarker}}
+              {{dIcon
+                "far-square"
+                class="d-select__option-selected-icon --checkbox"
+              }}
+            {{/unless}}
+            <span
+              class="d-select__placeholder-label"
+            >{{descriptor.label}}</span>
+            <DSkeleton @variant="text" />
+          </li>
+        {{else}}
+          <SelectOptionRow
+            @descriptor={{descriptor}}
+            @engine={{@engine}}
+            @hasGroupHeaderBlock={{false}}
+            @hasItemBlock={{@hasItemBlock}}
+            @hasLoadingItemBlock={{false}}
+            @hideSelectionMarker={{@hideSelectionMarker}}
+            @index={{index}}
+            @items={{@items}}
+            @limitId={{@limitId}}
+            @listbox={{@listbox}}
+            @measure={{inFlow}}
+            @multiple={{true}}
+            @onOptionMousedown={{@onOptionMousedown}}
+            @place={{inFlow}}
+            @presenter={{@presenter}}
+            @selectedIcon={{@selectedIcon}}
+          >
+            <:item as |item|>{{yield item to="item"}}</:item>
+          </SelectOptionRow>
+        {{/if}}
       {{/each}}
     </ul>
   </template>;

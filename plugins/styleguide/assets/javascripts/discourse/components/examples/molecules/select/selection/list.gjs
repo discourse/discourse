@@ -20,7 +20,7 @@ export default class ListSelectExample extends Component {
 
   @action
   async load(filter, { signal }) {
-    await delay(signal, 100);
+    await delay(signal, 800);
     return TAGS.filter((tag) => tag.label.includes(filter.toLowerCase()));
   }
 
@@ -76,7 +76,7 @@ export default class ListSelectExample extends Component {
             @virtualized={{false}}
           >
             <:listHeader as |state|>
-              {{#unless state.filter}}
+              {{#unless state.query}}
                 <span>{{i18n
                     "styleguide.sections.select.list_suggested"
                   }}</span>
@@ -109,7 +109,7 @@ export default class ListSelectExample extends Component {
             />
           {{/if}}
           <DButton
-            class="btn-flat"
+            class="btn-flat select-examples__list-clear"
             @action={{fn this.clear form.set}}
             @label="styleguide.sections.select.list_clear"
           />

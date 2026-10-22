@@ -21,6 +21,7 @@ import WindowedListCoordinator, {
 } from "discourse/ui-kit/select/-internals/coordinators/windowed-list-coordinator";
 import SelectEngine, {
   type SelectItem as SelectItemModel,
+  selectItemLabel,
   type SelectLoadOptions,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
@@ -55,6 +56,27 @@ const registerListbox = createModifier(
     return () => register(null);
   }
 );
+
+/** Replaces each retained static row without changing the list's row count. */
+function placeholderRows(
+  items: readonly ListRow[],
+  feedback: LoadFeedbackTracker,
+  labelField: string,
+  staticBody?: boolean
+): readonly ListRow[] {
+  if (!staticBody || feedback.retainRowsWhileReloading) {
+    return items;
+  }
+  return items.length
+    ? items.map((row) => ({
+        key: row.key,
+        isSkeleton: true,
+        label: row.isSkeleton
+          ? row.label
+          : selectItemLabel(row.item, labelField),
+      }))
+    : [{ key: "__skeleton:empty", isSkeleton: true }];
+}
 
 /** Keeps popup hosts unchanged when they do not observe listbox presence. */
 function ignoreListbox(): void {}
@@ -115,6 +137,8 @@ interface SelectOptionsSignature {
     onRegisterRoving?: (api: DRovingFocusApi | null) => void;
     /** Reports whether a listbox actually renders. */
     onRegisterListbox?: (element: HTMLElement | null) => void;
+    /** Retains the static body during reloads and renders placeholders as option-shaped rows. */
+    staticBody?: boolean;
     /** Suppresses an empty result state for an empty query. */
     hideEmptyQuery?: boolean;
     /** Whether visible states have live-region roles; defaults to true. */
@@ -159,7 +183,7 @@ const SelectOptions: TemplateOnlyComponent<SelectOptionsSignature> = <template>
     @asyncData={{@loadListContent}}
     @context={{@engine.loadContext}}
     @debounce={{@presenter.debounceFor}}
-    @retainWhileReloading={{@feedback.retainRowsWhileReloading}}
+    @retainWhileReloading={{or @staticBody @feedback.retainRowsWhileReloading}}
   >
     <:loading>
       {{! The skeleton scrolls itself, and its rows are inert placeholders, so it would be
@@ -167,24 +191,44 @@ const SelectOptions: TemplateOnlyComponent<SelectOptionsSignature> = <template>
       nothing, in a panel the reader is still waiting on. }}
       <ul
         aria-busy="true"
-        class="d-select__listbox d-select__listbox--loading"
+        class="d-select__listbox
+          {{if @staticBody 'd-select__options' 'd-select__listbox--loading'}}"
         tabindex="-1"
       >
-        {{#each @feedback.skeletonRows key="key" as |row|}}
-          <li class="d-select__skeleton" data-key={{row.key}}>
-            {{#if @hasLoadingItemBlock}}
-              {{yield to="loadingItem"}}
-            {{else}}
-              <DSkeleton @variant="text" />
-            {{/if}}
-          </li>
-        {{/each}}
+        {{#if (or (not @staticBody) @feedback.showInitialPlaceholder)}}
+          {{#each @feedback.skeletonRows key="key" as |row|}}
+            <li
+              aria-hidden={{if @staticBody "true"}}
+              class={{if
+                @staticBody
+                "d-select__option --placeholder"
+                "d-select__skeleton"
+              }}
+              data-key={{row.key}}
+            >
+              {{#if @staticBody}}
+                {{! An empty label gives the placeholder a row's line height and a varied width. }}
+                <span class="d-select__placeholder-label"></span>
+              {{/if}}
+              {{#if @hasLoadingItemBlock}}
+                {{yield to="loadingItem"}}
+              {{else}}
+                <DSkeleton @variant="text" />
+              {{/if}}
+            </li>
+          {{/each}}
+        {{/if}}
       </ul>
     </:loading>
 
     <:content as |content|>
       {{#let
-        (@listbox.buildListItems content.rawItems content.filter)
+        (placeholderRows
+          (@listbox.buildListItems content.rawItems content.filter)
+          @feedback
+          @presenter.labelField
+          @staticBody
+        )
         as |items|
       }}
         {{#if items.length}}

@@ -180,21 +180,6 @@ export default class SelectListInteraction {
       return;
     }
     if (
-      event.key === "Backspace" &&
-      input.value === "" &&
-      this.#engine.hasValue
-    ) {
-      event.preventDefault();
-      this.#engine.deselectLast();
-    } else if (
-      event.key === "ArrowLeft" &&
-      input.selectionStart === 0 &&
-      input.selectionEnd === 0 &&
-      this.#engine.hasValue
-    ) {
-      event.preventDefault();
-      this.#stripRoving?.focusLast();
-    } else if (
       event.key === "Enter" &&
       !input.hasAttribute("aria-activedescendant") &&
       !this.#engine.belowMinChars &&

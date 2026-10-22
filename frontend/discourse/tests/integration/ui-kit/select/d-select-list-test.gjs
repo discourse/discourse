@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { registerDestructor } from "@ember/destroyable";
 import {
   click,
   fillIn,
@@ -338,7 +339,7 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       assert.dom(activeRow()).hasText(before, "the cursor did not move");
     });
 
-    test("DSelectList removes held items from the strip and with Backspace", async function (assert) {
+    test("DSelectList removes held items from the strip, not with Backspace in the search", async function (assert) {
       const held = tracked([1, 2, 3]);
       const setHeld = (next) => (held.value = next);
       await render(
@@ -356,12 +357,18 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await click(chips()[0].querySelector("button"));
       assert.deepEqual(held.value, [2, 3], "the chip removed its item");
 
+      // The strip sits below the search, so an empty-query Backspace would remove a chip out of
+      // the reader's view.
       await focus(input());
       await triggerKeyEvent(input(), "keydown", "Backspace");
-      assert.deepEqual(held.value, [2], "Backspace removed the last item");
+      assert.deepEqual(
+        held.value,
+        [2, 3],
+        "Backspace in the search removes nothing"
+      );
     });
 
-    test("DSelectList moves between the search and the strip with the arrow keys", async function (assert) {
+    test("DSelectList keeps arrow keys within the search and within the strip", async function (assert) {
       const held = tracked([1, 2]);
       const setHeld = (next) => (held.value = next);
       await render(
@@ -376,20 +383,41 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       );
 
       await focus(input());
-      await triggerKeyEvent(input(), "keydown", "ArrowLeft");
-      assert.true(
-        find(".d-select.--list .d-select__strip").contains(
-          document.activeElement
-        ),
-        "ArrowLeft at the start moves into the strip"
+      const left = await dispatched("keydown", () =>
+        triggerKeyEvent(input(), "keydown", "ArrowLeft")
+      );
+      assert.false(left?.defaultPrevented, "ArrowLeft moves the caret");
+      assert.strictEqual(
+        document.activeElement,
+        input(),
+        "focus stays in the search"
+      );
+
+      const buttons = () => chips().map((chip) => chip.querySelector("button"));
+      await focus(buttons()[0]);
+      await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
+      assert.strictEqual(
+        document.activeElement,
+        buttons()[1],
+        "ArrowRight moves to the next chip"
       );
 
       await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
       assert.strictEqual(
         document.activeElement,
-        input(),
-        "ArrowDown from the strip returns to the search"
+        buttons()[1],
+        "ArrowDown stays on the chip"
       );
+      await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
+      assert.strictEqual(
+        document.activeElement,
+        buttons()[1],
+        "ArrowUp stays on the chip"
+      );
+      assert.deepEqual(held.value, [1, 2], "arrows change nothing");
+
+      await triggerKeyEvent(document.activeElement, "keydown", "Delete");
+      assert.deepEqual(held.value, [1], "Delete removes the focused chip");
     });
   });
 
@@ -476,6 +504,188 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await focus(input());
       await type("an");
       assert.dom(".test-suggested").doesNotExist("hidden while typing");
+    });
+  });
+
+  module("loading", function () {
+    test("DSelectList static re-query shows placeholders in place of its rows", async function (assert) {
+      const held = tracked([]);
+      const setHeld = (next) => (held.value = next);
+      // Wrapping pills, where a placeholder narrower than its row would reflow the list.
+      const pills = document.createElement("style");
+      pills.textContent =
+        ".test-pills .d-select__options { display: flex; flex-wrap: wrap; }" +
+        ".test-pills .d-select__option { flex: 0 0 auto; }";
+      document.head.append(pills);
+      registerDestructor(this.owner, () => pills.remove());
+      const gate = gatedLoader();
+      const load = gate.load;
+      await render(
+        <template>
+          <DSelectList
+            class="test-pills"
+            @debounce={{false}}
+            @label="Fruit"
+            @load={{load}}
+            @onChange={{setHeld}}
+            @value={{held.value}}
+            @virtualized={{false}}
+          />
+        </template>
+      );
+
+      const list = () => find(".d-select.--list .d-select__options");
+      const rowCount = rows().length;
+      const height = list().offsetHeight;
+      const widths = rows().map((row) => row.offsetWidth);
+      await focus(input());
+      gate.hold();
+      try {
+        fillIn(input(), "an");
+        // Past the feedback delay, so the slow answer earns placeholders.
+        await new Promise((resolve) => setTimeout(resolve, 450));
+
+        assert
+          .dom(".d-select.--list .d-select__listbox--loading")
+          .doesNotExist("no separate placeholder list replaces the rows");
+        assert.strictEqual(
+          findAll(
+            ".d-select.--list .d-select__options .d-select__option.--placeholder"
+          ).length,
+          rowCount,
+          "one placeholder per row it stands in for"
+        );
+        assert.strictEqual(
+          findAll(".d-select.--list [role='option']").length,
+          0,
+          "placeholders are not options"
+        );
+        assert.deepEqual(
+          findAll(
+            ".d-select.--list .d-select__options .d-select__option.--placeholder"
+          ).map((row) => row.offsetWidth),
+          widths,
+          "each placeholder keeps the width of the row it replaces, so wrapping holds"
+        );
+        assert.strictEqual(
+          list()?.offsetHeight,
+          height,
+          "the list keeps its height"
+        );
+      } finally {
+        // A held request keeps a test waiter open; releasing it in finally stops one failure
+        // from stalling every later test.
+        gate.release();
+      }
+      await settled();
+      assert.deepEqual(
+        rowNames(),
+        ["Banana"],
+        "the answer replaces the placeholders"
+      );
+      assert
+        .dom(".d-select.--list .d-select__option.--placeholder")
+        .doesNotExist();
+    });
+
+    test("DSelectList static first load lays its placeholders out as rows", async function (assert) {
+      const held = tracked([]);
+      const setHeld = (next) => (held.value = next);
+      const gate = gatedLoader();
+      const load = gate.load;
+      gate.hold();
+      const rendered = render(
+        <template>
+          <DSelectList
+            @debounce={{false}}
+            @label="Fruit"
+            @load={{load}}
+            @onChange={{setHeld}}
+            @value={{held.value}}
+            @virtualized={{false}}
+          />
+        </template>
+      );
+      let placeholderHeights;
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        assert.true(
+          findAll(
+            ".d-select.--list .d-select__options .d-select__option.--placeholder"
+          ).length > 0,
+          "placeholders render as rows inside the list, where row styles apply"
+        );
+        assert.strictEqual(
+          findAll(".d-select.--list [role='option']").length,
+          0,
+          "placeholders are not options"
+        );
+        placeholderHeights = findAll(
+          ".d-select.--list .d-select__options .d-select__option.--placeholder"
+        ).map((row) => row.offsetHeight);
+      } finally {
+        // A held request keeps a test waiter open; releasing it in finally stops one failure
+        // from stalling every later test.
+        gate.release();
+      }
+      await rendered;
+      await settled();
+      assert.strictEqual(
+        rows().length,
+        FRUIT.length,
+        "the answer replaces them"
+      );
+      const rowHeight = rows()[0].offsetHeight;
+      assert.true(
+        placeholderHeights.every((height) => height === rowHeight),
+        `each placeholder is a row's height (${placeholderHeights.join(", ")} vs ${rowHeight})`
+      );
+    });
+
+    test("DSelectList list header state reports the query its results answer", async function (assert) {
+      const held = tracked([]);
+      const setHeld = (next) => (held.value = next);
+      const gate = gatedLoader();
+      const load = gate.load;
+      await render(
+        <template>
+          <DSelectList
+            @debounce={{false}}
+            @label="Fruit"
+            @load={{load}}
+            @onChange={{setHeld}}
+            @value={{held.value}}
+            @virtualized={{false}}
+          >
+            <:listHeader as |state|>
+              {{#unless state.query}}
+                <span class="test-suggested">Suggested</span>
+              {{/unless}}
+            </:listHeader>
+          </DSelectList>
+        </template>
+      );
+
+      await focus(input());
+      gate.hold();
+      try {
+        fillIn(input(), "an");
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        assert
+          .dom(".test-suggested")
+          .exists(
+            "the header stays while the shown rows still answer the empty query"
+          );
+      } finally {
+        // A held request keeps a test waiter open; releasing it in finally stops one failure
+        // from stalling every later test.
+        gate.release();
+      }
+      await settled();
+      assert
+        .dom(".test-suggested")
+        .doesNotExist("the header changes with the rows it describes");
     });
   });
 

@@ -1779,12 +1779,16 @@
   }
 }
 
+.select-examples__list-clear {
+  align-self: flex-start;
+  padding-inline: 0;
+}
+
 .select-examples__tag-list {
   .d-select__options {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-1);
-    padding-block: var(--space-2);
   }
 
   .d-select__option {

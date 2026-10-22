@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { associateDestroyableChild } from "@ember/destroyable";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
@@ -8,10 +9,11 @@ import Owner, { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { hasContentPluginApiCallbacks } from "discourse/select-kit/lib/plugin-api";
 import type A11yService from "discourse/services/a11y";
-import { eq } from "discourse/truth-helpers";
+import { and, eq, or } from "discourse/truth-helpers";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import SelectHost, {
   type SelectHostArgs,
@@ -19,20 +21,25 @@ import SelectHost, {
 import SelectListInteraction from "discourse/ui-kit/select/-internals/coordinators/select-list-interaction";
 import SelectListPresenter from "discourse/ui-kit/select/-internals/coordinators/select-list-presenter";
 import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
-import SelectOptions from "discourse/ui-kit/select/-internals/parts/select-options";
+import SelectOptions, {
+  type SelectListContent,
+} from "discourse/ui-kit/select/-internals/parts/select-options";
 import SelectionStrip from "discourse/ui-kit/select/-internals/parts/selection-strip";
 import StaticOptionList from "discourse/ui-kit/select/-internals/parts/static-option-list";
 import WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowed-option-list";
 import type {
   SelectItem,
+  SelectLoadOptions,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 /** Live state shared by the pinned list header and footer. */
 export interface SelectListState {
-  /** The current search query. */
+  /** The current search input, including a query still awaiting results. */
   filter: string;
+  /** The search query answered by the displayed results, retained while the next query loads. */
+  query: string;
   /** Held values in selection order. */
   value: SelectValue;
   /** Whether any values are held. */
@@ -172,6 +179,8 @@ interface DSelectListSignature {
 export default class DSelectList extends Component<DSelectListSignature> {
   @service declare a11y: A11yService;
 
+  @tracked query = "";
+
   interaction: SelectListInteraction;
 
   host: SelectHost = new SelectHost({
@@ -256,6 +265,27 @@ export default class DSelectList extends Component<DSelectListSignature> {
     }
   }
 
+  /** Keeps pinned state on the resolved filter while the input advances to its next query. */
+  @action
+  loadListContent(
+    context: unknown,
+    options?: SelectLoadOptions
+  ): SelectListContent | Promise<SelectListContent> {
+    const content = this.host.loadListContent(context, options);
+    const report = (resolved: SelectListContent): SelectListContent => {
+      if (!this.isDestroying && !options?.signal?.aborted) {
+        this.query = resolved.filter;
+      }
+      return resolved;
+    };
+    if (content instanceof Promise) {
+      return content.then(report);
+    }
+    // Local sources resolve during render, after pinned state has already been read.
+    schedule("afterRender", () => report(content));
+    return content;
+  }
+
   <template>
     <div
       class="d-select --list"
@@ -267,12 +297,18 @@ export default class DSelectList extends Component<DSelectListSignature> {
       {{this.interaction.watchCursor}}
       {{didInsert
         this.feedback.trackLoadFeedback
-        this.engine.serverPending
+        (or
+          this.engine.serverPending
+          (and (eq @virtualized false) this.engine.serverAwaitingFirstPage)
+        )
         this.engine.serverQueryPending
       }}
       {{didUpdate
         this.feedback.trackLoadFeedback
-        this.engine.serverPending
+        (or
+          this.engine.serverPending
+          (and (eq @virtualized false) this.engine.serverAwaitingFirstPage)
+        )
         this.engine.serverQueryPending
       }}
       {{willDestroy this.feedback.releaseLoadFeedback}}
@@ -325,7 +361,6 @@ export default class DSelectList extends Component<DSelectListSignature> {
           @onRegisterRoving={{this.interaction.registerStripRoving}}
           @onResize={{this.listbox.remeasureListbox}}
           @resolveSelection={{this.host.resolveMulti}}
-          @returnToInput={{this.interaction.focusInput}}
           @value={{@value}}
         >
           <:selection as |item|>{{yield
@@ -343,6 +378,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
       {{#let
         (hash
           filter=this.engine.filter
+          query=this.query
           value=this.engine.value
           hasValue=this.engine.hasValue
           total=this.engine.total
@@ -390,13 +426,14 @@ export default class DSelectList extends Component<DSelectListSignature> {
             @hasLoadingItemBlock={{false}}
             @hideEmptyQuery={{true}}
             @listbox={{this.listbox}}
-            @loadListContent={{this.host.loadListContent}}
+            @loadListContent={{this.loadListContent}}
             @multiple={{true}}
             @noResultsLabel={{@noResultsLabel}}
             @onRegisterListbox={{this.interaction.registerListbox}}
             @onRegisterRoving={{this.interaction.registerRoving}}
             @presenter={{this.presenter}}
             @reportsActive={{this.interaction.focused}}
+            @staticBody={{eq @virtualized false}}
           >
             <:body as |items content modifiers|>
               {{#let
