@@ -691,6 +691,26 @@ if merger_dependencies_available
 
         expect(TagGroup.find_by!(name: "Colors").parent_tag_id).to eq(tag.id)
       end
+
+      it "maps only the rows that a processor keeps" do
+        timestamp = 1.day.ago.to_formatted_s(:db)
+        add_source_row(TagGroup, id: 7, name: "Kept", created_at: timestamp, updated_at: timestamp)
+        add_source_row(
+          TagGroup,
+          id: 8,
+          name: "Skipped",
+          created_at: timestamp,
+          updated_at: timestamp,
+        )
+        allow(merger).to receive(:process_tag_group) do |tag_group|
+          tag_group unless tag_group["name"] == "Skipped"
+        end
+
+        merger.copy_model(TagGroup, mapping: merger.instance_variable_get(:@tag_groups))
+
+        expect(merger.tag_group_id_from_imported_id(7)).to eq(TagGroup.find_by!(name: "Kept").id)
+        expect(merger.tag_group_id_from_imported_id(8)).to be_nil
+      end
     end
   end
 end

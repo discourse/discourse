@@ -798,11 +798,10 @@ class BulkImport::DiscourseMerger < BulkImport::Base
             next unless remap_upload_reference_target(row)
           end
 
-          old_id = row["id"].to_i
-          if old_id && last_id
+          if last_id
+            old_id = row["id"].to_i
+            # Rows the processor skips below still consume an id; the gaps are harmless.
             row["id"] = (last_id += 1)
-            imported_ids << old_id if has_custom_fields
-            mapping[old_id] = row["id"] if mapping
           end
 
           if skip_processing
@@ -810,8 +809,14 @@ class BulkImport::DiscourseMerger < BulkImport::Base
           else
             processed =
               processor ? processor.call(ActiveSupport::HashWithIndifferentAccess.new(row)) : row
+            next unless processed
 
-            @raw_connection.put_copy_data columns.map { |c| processed[c] } if processed
+            @raw_connection.put_copy_data columns.map { |c| processed[c] }
+          end
+
+          if last_id
+            imported_ids << old_id if has_custom_fields
+            mapping[old_id] = row["id"] if mapping
           end
         end
     end
