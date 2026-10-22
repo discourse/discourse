@@ -8,19 +8,82 @@ import {
   waitUntil,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import { JSON_API_VERSION } from "discourse/data/handlers/json-api";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
+
+const INCLUDED = [
+  {
+    type: "users",
+    id: "-1",
+    attributes: {
+      username: "system",
+      avatarTemplate: "/images/discourse-logo-sketch-small.png",
+    },
+  },
+  {
+    type: "users",
+    id: "1",
+    attributes: {
+      username: "admin",
+      avatarTemplate: "/letter_avatar_proxy/v4/letter/a/{size}.png",
+    },
+  },
+  { type: "groups", id: "41", attributes: { name: "analysts" } },
+];
+
+const OLDER_QUERY = {
+  id: 2,
+  name: "Older query",
+  description: "",
+  lastRunAt: "2021-01-01T00:00:00.000Z",
+  tags: [],
+  userId: 1,
+  groupIds: [],
+};
+
+function toDocument(queries, next) {
+  return {
+    data: queries.map(({ id, userId, groupIds, ...attrs }) => ({
+      type: "queries",
+      id: String(id),
+      attributes: attrs,
+      relationships: {
+        user: { data: { type: "users", id: String(userId) } },
+        groups: {
+          data: groupIds.map((groupId) => ({
+            type: "groups",
+            id: String(groupId),
+          })),
+        },
+      },
+    })),
+    // Only what the page links to, as the server sends it.
+    included: INCLUDED.filter(({ type, id }) =>
+      queries.some((query) =>
+        type === "users"
+          ? String(query.userId) === id
+          : query.groupIds.map(String).includes(id)
+      )
+    ),
+    links: { next },
+  };
+}
 
 acceptance("List Queries", function (needs) {
   needs.user();
   needs.settings({ data_explorer_enabled: true });
 
   let lastQueryParams;
+  let lastRequestHeaders;
   let handleQueries;
+  let nextLink;
 
   needs.hooks.beforeEach(() => {
     lastQueryParams = null;
+    lastRequestHeaders = null;
+    nextLink = null;
   });
 
   needs.pretender((server, helper) => {
@@ -73,60 +136,54 @@ acceptance("List Queries", function (needs) {
 
     handleQueries = (request) => {
       lastQueryParams = request.queryParams;
+      lastRequestHeaders = request.requestHeaders;
       const queries = [
         {
           id: -6,
           name: "Top 100 Likers",
           description:
             "returns the top 100 likers for a given monthly period ordered by like_count. It accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
-          username: "system",
-          group_ids: [],
-          last_run_at: "2021-02-11T08:29:59.337Z",
-          user_id: -1,
+          lastRunAt: "2021-02-11T08:29:59.337Z",
           tags: ["default", "staff"],
+          userId: -1,
+          groupIds: [],
         },
         {
           id: -5,
           name: "Top 100 Active Topics",
           description:
             "based on the number of replies, it accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
-          username: "system",
-          group_ids: [],
-          last_run_at: "2021-02-08T15:37:49.188Z",
-          user_id: -1,
+          lastRunAt: "2021-02-08T15:37:49.188Z",
           tags: ["default"],
+          userId: -1,
+          groupIds: [],
         },
         {
           id: 1,
           name: "Staff activity",
           description: "Shows staff activity.",
-          username: "admin",
-          group_ids: [],
-          last_run_at: "2021-02-07T15:37:49.188Z",
-          user_id: 1,
+          lastRunAt: "2021-02-07T15:37:49.188Z",
           tags: ["staff"],
+          userId: 1,
+          groupIds: [41],
         },
       ];
-      const tags = request.queryParams.tags?.split(",") ?? [];
-      const filter = request.queryParams.filter?.toLowerCase();
+      const tags = request.queryParams["filter[tag]"] ?? [];
+      const search = request.queryParams["filter[search]"]?.toLowerCase();
       const filteredQueries = queries.filter((query) => {
         return (
           tags.every((tag) => query.tags.includes(tag)) &&
-          (!filter || query.name.toLowerCase().includes(filter))
+          (!search || query.name.toLowerCase().includes(search))
         );
       });
 
-      return helper.response({
-        queries: filteredQueries,
-        total_rows_queries: filteredQueries.length,
-        extras: { tags: ["default", "staff"] },
-      });
+      return helper.response(toDocument(filteredQueries, nextLink));
     };
 
-    server.get("/admin/plugins/discourse-data-explorer/queries", handleQueries);
-    server.get(
-      "/admin/plugins/discourse-data-explorer/queries.json",
-      handleQueries
+    server.get("/api/data-explorer/queries", (request) =>
+      request.queryParams["page[after]"]
+        ? helper.response(toDocument([OLDER_QUERY], null))
+        : handleQueries(request)
     );
   });
 
@@ -196,7 +253,7 @@ acceptance("List Queries", function (needs) {
     assert
       .dom(".query-tag-filter .d-multi-select-trigger__selected-item")
       .exists({ count: 2 }, "both selected tags remain visible");
-    assert.strictEqual(lastQueryParams.tags, "default,staff");
+    assert.deepEqual(lastQueryParams["filter[tag]"], ["default", "staff"]);
     assert.strictEqual(
       new URLSearchParams(currentURL().split("?")[1]).get("tags"),
       "default,staff",
@@ -212,7 +269,7 @@ acceptance("List Queries", function (needs) {
       "/admin/plugins/discourse-data-explorer/queries?tags=default,staff"
     );
 
-    assert.strictEqual(lastQueryParams.tags, "default,staff");
+    assert.deepEqual(lastQueryParams["filter[tag]"], ["default", "staff"]);
     assert
       .dom(".query-tag-filter .d-multi-select-trigger__selected-item")
       .exists({ count: 2 }, "both URL tags are selected");
@@ -221,15 +278,15 @@ acceptance("List Queries", function (needs) {
       .exists({ count: 1 }, "only the query with both tags is shown");
 
     await fillIn(".d-filter-controls__input", "likers");
-    assert.strictEqual(lastQueryParams.tags, "default,staff");
-    assert.strictEqual(lastQueryParams.filter, "likers");
+    assert.deepEqual(lastQueryParams["filter[tag]"], ["default", "staff"]);
+    assert.strictEqual(lastQueryParams["filter[search]"], "likers");
   });
 
   test("filters by clicking a query tag", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries");
     await click(".query-row:first-child .query-tags .d-table-badge:last-child");
 
-    assert.strictEqual(lastQueryParams.tags, "staff");
+    assert.deepEqual(lastQueryParams["filter[tag]"], ["staff"]);
     assert
       .dom(".recent-queries tbody tr")
       .exists({ count: 2 }, "only queries with the clicked tag are shown");
@@ -245,13 +302,13 @@ acceptance("List Queries", function (needs) {
     await click(".d-table__overview-link");
     await click(".back-button");
 
-    assert.strictEqual(
-      lastQueryParams.tags,
-      "staff",
+    assert.deepEqual(
+      lastQueryParams["filter[tag]"],
+      ["staff"],
       "the tag is sent on return"
     );
     assert.strictEqual(
-      lastQueryParams.filter,
+      lastQueryParams["filter[search]"],
       "activity",
       "the text search is sent on return"
     );
@@ -279,7 +336,7 @@ acceptance("List Queries", function (needs) {
 
     const requests = [];
     pretender.get(
-      "/admin/plugins/discourse-data-explorer/queries.json",
+      "/api/data-explorer/queries",
       (request) => {
         requests.push(request);
         return handleQueries(request);
@@ -309,5 +366,54 @@ acceptance("List Queries", function (needs) {
         /^\s*Staff activity/,
         "the latest filter results remain visible"
       );
+  });
+
+  test("requests the JSON:API endpoint with its version and sort", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries");
+
+    assert.strictEqual(lastRequestHeaders["Api-Version"], JSON_API_VERSION);
+    assert.strictEqual(lastQueryParams.include, "user,groups");
+    assert.strictEqual(lastQueryParams.sort, "-lastRunAt");
+
+    await click("#table-header-toggle-username");
+    assert.strictEqual(lastQueryParams.sort, "-user.username");
+
+    await click("#table-header-toggle-username");
+    assert.strictEqual(lastQueryParams.sort, "user.username");
+  });
+
+  test("renders the author and groups from included records", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries");
+
+    assert
+      .dom(".query-row:nth-child(3) .query-created-by__link")
+      .hasAttribute("href", "/u/admin", "links to the author");
+    assert
+      .dom(".query-row:nth-child(3) .query-created-by__link img.avatar")
+      .exists("renders the author's avatar");
+    assert
+      .dom(".query-row:nth-child(3) .query-group-names")
+      .includesText("analysts", "renders the group name");
+  });
+
+  test("loads the next page from the document links", async function (assert) {
+    nextLink = "/api/data-explorer/queries?page%5Bafter%5D=abc";
+    await visit("/admin/plugins/discourse-data-explorer/queries");
+
+    const controller = this.owner.lookup(
+      "controller:adminPlugins.show.explorer.index"
+    );
+    assert.true(controller.canLoadMore, "has a next page");
+
+    await controller.loadMore();
+    await settled();
+
+    assert
+      .dom(".recent-queries tbody tr")
+      .exists({ count: 4 }, "appends the next page");
+    assert
+      .dom(".recent-queries tbody tr:last-child td")
+      .hasText(/^\s*Older query/, "renders the appended query");
+    assert.false(controller.canLoadMore, "stops at the last page");
   });
 });
