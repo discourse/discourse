@@ -101,6 +101,50 @@ module(
       );
     });
 
+    for (const [name, head, tail] of [
+      ["bare delimiters", "```", "```"],
+      ["delimiters with newlines", "```\n", "\n```"],
+    ]) {
+      test(`useBlockMode separates multiline content with ${name}`, async function (assert) {
+        const state = await setupEditor();
+        setContent(state, "first\nsecond");
+        selectAll(state);
+
+        state.textManipulation.applySurroundSelection(head, tail, "code_text", {
+          multiline: false,
+          useBlockMode: true,
+        });
+
+        assert
+          .dom(".ProseMirror pre code")
+          .hasText(
+            "first\nsecond",
+            "both lines are inside the code block without extra blank lines"
+          );
+      });
+    }
+
+    test("useBlockMode keeps single-line code inline", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "before secret after");
+      state.textManipulation.selectText(8, 6);
+
+      state.textManipulation.applySurroundSelection("```", "```", "wrap_text", {
+        multiline: false,
+        useBlockMode: true,
+      });
+
+      assert
+        .dom(".ProseMirror p code")
+        .hasText("secret", "the selection is wrapped");
+      assert
+        .dom(".ProseMirror br")
+        .doesNotExist("no boundary breaks are added");
+      assert
+        .dom(".ProseMirror p")
+        .hasText("before secret after", "surrounding text is preserved");
+    });
+
     test("multiline surround skips empty paragraphs", async function (assert) {
       const state = await setupEditor();
       setContent(state, "one\n\ntwo");

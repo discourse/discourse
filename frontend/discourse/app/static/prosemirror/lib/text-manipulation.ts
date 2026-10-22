@@ -307,7 +307,12 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
   ): void {
     this.#restoreSelection(sel);
     const hval = typeof head === "function" ? head() : head;
-    const mark = this.#probeMark(hval, tail);
+    const needsBlockSpacing =
+      opts?.useBlockMode &&
+      !opts.multiline &&
+      !this.view.state.selection.empty &&
+      this.#selectedMarkdownOr(exampleKey).includes("\n");
+    const mark = needsBlockSpacing ? null : this.#probeMark(hval, tail);
 
     if (mark) {
       toggleMark(mark.type, mark.attrs)(this.view.state, this.view.dispatch);
