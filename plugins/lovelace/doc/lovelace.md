@@ -88,10 +88,9 @@ page’s temporary progress. Links open in a new tab with the current
 administrator’s permissions. Reloading or leaving the page resets preview
 progress; it does not write member progress.
 
-The editable checklist provides configuration and an administrator preview. It
-is saved separately from the member suggestion checklist described below; its
-items are not displayed on the member page. Neither interface stores member
-completion progress or opens automatically after signup.
+The editable configuration supplies the automatic member widget described below.
+The separate suggestion page retains its own selection. Preview progress stays
+temporary and never changes a member’s saved progress.
 
 ## Editable checklist authorization and persistence
 
@@ -212,6 +211,54 @@ Discourse's plugin configuration navigation. Each change waits for the server's
 response before displaying the new selection, disables further changes while
 saving, and displays Discourse's error dialog if saving fails.
 
+## Persistent member widget
+
+Signed-in members see the configured checklist within the main reading area,
+aligned with the content beside the sidebar, above the welcome banner in that
+area. This includes new members on their first visit after signup and existing
+members who have not dismissed it. Anonymous visitors and admin pages
+do not show the widget. Disabling Lovelace or saving an empty editable checklist
+hides it. Configuration changes appear on the next full page load.
+
+The widget uses a compact, tinted header with a list icon, chevron to minimize
+or expand, and a close icon to dismiss. These icon controls retain accessible
+labels. The completion count and a short progress bar remain visible in the
+header. The bar stays compact beside the count.
+Rows have thin separators, inline titles and descriptions on wider screens, and
+descriptions below titles on narrow screens.
+
+Each item has a bold title, description, primary-colored action link, and a circle
+button labelled with its title. Click the circle or use Enter or Space to mark an
+item complete; click again to undo it. Completed text and action links become
+lighter, with a green checked circle; action links remain available. Visited and
+unvisited action links use the same color for their completion state. Following a
+link does not automatically complete an item.
+The progress bar and count update after a successful save. Completing the last
+item drops confetti inside the widget and announces a congratulatory message.
+Reduced-motion preferences suppress the animation. Reloading a completed
+checklist does not replay the celebration.
+
+**Minimize** hides the item rows while retaining the heading, progress, and
+controls. **Expand** restores them. **Dismiss checklist** hides the widget at any
+progress level, including zero. Completion, minimization, and dismissal persist
+across return visits and devices for the signed-in account. Dismissal remains in
+effect when administrators change items; there is no member reset control.
+
+The signed-in user payload includes the editable items and that member’s saved
+state. `GET /lovelace/member-checklist.json` reads it, and `PUT` updates one item’s
+completion or the minimized/dismissed flags. Both endpoints require login and an
+enabled plugin. Updates always use the authenticated account, accept only
+configured item IDs and boolean flags, retain CSRF protection, and never change
+the community configuration. Unknown items or invalid flags return HTTP 400.
+
+`MemberChecklist` stores each account’s state under its own PluginStore key.
+A per-member distributed lock serializes updates so changing one item preserves
+other progress and display preferences. Removed item IDs are ignored; newly
+configured IDs start incomplete. Stable IDs retain progress through title or
+link edits. The widget uses the existing main content outlet and shared buttons,
+provides pressed/expanded state and progress semantics, and announces updates
+through Discourse’s accessibility service. Its layout wraps on narrow screens.
+
 ## Tests
 
 Run from the Discourse repository root:
@@ -223,6 +270,7 @@ pnpm --dir frontend/discourse build
 LOAD_PLUGINS=1 bin/rake assets:precompile:build_plugins
 LOAD_PLUGINS=1 RAILS_ENV=test bin/rspec plugins/lovelace/spec/system/configure_member_onboarding_spec.rb
 LOAD_PLUGINS=1 RAILS_ENV=test bin/rspec plugins/lovelace/spec/system/checklist_spec.rb
+LOAD_PLUGINS=1 RAILS_ENV=test bin/rspec plugins/lovelace/spec/system/use_member_checklist_spec.rb
 ```
 
 Request specs cover authorization, disabled-plugin behavior, persistence,
@@ -248,3 +296,12 @@ defaults, member destinations, the bank, empty selections, invalid IDs, and
 isolation between the two saved configurations. The
 checklist system spec covers both admin tabs, adding and returning suggestions,
 refreshing, and member preference links.
+
+Persistent widget request specs cover login, disabled-plugin behavior, per-account
+isolation, completion reversal, saved display preferences, editable configuration,
+and invalid input. Its system specs cover saved progress after reload, minimizing
+and expanding, celebrating completion, undoing an item, dismissal at partial and
+zero progress, and a narrow viewport. Layout checks cover inline desktop rows,
+stacked mobile descriptions, labelled header icons, and keyboard completion.
+Width checks verify alignment with the reading area with the sidebar open or
+closed, when minimized, and on mobile, along with a compact progress bar.
