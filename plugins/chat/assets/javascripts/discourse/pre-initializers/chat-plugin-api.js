@@ -68,6 +68,8 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
  * @param {string} [options.classNames] - Additional names to add to the button’s class attribute, eg: ["foo", "bar"]
  * @param {boolean} [options.displayed] - Hide or show the button
  * @param {boolean} [options.disabled] - Sets the disabled attribute on the button
+ * @param {boolean} [options.toggled] - Renders the dropdown entry as a switch in this state
+ * @param {string} [options.shortcut] - Keyboard shortcut shown beside a dropdown switch, eg: "mod+shift+f"
  * @param {number} [options.priority] - An integer defining the order of the buttons, higher comes first, eg: `700`
  * @param {Array.<string>} [options.dependentKeys] - List of property names which should trigger a refresh of the buttons when changed, eg: `["foo.bar", "bar.baz"]`
  * @example

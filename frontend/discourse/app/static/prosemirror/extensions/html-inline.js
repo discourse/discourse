@@ -399,6 +399,7 @@ function unwrapSmallRanges(state, ranges, schema) {
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownItRules: ["html_inline"],
   nodeSpec: {
     html_inline: {
       group: "inline",

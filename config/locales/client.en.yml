@@ -3779,6 +3779,8 @@ en:
       blockquote_title: "Blockquote"
       blockquote_text: "Blockquote"
       heading_text: "Heading"
+      strikethrough_title: "Strikethrough"
+      strikethrough_text: "strikethrough text"
       code_title: "Preformatted text"
       code_text: "indent preformatted text by 4 spaces"
       paste_code_text: "type or paste code here"

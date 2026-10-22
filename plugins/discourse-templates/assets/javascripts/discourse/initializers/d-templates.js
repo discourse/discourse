@@ -52,7 +52,7 @@ function addKeyboardShortcut(api, container) {
       for (const target of _templateShortcutTargets) {
         const editor = target.editor();
         if (editor && editor.element === document.activeElement) {
-          dTemplates.showEditorUI(editor.textManipulation, target.variables);
+          dTemplates.showEditorUI(editor, target.variables);
           return;
         }
       }
@@ -123,10 +123,7 @@ function addChatIntegration(api, container) {
 
       container
         .lookup("service:d-templates")
-        .showEditorUI(
-          this.composer.editor.textManipulation,
-          contextVariablesExtractor
-        );
+        .showEditorUI(this.composer.editor, contextVariablesExtractor);
     },
     displayed() {
       return (

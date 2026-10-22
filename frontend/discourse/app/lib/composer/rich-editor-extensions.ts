@@ -35,6 +35,14 @@ export interface MarkdownOptions {
     postNumber: number,
     topicId: number
   ) => string | undefined;
+  /**
+   * The only markdown features the host cooks with. Extensions that need
+   * another feature are left out, so the editor can't author what the host
+   * won't render.
+   */
+  featuresOverride?: string[];
+  /** The only markdown-it rules the host cooks with; see `featuresOverride`. */
+  markdownItRules?: string[];
   [key: string]: unknown;
 }
 
@@ -43,6 +51,10 @@ export interface PluginContext {
   placeholder?: string;
   /** ID of the topic being edited. */
   topicId?: number;
+  /** Mentions that address everyone and need no lookup, besides the site's here mention. */
+  globalMentions?: string[];
+  /** The `hashtag_configurations` entry whose type order resolves hashtags. */
+  hashtagContext?: string;
   /** ID of the category being edited. */
   categoryId?: number;
   /** Current application session. */
@@ -312,6 +324,10 @@ export interface RichEditorExtension {
   commands?: (params: PluginParams) => Record<string, RichCommand>;
   /** Custom toolbar state contributed by the extension. */
   state?: StateFunction;
+  /** Markdown features the extension's markup needs; see `MarkdownOptions.featuresOverride`. */
+  markdownFeatures?: string[];
+  /** markdown-it rules the extension's markup needs; see `MarkdownOptions.markdownItRules`. */
+  markdownItRules?: string[];
 }
 
 const registeredExtensions: RichEditorExtension[] = [];
@@ -357,4 +373,27 @@ export async function resetRichEditorExtensions() {
  */
 export function getExtensions(): RichEditorExtension[] {
   return registeredExtensions;
+}
+
+/**
+ * The extensions whose markup the host cooks, given its markdown options.
+ * Without `featuresOverride` or `markdownItRules`, every extension qualifies.
+ */
+export function extensionsCookedBy(
+  extensions: RichEditorExtension[],
+  options: MarkdownOptions | undefined
+): RichEditorExtension[] {
+  const { featuresOverride, markdownItRules } = options ?? {};
+
+  return extensions.filter(
+    (extension) =>
+      (!featuresOverride ||
+        (extension.markdownFeatures ?? []).every((feature) =>
+          featuresOverride.includes(feature)
+        )) &&
+      (!markdownItRules ||
+        (extension.markdownItRules ?? []).every((rule) =>
+          markdownItRules.includes(rule)
+        ))
+  );
 }

@@ -28,6 +28,8 @@ export function registerChatComposerButton(button) {
     disabled: false,
     priority: 0,
     synchronous: false,
+    toggled: null,
+    shortcut: null,
   };
 
   const normalizedButton = Object.assign(defaultButton, button);
@@ -113,6 +115,8 @@ export function chatComposerButtons(composer, position, context) {
       result.disabled = computeButton(composer, button, "disabled");
       result.priority = computeButton(composer, button, "priority");
       result.synchronous = computeButton(composer, button, "synchronous");
+      result.toggled = computeButton(composer, button, "toggled");
+      result.shortcut = computeButton(composer, button, "shortcut");
 
       if (isFunction(button.action)) {
         result.action = () => {

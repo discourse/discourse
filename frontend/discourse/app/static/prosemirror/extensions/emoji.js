@@ -90,10 +90,12 @@ function createOnlyEmojiPlugin() {
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownFeatures: ["emoji"],
   nodeSpec: {
     emoji: {
       attrs: { code: {} },
       inline: true,
+      leafText: (node) => `:${node.attrs.code}:`,
       group: "inline",
       draggable: true,
       selectable: false,

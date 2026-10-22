@@ -53,9 +53,6 @@ export default class DockedComposer extends Component {
   #rootElement = null;
 
   #handlePaste = (event) => {
-    if (!this.inputElement || document.activeElement !== this.inputElement) {
-      return;
-    }
     const { canUpload, canPasteHtml, types } = clipboardHelpers(event, {
       siteSettings: this.siteSettings,
       canUpload: true,
@@ -70,34 +67,12 @@ export default class DockedComposer extends Component {
     }
   };
 
-  #handleKeyDown = (event) => {
-    if (event.key !== "Enter" || event.isComposing) {
-      return;
-    }
-
-    const submitOnEnter =
+  get submitOnEnter() {
+    return (
       this.args.submitOnEnter ??
-      this.currentUser?.user_option?.send_shortcut !== SEND_SHORTCUT_META_ENTER;
-
-    if (submitOnEnter) {
-      if (
-        !event.shiftKey &&
-        !event.metaKey &&
-        !event.ctrlKey &&
-        !event.altKey
-      ) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.submit();
-      }
-    } else {
-      if (event.metaKey || event.ctrlKey) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.submit();
-      }
-    }
-  };
+      this.currentUser?.user_option?.send_shortcut !== SEND_SHORTCUT_META_ENTER
+    );
+  }
 
   get autoResize() {
     return this.args.autoResize ?? false;
@@ -170,22 +145,10 @@ export default class DockedComposer extends Component {
 
   @action
   setupEditor(textManipulation) {
-    this.inputElement?.removeEventListener(
-      "keydown",
-      this.#handleKeyDown,
-      true
-    );
     this.inputElement?.removeEventListener("paste", this.#handlePaste);
 
-    this.inputElement =
-      textManipulation?.textarea ??
-      // Scope the fallback to this instance's root so multiple docked
-      // composers on the same page can't cross-wire.
-      this.#rootElement?.querySelector(".d-editor-input") ??
-      null;
+    this.inputElement = textManipulation?.element ?? null;
     if (this.inputElement) {
-      // capture phase so Enter-to-send wins over ItsATrap / smart-list handlers
-      this.inputElement.addEventListener("keydown", this.#handleKeyDown, true);
       this.inputElement.addEventListener("paste", this.#handlePaste);
       this.syncAutoResizeHeight();
     }
@@ -263,11 +226,6 @@ export default class DockedComposer extends Component {
 
   @action
   teardown() {
-    this.inputElement?.removeEventListener(
-      "keydown",
-      this.#handleKeyDown,
-      true
-    );
     this.inputElement?.removeEventListener("paste", this.#handlePaste);
     if (this.uppyUpload) {
       destroy(this.uppyUpload);
@@ -424,8 +382,10 @@ export default class DockedComposer extends Component {
               @composerEvents={{this.composerEvents}}
               @extraButtons={{this.addToolbarButtons}}
               @onSetup={{this.setupEditor}}
+              @onSubmit={{this.submit}}
               @placeholder={{@placeholder}}
               @processPreview={{false}}
+              @submitOnEnter={{this.submitOnEnter}}
               @topicId={{@topicId}}
               @value={{this.reply}}
             >

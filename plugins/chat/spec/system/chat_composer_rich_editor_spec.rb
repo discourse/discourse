@@ -24,7 +24,9 @@ RSpec.describe "Chat composer rich editor" do
 
     expect(channel_page.composer).to have_markdown_editor
     channel_page.open_action_menu
-    expect(page).to have_no_css(".chat-composer-dropdown__action-btn.toggle-editor")
+    expect(page).to have_css(".chat-composer-dropdown__item")
+    expect(page).to have_no_css(".chat-composer-dropdown__item.toggle-editor")
+    expect(page).to have_no_css(".chat-composer-dropdown__item.toggle-formatting")
   end
 
   it "uses the editor the user prefers" do
@@ -119,6 +121,27 @@ RSpec.describe "Chat composer rich editor" do
 
     expect(channel_page.messages).to have_message(text: "bold text")
     expect(page).to have_css(".chat-message-text strong", text: "bold")
+  end
+
+  it "starts a list on a line added with Shift+Enter" do
+    chat_page.visit_channel(channel_1)
+    channel_page.composer.input.send_keys("intro", %i[shift enter], "- first")
+    channel_page.composer.enter_shortcut
+    channel_page.composer.input.send_keys("second")
+
+    expect(channel_page.composer.component).to have_css("li", count: 2)
+    expect(channel_page.composer).to have_value("intro\n\n* first\n* second")
+  end
+
+  it "keeps markup chat doesn't render as plain text" do
+    chat_page.visit_channel(channel_1)
+    channel_page.composer.input.send_keys("# not a heading")
+
+    expect(channel_page.composer.component).to have_no_css("h1")
+
+    channel_page.composer.enter_shortcut
+
+    expect(channel_page.messages).to have_message(text: "# not a heading")
   end
 
   it "adds a line break on Enter when sending needs Mod+Enter" do

@@ -1,10 +1,6 @@
-import {
-  InputRule,
-  inputRules,
-  textblockTypeInputRule,
-  wrappingInputRule,
-} from "prosemirror-inputrules";
+import { InputRule, inputRules } from "prosemirror-inputrules";
 import { TextSelection } from "prosemirror-state";
+import { canJoin, findWrapping } from "prosemirror-transform";
 import { markInputRule } from "discourse/static/prosemirror/lib/plugin-utils";
 
 export function buildInputRules(extensions, params, includeDefault = true) {
@@ -20,17 +16,12 @@ export function buildInputRules(extensions, params, includeDefault = true) {
     });
 
     const defaultRules = [
-      ...[
-        wrappingInputRule(/^\s*>\s$/, schema.nodes.blockquote),
-        orderedListRule(schema.nodes.ordered_list),
-        bulletListRule(schema.nodes.bullet_list),
-        textblockTypeInputRule(/^```$/, schema.nodes.code_block),
-        textblockTypeInputRule(/^ {4}$/, schema.nodes.code_block),
-        headingRule(schema.nodes.heading, 6),
-      ].map((rule) => {
-        rule.inCodeMark = false;
-        return rule;
-      }),
+      blockRule(/\s*>\s/, wrapIn(schema.nodes.blockquote)),
+      orderedListRule(schema.nodes.ordered_list),
+      bulletListRule(schema.nodes.bullet_list),
+      blockRule(/```/, setBlock(schema.nodes.code_block)),
+      blockRule(/ {4}/, setBlock(schema.nodes.code_block)),
+      ...(schema.nodes.heading ? [headingRule(schema.nodes.heading, 6)] : []),
       markInputRule(/\*\*([^*]+)\*\*$/, schema.marks.strong),
       markInputRule(/(^|\s)__([^_]+)__$/, schema.marks.strong, getAttrs),
       markInputRule(/(^|[^*])\*([^*]+)\*$/, schema.marks.em, getAttrs),
@@ -38,11 +29,15 @@ export function buildInputRules(extensions, params, includeDefault = true) {
       // `---`, `___ `, `***`. The en/em-dash variants are kept for content
       // that already contains those characters (e.g. pasted), since the editor
       // no longer converts `--`/`---` to dashes as you type.
-      new InputRule(
-        /^(---|\u2013-|\u2014-|___\s|\*\*\*\s)$/,
-        horizontalRuleHandler,
-        { inCodeMark: false }
-      ),
+      ...(schema.nodes.horizontal_rule
+        ? [
+            new InputRule(
+              /^(---|\u2013-|\u2014-|___\s|\*\*\*\s)$/,
+              horizontalRuleHandler,
+              { inCodeMark: false }
+            ),
+          ]
+        : []),
     ];
 
     rules.push(...defaultRules.map((rule) => processInputRule(rule, params)));
@@ -126,24 +121,89 @@ function wrapHandlerWithBacktickCheck(handler) {
 }
 
 function orderedListRule(nodeType) {
-  return wrappingInputRule(
-    /^(\d+)\.\s$/,
-    nodeType,
-    (match) => ({ order: +match[1] }),
-    (match, node) => node.childCount + node.attrs.order === +match[1]
+  return blockRule(
+    /(\d+)\.\s/,
+    wrapIn(
+      nodeType,
+      (match) => ({ order: +match[1] }),
+      (match, node) => node.childCount + node.attrs.order === +match[1]
+    )
   );
 }
 
 function bulletListRule(nodeType) {
-  return wrappingInputRule(/^\s*([-+*])\s$/, nodeType);
+  return blockRule(/\s*([-+*])\s/, wrapIn(nodeType));
 }
 
 function headingRule(nodeType, maxLevel) {
-  return textblockTypeInputRule(
-    new RegExp("^(#{1," + maxLevel + "})\\s$"),
-    nodeType,
-    (match) => ({ level: match[1].length })
+  return blockRule(
+    new RegExp("(#{1," + maxLevel + "})\\s"),
+    setBlock(nodeType, (match) => ({ level: match[1].length }))
   );
+}
+
+// Block markup, matched at the start of a paragraph or right after a line
+// break, where it starts a new block too: the break goes, the paragraph
+// splits there.
+function blockRule(markup, apply) {
+  return new InputRule(
+    new RegExp(`(?:^|\ufffc)${markup.source}$`),
+    (state, match, start, end) => {
+      // the placeholder stands for any leaf node, like a mention
+      const afterBreak = match[0].startsWith("\ufffc");
+      if (
+        afterBreak &&
+        state.doc.nodeAt(start)?.type !== state.schema.nodes.hard_break
+      ) {
+        return null;
+      }
+
+      const tr = state.tr.delete(afterBreak ? start + 1 : start, end);
+      if (afterBreak) {
+        tr.delete(start, start + 1).split(start);
+      }
+
+      const $block = tr.doc.resolve(afterBreak ? start + 2 : start);
+      return apply(tr, $block, match) ? tr : null;
+    },
+    { inCodeMark: false }
+  );
+}
+
+function wrapIn(nodeType, getAttrs, joinPredicate) {
+  return (tr, $block, match) => {
+    const attrs = getAttrs?.(match);
+    const range = $block.blockRange();
+    const wrapping = range && findWrapping(range, nodeType, attrs);
+    if (!wrapping) {
+      return false;
+    }
+
+    tr.wrap(range, wrapping);
+
+    const before =
+      range.start > 0 && tr.doc.resolve(range.start - 1).nodeBefore;
+    if (
+      before?.type === nodeType &&
+      canJoin(tr.doc, range.start - 1) &&
+      (!joinPredicate || joinPredicate(match, before))
+    ) {
+      tr.join(range.start - 1);
+    }
+    return true;
+  };
+}
+
+function setBlock(nodeType, getAttrs) {
+  return (tr, $block, match) => {
+    tr.setBlockType(
+      $block.before(),
+      $block.after(),
+      nodeType,
+      getAttrs?.(match)
+    );
+    return true;
+  };
 }
 
 function horizontalRuleHandler(state, match, start, end) {

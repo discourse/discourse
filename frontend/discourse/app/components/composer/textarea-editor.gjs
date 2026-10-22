@@ -9,6 +9,7 @@ import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-e
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import DTextarea from "discourse/ui-kit/d-textarea";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { isAutocompleteOpen } from "discourse/ui-kit/modifiers/d-autocomplete";
 
 export default class TextareaEditor extends Component {
   @service currentUser;
@@ -17,10 +18,14 @@ export default class TextareaEditor extends Component {
 
   registerTextarea = modifier((textarea) => {
     this.textarea = textarea;
+
+    // ahead of the keymap and smart lists, so Enter can submit instead
+    textarea.addEventListener("keydown", this.onKeyDownSubmit);
     this.#itsatrap = new ItsATrap(textarea);
 
     this.textManipulation = new TextareaTextManipulation(getOwner(this), {
       markdownOptions: this.args.markdownOptions,
+      eventPrefix: this.args.eventPrefix,
       textarea,
     });
 
@@ -37,12 +42,35 @@ export default class TextareaEditor extends Component {
       destructor?.();
       this.#itsatrap?.destroy();
       this.#itsatrap = null;
+      textarea.removeEventListener("keydown", this.onKeyDownSubmit);
     };
   });
 
   #itsatrap;
   #handleSmartListAutocomplete = false;
   #shiftPressed = false;
+
+  @bind
+  onKeyDownSubmit(event) {
+    if (
+      !this.args.onSubmit ||
+      event.key !== "Enter" ||
+      event.isComposing ||
+      event.altKey ||
+      isAutocompleteOpen()
+    ) {
+      return;
+    }
+
+    if (
+      event.metaKey ||
+      event.ctrlKey ||
+      (this.args.submitOnEnter && !event.shiftKey)
+    ) {
+      event.preventDefault();
+      this.args.onSubmit();
+    }
+  }
 
   @bind
   onInputSmartList() {

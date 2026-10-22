@@ -4,6 +4,7 @@ const SPOILER_NODES = ["inline_spoiler", "spoiler"];
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownFeatures: ["spoiler-alert"],
   nodeSpec: {
     spoiler: {
       attrs: { blurred: { default: true } },

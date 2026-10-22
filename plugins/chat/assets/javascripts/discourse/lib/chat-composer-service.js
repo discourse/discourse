@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 
 // The rich editor mounts asynchronously; a focus requested meanwhile is
@@ -9,7 +10,10 @@ let pendingFocus = null;
 
 export default class ChatComposerService extends Service {
   @service appEvents;
+  @service capabilities;
+  @service site;
 
+  /** @type {import("discourse/lib/composer/text-manipulation").TextManipulation | null} */
   @tracked editor;
   @tracked scroller;
 
@@ -64,17 +68,45 @@ export default class ChatComposerService extends Service {
     }
   }
 
+  /**
+   * @param {Object} [options]
+   * @param {boolean} [options.ensureAtEnd] moves the caret to the end
+   * @param {string} [options.addText] text typed while the editor wasn't focused
+   */
   @action
   focus(options = {}) {
-    if (this.editor) {
-      this.editor.focus(options);
-    } else if (this.#awaitingEditor) {
-      pendingFocus = { owner: this, options };
+    const { editor } = this;
+
+    if (!editor) {
+      if (this.#awaitingEditor) {
+        pendingFocus = { owner: this, options };
+      }
+      return;
     }
+
+    if (this.capabilities.isIpadOS || this.site.mobileView) {
+      return;
+    }
+
+    // inserted now to keep typed keys in order
+    if (options.addText) {
+      editor.insertTypedText(options.addText);
+    }
+
+    // Focusing fires the composer's focus handlers, which must not run inside
+    // the render that mounted the editor.
+    next(() => {
+      if (options.ensureAtEnd) {
+        editor.putCursorAtEnd();
+      } else {
+        editor.focus();
+      }
+    });
   }
 
   @action
   blur() {
-    this.editor?.blur();
+    const element = this.editor?.element;
+    next(() => element?.blur());
   }
 }
