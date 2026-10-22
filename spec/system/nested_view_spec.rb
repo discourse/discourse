@@ -514,6 +514,16 @@ RSpec.describe "Nested view" do
       expect(nested_view).to have_root_post(sibling_root_reply)
     end
 
+    it "collapses a child branch from its header", mobile: true do
+      nested_view.visit_nested(topic)
+
+      nested_view.click_header_collapse(child_reply)
+
+      expect(nested_view).to have_collapsed_bar_for(child_reply)
+      expect(nested_view).to have_no_children_visible_for(child_reply)
+      expect(nested_view).to have_root_post(sibling_root_reply)
+    end
+
     it "collapses a branch with hidden replies from the depth line", mobile: true do
       nested_view.visit_nested(topic)
 
