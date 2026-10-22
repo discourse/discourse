@@ -288,7 +288,7 @@ describe DiscourseAi::Discoveries do
       )
     end
 
-    it "drops only the sources the user can no longer see" do
+    it "expires the result when any source is out of the user's sight" do
       other_post = Fabricate(:post)
       request_id = SecureRandom.uuid
       described_class.store_result(
@@ -305,8 +305,7 @@ describe DiscourseAi::Discoveries do
 
       other_post.topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
 
-      result = described_class.cached_result_for(user:, request_id:)
-      expect(result.fetch("sources").pluck("post_id")).to eq([post.id])
+      expect(described_class.cached_result_for(user:, request_id:)).to be_nil
     end
 
     it "keeps follow-up context when topic metadata changes" do

@@ -279,8 +279,9 @@ module DiscourseAi
         Discourse.redis.set(result_key(user_id, request_id), payload, ex: REQUEST_TTL)
       end
 
-      # The result is read back for follow-ups well after it was answered, so
-      # sources the user can no longer see are dropped.
+      # The result is read back for follow-ups well after it was answered, so it
+      # expires once any source is out of the user's sight: its answer was
+      # written from all of them.
       def cached_result_for(user:, request_id:)
         return if user.nil? || !valid_request_id?(request_id)
 
@@ -289,24 +290,28 @@ module DiscourseAi
 
         result = JSON.parse(payload)
         sources = Array(result["sources"])
-        return if result["query"].blank? || !result.key?("answer")
+        return if result["query"].blank? || !result.key?("answer") || sources.empty?
 
         posts = Post.where(id: sources.pluck("post_id")).includes(:topic).index_by(&:id)
         guardian = Guardian.new(user)
-        visible_sources =
-          sources.filter_map do |source|
-            post = posts[source["post_id"]]
-            next if post&.topic.nil? || !guardian.can_see?(post)
+        if sources.any? { |source|
+             post = posts[source["post_id"]]
+             post&.topic.nil? || !guardian.can_see?(post)
+           }
+          return
+        end
 
-            source.merge(
-              "topic_id" => post.topic_id,
-              "title" => post.topic.title,
-              "url" => post.full_url,
-            )
-          end
-        return if visible_sources.empty?
-
-        result.merge("sources" => visible_sources)
+        result.merge(
+          "sources" =>
+            sources.map do |source|
+              post = posts[source["post_id"]]
+              source.merge(
+                "topic_id" => post.topic_id,
+                "title" => post.topic.title,
+                "url" => post.full_url,
+              )
+            end,
+        )
       rescue JSON::ParserError
         nil
       end
