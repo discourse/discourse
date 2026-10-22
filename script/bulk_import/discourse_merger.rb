@@ -185,9 +185,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       DoNotDisturbTiming,
     ].each { |c| copy_model(c, skip_if_merged: true, is_a_user_model: true, skip_processing: true) }
 
-    [MutedUser, IgnoredUser].each do |c|
-      copy_model(c, is_a_user_model: true, skip_processing: true)
-    end
+    [MutedUser, IgnoredUser].each { |c| copy_model(c, is_a_user_model: true) }
 
     [
       UserAssociatedAccount,
@@ -453,14 +451,11 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       mapping: @tag_groups,
       select_sql: merge_same_named_rows(TagGroup, @tag_groups),
     )
-    [TagGroupMembership, CategoryTagGroup, CategoryRequiredTagGroup].each do |k|
-      copy_model(k, skip_processing: true)
-    end
+    [TagGroupMembership, CategoryTagGroup, CategoryRequiredTagGroup].each { |k| copy_model(k) }
 
     col_list = TagGroupPermission.columns.map { |c| "\"#{c.name}\"" }.join(", ")
     copy_model(
       TagGroupPermission,
-      skip_processing: true,
       select_sql:
         "SELECT #{col_list} FROM tag_group_permissions WHERE group_id NOT IN (#{@auto_group_ids.join(", ")})",
     )
@@ -518,17 +513,13 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   end
 
   def copy_everything_else
-    [
-      PostTiming,
-      UserArchivedMessage,
-      UnsubscribeKey,
-      GroupMention,
-      Bookmark,
-      CategoryUser,
-      UserUpload,
-    ].each { |k| copy_model(k, skip_processing: true) }
+    [PostTiming, UserArchivedMessage, UnsubscribeKey, GroupMention, Bookmark].each do |k|
+      copy_model(k, skip_processing: true)
+    end
 
-    [UserHistory, UserWarning, GroupArchivedMessage].each { |k| copy_model(k) }
+    [UserHistory, UserWarning, GroupArchivedMessage, CategoryUser, UserUpload].each do |k|
+      copy_model(k)
+    end
 
     copy_model(Notification, mapping: @notifications)
 
@@ -1095,6 +1086,78 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
   def process_category_tag_stat(x)
     return nil if CategoryTagStat.where(category_id: x["category_id"], tag_id: x["tag_id"]).exists?
+    x
+  end
+
+  def process_tag_group_membership(x)
+    if TagGroupMembership.where(tag_group_id: x["tag_group_id"], tag_id: x["tag_id"]).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_category_tag_group(x)
+    if CategoryTagGroup.where(
+         category_id: x["category_id"],
+         tag_group_id: x["tag_group_id"],
+       ).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_category_required_tag_group(x)
+    if CategoryRequiredTagGroup.where(
+         category_id: x["category_id"],
+         tag_group_id: x["tag_group_id"],
+       ).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_tag_group_permission(x)
+    if TagGroupPermission.where(tag_group_id: x["tag_group_id"], group_id: x["group_id"]).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_muted_user(x)
+    return nil if MutedUser.where(user_id: x["user_id"], muted_user_id: x["muted_user_id"]).exists?
+    x
+  end
+
+  def process_ignored_user(x)
+    if IgnoredUser.where(user_id: x["user_id"], ignored_user_id: x["ignored_user_id"]).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_user_upload(x)
+    return nil if UserUpload.where(upload_id: x["upload_id"], user_id: x["user_id"]).exists?
+    x
+  end
+
+  def process_category_user(x)
+    return nil if CategoryUser.where(category_id: x["category_id"], user_id: x["user_id"]).exists?
+    x
+  end
+
+  def process_upload_reference(x)
+    if UploadReference.where(
+         upload_id: x["upload_id"],
+         target_type: x["target_type"],
+         target_id: x["target_id"],
+       ).exists?
+      return nil
+    end
+    x
+  end
+
+  def process_category_search_data(x)
+    return nil if CategorySearchData.where(category_id: x["category_id"]).exists?
     x
   end
 
