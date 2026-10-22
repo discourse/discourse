@@ -37,6 +37,7 @@ RSpec.describe PluginGem do
       %w[beta 1.0.0],
       %w[beta 1.1.0],
       ["gamma", "1.0.0", { git_gem.name => ">= 0" }],
+      %w[delta 1.0.0],
       %w[shared 1.0.0],
       %w[shared 1.1.0],
       %w[foo 2.3.1],
@@ -301,10 +302,22 @@ RSpec.describe PluginGem do
         s.add_dependency "alpha", ">= 1.1"
       end
     GEMSPEC
+    engine_file = File.join(dir, "engine", "lib", "plugin_gem_test_engine.rb")
+    FileUtils.mkdir_p(File.dirname(engine_file))
+    File.write(engine_file, "true\n")
 
     boot.to output(/Resolved 3 plugin gems/).to_stdout_from_any_process
     expect(installed).to eq(%w[alpha-1.1.0 beta-1.0.0])
     expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0 engine-0.0.1])
+    expect(loaded_specs.fetch("engine").full_gem_path).to eq(File.join(dir, "engine"))
+    expect(require "plugin_gem_test_engine").to eq(true)
+
+    $LOADED_FEATURES.delete(engine_file)
+    $LOAD_PATH.delete(File.dirname(engine_file))
+    boot.not_to output.to_stdout_from_any_process
+    expect(require "plugin_gem_test_engine").to eq(true)
+  ensure
+    $LOADED_FEATURES.delete(engine_file)
   end
 
   it "uses the application's gem although a plugin has a path gem of that name" do
@@ -333,6 +346,78 @@ RSpec.describe PluginGem do
     FileUtils.rm_rf(repo)
     boot.not_to output.to_stdout_from_any_process
     expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0])
+  end
+
+  it "resolves again when a gem leaves the application's active bundle" do
+    add_plugin("one", %(gem "delta"\n), lock: { "delta" => "1.0.0" })
+    boot.to output(/Resolved 0 plugin gems/).to_stdout_from_any_process
+
+    booted_specs.delete(git_gem.name)
+    app_specs = Bundler.load.specs.reject { it.name == git_gem.name }
+    allow(Bundler).to receive(:load).and_return(
+      instance_double(Bundler::Runtime, specs: Bundler::SpecSet.new(app_specs)),
+    )
+
+    boot.to output(/Resolved 1 plugin gems/).to_stdout_from_any_process
+    expect(activated).to eq(%w[delta-1.0.0])
+  end
+
+  it "uses the plugin's lock for dependencies declared in a nested Gemfile" do
+    dir = add_plugin("one", %(gem "beta"\n), lock: { "beta" => "1.0.0" })
+    File.write(File.join(dir, "dependencies.rb"), %(gem "beta"\n))
+    File.write(
+      File.join(dir, "Gemfile"),
+      %(source "https://rubygems.org"\neval_gemfile "dependencies.rb"\n),
+    )
+
+    boot.to output(/Resolved 1 plugin gems/).to_stdout_from_any_process
+    expect(activated).to eq(%w[beta-1.0.0])
+  end
+
+  it "ignores lock pins from dependencies for another platform" do
+    add_plugin(
+      "one",
+      %(gem "alpha", platforms: :jruby\n),
+      lock: {
+        "alpha" => "1.1.0",
+        "beta" => "1.1.0",
+      },
+    )
+    add_plugin("two", %(gem "beta", "1.0.0"\n), lock: { "beta" => "1.0.0" })
+
+    boot.to output(/Resolved 1 plugin gems/).to_stdout_from_any_process
+    expect(activated).to eq(%w[beta-1.0.0])
+  end
+
+  ["java", Gem::Platform.local.to_s].each do |platform|
+    it "ignores transitive lock pins from the #{platform} variant when using the Ruby gem" do
+      dir =
+        add_plugin(
+          "one",
+          %(gem "alpha", force_ruby_platform: true\n),
+          lock: {
+            "alpha" => "1.1.0",
+            "beta" => "1.0.0",
+            "shared" => "1.1.0",
+          },
+        )
+      lockfile = File.join(dir, "Gemfile.lock")
+      lock =
+        File.read(lockfile).sub(
+          "    alpha (1.1.0)\n",
+          "    alpha (1.1.0-#{platform})\n      shared (>= 1)\n    alpha (1.1.0)\n",
+        )
+      lock.sub!("PLATFORMS\n", "PLATFORMS\n  #{platform}\n")
+      lock.sub!(
+        "CHECKSUMS\n",
+        "CHECKSUMS\n  alpha (1.1.0-#{platform}) #{checksum("alpha", "1.1.0")}\n",
+      )
+      File.write(lockfile, lock)
+      add_plugin("two", %(gem "shared", "1.0.0"\n), lock: { "shared" => "1.0.0" })
+
+      boot.to output(/Resolved 3 plugin gems/).to_stdout_from_any_process
+      expect(activated).to eq(%w[alpha-1.1.0 beta-1.0.0 shared-1.0.0])
+    end
   end
 
   it "resolves again when a Gemfile or the application's lock changes, reusing what is installed" do
