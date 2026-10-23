@@ -399,7 +399,8 @@ acceptance("List Queries", function (needs) {
                 id: 2,
                 name: "Older query",
                 description: "",
-                lastRunAt: "2021-01-01T00:00:00.000Z",
+                lastRunAt: null,
+                createdAt: "2021-01-01T00:00:00.000Z",
                 tags: [],
                 userId: 1,
                 groupIds: [],
@@ -427,6 +428,11 @@ acceptance("List Queries", function (needs) {
     assert
       .dom(".recent-queries tbody tr:last-child td")
       .hasText(/^\s*Older query/, "renders the appended query");
+    assert
+      .dom(
+        ".recent-queries tbody tr:last-child .query-created-at .relative-date"
+      )
+      .doesNotExist("shows no last run for a never-run query");
     assert.false(controller.canLoadMore, "stops at the last page");
   });
 
