@@ -393,7 +393,7 @@ describe DiscourseAi::Discoveries::Retrieval do
       received = nil
       help_center =
         external_source do |**queries|
-          received = queries
+          received = queries.except(:deadline)
           [external_result("Reset guide", "https://kb.example.com/reset")]
         end
 
@@ -441,6 +441,30 @@ describe DiscourseAi::Discoveries::Retrieval do
         ).call("docs")
 
       expect(result.candidates.pluck("url")).to eq(["https://kb.example.com/docs"])
+    end
+
+    it "answers from external sources when the forum's retrieval fails" do
+      help_center =
+        external_source { |**| [external_result("Docs", "https://kb.example.com/docs")] }
+      failing_forum = ->(_query) { raise "embeddings unavailable" }
+
+      result =
+        described_class.new(
+          user:,
+          lexical_retriever: failing_forum,
+          semantic_retriever: failing_forum,
+          external_sources: [help_center],
+        ).call("docs")
+
+      expect(result.candidates.pluck("url")).to eq(["https://kb.example.com/docs"])
+      expect {
+        described_class.new(
+          user:,
+          lexical_retriever: failing_forum,
+          semantic_retriever: failing_forum,
+          external_sources: [external_source { |**| [] }],
+        ).call("docs")
+      }.to raise_error("embeddings unavailable")
     end
 
     it "searches only external sources when the forum's searches are disabled" do

@@ -47,7 +47,7 @@ class AiTool < ActiveRecord::Base
     tool_name.presence || name
   end
 
-  def runner(parameters, llm:, bot_user:, context: nil, secret_bindings: nil)
+  def runner(parameters, llm:, bot_user:, context: nil, secret_bindings: nil, deadline: nil)
     DiscourseAi::Agents::ToolRunner.new(
       parameters: parameters,
       llm: llm,
@@ -55,6 +55,7 @@ class AiTool < ActiveRecord::Base
       context: context,
       tool: self,
       secret_bindings: secret_bindings,
+      deadline: deadline,
     )
   end
 

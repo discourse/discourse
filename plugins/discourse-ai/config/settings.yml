@@ -544,7 +544,6 @@ discourse_ai:
   ai_ask_ai_search_max_age_days:
     default: 0
     min: 0
-    max: 3650
     area: "ai-features/search"
   ai_ask_ai_external_sources:
     type: list

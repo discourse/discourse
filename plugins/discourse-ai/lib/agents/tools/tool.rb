@@ -260,7 +260,8 @@ module DiscourseAi
           headers: {},
           follow_redirects: false,
           method: :get,
-          body: nil
+          body: nil,
+          timeout: nil
         )
           raise "Expecting caller to use a block" if !block_given?
 
@@ -309,9 +310,18 @@ module DiscourseAi
           request["User-Agent"] = DiscourseAi::AiBot::USER_AGENT
           headers.each { |k, v| request[k] = v }
 
-          FinalDestination::HTTP.start(uri.hostname, uri.port, use_ssl: uri.port != 80) do |http|
-            http.request(request) { |response| yield response, uri }
-          end
+          timeouts =
+            if timeout
+              { open_timeout: timeout, read_timeout: timeout, write_timeout: timeout }
+            else
+              {}
+            end
+          FinalDestination::HTTP.start(
+            uri.hostname,
+            uri.port,
+            use_ssl: uri.port != 80,
+            **timeouts,
+          ) { |http| http.request(request) { |response| yield response, uri } }
         end
 
         def self.read_response_body(response, max_length: nil)

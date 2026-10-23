@@ -88,6 +88,7 @@ describe DiscourseAi::Discoveries::ExternalSource do
           keyword_query: "reset password",
           semantic_query: "How can I reset a forgotten password?",
           locale: "en",
+          deadline: Process.clock_gettime(Process::CLOCK_MONOTONIC) + 5,
         )
 
       expect(candidates).to eq(
@@ -105,6 +106,32 @@ describe DiscourseAi::Discoveries::ExternalSource do
       )
     end
 
+    it "gives configured tools the model that writes the answer" do
+      SiteSetting.ai_ask_ai_agent =
+        Fabricate(:ai_agent, default_llm_id: Fabricate(:llm_model).id).id
+      ai_tool = Fabricate(:ai_tool, script: <<~JS)
+        function invoke() {
+          return [{ title: llm.truncate("one two three four", 2), url: "https://kb.example.com/a" }];
+        }
+      JS
+      SiteSetting.ai_ask_ai_external_sources = ai_tool.id.to_s
+
+      candidates =
+        described_class
+          .configured(user:)
+          .first
+          .call(
+            query: "q",
+            keyword_query: "q",
+            semantic_query: "q",
+            locale: "en",
+            deadline: Process.clock_gettime(Process::CLOCK_MONOTONIC) + 5,
+          )
+
+      expect(candidates.first["title"]).to be_present
+      expect(candidates.first["title"]).not_to include("four")
+    end
+
     it "raises when the tool fails" do
       ai_tool = Fabricate(:ai_tool, script: "function invoke() { throw new Error('down'); }")
 
@@ -114,6 +141,7 @@ describe DiscourseAi::Discoveries::ExternalSource do
           keyword_query: "q",
           semantic_query: "q",
           locale: "en",
+          deadline: Process.clock_gettime(Process::CLOCK_MONOTONIC) + 5,
         )
       }.to raise_error(StandardError)
     end

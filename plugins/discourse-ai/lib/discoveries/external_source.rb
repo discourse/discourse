@@ -26,10 +26,11 @@ module DiscourseAi
           ids = SiteSetting.ai_ask_ai_external_sources.to_s.split("|").map(&:to_i)
           return [] if ids.empty?
 
+          llm_model = answer_llm_model
           AiTool
             .where(id: ids, enabled: true)
             .includes(:secret_bindings)
-            .map { |ai_tool| new(ai_tool, user:) }
+            .map { |ai_tool| new(ai_tool, user:, llm_model:) }
         end
 
         def configured?(ai_tool)
@@ -69,6 +70,12 @@ module DiscourseAi
         end
 
         private
+
+        # Tools can call a model, so sources get the one that writes the answer.
+        def answer_llm_model
+          agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_ask_ai_agent)
+          LlmModel.find_by(id: agent&.default_llm_id.presence || SiteSetting.ai_default_llm_model)
+        end
 
         def normalize_result(result)
           return if !result.is_a?(Hash)
@@ -111,23 +118,27 @@ module DiscourseAi
 
       attr_reader :ai_tool
 
-      def initialize(ai_tool, user:)
+      def initialize(ai_tool, user:, llm_model: nil)
         @ai_tool = ai_tool
         @user = user
+        @llm_model = llm_model
       end
 
       def name
         ai_tool.name
       end
 
+      # @param deadline [Float] monotonic clock time the tool must finish by,
+      #   counting its HTTP requests, so a slow service cannot keep it running
       # @return [Array<Hash>] the source's results as retrieval candidates
-      def call(query:, keyword_query:, semantic_query:, locale:)
+      def call(query:, keyword_query:, semantic_query:, locale:, deadline:)
         runner =
           ai_tool.runner(
             { query:, keyword_query:, semantic_query:, locale: },
-            llm: nil,
+            llm: @llm_model&.to_llm,
             bot_user: Discourse.system_user,
             context: DiscourseAi::Agents::BotContext.new(user: @user, feature_name: "ask_ai"),
+            deadline:,
           )
         output = runner.invoke
         raise InvalidResults, output[:error].to_s if output.is_a?(Hash) && output[:error]

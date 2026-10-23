@@ -29,13 +29,19 @@ module DiscourseAi
       def call(query, keyword_query: query, semantic_query: query, scope_filter: nil, locale: nil)
         external_searches =
           search_external_sources(query:, keyword_query:, semantic_query:, locale:)
-        forum_rankings = forum_rankings(query, keyword_query:, semantic_query:, scope_filter:)
+        forum_rankings, forum_error =
+          forum_rankings_with_error(query, keyword_query:, semantic_query:, scope_filter:)
         external_rankings = external_rankings(external_searches)
+        # external results are still worth answering from when the forum's fail
+        raise forum_error if forum_error && external_rankings.all?(&:empty?)
 
         result = result_from(forum_rankings + external_rankings)
-        if scope_filter.present? && forum_search? &&
+        if scope_filter.present? && forum_search? && !forum_error &&
              result.candidates.all? { |candidate| ExternalSource.candidate?(candidate) }
-          forum_rankings = forum_rankings(query, keyword_query:, semantic_query:)
+          forum_rankings, forum_error =
+            forum_rankings_with_error(query, keyword_query:, semantic_query:)
+          raise forum_error if forum_error && external_rankings.all?(&:empty?)
+
           result = result_from(forum_rankings + external_rankings)
           result.scope_fallback = true
         end
@@ -127,6 +133,15 @@ module DiscourseAi
         retrieve_in_parallel(searches)
       end
 
+      def forum_rankings_with_error(...)
+        [forum_rankings(...), nil]
+      rescue StandardError => error
+        Rails.logger.warn(
+          "Discourse AI Discoveries continued without forum retrieval: #{error.class}",
+        )
+        [[], error]
+      end
+
       def keyword_search?
         SiteSetting.ai_ask_ai_keyword_search_enabled
       end
@@ -159,27 +174,27 @@ module DiscourseAi
         return [] if sources.empty?
 
         database = RailsMultisite::ConnectionManagement.current_db
-        started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        deadline =
+          Process.clock_gettime(Process::CLOCK_MONOTONIC) +
+            SiteSetting.ai_ask_ai_external_sources_timeout
         sources.map do |source|
           thread =
             Thread.new do
               RailsMultisite::ConnectionManagement.with_connection(database) do
-                [source.call(**queries), nil]
+                [source.call(**queries, deadline:), nil]
               rescue StandardError => error
                 [[], error]
               end
             end
-          [source, thread, started_at]
+          [source, thread, deadline]
         end
       end
 
-      # A source still running when its time is up is left to finish on its
-      # own; its results are not waited for.
+      # Sources stop themselves at the deadline, but one caught in a call that
+      # cannot be interrupted is left to finish on its own, unwaited for.
       def external_rankings(searches)
-        searches.filter_map do |source, thread, started_at|
-          remaining =
-            started_at + SiteSetting.ai_ask_ai_external_sources_timeout -
-              Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        searches.filter_map do |source, thread, deadline|
+          remaining = deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
           if thread.join([remaining, 0].max).nil?
             Rails.logger.warn(
               "Discourse AI Discoveries skipped external source #{source.name}: timed out",
