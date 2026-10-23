@@ -12,6 +12,15 @@ RSpec.describe JsonApiKit::Declarations::Filters do
   let(:filter_class) { JsonApiKit::Declarations::Filter }
   let(:declarations) { [filter_class.new(:title), filter_class.new(:closed)] }
   let(:scope) { Topic.all }
+  let(:adapter) do
+    Class
+      .new(JsonApiKit::Resource) do
+        model Topic
+        type :topics
+      end
+      .new(guardian: Guardian.new)
+      .adapter
+  end
 
   describe "#fetch" do
     subject(:filter) { filters.fetch("title") }
@@ -43,7 +52,7 @@ RSpec.describe JsonApiKit::Declarations::Filters do
   end
 
   describe "#apply" do
-    subject(:kept_ids) { filters.apply(scope, filtering).map(&:id) }
+    subject(:kept_ids) { filters.apply(scope, filtering, adapter:).map(&:id) }
 
     let(:filtering) { { "closed" => "false" } }
 
@@ -61,14 +70,14 @@ RSpec.describe JsonApiKit::Declarations::Filters do
 
     context "when there is no filtering" do
       it "returns the same scope" do
-        expect(filters.apply(scope)).to be(scope)
+        expect(filters.apply(scope, adapter:)).to be(scope)
       end
 
       context "when declarations are evaluated lazily" do
         let(:declarations) { Enumerator.new { raise "Filters were evaluated." } }
 
         it "returns the scope without evaluating the declarations" do
-          expect(filters.apply(scope)).to be(scope)
+          expect(filters.apply(scope, adapter:)).to be(scope)
         end
       end
     end

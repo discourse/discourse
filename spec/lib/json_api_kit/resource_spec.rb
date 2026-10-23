@@ -684,12 +684,12 @@ RSpec.describe JsonApiKit::Resource do
   end
 
   describe ".all" do
-    before { allow(JsonApiKit::Query::Collection).to receive(:new) }
+    before { allow(JsonApiKit::Adapters::ActiveRecord::Query::Collection).to receive(:new) }
 
     it "builds a listing for the request a caller sends" do
       topic_resource.all({ sort: { created_at: :asc } }, guardian:)
 
-      expect(JsonApiKit::Query::Collection).to have_received(:new).with(
+      expect(JsonApiKit::Adapters::ActiveRecord::Query::Collection).to have_received(:new).with(
         an_instance_of(topic_resource),
         an_object_having_attributes(ordering: { "created_at" => :asc }, guardian:),
         scoped_to: nil,
@@ -701,7 +701,9 @@ RSpec.describe JsonApiKit::Resource do
       fab!(:second_topic) { Fabricate(:topic, created_at: Time.utc(2026, 8, 2)) }
 
       before do
-        allow(JsonApiKit::Query::Collection).to receive(:new).and_call_original
+        allow(JsonApiKit::Adapters::ActiveRecord::Query::Collection).to receive(
+          :new,
+        ).and_call_original
         topic_resource.default_sort created_at: :asc
       end
 
@@ -714,12 +716,12 @@ RSpec.describe JsonApiKit::Resource do
   end
 
   describe ".find" do
-    before { allow(JsonApiKit::Query::Individual).to receive(:new) }
+    before { allow(JsonApiKit::Adapters::ActiveRecord::Query::Individual).to receive(:new) }
 
     it "resolves the default ordering before constructing the request" do
       topic_resource.find(12, guardian:)
 
-      expect(JsonApiKit::Query::Individual).to have_received(:new).with(
+      expect(JsonApiKit::Adapters::ActiveRecord::Query::Individual).to have_received(:new).with(
         an_instance_of(topic_resource),
         an_object_having_attributes(ordering: { "ran_at" => :desc }, guardian:),
       )

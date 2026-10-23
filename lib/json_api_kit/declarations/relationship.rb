@@ -16,10 +16,6 @@ module JsonApiKit
         verify_readable_block
       end
 
-      def listing(params, guardian:, scoped_to:, edition:)
-        resource.all(params, guardian:, scoped_to:, edition:)
-      end
-
       def resolves?(path) = resource.resolves?(path)
 
       private

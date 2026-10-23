@@ -31,7 +31,7 @@ module JsonApiKit
           self.declared_model = declaration
         end
 
-        def schema = Schema.new(model)
+        def schema = adapter.schema(self)
 
         def type(declaration = nil)
           return declared_type || inferred_type unless declaration
@@ -66,7 +66,8 @@ module JsonApiKit
         end
       end
 
-      delegate :model, :schema, :type, :namespace, to: :class
+      delegate :model, :type, :namespace, to: :class
+      delegate :schema, to: :adapter
     end
   end
 end

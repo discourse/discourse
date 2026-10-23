@@ -16,7 +16,7 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
     end
   end
   let(:fields) { resource.fields(guardian:) }
-  let(:row) { JsonApiKit::Pagination::Row.new(record: topic, segment: nil) }
+  let(:row) { JsonApiKit::Adapters::ActiveRecord::Pagination::Row.new(record: topic, segment: nil) }
   let(:record) { JsonApiKit::Record.new(row, fields, type: "topics") }
   let(:meta) { {} }
   let(:urls) do
@@ -88,7 +88,7 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
       let(:linkage) { JsonApiKit::Linkage::ToOne.new([author_record]) }
       let(:author_record) do
         JsonApiKit::Record.new(
-          JsonApiKit::Pagination::Row.new(record: topic.user, segment: nil),
+          JsonApiKit::Adapters::ActiveRecord::Pagination::Row.new(record: topic.user, segment: nil),
           users_resource.fields(guardian:),
           type: "users",
         )
@@ -151,7 +151,7 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
       end
       let(:post_record) do
         JsonApiKit::Record.new(
-          JsonApiKit::Pagination::Row.new(record: post, segment: nil),
+          JsonApiKit::Adapters::ActiveRecord::Pagination::Row.new(record: post, segment: nil),
           posts_resource.fields(guardian:),
           type: "posts",
         )

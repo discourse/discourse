@@ -8,9 +8,17 @@ module JsonApiKit
       @owner_resource = resource
     end
 
-    delegate :resource, to: :declaration
+    def resource
+      @resource ||= declaration.resource.new(guardian:, edition: owner_resource.edition)
+    end
 
-    def scope = owner_resource.related_scope(declaration.name, owner_id:)
+    def scope
+      resource.related_records(
+        declaration,
+        owners: [owner_resource.record_for(owner_id)],
+        owner_resource:,
+      ).scope
+    end
 
     private
 

@@ -5,7 +5,11 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
 
   let(:params) { {} }
   let(:glossary) { JsonApiKit::Glossary.kit }
-  let(:cursor) { JsonApiKit::Pagination::Cursor.new([resource.order({}).digest, 0, 12]).to_s }
+  let(:cursor) do
+    JsonApiKit::Adapters::ActiveRecord::Pagination::Cursor.new(
+      [resource.order({}).digest, 0, 12],
+    ).to_s
+  end
   let(:related) do
     Class.new(JsonApiKit::Resource) do
       model User
@@ -14,18 +18,20 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
   end
   let(:resource) do
     users = related
-    Class.new(JsonApiKit::Resource) do
-      has_one :user, resource: users
-      model Topic
-      type :topics
-      sort :created_at
-      sort :title
-      filter :title
-      anchor :id
-      anchor :title
-      page max: 50
-      anchor(:first_unread) { |topics, _guardian| topics }
-    end
+    Class
+      .new(JsonApiKit::Resource) do
+        has_one :user, resource: users
+        model Topic
+        type :topics
+        sort :created_at
+        sort :title
+        filter :title
+        anchor :id
+        anchor :title
+        page max: 50
+        anchor(:first_unread) { |topics, _guardian| topics }
+      end
+      .new(guardian: Guardian.new)
   end
 
   describe ".for" do
@@ -220,10 +226,14 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
 
     let(:params) { { page: {} } }
     let(:cursor_not_matching_segment) do
-      JsonApiKit::Pagination::Cursor.new([resource.order({}).digest, 7, 12]).to_s
+      JsonApiKit::Adapters::ActiveRecord::Pagination::Cursor.new(
+        [resource.order({}).digest, 7, 12],
+      ).to_s
     end
     let(:cursor_not_matching_length) do
-      JsonApiKit::Pagination::Cursor.new([resource.order({}).digest, 0]).to_s
+      JsonApiKit::Adapters::ActiveRecord::Pagination::Cursor.new(
+        [resource.order({}).digest, 0],
+      ).to_s
     end
 
     before { contract.valid? }
