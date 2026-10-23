@@ -85,6 +85,11 @@ module Migrations
       #   * A custom emoji name outside {Constructs::Emoji}'s presence shape
       #     never reaches the engine tier at all: the gate cannot see it, so
       #     nothing is extracted and nothing is reported.
+      #   * Inside raw HTML only an image tag's `upload://` source is
+      #     extracted, because that is the one attribute core rewrites. An
+      #     upload spelled as a full URL in a tag, or an `upload://` target on
+      #     a link tag, stays verbatim and is not reported either: the engine
+      #     reports no value there, so there is nothing to count.
       #   * A mail gateway's link-scanner wrapper around an upload URL
       #     (`…/__https:/host/secure-uploads/…__;!!…$`) is recorded as an
       #     upload on the gateway's host. The importer maps a foreign host's
