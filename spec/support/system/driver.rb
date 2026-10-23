@@ -105,8 +105,26 @@ module SystemDrivers
       end
 
     Capybara.register_driver(name) do |app|
+      if ENV["CAPYBARA_REMOTE_DRIVER_URL"].blank?
+        options =
+          options.merge(
+            executablePath: Rails.root.join("script/system-test-chromium").to_s,
+            args: [
+              *options[:args],
+              "--discourse-chromium-executable=#{chromium_executable_path(options[:playwright_cli_executable_path])}",
+            ],
+          )
+      end
+
       Capybara::Playwright::Driver.new(app, **options, **mobile_options)
     end
+  end
+
+  def self.chromium_executable_path(playwright_cli_executable_path)
+    @chromium_executable_path ||=
+      Playwright.create(
+        playwright_cli_executable_path: playwright_cli_executable_path,
+      ) { |playwright| playwright.chromium.executable_path }
   end
 
   # Set CHROME_DEVICE_SCALE_FACTOR=2 to capture screenshots and video at twice
@@ -198,7 +216,8 @@ module SystemDrivers
 
     base_args + args
   end
-  private_class_method :apply_base_chrome_args,
+  private_class_method :chromium_executable_path,
+                       :apply_base_chrome_args,
                        :register_chrome,
                        :allow_network_hosts,
                        :device_scale_factor,

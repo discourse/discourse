@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+args=()
+executable=
+disabled_features_found=false
+
+for arg in "$@"; do
+  case "$arg" in
+    --discourse-chromium-executable=*) executable="${arg#*=}" ;;
+    --disable-features=*)
+      args+=("$arg,WebUIOmniboxPopup,WebUIOmniboxAimPopup")
+      disabled_features_found=true
+      ;;
+    *) args+=("$arg") ;;
+  esac
+done
+
+if ! "$disabled_features_found"; then
+  args+=("--disable-features=WebUIOmniboxPopup,WebUIOmniboxAimPopup")
+fi
+
+exec "${executable:?Chromium executable was not supplied}" "${args[@]}"
