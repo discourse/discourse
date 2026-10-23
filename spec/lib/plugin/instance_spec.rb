@@ -516,6 +516,19 @@ TEXT
     end
   end
 
+  describe "#gem" do
+    let(:plugin_instance) { described_class.new(metadata, "/tmp/sample/plugin.rb") }
+
+    it "refuses to be mixed with a Gemfile" do
+      metadata.gemfile = "true"
+
+      expect { plugin_instance.gem("some_gem", "1.0.0") }.to raise_error(
+        RuntimeError,
+        "Plugin sample declares its gems in a Gemfile, `gem` can't be mixed with that",
+      )
+    end
+  end
+
   describe "#add_model_callback" do
     let(:metadata) do
       metadata = Plugin::Metadata.new
