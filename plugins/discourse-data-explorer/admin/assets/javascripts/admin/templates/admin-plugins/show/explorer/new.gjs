@@ -4,7 +4,6 @@ import BackButton from "discourse/components/back-button";
 import DSegmentedControl from "discourse/components/d-segmented-control";
 import Form from "discourse/components/form";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { eq } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";

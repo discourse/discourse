@@ -1,4 +1,3 @@
-import { or } from "discourse/truth-helpers";
 import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 

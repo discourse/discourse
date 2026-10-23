@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { eq, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";

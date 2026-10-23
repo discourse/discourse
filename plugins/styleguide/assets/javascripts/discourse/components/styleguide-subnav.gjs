@@ -1,6 +1,5 @@
 import { array, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { eq } from "discourse/truth-helpers";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 
 /**

@@ -12,7 +12,6 @@ import { modifier as modifierFn } from "ember-modifier";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import discourseLater from "discourse/lib/later";
-import { and, eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";

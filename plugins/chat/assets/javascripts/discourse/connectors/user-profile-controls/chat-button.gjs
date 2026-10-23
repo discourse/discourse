@@ -1,4 +1,3 @@
-import { and, not } from "discourse/truth-helpers";
 import ChatDirectMessageButton from "../../components/chat/direct-message-button.gjs";
 
 const ChatButton = <template>

@@ -6,7 +6,6 @@ import AceEditor from "discourse/components/ace-editor";
 import BackButton from "discourse/components/back-button";
 import DSegmentedControl from "discourse/components/d-segmented-control";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { and, eq, notEq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
@@ -315,7 +314,7 @@ export default class QueriesEdit extends Component {
         </div>
       {{/if}}
 
-      {{#if (notEq @controller.view "sql")}}
+      {{#if (neq @controller.view "sql")}}
         <QueryResultsWrapper
           @cachedAt={{@controller.cachedAt}}
           @content={{@controller.results}}

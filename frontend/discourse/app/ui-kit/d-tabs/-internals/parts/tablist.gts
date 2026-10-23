@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { and } from "discourse/truth-helpers";
 import DOverflowControls from "discourse/ui-kit/d-overflow-controls";
 import type { DTabsTablistSignature } from "discourse/ui-kit/d-tabs/types";
 import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";

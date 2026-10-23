@@ -7,7 +7,6 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
-import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

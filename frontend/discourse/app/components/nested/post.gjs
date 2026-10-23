@@ -25,7 +25,6 @@ import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
 import postActionFeedback from "discourse/lib/post-action-feedback";
 import { nativeShare } from "discourse/lib/pwa-utils";
 import { clipboardCopy } from "discourse/lib/utilities";
-import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

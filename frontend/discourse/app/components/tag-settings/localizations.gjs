@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { fn, hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class TagSettingsLocalizations extends Component {

@@ -8,7 +8,6 @@ import { service } from "@ember/service";
 import curryComponent from "ember-curry-component";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { findActiveLink } from "discourse/lib/sidebar/active-link";
-import { and } from "discourse/truth-helpers";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import MoreSectionLink from "./more-section-link.gjs";
 import MoreSectionTrigger from "./more-section-trigger.gjs";

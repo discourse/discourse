@@ -40,7 +40,6 @@ import {
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";

@@ -19,7 +19,6 @@ import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import Topic from "discourse/models/topic";
-import { and, eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";

@@ -13,7 +13,6 @@ import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
-import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";

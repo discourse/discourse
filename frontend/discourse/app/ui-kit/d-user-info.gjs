@@ -7,7 +7,6 @@ import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { userPath } from "discourse/lib/url";
-import { and } from "discourse/truth-helpers";
 import DUserAvatarFlair from "discourse/ui-kit/d-user-avatar-flair";
 import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";

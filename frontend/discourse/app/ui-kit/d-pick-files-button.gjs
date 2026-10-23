@@ -11,7 +11,6 @@ import {
   authorizedExtensions,
   authorizesAllExtensions,
 } from "discourse/lib/uploads";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
