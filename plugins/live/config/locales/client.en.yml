@@ -5,6 +5,10 @@ en:
         participants:
           one: "%{formatted_number} person joined voice chats"
           other: "%{formatted_number} people joined voice chats"
+      onebox:
+        here_now:
+          one: "%{count} person here now"
+          other: "%{count} people here now"
       sidebar:
         title: "Live rooms"
         create: "Create room"
