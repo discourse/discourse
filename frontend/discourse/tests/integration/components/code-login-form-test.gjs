@@ -464,14 +464,26 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     pretender.get("/session/hp.json", () =>
       response({ value: "hp-value", challenge: "abc", expires_in: 300 })
     );
-    pretender.post("/session/login-code", () => response({ error }));
+    let resolveRequest;
+    pretender.post("/session/login-code", async () => {
+      await new Promise((resolve) => (resolveRequest = resolve));
+      return response({ error });
+    });
 
     await render(<template><CodeLoginForm @context="signup" /></template>);
     await fillIn(
       ".code-login-form__email-step .form-kit__control-input",
       "user@example.com"
     );
-    await formKit().submit();
+    formKit().submit();
+    await waitUntil(() => resolveRequest);
+
+    assert
+      .dom(".code-login-form__continue")
+      .isDisabled("continue is disabled while the code is being sent");
+
+    resolveRequest();
+    await settled();
 
     assert
       .dom(".code-login-form__email-step")
