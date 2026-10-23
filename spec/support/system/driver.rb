@@ -176,30 +176,6 @@ module SystemDrivers
       --js-flags=--no-enable-lazy-source-positions
     ]
 
-    if ENV["SYSTEM_TEST_CHROMIUM_PROFILE"] == "1" && ENV["TEST_ENV_NUMBER"] == "1"
-      FileUtils.mkdir_p("tmp/chromium-profile")
-      trace_path = File.expand_path("tmp/chromium-profile/#{SecureRandom.hex(8)}.json")
-      trace_categories = %w[
-        toplevel
-        disabled-by-default-toplevel.ipc
-        sequence_manager
-        renderer.scheduler
-        devtools.timeline
-        v8
-        blink.user_timing
-        loading
-        disabled-by-default-v8.cpu_profiler
-      ]
-      base_args.concat(
-        %W[
-          --trace-startup=#{trace_categories.join(",")}
-          --trace-startup-duration=30
-          --trace-startup-format=json
-          --trace-startup-file=#{trace_path}
-        ],
-      )
-    end
-
     if ENV["PLAYWRIGHT_DEVTOOLS"].presence == "1" || ENV["SELENIUM_DEVTOOLS"].presence == "1"
       base_args << "--auto-open-devtools-for-tabs"
     end
