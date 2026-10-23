@@ -14,6 +14,7 @@ seed = rand(2**16)
 profile = false
 profile_print_slowest_examples_count = 10
 use_runtime_info = nil
+dynamic_files = false
 enable_system_tests = nil
 retry_and_log_flaky_tests = ENV["DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS"].to_s == "1"
 exclude_patterns = []
@@ -61,6 +62,10 @@ OptionParser
 
     opts.on("--use-runtime-info", "Use runtime info for tests group splitting") do
       use_runtime_info = true
+    end
+
+    opts.on("--dynamic-files", "Assign whole files to workers as they finish") do
+      dynamic_files = true
     end
 
     opts.on("--enable-system-tests", "Run the system tests (defaults false)") do
@@ -125,6 +130,7 @@ success =
     verbose: verbose,
     fail_fast: fail_fast,
     use_runtime_info: use_runtime_info,
+    dynamic_files:,
     seed: seed.to_s,
     profile:,
     profile_print_slowest_examples_count:,

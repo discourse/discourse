@@ -34,6 +34,7 @@ module TurboTests
         verbose: verbose,
         fail_fast: fail_fast,
         use_runtime_info: use_runtime_info,
+        dynamic_files: opts.fetch(:dynamic_files, false),
         seed: seed,
         profile: opts[:profile],
         retry_and_log_flaky_tests: retry_and_log_flaky_tests,
@@ -46,6 +47,7 @@ module TurboTests
       @verbose = opts[:verbose]
       @fail_fast = opts[:fail_fast]
       @use_runtime_info = opts[:use_runtime_info]
+      @dynamic_files = opts[:dynamic_files]
       @seed = opts[:seed]
       @profile = opts[:profile]
       @retry_and_log_flaky_tests = opts[:retry_and_log_flaky_tests]
@@ -65,7 +67,11 @@ module TurboTests
       group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log" if @use_runtime_info
 
       tests_in_groups =
-        ParallelTests::RSpec::Runner.tests_in_groups(@files, @num_processes, **group_opts)
+        if @dynamic_files
+          Array.new(@num_processes) { @files }
+        else
+          ParallelTests::RSpec::Runner.tests_in_groups(@files, @num_processes, **group_opts)
+        end
 
       setup_tmp_dir
 
@@ -119,6 +125,7 @@ module TurboTests
       end
 
       FileUtils.mkdir_p("tmp/test-pipes/")
+      FileUtils.mkdir_p("tmp/test-pipes/file-claims") if @dynamic_files
     end
 
     def rerun_failed_examples(failed_examples)
@@ -141,13 +148,16 @@ module TurboTests
     end
 
     def start_regular_subprocess(tests, process_id, **opts)
-      start_subprocess(
-        { "TEST_ENV_NUMBER" => process_id.to_s },
-        %w[--tag ~type:multisite],
-        tests,
-        process_id,
-        **opts,
-      )
+      env = { "TEST_ENV_NUMBER" => process_id.to_s }
+      extra_args = %w[--tag ~type:multisite]
+
+      if @dynamic_files && tests.any?
+        tests = @files
+        env["TURBO_RSPEC_FILE_CLAIMS"] = File.expand_path("tmp/test-pipes/file-claims")
+        extra_args += %w[--require ./lib/turbo_tests/dynamic_file_assignment]
+      end
+
+      start_subprocess(env, extra_args, tests, process_id, **opts)
     end
 
     def start_subprocess(env, extra_args, tests, process_id, record_runtime:)
