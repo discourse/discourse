@@ -6348,6 +6348,23 @@ en:
       truncated_file: "This file has been truncated."
       show_original: "show original"
     github:
+      header:
+        repository: "Repository"
+        folder: "Folder"
+        file: "File"
+        binary_file: "Binary file"
+        gist: "Gist"
+        open_issue: "Open issue"
+        closed_issue: "Closed issue"
+        commit: "Commit"
+        comment: "Comment"
+        review: "Review comment"
+        pull_request: "Pull request"
+        success: "Success"
+        failure: "Failure"
+        pending: "In progress"
+        unknown: "Unknown or queued"
+        check_run: "Check run"
       binary_file: "This file is binary."
       truncated_file: "This file has been truncated."
       show_original: "show original"
@@ -6361,21 +6378,13 @@ en:
       review_by: "Review by"
       pr_summary: "%{commits} commits changed %{changed_files} files with %{additions} additions and %{deletions} deletions"
       no_description: "Contribute to %{repo} development by creating an account on GitHub."
-      pr_title:
-        default: "Pull Request"
-        draft: "Draft Pull Request"
-        open: "Open Pull Request"
-        approved: "Approved Pull Request"
-        changes_requested: "Changes Requested"
-        merged: "Merged Pull Request"
-        closed: "Closed Pull Request"
-      status_date:
-        open: "opened"
-        draft: "drafted"
-        approved: "approved"
-        changes_requested: "changes requested"
-        merged: "merged"
-        closed: "closed"
+      pr_status:
+        draft: "Draft"
+        open: "Open"
+        approved: "Approved"
+        changes_requested: "Changes requested"
+        merged: "Merged"
+        closed: "Closed"
 
   discourse_push_notifications:
     popup:
