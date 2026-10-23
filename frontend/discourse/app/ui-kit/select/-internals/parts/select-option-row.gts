@@ -1,7 +1,6 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import { on } from "@ember/modifier";
 import type { ModifierLike } from "@glint/template";
-import { eq, or } from "discourse/truth-helpers";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import type { OptionsPresenter } from "discourse/ui-kit/select/-internals/coordinators/select-presenter-base";
 import WindowedListCoordinator, {

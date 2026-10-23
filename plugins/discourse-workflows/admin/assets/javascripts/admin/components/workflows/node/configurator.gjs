@@ -8,7 +8,6 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { eq, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DModal from "discourse/ui-kit/d-modal";

@@ -10,7 +10,6 @@ import { modifier } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
 import discourseLater from "discourse/lib/later";
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
-import { and, eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import ChatMessageReactionsUsers from "discourse/plugins/chat/discourse/components/chat-message-reactions-users";

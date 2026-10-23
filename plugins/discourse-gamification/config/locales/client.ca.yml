@@ -28,9 +28,7 @@ ca:
       close: "Tanca"
       delete: "Suprimeix"
       edit: "Edita"
-      back: "Enrere"
       save: "Desa"
-      apply: "Aplica"
       update_range:
         last_10_days: "Els darrers 10 dies"
         last_30_days: "Els darrers 30 dies"

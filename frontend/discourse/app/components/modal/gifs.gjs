@@ -9,7 +9,6 @@ import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
 import getURL from "discourse/lib/get-url";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import { or } from "discourse/truth-helpers";
 import DModal from "discourse/ui-kit/d-modal";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";

@@ -2211,6 +2211,7 @@ pl_PL:
     unavailable: "Nie udało się wygenerować losowej nazwy użytkownika. Sprawdź listy słów w losowej nazwie użytkownika w ustawieniach swojej witryny."
   site_settings:
     dsa_notice_group: "Grupa, która dostaje powiadomienia o nielegalnych treściach, gdy włączona jest opcja {{setting:dsa_reporting_enabled}}. Członkowie mogą przeglądać powiadomienia i dane kontaktowe osoby, która zgłosiła naruszenie. Domyślnie są to administratorzy, którzy też dostają powiadomienia, jeśli wybrana grupa nie istnieje lub jest pusta."
+    dsa_moderation_appeal_email: "Użytkownicy mogą odwołać się od decyzji moderatorów, wysyłając wiadomość e-mail na ten adres. Pozostaw puste pole, aby pominąć instrukcje dotyczące odwołania. Wymagane jest włączenie opcji {{setting:dsa_reporting_enabled}}."
     dsa_community_rules: "Reguły społeczności są dostępne dla klasyfikacji DSA, gdy włączona jest opcja {{setting:dsa_reporting_enabled}} . Każda reguła wymaga dokładnego odniesienia umownego (do 500 znaków) oraz wyjaśnienia (do 2000 znaków). Pozostaw puste, aby wyłączyć klasyfikację."
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
     disabled: "wyłączone"
@@ -3939,6 +3940,7 @@ pl_PL:
         other: "%{mentions} Wiadomości zostały wysłane ponad %{count} godzin temu. [Sprawdź je](%{base_url}/review)."
     private_topic_title: "Temat#%{id}"
     contents_hidden: "Proszę przejść do wpisu, aby wyświetlić jego zawartość."
+    moderation_appeal_instructions: "Aby odwołać się od tej decyzji, skontaktuj się z %{email}"
     post_hidden:
       title: "Ukryty wpis"
       preview: "Wpis został ukryty z powodu flag zgłoszonych przez członków społeczności."

@@ -1,7 +1,6 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
-import { not } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DLoadMore from "discourse/ui-kit/d-load-more";

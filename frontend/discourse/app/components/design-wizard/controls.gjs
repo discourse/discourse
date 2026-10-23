@@ -11,7 +11,6 @@ import SearchSection from "discourse/components/design-wizard/search-section";
 import Section from "discourse/components/design-wizard/section";
 import ThemeSection from "discourse/components/design-wizard/theme-section";
 import WelcomeBannerSection from "discourse/components/design-wizard/welcome-banner-section";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 

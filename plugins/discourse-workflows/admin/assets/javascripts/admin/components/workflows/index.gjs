@@ -15,7 +15,6 @@ import DiscourseURL, {
   applyQueryParams,
   searchParamsFromPath,
 } from "discourse/lib/url";
-import { eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DFilterInput from "discourse/ui-kit/d-filter-input";

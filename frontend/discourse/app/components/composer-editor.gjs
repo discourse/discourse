@@ -42,7 +42,6 @@ import UppyComposerUpload from "discourse/lib/uppy/composer-upload";
 import { formatUsername } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
 import FormTemplateChooser from "discourse/select-kit/components/form-template-chooser";
-import { gt } from "discourse/truth-helpers";
 import { applyHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import DEditor from "discourse/ui-kit/d-editor";
 import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";

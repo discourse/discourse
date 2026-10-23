@@ -2,7 +2,6 @@ import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import { warn } from "@ember/debug";
 import type { ModifierLike } from "@glint/template";
 import { modifier as createModifier } from "ember-modifier";
-import { or } from "discourse/truth-helpers";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import type SelectAnnouncer from "discourse/ui-kit/select/-internals/coordinators/select-announcer";

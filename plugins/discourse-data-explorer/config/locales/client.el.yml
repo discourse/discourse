@@ -19,14 +19,11 @@ el:
         manual: "Γράψτε SQL"
         ai: "Δημιουργήστε με AI"
       or: "ή"
-      create: "Δημιουργία"
       description_placeholder: "Εισάγετε εδώ μια περιγραφή"
       ai:
         regenerate_placeholder: "π.χ. Ενημέρωσε το ερώτημα ώστε να περιορίζεται στα 50 αποτελέσματα"
         generate: "Δημιουργία"
         optional: "προαιρετικό"
-      import:
-        label: "Εισαγωγή"
       help:
         label: "Βοήθεια"
       schema:
@@ -66,7 +63,6 @@ el:
       query_time: "Τελευταία εκτέλεση"
       query_user: "Δημιουργήθηκε από"
       reset_params: "Επαναφορά"
-      search_placeholder: "Αναζήτηση..."
     group:
       reports: "Αναφορές"
     discourse_workflows:

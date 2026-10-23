@@ -11,6 +11,8 @@ module JsonApiKit
             instance.all(params, scoped_to:)
           end
         end
+
+        def from(...) = from_records(...)
       end
 
       private

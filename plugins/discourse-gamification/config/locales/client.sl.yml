@@ -28,9 +28,7 @@ sl:
       close: "Zapri"
       delete: "Izbriši"
       edit: "Uredi"
-      back: "Nazaj"
       save: "Shrani"
-      apply: "Uporabi"
       update_range:
         last_10_days: "Zadnjih 10 dni"
         last_30_days: "Zadnjih 30 dni"

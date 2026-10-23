@@ -1,6 +1,5 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import { on } from "@ember/modifier";
-import { and, not, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import type VariantPresenter from "discourse/ui-kit/select/-internals/coordinators/variant-presenter";

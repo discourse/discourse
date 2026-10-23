@@ -8,12 +8,9 @@ bg:
   js:
     explorer:
       or: "или"
-      create: "Създай"
       ai:
         generate: "Генраирай"
         optional: "по избор"
-      import:
-        label: "Импорт"
       help:
         label: "Помощ"
       schema:
@@ -33,7 +30,6 @@ bg:
       query_tags: "Етикети"
       query_description: "Описание"
       reset_params: "Нулиране"
-      search_placeholder: "Търсене ... "
     discourse_workflows:
       sql:
         param_value: "Стойност"

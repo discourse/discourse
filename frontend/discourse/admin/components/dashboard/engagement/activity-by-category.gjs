@@ -13,7 +13,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { number } from "discourse/lib/formatter";
 import Category from "discourse/models/category";
 import MultipleCategoriesSelector from "discourse/select-kit/components/multiple-categories-selector";
-import { eq } from "discourse/truth-helpers";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";

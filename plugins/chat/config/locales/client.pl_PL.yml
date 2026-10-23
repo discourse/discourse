@@ -988,7 +988,7 @@ pl_PL:
         target_usernames_description: "Użytkownicy do wysłania wiadomości. Użyj wyrażenia takiego jak $trigger.user.username, aby wybrać użytkowników z każdego elementu."
         message: "Wiadomość"
         actor_username: "Nadawca"
-        actor_username_description: "Wiadomości bezpośrednie wysyłane są w imieniu tego użytkownika, a odbiorcy widzą je jako napisane przez niego."
+        actor_username_description: "Wiadomości są wysyłane w imieniu tego użytkownika i wszyscy widzą je jako napisane przez niego. Publikując na kanale, użytkownik musi być jego członkiem."
       chat_approval:
         message: "Wiadomość"
         buttons: "Przyciski"

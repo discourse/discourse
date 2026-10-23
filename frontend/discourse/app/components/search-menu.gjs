@@ -32,7 +32,6 @@ import {
 } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import userSearch from "discourse/lib/user-search";
-import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";

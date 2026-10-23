@@ -17,7 +17,6 @@ import { bind, debounce } from "discourse/lib/decorators";
 import domUtils from "discourse/lib/dom-utils";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import TopicNotificationsButton from "discourse/select-kit/components/topic-notifications-button";
-import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";

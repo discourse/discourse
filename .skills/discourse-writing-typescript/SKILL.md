@@ -170,8 +170,7 @@ plugin-setting extension mechanism.
 
 **A plain function IS a valid Glint template helper.** You do not need a class-based
 `Helper` to get a precise, argument-dependent return. A generic variadic function with a
-`const` type param resolves correctly both as a direct call and in `{{...}}` invocation (see
-`frontend/discourse/truth-helpers/helpers/or.ts`):
+`const` type param resolves correctly both as a direct call and in `{{...}}` invocation:
 
 ```ts
 export default function or<const T extends MaybeTruthy[]>(...args: T): FirstTruthy<T>;
@@ -260,9 +259,8 @@ in type ...`, or a helper returning a loose or wrong type). Two fixes:
   these stopgaps are greppable and get removed once the underlying component is typed.
 
 - **Untyped helper:** either wrap the value in a typed getter at the call site, or, better,
-  type the helper itself (and add a type test). `truth-helpers` is fully typed, so `or`/`and`
-  already return the precise value union; a still-untyped helper can follow the same
-  plain-function-with-overload pattern. Tag any interim workaround `TODO(typescript-pending)`.
+  type the helper itself (and add a type test) with the plain-function-with-overload pattern
+  above. Tag any interim workaround `TODO(typescript-pending)`.
 
 - **Sibling types:** `HelperLike<Sig>` / `ModifierLike<Sig>` are the same idea for untyped
   helpers and modifiers; **`WithBoundArgs<typeof Comp, "argName">`** types a *curried*

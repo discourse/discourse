@@ -9,7 +9,6 @@ import type { TrackedAsyncData } from "ember-async-data";
 import { modifier as createModifier } from "ember-modifier";
 import { makeArray } from "discourse/lib/helpers";
 import type { CapabilitiesService } from "discourse/services/capabilities";
-import { eq } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import dIcon from "discourse/ui-kit/helpers/d-icon";

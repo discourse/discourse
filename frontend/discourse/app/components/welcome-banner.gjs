@@ -14,7 +14,6 @@ import { prioritizeNameFallback } from "discourse/lib/settings";
 import { sanitize } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
-import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import I18n, { i18n } from "discourse-i18n";

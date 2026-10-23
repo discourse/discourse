@@ -1,4 +1,3 @@
-import { eq } from "discourse/truth-helpers";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";

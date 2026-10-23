@@ -40,7 +40,6 @@ import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import hideScrollableContent from "discourse/helpers/hide-scrollable-content";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
-import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DCookText from "discourse/ui-kit/d-cook-text";

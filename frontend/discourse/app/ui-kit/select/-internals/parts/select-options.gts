@@ -6,7 +6,6 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, schedule } from "@ember/runloop";
 import type { ModifierLike } from "@glint/template";
 import { modifier as createModifier } from "ember-modifier";
-import { eq, not, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DSkeleton from "discourse/ui-kit/d-skeleton";

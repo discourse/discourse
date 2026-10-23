@@ -369,11 +369,14 @@ table.group-reports {
     white-space: pre-wrap;
   }
 
+  &__details {
+    margin: 10px 0;
+  }
+
   &__metadata-fields {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-4);
-    margin: 10px 0;
   }
 
   &__metadata-field {
@@ -580,35 +583,16 @@ table.group-reports {
   }
 }
 
+.query-new__ai-heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+}
+
 .query-new {
   .query-new__ai-section {
     max-width: 720px;
     margin-bottom: 1em;
-  }
-
-  .query-new__ai-label {
-    display: flex;
-    align-items: center;
-    gap: 0.35em;
-    font-weight: 700;
-    margin-bottom: 0.25em;
-  }
-
-  .query-new__ai-hint {
-    color: var(--primary-medium);
-    margin-bottom: 0.75em;
-  }
-
-  .query-new__ai-textarea {
-    width: 100%;
-    min-height: 3em;
-    margin-bottom: 0.75em;
-  }
-
-  .query-new__ai-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
   }
 
   .query-new__generating-indicator {
@@ -660,57 +644,13 @@ table.group-reports {
     margin-top: 1.5em;
   }
 
-  .query-new__access-fields {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-4);
-    margin-top: 1em;
-  }
-
-  .query-new__access-field {
-    flex: 1 1 15rem;
-    min-width: 0;
-  }
-
   .query-new__preview {
     margin-top: 0.5em;
-  }
-
-  .query-new__field-label {
-    display: block;
-    font-weight: 700;
-    margin-bottom: 0.35em;
-    margin-top: 1em;
-
-    &:first-child {
-      margin-top: 0;
-    }
-
-    .query-new__optional {
-      font-weight: 400;
-      color: var(--primary-medium);
-    }
-  }
-
-  .query-new__name-input {
-    width: 100%;
-    margin-bottom: 0;
-  }
-
-  .query-new__description-input {
-    width: 100%;
-    min-height: 60px;
   }
 
   .query-group-select,
   .query-tag-chooser {
     width: 100%;
-  }
-
-  .query-new__actions {
-    display: flex;
-    gap: 0.5em;
-    margin-top: 1em;
   }
 
   .query-new__sql-label {

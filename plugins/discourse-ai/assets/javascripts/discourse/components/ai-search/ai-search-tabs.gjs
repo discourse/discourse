@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { service } from "@ember/service";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";

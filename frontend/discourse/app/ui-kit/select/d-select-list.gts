@@ -14,7 +14,6 @@ import { TrackedAsyncData } from "ember-async-data";
 import { hasContentPluginApiCallbacks } from "discourse/select-kit/lib/plugin-api";
 import type A11yService from "discourse/services/a11y";
 import type { CapabilitiesService } from "discourse/services/capabilities";
-import { and, eq, or } from "discourse/truth-helpers";
 import SelectHost, {
   type SelectHostArgs,
 } from "discourse/ui-kit/select/-internals/coordinators/select-host";

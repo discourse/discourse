@@ -23,7 +23,6 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { clipboardCopy } from "discourse/lib/utilities";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { eq, not, notEq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";
@@ -2026,7 +2025,7 @@ export default class AdminMcp extends Component {
                       authorization.status
                     }}</span></td>
                 <td class="d-table__cell --controls">{{#if
-                    (notEq authorization.status "revoked")
+                    (neq authorization.status "revoked")
                   }}<DButton
                       class="btn-small btn-danger"
                       @action={{fn this.revokeAuthorization authorization}}

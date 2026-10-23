@@ -8,7 +8,6 @@ bs_BA:
   js:
     explorer:
       or: "ili"
-      create: "napravi"
       ai:
         generate: "Generate"
         optional: "opcionalno"
@@ -29,7 +28,6 @@ bs_BA:
       query_tags: "Oznake"
       query_description: "Opis"
       reset_params: "Resetovati"
-      search_placeholder: "Pretraga..."
     group:
       reports: "Izvještaji"
     discourse_workflows:

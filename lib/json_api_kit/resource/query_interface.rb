@@ -32,6 +32,8 @@ module JsonApiKit
       delegate :scope_for, to: :class
       delegate :default_sorts, to: :edition, private: true
 
+      def current_values(id) = CurrentValues.new(self, id:)
+
       def all(params = {}, scoped_to: nil)
         Query::Collection.new(
           self,

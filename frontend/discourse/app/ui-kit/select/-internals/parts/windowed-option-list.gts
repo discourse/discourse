@@ -1,7 +1,6 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { or } from "discourse/truth-helpers";
 import DVirtualList from "discourse/ui-kit/d-virtual-list";
 import type SelectAnnouncer from "discourse/ui-kit/select/-internals/coordinators/select-announcer";
 import type { OptionsPresenter } from "discourse/ui-kit/select/-internals/coordinators/select-presenter-base";
