@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { associateDestroyableChild, isDestroying } from "@ember/destroyable";
 import { action } from "@ember/object";
 import type Owner from "@ember/owner";
@@ -118,6 +119,12 @@ export interface SelectHostOptions {
 
 /** Owns source, selection and list wiring shared by select components. */
 export default class SelectHost {
+  /**
+   * The search the visible results are for. While a new search loads, the previous results stay
+   * on screen and this keeps naming their search until the new results arrive.
+   */
+  @tracked query = "";
+
   /** Stable engine identity shared with parts and compatibility callbacks. */
   engine: SelectEngine;
   announcer: SelectAnnouncer;
@@ -277,10 +284,17 @@ export default class SelectHost {
     opts?: SelectLoadOptions
   ): SelectListContent | Promise<SelectListContent> {
     const rawItems = this.engine.loadItems(context, opts);
+    const report = (content: SelectListContent): SelectListContent => {
+      if (!isDestroying(this) && !opts?.signal?.aborted) {
+        this.query = content.filter;
+      }
+      return content;
+    };
     // Stamped at resolve time, not call time: an aborted-then-superseded load never reaches
     // here, so the query read on resolution is the one these rows were fetched for.
-    return rawItems instanceof Promise
-      ? rawItems.then((items) =>
+    if (rawItems instanceof Promise) {
+      return rawItems.then((items) =>
+        report(
           Object.freeze({
             rawItems: items,
             filter: this.engine.filter,
@@ -288,12 +302,17 @@ export default class SelectHost {
             context: this.engine.requestLoadContext,
           })
         )
-      : Object.freeze({
-          rawItems,
-          filter: this.engine.filter,
-          query: this.engine.queryKey,
-          context: this.engine.requestLoadContext,
-        });
+      );
+    }
+    const content = Object.freeze({
+      rawItems,
+      filter: this.engine.filter,
+      query: this.engine.queryKey,
+      context: this.engine.requestLoadContext,
+    });
+    // Local sources resolve during render, after the header and footer have read the query.
+    schedule("afterRender", () => report(content));
+    return content;
   }
 
   /**

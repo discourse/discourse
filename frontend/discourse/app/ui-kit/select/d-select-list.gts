@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import { associateDestroyableChild } from "@ember/destroyable";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
@@ -8,7 +8,6 @@ import Owner, { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { TrackedAsyncData } from "ember-async-data";
 import { hasContentPluginApiCallbacks } from "discourse/select-kit/lib/plugin-api";
@@ -21,42 +20,18 @@ import SelectListInteraction from "discourse/ui-kit/select/-internals/coordinato
 import SelectListPresenter from "discourse/ui-kit/select/-internals/coordinators/select-list-presenter";
 import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
 import MultiChips from "discourse/ui-kit/select/-internals/parts/multi-chips";
-import type { SelectListContent } from "discourse/ui-kit/select/-internals/parts/select-options";
-import SelectPanel from "discourse/ui-kit/select/-internals/parts/select-panel";
+import SelectPanel, {
+  type SelectPanelState,
+} from "discourse/ui-kit/select/-internals/parts/select-panel";
 import StaticOptionList from "discourse/ui-kit/select/-internals/parts/static-option-list";
 import WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowed-option-list";
 import type {
   SelectDescriptor,
   SelectItem,
-  SelectLoadOptions,
-  SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 
-/** Live state shared by the pinned list header and footer. */
-export interface SelectListState {
-  /** The current search input, including a query still awaiting results. */
-  filter: string;
-  /** The search query answered by the displayed results, retained while the next query loads. */
-  query: string;
-  /** Held values in selection order. */
-  value: SelectValue;
-  /** Whether any values are held. */
-  hasValue: boolean;
-  /** Source result count, when known. */
-  total: number | undefined;
-  /** Number of source options loaded so far. */
-  loadedCount: number;
-  /** Selection cap, or null when uncapped. */
-  maximum: number | null;
-  /** Advisory minimum selection size. */
-  minimum: number;
-  /** Whether the selection reached its cap. */
-  atMaximum: boolean;
-  /** Whether the selection is below its advisory minimum. */
-  belowMinimum: boolean;
-  /** Remaining selection capacity, when capped. */
-  remaining: number | undefined;
-}
+/** Live state yielded to the list's `:listHeader` and `:footer` blocks. */
+export type SelectListState = SelectPanelState;
 
 /** Public API for a persistent multi-select with an optional static list body. */
 interface DSelectListSignature {
@@ -182,8 +157,6 @@ export default class DSelectList extends Component<DSelectListSignature> {
   @service declare a11y: A11yService;
   @service declare capabilities: CapabilitiesService;
 
-  @tracked query = "";
-
   interaction: SelectListInteraction;
 
   host: SelectHost = new SelectHost({
@@ -270,27 +243,6 @@ export default class DSelectList extends Component<DSelectListSignature> {
     this.args.onChange?.(next as unknown[], items as SelectItem[], change);
   }
 
-  /** Keeps pinned state on the resolved filter while the input advances to its next query. */
-  @action
-  loadListContent(
-    context: unknown,
-    options?: SelectLoadOptions
-  ): SelectListContent | Promise<SelectListContent> {
-    const content = this.host.loadListContent(context, options);
-    const report = (resolved: SelectListContent): SelectListContent => {
-      if (!this.isDestroying && !options?.signal?.aborted) {
-        this.query = resolved.filter;
-      }
-      return resolved;
-    };
-    if (content instanceof Promise) {
-      return content.then(report);
-    }
-    // Local sources resolve during render, after pinned state has already been read.
-    schedule("afterRender", () => report(content));
-    return content;
-  }
-
   <template>
     <div
       class="d-select --list"
@@ -333,8 +285,8 @@ export default class DSelectList extends Component<DSelectListSignature> {
         @hasGroupHeaderBlock={{false}}
         @hasItemBlock={{has-block "item"}}
         @hasListHeaderBlock={{has-block "listHeader"}}
-        @hasLoadingItemBlock={{false}}
         @hasSelectionBlock={{has-block "selection"}}
+        @hasSkeletonItemBlock={{false}}
         @hasUnresolvedBlock={{has-block "unresolved"}}
         @hideEmptyQuery={{true}}
         @hideSelectionMarker={{@hideSelected}}
@@ -344,7 +296,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
         @limitMessage={{this.presenter.limitMessage}}
         @listbox={{this.listbox}}
         @listboxId={{this.listboxId}}
-        @loadListContent={{this.loadListContent}}
+        @loadListContent={{this.host.loadListContent}}
         @locked={{this.presenter.isLocked}}
         @multiple={{true}}
         @noResultsLabel={{@noResultsLabel}}
@@ -360,7 +312,9 @@ export default class DSelectList extends Component<DSelectListSignature> {
         @selectedIcon={{@selectedIcon}}
         @state={{hash
           filter=this.engine.filter
-          query=this.query
+          query=this.host.query
+          pending=this.engine.serverPending
+          showingSkeleton=this.feedback.showingSkeleton
           value=this.engine.value
           hasValue=this.engine.hasValue
           total=this.engine.total

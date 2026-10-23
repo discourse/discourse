@@ -95,7 +95,7 @@ export default class ReviewersSelectExample extends Component {
         </div>
       </:selectionLoading>
 
-      <:loadingItem>
+      <:skeletonItem>
         <div class="select-examples__row select-examples__row--identity">
           <DSkeleton @size="2rem" @variant="circle" />
           <div class="select-examples__details">
@@ -103,7 +103,7 @@ export default class ReviewersSelectExample extends Component {
             <DSkeleton class="select-examples__secondary" @width="12rem" />
           </div>
         </div>
-      </:loadingItem>
+      </:skeletonItem>
     </DSelect>
   </template>
 }

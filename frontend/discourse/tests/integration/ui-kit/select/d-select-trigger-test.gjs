@@ -10,12 +10,14 @@ import {
   find,
   findAll,
   focus,
+  getRootElement,
   render,
   resetOnerror,
   settled,
   setupOnerror,
   triggerKeyEvent,
   waitFor,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -99,6 +101,35 @@ function hitsAround(target, distance) {
     const hit = document.elementFromPoint(x + dx, y + dy);
     return hit === target || target.contains(hit);
   });
+}
+
+/**
+ * Records every distinct "query|pending|skeleton" state the header renders. Polling cannot see
+ * the pending-only state, because test timers shorten the skeleton delay to a single tick.
+ */
+function recordHeaderFrames() {
+  const frames = [];
+  const record = () => {
+    const parts = ["query", "pending", "skeleton"].map((key) =>
+      find(`.test-${key}`)?.textContent.trim()
+    );
+    const frame = parts.join("|");
+    if (parts.every((part) => part !== undefined) && frames.at(-1) !== frame) {
+      frames.push(frame);
+    }
+  };
+  const observer = new MutationObserver(record);
+  observer.observe(getRootElement(), {
+    characterData: true,
+    childList: true,
+    subtree: true,
+  });
+  return {
+    stop() {
+      observer.disconnect();
+      return frames;
+    },
+  };
 }
 
 module(
@@ -1830,6 +1861,243 @@ class ResolvingHost extends Component {
     />
   </template>
 }
+
+/** A controlled multi host exposing `@hideSelected`, `:listHeader` and the footer state. */
+class PanelBlocksHost extends Component {
+  @tracked value = this.args.value ?? [];
+
+  get load() {
+    return this.args.load ?? (this.args.server ? serverLoad : undefined);
+  }
+
+  get resolveValues() {
+    return this.args.load || this.args.server ? serverResolve : undefined;
+  }
+
+  get items() {
+    return this.args.load || this.args.server ? undefined : ITEMS;
+  }
+
+  @action
+  onChange(value) {
+    this.value = value;
+  }
+
+  <template>
+    <DSelect
+      @debounce={{@debounce}}
+      @hideSelected={{@hideSelected}}
+      @items={{this.items}}
+      @label="Fruit"
+      @load={{this.load}}
+      @multiple={{true}}
+      @onChange={{this.onChange}}
+      @resolveValues={{this.resolveValues}}
+      @value={{this.value}}
+      @variant={{@variant}}
+    >
+      <:listHeader as |state|>
+        <span class="test-list-header">
+          <span class="test-query">{{state.query}}</span>
+          <span class="test-pending">{{if state.pending "yes" "no"}}</span>
+          <span class="test-skeleton">{{if
+              state.showingSkeleton
+              "yes"
+              "no"
+            }}</span>
+        </span>
+      </:listHeader>
+      <:footer as |state|>
+        <span class="test-footer">query:{{state.query}}
+          close:{{if state.close "yes" "no"}}</span>
+      </:footer>
+    </DSelect>
+  </template>
+}
+
+/** The names of the result rows currently rendered. */
+const optionNames = () =>
+  findAll("[role='option']").map((option) => option.textContent.trim());
+
+module(
+  "Integration | ui-kit | select | DSelect (hideSelected and listHeader)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("hide selected: a button popup lists held items only as field chips", async function (assert) {
+      await render(
+        <template>
+          <PanelBlocksHost
+            @hideSelected={{true}}
+            @value={{array 1}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(TRIGGER);
+
+      assert.false(optionNames().includes("Apple"), "the held row is omitted");
+      assert.true(optionNames().includes("Banana"), "other rows remain");
+      assert
+        .dom(
+          ".d-select__panel .d-select__chips .d-select__chip[data-name='Apple']"
+        )
+        .exists("the held item is a chip in the field");
+      assert
+        .dom("[role='option'] .d-select__option-selected-icon")
+        .doesNotExist("rows drop the marker that could only read unselected");
+
+      await click(".d-select__panel .d-select__chip-remove");
+      assert.true(
+        optionNames().includes("Apple"),
+        "removing the chip brings its row back"
+      );
+    });
+
+    test("hide selected: a desktop typeahead keeps held items as trigger chips only", async function (assert) {
+      await render(
+        <template>
+          <PanelBlocksHost @hideSelected={{true}} @value={{array 1}} />
+        </template>
+      );
+      await click(".d-select__input");
+
+      assert.false(optionNames().includes("Apple"), "the held row is omitted");
+      assert
+        .dom(`${TRIGGER} .d-select__chip[data-name='Apple']`)
+        .exists("the held item stays a trigger chip");
+    });
+
+    test("hide selected: the mobile modal lists held items only as field chips", async function (assert) {
+      forceMobile();
+      await render(
+        <template>
+          <PanelBlocksHost @hideSelected={{true}} @value={{array 1}} />
+        </template>
+      );
+      await click(".d-select");
+
+      assert.false(optionNames().includes("Apple"), "the held row is omitted");
+      assert
+        .dom(".d-modal .d-select__chips .d-select__chip[data-name='Apple']")
+        .exists("the held item is a chip in the modal's field");
+    });
+
+    test("hide selected: a local static list shows its strip so held items stay reachable", async function (assert) {
+      await render(
+        <template>
+          <PanelBlocksHost
+            @hideSelected={{true}}
+            @value={{array 1}}
+            @variant="static"
+          />
+        </template>
+      );
+      await click(TRIGGER);
+
+      assert.false(optionNames().includes("Apple"), "the held row is omitted");
+      assert
+        .dom(".d-select__panel .d-select__strip")
+        .exists("the strip lists the held item instead")
+        .includesText("Apple");
+    });
+
+    test("list header: state separates a pending search from a showing skeleton", async function (assert) {
+      let release;
+      let holding = false;
+      const pending = [];
+      const load = (filter) => {
+        const answer = () =>
+          ITEMS.filter((item) =>
+            item.name.toLowerCase().includes((filter ?? "").toLowerCase())
+          );
+        return holding
+          ? new Promise((resolve) => pending.push(() => resolve(answer())))
+          : Promise.resolve(answer());
+      };
+      release = () => {
+        holding = false;
+        pending.splice(0).forEach((fn) => fn());
+      };
+      await render(
+        <template>
+          <PanelBlocksHost
+            @debounce={{false}}
+            @load={{load}}
+            @value={{array 1}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(TRIGGER);
+      const search = find(".d-select__panel input[type='search']");
+      assert.dom(".test-pending").hasText("no", "nothing is in flight at rest");
+
+      holding = true;
+      try {
+        const frames = recordHeaderFrames();
+        fillIn(search, "an");
+        await waitUntil(
+          () => find(".test-skeleton")?.textContent.trim() === "yes",
+          { timeout: 2000 }
+        );
+        assert.deepEqual(
+          frames.stop(),
+          ["|yes|no", "|yes|yes"],
+          "a search is pending at once with the previous results still answering the empty search; the skeleton replaces them later, and query keeps naming the last search that finished"
+        );
+      } finally {
+        release();
+      }
+      await settled();
+      assert.dom(".test-pending").hasText("no");
+      assert.dom(".test-skeleton").hasText("no");
+      assert
+        .dom(".test-query")
+        .hasText("an", "the new results answer the new search");
+    });
+
+    test("list header: renders between the field and the results with the answered query", async function (assert) {
+      await render(
+        <template>
+          <PanelBlocksHost
+            @server={{true}}
+            @value={{array 1}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(TRIGGER);
+
+      const header = find(".d-select__panel .d-select__list-header");
+      assert.dom(header).exists("the header renders in the panel");
+      assert.deepEqual(
+        findAll(
+          ".d-select__panel .d-select__list-header, .d-select__panel [role='listbox']"
+        ).map((element) =>
+          element.matches(".d-select__list-header") ? "header" : "results"
+        ),
+        ["header", "results"],
+        "the header comes before the results"
+      );
+      assert.strictEqual(
+        header.closest("[role='listbox']"),
+        null,
+        "the header sits outside the listbox"
+      );
+      assert.dom(".test-query").hasText("", "the rows answer the empty search");
+
+      await fillIn(".d-select__panel input[type='search']", "an");
+      assert
+        .dom(".test-query")
+        .hasText("an", "the header reports the query its results answer");
+      assert
+        .dom(".d-select__panel .test-footer")
+        .includesText("query:an", "the footer state carries the same query")
+        .includesText("close:yes", "and DSelect's footer can still close");
+    });
+  }
+);
 
 module(
   "Integration | ui-kit | select | DSelect (held-label resolution)",

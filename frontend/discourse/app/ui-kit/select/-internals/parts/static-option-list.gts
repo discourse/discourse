@@ -43,7 +43,7 @@ interface StaticOptionListSignature {
     /** Whether the consumer supplied custom item markup. */
     hasItemBlock: boolean;
     /** Whether the consumer supplied custom placeholder-row markup. */
-    hasLoadingItemBlock: boolean;
+    hasSkeletonItemBlock: boolean;
     /** Whether the consumer supplied custom group-header markup. */
     hasGroupHeaderBlock: boolean;
     /** Handles pointer-down on an option before its click resolves. */
@@ -65,7 +65,7 @@ interface StaticOptionListSignature {
       item: SelectItemModel,
     ];
     /** Custom markup for one placeholder row while a page of rows is loading. */
-    loadingItem?: [];
+    skeletonItem?: [];
   };
 }
 
@@ -125,7 +125,7 @@ const StaticOptionList: TemplateOnlyComponent<StaticOptionListSignature> =
             @engine={{@engine}}
             @hasGroupHeaderBlock={{false}}
             @hasItemBlock={{@hasItemBlock}}
-            @hasLoadingItemBlock={{false}}
+            @hasSkeletonItemBlock={{false}}
             @hideSelectionMarker={{@hideSelectionMarker}}
             @index={{index}}
             @items={{@items}}

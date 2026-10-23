@@ -23,6 +23,7 @@ export type SelectVariant =
 interface VariantPresenterArgs extends SelectPresenterArgs {
   value?: SelectValue;
   multiple?: boolean;
+  hideSelected?: boolean;
   /** Maximum trigger chips; zero renders only the selected count. */
   maxVisibleChips?: number;
   variant?: SelectVariant;
@@ -343,7 +344,10 @@ export default class VariantPresenter
       this.describeHeldLabels &&
       (this.isStatic || this.isDesktopTypeahead) &&
       this.#engine.hasValue &&
-      (this.overlayIsModal || this.isDesktopTypeahead || this.#engine.isAsync)
+      (this.overlayIsModal ||
+        this.isDesktopTypeahead ||
+        this.#engine.isAsync ||
+        !!this.#getArgs().hideSelected)
     );
   }
 

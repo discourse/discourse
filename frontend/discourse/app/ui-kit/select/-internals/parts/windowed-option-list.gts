@@ -41,7 +41,7 @@ interface WindowedOptionListSignature {
     /** Whether the consumer supplied custom item markup. */
     hasItemBlock: boolean;
     /** Whether the consumer supplied custom placeholder-row markup. */
-    hasLoadingItemBlock: boolean;
+    hasSkeletonItemBlock: boolean;
     /** Whether the consumer supplied custom group-header markup. */
     hasGroupHeaderBlock: boolean;
     /** Handles pointer-down on an option before its click resolves. */
@@ -63,7 +63,7 @@ interface WindowedOptionListSignature {
       item: SelectItemModel,
     ];
     /** Custom markup for one placeholder row while a page of rows is loading. */
-    loadingItem?: [];
+    skeletonItem?: [];
   };
 }
 
@@ -128,7 +128,7 @@ const WindowedOptionList: TemplateOnlyComponent<WindowedOptionListSignature> =
           @engine={{@engine}}
           @hasGroupHeaderBlock={{@hasGroupHeaderBlock}}
           @hasItemBlock={{@hasItemBlock}}
-          @hasLoadingItemBlock={{@hasLoadingItemBlock}}
+          @hasSkeletonItemBlock={{@hasSkeletonItemBlock}}
           @hideSelectionMarker={{@hideSelectionMarker}}
           @index={{row.index}}
           @items={{@items}}
@@ -143,7 +143,7 @@ const WindowedOptionList: TemplateOnlyComponent<WindowedOptionListSignature> =
         >
           <:item as |item|>{{yield item to="item"}}</:item>
           <:groupHeader as |item|>{{yield item to="groupHeader"}}</:groupHeader>
-          <:loadingItem>{{yield to="loadingItem"}}</:loadingItem>
+          <:skeletonItem>{{yield to="skeletonItem"}}</:skeletonItem>
         </SelectOptionRow>
       {{/let}}
     </DVirtualList>

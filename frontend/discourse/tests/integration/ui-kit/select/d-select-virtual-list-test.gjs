@@ -234,7 +234,7 @@ module(
       }
     });
 
-    test("a :loadingItem block replaces the placeholder rows of a pending reveal", async function (assert) {
+    test("a :skeletonItem block replaces the placeholder rows of a pending reveal", async function (assert) {
       let engine;
       let releaseReveal;
       let revealRequested = false;
@@ -252,9 +252,9 @@ module(
       await render(
         <template>
           <EngineProbe @debounce={{false}} @load={{load}}>
-            <:loadingItem><span
+            <:skeletonItem><span
                 class="custom-loading-row"
-              ></span></:loadingItem>
+              ></span></:skeletonItem>
           </EngineProbe>
         </template>
       );

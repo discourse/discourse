@@ -32,7 +32,9 @@ import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/e
 import keepAboveKeyboard from "discourse/ui-kit/select/-internals/modifiers/keep-above-keyboard";
 import ComboboxQueryInput from "discourse/ui-kit/select/-internals/parts/combobox-query-input";
 import MultiChips from "discourse/ui-kit/select/-internals/parts/multi-chips";
-import SelectPanel from "discourse/ui-kit/select/-internals/parts/select-panel";
+import SelectPanel, {
+  type SelectPanelState,
+} from "discourse/ui-kit/select/-internals/parts/select-panel";
 import SingleTriggerDisplay from "discourse/ui-kit/select/-internals/parts/single-trigger-display";
 import TriggerFrame from "discourse/ui-kit/select/-internals/parts/trigger-frame";
 import WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowed-option-list";
@@ -185,6 +187,11 @@ interface DSelectSignature {
      */
     minChars?: number;
     /**
+     * Omits held options from the results without reloading; held items stay reachable as chips
+     * (a static list shows its strip instead).
+     */
+    hideSelected?: boolean;
+    /**
      * Hard cap on a multi-select's selection count. At the cap every unselected ordinary option
      * is disabled (navigable, with activation blocked) and the limit message
      * appears. The cap never *newly* disables a selected row, so deselecting one is the way back
@@ -272,16 +279,23 @@ interface DSelectSignature {
      * One placeholder row, shown while a page of rows loads (the first load, or more rows
      * arriving at the end of the list). Repeated per row, so it should match the shape of `:item`.
      */
-    loadingItem?: [];
+    skeletonItem?: [];
     /** Consumer override for the no-results state, replacing the default "No results found". */
     empty?: [];
+    /** Content pinned between the search field and the results, outside the listbox. */
+    listHeader?: [
+      /** The live dropdown state. */
+      state: SelectState,
+      /** Resolved core and recipe values. */
+      options: SelectResolvedOptions,
+    ];
     /**
      * Content pinned below the option list (labels, links, action buttons). Yields the live
      * dropdown state so the content can react (e.g. a "plus N more" from `total - loadedCount`).
      */
     footer?: [
       /** The live dropdown state. */
-      state: SelectFooterState,
+      state: SelectState,
       /** Resolved core and recipe values. */
       options: SelectResolvedOptions,
     ];
@@ -293,28 +307,8 @@ interface DSelectSignature {
   };
 }
 
-/** The live state yielded to the `:footer` block so its content can react to the dropdown. */
-interface SelectFooterState {
-  /** The current filter query. */
-  filter: string;
-  /** The current value (id or id array). */
-  value: SelectValue;
-  /** Whether anything is selected. */
-  hasValue: boolean;
-  /** The whole result-set size, or `undefined` when a paginating source hasn't reported one. */
-  total: number | undefined;
-  /** How many options are currently loaded into the list (`total - loadedCount` = "more"). */
-  loadedCount: number;
-  /** The multi-select selection cap, or `null` when uncapped. */
-  maximum: number | null;
-  /** The advisory multi-select minimum (`0` = none). */
-  minimum: number;
-  /** Whether the selection has reached {@link maximum}. */
-  atMaximum: boolean;
-  /** Whether the selection is still short of the advisory {@link minimum}. */
-  belowMinimum: boolean;
-  /** How many more items may still be added, or `undefined` when uncapped. */
-  remaining: number | undefined;
+/** Live state yielded to the `:listHeader` and `:footer` blocks. */
+interface SelectState extends SelectPanelState {
   /** Dismisses the overlay (for a footer action such as "View all"). */
   close: () => void;
 }
@@ -747,10 +741,11 @@ export default class DSelect extends Component<DSelectSignature> {
             @hasFooterBlock={{has-block "footer"}}
             @hasGroupHeaderBlock={{has-block "groupHeader"}}
             @hasItemBlock={{has-block "item"}}
-            @hasListHeaderBlock={{false}}
-            @hasLoadingItemBlock={{has-block "loadingItem"}}
+            @hasListHeaderBlock={{has-block "listHeader"}}
             @hasSelectionBlock={{has-block "selection"}}
+            @hasSkeletonItemBlock={{has-block "skeletonItem"}}
             @hasUnresolvedBlock={{has-block "unresolved"}}
+            @hideSelectionMarker={{@hideSelected}}
             @hintRole="status"
             @label={{this.presenter.ariaLabelText}}
             @limitId={{this.limitId}}
@@ -779,6 +774,9 @@ export default class DSelect extends Component<DSelectSignature> {
             @showSelectionStrip={{this.interaction.showSelectionStrip}}
             @state={{hash
               filter=this.engine.filter
+              query=this.host.query
+              pending=this.engine.serverPending
+              showingSkeleton=this.feedback.showingSkeleton
               value=this.engine.value
               hasValue=this.engine.hasValue
               total=this.engine.total
@@ -888,7 +886,7 @@ export default class DSelect extends Component<DSelectSignature> {
                 options
                 to="groupHeader"
               }}</:groupHeader>
-            <:loadingItem>{{yield to="loadingItem"}}</:loadingItem>
+            <:skeletonItem>{{yield to="skeletonItem"}}</:skeletonItem>
             <:selection as |item options|>{{yield
                 item
                 options
@@ -901,6 +899,9 @@ export default class DSelect extends Component<DSelectSignature> {
               }}</:unresolved>
             <:empty>{{yield to="empty"}}</:empty>
             <:error as |error retry|>{{yield error retry to="error"}}</:error>
+            <:listHeader as |state options|>
+              {{yield state options to="listHeader"}}
+            </:listHeader>
             <:footer as |state options|>{{yield
                 state
                 options

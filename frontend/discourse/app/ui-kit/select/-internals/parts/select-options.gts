@@ -159,7 +159,7 @@ interface SelectOptionsSignature {
     /** Consumer-provided label for an empty result set. */
     noResultsLabel?: string;
     /** Whether the consumer supplied custom placeholder-row markup. */
-    hasLoadingItemBlock: boolean;
+    hasSkeletonItemBlock: boolean;
     /** Whether the consumer supplied custom empty-state markup. */
     hasEmptyBlock: boolean;
     /** Whether the consumer supplied custom error-state markup. */
@@ -176,7 +176,7 @@ interface SelectOptionsSignature {
       modifiers: SelectOptionsModifiers,
     ];
     /** Custom markup for one placeholder row while a page of rows is loading. */
-    loadingItem?: [];
+    skeletonItem?: [];
     /** Custom markup for the empty state. */
     empty?: [];
     /** Custom markup for the error state. */
@@ -221,8 +221,8 @@ const SelectOptions: TemplateOnlyComponent<SelectOptionsSignature> = <template>
                 {{! An empty label gives the placeholder a row's line height and a varied width. }}
                 <span class="d-select__placeholder-label"></span>
               {{/if}}
-              {{#if @hasLoadingItemBlock}}
-                {{yield to="loadingItem"}}
+              {{#if @hasSkeletonItemBlock}}
+                {{yield to="skeletonItem"}}
               {{else}}
                 <DSkeleton @variant="text" />
               {{/if}}

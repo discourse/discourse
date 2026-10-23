@@ -99,7 +99,7 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     must stay a cache hit**: the resolve writes this tracked cache, so a read that missed
     would re-resolve, re-write, invalidate the render that read it and never settle. The
     original "no tracked-cache write during resolve" note was preventing exactly that loop.
-  - ☑ Custom `:unresolved` / `:selectionLoading` / `:loadingItem` blocks and the skeleton
+  - ☑ Custom `:unresolved` / `:selectionLoading` / `:loadingItem` (now `:skeletonItem`) blocks and the skeleton
     taxonomy (2026-10-06). `:loadingItem` is one placeholder row, repeated for the first load
     and for rows arriving at the end of the list. `:selectionLoading` replaces the placeholder
     in every chip and in all four single-trigger branches (mobile typeahead, desktop typeahead

@@ -96,6 +96,15 @@ export default class LoadFeedbackTracker {
   }
 
   /**
+   * Whether skeleton rows stand in for the results: a first load or a re-query has run past the
+   * delay. Skeletons appended below a page that is still correct do not count; results are on
+   * screen then.
+   */
+  get showingSkeleton(): boolean {
+    return this.#replaceRowsWhileReloading || this.showInitialPlaceholder;
+  }
+
+  /**
    * Whether to keep the previous rows mounted while a load is in flight.
    *
    * Retention exists to absorb a fast source, where dropping to a skeleton and back reads as a

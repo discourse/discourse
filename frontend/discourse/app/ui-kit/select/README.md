@@ -634,12 +634,16 @@ by mechanism.
 - Custom row and selection markup (`:item` / `:selection` blocks; on the typeahead variant the
   `:selection` block is the resting/closed display — once the menu opens the built-in input shows
   the editable label text, so it is not a live-while-editing surface); empty state
-  (`@noResultsLabel` / `:empty`); loading skeleton (`@skeletonCount`); a muted source-error state
-  with an optional retry (`@retryable`) and an `:error` consumer block.
-- A fixed `:footer` block below the option list (labels, links, action buttons), keyboard-reachable
-  and yielding live state `{filter, value, hasValue, total, loadedCount, maximum, minimum, atMaximum,
-  belowMinimum, remaining, close}` so its content can react (e.g. a "plus N more" from
-  `total - loadedCount`).
+  (`@noResultsLabel` / `:empty`); loading skeleton (`@skeletonCount`, and a `:skeletonItem` block
+  for one placeholder row); a muted source-error state with an optional retry (`@retryable`) and an
+  `:error` consumer block.
+- A fixed `:footer` block below the option list (labels, links, action buttons), keyboard-reachable,
+  and a `:listHeader` block between the search field and the results, outside the listbox. Both
+  yield live state `{filter, query, pending, showingSkeleton, value, hasValue, total, loadedCount,
+  maximum, minimum, atMaximum, belowMinimum, remaining, close}` so their content can react (e.g. a
+  "plus N more" from `total - loadedCount`). The search fields are described under `DSelectList`.
+- `@hideSelected` omits held options from the results without reloading. Held items stay reachable
+  as chips; a local static list shows its strip of held items instead.
 - Selection limits (`@maximum` / `@minimum`, multi-select). `@maximum` is a hard cap enforced at the
   engine's single `select()` chokepoint (so pointer, keyboard, create-on-the-fly, and the compat
   bridge are all covered) and reinforced by disabling every unselected option at the cap; a value
@@ -751,10 +755,20 @@ Removing a chip restores its row without another source request. Rows then drop 
 selection marker, which could only ever read unselected. The `:listHeader`
 block sits between the search field and results, outside the listbox. It yields the same live
 state and resolved options as `:footer`, so a suggested-results heading can show only
-when `state.query` is empty. `state.filter` is the current input; `state.query` is the
-filter answered by the displayed results and stays on the previous answer while
-a new query loads. This works with async `@load` sources. Neither state has
-a `close` action. Other blocks are `:item`, `:selection`, `:selectionLoading`,
+when `state.query` is empty. Four fields describe a search, the same way in DSelect:
+
+- `state.filter` is the text in the search field right now.
+- `state.query` is the search the visible results are for. While a new search loads, the
+  previous results stay on screen and `query` keeps naming their search until the new
+  results arrive.
+- `state.pending` is true while results are loading (a new search, a reload or the next
+  page), from the moment the load starts; for a search, that is the keystroke.
+- `state.showingSkeleton` turns true once a search, a reload or the first load runs past the
+  loading-feedback delay and skeleton rows replace the results; `query` then names the last
+  search that finished. Placeholder rows added below results for the next page do not count.
+
+This works with async `@load` sources. Unlike DSelect's, neither state has a `close`
+action. Other blocks are `:item`, `:selection`, `:selectionLoading`,
 `:unresolved`, `:empty` and `:error`; see the typed signature in `d-select-list.gts` for
 their yielded values. Held values resolve through `@resolveValues`, `@resolveValue` or
 `@valueItems`, as in DSelect.

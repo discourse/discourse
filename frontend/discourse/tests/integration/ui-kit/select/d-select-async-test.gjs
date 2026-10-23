@@ -317,14 +317,16 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
       .hasValue("One", "the picked value resolves from the loaded rows");
   });
 
-  test("a :loadingItem block replaces each placeholder row of the first load", async function (assert) {
+  test("a :skeletonItem block replaces each placeholder row of the first load", async function (assert) {
     let resolveLoad;
     const load = () => new Promise((resolve) => (resolveLoad = resolve));
 
     await render(
       <template>
         <DSelect @load={{load}}>
-          <:loadingItem><span class="custom-loading-row"></span></:loadingItem>
+          <:skeletonItem><span
+              class="custom-loading-row"
+            ></span></:skeletonItem>
         </DSelect>
       </template>
     );

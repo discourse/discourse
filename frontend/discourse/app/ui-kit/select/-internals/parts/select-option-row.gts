@@ -32,7 +32,7 @@ interface SelectOptionRowSignature {
     /** Whether the consumer supplied custom item markup. */
     hasItemBlock: boolean;
     /** Whether the consumer supplied custom placeholder-row markup. */
-    hasLoadingItemBlock: boolean;
+    hasSkeletonItemBlock: boolean;
     /** Whether the consumer supplied custom group-header markup. */
     hasGroupHeaderBlock: boolean;
     /** Handles pointer-down on an option before its click resolves. */
@@ -60,7 +60,7 @@ interface SelectOptionRowSignature {
       item: SelectItemModel,
     ];
     /** Custom markup for one placeholder row while a page of rows is loading. */
-    loadingItem?: [];
+    skeletonItem?: [];
   };
 }
 
@@ -149,8 +149,8 @@ const SelectOptionRow: TemplateOnlyComponent<SelectOptionRowSignature> =
             {{@place}}
             {{@measure}}
           >
-            {{#if @hasLoadingItemBlock}}
-              {{yield to="loadingItem"}}
+            {{#if @hasSkeletonItemBlock}}
+              {{yield to="skeletonItem"}}
             {{else}}
               <DSkeleton @variant="text" />
             {{/if}}

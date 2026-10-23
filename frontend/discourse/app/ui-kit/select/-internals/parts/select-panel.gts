@@ -20,6 +20,46 @@ import SelectEngine, {
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
+/** Live state yielded to a select's `:listHeader` and `:footer` blocks. */
+export interface SelectPanelState {
+  /** The text in the search field right now. */
+  filter: string;
+  /**
+   * The search the visible results are for. While a new search loads, the previous results stay
+   * on screen and this keeps naming their search until the new results arrive.
+   */
+  query: string;
+  /**
+   * Whether results are loading: a new search, a reload or the next page. True from the moment
+   * it starts (for a search, the keystroke), before any skeleton shows.
+   */
+  pending: boolean;
+  /**
+   * Whether skeleton rows stand in for the results, which happens once a search or the first
+   * load runs past a short delay. While true, no results are on screen and `query` names the
+   * last search that finished.
+   */
+  showingSkeleton: boolean;
+  /** Held values in selection order, or the single held value. */
+  value: SelectValue;
+  /** Whether anything is held. */
+  hasValue: boolean;
+  /** The whole result-set size, or `undefined` when a paginating source has not reported one. */
+  total: number | undefined;
+  /** How many results are loaded so far. */
+  loadedCount: number;
+  /** The selection cap, or `null` when uncapped. */
+  maximum: number | null;
+  /** The advisory selection minimum (`0` means none). */
+  minimum: number;
+  /** Whether the selection reached its cap. */
+  atMaximum: boolean;
+  /** Whether the selection is below its advisory minimum. */
+  belowMinimum: boolean;
+  /** How many more items may be added, or `undefined` when uncapped. */
+  remaining: number | undefined;
+}
+
 interface SelectPanelSignature<State> {
   Args: {
     /** The headless selection engine. */
@@ -103,8 +143,8 @@ interface SelectPanelSignature<State> {
     hasItemBlock: boolean;
     /** Whether the host supplies the groupHeader block. */
     hasGroupHeaderBlock: boolean;
-    /** Whether the host supplies the loadingItem block. */
-    hasLoadingItemBlock: boolean;
+    /** Whether the host supplies the skeletonItem block. */
+    hasSkeletonItemBlock: boolean;
     /** Whether the host supplies the selection block. */
     hasSelectionBlock: boolean;
     /** Whether the host supplies the unresolved block. */
@@ -143,8 +183,8 @@ interface SelectPanelSignature<State> {
       /** The rendered item. */ item: SelectItem,
       /** Resolved core and recipe options. */ options: SelectResolvedOptions,
     ];
-    /** Custom loadingItem content. */
-    loadingItem?: [];
+    /** Custom skeletonItem content. */
+    skeletonItem?: [];
     /** Custom empty content. */
     empty?: [];
     /** Custom source-error content. */
@@ -252,7 +292,7 @@ export default class SelectPanel<State> extends Component<
         @filterInput={{@filterInput}}
         @hasEmptyBlock={{@hasEmptyBlock}}
         @hasErrorBlock={{@hasErrorBlock}}
-        @hasLoadingItemBlock={{@hasLoadingItemBlock}}
+        @hasSkeletonItemBlock={{@hasSkeletonItemBlock}}
         @hideEmptyQuery={{@hideEmptyQuery}}
         @listbox={{@listbox}}
         @loadListContent={{@loadListContent}}
@@ -270,7 +310,7 @@ export default class SelectPanel<State> extends Component<
             @engine={{@engine}}
             @hasGroupHeaderBlock={{@hasGroupHeaderBlock}}
             @hasItemBlock={{@hasItemBlock}}
-            @hasLoadingItemBlock={{@hasLoadingItemBlock}}
+            @hasSkeletonItemBlock={{@hasSkeletonItemBlock}}
             @hideSelectionMarker={{@hideSelectionMarker}}
             @items={{items}}
             @label={{@label}}
@@ -294,10 +334,10 @@ export default class SelectPanel<State> extends Component<
                 this.resolvedOptions
                 to="groupHeader"
               }}</:groupHeader>
-            <:loadingItem>{{yield to="loadingItem"}}</:loadingItem>
+            <:skeletonItem>{{yield to="skeletonItem"}}</:skeletonItem>
           </@body>
         </:body>
-        <:loadingItem>{{yield to="loadingItem"}}</:loadingItem>
+        <:skeletonItem>{{yield to="skeletonItem"}}</:skeletonItem>
         <:empty>{{yield to="empty"}}</:empty>
         <:error as |error retry|>{{yield error retry to="error"}}</:error>
       </SelectOptions>

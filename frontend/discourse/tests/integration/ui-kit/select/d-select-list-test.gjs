@@ -6,11 +6,13 @@ import {
   find,
   findAll,
   focus,
+  getRootElement,
   render,
   settled,
   triggerEvent,
   triggerKeyEvent,
   waitFor,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -134,6 +136,35 @@ function chipButtons(scope = ".d-select.--list") {
 
 async function type(text, scope) {
   await fillIn(input(scope), text);
+}
+
+/**
+ * Records every distinct "query|pending|skeleton" state the header renders. Polling cannot see
+ * the pending-only state, because test timers shorten the skeleton delay to a single tick.
+ */
+function recordHeaderFrames() {
+  const frames = [];
+  const record = () => {
+    const parts = ["query", "pending", "skeleton"].map((key) =>
+      find(`.test-${key}`)?.textContent.trim()
+    );
+    const frame = parts.join("|");
+    if (parts.every((part) => part !== undefined) && frames.at(-1) !== frame) {
+      frames.push(frame);
+    }
+  };
+  const observer = new MutationObserver(record);
+  observer.observe(getRootElement(), {
+    characterData: true,
+    childList: true,
+    subtree: true,
+  });
+  return {
+    stop() {
+      observer.disconnect();
+      return frames;
+    },
+  };
 }
 
 module("Integration | ui-kit | select | DSelectList", function (hooks) {
@@ -1135,6 +1166,61 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       assert
         .dom(".test-suggested")
         .doesNotExist("the header changes with the rows it describes");
+    });
+    test("DSelectList state separates a pending search from a showing skeleton", async function (assert) {
+      const held = tracked([]);
+      const setHeld = (next) => (held.value = next);
+      const gate = gatedLoader();
+      const load = gate.load;
+      await render(
+        <template>
+          <DSelectList
+            @debounce={{false}}
+            @label="Fruit"
+            @load={{load}}
+            @onChange={{setHeld}}
+            @value={{held.value}}
+            @virtualized={{false}}
+          >
+            <:listHeader as |state|>
+              <span class="test-query">{{state.query}}</span>
+              <span class="test-pending">{{if state.pending "yes" "no"}}</span>
+              <span class="test-skeleton">{{if
+                  state.showingSkeleton
+                  "yes"
+                  "no"
+                }}</span>
+            </:listHeader>
+          </DSelectList>
+        </template>
+      );
+
+      await focus(input());
+      assert.dom(".test-pending").hasText("no", "nothing is in flight at rest");
+      gate.hold();
+      try {
+        const frames = recordHeaderFrames();
+        fillIn(input(), "an");
+        await waitUntil(
+          () => find(".test-skeleton")?.textContent.trim() === "yes",
+          { timeout: 2000 }
+        );
+        assert.deepEqual(
+          frames.stop(),
+          ["|yes|no", "|yes|yes"],
+          "a search is pending at once with the previous results still answering the empty search; the skeleton replaces them later, and query keeps naming the last search that finished"
+        );
+      } finally {
+        // A held request keeps a test waiter open; releasing it in finally stops one failure
+        // from stalling every later test.
+        gate.release();
+      }
+      await settled();
+      assert.dom(".test-pending").hasText("no");
+      assert.dom(".test-skeleton").hasText("no");
+      assert
+        .dom(".test-query")
+        .hasText("an", "the new results answer the new search");
     });
   });
 
