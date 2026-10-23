@@ -177,41 +177,52 @@ module DiscourseAi
         deadline =
           Process.clock_gettime(Process::CLOCK_MONOTONIC) +
             SiteSetting.ai_ask_ai_external_sources_timeout
-        sources.map do |source|
+        sources.filter_map do |source|
+          if !ExternalSource.claim_slot
+            skip_external_source(source, :busy)
+            next
+          end
+
           thread =
             Thread.new do
               RailsMultisite::ConnectionManagement.with_connection(database) do
-                [source.call(**queries, deadline:), nil]
+                [source.call(**queries), nil]
               rescue StandardError => error
                 [[], error]
               end
+            ensure
+              ExternalSource.release_slot
             end
           [source, thread, deadline]
         end
       end
 
-      # Sources stop themselves at the deadline, but one caught in a call that
-      # cannot be interrupted is left to finish on its own, unwaited for.
+      # A source still running at the deadline is not waited for. It runs on
+      # until the tool runner's own limits end it, holding its slot.
       def external_rankings(searches)
         searches.filter_map do |source, thread, deadline|
           remaining = deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
           if thread.join([remaining, 0].max).nil?
-            Rails.logger.warn(
-              "Discourse AI Discoveries skipped external source #{source.name}: timed out",
-            )
+            skip_external_source(source, :timed_out)
             next
           end
 
           results, error = thread.value
           if error
-            Rails.logger.warn(
-              "Discourse AI Discoveries skipped external source #{source.name}: #{error.class}",
-            )
+            skip_external_source(source, :failed, error.class)
             next
           end
 
+          source.record_outcome(:succeeded)
           results
         end
+      end
+
+      def skip_external_source(source, outcome, reason = outcome)
+        source.record_outcome(outcome)
+        Rails.logger.warn(
+          "Discourse AI Discoveries skipped external source #{source.name}: #{reason}",
+        )
       end
 
       def lexical_sources(query)

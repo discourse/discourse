@@ -14,7 +14,6 @@ module DiscourseAi
       attr_accessor :running_attached_function, :timeout, :custom_raw
 
       TooManyRequestsError = Class.new(StandardError)
-      DeadlineExceededError = Class.new(StandardError)
 
       DEFAULT_TIMEOUT = 2000
       MAX_MEMORY = 10_000_000
@@ -43,8 +42,7 @@ module DiscourseAi
         context: nil,
         tool:,
         timeout: nil,
-        secret_bindings: nil,
-        deadline: nil
+        secret_bindings: nil
       )
         if context && !context.is_a?(DiscourseAi::Agents::BotContext)
           raise ArgumentError, "context must be a BotContext object"
@@ -60,9 +58,6 @@ module DiscourseAi
         @timeout = timeout || DEFAULT_TIMEOUT
         @running_attached_function = false
         @secret_bindings = secret_bindings
-        # Unlike timeout, which only counts time spent running the script, the
-        # deadline is a monotonic clock time that Ruby callbacks count towards.
-        @deadline = deadline
 
         @sleep_calls_made = 0
         @http_requests_made = 0
@@ -379,7 +374,7 @@ module DiscourseAi
                     true
                   else
                     elapsed += 1 if !running_attached_function
-                    if elapsed > timeout || (!running_attached_function && past_deadline?)
+                    if elapsed > timeout
                       context.stop
                       true
                     else
@@ -511,9 +506,6 @@ module DiscourseAi
             end
 
             raise ArgumentError.new("Sleep duration must be positive") if duration_ms <= 0
-            if (remaining = remaining_time) && duration_ms / 1000.0 > remaining
-              raise DeadlineExceededError.new("Tool would sleep past its deadline")
-            end
 
             in_attached_function do
               sleep(duration_ms / 1000.0)
@@ -521,21 +513,6 @@ module DiscourseAi
             end
           end,
         )
-      end
-
-      def past_deadline?
-        @deadline && Process.clock_gettime(Process::CLOCK_MONOTONIC) >= @deadline
-      end
-
-      # @return [Float, nil] seconds left before the deadline, nil without one
-      # @raise [DeadlineExceededError] once the deadline has passed
-      def remaining_time
-        return if @deadline.nil?
-
-        remaining = @deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
-        raise DeadlineExceededError.new("Tool ran out of time") if remaining <= 0
-
-        remaining
       end
 
       def resolve_tool_secret!(alias_name)

@@ -14,7 +14,6 @@ module DiscourseAi
                   raise TooManyRequestsError.new("Tool made too many HTTP requests")
                 end
 
-                timeout = remaining_time
                 in_attached_function do
                   headers = (options && options["headers"]) || {}
                   base64_encode = options && options["base64Encode"]
@@ -23,7 +22,6 @@ module DiscourseAi
                   DiscourseAi::Agents::Tools::Tool.send_http_request(
                     url,
                     headers: headers,
-                    timeout: timeout,
                   ) do |response|
                     if base64_encode
                       result[:body] = Base64.strict_encode64(response.body)
@@ -49,7 +47,6 @@ module DiscourseAi
                     raise TooManyRequestsError.new("Tool made too many HTTP requests")
                   end
 
-                  timeout = remaining_time
                   in_attached_function do
                     headers = (options && options["headers"]) || {}
                     body = options && options["body"]
@@ -61,7 +58,6 @@ module DiscourseAi
                       method: method,
                       headers: headers,
                       body: body,
-                      timeout: timeout,
                     ) do |response|
                       if base64_encode
                         result[:body] = Base64.strict_encode64(response.body)

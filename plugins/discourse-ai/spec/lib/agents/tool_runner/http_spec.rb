@@ -138,21 +138,6 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
       expect(result).to eq("Hello World")
     end
 
-    it "refuses requests once the deadline has passed" do
-      tool = create_tool(script: "function invoke() { return http.get('https://example.com/'); }")
-      request = stub_request(:get, "https://example.com/")
-      runner =
-        tool.runner(
-          {},
-          llm:,
-          bot_user:,
-          deadline: Process.clock_gettime(Process::CLOCK_MONOTONIC) - 1,
-        )
-
-      expect { runner.invoke }.to raise_error(/ran out of time/)
-      expect(request).not_to have_been_requested
-    end
-
     it "is limited to MAX http requests" do
       script = <<~JS
         function invoke(params) {

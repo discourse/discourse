@@ -11,6 +11,7 @@ en:
         other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. Over the last %{count} hours, it failed to respond %{failed_calls} out of %{total_calls} times."
       ai_credit_soft_limit: "%{model_name} has only %{percentage_remaining}% of credits remaining. Credits will reset at %{reset_date}. <a href='%{url}'>View AI models</a>"
       ai_credit_hard_limit: "You have run out of AI credits for %{model_name}. AI features will be unavailable until %{reset_date}. <a href='%{url}'>View AI models</a>"
+      ai_ask_ai_external_source: "Ask AI skipped its external source <a href='%{base_path}/admin/plugins/discourse-ai/ai-tools/%{target}/edit'>%{tool_name}</a> in %{skipped} of its last %{searches} searches over the past %{hours} hours: %{timed_out} took longer than the external source wait, %{failed} failed, and %{busy} were skipped because too many searches were still waiting on external sources."
       ai_image_caption_agent: "AI image captions are enabled, but the selected image caption agent is not ready: %{reason}. <a href='%{url}'>Review the image caption agent</a>."
       ai_image_caption_agent_reasons:
         agent_missing: "the selected agent does not exist"

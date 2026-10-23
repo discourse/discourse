@@ -382,7 +382,12 @@ describe DiscourseAi::Discoveries::Retrieval do
 
   describe "#call with external sources" do
     def external_source(name: "Help center", &search)
-      Struct.new(:name, :search) { def call(**queries) = search.call(**queries) }.new(name, search)
+      Struct
+        .new(:name, :search) do
+          def call(**queries) = search.call(**queries)
+          def record_outcome(_outcome) = nil
+        end
+        .new(name, search)
     end
 
     def external_result(title, url)
@@ -393,7 +398,7 @@ describe DiscourseAi::Discoveries::Retrieval do
       received = nil
       help_center =
         external_source do |**queries|
-          received = queries.except(:deadline)
+          received = queries
           [external_result("Reset guide", "https://kb.example.com/reset")]
         end
 
@@ -465,6 +470,53 @@ describe DiscourseAi::Discoveries::Retrieval do
           external_sources: [external_source { |**| [] }],
         ).call("docs")
       }.to raise_error("embeddings unavailable")
+    end
+
+    it "records how each source's search ended" do
+      SiteSetting.ai_ask_ai_external_sources_timeout = 1
+      scripts = {
+        "Fast" => "function invoke() { return []; }",
+        "Slow" => "function invoke() { sleep(3000); return []; }",
+        "Broken" => "function invoke() { throw new Error('down'); }",
+      }
+      tools = scripts.map { |name, script| Fabricate(:ai_tool, name:, script:) }
+
+      described_class.new(
+        user:,
+        lexical_retriever: ->(_query) { [] },
+        semantic_retriever: ->(_query) { [] },
+        external_sources:
+          tools.map { |tool| DiscourseAi::Discoveries::ExternalSource.new(tool, user:) },
+      ).call("docs")
+
+      outcomes =
+        tools.to_h do |tool|
+          counts = DiscourseAi::Discoveries::ExternalSource.outcome_counts(tool.id, hours: 1)
+          [tool.name, counts.select { |_outcome, count| count > 0 }.keys]
+        end
+      expect(outcomes).to eq(
+        "Fast" => %w[succeeded],
+        "Slow" => %w[timed_out],
+        "Broken" => %w[failed],
+      )
+    end
+
+    it "skips external sources once too many are still running" do
+      ai_tool = Fabricate(:ai_tool, script: "function invoke() { return []; }")
+      source = DiscourseAi::Discoveries::ExternalSource.new(ai_tool, user:)
+
+      stub_const(DiscourseAi::Discoveries::ExternalSource, :MAX_IN_FLIGHT, 0) do
+        described_class.new(
+          user:,
+          lexical_retriever: ->(_query) { [source(post_1)] },
+          semantic_retriever: ->(_query) { [] },
+          external_sources: [source],
+        ).call("docs")
+      end
+
+      expect(
+        DiscourseAi::Discoveries::ExternalSource.outcome_counts(ai_tool.id, hours: 1),
+      ).to include("busy" => 1, "succeeded" => 0)
     end
 
     it "searches only external sources when the forum's searches are disabled" do

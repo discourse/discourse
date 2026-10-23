@@ -145,36 +145,6 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
         described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool, timeout: 10)
       expect(runner.eval_with_timeout("sleep(50); 42")).to eq(42)
     end
-
-    it "stops a running script at its deadline however much script time is left" do
-      tool.update!(script: "function invoke() { while (true) {} }")
-      runner =
-        described_class.new(
-          parameters: {
-          },
-          llm: llm,
-          bot_user: bot_user,
-          tool: tool,
-          timeout: 60_000,
-          deadline: Process.clock_gettime(Process::CLOCK_MONOTONIC) + 0.1,
-        )
-
-      expect(runner.invoke).to eq(error: "Script terminated due to timeout")
-    end
-
-    it "counts time spent in attached functions towards the deadline" do
-      runner =
-        described_class.new(
-          parameters: {
-          },
-          llm: llm,
-          bot_user: bot_user,
-          tool: tool,
-          deadline: Process.clock_gettime(Process::CLOCK_MONOTONIC) + 0.2,
-        )
-
-      expect { runner.eval_with_timeout("while (true) { sleep(50); }") }.to raise_error(/deadline/)
-    end
   end
 
   describe "#has_custom_system_message?" do

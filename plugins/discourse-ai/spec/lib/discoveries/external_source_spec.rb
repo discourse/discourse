@@ -88,7 +88,6 @@ describe DiscourseAi::Discoveries::ExternalSource do
           keyword_query: "reset password",
           semantic_query: "How can I reset a forgotten password?",
           locale: "en",
-          deadline: Process.clock_gettime(Process::CLOCK_MONOTONIC) + 5,
         )
 
       expect(candidates).to eq(
@@ -120,13 +119,7 @@ describe DiscourseAi::Discoveries::ExternalSource do
         described_class
           .configured(user:)
           .first
-          .call(
-            query: "q",
-            keyword_query: "q",
-            semantic_query: "q",
-            locale: "en",
-            deadline: Process.clock_gettime(Process::CLOCK_MONOTONIC) + 5,
-          )
+          .call(query: "q", keyword_query: "q", semantic_query: "q", locale: "en")
 
       expect(candidates.first["title"]).to be_present
       expect(candidates.first["title"]).not_to include("four")
@@ -141,7 +134,6 @@ describe DiscourseAi::Discoveries::ExternalSource do
           keyword_query: "q",
           semantic_query: "q",
           locale: "en",
-          deadline: Process.clock_gettime(Process::CLOCK_MONOTONIC) + 5,
         )
       }.to raise_error(StandardError)
     end
