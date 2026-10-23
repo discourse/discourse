@@ -10,6 +10,25 @@ module PageObjects
         body.find("#radio_#{type}").click
       end
 
+      def has_no_illegal_flag_choice?
+        body.has_no_css?("#radio_illegal")
+      end
+
+      def has_illegal_content_description?
+        body.has_css?(
+          ".flag-modal__illegal-content-description",
+          text:
+            I18n.t(
+              "js.flagging.illegal_content_report_description",
+              reportLink: I18n.t("js.flagging.illegal_content_report_link"),
+            ),
+        )
+      end
+
+      def report_illegal_content
+        body.click_link(I18n.t("js.flagging.illegal_content_report_link"))
+      end
+
       def confirm_flag
         click_primary_button
       end

@@ -5768,10 +5768,14 @@ en:
       colors_disabled: "You can’t select colors because you have a category style of none."
 
     anonymous_flagging:
+      dsa_description: "If you believe this content is illegal, %{reportLink} for our team to review."
+      report_link: "submit a report"
       title: "Report illegal content"
       description: "To report illegal content, please contact <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
 
     flagging:
+      illegal_content_report_description: "If you believe this content is illegal, %{reportLink}"
+      illegal_content_report_link: "submit an illegal content report."
       title: "Thanks for keeping our community civil!"
       review_process_description: "All flags are received by moderators and will be reviewed as soon as possible."
       action: "Flag Post"
