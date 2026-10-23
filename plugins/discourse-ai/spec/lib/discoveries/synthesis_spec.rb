@@ -42,7 +42,7 @@ describe DiscourseAi::Discoveries::Synthesis do
     expect(source_refs["max_items"]).to eq(6)
   end
 
-  it "leaves out unset flags and a last update on the day the post was made" do
+  it "leaves out unset flags, whether the post is the first, and a same-day last update" do
     candidate = {
       "source_ref" => "source_1",
       "title" => "Plugins",
@@ -185,7 +185,6 @@ describe DiscourseAi::Discoveries::Synthesis do
               "topic_replies" => 8,
               "tags" => "plugin, development",
               "author_is_staff" => true,
-              "is_topic_op" => true,
               "last_updated_at" => "2026-08-12",
             },
           ],

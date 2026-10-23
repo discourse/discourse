@@ -174,6 +174,7 @@ module DiscourseAi
       # Most of each candidate is metadata rather than content, so it is kept
       # to what the model can use: days rather than timestamps, links without
       # the slug that repeats the title, and flags only when they are set.
+      # Whether a passage is the topic's first post shows in its post_number.
       def candidate_input(candidate)
         input =
           candidate.slice(
@@ -191,7 +192,6 @@ module DiscourseAi
         input["url"] = slugless_url(candidate["url"]) if candidate["url"]
         input["created"] = day(candidate["created"]) if candidate["created"]
         input["author_is_staff"] = true if candidate["author_is_staff"]
-        input["is_topic_op"] = true if candidate["is_topic_op"]
         if candidate["passages"].present?
           input["passages"] = candidate["passages"].map do |passage|
             passage.slice("post_number", "excerpt").compact
