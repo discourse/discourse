@@ -1,0 +1,27 @@
+.hamilton {
+  &__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    padding-block: 1em;
+  }
+
+  &__greeting {
+    display: grid;
+    place-items: center;
+    min-height: 70vh;
+    text-align: center;
+    overflow-wrap: anywhere;
+
+    h1 {
+      font-size: var(--font-up-5);
+    }
+  }
+
+  &__docs {
+    max-width: 50em;
+    margin-inline: auto;
+    padding-block: 1em;
+    overflow-wrap: anywhere;
+  }
+}

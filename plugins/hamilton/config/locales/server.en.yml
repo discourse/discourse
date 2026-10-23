@@ -1,0 +1,4 @@
+en:
+  site_settings:
+    hamilton_enabled: "Enable the Hamilton plugin."
+    hamilton_greeting: "Text shown after Hello on the Hamilton page."
