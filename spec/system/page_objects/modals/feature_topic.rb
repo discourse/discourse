@@ -5,23 +5,25 @@ module PageObjects
     class FeatureTopic < Base
       MODAL_SELECTOR = ".feature-topic"
 
-      def select_custom_date(date:, globally: false)
+      def select_custom_date(day:, globally: false)
         selector =
           PageObjects::Components::SelectKit.new(
             "#{section_selector(globally:)} .future-date-input-selector",
           )
         selector.expand
         selector.select_row_by_value("custom")
-        find("#{section_selector(globally:)} .date-picker").click
-        selected_date = Date.iso8601(date)
-        find(
-          ".pika-single button[data-pika-year='#{selected_date.year}'][data-pika-month='#{selected_date.month - 1}'][data-pika-day='#{selected_date.day}']",
-        ).click
-        find("#{section_selector(globally:)} .time-input").click
+        calendar =
+          PageObjects::Components::PikadayCalendar.new(
+            "#{section_selector(globally:)} .date-picker",
+          )
+        calendar.open_calendar
+        calendar.select_day(day)
       end
 
       def set_time(time:, globally: false)
-        find("#{section_selector(globally:)} .time-input").set(time)
+        input = find("#{section_selector(globally:)} .time-input")
+        input.click
+        input.set(time)
       end
 
       def has_focused_time?(time:, globally: false)
