@@ -76,7 +76,7 @@ If multiple transformers are registered against a single name, then they will be
 
 ## Finding Transformers
 
-All core transformer names are listed in [lib/registry/transformers.ts](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/registry/transformers.ts). Typed hooks point to a contract declared next to the code that applies them, describing the value, context, and return types. For the others, search for the name in the core codebase to find where it's applied, its context and value, and the expected return type. Editors that understand TypeScript complete hook names when you call `applyValueTransformer`, `api.registerValueTransformer`, and their behavior counterparts, including in plain JavaScript files.
+All core transformer names are listed in [lib/registry/transformers.ts](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/registry/transformers.ts). Typed hooks point to a contract declared next to the code that applies them, describing the value, context, and return types. For the others, search for the name in the core codebase to find where it's applied, its context and value, and the expected return type. Editors set up as described in [Types](27-types.md) complete hook names when you call `applyValueTransformer`, `api.registerValueTransformer`, and their behavior counterparts, including in plain JavaScript files. The plugin API is defined in a `.gjs` file, so its hints need an editor that can read `.gjs` files.
 
 ## Introducing new Transformers
 

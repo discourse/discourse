@@ -28,7 +28,9 @@ Types whose meaning a runtime test can't capture (a generic's resolved type, an 
 
 - **VSCode**: Install the [TypeScript 7](https://marketplace.visualstudio.com/items?itemName=TypeScriptTeam.native-preview) and [Glint v2](https://marketplace.visualstudio.com/items?itemName=typed-ember.glint2-vscode) extensions. Glint 1.4.0 and newer hands `.gts`/`.gjs` files to TypeScript's own language server. Both are part of our [recommended config](https://github.com/discourse/discourse/blob/main/.vscode/extensions.json), so you may already have it. If anything isn't working, you may need to trigger "Restart extension host" from VSCode's command palette, or restart the IDE.
 
-- **JetBrains** (RubyMine, WebStorm, Intellij, etc.): Install the [EmberExperimental](https://plugins.jetbrains.com/plugin/15499-emberexperimental-js) plugin.
+  The TypeScript 7 extension uses its own bundled TypeScript by default, which may be too old to read `.gjs` and `.gts` files. Point it at the repository's TypeScript instead by adding `"js/ts.tsdk.path": "node_modules/typescript"` to your user settings. Without it, types that come from `.gjs` modules, such as the plugin API, show up as `any`.
+
+- **JetBrains** (RubyMine, WebStorm, Intellij, etc.): Install the [EmberExperimental](https://plugins.jetbrains.com/plugin/15499-emberexperimental-js) plugin. JetBrains IDEs don't yet enable the external code TypeScript 7 needs to read `.gjs` and `.gts` files, so types that come from those files show up as `any`. Types defined in `.js` and `.ts` files work as usual.
 
 ## Troubleshooting
 
