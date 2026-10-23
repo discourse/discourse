@@ -17,10 +17,10 @@ module DiscourseMcp
             .limit(limit)
         if !request_context.has_scopes?(Scopes::PRIVATE_MESSAGES_READ)
           notifications =
-            notifications.left_joins(:topic).where(
-              "topics.id IS NULL OR topics.archetype <> ?",
-              Archetype.private_message,
-            )
+            notifications
+              .where.not(notification_type: Notification.types[:group_message_summary])
+              .left_joins(:topic)
+              .where("topics.id IS NULL OR topics.archetype <> ?", Archetype.private_message)
         end
         notifications =
           Notification.filter_inaccessible_topic_notifications(
