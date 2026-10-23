@@ -1,9 +1,9 @@
-import { attrs, withDefaults } from "./helpers.js";
+import type { LegacyResourceSchema } from "@warp-drive/core/types/schema/fields";
+import { attrs, withDefaults } from "./helpers.ts";
 
 // Loaded via `/tag/:id/info.json` (DetailedTagSerializer). Schema covers the
 // fields the legacy model exposed via `@tracked` / `@autoTrackedArray`.
-/** @type {import("@warp-drive/core/types/schema/fields").LegacyResourceSchema} */
-export const TagInfoSchema = withDefaults({
+export const TagInfoSchema: LegacyResourceSchema = withDefaults({
   type: "tag-info",
   fields: [
     ...attrs(

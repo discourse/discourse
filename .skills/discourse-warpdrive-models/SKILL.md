@@ -7,15 +7,15 @@ description: Use when creating a new WarpDrive-backed frontend model, or when re
 
 `service:warp-store` (`services/warp-store.js`) is a second data store alongside the legacy `service:store`, built on `@warp-drive/*` in LegacyMode with a JSON:API cache. Migrated models live in `frontend/discourse/app/data/`:
 
-- `schemas/` — one resource schema per type, registered in `schemas/index.js`
-- `normalize.js` + `jsonapi-utils.js` — Discourse REST payloads → JSON:API documents
+- `schemas/` — one resource schema per type, registered in `schemas/index.ts`
+- `normalize.ts` + `jsonapi-utils.ts` — Discourse REST payloads → JSON:API documents
 - `builders/` — request objects, one file per resource
-- `handlers/discourse-rest.js` — the sole network handler; routes through `ajax()`
-- `warp-rest-model.js` — `WarpRestModel` wrapper base, plus `warpStore()`, `requestMany`/`requestOne`, `defineFieldForwarders`
-- `rest-compat.js` — `RestCompatModel`, temporary legacy `RestModel` surface (`get`/`set`/`setProperties`, drafts, legacy adapter save path)
-- `extra-attributes.js` — retains payload keys no schema declares (migration safety net)
+- `handlers/discourse-rest.ts` — the sole network handler; routes through `ajax()`
+- `warp-rest-model.ts` — `WarpRestModel` wrapper base, plus `warpStore()`, `requestMany`/`requestOne`, `defineFieldForwarders`
+- `rest-compat.ts` — `RestCompatModel`, temporary legacy `RestModel` surface (`get`/`set`/`setProperties`, drafts, legacy adapter save path)
+- `extra-attributes.ts` — retains payload keys no schema declares (migration safety net)
 
-A model is converted if its class in `app/models/` extends `RestCompatModel` (or `WarpRestModel` directly) and its schema is listed in `schemas/index.js`.
+A model is converted if its class in `app/models/` extends `RestCompatModel` (or `WarpRestModel` directly) and its schema is listed in `schemas/index.ts`.
 
 ## Note: Schemas must be complete
 
@@ -23,13 +23,13 @@ A record is a proxy over the cache; reading a field the schema doesn't declare *
 
 - Declare more attributes than seems necessary — a field only one endpoint sends still needs a line.
 - To find every field, read the Ruby serializers (`app/serializers/`, including subclasses and `add_to_serializer` calls) and the API JSON schemas (`spec/requests/api/schemas/json/`) — not just one sample payload.
-- Anything still arriving via `extra-attributes.js` is unfinished work, not a pattern to rely on.
+- Anything still arriving via `extra-attributes.ts` is unfinished work, not a pattern to rely on.
 
 ## Creating a new model
 
-1. **Schema** — `data/schemas/<type>.js`, using `withDefaults` + `attrs`/`belongsTo` from `schemas/helpers.js`. Annotate with `/** @type {import("@warp-drive/core/types/schema/fields").LegacyResourceSchema} */` (avoids a TS2883 d.ts issue). Register it in `schemas/index.js`.
-2. **Normalizer** — in `data/normalize.js` (or a per-resource file), build `{ data, included, meta }`. Use `resourceFrom(type, Schema, raw)` for the resource object (it also feeds the extras registry; pass an explicit `id` for sub-resources), `indexIncluded` + `maybeRelate` for relationships — `maybeRelate` drops pointers with no matching `included` entry, on purpose. Absent payload → `{ data: null }`, never `{ data: [] }` for single-record ops (wrap with the `recordOnly` pattern).
-3. **Builders** — `data/builders/<resource>.js` using `readMany`/`readOne`/`createOne`/`updateOne`/`deleteOne` from `builders/helpers.js`; they carry the `op` and the `data: { type, id }` the cache needs. RPC-style endpoints (toggles, bulk ops) are plain inline `{ url, method, options }` objects with no `op`.
+1. **Schema** — `data/schemas/<type>.ts`, using `withDefaults` + `attrs`/`belongsTo` from `schemas/helpers.ts`. Annotate the export explicitly (`export const XSchema: LegacyResourceSchema = withDefaults(...)`) — an inferred type makes the emitted `.d.ts` anchor through pnpm's `.pnpm/...` path (TS2883). Register it in `schemas/index.ts`. The `data/` directory is TypeScript; relative imports need the `.ts` extension.
+2. **Normalizer** — in `data/normalize.ts` (or a per-resource file), build `{ data, included, meta }`. Use `resourceFrom(type, Schema, raw)` for the resource object (it also feeds the extras registry; pass an explicit `id` for sub-resources), `indexIncluded` + `maybeRelate` for relationships — `maybeRelate` drops pointers with no matching `included` entry, on purpose. Absent payload → `{ data: null }`, never `{ data: [] }` for single-record ops (wrap with the `recordOnly` pattern).
+3. **Builders** — `data/builders/<resource>.ts` using `readMany`/`readOne`/`createOne`/`updateOne`/`deleteOne` from `builders/helpers.ts`; they carry the `op` and the `data: { type, id }` the cache needs. RPC-style endpoints (toggles, bulk ops) are plain inline `{ url, method, options }` objects with no `op`.
 4. **Model class** — in `app/models/`, extend `RestCompatModel` (only extend `WarpRestModel` directly if no caller uses the legacy store/`get`/`set` API):
 
    ```js
@@ -55,7 +55,7 @@ A record is a proxy over the cache; reading a field the schema doesn't declare *
 
 5. Run the model's qunit tests plus acceptance tests for its screens.
 
-Relations to **unmigrated** models (User, Topic, …) are not relationships: store the raw embedded object as a plain attribute (see `bookmark.js` `user`, or `userBadgeResource` inlining sideloads), optionally wrapping it in the legacy model class in a getter or `create`.
+Relations to **unmigrated** models (User, Topic, …) are not relationships: store the raw embedded object as a plain attribute (see `schemas/bookmark.ts` `user`, or `userBadgeResource` inlining sideloads), optionally wrapping it in the legacy model class in a getter or `create`.
 
 ## Working with a converted model
 
@@ -85,7 +85,7 @@ Plugin-extension APIs (`api.addModelField`/`Getter`/`Method`/…) still work —
 - **New server field**: add one line to the schema (`attrs(...)`) — `resourceFrom` picks it up automatically.
 - **New client-only field**: also declare it in the schema (cheap, and keeps reads legal); mark it with a comment saying who sets it.
 - **New relationship**: schema `belongsTo` + normalizer `maybeRelate` + push the related resource into `included`. Only between migrated types.
-- **New endpoint**: add a builder; CRUD shapes use `builders/helpers.js`, RPC shapes are inline objects.
+- **New endpoint**: add a builder; CRUD shapes use `builders/helpers.ts`, RPC shapes are inline objects.
 - **Derived values**: plain getters on the model class — define them before `defineFieldForwarders` runs. It skips any name that resolves anywhere on the prototype chain, which is also what stops a legacy-derived schema field called `save`/`get`/`destroy` from shadowing a base method.
 - Prefer data-layer fixes (normalizer, schema, builder, compat layer) over touching consumers (routes, controllers, components) — the migration's goal is unchanged call sites.
 - Shedding `RestCompatModel` for a model is the end state: only after no caller uses `get`/`set`/`store.createRecord`/legacy `save`.

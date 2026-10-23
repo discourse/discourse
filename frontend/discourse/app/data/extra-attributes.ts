@@ -6,13 +6,17 @@ import { trackedObject } from "@ember/reactive/collections";
 // to `create`. Those are retained here instead of being dropped, keyed by
 // identity so every wrapper around the same cached record reads the same
 // values.
-const registry = new Map();
+const registry = new Map<string, Record<string, unknown>>();
 
-function keyFor(type, id) {
+function keyFor(type: string, id: string) {
   return `${type}:${id}`;
 }
 
-export function recordExtraAttributes(type, id, attributes) {
+export function recordExtraAttributes(
+  type: string,
+  id: string,
+  attributes: Record<string, unknown>
+): void {
   if (Object.keys(attributes).length === 0) {
     return;
   }
@@ -20,14 +24,17 @@ export function recordExtraAttributes(type, id, attributes) {
   const key = keyFor(type, id);
   let stored = registry.get(key);
   if (!stored) {
-    stored = trackedObject({});
+    stored = trackedObject<Record<string, unknown>>({});
     registry.set(key, stored);
   }
 
   Object.assign(stored, attributes);
 }
 
-export function extraAttributesFor(type, id) {
+export function extraAttributesFor(
+  type: string,
+  id: string
+): Record<string, unknown> | undefined {
   return registry.get(keyFor(type, id));
 }
 
@@ -35,7 +42,10 @@ export function extraAttributesFor(type, id) {
 // (a schema forwarder, a getter, a method) win and are left alone. Defining
 // accessors rather than copying values keeps later payloads visible: they land
 // in the same `attributes` object.
-export function exposeExtraAttributes(target, attributes) {
+export function exposeExtraAttributes(
+  target: object,
+  attributes: Record<string, unknown>
+): void {
   for (const name of Object.keys(attributes)) {
     if (name in target) {
       continue;
@@ -45,7 +55,7 @@ export function exposeExtraAttributes(target, attributes) {
       configurable: true,
       enumerable: true,
       get: () => attributes[name],
-      set: (value) => {
+      set: (value: unknown) => {
         attributes[name] = value;
       },
     });
@@ -53,6 +63,6 @@ export function exposeExtraAttributes(target, attributes) {
 }
 
 // USE ONLY FOR TESTING PURPOSES.
-export function clearExtraAttributes() {
+export function clearExtraAttributes(): void {
   registry.clear();
 }
