@@ -11,9 +11,6 @@ import VoiceRecordingBadge from "./recording-badge.gjs";
 import VoiceTranscriptBadge from "./transcript-badge.gjs";
 
 const RoomMeta = <template>
-  {{#if @badge}}
-    {{dIcon @badge class="voice-room-header__badge"}}
-  {{/if}}
   <VoiceRecordingBadge @room={{@room}} />
   <VoiceTranscriptBadge @room={{@room}} />
   {{#if @participantCountLabel}}
@@ -21,6 +18,22 @@ const RoomMeta = <template>
       {{@participantCountLabel}}
     </span>
   {{/if}}
+</template>;
+
+const RoomTitle = <template>
+  <div class="voice-room-header__title">
+    <div class="voice-room-header__icon">
+      {{dIcon @icon}}
+      {{#if @badge}}
+        {{dIcon @badge class="voice-room-header__restricted-icon"}}
+      {{/if}}
+    </div>
+    <h1 class="voice-room-header__name">{{@room.name}}</h1>
+    <RoomMeta
+      @participantCountLabel={{@participantCountLabel}}
+      @room={{@room}}
+    />
+  </div>
 </template>;
 
 const RoomActions = <template>
@@ -78,13 +91,12 @@ export default class VoiceRoomHeader extends Component {
     <header class="voice-room-header">
       {{#if this.chatNavbar}}
         <this.chatNavbar as |navbar|>
-          <navbar.Title @icon={{this.icon}} @title={{@room.name}}>
-            <RoomMeta
-              @badge={{this.badge}}
-              @participantCountLabel={{this.participantCountLabel}}
-              @room={{@room}}
-            />
-          </navbar.Title>
+          <RoomTitle
+            @badge={{this.badge}}
+            @icon={{this.icon}}
+            @participantCountLabel={{this.participantCountLabel}}
+            @room={{@room}}
+          />
           <navbar.Actions>
             <RoomActions
               @canOpenChat={{@canOpenChat}}
@@ -96,12 +108,9 @@ export default class VoiceRoomHeader extends Component {
         </this.chatNavbar>
       {{else}}
         <div class="voice-room-header__fallback">
-          <h1 class="voice-room-header__title">
-            {{dIcon this.icon}}
-            {{@room.name}}
-          </h1>
-          <RoomMeta
+          <RoomTitle
             @badge={{this.badge}}
+            @icon={{this.icon}}
             @participantCountLabel={{this.participantCountLabel}}
             @room={{@room}}
           />

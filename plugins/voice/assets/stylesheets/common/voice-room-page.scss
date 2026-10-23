@@ -289,8 +289,9 @@ html.discourse-touch .voice-call-widget {
     min-height: 0;
     display: flex;
     flex-direction: column;
-    row-gap: 0.75em;
-    padding: var(--space-2);
+    row-gap: var(--space-3);
+    margin: var(--space-2);
+    margin-block-end: var(--space-4);
   }
 
   &__presentation {
@@ -423,13 +424,51 @@ html.discourse-touch .voice-call-widget {
 
 // fallbacks when chat plugin isn't enabled
 .voice-room-header {
-  &__badge,
-  &__participants {
-    color: var(--primary-medium);
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    height: var(--chat-header-offset);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__name {
+    margin: 0;
+    overflow: hidden;
+    font-size: var(--font-0);
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__participants {
+    color: var(--primary-medium);
     font-size: var(--font-down-1);
+  }
+
+  &__icon {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--font-up-1);
+    color: var(--primary-medium);
+  }
+
+  &__restricted-icon {
+    position: absolute;
+    top: -20%;
+    right: -30%;
+    width: 40%;
+    height: 40%;
+    padding: 2px 2px 3px;
+    border-radius: 50%;
+    background-color: var(--secondary);
+    color: var(--primary-high);
   }
 
   &__fallback {
@@ -438,11 +477,6 @@ html.discourse-touch .voice-call-widget {
     gap: var(--space-2);
     padding: var(--space-2);
     border-block-end: 1px solid var(--content-border-color);
-  }
-
-  &__title {
-    margin: 0;
-    font-size: var(--font-up-1);
   }
 
   &__actions {
