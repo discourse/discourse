@@ -56,6 +56,15 @@ RSpec.describe DiscourseEvents::Events::SchemaMarkup do
     expect(described_class.build(Struct.new(:topic).new(topic))).to be_nil
   end
 
+  it "safely embeds JSON in the script element" do
+    name = "Community meetup </script><script>alert('hello')</script>"
+    html = described_class.build(topic_view(event_double(name:)))
+    fragment = Nokogiri::HTML5.fragment(html)
+
+    expect(fragment.css('script[type="application/ld+json"]').count).to eq(1)
+    expect(schema_from(html)["name"]).to eq(name)
+  end
+
   def event_double(overrides = {})
     defaults = {
       all_day: false,
