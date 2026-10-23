@@ -504,6 +504,56 @@ RSpec.describe InvitesController do
           expect(response.status).to eq(403)
         end
       end
+
+      context "when the topic is visible to trust level 0" do
+        fab!(:group)
+        fab!(:category) do
+          Fabricate(:category).tap do |c|
+            c.update!(permissions: { :trust_level_0 => :full, group.name => :full })
+          end
+        end
+        fab!(:topic) { Fabricate(:topic, category:) }
+
+        before { User.set_callback(:create, :after, :ensure_in_trust_level_group) }
+        after { User.skip_callback(:create, :after, :ensure_in_trust_level_group) }
+
+        it "creates an invite that brings the new user to the topic without adding a group" do
+          SiteSetting.enable_local_logins_via_code = false
+          sign_in(admin)
+          post "/invites.json", params: { email: "test@example.com", topic_id: topic.id }
+
+          expect(response.status).to eq(200)
+          invite = Invite.find_by(email: "test@example.com")
+          expect(invite.topics).to contain_exactly(topic)
+          expect(invite.groups).to be_empty
+
+          delete "/session/#{admin.username}.json"
+          put "/invites/show/#{invite.invite_key}.json", params: { email_token: invite.email_token }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["redirect_to"]).to eq(topic.relative_url)
+        end
+
+        it "does not work when only trust levels above 0 can see the topic" do
+          SiteSetting.default_invitee_trust_level = 1
+          category.update!(permissions: { trust_level_1: :full })
+          sign_in(admin)
+
+          post "/invites.json", params: { email: "test@example.com", topic_id: topic.id }
+
+          expect(response.status).to eq(403)
+        end
+
+        it "does not work when only logged in users can see the topic" do
+          # Category visibility is computed from real group memberships, which this pseudogroup has none of.
+          category.update!(permissions: { logged_in_users: :full })
+          sign_in(admin)
+
+          post "/invites.json", params: { email: "test@example.com", topic_id: topic.id }
+
+          expect(response.status).to eq(403)
+        end
+      end
     end
 
     context "with invite to group" do
@@ -2041,6 +2091,19 @@ RSpec.describe InvitesController do
               topic: topic,
             ).count,
           ).to eq(1)
+        end
+
+        it "redirects an existing trust level 0 user to a topic in a category visible to trust level 0" do
+          user.update!(trust_level: TrustLevel[0])
+          Group.refresh_automatic_groups!
+          category = Fabricate(:private_category, group: Group[:trust_level_0])
+          topic = Fabricate(:topic, category:)
+          TopicInvite.create!(invite:, topic:)
+
+          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["redirect_to"]).to eq(topic.relative_url)
         end
 
         it "adds the user to the groups specified on the invite and allows them to access the secure topic" do
