@@ -395,7 +395,7 @@ describe "MCP content access" do
     end
   end
 
-  it "requires private-message read scope for private-message drafts" do
+  it "requires private-message read scope for live and soft-deleted private-message drafts" do
     topic = Fabricate(:topic, user:)
     topic_draft_key = "topic_#{topic.id}"
     message_draft_key = "topic_#{message.topic_id}"
@@ -424,6 +424,11 @@ describe "MCP content access" do
     end
     expect(response.body).not_to include(private_title)
 
+    message.topic.trash!
+    call_tool("discourse_get_draft", { draft_key: message_draft_key })
+    expect_missing_scope("mcp:private-messages:read")
+    expect(response.body).not_to include(private_reply)
+
     authorize("mcp:drafts:read", "mcp:private-messages:read")
     call_tool("discourse_get_draft", { draft_key: compose_draft_key })
     expect(response.status).to eq(200)
@@ -433,6 +438,102 @@ describe "MCP content access" do
     expect(response.parsed_body.dig("result", "structuredContent", "data", "title")).to eq(
       private_title,
     )
+  end
+
+  it "requires private-message write scope for private-message draft mutations" do
+    draft_key = "topic_#{message.topic_id}"
+    original_reply = "Private reply draft"
+    Draft.set(user, draft_key, 0, { reply: original_reply }.to_json)
+    authorize("mcp:drafts:write")
+
+    call_tool(
+      "discourse_save_draft",
+      { draft_key:, reply: "Overwritten without private-message scope", sequence: 0 },
+    )
+
+    expect_missing_scope("mcp:private-messages:write")
+    expect(response.parsed_body.dig("error", "message")).to eq("Insufficient scope")
+    expect(Draft.find_by!(user:, draft_key:).parsed_data["reply"]).to eq(original_reply)
+
+    call_tool("discourse_delete_draft", { draft_key:, sequence: 0 })
+
+    expect_missing_scope("mcp:private-messages:write")
+    expect(Draft.find_by!(user:, draft_key:)).to be_present
+
+    authorize("mcp:drafts:write", "mcp:private-messages:write")
+    call_tool("discourse_save_draft", { draft_key:, reply: "Updated private reply", sequence: 0 })
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "structuredContent", "saved")).to eq(true)
+
+    call_tool("discourse_delete_draft", { draft_key:, sequence: 1 })
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "structuredContent", "deleted")).to eq(true)
+    expect(Draft.find_by(user:, draft_key:)).to be_nil
+  end
+
+  it "requires private-message write scope for soft-deleted private-message reply drafts" do
+    draft_key = "topic_#{message.topic_id}"
+    original_reply = "Retained private reply draft"
+    Draft.set(user, draft_key, 0, { reply: original_reply }.to_json)
+    message.topic.trash!
+    authorize("mcp:drafts:write")
+
+    call_tool(
+      "discourse_save_draft",
+      { draft_key:, reply: "Overwritten without private-message scope", sequence: 0 },
+    )
+
+    expect_missing_scope("mcp:private-messages:write")
+    expect(Draft.find_by!(user:, draft_key:).parsed_data["reply"]).to eq(original_reply)
+
+    call_tool("discourse_delete_draft", { draft_key:, sequence: 0 })
+
+    expect_missing_scope("mcp:private-messages:write")
+    expect(Draft.find_by!(user:, draft_key:).parsed_data["reply"]).to eq(original_reply)
+  end
+
+  it "requires private-message write scope for fixed and suffixed compose keys" do
+    public_draft_key = "topic_#{Fabricate(:topic, user:).id}"
+    compose_keys = [
+      Draft::NEW_PRIVATE_MESSAGE,
+      "#{Draft::NEW_PRIVATE_MESSAGE}_#{Time.zone.now.to_i}",
+    ]
+    authorize("mcp:drafts:write")
+
+    call_tool(
+      "discourse_save_draft",
+      { draft_key: public_draft_key, reply: "Public edit", sequence: 0 },
+    )
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "structuredContent", "saved")).to eq(true)
+
+    compose_keys.each do |compose_key|
+      call_tool(
+        "discourse_save_draft",
+        { draft_key: compose_key, reply: "Blocked compose", sequence: 0 },
+      )
+      aggregate_failures(compose_key) do
+        expect_missing_scope("mcp:private-messages:write")
+        expect(Draft.exists?(user_id: user.id, draft_key: compose_key)).to eq(false)
+      end
+
+      call_tool("discourse_delete_draft", { draft_key: compose_key, sequence: 0 })
+      aggregate_failures(compose_key) { expect_missing_scope("mcp:private-messages:write") }
+    end
+
+    authorize("mcp:drafts:write", "mcp:private-messages:write")
+    compose_keys.each do |compose_key|
+      call_tool(
+        "discourse_save_draft",
+        { draft_key: compose_key, reply: "Allowed compose", sequence: 0 },
+      )
+      aggregate_failures(compose_key) do
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("result", "structuredContent", "saved")).to eq(true)
+      end
+    end
   end
 
   it "requires the read scope for private-message resources and draft prompts" do
@@ -651,21 +752,35 @@ describe "MCP content access" do
   it "filters private-message notifications before the limit unless the read scope is granted" do
     public_notification = Fabricate(:notification, user:)
     other_notification = Fabricate(:notification, user:, topic: nil)
+    group_summary_notification =
+      Fabricate(
+        :notification,
+        user:,
+        topic: nil,
+        notification_type: Notification.types[:group_message_summary],
+        data: { group_id: group.id, group_name: group.name, inbox_count: 2 }.to_json,
+      )
     private_notification = Fabricate(:private_message_notification, user:, topic: message.topic)
     authorize
 
-    call_tool("discourse_notification_list", { limit: 2 })
+    call_tool("discourse_notification_list", { limit: 3 })
 
     expect(response.status).to eq(200)
     notifications = response.parsed_body.dig("result", "structuredContent", "notifications")
     expect(notifications.pluck("id")).to eq([other_notification.id, public_notification.id])
+    expect(response.body).not_to include(group.name)
 
     authorize("mcp:private-messages:read")
-    call_tool("discourse_notification_list", { limit: 2 })
+    call_tool("discourse_notification_list", { limit: 3 })
 
     expect(response.status).to eq(200)
     notifications = response.parsed_body.dig("result", "structuredContent", "notifications")
-    expect(notifications.pluck("id")).to eq([private_notification.id, other_notification.id])
+    expect(notifications.pluck("id")).to eq(
+      [private_notification.id, group_summary_notification.id, other_notification.id],
+    )
+    expect(
+      notifications.find { |notification| notification["id"] == group_summary_notification.id },
+    ).to include("data" => include("group_name" => group.name, "inbox_count" => 2))
   end
 
   it "filters private-message bookmarks before the limit unless the read scope is granted" do
