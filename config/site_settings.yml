@@ -4790,6 +4790,14 @@ dashboard:
     client: true
 
 experimental:
+  enable_user_menu_mentions_tab:
+    default: false
+    client: true
+    hidden: true
+    upcoming_change:
+      status: "beta"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/415579"
   enable_markdown_endpoints:
     default: false
     hidden: true

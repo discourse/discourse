@@ -15,6 +15,12 @@ module PageObjects
         self
       end
 
+      def click_mentions_notifications_tab
+        click_link("user-menu-button-mentions")
+        has_css?("#quick-access-mentions")
+        self
+      end
+
       def click_bookmarks_tab
         click_link("user-menu-button-bookmarks")
         has_css?("#quick-access-bookmarks")
@@ -93,6 +99,21 @@ module PageObjects
 
       def has_right_replies_button_count?(count)
         expect(find("#user-menu-button-replies").text).to eq(count.to_s)
+      end
+
+      def has_no_direct_mentions?
+        page.has_no_css?(".user-menu .notification.mentioned")
+      end
+
+      def has_no_mentions_notifications_tab?
+        page.has_no_css?("#user-menu-button-mentions")
+      end
+
+      def has_direct_mention_notification?(post)
+        page.has_css?(
+          "#quick-access-mentions .mentioned .item-description[data-topic-id='#{post.topic_id}']",
+          text: post.topic.title,
+        )
       end
 
       def has_notification_count_of?(count)

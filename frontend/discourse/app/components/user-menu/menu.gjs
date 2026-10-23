@@ -17,6 +17,7 @@ import { NO_REMINDER_ICON } from "discourse/models/bookmark";
 import { i18n } from "discourse-i18n";
 import UserMenuBookmarksList from "./bookmarks-list.js";
 import UserMenuLikesNotificationsList from "./likes-notifications-list.js";
+import UserMenuMentionsNotificationsList from "./mentions-notifications-list.js";
 import UserMenuMessagesList from "./messages-list.js";
 import UserMenuNotificationsList from "./notifications-list.js";
 import UserMenuOtherNotificationsList from "./other-notifications-list.js";
@@ -44,26 +45,42 @@ const CORE_TOP_TABS = [
     id = "replies";
     icon = "user_menu.replies";
     panelComponent = UserMenuRepliesNotificationsList;
-    notificationTypes = [
-      "mentioned",
-      "group_mentioned",
-      "posted",
-      "quoted",
-      "replied",
-    ];
+
+    get notificationTypes() {
+      const types = ["group_mentioned", "posted", "quoted", "replied"];
+      return this.siteSettings.enable_user_menu_mentions_tab
+        ? types
+        : ["mentioned", ...types];
+    }
 
     get count() {
-      return (
-        this.getUnreadCountForType("mentioned") +
-        this.getUnreadCountForType("group_mentioned") +
-        this.getUnreadCountForType("posted") +
-        this.getUnreadCountForType("quoted") +
-        this.getUnreadCountForType("replied")
+      return this.notificationTypes.reduce(
+        (sum, type) => sum + this.getUnreadCountForType(type),
+        0
       );
     }
 
     get linkWhenActive() {
       return `${this.currentUser.path}/notifications/responses`;
+    }
+  },
+
+  class extends UserMenuTab {
+    id = "mentions";
+    icon = "at";
+    panelComponent = UserMenuMentionsNotificationsList;
+    notificationTypes = ["mentioned"];
+
+    get shouldDisplay() {
+      return this.siteSettings.enable_user_menu_mentions_tab;
+    }
+
+    get count() {
+      return this.getUnreadCountForType("mentioned");
+    }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/notifications/mentions`;
     }
   },
 

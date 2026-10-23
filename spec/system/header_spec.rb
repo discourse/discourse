@@ -116,6 +116,8 @@ RSpec.describe "Glimmer Header" do
   end
 
   it "moves focus between tabs using arrow keys" do
+    SiteSetting.enable_user_menu_mentions_tab = true
+
     sign_in(current_user)
     visit "/"
     find(".header-dropdown-toggle.current-user").click
@@ -123,6 +125,9 @@ RSpec.describe "Glimmer Header" do
 
     find("##{header.active_element_id}").send_keys(:down)
     expect(header.active_element_id).to eq("user-menu-button-replies")
+
+    find("##{header.active_element_id}").send_keys(:down)
+    expect(header.active_element_id).to eq("user-menu-button-mentions")
 
     4.times { find("##{header.active_element_id}").send_keys(:down) }
     expect(header.active_element_id).to eq("user-menu-button-profile")

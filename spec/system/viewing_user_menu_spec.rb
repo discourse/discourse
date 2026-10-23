@@ -5,6 +5,55 @@ RSpec.describe "Viewing User Menu" do
 
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
+  it "keeps the mentions tab hidden when the upcoming change is disabled" do
+    SiteSetting.enable_user_menu_mentions_tab = false
+
+    sign_in(user)
+    visit("/latest")
+    user_menu.open
+
+    expect(user_menu).to have_no_mentions_notifications_tab
+  end
+
+  it "lets the user filter direct mentions and visit the mentioned post" do
+    SiteSetting.enable_user_menu_mentions_tab = true
+    Jobs.run_immediately!
+
+    mentioned_post =
+      PostCreator.create!(
+        Fabricate(:user),
+        topic_id: Fabricate(:post).topic_id,
+        raw: "Hello @#{user.username}, what do you think about this?",
+      )
+    Fabricate(:replied_notification, user: user, post: Fabricate(:post))
+    Fabricate(
+      :group_mentioned_notification,
+      user: user,
+      post: Fabricate(:post),
+      group: Fabricate(:group),
+    )
+
+    sign_in(user)
+    visit("/latest")
+    user_menu.open
+
+    expect(user_menu).to have_notification_count_of(3)
+
+    user_menu.click_replies_notifications_tab
+
+    expect(user_menu).to have_notification_count_of(2)
+    expect(user_menu).to have_no_direct_mentions
+
+    user_menu.click_mentions_notifications_tab
+
+    expect(user_menu).to have_direct_mention_notification(mentioned_post)
+    expect(user_menu).to have_notification_count_of(1)
+
+    user_menu.click_notification_with_href(mentioned_post.url)
+
+    expect(page).to have_current_path(mentioned_post.url)
+  end
+
   describe "with notification limit set via plugin api" do
     it "only displays as many notifications as the limit" do
       sign_in(user)
@@ -64,6 +113,8 @@ RSpec.describe "Viewing User Menu" do
 
   describe "when viewing replies notifications tab" do
     fab!(:topic)
+
+    before { SiteSetting.enable_user_menu_mentions_tab = false }
 
     it "shows group-mention notifications in the tab" do
       Jobs.run_immediately!
