@@ -27,8 +27,6 @@ class UserMerger
     log_merge
 
     @target_user.reload
-    @target_user.publish_notifications_state
-    @target_user
   end
 
   protected
@@ -216,11 +214,7 @@ class UserMerger
       UPDATE user_stats AS t
       SET new_since             = LEAST(t.new_since, s.new_since),
         read_faq              = LEAST(t.read_faq, s.read_faq),
-        first_post_created_at = LEAST(t.first_post_created_at, s.first_post_created_at),
-        received_notification_types = CASE
-          WHEN t.received_notification_types IS NULL OR s.received_notification_types IS NULL THEN NULL
-          ELSE ARRAY(SELECT DISTINCT unnest(t.received_notification_types || s.received_notification_types))
-        END
+        first_post_created_at = LEAST(t.first_post_created_at, s.first_post_created_at)
       FROM user_stats AS s
       WHERE t.user_id = :target_user_id AND s.user_id = :source_user_id
     SQL

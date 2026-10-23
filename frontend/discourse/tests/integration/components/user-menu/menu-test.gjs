@@ -17,7 +17,7 @@ module("Integration | Component | UserMenu", function (hooks) {
   });
 
   test("new users only see navigation tabs before receiving notifications", async function (assert) {
-    this.currentUser.set("received_notification_types", []);
+    this.currentUser.set("available_notification_types", []);
     this.currentUser.set("can_send_private_messages", true);
     await render(<template><Menu /></template>);
 
@@ -38,8 +38,8 @@ module("Integration | Component | UserMenu", function (hooks) {
     );
   });
 
-  test("read notification history reveals filters without unread badges", async function (assert) {
-    this.currentUser.set("received_notification_types", [
+  test("read notifications reveals filters without unread badges", async function (assert) {
+    this.currentUser.set("available_notification_types", [
       NOTIFICATION_TYPES.mentioned,
       NOTIFICATION_TYPES.liked,
       NOTIFICATION_TYPES.edited,
@@ -66,7 +66,7 @@ module("Integration | Component | UserMenu", function (hooks) {
 
   test("direct mentions reveal Replies when the mentions feature is disabled", async function (assert) {
     this.siteSettings.enable_user_menu_mentions_tab = false;
-    this.currentUser.set("received_notification_types", [
+    this.currentUser.set("available_notification_types", [
       NOTIFICATION_TYPES.mentioned,
     ]);
     await render(<template><Menu /></template>);
@@ -92,7 +92,7 @@ module("Integration | Component | UserMenu", function (hooks) {
         { notifications: [] },
       ];
     });
-    this.currentUser.set("received_notification_types", [
+    this.currentUser.set("available_notification_types", [
       NOTIFICATION_TYPES.edited,
     ]);
     await render(<template><Menu /></template>);
@@ -112,7 +112,7 @@ module("Integration | Component | UserMenu", function (hooks) {
     );
   });
 
-  test("Other excludes plugin-owned types while retaining its own history", async function (assert) {
+  test("Other excludes plugin-owned types while retaining its own notifications", async function (assert) {
     registerUserMenuTab(
       (UserMenuTab) =>
         class extends UserMenuTab {
@@ -126,7 +126,7 @@ module("Integration | Component | UserMenu", function (hooks) {
           }
         }
     );
-    this.currentUser.set("received_notification_types", [
+    this.currentUser.set("available_notification_types", [
       NOTIFICATION_TYPES.chat_mention,
       NOTIFICATION_TYPES.edited,
     ]);
@@ -156,7 +156,7 @@ module("Integration | Component | UserMenu", function (hooks) {
 
   test("disabling Likes preserves its existing classification into Other", async function (assert) {
     this.currentUser.set("user_option.likes_notifications_disabled", true);
-    this.currentUser.set("received_notification_types", [
+    this.currentUser.set("available_notification_types", [
       NOTIFICATION_TYPES.liked,
     ]);
     await render(<template><Menu /></template>);
@@ -169,14 +169,14 @@ module("Integration | Component | UserMenu", function (hooks) {
       .exists("Other retains the disabled tab's notification types");
   });
 
-  test("existing users with no tracked history keep their notification tabs", async function (assert) {
-    this.currentUser.set("received_notification_types", null);
+  test("missing availability data preserves tabs for older servers", async function (assert) {
+    this.currentUser.set("available_notification_types", null);
     await render(<template><Menu /></template>);
 
     for (const id of ["replies", "mentions", "likes", "other-notifications"]) {
       assert
         .dom(`#user-menu-button-${id}`)
-        .exists("existing tab remains visible");
+        .exists("tabs remain usable without availability data");
     }
   });
 

@@ -59,9 +59,9 @@ acceptance("User menu", function (needs) {
     requestHeaders = {};
   });
 
-  test("plugin-owned history reveals no unrelated core filters", async function (assert) {
+  test("plugin-owned notifications reveals no unrelated core filters", async function (assert) {
     updateCurrentUser({
-      received_notification_types: [NOTIFICATION_TYPES.chat_mention],
+      available_notification_types: [NOTIFICATION_TYPES.chat_mention],
     });
     withPluginApi((api) => {
       api.registerUserMenuTab((UserMenuTab) => {
@@ -89,7 +89,7 @@ acceptance("User menu", function (needs) {
   });
 
   test("new notification filters appear on the next menu opening", async function (assert) {
-    updateCurrentUser({ received_notification_types: [] });
+    updateCurrentUser({ available_notification_types: [] });
     await visit("/");
     await click(".d-header-icons .current-user button");
     assert
@@ -97,7 +97,7 @@ acceptance("User menu", function (needs) {
       .doesNotExist("a new user has no Likes tab");
 
     await publishToMessageBus(`/notification/${loggedInUser().id}`, {
-      received_notification_types: [NOTIFICATION_TYPES.liked],
+      available_notification_types: [NOTIFICATION_TYPES.liked],
       grouped_unread_notifications: { [NOTIFICATION_TYPES.liked]: 1 },
     });
     assert
@@ -115,7 +115,7 @@ acceptance("User menu", function (needs) {
 
     const tabIds = findAll(".user-menu-tab").map((tab) => tab.id);
     await publishToMessageBus(`/notification/${loggedInUser().id}`, {
-      received_notification_types: [NOTIFICATION_TYPES.liked],
+      available_notification_types: [NOTIFICATION_TYPES.liked],
       grouped_unread_notifications: { [NOTIFICATION_TYPES.liked]: 2 },
     });
     assert
@@ -134,7 +134,7 @@ acceptance("User menu", function (needs) {
     );
 
     await publishToMessageBus(`/notification/${loggedInUser().id}`, {
-      received_notification_types: [NOTIFICATION_TYPES.liked],
+      available_notification_types: [NOTIFICATION_TYPES.liked],
       grouped_unread_notifications: {},
     });
     assert
@@ -148,6 +148,19 @@ acceptance("User menu", function (needs) {
     assert
       .dom("#user-menu-button-likes .badge-notification")
       .doesNotExist("the badge clears independently of visibility");
+
+    await publishToMessageBus(`/notification/${loggedInUser().id}`, {
+      available_notification_types: [],
+      grouped_unread_notifications: {},
+    });
+    assert
+      .dom("#user-menu-button-likes")
+      .exists("deletion does not move open tabs");
+    await click(".d-header-icons .current-user button");
+    await click(".d-header-icons .current-user button");
+    assert
+      .dom("#user-menu-button-likes")
+      .doesNotExist("deleting the last like hides its filter on reopening");
   });
 
   test("notifications panel has a11y attributes", async function (assert) {

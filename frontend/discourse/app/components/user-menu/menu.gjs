@@ -227,14 +227,14 @@ export default class UserMenu extends Component {
   @tracked currentPanelComponent = DEFAULT_PANEL_COMPONENT;
   @tracked currentNotificationTypes;
 
-  #receivedNotificationTypes;
+  #availableNotificationTypes;
 
   constructor() {
     super(...arguments);
     // Snapshot visibility so notifications cannot move tabs while the menu is open.
-    const receivedTypes = this.currentUser.received_notification_types;
-    this.#receivedNotificationTypes = receivedTypes
-      ? new Set(receivedTypes)
+    const availableTypes = this.currentUser.available_notification_types;
+    this.#availableNotificationTypes = availableTypes
+      ? new Set(availableTypes)
       : null;
     this.router.on("routeDidChange", this.onRouteChange);
   }
@@ -289,7 +289,7 @@ export default class UserMenu extends Component {
     );
 
     return tabs
-      .filter((tab) => this.#hasReceivedNotifications(tab))
+      .filter((tab) => this.#hasNotifications(tab))
       .map((tab, index) => {
         tab.position = index;
         return tab;
@@ -352,16 +352,16 @@ export default class UserMenu extends Component {
     topTabsContainerElement.querySelector(".btn.active")?.focus();
   }
 
-  #hasReceivedNotifications(tab) {
+  #hasNotifications(tab) {
     if (
       !PROGRESSIVE_TAB_IDS.has(tab.id) ||
-      this.#receivedNotificationTypes === null
+      this.#availableNotificationTypes === null
     ) {
       return true;
     }
 
     return tab.notificationTypes.some((type) =>
-      this.#receivedNotificationTypes.has(this.site.notification_types[type])
+      this.#availableNotificationTypes.has(this.site.notification_types[type])
     );
   }
 

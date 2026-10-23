@@ -6,12 +6,18 @@ RSpec.describe CurrentUserSerializer do
 
   let(:guardian) { user.guardian }
 
-  it "includes the persisted notification history for the current user" do
-    expect(serializer.as_json[:received_notification_types]).to eq([])
-    user.user_stat.update!(received_notification_types: [Notification.types[:liked]])
-    expect(serializer.as_json[:received_notification_types]).to eq([Notification.types[:liked]])
-    user.user_stat.update!(received_notification_types: nil)
-    expect(serializer.as_json).to include(received_notification_types: nil)
+  it "includes notification types with remaining read or unread notifications" do
+    expect(serializer.as_json[:available_notification_types]).to eq([])
+    notification =
+      Fabricate(
+        :notification,
+        user: user,
+        notification_type: Notification.types[:liked],
+        read: true,
+      )
+    expect(serializer.as_json[:available_notification_types]).to eq([Notification.types[:liked]])
+    notification.destroy!
+    expect(serializer.as_json[:available_notification_types]).to eq([])
   end
 
   context "when SSO is not enabled" do

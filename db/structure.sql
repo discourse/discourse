@@ -13608,8 +13608,7 @@ CREATE TABLE public.user_stats (
     digest_attempted_at timestamp without time zone,
     post_edits_count integer,
     draft_count integer DEFAULT 0 NOT NULL,
-    pending_posts_count integer DEFAULT 0 NOT NULL,
-    received_notification_types integer[] DEFAULT '{}'::integer[]
+    pending_posts_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -26161,7 +26160,6 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20261023204904'),
 ('20261020161054'),
 ('20261020160221'),
 ('20261019232249'),

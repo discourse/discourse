@@ -9,23 +9,6 @@ RSpec.describe Notification::Action::BulkCreate do
 
     let(:options) { {} }
 
-    it "records all received types for each user without resetting previous history" do
-      Fabricate(:notification, user: user1, notification_type: Notification.types[:mentioned])
-      records = [
-        { user_id: user1.id, notification_type: Notification.types[:liked], data: "{}" },
-        { user_id: user1.id, notification_type: Notification.types[:replied], data: "{}" },
-        { user_id: user2.id, notification_type: Notification.types[:liked], data: "{}" },
-      ]
-      described_class.call(records: records, skip_send_email: true)
-
-      expect(user1.received_notification_types).to contain_exactly(
-        Notification.types[:mentioned],
-        Notification.types[:liked],
-        Notification.types[:replied],
-      )
-      expect(user2.received_notification_types).to eq([Notification.types[:liked]])
-    end
-
     context "when records is empty" do
       let(:records) { [] }
 

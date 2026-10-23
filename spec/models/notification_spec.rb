@@ -1,64 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Notification do
-  describe "received notification types" do
-    fab!(:user)
-
-    it "remembers each type after notifications are read or removed" do
-      expect(user.received_notification_types).to eq([])
-      mention =
-        Fabricate(:notification, user: user, notification_type: Notification.types[:mentioned])
-      Fabricate(:notification, user: user, notification_type: Notification.types[:mentioned])
-      reply = Fabricate(:notification, user: user, notification_type: Notification.types[:replied])
-
-      mention.update!(read: true)
-      reply.destroy!
-      user.notifications.delete_all
-
-      expect(user.received_notification_types).to contain_exactly(
-        Notification.types[:mentioned],
-        Notification.types[:replied],
-      )
-    end
-
-    it "records a new type when a notification is consolidated" do
-      notification =
-        Fabricate(:notification, user: user, notification_type: Notification.types[:liked])
-      notification.update!(notification_type: Notification.types[:liked_consolidated])
-
-      expect(user.received_notification_types).to contain_exactly(
-        Notification.types[:liked],
-        Notification.types[:liked_consolidated],
-      )
-    end
-
-    it "preserves the full menu for users created before tracking was introduced" do
-      user.user_stat.update!(received_notification_types: nil)
-      Fabricate(:notification, user: user)
-
-      expect(user.received_notification_types).to be_nil
-    end
-
-    it "rolls back notification history when creation is rolled back" do
-      Notification.transaction do
-        Fabricate(:notification, user: user)
-        raise ActiveRecord::Rollback
-      end
-
-      expect(user.received_notification_types).to eq([])
-    end
-
-    it "publishes the received types with notification updates" do
-      user.update!(last_seen_at: 1.minute.ago)
-      messages =
-        MessageBus.track_publish("/notification/#{user.id}") do
-          Fabricate(:notification, user: user, notification_type: Notification.types[:liked])
-        end
-
-      expect(messages.last.data[:received_notification_types]).to eq([Notification.types[:liked]])
-    end
-  end
-
   describe ".filter_inaccessible_reviewable_notifications" do
     fab!(:admin)
     fab!(:moderator)

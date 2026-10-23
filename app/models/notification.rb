@@ -65,9 +65,6 @@ class Notification < ActiveRecord::Base
 
   attr_accessor :skip_send_email
 
-  after_save :record_received_notification_type,
-             if: -> { saved_change_to_notification_type? || saved_change_to_user_id? }
-
   after_commit :refresh_notification_count, on: %i[create update destroy]
   after_commit :send_email, on: :create
 
@@ -477,10 +474,6 @@ class Notification < ActiveRecord::Base
     slug_segment = topic.slug.present? ? "/#{topic.slug}" : ""
     bucket_segment = bucket > TOPIC_ROOT_BUCKET ? "/#{bucket}" : ""
     "#{Discourse.base_path}/t#{slug_segment}/#{topic.id}#{bucket_segment}?sort=new&collapse_replies=true"
-  end
-
-  def record_received_notification_type
-    UserStat.record_notification_type(user_ids: [user_id], notification_type: notification_type)
   end
 
   def refresh_notification_count

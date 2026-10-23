@@ -117,7 +117,9 @@ RSpec.describe "Glimmer Header" do
   end
 
   it "moves focus between tabs using arrow keys" do
-    current_user.user_stat.update!(received_notification_types: nil)
+    %i[replied mentioned liked edited].each do |type|
+      Fabricate(:notification, user: current_user, notification_type: Notification.types[type])
+    end
     SiteSetting.enable_user_menu_mentions_tab = true
 
     sign_in(current_user)
@@ -141,15 +143,15 @@ RSpec.describe "Glimmer Header" do
     expect(header.active_element_id).to eq("user-menu-button-profile")
   end
 
-  [[], [Notification.types[:liked]]].each do |history|
-    it "navigates the reduced menu with #{history.length} received notification types" do
-      current_user.user_stat.update!(received_notification_types: history)
+  [[], [Notification.types[:liked]]].each do |types|
+    it "navigates the reduced menu with #{types.length} available notification types" do
+      types.each { |type| Fabricate(:notification, user: current_user, notification_type: type) }
       sign_in(current_user)
       visit "/"
       user_menu.open
 
       expect(user_menu).to have_focused_tab("all-notifications")
-      visible_tabs = history.empty? ? %w[bookmarks profile] : %w[likes bookmarks profile]
+      visible_tabs = types.empty? ? %w[bookmarks profile] : %w[likes bookmarks profile]
       visible_tabs.each do |tab|
         user_menu.press_key(:down)
         expect(user_menu).to have_focused_tab(tab)

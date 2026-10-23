@@ -144,10 +144,10 @@ class SubscribeUserNotificationsInit {
     const oldHighPriority = this.currentUser.unread_high_priority_notifications;
     const oldAllUnread = this.currentUser.all_unread_notifications_count;
 
-    if ("received_notification_types" in data) {
+    if ("available_notification_types" in data) {
       this.currentUser.set(
-        "received_notification_types",
-        data.received_notification_types
+        "available_notification_types",
+        data.available_notification_types
       );
     }
 
