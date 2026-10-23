@@ -7,6 +7,31 @@ RSpec.describe "Post voting" do
 
   let(:topic_page) { PageObjects::Pages::PostVotingTopic.new }
 
+  it "lets a reporter open the illegal content form for a comment on a subfolder site" do
+    set_subfolder "/forum"
+    SiteSetting.post_voting_enabled = true
+    SiteSetting.post_voting_comment_enabled = true
+    SiteSetting.dsa_reporting_enabled = true
+    topic = Fabricate(:topic, subtype: Topic::POST_VOTING_SUBTYPE, user: user2)
+    Fabricate(:post, topic: topic)
+    answer = Fabricate(:post, topic: topic)
+    comment = Fabricate(:post_voting_comment, post: answer, user: user1)
+    flag_modal = PageObjects::Modals::Flag.new
+    notice_page = PageObjects::Pages::DsaNotice.new
+    sign_in(admin)
+
+    topic_page.visit_topic(topic)
+    topic_page.flag_comment(comment)
+    expect(flag_modal).to be_open
+    expect(flag_modal).to have_no_illegal_flag_choice
+    flag_modal.choose_type(:spam)
+    flag_modal.report_illegal_content
+
+    expect(flag_modal).to be_closed
+    expect(notice_page).to have_notice_form
+    expect(notice_page.form.field("content_url").value).to eq("")
+  end
+
   it "does not display button to add a comment and does not show comments when `post_voting_comment_enabled` site setting is false" do
     SiteSetting.post_voting_comment_enabled = false
     SiteSetting.post_voting_enabled = true

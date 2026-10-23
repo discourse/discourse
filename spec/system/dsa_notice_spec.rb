@@ -31,7 +31,9 @@ RSpec.describe "Illegal content notices" do
     flag_modal.report_illegal_content
     expect(flag_modal).to be_closed
     expect(notice_page).to have_notice_form
-    expect(notice_page.form.field("content_url").value).to end_with(reported_post.url)
+    expect(notice_page.form.field("content_url").value).to eq(
+      URI.join(page.current_url, reported_post.url).to_s,
+    )
 
     topic_page.visit_topic(topic)
     topic_page.open_flag_topic_modal
@@ -39,7 +41,9 @@ RSpec.describe "Illegal content notices" do
     flag_modal.report_illegal_content
     expect(flag_modal).to be_closed
     expect(notice_page).to have_notice_form
-    expect(notice_page.form.field("content_url").value).to end_with(topic.relative_url)
+    expect(notice_page.form.field("content_url").value).to eq(
+      URI.join(page.current_url, topic.relative_url).to_s,
+    )
 
     topic_page.visit_topic(topic)
     topic_page.click_post_action_button(reported_post, :flag)
@@ -68,14 +72,18 @@ RSpec.describe "Illegal content notices" do
 
     expect(flag_modal).to be_closed
     expect(notice_page).to have_notice_form
-    expect(notice_page.form.field("content_url").value).to end_with(reported_post.url)
+    expect(notice_page.form.field("content_url").value).to eq(
+      URI.join(page.current_url, reported_post.url).to_s,
+    )
   end
 
   it "lets a reporter verify their email and submit an illegal content report" do
     topic_page.visit_topic(topic)
     topic_page.click_post_action_button(reported_post, :flag)
     expect(notice_page).to have_notice_form
-    expect(notice_page.form.field("content_url").value).to end_with(reported_post.url)
+    expect(notice_page.form.field("content_url").value).to eq(
+      URI.join(page.current_url, reported_post.url).to_s,
+    )
     expect(page).to have_button("Submit report", disabled: true)
 
     notice_page.form.field("email").fill_in("alex@example.com")

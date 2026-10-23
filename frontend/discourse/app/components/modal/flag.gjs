@@ -109,9 +109,9 @@ export default class Flag extends Component {
   }
 
   get illegalContentUrl() {
-    return getAbsoluteURL(
-      this.args.model.flagModel.urlWithNumber || this.args.model.flagModel.url
-    );
+    const url =
+      this.args.model.flagModel.urlWithNumber || this.args.model.flagModel.url;
+    return url ? getAbsoluteURL(url) : "";
   }
 
   get staffFlagsAvailable() {
