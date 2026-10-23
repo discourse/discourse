@@ -24,11 +24,17 @@ module("Live | Unit | Lib | room onebox slug", function () {
       "watercooler",
       "subfolder installs"
     );
+    assert.strictEqual(
+      roomSlug(card("/live/r/watercooler")),
+      "watercooler",
+      "relative links"
+    );
   });
 
   test("ignores other links", function (assert) {
     assert.strictEqual(roomSlug(card(`${origin}/t/some-topic/1`)), null);
     assert.strictEqual(roomSlug(card(`${origin}/live/rooms`)), null);
     assert.strictEqual(roomSlug(document.createElement("aside")), null);
+    assert.strictEqual(roomSlug(card("http://[")), null, "malformed links");
   });
 });

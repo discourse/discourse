@@ -9,12 +9,18 @@ const ROOM_SLUG_PATTERN = /\/live\/r\/([^/?#]+)/;
 // which may use another of the site's hostnames, and the sanitizer keeps
 // authors from writing one by hand.
 export function roomSlug(card) {
-  const href = card.querySelector(".live-room-onebox__title a")?.href;
-  if (!href) {
+  // Read the attribute, not the `href` property: cooked HTML can be decorated
+  // in a detached document, where a relative link isn't resolved.
+  const href = card
+    .querySelector(".live-room-onebox__title a")
+    ?.getAttribute("href");
+  if (!href || !URL.canParse(href, window.location.origin)) {
     return null;
   }
 
-  const match = new URL(href).pathname.match(ROOM_SLUG_PATTERN);
+  const match = new URL(href, window.location.origin).pathname.match(
+    ROOM_SLUG_PATTERN
+  );
   return match ? decodeURIComponent(match[1]) : null;
 }
 
