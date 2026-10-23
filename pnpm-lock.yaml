@@ -176,6 +176,7 @@ patchedDependencies:
   http-proxy@1.18.1: 3032f3a47f33911d5c278ec6f2d4e0e4afc8f977baea1012613b13de23831c73
   licensee: 566956dc682db703e899e5b01c65b129e434ad9f0848f5b9f62c3c28afd086e9
   pikaday: ab597bca99e3c8cc091cd804d003516de8a3744472e0a4b881e598a38b51dc83
+  playwright-core@1.64.0: ca315494772806bfa49273904521af71a63ab1343dc327d950ac711f4a0afe5c
   xss@1.0.15: c255740ccc35e471df9a3ace55ec09e2b54dc3a6f9258354311e30c96ff716bf
 
 importers:
@@ -15011,11 +15012,11 @@ snapshots:
     dependencies:
       find-up: 3.0.0
 
-  playwright-core@1.64.0: {}
+  playwright-core@1.64.0(patch_hash=ca315494772806bfa49273904521af71a63ab1343dc327d950ac711f4a0afe5c): {}
 
   playwright@1.64.0:
     dependencies:
-      playwright-core: 1.64.0
+      playwright-core: 1.64.0(patch_hash=ca315494772806bfa49273904521af71a63ab1343dc327d950ac711f4a0afe5c)
 
   polyfill-crypto.getrandomvalues@1.0.0:
     dependencies:

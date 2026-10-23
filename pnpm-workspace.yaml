@@ -83,6 +83,7 @@ patchedDependencies:
   "http-proxy@1.18.1": "patches/http-proxy@1.18.1.patch"
   "pikaday": "patches/pikaday.patch"
   "xss@1.0.15": "patches/xss@1.0.15.patch"
+  "playwright-core@1.64.0": "patches/playwright-core@1.64.0.patch"
 peerDependencyRules:
   allowedVersions:
     "@mixer/parallel-prettier>prettier": "*"
