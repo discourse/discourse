@@ -866,6 +866,17 @@ class UserNotifications < ActionMailer::Base
           .cook(message, sanitize: false)
           .gsub("%{topic_title}") { ERB::Util.html_escape(topic_title_text) }
           .html_safe
+      # Customized bodies cook %{message} again in Email::Renderer. Escape
+      # punctuation before HTML encoding so its entity decoding cannot restore
+      # Markdown or HTML structure from the title.
+      if translation_override_exists
+        topic_title_text =
+          ERB::Util.html_escape(
+            topic_title_text.gsub(/[!"\#$%&'()*+,\-.\/:;<=>?@\[\]\\^_`{|}~]/) do |char|
+              "\\#{char}"
+            end,
+          )
+      end
       message = message.gsub("%{topic_title}") { topic_title_text }
     else
       reached_limit = SiteSetting.max_emails_per_day_per_user > 0
