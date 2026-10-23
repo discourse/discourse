@@ -167,7 +167,7 @@
     "pretender": "^3.4.7",
     "qunit": "^3.0.0",
     "qunit-dom": "^3.6.0",
-    "rolldown": "1.2.7",
+    "rolldown": "1.2.14",
     "sinon": "^22.1.0",
     "source-map-js": "^1.2.2",
     "testem": "^3.21.3",
