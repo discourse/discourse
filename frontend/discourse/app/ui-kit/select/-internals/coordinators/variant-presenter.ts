@@ -34,6 +34,8 @@ interface VariantPresenterOptions {
   shouldRenderInModal: (modalForMobile: boolean) => boolean;
   isExpanded: () => boolean;
   activeListboxId: () => string | undefined;
+  /** Whether this session moves real focus through the list for a touch screen reader. */
+  usesDirectFocus: () => boolean;
 }
 
 export default class VariantPresenter
@@ -45,6 +47,7 @@ export default class VariantPresenter
   #getArgs: () => VariantPresenterArgs;
   #isExpanded: () => boolean;
   #shouldRenderInModal: (modalForMobile: boolean) => boolean;
+  #usesDirectFocus: () => boolean;
 
   constructor(options: VariantPresenterOptions) {
     super(options);
@@ -53,6 +56,7 @@ export default class VariantPresenter
     this.#getArgs = options.getArgs;
     this.#isExpanded = options.isExpanded;
     this.#shouldRenderInModal = options.shouldRenderInModal;
+    this.#usesDirectFocus = options.usesDirectFocus;
   }
 
   /** The trigger style; defaults to `typeahead`. */
@@ -369,7 +373,7 @@ export default class VariantPresenter
    * into the listbox rather than stay on the out-of-modal trigger.
    */
   get usesActiveRoving(): boolean {
-    return !(this.isStatic && this.overlayIsModal);
+    return !this.#usesDirectFocus() && !(this.isStatic && this.overlayIsModal);
   }
 
   /**
@@ -423,6 +427,9 @@ export default class VariantPresenter
    * value but highlights nothing without one, so it cannot share `typeahead`'s.
    */
   get entryFocus(): DRovingFocusEntry {
+    if (this.#usesDirectFocus()) {
+      return "none";
+    }
     if (this.shouldActivateSelected) {
       return this.shouldAutoActivateFirst
         ? "selected-or-first"

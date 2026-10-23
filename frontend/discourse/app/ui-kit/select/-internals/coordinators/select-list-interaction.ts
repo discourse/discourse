@@ -3,6 +3,7 @@ import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { cancel, schedule } from "@ember/runloop";
 import { modifier } from "ember-modifier";
+import { isTouchScreenReader } from "discourse/ui-kit/-internals/interaction-modality";
 import type { DRovingFocusApi } from "discourse/ui-kit/modifiers/d-roving-focus";
 import { handleFieldKeydown } from "discourse/ui-kit/select/-internals/coordinators/field-keyboard";
 import type SelectAnnouncer from "discourse/ui-kit/select/-internals/coordinators/select-announcer";
@@ -17,6 +18,12 @@ export default class SelectListInteraction {
   @tracked inputFocused = false;
   @tracked listboxElement: HTMLElement | null = null;
   @tracked root: HTMLElement | null = null;
+
+  /**
+   * Whether this focus session moves real focus through the list, decided when focus enters:
+   * touch screen readers ignore `aria-activedescendant`.
+   */
+  @tracked usesDirectFocus = false;
 
   session = 0;
 
@@ -53,12 +60,16 @@ export default class SelectListInteraction {
   #engine: SelectEngine;
   #listbox: WindowedListCoordinator;
   #presenter: SelectListPresenter;
+  #platform: { isIOS: boolean; isAndroid: boolean };
   #roving: DRovingFocusApi | null = null;
   #stripRoving: DRovingFocusApi | null = null;
   #focusCheck?: ReturnType<typeof schedule>;
   #destroyed = false;
 
   #handleFocusIn = (event: FocusEvent): void => {
+    if (!this.focused) {
+      this.usesDirectFocus = isTouchScreenReader(this.#platform);
+    }
     this.focused = true;
     this.inputFocused = event.target === this.filterInput;
     if (!this.inputFocused) {
@@ -100,11 +111,14 @@ export default class SelectListInteraction {
     listbox: WindowedListCoordinator;
     /** Live presentation and lock state. */
     presenter: SelectListPresenter;
+    /** The device's platform flags. */
+    platform: { isIOS: boolean; isAndroid: boolean };
   }) {
     this.#announcer = options.announcer;
     this.#engine = options.engine;
     this.#listbox = options.listbox;
     this.#presenter = options.presenter;
+    this.#platform = options.platform;
     registerDestructor(this, () => {
       this.#destroyed = true;
       cancel(this.#focusCheck);

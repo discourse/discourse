@@ -386,6 +386,7 @@ export default class DSelect extends Component<DSelectSignature> {
       this.menu.shouldRenderInModal(modalForMobile),
     isExpanded: () => this.interaction.isExpanded,
     activeListboxId: () => this.activeListboxId,
+    usesDirectFocus: () => this.interaction.usesDirectFocus,
   });
 
   /** Records eligibility after render; the session latch survives later presentation changes. */

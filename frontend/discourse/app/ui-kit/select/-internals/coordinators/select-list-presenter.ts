@@ -14,6 +14,7 @@ export default class SelectListPresenter
 {
   #canSeed: () => boolean;
   #engine: SelectEngine;
+  #usesDirectFocus: () => boolean;
 
   constructor(options: {
     /** The headless selection engine. */
@@ -22,18 +23,21 @@ export default class SelectListPresenter
     getArgs: () => SelectPresenterArgs;
     /** Whether focus, query and selection limits permit automatic entry. */
     canSeed: () => boolean;
+    /** Whether this session moves real focus through the list for a touch screen reader. */
+    usesDirectFocus: () => boolean;
   }) {
     super(options);
     this.#engine = options.engine;
     this.#canSeed = options.canSeed;
+    this.#usesDirectFocus = options.usesDirectFocus;
   }
 
   get usesActiveRoving(): boolean {
-    return true;
+    return !this.#usesDirectFocus();
   }
 
   get entryFocus(): DRovingFocusEntry {
-    return this.#canSeed() ? "first" : "none";
+    return this.#canSeed() && !this.#usesDirectFocus() ? "first" : "none";
   }
 
   /** The search placeholder, falling back to the shared panel default. */

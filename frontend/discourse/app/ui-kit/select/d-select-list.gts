@@ -13,6 +13,7 @@ import { service } from "@ember/service";
 import { TrackedAsyncData } from "ember-async-data";
 import { hasContentPluginApiCallbacks } from "discourse/select-kit/lib/plugin-api";
 import type A11yService from "discourse/services/a11y";
+import type { CapabilitiesService } from "discourse/services/capabilities";
 import { and, eq, or } from "discourse/truth-helpers";
 import SelectHost, {
   type SelectHostArgs,
@@ -176,6 +177,7 @@ interface DSelectListSignature {
 /** Always-open searchable multi-select; focus and dismissal belong to its containing panel. */
 export default class DSelectList extends Component<DSelectListSignature> {
   @service declare a11y: A11yService;
+  @service declare capabilities: CapabilitiesService;
 
   @tracked query = "";
 
@@ -207,6 +209,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
     engine: this.engine,
     getArgs: () => this.args,
     canSeed: () => this.interaction.canSeed,
+    usesDirectFocus: () => this.interaction.usesDirectFocus,
   });
 
   #listboxId = `d-select-listbox-${guidFor(this)}`;
@@ -225,6 +228,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
       presenter: this.presenter,
       announcer: this.announcer,
       listbox: this.listbox,
+      platform: this.capabilities,
     });
     associateDestroyableChild(this, this.host);
     associateDestroyableChild(this, this.interaction);

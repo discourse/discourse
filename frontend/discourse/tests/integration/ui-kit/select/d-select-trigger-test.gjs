@@ -20,6 +20,7 @@ import {
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { forceMobile } from "discourse/lib/mobile";
+import { capabilities } from "discourse/services/capabilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   Host,
@@ -1956,6 +1957,54 @@ module(
       await triggerKeyEvent(panelInput(), "keydown", "Backspace");
       assert.strictEqual(panelChips().length, 0, "Backspace removes the last");
       assert.dom(PANEL).exists("the popup stays open");
+    });
+
+    test("panel field: a button popup's search drives the active descendant on desktop", async function (assert) {
+      const resolver = delayedResolver(0);
+      await render(
+        <template>
+          <ResolvingHost
+            @resolver={{resolver}}
+            @value={{array 1}}
+            @variant="button"
+          />
+        </template>
+      );
+      find(TRIGGER).dispatchEvent(
+        new MouseEvent("click", { bubbles: true, cancelable: true, detail: 0 })
+      );
+      await settled();
+      await fillIn(panelInput(), "an");
+      await triggerKeyEvent(panelInput(), "keydown", "ArrowDown");
+
+      const active = find(`${PANEL} [role='option'].--active`);
+      assert.dom(active).exists("typing activates a row");
+      assert.dom(panelInput()).hasAria("activedescendant", active.id);
+    });
+
+    test("panel field: a button popup opened by a touch screen reader drives no active descendant", async function (assert) {
+      sinon.stub(capabilities, "isIOS").value(true);
+      const resolver = delayedResolver(0);
+      await render(
+        <template>
+          <ResolvingHost
+            @resolver={{resolver}}
+            @value={{array 1}}
+            @variant="button"
+          />
+        </template>
+      );
+      find(TRIGGER).dispatchEvent(
+        new MouseEvent("click", { bubbles: true, cancelable: true, detail: 0 })
+      );
+      await settled();
+      await fillIn(panelInput(), "an");
+      await triggerKeyEvent(panelInput(), "keydown", "ArrowDown");
+
+      assert.dom(`${PANEL} [role='option']`).exists("results render");
+      assert
+        .dom(panelInput())
+        .doesNotHaveAria("activedescendant", "the reader walks the results");
     });
 
     test("panel field: Escape still closes the button popup", async function (assert) {

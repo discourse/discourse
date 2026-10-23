@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import type { CapabilitiesService } from "discourse/services/capabilities";
+import { isTouchScreenReader } from "discourse/ui-kit/-internals/interaction-modality";
 import type { DRovingFocusApi } from "discourse/ui-kit/modifiers/d-roving-focus";
 import { handleFieldKeydown } from "discourse/ui-kit/select/-internals/coordinators/field-keyboard";
 import SelectAnnouncer from "discourse/ui-kit/select/-internals/coordinators/select-announcer";
@@ -40,6 +41,12 @@ export default class InteractionCoordinator {
   // field is unfocused; focusing it — by Tab or by opening — reveals the plain editable label,
   // so keyboard focus and a click behave alike.
   @tracked triggerFocused = false;
+
+  /**
+   * Whether this open session moves real focus through the list, decided when it opens: touch
+   * screen readers ignore `aria-activedescendant`.
+   */
+  @tracked usesDirectFocus = false;
 
   /**
    * Empty `@untriggers` for `typeahead`: keeps DMenu's default click-to-open on the whole
@@ -319,6 +326,7 @@ export default class InteractionCoordinator {
     }
     if (!wasExpanded) {
       this.session++;
+      this.usesDirectFocus = isTouchScreenReader(this.#capabilities);
       this.#engine.reloadIfContextChanged();
       this.#engine.supersedeUpdate();
       this.#onShow();

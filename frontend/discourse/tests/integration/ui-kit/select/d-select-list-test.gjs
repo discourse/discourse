@@ -16,6 +16,7 @@ import sinon from "sinon";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { capabilities } from "discourse/services/capabilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
 import { settledAfterFrame } from "discourse/tests/helpers/qunit-helpers";
@@ -706,6 +707,62 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       assert
         .dom(input(".own-placeholder"))
         .hasAttribute("placeholder", "Find fruit");
+    });
+
+    test("panel field: a touch screen reader gets no active descendant and keeps its own focus", async function (assert) {
+      sinon.stub(capabilities, "isIOS").value(true);
+      const held = tracked([]);
+      await renderHeld(held);
+
+      // A screen reader's double-tap activates the field with a virtual click.
+      input().dispatchEvent(
+        new MouseEvent("click", { bubbles: true, cancelable: true, detail: 0 })
+      );
+      await focus(input());
+      await type("an");
+      assert
+        .dom(input())
+        .doesNotHaveAria(
+          "activedescendant",
+          "the reader's own cursor walks the results"
+        );
+      assert.strictEqual(rows().length, 1, "the results still render");
+
+      document.activeElement.blur();
+      rows()[0].dispatchEvent(
+        new MouseEvent("click", { bubbles: true, cancelable: true, detail: 0 })
+      );
+      await settled();
+      assert.deepEqual(held.value, [2], "a double-tap picks the row");
+      assert.notStrictEqual(
+        document.activeElement,
+        input(),
+        "the pick does not pull the reader back to the search"
+      );
+    });
+
+    test("panel field: touch without a screen reader keeps the active descendant", async function (assert) {
+      sinon.stub(capabilities, "isIOS").value(true);
+      const held = tracked([]);
+      await renderHeld(held);
+
+      input().dispatchEvent(
+        new PointerEvent("pointerdown", { bubbles: true, pointerType: "touch" })
+      );
+      await focus(input());
+      await type("an");
+      assert
+        .dom(input())
+        .hasAria("activedescendant", activeRow().id, "a tap keeps the cursor");
+    });
+
+    test("panel field: desktop keeps the active descendant however focus arrives", async function (assert) {
+      const held = tracked([]);
+      await renderHeld(held);
+
+      await focus(input());
+      await type("an");
+      assert.dom(input()).hasAria("activedescendant", activeRow().id);
     });
 
     test("panel field: a surrounding label focuses the input, not a chip", async function (assert) {

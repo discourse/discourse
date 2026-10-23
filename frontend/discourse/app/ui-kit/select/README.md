@@ -101,6 +101,12 @@ result row shows as active. Locked or read-only chips keep focus but carry
 `aria-disabled="true"` and cannot be removed. Keyboard chip names lead with the label and
 include the removal hint; touch names say “Remove X”.
 
+Touch screen readers ignore `aria-activedescendant`. When a session starts on iOS or Android
+and the latest interaction carried no key or pointer press (a screen reader's double-tap
+or focus move), that session moves real focus through the results instead: the input
+points at no row, no row is pre-activated, and a pick does not pull focus back to the
+input. The shared `ui-kit/-internals/interaction-modality` tracker records that signal.
+
 The input keeps a minimum width and wraps onto its own line rather than shrinking. The
 field scrolls within `--d-select-field-max-height` (default `8em`) and keeps the focused
 chip or the caret line in view. Remove targets are at least 24px, and 44px on touch and
