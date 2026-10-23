@@ -36,9 +36,12 @@ module PluginGem
 
   GEMS_DIR = File.expand_path("../vendor/plugin-gems", __dir__)
   LOCKFILE = File.join(GEMS_DIR, "Gemfile.lock")
-  # Checksums cover a gem server, and a path is the plugin's own code. A git
-  # gem keeps its version across commits, so a lock can't pin it, and a
-  # bundler plugin's source isn't verified at all.
+  # The source types a plugin Gemfile may use. A gem from a gem server is
+  # checked against the checksum in the lock. A path gem is code the plugin
+  # ships itself. Git gems are refused: a gem keeps its version number from
+  # commit to commit, so the lock check in `resolve` can't tell two commits
+  # apart, and there is no checksum for a checkout. Sources added by bundler
+  # plugins are refused because nothing checks what they download.
   GEMFILE_SOURCES = [Bundler::Source::Rubygems, Bundler::Source::Path, Bundler::Source::Gemspec]
 
   # Resolves the Gemfiles of all plugins with `gemfile: true` in one bundle,
