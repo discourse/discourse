@@ -108,10 +108,16 @@ module Email
     end
 
     def subject
+      subject_key =
+        DsaNotification.template_key(
+          "#{@opts[:template]}.subject_template",
+          context: @opts[:notification_context],
+          locale: @opts[:locale] || I18n.locale,
+        )
       has_override =
         TranslationOverride.exists?(
-          locale: I18n.locale,
-          translation_key: "#{@opts[:template]}.subject_template",
+          locale: @opts[:locale] || I18n.locale,
+          translation_key: subject_key,
         )
 
       if @opts[:template] && has_override
@@ -124,7 +130,7 @@ module Email
             optional_tags: format_tags,
             topic_title: @template_args[:topic_title] ? @template_args[:topic_title] : "",
           )
-        subject = I18n.t("#{@opts[:template]}.subject_template", augmented_template_args)
+        subject = I18n.t(subject_key, augmented_template_args)
       elsif @opts[:use_site_subject]
         subject = String.new(SiteSetting.email_subject)
         subject.gsub!("%{site_name}", @template_args[:email_prefix])
@@ -219,12 +225,22 @@ module Email
             optional_tags: ->(_) { format_tag_hashtags },
           )
 
-        body = I18n.t("#{@opts[:template]}.text_body_template", augmented_template_args).dup
+        body_key =
+          DsaNotification.template_key(
+            "#{@opts[:template]}.text_body_template",
+            context: @opts[:notification_context],
+            locale: @opts[:locale] || I18n.locale,
+          )
+        body = I18n.t(body_key, augmented_template_args).dup
       else
         body = @opts[:body].dup
       end
 
-      if key = @template_args[:body_suffix_key]
+      key = @template_args[:body_suffix_key]
+      if key &&
+           !(
+             @opts[:notification_context] && key == "system_messages.moderation_appeal_instructions"
+           )
         paragraph = I18n.t(key, @template_args)
         body = "#{body.rstrip}\n\n#{paragraph}"
       end
@@ -233,7 +249,13 @@ module Email
         body << "\n"
         body << @template_args[:unsubscribe_instructions]
       end
-      DiscoursePluginRegistry.apply_modifier(:message_builder_body, body, @opts, @to)
+      body = DiscoursePluginRegistry.apply_modifier(:message_builder_body, body, @opts, @to)
+      DsaNotification.append(
+        body,
+        @opts[:notification_context],
+        template: @opts[:template],
+        recipient: @opts[:recipient_user],
+      )
     end
 
     def build_args

@@ -163,12 +163,19 @@ class ReviewableUser < Reviewable
       DiscourseEvent.trigger(:suspect_user_deleted, target) if is_a_suspect_user?
 
       begin
-        self.reject_reason = args[:reject_reason]
+        self.reject_reason =
+          (
+            if args[:notification_context]
+              args[:notification_context]["ground"].truncate(2000)
+            else
+              args[:reject_reason]
+            end
+          )
 
         # Without this, we end up sending the email even if this reject_reason is too long.
         validate!
 
-        if args[:send_email] && SiteSetting.must_approve_users?
+        if !args[:notification_context] && args[:send_email] && SiteSetting.must_approve_users?
           # Execute job instead of enqueue because user has to exists to send email
           Jobs::CriticalUserEmail.new.execute(
             { type: :signup_after_reject, user_id: target.id, reject_reason: reject_reason },
@@ -184,9 +191,34 @@ class ReviewableUser < Reviewable
           I18n.t("user.destroy_reasons.reviewable_reject")
         end
         delete_args[:reviewable_id] = id
+        delete_args[:preserve_reviewable] = true if args[:notification_context]
 
         destroyer.destroy(target, delete_args)
-      rescue UserDestroyer::PostsExistError, Discourse::InvalidAccess
+        if args[:notification_context]
+          Jobs.enqueue(
+            :critical_user_email,
+            type: "account_deleted",
+            user_id: args[:notification_context]["post_user_id"],
+            recipient_email: args[:notification_context]["recipient_email"],
+            reject_reason:,
+            notification_context: args[:notification_context],
+          )
+        end
+      rescue UserDestroyer::PostsExistError, Discourse::InvalidAccess => error
+        if args[:notification_context]
+          raise if error.is_a?(Discourse::InvalidAccess)
+
+          errors.add(
+            :base,
+            I18n.t(
+              "user.cannot_delete_has_posts",
+              username: target.username,
+              count: target.posts.joins(:topic).count,
+            ),
+          )
+          return create_result(:failure) { |result| result.errors = errors }
+        end
+
         # If a user has posts or user is an admin, we won't delete them to preserve their content.
         # However the reviewable record will be "rejected" and they will remain
         # unapproved in the database. A staff member can still approve them
@@ -215,9 +247,15 @@ class ReviewableUser < Reviewable
     reviewable_scores.any? { |rs| rs.reason == "suspect_user" }
   end
 
+  def registration_review?
+    !is_a_suspect_user? && !target&.approved?
+  end
+
   private
 
   def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
+    return if registration_review?
+
     case action_id
     when :suspend_user
       user = target.reload

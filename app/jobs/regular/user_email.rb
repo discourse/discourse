@@ -236,6 +236,7 @@ module Jobs
       end
 
       email_args[:reject_reason] = args[:reject_reason]
+      email_args[:notification_context] = args[:notification_context] if args[:notification_context]
 
       message =
         EmailLog.unique_email_per_post(post, user) do

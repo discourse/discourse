@@ -2615,6 +2615,46 @@ RSpec.describe UserNotifications do
       end
     end
 
+    it "uses the customized DSA deletion subject unless the original subject is customized" do
+      account_review = Fabricate(:suspect_user_reviewable)
+      SiteSetting.contact_email = "support@forum.example"
+      SiteSetting.email_prefix = "Example community"
+      notification_context =
+        DsaNotification.context(
+          reviewable: account_review,
+          action_id: :delete_user,
+          args: {
+            dsa_classification: {
+              community_rule: {
+                "ground" => "Be respectful",
+                "explanation" => "Personal attacks are not allowed.",
+              },
+            },
+          },
+          automated_detection: "No",
+          automated_decision: "AUTOMATED_DECISION_NOT_AUTOMATED",
+        )
+      TranslationOverride.upsert!(
+        "en",
+        "dsa_notifications.account_deleted.subject_template",
+        "[%{email_prefix}] A moderation decision",
+      )
+
+      mail =
+        UserNotifications.account_deleted("user@example.com", account_review, notification_context:)
+      expect(mail.subject).to eq("[Example community] A moderation decision")
+
+      TranslationOverride.upsert!(
+        "en",
+        "user_notifications.account_deleted.subject_template",
+        "[%{email_prefix}] The original moderation subject",
+      )
+
+      mail =
+        UserNotifications.account_deleted("user@example.com", account_review, notification_context:)
+      expect(mail.subject).to eq("[Example community] The original moderation subject")
+    end
+
     it "includes flag reason for standard flags" do
       Fabricate(
         :reviewable_score,

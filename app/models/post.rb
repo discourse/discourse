@@ -677,7 +677,7 @@ class Post < ActiveRecord::Base
       topic_including_deleted.read_restricted_category?
   end
 
-  def hide!(post_action_type_id, reason = nil, custom_message: nil)
+  def hide!(post_action_type_id, reason = nil, custom_message: nil, notification_context: nil)
     return if hidden?
 
     reason ||=
@@ -730,6 +730,7 @@ class Post < ActiveRecord::Base
             default: PostActionType.names[post_action_type_id],
           ),
       }
+      options[:notification_context] = notification_context if notification_context
 
       message = custom_message
       message = hiding_again ? :post_hidden_again : :post_hidden if message.nil?

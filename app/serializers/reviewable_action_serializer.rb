@@ -13,7 +13,8 @@ class ReviewableActionSerializer < ApplicationSerializer
              :client_action,
              :require_reject_reason,
              :completed_message,
-             :penalty_effect
+             :penalty_effect,
+             :dsa_classification_required
 
   def label
     I18n.t(object.label)
@@ -53,6 +54,11 @@ class ReviewableActionSerializer < ApplicationSerializer
 
   def include_require_reject_reason?
     object.require_reject_reason.present?
+  end
+
+  def include_dsa_classification_required?
+    object.dsa_classification_required && DsaStatementOfRecord.classification_enabled? &&
+      scope.is_staff?
   end
 
   def include_penalty_effect?

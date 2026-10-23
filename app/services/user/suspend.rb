@@ -25,7 +25,10 @@ class User::Suspend
               allow_blank: true
   end
 
-  options { attribute :raise_on_failure, :boolean, default: false }
+  options do
+    attribute :raise_on_failure, :boolean, default: false
+    attribute :notification_context
+  end
 
   model :user
   policy :not_suspended_already, class_name: User::Policy::NotAlreadySuspended
@@ -55,6 +58,7 @@ class User::Suspend
       actor: guardian.user,
       params:,
       raise_on_failure: options.raise_on_failure,
+      notification_context: options.notification_context,
     )
   end
 
@@ -68,6 +72,7 @@ class User::Suspend
       post:,
       params:,
       raise_on_failure: options.raise_on_failure,
+      notification_context: options.notification_context,
     )
   end
 end

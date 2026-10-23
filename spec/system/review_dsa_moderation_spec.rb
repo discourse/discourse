@@ -1,0 +1,128 @@
+# frozen_string_literal: true
+
+describe "Classifying reviewable moderation" do
+  fab!(:admin)
+  fab!(:topic, :topic_with_op)
+
+  let(:review_page) { PageObjects::Pages::Review.new }
+  let(:modal) { PageObjects::Modals::DsaModeration.new }
+  let(:rule) { { ground: "Be respectful", explanation: "Personal attacks are not allowed." } }
+  let(:category) { "Other violation of terms and conditions" }
+  let(:note) do
+    "Classified this moderation decision for DSA reporting. Community rule: #{rule[:ground]} Category: #{category}"
+  end
+
+  before do
+    SiteSetting.dsa_reporting_enabled = true
+    SiteSetting.dsa_community_rules = [rule].to_json
+    SiteSetting.contact_email = "support@forum.example"
+    sign_in(admin)
+  end
+
+  it "classifies direct post actions at confirmation and preserves pending reviews on cancel" do
+    { "delete_and_agree" => "Delete post", "agree_and_hide" => "Hide post" }.each do |action, label|
+      post = Fabricate(:post, topic: topic)
+      reviewable =
+        Fabricate(
+          :reviewable_flagged_post,
+          target: post,
+          target_created_by: post.user,
+          topic: topic,
+        )
+      review_page.visit_reviewable(reviewable)
+      review_page.select_bundled_action(reviewable, "post-#{action}", bundle_index: 1)
+
+      expect(modal).to have_action_title(label)
+      expect(modal).to have_classification
+      modal.cancel
+      expect(modal).to be_closed
+      expect(review_page).to have_reviewable_with_pending_status(reviewable)
+
+      review_page.select_bundled_action(reviewable, "post-#{action}", bundle_index: 1)
+      modal.confirm(label)
+      expect(modal).to have_required_errors
+      modal.select_rule(rule[:ground])
+      modal.select_category(category)
+      modal.confirm(label)
+
+      expect(modal).to be_closed
+      expect(review_page).to have_reviewable_with_approved_status(reviewable)
+      expect(review_page).to have_note(note)
+      page.refresh
+      expect(review_page).to have_note(note)
+    end
+  end
+
+  it "keeps author penalties in one modal and preserves classification when going back" do
+    { "suspend" => "Suspend", "silence" => "Silence" }.each do |penalty, label|
+      post = Fabricate(:post, topic: topic)
+      reviewable =
+        Fabricate(
+          :reviewable_flagged_post,
+          target: post,
+          target_created_by: post.user,
+          topic: topic,
+        )
+      penalty_modal = PageObjects::Modals::PenalizeUser.new(penalty)
+      review_page.visit_reviewable(reviewable)
+      review_page.select_bundled_action(reviewable, "post-agree_and_#{penalty}", bundle_index: 1)
+
+      expect(modal).to have_action_title("#{label} @#{post.user.username}")
+      penalty_modal.set_future_date("two_weeks")
+      if penalty == "suspend"
+        expect(modal).to have_disabled_continue
+        penalty_modal.fill_in_suspend_reason("Repeated personal attacks.")
+      end
+      modal.continue
+      expect(modal).to have_action_title("#{label} @#{post.user.username}")
+      expect(modal).to have_classification
+      expect(modal).to have_focused_step("DSA classification")
+      modal.select_rule(rule[:ground])
+      modal.select_category(category)
+      modal.back
+      expect(modal).to have_focused_step("Action details")
+      expect(modal).to have_action_title("#{label} @#{post.user.username}")
+      if penalty == "suspend"
+        expect(penalty_modal).to have_suspend_reason("Repeated personal attacks.")
+      end
+      modal.continue
+      expect(modal).to have_selected_category(category)
+      modal.confirm("#{label} and remove post")
+
+      expect(modal).to be_closed
+      expect(review_page).to have_reviewable_with_approved_status(reviewable)
+      page.refresh
+      expect(review_page).to have_note(note)
+      if penalty == "suspend"
+        admin_user_page = PageObjects::Pages::AdminUser.new
+        admin_user_page.visit(post.user)
+        expect(admin_user_page).to have_suspension_reason("Repeated personal attacks.")
+      end
+    end
+  end
+
+  it "classifies actions on flagged posts loaded after the first queue page" do
+    post = Fabricate(:post, topic: topic)
+    reviewable =
+      Fabricate(:reviewable_flagged_post, target: post, target_created_by: post.user, topic: topic)
+    newer_reviewable = Fabricate(:reviewable_flagged_post)
+
+    stub_const(ReviewablesController, "PER_PAGE", 1) do
+      visit("/review?sort_order=created_at")
+      expect(review_page).to have_reviewable_with_pending_status(newer_reviewable)
+      page.scroll_to(:bottom)
+      expect(review_page).to have_reviewable_with_pending_status(reviewable)
+      review_page.select_bundled_action(reviewable, "post-agree_and_hide", bundle_index: 1)
+
+      expect(modal).to have_action_title("Hide post")
+      modal.select_rule(rule[:ground])
+      modal.select_category(category)
+      modal.confirm("Hide post")
+      expect(modal).to be_closed
+      expect(review_page).to have_reviewable_with_approved_status(reviewable)
+    end
+
+    review_page.visit_reviewable(reviewable)
+    expect(review_page).to have_note(note)
+  end
+end

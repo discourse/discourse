@@ -65,14 +65,15 @@ class UserNotifications < ActionMailer::Base
   end
 
   def signup_after_reject(user, opts = {})
-    locale = user_locale(user)
+    locale = user ? user_locale(user) : opts.fetch(:notification_context).fetch("recipient_locale")
     build_email(
-      user.email,
+      user ? user.email : opts.fetch(:recipient_email),
       template: "user_notifications.signup_after_reject",
       **Dsa::AppealInstructions.message_options,
       locale: locale,
       reject_reason: opts[:reject_reason],
       recipient_user: user,
+      notification_context: opts[:notification_context],
     )
   end
 
@@ -171,103 +172,38 @@ class UserNotifications < ActionMailer::Base
   end
 
   def account_silenced(user, opts = nil)
-    opts ||= {}
-
-    return unless user_history = opts[:user_history]
-
-    locale = user_locale(user)
-
-    if user.silenced_forever?
-      build_email(
-        user.email,
-        template: "user_notifications.account_silenced_forever",
-        **Dsa::AppealInstructions.message_options,
-        locale:,
-        reason: user_history.details,
-        recipient_user: user,
-      )
-    else
-      timezone =
-        ActiveSupport::TimeZone[user.user_option.timezone.presence || "UTC"] ||
-          ActiveSupport::TimeZone["UTC"]
-      silenced_till = user.silenced_till.in_time_zone(timezone)
-      build_email(
-        user.email,
-        template: "user_notifications.account_silenced",
-        **Dsa::AppealInstructions.message_options,
-        locale:,
-        reason: user_history.details,
-        silenced_till:
-          I18n.t(
-            "user_notifications.account_silenced.date_with_timezone",
-            locale:,
-            date: I18n.l(silenced_till, format: :long, locale:),
-            offset: silenced_till.formatted_offset,
-          ),
-        recipient_user: user,
-      )
-    end
+    build_account_penalty_email(user, opts || {}, :silenced)
   end
 
-  def account_deleted(email, reviewable)
+  def account_deleted(email, reviewable, notification_context: nil)
     post_action_type_view = PostActionTypeView.new
-    post_action_type_id = reviewable.reviewable_scores.first&.reviewable_score_type
+    locale = notification_context&.fetch("recipient_locale") || I18n.locale
+    post_action_type_id =
+      notification_context&.fetch("score_type") ||
+        reviewable&.reviewable_scores&.first&.reviewable_score_type
 
     flag_reason =
       if post_action_type_id
         reason_key = post_action_type_view.flag_and_score_types[post_action_type_id]
 
-        reason = I18n.t("flag_reasons.#{reason_key}", default: nil).presence if reason_key
+        reason = I18n.t("flag_reasons.#{reason_key}", locale:, default: nil).presence if reason_key
         reason || post_action_type_view.descriptions[post_action_type_id].presence
       end
 
-    flag_reason ||= I18n.t("flag_reasons.spam")
+    flag_reason ||= I18n.t("flag_reasons.spam", locale:)
 
     build_email(
       email,
       template: "user_notifications.account_deleted",
       **Dsa::AppealInstructions.message_options,
-      flag_reason: flag_reason,
+      flag_reason:,
+      locale:,
+      notification_context:,
     )
   end
 
   def account_suspended(user, opts = nil)
-    opts ||= {}
-
-    return unless user_history = opts[:user_history]
-
-    locale = user_locale(user)
-
-    if user.suspended_forever?
-      build_email(
-        user.email,
-        template: "user_notifications.account_suspended_forever",
-        **Dsa::AppealInstructions.message_options,
-        locale:,
-        reason: user_history.details,
-        recipient_user: user,
-      )
-    else
-      timezone =
-        ActiveSupport::TimeZone[user.user_option.timezone.presence || "UTC"] ||
-          ActiveSupport::TimeZone["UTC"]
-      suspended_till = user.suspended_till.in_time_zone(timezone)
-      build_email(
-        user.email,
-        template: "user_notifications.account_suspended",
-        **Dsa::AppealInstructions.message_options,
-        locale:,
-        reason: user_history.details,
-        suspended_till:
-          I18n.t(
-            "user_notifications.account_suspended.date_with_timezone",
-            locale:,
-            date: I18n.l(suspended_till, format: :long, locale:),
-            offset: suspended_till.formatted_offset,
-          ),
-        recipient_user: user,
-      )
-    end
+    build_account_penalty_email(user, opts || {}, :suspended)
   end
 
   def account_exists(user, opts = {})
@@ -1002,6 +938,39 @@ class UserNotifications < ActionMailer::Base
   end
 
   private
+
+  def build_account_penalty_email(user, opts, penalty)
+    return unless user_history = opts[:user_history]
+
+    until_date = opts[:notification_context]&.fetch("penalty_until")
+    until_date = until_date ? Time.zone.parse(until_date) : user.public_send("#{penalty}_till")
+    forever = until_date > 100.years.from_now
+    template = "user_notifications.account_#{penalty}#{"_forever" if forever}"
+    locale = user_locale(user)
+    values = {
+      **Dsa::AppealInstructions.message_options,
+      template:,
+      locale:,
+      reason: user_history.details,
+      recipient_user: user,
+      notification_context: opts[:notification_context],
+    }
+    unless forever
+      timezone =
+        ActiveSupport::TimeZone[user.user_option.timezone.presence || "UTC"] ||
+          ActiveSupport::TimeZone["UTC"]
+      local_date = until_date.in_time_zone(timezone)
+      date =
+        I18n.t(
+          "#{template}.date_with_timezone",
+          date: I18n.l(local_date, format: :long, locale:),
+          offset: local_date.formatted_offset,
+          locale:,
+        )
+      values[:"#{penalty}_till"] = date
+    end
+    build_email(user.email, values)
+  end
 
   def build_user_email_token_by_template(template, user, email_token)
     build_email(

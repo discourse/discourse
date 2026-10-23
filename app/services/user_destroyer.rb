@@ -24,11 +24,17 @@ class UserDestroyer
     prepare_for_destroy(user) if opts[:prepare_for_destroy] == true
 
     result = nil
+    preserved_reviewable_id = opts[:reviewable_id] if opts[:preserve_reviewable]
 
     optional_transaction(open_transaction: opts[:transaction]) do
       UserSecurityKey.where(user_id: user.id).delete_all
       Bookmark.where(user_id: user.id).delete_all
       Draft.where(user_id: user.id).delete_all
+      if preserved_reviewable_id
+        Reviewable.where(id: preserved_reviewable_id, created_by_id: user.id).update_all(
+          created_by_id: Discourse::SYSTEM_USER_ID,
+        )
+      end
       reviewable_ids = Reviewable.where(created_by_id: user.id).select(:id)
       ReviewableNote.where(reviewable_id: reviewable_ids).delete_all
       Reviewable.where(created_by_id: user.id).delete_all
@@ -41,12 +47,14 @@ class UserDestroyer
           cb.call(user, @guardian, opts)
         end
 
-        agree_with_flags(user) if opts[:delete_as_spammer]
+        if opts[:delete_as_spammer]
+          agree_with_flags(user, except_reviewable_id: preserved_reviewable_id)
+        end
         block_external_urls(user) if opts[:block_urls]
         delete_posts(user, category_topic_ids, opts)
       end
 
-      resolve_reviewables_targeting(user)
+      resolve_reviewables_targeting(user, except_reviewable_id: preserved_reviewable_id)
 
       user.post_actions.find_each { |post_action| post_action.remove_act!(Discourse.system_user) }
 
@@ -142,9 +150,10 @@ class UserDestroyer
       end
   end
 
-  def agree_with_flags(user)
+  def agree_with_flags(user, except_reviewable_id: nil)
     ReviewableFlaggedPost
       .where(target_created_by: user)
+      .where.not(id: except_reviewable_id)
       .find_each do |reviewable|
         actions = reviewable.actions_for(@guardian)
 
@@ -155,6 +164,7 @@ class UserDestroyer
 
     ReviewablePost
       .where(target_created_by: user)
+      .where.not(id: except_reviewable_id)
       .find_each do |reviewable|
         if reviewable.actions_for(@guardian).has?(:reject_and_delete)
           reviewable.perform(@actor, :reject_and_delete)
@@ -163,6 +173,7 @@ class UserDestroyer
 
     ReviewableQueuedPost
       .where(target_created_by: user)
+      .where.not(id: except_reviewable_id)
       .find_each do |reviewable|
         if reviewable.actions_for(@guardian).has?(:reject_post)
           reviewable.perform(@actor, :reject_post)
@@ -170,10 +181,11 @@ class UserDestroyer
       end
   end
 
-  def resolve_reviewables_targeting(user)
+  def resolve_reviewables_targeting(user, except_reviewable_id: nil)
     Reviewable
       .pending
       .where(target_created_by: user)
+      .where.not(id: except_reviewable_id)
       .find_each do |reviewable|
         reviewable.reviewable_notes.create!(
           user: Discourse.system_user,

@@ -46,13 +46,24 @@ class PostDestroyer
       .find_each { |post| PostDestroyer.new(Discourse.system_user, post, context: context).destroy }
   end
 
-  def self.delete_with_replies(performed_by, post, reviewable_id = nil, defer_reply_flags: true)
+  def self.delete_with_replies(
+    performed_by,
+    post,
+    reviewable_id = nil,
+    defer_reply_flags: true,
+    notification_context: nil
+  )
     reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
-    PostDestroyer.new(performed_by, post, reviewable_id: reviewable_id).destroy
+    PostDestroyer.new(
+      performed_by,
+      post,
+      reviewable_id: reviewable_id,
+      notification_context:,
+    ).destroy
 
-    options = { defer_flags: defer_reply_flags }
-    if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
+    options = { defer_flags: defer_reply_flags, notification_context: }
+    if SiteSetting.notify_users_after_responses_deleted_on_flagged_post || notification_context
       options.merge!({ reviewable_id: reviewable_id, notify_responders: true, parent_post: post })
     end
     replies.each { |reply| PostDestroyer.new(performed_by, reply, options).destroy }
@@ -453,7 +464,7 @@ class PostDestroyer
     # If the reviewable score type is not on the latter, it means it's not a flag by a user and
     #  must be an automated flag like `needs_approval`. There's no flag reason for these kind of types.
     flag_type = post_action_type_view.flag_types[rs.reviewable_score_type]
-    return unless flag_type
+    return unless flag_type || @opts[:notification_context]
 
     notify_responders = options[:notify_responders]
 
@@ -470,16 +481,19 @@ class PostDestroyer
         ),
       message_options: {
         **Dsa::AppealInstructions.message_options,
+        notification_context: @opts[:notification_context],
         flagged_post_raw_content: notify_responders ? options[:parent_post].raw : @post.raw,
         flagged_post_response_raw_content: @post.raw,
         url: notify_responders ? options[:parent_post].url : @post.url,
         flag_reason:
-          I18n.t(
-            "flag_reasons#{".responder" if notify_responders}.#{flag_type}",
-            locale: SiteSetting.default_locale,
-            base_path: Discourse.base_path,
-            default: PostActionType.flags.find { |flag| flag[:name_key] == flag_type.to_s }[:name],
-          ),
+          flag_type &&
+            I18n.t(
+              "flag_reasons#{".responder" if notify_responders}.#{flag_type}",
+              locale: SiteSetting.default_locale,
+              base_path: Discourse.base_path,
+              default:
+                PostActionType.flags.find { |flag| flag[:name_key] == flag_type.to_s }[:name],
+            ),
       },
     )
   end

@@ -20,12 +20,15 @@ class User::Silence
     validates :other_user_ids, length: { maximum: User::MAX_SIMILAR_USERS }
     validates :post_action,
               inclusion: {
-                in: %w[delete delete_replies edit none],
+                in: %w[delete delete_replies delete_all edit none],
               },
               allow_blank: true
   end
 
-  options { attribute :raise_on_failure, :boolean, default: false }
+  options do
+    attribute :raise_on_failure, :boolean, default: false
+    attribute :notification_context
+  end
 
   model :user
   policy :not_silenced_already, class_name: User::Policy::NotAlreadySilenced
@@ -55,6 +58,7 @@ class User::Silence
       actor: guardian.user,
       params:,
       raise_on_failure: options.raise_on_failure,
+      notification_context: options.notification_context,
     )
   end
 
@@ -68,6 +72,7 @@ class User::Silence
       post:,
       params:,
       raise_on_failure: options.raise_on_failure,
+      notification_context: options.notification_context,
     )
   end
 end

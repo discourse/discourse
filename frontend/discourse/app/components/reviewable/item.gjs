@@ -10,6 +10,7 @@ import { classify, dasherize } from "@ember/string";
 import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
 import DsaStatementClassification from "discourse/components/dsa-statement-classification";
 import DsaClassificationModal from "discourse/components/modal/dsa-classification";
+import DsaModerationAction from "discourse/components/modal/dsa-moderation-action";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
@@ -236,6 +237,13 @@ export default class ReviewableItem extends Component {
     return this.siteSettings?.reviewable_claiming !== "required";
   }
 
+  get dsaClassificationOptions() {
+    const { classificationOptions } = this.args;
+    if (classificationOptions?.community_rules?.length) {
+      return classificationOptions;
+    }
+  }
+
   get primaryBundles() {
     return (this.args.reviewable?.bundled_actions ?? []).filter(
       (bundle) => !bundle.secondary
@@ -339,15 +347,37 @@ export default class ReviewableItem extends Component {
     }
   }
 
-  clientSuspend(reviewable, performAction) {
-    return this._penalize("showSuspendModal", reviewable, performAction);
+  clientSuspend(
+    reviewable,
+    performAction,
+    dsaClassification,
+    performableAction
+  ) {
+    return this._penalize(
+      "showSuspendModal",
+      reviewable,
+      performAction,
+      dsaClassification,
+      performableAction
+    );
   }
 
-  clientSilence(reviewable, performAction) {
-    return this._penalize("showSilenceModal", reviewable, performAction);
+  clientSilence(
+    reviewable,
+    performAction,
+    dsaClassification,
+    performableAction
+  ) {
+    return this._penalize(
+      "showSilenceModal",
+      reviewable,
+      performAction,
+      dsaClassification,
+      performableAction
+    );
   }
 
-  async clientEdit(reviewable, performAction) {
+  async clientEdit(reviewable, performAction, classification) {
     if (!this.currentUser) {
       return this.dialog.alert(i18n("post.controls.edit_anonymous"));
     }
@@ -367,10 +397,28 @@ export default class ReviewableItem extends Component {
       draftKey: topic.draft_key,
       draftSequence: topic.draft_sequence,
       skipJumpOnSave: true,
-      onSaved: (result) =>
-        performAction({ post_version: result.payload.version }).catch(
-          popupAjaxError
-        ),
+      savePost: classification
+        ? async ({ post: editedPost, postChanges, topicChanges }) => {
+            const result = await performAction({
+              dsa_classification: classification,
+              post_update: postChanges,
+              topic_update: topicChanges,
+            });
+            const updated = result.edited_post;
+            editedPost.setProperties(editedPost.constructor.munge(updated));
+            return {
+              target: editedPost,
+              payload: updated,
+              responseJson: { post: updated },
+            };
+          }
+        : undefined,
+      onSaved: classification
+        ? undefined
+        : (result) =>
+            performAction({ post_version: result.payload.version }).catch(
+              popupAjaxError
+            ),
     });
   }
 
@@ -420,6 +468,13 @@ export default class ReviewableItem extends Component {
   async perform(performableAction) {
     if (this.updating) {
       return;
+    }
+
+    if (
+      this.dsaClassificationOptions &&
+      performableAction.dsa_classification_required
+    ) {
+      return this._performConfirmed(performableAction);
     }
 
     const message = performableAction.get("confirm_message");
@@ -657,16 +712,18 @@ export default class ReviewableItem extends Component {
         {
           type: "PUT",
           dataType: "json",
-          data,
+          contentType: actionData.post_update ? "application/json" : undefined,
+          data: actionData.post_update ? JSON.stringify(data) : data,
         }
       )
-        .then((result) =>
-          this._performResult(
+        .then(async (result) => {
+          await this._performResult(
             result.reviewable_perform_result,
             performableAction,
             reviewable
-          )
-        )
+          );
+          return result.reviewable_perform_result;
+        })
         .finally(() => {
           this.updating = false;
           this.disabled = false;
@@ -674,12 +731,42 @@ export default class ReviewableItem extends Component {
     };
 
     try {
-      if (performableAction.client_action) {
+      const classificationOptions =
+        performableAction.dsa_classification_required
+          ? this.dsaClassificationOptions
+          : undefined;
+      if (
+        classificationOptions &&
+        !["suspend", "silence"].includes(performableAction.client_action)
+      ) {
+        if (await this.#claimReviewable()) {
+          await this.modal.show(DsaModerationAction, {
+            model: {
+              action: performableAction,
+              options: classificationOptions,
+              perform: (data) =>
+                performableAction.client_action === "edit"
+                  ? this.clientEdit(
+                      reviewable,
+                      performAction,
+                      data.dsa_classification
+                    )
+                  : performAction(data),
+            },
+          });
+        }
+      } else if (performableAction.client_action) {
         let actionMethod =
           this[`client${classify(performableAction.client_action)}`];
         if (actionMethod) {
           if (await this.#claimReviewable()) {
-            await actionMethod.call(this, reviewable, performAction);
+            await actionMethod.call(
+              this,
+              reviewable,
+              performAction,
+              classificationOptions,
+              performableAction
+            );
           }
         } else {
           // eslint-disable-next-line no-console
@@ -725,17 +812,28 @@ export default class ReviewableItem extends Component {
     }
   }
 
-  _penalize(adminToolMethod, reviewable, performAction) {
+  _penalize(
+    adminToolMethod,
+    reviewable,
+    performAction,
+    dsaClassification,
+    performableAction
+  ) {
     if (!this.adminTools) {
       return;
     }
 
-    return this.adminTools[adminToolMethod](reviewable.target_created_by, {
-      postId: reviewable.post_id,
-      postEdit: reviewable.raw ?? reviewable.payload?.raw,
-      reviewableId: reviewable.id,
-      perform: performAction,
-    });
+    return this.adminTools[adminToolMethod](
+      reviewable.target_created_by ?? reviewable.target_user,
+      {
+        postId: reviewable.post_id,
+        postEdit: reviewable.raw ?? reviewable.payload?.raw,
+        reviewableId: reviewable.id,
+        dsaClassification,
+        dsaAction: performableAction?.server_action,
+        perform: performAction,
+      }
+    );
   }
 
   <template>

@@ -55,7 +55,8 @@ class Reviewable < ActiveRecord::Base
                     :require_reject_reason,
                     :custom_modal,
                     :completed_message,
-                    :penalty_effect
+                    :penalty_effect,
+                    :dsa_classification_required
 
       def initialize(id, icon = nil, button_class = nil, label = nil)
         super(id)
@@ -89,6 +90,7 @@ class Reviewable < ActiveRecord::Base
       scoped_id = [reviewable.id, action_name].compact_blank.join("-")
       action = Actions.common_actions[action_name] || Action.new(scoped_id)
       yield action if block_given?
+      action.dsa_classification_required = DsaNotification.supports?(reviewable, id)
       @content << action
 
       bundle ||= add_bundle(scoped_id, secondary:)
