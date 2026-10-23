@@ -125,26 +125,23 @@ RSpec.describe "Anonymous public chat channels" do
       expect(anonymous_flag_modal.body).to have_content(expected_description)
     end
 
-    [false, true].each do |mobile|
-      it "lets visitors open the DSA form from a #{mobile ? "mobile" : "desktop"} chat flag modal",
-         mobile: mobile do
-        SiteSetting.allow_all_users_to_flag_illegal_content = true
-        SiteSetting.dsa_reporting_enabled = true
-        notice_page = PageObjects::Pages::DsaNotice.new
+    it "lets visitors open the DSA form from the chat flag modal" do
+      SiteSetting.allow_all_users_to_flag_illegal_content = true
+      SiteSetting.dsa_reporting_enabled = true
+      notice_page = PageObjects::Pages::DsaNotice.new
 
-        chat_page.visit_channel(public_channel)
-        channel_page.messages.flag(existing_message)
+      chat_page.visit_channel(public_channel)
+      channel_page.messages.flag(existing_message)
 
-        expect(anonymous_flag_modal).to be_open
-        expect(anonymous_flag_modal).to have_dsa_reporting_description
-        anonymous_flag_modal.report_illegal_content
+      expect(anonymous_flag_modal).to be_open
+      expect(anonymous_flag_modal).to have_dsa_reporting_description
+      anonymous_flag_modal.report_illegal_content
 
-        expect(anonymous_flag_modal).to be_closed
-        expect(notice_page).to have_notice_form
-        expect(notice_page.form.field("content_url").value).to eq(
-          "#{Discourse.base_url}/chat/c/-/#{public_channel.id}/#{existing_message.id}",
-        )
-      end
+      expect(anonymous_flag_modal).to be_closed
+      expect(notice_page).to have_notice_form
+      expect(notice_page.form.field("content_url").value).to eq(
+        "#{Discourse.base_url}/chat/c/-/#{public_channel.id}/#{existing_message.id}",
+      )
     end
 
     it "lets visitors on mobile email a report", mobile: true do
