@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
-import { PEOPLE } from "../../../../../lib/select-fixtures.js";
+import { ACTIVITY_FILTERS } from "../../../../../lib/select-fixtures.js";
 
 export default class DefaultsSelectExample extends Component {
-  @tracked value = 102;
+  @tracked value = "mentions";
 
   @action
   onChange(value) {
@@ -15,7 +15,7 @@ export default class DefaultsSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-content-defaults"
-      @items={{PEOPLE}}
+      @items={{ACTIVITY_FILTERS}}
       @labelField="name"
       @onChange={{this.onChange}}
       @selectedIcon="check"

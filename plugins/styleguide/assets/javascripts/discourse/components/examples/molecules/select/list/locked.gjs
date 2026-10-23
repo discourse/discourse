@@ -1,8 +1,8 @@
 import DSelectList from "discourse/ui-kit/select/d-select-list";
 import { i18n } from "discourse-i18n";
-import { TAGS } from "../../../../../lib/select-fixtures.js";
+import { USER_GROUPS } from "../../../../../lib/select-fixtures.js";
 
-const HELD = ["design-system", "accessibility"];
+const HELD = [2, 12];
 
 const ListLockedExample = <template>
   <div class="select-examples__list-pair">
@@ -10,24 +10,26 @@ const ListLockedExample = <template>
       class="select-examples__tag-list"
       @disabled={{true}}
       @identifier="sg-list-disabled"
-      @items={{TAGS}}
+      @items={{USER_GROUPS}}
       @label={{i18n "styleguide.sections.select.list_disabled_label"}}
-      @labelField="label"
-      @searchPlaceholder={{i18n "styleguide.sections.select.list_search"}}
+      @labelField="fullName"
+      @searchPlaceholder={{i18n
+        "styleguide.sections.select.placeholders.search_groups"
+      }}
       @value={{HELD}}
-      @valueField="slug"
       @virtualized={{false}}
     />
     <DSelectList
       class="select-examples__tag-list"
       @identifier="sg-list-readonly"
-      @items={{TAGS}}
+      @items={{USER_GROUPS}}
       @label={{i18n "styleguide.sections.select.list_readonly_label"}}
-      @labelField="label"
+      @labelField="fullName"
       @readonly={{true}}
-      @searchPlaceholder={{i18n "styleguide.sections.select.list_search"}}
+      @searchPlaceholder={{i18n
+        "styleguide.sections.select.placeholders.search_groups"
+      }}
       @value={{HELD}}
-      @valueField="slug"
       @virtualized={{false}}
     />
   </div>

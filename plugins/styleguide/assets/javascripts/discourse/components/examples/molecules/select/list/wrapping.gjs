@@ -3,12 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelectList from "discourse/ui-kit/select/d-select-list";
 import { i18n } from "discourse-i18n";
-import { TAGS } from "../../../../../lib/select-fixtures.js";
+import { LOCALES } from "../../../../../lib/select-fixtures.js";
 
 export default class ListWrappingExample extends Component {
-  @tracked value = ["design-system"];
-
-  tags = TAGS;
+  @tracked value = ["ja"];
 
   @action
   onChange(value) {
@@ -19,13 +17,13 @@ export default class ListWrappingExample extends Component {
     <DSelectList
       class="select-examples__tag-list"
       @identifier="sg-list-wrapping"
-      @items={{this.tags}}
-      @label={{i18n "styleguide.sections.select.list_tags_label"}}
-      @labelField="label"
+      @items={{LOCALES}}
+      @label={{i18n "styleguide.sections.select.list_languages_label"}}
       @onChange={{this.onChange}}
-      @searchPlaceholder={{i18n "styleguide.sections.select.list_search"}}
+      @searchPlaceholder={{i18n
+        "styleguide.sections.select.placeholders.search_languages"
+      }}
       @value={{this.value}}
-      @valueField="slug"
       @virtualized={{false}}
     />
   </template>

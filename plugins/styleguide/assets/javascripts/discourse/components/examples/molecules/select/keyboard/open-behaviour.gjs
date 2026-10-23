@@ -24,7 +24,9 @@ export default class OpenBehaviourSelectExample extends Component {
       @items={{LOCALES}}
       @label={{@label}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.choose_language"
+      }}
       @value={{this.value}}
       @variant={{@variant}}
     />

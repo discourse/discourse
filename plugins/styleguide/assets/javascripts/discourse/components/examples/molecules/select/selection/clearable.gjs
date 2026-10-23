@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { LOCALES } from "../../../../../lib/select-fixtures.js";
+import { PEOPLE } from "../../../../../lib/select-fixtures.js";
 
 export default class ClearableSelectExample extends Component {
-  @tracked value = "es";
+  @tracked value = 103;
 
   @action
   onChange(value) {
@@ -17,9 +17,9 @@ export default class ClearableSelectExample extends Component {
     <DSelect
       @clearable={{true}}
       @identifier="sg-clearable"
-      @items={{LOCALES}}
+      @items={{PEOPLE}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n "styleguide.sections.select.placeholders.assign_to"}}
       @value={{this.value}}
     />
   </template>

@@ -24,8 +24,8 @@ export default class SelectionBlockSelectExample extends Component {
       @placeholder={{i18n
         (if
           @multiple
-          "styleguide.sections.select.multi_placeholder"
-          "styleguide.sections.select.placeholder"
+          "styleguide.sections.select.placeholders.add_people"
+          "styleguide.sections.select.placeholders.find_person"
         )
       }}
       @value={{this.value}}

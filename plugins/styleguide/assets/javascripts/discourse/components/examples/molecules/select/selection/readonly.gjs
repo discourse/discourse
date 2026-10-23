@@ -3,10 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { LOCALES } from "../../../../../lib/select-fixtures.js";
+import { topicVisibilities } from "../../../../../lib/select-fixtures.js";
 
 export default class ReadonlySelectExample extends Component {
-  @tracked value = "en";
+  @tracked value = "members";
+
+  items = topicVisibilities();
 
   @action
   onChange(value) {
@@ -16,9 +18,12 @@ export default class ReadonlySelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-readonly"
-      @items={{LOCALES}}
+      @items={{this.items}}
+      @labelField="title"
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.choose_visibility"
+      }}
       @readonly={{true}}
       @value={{this.value}}
       @variant="static"

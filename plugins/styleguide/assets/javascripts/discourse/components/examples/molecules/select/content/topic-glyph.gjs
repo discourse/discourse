@@ -1,23 +1,21 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { trustHTML } from "@ember/template";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { topics } from "../../../../../lib/select-fixtures.js";
+import { TAGS } from "../../../../../lib/select-fixtures.js";
 
 export default class TopicGlyphSelectExample extends Component {
   @tracked value = null;
 
-  items = topics()
-    .slice(0, 40)
-    .map((topic) => ({
-      ...topic,
-      categoryColor: trustHTML(`--bullet-color: #${topic.category.color}`),
-      repliesLabel: i18n("styleguide.sections.select.content.glyph_replies", {
-        count: topic.replies,
-      }),
-    }));
+  items = TAGS.map((tag) => ({
+    ...tag,
+    usesLabel: i18n("styleguide.sections.select.content.glyph_uses", {
+      count: tag.count,
+      formatted: new Intl.NumberFormat().format(tag.count),
+    }),
+  }));
 
   @action
   onChange(value) {
@@ -28,21 +26,19 @@ export default class TopicGlyphSelectExample extends Component {
     <DSelect
       @identifier="sg-content-glyph"
       @items={{this.items}}
+      @labelField="label"
       @onChange={{this.onChange}}
       @placeholder={{i18n
         "styleguide.sections.select.content.glyph_placeholder"
       }}
       @value={{this.value}}
+      @valueField="slug"
     >
-      <:item as |topic|>
+      <:item as |tag|>
         <span class="select-examples__row select-examples__row--glyph">
-          <span
-            aria-hidden="true"
-            class="select-examples__bullet"
-            style={{topic.categoryColor}}
-          ></span>
-          <span class="select-examples__primary">{{topic.name}}</span>
-          <span class="select-examples__meta">{{topic.repliesLabel}}</span>
+          {{dIcon "tag"}}
+          <span class="select-examples__primary">{{tag.label}}</span>
+          <span class="select-examples__meta">{{tag.usesLabel}}</span>
         </span>
       </:item>
     </DSelect>

@@ -18,7 +18,9 @@ export default class PagedSelectExample extends Component {
       @identifier="sg-paged"
       @load={{pagedTopicApi.search}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.search_topics"
+      }}
       @resolveValue={{pagedTopicApi.find}}
       @value={{this.value}}
     />

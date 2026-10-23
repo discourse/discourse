@@ -55,7 +55,9 @@ export default class FooterSelectExample extends Component {
       @labelField="name"
       @load={{this.api.search}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.invite_member"
+      }}
       @resolveValue={{this.api.find}}
       @value={{this.value}}
     >

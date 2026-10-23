@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { LOCALES } from "../../../../../lib/select-fixtures.js";
+import { TIMEZONES } from "../../../../../lib/select-fixtures.js";
 
 export default class EventsSelectExample extends Component {
   @tracked value = null;
@@ -28,11 +28,13 @@ export default class EventsSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-events"
-      @items={{LOCALES}}
+      @items={{TIMEZONES}}
       @onChange={{this.onChange}}
       @onClose={{this.onClose}}
       @onShow={{this.onShow}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.choose_timezone"
+      }}
       @placement="top-start"
       @value={{this.value}}
     />

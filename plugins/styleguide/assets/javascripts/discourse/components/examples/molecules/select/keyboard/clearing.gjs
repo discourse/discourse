@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { LOCALES } from "../../../../../lib/select-fixtures.js";
+import { TAGS } from "../../../../../lib/select-fixtures.js";
 
 export default class KeyboardClearingSelectExample extends Component {
-  @tracked value = "fr";
+  @tracked value = "accessibility";
 
   @action
   onChange(value) {
@@ -17,10 +17,12 @@ export default class KeyboardClearingSelectExample extends Component {
     <DSelect
       @clearable={{true}}
       @identifier="sg-keyboard-clearing"
-      @items={{LOCALES}}
+      @items={{TAGS}}
+      @labelField="label"
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n "styleguide.sections.select.placeholders.choose_tag"}}
       @value={{this.value}}
+      @valueField="slug"
     />
   </template>
 }

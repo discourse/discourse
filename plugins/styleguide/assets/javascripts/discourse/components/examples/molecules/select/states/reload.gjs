@@ -23,7 +23,9 @@ export default class ReloadSelectExample extends Component {
       @identifier={{@identifier}}
       @load={{this.api.search}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.search_topics"
+      }}
       @resolveValue={{this.api.find}}
       @value={{this.value}}
     />

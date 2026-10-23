@@ -20,7 +20,9 @@ export default class LargeListSelectExample extends Component {
       @identifier="sg-large-list"
       @items={{this.items}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.choose_topic"
+      }}
       @value={{this.value}}
     />
   </template>

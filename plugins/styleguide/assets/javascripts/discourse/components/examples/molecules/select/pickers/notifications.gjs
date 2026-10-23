@@ -54,14 +54,9 @@ export default class NotificationsSelectExample extends Component {
       </:selection>
 
       <:item as |level|>
-        <span class="select-examples__row select-examples__row--identity">
+        <span class="select-examples__row select-examples__row--glyph">
           {{dIcon level.icon}}
-          <span class="select-examples__details">
-            <span class="select-examples__primary">{{level.title}}</span>
-            <span class="select-examples__secondary">
-              {{level.description}}
-            </span>
-          </span>
+          <span class="select-examples__primary">{{level.title}}</span>
         </span>
       </:item>
     </DSelect>

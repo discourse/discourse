@@ -3,12 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { createRetryingLocaleApi } from "../../../../../lib/select-fixtures.js";
+import { createRetryingGroupApi } from "../../../../../lib/select-fixtures.js";
 
 export default class ErrorSelectExample extends Component {
   @tracked value = null;
 
-  api = createRetryingLocaleApi();
+  api = createRetryingGroupApi();
 
   @action
   onChange(value) {
@@ -18,10 +18,13 @@ export default class ErrorSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-error"
+      @labelField="fullName"
       @load={{this.api.search}}
       @onChange={{this.onChange}}
       @onClose={{this.api.reset}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.choose_group"
+      }}
       @resolveValue={{this.api.find}}
       @value={{this.value}}
       @variant="button"

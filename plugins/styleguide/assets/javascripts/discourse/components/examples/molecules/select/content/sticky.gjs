@@ -38,7 +38,9 @@ export default class StickySelectExample extends Component {
       @identifier="sg-content-sticky"
       @items={{this.items}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.choose_topic"
+      }}
       @specialItems={{this.specialItems}}
       @value={{this.value}}
       @variant="static"

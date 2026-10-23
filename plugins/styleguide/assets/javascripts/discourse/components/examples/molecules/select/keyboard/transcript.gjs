@@ -5,7 +5,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { LOCALES } from "../../../../../lib/select-fixtures.js";
+import { PEOPLE } from "../../../../../lib/select-fixtures.js";
 
 const MAX_ENTRIES = 6;
 
@@ -31,10 +31,10 @@ export default class KeyboardTranscriptSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-keyboard-transcript"
-      @items={{LOCALES}}
+      @items={{PEOPLE}}
       @multiple={{true}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.multi_placeholder"}}
+      @placeholder={{i18n "styleguide.sections.select.placeholders.add_people"}}
       @placement="top-start"
       @value={{this.value}}
     />

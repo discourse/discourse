@@ -18,7 +18,9 @@ export default class CursorPagedSelectExample extends Component {
       @identifier="sg-paged-cursor"
       @load={{cursorTopicApi.search}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.search_topic_archive"
+      }}
       @resolveValue={{cursorTopicApi.find}}
       @value={{this.value}}
     />

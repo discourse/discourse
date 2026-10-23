@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { LOCALES } from "../../../../../lib/select-fixtures.js";
+import { USER_GROUPS } from "../../../../../lib/select-fixtures.js";
 
 export default class MaximumSelectExample extends Component {
-  @tracked value = ["en", "es", "pt-BR"];
+  @tracked value = [1, 11, 14];
 
   @action
   onChange(value) {
@@ -16,11 +16,14 @@ export default class MaximumSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-maximum"
-      @items={{LOCALES}}
+      @items={{USER_GROUPS}}
+      @labelField="fullName"
       @maximum={{3}}
       @multiple={{true}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.multi_placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.choose_groups"
+      }}
       @value={{this.value}}
     />
   </template>

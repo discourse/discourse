@@ -24,7 +24,9 @@ export default class DefaultSelectExample extends Component {
       @identifier="sg-default"
       @items={{this.items}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.choose_status"
+      }}
       @value={{this.value}}
     />
   </template>

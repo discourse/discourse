@@ -58,20 +58,20 @@ describe "UiKit | DSelect page object by value" do
     it "builds a multi-select value and removes a chip" do
       multi = select_at("sg-multi")
 
-      multi.select_value("draft")
-      multi.select_value("archived")
-      expect(multi).to have_selected_value("draft,archived")
-      expect(multi).to have_selected_name("Draft,Archived")
+      multi.select_value("101")
+      multi.select_value("105")
+      expect(multi).to have_selected_value("101,105")
+      expect(multi).to have_selected_name("Maya Alvarez,Sora Tanaka")
 
-      multi.remove("draft")
-      expect(multi).to have_selected_value("archived")
+      multi.remove("101")
+      expect(multi).to have_selected_value("105")
     end
 
     it "stays scoped to its own select while another one is open" do
       multi = select_at("sg-multi")
       default_select = select_at("sg-default")
 
-      multi.search("arch")
+      multi.search("so")
       default_select.select_value("scheduled")
 
       expect(default_select).to have_selected_value("scheduled")
@@ -104,7 +104,7 @@ describe "UiKit | DSelect page object by value" do
 
     it "clears the selection" do
       clearable = select_at("sg-clearable")
-      expect(clearable).to have_selected_value("es")
+      expect(clearable).to have_selected_value("103")
 
       clearable.clear
       expect(clearable).to have_selected_value("")
@@ -122,7 +122,7 @@ describe "UiKit | DSelect page object by value" do
     it "sees the options disabled at the selection cap" do
       maximum = select_at("sg-maximum")
 
-      expect(maximum).to have_disabled_option("fr")
+      expect(maximum).to have_disabled_option("12")
     end
   end
 
@@ -181,12 +181,12 @@ describe "UiKit | DSelect page object by value" do
       select =
         PageObjects::Components::UiKit::DSelect.at("[data-identifier='sg-static'][data-trigger]")
 
-      expect(select).to have_option_value("fr")
+      expect(select).to have_option_value("mentions")
       select.close
       expect(select.trigger).to match_css("[aria-expanded='false']")
       select.close
-      select.select_value("fr")
-      expect(select).to have_selected_value("fr")
+      select.select_value("mentions")
+      expect(select).to have_selected_value("mentions")
     end
 
     it "replaces searches and closes a button select through its panel filter" do
@@ -209,16 +209,16 @@ describe "UiKit | DSelect page object by value" do
         PageObjects::Components::UiKit::DSelect.at("[data-identifier='sg-multi'][data-trigger]")
       literal = "both'\"quotes\\and[brackets],"
 
-      expect(select).to have_option_value("published")
+      expect(select).to have_option_value("102")
       page.execute_script(
         "arguments[0].setAttribute('data-value', arguments[1]); arguments[0].setAttribute('data-name', arguments[1]);",
-        select.options.find { |option| option["data-value"] == "published" },
+        select.options.find { |option| option["data-value"] == "102" },
         literal,
       )
       expect(select).to have_option_value(literal)
       expect(select).to have_option_name(literal)
       select.select_name(literal)
-      expect(select).to have_selected_value("published")
+      expect(select).to have_selected_value("102")
 
       page.execute_script(
         "arguments[0].setAttribute('data-value', arguments[1]);",
@@ -228,14 +228,14 @@ describe "UiKit | DSelect page object by value" do
       select.remove(literal)
       expect(select).to have_selected_value("")
 
-      expect(select).to have_option_value("archived")
+      expect(select).to have_option_value("105")
       page.execute_script(
         "arguments[0].setAttribute('data-value', arguments[1]);",
-        select.options.find { |option| option["data-value"] == "archived" },
+        select.options.find { |option| option["data-value"] == "105" },
         literal,
       )
       select.select_value(literal)
-      expect(select).to have_selected_value("archived")
+      expect(select).to have_selected_value("105")
     end
 
     it "waits for selected hooks and options to lose their previous values" do

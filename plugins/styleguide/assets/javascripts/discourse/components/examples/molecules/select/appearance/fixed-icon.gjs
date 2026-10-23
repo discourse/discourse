@@ -19,7 +19,9 @@ export default class FixedIconSelectExample extends Component {
       @identifier="sg-icon"
       @items={{LOCALES}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.choose_language"
+      }}
       @value={{this.value}}
       @variant="static"
     />

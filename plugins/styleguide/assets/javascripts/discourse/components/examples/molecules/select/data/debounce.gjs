@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { localeApi } from "../../../../../lib/select-fixtures.js";
+import { peopleApi } from "../../../../../lib/select-fixtures.js";
 
 export default class DebounceSelectExample extends Component {
   @tracked value = null;
@@ -15,7 +15,7 @@ export default class DebounceSelectExample extends Component {
 
   @action
   async load(filter, options) {
-    const items = await localeApi.search(filter, options);
+    const items = await peopleApi.search(filter, options);
     this.queries = [
       ...this.queries,
       { id: (this.#sequence += 1), query: filter },
@@ -46,9 +46,11 @@ export default class DebounceSelectExample extends Component {
       @load={{this.load}}
       @onChange={{this.onChange}}
       @onShow={{this.resetLog}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.search_people"
+      }}
       @placement="top-start"
-      @resolveValue={{localeApi.find}}
+      @resolveValue={{peopleApi.find}}
       @value={{this.value}}
       @variant="button"
       {{on "input" this.countKeystroke}}

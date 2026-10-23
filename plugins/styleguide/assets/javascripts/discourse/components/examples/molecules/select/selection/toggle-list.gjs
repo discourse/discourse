@@ -20,7 +20,9 @@ export default class ToggleListSelectExample extends Component {
       @label={{i18n "styleguide.sections.select.toggle_label"}}
       @multiple={{true}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.multi_placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.choose_languages"
+      }}
       @value={{this.value}}
       @variant="button"
     />

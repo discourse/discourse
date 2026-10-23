@@ -18,7 +18,9 @@ export default class CustomEmptySelectExample extends Component {
       @identifier="sg-custom-empty"
       @load={{emptyApi.search}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.find_saved_search"
+      }}
       @value={{this.value}}
       @variant="button"
     >

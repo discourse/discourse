@@ -3,10 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { LOCALES } from "../../../../../lib/select-fixtures.js";
+import { notificationLevels } from "../../../../../lib/select-fixtures.js";
 
 export default class DisabledSelectExample extends Component {
-  @tracked value = "en";
+  @tracked value = "watching";
+
+  items = notificationLevels();
 
   @action
   onChange(value) {
@@ -17,10 +19,14 @@ export default class DisabledSelectExample extends Component {
     <DSelect
       @disabled={{true}}
       @identifier="sg-disabled"
-      @items={{LOCALES}}
+      @items={{this.items}}
+      @labelField="title"
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.choose_notification_level"
+      }}
       @value={{this.value}}
+      @valueField="level"
       @variant="static"
     />
   </template>

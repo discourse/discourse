@@ -18,7 +18,9 @@ export default class AsyncButtonSelectExample extends Component {
       @identifier="sg-async-button"
       @load={{activityFilterApi.search}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.filter_activity"
+      }}
       @resolveValue={{activityFilterApi.find}}
       @value={{this.value}}
       @variant="button"

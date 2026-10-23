@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { LOCALES } from "../../../../../lib/select-fixtures.js";
+import { TAGS } from "../../../../../lib/select-fixtures.js";
 
 export default class ClearableMultipleSelectExample extends Component {
-  @tracked value = ["en", "es"];
+  @tracked value = ["accessibility", "performance"];
 
   @action
   onChange(value) {
@@ -17,11 +17,15 @@ export default class ClearableMultipleSelectExample extends Component {
     <DSelect
       @clearable={{true}}
       @identifier="sg-clearable-multi"
-      @items={{LOCALES}}
+      @items={{TAGS}}
+      @labelField="label"
       @multiple={{true}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.multi_placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.choose_tags"
+      }}
       @value={{this.value}}
+      @valueField="slug"
     />
   </template>
 }

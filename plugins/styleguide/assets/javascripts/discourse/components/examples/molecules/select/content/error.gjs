@@ -24,7 +24,9 @@ export default class CustomErrorSelectExample extends Component {
       @load={{this.api.search}}
       @onChange={{this.onChange}}
       @onClose={{this.api.reset}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.mention_someone"
+      }}
       @resolveValue={{this.api.find}}
       @value={{this.value}}
       @variant="button"

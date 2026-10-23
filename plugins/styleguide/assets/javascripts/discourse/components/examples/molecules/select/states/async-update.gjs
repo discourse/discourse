@@ -83,7 +83,9 @@ export default class AsyncUpdateSelectExample extends Component {
           @items={{this.items}}
           @label={{i18n "styleguide.sections.select.async_update_single_label"}}
           @onChange={{this.onChange}}
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+          @placeholder={{i18n
+            "styleguide.sections.select.placeholders.choose_language"
+          }}
           @value={{this.value}}
         />
       </div>
@@ -95,7 +97,9 @@ export default class AsyncUpdateSelectExample extends Component {
           @labelField="label"
           @multiple={{true}}
           @onChange={{this.onTagsChange}}
-          @placeholder={{i18n "styleguide.sections.select.multi_placeholder"}}
+          @placeholder={{i18n
+            "styleguide.sections.select.placeholders.choose_tags"
+          }}
           @value={{this.tags}}
           @valueField="slug"
         />

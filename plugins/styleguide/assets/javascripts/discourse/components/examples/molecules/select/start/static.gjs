@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { LOCALES } from "../../../../../lib/select-fixtures.js";
+import { ACTIVITY_FILTERS } from "../../../../../lib/select-fixtures.js";
 
 export default class StaticSelectExample extends Component {
   @tracked value = null;
@@ -16,9 +16,11 @@ export default class StaticSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-static"
-      @items={{LOCALES}}
+      @items={{ACTIVITY_FILTERS}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.filter_activity"
+      }}
       @value={{this.value}}
       @variant="static"
     />

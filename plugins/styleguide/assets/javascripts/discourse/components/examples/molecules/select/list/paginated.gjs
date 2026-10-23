@@ -20,7 +20,9 @@ export default class ListPaginatedExample extends Component {
       @load={{pagedTopicApi.search}}
       @onChange={{this.onChange}}
       @resolveValues={{pagedTopicApi.findMany}}
-      @searchPlaceholder={{i18n "styleguide.sections.select.placeholder"}}
+      @searchPlaceholder={{i18n
+        "styleguide.sections.select.placeholders.search_topics"
+      }}
       @value={{this.value}}
     />
   </template>

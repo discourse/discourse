@@ -3,12 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelectList from "discourse/ui-kit/select/d-select-list";
 import { i18n } from "discourse-i18n";
-import { TAGS } from "../../../../../lib/select-fixtures.js";
+import { PEOPLE } from "../../../../../lib/select-fixtures.js";
 
 export default class ListHideSelectedExample extends Component {
-  @tracked value = ["design-system", "accessibility"];
-
-  tags = TAGS;
+  @tracked value = [101, 104];
 
   @action
   onChange(value) {
@@ -20,13 +18,14 @@ export default class ListHideSelectedExample extends Component {
       class="select-examples__tag-list"
       @hideSelected={{true}}
       @identifier="sg-list-hide-selected"
-      @items={{this.tags}}
-      @label={{i18n "styleguide.sections.select.list_tags_label"}}
-      @labelField="label"
+      @items={{PEOPLE}}
+      @label={{i18n "styleguide.sections.select.list_people_label"}}
+      @labelField="name"
       @onChange={{this.onChange}}
-      @searchPlaceholder={{i18n "styleguide.sections.select.list_search"}}
+      @searchPlaceholder={{i18n
+        "styleguide.sections.select.placeholders.search_people"
+      }}
       @value={{this.value}}
-      @valueField="slug"
       @virtualized={{false}}
     />
   </template>

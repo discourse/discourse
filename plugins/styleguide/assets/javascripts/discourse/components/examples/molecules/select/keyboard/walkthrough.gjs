@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { LOCALES } from "../../../../../lib/select-fixtures.js";
+import { USER_GROUPS } from "../../../../../lib/select-fixtures.js";
 
 export default class KeyboardWalkthroughSelectExample extends Component {
   @tracked value = null;
@@ -16,9 +16,12 @@ export default class KeyboardWalkthroughSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-keyboard-walkthrough"
-      @items={{LOCALES}}
+      @items={{USER_GROUPS}}
+      @labelField="fullName"
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.choose_group"
+      }}
       @placement="top-start"
       @value={{this.value}}
     />

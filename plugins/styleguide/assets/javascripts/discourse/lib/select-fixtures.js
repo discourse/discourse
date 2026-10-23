@@ -21,8 +21,7 @@ import { i18n } from "discourse-i18n";
  * assertion still passes while its intent has moved — so each one names the spec that depends
  * on it. Every constraint below is live; do not add one here that nothing consumes.
  *
- *   LOCALES.length >= 15            large enough to scroll a panel; the default set everywhere
- *                                   an example's subject is a mechanism rather than markup
+ *   LOCALES.length >= 15            large enough to scroll a panel
  *   ASYNC_BUTTON_DELAY === 1200     d_select_no_probe_spec: its `wait: 10` and `sleep 4` budget
  *   TOPIC_COUNT === 5000            d_select_bounded_reveal_spec: aria-setsize "5000", and
  *                                   reveal_to_index(4999) must reach exactly 4999
@@ -35,7 +34,7 @@ import { i18n } from "discourse-i18n";
  *   not pre-selected
  *   TAGS excludes "architecture"    d_select_showcases_spec: the create-a-tag flow needs it to
  *                                   be genuinely absent
- *   TEAM_MEMBERS spans >= 2 teams   smoke_test_spec: `.d-select__group-header` minimum: 2
+ *   LOCALES spans >= 2 scripts      smoke_test_spec: `.d-select__group-header` minimum: 2
  */
 
 /** Rejects when `signal` aborts, otherwise resolves after `ms`. */
@@ -65,26 +64,26 @@ const ASYNC_BUTTON_DELAY = 1200;
 const PAGE_SIZE = 50;
 const TOPIC_COUNT = 5000;
 
-/* Interface languages — the default set for any example whose subject is a mechanism rather
-   than markup. Endonyms are literals, not display strings, so they are not translated, and they
-   carry three writing systems and two RTL scripts. That makes RTL and non-Latin the page's
-   ordinary content instead of a quarantined "hostile input" demo. */
+/* Interface languages. Endonyms are literals, not display strings, so they are not translated,
+   and they carry three writing systems and two RTL scripts. That makes RTL and non-Latin the
+   page's ordinary content instead of a quarantined "hostile input" demo. Examples spread across
+   these sets rather than defaulting to one, so neighbouring cards never look alike. */
 export const LOCALES = [
-  { id: "en", name: "English (US)" },
-  { id: "es", name: "Español" },
-  { id: "pt-BR", name: "Português (Brasil)" },
-  { id: "fr", name: "Français" },
-  { id: "de", name: "Deutsch" },
-  { id: "it", name: "Italiano" },
-  { id: "nl", name: "Nederlands" },
-  { id: "pl", name: "Polski" },
-  { id: "tr", name: "Türkçe" },
-  { id: "ru", name: "Русский" },
-  { id: "ja", name: "日本語" },
-  { id: "ko", name: "한국어" },
-  { id: "zh-CN", name: "简体中文" },
-  { id: "ar", name: "العربية" },
-  { id: "he", name: "עברית" },
+  { id: "en", name: "English (US)", script: "latin" },
+  { id: "es", name: "Español", script: "latin" },
+  { id: "pt-BR", name: "Português (Brasil)", script: "latin" },
+  { id: "fr", name: "Français", script: "latin" },
+  { id: "de", name: "Deutsch", script: "latin" },
+  { id: "it", name: "Italiano", script: "latin" },
+  { id: "nl", name: "Nederlands", script: "latin" },
+  { id: "pl", name: "Polski", script: "latin" },
+  { id: "tr", name: "Türkçe", script: "latin" },
+  { id: "ru", name: "Русский", script: "cyrillic" },
+  { id: "ja", name: "日本語", script: "cjk" },
+  { id: "ko", name: "한국어", script: "cjk" },
+  { id: "zh-CN", name: "简体中文", script: "cjk" },
+  { id: "ar", name: "العربية", script: "rtl" },
+  { id: "he", name: "עברית", script: "rtl" },
 ];
 
 /* Letter avatars are not an option because the avatar proxy is disabled under
@@ -213,6 +212,16 @@ export function teamLabels() {
     design: i18n("styleguide.sections.select.teams.design"),
     engineering: i18n("styleguide.sections.select.teams.engineering"),
     support: i18n("styleguide.sections.select.teams.support"),
+  };
+}
+
+/** Display names for the writing systems `LOCALES` are grouped by. */
+export function scriptLabels() {
+  return {
+    latin: i18n("styleguide.sections.select.scripts.latin"),
+    cyrillic: i18n("styleguide.sections.select.scripts.cyrillic"),
+    cjk: i18n("styleguide.sections.select.scripts.cjk"),
+    rtl: i18n("styleguide.sections.select.scripts.rtl"),
   };
 }
 
@@ -478,9 +487,41 @@ export const TIMEZONES = [
  *
  * @param {Function} [onManage] - invoked by the action row, which selects nothing.
  */
+/** Topic visibility levels, each with its own glyph and a one-line consequence. */
+export function topicVisibilities() {
+  const t = (key) => i18n(`styleguide.sections.select.topic_visibility.${key}`);
+
+  return [
+    {
+      id: "public",
+      icon: "globe",
+      title: t("public"),
+      description: t("public_description"),
+    },
+    {
+      id: "unlisted",
+      icon: "eye-slash",
+      title: t("unlisted"),
+      description: t("unlisted_description"),
+    },
+    {
+      id: "members",
+      icon: "users",
+      title: t("members"),
+      description: t("members_description"),
+    },
+    {
+      id: "private",
+      icon: "lock",
+      title: t("private"),
+      description: t("private_description"),
+    },
+  ];
+}
+
 export function notificationLevels(onManage) {
-  // Keyed under the section, not a group: the hero, the icon-only example and the notification
-  // picker all render these, so they are data rather than one card's copy.
+  // Keyed under the section, not a group: the hero, several examples and the notification picker
+  // all render these, so they are data rather than one card's copy.
   const t = (key) =>
     i18n(`styleguide.sections.select.notification_levels.${key}`);
 
@@ -753,9 +794,10 @@ function createDataSource({
   return source;
 }
 
-export function createRetryingLocaleApi() {
+export function createRetryingGroupApi() {
   return createDataSource({
-    items: LOCALES,
+    items: USER_GROUPS,
+    fields: ["fullName"],
     failOn: "first",
     message: i18n("styleguide.sections.select.request_error"),
     report: "none",
@@ -771,13 +813,15 @@ export function createRetryingPeopleApi() {
   });
 }
 
+export const ACTIVITY_FILTERS = [
+  { id: "all", name: "All activity" },
+  { id: "following", name: "Topics I follow" },
+  { id: "mentions", name: "Mentions" },
+  { id: "unread", name: "Unread topics" },
+];
+
 export const activityFilterApi = createDataSource({
-  items: [
-    { id: "all", name: "All activity" },
-    { id: "following", name: "Topics I follow" },
-    { id: "mentions", name: "Mentions" },
-    { id: "unread", name: "Unread topics" },
-  ],
+  items: ACTIVITY_FILTERS,
   report: "none",
   searchDelayMs: ASYNC_BUTTON_DELAY,
 });
@@ -824,6 +868,12 @@ export const reviewerApi = createDataSource({
   report: "none",
   resolveDelayMs: 500,
   searchDelayMs: 650,
+});
+
+export const timezoneApi = createDataSource({
+  items: TIMEZONES,
+  report: "none",
+  searchDelayMs: 400,
 });
 
 export const unavailableApi = createDataSource({

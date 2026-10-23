@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import DButton from "discourse/ui-kit/d-button";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { LOCALES } from "../../../../../lib/select-fixtures.js";
+import { TIMEZONES } from "../../../../../lib/select-fixtures.js";
 
 /**
  * A panel that owns controls of its own — the `button` variant's filter, plus a footer action —
@@ -31,10 +31,12 @@ export default class TabOrderSelectExample extends Component {
   <template>
     <DSelect
       @identifier="sg-tab-order"
-      @items={{LOCALES}}
+      @items={{TIMEZONES}}
       @label={{i18n "styleguide.sections.select.tab_order_label"}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      @placeholder={{i18n
+        "styleguide.sections.select.placeholders.choose_timezone"
+      }}
       @value={{this.value}}
       @variant="button"
     >
