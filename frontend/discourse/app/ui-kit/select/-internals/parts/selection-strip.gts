@@ -231,10 +231,9 @@ export default class SelectionStrip extends Component<SelectionStripSignature> {
                     <SelectionLabel @engine={{@engine}} @item={{chip.item}} />
                   {{/if}}
                 </span>
-                <span
-                  class="sr-only"
-                  id="{{this.idPrefix}}-{{index}}-hint"
-                >{{i18n "d_select.remove_hint"}}</span>
+                <span class="sr-only" id="{{this.idPrefix}}-{{index}}-hint">
+                  {{~i18n "d_select.remove_hint"~}}
+                </span>
                 {{dIcon "xmark"}}
               </button>
             </li>

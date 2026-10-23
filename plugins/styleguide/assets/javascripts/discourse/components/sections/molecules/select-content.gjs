@@ -134,7 +134,9 @@ export default <template>
     <:default>
       <div class="select-examples__control"><DividerSelectExample /></div>
     </:default>
-    <:note>{{i18n "styleguide.sections.select.content.divided_note"}}</:note>
+    <:note>
+      {{~i18n "styleguide.sections.select.content.divided_note"~}}
+    </:note>
   </StyleguideExample>
 
   <StyleguideExample

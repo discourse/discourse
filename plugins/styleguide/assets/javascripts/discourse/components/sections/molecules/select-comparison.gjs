@@ -103,9 +103,11 @@ export default class SelectComparison extends Component {
         data-pair="tag-chooser"
       >
         <h3>{{i18n "styleguide.sections.select_comparison.tag_chooser"}}</h3>
-        <p class="styleguide-select-comparison__description">{{i18n
+        <p class="styleguide-select-comparison__description">
+          {{~i18n
             "styleguide.sections.select_comparison.tag_chooser_description"
-          }}</p>
+          ~}}
+        </p>
         <div class="styleguide-select-comparison__controls">
           <div class="styleguide-select-comparison__legacy">
             <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
@@ -115,10 +117,12 @@ export default class SelectComparison extends Component {
               @options={{hash maximum=5}}
               @tags={{this.legacyTags.value}}
             />
-            <small class="styleguide-select-comparison__value">{{i18n
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
                 "styleguide.sections.select_comparison.current_value"
                 value=(formatValue this.legacyTags.value)
-              }}</small>
+              ~}}
+            </small>
           </div>
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
@@ -128,10 +132,12 @@ export default class SelectComparison extends Component {
               @onChange={{this.newTags.update}}
               @value={{this.newTags.value}}
             />
-            <small class="styleguide-select-comparison__value">{{i18n
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
                 "styleguide.sections.select_comparison.current_value"
                 value=(formatValue this.newTags.value)
-              }}</small>
+              ~}}
+            </small>
           </div>
         </div>
       </section>
@@ -140,12 +146,14 @@ export default class SelectComparison extends Component {
         class="styleguide-select-comparison__pair"
         data-pair="mini-tag-chooser"
       >
-        <h3>{{i18n
-            "styleguide.sections.select_comparison.mini_tag_chooser"
-          }}</h3>
-        <p class="styleguide-select-comparison__description">{{i18n
+        <h3>
+          {{~i18n "styleguide.sections.select_comparison.mini_tag_chooser"~}}
+        </h3>
+        <p class="styleguide-select-comparison__description">
+          {{~i18n
             "styleguide.sections.select_comparison.mini_tag_chooser_description"
-          }}</p>
+          ~}}
+        </p>
         <div class="styleguide-select-comparison__controls">
           <div class="styleguide-select-comparison__legacy">
             <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
@@ -154,10 +162,12 @@ export default class SelectComparison extends Component {
               @options={{hash allowAny=false maximum=5}}
               @value={{this.legacyMiniTags.value}}
             />
-            <small class="styleguide-select-comparison__value">{{i18n
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
                 "styleguide.sections.select_comparison.current_value"
                 value=(formatValue this.legacyMiniTags.value)
-              }}</small>
+              ~}}
+            </small>
           </div>
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
@@ -168,19 +178,23 @@ export default class SelectComparison extends Component {
               @onChange={{this.newMiniTags.update}}
               @value={{this.newMiniTags.value}}
             />
-            <small class="styleguide-select-comparison__value">{{i18n
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
                 "styleguide.sections.select_comparison.current_value"
                 value=(formatValue this.newMiniTags.value)
-              }}</small>
+              ~}}
+            </small>
           </div>
         </div>
       </section>
 
       <section class="styleguide-select-comparison__pair" data-pair="tag-drop">
         <h3>{{i18n "styleguide.sections.select_comparison.tag_drop"}}</h3>
-        <p class="styleguide-select-comparison__description">{{i18n
+        <p class="styleguide-select-comparison__description">
+          {{~i18n
             "styleguide.sections.select_comparison.tag_drop_description"
-          }}</p>
+          ~}}
+        </p>
         <div class="styleguide-select-comparison__controls">
           <div class="styleguide-select-comparison__legacy">
             <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
@@ -188,10 +202,12 @@ export default class SelectComparison extends Component {
               @onChange={{this.legacyTag.updateTag}}
               @tag={{this.legacyTag.value}}
             />
-            <small class="styleguide-select-comparison__value">{{i18n
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
                 "styleguide.sections.select_comparison.current_value"
                 value=(formatValue this.legacyTag.value)
-              }}</small>
+              ~}}
+            </small>
           </div>
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
@@ -199,10 +215,12 @@ export default class SelectComparison extends Component {
               @onChange={{this.newTag.updateFilter}}
               @value={{this.newTag.value}}
             />
-            <small class="styleguide-select-comparison__value">{{i18n
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
                 "styleguide.sections.select_comparison.current_value"
                 value=(formatValue this.newTag.value)
-              }}</small>
+              ~}}
+            </small>
           </div>
         </div>
       </section>
@@ -211,12 +229,16 @@ export default class SelectComparison extends Component {
         class="styleguide-select-comparison__pair"
         data-pair="tags-intersection-chooser"
       >
-        <h3>{{i18n
+        <h3>
+          {{~i18n
             "styleguide.sections.select_comparison.tags_intersection_chooser"
-          }}</h3>
-        <p class="styleguide-select-comparison__description">{{i18n
+          ~}}
+        </h3>
+        <p class="styleguide-select-comparison__description">
+          {{~i18n
             "styleguide.sections.select_comparison.tags_intersection_chooser_description"
-          }}</p>
+          ~}}
+        </p>
         <div class="styleguide-select-comparison__controls">
           <div class="styleguide-select-comparison__legacy">
             <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
@@ -226,10 +248,12 @@ export default class SelectComparison extends Component {
               @onChange={{this.legacyIntersection.update}}
               @options={{hash allowAny=false maximum=5}}
             />
-            <small class="styleguide-select-comparison__value">{{i18n
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
                 "styleguide.sections.select_comparison.current_value"
                 value=(formatValue this.legacyIntersection.value)
-              }}</small>
+              ~}}
+            </small>
           </div>
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
@@ -238,10 +262,12 @@ export default class SelectComparison extends Component {
               @onChange={{this.newIntersection.update}}
               @value={{this.newIntersection.value}}
             />
-            <small class="styleguide-select-comparison__value">{{i18n
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
                 "styleguide.sections.select_comparison.current_value"
                 value=(formatValue this.newIntersection.value)
-              }}</small>
+              ~}}
+            </small>
           </div>
         </div>
       </section>
@@ -251,9 +277,11 @@ export default class SelectComparison extends Component {
         data-pair="tag-dropdown"
       >
         <h3>{{i18n "styleguide.sections.select_comparison.tag_dropdown"}}</h3>
-        <p class="styleguide-select-comparison__description">{{i18n
+        <p class="styleguide-select-comparison__description">
+          {{~i18n
             "styleguide.sections.select_comparison.tag_dropdown_description"
-          }}</p>
+          ~}}
+        </p>
         <div class="styleguide-select-comparison__controls">
           <div class="styleguide-select-comparison__legacy">
             <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
@@ -263,10 +291,12 @@ export default class SelectComparison extends Component {
               @tags={{this.tags}}
               @value={{this.legacyTagName.value}}
             />
-            <small class="styleguide-select-comparison__value">{{i18n
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
                 "styleguide.sections.select_comparison.current_value"
                 value=(formatValue this.legacyTagName.value)
-              }}</small>
+              ~}}
+            </small>
           </div>
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
@@ -282,10 +312,12 @@ export default class SelectComparison extends Component {
               @value={{this.newTagName.value}}
               @variant="button"
             />
-            <small class="styleguide-select-comparison__value">{{i18n
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
                 "styleguide.sections.select_comparison.current_value"
                 value=(formatValue this.newTagName.value)
-              }}</small>
+              ~}}
+            </small>
           </div>
         </div>
       </section>
@@ -294,12 +326,14 @@ export default class SelectComparison extends Component {
         class="styleguide-select-comparison__pair"
         data-pair="tag-group-chooser"
       >
-        <h3>{{i18n
-            "styleguide.sections.select_comparison.tag_group_chooser"
-          }}</h3>
-        <p class="styleguide-select-comparison__description">{{i18n
+        <h3>
+          {{~i18n "styleguide.sections.select_comparison.tag_group_chooser"~}}
+        </h3>
+        <p class="styleguide-select-comparison__description">
+          {{~i18n
             "styleguide.sections.select_comparison.tag_group_chooser_description"
-          }}</p>
+          ~}}
+        </p>
         <div class="styleguide-select-comparison__controls">
           <div class="styleguide-select-comparison__legacy">
             <h4>{{i18n "styleguide.sections.select_comparison.legacy"}}</h4>
@@ -307,10 +341,12 @@ export default class SelectComparison extends Component {
               @onChange={{this.legacyTagGroups.update}}
               @tagGroups={{this.legacyTagGroups.value}}
             />
-            <small class="styleguide-select-comparison__value">{{i18n
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
                 "styleguide.sections.select_comparison.current_value"
                 value=(formatValue this.legacyTagGroups.value)
-              }}</small>
+              ~}}
+            </small>
           </div>
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
@@ -318,10 +354,12 @@ export default class SelectComparison extends Component {
               @onChange={{this.newTagGroups.update}}
               @value={{this.newTagGroups.value}}
             />
-            <small class="styleguide-select-comparison__value">{{i18n
+            <small class="styleguide-select-comparison__value">
+              {{~i18n
                 "styleguide.sections.select_comparison.current_value"
                 value=(formatValue this.newTagGroups.value)
-              }}</small>
+              ~}}
+            </small>
           </div>
         </div>
       </section>

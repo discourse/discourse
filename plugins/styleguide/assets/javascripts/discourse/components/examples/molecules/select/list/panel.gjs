@@ -77,9 +77,9 @@ export default class ListSelectExample extends Component {
           >
             <:listHeader as |state|>
               {{#unless state.query}}
-                <span>{{i18n
-                    "styleguide.sections.select.list_suggested"
-                  }}</span>
+                <span>
+                  {{~i18n "styleguide.sections.select.list_suggested"~}}
+                </span>
               {{/unless}}
             </:listHeader>
           </DSelectList>

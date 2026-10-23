@@ -59,7 +59,9 @@ export default class IconOnlySelectExample extends Component {
       <p
         class="select-examples__aligned --{{this.value}}"
         data-alignment={{this.value}}
-      >{{i18n "styleguide.sections.select.icon_only_sample"}}</p>
+      >
+        {{~i18n "styleguide.sections.select.icon_only_sample"~}}
+      </p>
     </div>
   </template>
 }

@@ -46,15 +46,16 @@ export const TagOption: TemplateOnlyComponent<{
     {{dDiscourseTag @item.name noHref=true tagName="span"}}
     {{#if @item.count}}
       <span aria-hidden="true" class="discourse-tag-count">x
-        {{tagCount @item}}</span>
-      <span class="sr-only">{{i18n
-          "tagging.tag_count_hidden"
-          count=(tagCount @item)
-        }}</span>
+        {{tagCount @item~}}
+      </span>
+      <span class="sr-only">
+        {{~i18n "tagging.tag_count_hidden" count=(tagCount @item)~}}
+      </span>
     {{/if}}
     {{#if @item.target_tag}}
       <span class="synonym-hint"><span aria-hidden="true">→</span>
-        {{synonymName @item}}</span>
+        {{synonymName @item~}}
+      </span>
     {{/if}}
   {{/if}}
 </template>;

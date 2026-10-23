@@ -375,44 +375,38 @@ export default class DSelectList extends Component<DSelectListSignature> {
             @triggerChipsInteractive={{true}}
             @value={{@value}}
           >
-            <:selection as |item|>{{yield
-                item
-                this.engine.resolvedOptions
-                to="selection"
-              }}</:selection>
-            <:selectionLoading>{{yield
-                to="selectionLoading"
-              }}</:selectionLoading>
-            <:unresolved as |item|>{{yield
-                item
-                this.engine.resolvedOptions
-                to="unresolved"
-              }}</:unresolved>
+            <:selection as |item|>
+              {{~yield item this.engine.resolvedOptions to="selection"~}}
+            </:selection>
+            <:selectionLoading>
+              {{~yield to="selectionLoading"~}}
+            </:selectionLoading>
+            <:unresolved as |item|>
+              {{~yield item this.engine.resolvedOptions to="unresolved"~}}
+            </:unresolved>
           </MultiChips>
         </:field>
-        <:item as |item options|>{{yield item options to="item"}}</:item>
-        <:selection as |item options|>{{yield
-            item
-            options
-            to="selection"
-          }}</:selection>
-        <:unresolved as |item options|>{{yield
-            item
-            options
-            to="unresolved"
-          }}</:unresolved>
-        <:empty>{{yield to="empty"}}</:empty>
-        <:error as |error retry|>{{yield error retry to="error"}}</:error>
-        <:listHeader as |state options|>{{yield
-            state
-            options
-            to="listHeader"
-          }}</:listHeader>
-        <:footer as |state options|>{{yield
-            state
-            options
-            to="footer"
-          }}</:footer>
+        <:item as |item options|>
+          {{~yield item options to="item"~}}
+        </:item>
+        <:selection as |item options|>
+          {{~yield item options to="selection"~}}
+        </:selection>
+        <:unresolved as |item options|>
+          {{~yield item options to="unresolved"~}}
+        </:unresolved>
+        <:empty>
+          {{~yield to="empty"~}}
+        </:empty>
+        <:error as |error retry|>
+          {{~yield error retry to="error"~}}
+        </:error>
+        <:listHeader as |state options|>
+          {{~yield state options to="listHeader"~}}
+        </:listHeader>
+        <:footer as |state options|>
+          {{~yield state options to="footer"~}}
+        </:footer>
       </SelectPanel>
     </div>
   </template>

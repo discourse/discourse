@@ -606,8 +606,12 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     await render(
       <template>
         <DSelect @load={{load}}>
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
+          <:selection as |item|>
+            {{~item.name~}}
+          </:selection>
+          <:item as |item|>
+            {{~item.name~}}
+          </:item>
         </DSelect>
       </template>
     );
@@ -692,7 +696,9 @@ module(
                 {{on "click" retry}}
               >go</button>
             </:error>
-            <:item as |item|>{{item.name}}</:item>
+            <:item as |item|>
+              {{~item.name~}}
+            </:item>
           </DSelect>
         </template>
       );
@@ -780,7 +786,9 @@ module(
         name: "the desktop typeahead with a :selection block",
         Host: <template>
           <DSelect @items={{array}} @resolveValue={{resolveValue}} @value={{2}}>
-            <:selection as |item|>{{item.name}}</:selection>
+            <:selection as |item|>
+              {{~item.name~}}
+            </:selection>
             <:selectionLoading><span
                 class="custom-selection-loading"
               ></span></:selectionLoading>
@@ -878,9 +886,9 @@ module(
             @resolveValues={{resolveNone}}
             @value={{array 2}}
           >
-            <:selection as |item|><span
-                class="custom-selection"
-              >{{item.name}}</span></:selection>
+            <:selection as |item|><span class="custom-selection">
+                {{~item.name~}}
+              </span></:selection>
           </DSelect>
         </template>,
         Custom: <template>
@@ -890,11 +898,12 @@ module(
             @resolveValues={{resolveNone}}
             @value={{array 2}}
           >
-            <:selection as |item|><span
-                class="custom-selection"
-              >{{item.name}}</span></:selection>
+            <:selection as |item|><span class="custom-selection">
+                {{~item.name~}}
+              </span></:selection>
             <:unresolved as |item|><span class="custom-unresolved">Missing
-                {{item.id}}</span></:unresolved>
+                {{item.id~}}
+              </span></:unresolved>
           </DSelect>
         </template>,
       },
@@ -907,9 +916,9 @@ module(
             @value={{2}}
             @variant="button"
           >
-            <:selection as |item|><span
-                class="custom-selection"
-              >{{item.name}}</span></:selection>
+            <:selection as |item|><span class="custom-selection">
+                {{~item.name~}}
+              </span></:selection>
           </DSelect>
         </template>,
         Custom: <template>
@@ -919,11 +928,12 @@ module(
             @value={{2}}
             @variant="button"
           >
-            <:selection as |item|><span
-                class="custom-selection"
-              >{{item.name}}</span></:selection>
+            <:selection as |item|><span class="custom-selection">
+                {{~item.name~}}
+              </span></:selection>
             <:unresolved as |item|><span class="custom-unresolved">Missing
-                {{item.id}}</span></:unresolved>
+                {{item.id~}}
+              </span></:unresolved>
           </DSelect>
         </template>,
       },
@@ -931,18 +941,19 @@ module(
         name: "the desktop typeahead",
         Plain: <template>
           <DSelect @items={{array}} @resolveValues={{resolveNone}} @value={{2}}>
-            <:selection as |item|><span
-                class="custom-selection"
-              >{{item.name}}</span></:selection>
+            <:selection as |item|><span class="custom-selection">
+                {{~item.name~}}
+              </span></:selection>
           </DSelect>
         </template>,
         Custom: <template>
           <DSelect @items={{array}} @resolveValues={{resolveNone}} @value={{2}}>
-            <:selection as |item|><span
-                class="custom-selection"
-              >{{item.name}}</span></:selection>
+            <:selection as |item|><span class="custom-selection">
+                {{~item.name~}}
+              </span></:selection>
             <:unresolved as |item|><span class="custom-unresolved">Missing
-                {{item.id}}</span></:unresolved>
+                {{item.id~}}
+              </span></:unresolved>
           </DSelect>
         </template>,
       },
@@ -951,18 +962,19 @@ module(
         mobile: true,
         Plain: <template>
           <DSelect @items={{array}} @resolveValues={{resolveNone}} @value={{2}}>
-            <:selection as |item|><span
-                class="custom-selection"
-              >{{item.name}}</span></:selection>
+            <:selection as |item|><span class="custom-selection">
+                {{~item.name~}}
+              </span></:selection>
           </DSelect>
         </template>,
         Custom: <template>
           <DSelect @items={{array}} @resolveValues={{resolveNone}} @value={{2}}>
-            <:selection as |item|><span
-                class="custom-selection"
-              >{{item.name}}</span></:selection>
+            <:selection as |item|><span class="custom-selection">
+                {{~item.name~}}
+              </span></:selection>
             <:unresolved as |item|><span class="custom-unresolved">Missing
-                {{item.id}}</span></:unresolved>
+                {{item.id~}}
+              </span></:unresolved>
           </DSelect>
         </template>,
       },

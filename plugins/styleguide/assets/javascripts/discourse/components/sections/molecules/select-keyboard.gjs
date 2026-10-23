@@ -143,9 +143,9 @@ export default <template>
     <:note>
       <ul class="styleguide-example__note-list">
         <li>{{i18n "styleguide.sections.select.open_behaviour_note_empty"}}</li>
-        <li>{{i18n
-            "styleguide.sections.select.open_behaviour_note_filled"
-          }}</li>
+        <li>
+          {{~i18n "styleguide.sections.select.open_behaviour_note_filled"~}}
+        </li>
         <li>{{i18n "styleguide.sections.select.open_behaviour_note_rule"}}</li>
       </ul>
     </:note>
@@ -188,15 +188,15 @@ export default <template>
     </:default>
     <:note>
       <ul class="styleguide-example__note-list">
-        <li>{{i18n
-            "styleguide.sections.select.keyboard_mobile_note_input"
-          }}</li>
-        <li>{{i18n
-            "styleguide.sections.select.keyboard_mobile_note_static"
-          }}</li>
-        <li>{{i18n
-            "styleguide.sections.select.keyboard_mobile_note_chips"
-          }}</li>
+        <li>
+          {{~i18n "styleguide.sections.select.keyboard_mobile_note_input"~}}
+        </li>
+        <li>
+          {{~i18n "styleguide.sections.select.keyboard_mobile_note_static"~}}
+        </li>
+        <li>
+          {{~i18n "styleguide.sections.select.keyboard_mobile_note_chips"~}}
+        </li>
       </ul>
     </:note>
   </StyleguideExample>

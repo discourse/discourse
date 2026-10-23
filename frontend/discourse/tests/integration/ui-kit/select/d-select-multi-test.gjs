@@ -46,8 +46,12 @@ class MultiHost extends Component {
       @placeholder="Pick some"
       @value={{this.value}}
     >
-      <:selection as |item|>{{item.name}}</:selection>
-      <:item as |item|>{{item.name}}</:item>
+      <:selection as |item|>
+        {{~item.name~}}
+      </:selection>
+      <:item as |item|>
+        {{~item.name~}}
+      </:item>
     </DSelect>
   </template>
 }

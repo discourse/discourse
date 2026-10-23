@@ -110,12 +110,13 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                 @asyncData={{@resolveSelection}}
                 @context={{@value}}
               >
-                <:loading>{{#if @hasSelectionLoadingBlock}}{{yield
-                      to="selectionLoading"
-                    }}{{else}}<DSkeleton
-                      @variant="text"
-                      @width="8ch"
-                    />{{/if}}</:loading>
+                <:loading>
+                  {{~#if @hasSelectionLoadingBlock~}}
+                    {{yield to="selectionLoading"}}
+                  {{~else~}}
+                    <DSkeleton @variant="text" @width="8ch" />
+                  {{~/if~}}
+                </:loading>
                 <:content as |selected|>
                   {{#if selected}}
                     {{#if selected.__unresolved}}
@@ -148,12 +149,13 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
                 @asyncData={{@resolveSelection}}
                 @context={{@value}}
               >
-                <:loading>{{#if @hasSelectionLoadingBlock}}{{yield
-                      to="selectionLoading"
-                    }}{{else}}<DSkeleton
-                      @variant="text"
-                      @width="8ch"
-                    />{{/if}}</:loading>
+                <:loading>
+                  {{~#if @hasSelectionLoadingBlock~}}
+                    {{yield to="selectionLoading"}}
+                  {{~else~}}
+                    <DSkeleton @variant="text" @width="8ch" />
+                  {{~/if~}}
+                </:loading>
                 <:content as |selected|>
                   {{#if selected}}
                     {{#if selected.__unresolved}}
@@ -240,12 +242,13 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
         control; the selected value and placeholder text are intentionally suppressed. }}
     {{else}}
       <DAsyncContent @asyncData={{@resolveSelection}} @context={{@value}}>
-        <:loading>{{#if @hasSelectionLoadingBlock}}{{yield
-              to="selectionLoading"
-            }}{{else}}<DSkeleton
-              @variant="text"
-              @width="8ch"
-            />{{/if}}</:loading>
+        <:loading>
+          {{~#if @hasSelectionLoadingBlock~}}
+            {{yield to="selectionLoading"}}
+          {{~else~}}
+            <DSkeleton @variant="text" @width="8ch" />
+          {{~/if~}}
+        </:loading>
         <:content as |selected|>
           {{#if selected}}
             <span class="d-select__value">

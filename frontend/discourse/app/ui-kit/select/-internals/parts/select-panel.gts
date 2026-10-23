@@ -244,25 +244,19 @@ export default class SelectPanel<State> extends Component<
         @returnToInput={{@returnToInput}}
         @value={{@value}}
       >
-        <:selection as |item|>{{yield
-            item
-            this.resolvedOptions
-            to="selection"
-          }}</:selection>
-        <:unresolved as |item|>{{yield
-            item
-            this.resolvedOptions
-            to="unresolved"
-          }}</:unresolved>
+        <:selection as |item|>
+          {{~yield item this.resolvedOptions to="selection"~}}
+        </:selection>
+        <:unresolved as |item|>
+          {{~yield item this.resolvedOptions to="unresolved"~}}
+        </:unresolved>
       </SelectionStrip>
     {{/if}}
 
     {{#if @hasListHeaderBlock}}
-      <div class="d-select__list-header">{{yield
-          @state
-          this.resolvedOptions
-          to="listHeader"
-        }}</div>
+      <div class="d-select__list-header">
+        {{~yield @state this.resolvedOptions to="listHeader"~}}
+      </div>
     {{/if}}
 
     {{#if @engine.belowMinChars}}
@@ -324,22 +318,26 @@ export default class SelectPanel<State> extends Component<
             @selectedIcon={{@selectedIcon}}
             @tabIndex={{@tabIndex}}
           >
-            <:item as |item|>{{yield
-                item
-                this.resolvedOptions
-                to="item"
-              }}</:item>
-            <:groupHeader as |item|>{{yield
-                item
-                this.resolvedOptions
-                to="groupHeader"
-              }}</:groupHeader>
-            <:skeletonItem>{{yield to="skeletonItem"}}</:skeletonItem>
+            <:item as |item|>
+              {{~yield item this.resolvedOptions to="item"~}}
+            </:item>
+            <:groupHeader as |item|>
+              {{~yield item this.resolvedOptions to="groupHeader"~}}
+            </:groupHeader>
+            <:skeletonItem>
+              {{~yield to="skeletonItem"~}}
+            </:skeletonItem>
           </@body>
         </:body>
-        <:skeletonItem>{{yield to="skeletonItem"}}</:skeletonItem>
-        <:empty>{{yield to="empty"}}</:empty>
-        <:error as |error retry|>{{yield error retry to="error"}}</:error>
+        <:skeletonItem>
+          {{~yield to="skeletonItem"~}}
+        </:skeletonItem>
+        <:empty>
+          {{~yield to="empty"~}}
+        </:empty>
+        <:error as |error retry|>
+          {{~yield error retry to="error"~}}
+        </:error>
       </SelectOptions>
     {{/if}}
     {{#if @hasFooterBlock}}

@@ -114,9 +114,9 @@ const StaticOptionList: TemplateOnlyComponent<StaticOptionListSignature> =
                 class="d-select__option-selected-icon --checkbox"
               }}
             {{/unless}}
-            <span
-              class="d-select__placeholder-label"
-            >{{descriptor.label}}</span>
+            <span class="d-select__placeholder-label">
+              {{~descriptor.label~}}
+            </span>
             <DSkeleton @variant="text" />
           </li>
         {{else}}
@@ -138,7 +138,9 @@ const StaticOptionList: TemplateOnlyComponent<StaticOptionListSignature> =
             @presenter={{@presenter}}
             @selectedIcon={{@selectedIcon}}
           >
-            <:item as |item|>{{yield item to="item"}}</:item>
+            <:item as |item|>
+              {{~yield item to="item"~}}
+            </:item>
           </SelectOptionRow>
         {{/if}}
       {{/each}}

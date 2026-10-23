@@ -24,9 +24,9 @@ interface SelectionLabelSignature {
 const SelectionLabel: TemplateOnlyComponent<SelectionLabelSignature> =
   <template>
     {{#if @item.__unresolved}}
-      <span class="d-select__unresolved">{{@engine.getSelectionLabel
-          @item
-        }}</span>
+      <span class="d-select__unresolved">
+        {{~@engine.getSelectionLabel @item~}}
+      </span>
     {{else}}
       {{@engine.getSelectionLabel @item}}
     {{/if}}

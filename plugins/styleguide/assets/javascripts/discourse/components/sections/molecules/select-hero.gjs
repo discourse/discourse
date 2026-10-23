@@ -92,8 +92,12 @@ export default class SelectHero extends Component {
             @valueField="slug"
           >
             {{! A category is a badge, not a string — no argument can express it. }}
-            <:selection as |item|>{{dCategoryBadge item}}</:selection>
-            <:item as |item|>{{dCategoryBadge item}}</:item>
+            <:selection as |item|>
+              {{~dCategoryBadge item~}}
+            </:selection>
+            <:item as |item|>
+              {{~dCategoryBadge item~}}
+            </:item>
           </DSelect>
         </div>
 

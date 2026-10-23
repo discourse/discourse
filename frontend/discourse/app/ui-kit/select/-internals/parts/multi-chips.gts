@@ -468,18 +468,16 @@ export default class MultiChips extends Component<MultiChipsSignature> {
         </DAsyncContent>
       </ul>
       {{#if this.moreLabel}}
-        <span
-          aria-hidden="true"
-          class="d-select__chips-more"
-        >{{this.moreLabel}}</span>
+        <span aria-hidden="true" class="d-select__chips-more">
+          {{~this.moreLabel~}}
+        </span>
       {{/if}}
       {{#if this.summarized}}
         {{! The field's name and description already carry the held labels for assistive
           technology; the count is the visual stand-in for the hidden chips. }}
-        <span
-          aria-hidden="true"
-          class="d-select__chips-summary"
-        >{{this.summary}}</span>
+        <span aria-hidden="true" class="d-select__chips-summary">
+          {{~this.summary~}}
+        </span>
       {{/if}}
       {{#if @fieldRendersInput}}
         <ComboboxQueryInput

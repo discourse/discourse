@@ -153,7 +153,9 @@ module("Integration | ui-kit | select | DSelect reactivity", function (hooks) {
           @value={{state.value}}
           @valueItems={{state.valueItems}}
         >
-          <:selection as |item|>{{item.name}}</:selection>
+          <:selection as |item|>
+            {{~item.name~}}
+          </:selection>
         </DSelect>
         <DSelect
           class="late-button"

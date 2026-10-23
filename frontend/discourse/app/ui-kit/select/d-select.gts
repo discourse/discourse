@@ -663,19 +663,15 @@ export default class DSelect extends Component<DSelectSignature> {
               @triggerChipsInteractive={{this.presenter.triggerChipsInteractive}}
               @value={{@value}}
             >
-              <:selection as |item|>{{yield
-                  item
-                  this.engine.resolvedOptions
-                  to="selection"
-                }}</:selection>
-              <:selectionLoading>{{yield
-                  to="selectionLoading"
-                }}</:selectionLoading>
-              <:unresolved as |item|>{{yield
-                  item
-                  this.engine.resolvedOptions
-                  to="unresolved"
-                }}</:unresolved>
+              <:selection as |item|>
+                {{~yield item this.engine.resolvedOptions to="selection"~}}
+              </:selection>
+              <:selectionLoading>
+                {{~yield to="selectionLoading"~}}
+              </:selectionLoading>
+              <:unresolved as |item|>
+                {{~yield item this.engine.resolvedOptions to="unresolved"~}}
+              </:unresolved>
             </MultiChips>
           {{else}}
             <SingleTriggerDisplay
@@ -708,19 +704,15 @@ export default class DSelect extends Component<DSelectSignature> {
               @triggerFocused={{this.interaction.triggerFocused}}
               @value={{@value}}
             >
-              <:selection as |item|>{{yield
-                  item
-                  this.engine.resolvedOptions
-                  to="selection"
-                }}</:selection>
-              <:selectionLoading>{{yield
-                  to="selectionLoading"
-                }}</:selectionLoading>
-              <:unresolved as |item|>{{yield
-                  item
-                  this.engine.resolvedOptions
-                  to="unresolved"
-                }}</:unresolved>
+              <:selection as |item|>
+                {{~yield item this.engine.resolvedOptions to="selection"~}}
+              </:selection>
+              <:selectionLoading>
+                {{~yield to="selectionLoading"~}}
+              </:selectionLoading>
+              <:unresolved as |item|>
+                {{~yield item this.engine.resolvedOptions to="unresolved"~}}
+              </:unresolved>
             </SingleTriggerDisplay>
           {{/if}}
         </TriggerFrame>
@@ -852,19 +844,23 @@ export default class DSelect extends Component<DSelectSignature> {
                     @triggerChipsInteractive={{true}}
                     @value={{@value}}
                   >
-                    <:selection as |item|>{{yield
+                    <:selection as |item|>
+                      {{~yield
                         item
                         this.engine.resolvedOptions
                         to="selection"
-                      }}</:selection>
-                    <:unresolved as |item|>{{yield
+                      ~}}
+                    </:selection>
+                    <:unresolved as |item|>
+                      {{~yield
                         item
                         this.engine.resolvedOptions
                         to="unresolved"
-                      }}</:unresolved>
-                    <:selectionLoading>{{yield
-                        to="selectionLoading"
-                      }}</:selectionLoading>
+                      ~}}
+                    </:unresolved>
+                    <:selectionLoading>
+                      {{~yield to="selectionLoading"~}}
+                    </:selectionLoading>
                   </MultiChips>
                 {{else}}
                   <ComboboxQueryInput
@@ -897,33 +893,33 @@ export default class DSelect extends Component<DSelectSignature> {
                 {{/if}}
               {{/if}}
             </:field>
-            <:item as |item options|>{{yield item options to="item"}}</:item>
-            <:groupHeader as |item options|>{{yield
-                item
-                options
-                to="groupHeader"
-              }}</:groupHeader>
-            <:skeletonItem>{{yield to="skeletonItem"}}</:skeletonItem>
-            <:selection as |item options|>{{yield
-                item
-                options
-                to="selection"
-              }}</:selection>
-            <:unresolved as |item options|>{{yield
-                item
-                options
-                to="unresolved"
-              }}</:unresolved>
-            <:empty>{{yield to="empty"}}</:empty>
-            <:error as |error retry|>{{yield error retry to="error"}}</:error>
+            <:item as |item options|>
+              {{~yield item options to="item"~}}
+            </:item>
+            <:groupHeader as |item options|>
+              {{~yield item options to="groupHeader"~}}
+            </:groupHeader>
+            <:skeletonItem>
+              {{~yield to="skeletonItem"~}}
+            </:skeletonItem>
+            <:selection as |item options|>
+              {{~yield item options to="selection"~}}
+            </:selection>
+            <:unresolved as |item options|>
+              {{~yield item options to="unresolved"~}}
+            </:unresolved>
+            <:empty>
+              {{~yield to="empty"~}}
+            </:empty>
+            <:error as |error retry|>
+              {{~yield error retry to="error"~}}
+            </:error>
             <:listHeader as |state options|>
               {{yield state options to="listHeader"}}
             </:listHeader>
-            <:footer as |state options|>{{yield
-                state
-                options
-                to="footer"
-              }}</:footer>
+            <:footer as |state options|>
+              {{~yield state options to="footer"~}}
+            </:footer>
           </SelectPanel>
         </div>
       </:content>

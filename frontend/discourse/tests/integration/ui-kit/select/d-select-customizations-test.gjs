@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { trackedObject } from "@ember/reactive/collections";
 import {
   click,
@@ -777,7 +777,9 @@ module(
             @kind="recipe"
             @kindOptions={{hash prefix="base"}}
           >
-            <:item as |item options|>{{options.prefix}} {{item.name}}</:item>
+            <:item as |item options|>
+              {{~concat options.prefix " " item.name~}}
+            </:item>
           </DSelect>
         </template>
       );
@@ -1063,7 +1065,9 @@ module(
             @kind="recipe"
             @kindOptions={{hash prefix=state.prefix}}
           >
-            <:item as |item options|>{{options.prefix}} {{item.name}}</:item>
+            <:item as |item options|>
+              {{~concat options.prefix " " item.name~}}
+            </:item>
           </DSelect>
         </template>
       );
@@ -1095,7 +1099,9 @@ module(
               @kind="recipe"
               @kindOptions={{hash prefix=null}}
             >
-              <:item as |item options|>{{options.prefix}} {{item.name}}</:item>
+              <:item as |item options|>
+                {{~concat options.prefix " " item.name~}}
+              </:item>
             </DSelect>
           </template>
         );
@@ -1312,7 +1318,9 @@ module(
             @kind="recipe"
             @kindOptions={{hash prefix="base"}}
           >
-            <:item as |item options|>{{options.prefix}} {{item.name}}</:item>
+            <:item as |item options|>
+              {{~concat options.prefix " " item.name~}}
+            </:item>
           </DSelect>
         </template>
       );

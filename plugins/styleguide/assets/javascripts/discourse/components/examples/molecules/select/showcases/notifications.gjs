@@ -63,9 +63,8 @@ export default class NotificationsSelectExample extends Component {
       </:item>
     </DSelect>
 
-    <output
-      class="styleguide-example__result"
-      data-test-notification-event
-    >{{this.event}}</output>
+    <output class="styleguide-example__result" data-test-notification-event>
+      {{~this.event~}}
+    </output>
   </template>
 }

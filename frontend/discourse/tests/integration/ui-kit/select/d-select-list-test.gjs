@@ -1185,11 +1185,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
             <:listHeader as |state|>
               <span class="test-query">{{state.query}}</span>
               <span class="test-pending">{{if state.pending "yes" "no"}}</span>
-              <span class="test-skeleton">{{if
-                  state.showingSkeleton
-                  "yes"
-                  "no"
-                }}</span>
+              <span class="test-skeleton">
+                {{~if state.showingSkeleton "yes" "no"~}}
+              </span>
             </:listHeader>
           </DSelectList>
         </template>

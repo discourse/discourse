@@ -602,7 +602,9 @@ class AsyncUpdateSelectionHost extends Component {
       @placeholder="Pick one"
       @value={{this.value}}
     >
-      <:selection as |item|>{{item.name}}</:selection>
+      <:selection as |item|>
+        {{~item.name~}}
+      </:selection>
     </DSelect>
   </template>
 }
@@ -1979,7 +1981,9 @@ class SuggesterHost extends Component {
       @onChange={{this.onChange}}
       @value={{this.value}}
     >
-      <:selection as |item|>{{item.name}}</:selection>
+      <:selection as |item|>
+        {{~item.name~}}
+      </:selection>
     </DSelect>
   </template>
 }

@@ -30,8 +30,12 @@ export class Host extends Component {
       @value={{this.value}}
       @variant={{@variant}}
     >
-      <:selection as |item|>{{item.name}}</:selection>
-      <:item as |item|>{{item.name}}</:item>
+      <:selection as |item|>
+        {{~item.name~}}
+      </:selection>
+      <:item as |item|>
+        {{~item.name~}}
+      </:item>
     </DSelect>
   </template>
 }
@@ -89,8 +93,12 @@ export class MultiLimitsHost extends Component {
       @placeholder="Pick some"
       @value={{this.value}}
     >
-      <:selection as |item|>{{item.name}}</:selection>
-      <:item as |item|>{{item.name}}</:item>
+      <:selection as |item|>
+        {{~item.name~}}
+      </:selection>
+      <:item as |item|>
+        {{~item.name~}}
+      </:item>
     </DSelect>
   </template>
 }

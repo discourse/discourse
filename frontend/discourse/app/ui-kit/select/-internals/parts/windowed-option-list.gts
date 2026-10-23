@@ -141,9 +141,15 @@ const WindowedOptionList: TemplateOnlyComponent<WindowedOptionListSignature> =
           @presenter={{@presenter}}
           @selectedIcon={{@selectedIcon}}
         >
-          <:item as |item|>{{yield item to="item"}}</:item>
-          <:groupHeader as |item|>{{yield item to="groupHeader"}}</:groupHeader>
-          <:skeletonItem>{{yield to="skeletonItem"}}</:skeletonItem>
+          <:item as |item|>
+            {{~yield item to="item"~}}
+          </:item>
+          <:groupHeader as |item|>
+            {{~yield item to="groupHeader"~}}
+          </:groupHeader>
+          <:skeletonItem>
+            {{~yield to="skeletonItem"~}}
+          </:skeletonItem>
         </SelectOptionRow>
       {{/let}}
     </DVirtualList>

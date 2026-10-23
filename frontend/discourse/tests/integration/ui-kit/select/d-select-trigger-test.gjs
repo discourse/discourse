@@ -56,8 +56,12 @@ class FrameHost extends Component {
       @value={{this.value}}
       @variant={{@variant}}
     >
-      <:selection as |item|>{{item.name}}</:selection>
-      <:item as |item|>{{item.name}}</:item>
+      <:selection as |item|>
+        {{~item.name~}}
+      </:selection>
+      <:item as |item|>
+        {{~item.name~}}
+      </:item>
     </DSelect>
   </template>
 }
@@ -754,8 +758,12 @@ module(
             @value={{1}}
             @variant="static"
           >
-            <:selection as |item|>{{item.name}}</:selection>
-            <:item as |item|>{{item.name}}</:item>
+            <:selection as |item|>
+              {{~item.name~}}
+            </:selection>
+            <:item as |item|>
+              {{~item.name~}}
+            </:item>
           </DSelect>
         </template>
       }
@@ -1903,16 +1911,15 @@ class PanelBlocksHost extends Component {
         <span class="test-list-header">
           <span class="test-query">{{state.query}}</span>
           <span class="test-pending">{{if state.pending "yes" "no"}}</span>
-          <span class="test-skeleton">{{if
-              state.showingSkeleton
-              "yes"
-              "no"
-            }}</span>
+          <span class="test-skeleton">
+            {{~if state.showingSkeleton "yes" "no"~}}
+          </span>
         </span>
       </:listHeader>
       <:footer as |state|>
         <span class="test-footer">query:{{state.query}}
-          close:{{if state.close "yes" "no"}}</span>
+          close:{{if state.close "yes" "no"~}}
+        </span>
       </:footer>
     </DSelect>
   </template>

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array } from "@ember/helper";
+import { array, concat } from "@ember/helper";
 import { action } from "@ember/object";
 import {
   click,
@@ -826,7 +826,9 @@ module("Integration | ui-kit | select | DSelect create row", function (hooks) {
           @labelField="text"
           @valueField="code"
         >
-          <:item as |item|>Use {{item.text}}</:item>
+          <:item as |item|>
+            {{~concat "Use " item.text~}}
+          </:item>
         </DSelect>
       </template>
     );

@@ -186,7 +186,9 @@ export default class Select extends Component {
           <:default>
             <div class="select-examples__control"><PagedSelectExample /></div>
           </:default>
-          <:note>{{i18n "styleguide.sections.select.paged_note"}}</:note>
+          <:note>
+            {{~i18n "styleguide.sections.select.paged_note"~}}
+          </:note>
         </StyleguideExample>
         <StyleguideExample
           @code={{cursorPagedSelectSource}}
@@ -201,7 +203,9 @@ export default class Select extends Component {
               <CursorPagedSelectExample />
             </div>
           </:default>
-          <:note>{{i18n "styleguide.sections.select.paged_cursor_note"}}</:note>
+          <:note>
+            {{~i18n "styleguide.sections.select.paged_cursor_note"~}}
+          </:note>
         </StyleguideExample>
         <StyleguideExample
           @code={{formFieldSelectSource}}
@@ -362,7 +366,9 @@ export default class Select extends Component {
               <ToggleListSelectExample />
             </div>
           </:default>
-          <:note>{{i18n "styleguide.sections.select.toggle_note"}}</:note>
+          <:note>
+            {{~i18n "styleguide.sections.select.toggle_note"~}}
+          </:note>
         </StyleguideExample>
         <StyleguideExample
           @code={{panelChipsSelectSource}}
@@ -444,7 +450,9 @@ export default class Select extends Component {
               <LargeListSelectExample />
             </div>
           </:default>
-          <:note>{{i18n "styleguide.sections.select.large_list_note"}}</:note>
+          <:note>
+            {{~i18n "styleguide.sections.select.large_list_note"~}}
+          </:note>
         </StyleguideExample>
       </Group>
 

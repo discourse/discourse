@@ -2108,8 +2108,12 @@ module(
             @placeholder="Choose an option"
             @value={{1}}
           >
-            <:selection as |item|>{{item.name}}</:selection>
-            <:item as |item|>{{item.name}}</:item>
+            <:selection as |item|>
+              {{~item.name~}}
+            </:selection>
+            <:item as |item|>
+              {{~item.name~}}
+            </:item>
           </DSelect>
         </template>
       );
@@ -2866,8 +2870,12 @@ module(
             @value={{1}}
             @variant="static"
           >
-            <:selection as |item|>{{item.name}}</:selection>
-            <:item as |item|>{{item.name}}</:item>
+            <:selection as |item|>
+              {{~item.name~}}
+            </:selection>
+            <:item as |item|>
+              {{~item.name~}}
+            </:item>
           </DSelect>
           <DSelect
             class="lbl-button"
@@ -2876,8 +2884,12 @@ module(
             @value={{1}}
             @variant="button"
           >
-            <:selection as |item|>{{item.name}}</:selection>
-            <:item as |item|>{{item.name}}</:item>
+            <:selection as |item|>
+              {{~item.name~}}
+            </:selection>
+            <:item as |item|>
+              {{~item.name~}}
+            </:item>
           </DSelect>
         </template>
       );
@@ -2911,8 +2923,12 @@ module(
             @value={{1}}
             @variant="button"
           >
-            <:selection as |item|>{{item.name}}</:selection>
-            <:item as |item|>{{item.name}}</:item>
+            <:selection as |item|>
+              {{~item.name~}}
+            </:selection>
+            <:item as |item|>
+              {{~item.name~}}
+            </:item>
           </DSelect>
         </template>
       );
@@ -2950,8 +2966,12 @@ module(
             @value={{1}}
             @variant="static"
           >
-            <:selection as |item|>{{item.name}}</:selection>
-            <:item as |item|>{{item.name}}</:item>
+            <:selection as |item|>
+              {{~item.name~}}
+            </:selection>
+            <:item as |item|>
+              {{~item.name~}}
+            </:item>
           </DSelect>
         </template>
       }
@@ -3039,8 +3059,12 @@ module(
             @onChange={{this.onChange}}
             @value={{this.value}}
           >
-            <:selection as |item|>{{item.name}}</:selection>
-            <:item as |item|>{{item.name}}</:item>
+            <:selection as |item|>
+              {{~item.name~}}
+            </:selection>
+            <:item as |item|>
+              {{~item.name~}}
+            </:item>
           </DSelect>
         </template>
       }
