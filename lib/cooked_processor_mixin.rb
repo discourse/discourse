@@ -2,6 +2,9 @@
 
 module CookedProcessorMixin
   LIGHTBOX_WRAPPER_CSS_CLASS = "lightbox-wrapper"
+  # With deferral enabled, a post with more images than this missing thumbnails
+  # publishes with the originals and leaves generation to a background job.
+  INLINE_THUMBNAIL_IMAGE_LIMIT = 5
   MIN_LIGHTBOX_WIDTH = 100
   MIN_LIGHTBOX_HEIGHT = 100
 
@@ -130,6 +133,8 @@ module CookedProcessorMixin
       still_an_image = process_hotlinked_image(img)
       convert_to_link!(img) if still_an_image
     end
+
+    generate_pending_thumbnails!
   end
 
   def extract_images
@@ -468,27 +473,63 @@ module CookedProcessorMixin
     end
 
     if upload.present?
-      if generate_thumbnail
-        upload.create_thumbnail!(width, height, crop: crop)
-
-        each_responsive_ratio do |ratio|
-          resized_w = (width * ratio).to_i
-          resized_h = (height * ratio).to_i
-
-          if upload.width && resized_w <= upload.width
-            upload.create_thumbnail!(resized_w, resized_h, crop: crop)
-          end
-        end
-      end
-
       return if upload.animated?
 
       if img.ancestors(".onebox, .onebox-body").blank? && !img.classes.include?("onebox")
         add_lightbox!(img, original_width, original_height, upload, crop)
       end
 
-      optimize_image!(img, upload, cropped: crop) if generate_thumbnail
+      queue_thumbnails(img, upload, width, height, crop) if generate_thumbnail
     end
+  end
+
+  # Thumbnails left to a background job. Each entry is one size for one upload.
+  def deferred_thumbnails
+    @deferred_thumbnails ||= []
+  end
+
+  def pending_thumbnails
+    @pending_thumbnails ||= []
+  end
+
+  def queue_thumbnails(img, upload, width, height, crop)
+    sizes = [[width, height]]
+
+    each_responsive_ratio do |ratio|
+      resized_w = (width * ratio).to_i
+      resized_h = (height * ratio).to_i
+      sizes << [resized_w, resized_h] if upload.width && resized_w <= upload.width
+    end
+
+    existing = upload.optimized_images.map { |image| [image.width, image.height] }
+
+    pending_thumbnails << { img:, upload:, crop:, sizes:, missing: sizes - existing }
+  end
+
+  # Decided once for the whole post so it either gets every thumbnail in this
+  # pass or none of them, never a mix.
+  def generate_pending_thumbnails!
+    deferred = defer_thumbnails?
+
+    pending_thumbnails.each do |pending|
+      upload, crop = pending[:upload], pending[:crop]
+
+      if deferred
+        pending[:missing].each do |width, height|
+          deferred_thumbnails << { upload_id: upload.id, width:, height:, crop: }
+        end
+      else
+        pending[:sizes].each { |width, height| upload.create_thumbnail!(width, height, crop:) }
+      end
+
+      optimize_image!(pending[:img], upload, cropped: crop, calculate_dominant_color: !deferred)
+    end
+  end
+
+  def defer_thumbnails?
+    return false if !@opts[:defer_thumbnails] || !SiteSetting.create_thumbnails?
+
+    pending_thumbnails.count { |pending| pending[:missing].any? } > INLINE_THUMBNAIL_IMAGE_LIMIT
   end
 
   def process_hotlinked_image(img)
@@ -535,7 +576,7 @@ module CookedProcessorMixin
     @post&.post_hotlinked_media&.preload(:upload)&.index_by(&:url)
   end
 
-  def optimize_image!(img, upload, cropped: false)
+  def optimize_image!(img, upload, cropped: false, calculate_dominant_color: true)
     w, h = img["width"].to_i, img["height"].to_i
     onebox = img.ancestors(".onebox, .onebox-body").first
 
@@ -573,7 +614,7 @@ module CookedProcessorMixin
     end
 
     if !@disable_dominant_color &&
-         (color = upload.dominant_color(calculate_if_missing: true).presence)
+         (color = upload.dominant_color(calculate_if_missing: calculate_dominant_color).presence)
       img["data-dominant-color"] = color
     end
   end
