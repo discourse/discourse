@@ -37,7 +37,7 @@ RSpec.describe FinalizeBoardOwnerAcls do
     Discourse.clear_site_creation_date_cache
   end
 
-  it "backfills owners and removes their redundant direct grants idempotently" do
+  it "preserves established ownership and removes grants redundant with current owners" do
     AccessControlList.create!(
       target: board,
       source: "boards",
@@ -69,10 +69,15 @@ RSpec.describe FinalizeBoardOwnerAcls do
     2.times { migrate }
 
     owner_acl = AccessControlList.find_by!(target: board, permission: "owner")
-    expect(owner_acl.allowed_user_ids).to contain_exactly(creator.id, existing_owner.id)
-    expect(AccessControlList.where(target: board, permission: "manage")).to be_empty
-    expect(edit_acl.reload.allowed_user_ids).to eq([member.id])
-    expect(view_acl.reload).to have_attributes(allowed_user_ids: [], allowed_group_ids: [group.id])
+    expect(owner_acl.allowed_user_ids).to eq([existing_owner.id])
+    expect(AccessControlList.find_by!(target: board, permission: "manage").allowed_user_ids).to eq(
+      [creator.id],
+    )
+    expect(edit_acl.reload.allowed_user_ids).to contain_exactly(creator.id, member.id)
+    expect(view_acl.reload).to have_attributes(
+      allowed_user_ids: [creator.id],
+      allowed_group_ids: [group.id],
+    )
   end
 
   it "catches boards created during rollout before cleaning up the creator's direct grants" do

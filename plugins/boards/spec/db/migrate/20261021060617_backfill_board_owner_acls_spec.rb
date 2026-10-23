@@ -69,7 +69,7 @@ RSpec.describe BackfillBoardOwnerAcls do
       SQL
   end
 
-  it "merges the creator into an owner ACL without removing legacy grants" do
+  it "preserves established ownership and the creator's legacy grant" do
     insert_acl(permission: "owner", user_ids: [existing_owner.id])
     manager_acl_id = insert_acl(permission: "manage", user_ids: [creator.id]).first
     DB.exec("DROP INDEX idx_on_target_type_target_id_permission_f472902150")
@@ -84,7 +84,7 @@ RSpec.describe BackfillBoardOwnerAcls do
           AND permission = 'owner'
       SQL
     expect(owner_acl.owner).to eq("boards")
-    expect(owner_acl.allowed_user_ids).to contain_exactly(creator.id, existing_owner.id)
+    expect(owner_acl.allowed_user_ids).to eq([existing_owner.id])
     expect(owner_acl.allowed_group_ids).to eq([])
     expect(
       DB.query_single(
