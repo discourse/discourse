@@ -27,7 +27,6 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked loading = false;
   @tracked aiGenerating = false;
   @tracked hasGenerated = false;
-  @tracked aiDescription = "";
   @tracked generatedSql = "";
   @tracked mode = rememberedMode() ?? "ai";
   @tracked schema = null;
@@ -39,9 +38,11 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked previewResults = null;
   @tracked showPreview = false;
   @tracked view = "sql";
+  @tracked aiPromptData = { prompt: "" };
   @tracked aiFormData = null;
 
   manualFormData = { name: "", description: "", groupIds: [], tags: [] };
+  #aiPromptApi = null;
   #aiFormApi = null;
   _teardownAiGeneration = null;
 
@@ -96,22 +97,23 @@ export default class AdminPluginsExplorerNew extends Controller {
     return dataExplorerAiQueriesEnabled(this.siteSettings);
   }
 
+  get isAiMode() {
+    return this.aiQueriesEnabled && this.mode === "ai";
+  }
+
   @action
   setView(value) {
     this.view = value;
   }
 
   @action
-  handleKeydown(event) {
-    if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
-      event.preventDefault();
-      this.generate();
-    }
-  }
-
-  @action
   setMode(value) {
-    // the AI form unmounts in manual mode, so keep its edits for when it returns
+    // the AI forms unmount in manual mode, so keep their edits for when they return
+    if (this.mode === "ai" && this.#aiPromptApi) {
+      this.aiPromptData = { prompt: this.#aiPromptApi.get("prompt") };
+      this.#aiPromptApi = null;
+    }
+
     if (this.mode === "ai" && this.#aiFormApi) {
       this.aiFormData = {
         name: this.#aiFormApi.get("name"),
@@ -135,6 +137,16 @@ export default class AdminPluginsExplorerNew extends Controller {
   updateHideSchema(value) {
     this.hideSchema = value;
     dataExplorerStore.set({ key: HIDE_SCHEMA_KEY, value: value.toString() });
+  }
+
+  @action
+  registerAiPromptApi(api) {
+    this.#aiPromptApi = api;
+  }
+
+  @action
+  submitAiPrompt() {
+    this.#aiPromptApi?.submit();
   }
 
   @action
@@ -170,8 +182,8 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   @action
-  async generate() {
-    if (this.aiGenerating || !this.aiDescription.trim()) {
+  async generate({ prompt }) {
+    if (this.aiGenerating) {
       return;
     }
 
@@ -186,7 +198,7 @@ export default class AdminPluginsExplorerNew extends Controller {
         {
           type: "POST",
           data: {
-            ai_description: this.aiDescription.trim(),
+            ai_description: prompt.trim(),
             existing_sql: this.generatedSql || undefined,
           },
         }
@@ -290,11 +302,6 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   @action
-  updateAiDescription(event) {
-    this.aiDescription = event.target.value;
-  }
-
-  @action
   updateSql(newSql) {
     this.generatedSql = newSql;
   }
@@ -303,7 +310,8 @@ export default class AdminPluginsExplorerNew extends Controller {
     this._teardownAi();
     this.aiGenerating = false;
     this.hasGenerated = false;
-    this.aiDescription = "";
+    this.aiPromptData = { prompt: "" };
+    this.#aiPromptApi = null;
     this.generatedSql = "";
     this.aiFormData = null;
     this.#aiFormApi = null;

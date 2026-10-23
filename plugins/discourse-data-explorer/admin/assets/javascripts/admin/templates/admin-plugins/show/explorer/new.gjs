@@ -1,14 +1,11 @@
-import { on } from "@ember/modifier";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import AceEditor from "discourse/components/ace-editor";
 import BackButton from "discourse/components/back-button";
 import DSegmentedControl from "discourse/components/d-segmented-control";
 import Form from "discourse/components/form";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { and, eq } from "discourse/truth-helpers";
-import DButton from "discourse/ui-kit/d-button";
+import { eq } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
-import DTextarea from "discourse/ui-kit/d-textarea";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ExplorerSchema from "discourse/plugins/discourse-data-explorer/discourse/components/explorer-schema";
@@ -32,57 +29,71 @@ export default <template>
       {{/if}}
     </div>
 
-    <AdminConfigAreaCard @heading="explorer.new_query">
+    {{! the header block only renders in AI mode, when @heading is unset }}
+    <AdminConfigAreaCard
+      @heading={{unless @controller.isAiMode "explorer.new_query"}}
+    >
+      <:header>
+        <span class="query-new__ai-heading" id="query-new-ai-heading">
+          {{i18n "explorer.ai.description_title"}}
+          {{dIcon "discourse-sparkles"}}
+        </span>
+      </:header>
       <:content>
         <div class="query-new">
-          {{#if (and @controller.aiQueriesEnabled (eq @controller.mode "ai"))}}
+          {{#if @controller.isAiMode}}
             <div class="query-new__ai-section">
-              <label class="query-new__ai-label">
-                <span>{{i18n "explorer.ai.description_title"}}</span>
-                {{dIcon "discourse-sparkles"}}
-              </label>
-
-              <p class="query-new__ai-hint">
-                {{i18n "explorer.ai.description_hint"}}
-              </p>
-
-              <DTextarea
-                class="query-new__ai-textarea"
-                disabled={{@controller.aiGenerating}}
-                placeholder={{i18n "explorer.ai.description_placeholder"}}
-                @value={{@controller.aiDescription}}
-                {{on "input" @controller.updateAiDescription}}
-                {{on "keydown" @controller.handleKeydown}}
-              />
-
-              <div class="query-new__ai-actions">
-                {{#if @controller.hasGenerated}}
-                  <DButton
-                    class="btn-default query-new__regenerate-btn"
-                    @action={{@controller.generate}}
-                    @disabled={{@controller.aiGenerating}}
-                    @icon="discourse-sparkles"
-                    @label="explorer.ai.regenerate"
+              <Form
+                class="query-new__ai-form"
+                @data={{@controller.aiPromptData}}
+                @onRegisterApi={{@controller.registerAiPromptApi}}
+                @onSubmit={{@controller.generate}}
+                as |form|
+              >
+                <form.Field
+                  @description={{i18n "explorer.ai.description_hint"}}
+                  @disabled={{@controller.aiGenerating}}
+                  @format="full"
+                  @name="prompt"
+                  @showTitle={{false}}
+                  @title={{i18n "explorer.ai.description_title"}}
+                  @type="textarea"
+                  @validation="required"
+                  as |field|
+                >
+                  <field.Control
+                    aria-labelledby="query-new-ai-heading"
+                    placeholder={{i18n "explorer.ai.description_placeholder"}}
                   />
-                {{else}}
-                  <DButton
-                    class="btn-primary query-new__generate-btn"
-                    @action={{@controller.generate}}
-                    @disabled={{@controller.aiGenerating}}
-                    @label="explorer.ai.generate"
-                  />
-                {{/if}}
-
-                {{#if @controller.aiGenerating}}
-                  <span class="query-new__generating-indicator">
-                    <DConditionalLoadingSpinner
-                      @condition={{true}}
-                      @size="small"
+                </form.Field>
+                <form.Actions>
+                  {{#if @controller.hasGenerated}}
+                    <form.Button
+                      class="btn-default query-new__regenerate-btn"
+                      @action={{@controller.submitAiPrompt}}
+                      @disabled={{@controller.aiGenerating}}
+                      @icon="discourse-sparkles"
+                      @label="explorer.ai.regenerate"
                     />
-                    <span>{{i18n "explorer.ai.generating"}}</span>
-                  </span>
-                {{/if}}
-              </div>
+                  {{else}}
+                    <form.Submit
+                      class="query-new__generate-btn"
+                      @disabled={{@controller.aiGenerating}}
+                      @label="explorer.ai.generate"
+                    />
+                  {{/if}}
+
+                  {{#if @controller.aiGenerating}}
+                    <span class="query-new__generating-indicator">
+                      <DConditionalLoadingSpinner
+                        @condition={{true}}
+                        @size="small"
+                      />
+                      <span>{{i18n "explorer.ai.generating"}}</span>
+                    </span>
+                  {{/if}}
+                </form.Actions>
+              </Form>
             </div>
 
             {{#if @controller.hasGenerated}}

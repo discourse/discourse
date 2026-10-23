@@ -583,35 +583,16 @@ table.group-reports {
   }
 }
 
+.query-new__ai-heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+}
+
 .query-new {
   .query-new__ai-section {
     max-width: 720px;
     margin-bottom: 1em;
-  }
-
-  .query-new__ai-label {
-    display: flex;
-    align-items: center;
-    gap: 0.35em;
-    font-weight: 700;
-    margin-bottom: 0.25em;
-  }
-
-  .query-new__ai-hint {
-    color: var(--primary-medium);
-    margin-bottom: 0.75em;
-  }
-
-  .query-new__ai-textarea {
-    width: 100%;
-    min-height: 3em;
-    margin-bottom: 0.75em;
-  }
-
-  .query-new__ai-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
   }
 
   .query-new__generating-indicator {
