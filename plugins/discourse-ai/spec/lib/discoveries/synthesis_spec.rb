@@ -42,6 +42,41 @@ describe DiscourseAi::Discoveries::Synthesis do
     expect(source_refs["max_items"]).to eq(6)
   end
 
+  it "leaves out unset flags and a last update on the day the post was made" do
+    candidate = {
+      "source_ref" => "source_1",
+      "title" => "Plugins",
+      "url" => "/t/plugins/1/3",
+      "passages" => [{ "post_number" => 3, "excerpt" => "Use the skeleton." }],
+      "created" => Time.utc(2026, 8, 1, 9),
+      "author_is_staff" => false,
+      "is_topic_op" => false,
+      "topic_replies" => 0,
+      "post_updated_at" => "2026-08-01T18:00:00.000000Z",
+    }
+
+    supplied_candidates =
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ answerable: false, source_refs: [], title: "", answer: "" }],
+      ) do |_, _, prompts|
+        synthesis.call(query: "plugins", candidates: [candidate])
+        JSON.parse(prompts.first.messages.last[:content]).fetch("candidates")
+      end
+
+    expect(supplied_candidates).to eq(
+      [
+        {
+          "source_ref" => "source_1",
+          "title" => "Plugins",
+          "url" => "/t/1/3",
+          "passages" => [{ "post_number" => 3, "excerpt" => "Use the skeleton." }],
+          "created" => "2026-08-01",
+          "topic_replies" => 0,
+        },
+      ],
+    )
+  end
+
   it "uses one tool-free structured call to select sources and stream an answer" do
     SiteSetting.ai_ask_ai_related_count = 4
     feature_name = nil
@@ -136,13 +171,13 @@ describe DiscourseAi::Discoveries::Synthesis do
             {
               "source_ref" => "source_1",
               "title" => "Create a Discourse plugin",
-              "url" => "/t/create-a-plugin/123",
+              "url" => "/t/123",
               "username" => "sam",
               "passages" => [
                 { "post_number" => 1, "excerpt" => "Start with the plugin skeleton." },
                 { "post_number" => 10, "excerpt" => "Then register the plugin." },
               ],
-              "created" => "2026-08-01T09:00:00.000000Z",
+              "created" => "2026-08-01",
               "category" => "Documentation > Developer Guides",
               "likes" => 12,
               "topic_views" => 300,
@@ -151,7 +186,7 @@ describe DiscourseAi::Discoveries::Synthesis do
               "tags" => "plugin, development",
               "author_is_staff" => true,
               "is_topic_op" => true,
-              "last_updated_at" => "2026-08-12T10:30:00.000000Z",
+              "last_updated_at" => "2026-08-12",
             },
           ],
         )
