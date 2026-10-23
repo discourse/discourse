@@ -77,6 +77,39 @@ describe DiscourseAi::Discoveries::Synthesis do
     )
   end
 
+  it "sends an external candidate's publish date as a day and its link unchanged" do
+    candidate = {
+      "source_ref" => "source_1",
+      "kind" => "external",
+      "source_name" => "Help center",
+      "title" => "Plugin quickstart",
+      "url" => "https://kb.example.com/t/plugins/12",
+      "excerpt" => "The full quickstart.",
+      "published_at" => "2026-09-01T10:00:00Z",
+    }
+
+    supplied_candidates =
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [{ answerable: false, source_refs: [], title: "", answer: "" }],
+      ) do |_, _, prompts|
+        synthesis.call(query: "plugins", candidates: [candidate])
+        JSON.parse(prompts.first.messages.last[:content]).fetch("candidates")
+      end
+
+    expect(supplied_candidates).to eq(
+      [
+        {
+          "source_ref" => "source_1",
+          "source_name" => "Help center",
+          "title" => "Plugin quickstart",
+          "url" => "https://kb.example.com/t/plugins/12",
+          "excerpt" => "The full quickstart.",
+          "last_updated_at" => "2026-09-01",
+        },
+      ],
+    )
+  end
+
   it "uses one tool-free structured call to select sources and stream an answer" do
     SiteSetting.ai_ask_ai_related_count = 4
     feature_name = nil
