@@ -7,20 +7,38 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
     Fabricate(:category, slug: "cat", emoji: "cat", style_type: "emoji")
   end
 
-  it "supports Ctrl + B to create a bold text" do
-    open_composer
-    composer.type_content([SystemHelpers::PLATFORM_KEY_MODIFIER, "b"])
-    composer.type_content("This is bold")
+  private
 
-    expect(rich).to have_css("strong", text: "This is bold")
+  def reset_composer
+    composer.toggle_rich_editor if composer.editor_toggle_switch["data-rich-editor"]
+    composer.clear_content
+    expect(composer).to have_value("")
+    composer.toggle_rich_editor
+    expect(rich).to have_css("p", count: 1)
+    expect(rich.text).to eq("")
+    composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "z"])
+    expect(rich.text).to eq("")
+    composer.focus
   end
 
-  it "supports Ctrl + I to create an italic text" do
+  it "applies inline formatting shortcuts to independent documents", aggregate_failures: true do
     open_composer
-    composer.type_content([SystemHelpers::PLATFORM_KEY_MODIFIER, "i"])
-    composer.type_content("This is italic")
 
-    expect(rich).to have_css("em", text: "This is italic")
+    aggregate_failures("supports Ctrl + B to create a bold text") do
+      composer.type_content([SystemHelpers::PLATFORM_KEY_MODIFIER, "b"])
+      composer.type_content("This is bold")
+
+      expect(rich).to have_css("strong", text: "This is bold")
+    end
+
+    reset_composer
+
+    aggregate_failures("supports Ctrl + I to create an italic text") do
+      composer.type_content([SystemHelpers::PLATFORM_KEY_MODIFIER, "i"])
+      composer.type_content("This is italic")
+
+      expect(rich).to have_css("em", text: "This is italic")
+    end
   end
 
   it "supports Ctrl + K to create a link" do
@@ -37,52 +55,68 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
     expect(rich).to have_css("a", text: "This is a link")
   end
 
-  it "supports Ctrl + Shift + 7 to create an ordered list" do
+  it "applies block formatting shortcuts to independent documents", aggregate_failures: true do
     open_composer
-    composer.type_content("Item 1")
-    composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :shift, "7"])
 
-    expect(rich).to have_css("ol li", text: "Item 1")
-  end
+    aggregate_failures("supports Ctrl + Shift + 7 to create an ordered list") do
+      composer.type_content("Item 1")
+      composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :shift, "7"])
 
-  it "supports Ctrl + Shift + 8 to create a bullet list" do
-    open_composer
-    composer.type_content("Item 1")
-    composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :shift, "8"])
-
-    expect(rich).to have_css("ul li", text: "Item 1")
-  end
-
-  it "lets the user nest and lift list items with Tab" do
-    open_composer
-    composer.type_content("* First\nSecond")
-
-    composer.send_keys(:tab)
-    expect(composer).to have_nested_list_item("Second")
-
-    composer.send_keys(%i[shift tab])
-    expect(composer).to have_top_level_list_item("Second")
-  end
-
-  it "supports Ctrl + Shift + 9 to create a blockquote" do
-    open_composer
-    composer.type_content("This is a blockquote")
-    composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :shift, "9"])
-
-    expect(rich).to have_css("blockquote", text: "This is a blockquote")
-  end
-
-  it "supports Ctrl + Shift + 1-4 for headings, 0 for reset" do
-    open_composer
-    (1..4).each do |i|
-      composer.type_content("\nHeading #{i}")
-      composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :alt, i.to_s])
-
-      expect(rich).to have_css("h#{i}", text: "Heading #{i}")
+      expect(rich).to have_css("ol li", text: "Item 1")
     end
 
-    composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :alt, "0"])
-    expect(rich).not_to have_css("h4")
+    reset_composer
+
+    aggregate_failures("supports Ctrl + Shift + 8 to create a bullet list") do
+      composer.type_content("Item 1")
+      composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :shift, "8"])
+
+      expect(rich).to have_css("ul li", text: "Item 1")
+    end
+
+    reset_composer
+
+    aggregate_failures("lets the user nest and lift list items with Tab") do
+      composer.type_content("* First\nSecond")
+
+      composer.send_keys(:tab)
+      expect(composer).to have_nested_list_item("Second")
+
+      composer.send_keys(%i[shift tab])
+      expect(composer).to have_top_level_list_item("Second")
+    end
+
+    reset_composer
+
+    aggregate_failures("supports Ctrl + Shift + 9 to create a blockquote") do
+      composer.type_content("This is a blockquote")
+      composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :shift, "9"])
+
+      expect(rich).to have_css("blockquote", text: "This is a blockquote")
+    end
+
+    reset_composer
+
+    aggregate_failures("supports Ctrl + Shift + 1-4 for headings, 0 for reset") do
+      (1..4).each do |i|
+        composer.type_content("\nHeading #{i}")
+        composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :alt, i.to_s])
+
+        expect(rich).to have_css("h#{i}", text: "Heading #{i}")
+      end
+
+      composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :alt, "0"])
+      expect(rich).not_to have_css("h4")
+    end
+
+    reset_composer
+
+    aggregate_failures("supports Ctrl + Shift + _ to create a horizontal rule") do
+      composer.type_content("This is a test")
+      composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :shift, "_"])
+
+      expect(rich).to have_css("hr")
+    end
   end
 
   it "supports Ctrl + Z and Ctrl + Shift + Z to undo and redo" do
@@ -97,84 +131,97 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
     expect(rich).to have_css("p", text: "This is a test")
   end
 
-  it "supports Ctrl + Shift + _ to create a horizontal rule" do
+  it "edits independent documents with enter and backspace", aggregate_failures: true do
     open_composer
-    composer.type_content("This is a test")
-    composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :shift, "_"])
 
-    expect(rich).to have_css("hr")
+    aggregate_failures(
+      "creates hard break when pressing Enter after double space at end of line",
+    ) do
+      composer.type_content("Line with double space  ")
+      composer.send_keys(:enter)
+      composer.type_content("Next line")
+
+      composer.toggle_rich_editor
+      expect(composer).to have_value("Line with double space\nNext line")
+    end
+
+    reset_composer
+
+    aggregate_failures("supports Backspace to reset a heading") do
+      composer.type_content("# With text")
+
+      expect(rich).to have_css("h1", text: "With text")
+
+      composer.send_keys(SystemHelpers::LINE_START_KEY)
+      wait_for_timeout
+      composer.send_keys(:backspace)
+
+      expect(rich).to have_css("p", text: "With text")
+    end
+
+    reset_composer
+
+    aggregate_failures("supports Backspace to reset a code_block") do
+      composer.type_content("```code block")
+      composer.send_keys(SystemHelpers::LINE_START_KEY)
+      wait_for_timeout
+      composer.send_keys(:backspace)
+
+      expect(rich).to have_css("p", text: "code block")
+    end
+
+    reset_composer
+
+    aggregate_failures("doesn't add a new list item when backspacing from below a list") do
+      composer.type_content("1. Item 1\nItem 2")
+      composer.send_keys(:down)
+      composer.type_content("Item 3")
+      composer.send_keys(SystemHelpers::LINE_START_KEY)
+      composer.send_keys(:backspace)
+
+      expect(rich).to have_css("ol li", text: "Item 1")
+      expect(rich).to have_css("ol li", text: "Item 2Item 3")
+    end
+
+    reset_composer
+
+    aggregate_failures("adds a new paragraph when ENTER is pressed after an image") do
+      composer.type_content("![image](https://example.com/image.png)")
+      composer.send_keys(:right, :enter)
+      composer.type_content("This is a test")
+
+      composer.toggle_rich_editor
+      expect(composer).to have_value("\n![image](https://example.com/image.png)\n\nThis is a test")
+    end
   end
 
-  it "creates hard break when pressing Enter after double space at end of line" do
-    open_composer
-    composer.type_content("Line with double space  ")
-    composer.send_keys(:enter)
-    composer.type_content("Next line")
-
-    composer.toggle_rich_editor
-    expect(composer).to have_value("Line with double space\nNext line")
-  end
-
-  it "supports Backspace to reset a heading" do
-    open_composer
-    composer.type_content("# With text")
-
-    expect(rich).to have_css("h1", text: "With text")
-
-    composer.send_keys(SystemHelpers::LINE_START_KEY)
-    wait_for_timeout
-    composer.send_keys(:backspace)
-
-    expect(rich).to have_css("p", text: "With text")
-  end
-
-  it "supports Backspace to reset a code_block" do
-    open_composer
-    composer.type_content("```code block")
-    composer.send_keys(SystemHelpers::LINE_START_KEY)
-    wait_for_timeout
-    composer.send_keys(:backspace)
-
-    expect(rich).to have_css("p", text: "code block")
-  end
-
-  it "doesn't add a new list item when backspacing from below a list" do
-    open_composer
-    composer.type_content("1. Item 1\nItem 2")
-    composer.send_keys(:down)
-    composer.type_content("Item 3")
-    composer.send_keys(SystemHelpers::LINE_START_KEY)
-    composer.send_keys(:backspace)
-
-    expect(rich).to have_css("ol li", text: "Item 1")
-    expect(rich).to have_css("ol li", text: "Item 2Item 3")
-  end
-
-  it "supports hashtag decoration when pressing return" do
+  it "decorates independent hashtags with return and backspace", aggregate_failures: true do
     open_composer
 
-    composer.type_content("##{category_with_emoji.slug}")
-    composer.send_keys(:space)
-    composer.send_keys(SystemHelpers::LINE_START_KEY)
-    wait_for_timeout
-    composer.send_keys(:enter)
+    aggregate_failures("supports hashtag decoration when pressing return") do
+      composer.type_content("##{category_with_emoji.slug}")
+      composer.send_keys(:space)
+      composer.send_keys(SystemHelpers::LINE_START_KEY)
+      wait_for_timeout
+      composer.send_keys(:enter)
 
-    expect(rich).to have_css("a.hashtag-cooked .emoji[alt='#{category_with_emoji.emoji}']")
-  end
+      expect(rich).to have_css("a.hashtag-cooked .emoji[alt='#{category_with_emoji.emoji}']")
+    end
 
-  it "supports hashtag decoration when backspacing to combine paragraphs" do
-    open_composer
+    reset_composer
 
-    composer.type_content("some text ")
-    composer.send_keys(:enter)
+    aggregate_failures("supports hashtag decoration when backspacing to combine paragraphs") do
+      composer.type_content("some text ")
+      composer.send_keys(:enter)
 
-    composer.type_content("##{category_with_emoji.slug}")
-    composer.send_keys(:space)
-    composer.send_keys(SystemHelpers::LINE_START_KEY)
-    wait_for_timeout
-    composer.send_keys(:backspace)
+      composer.type_content("##{category_with_emoji.slug}")
+      composer.send_keys(:space)
+      composer.send_keys(SystemHelpers::LINE_START_KEY)
+      wait_for_timeout
+      composer.send_keys(:backspace)
 
-    expect(rich).to have_css("a.hashtag-cooked .emoji[alt='#{category_with_emoji.emoji}']")
+      expect(rich).to have_css("a.hashtag-cooked .emoji[alt='#{category_with_emoji.emoji}']")
+    end
   end
 
   it "supports Ctrl + M to toggle between rich and markdown editors" do
@@ -194,15 +241,5 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
 
     expect(composer).to have_value(nil)
     expect(rich).to have_css("blockquote", text: "This is a test")
-  end
-
-  it "adds a new paragraph when ENTER is pressed after an image" do
-    open_composer
-    composer.type_content("![image](https://example.com/image.png)")
-    composer.send_keys(:right, :enter)
-    composer.type_content("This is a test")
-
-    composer.toggle_rich_editor
-    expect(composer).to have_value("\n![image](https://example.com/image.png)\n\nThis is a test")
   end
 end
