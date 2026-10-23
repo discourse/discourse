@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
@@ -15,10 +14,7 @@ export const MAX_GLOBALLY_PINNED_TOPICS = 4;
 export default class PinOptionSection extends Component {
   @service dialog;
 
-  @cached
-  get formData() {
-    return { pinUntil: this.args.dateValue };
-  }
+  formData = { pinUntil: this.args.dateValue };
 
   @action
   validatePinUntil(name, value, { addError }) {
