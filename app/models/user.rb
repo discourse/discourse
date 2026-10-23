@@ -737,6 +737,10 @@ class User < ActiveRecord::Base
     DB.query_single(sql, user_id: id, high_priority: high_priority)[0].to_i
   end
 
+  def received_notification_types
+    UserStat.where(user_id: id).pick(:received_notification_types)
+  end
+
   MAX_UNREAD_BACKLOG = 400
   def grouped_unread_notifications
     results = DB.query(<<~SQL, user_id: id, limit: MAX_UNREAD_BACKLOG)
@@ -934,6 +938,7 @@ class User < ActiveRecord::Base
 
     payload[:all_unread_notifications_count] = all_unread_notifications_count
     payload[:grouped_unread_notifications] = grouped_unread_notifications
+    payload[:received_notification_types] = received_notification_types
     payload[:new_personal_messages_notifications_count] = new_personal_messages_notifications_count
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])

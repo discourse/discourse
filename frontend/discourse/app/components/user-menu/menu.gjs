@@ -29,6 +29,12 @@ const DEFAULT_TAB_ID = "all-notifications";
 const DEFAULT_PANEL_COMPONENT = UserMenuNotificationsList;
 
 const REVIEW_QUEUE_TAB_ID = "review-queue";
+const PROGRESSIVE_TAB_IDS = new Set([
+  "replies",
+  "mentions",
+  "likes",
+  "other-notifications",
+]);
 
 const CORE_TOP_TABS = [
   class extends UserMenuTab {
@@ -221,8 +227,15 @@ export default class UserMenu extends Component {
   @tracked currentPanelComponent = DEFAULT_PANEL_COMPONENT;
   @tracked currentNotificationTypes;
 
+  #receivedNotificationTypes;
+
   constructor() {
     super(...arguments);
+    // Snapshot visibility so notifications cannot move tabs while the menu is open.
+    const receivedTypes = this.currentUser.received_notification_types;
+    this.#receivedNotificationTypes = receivedTypes
+      ? new Set(receivedTypes)
+      : null;
     this.router.on("routeDidChange", this.onRouteChange);
   }
 
@@ -275,10 +288,12 @@ export default class UserMenu extends Component {
       )
     );
 
-    return tabs.map((tab, index) => {
-      tab.position = index;
-      return tab;
-    });
+    return tabs
+      .filter((tab) => this.#hasReceivedNotifications(tab))
+      .map((tab, index) => {
+        tab.position = index;
+        return tab;
+      });
   }
 
   @cached
@@ -335,6 +350,19 @@ export default class UserMenu extends Component {
   @action
   focusFirstTab(topTabsContainerElement) {
     topTabsContainerElement.querySelector(".btn.active")?.focus();
+  }
+
+  #hasReceivedNotifications(tab) {
+    if (
+      !PROGRESSIVE_TAB_IDS.has(tab.id) ||
+      this.#receivedNotificationTypes === null
+    ) {
+      return true;
+    }
+
+    return tab.notificationTypes.some((type) =>
+      this.#receivedNotificationTypes.has(this.site.notification_types[type])
+    );
   }
 
   #notificationTypesForTheOtherTab(tabs) {

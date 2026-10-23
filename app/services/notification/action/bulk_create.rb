@@ -55,7 +55,19 @@ class Notification::Action::BulkCreate < Service::ActionBase
         }
       end
 
-    result = Notification.insert_all!(rows, returning: %i[id user_id])
+    result =
+      Notification.transaction do
+        inserted = Notification.insert_all!(rows, returning: %i[id user_id])
+        records
+          .group_by { |record| record[:notification_type] }
+          .each do |type, notifications|
+            UserStat.record_notification_type(
+              user_ids: notifications.map { |notification| notification[:user_id] }.uniq,
+              notification_type: type,
+            )
+          end
+        inserted
+      end
     @notification_ids = result.rows.map(&:first)
     @user_ids_from_insert = result.rows.map(&:second).uniq
   end

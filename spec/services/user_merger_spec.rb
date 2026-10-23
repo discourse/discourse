@@ -23,6 +23,26 @@ RSpec.describe UserMerger do
     UserMerger.new(source, target).merge!
   end
 
+  it "preserves the notification types received by either account" do
+    target_user.update!(last_seen_at: 1.minute.ago)
+    source_user.user_stat.update!(received_notification_types: [1, 2])
+    target_user.user_stat.update!(received_notification_types: [2, 5])
+
+    messages = MessageBus.track_publish("/notification/#{target_user.id}") { merge_users! }
+
+    expect(target_user.received_notification_types).to contain_exactly(1, 2, 5)
+    expect(messages.last.data[:received_notification_types]).to contain_exactly(1, 2, 5)
+  end
+
+  it "preserves the full notification menu when either account predates tracking" do
+    source_user.user_stat.update!(received_notification_types: nil)
+    target_user.user_stat.update!(received_notification_types: [2])
+
+    merge_users!
+
+    expect(target_user.received_notification_types).to be_nil
+  end
+
   it "changes owner of topics and posts" do
     topic1 = Fabricate(:topic, user: source_user)
     post1 = Fabricate(:post, topic: topic1, user: source_user)

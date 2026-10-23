@@ -3,6 +3,15 @@ class UserStat < ActiveRecord::Base
   belongs_to :user
   after_save :trigger_badges
 
+  def self.record_notification_type(user_ids:, notification_type:)
+    DB.exec(<<~SQL, user_ids: user_ids, notification_type: notification_type)
+      UPDATE user_stats
+      SET received_notification_types = array_append(received_notification_types, :notification_type)
+      WHERE user_id IN (:user_ids)
+        AND NOT (:notification_type = ANY(received_notification_types))
+    SQL
+  end
+
   def self.ensure_consistency!(last_seen = 1.hour.ago)
     reset_bounce_scores
     update_distinct_badge_count
@@ -359,28 +368,29 @@ end
 #
 # Table name: user_stats
 #
-#  bounce_score             :float            default(0.0), not null
-#  days_visited             :integer          default(0), not null
-#  digest_attempted_at      :datetime
-#  distinct_badge_count     :integer          default(0), not null
-#  draft_count              :integer          default(0), not null
-#  first_post_created_at    :datetime
-#  first_unread_at          :datetime         not null
-#  first_unread_pm_at       :datetime         not null
-#  flags_agreed             :integer          default(0), not null
-#  flags_disagreed          :integer          default(0), not null
-#  flags_ignored            :integer          default(0), not null
-#  likes_given              :integer          default(0), not null
-#  likes_received           :integer          default(0), not null
-#  new_since                :datetime         not null
-#  pending_posts_count      :integer          default(0), not null
-#  post_count               :integer          default(0), not null
-#  post_edits_count         :integer
-#  posts_read_count         :integer          default(0), not null
-#  read_faq                 :datetime
-#  reset_bounce_score_after :datetime
-#  time_read                :integer          default(0), not null
-#  topic_count              :integer          default(0), not null
-#  topics_entered           :integer          default(0), not null
-#  user_id                  :integer          not null, primary key
+#  bounce_score                :float            default(0.0), not null
+#  days_visited                :integer          default(0), not null
+#  digest_attempted_at         :datetime
+#  distinct_badge_count        :integer          default(0), not null
+#  draft_count                 :integer          default(0), not null
+#  first_post_created_at       :datetime
+#  first_unread_at             :datetime         not null
+#  first_unread_pm_at          :datetime         not null
+#  flags_agreed                :integer          default(0), not null
+#  flags_disagreed             :integer          default(0), not null
+#  flags_ignored               :integer          default(0), not null
+#  likes_given                 :integer          default(0), not null
+#  likes_received              :integer          default(0), not null
+#  new_since                   :datetime         not null
+#  pending_posts_count         :integer          default(0), not null
+#  post_count                  :integer          default(0), not null
+#  post_edits_count            :integer
+#  posts_read_count            :integer          default(0), not null
+#  read_faq                    :datetime
+#  received_notification_types :integer          default([]), is an Array
+#  reset_bounce_score_after    :datetime
+#  time_read                   :integer          default(0), not null
+#  topic_count                 :integer          default(0), not null
+#  topics_entered              :integer          default(0), not null
+#  user_id                     :integer          not null, primary key
 #

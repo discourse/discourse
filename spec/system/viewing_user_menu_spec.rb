@@ -5,6 +5,37 @@ RSpec.describe "Viewing User Menu" do
 
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
+  it "keeps notification filters visible after their first notification is read and deleted" do
+    sign_in(user)
+    visit("/latest")
+    user_menu.open
+
+    expect(user_menu).to have_notification_tab("all-notifications")
+    expect(user_menu).to have_notification_tab("bookmarks")
+    expect(user_menu).to have_notification_tab("profile")
+    expect(user_menu).to have_no_notification_tab("likes")
+    expect(user_menu).to have_no_notification_tab("replies")
+    expect(user_menu).to have_no_notification_tab("other-notifications")
+
+    notification =
+      Fabricate(
+        :notification,
+        user: user,
+        notification_type: Notification.types[:liked],
+        post: Fabricate(:post),
+      )
+    visit("/latest")
+    user_menu.open
+    expect(user_menu).to have_notification_tab("likes")
+
+    notification.update!(read: true)
+    notification.destroy!
+    visit("/latest")
+    user_menu.open
+    expect(user_menu).to have_notification_tab("likes")
+    expect(user_menu).to have_no_notification_tab("replies")
+  end
+
   it "keeps the mentions tab hidden when the upcoming change is disabled" do
     SiteSetting.enable_user_menu_mentions_tab = false
 
