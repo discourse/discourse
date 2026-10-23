@@ -74,6 +74,10 @@ const CORE_TOP_TABS = [
     panelComponent = UserMenuMentionsNotificationsList;
     notificationTypes = ["mentioned"];
 
+    get shouldDisplay() {
+      return this.siteSettings.enable_user_menu_mentions_tab;
+    }
+
     get count() {
       return this.getUnreadCountForType("mentioned");
     }

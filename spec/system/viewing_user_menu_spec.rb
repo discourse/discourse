@@ -5,7 +5,18 @@ RSpec.describe "Viewing User Menu" do
 
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
+  it "keeps the mentions tab hidden when the upcoming change is disabled" do
+    SiteSetting.enable_user_menu_mentions_tab = false
+
+    sign_in(user)
+    visit("/latest")
+    user_menu.open
+
+    expect(user_menu).to have_no_mentions_notifications_tab
+  end
+
   it "lets the user filter direct mentions and visit the mentioned post" do
+    SiteSetting.enable_user_menu_mentions_tab = true
     Jobs.run_immediately!
 
     mentioned_post =

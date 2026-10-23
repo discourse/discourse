@@ -116,6 +116,8 @@ RSpec.describe "Glimmer Header" do
   end
 
   it "moves focus between tabs using arrow keys" do
+    SiteSetting.enable_user_menu_mentions_tab = true
+
     sign_in(current_user)
     visit "/"
     find(".header-dropdown-toggle.current-user").click

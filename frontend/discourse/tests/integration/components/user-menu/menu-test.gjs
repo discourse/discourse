@@ -10,6 +10,22 @@ import { i18n } from "discourse-i18n";
 module("Integration | Component | UserMenu", function (hooks) {
   setupRenderingTest(hooks);
 
+  hooks.beforeEach(function () {
+    this.siteSettings.enable_user_menu_mentions_tab = true;
+  });
+
+  test("mentions tab is hidden when the upcoming change is disabled", async function (assert) {
+    this.siteSettings.enable_user_menu_mentions_tab = false;
+    await render(<template><Menu /></template>);
+
+    assert
+      .dom("#user-menu-button-mentions")
+      .doesNotExist("the mentions tab is hidden while the change is disabled");
+    assert
+      .dom("#user-menu-button-replies")
+      .exists("the existing Replies tab remains available");
+  });
+
   test("default tab is all notifications", async function (assert) {
     await render(<template><Menu /></template>);
 

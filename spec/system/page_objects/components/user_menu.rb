@@ -101,6 +101,10 @@ module PageObjects
         expect(find("#user-menu-button-replies").text).to eq(count.to_s)
       end
 
+      def has_no_mentions_notifications_tab?
+        page.has_no_css?("#user-menu-button-mentions")
+      end
+
       def has_direct_mention_notification?(post)
         page.has_css?(
           "#quick-access-mentions .mentioned .item-description[data-topic-id='#{post.topic_id}']",

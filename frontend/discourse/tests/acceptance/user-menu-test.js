@@ -37,6 +37,7 @@ acceptance("User menu", function (needs) {
   });
 
   needs.settings({
+    enable_user_menu_mentions_tab: true,
     allow_anonymous_mode: true,
   });
 
