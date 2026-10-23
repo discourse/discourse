@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
-import { computed, set } from "@ember/object";
+import { action, computed, set } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import ChooseTopic from "discourse/components/choose-topic";
@@ -78,6 +78,11 @@ export default class ChatToTopicSelector extends Component {
     return trustHTML(this.instructionLabels[NEW_MESSAGE_SELECTION]);
   }
 
+  @action
+  changeTags(tags) {
+    this.set("tags", tags);
+  }
+
   <template>
     <div class="chat-to-topic-selector" ...attributes>
       <div class="radios">
@@ -142,6 +147,7 @@ export default class ChatToTopicSelector extends Component {
             <TagChooser
               @categoryId={{this.categoryId}}
               @filterable={{true}}
+              @onChange={{this.changeTags}}
               @tags={{this.tags}}
             />
           {{/if}}
@@ -174,7 +180,11 @@ export default class ChatToTopicSelector extends Component {
 
           {{#if this.canTagMessages}}
             <label>{{i18n "tagging.tags"}}</label>
-            <TagChooser @filterable={{true}} @tags={{this.tags}} />
+            <TagChooser
+              @filterable={{true}}
+              @onChange={{this.changeTags}}
+              @tags={{this.tags}}
+            />
           {{/if}}
         </form>
       {{/if}}

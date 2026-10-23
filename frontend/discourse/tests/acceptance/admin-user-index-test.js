@@ -217,6 +217,32 @@ acceptance("Admin - User Index", function (needs) {
         post_count: 50,
       });
     });
+
+    server.get("/admin/users/13.json", () => {
+      return helper.response({
+        id: 13,
+        username: "merge_source",
+        name: null,
+        avatar_template: "/letter_avatar_proxy/v4/letter/m/f0a364/{size}.png",
+        active: true,
+        admin: false,
+        moderator: false,
+        can_be_merged: true,
+      });
+    });
+
+    server.get("/u/search/users", () => {
+      return helper.response({
+        users: [
+          {
+            username: "merge_target",
+            name: null,
+            avatar_template:
+              "/letter_avatar_proxy/v4/letter/m/f0a364/{size}.png",
+          },
+        ],
+      });
+    });
   });
 
   needs.hooks.beforeEach(() => {
@@ -463,5 +489,33 @@ acceptance("Admin - User Index", function (needs) {
         i18n("admin.user.delete_posts_forbidden_because_admin"),
         "moderators don't get the admin-specific message for delete posts"
       );
+  });
+
+  test("merge user - the chosen target user is carried to the confirmation", async function (assert) {
+    await visit("/admin/users/13/merge_source");
+    await click(".btn-user-merge");
+
+    assert
+      .dom(".d-modal__footer .btn-primary")
+      .isDisabled("cannot merge before a target user is chosen");
+
+    const targetUser = selectKit(".d-modal .email-group-user-chooser");
+    await targetUser.expand();
+    await targetUser.fillInFilter("merge_target");
+    await targetUser.selectRowByValue("merge_target");
+
+    assert
+      .dom(".d-modal__footer .btn-primary")
+      .isEnabled("can merge once a target user is chosen");
+
+    await click(".d-modal__footer .btn-primary");
+
+    assert.dom(".d-modal__body").includesText(
+      i18n("admin.user.merge.confirmation.text", {
+        username: "merge_source",
+        targetUsername: "merge_target",
+      }),
+      "asks to confirm merging into the chosen user"
+    );
   });
 });
