@@ -176,10 +176,6 @@ export default <template>
                           <span>
                             {{dAgeWithTooltip query.lastRunAt format="medium"}}
                           </span>
-                        {{else if query.createdAt}}
-                          <span>
-                            {{dAgeWithTooltip query.createdAt format="medium"}}
-                          </span>
                         {{else}}
                           -
                         {{/if}}
