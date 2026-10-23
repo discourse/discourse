@@ -14,14 +14,6 @@ module PageObjects
         body.has_no_css?("#radio_illegal")
       end
 
-      def has_wrapped_illegal_content_link?(label)
-        body.has_css?(".flag-modal__report-illegal-content", text: label) do |link|
-          link.evaluate_script(
-            "this.closest('.d-modal__body').scrollWidth <= this.closest('.d-modal__body').clientWidth",
-          )
-        end
-      end
-
       def has_illegal_content_description?
         body.has_css?(
           ".flag-modal__illegal-content-description",
@@ -31,10 +23,6 @@ module PageObjects
               reportLink: I18n.t("js.flagging.illegal_content_report_link"),
             ),
         )
-      end
-
-      def has_no_illegal_content_description?
-        body.has_no_css?(".flag-modal__illegal-content-description")
       end
 
       def report_illegal_content

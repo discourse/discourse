@@ -11,13 +11,6 @@ module PageObjects
         has_no_css?(".post-voting-comments__menu")
       end
 
-      def flag_comment(comment)
-        comment_element = find("#post-voting-comment-#{comment.id}")
-        comment_element.hover
-        comment_element.find(".post-voting-comments__comment-actions-flag-link").click
-        self
-      end
-
       def click_vote_count(post)
         find("#post_#{post.post_number} .post-voting-post__toggle-voters").click
         self
