@@ -14,7 +14,7 @@ module DiscourseWorkflows
             color: "green",
           },
           group: "discourse_triggers",
-          events: [:user_seen],
+          event: :user_seen,
           output_contracts: [{ schema: Schema::USER_SEEN_SCHEMA }],
           properties: {
             trigger_conditions: {

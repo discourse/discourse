@@ -4,28 +4,22 @@ import { isBlank } from "@ember/utils";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import MultiSelect from "discourse/select-kit/components/multi-select";
 import { i18n } from "discourse-i18n";
-import BaseField from "./da-base-field";
-import DAFieldDescription from "./da-field-description";
-import DAFieldLabel from "./da-field-label";
+import BaseField from "./da-base-field.gjs";
+import DAFieldDescription from "./da-field-description.gjs";
+import DAFieldLabel from "./da-field-label.gjs";
 
 export default class ChoicesField extends BaseField {
-  @action
-  onChangeChoices(choices) {
-    if (isBlank(choices)) {
-      choices = undefined;
-    }
-
-    this.mutValue(choices);
+  get multiselect() {
+    return !!this.args.field.extra.multiselect;
   }
 
   <template>
     <div class="field control-group">
-      <DAFieldLabel @label={{@label}} @field={{@field}} />
+      <DAFieldLabel @field={{@field}} @label={{@label}} />
 
       <div class="controls">
         {{#if this.multiselect}}
           <MultiSelect
-            @value={{@field.metadata.value}}
             @content={{this.replacedContent}}
             @onChange={{this.onChangeChoices}}
             @options={{hash
@@ -33,10 +27,10 @@ export default class ChoicesField extends BaseField {
               clearable=true
               disabled=@field.isDisabled
             }}
+            @value={{@field.metadata.value}}
           />
         {{else}}
           <ComboBox
-            @value={{@field.metadata.value}}
             @content={{this.replacedContent}}
             @onChange={{this.mutValue}}
             @options={{hash
@@ -44,6 +38,7 @@ export default class ChoicesField extends BaseField {
               clearable=true
               disabled=@field.isDisabled
             }}
+            @value={{@field.metadata.value}}
           />
         {{/if}}
 
@@ -52,10 +47,6 @@ export default class ChoicesField extends BaseField {
     </div>
   </template>
 
-  get multiselect() {
-    return !!this.args.field.extra.multiselect;
-  }
-
   get replacedContent() {
     return (this.args.field.extra.content || []).map((r) => {
       return {
@@ -63,5 +54,14 @@ export default class ChoicesField extends BaseField {
         name: r.translated_name || i18n(r.name),
       };
     });
+  }
+
+  @action
+  onChangeChoices(choices) {
+    if (isBlank(choices)) {
+      choices = undefined;
+    }
+
+    this.mutValue(choices);
   }
 }

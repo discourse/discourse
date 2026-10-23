@@ -16,10 +16,56 @@ hu:
         image_generation_custom:
           name: "Egyéni"
     ai_bot:
+      navigation:
+        settings:
+          title: "Webhely beállítások"
+        users:
+          title: "Felhasználók"
+        groups:
+          title: "Csoportok"
+        review:
+          title: "Felülvizsgálati sor"
+        categories:
+          title: "Kategóriák"
+        tags:
+          title: "Címkék"
+        themes:
+          title: "Témák"
+        authentication:
+          title: "Bejelentkezés és hitelesítés"
+        backups:
+          title: "Biztonsági mentések"
+      read_post:
+        unknown_post: "bejegyzéssel"
+      chat_tool_approval:
+        topic_states:
+          open: "Megnyitás"
+          closed: "Lezárva"
+          active: "Aktív"
+          deleted: "Törölve"
+        solution_post: "Bejegyzés #%{number}"
+        duration_label: "Időtartam:"
+        user_duration:
+          one: "%{count} nap"
+          other: "%{count} nap"
+        post_states:
+          locked: "Zárva"
+        posts_label: "Bejegyzések:"
+        category_label: "Kategória"
+        category_fields:
+          name: "név"
+          description: "leírás"
+          color: "szín"
+          text_color: "szöveg színe"
+        approve_label: "Igen"
+        reject_label: "Nem"
+        empty_value: "Üres"
       tool_summary:
         suspend_user: "Felhasználó felfüggesztése"
         silence_user: "Felhasználó némítása"
         edit_post: "Bejegyzés szerkesztése"
+        edit_tag: "Címke szerkesztése"
+        create_category: "Kategória létrehozása"
         move_posts: "Bejegyzések áthelyezése"
         search: "Keresés"
         tags: "Címkék felsorolása"
@@ -27,6 +73,7 @@ hu:
         summarize: "Összefoglalás"
       tool_help:
         delete_topic: "Téma törlése"
+        create_category: "Új kategória létrehozása"
       close_topic:
         errors:
           not_found: "A téma nem található."
@@ -36,10 +83,10 @@ hu:
       delete_topic:
         errors:
           not_found: "A téma nem található."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "A téma nem található."
-      edit_category:
+      change_topic_category:
         errors:
           not_found: "A téma nem található."
       set_topic_timer:

@@ -13,31 +13,31 @@ function renderComponent(context) {
   return render(
     <template>
       <NestedOp
-        @post={{context.post}}
-        @topic={{context.topic}}
-        @editPost={{noop}}
-        @showHistory={{noop}}
-        @replyToPost={{noop}}
-        @deletePost={{context.deletePost}}
-        @recoverPost={{context.recoverPost}}
         @changeNotice={{noop}}
         @changePostOwner={{noop}}
+        @deletePost={{context.deletePost}}
+        @editPost={{noop}}
         @grantBadge={{noop}}
         @lockPost={{noop}}
-        @unlockPost={{noop}}
+        @multiSelect={{context.multiSelect}}
         @permanentlyDeletePost={{noop}}
+        @post={{context.post}}
+        @postSelected={{context.postSelected}}
         @rebakePost={{noop}}
+        @recoverPost={{context.recoverPost}}
+        @registerPost={{registerPost}}
+        @replyToPost={{noop}}
+        @selectBelow={{context.selectBelow}}
+        @selectReplies={{context.selectReplies}}
+        @showHistory={{noop}}
         @showPagePublish={{noop}}
+        @showPostMenu={{context.showPostMenu}}
+        @togglePostSelection={{context.togglePostSelection}}
         @togglePostType={{noop}}
         @toggleWiki={{noop}}
+        @topic={{context.topic}}
         @unhidePost={{noop}}
-        @showPostMenu={{context.showPostMenu}}
-        @registerPost={{registerPost}}
-        @multiSelect={{context.multiSelect}}
-        @togglePostSelection={{context.togglePostSelection}}
-        @selectReplies={{context.selectReplies}}
-        @selectBelow={{context.selectBelow}}
-        @postSelected={{context.postSelected}}
+        @unlockPost={{noop}}
       />
     </template>
   );

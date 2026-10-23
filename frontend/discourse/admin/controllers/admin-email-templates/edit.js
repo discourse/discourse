@@ -3,9 +3,9 @@ import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
-import BufferedProxy from "ember-buffered-proxy/proxy";
 import { interpolationKeysWithStatus as computeInterpolationKeysWithStatus } from "discourse/admin/lib/interpolation-keys";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import BufferedProxy from "discourse/lib/buffered-proxy";
 import { isObject } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
 
@@ -13,6 +13,7 @@ export default class AdminEmailTemplatesEditController extends Controller {
   @service dialog;
   @controller adminEmailTemplates;
 
+  /** @type {import("discourse/admin/models/email-template").default | null | undefined} */
   @tracked emailTemplate = null;
   saved = false;
 
@@ -52,6 +53,18 @@ export default class AdminEmailTemplatesEditController extends Controller {
     } else {
       return this.buffered.getProperties("id")["id"];
     }
+  }
+
+  @computed(
+    "buffered.subject",
+    "buffered.body",
+    "emailTemplate.interpolation_keys"
+  )
+  get interpolationKeysWithStatus() {
+    return computeInterpolationKeysWithStatus(
+      `${this.get("buffered.subject") || ""} ${this.get("buffered.body") || ""}`,
+      this.emailTemplate.interpolation_keys
+    );
   }
 
   @action
@@ -134,17 +147,5 @@ export default class AdminEmailTemplatesEditController extends Controller {
           .catch(popupAjaxError);
       },
     });
-  }
-
-  @computed(
-    "buffered.subject",
-    "buffered.body",
-    "emailTemplate.interpolation_keys"
-  )
-  get interpolationKeysWithStatus() {
-    return computeInterpolationKeysWithStatus(
-      `${this.get("buffered.subject") || ""} ${this.get("buffered.body") || ""}`,
-      this.emailTemplate.interpolation_keys
-    );
   }
 }

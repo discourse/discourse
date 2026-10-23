@@ -35,4 +35,28 @@ describe EmberAssets do
       end
     end
   end
+
+  describe ".import_map" do
+    before { EmberAssets.unstub(:import_map) }
+    after { EmberAssets.clear_cache! }
+
+    it "returns the stable-to-hashed chunk mapping as logical paths" do
+      EmberAssets.stubs(:read_manifest!).returns(
+        {
+          "importMap" => {
+            "assets/js/chunk-stable11.digested.js" => "assets/js/chunk-real1111.digested.js",
+          },
+        },
+      )
+
+      expect(EmberAssets.import_map).to eq(
+        { "js/chunk-stable11.digested" => "js/chunk-real1111.digested" },
+      )
+    end
+
+    it "is empty when the manifest has no import map" do
+      EmberAssets.stubs(:read_manifest!).returns({ "entrypoints" => {} })
+      expect(EmberAssets.import_map).to eq({})
+    end
+  end
 end

@@ -18,16 +18,6 @@ export default class SingleSelectHeader extends SelectKitHeaderComponent {
     return this.selectKit?.options?.headerAriaLabel || this.name;
   }
 
-  focusIn(event) {
-    event.stopImmediatePropagation();
-
-    document.querySelectorAll(".select-kit-header").forEach((header) => {
-      if (header !== event.target) {
-        header.parentNode.open = false;
-      }
-    });
-  }
-
   @computed("selectedContent.name")
   get name() {
     if (this.selectedContent) {
@@ -37,6 +27,16 @@ export default class SingleSelectHeader extends SelectKitHeaderComponent {
     } else {
       return i18n("select_kit.select_to_filter");
     }
+  }
+
+  focusIn(event) {
+    event.stopImmediatePropagation();
+
+    document.querySelectorAll(".select-kit-header").forEach((header) => {
+      if (header !== event.target) {
+        header.parentNode.open = false;
+      }
+    });
   }
 
   <template>

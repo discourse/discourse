@@ -18,7 +18,7 @@ RSpec.describe Chat::Api::ChannelThreadMessagesController do
       fab!(:message_1) { Fabricate(:chat_message, thread: thread, chat_channel: thread.channel) }
       fab!(:message_2) { Fabricate(:chat_message, chat_channel: thread.channel) }
 
-      it "works" do
+      it "returns the thread's messages" do
         get "/chat/api/channels/#{thread.channel.id}/threads/#{thread.id}/messages"
 
         expect(response.status).to eq(200)
@@ -88,6 +88,36 @@ RSpec.describe Chat::Api::ChannelThreadMessagesController do
         get "/chat/api/channels/#{thread.channel.id}/threads/#{thread.id}/messages"
 
         expect(response.status).to eq(403)
+      end
+    end
+
+    context "when user can only see a readonly category channel" do
+      fab!(:readonly_group) { Fabricate(:group, users: [current_user]) }
+      fab!(:thread) do
+        category =
+          Fabricate(
+            :private_category,
+            group: readonly_group,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        channel = Fabricate(:category_channel, chatable: category, threading_enabled: true)
+        Fabricate(:chat_thread, channel:)
+      end
+      fab!(:restricted_message) do
+        Fabricate(
+          :chat_message,
+          chat_channel: thread.channel,
+          thread:,
+          message: "Confidential restricted thread history",
+        )
+      end
+
+      it "does not expose the thread messages" do
+        get "/chat/api/channels/#{thread.channel.id}/threads/#{thread.id}/messages"
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+        expect(response.body).not_to include(restricted_message.message)
       end
     end
 

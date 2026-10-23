@@ -143,8 +143,14 @@ et:
         sort:
           relevance: "Asjakohasus"
           latest: "Värskeimad"
+      direct_messages:
+        close: "Sulge kanal"
       channel_list:
         title: "Kanalid"
+        options:
+          filter: "Filter"
+        filter:
+          mentions: "Mainimised"
       incoming_webhooks:
         back: "Tagasi"
         description: "Kirjeldus"
@@ -215,8 +221,14 @@ et:
       chat_message_created:
         channel_id: "Kanal"
       send_chat_message:
+        targets:
+          channel: "Kanal"
         channel_id: "Kanal"
         message: "Sõnum"
       chat_approval:
         message: "Sõnum"
+        value: "Väärtus"
+        style_default: "Vaikimisi"
+        style_success: "Korras"
+        icon: "Ikoon"
         channel_id: "Kanal"

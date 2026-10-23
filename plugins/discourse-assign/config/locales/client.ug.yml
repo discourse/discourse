@@ -49,4 +49,15 @@ ug:
       nodes:
         "trigger:assigned": "تەقسىملەنگەن"
       assign_topic:
+        resource: "مەنبە"
+        resources:
+          topic: "تېما"
+          post: "يازما"
         topic_id: "تېما كىملىكى"
+        post_id: "يازما كىملىكى"
+      check_assignment:
+        target_types:
+          topic: "تېما"
+          post: "يازما"
+        topic_id: "تېما كىملىكى"
+        post_id: "يازما كىملىكى"

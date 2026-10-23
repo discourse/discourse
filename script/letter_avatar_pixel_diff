@@ -5,6 +5,8 @@ ENV["RAILS_ENV"] ||= "test"
 
 require_relative "../config/environment"
 
+GlobalSetting.define_singleton_method(:enable_vips_image_processing) { true }
+
 require "base64"
 require "chunky_png"
 require "fileutils"

@@ -19,6 +19,14 @@ class DesignWizardThemeSerializer < ApplicationSerializer
     object.default?
   end
 
+  def screenshot_light_url
+    ThemeScreenshotThumbnails.url_for(object, "screenshot_light") || object.screenshot_light_url
+  end
+
+  def screenshot_dark_url
+    ThemeScreenshotThumbnails.url_for(object, "screenshot_dark") || object.screenshot_dark_url
+  end
+
   def palette_pairs
     DesignWizard::PalettePairs.for_theme(object)
   end

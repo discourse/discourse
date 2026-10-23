@@ -177,7 +177,7 @@ module DiscourseAi
             model_name: model_name,
           )
 
-        grouped_sentiments
+        grouped_sentiments.map(&:to_h)
       end
     end
   end

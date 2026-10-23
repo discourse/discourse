@@ -7,13 +7,13 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
     describe "when post contains emoijs" do
       before { post.update!(raw: ":slight_smile: This is a test") }
 
-      it "should return the right excerpt" do
+      it "returns the post excerpt" do
         expect(described_class.excerpt(post)).to eq("🙂 This is a test")
       end
     end
 
     describe "when post contains onebox" do
-      it "should return the right excerpt" do
+      it "returns an excerpt without the onebox" do
         post.update!(cooked: <<~COOKED)
         <aside class=\"onebox whitelistedgeneric\">
           <header class=\"source\">
@@ -47,7 +47,7 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
     end
 
     describe "when post contains an email" do
-      it "should return the right excerpt" do
+      it "returns an excerpt containing the email address" do
         post.update!(cooked: <<~COOKED)
             The address is <a href=\"mailto:someone@domain.com\">my email</a>
         COOKED
@@ -282,7 +282,7 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
   end
 
   describe ".create_slack_message" do
-    it "should work with a simple message" do
+    it "creates a simple Slack message" do
       content = "Simple message"
       url = "http://example.com"
       message = { channel: "#general", username: "Discourse", content: "#{content} - #{url}" }
@@ -303,7 +303,7 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
       ).to eq(message)
     end
 
-    it "should do the replacements" do
+    it "replaces the topic placeholders" do
       topic = Fabricate(:topic)
       topic.posts << Fabricate(:post, topic: topic)
       tag1, tag2, tag3, tag4 = [Fabricate(:tag), Fabricate(:tag), Fabricate(:tag), Fabricate(:tag)]
@@ -330,7 +330,7 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
       expect(text).to include("<#{tag3.full_url}|#{tag3.name}>, <#{tag4.full_url}|#{tag4.name}>")
     end
 
-    it "should do the replacements for ${ADDED_AND_REMOVED}" do
+    it "replaces the combined added-and-removed placeholder" do
       topic = Fabricate(:topic)
       topic.posts << Fabricate(:post, topic: topic)
       tag1, tag2 = [Fabricate(:tag), Fabricate(:tag)]
@@ -397,7 +397,7 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
       )
     end
 
-    it "should raise errors if tags are not present but uses in content" do
+    it "raises an error when tag placeholders lack tag data" do
       topic = Fabricate(:topic)
       topic.posts << Fabricate(:post, topic: topic)
       content = "This should not work ${ADDED_TAGS}"

@@ -1,7 +1,6 @@
 import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
 import SchemaSettingTypeModels from "discourse/admin/components/schema-setting/types/models";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
-import { and, not } from "discourse/truth-helpers";
 
 export default class SchemaSettingTypeTags extends SchemaSettingTypeModels {
   type = "tags";
@@ -19,11 +18,11 @@ export default class SchemaSettingTypeTags extends SchemaSettingTypeModels {
 
   <template>
     <TagChooser
-      @tags={{this.value}}
+      class={{if this.validationErrorMessage "--invalid"}}
+      @everyTag={{@spec.every_tag}}
       @onChange={{this.onInput}}
       @options={{this.tagChooserOption}}
-      @everyTag={{@spec.every_tag}}
-      class={{if this.validationErrorMessage "--invalid"}}
+      @tags={{this.value}}
     />
 
     <div class="schema-field__input-supporting-text">

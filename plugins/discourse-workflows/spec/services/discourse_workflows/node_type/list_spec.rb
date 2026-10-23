@@ -66,14 +66,8 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         expect(node_type.dig(:properties, :operation, :default)).to eq("create")
         expect(node_type.dig(:properties, :limit)).to include(default: 30, min: 1, max: 800)
         expect(node_type[:operations].map { |operation| operation[:value] }).to eq(
-          %w[create edit get list],
+          %w[create edit get list delete recover],
         )
-      end
-
-      it "returns UI hints for schema-driven configurators" do
-        node_type = result[:node_types].find { |nt| nt[:identifier] == "action:post" }
-
-        expect(node_type.dig(:properties, :raw, :ui)).to eq(control: :textarea)
       end
 
       it "includes specialized property-engine controls in node schemas" do
@@ -120,11 +114,6 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
             name: membership_group.name,
           )
         end
-      end
-
-      it "includes branching for condition nodes" do
-        condition = result[:node_types].find { |nt| nt[:identifier] == "condition:if" }
-        expect(condition[:branching]).to be(true)
       end
 
       it "serializes ui palette group for action nodes" do
@@ -196,12 +185,6 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
 
         expect(loop_node[:palette_visible]).to eq(false)
         expect(loop_node[:output_contracts].pluck(:mode)).to eq(%i[passthrough passthrough])
-      end
-
-      it "serializes ui palette group for trigger nodes" do
-        topic_closed = result[:node_types].find { |nt| nt[:identifier] == "trigger:topic_closed" }
-
-        expect(topic_closed.dig(:ui, :palette_group, :id)).to eq("discourse_triggers")
       end
 
       it "includes manually_triggerable for triggers that support it" do

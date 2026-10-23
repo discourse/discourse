@@ -136,6 +136,8 @@ de:
             webhook_setup_failed: "Der Webhook konnte nicht bei Telegram registriert werden. Überprüfe das Token und versuche es erneut."
             channel_not_found: "Der angegebene Kanal existiert nicht auf Telegram"
             forbidden: "Der Bot hat keine Berechtigung, in diesem Kanal zu schreiben"
+            invalid_api_base_url: "Die Website-Einstellung für die Basis-URL der Telegram-API ist keine gültige HTTPS-URL."
+            api_base_url_blocked: "Anfragen an die Basis-URL der Telegram-API wurden blockiert. Hosts in privaten Netzwerken müssen in der Website-Einstellung für erlaubte interne Hosts hinzugefügt werden."
         discord:
           title: "Discord"
           param:
@@ -274,6 +276,12 @@ de:
             provider:
               label: Anbieter
     discourse_workflows:
+      node_unavailable:
+        requires_chat_integration: "Erfordert die Aktivierung des Chat-Integration-Plug-ins."
+      nodes:
+        "action:send_chat_integration_message": "Chat-Integration-Nachricht senden"
+      node_descriptions:
+        "action:send_chat_integration_message": "Sende eine Benachrichtigung an einen Chat-Integrationskanal (Slack, Discord, Telegram usw.)."
       send_chat_integration_message:
         channel_id: "Kanal"
         configure: "Konfigurieren"

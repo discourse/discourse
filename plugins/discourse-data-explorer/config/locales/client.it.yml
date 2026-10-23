@@ -18,19 +18,16 @@ it:
       admin_dashboard_card:
         no_results: "Nessun risultato"
     explorer:
-      default_query: "Predefinito"
       or: "o"
       admins_only: "Data explorer è disponibile solo per gli amministratori."
       allow_groups: "Consenti ai gruppi di accedere a questa query"
       title: "Data Explorer"
-      create: "Crea"
       create_placeholder: "Nome query..."
       description_placeholder: "Inserisci una descrizione qui"
       ai:
         generate: "Genera"
         optional: "opzionale"
       import:
-        label: "Importa"
         unparseable_json: "File JSON non analizzabile."
         wrong_json: "File JSON errato. Un file JSON dovrebbe contenere un oggetto \"query\" contenente almeno una proprietà \"sql\"."
       help:
@@ -54,7 +51,6 @@ it:
         form:
           label: "Tipo di grafico"
           bar: "Barra"
-      others_dirty: "Una query ha modifiche non salvate che andranno perse se esci."
       run_time: "Query completata in %{value} ms."
       result_count:
         one: "%{count} risultato."
@@ -64,6 +60,7 @@ it:
         other: "Visualizzazione dei primi %{count} risultati."
       query_name: "Query"
       query_groups: "Gruppi"
+      query_tags: "Etichette"
       link: "Collegamento per"
       report_name: "Rapporto"
       query_description: "Descrizione"
@@ -71,7 +68,6 @@ it:
       query_user: "Creato da"
       column: "Colonna %{number}"
       reset_params: "Annulla"
-      search_placeholder: "Ricerca..."
       no_search_results: "Spiacenti, non abbiamo trovato alcun risultato che corrisponda al tuo testo."
       form:
         errors:

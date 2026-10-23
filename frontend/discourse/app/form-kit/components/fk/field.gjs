@@ -32,7 +32,6 @@ import FKRow from "discourse/form-kit/components/fk/row";
 import FKText from "discourse/form-kit/components/fk/text";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
 import deprecated from "discourse/lib/deprecated";
-import { and, eq, not } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const RowColWrapper = <template>
@@ -125,7 +124,6 @@ export default class FKField extends Component {
         <this.wrapper @size={{@size}}>
           {{#if (has-block-params)}}
             <div
-              id={{concat "control-" field.normalizedName}}
               class={{dConcatClass
                 "form-kit__container"
                 "form-kit__field"
@@ -136,6 +134,7 @@ export default class FKField extends Component {
               }}
               data-disabled={{field.disabled}}
               data-name={{field.name}}
+              id={{concat "control-" field.normalizedName}}
               ...attributes
               {{this.applyControlType field}}
               {{didInsert (fn @registerField field.name field)}}
@@ -160,11 +159,11 @@ export default class FKField extends Component {
 
               {{#if field.description}}
                 <FKText
-                  id={{field.descriptionId}}
                   class={{dConcatClass
                     "form-kit__container-description"
                     (if field.labelFormat (concat "--" field.labelFormat))
                   }}
+                  id={{field.descriptionId}}
                 >{{field.description}}</FKText>
               {{/if}}
 
@@ -177,12 +176,12 @@ export default class FKField extends Component {
 
                 {{#if field.helpText}}
                   <FKText
-                    id={{field.helpTextId}}
                     class="form-kit__container-help-text"
+                    id={{field.helpTextId}}
                   >{{field.helpText}}</FKText>
                 {{/if}}
 
-                <FKMeta @field={{field}} @error={{field.error}} />
+                <FKMeta @error={{field.error}} @field={{field}} />
               </div>
             </div>
           {{else}}

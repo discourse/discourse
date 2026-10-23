@@ -2,7 +2,6 @@
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import { removeValueFromArray } from "discourse/lib/array-tools";
@@ -22,7 +21,7 @@ export default class ChatComposerUploads extends Component {
 
   @autoTrackedArray uploads = null;
 
-  uppyUpload = new UppyUpload(getOwner(this), {
+  uppyUpload = new UppyUpload(this, {
     id: "chat-composer-uploader",
     type: "chat-composer",
     useMultipartUploadsIfAvailable: true,
@@ -76,10 +75,14 @@ export default class ChatComposerUploads extends Component {
     return this.uppyUpload.inProgressUploads;
   }
 
+  get showUploadsContainer() {
+    return this.uploads?.length > 0 || this.inProgressUploads.length > 0;
+  }
+
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
     if (this.inProgressUploads?.length > 0) {
-      this.uppyUpload.uppyWrapper.uppyInstance?.cancelAll();
+      this.uppyUpload.cancelAllUploads();
     }
 
     this.uploads = this.existingUploads ? cloneJSON(this.existingUploads) : [];
@@ -98,10 +101,6 @@ export default class ChatComposerUploads extends Component {
       "paste",
       this._pasteEventListener
     );
-  }
-
-  get showUploadsContainer() {
-    return this.uploads?.length > 0 || this.inProgressUploads.length > 0;
   }
 
   @action
@@ -152,16 +151,16 @@ export default class ChatComposerUploads extends Component {
         <div class="chat-composer-uploads-container">
           {{#each this.uploads as |upload|}}
             <ChatComposerUpload
-              @upload={{upload}}
               @isDone={{true}}
               @onCancel={{fn this.removeUpload upload}}
+              @upload={{upload}}
             />
           {{/each}}
 
           {{#each this.inProgressUploads as |upload|}}
             <ChatComposerUpload
-              @upload={{upload}}
               @onCancel={{fn this.cancelUploading upload}}
+              @upload={{upload}}
             />
           {{/each}}
         </div>
@@ -169,8 +168,8 @@ export default class ChatComposerUploads extends Component {
 
       <DPickFilesButton
         @allowMultiple={{true}}
-        @fileInputId={{this.fileUploadElementId}}
         @fileInputClass="hidden-upload-field"
+        @fileInputId={{this.fileUploadElementId}}
         @registerFileInput={{this.uppyUpload.setup}}
       />
     </div>

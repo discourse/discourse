@@ -14,19 +14,96 @@ de:
     rss_polling:
       title: RSS-Abfrage
     admin:
+      logs:
+        staff_actions:
+          actions:
+            create_rss_polling_feed: RSS-Feed erstellen
+            update_rss_polling_feed: RSS-Feed aktualisieren
+            destroy_rss_polling_feed: RSS-Feed löschen
+            enable_rss_polling_feed: RSS-Feed aktivieren
+            disable_rss_polling_feed: RSS-Feed deaktivieren
+            poll_rss_polling_feed: RSS-Feed jetzt abfragen
       rss_polling:
+        feed_settings: Feed-Einstellungen
+        discourse_settings: Discourse-Einstellungen
         author: Verfasser
         feed_url: URL
+        feed_url_must_be_http: Gib eine gültige Feed-URL ein, die mit http:// oder https:// beginnt.
         discourse_category: Kategorie
         discourse_tags: Schlagwörter
+        required_tags_hint: "Für diese Kategorie ist eines dieser Schlagwörter erforderlich – füge eines hinzu, sonst werden importierte Themen abgelehnt:"
+        required_tag_error: 'Füge mindestens %{count} Schlagwörter aus der Gruppe „%{tag_group}“ hinzu, sonst werden importierte Themen abgelehnt.'
+        feed_category_filter: Kategoriefilter
+        feed_category_filter_description: Importiere nur Elemente, deren Feed-Kategorie diesen Text enthält (Groß-/Kleinschreibung spielt keine Rolle). Lass das Feld leer, um alles zu importieren.
+        showing: "Zeigt die ersten %{count} von %{total} Elementen."
         feeds:
+          title: Feeds
+          nav_description: Verwalte die RSS-/Atom-Feeds, die in Discourse importiert werden.
+          description: Konfiguriere die RSS-/Atom-Feeds, die abgefragt und als Themen importiert werden.
+          add: Feed hinzufügen
+          add_header: Feed hinzufügen
+          edit_header: Feed bearbeiten
+          empty: Du hast noch keine Feeds eingerichtet.
           edit: Bearbeiten
           delete: Löschen
+          enable: Feed aktivieren
+          disable: Feed deaktivieren
+          back: Zurück zu den Feeds
           save: Speichern
           confirm_delete: "Bist du sicher, dass du diesen Feed löschen möchtest?"
+          delete_success: Feed gelöscht
+          save_success: Feed gespeichert
+          enable_success: Feed aktiviert
+          disable_success: Feed deaktiviert
         test:
+          button: Feed testen
           title: Vorschau
+          empty: Dieser Feed hat keine Elemente zurückgegeben.
           dismiss: Schließen
+          would_import: Würde importiert werden
+          summary:
+            would_import: "%{count} würde importiert werden"
+            already_imported: "%{count} bereits importiert"
+            skipped: "%{count} würde übersprungen werden"
+          already_imported: "Bereits importiert – durch das Abfragen würde das <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>vorhandene Thema</a> aktualisiert werden."
+          already_imported_plain: "Bereits importiert – durch das Abfragen würde das vorhandene Thema aktualisiert werden."
+          skip_reasons:
+            missing_content: Übersprungen – das Element enthält keinen Inhalt.
+            missing_title: Übersprungen – das Element enthält keinen Titel.
+            invalid_url: Übersprungen – das Element hat keinen gültigen Link zum Importieren.
+            category_filter_mismatch: "Übersprungen — Elementkategorien: %{categories}"
+            category_filter_mismatch_none: Übersprungen – das Element enthält keine Kategorien.
+          errors:
+            fetch_failed: Der Feed konnte nicht abgerufen werden. Überprüfe, ob die URL korrekt und erreichbar ist.
+            parse_failed: Die Antwort sieht nicht nach einem gültigen RSS- oder Atom-Feed aus.
+            invalid_feed: Der Feed konnte nicht gelesen werden, da er fehlerhaft ist.
+            blank_feed_url: Gib eine Feed-URL ein, die du testen möchtest.
+            category_deleted: Die Kategorie, in die dieser Feed importiert wird, existiert nicht mehr. Bearbeite den Feed und wähle eine neue Kategorie aus.
+            unknown: Dieser Feed konnte nicht gelesen werden. Möglicherweise ist er vorübergehend nicht verfügbar oder liefert unerwartete Inhalte. Teste den Feed, um das Problem zu diagnostizieren, oder schau in den Protokollen nach weiteren Details.
         status:
           enabled: Aktiviert
           disabled: Deaktiviert
+          disabled_note: Wird nicht planmäßig abgefragt
+        history:
+          recent: Letzte Abfragen
+          show_older: "%{count} ältere anzeigen"
+          poll_now: Jetzt abrufen
+          poll_now_dirty: Speichere vor dem Abrufen deine Änderungen.
+          poll_now_disabled: Aktiviere den Feed vor der Abfrage.
+          poll_confirm: Wenn du jetzt eine Abfrage durchführst, wird dieser Feed abgerufen und die Themen werden importiert oder aktualisiert. Möchtest du fortfahren?
+          poll_started: Das Abrufen hat begonnen – der neueste Versuch wird in Kürze hier erscheinen.
+          empty: Dieser Feed wurde noch nicht abgefragt.
+          no_items: Bei dieser Abfrage wurden keine Elemente verarbeitet.
+          no_changes: Keine Änderungen
+          imported_count: "%{count} importiert"
+          updated_count: "%{count} aktualisiert"
+          skipped_count: "%{count} übersprungen"
+          failed_count: "%{count} fehlgeschlagen"
+          imported: "Als neues <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>Thema</a> importiert."
+          imported_plain: "Als neues Thema importiert."
+          updated: "Das vorhandene <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'>Thema</a> wurde aktualisiert."
+          updated_plain: "Das vorhandene Thema wurde aktualisiert."
+          failed: Import fehlgeschlagen.
+          failed_reasons:
+            import_rejected: "Konnte nicht importiert werden — das Element hat keinen gültigen Link zum Importieren."
+            import_error: "Konnte nicht importiert werden: %{error}"

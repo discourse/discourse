@@ -19,9 +19,11 @@ he:
         countdown:
           passed: התאריך חלף
       title: הוספת תאריך / שעה
+      edit_date: עריכת %{date}
       create:
         form:
           insert: כתיבה
+          save: שמירה
           format_description: "תבנית המשמשת להצגת התאריך למשתמש. Z משמש להצגת ההפרש ו־zz לשם אזור הזמן."
           timezones_title: אזורי זמן להצגה
           timezones_description: אזורי זמן משמשים להצגת תאריך בתצוגה מקדימה וכברירת מחדל.

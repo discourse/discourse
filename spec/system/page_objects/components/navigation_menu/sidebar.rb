@@ -83,7 +83,7 @@ module PageObjects
         end
 
         def my_messages_link_css
-          ".sidebar-section-link[data-link-name='#{my_messages.downcase.parameterize}']"
+          ".sidebar-section-link[data-link-name='my-messages']"
         end
 
         def has_my_messages_link?(text = my_messages)

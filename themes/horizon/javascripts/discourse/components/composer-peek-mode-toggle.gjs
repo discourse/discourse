@@ -30,11 +30,11 @@ export default class ComposerPeekModeToggle extends Component {
   <template>
     {{bodyClass this.bodyCssClass}}
     <DButton
-      @action={{this.togglePeekMode}}
-      @preventFocus={{true}}
-      @icon="discourse-sidebar"
-      @title="composer.peek_mode_toggle"
       class="btn-small no-text peek-mode-toggle btn-transparent"
+      @action={{this.togglePeekMode}}
+      @icon="discourse-sidebar"
+      @preventFocus={{true}}
+      @title="composer.peek_mode_toggle"
     />
   </template>
 }

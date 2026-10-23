@@ -1,22 +1,20 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import { action, computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import { action } from "@ember/object";
 import ListSetting from "discourse/select-kit/components/list-setting";
 
-@tagName("")
 export default class NamedList extends Component {
   tokenSeparator = "|";
 
-  @computed("value")
   get settingValue() {
-    return this.value.toString().split(this.tokenSeparator).filter(Boolean);
+    return this.args.value
+      .toString()
+      .split(this.tokenSeparator)
+      .filter(Boolean);
   }
 
-  @computed("setting.choices.[]", "settingValue")
   get settingChoices() {
-    let choices = this.setting.choices;
+    let choices = this.args.setting.choices;
 
     if (this.settingValue) {
       const valuesSet = new Set(choices.map((choice) => choice.value));
@@ -33,19 +31,19 @@ export default class NamedList extends Component {
 
   @action
   onChangeListSetting(value) {
-    this.set("value", value.join(this.tokenSeparator));
+    this.args.changeValueCallback(value.join(this.tokenSeparator));
   }
 
   <template>
     <div ...attributes>
       <ListSetting
-        @value={{this.settingValue}}
-        @settingName={{this.setting.setting}}
         @choices={{this.settingChoices}}
         @nameProperty="name"
-        @valueProperty="value"
         @onChange={{this.onChangeListSetting}}
-        @options={{hash allowAny=this.allowAny}}
+        @options={{hash allowAny=@allowAny}}
+        @settingName={{@setting.setting}}
+        @value={{this.settingValue}}
+        @valueProperty="value"
       />
     </div>
   </template>

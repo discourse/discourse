@@ -21,6 +21,7 @@ module DiscourseWorkflows
                :last_execution_at,
                :last_execution_run_data,
                :pin_data,
+               :variables,
                :tags
 
     attribute :created_by
@@ -106,8 +107,8 @@ module DiscourseWorkflows
         object
           .executions
           .includes(:execution_data)
-          .where(status: :success)
-          .order(created_at: :desc)
+          .where(status: %i[success error])
+          .order(created_at: :desc, id: :desc)
           .first
       execution&.execution_data&.run_data
     end
@@ -121,6 +122,17 @@ module DiscourseWorkflows
     end
 
     def include_pin_data?
+      !object.attributes.key?("last_execution_status_value")
+    end
+
+    def variables
+      object
+        .variables
+        .order(:id)
+        .map { |variable| WorkflowVariableSerializer.new(variable, root: false).as_json }
+    end
+
+    def include_variables?
       !object.attributes.key?("last_execution_status_value")
     end
   end

@@ -9,7 +9,6 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import DModal from "discourse/ui-kit/d-modal";
@@ -18,10 +17,10 @@ import { i18n } from "discourse-i18n";
 import {
   isAiCreditLimitError,
   popupAiCreditLimitError,
-} from "../../lib/ai-errors";
-import DiffStreamer from "../../lib/diff-streamer";
-import SmoothStreamer from "../../lib/smooth-streamer";
-import AiIndicatorWave from "../ai-indicator-wave";
+} from "../../lib/ai-errors.js";
+import DiffStreamer from "../../lib/diff-streamer.gjs";
+import SmoothStreamer from "../../lib/smooth-streamer.gjs";
+import AiIndicatorWave from "../ai-indicator-wave.gjs";
 
 export default class ModalDiffModal extends Component {
   @service messageBus;
@@ -206,11 +205,11 @@ export default class ModalDiffModal extends Component {
   <template>
     <DModal
       class="composer-ai-helper-modal"
-      @title={{i18n "discourse_ai.ai_helper.context_menu.changes"}}
       @closeModal={{this.cleanupAndClose}}
+      @title={{i18n "discourse_ai.ai_helper.context_menu.changes"}}
     >
       <:body>
-        <div {{willDestroy this.cleanup}} class="text-preview">
+        <div class="text-preview" {{willDestroy this.cleanup}}>
           <div
             class={{dConcatClass
               "composer-ai-helper-modal__suggestion"
@@ -226,8 +225,8 @@ export default class ModalDiffModal extends Component {
             {{else}}
               {{#if (or this.loading this.smoothStreamer.isStreaming)}}
                 <DCookText
-                  @rawText={{this.smoothStreamerResult}}
                   class="cooked"
+                  @rawText={{this.smoothStreamerResult}}
                 />
               {{else}}
                 <div class="composer-ai-helper-modal__old-value">
@@ -235,8 +234,8 @@ export default class ModalDiffModal extends Component {
                 </div>
                 <div class="composer-ai-helper-modal__new-value">
                   <DCookText
-                    @rawText={{this.smoothStreamerResult}}
                     class="cooked"
+                    @rawText={{this.smoothStreamerResult}}
                   />
                 </div>
               {{/if}}
@@ -248,8 +247,8 @@ export default class ModalDiffModal extends Component {
       <:footer>
         <DButton
           class="btn-primary confirm"
-          @disabled={{this.primaryBtnDisabled}}
           @action={{this.triggerConfirmChanges}}
+          @disabled={{this.primaryBtnDisabled}}
           @translatedLabel={{this.primaryBtnLabel}}
           {{didUpdate this.focusConfirmBtn this.isStreaming}}
         >
@@ -264,8 +263,8 @@ export default class ModalDiffModal extends Component {
         />
         <DButton
           class="regenerate"
-          @icon="arrows-rotate"
           @action={{this.suggestChanges}}
+          @icon="arrows-rotate"
           @label="discourse_ai.ai_helper.context_menu.regen"
         />
       </:footer>

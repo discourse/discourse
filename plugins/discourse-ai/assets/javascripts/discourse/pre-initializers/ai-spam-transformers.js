@@ -6,6 +6,7 @@ export default {
   initialize() {
     withPluginApi((api) => {
       api.addValueTransformerName("ai-spam-toggle-disabled");
+      api.addValueTransformerName("ai-discovery-source-avatar");
     });
   },
 };

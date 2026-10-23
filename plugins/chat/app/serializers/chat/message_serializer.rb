@@ -31,6 +31,7 @@ module Chat
             channel
             thread_title
             pinned
+            is_action
           ]
       ),
     )
@@ -59,7 +60,11 @@ module Chat
     end
 
     def excerpt
-      object.excerpt || object.build_excerpt
+      object.excerpt_for_display
+    end
+
+    def is_action
+      object.action?
     end
 
     def reactions
@@ -169,6 +174,7 @@ module Chat
       ActiveModel::ArraySerializer.new(
         object.blocks || [],
         each_serializer: Chat::BlockSerializer,
+        user_id: object.user_id,
         scope:,
         root: false,
       ).as_json
@@ -177,6 +183,10 @@ module Chat
     def available_flags
       return [] if !scope.can_flag_chat_message?(object)
       return [] if reviewable_id.present? && user_flag_status == ReviewableScore.statuses[:pending]
+
+      if scope.can_only_flag_chat_messages_as_illegal?
+        return PostActionType.flag_types.slice(:illegal).keys
+      end
 
       PostActionType.flag_types.map do |sym, id|
         if channel_object.direct_message_channel? && %i[notify_moderators notify_user].include?(sym)

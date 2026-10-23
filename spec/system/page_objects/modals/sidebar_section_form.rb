@@ -12,7 +12,6 @@ module PageObjects
         fill_in("link-url", with: url, match: :first)
         icon_picker = first_link_icon_picker
         icon_picker.expand
-        icon_picker.filter(icon)
         icon_picker.select_icon(icon)
       end
 
@@ -26,7 +25,6 @@ module PageObjects
 
             icon_picker = PageObjects::Components::DIconGridPicker.new(link_row)
             icon_picker.expand
-            icon_picker.filter(icon)
             icon_picker.select_icon(icon)
           end
       end
@@ -62,7 +60,7 @@ module PageObjects
 
       def add_language(locale)
         find(".sidebar-section-translations__add-language").click
-        PageObjects::Components::DSelect.new(translation_language_selects.last).select(locale)
+        PageObjects::Components::DNativeSelect.new(translation_language_selects.last).select(locale)
       end
 
       def remove_language(locale)
@@ -206,6 +204,54 @@ module PageObjects
         find(".draggable[data-link-name='Review']")
       end
 
+      # Methods for when the enable_new_reordering_controls upcoming change is
+      # enabled. topics_link/review_link above keep main's drag-source lookups.
+      #
+      # TODO (ui-kit-reorderable-list-cleanup) fold these over them once the change
+      # ships.
+
+      # Driven by the keyboard rather than clicked: the reorder control exists
+      # because a drag has no keyboard path, so the spec has to go through the
+      # keyboard to be testing the thing it was added for.
+      def move_link_up(name)
+        link_handle(name).send_keys(%i[alt up])
+      end
+
+      def move_link_down(name)
+        link_handle(name).send_keys(%i[alt down])
+      end
+
+      # Presses whatever the previous move left focused, rather than looking the
+      # handle up again. Finding it by name would pass even if focus had been lost,
+      # which is most of what there is to get wrong here.
+      def press_focused_link_move_down
+        page.driver.with_playwright_page { |pw_page| pw_page.keyboard.press("Alt+ArrowDown") }
+      end
+
+      def open_focused_link_menu
+        page.driver.with_playwright_page { |pw_page| pw_page.keyboard.press("Enter") }
+      end
+
+      # The link whose row currently holds focus. The row is the cursor's item, so
+      # this is what says focus survived a move; the handle inside it is a pointer
+      # affordance and never takes focus from the keyboard.
+      def focused_link_name
+        page.evaluate_script("document.activeElement?.dataset?.linkName")
+      end
+
+      def link_handle(name)
+        find("button[aria-label='Reorder #{name}']")
+      end
+
+      # Read from the name inputs, not from the drag handles, so it reports the
+      # order on a touch screen too, where no handle renders. Scoped away from the
+      # secondary list, which renders in a wrapper of its own.
+      def link_names
+        all(".sidebar-section-form__links-wrapper:not(.--secondary) input[name='link-name']").map(
+          &:value
+        )
+      end
+
       def has_source_language?(locale)
         page.has_css?(
           ".sidebar-section-form__source-locale-select option[value='#{locale}']:checked",
@@ -218,9 +264,9 @@ module PageObjects
       end
 
       def select_source_language(locale)
-        PageObjects::Components::DSelect.new(".sidebar-section-form__source-locale-select").select(
-          locale,
-        )
+        PageObjects::Components::DNativeSelect.new(
+          ".sidebar-section-form__source-locale-select",
+        ).select(locale)
       end
 
       private

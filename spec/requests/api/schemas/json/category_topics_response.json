@@ -39,6 +39,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "filter": {
+          "type": "string"
+        },
         "can_create_topic": {
           "type": "boolean"
         },

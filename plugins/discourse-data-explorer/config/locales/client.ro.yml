@@ -13,15 +13,10 @@ ro:
         title: "Creează o interogare pentru Exploratorul de date"
         description: "Scrie o interogare SQL personalizată pentru a scoate la iveală orice aspect specific comunității tale."
     explorer:
-      default_query: "Implicit"
       or: "sau"
-      create: "Creează"
       ai:
         generate: "Generare"
-        regenerate: "Actualizează interogarea"
         optional: "opțional"
-      import:
-        label: "Importă"
       help:
         label: "Ajutor"
       schema:
@@ -34,12 +29,12 @@ ro:
       undo: "Renunță la modificări"
       delete: "Șterge"
       query_groups: "Grupuri"
+      query_tags: "Etichete"
       report_name: "Raport"
       query_description: "Descriere"
       query_time: "Ultima rulare"
       query_user: "Creată de"
       reset_params: "Resetare"
-      search_placeholder: "Caută..."
     group:
       reports: "Rapoarte"
     discourse_workflows:

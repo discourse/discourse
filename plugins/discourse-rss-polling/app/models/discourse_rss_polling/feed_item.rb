@@ -17,16 +17,30 @@ module DiscourseRssPolling
     def content
       return @content if defined?(@content)
 
-      @content =
-        if is_youtube?
-          url
-        else
-          value = nil
-          CONTENT_ELEMENT_TAG_NAMES.each do |tag_name|
-            break if value = @accessor.element_content(tag_name)
-          end
-          value&.force_encoding("UTF-8")&.scrub
-        end
+      value = @accessor.element_content(content_element_name) if content_element_name
+      value ||= url
+      @content = value.to_s.dup.force_encoding("UTF-8").scrub if value
+    end
+
+    def decoded_content
+      @decoded_content ||= CGI.unescapeHTML(content.to_s)
+    end
+
+    def cook_method
+      return Post.cook_methods[:regular] if content_element_name.nil?
+
+      case @accessor.element_type(content_element_name).to_s.downcase
+      when "text", "text/plain"
+        Post.cook_methods[:regular]
+      when "html", "text/html", "xhtml", "application/xhtml+xml"
+        nil
+      else
+        Post.cook_methods[:regular] if markdown_compatible?
+      end
+    end
+
+    def truncate_content?
+      Nokogiri::HTML5.fragment(decoded_content).text.squish.length > MINIMUM_TEXT_LENGTH_TO_TRUNCATE
     end
 
     def title
@@ -56,10 +70,6 @@ module DiscourseRssPolling
 
     def image_link
       @accessor.element_content(:itunes_image)&.href
-    end
-
-    def is_youtube?
-      url&.starts_with?("https://www.youtube.com/watch")
     end
 
     def pubdate
@@ -97,5 +107,41 @@ module DiscourseRssPolling
     private
 
     CONTENT_ELEMENT_TAG_NAMES = %i[content_encoded content description summary]
+    MINIMUM_TEXT_LENGTH_TO_TRUNCATE = 500
+    MARKDOWN_COMPATIBLE_TAG_NAMES = %w[
+      a
+      abbr
+      b
+      br
+      code
+      del
+      em
+      i
+      img
+      ins
+      kbd
+      mark
+      q
+      s
+      small
+      span
+      strong
+      sub
+      sup
+      time
+      u
+    ]
+
+    def content_element_name
+      return @content_element_name if defined?(@content_element_name)
+
+      @content_element_name =
+        CONTENT_ELEMENT_TAG_NAMES.find { |tag_name| @accessor.element_content(tag_name).present? }
+    end
+
+    def markdown_compatible?
+      tag_names = decoded_content.scan(%r{</?([a-z][a-z0-9-]*)(?:\s[^>]*)?/?>}i).flatten
+      tag_names.all? { |tag_name| MARKDOWN_COMPATIBLE_TAG_NAMES.include?(tag_name.downcase) }
+    end
   end
 end

@@ -16,6 +16,12 @@ el:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        ask_ai:
+          reports:
+            retry_questions: "Επανάληψη"
+          date: "Ημερομηνία"
+          outcomes:
+            failed: "Απέτυχε"
         reports:
           filters:
             group_by:
@@ -92,9 +98,21 @@ el:
               label: "Περιεχόμενο ΠΜ"
               description: "Προαιρετικό προσαρμοσμένο μήνυμα για αποστολή στον συντάκτη"
     discourse_ai:
+      copied: "Αντιγράφηκε"
+      ai_decoded_transcript:
+        arguments: "Παράμετροι"
+        type: "Τύπος"
+        error: "Σφάλμα"
+        response: "Απάντηση"
       discourse_workflows:
         ai_agent:
           mode: "Λειτουργία"
+        classify:
+          text: "Κείμενο"
+          upload_ids: "Εικόνες"
+          name: "Όνομα"
+          type: "Τύπος"
+          type_score: "Βαθμολογία"
       bot_chats:
         tab_label: "Συνομιλίες bot"
       ai_tool_approval:
@@ -200,6 +218,43 @@ el:
         periods:
           last_day: "Τελευταίες 24 ώρες"
           custom: "Προσαρμοσμένο..."
+      logs:
+        short_title: "Αρχεία καταγραφής"
+        retry: "Δοκιμάστε ξανά"
+        apply: "Εφαρμογή"
+        successful: "Επιτυχής"
+        failed: "Απέτυχε"
+        unknown: "Άγνωστο"
+        time: "Ώρα"
+        when: "Πότε"
+        outcome: "Αποτέλεσμα"
+        feature: "Λειτουργία"
+        model: "Μοντέλο"
+        request: "Αίτημα"
+        provider: "Πάροχος"
+        user: "Χρήστης"
+        context: "Πλαίσιο αναφοράς"
+        topic: "Νήμα"
+        post: "Ανάρτηση"
+        post_short: "Ανάρτηση %{id}"
+        duration: "Διάρκεια"
+        actions: "Ενέργειες"
+        view_details: "Λεπτομέρειες"
+        periods:
+          day: "Τελευταίες 24 ώρες"
+          week: "Τελευταίες 7 ημέρες"
+          custom: "Προσαρμοσμένο"
+        detail:
+          request: "Αίτημα"
+          response: "Απάντηση"
+          context: "Πλαίσιο αναφοράς"
+          copy_request: "Αντιγραφή αιτήματος"
+          copy_response: "Αντιγραφή απάντησης"
+          network_error: "Σφάλμα δικτύου"
+        retention:
+          summary_stage: "Περίληψη"
+          deleted_stage: "Διαγράφηκε"
+          save: "Αποθήκευση"
       ai_agent:
         mcp_server_enabled_tools:
           one: "%{count} από %{total} εργαλείο ενεργοποιημένο"
@@ -272,6 +327,15 @@ el:
         edit: "Επεξεργασία"
         delete: "Διαγραφή"
         embedding: "Ενσωμάτωση"
+      decision_models:
+        no_preset: "Κανένα"
+        display_name: "Όνομα"
+        model: "Μοντέλο"
+        provider: "Πάροχος"
+        api_key: "Διαπιστευτήρια"
+        edit: "Επεξεργασία"
+        delete: "Σβήσιμο"
+        test: "Εκτέλεση δοκιμής"
       mcp_servers:
         name: "Όνομα"
         description: "Περιγραφή"
@@ -303,9 +367,23 @@ el:
         tools_modal:
           required: "Απαιτείται"
         test_result: "Αποτέλεσμα σύνδεσης"
+      models:
+        name: "Όνομα"
+        type: "Τύπος"
+        provider: "Πάροχος"
+        edit: "Επεξεργασία"
+        select_type: "Επιλογή"
+        types:
+          embedding: "Ενσωμάτωση"
+        filters:
+          all: "Όλοι οι τύποι"
+          reset: "Επαναφορά φίλτρων"
       llms:
         no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"
+        vision_modes:
+          disabled:
+            title: "Απενεργοποιημένος"
         attachment_types_placeholder: "Επιλέξτε ή πληκτρολογήστε επεκτάσεις (π.χ., pdf, txt, csv, docx, xlsx)"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
@@ -362,6 +440,19 @@ el:
         providers:
           google: "Google"
           fake: "Προσαρμοσμένο"
+      ai_artifact:
+        editor:
+          version: "Έκδοση"
+          default: "Προεπιλογή"
+          option_on: "Ενεργό"
+          option_off: "Ανενεργό"
+          apply: "Εφαρμογή"
+        share: "Κοινοποίηση"
+        create_link: "Δημιουργία συνδέσμου"
+        copy_link: "Αντιγραφή συνδέσμου"
+        filter_all: "Όλα"
+        filter_standalone: "Αυτόνομη"
+        filter_conversation: "Συνομιλία"
       ai_bot:
         title: "AI bot"
         llm: "Μοντέλο:"
@@ -375,6 +466,7 @@ el:
           copy_response: "Αντιγραφή απάντησης"
           this_turn: "Αυτός ο γύρος:"
           whole_conversation: "Συνομιλία:"
+          duration_label: "Διάρκεια:"
           request: "Αίτημα"
           response: "Απάντηση"
           next_log: "Επόμενο"
@@ -409,12 +501,23 @@ el:
       summarization:
         chat:
           summarize: "Συνοψίστε"
+      ai_search:
+        related_replies:
+          one: "%{count} απάντηση"
+          other: "%{count} απαντήσεις"
+        tabs:
+          topics: "Θέματα"
+          messages: "Μηνύματα"
       discobot_discoveries:
-        regular_results: "Θέματα"
-        collapse: "Σύμπτυξη"
-        tooltip:
-          actions:
-            disable: "Απενεργοποίηση"
+        create_topic: "Δημιουργία θέματος"
+        legacy:
+          regular_results: "Θέματα"
+          collapse: "Σύμπτυξη"
+          tooltip:
+            actions:
+              disable: "Απενεργοποίηση"
+        search_all_topics: "Όλα τα θέματα"
+        search_messages: "Μηνύματα"
     review:
       statuses:
         approved_tool_action:

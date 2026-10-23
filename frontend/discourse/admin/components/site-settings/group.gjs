@@ -15,7 +15,10 @@ export default class Group extends Component {
 
     return (this.site.groups || [])
       .filter((g) => !disallowed.includes(g.id.toString()))
-      .map((g) => ({ name: g.name, id: g.id.toString() }));
+      .map((g) => {
+        const name = g.name === "everyone" ? "everyone (legacy)" : g.name;
+        return { name, id: g.id.toString() };
+      });
   }
 
   @action
@@ -26,10 +29,10 @@ export default class Group extends Component {
   <template>
     <div ...attributes>
       <ComboBox
-        @value={{@value}}
         @content={{this.groupChoices}}
         @onChange={{this.onChange}}
         @options={{hash clearable=true}}
+        @value={{@value}}
       />
     </div>
   </template>

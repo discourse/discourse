@@ -490,6 +490,7 @@ describe "Content Localization" do
             Fabricate(
               :post,
               topic: topic,
+              user: admin,
               locale: "ja",
               raw: "Japanese content for post #{post_number}",
               cooked: "<p>日本語コンテンツ #{post_number}</p>",
@@ -538,12 +539,19 @@ describe "Content Localization" do
         Fabricate(
           :post,
           topic: late_localization_topic,
+          user: admin,
           locale: "en",
           raw: "English post #{index + 1}",
         )
       end
       late_post =
-        Fabricate(:post, topic: late_localization_topic, locale: "ja", raw: "最初のページより後の投稿")
+        Fabricate(
+          :post,
+          topic: late_localization_topic,
+          user: admin,
+          locale: "ja",
+          raw: "最初のページより後の投稿",
+        )
       Fabricate(
         :post_localization,
         post: late_post,
@@ -712,6 +720,19 @@ describe "Content Localization" do
 
         topic_list.visit_topic_with_title("Life strategies from The Art of War")
         expect(page).to have_css(".title-wrapper .discourse-tag", text: "strategy")
+      end
+
+      it "shows the original tag name consistently when its source language is missing" do
+        tag.update!(locale: nil)
+        sign_in(japanese_user)
+
+        visit("/")
+
+        expect(sidebar).to have_section_link(tag.name)
+        expect(topic_list).to have_topic_tag(topic, tag.name)
+
+        discovery.tag_drop.expand
+        expect(discovery.tag_drop).to have_option_name(tag.name)
       end
 
       it "displays localized tag names in the composer tag chooser" do

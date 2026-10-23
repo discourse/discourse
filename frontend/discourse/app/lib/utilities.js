@@ -204,18 +204,6 @@ export function selectedHTML() {
     element.replaceWith(element.dataset.oneboxSrc);
   });
 
-  div
-    .querySelectorAll("div.video-placeholder-container[data-video-src]")
-    .forEach((element) => {
-      const videoBase62Sha1 = element.dataset.videoBase62Sha1;
-      if (videoBase62Sha1) {
-        element.replaceWith(`![|video](upload://${videoBase62Sha1})`);
-      } else {
-        // Fallback for old posts that don't contain data-video-base62-sha1
-        element.replaceWith(`![|video](${element.dataset.videoSrc})`);
-      }
-    });
-
   return div.outerHTML;
 }
 
@@ -534,7 +522,22 @@ export async function inCodeBlock(text, pos) {
   return CODE_TOKEN_TYPES.includes(type);
 }
 
+/**
+ * Replaces modifier names in a shortcut string with their platform spelling.
+ *
+ * @deprecated To draw a shortcut use `DShortcut` (`discourse/ui-kit/d-shortcut`),
+ * which carries the accessible markup too. For the string alone use
+ * `formatShortcut` from `discourse/lib/shortcut-format`.
+ */
 export function translateModKey(string, separator = " ") {
+  deprecated(
+    "`translateModKey()` is deprecated. To draw a shortcut use `DShortcut` (`discourse/ui-kit/d-shortcut`), which carries the accessible markup too; for the string alone use `formatShortcut()` from `discourse/lib/shortcut-format`.",
+    {
+      since: "2026.9.0",
+      id: "discourse.translate-mod-key",
+    }
+  );
+
   const { isApple } = capabilities;
   // Apple device users are used to glyphs for shortcut keys
   if (isApple) {
@@ -699,90 +702,11 @@ export function getCaretPosition(element, options) {
 }
 
 /**
- * Generate markdown table from an array of objects
- * Inspired by https://github.com/Ygilany/array-to-table
- *
- * @param  {Array<Record<string, string | undefined>>}          array       Array of objects
- * @param  {String[]}                                           columns     Column headings
- * @param  {String}                                             colPrefix   Table column prefix
- * @param  {("left" | "center" | "right" | null)[] | undefined} alignments  Table alignments
- *
- * @return {String} Markdown table
- */
-export function arrayToTable(array, cols, colPrefix = "col", alignments) {
-  let table = "";
-
-  // Generate table headers
-  table += "|";
-  table += cols.join(" | ");
-  table += "|\n|";
-
-  const alignMap = {
-    left: ":--",
-    center: ":-:",
-    right: "--:",
-  };
-
-  // Generate table header separator
-  table += cols
-    .map((_, index) => alignMap[String(alignments?.[index])] || "---")
-    .join(" | ");
-  table += "|\n";
-
-  // Generate table body
-  array.forEach(function (item) {
-    table += "|";
-
-    table +=
-      cols
-        .map(function (_key, index) {
-          return String(item[`${colPrefix}${index}`] || "")
-            .replace(/\r?\n|\r/g, " ")
-            .replaceAll("|", "\\|");
-        })
-        .join(" | ") + "|\n";
-  });
-
-  return table;
-}
-
-/**
  *
  * @returns a regular expression finding all markdown tables
  */
 export function findTableRegex() {
   return /((\r?){2}|^)(^\|[^\r\n]*(\r?\n)?)+(?=(\r?\n){2}|$)/gm;
-}
-
-export function replaceTableRaw(raw, lineRange, newTableRaw) {
-  const lines = raw.split("\n");
-  const before = lines.slice(0, lineRange[0]);
-  const after = lines.slice(lineRange[1]);
-  return [...before, ...newTableRaw.trimEnd().split("\n"), ...after].join("\n");
-}
-
-export function tokenRange(tokens, start, end) {
-  const contents = [];
-  let startPushing = false;
-  let items = [];
-
-  tokens.forEach((token) => {
-    if (token.type === start) {
-      startPushing = true;
-    }
-
-    if (token.type === end) {
-      contents.push(items);
-      items = [];
-      startPushing = false;
-    }
-
-    if (startPushing) {
-      items.push(token);
-    }
-  });
-
-  return contents;
 }
 
 export function allowOnlyNumericInput(event, allowNegative = false) {

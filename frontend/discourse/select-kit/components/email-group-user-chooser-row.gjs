@@ -2,7 +2,6 @@ import { classNames } from "@ember-decorators/component";
 import decorateUsernameSelector from "discourse/helpers/decorate-username-selector";
 import formatUsername from "discourse/helpers/format-username";
 import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
-import { and, eq } from "discourse/truth-helpers";
 import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -32,7 +31,7 @@ export default class EmailGroupUserChooserRow extends SelectKitRowComponent {
   get shouldExcludeGroupName() {
     return (
       this.selectKit.options.excludeGroupNameWhenMatchingFullName &&
-      this.item.full_name.toLowerCase() ===
+      (this.item.full_name || "").toLowerCase() ===
         this.item.id.toLowerCase().replaceAll("_", " ").replaceAll("-", " ")
     );
   }
@@ -64,8 +63,8 @@ export default class EmailGroupUserChooserRow extends SelectKitRowComponent {
       </div>
       {{#if (and this.item.showUserStatus this.item.status)}}
         <DUserStatusMessage
-          @status={{this.item.status}}
           @showDescription={{true}}
+          @status={{this.item.status}}
         />
       {{/if}}
       {{decorateUsernameSelector this.item.id}}
@@ -86,11 +85,17 @@ export default class EmailGroupUserChooserRow extends SelectKitRowComponent {
             <span class="identifier">{{this.item.id}}</span>
           {{/unless}}
           <span class="name">{{this.item.full_name}}</span>
-        {{else}}
-          <span class="name">{{this.item.full_name}}</span>
-          {{#unless this.shouldExcludeGroupName}}
-            <span class="identifier">{{this.item.id}}</span>
-          {{/unless}}
+        {{else if (eq this.groupNameOrdering "groupFullNameFirst")}}
+          {{#if this.item.full_name}}
+            <span class="name">{{this.item.full_name}}</span>
+            {{#unless this.shouldExcludeGroupName}}
+              <span class="identifier">{{this.item.id}}</span>
+            {{/unless}}
+          {{else}}
+            {{#unless this.shouldExcludeGroupName}}
+              <span class="name">{{this.item.id}}</span>
+            {{/unless}}
+          {{/if}}
         {{/if}}
       </div>
     {{else}}

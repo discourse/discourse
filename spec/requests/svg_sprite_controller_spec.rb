@@ -6,7 +6,7 @@ RSpec.describe SvgSpriteController do
   describe "#show" do
     before { SvgSprite.expire_cache }
 
-    it "should return bundle when version is current" do
+    it "returns the bundle when its version is current" do
       get "/svg-sprite/#{Discourse.current_hostname}/svg--#{SvgSprite.version}.js"
       expect(response.status).to eq(200)
 
@@ -17,7 +17,16 @@ RSpec.describe SvgSpriteController do
       expect(response.status).to eq(200)
     end
 
-    it "should redirect to current version" do
+    it "does not include a username in the cacheable response" do
+      sign_in(user)
+
+      get "/svg-sprite/#{Discourse.current_hostname}/svg--#{SvgSprite.version}.js"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Discourse-Username"]).to be_nil
+    end
+
+    it "redirects to the current version" do
       random_hash = Digest::SHA1.hexdigest("somerandomstring")
       get "/svg-sprite/#{Discourse.current_hostname}/svg--#{random_hash}.js"
 
@@ -34,12 +43,12 @@ RSpec.describe SvgSpriteController do
   end
 
   describe "#search" do
-    it "should not work for anons" do
+    it "rejects anonymous requests" do
       get "/svg-sprite/search/bolt"
       expect(response.status).to eq(404)
     end
 
-    it "should return symbol for FA icon search" do
+    it "returns the symbol for a Font Awesome icon search" do
       sign_in(user)
 
       get "/svg-sprite/search/bolt"
@@ -47,14 +56,14 @@ RSpec.describe SvgSpriteController do
       expect(response.body).to include("bolt")
     end
 
-    it "should return 404 when looking for non-existent FA icon" do
+    it "returns 404 for a nonexistent Font Awesome icon" do
       sign_in(user)
 
       get "/svg-sprite/search/not-a-valid-icon"
       expect(response.status).to eq(404)
     end
 
-    it "should find a custom icon in default theme" do
+    it "finds a custom icon in the default theme" do
       theme = Fabricate(:theme)
       fname = "custom-theme-icon-sprite.svg"
 
@@ -79,48 +88,126 @@ RSpec.describe SvgSpriteController do
   end
 
   describe "#icon_picker_search" do
-    it "should return 403 for anonymous users" do
+    it "returns 403 for anonymous users" do
       get "/svg-sprite/picker-search"
 
       expect(response.status).to eq(403)
     end
 
-    it "should work with no filter and max out at 500 results" do
+    it "returns one page of results without a filter" do
       sign_in(user)
       get "/svg-sprite/picker-search"
 
       expect(response.status).to eq(200)
 
-      data = response.parsed_body
-      expect(data.length).to be <= 500
-      expect(data[0]["id"]).to eq("0")
+      data = response.parsed_body["icons"]
+      expect(data.length).to eq(SvgSpriteController::ICONS_PER_PAGE)
+      expect(data[0]["id"]).to be_in(SvgSprite.all_icons)
     end
 
-    it "should filter" do
+    it "filters the icon results" do
       sign_in(user)
 
-      get "/svg-sprite/picker-search", params: { filter: "500px" }
+      get "/svg-sprite/picker-search", params: { filter: "500px", only_available: "false" }
 
       expect(response.status).to eq(200)
 
-      data = response.parsed_body
+      data = response.parsed_body["icons"]
       expect(data.length).to eq(1)
       expect(data[0]["id"]).to eq("fab-500px")
+      expect(response.parsed_body["has_more"]).to eq(false)
     end
 
-    it "should display only available" do
+    it "paginates and reports whether more pages exist" do
+      sign_in(user)
+
+      get "/svg-sprite/picker-search", params: { only_available: "false" }
+      first_page = response.parsed_body
+
+      get "/svg-sprite/picker-search", params: { only_available: "false", page: 1 }
+      second_page = response.parsed_body
+
+      expect(first_page["icons"].length).to eq(SvgSpriteController::ICONS_PER_PAGE)
+      expect(first_page["has_more"]).to eq(true)
+      expect(second_page["icons"].length).to eq(SvgSpriteController::ICONS_PER_PAGE)
+      expect(
+        first_page["icons"].map { |i| i["id"] } & second_page["icons"].map { |i| i["id"] },
+      ).to be_empty
+    end
+
+    it "returns an empty page past the last one" do
+      sign_in(user)
+
+      get "/svg-sprite/picker-search", params: { page: 999 }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq("icons" => [], "has_more" => false)
+    end
+
+    it "rejects a negative, non-numeric, or absurdly large page" do
+      sign_in(user)
+
+      ["-1", "not-a-number", ["1"], "99999999999999999999999999"].each do |page|
+        get "/svg-sprite/picker-search", params: { page: }
+
+        expect(response.status).to eq(400)
+      end
+    end
+
+    it "lists the icons in the sprite before the rest" do
+      sign_in(user)
+
+      get "/svg-sprite/picker-search", params: { only_available: "false" }
+
+      available = SvgSprite.all_icons
+      ids = response.parsed_body["icons"].map { |i| i["id"] }
+
+      expect(ids.first).to be_in(available)
+      expect(ids).to eq(ids.sort_by { |id| [available.include?(id) ? 0 : 1, id] })
+    end
+
+    it "keeps the restricted set when only_available is blank" do
+      sign_in(user)
+
+      get "/svg-sprite/picker-search", params: { only_available: "" }
+
+      beer_icon = response.parsed_body["icons"].find { |i| i["id"] == "beer-mug-empty" }
+      expect(beer_icon).to be nil
+    end
+
+    it "returns every icon when only_available is false" do
+      sign_in(user)
+
+      get "/svg-sprite/picker-search", params: { only_available: "false", filter: "beer" }
+
+      beer_icon = response.parsed_body["icons"].find { |i| i["id"] == "beer-mug-empty" }
+      expect(beer_icon).to be_present
+    end
+
+    it "revalidates with an etag until the sprite changes" do
       sign_in(user)
 
       get "/svg-sprite/picker-search"
-      data = response.parsed_body
-      beer_icon = response.parsed_body.find { |i| i["id"] == "beer-mug-empty" }
-      expect(beer_icon).to be_present
+      etag = response.headers["ETag"]
+      expect(etag).to be_present
+
+      get "/svg-sprite/picker-search", headers: { "HTTP_IF_NONE_MATCH" => etag }
+      expect(response.status).to eq(304)
+
+      Fabricate(:badge, name: "Seedling Badge", icon: "seedling")
+
+      get "/svg-sprite/picker-search", headers: { "HTTP_IF_NONE_MATCH" => etag }
+      expect(response.status).to eq(200)
+    end
+
+    it "displays only available icons" do
+      sign_in(user)
+
+      get "/svg-sprite/picker-search", params: { only_available: "true", filter: "beer" }
+      expect(response.parsed_body["icons"]).to eq([])
 
       get "/svg-sprite/picker-search", params: { only_available: "true" }
-      data = response.parsed_body
-      beer_icon = response.parsed_body.find { |i| i["id"] == "beer-mug-empty" }
-      expect(beer_icon).to be nil
-      expect(data.length).to be > 0
+      expect(response.parsed_body["icons"].length).to be > 0
     end
   end
 

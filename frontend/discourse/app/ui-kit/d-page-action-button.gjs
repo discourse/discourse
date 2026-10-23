@@ -6,14 +6,14 @@ export const DPageActionButton = <template>
     class="d-page-action-button btn-small"
     ...attributes
     @action={{@action}}
-    @route={{@route}}
-    @routeModels={{@routeModels}}
-    @label={{@label}}
-    @translatedLabel={{@translatedLabel}}
-    @title={{@title}}
+    @disabled={{@disabled}}
     @icon={{@icon}}
     @isLoading={{@isLoading}}
-    @disabled={{@disabled}}
+    @label={{@label}}
+    @route={{@route}}
+    @routeModels={{@routeModels}}
+    @title={{@title}}
+    @translatedLabel={{@translatedLabel}}
   />
 </template>;
 
@@ -32,15 +32,15 @@ export const PrimaryButton = <template>
   <DPageActionButton
     class="btn-primary"
     ...attributes
-    @icon={{@icon}}
     @action={{@action}}
+    @disabled={{@disabled}}
+    @icon={{@icon}}
+    @isLoading={{@isLoading}}
+    @label={{@label}}
     @route={{@route}}
     @routeModels={{@routeModels}}
-    @label={{@label}}
-    @translatedLabel={{@translatedLabel}}
     @title={{@title}}
-    @isLoading={{@isLoading}}
-    @disabled={{@disabled}}
+    @translatedLabel={{@translatedLabel}}
   />
 </template>;
 
@@ -50,12 +50,12 @@ export const DangerButton = <template>
     ...attributes
     @action={{@action}}
     @icon={{@icon}}
+    @isLoading={{@isLoading}}
+    @label={{@label}}
     @route={{@route}}
     @routeModels={{@routeModels}}
-    @label={{@label}}
-    @translatedLabel={{@translatedLabel}}
     @title={{@title}}
-    @isLoading={{@isLoading}}
+    @translatedLabel={{@translatedLabel}}
   />
 </template>;
 
@@ -65,12 +65,12 @@ export const DefaultButton = <template>
     ...attributes
     @action={{@action}}
     @icon={{@icon}}
+    @isLoading={{@isLoading}}
+    @label={{@label}}
     @route={{@route}}
     @routeModels={{@routeModels}}
-    @label={{@label}}
-    @translatedLabel={{@translatedLabel}}
     @title={{@title}}
-    @isLoading={{@isLoading}}
+    @translatedLabel={{@translatedLabel}}
   />
 </template>;
 
@@ -80,13 +80,13 @@ export const DPageActionListItem = <template>
       class="btn-transparent"
       ...attributes
       @action={{@action}}
-      @route={{@route}}
-      @routeModels={{@routeModels}}
-      @label={{@label}}
-      @translatedLabel={{@translatedLabel}}
-      @title={{@title}}
       @icon={{@icon}}
       @isLoading={{@isLoading}}
+      @label={{@label}}
+      @route={{@route}}
+      @routeModels={{@routeModels}}
+      @title={{@title}}
+      @translatedLabel={{@translatedLabel}}
     />
   </li>
 </template>;
@@ -111,12 +111,12 @@ export const DefaultActionListItem = <template>
     ...attributes
     @action={{@action}}
     @icon={{@icon}}
+    @isLoading={{@isLoading}}
+    @label={{@label}}
     @route={{@route}}
     @routeModels={{@routeModels}}
-    @label={{@label}}
-    @translatedLabel={{@translatedLabel}}
     @title={{@title}}
-    @isLoading={{@isLoading}}
+    @translatedLabel={{@translatedLabel}}
   />
 </template>;
 
@@ -125,12 +125,12 @@ export const DangerActionListItem = <template>
     class="btn-danger"
     ...attributes
     @action={{@action}}
-    @route={{@route}}
-    @routeModels={{@routeModels}}
-    @label={{@label}}
-    @translatedLabel={{@translatedLabel}}
-    @title={{@title}}
     @icon={{@icon}}
     @isLoading={{@isLoading}}
+    @label={{@label}}
+    @route={{@route}}
+    @routeModels={{@routeModels}}
+    @title={{@title}}
+    @translatedLabel={{@translatedLabel}}
   />
 </template>;

@@ -63,6 +63,8 @@ sk:
       cast-votes:
         title: "Hlasovať"
         label: "Hlasuj teraz!"
+      keep-vote:
+        label: "Späť"
       show-results:
         title: "Zobraziť výsledky hlasovania"
         label: "Výsledky"

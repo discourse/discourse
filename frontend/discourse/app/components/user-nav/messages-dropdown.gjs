@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -33,10 +32,10 @@ export default class MessagesDropdown extends Component {
   <template>
     <DMenu
       @icon={{this.currentSelection.icon}}
-      @label={{this.currentSelection.name}}
-      @title={{i18n "user.messages.all"}}
       @identifier="messages-dropdown"
+      @label={{this.currentSelection.name}}
       @onRegisterApi={{this.onRegisterApi}}
+      @title={{i18n "user.messages.all"}}
       @triggerClass="btn-default"
     >
       <:trigger>
@@ -50,13 +49,13 @@ export default class MessagesDropdown extends Component {
           {{#each @content as |item|}}
             <dropdown.item>
               <DButton
-                @translatedLabel={{item.name}}
-                @icon={{item.icon}}
                 class={{if
                   (eq this.currentSelection.name item.name)
                   "is-selected"
                 }}
                 @action={{this.openInbox item.id}}
+                @icon={{item.icon}}
+                @translatedLabel={{item.name}}
               >
                 {{#if item.showUnreadIcon}}
                   {{dIcon "circle" class="d-icon-d-unread"}}

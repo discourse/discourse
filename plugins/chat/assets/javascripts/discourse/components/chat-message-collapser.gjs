@@ -6,7 +6,6 @@ import { modifier } from "ember-modifier";
 import domFromString from "discourse/lib/dom-from-string";
 import applyLightbox from "discourse/lib/lightbox";
 import { escapeExpression } from "discourse/lib/utilities";
-import { and } from "discourse/truth-helpers";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import { i18n } from "discourse-i18n";
 import ChatUpload from "discourse/plugins/chat/discourse/components/chat-upload";
@@ -128,8 +127,11 @@ export default class ChatMessageCollapser extends Component {
           : e.firstElementChild.href;
 
         link = escapeExpression(link);
+        const title = youtubeThumbnailOneboxPredicate(e)
+          ? i18n("chat.youtube")
+          : link;
         const header = trustHTML(
-          `<a target="_blank" class="chat-message-collapser-link-small" rel="noopener noreferrer" href="${link}">${link}</a>`
+          `<a target="_blank" class="chat-message-collapser-link-small" rel="noopener noreferrer" href="${link}">${title}</a>`
         );
         acc.push({ header, body: e.outerHTML, needsCollapser: true });
       } else {
@@ -180,9 +182,9 @@ export default class ChatMessageCollapser extends Component {
     <div class="chat-message-collapser">
       {{#if this.hasUploads}}
         <DDecoratedHtml
-          @html={{trustHTML @cooked}}
-          @decorate={{@decorate}}
           @className="chat-cooked"
+          @decorate={{@decorate}}
+          @html={{trustHTML @cooked}}
         />
 
         <Collapser
@@ -210,17 +212,17 @@ export default class ChatMessageCollapser extends Component {
                 </div>
               {{else}}
                 <DDecoratedHtml
-                  @html={{trustHTML cooked.body}}
-                  @decorate={{@decorate}}
                   @className="chat-cooked"
+                  @decorate={{@decorate}}
+                  @html={{trustHTML cooked.body}}
                 />
               {{/if}}
             </Collapser>
           {{else}}
             <DDecoratedHtml
-              @html={{trustHTML cooked.body}}
-              @decorate={{@decorate}}
               @className="chat-cooked"
+              @decorate={{@decorate}}
+              @html={{trustHTML cooked.body}}
             />
           {{/if}}
         {{/each}}
@@ -258,6 +260,15 @@ function externalImageOnebox(e) {
 
 function imageOneboxPredicate(e) {
   return animatedImagePredicate(e) || externalImageOnebox(e);
+}
+
+function youtubeThumbnailOneboxPredicate(e) {
+  return (
+    externalImageOnebox(e) &&
+    e.firstElementChild.firstElementChild.classList.contains(
+      "youtube-thumbnail"
+    )
+  );
 }
 
 function hasImageOnebox(elements) {

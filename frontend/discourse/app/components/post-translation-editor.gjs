@@ -84,12 +84,12 @@ export default class PostTranslationEditor extends Component {
       <div class="topic-title-translator title-and-category with-preview">
         <div class="title-input-column">
           <DTextField
-            @value={{this.composer.model.title}}
+            @autocomplete="off"
+            @disabled={{this.composer.loading}}
             @id="translated-topic-title"
             @maxLength={{this.siteSettings.max_topic_title_length}}
             @placeholder={{this.composer.model.topic.title}}
-            @disabled={{this.composer.loading}}
-            @autocomplete="off"
+            @value={{this.composer.model.title}}
           />
         </div>
         <div class="title-preview-spacer"></div>
@@ -98,27 +98,27 @@ export default class PostTranslationEditor extends Component {
 
     <DEditor
       class="translation-editor"
-      @value={{readonly this.composer.model.reply}}
+      @categoryId={{this.composer.model.category.id}}
       @change={{this.handleInput}}
-      @placeholder={{i18n "composer.translations.placeholder"}}
+      @composerEvents={{true}}
+      @disabled={{this.composer.disableTextarea}}
+      @disableSubmit={{this.composer.disableSubmit}}
       @extraButtons={{@extraButtons}}
       @forcePreview={{true}}
-      @processPreview={{false}}
-      @composerEvents={{true}}
-      @onPopupMenuAction={{this.composer.onPopupMenuAction}}
-      @popupMenuOptions={{this.composer.popupMenuOptions}}
-      @showLink={{@showLink}}
-      @loading={{this.composer.loading}}
       @hijackPreview={{this.composer.hijackPreview}}
-      @disabled={{this.composer.disableTextarea}}
+      @loading={{this.composer.loading}}
+      @onPopupMenuAction={{this.composer.onPopupMenuAction}}
       @onSetup={{@setupEditor}}
-      @disableSubmit={{this.composer.disableSubmit}}
-      @topicId={{this.composer.model.topic.id}}
-      @categoryId={{this.composer.model.category.id}}
       @outletArgs={{lazyHash
         composer=this.composer.model
         editorType="composer"
       }}
+      @placeholder={{i18n "composer.translations.placeholder"}}
+      @popupMenuOptions={{this.composer.popupMenuOptions}}
+      @processPreview={{false}}
+      @showLink={{@showLink}}
+      @topicId={{this.composer.model.topic.id}}
+      @value={{readonly this.composer.model.reply}}
       {{didInsert this.setupUploads}}
       {{willDestroy this.teardownUploads}}
     />

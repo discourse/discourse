@@ -127,6 +127,41 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Differ, :rails do
       expect(result.unconfigured_tables).to be_empty
     end
 
+    it "suppresses unconfigured tables when all_other_tables is set" do
+      stub_plugin_manifest_unavailable
+
+      Migrations::Tooling::Schema.table(:users) { include :id }
+      Migrations::Tooling::Schema.ignored { all_other_tables "only mirrors a few tables" }
+
+      stub_database(
+        connection,
+        db_tables: %i[users posts comments],
+        table_columns: {
+          users: %i[id],
+        },
+      )
+
+      result = described_class.new(Migrations::Tooling::Schema).diff
+
+      expect(result.unconfigured_tables).to be_empty
+    end
+
+    it "still reports stale explicit ignores when all_other_tables is set" do
+      stub_plugin_manifest_unavailable
+
+      Migrations::Tooling::Schema.ignored do
+        all_other_tables "only mirrors a few tables"
+        table :old_table, "removed"
+      end
+
+      stub_database(connection, db_tables: %i[users])
+
+      result = described_class.new(Migrations::Tooling::Schema).diff
+
+      expect(result.unconfigured_tables).to be_empty
+      expect(result.stale_ignored_tables.map(&:name)).to contain_exactly("old_table")
+    end
+
     it "detects missing tables" do
       stub_plugin_manifest_unavailable
 
@@ -194,7 +229,7 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Differ, :rails do
       expect(names).to contain_exactly("created_at", "email")
     end
 
-    it "uses source table name when attributing unconfigured columns for copied tables" do
+    it "uses source table name for unconfigured columns in copied tables" do
       manifest = instance_double(Migrations::Tooling::Schema::DSL::PluginManifest)
       allow(manifest).to receive(:available?).and_return(true)
       allow(manifest).to receive(:plugin_for_table).and_return(nil)

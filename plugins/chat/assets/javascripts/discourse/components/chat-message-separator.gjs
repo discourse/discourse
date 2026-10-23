@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -9,6 +10,8 @@ import { i18n } from "discourse-i18n";
 const IS_PINNED_CLASS = "is-pinned";
 
 export default class ChatMessageSeparator extends Component {
+  @service currentUser;
+
   track = modifier((element) => {
     const intersectionObserver = new IntersectionObserver(
       ([entry]) => {
@@ -31,11 +34,6 @@ export default class ChatMessageSeparator extends Component {
       intersectionObserver?.disconnect();
     };
   });
-
-  @action
-  onDateClick() {
-    return this.args.fetchMessagesByDate?.(this.firstMessageOfTheDayAt);
-  }
 
   @cached
   get firstMessageOfTheDayAt() {
@@ -66,25 +64,34 @@ export default class ChatMessageSeparator extends Component {
     return this.args.message.id === this.args.message.channel.newestMessage?.id;
   }
 
+  get #timezone() {
+    return this.currentUser?.user_option?.timezone || moment.tz.guess();
+  }
+
+  @action
+  onDateClick() {
+    return this.args.fetchMessagesByDate?.(this.firstMessageOfTheDayAt);
+  }
+
   #areDatesOnSameDay(a, b) {
-    return (
-      a.getFullYear() === b.getFullYear() &&
-      a.getMonth() === b.getMonth() &&
-      a.getDate() === b.getDate()
-    );
+    return moment(a)
+      .tz(this.#timezone)
+      .isSame(moment(b).tz(this.#timezone), "day");
   }
 
   #startOfDay(date) {
-    return moment(date).startOf("day").format();
+    return moment(date).tz(this.#timezone).startOf("day").format();
   }
 
   #calendarDate(date) {
-    return moment(date).calendar(moment(), {
-      sameDay: `[${i18n("chat.chat_message_separator.today")}]`,
-      lastDay: `[${i18n("chat.chat_message_separator.yesterday")}]`,
-      lastWeek: "LL",
-      sameElse: "LL",
-    });
+    return moment(date)
+      .tz(this.#timezone)
+      .calendar(moment().tz(this.#timezone), {
+        sameDay: `[${i18n("chat.chat_message_separator.today")}]`,
+        lastDay: `[${i18n("chat.chat_message_separator.yesterday")}]`,
+        lastWeek: "LL",
+        sameElse: "LL",
+      });
   }
 
   <template>
@@ -95,9 +102,9 @@ export default class ChatMessageSeparator extends Component {
           "chat-message-separator-date"
           (if this.isNewestMessage "with-last-visit")
         }}
+        data-id={{@message.id}}
         role="button"
         {{on "click" this.onDateClick passive=true}}
-        data-id={{@message.id}}
       >
         <div class="chat-message-separator__text-container" {{this.track}}>
           <span class="chat-message-separator__text">

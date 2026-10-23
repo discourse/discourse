@@ -7,14 +7,10 @@
 lv:
   js:
     explorer:
-      default_query: "Noklusējums"
       or: "vai"
-      create: "Izveidot"
       ai:
         generate: "Radīt"
         optional: "pēc izvēles"
-      import:
-        label: "Importēt"
       help:
         label: "Palīdzība"
       schema:
@@ -28,9 +24,9 @@ lv:
         form:
           bar: "Josla"
       query_groups: "Grupas"
+      query_tags: "Birkas"
       query_description: "Apraksts"
       reset_params: "Atlikt"
-      search_placeholder: "Meklēt..."
     discourse_workflows:
       sql:
         param_value: "Vērtība"

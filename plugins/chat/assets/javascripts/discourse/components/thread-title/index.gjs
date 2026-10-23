@@ -23,8 +23,8 @@ export default class ChatThreadTitle extends Component {
         {{#if this.site.desktopView}}
           <LinkTo
             class="chat__thread-title__name"
-            @route="chat.channel.thread"
             @models={{@thread.routeModels}}
+            @route="chat.channel.thread"
           >
             {{this.title}}
           </LinkTo>

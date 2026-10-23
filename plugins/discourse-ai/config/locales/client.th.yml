@@ -8,6 +8,10 @@ th:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "วันที่"
+          outcomes:
+            failed: "ล้มเหลว"
         reports:
           filters:
             sort_by:
@@ -34,6 +38,17 @@ th:
             canned_reply:
               label: "ตอบ"
     discourse_ai:
+      copied: "คัดลอกแล้ว"
+      ai_decoded_transcript:
+        type: "ชนิด"
+        error: "ผิดพลาด"
+      discourse_workflows:
+        classify:
+          text: "ข้อความ"
+          upload_ids: "รูปภาพ"
+          name: "ชื่อ"
+          type: "ชนิด"
+          type_score: "คะแนน"
       ai_tool_approval:
         loading: "กำลังโหลด..."
         user: "ผู้ใช้"
@@ -97,6 +112,30 @@ th:
         total: "ทั้งหมด"
         periods:
           last_day: "24 ชั่วโมงที่ผ่านมา"
+      logs:
+        apply: "นำไปใช้"
+        successful: "สำเร็จ"
+        failed: "ล้มเหลว"
+        unknown: "ไม่ทราบ"
+        time: "เวลา"
+        when: "เมื่อ"
+        request: "ร้องขอ"
+        user: "ผู้ใช้"
+        topic: "หัวข้อ"
+        post: "โพส"
+        post_short: "โพสต์ %{id}"
+        duration: "ช่วงเวลา"
+        actions: "การกระทำ"
+        view_details: "รายละเอียด"
+        periods:
+          day: "24 ชั่วโมงที่ผ่านมา"
+          week: "7 วันที่ผ่านมา"
+        detail:
+          request: "ร้องขอ"
+        retention:
+          summary_stage: "สรุป"
+          deleted_stage: "ลบ"
+          save: "บันทึก"
       ai_agent:
         name: "ชื่อ"
         edit: "แก้ไข"
@@ -134,6 +173,11 @@ th:
         edit: "แก้ไข"
         delete: "ลบ"
         embedding: "ฝั่ง"
+      decision_models:
+        no_preset: "ไม่มี"
+        display_name: "ชื่อ"
+        edit: "แก้ไข"
+        delete: "ลบ"
       mcp_servers:
         name: "ชื่อ"
         description: "รายละเอียด"
@@ -144,8 +188,19 @@ th:
         delete: "ลบ"
         tools_modal:
           required: "ต้องการ"
+      models:
+        name: "ชื่อ"
+        type: "ชนิด"
+        edit: "แก้ไข"
+        types:
+          embedding: "ฝั่ง"
+        filters:
+          all: "ทุกประเภท"
       llms:
         display_name: "ชื่อ"
+        vision_modes:
+          disabled:
+            title: "ปิดใช้งานแล้ว"
         save: "บันทึก"
         edit: "แก้ไข"
         delete: ลบ
@@ -177,8 +232,16 @@ th:
         display_name: "ชื่อ"
         providers:
           google: "กูเกิล"
+      ai_artifact:
+        editor:
+          version: "เวอร์ชัน"
+          default: "ค่าเริ่มต้น"
+          apply: "นำไปใช้"
+        share: "แบ่งปัน"
+        filter_all: "ทั้งหมด"
       ai_bot:
         debug_ai_modal:
+          duration_label: "ช่วงเวลา:"
           request: "ร้องขอ"
           next_log: "ต่อไป"
           previous_log: "ก่อนหน้า"
@@ -198,9 +261,17 @@ th:
             category: "หมวดหมู่"
           table:
             total_count: "ทั้งหมด"
+      ai_search:
+        related_replies:
+          other: "%{count} ตอบ"
+        tabs:
+          topics: "หัวข้อ"
+          messages: "ข้อความ"
       discobot_discoveries:
-        regular_results: "หัวข้อ"
-        collapse: "ย่อ"
-        tooltip:
-          actions:
-            disable: "ปิดใช้งาน"
+        legacy:
+          regular_results: "หัวข้อ"
+          collapse: "ย่อ"
+          tooltip:
+            actions:
+              disable: "ปิดใช้งาน"
+        search_messages: "ข้อความ"

@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const autofocus = modifier((element) => element.focus());
@@ -39,6 +38,16 @@ export default class CellEditor extends Component {
       return this.formatDateValue(this.args.value);
     }
     return String(this.args.value);
+  }
+
+  get inputType() {
+    if (this.columnType === "number") {
+      return "number";
+    }
+    if (this.columnType === "date") {
+      return "date";
+    }
+    return "text";
   }
 
   @action
@@ -86,16 +95,6 @@ export default class CellEditor extends Component {
     return String(value).slice(0, 10);
   }
 
-  get inputType() {
-    if (this.columnType === "number") {
-      return "number";
-    }
-    if (this.columnType === "date") {
-      return "date";
-    }
-    return "text";
-  }
-
   <template>
     <td
       class={{dConcatClass
@@ -105,16 +104,16 @@ export default class CellEditor extends Component {
     >
       {{#if (eq this.columnType "boolean")}}
         <input
-          type="checkbox"
           checked={{@value}}
           class="workflows-data-table-viewer__checkbox"
+          type="checkbox"
           {{on "change" this.toggleBoolean}}
         />
       {{else if this.isEditing}}
         <input
+          class="workflows-data-table-viewer__cell-input"
           type={{this.inputType}}
           value={{this.editValue}}
-          class="workflows-data-table-viewer__cell-input"
           {{autofocus}}
           {{on "blur" this.save}}
           {{on "keydown" this.handleKeydown}}
@@ -123,11 +122,11 @@ export default class CellEditor extends Component {
       {{else}}
 
         <button
-          type="button"
           class={{dConcatClass
             "workflows-data-table-viewer__cell-value"
             (if this.isPlaceholder "is-null")
           }}
+          type="button"
           {{on "click" this.startEditing}}
         >{{this.displayValue}}</button>
       {{/if}}

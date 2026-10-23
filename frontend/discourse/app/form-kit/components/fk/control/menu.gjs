@@ -21,15 +21,15 @@ export default class FKControlMenu extends FKBaseControl {
 
   <template>
     <DMenu
-      @onRegisterApi={{this.registerMenuApi}}
-      @triggerClass="form-kit__control-menu-trigger"
+      data-value={{@field.value}}
+      id={{@field.id}}
       @contentClass="form-kit__control-menu-content"
       @disabled={{@field.disabled}}
-      @placement="bottom-start"
-      @offset={{5}}
-      id={{@field.id}}
-      data-value={{@field.value}}
       @modalForMobile={{true}}
+      @offset={{5}}
+      @onRegisterApi={{this.registerMenuApi}}
+      @placement="bottom-start"
+      @triggerClass="form-kit__control-menu-trigger"
     >
       <:trigger>
         <span class="d-button-label">

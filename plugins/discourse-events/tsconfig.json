@@ -1,0 +1,25 @@
+{
+  "extends": "discourse/tsconfig-plugin",
+  "include": [
+    "admin/assets/javascripts/**/*",
+    "assets/javascripts/**/*",
+    "test/javascripts/**/*"
+  ],
+  "compilerOptions": {
+    "paths": {
+      "discourse/plugins/discourse-events/*": [
+        "./assets/javascripts/*",
+        "./assets/javascripts/*.gjs",
+        "./assets/javascripts/*.gts",
+        "./test/javascripts/*",
+        "./test/javascripts/*.gjs",
+        "./test/javascripts/*.gts"
+      ]
+    }
+  },
+  "references": [
+    {
+      "path": "../../frontend/discourse"
+    }
+  ]
+}

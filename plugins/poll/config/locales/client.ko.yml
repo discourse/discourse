@@ -28,6 +28,8 @@ ko:
       cast-votes:
         title: "표 던지기"
         label: "지금 투표!"
+      keep-vote:
+        label: "뒤로"
       show-results:
         title: "투표 결과 표시"
         label: "검색 결과"

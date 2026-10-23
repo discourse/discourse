@@ -167,6 +167,16 @@ RSpec.describe PostGuardian do
       expect(Guardian.new(user).post_can_act?(post, :bookmark)).to be_truthy
     end
 
+    it "lets silenced users flag illegal content when allow_all_users_to_flag_illegal_content" do
+      UserSilencer.silence(user, admin)
+      expect(Guardian.new(user).post_can_act?(post, :illegal)).to be false
+
+      SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
+      SiteSetting.allow_all_users_to_flag_illegal_content = true
+      expect(Guardian.new(user).post_can_act?(post, :illegal)).to be true
+      expect(Guardian.new(user).post_can_act?(post, :spam)).to be false
+    end
+
     it "allows flagging archived posts" do
       post.topic.archived = true
       expect(Guardian.new(user).post_can_act?(post, :spam)).to be_truthy
@@ -320,7 +330,7 @@ RSpec.describe PostGuardian do
       fab!(:post) { Fabricate(:post, user: user, topic: topic) }
 
       describe "when post has been deleted" do
-        it "should return the right value" do
+        it "allows a moderator to recover a post they deleted" do
           expect(Guardian.new(moderator).can_recover_post?(post)).to be_falsey
 
           PostDestroyer.new(moderator, post).destroy
@@ -329,7 +339,7 @@ RSpec.describe PostGuardian do
         end
 
         describe "when post's user has been deleted" do
-          it "should return the right value" do
+          it "allows a moderator to recover a post whose author was deleted" do
             PostDestroyer.new(moderator, post).destroy
             post.user.destroy!
 
@@ -461,6 +471,7 @@ RSpec.describe PostGuardian do
       fab!(:private_message) { Fabricate(:system_message_topic, user: user) }
 
       before { user.save! }
+
       it "allows the user to reply to system messages" do
         expect(Guardian.new(user).can_create_post?(private_message)).to eq(true)
         SiteSetting.enable_system_message_replies = false
@@ -579,6 +590,24 @@ RSpec.describe PostGuardian do
       guardian = Guardian.new(user)
 
       expect(guardian.can_edit?(post)).to be_truthy
+    end
+
+    it "returns false for the author of a wiki post hidden during the cooldown" do
+      post.update!(user: user, wiki: true, hidden: true, hidden_at: Time.zone.now)
+
+      expect(user.guardian.can_edit_post?(post)).to eq(false)
+    end
+
+    it "returns true for the author of a wiki post unhidden during the cooldown" do
+      post.update!(user: user, wiki: true, hidden: false, hidden_at: Time.zone.now)
+
+      expect(user.guardian.can_edit_post?(post)).to eq(true)
+    end
+
+    it "returns true for other wiki editors of a wiki post hidden during the cooldown" do
+      post.update!(wiki: true, hidden: true, hidden_at: Time.zone.now)
+
+      expect(user.guardian.can_edit_post?(post)).to eq(true)
     end
   end
 
@@ -1040,6 +1069,7 @@ RSpec.describe PostGuardian do
         SiteSetting.allow_likes_in_anonymous_mode = false
         SiteSetting.allow_anonymous_mode = true
       end
+
       describe "an anonymous user" do
         let(:post_action) do
           user.id = anon.id

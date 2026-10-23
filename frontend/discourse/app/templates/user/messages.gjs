@@ -21,16 +21,16 @@ export default <template>
       <li>
         <MessagesDropdown
           @content={{@controller.messagesDropdownContent}}
-          @value={{@controller.messagesDropdownValue}}
           @onChange={{@controller.onMessagesDropdownChange}}
+          @value={{@controller.messagesDropdownValue}}
         />
       </li>
     </ol>
 
     <DHorizontalOverflowNav
-      @ariaLabel="User secondary - messages"
-      id="user-navigation-secondary__horizontal-nav"
       class="messages-nav"
+      id="user-navigation-secondary__horizontal-nav"
+      @ariaLabel="User secondary - messages"
     />
 
     <div class="navigation-controls">
@@ -51,11 +51,11 @@ export default <template>
 
       {{#if @controller.showNewPM}}
         <DButton
+          class="btn-primary new-private-message"
+          id="new-private-message-btn"
           @action={{routeAction "composePrivateMessage"}}
           @icon="envelope"
           @label="user.new_private_message"
-          id="new-private-message-btn"
-          class="btn-primary new-private-message"
         />
       {{/if}}
       <PluginOutlet

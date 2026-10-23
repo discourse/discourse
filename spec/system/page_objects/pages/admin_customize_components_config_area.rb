@@ -133,7 +133,7 @@ module PageObjects
       end
 
       def status_selector
-        PageObjects::Components::DSelect.new(find(".d-filter-controls__dropdown"))
+        PageObjects::Components::DNativeSelect.new(find(".d-filter-controls__dropdown"))
       end
 
       def name_filter_input

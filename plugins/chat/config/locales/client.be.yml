@@ -101,6 +101,11 @@ be:
         no_results: "Няма вынікаў"
         sort:
           latest: "апошняя"
+      channel_list:
+        options:
+          filter: "Фільтр"
+        filter:
+          mentions: "Згадкі"
       incoming_webhooks:
         back: "Назад"
         description: "Апісанне"
@@ -144,3 +149,7 @@ be:
         message: "Паведамленне"
       chat_approval:
         message: "Паведамленне"
+        value: "Значэнне"
+        style_default: "Прадвызначаная"
+        style_success: "Поспех"
+        icon: "Значок"

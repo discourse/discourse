@@ -7,12 +7,17 @@ module PageObjects
         @composer_component = PageObjects::Components::Composer.new
         @fast_edit_component = PageObjects::Components::FastEditor.new
         @topic_map_component = PageObjects::Components::TopicMap.new
+        @topic_timeline_component = PageObjects::Components::TopicTimeline.new
         @private_message_map_component = PageObjects::Components::PrivateMessageMap.new
       end
 
       def visit_topic(topic, post_number: nil)
         visit(topic.url(post_number))
         self
+      end
+
+      def timeline
+        @topic_timeline_component
       end
 
       def open_new_topic
@@ -77,6 +82,22 @@ module PageObjects
 
       def has_replies_collapsed?(post)
         within_post(post) { has_no_css?(".embedded-posts") }
+      end
+
+      def expand_quote(post)
+        within_post(post) { find("aside.quote .quote-toggle", match: :first).click }
+      end
+
+      def follow_quote(post)
+        within_post(post) { find("aside.quote .quote-controls .back").click }
+      end
+
+      def has_highlighted_text?(post, text, inside: nil)
+        selector = [inside, ".quote-highlight"].compact.join(" ")
+        within_post(post) do
+          has_css?(selector, obscured: false) &&
+            text.split.all? { |word| has_css?(selector, text: word) }
+        end
       end
 
       def post_by_number(post_or_number, wait: Capybara.default_max_wait_time)

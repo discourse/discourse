@@ -28,9 +28,7 @@ bg:
       close: "Затвори"
       delete: "Изтрий"
       edit: "Редактирай"
-      back: "Назад"
       save: "Запази "
-      apply: "Приложи"
       update_range:
         last_10_days: "Последните 10 дни"
         last_30_days: "Последните 30 дни"
@@ -39,3 +37,9 @@ bg:
       custom_range_from: "От"
       admin:
         name: "Име "
+    discourse_workflows:
+      gamification_score:
+        username: "Потребител"
+        date: "Дата"
+        description: "Описание"
+        category_id: "Категория"

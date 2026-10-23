@@ -1,19 +1,20 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
-import AddColumnModal from "./add-column-modal";
-import CellEditor from "./cell-editor";
+import AddColumnModal from "./add-column-modal.gjs";
+import CellEditor from "./cell-editor.gjs";
 
 const autofocus = modifier((element) => {
   element.focus();
@@ -27,6 +28,12 @@ const autofocus = modifier((element) => {
 function syncInputWidth(input) {
   input.style.setProperty("--col-name-length", input.value.length || 1);
 }
+
+// Lets CSS size the scroll box to end at the bottom of the viewport.
+const measureTopOffset = modifier((element) => {
+  const top = element.getBoundingClientRect().top + window.scrollY;
+  element.style.setProperty("--top-offset", `${top}px`);
+});
 
 const indeterminate = modifier((element, [value]) => {
   element.indeterminate = value;
@@ -55,6 +62,37 @@ export default class DataTableViewer extends Component {
     return `/admin/plugins/discourse-workflows/data-tables/${this.args.dataTableId}`;
   }
 
+  get canLoadMore() {
+    return this.rows && this.rows.length < this.totalCount;
+  }
+
+  get isLoading() {
+    return this.rows === null || this.dataTable === null;
+  }
+
+  @cached
+  get columns() {
+    return this.dataTable?.columns?.filter((c) => !c.reserved) ?? [];
+  }
+
+  get lastColumnIndex() {
+    return this.columns.length - 1;
+  }
+
+  get hasSelection() {
+    return this.selectedRowIds.size > 0;
+  }
+
+  get allSelected() {
+    return (
+      this.rows?.length > 0 && this.selectedRowIds.size === this.rows.length
+    );
+  }
+
+  get isIndeterminate() {
+    return this.hasSelection && !this.allSelected;
+  }
+
   async loadTable() {
     try {
       const [tableResult, rowsResult] = await Promise.all([
@@ -67,10 +105,6 @@ export default class DataTableViewer extends Component {
     } catch (e) {
       popupAjaxError(e);
     }
-  }
-
-  get canLoadMore() {
-    return this.rows && this.rows.length < this.totalCount;
   }
 
   @action
@@ -91,31 +125,6 @@ export default class DataTableViewer extends Component {
     } finally {
       this.loadingMore = false;
     }
-  }
-
-  get isLoading() {
-    return this.rows === null || this.dataTable === null;
-  }
-
-  get columns() {
-    const reserved = ["id", "created_at", "updated_at"];
-    return (
-      this.dataTable?.columns?.filter((c) => !reserved.includes(c.name)) ?? []
-    );
-  }
-
-  get hasSelection() {
-    return this.selectedRowIds.size > 0;
-  }
-
-  get allSelected() {
-    return (
-      this.rows?.length > 0 && this.selectedRowIds.size === this.rows.length
-    );
-  }
-
-  get isIndeterminate() {
-    return this.hasSelection && !this.allSelected;
   }
 
   @action
@@ -251,23 +260,61 @@ export default class DataTableViewer extends Component {
   }
 
   @action
+  async renameColumnFromMenu(index, closeMenu) {
+    await closeMenu();
+    this.editingColumnIndex = index;
+  }
+
+  @action
+  async moveColumn(index, offset, closeMenu) {
+    await closeMenu();
+    try {
+      const result = await ajax(
+        `${this.apiBasePath}/columns/${this.columns[index].name}/move.json`,
+        { type: "PUT", data: { position: index + offset } }
+      );
+      this.dataTable = result.data_table;
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  @action
+  async deleteColumn(column, closeMenu) {
+    await closeMenu();
+    this.dialog.deleteConfirm({
+      message: i18n("discourse_workflows.data_tables.delete_column_confirm", {
+        name: column.name,
+      }),
+      didConfirm: async () => {
+        try {
+          await ajax(`${this.apiBasePath}/columns/${column.name}.json`, {
+            type: "DELETE",
+          });
+          this.dataTable = {
+            ...this.dataTable,
+            columns: this.dataTable.columns.filter((c) => c !== column),
+          };
+        } catch (e) {
+          popupAjaxError(e);
+        }
+      },
+    });
+  }
+
+  @action
   async renameColumn(index, event) {
     this.editingColumnIndex = null;
     const newName = event.target.value.trim();
-    const column = this.columns[index];
-    const oldName = column.name;
+    const oldName = this.columns[index].name;
     if (!newName || newName === oldName) {
       return;
     }
     try {
-      const result = await ajax(
-        `${this.apiBasePath}/columns/${column.name}/rename.json`,
-        {
-          type: "PATCH",
-          data: { name: newName },
-        }
-      );
-      this.dataTable = result.data_table;
+      await ajax(`${this.apiBasePath}/columns/${oldName}/rename.json`, {
+        type: "PATCH",
+        data: { name: newName },
+      });
       await this.loadTable();
     } catch (e) {
       popupAjaxError(e);
@@ -284,7 +331,6 @@ export default class DataTableViewer extends Component {
             data: { name: data.name, column_type: data.type },
           });
           this.dataTable = result.data_table;
-          await this.loadTable();
         },
       },
     });
@@ -295,49 +341,49 @@ export default class DataTableViewer extends Component {
       <div class="workflows-data-table-viewer__header">
         {{#if this.editingName}}
           <input
+            class="workflows-data-table-viewer__title-input"
             type="text"
             value={{this.dataTable.name}}
-            class="workflows-data-table-viewer__title-input"
             {{autofocus}}
             {{on "blur" this.saveName}}
             {{on "keydown" (fn this.handleEditKeydown this.dataTable.name)}}
           />
         {{else}}
           <button
-            type="button"
             class="workflows-data-table-viewer__title"
+            type="button"
             {{on "click" this.startEditingName}}
           >{{this.dataTable.name}}</button>
         {{/if}}
         <div class="workflows-data-table-viewer__actions">
           {{#if this.hasSelection}}
             <DButton
+              class="btn-danger btn-small"
               @action={{this.deleteSelectedRows}}
               @icon="trash-can"
               @label="discourse_workflows.data_tables.delete_selected"
-              class="btn-danger btn-small"
             />
             <DButton
+              class="btn-default btn-small"
               @action={{this.clearSelection}}
               @icon="xmark"
               @label="discourse_workflows.data_tables.clear_selection"
-              class="btn-default btn-small"
             />
           {{/if}}
         </div>
       </div>
 
       <DConditionalLoadingSpinner @condition={{this.isLoading}}>
-        <DLoadMore @action={{this.loadMore}} @enabled={{this.canLoadMore}}>
-          <div class="workflows-data-table-viewer__scroll">
+        <div class="workflows-data-table-viewer__scroll" {{measureTopOffset}}>
+          <DLoadMore @action={{this.loadMore}} @enabled={{this.canLoadMore}}>
             <table class="workflows-data-table-viewer__table">
               <thead>
                 <tr>
                   <th class="workflows-data-table-viewer__th --id">
                     <input
-                      type="checkbox"
                       checked={{this.allSelected}}
                       class="workflows-data-table-viewer__checkbox"
+                      type="checkbox"
                       {{indeterminate this.isIndeterminate}}
                       {{on "change" this.toggleAllSelection}}
                     />
@@ -350,20 +396,84 @@ export default class DataTableViewer extends Component {
                       >{{col.type}}</span>
                       {{#if (eq this.editingColumnIndex index)}}
                         <input
+                          class="workflows-data-table-viewer__col-name-input"
                           type="text"
                           value={{col.name}}
-                          class="workflows-data-table-viewer__col-name-input"
                           {{autofocus}}
                           {{on "blur" (fn this.renameColumn index)}}
                           {{on "keydown" (fn this.handleEditKeydown col.name)}}
                         />
                       {{else}}
                         <button
-                          type="button"
                           class="workflows-data-table-viewer__col-name"
+                          type="button"
                           {{on "click" (fn this.startEditingColumn index)}}
                         >{{col.name}}</button>
                       {{/if}}
+                      <DMenu
+                        @icon="ellipsis-vertical"
+                        @identifier="workflows-data-table-column-menu"
+                        @title={{i18n
+                          "discourse_workflows.data_tables.column_options"
+                        }}
+                        @triggerClass="btn-transparent btn-small workflows-data-table-viewer__col-menu"
+                      >
+                        <:content as |menu|>
+                          <DDropdownMenu as |dropdown|>
+                            <dropdown.item>
+                              <DButton
+                                class="btn-transparent"
+                                @action={{fn
+                                  this.renameColumnFromMenu
+                                  index
+                                  menu.close
+                                }}
+                                @icon="pencil"
+                                @label="discourse_workflows.data_tables.rename_column"
+                              />
+                            </dropdown.item>
+                            {{#if (gt index 0)}}
+                              <dropdown.item>
+                                <DButton
+                                  class="btn-transparent"
+                                  @action={{fn
+                                    this.moveColumn
+                                    index
+                                    -1
+                                    menu.close
+                                  }}
+                                  @icon="arrow-left"
+                                  @label="discourse_workflows.data_tables.move_column_left"
+                                />
+                              </dropdown.item>
+                            {{/if}}
+                            {{#if (lt index this.lastColumnIndex)}}
+                              <dropdown.item>
+                                <DButton
+                                  class="btn-transparent"
+                                  @action={{fn
+                                    this.moveColumn
+                                    index
+                                    1
+                                    menu.close
+                                  }}
+                                  @icon="arrow-right"
+                                  @label="discourse_workflows.data_tables.move_column_right"
+                                />
+                              </dropdown.item>
+                            {{/if}}
+                            <dropdown.divider />
+                            <dropdown.item>
+                              <DButton
+                                class="btn-transparent btn-danger"
+                                @action={{fn this.deleteColumn col menu.close}}
+                                @icon="trash-can"
+                                @label="discourse_workflows.data_tables.delete_column"
+                              />
+                            </dropdown.item>
+                          </DDropdownMenu>
+                        </:content>
+                      </DMenu>
                     </th>
                   {{/each}}
                   <th
@@ -374,9 +484,9 @@ export default class DataTableViewer extends Component {
                   >updated_at</th>
                   <th class="workflows-data-table-viewer__th --add-column">
                     <DButton
+                      class="btn-transparent btn-small"
                       @action={{this.addColumn}}
                       @icon="plus"
-                      class="btn-transparent btn-small"
                     />
                   </th>
                 </tr>
@@ -386,9 +496,9 @@ export default class DataTableViewer extends Component {
                   <tr class="workflows-data-table-viewer__row">
                     <td class="workflows-data-table-viewer__cell --id">
                       <input
-                        type="checkbox"
                         checked={{this.isRowSelected row.id}}
                         class="workflows-data-table-viewer__checkbox"
+                        type="checkbox"
                         {{on "click" (fn this.toggleRowSelection row.id)}}
                       />
                       {{row.id}}
@@ -396,8 +506,8 @@ export default class DataTableViewer extends Component {
                     {{#each this.columns as |col|}}
                       <CellEditor
                         @column={{col}}
-                        @value={{get row col.name}}
                         @onSave={{fn this.saveCell row}}
+                        @value={{get row col.name}}
                       />
                     {{/each}}
                     <td
@@ -412,17 +522,17 @@ export default class DataTableViewer extends Component {
                 <tr class="workflows-data-table-viewer__add-row">
                   <td colspan="99">
                     <DButton
+                      class="btn-transparent btn-small"
                       @action={{this.addRow}}
                       @icon="plus"
-                      class="btn-transparent btn-small"
                     />
                   </td>
                 </tr>
               </tbody>
             </table>
-          </div>
+          </DLoadMore>
           <DConditionalLoadingSpinner @condition={{this.loadingMore}} />
-        </DLoadMore>
+        </div>
       </DConditionalLoadingSpinner>
     </div>
   </template>

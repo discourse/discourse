@@ -43,9 +43,9 @@ export default class GifsResultList extends Component {
 
   <template>
     <div
+      class="gifs-result-list"
       {{didInsert this.setup}}
       {{didUpdate this.update @content.length}}
-      class="gifs-result-list"
     >
       {{#each @content key="preview" as |result|}}
         <GifsResult @gif={{result}} @pick={{@pick}} />
@@ -55,9 +55,9 @@ export default class GifsResultList extends Component {
     {{#if @loadMore}}
       <DLoadMore
         @action={{@loadMore}}
-        @root=".gifs-modal__content"
-        @isLoading={{@loading}}
         @enabled={{this.loadMoreEnabled}}
+        @isLoading={{@loading}}
+        @root=".gifs-modal__content"
       />
     {{/if}}
 

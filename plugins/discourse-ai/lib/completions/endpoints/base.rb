@@ -18,32 +18,21 @@ module DiscourseAi
         # Stored in AiApiAuditLog#request_attempts for retried network failures,
         # which do not have an HTTP status code. 0 is intentionally outside the HTTP range.
         NETWORK_ERROR_RETRY_STATUS = 0
+
+        def self.schema_properties(response_format)
+          response_format&.dig(:json_schema, :schema, :properties)
+        end
         RETRIABLE_NETWORK_ERRORS = [
           Net::OpenTimeout,
           Net::ReadTimeout,
           Errno::ECONNREFUSED,
           Errno::ECONNRESET,
           Errno::ETIMEDOUT,
+          EOFError,
           SocketError,
           OpenSSL::SSL::SSLError,
         ]
 
-        # Read-only context handed to request header providers. Lets plugins
-        # contribute provider-agnostic, per-request HTTP headers (e.g. routing
-        # hints for a proxy) without reaching into endpoint internals.
-        RequestHeaderContext =
-          Struct.new(
-            :llm_model,
-            :feature_name,
-            :feature_context,
-            :has_images,
-            :streaming,
-            keyword_init: true,
-          )
-
-        # Mutated in place (<<, clear) but never reassigned, so the single array
-        # is shared across Base and all endpoint subclasses via constant lookup.
-        REQUEST_HEADERS_PROVIDERS = []
         # 6 minutes
         # Reasoning LLMs can take a very long time to respond, generally it will be under 5 minutes
         # The alternative is to have per LLM timeouts but that would make it extra confusing for people
@@ -90,20 +79,10 @@ module DiscourseAi
             true
           end
 
-          # Register a block that returns a Hash of extra HTTP headers to send
-          # with each completion request. The block receives a
-          # RequestHeaderContext and must not raise (errors are swallowed and
-          # logged so a header bug can never break inference).
+          # Plugins registered header providers here before RequestHeaders also
+          # served decision models; kept so they work across versions.
           def register_request_headers_provider(&block)
-            REQUEST_HEADERS_PROVIDERS << block
-          end
-
-          def request_headers_providers
-            REQUEST_HEADERS_PROVIDERS
-          end
-
-          def reset_request_headers_providers!
-            REQUEST_HEADERS_PROVIDERS.clear
+            RequestHeaders.register(&block)
           end
         end
 
@@ -203,291 +182,6 @@ module DiscourseAi
           )
         end
 
-        def replay_non_streaming_as_streaming!(
-          dialect,
-          user,
-          model_params,
-          feature_name:,
-          feature_context:,
-          partial_tool_calls:,
-          output_thinking:,
-          cancel_manager:,
-          execution_context:,
-          &blk
-        )
-          result =
-            perform_completion!(
-              dialect,
-              user,
-              model_params,
-              feature_name: feature_name,
-              feature_context: feature_context,
-              partial_tool_calls: partial_tool_calls,
-              output_thinking: output_thinking,
-              cancel_manager: cancel_manager,
-              execution_context: execution_context,
-            )
-
-          wrapped = result
-          wrapped = [result] if !result.is_a?(Array)
-          wrapped.each do |partial|
-            blk.call(partial)
-            break if cancel_manager&.cancelled?
-          end
-          result
-        end
-
-        def build_structured_output(model_params)
-          return if model_params[:response_format].blank?
-
-          schema_properties = model_params[:response_format].dig(:json_schema, :schema, :properties)
-          return if schema_properties.blank?
-
-          DiscourseAi::Completions::StructuredOutput.new(schema_properties)
-        end
-
-        def perform_completion_request_with_retries(
-          prompt:,
-          dialect:,
-          user:,
-          model_params:,
-          feature_name:,
-          feature_context:,
-          partial_tool_calls:,
-          orig_blk:,
-          cancel_manager:,
-          execution_context:
-        )
-          request_started_at = Time.now
-          cancelled = false
-          call_status = :error
-          retry_count_429 = 0
-          # 408/409/5xx and network errors share one transient budget.
-          retry_count_transient = 0
-          request_attempts = []
-          retried = false
-          next_attempt_delay_ms = 0
-          @forced_json_through_prefill = false
-          request_body =
-            prepare_payload(prompt, provider_model_params(model_params), dialect).to_json
-          log =
-            start_completion_log(
-              request_body: request_body,
-              dialect: dialect,
-              prompt: prompt,
-              user: user,
-              feature_name: feature_name,
-              feature_context: feature_context,
-            )
-
-          loop do
-            call_status = :error
-            response_data = +""
-            response_raw = +""
-
-            # Needed to response token calculations. Cannot rely on response_data due to function buffering.
-            partials_raw = +""
-            structured_output = build_structured_output(model_params)
-
-            request = prepare_request(request_body)
-            retrying = false
-            retry_delay = nil
-            retry_status = nil
-            current_attempt_delay_ms = next_attempt_delay_ms
-            next_attempt_delay_ms = 0
-            response_output_started = false
-            cancel_manager_callback = nil
-
-            if cancelled || cancel_manager&.cancelled?
-              call_status = :cancelled
-              break
-            end
-
-            begin
-              FinalDestination::HTTP.start(
-                model_uri.host,
-                model_uri.port,
-                use_ssl: use_ssl?,
-                read_timeout: TIMEOUT,
-                open_timeout: TIMEOUT,
-                write_timeout: TIMEOUT,
-              ) do |http|
-                if cancel_manager
-                  cancel_manager_callback =
-                    lambda do
-                      cancelled = true
-                      call_status = :cancelled
-                      http.finish
-                    end
-                  cancel_manager.add_callback(cancel_manager_callback)
-                end
-
-                begin
-                  http.request(request) do |response|
-                    log.response_status = response.code.to_i if log
-
-                    if response.code.to_i != 200
-                      retry_status, retry_delay =
-                        failed_response_retry_status_and_delay(
-                          response,
-                          response_raw,
-                          retry_count_429: retry_count_429,
-                          retry_count_transient: retry_count_transient,
-                        )
-                      retrying = !retry_delay.nil?
-                      raise CompletionFailed, response.body
-                    end
-
-                    # Some providers rely on prefill to return structured outputs, so the start
-                    # of the JSON won't be included in the response. Supply it to keep JSON valid.
-                    structured_output << +"{" if structured_output && @forced_json_through_prefill
-
-                    xml_tool_processor = build_xml_tool_processor(dialect, partial_tool_calls)
-                    xml_stripper = build_xml_stripper(dialect)
-
-                    if @streaming_mode
-                      blk = streaming_partial_handler(orig_blk, xml_stripper, structured_output)
-                    end
-
-                    if !@streaming_mode
-                      response_data =
-                        non_streaming_response(
-                          response: response,
-                          xml_tool_processor: xml_tool_processor,
-                          xml_stripper: xml_stripper,
-                          partials_raw: partials_raw,
-                          response_raw: response_raw,
-                          structured_output: structured_output,
-                        )
-                      call_status = :success
-                      return response_data
-                    end
-
-                    response_data =
-                      streaming_response(
-                        response: response,
-                        blk: blk,
-                        xml_tool_processor: xml_tool_processor,
-                        xml_stripper: xml_stripper,
-                        partials_raw: partials_raw,
-                        response_raw: response_raw,
-                        structured_output: structured_output,
-                        cancelled: -> { cancelled },
-                        on_output_started: -> { response_output_started = true },
-                      )
-                    call_status = :success
-                    return response_data
-                  end
-                rescue *RETRIABLE_NETWORK_ERRORS => e
-                  raise if cancelled
-
-                  Rails.logger.warn(
-                    "#{self.class.name}: retryable network error: #{e.class}: #{e.message}",
-                  )
-                  if response_output_started
-                    retrying = false
-                    raise CompletionFailed, e.message
-                  end
-
-                  retry_status = NETWORK_ERROR_RETRY_STATUS
-                  retry_delay =
-                    retry_delay_for_network_error(retry_count_transient: retry_count_transient)
-                  retrying = !retry_delay.nil?
-                  raise CompletionFailed, e.message
-                ensure
-                  if cancel_manager && cancel_manager_callback
-                    cancel_manager.remove_callback(cancel_manager_callback)
-                  end
-                end
-              end
-            rescue *RETRIABLE_NETWORK_ERRORS => e
-              raise if cancelled
-
-              Rails.logger.warn(
-                "#{self.class.name}: retryable network error: #{e.class}: #{e.message}",
-              )
-              retry_status = NETWORK_ERROR_RETRY_STATUS
-              retry_delay =
-                retry_delay_for_network_error(retry_count_transient: retry_count_transient)
-              retrying = !retry_delay.nil?
-
-              if retrying
-                request_attempts << request_attempt(retry_status, current_attempt_delay_ms)
-                retried = true
-                next_attempt_delay_ms = retry_delay_to_ms(retry_delay)
-                retry_count_transient += 1
-                sleep_before_retry(retry_delay, cancel_manager) if retry_delay.positive?
-                next
-              end
-
-              raise CompletionFailed, e.message
-            rescue CompletionFailed
-              if retrying && !cancelled
-                if retry_status
-                  request_attempts << request_attempt(retry_status, current_attempt_delay_ms)
-                  retried = true
-                  next_attempt_delay_ms = retry_delay_to_ms(retry_delay)
-                end
-
-                if retry_status == 429
-                  retry_count_429 += 1
-                else
-                  retry_count_transient += 1
-                end
-
-                sleep_before_retry(retry_delay, cancel_manager) if retry_delay.positive?
-                next
-              end
-
-              raise
-            ensure
-              should_log = log && call_status != :cancelled && !retrying
-
-              if should_log
-                if retried
-                  final_attempt_status = retry_status || log.response_status
-                  if final_attempt_status
-                    request_attempts << request_attempt(
-                      final_attempt_status,
-                      current_attempt_delay_ms,
-                    )
-                  end
-                end
-
-                persist_completion_log!(
-                  log,
-                  response_raw: response_raw,
-                  partials_raw: partials_raw,
-                  request_attempts: request_attempts.presence,
-                  call_status: call_status,
-                  start_time: request_started_at,
-                  feature_name: feature_name,
-                  user: user,
-                  execution_context: execution_context,
-                )
-              end
-
-              track_failures(call_status) if !retrying
-
-              if should_log
-                log_completion_audit_entries(
-                  log,
-                  request: request,
-                  response_data: response_data,
-                  start_time: request_started_at,
-                  execution_context: execution_context,
-                )
-              end
-            end
-          end
-        rescue IOError, StandardError
-          raise if !cancelled
-        end
-
-        private :replay_non_streaming_as_streaming!,
-                :build_structured_output,
-                :perform_completion_request_with_retries
-
         def final_log_update(log)
           # for people that need to override
         end
@@ -517,33 +211,86 @@ module DiscourseAi
 
         # Extra HTTP headers contributed by registered providers for this
         # request. Endpoints that want them merge the result into their request
-        # headers. Provider failures are isolated so they can never break a
-        # completion.
+        # headers.
         def extra_request_headers
-          providers = self.class.request_headers_providers
-          return {} if providers.blank?
-
-          context =
-            RequestHeaderContext.new(
-              llm_model: llm_model,
+          RequestHeaders.for(
+            RequestHeaders::Context.new(
+              model: llm_model,
               feature_name: @feature_name,
               feature_context: @feature_context,
               has_images: @request_has_images,
               streaming: @streaming_mode,
-            )
-
-          providers.each_with_object({}) do |provider, headers|
-            result = provider.call(context)
-            headers.merge!(result.stringify_keys) if result.is_a?(Hash)
-          rescue StandardError => e
-            Discourse.warn_exception(
-              e,
-              message: "Discourse AI request header provider raised an error; skipping it",
-            )
-          end
+            ),
+          )
         end
 
         protected
+
+        def output_stop_reason
+          nil
+        end
+
+        def output_limit_reached?
+          false
+        end
+
+        def reported_reasoning_tokens
+          nil
+        end
+
+        def reset_attempt_state!
+          @processor = nil
+          @decoder = nil
+          @json_decoder = nil
+          @visible_output = false
+        end
+
+        def visible_partial?(partial)
+          case partial
+          when Thinking
+            false
+          when String
+            partial.present?
+          when ToolCall
+            true
+          when StructuredOutput
+            partial.content?
+          when Array
+            partial.any? { |item| visible_partial?(item) }
+          else
+            false
+          end
+        end
+
+        def update_completion_state(
+          log,
+          call_status,
+          cancelled: false,
+          response_limit_tripped: false
+        )
+          log.reasoning_tokens = reported_reasoning_tokens
+
+          # A response-limit cut is our own doing: the reply was trimmed to
+          # the caller's visible-response cap and generation aborted.
+          if response_limit_tripped
+            log.stop_reason = "max_response_tokens"
+            log.completion_state = AiApiAuditLog::CompletionState::TRUNCATED if @visible_output
+            return
+          end
+
+          log.stop_reason = output_stop_reason&.to_s&.slice(0, 50).presence
+          # Cancellation is a user action, not an incomplete completion.
+          return if cancelled || call_status != :success
+
+          log.completion_state =
+            if !@visible_output
+              AiApiAuditLog::CompletionState::EMPTY
+            elsif output_limit_reached?
+              AiApiAuditLog::CompletionState::TRUNCATED
+            else
+              AiApiAuditLog::CompletionState::COMPLETE
+            end
+        end
 
         def tokenizer
           llm_model.tokenizer_class
@@ -606,7 +353,12 @@ module DiscourseAi
         end
 
         def provider_model_params(model_params)
-          model_params.except(:thinking_effort, :reserved_output_tokens, :provider_output_tokens)
+          model_params.except(
+            :thinking_effort,
+            :reserved_output_tokens,
+            :provider_output_tokens,
+            :max_tokens_is_total,
+          )
         end
 
         def prepare_request(_payload)
@@ -638,6 +390,324 @@ module DiscourseAi
         end
 
         private
+
+        def replay_non_streaming_as_streaming!(
+          dialect,
+          user,
+          model_params,
+          feature_name:,
+          feature_context:,
+          partial_tool_calls:,
+          output_thinking:,
+          cancel_manager:,
+          execution_context:,
+          &blk
+        )
+          result =
+            perform_completion!(
+              dialect,
+              user,
+              model_params,
+              feature_name: feature_name,
+              feature_context: feature_context,
+              partial_tool_calls: partial_tool_calls,
+              output_thinking: output_thinking,
+              cancel_manager: cancel_manager,
+              execution_context: execution_context,
+            )
+
+          wrapped = result
+          wrapped = [result] if !result.is_a?(Array)
+          wrapped.each do |partial|
+            blk.call(partial)
+            break if cancel_manager&.cancelled?
+          end
+          result
+        end
+
+        def build_structured_output(model_params)
+          properties = self.class.schema_properties(model_params[:response_format])
+          return if properties.blank?
+
+          DiscourseAi::Completions::StructuredOutput.new(properties)
+        end
+
+        def perform_completion_request_with_retries(
+          prompt:,
+          dialect:,
+          user:,
+          model_params:,
+          feature_name:,
+          feature_context:,
+          partial_tool_calls:,
+          orig_blk:,
+          cancel_manager:,
+          execution_context:
+        )
+          request_started_at = Time.now
+          request_started_at_msecs = monotonic_milliseconds
+          time_to_first_token_msecs = nil
+          # This is end-to-end latency for the audited request, including retries and backoff.
+          record_first_token =
+            lambda do
+              time_to_first_token_msecs ||=
+                (monotonic_milliseconds - request_started_at_msecs).round
+            end
+          cancelled = false
+          call_status = :error
+          retry_count_429 = 0
+          # 408/409/5xx and network errors share one transient budget.
+          retry_count_transient = 0
+          request_attempts = []
+          retried = false
+          next_attempt_delay_ms = 0
+          @forced_json_through_prefill = false
+          request_body =
+            prepare_payload(prompt, provider_model_params(model_params), dialect).to_json
+          log =
+            start_completion_log(
+              request_body: request_body,
+              dialect: dialect,
+              prompt: prompt,
+              user: user,
+              feature_name: feature_name,
+              feature_context: feature_context,
+            )
+
+          loop do
+            reset_attempt_state!
+            call_status = :error
+            response_data = +""
+            response_raw = +""
+
+            # Needed to response token calculations. Cannot rely on response_data due to function buffering.
+            partials_raw = +""
+            attempt_output = GeneratedOutput.new
+            structured_output = build_structured_output(model_params)
+
+            request = prepare_request(request_body)
+            retrying = false
+            retry_delay = nil
+            retry_status = nil
+            current_attempt_delay_ms = next_attempt_delay_ms
+            next_attempt_delay_ms = 0
+            response_output_started = false
+            cancel_manager_callback = nil
+
+            if cancelled || cancel_manager&.cancelled?
+              call_status = :cancelled
+              break
+            end
+
+            begin
+              FinalDestination::HTTP.start(
+                model_uri.host,
+                model_uri.port,
+                use_ssl: use_ssl?,
+                read_timeout: TIMEOUT,
+                open_timeout: TIMEOUT,
+                write_timeout: TIMEOUT,
+              ) do |http|
+                if cancel_manager
+                  cancel_manager_callback =
+                    lambda do
+                      cancelled = true
+                      call_status = :cancelled
+                      http.finish
+                    end
+                  cancel_manager.add_callback(cancel_manager_callback)
+                end
+
+                begin
+                  http.request(request) do |response|
+                    log.response_status = response.code.to_i if log
+
+                    if response.code.to_i != 200
+                      retry_status, retry_delay =
+                        failed_response_retry_status_and_delay(
+                          response,
+                          response_raw,
+                          retry_count_429: retry_count_429,
+                          retry_count_transient: retry_count_transient,
+                        )
+                      retrying = !retry_delay.nil?
+                      raise CompletionFailed, response.body
+                    end
+
+                    # Some providers rely on prefill to return structured outputs, so the start
+                    # of the JSON won't be included in the response. Supply it to keep JSON valid.
+                    structured_output.prefill if structured_output && @forced_json_through_prefill
+
+                    xml_tool_processor = build_xml_tool_processor(dialect, partial_tool_calls)
+                    xml_stripper = build_xml_stripper(dialect)
+
+                    if @streaming_mode
+                      blk =
+                        streaming_partial_handler(
+                          orig_blk,
+                          xml_stripper,
+                          structured_output,
+                          record_first_token,
+                        )
+                    end
+
+                    if !@streaming_mode
+                      response_data =
+                        non_streaming_response(
+                          response: response,
+                          xml_tool_processor: xml_tool_processor,
+                          xml_stripper: xml_stripper,
+                          partials_raw: partials_raw,
+                          response_raw: response_raw,
+                          structured_output: structured_output,
+                        )
+                      # Non-streaming callers receive their first output only after the response is complete.
+                      record_first_token.call
+                      call_status = :success
+                      return response_data
+                    end
+
+                    response_data =
+                      streaming_response(
+                        response: response,
+                        blk: blk,
+                        xml_tool_processor: xml_tool_processor,
+                        xml_stripper: xml_stripper,
+                        partials_raw: partials_raw,
+                        response_raw: response_raw,
+                        structured_output: structured_output,
+                        cancelled: -> { cancelled },
+                        on_output_started: -> { response_output_started = true },
+                        attempt_output: attempt_output,
+                      )
+                    call_status = :success
+                    return response_data
+                  end
+                rescue *RETRIABLE_NETWORK_ERRORS => e
+                  raise if cancelled
+
+                  Rails.logger.warn(
+                    "#{self.class.name}: retryable network error: #{e.class}: #{e.message}",
+                  )
+                  if generation_started?(response_output_started, log)
+                    retrying = false
+                    raise CompletionFailed, e.message
+                  end
+
+                  retry_status = NETWORK_ERROR_RETRY_STATUS
+                  retry_delay =
+                    retry_delay_for_network_error(retry_count_transient: retry_count_transient)
+                  retrying = !retry_delay.nil?
+                  raise CompletionFailed, e.message
+                ensure
+                  if cancel_manager && cancel_manager_callback
+                    cancel_manager.remove_callback(cancel_manager_callback)
+                  end
+                end
+              end
+            rescue *RETRIABLE_NETWORK_ERRORS => e
+              raise if cancelled
+
+              Rails.logger.warn(
+                "#{self.class.name}: retryable network error: #{e.class}: #{e.message}",
+              )
+              if generation_started?(response_output_started, log)
+                retrying = false
+                raise CompletionFailed, e.message
+              end
+              retry_status = NETWORK_ERROR_RETRY_STATUS
+              retry_delay =
+                retry_delay_for_network_error(retry_count_transient: retry_count_transient)
+              retrying = !retry_delay.nil?
+
+              if retrying
+                request_attempts << request_attempt(retry_status, current_attempt_delay_ms)
+                retried = true
+                next_attempt_delay_ms = retry_delay_to_ms(retry_delay)
+                retry_count_transient += 1
+                sleep_before_retry(retry_delay, cancel_manager) if retry_delay.positive?
+                next
+              end
+
+              raise CompletionFailed, e.message
+            rescue CompletionFailed
+              if retrying && !cancelled
+                if retry_status
+                  request_attempts << request_attempt(retry_status, current_attempt_delay_ms)
+                  retried = true
+                  next_attempt_delay_ms = retry_delay_to_ms(retry_delay)
+                end
+
+                if retry_status == 429
+                  retry_count_429 += 1
+                else
+                  retry_count_transient += 1
+                end
+
+                sleep_before_retry(retry_delay, cancel_manager) if retry_delay.positive?
+                next
+              end
+
+              raise
+            ensure
+              if execution_context&.generated_output &&
+                   (
+                     call_status != :success ||
+                       execution_context.generated_output.size(tokenizer).zero?
+                   ) && attempt_output.size(tokenizer) > 0
+                execution_context.generated_output = attempt_output
+              end
+              should_log = log && !retrying && (call_status != :cancelled || partials_raw.present?)
+
+              if should_log
+                if retried
+                  final_attempt_status = retry_status || log.response_status
+                  if final_attempt_status
+                    request_attempts << request_attempt(
+                      final_attempt_status,
+                      current_attempt_delay_ms,
+                    )
+                  end
+                end
+
+                persist_completion_log!(
+                  log,
+                  response_raw: response_raw,
+                  partials_raw: partials_raw,
+                  request_attempts: request_attempts.presence,
+                  call_status: call_status,
+                  cancelled: cancelled,
+                  start_time: request_started_at,
+                  time_to_first_token_msecs: time_to_first_token_msecs,
+                  feature_name: feature_name,
+                  user: user,
+                  execution_context: execution_context,
+                )
+              end
+
+              track_failures(call_status) if !retrying
+
+              if should_log
+                log_completion_audit_entries(
+                  log,
+                  request: request,
+                  response_data: response_data,
+                  start_time: request_started_at,
+                  execution_context: execution_context,
+                )
+              end
+            end
+          end
+        rescue IOError, StandardError
+          raise if !cancelled
+        end
+
+        def generation_started?(decoded_output_started, log)
+          return true if decoded_output_started
+          return false if !log || log.response_status != 200
+          final_log_update(log)
+          log.response_tokens.to_i > 0
+        end
 
         def start_completion_log(
           request_body:,
@@ -708,17 +778,26 @@ module DiscourseAi
           DiscourseAi::Completions::XmlTagStripper.new(to_strip)
         end
 
-        def streaming_partial_handler(orig_blk, xml_stripper, structured_output)
+        def monotonic_milliseconds
+          Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)
+        end
+
+        def streaming_partial_handler(orig_blk, xml_stripper, structured_output, record_first_token)
           lambda do |partial|
+            should_record_first_token = !partial.is_a?(String) || !partial.empty?
             if partial.is_a?(String)
               partial = xml_stripper << partial if xml_stripper && !partial.empty?
 
-              if structured_output.present?
+              if partial && structured_output.present?
                 structured_output << partial if !partial.empty?
                 partial = structured_output
               end
             end
-            orig_blk.call(partial) if partial
+            if partial
+              record_first_token.call if should_record_first_token
+              @visible_output ||= visible_partial?(partial)
+              orig_blk.call(partial)
+            end
           end
         end
 
@@ -731,7 +810,8 @@ module DiscourseAi
           response_raw:,
           structured_output:,
           cancelled:,
-          on_output_started:
+          on_output_started:,
+          attempt_output: nil
         )
           response_data = +""
 
@@ -742,6 +822,9 @@ module DiscourseAi
 
             decode_chunk(chunk).each do |partial|
               break if cancelled.call
+              # Even output buffered before a complete tool/XML block is generated work.
+              on_output_started.call
+              attempt_output&.<<(partial)
               partials_raw << partial.to_s
               response_data << partial if partial.is_a?(String)
               partials = [partial]
@@ -749,10 +832,7 @@ module DiscourseAi
                 partials = (xml_tool_processor << partial)
                 break if xml_tool_processor.should_cancel?
               end
-              partials.each do |inner_partial|
-                on_output_started.call
-                blk.call(inner_partial)
-              end
+              partials.each { |inner_partial| blk.call(inner_partial) }
             end
           end
 
@@ -775,12 +855,12 @@ module DiscourseAi
           structured_output:
         )
           if xml_stripper
-            stripped = xml_stripper.finish
-            if stripped.present?
-              response_data << stripped
-              result = []
-              result = (xml_tool_processor << stripped) if xml_tool_processor
-              result.each { |partial| blk.call(partial) }
+            # Preserve legacy return data without exposing buffered reasoning through the block.
+            unstripped = xml_stripper.finish
+            response_data << unstripped if unstripped.present?
+            stripped = xml_stripper.finish_visible
+            if stripped.present? && xml_tool_processor
+              (xml_tool_processor << stripped).each { |partial| blk.call(partial) }
             end
           end
 
@@ -792,6 +872,7 @@ module DiscourseAi
 
         def finish_structured_output_streaming(structured_output, blk)
           structured_output.finish
+          @visible_output ||= structured_output.content?
           if structured_output.broken?
             # signal last partial output which will get parsed
             # by best effort json parser
@@ -808,7 +889,9 @@ module DiscourseAi
           partials_raw:,
           request_attempts:,
           call_status:,
+          cancelled:,
           start_time:,
+          time_to_first_token_msecs:,
           feature_name:,
           user:,
           execution_context:
@@ -816,15 +899,31 @@ module DiscourseAi
           log.raw_response_payload = response_raw
           log.request_attempts = request_attempts if log.has_attribute?(:request_attempts)
           final_log_update(log)
+          update_completion_state(
+            log,
+            call_status,
+            cancelled: cancelled,
+            response_limit_tripped: !!execution_context&.response_limit_tripped,
+          )
+          execution_context&.settle_generation(
+            tokens: log.response_tokens,
+            tokenizer: tokenizer,
+            complete: call_status == :success && !cancelled,
+          )
           log.response_tokens = tokenizer.size(partials_raw) if log.response_tokens.blank?
           log.response_status ||= 200 if call_status == :success
           log.estimated_cost = estimated_cost_for(log)
           log.created_at = start_time
           log.updated_at = Time.now
           log.duration_msecs = (Time.now - start_time) * 1000
+          log.time_to_first_token_msecs = time_to_first_token_msecs
           log.save!
+          execution_context.audit_log_id = log.id if execution_context
 
-          execution_context&.token_usage_tracker&.add_from_audit_log(log)
+          execution_context&.token_usage_tracker&.add_from_audit_log(
+            log,
+            preparation: feature_name == "context_compression",
+          )
 
           AiApiRequestStat.record_from_audit_log(log, llm_model: @llm_model)
           LlmQuota.log_usage(
@@ -1072,12 +1171,22 @@ module DiscourseAi
             end
           end
 
+          # Legacy return values include stripped-only text; audit visibility must not.
+          visible_response_data = response_data
           if xml_stripper
+            visible_response_data = []
             response_data.map! do |partial|
-              stripped = (xml_stripper << partial) if partial.is_a?(String)
-              stripped.presence || partial
+              if partial.is_a?(String)
+                stripped = xml_stripper << partial
+                visible_response_data << stripped
+                stripped.presence || partial
+              else
+                visible_response_data << partial
+                partial
+              end
             end
             response_data << xml_stripper.finish
+            visible_response_data << xml_stripper.finish_visible
           end
 
           response_data.reject!(&:blank?)
@@ -1086,8 +1195,20 @@ module DiscourseAi
             response_data.each { |data| structured_output << data if data.is_a?(String) }
             structured_output.finish
 
+            visible_structured_output = structured_output
+            if xml_stripper
+              visible_structured_output = StructuredOutput.new({})
+              visible_structured_output.prefill if @forced_json_through_prefill
+              visible_response_data.each do |partial|
+                visible_structured_output << partial if partial.is_a?(String)
+              end
+              visible_structured_output.finish
+            end
+            @visible_output = visible_structured_output.content?
             return structured_output
           end
+
+          @visible_output = visible_partial?(visible_response_data)
 
           # this is to keep stuff backwards compatible
           response_data = response_data.first if response_data.length == 1

@@ -19,17 +19,17 @@ class WebHookExtras {
     this.grouped_event_types = args.grouped_event_types || [];
   }
 
+  get categoriesById() {
+    if (this.categories) {
+      return new Map(this.categories.map((c) => [c.id, c]));
+    }
+  }
+
   addCategories(categories) {
     this.categories = uniqueItemsFromArray(
       this.categories.concat(categories),
       "id"
     );
-  }
-
-  get categoriesById() {
-    if (this.categories) {
-      return new Map(this.categories.map((c) => [c.id, c]));
-    }
   }
 
   findCategoryById(id) {
@@ -44,7 +44,15 @@ export default class WebHook extends RestModel {
   wildcard_web_hook = false;
   verify_certificate = true;
   active = false;
+
+  /** @type {Array<{ id: number, name: string }> | null} */
   web_hook_event_types = null;
+
+  /**
+   * Group names, or a comma-separated string of them when set by a group selector.
+   *
+   * @type {string[] | string | null}
+   */
   group_names = null;
 
   @computed("wildcard_web_hook")
@@ -73,6 +81,18 @@ export default class WebHook extends RestModel {
     );
   }
 
+  @computed("wildcard_web_hook", "web_hook_event_types.[]")
+  get description() {
+    let desc = "";
+
+    this.web_hook_event_types?.forEach((type) => {
+      const name = `${type.name.toLowerCase()}_event`;
+      desc += desc !== "" ? `, ${name}` : name;
+    });
+
+    return this.wildcard_web_hook ? "*" : desc;
+  }
+
   @observes("group_ids")
   updateGroupsFilter() {
     const groupIds = this.group_ids;
@@ -89,18 +109,6 @@ export default class WebHook extends RestModel {
 
   groupFinder(term) {
     return Group.findAll({ term, ignore_automatic: false });
-  }
-
-  @computed("wildcard_web_hook", "web_hook_event_types.[]")
-  get description() {
-    let desc = "";
-
-    this.web_hook_event_types?.forEach((type) => {
-      const name = `${type.name.toLowerCase()}_event`;
-      desc += desc !== "" ? `, ${name}` : name;
-    });
-
-    return this.wildcard_web_hook ? "*" : desc;
   }
 
   createProperties() {

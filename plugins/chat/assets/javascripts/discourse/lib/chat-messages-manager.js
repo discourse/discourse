@@ -6,6 +6,18 @@ import {
 } from "discourse/lib/array-tools";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 
+function compareMessages(a, b) {
+  if (a.staged !== b.staged) {
+    return a.staged ? 1 : -1;
+  }
+
+  if (a.staged) {
+    return 0;
+  }
+
+  return a.createdAt - b.createdAt || a.id - b.id;
+}
+
 export default class ChatMessagesManager {
   @autoTrackedArray messages = [];
 
@@ -35,7 +47,11 @@ export default class ChatMessagesManager {
     this.messages = uniqueItemsFromArray(
       this.messages.concat(messages),
       "id"
-    ).sort((a, b) => a.createdAt - b.createdAt);
+    ).sort(compareMessages);
+  }
+
+  sortMessages() {
+    this.messages = this.messages.toSorted(compareMessages);
   }
 
   findMessage(messageId) {
@@ -44,12 +60,12 @@ export default class ChatMessagesManager {
     );
   }
 
-  findFirstMessageOfDay(a) {
-    return this.messages.find(
-      (b) =>
-        a.getFullYear() === b.createdAt.getFullYear() &&
-        a.getMonth() === b.createdAt.getMonth() &&
-        a.getDate() === b.createdAt.getDate()
+  findFirstMessageOfDay(date, timezone) {
+    const resolvedTimezone = timezone || moment.tz.guess();
+    const targetDate = moment(date).tz(resolvedTimezone);
+
+    return this.messages.find((message) =>
+      targetDate.isSame(moment(message.createdAt).tz(resolvedTimezone), "day")
     );
   }
 

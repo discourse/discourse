@@ -2,7 +2,8 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::UpdateArtifact do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
+
   fab!(:post)
   fab!(:artifact) do
     AiArtifact.create!(
@@ -21,6 +22,46 @@ RSpec.describe DiscourseAi::Agents::Tools::UpdateArtifact do
   end
 
   describe "#process" do
+    it "ignores non-text completion events while updating artifact code" do
+      updated_source = <<~TXT.strip
+        [HTML]
+        <div>Updated safely</div>
+        [/HTML]
+      TXT
+      thinking =
+        DiscourseAi::Completions::Thinking.new(
+          message: nil,
+          provider_info: {
+            gemini_interactions: {
+              steps: [{ signature: "signed-context" }],
+            },
+          },
+        )
+      tool = nil
+      result = nil
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([[updated_source, thinking]]) do
+        tool =
+          described_class.new(
+            { artifact_id: artifact.id, instructions: "Update safely" },
+            bot_user: bot_user,
+            llm: llm_model.to_llm,
+            agent_options: {
+              "update_algorithm" => "full",
+            },
+            context: DiscourseAi::Agents::BotContext.new(messages: [], post: post),
+          )
+
+        result = tool.invoke {}
+      end
+
+      expect(result[:status]).to eq("success")
+      expect(artifact.versions.order(:version_number).last.html).to eq("<div>Updated safely</div>")
+      expect(tool.custom_raw).not_to include(
+        thinking.provider_info_for(:gemini_interactions)[:steps].first[:signature],
+      )
+    end
+
     it "correctly updates artifact using section markers" do
       responses = [<<~TXT.strip]
         [HTML]
@@ -71,7 +112,9 @@ RSpec.describe DiscourseAi::Agents::Tools::UpdateArtifact do
       expect(tool.custom_raw).to include("### HTML Changes")
       expect(tool.custom_raw).to include("### CSS Changes")
       expect(tool.custom_raw).to include("### JS Changes")
-      expect(tool.custom_raw).to include("<div class=\"ai-artifact\"")
+      expect(tool.custom_raw).to include(
+        %([ai-artifact id="#{artifact.id}" version="#{version.version_number}"]),
+      )
     end
 
     it "handles partial updates with only some sections" do
@@ -328,7 +371,9 @@ RSpec.describe DiscourseAi::Agents::Tools::UpdateArtifact do
     expect(tool.custom_raw).to include("[details='View Changes']")
     expect(tool.custom_raw).to include("### HTML Changes")
     expect(tool.custom_raw).to include("### CSS Changes")
-    expect(tool.custom_raw).to include("<div class=\"ai-artifact\"")
+    expect(tool.custom_raw).to include(
+      %([ai-artifact id="#{artifact.id}" version="#{version.version_number}"]),
+    )
   end
 
   it "correctly updates artifact using diff strategy" do
@@ -397,6 +442,8 @@ RSpec.describe DiscourseAi::Agents::Tools::UpdateArtifact do
     expect(tool.custom_raw).to include("### HTML Changes")
     expect(tool.custom_raw).to include("### CSS Changes")
     expect(tool.custom_raw).to include("### JS Changes")
-    expect(tool.custom_raw).to include("<div class=\"ai-artifact\"")
+    expect(tool.custom_raw).to include(
+      %([ai-artifact id="#{artifact.id}" version="#{version.version_number}"]),
+    )
   end
 end

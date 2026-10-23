@@ -48,9 +48,6 @@ loaderShim("discourse/components/d-page-header", () =>
 loaderShim("discourse/components/d-page-subheader", () =>
   importSync("discourse/ui-kit/d-page-subheader")
 );
-loaderShim("discourse/components/d-select", () =>
-  importSync("discourse/ui-kit/d-select")
-);
 loaderShim("discourse/components/d-stat-tiles", () =>
   importSync("discourse/ui-kit/d-stat-tiles")
 );
@@ -82,12 +79,6 @@ loaderShim("discourse/components/cdn-img", () =>
 );
 loaderShim("discourse/components/char-counter", () =>
   importSync("discourse/ui-kit/d-char-counter")
-);
-loaderShim("discourse/components/color-picker", () =>
-  importSync("discourse/ui-kit/d-color-picker")
-);
-loaderShim("discourse/components/color-picker-choice", () =>
-  importSync("discourse/ui-kit/d-color-picker-choice")
 );
 loaderShim("discourse/components/conditional-in-element", () =>
   importSync("discourse/ui-kit/d-conditional-in-element")
@@ -244,6 +235,14 @@ loaderShim("discourse/components/user-stat", () =>
 );
 loaderShim("discourse/components/user-status-message", () =>
   importSync("discourse/ui-kit/d-user-status-message")
+);
+
+// Components - renamed within ui-kit
+loaderShim("discourse/components/d-select", () =>
+  importSync("discourse/ui-kit/d-native-select")
+);
+loaderShim("discourse/ui-kit/d-select", () =>
+  importSync("discourse/ui-kit/d-native-select")
 );
 
 // Helpers

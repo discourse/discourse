@@ -3,16 +3,16 @@ import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import DAG from "discourse/lib/dag";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
-import PostMetaDataDate from "./meta-data/date";
-import PostMetaDataEditsIndicator from "./meta-data/edits-indicator";
-import PostMetaDataEmailIndicator from "./meta-data/email-indicator";
-import PostMetaDataLanguage from "./meta-data/language";
-import PostMetaDataLockedIndicator from "./meta-data/locked-indicator";
-import PostMetaDataPosterName from "./meta-data/poster-name";
-import PostMetaDataReadIndicator from "./meta-data/read-indicator";
-import PostMetaDataReplyToTab from "./meta-data/reply-to-tab";
-import PostMetaDataSelectPost from "./meta-data/select-post";
-import PostMetaDataWhisperIndicator from "./meta-data/whisper-indicator";
+import PostMetaDataDate from "./meta-data/date.gjs";
+import PostMetaDataEditsIndicator from "./meta-data/edits-indicator.gjs";
+import PostMetaDataEmailIndicator from "./meta-data/email-indicator.gjs";
+import PostMetaDataLanguage from "./meta-data/language.gjs";
+import PostMetaDataLockedIndicator from "./meta-data/locked-indicator.gjs";
+import PostMetaDataPosterName from "./meta-data/poster-name.gjs";
+import PostMetaDataReadIndicator from "./meta-data/read-indicator.gjs";
+import PostMetaDataReplyToTab from "./meta-data/reply-to-tab.gjs";
+import PostMetaDataSelectPost from "./meta-data/select-post.gjs";
+import PostMetaDataWhisperIndicator from "./meta-data/whisper-indicator.gjs";
 
 const metaDataInfoKeys = Object.freeze({
   WHISPER_INDICATOR: "whisper_indicator",
@@ -108,14 +108,14 @@ export default class PostMetaData extends Component {
         {{! do not include PluginOutlets here, use the DAG API instead }}
         {{#each this.availableInfoComponents key="key" as |item|}}
           <item.InfoComponent
-            @post={{@post}}
             @editPost={{@editPost}}
             @hasRepliesAbove={{@hasRepliesAbove}}
             @isReplyingDirectlyToPostAbove={{@isReplyingDirectlyToPostAbove}}
+            @post={{@post}}
             @repliesAbove={{@repliesAbove}}
             @selectBelow={{@selectBelow}}
-            @selectReplies={{@selectReplies}}
             @selected={{@selected}}
+            @selectReplies={{@selectReplies}}
             @showHistory={{@showHistory}}
             @showRawEmail={{@showRawEmail}}
             @togglePostSelection={{@togglePostSelection}}

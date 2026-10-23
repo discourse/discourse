@@ -238,7 +238,9 @@ describe Chat::Publisher do
         )
       end
 
-      it "calls MessageBus with the correct permissions" do
+      it "restricts MessageBus delivery when anonymous access is disabled" do
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+
         messages =
           MessageBus.track_publish("/chat/#{channel.id}") do
             described_class.publish_new!(channel, message_1, staged_id)
@@ -246,6 +248,29 @@ describe Chat::Publisher do
 
         expect(messages.first.group_ids).to contain_exactly(*Chat.allowed_group_ids)
         expect(messages.first.user_ids).to eq(nil)
+      end
+
+      it "publishes restricted category messages to bounded category permission groups" do
+        category_group = Fabricate(:group)
+        chat_group = Fabricate(:group)
+        category = Fabricate(:private_category, group: category_group)
+        restricted_channel = Fabricate(:category_channel, chatable: category)
+        message = Fabricate(:chat_message, chat_channel: restricted_channel)
+        SiteSetting.chat_allowed_groups = chat_group.id
+
+        published_message =
+          MessageBus
+            .track_publish(described_class.root_message_bus_channel(restricted_channel.id)) do
+              described_class.publish_new!(restricted_channel, message, staged_id)
+            end
+            .first
+
+        expect(published_message.user_ids).to eq(nil)
+        expect(published_message.group_ids).to contain_exactly(
+          *restricted_channel.allowed_group_ids.map do |group_id|
+            "chat-restricted-category-group-#{group_id}"
+          end,
+        )
       end
 
       it "publishes to trust level 0 when chat is allowed for everyone" do
@@ -283,10 +308,7 @@ describe Chat::Publisher do
         ).to eq(false)
       end
 
-      it "allows anonymous clients when anonymous public chat access is enabled" do
-        SiteSetting.chat_allowed_groups =
-          "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
-
+      it "allows anonymous clients by default" do
         messages =
           MessageBus.track_publish("/chat/#{channel.id}") do
             described_class.publish_new!(channel, message_1, staged_id)
@@ -357,7 +379,9 @@ describe Chat::Publisher do
           expect(messages).not_to be_empty
         end
 
-        it "calls MessageBus with the correct permissions" do
+        it "restricts MessageBus delivery when anonymous access is disabled" do
+          SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
               described_class.publish_new!(channel, message_1, staged_id)
@@ -391,7 +415,9 @@ describe Chat::Publisher do
           )
         end
 
-        it "calls MessageBus with the correct permissions" do
+        it "restricts MessageBus delivery when anonymous access is disabled" do
+          SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
               described_class.publish_new!(channel, message_1, staged_id)

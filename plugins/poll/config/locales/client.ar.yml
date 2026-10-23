@@ -84,6 +84,8 @@ ar:
       cast-votes:
         title: "الإدلاء بصوتك"
         label: "صوِّت اﻵن!"
+      keep-vote:
+        label: "رجوع"
       show-results:
         title: "عرض نتائج استطلاع الرأي"
         label: "النتائج"

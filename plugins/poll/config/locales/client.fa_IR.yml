@@ -28,6 +28,8 @@ fa_IR:
       cast-votes:
         title: "انداختن رأی شما"
         label: "ثبت رای!"
+      keep-vote:
+        label: "بازگشت"
       show-results:
         title: "نمایش نتایج"
         label: "نتایج"

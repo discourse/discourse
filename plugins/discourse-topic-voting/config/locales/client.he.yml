@@ -18,7 +18,6 @@ he:
       votes:
         one: "הצבעה"
         two: "שתי הצבעות"
-        many: "%{count} הצבעות"
         other: "%{count} הצבעות"
       remove_vote: "הסרת הצבעה"
       and_more_voters: "ו־%{count} נוספות..."

@@ -3,6 +3,7 @@
 RSpec.describe(Chat::UpdateChannelStatus) do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:channel_id) }
+
     it do
       is_expected.to validate_inclusion_of(:status).in_array(Chat::Channel.editable_statuses.keys)
     end

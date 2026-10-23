@@ -82,7 +82,7 @@ export default class Menu extends Service {
     }
 
     if (instance.expanded) {
-      await this.close(instance);
+      await instance.close();
       return;
     }
 

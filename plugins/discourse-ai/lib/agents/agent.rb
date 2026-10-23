@@ -3,6 +3,8 @@
 module DiscourseAi
   module Agents
     class Agent
+      DELEGATED_IMAGE_PATTERN = %r{!\[[^\]]*\]\((upload://[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]{1,10})?)\)}
+
       class << self
         def default_enabled
           true
@@ -24,12 +26,24 @@ module DiscourseAi
           nil
         end
 
+        def subagent_ids
+          []
+        end
+
         def compression_threshold
           nil
         end
 
+        def rag_document_sources
+          []
+        end
+
         def force_default_llm
           false
+        end
+
+        def supports_bot_user?
+          agents_supporting_bot_user.any? { |klass| self <= klass }
         end
 
         def allow_chat_channel_mentions
@@ -49,6 +63,14 @@ module DiscourseAi
           @system_agents_by_id ||= system_agents.invert
         end
 
+        def builtin_tool_by_name(name)
+          normalized_name = name.to_s.gsub("Tool", "")
+          normalized_name = "List#{normalized_name}" if %w[Categories Tags Users].include?(
+            normalized_name,
+          )
+          "DiscourseAi::Agents::Tools::#{normalized_name}".safe_constantize
+        end
+
         def external_tool_by_name(name)
           sync_external_registry!
           @external_tools_by_name[name]
@@ -61,13 +83,13 @@ module DiscourseAi
 
         def all(user:)
           # listing tools has to be dynamic cause site settings may change
+          available_tools = all_available_tools
           AiAgent.all_agents.filter do |agent|
             next false if !user.in_any_groups?(agent.allowed_group_ids)
 
             if agent.system
               instance = agent.new
-              instance.required_tools == [] ||
-                (instance.required_tools - all_available_tools).empty?
+              instance.required_tools == [] || (instance.required_tools - available_tools).empty?
             else
               true
             end
@@ -92,7 +114,9 @@ module DiscourseAi
             Tools::ListUsers,
             Tools::Time,
             Tools::Search,
+            Tools::SearchUploadedDocuments,
             Tools::Read,
+            Tools::ReadPost,
             Tools::FlagPost,
             Tools::CloseTopic,
             Tools::SuspendUser,
@@ -101,7 +125,9 @@ module DiscourseAi
             Tools::LockPost,
             Tools::DeleteTopic,
             Tools::EditPost,
+            Tools::CreateCategory,
             Tools::EditCategory,
+            Tools::ChangeTopicCategory,
             Tools::SetTopicTimer,
             Tools::SetSlowMode,
             Tools::MovePosts,
@@ -111,10 +137,12 @@ module DiscourseAi
             Tools::AddReviewableNote,
             Tools::DbSchema,
             Tools::SearchSettings,
+            Tools::SearchDiscourseNavigation,
             Tools::SettingContext,
             Tools::ReadSiteSetting,
             Tools::ChangeSiteSetting,
             Tools::RandomPicker,
+            Tools::LoadDiscourseWebsitePage,
             Tools::DiscourseMetaSearch,
             Tools::GithubFileContent,
             Tools::GithubDiff,
@@ -134,7 +162,9 @@ module DiscourseAi
 
           if SiteSetting.tagging_enabled
             tools << Tools::ListTags
-            tools << Tools::EditTags
+            tools << Tools::CreateTag
+            tools << Tools::EditTag
+            tools << Tools::ChangeTopicTags
           end
 
           # Image generation tools - use custom UI-configured tools
@@ -151,8 +181,9 @@ module DiscourseAi
 
           tools << Tools::Assign if defined?(::Assigner)
           tools << Tools::MarkAsSolved if defined?(::DiscourseSolved)
+          tools.concat(external_tools)
 
-          tools
+          DiscoursePluginRegistry.apply_modifier(:ai_agent_available_tools, tools).uniq
         end
 
         def external_agent_id(agent_klass)
@@ -163,14 +194,15 @@ module DiscourseAi
 
         def sync_external_registry!
           configs = external_feature_configs
-          signature = configs.hash
+          standalone_tools = DiscoursePluginRegistry.external_ai_tools
+          signature = [configs, standalone_tools].hash
           if @external_registry_signature == signature && @external_tools_by_name && @system_agents
             return
           end
 
-          @external_registry_signature = signature
           external_agents = {}
           external_tools_by_name = {}
+          agent_tools = []
 
           configs.each do |config|
             agent_klass = config[:agent_klass]
@@ -179,18 +211,32 @@ module DiscourseAi
             next if builtin_system_agents.key?(agent_klass)
 
             external_agents[agent_klass] = config[:agent_id]
+            agent_tools.concat(agent_klass.new.tools)
+          end
 
-            agent_klass.new.tools.each do |tool_klass|
-              tool_name = tool_klass.to_s.split("::").last
-              next if "DiscourseAi::Agents::Tools::#{tool_name}".safe_constantize
-              external_tools_by_name[tool_name] ||= tool_klass
+          (agent_tools + standalone_tools).each do |tool_klass|
+            tool_name = tool_klass.to_s.demodulize
+            builtin = builtin_tool_by_name(tool_name)
+            next if builtin == tool_klass
+            if builtin
+              raise ArgumentError,
+                    "AI tool '#{tool_name}' from #{tool_klass} clashes with built-in #{builtin}"
             end
+
+            existing = external_tools_by_name[tool_name]
+            if existing && existing.to_s != tool_klass.to_s
+              raise ArgumentError,
+                    "AI tool '#{tool_name}' from #{tool_klass} is already registered by #{existing}"
+            end
+
+            external_tools_by_name[tool_name] = tool_klass
           end
 
           new_system_agents = builtin_system_agents.merge(external_agents)
           @system_agents_by_id = nil if @system_agents != new_system_agents
           @system_agents = new_system_agents
           @external_tools_by_name = external_tools_by_name
+          @external_registry_signature = signature
         end
 
         def external_feature_configs
@@ -202,6 +248,24 @@ module DiscourseAi
             .each do |config|
               config[:agent_id] ||= external_agent_id(config[:agent_klass]) if config[:agent_klass]
             end
+        end
+
+        def agents_supporting_bot_user
+          @agents_supporting_bot_user ||= [
+            General,
+            SqlHelper,
+            Artist,
+            SettingsExplorer,
+            Researcher,
+            Creative,
+            DiscourseHelper,
+            GithubHelper,
+            WebArtifactCreator,
+            Designer,
+            ForumResearcher,
+            Discover,
+            DiscourseAdminAssistant,
+          ].freeze
         end
 
         def builtin_system_agents
@@ -244,6 +308,9 @@ module DiscourseAi
             EmotionClassifier => -37,
             AdminDashboardHighlights => -38,
             DiscourseAdminAssistant => -39,
+            AskAiQueryRewriter => -40,
+            AskAiSynthesis => -41,
+            AskAiReporter => -42,
           }.freeze
         end
       end
@@ -320,8 +387,69 @@ module DiscourseAi
           .uniq
       end
 
+      def runtime_tools(llm: nil, context: nil)
+        reserved_spawn_agent = self.class.subagent_ids.present?
+        tools =
+          available_tools.reject do |tool|
+            tool_name = tool.signature[:name]
+            !tool.available_for_context?(context) || tool_name == Tools::ViewImage.name ||
+              reserved_spawn_agent && tool_name.to_s.casecmp(Tools::SpawnAgent.name).zero?
+          end
+
+        if (spawn_agent_tool = spawn_agent_tool_class(context))
+          tools.unshift(spawn_agent_tool)
+        end
+
+        if automatic_vision_tool_enabled?(context) && llm&.llm_model&.delegated_vision?
+          tools << Tools::ViewImage
+        end
+
+        tools.uniq { |tool| tool.signature[:name].to_s.downcase }
+      end
+
+      def spawn_agent_tool_class(context)
+        return if self.class.subagent_ids.blank?
+        return if context&.server_owned_tools == false || context&.user.nil?
+        return if context.subagent_depth.to_i >= SubagentRunner::MAX_SUBAGENT_DEPTH
+
+        state = context.subagent_execution_state
+        if !state&.spawn_available? || !state.completion_available? || state.remaining_tokens <= 0
+          return
+        end
+
+        records_by_id = AiAgent.where(id: self.class.subagent_ids, enabled: true).index_by(&:id)
+        models_by_agent_id = SubagentRunner.resolve_models(records_by_id.values)
+        usable_agents =
+          self.class.subagent_ids.filter_map do |subagent_id|
+            record = records_by_id[subagent_id]
+            next if !record
+            next if !context.user.in_any_groups?(record.allowed_group_ids)
+            next if !models_by_agent_id[subagent_id]
+            if record.system?
+              required_tools = record.class_instance.new.required_tools
+              next if (required_tools - self.class.all_available_tools).present?
+            end
+
+            record
+          end
+        return if usable_agents.empty?
+
+        Tools::SpawnAgent.class_instance(id, usable_agents)
+      end
+
+      def automatic_vision_tool_enabled?(context)
+        context&.server_owned_tools != false && self.class.vision_enabled
+      end
+
+      def defer_forced_tool_for_vision?
+        false
+      end
+
       def craft_prompt(context, llm: nil)
-        available_tools = self.available_tools
+        available_tools = runtime_tools(llm: llm, context: context)
+        context.runtime_tools = available_tools
+        context.runtime_tools_llm_model_id = llm&.llm_model&.id
+        messages = delegated_vision_messages(context, llm)
         system_insts = replace_placeholders(system_prompt, context)
 
         prompt_insts = <<~TEXT.strip
@@ -348,7 +476,7 @@ module DiscourseAi
         prompt =
           DiscourseAi::Completions::Prompt.new(
             prompt_insts,
-            messages: post_system_examples.concat(context.messages),
+            messages: post_system_examples.concat(messages),
             topic_id: context.topic_id,
             post_id: context.post_id,
           )
@@ -379,6 +507,106 @@ module DiscourseAi
 
       protected
 
+      def delegated_vision_messages(context, llm)
+        return context.messages if !automatic_vision_tool_enabled?(context)
+        return context.messages if !llm&.llm_model&.delegated_vision?
+        return context.messages if !self.class.vision_enabled
+
+        messages = context.messages.deep_dup
+        uploads_by_id, uploads_by_sha1 = delegated_vision_uploads(messages)
+
+        messages.map do |message|
+          next message if message[:type].to_sym != :user
+
+          message[:content] = delegated_vision_content(
+            message[:content],
+            context,
+            uploads_by_id,
+            uploads_by_sha1,
+          )
+          message
+        end
+      end
+
+      def delegated_vision_uploads(messages)
+        upload_ids = Set.new
+        upload_sha1s = Set.new
+
+        messages.each do |message|
+          next if message[:type].to_sym != :user
+
+          content_parts = message[:content].is_a?(Array) ? message[:content] : [message[:content]]
+          content_parts.each do |part|
+            if part.is_a?(Hash) && part.key?(:upload_id)
+              upload_ids << part[:upload_id]
+            elsif part.is_a?(String)
+              part.scan(DELEGATED_IMAGE_PATTERN) do |(short_url)|
+                sha1 = Upload.sha1_from_short_url(short_url)
+                upload_sha1s << sha1 if sha1
+              end
+            end
+          end
+        end
+
+        return {}, {} if upload_ids.empty? && upload_sha1s.empty?
+
+        uploads = Upload.where(id: upload_ids).or(Upload.where(sha1: upload_sha1s)).to_a
+        [uploads.index_by(&:id), uploads.index_by(&:sha1)]
+      end
+
+      def delegated_vision_content(content, context, uploads_by_id, uploads_by_sha1)
+        seen_upload_ids = Set.new
+
+        if content.is_a?(String)
+          replace_delegated_image_references(content, context, seen_upload_ids, uploads_by_sha1)
+        elsif content.is_a?(Array)
+          content.filter_map do |part|
+            if part.is_a?(Hash) && part.key?(:upload_id)
+              upload = uploads_by_id[part[:upload_id].to_i]
+              if upload.blank? ||
+                   !DiscourseAi::Completions::UploadEncoder.supported_image_upload?(upload)
+                next part
+              end
+              next if seen_upload_ids.include?(upload.id)
+
+              delegated_image_handle(upload, context, seen_upload_ids)
+            elsif part.is_a?(String)
+              replace_delegated_image_references(part, context, seen_upload_ids, uploads_by_sha1)
+            else
+              part
+            end
+          end
+        else
+          content
+        end
+      end
+
+      def replace_delegated_image_references(content, context, seen_upload_ids, uploads_by_sha1)
+        content.gsub(DELEGATED_IMAGE_PATTERN) do |markdown|
+          sha1 = Upload.sha1_from_short_url(Regexp.last_match(1))
+          upload = uploads_by_sha1[sha1]
+          if upload.blank? ||
+               !DiscourseAi::Completions::UploadEncoder.supported_image_upload?(upload)
+            next markdown
+          end
+          next "" if seen_upload_ids.include?(upload.id)
+
+          delegated_image_handle(upload, context, seen_upload_ids) || "[Image unavailable]"
+        end
+      end
+
+      def delegated_image_handle(upload, context, seen_upload_ids)
+        return if !prompt_guardian(context).can_see_upload?(upload)
+
+        seen_upload_ids << upload.id
+        context.register_image_upload(upload.id)
+        "[Image available through view_image: upload_id #{upload.id}]"
+      end
+
+      def prompt_guardian(context)
+        context.image_guardian
+      end
+
       def replace_placeholders(content, context)
         replaced =
           content.gsub(/\{(\w+)\}/) do |match|
@@ -396,7 +624,19 @@ module DiscourseAi
         function_name = tool_call.name
         return nil if function_name.nil?
 
-        tool_klass = available_tools.find { |c| c.signature.dig(:name) == function_name }
+        exposed_tools =
+          if context&.runtime_tools.present? &&
+               context.runtime_tools_llm_model_id == llm&.llm_model&.id
+            context.runtime_tools
+          else
+            available_tools.reject do |tool|
+              tool_name = tool.signature[:name]
+              tool_name == Tools::ViewImage.name ||
+                self.class.subagent_ids.present? &&
+                  tool_name.to_s.casecmp(Tools::SpawnAgent.name).zero?
+            end
+          end
+        tool_klass = exposed_tools.find { |tool| tool.signature.dig(:name) == function_name }
         return nil if tool_klass.nil?
 
         arguments =
@@ -444,10 +684,14 @@ module DiscourseAi
 
           if param[:type] == "array" && value
             value =
-              begin
-                JSON.parse(value)
-              rescue JSON::ParserError
-                [value.to_s]
+              if value.is_a?(Array)
+                value
+              else
+                begin
+                  JSON.parse(value)
+                rescue JSON::ParserError, TypeError
+                  [value.to_s]
+                end
               end
           elsif param[:type] == "string" && value
             value = strip_quotes(value).to_s

@@ -111,6 +111,26 @@ adsense_plugin:
     default: "responsive"
     type: list
     choices: *adsense_choices
+  adsense_above_site_header_code:
+    client: true
+    default: ""
+    max: 50
+    regex: '^[\d]*$'
+  adsense_above_site_header_ad_sizes:
+    client: true
+    default: "728*90 - leaderboard"
+    type: list
+    choices: *adsense_choices
+  adsense_mobile_above_site_header_code:
+    client: true
+    default: ""
+    max: 50
+    regex: '^[\d]*$'
+  adsense_mobile_above_site_header_ad_size:
+    client: true
+    default: "responsive"
+    type: list
+    choices: *adsense_choices
   adsense_topic_above_post_stream_code:
     client: true
     default: ""
@@ -261,6 +281,32 @@ dfp_plugin:
     default: ""
     type: value_list
     client: true
+  dfp_above_site_header_code:
+    client: true
+    default: ""
+    max: 50
+  dfp_above_site_header_ad_sizes:
+    client: true
+    default: "728*90 - leaderboard"
+    type: list
+    choices: *dfp_choices
+  dfp_mobile_above_site_header_code:
+    client: true
+    default: ""
+    max: 50
+  dfp_mobile_above_site_header_ad_sizes:
+    client: true
+    default: "320*50 - mobile leaderboard"
+    type: list
+    choices: *dfp_choices
+  dfp_target_above_site_header_key_code:
+    default: ""
+    type: value_list
+    client: true
+  dfp_target_above_site_header_value_code:
+    default: ""
+    type: value_list
+    client: true
   dfp_topic_above_post_stream_code:
     client: true
     default: ""
@@ -383,6 +429,24 @@ amazon_plugin:
   amazon_mobile_topic_list_top_ad_height_code:
     client: true
     default: ""
+  amazon_above_site_header_src_code:
+    client: true
+    default: ""
+  amazon_above_site_header_ad_width_code:
+    client: true
+    default: ""
+  amazon_above_site_header_ad_height_code:
+    client: true
+    default: ""
+  amazon_mobile_above_site_header_src_code:
+    client: true
+    default: ""
+  amazon_mobile_above_site_header_ad_width_code:
+    client: true
+    default: ""
+  amazon_mobile_above_site_header_ad_height_code:
+    client: true
+    default: ""
   amazon_topic_above_post_stream_src_code:
     client: true
     default: ""
@@ -468,6 +532,9 @@ carbonads_plugin:
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
+  carbonads_above_site_header_enabled:
+    client: true
+    default: false
   carbonads_topic_list_top_enabled:
     client: true
     default: false
@@ -502,6 +569,12 @@ adbutler_plugin:
     client: true
     default: ""
   adbutler_mobile_topic_list_top_zone_id:
+    client: true
+    default: ""
+  adbutler_above_site_header_zone_id:
+    client: true
+    default: ""
+  adbutler_mobile_above_site_header_zone_id:
     client: true
     default: ""
   adbutler_topic_above_post_stream_zone_id:

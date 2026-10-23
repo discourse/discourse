@@ -17,12 +17,35 @@ const WORKFLOW_METHOD_DOCS = Object.freeze({
       infoKey: "discourse_workflows.expression_docs.methods.input.last",
     }),
   }),
+  $helpers: Object.freeze({
+    absoluteUrl: Object.freeze({
+      detail: "(path)",
+      infoKey:
+        "discourse_workflows.expression_docs.methods.helpers.absolute_url",
+    }),
+  }),
 });
 
 export function resolveVariableId(variable, itemPrefix = "$json") {
   return variable.id.startsWith("$")
     ? variable.id
     : `${itemPrefix}.${variable.id}`;
+}
+
+// Null whenever the point does not resolve inside the control, including on
+// engines without caretPositionFromPoint, where callers append instead.
+export function caretOffsetFromPoint(control, x, y) {
+  const position = document.caretPositionFromPoint?.(x, y);
+  if (
+    position?.offsetNode !== control ||
+    !Number.isInteger(position.offset) ||
+    position.offset < 0 ||
+    position.offset > control.value.length
+  ) {
+    return null;
+  }
+
+  return position.offset;
 }
 
 // Matches paths like $('Node Name').rest or $("Node Name").rest
@@ -283,11 +306,44 @@ function buildSiteSettingsScope(siteSettings) {
   return scope;
 }
 
-function buildVarsScope(workflowVars) {
+function buildVarsScope(globalVars) {
   const scope = Object.create(null);
-  if (workflowVars?.length) {
-    for (const v of workflowVars) {
+  if (globalVars?.length) {
+    for (const v of globalVars) {
       scope[v.key] = v.value ?? "";
+    }
+  }
+  return scope;
+}
+
+function typedWorkflowVarValue(field) {
+  const raw = field.value;
+
+  switch (field.variable_type) {
+    case "integer":
+    case "category":
+    case "group":
+      return raw ? parseInt(raw, 10) : TYPE_EXEMPLARS.integer;
+    case "boolean":
+      return raw ? raw === "true" : TYPE_EXEMPLARS.boolean;
+    case "category_list":
+    case "group_list":
+      return raw
+        ? raw.split("|").filter(Boolean).map(Number)
+        : TYPE_EXEMPLARS.array;
+    case "tag_list":
+    case "simple_list":
+      return raw ? raw.split("|").filter(Boolean) : TYPE_EXEMPLARS.array;
+    default:
+      return raw ?? TYPE_EXEMPLARS.string;
+  }
+}
+
+function buildWorkflowVarsScope(workflowVariables) {
+  const scope = Object.create(null);
+  if (workflowVariables?.length) {
+    for (const field of workflowVariables) {
+      scope[field.key] = typedWorkflowVarValue(field);
     }
   }
   return scope;
@@ -320,6 +376,17 @@ function buildExecutionScope(nodes) {
   return scope;
 }
 
+function buildHelpersScope() {
+  return cleanObject({
+    absoluteUrl: (path) => {
+      if (typeof path !== "string" || !/^\/[^/]/.test(path)) {
+        return path;
+      }
+      return `${window.location.origin}${path}`;
+    },
+  });
+}
+
 function buildInputScope($json) {
   const currentItem = buildItem($json);
   const inputItems = [currentItem];
@@ -338,7 +405,8 @@ export function buildScope({
   inputFields = [],
   ancestorNodes = [],
   siteSettings,
-  workflowVars,
+  globalVars,
+  workflowVariables,
   nodes,
 }) {
   const $json = buildScopeFromFields(inputFields);
@@ -362,8 +430,10 @@ export function buildScope({
     $trigger: triggerJson || Object.create(null),
     $site_settings: buildSiteSettingsScope(siteSettings),
     $current_user: cleanObject({ id: 0, username: "" }),
-    $vars: buildVarsScope(workflowVars),
+    $vars: buildVarsScope(globalVars),
+    $workflow_vars: buildWorkflowVarsScope(workflowVariables),
     $execution: buildExecutionScope(nodes),
+    $helpers: buildHelpersScope(),
     $: (name) => nodeOutputs[name] || EMPTY_NODE_OUTPUT,
     JSON,
     Math,

@@ -38,7 +38,6 @@ he:
     answer_lowercase:
       one: תשובה
       two: תשובות
-      many: תשובות
       other: תשובות
     post_voting:
       post:
@@ -47,17 +46,14 @@ he:
             too_short:
               one: "נא להקליד תו %{count} לפחות"
               two: "נא להקליד %{count} תווים לפחות"
-              many: "נא להקליד %{count} תווים לפחות"
               other: "נא להקליד %{count} תווים לפחות"
             length_ok:
               one: "נותר תו %{count}…"
               two: "נותרו %{count} תווים…"
-              many: "נותרו %{count} תווים…"
               other: "נותרו %{count} תווים…"
             too_long:
               one: "תגובה לא יכולה להיות ארוכה מתו %{count}"
               two: "תגובה לא יכולה להיות ארוכה מ־%{count} תווים"
-              many: "תגובה לא יכולה להיות ארוכה מ־%{count} תווים"
               other: "תגובה לא יכולה להיות ארוכה מ־%{count} תווים"
           submit: "הוספת תגובה"
           edit: "עריכה"
@@ -68,7 +64,6 @@ he:
           show:
             one: הצגת תגובה %{count} נוספת
             two: הצגת %{count} תגובות נוספות
-            many: הצגת %{count} תגובות נוספות
             other: הצגת %{count} תגובות נוספות
           delete:
             confirm: "למחוק את התגובה הזאת?"
@@ -120,12 +115,10 @@ he:
         answer_count:
           one: "תשובה %{count}"
           two: "%{count} תשובות"
-          many: "%{count} תשובות"
           other: "%{count} תשובות"
         voters_count_diff:
           one: "ועוד משתמש/ת…"
           two: "ועוד שני/שתי משתמשים/ות…"
-          many: "ועוד %{count} משתמשים/ות…"
           other: "ועוד %{count} משתמשים/ות…"
     review:
       transcript:

@@ -8,6 +8,16 @@ export default class ReviewSettingsController extends Controller {
   saving = false;
   saved = false;
 
+  @computed("settings.reviewable_score_types")
+  get scoreTypes() {
+    const username = i18n("review.example_username");
+
+    return this.settings?.reviewable_score_types?.map((type) => ({
+      ...type,
+      title: type.title.replace("%{username}", username),
+    }));
+  }
+
   @action
   save() {
     let priorities = {};
@@ -25,15 +35,5 @@ export default class ReviewSettingsController extends Controller {
       })
       .catch(popupAjaxError)
       .finally(() => this.set("saving", false));
-  }
-
-  @computed("settings.reviewable_score_types")
-  get scoreTypes() {
-    const username = i18n("review.example_username");
-
-    return this.settings?.reviewable_score_types?.map((type) => ({
-      ...type,
-      title: type.title.replace("%{username}", username),
-    }));
   }
 }

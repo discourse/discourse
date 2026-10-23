@@ -46,6 +46,31 @@ describe Jobs::DetectTranslatePost do
     job.execute({ post_id: post.id })
   end
 
+  describe "finishing with a post" do
+    it "reports it is done after translating the post" do
+      post.update!(locale: "en")
+      DiscourseAi::Translation::PostLocalizer.stubs(:localize)
+
+      events =
+        DiscourseEvent.track_events(:post_localizations_finished) do
+          job.execute({ post_id: post.id })
+        end
+
+      expect(events.map { |e| e[:params] }).to eq([[post.id]])
+    end
+
+    it "reports it is done when it skips the post" do
+      SiteSetting.discourse_ai_enabled = false
+
+      events =
+        DiscourseEvent.track_events(:post_localizations_finished) do
+          job.execute({ post_id: post.id })
+        end
+
+      expect(events.map { |e| e[:params] }).to eq([[post.id]])
+    end
+  end
+
   it "detects locale" do
     allow(DiscourseAi::Translation::PostLocaleDetector).to receive(:detect_locale).with(
       post,
@@ -143,6 +168,24 @@ describe Jobs::DetectTranslatePost do
     )
 
     expect { job.execute({ post_id: post.id }) }.not_to raise_error
+  end
+
+  it "restricts private message notifications to the topic audience" do
+    recipient = Fabricate(:user)
+    private_message_post = Fabricate(:private_message_post, recipient: recipient, locale: "en")
+    SiteSetting.ai_translation_personal_messages = "all"
+
+    messages =
+      MessageBus.track_publish("/topic/#{private_message_post.topic_id}") do
+        job.execute(post_id: private_message_post.id)
+      end
+
+    expect(messages.length).to eq(1)
+    message = messages.first
+    expect(message.data).to eq(type: :localized, id: private_message_post.id)
+    expect(message.user_ids).to contain_exactly(
+      *private_message_post.topic.secure_audience_publish_messages[:user_ids],
+    )
   end
 
   describe "with category scope and PM scope" do

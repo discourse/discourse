@@ -17,6 +17,7 @@ class LocalizedAiAgentSerializer < ApplicationSerializer
              :top_p,
              :default_llm_id,
              :user_id,
+             :can_have_bot_user?,
              :vision_enabled,
              :vision_max_pixels,
              :rag_chunk_tokens,
@@ -36,16 +37,20 @@ class LocalizedAiAgentSerializer < ApplicationSerializer
              :mcp_server_ids,
              :mcp_server_tool_names,
              :mcp_servers,
+             :subagent_ids,
+             :subagent_tool_token_count,
              :response_format,
              :examples,
              :features
 
   has_one :user, serializer: BasicUserSerializer, embed: :object
   has_many :rag_uploads, serializer: UploadSerializer, embed: :object
+  has_many :rag_document_sources, serializer: RagDocumentSourceSerializer, embed: :object
   has_one :default_llm, serializer: BasicLlmModelSerializer, embed: :object
 
   def rag_uploads
-    object.uploads
+    source_upload_ids = object.rag_document_sources.filter_map(&:upload_id).to_set
+    object.uploads.reject { |upload| source_upload_ids.include?(upload.id) }
   end
 
   def name
@@ -76,6 +81,10 @@ class LocalizedAiAgentSerializer < ApplicationSerializer
 
       hash[assignment.ai_mcp_server_id.to_s] = assignment.selected_tool_names
     end
+  end
+
+  def subagent_tool_token_count
+    AiAgent.subagent_tool_token_count
   end
 
   def mcp_servers

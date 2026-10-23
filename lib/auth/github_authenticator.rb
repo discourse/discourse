@@ -15,8 +15,12 @@ class Auth::GithubAuthenticator < Auth::ManagedAuthenticator
     "https://github.com"
   end
 
-  def enabled?
-    SiteSetting.enable_github_logins
+  def enable_setting
+    :enable_github_logins
+  end
+
+  def required_settings
+    %i[github_client_id github_client_secret]
   end
 
   def after_authenticate(auth_token, existing_account: nil)
@@ -56,12 +60,14 @@ class Auth::GithubAuthenticator < Auth::ManagedAuthenticator
   end
 
   def register_middleware(omniauth)
+    require "omniauth-github"
     omniauth.provider :github,
                       setup:
                         lambda { |env|
                           strategy = env["omniauth.strategy"]
                           strategy.options[:client_id] = SiteSetting.github_client_id
                           strategy.options[:client_secret] = SiteSetting.github_client_secret
+                          strategy.options[:client_options][:auth_scheme] = :request_body
                         },
                       scope: "user:email"
   end

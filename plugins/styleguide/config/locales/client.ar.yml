@@ -13,6 +13,10 @@ ar:
   js:
     styleguide:
       title: "دليل الأنماط"
+      welcome: "للبدء، اختر قسمًا من قائمة التنقل."
+      example:
+        kind:
+          component: "المكوِّن"
       categories:
         syntax: بناء الجملة
         atoms: الذرّات (Atoms)
@@ -29,8 +33,18 @@ ar:
           title: "حقول إدخال التاريخ/الوقت"
         menus:
           title: "القوائم"
+        context_menu:
+          actions:
+            duplicate: "تكرار"
+            delete: "حذف"
         multi_select:
           title: "اختيار متعدد"
+        reorderable_list:
+          policies_pinned: "مثبَّت"
+          policies_required: "مطلوب"
+          table_field: "الحقل"
+          table_type: "النوع"
+          cross_list_primary: "أساسي"
         toasts:
           title: "الرسائل المنبثقة"
         font_scale:
@@ -39,6 +53,8 @@ ar:
           title: "الألوان"
         dialog:
           title: "حوار"
+        drag_and_drop:
+          locked: "مغلق"
         icons:
           title: "الأيقونات"
           full_list: "طالِع قائمة أيقونات Font Awesome كاملةً"
@@ -94,6 +110,30 @@ ar:
           title: "المزيد من الموضوعات"
         post_menu:
           title: "قائمة المشاركة"
+        roving_focus:
+          toolbar:
+            bold: "عريض"
+            italic: "مائل"
+            copy: "نسخ"
+          tags:
+            design: "تصميم"
+            support: "الدعم"
+          adjacent:
+            label: "المرشحات"
+            field: "البحث"
+            placeholder: "موضوعات البحث"
+            open: "فتح"
+            recent: "الحديثة"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "يوميًا"
+            weekly: "أسبوعيًا"
+            monthly: "شهريًا"
+            never: "أبدًا"
+          tree:
+            components: "المكوِّنان"
+            select: "تحديد"
         docked_composer:
           title: "أداة إنشاء مثبتة"
         modal:

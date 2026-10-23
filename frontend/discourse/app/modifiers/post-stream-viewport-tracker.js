@@ -198,7 +198,7 @@ export default class PostStreamViewportTracker {
   /**
    * Map of post numbers to their post models and DOM elements that are currently on screen
    * Used to track which posts are visible in the viewport for eyeline calculations and screen tracking
-   * @type {Object<number, {post: Object, element: HTMLElement}>}
+   * @type {Record<number, {post: import("discourse/models/post").default, element: HTMLElement}>}
    * @private
    */
   #postsOnScreen = {};
@@ -405,32 +405,8 @@ export default class PostStreamViewportTracker {
   );
 
   /**
-   * Cleans up resources when the tracker is destroyed
-   * Disconnects intersection observers and clears DOM references
-   * @returns {void}
-   */
-  destroy() {
-    // cancel scheduled timers
-    for (const timer of this.#scheduledTimers.values()) {
-      cancel(timer);
-    }
-
-    // disconnect the intersection observers
-    this.#viewportObserver?.disconnect();
-    this.#cloakingObserver?.disconnect();
-
-    // clear DOM references
-    this.#observedPostElements.clear();
-    this.#trackOnlyElements.clear();
-
-    // clear the set of posts with cloaking prevented
-    cloakingPrevented.topicId = null;
-    cloakingPrevented.posts.clear();
-  }
-
-  /**
    * Returns a map of post numbers to their post models and DOM elements that are currently on screen
-   * @returns {Object<number, {post: Object, element: HTMLElement}>} Map of visible posts
+   * @returns {Record<number, {post: import("discourse/models/post").default, element: HTMLElement}>} Map of visible posts
    */
   get postsOnScreen() {
     return this.#postsOnScreen;
@@ -461,15 +437,96 @@ export default class PostStreamViewportTracker {
   }
 
   /**
+   * Gets the testing wrapper element for test environment
+   * @private
+   * @returns {HTMLElement} The ember-testing container element
+   */
+  get #testWrapperElement() {
+    return document.getElementById("ember-testing");
+  }
+
+  /**
+   * Gets the total document height, accounting for test environment
+   * @private
+   * @returns {number} The total scrollable height of the document
+   */
+  get #documentHeight() {
+    return isTesting()
+      ? this.#testWrapperElement.scrollHeight
+      : Math.max(
+          document.body.scrollHeight,
+          document.documentElement.scrollHeight
+        );
+  }
+
+  /**
+   * Gets the viewport height, accounting for test environment
+   * @private
+   * @returns {number} The height of the viewport
+   */
+  get #viewportHeight() {
+    return isTesting()
+      ? this.#testWrapperElement.offsetHeight
+      : window.innerHeight;
+  }
+
+  /**
+   * Gets the current scroll position, accounting for test environment
+   * @private
+   * @returns {number} The current vertical scroll position
+   */
+  get #scrollPosition() {
+    return isTesting() ? this.#testWrapperElement.scrollTop : window.scrollY;
+  }
+
+  /**
+   * Gets the top boundary position for post visibility calculations
+   * In production, accounts for header offset if the wrapper element top is less than header offset
+   * @private
+   * @returns {number} The top boundary position in viewport coordinates
+   */
+  get #topBoundary() {
+    return isTesting()
+      ? this.#wrapperElement.getBoundingClientRect().top
+      : Math.max(
+          this.#headerOffset,
+          this.#wrapperElement.getBoundingClientRect().top
+        ) + 1;
+  }
+
+  /**
+   * Cleans up resources when the tracker is destroyed
+   * Disconnects intersection observers and clears DOM references
+   * @returns {void}
+   */
+  destroy() {
+    // cancel scheduled timers
+    for (const timer of this.#scheduledTimers.values()) {
+      cancel(timer);
+    }
+
+    // disconnect the intersection observers
+    this.#viewportObserver?.disconnect();
+    this.#cloakingObserver?.disconnect();
+
+    // clear DOM references
+    this.#observedPostElements.clear();
+    this.#trackOnlyElements.clear();
+
+    // clear the set of posts with cloaking prevented
+    cloakingPrevented.topicId = null;
+    cloakingPrevented.posts.clear();
+  }
+
+  /**
    * Determines if a post should be cloaked based on its position relative to the viewport boundaries
    * Returns an object containing cloaking state and optional height style when cloaking is active
    *
-   * @param {Object} post - The post model
+   * @param {import("discourse/models/post").default | null | undefined} post - The post model
    * @param {Object} options - Cloaking boundary options
    * @param {number} options.above - The minimum post number to keep visible
    * @param {number} options.below - The maximum post number to keep visible
-   * @returns {Object} Object with active boolean and optional style string
-   *                   {active: boolean, style?: string}
+   * @returns {{ active: boolean, style?: import("@ember/template").TrustedHTML }} Object with active boolean and optional style
    */
   @bind
   getCloakingData(post, { above, below }) {
@@ -628,64 +685,6 @@ export default class PostStreamViewportTracker {
         RESIZE_DEBOUNCE_MS
       )
     );
-  }
-
-  /**
-   * Gets the testing wrapper element for test environment
-   * @private
-   * @returns {HTMLElement} The ember-testing container element
-   */
-  get #testWrapperElement() {
-    return document.getElementById("ember-testing");
-  }
-
-  /**
-   * Gets the total document height, accounting for test environment
-   * @private
-   * @returns {number} The total scrollable height of the document
-   */
-  get #documentHeight() {
-    return isTesting()
-      ? this.#testWrapperElement.scrollHeight
-      : Math.max(
-          document.body.scrollHeight,
-          document.documentElement.scrollHeight
-        );
-  }
-
-  /**
-   * Gets the viewport height, accounting for test environment
-   * @private
-   * @returns {number} The height of the viewport
-   */
-  get #viewportHeight() {
-    return isTesting()
-      ? this.#testWrapperElement.offsetHeight
-      : window.innerHeight;
-  }
-
-  /**
-   * Gets the current scroll position, accounting for test environment
-   * @private
-   * @returns {number} The current vertical scroll position
-   */
-  get #scrollPosition() {
-    return isTesting() ? this.#testWrapperElement.scrollTop : window.scrollY;
-  }
-
-  /**
-   * Gets the top boundary position for post visibility calculations
-   * In production, accounts for header offset if the wrapper element top is less than header offset
-   * @private
-   * @returns {number} The top boundary position in viewport coordinates
-   */
-  get #topBoundary() {
-    return isTesting()
-      ? this.#wrapperElement.getBoundingClientRect().top
-      : Math.max(
-          this.#headerOffset,
-          this.#wrapperElement.getBoundingClientRect().top
-        ) + 1;
   }
 
   /**

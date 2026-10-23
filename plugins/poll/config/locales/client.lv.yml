@@ -22,6 +22,8 @@ lv:
       cast-votes:
         title: "Atdod savas balsis"
         label: "Balso tagad!"
+      keep-vote:
+        label: "Atpakaļ"
       show-results:
         title: "Parādīt aptaujas rezultātus"
       hide-results:

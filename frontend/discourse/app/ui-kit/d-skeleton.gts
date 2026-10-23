@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { type TrustedHTML, trustHTML } from "@ember/template";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const DEFAULT_COUNT = 1;
@@ -200,12 +199,12 @@ export default class DSkeleton extends Component<DSkeletonSignature> {
 
   <template>
     <div
+      aria-hidden="true"
       class={{dConcatClass
         "d-skeleton"
         (concat "d-skeleton--" this.variant)
         (if this.multiline "d-skeleton--multiline")
       }}
-      aria-hidden="true"
       ...attributes
       style={{this.dimensionStyle}}
     >

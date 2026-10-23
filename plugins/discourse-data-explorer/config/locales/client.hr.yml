@@ -10,9 +10,7 @@ hr:
       admin_dashboard_card:
         no_results: "Nema rezultata"
     explorer:
-      default_query: "Zadano"
       or: "ili"
-      create: "Stvorite"
       ai:
         generate: "Generiraj"
         optional: "neobvezno"
@@ -35,10 +33,10 @@ hr:
         few: "%{count} rezultata."
         other: "%{count} rezultata."
       query_groups: "Grupe"
+      query_tags: "Oznake"
       query_description: "Opis"
       query_user: "Napravio"
       reset_params: "Resetirati"
-      search_placeholder: "Pretraži..."
     group:
       reports: "Izvještaji"
     discourse_workflows:

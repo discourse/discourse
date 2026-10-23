@@ -35,12 +35,12 @@ RSpec.describe Stylesheet::Watcher do
     end
 
     it "infers plugin names from stylesheet paths under plugins" do
-      plugin_path = Rails.root.join("plugins/discourse-calendar").to_s
-      path = Rails.root.join("plugins/discourse-calendar/assets/stylesheets/admin/calendar.scss")
+      plugin_path = Rails.root.join("plugins/discourse-events").to_s
+      path = Rails.root.join("plugins/discourse-events/assets/stylesheets/admin/calendar.scss")
 
       expect(watcher.path_data(path.to_s, [plugin_path])).to include(
         target: nil,
-        plugin_name: "discourse-calendar",
+        plugin_name: "discourse-events",
       )
     end
   end

@@ -119,6 +119,11 @@ te:
         sort:
           relevance: "ఔచిత్యం"
           latest: "తాజా"
+      channel_list:
+        options:
+          filter: "ఫిల్టర్ చేయండి"
+        filter:
+          mentions: "ప్రస్తావనలు"
       incoming_webhooks:
         back: "వెనుకకు"
         description: "వివరణ"
@@ -179,3 +184,8 @@ te:
         message: "సందేశం పంపించండి"
       chat_approval:
         message: "సందేశం పంపించండి"
+        value: "విలువ"
+        style_default: "అప్రమేయ"
+        style_primary: "ప్రాథమిక"
+        style_success: "విజయం"
+        icon: "చిహ్నం"

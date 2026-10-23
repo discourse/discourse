@@ -18,19 +18,15 @@ da:
       admin_dashboard_card:
         no_results: "Ingen resultater"
     explorer:
-      default_query: "Standard"
       or: "eller"
       admins_only: "Data explorer er kun tilgængelige for administratorer."
       allow_groups: "Tillad grupper at få adgang til denne forespørgsel"
       title: "Data Udforsker"
-      create: "Opret"
       create_placeholder: "Navn på forespørgsel..."
       description_placeholder: "Indtast en beskrivelse her"
       ai:
         generate: "Generér"
         optional: "valgfri"
-      import:
-        label: "Importer"
       help:
         label: "Hjælp"
         modal_title: "Hjælp til Data Udforsker"
@@ -54,11 +50,11 @@ da:
         other: "%{count} resultater."
       query_name: "Forespørgsel"
       query_groups: "Grupper"
+      query_tags: "Mærker"
       report_name: "Rapport"
       query_description: "Beskrivelse"
       query_user: "Oprettet af"
       reset_params: "Nulstil"
-      search_placeholder: "Søg..."
     group:
       reports: "Rapporter"
     discourse_workflows:

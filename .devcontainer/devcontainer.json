@@ -1,6 +1,6 @@
 {
   "name": "Discourse",
-  "image": "docker.io/discourse/discourse_dev:20260803-0122",
+  "image": "docker.io/discourse/discourse_dev:20261021-0024",
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/discourse,type=bind",
   "workspaceFolder": "/workspace/discourse",
   "postStartCommand": "./.devcontainer/scripts/start.rb",
@@ -29,6 +29,7 @@
         "dbaeumer.vscode-eslint",
         "lifeart.vscode-glimmer-syntax",
         "typed-ember.glint2-vscode",
+        "TypeScriptTeam.native-preview",
         "stylelint.vscode-stylelint"
       ]
     }

@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { not } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -22,17 +21,17 @@ export default class PostMetaDataPosterNameIcon extends Component {
       {{#if @url}}
         <a href={{@url}}>
           <Content
-            @icon={{@icon}}
             @emojis={{this.emojis}}
             @emojiTitle={{@emojiTitle}}
+            @icon={{@icon}}
             @text={{@text}}
           />
         </a>
       {{else}}
         <Content
-          @icon={{@icon}}
           @emojis={{this.emojis}}
           @emojiTitle={{@emojiTitle}}
+          @icon={{@icon}}
           @text={{@text}}
         />
       {{/if}}

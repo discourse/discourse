@@ -3,268 +3,346 @@
 module DiscourseDataExplorer
   class Queries
     def self.default
+      definitions.transform_values { |attributes| attributes.except("tags") }
+    end
+
+    # Tags shipped with default queries, in addition to the virtual "default" tag
+    def self.tags
+      @tags ||= definitions.to_h { |id, attributes| [id.to_i, attributes["tags"] || []] }.freeze
+    end
+
+    def self.definitions
       # WARNING: Edit the query hash carefully
-      # For each query, add id, name and description here and add sql below
+      # For each query, add id, name, description and optional tags here and add sql below
       # Feel free to add new queries at the bottom of the hash in numerical order
-      # If any query has been run on an instance, it is then saved in the local db
-      # Locally stored queries are updated from the below data only when they are run again
-      # eg. If you update a query with id=-1 in this file and the query has been run on a site,
-      #     you must run the query with id=-1 on the site again to update these changes in the site db
+      # The seed task synchronizes these definitions without changing local query state.
 
       queries = {
         "most-common-likers": {
           id: -1,
           name: "Most Common Likers",
           description: "Which users like particular other users the most?",
+          tags: %w[users],
         },
         "most-messages": {
           id: -2,
           name: "Who has been sending the most messages in the last week?",
           description: "tracking down suspicious PM activity",
+          tags: %w[engagement],
         },
         "edited-post-spam": {
           id: -3,
           name: "Last 500 posts that were edited by TL0/TL1 users",
           description: "fighting human-driven copy-paste spam",
+          tags: %w[users],
         },
         "new-topics": {
           id: -4,
           name: "New Topics by Category",
           description:
             "Lists all new topics ordered by category and creation_date. The query accepts a ‘months_ago’ parameter. It defaults to 0 to give you the stats for the current month.",
+          tags: %w[content],
         },
         "active-topics": {
           id: -5,
           name: "Top 100 Active Topics",
           description:
             "based on the number of replies, it accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
+          tags: %w[content],
         },
         "top-likers": {
           id: -6,
           name: "Top 100 Likers",
           description:
             "returns the top 100 likers for a given monthly period ordered by like_count. It accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
+          tags: %w[users],
         },
         "quality-users": {
           id: -7,
           name: "Top 50 Quality Users",
           description:
             "based on post score calculated using reply count, likes, incoming links, bookmarks, time spent and read count.",
+          tags: %w[users],
         },
         "user-participation": {
           id: -8,
           name: "User Participation Statistics",
           description: "Detailed statistics for the most active users.",
+          tags: %w[engagement],
         },
         "largest-uploads": {
           id: -9,
           name: "Top 50 Largest Uploads",
           description: "sorted by file size.",
+          tags: %w[admin],
         },
         "inactive-users": {
           id: -10,
           name: "Inactive Users with no posts",
           description: "analyze pre-Discourse signups.",
+          tags: %w[users],
         },
         "active-lurkers": {
           id: -11,
           name: "Most Active Lurkers",
           description:
             "active users without posts and excessive read times, it accepts a post_read_count parameter that sets the threshold for posts read.",
+          tags: %w[engagement],
         },
         "topic-user-notification-level": {
           id: -12,
           name: "List of topics a user is watching/tracking/muted",
           description:
             "The query requires a ‘notification_level’ parameter. Use 0 for muted, 1 for regular, 2 for tracked and 3 for watched topics.",
+          tags: %w[users],
         },
         "assigned-topics-report": {
           id: -13,
           name: "List of assigned topics by user",
           description: "This report requires the assign plugin, it will find all assigned topics",
+          tags: %w[assign],
         },
         "group-members-reply-count": {
           id: -14,
           name: "Group Members Reply Count",
           description:
             "Number of replies by members of a group over a given time period. Requires 'group_name', 'start_date', and 'end_date' parameters. Dates need to be in the form 'yyyy-mm-dd'. Accepts an 'include_pms' parameter.",
+          tags: %w[assign],
         },
         "total-assigned-topics-report": {
           id: -15,
           name: "Total topics assigned per user",
           description: "Count of assigned topis per user linking to assign list",
+          tags: %w[assign],
         },
         "poll-results": {
           id: -16,
           name: "Poll results report",
           description:
             "Details of a poll result, including details about each vote and voter, useful for analyzing results in external software.",
+          tags: %w[polls],
         },
         "top-tags-per-year": {
           id: -17,
           name: "Top tags per year",
           description: "List the top tags per year.",
+          tags: %w[content],
         },
         number_of_replies_by_category: {
           id: -18,
           name: "Number of replies by category",
           description: "List the number of replies by category.",
+          tags: %w[content],
         },
         "poll-results-ranked-choice": {
           id: -19,
           name: "Poll results report (for Ranked Choice polls)",
           description:
             "Details of a Ranked Choice poll result, including details about each vote and voter inc. rank, useful for analyzing results in external software.",
+          tags: %w[polls],
         },
         "weekly-unique-visitors": {
           id: -20,
           name: "Weekly Unique Visitors",
           description:
             "Number of distinct users who visited the site each week. Accepts a 'weeks_ago' parameter, defaults to the last 12 weeks.",
+          tags: %w[traffic],
         },
         "top-topics-by-views": {
           id: -21,
           name: "Top 100 Topics by Views",
           description:
             "The most viewed topics in a recent period, split into anonymous and logged-in views. Accepts a 'days_ago' parameter, defaults to the last 7 days.",
+          tags: %w[content],
         },
         "top-search-terms": {
           id: -22,
           name: "Top 200 Search Terms",
           description:
             "The most popular search terms by number of distinct users searching for them, useful for spotting content gaps. Accepts a 'days_ago' parameter, defaults to the last 30 days.",
+          tags: %w[content],
         },
         "topic-views-and-clicks": {
           id: -23,
           name: "Topic Views and Link Clicks Over Time",
           description:
             "Daily views (anonymous and logged in) and outbound link clicks for a single topic, useful for measuring how an announcement performed. Requires a 'topic_id' parameter, accepts a 'days_ago' parameter.",
+          tags: %w[content],
         },
         "avg-first-response-time": {
           id: -24,
           name: "Average Time to First Response",
           description:
             "Average number of hours before a new topic receives its first reply from someone other than the topic author, grouped by week. Accepts a 'weeks_ago' parameter, defaults to the last 12 weeks.",
+          tags: %w[engagement],
         },
         "new-topic-response-rate": {
           id: -25,
           name: "New Topic Response Rate",
           description:
             "Percentage of new public topics that receive any reply, and a staff reply, within 30 days of creation, grouped by month. Only counts topics old enough to have had a fair chance at a reply. Accepts a 'months_ago' parameter.",
+          tags: %w[engagement],
         },
         "community-participation-trend": {
           id: -26,
           name: "Community Participation Trend",
           description:
             "Monthly count of distinct non-staff users replying in public topics, with average replies per replier, useful to distinguish 'fewer people participating' from 'the same people posting less'. Accepts a 'months_ago' parameter.",
+          tags: %w[engagement],
         },
         "trust-level-growth": {
           id: -27,
           name: "Trust Level Growth Summary",
           description:
             "Number of users who reached each trust level in a recent period, alongside the current total population at each level. Accepts a 'days_ago' parameter, defaults to the last 28 days.",
+          tags: %w[users],
         },
         "topics-with-no-response": {
           id: -28,
           name: "Topics With No Response",
           description:
             "Number of topics per period that never received a reply from anyone other than the topic author. Accepts 'days_ago', 'category_id', 'include_subcategories' and 'interval' (day, week, month or year) parameters.",
+          tags: %w[content],
         },
         "top-posters": {
           id: -29,
           name: "Top Posters in a Given Timeframe",
           description:
             "Ranks users by topics created and replies posted in a date range. Requires 'start_date' and 'end_date' parameters (yyyy-mm-dd). Accepts a 'top_x' parameter, defaults to 10.",
+          tags: %w[engagement],
         },
         "category-activity": {
           id: -30,
           name: "Category Activity Breakdown",
           description:
             "Topic count, post count, likes and reads per category for a date range. Requires 'start_date' and 'end_date' parameters (yyyy-mm-dd).",
+          tags: %w[content],
         },
         "tl3-promotion-candidates": {
           id: -31,
           name: "Trust Level 3 Promotion Progress",
           description:
             "Checks every trust level 3 promotion requirement for current trust level 2 users, mirroring the logic of the built-in promotion job, including promotion blockers (locked trust level, active or recent suspensions and silences). Each threshold is a parameter defaulting to the matching site setting's default. Set 'show_all_results' to false to only list users currently meeting every requirement.",
+          tags: %w[users],
         },
         "silenced-users": {
           id: -32,
           name: "Silenced Users Report",
           description:
             "Currently silenced users, when they were silenced and by whom ('system' for automatic silences). Accepts optional 'start_date', 'end_date' and 'silenced_by' parameters.",
+          tags: %w[moderation],
         },
         "user-warnings": {
           id: -33,
           name: "Recent Official Warnings",
           description:
             "Official warnings issued recently, showing who was warned, who issued the warning, and the related topic. Accepts a 'days_ago' parameter, defaults to the last 28 days.",
+          tags: %w[moderation],
         },
         "most-flagged-users": {
           id: -34,
           name: "Users With Most Agreed-Upon Flags",
           description:
             "Ranks users by the number of their posts that had a flag agreed with by staff, useful for finding repeat offenders.",
+          tags: %w[moderation],
         },
         "subcategory-permission-drift": {
           id: -35,
           name: "Subcategory Permission Audit",
           description:
             "Finds subcategories granting a group permission that the parent category does not grant — a permission-hygiene check not surfaced by the admin UI.",
+          tags: %w[admin],
         },
         "reading-participation-histogram": {
           id: -36,
           name: "Reading Participation Histogram",
           description:
             "Buckets users by how many posts they read in a given period, from a single post up to 2048+, showing the shape of your reading base (lurkers vs power readers). Accepts 'from_days_ago' and 'duration_days' parameters.",
+          tags: %w[engagement],
         },
         "flags-by-type": {
           id: -37,
           name: "Flags by Type",
           description:
             "Number of flags per flag type, split into flags reported by real users and flags raised by automated accounts (system, bots). Accepts a 'days_ago' parameter, defaults to the last 90 days.",
+          tags: %w[moderation],
         },
         "flags-handled-by-staff": {
           id: -38,
           name: "Flags Handled by Staff Member",
           description:
             "Number of review queue items handled per staff member, useful for recognizing moderation workload. Accepts a 'days_ago' parameter, defaults to the last 90 days.",
+          tags: %w[moderation],
         },
         "suspended-users": {
           id: -39,
           name: "Suspended Users Report",
           description:
             "Currently suspended users, when they were suspended, until when, by whom and why. Accepts optional 'start_date', 'end_date' and 'suspended_by' parameters.",
+          tags: %w[moderation],
         },
         "foreign-language-topics": {
           id: -40,
           name: "Topics Not in the Site's Primary Language",
           description:
             "Recently created topics whose detected language differs from the site's primary language, useful for routing content for translation or moderation. WARNING: requires content localization with locale detection to be enabled (e.g. the content_localization_enabled and ai_translation_enabled site settings); without it topics have no locale recorded and this report will be empty. Accepts 'primary_locale' and 'days_ago' parameters.",
+          tags: %w[translation],
         },
         "foreign-language-posts": {
           id: -41,
           name: "Posts Not in the Site's Primary Language",
           description:
             "Recent posts whose detected language differs from the site's primary language, with a short excerpt. WARNING: requires content localization with locale detection to be enabled (e.g. the content_localization_enabled and ai_translation_enabled site settings); without it posts have no locale recorded and this report will be empty. Accepts 'primary_locale' and 'days_ago' parameters.",
+          tags: %w[translation],
         },
         "crawler-traffic-overview": {
           id: -42,
           name: "Crawler and Bot Traffic Overview",
           description:
-            "Buckets recent beacon pageviews by bot-likelihood score from Discourse's built-in crawler detection. Scoring lags live traffic, so the newest pageviews sit in the 'not scored' bucket alongside those that carried no bot signals at all, rather than counting as users. WARNING: requires browser pageview event collection (hidden site setting persist_browser_pageview_events) and scoring (hidden site setting experimental_detect_crawler_pageviews); without both, every pageview lands in 'not scored'. Accepts an 'hours' parameter, defaults to the last 24 hours.",
+            "Buckets recent beacon pageviews by bot-likelihood score from Discourse's built-in crawler detection. Scoring lags live traffic, so the newest pageviews sit in the 'not scored' bucket alongside those that carried no bot signals at all, rather than counting as users. WARNING: requires scoring (hidden site setting experimental_detect_crawler_pageviews); without it, every pageview lands in 'not scored'. Accepts an 'hours' parameter, defaults to the last 24 hours.",
+          tags: %w[traffic],
         },
         "crawler-traffic-detailed": {
           id: -43,
           name: "Crawler and Bot Traffic Detailed Report",
           description:
-            "Row-per-IP breakdown of likely bot pageview activity, with the individual signals that drove the score (automated user agent, known crawler network, velocity, session churn, rapid navigation, bad referrer, no measured interaction). WARNING: requires browser pageview event collection (hidden site setting persist_browser_pageview_events) and scoring (hidden site setting experimental_detect_crawler_pageviews); without both this report will be empty. Accepts 'hours' and 'min_score' parameters.",
+            "Row-per-IP breakdown of likely bot pageview activity, with the individual signals that drove the score (automated user agent, known crawler network, velocity, session churn, rapid navigation, bad referrer, no measured interaction). WARNING: requires scoring (hidden site setting experimental_detect_crawler_pageviews); without it this report will be empty. Accepts 'hours' and 'min_score' parameters.",
+          tags: %w[traffic],
         },
         "suspected-bot-networks": {
           id: -44,
           name: "Suspected Automated Traffic by IP and Network",
           description:
-            "Networks (ASNs) and IPs generating high pageview volume with bot-like session patterns (near 1.0 views per session, rotating user agents, systematic topic harvesting), sorted so a scrape spread across many IPs on one network floats to the top. WARNING: requires browser pageview event collection to be enabled (hidden site setting persist_browser_pageview_events); without it no events are recorded and this report will be empty. Accepts a 'days_ago' parameter, defaults to the last 3 days.",
+            "Networks (ASNs) and IPs generating high pageview volume with bot-like session patterns (near 1.0 views per session, rotating user agents, systematic topic harvesting), sorted so a scrape spread across many IPs on one network floats to the top. Accepts a 'days_ago' parameter, defaults to the last 3 days.",
+          tags: %w[traffic],
+        },
+        "ask-ai-asks-over-time": {
+          id: -45,
+          name: "Ask AI - Asks over time",
+          description:
+            "Daily Ask AI counts between start_date and end_date, inclusive (UTC). Requires Discourse AI.",
+          tags: %w[ai],
+        },
+        "ask-ai-ask-outcomes": {
+          id: -46,
+          name: "Ask AI - Ask outcomes",
+          description:
+            "Ask AI outcome counts and percentages between start_date and end_date, inclusive (UTC). Requires Discourse AI.",
+          tags: %w[ai],
+        },
+        "ask-ai-report-questions": {
+          id: -47,
+          name: "Ask AI - Questions included in this report",
+          description:
+            "Questions included in a particular Ask AI report, with their subjects and logged answers. Questions assigned to multiple subjects appear once per subject. Requires Discourse AI.",
+          tags: %w[ai],
+        },
+        "ask-ai-questions": {
+          id: -48,
+          name: "Ask AI - What users are asking",
+          description:
+            "All Ask AI questions between start_date and end_date, inclusive (UTC), with logged answers. Includes groups excluded from generated reports and is not limited by the report sample size. Requires Discourse AI.",
+          tags: %w[ai],
         },
       }.with_indifferent_access
 
@@ -315,8 +393,8 @@ module DiscourseDataExplorer
 
       WITH query_period as (
           SELECT
-              date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' as period_start,
-              date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' as period_end
+              date_trunc('month', CURRENT_DATE) - :months_ago * INTERVAL '1 month' as period_start,
+              date_trunc('month', CURRENT_DATE) - :months_ago * INTERVAL '1 month' + INTERVAL '1 month' - INTERVAL '1 second' as period_end
       )
 
       SELECT
@@ -336,8 +414,8 @@ module DiscourseDataExplorer
       -- int :months_ago = 1
 
       WITH query_period AS
-      (SELECT date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' AS period_start,
-                                                          date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' AS period_end)
+      (SELECT date_trunc('month', CURRENT_DATE) - :months_ago * INTERVAL '1 month' AS period_start,
+                                                          date_trunc('month', CURRENT_DATE) - :months_ago * INTERVAL '1 month' + INTERVAL '1 month' - INTERVAL '1 second' AS period_end)
       SELECT t.id AS topic_id,
           t.category_id,
           COUNT(p.id) AS reply_count
@@ -358,8 +436,8 @@ module DiscourseDataExplorer
 
       WITH query_period AS (
           SELECT
-              date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' as period_start,
-              date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' as period_end
+              date_trunc('month', CURRENT_DATE) - :months_ago * INTERVAL '1 month' as period_start,
+              date_trunc('month', CURRENT_DATE) - :months_ago * INTERVAL '1 month' + INTERVAL '1 month' - INTERVAL '1 second' as period_end
               )
 
           SELECT
@@ -754,7 +832,7 @@ module DiscourseDataExplorer
           COALESCE(SUM(tvs.anonymous_views + tvs.logged_in_views), 0) AS total_views
       FROM topics t
       JOIN topic_view_stats tvs ON tvs.topic_id = t.id
-          AND tvs.viewed_at >= CURRENT_DATE - :days_ago
+          AND tvs.viewed_at >= CURRENT_DATE - CAST(:days_ago AS integer)
       WHERE t.deleted_at IS NULL
           AND t.archetype = 'regular'
       GROUP BY t.id, t.category_id
@@ -771,7 +849,7 @@ module DiscourseDataExplorer
           COUNT(*) AS searches,
           COUNT(DISTINCT user_id) AS distinct_users
       FROM search_logs
-      WHERE created_at >= CURRENT_DATE - :days_ago
+      WHERE created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
       GROUP BY term
       ORDER BY distinct_users DESC, searches DESC
       LIMIT 200
@@ -785,7 +863,7 @@ module DiscourseDataExplorer
       -- gapless day series, so days with zero activity still show up as rows
       WITH day_series AS (
           SELECT generate_series(
-              CURRENT_DATE - :days_ago,
+              CURRENT_DATE - CAST(:days_ago AS integer),
               CURRENT_DATE,
               '1 day'::interval
           )::date AS day
@@ -797,7 +875,7 @@ module DiscourseDataExplorer
           FROM topic_link_clicks tlc
           JOIN topic_links tl ON tl.id = tlc.topic_link_id
           WHERE tl.topic_id = :topic_id
-              AND tlc.created_at >= CURRENT_DATE - :days_ago
+              AND tlc.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
           GROUP BY tlc.created_at::date
       ),
       daily_views AS (
@@ -807,7 +885,7 @@ module DiscourseDataExplorer
               COALESCE(SUM(logged_in_views), 0) AS logged_in_views
           FROM topic_view_stats
           WHERE topic_id = :topic_id
-              AND viewed_at >= CURRENT_DATE - :days_ago
+              AND viewed_at >= CURRENT_DATE - CAST(:days_ago AS integer)
           GROUP BY viewed_at
       )
       SELECT
@@ -947,10 +1025,10 @@ module DiscourseDataExplorer
           LEFT JOIN (
               SELECT DISTINCT target_user_id
               FROM user_histories
-              WHERE created_at >= CURRENT_DATE - :days_ago
+              WHERE created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
                   AND action IN (2, 15) -- change_trust_level, auto_trust_level_change
           ) tlc ON u.id = tlc.target_user_id
-          WHERE u.created_at >= CURRENT_DATE - :days_ago
+          WHERE u.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
               AND tlc.target_user_id IS NULL
       ),
       trust_level_changes AS (
@@ -959,7 +1037,7 @@ module DiscourseDataExplorer
               COUNT(DISTINCT uh.target_user_id) AS users_gained
           FROM user_histories uh
           JOIN users u ON uh.target_user_id = u.id
-          WHERE uh.created_at >= CURRENT_DATE - :days_ago
+          WHERE uh.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
               AND uh.action IN (2, 15) -- change_trust_level, auto_trust_level_change
               AND uh.new_value IN ('1', '2', '3', '4')
           GROUP BY uh.new_value
@@ -999,9 +1077,9 @@ module DiscourseDataExplorer
                   AND p.post_type = 1
               WHERE t.archetype = 'regular'
                   AND t.deleted_at IS NULL
-                  AND t.created_at >= CURRENT_DATE - :days_ago
+                  AND t.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
                   AND (
-                      :category_id IS NULL
+                      CAST(:category_id AS integer) IS NULL
                       OR t.category_id = :category_id
                       OR (:include_subcategories AND t.category_id IN (
                           SELECT id FROM categories WHERE parent_category_id = :category_id
@@ -1317,7 +1395,7 @@ module DiscourseDataExplorer
           w.topic_id,
           w.created_at
       FROM user_warnings w
-      WHERE w.created_at >= CURRENT_DATE - :days_ago
+      WHERE w.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
       ORDER BY w.created_at DESC
       SQL
 
@@ -1413,7 +1491,7 @@ module DiscourseDataExplorer
           COUNT(*) AS total
       FROM reviewable_scores rs
       LEFT JOIN flags f ON f.id = rs.reviewable_score_type
-      WHERE rs.created_at >= CURRENT_DATE - :days_ago
+      WHERE rs.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
       GROUP BY 1
       ORDER BY total DESC
       SQL
@@ -1428,7 +1506,7 @@ module DiscourseDataExplorer
       FROM reviewable_scores rs
       JOIN users u ON u.id = rs.reviewed_by_id
       WHERE (u.admin OR u.moderator)
-          AND rs.reviewed_at >= CURRENT_DATE - :days_ago
+          AND rs.reviewed_at >= CURRENT_DATE - CAST(:days_ago AS integer)
       GROUP BY rs.reviewed_by_id
       ORDER BY flags_handled DESC
       LIMIT 100
@@ -1483,7 +1561,7 @@ module DiscourseDataExplorer
       WHERE t.locale IS NOT NULL
           AND t.locale <> ''
           AND split_part(t.locale, '_', 1) <> split_part(:primary_locale, '_', 1)
-          AND t.created_at >= CURRENT_DATE - :days_ago
+          AND t.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
           AND t.deleted_at IS NULL
       ORDER BY t.created_at DESC
       SQL
@@ -1503,7 +1581,7 @@ module DiscourseDataExplorer
       WHERE p.locale IS NOT NULL
           AND p.locale <> ''
           AND split_part(p.locale, '_', 1) <> split_part(:primary_locale, '_', 1)
-          AND p.created_at >= CURRENT_DATE - :days_ago
+          AND p.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
           AND p.deleted_at IS NULL
       ORDER BY p.created_at DESC
       SQL
@@ -1516,7 +1594,6 @@ module DiscourseDataExplorer
           SELECT score
           FROM browser_pageview_events
           WHERE created_at >= NOW() - (:hours * INTERVAL '1 hour')
-            AND source = #{BrowserPageviewEvent::SOURCE_BEACON}
       )
       SELECT 'Not scored (pending or no signals)' AS bucket, COUNT(*) FILTER (WHERE score IS NULL) AS pageviews FROM events
       UNION ALL
@@ -1574,7 +1651,6 @@ module DiscourseDataExplorer
       FROM browser_pageview_events e
       JOIN browser_pageview_event_scores s ON s.event_id = e.id
       WHERE e.created_at >= NOW() - (:hours * INTERVAL '1 hour')
-          AND e.source = #{BrowserPageviewEvent::SOURCE_BEACON}
           AND e.score > :min_score
       GROUP BY e.ip_address, e.user_agent, e.asn, e.country_code, e.user_id, e.session_id
       ORDER BY max_score DESC, pageviews DESC
@@ -1600,16 +1676,106 @@ module DiscourseDataExplorer
           MAX(created_at) AS last_seen,
           (array_agg(user_agent ORDER BY created_at DESC))[1] AS sample_user_agent
       FROM browser_pageview_events
-      WHERE created_at >= CURRENT_DATE - :days_ago
-          AND source = #{BrowserPageviewEvent::SOURCE_BEACON}
+      WHERE created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
       GROUP BY ip_address, asn, country_code
       ORDER BY asn_total_pageviews DESC, pageviews DESC
       LIMIT 100
+      SQL
+
+      queries["ask-ai-asks-over-time"]["sql"] = <<~SQL
+      -- [params]
+      -- date :start_date
+      -- date :end_date
+
+      WITH daily_asks AS (
+        SELECT asked_at::date AS date, COUNT(*) AS asks
+        FROM ask_ai_logs
+        WHERE asked_at >= :start_date::date
+          AND asked_at < :end_date::date + INTERVAL '1 day'
+        GROUP BY asked_at::date
+      )
+      SELECT days.date::date AS date, COALESCE(daily_asks.asks, 0) AS asks
+      FROM generate_series(:start_date::date, :end_date::date, INTERVAL '1 day') AS days(date)
+      LEFT JOIN daily_asks ON daily_asks.date = days.date::date
+      ORDER BY days.date
+      SQL
+
+      queries["ask-ai-ask-outcomes"]["sql"] = <<~SQL
+      -- [params]
+      -- date :start_date
+      -- date :end_date
+
+      SELECT
+        CASE ask_outcome
+          WHEN 0 THEN 'answered'
+          WHEN 1 THEN 'no_answer'
+          WHEN 2 THEN 'failed'
+          WHEN 3 THEN 'cancelled'
+          ELSE 'pending'
+        END AS outcome,
+        COUNT(*) AS asks,
+        ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 1) AS percentage
+      FROM ask_ai_logs
+      WHERE asked_at >= :start_date::date
+        AND asked_at < :end_date::date + INTERVAL '1 day'
+      GROUP BY ask_outcome
+      ORDER BY ask_outcome NULLS LAST
+      SQL
+
+      queries["ask-ai-report-questions"]["sql"] = <<~SQL
+      -- [params]
+      -- int :report_id
+
+      SELECT
+        subjects.name AS subject,
+        logs.user_id,
+        TO_CHAR(logs.asked_at, 'Mon DD HH24:MI "UTC"') AS asked_at,
+        logs.query,
+        logs.answer_title,
+        logs.answer,
+        CASE logs.ask_outcome
+          WHEN 0 THEN 'answered'
+          WHEN 1 THEN 'no_answer'
+          WHEN 2 THEN 'failed'
+          WHEN 3 THEN 'cancelled'
+          ELSE 'pending'
+        END AS outcome
+      FROM ask_ai_reports reports
+      JOIN ask_ai_report_subjects subjects ON subjects.ask_ai_report_id = reports.id
+      JOIN ask_ai_report_subject_asks memberships ON memberships.ask_ai_report_subject_id = subjects.id
+      JOIN ask_ai_logs logs ON logs.id = memberships.ask_ai_log_id
+      WHERE reports.id = :report_id
+      ORDER BY subjects.position, subjects.id, logs.asked_at DESC, logs.id DESC
+      SQL
+
+      queries["ask-ai-questions"]["sql"] = <<~SQL
+      -- [params]
+      -- date :start_date
+      -- date :end_date
+
+      SELECT
+        user_id,
+        TO_CHAR(asked_at, 'Mon DD HH24:MI "UTC"') AS asked_at,
+        query,
+        answer_title,
+        answer,
+        CASE ask_outcome
+          WHEN 0 THEN 'answered'
+          WHEN 1 THEN 'no_answer'
+          WHEN 2 THEN 'failed'
+          WHEN 3 THEN 'cancelled'
+          ELSE 'pending'
+        END AS outcome
+      FROM ask_ai_logs
+      WHERE asked_at >= :start_date::date
+        AND asked_at < :end_date::date + INTERVAL '1 day'
+      ORDER BY ask_ai_logs.asked_at DESC, id DESC
       SQL
 
       # convert query ids from "mostcommonlikers" to "-1", "mostmessages" to "-2" etc.
       queries.transform_keys!.with_index { |key, idx| "-#{idx + 1}" }
       queries
     end
+    private_class_method :definitions
   end
 end

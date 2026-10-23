@@ -1,0 +1,28 @@
+# frozen_string_literal: true
+
+RSpec.describe UserResource do
+  fab!(:user) { Fabricate(:user, username: "someone") }
+  let(:guardian) { Guardian.new }
+  let(:edition) { JsonApiKit::Edition.current }
+  let(:urls) do
+    JsonApiKit::Urls.new(base: "https://example.com/api", current: "https://example.com/api/users")
+  end
+  let(:client) { JsonApiKit::Client.new(guardian:, edition:, urls:) }
+  let(:document) do
+    JsonApiKit::Document::Individual.for(user.id, {}, resource: described_class, client:)
+  end
+
+  it "shows the username and the avatar template" do
+    expect(document.to_h[:data]).to eq(
+      type: "users",
+      id: user.id.to_s,
+      attributes: {
+        "username" => "someone",
+        "avatarTemplate" => user.avatar_template,
+      },
+      links: {
+        self: "https://example.com/api/users/#{user.id}",
+      },
+    )
+  end
+end

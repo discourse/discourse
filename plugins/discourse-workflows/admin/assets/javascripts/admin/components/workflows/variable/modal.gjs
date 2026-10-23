@@ -35,27 +35,27 @@ export default class VariableModal extends Component {
 
   <template>
     <DModal
+      @closeModal={{@closeModal}}
       @title={{if
         @model.variable
         (i18n "discourse_workflows.variables.edit")
         (i18n "discourse_workflows.variables.add")
       }}
-      @closeModal={{@closeModal}}
     >
       <:body>
         <Form
+          class="workflows-configurator-form"
           @data={{this.formData}}
           @onSubmit={{this.handleSubmit}}
-          class="workflows-configurator-form"
           as |form|
         >
           <form.Field
+            @format="full"
             @name="key"
             @title={{i18n "discourse_workflows.variables.key"}}
             @type="input"
-            @format="full"
-            @validation="required"
             @validate={{this.validateKey}}
+            @validation="required"
             as |field|
           >
             <field.Control
@@ -66,10 +66,10 @@ export default class VariableModal extends Component {
           </form.Field>
 
           <form.Field
+            @format="full"
             @name="value"
             @title={{i18n "discourse_workflows.variables.value"}}
             @type="input"
-            @format="full"
             @validation="required"
             as |field|
           >

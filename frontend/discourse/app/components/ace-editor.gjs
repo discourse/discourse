@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
@@ -9,8 +8,8 @@ import { modifier } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import loadAce from "discourse/lib/load-ace-editor";
-import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
@@ -63,7 +62,17 @@ export default class AceEditor extends Component {
   @service appEvents;
 
   @tracked isLoading = true;
+
+  /**
+   * The resized box, handed to the separator once the editor has built it.
+   * @type {HTMLElement | null}
+   */
+  @tracked editorContainer = null;
+
+  /** @type {import("ace-builds").Ace.Editor | null} */
   editor = null;
+
+  /** @type {typeof import("ace-builds") | null} */
   ace = null;
   skipChangePropagation = false;
 
@@ -88,7 +97,7 @@ export default class AceEditor extends Component {
     super(...arguments);
 
     loadAce().then((ace) => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -110,6 +119,18 @@ export default class AceEditor extends Component {
     this._darkModeListener?.removeEventListener("change", this.setAceTheme);
     window.removeEventListener("resize", this.resize);
     this.appEvents.off("ace:resize", this.resize);
+  }
+
+  get mode() {
+    return this.args.mode || "css";
+  }
+
+  get cssClasses() {
+    let cssClasses = ["ace"];
+    if (this.args.resizable) {
+      cssClasses.push("ace_editor--resizable");
+    }
+    return cssClasses.join(" ");
   }
 
   @bind
@@ -153,6 +174,7 @@ export default class AceEditor extends Component {
 
     this.editor.on("blur", () => this.warnSCSSDeprecations());
 
+    this.editorContainer = this.editor.container;
     this.editor.$blockScrolling = Infinity;
     this.editor.renderer.setScrollMargin(10, 10);
 
@@ -168,18 +190,6 @@ export default class AceEditor extends Component {
     }
 
     this.setAceTheme();
-  }
-
-  get mode() {
-    return this.args.mode || "css";
-  }
-
-  get cssClasses() {
-    let cssClasses = ["ace"];
-    if (this.args.resizable) {
-      cssClasses.push("ace_editor--resizable");
-    }
-    return cssClasses.join(" ");
   }
 
   @bind
@@ -270,32 +280,39 @@ export default class AceEditor extends Component {
 
   @bind
   onResizeDrag(size) {
-    this.editor.container.style.height = `${size}px`;
+    this.editorContainer.classList.add("clear-transitions");
+    this.editorContainer.style.height = `${size}px`;
+  }
+
+  @bind
+  onResizeEnd() {
+    this.editorContainer.classList.remove("clear-transitions");
   }
 
   <template>
     <div class="ace-wrapper">
       <DConditionalLoadingSpinner @condition={{this.isLoading}} @size="small">
         <div
+          class={{dConcatClass this.cssClasses}}
+          ...attributes
           {{didInsert this.setupAce}}
           {{this.setContent}}
           {{didUpdate this.editorIdChanged @editorId}}
           {{didUpdate this.modeChanged @mode}}
           {{didUpdate this.placeholderChanged @placeholder}}
           {{didUpdate this.changeDisabledState @disabled}}
-          class={{dConcatClass this.cssClasses}}
-          ...attributes
         >
         </div>
         {{#if @resizable}}
-          <div
+          <DResizeSeparator
             class="grippie"
-            {{grippieDragResize
-              ".ace_editor--resizable"
-              "bottom"
-              (hash onThrottledDrag=this.onResizeDrag)
-            }}
-          ></div>
+            @axis="vertical"
+            @label={{i18n "ace_editor.resize"}}
+            @measure={{this.editorContainer}}
+            @onResize={{this.onResizeDrag}}
+            @onResizeEnd={{this.onResizeEnd}}
+            @side="start"
+          />
         {{/if}}
       </DConditionalLoadingSpinner>
     </div>

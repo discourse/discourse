@@ -8,7 +8,6 @@ import { trustHTML } from "@ember/template";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { escapeExpression } from "discourse/lib/utilities";
-import { and, not } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
@@ -39,6 +38,10 @@ export default class AdminSearch extends Component {
     return i18n("admin.search.no_results", {
       filter: escapeExpression(this.filter),
     });
+  }
+
+  get showLoadingSpinner() {
+    return this.filter !== "" && (this.loading || !this.dataReady);
   }
 
   @action
@@ -119,10 +122,6 @@ export default class AdminSearch extends Component {
     this.loading = false;
   }
 
-  get showLoadingSpinner() {
-    return this.filter !== "" && (this.loading || !this.dataReady);
-  }
-
   <template>
     <div
       class="admin-search__input-container
@@ -133,17 +132,17 @@ export default class AdminSearch extends Component {
       <div class="admin-search__input-group">
         {{dIcon "magnifying-glass" class="admin-search__input-icon"}}
         <input
-          type="text"
           class="admin-search__input-field"
+          placeholder={{i18n "admin.search.instructions"}}
+          type="text"
           value={{this.filter}}
           {{dAutoFocus}}
           {{on "input" this.changeSearchTerm}}
           {{on "keydown" this.handleSearchKeyDown}}
-          placeholder={{i18n "admin.search.instructions"}}
         />
       </div>
     </div>
-    <div class="sr-only" aria-live="polite" role="status">
+    <div aria-live="polite" class="sr-only" role="status">
       {{#if this.searchResults}}
         {{i18n
           "admin.search.result_count"
@@ -168,7 +167,7 @@ export default class AdminSearch extends Component {
         (not this.showLoadingSpinner)
       )
     }}
-      <p class="admin-search__no-results" aria-live="polite" role="status">
+      <p aria-live="polite" class="admin-search__no-results" role="status">
         {{this.noResultsDescription}}
       </p>
     {{/if}}
@@ -179,10 +178,10 @@ export default class AdminSearch extends Component {
         {{#each this.searchResults as |result|}}
           <div class="admin-search__result" data-result-type={{result.type}}>
             <a
-              href={{result.url}}
-              {{on "keydown" this.handleResultKeyDown}}
               class="admin-search__result-link"
+              href={{result.url}}
               tabindex="0"
+              {{on "keydown" this.handleResultKeyDown}}
             >
               <div class="admin-search__result-name">
                 {{#if result.icon}}

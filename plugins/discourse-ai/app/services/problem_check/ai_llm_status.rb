@@ -53,14 +53,7 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
     counts = DB.query_single(<<~SQL, llm_id: model.id, since: LOOKBACK_WINDOW.ago)
         SELECT
           COUNT(*) AS total_calls,
-          SUM(
-            CASE
-              WHEN response_status IS NOT NULL THEN
-                CASE WHEN response_status NOT BETWEEN 200 AND 299 THEN 1 ELSE 0 END
-              ELSE
-                CASE WHEN COALESCE(response_tokens, 0) <= 0 THEN 1 ELSE 0 END
-            END
-          ) AS failed_calls
+          COUNT(*) FILTER (WHERE #{AiApiAuditLog::FAILURE_CONDITION}) AS failed_calls
         FROM ai_api_audit_logs
         WHERE llm_id = :llm_id
           AND created_at >= :since

@@ -104,7 +104,6 @@
   pre code {
     overflow-wrap: anywhere; // prevent long strings from breaking modal width
     min-width: 0;
-    overflow: auto;
     flex: 0 1 auto;
   }
 
@@ -247,8 +246,8 @@
   }
 
   ins,
-  .diff-ins,
   del,
+  .diff-ins,
   .diff-del {
     color: var(--primary);
 
@@ -263,6 +262,11 @@
 
     a {
       text-decoration: none;
+    }
+
+    > .title,
+    > blockquote {
+      background: transparent;
     }
   }
 

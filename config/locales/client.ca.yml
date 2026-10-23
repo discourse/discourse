@@ -166,7 +166,6 @@ ca:
       en:
         name: Anglès
     share:
-      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicació #%{postNumber} de @%{username}"
       close: "tanca"
       twitter: "Comparteix a X"
@@ -214,12 +213,16 @@ ca:
     topic_admin_menu: "accions del tema"
     skip_to_main_content: "Vés al contingut principal"
     skip_user_nav: "Ves al contingut principal"
+    reorder:
+      removed: "Ha suprimit %{label}"
+      position: "%{position} de %{total}"
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap notificació de cap mena per correu electrònic."
     emails_are_disabled_non_staff: "El correu electrònic sortint ha estat desactivat per a usuaris que no siguin del personal."
     software_update_prompt:
       message: "Hem actualitzat aquest lloc, <span>si us plau, refresqueu</span> per mantenir les coses funcionant sense problemes."
       dismiss: "Descarta-ho"
     back_button: "Enrere"
+    confirm_button: "Confirma"
     welcome_banner:
       header:
         logged_in_members: "Benvingut de nou, %{preferred_display_name}!"
@@ -307,9 +310,6 @@ ca:
     max_of_count:
       one: "màxim de %{count}"
       other: "màxim de %{count}"
-    character_count:
-      one: "%{count} caràcter"
-      other: "%{count} caràcters"
     period_chooser:
       aria_label: "Filtra per període"
     related_messages:
@@ -326,6 +326,7 @@ ca:
       sections:
         theme: "Aparença"
         homepage: "Pàgina principal"
+        search: "Cerca"
       colors:
         light: "Clar"
         dark: "Fosc"
@@ -477,6 +478,8 @@ ca:
       title:
         search: "Cerqueu un missatge"
         placeholder: "escriviu aquí el títol, l'URL o l'identificador del missatge"
+    dsa_statements:
+      category: "Categoria"
     review:
       order_by: "Ordena per"
       date_filter: "Publicat entre"
@@ -628,6 +631,9 @@ ca:
       user_label: "Usuari"
       timeline:
         target_deleted: "Publicació suprimida"
+      author_penalty:
+        toast:
+          undo: "Desfés"
       notes:
         delete: "Suprimeix"
       topic_label: "Tema"
@@ -1040,7 +1046,6 @@ ca:
       admin: "%{user} és un administrador"
       moderator_tooltip: "Aquest usuari és un moderador."
       admin_tooltip: "Aquest usuari és un administrador"
-      silenced_tooltip: "Aquest usuari és silenciat"
       suspended_notice: "Aquest usuari és suspès fins a %{date}."
       suspended_permanently: "Aquest usuari és suspès."
       suspended_reason: "Motiu:"
@@ -1092,6 +1097,13 @@ ca:
       tracked_topics_link: "Mostra"
       automatically_unpin_topics: "Desafixa automàticament els temes quan jo arribi al final"
       apps: "Aplicacions"
+      mcp_authorizations:
+        details: "Detalls"
+        never: "Mai"
+        status: "Estat"
+        statuses:
+          active: "Actiu"
+          revoked: "Revocat"
       revoke_access: "Revoca l'accés"
       undo_revoke_access: "Desfés revocar l'accés"
       api_approved: "Aprovat:"
@@ -1686,6 +1698,8 @@ ca:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Retorn"
+      delete: "Suprimeix"
+      home: "Pàgina principal"
     category_row:
       subcategories: "+ Subcategories"
     select_kit:
@@ -1760,8 +1774,7 @@ ca:
       create_shared_draft: "Crea un esborrany compartit"
       edit_shared_draft: "Edita l'esborrany compartit"
       discard: "Descarta"
-      title_placeholder: "De què tracta aquesta discussió (en una frase curta)?"
-      title_placeholder_redesign: "Títol"
+      title_placeholder: "Títol"
       title_or_link_placeholder: "Escriviu aquí el títol o enganxeu-hi un enllaç"
       edit_reason_placeholder: "Per què ho editeu?"
       topic_featured_link_placeholder: "Introduïu un enllaç mostrat amb títol."
@@ -1829,6 +1842,8 @@ ca:
         unknown_user: "Usuari"
       ignore: "Ignora"
       image: "imatge"
+      table:
+        default_heading: "Columna %{number}"
     notifications:
       tooltip:
         regular:
@@ -1945,6 +1960,7 @@ ca:
       categories: "Categories"
       tags: "Etiquetes"
       type:
+        default: "Publicacions"
         users: "Usuaris"
         categories: "Categories"
       context:
@@ -2387,7 +2403,6 @@ ca:
       reply_as_new_private_message: "Respon amb un missatge nou als mateixos destinataris."
       continue_discussion: "Continuant la discussió de %{postLink}:"
       follow_quote: "vés a la publicació citada"
-      show_full: "Mostra la publicació sencera"
       show_hidden: "Mira el contingut ignorat"
       collapse: "redueix"
       expand_collapse: "expandeix/contrau"
@@ -2583,6 +2598,7 @@ ca:
       delete_confirm: "Esteu segur que voleu suprimir aquesta categoria?"
       delete_error: "Hi ha hagut un error en suprimir aquesta categoria"
       no_description: "Introduïu una descripció per a aquesta categoria."
+      latest_topics: "Temes més recents"
       already_used: "Aquest color ha estat utilitzat per una altra categoria"
       security: "Seguretat"
       permissions:
@@ -2762,6 +2778,7 @@ ca:
       with_topics: "%{filter} temes"
       with_category: "%{filter} %{category} temes"
       filter:
+        reset: "restableix"
         button:
           label: "Filtre"
       latest:
@@ -2843,11 +2860,8 @@ ca:
       content_load_error: 'No s''ha pogut carregar <a href="%url%">el contingut</a>. '
       image_load_error: 'No s''ha pogut carregar la <a href="%url%">imatge</a>.'
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} o %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Dreceres de teclat"
       description_header: "Descripció"
       key_header: "Clau"
@@ -2892,9 +2906,6 @@ ca:
       admin:
         title: "Administració"
     badges:
-      earned_n_times:
-        one: "Ha rebut aquesta insígnia %{count} vegada."
-        other: "Ha rebut aquesta insígnia%{count} vegades."
       granted_on: "Concedit %{date}"
       title: Insígnies
       allow_title: "Podeu fer servir aquesta insígnia com a títol"
@@ -3099,18 +3110,6 @@ ca:
         type_mismatch:
           default: "Introduïu un valor vàlid."
           email: "Introduïu una adreça vàlida de correu electrònic."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Retorn"
-      edit:
-        modal:
-          cancel: "cancel·la"
-          create: "Desa"
-          reason: "Per què ho editeu?"
-      spreadsheet:
-        show: "Mostra"
-        about: "Quant a"
     filter:
       description:
         yesterday: "Ahir"
@@ -3137,6 +3136,11 @@ ca:
         group_traffic: "Tràfic"
         group_members: "Membres"
         group_other: "Altres"
+        related_items:
+          users:
+            title: "Usuaris"
+          labels:
+            user: "Usuari"
       config_sections:
         account:
           title: "Compte"
@@ -3175,6 +3179,62 @@ ca:
       config:
         developer:
           title: "Desenvolupador"
+        mcp:
+          tabs:
+            access: "Accés"
+            activity: "Activitat"
+          overview:
+            status: "Estat"
+          access:
+            title: "Accés"
+            group: "Grup"
+            groups: "Grups"
+            actions: "Accions"
+            edit: "Edita"
+            delete: "Suprimeix"
+          primitives:
+            group_by_options:
+              provider: "Proveïdor"
+              kind: "Tipus"
+            provider: "Proveïdor"
+            kind: "Tipus"
+          clients:
+            actions: "Accions"
+            block: "Bloca"
+            presets:
+              custom: "Personalitzat"
+            automatic: "Automàtic"
+          authorizations:
+            user: "Usuari"
+            status: "Estat"
+            actions: "Accions"
+          activity:
+            time: "Hora"
+            user: "Usuari"
+            duration: "Duració"
+          values:
+            server_status:
+              disabled: "Desactivat"
+            client_trust:
+              approved: "Aprovat"
+            authorization_status:
+              active: "Actiu"
+              revoked: "Revocat"
+            activity_outcome:
+              success: "Èxit"
+              error: "Error"
+            primitive_state:
+              enabled: "Activat"
+              disabled: "Desactivat"
+            primitive_kind:
+              all: "Tots els tipus"
+            primitive_risk:
+              moderation: "Moderació"
+            filter:
+              all: "Tots"
+          never: "Mai"
+          actions:
+            revoke: "Revoca"
         emojis:
           title: "Emoji"
         flags:
@@ -3303,13 +3363,20 @@ ca:
         default_value: "Per defecte"
       search:
         title: "Cerca"
+      site_traffic_explorer:
+        metric_information: "Quant a %{metric}"
+        apply: "Aplica"
+        filters:
+          browser: "Navegador"
+          ip: "Adreça IP"
+        series:
+          anonymous_human: "Anònim"
       dashboard:
         title: "Tauler de control"
         last_updated: "Tauler de control actualitzat:"
         discourse_last_updated: "Discourse actualitzat"
         version: "Versió"
         up_to_date: "Esteu al dia!"
-        critical_available: "Hi ha una actualització crítica."
         updates_available: "Hi ha actualitzacions disponibles."
         no_check_performed: "No s'ha executat la comprovació d'actualitzacions. Assegureu-vos que funciona Sidekiq."
         stale_data: "Darrerament no s'ha executat la comprovació d'actualitzacions. Assegureu-vos que funciona Sidekiq."
@@ -3368,6 +3435,8 @@ ca:
               share: "Comparteix"
             whos_posting:
               staff: "Equip responsable"
+              modal:
+                apply: "Desa"
             trust_level_pipeline:
               trust_levels:
                 "0": "Nou"
@@ -3380,6 +3449,10 @@ ca:
             table:
               searches: "Cerques"
               status: "Estat"
+          system:
+            title: "Sistema"
+            status: "Estat"
+            dashboard_updated: "Tauler de control actualitzat"
         reports_section:
           header_action: "Gestiona"
           modal:
@@ -3390,6 +3463,7 @@ ca:
           series:
             anonymous: "Anònim"
             crawlers: "Rastrejadors"
+          crawler_learn_more: "Per a saber-ne més"
         period:
           last_7_days: "Els darrers 7 dies"
           last_30_days: "Els darrers 30 dies"
@@ -3416,6 +3490,13 @@ ca:
           average_for_sample: "Mitjana per mostra"
           total: "Total de tots els temps"
           no_data: "No hi ha dades per a mostrar"
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} usuari"
+              other: "%{count} usuaris"
+            posts_count:
+              one: "%{count} publicació"
+              other: "%{count} publicacions"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Cerca de registres (logs)</a>'
             disabled: 'El report de cerca de tendències està desactivat. Habiliteu <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">les consultes de cerca de registres</a> per a recopilar dades.'
@@ -3836,6 +3917,7 @@ ca:
           upload: "Carrega"
           unsaved_changes_alert: "Encara no heu desat els canvis. Voleu descartar-los i continuar?"
           discard: "Descarta"
+          leave: "Abandona"
           stay: "Roman"
           delete_upload_confirm: "Voleu suprimir aquesta càrrega? (L'aparença CSS pot deixar de funcionar!)"
           import_web_tip: "Repositori que conté l'aparença"
@@ -4431,12 +4513,11 @@ ca:
           confirm: "Confirmació"
           dropdown: "Desplega"
       site_text:
-        search: "Cerca el text que t'agradaria editar"
+        search_label: "Cerca"
+        theme_disabled: "Desactivat"
+        filters: "Filtres"
         edit: "Edita"
-        revert: "Reverteix els canvis"
         revert_confirm: "Esteu segur que voleu revertir els canvis?"
-        go_back: "Torna a la cerca"
-        recommended: "Recomanem personalitzar el text següent segons us convingui:"
         show_overriden: "Mostra sols texts editats"
         more_than_50_results: "Hi ha més de 50 resultats. Restringiu la cerca."
         outdated:

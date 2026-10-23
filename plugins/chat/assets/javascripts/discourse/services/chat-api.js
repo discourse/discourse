@@ -2,7 +2,7 @@ import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
-import Collection from "../lib/collection";
+import Collection from "../lib/collection.js";
 
 /**
  * Chat API service. Provides methods to interact with the chat API.
@@ -12,6 +12,10 @@ import Collection from "../lib/collection";
  */
 export default class ChatApi extends Service {
   @service chatChannelsManager;
+
+  get #basePath() {
+    return "/chat/api";
+  }
 
   channel(channelId) {
     return this.#getRequest(`/channels/${channelId}`);
@@ -659,10 +663,6 @@ export default class ChatApi extends Service {
 
   markPinsAsRead(channelId) {
     return this.#putRequest(`/channels/${channelId}/pins/read`);
-  }
-
-  get #basePath() {
-    return "/chat/api";
   }
 
   #getRequest(endpoint, data = {}) {

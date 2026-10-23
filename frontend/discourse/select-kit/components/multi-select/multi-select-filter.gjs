@@ -42,16 +42,16 @@ export default class MultiSelectFilter extends SelectKitFilterComponent {
       {{! filter-input-search prevents 1password from attempting autocomplete }}
 
       <Input
-        tabindex={{0}}
-        class="filter-input"
-        placeholder={{this.computedPlaceholder}}
+        autocapitalize="off"
         autocomplete="off"
         autocorrect="off"
-        autocapitalize="off"
+        class="filter-input"
         name="filter-input-search"
+        placeholder={{this.computedPlaceholder}}
         spellcheck={{false}}
-        @value={{readonly this.selectKit.filter}}
+        tabindex={{0}}
         @type="search"
+        @value={{readonly this.selectKit.filter}}
         {{on "paste" this.onPaste}}
         {{on "keydown" this.onKeydown}}
         {{on "keyup" this.onKeyup}}

@@ -1,4 +1,5 @@
 import { service } from "@ember/service";
+import UserMenuMessagesListEmptyState from "discourse/components/user-menu/messages-list-empty-state";
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
 import { ajax } from "discourse/lib/ajax";
 import UserMenuMessageItem from "discourse/lib/user-menu/message-item";
@@ -36,7 +37,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
   }
 
   get emptyStateComponent() {
-    return "user-menu/messages-list-empty-state";
+    return UserMenuMessagesListEmptyState;
   }
 
   get #unreadMessagesNotifications() {
@@ -77,19 +78,6 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
 
     const topics = data.topics.map((t) => this.store.createRecord("topic", t));
     await Topic.applyTransformations(topics);
-
-    if (
-      this.siteSettings.show_user_menu_avatars ||
-      this.siteSettings.prioritize_full_name_in_ux
-    ) {
-      // Populate avatar_template for lastPoster
-      const usersById = new Map(data.users.map((u) => [u.id, u]));
-      topics.forEach((t) => {
-        const lastPoster = usersById.get(t.lastPoster.user_id);
-        t.last_poster_avatar_template = lastPoster?.avatar_template;
-        t.last_poster_name = lastPoster?.name;
-      });
-    }
 
     const readNotifications = await Notification.initializeNotifications(
       data.read_notifications

@@ -63,6 +63,11 @@ module Chat
              foreign_key: :target_id
     has_many :uploads, through: :upload_references, class_name: "::Upload"
 
+    has_many :hotlinked_media,
+             dependent: :destroy,
+             foreign_key: :chat_message_id,
+             class_name: "Chat::MessageHotlinkedMedia"
+
     has_one :chat_webhook_event,
             dependent: :destroy,
             class_name: "Chat::WebhookEvent",
@@ -179,14 +184,20 @@ module Chat
       end
 
       # upload-only messages are better represented as the filename
-      return uploads.first.original_filename if cooked.blank? && uploads.present?
+      return upload_filename_excerpt if cooked.blank? && uploads.present?
 
       # this may return blank for some complex things like quotes, that is acceptable
       PrettyText.excerpt(cooked, EXCERPT_LENGTH, strip_links:, keep_mentions: true)
     end
 
+    def excerpt_for_display
+      return upload_filename_excerpt if only_uploads?
+
+      excerpt || build_excerpt
+    end
+
     def cooked_for_excerpt
-      (cooked.blank? && uploads.present?) ? "<p>#{uploads.first.original_filename}</p>" : cooked
+      (cooked.blank? && uploads.present?) ? "<p>#{upload_filename_excerpt}</p>" : cooked
     end
 
     def push_notification_excerpt
@@ -271,10 +282,8 @@ module Chat
       entity
     ]
 
-    def self.cook(message, opts = {})
+    def self.markdown_options(opts = {})
       bot = opts[:user_id] && opts[:user_id].negative?
-      slash_command = match_slash_command(message, opts[:author_username])
-      message_to_cook = slash_command ? slash_command[:content] : message
 
       features = MARKDOWN_FEATURES.dup
       features << "image-grid" if bot
@@ -289,15 +298,20 @@ module Chat
       # this when cooking #hashtags to determine whether we should render
       # the found hashtag based on whether the user can access the channel it
       # is referencing.
-      cooked =
-        PrettyText.cook(
-          message_to_cook,
-          features_override: features + DiscoursePluginRegistry.chat_markdown_features.to_a,
-          markdown_it_rules: rules,
-          force_quote_link: true,
-          user_id: opts[:user_id],
-          hashtag_context: "chat-composer",
-        )
+      {
+        features_override: features + DiscoursePluginRegistry.chat_markdown_features.to_a,
+        markdown_it_rules: rules,
+        force_quote_link: true,
+        user_id: opts[:user_id],
+        hashtag_context: "chat-composer",
+      }
+    end
+
+    def self.cook(message, opts = {})
+      slash_command = match_slash_command(message, opts[:author_username])
+      message_to_cook = slash_command ? slash_command[:content] : message
+
+      cooked = PrettyText.cook(message_to_cook, markdown_options(opts))
       cooked = format_slash_command(cooked, slash_command, opts[:author_username]) if slash_command
 
       result =
@@ -312,6 +326,12 @@ module Chat
 
       cooked = result.to_html if result.changed?
       cooked
+    end
+
+    def action?
+      SLASH_COMMAND_PATTERNS.any? do |_, command|
+        command[:formatter] == :action && message&.match?(command[:pattern])
+      end
     end
 
     def self.match_slash_command(message, author_username)
@@ -408,6 +428,10 @@ module Chat
     end
 
     private
+
+    def upload_filename_excerpt
+      ERB::Util.html_escape(uploads.first.original_filename.truncate(EXCERPT_LENGTH, omission: ""))
+    end
 
     def urls_as_links(urls)
       html =
@@ -512,6 +536,7 @@ end
 #  idx_chat_messages_thread_id_id_user_id_not_deleted     (thread_id,id) WHERE (deleted_at IS NULL)
 #  index_chat_messages_on_chat_channel_id_and_created_at  (chat_channel_id,created_at)
 #  index_chat_messages_on_chat_channel_id_and_id          (chat_channel_id,id) WHERE (deleted_at IS NOT NULL)
+#  index_chat_messages_on_in_reply_to_id                  (in_reply_to_id) WHERE (in_reply_to_id IS NOT NULL)
 #  index_chat_messages_on_last_editor_id                  (last_editor_id)
 #  index_chat_messages_on_thread_id                       (thread_id)
 #

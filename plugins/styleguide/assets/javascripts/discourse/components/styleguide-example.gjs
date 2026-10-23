@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { warn } from "@ember/debug";
 import { action } from "@ember/object";
-import { eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DHighlightedCode from "discourse/ui-kit/d-highlighted-code";
 import { i18n } from "discourse-i18n";
@@ -10,6 +10,9 @@ import inlineCode from "discourse/plugins/styleguide/discourse/lib/inline-code";
 // A plain counter rather than `guidFor`: `@ember/object/internals` is not resolvable from a
 // plugin bundle, and importing it fails the whole bundle at load rather than at use.
 let exampleId = 0;
+
+/** What an example demonstrates, when the page is documenting named APIs. */
+const KINDS = ["component", "modifier", "service"];
 
 /**
  * One demonstrated capability: a heading, the prose that says what it proves, the live
@@ -34,6 +37,10 @@ let exampleId = 0;
  *   Also accepts a block, for a short list; give a list in that block the class
  *   `styleguide-example__note-list` so it picks up the card's list spacing.
  * @param {string} [code] - the imported source of the example module, revealed by a toggle.
+ * @param {string} [kind] - what the example demonstrates: `component`, `modifier` or `service`.
+ *   Shown as a label beside the title. For a page documenting named APIs, where a card's title
+ *   alone leaves the reader guessing which kind of thing they are looking at. Omit it on a page
+ *   that demonstrates appearance rather than an API.
  *
  * Two opt-in classes an example may apply to its own yielded markup:
  * `styleguide-example__result`, for an element the demo writes its output into, inside the
@@ -53,6 +60,23 @@ export default class StyleguideExample extends Component {
 
   get headingLevel() {
     return this.args.headingLevel ?? 2;
+  }
+
+  get kindLabel() {
+    const kind = this.args.kind;
+    if (!kind) {
+      return;
+    }
+
+    warn(
+      `<StyleguideExample> was given @kind="${kind}", which is not one of ${KINDS.join(", ")}.`,
+      KINDS.includes(kind),
+      { id: "styleguide.example-unknown-kind" }
+    );
+
+    return KINDS.includes(kind)
+      ? i18n(`styleguide.example.kind.${kind}`)
+      : null;
   }
 
   @action
@@ -75,20 +99,24 @@ export default class StyleguideExample extends Component {
           </h2>
         {{/if}}
 
+        {{#if this.kindLabel}}
+          <span class="styleguide-example__kind">{{this.kindLabel}}</span>
+        {{/if}}
+
         {{#if @code}}
           {{! Icon-only, so the tooltip and the accessible name are set separately. DButton
           builds its aria-label from the ariaLabel argument alone and never from the title
           argument, and a name coming only from a title attribute is a weak one. }}
           <DButton
-            @icon="code"
-            @title="styleguide.example.toggle_code"
-            @ariaLabel="styleguide.example.toggle_code"
-            @action={{this.toggleCode}}
-            class="btn-flat btn-transparent styleguide-example__code-toggle"
-            aria-expanded={{if this.showCode "true" "false"}}
             {{! Only while the region exists — the panel is unmounted when collapsed, and a
             reference to an absent id is an ARIA validity error. }}
             aria-controls={{if this.showCode this.codeId}}
+            aria-expanded={{if this.showCode "true" "false"}}
+            class="btn-flat btn-transparent styleguide-example__code-toggle"
+            @action={{this.toggleCode}}
+            @ariaLabel="styleguide.example.toggle_code"
+            @icon="code"
+            @title="styleguide.example.toggle_code"
           />
         {{/if}}
       </div>
@@ -140,12 +168,12 @@ export default class StyleguideExample extends Component {
 
       {{#if this.showCode}}
         <div
-          class="styleguide-example__code"
-          id={{this.codeId}}
-          role="region"
           {{! Named after its own example: several panels can be open at once, and landmarks
           sharing one name are indistinguishable in a screen reader's landmark list. }}
           aria-label={{i18n "styleguide.example.code_region" title=@title}}
+          class="styleguide-example__code"
+          id={{this.codeId}}
+          role="region"
         >
           <DHighlightedCode @code={{@code}} @lang="javascript" />
         </div>

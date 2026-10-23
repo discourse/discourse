@@ -5,6 +5,7 @@ if defined?(DiscourseWorkflows)
     module Nodes
       module AssignTopic
         class V1 < DiscourseWorkflows::NodeType
+          RESOURCES = %w[topic post].freeze
           OPERATIONS = %w[assign unassign].freeze
 
           description(
@@ -23,6 +24,13 @@ if defined?(DiscourseWorkflows)
               run_scope: "per_item",
             },
             properties: {
+              resource: {
+                type: :options,
+                required: true,
+                options: RESOURCES,
+                default: "topic",
+                no_data_expression: true,
+              },
               operation: {
                 type: :options,
                 required: true,
@@ -35,6 +43,20 @@ if defined?(DiscourseWorkflows)
               topic_id: {
                 type: :string,
                 required: true,
+                display_options: {
+                  show: {
+                    resource: ["topic"],
+                  },
+                },
+              },
+              post_id: {
+                type: :string,
+                required: true,
+                display_options: {
+                  show: {
+                    resource: ["post"],
+                  },
+                },
               },
               assignee: {
                 type: :string,
@@ -64,10 +86,13 @@ if defined?(DiscourseWorkflows)
             actor = exec_ctx.user || Discourse.system_user
             items =
               exec_ctx.input_items.map.with_index do |_item, item_index|
+                resource =
+                  exec_ctx.get_node_parameter("resource", item_index, default: "topic").to_s
                 config = {
                   "operation" =>
                     exec_ctx.get_node_parameter("operation", item_index, default: "assign"),
-                  "topic_id" => exec_ctx.get_node_parameter("topic_id", item_index),
+                  "resource" => resource,
+                  "target_id" => exec_ctx.get_node_parameter("#{resource}_id", item_index),
                   "assignee" => exec_ctx.get_node_parameter("assignee", item_index),
                   "replace_existing" =>
                     exec_ctx.get_node_parameter("replace_existing", item_index, default: true),
@@ -81,9 +106,9 @@ if defined?(DiscourseWorkflows)
           private
 
           def process(actor, config)
-            topic = ::Topic.find(config["topic_id"])
-            assigner = ::Assigner.new(topic, actor)
-            previously_assigned = topic.assignment&.assigned_to
+            target = find_target(config["resource"], config["target_id"])
+            assigner = ::Assigner.new(target, actor)
+            previously_assigned = target.assignment&.assigned_to
 
             case config["operation"]
             when "unassign"
@@ -92,9 +117,9 @@ if defined?(DiscourseWorkflows)
               { previously_assigned: assignee_data(previously_assigned, actor.guardian) }
             else
               assignee = find_assignee(config["assignee"])
-              if config["replace_existing"] != false && topic.assignment
+              if config["replace_existing"] != false && target.assignment
                 assigner.unassign
-                topic.association(:assignment).reset
+                target.association(:assignment).reset
               end
 
               result = assigner.assign(assignee)
@@ -113,6 +138,10 @@ if defined?(DiscourseWorkflows)
                 previously_assigned: assignee_data(previously_assigned, actor.guardian),
               }
             end
+          end
+
+          def find_target(resource, target_id)
+            resource == "post" ? ::Post.find(target_id) : ::Topic.find(target_id)
           end
 
           def find_assignee(identifier)

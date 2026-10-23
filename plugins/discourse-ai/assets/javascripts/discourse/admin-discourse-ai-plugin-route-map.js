@@ -10,10 +10,23 @@ export default {
     });
     this.route("discourse-ai-agents-legacy", { path: "ai-personas/*path" });
 
+    this.route("discourse-ai-models", { path: "ai-models" }, function () {
+      this.route("new");
+    });
+
     this.route("discourse-ai-llms", { path: "ai-llms" }, function () {
       this.route("new");
       this.route("edit", { path: "/:id/edit" });
     });
+
+    this.route(
+      "discourse-ai-decision-models",
+      { path: "ai-decision-models" },
+      function () {
+        this.route("new");
+        this.route("edit", { path: "/:id/edit" });
+      }
+    );
 
     this.route("discourse-ai-secrets", { path: "ai-secrets" }, function () {
       this.route("new");
@@ -29,6 +42,7 @@ export default {
     this.route("discourse-ai-spam", { path: "ai-spam" });
     this.route("discourse-ai-translations", { path: "ai-translations" });
     this.route("discourse-ai-usage", { path: "ai-usage" });
+    this.route("discourse-ai-logs", { path: "ai-logs" });
 
     this.route(
       "discourse-ai-embeddings",

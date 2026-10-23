@@ -11,7 +11,6 @@ import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import AceEditor from "discourse/components/ace-editor";
 import { isDocumentRTL } from "discourse/lib/text-direction";
-import { gt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
@@ -41,7 +40,27 @@ export default class AdminThemeEditor extends Component {
   @tracked showAdvanced;
   currentTargetName;
 
+  /** @type {string | false | null} */
   warning = null;
+
+  @computed("fieldName", "currentTargetName", "theme")
+  get activeSection() {
+    const themeValue = this.theme.getField(
+      this.currentTargetName,
+      this.fieldName
+    );
+    if (!themeValue && this.fieldName === "js") {
+      return JS_DEFAULT_VALUE;
+    }
+    return themeValue;
+  }
+
+  set activeSection(value) {
+    if (this.fieldName === "js" && value === JS_DEFAULT_VALUE) {
+      value = "";
+    }
+    this.theme.setField(this.currentTargetName, this.fieldName, value);
+  }
 
   @computed("fieldName", "currentTargetName")
   get editorId() {
@@ -104,25 +123,6 @@ export default class AdminThemeEditor extends Component {
     return "";
   }
 
-  @computed("fieldName", "currentTargetName", "theme")
-  get activeSection() {
-    const themeValue = this.theme.getField(
-      this.currentTargetName,
-      this.fieldName
-    );
-    if (!themeValue && this.fieldName === "js") {
-      return JS_DEFAULT_VALUE;
-    }
-    return themeValue;
-  }
-
-  set activeSection(value) {
-    if (this.fieldName === "js" && value === JS_DEFAULT_VALUE) {
-      value = "";
-    }
-    this.theme.setField(this.currentTargetName, this.fieldName, value);
-  }
-
   @computed("maximized")
   get maximizeIcon() {
     return this.maximized ? "discourse-compress" : "discourse-expand";
@@ -172,19 +172,19 @@ export default class AdminThemeEditor extends Component {
       <div class="editor-information">
         <div class="editor-information__title">
           <DButton
-            @title="go_back"
+            class="btn-default btn-small editor-back-button"
             @action={{this.goBack}}
             @icon="chevron-left"
-            class="btn-default btn-small editor-back-button"
+            @title="go_back"
           />
 
           <span class="editor-theme-name-wrapper">
             {{i18n "admin.customize.theme.edit_css_html"}}
             <LinkTo
-              @route={{this.showRouteName}}
+              class="editor-theme-name"
               @model={{this.theme.id}}
               @replace={{true}}
-              class="editor-theme-name"
+              @route={{this.showRouteName}}
             >
               {{this.theme.name}}
             </LinkTo>
@@ -193,16 +193,16 @@ export default class AdminThemeEditor extends Component {
 
         <div class="editor-information__admin-actions">
           <DToggleSwitch
-            @state={{this.showAdvanced}}
             @label="admin.customize.theme.show_advanced"
+            @state={{this.showAdvanced}}
             {{on "click" this.toggleShowAdvanced}}
           />
 
           <DButton
+            class="btn-transparent theme-editor-maximize"
             @action={{this.toggleMaximize}}
             @icon={{this.maximizeIcon}}
             @title={{this.maximizeTitle}}
-            class="btn-transparent theme-editor-maximize"
           />
         </div>
       </div>
@@ -213,11 +213,11 @@ export default class AdminThemeEditor extends Component {
             {{#each this.visibleTargets as |target|}}
               <li>
                 <LinkTo
-                  @route={{this.editRouteName}}
+                  class={{if target.edited "edited" "blank"}}
+                  title={{this.field.title}}
                   @models={{array this.theme.id target.name this.fieldName}}
                   @replace={{true}}
-                  title={{this.field.title}}
-                  class={{if target.edited "edited" "blank"}}
+                  @route={{this.editRouteName}}
                 >
                   {{#if target.error}}{{dIcon "triangle-exclamation"}}{{/if}}
                   {{#if target.icon}}{{dIcon target.icon}}{{/if}}
@@ -234,15 +234,15 @@ export default class AdminThemeEditor extends Component {
           {{#each this.visibleFields as |field|}}
             <li>
               <LinkTo
-                @route={{this.editRouteName}}
+                class={{if field.edited "edited" "blank"}}
+                title={{field.title}}
                 @models={{array
                   this.theme.id
                   this.currentTargetName
                   field.name
                 }}
                 @replace={{true}}
-                title={{field.title}}
-                class={{if field.edited "edited" "blank"}}
+                @route={{this.editRouteName}}
               >
                 {{#if field.error}}{{dIcon "triangle-exclamation"}}{{/if}}
                 {{#if field.icon}}{{dIcon field.icon}}{{/if}}
@@ -266,13 +266,13 @@ export default class AdminThemeEditor extends Component {
       </div>
 
       <AceEditor
-        @content={{this.activeSection}}
-        @onChange={{fn (mut this.activeSection)}}
-        @editorId={{this.editorId}}
-        @mode={{this.activeSectionMode}}
         @autofocus="true"
-        @placeholder={{this.placeholder}}
+        @content={{this.activeSection}}
+        @editorId={{this.editorId}}
         @htmlPlaceholder={{true}}
+        @mode={{this.activeSectionMode}}
+        @onChange={{fn (mut this.activeSection)}}
+        @placeholder={{this.placeholder}}
         @save={{this.save}}
         @setWarning={{this.setWarning}}
       />

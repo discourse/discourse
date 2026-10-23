@@ -7,9 +7,19 @@
 ca:
   js:
     styleguide:
+      example:
+        kind:
+          component: "Component"
       sections:
         typography:
           example: "Benvingut a Discourse"
+        context_menu:
+          actions:
+            delete: "Suprimeix"
+        reorderable_list:
+          policies_pinned: "Afixat"
+          policies_required: "Necessari"
+          table_type: "Tipus"
         colors:
           title: "Colors"
         icons:
@@ -26,6 +36,21 @@ ca:
           title: "Publicació"
         more_topics:
           title: "Més temes"
+        roving_focus:
+          toolbar:
+            copy: "Còpia"
+          adjacent:
+            label: "Filtres"
+            field: "Cerca"
+            open: "Obre"
+            recent: "Recents"
+          combobox:
+            daily: "Diàriament"
+            weekly: "Setmanalment"
+            monthly: "Mensualment"
+            never: "Mai"
+          tree:
+            components: "Components"
         tooltips:
           description: "Descripció"
           header: "Capçalera"

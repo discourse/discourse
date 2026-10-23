@@ -1,8 +1,72 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  find,
+  settled,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
+import pretender, {
+  parsePostData,
+} from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Signing In", function () {
+function sessionRequests() {
+  return pretender.handledRequests.filter(
+    ({ method, url }) => method === "POST" && url.endsWith("/session")
+  );
+}
+
+acceptance("Signing In", function (needs) {
+  needs.settings({ enable_local_logins_via_code: false });
+
+  test("submits username credentials with the login button", async function (assert) {
+    await visit("/login");
+
+    assert
+      .dom("#login-account-name")
+      .hasAttribute("type", "text", "accepts usernames")
+      .hasAttribute("inputmode", "email", "uses an email-friendly keyboard");
+    assert
+      .dom("#login-button")
+      .hasAttribute("type", "submit", "is a native submit button")
+      .hasAttribute("form", "login-form", "submits the login form");
+
+    await fillIn("#login-account-name", "eviltrout");
+    await fillIn("#login-account-password", "incorrect");
+    await click("#login-button");
+
+    const requests = sessionRequests();
+    assert.strictEqual(requests.length, 1, "sends one login request");
+    assert.strictEqual(
+      parsePostData(requests[0].requestBody).login,
+      "eviltrout",
+      "submits the username"
+    );
+    assert.dom(".code-login-form").doesNotExist("keeps the password flow");
+  });
+
+  test("submits email credentials once when pressing Enter", async function (assert) {
+    await visit("/login");
+    await fillIn("#login-account-name", "eviltrout@example.com");
+    await fillIn("#login-account-password", "incorrect");
+
+    await triggerKeyEvent("#login-account-password", "keydown", "Enter");
+    // Synthetic key events do not perform the browser's default form submission.
+    find("#login-form").requestSubmit();
+    await settled();
+
+    const requests = sessionRequests();
+    assert.strictEqual(requests.length, 1, "sends one login request");
+    assert.strictEqual(
+      parsePostData(requests[0].requestBody).login,
+      "eviltrout@example.com",
+      "submits the email address"
+    );
+    assert.dom(".code-login-form").doesNotExist("keeps the password flow");
+  });
+
   test("sign in", async function (assert) {
     await visit("/");
     await click("header .login-button");
@@ -150,5 +214,52 @@ acceptance("Signing In", function () {
     assert
       .dom(".alert-error")
       .exists("shows an error when the code is invalid");
+  });
+});
+
+acceptance("Signing In with code", function (needs) {
+  needs.settings({ enable_local_logins_via_code: true });
+
+  test("defaults to password login and offers code login", async function (assert) {
+    await visit("/login");
+
+    assert.dom("#login-form").exists("shows the password form");
+    assert.dom(".code-login-form").doesNotExist("does not open code login");
+    assert.dom("#one-time-code-link").exists("offers code login");
+
+    await fillIn("#login-account-name", "person@example.com");
+    await click("#one-time-code-link");
+
+    assert.dom(".code-login-form").exists("opens code login explicitly");
+    assert
+      .dom(".code-login-form__email-step input")
+      .hasValue("person@example.com", "preserves the entered email");
+    assert
+      .dom("#login-buttons .btn-social")
+      .isVisible("keeps external login methods accessible");
+
+    await fillIn(".code-login-form__email-step input", "updated@example.com");
+    await click(".code-login-form__password-toggle");
+
+    assert.dom("#login-form").exists("returns to password login");
+    assert
+      .dom("#login-account-name")
+      .hasValue("updated@example.com", "preserves the updated email");
+    assert.strictEqual(sessionRequests().length, 0, "does not submit a login");
+  });
+
+  test("only an available explicit code mode opens code login", async function (assert) {
+    await visit("/login?mode=code");
+    assert.dom(".code-login-form").exists("opens the available code login");
+
+    await visit("/login?mode=unknown");
+    assert.dom("#login-form").exists("ignores an unknown login mode");
+
+    this.siteSettings.enable_local_logins_via_code = false;
+    await visit("/login?mode=code");
+    assert.dom("#login-form").exists("ignores unavailable code login");
+    assert
+      .dom("#one-time-code-link")
+      .doesNotExist("hides the unavailable option");
   });
 });

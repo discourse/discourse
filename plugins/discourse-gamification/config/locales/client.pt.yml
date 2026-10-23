@@ -29,9 +29,7 @@ pt:
       close: "Fechar"
       delete: "Eliminar"
       edit: "Editar"
-      back: "Retroceder"
       save: "Guardar"
-      apply: "Aplicar"
       update_range:
         last_10_days: "Últimos 10 Dias"
         last_30_days: "Últimos 30 Dias"
@@ -40,3 +38,9 @@ pt:
       custom_range_from: "De"
       admin:
         name: "Nome"
+    discourse_workflows:
+      gamification_score:
+        username: "Utilizador"
+        date: "Data"
+        description: "Descrição"
+        category_id: "Categoria"

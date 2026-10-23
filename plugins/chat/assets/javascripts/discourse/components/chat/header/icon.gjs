@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import getURL from "discourse/lib/get-url";
-import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -97,18 +96,18 @@ export default class ChatHeaderIcon extends Component {
     {{#unless (and this.site.mobileView this.isActive)}}
       <li class="header-dropdown-toggle chat-header-icon">
         <DButton
+          class={{dConcatClass "icon" "btn-flat" (if this.isActive "active")}}
+          tabindex="0"
+          title={{this.title}}
           @action={{this.openChat}}
           @href={{this.href}}
-          tabindex="0"
-          class={{dConcatClass "icon" "btn-flat" (if this.isActive "active")}}
-          title={{this.title}}
         >
           {{~dIcon this.icon~}}
           {{#if this.showUnreadIndicator}}
             <ChatHeaderIconUnreadIndicator
-              @urgentCount={{@urgentCount}}
-              @unreadCount={{@unreadCount}}
               @indicatorPreference={{@indicatorPreference}}
+              @unreadCount={{@unreadCount}}
+              @urgentCount={{@urgentCount}}
             />
           {{/if}}
         </DButton>

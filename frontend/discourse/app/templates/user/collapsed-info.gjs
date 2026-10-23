@@ -49,8 +49,8 @@ const CollapsedInfo = <template>
           <div><dt class="invited-by">{{i18n "user.invited_by"}}</dt><dd
               class="invited-by"
             ><LinkTo
-                @route="user"
                 @model={{@model.invited_by}}
+                @route="user"
               >{{@model.invited_by.username}}</LinkTo></dd></div>
         {{/if}}
         {{#if @hasTrustLevel}}
@@ -65,10 +65,10 @@ const CollapsedInfo = <template>
                 {{@model.email}}
               {{else}}
                 <DButton
+                  class="btn-small btn-primary"
                   @action={{fn (routeAction "checkEmail") @model}}
                   @icon="envelope"
                   @label="admin.users.check_email.text"
-                  class="btn-small btn-primary"
                 />
               {{/if}}
             </dd>
@@ -82,13 +82,13 @@ const CollapsedInfo = <template>
             <dd class="groups">
               {{#each @model.displayGroups as |group|}}
                 <span><LinkTo
-                    @route="group"
-                    @model={{group.name}}
                     class="group-link"
+                    @model={{group.name}}
+                    @route="group"
                   >{{group.name}}</LinkTo></span>
               {{/each}}
 
-              <LinkTo @route="groups" @query={{hash username=@model.username}}>
+              <LinkTo @query={{hash username=@model.username}} @route="groups">
                 ...
               </LinkTo>
             </dd>
@@ -98,8 +98,9 @@ const CollapsedInfo = <template>
         {{#if @canDeleteUser}}
           <div class="pull-right">
             <DropdownSelectBox
-              @nameProperty="label"
+              class="btn-small btn-delete-user"
               @content={{@adminDeleteOptions}}
+              @nameProperty="label"
               @onChange={{@adminDelete}}
               @options={{hash
                 icon="triangle-exclamation"
@@ -108,7 +109,6 @@ const CollapsedInfo = <template>
                 customStyle=true
                 btnCustomClasses="btn-danger"
               }}
-              class="btn-small btn-delete-user"
             />
           </div>
         {{/if}}

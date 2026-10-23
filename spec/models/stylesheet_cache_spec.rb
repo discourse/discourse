@@ -23,7 +23,7 @@ RSpec.describe StylesheetCache do
       expect(StylesheetCache.first.content).to eq "c"
     end
 
-    it "it retains stylesheets for competing targets" do
+    it "retains stylesheets for competing targets" do
       StylesheetCache.destroy_all
 
       StylesheetCache.add("desktop", SecureRandom.hex, "body { }", "map", max_to_keep: 2)

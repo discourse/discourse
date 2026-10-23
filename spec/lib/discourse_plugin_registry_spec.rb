@@ -41,7 +41,7 @@ RSpec.describe DiscoursePluginRegistry do
     end
 
     describe ".define_filtered_register" do
-      it "works" do
+      it "filters registered values by their enabled plugin" do
         fresh_registry.define_filtered_register(:test_things)
         expect(fresh_registry.test_things.length).to eq(0)
 
@@ -142,7 +142,7 @@ RSpec.describe DiscoursePluginRegistry do
       expect(registry_instance.stylesheets[plugin_directory_name].include?("hello.css")).to eq(true)
     end
 
-    it "won't add the same file twice" do
+    it "does not add the same CSS file twice" do
       expect { registry_instance.register_css("hello.css", plugin_directory_name) }.not_to change(
         registry.stylesheets[plugin_directory_name],
         :size,
@@ -157,7 +157,7 @@ RSpec.describe DiscoursePluginRegistry do
       expect(registry_instance.javascripts.include?("hello.js")).to eq(true)
     end
 
-    it "won't add the same file twice" do
+    it "does not add the same JavaScript file twice" do
       expect { registry_instance.register_js("hello.js") }.not_to change(
         registry.javascripts,
         :size,
@@ -189,7 +189,7 @@ RSpec.describe DiscoursePluginRegistry do
 
     after { registry.reset! }
 
-    it "should register the file once" do
+    it "registers the service worker file once" do
       2.times { registry.register_service_worker("hello.js") }
 
       expect(registry.service_workers.size).to eq(1)

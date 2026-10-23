@@ -20,7 +20,7 @@ module UserAuthTokensMixin
 
   def browser
     val = BrowserDetection.browser(object.user_agent)
-    I18n.t("user_auth_tokens.browser.#{val}")
+    I18n.t("browsers.#{val}")
   end
 
   def device

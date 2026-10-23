@@ -70,6 +70,36 @@ describe "Composer - Drafts" do
     end
   end
 
+  context "when starting a topic with the keyboard shortcut on a topic page" do
+    let(:dialog) { PageObjects::Components::Dialog.new }
+    let(:drafts_page) { PageObjects::Pages::UserActivityDrafts.new }
+
+    it "lets the user save a new topic draft next to an older one" do
+      # an older topic draft on the shared key, whose sequence has moved on
+      DraftSequence.next!(current_user, Draft::NEW_TOPIC)
+      Draft.set(
+        current_user,
+        Draft::NEW_TOPIC,
+        1,
+        { title: "An older topic draft", reply: "Started before the new one" }.to_json,
+      )
+
+      topic_page.visit_topic(topic)
+      send_keys("c")
+
+      expect(composer).to be_opened
+      composer.fill_title("A new topic started from a topic page")
+      composer.fill_content("This draft must not conflict with the older one")
+      composer.close
+
+      expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
+      expect(dialog).to be_closed
+
+      drafts_page.visit(current_user)
+      expect(drafts_page).to have_drafts(count: 2)
+    end
+  end
+
   context "when clicking discard" do
     let(:dialog) { PageObjects::Components::Dialog.new }
 
@@ -289,6 +319,48 @@ describe "Composer - Drafts" do
     end
   end
 
+  context "when resuming a saved edit draft" do
+    fab!(:post_1) { Fabricate(:post, topic:, user: current_user, raw: "original post content") }
+    fab!(:post_2) { Fabricate(:post, topic:, user: current_user, raw: "another post content") }
+
+    before do
+      topic_page.visit_topic(topic)
+      topic_page.click_post_action_button(post_1, :edit)
+      composer.fill_content("edited post content")
+      composer.close
+
+      expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
+    end
+
+    it "lets the user finish their edit after clicking reply" do
+      topic_page.click_reply_button
+
+      expect(composer).to have_content("edited post content")
+      expect(composer.button_label).to have_text(I18n.t("js.composer.save_edit"))
+
+      composer.create
+
+      expect(composer).to be_closed
+      expect(topic_page).to have_post_content(
+        post_number: post_1.post_number,
+        content: "edited post content",
+      )
+    end
+
+    it "shows the user their saved edit when they edit the same post again" do
+      topic_page.click_post_action_button(post_1, :edit)
+
+      expect(composer).to have_content("edited post content")
+      expect(composer.button_label).to have_text(I18n.t("js.composer.save_edit"))
+    end
+
+    it "shows the user the original content when they edit a different post" do
+      topic_page.click_post_action_button(post_2, :edit)
+
+      expect(composer).to have_content("another post content")
+    end
+  end
+
   context "when replying to a different topic with an active draft" do
     fab!(:other_topic, :topic_with_op)
 
@@ -435,7 +507,7 @@ describe "Composer - Drafts" do
         expect(Draft.where(user: current_user).count).to eq(1)
       end
 
-      composer.open_composer_actions_new
+      composer.open_composer_actions
       composer.select_action_by_id("reply_as_new_topic")
 
       expect(composer).to be_opened

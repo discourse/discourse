@@ -8,6 +8,10 @@ sl:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Datum"
+          outcomes:
+            failed: "Spodletelo"
         reports:
           filters:
             sort_by:
@@ -34,6 +38,17 @@ sl:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      copied: "Kopirano"
+      ai_decoded_transcript:
+        type: "Tip"
+        error: "napaka"
+      discourse_workflows:
+        classify:
+          text: "Besedilo"
+          upload_ids: "Slike"
+          name: "Ime"
+          type: "Tip"
+          type_score: "Ocena"
       ai_tool_approval:
         loading: "Nalagam..."
         tool: "Dejanje"
@@ -123,6 +138,34 @@ sl:
         periods:
           last_day: "Zadnjih 24 ur"
           custom: "Po meri..."
+      logs:
+        short_title: "Dnevniki"
+        apply: "Uporabi"
+        successful: "Uspešno"
+        failed: "Spodletelo"
+        unknown: "Neznano"
+        time: "Čas"
+        when: "Kdaj"
+        request: "Zahteva"
+        user: "Uporabnik"
+        context: "Kontekst"
+        topic: "Tema"
+        post: "Prispevek"
+        post_short: "Prispevek %{id}"
+        duration: "Trajanje"
+        actions: "Akcije"
+        view_details: "Podrobnosti"
+        periods:
+          day: "Zadnjih 24 ur"
+          week: "Zadnjih 7 dni"
+          custom: "Po meri"
+        detail:
+          request: "Zahteva"
+          context: "Kontekst"
+        retention:
+          summary_stage: "Povzetek"
+          deleted_stage: "Izbrisano"
+          save: "Shrani"
       ai_agent:
         name: "Ime"
         edit: "Uredi"
@@ -168,6 +211,11 @@ sl:
         edit: "Uredi"
         delete: "Izbriši"
         embedding: "Vdelovanje"
+      decision_models:
+        no_preset: "Brez"
+        display_name: "Ime"
+        edit: "Uredi"
+        delete: "Izbriši"
       mcp_servers:
         name: "Ime"
         description: "Opis"
@@ -179,8 +227,19 @@ sl:
         delete: "Izbriši"
         tools_modal:
           required: "Zahtevano"
+      models:
+        name: "Ime"
+        type: "Tip"
+        edit: "Uredi"
+        types:
+          embedding: "Vdelovanje"
+        filters:
+          all: "Vse vrste"
       llms:
         display_name: "Ime"
+        vision_modes:
+          disabled:
+            title: "Onemogočeno"
         save: "Shrani"
         edit: "Uredi"
         delete: Izbriši
@@ -226,8 +285,17 @@ sl:
         providers:
           google: "Google"
           fake: "Po meri"
+      ai_artifact:
+        editor:
+          version: "Verzija"
+          default: "Privzeto"
+          apply: "Uporabi"
+        share: "Deli"
+        filter_all: "Vsi"
+        filter_standalone: "Samostojni"
       ai_bot:
         debug_ai_modal:
+          duration_label: "Trajanje:"
           request: "Zahteva"
           next_log: "Naprej"
           previous_log: "Prejšnja"
@@ -247,9 +315,20 @@ sl:
             category: "Kategorija"
           table:
             total_count: "Skupaj"
+      ai_search:
+        related_replies:
+          one: "%{count} odgovor"
+          two: "%{count} odgovora"
+          few: "%{count} odgovori"
+          other: "%{count} odgovorov"
+        tabs:
+          topics: "Tem"
+          messages: "Zasebna sporočila"
       discobot_discoveries:
-        regular_results: "Tem"
-        collapse: "Skrči"
-        tooltip:
-          actions:
-            disable: "Onemogoči"
+        legacy:
+          regular_results: "Tem"
+          collapse: "Skrči"
+          tooltip:
+            actions:
+              disable: "Onemogoči"
+        search_messages: "Zasebna sporočila"

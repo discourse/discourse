@@ -10,7 +10,6 @@ import AdminPenaltyPostAction from "discourse/admin/components/admin-penalty-pos
 import AdminPenaltyReason from "discourse/admin/components/admin-penalty-reason";
 import AdminPenaltySimilarUsers from "discourse/admin/components/admin-penalty-similar-users";
 import { extractError } from "discourse/lib/ajax-error";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import DModal from "discourse/ui-kit/d-modal";
@@ -26,6 +25,7 @@ export default class PenalizeUser extends Component {
 
   @tracked otherUserIds = [];
   @tracked postAction = "delete";
+  @tracked postEdit = this.args.model.postEdit;
   @tracked flash;
   @tracked reason;
   @tracked message;
@@ -37,10 +37,6 @@ export default class PenalizeUser extends Component {
     if (this.postEdit && this.siteSettings.penalty_include_post_message) {
       this.message = `-------------------\n${this.postEdit}\n-------------------`;
     }
-  }
-
-  get postEdit() {
-    return this.args.model.postEdit;
   }
 
   get modalTitle() {
@@ -112,10 +108,14 @@ export default class PenalizeUser extends Component {
 
       if (this.args.model.penaltyType === "suspend") {
         opts.suspend_until = this.penalizeUntil;
-        result = await this.args.model.user.suspend(opts);
+        result = await (this.args.model.perform
+          ? this.args.model.perform(opts)
+          : this.args.model.user.suspend(opts));
       } else if (this.args.model.penaltyType === "silence") {
         opts.silenced_till = this.penalizeUntil;
-        result = await this.args.model.user.silence(opts);
+        result = await (this.args.model.perform
+          ? this.args.model.perform(opts)
+          : this.args.model.user.silence(opts));
       } else {
         // eslint-disable-next-line no-console
         console.error("Unknown penalty type:", this.args.model.penaltyType);
@@ -161,28 +161,28 @@ export default class PenalizeUser extends Component {
   <template>
     <DModal
       class="{{@model.penaltyType}}-user-modal --large"
-      @title={{i18n this.modalTitle}}
       @closeModal={{this.warnBeforeClosing}}
       @flash={{this.flash}}
+      @title={{i18n this.modalTitle}}
     >
       <:body>
         {{#if this.canPenalize}}
           <div class="penalty-duration-controls">
             {{#if (eq @model.penaltyType "suspend")}}
               <DFutureDateInput
-                @label="admin.user.suspend_duration"
+                class="suspend-until"
                 @clearable={{false}}
                 @input={{this.penalizeUntil}}
+                @label="admin.user.suspend_duration"
                 @onChangeInput={{fn (mut this.penalizeUntil)}}
-                class="suspend-until"
               />
             {{else if (eq @model.penaltyType "silence")}}
               <DFutureDateInput
-                @label="admin.user.silence_duration"
+                class="silence-until"
                 @clearable={{false}}
                 @input={{this.penalizeUntil}}
+                @label="admin.user.silence_duration"
                 @onChangeInput={{fn (mut this.penalizeUntil)}}
-                class="silence-until"
               />
             {{/if}}
           </div>
@@ -196,25 +196,27 @@ export default class PenalizeUser extends Component {
             </div>
           {{/if}}
           <AdminPenaltyReason
-            @penaltyType={{@model.penaltyType}}
-            @reason={{this.reason}}
             @message={{this.message}}
+            @onChangeMessage={{fn (mut this.message)}}
+            @onChangeReason={{fn (mut this.reason)}}
+            @penaltyType={{@model.penaltyType}}
           />
           {{#if @model.postId}}
             <AdminPenaltyPostAction
-              @postId={{@model.postId}}
+              @onChangePostAction={{fn (mut this.postAction)}}
+              @onChangePostEdit={{fn (mut this.postEdit)}}
+              @onDeleteAllPostsReady={{this.updateReadyToDeleteAll}}
               @postAction={{this.postAction}}
               @postEdit={{this.postEdit}}
               @user={{@model.user}}
-              @onDeleteAllPostsReady={{this.updateReadyToDeleteAll}}
             />
           {{/if}}
           {{#if @model.user.similar_users_count}}
             <AdminPenaltySimilarUsers
-              @penaltyType={{@model.penaltyType}}
-              @user={{@model.user}}
-              @selectedUserIds={{this.otherUserIds}}
               @onUsersChanged={{this.similarUsersChanged}}
+              @penaltyType={{@model.penaltyType}}
+              @selectedUserIds={{this.otherUserIds}}
+              @user={{@model.user}}
             />
           {{/if}}
         {{else}}

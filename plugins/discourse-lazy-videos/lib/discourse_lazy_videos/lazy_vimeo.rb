@@ -19,15 +19,17 @@ class Onebox::Engine::VimeoOnebox
         iframe_id = iframe_src.sub("https://player.vimeo.com/video/", "")
       end
 
+      escaped_title = ERB::Util.html_escape(og_data.title)
+
       <<~HTML
         <div class="vimeo-onebox lazy-video-container"
           data-video-id="#{iframe_id}"
-          data-video-title="#{og_data.title}"
+          data-video-title="#{escaped_title}"
           data-provider-name="vimeo">
           <a href="https://vimeo.com/#{full_video_id}" target="_blank">
             <img class="vimeo-thumbnail"
               src="#{og_data.image}"
-              title="#{og_data.title}">
+              title="#{escaped_title}">
           </a>
         </div>
       HTML

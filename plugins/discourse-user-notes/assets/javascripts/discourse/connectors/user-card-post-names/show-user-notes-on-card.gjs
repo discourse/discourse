@@ -5,7 +5,7 @@ import DButton from "discourse/ui-kit/d-button";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { showUserNotes } from "../../lib/user-notes";
+import { showUserNotes } from "../../lib/user-notes.js";
 
 export default class extends Component {
   static shouldRender(args, { siteSettings, currentUser }) {
@@ -33,9 +33,9 @@ export default class extends Component {
     <div class="show-user-notes-on-card">
       {{#if this.userNotesCount}}
         <DButton
-          @translatedTitle={{i18n "user_notes.show" count=this.userNotesCount}}
-          @action={{this.showUserNotes}}
           class="btn-flat"
+          @action={{this.showUserNotes}}
+          @translatedTitle={{i18n "user_notes.show" count=this.userNotesCount}}
         >
           {{#if this.siteSettings.enable_emoji}}
             {{dEmoji "memo"}}

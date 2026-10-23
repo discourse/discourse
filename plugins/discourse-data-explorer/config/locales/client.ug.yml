@@ -10,9 +10,8 @@ ug:
       admin_dashboard_card:
         no_results: "نەتىجە يوق"
     explorer:
-      default_query: "كۆڭۈلدىكى"
+      view_query: "كۆرۈنۈش"
       or: "ياكى"
-      create: "قۇر"
       ai:
         generate: "ھاسىللا"
         optional: "تاللاشچان"
@@ -32,6 +31,7 @@ ug:
         one: "%{count} نەتىجە."
         other: "%{count} نەتىجە."
       query_groups: "گۇرۇپپا"
+      query_tags: "بەلگە"
       report_name: "دوكلات"
       query_description: "چۈشەندۈرۈش"
       query_time: "ئاخىرقى ئىجرا"

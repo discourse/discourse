@@ -168,6 +168,7 @@ RSpec.describe UserMerger do
     end
 
     it "merges likes" do
+      UserActionManager.enable
       now = Time.zone.now
 
       freeze_time(now - 1.day)
@@ -193,6 +194,7 @@ RSpec.describe UserMerger do
       expect(given_daily_like_count_for(target_user, Date.yesterday)).to eq(3)
       expect(given_daily_like_count_for(source_user, Date.today)).to eq(0)
       expect(given_daily_like_count_for(target_user, Date.today)).to eq(2)
+      expect(target_user.user_stat.reload.likes_given).to eq(5)
     end
   end
 

@@ -4,7 +4,6 @@ import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import noop from "discourse/helpers/noop";
-import { and, or } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
@@ -91,10 +90,10 @@ export default class ChatThreadHeader extends Component {
       {{/if}}
 
       <navbar.Title
+        class={{if this.openThreadTitleModal "clickable"}}
+        role={{if this.openThreadTitleModal "button"}}
         @title={{dReplaceEmoji this.headerTitle}}
         {{on "click" (or this.openThreadTitleModal noop)}}
-        role={{if this.openThreadTitleModal "button"}}
-        class={{if this.openThreadTitleModal "clickable"}}
       />
       <navbar.Actions as |action|>
         <PluginOutlet

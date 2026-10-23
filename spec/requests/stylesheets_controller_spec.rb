@@ -1,6 +1,23 @@
 # frozen_string_literal: true
 
 RSpec.describe StylesheetsController do
+  fab!(:user)
+
+  describe "#show_source_map" do
+    it "does not include a username in the cacheable response" do
+      sign_in(user)
+
+      manager = Stylesheet::Manager.new(theme_id: nil)
+      builder = Stylesheet::Manager::Builder.new(target: "common", manager: manager, theme: nil)
+      builder.compile
+
+      get "/stylesheets/#{builder.stylesheet_filename}.map"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Discourse-Username"]).to be_nil
+    end
+  end
+
   it "can survive cache miss" do
     StylesheetCache.destroy_all
     manager = Stylesheet::Manager.new(theme_id: nil)

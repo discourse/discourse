@@ -1,6 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
-import richEditorExtension from "../lib/rich-editor-extension";
+import richEditorExtension from "../lib/rich-editor-extension.js";
 
 function initializeDetails(api) {
   api.addComposerToolbarPopupMenuOption({
@@ -14,6 +14,8 @@ function initializeDetails(api) {
     },
     icon: "angle-right",
     label: "details.title",
+    name: "details",
+    shortcut: "Shift+D",
   });
 
   api.registerRichEditorExtension(richEditorExtension);

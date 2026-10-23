@@ -27,8 +27,8 @@ module("Component | <Chat::SelectionManager />", function (hooks) {
       <template>
         <ChatSelectionManager
           @channel={{this.channel}}
-          @pane={{this.pane}}
           @messagesManager={{this.channel.messagesManager}}
+          @pane={{this.pane}}
         />
       </template>
     );
@@ -44,8 +44,8 @@ module("Component | <Chat::SelectionManager />", function (hooks) {
       <template>
         <ChatSelectionManager
           @channel={{this.channel}}
-          @pane={{this.pane}}
           @messagesManager={{this.channel.messagesManager}}
+          @pane={{this.pane}}
         />
       </template>
     );
@@ -65,8 +65,8 @@ module("Component | <Chat::SelectionManager />", function (hooks) {
       <template>
         <ChatSelectionManager
           @channel={{this.channel}}
-          @pane={{this.pane}}
           @messagesManager={{this.channel.messagesManager}}
+          @pane={{this.pane}}
         />
       </template>
     );

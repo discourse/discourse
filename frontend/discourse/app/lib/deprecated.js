@@ -1,7 +1,7 @@
 import { registerDeprecationHandler as emberRegisterDeprecationHandler } from "@ember/debug";
-import DeprecationWorkflow from "../deprecation-workflow";
-import { isRailsTesting } from "./environment";
-import identifySource, { consolePrefix } from "./source-identifier";
+import DeprecationWorkflow from "../deprecation-workflow.js";
+import { isRailsTesting } from "./environment.js";
+import identifySource, { consolePrefix } from "./source-identifier.js";
 
 const handlers = [];
 // Universal handlers also receive Ember's own deprecations (via the bridge below).
@@ -30,6 +30,7 @@ let emberDeprecationSilencer;
  * @param {String} [options.id] A unique identifier for this deprecation. This should be namespaced by dots (e.g. discourse.my_deprecation)
  * @param {String} [options.since] The Discourse version this deprecation was introduced in
  * @param {String} [options.url] A URL which provides more detail about the deprecation
+ * @param {boolean} [options.reportAtCallSite] Attribute test reports to the code calling deprecated(), rather than its caller. Defaults to `false`
  * @param {boolean} [options.raiseError] Raise an error when this deprecation is triggered. Defaults to `false`
  */
 export default function deprecated(msg, options = {}) {

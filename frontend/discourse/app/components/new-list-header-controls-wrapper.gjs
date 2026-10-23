@@ -18,11 +18,11 @@ export default class NewListHeaderControlsWrapper extends Component {
   <template>
     <div class="topic-replies-toggle-wrapper">
       <NewListHeaderControls
+        @changeNewListSubset={{@changeNewListSubset}}
         @current={{@current}}
         @newRepliesCount={{@newRepliesCount}}
         @newTopicsCount={{@newTopicsCount}}
         @noStaticLabel={{true}}
-        @changeNewListSubset={{@changeNewListSubset}}
       />
     </div>
   </template>

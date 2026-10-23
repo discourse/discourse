@@ -3,8 +3,13 @@
 module DiscourseAi
   module Completions
     class RtfToText
+      include TextNormalization
+
+      def normalize_document_text(text)
+        super.gsub(/\n[ \t]+/, "\n")
+      end
+
       MAX_INPUT_BYTES = 2 * 1024 * 1024
-      MAX_EXTRACTED_TEXT_CHARS = 100_001
       MAX_GROUP_DEPTH = 100
       MAX_CONTROL_WORD_CHARS = 64
 
@@ -386,18 +391,6 @@ module DiscourseAi
 
       def digit?(byte)
         byte >= 48 && byte <= 57
-      end
-
-      def normalize_document_text(text)
-        text
-          .to_s
-          .encode("UTF-8", invalid: :replace, undef: :replace, replace: "")
-          .gsub("\u00A0", " ")
-          .gsub(/\r\n?/, "\n")
-          .gsub(/[ \t]+\n/, "\n")
-          .gsub(/\n[ \t]+/, "\n")
-          .gsub(/\n{3,}/, "\n\n")
-          .strip
       end
     end
   end

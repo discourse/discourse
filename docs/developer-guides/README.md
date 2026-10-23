@@ -70,7 +70,19 @@ Images (e.g. screenshots) for docs can be stored in the `/assets` directory. To 
 
 The sync tool will automatically upload the images to Discourse, and replace the path with a discourse-specific `upload://` path. A mapping of repo-path to discourse-path will be persisted in an HTML comment at the end of the doc's topic.
 
+When a doc stops using an image, delete it from `/assets`. CI runs `./check_unused_assets` to catch any that are left behind.
+
 Avoid hotlinking images from other sources. If you do, Discourse may download them and update the topic content. This will cause the docs sync tool to detect a diff, and update the topic unnecessarily.
+
+## Links between docs
+
+Link to other docs using a relative path to their markdown file, so the link works when browsing the repository. For example:
+
+```
+See the [DModal API](12-dmodal-api.md) or [theme settings](../05-themes-components/09-theme-settings.md).
+```
+
+The sync tool rewrites these to the corresponding Discourse topic. Heading fragments (`#some-heading`) are dropped, becasue Discourse anchors are generated differently. Relative links to files which aren't docs will fail validation.
 
 ## Contributing
 

@@ -35,11 +35,6 @@ export default class GroupAssignedShow extends UserTopicsList {
     return this.search || !!this.model?.topics?.length;
   }
 
-  _setSearchTerm(searchTerm) {
-    this.set("search", searchTerm);
-    this.refreshModel();
-  }
-
   refreshModel() {
     this.set("loading", true);
     this.store
@@ -94,6 +89,11 @@ export default class GroupAssignedShow extends UserTopicsList {
 
   @action
   refresh() {
+    this.refreshModel();
+  }
+
+  _setSearchTerm(searchTerm) {
+    this.set("search", searchTerm);
     this.refreshModel();
   }
 }

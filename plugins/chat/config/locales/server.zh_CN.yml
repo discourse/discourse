@@ -9,10 +9,9 @@ zh_CN:
     chat_separate_sidebar_mode: "为论坛和聊天显示单独的边栏模式。"
     chat_enabled: "启用聊天。"
     chat_pinned_messages: "在聊天频道中启用置顶消息。"
-    enable_new_chat_reactions_popup: "在聊天消息上启用重新设计的回应弹出窗口，通过无限滚动和原生移动体验显示谁做出了回应。"
     enable_public_channels: "基于类别启用公开频道。"
-    chat_allowed_groups: "这些群组中的用户可以聊天，但匿名用户除外，他们只有在被添加到此设置后才能查看聊天。请注意，管理员和版主可以随时访问聊天。"
-    chat_channel_retention_days: "常规频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
+    chat_allowed_groups: "这些群组中的用户可以聊天，但匿名用户除外，他们只有在被添加到此设置后才能查看聊天记录。添加匿名用户还可以让搜索引擎索引公共频道。请注意，管理员和版主始终可以访问聊天记录。"
+    chat_channel_retention_days: "普通频道中的聊天记录将保留指定天数。设置为“0”则永久保留消息。当匿名用户可以查看聊天记录时，已删除的消息也会随着时间推移从搜索引擎结果中消失，因此较短的保留期限会限制可通过搜索找到的聊天记录数量。"
     chat_dm_retention_days: "个人聊天频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
     chat_auto_silence_duration: "用户超过聊天消息创建速率限值时将被禁言的分钟数。设置为 0 将禁用自动禁言。"
     chat_allowed_messages_for_trust_level_0: "信任级别 0 用户在 30 秒内可以发送的消息数。设置为 0 将禁用限制。"
@@ -29,6 +28,7 @@ zh_CN:
     chat_pinning_messages_allowed_groups: "这些群组中的用户可以将聊天消息置顶在他们能够访问的频道中。请注意，管理员和版主始终可以置顶聊天消息。群聊或私信中的任何成员都可以置顶消息。"
     max_mentions_per_chat_message: "用户可以在聊天消息中使用的 @name 通知的最大数量。"
     chat_max_direct_message_users: "在创建新的直接消息时，用户无法添加超过此数量的其他用户。设置为 0 只允许给自己发送消息。管理人员不受此设置的影响。"
+    chat_homepage_channel: "当 {{setting:default_homepage}} 设置为聊天频道时，用户将进入该频道。无法访问该频道的用户将看到 {{setting:top_menu}} 中的第一个项目，除非 {{setting:chat_allowed_groups}} 包含匿名用户。"
     chat_allow_archiving_channels: "允许管理人员在关闭频道时将消息归档到某个话题。"
     chat_editing_grace_period: "在发送聊天后 (n) 秒内进行编辑时，不会在聊天消息旁边显示（已编辑）标签。"
     chat_editing_grace_period_max_diff_low_trust: "聊天编辑宽限期内允许的最大字符更改数，超过此值将在聊天消息旁边显示（已编辑）标签（信任级别 0 和 1）。"
@@ -64,11 +64,25 @@ zh_CN:
         访问 %{channel_url} 下的频道以重试。
   chat:
     deleted_chat_username: 已删除
+    crawler:
+      directory_title: "聊天频道"
+      nav_title: "聊天"
+      last_activity: "最近活动"
+      retention_notice:
+        other: "超过 %{count} 天的消息将被删除，置顶消息除外。"
+      messages_count:
+        other: "%{count} 消息"
+      members_count:
+        other: "%{count} 个成员"
+      thread_title: "%{channel} 中的话题"
+      channel_day_title: "%{channel} – %{date}"
+      thread_replies:
+        other: "%{count} 条回复"
     errors:
       users_cant_be_added_to_channel: "无法将用户添加到此频道。"
       user_cant_be_removed_from_channel: "无法将用户从此频道中移除"
       channel_exists_for_category: "此类别和名称的频道已经存在"
-      public_channels_disabled: "由于公共频道已禁用，因此无法创建频道。管理员可以启用“启用公共频道”站点设置。"
+      public_channels_disabled: "由于公开频道已禁用，无法创建频道。管理员可以启用 'enable public channels' 站点设置。"
       channel_new_message_disallowed:
         archived: "该频道已被归档，无法发送新消息"
         closed: "该频道已关闭，无法发送新消息"
@@ -156,6 +170,10 @@ zh_CN:
         ignore:
           title: "忽略举报"
           description: "将其从队列中移除，不采取任何措施。"
+        unsilence_user:
+          title: "取消禁言作者"
+          description: "解除对作者的禁言。此标志保留在队列中。"
+          complete: "作者不再禁言。"
       direct_messages:
         transcript_title: "%{channel_name}中以前消息的副本"
         transcript_body: "为了向您提供更多背景，我们在此对话中包含了以前消息的副本（最多十条）：\n\n%{transcript}"
@@ -236,14 +254,49 @@ zh_CN:
       default_deny_label: "拒绝"
     errors:
       send_chat_message:
-        invalid_params: "无效参数： %{errors}"
+        invalid_params: "消息无效： %{errors}"
         channel_not_found: "未找到频道： %{channel_id}"
-        failed: "无法发送聊天消息。"
+        channel_blocked: "无法在频道 %{channel_id}: %{reason} 中发帖。"
+        failed: "无法发送聊天消息（失败步骤： %{step}）。"
+        recipient_blank: "未提供收件人用户名。"
+        recipient_staged: "'%{username}' 是一个临时用户，无法使用聊天功能。"
+        recipient_suspended: "用户“%{username}”已被暂停，无法接收私信。"
+        recipient_inactive: "用户“%{username}”尚未激活其帐户。"
+        recipient_chat_disabled: "'%{username}' 已在其偏好设置中禁用聊天功能。"
+        recipient_cannot_chat: "用户“%{username}”无法使用聊天功能，因为他们不在“允许聊天的群组”设置允许的群组中。"
+        sender_anonymous: "聊天信息无法匿名发送。请选择一个用户作为发送者。"
+        sender_chat_disabled: "发件人“%{sender}”已在其偏好设置中禁用聊天功能。"
+        sender_cannot_chat: "发件人“%{sender}”无法使用聊天功能，因为他们不在“允许聊天的群组”设置允许的群组中。"
+        sender_cannot_create_dm: "发件人“%{sender}”无权发送私信（请参阅“启用私信的群组”设置）。"
+        sender_dms_disabled: "发件人“%{sender}”已在其偏好设置中禁用私人消息。"
+        sender_cannot_post: "发件人 '%{sender}' 无权在频道 '%{channel_id}' 中发帖。"
+        sender_not_member: "发件人'%{sender}' 不是频道 '%{channel_id}' 的成员。请先以该用户身份加入频道。"
+        user_blocked: "用户“%{sender}”无法向用户“%{username}”发送私信： %{reason}"
+        group_blocked: "用户“%{sender}”无法向用户“ %{usernames}”发送群组私信： %{reason}"
       chat_approval:
         channel_not_found: "聊天消息发送失败：未找到频道 %{channel_id}。"
         invalid_params: "聊天消息发送失败： %{errors}"
-        failed: "聊天消息发送失败： %{steps}"
+        channel_blocked: "聊天消息发送失败：无法在频道 %{channel_id}: %{reason} 中发布消息。"
+        failed_step: "聊天消息发送失败（失败步骤： %{step}）。"
         timeout_must_be_positive: "超时时长必须大于 0 分钟。"
+        invalid_timeout_action: "无效的超时操作： %{action}。"
+        buttons_required: "至少需要一个聊天批准按钮。"
+        too_many_buttons: "聊天批准最多支持 %{max} 按钮。"
+        button_label_required: "聊天批准按钮 %{position} 需要标签。"
+        button_label_too_long: "聊天批准按钮 %{position} 标签必须小于等于 %{max} 个字符。"
+        button_value_required: "聊天批准按钮 %{position} 需要一个值。"
+        button_value_too_long: "聊天批准按钮 %{position} 的值必须小于等于 %{max} 个字符。"
+        button_style_invalid: "聊天批准按钮 %{position} 样式必须是以下之一： %{styles}。"
+        button_icon_too_long: "聊天批准按钮 %{position} 图标必须小于等于 %{max} 个字符。"
+    hints:
+      send_chat_message:
+        self_message: "发件人和收件人都是“%{username}”，因此该消息被发布到他们的私人聊天中。"
+        preferences_bypassed: "'%{username}' 不接受来自 '%{sender}' 的直接消息，但消息已送达，因为发件人是工作人员。"
+    logs:
+      send_chat_message:
+        sent_to_channel: "项目 %{item_index}：'%{sender}' 向频道 %{channel_id} 发送消息 %{message_id}。"
+        sent_to_user: "项目 %{item_index}：'%{sender}' 向 '%{username}' 发送消息 %{message_id}。"
+        sent_to_group: "项目 %{item_index}：'%{sender}' 向群组私信发送消息 %{message_id} ，该群组私信包含 %{usernames}。"
   reviewable_score_types:
     needs_review:
       title: "需要审核"

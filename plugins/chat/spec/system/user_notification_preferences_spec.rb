@@ -63,6 +63,22 @@ RSpec.describe "User notification preferences | Chat notifications" do
     expect(combo(".chat-sound").value).to eq("retro")
   end
 
+  it "shows a sound preview button only while a sound is selected" do
+    visit_notifications
+
+    expect(page).to have_no_css(".chat-sound-preview")
+
+    combo(".chat-sound").expand
+    combo(".chat-sound").select_row_by_value("retro")
+
+    expect(page).to have_css(".chat-sound-preview")
+
+    combo(".chat-sound").expand
+    combo(".chat-sound").select_row_by_name("None")
+
+    expect(page).to have_no_css(".chat-sound-preview")
+  end
+
   it "can toggle and persist ignore channel-wide mentions" do
     current_user.user_option.update!(ignore_channel_wide_mention: false)
     visit_notifications

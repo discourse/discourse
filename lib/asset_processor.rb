@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
 class AssetProcessor
-  BASE_COMPILER_VERSION = 113
+  # Bump only when theme JS output changes; it rebakes every theme on every site. Plugin builds
+  # also key on the processor's digest, so JS changes there rebuild them without a bump.
+  BASE_COMPILER_VERSION = 120
 
   BUNDLE =
     PrecompiledBundle.new(
       dir: "tmp/asset-processor",
       filename_prefix: "asset-processor",
       dependency_globs: %w[
-        node_modules/.pnpm/lock.yaml
+        pnpm-lock.yaml
         frontend/asset-processor/**/*.{js,mjs}
+        app/assets/stylesheets/variable-renames.json
         frontend/discourse/lib/babel-transform-module-renames.js
         frontend/discourse/lib/discourse-source-imports.mjs
         frontend/discourse/config/targets.js
@@ -40,6 +43,7 @@ class AssetProcessor
         "The file '#{file_path}' uses the deprecated `.js.es6` extension. Use `.js` instead.",
         {
           id: "discourse.es6-extension",
+          reportAtCallSite: true,
           url: "https://meta.discourse.org/t/398894",
         }
       );
@@ -124,15 +128,11 @@ class AssetProcessor
     @ctx
   end
 
-  # Call a method in the global scope of the v8 context.
-  # The `fetch_result_call` kwarg provides a workaround for the lack of mini_racer async
-  # result support. The first call can perform some async operation, and then `fetch_result_call`
-  # will be called to fetch the result.
-  def self.v8_call(*args, **kwargs)
-    fetch_result_call = kwargs.delete(:fetch_result_call)
+  # Call a method in the global scope of the v8 context. Promise results are
+  # awaited and returned as values.
+  def self.v8_call(*args)
     mutex.synchronize do
-      result = v8.call(*args, **kwargs)
-      result = v8.call(fetch_result_call) if fetch_result_call
+      result = v8.call_await(*args)
       v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
       result
     end
@@ -157,6 +157,12 @@ class AssetProcessor
 
   def self.ember_version
     v8_call("emberVersion")
+  end
+
+  # Identifies the processor source loaded into the V8 context
+  def self.digest
+    v8
+    BUNDLE.loaded_digest
   end
 
   def initialize(skip_module: false)
@@ -206,14 +212,14 @@ class AssetProcessor
   end
 
   def terser(tree, opts)
-    self.class.v8_call("minify", tree, opts, fetch_result_call: "getMinifyResult")
+    self.class.v8_call("minify", tree, opts)
   end
 
   def rollup(tree, opts)
-    self.class.v8_call("rollup", tree, opts, fetch_result_call: "getRollupResult")
+    self.class.v8_call("rollup", tree, opts)
   end
 
   def post_css(css:, map:, source_map_file:)
-    self.class.v8_call("postCss", css, map, source_map_file, fetch_result_call: "getPostCssResult")
+    self.class.v8_call("postCss", css, map, source_map_file)
   end
 end

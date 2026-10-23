@@ -19,7 +19,7 @@ module("Component | PollInfo", function (hooks) {
       min: 1,
       max: 2,
       options: OPTIONS,
-      close: null,
+      closesAt: null,
       closed: false,
       results: [],
       showResults: false,
@@ -32,17 +32,17 @@ module("Component | PollInfo", function (hooks) {
     await render(
       <template>
         <PollInfo
-          @options={{this.options}}
-          @min={{this.min}}
-          @max={{this.max}}
-          @isMultiple={{this.isMultiple}}
-          @close={{this.close}}
           @closed={{this.closed}}
+          @closesAt={{this.closesAt}}
+          @hasVoted={{this.hasVoted}}
+          @isMultiple={{this.isMultiple}}
+          @isPublic={{this.isPublic}}
+          @max={{this.max}}
+          @min={{this.min}}
+          @options={{this.options}}
+          @postUserId={{this.postUserId}}
           @results={{this.results}}
           @showResults={{this.showResults}}
-          @postUserId={{this.postUserId}}
-          @isPublic={{this.isPublic}}
-          @hasVoted={{this.hasVoted}}
           @voters={{this.voters}}
         />
       </template>
@@ -69,7 +69,7 @@ module("Component | PollInfo", function (hooks) {
       min: 1,
       max: 2,
       options: OPTIONS,
-      close: null,
+      closesAt: null,
       closed: false,
       results: "on_vote",
       showResults: false,
@@ -82,17 +82,17 @@ module("Component | PollInfo", function (hooks) {
     await render(
       <template>
         <PollInfo
-          @options={{this.options}}
-          @min={{this.min}}
-          @max={{this.max}}
-          @isMultiple={{this.isMultiple}}
-          @close={{this.close}}
           @closed={{this.closed}}
+          @closesAt={{this.closesAt}}
+          @hasVoted={{this.hasVoted}}
+          @isMultiple={{this.isMultiple}}
+          @isPublic={{this.isPublic}}
+          @max={{this.max}}
+          @min={{this.min}}
+          @options={{this.options}}
+          @postUserId={{this.postUserId}}
           @results={{this.results}}
           @showResults={{this.showResults}}
-          @postUserId={{this.postUserId}}
-          @isPublic={{this.isPublic}}
-          @hasVoted={{this.hasVoted}}
           @voters={{this.voters}}
         />
       </template>
@@ -123,7 +123,7 @@ module("Component | PollInfo", function (hooks) {
   test("displays who closed the poll", async function (assert) {
     this.setProperties({
       options: OPTIONS,
-      close: null,
+      closesAt: null,
       closed: true,
       closedBy: { username: "jane" },
       results: [],
@@ -137,15 +137,15 @@ module("Component | PollInfo", function (hooks) {
     await render(
       <template>
         <PollInfo
-          @options={{this.options}}
-          @close={{this.close}}
           @closed={{this.closed}}
           @closedBy={{this.closedBy}}
+          @closesAt={{this.closesAt}}
+          @hasVoted={{this.hasVoted}}
+          @isPublic={{this.isPublic}}
+          @options={{this.options}}
+          @postUserId={{this.postUserId}}
           @results={{this.results}}
           @showResults={{this.showResults}}
-          @postUserId={{this.postUserId}}
-          @isPublic={{this.isPublic}}
-          @hasVoted={{this.hasVoted}}
           @voters={{this.voters}}
         />
       </template>

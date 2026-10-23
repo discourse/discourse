@@ -15,11 +15,18 @@ export default class UserDraftsStream extends RestModel {
   limit = 30;
   loading = false;
   hasMore = false;
+
+  /** @type {UserDraft[] | null} */
   content = null;
 
   init() {
     super.init(...arguments);
     this.reset();
+  }
+
+  @computed("content.length", "loading")
+  get noContent() {
+    return this.content?.length === 0 && !this.loading;
   }
 
   reset() {
@@ -28,11 +35,6 @@ export default class UserDraftsStream extends RestModel {
       hasMore: true,
       content: [],
     });
-  }
-
-  @computed("content.length", "loading")
-  get noContent() {
-    return this.content?.length === 0 && !this.loading;
   }
 
   remove(draft) {

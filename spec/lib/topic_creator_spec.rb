@@ -32,11 +32,11 @@ RSpec.describe TopicCreator do
         SiteSetting.duplicate_topic_titles = "allowed"
       end
 
-      it "should be possible for an admin to create a topic" do
+      it "allows an admin to create a topic" do
         expect(TopicCreator.create(admin, Guardian.new(admin), valid_attrs)).to be_valid
       end
 
-      it "should be possible for a moderator to create a topic" do
+      it "allows a moderator to create a topic" do
         expect(TopicCreator.create(moderator, Guardian.new(moderator), valid_attrs)).to be_valid
       end
 
@@ -51,11 +51,11 @@ RSpec.describe TopicCreator do
       context "with regular user" do
         before { SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0] }
 
-        it "should be possible for a regular user to create a topic" do
+        it "allows a regular user to create a topic" do
           expect(TopicCreator.create(user, Guardian.new(user), valid_attrs)).to be_valid
         end
 
-        it "should be possible for a regular user to create a topic with blank auto_close_time" do
+        it "allows a regular user to create a topic with a blank auto_close_time" do
           expect(
             TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(auto_close_time: "")),
           ).to be_valid
@@ -555,7 +555,7 @@ RSpec.describe TopicCreator do
           SiteSetting.enable_staged_users = true
         end
 
-        it "should be possible for a regular user to send private message" do
+        it "allows a regular user to send a private message" do
           expect(TopicCreator.create(user, Guardian.new(user), pm_valid_attrs)).to be_valid
         end
 
@@ -577,7 +577,7 @@ RSpec.describe TopicCreator do
       end
 
       context "with failure cases" do
-        it "should be rollback the changes when email is invalid" do
+        it "rolls back the changes when the email is invalid" do
           SiteSetting.manual_polling_enabled = true
           SiteSetting.reply_by_email_address = "sam+%{reply_key}@sam.com"
           SiteSetting.reply_by_email_enabled = true

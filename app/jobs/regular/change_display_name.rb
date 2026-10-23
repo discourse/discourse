@@ -51,8 +51,9 @@ module Jobs
     end
 
     def update_post(post)
-      post.raw = update_raw(post.raw)
-      post.cooked = update_cooked(post.cooked)
+      rewritten = update_content(post.raw, post.cooked)
+      post.raw = rewritten[:raw]
+      post.cooked = rewritten[:cooked]
 
       post.update_columns(raw: post.raw, cooked: post.cooked)
       post.sync_first_post_caches
@@ -63,28 +64,29 @@ module Jobs
     end
 
     def update_revision(revision)
-      if revision.modifications["raw"] || revision.modifications["cooked"]
-        revision.modifications["raw"]&.map! { |raw| update_raw(raw) }
-        revision.modifications["cooked"]&.map! { |cooked| update_cooked(cooked) }
-        revision.save!
+      raw_versions = revision.modifications["raw"]
+      cooked_versions = revision.modifications["cooked"]
+      return if raw_versions.blank?
+
+      raw_versions.each_index do |index|
+        rewritten = update_content(raw_versions[index], cooked_versions&.at(index))
+        raw_versions[index] = rewritten[:raw]
+        cooked_versions[index] = rewritten[:cooked] if cooked_versions
       end
+
+      revision.save!
     rescue => e
       Discourse.warn_exception(e, message: "Failed to update post revision with id #{revision.id}")
     end
 
-    def update_raw(raw)
-      @quote_rewriter.rewrite_raw_display_name(raw, old_display_name, new_display_name)
-    end
-
-    # Uses Nokogiri instead of rebake, because it works for posts and revisions
-    # and there is no reason to invalidate oneboxes, run the post analyzer etc.
-    # when only the display name changes.
-    def update_cooked(cooked)
-      doc = Nokogiri::HTML5.fragment(cooked)
-
-      @quote_rewriter.rewrite_cooked_display_name(doc, old_display_name, new_display_name)
-
-      doc.to_html
+    def update_content(raw, cooked)
+      @quote_rewriter.rewrite_display_name(
+        raw: raw,
+        cooked: cooked,
+        old_display_name: old_display_name,
+        new_display_name: new_display_name,
+        username: user.username,
+      )
     end
   end
 end

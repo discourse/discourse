@@ -810,7 +810,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
 
     # Discuz can create PM out of a post, which will generates like
     # [url=http://example.com/forum.php?mod=redirect&goto=findpost&pid=111&ptid=11][b]关于您在“主题名称”的帖子[/b][/url]
-    s.gsub!(pm_url_regexp) { |discuzx_link| replace_internal_link(discuzx_link, $1) }
+    s.gsub!(pm_url_regexp) { |discuzx_link| replace_internal_link(discuzx_link, $1, nil, nil, nil) }
 
     # [url][b]text[/b][/url] to **[url]text[/url]**
     s.gsub!(%r{(\[url=[^\[\]]*?\])\[b\](\S*)\[/b\](\[/url\])}, '**\1\2\3**')

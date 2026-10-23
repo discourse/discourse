@@ -15,9 +15,10 @@ import {
 import { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import LinkLookup from "discourse/lib/link-lookup";
+import { userPath } from "discourse/lib/url";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import { autoTrackedArray } from "../lib/tracked-tools";
+import { autoTrackedArray } from "../lib/tracked-tools.js";
 
 let _messagesCache = {};
 let _educationMessageShown = false;
@@ -35,24 +36,54 @@ function visibleMessages(messages) {
   return messages?.content?.filter((msg) => msg.id !== "education") || [];
 }
 
+/**
+ * @typedef {import("discourse/models/rest").default & { id: number, topic: import("discourse/models/topic").default, blurb: string, created_at: string, url: string }} SimilarComposerTopic
+ * @typedef {EmberObject & { id?: string, templateName: string, extraClass?: string, title?: string, body?: string | import("@ember/template").TrustedHTML, wait_for_typing?: boolean, hide_if_whisper?: boolean, reply_username?: string | null, similarTopics?: SimilarComposerTopic[] }} ComposerPopupMessage
+ */
 @tagName("")
 export default class ComposerMessages extends Component {
   @tracked showShareModal;
+
+  /** @type {SimilarComposerTopic[] | null} */
   @autoTrackedArray similarTopics = null;
+
+  /** @type {ComposerPopupMessage[] | null} */
   @autoTrackedArray messages = null;
 
   checkedMessages = false;
+
+  /** @type {Record<string, ComposerPopupMessage | undefined> | null} */
   messagesByTemplate = null;
+
+  /** @type {ComposerPopupMessage[] | null} */
   queuedForTyping = null;
+
+  /** @type {string | null} */
   usersNotSeen = null;
   recipientNames = [];
 
+  /** @type {string | null} */
   _lastSimilaritySearch = null;
+
+  /** @type {ComposerPopupMessage | null} */
   _similarTopicsMessage = null;
 
   @computed("composer.viewOpenOrFullscreen")
   get hidden() {
     return !this.composer?.viewOpenOrFullscreen;
+  }
+
+  get shareModalData() {
+    const { topic } = this.composer;
+    return {
+      topic,
+      category: topic.category,
+      allowInvites:
+        topic.details.can_invite_to &&
+        !topic.archived &&
+        !topic.closed &&
+        !topic.deleted,
+    };
   }
 
   didInsertElement() {
@@ -82,8 +113,54 @@ export default class ComposerMessages extends Component {
     );
   }
 
+  // Resets all active messages.
+  // For example if composing a new post.
+  reset() {
+    this.setProperties({
+      messages: [],
+      messagesByTemplate: {},
+      queuedForTyping: [],
+      checkedMessages: false,
+      similarTopics: [],
+    });
+  }
+
+  @action
+  closeMessage(message, event) {
+    event?.preventDefault();
+    this._removeMessage(message);
+  }
+
+  @action
+  hideMessage(message) {
+    this._removeMessage(message);
+
+    // kind of hacky but the visibility depends on this
+    this.messagesByTemplate[message.templateName] = undefined;
+  }
+
+  @action
+  popup(message) {
+    if (this.messages.length) {
+      return;
+    }
+
+    if (!this.messagesByTemplate[message.templateName]) {
+      this.messages.push(message);
+      this.set("messageCount", this.messages.length);
+      this.messagesByTemplate[message.templateName] = message;
+    }
+  }
+
+  @action
+  switchPM(message) {
+    this.composer.set("action", "privateMessage");
+    this.composer.set("targetRecipients", message.reply_username);
+    this._removeMessage(message);
+  }
+
   _closeTop() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -97,7 +174,7 @@ export default class ComposerMessages extends Component {
   }
 
   _create(info) {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -111,23 +188,11 @@ export default class ComposerMessages extends Component {
     _educationMessageShown = false;
   }
 
-  // Resets all active messages.
-  // For example if composing a new post.
-  reset() {
-    this.setProperties({
-      messages: [],
-      messagesByTemplate: {},
-      queuedForTyping: [],
-      checkedMessages: false,
-      similarTopics: [],
-    });
-  }
-
   // Called after the user has typed a reply.
   // Some messages only get shown after being typed.
   @debounce(INPUT_DELAY)
   async _typedReply() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -184,7 +249,7 @@ export default class ComposerMessages extends Component {
           }
         );
 
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 
@@ -198,7 +263,7 @@ export default class ComposerMessages extends Component {
           let usernames = [];
           response.usernames.forEach((username, index) => {
             usernames[index] =
-              `<a class='mention' href='/u/${username}'>@${username}</a>`;
+              `<a class='mention' href='${userPath(username)}'>@${username}</a>`;
           });
 
           let body_key;
@@ -224,7 +289,7 @@ export default class ComposerMessages extends Component {
   }
 
   async _findSimilar() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -234,7 +299,7 @@ export default class ComposerMessages extends Component {
     }
 
     // We don't care about similar topics when creating with a form template
-    if (this.composer?.category?.form_template_ids.length > 0) {
+    if (this.composer?.category?.form_template_ids?.length > 0) {
       return;
     }
 
@@ -268,7 +333,7 @@ export default class ComposerMessages extends Component {
       raw,
     });
 
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -284,7 +349,7 @@ export default class ComposerMessages extends Component {
 
   // Figure out if there are any messages that should be displayed above the composer.
   async _findMessages() {
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -311,7 +376,7 @@ export default class ComposerMessages extends Component {
       messages = _messagesCache.messages;
     } else {
       messages = await this.composer.store.find("composer-message", args);
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 
@@ -338,53 +403,6 @@ export default class ComposerMessages extends Component {
     });
   }
 
-  @action
-  closeMessage(message, event) {
-    event?.preventDefault();
-    this._removeMessage(message);
-  }
-
-  @action
-  hideMessage(message) {
-    this._removeMessage(message);
-
-    // kind of hacky but the visibility depends on this
-    this.messagesByTemplate[message.templateName] = undefined;
-  }
-
-  @action
-  popup(message) {
-    if (this.messages.length) {
-      return;
-    }
-
-    if (!this.messagesByTemplate[message.templateName]) {
-      this.messages.push(message);
-      this.set("messageCount", this.messages.length);
-      this.messagesByTemplate[message.templateName] = message;
-    }
-  }
-
-  get shareModalData() {
-    const { topic } = this.composer;
-    return {
-      topic,
-      category: topic.category,
-      allowInvites:
-        topic.details.can_invite_to &&
-        !topic.archived &&
-        !topic.closed &&
-        !topic.deleted,
-    };
-  }
-
-  @action
-  switchPM(message) {
-    this.composer.set("action", "privateMessage");
-    this.composer.set("targetRecipients", message.reply_username);
-    this._removeMessage(message);
-  }
-
   <template>
     <div
       class={{dConcatClass
@@ -395,8 +413,8 @@ export default class ComposerMessages extends Component {
     >
       {{#each this.messages as |message|}}
         <ComposerMessage
-          @message={{message}}
           @closeMessage={{this.closeMessage}}
+          @message={{message}}
           @shareModal={{fn (mut this.showShareModal) true}}
           @switchPM={{this.switchPM}}
         />

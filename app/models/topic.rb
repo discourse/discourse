@@ -145,6 +145,10 @@ class Topic < ActiveRecord::Base
     @featured_users ||= TopicFeaturedUsers.new(self)
   end
 
+  def first_post_with_deleted
+    posts.with_deleted.find_by(post_number: 1)
+  end
+
   def trash!(trashed_by = nil)
     trigger_event = false
 
@@ -348,6 +352,20 @@ class Topic < ActiveRecord::Base
           )
         end
 
+  scope :allowed_to_user, ->(user) { where(<<~SQL, user_id: user.id) }
+    EXISTS (
+      SELECT 1
+      FROM topic_allowed_users tau
+      WHERE tau.topic_id = topics.id AND tau.user_id = :user_id
+    )
+    OR EXISTS (
+      SELECT 1
+      FROM topic_allowed_groups tg
+      JOIN group_users gu ON gu.group_id = tg.group_id AND gu.user_id = :user_id
+      WHERE tg.topic_id = topics.id
+    )
+  SQL
+
   scope :listable_topics, -> { where.not(topics: { archetype: Archetype.private_message }) }
 
   scope :by_newest, -> { order("topics.created_at desc, topics.id desc") }
@@ -475,6 +493,37 @@ class Topic < ActiveRecord::Base
       previous_count: replies_count - 1,
       current_count: replies_count,
     )
+  end
+
+  def self.recalculate_like_counts!(topic_ids)
+    counts = DB.query(<<~SQL, topic_ids:, whisper: Post.types[:whisper])
+      WITH previous AS (SELECT id, like_count FROM topics WHERE id IN (:topic_ids))
+      UPDATE topics
+      SET like_count = (
+        SELECT COALESCE(SUM(posts.like_count), 0)
+        FROM posts
+        WHERE posts.topic_id = topics.id
+          AND posts.post_type <> :whisper
+          AND posts.deleted_at IS NULL
+      )
+      FROM previous
+      WHERE topics.id = previous.id
+      RETURNING topics.id, previous.like_count AS previous_count, topics.like_count AS current_count
+    SQL
+
+    crossed =
+      counts.select do |count|
+        og_image_counter_regeneration_needed?(count.previous_count, count.current_count)
+      end
+    topics = where(id: crossed.map(&:id)).index_by(&:id)
+    crossed.each do |count|
+      topics[count.id]&.enqueue_og_image_regeneration_after_counter_change(
+        previous_count: count.previous_count,
+        current_count: count.current_count,
+      )
+    end
+
+    counts
   end
 
   def self.og_image_counter_regeneration_needed?(previous_count, current_count)
@@ -935,7 +984,6 @@ class Topic < ActiveRecord::Base
 
   def update_status(status, enabled, user, opts = {})
     TopicStatusUpdater.new(self, user).update!(status, enabled, opts)
-    DiscourseEvent.trigger(:topic_status_updated, self, status, enabled)
 
     if status == "closed"
       StaffActionLogger.new(user).log_topic_closed(self, closed: enabled)
@@ -1257,6 +1305,7 @@ class Topic < ActiveRecord::Base
         group_user.destroy
         allowed_groups.reload
         add_small_action(removed_by, "removed_group", group.name, skip_guardian: true)
+        Jobs.enqueue(:delete_inaccessible_notifications, topic_id: id)
         return true
       end
     end
@@ -1277,6 +1326,10 @@ class Topic < ActiveRecord::Base
           add_small_action(removed_by, "user_left", user.username, skip_guardian: true)
         else
           add_small_action(removed_by, "removed_user", user.username, skip_guardian: true)
+        end
+
+        unless user.guardian.can_see?(self)
+          user.publish_notifications_state if Notification.remove_for(user.id, id).positive?
         end
 
         MessageBus.publish("/topic/#{id}", { type: "remove_allowed_user" }, user_ids: [user.id])
@@ -1400,6 +1453,7 @@ class Topic < ActiveRecord::Base
         self,
         moved_by,
         post_ids,
+        guardian: opts.fetch(:guardian) { moved_by.guardian },
         move_to_pm: opts[:archetype].present? && opts[:archetype] == "private_message",
         options: {
           freeze_original: opts[:freeze_original],
@@ -1436,15 +1490,9 @@ class Topic < ActiveRecord::Base
   end
 
   def update_action_counts
-    old_like_count = like_count
-    new_like_count =
-      Post.where.not(post_type: Post.types[:whisper]).where(topic_id: id).sum(:like_count)
-
-    update_column(:like_count, new_like_count)
-    enqueue_og_image_regeneration_after_counter_change(
-      previous_count: old_like_count,
-      current_count: new_like_count,
-    )
+    count = Topic.recalculate_like_counts!([id]).first
+    self.like_count = count.current_count
+    clear_attribute_changes(%i[like_count])
   end
 
   def posters_summary(options = {}) # avatar lookup in options
@@ -1690,10 +1738,10 @@ class Topic < ActiveRecord::Base
     @slow_mode_topic_timer ||= topic_timers.find_by(status_type: TopicTimer.types[:clear_slow_mode])
   end
 
-  def delete_topic_timer(status_type, by_user: Discourse.system_user)
+  def delete_topic_timer(status_type, by_user: Discourse.system_user, reason: :cancelled)
     options = { status_type: status_type }
     options.merge!(user: by_user) unless TopicTimer.public_types[status_type]
-    topic_timers.find_by(options)&.trash!(by_user)
+    topic_timers.find_by(options)&.finish!(reason, by_user: by_user)
     @public_topic_timer = nil
     nil
   end
@@ -1840,7 +1888,13 @@ class Topic < ActiveRecord::Base
   end
 
   def expandable_first_post?
-    SiteSetting.embed_truncate? && has_topic_embed?
+    embed = topic_embed
+    return false if embed.nil?
+
+    # A nil state preserves site-wide behavior for embeds without recorded state.
+    return SiteSetting.embed_truncate? if embed.content_truncated.nil?
+
+    embed.content_truncated?
   end
 
   def message_archived?(user)
@@ -2166,8 +2220,8 @@ class Topic < ActiveRecord::Base
       data: {
         topic_title: title,
         display_username: invited_by.username,
-        original_user_id: user.id,
-        original_username: user.username,
+        original_user_id: invited_by.id,
+        original_username: invited_by.username,
       }.to_json,
     )
   end
@@ -2255,7 +2309,10 @@ class Topic < ActiveRecord::Base
   end
 
   def visible_tags(guardian)
-    tags.reject { |tag| guardian.hidden_tag_names.include?(tag[:name]) }
+    guardian ||= Guardian.new
+    return tags if guardian.is_admin?
+
+    tags.select { |tag| guardian.visible_tag_ids.include?(tag.id) }
   end
 
   def self.editable_custom_fields(guardian)
@@ -2407,7 +2464,7 @@ end
 #  index_topics_on_pinned_globally                  (pinned_globally) WHERE pinned_globally
 #  index_topics_on_pinned_until                     (pinned_until) WHERE (pinned_until IS NOT NULL)
 #  index_topics_on_timestamps_private               (bumped_at,created_at,updated_at) WHERE ((deleted_at IS NULL) AND ((archetype)::text = 'private_message'::text))
-#  index_topics_on_updated_at_for_locale_detection  (updated_at) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NULL))
-#  index_topics_on_updated_at_for_localization      (updated_at) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NOT NULL))
+#  index_topics_on_updated_at_for_locale_detection  (updated_at DESC) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NULL))
+#  index_topics_on_updated_at_for_localization      (updated_at DESC) WHERE ((deleted_at IS NULL) AND (user_id > 0) AND (locale IS NOT NULL))
 #  index_topics_on_updated_at_public                (updated_at,visible,highest_staff_post_number,highest_post_number,category_id,created_at,id) WHERE (((archetype)::text <> 'private_message'::text) AND (deleted_at IS NULL))
 #

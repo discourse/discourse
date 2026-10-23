@@ -27,7 +27,13 @@ RSpec.describe "AI Bot - Header Toggle" do
     group.save
 
     allowed_agent = AiAgent.last
-    allowed_agent.update!(allowed_group_ids: [group.id], enabled: true)
+    allowed_agent.update!(
+      allowed_group_ids: [group.id],
+      default_llm: gpt_4,
+      enabled: true,
+      allow_personal_messages: true,
+    )
+    allowed_agent.ensure_user!
 
     sign_in(user)
   end
@@ -40,7 +46,7 @@ RSpec.describe "AI Bot - Header Toggle" do
     expect(header).to have_icon_in_bot_button(icon: "shuffle")
 
     header.click_bot_button
-    expect(header).to have_icon_in_bot_button(icon: "robot")
+    expect(header).to have_icon_in_bot_button(icon: "far-discobot")
     expect(page).to have_current_path("/hot")
   end
 
@@ -51,7 +57,7 @@ RSpec.describe "AI Bot - Header Toggle" do
     expect(ai_pm_homepage).to have_homepage
 
     header.click_bot_button
-    expect(header).to have_icon_in_bot_button(icon: "robot")
+    expect(header).to have_icon_in_bot_button(icon: "far-discobot")
     expect(page).to have_current_path("/hot")
 
     visit "/categories"
@@ -61,7 +67,7 @@ RSpec.describe "AI Bot - Header Toggle" do
     expect(ai_pm_homepage).to have_homepage
 
     header.click_bot_button
-    expect(header).to have_icon_in_bot_button(icon: "robot")
+    expect(header).to have_icon_in_bot_button(icon: "far-discobot")
     expect(page).to have_current_path("/categories")
   end
 end

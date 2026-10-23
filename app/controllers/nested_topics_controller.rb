@@ -200,7 +200,7 @@ class NestedTopicsController < ApplicationController
   end
 
   def topic_route_url(post_number = nil)
-    url = +"/t/#{@topic.slug}/#{@topic.id}"
+    url = +path("/t/#{@topic.slug}/#{@topic.id}")
     post_number = post_number.to_i
     url << "/#{post_number}" if post_number > 0
 
@@ -218,7 +218,7 @@ class NestedTopicsController < ApplicationController
     return unless @topic.private_message?
 
     if request.get?
-      url = "/t/#{@topic.slug}/#{@topic.id}"
+      url = +path("/t/#{@topic.slug}/#{@topic.id}")
       post_number = params[:post_number].to_i
       url << "/#{post_number}" if post_number > 0
       redirect_to url, status: :found

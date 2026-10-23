@@ -22,16 +22,7 @@ export default apiInitializer((api) => {
       return;
     }
 
-    const allowedGroups = settings.content_localization_allowed_groups
-      .split("|")
-      .map((id) => parseInt(id, 10));
-
-    const userGroupIds = currentUser.groups.map((g) => g.id);
-    const hasPermission = allowedGroups.some((groupId) =>
-      userGroupIds.includes(groupId)
-    );
-
-    if (!hasPermission) {
+    if (!currentUser.in_any_content_localization_allowed_groups) {
       return;
     }
 
@@ -46,19 +37,26 @@ export default apiInitializer((api) => {
               type: "POST",
             }
           );
+          const message =
+            result.scheduled_posts === 0
+              ? i18n(
+                  "discourse_ai.features.translation.schedule_topic_only_success"
+                )
+              : i18n(
+                  "discourse_ai.features.translation.schedule_topic_success",
+                  { count: result.scheduled_posts }
+                );
 
           toasts.success({
             duration: "long",
             data: {
-              message: i18n("discourse_ai.translation.schedule_topic_success", {
-                count: result.scheduled_posts,
-              }),
+              message,
             },
           });
         } catch (error) {
           const errorMessage =
             error.jqXHR?.responseJSON?.errors?.[0] ||
-            i18n("discourse_ai.translation.schedule_topic_error");
+            i18n("discourse_ai.features.translation.schedule_topic_error");
 
           toasts.error({
             duration: "long",

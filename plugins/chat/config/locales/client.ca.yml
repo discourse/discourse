@@ -119,6 +119,11 @@ ca:
         sort:
           relevance: "Importància"
           latest: "Més recents"
+      channel_list:
+        options:
+          filter: "Filtre"
+        filter:
+          mentions: "Mencions"
       incoming_webhooks:
         back: "Enrere"
         description: "Descripció"
@@ -177,8 +182,14 @@ ca:
       chat_message_created:
         channel_id: "Canal"
       send_chat_message:
+        targets:
+          channel: "Canal"
         channel_id: "Canal"
         message: "Missatge"
       chat_approval:
         message: "Missatge"
+        value: "Valor"
+        style_default: "Per defecte"
+        style_success: "Èxit"
+        icon: "Icona"
         channel_id: "Canal"

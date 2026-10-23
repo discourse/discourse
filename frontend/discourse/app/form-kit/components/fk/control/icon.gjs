@@ -12,12 +12,14 @@ export default class FKControlIcon extends FKBaseControl {
 
   <template>
     <DIconGridPicker
-      @value={{@field.value}}
-      @onChange={{this.handleInput}}
+      class="form-kit__control-icon"
+      @allowClear={{@allowClear}}
       @disabled={{@field.disabled}}
+      @onChange={{this.handleInput}}
+      @onlyAvailable={{@onlyAvailable}}
       @showCaret={{true}}
       @showSelectedName={{true}}
-      class="form-kit__control-icon"
+      @value={{@field.value}}
     />
   </template>
 }

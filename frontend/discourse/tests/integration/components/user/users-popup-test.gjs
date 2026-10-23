@@ -183,6 +183,29 @@ module("Integration | Component | User | UsersPopup", function (hooks) {
     await settled();
   });
 
+  test("announces each user once when the name and username are both shown", async function (assert) {
+    this.siteSettings.prioritize_username_in_ux = false;
+
+    const fetchUsers = () =>
+      Promise.resolve({ users: makeUsers(1), canLoadMore: false });
+
+    await renderMenu({ fetchUsers });
+
+    assert
+      .dom(".users-popup__name")
+      .doesNotHaveAria("hidden", "the name link is announced");
+    assert
+      .dom(".users-popup__username")
+      .hasAria(
+        "hidden",
+        "true",
+        "the username link duplicates it, so it is not announced"
+      );
+    assert
+      .dom(".users-popup__username")
+      .hasAttribute("tabindex", "-1", "and is skipped when tabbing");
+  });
+
   test("can transform the display name via user-list-display-name transformer", async function (assert) {
     this.siteSettings.prioritize_username_in_ux = false;
 

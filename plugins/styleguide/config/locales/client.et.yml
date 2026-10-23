@@ -7,9 +7,19 @@
 et:
   js:
     styleguide:
+      example:
+        kind:
+          component: "Komponent"
       sections:
         typography:
           example: "Tere tulemast Discourse'i"
+        context_menu:
+          actions:
+            delete: "Kustuta"
+        reorderable_list:
+          policies_pinned: "Esiletõstetud"
+          policies_required: "Nõutud"
+          table_type: "Tüüp"
         colors:
           title: "Värvid"
         icons:
@@ -26,6 +36,21 @@ et:
           title: "Postitus"
         more_topics:
           title: "Veel teemasid"
+        roving_focus:
+          toolbar:
+            copy: "Kopeeri"
+          adjacent:
+            label: "Filtrid"
+            field: "Otsi"
+            open: "Ava"
+            recent: "Viimased"
+          combobox:
+            daily: "Igapäevaselt"
+            weekly: "Iganädalaselt"
+            monthly: "Igakuiselt"
+            never: "Mitte kunagi"
+          tree:
+            components: "Komponendid"
         tooltips:
           description: "Kirjeldus"
           header: "Päis"

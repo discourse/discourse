@@ -3,6 +3,8 @@ import { click, find, render, settled, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { i18n } from "discourse-i18n";
 import AiTranslations from "discourse/plugins/discourse-ai/discourse/components/ai-translations";
 
 class AiCreditsStub extends Service {
@@ -195,6 +197,65 @@ module("Integration | Component | AiTranslations", function (hooks) {
     assert
       .dom(toggle)
       .isDisabled("the toggle stays disabled after saving no locales");
+  });
+
+  test("shows the locale count and blocks selections beyond the max", async function (assert) {
+    this.siteSettings.content_localization_max_locales = 2;
+    this.siteSettings.available_locales = [
+      { name: "English", value: "en" },
+      { name: "French", value: "fr" },
+      { name: "Spanish", value: "es" },
+    ];
+
+    await render(<template><AiTranslations @model={{this.model}} /></template>);
+
+    assert
+      .dom(".ai-translations__locale-count")
+      .hasText(
+        i18n("discourse_ai.translations.locale_count", { count: 2, max: 2 }),
+        "renders the locale usage count"
+      );
+
+    const locales = selectKit(
+      ".ai-translations__locale-input-row .multi-select"
+    );
+    await locales.expand();
+    await locales.selectRowByValue("es");
+
+    const toasts = this.owner.lookup("service:toasts");
+    assert.strictEqual(
+      toasts.activeToasts.length,
+      1,
+      "selecting a locale beyond the max shows a toast"
+    );
+    assert.strictEqual(
+      toasts.activeToasts[0].options.data.message,
+      i18n("discourse_ai.translations.max_locales_reached", { max: 2 }),
+      "the toast explains the limit"
+    );
+
+    assert.strictEqual(
+      locales.header().value(),
+      "en,fr",
+      "the selection is unchanged"
+    );
+    assert
+      .dom(".ai-translations__locale-count")
+      .hasText(
+        i18n("discourse_ai.translations.locale_count", { count: 2, max: 2 }),
+        "the count is unchanged"
+      );
+    assert
+      .dom(".ai-translations__locale-input-row .setting-controls")
+      .doesNotExist("no save controls appear for the rejected selection");
+  });
+
+  test("hides the locale count when no max is configured", async function (assert) {
+    this.siteSettings.content_localization_max_locales = 0;
+
+    await render(<template><AiTranslations @model={{this.model}} /></template>);
+
+    assert.dom(".ai-translations__locale-info").doesNotExist();
   });
 
   test("enables the language switcher along with translations", async function (assert) {

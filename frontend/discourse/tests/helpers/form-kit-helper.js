@@ -100,6 +100,13 @@ class Field {
     }
   }
 
+  get pickerElement() {
+    if (this.controlType !== "color") {
+      throw new Error(`Unsupported control type: ${this.controlType}`);
+    }
+    return this.element.querySelector(".form-kit__control-color-input-picker");
+  }
+
   value() {
     switch (this.resolvedControlType) {
       case "input-number":
@@ -215,13 +222,6 @@ class Field {
     );
   }
 
-  get pickerElement() {
-    if (this.controlType !== "color") {
-      throw new Error(`Unsupported control type: ${this.controlType}`);
-    }
-    return this.element.querySelector(".form-kit__control-color-input-picker");
-  }
-
   swatches() {
     if (this.controlType !== "color") {
       throw new Error(`Unsupported control type: ${this.controlType}`);
@@ -333,7 +333,7 @@ class Field {
    * Triggers any event on the input element of the field.
    *
    * @param {string} eventName - The name of the event to trigger.
-   * @param {Object} [options={}] - Additional options for the event.
+   * @param {Record<string, unknown>} [options={}] - Additional options for the event.
    */
   async triggerEvent(eventName, options = {}) {
     await triggerEvent(this.inputElement, eventName, options);

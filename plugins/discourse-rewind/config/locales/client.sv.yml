@@ -15,19 +15,15 @@ sv:
         reading_time:
           title: Lästid
         assignments:
-          title: Tilldelningar
           total_assigned_others: "Tilldelad till %{username}"
         chat_usage:
-          messages: meddelanden
           author: Du
           author_others: "%{username}"
+        live_usage:
+          minutes:
+            one: "%{count} min"
+            other: "%{count} min"
         invites:
-          title: Inbjudningar
-          invitee_posts: Inlägg skapade
-          invitee_likes: Utdelade gillningar
           label_invitations_sent: "Inbjudningar skickade:"
-        new_user_interactions:
-          likes_given: Utdelade gillningar
-          mentions: Omnämnanden
         writing_analysis:
           menu_other: Övrigt

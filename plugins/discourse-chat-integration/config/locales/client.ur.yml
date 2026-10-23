@@ -9,12 +9,23 @@ ur:
     admin:
       site_settings:
         categories:
-          chat_integration: "چَیٹ اِنٹیگرَیشَن"
+          chat_integration: "انضامِ گفتگو"
   js:
     chat_integration:
-      menu_title: "چَیٹ اِنٹیگرَیشَن"
+      menu_title: "انضامِ گفتگو"
       settings: "ترتیبات"
-      more_providers: "مزید "
+      nav:
+        providers: "فراہم کنندگان"
+        providers_description: "گفتگو کے فراہم کنندگان کے انضمام کی ترتیب"
+      add_provider: "فراہم کنندہ شامل کریں"
+      view_provider_settings: "فراہم کنندہ کی ترتیبات"
+      more_providers: "مزید"
+      confirm_setup_provider: "کیا آپ واقعی %{provider} فراہم کنندہ کو فعال کرنا چاہتے ہیں؟ اسے بعد میں ترتیبات کے ٹیب میں غیر فعال کیا جا سکتا ہے۔"
+      setup_provider_modal:
+        title: "فراہم کنندہ %{provider} کا اقدام"
+        setup_instructions: "فراہم کنندہ %{provider} کو ترتیب دینے کے لیے براہ کرم درج ذیل تفصیلات فراہم کریں۔ %{additionalInstructions}"
+        confirm_setup: "اقدام کی تصدیق"
+        success: "فراہم کنندہ %{provider} کے اقدام میں کامیابی"
       channels_title: "چینلوں"
       channels_with_errors: "اس فراہم کنندہ کے کچھ چینلز آخری بار پیغامات بھیجنے میں ناکام ہو گئے۔ مزید جاننے کے لیے ایرر آئیکن(ز) پر کلک کریں۔"
       group_mention_template: "ذکر: @%{name} کے"

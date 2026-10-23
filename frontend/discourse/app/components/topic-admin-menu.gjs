@@ -7,34 +7,19 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
-import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef {{ action?: () => unknown, icon?: string, className?: string, label?: string, translatedLabel?: string, section?: { id: string, label?: string, translatedLabel?: string } }} TopicAdminButton
+ */
 export default class TopicAdminMenu extends Component {
   @service adminTopicMenuButtons;
   @service currentUser;
   @service siteSettings;
-
-  @action
-  onRegisterApi(api) {
-    this.dMenu = api;
-  }
-
-  @action
-  async onButtonAction(buttonAction) {
-    await this.dMenu.close();
-    this.args[buttonAction]?.();
-  }
-
-  @action
-  async onExtraButtonAction(buttonAction) {
-    await this.dMenu.close();
-    buttonAction?.();
-  }
 
   get extraButtons() {
     return this.adminTopicMenuButtons.callbacks
@@ -44,6 +29,7 @@ export default class TopicAdminMenu extends Component {
       .filter(Boolean);
   }
 
+  /** @returns {{ id: string | null, label: string | null, buttons: TopicAdminButton[] }[]} */
   get extraButtonGroups() {
     const groups = [];
     let currentGroup = null;
@@ -166,6 +152,23 @@ export default class TopicAdminMenu extends Component {
   }
 
   @action
+  onRegisterApi(api) {
+    this.dMenu = api;
+  }
+
+  @action
+  async onButtonAction(buttonAction) {
+    await this.dMenu.close();
+    this.args[buttonAction]?.();
+  }
+
+  @action
+  async onExtraButtonAction(buttonAction) {
+    await this.dMenu.close();
+    buttonAction?.();
+  }
+
+  @action
   async toggleNestedReplies() {
     await this.dMenu.close();
     const topic = this.args.topic;
@@ -193,10 +196,10 @@ export default class TopicAdminMenu extends Component {
   <template>
     {{#if this.showAdminButton}}
       <DMenu
-        @identifier="topic-admin-menu"
-        @onRegisterApi={{this.onRegisterApi}}
-        @modalForMobile={{true}}
         @autofocus={{true}}
+        @identifier="topic-admin-menu"
+        @modalForMobile={{true}}
+        @onRegisterApi={{this.onRegisterApi}}
         @triggerClass="btn-default btn-icon toggle-admin-menu {{@buttonClasses}}"
       >
         <:trigger>
@@ -212,9 +215,9 @@ export default class TopicAdminMenu extends Component {
             }}
               <dropdown.item class="topic-admin-multi-select">
                 <DButton
-                  @label="topic.actions.multi_select"
                   @action={{fn this.onButtonAction "toggleMultiSelect"}}
                   @icon="list-check"
+                  @label="topic.actions.multi_select"
                 />
               </dropdown.item>
             {{/if}}
@@ -228,18 +231,18 @@ export default class TopicAdminMenu extends Component {
               {{#if this.canDelete}}
                 <dropdown.item class="topic-admin-delete">
                   <DButton
-                    @label="topic.actions.delete"
+                    class="popup-menu-btn-danger --danger"
                     @action={{fn this.onButtonAction "deleteTopic"}}
                     @icon="trash-can"
-                    class="popup-menu-btn-danger --danger"
+                    @label="topic.actions.delete"
                   />
                 </dropdown.item>
               {{else if this.canRecover}}
                 <dropdown.item class="topic-admin-recover">
                   <DButton
-                    @label="topic.actions.recover"
                     @action={{fn this.onButtonAction "recoverTopic"}}
                     @icon="arrow-rotate-left"
+                    @label="topic.actions.recover"
                   />
                 </dropdown.item>
               {{/if}}
@@ -254,13 +257,13 @@ export default class TopicAdminMenu extends Component {
                 }}
               >
                 <DButton
+                  @action={{fn this.onButtonAction "toggleClosed"}}
+                  @icon={{if @topic.closed "topic.opened" "topic.closed"}}
                   @label={{if
                     @topic.closed
                     "topic.actions.open"
                     "topic.actions.close"
                   }}
-                  @action={{fn this.onButtonAction "toggleClosed"}}
-                  @icon={{if @topic.closed "topic.opened" "topic.closed"}}
                 />
               </dropdown.item>
             {{/if}}
@@ -274,13 +277,13 @@ export default class TopicAdminMenu extends Component {
             }}
               <dropdown.item class="topic-admin-pin">
                 <DButton
+                  @action={{fn this.onButtonAction "showFeatureTopic"}}
+                  @icon="thumbtack"
                   @label={{if
                     this.featured
                     "topic.actions.unpin"
                     "topic.actions.pin"
                   }}
-                  @action={{fn this.onButtonAction "showFeatureTopic"}}
-                  @icon="thumbtack"
                 />
               </dropdown.item>
             {{/if}}
@@ -290,13 +293,13 @@ export default class TopicAdminMenu extends Component {
             }}
               <dropdown.item class="topic-admin-archive">
                 <DButton
+                  @action={{fn this.onButtonAction "toggleArchived"}}
+                  @icon="folder"
                   @label={{if
                     this.archived
                     "topic.actions.unarchive"
                     "topic.actions.archive"
                   }}
-                  @action={{fn this.onButtonAction "toggleArchived"}}
-                  @icon="folder"
                 />
               </dropdown.item>
             {{/if}}
@@ -304,25 +307,20 @@ export default class TopicAdminMenu extends Component {
             {{#if this.details.can_toggle_topic_visibility}}
               <dropdown.item class="topic-admin-visible">
                 <DButton
+                  @action={{fn this.onButtonAction "toggleVisibility"}}
+                  @icon={{if this.visible "far-eye-slash" "far-eye"}}
                   @label={{if
                     this.visible
                     "topic.actions.invisible"
                     "topic.actions.visible"
                   }}
-                  @action={{fn this.onButtonAction "toggleVisibility"}}
-                  @icon={{if this.visible "far-eye-slash" "far-eye"}}
                 />
               </dropdown.item>
             {{/if}}
 
-            {{#if (and this.details.can_convert_topic)}}
+            {{#if this.details.can_convert_topic}}
               <dropdown.item class="topic-admin-convert">
                 <DButton
-                  @label={{if
-                    this.isPrivateMessage
-                    "topic.actions.make_public"
-                    "topic.actions.make_private"
-                  }}
                   @action={{fn
                     this.onButtonAction
                     (if
@@ -332,6 +330,11 @@ export default class TopicAdminMenu extends Component {
                     )
                   }}
                   @icon={{if this.isPrivateMessage "comment" "envelope"}}
+                  @label={{if
+                    this.isPrivateMessage
+                    "topic.actions.make_public"
+                    "topic.actions.make_private"
+                  }}
                 />
               </dropdown.item>
             {{/if}}
@@ -344,9 +347,9 @@ export default class TopicAdminMenu extends Component {
               {{#if this.showTopicTimerItem}}
                 <dropdown.item class="admin-topic-timer-update">
                   <DButton
-                    @label="topic.actions.timed_update"
                     @action={{fn this.onButtonAction "showTopicTimerModal"}}
                     @icon="far-clock"
+                    @label="topic.actions.timed_update"
                   />
                 </dropdown.item>
               {{/if}}
@@ -355,26 +358,26 @@ export default class TopicAdminMenu extends Component {
                 {{#if this.currentUser.staff}}
                   <dropdown.item class="topic-admin-change-timestamp">
                     <DButton
-                      @label="topic.change_timestamp.title"
                       @action={{fn this.onButtonAction "showChangeTimestamp"}}
                       @icon="calendar-days"
+                      @label="topic.change_timestamp.title"
                     />
                   </dropdown.item>
                 {{/if}}
 
                 <dropdown.item class="topic-admin-reset-bump-date">
                   <DButton
-                    @label="topic.actions.reset_bump_date"
                     @action={{fn this.onButtonAction "resetBumpDate"}}
                     @icon="anchor"
+                    @label="topic.actions.reset_bump_date"
                   />
                 </dropdown.item>
 
                 <dropdown.item class="topic-admin-slow-mode">
                   <DButton
-                    @label="topic.actions.slow_mode"
                     @action={{fn this.onButtonAction "showTopicSlowModeUpdate"}}
                     @icon="hourglass-start"
+                    @label="topic.actions.slow_mode"
                   />
                 </dropdown.item>
               {{/if}}
@@ -392,9 +395,9 @@ export default class TopicAdminMenu extends Component {
               {{#if this.currentUser.staff}}
                 <dropdown.item class="topic-admin-moderation-history">
                   <DButton
-                    @label="review.moderation_history"
                     @href={{this.topicModerationHistoryUrl}}
                     @icon="list"
+                    @label="review.moderation_history"
                   />
                 </dropdown.item>
               {{/if}}
@@ -402,9 +405,9 @@ export default class TopicAdminMenu extends Component {
               {{#if this.showNestedRepliesToggle}}
                 <dropdown.item class="topic-admin-nested-replies">
                   <DButton
-                    @label={{this.nestedRepliesToggleLabel}}
                     @action={{this.toggleNestedReplies}}
                     @icon="nested-thread"
+                    @label={{this.nestedRepliesToggleLabel}}
                   />
                 </dropdown.item>
               {{/if}}
@@ -424,11 +427,11 @@ export default class TopicAdminMenu extends Component {
                 {{#each group.buttons as |button|}}
                   <dropdown.item>
                     <DButton
-                      @label={{button.label}}
-                      @translatedLabel={{button.translatedLabel}}
-                      @icon={{button.icon}}
                       class={{dConcatClass "btn-transparent" button.className}}
                       @action={{fn this.onExtraButtonAction button.action}}
+                      @icon={{button.icon}}
+                      @label={{button.label}}
+                      @translatedLabel={{button.translatedLabel}}
                     />
                   </dropdown.item>
                 {{/each}}

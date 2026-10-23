@@ -2,6 +2,7 @@
 
 describe "Admin Site Setting Search" do
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
+
   fab!(:admin)
 
   before do

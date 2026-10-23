@@ -93,6 +93,22 @@ export function nextBusinessWeekStart(timezone) {
   return startOfDay(now(timezone).add(7, "days")).day(MOMENT_MONDAY);
 }
 
+export function adjustedRangeEnd(from, to, { dateOnly = false } = {}) {
+  if (!from || !to) {
+    return to;
+  }
+
+  if (dateOnly) {
+    return to.isBefore(from, "day") ? from.clone() : to;
+  }
+
+  if (to.isBefore(from) || to.isSame(from)) {
+    return from.clone().add(1, "hour");
+  }
+
+  return to;
+}
+
 export function parseCustomDatetime(
   date,
   time,

@@ -7,10 +7,11 @@ require "compression/safe_zip_reader"
 module DiscourseAi
   module Completions
     class XlsxToText
+      include TextNormalization
+
       MAX_ENTRY_XML_BYTES = 10 * 1024 * 1024
       MAX_TOTAL_XML_BYTES = 30 * 1024 * 1024
       MAX_ZIP_ENTRIES = 1_000
-      MAX_EXTRACTED_TEXT_CHARS = 100_001
       MAX_SHEETS = 50
       MAX_ROWS_PER_SHEET = 10_000
       MAX_COLUMNS = 200
@@ -241,23 +242,6 @@ module DiscourseAi
 
         column_name.upcase.each_byte.reduce(0) { |index, char| (index * 26) + char - "A".ord + 1 } -
           1
-      end
-
-      def normalize_inline_text(text)
-        force_utf8(text).gsub("\u00A0", " ").gsub(/[ \t\r\n]+/, " ").strip
-      end
-
-      def normalize_document_text(text)
-        force_utf8(text)
-          .gsub("\u00A0", " ")
-          .gsub(/\r\n?/, "\n")
-          .gsub(/[ \t]+\n/, "\n")
-          .gsub(/\n{3,}/, "\n\n")
-          .strip
-      end
-
-      def force_utf8(text)
-        text.to_s.encode("UTF-8", invalid: :replace, undef: :replace, replace: "")
       end
     end
   end

@@ -40,6 +40,8 @@ sv:
       cast-votes:
         title: "Lägg dina röster"
         label: "Rösta nu!"
+      keep-vote:
+        label: "Tillbaka"
       show-results:
         title: "Visa omröstningsresultatet"
         label: "Resultat"

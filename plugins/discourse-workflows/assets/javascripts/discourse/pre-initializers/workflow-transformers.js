@@ -7,6 +7,7 @@ export default {
     withPluginApi((api) => {
       api.addValueTransformerName("workflow-node-defaults");
       api.addValueTransformerName("workflow-node-icons");
+      api.addValueTransformerName("workflow-field-control");
     });
   },
 };

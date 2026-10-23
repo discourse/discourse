@@ -20,27 +20,27 @@ export default <template>
   <div class="user-navigation user-navigation-secondary">
     <DHorizontalOverflowNav @ariaLabel="User secondary - notifications">
       <DNavigationItem
-        @route="userNotifications.index"
-        @ariaCurrentContext="subNav"
         class="user-nav__notifications-all"
+        @ariaCurrentContext="subNav"
+        @route="userNotifications.index"
       >
         {{dIcon "bell"}}
         <span>{{i18n "user.filters.all"}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="userNotifications.responses"
-        @ariaCurrentContext="subNav"
         class="user-nav__notifications-responses"
+        @ariaCurrentContext="subNav"
+        @route="userNotifications.responses"
       >
         {{dIcon "reply"}}
         <span>{{i18n "user_action_groups.5"}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="userNotifications.likesReceived"
-        @ariaCurrentContext="subNav"
         class="user-nav__notifications-likes"
+        @ariaCurrentContext="subNav"
+        @route="userNotifications.likesReceived"
       >
         {{dIcon "heart"}}
         <span>{{i18n "user_action_groups.2"}}</span>
@@ -48,9 +48,9 @@ export default <template>
 
       {{#if @controller.siteSettings.enable_mentions}}
         <DNavigationItem
-          @route="userNotifications.mentions"
-          @ariaCurrentContext="subNav"
           class="user-nav__notifications-mentions"
+          @ariaCurrentContext="subNav"
+          @route="userNotifications.mentions"
         >
           {{dIcon "at"}}
           <span>{{i18n "user_action_groups.7"}}</span>
@@ -58,26 +58,26 @@ export default <template>
       {{/if}}
 
       <DNavigationItem
-        @route="userNotifications.edits"
-        @ariaCurrentContext="subNav"
         class="user-nav__notifications-edits"
+        @ariaCurrentContext="subNav"
+        @route="userNotifications.edits"
       >
         {{dIcon "pencil"}}
         <span>{{i18n "user_action_groups.11"}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="userNotifications.links"
-        @ariaCurrentContext="subNav"
         class="user-nav__notifications-links"
+        @ariaCurrentContext="subNav"
+        @route="userNotifications.links"
       >
         {{dIcon "link"}}
         <span>{{i18n "user_action_groups.17"}}</span>
       </DNavigationItem>
 
       <PluginOutlet
-        @name="user-notifications-bottom"
         @connectorTagName="li"
+        @name="user-notifications-bottom"
         @outletArgs={{lazyHash model=@controller.model}}
       />
 
@@ -86,12 +86,12 @@ export default <template>
     {{#if @controller.model.content}}
       <div class="navigation-controls">
         <DButton
-          @title="user.dismiss_notifications_tooltip"
-          @action={{@controller.resetNew}}
-          @label="user.dismiss_notifications"
-          @icon="check"
-          @disabled={{@controller.allNotificationsRead}}
           class="btn-default dismiss-notifications"
+          @action={{@controller.resetNew}}
+          @disabled={{@controller.allNotificationsRead}}
+          @icon="check"
+          @label="user.dismiss_notifications"
+          @title="user.dismiss_notifications_tooltip"
         />
       </div>
     {{/if}}
@@ -99,8 +99,8 @@ export default <template>
 
   <section class="user-content" id="user-content">
     <DLoadMore
-      @action={{@controller.loadMore}}
       class="notification-history user-stream"
+      @action={{@controller.loadMore}}
     >
       {{outlet}}
       <DConditionalLoadingSpinner

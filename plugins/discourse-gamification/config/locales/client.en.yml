@@ -21,6 +21,8 @@ en:
         name: "Name"
         name_placeholder: "Name..."
         new: "New leaderboard"
+        edit: "Edit leaderboard"
+        view: "View leaderboard"
         create_success: "Leaderboard created"
         delete_success: "Leaderboard deleted"
         save_success: "Leaderboard saved"
@@ -49,7 +51,7 @@ en:
         scoring_configuration: "Scoring configuration"
         scoring_configuration_description: "Override the global scoring rules for this leaderboard. Leave fields empty to use the global defaults."
         scorable_categories: "Scorable categories"
-        scorable_categories_help: "Categories to include in scoring. Leave empty to use the global setting."
+        scorable_categories_help: "Select categories to count only category-based activity. Visits, reading, invitations, flags, and chat are excluded, and manual score adjustments count only when assigned to one of these categories. Leave empty to use the global scoring settings."
         score_overrides: "Score weights"
         score_overrides_help: "Override the point values for each action. Leave empty to use the global default. Set to 0 to disable."
         weight:
@@ -69,7 +71,7 @@ en:
           chat_reaction_given: "Chat reaction given"
           chat_reaction_received: "Chat reaction received"
         period:
-          all_time: "All Time"
+          all_time: "All time"
           yearly: "Yearly"
           quarterly: "Quarterly"
           monthly: "Monthly"
@@ -81,9 +83,8 @@ en:
       close: "Close"
       delete: "Delete"
       edit: "Edit"
-      back: "Back"
+      back_to_leaderboards: "Back to leaderboards"
       save: "Save"
-      apply: "Apply"
       recalculate: "Recalculate scores"
       recalculating: "Recalculating scores..."
       completed: "Done! The scores have been successfully recalculated."
@@ -93,7 +94,7 @@ en:
         last_30_days: "Last 30 days"
         last_90_days: "Last 90 days"
         last_year: "Last year"
-        all_time: "All Time"
+        all_time: "All time"
         custom_date_range: "Custom range"
       custom_range_from: "From"
       daily_update_scores_availability:
@@ -102,6 +103,7 @@ en:
       admin:
         title: "Gamification"
         name: "Name"
+        created_by: "Created by"
         period: "Period"
     discourse_workflows:
       node_unavailable:
@@ -118,3 +120,5 @@ en:
         date_description: "Date the points apply to (YYYY-MM-DD). Defaults to today."
         description: "Description"
         description_description: "Optional note shown alongside the score event."
+        category_id: "Category"
+        category_id_description: "Optional. Points assigned to a category also count on leaderboards scoped to that category."

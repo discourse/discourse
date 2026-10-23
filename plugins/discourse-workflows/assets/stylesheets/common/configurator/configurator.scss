@@ -117,7 +117,7 @@
     }
 
     > .combo-box,
-    > .d-select,
+    > .d-native-select,
     > .icon-picker,
     > .select-kit.combo-box.category-chooser,
     > .user-chooser,
@@ -156,7 +156,8 @@
       outline-offset: 2px;
     }
 
-    &.is-drag-over input {
+    &.is-drag-over input,
+    &.is-drag-over textarea {
       border-color: var(--tertiary) !important;
       background: var(--tertiary-50);
     }
@@ -199,6 +200,23 @@
         }
       }
     }
+  }
+
+  &__collection-order-controls {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: var(--space-2);
+    transform: translateY(-50%);
+    display: flex;
+    gap: var(--space-half);
+  }
+
+  &__collection-move {
+    padding: var(--space-half);
+    border-radius: 6px;
+    font-size: var(--font-down-1-rem);
+    background: var(--secondary);
+    border: 1px solid var(--primary-low-mid);
   }
 
   &__collection-fields {
@@ -445,5 +463,28 @@
       font-family: var(--d-font-family--monospace);
       font-weight: 500;
     }
+  }
+}
+
+.workflows-access-control {
+  &__input-row {
+    align-items: flex-start;
+    gap: var(--space-12);
+    padding-block: var(--space-3);
+  }
+
+  &__groups {
+    flex: 1 1 0;
+    min-width: 0;
+
+    input {
+      width: 100%;
+      margin: 0;
+    }
+  }
+
+  &__permission {
+    flex: 0 0 auto;
+    text-align: end;
   }
 }

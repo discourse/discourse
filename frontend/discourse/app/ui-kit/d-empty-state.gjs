@@ -1,5 +1,4 @@
 import { concat } from "@ember/helper";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
@@ -17,7 +16,7 @@ const DEmptyState = <template>
       {{/if}}
 
       {{#if @title}}
-        <div data-test-title class="empty-state__title">{{@title}}</div>
+        <div class="empty-state__title" data-test-title>{{@title}}</div>
       {{/if}}
 
       {{#if @body}}
@@ -29,12 +28,13 @@ const DEmptyState = <template>
       {{#if @ctaLabel}}
         <div class="empty-state__cta">
           <DButton
+            class="btn-primary"
             @action={{@ctaAction}}
+            @disabled={{@ctaDisabled}}
             @href={{@ctaHref}}
+            @icon={{@ctaIcon}}
             @route={{@ctaRoute}}
             @translatedLabel={{@ctaLabel}}
-            @icon={{@ctaIcon}}
-            class="btn-primary"
           />
         </div>
       {{/if}}

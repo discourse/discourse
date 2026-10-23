@@ -6,7 +6,7 @@ RSpec.describe AdminDashboardSiteTraffic do
   before do
     freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0))
     SiteSetting.use_legacy_pageviews = false
-    SiteSetting.persist_browser_pageview_events = false
+    allow(Report).to receive(:hidden?).and_return(true)
   end
 
   def build_traffic(start_date: nil, end_date: nil, guardian: admin.guardian)
@@ -15,6 +15,10 @@ RSpec.describe AdminDashboardSiteTraffic do
 
   def traffic_point(date, count)
     { x: date, y: count }
+  end
+
+  def empty_session_kpis
+    { bounce_rate: { value: nil }, average_session_duration_seconds: { value: nil } }
   end
 
   def traffic_series(id, data, req: traffic_series_req(id))
@@ -42,10 +46,6 @@ RSpec.describe AdminDashboardSiteTraffic do
     response[:pageview_series].find { |traffic_series| traffic_series[:req] == req }[:data]
   end
 
-  def use_beacon_cutover_date(date)
-    BrowserPageviewEvent.stubs(:beacon_cutover_date).returns(date)
-  end
-
   describe ".build" do
     it "returns public-community KPIs and pageview series for selected dates" do
       SiteSetting.embed_topics_list = true
@@ -62,6 +62,7 @@ RSpec.describe AdminDashboardSiteTraffic do
 
       expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")).to eq(
         kpis: {
+          **empty_session_kpis,
           browser_pageviews: {
             value: 30,
             percent_change: 900,
@@ -118,6 +119,7 @@ RSpec.describe AdminDashboardSiteTraffic do
 
       expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")).to eq(
         kpis: {
+          **empty_session_kpis,
           browser_pageviews: {
             value: 5,
             percent_change: -75,
@@ -187,12 +189,76 @@ RSpec.describe AdminDashboardSiteTraffic do
       )
     end
 
+    it "reads days with beacon traffic from beacons and the rest from piggyback counters" do
+      Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 20)
+      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-01", count: 15)
+      Fabricate(:logged_in_browser_application_request, date: "2026-05-02", count: 25)
+      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-02", count: 30)
+      Fabricate(:logged_in_browser_application_request, date: "2026-05-03", count: 40)
+
+      response = build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")
+
+      expect(traffic_series_data(response, :logged_in)).to eq(
+        [
+          traffic_point("2026-05-01", 15),
+          traffic_point("2026-05-02", 30),
+          traffic_point("2026-05-03", 40),
+        ],
+      )
+    end
+
+    it "keeps counting piggyback traffic after an isolated day of beacon data" do
+      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-01", count: 1)
+      Fabricate(:logged_in_browser_application_request, date: "2026-05-02", count: 30)
+      Fabricate(:logged_in_browser_application_request, date: "2026-05-03", count: 40)
+
+      response = build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")
+
+      expect(traffic_series_data(response, :logged_in)).to eq(
+        [
+          traffic_point("2026-05-01", 1),
+          traffic_point("2026-05-02", 30),
+          traffic_point("2026-05-03", 40),
+        ],
+      )
+    end
+
+    it "includes the first day of traffic on beacon-only sites" do
+      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-01", count: 15)
+      Fabricate(:anonymous_browser_beacon_application_request, date: "2026-05-01", count: 25)
+
+      response = build_traffic(start_date: "2026-05-01", end_date: "2026-05-01")
+
+      expect(traffic_series_data(response, :logged_in)).to eq([traffic_point("2026-05-01", 15)])
+      expect(traffic_series_data(response, :anonymous)).to eq([traffic_point("2026-05-01", 25)])
+    end
+
+    it "keeps using legacy counters when beacon data exists" do
+      SiteSetting.use_legacy_pageviews = true
+
+      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-04-30", count: 100)
+      Fabricate(:logged_in_application_request, date: "2026-05-01", count: 11)
+      Fabricate(:anonymous_application_request, date: "2026-05-01", count: 22)
+      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-01", count: 110)
+      Fabricate(:anonymous_browser_beacon_application_request, date: "2026-05-01", count: 220)
+
+      response = build_traffic(start_date: "2026-05-01", end_date: "2026-05-01")
+
+      expect(traffic_series_data(response, :logged_in, req: "page_view_logged_in")).to eq(
+        [traffic_point("2026-05-01", 11)],
+      )
+      expect(traffic_series_data(response, :anonymous, req: "page_view_anon")).to eq(
+        [traffic_point("2026-05-01", 22)],
+      )
+    end
+
     it "omits trend data when the comparison period has no pageviews" do
       Fabricate(:logged_in_browser_application_request, date: "2026-04-01", count: 1)
 
       Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 8)
 
       expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
+        **empty_session_kpis,
         browser_pageviews: {
           value: 8,
         },
@@ -208,6 +274,7 @@ RSpec.describe AdminDashboardSiteTraffic do
       Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 8)
 
       expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
+        **empty_session_kpis,
         browser_pageviews: {
           value: 8,
         },
@@ -223,6 +290,7 @@ RSpec.describe AdminDashboardSiteTraffic do
       Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 200_001)
 
       expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
+        **empty_session_kpis,
         browser_pageviews: {
           value: 200_001,
         },
@@ -238,6 +306,7 @@ RSpec.describe AdminDashboardSiteTraffic do
       Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 10_050)
 
       expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
+        **empty_session_kpis,
         browser_pageviews: {
           value: 10_050,
           percent_change: 0.5,
@@ -258,6 +327,7 @@ RSpec.describe AdminDashboardSiteTraffic do
       Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 110)
 
       expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
+        **empty_session_kpis,
         browser_pageviews: {
           value: 110,
           percent_change: 10,
@@ -272,120 +342,9 @@ RSpec.describe AdminDashboardSiteTraffic do
       )
     end
 
-    it "excludes mobile and beacon browser pageviews from totals and series" do
-      Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 10)
-      Fabricate(:anonymous_browser_application_request, date: "2026-05-01", count: 20)
-
-      Fabricate(:logged_in_browser_mobile_application_request, date: "2026-05-01", count: 100)
-      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-01", count: 200)
-      Fabricate(:anonymous_browser_mobile_application_request, date: "2026-05-01", count: 300)
-      Fabricate(:anonymous_browser_beacon_application_request, date: "2026-05-01", count: 400)
-
-      expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-01")).to eq(
-        kpis: {
-          browser_pageviews: {
-            value: 30,
-          },
-          logged_in_share: {
-            value: 33,
-          },
-        },
-        pageview_series: [
-          traffic_series(:logged_in, [traffic_point("2026-05-01", 10)]),
-          traffic_series(:anonymous, [traffic_point("2026-05-01", 20)]),
-          traffic_series(:crawlers, [traffic_point("2026-05-01", 0)]),
-        ],
-      )
-    end
-
-    it "uses beacon browser pageviews starting the day after dashboard improvements was enabled" do
-      use_beacon_cutover_date(Date.new(2026, 5, 3))
-
-      Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 10)
-      Fabricate(:anonymous_browser_application_request, date: "2026-05-01", count: 20)
-      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-01", count: 100)
-      Fabricate(:anonymous_browser_beacon_application_request, date: "2026-05-01", count: 200)
-
-      Fabricate(:logged_in_browser_application_request, date: "2026-05-02", count: 11)
-      Fabricate(:anonymous_browser_application_request, date: "2026-05-02", count: 21)
-      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-02", count: 110)
-      Fabricate(:anonymous_browser_beacon_application_request, date: "2026-05-02", count: 210)
-
-      Fabricate(:logged_in_browser_application_request, date: "2026-05-03", count: 12)
-      Fabricate(:anonymous_browser_application_request, date: "2026-05-03", count: 22)
-      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-03", count: 120)
-      Fabricate(:anonymous_browser_beacon_application_request, date: "2026-05-03", count: 220)
-
-      expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")).to eq(
-        kpis: {
-          browser_pageviews: {
-            value: 402,
-          },
-          logged_in_share: {
-            value: 35,
-          },
-        },
-        pageview_series: [
-          traffic_series(
-            :logged_in,
-            [
-              traffic_point("2026-05-01", 10),
-              traffic_point("2026-05-02", 11),
-              traffic_point("2026-05-03", 120),
-            ],
-          ),
-          traffic_series(
-            :anonymous,
-            [
-              traffic_point("2026-05-01", 20),
-              traffic_point("2026-05-02", 21),
-              traffic_point("2026-05-03", 220),
-            ],
-          ),
-          traffic_series(
-            :crawlers,
-            [
-              traffic_point("2026-05-01", 0),
-              traffic_point("2026-05-02", 0),
-              traffic_point("2026-05-03", 0),
-            ],
-          ),
-        ],
-      )
-    end
-
-    it "compares beacon pageviews against piggyback pageviews when the prior period predates the cutover" do
-      use_beacon_cutover_date(Date.new(2026, 5, 1))
-
-      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-04-28", count: 5)
-
-      Fabricate(:logged_in_browser_application_request, date: "2026-04-29", count: 30)
-      Fabricate(:anonymous_browser_application_request, date: "2026-04-29", count: 70)
-      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-04-29", count: 1)
-      Fabricate(:anonymous_browser_beacon_application_request, date: "2026-04-29", count: 2)
-
-      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-02", count: 60)
-      Fabricate(:anonymous_browser_beacon_application_request, date: "2026-05-02", count: 140)
-      Fabricate(:logged_in_browser_application_request, date: "2026-05-02", count: 3)
-      Fabricate(:anonymous_browser_application_request, date: "2026-05-02", count: 4)
-
-      expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
-        browser_pageviews: {
-          value: 200,
-          percent_change: 100,
-          comparison_period: {
-            start_date: "2026-04-28",
-            end_date: "2026-04-30",
-          },
-        },
-        logged_in_share: {
-          value: 30,
-        },
-      )
-    end
-
-    it "uses legacy human counters when legacy pageviews are enabled" do
+    it "uses legacy human counters with improved crawler detection" do
       SiteSetting.use_legacy_pageviews = true
+      SiteSetting.improved_crawler_detection = true
 
       Fabricate(:logged_in_application_request, date: "2026-05-01", count: 11)
       Fabricate(:anonymous_application_request, date: "2026-05-01", count: 22)
@@ -397,6 +356,7 @@ RSpec.describe AdminDashboardSiteTraffic do
 
       expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-01")).to eq(
         kpis: {
+          **empty_session_kpis,
           browser_pageviews: {
             value: 33,
           },
@@ -407,6 +367,7 @@ RSpec.describe AdminDashboardSiteTraffic do
         pageview_series: [
           traffic_series(:logged_in, [traffic_point("2026-05-01", 11)], req: "page_view_logged_in"),
           traffic_series(:anonymous, [traffic_point("2026-05-01", 22)], req: "page_view_anon"),
+          traffic_series(:likely_crawlers, [traffic_point("2026-05-01", 0)]),
           traffic_series(:crawlers, [traffic_point("2026-05-01", 4)]),
         ],
       )
@@ -417,6 +378,7 @@ RSpec.describe AdminDashboardSiteTraffic do
 
       expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-01")).to eq(
         kpis: {
+          **empty_session_kpis,
           browser_pageviews: {
             value: 0,
           },
@@ -436,6 +398,7 @@ RSpec.describe AdminDashboardSiteTraffic do
 
       expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-01")).to eq(
         kpis: {
+          **empty_session_kpis,
           browser_pageviews: {
             value: 0,
           },
@@ -460,6 +423,7 @@ RSpec.describe AdminDashboardSiteTraffic do
 
       expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-01")).to eq(
         kpis: {
+          **empty_session_kpis,
           browser_pageviews: {
             value: 0,
           },
@@ -488,6 +452,7 @@ RSpec.describe AdminDashboardSiteTraffic do
 
       expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-01")).to eq(
         kpis: {
+          **empty_session_kpis,
           browser_pageviews: {
             value: 9,
           },
@@ -503,6 +468,7 @@ RSpec.describe AdminDashboardSiteTraffic do
 
       expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")).to eq(
         kpis: {
+          **empty_session_kpis,
           browser_pageviews: {
             value: 8,
           },
@@ -544,6 +510,7 @@ RSpec.describe AdminDashboardSiteTraffic do
 
       expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")).to eq(
         kpis: {
+          **empty_session_kpis,
           browser_pageviews: {
             value: 0,
           },
@@ -623,61 +590,77 @@ RSpec.describe AdminDashboardSiteTraffic do
       )
     end
 
-    context "for top countries and top referrers" do
-      before { SiteSetting.persist_browser_pageview_events = true }
+    context "for top countries, top referrers, and top entry URLs" do
+      before { allow(Report).to receive(:hidden?).and_call_original }
 
       def aggregate_rollups
         range = { start_date: 1.year.ago.to_date, end_date: Date.current }
         BrowserPageviewCountryDailyRollup.aggregate(**range)
         BrowserPageviewReferrerDailyRollup.aggregate(**range)
+        BrowserPageviewEntryUrlDailyRollup.aggregate(**range)
       end
 
-      it "omits top_countries and top_referrers when persist_browser_pageview_events is disabled" do
-        SiteSetting.persist_browser_pageview_events = false
+      it "omits top_countries and top_referrers when legacy pageviews are enabled" do
+        SiteSetting.use_legacy_pageviews = true
 
         result = build_traffic(start_date: nil, end_date: nil)
-        expect(result).not_to have_key(:top_countries)
-        expect(result).not_to have_key(:top_referrers)
+        expect(result.keys).to contain_exactly(:kpis, :pageview_series)
       end
 
-      it "returns top_countries and top_referrers with rows and no error when matching events exist" do
-        6.times do
-          Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")
-        end
-        aggregate_rollups
-
-        result = build_traffic(start_date: nil, end_date: nil)
-
-        expect(result[:top_countries][:rows].first[:country_code]).to eq("US")
-        expect(result[:top_countries][:error]).to be_nil
-
-        expect(result[:top_referrers][:rows].first[:normalized_referrer]).to eq("google.com")
-        expect(result[:top_referrers][:error]).to be_nil
-      end
-
-      it "caps each card at the top 5 rows on both the fresh and cached paths" do
+      it "returns the same top five card rows from fresh and cached results" do
         %w[US GB DE FR JP CA].each do |code|
           Fabricate(
             :browser_pageview_event,
+            url: "/#{code.downcase}",
             country_code: code,
             normalized_referrer: "#{code.downcase}.example.com",
           )
         end
+        Fabricate(
+          :browser_pageview_event,
+          url: "/outside-range",
+          country_code: "AU",
+          normalized_referrer: "outside-range.example.com",
+          created_at: "2026-03-01",
+        )
         aggregate_rollups
 
+        expected_cards = {
+          top_countries: {
+            rows: %w[CA DE FR GB JP].map { |code| { country_code: code, count: 1, percent: 17 } },
+            error: nil,
+          },
+          top_referrers: {
+            rows:
+              %w[ca de fr gb jp].map do |code|
+                { normalized_referrer: "#{code}.example.com", count: 1, percent: 17 }
+              end,
+            error: nil,
+          },
+          top_entry_urls: {
+            rows:
+              %w[ca de fr gb jp].map { |code| { entry_url: "/#{code}", count: 1, percent: 17 } },
+            error: nil,
+          },
+        }
+
         fresh = build_traffic(start_date: nil, end_date: nil)
-        expect(fresh[:top_countries][:rows].size).to eq(5)
-        expect(fresh[:top_referrers][:rows].size).to eq(5)
+        expect(fresh.slice(*expected_cards.keys)).to eq(expected_cards)
+
+        BrowserPageviewCountryDailyRollup.delete_all
+        BrowserPageviewReferrerDailyRollup.delete_all
+        BrowserPageviewEntryUrlDailyRollup.delete_all
+        BrowserPageviewEvent.delete_all
 
         cached = build_traffic(start_date: nil, end_date: nil)
-        expect(cached[:top_countries][:rows].size).to eq(5)
-        expect(cached[:top_referrers][:rows].size).to eq(5)
+        expect(cached.slice(*expected_cards.keys)).to eq(expected_cards)
       end
 
       it "returns empty rows when no events match the date range" do
         result = build_traffic(start_date: nil, end_date: nil)
         expect(result[:top_countries]).to eq(rows: [], error: nil)
         expect(result[:top_referrers]).to eq(rows: [], error: nil)
+        expect(result[:top_entry_urls]).to eq(rows: [], error: nil)
       end
 
       it "returns an exception error payload when the underlying report cannot be built" do
@@ -686,24 +669,7 @@ RSpec.describe AdminDashboardSiteTraffic do
         result = build_traffic(start_date: nil, end_date: nil)
         expect(result[:top_countries]).to eq(rows: [], error: "exception")
         expect(result[:top_referrers]).to eq(rows: [], error: "exception")
-      end
-
-      it "serves the cached payload on subsequent calls within the cache window" do
-        4.times do
-          Fabricate(:browser_pageview_event, country_code: "US", normalized_referrer: "google.com")
-        end
-        aggregate_rollups
-
-        first = build_traffic(start_date: nil, end_date: nil)
-        expect(first[:top_countries][:rows].first[:country_code]).to eq("US")
-
-        BrowserPageviewCountryDailyRollup.delete_all
-        BrowserPageviewReferrerDailyRollup.delete_all
-        BrowserPageviewEvent.delete_all
-
-        second = build_traffic(start_date: nil, end_date: nil)
-        expect(second[:top_countries][:rows].first[:country_code]).to eq("US")
-        expect(second[:top_countries][:rows].first.keys).to all(be_a(Symbol))
+        expect(result[:top_entry_urls]).to eq(rows: [], error: "exception")
       end
 
       it "invalidates the cached payload when login_required is toggled" do
@@ -719,6 +685,20 @@ RSpec.describe AdminDashboardSiteTraffic do
         SiteSetting.login_required = true
         second = build_traffic(start_date: nil, end_date: nil)
         expect(second[:top_countries][:rows]).to be_empty
+      end
+
+      it "invalidates the cached payload when crawler detection is toggled" do
+        SiteSetting.improved_crawler_detection = false
+        3.times { Fabricate(:browser_pageview_event, country_code: "US", score: 90) }
+        Fabricate(:browser_pageview_event, country_code: "US", score: 10)
+        aggregate_rollups
+
+        first = build_traffic(start_date: nil, end_date: nil)
+        expect(first[:top_countries][:rows].first[:count]).to eq(4)
+
+        SiteSetting.improved_crawler_detection = true
+        second = build_traffic(start_date: nil, end_date: nil)
+        expect(second[:top_countries][:rows].first[:count]).to eq(1)
       end
 
       it "invalidates the cached payload when current_hostname changes" do
@@ -779,8 +759,6 @@ RSpec.describe AdminDashboardSiteTraffic do
     end
 
     context "for direct traffic share" do
-      before { SiteSetting.persist_browser_pageview_events = true }
-
       def aggregate_referrer_rollups
         BrowserPageviewReferrerDailyRollup.aggregate(
           start_date: "2026-05-01".to_date,
@@ -816,6 +794,39 @@ RSpec.describe AdminDashboardSiteTraffic do
           },
           average_session_duration_seconds: {
             value: nil,
+          },
+        )
+      end
+
+      it "excludes likely crawler pageviews from the direct traffic share once crawler detection is enabled" do
+        SiteSetting.improved_crawler_detection = true
+        3.times do
+          Fabricate(
+            :browser_pageview_event,
+            normalized_referrer: nil,
+            score: 10,
+            created_at: "2026-05-01",
+          )
+        end
+        9.times do
+          Fabricate(
+            :browser_pageview_event,
+            normalized_referrer: "google.com",
+            score: 90,
+            created_at: "2026-05-01",
+          )
+        end
+        Fabricate(
+          :browser_pageview_event,
+          normalized_referrer: "google.com",
+          score: 10,
+          created_at: "2026-05-01",
+        )
+        aggregate_referrer_rollups
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to include(
+          direct_traffic: {
+            value: 75,
           },
         )
       end
@@ -891,24 +902,6 @@ RSpec.describe AdminDashboardSiteTraffic do
         )
       end
 
-      it "omits direct traffic when persist_browser_pageview_events is disabled" do
-        SiteSetting.persist_browser_pageview_events = false
-
-        3.times do
-          Fabricate(:browser_pageview_event, normalized_referrer: nil, created_at: "2026-05-01")
-        end
-        aggregate_referrer_rollups
-
-        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
-          browser_pageviews: {
-            value: 0,
-          },
-          logged_in_share: {
-            value: 0,
-          },
-        )
-      end
-
       it "omits direct traffic when no pageviews were tracked in the period" do
         expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
           browser_pageviews: {
@@ -928,8 +921,6 @@ RSpec.describe AdminDashboardSiteTraffic do
     end
 
     context "for bounce rate and average session duration" do
-      before { SiteSetting.persist_browser_pageview_events = true }
-
       it "returns bounce rate and average session duration summed across the audience" do
         Fabricate(
           :browser_pageview_session_engagement_daily_rollup,
@@ -976,6 +967,54 @@ RSpec.describe AdminDashboardSiteTraffic do
           },
           average_session_duration_seconds: {
             value: 30,
+          },
+        )
+      end
+
+      it "excludes likely crawler sessions once crawler detection is enabled" do
+        SiteSetting.improved_crawler_detection = true
+        Fabricate(
+          :browser_pageview_session_engagement_daily_rollup,
+          date: Date.new(2026, 5, 10),
+          logged_in: false,
+          sessions: 14,
+          bounced: 11,
+          engaged_seconds_total: 700,
+          likely_crawler_sessions: 6,
+          likely_crawler_bounced: 6,
+          likely_crawler_engaged_seconds_total: 100,
+        )
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-14")[:kpis]).to include(
+          bounce_rate: {
+            value: 63,
+          },
+          average_session_duration_seconds: {
+            value: 75,
+          },
+        )
+      end
+
+      it "counts likely crawler sessions while crawler detection is disabled" do
+        SiteSetting.improved_crawler_detection = false
+        Fabricate(
+          :browser_pageview_session_engagement_daily_rollup,
+          date: Date.new(2026, 5, 10),
+          logged_in: false,
+          sessions: 14,
+          bounced: 11,
+          engaged_seconds_total: 700,
+          likely_crawler_sessions: 6,
+          likely_crawler_bounced: 6,
+          likely_crawler_engaged_seconds_total: 100,
+        )
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-14")[:kpis]).to include(
+          bounce_rate: {
+            value: 79,
+          },
+          average_session_duration_seconds: {
+            value: 50,
           },
         )
       end
@@ -1064,27 +1103,6 @@ RSpec.describe AdminDashboardSiteTraffic do
           },
         )
       end
-
-      it "omits the KPIs entirely when persist_browser_pageview_events is off" do
-        SiteSetting.persist_browser_pageview_events = false
-        Fabricate(
-          :browser_pageview_session_engagement_daily_rollup,
-          date: Date.new(2026, 5, 10),
-          logged_in: false,
-          sessions: 8,
-          bounced: 3,
-          engaged_seconds_total: 240,
-        )
-
-        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-14")[:kpis]).to eq(
-          browser_pageviews: {
-            value: 0,
-          },
-          logged_in_share: {
-            value: 0,
-          },
-        )
-      end
     end
 
     context "for likely crawlers" do
@@ -1168,7 +1186,7 @@ RSpec.describe AdminDashboardSiteTraffic do
         )
       end
 
-      it "excludes anonymous crawlers when login is required" do
+      it "excludes anonymous likely crawlers when login is required" do
         SiteSetting.login_required = true
 
         Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 10)

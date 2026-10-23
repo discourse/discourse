@@ -285,4 +285,4 @@ zh_CN:
       send_chat_integration_message:
         channel_id: "频道"
         configure: "配置"
-        message: "发送私信"
+        message: "消息"

@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { dasherize } from "@ember/string";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import PostNoticeCustom from "./notice/custom";
-import PostNoticeNewUser from "./notice/new-user";
-import PostNoticeReturningUser from "./notice/returning-user";
+import PostNoticeCustom from "./notice/custom.gjs";
+import PostNoticeNewUser from "./notice/new-user.gjs";
+import PostNoticeReturningUser from "./notice/returning-user.gjs";
 
 const POST_NOTICE_COMPONENTS = {
   custom: PostNoticeCustom,

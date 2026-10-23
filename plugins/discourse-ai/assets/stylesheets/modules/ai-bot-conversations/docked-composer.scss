@@ -145,19 +145,25 @@ body.has-ai-bot-docked-composer {
 
 // Toolbar: below input inside the bordered box, separated by a subtle line.
 // Edge-to-edge background with bottom corners matching the wrapper radius.
-// padding-right reserves space for the absolutely-positioned send button.
 .docked-composer.ai-bot-docked-composer .d-editor-button-bar__wrap {
   overflow: hidden;
   max-height: 4em;
   opacity: 1;
   margin: 0;
-  padding-right: 3em;
   border-top: 1px solid var(--primary-low);
   border-radius: 0 0 var(--d-input-border-radius) var(--d-input-border-radius);
   background: var(--primary-very-low);
   transition:
     max-height 0.25s ease,
     opacity 0.2s ease;
+}
+
+// Reserves space for the absolutely-positioned send button on the scroller
+// rather than the wrapper: the wrapper positions the overflow chevrons, so
+// padding there parks them off the strip and the strip's own edge fade then
+// hides toolbar buttons with nothing covering them.
+.docked-composer.ai-bot-docked-composer .d-editor-button-bar {
+  padding-right: 3em;
 }
 
 .docked-composer.ai-bot-docked-composer.docked-composer--toolbar-hidden

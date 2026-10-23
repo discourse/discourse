@@ -18,12 +18,23 @@ pt_BR:
         cant_remove_reaction: "Você não pode mais remover sua reação"
         remove_reaction: "Remova esta %{reaction} reação"
       users_popup:
-        all: "Todos"
+        all: "Todas"
+        title:
+          one: "%{count} Reação"
+          other: "%{count} Reações"
+      counter:
+        aria_label:
+          one: "%{count} reação"
+          other: "%{count} reações"
       main_reaction:
         add: "Curtir esta postagem"
         remove: "Remova essa curtida"
         cant_remove: "Você não pode mais remover sua curtida"
         unauthenticated: "Cadastre-se ou faça login para curtir esta postagem"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "Adicionado"
+        changes_removed: "Removido(a)"
     notifications:
       reaction_1_user_multiple_posts:
         one: "reagiu a %{count} da sua postagem"

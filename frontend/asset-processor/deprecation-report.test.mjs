@@ -1,0 +1,397 @@
+/* eslint-disable qunit/require-expect */
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { SourceMapGenerator } from "source-map-js";
+import { afterEach, expect, test } from "vitest";
+import deprecationReport from "../discourse/lib/deprecation-report.js";
+
+const {
+  DeprecationStackResolver,
+  buildReport,
+  mergeReports,
+  parseStack,
+  renderReportSummary,
+} = deprecationReport;
+
+let temporaryDirectory;
+
+afterEach(() => {
+  if (temporaryDirectory) {
+    fs.rmSync(temporaryDirectory, { recursive: true, force: true });
+    temporaryDirectory = null;
+  }
+});
+
+function addSource(generator, generatedLine, source, originalLine, code) {
+  generator.addMapping({
+    generated: { line: generatedLine, column: 0 },
+    original: { line: originalLine, column: 0 },
+    source,
+  });
+  generator.setSourceContent(
+    source,
+    `${"\n".repeat(originalLine - 1)}${code}\n`
+  );
+}
+
+test("builds an actionable compact report from browser stacks", () => {
+  temporaryDirectory = fs.mkdtempSync(
+    path.join(os.tmpdir(), "discourse-deprecation-report-")
+  );
+  const sourceMap = new SourceMapGenerator({ file: "bundle.js" });
+  addSource(
+    sourceMap,
+    1,
+    "frontend/discourse/app/lib/deprecated.js",
+    10,
+    "deprecated(message, options);"
+  );
+  addSource(
+    sourceMap,
+    2,
+    "frontend/discourse/app/models/user.js",
+    427,
+    "get groups() {}"
+  );
+  addSource(
+    sourceMap,
+    3,
+    "discourse/plugins/poll/discourse/components/poll.gjs",
+    71,
+    "return user.groups;"
+  );
+  addSource(
+    sourceMap,
+    4,
+    "discourse/plugins/poll/component/poll-test.gjs",
+    12,
+    'test("shows a poll");'
+  );
+  fs.writeFileSync(
+    path.join(temporaryDirectory, "bundle.js.map"),
+    sourceMap.toString()
+  );
+
+  const report = buildReport({
+    group: "frontend-plugins",
+    entries: [
+      {
+        id: "discourse.user.groups",
+        origin: "poll",
+        count: 2,
+        stack: [
+          "Error",
+          "    at deprecated (http://localhost/bundle.js:1:1)",
+          "    at get groups (http://localhost/bundle.js:2:1)",
+          "    at Poll.groups (http://localhost/bundle.js:3:1)",
+        ].join("\n"),
+        testStack: "    at test (http://localhost/bundle.js:4:1)",
+      },
+    ],
+    totals: { "discourse.user.groups": 3 },
+    totalsByOrigin: { poll: { "discourse.user.groups": 3 } },
+    resolver: new DeprecationStackResolver({
+      mapRoots: [temporaryDirectory],
+    }),
+  });
+
+  expect(report).toEqual({
+    format: 1,
+    files: [
+      {
+        file: "plugins/poll/assets/javascripts/discourse/components/poll.gjs",
+        deprecations: [
+          {
+            id: "discourse.user.groups",
+            line: 71,
+            code: "return user.groups;",
+            count: 2,
+            origins: { poll: 2 },
+            groups: ["frontend-plugins"],
+            specCount: 1,
+            specs: ["plugins/poll/test/javascripts/component/poll-test.gjs:12"],
+          },
+        ],
+      },
+    ],
+    unresolved: [
+      {
+        id: "discourse.user.groups",
+        count: 1,
+        origins: { poll: 1 },
+        groups: ["frontend-plugins"],
+        specCount: 0,
+        specs: [],
+      },
+    ],
+  });
+  expect(JSON.stringify(report)).not.toContain("stack");
+});
+
+test.each([1, 2])(
+  "keeps a deprecation unresolved when an unmapped frame precedes its source at stack position %i",
+  (position) => {
+    temporaryDirectory = fs.mkdtempSync(
+      path.join(os.tmpdir(), "discourse-deprecation-report-")
+    );
+    const sourceMap = new SourceMapGenerator({ file: "bundle.js" });
+    addSource(
+      sourceMap,
+      1,
+      path.resolve(import.meta.dirname, "../discourse/app/lib/deprecated.js"),
+      10,
+      "deprecated(message, options);"
+    );
+    addSource(
+      sourceMap,
+      2,
+      path.resolve(import.meta.dirname, "../discourse/app/models/user.js"),
+      427,
+      "get groups() {}"
+    );
+    addSource(
+      sourceMap,
+      3,
+      path.resolve(
+        import.meta.dirname,
+        "../discourse/app/components/example.gjs"
+      ),
+      20,
+      "pluginCallback();"
+    );
+    addSource(
+      sourceMap,
+      4,
+      path.resolve(
+        import.meta.dirname,
+        "../discourse/tests/integration/components/example-test.gjs"
+      ),
+      12,
+      'test("renders the component");'
+    );
+    fs.writeFileSync(
+      path.join(temporaryDirectory, "bundle.js.map"),
+      sourceMap.toString()
+    );
+    const frames = [
+      "    at deprecated (http://localhost/bundle.js:1:1)",
+      "    at get groups (http://localhost/bundle.js:2:1)",
+      "    at Example.render (http://localhost/bundle.js:3:1)",
+      "    at test (http://localhost/bundle.js:4:1)",
+    ];
+    frames.splice(
+      position,
+      0,
+      "    at pluginCallback (http://localhost/plugin.js:1:1)"
+    );
+
+    const report = buildReport({
+      group: "frontend-plugins",
+      entries: [
+        {
+          id: "discourse.user.groups",
+          origin: "example-plugin",
+          count: 3,
+          stack: frames.join("\n"),
+        },
+      ],
+      resolver: new DeprecationStackResolver({
+        mapRoots: [temporaryDirectory],
+      }),
+    });
+
+    expect(report.files).toEqual([]);
+    expect(report.unresolved).toEqual([
+      {
+        id: "discourse.user.groups",
+        count: 3,
+        origins: { "example-plugin": 3 },
+        groups: ["frontend-plugins"],
+        specCount: 1,
+        specs: [
+          "frontend/discourse/tests/integration/components/example-test.gjs:12",
+        ],
+      },
+    ]);
+  }
+);
+
+test("resolves plugin admin source maps to the admin JavaScript directory", () => {
+  temporaryDirectory = fs.mkdtempSync(
+    path.join(os.tmpdir(), "discourse-deprecation-report-")
+  );
+  const sourceMap = new SourceMapGenerator({ file: "admin.js" });
+  addSource(
+    sourceMap,
+    1,
+    "discourse/plugins/automation/admin/components/automation-enabled-toggle.gjs",
+    10,
+    "user.groups;"
+  );
+  fs.writeFileSync(
+    path.join(temporaryDirectory, "admin.js.map"),
+    sourceMap.toString()
+  );
+
+  const resolver = new DeprecationStackResolver({
+    mapRoots: [temporaryDirectory],
+  });
+  const frame = resolver.resolveFrame({
+    fn: "toggle",
+    url: "http://localhost/admin.js",
+    line: 1,
+    column: 1,
+  });
+
+  expect(frame).toMatchObject({
+    file: "plugins/automation/admin/assets/javascripts/admin/components/automation-enabled-toggle.gjs",
+    line: 10,
+    resolved: true,
+  });
+});
+
+test("keeps direct call-site attribution separate from caller attribution", () => {
+  temporaryDirectory = fs.mkdtempSync(
+    path.join(os.tmpdir(), "discourse-deprecation-report-")
+  );
+  const sourceMap = new SourceMapGenerator({ file: "bundle.js" });
+  addSource(
+    sourceMap,
+    1,
+    "frontend/discourse/app/lib/deprecated.js",
+    10,
+    "deprecated(message, options);"
+  );
+  addSource(
+    sourceMap,
+    2,
+    "discourse/plugins/example/discourse/initializers/legacy.js.es6",
+    5,
+    "deprecated(message, options);"
+  );
+  addSource(
+    sourceMap,
+    3,
+    "discourse/plugins/example/discourse/initializers/loader.js",
+    20,
+    "loadLegacy();"
+  );
+  fs.writeFileSync(
+    path.join(temporaryDirectory, "bundle.js.map"),
+    sourceMap.toString()
+  );
+  const entry = {
+    id: "discourse.es6-extension",
+    origin: "example",
+    stack: [
+      "    at deprecated (http://localhost/bundle.js:1:1)",
+      "    at legacy (http://localhost/bundle.js:2:1)",
+      "    at loader (http://localhost/bundle.js:3:1)",
+    ].join("\n"),
+  };
+
+  const report = buildReport({
+    entries: [
+      { ...entry, count: 2, reportAtCallSite: true },
+      { ...entry, count: 1 },
+    ],
+    resolver: new DeprecationStackResolver({ mapRoots: [temporaryDirectory] }),
+  });
+
+  expect(
+    report.files.map(({ file, deprecations }) => ({
+      file,
+      count: deprecations[0].count,
+    }))
+  ).toEqual([
+    {
+      file: "plugins/example/assets/javascripts/discourse/initializers/legacy.js.es6",
+      count: 2,
+    },
+    {
+      file: "plugins/example/assets/javascripts/discourse/initializers/loader.js",
+      count: 1,
+    },
+  ]);
+  expect(report.unresolved).toEqual([]);
+});
+
+test("merges compact reports and renders the shared summary", () => {
+  const first = {
+    format: 1,
+    files: [
+      {
+        file: "frontend/discourse/app/models/user.js",
+        deprecations: [
+          {
+            id: "discourse.user.groups",
+            line: 10,
+            code: "user.groups;",
+            count: 2,
+            origins: { core: 2 },
+            groups: ["frontend-core"],
+            specCount: 1,
+            specs: ["frontend/discourse/tests/unit/user-test.js:20"],
+          },
+        ],
+      },
+    ],
+    unresolved: [],
+  };
+  const second = {
+    format: 1,
+    files: [
+      {
+        file: "frontend/discourse/app/models/user.js",
+        deprecations: [
+          {
+            id: "discourse.user.groups",
+            line: 10,
+            code: "user.groups;",
+            count: 1,
+            origins: { chat: 1 },
+            groups: ["system-chat"],
+            specCount: 1,
+            specs: ["plugins/chat/spec/system/user_spec.rb:8"],
+          },
+        ],
+      },
+    ],
+    unresolved: [],
+  };
+
+  const merged = mergeReports([first, second]);
+  const deprecation = merged.files[0].deprecations[0];
+  expect(deprecation.count).toBe(3);
+  expect(deprecation.origins).toEqual({ chat: 1, core: 2 });
+  expect(deprecation.groups).toEqual(["frontend-core", "system-chat"]);
+  expect(deprecation.specCount).toBe(2);
+
+  const summary = renderReportSummary(merged);
+  expect(summary).toContain("| discourse.user.groups | 3 |");
+  expect(summary).toContain(
+    "| discourse.user.groups | frontend/discourse/app/models/user.js:10 | 3 | 2 |"
+  );
+});
+
+test("parses Chrome and Firefox stack frames", () => {
+  expect(
+    parseStack(
+      "    at run (http://localhost/assets/app.js:10:2)\nnext@http://localhost/assets/app.js:20:3"
+    )
+  ).toEqual([
+    {
+      fn: "run",
+      url: "http://localhost/assets/app.js",
+      line: 10,
+      column: 2,
+    },
+    {
+      fn: "next",
+      url: "http://localhost/assets/app.js",
+      line: 20,
+      column: 3,
+    },
+  ]);
+});

@@ -40,8 +40,8 @@ export default class SecondFactorEdit extends Component {
 
   <template>
     <DModal
-      @title={{i18n "user.second_factor.edit_title"}}
       @closeModal={{@closeModal}}
+      @title={{i18n "user.second_factor.edit_title"}}
     >
       <:body>
         <div class="input-group">
@@ -49,8 +49,8 @@ export default class SecondFactorEdit extends Component {
               "user.second_factor.edit_description"
             }}</label>
           <Input
-            name="authenticator-name"
             maxlength={{this.maxSecondFactorNameLength}}
+            name="authenticator-name"
             @type="text"
             @value={{@model.secondFactor.name}}
           />
@@ -58,8 +58,8 @@ export default class SecondFactorEdit extends Component {
       </:body>
       <:footer>
         <DButton
-          @action={{this.editSecondFactor}}
           class="btn-primary"
+          @action={{this.editSecondFactor}}
           @label="user.second_factor.save"
         />
       </:footer>

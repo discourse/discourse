@@ -16,6 +16,12 @@ ug:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        ask_ai:
+          reports:
+            retry_questions: "قايتا سىنا"
+          date: "چېسلا"
+          outcomes:
+            failed: "مەغلۇب بولدى"
         reports:
           filters:
             sort_by:
@@ -46,9 +52,21 @@ ug:
             canned_reply:
               label: "جاۋاب"
     discourse_ai:
+      copied: "كۆچۈرۈلدى"
+      ai_decoded_transcript:
+        arguments: "ئۆزگەرگۈچى"
+        type: "تىپى"
+        error: "خاتالىق"
+        response: "ئىنكاس"
       discourse_workflows:
         ai_agent:
           mode: "ھالەت"
+        classify:
+          text: "تېكىست"
+          upload_ids: "سۈرەت"
+          name: "ئىسمى"
+          type: "تىپى"
+          type_score: "نومۇر"
       ai_tool_approval:
         tool: "مەشغۇلات"
         user: "ئىشلەتكۈچى"
@@ -135,6 +153,37 @@ ug:
         total: "جەمئىي"
         periods:
           custom: "ئىختىيارى..."
+      logs:
+        short_title: "خاتىرە"
+        apply: "قوللان"
+        successful: "مۇۋەپپەقىيەتلىك"
+        failed: "مەغلۇب بولدى"
+        unknown: "يوچۇن"
+        time: "ۋاقىت"
+        when: "قاچان"
+        outcome: "نەتىجە"
+        feature: "ئىقتىدار"
+        request: "ئىلتىماس"
+        user: "ئىشلەتكۈچى"
+        context: "مەزمۇن"
+        topic: "تېما"
+        post: "يازما"
+        post_short: "%{id} يازما"
+        duration: "داۋاملىشىش ۋاقتى"
+        actions: "مەشغۇلات"
+        view_details: "تەپسىلاتى"
+        periods:
+          hour: "ئاخىرقى %{count} سائەت"
+          week: "ئۆتكەن 7 كۈن"
+          custom: "ئىختىيارى"
+        detail:
+          request: "ئىلتىماس"
+          response: "ئىنكاس"
+          context: "مەزمۇن"
+          network_error: "تور خاتالىقى"
+        retention:
+          summary_stage: "خۇلاسە"
+          save: "ساقلا"
       ai_agent:
         name: "ئىسمى"
         edit: "تەھرىر"
@@ -188,6 +237,12 @@ ug:
         edit: "تەھرىر"
         delete: "ئۆچۈر"
         embedding: "سىڭدۈرمە"
+      decision_models:
+        no_preset: "يوق"
+        display_name: "ئىسمى"
+        edit: "تەھرىر"
+        delete: "ئۆچۈر"
+        test: "سىناقنى ئىجرا قىل"
       mcp_servers:
         name: "ئىسمى"
         description: "چۈشەندۈرۈش"
@@ -204,8 +259,21 @@ ug:
         delete: "ئۆچۈر"
         tools_modal:
           required: "زۆرۈر"
+      models:
+        name: "ئىسمى"
+        type: "تىپى"
+        edit: "تەھرىر"
+        select_type: "تاللا"
+        types:
+          embedding: "سىڭدۈرمە"
+        filters:
+          all: "ھەممە تىپ"
+          reset: "سۈزگۈچنى ئەسلىگە قايتۇرىدۇ"
       llms:
         display_name: "ئىسمى"
+        vision_modes:
+          disabled:
+            title: "چەكلەندى"
         save: "ساقلا"
         edit: "تەھرىر"
         delete: ئۆچۈر
@@ -255,8 +323,20 @@ ug:
         providers:
           google: "Google"
           fake: "ئىختىيارى"
+      ai_artifact:
+        editor:
+          version: "نەشرى"
+          default: "كۆڭۈلدىكى"
+          option_on: "ئوچۇق"
+          option_off: "تاقاق"
+          apply: "قوللان"
+        share: "ھەمبەھىر"
+        create_link: "ئۇلانما قۇر"
+        copy_link: "ئۇلانما كۆچۈر"
+        filter_all: "ھەممىسى"
       ai_bot:
         debug_ai_modal:
+          duration_label: "داۋاملىشىش ۋاقتى:"
           request: "ئىلتىماس"
           response: "ئىنكاس"
           next_log: "كېيىنكى"
@@ -288,9 +368,19 @@ ug:
           since:
             one: "ئاخىرقى %{count} سائەت"
             other: "ئاخىرقى %{count} سائەت"
+      ai_search:
+        related_replies:
+          one: "%{count} جاۋاب"
+          other: "%{count} جاۋاب"
+        tabs:
+          topics: "تېما"
+          messages: "ئۇچۇر"
       discobot_discoveries:
-        regular_results: "تېما"
-        collapse: "يىغ"
-        tooltip:
-          actions:
-            disable: "چەكلە"
+        legacy:
+          regular_results: "تېما"
+          collapse: "يىغ"
+          tooltip:
+            actions:
+              disable: "چەكلە"
+        search_all_topics: "بارلىق تېما"
+        search_messages: "ئۇچۇر"

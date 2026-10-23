@@ -1,0 +1,214 @@
+{
+  "name": "Notify staff about topics with no response",
+  "description": "Waits after a topic is created and pings a chat channel if nobody has replied.",
+  "nodes": [
+    {
+      "id": "topic-created",
+      "type": "trigger:topic_created",
+      "typeVersion": "1.0",
+      "name": "Topic created",
+      "parameters": {},
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "wait",
+      "type": "flow:wait",
+      "typeVersion": "1.0",
+      "name": "Wait",
+      "parameters": {
+        "resume": "time_interval",
+        "wait_amount": 2,
+        "wait_unit": "days"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 240,
+        "y": 0
+      }
+    },
+    {
+      "id": "get-topic",
+      "type": "action:topic",
+      "typeVersion": "1.0",
+      "name": "Get topic",
+      "parameters": {
+        "operation": "get",
+        "topic_id": "={{ $(\"Topic created\").item.json.topic.id }}",
+        "actor_username": "system"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 480,
+        "y": 0
+      }
+    },
+    {
+      "id": "if",
+      "type": "condition:if",
+      "typeVersion": "1.0",
+      "name": "No replies",
+      "parameters": {
+        "combinator": "and",
+        "conditions": [
+          {
+            "id": "no-replies",
+            "operator": {
+              "type": "number",
+              "operation": "equals",
+              "singleValue": false
+            },
+            "leftValue": "={{ $json.topic.posts_count }}",
+            "rightValue": "1"
+          }
+        ]
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 720,
+        "y": 0
+      }
+    },
+    {
+      "id": "send-chat-message",
+      "type": "action:send_chat_message",
+      "typeVersion": "1.0",
+      "name": "Send chat message",
+      "parameters": {
+        "target": "channel",
+        "message": "=**{{ $json.topic.title }}** has had no reply for 2 days. Please review and respond: {{ $json.topic.url }}"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 960,
+        "y": 0
+      }
+    },
+    {
+      "id": "note-trigger",
+      "type": "flow:sticky_note",
+      "typeVersion": "1.0",
+      "name": "Sticky Note",
+      "parameters": {
+        "content": "Double-click \"Topic created\" to limit this to a category, such as your support category. By default, it runs on all topics.",
+        "width": 220,
+        "height": 250,
+        "color": "green"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": -20,
+        "y": -110
+      }
+    },
+    {
+      "id": "note-wait",
+      "type": "flow:sticky_note",
+      "typeVersion": "1.0",
+      "name": "Sticky Note",
+      "parameters": {
+        "content": "Double-click \"Wait\" to change how long to give the community before staff is pinged. By default, 2 days.",
+        "width": 220,
+        "height": 250,
+        "color": "pink"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 220,
+        "y": -110
+      }
+    },
+    {
+      "id": "note-check",
+      "type": "flow:sticky_note",
+      "typeVersion": "1.0",
+      "name": "Sticky Note",
+      "parameters": {
+        "content": "\"Get topic\" reloads the topic after the wait and \"No replies\" checks that it still has only its first post.",
+        "width": 460,
+        "height": 250,
+        "color": "blue"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 460,
+        "y": -110
+      }
+    },
+    {
+      "id": "note-chat",
+      "type": "flow:sticky_note",
+      "typeVersion": "1.0",
+      "name": "Sticky Note",
+      "parameters": {
+        "content": "Double-click \"Send chat message\" to pick the channel to notify (required) and to adjust the message.",
+        "width": 220,
+        "height": 250,
+        "color": "green"
+      },
+      "credentials": {},
+      "webhookId": null,
+      "position": {
+        "x": 940,
+        "y": -110
+      }
+    }
+  ],
+  "connections": {
+    "Topic created": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get topic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get topic": {
+      "main": [
+        [
+          {
+            "node": "No replies",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No replies": {
+      "main": [
+        [
+          {
+            "node": "Send chat message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

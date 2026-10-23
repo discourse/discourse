@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import I18n, { i18n } from "discourse-i18n";
 import { subscribeToAiGeneration } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-generation";
 import { dataExplorerAiQueriesEnabled } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-query-availability";
@@ -26,25 +27,37 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked loading = false;
   @tracked aiGenerating = false;
   @tracked hasGenerated = false;
-  @tracked aiDescription = "";
   @tracked generatedSql = "";
-  @tracked generatedName = "";
-  @tracked generatedDescription = "";
   @tracked mode = rememberedMode() ?? "ai";
   @tracked schema = null;
+  @tracked groups = null;
+  @tracked availableTags = [];
   @tracked hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
   @tracked manualSql = "SELECT 1";
   @tracked previewLoading = false;
   @tracked previewResults = null;
   @tracked showPreview = false;
   @tracked view = "sql";
+  @tracked aiPromptData = { prompt: "" };
+  @tracked aiFormData = null;
 
-  manualFormData = { name: "", description: "" };
+  manualFormData = { name: "", description: "", groupIds: [], tags: [] };
+  #aiPromptApi = null;
+  #aiFormApi = null;
   _teardownAiGeneration = null;
 
   get previewDisabled() {
     return (
       this.aiGenerating || this.previewLoading || !this.generatedSql.trim()
+    );
+  }
+
+  get groupOptions() {
+    return (this.groups ?? []).filter(
+      (group) =>
+        group.id !== AUTO_GROUPS.everyone.id &&
+        group.id !== AUTO_GROUPS.anonymous_users.id &&
+        group.id !== AUTO_GROUPS.logged_in_users.id
     );
   }
 
@@ -80,25 +93,37 @@ export default class AdminPluginsExplorerNew extends Controller {
     });
   }
 
+  get aiQueriesEnabled() {
+    return dataExplorerAiQueriesEnabled(this.siteSettings);
+  }
+
+  get isAiMode() {
+    return this.aiQueriesEnabled && this.mode === "ai";
+  }
+
   @action
   setView(value) {
     this.view = value;
   }
 
-  get aiQueriesEnabled() {
-    return dataExplorerAiQueriesEnabled(this.siteSettings);
-  }
-
-  @action
-  handleKeydown(event) {
-    if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
-      event.preventDefault();
-      this.generate();
-    }
-  }
-
   @action
   setMode(value) {
+    // the AI forms unmount in manual mode, so keep their edits for when they return
+    if (this.mode === "ai" && this.#aiPromptApi) {
+      this.aiPromptData = { prompt: this.#aiPromptApi.get("prompt") };
+      this.#aiPromptApi = null;
+    }
+
+    if (this.mode === "ai" && this.#aiFormApi) {
+      this.aiFormData = {
+        name: this.#aiFormApi.get("name"),
+        description: this.#aiFormApi.get("description"),
+        groupIds: this.#aiFormApi.get("groupIds"),
+        tags: this.#aiFormApi.get("tags"),
+      };
+      this.#aiFormApi = null;
+    }
+
     this.mode = value;
     rememberMode(value);
   }
@@ -115,7 +140,22 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   @action
-  async create({ name, description }) {
+  registerAiPromptApi(api) {
+    this.#aiPromptApi = api;
+  }
+
+  @action
+  submitAiPrompt() {
+    this.#aiPromptApi?.submit();
+  }
+
+  @action
+  registerAiFormApi(api) {
+    this.#aiFormApi = api;
+  }
+
+  @action
+  async create({ name, description, groupIds, tags }) {
     try {
       this.loading = true;
       const result = await this.store
@@ -123,6 +163,8 @@ export default class AdminPluginsExplorerNew extends Controller {
           name: name.trim(),
           description: description?.trim(),
           sql: this.manualSql,
+          group_ids: groupIds,
+          tags,
         })
         .save();
       this.toasts.success({
@@ -140,8 +182,8 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   @action
-  async generate() {
-    if (this.aiGenerating || !this.aiDescription.trim()) {
+  async generate({ prompt }) {
+    if (this.aiGenerating) {
       return;
     }
 
@@ -156,7 +198,7 @@ export default class AdminPluginsExplorerNew extends Controller {
         {
           type: "POST",
           data: {
-            ai_description: this.aiDescription.trim(),
+            ai_description: prompt.trim(),
             existing_sql: this.generatedSql || undefined,
           },
         }
@@ -167,8 +209,7 @@ export default class AdminPluginsExplorerNew extends Controller {
         generationId: response.generation_id,
         onComplete: (data) => {
           this.generatedSql = data.sql;
-          this.generatedName = data.name;
-          this.generatedDescription = data.description;
+          this.#applyGeneratedDetails(data);
           this.hasGenerated = true;
           this.aiGenerating = false;
           // prioritise the result: run straight away so the data is what the
@@ -212,7 +253,7 @@ export default class AdminPluginsExplorerNew extends Controller {
           type: "POST",
           data: {
             sql: this.generatedSql,
-            name: this.generatedName || undefined,
+            name: this.#aiFormApi?.get("name") || undefined,
           },
         }
       );
@@ -234,14 +275,16 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   @action
-  async saveQuery() {
+  async saveQuery({ name, description, groupIds, tags }) {
     try {
       this.loading = true;
       const result = await this.store
         .createRecord("query", {
-          name: this.generatedName,
-          description: this.generatedDescription,
+          name: name.trim(),
+          description: description?.trim(),
           sql: this.generatedSql,
+          group_ids: groupIds,
+          tags,
         })
         .save();
       this.toasts.success({
@@ -259,47 +302,58 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   @action
-  updateAiDescription(event) {
-    this.aiDescription = event.target.value;
-  }
-
-  @action
   updateSql(newSql) {
     this.generatedSql = newSql;
-  }
-
-  @action
-  updateName(value) {
-    this.generatedName = value;
-  }
-
-  @action
-  updateDescription(event) {
-    this.generatedDescription = event.target.value;
-  }
-
-  _teardownAi() {
-    this._teardownAiGeneration?.();
-    this._teardownAiGeneration = null;
   }
 
   resetState() {
     this._teardownAi();
     this.aiGenerating = false;
     this.hasGenerated = false;
-    this.aiDescription = "";
+    this.aiPromptData = { prompt: "" };
+    this.#aiPromptApi = null;
     this.generatedSql = "";
-    this.generatedName = "";
-    this.generatedDescription = "";
+    this.aiFormData = null;
+    this.#aiFormApi = null;
     this.mode = rememberedMode() ?? "ai";
     this.schema = null;
+    this.groups = null;
+    this.availableTags = [];
     this.hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
     this.manualSql = "SELECT 1";
     this.loading = false;
-    this.manualFormData = { name: "", description: "" };
+    this.manualFormData = {
+      name: "",
+      description: "",
+      groupIds: [],
+      tags: [],
+    };
     this.previewLoading = false;
     this.previewResults = null;
     this.showPreview = false;
     this.view = "sql";
+  }
+
+  // A regenerate updates the mounted form in place, committing so the new
+  // values don't count as unsaved edits.
+  async #applyGeneratedDetails({ name, description }) {
+    const formApi = this.#aiFormApi;
+    if (formApi) {
+      await formApi.setProperties({ name, description });
+      formApi.commit();
+    } else {
+      this.aiFormData = {
+        groupIds: [],
+        tags: [],
+        ...this.aiFormData,
+        name,
+        description,
+      };
+    }
+  }
+
+  _teardownAi() {
+    this._teardownAiGeneration?.();
+    this._teardownAiGeneration = null;
   }
 }

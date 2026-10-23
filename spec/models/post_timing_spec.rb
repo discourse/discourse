@@ -179,6 +179,14 @@ RSpec.describe PostTiming do
   end
 
   describe ".destroy_last_for" do
+    it "does not decrement reads when the user had no timing on the last post" do
+      post = Fabricate(:post, reads: 5)
+
+      expect {
+        PostTiming.destroy_last_for(Fabricate(:user), topic_id: post.topic_id)
+      }.not_to change { post.reload.reads }
+    end
+
     it "updates first unread for a user correctly when topic is public" do
       post.topic.update!(updated_at: 10.minutes.ago)
       PostTiming.process_timings(post.user, post.topic_id, 1, [[post.post_number, 100]])

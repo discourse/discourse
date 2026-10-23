@@ -33,6 +33,7 @@ class GroupManager
 
     recalculate_trust_level(removed_user_ids)
     bulk_publish_category_updates(removed_user_ids)
+    enqueue_pm_notification_cleanup(removed_user_ids)
 
     User.where(id: removed_user_ids).find_each { |user| @group.trigger_user_removed_event(user) }
     enqueue_user_removed_webhook_events(webhook_payloads)
@@ -61,7 +62,7 @@ class GroupManager
   end
 
   def decrease_group_user_count(removed_user_ids)
-    Group.update_counters(@group.id, user_count: -removed_user_ids.size)
+    Group.update_counters(@group.id, user_count: -counted_user_ids(removed_user_ids).size)
   end
 
   private
@@ -149,6 +150,24 @@ class GroupManager
     end
   end
 
+  def enqueue_pm_notification_cleanup(removed_user_ids)
+    Notification
+      .where(
+        user_id: removed_user_ids,
+        topic_id: TopicAllowedGroup.where(group_id: @group.id).select(:topic_id),
+      )
+      .distinct
+      .pluck(:topic_id, :user_id)
+      .group_by(&:first)
+      .each do |topic_id, pairs|
+        Jobs.enqueue(
+          :delete_inaccessible_notifications,
+          topic_id: topic_id,
+          user_ids: pairs.map(&:last),
+        )
+      end
+  end
+
   def build_user_removed_webhook_payloads(group_users_relation)
     return unless WebHook.active_web_hooks(:group_user)
 
@@ -219,7 +238,11 @@ class GroupManager
   end
 
   def increase_group_user_count(added_user_ids)
-    Group.update_counters(@group.id, user_count: added_user_ids.size)
+    Group.update_counters(@group.id, user_count: counted_user_ids(added_user_ids).size)
+  end
+
+  def counted_user_ids(user_ids)
+    @group.hides_bot_members? ? user_ids.select(&:positive?) : user_ids
   end
 
   def grant_other_available_title(removed_user_ids)

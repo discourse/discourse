@@ -17,6 +17,13 @@ RSpec.describe SvgSprite do
     expect(bundle).to match(/angles-down/)
   end
 
+  it "lets symbols draw outside their viewBox" do
+    symbols = Nokogiri.XML(SvgSprite.bundle).css("symbol")
+
+    expect(symbols).to be_present
+    expect(symbols.map { |symbol| symbol["overflow"] }.uniq).to eq(["visible"])
+  end
+
   it "can generate paths" do
     version = SvgSprite.version # Icons won't change for this test
 
@@ -96,6 +103,20 @@ RSpec.describe SvgSprite do
     expect(SvgSprite.all_icons).not_to include("  fab fa-facebook-messenger  ")
   end
 
+  it "picks up a new badge icon in the picker list" do
+    expect(SvgSprite.picker_icon_ids(nil, true)).not_to include("seedling")
+
+    Fabricate(:badge, name: "Seedling Badge", icon: "seedling")
+
+    expect(SvgSprite.picker_icon_ids(nil, true)).to include("seedling")
+  end
+
+  it "renders legacy icon names without offering them in the full picker list" do
+    expect(SvgSprite.search("user-large")).to match(/user-large/)
+    expect(SvgSprite.picker_icon_ids(nil, false)).to include("user")
+    expect(SvgSprite.picker_icon_ids(nil, false)).not_to include("user-large")
+  end
+
   it "includes icons from badges" do
     Fabricate(:badge, name: "Custom Icon Badge", icon: "far fa-building")
     expect(SvgSprite.all_icons).to include("far fa-building")
@@ -143,6 +164,65 @@ RSpec.describe SvgSprite do
     parent_theme = Fabricate(:theme)
     parent_theme.add_relative_theme!(:child, theme)
     expect(SvgSprite.all_icons(parent_theme.id)).to include("dragon")
+  end
+
+  it "includes icons defined in icon type theme settings" do
+    theme.set_field(
+      target: :settings,
+      name: :yaml,
+      value: "flair:\n  type: icon\n  default: dragon\n",
+    )
+    theme.save!
+    expect(SvgSprite.all_icons(theme.id)).to include("dragon")
+
+    theme.update_setting(:flair, "gas-pump")
+    theme.save!
+    expect(SvgSprite.all_icons(theme.id)).to include("gas-pump")
+    expect(SvgSprite.all_icons(theme.id)).not_to include("dragon")
+  end
+
+  it "includes icons defined in icon type site settings" do
+    SiteSetting.load_settings(Rails.root.join("spec/fixtures/site_settings/icon_settings.yml").to_s)
+
+    SiteSetting.reaction_flair = "dragon"
+    SvgSprite.expire_cache
+
+    expect(SvgSprite.all_icons).to include("dragon")
+  end
+
+  it "includes icons defined in icon properties of objects type theme settings" do
+    theme.set_field(target: :settings, name: :yaml, value: <<~YAML)
+      featured_links:
+        type: objects
+        default:
+          - title: link
+            icon: dragon
+        schema:
+          name: link
+          properties:
+            title:
+              type: string
+            icon:
+              type: icon
+    YAML
+    theme.save!
+
+    expect(SvgSprite.all_icons(theme.id)).to include("dragon")
+
+    theme.update_setting(:featured_links, [{ "title" => "link", "icon" => "gas-pump" }])
+    theme.save!
+
+    expect(SvgSprite.all_icons(theme.id)).to include("gas-pump")
+    expect(SvgSprite.all_icons(theme.id)).not_to include("dragon")
+  end
+
+  it "includes icons defined in icon properties of objects type site settings" do
+    SiteSetting.load_settings(Rails.root.join("spec/fixtures/site_settings/icon_settings.yml").to_s)
+
+    SiteSetting.reaction_list = [{ name: "party", icon: "dragon" }].to_json
+    SvgSprite.expire_cache
+
+    expect(SvgSprite.all_icons).to include("dragon")
   end
 
   it "includes icons defined in theme modifiers" do
@@ -221,11 +301,63 @@ RSpec.describe SvgSprite do
   end
 
   it "includes icons from plugin registry" do
+    original_icons = DiscoursePluginRegistry.svg_icons.dup
     DiscoursePluginRegistry.register_svg_icon "blender"
     DiscoursePluginRegistry.register_svg_icon "fab fa-bandcamp"
 
     expect(SvgSprite.all_icons).to include("blender")
     expect(SvgSprite.all_icons).to include("fab fa-bandcamp")
+  ensure
+    DiscoursePluginRegistry.svg_icons.replace(original_icons)
+  end
+
+  describe "icon sources registered by plugins" do
+    let(:plugin) do
+      Class
+        .new(Plugin::Instance) do
+          attr_accessor :enabled
+          attr_accessor :name
+
+          def enabled?
+            @enabled
+          end
+        end
+        .new
+    end
+
+    after { DiscoursePluginRegistry._raw_svg_icon_sources.clear }
+
+    it "includes the icons the source returns" do
+      plugin.enabled = true
+      DiscoursePluginRegistry.register_svg_icon_source(-> { %w[blender guitar] }, plugin)
+
+      expect(SvgSprite.all_icons).to include("blender", "guitar")
+    end
+
+    it "ignores sources belonging to disabled plugins" do
+      plugin.enabled = false
+      DiscoursePluginRegistry.register_svg_icon_source(-> { ["blender"] }, plugin)
+
+      expect(SvgSprite.all_icons).not_to include("blender")
+    end
+
+    it "does not call the source until the sprite is built" do
+      plugin.enabled = true
+      called = false
+      DiscoursePluginRegistry.register_svg_icon_source(
+        -> do
+          called = true
+          ["blender"]
+        end,
+        plugin,
+      )
+
+      expect(called).to eq(false)
+
+      SvgSprite.all_icons
+
+      expect(called).to eq(true)
+    end
   end
 
   it "includes Font Awesome icon from groups" do

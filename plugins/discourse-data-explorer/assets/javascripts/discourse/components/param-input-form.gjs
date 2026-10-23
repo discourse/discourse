@@ -7,11 +7,11 @@ import Form from "discourse/components/form";
 import Category from "discourse/models/category";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
-import BooleanThree from "./param-input/boolean-three";
-import CategoryIdInput from "./param-input/category-id-input";
-import GroupInput from "./param-input/group-input";
-import UserIdInput from "./param-input/user-id-input";
-import UserListInput from "./param-input/user-list-input";
+import BooleanThree from "./param-input/boolean-three.gjs";
+import CategoryIdInput from "./param-input/category-id-input.gjs";
+import GroupInput from "./param-input/group-input.gjs";
+import UserIdInput from "./param-input/user-id-input.gjs";
+import UserListInput from "./param-input/user-list-input.gjs";
 
 export class ParamValidationError extends Error {}
 
@@ -466,10 +466,10 @@ export default class ParamInputForm extends Component {
     {{#if this.paramInfo.length}}
       <div class="query-params">
         <Form
+          class="params-form"
           @data={{this.data}}
           @onRegisterApi={{this.onRegisterApi}}
           @onSubmit={{this.onSubmit}}
-          class="params-form"
           as |form|
         >
           {{#each this.paramInfo as |info|}}
@@ -477,9 +477,9 @@ export default class ParamInputForm extends Component {
               <form.Field
                 @name={{info.identifier}}
                 @title={{info.identifier}}
-                @validation={{info.validation}}
-                @validate={{info.validate}}
                 @type={{this.fieldTypeFor info}}
+                @validate={{info.validate}}
+                @validation={{info.validation}}
                 as |field|
               >
                 <info.component

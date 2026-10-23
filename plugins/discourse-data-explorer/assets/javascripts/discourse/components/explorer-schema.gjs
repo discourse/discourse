@@ -9,7 +9,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import OneTable from "./explorer-schema/one-table";
+import OneTable from "./explorer-schema/one-table.gjs";
 
 export default class ExplorerSchema extends Component {
   @tracked filter;
@@ -140,26 +140,26 @@ export default class ExplorerSchema extends Component {
   <template>
     {{#if @hideSchema}}
       <DButton
+        class="schema__toggle --expand no-text"
         @action={{this.expandSchema}}
-        @icon="chevron-left"
         @ariaLabel="explorer.schema.show"
-        class="schema__toggle --expand no-text unhide"
+        @icon="chevron-left"
       />
     {{else}}
       <div class="schema">
         <div class="schema-search">
           {{dIcon "magnifying-glass" class="schema-search__icon"}}
           <input
-            type="text"
             class="schema-search__input"
             placeholder={{i18n "explorer.schema.search_tables"}}
+            type="text"
             {{on "input" (withEventValue this.filterChanged)}}
           />
           <DButton
-            @action={{this.collapseSchema}}
-            @icon="chevron-right"
-            @ariaLabel="explorer.schema.hide"
             class="schema__toggle --collapse no-text"
+            @action={{this.collapseSchema}}
+            @ariaLabel="explorer.schema.hide"
+            @icon="chevron-right"
           />
         </div>
 

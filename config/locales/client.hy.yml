@@ -159,7 +159,6 @@ hy:
     date_range_picker:
       apply: "Կիրառել"
     share:
-      topic_html: 'Թեմա՝ <span class="topic-title">%{topicTitle}</span>'
       post: "գրառում #%{postNumber} @%{username}-ի կողմից"
       close: "փակել"
       twitter: "Կիսվել X-ում"
@@ -205,12 +204,16 @@ hy:
     topic_admin_menu: "թեմայի ադմինի գործողություններ"
     skip_to_main_content: "Անցնել հիմնական բովանդակությանը"
     skip_user_nav: "Անցնել պրոֆիլի բովանդակությանը"
+    reorder:
+      removed: "Հեռացրել է %{label}-ին"
+      position: "%{position} %{total}-ից"
     emails_are_disabled: "Բոլոր ելքային էլ. նամակները անջատվել են ադմինիստրատորի կողմից: Էլ. փոստով ոչ մի տեսակի ծանուցում չի ուղարկվի:"
     emails_are_disabled_non_staff: "Ելքային էլփոստն անջատվել է ոչ անձնակազմի օգտատերերի համար:"
     software_update_prompt:
       message: "Մենք թարմացրել ենք այս կայքը, <span>խնդրում ենք թարմացնել էջը</span>, որպեսզի ամեն ինչ սահուն աշխատի:"
       dismiss: "Չեղարկել"
     back_button: "Ետ"
+    confirm_button: "Հաստատել"
     welcome_banner:
       header:
         anonymous_members: "Բարի գալուստ %{site_name}!"
@@ -299,9 +302,6 @@ hy:
     max_of_count:
       one: "առավելագույնը %{count}"
       other: "առավելագույնը %{count}"
-    character_count:
-      one: "%{count} սիմվոլ"
-      other: "%{count} սիմվոլ"
     period_chooser:
       aria_label: "Զտել ըստ ժամանակահատվածի"
     related_messages:
@@ -321,6 +321,7 @@ hy:
       sections:
         theme: "Թեմա"
         homepage: "Գլխավոր էջ"
+        search: "Որոնում"
       colors:
         light: "Բաց"
         dark: "Մութ"
@@ -544,6 +545,9 @@ hy:
       title:
         search: "Որոնում անձնական Հաղորդագրություններում"
         placeholder: "Մուտքագրեք հաղորդագրությունների վերնագրերը url կամ id"
+    dsa_statements:
+      category: "Կատեգորիա"
+      saving: "Պահպանվում է…"
     review:
       show_more: "Ցույց տալ ավելին"
       show_less: "Ցույց տալ ավելի քիչ"
@@ -727,6 +731,9 @@ hy:
       user_label: "Օգտատեր"
       timeline:
         target_deleted: "Գրառումը ջնջված է"
+      author_penalty:
+        toast:
+          undo: "Ետարկել"
       notes:
         delete: "Ջնջել"
       topic_label: "Թեմա"
@@ -1290,7 +1297,6 @@ hy:
       admin: "%{user}-ը ադմին է"
       moderator_tooltip: "Այս օգտատերը մոդերատոր է"
       admin_tooltip: "Այս օգտատերն ադմին է"
-      silenced_tooltip: "Այս օգտատերը լռեցված է"
       suspended_notice: "Այս օգտատերը սառեցված է մինչև %{date}:"
       suspended_permanently: "Այս օգտատերը սառեցված է"
       suspended_reason: "Պատճառը՝ "
@@ -1345,6 +1351,13 @@ hy:
       ignored_users_instructions: "Անտեսել այս օգտատերերի բոլոր գրառումները, ծանուցումները և անձնական հաղորդագրությունները:"
       tracked_topics_link: "Ցուցադրել"
       apps: "Հավելվածներ"
+      mcp_authorizations:
+        details: "Մանրամասներ"
+        never: "Երբեք"
+        status: "Ստատուս"
+        statuses:
+          active: "Ակտիվ"
+          revoked: "Հետկանչված"
       revoke_access: "Հետ Կանչել Թույլտվությունը"
       undo_revoke_access: "Ետարկել Թույլտվության Հետկանչումը (Undo Revoke Access)"
       api_approved: "Հաստատված է՝"
@@ -1602,7 +1615,6 @@ hy:
         uploaded_avatar_empty: "Ավելացնել անհատական նկար"
         upload_title: "Վերբեռնեք Ձեր նկարը"
         image_is_not_a_square: "Ուշադրություն. մենք կտրել ենք Ձեր նկարը; լայնությունն ու երկարությունը հավասար չէին:"
-        use_custom: "Կամ վերբեռնեք անհատական ավատար՝"
       change_profile_background:
         title: "Պրոֆիլի Վերնագիրը"
         instructions: "Պրոֆիլի վերնագիրը կկենտրոնանա և կունենա 1110 պքս լռելյայն լայնություն:"
@@ -1774,7 +1786,6 @@ hy:
         after_10_minutes: "10 րոպե հետո"
       notification_level_when_replying:
         do_nothing: "Ոչինչ չանել"
-      topics_unread_when_closed: "Դիտարկել թեմաները չկարդացած, երբ դրանք փակ են"
       invited:
         title: "Հրավերներ"
         pending_tab: "Սպասող"
@@ -2218,6 +2229,8 @@ hy:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Մուտք"
+      delete: "Ջնջել"
+      home: "Գլխավոր էջ"
     category_row:
       subcategories: "+ Ենթակատեգորիաներ"
       topic_count:
@@ -2314,8 +2327,7 @@ hy:
       create_shared_draft: "Ստեղծել Կիսված Սևագիր"
       edit_shared_draft: "Խմբագրել Կիսված Սևագիրը"
       discard: "Ջնջել"
-      title_placeholder: "Համառոտ մեկ նախադասությամբ ներկայացրեք թե ինչի՞ մասին է քննարկումը:"
-      title_placeholder_redesign: "Վերնագիր"
+      title_placeholder: "Վերնագիր"
       title_or_link_placeholder: "Գրեք վերնագիրը կամ տեղադրեք հղումն այստեղ"
       edit_reason_placeholder: "Ո՞րն է խմբագրման պատճառը:"
       topic_featured_link_placeholder: "Մուտքագրել վերնագրի հետ ցուցադրվող հղում"
@@ -2517,10 +2529,9 @@ hy:
       in_this_topic_tooltip: "անցնել բոլոր թեմաների որոնմանը"
       in_messages_tooltip: "անցնել սովորական թեմաների որոնմանը"
       type:
-        default: "Թեմաներ/գրառումներ"
+        default: "Գրառումներ"
         users: "Օգտատերեր"
         categories: "Կատեգորիաներ"
-        categories_and_tags: "Կատեգորիաներ/պիտակներ"
       context:
         user: "Որոնել @%{username}-ի գրառումները"
         category: "Որոնել #%{category} կատեգորիայում"
@@ -3024,7 +3035,6 @@ hy:
       reply_as_new_private_message: "Պատասխանել որպես հաղորդագրություն նույն ստացողներին"
       continue_discussion: "Շարունակելով %{postLink} քննարկումը՝ "
       follow_quote: "գնալ դեպի մեջբերված գրառումը"
-      show_full: "Ցուցադրել Գրառումն Ամբողջությամբ"
       show_hidden: "Դիտել անտեսված բովանդակությունը "
       collapse: "կրճատել"
       expand_collapse: "ընդլայնել/կրճատել"
@@ -3235,6 +3245,7 @@ hy:
       delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս կատեգորիան:"
       delete_error: "Այս կատեգորիան ջնջելիս սխալ է տեղի ունեցել:"
       no_description: "Խնդրում ենք այս կատեգորիայի համար ավելացնել նկարագրություն:"
+      latest_topics: "Վերջին թեմաները"
       description_expand: "Ցույց տալ ավելին"
       description_collapse: "Ցույց տալ ավելի քիչ"
       already_used: "Այս գույնը օգտագործվել է մեկ այլ կատեգորիայի կողմից"
@@ -3428,6 +3439,7 @@ hy:
       with_topics: "%{filter} թեմա"
       with_category: "%{filter} %{category} թեմա"
       filter:
+        reset: "վերահաստատել"
         button:
           label: "Ֆիլտր"
       latest:
@@ -3518,11 +3530,8 @@ hy:
       content_load_error: '<a href="%url%"> Բովանդակությունը </a> հնարավոր չէ բեռնել:'
       image_load_error: '<a href="%url%"> Պատկերը </a> հնարավոր չէ բեռնել:'
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ","
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} կամ %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Ստեղնաշարի Համադրություններ"
       description_header: "Նկարագրություն"
       key_header: "Բանալի"
@@ -3572,9 +3581,6 @@ hy:
       admin:
         title: "Ադմին"
     badges:
-      earned_n_times:
-        one: "Վաստակել է այս կրծքանշանը %{count} անգամ"
-        other: "Վաստակել է այս կրծքանշանը %{count} անգամ"
       granted_on: "Շնորհված է %{date}"
       others_count:
         one: "Ուրիշներին շնորհվել է %{count} անգամ"
@@ -3819,18 +3825,6 @@ hy:
         type_mismatch:
           default: "Խնդրում ենք մուտքագրել վավեր արժեք:"
           email: "Խնդրում ենք մուտքագրել վավեր էլ. հասցե."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Մուտք"
-      edit:
-        modal:
-          cancel: "չեղարկել"
-          create: "Պահպանել"
-          reason: "Ո՞րն է խմբագրման պատճառը:"
-      spreadsheet:
-        show: "Ցուցադրել"
-        about: "Մասին"
     filter:
       description:
         yesterday: "Երեկվա"
@@ -3857,6 +3851,11 @@ hy:
         group_traffic: "Այցելությունները"
         group_members: "Անդամներ"
         group_other: "Այլ"
+        related_items:
+          users:
+            title: "Օգտատերեր"
+          labels:
+            user: "Օգտատեր"
       config_sections:
         account:
           title: "Հաշիվ"
@@ -3891,6 +3890,60 @@ hy:
       config:
         developer:
           title: "Ծրագրավորող"
+        mcp:
+          tabs:
+            access: "Հասանելիություն"
+            activity: "Ակտիվության"
+          overview:
+            status: "Ստատուս"
+          access:
+            title: "Հասանելիություն"
+            group: "Խմբավորել"
+            groups: "Խմբեր"
+            actions: "Գործողություններ"
+            edit: "Խմբագրել"
+            delete: "Ջնջել"
+          primitives:
+            group_by_options:
+              provider: "Մատակարար"
+              kind: "Տիպ"
+            provider: "Մատակարար"
+            kind: "Տիպ"
+          clients:
+            actions: "Գործողություններ"
+            block: "Արգելափակել"
+            presets:
+              custom: "Մասնավոր"
+            automatic: "Ավտոմատ"
+          authorizations:
+            user: "Օգտատեր"
+            status: "Ստատուս"
+            actions: "Գործողություններ"
+          activity:
+            time: "Ժամ"
+            user: "Օգտատեր"
+          values:
+            server_status:
+              disabled: "Անջատված"
+            client_trust:
+              approved: "Հաստատված է"
+            authorization_status:
+              active: "Ակտիվ"
+              revoked: "Հետկանչված"
+            activity_outcome:
+              success: "Հաջողություն"
+              error: "Սխալ"
+            primitive_state:
+              disabled: "Անջատված"
+            primitive_kind:
+              all: "Բոլոր տեսակները"
+            primitive_risk:
+              moderation: "Մոդերացիա"
+            filter:
+              all: "Բոլոր"
+          never: "Երբեք"
+          actions:
+            revoke: "Հետ կանչել"
         emojis:
           title: "Էմոջի"
         flags:
@@ -4013,13 +4066,23 @@ hy:
         default_value: "Լռելյայն"
       search:
         title: "Որոնում"
+      site_traffic_explorer:
+        metric_information: " %{metric}-ի մասին"
+        apply: "Կիրառել"
+        view_more: "Դիտել ավելին"
+        cards:
+          visitors: "Այցելուներ"
+        filters:
+          browser: "Բրաուզեր"
+          ip: "IP հասցե"
+        series:
+          anonymous_human: "Անանուն"
       dashboard:
         title: "Կառավարման Հարթակ"
         last_updated: "Կառավարման Հարթակի վերջին թարմացումը՝"
         discourse_last_updated: "Discourse վերջին թարմացումը՝"
         version: "Տարբերակ"
         up_to_date: "Դուք ամենավերջին տարբերակն եք օգտագործում!"
-        critical_available: "Հասանելի է կրիտիկական թարմացում:"
         updates_available: "Կան հասանելի թարմացումներ:"
         no_check_performed: "Թարմացումների ստուգում չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"
         stale_data: "Թարմացումների ստուգում վերջերս չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"
@@ -4078,6 +4141,8 @@ hy:
               share: "Կիսվել"
             whos_posting:
               staff: "Անձնակազմ"
+              modal:
+                apply: "Պահպանել"
             trust_level_pipeline:
               trust_levels:
                 "0": "Նոր"
@@ -4090,6 +4155,9 @@ hy:
             table:
               searches: "Որոնումներ"
               status: "Ստատուս"
+          system:
+            title: "Համակարգային"
+            status: "Ստատուս"
         reports_section:
           header_action: "Կառավարել"
           modal:
@@ -4099,6 +4167,7 @@ hy:
           series:
             anonymous: "Անանուն"
             crawlers: "Տվյալների հավաքագրիչներ (Crawler)"
+          crawler_learn_more: "Իմանալ ավելին"
         period:
           custom: "Մասնավոր"
         reports:
@@ -4124,6 +4193,13 @@ hy:
           average_for_sample: "Միջին օրինակի համար"
           total: "Ամբողջ ժամանակվա ընդհանուրը"
           no_data: "Ցուցադրման ենթակա տվյալներ չկան:"
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} օգտատեր"
+              other: "%{count} օգտատեր"
+            posts_count:
+              one: "%{count} գրառում"
+              other: "%{count} գրառում"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Որոնման գրառումներ</a>'
             disabled: 'Առաջատար որոնման հաշվետվությունն անջատված է: Միացրեք <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">գրառումների որոնման հարցումները</a>՝ տվյալներ հավաքելու համար:'
@@ -4574,8 +4650,8 @@ hy:
             must_be_unique: "Անվավեր փոփոխականի անուն: Պետք է լինի եզակի:"
           upload: "Վերբեռնել"
           unsaved_changes_alert: "Դուք դեռևս չեք պահել Ձեր փոփոխությունները, Դուք ցանկանո՞ւմ եք չեղարկել դրանք և անցնել առաջ:"
-          unsaved_parent_themes: "Դուք դեռևս բաղադրիչ չեք հատկացրել թեմաներին, Դուք ցանկանու՞մ եք անցնել առաջ: "
           discard: "Չեղարկել"
+          leave: "Լքել"
           stay: "Մնալ"
           delete_upload_confirm: "Ջնջե՞լ այս վերբեռնումը (Թեմայի CSS-ը կարող է դադարել աշխատել!):"
           component_on_themes: "Ներառել բաղադրիչը՝ այս թեմաների մեջ"
@@ -5210,12 +5286,11 @@ hy:
           confirm: "Հաստատում"
           dropdown: "Բացվող Ցուցակ"
       site_text:
-        search: "Որոնել տեքստը, որը կցանկանայիք խմբագրել"
+        search_label: "Որոնում"
+        theme_disabled: "Անջատված"
+        filters: "Ֆիլտրներ"
         edit: "Խմբագրել"
-        revert: "Վերադարձնել Փոփոխությունները"
         revert_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք վերադարձնել կատարված փոփոխությունները:"
-        go_back: "Վերադարձ Որոնմանը"
-        recommended: "Մենք խորհուրդ ենք տալիս անհատականացնել հետևյալ տեքստը՝ Ձեր պահանջներին համապատասխանեցնելու համար՝ "
         show_overriden: "Ցուցադրել միայն վերասահմանվածները"
         more_than_50_results: "Կա 50-ից ավել արդյունք: Խնդրում ենք հստակեցնել Ձեր որոնումը:"
         outdated:

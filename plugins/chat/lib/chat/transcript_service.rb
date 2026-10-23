@@ -25,6 +25,7 @@ module Chat
 
     class TranscriptBBCode
       attr_reader :channel,
+                  :channel_id,
                   :multiquote,
                   :chained,
                   :no_link,
@@ -34,6 +35,7 @@ module Chat
 
       def initialize(
         channel: nil,
+        channel_id: nil,
         acting_user: nil,
         multiquote: false,
         chained: false,
@@ -43,6 +45,7 @@ module Chat
         thread_ranges: {}
       )
         @channel = channel
+        @channel_id = channel&.id || channel_id
         @acting_user = acting_user
         @multiquote = multiquote
         @chained = chained
@@ -65,10 +68,8 @@ module Chat
       def render
         attrs = [quote_attr(@message_data.first[:message])]
 
-        if channel
-          attrs << channel_attr
-          attrs << channel_id_attr
-        end
+        attrs << channel_attr if channel
+        attrs << channel_id_attr if channel_id
 
         attrs << MULTIQUOTE_ATTR if multiquote
         attrs << CHAINED_ATTR if chained
@@ -135,7 +136,7 @@ module Chat
       end
 
       def channel_id_attr
-        "channelId=\"#{channel.id}\""
+        "channelId=\"#{channel_id}\""
       end
 
       def thread_id_attr
@@ -212,8 +213,11 @@ module Chat
           rendered_markdown << open_bbcode_tag.render
           thread_id = threading_enabled ? message.thread_id : nil
 
+          # carries the channel id but not the name, so it renders as a
+          # continuation of the transcript with a linked timestamp
           open_bbcode_tag =
             TranscriptBBCode.new(
+              channel_id: @channel.id,
               acting_user: @acting_user,
               chained: !all_messages_same_user,
               no_link: @opts[:no_link],

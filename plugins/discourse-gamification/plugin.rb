@@ -73,10 +73,7 @@ after_initialize do
   end
 
   if respond_to?(:register_discourse_workflows_node)
-    register_discourse_workflows_node do
-      require_relative "lib/discourse_workflows/nodes/gamification_score/v1"
-      DiscourseWorkflows::Nodes::GamificationScore::V1
-    end
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::GamificationScore::V1 }
   end
 
   add_directory_column(
@@ -99,6 +96,7 @@ after_initialize do
           .map { |group| BasicGroupSerializer.new(group, root: false, scope: scope).as_json },
       gamification_leaderboards:
         DiscourseGamification::GamificationLeaderboard
+          .includes(:created_by)
           .order(updated_at: :desc)
           .map { |leaderboard| AdminLeaderboardSerializer.new(leaderboard, root: false).as_json },
     }

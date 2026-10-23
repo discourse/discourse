@@ -1,23 +1,39 @@
 import { tracked } from "@glimmer/tracking";
 import { click, render, settled, waitFor } from "@ember/test-helpers";
+import ModalContainer from "discourse/components/modal-container";
+import DMenus from "discourse/float-kit/components/d-menus";
 import DEditor from "discourse/ui-kit/d-editor";
 
-export async function setupRichEditor(assert, markdown, multiToggle = false) {
+export async function setupRichEditor(assert, markdown, opts = {}) {
+  const {
+    disabled = false,
+    multiToggle = false,
+    markdownOptions,
+    onSetup,
+    withMenus = false,
+  } = opts;
   const self = new (class {
     @tracked value = markdown;
     @tracked view;
   })();
   const handleSetup = (textManipulation) => {
     self.view = textManipulation.view;
+    onSetup?.(textManipulation);
   };
 
   await render(
     <template>
       <DEditor
-        @value={{self.value}}
-        @processPreview={{false}}
+        @disabled={{disabled}}
+        @markdownOptions={{markdownOptions}}
         @onSetup={{handleSetup}}
+        @processPreview={{false}}
+        @value={{self.value}}
       />
+      {{#if withMenus}}
+        <DMenus />
+        <ModalContainer />
+      {{/if}}
     </template>
   );
 
@@ -76,13 +92,9 @@ export async function testMarkdown(
   markdown,
   expectedHtml,
   expectedMarkdown,
-  multiToggle = false
+  opts = {}
 ) {
-  const [editorClass, html] = await setupRichEditor(
-    assert,
-    markdown,
-    multiToggle
-  );
+  const [editorClass, html] = await setupRichEditor(assert, markdown, opts);
 
   if (typeof expectedHtml === "function") {
     expectedHtml(assert);

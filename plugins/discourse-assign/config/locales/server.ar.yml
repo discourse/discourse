@@ -42,6 +42,7 @@ ar:
         nobody: "تصفية الموضوعات غير المخصصة لأي شخص"
         anyone: "تصفية الموضوعات المخصصة لأي شخص"
     already_claimed: "تمت المطالبة بملكية هذا الموضوع بالفعل."
+    no_assignee: "لم يتم تحديد أي مستخدم معيَّن."
     already_assigned: "الموضوع معيَّن بالفعل إلى @%{username}"
     too_many_assigns: "لقد بلغ @%{username} أقصى عدد من الموضوعات المعيَّنة (%{max})."
     too_many_assigns_for_topic: "تم بلوغ الحد الأقصى لعدد المهام المعيَّنة في الموضوع والبالغ %{limit}."
@@ -63,9 +64,6 @@ ar:
       weekly: "أسبوعيًا"
       monthly: "شهريًا"
       quarterly: "ربع سنوي"
-    discourse_workflows:
-      assign_topic:
-        error: "فشل تعيين الموضوع: %{reason}"
   assign_mailer:
     title: "تعيين مرسل البريد"
     subject_template: "عيَّن [%{email_prefix}] %{assignee_name} الموضوع \"%{topic_title}\" إليك!"

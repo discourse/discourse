@@ -26,6 +26,8 @@ ca:
       cast-votes:
         title: "Repartiu els vostres vots"
         label: "Voteu ara!"
+      keep-vote:
+        label: "Enrere"
       show-results:
         title: "Mostra els resultats de l'enquesta"
         label: "Resultats"

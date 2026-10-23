@@ -10,10 +10,12 @@ describe DiscourseAi::Translation::TagLocalizer do
 
   def short_text_translator_stub(opts)
     mock = instance_double(DiscourseAi::Translation::ShortTextTranslator)
+    expected_args = { text: opts[:text], target_locale: opts[:target_locale], llm_model: be_nil }
+    expected_args[:content_description] = opts[:content_description] if opts.key?(
+      :content_description,
+    )
     allow(DiscourseAi::Translation::ShortTextTranslator).to receive(:new).with(
-      text: opts[:text],
-      target_locale: opts[:target_locale],
-      llm_model: be_nil,
+      **expected_args,
     ).and_return(mock)
     allow(mock).to receive(:translate).and_return(opts[:translated])
   end
@@ -27,7 +29,12 @@ describe DiscourseAi::Translation::TagLocalizer do
       translated_tag_desc = "C'est une description de tag de test"
       translated_tag_name = "tag-de-test"
       short_text_translator_stub(
-        { text: tag.name, target_locale: target_locale, translated: translated_tag_name },
+        {
+          text: tag.name,
+          content_description: tag.description,
+          target_locale: target_locale,
+          translated: translated_tag_name,
+        },
       )
       short_text_translator_stub(
         { text: tag.description, target_locale: target_locale, translated: translated_tag_desc },
@@ -43,7 +50,12 @@ describe DiscourseAi::Translation::TagLocalizer do
       tag_no_desc = Fabricate(:tag, name: "no-desc-tag", description: nil)
       translated_tag_name = "tag-sans-description"
       short_text_translator_stub(
-        { text: tag_no_desc.name, target_locale: target_locale, translated: translated_tag_name },
+        {
+          text: tag_no_desc.name,
+          content_description: nil,
+          target_locale: target_locale,
+          translated: translated_tag_name,
+        },
       )
 
       res = localizer.localize(tag_no_desc, target_locale)
@@ -65,7 +77,12 @@ describe DiscourseAi::Translation::TagLocalizer do
       translated_tag_desc = "Esta es una descripción de tag de prueba"
       translated_tag_name = "tag-de-prueba"
       short_text_translator_stub(
-        { text: tag.name, target_locale: "es", translated: translated_tag_name },
+        {
+          text: tag.name,
+          content_description: tag.description,
+          target_locale: "es",
+          translated: translated_tag_name,
+        },
       )
       short_text_translator_stub(
         { text: tag.description, target_locale: "es", translated: translated_tag_desc },
@@ -83,7 +100,12 @@ describe DiscourseAi::Translation::TagLocalizer do
       translated_tag_name = "tag-de-test"
       translated_tag_desc = "C'est une description"
       short_text_translator_stub(
-        { text: tag.name, target_locale: target_locale, translated: translated_tag_name },
+        {
+          text: tag.name,
+          content_description: tag.description,
+          target_locale: target_locale,
+          translated: translated_tag_name,
+        },
       )
       short_text_translator_stub(
         { text: tag.description, target_locale: target_locale, translated: translated_tag_desc },

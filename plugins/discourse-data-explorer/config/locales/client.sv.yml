@@ -15,19 +15,16 @@ sv:
         no_semicolons: "Ta bort semikolon från sökningen."
         dirty: "Du måste spara sökningen innan du kör."
     explorer:
-      default_query: "Standard"
       or: "eller"
       admins_only: "Datautforskaren är endast tillgänglig för administratörer."
       allow_groups: "Tillåt att grupper går till denna sökning"
       title: "Datautforskaren"
-      create: "Skapa"
       create_placeholder: "Sökningsnamn..."
       description_placeholder: "Ange en beskrivning här"
       ai:
         generate: "Generera"
         optional: "valfritt"
       import:
-        label: "Importera"
         unparseable_json: "JSON-fil kan inte tolkas."
         wrong_json: "Fel JSON-fil. En JSON-fil bör innehålla ett 'query'-objekt, som åtminstone bör ha en 'sql'-egenskap."
       help:
@@ -49,7 +46,6 @@ sv:
         form:
           label: "Diagramtyp"
           bar: "Stapel"
-      others_dirty: "En sökning har ändringar som inte har sparats och kommer att förloras om du lämnar sidan."
       run_time: "Sökning slutförd efter %{value} ms."
       result_count:
         one: "%{count} resultat."
@@ -59,6 +55,7 @@ sv:
         other: "Visar resultat nr %{count}, det översta."
       query_name: "Sökning"
       query_groups: "Grupper"
+      query_tags: "Taggar"
       link: "Länk för"
       report_name: "Rapport"
       query_description: "Beskrivning"
@@ -66,7 +63,6 @@ sv:
       query_user: "Skapat av"
       column: "Kolumn %{number}"
       reset_params: "Återställ"
-      search_placeholder: "Sök..."
       no_search_results: "Tyvärr kunde vi inte hitta några resultat som stämmer överens med din text."
     group:
       reports: "Rapporter"

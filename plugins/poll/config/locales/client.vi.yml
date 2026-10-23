@@ -48,6 +48,8 @@ vi:
       cast-votes:
         title: "Bình chọn theo ý bạn"
         label: "Bình chọn ngay!"
+      keep-vote:
+        label: "Quay lại"
       show-results:
         title: "Hiển thị kết quả bình chọn"
         label: "Kết quả"

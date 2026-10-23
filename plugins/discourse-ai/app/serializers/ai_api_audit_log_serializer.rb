@@ -10,6 +10,7 @@ class AiApiAuditLogSerializer < ApplicationSerializer
              :cache_write_tokens,
              :raw_request_payload,
              :raw_response_payload,
+             :decoded_response,
              :topic_id,
              :post_id,
              :feature_name,
@@ -17,6 +18,8 @@ class AiApiAuditLogSerializer < ApplicationSerializer
              :language_model,
              :response_status,
              :request_attempts,
+             :duration_msecs,
+             :time_to_first_token_msecs,
              :created_at,
              :prev_log_id,
              :next_log_id,
@@ -26,6 +29,10 @@ class AiApiAuditLogSerializer < ApplicationSerializer
              :conversation_cache_read_tokens,
              :conversation_cache_write_tokens,
              :conversation_spending
+
+  def decoded_response
+    DiscourseAi::AiApiAuditLogResponseDecoder.decode(object.raw_response_payload)
+  end
 
   def request_attempts
     object.request_attempts

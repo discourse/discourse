@@ -135,7 +135,6 @@ gl:
     date_range_picker:
       apply: "Aplicar"
     share:
-      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "pechar"
       facebook: "Compartir no Facebook"
       email: "Enviar por correo"
@@ -174,10 +173,14 @@ gl:
         enabled: "Faga disto un báner %{when}. Aparecerá na banda superior de todas as páxinas ata que sexa desbotado polo usuario."
         disabled: "Eliminou este báner %{when}. Xa non aparecerá máis na banda superior de todas as páxinas."
     topic_admin_menu: "accións do tema"
+    reorder:
+      removed: "Retirou ao %{label} o"
+      position: "%{position} de %{total}"
     emails_are_disabled: "Todos as mensaxes de correo saíntes foron desactivadas globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     software_update_prompt:
       dismiss: "Desbotar"
     back_button: "Volver"
+    confirm_button: "Confirmar"
     welcome_banner:
       header:
         anonymous_members: "Dámoslle a benvida a %{site_name}!"
@@ -257,9 +260,6 @@ gl:
     max_of_count:
       one: "máx. de %{count}"
       other: "máx. de %{count}"
-    character_count:
-      one: "%{count} carácter"
-      other: "%{count} caracteres"
     related_messages:
       title: "Mensaxes relacionadas"
       pill: "Mensaxes relacionadas"
@@ -275,6 +275,7 @@ gl:
         theme: "Tema"
         fonts: "Tipos de letra"
         homepage: "Páxina de inicio"
+        search: "Buscar"
       colors:
         light: "Claro"
         dark: "Escuro"
@@ -403,6 +404,8 @@ gl:
       title:
         search: "Buscar unha mensaxe"
         placeholder: "escriba o título da mensaxe, url ou id aquí"
+    dsa_statements:
+      category: "Categoría"
     review:
       order_by: "Ordenar por"
       in_reply_to: "en resposta a"
@@ -557,6 +560,9 @@ gl:
       user_label: "Usuario"
       timeline:
         target_deleted: "Publicación eliminada"
+      author_penalty:
+        toast:
+          undo: "Desfacer"
       notes:
         delete: "Eliminar"
       topic_label: "Tema"
@@ -1044,7 +1050,6 @@ gl:
       admin: "%{user} é administrador"
       moderator_tooltip: "Este usuario é un moderador"
       admin_tooltip: "Este usuario é un administrador"
-      silenced_tooltip: "Este usuario está silenciado"
       suspended_notice: "Este usuario está suspendido ata o %{date}."
       suspended_permanently: "Este usuario está suspendido."
       suspended_reason: "Razón: "
@@ -1101,6 +1106,15 @@ gl:
       tracked_topics_link: "Amosar"
       automatically_unpin_topics: "Desprender os temas automaticamente cando acade o fondo"
       apps: "Apps"
+      mcp_authorizations:
+        endpoint: "Recurso"
+        scopes: "Ámbitos"
+        details: "Detalles"
+        never: "Nunca"
+        status: "Estado"
+        statuses:
+          active: "Activo"
+          revoked: "Revogada"
       revoke_access: "Revogar acceso"
       undo_revoke_access: "Desfacer a revogación de acceso"
       api_approved: "Aprobado:"
@@ -1790,6 +1804,8 @@ gl:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Intro"
+      delete: "Eliminar"
+      home: "Inicio"
     category_row:
       subcategory_count:
         one: "+%{count} subcategoría"
@@ -1890,8 +1906,7 @@ gl:
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar o borrador compartido"
       discard: "Desbotar"
-      title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
-      title_placeholder_redesign: "Título"
+      title_placeholder: "Título"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
       edit_reason_placeholder: "Por que o está editando?"
       topic_featured_link_placeholder: "Escriba a ligazón amosada co título."
@@ -2094,6 +2109,7 @@ gl:
       categories: "Categorías"
       tags: "Etiquetas"
       type:
+        default: "Publicacións"
         users: "Usuarios"
         categories: "Categorías"
       context:
@@ -2605,7 +2621,6 @@ gl:
       reply_as_new_private_message: "Responderlles como nova mensaxe aos mesmos destinatarios"
       continue_discussion: "Continuar a discusión de %{postLink}:"
       follow_quote: "ir á publicación citada"
-      show_full: "Amosar a publicación completa"
       show_hidden: "Ver o contido ignorado."
       collapse: "reducir"
       expand_collapse: "ampliar/reducir"
@@ -2851,6 +2866,7 @@ gl:
       delete_confirm: "Confirma a eliminación desta categoría?"
       delete_error: "Produciuse un erro elimando esta categoría."
       no_description: "Engada unha descrición a esta categoría."
+      latest_topics: "Últimos temas"
       already_used: "Esta cor usouna outra categoría"
       security: "Seguranza"
       security_add_group: "Engadir grupo"
@@ -3044,6 +3060,7 @@ gl:
       with_topics: "%{filter} temas"
       with_category: "Temas de %{filter} %{category}"
       filter:
+        reset: "restabelecer"
         button:
           label: "Filtro"
       latest:
@@ -3125,11 +3142,8 @@ gl:
       content_load_error: '<a href="%url%">O contido</a> non puido cargarse.'
       image_load_error: '<a href="%url%">A imaxe</a> non puido cargarse.'
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ", "
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} ou %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Atallos do teclado"
       description_header: "Descrición"
       key_header: "Chave"
@@ -3178,9 +3192,6 @@ gl:
       admin:
         title: "Administrador"
     badges:
-      earned_n_times:
-        one: "Gañou esta insignia %{count} vez"
-        other: "Gañou esta insignia %{count} veces"
       granted_on: "Concedida %{date}"
       title: Insignias
       allow_title: "Pode usar esta insignia como título"
@@ -3419,18 +3430,6 @@ gl:
         type_mismatch:
           default: "Introduza un valor correcto."
           email: "Introduza un enderezo de correo electrónico correcto."
-    table_builder:
-      modal:
-        help:
-          enter_key: "Intro"
-      edit:
-        modal:
-          cancel: "cancelar"
-          create: "Gardar"
-          reason: "Por que o está editando?"
-      spreadsheet:
-        show: "Amosar"
-        about: "Verbo de"
     filter:
       description:
         yesterday: "Onte"
@@ -3457,6 +3456,11 @@ gl:
         group_traffic: "Tráfico"
         group_members: "Membros"
         group_other: "Outro"
+        related_items:
+          users:
+            title: "Usuarios"
+          labels:
+            user: "Usuario"
       config_sections:
         account:
           title: "Conta"
@@ -3495,6 +3499,64 @@ gl:
       config:
         developer:
           title: "Desenvolvedor"
+        mcp:
+          tabs:
+            access: "Acceso"
+            activity: "Actividade"
+          overview:
+            status: "Estado"
+          access:
+            title: "Acceso"
+            group: "Grupo"
+            groups: "Grupos"
+            actions: "Accións"
+            edit: "Editar"
+            delete: "Eliminar"
+          primitives:
+            group_by_options:
+              provider: "Fornecedor"
+              kind: "Tipo"
+            provider: "Fornecedor"
+            kind: "Tipo"
+            scopes: "Ámbitos"
+          clients:
+            actions: "Accións"
+            block: "Bloquear"
+            presets:
+              custom: "Personalizado"
+            automatic: "Automático"
+          authorizations:
+            user: "Usuario"
+            status: "Estado"
+            actions: "Accións"
+          activity:
+            time: "Hora"
+            user: "Usuario"
+            duration: "Duración"
+          values:
+            server_status:
+              disabled: "Desactivado"
+            client_trust:
+              approved: "Aprobado"
+            authorization_status:
+              active: "Activo"
+              revoked: "Revogada"
+            activity_outcome:
+              success: "Feito"
+              error: "Erro"
+            primitive_state:
+              enabled: "Activado"
+              disabled: "Desactivado"
+            primitive_kind:
+              all: "Todos os tipos"
+              resource: "Recurso"
+            primitive_risk:
+              moderation: "Moderación"
+            filter:
+              all: "Todas"
+          never: "Nunca"
+          actions:
+            revoke: "Revogar"
         emojis:
           title: "Emoji"
         flags:
@@ -3631,13 +3693,21 @@ gl:
         default_value: "Predeterminado"
       search:
         title: "Buscar"
+      site_traffic_explorer:
+        metric_information: "Verbo de %{metric}"
+        apply: "Aplicar"
+        filters:
+          browser: "Navegador"
+          language: "Idioma"
+          ip: "Enderezo IP"
+        series:
+          anonymous_human: "Anónimo"
       dashboard:
         title: "Panel"
         last_updated: "Actualización do panel:"
         discourse_last_updated: "Actualización de Discourse:"
         version: "Versión"
         up_to_date: "Está actualizado/a!"
-        critical_available: "Está dispoñíbel unha actualización crítica."
         updates_available: "Hai actualizacións dispoñíbeis."
         no_check_performed: "Non se efectuou unha busca de actualizacións. Asegúrese de que sidekiq está executándose."
         stale_data: "Non se efectuou unha busca de actualizacións ultimamente. Asegúrese de que sidekiq está executándose."
@@ -3696,6 +3766,8 @@ gl:
               share: "Compartir"
             whos_posting:
               staff: "Equipo"
+              modal:
+                apply: "Gardar"
             trust_level_pipeline:
               trust_levels:
                 "0": "Novo"
@@ -3708,6 +3780,11 @@ gl:
             table:
               searches: "Buscas"
               status: "Estado"
+          system:
+            title: "Sistema"
+            status: "Estado"
+            discourse_updated: "Actualización de Discourse"
+            dashboard_updated: "Actualización do panel"
         reports_section:
           header_action: "Xestionar"
           no_data: "Non hai datos que amosar"
@@ -3719,6 +3796,7 @@ gl:
           series:
             anonymous: "Anónimo"
             crawlers: "Rastrexadores"
+          crawler_learn_more: "Saber máis"
         period:
           custom: "Personalizado"
         reports:
@@ -3744,6 +3822,13 @@ gl:
           average_for_sample: "Media por mostra"
           total: "Total global"
           no_data: "Non hai datos que amosar."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} usuario"
+              other: "%{count} usuarios"
+            posts_count:
+              one: "%{count} publicación"
+              other: "%{count} publicacións"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Buscar rexistros</a>'
             disabled: 'O informe de busca de tendencias está desactivado. Activa as <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">consultas de busca de rexistros</a> para obter datos.'
@@ -4209,8 +4294,8 @@ gl:
             must_be_unique: "O nome da variábel non é correcto. Debe ser exclusivo."
           upload: "Cargar"
           unsaved_changes_alert: "Aínda non gardou os cambios. Quere desbotalos e continuar?"
-          unsaved_parent_themes: "Aínda non asignou o compoñente aos temas. Quere continuar?"
           discard: "Desbotar"
+          leave: "Abandonar"
           stay: "Deixar"
           delete_upload_confirm: "Eliminar esta carga? (Pode ser que o tema CSS deixe de funcionar!)"
           component_on_themes: "Incluír compoñentes nestes temas"
@@ -4907,12 +4992,11 @@ gl:
           confirm: "Confirmación"
           dropdown: "Despregábel"
       site_text:
-        search: "Busque o texto que quere editar"
+        search_label: "Buscar"
+        theme_disabled: "Desactivado"
+        filters: "Filtros"
         edit: "Editar"
-        revert: "Reverter os cambios"
         revert_confirm: "Confirma a reversión dos cambios?"
-        go_back: "Volver á busca"
-        recommended: "Recomendamos personalizar o seguinte texto para axeitalo ás súas necesidades:"
         show_overriden: "Amosar só os cambios"
         locale: "Idioma:"
         more_than_50_results: "Hai máis de 50 resultados. Restrinxa a busca."

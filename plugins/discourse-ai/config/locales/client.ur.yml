@@ -14,8 +14,14 @@ ur:
               search: "اے آئی تلاش کی اجازت دیتا ہے"
       site_settings:
         categories:
-          discourse_ai: "ڈسکورس اے آئی"
+          discourse_ai: "Discourse AI"
       dashboard:
+        ask_ai:
+          reports:
+            retry_questions: "دوبارہ کوشش"
+          date: "تاریخ"
+          outcomes:
+            failed: "ناکامی"
         emotion:
           title: "جذبات"
         reports:
@@ -59,9 +65,23 @@ ur:
             hide_topic:
               label: "موضوع چھپائیں"
     discourse_ai:
+      title: "مصنوعی ذہانت"
+      copied: "کاپی کر لیا"
+      view_raw: "خام دیکھیں"
+      ai_decoded_transcript:
+        arguments: "دلائل"
+        type: "قِسم"
+        error: "خرابی"
+        response: "جواب"
       discourse_workflows:
         ai_agent:
           mode: "موڈ"
+        classify:
+          text: "ٹیکسٹ"
+          upload_ids: "تصاویر"
+          name: "نام"
+          type: "قِسم"
+          type_score: "اسکور"
       ai_tool_approval:
         loading: "لوڈ ہو رہا ہے..."
         tool: "عمل"
@@ -157,6 +177,37 @@ ur:
           last_week: "گزشتہ ہفتے"
           last_month: "گزشتہ ماہ"
           custom: "ترمیم..."
+      logs:
+        short_title: "لاگز"
+        apply: "لاگو کریں"
+        successful: "کامیابی"
+        failed: "ناکامی"
+        unknown: "نامعلوم"
+        time: "وقت"
+        when: "کب"
+        outcome: "نتیجہ"
+        request: "ریکویسٹ"
+        provider: "پرووَائیڈر"
+        user: "رکن"
+        context: "سیاق و سباق"
+        topic: "ٹاپک"
+        post: "دھاگہ"
+        post_short: "پوسٹ %{id}"
+        duration: "دورانیہ"
+        actions: "عمل"
+        view_details: "تفصیلات"
+        periods:
+          day: "پچھلے 24 گھنٹے"
+          week: "پچھلے 7 دن"
+          custom: "اپنی مرضی کا"
+        detail:
+          request: "ریکویسٹ"
+          response: "جواب"
+          context: "سیاق و سباق"
+        retention:
+          summary_stage: "Summary"
+          deleted_stage: "مٹائیں"
+          save: "محفوظ"
       ai_agent:
         name: "نام"
         edit: "ترمیم کریں"
@@ -210,6 +261,13 @@ ur:
         edit: "ترمیم کریں"
         delete: "مٹائیں"
         embedding: "اَیمبَیڈ کرنا"
+      decision_models:
+        no_preset: "کوئی نہیں"
+        display_name: "نام"
+        provider: "پرووَائیڈر"
+        edit: "ترمیم کریں"
+        delete: "مٹائیں"
+        test: "ٹیسٹ چلائیں"
       mcp_servers:
         name: "نام"
         description: "تفصیل"
@@ -225,9 +283,23 @@ ur:
         delete: "حذف کریں"
         tools_modal:
           required: "درکار"
+      models:
+        name: "نام"
+        type: "قِسم"
+        provider: "پرووَائیڈر"
+        edit: "ترمیم کریں"
+        select_type: "منتخب"
+        types:
+          embedding: "اَیمبَیڈ کرنا"
+        filters:
+          all: "تمام اقسام"
+          reset: "فلٹرز ری سیٹ کریں"
       llms:
         display_name: "نام"
         provider: "پرووَائیڈر"
+        vision_modes:
+          disabled:
+            title: "غیر فعال"
         save: "محفوظ کریں"
         edit: "ترمیم کریں"
         delete: مٹائیں
@@ -279,9 +351,19 @@ ur:
         providers:
           google: "گُوگَل"
           fake: "اپنی مرضی کا"
+      ai_artifact:
+        editor:
+          version: "ورژن"
+          default: "ڈِیفالٹ"
+          apply: "لاگو کریں"
+        share: "اشتراک"
+        create_link: "رابطہ بنائیں"
+        copy_link: "رابطہ کاپی کریں"
+        filter_all: "تمام"
       ai_bot:
         pm_warning: "AI چیٹ بوٹ پیغامات کو نگرانوں کے ذریعے باقاعدگی سے مانیٹر کیا جاتا ہے۔"
         debug_ai_modal:
+          duration_label: "دورانیہ:"
           request: "ریکویسٹ"
           response: "جواب"
           next_log: "اگلا"
@@ -292,6 +374,7 @@ ur:
           delete: "شیئر کو حذف کریں"
         invite_ai_conversation:
           button: "دعوت دیں"
+        ai_label: "مصنوعی ذہانت"
         share_modal:
           copy: "کاپی"
         conversations:
@@ -316,11 +399,28 @@ ur:
         topic:
           title: "موضوع کا خلاصہ"
           close: "خلاصہ پینل بند کریں"
+      ai_search:
+        related_topics: "متعلقہ موضوعات"
+        related_replies:
+          one: "%{count} جواب"
+          other: "%{count} جوابات"
+        tabs:
+          topics: "موضوعات"
+          messages: "پیغامات"
       discobot_discoveries:
-        regular_results: "موضوعات"
-        collapse: "بند کریں"
-        tooltip:
-          header: "AI سے چلنے والی تلاش"
-          content: "%{model}کے ذریعے تقویت یافتہ زبان کی تلاش"
-          actions:
-            disable: "غیر فعال کریں"
+        create_topic: "موضوع بنائیں"
+        legacy:
+          regular_results: "موضوعات"
+          continue_convo: "گفتگو جاری رکھیں..."
+          collapse: "بند کریں"
+          tooltip:
+            header: "AI سے چلنے والی تلاش"
+            content: "%{model}کے ذریعے تقویت یافتہ زبان کی تلاش"
+            actions:
+              disable: "غیر فعال کریں"
+        search_type: "مصنوعی ذہانت"
+        search_all_topics: "تمام موضوعات"
+        search_messages: "پیغامات"
+        ask_ai: "مصنوعی ذہانت"
+        sources:
+          related_discussions: "متعلقہ موضوعات"

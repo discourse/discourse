@@ -5,7 +5,6 @@ import DismissReadModal from "discourse/components/modal/dismiss-read";
 import DButton from "discourse/ui-kit/d-button";
 import DComboButton from "discourse/ui-kit/d-combo-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class TopicDismissButtons extends Component {
@@ -134,60 +133,56 @@ export default class TopicDismissButtons extends Component {
       <div class="row dismiss-container-{{@position}}">
         {{~#if @showDismissRead~}}
           <DButton
-            @action={{this.dismissReadPosts}}
-            @translatedLabel={{this.dismissLabel}}
-            @title="topics.bulk.dismiss_tooltip"
-            id="dismiss-topics-{{@position}}"
             class="btn-default dismiss-read"
+            id="dismiss-topics-{{@position}}"
+            @action={{this.dismissReadPosts}}
+            @title="topics.bulk.dismiss_tooltip"
+            @translatedLabel={{this.dismissLabel}}
           />
         {{~/if~}}
         {{~#if @showResetNew~}}
           {{#if @showNewDismissCombo}}
             <DComboButton
-              class={{dConcatClass
-                "topic-dismiss-buttons__combo"
-                (if this.showDismissNewMenu "--has-menu")
-              }}
+              class="topic-dismiss-buttons__combo"
+              @btnTypeClass="btn-default dismiss-read"
+              @hasMenu={{this.showDismissNewMenu}}
               as |combo|
             >
               <combo.Button
+                class="topic-dismiss-buttons__button"
+                id="dismiss-new-{{@position}}"
                 @action={{this.dismissNew}}
                 @translatedLabel={{this.dismissNewLabel}}
-                id="dismiss-new-{{@position}}"
-                class="btn-default dismiss-read topic-dismiss-buttons__button"
               />
 
-              {{#if this.showDismissNewMenu}}
-                <combo.Menu
-                  @identifier="dismiss-new-menu"
-                  @onRegisterApi={{this.registerDMenu}}
-                  @modalForMobile={{true}}
-                  @placement="bottom-end"
-                  aria-label={{i18n "topics.bulk.dismiss_new_menu"}}
-                  id="dismiss-new-menu-{{@position}}"
-                  class="btn-default dismiss-read topic-dismiss-buttons__menu"
-                >
-                  <DDropdownMenu as |dropdown|>
-                    <dropdown.item class="topic-dismiss-buttons__menu-item">
-                      <DButton
-                        @action={{this.dismissNewAndStopTracking}}
-                        @translatedLabel={{i18n
-                          "topics.bulk.dismiss_and_stop_tracking"
-                        }}
-                        class="btn-secondary dismiss-new-stop-tracking"
-                      />
-                    </dropdown.item>
-                  </DDropdownMenu>
-                </combo.Menu>
-              {{/if}}
+              <combo.Menu
+                aria-label={{i18n "topics.bulk.dismiss_new_menu"}}
+                class="topic-dismiss-buttons__menu"
+                id="dismiss-new-menu-{{@position}}"
+                @identifier="dismiss-new-menu"
+                @modalForMobile={{true}}
+                @onRegisterApi={{this.registerDMenu}}
+              >
+                <DDropdownMenu as |dropdown|>
+                  <dropdown.item class="topic-dismiss-buttons__menu-item">
+                    <DButton
+                      class="dismiss-new-stop-tracking"
+                      @action={{this.dismissNewAndStopTracking}}
+                      @translatedLabel={{i18n
+                        "topics.bulk.dismiss_and_stop_tracking"
+                      }}
+                    />
+                  </dropdown.item>
+                </DDropdownMenu>
+              </combo.Menu>
             </DComboButton>
           {{else}}
             <DButton
-              @action={{@resetNew}}
-              @translatedLabel={{this.dismissNewLabel}}
-              @icon="check"
-              id="dismiss-new-{{@position}}"
               class="btn-default dismiss-read"
+              id="dismiss-new-{{@position}}"
+              @action={{@resetNew}}
+              @icon="check"
+              @translatedLabel={{this.dismissNewLabel}}
             />
           {{/if}}
         {{~/if~}}

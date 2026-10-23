@@ -3,7 +3,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { not } from "discourse/truth-helpers";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import ChatMessage from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
@@ -112,7 +111,7 @@ export default class ChatStyleguideChatMessage extends Component {
   <template>
     <StyleguideExample @title="<ChatMessage>">
       <StyleguideComponent>
-        <ChatMessage @message={{this.message}} @context="channel" />
+        <ChatMessage @context="channel" @message={{this.message}} />
       </StyleguideComponent>
 
       <Controls>

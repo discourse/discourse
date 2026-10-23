@@ -98,18 +98,37 @@ describe "Standalone scripts" do
   end
 
   describe "pageview.js" do
-    it "sends a pageview tracking request on a non-ember page" do
+    it "sends a beacon pageview tracking request on a non-ember page" do
       pageview_requests = []
       page.driver.with_playwright_page do |pw_page|
         pw_page.on(
           "request",
-          ->(request) { pageview_requests << request.url if request.url.include?("/pageview") },
+          ->(request) { pageview_requests << request.url if request.url.end_with?("/srv/pv") },
         )
       end
 
       visit("/safe-mode")
 
       try_until_success { expect(pageview_requests).not_to be_empty }
+    end
+
+    it "does not send tracking requests when request tracking is disabled in development" do
+      original_track_requests = ENV.delete("TRACK_REQUESTS")
+      Rails.env.stubs(:development?).returns(true)
+      tracking_requests = []
+      page.driver.with_playwright_page do |pw_page|
+        pw_page.on(
+          "request",
+          lambda { |request| tracking_requests << request.url if request.url.end_with?("/srv/pv") },
+        )
+      end
+
+      visit("/safe-mode")
+
+      page.driver.with_playwright_page { |pw_page| pw_page.wait_for_timeout(100) }
+      expect(tracking_requests).to eq([])
+    ensure
+      ENV["TRACK_REQUESTS"] = original_track_requests if original_track_requests
     end
   end
 

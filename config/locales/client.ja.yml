@@ -6,6 +6,9 @@
 
 ja:
   js:
+    dsa_notice:
+      title: "違法コンテンツの報告"
+      email: "メールアドレス"
     user_api_key:
       title: '「%{application_name}」の承認'
       authorize: "承認"
@@ -248,7 +251,6 @@ ja:
       zh_CN:
         name: 中国語 (簡体字)
     share:
-      topic_html: 'トピック: <span class="topic-title">%{topicTitle}</span>'
       post: "%{username} の投稿 #%{postNumber}"
       close: "閉じる"
       twitter: "X で共有"
@@ -302,12 +304,19 @@ ja:
     skip_to_last_reply: "最後の返信までスキップ"
     skip_to_top: "トップへスキップ"
     skip_user_nav: "プロファイルのコンテンツにスキップ"
+    reorder:
+      remove: "%{label} を削除"
+      removed: "%{label} を削除しました"
+      move_up: "上に移動"
+      move_down: "下に移動"
+      position: "%{position} / %{total}"
     emails_are_disabled: "メールの送信は管理者によって無効化されています。メール通知は一切送信されません。"
     emails_are_disabled_non_staff: "スタッフ以外のユーザーの送信メールは無効になっています。"
     software_update_prompt:
       message: "このサイトを更新しました。スムーズに動作するように<span>更新してください</span>。"
       dismiss: "閉じる"
     back_button: "戻る"
+    confirm_button: "確認"
     welcome_banner:
       header:
         new_members: "%{preferred_display_name}、ようこそ！"
@@ -405,8 +414,6 @@ ja:
     every_six_months: "6 か月毎"
     max_of_count:
       other: "最大 %{count}"
-    character_count:
-      other: "%{count} 文字"
     period_chooser:
       aria_label: "期間でフィルタ"
     related_messages:
@@ -427,6 +434,8 @@ ja:
         theme: "テーマ"
         fonts: "フォント"
         homepage: "ホームページ"
+        welcome_banner: "ウェルカムバナー"
+        search: "検索"
       theme:
         selected: "選択済み"
       colors:
@@ -646,6 +655,10 @@ ja:
       title:
         search: "メッセージの検索"
         placeholder: "ここにメッセージのタイトル、URL、または ID を入力してください"
+    dsa_statements:
+      category: "カテゴリ"
+      category_prompt: "カテゴリを選択する"
+      saving: "保存中…"
     review:
       show_more: "もっと表示"
       show_less: "表示を減らす"
@@ -886,6 +899,9 @@ ja:
         note_added: "モデレーターのメモ"
         note_added_by: "%{username} のモデレーターメモ · %{relativeDate}"
         no_events: "表示するタイムラインイベントはありません"
+      author_penalty:
+        toast:
+          undo: "元に戻す"
       notes:
         add_note_description: "他のモデレーターに文脈を伝えるメモを追加してください。"
         add_note_button: "メモを追加"
@@ -1513,7 +1529,6 @@ ja:
       admin: "%{user} は管理者です"
       moderator_tooltip: "このユーザーはモデレーターです"
       admin_tooltip: "このユーザーは管理者です"
-      silenced_tooltip: "このユーザーは投稿を禁止されています"
       suspended_notice: "このユーザーは %{date} まで凍結されています。"
       suspended_permanently: "このユーザーは凍結されています。"
       suspended_reason: "理由: "
@@ -1572,6 +1587,16 @@ ja:
       tracked_topics_link: "表示"
       automatically_unpin_topics: "最後に到達したら、自動的にトピックの固定表示を解除する"
       apps: "アプリ連携"
+      mcp_authorizations:
+        endpoint: "リソース"
+        scopes: "スコープ"
+        details: "詳細"
+        last_used: "最後の使用"
+        never: "送信しない"
+        status: "ステータス"
+        statuses:
+          active: "アクティブ"
+          revoked: "取り消し済み"
       revoke_access: "アクセスを取り消す"
       undo_revoke_access: "アクセスの取り消しを元に戻す"
       api_approved: "承認:"
@@ -1830,7 +1855,6 @@ ja:
         upload_title: "写真をアップロードする"
         image_is_not_a_square: "警告: 幅と高さが等しくないため、画像をトリミングしました。"
         logo_small: "サイトの小さなロゴ。デフォルトで使用されます。"
-        use_custom: "またはカスタムアバターをアップロード:"
       change_profile_background:
         title: "プロファイルヘッダー"
         instructions: "プロファイルヘッダーは中央揃えで、デフォルトの幅は 1110 px です。"
@@ -2012,7 +2036,6 @@ ja:
         watch_topic: "トピックをウォッチ"
         track_topic: "トピックを追跡"
         do_nothing: "何もしない"
-      topics_unread_when_closed: "トピックが閉じられている場合は未読と見なす"
       invited:
         title: "招待"
         pending_tab: "保留中"
@@ -2378,7 +2401,6 @@ ja:
       hide_forever: "いいえ、結構です"
       hidden_for_session: "了解です。明日お尋ねします。'ログイン' からでもアカウントを作成できます。"
       intro: "こんにちは！ ディスカッションを楽しんでいるようですね。ですが、アカウント登録はまだのようです。"
-      value_prop: "同じ投稿をスクロールするのにうんざりしていませんか？アカウントを作成すると、中断した場所にいつでも戻ることができます。アカウントを使うと、新しい返信の通知を受け取ったり、ブックマークを保存したり、「いいね！」を使って感謝の気持ちを伝えたりすることも可能です。このコミュニティーを一緒に盛り上げていきましょう。:heart:"
     offline_indicator:
       no_internet: "インターネット接続がありません。"
       refresh_page: "ページを更新"
@@ -2629,6 +2651,11 @@ ja:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+      option: "オプション"
+      period: "期間"
+      tab: "Tab"
+      delete: "削除"
+      home: "ホーム"
     conditional_loading_section:
       loading: 読み込み中…
     category_row:
@@ -2781,13 +2808,11 @@ ja:
       create_whisper: "ささやき"
       create_shared_draft: "共有の下書きを作成"
       edit_shared_draft: "共有の下書きを編集"
-      title: "または %{modifier}Enter キーを押します"
       save_and_close: "保存して閉じる"
       discard: "破棄"
       draft_saved: "下書きが保存されました！"
       users_placeholder: "ユーザーまたはグループを追加"
-      title_placeholder: "トピックのタイトルを入力してください"
-      title_placeholder_redesign: "タイトル"
+      title_placeholder: "タイトル"
       title_or_link_placeholder: "タイトルを入力するか、リンクを貼り付けてください"
       edit_reason_placeholder: "編集する理由は？"
       topic_featured_link_placeholder: "タイトルに表示されるリンクを入力してください。"
@@ -2804,8 +2829,6 @@ ja:
       uploading: "アップロード中…"
       show_preview: "プレビューを表示"
       hide_preview: "プレビューを非表示"
-      switch_to_markdown: "標準の Markdown エディターに切り替える (%{keyboardShortcut})"
-      switch_to_rich_text: "新しいリッチテキストエディターに切り替える (%{keyboardShortcut})"
       quote_post_title: "投稿全体を引用"
       bold_label: "B"
       bold_title: "太字"
@@ -2941,6 +2964,8 @@ ja:
       onebox_toolbar:
         copy: "リンクをコピー"
         link_copied: "リンクがコピーされました！"
+      table:
+        default_heading: "列 %{number}"
       unsupported_token: "リッチテキストエディターではこの投稿で使用されているすべての機能がサポートされていないため、Markdown エディターに切り替えます。"
     notifications:
       tooltip:
@@ -3116,10 +3141,10 @@ ja:
         search_field: "サイトヘッダーの検索フィールド"
         search_icon: "プロファイルアバターの近くの検索アイコン"
       type:
-        default: "トピック/投稿"
+        default: "投稿"
         users: "ユーザー"
         categories: "カテゴリ"
-        categories_and_tags: "カテゴリ/タグ"
+        categories_and_tags: "カテゴリとタグ"
       context:
         user: "@%{username} の投稿を検索"
         category: "#%{category} カテゴリを検索"
@@ -3132,7 +3157,6 @@ ja:
         in: "メタデータでフィルタします (例: in:title、in:personal、in:pinned)"
         status: "トピックのステータスでフィルタします"
         full_search: "全ページ検索を開始します"
-        full_search_key: "%{modifier} + Enter"
         me: "自分の投稿のみを表示します"
       advanced:
         title: 高度なフィルタ
@@ -3800,7 +3824,6 @@ ja:
       reply_as_new_private_message: "同じ受信者に新規メッセージとして返信する"
       continue_discussion: "%{postLink} からディスカッションを続行:"
       follow_quote: "引用した投稿に移動"
-      show_full: "投稿全文を表示"
       show_hidden: "無視したコンテンツを表示します。"
       deleted_by_author_simple: "(作成者が削除した投稿)"
       collapse: "折りたたむ"
@@ -4158,6 +4181,7 @@ ja:
       list: "カテゴリをリスト表示"
       no_description: "このカテゴリの説明を追加してください。"
       change_in_category_topic: "説明を編集する"
+      latest_topics: "最新のトピック"
       description_expand: "もっと表示"
       description_collapse: "表示を減らす"
       already_used: "この色は他のカテゴリで使用されています。"
@@ -4425,6 +4449,7 @@ ja:
       with_category: "%{filter} %{category} トピック"
       filter:
         title: "%{filter} の絞り込み結果"
+        reset: "リセット"
         button:
           label: "フィルタ"
       latest:
@@ -4531,12 +4556,8 @@ ja:
     invalid_video_url: URL が無効であるか利用できないため、この動画を再生できません。
     keyboard_shortcuts_help:
       search_placeholder: "説明またはキーの組み合わせでショートカットを検索する"
-      shortcut_key_delimiter_comma: "、"
-      shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} または %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
-      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
-      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "ショートカットキー"
       short_title: "ショートカット"
       search_ctrl_f_tip: "このフォーラム全体を検索するするには <kbd>/</kbd> を押します"
@@ -4598,8 +4619,6 @@ ja:
       admin:
         title: "管理者"
     badges:
-      earned_n_times:
-        other: "このバッジを %{count} 回獲得しました"
       granted_on: "%{date} にゲット！"
       others_count:
         other: "他の人に %{count} 回付与しました"
@@ -4630,11 +4649,11 @@ ja:
       favorite_max_not_reached: "このバッジをお気に入りにする"
       favorite_count: "%{count}/%{max} 個のバッジがお気に入りに登録されています"
     download_calendar:
-      title: "カレンダーをダウンロード"
+      title: "カレンダーに追加"
+      calendar: "カレンダー"
       save_ics: ".ics ファイルをダウンロード"
       save_google: "Google カレンダーに追加"
       remember: "今後表示しない"
-      remember_explanation: "(この設定はユーザー設定で変更できます)"
       download: "ダウンロード"
       default_calendar: "デフォルトのカレンダー"
       default_calendar_instruction: "日付を保存する際に、どのカレンダーを使用するかを決定します"
@@ -5048,63 +5067,6 @@ ja:
           other: "入力は %{count} 以上である必要があります。"
         pattern_mismatch: "要求されたフォーマットに一致させてください。"
         bad_input: "有効な入力を入力してください。"
-    table_builder:
-      title: "テーブル作成ツール"
-      modal:
-        title: "テーブル作成ツール"
-        create: "テーブルを作成"
-        help:
-          title: "表計算シート作成ツールの使用"
-          enter_key: "Enter"
-          tab_key: "Tab"
-          new_row: "を行の末尾に使用して、新しい行を挿入します。"
-          new_col: "を列の末尾に使用した、新しい列を挿入します。"
-          options: "セルを右クリックすると、ドロップダウンメニューのその他のオプションにアクセスできます。"
-        confirm_close: "テーブル作成ツールを閉じてもよろしいですか？保存されていない変更は失われます。"
-      edit:
-        btn_edit: "テーブルの編集"
-        modal:
-          title: "テーブルの編集"
-          cancel: "キャンセル"
-          create: "保存"
-          reason: "編集する理由は？"
-          trigger_reason: "編集理由を追加してください"
-        default_edit_reason: "テーブル作成ツールでテーブルを更新"
-      default_header:
-        col_1: "列 1"
-        col_2: "列 2"
-        col_3: "列 3"
-        col_4: "列 4"
-      spreadsheet:
-        no_records_found: "レコードが見つかりません"
-        show: "表示"
-        entries: "エントリ"
-        about: "情報"
-        prompts:
-          delete_selected_rows: "選択された行を削除してもよろしいですか？"
-          delete_selected_cols: "選択された列を削除してもよろしいですか？"
-          will_destroy_merged_cells: "この操作によってマージされた既存のセルがすべて破棄されます。よろしいですか？"
-          will_clear_search_results: "この操作によってマージされた既存のセルがすべて破棄されます。よろしいですか？"
-          conflicts_with_merged_cells: "別のマージセルと競合しています"
-        invalid_merge_props: "マージされたプロパティが無効です"
-        cells_already_merged: "セルはすでにマージ済みです"
-        no_cells_selected: "セルが選択されていません"
-        context_menu:
-          row:
-            before: "前に新しい行を挿入"
-            after: "後に新しい行を挿入"
-            delete: "選択行を削除"
-          col:
-            before: "前に新しい列を挿入"
-            after: "後に新しい列を挿入"
-            delete: "選択列を削除"
-            rename: "この列の名前を変更"
-          order:
-            ascending: "昇順で並べ替え"
-            descending: "降順で並べ替え"
-          copy: "コピー..."
-          paste: "貼り付け..."
-          save: "名前を付けて保存..."
     powered_by_discourse: "Discourse 提供"
     safari_15_warning: "お使いのブラウザはまもなくこのコミュニティーに対応しなくなります。引き続き参加するには、ブラウザをアップグレードするか、<a href='%{url}'>詳細</a>をご確認ください。"
     filter:
@@ -5203,6 +5165,11 @@ ja:
         group_traffic: "トラフィック"
         group_members: "メンバー"
         group_other: "その他"
+        related_items:
+          users:
+            title: "ユーザー"
+          labels:
+            user: "ユーザー"
       config_sections:
         account:
           title: "アカウント"
@@ -5291,6 +5258,74 @@ ja:
           header_description: "コミュニティーの目的、運営者、および問題が発生した場合の連絡方法がわかるように、このサイトとチームに関する情報をここに入力します。サイトの<a href='%{basePath}/about'>情報ページ</a>に表示されます。"
         developer:
           title: "開発者"
+        mcp:
+          tabs:
+            access: "アクセス"
+            activity: "アクティビティ"
+          overview:
+            status: "ステータス"
+            tools: "ツール"
+          access:
+            title: "アクセス"
+            group: "グループ"
+            groups: "グループ"
+            actions: "アクション"
+            edit: "編集"
+            delete: "削除"
+          primitives:
+            group_by: "グループ化"
+            group_by_options:
+              scope: "範囲"
+              provider: "プロバイダー"
+              kind: "タイプ"
+            provider: "プロバイダー"
+            kind: "タイプ"
+            scope: "範囲"
+            state: "都道府県"
+            scopes: "スコープ"
+          clients:
+            actions: "アクション"
+            block: "ブロック"
+            use_preset: "セットアップ"
+            presets:
+              custom: "カスタム"
+            automatic: "自動作成"
+          authorizations:
+            user: "ユーザー"
+            last_used: "最後の使用"
+            status: "ステータス"
+            actions: "アクション"
+          activity:
+            outcome: "結果"
+            time: "時刻"
+            user: "ユーザー"
+            duration: "期間"
+          values:
+            server_status:
+              disabled: "無効"
+            client_trust:
+              approved: "承認済み"
+            authorization_status:
+              active: "アクティブ"
+              revoked: "取り消し済み"
+            activity_outcome:
+              success: "成功"
+              error: "エラー"
+            primitive_state:
+              enabled: "有効"
+              disabled: "無効"
+            primitive_kind:
+              all: "全タイプ"
+              tool: "ツール"
+              resource: "リソース"
+            primitive_risk:
+              read: "読み取り専用"
+              moderation: "モデレーション"
+            filter:
+              all: "すべて"
+          never: "送信しない"
+          actions:
+            revoke: "同意を取り消す"
         experimental:
           title: "実験的"
           header_description: "サイトの実験的機能をオンまたはオフに切り替えます。これらのほとんどは、グループ単位で制御できます。"
@@ -5498,7 +5533,6 @@ ja:
           header_description: "ログ記録やトークン化など、中国語と日本語の検索設定を構成します"
         search_everything:
           title: "検索"
-          header_description: "ここで管理者インターフェースのあらゆる項目を検索できます。検索結果は以下で絞り込め、設定は記憶されます。この検索を管理者インターフェースの任意の場所で開くには、%{shortcutHTML} を押してください。"
         security:
           title: "セキュリティ"
           header_description: "二要素認証、モデレーター権限、コンテンツセキュリティポリシーなどのセキュリティ設定を構成します"
@@ -5719,13 +5753,28 @@ ja:
       new_features:
         title: "新機能"
         check_for_updates: "アップデートを確認"
+      site_traffic_explorer:
+        metric_information: "%{metric}について"
+        remove_filter_value: "%{value} を削除"
+        clear_all: "すべてクリア"
+        apply: "適用"
+        view_more: "さらに表示"
+        cards:
+          pages: "ページ"
+          visitors: "訪問者"
+        filters:
+          country: "国"
+          browser: "ブラウザ"
+          language: "言語"
+          ip: "IP アドレス"
+        series:
+          anonymous_human: "匿名ユーザー"
       dashboard:
         title: "ダッシュボード"
         last_updated: "ダッシュボードが更新されました:"
         discourse_last_updated: "Discourse が更新されました:"
         version: "バージョン"
         up_to_date: "最新のバージョンです!"
-        critical_available: "重大なアップデートがあります。"
         updates_available: "アップデートがあります。"
         please_update: "更新してください！"
         no_check_performed: "アップデートの確認が行われていません。sidekiq が起動していることを確認してください。"
@@ -5791,6 +5840,8 @@ ja:
               share: "共有"
             whos_posting:
               staff: "スタッフ"
+              modal:
+                apply: "保存"
             trust_level_pipeline:
               trust_levels:
                 "0": "新規"
@@ -5803,6 +5854,11 @@ ja:
             table:
               searches: "検索数"
               status: "ステータス"
+          system:
+            title: "システム"
+            status: "ステータス"
+            discourse_updated: "Discourse が更新されました"
+            dashboard_updated: "ダッシュボードが更新されました"
         reports_section:
           header_action: "管理"
           modal:
@@ -5815,6 +5871,7 @@ ja:
           series:
             anonymous: "匿名ユーザー"
             crawlers: "クローラー"
+          crawler_learn_more: "もっと読む"
         period:
           last_7_days: "過去 7 日間"
           last_30_days: "過去 30 日間"
@@ -5852,6 +5909,12 @@ ja:
           average_for_sample: "サンプルの平均"
           total: "全期間合計"
           no_data: "表示するデータはありません。"
+          posters_by_member_type_members:
+            users_count:
+              other: "%{count} 人のユーザー"
+            posts_count:
+              other: "投稿 %{count} 件"
+            deselect: "%{name} を選択解除"
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">検索ログ</a>'
             disabled: 'トレンド検索レポートは無効です。データを収集するには、<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">ログ検索クエリ</a>を有効にしてください。'
@@ -6727,8 +6790,8 @@ ja:
           upload: "アップロード"
           select_component: "コンポーネントを選択してください…"
           unsaved_changes_alert: "変更内容を保存していません。変更を破棄して続行しますか？"
-          unsaved_parent_themes: "テーマにコンポーネントを割り当てていません。続行しますか？"
           discard: "破棄"
+          leave: "退出"
           stay: "移動しない"
           css_html: "カスタムコード"
           edit_css_html: "コードを編集"
@@ -7806,13 +7869,14 @@ ja:
           multiselect: "複数選択"
       site_text:
         description: "フォーラム内のテキストをカスタマイズできます。"
-        search: "編集するテキストを検索"
+        search_label: "検索"
+        theme_disabled: "無効"
+        filters: "フィルター"
+        status:
+          invalid: "無効です"
         title: "サイトのテキスト"
         edit: "編集"
-        revert: "変更を戻す"
         revert_confirm: "変更を戻してよろしいですか？"
-        go_back: "検索に戻る"
-        recommended: "ニーズに合わせて次のテキストをカスタマイズすることをお勧めします。"
         show_overriden: "上書き部分のみ表示"
         show_outdated: "古い/無効なもののみを表示する"
         show_untranslated: "未翻訳のみを表示"

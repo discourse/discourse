@@ -48,10 +48,10 @@ export default class SecondFactorConfirmPhrase extends Component {
     </p>
 
     <DTextField
-      {{on "input" this.onConfirmPhraseInput}}
-      @id="confirm-phrase"
-      @autocorrect="off"
       @autocapitalize="off"
+      @autocorrect="off"
+      @id="confirm-phrase"
+      {{on "input" this.onConfirmPhraseInput}}
     />
   </template>
 }

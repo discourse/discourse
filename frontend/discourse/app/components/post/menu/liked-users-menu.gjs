@@ -50,6 +50,7 @@ export default class PostLikedUsersMenu extends Component {
 
   <template>
     <UsersPopup
+      @autofocus={{true}}
       @fetchUsers={{this.fetchUsers}}
       @titleText={{this.titleText}}
       @totalUsers={{this.post.likeCount}}
@@ -59,7 +60,7 @@ export default class PostLikedUsersMenu extends Component {
           @name="liked-users-list-avatar"
           @outletArgs={{lazyHash user=user post=this.post}}
         >
-          <DUserAvatar class="trigger-user-card" @user={{user}} @size="small" />
+          <DUserAvatar class="trigger-user-card" @size="small" @user={{user}} />
         </PluginOutlet>
       </:avatar>
     </UsersPopup>

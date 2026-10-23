@@ -9,7 +9,7 @@ import {
   query,
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
-import aiHelperPrompts from "../fixtures/ai-helper-prompts";
+import aiHelperPrompts from "../fixtures/ai-helper-prompts.js";
 
 let lastStreamRequest = null;
 
@@ -26,7 +26,7 @@ acceptance("Post Helper Menu", function (needs) {
   needs.user({
     admin: true,
     moderator: true,
-    groups: [AUTO_GROUPS.admins],
+    visibleGroups: [AUTO_GROUPS.admins],
     can_use_assistant_in_post: true,
     ai_helper_prompts: aiHelperPrompts,
     trust_level: 4,

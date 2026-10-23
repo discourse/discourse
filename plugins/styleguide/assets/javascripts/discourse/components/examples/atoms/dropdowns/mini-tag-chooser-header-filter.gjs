@@ -5,11 +5,11 @@ const TAGS = ["apple", "orange", "potato"];
 
 export default <template>
   <MiniTagChooser
-    @value={{TAGS}}
     @options={{hash
       filterable=true
       filterPlaceholder="tagging.choose_for_topic"
       useHeaderFilter=true
     }}
+    @value={{TAGS}}
   />
 </template>

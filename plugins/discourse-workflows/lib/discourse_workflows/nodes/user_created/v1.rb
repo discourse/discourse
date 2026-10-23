@@ -12,7 +12,7 @@ module DiscourseWorkflows
             color: "teal",
           },
           group: "discourse_triggers",
-          events: [:user_created],
+          event: :user_created,
           output_contracts: [{ schema: Schema::USER_EVENT_SCHEMA }],
           capabilities: {
             provides_current_user: true,

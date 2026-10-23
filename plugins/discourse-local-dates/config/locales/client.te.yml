@@ -7,8 +7,10 @@
 te:
   js:
     discourse_local_dates:
+      edit_date: '%{date}ని సవరించండి'
       create:
         form:
+          save: సేవ్ చేయండి
           date_title: తేదీ
           time_title: కాలం
           timezone: సమయమండలం

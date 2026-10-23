@@ -161,9 +161,22 @@ pt:
     discourse_workflows:
       nodes:
         "trigger:assigned": "Atribuído(a)"
+        "trigger:unassigned": "Não atribuído(a)"
       assign_topic:
+        resource: "Recurso"
+        resources:
+          topic: "Tópico"
+          post: "Publicação"
         operations:
           assign: "Atribuir"
           unassign: "Cancelar atribuição"
         topic_id: "Id. do Tópico"
+        post_id: "Id. da Publicação"
+        assignee: "Destinatário(a)"
+      check_assignment:
+        target_types:
+          topic: "Tópico"
+          post: "Publicação"
+        topic_id: "Id. do Tópico"
+        post_id: "Id. da Publicação"
         assignee: "Destinatário(a)"

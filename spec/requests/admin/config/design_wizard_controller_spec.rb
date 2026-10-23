@@ -55,6 +55,61 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(dracula["light"]).to be_nil
       end
 
+      context "with a theme screenshot" do
+        fab!(:upload, :image_upload)
+
+        before do
+          horizon = Theme.horizon_theme
+          horizon.set_field(
+            target: :common,
+            name: "screenshot_light",
+            type: :theme_screenshot_upload_var,
+            upload_id: upload.id,
+          )
+          horizon.save!
+        end
+
+        def serialized_horizon
+          get "/admin/config/design-wizard.json"
+          response.parsed_body["themes"].find do |theme|
+            theme["id"] == Theme::CORE_THEMES["horizon"]
+          end
+        end
+
+        it "serves the full-size screenshot and schedules a resize when none exists yet" do
+          expect_enqueued_with(
+            job: :generate_theme_screenshot_thumbnails,
+            args: {
+              theme_id: Theme::CORE_THEMES["horizon"],
+            },
+          ) { expect(serialized_horizon["screenshot_light_url"]).to eq(upload.url) }
+        end
+
+        it "only schedules the resize once while it is outstanding" do
+          serialized_horizon
+
+          expect { serialized_horizon }.not_to change {
+            Jobs::GenerateThemeScreenshotThumbnails.jobs.size
+          }
+        end
+
+        it "serves the resized screenshot once it has been generated" do
+          Jobs::GenerateThemeScreenshotThumbnails.new.execute(
+            theme_id: Theme::CORE_THEMES["horizon"],
+          )
+
+          url = serialized_horizon["screenshot_light_url"]
+
+          expect(url).not_to eq(upload.url)
+          expect(OptimizedImage.find_by(upload_id: upload.id)).to have_attributes(
+            url:,
+            width: ThemeScreenshotThumbnails::WIDTH,
+            height: ThemeScreenshotThumbnails::HEIGHT,
+            extension: ".webp",
+          )
+        end
+      end
+
       it "returns the current fonts and homepage" do
         SiteSetting.base_font = "lato"
         SiteSetting.heading_font = "merriweather"
@@ -158,6 +213,7 @@ RSpec.describe Admin::Config::DesignWizardController do
               heading_font: "merriweather",
               homepage: "categories",
               category_page_style: "categories_boxes",
+              welcome_banner_location: "below_site_header",
             }
 
         expect(response.status).to eq(200)
@@ -168,7 +224,34 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(SiteSetting.heading_font).to eq("merriweather")
         expect(SiteSetting.default_homepage).to eq("categories")
         expect(SiteSetting.desktop_category_page_style).to eq("categories_boxes")
+        expect(SiteSetting.welcome_banner_location).to eq("below_site_header")
         expect(light.reload.user_selectable).to eq(true)
+      end
+
+      it "applies the welcome banner and search choices to the chosen theme" do
+        horizon = Theme.horizon_theme
+
+        put "/admin/config/design-wizard.json",
+            params: {
+              theme_id: horizon.id,
+              enable_welcome_banner: false,
+              search_experience: "search_field",
+            }
+
+        expect(response.status).to eq(200)
+        expect(SiteSetting.enable_welcome_banner(theme_id: horizon.id)).to eq(false)
+        expect(SiteSetting.search_experience(theme_id: horizon.id)).to eq("search_field")
+      end
+
+      it "returns a 400 for an unsupported search experience" do
+        put "/admin/config/design-wizard.json",
+            params: {
+              theme_id: Theme::CORE_THEMES["horizon"],
+              search_experience: "not_an_experience",
+            }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to be_present
       end
 
       it "returns a 400 with errors for an invalid contract" do

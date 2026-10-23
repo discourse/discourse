@@ -1,14 +1,13 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const TopicLabelButton = <template>
-  <DButton @action={{@action}} ...attributes>
+  <DButton ...attributes @action={{@action}}>
     <div class="topic-title">
       <div class="topic-title__top-line">
         <span class="topic-statuses">
@@ -62,15 +61,15 @@ export default class TopicReplyChoiceDialog extends Component {
 
   <template>
     <TopicLabelButton
+      class="btn-primary btn-reply-where btn-reply-on-original"
       @action={{this.replyOnOriginal}}
       @topic={{@model.originalTopic}}
-      class="btn-primary btn-reply-where btn-reply-on-original"
     />
 
     <TopicLabelButton
+      class="btn-reply-where btn-reply-here btn-default"
       @action={{this.replyOnCurrent}}
       @topic={{@model.currentTopic}}
-      class="btn-reply-where btn-reply-here btn-default"
     />
   </template>
 }

@@ -3,6 +3,10 @@
 describe "Composer - ProseMirror - Keyboard shortcuts" do
   include_context "with prosemirror editor"
 
+  fab!(:category_with_emoji) do
+    Fabricate(:category, slug: "cat", emoji: "cat", style_type: "emoji")
+  end
+
   it "supports Ctrl + B to create a bold text" do
     open_composer
     composer.type_content([SystemHelpers::PLATFORM_KEY_MODIFIER, "b"])
@@ -47,6 +51,17 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
     composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :shift, "8"])
 
     expect(rich).to have_css("ul li", text: "Item 1")
+  end
+
+  it "lets the user nest and lift list items with Tab" do
+    open_composer
+    composer.type_content("* First\nSecond")
+
+    composer.send_keys(:tab)
+    expect(composer).to have_nested_list_item("Second")
+
+    composer.send_keys(%i[shift tab])
+    expect(composer).to have_top_level_list_item("Second")
   end
 
   it "supports Ctrl + Shift + 9 to create a blockquote" do

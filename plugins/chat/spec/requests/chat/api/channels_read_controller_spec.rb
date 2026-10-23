@@ -58,7 +58,7 @@ RSpec.describe Chat::Api::ChannelsReadController do
         context "when message_id refers to deleted message" do
           before { message_1.trash!(Discourse.system_user) }
 
-          it "works" do
+          it "accepts the last read message update" do
             put "/chat/api/channels/#{chat_channel.id}/read?message_id=#{message_1.id}"
             expect(response.status).to eq(200)
           end

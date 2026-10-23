@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import { eq } from "discourse/truth-helpers";
-import { i18n } from "discourse-i18n";
-import FIELD_CONTROL_REGISTRY from "../../../lib/workflows/field-control-registry";
+import { applyValueTransformer } from "discourse/lib/transformer";
+import FIELD_CONTROL_REGISTRY from "../../../lib/workflows/field-control-registry.js";
+import { fieldValidator } from "../../../lib/workflows/field-validators.js";
 import {
   fieldControl,
   fieldFormat,
@@ -10,36 +10,14 @@ import {
   fieldShowDescription,
   fieldShowLabel,
   fieldSupportsExpression,
+  fieldType,
   findNodeType,
-  isExpression,
   propertyDescription,
   propertyDynamicValueHint,
   propertyLabel,
   propertyPlaceholder,
   propertyTooltip,
-} from "../../../lib/workflows/property-engine";
-
-const CRON_FIELD_PATTERN =
-  /^(\*|\d+(-\d+)?(\/\d+)?|\*\/\d+)(,(\*|\d+(-\d+)?(\/\d+)?|\*\/\d+))*$/;
-
-function isValidCron(value) {
-  if (!value || typeof value !== "string") {
-    return false;
-  }
-  const fields = value.trim().split(/\s+/);
-  return fields.length === 5 && fields.every((f) => CRON_FIELD_PATTERN.test(f));
-}
-
-const FIELD_VALIDATORS = {
-  cron: (name, value, { addError }) => {
-    if (value && !isExpression(value) && !isValidCron(value)) {
-      addError(name, {
-        title: i18n("discourse_workflows.schedule.cron"),
-        message: i18n("discourse_workflows.schedule.cron_invalid"),
-      });
-    }
-  },
-};
+} from "../../../lib/workflows/property-engine.js";
 
 export default class Field extends Component {
   get control() {
@@ -47,9 +25,16 @@ export default class Field extends Component {
   }
 
   get entry() {
-    return (
-      FIELD_CONTROL_REGISTRY[this.control] || FIELD_CONTROL_REGISTRY.default
-    );
+    const entry =
+      FIELD_CONTROL_REGISTRY[this.control] || FIELD_CONTROL_REGISTRY.default;
+
+    return applyValueTransformer("workflow-field-control", entry, {
+      control: this.control,
+      fieldName: this.args.fieldName,
+      node: this.args.node,
+      nodeParameters: this.args.nodeParameters,
+      schema: this.args.schema,
+    });
   }
 
   get renderer() {
@@ -94,7 +79,10 @@ export default class Field extends Component {
   }
 
   get placeholder() {
-    return propertyPlaceholder(this.nodeDefinition, this.args.fieldName);
+    return (
+      this.args.placeholder ??
+      propertyPlaceholder(this.nodeDefinition, this.args.fieldName)
+    );
   }
 
   get showLabel() {
@@ -119,6 +107,9 @@ export default class Field extends Component {
     if (schema.required) {
       rules.push("required");
     }
+    if (fieldType(schema) === "integer" && !this.supportsExpression) {
+      rules.push("integer");
+    }
     if (schema.min != null || schema.max != null) {
       const min = schema.min ?? Number.MIN_SAFE_INTEGER;
       const max = schema.max ?? Number.MAX_SAFE_INTEGER;
@@ -128,7 +119,7 @@ export default class Field extends Component {
   }
 
   get customValidation() {
-    return FIELD_VALIDATORS[this.args.schema?.validate];
+    return fieldValidator(this.args.schema, this.fieldTitle);
   }
 
   get fieldDescription() {
@@ -170,86 +161,96 @@ export default class Field extends Component {
   <template>
     {{#if (eq this.entry.kind "standalone")}}
       <this.renderer
-        @form={{@form}}
-        @formApi={{@formApi}}
         @configuration={{@configuration}}
         @connections={{@connections}}
         @credentials={{@credentials}}
+        @dynamicValueHint={{this.dynamicValueHint}}
         @fieldName={{@fieldName}}
+        @form={{@form}}
+        @formApi={{@formApi}}
         @label={{this.fieldTitle}}
         @metadata={{this.metadata}}
         @node={{@node}}
+        @nodeDefinition={{this.nodeDefinition}}
         @nodeParameters={{@nodeParameters}}
         @nodes={{@nodes}}
-        @nodeDefinition={{this.nodeDefinition}}
         @nodeTypes={{@nodeTypes}}
+        @onBeforeStartTestSession={{@onBeforeStartTestSession}}
+        @onSet={{@onSet}}
         @schema={{@schema}}
         @session={{@session}}
         @showOptional={{this.showOptional}}
-        @dynamicValueHint={{this.dynamicValueHint}}
-        @onSet={{@onSet}}
-        @onBeforeStartTestSession={{@onBeforeStartTestSession}}
+        @validate={{this.customValidation}}
       />
     {{else}}
       <@form.Field
-        @name={{@fieldName}}
-        @title={{this.fieldTitle}}
-        @showTitle={{this.showLabel}}
-        @showOptional={{this.showOptional}}
         @description={{this.fieldDescription}}
+        @format={{this.format}}
+        @name={{@fieldName}}
+        @onSet={{@onSet}}
+        @showOptional={{this.showOptional}}
+        @showTitle={{this.showLabel}}
+        @title={{this.fieldTitle}}
         @tooltip={{this.fieldTooltip}}
         @type={{this.resolvedFieldType}}
-        @format={{this.format}}
-        @validation={{this.validation}}
         @validate={{this.customValidation}}
-        @onSet={{@onSet}}
+        @validation={{this.validation}}
         as |field|
       >
         {{#if this.isCustomType}}
           <field.Control>
             <this.renderer
+              @configuration={{@configuration}}
+              @connections={{@connections}}
+              @credentials={{@credentials}}
+              @dynamicValueHint={{this.dynamicValueHint}}
               @field={{field}}
               @fieldName={{@fieldName}}
-              @schema={{@schema}}
-              @configuration={{@configuration}}
-              @credentials={{@credentials}}
+              @formApi={{@formApi}}
               @metadata={{this.metadata}}
               @node={{@node}}
               @nodeDefinition={{this.nodeDefinition}}
               @nodeParameters={{@nodeParameters}}
               @nodes={{@nodes}}
               @nodeTypes={{@nodeTypes}}
-              @connections={{@connections}}
-              @formApi={{@formApi}}
+              @onBeforeStartTestSession={{@onBeforeStartTestSession}}
+              @placeholder={{this.placeholder}}
+              @schema={{@schema}}
               @session={{@session}}
               @supportsExpression={{this.supportsExpression}}
-              @placeholder={{this.placeholder}}
-              @dynamicValueHint={{this.dynamicValueHint}}
-              @onBeforeStartTestSession={{@onBeforeStartTestSession}}
             />
           </field.Control>
         {{else}}
           <this.renderer
+            @configuration={{@configuration}}
+            @connections={{@connections}}
+            @credentials={{@credentials}}
+            @dynamicValueHint={{this.dynamicValueHint}}
             @field={{field}}
             @fieldName={{@fieldName}}
-            @schema={{@schema}}
-            @configuration={{@configuration}}
-            @credentials={{@credentials}}
+            @formApi={{@formApi}}
             @metadata={{this.metadata}}
             @node={{@node}}
             @nodeDefinition={{this.nodeDefinition}}
             @nodeParameters={{@nodeParameters}}
             @nodes={{@nodes}}
             @nodeTypes={{@nodeTypes}}
-            @connections={{@connections}}
-            @formApi={{@formApi}}
+            @onBeforeStartTestSession={{@onBeforeStartTestSession}}
+            @placeholder={{this.placeholder}}
+            @schema={{@schema}}
             @session={{@session}}
             @supportsExpression={{this.supportsExpression}}
-            @placeholder={{this.placeholder}}
-            @dynamicValueHint={{this.dynamicValueHint}}
-            @onBeforeStartTestSession={{@onBeforeStartTestSession}}
           />
         {{/if}}
+        {{#each this.entry.addons as |Addon|}}
+          <Addon
+            @field={{field}}
+            @fieldName={{@fieldName}}
+            @node={{@node}}
+            @nodeParameters={{@nodeParameters}}
+            @schema={{@schema}}
+          />
+        {{/each}}
       </@form.Field>
     {{/if}}
   </template>

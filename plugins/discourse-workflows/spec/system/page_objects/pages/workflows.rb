@@ -70,6 +70,26 @@ module PageObjects
           find(".workflows-index__name", text: name).find("a").click
           self
         end
+
+        def click_creator(workflow)
+          find(
+            ".workflows-index__row[data-item-id='#{workflow.id}'] .workflows-index__creator-link",
+          ).click
+          self
+        end
+
+        def click_edit(workflow)
+          find(".workflows-index__row[data-item-id='#{workflow.id}'] .workflows-index__edit").click
+          self
+        end
+
+        def click_delete(workflow)
+          find(
+            ".workflows-index__row[data-item-id='#{workflow.id}'] .workflows-index__menu-trigger",
+          ).click
+          find(".workflows-index__delete").click
+          self
+        end
       end
     end
   end

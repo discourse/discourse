@@ -42,6 +42,7 @@ de:
         nobody: "Themen anzeigen, die keinem zugeordnet sind"
         anyone: "Themen anzeigen, die jemanden zugeordnet sind"
     already_claimed: "Dieses Thema wurde bereits übernommen."
+    no_assignee: "Es wurde keine zugeordnete Person ausgewählt."
     already_assigned: "Thema ist bereits @%{username} zugeordnet"
     too_many_assigns: "@%{username} hat bereits die maximale Anzahl der zugeordneten Themen erreicht (%{max})."
     too_many_assigns_for_topic: "Das Limit von %{limit} Zuordnungen pro Thema wurde erreicht."
@@ -63,9 +64,6 @@ de:
       weekly: "wöchentlich"
       monthly: "monatlich"
       quarterly: "vierteljährlich"
-    discourse_workflows:
-      assign_topic:
-        error: "Thema konnte nicht zugeordnet werden: %{reason}"
   assign_mailer:
     title: "Mailer zuordnen"
     subject_template: "[%{email_prefix}] %{assignee_name} hat dir „%{topic_title}“ zugeordnet!"

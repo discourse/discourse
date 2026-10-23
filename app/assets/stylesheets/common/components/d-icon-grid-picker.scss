@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // Custom properties for the grid layout, set on the DMenu/modal container.
 // The DMenu identifier generates `.fk-d-menu.d-icon-grid-picker-content`
 // which doesn't follow the BEM `__` pattern, so it stays outside the block.
@@ -105,6 +107,10 @@
     box-sizing: border-box;
   }
 
+  &__sentinel {
+    grid-column: 1 / -1;
+  }
+
   // Favorites row inherits parent columns via subgrid
   &__favorites {
     display: grid;
@@ -210,10 +216,17 @@
     color: var(--primary-medium);
     grid-column: 1 / -1;
   }
+
+  &__loading-more {
+    display: flex;
+    justify-content: center;
+    padding: 0.5em;
+    grid-column: 1 / -1;
+  }
 }
 
 // Mobile overrides
-@media screen and (width <= 767px) {
+@include viewport.until(md) {
   .fk-d-menu-modal.d-icon-grid-picker-content {
     .d-modal__body {
       padding: 0;

@@ -3,8 +3,11 @@ import {
   click,
   fillIn,
   find,
+  findAll,
   focus,
   settled,
+  triggerEvent,
+  triggerKeyEvent,
   visit,
   waitFor,
 } from "@ember/test-helpers";
@@ -102,6 +105,14 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     await fillIn(".d-editor-input", "The image:\n");
     const appEvents = getOwner(this).lookup("service:app-events");
     const done = assert.async();
+    const cancellations = [];
+
+    appEvents.on("composer:upload-cancelled", () =>
+      cancellations.push("upload-cancelled")
+    );
+    appEvents.on("composer:uploads-cancelled", () =>
+      cancellations.push("uploads-cancelled")
+    );
 
     appEvents.on("composer:all-uploads-complete", async () => {
       await settled();
@@ -110,6 +121,11 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
         .hasValue(
           "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
         );
+      assert.deepEqual(
+        cancellations,
+        [],
+        "the successful upload is not reported as cancelled"
+      );
       done();
     });
 
@@ -484,6 +500,159 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       );
     assert.false(uppyEventFired, "uppy does not start uploading the file");
     done();
+  });
+});
+
+acceptance("Uppy Composer Attachment - Auto Image Grid", function (needs) {
+  needs.user({ "user_option.composition_mode": 1 });
+  needs.pretender(pretender);
+  needs.settings({
+    simultaneous_uploads: 3,
+    enable_auto_grid_images: true,
+    allow_uncategorized_topics: true,
+  });
+  needs.hooks.afterEach(() => {
+    uploadNumber = 1;
+  });
+
+  test("auto-grids previewable images immediately", async function (assert) {
+    await visit("/new-topic");
+
+    const appEvents = getOwner(this).lookup("service:app-events");
+    const uploadsComplete = new Promise((resolve) => {
+      appEvents.one("composer:all-uploads-complete", resolve);
+    });
+    const dataTransfer = new DataTransfer();
+    ["image-1.png", "image-2.png", "image-3.png"].forEach((filename) => {
+      dataTransfer.items.add(createFile(filename));
+    });
+
+    await triggerEvent(".ProseMirror", "drop", { dataTransfer });
+    await waitFor(".composer-image-grid");
+
+    assert
+      .dom(".composer-image-grid .upload-placeholder.--image")
+      .exists({ count: 3 }, "previewable images are gridded while uploading");
+
+    await uploadsComplete;
+  });
+
+  test("auto-grids MIME-less images dropped from the filesystem", async function (assert) {
+    await visit("/new-topic");
+
+    const appEvents = getOwner(this).lookup("service:app-events");
+    const uploadsComplete = new Promise((resolve) => {
+      appEvents.one("composer:all-uploads-complete", resolve);
+    });
+    const dataTransfer = new DataTransfer();
+    ["IMG_1.HEIC", "IMG_2.HEIC", "IMG_3.HEIC"].forEach((filename) => {
+      dataTransfer.items.add(createFile(filename, ""));
+    });
+
+    await triggerEvent(".ProseMirror", "drop", { dataTransfer });
+    await waitFor(".composer-image-grid .upload-placeholder.--file");
+
+    assert
+      .dom(".composer-image-grid")
+      .exists({ count: 1 }, "the image filenames create one grid immediately");
+    assert
+      .dom(".composer-image-grid .upload-placeholder.--file")
+      .exists(
+        { count: 3 },
+        "the pending HEIC uploads use file placeholders inside the grid"
+      );
+
+    await uploadsComplete;
+    await settled();
+
+    assert
+      .dom(".composer-image-node")
+      .exists({ count: 3 }, "all completed images are present");
+    assert.deepEqual(
+      findAll(".composer-image-node img").map((img) =>
+        img.getAttribute("data-orig-src")
+      ),
+      [
+        "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
+        "upload://sdfljsdfgjlkwg4328.jpeg",
+        "upload://sdfljsdfgjlkwg4328.jpeg",
+      ],
+      "the final images retain their returned upload URLs"
+    );
+    assert
+      .dom(".composer-image-grid")
+      .exists({ count: 1 }, "the completed drop preserves the grid");
+    assert
+      .dom(".composer-image-grid .composer-image-node")
+      .exists({ count: 3 }, "the completed images are placed in the grid");
+    assert
+      .dom(".composer-image-grid .upload-placeholder.--file")
+      .doesNotExist("the completed uploads no longer use file placeholders");
+  });
+});
+
+acceptance("Uppy Composer Attachment - Rich Editor", function (needs) {
+  needs.user({ "user_option.composition_mode": 1 });
+  needs.pretender(pretender);
+  needs.settings({ allow_uncategorized_topics: true });
+  needs.hooks.afterEach(() => {
+    uploadNumber = 1;
+  });
+
+  test("does not cancel an upload once it succeeds", async function (assert) {
+    await visit("/new-topic");
+
+    const appEvents = getOwner(this).lookup("service:app-events");
+    const cancellations = [];
+    appEvents.on("composer:upload-cancelled", () =>
+      cancellations.push("upload-cancelled")
+    );
+    appEvents.on("composer:uploads-cancelled", () =>
+      cancellations.push("uploads-cancelled")
+    );
+    const uploadsComplete = new Promise((resolve) => {
+      appEvents.one("composer:all-uploads-complete", resolve);
+    });
+
+    appEvents.trigger("composer:add-files", createFile("avatar.png"));
+    await uploadsComplete;
+    await settled();
+
+    assert
+      .dom(".composer-image-node img")
+      .hasAttribute(
+        "data-orig-src",
+        "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
+        "the uploaded image replaces the placeholder"
+      );
+    assert.deepEqual(
+      cancellations,
+      [],
+      "the successful upload is not reported as cancelled"
+    );
+  });
+
+  test("cancels the upload when its placeholder is deleted", async function (assert) {
+    await visit("/new-topic");
+
+    const appEvents = getOwner(this).lookup("service:app-events");
+    const uploadCancelled = new Promise((resolve) => {
+      appEvents.one("composer:upload-cancelled", resolve);
+    });
+
+    appEvents.trigger("composer:add-files", createFile("avatar.png"));
+    await waitFor(".upload-placeholder.--image img");
+    await click(".upload-placeholder.--image img");
+    await triggerKeyEvent(".ProseMirror", "keydown", "Backspace");
+    await uploadCancelled;
+    await settled();
+
+    assert
+      .dom(".upload-placeholder")
+      .doesNotExist("the deleted placeholder stays removed");
+    assert
+      .dom(".composer-image-node img")
+      .doesNotExist("the cancelled upload is not inserted");
   });
 });
 

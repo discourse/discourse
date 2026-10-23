@@ -7,6 +7,11 @@ RSpec.describe InvitesController do
   describe "#show" do
     fab!(:invite)
 
+    # These cover the legacy invite flow, which the email code flow replaces
+    # when enable_local_logins_via_code is on. Examples that exercise the code
+    # flow enable it for themselves.
+    before { SiteSetting.enable_local_logins_via_code = false }
+
     it "shows the accept invite page" do
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
@@ -43,6 +48,43 @@ RSpec.describe InvitesController do
         invite_info = JSON.parse(json["invite_info"])
         expect(invite_info["username"]).to eq("") # Default is that we don't use emails to suggest usernames
         expect(invite_info["email"]).to eq(invite.email)
+      end
+    end
+
+    it "does not treat a legacy email token as verification when invite codes are enabled" do
+      SiteSetting.enable_local_logins_via_code = true
+      user_field = Fabricate(:user_field)
+      staged_user = Fabricate(:user, staged: true, email: invite.email)
+      staged_user.set_user_field(user_field.id, "private value")
+      staged_user.save_custom_fields
+
+      get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
+        invite_info = JSON.parse(json["invite_info"])
+        expect(invite_info["email"]).to eq("i*****g@a***********e.ooo")
+        expect(invite_info["email_verified_by_link"]).to eq(false)
+        expect(invite_info["username"]).not_to eq(staged_user.username)
+        expect(invite_info["user_fields"]).to be_nil
+      end
+    end
+
+    %i[enable_local_logins enable_local_logins_via_email].each do |setting|
+      it "verifies legacy email tokens when #{setting} is disabled after enabling codes" do
+        SiteSetting.enable_local_logins_via_code = true
+        SiteSetting.public_send("#{setting}=", false)
+        enable_auth_provider(:google_oauth2)
+
+        get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          invite_info = JSON.parse(JSON.parse(element.current_scope.text)["invite_info"])
+          expect(invite_info["email"]).to eq(invite.email)
+          expect(invite_info["email_verified_by_link"]).to eq(true)
+        end
       end
     end
 
@@ -412,7 +454,7 @@ RSpec.describe InvitesController do
     context "with invite to topic" do
       fab!(:topic)
 
-      it "works" do
+      it "enqueues an email invitation to the topic" do
         sign_in(user)
 
         post "/invites.json",
@@ -571,7 +613,7 @@ RSpec.describe InvitesController do
       context "when validations fail" do
         let(:email) { "test@mailinator.com" }
 
-        it "fails" do
+        it "returns validation errors for a blocked email domain" do
           create_invite
           expect(response).to have_http_status :unprocessable_entity
           expect(response.parsed_body["errors"]).to be_present
@@ -581,7 +623,7 @@ RSpec.describe InvitesController do
       context "when email address is too long" do
         let(:email) { "a" * 495 + "@example.com" }
 
-        it "fails" do
+        it "returns a validation error for an excessively long email address" do
           create_invite
           expect(response).to have_http_status :unprocessable_entity
           expect(response.parsed_body["errors"]).to be_present
@@ -618,7 +660,7 @@ RSpec.describe InvitesController do
     end
 
     context "with domain invite" do
-      it "works" do
+      it "creates a domain invitation" do
         sign_in(admin)
 
         post "/invites.json", params: { domain: "example.com" }
@@ -706,7 +748,38 @@ RSpec.describe InvitesController do
         expect(response.status).to eq(403)
       end
 
-      it "fails when combined with a topic, groups or a domain" do
+      it "creates a single-use admin invite link when no email is given" do
+        sign_in(admin)
+
+        post "/invites.json", params: { is_admin: "true", skip_email: "true" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["grants_admin"]).to eq(true)
+
+        invite = Invite.last
+        expect(invite.admin).to eq(true)
+        expect(invite.email).to eq(nil)
+        expect(invite.max_redemptions_allowed).to eq(1)
+      end
+
+      it "creates an admin invite link restricted to a domain" do
+        sign_in(admin)
+
+        post "/invites.json",
+             params: {
+               is_admin: "true",
+               skip_email: "true",
+               domain: "example.com",
+             }
+
+        expect(response.status).to eq(200)
+
+        invite = Invite.last
+        expect(invite.admin).to eq(true)
+        expect(invite.domain).to eq("example.com")
+      end
+
+      it "fails when combined with a topic or groups" do
         sign_in(admin)
         topic = Fabricate(:topic)
         group = Fabricate(:group)
@@ -725,9 +798,6 @@ RSpec.describe InvitesController do
                is_admin: "true",
                group_ids: [group.id],
              }
-        expect(response.status).to eq(400)
-
-        post "/invites.json", params: { is_admin: "true", domain: "example.com" }
         expect(response.status).to eq(400)
       end
 
@@ -775,7 +845,7 @@ RSpec.describe InvitesController do
         expect(invite.groups).to be_empty
       end
 
-      it "cannot strip the email from an admin invite via #update" do
+      it "can convert an admin email invite into a domain-restricted link via #update" do
         sign_in(admin)
 
         post "/invites.json", params: { email: "test@example.com", is_admin: "true" }
@@ -784,9 +854,23 @@ RSpec.describe InvitesController do
 
         put "/invites/#{invite.id}", params: { domain: "example.com" }
 
-        expect(response.status).to eq(422)
-        expect(invite.reload.email).to eq("test@example.com")
+        expect(response.status).to eq(200)
+        expect(invite.reload.email).to eq(nil)
+        expect(invite.domain).to eq("example.com")
         expect(invite.admin).to eq(true)
+      end
+
+      it "cannot raise max_redemptions_allowed on an admin invite via #update" do
+        sign_in(admin)
+
+        post "/invites.json", params: { is_admin: "true", skip_email: "true" }
+        expect(response.status).to eq(200)
+        invite = Invite.last
+
+        put "/invites/#{invite.id}", params: { max_redemptions_allowed: 10 }
+
+        expect(response.status).to eq(422)
+        expect(invite.reload.max_redemptions_allowed).to eq(1)
       end
 
       it "is rate limited" do
@@ -832,7 +916,21 @@ RSpec.describe InvitesController do
         expect(response.status).to eq(403)
       end
 
-      it "fails when combined with a topic, groups or a domain" do
+      it "creates a single-use moderator invite link when no email is given" do
+        sign_in(admin)
+
+        post "/invites.json", params: { is_moderator: "true", skip_email: "true" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["grants_moderator"]).to eq(true)
+
+        invite = Invite.last
+        expect(invite.moderator).to eq(true)
+        expect(invite.email).to eq(nil)
+        expect(invite.max_redemptions_allowed).to eq(1)
+      end
+
+      it "fails when combined with a topic or groups" do
         sign_in(admin)
         topic = Fabricate(:topic)
         group = Fabricate(:group)
@@ -852,14 +950,11 @@ RSpec.describe InvitesController do
                group_ids: [group.id],
              }
         expect(response.status).to eq(400)
-
-        post "/invites.json", params: { is_moderator: "true", domain: "example.com" }
-        expect(response.status).to eq(400)
       end
     end
 
     context "with link invite" do
-      it "works" do
+      it "creates a single-use link invitation without an email" do
         sign_in(admin)
 
         post "/invites.json"
@@ -953,7 +1048,7 @@ RSpec.describe InvitesController do
     context "with invite to topic" do
       fab!(:topic)
 
-      it "works" do
+      it "enqueues topic invitation emails through the multiple-invite endpoint" do
         sign_in(admin)
 
         post "/invites/create-multiple.json",
@@ -1261,6 +1356,43 @@ RSpec.describe InvitesController do
   end
 
   describe "#perform_accept_invitation" do
+    # These cover the legacy invite flow, which the email code flow replaces
+    # when enable_local_logins_via_code is on. Examples that exercise the code
+    # flow enable it for themselves.
+    before { SiteSetting.enable_local_logins_via_code = false }
+
+    context "when anonymous invite acceptance uses email codes" do
+      fab!(:invite)
+
+      before { SiteSetting.enable_local_logins_via_code = true }
+
+      it "accepts the legacy form when email login is disabled after enabling codes" do
+        SiteSetting.enable_local_logins_via_email = false
+
+        put "/invites/show/#{invite.invite_key}.json",
+            params: {
+              email_token: invite.email_token,
+              password: "verystrongpassword",
+            }
+
+        expect(response.status).to eq(200)
+        expect(invite.reload).to be_redeemed
+        expect(session[:current_user_id]).to eq(User.find_by_email(invite.email).id)
+      end
+
+      it "does not allow the legacy password acceptance endpoint" do
+        put "/invites/show/#{invite.invite_key}.json",
+            params: {
+              email_token: invite.email_token,
+              password: "verystrongpassword",
+            }
+
+        expect(response.status).to eq(404)
+        expect(invite.reload).not_to be_redeemed
+        expect(User.find_by_email(invite.email)).to be_nil
+      end
+    end
+
     context "with an invalid invite" do
       it "redirects to the root" do
         put "/invites/show/doesntexist.json"
@@ -1411,7 +1543,7 @@ RSpec.describe InvitesController do
           )
 
           Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
-          SiteSetting.enable_google_oauth2_logins = true
+          enable_auth_provider(:google_oauth2)
 
           get "/auth/google_oauth2/callback.json"
           expect(response.status).to eq(302)
@@ -1424,7 +1556,7 @@ RSpec.describe InvitesController do
           OmniAuth.config.test_mode = false
         end
 
-        it "should associate the invited user with authenticator records" do
+        it "associates the invited user with authenticator records" do
           SiteSetting.auth_overrides_name = true
           invite.update!(email: authenticated_email)
 
@@ -1438,7 +1570,8 @@ RSpec.describe InvitesController do
           expect(user.user_associated_accounts.first.provider_name).to eq("google_oauth2")
         end
 
-        it "returns the right response even if local logins has been disabled" do
+        it "accepts external authentication when local logins are disabled after enabling codes" do
+          SiteSetting.enable_local_logins_via_code = true
           SiteSetting.enable_local_logins = false
           invite.update!(email: authenticated_email)
 
@@ -1631,6 +1764,41 @@ RSpec.describe InvitesController do
         expect(User.count).to eq(user_count + 1)
       end
 
+      it "does not grant a bounded invite after another request has consumed its capacity" do
+        group = Fabricate(:group)
+        invite.update!(invited_by: admin)
+        InvitedGroup.create!(invite: invite, group: group)
+        stale_invite = Invite.find(invite.id)
+
+        put "/invites/show/#{invite.invite_key}.json",
+            params: {
+              email: "first@example.com",
+              password: "verystrongpassword",
+            }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["message"]).to eq(I18n.t("invite.confirm_email"))
+
+        allow(Invite).to receive(:find_by).with(invite_key: invite.invite_key).and_return(
+          stale_invite,
+        )
+
+        expect {
+          put "/invites/show/#{invite.invite_key}.json",
+              params: {
+                email: "second@example.com",
+                password: "verystrongpassword",
+              }
+        }.not_to change { User.count }
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["message"]).to eq(I18n.t("invite.not_found_json"))
+        expect(invite.reload.redemption_count).to eq(1)
+        expect(invite.invited_users.count).to eq(1)
+        expect(
+          GroupUser.where(group: group, user_id: invite.invited_users.select(:user_id)).count,
+        ).to eq(1)
+      end
+
       it "sends an activation email and does not activate the user" do
         expect {
           put "/invites/show/#{invite.invite_key}.json",
@@ -1783,7 +1951,8 @@ RSpec.describe InvitesController do
         end
 
         it "adds the user to the private topic" do
-          topic = Fabricate(:private_message_topic)
+          Group.refresh_automatic_groups_for_user!(invite.invited_by)
+          topic = Fabricate(:private_message_topic, user: invite.invited_by)
           TopicInvite.create!(invite: invite, topic: topic)
           put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
           expect(response.status).to eq(200)

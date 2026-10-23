@@ -78,6 +78,10 @@ export default class Validator {
   }
 
   betweenValidator(value, rule) {
+    if (isBlank(value)) {
+      return;
+    }
+
     if (rule.max) {
       if (value > rule.max) {
         return i18n("form_kit.errors.too_high", {

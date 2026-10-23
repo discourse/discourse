@@ -85,6 +85,9 @@ module Email
     class ReplyToDigestError < ProcessingError
     end
 
+    class SiteArchivedError < ProcessingError
+    end
+
     class TooManyRecipientsError < ProcessingError
       attr_reader :recipients_count
 
@@ -150,8 +153,17 @@ module Email
     end
 
     def is_blocked?
-      return false if SiteSetting.ignore_by_title.blank?
-      Regexp.new(SiteSetting.ignore_by_title, Regexp::IGNORECASE) =~ @mail.subject
+      if SiteSetting.ignore_by_title.present?
+        escaped_regex =
+          SiteSetting.ignore_by_title.split("|").map { |s| Regexp.escape(s) }.join("|")
+        return true if Regexp.new(escaped_regex, Regexp::IGNORECASE) =~ @mail.subject
+      end
+      if SiteSetting.ignore_by_title_regex.present?
+        if Regexp.new(SiteSetting.ignore_by_title_regex, Regexp::IGNORECASE) =~ @mail.subject
+          return true
+        end
+      end
+      false
     end
 
     def create_incoming_email
@@ -173,6 +185,7 @@ module Email
       raise NoSenderDetectedError if @from_email.blank?
       raise FromReplyByAddressError if is_from_reply_by_email_address?
       raise ScreenedEmailError if ScreenedEmail.should_block?(@from_email)
+      raise SiteArchivedError if SiteSetting.site_archived
 
       user = @from_user
 
@@ -215,7 +228,7 @@ module Email
         # the email is a reply to *something*
         if category = post.topic&.category
           # it's a topic in a category
-          if category.mailinglist_mirror?
+          if sent_to_mailinglist_mirror?(category)
             # replies to categories that are mailing mirrors should work,
             # even if reply_by_email is not otherwise enabled
           elsif !SiteSetting.reply_by_email_enabled
@@ -414,6 +427,10 @@ module Email
 
     def auth_res_action
       @auth_res_action ||= AuthenticationResults.new(@mail.header[:authentication_results]).action
+    rescue StandardError => e
+      # fail closed without losing the post: queue it for review
+      Discourse.warn_exception(e, message: "Failed to evaluate Authentication-Results")
+      @auth_res_action = :enqueue
     end
 
     def select_body
@@ -843,15 +860,11 @@ module Email
         all_destinations.map { |d| Email::Receiver.check_address(d, is_bounce?) }.reject(&:blank?)
     end
 
-    def sent_to_mailinglist_mirror?
-      @sent_to_mailinglist_mirror ||=
-        begin
-          destinations.each do |destination|
-            return true if destination.is_a?(Category) && destination.mailinglist_mirror?
-          end
-
-          false
-        end
+    def sent_to_mailinglist_mirror?(category = nil)
+      destinations.any? do |destination|
+        destination.is_a?(Category) && destination.mailinglist_mirror? &&
+          (category.nil? || destination == category)
+      end
     end
 
     def self.check_address(address, include_verp = false)
@@ -1254,7 +1267,13 @@ module Email
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       return if message_ids.empty?
 
-      Email::MessageIdService.find_post_from_message_ids(message_ids)
+      post = Email::MessageIdService.find_post_from_message_ids(message_ids)
+      if !force && SiteSetting.find_related_post_with_key &&
+           !(post&.topic&.category && sent_to_mailinglist_mirror?(post.topic.category))
+        return
+      end
+
+      post
     end
 
     def self.extract_reply_message_ids(mail, max_message_id_count:)
@@ -1500,7 +1519,10 @@ module Email
 
       add_elided_to_raw!(options)
 
-      if sent_to_mailinglist_mirror?
+      topic_category = options[:topic]&.category
+      topic_category ||= Category.find_by(id: options[:category]) if options[:category]
+
+      if topic_category && sent_to_mailinglist_mirror?(topic_category)
         options[:skip_validations] = true
         options[:skip_guardian] = true
       else
