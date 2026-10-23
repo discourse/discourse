@@ -11,6 +11,8 @@ module JsonApiKit
             instance.all(params, scoped_to:)
           end
         end
+
+        def from(...) = from_records(...)
       end
 
       private
@@ -18,9 +20,11 @@ module JsonApiKit
       def primary_records = query.records
 
       def data
-        contents.primary.map do
-          ResourceObject.new(it, client:, fieldsets:, meta: page_meta(it)).to_h
-        end
+        contents.primary.map { representation(it, meta: page_meta(it)).to_h }
+      end
+
+      def representation(record, meta:)
+        ResourceObject.new(record, client:, fieldsets:, meta:)
       end
 
       def page_meta(record)

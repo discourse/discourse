@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module JsonApiKit
-  class BaseController
+  class EndpointController
     module Versioning
       extend ActiveSupport::Concern
 

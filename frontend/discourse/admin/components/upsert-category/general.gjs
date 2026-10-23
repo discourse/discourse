@@ -33,7 +33,6 @@ import Composer from "discourse/models/composer";
 import PermissionType from "discourse/models/permission-type";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { eq, or } from "discourse/truth-helpers";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
 import DMultiSelect from "discourse/ui-kit/d-multi-select";

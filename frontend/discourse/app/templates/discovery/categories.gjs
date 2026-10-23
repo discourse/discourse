@@ -5,7 +5,6 @@ import Navigation from "discourse/components/discovery/navigation";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { and } from "discourse/truth-helpers";
 import DCountI18n from "discourse/ui-kit/d-count-i18n";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 

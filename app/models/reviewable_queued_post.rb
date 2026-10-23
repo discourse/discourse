@@ -88,6 +88,9 @@ class ReviewableQueuedPost < Reviewable
     result[:cooking_options].symbolize_keys! if result[:cooking_options]
     result[:topic_id] = topic_id if topic_id
     result[:category] = category_id if category_id
+    if result[:tags].present? && !result[:tags].is_a?(Array)
+      raise Discourse::InvalidParameters.new(:tags)
+    end
     if result[:tags].is_a?(Array)
       result[:tags] = result[:tags].map { |t| t.is_a?(Hash) ? t["name"] : t }
     end
@@ -190,6 +193,7 @@ class ReviewableQueuedPost < Reviewable
       end
 
     pm_translation_args = {
+      **Dsa::AppealInstructions.message_options,
       topic_title: topic&.title || payload["title"],
       topic_url: topic&.url,
       reason: args[:revise_custom_reason].presence || args[:revise_reason],

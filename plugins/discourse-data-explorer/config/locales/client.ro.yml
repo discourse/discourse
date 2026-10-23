@@ -14,12 +14,9 @@ ro:
         description: "Scrie o interogare SQL personalizată pentru a scoate la iveală orice aspect specific comunității tale."
     explorer:
       or: "sau"
-      create: "Creează"
       ai:
         generate: "Generare"
         optional: "opțional"
-      import:
-        label: "Importă"
       help:
         label: "Ajutor"
       schema:
@@ -38,7 +35,6 @@ ro:
       query_time: "Ultima rulare"
       query_user: "Creată de"
       reset_params: "Resetare"
-      search_placeholder: "Caută..."
     group:
       reports: "Rapoarte"
     discourse_workflows:

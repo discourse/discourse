@@ -7,7 +7,6 @@ import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import withEventValue from "discourse/helpers/with-event-value";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { gt, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 import { i18n } from "discourse-i18n";

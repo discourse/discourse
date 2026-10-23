@@ -1,4 +1,3 @@
-import { or } from "discourse/truth-helpers";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import { i18n } from "discourse-i18n";
 

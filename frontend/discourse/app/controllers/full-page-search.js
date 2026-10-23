@@ -117,6 +117,7 @@ export default class FullPageSearchController extends Controller {
 
   /** @type {string | null | undefined} */
   error = null;
+  #syncedQ;
   _searchOnSortChange = true;
 
   init() {
@@ -413,6 +414,7 @@ export default class FullPageSearchController extends Controller {
   }
 
   setSearchTerm(term) {
+    this.#syncedQ = term;
     this._searchOnSortChange = false;
     term = this.cleanTerm(term);
     this._searchOnSortChange = true;
@@ -453,6 +455,12 @@ export default class FullPageSearchController extends Controller {
 
   @observes("search_type")
   triggerSearchOnTypeChange() {
+    // Runs before the `q` observer, so a URL change to both would otherwise
+    // search with the previous term.
+    if (this.q !== this.#syncedQ) {
+      this.setSearchTerm(this.q);
+    }
+
     if (this.searchActive) {
       this.set("page", 1);
       this._search();
@@ -472,6 +480,8 @@ export default class FullPageSearchController extends Controller {
     if (model && this.get("model.q") !== this.q) {
       this.setSearchTerm(this.q);
       this.send("search");
+    } else {
+      this.#syncedQ = this.q;
     }
   }
 

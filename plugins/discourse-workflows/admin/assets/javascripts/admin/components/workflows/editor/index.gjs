@@ -1460,7 +1460,11 @@ export default class WorkflowsEditor extends Component {
     try {
       const response = await ajax(
         `/admin/plugins/discourse-workflows/workflows/${this.args.workflow.id}/variables/import.json`,
-        { type: "POST", data: { variables } }
+        {
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({ variables }),
+        }
       );
       this.replaceWorkflow(response.workflow);
 

@@ -78,7 +78,7 @@ RSpec.describe "a JSON:API endpoint", type: :request do
 
       it "reports a missing declaration" do
         expect(Discourse).to have_received(:warn_exception) do |error, _|
-          expect(error).to be_a(JsonApiKit::BaseController::Serving::MissingDeclaration)
+          expect(error).to be_a(JsonApiKit::EndpointController::Serving::MissingDeclaration)
           expect(error.message).to match(/declare the resource it serves/)
         end
       end

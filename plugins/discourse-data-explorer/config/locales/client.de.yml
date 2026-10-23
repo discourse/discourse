@@ -40,7 +40,6 @@ de:
       admins_only: "Der Daten-Explorer ist nur für Administratoren verfügbar."
       allow_groups: "Gruppen erlauben, auf diese Anfrage zuzugreifen"
       title: "Daten-Explorer"
-      create: "Erstellen"
       create_placeholder: "Name der Anfrage …"
       description_placeholder: "Hier bitte eine Beschreibung eingeben"
       ai:
@@ -58,7 +57,6 @@ de:
         sql_label: "SQL"
         optional: "optional"
       import:
-        label: "Importieren"
         unparseable_json: "JSON-Datei kann nicht verarbeitet werden."
         wrong_json: "Falsche JSON-Datei. Eine JSON-Datei sollte ein „query“-Objekt enthalten, das zumindest eine „sql“-Eigenschaft haben sollte."
       help:
@@ -112,7 +110,6 @@ de:
         results_json: "Ergebnisse (JSON)"
         results_csv: "Ergebnisse (CSV)"
         query_json: "Abfragedefinition (JSON)"
-      others_dirty: "Eine Anfrage hat nicht gespeicherte Änderungen, die verloren gehen, wenn du woanders hin navigierst."
       run_time: "Anfrage in %{value} ms abgeschlossen."
       cached_result_notice: "Zeigt zwischengespeicherte Ergebnisse von %{relative_time}."
       result_count:
@@ -132,7 +129,6 @@ de:
       column: "Spalte %{number}"
       save_params: "Standards festlegen"
       reset_params: "Zurücksetzen"
-      search_placeholder: "Suche …"
       no_search_results: "Leider konnten wir keine Ergebnisse finden, die deinem Text entsprechen."
       form:
         errors:

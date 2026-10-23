@@ -25,6 +25,79 @@ RSpec.describe JsonApiKit::Document do
   let(:client) { JsonApiKit::Client.new(guardian:, edition:, urls:) }
   let(:parameters) { {} }
 
+  describe ".from" do
+    subject(:document) { described_class.from(value) { { resource: instance, input:, client: } } }
+
+    let(:resource) { Class.new(super()) { scope { Topic.none } } }
+    let(:instance) { resource.new(guardian:, edition:) }
+    let(:input) do
+      JsonApiKit::Request::Input::Individual.new(parameters, resource: instance, edition:)
+    end
+    let(:rendered_ids) { document.to_h[:data].map { it[:id] } }
+
+    context "when the input is a record" do
+      let(:value) { topic }
+
+      it "renders an individual resource" do
+        expect(document.to_h[:data]).to include(id: topic.id.to_s)
+      end
+    end
+
+    context "when the input is an array" do
+      let(:value) { [other_topic, topic] }
+
+      it "preserves the supplied order" do
+        expect(rendered_ids).to eq([other_topic.id.to_s, topic.id.to_s])
+      end
+    end
+
+    context "when the array contains one record" do
+      let(:value) { [topic] }
+
+      it "preserves the collection representation" do
+        expect(rendered_ids).to eq([topic.id.to_s])
+      end
+    end
+
+    context "when the array is empty" do
+      let(:value) { [] }
+
+      it "renders an empty collection" do
+        expect(document.to_h[:data]).to eq([])
+      end
+    end
+
+    context "when the input is a relation" do
+      fab!(:excluded_topic) { Fabricate(:topic, created_at: Time.utc(2026, 8, 3)) }
+
+      let(:value) { Topic.where(id: [topic.id, other_topic.id]).order(created_at: :desc) }
+
+      it "preserves its selection and order" do
+        expect(rendered_ids).to eq([other_topic.id.to_s, topic.id.to_s])
+      end
+    end
+
+    context "when the input is an existing document" do
+      subject(:document) { described_class.from(value) { raise "Unexpected request context" } }
+
+      let(:value) { JsonApiKit::Document::Collection.for(parameters, resource:, client:) }
+
+      it "returns the document without evaluating the context" do
+        expect(document).to equal(value)
+      end
+
+      context "when the document contains errors" do
+        let(:value) do
+          JsonApiKit::Document::Errors.new(JsonApiKit::BadRequest.new("Invalid input"))
+        end
+
+        it "returns the errors without evaluating the context" do
+          expect(document).to equal(value)
+        end
+      end
+    end
+  end
+
   describe "Collection.for" do
     subject(:document) do
       JsonApiKit::Document::Collection.for(parameters, resource:, client:, scoped_to:)

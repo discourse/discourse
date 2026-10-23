@@ -24,7 +24,7 @@ import { makeArray } from "discourse/lib/helpers";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { emojiUrlFor } from "discourse/lib/text";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
-import { eq, gt, includes, notEq } from "discourse/truth-helpers";
+import { includes } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DOverflowControls from "discourse/ui-kit/d-overflow-controls";
@@ -614,7 +614,7 @@ export default class EmojiPicker extends Component {
                       }}
                       class={{dConcatClass
                         "emoji-picker__section"
-                        (if (notEq this.filteredEmojis null) "hidden")
+                        (if (neq this.filteredEmojis null) "hidden")
                       }}
                       data-section={{section}}
                       role="region"

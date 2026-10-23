@@ -1020,7 +1020,7 @@ class Search
           nil
         elsif word =~ /\Atopic:(\d+)\z/i
           topic_id = $1.to_i
-          if topic_id > 1
+          if topic_id > 0
             topic = Topic.find_by(id: topic_id)
             @search_context = topic if @guardian.can_see?(topic)
           end

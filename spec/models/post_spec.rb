@@ -1623,6 +1623,25 @@ RSpec.describe Post do
       custom_flag.destroy!
     end
 
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        SiteSetting.dsa_reporting_enabled = true
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "includes appeal instructions in the hidden post notice" do
+        custom_flag = Fabricate(:flag, name: "custom flag")
+        post.hide!(PostActionType.types[:custom_custom_flag])
+
+        jobs = Jobs::SendSystemMessage.jobs
+
+        Jobs::SendSystemMessage.new.execute(jobs[0]["args"][0].with_indifferent_access)
+        expect(Post.last.raw).to include("To appeal this decision, contact appeals@example.com")
+
+        custom_flag.destroy!
+      end
+    end
+
     it "decreases user_stat topic_count for the first post" do
       expect do post.hide!(PostActionType.types[:off_topic]) end.to change {
         post.user.user_stat.reload.topic_count

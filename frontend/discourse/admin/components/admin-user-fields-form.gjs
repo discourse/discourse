@@ -10,7 +10,6 @@ import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { eq, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class AdminUserFieldsForm extends Component {

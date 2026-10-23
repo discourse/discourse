@@ -180,6 +180,7 @@ module PostGuardian
     end
 
     if post.wiki && @user.in_any_groups?(SiteSetting.edit_wiki_post_allowed_groups_map)
+      return false if post.hidden? && is_my_own?(post) && !can_edit_hidden_post?(post)
       return can_create_post?(post.topic)
     end
 
