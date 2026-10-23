@@ -11,3 +11,9 @@ Migrations::CLI::Registry.register(
   command_class: "Migrations::Importer::CLI::UploadCommand",
   description: "Import media uploads referenced by the IntermediateDB",
 )
+
+Migrations::CLI::Registry.register(
+  name: "cache",
+  command_class: "Migrations::Importer::CLI::CacheCommand",
+  description: "Preserve rendered content across imports",
+)
