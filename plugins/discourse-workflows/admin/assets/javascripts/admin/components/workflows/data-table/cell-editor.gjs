@@ -79,6 +79,10 @@ export default class CellEditor extends Component {
 
   @action
   save() {
+    if (!this.isEditing) {
+      return;
+    }
+
     this.isEditing = false;
 
     if (this.editValue === this.#initialValue) {
