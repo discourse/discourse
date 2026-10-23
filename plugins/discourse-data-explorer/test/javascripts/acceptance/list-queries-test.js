@@ -8,7 +8,7 @@ import {
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import { JSON_API_VERSION } from "discourse/data/handlers/json-api";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 function listDocument(id, name) {
@@ -103,10 +103,10 @@ acceptance("List Queries", function (needs) {
       "/api/data-explorer/queries",
       (request) => {
         requests.push(request);
-        const document = request.queryParams["filter[tag]"]?.includes("default")
-          ? listDocument("2", "Top 100 Likers")
-          : listDocument("3", "Staff activity");
-        return [200, { "Content-Type": "application/json" }, document];
+        if (request.queryParams["filter[tag]"]?.includes("default")) {
+          return response(listDocument("2", "Top 100 Likers"));
+        }
+        return response(listDocument("3", "Staff activity"));
       },
       true
     );
