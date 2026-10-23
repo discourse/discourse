@@ -28,9 +28,7 @@ hy:
       close: "Փակել"
       delete: "Ջնջել"
       edit: "Խմբագրել"
-      back: "Ետ"
       save: "Պահպանել"
-      apply: "Կիրառել"
       update_range:
         all_time: "Ամբողջ Ժամանակվա"
       custom_range_from: "Ում կողմից"

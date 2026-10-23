@@ -264,11 +264,13 @@ zh_CN:
         recipient_inactive: "用户“%{username}”尚未激活其帐户。"
         recipient_chat_disabled: "'%{username}' 已在其偏好设置中禁用聊天功能。"
         recipient_cannot_chat: "用户“%{username}”无法使用聊天功能，因为他们不在“允许聊天的群组”设置允许的群组中。"
-        sender_anonymous: "私信无法匿名发送。请选择一位用户作为发件人。"
+        sender_anonymous: "聊天信息无法匿名发送。请选择一个用户作为发送者。"
         sender_chat_disabled: "发件人“%{sender}”已在其偏好设置中禁用聊天功能。"
         sender_cannot_chat: "发件人“%{sender}”无法使用聊天功能，因为他们不在“允许聊天的群组”设置允许的群组中。"
         sender_cannot_create_dm: "发件人“%{sender}”无权发送私信（请参阅“启用私信的群组”设置）。"
         sender_dms_disabled: "发件人“%{sender}”已在其偏好设置中禁用私人消息。"
+        sender_cannot_post: "发件人 '%{sender}' 无权在频道 '%{channel_id}' 中发帖。"
+        sender_not_member: "发件人'%{sender}' 不是频道 '%{channel_id}' 的成员。请先以该用户身份加入频道。"
         user_blocked: "用户“%{sender}”无法向用户“%{username}”发送私信： %{reason}"
         group_blocked: "用户“%{sender}”无法向用户“ %{usernames}”发送群组私信： %{reason}"
       chat_approval:
@@ -292,7 +294,7 @@ zh_CN:
         preferences_bypassed: "'%{username}' 不接受来自 '%{sender}' 的直接消息，但消息已送达，因为发件人是工作人员。"
     logs:
       send_chat_message:
-        sent_to_channel: "项目 %{item_index}：已向频道 %{channel_id} 发送消息 %{message_id}。"
+        sent_to_channel: "项目 %{item_index}：'%{sender}' 向频道 %{channel_id} 发送消息 %{message_id}。"
         sent_to_user: "项目 %{item_index}：'%{sender}' 向 '%{username}' 发送消息 %{message_id}。"
         sent_to_group: "项目 %{item_index}：'%{sender}' 向群组私信发送消息 %{message_id} ，该群组私信包含 %{usernames}。"
   reviewable_score_types:
