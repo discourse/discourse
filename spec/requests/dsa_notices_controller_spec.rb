@@ -147,7 +147,7 @@ RSpec.describe DsaNoticesController do
       post "/dsa/report-illegal-content.json", params: params
 
       expect(response.status).to eq(201)
-      expect(response.parsed_body["reference"]).to start_with("DSA-")
+      expect(response.parsed_body["reference"]).to match(/\A[0-9a-f]{12}\z/)
     end
 
     it "returns not found when disabled" do

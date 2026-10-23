@@ -24,10 +24,6 @@ module Dsa
       end
     end
 
-    def reference
-      "DSA-#{id}"
-    end
-
     def receipt_sent?
       receipt_sent_at.present?
     end
@@ -73,10 +69,12 @@ end
 #  explanation     :text             not null
 #  name            :string
 #  receipt_sent_at :datetime
+#  reference       :string           not null
 #  created_at      :datetime         not null
 #  post_id         :bigint
 #
 # Indexes
 #
-#  index_dsa_notices_on_post_id  (post_id) UNIQUE
+#  index_dsa_notices_on_post_id    (post_id) UNIQUE
+#  index_dsa_notices_on_reference  (reference) UNIQUE
 #

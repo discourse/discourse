@@ -6101,6 +6101,7 @@ ALTER SEQUENCE public.drafts_id_seq OWNED BY public.drafts.id;
 
 CREATE TABLE public.dsa_notices (
     id bigint NOT NULL,
+    reference character varying DEFAULT substr(replace((gen_random_uuid())::text, '-'::text, ''::text), 1, 12) NOT NULL,
     post_id bigint,
     content_url text NOT NULL,
     explanation text NOT NULL,
@@ -22283,6 +22284,13 @@ CREATE UNIQUE INDEX index_drafts_on_user_id_and_draft_key ON public.drafts USING
 --
 
 CREATE UNIQUE INDEX index_dsa_notices_on_post_id ON public.dsa_notices USING btree (post_id);
+
+
+--
+-- Name: index_dsa_notices_on_reference; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_dsa_notices_on_reference ON public.dsa_notices USING btree (reference);
 
 
 --

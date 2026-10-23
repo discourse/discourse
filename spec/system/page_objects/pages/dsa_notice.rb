@@ -25,6 +25,10 @@ module PageObjects
         has_button?("Verified", disabled: true)
       end
 
+      def reference
+        find(".dsa-notice__reference strong").text
+      end
+
       def has_confirmation?
         has_css?(".dsa-notice h1", text: "Report received")
       end

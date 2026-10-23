@@ -99,5 +99,11 @@ RSpec.describe "Illegal content notices" do
     notice_page.form.field("declaration").check
     notice_page.form.submit
     expect(notice_page).to have_confirmation
+
+    reference = notice_page.reference
+    expect(reference).to match(/\A[0-9a-f]{12}\z/)
+    receipt = ActionMailer::Base.deliveries.last
+    expect(receipt.subject).to include(reference)
+    expect(receipt.text_part.decoded).to include(reference)
   end
 end

@@ -25,11 +25,23 @@ RSpec.describe Dsa::Notice do
       expect(saved_notice.reload.attributes.symbolize_keys.slice(*attributes.keys)).to eq(
         attributes,
       )
-      expect(saved_notice.reference).to eq("DSA-#{saved_notice.id}")
       expect(saved_notice.summary(plain_text: true)).to include(
         attributes[:name],
         attributes[:explanation],
       )
+    end
+
+    it "assigns distinct stable short references to reports" do
+      first_notice = described_class.create_with_post!(attributes:, group:)
+      second_notice = described_class.create_with_post!(attributes:, group:)
+      reference = first_notice.reference
+
+      expect(reference).to match(/\A[0-9a-f]{12}\z/)
+      expect(second_notice.reference).to match(/\A[0-9a-f]{12}\z/)
+      expect(second_notice.reference).not_to eq(reference)
+      expect(first_notice.reload.reference).to eq(reference)
+      expect(first_notice.post.topic.title).to include(reference)
+      expect(first_notice.post.raw).to include(reference)
     end
 
     it "rolls back the notice when the PM cannot be stored" do

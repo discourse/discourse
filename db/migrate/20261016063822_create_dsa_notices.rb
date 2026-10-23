@@ -3,6 +3,9 @@
 class CreateDsaNotices < ActiveRecord::Migration[8.0]
   def change
     create_table :dsa_notices do |t|
+      t.string :reference,
+               null: false,
+               default: -> { "substr(replace(gen_random_uuid()::text, '-', ''), 1, 12)" }
       t.bigint :post_id
       t.text :content_url, null: false
       t.text :explanation, null: false
@@ -12,6 +15,7 @@ class CreateDsaNotices < ActiveRecord::Migration[8.0]
       t.datetime :created_at, null: false
     end
 
+    add_index :dsa_notices, :reference, unique: true
     add_index :dsa_notices, :post_id, unique: true
   end
 end

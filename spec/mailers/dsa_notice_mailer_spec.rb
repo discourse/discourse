@@ -21,7 +21,7 @@ RSpec.describe DsaNoticeMailer do
     let(:notice) do
       Dsa::Notice.new(
         {
-          "id" => 123,
+          "reference" => "a7c94e2b6f10",
           "content_url" => "https://example.com/post?a=1&b=2",
           "explanation" =>
             "This listing advertises counterfeit goods as authentic and deceives buyers.",
