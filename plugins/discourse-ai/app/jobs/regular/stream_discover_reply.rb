@@ -85,6 +85,7 @@ module Jobs
       retrieval_options = {
         keyword_query: rewritten_queries.keyword_query,
         semantic_query: rewritten_queries.semantic_query,
+        locale: rewritten_queries.original_query_locale,
       }
       scope_filter = DiscourseAi::Discoveries.scope_filter(args[:scope])
       retrieval_options[:scope_filter] = scope_filter if scope_filter
@@ -93,14 +94,15 @@ module Jobs
         return
       end
       return if !active_request?(user, args[:request_id])
-      ask_log.candidate_post_ids = retrieval_result.synthesis_candidates.pluck("post_id") if ask_log
+      ask_log.candidate_post_ids =
+        retrieval_result.synthesis_candidates.pluck("post_id").compact if ask_log
       base = base.merge(scope_fallback: true) if retrieval_result.scope_fallback
       if retrieval_result.synthesis_candidates.empty?
         ask_log.ask_outcome = :no_answer if ask_log
         publish_no_answer(user, base)
         return
       end
-      candidate_topic_ids = retrieval_result.candidates.pluck("topic_id").uniq
+      candidate_topic_ids = retrieval_result.candidates.pluck("topic_id").compact.uniq
 
       stage = :synthesis
       result_settings = request_result_settings(args, user)
@@ -208,7 +210,7 @@ module Jobs
           answer_title: result.title,
           answer: result.answer,
           suggested_follow_up: result.follow_up,
-          source_post_ids: final_sources.pluck("post_id"),
+          source_post_ids: final_sources.pluck("post_id").compact,
         )
         DiscourseAi::Discoveries.store_result(
           user_id: user.id,
@@ -452,6 +454,10 @@ module Jobs
 
     def serialize_sources(sources)
       sources.map do |source|
+        if DiscourseAi::Discoveries::ExternalSource.candidate?(source)
+          next serialize_external_source(source)
+        end
+
         {
           title: source["title"],
           url: source["url"],
@@ -465,6 +471,17 @@ module Jobs
           avatar_template: source["avatar_template"],
         }
       end
+    end
+
+    def serialize_external_source(source)
+      {
+        kind: source["kind"],
+        title: source["title"],
+        url: source["url"],
+        excerpt: source["blurb"],
+        source_name: source["source_name"],
+        published_at: source["published_at"],
+      }
     end
   end
 end

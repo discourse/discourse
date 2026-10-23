@@ -274,7 +274,14 @@ module DiscourseAi
       def store_result(user_id:, request_id:, query:, answer:, sources:, agent_id:, follow_up: "")
         return if !valid_request_id?(request_id) || query.blank? || sources.blank?
 
-        stored_sources = sources.map { |source| source.slice("post_id", "topic_id") }
+        stored_sources =
+          sources.map do |source|
+            if ExternalSource.candidate?(source)
+              source.slice("kind", "title", "url")
+            else
+              source.slice("post_id", "topic_id")
+            end
+          end
         payload = { query:, answer:, sources: stored_sources, agent_id:, follow_up: }.to_json
         Discourse.redis.set(result_key(user_id, request_id), payload, ex: REQUEST_TTL)
       end
@@ -292,9 +299,10 @@ module DiscourseAi
         sources = Array(result["sources"])
         return if result["query"].blank? || !result.key?("answer") || sources.empty?
 
-        posts = Post.where(id: sources.pluck("post_id")).includes(:topic).index_by(&:id)
+        forum_sources = sources.reject { |source| ExternalSource.candidate?(source) }
+        posts = Post.where(id: forum_sources.pluck("post_id")).includes(:topic).index_by(&:id)
         guardian = Guardian.new(user)
-        if sources.any? { |source|
+        if forum_sources.any? { |source|
              post = posts[source["post_id"]]
              post&.topic.nil? || !guardian.can_see?(post)
            }
@@ -304,6 +312,8 @@ module DiscourseAi
         result.merge(
           "sources" =>
             sources.map do |source|
+              next source if ExternalSource.candidate?(source)
+
               post = posts[source["post_id"]]
               source.merge(
                 "topic_id" => post.topic_id,

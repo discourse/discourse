@@ -136,6 +136,7 @@ describe Jobs::StreamDiscoverReply do
       query,
       keyword_query: query,
       semantic_query: query,
+      locale: "en",
     )
     expect(messages).to all(include(query:, request_id:))
     expect(messages.second[:sources]).to eq(
@@ -231,6 +232,53 @@ describe Jobs::StreamDiscoverReply do
     expect(messages.last).to include(candidate_topic_ids:)
   end
 
+  it "publishes and keeps external sources as cards beside the forum's" do
+    external_candidate = {
+      "source_ref" => "source_2",
+      "kind" => "external",
+      "source_id" => 12,
+      "source_name" => "Help center",
+      "title" => "Plugin quickstart",
+      "url" => "https://kb.example.com/plugins",
+      "blurb" => "Build a plugin in five minutes.",
+      "excerpt" => "The full quickstart.",
+      "published_at" => "2026-09-01T00:00:00Z",
+    }
+    result =
+      DiscourseAi::Discoveries::Retrieval::Result.new(candidates: [candidate, external_candidate])
+    allow(retrieval).to receive(:call).and_return(result)
+    allow(retrieval).to receive(:sources_for).and_return([candidate, external_candidate])
+    allow(synthesis).to receive(:call) do |**_, &stream|
+      stream.call(answerable: true, source_refs: %w[source_1 source_2], answer: "Use the skeleton.")
+      DiscourseAi::Discoveries::Synthesis::Result.new(
+        answerable: true,
+        source_refs: %w[source_1 source_2],
+        title: "",
+        answer: "Use the skeleton.",
+      )
+    end
+
+    messages =
+      MessageBus
+        .track_publish("/discourse-ai/discoveries") do
+          job.execute(user_id: user.id, query:, request_id:)
+        end
+        .map(&:data)
+
+    expect(messages.last).to include(candidate_topic_ids: [source_post.topic_id])
+    expect(messages.last[:sources].last).to eq(
+      kind: "external",
+      title: "Plugin quickstart",
+      url: "https://kb.example.com/plugins",
+      excerpt: "Build a plugin in five minutes.",
+      source_name: "Help center",
+      published_at: "2026-09-01T00:00:00Z",
+    )
+    expect(
+      DiscourseAi::Discoveries.cached_result_for(user:, request_id:)["sources"].pluck("url"),
+    ).to eq([source_post.full_url, "https://kb.example.com/plugins"])
+  end
+
   it "uses the configured rewrite agent's queries for retrieval" do
     query_rewrite_agent.update!(enabled: false)
     allow(query_rewriter).to receive(:call).with(query).and_return(
@@ -247,6 +295,7 @@ describe Jobs::StreamDiscoverReply do
       query,
       keyword_query: "create plugin",
       semantic_query: "how to create a Discourse plugin",
+      locale: "zh_CN",
     )
     expect(synthesis).to have_received(:call).with(
       query:,
@@ -301,6 +350,7 @@ describe Jobs::StreamDiscoverReply do
       query,
       keyword_query: query,
       semantic_query: query,
+      locale: "en",
       scope_filter: "category:7",
     )
     expect(messages.last).to include(phase: "complete", scope_fallback: true)
@@ -316,6 +366,7 @@ describe Jobs::StreamDiscoverReply do
       query,
       keyword_query: query,
       semantic_query: query,
+      locale: "en",
     )
   end
 
