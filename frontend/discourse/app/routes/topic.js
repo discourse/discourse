@@ -17,6 +17,7 @@ import PublishPageModal from "discourse/components/modal/publish-page";
 import RawEmailModal from "discourse/components/modal/raw-email";
 import PostFlag from "discourse/lib/flag-targets/post-flag";
 import TopicFlag from "discourse/lib/flag-targets/topic-flag";
+import getFlagContentUrl from "discourse/lib/get-flag-content-url";
 import discourseLater from "discourse/lib/later";
 import { setTopicId } from "discourse/lib/topic-list-tracker";
 import topicTitleToken from "discourse/lib/topic-title-token";
@@ -84,11 +85,12 @@ export default class TopicRoute extends DiscourseRoute {
   showFlags(model) {
     if (
       this.siteSettings.dsa_reporting_enabled &&
-      (!this.currentUser || !model.canFlag)
+      this.currentUser &&
+      !model.canFlag
     ) {
       this.router.transitionTo("report-illegal-content", {
         queryParams: {
-          content_url: window.location.origin + model.urlWithNumber,
+          content_url: getFlagContentUrl(model),
         },
       });
       return;

@@ -12,7 +12,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewableBundledAction from "discourse/components/reviewable-bundled-action";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { reload } from "discourse/helpers/page-reloader";
-import { getAbsoluteURL } from "discourse/lib/get-url";
+import getFlagContentUrl from "discourse/lib/get-flag-content-url";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import User from "discourse/models/user";
 import { not } from "discourse/truth-helpers";
@@ -107,12 +107,6 @@ export default class Flag extends Component {
           flag.enabled &&
           !(this.siteSettings.dsa_reporting_enabled && flag.isIllegal)
       );
-  }
-
-  get illegalContentUrl() {
-    const url =
-      this.args.model.flagModel.urlWithNumber || this.args.model.flagModel.url;
-    return url ? getAbsoluteURL(url) : "";
   }
 
   get staffFlagsAvailable() {
@@ -259,7 +253,7 @@ export default class Flag extends Component {
               <Placeholder @name="reportLink">
                 <LinkTo
                   class="flag-modal__report-illegal-content"
-                  @query={{hash content_url=this.illegalContentUrl}}
+                  @query={{hash content_url=(getFlagContentUrl @model.flagModel)}}
                   @route="report-illegal-content"
                   {{on "click" @closeModal}}
                 >

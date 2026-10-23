@@ -5,6 +5,7 @@ RSpec.describe "Illegal content notices" do
   fab!(:reported_post) { Fabricate(:post, topic:) }
   fab!(:reporter) { Fabricate(:user, refresh_auto_groups: true) }
 
+  let(:anonymous_flag_modal) { PageObjects::Modals::AnonymousFlag.new }
   let(:flag_modal) { PageObjects::Modals::Flag.new }
   let(:explanation) do
     "This listing advertises counterfeit goods as authentic and asks buyers to pay outside the marketplace. The product description and payment instructions appear intended to deceive buyers."
@@ -91,6 +92,10 @@ RSpec.describe "Illegal content notices" do
   it "lets a reporter verify their email and submit an illegal content report" do
     topic_page.visit_topic(topic)
     topic_page.click_post_action_button(reported_post, :flag)
+    expect(anonymous_flag_modal).to be_open
+    expect(anonymous_flag_modal).to have_dsa_reporting_description
+    anonymous_flag_modal.report_illegal_content
+    expect(anonymous_flag_modal).to be_closed
     expect(notice_page).to have_notice_form
     expect(notice_page.form.field("content_url").value).to eq(
       URI.join(page.current_url, reported_post.url).to_s,

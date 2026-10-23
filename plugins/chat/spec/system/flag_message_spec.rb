@@ -17,6 +17,26 @@ RSpec.describe "Flag message" do
 
     before { category_channel_1.add(current_user) }
 
+    it "links logged in reporters to the DSA form for the message" do
+      SiteSetting.dsa_reporting_enabled = true
+      flag_modal = PageObjects::Modals::Flag.new
+      notice_page = PageObjects::Pages::DsaNotice.new
+
+      chat.visit_channel(category_channel_1)
+      channel.messages.flag(message_1)
+
+      expect(flag_modal).to be_open
+      expect(flag_modal).to have_illegal_content_description
+      expect(flag_modal).to have_no_illegal_flag_choice
+      flag_modal.report_illegal_content
+
+      expect(flag_modal).to be_closed
+      expect(notice_page).to have_notice_form
+      expect(notice_page.form.field("content_url").value).to eq(
+        "#{Discourse.base_url}/chat/c/-/#{category_channel_1.id}/#{message_1.id}",
+      )
+    end
+
     it "allows to flag a message" do
       chat.visit_channel(category_channel_1)
       channel.messages.flag(message_1)
