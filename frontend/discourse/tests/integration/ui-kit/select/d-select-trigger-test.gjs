@@ -1724,6 +1724,160 @@ module(
   }
 );
 
+/** A batch resolver that answers after `ms`, honours its abort signal, and counts its calls. */
+function delayedResolver(ms) {
+  const calls = [];
+  const resolveValues = (values, { signal } = {}) => {
+    calls.push(values);
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(
+        () => resolve(ITEMS.filter((item) => values.includes(item.id))),
+        ms
+      );
+      signal?.addEventListener("abort", () => {
+        clearTimeout(timer);
+        reject(signal.reason);
+      });
+    });
+  };
+  return { calls, resolveValues };
+}
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** A controlled server-backed multi whose held ids resolve through `@resolver`. */
+class ResolvingHost extends Component {
+  @tracked value = this.args.value ?? [];
+
+  @action
+  onChange(value) {
+    this.value = value;
+  }
+
+  <template>
+    <DSelect
+      @label="Fruit"
+      @load={{serverLoad}}
+      @maxVisibleChips={{@maxVisibleChips}}
+      @multiple={{true}}
+      @onChange={{this.onChange}}
+      @resolveValues={{@resolver.resolveValues}}
+      @value={{this.value}}
+      @variant={{@variant}}
+    />
+  </template>
+}
+
+module(
+  "Integration | ui-kit | select | DSelect (held-label resolution)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    for (const surface of ["mobile", "button"]) {
+      test(`held-label resolution: a ${surface} trigger resolves its held ids once`, async function (assert) {
+        if (surface === "mobile") {
+          forceMobile();
+        }
+        const resolver = delayedResolver(30);
+        const variant = surface === "button" ? "button" : undefined;
+
+        await render(
+          <template>
+            <ResolvingHost
+              @resolver={{resolver}}
+              @value={{array 1 2 999}}
+              @variant={{variant}}
+            />
+          </template>
+        );
+        await wait(150);
+        await settled();
+
+        assert.deepEqual(
+          findAll(`${TRIGGER} .d-select__chip`).map((chip) =>
+            chip.textContent.trim()
+          ),
+          ["Apple", "Banana", "Unknown item (999)"],
+          "real ids show their items; only the missing id falls back"
+        );
+        assert.strictEqual(
+          resolver.calls.length,
+          1,
+          `@resolveValues is called once: ${JSON.stringify(resolver.calls)}`
+        );
+        const described = descriptionOf(find(".d-select"));
+        for (const label of ["Apple", "Banana", "Unknown item (999)"]) {
+          assert.true(
+            described.includes(label),
+            `the description names ${label}: ${described}`
+          );
+        }
+      });
+    }
+
+    test("held-label resolution: a capped trigger describes every held item from one call", async function (assert) {
+      const resolver = delayedResolver(30);
+
+      await render(
+        <template>
+          <ResolvingHost
+            @maxVisibleChips={{1}}
+            @resolver={{resolver}}
+            @value={{array 1 2 3}}
+            @variant="button"
+          />
+        </template>
+      );
+      await wait(150);
+      await settled();
+
+      assert.dom(`${TRIGGER} .d-select__chip`).exists({ count: 1 });
+      const described = descriptionOf(find(".d-select"));
+      for (const label of ["Apple", "Banana", "Cherry pie"]) {
+        assert.true(
+          described.includes(label),
+          `the description names ${label} past the cap: ${described}`
+        );
+      }
+      assert.strictEqual(resolver.calls.length, 1, "one call");
+    });
+
+    test("held-label resolution: opening the panel while chips resolve adds no request", async function (assert) {
+      const resolver = delayedResolver(200);
+
+      const rendering = render(
+        <template>
+          <ResolvingHost
+            @resolver={{resolver}}
+            @value={{array 1 2}}
+            @variant="button"
+          />
+        </template>
+      );
+      await waitFor(TRIGGER);
+      const opening = click(TRIGGER);
+      await waitFor(".d-select__strip");
+      await Promise.all([rendering, opening]);
+      await wait(300);
+      await settled();
+
+      assert.strictEqual(
+        resolver.calls.length,
+        1,
+        `one request for the chips, description and strip: ${JSON.stringify(resolver.calls)}`
+      );
+      assert.dom(".d-select__strip button").exists({ count: 2 });
+      assert.deepEqual(
+        findAll(`${TRIGGER} .d-select__chip`).map((chip) =>
+          chip.textContent.trim()
+        ),
+        ["Apple", "Banana"],
+        "the trigger chips resolve to the real items"
+      );
+    });
+  }
+);
+
 module(
   "Integration | ui-kit | select | DSelect (compact and overflow)",
   function (hooks) {

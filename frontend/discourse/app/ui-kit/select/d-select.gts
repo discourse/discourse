@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
 import { associateDestroyableChild } from "@ember/destroyable";
 import { hash } from "@ember/helper";
@@ -11,6 +12,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { TrackedAsyncData } from "ember-async-data";
 import { modifier } from "ember-modifier";
 import DMenu from "discourse/float-kit/components/d-menu";
 import type { MenuOptions } from "discourse/float-kit/lib/constants";
@@ -37,6 +39,7 @@ import SingleTriggerDisplay from "discourse/ui-kit/select/-internals/parts/singl
 import TriggerFrame from "discourse/ui-kit/select/-internals/parts/trigger-frame";
 import WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowed-option-list";
 import type {
+  SelectDescriptor,
   SelectEngineOptions,
   SelectItem as SelectItemModel,
   SelectValue,
@@ -441,6 +444,17 @@ export default class DSelect extends Component<DSelectSignature> {
     return `${this.#listboxId}-held-labels`;
   }
 
+  /**
+   * The held values resolved once, for both the trigger chips and the held-labels description.
+   * Separate lookups race: one landing re-renders the other, which aborts its own request.
+   */
+  @cached
+  get heldSelection(): TrackedAsyncData<
+    readonly SelectDescriptor[] | undefined
+  > {
+    return new TrackedAsyncData(this.host.resolveMulti(this.args.value));
+  }
+
   /** The listbox id, wiring `aria-controls`/`aria-activedescendant`. */
   get listboxId(): string {
     return this.#listboxId;
@@ -622,7 +636,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @pending={{this.engine.pending}}
               @presenter={{this.presenter}}
               @registerInput={{this.interaction.registerTriggerInput}}
-              @resolveSelection={{this.host.resolveMulti}}
+              @selection={{this.heldSelection}}
               @shouldCorrectKeyboardOcclusion={{this.interaction.shouldCorrectKeyboardOcclusion}}
               @shouldSelectOnFocus={{this.interaction.shouldSelectOnFocus}}
               @showMenu={{menuArgs.show}}
@@ -921,10 +935,7 @@ export default class DSelect extends Component<DSelectSignature> {
     </DMenu>
     {{#if this.presenter.describeHeldLabels}}
       {{#if this.engine.hasValue}}
-        <DAsyncContent
-          @asyncData={{this.host.resolveMulti}}
-          @context={{@value}}
-        >
+        <DAsyncContent @asyncData={{this.heldSelection}}>
           <:content as |chips|>
             <ul class="sr-only" id={{this.heldLabelsId}}>
               {{#each chips key="key" as |chip|}}

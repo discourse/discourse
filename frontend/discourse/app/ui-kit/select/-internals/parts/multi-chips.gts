@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { next as nextRunloop } from "@ember/runloop";
+import type { TrackedAsyncData } from "ember-async-data";
 import { makeArray } from "discourse/lib/helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
@@ -19,7 +20,6 @@ import SelectionLabel from "discourse/ui-kit/select/-internals/parts/selection-l
 import SelectEngine, {
   SelectDescriptor,
   SelectItem,
-  SelectLoadOptions,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
@@ -52,14 +52,8 @@ interface MultiChipsSignature {
     hasSelectionLoadingBlock: boolean;
     /** Whether the consumer supplied custom markup for a held value that cannot be resolved. */
     hasUnresolvedBlock: boolean;
-    /** Resolves the bound selection into chip descriptors. */
-    resolveSelection: (
-      value: unknown,
-      options?: SelectLoadOptions
-    ) =>
-      | readonly SelectDescriptor[]
-      | Promise<readonly SelectDescriptor[] | undefined>
-      | undefined;
+    /** The held values' chip descriptors, resolved once by the host and shared with its description. */
+    selection: TrackedAsyncData<readonly SelectDescriptor[] | undefined>;
     /** Composes the component and consumer description ids. */
     composeDescribedBy: (
       ...ids: Array<string | undefined | false>
@@ -285,7 +279,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           )
         )}}
       >
-        <DAsyncContent @asyncData={{@resolveSelection}} @context={{@value}}>
+        <DAsyncContent @asyncData={{@selection}}>
           <:loading>
             {{#each (this.visibleChips this.chipSkeletons) key="key" as |row|}}
               <li class="d-select__chip" data-key={{row.key}}>

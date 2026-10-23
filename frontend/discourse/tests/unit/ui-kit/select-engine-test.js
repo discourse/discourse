@@ -829,6 +829,156 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
     });
   });
 
+  module("in-flight resolve sharing", function () {
+    /** A batch resolver whose every call waits on its own deferred, recording ids and signal. */
+    function gatedResolver(known) {
+      const calls = [];
+      const resolveValues = (values, { signal } = {}) => {
+        const gate = deferred();
+        calls.push({ values, signal, gate });
+        signal?.addEventListener("abort", () => gate.reject(signal.reason));
+        return gate.promise.then(() =>
+          known.filter((item) => values.includes(item.id))
+        );
+      };
+      return { calls, resolveValues };
+    }
+
+    const PEOPLE = [
+      { id: 1, name: "One" },
+      { id: 2, name: "Two" },
+      { id: 3, name: "Three" },
+    ];
+
+    test("in-flight resolve: concurrent resolves of the same ids fetch once", async function (assert) {
+      const { calls, resolveValues } = gatedResolver(PEOPLE);
+      const engine = new SelectEngine({ multiple: true, resolveValues });
+
+      const first = engine.resolveSelection([1, 2]);
+      const second = engine.resolveSelection([1, 2]);
+      calls.forEach((call) => call.gate.resolve());
+
+      assert.deepEqual(
+        calls.map((call) => call.values),
+        [[1, 2]],
+        "the second resolve joins the pending request"
+      );
+      assert.deepEqual(
+        (await first).map((item) => item.name),
+        ["One", "Two"]
+      );
+      assert.deepEqual(
+        (await second).map((item) => item.name),
+        ["One", "Two"],
+        "both callers get the real items"
+      );
+    });
+
+    test("in-flight resolve: overlapping ids fetch only what is not pending", async function (assert) {
+      const { calls, resolveValues } = gatedResolver(PEOPLE);
+      const engine = new SelectEngine({ multiple: true, resolveValues });
+
+      const first = engine.resolveSelection([1, 2]);
+      const second = engine.resolveSelection([2, 3]);
+      calls.forEach((call) => call.gate.resolve());
+
+      assert.deepEqual(
+        calls.map((call) => call.values),
+        [[1, 2], [3]],
+        "id 2 joins the pending request; only id 3 is fetched"
+      );
+      assert.deepEqual(
+        (await first).map((item) => item.name),
+        ["One", "Two"]
+      );
+      assert.deepEqual(
+        (await second).map((item) => item.name),
+        ["Two", "Three"],
+        "the joined and the new results assemble in value order"
+      );
+    });
+
+    test("in-flight resolve: one caller aborting leaves the request for the other", async function (assert) {
+      const { calls, resolveValues } = gatedResolver(PEOPLE);
+      const engine = new SelectEngine({ multiple: true, resolveValues });
+      const leaving = new AbortController();
+
+      engine.resolveSelection([1, 2], { signal: leaving.signal });
+      const staying = engine.resolveSelection([1, 2]);
+      leaving.abort();
+
+      assert.strictEqual(calls.length, 1, "one request for both callers");
+      assert.false(
+        calls[0].signal.aborted,
+        "the shared request survives while a caller still waits"
+      );
+
+      calls[0].gate.resolve();
+      assert.deepEqual(
+        (await staying).map((item) => item.name),
+        ["One", "Two"],
+        "the remaining caller gets the real items"
+      );
+      await settled();
+      assert.deepEqual(
+        engine.resolveSelection([1, 2]).map((item) => item.name),
+        ["One", "Two"],
+        "the cache holds the real items, read synchronously"
+      );
+    });
+
+    test("in-flight resolve: when every caller aborts, the request aborts and nothing is cached", async function (assert) {
+      const { calls, resolveValues } = gatedResolver(PEOPLE);
+      const engine = new SelectEngine({ multiple: true, resolveValues });
+      const a = new AbortController();
+      const b = new AbortController();
+
+      const first = engine.resolveSelection([1, 2], { signal: a.signal });
+      const second = engine.resolveSelection([1, 2], { signal: b.signal });
+      a.abort();
+      b.abort();
+      await Promise.allSettled([first, second]);
+      await settled();
+
+      assert.true(
+        calls[0].signal.aborted,
+        "the shared request is aborted once nobody waits"
+      );
+
+      const retry = engine.resolveSelection([1, 2]);
+      assert.true(
+        retry instanceof Promise,
+        "an aborted request recorded no fallback, so the ids resolve again"
+      );
+      assert.strictEqual(calls.length, 2, "the retry is a fresh request");
+      calls[1].gate.resolve();
+      assert.deepEqual(
+        (await retry).map((item) => item.name),
+        ["One", "Two"]
+      );
+    });
+
+    test("in-flight resolve: a failure landing late never replaces a real item", async function (assert) {
+      const gate = deferred();
+      const engine = new SelectEngine({
+        resolveValues: () => gate.promise,
+      });
+      const picked = { id: 1, name: "Picked" };
+
+      const pending = engine.resolveSelection(1);
+      engine.select(picked);
+      gate.reject(new Error("offline"));
+      await pending;
+      await settled();
+
+      assert.strictEqual(
+        engine.resolveSelection(1),
+        picked,
+        "the item picked while the resolve was pending stays"
+      );
+    });
+  });
+
   module("value equality (string vs number ids)", function () {
     test("matches a string value against a numeric id and vice-versa", function (assert) {
       const single = controlled({ value: "2" }).engine;

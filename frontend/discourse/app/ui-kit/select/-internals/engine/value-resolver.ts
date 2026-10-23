@@ -15,6 +15,13 @@ interface ValueResolverOptions {
   knownRows: () => SelectItem[];
 }
 
+/** A batch stays alive while any joined caller still needs its values. */
+type PendingResolution = {
+  controller: AbortController;
+  callers: Set<AbortSignal | undefined>;
+  promise: Promise<Map<string, SelectItem>>;
+};
+
 export default class ValueResolver {
   /**
    * value → resolved item, so a re-render or reopen never re-fetches a label. Keyed by the
@@ -30,6 +37,8 @@ export default class ValueResolver {
    * invalidate the very computation performing the write.
    */
   #synchronousOutcomes = new Map<string, SelectItem>();
+
+  #pending = new Map<string, PendingResolution>();
 
   // Fallback items that were actually produced by `createUnresolvedItem`.
   #customUnresolvedItems = new WeakSet<SelectItem>();
@@ -168,9 +177,10 @@ export default class ValueResolver {
   }
 
   /**
-   * Ordered items for `values`: the sync ladder for what is already known, one batch call
-   * for the rest, and an `__unresolved` fallback for whatever still doesn't resolve. Order
-   * follows the bound ids, not the response. Never rejects.
+   * Ordered items for `values`: the sync ladder for what is already known, the pending request
+   * for ids already being fetched, one batch call for the rest, and an `__unresolved` fallback
+   * for whatever still doesn't resolve. Order follows the bound ids, not the response. Never
+   * rejects.
    */
   #resolveMany(
     values: SelectItemId[],
@@ -180,21 +190,124 @@ export default class ValueResolver {
     if (synced.every((item) => item != null)) {
       return synced as SelectItem[];
     }
-    const uncached = values.filter((_v, index) => synced[index] == null);
-    const batch = this.#resolveBatch(uncached, opts);
-    if (this.#isPromise(batch)) {
-      return batch.then((resolved) => {
-        const items = this.#assemble(values, synced, resolved);
-        this.#cacheOutcome(values, items);
-        return items;
-      });
+    let resolved = new Map<string, SelectItem>();
+    if (opts.signal?.aborted) {
+      return this.#assemble(values, synced, resolved);
     }
-    const items = this.#assemble(values, synced, batch);
-    // A synchronous resolve runs *during* render, and this render already read the tracked
-    // cache via `#resolveOneSync`. Preserve the result in an untracked map so the desktop
-    // input can read its label later in this render without dirtying the consumed tag.
-    this.#rememberSynchronousOutcomes(values, synced, items);
-    return items;
+    const requests = new Set<PendingResolution>();
+    const uncached = values.filter((value, index) => {
+      if (synced[index] != null) {
+        return false;
+      }
+      const key = this.#options.valueKey(value);
+      const pending = key == null ? undefined : this.#pending.get(key);
+      if (pending && !pending.controller.signal.aborted) {
+        requests.add(pending);
+        return false;
+      }
+      return true;
+    });
+    if (uncached.length) {
+      const controller = new AbortController();
+      const batch = this.#resolveBatch(uncached, {
+        ...opts,
+        signal: controller.signal,
+      });
+      if (this.#isPromise(batch)) {
+        requests.add(this.#trackRequest(uncached, batch, controller));
+      } else {
+        resolved = batch;
+        if (!opts.signal?.aborted) {
+          // A synchronous result must not dirty the tracked cache consumed during render.
+          this.#rememberSynchronousOutcomes(
+            uncached,
+            [],
+            this.#assemble(uncached, [], batch)
+          );
+        }
+      }
+    }
+    if (!requests.size) {
+      return this.#assemble(values, synced, resolved);
+    }
+    return Promise.all(
+      [...requests].map((request) => this.#joinRequest(request, opts.signal))
+    ).then((batches) => {
+      if (opts.signal?.aborted) {
+        resolved.clear();
+      } else {
+        for (const batch of batches) {
+          for (const [key, item] of batch) {
+            resolved.set(key, item);
+          }
+        }
+      }
+      return this.#assemble(values, synced, resolved);
+    });
+  }
+
+  /**
+   * Registers a batch under each of its ids so later resolves join it, caching its outcome unless
+   * every caller abandoned it: an aborted request knows nothing about the ids it was asked for.
+   */
+  #trackRequest(
+    values: SelectItemId[],
+    batch: Promise<Map<string, SelectItem>>,
+    controller: AbortController
+  ): PendingResolution {
+    const request: PendingResolution = {
+      controller,
+      callers: new Set(),
+      promise: batch
+        .then((resolved) => {
+          if (!controller.signal.aborted) {
+            this.#cacheOutcome(values, this.#assemble(values, [], resolved));
+          }
+          return resolved;
+        })
+        .finally(() => {
+          for (const value of values) {
+            const key = this.#options.valueKey(value);
+            if (key != null && this.#pending.get(key) === request) {
+              this.#pending.delete(key);
+            }
+          }
+        }),
+    };
+    for (const value of values) {
+      const key = this.#options.valueKey(value);
+      if (key != null) {
+        this.#pending.set(key, request);
+      }
+    }
+    return request;
+  }
+
+  /**
+   * Waits on a shared request for one caller. A caller's abort settles only that caller; the
+   * request itself aborts once no joined caller is still waiting.
+   */
+  #joinRequest(
+    request: PendingResolution,
+    signal: AbortSignal | undefined
+  ): Promise<Map<string, SelectItem>> {
+    request.callers.add(signal);
+    return new Promise((resolve) => {
+      const onAbort = () => {
+        if ([...request.callers].every((caller) => caller?.aborted)) {
+          request.controller.abort();
+        }
+        resolve(new Map());
+      };
+      signal?.addEventListener("abort", onAbort, { once: true });
+      if (signal?.aborted) {
+        onAbort();
+      }
+      void request.promise.then((resolved) => {
+        signal?.removeEventListener("abort", onAbort);
+        resolve(signal?.aborted ? new Map() : resolved);
+      });
+    });
   }
 
   #rememberSynchronousOutcomes(
@@ -386,7 +499,16 @@ export default class ValueResolver {
     item: SelectItem | null | undefined
   ): void {
     const key = this.#options.valueKey(value);
-    if (key != null && item && this.#resolvedCache.get(key) !== item) {
+    if (key == null || !item) {
+      return;
+    }
+    if (
+      item.__unresolved &&
+      this.#recordedOutcomes(key).some((cached) => !cached.__unresolved)
+    ) {
+      return;
+    }
+    if (this.#resolvedCache.get(key) !== item) {
       this.#resolvedCache.set(key, item);
     }
   }
