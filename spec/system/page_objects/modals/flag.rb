@@ -22,8 +22,23 @@ module PageObjects
         end
       end
 
+      def has_illegal_content_description?
+        body.has_css?(
+          ".flag-modal__illegal-content-description",
+          text:
+            I18n.t(
+              "js.flagging.illegal_content_report_description",
+              reportLink: I18n.t("js.flagging.illegal_content_report_link"),
+            ),
+        )
+      end
+
+      def has_no_illegal_content_description?
+        body.has_no_css?(".flag-modal__illegal-content-description")
+      end
+
       def report_illegal_content
-        body.click_link(I18n.t("js.dsa_notice.title"))
+        body.click_link(I18n.t("js.flagging.illegal_content_report_link"))
       end
 
       def confirm_flag

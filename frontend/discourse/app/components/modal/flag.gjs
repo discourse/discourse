@@ -17,6 +17,7 @@ import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import User from "discourse/models/user";
 import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
@@ -249,6 +250,25 @@ export default class Flag extends Component {
     >
       <:body>
         <p>{{trustHTML (i18n "flagging.review_process_description")}}</p>
+        {{#if this.siteSettings.dsa_reporting_enabled}}
+          <p class="flag-modal__illegal-content-description">
+            <DInterpolatedTranslation
+              @key="flagging.illegal_content_report_description"
+              as |Placeholder|
+            >
+              <Placeholder @name="reportLink">
+                <LinkTo
+                  class="flag-modal__report-illegal-content"
+                  @query={{hash content_url=this.illegalContentUrl}}
+                  @route="report-illegal-content"
+                  {{on "click" @closeModal}}
+                >
+                  {{i18n "flagging.illegal_content_report_link"}}
+                </LinkTo>
+              </Placeholder>
+            </DInterpolatedTranslation>
+          </p>
+        {{/if}}
         <PluginOutlet
           @connectorTagName="div"
           @name="after-flag-modal-review-process-description"
@@ -269,18 +289,6 @@ export default class Flag extends Component {
             />
           </FlagSelection>
         </form>
-        {{#if this.siteSettings.dsa_reporting_enabled}}
-          <p>
-            <LinkTo
-              class="flag-modal__report-illegal-content"
-              @query={{hash content_url=this.illegalContentUrl}}
-              @route="report-illegal-content"
-              {{on "click" @closeModal}}
-            >
-              {{i18n "dsa_notice.title"}}
-            </LinkTo>
-          </p>
-        {{/if}}
         <PluginOutlet
           @connectorTagName="div"
           @name="flag-modal-bottom"

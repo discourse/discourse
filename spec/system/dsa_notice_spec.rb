@@ -27,6 +27,7 @@ RSpec.describe "Illegal content notices" do
     topic_page.visit_topic(topic)
     topic_page.click_post_action_button(reported_post, :flag)
     expect(flag_modal).to be_open
+    expect(flag_modal).to have_illegal_content_description
     expect(flag_modal).to have_no_illegal_flag_choice
     flag_modal.report_illegal_content
     expect(flag_modal).to be_closed
@@ -52,9 +53,19 @@ RSpec.describe "Illegal content notices" do
     expect(page).to have_content(I18n.t("js.post.actions.by_you.off_topic"))
   end
 
+  it "keeps the ordinary flag dialog when DSA reporting is disabled" do
+    SiteSetting.dsa_reporting_enabled = false
+    sign_in(reporter)
+    topic_page.visit_topic(topic)
+    topic_page.click_post_action_button(reported_post, :flag)
+
+    expect(flag_modal).to be_open
+    expect(flag_modal).to have_no_illegal_content_description
+  end
+
   it "lets a mobile reporter follow a long translated report link", mobile: true do
     label = "Report illegal content with an explanation " + "Example" * 20
-    TranslationOverride.upsert!("en", "js.dsa_notice.title", label)
+    TranslationOverride.upsert!("en", "js.flagging.illegal_content_report_link", label)
     sign_in(reporter)
     topic_page.visit_topic(topic)
     topic_page.click_post_action_button(reported_post, :flag)

@@ -5772,6 +5772,8 @@ en:
       description: "To report illegal content, please contact <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
 
     flagging:
+      illegal_content_report_description: "If you believe this content is illegal, %{reportLink}"
+      illegal_content_report_link: "submit an illegal content report."
       title: "Thanks for keeping our community civil!"
       review_process_description: "All flags are received by moderators and will be reviewed as soon as possible."
       action: "Flag Post"
