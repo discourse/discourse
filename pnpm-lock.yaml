@@ -513,8 +513,8 @@ importers:
         specifier: 0.6.5
         version: 0.6.5
       morphlex:
-        specifier: ^1.4.0
-        version: 1.4.0
+        specifier: ^2.0.0
+        version: 2.0.0
       orderedmap:
         specifier: ^2.1.1
         version: 2.1.1
@@ -6283,8 +6283,8 @@ packages:
     resolution: {integrity: sha512-tljKC0ex20AjO58Ob/eZ53JloycbVswbVNCHx6V6VLGzqt/w8dIynVGL0G8qVjNKwiA7sYSogCrN6QtJ82IV+g==}
     engines: {node: '>= 0.8.0'}
 
-  morphlex@1.4.0:
-    resolution: {integrity: sha512-20/rnlsvvzExLmdq8o9yRz4btq7ZV8bmFaRbkgvlmWYUyFQ31nvORHyKgvCdBIx83HWzxulPAoKNq2Hq1VjYmg==}
+  morphlex@2.0.0:
+    resolution: {integrity: sha512-3WMojotlSOQJT+N7ME8LRkahlH+UoEhEOcXFzQ1k4EbQI4HcTpNlvw/2NGln2WpcJMQ5StB/R4M8xyKH5686hw==}
 
   ms@2.0.0:
     resolution: {integrity: sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==}
@@ -14592,7 +14592,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  morphlex@1.4.0: {}
+  morphlex@2.0.0: {}
 
   ms@2.0.0: {}
 
