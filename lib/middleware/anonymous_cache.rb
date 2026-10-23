@@ -11,6 +11,9 @@ module Middleware
   class AnonymousCache
     CACHEABLE_ENV = "discourse.anonymous_cache.cacheable"
 
+    # Bump when the stored format changes, so processes on different versions never share entries.
+    CACHE_KEY_VERSION = 2
+
     def self.cache_key_segments
       @@cache_key_segments ||= {
         m: "key_is_mobile?",
@@ -164,7 +167,7 @@ module Middleware
         is_xhr = @env["HTTP_X_REQUESTED_WITH"]&.casecmp("XMLHttpRequest") == 0 ? "t" : "f"
 
         @cache_key =
-          +"ANON_CACHE_#{is_xhr}_#{@env["HTTP_ACCEPT"]}_#{@env[Rack::RACK_URL_SCHEME]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}"
+          +"ANON_CACHE_V#{CACHE_KEY_VERSION}_#{is_xhr}_#{@env["HTTP_ACCEPT"]}_#{@env[Rack::RACK_URL_SCHEME]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}"
 
         @cache_key << key_embed_referer if @request.path.start_with?("/embed/")
         @cache_key << AnonymousCache.build_cache_key(self)
