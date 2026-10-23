@@ -16,7 +16,7 @@ import UserChooser from "discourse/select-kit/components/user-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
-import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 import RssPollingFeedItemList from "discourse/plugins/discourse-rss-polling/discourse/components/rss-polling-feed-item-list";
 import {
@@ -357,13 +357,14 @@ export default class RssPollingFeedForm extends Component {
                 <field.Control>
                   {{! TODO (select-kit-replacement-cleanup) }}
                   {{#if this.siteSettings.enable_new_select_controls}}
-                    <DTagChooser
+                    <DSelectTag
                       class="rss-polling-feed-form__tags"
                       @allowCreate={{false}}
-                      @everyTag={{true}}
+                      @emit="names"
+                      @ignoreRestrictions={{true}}
+                      @maximum={{false}}
                       @onChange={{field.set}}
-                      @tags={{field.value}}
-                      @unlimitedTagCount={{true}}
+                      @value={{field.value}}
                     />
                   {{else}}
                     {{! TODO (select-kit-replacement-cleanup) }}

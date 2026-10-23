@@ -1,16 +1,20 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryVariables from "discourse/helpers/category-variables";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
 import CategoryDrop from "discourse/select-kit/components/category-drop";
 import TagDrop from "discourse/select-kit/components/tag-drop";
 import TagsIntersectionChooser from "discourse/select-kit/components/tags-intersection-chooser";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import DTagDropControl from "discourse/ui-kit/select/recipes/tags/d-tag-drop";
-import DTagsIntersectionChooser from "discourse/ui-kit/select/recipes/tags/d-tags-intersection-chooser";
+import DSelectTagFilter, {
+  ALL_TAGS_ID,
+  NO_TAG_ID,
+} from "discourse/ui-kit/select/recipes/tags/d-select-tag-filter";
 import deprecatedOutletArgument from "../helpers/deprecated-outlet-argument.js";
 
 export default class BreadCrumbs extends Component {
@@ -54,6 +58,57 @@ export default class BreadCrumbs extends Component {
 
   get hidden() {
     return this.site.mobileView && !this.args.category;
+  }
+
+  get intersectionTags() {
+    return [
+      ...(this.args.tag ? [this.args.tag] : []),
+      ...(this.args.additionalTags ?? []).map((name) => ({ name })),
+    ];
+  }
+
+  @action
+  changeIntersection(tags) {
+    const main = this.args.tag;
+    const names = tags.map((tag) => tag.name);
+    DiscourseURL.routeTo(this.#intersectionUrl(main, names));
+  }
+
+  @action
+  changeTag(tag) {
+    let target = tag.target_tag ?? tag;
+    if (tag === NO_TAG_ID) {
+      target = "none";
+    } else if (tag === ALL_TAGS_ID) {
+      target = null;
+    }
+    DiscourseURL.routeToUrl(
+      getCategoryAndTagUrl(
+        this.args.category,
+        !this.args.noSubcategories,
+        target
+      )
+    );
+  }
+
+  #intersectionUrl(main, names) {
+    if (main && names.includes(main.name)) {
+      const remaining = names.filter((name) => name !== main.name);
+      if (remaining.length) {
+        return `/tags/intersection/${main.name}/${remaining.join("/")}`;
+      }
+      if (main.id) {
+        return `/tag/${main.slug || `${main.id}-tag`}/${main.id}`;
+      }
+      return `/tag/${main.name}`;
+    }
+    if (names.length >= 2) {
+      return `/tags/intersection/${names.join("/")}`;
+    }
+    if (names.length) {
+      return `/tag/${names[0]}`;
+    }
+    return "/tags";
   }
 
   <template>
@@ -119,11 +174,11 @@ export default class BreadCrumbs extends Component {
           <li>
             {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
             {{#if this.siteSettings.enable_new_select_controls}}
-              <DTagsIntersectionChooser
-                @additionalTags={{@additionalTags}}
+              <DSelectTagFilter
                 @categoryId={{@category.id}}
-                @currentCategory={{@category}}
-                @mainTag={{@tag}}
+                @multiple={{true}}
+                @onChange={{this.changeIntersection}}
+                @value={{this.intersectionTags}}
               />
             {{else}}
               <TagsIntersectionChooser
@@ -138,10 +193,10 @@ export default class BreadCrumbs extends Component {
           <li>
             {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
             {{#if this.siteSettings.enable_new_select_controls}}
-              <DTagDropControl
-                @currentCategory={{@category}}
-                @noSubcategories={{@noSubcategories}}
-                @tag={{@tag}}
+              <DSelectTagFilter
+                @categoryId={{@category.id}}
+                @onChange={{this.changeTag}}
+                @value={{@tag}}
               />
             {{else}}
               <TagDrop

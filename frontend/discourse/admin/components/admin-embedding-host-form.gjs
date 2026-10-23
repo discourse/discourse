@@ -11,7 +11,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import UserChooser from "discourse/select-kit/components/user-chooser";
-import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
 export default class AdminEmbeddingHostForm extends Component {
@@ -113,14 +113,14 @@ export default class AdminEmbeddingHostForm extends Component {
                 <field.Control>
                   {{! TODO (select-kit-replacement-cleanup) }}
                   {{#if this.siteSettings.enable_new_select_controls}}
-                    <DTagChooser
+                    <DSelectTag
                       class="admin-embedding-host-form__tags"
-                      @everyTag={{true}}
                       @excludeSynonyms={{true}}
+                      @ignoreRestrictions={{true}}
+                      @maximum={{false}}
                       @onChange={{field.set}}
                       @placeholder={{i18n "category.tags_placeholder"}}
-                      @tags={{field.value}}
-                      @unlimitedTagCount={{true}}
+                      @value={{field.value}}
                     />
                   {{else}}
                     {{! TODO (select-kit-replacement-cleanup) }}

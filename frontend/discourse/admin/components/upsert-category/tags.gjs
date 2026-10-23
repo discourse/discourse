@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import TagGroupChooser from "discourse/select-kit/components/tag-group-chooser";
-import DTagGroupChooserControl from "discourse/ui-kit/select/recipes/tags/d-tag-group-chooser";
+import DSelectTagGroup from "discourse/ui-kit/select/recipes/tags/d-select-tag-group";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategoryTags extends Component {
@@ -33,6 +33,11 @@ export default class UpsertCategoryTags extends Component {
   @action
   onTagGroupFieldChange(field, valueArray) {
     field.set(valueArray[0]);
+  }
+
+  @action
+  onSingleTagGroupFieldChange(field, value) {
+    field.set(value ?? undefined);
   }
 
   <template>
@@ -76,10 +81,10 @@ export default class UpsertCategoryTags extends Component {
     >
       {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
       {{#if this.siteSettings.enable_new_select_controls}}
-        <DTagGroupChooserControl
+        <DSelectTagGroup
           @id="category-allowed-tag-groups"
           @onChange={{this.onAllowedTagGroupsChange}}
-          @tagGroups={{this.allowedTagGroups}}
+          @value={{this.allowedTagGroups}}
         />
       {{else}}
         <TagGroupChooser
@@ -134,14 +139,14 @@ export default class UpsertCategoryTags extends Component {
               <field.Control>
                 {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
                 {{#if this.siteSettings.enable_new_select_controls}}
-                  <DTagGroupChooserControl
+                  <DSelectTagGroup
                     @disabled={{field.disabled}}
-                    @maximum={{1}}
-                    @onChange={{fn this.onTagGroupFieldChange field}}
+                    @multiple={{false}}
+                    @onChange={{fn this.onSingleTagGroupFieldChange field}}
                     @placeholder={{i18n
                       "category.required_tag_group.placeholder"
                     }}
-                    @tagGroups={{if field.value (array field.value) (array)}}
+                    @value={{field.value}}
                   />
                 {{else}}
                   <TagGroupChooser

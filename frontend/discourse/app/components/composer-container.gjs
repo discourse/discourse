@@ -41,7 +41,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
-import DMiniTagChooser from "discourse/ui-kit/select/recipes/tags/d-mini-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
 const trackFieldsHeight = modifier((element, [enabled]) => {
@@ -481,11 +481,12 @@ export default class ComposerContainer extends Component {
                         <div class="tags-input">
                           {{#if this.siteSettings.enable_new_select_controls}}
                             {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
-                            <DMiniTagChooser
+                            <DSelectTag
                               class={{if
                                 this.composer.model.tags.length
                                 "has-selection"
                               }}
+                              @allowCreate={{true}}
                               @categoryId={{this.composer.model.categoryId}}
                               @describedBy={{if
                                 this.composer.tagValidation.failed
@@ -499,13 +500,14 @@ export default class ComposerContainer extends Component {
                               }}
                               @invalid={{this.composer.tagValidation.failed}}
                               @label={{i18n "tagging.choose_for_topic"}}
+                              @legacyKind="mini-tag-chooser"
                               @maxVisibleChips={{if
                                 (and this.composerRedesign this.site.mobileView)
                                 0
                               }}
                               @minimum={{this.composer.model.minimumRequiredTags}}
                               @onChange={{fn (mut this.composer.model.tags)}}
-                              @prioritizeRecentTags={{true}}
+                              @suggestRecent={{true}}
                               @value={{this.composer.model.tags}}
                             />
                           {{else}}

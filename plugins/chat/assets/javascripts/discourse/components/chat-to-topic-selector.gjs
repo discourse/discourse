@@ -10,7 +10,7 @@ import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import DTextField from "discourse/ui-kit/d-text-field";
-import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
 export const NEW_TOPIC_SELECTION = "new_topic";
@@ -149,10 +149,10 @@ export default class ChatToTopicSelector extends Component {
             <label>{{i18n "tagging.tags"}}</label>
             {{! TODO (select-kit-replacement-cleanup) }}
             {{#if this.siteSettings.enable_new_select_controls}}
-              <DTagChooser
+              <DSelectTag
                 @categoryId={{this.categoryId}}
                 @onChange={{this.changeTags}}
-                @tags={{this.tags}}
+                @value={{this.tags}}
               />
             {{else}}
               {{! TODO (select-kit-replacement-cleanup) }}
@@ -195,7 +195,7 @@ export default class ChatToTopicSelector extends Component {
             <label>{{i18n "tagging.tags"}}</label>
             {{! TODO (select-kit-replacement-cleanup) }}
             {{#if this.siteSettings.enable_new_select_controls}}
-              <DTagChooser @onChange={{this.changeTags}} @tags={{this.tags}} />
+              <DSelectTag @onChange={{this.changeTags}} @value={{this.tags}} />
             {{else}}
               {{! TODO (select-kit-replacement-cleanup) }}
               <TagChooser

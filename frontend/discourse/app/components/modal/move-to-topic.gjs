@@ -21,7 +21,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import DTextField from "discourse/ui-kit/d-text-field";
-import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
 export default class MoveToTopic extends Component {
@@ -269,9 +269,9 @@ export default class MoveToTopic extends Component {
                   <label>{{i18n "tagging.tags"}}</label>
                   {{! TODO (select-kit-replacement-cleanup) }}
                   {{#if this.siteSettings.enable_new_select_controls}}
-                    <DTagChooser
+                    <DSelectTag
                       @onChange={{this.updateTags}}
-                      @tags={{this.tags}}
+                      @value={{this.tags}}
                     />
                   {{else}}
                     {{! TODO (select-kit-replacement-cleanup) }}
@@ -439,10 +439,10 @@ export default class MoveToTopic extends Component {
                     <label>{{i18n "tagging.tags"}}</label>
                     {{! TODO (select-kit-replacement-cleanup) }}
                     {{#if this.siteSettings.enable_new_select_controls}}
-                      <DTagChooser
+                      <DSelectTag
                         @categoryId={{this.categoryId}}
                         @onChange={{this.updateTags}}
-                        @tags={{this.tags}}
+                        @value={{this.tags}}
                       />
                     {{else}}
                       {{! TODO (select-kit-replacement-cleanup) }}
@@ -491,9 +491,9 @@ export default class MoveToTopic extends Component {
                   <label>{{i18n "tagging.tags"}}</label>
                   {{! TODO (select-kit-replacement-cleanup) }}
                   {{#if this.siteSettings.enable_new_select_controls}}
-                    <DTagChooser
+                    <DSelectTag
                       @onChange={{this.updateTags}}
-                      @tags={{this.tags}}
+                      @value={{this.tags}}
                     />
                   {{else}}
                     {{! TODO (select-kit-replacement-cleanup) }}

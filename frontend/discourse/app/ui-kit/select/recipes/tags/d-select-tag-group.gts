@@ -2,10 +2,11 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { makeArray } from "discourse/lib/helpers";
 import { searchTagGroups } from "discourse/lib/tag-source";
 import type SiteSettingsService from "discourse/services/site-settings";
 import DSelect from "discourse/ui-kit/select/d-select";
-import { tagItemName } from "discourse/ui-kit/select/recipes/tags/-internals/tag-select-base";
+import { tagItemName } from "discourse/ui-kit/select/recipes/tags/-internals/tag-renderers";
 import type {
   SelectLoadOptions,
   SelectValue,
@@ -68,19 +69,12 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
     max_tag_search_results: number;
   };
 
-  get value() {
-    const value = this.args.value;
-    return [
-      ...new Set(Array.isArray(value) ? value : value ? [value as string] : []),
-    ];
-  }
-
   get multiple() {
     return this.args.multiple !== false;
   }
 
   get selectionValue() {
-    return this.multiple ? this.value : (this.value[0] ?? null);
+    return this.multiple ? this.#value : (this.#value[0] ?? null);
   }
 
   get legacyKind() {
@@ -88,35 +82,50 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
   }
 
   get loadContext() {
-    return { held: this.value.join("|") };
+    return { held: this.#value.join("|") };
+  }
+
+  get sourceLoad() {
+    if (this.args.load) {
+      return this.args.load;
+    }
+    return this.args.items ? undefined : this._load;
   }
 
   get valueItems() {
-    return this.value.map((name) => ({ id: name, name }));
+    return this.#value.map((name) => ({ id: name, name }));
+  }
+
+  get #value() {
+    const value = this.args.value;
+    if (!value) {
+      return [];
+    }
+    return [...new Set(makeArray(value as string | string[]))];
   }
 
   @action
-  async load(filter: string, opts: SelectLoadOptions) {
+  onChange(value: SelectValue) {
+    if (this.multiple) {
+      this.args.onChange?.(
+        makeArray(value).filter(
+          (name): name is string => typeof name === "string"
+        )
+      );
+      return;
+    }
+    this.args.onChange?.(typeof value === "string" ? value : null);
+  }
+
+  @action
+  async _load(filter: string, opts: SelectLoadOptions) {
     const groups = await searchTagGroups(filter, {
       signal: opts.signal,
       siteSettings: this.siteSettings,
     });
     return this.multiple
-      ? groups.filter((group) => !this.value.includes(group.name))
+      ? groups.filter((group) => !this.#value.includes(group.name))
       : groups;
-  }
-
-  @action
-  onChange(value: SelectValue) {
-    this.args.onChange?.(
-      this.multiple
-        ? Array.isArray(value)
-          ? value.filter((name): name is string => typeof name === "string")
-          : []
-        : typeof value === "string"
-          ? value
-          : null
-    );
   }
 
   <template>
@@ -136,7 +145,7 @@ export default class DSelectTagGroup extends Component<DSelectTagGroupSignature>
       @label={{@label}}
       @labelField="name"
       @legacyKind={{this.legacyKind}}
-      @load={{if @load @load (if @items undefined this.load)}}
+      @load={{this.sourceLoad}}
       @loadContext={{this.loadContext}}
       @maximum={{@maximum}}
       @maxVisibleChips={{@maxVisibleChips}}

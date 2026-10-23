@@ -6,7 +6,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import DButton from "discourse/ui-kit/d-button";
-import DMiniTagChooser from "discourse/ui-kit/select/recipes/tags/d-mini-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 
 export default class TopicMetadata extends Component {
   @service siteSettings;
@@ -35,13 +35,15 @@ export default class TopicMetadata extends Component {
         >
           {{#if this.siteSettings.enable_new_select_controls}}
             {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
-            <DMiniTagChooser
+            <DSelectTag
+              @allowCreate={{true}}
               @categoryId={{@buffered.category_id}}
               @identifier="topic-edit-tags"
               @instanceContext={{hash topic=@model buffered=@buffered}}
+              @legacyKind="mini-tag-chooser"
               @minimum={{@minimumRequiredTags}}
               @onChange={{@topicTagsChanged}}
-              @prioritizeRecentTags={{true}}
+              @suggestRecent={{true}}
               @value={{@buffered.tags}}
             />
           {{else}}

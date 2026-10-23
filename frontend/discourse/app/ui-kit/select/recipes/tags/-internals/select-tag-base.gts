@@ -6,6 +6,7 @@ import { guidFor } from "@ember/object/internals";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import { modifier } from "ember-modifier";
+import { makeArray } from "discourse/lib/helpers";
 import {
   cleanTagName,
   findTagIdsByNames,
@@ -23,7 +24,7 @@ import DSelect, {
 import {
   TagOption,
   TagSelection,
-} from "discourse/ui-kit/select/recipes/tags/-internals/tag-select-base";
+} from "discourse/ui-kit/select/recipes/tags/-internals/tag-renderers";
 import {
   createTagItem,
   emitTags,
@@ -164,13 +165,20 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
     return this.args.allowCreate && this.site.can_create_tag && !this.#zeroCap;
   }
 
+  get #excludedNames() {
+    return new Set(
+      (this.args.exclude ?? []).map((tag) =>
+        storedName(typeof tag === "string" ? { name: tag } : tag).toLowerCase()
+      )
+    );
+  }
+
   get #tags(): readonly (TagObject | string)[] {
     const value = this.args.value;
-    return Array.isArray(value)
-      ? value
-      : value
-        ? [value as TagObject | string]
-        : [];
+    if (!value) {
+      return [];
+    }
+    return makeArray(value as TagObject | string | (TagObject | string)[]);
   }
 
   get #zeroCap() {
@@ -253,7 +261,7 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
     return this.args.load ||
       !this.args.items ||
       typeof this.args.items === "function"
-      ? this.load
+      ? this._load
       : undefined;
   }
 
@@ -274,16 +282,18 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
     const required = this._validation.get(
       this.#validationKey(this.loadContext, "")
     )?.requiredTagGroup;
-    return required
-      ? i18n("tagging.choose_for_topic_required_group", {
-          count: required.min_count,
-          name: required.name,
-        })
-      : this.args.minimum
-        ? i18n("tagging.choose_for_topic_required", {
-            count: this.args.minimum,
-          })
-        : undefined;
+    if (required) {
+      return i18n("tagging.choose_for_topic_required_group", {
+        count: required.min_count,
+        name: required.name,
+      });
+    }
+    if (this.args.minimum) {
+      return i18n("tagging.choose_for_topic_required", {
+        count: this.args.minimum,
+      });
+    }
+    return undefined;
   }
 
   get describedBy() {
@@ -292,64 +302,6 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
         .filter(Boolean)
         .join(" ") || undefined
     );
-  }
-
-  get #excludedNames() {
-    return new Set(
-      (this.args.exclude ?? []).map((tag) =>
-        storedName(typeof tag === "string" ? { name: tag } : tag).toLowerCase()
-      )
-    );
-  }
-
-  @action
-  async load(filter: string, opts: SelectLoadOptions) {
-    if (this.args.load) {
-      const result = await this.args.load(filter, opts);
-      const items = this.#prepareItems(
-        Array.isArray(result) ? result : result.items
-      );
-      if (!opts.signal?.aborted && !this.isDestroying) {
-        this._loadedItems = opts.offset
-          ? [...this._loadedItems, ...items]
-          : items;
-      }
-      return Array.isArray(result) ? items : { ...result, items };
-    }
-    if (typeof this.args.items === "function" && opts.options) {
-      const items = this.#prepareItems(this.args.items(opts.options) ?? []);
-      this._loadedItems = items;
-      return items.filter((item) =>
-        String(item.name ?? "")
-          .toLowerCase()
-          .includes(filter.toLowerCase())
-      );
-    }
-    const context: TagSearchContext = opts.context ?? {};
-    const result = await searchTags(filter, {
-      context: {
-        ...context,
-        prioritizeRecentTags: filter ? undefined : context.prioritizeRecentTags,
-      },
-      signal: opts.signal,
-      siteSettings: this.siteSettings,
-    });
-    if (!opts.signal?.aborted && !this.isDestroying) {
-      const validation = new Map(this._validation);
-      validation.set(
-        this.#validationKey(context, cleanTagName(filter, this.siteSettings)),
-        result
-      );
-      validation.set(this.#validationKey(context, ""), result);
-      this._validation = validation;
-    }
-    const items = this.#prepareItems(result.items.map((item) => ({ ...item })));
-    if (!opts.signal?.aborted && !this.isDestroying) {
-      this._loadedItems = opts.offset
-        ? [...this._loadedItems, ...items]
-        : items;
-    }
-    return items;
   }
 
   @action
@@ -421,10 +373,8 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
 
   @action
   onChange(ids: SelectValue, items: SelectItem | SelectItem[] | null) {
-    const keys = (
-      Array.isArray(ids) ? ids : ids === null ? [] : [ids]
-    ) as TagKey[];
-    const rows = !items ? [] : Array.isArray(items) ? items : [items];
+    const keys = makeArray(ids) as TagKey[];
+    const rows = makeArray(items);
     const heldKeys = new Set(this.valueItems.map((item) => item.id));
     if (this.#zeroCap && keys.some((id) => !heldKeys.has(id))) {
       return;
@@ -488,6 +438,56 @@ export default class SelectTagBase extends Component<SelectTagBaseSignature> {
 
   #validationKey(context: TagSearchContext, term: string) {
     return JSON.stringify([context, term]);
+  }
+
+  @action
+  private async _load(filter: string, opts: SelectLoadOptions) {
+    if (this.args.load) {
+      const result = await this.args.load(filter, opts);
+      const items = this.#prepareItems(
+        Array.isArray(result) ? result : result.items
+      );
+      if (!opts.signal?.aborted && !this.isDestroying) {
+        this._loadedItems = opts.offset
+          ? [...this._loadedItems, ...items]
+          : items;
+      }
+      return Array.isArray(result) ? items : { ...result, items };
+    }
+    if (typeof this.args.items === "function" && opts.options) {
+      const items = this.#prepareItems(this.args.items(opts.options) ?? []);
+      this._loadedItems = items;
+      return items.filter((item) =>
+        String(item.name ?? "")
+          .toLowerCase()
+          .includes(filter.toLowerCase())
+      );
+    }
+    const context: TagSearchContext = opts.context ?? {};
+    const result = await searchTags(filter, {
+      context: {
+        ...context,
+        prioritizeRecentTags: filter ? undefined : context.prioritizeRecentTags,
+      },
+      signal: opts.signal,
+      siteSettings: this.siteSettings,
+    });
+    if (!opts.signal?.aborted && !this.isDestroying) {
+      const validation = new Map(this._validation);
+      validation.set(
+        this.#validationKey(context, cleanTagName(filter, this.siteSettings)),
+        result
+      );
+      validation.set(this.#validationKey(context, ""), result);
+      this._validation = validation;
+    }
+    const items = this.#prepareItems(result.items.map((item) => ({ ...item })));
+    if (!opts.signal?.aborted && !this.isDestroying) {
+      this._loadedItems = opts.offset
+        ? [...this._loadedItems, ...items]
+        : items;
+    }
+    return items;
   }
 
   <template>

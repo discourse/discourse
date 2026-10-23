@@ -14,7 +14,7 @@ import {
   tagItemName,
   TagOption,
   TagSelection,
-} from "discourse/ui-kit/select/recipes/tags/-internals/tag-select-base";
+} from "discourse/ui-kit/select/recipes/tags/-internals/tag-renderers";
 import type { TagObject } from "discourse/ui-kit/select/recipes/tags/-internals/tag-values";
 import type {
   SelectItem,
@@ -96,8 +96,8 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     max_tags_per_topic: number;
   };
 
-  @tracked expanded = false;
   @tracked moreTags = false;
+  @tracked _expanded = false;
 
   get multiple() {
     return this.args.multiple === true;
@@ -117,14 +117,14 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     return tag && "slug" in tag && tag.slug ? `tag-${tag.slug}` : "tag_all";
   }
 
-  get #tag(): TagObject | undefined {
+  get #tag(): FilterTag | undefined {
     const value = this.args.value;
     return value && !Array.isArray(value) && typeof value === "object"
-      ? (value as TagObject)
+      ? (value as FilterTag)
       : undefined;
   }
 
-  get selection() {
+  get selection(): SelectItem {
     const tag = this.#tag;
     if (
       this.args.value === NO_TAG_ID ||
@@ -133,8 +133,9 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     ) {
       return { id: NO_TAG_ID, name: i18n("tagging.selector_no_tags") };
     }
+    // A tag model keeps its fields on getters, which a spread would drop.
     return tag?.id
-      ? { ...tag, id: tag.id }
+      ? tag
       : { id: ALL_TAGS_ID, name: i18n("tagging.selector_tags") };
   }
 
@@ -154,18 +155,17 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
     };
   }
 
-  isShortcut(item: SelectItem) {
-    return item.id === ALL_TAGS_ID || item.id === NO_TAG_ID;
-  }
-
   @action
   caret(options: SelectResolvedOptions) {
-    const icon = this.expanded ? options.caretUpIcon : options.caretDownIcon;
-    return typeof icon === "string"
-      ? icon
-      : this.expanded
-        ? "angle-down"
-        : "angle-right";
+    const icon = this._expanded ? options.caretUpIcon : options.caretDownIcon;
+    if (typeof icon === "string") {
+      return icon;
+    }
+    return this._expanded ? "angle-down" : "angle-right";
+  }
+
+  isShortcut(item: SelectItem) {
+    return item.id === ALL_TAGS_ID || item.id === NO_TAG_ID;
   }
 
   @action
@@ -246,13 +246,13 @@ export default class DSelectTagFilter extends Component<DSelectTagFilterSignatur
   }
 
   @action
-  onShow() {
-    this.expanded = true;
+  onClose() {
+    this._expanded = false;
   }
 
   @action
-  onClose() {
-    this.expanded = false;
+  onShow() {
+    this._expanded = true;
   }
 
   <template>

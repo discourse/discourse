@@ -1,8 +1,9 @@
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
 import SchemaSettingTypeModels from "discourse/admin/components/schema-setting/types/models";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
-import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 
 export default class SchemaSettingTypeTags extends SchemaSettingTypeModels {
   @service siteSettings;
@@ -20,16 +21,23 @@ export default class SchemaSettingTypeTags extends SchemaSettingTypeModels {
     return tags.map((tag) => tag.name);
   }
 
+  @action
+  onNamesInput(names) {
+    this.value = names;
+    this.args.onChange(names);
+  }
+
   <template>
     {{! TODO (select-kit-replacement-cleanup) }}
     {{#if this.siteSettings.enable_new_select_controls}}
-      <DTagChooser
+      <DSelectTag
         class={{if this.validationErrorMessage "--invalid"}}
         @allowCreate={{false}}
-        @everyTag={{@spec.every_tag}}
+        @emit="names"
+        @ignoreRestrictions={{@spec.every_tag}}
         @maximum={{this.max}}
-        @onChange={{this.onInput}}
-        @tags={{this.value}}
+        @onChange={{this.onNamesInput}}
+        @value={{this.value}}
       />
     {{else}}
       {{! TODO (select-kit-replacement-cleanup) }}

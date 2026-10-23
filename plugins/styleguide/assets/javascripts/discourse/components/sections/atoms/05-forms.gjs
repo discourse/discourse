@@ -1,5 +1,5 @@
 import Form from "discourse/components/form";
-import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 import AlertExample from "../../examples/atoms/forms/alert.gjs";
@@ -105,7 +105,7 @@ export default <template>
           as |field|
         >
           <field.Control>
-            <DTagChooser @onChange={{field.set}} @tags={{field.value}} />
+            <DSelectTag @onChange={{field.set}} @value={{field.value}} />
           </field.Control>
         </form.Field>
       </Form>

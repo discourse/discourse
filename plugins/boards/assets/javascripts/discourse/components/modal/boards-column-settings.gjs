@@ -12,7 +12,7 @@ import EmailGroupUserChooser from "discourse/select-kit/components/email-group-u
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
-import DMiniTagChooser from "discourse/ui-kit/select/recipes/tags/d-mini-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 import {
   ASSIGNED_OPTIONS,
@@ -70,6 +70,11 @@ export default class BoardsColumnSettings extends Component {
   onTagChange(field, tags) {
     const tag = tags?.[0];
     field.set(typeof tag === "object" ? tag.name : tag || "");
+  }
+
+  @action
+  onSingleTagChange(field, name) {
+    field.set(name || "");
   }
 
   @action
@@ -193,12 +198,14 @@ export default class BoardsColumnSettings extends Component {
                 <field.Control>
                   {{#if this.siteSettings.enable_new_select_controls}}
                     {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
-                    <DMiniTagChooser
+                    <DSelectTag
                       @allowCreate={{true}}
                       @categoryId={{this.tagChooserCategoryId}}
-                      @maximum={{1}}
-                      @onChange={{fn this.onTagChange field}}
-                      @value={{tagToArray data.tag_name}}
+                      @emit="names"
+                      @legacyKind="mini-tag-chooser"
+                      @multiple={{false}}
+                      @onChange={{fn this.onSingleTagChange field}}
+                      @value={{data.tag_name}}
                     />
                   {{else}}
                     {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}

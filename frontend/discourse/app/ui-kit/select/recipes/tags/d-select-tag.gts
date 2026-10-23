@@ -6,8 +6,9 @@ import SelectTagBase, {
 import {
   TagOption,
   TagSelection,
-} from "discourse/ui-kit/select/recipes/tags/-internals/tag-select-base";
+} from "discourse/ui-kit/select/recipes/tags/-internals/tag-renderers";
 
+/** Arguments of `DSelectTag`, the shared tag base minus the kind it fixes. */
 interface DSelectTagSignature extends Omit<SelectTagBaseSignature, "Args"> {
   Args: Omit<
     SelectTagBaseSignature["Args"],
@@ -15,6 +16,7 @@ interface DSelectTagSignature extends Omit<SelectTagBaseSignature, "Args"> {
   >;
 }
 
+/** Picks tags to store, as tag objects or, with `@emit="names"`, stored names. */
 const DSelectTag: TemplateOnlyComponent<DSelectTagSignature> = <template>
   <SelectTagBase
     ...attributes

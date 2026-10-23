@@ -825,11 +825,7 @@ export default class SelectEngine {
   /** Whether any non-null id in the normalized selection currently resolves as unresolved. */
   get hasUnresolvedSelection(): boolean {
     const value = this.value;
-    const values = this.multiple
-      ? [...(value as readonly SelectItemId[])]
-      : value == null
-        ? []
-        : [value];
+    const values = [...makeArray(value as SelectItemId | SelectItemId[])];
     return this.#valueResolver.hasUnresolved(values);
   }
 

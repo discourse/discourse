@@ -4,7 +4,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
-import DMiniTagChooser from "discourse/ui-kit/select/recipes/tags/d-mini-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 
 export default class ReviewableFieldTags extends Component {
   @service siteSettings;
@@ -31,8 +31,10 @@ export default class ReviewableFieldTags extends Component {
   <template>
     {{#if this.siteSettings.enable_new_select_controls}}
       {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
-      <DMiniTagChooser
+      <DSelectTag
+        @allowCreate={{true}}
         @categoryId={{@tagCategoryId}}
+        @legacyKind="mini-tag-chooser"
         @onChange={{this.onChange}}
         @value={{this.value}}
       />

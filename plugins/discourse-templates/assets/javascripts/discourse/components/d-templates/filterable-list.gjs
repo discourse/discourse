@@ -9,11 +9,10 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DTextField from "discourse/ui-kit/d-text-field";
-import {
+import DSelectTagFilter, {
   ALL_TAGS_ID,
   NO_TAG_ID,
 } from "discourse/ui-kit/select/recipes/tags/d-select-tag-filter";
-import DTagDrop from "discourse/ui-kit/select/recipes/tags/d-tag-drop";
 import { i18n } from "discourse-i18n";
 import Item from "./item.gjs";
 import TagDrop from "./tag-drop.js";
@@ -152,6 +151,11 @@ export default class DTemplatesFilterableList extends Component {
   }
 
   @action
+  changeTagFilter(tag) {
+    this.changeSelectedTag(typeof tag === "string" ? tag : tag.id);
+  }
+
+  @action
   insertTemplate(template) {
     this.args.onBeforeInsertTemplate?.();
     this.args.onInsertTemplate?.(template);
@@ -166,10 +170,10 @@ export default class DTemplatesFilterableList extends Component {
           {{#if this.siteSettings.tagging_enabled}}
             {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
             {{#if this.siteSettings.enable_new_select_controls}}
-              <DTagDrop
+              <DSelectTagFilter
                 @items={{this.sortedAvailableTags}}
-                @onChange={{this.changeSelectedTag}}
-                @tag={{this.selectedTagObject}}
+                @onChange={{this.changeTagFilter}}
+                @value={{this.selectedTagObject}}
               />
             {{else}}
               <TagDrop

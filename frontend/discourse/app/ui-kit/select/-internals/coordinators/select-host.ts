@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import type Owner from "@ember/owner";
 import { cancel, schedule } from "@ember/runloop";
 import { modifier } from "ember-modifier";
+import { makeArray } from "discourse/lib/helpers";
 import type A11yService from "discourse/services/a11y";
 import LoadFeedbackTracker from "discourse/ui-kit/select/-internals/coordinators/load-feedback";
 import SelectAnnouncer from "discourse/ui-kit/select/-internals/coordinators/select-announcer";
@@ -139,11 +140,7 @@ export default class SelectHost {
    */
   selectionHooks = modifier((element: HTMLElement) => {
     const value = this.engine.value;
-    const values: unknown[] = Array.isArray(value)
-      ? value
-      : value == null
-        ? []
-        : [value];
+    const values: unknown[] = makeArray(value);
     element.setAttribute("data-value", values.map(String).join(","));
     element.setAttribute(
       "data-name",
@@ -190,11 +187,7 @@ export default class SelectHost {
       // args below are passed by value.
       getMultiple: () => this.#options.getMultiple(),
       kind: this.#options.getArgs().kind,
-      legacyKinds: Array.isArray(legacyKind)
-        ? legacyKind
-        : legacyKind === undefined
-          ? []
-          : [legacyKind],
+      legacyKinds: makeArray(legacyKind),
       identifier: this.#options.getArgs().identifier,
       getKindContext: () => this.#options.getArgs().kindContext,
       getKindOptions: () => this.#options.getArgs().kindOptions,

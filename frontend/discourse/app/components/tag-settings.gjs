@@ -17,8 +17,7 @@ import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
-import DMiniTagChooser from "discourse/ui-kit/select/recipes/tags/d-mini-tag-chooser";
-import DTagDropdown from "discourse/ui-kit/select/recipes/tags/d-tag-dropdown";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -40,11 +39,9 @@ export default class TagSettings extends Component {
 
   constructor() {
     super(...arguments);
-    this.loadTags();
-  }
-
-  get tagNames() {
-    return this.tags.map((t) => t.name);
+    if (!this.siteSettings.enable_new_select_controls) {
+      this.loadTags();
+    }
   }
 
   /** @returns {TagSettingsFormData} */
@@ -135,6 +132,18 @@ export default class TagSettings extends Component {
         name: tag.name,
       }));
     } catch {}
+  }
+
+  @action
+  editTag(tag) {
+    if (tag) {
+      this.router.transitionTo(
+        "tag.edit.tab",
+        tag.slug || `${tag.id}-tag`,
+        tag.id,
+        "general"
+      );
+    }
   }
 
   @action
@@ -273,10 +282,15 @@ export default class TagSettings extends Component {
           <span class="tag-settings-title__dropdown">
             {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
             {{#if this.siteSettings.enable_new_select_controls}}
-              <DTagDropdown
+              <DSelectTag
+                @excludeSynonyms={{true}}
+                @ignoreRestrictions={{true}}
                 @label={{i18n "tagging.settings.select_tag"}}
-                @tags={{this.tags}}
-                @value={{@tag.name}}
+                @legacyKind="tag-dropdown"
+                @multiple={{false}}
+                @onChange={{this.editTag}}
+                @value={{@tag}}
+                @variant="button"
               />
             {{else}}
               <TagDropdown
@@ -390,15 +404,15 @@ export default class TagSettings extends Component {
             <field.Control>
               {{#if this.siteSettings.enable_new_select_controls}}
                 {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
-                <DMiniTagChooser
-                  @blockedTags={{this.blockedTags}}
-                  @everyTag={{true}}
+                <DSelectTag
+                  @exclude={{this.blockedTags}}
+                  @ignoreRestrictions={{true}}
+                  @legacyKind="mini-tag-chooser"
                   @maximum={{200}}
                   @onChange={{this.handleSynonymChange}}
                   @placeholder={{i18n
                     "tagging.settings.add_synonym_placeholder"
                   }}
-                  @preventCreate={{true}}
                   @value={{transientData.synonyms}}
                 />
               {{else}}

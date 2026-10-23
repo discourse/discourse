@@ -4,7 +4,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
 function updateTags(model, field, tags) {
@@ -33,12 +33,12 @@ export default <template>
 
       {{! TODO (select-kit-replacement-cleanup) }}
       {{#if @controller.siteSettings.enable_new_select_controls}}
-        <DTagChooser
-          @blockedTags={{@controller.selectedTags}}
-          @everyTag={{true}}
+        <DSelectTag
+          @exclude={{@controller.selectedTags}}
+          @ignoreRestrictions={{true}}
+          @maximum={{false}}
           @onChange={{fn updateTags @controller.model "watching_tags"}}
-          @tags={{@controller.model.watching_tags}}
-          @unlimitedTagCount={{true}}
+          @value={{@controller.model.watching_tags}}
         />
       {{else}}
         {{! TODO (select-kit-replacement-cleanup) }}
@@ -63,12 +63,12 @@ export default <template>
 
       {{! TODO (select-kit-replacement-cleanup) }}
       {{#if @controller.siteSettings.enable_new_select_controls}}
-        <DTagChooser
-          @blockedTags={{@controller.selectedTags}}
-          @everyTag={{true}}
+        <DSelectTag
+          @exclude={{@controller.selectedTags}}
+          @ignoreRestrictions={{true}}
+          @maximum={{false}}
           @onChange={{fn updateTags @controller.model "tracking_tags"}}
-          @tags={{@controller.model.tracking_tags}}
-          @unlimitedTagCount={{true}}
+          @value={{@controller.model.tracking_tags}}
         />
       {{else}}
         {{! TODO (select-kit-replacement-cleanup) }}
@@ -93,16 +93,16 @@ export default <template>
 
       {{! TODO (select-kit-replacement-cleanup) }}
       {{#if @controller.siteSettings.enable_new_select_controls}}
-        <DTagChooser
-          @blockedTags={{@controller.selectedTags}}
-          @everyTag={{true}}
+        <DSelectTag
+          @exclude={{@controller.selectedTags}}
+          @ignoreRestrictions={{true}}
+          @maximum={{false}}
           @onChange={{fn
             updateTags
             @controller.model
             "watching_first_post_tags"
           }}
-          @tags={{@controller.model.watching_first_post_tags}}
-          @unlimitedTagCount={{true}}
+          @value={{@controller.model.watching_first_post_tags}}
         />
       {{else}}
         {{! TODO (select-kit-replacement-cleanup) }}
@@ -131,12 +131,12 @@ export default <template>
 
       {{! TODO (select-kit-replacement-cleanup) }}
       {{#if @controller.siteSettings.enable_new_select_controls}}
-        <DTagChooser
-          @blockedTags={{@controller.selectedTags}}
-          @everyTag={{true}}
+        <DSelectTag
+          @exclude={{@controller.selectedTags}}
+          @ignoreRestrictions={{true}}
+          @maximum={{false}}
           @onChange={{fn updateTags @controller.model "regular_tags"}}
-          @tags={{@controller.model.regular_tags}}
-          @unlimitedTagCount={{true}}
+          @value={{@controller.model.regular_tags}}
         />
       {{else}}
         {{! TODO (select-kit-replacement-cleanup) }}
@@ -161,12 +161,12 @@ export default <template>
 
       {{! TODO (select-kit-replacement-cleanup) }}
       {{#if @controller.siteSettings.enable_new_select_controls}}
-        <DTagChooser
-          @blockedTags={{@controller.selectedTags}}
-          @everyTag={{true}}
+        <DSelectTag
+          @exclude={{@controller.selectedTags}}
+          @ignoreRestrictions={{true}}
+          @maximum={{false}}
           @onChange={{fn updateTags @controller.model "muted_tags"}}
-          @tags={{@controller.model.muted_tags}}
-          @unlimitedTagCount={{true}}
+          @value={{@controller.model.muted_tags}}
         />
       {{else}}
         {{! TODO (select-kit-replacement-cleanup) }}

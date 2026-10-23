@@ -14,7 +14,7 @@ import TagChooser from "discourse/select-kit/components/tag-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import DTextField from "discourse/ui-kit/d-text-field";
-import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -59,6 +59,11 @@ export default class TagGroupsForm extends Component {
     return groupIds;
   }
 
+  @computed("buffered.parent_tag")
+  get parentTag() {
+    return this.buffered.get("parent_tag")?.[0] ?? null;
+  }
+
   @action
   setPermissionsGroups(groupIds) {
     let permissions = {};
@@ -69,6 +74,11 @@ export default class TagGroupsForm extends Component {
   @action
   updateTags(field, tags) {
     this.buffered.set(field, tags);
+  }
+
+  @action
+  updateParentTag(tag) {
+    this.buffered.set("parent_tag", tag ? [tag] : []);
   }
 
   @action
@@ -151,14 +161,14 @@ export default class TagGroupsForm extends Component {
       <label>{{i18n "tagging.groups.tags_label"}}</label><br />
       {{! TODO (select-kit-replacement-cleanup) }}
       {{#if this.siteSettings.enable_new_select_controls}}
-        <DTagChooser
+        <DSelectTag
           @allowCreate={{true}}
-          @everyTag={{true}}
           @excludeSynonyms={{true}}
+          @ignoreRestrictions={{true}}
+          @maximum={{false}}
           @onChange={{fn this.updateTags "tags"}}
           @placeholder={{i18n "tagging.groups.tags_placeholder"}}
-          @tags={{this.buffered.tags}}
-          @unlimitedTagCount={{true}}
+          @value={{this.buffered.tags}}
         />
       {{else}}
         {{! TODO (select-kit-replacement-cleanup) }}
@@ -181,14 +191,14 @@ export default class TagGroupsForm extends Component {
       <div>
         {{! TODO (select-kit-replacement-cleanup) }}
         {{#if this.siteSettings.enable_new_select_controls}}
-          <DTagChooser
+          <DSelectTag
             @allowCreate={{true}}
-            @everyTag={{true}}
             @excludeSynonyms={{true}}
-            @maximum={{1}}
-            @onChange={{fn this.updateTags "parent_tag"}}
+            @ignoreRestrictions={{true}}
+            @multiple={{false}}
+            @onChange={{this.updateParentTag}}
             @placeholder={{i18n "tagging.groups.parent_tag_placeholder"}}
-            @tags={{this.buffered.parent_tag}}
+            @value={{this.parentTag}}
           />
         {{else}}
           {{! TODO (select-kit-replacement-cleanup) }}

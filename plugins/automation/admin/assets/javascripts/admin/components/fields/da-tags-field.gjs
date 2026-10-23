@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
-import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import BaseField from "./da-base-field.gjs";
 import DAFieldDescription from "./da-field-description.gjs";
 import DAFieldLabel from "./da-field-label.gjs";
@@ -30,13 +30,14 @@ export default class TagsField extends BaseField {
         <div class="controls">
           {{! TODO (select-kit-replacement-cleanup) }}
           {{#if this.siteSettings.enable_new_select_controls}}
-            <DTagChooser
+            <DSelectTag
               @allowCreate={{false}}
               @disabled={{@field.isDisabled}}
-              @everyTag={{true}}
+              @emit="names"
+              @ignoreRestrictions={{true}}
+              @maximum={{false}}
               @onChange={{this.onChangeTags}}
-              @tags={{readonly @field.metadata.value}}
-              @unlimitedTagCount={{true}}
+              @value={{readonly @field.metadata.value}}
             />
           {{else}}
             {{! TODO (select-kit-replacement-cleanup) }}

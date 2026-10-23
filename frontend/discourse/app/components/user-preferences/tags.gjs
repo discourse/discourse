@@ -3,7 +3,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
 function updateTags(model, field, tags) {
@@ -20,12 +20,12 @@ const Tags = <template>
           {{i18n "user.watched_tags"}}</label>
         {{! TODO (select-kit-replacement-cleanup) }}
         {{#if @siteSettings.enable_new_select_controls}}
-          <DTagChooser
-            @blockedTags={{@selectedTags}}
-            @everyTag={{true}}
+          <DSelectTag
+            @exclude={{@selectedTags}}
+            @ignoreRestrictions={{true}}
+            @maximum={{false}}
             @onChange={{fn updateTags @model "watched_tags"}}
-            @tags={{@model.watched_tags}}
-            @unlimitedTagCount={{true}}
+            @value={{@model.watched_tags}}
           />
         {{else}}
           {{! TODO (select-kit-replacement-cleanup) }}
@@ -47,12 +47,12 @@ const Tags = <template>
           {{i18n "user.tracked_tags"}}</label>
         {{! TODO (select-kit-replacement-cleanup) }}
         {{#if @siteSettings.enable_new_select_controls}}
-          <DTagChooser
-            @blockedTags={{@selectedTags}}
-            @everyTag={{true}}
+          <DSelectTag
+            @exclude={{@selectedTags}}
+            @ignoreRestrictions={{true}}
+            @maximum={{false}}
             @onChange={{fn updateTags @model "tracked_tags"}}
-            @tags={{@model.tracked_tags}}
-            @unlimitedTagCount={{true}}
+            @value={{@model.tracked_tags}}
           />
         {{else}}
           {{! TODO (select-kit-replacement-cleanup) }}
@@ -76,12 +76,12 @@ const Tags = <template>
           {{i18n "user.watched_first_post_tags"}}</label>
         {{! TODO (select-kit-replacement-cleanup) }}
         {{#if @siteSettings.enable_new_select_controls}}
-          <DTagChooser
-            @blockedTags={{@selectedTags}}
-            @everyTag={{true}}
+          <DSelectTag
+            @exclude={{@selectedTags}}
+            @ignoreRestrictions={{true}}
+            @maximum={{false}}
             @onChange={{fn updateTags @model "watching_first_post_tags"}}
-            @tags={{@model.watching_first_post_tags}}
-            @unlimitedTagCount={{true}}
+            @value={{@model.watching_first_post_tags}}
           />
         {{else}}
           {{! TODO (select-kit-replacement-cleanup) }}
@@ -105,12 +105,12 @@ const Tags = <template>
           {{i18n "user.muted_tags"}}</label>
         {{! TODO (select-kit-replacement-cleanup) }}
         {{#if @siteSettings.enable_new_select_controls}}
-          <DTagChooser
-            @blockedTags={{@selectedTags}}
-            @everyTag={{true}}
+          <DSelectTag
+            @exclude={{@selectedTags}}
+            @ignoreRestrictions={{true}}
+            @maximum={{false}}
             @onChange={{fn updateTags @model "muted_tags"}}
-            @tags={{@model.muted_tags}}
-            @unlimitedTagCount={{true}}
+            @value={{@model.muted_tags}}
           />
         {{else}}
           {{! TODO (select-kit-replacement-cleanup) }}

@@ -9,7 +9,7 @@ import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import DModal from "discourse/ui-kit/d-modal";
-import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 import getTagName from "../../lib/utilities.js";
 import ChannelData from "../channel-data.gjs";
@@ -208,11 +208,12 @@ export default class EditRule extends Component {
               <field.Control>
                 {{! TODO (select-kit-replacement-cleanup) }}
                 {{#if this.siteSettings.enable_new_select_controls}}
-                  <DTagChooser
-                    @everyTag={{true}}
+                  <DSelectTag
+                    @emit="names"
+                    @ignoreRestrictions={{true}}
                     @onChange={{this.onTagsChange}}
                     @placeholder={{i18n "chat_integration.all_tags"}}
-                    @tags={{this.tags}}
+                    @value={{this.tags}}
                   />
                 {{else}}
                   {{! TODO (select-kit-replacement-cleanup) }}

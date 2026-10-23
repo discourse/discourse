@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import TagGroupChooser from "discourse/select-kit/components/tag-group-chooser";
-import DTagGroupChooserControl from "discourse/ui-kit/select/recipes/tags/d-tag-group-chooser";
+import DSelectTagGroup from "discourse/ui-kit/select/recipes/tags/d-select-tag-group";
 import { i18n } from "discourse-i18n";
 
 export default class TagGroupList extends Component {
@@ -22,11 +22,11 @@ export default class TagGroupList extends Component {
     <div ...attributes>
       {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
       {{#if this.siteSettings.enable_new_select_controls}}
-        <DTagGroupChooserControl
+        <DSelectTagGroup
           @disabled={{@disabled}}
           @onChange={{this.onTagGroupChange}}
           @placeholder={{i18n "category.required_tag_group.placeholder"}}
-          @tagGroups={{this.selectedTagGroups}}
+          @value={{this.selectedTagGroups}}
         />
       {{else}}
         <TagGroupChooser

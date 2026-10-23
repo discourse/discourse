@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
-import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 
 export default class TagList extends Component {
   @service siteSettings;
@@ -17,17 +17,23 @@ export default class TagList extends Component {
     this.args.changeValueCallback(tags.map((t) => t.name).join("|"));
   }
 
+  @action
+  changeSelectedNames(names) {
+    this.args.changeValueCallback(names.join("|"));
+  }
+
   <template>
     <div ...attributes>
       {{! TODO (select-kit-replacement-cleanup) }}
       {{#if this.siteSettings.enable_new_select_controls}}
-        <DTagChooser
+        <DSelectTag
           @allowCreate={{false}}
           @disabled={{@disabled}}
-          @everyTag={{true}}
-          @onChange={{this.changeSelectedTags}}
-          @tags={{this.selectedTags}}
-          @unlimitedTagCount={{true}}
+          @emit="names"
+          @ignoreRestrictions={{true}}
+          @maximum={{false}}
+          @onChange={{this.changeSelectedNames}}
+          @value={{this.selectedTags}}
         />
       {{else}}
         {{! TODO (select-kit-replacement-cleanup) }}

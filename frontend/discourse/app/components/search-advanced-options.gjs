@@ -20,7 +20,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DDateInput from "discourse/ui-kit/d-date-input";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
 const REGEXP_BLOCKS = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
@@ -872,14 +872,15 @@ export default class SearchAdvancedOptions extends Component {
                 <div class="controls">
                   {{! TODO (select-kit-replacement-cleanup) }}
                   {{#if this.siteSettings.enable_new_select_controls}}
-                    <DTagChooser
+                    <DSelectTag
                       @allowCreate={{false}}
-                      @everyTag={{true}}
+                      @emit="names"
                       @id="search-with-tags"
+                      @ignoreRestrictions={{true}}
                       @label={{i18n "search.advanced.with_tags.aria_label"}}
+                      @maximum={{false}}
                       @onChange={{this.onChangeSearchTermForTags}}
-                      @tags={{this.searchedTerms.tags}}
-                      @unlimitedTagCount={{true}}
+                      @value={{this.searchedTerms.tags}}
                     />
                   {{else}}
                     {{! TODO (select-kit-replacement-cleanup) }}

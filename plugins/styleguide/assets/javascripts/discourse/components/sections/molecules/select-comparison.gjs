@@ -8,16 +8,12 @@ import TagDrop from "discourse/select-kit/components/tag-drop";
 import TagDropdown from "discourse/select-kit/components/tag-dropdown";
 import TagGroupChooserControl from "discourse/select-kit/components/tag-group-chooser";
 import TagsIntersectionChooser from "discourse/select-kit/components/tags-intersection-chooser";
-import DMiniTagChooser from "discourse/ui-kit/select/recipes/tags/d-mini-tag-chooser";
-import {
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
+import DSelectTagFilter, {
   ALL_TAGS_ID,
   NO_TAG_ID,
 } from "discourse/ui-kit/select/recipes/tags/d-select-tag-filter";
-import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
-import DTagDrop from "discourse/ui-kit/select/recipes/tags/d-tag-drop";
-import DTagDropdown from "discourse/ui-kit/select/recipes/tags/d-tag-dropdown";
-import DTagGroupChooser from "discourse/ui-kit/select/recipes/tags/d-tag-group-chooser";
-import DTagsIntersectionChooser from "discourse/ui-kit/select/recipes/tags/d-tags-intersection-chooser";
+import DSelectTagGroup from "discourse/ui-kit/select/recipes/tags/d-select-tag-group";
 import { i18n } from "discourse-i18n";
 
 function initialTags() {
@@ -60,13 +56,19 @@ class DemoSelection {
   }
 
   @action
+  updateFilter(value) {
+    this.updateTag(value, value);
+  }
+
+  @action
   updateTag(id, tag) {
-    this.value =
-      id === ALL_TAGS_ID
-        ? null
-        : id === NO_TAG_ID
-          ? { id: NO_TAG_ID, name: "none" }
-          : tag;
+    if (id === ALL_TAGS_ID) {
+      this.value = null;
+    } else if (id === NO_TAG_ID) {
+      this.value = { id: NO_TAG_ID, name: "none" };
+    } else {
+      this.value = tag;
+    }
   }
 }
 
@@ -92,14 +94,6 @@ export default class SelectComparison extends Component {
 
   get legacyAdditionalTags() {
     return this.legacyIntersection.value.slice(1);
-  }
-
-  get newMainTag() {
-    return this.newIntersection.value[0];
-  }
-
-  get newAdditionalTags() {
-    return this.newIntersection.value.slice(1);
   }
 
   <template>
@@ -128,11 +122,11 @@ export default class SelectComparison extends Component {
           </div>
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
-            <DTagChooser
+            <DSelectTag
               @allowCreate={{false}}
               @maximum={{5}}
               @onChange={{this.newTags.update}}
-              @tags={{this.newTags.value}}
+              @value={{this.newTags.value}}
             />
             <small class="styleguide-select-comparison__value">{{i18n
                 "styleguide.sections.select_comparison.current_value"
@@ -167,10 +161,11 @@ export default class SelectComparison extends Component {
           </div>
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
-            <DMiniTagChooser
+            {{! TODO (select-kit-replacement-cleanup): Retain the mini chooser's compatibility class during rollout. }}
+            <DSelectTag
+              @legacyKind="mini-tag-chooser"
               @maximum={{5}}
               @onChange={{this.newMiniTags.update}}
-              @preventCreate={{true}}
               @value={{this.newMiniTags.value}}
             />
             <small class="styleguide-select-comparison__value">{{i18n
@@ -200,9 +195,9 @@ export default class SelectComparison extends Component {
           </div>
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
-            <DTagDrop
-              @onChange={{this.newTag.updateTag}}
-              @tag={{this.newTag.value}}
+            <DSelectTagFilter
+              @onChange={{this.newTag.updateFilter}}
+              @value={{this.newTag.value}}
             />
             <small class="styleguide-select-comparison__value">{{i18n
                 "styleguide.sections.select_comparison.current_value"
@@ -238,11 +233,10 @@ export default class SelectComparison extends Component {
           </div>
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
-            <DTagsIntersectionChooser
-              @additionalTags={{this.newAdditionalTags}}
-              @mainTag={{this.newMainTag}}
-              @maximum={{5}}
+            <DSelectTagFilter
+              @multiple={{true}}
               @onChange={{this.newIntersection.update}}
+              @value={{this.newIntersection.value}}
             />
             <small class="styleguide-select-comparison__value">{{i18n
                 "styleguide.sections.select_comparison.current_value"
@@ -276,11 +270,17 @@ export default class SelectComparison extends Component {
           </div>
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
-            <DTagDropdown
+            <DSelectTag
+              @emit="names"
+              @excludeSynonyms={{true}}
+              @ignoreRestrictions={{true}}
               @label={{i18n "tagging.settings.select_tag"}}
+              {{! TODO (select-kit-replacement-cleanup): Retain the dropdown's compatibility class during rollout. }}
+              @legacyKind="tag-dropdown"
+              @multiple={{false}}
               @onChange={{this.newTagName.update}}
-              @tags={{this.tags}}
               @value={{this.newTagName.value}}
+              @variant="button"
             />
             <small class="styleguide-select-comparison__value">{{i18n
                 "styleguide.sections.select_comparison.current_value"
@@ -314,9 +314,9 @@ export default class SelectComparison extends Component {
           </div>
           <div class="styleguide-select-comparison__new">
             <h4>{{i18n "styleguide.sections.select_comparison.new"}}</h4>
-            <DTagGroupChooser
+            <DSelectTagGroup
               @onChange={{this.newTagGroups.update}}
-              @tagGroups={{this.newTagGroups.value}}
+              @value={{this.newTagGroups.value}}
             />
             <small class="styleguide-select-comparison__value">{{i18n
                 "styleguide.sections.select_comparison.current_value"

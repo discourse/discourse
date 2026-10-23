@@ -227,10 +227,8 @@ describe "Tag Groups" do
 
       expect(page).to have_css(".group-tags-list .tag-chooser.d-select .d-select__chip", count: 2)
       expect(tag_groups_page.tags_chooser.chip_labels).to contain_exactly("cats", "bats")
-      expect(page).to have_css(
-        ".parent-tag-section .tag-chooser.d-select .d-select__chip",
-        text: "parent-tag",
-      )
+      expect(page).to have_css(".parent-tag-section .tag-chooser.d-select[data-name='parent-tag']")
+      expect(page).to have_no_css(".parent-tag-section .tag-chooser.d-select .d-select__chip")
     end
 
     it "creates a tag group with existing and brand-new tags with the new select controls" do

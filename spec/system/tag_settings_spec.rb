@@ -186,12 +186,13 @@ describe "Tag Settings" do
       sign_in(admin)
       tag_settings_page.visit(tag_1)
 
-      expect(tag_settings_page.tag_dropdown).to have_selected_value(tag_1.name)
+      expect(tag_settings_page.tag_dropdown).to have_selected_name(tag_1.name)
+      tag_settings_page.tag_dropdown.search(tag_2.name)
       tag_settings_page.tag_dropdown.select_name(tag_2.name)
 
-      expect(page).to have_current_path("/tag/#{tag_2.name}/#{tag_2.id}/edit/general")
+      expect(page).to have_current_path("/tag/#{tag_2.slug_for_url}/#{tag_2.id}/edit/general")
       expect(tag_settings_page).to have_name_value(tag_2.name)
-      expect(tag_settings_page.tag_dropdown).to have_selected_value(tag_2.name)
+      expect(tag_settings_page.tag_dropdown).to have_selected_name(tag_2.name)
     end
 
     it "adds an existing tag as a synonym with the new select controls" do

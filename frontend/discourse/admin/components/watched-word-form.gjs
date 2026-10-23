@@ -11,7 +11,7 @@ import TagChooser from "discourse/select-kit/components/tag-chooser";
 import WatchedWords from "discourse/select-kit/components/watched-words";
 import DButton from "discourse/ui-kit/d-button";
 import DTextField from "discourse/ui-kit/d-text-field";
-import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
 export default class WatchedWordForm extends Component {
@@ -189,14 +189,14 @@ export default class WatchedWordForm extends Component {
             }}</label>
           {{! TODO (select-kit-replacement-cleanup) }}
           {{#if this.siteSettings.enable_new_select_controls}}
-            <DTagChooser
+            <DSelectTag
               class="watched-word-input-field"
               @allowCreate={{true}}
               @disabled={{this.formSubmitted}}
-              @everyTag={{true}}
               @id="watched-tag"
+              @ignoreRestrictions={{true}}
               @onChange={{this.changeSelectedTags}}
-              @tags={{this.selectedTags}}
+              @value={{this.selectedTags}}
             />
           {{else}}
             {{! TODO (select-kit-replacement-cleanup) }}
