@@ -2,6 +2,12 @@ discourse_post_voting:
   post_voting_enabled:
     client: true
     default: false
+  post_voting_category_mode:
+    type: enum
+    enum: "PostVoting::CategoryModeSiteSetting"
+    client: true
+    default: "all_categories"
+    refresh: true
   post_voting_undo_vote_action_window:
     default: 10
   post_voting_comment_enabled:

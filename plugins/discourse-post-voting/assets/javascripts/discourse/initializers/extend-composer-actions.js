@@ -1,6 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { CREATE_TOPIC } from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
+import { postVotingEnabledForCategory } from "discourse/plugins/discourse-post-voting/discourse/lib/post-voting-utilities";
 
 export default {
   name: "extend-composer-actions",
@@ -18,6 +19,9 @@ export default {
         "only_post_voting_in_this_category",
         "onlyPostVotingInThisCategory"
       );
+
+      const canEnablePostVoting = (model) =>
+        postVotingEnabledForCategory(model.category, siteSettings);
 
       api.customizeComposerText({
         actionTitle(model) {
@@ -46,7 +50,7 @@ export default {
         ({ value, context }) => {
           const { action, composerModel } = context;
 
-          if (action === CREATE_TOPIC) {
+          if (action === CREATE_TOPIC && canEnablePostVoting(composerModel)) {
             if (
               composerModel.createAsPostVoting &&
               !composerModel.onlyPostVotingInThisCategory
@@ -97,16 +101,17 @@ export default {
         "composer",
         "onlyPostVotingInThisCategory",
         function () {
-          return (
-            this.creatingTopic &&
-            !!this.category?.only_post_voting_in_this_category
-          );
+          if (!this.creatingTopic || !canEnablePostVoting(this)) {
+            return false;
+          }
+
+          return !!this.category?.only_post_voting_in_this_category;
         }
       );
 
       // Defaults from the category (forced on when it's post-voting-only),
-      // resets on category change, and is user-toggleable until then.
-      api.addModelField("composer", "createAsPostVoting", {
+      // resets when that default changes, and is user-toggleable until then.
+      api.addModelField("composer", "postVotingRequested", {
         resettable: true,
         defaultValue() {
           if (!this.creatingTopic) {
@@ -117,6 +122,15 @@ export default {
             this.onlyPostVotingInThisCategory ||
             !!this.category?.create_as_post_voting_default
           );
+        },
+      });
+
+      api.addModelAccessor("composer", "createAsPostVoting", {
+        get() {
+          return canEnablePostVoting(this) && this.postVotingRequested;
+        },
+        set(value) {
+          this.postVotingRequested = value;
         },
       });
     });
