@@ -76,8 +76,8 @@ describe "UiKit | DSelect panel tab order" do
   end
 
   it "leaves a button panel field from its chips in both Tab directions" do
-    visit_group("selection", "sg-toggle")
-    select = PageObjects::Components::UiKit::DSelect.by_identifier("sg-toggle")
+    visit_group("selection", "sg-panel-chips")
+    select = PageObjects::Components::UiKit::DSelect.by_identifier("sg-panel-chips")
     expect(select.mark_tab_order_oracle.fetch("hasAfter")).to eq(true)
 
     select.open_trigger

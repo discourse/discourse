@@ -24,6 +24,7 @@ interface VariantPresenterArgs extends SelectPresenterArgs {
   value?: SelectValue;
   multiple?: boolean;
   hideSelected?: boolean;
+  panelChips?: boolean;
   /** Maximum trigger chips; zero renders only the selected count. */
   maxVisibleChips?: number;
   variant?: SelectVariant;
@@ -327,15 +328,13 @@ export default class VariantPresenter
     | "panel-chips"
     | "strip"
     | "selected-rows" {
-    if (this.isStatic) {
-      return this.overlayIsModal || this.#engine.isAsync
-        ? "strip"
-        : "selected-rows";
-    }
     if (this.isDesktopTypeahead) {
       return this.triggerChipsInteractive ? "trigger-chips" : "strip";
     }
-    return "panel-chips";
+    if (!this.panelListsSelection) {
+      return "selected-rows";
+    }
+    return this.isStatic ? "strip" : "panel-chips";
   }
 
   /** Local control lists already expose held rows with checked states. */
@@ -344,10 +343,24 @@ export default class VariantPresenter
       this.describeHeldLabels &&
       (this.isStatic || this.isDesktopTypeahead) &&
       this.#engine.hasValue &&
-      (this.overlayIsModal ||
-        this.isDesktopTypeahead ||
-        this.#engine.isAsync ||
-        !!this.#getArgs().hideSelected)
+      (this.isDesktopTypeahead || this.panelListsSelection)
+    );
+  }
+
+  /**
+   * Whether the panel lists held items, as field chips or a static strip. It does where its list
+   * cannot show every held item (a modal covers the trigger, an async page may lack them, or
+   * `@hideSelected` drops their rows) and when the consumer opts in; elsewhere the selected rows
+   * already show them. Independent of the value, so picking the first item never remounts the
+   * field.
+   */
+  get panelListsSelection(): boolean {
+    const args = this.#getArgs();
+    return (
+      this.overlayIsModal ||
+      this.#engine.isAsync ||
+      !!args.hideSelected ||
+      !!args.panelChips
     );
   }
 

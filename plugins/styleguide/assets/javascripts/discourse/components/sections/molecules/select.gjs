@@ -48,6 +48,8 @@ import MaximumSelectExample from "../../examples/molecules/select/selection/maxi
 import maximumSelectSource from "../../examples/molecules/select/selection/maximum?source=file";
 import NoneSelectExample from "../../examples/molecules/select/selection/none.gjs";
 import noneSelectSource from "../../examples/molecules/select/selection/none?source=file";
+import PanelChipsSelectExample from "../../examples/molecules/select/selection/panel-chips.gjs";
+import panelChipsSelectSource from "../../examples/molecules/select/selection/panel-chips?source=file";
 import ReadonlySelectExample from "../../examples/molecules/select/selection/readonly.gjs";
 import readonlySelectSource from "../../examples/molecules/select/selection/readonly?source=file";
 import ToggleListSelectExample from "../../examples/molecules/select/selection/toggle-list.gjs";
@@ -361,6 +363,17 @@ export default class Select extends Component {
             </div>
           </:default>
           <:note>{{i18n "styleguide.sections.select.toggle_note"}}</:note>
+        </StyleguideExample>
+        <StyleguideExample
+          @code={{panelChipsSelectSource}}
+          @description={{i18n
+            "styleguide.sections.select.panel_chips_description"
+          }}
+          @title={{i18n "styleguide.sections.select.panel_chips_example"}}
+          @tryThis={{i18n "styleguide.sections.select.panel_chips_try_this"}}
+        >
+          <div class="select-examples__control"><PanelChipsSelectExample
+            /></div>
         </StyleguideExample>
         <StyleguideExample
           @code={{noneSelectSource}}

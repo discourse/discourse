@@ -553,6 +553,9 @@ export default class InteractionCoordinator {
       multiple: this.#isMultiple(),
       locked: this.#presenter.isLocked,
       clearActive: this.#clearActive,
+      selectionInField:
+        !this.#presenter.isPanelSearchable ||
+        this.#presenter.panelListsSelection,
       navigateToSelection: (keyEvent) => this.#navigateToSelection(keyEvent),
     });
   }

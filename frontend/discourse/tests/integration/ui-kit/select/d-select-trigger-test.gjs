@@ -51,6 +51,7 @@ class FrameHost extends Component {
       @items={{ITEMS}}
       @multiple={{@multiple}}
       @onChange={{this.onChange}}
+      @panelChips={{@panelChips}}
       @readonly={{@readonly}}
       @value={{this.value}}
       @variant={{@variant}}
@@ -1798,9 +1799,11 @@ module(
       await click(TRIGGER);
 
       assert
-        .dom(".d-select__panel .d-select__chip-remove")
-        .exists({ count: 2 }, "the field holds the selected items");
-      assert.dom("[role='option'][aria-selected='true']").exists({ count: 2 });
+        .dom(".d-select__panel .d-select__chip")
+        .doesNotExist("the panel does not repeat the held items");
+      assert
+        .dom("[role='option'][aria-selected='true']")
+        .exists({ count: 2 }, "the selected rows show them");
     });
 
     test("picking the first item shows a field chip without reopening", async function (assert) {
@@ -2328,44 +2331,72 @@ module(
       test(`panel field: an open ${variant} trigger shows a count in place of its chips`, async function (assert) {
         await render(
           <template>
-            <FrameHost
-              @multiple={{true}}
-              @value={{array 1 2 3}}
-              @variant={{variant}}
-            />
+            <div style="width: 8em">
+              <FrameHost
+                @multiple={{true}}
+                @panelChips={{true}}
+                @value={{array 1 2}}
+                @variant={{variant}}
+              />
+            </div>
           </template>
         );
         const trigger = find(TRIGGER);
-        assert.dom(`${TRIGGER} .d-select__chip`).exists({ count: 3 });
+        assert
+          .dom(TRIGGER)
+          .hasAttribute(
+            "data-selection-removal",
+            variant === "static" ? "strip" : "panel-chips",
+            "an opted-in panel removes held items from its own list"
+          );
+        const chipRows = new Set(
+          findAll(`${TRIGGER} .d-select__chip`).map((chip) => chip.offsetTop)
+        );
+        assert.true(chipRows.size > 1, "the closed chips wrap onto more rows");
         const closedHeight = trigger.offsetHeight;
 
         await click(TRIGGER);
         assert.dom(PANEL).exists("the popup is open");
         assert.true(
           findAll(`${TRIGGER} .d-select__chip`).every(
-            (chip) => getComputedStyle(chip).visibility === "hidden"
+            (chip) => !chip.checkVisibility({ visibilityProperty: true })
           ),
           "held items are not repeated above the popup"
         );
         assert
           .dom(TRIGGER)
           .includesText(
-            i18n("d_select.selected_count", { count: 3 }),
+            i18n("d_select.selected_count", { count: 2 }),
             "the trigger states how many are held"
+          );
+        const openHeight = trigger.offsetHeight;
+        assert.true(
+          openHeight < closedHeight,
+          "the open trigger is one line, not the height of the chips it hides"
+        );
+
+        await click(optionWithText("Cherry pie"));
+        assert
+          .dom(TRIGGER)
+          .includesText(
+            i18n("d_select.selected_count", { count: 3 }),
+            "the count follows picks made while open"
           );
         assert.strictEqual(
           trigger.offsetHeight,
-          closedHeight,
-          "the trigger keeps its closed height, so the popup does not move"
+          openHeight,
+          "picking more while open does not grow the trigger, so the popup does not move"
         );
 
         await triggerKeyEvent(document.activeElement, "keydown", "Escape");
         assert.dom(PANEL).doesNotExist();
+        const chips = findAll(`${TRIGGER} .d-select__chip`);
+        assert.strictEqual(chips.length, 3, "closing brings the chips back");
         assert.true(
-          findAll(`${TRIGGER} .d-select__chip`).every(
-            (chip) => getComputedStyle(chip).visibility === "visible"
+          chips.every((chip) =>
+            chip.checkVisibility({ visibilityProperty: true })
           ),
-          "closing brings the chips back"
+          "all of them visible"
         );
         assert
           .dom(TRIGGER)
@@ -2375,6 +2406,83 @@ module(
           );
       });
     }
+
+    for (const variant of ["button", "static"]) {
+      test(`panel chips: a local ${variant} popup lists held items only as selected rows`, async function (assert) {
+        await render(
+          <template>
+            <FrameHost
+              @multiple={{true}}
+              @value={{array 1 2}}
+              @variant={{variant}}
+            />
+          </template>
+        );
+        await click(TRIGGER);
+        assert.dom(PANEL).exists("the popup is open");
+        assert
+          .dom(`${PANEL} .d-select__chip`)
+          .doesNotExist("the panel does not repeat the held items");
+        assert
+          .dom(`${PANEL} [role='option'][aria-selected='true']`)
+          .exists({ count: 2 }, "the rows show what is held");
+        assert
+          .dom(TRIGGER)
+          .hasAttribute(
+            "data-selection-removal",
+            "selected-rows",
+            "held items are removed by toggling their rows"
+          );
+        assert.true(
+          findAll(`${TRIGGER} .d-select__chip`).every((chip) =>
+            chip.checkVisibility({ visibilityProperty: true })
+          ),
+          "the trigger keeps showing its chips"
+        );
+        assert
+          .dom(TRIGGER)
+          .doesNotIncludeText(
+            i18n("d_select.selected_count", { count: 2 }),
+            "so it needs no count"
+          );
+      });
+    }
+
+    test("panel chips: Backspace in a plain search field leaves the selection alone", async function (assert) {
+      await render(
+        <template>
+          <FrameHost
+            @multiple={{true}}
+            @value={{array 1 2}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(TRIGGER);
+      const search = find(`${PANEL} input[type='search']`);
+      await triggerKeyEvent(search, "keydown", "Backspace");
+      assert
+        .dom(`${PANEL} [role='option'][aria-selected='true']`)
+        .exists({ count: 2 }, "no held item is removed out of sight");
+    });
+
+    test("panel chips: @panelChips opts a local popup into field chips", async function (assert) {
+      await render(
+        <template>
+          <FrameHost
+            @multiple={{true}}
+            @panelChips={{true}}
+            @value={{array 1 2}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(TRIGGER);
+      assert
+        .dom(`${PANEL} .d-select__chip`)
+        .exists({ count: 2 }, "the search field carries the held items");
+      assert.dom(TRIGGER).hasAttribute("data-selection-removal", "panel-chips");
+    });
 
     test("panel field: an open desktop typeahead keeps its chips in the trigger", async function (assert) {
       await render(
@@ -2507,10 +2615,13 @@ module(
       await click(TRIGGER);
 
       assert
-        .dom(".d-select__panel .d-select__chip-remove")
+        .dom(".d-select__panel .d-select__chip")
+        .doesNotExist("the panel adds no chips");
+      assert
+        .dom("[role='option'][aria-selected='true']")
         .exists(
           { count: 3 },
-          "the panel shows every held item beyond the trigger cap"
+          "the selected rows show every held item beyond the trigger cap"
         );
     });
 

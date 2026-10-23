@@ -364,10 +364,12 @@ the race the suite is otherwise blind to.
    restructure proposed below. Settle this cycle before committing to that one.
 
    **Since the panel field landed,** removal no longer depends on the trigger. A button
-   multi-select's popup and the mobile modal show every held item as a removable chip inside
-   the panel's search field (see "The panel field" in `frontend/discourse/app/ui-kit/select/README.md`),
-   and display-only trigger chips are described by the held-labels list. What this cycle still
-   has to decide is the trigger's own content: chips, a count, or both.
+   multi-select's popup removes held items from inside the panel: as chips in its search field
+   where the rows cannot show every held item (the mobile modal, an async source,
+   `@hideSelected`, or `@panelChips`), and otherwise by toggling their selected rows (see "The
+   panel field" in `frontend/discourse/app/ui-kit/select/README.md`). Display-only trigger
+   chips are described by the held-labels list. What this cycle still has to decide is the
+   trigger's own content: chips, a count, or both.
 
 ## Fixed in the unified grouping rework
 

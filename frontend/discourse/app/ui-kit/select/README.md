@@ -71,8 +71,14 @@ requests already in flight, so the same ids are never fetched twice.
 ## The panel field
 
 Wherever the list stays visible (a button select's popup, the mobile modal, and
-`DSelectList`), held chips sit inside the search field, before the caret. The field is a
-single Tab stop. Its input is a search field (`type="search"`, no role) that drives the
+`DSelectList`), the panel has a search field. Held chips sit inside it, before the caret,
+where the rows alone cannot show every held item: in the mobile modal, which covers the
+trigger; for an async source, whose loaded page may lack them; with `@hideSelected`; and
+always in `DSelectList`, which has no trigger. Elsewhere, such as a local desktop popup, the
+selected rows and the trigger's chips already show them, so the field holds only the input.
+`@panelChips={{true}}` opts such a popup into field chips. While a panel lists the held
+items, a button or static trigger shrinks to one line reading "N selected" instead of
+repeating them. The field is a single Tab stop. Its input is a search field (`type="search"`, no role) that drives the
 listbox through `aria-activedescendant`, with `aria-autocomplete="list"` and
 `aria-controls` while a listbox is rendered. Only the desktop typeahead trigger, whose list
 opens and closes, keeps `role="combobox"`.
@@ -83,7 +89,9 @@ From the input:
 - Home/End and Left/Right move the caret and clear the active row, so screen readers read
   the text again. Up or Down brings the row back.
 - Left at the start of the input enters the chips (Right in right-to-left pages).
-- Backspace on an empty query removes the last held item, or clears a single value.
+- Backspace on an empty query removes the last held item, or clears a single value. A
+  multi-select field without chips leaves the selection alone on both keys, so nothing is
+  removed out of sight.
 - Escape closes a popup or modal. In `DSelectList` it clears a non-empty query and
   otherwise leaves Escape to the containing panel.
 
@@ -643,7 +651,8 @@ by mechanism.
   maximum, minimum, atMaximum, belowMinimum, remaining, close}` so their content can react (e.g. a
   "plus N more" from `total - loadedCount`). The search fields are described under `DSelectList`.
 - `@hideSelected` omits held options from the results without reloading. Held items stay reachable
-  as chips; a local static list shows its strip of held items instead.
+  as chips; a local static list shows its strip of held items instead. `@panelChips` lists held
+  items in the panel even where the rows already show them (see "The panel field").
 - Selection limits (`@maximum` / `@minimum`, multi-select). `@maximum` is a hard cap enforced at the
   engine's single `select()` chokepoint (so pointer, keyboard, create-on-the-fly, and the compat
   bridge are all covered) and reinforced by disabling every unselected option at the cap; a value

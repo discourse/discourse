@@ -12,6 +12,7 @@ export function handleFieldKeydown(
     locked,
     navigateToSelection,
     clearActive,
+    selectionInField = true,
   }: {
     /** The engine whose held values can be removed. */
     engine: SelectEngine;
@@ -19,6 +20,11 @@ export function handleFieldKeydown(
     multiple: boolean | undefined;
     /** Blocks removal and selection navigation. */
     locked: boolean;
+    /**
+     * Whether held items show as chips in this field. Without them, a multi field's Backspace and
+     * previous key leave the selection alone rather than act on items out of sight.
+     */
+    selectionInField?: boolean;
     /** Clears virtual list focus when an editing key moves the caret. */
     clearActive?: () => void;
     /** Consumes the event on successful entry, including any preventDefault before focus. */
@@ -48,7 +54,7 @@ export function handleFieldKeydown(
 
   // Clearability governs the visible clear control, not empty-query keyboard removal.
   if (!event.isComposing && input.value === "" && engine.hasValue && !locked) {
-    if (multiple && event.key === "Backspace") {
+    if (multiple && selectionInField && event.key === "Backspace") {
       event.preventDefault();
       engine.deselectLast();
       return true;
@@ -66,7 +72,8 @@ export function handleFieldKeydown(
     input.selectionStart === 0 &&
     input.selectionEnd === 0 &&
     engine.hasValue &&
-    !locked
+    !locked &&
+    (!multiple || selectionInField)
   ) {
     return navigateToSelection(event);
   }

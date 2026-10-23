@@ -1533,6 +1533,7 @@ module("Integration | ui-kit | select | field ownership", function (hooks) {
           @items={{items}}
           @multiple={{true}}
           @onChange={{change}}
+          @panelChips={{true}}
           @value={{held.value}}
           @variant="button"
         />
@@ -1588,7 +1589,7 @@ module("Integration | ui-kit | select | field ownership", function (hooks) {
     );
   });
 
-  test("helpers remove a selected row only in a desktop local static list", async function (assert) {
+  test("helpers remove a selected row where the panel lists held items only as rows", async function (assert) {
     const onChange = sinon.spy();
     await render(
       <template>
@@ -1640,6 +1641,7 @@ module("Integration | ui-kit | select | field ownership", function (hooks) {
           @items={{ITEMS}}
           @multiple={{true}}
           @onChange={{onChange}}
+          @panelChips={{true}}
           @value={{array 1}}
           @variant="button"
         />

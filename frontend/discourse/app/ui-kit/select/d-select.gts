@@ -192,6 +192,12 @@ interface DSelectSignature {
      */
     hideSelected?: boolean;
     /**
+     * Lists held items in the panel (chips in its search field, or a static list's strip) even
+     * when the list can show them all. They are always listed in the mobile modal, for an async
+     * source and with `@hideSelected`, where rows alone cannot show every held item.
+     */
+    panelChips?: boolean;
+    /**
      * Hard cap on a multi-select's selection count. At the cap every unselected ordinary option
      * is disabled (navigable, with activation blocked) and the limit message
      * appears. The cap never *newly* disables a selected row, so deselecting one is the way back
@@ -642,7 +648,10 @@ export default class DSelect extends Component<DSelectSignature> {
               @shouldCorrectKeyboardOcclusion={{this.interaction.shouldCorrectKeyboardOcclusion}}
               @shouldSelectOnFocus={{this.interaction.shouldSelectOnFocus}}
               @showMenu={{menuArgs.show}}
-              @summarizeWhileExpanded={{not this.presenter.isTypeahead}}
+              @summarizeWhileExpanded={{and
+                (not this.presenter.isTypeahead)
+                this.presenter.panelListsSelection
+              }}
               @triggerChipsInteractive={{this.presenter.triggerChipsInteractive}}
               @value={{@value}}
             >
@@ -797,7 +806,7 @@ export default class DSelect extends Component<DSelectSignature> {
                   this.presenter.isMobileTypeahead
                 )
               }}
-                {{#if @multiple}}
+                {{#if (and @multiple this.presenter.panelListsSelection)}}
                   <MultiChips
                     @ariaOwns={{false}}
                     @closeMenu={{menuArgs.close}}

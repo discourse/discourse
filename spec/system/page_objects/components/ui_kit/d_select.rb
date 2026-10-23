@@ -687,7 +687,7 @@ module PageObjects
         def remove_selected_row_by(hook, value)
           open_for_value
           if trigger["data-selection-removal"] != "selected-rows"
-            raise "selected-row removal requires a desktop local static list"
+            raise "selected-row removal requires a panel that lists held items only as selected rows"
           end
           panel = linked_panel_selector
           selector = "#{panel} [role='option'][aria-selected='true']#{hook_selector(hook, value)}"

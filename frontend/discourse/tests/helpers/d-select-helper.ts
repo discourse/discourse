@@ -89,13 +89,13 @@ export class DSelect {
     );
   }
 
-  /** Deselects a checked row in a desktop local static list. */
+  /** Deselects a checked row in a panel that lists held items only as selected rows. */
   async removeSelectedRow(value: unknown): Promise<void> {
     await this.open();
     const panel = this.#dom.panel;
     if (this.element().dataset.selectionRemoval !== "selected-rows") {
       throw new Error(
-        `DSelect ${this.#dom.description}: selected-row removal requires a desktop local static list`
+        `DSelect ${this.#dom.description}: selected-row removal requires a panel that lists held items only as selected rows`
       );
     }
     const row =

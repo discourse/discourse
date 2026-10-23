@@ -465,23 +465,20 @@
   display: contents;
 }
 
-// An open overlay that repeats the held items hides the trigger's chips in place, keeping their
-// height, and lays a count over them.
+// While an open panel lists the held items, the trigger shrinks to one line with a count.
 .d-select__chips.--summarized {
-  position: relative;
-
   .d-select__chip,
   .d-select__chips-more,
   .d-select__placeholder {
-    visibility: hidden;
+    display: none;
   }
 }
 
 .d-select__chips-summary {
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline-start: 0;
+  min-width: 0;
+  overflow: hidden;
   color: var(--primary);
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
