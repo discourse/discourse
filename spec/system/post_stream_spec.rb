@@ -176,4 +176,41 @@ describe "Post stream" do
       expect(blockquote).to have_content(first_post.raw)
     end
   end
+
+  context "when cloaking a small action in a personal message" do
+    let!(:pm) { Fabricate(:private_message_topic, user: user) }
+    let!(:first_post) { Fabricate(:post, topic: pm, user: user) }
+    let!(:small_action) do
+      Fabricate(:small_action, topic: pm, user: user, action_code: "closed.enabled")
+    end
+    let!(:replies) do
+      Fabricate.times(10, :post, topic: pm, user: user, raw: "Hello world\n\n" * 20)
+    end
+
+    before { sign_in(user) }
+
+    def space_taken(selector)
+      page.evaluate_script(<<~JS)
+        (() => {
+          const el = document.querySelector(#{selector.to_json});
+          return el.nextElementSibling.getBoundingClientRect().top - el.getBoundingClientRect().top;
+        })()
+      JS
+    end
+
+    # A placeholder that takes up less space than the post it replaces shifts the
+    # page, which can push the post back across the cloaking boundary in a loop.
+    it "keeps the same space taken by the post when it is cloaked" do
+      visit "/t/#{pm.slug}/#{pm.id}/1"
+
+      selector = ".post-stream > [data-post-number='#{small_action.post_number}']"
+      expect(page).to have_css("#{selector} .small-action")
+      uncloaked_space = space_taken(selector)
+
+      send_keys(:end)
+
+      expect(page).to have_css("#{selector}.post-stream--cloaked")
+      expect(space_taken(selector)).to be_within(0.5).of(uncloaked_space)
+    end
+  end
 end

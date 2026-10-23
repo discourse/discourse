@@ -971,6 +971,12 @@ aside.quote {
   opacity: 0.4;
 }
 
+// Child margins collapsing through a bare post wrapper aren't included in the
+// height measured when cloaking, so the placeholder would come out short
+:where(.post-stream > [data-post-number]) {
+  display: flow-root;
+}
+
 .post-stream--cloaked {
   min-height: 1px; // ensures that cloaked items have a minimum height to force the intersection observers to work
   overflow-anchor: none; // cloaked posts are empty placeholders with approximate height and must not be used as scroll anchors
