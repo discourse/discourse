@@ -1,5 +1,6 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import * as tagSource from "discourse/lib/tag-source";
 import {
   cleanTagName,
   findTagIdsByNames,
@@ -203,5 +204,37 @@ module("Unit | lib | tag-source", function (hooks) {
     assert.deepEqual(topTags({ site, categoryId: 3 }), ["c"]);
     assert.deepEqual(topTags({ site }), ["a", "b"]);
     assert.deepEqual(topTags({ site: {} }), []);
+  });
+
+  test("prefers the stored name over a translated one", function (assert) {
+    assert.strictEqual(
+      tagSource.storedName?.({
+        id: 1,
+        name: "戦略",
+        original_name: "strategy",
+      }),
+      "strategy",
+      "a translated row yields its stored name"
+    );
+    assert.strictEqual(
+      tagSource.storedName?.({ id: 2, name: "design" }),
+      "design",
+      "an untranslated row yields its name"
+    );
+  });
+
+  test("search keeps original_name on its rows", async function (assert) {
+    pretender.get("/tags/filter/search", () =>
+      response({
+        results: [{ id: 1, name: "戦略", original_name: "strategy" }],
+      })
+    );
+
+    const { items } = await searchTags("st", {
+      context: {},
+      siteSettings: SETTINGS,
+    });
+
+    assert.strictEqual(items[0].original_name, "strategy");
   });
 });

@@ -4,6 +4,8 @@ import { ajax } from "discourse/lib/ajax";
 export interface TagRow {
   id: number;
   name: string;
+  /** The stored name, present only when `name` is a translation. */
+  original_name?: string;
   text?: string;
   count?: number;
   disabled?: boolean;
@@ -30,6 +32,14 @@ export interface TagSearchResult {
 }
 
 const tagIdsByNames = new Map<string, Promise<Set<number>>>();
+
+/** Returns the stored tag name when the displayed name is translated. */
+export function storedName(row: {
+  name: string;
+  original_name?: string;
+}): string {
+  return row.original_name ?? row.name;
+}
 
 /** Searches using resolved held ids, leaving request failures for the caller to display. */
 export async function searchTags(
