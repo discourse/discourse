@@ -334,7 +334,17 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           CHECKOUT_TIMEOUT: 10
+          SYSTEM_TEST_CHROMIUM_PROFILE: "1"
         run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
+
+      - name: Upload Chromium profile
+        uses: actions/upload-artifact@v7
+        if: always() && matrix.build_type == 'system' && matrix.target == 'core'
+        with:
+          name: chromium-profile
+          if-no-files-found: error
+          path: tmp/chromium-profile/*.json
+          retention-days: 7
 
       - name: Core Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
