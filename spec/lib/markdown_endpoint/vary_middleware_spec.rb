@@ -11,9 +11,14 @@ RSpec.describe MarkdownEndpoint::VaryMiddleware do
 
     expect(headers).to eq("vArY" => "Origin, aCcEpT")
 
-    app = ->(_env) { [404, { "Vary" => "Origin" }, []] }
+    app = ->(_env) { [404, { "vary" => "Origin" }, []] }
     _status, headers, _body = described_class.new(app).call(env)
 
-    expect(headers).to eq("Vary" => "Origin, Accept")
+    expect(headers).to eq("vary" => "Origin, Accept")
+
+    app = ->(_env) { [500, {}, []] }
+    _status, headers, _body = described_class.new(app).call(env)
+
+    expect(headers).to eq("vary" => "Accept")
   end
 end
