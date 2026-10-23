@@ -81,7 +81,6 @@ export default class DUserInfo extends Component {
         >
           <span class="username-wrapper">
             {{#if this.includeLink}}
-              {{! eslint-disable-next-line ember/template-no-unsupported-role-attributes }}
               <a
                 aria-level={{@headingLevel}}
                 data-user-card={{@user.username}}
