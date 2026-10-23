@@ -133,26 +133,56 @@ module SystemDrivers
   end
 
   def self.apply_base_chrome_args(args = [], allow_network: [])
-    disabled_features = %w[
-      AimEnabled
-      AutoDeElevate
-      AvoidUnnecessaryBeforeUnloadCheckSync
-      BlockOriginHeaderModificationOnRedirect
-      DestroyProfileOnBrowserClose
-      DialMediaRouteProvider
-      GlobalMediaControls
-      HttpsUpgrades
-      LensOverlay
-      MediaRouter
-      NetworkTimeServiceQuerying
-      OptimizationHints
-      PaintHolding
-      ThirdPartyStoragePartitioning
-      Translate
-      msEdgeUpdateLaunchServicesPreferredVersion
-      msForceBrowserSignIn
-      WebUIOmniboxPopup
-      WebUIOmniboxAimPopup
+    # A custom --disable-features replaces the generated list. Preserve the existing
+    # launch defaults below, including legacy and Edge entries, when adding our own.
+    disabled_features = [
+      # Avoid Google AI Mode eligibility requests during browser startup.
+      "AimEnabled",
+      # Legacy Windows relaunch workaround, removed in Chromium 156.
+      # https://github.com/microsoft/playwright/pull/43460
+      "AutoDeElevate",
+      # Avoid headed about:blank navigation hangs.
+      # https://github.com/microsoft/playwright/issues/14047
+      "AvoidUnnecessaryBeforeUnloadCheckSync",
+      # Let intercepted redirects reapply Origin headers without ERR_INVALID_ARGUMENT.
+      # https://github.com/microsoft/playwright/issues/41690
+      "BlockOriginHeaderModificationOnRedirect",
+      # Keep the profile alive when examples close and replace the last browser window.
+      "DestroyProfileOnBrowserClose",
+      # Disable DIAL discovery, which can trigger the macOS firewall permission prompt.
+      # https://github.com/microsoft/playwright/pull/13854
+      "DialMediaRouteProvider",
+      # Legacy suppression of media popups, ignored by Chromium 156.
+      # https://chromium.googlesource.com/chromium/src/+/6456af9f61e9518ba50d8331e4c42f42f63d03eb
+      "GlobalMediaControls",
+      # Keep HTTP test URLs on HTTP instead of attempting automatic HTTPS upgrades.
+      "HttpsUpgrades",
+      # Keep visual search overlays out of the browser UI in branded Chrome builds.
+      "LensOverlay",
+      # Disable casting discovery, which can trigger the macOS firewall permission prompt.
+      # https://github.com/microsoft/playwright/pull/8162
+      "MediaRouter",
+      # Avoid startup requests to Google network time servers.
+      "NetworkTimeServiceQuerying",
+      # Avoid downloading remote navigation optimization hints during startup.
+      "OptimizationHints",
+      # Avoid lost iframe clicks and file chooser events while painting is deferred.
+      # https://github.com/microsoft/playwright/issues/28023
+      "PaintHolding",
+      # Preserve browser context storage state when an origin is loaded in an iframe.
+      # https://github.com/microsoft/playwright/issues/32230
+      "ThirdPartyStoragePartitioning",
+      # Suppress translation prompts that can interrupt navigation waits.
+      # https://github.com/microsoft/playwright/issues/16126
+      "Translate",
+      # Edge only: avoid changing macOS browser registration during a test run.
+      "msEdgeUpdateLaunchServicesPreferredVersion",
+      # Edge only: prevent browser account sign in requirements from blocking tests.
+      "msForceBrowserSignIn",
+      # Avoid creating the internal address bar popup page when tests replace pages.
+      "WebUIOmniboxPopup",
+      # Avoid creating the companion AI Mode popup page when tests replace pages.
+      "WebUIOmniboxAimPopup",
     ]
 
     base_args = %W[
