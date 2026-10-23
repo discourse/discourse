@@ -47,5 +47,100 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
     it "returns the expected data" do
       expect(data).to include expected_data
     end
+
+    context "with Schema.org Event data" do
+      let(:url) { "https://example.com/t/community-hangout/123" }
+      let(:image_metadata) { "" }
+      let(:event_description_json) { %("description": "Meet the community",) }
+      let(:html) { <<~HTML }
+          <html>
+            <head>
+              <meta property="og:site_name" content="Example community">
+              <meta property="og:title" content="Community hangout">
+              <meta property="og:description" content="The ordinary topic excerpt">
+              <meta property="og:image" content="https://example.com/topic.png">
+              #{image_metadata}
+              <meta property="article:published_time" content="2026-10-19T00:00:00Z">
+              <meta name="twitter:label1" value="Reading time">
+              <meta name="twitter:data1" value="1 min 🕑">
+              <meta name="twitter:label2" value="Likes">
+              <meta name="twitter:data2" value="2 ❤">
+              <script type="application/ld+json">
+                {
+                  "@context": "https://schema.org",
+                  "@type": "Event",
+                  "name": "Community hangout",
+                  #{event_description_json}
+                  "startDate": "2026-10-22T09:00:00.000-04:00",
+                  "endDate": "2026-10-22T10:00:00.000-04:00"
+                }
+              </script>
+            </head>
+          </html>
+        HTML
+
+      before { stub_request(:get, url).to_return(status: 200, body: html) }
+
+      it "uses the event description and exposes event display data" do
+        expect(data).to include(
+          description: "Meet the community",
+          is_event: true,
+          event_all_day: false,
+          event_date_day: "22",
+          event_date_month: "Oct",
+          event_has_featured_image: false,
+          event_starts_at: "2026-10-22T09:00:00.000-04:00",
+          event_ends_at: "2026-10-22T10:00:00.000-04:00",
+          event_timezone: "UTC-04:00",
+        )
+      end
+
+      it "renders event data for client-side localization" do
+        html = onebox.to_html
+
+        expect(html).to include('class="discourse-event-onebox"')
+        expect(html).not_to include("--featured-image")
+        expect(html).to include('data-event-starts-at="2026-10-22T09:00:00.000-04:00"')
+        expect(html).to include('class="discourse-event-onebox__date"')
+        expect(html).to include("Meet the community")
+        expect(html).to include("Reading time: 1 min 🕑")
+        expect(html).to include("Likes: 2 ❤")
+        expect(html).not_to include("The ordinary topic excerpt")
+      end
+
+      context "without an event description" do
+        let(:event_description_json) { "" }
+
+        it "does not fall back to the topic excerpt" do
+          expect(data[:description]).to be_nil
+          expect(onebox.to_html).not_to include('class="discourse-event-onebox__description"')
+          expect(onebox.to_html).not_to include("The ordinary topic excerpt")
+        end
+      end
+
+      context "with a square topic image" do
+        let(:image_metadata) { <<~HTML }
+            <meta property="og:image:width" content="500">
+            <meta property="og:image:height" content="500">
+          HTML
+
+        it "keeps the compact image layout" do
+          expect(data).to include(event_has_featured_image: false)
+          expect(onebox.to_html).not_to include("--featured-image")
+        end
+      end
+
+      context "with a landscape topic image" do
+        let(:image_metadata) { <<~HTML }
+            <meta property="og:image:width" content="690">
+            <meta property="og:image:height" content="362">
+          HTML
+
+        it "uses the featured image layout" do
+          expect(data).to include(event_has_featured_image: true)
+          expect(onebox.to_html).to include("--featured-image")
+        end
+      end
+    end
   end
 end

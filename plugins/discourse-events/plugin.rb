@@ -228,10 +228,20 @@ require_relative "lib/discourse_events/livestream/allowed_hosts_validator"
 require_relative "lib/discourse_events/livestream/topic_extension"
 require_relative "lib/discourse_events/livestream/chat_channel_extension"
 require_relative "lib/discourse_events/livestream/zoom_url_parser"
+require_relative "lib/discourse_events/events/schema_markup"
 
 Dir
   .glob(File.expand_path("../lib/discourse_events/configuration/*.rb", __FILE__))
   .each { |f| require(f) }
+
+event_schema_markup =
+  lambda do |controller|
+    topic_view = controller.instance_variable_get(:@topic_view)
+    DiscourseEvents::Events::SchemaMarkup.build(topic_view)
+  end
+
+register_html_builder("server:before-head-close", &event_schema_markup)
+register_html_builder("server:before-head-close-crawler", &event_schema_markup)
 
 after_initialize do
   UserOption.prepend DiscourseEvents::UserOptionExtension
