@@ -1,4 +1,10 @@
-import { fillIn, findAll, render, triggerEvent } from "@ember/test-helpers";
+import {
+  fillIn,
+  findAll,
+  render,
+  triggerEvent,
+  typeIn,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import CompactEventEditor from "discourse/plugins/discourse-events/discourse/components/compact-event-editor";
@@ -254,5 +260,23 @@ module("Integration | Component | CompactEventEditor", function (hooks) {
     assert
       .dom(findAll(".composer-event__date-input")[1])
       .hasValue("2026-07-01", "the picked day stays in the field");
+  });
+
+  test("typing a multi-digit reminder value keeps every digit", async function (assert) {
+    const initialState = stateWith({
+      reminders: [
+        { type: "notification", value: 1, unit: "minutes", period: "before" },
+      ],
+    });
+    let lastState = null;
+    await renderEditor(initialState, (state) => (lastState = state));
+
+    await typeIn(".composer-event__reminder-value", "55");
+
+    assert.strictEqual(
+      lastState.reminders[0].value,
+      155,
+      "each keystroke lands in the reminder value"
+    );
   });
 });
