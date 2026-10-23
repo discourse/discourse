@@ -190,6 +190,7 @@ class ReviewableQueuedPost < Reviewable
       end
 
     pm_translation_args = {
+      **Dsa::AppealInstructions.message_options,
       topic_title: topic&.title || payload["title"],
       topic_url: topic&.url,
       reason: args[:revise_custom_reason].presence || args[:revise_reason],
