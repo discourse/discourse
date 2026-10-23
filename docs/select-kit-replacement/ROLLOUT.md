@@ -98,6 +98,11 @@ Paths are relative to the repository root.
   wizard's dynamic `{{component}}`. All now pass an explicit `onChange`. The write-back emits
   `discourse.select-kit.implicit-mutation`, which is not silenced, so core and bundled plugin tests
   fail on any new two-way site; third-party code only logs it.
+- **Customized multi-select panels:** button and mobile multi-selects no longer show a
+  separate strip of held items between the search and the results. Picked items now render as
+  chips inside the panel's search field. Plugins and themes that style or position the old strip
+  in those panels (`.d-select__strip`) need to target the field (`.d-select__chips`) instead.
+  Static selects and capped typeaheads keep the strip.
 
 ## Rollout architecture
 

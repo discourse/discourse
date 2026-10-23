@@ -363,6 +363,12 @@ the race the suite is otherwise blind to.
    multi-select that puts no chips in the trigger sidesteps that without the roleless-wrapper
    restructure proposed below. Settle this cycle before committing to that one.
 
+   **Since the panel field landed,** removal no longer depends on the trigger. A button
+   multi-select's popup and the mobile modal show every held item as a removable chip inside
+   the panel's search field (see "The panel field" in `frontend/discourse/app/ui-kit/select/README.md`),
+   and display-only trigger chips are described by the held-labels list. What this cycle still
+   has to decide is the trigger's own content: chips, a count, or both.
+
 ## Fixed in the unified grouping rework
 
 - **The create row no longer inherits the last group.** `#describeList` used to leave

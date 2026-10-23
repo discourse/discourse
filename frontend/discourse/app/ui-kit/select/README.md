@@ -52,7 +52,7 @@ block creation; `@allowCreate` can impose additional rules.
 renders `d_select.create_item` ("Create “%{label}”") around that label. The `data-name` hook
 remains the item label, and a consumer `:item` block overrides the row's content.
 
-## Compact triggers and the selection strip
+## Compact triggers
 
 `@maxVisibleChips={{N}}` limits a multi-select trigger on every variant and device.
 Zero shows the held count; a positive N shows the first N chips followed by `+K` for
@@ -65,41 +65,58 @@ chips stay removable unless `@maxVisibleChips` is set. Display-only chip labels 
 exposed to assistive technology. Every display-only trigger references a visually hidden
 list of **all** held labels in `aria-describedby`, merged with `@describedBy`, even when
 locked. The list sits outside the named root so disabled fields still expose their labels.
+The chips and that list share one resolution of the held values, and the resolver joins
+requests already in flight, so the same ids are never fetched twice.
 
-On desktop the strip appears for a multi-select with held items and display-only trigger
-chips. Button and static selects with a local `@items` source are the exception: their
-held rows are checked in the list. Server-backed button/static selects and capped
-typeaheads use the strip even when every held chip fits in the trigger. Once eligible in
-an open session, the strip stays eligible until close. It unmounts at zero held values
-after removal has handed focus back; picking the first item while open shows it again.
+## The panel field
 
-For a capped desktop typeahead, ArrowLeft at the start of the input opens the panel and
-focuses the strip's last chip. Tab from the input enters its single Tab stop through the
-panel's inline tab order; Up/Down or Shift+Tab return to the input. Only interactive
-trigger chips advertise “Press Left arrow to reach selected items”.
+Wherever the list stays visible (a button select's popup, the mobile modal, and
+`DSelectList`), held chips sit inside the search field, before the caret. The field is a
+single Tab stop. Its input is a search field (`type="search"`, no role) that drives the
+listbox through `aria-activedescendant`, with `aria-autocomplete="list"` and
+`aria-controls` while a listbox is rendered. Only the desktop typeahead trigger, whose list
+opens and closes, keeps `role="combobox"`.
 
-Every mobile multi-select with held items, including local sources, renders a labelled “Selected items” list in the
-modal: after the query input and limit message, before the results. Static modals have no
-query input. The modal is named after the field. The strip resolves every held value in
-order through the trigger's resolver cache, renders button-free skeletons while labels
-load, and keeps unresolved values removable. Custom `:selection` and `:unresolved` markup
-is shared with the trigger.
+From the input:
 
-The strip has one Tab stop. Left/Right move between its remove buttons; Enter, Space,
-Backspace and Delete remove the focused item and announce “Removed X”. Focus moves to
-the previous item, otherwise the next, then the connected query input or the static
-modal's first option when the strip empties. Pointer presses preserve query focus so the
-software keyboard stays open. Touch button names say “Remove X”; keyboard names lead
-with the label and include the existing removal hint. While strip focus is visible, the
-list's active-row indicator is suppressed.
+- Up/Down, PageUp/PageDown and Enter move through and pick results.
+- Home/End and Left/Right move the caret and clear the active row, so screen readers read
+  the text again. Up or Down brings the row back.
+- Left at the start of the input enters the chips (Right in right-to-left pages).
+- Backspace on an empty query removes the last held item, or clears a single value.
+- Escape closes a popup or modal. In `DSelectList` it clears a non-empty query and
+  otherwise leaves Escape to the containing panel.
 
-The strip has its own capped scroll area (`--d-select-strip-max-height`, default `8em`)
-and remove targets of at least 44px in the modal. The whole panel has a height budget
-(`--d-select-panel-max-height`, default `min(32em, 70dvh)`); the results shrink into the
-remaining space and remeasure when the strip resizes. Its roving group is independent
-of the trigger chips. Desktop strips follow the filter (button) or lead the panel
-(typeahead/static), after any limit message and before the results. Desktop remove
-targets are at least 24px.
+From a chip:
+
+- Left and Right move between chips; moving past the last one returns to the input.
+- Backspace or Delete remove the chip. Focus moves to the previous chip, or the next one,
+  before the chip goes, so it never falls to the page. Removing the only chip returns focus
+  to the input.
+- Enter, Space or a press remove the chip and return focus to the input.
+- Tab and Shift+Tab leave the whole field.
+
+Adds and removals are announced (“Added X”, “Removed X”). While a chip has focus, no
+result row shows as active. Locked or read-only chips keep focus but carry
+`aria-disabled="true"` and cannot be removed. Keyboard chip names lead with the label and
+include the removal hint; touch names say “Remove X”.
+
+The input keeps a minimum width and wraps onto its own line rather than shrinking. The
+field scrolls within `--d-select-field-max-height` (default `8em`) and keeps the focused
+chip or the caret line in view. Remove targets are at least 24px, and 44px on touch and
+in the modal. The whole panel has a height budget (`--d-select-panel-max-height`, default
+`min(32em, 70dvh)`); the results take the remaining space and remeasure when the field
+wraps. Clicking a label that wraps the field focuses the input, never a chip.
+
+Two surfaces keep a separate selection strip instead:
+
+- **The static variant** has no search. In the modal or with a server source it keeps a
+  strip; a desktop static list with local `@items` shows held items as checked rows
+  instead.
+- **A capped desktop typeahead** (`@maxVisibleChips`) lists every held item in a strip
+  in its panel. Left at the start of the input opens the panel and focuses the strip's
+  last chip; Tab from the input enters the strip, and Up/Down or Shift+Tab return to the
+  input. The strip scrolls within `--d-select-strip-max-height` (default `8em`).
 
 Closing clears only a panel/modal input captured for that session; persistent desktop
 controllers remain registered. Escape from the panel returns focus to the connected
@@ -158,7 +175,8 @@ entirely on `d-select.gts` and `select-engine.ts`.
 - `-internals/parts/` — the rendering subcomponents: trigger pieces (`trigger-frame`,
   `combobox-query-input`, `multi-chips`, `single-trigger-display`, `selection-label`),
   the list (`select-options`, `windowed-option-list`, `select-option-row`, `select-item`),
-  and the overlay selection strip (`selection-strip`). The options part owns the async shell
+  the shared panel body (`select-panel`), and the selection strip kept by the static and
+  capped variants (`selection-strip`). The options part owns the async shell
   and yields composed rows, their resolved content and configured per-list modifiers to its
   body. The windowed body and shared row part keep their elements and modifier order.
   Parts receive the stable helper objects (`@engine`, `@presenter`, …) plus per-slot inputs;
@@ -721,10 +739,11 @@ an inert `li.d-select__option.--placeholder` containing a text skeleton in the s
 `ul.d-select__options`, marked `aria-busy="true"`. Its first load uses the same row
 markup. Virtualized lists keep the separate skeleton list.
 
-`@hideSelected` leaves held items in the selection strip and omits them from results.
+`@hideSelected` leaves held items as chips in the search field and omits them from
+results.
 Removing a chip restores its row without another source request. Rows then drop the
 selection marker, which could only ever read unselected. The `:listHeader`
-block sits between the strip and results, outside the listbox. It yields the same live
+block sits between the search field and results, outside the listbox. It yields the same live
 state and resolved options as `:footer`, so a suggested-results heading can show only
 when `state.query` is empty. `state.filter` is the current input; `state.query` is the
 filter answered by the displayed results and stays on the previous answer while
@@ -732,15 +751,13 @@ a new query loads. This works with async `@load` sources. Neither state has
 a `close` action. Other blocks are `:item`, `:selection`, `:unresolved`, `:empty` and
 `:error`; see the typed signature in `d-select-list.gts` for their yielded values.
 
-Nothing takes focus on render. A row or chip press first focuses this select's search
-and keeps it there, including when another select previously held focus. Up/Down and
-Enter navigate and select from the input; Left/Right/Home/End remain text-caret commands.
-Backspace in the search edits only its text. In a static list PageUp/PageDown jump
-to the first/last option, since every row is mounted. Within the strip, Left/Right
-move between chips; Backspace/Delete/Enter remove the focused chip. Up/Down leave
-focus on the chip. Tab visits the search, strip
-when held items exist, footer controls, then the next control. The listbox itself is
-never a Tab stop. Escape is left to the containing panel, including a `DMenu`.
+Nothing takes focus on render. A row press first focuses this select's search and keeps
+it there, including when another select previously held focus. The search field and its
+chips follow [the panel field](#the-panel-field) model. In a static list PageUp/PageDown
+jump to the first/last option, since every row is mounted. Tab visits the search field,
+footer controls, then the next control; neither the chips nor the listbox are Tab
+stops. Escape clears a non-empty query and is otherwise left to the containing panel,
+including a `DMenu`.
 
 Automatic cursor entry needs focus inside the root, a query and room below the cap.
 Blur clears the cursor and pending jumps while preserving the query; returning with
@@ -749,11 +766,11 @@ second ownership check for deferred reports. Adds and removals always speak. Emp
 and error content remains visible while unfocused without live-region roles. An
 empty query with no rows renders and speaks no empty-result message.
 
-`@label`, `@placeholder`, `@id`, `@describedBy`, `@invalid`, `@disabled` and `@readonly`
-apply to the search input. Its expanded/controls attributes exist only while a listbox
-renders. The root is `.d-select.--list`, takes `...attributes`, and exposes the same
-`data-select-id`, `data-value` and `data-name` hooks as DSelect. `dSelect()` and
-`PageObjects::Components::UiKit::DSelect.at` accept this root too.
+`@label`, `@placeholder` (default “Search…”), `@id`, `@describedBy`, `@invalid`,
+`@disabled` and `@readonly` apply to the search input. Its `aria-controls` exists only
+while a listbox renders. The root is `.d-select.--list`, takes `...attributes`, and
+exposes the same `data-select-id`, `data-value` and `data-name` hooks as DSelect.
+`dSelect()` and `PageObjects::Components::UiKit::DSelect.at` accept this root too.
 
 The styleguide's “Two lists in one panel” example uses async tag sources, wrapping
 suggestions, a suggested-results header, and a checkbox that mounts the second list.

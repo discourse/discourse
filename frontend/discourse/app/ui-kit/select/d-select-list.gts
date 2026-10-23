@@ -394,7 +394,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
             @onRegisterChipRoving={{this.interaction.registerChipRoving}}
             @onResize={{this.listbox.remeasureListbox}}
             @pending={{this.engine.pending}}
-            @placeholder={{this.presenter.placeholder}}
+            @placeholder={{this.presenter.searchPlaceholderText}}
             @presenter={{this.presenter}}
             @queryDisplay="always"
             @registerInput={{this.interaction.registerFilter}}

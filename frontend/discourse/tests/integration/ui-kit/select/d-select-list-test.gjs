@@ -24,6 +24,7 @@ import {
   enableVirtualization,
 } from "discourse/ui-kit/-internals/windowing/virtualizer";
 import DSelectList from "discourse/ui-kit/select/d-select-list";
+import { i18n } from "discourse-i18n";
 
 const FRUIT = [
   { id: 1, name: "Apple" },
@@ -674,6 +675,37 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         leaving?.defaultPrevented,
         "an empty field leaves Escape alone"
       );
+    });
+
+    test("panel field: the search shows the shared placeholder unless one is given", async function (assert) {
+      const held = tracked([]);
+      const setHeld = (next) => (held.value = next);
+      await render(
+        <template>
+          <DSelectList
+            class="default-placeholder"
+            @items={{FRUIT}}
+            @label="Fruit"
+            @onChange={{setHeld}}
+            @value={{held.value}}
+          />
+          <DSelectList
+            class="own-placeholder"
+            @items={{FRUIT}}
+            @label="Fruit"
+            @onChange={{setHeld}}
+            @placeholder="Find fruit"
+            @value={{held.value}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(input(".default-placeholder"))
+        .hasAttribute("placeholder", i18n("d_select.search_placeholder"));
+      assert
+        .dom(input(".own-placeholder"))
+        .hasAttribute("placeholder", "Find fruit");
     });
 
     test("panel field: a surrounding label focuses the input, not a chip", async function (assert) {
