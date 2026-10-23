@@ -84,14 +84,19 @@ export function register(user, router, appEvents, applicationServerKey) {
           subscription = await pushManager.subscribe(
             pushSubscriptionOptions(applicationServerKey)
           );
+
+          // push was turned off while subscribing
+          if (
+            keyValueStore.getItem(userSubscriptionKey(user)) !== "subscribed"
+          ) {
+            await subscription.unsubscribe();
+            return true;
+          }
+
           // the new endpoint delivers nothing until the server knows it
           await sendSubscriptionToServer(subscription, false);
         }
 
-        if (subscription) {
-          // Resync localStorage
-          keyValueStore.setItem(userSubscriptionKey(user), "subscribed");
-        }
         return true;
       } catch (e) {
         // eslint-disable-next-line no-console

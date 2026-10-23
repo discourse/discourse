@@ -91,7 +91,10 @@ class SubscribeUserNotificationsInit {
             this.siteSettings.vapid_public_key_bytes
           )?.then((registered) => {
             // keep alerting through this tab until a later boot restores push
-            if (registered === false) {
+            if (
+              registered === false &&
+              isPushNotificationsEnabled(this.currentUser)
+            ) {
               this.desktopNotifications.setIsEnabledBrowser(true);
             }
           });

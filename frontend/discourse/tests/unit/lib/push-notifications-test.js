@@ -135,4 +135,23 @@ module("Unit | Lib | push-notifications | register", function (hooks) {
     keyValueStore.setItem(userSubscriptionKey(user), "subscribed");
     assert.true(isPushNotificationsEnabled(user));
   });
+
+  test("drops a restored subscription when push was turned off meanwhile", async function (assert) {
+    keyValueStore.setItem(userSubscriptionKey(user), "subscribed");
+    const restored = { unsubscribe: sinon.stub().resolves(true) };
+    this.pushManager.subscribe = () => {
+      keyValueStore.setItem(userSubscriptionKey(user), "false");
+      return Promise.resolve(restored);
+    };
+
+    await register(user, router, appEvents, "1|2|3");
+    await settled();
+
+    assert.true(restored.unsubscribe.calledOnce);
+    assert.strictEqual(this.subscribeRequests.length, 0);
+    assert.strictEqual(
+      keyValueStore.getItem(userSubscriptionKey(user)),
+      "false"
+    );
+  });
 });
