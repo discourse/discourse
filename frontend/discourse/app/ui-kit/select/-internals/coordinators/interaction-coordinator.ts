@@ -18,6 +18,7 @@ interface InteractionCoordinatorOptions {
   onShow: () => void;
   onClose: () => void;
   isMultiple: () => boolean | undefined;
+  clearActive: () => void;
 }
 
 export default class InteractionCoordinator {
@@ -27,6 +28,8 @@ export default class InteractionCoordinator {
    * the trigger input; in `button` it is the in-panel filter.
    */
   @tracked filterInput: HTMLElement | null = null;
+
+  @tracked listboxElement: HTMLElement | null = null;
 
   @tracked isExpanded = false;
 
@@ -70,6 +73,7 @@ export default class InteractionCoordinator {
   #engine: SelectEngine;
 
   #isMultiple: () => boolean | undefined;
+  #clearActive: () => void;
   // The DMenu instance, captured on register so the engine can close the overlay and
   // the compat bridge can reach the trigger element.
   #menu: DMenuInstance | null = null;
@@ -111,6 +115,7 @@ export default class InteractionCoordinator {
     onShow,
     onClose,
     isMultiple,
+    clearActive,
   }: InteractionCoordinatorOptions) {
     this.#engine = engine;
     this.#presenter = presenter;
@@ -119,6 +124,7 @@ export default class InteractionCoordinator {
     this.#onShow = onShow;
     this.#onClose = onClose;
     this.#isMultiple = isMultiple;
+    this.#clearActive = clearActive;
     // A pointer press outside the widget ends the interaction, so a focused custom-selection
     // field reverts to its resting markup. The browser leaves DOM focus on the input when the
     // press lands on a non-focusable element, so revert explicitly rather than waiting for a
@@ -231,6 +237,17 @@ export default class InteractionCoordinator {
   @action
   registerChipRoving(api: DRovingFocusApi | null): void {
     this.#chipRoving = api;
+  }
+
+  @action
+  registerListbox(element: HTMLElement | null): void {
+    this.listboxElement = element;
+  }
+
+  @action
+  escapePanel(event: KeyboardEvent): void {
+    event.preventDefault();
+    this.closeMenu();
   }
 
   /**
@@ -522,10 +539,12 @@ export default class InteractionCoordinator {
 
   @action
   handleInputKeydown(event: KeyboardEvent): void {
+    this.handleControllerKeydown(event);
     handleFieldKeydown(event, {
       engine: this.#engine,
       multiple: this.#isMultiple(),
       locked: this.#presenter.isLocked,
+      clearActive: this.#clearActive,
       navigateToSelection: (keyEvent) => this.#navigateToSelection(keyEvent),
     });
   }
@@ -564,7 +583,10 @@ export default class InteractionCoordinator {
 
   /** Keeps compact-strip opening and focus ownership with the overlay host. */
   #navigateToSelection(event: KeyboardEvent): boolean {
-    const target = this.#presenter.previousKeyTarget;
+    const target =
+      this.#presenter.isPanelSearchable || this.#presenter.isMobileTypeahead
+        ? "chips"
+        : this.#presenter.previousKeyTarget;
     if (target === "strip") {
       event.preventDefault();
       this.#stripFocusRequested = true;

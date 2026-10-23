@@ -121,6 +121,8 @@ interface SelectPanelSignature<State> {
     state: State;
   };
   Blocks: {
+    /** Optional search field sharing this panel with its results. */
+    field?: [];
     /** Custom item content. */
     item?: [
       /** The rendered item. */ item: SelectItem,
@@ -172,6 +174,7 @@ export default class SelectPanel<State> extends Component<
   }
 
   <template>
+    {{yield to="field"}}
     {{#if @limitMessage}}
       {{! A pinned top zone (sibling of the list, above it), so the cap/floor hint never
         stacks with the footer or an error body. Announced through the a11y service (a mounted

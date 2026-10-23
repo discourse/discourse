@@ -1299,10 +1299,10 @@ module(
         .exists({ count: 1 }, "mobile local sources keep a strip");
     });
 
-    test("desktop limit, strip and results share a height budget", async function (assert) {
+    test("desktop limit, field and results share a height budget", async function (assert) {
       const items = Array.from({ length: 60 }, (_, id) => ({
         id,
-        name: `Fruit ${id}`,
+        name: `Held fruit with a long label ${id}`,
       }));
       const value = items.slice(0, 40).map((item) => item.id);
       const server = () => items;
@@ -1328,9 +1328,9 @@ module(
         .dom(panel.children[1])
         .hasClass("d-select__limit", "then the limit");
       assert
-        .dom(panel.children[2])
-        .hasClass("d-select__strip", "then the strip");
-      const strip = find(".d-select__strip");
+        .dom(panel.children[0])
+        .hasClass("d-select__chips", "the field holds the chips");
+      const strip = find(".d-select__panel .d-select__chips");
       assert.true(
         strip.scrollHeight > strip.clientHeight,
         "long strips scroll internally"
@@ -1340,7 +1340,7 @@ module(
         "auto",
         "strip owns its scroll"
       );
-      const button = find(".d-select__strip button");
+      const button = find(".d-select__panel .d-select__chip-remove");
       assert.true(button.offsetHeight >= 24, "desktop targets are 24px tall");
       assert.true(button.offsetWidth >= 24, "and 24px wide");
       assert.true(

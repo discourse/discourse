@@ -3,6 +3,7 @@ import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { cancel, schedule } from "@ember/runloop";
 import type { ModifierLike } from "@glint/template";
 import { modifier as createModifier } from "ember-modifier";
 import { eq, not, or } from "discourse/truth-helpers";
@@ -50,10 +51,21 @@ const count: ListLifecycleModifier<[number, number | undefined, string?]> =
 const registerListbox = createModifier(
   (
     element: HTMLElement,
-    [register]: [(element: HTMLElement | null) => void]
+    [register, controller]: [
+      (element: HTMLElement | null) => void,
+      HTMLElement | null | undefined,
+    ]
   ) => {
-    register(element);
-    return () => register(null);
+    // Roving can seed before the deferred registration updates the input's rendered attributes.
+    controller?.setAttribute("aria-controls", element.id);
+    const registration = schedule("afterRender", () => register(element));
+    return () => {
+      if (controller?.getAttribute("aria-controls") === element.id) {
+        controller.removeAttribute("aria-controls");
+      }
+      cancel(registration);
+      schedule("afterRender", () => register(null));
+    };
   }
 );
 
@@ -241,7 +253,11 @@ const SelectOptions: TemplateOnlyComponent<SelectOptionsSignature> = <template>
           out-of-modal trigger cannot be the controller. Where the cursor lands on
           open is the presenter's entry convention; re-seed when async lands. }}
           {{#let
-            (modifier registerListbox (or @onRegisterListbox ignoreListbox))
+            (modifier
+              registerListbox
+              (or @onRegisterListbox ignoreListbox)
+              (if @presenter.usesActiveRoving @filterInput)
+            )
             (modifier listRelease @listbox.releaseListbox)
             (modifier recordOnEntry @feedback.recordRowCount items.length)
             (modifier record @feedback.recordRowCount items.length)

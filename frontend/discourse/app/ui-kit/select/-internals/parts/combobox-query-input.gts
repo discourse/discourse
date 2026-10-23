@@ -8,6 +8,8 @@ import type SelectEngine from "discourse/ui-kit/select/select-engine";
 interface ComboboxQueryInputSignature {
   Element: HTMLInputElement;
   Args: {
+    /** Search fields omit disclosure semantics while their list stays visible. */
+    roleMode?: "combobox" | "search";
     /** The headless engine; the input reads/writes only its `filter` (the query). */
     engine: SelectEngine;
     /**
@@ -48,11 +50,11 @@ interface ComboboxQueryInputSignature {
      */
     ariaOwns?: boolean;
     /** Opens the overlay (wired to the menu's `show`). */
-    onOpen: () => void;
+    onOpen?: () => void;
     /** Closes the overlay (Escape) — the parent resets the query on close. */
-    onRequestClose: () => void;
+    onRequestClose?: () => void;
     /** Overrides Escape's close action. Defaults to onRequestClose. */
-    onEscape?: () => void;
+    onEscape?: (event: KeyboardEvent) => void;
     /** Lets Tab bubble to the host. Defaults to false so Tab exits the trigger. */
     tabPassthrough?: boolean;
     /** Focus left the input; the parent decides whether that should close the overlay. */
@@ -66,37 +68,20 @@ interface ComboboxQueryInputSignature {
      */
     shouldSelectOnFocus?: () => boolean;
     /** Captures the input element (fed to `dRovingFocus` as the combobox controller). */
-    registerInput: (element: HTMLElement) => void;
+    registerInput: (element: HTMLInputElement) => void;
   };
 }
 
-/**
- * The `role="combobox"` text input at the heart of the typeahead trigger. It is
- * deliberately **arity-agnostic**: it carries the engine's `filter` and can display a
- * selected-label fallback until query editing begins. Custom selection markup and chips
- * remain siblings in the composite trigger box. It owns the combobox keyboard model that
- * DMenu's default button trigger does not:
- *
- * - **Tab** is stopped from bubbling to DMenu's trigger-root `forwardTabToContent`, which
- *   would pull focus into the panel whenever one is open — onto the body wrapper itself when
- *   the panel holds nothing but a list. Stopped here, Tab exits the widget instead, and the
- *   resulting blur closes the overlay. A panel that renders a control of its own (a `:footer`,
- *   the error state's retry) is reached before this, by the overlay's `inlineTabOrder`
- *   handler, which listens in the capture phase and declines a panel with no stop to offer.
- * - **ArrowDown/ArrowUp** open the overlay when closed; once open they reach `dRovingFocus`
- *   (bound to this same input) to move the virtual highlight.
- * - **Escape** closes; **Enter** is handled by `dRovingFocus` (activates the highlighted
- *   option) — except mid-composition, where both are suppressed so an IME candidate commit
- *   doesn't select an option.
- *
- * Arrow/Enter navigation keeps DOM focus on this input (the `active-descendant` focus
- * strategy), so the user can keep typing while navigating results.
- */
+/** Query input shared by typeahead triggers and visible-list search fields. */
 export default class ComboboxQueryInput extends Component<ComboboxQueryInputSignature> {
   // Set on `pointerdown` (which fires just before the native focus) so the focus handler
   // knows this focus came from a pointer press and must leave the caret where the click
   // put it, rather than selecting the whole label.
   #pointerFocus = false;
+
+  get isCombobox(): boolean {
+    return this.args.roleMode !== "search";
+  }
 
   get value(): string {
     return this.args.queryDisplay === "always" || this.args.editing
@@ -106,7 +91,9 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
 
   /** `aria-controls` only resolves to a live element while the listbox is rendered. */
   get controlsId(): string | undefined {
-    return this.args.expanded ? this.args.listboxId : undefined;
+    return this.args.roleMode === "search" || this.args.expanded
+      ? this.args.listboxId
+      : undefined;
   }
 
   /** `aria-owns` (desktop, cross-portal) only while the listbox is rendered. */
@@ -182,17 +169,17 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
     ) {
       event.preventDefault();
       if (!this.#locked) {
-        this.args.onOpen();
+        this.args.onOpen?.();
       }
       return;
     }
 
     if (event.key === "Escape") {
-      event.preventDefault();
       if (this.args.onEscape) {
-        this.args.onEscape();
+        this.args.onEscape(event);
       } else {
-        this.args.onRequestClose();
+        event.preventDefault();
+        this.args.onRequestClose?.();
       }
       return;
     }
@@ -236,7 +223,7 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
     this.args.onEdit?.();
     this.args.engine.setFilter(value);
     if (!this.args.expanded) {
-      this.args.onOpen();
+      this.args.onOpen?.();
     }
   }
 
@@ -244,8 +231,8 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
     <input
       aria-autocomplete="list"
       aria-controls={{this.controlsId}}
-      aria-expanded={{if @expanded "true" "false"}}
-      aria-haspopup="listbox"
+      aria-expanded={{if this.isCombobox (if @expanded "true" "false")}}
+      aria-haspopup={{if this.isCombobox "listbox"}}
       aria-label={{@label}}
       aria-owns={{this.ownsId}}
       autocomplete="off"
@@ -253,8 +240,8 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
       disabled={{@disabled}}
       placeholder={{@placeholder}}
       readonly={{@readonly}}
-      role="combobox"
-      type="text"
+      role={{if this.isCombobox "combobox"}}
+      type={{if this.isCombobox "text" "search"}}
       value={{this.value}}
       ...attributes
       {{on "input" this.handleInput}}

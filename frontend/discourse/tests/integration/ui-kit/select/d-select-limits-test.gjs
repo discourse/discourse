@@ -1455,7 +1455,7 @@ module(
 );
 
 /** Dispatches a cancellable native paste without waiting for pending parser work. */
-function pasteBulk(text) {
+function pasteBulk(text, selector = "input[role='combobox']") {
   const clipboardData = new DataTransfer();
   clipboardData.setData("text/plain", text);
   const event = new ClipboardEvent("paste", {
@@ -1463,7 +1463,7 @@ function pasteBulk(text) {
     bubbles: true,
     cancelable: true,
   });
-  find("input[role='combobox']").dispatchEvent(event);
+  find(selector).dispatchEvent(event);
   return event;
 }
 
@@ -1498,8 +1498,8 @@ module(
         </template>
       );
       await click(".d-select");
-      await fillIn("input[role='combobox']", "query");
-      const event = pasteBulk("one|two");
+      await fillIn("input.d-select__filter", "query");
+      const event = pasteBulk("one|two", "input.d-select__filter");
       await settled();
       assert.true(event.defaultPrevented, "mobile paste is consumed");
       assert.strictEqual(onChange.callCount, 1, "the batch emits once");
@@ -1520,7 +1520,7 @@ module(
         "the parser receives resolved options"
       );
       assert
-        .dom("input[role='combobox']")
+        .dom("input.d-select__filter")
         .hasValue("", "the mobile query clears");
     });
 

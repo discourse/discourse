@@ -20,7 +20,6 @@ import type Menu from "discourse/float-kit/services/menu";
 import type A11y from "discourse/services/a11y";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
-import DFilterInput from "discourse/ui-kit/d-filter-input";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import InteractionCoordinator from "discourse/ui-kit/select/-internals/coordinators/interaction-coordinator";
 import SelectHost, {
@@ -417,6 +416,7 @@ export default class DSelect extends Component<DSelectSignature> {
       onShow: () => this.args.onShow?.(),
       onClose: () => this.args.onClose?.(),
       isMultiple: () => this.args.multiple,
+      clearActive: () => this.listbox.clearCursor(),
     });
     associateDestroyableChild(this, this.host);
     associateDestroyableChild(this, this.interaction);
@@ -468,6 +468,14 @@ export default class DSelect extends Component<DSelectSignature> {
     return this.engine.belowMinChars ? undefined : this.listboxId;
   }
 
+  get panelInputId(): string {
+    return `${this.listboxId}-input`;
+  }
+
+  get panelListboxId(): string | undefined {
+    return this.interaction.listboxElement ? this.listboxId : undefined;
+  }
+
   /**
    * Stable id for the resting selection markup, so the combobox can point at it.
    *
@@ -511,11 +519,6 @@ export default class DSelect extends Component<DSelectSignature> {
     }
   }
 
-  @action
-  onFilterInput(event: Event): void {
-    this.engine.setFilter((event.target as HTMLInputElement).value);
-  }
-
   <template>
     <DMenu
       aria-busy={{if this.engine.pending "true"}}
@@ -534,6 +537,7 @@ export default class DSelect extends Component<DSelectSignature> {
       aria-readonly={{this.presenter.triggerRootReadonly}}
       class="d-select"
       data-select-id={{this.listboxId}}
+      data-selection-removal={{this.presenter.selectionRemovalSurface}}
       data-unresolved={{if this.presenter.hasUnresolvedSelection "true"}}
       {{! Desktop typeahead owns the field id on its input; every other surface needs it on
         the root because no trigger input renders there. }}
@@ -630,6 +634,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @label={{this.presenter.selectionLabel}}
               @listboxId={{this.activeListboxId}}
               @onBlur={{this.interaction.handleTriggerBlur}}
+              @onChipFocus={{this.listbox.clearCursor}}
               @onEdit={{this.interaction.beginQuery}}
               @onInputKeydown={{this.interaction.handleInputKeydown}}
               @onPaste={{this.host.handlePaste}}
@@ -727,61 +732,6 @@ export default class DSelect extends Component<DSelectSignature> {
           }}
           {{willDestroy this.feedback.releaseLoadFeedback}}
         >
-          {{#if this.presenter.isPanelSearchable}}
-            <DFilterInput
-              aria-autocomplete="list"
-              aria-controls={{this.activeListboxId}}
-              aria-expanded="true"
-              {{! The disclosure trigger hands focus straight here on open, so this is the first
-                thing a reader meets. A placeholder is a last-resort name source that screen
-                readers treat inconsistently — name it after the field it narrows. }}
-              aria-label={{this.presenter.ariaLabelText}}
-              autocomplete="off"
-              class="d-select__filter"
-              placeholder={{this.presenter.searchPlaceholderText}}
-              role="combobox"
-              @filterAction={{this.onFilterInput}}
-              @icons={{hash left="magnifying-glass"}}
-              @value={{this.engine.filter}}
-              {{on
-                "keydown"
-                this.interaction.handleControllerKeydown
-                capture=true
-              }}
-              {{on "paste" this.host.handlePaste}}
-              {{didInsert this.interaction.captureFilter}}
-            />
-          {{else if this.presenter.isMobileTypeahead}}
-            {{! Mobile: the query input lives inside the modal (an external host input can't
-              function behind an aria-modal). No aria-owns (input + listbox share the modal
-              subtree); no blur-close (the modal owns dismissal). }}
-            <ComboboxQueryInput
-              class="d-select__filter"
-              @disabled={{this.presenter.isDisabled}}
-              @editing={{this.interaction.queryActive}}
-              @engine={{this.engine}}
-              @expanded={{menuArgs.expanded}}
-              @label={{this.presenter.ariaLabelText}}
-              @listboxId={{this.activeListboxId}}
-              @onEdit={{this.interaction.beginQuery}}
-              @onOpen={{menuArgs.show}}
-              @onRequestClose={{menuArgs.close}}
-              @placeholder={{this.presenter.searchPlaceholderText}}
-              @readonly={{this.presenter.isReadonly}}
-              @registerInput={{this.interaction.captureFilter}}
-              {{on "paste" this.host.handlePaste}}
-              {{keepAboveKeyboard
-                this.interaction.shouldCorrectKeyboardOcclusion
-              }}
-              {{on
-                "keydown"
-                this.interaction.handleControllerKeydown
-                capture=true
-              }}
-              {{on "keydown" this.interaction.handleInputKeydown}}
-            />
-          {{/if}}
-
           <SelectPanel
             @announcer={{this.announcer}}
             @body={{WindowedOptionList}}
@@ -813,6 +763,7 @@ export default class DSelect extends Component<DSelectSignature> {
             @multiple={{@multiple}}
             @noResultsLabel={{@noResultsLabel}}
             @onOptionMousedown={{this.interaction.preventPointerBlur}}
+            @onRegisterListbox={{this.interaction.registerListbox}}
             @onRegisterStripRoving={{this.interaction.registerStripRoving}}
             @onStripResize={{this.listbox.remeasureListbox}}
             @presenter={{this.presenter}}
@@ -839,6 +790,96 @@ export default class DSelect extends Component<DSelectSignature> {
             }}
             @value={{@value}}
           >
+            <:field>
+              {{#if
+                (or
+                  this.presenter.isPanelSearchable
+                  this.presenter.isMobileTypeahead
+                )
+              }}
+                {{#if @multiple}}
+                  <MultiChips
+                    @ariaOwns={{false}}
+                    @closeMenu={{menuArgs.close}}
+                    @composeDescribedBy={{this.host.describedBy}}
+                    @describedBy={{@describedBy}}
+                    @editing={{true}}
+                    @engine={{this.engine}}
+                    @expanded={{true}}
+                    @fieldRendersInput={{true}}
+                    @focusChip={{this.interaction.focusChip}}
+                    @focusInput={{this.interaction.focusInput}}
+                    @hasSelectionBlock={{has-block "selection"}}
+                    @hasSelectionLoadingBlock={{has-block "selectionLoading"}}
+                    @hasUnresolvedBlock={{has-block "unresolved"}}
+                    @id={{this.panelInputId}}
+                    @invalid={{@invalid}}
+                    @label={{this.presenter.ariaLabelText}}
+                    @listboxId={{this.panelListboxId}}
+                    @onChipFocus={{this.listbox.clearCursor}}
+                    @onEscape={{this.interaction.escapePanel}}
+                    @onInputKeydown={{this.interaction.handleInputKeydown}}
+                    @onPaste={{this.host.handlePaste}}
+                    @onRegisterChipRoving={{this.interaction.registerChipRoving}}
+                    @onResize={{this.listbox.remeasureListbox}}
+                    @pending={{this.engine.pending}}
+                    @placeholder={{this.presenter.searchPlaceholderText}}
+                    @presenter={{this.presenter}}
+                    @queryDisplay="always"
+                    @registerInput={{this.interaction.captureFilter}}
+                    @roleMode="search"
+                    @selection={{this.heldSelection}}
+                    @shouldCorrectKeyboardOcclusion={{this.interaction.shouldCorrectKeyboardOcclusion}}
+                    @showMenu={{menuArgs.show}}
+                    @tabPassthrough={{true}}
+                    @triggerChipsInteractive={{true}}
+                    @value={{@value}}
+                  >
+                    <:selection as |item|>{{yield
+                        item
+                        this.engine.resolvedOptions
+                        to="selection"
+                      }}</:selection>
+                    <:unresolved as |item|>{{yield
+                        item
+                        this.engine.resolvedOptions
+                        to="unresolved"
+                      }}</:unresolved>
+                    <:selectionLoading>{{yield
+                        to="selectionLoading"
+                      }}</:selectionLoading>
+                  </MultiChips>
+                {{else}}
+                  <ComboboxQueryInput
+                    aria-describedby={{@describedBy}}
+                    aria-invalid={{if @invalid "true"}}
+                    class="d-select__filter"
+                    id={{this.panelInputId}}
+                    @disabled={{this.presenter.isDisabled}}
+                    @engine={{this.engine}}
+                    @expanded={{true}}
+                    @label={{this.presenter.ariaLabelText}}
+                    @listboxId={{this.panelListboxId}}
+                    @onRequestClose={{menuArgs.close}}
+                    @placeholder={{this.presenter.searchPlaceholderText}}
+                    @queryDisplay="always"
+                    @readonly={{this.presenter.isReadonly}}
+                    @registerInput={{this.interaction.captureFilter}}
+                    @roleMode="search"
+                    @tabPassthrough={{true}}
+                    {{on "paste" this.host.handlePaste}}
+                    {{keepAboveKeyboard
+                      this.interaction.shouldCorrectKeyboardOcclusion
+                    }}
+                    {{on
+                      "keydown"
+                      this.interaction.handleInputKeydown
+                      capture=true
+                    }}
+                  />
+                {{/if}}
+              {{/if}}
+            </:field>
             <:item as |item options|>{{yield item options to="item"}}</:item>
             <:groupHeader as |item options|>{{yield
                 item

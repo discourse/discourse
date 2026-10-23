@@ -162,6 +162,8 @@
     flex-shrink: 0;
   }
 
+  &:has(> .d-select__chips .d-select__chip-list:focus-within)
+    .d-select__option.--active,
   &:has(> .d-select__strip:focus-within) .d-select__option.--active {
     outline: none;
   }
@@ -585,7 +587,65 @@
   }
 
   &:not(:focus-within) .d-select__option.--active,
+  &:has(> .d-select__chips .d-select__chip-list:focus-within)
+    .d-select__option.--active,
   &:has(> .d-select__strip:focus-within) .d-select__option.--active {
     outline: none;
   }
+}
+
+.d-select__chips.--field {
+  @include form-item-sizing;
+  border: var(--d-input-border);
+  border-radius: var(--d-input-border-radius);
+  background: var(--d-input-bg-color);
+  color: var(--d-input-text-color);
+  max-height: var(--d-select-field-max-height, 8em);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  &:focus-within {
+    @include default-focus;
+  }
+
+  .d-select__filter {
+    flex: 1 0 8em;
+    min-width: min(8em, 100%);
+    width: auto;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+  }
+
+  .d-select__chip {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .d-select__chip-label {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .d-select__chip-remove {
+    flex-shrink: 0;
+    min-width: 24px;
+    min-height: 24px;
+
+    .discourse-touch &,
+    .fk-d-menu-modal & {
+      min-width: 44px;
+      min-height: 44px;
+    }
+  }
+}
+
+.d-select__filter::-webkit-search-cancel-button {
+  display: none;
 }

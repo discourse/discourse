@@ -1110,15 +1110,15 @@ module(
       await click(".d-select__trigger");
 
       assert
-        .dom(".fk-d-menu-modal [role='combobox']")
+        .dom(".fk-d-menu-modal .d-select__filter")
         .exists("the query input renders inside the modal");
       assert.strictEqual(
-        document.activeElement.getAttribute("role"),
-        "combobox",
+        document.activeElement,
+        find(".fk-d-menu-modal .d-select__filter"),
         "the modal input is focused on open"
       );
 
-      await fillIn(".fk-d-menu-modal [role='combobox']", "ban");
+      await fillIn(".fk-d-menu-modal .d-select__filter", "ban");
       assert.dom("[role='option']").exists({ count: 1 });
       assert.dom("[role='option']").hasText("Banana");
     });
@@ -1165,7 +1165,7 @@ module(
 
         assert.dom(".fk-d-menu-modal").exists("the modal opens");
         assert
-          .dom(".fk-d-menu-modal [role='combobox']")
+          .dom(".fk-d-menu-modal .d-select__filter")
           .isFocused("focus lands in the modal's query input");
       });
     }
@@ -1178,7 +1178,7 @@ module(
       await focus(".kt");
       await triggerKeyEvent(".kt", "keydown", "Enter");
       await triggerKeyEvent(
-        ".fk-d-menu-modal [role='combobox']",
+        ".fk-d-menu-modal .d-select__filter",
         "keydown",
         "Escape"
       );
@@ -1307,7 +1307,7 @@ module(
 
       assert.dom(".fk-d-menu-modal").exists("ArrowUp opens the modal");
       assert
-        .dom(".fk-d-menu-modal [role='combobox']")
+        .dom(".fk-d-menu-modal .d-select__filter")
         .isFocused("the modal query takes focus");
     });
 
@@ -1333,7 +1333,7 @@ module(
         );
 
       await triggerKeyEvent(
-        ".fk-d-menu-modal [role='combobox']",
+        ".fk-d-menu-modal .d-select__filter",
         "keydown",
         "Escape"
       );
@@ -1432,15 +1432,19 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("opens into a WAI-ARIA combobox + listbox with wired ids", async function (assert) {
+    test("opens into a search field + listbox with wired ids", async function (assert) {
       await render(<template><Host @variant="button" /></template>);
       await click(".d-select__trigger");
 
-      assert.dom("[role='combobox']").exists("the panel filter is a combobox");
       assert
-        .dom("[role='combobox']")
+        .dom(".d-select__filter")
+        .exists("the panel filter is a search field");
+      assert
+        .dom(".d-select__filter")
         .hasAttribute("aria-autocomplete", "list")
-        .hasAttribute("aria-expanded", "true");
+        .doesNotHaveAttribute("role")
+        .hasAttribute("type", "search")
+        .doesNotHaveAttribute("aria-expanded");
       assert.dom("[role='listbox']").exists("results are a listbox");
       assert.dom("[role='option']").exists({ count: 3 }, "one option per item");
 
@@ -1448,7 +1452,7 @@ module(
         .querySelector("[role='listbox']")
         .getAttribute("id");
       assert
-        .dom("[role='combobox']")
+        .dom(".d-select__filter")
         .hasAttribute(
           "aria-controls",
           listboxId,
@@ -1459,7 +1463,7 @@ module(
     test("the trigger is a disclosure button that opens from the keyboard", async function (assert) {
       await render(<template><Host @variant="button" /></template>);
 
-      // The button variant's in-panel filter is the combobox, so its trigger is a
+      // The button variant's in-panel filter is a search field, so its trigger is a
       // role="button" disclosure (not a second combobox), focusable and keyboard-openable.
       assert
         .dom(".d-select__trigger")
@@ -1493,7 +1497,7 @@ module(
       await triggerKeyEvent(".d-select__trigger", "keydown", " ");
       assert.dom("[role='listbox']").exists("Space opens the disclosure");
 
-      await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+      await triggerKeyEvent(".d-select__filter", "keydown", "Escape");
       assert.dom("[role='listbox']").doesNotExist("Escape closes it again");
 
       await click(".d-select__trigger");
@@ -1504,21 +1508,21 @@ module(
       await render(<template><Host @variant="button" /></template>);
       await click(".d-select__trigger");
 
-      await fillIn("[role='combobox']", "ban");
+      await fillIn(".d-select__filter", "ban");
       assert.dom("[role='option']").exists({ count: 1 });
       assert.dom("[role='option']").hasText("Banana");
 
-      await fillIn("[role='combobox']", "cherry p");
+      await fillIn(".d-select__filter", "cherry p");
       assert.dom("[role='option']").hasText("Cherry pie");
     });
 
     test("keyboard: ArrowDown + Enter selects the highlighted option and closes", async function (assert) {
       await render(<template><Host @variant="button" /></template>);
       await click(".d-select__trigger");
-      await fillIn("[role='combobox']", "app");
+      await fillIn(".d-select__filter", "app");
 
-      await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
-      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+      await triggerKeyEvent(".d-select__filter", "keydown", "ArrowDown");
+      await triggerKeyEvent(".d-select__filter", "keydown", "Enter");
 
       assert.dom("[role='listbox']").doesNotExist("selecting closes the menu");
       assert
@@ -2228,7 +2232,7 @@ module(
       );
 
       await click(".d-select__trigger");
-      await fillIn(".fk-d-menu-modal [role='combobox']", "ap");
+      await fillIn(".fk-d-menu-modal .d-select__filter", "ap");
 
       assert
         .dom(".fk-d-menu-modal .d-select__min-chars[role='status']")
@@ -2840,12 +2844,12 @@ module(
         .dom("[role='option'].--active")
         .doesNotExist("a button select opens with no highlight");
 
-      await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+      await triggerKeyEvent(".d-select__filter", "keydown", "ArrowDown");
       assert
         .dom("[role='option'].--active")
         .exists("arrowing down seeds the highlight");
 
-      await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+      await triggerKeyEvent(".d-select__filter", "keydown", "Escape");
       await click(".d-select__trigger");
       assert
         .dom("[role='option'].--active")

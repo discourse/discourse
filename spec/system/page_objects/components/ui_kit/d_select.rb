@@ -133,6 +133,26 @@ module PageObjects
           remove_by("name", name)
         end
 
+        def remove_trigger_chip(value)
+          remove_trigger_chip_by("value", value)
+          self
+        end
+
+        def remove_panel_chip(value)
+          remove_panel_chip_by("value", value)
+          self
+        end
+
+        def remove_strip_item(value)
+          remove_strip_item_by("value", value)
+          self
+        end
+
+        def remove_selected_row(value)
+          remove_selected_row_by("value", value)
+          self
+        end
+
         def value
           trigger["data-value"]
         end
@@ -315,10 +335,7 @@ module PageObjects
         end
 
         # The query input for a panel-searchable (`button`) variant, which renders inside the
-        # portaled overlay rather than in the trigger. `input` reaches the typeahead's trigger
-        # input instead, and finds nothing here: the panel builds its filter from `DFilterInput`
-        # (an `input.filter-input`), not the typeahead's `.d-select__input`. The class DSelect
-        # puts on it is what both variants have in common to key on.
+        # overlay rather than in the trigger.
         def panel_input
           find(in_panel(".d-select__filter"))
         end
@@ -632,29 +649,50 @@ module PageObjects
         end
 
         def remove_by(hook, value)
-          button =
-            trigger.first(
-              ".d-select__chip#{hook_selector(hook, value)} .d-select__chip-remove",
-              minimum: 0,
-              wait: 0,
-            )
-          if button
-            button.click
+          case trigger["data-selection-removal"]
+          when "trigger-chips"
+            remove_trigger_chip_by(hook, value)
+          when "panel-chips"
+            remove_panel_chip_by(hook, value)
+          when "strip"
+            remove_strip_item_by(hook, value)
+          when "selected-rows"
+            remove_selected_row_by(hook, value)
           else
-            open_for_value
-            strip_button =
-              first(
-                in_panel(".d-select__strip-item#{hook_selector(hook, value)} button"),
-                minimum: 0,
-                wait: 0,
-              )
-            if strip_button
-              strip_button.click
-            else
-              select_hook(hook, value)
-            end
+            raise "unknown selection removal model"
           end
           self
+        end
+
+        def remove_trigger_chip_by(hook, value)
+          trigger.find(".d-select__chip#{hook_selector(hook, value)} .d-select__chip-remove").click
+        end
+
+        def remove_panel_chip_by(hook, value)
+          open_for_value
+          find(
+            in_panel(
+              ".d-select__chips.--field .d-select__chip#{hook_selector(hook, value)} .d-select__chip-remove",
+            ),
+          ).click
+        end
+
+        def remove_strip_item_by(hook, value)
+          open_for_value
+          find(
+            in_panel(".d-select__strip-item#{hook_selector(hook, value)} .d-select__strip-remove"),
+          ).click
+        end
+
+        def remove_selected_row_by(hook, value)
+          open_for_value
+          if trigger["data-selection-removal"] != "selected-rows"
+            raise "selected-row removal requires a desktop local static list"
+          end
+          panel = linked_panel_selector
+          selector = "#{panel} [role='option'][aria-selected='true']#{hook_selector(hook, value)}"
+          page.assert_selector(panel) { option_in_windows?(panel, selector) }
+          find(selector).click
         end
 
         def select_hook(hook, value)

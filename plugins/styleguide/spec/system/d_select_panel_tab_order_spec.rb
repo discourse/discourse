@@ -74,4 +74,24 @@ describe "UiKit | DSelect panel tab order" do
     # captured by a panel that has nothing to offer it.
     expect(plain).to be_widget_blurred
   end
+
+  it "leaves a button panel field from its chips in both Tab directions" do
+    visit_group("selection", "sg-toggle")
+    select = PageObjects::Components::UiKit::DSelect.by_identifier("sg-toggle")
+    expect(select.mark_tab_order_oracle.fetch("hasAfter")).to eq(true)
+
+    select.open_trigger
+    select.press(:left)
+    expect(select.focused_chip_label).to be_present
+    select.press(:tab)
+    expect(page).to have_css("[data-tab-oracle='after']:focus")
+    expect(select).to be_widget_blurred
+
+    select.open_trigger
+    select.press(:left)
+    expect(select.focused_chip_label).to be_present
+    select.press(%i[shift tab])
+    expect(select).to be_trigger_focused
+    expect(select).to have_no_listbox
+  end
 end

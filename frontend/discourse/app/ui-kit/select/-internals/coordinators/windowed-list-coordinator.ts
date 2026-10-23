@@ -332,6 +332,7 @@ export default class WindowedListCoordinator {
   }
 
   /** Cancels cursor work without releasing a list that remains mounted. */
+  @action
   clearCursor(): void {
     cancel(this.#jumpTimer);
     this.#jumpTimer = undefined;

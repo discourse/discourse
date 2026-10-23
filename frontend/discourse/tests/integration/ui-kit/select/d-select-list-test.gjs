@@ -102,7 +102,7 @@ function root(selector = ".d-select.--list") {
 }
 
 function input(scope = ".d-select.--list") {
-  return find(`${scope} input[role="combobox"]`);
+  return find(`${scope} .d-select__chips input[type="search"]`);
 }
 
 function listbox(scope = ".d-select.--list") {
@@ -122,7 +122,11 @@ function activeRow(scope = ".d-select.--list") {
 }
 
 function chips(scope = ".d-select.--list") {
-  return findAll(`${scope} .d-select__strip-item`);
+  return findAll(`${scope} .d-select__chips .d-select__chip`);
+}
+
+function chipButtons(scope = ".d-select.--list") {
+  return findAll(`${scope} .d-select__chips .d-select__chip-remove`);
 }
 
 async function type(text, scope) {
@@ -189,7 +193,7 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       assert.dom(listbox()).hasAttribute("tabindex", "-1");
     });
 
-    test("DSelectList ties aria-expanded and aria-controls to a rendered listbox", async function (assert) {
+    test("DSelectList ties aria-controls to a rendered listbox without disclosure semantics", async function (assert) {
       const held = tracked([]);
       const setHeld = (next) => (held.value = next);
       const load = fruitLoader();
@@ -204,7 +208,9 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         </template>
       );
 
-      assert.dom(input()).hasAria("expanded", "true");
+      assert
+        .dom(input())
+        .doesNotHaveAria("expanded", "search fields have no disclosure state");
       assert
         .dom(input())
         .hasAria("controls", listbox().id, "controls the rendered listbox");
@@ -313,111 +319,387 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
         "focus stays in the search"
       );
     });
+  });
 
-    test("DSelectList leaves Home and End to the text caret", async function (assert) {
-      const held = tracked([]);
+  module("panel field", function () {
+    /** A list holding Apple and Banana, with a button after it to receive focus. */
+    async function renderHeld(held, extra = {}) {
       const setHeld = (next) => (held.value = next);
-      const load = fruitLoader();
       await render(
         <template>
-          <DSelectList
-            @label="Fruit"
-            @load={{load}}
-            @onChange={{setHeld}}
-            @value={{held.value}}
-          />
+          <div dir={{extra.dir}}>
+            <DSelectList
+              @disabled={{extra.disabled}}
+              @items={{FRUIT}}
+              @label="Fruit"
+              @onChange={{setHeld}}
+              @readonly={{extra.readonly}}
+              @value={{held.value}}
+            />
+          </div>
+          <button class="after-list" type="button">After</button>
         </template>
       );
+    }
 
-      await focus(input());
-      await type("a");
-      const before = activeRow().textContent.trim();
-      const end = await dispatched("keydown", () =>
-        triggerKeyEvent(input(), "keydown", "End")
+    test("panel field: held chips sit inside the search field and there is no strip", async function (assert) {
+      const held = tracked([1, 2]);
+      await renderHeld(held);
+
+      assert.dom(".d-select__strip").doesNotExist("no separate strip");
+      assert.deepEqual(
+        chips().map((chip) => chip.dataset.name),
+        ["Apple", "Banana"],
+        "the field holds one chip per held item, in order"
       );
-      assert.false(end?.defaultPrevented, "End is not consumed");
-      assert.dom(activeRow()).hasText(before, "the cursor did not move");
+      const field = find(".d-select.--list .d-select__chips");
+      assert.true(
+        field.contains(input()),
+        "the search input is part of the same field as the chips"
+      );
+      assert
+        .dom(".d-select.--list .d-select__chip-list")
+        .hasAria("label", "Selected items", "the chips are a labelled list");
+      assert
+        .dom(".d-select.--list input[role='combobox']")
+        .doesNotExist("no combobox input remains in the list");
+      assert.true(
+        chipButtons().every((button) => button.tabIndex === -1),
+        "chips are not Tab stops; the input is the field's only stop"
+      );
     });
 
-    test("DSelectList removes held items from the strip, not with Backspace in the search", async function (assert) {
-      const held = tracked([1, 2, 3]);
-      const setHeld = (next) => (held.value = next);
-      await render(
-        <template>
-          <DSelectList
-            @items={{FRUIT}}
-            @label="Fruit"
-            @onChange={{setHeld}}
-            @value={{held.value}}
-          />
-        </template>
+    test("panel field: the search input is a search field driving the listbox", async function (assert) {
+      const held = tracked([]);
+      await renderHeld(held);
+
+      assert
+        .dom(input())
+        .hasAttribute("type", "search")
+        .doesNotHaveAttribute("role", "a search field carries no explicit role")
+        .hasAria("autocomplete", "list")
+        .hasAria("controls", listbox().id)
+        .hasAria("label", "Fruit");
+
+      await focus(input());
+      await type("an");
+      assert
+        .dom(input())
+        .hasAria(
+          "activedescendant",
+          activeRow().id,
+          "the input drives the list"
+        );
+    });
+
+    test("panel field: ArrowLeft at the start of the input enters the chips and ArrowRight returns", async function (assert) {
+      const held = tracked([1, 2]);
+      await renderHeld(held);
+
+      await focus(input());
+      await triggerKeyEvent(input(), "keydown", "ArrowLeft");
+      assert.strictEqual(
+        document.activeElement,
+        chipButtons()[1],
+        "ArrowLeft reaches the last chip"
+      );
+      await triggerKeyEvent(document.activeElement, "keydown", "ArrowLeft");
+      assert.strictEqual(
+        document.activeElement,
+        chipButtons()[0],
+        "ArrowLeft moves to the previous chip"
+      );
+      await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
+      await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
+      assert.strictEqual(
+        document.activeElement,
+        input(),
+        "ArrowRight past the last chip returns to the input"
+      );
+    });
+
+    test("panel field: ArrowLeft with text before the caret stays in the input", async function (assert) {
+      const held = tracked([1, 2]);
+      await renderHeld(held);
+
+      await focus(input());
+      await type("ap");
+      const left = await dispatched("keydown", () =>
+        triggerKeyEvent(input(), "keydown", "ArrowLeft")
+      );
+      assert.false(left?.defaultPrevented, "the caret moves");
+      assert.strictEqual(document.activeElement, input(), "focus stays");
+    });
+
+    test("panel field: in a right-to-left page ArrowRight enters the chips", async function (assert) {
+      const held = tracked([1, 2]);
+      await renderHeld(held, { dir: "rtl" });
+
+      await focus(input());
+      await triggerKeyEvent(input(), "keydown", "ArrowLeft");
+      assert.strictEqual(
+        document.activeElement,
+        input(),
+        "ArrowLeft is the next key in RTL and stays in the input"
+      );
+      await triggerKeyEvent(input(), "keydown", "ArrowRight");
+      assert.strictEqual(
+        document.activeElement,
+        chipButtons()[1],
+        "ArrowRight reaches the last chip"
+      );
+    });
+
+    test("panel field: Backspace on an empty query removes the last held item and says so", async function (assert) {
+      const held = tracked([1, 2]);
+      await renderHeld(held);
+
+      await focus(input());
+      await triggerKeyEvent(input(), "keydown", "Backspace");
+      assert.deepEqual(held.value, [1], "the last held item is removed");
+      assert.strictEqual(document.activeElement, input(), "focus stays");
+      assert.true(
+        this.announce.calledWithMatch(sinon.match("Removed Banana")),
+        "the removal is announced"
       );
 
-      assert.strictEqual(chips().length, 3, "every held item has a chip");
-      await click(chips()[0].querySelector("button"));
-      assert.deepEqual(held.value, [2, 3], "the chip removed its item");
-
-      // The strip sits below the search, so an empty-query Backspace would remove a chip out of
-      // the reader's view.
-      await focus(input());
+      await type("a");
       await triggerKeyEvent(input(), "keydown", "Backspace");
       assert.deepEqual(
         held.value,
-        [2, 3],
-        "Backspace in the search removes nothing"
+        [1],
+        "Backspace with a query edits the text"
       );
     });
 
-    test("DSelectList keeps arrow keys within the search and within the strip", async function (assert) {
+    test("panel field: Delete on a chip removes it and focuses the previous chip", async function (assert) {
+      const held = tracked([1, 2, 3]);
+      await renderHeld(held);
+
+      await focus(chipButtons()[2]);
+      await triggerKeyEvent(document.activeElement, "keydown", "Delete");
+      assert.deepEqual(held.value, [1, 2]);
+      assert.strictEqual(
+        document.activeElement,
+        chipButtons()[1],
+        "focus lands on the previous chip"
+      );
+
+      await triggerKeyEvent(document.activeElement, "keydown", "Backspace");
+      assert.deepEqual(
+        held.value,
+        [1],
+        "Backspace removes the focused chip too"
+      );
+      assert.strictEqual(document.activeElement, chipButtons()[0]);
+    });
+
+    test("panel field: removing a chip hands focus straight to its neighbour", async function (assert) {
+      const held = tracked([1, 2, 3]);
+      await renderHeld(held);
+
+      for (const [index, expected] of [
+        [1, "Apple"],
+        [0, "Cherry"],
+      ]) {
+        const removed = chipButtons()[index];
+        let handedTo;
+        removed.addEventListener(
+          "focusout",
+          (event) => (handedTo = event.relatedTarget),
+          { once: true }
+        );
+        await focus(removed);
+        await triggerKeyEvent(removed, "keydown", "Delete");
+        assert.strictEqual(
+          handedTo?.closest(".d-select__chip")?.dataset.name,
+          expected,
+          `focus moves from the removed chip to ${expected}, never to the page`
+        );
+      }
+    });
+
+    test("panel field: removing the only chip returns focus to the input", async function (assert) {
+      const held = tracked([1]);
+      await renderHeld(held);
+
+      await focus(chipButtons()[0]);
+      await triggerKeyEvent(document.activeElement, "keydown", "Delete");
+      assert.deepEqual(held.value, []);
+      assert.strictEqual(document.activeElement, input());
+    });
+
+    test("panel field: pressing a chip removes it and returns focus to the input", async function (assert) {
+      const held = tracked([1, 2]);
+      await renderHeld(held);
+
+      await click(chipButtons()[0]);
+      assert.deepEqual(held.value, [2]);
+      assert.strictEqual(document.activeElement, input());
+    });
+
+    test("panel field: a focus restore after removal yields to focus that moved on", async function (assert) {
+      const held = tracked([1, 2, 3]);
+      await renderHeld(held);
+
+      await focus(chipButtons()[2]);
+      const removal = triggerKeyEvent(
+        document.activeElement,
+        "keydown",
+        "Delete"
+      );
+      moveFocusNow(find(".after-list"));
+      await removal;
+      await settled();
+      assert.deepEqual(held.value, [1, 2]);
+      assert.strictEqual(
+        document.activeElement,
+        find(".after-list"),
+        "a late restore does not pull focus back into the field"
+      );
+    });
+
+    test("panel field: locked chips stay reachable but cannot be removed", async function (assert) {
+      for (const lock of ["disabled", "readonly"]) {
+        const held = tracked([1, 2]);
+        await renderHeld(held, { [lock]: true });
+
+        const buttons = chipButtons();
+        assert.true(
+          buttons.every(
+            (button) => button.getAttribute("aria-disabled") === "true"
+          ),
+          `${lock}: chips announce that they are unavailable`
+        );
+        assert.true(
+          buttons.every((button) => !button.disabled),
+          `${lock}: chips stay focusable`
+        );
+        await focus(buttons[1]);
+        await triggerKeyEvent(document.activeElement, "keydown", "Delete");
+        await click(buttons[0]);
+        assert.deepEqual(held.value, [1, 2], `${lock}: nothing is removed`);
+      }
+    });
+
+    test("panel field: chips name their item and how to remove it", async function (assert) {
+      const held = tracked([1]);
+      await renderHeld(held);
+
+      const ids = chipButtons()[0].getAttribute("aria-labelledby").split(/\s+/);
+      const name = ids
+        .map((id) => document.getElementById(id).textContent.trim())
+        .join(" ");
+      assert.true(
+        name.startsWith("Apple"),
+        `the name leads with the item: ${name}`
+      );
+      assert.true(
+        name.includes("Press Backspace or Delete to remove"),
+        "and says how to remove it"
+      );
+      const described = (input().getAttribute("aria-describedby") ?? "")
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((id) => document.getElementById(id)?.textContent.trim())
+        .join(" ");
+      assert.true(
+        described.includes("Press Left arrow to reach selected items."),
+        `the input explains how to reach the chips: ${described}`
+      );
+    });
+
+    test("panel field: caret moves clear the active row and arrows bring it back", async function (assert) {
+      const held = tracked([]);
+      await renderHeld(held);
+
+      await focus(input());
+      await type("a");
+      assert.dom(activeRow()).exists("a query activates a row");
+      for (const key of ["End", "Home"]) {
+        await triggerKeyEvent(input(), "keydown", "ArrowDown");
+        const event = await dispatched("keydown", () =>
+          triggerKeyEvent(input(), "keydown", key)
+        );
+        assert.false(event?.defaultPrevented, `${key} moves the caret`);
+        assert
+          .dom(input())
+          .doesNotHaveAria(
+            "activedescendant",
+            `${key} hands reading back to the caret`
+          );
+      }
+      await triggerKeyEvent(input(), "keydown", "ArrowDown");
+      assert
+        .dom(input())
+        .hasAria(
+          "activedescendant",
+          activeRow().id,
+          "ArrowDown reactivates a row"
+        );
+    });
+
+    test("panel field: the active row is hidden while a chip has focus", async function (assert) {
+      const held = tracked([1]);
+      await renderHeld(held);
+
+      await focus(input());
+      await type("a");
+      const active = activeRow();
+      assert.dom(active).exists();
+      await triggerKeyEvent(input(), "keydown", "Home");
+      await triggerKeyEvent(input(), "keydown", "ArrowLeft");
+      assert.strictEqual(document.activeElement, chipButtons()[0]);
+      assert.strictEqual(activeRow(), null, "no row looks active from a chip");
+      await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
+      assert.strictEqual(document.activeElement, input());
+    });
+
+    test("panel field: Escape with a query clears it, and with none leaves it to the page", async function (assert) {
+      const held = tracked([]);
+      await renderHeld(held);
+
+      await focus(input());
+      await type("ap");
+      const clearing = await dispatched("keydown", () =>
+        triggerKeyEvent(input(), "keydown", "Escape")
+      );
+      assert.true(clearing?.defaultPrevented, "Escape is consumed to clear");
+      assert.dom(input()).hasValue("", "the query is cleared");
+
+      const leaving = await dispatched("keydown", () =>
+        triggerKeyEvent(input(), "keydown", "Escape")
+      );
+      assert.false(
+        leaving?.defaultPrevented,
+        "an empty field leaves Escape alone"
+      );
+    });
+
+    test("panel field: a surrounding label focuses the input, not a chip", async function (assert) {
       const held = tracked([1, 2]);
       const setHeld = (next) => (held.value = next);
       await render(
         <template>
-          <DSelectList
-            @items={{FRUIT}}
-            @label="Fruit"
-            @onChange={{setHeld}}
-            @value={{held.value}}
-          />
+          <label class="field-label">
+            Pick fruit
+            <DSelectList
+              @items={{FRUIT}}
+              @label="Fruit"
+              @onChange={{setHeld}}
+              @value={{held.value}}
+            />
+          </label>
         </template>
       );
 
-      await focus(input());
-      const left = await dispatched("keydown", () =>
-        triggerKeyEvent(input(), "keydown", "ArrowLeft")
+      await click(".field-label");
+      assert.strictEqual(document.activeElement, input());
+      assert.deepEqual(
+        held.value,
+        [1, 2],
+        "activating the label removes nothing"
       );
-      assert.false(left?.defaultPrevented, "ArrowLeft moves the caret");
-      assert.strictEqual(
-        document.activeElement,
-        input(),
-        "focus stays in the search"
-      );
-
-      const buttons = () => chips().map((chip) => chip.querySelector("button"));
-      await focus(buttons()[0]);
-      await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
-      assert.strictEqual(
-        document.activeElement,
-        buttons()[1],
-        "ArrowRight moves to the next chip"
-      );
-
-      await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
-      assert.strictEqual(
-        document.activeElement,
-        buttons()[1],
-        "ArrowDown stays on the chip"
-      );
-      await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
-      assert.strictEqual(
-        document.activeElement,
-        buttons()[1],
-        "ArrowUp stays on the chip"
-      );
-      assert.deepEqual(held.value, [1, 2], "arrows change nothing");
-
-      await triggerKeyEvent(document.activeElement, "keydown", "Delete");
-      assert.deepEqual(held.value, [1], "Delete removes the focused chip");
     });
   });
 

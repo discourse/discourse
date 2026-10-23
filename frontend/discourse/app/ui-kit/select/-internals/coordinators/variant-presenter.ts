@@ -316,10 +316,28 @@ export default class VariantPresenter
     return !!this.#getArgs().multiple && !this.triggerChipsInteractive;
   }
 
+  /** Stable removal model for drivers, including when expected selection markup is missing. */
+  get selectionRemovalSurface():
+    | "trigger-chips"
+    | "panel-chips"
+    | "strip"
+    | "selected-rows" {
+    if (this.isStatic) {
+      return this.overlayIsModal || this.#engine.isAsync
+        ? "strip"
+        : "selected-rows";
+    }
+    if (this.isDesktopTypeahead) {
+      return this.triggerChipsInteractive ? "trigger-chips" : "strip";
+    }
+    return "panel-chips";
+  }
+
   /** Local control lists already expose held rows with checked states. */
   get selectionStripEligible(): boolean {
     return (
       this.describeHeldLabels &&
+      (this.isStatic || this.isDesktopTypeahead) &&
       this.#engine.hasValue &&
       (this.overlayIsModal || this.isDesktopTypeahead || this.#engine.isAsync)
     );

@@ -1,14 +1,19 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import { next as nextRunloop } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
+import { service } from "@ember/service";
 import type { TrackedAsyncData } from "ember-async-data";
+import { modifier as createModifier } from "ember-modifier";
 import { makeArray } from "discourse/lib/helpers";
+import type { CapabilitiesService } from "discourse/services/capabilities";
+import { eq } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import dRovingFocus, {
   type DRovingFocusApi,
   type DRovingFocusAxis,
@@ -33,7 +38,16 @@ interface MultiChipsSignature {
     /** The headless selection engine. */
     engine: SelectEngine;
     /** The stable helper for variant-specific presentation state. */
-    presenter: VariantPresenter;
+    presenter: Pick<
+      VariantPresenter,
+      "isLocked" | "isDisabled" | "isReadonly"
+    > & { maxVisibleChips?: number };
+    /** Search-mode fields show every held chip and let Tab reach the panel host. */
+    roleMode?: "combobox" | "search";
+    /** Remeasures the list when this field wraps or changes height. */
+    onResize?: () => void;
+    /** Drops virtual list focus when a chip takes DOM focus. */
+    onChipFocus?: () => void;
     /** Whether the field contains a query input. */
     fieldRendersInput: boolean;
     /** Whether the chips rove and offer removal. */
@@ -41,7 +55,7 @@ interface MultiChipsSignature {
     /** Whether the input claims the listbox through aria-owns. */
     ariaOwns: boolean;
     /** Overrides Escape's close action. Defaults to closeMenu. */
-    onEscape?: () => void;
+    onEscape?: (event: KeyboardEvent) => void;
     /** Lets Tab bubble to the host. Defaults to false so Tab exits the trigger. */
     tabPassthrough?: boolean;
     /** Defaults to showing the query only while editing; always shows the engine's filter. */
@@ -85,19 +99,19 @@ interface MultiChipsSignature {
     /** Reports the chip roving-focus API to the owner. */
     onRegisterChipRoving: (api: DRovingFocusApi | null) => void;
     /** Determines whether focus should select the displayed label. */
-    shouldSelectOnFocus: () => boolean;
+    shouldSelectOnFocus?: () => boolean;
     /** Handles query editing. */
-    onEdit: () => void;
-    /** Handles parsed pastes on the desktop query input. */
+    onEdit?: () => void;
+    /** Handles parsed pastes on the query input. */
     onPaste: (event: ClipboardEvent) => void | Promise<void>;
-    /** Captures the desktop query input. */
-    registerInput: (element: HTMLElement) => void;
-    /** Handles focus leaving the desktop query input. */
-    onBlur: (event: FocusEvent) => void;
+    /** Captures the query input. */
+    registerInput: (element: HTMLInputElement) => void;
+    /** Handles focus leaving the query input. */
+    onBlur?: (event: FocusEvent) => void;
     /** Handles selection-removal keys on the query input. */
     onInputKeydown: (event: KeyboardEvent) => void;
     /** Whether the keyboard-occlusion correction should run. */
-    shouldCorrectKeyboardOcclusion: () => boolean;
+    shouldCorrectKeyboardOcclusion?: () => boolean;
   };
   Blocks: {
     /** Custom markup for a selected item. */
@@ -116,6 +130,29 @@ interface MultiChipsSignature {
 }
 
 export default class MultiChips extends Component<MultiChipsSignature> {
+  @service declare capabilities: CapabilitiesService;
+
+  /**
+   * Keeps the focused chip or caret line in view. Its positionals, the held values and their
+   * resolved labels, only make it re-run when either changes.
+   */
+  watchField = createModifier<{
+    Element: HTMLElement;
+    Args: { Positional: [value: unknown, resolved: unknown] };
+  }>((element) => {
+    this.#element = element;
+    const check = schedule("afterRender", () => {
+      if (!this.isDestroying && element.contains(document.activeElement)) {
+        this.#revealFocused();
+      }
+    });
+    return () => {
+      cancel(check);
+    };
+  });
+
+  #element: HTMLElement | null = null;
+
   /** Stable prefix for the per-chip element ids (label + remove button). */
   get chipIdPrefix(): string {
     return `d-select-chip-${guidFor(this)}`;
@@ -139,7 +176,10 @@ export default class MultiChips extends Component<MultiChipsSignature> {
 
   /** The decorative count of held values beyond the visible chips. */
   get moreLabel(): string | undefined {
-    const maximum = this.args.presenter.maxVisibleChips;
+    const maximum =
+      this.args.roleMode === "search"
+        ? undefined
+        : this.args.presenter.maxVisibleChips;
     const value = this.args.engine.value;
     const count = Array.isArray(value) ? value.length : 0;
     if (maximum === undefined || count <= maximum) {
@@ -163,7 +203,8 @@ export default class MultiChips extends Component<MultiChipsSignature> {
   /** Restricts both resolved chips and loading placeholders to the trigger budget. */
   @action
   visibleChips<T>(chips: readonly T[] | undefined): readonly T[] {
-    return this.args.presenter.maxVisibleChips === undefined
+    return this.args.roleMode === "search" ||
+      this.args.presenter.maxVisibleChips === undefined
       ? (chips ?? [])
       : (chips ?? []).slice(0, this.args.presenter.maxVisibleChips);
   }
@@ -194,25 +235,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
     }
   }
 
-  /**
-   * Desktop multi: keyboard handling for a focused chip.
-   *
-   * - **ArrowDown / ArrowUp** move focus back to the query input and open the overlay — the same
-   *   "go to the options" gesture the input itself uses. Focus has to land on the input because
-   *   the listbox highlight is driven by `aria-activedescendant` on the input, not on the chip;
-   *   this is also how the control is reopened after Escape.
-   * - **Backspace / Delete** remove the chip and keep the cursor in the group, landing on the
-   *   previous chip (or the input when the first/last one goes or a loading re-flash leaves no
-   *   button to focus).
-   * - **Enter / Space** are left to the button's native activation (→ `removeItem`, which returns
-   *   focus to the input), so there is a single removal path and no synthesized-click race.
-   * - **Escape** is not handled here — float-kit's document-level capture listener closes the
-   *   overlay first; focus stays on the chip (still arrow-navigable, reopen with ArrowDown).
-   *
-   * @param item - The chip's item.
-   * @param index - The chip's position, for restoring focus to a neighbor.
-   * @param event - The keydown event.
-   */
+  /** Keeps removal focus inside the field; native button activation returns to the input. */
   @action
   handleChipKeydown(
     item: SelectItem,
@@ -232,51 +255,93 @@ export default class MultiChips extends Component<MultiChipsSignature> {
       return;
     }
 
-    if (this.args.presenter.isLocked) {
+    if (event.key === "Tab") {
+      this.args.focusInput();
+      return;
+    }
+
+    if (this.args.presenter.isLocked || event.isComposing) {
       return;
     }
 
     if (event.key === "Backspace" || event.key === "Delete") {
       event.preventDefault();
       event.stopPropagation();
-      this.args.engine.deselect(item);
-      // The chip DOM re-renders on the value change; restore focus once it settles. A
-      // macrotask lands after the render flush, and the boolean guard falls back to the
-      // input if the group is momentarily empty.
-      nextRunloop(() => {
-        const remaining = makeArray(this.args.value).length;
-        if (remaining > 0 && this.args.focusChip(Math.max(0, index - 1))) {
-          return;
+      // Focus moves before the removal: the removed button unmounts, and focus it still holds
+      // would fall to the page. The neighbour is keyed, so it survives the re-render. Focus the
+      // chip does not hold is never claimed.
+      if (document.activeElement === event.currentTarget) {
+        const neighbour = index > 0 ? index - 1 : 1;
+        if (
+          makeArray(this.args.value).length === 1 ||
+          !this.args.focusChip(neighbour)
+        ) {
+          this.args.focusInput();
         }
-        this.args.focusInput();
-      });
+      }
+      this.args.engine.deselect(item);
     }
   }
 
-  /**
-   * Removes a chip's item, stops the click from opening the menu, and restores input focus
-   * after the focused remove button unmounts. Handles a pointer click and the button's
-   * native Enter/Space activation; Backspace/Delete go through `handleChipKeydown`.
-   */
+  /** Focuses the input before removal so an unmounted button cannot drop focus to the body. */
   @action
   removeItem(item: SelectItem, event?: MouseEvent): void {
     event?.stopPropagation();
     if (this.args.presenter.isLocked) {
       return;
     }
-    this.args.engine.deselect(item);
     this.args.focusInput();
+    this.args.engine.deselect(item);
+  }
+
+  @action
+  handleFieldFocus(event: FocusEvent): void {
+    if ((event.target as Element).matches(".d-select__chip-remove")) {
+      this.args.onChipFocus?.();
+    }
+    this.#revealFocused();
+  }
+
+  @action
+  handleFieldResize(): void {
+    this.args.onResize?.();
+    this.#revealFocused();
+  }
+
+  #revealFocused(): void {
+    const active = document.activeElement;
+    const field = this.#element;
+    if (
+      this.args.roleMode !== "search" ||
+      !field?.contains(active) ||
+      !(active instanceof HTMLElement)
+    ) {
+      return;
+    }
+    if (active.matches(".d-select__input")) {
+      field.scrollTop = field.scrollHeight;
+    } else {
+      active.scrollIntoView({ block: "nearest", inline: "nearest" });
+    }
   }
 
   <template>
-    {{! Desktop multi: the chips are a horizontal arrow-roving group whose remove buttons
-      are the navigable items (tabindex -1 below), so the query input stays the sole tab
-      stop. Gated to desktop — the mobile trigger has no inline input to enter the chips
-      from. }}
-    {{! The chips are a real list (ul/li) so assistive tech announces them as a
-      navigable collection; display:contents keeps the items flowing inline with the
-      query input, which is a sibling of the list (an input cannot be a child of a ul). }}
-    <div class="d-select__chips">
+    <div
+      class="d-select__chips {{if (eq @roleMode 'search') '--field'}}"
+      {{this.watchField @value (if @selection.isResolved @selection.value)}}
+      {{(if @onResize (modifier dOnResize this.handleFieldResize))}}
+      {{on "focusin" this.handleFieldFocus}}
+    >
+      {{#if (eq @roleMode "search")}}
+        {{! A wrapping label must activate the input before any remove button. }}
+        <input
+          class="d-select__label-sink"
+          hidden
+          style="display: none"
+          type="text"
+          {{on "click" @focusInput}}
+        />
+      {{/if}}
       {{! Removal restores focus here, not through the modifier: once the last chip goes this
         list falls back to the query input, which is outside the group. }}
       <ul
@@ -338,9 +403,28 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                     {{! Name leads with the item, then how to remove it (e.g. "Orange, Press
                     Backspace or Delete to remove") so it reads as a selected item rather
                     than a bare action. }}
-                    aria-labelledby="{{this.chipIdPrefix}}-{{index}}-label {{this.chipIdPrefix}}-{{index}}-remove"
+                    aria-disabled={{if @presenter.isLocked "true"}}
+                    aria-label={{if
+                      this.capabilities.touch
+                      (i18n
+                        "d_select.remove_item"
+                        item=(@engine.getSelectionLabel chip.item)
+                      )
+                    }}
+                    aria-labelledby={{unless
+                      this.capabilities.touch
+                      (concat
+                        this.chipIdPrefix
+                        "-"
+                        index
+                        "-label "
+                        this.chipIdPrefix
+                        "-"
+                        index
+                        "-remove"
+                      )
+                    }}
                     class="d-select__chip-remove"
-                    disabled={{@presenter.isLocked}}
                     tabindex="-1"
                     type="button"
                     {{on "click" (fn this.removeItem chip.item)}}
@@ -368,12 +452,16 @@ export default class MultiChips extends Component<MultiChipsSignature> {
       {{/if}}
       {{#if @fieldRendersInput}}
         <ComboboxQueryInput
-          aria-busy={{if @pending "true"}}
+          aria-busy={{if
+            (if (eq @roleMode "search") @engine.serverPending @pending)
+            "true"
+          }}
           aria-describedby={{@composeDescribedBy
             (if this.chipHint this.chipHintId)
             @describedBy
           }}
           aria-invalid={{if @invalid "true"}}
+          class={{if (eq @roleMode "search") "d-select__filter"}}
           id={{@id}}
           @ariaOwns={{@ariaOwns}}
           @disabled={{@presenter.isDisabled}}
@@ -392,11 +480,15 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           @queryDisplay={{@queryDisplay}}
           @readonly={{@presenter.isReadonly}}
           @registerInput={{@registerInput}}
+          @roleMode={{@roleMode}}
           @shouldSelectOnFocus={{@shouldSelectOnFocus}}
           @tabPassthrough={{@tabPassthrough}}
           {{on "paste" @onPaste}}
-          {{keepAboveKeyboard @shouldCorrectKeyboardOcclusion}}
-          {{on "keydown" @onInputKeydown}}
+          {{(if
+            @shouldCorrectKeyboardOcclusion
+            (modifier keepAboveKeyboard @shouldCorrectKeyboardOcclusion)
+          )}}
+          {{on "keydown" @onInputKeydown capture=true}}
         />
         {{#if this.chipHint}}
           <span class="sr-only" id={{this.chipHintId}}>

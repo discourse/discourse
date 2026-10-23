@@ -566,7 +566,8 @@ module(
       const removeButton = find(".d-select__chip-remove");
       assert
         .dom(removeButton)
-        .isDisabled("the chip remove control is natively disabled");
+        .isNotDisabled("the chip remains focusable")
+        .hasAria("disabled", "true", "removal is unavailable");
 
       await click(".d-select__trigger");
 
@@ -1232,7 +1233,7 @@ module(
     setupRenderingTest(hooks);
 
     for (const key of ["Enter", " "]) {
-      test(`${key === " " ? "Space" : key} removes once and focuses the previous chip`, async function (assert) {
+      test(`${key === " " ? "Space" : key} removes once and focuses the input`, async function (assert) {
         forceMobile();
         await render(
           <template>
@@ -1240,15 +1241,18 @@ module(
           </template>
         );
         await click(".d-select__trigger");
-        const buttons = findAll(".d-select__strip button");
+        const buttons = findAll(".d-select__panel .d-select__chip-remove");
         buttons[2].focus();
         await triggerKeyEvent(buttons[2], "keydown", key);
+        await click(buttons[2]);
         assert
-          .dom(".d-select__strip button")
+          .dom(".d-select__panel .d-select__chip-remove")
           .exists({ count: 2 }, "one item was removed");
-        assert
-          .dom(document.activeElement.closest("li"))
-          .hasAttribute("data-value", "2", "the previous chip takes focus");
+        assert.strictEqual(
+          document.activeElement,
+          find(".d-select__filter"),
+          "activation returns to the input"
+        );
       });
     }
 
@@ -1260,16 +1264,16 @@ module(
         </template>
       );
       await click(".d-select__trigger");
-      const input = find(".fk-d-menu-modal input");
+      const input = find(".fk-d-menu-modal .d-select__filter");
       input.focus();
-      await click(".d-select__strip button");
+      await click(".d-select__panel .d-select__chip-remove");
       assert.strictEqual(
         document.activeElement,
         input,
         "the keyboard's input keeps focus"
       );
       assert
-        .dom(".d-select__strip button")
+        .dom(".d-select__panel .d-select__chip-remove")
         .exists({ count: 1 }, "the pointer removed the item");
     });
 
@@ -1380,7 +1384,7 @@ module(
       });
     }
 
-    test("button modal orders its limit, strip and results", async function (assert) {
+    test("button modal orders its field, limit and results", async function (assert) {
       forceMobile();
       await render(
         <template>
@@ -1403,11 +1407,11 @@ module(
         "then the limit"
       );
       assert.true(
-        panel.children[2].matches(".d-select__strip"),
-        "then the strip"
+        Boolean(panel.children[0].querySelector(".d-select__chip-list")),
+        "the field contains the held chips"
       );
       assert.true(
-        Boolean(panel.children[3].querySelector("[role='listbox']")),
+        Boolean(panel.children[2].querySelector("[role='listbox']")),
         "then the list"
       );
     });
@@ -1447,21 +1451,21 @@ module(
       );
       await click(".d-select__trigger");
       assert
-        .dom(".d-select__strip button")
+        .dom(".d-select__panel .d-select__chip-remove")
         .hasAttribute(
           "aria-label",
           "Remove Apple",
           "touch users hear the item action"
         );
       assert
-        .dom(".d-select__strip button")
+        .dom(".d-select__panel .d-select__chip-remove")
         .doesNotHaveAttribute(
           "aria-labelledby",
           "the keyboard hint does not override the touch name"
         );
     });
 
-    test("long strips scroll within the panel budget and keep mobile tap targets", async function (assert) {
+    test("long fields scroll within the panel budget and keep mobile tap targets", async function (assert) {
       forceMobile();
       const items = Array.from({ length: 40 }, (_, id) => ({
         id,
@@ -1474,9 +1478,9 @@ module(
         </template>
       );
       await click(".d-select__trigger");
-      const strip = find(".d-select__strip");
+      const strip = find(".d-select__panel .d-select__chips");
       const panel = find(".fk-d-menu-modal .d-select__panel");
-      const button = find(".d-select__strip button");
+      const button = find(".d-select__panel .d-select__chip-remove");
       assert.true(
         strip.scrollHeight > strip.clientHeight,
         "the strip overflows its own viewport"
@@ -1497,7 +1501,7 @@ module(
       );
     });
 
-    test("strip focus suppresses the active option's second indicator", async function (assert) {
+    test("chip focus suppresses the active option's second indicator", async function (assert) {
       forceMobile();
       await render(
         <template>
@@ -1507,21 +1511,26 @@ module(
       await click(".d-select__trigger");
       const option = find(".d-select__option.--active");
       assert.true(Boolean(option), "the query has an active result");
-      find(".d-select__strip button").focus();
+      find(".d-select__panel .d-select__chip-remove").focus();
       assert.strictEqual(
         getComputedStyle(option).outlineStyle,
         "none",
         "only the strip shows the focus indicator"
       );
-      find(".fk-d-menu-modal [role='combobox']").focus();
+      await settled();
+      assert
+        .dom(".d-select__option.--active")
+        .doesNotExist("no row stays active while a chip has focus");
+      find(".fk-d-menu-modal .d-select__filter").focus();
+      await triggerKeyEvent(".d-select__filter", "keydown", "ArrowDown");
       assert.notStrictEqual(
-        getComputedStyle(option).outlineStyle,
+        getComputedStyle(find(".d-select__option.--active")).outlineStyle,
         "none",
-        "the result indicator returns with query focus"
+        "the result indicator returns with query navigation"
       );
     });
 
-    test("pending strip items have no buttons and unresolved items remain removable", async function (assert) {
+    test("pending field items have no buttons and unresolved items remain removable", async function (assert) {
       forceMobile();
       let resolve;
       const response = new Promise((done) => (resolve = done));
@@ -1538,24 +1547,24 @@ module(
       try {
         await waitFor(".d-select__trigger");
         const opening = click(".d-select__trigger");
-        await waitFor(".d-select__strip .d-skeleton");
+        await waitFor(".d-select__panel .d-select__chips .d-skeleton");
         assert
-          .dom(".d-select__strip li")
+          .dom(".d-select__panel .d-select__chip")
           .exists({ count: 2 }, "one skeleton per held value");
         assert
-          .dom(".d-select__strip button")
+          .dom(".d-select__panel .d-select__chip-remove")
           .doesNotExist("pending labels cannot be removed");
         resolve([]);
         await rendering;
         await opening;
         await settled();
         assert
-          .dom(".d-select__strip .d-select__unresolved")
+          .dom(".d-select__panel .d-select__chips .d-select__unresolved")
           .exists({ count: 2 }, "missing values get fallback labels");
-        findAll(".d-select__strip button")[1].focus();
+        findAll(".d-select__panel .d-select__chip-remove")[1].focus();
         await triggerKeyEvent(document.activeElement, "keydown", "Delete");
         assert
-          .dom(".d-select__strip button")
+          .dom(".d-select__panel .d-select__chip-remove")
           .exists({ count: 1 }, "unresolved values can be removed");
         assert
           .dom(document.activeElement.closest("li"))
@@ -1682,7 +1691,7 @@ module(
         .exists({ count: 2 }, "nothing changes without @maxVisibleChips");
     });
 
-    test("a server-backed button panel lists held items in the strip", async function (assert) {
+    test("a server-backed button panel lists held items in the field", async function (assert) {
       await render(
         <template>
           <CompactHost
@@ -1694,7 +1703,9 @@ module(
       );
       await click(TRIGGER);
 
-      assert.dom(".d-select__strip button").exists({ count: 2 });
+      assert
+        .dom(".d-select__panel .d-select__chip-remove")
+        .exists({ count: 2 });
     });
 
     test("a local button list needs no strip", async function (assert) {
@@ -1706,20 +1717,22 @@ module(
       await click(TRIGGER);
 
       assert
-        .dom(".d-select__strip")
-        .doesNotExist("held rows are checked in the list");
+        .dom(".d-select__panel .d-select__chip-remove")
+        .exists({ count: 2 }, "the field holds the selected items");
       assert.dom("[role='option'][aria-selected='true']").exists({ count: 2 });
     });
 
-    test("picking the first item shows the strip without reopening", async function (assert) {
+    test("picking the first item shows a field chip without reopening", async function (assert) {
       await render(
         <template><CompactHost @server={{true}} @variant="button" /></template>
       );
       await click(TRIGGER);
-      assert.dom(".d-select__strip").doesNotExist();
+      assert.dom(".d-select__panel .d-select__chip").doesNotExist();
 
       await click(optionWithText("Apple"));
-      assert.dom(".d-select__strip button").exists({ count: 1 });
+      assert
+        .dom(".d-select__panel .d-select__chip-remove")
+        .exists({ count: 1 });
     });
   }
 );
@@ -1856,7 +1869,7 @@ module(
       );
       await waitFor(TRIGGER);
       const opening = click(TRIGGER);
-      await waitFor(".d-select__strip");
+      await waitFor(".d-select__panel .d-select__chips");
       await Promise.all([rendering, opening]);
       await wait(300);
       await settled();
@@ -1864,9 +1877,11 @@ module(
       assert.strictEqual(
         resolver.calls.length,
         1,
-        `one request for the chips, description and strip: ${JSON.stringify(resolver.calls)}`
+        `one request for the chips, description and panel: ${JSON.stringify(resolver.calls)}`
       );
-      assert.dom(".d-select__strip button").exists({ count: 2 });
+      assert
+        .dom(".d-select__panel .d-select__chip-remove")
+        .exists({ count: 2 });
       assert.deepEqual(
         findAll(`${TRIGGER} .d-select__chip`).map((chip) =>
           chip.textContent.trim()
@@ -1874,6 +1889,135 @@ module(
         ["Apple", "Banana"],
         "the trigger chips resolve to the real items"
       );
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (panel field)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    const PANEL = ".d-select__content";
+    const panelInput = () =>
+      find(`${PANEL} .d-select__chips input[type="search"]`);
+    const panelChips = () =>
+      findAll(`${PANEL} .d-select__chips .d-select__chip`);
+    const panelChipButtons = () =>
+      findAll(`${PANEL} .d-select__chips .d-select__chip-remove`);
+
+    test("panel field: a button popup holds its chips in the focused search field", async function (assert) {
+      const resolver = delayedResolver(0);
+      await render(
+        <template>
+          <ResolvingHost
+            @resolver={{resolver}}
+            @value={{array 1 2}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(TRIGGER);
+
+      assert
+        .dom(`${PANEL} .d-select__strip`)
+        .doesNotExist("no strip in the popup");
+      assert.deepEqual(
+        panelChips().map((chip) => chip.dataset.name),
+        ["Apple", "Banana"]
+      );
+      assert.strictEqual(
+        document.activeElement,
+        panelInput(),
+        "opening focuses the search field"
+      );
+      assert
+        .dom(panelInput())
+        .doesNotHaveAttribute(
+          "role",
+          "the open panel's input is a search field"
+        )
+        .hasAria("autocomplete", "list");
+
+      await triggerKeyEvent(panelInput(), "keydown", "ArrowLeft");
+      assert.strictEqual(
+        document.activeElement,
+        panelChipButtons()[1],
+        "ArrowLeft enters the chips"
+      );
+      await triggerKeyEvent(document.activeElement, "keydown", "Delete");
+      assert.deepEqual(
+        panelChips().map((chip) => chip.dataset.name),
+        ["Apple"],
+        "Delete removes the focused chip"
+      );
+
+      await focus(panelInput());
+      await triggerKeyEvent(panelInput(), "keydown", "Backspace");
+      assert.strictEqual(panelChips().length, 0, "Backspace removes the last");
+      assert.dom(PANEL).exists("the popup stays open");
+    });
+
+    test("panel field: Escape still closes the button popup", async function (assert) {
+      const resolver = delayedResolver(0);
+      await render(
+        <template>
+          <ResolvingHost
+            @resolver={{resolver}}
+            @value={{array 1}}
+            @variant="button"
+          />
+        </template>
+      );
+      await click(TRIGGER);
+
+      await triggerKeyEvent(panelInput(), "keydown", "Escape");
+
+      assert.dom(PANEL).doesNotExist("Escape closes the popup");
+    });
+
+    test("panel field: the mobile modal holds its chips in the search field", async function (assert) {
+      forceMobile();
+      const resolver = delayedResolver(0);
+      await render(
+        <template>
+          <ResolvingHost @resolver={{resolver}} @value={{array 1 2}} />
+        </template>
+      );
+      await click(".d-select");
+
+      const field = ".d-modal .d-select__chips";
+      assert
+        .dom(".d-modal .d-select__strip")
+        .doesNotExist("no strip in the modal");
+      assert.deepEqual(
+        findAll(`${field} .d-select__chip`).map((chip) => chip.dataset.name),
+        ["Apple", "Banana"]
+      );
+      assert
+        .dom(`${field} input[type="search"]`)
+        .exists("the modal's input is a search field beside the chips")
+        .doesNotHaveAttribute("role");
+    });
+
+    test("panel field: a single button popup clears its value with Backspace", async function (assert) {
+      await render(
+        <template><FrameHost @value={{1}} @variant="button" /></template>
+      );
+      assert.dom(TRIGGER).includesText("Apple", "the value shows at rest");
+      await click(TRIGGER);
+      const field = find(`${PANEL} input[type="search"]`);
+      assert.strictEqual(
+        document.activeElement,
+        field,
+        "the search is focused"
+      );
+      assert.dom(field).doesNotHaveAttribute("role");
+
+      await triggerKeyEvent(field, "keydown", "Backspace");
+      assert
+        .dom(TRIGGER)
+        .doesNotIncludeText("Apple", "Backspace clears the single value");
     });
   }
 );
@@ -1932,8 +2076,11 @@ module(
       await click(TRIGGER);
 
       assert
-        .dom(".d-select__strip button")
-        .doesNotExist("local lists show every held item checked, so no strip");
+        .dom(".d-select__panel .d-select__chip-remove")
+        .exists(
+          { count: 3 },
+          "the panel shows every held item beyond the trigger cap"
+        );
     });
 
     test("the desktop typeahead compacts and lists held items in its panel", async function (assert) {
@@ -1988,7 +2135,7 @@ module(
         </template>
       );
       await click(TRIGGER);
-      await click(findAll(".d-select__strip button")[0]);
+      await click(findAll(".d-select__panel .d-select__chip-remove")[0]);
 
       assert.strictEqual(nameOf(find(".d-select")), "Fruit, 1 selected");
       assert.dom(".d-select__chips-more").hasText("1");

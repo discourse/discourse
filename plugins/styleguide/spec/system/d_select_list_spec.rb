@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # A panel holding two DSelectLists, a checkbox and a button, driven with a real keyboard. Tab
-# order across the lists, their held-item strips and the controls between them is decided by the
+# order across the lists, their held chips and the controls between them is decided by the
 # browser, so a component test cannot show it.
 describe "UiKit | DSelectList in a panel" do
   include ThemeScreenshotMarker
@@ -36,7 +36,7 @@ describe "UiKit | DSelectList in a panel" do
   # deliberately refused.
   def expect_active(list, name)
     scope = "#{panel} .select-examples__tag-list.--#{list}"
-    expect(page).to have_no_css("#{scope} input[role='combobox'][aria-busy='true']")
+    expect(page).to have_no_css("#{scope} input.d-select__filter[aria-busy='true']")
     expect(page).to have_css("#{scope} [role='option'].--active", text: name)
   end
 
@@ -51,16 +51,26 @@ describe "UiKit | DSelectList in a panel" do
     page.send_keys(:tab)
   end
 
-  it "tabs through both lists and the controls between them, and selects in each" do
+  it "gives each list one Tab stop, leaves the field from a chip, and selects in each" do
     open_panel
 
     expect(include_list).to have_selected_name("design-system")
 
     include_list.input.click
     tab
-    expect(focused?("#{panel} .select-examples__tag-list.--include .d-select__strip-remove")).to eq(
+    expect(focused?("#{panel} input[type='checkbox']")).to eq(true)
+
+    page.send_keys(%i[shift tab])
+    expect(focused?("#{panel} .select-examples__tag-list.--include input.d-select__filter")).to eq(
       true,
     )
+
+    page.send_keys(:left)
+    expect(
+      focused?(
+        "#{panel} .select-examples__tag-list.--include .d-select__chips .d-select__chip-remove",
+      ),
+    ).to eq(true)
 
     tab
     expect(focused?("#{panel} input[type='checkbox']")).to eq(true)
@@ -68,7 +78,7 @@ describe "UiKit | DSelectList in a panel" do
     expect(page).to have_css("#{panel} .select-examples__tag-list.--exclude")
 
     tab
-    expect(focused?("#{panel} .select-examples__tag-list.--exclude input[role='combobox']")).to eq(
+    expect(focused?("#{panel} .select-examples__tag-list.--exclude input.d-select__filter")).to eq(
       true,
     )
 
@@ -83,6 +93,16 @@ describe "UiKit | DSelectList in a panel" do
     page.send_keys(:enter)
     expect(include_list).to have_selected_names("design-system", "accessibility")
     expect(exclude_list).to have_selected_name("theming")
+  end
+
+  it "leaves the first list backward from a chip" do
+    open_panel
+    include_list.input.click
+    page.send_keys(:left)
+    expect(include_list.focused_chip_label).to eq("design-system")
+
+    page.send_keys(%i[shift tab])
+    expect(page).to have_css("[data-identifier='sg-select-list'][data-trigger]:focus")
   end
 
   it "drops the excluded tags when exclusion is turned off, and clears everything" do

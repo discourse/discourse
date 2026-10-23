@@ -39,32 +39,75 @@ export class DSelect {
     }
   }
 
-  /** Removes through an interactive trigger chip, the strip, or a checked local row. */
+  /** Dispatches by the rendered selection model, never by whether the requested item exists. */
   async remove(value: unknown): Promise<void> {
-    const chip = Array.from(
-      this.element().querySelectorAll<HTMLElement>(".d-select__chip")
-    ).find((element) => element.dataset.value === String(value));
-    const button = chip?.querySelector(".d-select__chip-remove");
-    if (button) {
-      await click(button);
-      return;
+    switch (this.element().dataset.selectionRemoval) {
+      case "trigger-chips":
+        return this.removeTriggerChip(value);
+      case "panel-chips":
+        return this.removePanelChip(value);
+      case "strip":
+        return this.removeStripItem(value);
+      case "selected-rows":
+        return this.removeSelectedRow(value);
+      default:
+        throw new Error(
+          `DSelect ${this.#dom.description}: unknown selection removal model`
+        );
     }
+  }
+
+  /** Removes an expected interactive trigger chip. */
+  async removeTriggerChip(value: unknown): Promise<void> {
+    await this.#removeChip(
+      this.element(),
+      ".d-select__chip",
+      value,
+      "trigger chip"
+    );
+  }
+
+  /** Removes an expected chip from a searchable panel field. */
+  async removePanelChip(value: unknown): Promise<void> {
     await this.open();
-    const stripItem = Array.from(
-      this.#dom.panel?.querySelectorAll<HTMLElement>(".d-select__strip-item") ??
-        []
-    ).find((element) => element.dataset.value === String(value));
-    if (stripItem) {
-      await click(
-        this.#required(
-          stripItem.querySelector("button"),
-          `strip button for ${String(value)}`
-        )
+    await this.#removeChip(
+      this.#dom.panel,
+      ".d-select__chips.--field .d-select__chip",
+      value,
+      "panel field chip"
+    );
+  }
+
+  /** Removes an expected chip from a retained selection strip. */
+  async removeStripItem(value: unknown): Promise<void> {
+    await this.open();
+    await this.#removeChip(
+      this.#dom.panel,
+      ".d-select__strip-item",
+      value,
+      "strip item"
+    );
+  }
+
+  /** Deselects a checked row in a desktop local static list. */
+  async removeSelectedRow(value: unknown): Promise<void> {
+    await this.open();
+    const panel = this.#dom.panel;
+    if (this.element().dataset.selectionRemoval !== "selected-rows") {
+      throw new Error(
+        `DSelect ${this.#dom.description}: selected-row removal requires a desktop local static list`
       );
-    } else {
-      // Desktop local control lists expose selection through their checked rows.
-      await this.select(value);
     }
+    const row =
+      panel &&
+      this.#dom
+        .options(panel)
+        .find(
+          (option) =>
+            option.dataset.value === String(value) &&
+            option.getAttribute("aria-selected") === "true"
+        );
+    await click(this.#required(row, `selected row for ${String(value)}`));
   }
 
   /** Replaces the query, including a typeahead's resting selection label. */
@@ -96,6 +139,23 @@ export class DSelect {
       );
     }
     return element;
+  }
+
+  async #removeChip(
+    root: HTMLElement | null,
+    selector: string,
+    value: unknown,
+    kind: string
+  ): Promise<void> {
+    const chip = Array.from(
+      root?.querySelectorAll<HTMLElement>(selector) ?? []
+    ).find((element) => element.dataset.value === String(value));
+    await click(
+      this.#required(
+        chip?.querySelector("button"),
+        `${kind} for ${String(value)}`
+      )
+    );
   }
 
   /** Compares hook values directly so punctuation never becomes selector syntax. */

@@ -1,8 +1,7 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { associateDestroyableChild } from "@ember/destroyable";
 import { hash } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import Owner, { getOwner } from "@ember/owner";
@@ -11,21 +10,23 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { TrackedAsyncData } from "ember-async-data";
 import { hasContentPluginApiCallbacks } from "discourse/select-kit/lib/plugin-api";
 import type A11yService from "discourse/services/a11y";
 import { and, eq, or } from "discourse/truth-helpers";
-import DFilterInput from "discourse/ui-kit/d-filter-input";
 import SelectHost, {
   type SelectHostArgs,
 } from "discourse/ui-kit/select/-internals/coordinators/select-host";
 import SelectListInteraction from "discourse/ui-kit/select/-internals/coordinators/select-list-interaction";
 import SelectListPresenter from "discourse/ui-kit/select/-internals/coordinators/select-list-presenter";
 import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
+import MultiChips from "discourse/ui-kit/select/-internals/parts/multi-chips";
 import type { SelectListContent } from "discourse/ui-kit/select/-internals/parts/select-options";
 import SelectPanel from "discourse/ui-kit/select/-internals/parts/select-panel";
 import StaticOptionList from "discourse/ui-kit/select/-internals/parts/static-option-list";
 import WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowed-option-list";
 import type {
+  SelectDescriptor,
   SelectItem,
   SelectLoadOptions,
   SelectValue,
@@ -229,6 +230,13 @@ export default class DSelectList extends Component<DSelectListSignature> {
     associateDestroyableChild(this, this.interaction);
   }
 
+  @cached
+  get heldSelection(): TrackedAsyncData<
+    readonly SelectDescriptor[] | undefined
+  > {
+    return new TrackedAsyncData(this.host.resolveMulti(this.args.value));
+  }
+
   get listboxId(): string {
     return this.#listboxId;
   }
@@ -253,13 +261,6 @@ export default class DSelectList extends Component<DSelectListSignature> {
   ): void {
     // The host engine is always multi; narrow its arity-union at this boundary.
     this.args.onChange?.(next as unknown[], items as SelectItem[], change);
-  }
-
-  @action
-  onFilterInput(event: Event): void {
-    if (!this.presenter.isLocked) {
-      this.engine.setFilter((event.target as HTMLInputElement).value);
-    }
   }
 
   /** Keeps pinned state on the resolved filter while the input advances to its next query. */
@@ -287,6 +288,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
     <div
       class="d-select --list"
       data-select-id={{this.listboxId}}
+      data-selection-removal="panel-chips"
       ...attributes
       {{this.interaction.registerRoot}}
       {{this.host.selectionHooks}}
@@ -310,27 +312,6 @@ export default class DSelectList extends Component<DSelectListSignature> {
       }}
       {{willDestroy this.feedback.releaseLoadFeedback}}
     >
-      <DFilterInput
-        aria-autocomplete="list"
-        aria-busy={{if this.engine.serverPending "true"}}
-        aria-controls={{this.activeListboxId}}
-        aria-describedby={{@describedBy}}
-        aria-expanded={{if this.activeListboxId "true"}}
-        aria-invalid={{if @invalid "true"}}
-        aria-label={{this.presenter.ariaLabelText}}
-        class="d-select__filter"
-        disabled={{this.presenter.isDisabled}}
-        id={{@id}}
-        placeholder={{this.presenter.placeholder}}
-        readonly={{this.presenter.isReadonly}}
-        role="combobox"
-        @filterAction={{this.onFilterInput}}
-        @icons={{hash left="magnifying-glass"}}
-        @value={{this.engine.filter}}
-        {{didInsert this.interaction.registerFilter}}
-        {{on "keydown" this.interaction.handleInputKeydown capture=true}}
-        {{on "paste" this.host.handlePaste}}
-      />
       <SelectPanel
         @announcer={{this.announcer}}
         @body={{if (eq @virtualized false) StaticOptionList WindowedOptionList}}
@@ -370,7 +351,6 @@ export default class DSelectList extends Component<DSelectListSignature> {
         @reportsActive={{this.interaction.focused}}
         @resolveSelection={{this.host.resolveMulti}}
         @selectedIcon={{@selectedIcon}}
-        @showSelectionStrip={{this.engine.hasValue}}
         @state={{hash
           filter=this.engine.filter
           query=this.query
@@ -388,6 +368,56 @@ export default class DSelectList extends Component<DSelectListSignature> {
         @tabIndex={{-1}}
         @value={{@value}}
       >
+        <:field>
+          <MultiChips
+            @ariaOwns={{false}}
+            @closeMenu={{this.interaction.focusInput}}
+            @composeDescribedBy={{this.host.describedBy}}
+            @describedBy={{@describedBy}}
+            @editing={{true}}
+            @engine={{this.engine}}
+            @expanded={{true}}
+            @fieldRendersInput={{true}}
+            @focusChip={{this.interaction.focusChip}}
+            @focusInput={{this.interaction.focusInput}}
+            @hasSelectionBlock={{has-block "selection"}}
+            @hasSelectionLoadingBlock={{false}}
+            @hasUnresolvedBlock={{has-block "unresolved"}}
+            @id={{@id}}
+            @invalid={{@invalid}}
+            @label={{this.presenter.ariaLabelText}}
+            @listboxId={{this.activeListboxId}}
+            @onChipFocus={{this.interaction.clearActive}}
+            @onEscape={{this.interaction.handleEscape}}
+            @onInputKeydown={{this.interaction.handleInputKeydown}}
+            @onPaste={{this.host.handlePaste}}
+            @onRegisterChipRoving={{this.interaction.registerChipRoving}}
+            @onResize={{this.listbox.remeasureListbox}}
+            @pending={{this.engine.pending}}
+            @placeholder={{this.presenter.placeholder}}
+            @presenter={{this.presenter}}
+            @queryDisplay="always"
+            @registerInput={{this.interaction.registerFilter}}
+            @roleMode="search"
+            @selection={{this.heldSelection}}
+            @showMenu={{this.interaction.focusInput}}
+            @tabPassthrough={{true}}
+            @triggerChipsInteractive={{true}}
+            @value={{@value}}
+          >
+            <:selection as |item|>{{yield
+                item
+                this.engine.resolvedOptions
+                to="selection"
+              }}</:selection>
+            <:unresolved as |item|>{{yield
+                item
+                this.engine.resolvedOptions
+                to="unresolved"
+              }}</:unresolved>
+
+          </MultiChips>
+        </:field>
         <:item as |item options|>{{yield item options to="item"}}</:item>
         <:selection as |item options|>{{yield
             item
