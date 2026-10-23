@@ -4798,6 +4798,7 @@ experimental:
       status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/413006"
+      permanent_warning: false
       allow_enabled_for:
         - everyone
   enable_generated_llms_txt:
