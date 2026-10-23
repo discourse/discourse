@@ -16,63 +16,31 @@ module DiscourseAi
           end
         end
 
-      def initialize(user:, lexical_retriever: nil, semantic_retriever: nil)
+      def initialize(user:, lexical_retriever: nil, semantic_retriever: nil, external_sources: nil)
         @user = user
         @lexical_retriever = lexical_retriever || method(:lexical_sources)
         @semantic_retriever = semantic_retriever
+        @external_sources = external_sources
       end
 
-      # A scope filter narrows both retrievals. When nothing matches inside it,
-      # the whole site is searched instead and the result says so.
-      def call(query, keyword_query: query, semantic_query: query, scope_filter: nil)
-        if scope_filter.present?
-          scoped = retrieve_candidates(query, keyword_query:, semantic_query:, scope_filter:)
-          return scoped if scoped.candidates.present?
+      # A scope filter narrows the forum's retrievals. When nothing in the forum
+      # matches inside it, the whole site is searched instead and the result
+      # says so. External sources are searched once, alongside both.
+      def call(query, keyword_query: query, semantic_query: query, scope_filter: nil, locale: nil)
+        external_searches =
+          search_external_sources(query:, keyword_query:, semantic_query:, locale:)
+        forum_rankings = forum_rankings(query, keyword_query:, semantic_query:, scope_filter:)
+        external_rankings = external_rankings(external_searches)
 
-          fallback = retrieve_candidates(query, keyword_query:, semantic_query:)
-          fallback.scope_fallback = true
-          return fallback
+        result = result_from(forum_rankings + external_rankings)
+        if scope_filter.present? && forum_search? &&
+             result.candidates.all? { |candidate| ExternalSource.candidate?(candidate) }
+          forum_rankings = forum_rankings(query, keyword_query:, semantic_query:)
+          result = result_from(forum_rankings + external_rankings)
+          result.scope_fallback = true
         end
 
-        retrieve_candidates(query, keyword_query:, semantic_query:)
-      end
-
-      def retrieve_candidates(query, keyword_query:, semantic_query:, scope_filter: nil)
-        private_messages =
-          DiscourseAi::Discoveries.private_message_query?(query) ||
-            DiscourseAi::Discoveries.private_message_query?(keyword_query) ||
-            DiscourseAi::Discoveries.private_message_query?(scope_filter)
-        # embeddings describe whole topics, so they cannot narrow within one;
-        # a topic is searched post by post instead
-        topic_scope = scope_filter.to_s.start_with?("topic:")
-        # a personal message is searched as one, or its posts are filtered out
-        if topic_scope &&
-             Topic.where(
-               id: scope_filter.delete_prefix("topic:").to_i,
-               archetype: Archetype.private_message,
-             ).exists?
-          private_messages = true
-        end
-        @per_post = topic_scope
-        scoped = ->(search_query) { [search_query, scope_filter].compact_blank.join(" ") }
-
-        rankings =
-          if self.class.explicit_filters_except_private_messages?(query)
-            [retrieve(@lexical_retriever, scoped.(query))]
-          elsif topic_scope || !DiscourseAi::Embeddings.enabled? || semantic_query.blank? ||
-                self.class.explicit_filters_except_private_messages?(keyword_query)
-            [retrieve(@lexical_retriever, scoped.(keyword_query))]
-          else
-            retrieve_in_parallel(scoped.(keyword_query), scoped.(semantic_query), private_messages:)
-          end
-        candidates = reciprocal_rank_fusion(rankings)
-        candidates = with_metadata(candidates)
-        candidates =
-          candidates.map.with_index do |candidate, index|
-            candidate.merge("source_ref" => "source_#{index + 1}")
-          end
-
-        Result.new(candidates:)
+        result
       end
 
       def self.explicit_filters?(query)
@@ -112,6 +80,125 @@ module DiscourseAi
 
       private
 
+      def result_from(rankings)
+        candidates = with_metadata(reciprocal_rank_fusion(rankings))
+        candidates =
+          candidates.map.with_index do |candidate, index|
+            candidate.merge("source_ref" => "source_#{index + 1}")
+          end
+
+        Result.new(candidates:)
+      end
+
+      def forum_rankings(query, keyword_query:, semantic_query:, scope_filter: nil)
+        private_messages =
+          DiscourseAi::Discoveries.private_message_query?(query) ||
+            DiscourseAi::Discoveries.private_message_query?(keyword_query) ||
+            DiscourseAi::Discoveries.private_message_query?(scope_filter)
+        # embeddings describe whole topics, so they cannot narrow within one;
+        # a topic is searched post by post instead
+        topic_scope = scope_filter.to_s.start_with?("topic:")
+        # a personal message is searched as one, or its posts are filtered out
+        if topic_scope &&
+             Topic.where(
+               id: scope_filter.delete_prefix("topic:").to_i,
+               archetype: Archetype.private_message,
+             ).exists?
+          private_messages = true
+        end
+        @per_post = topic_scope
+        filters = [scope_filter, forced_filter(private_messages:)]
+        scoped = ->(search_query) { [search_query, *filters].compact_blank.join(" ") }
+
+        explicit_query = self.class.explicit_filters_except_private_messages?(query)
+        semantic =
+          semantic_search? && !explicit_query && !topic_scope && semantic_query.present? &&
+            !self.class.explicit_filters_except_private_messages?(keyword_query)
+
+        searches = []
+        if keyword_search?
+          searches << [@lexical_retriever, scoped.(explicit_query ? query : keyword_query)]
+        end
+        searches << [semantic_retriever(private_messages:), scoped.(semantic_query)] if semantic
+
+        return [] if searches.empty?
+        return [retrieve(*searches.first)] if searches.length == 1
+
+        retrieve_in_parallel(searches)
+      end
+
+      def keyword_search?
+        SiteSetting.ai_ask_ai_keyword_search_enabled
+      end
+
+      def semantic_search?
+        SiteSetting.ai_ask_ai_semantic_search_enabled && DiscourseAi::Embeddings.enabled?
+      end
+
+      def forum_search?
+        keyword_search? || semantic_search?
+      end
+
+      # Set by the site rather than the reader, so unlike a scope these are
+      # never dropped to widen a search that found nothing.
+      def forced_filter(private_messages:)
+        filters = []
+        if (max_age_days = SiteSetting.ai_ask_ai_search_max_age_days).positive?
+          filters << "after:#{max_age_days.days.ago.to_date.iso8601}"
+        end
+        # personal messages have no category, so limiting by one would hide them all
+        category_ids = SiteSetting.ai_ask_ai_search_categories_map
+        if !private_messages && category_ids.present?
+          filters << "categories:#{category_ids.join(",")}"
+        end
+        filters.join(" ").presence
+      end
+
+      def search_external_sources(**queries)
+        sources = @external_sources || ExternalSource.configured(user: @user)
+        return [] if sources.empty?
+
+        database = RailsMultisite::ConnectionManagement.current_db
+        started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        sources.map do |source|
+          thread =
+            Thread.new do
+              RailsMultisite::ConnectionManagement.with_connection(database) do
+                [source.call(**queries), nil]
+              rescue StandardError => error
+                [[], error]
+              end
+            end
+          [source, thread, started_at]
+        end
+      end
+
+      # A source still running when its time is up is left to finish on its
+      # own; its results are not waited for.
+      def external_rankings(searches)
+        searches.filter_map do |source, thread, started_at|
+          remaining =
+            started_at + SiteSetting.ai_ask_ai_external_sources_timeout -
+              Process.clock_gettime(Process::CLOCK_MONOTONIC)
+          if thread.join([remaining, 0].max).nil?
+            Rails.logger.warn(
+              "Discourse AI Discoveries skipped external source #{source.name}: timed out",
+            )
+            next
+          end
+
+          results, error = thread.value
+          if error
+            Rails.logger.warn(
+              "Discourse AI Discoveries skipped external source #{source.name}: #{error.class}",
+            )
+            next
+          end
+
+          results
+        end
+      end
+
       def lexical_sources(query)
         guardian = Guardian.new(@user)
         results = ::Search.execute(query, search_type: :full_page, guardian:)
@@ -131,12 +218,8 @@ module DiscourseAi
           .first(CANDIDATE_LIMIT)
       end
 
-      def retrieve_in_parallel(keyword_query, semantic_query, private_messages:)
+      def retrieve_in_parallel(searches)
         database = RailsMultisite::ConnectionManagement.current_db
-        searches = [
-          [@lexical_retriever, keyword_query],
-          [semantic_retriever(private_messages:), semantic_query],
-        ]
         threads =
           searches.map do |retriever, search_query|
             Thread.new do
@@ -205,23 +288,29 @@ module DiscourseAi
         fused = {}
         rankings.each_with_index do |ranking, ranking_index|
           ranking.each_with_index do |source, index|
-            topic_id = source.fetch("topic_id")
             candidate =
-              fused[topic_id] ||= source.merge(
+              fused[source["topic_id"] || source.fetch("url")] ||= source.merge(
                 "rrf_score" => 0.0,
                 "retrievals" => [],
-                "passages" => [passage_from_source(source)],
               )
-            if candidate["passages"].none? { |passage| passage["post_id"] == source["post_id"] }
-              candidate["passages"] << passage_from_source(source)
+            if source["post_id"]
+              passages = candidate["passages"] ||= []
+              if passages.none? { |passage| passage["post_id"] == source["post_id"] }
+                passages << passage_from_source(source)
+              end
             end
             candidate["rrf_score"] += 1.0 / (RRF_K + index + 1)
             candidate["retrievals"] << { "ranking" => ranking_index + 1, "rank" => index + 1 }
           end
         end
 
+        # on a tie the forum's topics come first, in a stable order
         fused.values.sort_by do |candidate|
-          [-candidate.fetch("rrf_score"), candidate.fetch("topic_id")]
+          [
+            -candidate.fetch("rrf_score"),
+            candidate["topic_id"] || Float::INFINITY,
+            candidate["url"].to_s,
+          ]
         end
       end
 
@@ -229,18 +318,20 @@ module DiscourseAi
         source.slice("post_id", "post_number", "url", "excerpt", "post_updated_at")
       end
 
-      # Both retrievers search with the user's guardian, so candidates only need
-      # the metadata synthesis and the sources list show.
+      # The forum's retrievers search with the user's guardian, so candidates only
+      # need the metadata synthesis and the sources list show.
       def with_metadata(candidates)
         candidates = candidates.first(CANDIDATE_LIMIT)
         posts =
           Post
-            .where(id: candidates.pluck("post_id"))
+            .where(id: candidates.pluck("post_id").compact)
             .includes(:user, topic: [{ category: :parent_category }, :tags])
             .index_by(&:id)
         hidden_tags = DiscourseTagging.hidden_tag_names if SiteSetting.tagging_enabled
 
         candidates.filter_map do |candidate|
+          next candidate if ExternalSource.candidate?(candidate)
+
           post = posts[candidate.fetch("post_id")]
           topic = post&.topic
           next if topic.nil?

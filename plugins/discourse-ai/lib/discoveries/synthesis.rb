@@ -187,6 +187,7 @@ module DiscourseAi
             "tags",
             "author_is_staff",
             "is_topic_op",
+            "source_name",
           ).compact
         if candidate["passages"].present?
           input["passages"] = candidate["passages"].map do |passage|
@@ -195,7 +196,8 @@ module DiscourseAi
         else
           input["excerpt"] = candidate["excerpt"] if candidate["excerpt"]
         end
-        input["last_updated_at"] = candidate["post_updated_at"] if candidate["post_updated_at"]
+        last_updated_at = candidate["post_updated_at"] || candidate["published_at"]
+        input["last_updated_at"] = last_updated_at if last_updated_at
         input
       end
 

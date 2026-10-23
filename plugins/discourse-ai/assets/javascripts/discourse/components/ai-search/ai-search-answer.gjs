@@ -185,9 +185,10 @@ export default class AiSearchAnswer extends Component {
                 <li class="ai-search-answer__related-item">
                   <AiSearchTopicRow
                     class="ai-search-answer__related-link"
-                    @bumpedAt={{topic.bumped_at}}
+                    @bumpedAt={{or topic.bumped_at topic.published_at}}
                     @category={{topic.categoryModel}}
                     @replyCount={{topic.topic_replies}}
+                    @sourceName={{topic.source_name}}
                     @title={{topic.title}}
                     @url={{topic.url}}
                   />

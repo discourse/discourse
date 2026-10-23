@@ -380,6 +380,141 @@ describe DiscourseAi::Discoveries::Retrieval do
     end
   end
 
+  describe "#call with external sources" do
+    def external_source(name: "Help center", &search)
+      Struct.new(:name, :search) { def call(**queries) = search.call(**queries) }.new(name, search)
+    end
+
+    def external_result(title, url)
+      { "kind" => "external", "source_name" => "Help center", "title" => title, "url" => url }
+    end
+
+    it "fuses external results with the forum's and passes them the prepared queries" do
+      received = nil
+      help_center =
+        external_source do |**queries|
+          received = queries
+          [external_result("Reset guide", "https://kb.example.com/reset")]
+        end
+
+      result =
+        described_class.new(
+          user:,
+          lexical_retriever: ->(_query) { [source(post_1)] },
+          semantic_retriever: ->(_query) { [] },
+          external_sources: [help_center],
+        ).call(
+          "how do I reset my password",
+          keyword_query: "reset password",
+          semantic_query: "How can I reset a forgotten password?",
+          locale: "en",
+        )
+
+      expect(received).to eq(
+        query: "how do I reset my password",
+        keyword_query: "reset password",
+        semantic_query: "How can I reset a forgotten password?",
+        locale: "en",
+      )
+      expect(result.candidates.map { |candidate| candidate.values_at("url", "source_ref") }).to eq(
+        [[post_1.relative_url, "source_1"], %w[https://kb.example.com/reset source_2]],
+      )
+    end
+
+    it "keeps the other results when an external source fails or runs out of time" do
+      failing = external_source(name: "Broken") { |**| raise "down" }
+      slow =
+        external_source(name: "Slow") do |**|
+          sleep 2
+          [external_result("Late", "https://kb.example.com/late")]
+        end
+      working = external_source { |**| [external_result("Docs", "https://kb.example.com/docs")] }
+
+      SiteSetting.ai_ask_ai_external_sources_timeout = 1
+
+      result =
+        described_class.new(
+          user:,
+          lexical_retriever: ->(_query) { [] },
+          semantic_retriever: ->(_query) { [] },
+          external_sources: [failing, slow, working],
+        ).call("docs")
+
+      expect(result.candidates.pluck("url")).to eq(["https://kb.example.com/docs"])
+    end
+
+    it "searches only external sources when the forum's searches are disabled" do
+      SiteSetting.ai_ask_ai_keyword_search_enabled = false
+      SiteSetting.ai_ask_ai_semantic_search_enabled = false
+      lexical_retriever = instance_spy(Proc, call: [source(post_1)])
+      help_center =
+        external_source { |**| [external_result("Docs", "https://kb.example.com/docs")] }
+
+      result =
+        described_class.new(user:, lexical_retriever:, external_sources: [help_center]).call(
+          "docs",
+          scope_filter: "category:#{category.id}",
+        )
+
+      expect(result.candidates.pluck("url")).to eq(["https://kb.example.com/docs"])
+      expect(result.scope_fallback).to be_nil
+      expect(lexical_retriever).not_to have_received(:call)
+    end
+
+    it "searches the whole forum when only external sources match inside the scope" do
+      lexical_retriever = ->(query) { query.include?("category:") ? [] : [source(post_1)] }
+      help_center =
+        external_source { |**| [external_result("Docs", "https://kb.example.com/docs")] }
+
+      result =
+        described_class.new(
+          user:,
+          lexical_retriever:,
+          semantic_retriever: ->(_query) { [] },
+          external_sources: [help_center],
+        ).call("docs", scope_filter: "category:#{category.id}")
+
+      expect(result.candidates.pluck("url")).to contain_exactly(
+        post_1.relative_url,
+        "https://kb.example.com/docs",
+      )
+      expect(result.scope_fallback).to eq(true)
+    end
+  end
+
+  describe "#call with site-set search limits" do
+    it "adds the category and age limits to both retrievals and keeps them when widening a scope" do
+      freeze_time Time.utc(2026, 10, 23)
+      SiteSetting.ai_ask_ai_search_categories = category.id.to_s
+      SiteSetting.ai_ask_ai_search_max_age_days = 30
+      lexical_retriever = instance_spy(Proc, call: [])
+      semantic_retriever = instance_spy(Proc, call: [])
+
+      described_class.new(user:, lexical_retriever:, semantic_retriever:).call(
+        "reset password",
+        scope_filter: "tag:guides",
+      )
+
+      limits = "after:2026-09-23 categories:#{category.id}"
+      expect(lexical_retriever).to have_received(:call).with("reset password tag:guides #{limits}")
+      expect(lexical_retriever).to have_received(:call).with("reset password #{limits}")
+      expect(semantic_retriever).to have_received(:call).with("reset password #{limits}")
+    end
+
+    it "keeps only the age limit for personal message searches" do
+      freeze_time Time.utc(2026, 10, 23)
+      SiteSetting.ai_ask_ai_search_categories = category.id.to_s
+      SiteSetting.ai_ask_ai_search_max_age_days = 30
+      lexical_retriever = instance_spy(Proc, call: [])
+
+      described_class.new(user:, lexical_retriever:, semantic_retriever: ->(_query) { [] }).call(
+        "widget in:messages",
+      )
+
+      expect(lexical_retriever).to have_received(:call).with("widget in:messages after:2026-09-23")
+    end
+  end
+
   describe "#sources_for" do
     it "resolves known source references in the model's order, dropping the rest" do
       retrieval =
