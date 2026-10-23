@@ -253,7 +253,15 @@ module PluginGem
 
         # Transfer the validated metadata, without reevaluating gemspecs or
         # retaining Bundler's source indexes in the application process.
-        specs.map { [it.for_cache.to_yaml, it.loaded_from, it.full_gem_path] }
+        specs.map do |spec|
+          metadata = spec.for_cache
+          # A spec fetched from a compact index is a subclass, which the
+          # application's safe YAML load refuses; its installed gemspec isn't.
+          unless metadata.instance_of?(Gem::Specification)
+            metadata = Gem::Specification.load(spec.loaded_from).for_cache
+          end
+          [metadata.to_yaml, spec.loaded_from, spec.full_gem_path]
+        end
       end
   end
 
