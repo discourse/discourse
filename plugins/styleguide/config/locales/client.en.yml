@@ -118,9 +118,9 @@ en:
             limits:
               title: "Limits and edge cases"
               description: "Where the control bends: very large lists, truncation, and sources that misbehave."
-            pickers:
-              title: "Real-world pickers"
-              description: "The component doing jobs Discourse actually does. Each one names why its blocks exist and what they buy."
+            together:
+              title: "Putting it together"
+              description: "The features from the other groups combined, one control each, the way you would build one in practice. These are illustrations, not Discourse's own choosers: those ship as recipes, such as the tag chooser. Each card names why its blocks exist and what they buy."
           description: "Interactive examples of the current DSelect family for visual, responsive, keyboard, screen-reader, asynchronous-state, and theme testing."
           mobile_guidance: "Resize to a mobile viewport to verify that the typeahead query input opens inside the modal."
           default_example: "Default synchronous typeahead"
