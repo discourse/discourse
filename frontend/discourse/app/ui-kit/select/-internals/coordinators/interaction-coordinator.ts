@@ -5,6 +5,7 @@ import { schedule } from "@ember/runloop";
 import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import type { DRovingFocusApi } from "discourse/ui-kit/modifiers/d-roving-focus";
+import { handleFieldKeydown } from "discourse/ui-kit/select/-internals/coordinators/field-keyboard";
 import SelectAnnouncer from "discourse/ui-kit/select/-internals/coordinators/select-announcer";
 import VariantPresenter from "discourse/ui-kit/select/-internals/coordinators/variant-presenter";
 import SelectEngine from "discourse/ui-kit/select/select-engine";
@@ -521,61 +522,12 @@ export default class InteractionCoordinator {
 
   @action
   handleInputKeydown(event: KeyboardEvent): void {
-    const input = event.target as HTMLInputElement;
-
-    // Removing from the selection on an empty query: multi drops the last chip on Backspace
-    // (repeat to empty it) — Backspace is the token-input convention, deleting backward toward
-    // the chip before the caret; single clears on Backspace or Delete, since a lone value isn't
-    // a directional token. Blocked while locked.
-    //
-    // Neither is gated on `@clearable`, which governs the visible × control only. The family
-    // this replaces clears on Backspace-with-an-empty-filter unconditionally
-    // (`select-kit/components/select-kit/select-kit-filter.gjs`), so gating it here left a
-    // reader able to reach a value but not leave it, and contradicted the multi path directly
-    // below, which was never gated.
-    if (
-      !event.isComposing &&
-      input.value === "" &&
-      this.#engine.hasValue &&
-      !this.#presenter.isLocked
-    ) {
-      if (this.#isMultiple() && event.key === "Backspace") {
-        event.preventDefault();
-        this.#engine.deselectLast();
-        return;
-      }
-      if (
-        !this.#isMultiple() &&
-        (event.key === "Backspace" || event.key === "Delete")
-      ) {
-        event.preventDefault();
-        this.#engine.clear();
-        return;
-      }
-    }
-
-    // Compact typeaheads open into the strip; uncapped typeaheads enter trigger chips.
-    // Mobile query navigation stays inside its modal.
-    if (
-      this.#presenter.isDesktopTypeahead &&
-      event.key === "ArrowLeft" &&
-      !event.isComposing &&
-      input.selectionStart === 0 &&
-      input.selectionEnd === 0 &&
-      this.#engine.hasValue &&
-      !this.#presenter.isLocked
-    ) {
-      if (!this.#presenter.triggerChipsInteractive) {
-        event.preventDefault();
-        this.#stripFocusRequested = true;
-        this.#menu?.show();
-        if (this.#stripRoving?.focusLast()) {
-          this.#stripFocusRequested = false;
-        }
-      } else if (this.#chipRoving?.focusLast()) {
-        event.preventDefault();
-      }
-    }
+    handleFieldKeydown(event, {
+      engine: this.#engine,
+      multiple: this.#isMultiple(),
+      locked: this.#presenter.isLocked,
+      navigateToSelection: (keyEvent) => this.#navigateToSelection(keyEvent),
+    });
   }
 
   closeMenu(): void {
@@ -608,6 +560,25 @@ export default class InteractionCoordinator {
     this.#suppressSelectOnFocus = true;
     this.filterInput?.focus();
     this.#suppressSelectOnFocus = false;
+  }
+
+  /** Keeps compact-strip opening and focus ownership with the overlay host. */
+  #navigateToSelection(event: KeyboardEvent): boolean {
+    const target = this.#presenter.previousKeyTarget;
+    if (target === "strip") {
+      event.preventDefault();
+      this.#stripFocusRequested = true;
+      this.#menu?.show();
+      if (this.#stripRoving?.focusLast()) {
+        this.#stripFocusRequested = false;
+      }
+      return true;
+    }
+    if (target === "chips" && this.#chipRoving?.focusLast()) {
+      event.preventDefault();
+      return true;
+    }
+    return false;
   }
 
   /**

@@ -34,6 +34,22 @@ interface MultiChipsSignature {
     engine: SelectEngine;
     /** The stable helper for variant-specific presentation state. */
     presenter: VariantPresenter;
+    /** Whether the field contains a query input. */
+    fieldRendersInput: boolean;
+    /** Whether the chips rove and offer removal. */
+    triggerChipsInteractive: boolean;
+    /** Whether the input claims the listbox through aria-owns. */
+    ariaOwns: boolean;
+    /** Overrides Escape's close action. Defaults to closeMenu. */
+    onEscape?: () => void;
+    /** Lets Tab bubble to the host. Defaults to false so Tab exits the trigger. */
+    tabPassthrough?: boolean;
+    /** Defaults to showing the query only while editing; always shows the engine's filter. */
+    queryDisplay?: "editing" | "always";
+    /** The input's accessible name. */
+    label: string;
+    /** The field placeholder. */
+    placeholder?: string;
     /** The id of the currently rendered listbox. */
     listboxId?: string;
     /** Whether the menu is expanded. */
@@ -138,7 +154,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
       return undefined;
     }
     return i18n(
-      this.args.presenter.triggerChipsInteractive
+      this.args.triggerChipsInteractive
         ? "d_select.chips_hint"
         : "d_select.selected_items_hint"
     );
@@ -203,7 +219,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
     index: number,
     event: KeyboardEvent
   ): void {
-    if (!this.args.presenter.isDesktopTypeahead) {
+    if (!this.args.fieldRendersInput) {
       return;
     }
 
@@ -267,7 +283,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
         aria-label={{i18n "d_select.selected_items"}}
         class="d-select__chip-list"
         {{(if
-          @presenter.triggerChipsInteractive
+          @triggerChipsInteractive
           (modifier
             dRovingFocus
             tabStop=false
@@ -301,7 +317,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                 {{! Interactive chips are named through the remove button; display-only
                   chips expose their own label text. }}
                 <span
-                  aria-hidden={{if @presenter.triggerChipsInteractive "true"}}
+                  aria-hidden={{if @triggerChipsInteractive "true"}}
                   class="d-select__chip-label"
                   id="{{this.chipIdPrefix}}-{{index}}-label"
                 >
@@ -317,7 +333,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
                     <SelectionLabel @engine={{@engine}} @item={{chip.item}} />
                   {{/if}}
                 </span>
-                {{#if @presenter.triggerChipsInteractive}}
+                {{#if @triggerChipsInteractive}}
                   <button
                     {{! Name leads with the item, then how to remove it (e.g. "Orange, Press
                     Backspace or Delete to remove") so it reads as a selected item rather
@@ -350,7 +366,7 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           class="d-select__chips-more"
         >{{this.moreLabel}}</span>
       {{/if}}
-      {{#if @presenter.isDesktopTypeahead}}
+      {{#if @fieldRendersInput}}
         <ComboboxQueryInput
           aria-busy={{if @pending "true"}}
           aria-describedby={{@composeDescribedBy
@@ -359,22 +375,25 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           }}
           aria-invalid={{if @invalid "true"}}
           id={{@id}}
-          @ariaOwns={{true}}
+          @ariaOwns={{@ariaOwns}}
           @disabled={{@presenter.isDisabled}}
           @displayValue=""
           @editing={{@editing}}
           @engine={{@engine}}
           @expanded={{@expanded}}
-          @label={{@presenter.selectionLabel}}
+          @label={{@label}}
           @listboxId={{@listboxId}}
           @onBlur={{@onBlur}}
           @onEdit={{@onEdit}}
+          @onEscape={{@onEscape}}
           @onOpen={{@showMenu}}
           @onRequestClose={{@closeMenu}}
-          @placeholder={{@presenter.queryPlaceholder}}
+          @placeholder={{@placeholder}}
+          @queryDisplay={{@queryDisplay}}
           @readonly={{@presenter.isReadonly}}
           @registerInput={{@registerInput}}
           @shouldSelectOnFocus={{@shouldSelectOnFocus}}
+          @tabPassthrough={{@tabPassthrough}}
           {{on "paste" @onPaste}}
           {{keepAboveKeyboard @shouldCorrectKeyboardOcclusion}}
           {{on "keydown" @onInputKeydown}}
@@ -384,11 +403,11 @@ export default class MultiChips extends Component<MultiChipsSignature> {
             {{this.chipHint}}
           </span>
         {{/if}}
-      {{else if @presenter.queryPlaceholder}}
+      {{else if @placeholder}}
         {{! Without an inline query input there is nowhere else to say what to do, so an
           empty selection shows the placeholder here instead. }}
         <span class="d-select__placeholder">
-          {{@presenter.queryPlaceholder}}
+          {{@placeholder}}
         </span>
       {{/if}}
     </div>

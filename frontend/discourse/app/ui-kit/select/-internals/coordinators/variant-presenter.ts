@@ -1,6 +1,7 @@
 import type { FloatContentRole } from "discourse/float-kit/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import type { DRovingFocusEntry } from "discourse/ui-kit/modifiers/d-roving-focus";
+import type { SelectionNavigationTarget } from "discourse/ui-kit/select/-internals/coordinators/field-keyboard";
 import SelectPresenterBase, {
   type OptionsPresenter,
   type SelectPresenterArgs,
@@ -286,9 +287,22 @@ export default class VariantPresenter
     return this.isTypeahead && !this.overlayIsModal;
   }
 
+  /** Whether the trigger field contains a query input. */
+  get fieldRendersInput(): boolean {
+    return this.isDesktopTypeahead;
+  }
+
   /** Only uncapped desktop typeaheads offer removal in the trigger. */
   get triggerChipsInteractive(): boolean {
     return this.isDesktopTypeahead && this.maxVisibleChips === undefined;
+  }
+
+  /** Compact fields enter the panel strip; uncapped fields enter their trigger chips. */
+  get previousKeyTarget(): SelectionNavigationTarget {
+    if (!this.isDesktopTypeahead) {
+      return undefined;
+    }
+    return this.triggerChipsInteractive ? "chips" : "strip";
   }
 
   /** The trigger's chip budget; undefined preserves all chips. */

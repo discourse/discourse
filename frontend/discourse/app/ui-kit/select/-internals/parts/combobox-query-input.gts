@@ -21,6 +21,8 @@ interface ComboboxQueryInputSignature {
     label?: string;
     /** The input placeholder. */
     placeholder?: string;
+    /** Defaults to the resting display until editing; always shows the engine's filter. */
+    queryDisplay?: "editing" | "always";
     /** Selected label displayed in the input before query editing begins. */
     displayValue?: string;
     /**
@@ -49,6 +51,10 @@ interface ComboboxQueryInputSignature {
     onOpen: () => void;
     /** Closes the overlay (Escape) — the parent resets the query on close. */
     onRequestClose: () => void;
+    /** Overrides Escape's close action. Defaults to onRequestClose. */
+    onEscape?: () => void;
+    /** Lets Tab bubble to the host. Defaults to false so Tab exits the trigger. */
+    tabPassthrough?: boolean;
     /** Focus left the input; the parent decides whether that should close the overlay. */
     onBlur?: (event: FocusEvent) => void;
     /** Marks the first edit so the query replaces the selected label. */
@@ -93,7 +99,7 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
   #pointerFocus = false;
 
   get value(): string {
-    return this.args.editing
+    return this.args.queryDisplay === "always" || this.args.editing
       ? this.args.engine.filter
       : (this.args.displayValue ?? this.args.engine.filter);
   }
@@ -157,7 +163,9 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
     // with a control of its own has already claimed this press in the capture phase, so this
     // is only reached when leaving really is the right outcome.
     if (event.key === "Tab") {
-      event.stopPropagation();
+      if (!this.args.tabPassthrough) {
+        event.stopPropagation();
+      }
       return;
     }
 
@@ -181,7 +189,11 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
 
     if (event.key === "Escape") {
       event.preventDefault();
-      this.args.onRequestClose();
+      if (this.args.onEscape) {
+        this.args.onEscape();
+      } else {
+        this.args.onRequestClose();
+      }
       return;
     }
     // Enter and the arrows (while open) fall through to `dRovingFocus`.

@@ -612,12 +612,14 @@ export default class DSelect extends Component<DSelectSignature> {
         >
           {{#if @multiple}}
             <MultiChips
+              @ariaOwns={{true}}
               @closeMenu={{menuArgs.close}}
               @composeDescribedBy={{this.host.describedBy}}
               @describedBy={{this.triggerDescribedBy}}
               @editing={{this.interaction.queryActive}}
               @engine={{this.engine}}
               @expanded={{menuArgs.expanded}}
+              @fieldRendersInput={{this.presenter.fieldRendersInput}}
               @focusChip={{this.interaction.focusChip}}
               @focusInput={{this.interaction.focusInput}}
               @hasSelectionBlock={{has-block "selection"}}
@@ -625,6 +627,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @hasUnresolvedBlock={{has-block "unresolved"}}
               @id={{@id}}
               @invalid={{@invalid}}
+              @label={{this.presenter.selectionLabel}}
               @listboxId={{this.activeListboxId}}
               @onBlur={{this.interaction.handleTriggerBlur}}
               @onEdit={{this.interaction.beginQuery}}
@@ -632,12 +635,14 @@ export default class DSelect extends Component<DSelectSignature> {
               @onPaste={{this.host.handlePaste}}
               @onRegisterChipRoving={{this.interaction.registerChipRoving}}
               @pending={{this.engine.pending}}
+              @placeholder={{this.presenter.queryPlaceholder}}
               @presenter={{this.presenter}}
               @registerInput={{this.interaction.registerTriggerInput}}
               @selection={{this.heldSelection}}
               @shouldCorrectKeyboardOcclusion={{this.interaction.shouldCorrectKeyboardOcclusion}}
               @shouldSelectOnFocus={{this.interaction.shouldSelectOnFocus}}
               @showMenu={{menuArgs.show}}
+              @triggerChipsInteractive={{this.presenter.triggerChipsInteractive}}
               @value={{@value}}
             >
               <:selection as |item|>{{yield
