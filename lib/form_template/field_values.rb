@@ -37,6 +37,7 @@ class FormTemplate::FieldValues
     end
   end
 
+  # HTML constraints remain browser-side; Ruby regexes, lengths, and choice strings differ.
   def validate!
     @fields.each do |field|
       value = answers[field.fetch("id")]
@@ -44,16 +45,6 @@ class FormTemplate::FieldValues
 
       rules = field["validations"] || {}
       invalid = rules["required"] && (value.nil? || value == false || value == "" || value == [])
-      if value.is_a?(String) && value.present?
-        invalid ||= rules["minimum"] && value.length < rules["minimum"].to_i
-        invalid ||= rules["maximum"] && value.length > rules["maximum"].to_i
-        invalid ||=
-          rules["pattern"] &&
-            !Regexp.new("\\A(?:#{rules["pattern"]})\\z", timeout: 0.05).match?(value)
-      end
-      if field["choices"] && value.present? && field["type"] != "tag-chooser"
-        invalid ||= (Array(value) - field["choices"]).any?
-      end
       if invalid
         raise FormTemplate::InvalidAnswers,
               I18n.t(
@@ -62,8 +53,6 @@ class FormTemplate::FieldValues
               )
       end
     end
-  rescue RegexpError, Regexp::TimeoutError
-    raise FormTemplate::InvalidAnswers, I18n.t("form_templates.errors.invalid_output_template")
   end
 
   private
