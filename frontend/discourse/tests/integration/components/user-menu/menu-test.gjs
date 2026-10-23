@@ -16,6 +16,20 @@ module("Integration | Component | UserMenu", function (hooks) {
 
   test("mentions tab is hidden when the upcoming change is disabled", async function (assert) {
     this.siteSettings.enable_user_menu_mentions_tab = false;
+    this.currentUser.set("grouped_unread_notifications", {
+      [NOTIFICATION_TYPES.mentioned]: 2,
+      [NOTIFICATION_TYPES.group_mentioned]: 3,
+      [NOTIFICATION_TYPES.replied]: 4,
+    });
+    let filterByTypes;
+    pretender.get("/notifications", (request) => {
+      filterByTypes = request.queryParams.filter_by_types;
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        { notifications: [] },
+      ];
+    });
     await render(<template><Menu /></template>);
 
     assert
@@ -24,6 +38,65 @@ module("Integration | Component | UserMenu", function (hooks) {
     assert
       .dom("#user-menu-button-replies")
       .exists("the existing Replies tab remains available");
+    assert
+      .dom("#user-menu-button-replies .badge-notification")
+      .hasText(
+        "9",
+        "direct mentions are still counted in Replies when disabled"
+      );
+    await click("#user-menu-button-replies");
+    assert.strictEqual(
+      filterByTypes,
+      "mentioned,group_mentioned,posted,quoted,replied",
+      "Replies retains direct mentions when the change is disabled"
+    );
+  });
+  test("replies exclude direct mentions from their filter, count and dismissal when enabled", async function (assert) {
+    this.currentUser.set("grouped_unread_notifications", {
+      [NOTIFICATION_TYPES.mentioned]: 2,
+      [NOTIFICATION_TYPES.group_mentioned]: 3,
+      [NOTIFICATION_TYPES.replied]: 4,
+    });
+    let filterByTypes;
+    let dismissTypes;
+    pretender.get("/notifications", (request) => {
+      filterByTypes = request.queryParams.filter_by_types;
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        {
+          notifications: [
+            NotificationFixtures["/notifications"].notifications[1],
+          ],
+        },
+      ];
+    });
+    pretender.put("/notifications/mark-read", (request) => {
+      dismissTypes = new URLSearchParams(request.requestBody).get(
+        "dismiss_types"
+      );
+      return [200, { "Content-Type": "application/json" }, { success: true }];
+    });
+
+    await render(<template><Menu /></template>);
+    assert
+      .dom("#user-menu-button-replies .badge-notification")
+      .hasText("7", "direct mentions are excluded from the Replies badge");
+    await click("#user-menu-button-replies");
+    assert.strictEqual(
+      filterByTypes,
+      "group_mentioned,posted,quoted,replied",
+      "Replies includes group mentions but not direct mentions"
+    );
+    await click(".user-menu .notifications-dismiss");
+    assert.strictEqual(
+      dismissTypes,
+      "group_mentioned,posted,quoted,replied",
+      "dismissing Replies excludes direct mentions"
+    );
+    assert
+      .dom("#user-menu-button-mentions .badge-notification")
+      .hasText("2", "direct mentions remain unread after dismissing Replies");
   });
 
   test("default tab is all notifications", async function (assert) {
@@ -247,14 +320,13 @@ module("Integration | Component | UserMenu", function (hooks) {
           },
         ];
       } else if (
-        queryParams.filter_by_types ===
-        "mentioned,group_mentioned,posted,quoted,replied"
+        queryParams.filter_by_types === "group_mentioned,posted,quoted,replied"
       ) {
         data = [
           {
             id: 6,
             user_id: 1,
-            notification_type: NOTIFICATION_TYPES.mentioned,
+            notification_type: NOTIFICATION_TYPES.replied,
             read: true,
             high_priority: false,
             created_at: "2021-11-25T19:31:13.241Z",
@@ -306,8 +378,8 @@ module("Integration | Component | UserMenu", function (hooks) {
     assert.dom("#quick-access-replies.quick-access-panel").exists();
     assert.strictEqual(
       queryParams.filter_by_types,
-      "mentioned,group_mentioned,posted,quoted,replied",
-      "request params has filter_by_types set to `mentioned`, `posted`, `quoted` and `replied`"
+      "group_mentioned,posted,quoted,replied",
+      "request params include group mentions, posted, quoted and replied notifications"
     );
     assert.strictEqual(queryParams.silent, "true");
     activeTabs = findAll(".top-tabs .btn.active");

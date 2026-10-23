@@ -39,6 +39,11 @@ RSpec.describe "Viewing User Menu" do
 
     expect(user_menu).to have_notification_count_of(3)
 
+    user_menu.click_replies_notifications_tab
+
+    expect(user_menu).to have_notification_count_of(2)
+    expect(user_menu).to have_no_direct_mentions
+
     user_menu.click_mentions_notifications_tab
 
     expect(user_menu).to have_direct_mention_notification(mentioned_post)
@@ -108,6 +113,8 @@ RSpec.describe "Viewing User Menu" do
 
   describe "when viewing replies notifications tab" do
     fab!(:topic)
+
+    before { SiteSetting.enable_user_menu_mentions_tab = false }
 
     it "shows group-mention notifications in the tab" do
       Jobs.run_immediately!

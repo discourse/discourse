@@ -45,21 +45,18 @@ const CORE_TOP_TABS = [
     id = "replies";
     icon = "user_menu.replies";
     panelComponent = UserMenuRepliesNotificationsList;
-    notificationTypes = [
-      "mentioned",
-      "group_mentioned",
-      "posted",
-      "quoted",
-      "replied",
-    ];
+
+    get notificationTypes() {
+      const types = ["group_mentioned", "posted", "quoted", "replied"];
+      return this.siteSettings.enable_user_menu_mentions_tab
+        ? types
+        : ["mentioned", ...types];
+    }
 
     get count() {
-      return (
-        this.getUnreadCountForType("mentioned") +
-        this.getUnreadCountForType("group_mentioned") +
-        this.getUnreadCountForType("posted") +
-        this.getUnreadCountForType("quoted") +
-        this.getUnreadCountForType("replied")
+      return this.notificationTypes.reduce(
+        (sum, type) => sum + this.getUnreadCountForType(type),
+        0
       );
     }
 

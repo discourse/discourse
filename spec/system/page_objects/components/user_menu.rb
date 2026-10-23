@@ -101,6 +101,10 @@ module PageObjects
         expect(find("#user-menu-button-replies").text).to eq(count.to_s)
       end
 
+      def has_no_direct_mentions?
+        page.has_no_css?(".user-menu .notification.mentioned")
+      end
+
       def has_no_mentions_notifications_tab?
         page.has_no_css?("#user-menu-button-mentions")
       end
