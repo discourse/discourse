@@ -1,8 +1,10 @@
+import moment from "moment";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 import ComposerEventEditor from "discourse/plugins/discourse-events/discourse/components/composer-event-editor";
 import DiscoursePostEvent from "discourse/plugins/discourse-events/discourse/components/discourse-post-event";
 import DiscoursePostEventOneboxPreview from "discourse/plugins/discourse-events/discourse/components/discourse-post-event/onebox-preview";
+import decorateEventOneboxes from "discourse/plugins/discourse-events/discourse/lib/decorate-event-oneboxes";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 
 const ComposerEventEditorTemplate = <template>
@@ -99,10 +101,15 @@ function _decorateEventPreview(api, cooked, helper) {
 }
 
 function initializeDiscoursePostEventDecorator(api) {
+  const currentUser = api.container.lookup("service:current-user");
+  const timezone = currentUser?.user_option?.timezone || moment.tz.guess();
+
   api.addTrackedPostProperties("event_oneboxes");
 
   api.decorateCookedElement(
     (cooked, helper) => {
+      decorateEventOneboxes(cooked, timezone);
+
       if (cooked.classList.contains("d-editor-preview")) {
         _decorateEventPreview(api, cooked, helper);
         if (helper) {
@@ -156,6 +163,13 @@ function initializeDiscoursePostEventDecorator(api) {
       id: "discourse-post-event-decorator",
     }
   );
+
+  if (api.decorateChatMessage) {
+    api.decorateChatMessage(
+      (cooked) => decorateEventOneboxes(cooked, timezone),
+      { id: "discourse-post-event-onebox" }
+    );
+  }
 
   api.replaceIcon(
     "notification.discourse_post_event.notifications.invite_user_notification",

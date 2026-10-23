@@ -72,6 +72,9 @@ discourse_events:
   discourse_post_event_enabled:
     default: false
     client: true
+  enable_event_schema_for_topics:
+    default: false
+    hidden: true
   discourse_post_event_allowed_on_groups:
     client: true
     type: group_list

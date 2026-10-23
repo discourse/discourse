@@ -47,5 +47,55 @@ RSpec.describe Onebox::Engine::DiscourseTopicOnebox do
     it "returns the expected data" do
       expect(data).to include expected_data
     end
+
+    context "with Schema.org Event data" do
+      let(:url) { "https://example.com/t/community-hangout/123" }
+      let(:html) { <<~HTML }
+          <html>
+            <head>
+              <meta property="og:site_name" content="Example community">
+              <meta property="og:title" content="Community hangout">
+              <meta property="og:description" content="The ordinary topic excerpt">
+              <meta property="og:image" content="https://example.com/topic.png">
+              <meta property="article:published_time" content="2026-10-19T00:00:00Z">
+              <script type="application/ld+json">
+                {
+                  "@context": "https://schema.org",
+                  "@type": "Event",
+                  "name": "Community hangout",
+                  "description": "Meet the community",
+                  "startDate": "2026-10-22T09:00:00.000-04:00",
+                  "endDate": "2026-10-22T10:00:00.000-04:00"
+                }
+              </script>
+            </head>
+          </html>
+        HTML
+
+      before { stub_request(:get, url).to_return(status: 200, body: html) }
+
+      it "uses the event description and exposes event display data" do
+        expect(data).to include(
+          description: "Meet the community",
+          is_event: true,
+          event_all_day: false,
+          event_date_day: "22",
+          event_date_month: "Oct",
+          event_starts_at: "2026-10-22T09:00:00.000-04:00",
+          event_ends_at: "2026-10-22T10:00:00.000-04:00",
+          event_timezone: "UTC-04:00",
+        )
+      end
+
+      it "renders event data for client-side localization" do
+        html = onebox.to_html
+
+        expect(html).to include('class="discourse-event-onebox"')
+        expect(html).to include('data-event-starts-at="2026-10-22T09:00:00.000-04:00"')
+        expect(html).to include('class="discourse-event-onebox__date"')
+        expect(html).to include("Meet the community")
+        expect(html).not_to include("The ordinary topic excerpt")
+      end
+    end
   end
 end

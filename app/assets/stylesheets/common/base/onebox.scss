@@ -172,7 +172,12 @@ aside.onebox {
       color: var(--tertiary);
     }
 
-    img:not(.avatar, .onebox-avatar-inline, .emoji) {
+    img:not(
+      .avatar,
+      .onebox-avatar-inline,
+      .emoji,
+      .discourse-event-onebox__image
+    ) {
       max-height: 170px;
       max-width: 20%;
       height: auto;
@@ -328,6 +333,96 @@ aside.onebox {
           '<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 512 512" fill="white"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"></path></svg>'
         );
       }
+    }
+  }
+}
+
+.discourse-event-onebox {
+  display: grid;
+  grid-template-columns: minmax(8rem, 20%) minmax(0, 1fr);
+  gap: var(--space-4);
+
+  &__media {
+    align-self: start;
+    min-height: 5rem;
+    overflow: hidden;
+    position: relative;
+  }
+
+  &__image.thumbnail {
+    float: none;
+    height: 100%;
+    margin: 0;
+    max-height: 10.625rem;
+    max-width: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  &__date {
+    align-items: center;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    bottom: var(--space-2);
+    color: var(--primary);
+    display: flex;
+    flex-direction: column;
+    inset-inline-start: var(--space-2);
+    justify-content: center;
+    min-height: 3.5rem;
+    min-width: 3.5rem;
+    position: absolute;
+  }
+
+  &__month {
+    font-size: var(--font-down-2);
+    text-transform: uppercase;
+  }
+
+  &__day {
+    font-size: var(--font-up-2);
+    line-height: var(--line-height-small);
+  }
+
+  &__content {
+    min-width: 0;
+  }
+
+  &__time {
+    align-items: center;
+    display: flex;
+    gap: var(--space-2);
+    margin-block: var(--space-3);
+
+    .d-icon {
+      color: var(--primary-medium);
+      flex: 0 0 auto;
+    }
+  }
+
+  &__description {
+    align-items: flex-start;
+    display: flex;
+    gap: var(--space-2);
+    overflow-wrap: anywhere;
+
+    .d-icon {
+      color: var(--primary-medium);
+      flex: 0 0 auto;
+      margin-top: 0.2em;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  @include viewport.until(sm) {
+    grid-template-columns: 1fr;
+
+    &__media {
+      max-width: 14rem;
     }
   }
 }

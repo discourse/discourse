@@ -4,7 +4,12 @@ $max_video_height: 250px;
 .chat-message {
   // append selectors to set images to a
   // max height of $max_image_height
-  .onebox img:not(.ytp-thumbnail-image, .onebox-avatar-inline),
+  .onebox
+    img:not(
+      .ytp-thumbnail-image,
+      .onebox-avatar-inline,
+      .discourse-event-onebox__image
+    ),
   img.onebox,
   .chat-uploads img,
   p img,
@@ -53,7 +58,7 @@ $max_video_height: 250px;
           margin-right: 0.5rem;
         }
 
-        .thumbnail {
+        .thumbnail:not(.discourse-event-onebox__image) {
           max-width: 100% !important;
           margin: 0;
         }
