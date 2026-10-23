@@ -32,7 +32,11 @@ Paths are relative to the repository root.
     terminology and component names are chosen for the new API rather than copied, and behaviour
     lives at the layer that owns it (navigation belongs to the call site, not to a picker).
     Compatibility with third-party customizations (bridge kinds, legacy root classes) is kept by
-    mapping, never by mirroring select-kit's component structure. Decided 2026-10-21.
+    mapping, never by mirroring select-kit's component structure. Decided 2026-10-21. For tags
+    this produced `DSelectTag`, `DSelectTagFilter` and `DSelectTagGroup` (kinds named after the
+    components); each instance keeps its select-kit name(s) through `@legacyKind` for the bridge
+    and legacy CSS. That match is per instance, so it is narrower than select-kit's class chain:
+    only the intersection filter also answers to `mini-tag-chooser`.
 
 ## Blast radius
 

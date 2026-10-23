@@ -542,10 +542,36 @@ exception to the kit's domain-free primitives. A recipe:
   and its `:item`, `:selection` and `:footer` blocks;
 - never sets its own `@identifier`, which would take the call-site tier away from its callers.
 
-`DTagChooser` accepts controlled `@tags` and emits tag objects through `@onChange`. It resolves
-name-only held and blocked tags when those values change. Search sends only known numeric ids;
-a pending or failed name lookup never holds up search. A completed lookup reloads an open list
-with the resolved ids. Creation requires both `@allowCreate` and the site's permission.
+#### Tag recipes
+
+The tag family has three recipes, split by what the pick is for:
+
+- **`DSelectTag`** (kind `select-tag`) picks tags to store on something: topic tags, settings,
+  preferences, synonyms. `@value` takes tag objects or names; `@onChange` emits tag objects, or
+  stored names with `@emit="names"` (the untranslated name even when search shows a translation).
+  `@multiple={{false}}` holds one tag. Creation needs both `@allowCreate` and the site's
+  permission. `@maximum` defaults to the site's tags-per-topic and `@maximum={{false}}` lifts it;
+  a site limit of 0 blocks additions while keeping removal. Search options are
+  `@categoryId`, `@ignoreRestrictions` (all tags, not only those usable on topics), `@exclude`,
+  `@excludeSynonyms`, `@excludeTagsWithSynonyms` and `@suggestRecent`.
+- **`DSelectTagFilter`** (kind `select-tag-filter`) narrows a topic list. Its value is a tag,
+  `ALL_TAGS_ID` or `NO_TAG_ID` (exported by the module), or several tags with `@multiple` for
+  intersections. It offers the "all tags" and "no tags" shortcuts and the top tags, and never
+  navigates: the call site turns the pick into a URL.
+- **`DSelectTagGroup`** (kind `select-tag-group`) picks tag groups by name.
+
+Held names resolve when the value changes. Search sends only known numeric ids, and a pending or
+failed name lookup never holds up search; a completed lookup reloads an open list with the
+resolved ids.
+
+Until cleanup, each recipe sets a default `@legacyKind` (`tag-chooser`, `tag-drop` or
+`tags-intersection-chooser` with `mini-tag-chooser`, and `tag-group-chooser` with
+`tag-chooser`), and call sites that replaced other select-kit components pass their own (the
+composer passes `mini-tag-chooser`).
+
+`@exclude` tags are also sent to the server as selected, so results fill with usable tags and
+one-per-group rules apply. A side effect, unchanged from select-kit: in the bulk "replace tag"
+rows, tags that share a one-per-topic group with the other row's tag are not offered.
 
 The default tag row renders new items with `d_select.create_item`. A custom `:item` block
 owns that wording too; use the item's `isNew` flag to distinguish creation from existing tags.
@@ -591,9 +617,9 @@ existing arguments keep their positions:
 
 Code outside `DSelect`, such as markup around it, cannot read the resolved values.
 
-A multi-only chooser used with `maximum=1` to pick one value is not a capability gap. Its recipe
-renders a single select (`@multiple={{false}}`) and converts between `[id]` and `id` at its
-boundary, so call sites keep storing arrays.
+Use `@multiple={{false}}` for single fields. A call site that stores an array adapts between
+the recipe's single value and its array boundary; FormKit's tag chooser does this when its
+maximum is one.
 
 ## Capability parity & gaps
 

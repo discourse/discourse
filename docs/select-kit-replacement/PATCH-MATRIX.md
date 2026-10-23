@@ -11,7 +11,7 @@ A family joins only once the ports for its rows are done.
 
 | Kind | Sites | Targets today | Supported route | Status |
 |---|---|---|---|---|
-| Caret icons | 10 | `category-drop`, `tag-drop`, direct `DropdownSelectBox` uses (one site applies `selectKitOptions` to the classes directly instead of `modifyClass`) | `spec.options` returning `caretIcon`, through `forKind` | Available |
+| Caret icons | 10 | `category-drop`, `tag-drop`, direct `DropdownSelectBox` uses (one site applies `selectKitOptions` to the classes directly instead of `modifyClass`) | `spec.options` returning `caretIcon`, through `forKind` (the tag drop is now kind `select-tag-filter`) | Available |
 | Hiding the title text | 2 | `category-drop`, direct `DropdownSelectBox` uses | `spec.options` returning `iconOnly`; the recipe or call site passes `@label` | Available |
 | Empty-selection trigger text | 1 | `category-drop` (one parent's subcategory drop; the drop has no none row, the patch changes the trigger's no-selection text and title) | `spec.options` returning `placeholder`, through `forIdentifier`; the trigger title has no route yet | Available (text) |
 | Disabling a select from an outside flow | 1 | `form-template-chooser`, plus the composer's category and tag choosers through DOM queries | `spec.options` returning `disabled`, through `forIdentifier` | Available |
