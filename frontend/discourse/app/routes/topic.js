@@ -82,7 +82,10 @@ export default class TopicRoute extends DiscourseRoute {
 
   @action
   showFlags(model) {
-    if (!this.currentUser && this.siteSettings.dsa_reporting_enabled) {
+    if (
+      this.siteSettings.dsa_reporting_enabled &&
+      (!this.currentUser || !model.canFlag)
+    ) {
       this.router.transitionTo("report-illegal-content", {
         queryParams: {
           content_url: window.location.origin + model.urlWithNumber,

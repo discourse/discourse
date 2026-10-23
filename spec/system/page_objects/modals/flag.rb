@@ -10,6 +10,22 @@ module PageObjects
         body.find("#radio_#{type}").click
       end
 
+      def has_no_illegal_flag_choice?
+        body.has_no_css?("#radio_illegal")
+      end
+
+      def has_wrapped_illegal_content_link?(label)
+        body.has_css?(".flag-modal__report-illegal-content", text: label) do |link|
+          link.evaluate_script(
+            "this.closest('.d-modal__body').scrollWidth <= this.closest('.d-modal__body').clientWidth",
+          )
+        end
+      end
+
+      def report_illegal_content
+        body.click_link(I18n.t("js.dsa_notice.title"))
+      end
+
       def confirm_flag
         click_primary_button
       end

@@ -3,7 +3,9 @@
 RSpec.describe "Illegal content notices" do
   fab!(:topic)
   fab!(:reported_post) { Fabricate(:post, topic:) }
+  fab!(:reporter) { Fabricate(:user, refresh_auto_groups: true) }
 
+  let(:flag_modal) { PageObjects::Modals::Flag.new }
   let(:explanation) do
     "This listing advertises counterfeit goods as authentic and asks buyers to pay outside the marketplace. The product description and payment instructions appear intended to deceive buyers."
   end
@@ -12,11 +14,61 @@ RSpec.describe "Illegal content notices" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
   before do
+    SiteSetting.post_menu_hidden_items = ""
     SiteSetting.contact_email = "legal@example.invalid"
     SiteSetting.dsa_reporting_enabled = true
     SiteSetting.disable_emails = "no"
     SiteSetting.allow_all_users_to_flag_illegal_content = true
     Jobs.run_immediately!
+  end
+
+  it "lets a logged in reporter open the notice form from post and topic flagging" do
+    sign_in(reporter)
+    topic_page.visit_topic(topic)
+    topic_page.click_post_action_button(reported_post, :flag)
+    expect(flag_modal).to be_open
+    expect(flag_modal).to have_no_illegal_flag_choice
+    flag_modal.report_illegal_content
+    expect(flag_modal).to be_closed
+    expect(notice_page).to have_notice_form
+    expect(notice_page.form.field("content_url").value).to end_with(reported_post.url)
+
+    topic_page.visit_topic(topic)
+    topic_page.open_flag_topic_modal
+    expect(flag_modal).to have_no_illegal_flag_choice
+    flag_modal.report_illegal_content
+    expect(flag_modal).to be_closed
+    expect(notice_page).to have_notice_form
+    expect(notice_page.form.field("content_url").value).to end_with(topic.relative_url)
+
+    topic_page.visit_topic(topic)
+    topic_page.click_post_action_button(reported_post, :flag)
+    flag_modal.choose_type(:off_topic)
+    flag_modal.confirm_flag
+    expect(page).to have_content(I18n.t("js.post.actions.by_you.off_topic"))
+  end
+
+  it "lets a mobile reporter follow a long translated report link", mobile: true do
+    label = "Report illegal content with an explanation " + "Example" * 20
+    TranslationOverride.upsert!("en", "js.dsa_notice.title", label)
+    sign_in(reporter)
+    topic_page.visit_topic(topic)
+    topic_page.click_post_action_button(reported_post, :flag)
+
+    expect(flag_modal).to have_wrapped_illegal_content_link(label)
+    flag_modal.report_illegal_content
+    expect(notice_page).to have_notice_form
+  end
+
+  it "lets a silenced reporter open the notice form directly" do
+    UserSilencer.silence(reporter)
+    sign_in(reporter)
+    topic_page.visit_topic(topic)
+    topic_page.click_post_action_button(reported_post, :flag)
+
+    expect(flag_modal).to be_closed
+    expect(notice_page).to have_notice_form
+    expect(notice_page.form.field("content_url").value).to end_with(reported_post.url)
   end
 
   it "lets a reporter verify their email and submit an illegal content report" do

@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import FlagActionType from "discourse/components/flag-action-type";
@@ -11,6 +12,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewableBundledAction from "discourse/components/reviewable-bundled-action";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { reload } from "discourse/helpers/page-reloader";
+import { getAbsoluteURL } from "discourse/lib/get-url";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import User from "discourse/models/user";
 import { not } from "discourse/truth-helpers";
@@ -99,7 +101,17 @@ export default class Flag extends Component {
   get flagsAvailable() {
     return this.args.model.flagTarget
       .flagsAvailable(this)
-      .filter((flag) => flag.enabled);
+      .filter(
+        (flag) =>
+          flag.enabled &&
+          !(this.siteSettings.dsa_reporting_enabled && flag.isIllegal)
+      );
+  }
+
+  get illegalContentUrl() {
+    return getAbsoluteURL(
+      this.args.model.flagModel.urlWithNumber || this.args.model.flagModel.url
+    );
   }
 
   get staffFlagsAvailable() {
@@ -257,6 +269,18 @@ export default class Flag extends Component {
             />
           </FlagSelection>
         </form>
+        {{#if this.siteSettings.dsa_reporting_enabled}}
+          <p>
+            <LinkTo
+              class="flag-modal__report-illegal-content"
+              @query={{hash content_url=this.illegalContentUrl}}
+              @route="report-illegal-content"
+              {{on "click" @closeModal}}
+            >
+              {{i18n "dsa_notice.title"}}
+            </LinkTo>
+          </p>
+        {{/if}}
         <PluginOutlet
           @connectorTagName="div"
           @name="flag-modal-bottom"
