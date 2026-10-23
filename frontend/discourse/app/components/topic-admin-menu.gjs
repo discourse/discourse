@@ -319,7 +319,7 @@ export default class TopicAdminMenu extends Component {
               </dropdown.item>
             {{/if}}
 
-            {{#if (and this.details.can_convert_topic)}}
+            {{#if this.details.can_convert_topic}}
               <dropdown.item class="topic-admin-convert">
                 <DButton
                   @action={{fn
