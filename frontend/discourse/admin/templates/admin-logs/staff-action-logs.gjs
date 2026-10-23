@@ -200,7 +200,7 @@ export default <template>
                   </div>
                 </td>
                 <td class="col value context">
-                  {{#if (fn @controller.showHtmlSafeContext item)}}
+                  {{#if (@controller.showHtmlSafeContext item)}}
                     {{trustHTML item.context}}
                   {{else}}
                     {{item.context}}
