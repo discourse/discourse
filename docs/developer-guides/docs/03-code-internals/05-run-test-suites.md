@@ -49,9 +49,21 @@ bin/qunit --standalone --no-headless
 From the root directory of Discourse:
 
 ```sh
+bin/qunit plugins/chat/test/javascripts/unit/lib/chat-audio-test.js # Run one file
+bin/qunit plugins/chat/test/javascripts/unit # Run a directory
 bin/rake "plugin:qunit" # Run all plugin qunit tests
 bin/rake "plugin:qunit[discourse-chat-integration]" # Run a single plugin's qunit tests
 ```
+
+### Test module registration
+
+Core and plugin `*-test.{js,gjs,ts,gts}` files run their bodies only when the runner selects them, so path filters register only the matching tests. Top-level `await` is supported.
+
+Test modules cannot contain exports. Put shared helpers in `tests/helpers` (core) or `test/javascripts/helpers` (plugins) and import them. Imports run when the bundle loads, so register tests only in the test modules themselves.
+
+In core, an export fails the build. A plugin test module with exports runs eagerly, ignoring path filters, and fails an "is a valid test module" test when selected.
+
+Theme tests always register eagerly.
 
 ### Themes
 

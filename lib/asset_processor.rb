@@ -15,6 +15,7 @@ class AssetProcessor
         app/assets/stylesheets/variable-renames.json
         frontend/discourse/lib/babel-transform-module-renames.js
         frontend/discourse/lib/discourse-source-imports.mjs
+        frontend/discourse/lib/wrap-test-module-body.mjs
         frontend/discourse/config/targets.js
       ],
     ) do

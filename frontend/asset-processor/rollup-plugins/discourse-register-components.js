@@ -27,7 +27,10 @@ function componentPathFor(id, basePath) {
 
 // Components are reached by import, so nothing can look one up by name. Each module says what
 // it is as it evaluates, which is when a `modifyClass` call that arrived first can be applied.
-export default function discourseRegisterComponents({ basePath }) {
+export default function discourseRegisterComponents({
+  basePath,
+  testModuleIds = new Set(),
+}) {
   return {
     name: "discourse-register-components",
 
@@ -36,6 +39,11 @@ export default function discourseRegisterComponents({ basePath }) {
       order: "post",
 
       handler(code, id) {
+        // Test registration functions must stay out of the component registry.
+        if (testModuleIds.has(id)) {
+          return null;
+        }
+
         const path = componentPathFor(id, basePath);
 
         if (!path) {
