@@ -643,7 +643,7 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     @provider.log_on_user(user, {}, @provider.cookie_jar)
 
     cookie_info = get_cookie_info(@provider.cookie_jar, "_t")
-    expect(cookie_info[:samesite]).to eq("Lax")
+    expect(cookie_info[:samesite]).to eq("lax")
     expect(cookie_info[:httponly]).to eq(true)
     expect(cookie_info.key?(:secure)).to eq(false)
 

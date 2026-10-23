@@ -11,10 +11,10 @@ class ContentSecurityPolicy
       request = Rack::Request.new(env)
       _, headers, _ = response = @app.call(env)
 
-      return response if headers["Content-Security-Policy"].present?
+      return response if headers["content-security-policy"].present?
       return response unless html_response?(headers)
 
-      prevent_framing = headers["X-Frame-Options"] == "DENY"
+      prevent_framing = headers["x-frame-options"] == "DENY"
 
       # The EnforceHostname middleware ensures request.host_with_port can be trusted
       protocol = (SiteSetting.force_https || request.ssl?) ? "https://" : "http://"
@@ -24,7 +24,7 @@ class ContentSecurityPolicy
 
       if SiteSetting.content_security_policy || prevent_framing
         enforced_policy = policy(theme_id, base_url: base_url, path_info: env["PATH_INFO"])
-        headers["Content-Security-Policy"] = (
+        headers["content-security-policy"] = (
           if prevent_framing
             policy_preventing_framing(enforced_policy)
           else
@@ -32,7 +32,7 @@ class ContentSecurityPolicy
           end
         )
       end
-      headers["Content-Security-Policy-Report-Only"] = policy(
+      headers["content-security-policy-report-only"] = policy(
         theme_id,
         base_url: base_url,
         path_info: env["PATH_INFO"],
@@ -54,7 +54,7 @@ class ContentSecurityPolicy
     end
 
     def html_response?(headers)
-      headers["Content-Type"] && headers["Content-Type"] =~ /html/
+      headers["content-type"] && headers["content-type"] =~ /html/
     end
   end
 end
