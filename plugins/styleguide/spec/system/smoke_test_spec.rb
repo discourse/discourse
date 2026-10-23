@@ -183,7 +183,7 @@ RSpec.describe "Styleguide Smoke Test" do
     screenshot_marker(label: "styleguide-select-none", only: :desktop)
   end
 
-  it "shows an icon-only trigger whose icon reflects the selection" do
+  it "shows an icon-only toolbar trigger whose glyph and sample follow the selection" do
     visit "/styleguide/molecules/select?group=appearance"
     expect(styleguide).to have_heading("Select")
 
@@ -195,8 +195,12 @@ RSpec.describe "Styleguide Smoke Test" do
     # are not clipped.
     icon_only = PageObjects::Components::UiKit::DSelect.by_identifier("sg-icon-only")
     icon_only.open_trigger
-    expect(page).to have_css(icon_only.option_selector, text: "Watching")
+    expect(page).to have_css(icon_only.option_selector, text: "Align right")
     screenshot_marker(label: "styleguide-select-icon-only", only: :desktop)
+
+    icon_only.select_value("right")
+    expect(page).to have_css(".select-examples__aligned[data-alignment='right']")
+    expect(page).to have_css("[data-identifier='sg-icon-only'][data-trigger] .d-icon-align-right")
   end
 
   it "shows a custom selection that becomes an editable label on open" do
