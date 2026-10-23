@@ -851,14 +851,22 @@ class UserNotifications < ActionMailer::Base
           invite_template,
           username: username,
           group_name: group_name,
-          topic_title: ERB::Util.html_escape(gsub_emoji_to_unicode(title)),
+          topic_title: "%{topic_title}",
           topic_excerpt: topic_excerpt,
           site_title: SiteSetting.title,
           site_description: SiteSetting.site_description,
           topic_url: topic_url,
         )
 
-      html = PrettyText.cook(message, sanitize: false).html_safe
+      # the title is substituted after cooking so it always renders as literal
+      # text and can never alter the template's Markdown structure
+      topic_title_text = gsub_emoji_to_unicode(title).to_s
+      html =
+        PrettyText
+          .cook(message, sanitize: false)
+          .gsub("%{topic_title}") { ERB::Util.html_escape(topic_title_text) }
+          .html_safe
+      message = message.gsub("%{topic_title}") { topic_title_text }
     else
       reached_limit = SiteSetting.max_emails_per_day_per_user > 0
       reached_limit &&=
