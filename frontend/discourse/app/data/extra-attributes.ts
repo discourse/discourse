@@ -24,7 +24,7 @@ export function recordExtraAttributes(
   const key = keyFor(type, id);
   let stored = registry.get(key);
   if (!stored) {
-    stored = trackedObject<Record<string, unknown>>({});
+    stored = trackedObject({});
     registry.set(key, stored);
   }
 

@@ -7,6 +7,7 @@ import { trackedObject } from "@ember/reactive/collections";
 import { exposeExtraAttributes } from "discourse/data/extra-attributes";
 import WarpRestModel, {
   type WarpResource,
+  type WarpRestModelCtor,
 } from "discourse/data/warp-rest-model";
 import {
   applyModelCallbacks,
@@ -46,7 +47,7 @@ export default class RestCompatModel extends WarpRestModel {
   // matching the old EmberObject behavior. Cached LegacyMode records have
   // their own signal-based reactivity.
   static create<T extends RestCompatModel>(
-    this: new (resource?: WarpResource | null) => T,
+    this: WarpRestModelCtor<T>,
     attrs: {
       store?: StoreService;
       __type?: string;
@@ -74,6 +75,8 @@ export default class RestCompatModel extends WarpRestModel {
   }
 
   @tracked isSaving = false;
+
+  declare ["constructor"]: typeof RestCompatModel;
 
   // Subclasses override (e.g. `TagNotification` uses `"name"`).
   primaryKey: string = "id";
@@ -188,7 +191,7 @@ export default class RestCompatModel extends WarpRestModel {
   // Legacy `RestModel#save`. Goes through the WarpDrive path when the subclass
   // defines `static builders.save`; the legacy adapter pipeline otherwise.
   async save(data?: Record<string, unknown>): Promise<unknown> {
-    if (!(this.constructor as typeof RestCompatModel).builders?.save) {
+    if (!this.constructor.builders?.save) {
       return this.isNew ? this._saveNew(data) : this.update(data);
     }
 
@@ -208,7 +211,7 @@ export default class RestCompatModel extends WarpRestModel {
           this[this.primaryKey],
           props
         );
-        const payload = (this.constructor as typeof RestCompatModel).munge(
+        const payload = this.constructor.munge(
           res.payload || res.responseJson
         ) as Record<string, unknown> | undefined;
         if (payload && payload.success !== "OK") {
@@ -280,9 +283,7 @@ export default class RestCompatModel extends WarpRestModel {
         );
         if (res.payload) {
           this.setProperties(
-            (this.constructor as typeof RestCompatModel).munge(
-              res.payload
-            ) as Record<string, unknown>
+            this.constructor.munge(res.payload) as Record<string, unknown>
           );
           this.__state = "created";
         }

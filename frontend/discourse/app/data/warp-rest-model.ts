@@ -45,10 +45,10 @@ export interface WarpRestBuilders {
   delete?: (id: string | number) => WarpRequest;
 }
 
-type WarpRestModelClass<T extends WarpRestModel> = (new (
-  resource?: WarpResource | null
-) => T) &
-  Pick<typeof WarpRestModel, "type" | "normalize" | "builders">;
+export type WarpRestModelCtor<T> = new (resource?: WarpResource | null) => T;
+
+type WarpRestModelClass<T extends WarpRestModel> = WarpRestModelCtor<T> &
+  Pick<typeof WarpRestModel, "normalize" | "builders">;
 
 // Pure WarpDrive base. Ember/RestModel-API shims live in `rest-compat.ts`.
 //
@@ -104,6 +104,8 @@ export default class WarpRestModel {
   // `defineFieldForwarders`, so they can't be declared here.
   [field: string]: unknown;
 
+  declare ["constructor"]: typeof WarpRestModel;
+
   #resource: WarpResource | null | undefined;
 
   constructor(resource?: WarpResource | null) {
@@ -126,7 +128,7 @@ export default class WarpRestModel {
     if (json == null) {
       return this;
     }
-    const Klass = this.constructor as typeof WarpRestModel;
+    const Klass = this.constructor;
     const document = Klass.normalize!(json);
     if (!document || Array.isArray(document.data)) {
       return this;
@@ -137,7 +139,7 @@ export default class WarpRestModel {
   }
 
   async save(data?: Record<string, unknown>): Promise<unknown> {
-    const Klass = this.constructor as typeof WarpRestModel;
+    const Klass = this.constructor;
     const store = warpStore();
     const result = await store.request<{ data?: WarpResource | null }>(
       Klass.builders!.save!(this, data)
@@ -147,7 +149,7 @@ export default class WarpRestModel {
   }
 
   async destroy(): Promise<void> {
-    const Klass = this.constructor as typeof WarpRestModel;
+    const Klass = this.constructor;
     const id = this.id as string | number | null | undefined;
     if (id == null) {
       return;
@@ -160,7 +162,7 @@ export default class WarpRestModel {
   // whenever the wrapper adopts a cached record — subclasses with their own
   // ingest path (`TopicDetails`) call it after pushing.
   _applyExtraAttributes(id: unknown): void {
-    const { type } = this.constructor as typeof WarpRestModel;
+    const { type } = this.constructor;
     if (type == null || id == null) {
       return;
     }
@@ -176,7 +178,7 @@ export default class WarpRestModel {
     if (id == null) {
       return;
     }
-    const Klass = this.constructor as typeof WarpRestModel;
+    const Klass = this.constructor;
     const cached = warpStore().peekRecord({
       type: Klass.type!,
       id: String(id),
@@ -201,7 +203,7 @@ export function attachMeta<T extends unknown[]>(
 }
 
 export async function requestMany<T>(
-  Klass: new (resource?: WarpResource | null) => T,
+  Klass: WarpRestModelCtor<T>,
   request: WarpRequest
 ): Promise<T[]> {
   const { content } = await warpStore().request<{
@@ -215,7 +217,7 @@ export async function requestMany<T>(
 }
 
 export async function requestOne<T>(
-  Klass: new (resource?: WarpResource | null) => T,
+  Klass: WarpRestModelCtor<T>,
   request: WarpRequest
 ): Promise<T> {
   const { content } = await warpStore().request<{ data?: WarpResource }>(
