@@ -19,7 +19,7 @@ sv:
         chat_usage:
           author: Du
           author_others: "%{username}"
-        voice_usage:
+        live_usage:
           minutes:
             one: "%{count} min"
             other: "%{count} min"

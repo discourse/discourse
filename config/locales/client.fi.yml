@@ -6,6 +6,9 @@
 
 fi:
   js:
+    dsa_notice:
+      title: "Ilmoita laittomasta sisällöstä"
+      email: "Sähköpostiosoite"
     user_api_key:
       authorize: "Anna käyttöoikeus"
       deny: "Peruuta"

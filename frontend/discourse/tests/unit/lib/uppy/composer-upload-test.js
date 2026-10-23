@@ -1,7 +1,10 @@
-import { getOwner } from "@ember/owner";
+import { destroy } from "@ember/destroyable";
+import { getOwner, setOwner } from "@ember/owner";
+import { run } from "@ember/runloop";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import UppyComposerUpload from "discourse/lib/uppy/composer-upload";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
 
@@ -9,8 +12,8 @@ function fakeComposerModel() {
   return { privateMessage: false };
 }
 
-function buildUploader(context) {
-  return new UppyComposerUpload(getOwner(context), {
+function buildUploader(parent) {
+  return new UppyComposerUpload(parent, {
     composerEventPrefix: "composer",
     composerModel: fakeComposerModel(),
     uploadMarkdownResolvers: [],
@@ -46,16 +49,20 @@ module("Unit | Lib | uppy/composer-upload", function (hooks) {
     this.editorInput.className = "d-editor-input";
     this.formEl.appendChild(this.editorInput);
     document.body.appendChild(this.formEl);
+
+    this.parent = {};
+    setOwner(this.parent, getOwner(this));
   });
 
   hooks.afterEach(function () {
+    run(() => destroy(this.parent));
     this.fileInput.remove();
     this.formEl.remove();
     sinon.restore();
   });
 
   test("_pasteEventListener accepts paste from descendants of .d-editor-input", function (assert) {
-    const uploader = buildUploader(this);
+    const uploader = buildUploader(this.parent);
     uploader.uppyWrapper.uppyInstance = { addFiles: sinon.spy() };
 
     const nested = document.createElement("span");
@@ -77,7 +84,7 @@ module("Unit | Lib | uppy/composer-upload", function (hooks) {
     document.body.insertBefore(earlierInput, this.formEl);
 
     try {
-      const uploader = buildUploader(this);
+      const uploader = buildUploader(this.parent);
       uploader.uppyWrapper.uppyInstance = { addFiles: sinon.spy() };
 
       const file = createFile("paste.png", "image/png", "data");
@@ -94,7 +101,7 @@ module("Unit | Lib | uppy/composer-upload", function (hooks) {
   });
 
   test("_pasteEventListener ignores paste outside .d-editor-input", function (assert) {
-    const uploader = buildUploader(this);
+    const uploader = buildUploader(this.parent);
     uploader.uppyWrapper.uppyInstance = { addFiles: sinon.spy() };
 
     const outside = document.createElement("div");
@@ -113,7 +120,7 @@ module("Unit | Lib | uppy/composer-upload", function (hooks) {
   });
 
   test("setup() called twice tears down the first binding", function (assert) {
-    const uploader = buildUploader(this);
+    const uploader = buildUploader(this.parent);
 
     uploader.setup(this.formEl);
     const firstUppy = uploader.uppyWrapper.uppyInstance;
@@ -133,7 +140,39 @@ module("Unit | Lib | uppy/composer-upload", function (hooks) {
       uploader.uppyWrapper.uppyInstance,
       "second setup replaces the Uppy instance"
     );
+  });
+
+  test("destroying the parent tears down", function (assert) {
+    const uploader = buildUploader(this.parent);
+    uploader.setup(this.formEl);
+    const uppyDestroy = sinon.spy(uploader.uppyWrapper.uppyInstance, "destroy");
+
+    run(() => destroy(this.parent));
+
+    assert.true(uppyDestroy.calledOnce, "destroys the Uppy instance");
+  });
+
+  test("teardown can run more than once", function (assert) {
+    const uploader = buildUploader(this.parent);
+    uploader.setup(this.formEl);
 
     uploader.teardown();
+    uploader.teardown();
+
+    assert.strictEqual(
+      uploader.uppyWrapper.uppyInstance,
+      null,
+      "leaves no Uppy instance"
+    );
+  });
+
+  test("still accepts an owner", function (assert) {
+    const owner = getOwner(this);
+    const uploader = withSilencedDeprecations(
+      "discourse.uppy-composer-upload-owner",
+      () => buildUploader(owner)
+    );
+
+    assert.strictEqual(getOwner(uploader), owner, "uses it as the owner");
   });
 });

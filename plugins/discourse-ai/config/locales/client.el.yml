@@ -501,6 +501,13 @@ el:
       summarization:
         chat:
           summarize: "Συνοψίστε"
+      ai_search:
+        related_replies:
+          one: "%{count} απάντηση"
+          other: "%{count} απαντήσεις"
+        tabs:
+          topics: "Θέματα"
+          messages: "Μηνύματα"
       discobot_discoveries:
         create_topic: "Δημιουργία θέματος"
         legacy:

@@ -41,7 +41,6 @@ zh_TW:
       admins_only: "資料瀏覽器僅供管理員使用。"
       allow_groups: "允許群組存取此查詢"
       title: "資料瀏覽器"
-      create: "建立"
       create_placeholder: "查詢名稱……"
       description_placeholder: "在此輸入描述"
       ai:
@@ -61,7 +60,6 @@ zh_TW:
         sql_label: "SQL"
         optional: "選填"
       import:
-        label: "匯入"
         unparseable_json: "無法解析 JSON 檔案。"
         wrong_json: "JSON 檔案格式錯誤。JSON 檔案應包含一個「query」物件，且至少應有一個「sql」屬性。"
       help:
@@ -115,7 +113,6 @@ zh_TW:
         results_json: "結果（JSON）"
         results_csv: "結果（CSV）"
         query_json: "查詢定義（JSON）"
-      others_dirty: "某個查詢有未儲存的變更；若離開此頁，這些變更將會遺失。"
       run_time: "查詢已在 %{value} 毫秒內完成。"
       cached_result_notice: "顯示 %{relative_time} 的快取結果。"
       result_count:
@@ -133,7 +130,6 @@ zh_TW:
       column: "第 %{number} 欄"
       save_params: "設為預設值"
       reset_params: "重設"
-      search_placeholder: "搜尋……"
       no_search_results: "抱歉，找不到符合你輸入文字的結果。"
       form:
         errors:

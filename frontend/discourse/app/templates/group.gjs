@@ -6,7 +6,6 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
-import { and, or } from "discourse/truth-helpers";
 import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";

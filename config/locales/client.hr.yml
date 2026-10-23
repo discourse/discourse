@@ -6,6 +6,9 @@
 
 hr:
   js:
+    dsa_notice:
+      title: "Prijavite ilegalni sadržaj"
+      email: "E-mail adresa"
     user_api_key:
       authorize: "Odobriti"
       deny: "Odustani"

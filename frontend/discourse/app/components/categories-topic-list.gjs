@@ -4,7 +4,6 @@ import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import LatestTopicListItem from "discourse/components/topic-list/latest-topic-list-item";
 import getUrl from "discourse/lib/get-url";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 // Exists so plugins can use it

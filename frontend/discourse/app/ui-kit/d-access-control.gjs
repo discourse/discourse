@@ -7,7 +7,6 @@ import { isEmpty } from "@ember/utils";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { prioritizeNameFallback } from "discourse/lib/settings";
-import { eq, or } from "discourse/truth-helpers";
 import DAccessControlPermissionMenu from "discourse/ui-kit/d-access-control-permission-menu";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

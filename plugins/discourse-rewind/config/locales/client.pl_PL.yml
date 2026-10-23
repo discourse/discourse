@@ -160,7 +160,7 @@ pl_PL:
           message_4: "Twoja średnia długość wiadomości wynosiła <strong>%{length}</strong> znaków"
           message_5: "Twoje ulubione kanały:"
           dancing_baby_alt: "Tańczące dziecko"
-        voice_usage:
+        live_usage:
           title: Rachunek telefoniczny
           subtitle: Twoje oświadczenie o połączeniu głosowym
           subtitle_others: "Oświadczenie o połączeniu głosowym %{username}"

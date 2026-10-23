@@ -35,7 +35,6 @@ nl:
       admins_only: "De gegevensverkenner is alleen beschikbaar voor beheerders."
       allow_groups: "Groepen hebben toegang tot deze query"
       title: "Gegevensverkenner"
-      create: "Maken"
       create_placeholder: "Querynaam..."
       description_placeholder: "Voer hier een beschrijving in"
       ai:
@@ -51,7 +50,6 @@ nl:
         sql_label: "SQL"
         optional: "optioneel"
       import:
-        label: "Importeren"
         unparseable_json: "Onparseerbaar JSON-bestand."
         wrong_json: "Onjuist JSON-bestand. Een JSON-bestand moet een 'query'-object bevatten, dat minimaal een 'sql'-eigenschap moet hebben."
       help:
@@ -81,7 +79,6 @@ nl:
         form:
           label: "Diagramtype"
           bar: "Staaf"
-      others_dirty: "Een query heeft niet-opgeslagen wijzigingen die verloren gaan als je de pagina verlaat."
       run_time: "Query voltooid in %{value} ms."
       cached_result_notice: "Gecachete resultaten van %{relative_time} worden weergegeven."
       result_count:
@@ -101,7 +98,6 @@ nl:
       column: "Kolom %{number}"
       save_params: "Standaardwaarden instellen"
       reset_params: "Resetten"
-      search_placeholder: "Zoeken..."
       no_search_results: "Er zijn geen resultaten gevonden voor je tekst."
       form:
         errors:

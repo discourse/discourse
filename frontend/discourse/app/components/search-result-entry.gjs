@@ -116,7 +116,16 @@ export default class SearchResultEntry extends Component {
             {{/if}}
             {{dCategoryLink @post.topic.category hideParent=true}}
             {{#if @post.topic}}
-              {{dDiscourseTags @post.topic}}
+              <PluginOutlet
+                @name="search-result-entry-tags-wrapper"
+                @outletArgs={{lazyHash
+                  post=@post
+                  topic=@post.topic
+                  tags=@post.topic.tags
+                }}
+              >
+                {{dDiscourseTags @post.topic}}
+              </PluginOutlet>
             {{/if}}
             <span>
               <PluginOutlet

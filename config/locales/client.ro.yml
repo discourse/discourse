@@ -6,6 +6,8 @@
 
 ro:
   js:
+    dsa_notice:
+      email: "Adresă email"
     user_api_key:
       title: 'Autorizează „%{application_name}”'
       authorize: "Autorizează"

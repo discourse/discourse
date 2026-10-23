@@ -26,14 +26,12 @@ hu:
       admins_only: "Az adatfelfedező csak az adminok számára érhető el."
       allow_groups: "Engedélyezés csoportok számára, hogy hozzáférjenek ehhez a lekérdezéshez"
       title: "Adatfelfedező"
-      create: "Létrehozás"
       create_placeholder: "Lekérdezés neve…"
       description_placeholder: "Adjon meg egy leírást"
       ai:
         generate: "Generálás"
         optional: "nem kötelező"
       import:
-        label: "Importálás"
         unparseable_json: "Nem értelmezhető JSON-fájl."
         wrong_json: "Hibás JSON-fájl. A JSON-fájlnak kellene tartalmaznia egy „query” objektumot, amelynek legalább egy „sql” tulajdonsággal kell rendelkeznie."
       help:
@@ -61,7 +59,6 @@ hu:
       chart:
         form:
           bar: "Oszlop"
-      others_dirty: "A lekérdezés nem mentett módosításokat tartalmaz, amelyek elvesznek, ha elnavigál."
       run_time: "A lekérdezés %{value} ms alatt fejeződött be."
       result_count:
         one: "%{count} találat."
@@ -80,7 +77,6 @@ hu:
       column: "%{number}. oszlop"
       save_params: "Beállítás alapértelmezettként"
       reset_params: "Alaphelyzetbe állítás"
-      search_placeholder: "Keresés…"
       no_search_results: "Sajnos nem találtunk a szövegének megfelelő találatot."
       form:
         errors:

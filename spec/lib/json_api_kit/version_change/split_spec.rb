@@ -22,7 +22,7 @@ RSpec.describe JsonApiKit::VersionChange::Split do
   end
 
   describe "#current_pairs" do
-    subject(:current_pairs) { split.current_pairs(dimensions => [640, 480]) }
+    subject(:current_pairs) { split.current_pairs({ dimensions => [640, 480] }) }
 
     it "pairs the converted values with the destination names" do
       expect(current_pairs).to eq([[width, 640], [height, 480]])

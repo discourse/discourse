@@ -1776,6 +1776,21 @@ uk:
             compact: "Компактний"
             expanded: "Розгорнуто"
             expanded_description: "з резюме ШІ"
+      ai_search:
+        related_topics: "Пов'язані теми"
+        related_replies:
+          one: "%{count} відповідь"
+          few: "%{count} відповіді"
+          many: "%{count} відповідей"
+          other: "%{count} відповідь"
+        ask: "Запитайте"
+        tabs:
+          ask: "Запитайте ШІ"
+          topics: "Теми"
+          this_topic: "Ця тема"
+          messages: "Повідомлення"
+        scope:
+          this_topic: "ця тема"
       discobot_discoveries:
         main_title: "Запитайте ШІ"
         loading_convo: "Завантаження розмови"

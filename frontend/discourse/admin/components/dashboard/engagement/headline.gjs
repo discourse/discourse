@@ -8,7 +8,6 @@ import {
 } from "discourse/admin/lib/dashboard-format";
 import { engagementHeadlineKeys } from "discourse/admin/lib/engagement-headline";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const PERCENTAGE_KPIS = ["dau_mau"];

@@ -58,7 +58,7 @@ module DiscourseAi
         bot =
           DiscourseAi::Agents::Bot.as(
             Discourse.system_user,
-            agent: @ai_agent.class_instance.new,
+            agent: agent_for(related_count),
             model: @llm_model,
           )
         values = { answerable: nil, source_refs: nil, title: +"", answer: +"", follow_up: +"" }
@@ -69,8 +69,11 @@ module DiscourseAi
           answerable = partial.read_buffered_property(:answerable)
           values[:answerable] = answerable if !answerable.nil?
 
+          # Locking in a partial array would make later updates look like a changed selection.
           source_refs = partial.read_buffered_property(:source_refs)
-          values[:source_refs] = source_refs if !source_refs.nil?
+          if !source_refs.nil? && partial.property_complete?(:source_refs)
+            values[:source_refs] = source_refs
+          end
 
           title = partial.read_buffered_property(:title)
           values[:title] << title if title.present?
@@ -91,14 +94,17 @@ module DiscourseAi
         result =
           Result.new(
             answerable: values[:answerable] == true,
-            source_refs: Array(values[:source_refs]),
+            source_refs: known_source_refs(values[:source_refs], candidates:, related_count:),
             title: values[:title].to_s.strip,
             answer: answer_without_source_references(values[:answer]),
             follow_up: values[:follow_up].to_s.strip,
           )
-        return empty_result if !result.answerable
+        if !result.answerable || result.source_refs.empty? ||
+             !self.class.meaningful_answer?(result.answer)
+          return empty_result
+        end
 
-        valid_result?(result, candidates:, related_count:) ? result : empty_result
+        result
       end
 
       def self.meaningful_answer?(answer)
@@ -110,18 +116,24 @@ module DiscourseAi
 
       private
 
-      def valid_result?(result, candidates:, related_count:)
-        return false if result.source_refs.empty?
-        return false if result.source_refs.uniq.length != result.source_refs.length
-        return false if result.source_refs.length > related_count
+      # The agent's stored format caps the sources at the shared setting, which
+      # would cut short a request that asks for more, so it follows the request.
+      def agent_for(related_count)
+        agent = @ai_agent.class_instance.new
+        format =
+          agent.response_format&.map do |field|
+            field["key"] == "source_refs" ? field.merge("max_items" => related_count) : field
+          end
+        agent.define_singleton_method(:response_format) { format } if format
+        agent
+      end
 
+      def known_source_refs(source_refs, candidates:, related_count:)
         candidate_refs = candidates.pluck("source_ref")
-        if result.source_refs.any? { |source_ref| !candidate_refs.include?(source_ref) }
-          return false
-        end
-        return false if !self.class.meaningful_answer?(result.answer)
-
-        true
+        Array(source_refs)
+          .uniq
+          .select { |source_ref| candidate_refs.include?(source_ref) }
+          .first(related_count)
       end
 
       def empty_result

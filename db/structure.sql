@@ -1443,7 +1443,19 @@ CREATE TABLE public.ask_ai_logs (
     asked_at timestamp(6) without time zone NOT NULL,
     time_to_first_answer_ms integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    ask_trigger character varying DEFAULT ''::character varying NOT NULL,
+    ask_trigger_reason character varying DEFAULT ''::character varying NOT NULL,
+    ask_intent_heuristic character varying DEFAULT ''::character varying NOT NULL,
+    ask_intent_model character varying DEFAULT ''::character varying NOT NULL,
+    ask_intent_probability double precision DEFAULT 0.0 NOT NULL,
+    ask_tab_opened character varying DEFAULT ''::character varying NOT NULL,
+    ask_tab_opened_reason character varying DEFAULT ''::character varying NOT NULL,
+    ask_tab_switched_to character varying DEFAULT ''::character varying NOT NULL,
+    ask_tab_switched_after_ms integer DEFAULT 0 NOT NULL,
+    ask_scope character varying DEFAULT ''::character varying NOT NULL,
+    ask_scope_model character varying DEFAULT ''::character varying NOT NULL,
+    ask_scope_probability double precision DEFAULT 0.0 NOT NULL
 );
 
 
@@ -6081,6 +6093,41 @@ CREATE SEQUENCE public.drafts_id_seq
 --
 
 ALTER SEQUENCE public.drafts_id_seq OWNED BY public.drafts.id;
+
+
+--
+-- Name: dsa_notices; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dsa_notices (
+    id bigint NOT NULL,
+    post_id bigint,
+    content_url text NOT NULL,
+    explanation text NOT NULL,
+    name character varying,
+    email character varying,
+    receipt_sent_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: dsa_notices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dsa_notices_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dsa_notices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dsa_notices_id_seq OWNED BY public.dsa_notices.id;
 
 
 --
@@ -15103,6 +15150,13 @@ ALTER TABLE ONLY public.drafts ALTER COLUMN id SET DEFAULT nextval('public.draft
 
 
 --
+-- Name: dsa_notices id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dsa_notices ALTER COLUMN id SET DEFAULT nextval('public.dsa_notices_id_seq'::regclass);
+
+
+--
 -- Name: email_change_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -17819,6 +17873,14 @@ ALTER TABLE ONLY public.draft_sequences
 
 ALTER TABLE ONLY public.drafts
     ADD CONSTRAINT drafts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dsa_notices dsa_notices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dsa_notices
+    ADD CONSTRAINT dsa_notices_pkey PRIMARY KEY (id);
 
 
 --
@@ -22217,6 +22279,13 @@ CREATE UNIQUE INDEX index_drafts_on_user_id_and_draft_key ON public.drafts USING
 
 
 --
+-- Name: index_dsa_notices_on_post_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_dsa_notices_on_post_id ON public.dsa_notices USING btree (post_id);
+
+
+--
 -- Name: index_dsa_statement_of_records_on_reviewable_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -26093,9 +26162,13 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20261020161054'),
 ('20261020160221'),
+('20261019232249'),
+('20261019213757'),
+('20261019213116'),
 ('20261019105124'),
 ('20261019104439'),
 ('20261018172000'),
+('20261016063822'),
 ('20261015175355'),
 ('20261015175340'),
 ('20261015121116'),
@@ -26119,6 +26192,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261006113418'),
 ('20261005091527'),
 ('20261005091447'),
+('20261002200029'),
 ('20261001073226'),
 ('20260930114733'),
 ('20260928103925'),

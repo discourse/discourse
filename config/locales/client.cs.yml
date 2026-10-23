@@ -6,6 +6,9 @@
 
 cs:
   js:
+    dsa_notice:
+      title: "Nahlásit protizákonný obsah"
+      email: "E-mailová adresa"
     user_api_key:
       title: 'Autorizovat „%{application_name}“'
       authorize: "Autorizovat"

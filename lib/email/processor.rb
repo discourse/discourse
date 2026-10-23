@@ -101,6 +101,8 @@ module Email
           :email_reject_reply_to_digest
         when Email::Receiver::TooManyRecipientsError
           :email_reject_too_many_recipients
+        when Email::Receiver::SiteArchivedError
+          :email_reject_site_archived
         else
           :email_reject_unrecognized_error
         end

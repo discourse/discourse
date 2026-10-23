@@ -22,14 +22,11 @@ da:
       admins_only: "Data explorer er kun tilgængelige for administratorer."
       allow_groups: "Tillad grupper at få adgang til denne forespørgsel"
       title: "Data Udforsker"
-      create: "Opret"
       create_placeholder: "Navn på forespørgsel..."
       description_placeholder: "Indtast en beskrivelse her"
       ai:
         generate: "Generér"
         optional: "valgfri"
-      import:
-        label: "Importer"
       help:
         label: "Hjælp"
         modal_title: "Hjælp til Data Udforsker"
@@ -58,7 +55,6 @@ da:
       query_description: "Beskrivelse"
       query_user: "Oprettet af"
       reset_params: "Nulstil"
-      search_placeholder: "Søg..."
     group:
       reports: "Rapporter"
     discourse_workflows:

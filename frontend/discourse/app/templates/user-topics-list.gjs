@@ -3,7 +3,6 @@ import BasicTopicList from "discourse/components/basic-topic-list";
 import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import routeAction from "discourse/helpers/route-action";
-import { or } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DCountI18n from "discourse/ui-kit/d-count-i18n";
 import DEmptyState from "discourse/ui-kit/d-empty-state";

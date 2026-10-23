@@ -11,7 +11,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { sanitize } from "discourse/lib/text";
 import { clipboardCopy } from "discourse/lib/utilities";
-import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

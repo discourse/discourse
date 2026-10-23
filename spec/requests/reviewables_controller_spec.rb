@@ -582,8 +582,9 @@ RSpec.describe ReviewablesController do
         reviewable_flagged_post = Fabricate(:reviewable_flagged_post)
         reviewable_queued_post = Fabricate(:reviewable_queued_post)
 
-        get "/review/user-menu-list.json"
+        queries = track_sql_queries { get "/review/user-menu-list.json" }
         expect(response.status).to eq(200)
+        expect(queries.grep(/FROM "reviewable_(scores|notes|histories)"/)).to be_empty
 
         reviewables = response.parsed_body["reviewables"]
 
@@ -1134,6 +1135,24 @@ RSpec.describe ReviewablesController do
         result = response.parsed_body
         expect(result["errors"]).to be_present
         expect(qp.reload.version).to eq(version)
+      end
+
+      it "returns a validation error when approving a queued topic with scalar tags" do
+        SiteSetting.tagging_enabled = true
+        queued_post = Fabricate(:reviewable_queued_post_topic)
+        queued_post.update!(payload: queued_post.payload.merge("tags" => "macos"))
+
+        expect do
+          put "/review/#{queued_post.id}/perform/approve_post.json",
+              params: {
+                version: queued_post.version,
+              }
+        end.not_to change(Post, :count)
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to include(I18n.t("invalid_params", message: "tags"))
+        expect(queued_post.reload).to be_pending
+        expect(queued_post.version).to eq(0)
       end
 
       it "requires a version parameter" do

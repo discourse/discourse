@@ -6,7 +6,7 @@ module JsonApiKit
       Data.define(:name) do
         def current_names = [name]
 
-        def current_pairs(attributes) = [[name, attributes[name]]]
+        def current_pairs(attributes, **) = [[name, attributes[name]]]
 
         def previous_names = [name]
 

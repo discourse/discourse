@@ -288,6 +288,13 @@ et:
             category: "Kategooriad"
           table:
             total_count: "Kokku"
+      ai_search:
+        related_replies:
+          one: "%{count} vastus"
+          other: "%{count} vastust"
+        tabs:
+          topics: "Teemasid"
+          messages: "Sõnumid"
       discobot_discoveries:
         legacy:
           regular_results: "Teemasid"

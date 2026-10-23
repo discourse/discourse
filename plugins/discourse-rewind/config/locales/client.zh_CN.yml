@@ -118,7 +118,7 @@ zh_CN:
           message_4: "您的平均消息长度为 <strong>%{length}</strong> 个字符"
           message_5: "您最喜欢的频道："
           dancing_baby_alt: "跳舞的宝宝"
-        voice_usage:
+        live_usage:
           title: 电话账单
           subtitle: 您的语音通话记录
           subtitle_others: "%{username}的语音通话记录"

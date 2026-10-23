@@ -2389,7 +2389,6 @@ ug:
     enable_auto_grid_images: "تەھرىرلىگۈچكە 3 ياكى ئۇنىڭدىن كۆپ سۈرەت يۈكلەنگەندە سۈرەتنى ئۆزلۈكىدىن [grid] بەلگە بىلەن ئورايدۇ."
     page_loading_indicator: "Discourse دا بەت يولباشچى كۆرۈنگەندىكى يۈكلەش كۆرسەتكۈچنى سەپلەيدۇ. «ئايلانما توپچە» تولۇق بەت كۆرسەتكۈچى.«سىيرىغۇچ» ئېكراننىڭ چوققىسىدا بىر تار بالداقنى كۆرسىتىدۇ."
     show_user_menu_avatars: "ئىشلەتكۈچى تىزىملىكىدە ئىشلەتكۈچى سىماسىنى كۆرسىتىدۇ"
-    about_page_hidden_groups: "/about يەنى ھەققىدە بەتتە بەلگىلەنگەن گۇرۇپپىنىڭ ئەزالىرىنى كۆرسەتمەيدۇ."
     about_page_extra_groups: "رىياسەتچىلەرنىڭ ئاستىدىكى ھەققىدە بېتىدە كۆرسىتىغان گۇرۇپپا."
     about_page_extra_groups_initial_members: "ھەققىدە بېتىدىكى ھەر بىر گۇرۇپپىدا يايىدىغان ئەزانىڭ سانى."
     about_page_extra_groups_show_description: "ھەققىدە بېتىدە گۇرۇپپا چۈشەندۈرۈشى بارمۇ يوق."
@@ -3766,31 +3765,15 @@ ug:
     account_suspended:
       title: "ھېسابات توختىتىلدى"
       subject_template: "[%{email_prefix}] ھېساباتىڭىز توختىتىلدى"
-      text_body_template: |
-        مۇنبەر ھېساباتىڭىزنى %{suspended_till} غىچە چەكلىدى.
-
-        سەۋەبى - %{reason}
     account_suspended_forever:
       title: "ھېسابات توختىتىلدى"
       subject_template: "[%{email_prefix}] ھېساباتىڭىز توختىتىلدى"
-      text_body_template: |
-        مۇنبەر ھېساباتىڭىز چەكلەندى.
-
-        سەۋەبى - %{reason}
     account_silenced:
       title: "ھېسابات ئۈنسىزلەندى"
       subject_template: "%{email_prefix} ھېساباتىڭىز ئۈنسىزلەندى"
-      text_body_template: |
-        مۇنبەر ھېساباتىڭىزنى %{silenced_till} غىچە ئۈنسىزلەندى.
-
-        سەۋەبى - %{reason}
     account_silenced_forever:
       title: "ھېسابات ئۈنسىزلەندى"
       subject_template: "%{email_prefix} ھېساباتىڭىز ئۈنسىزلەندى"
-      text_body_template: |
-        مۇنبەر ھېساباتىڭىز ئۈنسىزلەندى.
-
-        سەۋەبى - %{reason}
     account_deleted:
       title: "ھېسابات ئۆچۈرۈلدى"
       subject_template: "[%{email_prefix}] ھېساباتىڭىز ئۆچۈرۈلدى"

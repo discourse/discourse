@@ -1,7 +1,6 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import OptionRow from "discourse/components/design-wizard/option-row";
-import { eq } from "discourse/truth-helpers";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
 

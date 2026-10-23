@@ -542,6 +542,11 @@ module PageObjects
         self
       end
 
+      def click_header_collapse(post)
+        within(post_container(post)) { find(".nested-post__header-collapse").click }
+        self
+      end
+
       def click_collapsed_bar(post)
         find(wrapper_selector(post, "> .nested-post__main > .nested-post__collapsed-bar")).click
         self

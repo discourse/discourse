@@ -400,6 +400,13 @@ fa_IR:
       summarization:
         chat:
           summarize: "خلاصه کن"
+      ai_search:
+        related_replies:
+          one: "%{count} پاسخ"
+          other: "%{count} پاسخ"
+        tabs:
+          topics: "موضوعات"
+          messages: "پیام‌ها"
       discobot_discoveries:
         create_topic: "ایجاد موضوع"
         legacy:

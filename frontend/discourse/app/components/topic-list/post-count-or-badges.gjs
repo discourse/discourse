@@ -1,7 +1,6 @@
 import ItemRepliesCell from "discourse/components/topic-list/item/replies-cell";
 import NewRepliesDot from "discourse/components/topic-list/new-replies-dot";
 import TopicPostBadges from "discourse/components/topic-post-badges";
-import { and } from "discourse/truth-helpers";
 
 const PostCountOrBadges = <template>
   {{#if @topic.is_nested_view}}
