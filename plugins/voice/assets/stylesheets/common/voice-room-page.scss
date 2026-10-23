@@ -238,12 +238,11 @@ html.discourse-touch .voice-call-widget {
 .voice-room-page {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  height: 100%;
+  height: calc(100dvh - var(--header-offset, 4em));
   min-height: 0;
   border-right: 1px solid var(--content-border-color);
 
   &__main {
-    flex: 1;
     min-width: 0;
     min-height: 0;
     display: flex;
@@ -251,7 +250,6 @@ html.discourse-touch .voice-call-widget {
   }
 
   .chat-side-panel {
-    flex: 0 0 22rem;
     width: 22rem;
     min-width: 0;
     min-height: 0;
@@ -691,7 +689,6 @@ body.has-sidebar-page #main-outlet-wrapper:has(.voice-room-header) {
     inset-block: var(--header-offset, 4em) 0;
     inset-inline: 0;
     z-index: 1050;
-    flex: none;
     width: auto;
     background: var(--secondary);
     animation-name: voice-drawer-in;
@@ -851,13 +848,11 @@ body.has-sidebar-page #main-outlet-wrapper:has(.voice-room-header) {
 
 @keyframes voice-sidebar-in {
   from {
-    flex-basis: 0;
     width: 0;
     opacity: 0;
   }
 
   to {
-    flex-basis: 22rem;
     width: 22rem;
     opacity: 1;
   }
@@ -865,13 +860,11 @@ body.has-sidebar-page #main-outlet-wrapper:has(.voice-room-header) {
 
 @keyframes voice-sidebar-out {
   from {
-    flex-basis: 22rem;
     width: 22rem;
     opacity: 1;
   }
 
   to {
-    flex-basis: 0;
     width: 0;
     opacity: 0;
   }

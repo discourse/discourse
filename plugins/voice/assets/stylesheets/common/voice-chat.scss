@@ -81,8 +81,10 @@
 }
 
 .c-navbar__title-text {
-  .d-icon {
-    color: var(--primary-high);
+  .voice-chat & {
+    .d-icon {
+      color: var(--primary-high);
+    }
   }
 }
 
