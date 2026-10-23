@@ -22,7 +22,7 @@ describe "UiKit | DSelectList in a panel" do
   end
 
   def open_panel
-    visit "/styleguide/molecules/select?group=selection"
+    visit "/styleguide/molecules/select?group=list"
     find("[data-identifier='sg-select-list'][data-trigger]").click
     expect(page).to have_css("#{panel} .d-select.--list")
   end

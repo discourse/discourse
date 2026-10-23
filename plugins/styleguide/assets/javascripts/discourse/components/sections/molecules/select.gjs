@@ -24,14 +24,26 @@ import PagedSelectExample from "../../examples/molecules/select/data/paged.gjs";
 import pagedSelectSource from "../../examples/molecules/select/data/paged?source=file";
 import LargeListSelectExample from "../../examples/molecules/select/limits/large-list.gjs";
 import largeListSelectSource from "../../examples/molecules/select/limits/large-list?source=file";
+import ListHeaderFooterExample from "../../examples/molecules/select/list/header-footer.gjs";
+import listHeaderFooterSource from "../../examples/molecules/select/list/header-footer?source=file";
+import ListHideSelectedExample from "../../examples/molecules/select/list/hide-selected.gjs";
+import listHideSelectedSource from "../../examples/molecules/select/list/hide-selected?source=file";
+import ListLoadingExample from "../../examples/molecules/select/list/loading.gjs";
+import listLoadingSource from "../../examples/molecules/select/list/loading?source=file";
+import ListLockedExample from "../../examples/molecules/select/list/locked.gjs";
+import listLockedSource from "../../examples/molecules/select/list/locked?source=file";
+import ListPaginatedExample from "../../examples/molecules/select/list/paginated.gjs";
+import listPaginatedSource from "../../examples/molecules/select/list/paginated?source=file";
+import ListPanelExample from "../../examples/molecules/select/list/panel.gjs";
+import listPanelSource from "../../examples/molecules/select/list/panel?source=file";
+import ListWrappingExample from "../../examples/molecules/select/list/wrapping.gjs";
+import listWrappingSource from "../../examples/molecules/select/list/wrapping?source=file";
 import ClearableSelectExample from "../../examples/molecules/select/selection/clearable.gjs";
 import clearableSelectSource from "../../examples/molecules/select/selection/clearable?source=file";
 import ClearableMultipleSelectExample from "../../examples/molecules/select/selection/clearable-multiple.gjs";
 import clearableMultipleSelectSource from "../../examples/molecules/select/selection/clearable-multiple?source=file";
 import DisabledSelectExample from "../../examples/molecules/select/selection/disabled.gjs";
 import disabledSelectSource from "../../examples/molecules/select/selection/disabled?source=file";
-import ListSelectExample from "../../examples/molecules/select/selection/list.gjs";
-import listSelectSource from "../../examples/molecules/select/selection/list?source=file";
 import MaximumSelectExample from "../../examples/molecules/select/selection/maximum.gjs";
 import maximumSelectSource from "../../examples/molecules/select/selection/maximum?source=file";
 import NoneSelectExample from "../../examples/molecules/select/selection/none.gjs";
@@ -42,6 +54,8 @@ import ToggleListSelectExample from "../../examples/molecules/select/selection/t
 import toggleListSelectSource from "../../examples/molecules/select/selection/toggle-list?source=file";
 import DefaultSelectExample from "../../examples/molecules/select/start/default.gjs";
 import defaultSelectSource from "../../examples/molecules/select/start/default?source=file";
+import ListSelectStartExample from "../../examples/molecules/select/start/list.gjs";
+import listSelectStartSource from "../../examples/molecules/select/start/list?source=file";
 import MultipleSelectExample from "../../examples/molecules/select/start/multiple.gjs";
 import multipleSelectSource from "../../examples/molecules/select/start/multiple?source=file";
 import StaticSelectExample from "../../examples/molecules/select/start/static.gjs";
@@ -72,6 +86,7 @@ const GROUPS = [
   "selection",
   "keyboard",
   "limits",
+  "list",
   "pickers",
 ];
 
@@ -122,6 +137,16 @@ export default class Select extends Component {
           @tryThis={{i18n "styleguide.sections.select.multi_try_this"}}
         >
           <div class="select-examples__control"><MultipleSelectExample /></div>
+        </StyleguideExample>
+        <StyleguideExample
+          @code={{listSelectStartSource}}
+          @description={{i18n
+            "styleguide.sections.select.list_start_description"
+          }}
+          @title={{i18n "styleguide.sections.select.list_start_example"}}
+          @tryThis={{i18n "styleguide.sections.select.list_start_try_this"}}
+        >
+          <div class="select-examples__control"><ListSelectStartExample /></div>
         </StyleguideExample>
       </Group>
 
@@ -317,13 +342,6 @@ export default class Select extends Component {
 
       <Group @id="selection">
         <StyleguideExample
-          @code={{listSelectSource}}
-          @description={{i18n "styleguide.sections.select.list_description"}}
-          @title={{i18n "styleguide.sections.select.list_title"}}
-        >
-          <ListSelectExample />
-        </StyleguideExample>
-        <StyleguideExample
           @code={{maximumSelectSource}}
           @description={{i18n "styleguide.sections.select.maximum_description"}}
           @title={{i18n "styleguide.sections.select.maximum_example"}}
@@ -414,6 +432,89 @@ export default class Select extends Component {
             </div>
           </:default>
           <:note>{{i18n "styleguide.sections.select.large_list_note"}}</:note>
+        </StyleguideExample>
+      </Group>
+
+      <Group @id="list">
+        <StyleguideExample
+          @code={{listWrappingSource}}
+          @description={{i18n
+            "styleguide.sections.select.list_wrapping_description"
+          }}
+          @title={{i18n "styleguide.sections.select.list_wrapping_example"}}
+          @tryThis={{i18n "styleguide.sections.select.list_wrapping_try_this"}}
+        >
+          <div class="select-examples__control"><ListWrappingExample /></div>
+        </StyleguideExample>
+        <StyleguideExample
+          @code={{listHideSelectedSource}}
+          @description={{i18n
+            "styleguide.sections.select.list_hide_selected_description"
+          }}
+          @title={{i18n
+            "styleguide.sections.select.list_hide_selected_example"
+          }}
+          @tryThis={{i18n
+            "styleguide.sections.select.list_hide_selected_try_this"
+          }}
+        >
+          <div class="select-examples__control"><ListHideSelectedExample
+            /></div>
+        </StyleguideExample>
+        <StyleguideExample
+          @code={{listHeaderFooterSource}}
+          @description={{i18n
+            "styleguide.sections.select.list_header_footer_description"
+          }}
+          @title={{i18n
+            "styleguide.sections.select.list_header_footer_example"
+          }}
+          @tryThis={{i18n
+            "styleguide.sections.select.list_header_footer_try_this"
+          }}
+        >
+          <div class="select-examples__control"><ListHeaderFooterExample
+            /></div>
+        </StyleguideExample>
+        <StyleguideExample
+          @code={{listPaginatedSource}}
+          @description={{i18n
+            "styleguide.sections.select.list_paginated_description"
+          }}
+          @title={{i18n "styleguide.sections.select.list_paginated_example"}}
+          @tryThis={{i18n "styleguide.sections.select.list_paginated_try_this"}}
+        >
+          <div class="select-examples__control"><ListPaginatedExample /></div>
+        </StyleguideExample>
+        <StyleguideExample
+          @code={{listLoadingSource}}
+          @description={{i18n
+            "styleguide.sections.select.list_loading_description"
+          }}
+          @title={{i18n "styleguide.sections.select.list_loading_example"}}
+          @tryThis={{i18n "styleguide.sections.select.list_loading_try_this"}}
+        >
+          <div class="select-examples__control"><ListLoadingExample /></div>
+        </StyleguideExample>
+        <StyleguideExample
+          @code={{listLockedSource}}
+          @description={{i18n
+            "styleguide.sections.select.list_locked_description"
+          }}
+          @title={{i18n "styleguide.sections.select.list_locked_example"}}
+          @tryThis={{i18n "styleguide.sections.select.list_locked_try_this"}}
+        >
+          <ListLockedExample />
+        </StyleguideExample>
+        <StyleguideExample
+          @code={{listPanelSource}}
+          @description={{i18n
+            "styleguide.sections.select.list_panel_description"
+          }}
+          @title={{i18n "styleguide.sections.select.list_panel_example"}}
+          @tryThis={{i18n "styleguide.sections.select.list_panel_try_this"}}
+        >
+          <ListPanelExample />
         </StyleguideExample>
       </Group>
 

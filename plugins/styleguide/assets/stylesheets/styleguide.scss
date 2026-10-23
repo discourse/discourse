@@ -1779,6 +1779,12 @@
   }
 }
 
+.select-examples__list-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14em, 1fr));
+  gap: var(--space-4);
+}
+
 .select-examples__list-clear {
   align-self: flex-start;
   padding-inline: 0;
