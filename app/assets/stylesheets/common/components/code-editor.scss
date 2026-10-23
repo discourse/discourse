@@ -111,9 +111,10 @@
     color: var(--primary-medium);
   }
 
+  // Opaque, because text scrolled sideways passes under the pinned gutter.
   .cm-gutters {
     border: 0;
-    background: transparent;
+    background: var(--secondary);
     color: var(--primary-low-mid);
   }
 
