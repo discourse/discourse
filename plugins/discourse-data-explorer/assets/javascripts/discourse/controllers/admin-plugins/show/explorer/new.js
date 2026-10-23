@@ -336,12 +336,19 @@ export default class AdminPluginsExplorerNew extends Controller {
 
   // A regenerate updates the mounted form in place, committing so the new
   // values don't count as unsaved edits.
-  #applyGeneratedDetails({ name, description }) {
-    if (this.#aiFormApi) {
-      this.#aiFormApi.setProperties({ name, description });
-      this.#aiFormApi.commit();
+  async #applyGeneratedDetails({ name, description }) {
+    const formApi = this.#aiFormApi;
+    if (formApi) {
+      await formApi.setProperties({ name, description });
+      formApi.commit();
     } else {
-      this.aiFormData = { name, description, groupIds: [], tags: [] };
+      this.aiFormData = {
+        groupIds: [],
+        tags: [],
+        ...this.aiFormData,
+        name,
+        description,
+      };
     }
   }
 
