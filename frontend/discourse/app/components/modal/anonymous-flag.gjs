@@ -44,7 +44,9 @@ export default class AnonymousFlagModal extends Component {
               <Placeholder @name="reportLink">
                 <LinkTo
                   class="anonymous-flag-modal__report-illegal-content"
-                  @query={{hash content_url=(getFlagContentUrl @model.flagModel)}}
+                  @query={{hash
+                    content_url=(getFlagContentUrl @model.flagModel)
+                  }}
                   @route="report-illegal-content"
                   {{on "click" @closeModal}}
                 >
