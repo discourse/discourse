@@ -202,14 +202,15 @@ module PluginGem
         # a downloaded gem with another checksum fails the install. The
         # application's gems are never downloaded, its lock gives them their
         # entries in LOCKFILE.
+        # A source scoped to some gems is a second, equal object; every one
+        # of them installs gems, so every one of them gets the checksums.
         [app_lock, *locks].flat_map(&:sources)
           .each do |locked_source|
             definition
               .sources
               .rubygems_sources
-              .find { it == locked_source }
-              &.checksum_store
-              &.merge!(locked_source.checksum_store)
+              .select { it == locked_source }
+              .each { it.checksum_store.merge!(locked_source.checksum_store) }
           end
         definition.setup_domain!(options)
         # Check the complete graph before installing any gems.

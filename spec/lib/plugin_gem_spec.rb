@@ -89,9 +89,12 @@ RSpec.describe PluginGem do
     lock,
     path: {},
     checksums: {},
-    source: "https://rubygems.org"
+    source: "https://rubygems.org",
+    scoped: false
   )
-    File.write(File.join(dir, "Gemfile"), "source \"#{source}\"\n#{gemfile}")
+    gemfile =
+      scoped ? "source \"#{source}\" do\n#{gemfile}end\n" : "source \"#{source}\"\n#{gemfile}"
+    File.write(File.join(dir, "Gemfile"), gemfile)
     return if lock.nil?
 
     dsl = Bundler::Dsl.new
@@ -107,8 +110,9 @@ RSpec.describe PluginGem do
       path.map do |name, (version, dependencies)|
         "PATH\n  remote: #{name}\n  specs:\n#{lock_specs([[name, version, dependencies]])}\n\n"
       end
+    # A scoped source leaves bundler's implicit global source in the lock.
     File.write(File.join(dir, "Gemfile.lock"), <<~LOCK)
-      #{path_sections.join}GEM
+      #{"GEM\n  specs:\n\n" if scoped}#{path_sections.join}GEM
         remote: #{source}/
         specs:
       #{lock_specs(gems)}
@@ -596,6 +600,25 @@ RSpec.describe PluginGem do
           )
         end
       expect(installed).not_to include("beta-1.0.0")
+    end
+
+    it "verifies the checksums of every plugin when the first one scopes its source" do
+      add_plugin("one", %(  gem "alpha"\n), lock: alpha_lock, scoped: true)
+      add_plugin(
+        "two",
+        %(gem "shared"\n),
+        lock: {
+          "shared" => "1.1.0",
+        },
+        checksums: {
+          "shared" => "sha256=#{"0" * 64}",
+        },
+      )
+
+      expect { boot }.to raise_error(
+        /Bundler found mismatched checksums.*shared \(1\.1\.0\) sha256=0{64}/m,
+      )
+      expect(installed).not_to include("shared-1.1.0")
     end
 
     it "updates pinned gems when the lock changes and reuses unchanged dependencies" do
