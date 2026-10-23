@@ -133,9 +133,31 @@ module SystemDrivers
   end
 
   def self.apply_base_chrome_args(args = [], allow_network: [])
-    base_args = %w[
+    disabled_features = %w[
+      AimEnabled
+      AutoDeElevate
+      AvoidUnnecessaryBeforeUnloadCheckSync
+      BlockOriginHeaderModificationOnRedirect
+      DestroyProfileOnBrowserClose
+      DialMediaRouteProvider
+      GlobalMediaControls
+      HttpsUpgrades
+      LensOverlay
+      MediaRouter
+      NetworkTimeServiceQuerying
+      OptimizationHints
+      PaintHolding
+      ThirdPartyStoragePartitioning
+      Translate
+      msEdgeUpdateLaunchServicesPreferredVersion
+      msForceBrowserSignIn
+      WebUIOmniboxPopup
+      WebUIOmniboxAimPopup
+    ]
+
+    base_args = %W[
       --disable-search-engine-choice-screen
-      --disable-features=WebUIOmniboxPopup,WebUIOmniboxAimPopup
+      --disable-features=#{disabled_features.join(",")}
       --no-sandbox
       --disable-dev-shm-usage
       --mute-audio
