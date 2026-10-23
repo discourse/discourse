@@ -114,18 +114,6 @@ export default class SelectListInteraction {
     return this.focused && !!this.root?.contains(document.activeElement);
   }
 
-  /** Re-reports a mounted limit hint when focus returns. */
-  @action
-  reportLimit(element: HTMLElement, [message]: [string, boolean]): void {
-    this.#announcer.announceLimit(element, [message]);
-  }
-
-  /** Re-reports a mounted query hint when focus returns. */
-  @action
-  reportMinChars(element: HTMLElement, [remaining]: [number, boolean]): void {
-    this.#announcer.announceMinChars(element, [remaining]);
-  }
-
   @action
   registerFilter(element: HTMLInputElement): void {
     this.filterInput = element;

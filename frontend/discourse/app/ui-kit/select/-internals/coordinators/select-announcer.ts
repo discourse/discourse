@@ -296,7 +296,10 @@ export default class SelectAnnouncer {
    * which a freshly-mounted live region announces unreliably. Deduped on the remaining count.
    */
   @action
-  announceMinChars(_element: HTMLElement, [remaining]: [number]): void {
+  announceMinChars(
+    _element: HTMLElement,
+    [remaining]: [number, ...dependencies: unknown[]]
+  ): void {
     if (!this.#canReport()) {
       return;
     }
@@ -334,7 +337,10 @@ export default class SelectAnnouncer {
    * in-place message swap that repeats reads only once.
    */
   @action
-  announceLimit(_element: HTMLElement, [message]: [string]): void {
+  announceLimit(
+    _element: HTMLElement,
+    [message]: [string, ...dependencies: unknown[]]
+  ): void {
     if (!this.#canReport()) {
       return;
     }

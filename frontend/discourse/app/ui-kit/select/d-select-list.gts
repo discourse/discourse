@@ -21,10 +21,8 @@ import SelectHost, {
 import SelectListInteraction from "discourse/ui-kit/select/-internals/coordinators/select-list-interaction";
 import SelectListPresenter from "discourse/ui-kit/select/-internals/coordinators/select-list-presenter";
 import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
-import SelectOptions, {
-  type SelectListContent,
-} from "discourse/ui-kit/select/-internals/parts/select-options";
-import SelectionStrip from "discourse/ui-kit/select/-internals/parts/selection-strip";
+import type { SelectListContent } from "discourse/ui-kit/select/-internals/parts/select-options";
+import SelectPanel from "discourse/ui-kit/select/-internals/parts/select-panel";
 import StaticOptionList from "discourse/ui-kit/select/-internals/parts/static-option-list";
 import WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowed-option-list";
 import type {
@@ -32,7 +30,6 @@ import type {
   SelectLoadOptions,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
-import { i18n } from "discourse-i18n";
 
 /** Live state shared by the pinned list header and footer. */
 export interface SelectListState {
@@ -334,49 +331,47 @@ export default class DSelectList extends Component<DSelectListSignature> {
         {{on "keydown" this.interaction.handleInputKeydown capture=true}}
         {{on "paste" this.host.handlePaste}}
       />
-      {{#if this.presenter.limitMessage}}
-        <div
-          class="d-select__limit"
-          id={{this.limitId}}
-          role={{if this.interaction.focused "status"}}
-          {{didInsert
-            this.announcer.announceLimitOnEntry
-            this.presenter.limitMessage
-          }}
-          {{didUpdate
-            this.interaction.reportLimit
-            this.presenter.limitMessage
-            this.interaction.focused
-          }}
-        >{{this.presenter.limitMessage}}</div>
-      {{/if}}
-      {{#if this.engine.hasValue}}
-        <SelectionStrip
-          @engine={{this.engine}}
-          @focusFallback={{this.interaction.focusInput}}
-          @focusStrip={{this.interaction.focusStrip}}
-          @hasSelectionBlock={{has-block "selection"}}
-          @hasUnresolvedBlock={{has-block "unresolved"}}
-          @locked={{this.presenter.isLocked}}
-          @onRegisterRoving={{this.interaction.registerStripRoving}}
-          @onResize={{this.listbox.remeasureListbox}}
-          @resolveSelection={{this.host.resolveMulti}}
-          @value={{@value}}
-        >
-          <:selection as |item|>{{yield
-              item
-              this.engine.resolvedOptions
-              to="selection"
-            }}</:selection>
-          <:unresolved as |item|>{{yield
-              item
-              this.engine.resolvedOptions
-              to="unresolved"
-            }}</:unresolved>
-        </SelectionStrip>
-      {{/if}}
-      {{#let
-        (hash
+      <SelectPanel
+        @announcer={{this.announcer}}
+        @body={{if (eq @virtualized false) StaticOptionList WindowedOptionList}}
+        @engine={{this.engine}}
+        @feedback={{this.feedback}}
+        @filterInput={{this.interaction.filterInput}}
+        @focusFallback={{this.interaction.focusInput}}
+        @focusStrip={{this.interaction.focusStrip}}
+        @hasEmptyBlock={{has-block "empty"}}
+        @hasErrorBlock={{has-block "error"}}
+        @hasFooterBlock={{has-block "footer"}}
+        @hasGroupHeaderBlock={{false}}
+        @hasItemBlock={{has-block "item"}}
+        @hasListHeaderBlock={{has-block "listHeader"}}
+        @hasLoadingItemBlock={{false}}
+        @hasSelectionBlock={{has-block "selection"}}
+        @hasUnresolvedBlock={{has-block "unresolved"}}
+        @hideEmptyQuery={{true}}
+        @hideSelectionMarker={{@hideSelected}}
+        @hintRole={{if this.interaction.focused "status"}}
+        @label={{this.presenter.ariaLabelText}}
+        @limitId={{this.limitId}}
+        @limitMessage={{this.presenter.limitMessage}}
+        @listbox={{this.listbox}}
+        @listboxId={{this.listboxId}}
+        @loadListContent={{this.loadListContent}}
+        @locked={{this.presenter.isLocked}}
+        @multiple={{true}}
+        @noResultsLabel={{@noResultsLabel}}
+        @onOptionMousedown={{this.interaction.preventPointerBlur}}
+        @onRegisterListbox={{this.interaction.registerListbox}}
+        @onRegisterRoving={{this.interaction.registerRoving}}
+        @onRegisterStripRoving={{this.interaction.registerStripRoving}}
+        @onStripResize={{this.listbox.remeasureListbox}}
+        @presenter={{this.presenter}}
+        @renderOptions={{this.renderOptions}}
+        @reportsActive={{this.interaction.focused}}
+        @resolveSelection={{this.host.resolveMulti}}
+        @selectedIcon={{@selectedIcon}}
+        @showSelectionStrip={{this.engine.hasValue}}
+        @state={{hash
           filter=this.engine.filter
           query=this.query
           value=this.engine.value
@@ -388,99 +383,35 @@ export default class DSelectList extends Component<DSelectListSignature> {
           atMaximum=this.engine.atMaximum
           belowMinimum=this.engine.belowMinimum
           remaining=this.engine.remaining
-        )
-        as |state|
-      }}
-        {{#if (has-block "listHeader")}}
-          <div class="d-select__list-header">{{yield
-              state
-              this.engine.resolvedOptions
-              to="listHeader"
-            }}</div>
-        {{/if}}
-        {{#if this.engine.belowMinChars}}
-          <div
-            class="d-select__min-chars"
-            role={{if this.interaction.focused "status"}}
-            {{didInsert
-              this.announcer.announceMinCharsOnEntry
-              this.engine.remainingMinChars
-            }}
-            {{didUpdate
-              this.interaction.reportMinChars
-              this.engine.remainingMinChars
-              this.interaction.focused
-            }}
-          >{{i18n
-              "d_select.min_chars"
-              count=this.engine.remainingMinChars
-            }}</div>
-        {{else if this.renderOptions}}
-          <SelectOptions
-            @announcer={{this.announcer}}
-            @engine={{this.engine}}
-            @feedback={{this.feedback}}
-            @filterInput={{this.interaction.filterInput}}
-            @hasEmptyBlock={{has-block "empty"}}
-            @hasErrorBlock={{has-block "error"}}
-            @hasLoadingItemBlock={{false}}
-            @hideEmptyQuery={{true}}
-            @listbox={{this.listbox}}
-            @loadListContent={{this.loadListContent}}
-            @multiple={{true}}
-            @noResultsLabel={{@noResultsLabel}}
-            @onRegisterListbox={{this.interaction.registerListbox}}
-            @onRegisterRoving={{this.interaction.registerRoving}}
-            @presenter={{this.presenter}}
-            @reportsActive={{this.interaction.focused}}
-            @staticBody={{eq @virtualized false}}
-          >
-            <:body as |items content modifiers|>
-              {{#let
-                (if (eq @virtualized false) StaticOptionList WindowedOptionList)
-                as |Body|
-              }}
-                <Body
-                  @announcer={{this.announcer}}
-                  @engine={{this.engine}}
-                  @hasGroupHeaderBlock={{false}}
-                  @hasItemBlock={{has-block "item"}}
-                  @hasLoadingItemBlock={{false}}
-                  @hideSelectionMarker={{@hideSelected}}
-                  @items={{items}}
-                  @label={{this.presenter.ariaLabelText}}
-                  @limitId={{this.limitId}}
-                  @listbox={{this.listbox}}
-                  @listboxId={{this.listboxId}}
-                  @modifiers={{modifiers}}
-                  @multiple={{true}}
-                  @onOptionMousedown={{this.interaction.preventPointerBlur}}
-                  @presenter={{this.presenter}}
-                  @selectedIcon={{@selectedIcon}}
-                  @tabIndex={{-1}}
-                >
-                  <:item as |item|>{{yield
-                      item
-                      this.engine.resolvedOptions
-                      to="item"
-                    }}</:item>
-                </Body>
-              {{/let}}
-            </:body>
-            <:empty>{{yield to="empty"}}</:empty>
-            <:error as |error retry|>{{yield error retry to="error"}}</:error>
-          </SelectOptions>
-        {{/if}}
-        {{#if (has-block "footer")}}
-          <div
-            aria-label={{i18n "d_select.footer_label"}}
-            class="d-select__footer"
-            role="group"
-          >
-            {{yield state this.engine.resolvedOptions to="footer"}}
-          </div>
-        {{/if}}
-      {{/let}}
+        }}
+        @staticBody={{eq @virtualized false}}
+        @tabIndex={{-1}}
+        @value={{@value}}
+      >
+        <:item as |item options|>{{yield item options to="item"}}</:item>
+        <:selection as |item options|>{{yield
+            item
+            options
+            to="selection"
+          }}</:selection>
+        <:unresolved as |item options|>{{yield
+            item
+            options
+            to="unresolved"
+          }}</:unresolved>
+        <:empty>{{yield to="empty"}}</:empty>
+        <:error as |error retry|>{{yield error retry to="error"}}</:error>
+        <:listHeader as |state options|>{{yield
+            state
+            options
+            to="listHeader"
+          }}</:listHeader>
+        <:footer as |state options|>{{yield
+            state
+            options
+            to="footer"
+          }}</:footer>
+      </SelectPanel>
     </div>
   </template>
 }

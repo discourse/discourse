@@ -33,8 +33,7 @@ import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/e
 import keepAboveKeyboard from "discourse/ui-kit/select/-internals/modifiers/keep-above-keyboard";
 import ComboboxQueryInput from "discourse/ui-kit/select/-internals/parts/combobox-query-input";
 import MultiChips from "discourse/ui-kit/select/-internals/parts/multi-chips";
-import SelectOptions from "discourse/ui-kit/select/-internals/parts/select-options";
-import SelectionStrip from "discourse/ui-kit/select/-internals/parts/selection-strip";
+import SelectPanel from "discourse/ui-kit/select/-internals/parts/select-panel";
 import SingleTriggerDisplay from "discourse/ui-kit/select/-internals/parts/single-trigger-display";
 import TriggerFrame from "discourse/ui-kit/select/-internals/parts/trigger-frame";
 import WindowedOptionList from "discourse/ui-kit/select/-internals/parts/windowed-option-list";
@@ -44,7 +43,6 @@ import type {
   SelectItem as SelectItemModel,
   SelectValue,
 } from "discourse/ui-kit/select/select-engine";
-import { i18n } from "discourse-i18n";
 
 export type { SelectVariant } from "discourse/ui-kit/select/-internals/coordinators/variant-presenter";
 
@@ -779,157 +777,88 @@ export default class DSelect extends Component<DSelectSignature> {
             />
           {{/if}}
 
-          {{#if this.presenter.limitMessage}}
-            {{#unless this.engine.belowMinChars}}
-              {{! A pinned top zone (sibling of the list, above it), so the cap/floor hint never
-                stacks with the footer or an error body. Suppressed while below the query minimum:
-                with no list rendered the hint has nothing to annotate. Announced through the a11y
-                service (a mounted live region speaks unreliably); the node stays role=status. }}
-              <div
-                class="d-select__limit"
-                id={{this.limitId}}
-                role="status"
-                {{didInsert
-                  this.announcer.announceLimitOnEntry
-                  this.presenter.limitMessage
-                }}
-                {{didUpdate
-                  this.announcer.announceLimit
-                  this.presenter.limitMessage
-                }}
-              >
-                {{this.presenter.limitMessage}}
-              </div>
-            {{/unless}}
-          {{/if}}
-
-          {{#if this.interaction.showSelectionStrip}}
-            <SelectionStrip
-              @engine={{this.engine}}
-              @focusFallback={{this.focusAfterStrip}}
-              @focusStrip={{this.interaction.focusStrip}}
-              @hasSelectionBlock={{has-block "selection"}}
-              @hasUnresolvedBlock={{has-block "unresolved"}}
-              @locked={{this.presenter.isLocked}}
-              @onRegisterRoving={{this.interaction.registerStripRoving}}
-              @onResize={{this.listbox.remeasureListbox}}
-              @resolveSelection={{this.host.resolveMulti}}
-              @returnToInput={{if
-                this.presenter.isDesktopTypeahead
-                this.interaction.focusInput
-              }}
-              @value={{@value}}
-            >
-              <:selection as |item|>{{yield
-                  item
-                  this.engine.resolvedOptions
-                  to="selection"
-                }}</:selection>
-              <:unresolved as |item|>{{yield
-                  item
-                  this.engine.resolvedOptions
-                  to="unresolved"
-                }}</:unresolved>
-            </SelectionStrip>
-          {{/if}}
-
-          {{#if this.engine.belowMinChars}}
-            {{! Below the minimum query length: no source call (no request, no skeleton flash),
-              and the truthy-empty-array routing / stray create-row are sidestepped by not
-              rendering the list at all. The hint is announced through the a11y service (see announceMinChars);
-              the visible node stays a status region for sighted users. }}
-            <div
-              class="d-select__min-chars"
-              role="status"
-              {{didInsert
-                this.announcer.announceMinCharsOnEntry
-                this.engine.remainingMinChars
-              }}
-              {{didUpdate
-                this.announcer.announceMinChars
-                this.engine.remainingMinChars
-              }}
-            >
-              {{i18n "d_select.min_chars" count=this.engine.remainingMinChars}}
-            </div>
-          {{else}}
-            <SelectOptions
-              @announcer={{this.announcer}}
-              @engine={{this.engine}}
-              @feedback={{this.feedback}}
-              @filterInput={{this.interaction.filterInput}}
-              @hasEmptyBlock={{has-block "empty"}}
-              @hasErrorBlock={{has-block "error"}}
-              @hasLoadingItemBlock={{has-block "loadingItem"}}
-              @listbox={{this.listbox}}
-              @loadListContent={{this.host.loadListContent}}
-              @multiple={{@multiple}}
-              @noResultsLabel={{@noResultsLabel}}
-              @presenter={{this.presenter}}
-            >
-              <:body as |items _content modifiers|>
-                <WindowedOptionList
-                  @announcer={{this.announcer}}
-                  @engine={{this.engine}}
-                  @hasGroupHeaderBlock={{has-block "groupHeader"}}
-                  @hasItemBlock={{has-block "item"}}
-                  @hasLoadingItemBlock={{has-block "loadingItem"}}
-                  @items={{items}}
-                  @label={{this.presenter.ariaLabelText}}
-                  @limitId={{this.limitId}}
-                  @listbox={{this.listbox}}
-                  @listboxId={{this.listboxId}}
-                  @modifiers={{modifiers}}
-                  @multiple={{@multiple}}
-                  @onOptionMousedown={{this.interaction.preventPointerBlur}}
-                  @presenter={{this.presenter}}
-                  @selectedIcon={{@selectedIcon}}
-                >
-                  <:item as |item|>{{yield
-                      item
-                      this.engine.resolvedOptions
-                      to="item"
-                    }}</:item>
-                  <:groupHeader as |item|>{{yield
-                      item
-                      this.engine.resolvedOptions
-                      to="groupHeader"
-                    }}</:groupHeader>
-                  <:loadingItem>{{yield to="loadingItem"}}</:loadingItem>
-                </WindowedOptionList>
-              </:body>
-              <:loadingItem>{{yield to="loadingItem"}}</:loadingItem>
-              <:empty>{{yield to="empty"}}</:empty>
-              <:error as |error retry|>{{yield error retry to="error"}}</:error>
-            </SelectOptions>
-          {{/if}}
-          {{#if (has-block "footer")}}
-            {{! A labeled region pinned below the list (a sibling of the listbox, never inside it).
-              Keyboard-reachable via float-kit's Tab-forward; a desktop focus-out closes the menu. }}
-            <div
-              aria-label={{i18n "d_select.footer_label"}}
-              class="d-select__footer"
-              role="group"
-            >
-              {{yield
-                (hash
-                  filter=this.engine.filter
-                  value=this.engine.value
-                  hasValue=this.engine.hasValue
-                  total=this.engine.total
-                  loadedCount=this.engine.loadedCount
-                  maximum=this.engine.maximum
-                  minimum=this.engine.minimum
-                  atMaximum=this.engine.atMaximum
-                  belowMinimum=this.engine.belowMinimum
-                  remaining=this.engine.remaining
-                  close=menuArgs.close
-                )
-                this.engine.resolvedOptions
+          <SelectPanel
+            @announcer={{this.announcer}}
+            @body={{WindowedOptionList}}
+            @engine={{this.engine}}
+            @feedback={{this.feedback}}
+            @filterInput={{this.interaction.filterInput}}
+            @focusFallback={{this.focusAfterStrip}}
+            @focusStrip={{this.interaction.focusStrip}}
+            @hasEmptyBlock={{has-block "empty"}}
+            @hasErrorBlock={{has-block "error"}}
+            @hasFooterBlock={{has-block "footer"}}
+            @hasGroupHeaderBlock={{has-block "groupHeader"}}
+            @hasItemBlock={{has-block "item"}}
+            @hasListHeaderBlock={{false}}
+            @hasLoadingItemBlock={{has-block "loadingItem"}}
+            @hasSelectionBlock={{has-block "selection"}}
+            @hasUnresolvedBlock={{has-block "unresolved"}}
+            @hintRole="status"
+            @label={{this.presenter.ariaLabelText}}
+            @limitId={{this.limitId}}
+            @limitMessage={{unless
+              this.engine.belowMinChars
+              this.presenter.limitMessage
+            }}
+            @listbox={{this.listbox}}
+            @listboxId={{this.listboxId}}
+            @loadListContent={{this.host.loadListContent}}
+            @locked={{this.presenter.isLocked}}
+            @multiple={{@multiple}}
+            @noResultsLabel={{@noResultsLabel}}
+            @onOptionMousedown={{this.interaction.preventPointerBlur}}
+            @onRegisterStripRoving={{this.interaction.registerStripRoving}}
+            @onStripResize={{this.listbox.remeasureListbox}}
+            @presenter={{this.presenter}}
+            @renderOptions={{true}}
+            @resolveSelection={{this.host.resolveMulti}}
+            @returnToInput={{if
+              this.presenter.isDesktopTypeahead
+              this.interaction.focusInput
+            }}
+            @selectedIcon={{@selectedIcon}}
+            @showSelectionStrip={{this.interaction.showSelectionStrip}}
+            @state={{hash
+              filter=this.engine.filter
+              value=this.engine.value
+              hasValue=this.engine.hasValue
+              total=this.engine.total
+              loadedCount=this.engine.loadedCount
+              maximum=this.engine.maximum
+              minimum=this.engine.minimum
+              atMaximum=this.engine.atMaximum
+              belowMinimum=this.engine.belowMinimum
+              remaining=this.engine.remaining
+              close=menuArgs.close
+            }}
+            @value={{@value}}
+          >
+            <:item as |item options|>{{yield item options to="item"}}</:item>
+            <:groupHeader as |item options|>{{yield
+                item
+                options
+                to="groupHeader"
+              }}</:groupHeader>
+            <:loadingItem>{{yield to="loadingItem"}}</:loadingItem>
+            <:selection as |item options|>{{yield
+                item
+                options
+                to="selection"
+              }}</:selection>
+            <:unresolved as |item options|>{{yield
+                item
+                options
+                to="unresolved"
+              }}</:unresolved>
+            <:empty>{{yield to="empty"}}</:empty>
+            <:error as |error retry|>{{yield error retry to="error"}}</:error>
+            <:footer as |state options|>{{yield
+                state
+                options
                 to="footer"
-              }}
-            </div>
-          {{/if}}
+              }}</:footer>
+          </SelectPanel>
         </div>
       </:content>
     </DMenu>
