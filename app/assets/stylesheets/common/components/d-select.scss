@@ -465,6 +465,26 @@
   display: contents;
 }
 
+// An open overlay that repeats the held items hides the trigger's chips in place, keeping their
+// height, and lays a count over them.
+.d-select__chips.--summarized {
+  position: relative;
+
+  .d-select__chip,
+  .d-select__chips-more,
+  .d-select__placeholder {
+    visibility: hidden;
+  }
+}
+
+.d-select__chips-summary {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  color: var(--primary);
+  white-space: nowrap;
+}
+
 .d-select__chips-more {
   padding-inline: 0.4em;
   border-radius: var(--d-input-border-radius);
@@ -604,6 +624,9 @@
   overflow-y: auto;
   overscroll-behavior: contain;
 
+  // Rows sit more than 24px apart so the remove targets below never overlap between rows.
+  row-gap: 0.375em;
+
   &:focus-within {
     @include default-focus;
   }
@@ -634,14 +657,19 @@
   }
 
   .d-select__chip-remove {
+    // The hit area grows past the button without sizing it, so a field chip stays as tall as a
+    // trigger chip.
+    position: relative;
     flex-shrink: 0;
-    min-width: 24px;
-    min-height: 24px;
 
-    .discourse-touch &,
-    .fk-d-menu-modal & {
-      min-width: 44px;
-      min-height: 44px;
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 24px;
+      height: 24px;
+      transform: translate(-50%, -50%);
     }
   }
 }

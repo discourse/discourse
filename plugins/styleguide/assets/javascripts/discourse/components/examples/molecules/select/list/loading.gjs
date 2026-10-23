@@ -29,7 +29,7 @@ export default class ListLoadingExample extends Component {
       @labelField="label"
       @load={{this.load}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.list_search"}}
+      @searchPlaceholder={{i18n "styleguide.sections.select.list_search"}}
       @value={{this.value}}
       @valueField="slug"
       @valueItems={{this.tags}}

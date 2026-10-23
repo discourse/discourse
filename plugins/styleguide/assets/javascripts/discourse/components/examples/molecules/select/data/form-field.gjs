@@ -25,6 +25,7 @@ export default class FormFieldSelectExample extends Component {
         </field.Control>
       </form.Field>
       <form.Field
+        @format="large"
         @name="locales"
         @title={{i18n "styleguide.sections.select.form_field_locales"}}
         @type="custom"

@@ -23,7 +23,7 @@ export default class ListWrappingExample extends Component {
       @label={{i18n "styleguide.sections.select.list_tags_label"}}
       @labelField="label"
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.list_search"}}
+      @searchPlaceholder={{i18n "styleguide.sections.select.list_search"}}
       @value={{this.value}}
       @valueField="slug"
       @virtualized={{false}}

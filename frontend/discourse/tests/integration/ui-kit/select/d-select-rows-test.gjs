@@ -71,6 +71,48 @@ class NoneRowMultiHost extends Component {
   </template>
 }
 
+/**
+ * The first remove button whose hit area, `distance` CSS pixels out from its center in each
+ * direction, lies inside the field's visible box, so clipping by the field's scroll cannot
+ * decide the result.
+ */
+function probeableButton(field, distance) {
+  const box = field.getBoundingClientRect();
+  const scale = box.height / field.offsetHeight || 1;
+  const reach = distance * scale;
+  return [...field.querySelectorAll(".d-select__chip-remove")].find(
+    (button) => {
+      const rect = button.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      return (
+        x - reach > box.left &&
+        x + reach < box.right &&
+        y - reach > box.top &&
+        y + reach < box.bottom
+      );
+    }
+  );
+}
+
+/** Whether points `distance` CSS pixels above, below, left and right of the center hit `target`. */
+function hitsAround(target, distance) {
+  const rect = target.getBoundingClientRect();
+  const scale = rect.height / target.offsetHeight || 1;
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
+  const reach = distance * scale;
+  return [
+    [0, -reach],
+    [0, reach],
+    [-reach, 0],
+    [reach, 0],
+  ].every(([dx, dy]) => {
+    const hit = document.elementFromPoint(x + dx, y + dy);
+    return hit === target || target.contains(hit);
+  });
+}
+
 module("Integration | ui-kit | DSelect (none row)", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -1340,9 +1382,18 @@ module(
         "auto",
         "strip owns its scroll"
       );
-      const button = find(".d-select__panel .d-select__chip-remove");
-      assert.true(button.offsetHeight >= 24, "desktop targets are 24px tall");
-      assert.true(button.offsetWidth >= 24, "and 24px wide");
+      const button = probeableButton(strip, 11);
+      assert.true(Boolean(button), "a chip sits clear of the field's edges");
+      assert.true(
+        hitsAround(button, 11),
+        "the remove target reaches 24px across without growing the chip"
+      );
+      const chip = button.closest(".d-select__chip");
+      assert.strictEqual(
+        chip.offsetHeight,
+        chip.querySelector(".d-select__chip-label").offsetHeight,
+        "the chip is only as tall as its label, like a trigger chip"
+      );
       assert.true(
         panel.offsetHeight <= parseFloat(getComputedStyle(panel).maxHeight) + 1,
         "the whole panel stays within its budget"

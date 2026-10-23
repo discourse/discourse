@@ -42,7 +42,10 @@ export default class SelectListPresenter
 
   /** The search placeholder, falling back to the shared panel default. */
   get searchPlaceholderText(): string {
-    return this.placeholder ?? i18n("d_select.search_placeholder");
+    return (
+      this.#engine.resolvedOptions.searchPlaceholder ??
+      i18n("d_select.search_placeholder")
+    );
   }
 
   /** Reconciles when focus ownership or cap eligibility changes, as well as the query. */

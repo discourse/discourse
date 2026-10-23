@@ -53,6 +53,11 @@ interface MultiChipsSignature {
     triggerChipsInteractive: boolean;
     /** Whether the input claims the listbox through aria-owns. */
     ariaOwns: boolean;
+    /**
+     * Whether an expanded overlay that repeats the held items replaces the chips with a count.
+     * The chips stay laid out but hidden, so the field keeps its height and the overlay stays put.
+     */
+    summarizeWhileExpanded?: boolean;
     /** Overrides Escape's close action. Defaults to closeMenu. */
     onEscape?: (event: KeyboardEvent) => void;
     /** Lets Tab bubble to the host. Defaults to false so Tab exits the trigger. */
@@ -151,6 +156,23 @@ export default class MultiChips extends Component<MultiChipsSignature> {
   });
 
   #element: HTMLElement | null = null;
+
+  /** Whether the chips are hidden behind a count while the overlay is open. */
+  get summarized(): boolean {
+    return Boolean(
+      this.args.summarizeWhileExpanded &&
+      this.args.expanded &&
+      this.args.engine.hasValue
+    );
+  }
+
+  /** The count shown in place of the chips. */
+  get summary(): string {
+    const value = this.args.engine.value;
+    return i18n("d_select.selected_count", {
+      count: Array.isArray(value) ? value.length : 0,
+    });
+  }
 
   /** Stable prefix for the per-chip element ids (label + remove button). */
   get chipIdPrefix(): string {
@@ -326,7 +348,9 @@ export default class MultiChips extends Component<MultiChipsSignature> {
 
   <template>
     <div
-      class="d-select__chips {{if (eq @roleMode 'search') '--field'}}"
+      class="d-select__chips
+        {{if (eq @roleMode 'search') '--field'}}
+        {{if this.summarized '--summarized'}}"
       {{this.watchField @value (if @selection.isResolved @selection.value)}}
       {{(if @onResize (modifier dOnResize this.handleFieldResize))}}
       {{on "focusin" this.handleFieldFocus}}
@@ -448,6 +472,14 @@ export default class MultiChips extends Component<MultiChipsSignature> {
           aria-hidden="true"
           class="d-select__chips-more"
         >{{this.moreLabel}}</span>
+      {{/if}}
+      {{#if this.summarized}}
+        {{! The field's name and description already carry the held labels for assistive
+          technology; the count is the visual stand-in for the hidden chips. }}
+        <span
+          aria-hidden="true"
+          class="d-select__chips-summary"
+        >{{this.summary}}</span>
       {{/if}}
       {{#if @fieldRendersInput}}
         <ComboboxQueryInput

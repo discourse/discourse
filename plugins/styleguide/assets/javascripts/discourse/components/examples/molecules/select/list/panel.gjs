@@ -69,7 +69,7 @@ export default class ListSelectExample extends Component {
             @labelField="label"
             @load={{this.load}}
             @onChange={{this.updateIncluded}}
-            @placeholder={{i18n "styleguide.sections.select.list_search"}}
+            @searchPlaceholder={{i18n "styleguide.sections.select.list_search"}}
             @value={{this.included}}
             @valueField="slug"
             @valueItems={{this.tags}}
@@ -101,7 +101,9 @@ export default class ListSelectExample extends Component {
               @labelField="label"
               @load={{this.load}}
               @onChange={{this.updateExcluded}}
-              @placeholder={{i18n "styleguide.sections.select.list_search"}}
+              @searchPlaceholder={{i18n
+                "styleguide.sections.select.list_search"
+              }}
               @value={{this.excluded}}
               @valueField="slug"
               @valueItems={{this.tags}}

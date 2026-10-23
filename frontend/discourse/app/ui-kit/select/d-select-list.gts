@@ -83,6 +83,8 @@ interface DSelectListSignature {
     labelField?: string;
     /** Already resolved held items. */
     valueItems?: SelectHostArgs["valueItems"];
+    /** Resolves one held value; used when `@resolveValues` is absent. */
+    resolveValue?: SelectHostArgs["resolveValue"];
     /** Resolves held values in one batch. */
     resolveValues?: SelectHostArgs["resolveValues"];
     /** Whether unmatched queries can create an item. */
@@ -117,8 +119,8 @@ interface DSelectListSignature {
     instanceContext?: object;
     /** Accessible name for the search and list. */
     label?: string;
-    /** Search placeholder text. */
-    placeholder?: string;
+    /** Search placeholder text; defaults to the shared “Search…”. */
+    searchPlaceholder?: string;
     /** Label shown when a nonempty query returns no results. */
     noResultsLabel?: string;
     /** Native search-input id, for a label's for attribute. */
@@ -148,6 +150,8 @@ interface DSelectListSignature {
       /** Held item. */ item: SelectItem,
       /** Resolved options. */ options: SelectResolvedOptions,
     ];
+    /** Stands in for each held chip while held values resolve. */
+    selectionLoading?: [];
     /** Content for unavailable held values. */
     unresolved?: [
       /** Fallback item. */ item: SelectItem,
@@ -384,7 +388,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
             @focusChip={{this.interaction.focusChip}}
             @focusInput={{this.interaction.focusInput}}
             @hasSelectionBlock={{has-block "selection"}}
-            @hasSelectionLoadingBlock={{false}}
+            @hasSelectionLoadingBlock={{has-block "selectionLoading"}}
             @hasUnresolvedBlock={{has-block "unresolved"}}
             @id={{@id}}
             @invalid={{@invalid}}
@@ -413,12 +417,14 @@ export default class DSelectList extends Component<DSelectListSignature> {
                 this.engine.resolvedOptions
                 to="selection"
               }}</:selection>
+            <:selectionLoading>{{yield
+                to="selectionLoading"
+              }}</:selectionLoading>
             <:unresolved as |item|>{{yield
                 item
                 this.engine.resolvedOptions
                 to="unresolved"
               }}</:unresolved>
-
           </MultiChips>
         </:field>
         <:item as |item options|>{{yield item options to="item"}}</:item>

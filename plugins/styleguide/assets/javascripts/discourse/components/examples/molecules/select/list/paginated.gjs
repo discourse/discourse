@@ -19,8 +19,8 @@ export default class ListPaginatedExample extends Component {
       @label={{i18n "styleguide.sections.select.list_topics_label"}}
       @load={{pagedTopicApi.search}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.placeholder"}}
       @resolveValues={{pagedTopicApi.findMany}}
+      @searchPlaceholder={{i18n "styleguide.sections.select.placeholder"}}
       @value={{this.value}}
     />
   </template>

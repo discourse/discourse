@@ -59,6 +59,48 @@ class FrameHost extends Component {
   </template>
 }
 
+/**
+ * The first remove button whose hit area, `distance` CSS pixels out from its center in each
+ * direction, lies inside the field's visible box, so clipping by the field's scroll cannot
+ * decide the result.
+ */
+function probeableButton(field, distance) {
+  const box = field.getBoundingClientRect();
+  const scale = box.height / field.offsetHeight || 1;
+  const reach = distance * scale;
+  return [...field.querySelectorAll(".d-select__chip-remove")].find(
+    (button) => {
+      const rect = button.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      return (
+        x - reach > box.left &&
+        x + reach < box.right &&
+        y - reach > box.top &&
+        y + reach < box.bottom
+      );
+    }
+  );
+}
+
+/** Whether points `distance` CSS pixels above, below, left and right of the center hit `target`. */
+function hitsAround(target, distance) {
+  const rect = target.getBoundingClientRect();
+  const scale = rect.height / target.offsetHeight || 1;
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
+  const reach = distance * scale;
+  return [
+    [0, -reach],
+    [0, reach],
+    [-reach, 0],
+    [reach, 0],
+  ].every(([dx, dy]) => {
+    const hit = document.elementFromPoint(x + dx, y + dy);
+    return hit === target || target.contains(hit);
+  });
+}
+
 module(
   "Integration | ui-kit | select | DSelect (@selectedIcon)",
   function (hooks) {
@@ -1466,7 +1508,7 @@ module(
         );
     });
 
-    test("long fields scroll within the panel budget and keep mobile tap targets", async function (assert) {
+    test("long fields scroll within the panel budget and keep 24px tap targets", async function (assert) {
       forceMobile();
       const items = Array.from({ length: 40 }, (_, id) => ({
         id,
@@ -1491,11 +1533,18 @@ module(
         "auto",
         "the strip owns its scroll"
       );
+      const probed = probeableButton(strip, 11);
+      assert.true(Boolean(probed), "a chip sits clear of the field's edges");
       assert.true(
-        button.offsetHeight >= 44,
-        "tap target is at least 44px high"
+        hitsAround(probed, 11),
+        "the tap target reaches 24px across without growing the chip"
       );
-      assert.true(button.offsetWidth >= 44, "tap target is at least 44px wide");
+      assert.strictEqual(
+        button.closest(".d-select__chip").offsetHeight,
+        button.closest(".d-select__chip").querySelector(".d-select__chip-label")
+          .offsetHeight,
+        "the chip is only as tall as its label"
+      );
       assert.true(
         panel.offsetHeight <= parseFloat(getComputedStyle(panel).maxHeight) + 1,
         "input, strip and list fit the panel budget"
@@ -2005,6 +2054,71 @@ module(
       assert
         .dom(panelInput())
         .doesNotHaveAria("activedescendant", "the reader walks the results");
+    });
+
+    for (const variant of ["button", "static"]) {
+      test(`panel field: an open ${variant} trigger shows a count in place of its chips`, async function (assert) {
+        await render(
+          <template>
+            <FrameHost
+              @multiple={{true}}
+              @value={{array 1 2 3}}
+              @variant={{variant}}
+            />
+          </template>
+        );
+        const trigger = find(TRIGGER);
+        assert.dom(`${TRIGGER} .d-select__chip`).exists({ count: 3 });
+        const closedHeight = trigger.offsetHeight;
+
+        await click(TRIGGER);
+        assert.dom(PANEL).exists("the popup is open");
+        assert.true(
+          findAll(`${TRIGGER} .d-select__chip`).every(
+            (chip) => getComputedStyle(chip).visibility === "hidden"
+          ),
+          "held items are not repeated above the popup"
+        );
+        assert
+          .dom(TRIGGER)
+          .includesText(
+            i18n("d_select.selected_count", { count: 3 }),
+            "the trigger states how many are held"
+          );
+        assert.strictEqual(
+          trigger.offsetHeight,
+          closedHeight,
+          "the trigger keeps its closed height, so the popup does not move"
+        );
+
+        await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+        assert.dom(PANEL).doesNotExist();
+        assert.true(
+          findAll(`${TRIGGER} .d-select__chip`).every(
+            (chip) => getComputedStyle(chip).visibility === "visible"
+          ),
+          "closing brings the chips back"
+        );
+        assert
+          .dom(TRIGGER)
+          .doesNotIncludeText(
+            i18n("d_select.selected_count", { count: 3 }),
+            "and drops the count"
+          );
+      });
+    }
+
+    test("panel field: an open desktop typeahead keeps its chips in the trigger", async function (assert) {
+      await render(
+        <template>
+          <FrameHost @multiple={{true}} @value={{array 1 2}} />
+        </template>
+      );
+      await click(".d-select__input");
+      assert.dom("[role='listbox']").exists("the list is open");
+      assert
+        .dom(`${TRIGGER} .d-select__chip`)
+        .exists({ count: 2 }, "the typeahead's chips are its field");
     });
 
     test("panel field: Escape still closes the button popup", async function (assert) {

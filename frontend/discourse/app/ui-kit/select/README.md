@@ -754,8 +754,10 @@ state and resolved options as `:footer`, so a suggested-results heading can show
 when `state.query` is empty. `state.filter` is the current input; `state.query` is the
 filter answered by the displayed results and stays on the previous answer while
 a new query loads. This works with async `@load` sources. Neither state has
-a `close` action. Other blocks are `:item`, `:selection`, `:unresolved`, `:empty` and
-`:error`; see the typed signature in `d-select-list.gts` for their yielded values.
+a `close` action. Other blocks are `:item`, `:selection`, `:selectionLoading`,
+`:unresolved`, `:empty` and `:error`; see the typed signature in `d-select-list.gts` for
+their yielded values. Held values resolve through `@resolveValues`, `@resolveValue` or
+`@valueItems`, as in DSelect.
 
 Nothing takes focus on render. A row press first focuses this select's search and keeps
 it there, including when another select previously held focus. The search field and its
@@ -772,7 +774,7 @@ second ownership check for deferred reports. Adds and removals always speak. Emp
 and error content remains visible while unfocused without live-region roles. An
 empty query with no rows renders and speaks no empty-result message.
 
-`@label`, `@placeholder` (default “Search…”), `@id`, `@describedBy`, `@invalid`,
+`@label`, `@searchPlaceholder` (default “Search…”), `@id`, `@describedBy`, `@invalid`,
 `@disabled` and `@readonly` apply to the search input. Its `aria-controls` exists only
 while a listbox renders. The root is `.d-select.--list`, takes `...attributes`, and
 exposes the same `data-select-id`, `data-value` and `data-name` hooks as DSelect.

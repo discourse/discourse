@@ -10,6 +10,7 @@ import {
   settled,
   triggerEvent,
   triggerKeyEvent,
+  waitFor,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -695,7 +696,7 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
             @items={{FRUIT}}
             @label="Fruit"
             @onChange={{setHeld}}
-            @placeholder="Find fruit"
+            @searchPlaceholder="Find fruit"
             @value={{held.value}}
           />
         </template>
@@ -763,6 +764,83 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await focus(input());
       await type("an");
       assert.dom(input()).hasAria("activedescendant", activeRow().id);
+    });
+
+    test("panel field: chips are only as tall as their label", async function (assert) {
+      const held = tracked([1, 2]);
+      await renderHeld(held);
+
+      for (const chip of chips()) {
+        assert.strictEqual(
+          chip.offsetHeight,
+          chip.querySelector(".d-select__chip-label").offsetHeight,
+          `${chip.dataset.name}: the remove target does not stretch the chip`
+        );
+      }
+    });
+
+    test("panel field: held values resolve one at a time through @resolveValue", async function (assert) {
+      const held = tracked([2, 4]);
+      const setHeld = (next) => (held.value = next);
+      const load = fruitLoader();
+      const resolveValue = async (id) => FRUIT.find((item) => item.id === id);
+      await render(
+        <template>
+          <DSelectList
+            @label="Fruit"
+            @load={{load}}
+            @onChange={{setHeld}}
+            @resolveValue={{resolveValue}}
+            @value={{held.value}}
+          />
+        </template>
+      );
+
+      assert.deepEqual(
+        chips().map((chip) => chip.dataset.name),
+        ["Banana", "Date"],
+        "each held id resolves to its item"
+      );
+    });
+
+    test("panel field: :selectionLoading stands in for chips while they resolve", async function (assert) {
+      const held = tracked([1]);
+      const setHeld = (next) => (held.value = next);
+      const load = fruitLoader();
+      let release;
+      const gate = new Promise((resolve) => (release = resolve));
+      const resolveValues = async (ids) => {
+        await gate;
+        return FRUIT.filter((item) => ids.includes(item.id));
+      };
+      const rendering = render(
+        <template>
+          <DSelectList
+            @label="Fruit"
+            @load={{load}}
+            @onChange={{setHeld}}
+            @resolveValues={{resolveValues}}
+            @value={{held.value}}
+          >
+            <:selectionLoading><span
+                class="pending-chip"
+              >…</span></:selectionLoading>
+          </DSelectList>
+        </template>
+      );
+      try {
+        await waitFor(".d-select.--list .pending-chip");
+        assert
+          .dom(".d-select.--list .d-select__chips .pending-chip")
+          .exists("the consumer's placeholder fills the chip slot");
+      } finally {
+        release();
+        await rendering;
+      }
+      assert.deepEqual(
+        chips().map((chip) => chip.dataset.name),
+        ["Apple"]
+      );
     });
 
     test("panel field: a surrounding label focuses the input, not a chip", async function (assert) {

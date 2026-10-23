@@ -31,7 +31,7 @@ export default class ListHeaderFooterExample extends Component {
       @load={{this.load}}
       @maximum={{3}}
       @onChange={{this.onChange}}
-      @placeholder={{i18n "styleguide.sections.select.list_search"}}
+      @searchPlaceholder={{i18n "styleguide.sections.select.list_search"}}
       @value={{this.value}}
       @valueField="slug"
       @valueItems={{this.tags}}

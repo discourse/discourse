@@ -648,6 +648,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @shouldCorrectKeyboardOcclusion={{this.interaction.shouldCorrectKeyboardOcclusion}}
               @shouldSelectOnFocus={{this.interaction.shouldSelectOnFocus}}
               @showMenu={{menuArgs.show}}
+              @summarizeWhileExpanded={{not this.presenter.isTypeahead}}
               @triggerChipsInteractive={{this.presenter.triggerChipsInteractive}}
               @value={{@value}}
             >
