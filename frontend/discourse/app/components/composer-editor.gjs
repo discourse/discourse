@@ -513,6 +513,9 @@ export default class ComposerEditor extends Component {
   async _updateFormPreview() {
     const sequence = this.#formPreviewSequence;
     const model = this.composer.model;
+    if (!model || this.isDestroying) {
+      return;
+    }
     const categoryId = model.categoryId;
     const templateId = this.selectedFormTemplateId;
     try {

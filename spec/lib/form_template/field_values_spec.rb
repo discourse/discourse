@@ -96,33 +96,45 @@ RSpec.describe FormTemplate::FieldValues do
   end
 
   describe "#validate!" do
-    it "checks required answers, lengths, patterns, and choices" do
-      fields = [
-        {
-          "id" => "code",
-          "type" => "input",
-          "validations" => {
-            "required" => true,
-            "minimum" => 2,
-            "maximum" => 4,
-            "pattern" => "[A-Z]+",
-          },
-        },
-        { "id" => "choices", "type" => "multi-select", "choices" => %w[first second] },
-      ]
+    it "rejects missing required answers" do
+      fields = [{ "id" => "code", "type" => "input", "validations" => { "required" => true } }]
       expect {
-        described_class.new(fields:, answers: { "code" => "ABC", "choices" => ["first"] }).validate!
+        described_class.new(fields:, answers: { "code" => "ABC" }).validate!
       }.not_to raise_error
-      [
-        {},
-        { "code" => "a" },
-        { "code" => "ABCDE" },
-        { "code" => "ABC", "choices" => ["unknown"] },
-      ].each do |answers|
+      [{}, { "code" => "" }, { "code" => nil }].each do |answers|
         expect { described_class.new(fields:, answers:).validate! }.to raise_error(
           FormTemplate::InvalidAnswers,
         )
       end
+    end
+
+    it "accepts browser strings for numeric dropdown and multi-select choices" do
+      fields = [
+        { "id" => "choice", "type" => "dropdown", "choices" => [1, 2, 3] },
+        { "id" => "choices", "type" => "multi-select", "choices" => [1.0, 1.0e-7] },
+      ]
+      answers = { "choice" => "2", "choices" => %w[1 1e-7] }
+
+      values = described_class.new(fields:, answers:)
+
+      expect { values.validate! }.not_to raise_error
+      expect(values.answers).to eq(answers)
+    end
+
+    it "leaves browser patterns and field-length rules to the browser" do
+      fields = [
+        {
+          "id" => "greek",
+          "type" => "input",
+          "validations" => {
+            "pattern" => '\p{Script=Greek}+',
+          },
+        },
+        { "id" => "emoji", "type" => "input", "validations" => { "minimum" => 2, "maximum" => 2 } },
+      ]
+      answers = { "greek" => "αβ", "emoji" => "😀" }
+
+      expect { described_class.new(fields:, answers:).validate! }.not_to raise_error
     end
   end
 end
