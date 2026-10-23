@@ -293,21 +293,22 @@ Its value is a registry, and each registration targets selects explicitly:
 
 - `forAll(setup)` reaches every select.
 - `forKind(kind, setup)` reaches selects whose `@kind` matches. A kind names what a select is,
-  such as `"tag-chooser"`. Recipes set it.
+  such as `"select-tag"`. Recipes set it.
 - `forIdentifier(identifier, setup)` reaches selects whose `@identifier` matches. An identifier
   names one call site, such as `"composer-tags"`.
 
 Names match exactly, and there is no inheritance or fan-out. A select has at most one kind and
 one identifier, both fixed when it is created. `@identifier` is also the menu's identifier, so
 selects that share one cannot be open together, and an identifier equal to another menu's closes
-that menu when the select opens. Name kinds after the family (the select-kit component name for
-converted families) and identifiers as `<surface>-<role>`.
+that menu when the select opens. Name kinds after the component and identifiers as
+`<surface>-<role>`. Until cleanup, `@legacyKind` carries the replaced select-kit name(s) for the
+deprecated `modifySelectKit` bridge and legacy root classes; it does not match `forKind`.
 
 ```js
 import { trackedObject } from "@ember/reactive/collections";
 
 api.registerValueTransformer("select-customizations", ({ value: selects }) => {
-  selects.forKind("tag-chooser", (spec) => {
+  selects.forKind("select-tag", (spec) => {
     // One state object per select: setup runs once for each matching select.
     const state = trackedObject({ suggesting: false });
 

@@ -46,20 +46,24 @@ export function applyContentPluginApiCallbacks(
   component,
   { bridgeOnly = false } = {}
 ) {
+  // TODO (select-kit-replacement-cleanup): Aliases can match the same bridge callback.
+  const applied = new Set();
   makeArray(component.pluginApiIdentifiers).forEach((key) => {
     (_prependContentCallbacks[key] || []).forEach((c) => {
-      if (bridgeOnly && _bridgeOptOutCallbacks.has(c)) {
+      if (bridgeOnly && (_bridgeOptOutCallbacks.has(c) || applied.has(c))) {
         return;
       }
+      applied.add(c);
       const prependedContent = c(component, content);
       if (prependedContent) {
         content = makeArray(prependedContent).concat(content);
       }
     });
     (_appendContentCallbacks[key] || []).forEach((c) => {
-      if (bridgeOnly && _bridgeOptOutCallbacks.has(c)) {
+      if (bridgeOnly && (_bridgeOptOutCallbacks.has(c) || applied.has(c))) {
         return;
       }
+      applied.add(c);
       const appendedContent = c(component, content);
       if (appendedContent) {
         content = content.concat(makeArray(appendedContent));
@@ -67,9 +71,10 @@ export function applyContentPluginApiCallbacks(
     });
 
     (_replaceContentCallbacks[key] || []).forEach((c) => {
-      if (bridgeOnly && _bridgeOptOutCallbacks.has(c)) {
+      if (bridgeOnly && (_bridgeOptOutCallbacks.has(c) || applied.has(c))) {
         return;
       }
+      applied.add(c);
       const replacementContent = c(component, content);
       if (replacementContent) {
         content = makeArray(replacementContent);
@@ -86,11 +91,15 @@ export function applyOnChangePluginApiCallbacks(
   component,
   { bridgeOnly = false } = {}
 ) {
+  // TODO (select-kit-replacement-cleanup): Aliases can match the same bridge callback.
+  const applied = new Set();
   makeArray(component.pluginApiIdentifiers).forEach((key) => {
     (_onChangeCallbacks[key] || []).forEach((c) => {
-      if (!bridgeOnly || !_bridgeOptOutCallbacks.has(c)) {
-        c(component, value, items);
+      if (bridgeOnly && (_bridgeOptOutCallbacks.has(c) || applied.has(c))) {
+        return;
       }
+      applied.add(c);
+      c(component, value, items);
     });
   });
 }

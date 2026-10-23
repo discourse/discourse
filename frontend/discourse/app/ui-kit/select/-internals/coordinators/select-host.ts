@@ -64,6 +64,8 @@ export interface SelectHostArgs
     > {
   /** Recipe data passed to customizations. */
   kindContext?: object;
+  /** Temporary aliases for the deprecated modifySelectKit bridge and legacy CSS. */
+  legacyKind?: string | string[];
   /** Instance data passed to customizations. */
   instanceContext?: object;
   /** The current controlled selection. */
@@ -177,6 +179,7 @@ export default class SelectHost {
 
   constructor(options: SelectHostOptions) {
     this.#options = options;
+    const legacyKind = options.getArgs().legacyKind;
     this.engine = new SelectEngine({
       // Read lazily so the engine reflects the parent's (reactive) @value — controlled.
       getValue: () => this.#options.getArgs().value,
@@ -187,6 +190,11 @@ export default class SelectHost {
       // args below are passed by value.
       getMultiple: () => this.#options.getMultiple(),
       kind: this.#options.getArgs().kind,
+      legacyKinds: Array.isArray(legacyKind)
+        ? legacyKind
+        : legacyKind === undefined
+          ? []
+          : [legacyKind],
       identifier: this.#options.getArgs().identifier,
       getKindContext: () => this.#options.getArgs().kindContext,
       getKindOptions: () => this.#options.getArgs().kindOptions,

@@ -5,12 +5,90 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
 import LoadFeedbackTracker from "discourse/ui-kit/select/-internals/coordinators/load-feedback";
 import {
   PagedSource,
   SelectState,
 } from "discourse/ui-kit/select/-internals/engine/select-sources";
 import SelectEngine from "discourse/ui-kit/select/select-engine";
+
+module(
+  "Unit | ui-kit | modify-select-kit bridge | alias edge cases",
+  function (hooks) {
+    setupTest(hooks);
+    setupLegacyBridgeCallbacks(hooks);
+
+    test("aliases work without a kind for content and changes", function (assert) {
+      const onChange = sinon.spy();
+      withPluginApi((api) => {
+        api.modifySelectKit("old-select").appendContent((component) => {
+          assert.deepEqual(
+            component.pluginApiIdentifiers,
+            ["old-select"],
+            "the facade exposes aliases without a kind"
+          );
+          return { id: "legacy", name: "Legacy" };
+        });
+        api.modifySelectKit("old-select").onChange(onChange);
+      });
+      const engine = new SelectEngine({ legacyKinds: ["old-select"] });
+
+      assert.deepEqual(
+        engine.buildItems([]).map((item) => item.value),
+        ["legacy"],
+        "content reaches an alias-only select"
+      );
+      engine.select({ id: "legacy", name: "Legacy" });
+      assert.true(
+        onChange.calledOnce,
+        "the alias-only change callback runs once"
+      );
+    });
+
+    test("shared callbacks run once per bridge invocation across duplicate names", function (assert) {
+      const callbacks = {
+        prependContent: sinon.spy(() => ({ id: "pre", name: "Pre" })),
+        appendContent: sinon.spy(() => ({ id: "app", name: "App" })),
+        replaceContent: sinon.spy((component, items) => items),
+        onChange: sinon.spy(),
+      };
+      withPluginApi((api) => {
+        for (const name of ["new-select", "old-select", "older-select"]) {
+          const registration = api.modifySelectKit(name);
+          for (const [method, callback] of Object.entries(callbacks)) {
+            registration[method](callback);
+          }
+        }
+        api.modifySelectKit("older-select").appendContent(() => ({
+          id: "older",
+          name: "Older",
+        }));
+      });
+      const engine = new SelectEngine({
+        kind: "new-select",
+        legacyKinds: ["new-select", "old-select", "old-select", "older-select"],
+      });
+      for (let run = 1; run <= 2; run++) {
+        assert.deepEqual(
+          engine
+            .buildItems([{ id: "core", name: "Core" }])
+            .map((item) => item.value),
+          ["pre", "core", "app", "older"],
+          "shared callbacks preserve the content stages"
+        );
+        engine.select({ id: run, name: String(run) });
+        for (const [method, callback] of Object.entries(callbacks)) {
+          assert.strictEqual(
+            callback.callCount,
+            run,
+            `${method} runs once each time`
+          );
+        }
+      }
+    });
+  }
+);
 
 module("Unit | ui-kit | SelectEngine | maximum diagnostics", function (hooks) {
   setupTest(hooks);

@@ -26,10 +26,10 @@ import SelectEngine, {
  * It reuses select-kit's own `applyContentPluginApiCallbacks` /
  * `applyOnChangePluginApiCallbacks`, which already implement the exact legacy
  * semantics — the three ordering stages (all prepends, then all appends, then
- * replace-wins). Matching is limited to the engine's single kind. We feed those
+ * replace-wins). Matching uses the engine's kind and compatibility aliases. We feed those
  * functions a facade shaped like the old component instance:
  *
- *   - `pluginApiIdentifiers` — a one-element array containing the engine's kind;
+ *   - `pluginApiIdentifiers` — the kind and legacy names, deduplicated;
  *   - a live `element` and a resolvable owner (`getOwner(component)`), which content
  *     callbacks read to build their context (e.g. locating the composer);
  *   - `isDestroying` / `isDestroyed`, checked by callbacks after an await;
@@ -53,6 +53,13 @@ const ON_CHANGE_DEPRECATION_ID =
 const DEPRECATION_SINCE = "2026.7.0";
 
 type CallbackKind = "content" | "onChange";
+
+/** TODO (select-kit-replacement-cleanup): Names targeted by the deprecated bridge only. */
+export function legacySelectKitIdentifiers(engine: SelectEngine): string[] {
+  return [
+    ...new Set([...(engine.kind ? [engine.kind] : []), ...engine.legacyKinds]),
+  ];
+}
 
 /** The plugin or theme a deprecation is attributed to, as `deprecated()` takes it. */
 type CallbackSource = {
@@ -80,7 +87,7 @@ interface LegacySelectKit {
 // Facade per engine instance (requirement: stable per-instance facade).
 const FACADES = new WeakMap<SelectEngine, LegacySelectKitComponent>();
 
-/** The `kind:source` pairs each facade has already reported. */
+/** The callback kind, registration name and source each facade has already reported. */
 const REPORTED = new WeakMap<LegacySelectKitComponent, Set<string>>();
 
 function facadeFor(engine: SelectEngine): LegacySelectKitComponent {
@@ -184,7 +191,7 @@ class LegacySelectKitComponent extends EmberObject {
   }
 
   get pluginApiIdentifiers(): string[] {
-    return this.engine.kind ? [this.engine.kind] : [];
+    return legacySelectKitIdentifiers(this.engine);
   }
 
   get element(): Element | null {
@@ -231,7 +238,7 @@ function adaptInjectedRows(
 }
 
 /**
- * Reports each registering plugin or theme once per control and callback kind. Reported
+ * Reports each registering plugin or theme once per control, registration name and callback kind. Reported
  * after render, so a deprecation configured to raise never aborts a render midway.
  */
 function report(
@@ -253,7 +260,7 @@ function report(
     kind === "content" ? CONTENT_DEPRECATION_ID : ON_CHANGE_DEPRECATION_ID;
 
   for (const [key, source] of sources) {
-    const mark = `${kind}:${key}`;
+    const mark = `${kind}:${targetKind}:${key}`;
     if (reported.has(mark)) {
       continue;
     }
@@ -267,7 +274,7 @@ function report(
 /**
  * Applies legacy content callbacks (prepend / append / replace) to the engine's item
  * list, after native content customizations have run. Returns the list unchanged
- * when nothing is registered for the engine's kind.
+ * when nothing is registered for the engine's kind or compatibility aliases.
  *
  * @param items - The items after native content customizations.
  * @returns The items with legacy callbacks applied.
@@ -276,15 +283,16 @@ export function applyLegacySelectKitContent(
   engine: SelectEngine,
   items: SelectItem[]
 ): SelectItem[] {
-  const kind = engine.kind;
-  const targets = kind ? [kind] : [];
-  if (!kind || !hasContentPluginApiCallbacks(targets)) {
+  const targets = legacySelectKitIdentifiers(engine);
+  if (!hasContentPluginApiCallbacks(targets)) {
     return items;
   }
 
   const facade = facadeFor(engine);
   facade.content = items;
-  report(facade, "content", kind, contentCallbackSources(targets));
+  for (const target of targets) {
+    report(facade, "content", target, contentCallbackSources([target]));
+  }
   const result: SelectItem[] = applyContentPluginApiCallbacks(items, facade, {
     bridgeOnly: true,
   });
@@ -311,14 +319,15 @@ export function applyLegacySelectKitOnChange(
   value: SelectValue,
   items: SelectItem | SelectItem[] | null
 ): void {
-  const kind = engine.kind;
-  const targets = kind ? [kind] : [];
-  if (!kind || !hasOnChangePluginApiCallbacks(targets)) {
+  const targets = legacySelectKitIdentifiers(engine);
+  if (!hasOnChangePluginApiCallbacks(targets)) {
     return;
   }
 
   const facade = facadeFor(engine);
-  report(facade, "onChange", kind, onChangeCallbackSources(targets));
+  for (const target of targets) {
+    report(facade, "onChange", target, onChangeCallbackSources([target]));
+  }
 
   applyOnChangePluginApiCallbacks(value, items, facade, { bridgeOnly: true });
 }

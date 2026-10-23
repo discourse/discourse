@@ -79,6 +79,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     const element = document.createElement("div");
     return new SelectEngine({
       kind: opts.kind ?? "test-select",
+      legacyKinds: opts.legacyKinds,
       identifier: opts.identifier,
       items: opts.items ?? [],
       multiple: opts.multiple ?? false,
@@ -158,6 +159,98 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
       ids(unnamed.buildItems([{ id: "core", name: "Core" }])),
       ["core"],
       "an identifier equal to the old name does not reach the bridge"
+    );
+  });
+
+  test("content callbacks on a legacy name reach the select alongside its kind", function (assert) {
+    withPluginApi((api) => {
+      api
+        .modifySelectKit("mini-tag-chooser")
+        .appendContent(() => ({ id: "legacy", name: "Legacy" }));
+      api
+        .modifySelectKit("select-tag")
+        .appendContent(() => ({ id: "current", name: "Current" }));
+      api
+        .modifySelectKit("tag-chooser")
+        .appendContent(() => ({ id: "other", name: "Other" }));
+    });
+
+    const engine = engineFor(getOwner(this), {
+      kind: "select-tag",
+      legacyKinds: ["mini-tag-chooser"],
+    });
+    const items = engine.buildItems([{ id: "core", name: "Core" }]);
+
+    assert.deepEqual(
+      ids(items).sort(),
+      ["core", "current", "legacy"],
+      "callbacks on the kind and on the legacy name both run; unrelated names do not"
+    );
+  });
+
+  test("onChange callbacks on a legacy name run with the legacy signature", function (assert) {
+    const calls: unknown[][] = [];
+    withPluginApi((api) => {
+      api
+        .modifySelectKit("tag-dropdown")
+        .onChange((component: unknown, value: unknown, item: unknown) =>
+          calls.push([value, item])
+        );
+    });
+
+    const engine = engineFor(getOwner(this), {
+      kind: "select-tag",
+      legacyKinds: ["tag-dropdown"],
+      items: [{ id: 7, name: "Seven" }],
+    });
+    engine.buildItems([]);
+    engine.select({ id: 7, name: "Seven" });
+
+    assert.strictEqual(calls.length, 1, "the onChange callback ran once");
+    assert.strictEqual(calls[0][0], 7, "it received the new value");
+  });
+
+  test("the deprecation names the legacy name that matched", async function (assert) {
+    withPluginApi((api) => {
+      api
+        .modifySelectKit("mini-tag-chooser")
+        .appendContent(() => ({ id: "x", name: "X" }));
+    });
+
+    const engine = engineFor(getOwner(this), {
+      kind: "select-tag",
+      legacyKinds: ["mini-tag-chooser"],
+    });
+    engine.buildItems([]);
+    await settled();
+
+    const [fired] = firedFor(CONTENT_ID);
+    assert.true(
+      fired?.message?.includes('modifySelectKit("mini-tag-chooser")'),
+      "the message names the registration that matched"
+    );
+  });
+
+  test("several legacy names each match once", function (assert) {
+    withPluginApi((api) => {
+      api
+        .modifySelectKit("tags-intersection-chooser")
+        .appendContent(() => ({ id: "intersection", name: "Intersection" }));
+      api
+        .modifySelectKit("mini-tag-chooser")
+        .appendContent(() => ({ id: "mini", name: "Mini" }));
+    });
+
+    const engine = engineFor(getOwner(this), {
+      kind: "select-tag-filter",
+      legacyKinds: ["tags-intersection-chooser", "mini-tag-chooser"],
+    });
+    const items = engine.buildItems([{ id: "core", name: "Core" }]);
+
+    assert.deepEqual(
+      ids(items).sort(),
+      ["core", "intersection", "mini"],
+      "each legacy name's callback runs exactly once"
     );
   });
 

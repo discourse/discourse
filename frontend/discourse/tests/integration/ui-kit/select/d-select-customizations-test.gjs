@@ -15,6 +15,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { ITEMS, optionWithText } from "discourse/tests/helpers/d-select-hosts";
 import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
 import DSelect from "discourse/ui-kit/select/d-select";
+import DSelectList from "discourse/ui-kit/select/d-select-list";
 
 /** Registers one `select-customizations` callback that receives the registry. */
 function customize(register) {
@@ -1384,6 +1385,107 @@ module(
         seen.at(-1)?.categoryId,
         7,
         "the load customization context carries loadContext"
+      );
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (legacy kind)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+    setupLegacyBridgeCallbacks(hooks);
+
+    const MINI_AND_INTERSECTION = [
+      "tags-intersection-chooser",
+      "mini-tag-chooser",
+    ];
+    const noop = () => {};
+
+    test("the root carries each legacy name as a class", async function (assert) {
+      await render(
+        <template>
+          <div class="one">
+            <DSelect
+              @items={{ITEMS}}
+              @kind="select-tag"
+              @legacyKind="mini-tag-chooser"
+            />
+          </div>
+          <div class="many">
+            <DSelect
+              @items={{ITEMS}}
+              @kind="select-tag-filter"
+              @legacyKind={{MINI_AND_INTERSECTION}}
+            />
+          </div>
+          <div class="list">
+            <DSelectList
+              @items={{ITEMS}}
+              @kind="select-tag"
+              @legacyKind="tag-chooser"
+              @onChange={{noop}}
+            />
+          </div>
+        </template>
+      );
+
+      assert.dom(".one .d-select").hasClass("mini-tag-chooser");
+      assert.dom(".many .d-select").hasClass("tags-intersection-chooser");
+      assert.dom(".many .d-select").hasClass("mini-tag-chooser");
+      assert.dom(".list .d-select").hasClass("tag-chooser");
+    });
+
+    test("forKind customizations match only the new kind", async function (assert) {
+      customize((selects) => {
+        selects.forKind("select-tag", (spec) =>
+          spec.row((row) => row.classes.push("x-new-kind"))
+        );
+        selects.forKind("mini-tag-chooser", (spec) =>
+          spec.row((row) => row.classes.push("x-legacy-kind"))
+        );
+      });
+
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @kind="select-tag"
+            @legacyKind="mini-tag-chooser"
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert.true(optionWithText("Apple").classList.contains("x-new-kind"));
+      assert.false(
+        optionWithText("Apple").classList.contains("x-legacy-kind"),
+        "a legacy name is for the deprecated bridge only"
+      );
+    });
+
+    test("DSelectList applies content callbacks on its legacy name", async function (assert) {
+      withPluginApi((api) =>
+        api
+          .modifySelectKit("mini-tag-chooser")
+          .appendContent(() => ({ id: "legacy-row", name: "Legacy row" }))
+      );
+
+      await render(
+        <template>
+          <DSelectList
+            @items={{ITEMS}}
+            @kind="select-tag"
+            @legacyKind="mini-tag-chooser"
+            @onChange={{noop}}
+            @virtualized={{false}}
+          />
+        </template>
+      );
+
+      assert.true(
+        Boolean(optionWithText("Legacy row")),
+        "the legacy callback's row is listed"
       );
     });
   }

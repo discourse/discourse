@@ -20,6 +20,7 @@ import type Menu from "discourse/float-kit/services/menu";
 import type A11y from "discourse/services/a11y";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import InteractionCoordinator from "discourse/ui-kit/select/-internals/coordinators/interaction-coordinator";
 import SelectHost, {
@@ -73,6 +74,11 @@ interface DSelectSignature {
       | Promise<readonly SelectItemModel[] | null | undefined>;
     /** The select's recipe or family, fixed at construction. */
     kind?: string;
+    /**
+     * Temporary compatibility alias for the deprecated modifySelectKit bridge and legacy CSS;
+     * not a customization key.
+     */
+    legacyKind?: string | string[];
     /** Declares recipe option keys and their live base values. Requires `@kind`; core keys are reserved. */
     kindOptions?: Record<string, unknown>;
     /** The call-site name used for customization and menu identity. */
@@ -537,7 +543,8 @@ export default class DSelect extends Component<DSelectSignature> {
       }}
       aria-label={{this.presenter.triggerRootLabel}}
       aria-readonly={{this.presenter.triggerRootReadonly}}
-      class="d-select"
+      {{! TODO (select-kit-replacement-cleanup): Retain legacy root classes during rollout. }}
+      class={{dConcatClass "d-select" this.engine.legacyKinds}}
       data-select-id={{this.listboxId}}
       data-selection-removal={{this.presenter.selectionRemovalSurface}}
       data-unresolved={{if this.presenter.hasUnresolvedSelection "true"}}

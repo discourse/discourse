@@ -13,12 +13,14 @@ import { TrackedAsyncData } from "ember-async-data";
 import { hasContentPluginApiCallbacks } from "discourse/select-kit/lib/plugin-api";
 import type A11yService from "discourse/services/a11y";
 import type { CapabilitiesService } from "discourse/services/capabilities";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import SelectHost, {
   type SelectHostArgs,
 } from "discourse/ui-kit/select/-internals/coordinators/select-host";
 import SelectListInteraction from "discourse/ui-kit/select/-internals/coordinators/select-list-interaction";
 import SelectListPresenter from "discourse/ui-kit/select/-internals/coordinators/select-list-presenter";
 import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
+import { legacySelectKitIdentifiers } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
 import MultiChips from "discourse/ui-kit/select/-internals/parts/multi-chips";
 import SelectPanel, {
   type SelectPanelState,
@@ -84,6 +86,11 @@ interface DSelectListSignature {
     minimum?: number;
     /** Customization family, fixed at construction. */
     kind?: string;
+    /**
+     * Temporary compatibility alias for the deprecated modifySelectKit bridge and legacy CSS;
+     * not a customization key.
+     */
+    legacyKind?: string | string[];
     /** Declares live recipe options; core option keys remain reserved. */
     kindOptions?: Record<string, unknown>;
     /** Call-site customization identity. */
@@ -194,8 +201,9 @@ export default class DSelectList extends Component<DSelectListSignature> {
    * TODO (select-kit-replacement-cleanup): Legacy content callbacks read the root while the list
    * builds, so the list waits one render for it only when such a callback targets this select.
    */
-  #needsBridgeAnchor =
-    !!this.args.kind && hasContentPluginApiCallbacks([this.args.kind]);
+  #needsBridgeAnchor = hasContentPluginApiCallbacks(
+    legacySelectKitIdentifiers(this.engine)
+  );
 
   constructor(owner: Owner, args: DSelectListSignature["Args"]) {
     super(owner, args);
@@ -245,7 +253,8 @@ export default class DSelectList extends Component<DSelectListSignature> {
 
   <template>
     <div
-      class="d-select --list"
+      {{! TODO (select-kit-replacement-cleanup): Retain legacy root classes during rollout. }}
+      class={{dConcatClass "d-select" "--list" this.engine.legacyKinds}}
       data-select-id={{this.listboxId}}
       data-selection-removal="panel-chips"
       ...attributes

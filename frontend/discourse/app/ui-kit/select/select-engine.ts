@@ -331,6 +331,9 @@ export interface SelectEngineOptions {
   /** The recipe or family name, fixed at construction. */
   kind?: string;
 
+  /** Temporary names for the deprecated modifySelectKit bridge and legacy CSS only. */
+  legacyKinds?: string[];
+
   /** The call-site name, fixed at construction. */
   identifier?: string;
 
@@ -659,6 +662,7 @@ export default class SelectEngine {
   #dualSourceWarned = false;
 
   #options: SelectOptionsView;
+  #legacyKinds: readonly string[];
   #valueResolver: ValueResolver;
   #selectionActions: SelectionActions;
   #selectionUpdates: SelectionUpdates;
@@ -678,6 +682,7 @@ export default class SelectEngine {
    *   {@link SelectEngineOptions}.
    */
   constructor(opts: SelectEngineOptions = {}) {
+    this.#legacyKinds = Object.freeze([...(opts.legacyKinds ?? [])]);
     this.#getLoadContext = opts.getLoadContext ?? (() => opts.loadContext);
     this.#onReloadList = opts.onReloadList;
     this.#options = new SelectOptionsView(opts);
@@ -892,6 +897,11 @@ export default class SelectEngine {
   /** The recipe or family name captured at construction. */
   get kind(): string | undefined {
     return this.#options.kind;
+  }
+
+  /** Compatibility aliases captured at construction; never customization keys. */
+  get legacyKinds(): readonly string[] {
+    return this.#legacyKinds;
   }
 
   /** The call-site name captured at construction. */
