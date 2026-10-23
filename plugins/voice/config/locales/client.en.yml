@@ -70,6 +70,7 @@ en:
         title: "Chat"
         open: "Open chat"
         close: "Close chat"
+        unavailable_title: "Zoinks!"
         unavailable: "Chat is unavailable right now."
         empty_title: "No chat yet"
         empty_body: "Send a message to get the conversation started."

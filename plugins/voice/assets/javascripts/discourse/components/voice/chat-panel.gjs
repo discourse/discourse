@@ -313,7 +313,10 @@ export default class VoiceChatPanel extends Component {
             <this.chatThread @thread={{thread}} />
           {{/each}}
         {{else if this.unavailable}}
-          <DEmptyState @svgContent={{dIcon "comment-slash"}} @title="Zoinks!">
+          <DEmptyState
+            @svgContent={{dIcon "comment-slash"}}
+            @title={{i18n "voice.chat.unavailable_title"}}
+          >
             <:tip>
               <div class="empty-state__tip-text">
                 {{i18n "voice.chat.unavailable"}}
