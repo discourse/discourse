@@ -10,7 +10,6 @@ hu:
     chat_enabled: "Csevegés engedélyezése."
     chat_pinned_messages: "Rögzített üzenetek engedélyezése a csevegőcsatornákban."
     enable_public_channels: "Nyilvános csatornák engedélyezése kategóriák alapján."
-    chat_channel_retention_days: "A normál csatornákon lévő csevegőüzenetek ennyi napig maradnak meg. Állítsa „0”-ra, hogy örökre megtartsa az üzeneteket."
     chat_dm_retention_days: "A személyes csevegési csatornákon lévő csevegőüzenetek ennyi napig maradnak meg. Állítsa „0”-ra, hogy örökre megtartsa az üzeneteket."
     chat_auto_silence_duration: "A felhasználók ennyi percig lesznek némítva, ha túllépik a csevegőüzenet létrehozási korlátját. Állítsa „0”-ra, hogy letiltsa az automatikus némítást."
     chat_allowed_messages_for_trust_level_0: "A 0-s megbízhatósági szinttel rendelkező felhasználók legfeljebb ennyi üzenetet küldhetnek 30 másodpercen belül. A korlátozás letiltásához állítsa „0”-ra."
@@ -60,6 +59,15 @@ hu:
         Látogassa meg a csatornát a %{channel_url} címen az újrapróbálkozáshoz.
   chat:
     deleted_chat_username: törölt
+    crawler:
+      directory_title: "Csevegőcsatornák"
+      nav_title: "Csevegés"
+      members_count:
+        one: "%{count} tag"
+        other: "%{count} tag"
+      thread_replies:
+        one: "%{count} válasz"
+        other: "%{count} válasz"
     errors:
       users_cant_be_added_to_channel: "Felhasználók nem adhatók hozzá ehhez a csatornához."
       user_cant_be_removed_from_channel: "A felhasználót nem lehet eltávolítani erről a csatornáról"

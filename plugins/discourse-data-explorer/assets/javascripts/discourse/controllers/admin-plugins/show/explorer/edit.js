@@ -20,12 +20,12 @@ import {
 } from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
-const DEFAULT_QUERY_TAG = "default";
 const HIDE_SCHEMA_KEY = "hide_schema";
 const DASHBOARD_REPORT_SOURCE = "data_explorer_query";
 
 export default class PluginsExplorerController extends Controller {
   @service modal;
+  @service dialog;
   @service appEvents;
   @service siteSettings;
   @service messageBus;
@@ -125,10 +125,6 @@ export default class PluginsExplorerController extends Controller {
       .map((group) => {
         return { id: group.id, name: group.name };
       });
-  }
-
-  get mandatoryTags() {
-    return this.model.is_default ? DEFAULT_QUERY_TAG : null;
   }
 
   get hasResults() {
@@ -442,9 +438,11 @@ export default class PluginsExplorerController extends Controller {
 
   @action
   updateTags(value) {
-    const tags = this.model.is_default
-      ? [DEFAULT_QUERY_TAG, ...value.filter((tag) => tag !== DEFAULT_QUERY_TAG)]
-      : value;
+    const automaticTags = this.model.automatic_tags ?? [];
+    const tags = [
+      ...automaticTags,
+      ...value.filter((tag) => !automaticTags.includes(tag)),
+    ];
     this.model.set("tags", tags);
     this.recomputeDirty();
   }
@@ -482,12 +480,21 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
+  confirmDestroyQuery() {
+    this.dialog.deleteConfirm({
+      message: i18n("explorer.delete_confirm"),
+      didConfirm: () => this.destroyQuery(),
+    });
+  }
+
+  @action
   async destroyQuery() {
     try {
       this.loading = true;
       this.showResults = false;
       await this.store.destroyRecord("query", this.model);
       this.model.set("destroyed", true);
+      this.dashboardMounted = false;
     } catch (error) {
       popupAjaxError(error);
     } finally {

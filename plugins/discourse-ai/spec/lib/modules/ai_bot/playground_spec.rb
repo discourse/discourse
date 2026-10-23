@@ -481,6 +481,36 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(thinking["message"]).to eq("Web search: OpenAI news")
     end
 
+    [nil, "setCustomRaw", "streamCustomRaw"].each do |custom_output|
+      it "returns script errors to the model #{custom_output ? "after #{custom_output}" : "without custom output"}" do
+        custom_tool.update!(script: <<~JS)
+          function invoke() {
+            #{custom_output ? "chain.#{custom_output}('Partial output');" : ""}
+            throw new Error("Category not found");
+          }
+        JS
+        source = Fabricate(:private_message_post, user: user, recipient: bot_user)
+        answer = "The category lookup failed because the category was not found."
+        reply = nil
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [tool_call, answer],
+        ) do |_, _, prompts|
+          reply = playground.reply_to(source, auto_set_title: false)
+
+          tool_result = prompts.last.messages.find { |message| message[:type] == :tool }
+          expect(tool_result).to include(id: tool_call.id, name: tool_call.name)
+          expect(JSON.parse(tool_result[:content])).to eq("error" => "Error: Category not found")
+        end
+
+        expect(reply.raw).to eq(answer)
+        tool_result = reply.post_custom_prompt.custom_prompt.find { |entry| entry[2] == "tool" }
+        expect(tool_result.take(4)).to eq(
+          ['{"error":"Error: Category not found"}', tool_call.id, "tool", tool_call.name],
+        )
+      end
+    end
+
     it "uses custom tool in conversation" do
       ai_agent.update!(show_thinking: true)
       agent_klass = AiAgent.all_agents.find { |p| p.name == ai_agent.name }
@@ -2040,6 +2070,64 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         )
       expect(last_post.raw).to include(expected_message)
       expect(last_post.user_id).to eq(bot_user.id)
+    end
+
+    context "when whispering in a public topic" do
+      fab!(:topic_post) { Fabricate(:post, user: user) }
+
+      def last_reply
+        topic_post.topic.reload.posts.order(:post_number).last
+      end
+
+      it "whispers the credit limit error" do
+        allocation =
+          Fabricate(
+            :llm_credit_allocation,
+            llm_model: Fabricate(:seeded_model),
+            daily_credits: 1000,
+            daily_used: 1000,
+          )
+        allow(LlmCreditAllocation).to receive(:check_credits!).and_raise(
+          LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:),
+        )
+
+        playground.reply_to(topic_post, whisper: true)
+
+        expect(last_reply.raw).to include(
+          I18n.t(
+            "discourse_ai.llm_credit_allocation.limit_exceeded_user",
+            reset_time: allocation.formatted_reset_time,
+          ),
+        )
+        expect(last_reply).to be_whisper
+      end
+
+      it "whispers the reply when the history changes while replying" do
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Triage done"]) do
+          playground.reply_to(topic_post, whisper: true) do
+            topic_post.update_columns(raw: "Edited while replying")
+          end
+        end
+
+        expect(last_reply.raw).to include("Triage done", "history_changed")
+        expect(last_reply).to be_whisper
+      end
+
+      it "whispers the reply when an unexpected error interrupts it" do
+        allow_any_instance_of(DiscourseAi::Completions::HistorySnapshot).to receive(
+          :stamp!,
+        ).and_raise(StandardError, "boom")
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Triage done"]) do
+          expect { playground.reply_to(topic_post, whisper: true) }.to raise_error(
+            StandardError,
+            "boom",
+          )
+        end
+
+        expect(last_reply.raw).to include("Triage done", "boom")
+        expect(last_reply).to be_whisper
+      end
     end
   end
 

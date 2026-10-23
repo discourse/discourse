@@ -131,6 +131,17 @@ RSpec.describe UserNotifications do
       expect(email.body).to be_present
     end
 
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        SiteSetting.dsa_reporting_enabled = true
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "omits appeal instructions from the password reset email" do
+        expect(email.body.decoded).not_to include(SiteSetting.dsa_moderation_appeal_email)
+      end
+    end
+
     it "shows the correct preview text in forgot password" do
       preview_text = I18n.t("user_notifications.forgot_password.preview")
       expect(Email::Renderer.new(email).html.scan(/#{preview_text}/).count).to eq(1)
@@ -146,6 +157,19 @@ RSpec.describe UserNotifications do
 
   describe ".post_approved" do
     fab!(:post)
+
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        SiteSetting.dsa_reporting_enabled = true
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "includes appeal instructions when DSA reporting and an appeal address are configured" do
+        mail = UserNotifications.post_approved(user, notification_data_hash: { post_url: post.url })
+
+        expect(mail.body.decoded).to include("To appeal this decision, contact appeals@example.com")
+      end
+    end
 
     it "addresses the post approval email to the user with a subject and body" do
       subject =
@@ -1539,6 +1563,43 @@ RSpec.describe UserNotifications do
     let(:user) { Fabricate(:user) }
     let(:notification) { Fabricate(:private_message_notification, user: user, post: response) }
 
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        SiteSetting.dsa_reporting_enabled = true
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "includes the stored moderation appeal once in each email part" do
+        moderation_post =
+          SystemMessage.create_from_system_user(
+            user,
+            :silenced_by_staff,
+            message_title: "Moderation notice",
+            message_raw: "Moderation outcome.",
+            **Dsa::AppealInstructions.message_options,
+          )
+        moderation_notification =
+          Fabricate(:private_message_notification, user:, post: moderation_post)
+        appeal =
+          I18n.t(
+            "system_messages.moderation_appeal_instructions",
+            email: SiteSetting.dsa_moderation_appeal_email,
+          )
+
+        mail =
+          UserNotifications.user_private_message(
+            user,
+            post: moderation_post,
+            notification_type: moderation_notification.notification_type,
+            notification_data_hash: moderation_notification.data_hash,
+          )
+
+        html_text = Nokogiri::HTML5.fragment(mail.html_part.body.decoded).text
+        expect(html_text.scan(appeal).size).to eq(1)
+        expect(mail.text_part.body.decoded.scan(appeal).size).to eq(1)
+      end
+    end
+
     it "generates a correct email" do
       SiteSetting.enable_names = true
       mail =
@@ -2427,13 +2488,80 @@ RSpec.describe UserNotifications do
   describe ".account_silenced" do
     fab!(:user_history) { Fabricate(:user_history, action: UserHistory.actions[:silence_user]) }
 
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        SiteSetting.dsa_reporting_enabled = true
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "includes appeal instructions for temporary and permanent silences without a reviewable" do
+        [1.day.from_now, 1000.years.from_now].each do |deadline|
+          user.silenced_till = deadline
+
+          mail = UserNotifications.account_silenced(user, user_history:)
+
+          expect(mail.body.decoded).to include(
+            "To appeal this decision, contact appeals@example.com",
+          )
+        end
+      end
+    end
+
     it "adds the silenced_till date in user's timezone" do
       user.user_option.timezone = "Asia/Tbilisi" # GMT+4
       user.silenced_till = DateTime.parse("May 25, 2020, 12:00pm")
 
       mail = UserNotifications.account_silenced(user, { user_history: user_history })
 
-      expect(mail.body).to include("May 25, 2020,  4:00pm")
+      expect(mail.body).to include("May 25, 2020,  4:00pm (UTC+04:00)")
+    end
+
+    it "uses the offset at the silence end date across daylight saving changes" do
+      user.user_option.timezone = "America/New_York"
+
+      {
+        "2027-01-15T17:00:00Z" => "UTC-05:00",
+        "2027-07-15T17:00:00Z" => "UTC-04:00",
+      }.each do |deadline, offset|
+        user.silenced_till = Time.iso8601(deadline)
+        email = UserNotifications.account_silenced(user, user_history:)
+
+        expect(email.body.decoded).to include(offset)
+      end
+    end
+
+    it "falls back to UTC for an unrecognized timezone" do
+      user.user_option.timezone = "Not/A_Timezone"
+      user.silenced_till = Time.iso8601("2027-01-15T17:00:00Z")
+
+      email = UserNotifications.account_silenced(user, user_history:)
+
+      expect(email.body.decoded).to include("UTC+00:00")
+    end
+
+    it "uses the recipient locale and customized date format and wrapper" do
+      SiteSetting.allow_user_locale = true
+      user.locale = "fr"
+      user.user_option.timezone = "Asia/Kolkata"
+      user.silenced_till = Time.iso8601("2027-01-15T12:00:00Z")
+      TranslationOverride.upsert!(:fr, "time.formats.long", "%d/%m/%Y à %H:%M")
+      TranslationOverride.upsert!(
+        :fr,
+        "user_notifications.account_silenced.date_with_timezone",
+        "%{date} (heure UTC%{offset})",
+      )
+
+      email = UserNotifications.account_silenced(user, user_history:)
+
+      expect(email.body.decoded).to include("15/01/2027 à 17:30 (heure UTC+05:30)")
+    end
+
+    it "keeps permanent silences free of an expiry date" do
+      user.silenced_till = 1000.years.from_now
+
+      email = UserNotifications.account_silenced(user, user_history:)
+
+      expect(email.body.decoded).not_to include("UTC", "until")
     end
 
     context "when user doesn't have timezone set" do
@@ -2449,11 +2577,11 @@ RSpec.describe UserNotifications do
 
         mail = UserNotifications.account_silenced(user, { user_history: user_history })
 
-        expect(mail.body).to include(date)
+        expect(mail.body).to include("#{date} (UTC+00:00)")
       end
     end
 
-    context "when user timezone is invalid" do
+    context "when user timezone is blank" do
       before { user.user_option.timezone = "" }
 
       it "doesn't raise error" do
@@ -2466,13 +2594,26 @@ RSpec.describe UserNotifications do
 
         mail = UserNotifications.account_silenced(user, { user_history: user_history })
 
-        expect(mail.body).to include(date)
+        expect(mail.body).to include("#{date} (UTC+00:00)")
       end
     end
   end
 
   describe ".account_deleted" do
     fab!(:reviewable) { Fabricate(:reviewable_flagged_post, reviewable_scores: []) }
+
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        SiteSetting.dsa_reporting_enabled = true
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "includes appeal instructions in account deletion emails" do
+        mail = UserNotifications.account_deleted("user@example.com", reviewable)
+
+        expect(mail.body.decoded).to include("To appeal this decision, contact appeals@example.com")
+      end
+    end
 
     it "includes flag reason for standard flags" do
       Fabricate(
@@ -2543,13 +2684,75 @@ RSpec.describe UserNotifications do
   describe ".account_suspended" do
     fab!(:user_history) { Fabricate(:user_history, action: UserHistory.actions[:suspend_user]) }
 
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        SiteSetting.dsa_reporting_enabled = true
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "includes appeal instructions for temporary and permanent suspensions without a reviewable" do
+        [1.day.from_now, 1000.years.from_now].each do |deadline|
+          user.suspended_till = deadline
+
+          mail = UserNotifications.account_suspended(user, user_history:)
+
+          expect(mail.body.decoded).to include(
+            "To appeal this decision, contact appeals@example.com",
+          )
+        end
+      end
+    end
+
     it "adds the suspended_till date in user's timezone" do
       user.user_option.timezone = "Asia/Tbilisi" # GMT+4
       user.suspended_till = DateTime.parse("May 25, 2020, 12:00pm")
 
       mail = UserNotifications.account_suspended(user, { user_history: user_history })
 
-      expect(mail.body).to include("May 25, 2020,  4:00pm")
+      expect(mail.body).to include("May 25, 2020,  4:00pm (UTC+04:00)")
+    end
+
+    it "uses the offset at the suspension end date across daylight saving changes" do
+      user.user_option.timezone = "America/New_York"
+
+      {
+        "2027-01-15T17:00:00Z" => "UTC-05:00",
+        "2027-07-15T17:00:00Z" => "UTC-04:00",
+      }.each do |deadline, offset|
+        user.suspended_till = Time.iso8601(deadline)
+        email = UserNotifications.account_suspended(user, user_history:)
+        expect(email.body.decoded).to include(offset)
+      end
+    end
+
+    it "falls back to UTC for an unrecognized timezone" do
+      user.user_option.timezone = "Not/A_Timezone"
+      user.suspended_till = Time.iso8601("2027-01-15T17:00:00Z")
+
+      email = UserNotifications.account_suspended(user, user_history:)
+
+      expect(email.body.decoded).to include("UTC+00:00")
+    end
+
+    it "uses the recipient locale and customized date format" do
+      SiteSetting.allow_user_locale = true
+      user.locale = "fr"
+      user.user_option.timezone = "Asia/Kolkata"
+      user.suspended_till = Time.iso8601("2027-01-15T12:00:00Z")
+      TranslationOverride.upsert!(:fr, "time.formats.long", "%d/%m/%Y à %H:%M")
+
+      email = UserNotifications.account_suspended(user, user_history:)
+
+      expect(email.body.decoded).to include("15/01/2027 à 17:30 (UTC+05:30)")
+    end
+
+    it "keeps permanent suspensions free of an expiry date" do
+      user.suspended_till = 1000.years.from_now
+
+      email = UserNotifications.account_suspended(user, user_history:)
+
+      expect(email.body.decoded).to include("your account has been suspended.")
+      expect(email.body.decoded).not_to include("UTC")
     end
 
     context "when user doesn't have timezone set" do
@@ -2565,11 +2768,11 @@ RSpec.describe UserNotifications do
 
         mail = UserNotifications.account_suspended(user, { user_history: user_history })
 
-        expect(mail.body).to include(date)
+        expect(mail.body).to include("#{date} (UTC+00:00)")
       end
     end
 
-    context "when user timezone is invalid" do
+    context "when user timezone is blank" do
       before { user.user_option.timezone = "" }
 
       it "doesn't raise error" do
@@ -2582,7 +2785,22 @@ RSpec.describe UserNotifications do
 
         mail = UserNotifications.account_suspended(user, { user_history: user_history })
 
-        expect(mail.body).to include(date)
+        expect(mail.body).to include("#{date} (UTC+00:00)")
+      end
+    end
+  end
+
+  describe ".signup_after_reject" do
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        SiteSetting.dsa_reporting_enabled = true
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "includes the DSA appeal address in signup rejection emails" do
+        mail = UserNotifications.signup_after_reject(user, reject_reason: "Account not approved.")
+
+        expect(mail.body.decoded).to include("To appeal this decision, contact appeals@example.com")
       end
     end
   end

@@ -2,11 +2,23 @@
 
 module Chat
   class ChatController < ::Chat::BaseController
+    skip_before_action :check_xhr, if: -> { action_name == "respond" && use_crawler_layout? }
     before_action :set_channel_and_chatable_with_access_check,
                   except: %i[respond set_user_chat_status dismiss_retention_reminder rebake]
 
+    DIRECTORY_PAGE_SIZE = Chat::ChannelFetcher::MAX_PUBLIC_CHANNEL_RESULTS
+
     def respond
-      render
+      raise ApplicationController::RenderEmpty if !use_crawler_layout? || current_user
+
+      # Channel routes 404 when anonymous access is off, so already-indexed pages drop out of search.
+      if params[:channel_id].present?
+        render_crawler_channel
+      elsif params[:crawler_directory] && Chat.anonymous_public_channel_access_allowed?
+        render_crawler_directory
+      else
+        raise ApplicationController::RenderEmpty
+      end
     end
 
     def react
@@ -97,6 +109,74 @@ module Chat
           messages_or_ids: message_ids,
         ).generate_markdown
       render json: success_json.merge(markdown: markdown)
+    end
+
+    private
+
+    # Crawler requests skip check_xhr, so respond itself decides what anonymous visitors may see.
+    def allow_anonymous_public_chat_access?
+      action_name == "respond" && use_crawler_layout?
+    end
+
+    def render_crawler_channel
+      channel = Chat::Channel.includes(:chatable).find_by_id_or_slug(params[:channel_id])
+      raise Discourse::NotFound if !guardian.can_preview_anonymous_public_chat_channel?(channel)
+
+      if params[:thread_id].present?
+        thread = channel.threads.find_by(id: params[:thread_id])
+        raise Discourse::NotFound if !thread || (!channel.threading_enabled? && !thread.force)
+      elsif params[:message_id].present?
+        # Channel permalinks to thread replies (e.g. from transcripts) live on the thread page.
+        message = channel.chat_messages.find_by(id: params[:message_id])
+        return redirect_to(message.url, status: :moved_permanently) if message&.thread_reply?
+      end
+
+      @crawler_view =
+        Chat::CrawlerView.new(
+          channel:,
+          thread:,
+          date: params[:date],
+          page: params[:page],
+          target_message_id: params[:message_id],
+        )
+      raise Discourse::NotFound if !@crawler_view.valid?
+
+      canonical_url(@crawler_view.canonical_url)
+      render :crawler_channel
+    end
+
+    def render_crawler_directory
+      channels =
+        Chat::CategoryChannel.joins(
+          "INNER JOIN categories ON categories.id = chat_channels.chatable_id",
+        ).where(chatable_id: Category.secured(Guardian.new).select(:id))
+
+      page = [params[:page].to_s.to_i, 1].max
+      total_pages = [(channels.count.to_f / DIRECTORY_PAGE_SIZE).ceil, 1].max
+      raise Discourse::NotFound if page > total_pages
+
+      @crawler_directory_offset = (page - 1) * DIRECTORY_PAGE_SIZE
+      @crawler_channels =
+        channels
+          .includes(:chatable, :last_message)
+          .order(
+            Arel.sql(
+              "LOWER(COALESCE(NULLIF(chat_channels.name, ''), categories.name)), chat_channels.id",
+            ),
+          )
+          .offset(@crawler_directory_offset)
+          .limit(DIRECTORY_PAGE_SIZE)
+
+      @crawler_prev_page_url = crawler_directory_url(page - 1) if page > 1
+      @crawler_next_page_url = crawler_directory_url(page + 1) if page < total_pages
+
+      canonical_url(crawler_directory_url(page))
+      render :crawler_directory
+    end
+
+    def crawler_directory_url(page)
+      url = "#{Discourse.base_url}/chat"
+      page > 1 ? "#{url}?page=#{page}" : url
     end
   end
 end

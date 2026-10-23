@@ -41,3 +41,4 @@ et:
         username: "Kasutaja"
         date: "Kuupäev"
         description: "Kirjeldus"
+        category_id: "Kategooriad"

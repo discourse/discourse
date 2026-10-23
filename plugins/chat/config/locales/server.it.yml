@@ -9,7 +9,6 @@ it:
     chat_separate_sidebar_mode: "Mostra modalità separate della barra laterale per forum e chat."
     chat_enabled: "Abilita chat."
     enable_public_channels: "Abilita i canali pubblici in base alle categorie."
-    chat_channel_retention_days: "I messaggi di chat nei canali normali saranno conservati per i giorni indicati. Impostare il parametro a '0' per conservare i messaggi per sempre."
     chat_dm_retention_days: "I messaggi di chat nei canali di chat personali saranno conservati per i giorni indicati. Impostare il parametro a '0' per conservare i messaggi per sempre."
     chat_auto_silence_duration: "Numero di minuti per i quali gli utenti verranno silenziati quando superano il limite di velocità di creazione dei messaggi di chat. Imposta il valore su '0' per disabilitare il silenziamento automatico."
     chat_allowed_messages_for_trust_level_0: "Numero di messaggi che gli utenti con livello di attendibilità 0 possono inviare in 30 secondi. Imposta su '0' per disabilitare il limite."
@@ -57,6 +56,15 @@ it:
         Visita il canale su %{channel_url} per riprovare.
   chat:
     deleted_chat_username: eliminato
+    crawler:
+      directory_title: "Canali di chat"
+      nav_title: "Chat"
+      members_count:
+        one: "%{count} membro"
+        other: "%{count} membri"
+      thread_replies:
+        one: "%{count} risposta"
+        other: "%{count} risposte"
     errors:
       users_cant_be_added_to_channel: "Impossibile aggiungere membri a questo canale."
       user_cant_be_removed_from_channel: "L'utente non può essere rimosso da questo canale"

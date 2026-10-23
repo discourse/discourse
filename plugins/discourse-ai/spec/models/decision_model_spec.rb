@@ -159,4 +159,37 @@ RSpec.describe DecisionModel do
       expect(described_class.presets).to all(be_frozen)
     end
   end
+
+  describe "#api_key" do
+    it "reads seeded keys from the environment first, then the column, ignoring secrets" do
+      seeded_model = Fabricate(:decision_model, id: -2, api_key: "column-key")
+      expect(seeded_model.api_key).to eq("column-key")
+
+      ENV["DISCOURSE_AI_SEEDED_DECISION_MODEL_API_KEY_2"] = "env-key"
+      expect(seeded_model.api_key).to eq("env-key")
+    ensure
+      ENV.delete("DISCOURSE_AI_SEEDED_DECISION_MODEL_API_KEY_2")
+    end
+
+    it "uses the selected secret for admin-created models" do
+      decision_model = Fabricate(:decision_model, api_key: "column-key")
+      expect(decision_model.api_key).to eq(decision_model.ai_secret.secret)
+    end
+  end
+
+  describe "#destroy" do
+    it "removes the model's credit allocation, costs and usage" do
+      allocation = Fabricate(:decision_model_credit_allocation, daily_used: 10)
+      seeded_model = allocation.decision_model
+      DecisionModelFeatureCreditCost.create!(decision_model: seeded_model, feature_name: "workflow")
+
+      seeded_model.destroy!
+
+      expect(DecisionModelCreditAllocation.exists?(allocation.id)).to eq(false)
+      expect(DecisionModelFeatureCreditCost.exists?(decision_model_id: seeded_model.id)).to eq(
+        false,
+      )
+      expect(DecisionModelCreditDailyUsage.exists?(decision_model_id: seeded_model.id)).to eq(false)
+    end
+  end
 end

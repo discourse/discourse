@@ -20,7 +20,7 @@ he:
           author: אני
           author_others: "%{username}"
           status_online: "● מקוון"
-        voice_usage:
+        live_usage:
           minutes:
             one: "דקה"
             two: "%{count} דקות"

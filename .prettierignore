@@ -27,3 +27,4 @@ tmp/
 !**/tsconfig.json
 **/*.md
 **/*.d.ts
+**/*.d.*.ts

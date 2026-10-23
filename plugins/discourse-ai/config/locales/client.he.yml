@@ -223,7 +223,7 @@ he:
         approved: "אושר"
         rejected: "נדחה"
       default_llm:
-        title: "מודל LLM/מש״ג ברירת מחדל"
+        title: "מודל שפה כברירת מחדל"
       llm_selector:
         none: "ללא"
       features:
@@ -664,6 +664,18 @@ he:
         tools_modal:
           parameters: "משתנים"
           required: "נדרש"
+      models:
+        new: "מודל חדש"
+        name: "שם"
+        type: "סוג"
+        provider: "ספק"
+        edit: "עריכה"
+        select_type: "בחירה"
+        types:
+          embedding: "שילוב (embedding)"
+        filters:
+          all: "כל הסוגים"
+          reset: "איפוס מסננים"
       llms:
         short_title: "LLMים"
         no_llms: "אין LLMים עדיין"
@@ -1011,6 +1023,16 @@ he:
             compact: "מצומצם"
             expanded: "מורחב"
             expanded_description: "עם סיכוי בינה מלאכותית"
+      ai_search:
+        related_topics: "נושאים קשורים"
+        related_replies:
+          one: "תגובה"
+          two: "שתי תגובות"
+          other: "שתי תגובות"
+        tabs:
+          ask: "לשאול בינה מלאכותית"
+          topics: "נושאים"
+          messages: "הודעות"
       discobot_discoveries:
         main_title: "לשאול בינה מלאכותית"
         loading_convo: "הדיון נטען"

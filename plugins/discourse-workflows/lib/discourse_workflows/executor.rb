@@ -17,6 +17,17 @@ module DiscourseWorkflows
       end
     end
 
+    class ExecutionTimedOut < StandardError
+      def initialize(reason = :run_timed_out)
+        super(
+          I18n.t(
+            "discourse_workflows.errors.#{reason}",
+            count: SiteSetting.discourse_workflows_run_timeout_minutes,
+          ),
+        )
+      end
+    end
+
     delegate :execution, to: :@store
 
     def initialize(workflow, trigger_node_id, trigger_data, options = ExecutionOptions.new)
@@ -242,6 +253,8 @@ module DiscourseWorkflows
     end
 
     def execute_flow(setup_method, *setup_args)
+      @deadline = SiteSetting.discourse_workflows_run_timeout_minutes.minutes.from_now
+
       begin
         return execution if send(setup_method, *setup_args) == false
         yield
@@ -303,6 +316,7 @@ module DiscourseWorkflows
           node, input_groups, input_sources = @queue[@queue_index]
           @queue_index += 1
           execute_node(node, input_groups, input_sources || {})
+          check_deadline!
         end
 
         break unless flush_partial_waiting_inputs
@@ -361,6 +375,7 @@ module DiscourseWorkflows
             raise StandardError, I18n.t("discourse_workflows.errors.step_execution.wait_requested")
           end
 
+          check_deadline!
           step.mark_waiting!
           @waiting_node = node
           @waiting_step = step
@@ -586,7 +601,12 @@ module DiscourseWorkflows
         workflow_call_stack: @workflow_call_stack,
         runtime_state:,
         static_data_state: @context.static_data_state,
+        deadline: @deadline,
       )
+    end
+
+    def check_deadline!
+      raise ExecutionTimedOut if @deadline.past?
     end
 
     def normalize_result(result, node, ports, input_groups)
@@ -700,6 +720,8 @@ module DiscourseWorkflows
     end
 
     def continued_error_outputs(node, input_groups, error)
+      return if error.is_a?(ExecutionTimedOut)
+
       case node_error_mode(node)
       when "continueRegularOutput"
         [primary_input_items(input_groups)]
@@ -964,6 +986,7 @@ module DiscourseWorkflows
           timeout_action:,
           steps: @steps,
         )
+      return @store.execution unless execution
 
       Jobs.enqueue_in(
         [resolved - now, 0].max,
@@ -976,6 +999,7 @@ module DiscourseWorkflows
 
     def begin_workflow_call_wait!(wait_request)
       execution = @store.pause_waiting_execution!(node: @waiting_node, steps: @steps)
+      return @store.execution unless execution
 
       DiscourseWorkflows::WorkflowCallContinuation.begin_child_call!(
         execution:,

@@ -556,6 +556,7 @@ class StaffActionLogger
         action: UserHistory.actions[:suspend_user],
         target_user_id: user.id,
         details: details,
+        expires_at: user.suspended_till,
       )
     args[:post_id] = opts[:post_id] if opts[:post_id]
     UserHistory.create!(args)
@@ -821,6 +822,7 @@ class StaffActionLogger
         action: UserHistory.actions[:silence_user],
         target_user_id: user.id,
         details: opts[:details],
+        expires_at: user.silenced_till,
       )
     create_args[:post_id] = opts[:post_id] if opts[:post_id]
 

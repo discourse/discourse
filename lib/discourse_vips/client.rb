@@ -23,6 +23,17 @@ module DiscourseVips
       reset_worker_process
     end
 
+    if Rails.env.test?
+      def self.shared_worker?
+        @shared_worker
+      end
+
+      def self.use_private_worker
+        reset_worker_process
+        @shared_worker = false
+      end
+    end
+
     def self.call(command, operation:, timeout: DEFAULT_TIMEOUT_SECONDS, nice: nil, read:, write:)
       payload = { command: command.map(&:to_s), timeout:, nice:, read:, write: }
 
@@ -69,7 +80,17 @@ module DiscourseVips
     private_class_method :send_command
 
     def self.connect_socket(deadline:)
-      Addrinfo.unix(worker_socket_path).connect(timeout: remaining_time(deadline))
+      delay_seconds = 0.1
+
+      begin
+        Addrinfo.unix(worker_socket_path).connect(timeout: remaining_time(deadline))
+      rescue Errno::ENOENT, Errno::ECONNREFUSED
+        raise if !@shared_worker
+
+        sleep [delay_seconds, remaining_time(deadline)].min
+        delay_seconds = [delay_seconds * 2, 1].min
+        retry
+      end
     rescue IO::TimeoutError
       raise WorkerUnavailable, "libvips worker did not respond"
     end

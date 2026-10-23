@@ -291,11 +291,9 @@ de:
         rejected: "Abgelehnt"
         awaiting_staff: "Warte auf Genehmigung durch das Team"
       default_llm:
-        title: "Standard-LLM-Modell"
-        description: "Das Standard-LLM-Modell für alle KI-Funktionen. Dieses wird verwendet, wenn in der Funktionskonfiguration oder im Agent kein LLM angegeben ist. Wenn kein Standard-LLM angegeben ist, wird das zuletzt erstellte LLM verwendet."
+        title: "Standard-Sprachmodell"
       llm_selector:
         none: "Keine Auswahl"
-        saved: "Standard-LLM-Modell erfolgreich aktualisiert"
       features:
         short_title: "Funktionen"
         description: "Dies sind die KI-Funktionen, die den Besuchern deiner Website zur Verfügung stehen. Sie können so konfiguriert werden, dass sie bestimmte Agenten und LLM verwenden, und der Zugriff kann mithilfe von Gruppen gesteuert werden."
@@ -1034,6 +1032,18 @@ de:
         test_summary:
           one: "%{count} Tool entdeckt mit Protokoll %{version}."
           other: "%{count} Tools entdeckt mit Protokoll %{version}."
+      models:
+        new: "Neues Modell"
+        name: "Name"
+        type: "Typ"
+        provider: "Anbieter"
+        edit: "Bearbeiten"
+        select_type: "Auswählen"
+        types:
+          embedding: "Einbettung"
+        filters:
+          all: "Alle Arten"
+          reset: "Filter zurücksetzen"
       llms:
         short_title: "LLM"
         no_llms: "Noch keine LLM"
@@ -1470,6 +1480,15 @@ de:
             compact: "Kompakt"
             expanded: "Erweitert"
             expanded_description: "mit KI-Zusammenfassungen"
+      ai_search:
+        related_topics: "Verwandte Themen"
+        related_replies:
+          one: "%{count} Antwort"
+          other: "%{count} Antworten"
+        tabs:
+          ask: "KI fragen"
+          topics: "Themen"
+          messages: "Nachrichten"
       discobot_discoveries:
         main_title: "KI fragen"
         loading_convo: "Unterhaltung wird geladen"

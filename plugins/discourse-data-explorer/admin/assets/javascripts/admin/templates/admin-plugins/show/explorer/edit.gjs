@@ -43,7 +43,7 @@ export default class QueriesEdit extends Component {
     <div class="admin-detail">
       <div class="query-edit__top-bar">
         <BackButton
-          @label="explorer.queries"
+          @label="explorer.back_to_queries"
           @route="adminPlugins.show.explorer.index"
         />
 
@@ -114,18 +114,14 @@ export default class QueriesEdit extends Component {
                 {{i18n "explorer.query_tags"}}
               </span>
               <QueryTagChooser
-                @allowDefaultTag={{@controller.model.is_default}}
+                @automaticTags={{@controller.model.automatic_tags}}
                 @availableTags={{@controller.availableTags}}
-                @mandatoryValues={{@controller.mandatoryTags}}
-                @mandatoryValueTitle={{i18n "explorer.default_tag_mandatory"}}
                 @onChange={{@controller.updateTags}}
                 @value={{@controller.model.tags}}
               />
             </div>
           </div>
         {{/unless}}
-
-        <div class="clear"></div>
 
         {{#if (eq @controller.mode "ai")}}
           <QueryAiPrompt
@@ -165,8 +161,6 @@ export default class QueriesEdit extends Component {
               </div>
 
               <PaneSeparator @controller={{@controller}} />
-
-              <div class="clear"></div>
             {{else}}
               <div class="sql">
                 <CodeView
@@ -259,7 +253,7 @@ export default class QueriesEdit extends Component {
           {{else if this.showDestroyQuery}}
             <DButton
               class="btn-danger"
-              @action={{@controller.destroyQuery}}
+              @action={{@controller.confirmDestroyQuery}}
               @disabled={{@controller.actionsBusy}}
               @icon="trash-can"
               @label="explorer.delete"
@@ -301,8 +295,6 @@ export default class QueriesEdit extends Component {
             </div>
 
             <PaneSeparator @controller={{@controller}} />
-
-            <div class="clear"></div>
           {{else}}
             <div class="sql">
               <CodeView

@@ -585,6 +585,43 @@ RSpec.describe PostDestroyer do
       expect(reviewable.reload).to be_ignored
     end
 
+    it "ignores all pending reviewables when the author immediately deletes an unpenalized post" do
+      SiteSetting.delete_removed_posts_after = 0
+      reply = create_post(topic: post.topic)
+      flagged_reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+      post_reviewable = ReviewablePost.queue_for_review(reply)
+
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload).to be_trashed
+      [flagged_reviewable, post_reviewable].each do |reviewable|
+        expect(reviewable.reload).to be_ignored
+        expect(reviewable.reviewable_scores).to all(
+          have_attributes(status: "ignored", reviewed_by_id: Discourse.system_user.id),
+        )
+      end
+    end
+
+    it "keeps all pending reviewables when a silenced author immediately deletes the post" do
+      SiteSetting.delete_removed_posts_after = 0
+      reply = create_post(topic: post.topic)
+      flagged_reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+      post_reviewable = ReviewablePost.queue_for_review(reply)
+      UserSilencer.silence(reply.user, moderator, post_id: reply.id)
+
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload).to be_trashed
+      [flagged_reviewable, post_reviewable].each do |reviewable|
+        expect(reviewable.reload).to be_pending
+        expect(reviewable.reviewable_scores).to all(be_pending)
+        expect(reviewable.reviewable_notes.last).to have_attributes(
+          user: Discourse.system_user,
+          content: I18n.t("reviewables.post_deleted_by_author_after_penalty"),
+        )
+      end
+    end
+
     it "does not auto-ignore reviewable when author was silenced for the post" do
       reply = create_post(topic: post.topic)
       reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
@@ -1093,6 +1130,21 @@ RSpec.describe PostDestroyer do
     let!(:flag) { flag_result.post_action }
 
     before { Jobs::SendSystemMessage.clear }
+
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        SiteSetting.dsa_reporting_enabled = true
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "includes appeal instructions in the deletion notice" do
+        PostDestroyer.new(moderator, second_post).destroy
+        args = Jobs::SendSystemMessage.jobs.last["args"][0].with_indifferent_access
+        Jobs::SendSystemMessage.new.execute(args)
+
+        expect(Post.last.raw).to include("To appeal this decision, contact appeals@example.com")
+      end
+    end
 
     it "deletes public post actions and agrees with flags" do
       url = second_post.url

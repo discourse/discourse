@@ -175,6 +175,15 @@ RSpec.describe TopicTimer, type: :model do
     end
   end
 
+  describe "#enqueue_typed_job" do
+    it "does nothing for obsolete reminder timers" do
+      topic_timer.update!(status_type: described_class.types[:reminder])
+
+      expect { topic_timer.enqueue_typed_job }.not_to change { Sidekiq::Queues["default"].size }
+      expect(topic_timer.reload).not_to be_trashed
+    end
+  end
+
   describe "runnable?" do
     it "returns false if execute_at > now" do
       topic_timer =

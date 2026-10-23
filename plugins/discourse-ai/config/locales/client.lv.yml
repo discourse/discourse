@@ -210,6 +210,14 @@ lv:
         delete: "Dzēst"
         tools_modal:
           required: "Nepieciešams"
+      models:
+        name: "Vārds"
+        type: "Tips"
+        edit: "Labot"
+        types:
+          embedding: "Ieguldīšana"
+        filters:
+          all: "Visi veidi"
       llms:
         display_name: "Vārds"
         vision_modes:
@@ -279,6 +287,14 @@ lv:
             category: "Sadaļa"
           table:
             total_count: "Kopā"
+      ai_search:
+        related_replies:
+          zero: "%{count} atbildes"
+          one: "%{count} atbilde"
+          other: "%{count} atbildes"
+        tabs:
+          topics: "Tēmas"
+          messages: "Ziņās"
       discobot_discoveries:
         legacy:
           regular_results: "Tēmas"

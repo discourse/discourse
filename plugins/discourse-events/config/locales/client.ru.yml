@@ -386,6 +386,7 @@ ru:
         filter_placeholder: "Фильтр пользователей"
         remove_invitee: "Удалить приглашенного из списка"
         add_invitee: "Добавить приглашенного в список"
+        this_event: "Это событие"
       bulk_invite_modal:
         confirm: "подтвердить"
         text: "Загрузить CSV-файл"

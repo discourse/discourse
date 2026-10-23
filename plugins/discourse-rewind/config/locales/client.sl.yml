@@ -17,7 +17,7 @@ sl:
         chat_usage:
           author: Vi
           author_others: "%{username}"
-        voice_usage:
+        live_usage:
           minutes:
             one: "%{count} minuto"
             two: "%{count} minuti"

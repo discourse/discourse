@@ -29,7 +29,7 @@ export default class PaymentPlan extends Component {
         "btn-discourse-subscriptions-subscribe"
         this.selectedClass
       }}
-      @action={{@planClick}}
+      @action={{this.planClick}}
     >
       <span class="interval">
         {{#if this.recurringPlan}}

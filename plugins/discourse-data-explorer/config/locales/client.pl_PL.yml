@@ -91,6 +91,7 @@ pl_PL:
       run: "Wykonaj"
       undo: "Odrzuć zmiany"
       delete: "Usuń"
+      delete_confirm: "Czy na pewno chcesz usunąć to zapytanie?"
       recover: "Cofnij usunięcie zapytania"
       dashboard:
         add: "Dodaj do pulpitu nawigacyjnego"
@@ -140,7 +141,7 @@ pl_PL:
       query_name: "Zapytanie"
       query_groups: "Grupy"
       query_tags: "Tagi"
-      default_tag_mandatory: "Domyślnego tagu nie można usunąć z zapytań pakietowych."
+      automatic_tag_mandatory: "Tag ten jest dodawany automatycznie i nie można go usunąć."
       link: "Link do"
       report_name: "Zgłoszenie"
       query_description: "Opis"

@@ -87,9 +87,11 @@ sk:
       admin:
         title: "Gamifikácia"
         name: "Meno"
+        created_by: "Vytvoril"
         period: "Obdobie"
     discourse_workflows:
       gamification_score:
         username: "Používateľ"
         date: "Dátum"
         description: "Popis"
+        category_id: "Kategória"

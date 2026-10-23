@@ -26,6 +26,8 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
     this.siteSettings.ai_ask_ai_summary_detail = "balanced";
     this.siteSettings.ai_ask_ai_related_count = 2;
     this.currentUser.can_use_ask_ai = true;
+    // present only for readers the AI bot is enabled for
+    this.currentUser.ai_enabled_chat_bots = [];
 
     this.closeSearchMenuCalled = false;
     this.closeSearchMenu = () => {
@@ -253,6 +255,29 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
         "What changed in the latest release?",
         "and the next answer brings a suggestion of its own"
       );
+  });
+
+  test("the default toggle is left out under the combined search", async function (assert) {
+    this.siteSettings.enable_ai_combined_search = true;
+    this.owner.register(
+      "service:discobot-discoveries",
+      class extends Service {
+        discovery = "A useful answer.";
+        streamedText = "A useful answer.";
+        loadingDiscoveries = false;
+        isStreaming = false;
+        discoveryTimedOut = false;
+
+        triggerDiscovery() {}
+        onDiscoveryUpdate() {}
+      }
+    );
+
+    await render(
+      <template><AiSearchDiscoveries @searchTerm="test search" /></template>
+    );
+
+    assert.dom(".ai-search-discoveries__default-preference").doesNotExist();
   });
 
   test("the default toggle can be dismissed for this browser", async function (assert) {

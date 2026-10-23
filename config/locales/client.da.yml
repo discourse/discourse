@@ -6,6 +6,8 @@
 
 da:
   js:
+    dsa_notice:
+      email: "E-mail adresse"
     user_api_key:
       authorize: "Autoriser"
       deny: "Annuller"
@@ -4333,45 +4335,6 @@ da:
           number: "Indtast venligst et tal."
           text: "Indtast venligst en tekstværdi."
           url: "Indtast venligst en gyldig URL."
-    table_builder:
-      title: "Tabel Bygger"
-      modal:
-        title: "Tabel Bygger"
-        create: "Byg Tabel"
-        help:
-          enter_key: "Enter"
-          tab_key: "Fane"
-      edit:
-        btn_edit: "Rediger tabel"
-        modal:
-          title: "Rediger tabel"
-          cancel: "annuller"
-          create: "Gem"
-          reason: "Hvorfor redigerer du?"
-          trigger_reason: "Tilføj årsag til redigering"
-      default_header:
-        col_1: "Kolonne 1"
-        col_2: "Kolonne 2"
-        col_3: "Kolonne 3"
-        col_4: "Kolonne 4"
-      spreadsheet:
-        show: "Vis"
-        about: "Om"
-        cells_already_merged: "Celle allerede flettet"
-        no_cells_selected: "Ingen celler valgt"
-        context_menu:
-          row:
-            before: "Indsæt en ny række før"
-            after: "Indsæt en ny række efter"
-            delete: "Slet valgte rækker"
-          col:
-            before: "Indsæt en ny kolonne før"
-            after: "Indsæt en ny kolonne efter"
-            delete: "Slet valgte kolonner"
-            rename: "Omdøb denne kolonne"
-          copy: "Kopiér..."
-          paste: "Indsæt..."
-          save: "Gem som..."
     powered_by_discourse: "Drevet af Discourse"
     filter:
       description:

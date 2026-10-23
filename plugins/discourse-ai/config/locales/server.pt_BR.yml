@@ -49,7 +49,6 @@ pt_BR:
         description: "Aplicar tags em tópicos automaticamente usando IA."
   site_settings:
     discourse_ai_enabled: "Ative o plugin de IA do Discourse."
-    ai_default_llm_model: "O modelo de LLM padrão a ser usado para todos os recursos de IA"
     ai_artifact_security: "O sistema de artefatos de IA gera IFRAMEs com código executável. with runnable code. O modo restrito obriga o(a) usuário(a) a clicar mais uma vez para executar o código. O modo Lax permite que ele(a) forneça uma execução automática de artefatos com IA para exibição automática. o modo desativado destiva o sistema de artefatos."
     ai_toxicity_enabled: "Ative o módulo de toxicidade."
     ai_toxicity_inference_service_api_endpoint: "URL em que a API está em execução para o módulo de toxicidade"

@@ -1,7 +1,9 @@
 import "./shims.js";
 import "./postcss.js";
 import "./asset-processor-rollup.js";
-import { transform as babelTransform } from "@babel/standalone";
+import { transformSync } from "@babel/core";
+import BabelTransformModulesAmd from "@babel/plugin-transform-modules-amd";
+import BabelPresetEnv from "@babel/preset-env";
 import DecoratorTransforms from "decorator-transforms";
 import EMBER_PACKAGE from "ember-source/package.json";
 import { minify as terserMinify } from "terser";
@@ -17,19 +19,20 @@ globalThis.transpile = function (source, options = {}) {
 
   const plugins = [];
   if (moduleId && !skipModule) {
-    plugins.push(["transform-modules-amd", { noInterop: true, moduleId }]);
+    plugins.push([BabelTransformModulesAmd, { noInterop: true }]);
   }
   plugins.push([DecoratorTransforms, { runEarly: true }]);
   plugins.push(babelTransformModuleRenames);
 
   try {
-    const result = babelTransform(source, {
+    const result = transformSync(source, {
+      moduleId,
       filename,
       ast: false,
       plugins,
       presets: [
         [
-          "env",
+          BabelPresetEnv,
           {
             modules: false,
             targets: {

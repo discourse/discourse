@@ -96,6 +96,7 @@ after_initialize do
           .map { |group| BasicGroupSerializer.new(group, root: false, scope: scope).as_json },
       gamification_leaderboards:
         DiscourseGamification::GamificationLeaderboard
+          .includes(:created_by)
           .order(updated_at: :desc)
           .map { |leaderboard| AdminLeaderboardSerializer.new(leaderboard, root: false).as_json },
     }

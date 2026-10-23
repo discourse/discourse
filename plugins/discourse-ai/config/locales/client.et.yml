@@ -207,6 +207,13 @@ et:
         delete: "Kustuta"
         tools_modal:
           required: "Nõutud"
+      models:
+        name: "Nimi"
+        type: "Tüüp"
+        provider: "Teenusepakkuja"
+        edit: "Muuda"
+        types:
+          embedding: "Sängitamine"
       llms:
         display_name: "Nimi"
         provider: "Teenusepakkuja"
@@ -281,6 +288,13 @@ et:
             category: "Kategooriad"
           table:
             total_count: "Kokku"
+      ai_search:
+        related_replies:
+          one: "%{count} vastus"
+          other: "%{count} vastust"
+        tabs:
+          topics: "Teemasid"
+          messages: "Sõnumid"
       discobot_discoveries:
         legacy:
           regular_results: "Teemasid"

@@ -17,7 +17,7 @@ id:
         chat_usage:
           author: Anda
           author_others: "%{username}"
-        voice_usage:
+        live_usage:
           minutes:
             other: "%{count} menit"
         invites:

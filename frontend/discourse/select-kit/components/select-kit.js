@@ -893,7 +893,9 @@ export default class SelectKit extends Component {
 
         if (this.selectKit.options.focusAfterOnChange) {
           this._safeAfterRender(() => {
-            this._focusFilter();
+            if (!this._focusMovedAway()) {
+              this._focusFilter();
+            }
           });
         }
       }
@@ -1262,6 +1264,16 @@ export default class SelectKit extends Component {
     }
   }
 
+  // onChange may move focus on purpose, e.g. into an input it revealed
+  _focusMovedAway() {
+    const active = document.activeElement;
+    return (
+      !!active &&
+      active !== document.body &&
+      !this.selectKit.mainElement()?.contains(active)
+    );
+  }
+
   _focusFilter(forceHeader = false) {
     if (!this.selectKit.mainElement()) {
       return;
@@ -1346,17 +1358,19 @@ export default class SelectKit extends Component {
   }
 
   _deprecateMutations() {
-    this.actions ??= {};
-
-    if (!this.onChange && !this.actions.onChange) {
+    if (!this.onChange && !this.actions?.onChange) {
       this._deprecated(
         "Implicit mutation has been deprecated, please use `onChange` handler"
       );
 
-      this.actions.onChange =
-        this.onSelect ||
-        this.actions.onSelect ||
-        ((value) => this.set("value", value));
+      // `actions` may come from the class prototype, shared by all instances
+      this.actions = {
+        ...this.actions,
+        onChange:
+          this.onSelect ||
+          this.actions?.onSelect ||
+          ((value) => this.set("value", value)),
+      };
     }
   }
 

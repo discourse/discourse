@@ -6,6 +6,9 @@
 
 he:
   js:
+    dsa_notice:
+      title: "דיווח על תוכן לא חוקי"
+      email: "כתובת דוא״ל"
     mcp_oauth_client_id_metadata_policy:
       disabled: "רישום מנהלים בלבד"
     user_api_key:
@@ -3253,10 +3256,6 @@ he:
       uploading: "בהליכי העלאה…"
       show_preview: "להציג תצוגה מקדימה"
       hide_preview: "להסתיר תצוגה מקדימה"
-      switch_to_markdown: "מעבר לעורך Markdown רגיל (%{keyboardShortcut})"
-      switch_to_rich_text: "מעבר לעורך טקסט עשיר חדש (%{keyboardShortcut})"
-      switch_to_markdown_no_shortcut: "החלפה לעורך ה־Markdown הרגיל"
-      switch_to_rich_text_no_shortcut: "החלפה לעורך טקסט עשיר החדש"
       quote_post_title: "ציטוט פוסט בשלמותו"
       bold_label: "B"
       bold_title: "מודגש"
@@ -3390,6 +3389,8 @@ he:
         visit: "פתיחת קישור"
         remove_preview: "הסרת תצוגה מקדימה"
         link_copied: "הקישור הועתק!"
+      table:
+        default_heading: "עמודה %{number}"
       unsupported_token: "עורך הטקסט העשיר אינו תומך בכל היכולות בהן נעשה שימוש בפוסט הזה, מעביר אותך לעורך Markdown."
     notifications:
       tooltip:
@@ -5830,63 +5831,6 @@ he:
           other: "הקלט חייב להיות יותר מ־%{count}."
         pattern_mismatch: "נא לתאם מול התבנית המבוקשת."
         bad_input: "נא למלא קלט תקין."
-    table_builder:
-      title: "בונה טבלאות"
-      modal:
-        title: "בונה טבלאות"
-        create: "בניית טבלה"
-        help:
-          title: "באמצעות עורך גיליונות הנתונים"
-          enter_key: "Enter"
-          tab_key: "Tab"
-          new_row: "בסוף השורה כדי להוסיף שורה חדשה."
-          new_col: "בסוף עמודה כדי להוסיף עמודה חדשה"
-          options: "לחיצה ימנית על תאים מעניקה גישה לאפשרויות נוספות דרך תפריט נפתח."
-        confirm_close: "לסגור את בונה הטבלאות? שינויים שלא שמרת יאבדו."
-      edit:
-        btn_edit: "עריכת טבלה"
-        modal:
-          title: "עריכת טבלה"
-          cancel: "ביטול"
-          create: "שמירה"
-          reason: "מדוע ערכת?"
-          trigger_reason: "הוספת סיבה לעריכה"
-        default_edit_reason: "עדכון טבלה עם עורך טבלאות"
-      default_header:
-        col_1: "עמודה 1"
-        col_2: "עמודה 2"
-        col_3: "עמודה 3"
-        col_4: "עמודה 4"
-      spreadsheet:
-        no_records_found: "לא נמצאו רשומות"
-        show: "הצגה"
-        entries: "רשומות"
-        about: "על אודות"
-        prompts:
-          delete_selected_rows: "למחוק את השורות הנבחרות?"
-          delete_selected_cols: "למחוק את העמודות הנבחרות?"
-          will_destroy_merged_cells: "פעולה זו תשמיד את התאים הממוזגים באשר הם. להמשיך?"
-          will_clear_search_results: "פעולה זו תשמיד את התאים הממוזגים באשר הם. להמשיך?"
-          conflicts_with_merged_cells: "קיימת סתירה עם תא ממוזג אחר"
-        invalid_merge_props: "מאפיינים ממוזגים שגויים"
-        cells_already_merged: "התא כבר מוזג"
-        no_cells_selected: "לא נבחרו תאים"
-        context_menu:
-          row:
-            before: "הוספת שורה חדשה לפני"
-            after: "הוספת שורה חדשה אחרי"
-            delete: "מחיקת השורות הנבחרות"
-          col:
-            before: "הוספת עמודה חדשה לפני"
-            after: "הוספת עמודה חדשה אחרי"
-            delete: "מחיקת העמודות הנבחרות"
-            rename: "שינוי שם העמודה הזאת"
-          order:
-            ascending: "סדר עולה"
-            descending: "סדר יורד"
-          copy: "העתקה…"
-          paste: "הדבקה…"
-          save: "שמירה בשם…"
     powered_by_discourse: "מופעל על גבי Discourse"
     safari_15_warning: "בקרוב הדפדפן שלך לא יהיה תואם לקהילה הזו. כדי להמשיך להשתתף כאן, נא לשדרג את הדפדפן שלך או <a href='%{url}'>לקרוא על כך עוד</a>."
     filter:

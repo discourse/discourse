@@ -1470,6 +1470,28 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       assert_pm_creation_enqueued(reviewable.post.user_id, "flags_disagreed")
     end
 
+    context "when the dsa_reporting_enabled site setting is enabled" do
+      before do
+        SiteSetting.dsa_reporting_enabled = true
+        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+      end
+
+      it "includes appeal instructions in the restored post notice" do
+        reviewable = Fabricate(:reviewable_flagged_post)
+        reviewable.post.update(
+          hidden: true,
+          hidden_at: Time.zone.now,
+          hidden_reason_id: PostActionType.types[:spam],
+        )
+
+        reviewable.perform(moderator, :disagree_and_restore)
+
+        args = Jobs::SendSystemMessage.jobs.last["args"][0].with_indifferent_access
+        Jobs::SendSystemMessage.new.execute(args)
+        expect(Post.last.raw).to include("To appeal this decision, contact appeals@example.com")
+      end
+    end
+
     it "unsilences the user if they were silenced for the post" do
       reviewable = Fabricate(:reviewable_flagged_post)
       target_user = reviewable.post.user

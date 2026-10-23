@@ -102,6 +102,43 @@ module("Unit | Utility | user-search", function (hooks) {
     assert.strictEqual(results.length, 1);
   });
 
+  test("it keeps mention search results separate from other search contexts", async function (assert) {
+    const contexts = [];
+    pretender.get("/u/search/users", (request) => {
+      const context = request.queryParams.search_context;
+      contexts.push(context);
+      return response({
+        users: [{ username: context === "mention" ? "mention_user" : "user" }],
+      });
+    });
+
+    let results = await userSearch({ term: "user" });
+    assert.strictEqual(
+      results[0].username,
+      "user",
+      "an ordinary search uses the default context"
+    );
+
+    results = await userSearch({ term: "user", searchContext: "mention" });
+    assert.strictEqual(
+      results[0].username,
+      "mention_user",
+      "mention searches do not reuse ordinary search results"
+    );
+
+    results = await userSearch({ term: "user", searchContext: "mention" });
+    assert.strictEqual(
+      results[0].username,
+      "mention_user",
+      "results are cached within the mention context"
+    );
+    assert.deepEqual(
+      contexts,
+      [undefined, "mention"],
+      "only mention searches send the mention context"
+    );
+  });
+
   test("it searches the given url without reusing results cached for another one", async function (assert) {
     pretender.get("/custom/search", () =>
       response({ users: [{ username: "custom_user" }] })
