@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DiscourseURL from "discourse/lib/url";
 import DSelect from "discourse/ui-kit/select/d-select";
-import { tagItemName } from "discourse/ui-kit/select/recipes/tags/tag-select-base";
+import { tagItemName } from "discourse/ui-kit/select/recipes/tags/-internals/tag-select-base";
 import type {
   SelectItem,
   SelectValue,

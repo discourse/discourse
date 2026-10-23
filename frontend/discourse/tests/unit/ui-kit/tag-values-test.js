@@ -6,7 +6,7 @@ import {
   tagFromItem,
   tagItem,
   tagKey,
-} from "discourse/ui-kit/select/recipes/tags/tag-values";
+} from "discourse/ui-kit/select/recipes/tags/-internals/tag-values";
 
 module("Unit | ui-kit | select | recipes | tag values", function () {
   test("tagKey follows serializeTags' id rules", function (assert) {

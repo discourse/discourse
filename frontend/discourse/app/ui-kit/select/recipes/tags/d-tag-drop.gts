@@ -16,11 +16,11 @@ import {
   tagItemName,
   TagOption,
   TagSelection,
-} from "discourse/ui-kit/select/recipes/tags/tag-select-base";
+} from "discourse/ui-kit/select/recipes/tags/-internals/tag-select-base";
 import {
   ALL_TAGS_ID,
   NO_TAG_ID,
-} from "discourse/ui-kit/select/recipes/tags/tag-values";
+} from "discourse/ui-kit/select/recipes/tags/-internals/tag-values";
 import type {
   SelectItem,
   SelectLoadOptions,

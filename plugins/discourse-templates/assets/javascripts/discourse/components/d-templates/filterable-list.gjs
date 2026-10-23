@@ -9,11 +9,11 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DTextField from "discourse/ui-kit/d-text-field";
-import DTagDrop from "discourse/ui-kit/select/recipes/tags/d-tag-drop";
 import {
   ALL_TAGS_ID,
   NO_TAG_ID,
-} from "discourse/ui-kit/select/recipes/tags/tag-values";
+} from "discourse/ui-kit/select/recipes/tags/d-select-tag-filter";
+import DTagDrop from "discourse/ui-kit/select/recipes/tags/d-tag-drop";
 import { i18n } from "discourse-i18n";
 import Item from "./item.gjs";
 import TagDrop from "./tag-drop.js";

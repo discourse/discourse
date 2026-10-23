@@ -4,8 +4,11 @@ import {
   click,
   fillIn,
   find,
+  findAll,
   render,
   settled,
+  setupOnerror,
+  triggerKeyEvent,
   waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -14,6 +17,10 @@ import { resetTagSourceCache } from "discourse/lib/tag-source";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { DSelect } from "discourse/tests/helpers/d-select-helper";
+import { paste as pasteTags } from "discourse/tests/helpers/qunit-helpers";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
+import DSelectTagFilter from "discourse/ui-kit/select/recipes/tags/d-select-tag-filter";
+import DSelectTagGroup from "discourse/ui-kit/select/recipes/tags/d-select-tag-group";
 import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
 import { i18n } from "discourse-i18n";
 
@@ -446,6 +453,530 @@ module(
         tags.value,
         rows,
         "without creation permission only the existing rows are selected"
+      );
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | recipes | Unit 4 supplements",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      resetTagSourceCache();
+      this.site.set("can_create_tag", true);
+      this.siteSettings.max_tags_per_topic = 5;
+      this.siteSettings.max_tag_search_results = 5;
+      this.siteSettings.max_tag_length = 30;
+      this.siteSettings.force_lowercase_tags = true;
+      pretender.get("/tags/list.json", () =>
+        response({ list_tags: [{ id: 3, name: "excluded" }] })
+      );
+      pretender.get("/tags/filter/search", () =>
+        response({
+          results: [
+            {
+              id: 1,
+              name: "戦略",
+              original_name: "strategy",
+              text: "戦略",
+              count: 9,
+            },
+            { id: 2, name: "other", text: "other" },
+            { id: 3, name: "除外", original_name: "excluded", text: "除外" },
+          ],
+        })
+      );
+    });
+
+    test("unit 4 supplement: validates emit when its argument changes", async function (assert) {
+      const emit = tracked(undefined);
+      let error;
+      setupOnerror((e) => (error = e));
+      try {
+        await render(<template><DSelectTag @emit={{emit.value}} /></template>);
+        emit.value = "name";
+        await settled();
+        assert.true(
+          String(error?.message).includes("@emit"),
+          "the changed argument is validated"
+        );
+      } finally {
+        setupOnerror();
+      }
+    });
+
+    test("unit 4 supplement: single held stored name matches a translated row", async function (assert) {
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          <DSelectTag
+            @multiple={{false}}
+            @onChange={{onChange}}
+            @value="STRATEGY"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      const row = findAll("[role='option']").find((el) =>
+        el.textContent.includes("戦略")
+      );
+      assert
+        .dom(row)
+        .hasAttribute(
+          "aria-selected",
+          "true",
+          "stored names match regardless of case"
+        );
+      await click(row);
+      assert.false(onChange.called, "re-picking is not a change");
+    });
+
+    test("unit 4 supplement: excludes translated stored names in single mode and sends excluded ids", async function (assert) {
+      const requests = [];
+      pretender.get("/tags/filter/search", (request) => {
+        requests.push(request.queryParams);
+        return response({
+          results: [
+            { id: 3, name: "除外", original_name: "excluded" },
+            { id: 2, name: "other" },
+          ],
+        });
+      });
+      const excluded = ["EXCLUDED"];
+      await render(
+        <template>
+          <DSelectTag @exclude={{excluded}} @multiple={{false}} @value="held" />
+        </template>
+      );
+      await click(".d-select__trigger");
+      assert
+        .dom("[role='option']")
+        .exists({ count: 1 }, "the translated excluded row is absent");
+      assert.deepEqual(
+        [].concat(
+          requests.at(-1)["selected_tag_ids[]"] ??
+            requests.at(-1).selected_tag_ids
+        ),
+        ["3"],
+        "only excluded ids reach the server"
+      );
+    });
+
+    test("unit 4 supplement: duplicate creation and paste use stored names", async function (assert) {
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          <DSelectTag @allowCreate={{true}} @onChange={{onChange}} />
+        </template>
+      );
+      await click(".d-select__trigger");
+      await fillIn("[role='combobox']", "strategy");
+      assert
+        .dom("[role='option'].--create")
+        .doesNotExist("a translated existing row prevents duplicate creation");
+      await fillIn("[role='combobox']", "");
+      await pasteTags("[role='combobox']", "STRATEGY|newtag");
+      assert.deepEqual(
+        onChange.lastCall.args[0].map((tag) => [tag.id, tag.name]),
+        [
+          [1, "戦略"],
+          ["newtag", "newtag"],
+        ],
+        "paste resolves stored names and creates only unknown names"
+      );
+    });
+
+    test("unit 4 supplement: site zero blocks paste creation while keeping removal", async function (assert) {
+      this.siteSettings.max_tags_per_topic = 0;
+      const value = tracked([{ id: 2, name: "other" }]);
+      const onChange = (next) => {
+        value.value = next;
+      };
+      await render(
+        <template>
+          <DSelectTag
+            @allowCreate={{true}}
+            @onChange={{onChange}}
+            @value={{value.value}}
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      await pasteTags("[role='combobox']", "new-one|new-two");
+      assert.deepEqual(
+        value.value.map((tag) => tag.name),
+        ["other"],
+        "paste cannot create at zero"
+      );
+      await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+      await click(".d-select__chip-remove");
+      assert.deepEqual(value.value, [], "chips remain removable");
+    });
+    test("unit 4 supplement: local tag sources match held names and exclude translated rows without requests", async function (assert) {
+      const requests = sinon.spy();
+      pretender.get("/tags/filter/search", () => {
+        requests();
+        return response({ results: [] });
+      });
+      const items = [
+        { id: 1, name: "戦略", original_name: "strategy" },
+        { id: 2, name: "other" },
+        { id: 3, name: "除外", original_name: "excluded" },
+      ];
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          <DSelectTag
+            @exclude={{array "excluded"}}
+            @items={{items}}
+            @multiple={{false}}
+            @onChange={{onChange}}
+            @value="STRATEGY"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      const translated = findAll("[role='option']").find((row) =>
+        row.textContent.includes("戦略")
+      );
+      assert
+        .dom(translated)
+        .hasAttribute(
+          "aria-selected",
+          "true",
+          "a local stored name matches too"
+        );
+      assert
+        .dom("[role='option']")
+        .exists({ count: 2 }, "excluded translated rows are absent");
+      await click(translated);
+      assert.false(
+        onChange.called,
+        "re-picking a local held name is unchanged"
+      );
+      assert.false(requests.called, "a local source never searches the server");
+    });
+
+    test("unit 4 supplement: a zero site cap disables only unselected rows, including held names", async function (assert) {
+      this.siteSettings.max_tags_per_topic = 0;
+      const value = tracked(["STRATEGY"]);
+      const onChange = (next) => {
+        value.value = next;
+      };
+      await render(
+        <template>
+          <DSelectTag @onChange={{onChange}} @value={{value.value}} />
+        </template>
+      );
+      await click(".d-select__trigger");
+      const translated = findAll("[role='option']").find((row) =>
+        row.textContent.includes("戦略")
+      );
+      assert
+        .dom(translated)
+        .hasAttribute(
+          "aria-selected",
+          "true",
+          "the name matches the selected row"
+        );
+      assert
+        .dom(translated)
+        .doesNotHaveAttribute(
+          "aria-disabled",
+          "a selected row remains enabled"
+        );
+      await click(translated);
+      assert.deepEqual(value.value, [], "selected rows can be removed");
+    });
+
+    test("unit 4 supplement: multiple filters use local items, enforce the site cap and never create", async function (assert) {
+      this.siteSettings.max_tags_per_topic = 1;
+      const requests = sinon.spy();
+      pretender.get("/tags/filter/search", () => {
+        requests();
+        return response({ results: [] });
+      });
+      const items = [
+        { id: 1, name: "first" },
+        { id: 2, name: "second" },
+      ];
+      const held = [items[0]];
+      await render(
+        <template>
+          <DSelectTagFilter
+            @items={{items}}
+            @multiple={{true}}
+            @value={{held}}
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      const second = findAll("[role='option']").find((row) =>
+        row.textContent.includes("second")
+      );
+      assert
+        .dom(second)
+        .hasAttribute("aria-disabled", "true", "the site cap applies");
+      await fillIn("[role='combobox']", "unknown");
+      assert
+        .dom("[role='option'].--create")
+        .doesNotExist("filters never create");
+      assert.false(
+        requests.called,
+        "local intersections never search the server"
+      );
+    });
+
+    test("unit 4 supplement: local filter searches the whole list beyond the top-tag cap", async function (assert) {
+      this.siteSettings.max_tags_in_filter_list = 1;
+      const items = [
+        { id: 1, name: "first" },
+        { id: 2, name: "second" },
+      ];
+      await render(<template><DSelectTagFilter @items={{items}} /></template>);
+      await click(".d-select__trigger");
+      await fillIn(".d-select__panel input", "second");
+      assert
+        .dom("[role='option']")
+        .hasText(
+          "second",
+          "matching local rows are found even beyond the initial cap"
+        );
+    });
+
+    test("unit 4 supplement: group single selection clears to null and forwards blocks and identity", async function (assert) {
+      const value = tracked("Local area");
+      const requests = sinon.spy();
+      pretender.get("/tag_groups/filter/search", () => {
+        requests();
+        return response({ results: [{ name: "Server group" }] });
+      });
+      const onChange = (next) => {
+        value.value = next;
+      };
+      const items = [
+        { id: "Local area", name: "Local area" },
+        { id: "Local kind", name: "Local kind" },
+      ];
+      await render(
+        <template>
+          <DSelectTagGroup
+            @id="groups-field"
+            @identifier="groups"
+            @instanceContext={{hash field="groups"}}
+            @items={{items}}
+            @label="Groups"
+            @multiple={{false}}
+            @onChange={{onChange}}
+            @value={{value.value}}
+            @variant="button"
+          >
+            <:selection as |item|>
+              <span class="custom-selection">Selected {{item.name}}</span>
+            </:selection>
+            <:item as |item|>
+              <span class="custom-item">Pick {{item.name}}</span>
+            </:item>
+            <:footer>
+              <span class="custom-footer">Footer</span>
+            </:footer>
+          </DSelectTagGroup>
+        </template>
+      );
+      assert.dom("#groups-field").hasAttribute(
+        "aria-label",
+        i18n("d_select.label_with_value", {
+          label: "Groups",
+          value: "Local area",
+        }),
+        "id, label and held value reach the control"
+      );
+      assert
+        .dom(".custom-selection")
+        .hasText("Selected Local area", "selection block is forwarded");
+      await click(".d-select__trigger");
+      assert
+        .dom(".custom-item")
+        .exists({ count: 2 }, "local item blocks are forwarded");
+      assert.false(requests.called, "local groups never search the server");
+      assert
+        .dom(".custom-footer")
+        .hasText("Footer", "footer block is forwarded");
+      await new DSelect().close();
+      await triggerKeyEvent(".d-select__trigger", "keydown", "Backspace");
+      assert.strictEqual(value.value, null, "single group clearing emits null");
+    });
+    test("unit 4 supplement: clearing a single filter emits the all-tags shortcut", async function (assert) {
+      const value = { id: 2, name: "other", slug: "other" };
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          <DSelectTagFilter @onChange={{onChange}} @value={{value}} />
+        </template>
+      );
+      await triggerKeyEvent(".d-select__trigger", "keydown", "Backspace");
+      assert.strictEqual(
+        onChange.lastCall?.args[0],
+        "all-tags",
+        "clearing normalizes to the all-tags id"
+      );
+    });
+
+    test("unit 4 supplement: custom loaders still apply exclusion and the zero site cap", async function (assert) {
+      this.siteSettings.max_tags_per_topic = 0;
+      const load = sinon.spy(async () => ({
+        items: [
+          { id: 1, name: "戦略", original_name: "strategy" },
+          { id: 2, name: "other" },
+          { id: 3, name: "除外", original_name: "excluded" },
+        ],
+        hasMore: false,
+      }));
+      const onChange = sinon.spy();
+      const held = ["STRATEGY"];
+      await render(
+        <template>
+          <DSelectTag
+            @exclude={{array "excluded"}}
+            @load={{load}}
+            @onChange={{onChange}}
+            @value={{held}}
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      assert.true(load.called, "the override is used");
+      assert
+        .dom("[role='option']")
+        .exists({ count: 2 }, "exclusion applies to override rows");
+      const other = findAll("[role='option']").find((row) =>
+        row.textContent.includes("other")
+      );
+      assert
+        .dom(other)
+        .hasAttribute(
+          "aria-disabled",
+          "true",
+          "the zero site cap applies to override rows"
+        );
+      await click(other);
+      assert.false(
+        onChange.called,
+        "an override cannot bypass the zero site cap"
+      );
+    });
+
+    test("unit 4 supplement: local creation needs both permissions and does not recreate excluded tags", async function (assert) {
+      const items = [];
+      const excluded = ["excluded"];
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          <DSelectTag
+            @allowCreate={{true}}
+            @exclude={{excluded}}
+            @items={{items}}
+            @onChange={{onChange}}
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      await fillIn("[role='combobox']", "excluded");
+      assert
+        .dom("[role='option'].--create")
+        .doesNotExist("excluded names cannot be recreated");
+      await fillIn("[role='combobox']", "newtag");
+      assert
+        .dom("[role='option'].--create")
+        .exists("local sources can create with both permissions");
+      await click("[role='option'].--create");
+      assert.deepEqual(
+        onChange.lastCall.args[0],
+        [{ id: "newtag", name: "newtag", isNew: true }],
+        "created rows have the public tag shape"
+      );
+    });
+    test("unit 4 supplement: single creation replaces a held tag at the site cap", async function (assert) {
+      this.siteSettings.max_tags_per_topic = 1;
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          <DSelectTag
+            @allowCreate={{true}}
+            @multiple={{false}}
+            @onChange={{onChange}}
+            @value="other"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      await fillIn("[role='combobox']", "newtag");
+      assert
+        .dom("[role='option'].--create")
+        .exists("a single choice can replace its held tag");
+      await click("[role='option'].--create");
+      assert.deepEqual(
+        onChange.lastCall.args[0],
+        { id: "newtag", name: "newtag", isNew: true },
+        "one new tag object is emitted"
+      );
+    });
+
+    test("unit 4 supplement: functional local sources receive options and match stored names", async function (assert) {
+      const requests = sinon.spy();
+      pretender.get("/tags/filter/search", () => {
+        requests();
+        return response({ results: [] });
+      });
+      const rows = [
+        { id: 1, name: "戦略", original_name: "strategy" },
+        { id: 2, name: "other" },
+      ];
+      const items = sinon.spy(() => rows);
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          <DSelectTag
+            @emit="names"
+            @items={{items}}
+            @label="Functional tags"
+            @multiple={{false}}
+            @onChange={{onChange}}
+            @value="STRATEGY"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      const translated = findAll("[role='option']").find((row) =>
+        row.textContent.includes("戦略")
+      );
+      assert
+        .dom(translated)
+        .hasAttribute(
+          "aria-selected",
+          "true",
+          "functional sources match stored names"
+        );
+      assert.strictEqual(
+        items.lastCall.args[0].label,
+        "Functional tags",
+        "resolved presentation options reach the source"
+      );
+      await fillIn("[role='combobox']", "other");
+      assert
+        .dom("[role='option']")
+        .exists({ count: 1 }, "functional rows are filtered locally");
+      await click("[role='option']");
+      assert.strictEqual(
+        onChange.lastCall.args[0],
+        "other",
+        "names mode emits a single name"
+      );
+      assert.false(
+        requests.called,
+        "functional local sources never search the server"
       );
     });
   }

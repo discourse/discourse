@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import type { TemplateOnlyComponent } from "@ember/component/template-only";
+import { assert } from "@ember/debug";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { service } from "@ember/service";
@@ -10,26 +10,28 @@ import {
   cleanTagName,
   findTagIdsByNames,
   searchTags,
+  storedName,
   type TagSearchContext,
   type TagSearchResult,
 } from "discourse/lib/tag-source";
 import type Site from "discourse/models/site";
 import type SiteSettingsService from "discourse/services/site-settings";
-import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import type { SelectResolvedOptions } from "discourse/ui-kit/select/-internals/engine/customizations";
 import DSelect, {
   type SelectPasteContext,
 } from "discourse/ui-kit/select/d-select";
 import {
+  TagOption,
+  TagSelection,
+} from "discourse/ui-kit/select/recipes/tags/-internals/tag-select-base";
+import {
   createTagItem,
   emitTags,
-  type HeldTag,
   tagItem,
   type TagKey,
   tagKey,
   type TagObject,
-} from "discourse/ui-kit/select/recipes/tags/tag-values";
+} from "discourse/ui-kit/select/recipes/tags/-internals/tag-values";
 import type {
   SelectItem,
   SelectLoadOptions,
@@ -42,7 +44,7 @@ type SelectSignature =
   DSelect extends Component<infer Signature> ? Signature : never;
 
 /** Shared tag recipe arguments; consumers keep their original held tag shapes. */
-export interface TagSelectSignature {
+export interface SelectTagBaseSignature {
   Args: {
     /** Recipe family used by select customizations and rollout styles. */
     kind: string;
@@ -55,35 +57,37 @@ export interface TagSelectSignature {
     /** Call-site state exposed to customizations. */
     instanceContext?: object;
     /** Controlled held tags, rendered without a resolver. */
-    tags?: readonly HeldTag[];
+    value?: readonly (TagObject | string)[] | TagObject | string | null;
     /** Tags excluded from search and included in server selection rules. */
-    blockedTags?: readonly HeldTag[];
+    exclude?: readonly (TagObject | string)[];
     /** Category whose tag restrictions apply. */
     categoryId?: number;
     /** Bypass input restrictions when listing tags. */
-    everyTag?: boolean;
+    ignoreRestrictions?: boolean;
     /** Exclude synonym rows. */
     excludeSynonyms?: boolean;
     /** Exclude tags that have synonyms. */
-    excludeHasSynonyms?: boolean;
+    excludeTagsWithSynonyms?: boolean;
     /** Opt in to creation, also requiring the site's permission. Defaults to false. */
     allowCreate?: boolean;
-    /** Whether creation needs an explicit opt-in or follows the site's permission. */
-    creationPolicy?: "explicit" | "permitted";
-    /** Suppress creation in fields that only accept existing tags. */
-    preventCreate?: boolean;
-    /** Held tags omitted from the visible selection. */
-    hiddenValues?: readonly HeldTag[];
-    /** Prefer recently used tags for an empty search when enabled by the site. */
-    prioritizeRecentTags?: boolean;
-    /** Selection cap; zero prevents additions. Overrides the site default. */
-    maximum?: number;
-    /** Ignore the site default cap. An explicit maximum still applies. */
-    unlimitedTagCount?: boolean;
+    /** Emit stored names instead of tag objects. */
+    emit?: "names";
+    /** Multiple selection defaults to true. */
+    multiple?: boolean;
+    /** Prefer recently used tags when the site enables suggestions. */
+    suggestRecent?: boolean;
+    /** Omitted uses the site limit; false removes the cap. */
+    maximum?: number | false;
+    /** Temporary compatibility aliases for legacy customizations and CSS. */
+    legacyKind?: SelectSignature["Args"]["legacyKind"];
+    /** Trigger presentation. */
+    variant?: SelectSignature["Args"]["variant"];
     /** Advisory minimum, also shown as persistent guidance. */
     minimum?: number;
     /** Receives selected tags in the consumer's shape. */
-    onChange: (tags: TagObject[]) => void;
+    onChange?: (
+      tags: TagObject[] | TagObject | string[] | string | null
+    ) => void;
     /** Optional local source forwarded to the engine. */
     items?: SelectSignature["Args"]["items"];
     /** Optional source override forwarded to the engine. */
@@ -109,73 +113,8 @@ export interface TagSelectSignature {
   Blocks: Pick<SelectSignature["Blocks"], "item" | "selection" | "footer">;
 }
 
-/** Narrows optional source counts at the rendering boundary. */
-function tagCount(item: SelectItem): number {
-  return typeof item.count === "number" ? item.count : 0;
-}
-
-/** Narrows the optional synonym target supplied by tag search. */
-function synonymName(item: SelectItem): string | undefined {
-  const target = item.target_tag;
-  return typeof target === "object" &&
-    target !== null &&
-    "name" in target &&
-    typeof target.name === "string"
-    ? target.name
-    : undefined;
-}
-
-/** An item's display name, narrowed for templates. */
-export function tagItemName(item: SelectItem): string {
-  return typeof item.name === "string" ? item.name : String(item.name ?? "");
-}
-
-/** Narrows optional action icons at the rendering boundary. */
-function actionIcon(item: SelectItem): string | undefined {
-  return typeof item.icon === "string" ? item.icon : undefined;
-}
-
-/** Default option content shared with forwarding recipes. */
-export const TagOption: TemplateOnlyComponent<{
-  Args: {
-    /** The tag row, including its optional count and synonym target. */
-    item: SelectItem;
-  };
-}> = <template>
-  {{#if @item.onSelect}}
-    {{#if (actionIcon @item)}}{{dIcon (actionIcon @item)}}{{/if}}
-    {{tagItemName @item}}
-  {{else if @item.isNew}}
-    {{i18n "d_select.create_item" label=@item.name}}
-  {{else}}
-    {{dDiscourseTag @item.name noHref=true tagName="span"}}
-    {{#if @item.count}}
-      <span aria-hidden="true" class="discourse-tag-count">x
-        {{tagCount @item}}</span>
-      <span class="sr-only">{{i18n
-          "tagging.tag_count_hidden"
-          count=(tagCount @item)
-        }}</span>
-    {{/if}}
-    {{#if @item.target_tag}}
-      <span class="synonym-hint"><span aria-hidden="true">→</span>
-        {{synonymName @item}}</span>
-    {{/if}}
-  {{/if}}
-</template>;
-
-/** Default held-tag content shared with forwarding recipes. */
-export const TagSelection: TemplateOnlyComponent<{
-  Args: {
-    /** The held tag supplied by the engine. */
-    item: SelectItem;
-  };
-}> = <template>
-  {{dDiscourseTag @item.name noHref=true tagName="span"}}
-</template>;
-
-/** Domain behavior shared by multi-tag selects. */
-export default class TagSelectBase extends Component<TagSelectSignature> {
+/** Stored-name selection and explicit creation shared by the new tag recipes. */
+export default class SelectTagBase extends Component<SelectTagBaseSignature> {
   /** TODO(typescript-pending): Remove the extension when Site types serialized permissions. */
   @service declare site: Site & { can_create_tag: boolean };
 
@@ -214,25 +153,35 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
     }
   });
 
-  #loadedItems: SelectItem[] = [];
   #resolutionKey: string | undefined;
+  @tracked private _loadedItems: SelectItem[] = [];
 
   @tracked private _resolvedNames: { key: string; ids: number[] } | undefined;
 
   @tracked private _validation = new Map<string, TagSearchResult>();
 
   get #creationAllowed() {
+    return this.args.allowCreate && this.site.can_create_tag && !this.#zeroCap;
+  }
+
+  get #tags(): readonly (TagObject | string)[] {
+    const value = this.args.value;
+    return Array.isArray(value)
+      ? value
+      : value
+        ? [value as TagObject | string]
+        : [];
+  }
+
+  get #zeroCap() {
     return (
-      !this.args.preventCreate &&
-      (this.args.creationPolicy === "permitted"
-        ? this.args.allowCreate || this.site.can_create_tag
-        : this.args.allowCreate && this.site.can_create_tag)
+      this.args.maximum === undefined &&
+      this.siteSettings.max_tags_per_topic === 0
     );
   }
 
-  get #tags() {
-    const hidden = new Set((this.args.hiddenValues ?? []).map(tagKey));
-    return (this.args.tags ?? []).filter((tag) => !hidden.has(tagKey(tag)));
+  get multiple() {
+    return this.args.multiple !== false;
   }
 
   @cached
@@ -240,14 +189,18 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
     const ids = new Set<number>();
     const names = new Set<string>();
     for (const tag of [
-      ...(this.args.tags ?? []),
-      ...(this.args.blockedTags ?? []),
+      ...(this.multiple ? this.#tags : []),
+      ...(this.args.exclude ?? []),
     ]) {
       const key = tagKey(tag);
       if (typeof key === "number") {
         ids.add(key);
       } else if (typeof tag !== "object" || !tag.isNew) {
-        names.add(tagItem(tag).name.toLowerCase());
+        names.add(
+          storedName(
+            typeof tag === "string" ? { name: tag } : tag
+          ).toLowerCase()
+        );
       }
     }
     const sortedNames = [...names].sort();
@@ -265,11 +218,11 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
       this._resolvedNames?.key === key ? this._resolvedNames.ids : [];
     return {
       categoryId: this.args.categoryId,
-      everyTag: this.args.everyTag,
+      everyTag: this.args.ignoreRestrictions,
       excludeSynonyms: this.args.excludeSynonyms,
-      excludeHasSynonyms: this.args.excludeHasSynonyms,
+      excludeHasSynonyms: this.args.excludeTagsWithSynonyms,
       prioritizeRecentTags:
-        this.args.prioritizeRecentTags &&
+        this.args.suggestRecent &&
         this.siteSettings.prioritize_recently_used_tags
           ? true
           : undefined,
@@ -278,20 +231,43 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
   }
 
   get maximum() {
-    return (
-      this.args.maximum ??
-      (this.args.unlimitedTagCount
-        ? undefined
-        : this.siteSettings.max_tags_per_topic)
-    );
+    return this.#zeroCap
+      ? false
+      : (this.args.maximum ?? this.siteSettings.max_tags_per_topic);
   }
 
   get value() {
-    return this.#tags.map(tagKey);
+    assert(
+      'DSelectTag: @emit must be "names" or undefined',
+      this.args.emit === undefined || this.args.emit === "names"
+    );
+    const keys = this.#tags.map((tag) => this.#itemForTag(tag).id);
+    return this.multiple ? keys : (keys[0] ?? null);
   }
 
   get valueItems() {
-    return this.#tags.map((tag) => ({ ...tagItem(tag) }));
+    return this.#tags.map((tag) => this.#itemForTag(tag));
+  }
+
+  get sourceLoad() {
+    return this.args.load ||
+      !this.args.items ||
+      typeof this.args.items === "function"
+      ? this.load
+      : undefined;
+  }
+
+  get localItems(): SelectSignature["Args"]["items"] {
+    if (this.sourceLoad || !this.args.items) {
+      return undefined;
+    }
+    return (options) => {
+      const items =
+        typeof this.args.items === "function"
+          ? this.args.items(options)
+          : (this.args.items ?? []);
+      return this.#prepareItems(items ?? []);
+    };
   }
 
   get guidance() {
@@ -318,17 +294,36 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
     );
   }
 
+  get #excludedNames() {
+    return new Set(
+      (this.args.exclude ?? []).map((tag) =>
+        storedName(typeof tag === "string" ? { name: tag } : tag).toLowerCase()
+      )
+    );
+  }
+
   @action
   async load(filter: string, opts: SelectLoadOptions) {
     if (this.args.load) {
       const result = await this.args.load(filter, opts);
+      const items = this.#prepareItems(
+        Array.isArray(result) ? result : result.items
+      );
       if (!opts.signal?.aborted && !this.isDestroying) {
-        const items = Array.isArray(result) ? result : result.items;
-        this.#loadedItems = opts.offset
-          ? [...this.#loadedItems, ...items]
+        this._loadedItems = opts.offset
+          ? [...this._loadedItems, ...items]
           : items;
       }
-      return result;
+      return Array.isArray(result) ? items : { ...result, items };
+    }
+    if (typeof this.args.items === "function" && opts.options) {
+      const items = this.#prepareItems(this.args.items(opts.options) ?? []);
+      this._loadedItems = items;
+      return items.filter((item) =>
+        String(item.name ?? "")
+          .toLowerCase()
+          .includes(filter.toLowerCase())
+      );
     }
     const context: TagSearchContext = opts.context ?? {};
     const result = await searchTags(filter, {
@@ -348,19 +343,10 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
       validation.set(this.#validationKey(context, ""), result);
       this._validation = validation;
     }
-    const blocked = new Set(
-      (this.args.blockedTags ?? []).map((tag) =>
-        tagItem(tag).name.toLowerCase()
-      )
-    );
-    const items = result.items
-      .filter((item) => !blocked.has(item.name.toLowerCase()))
-      .map((item) =>
-        this.maximum === 0 ? { ...item, disabled: true } : { ...item }
-      );
+    const items = this.#prepareItems(result.items.map((item) => ({ ...item })));
     if (!opts.signal?.aborted && !this.isDestroying) {
-      this.#loadedItems = opts.offset
-        ? [...this.#loadedItems, ...items]
+      this._loadedItems = opts.offset
+        ? [...this._loadedItems, ...items]
         : items;
     }
     return items;
@@ -376,22 +362,23 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
     const validation = this._validation.get(
       this.#validationKey(this.loadContext, name)
     );
-    const maximum = this.maximum === 0 ? 0 : options.maximum;
+    const maximum = this.#zeroCap ? 0 : options.maximum;
     return !!(
       this.#creationAllowed &&
       name &&
-      validation &&
-      !validation.forbidden &&
+      (validation || this.args.items || this.args.load) &&
+      !validation?.forbidden &&
+      !this.#excludedNames.has(name.toLowerCase()) &&
       (typeof maximum !== "number" || this.#tags.length < maximum) &&
-      !items.some((item) =>
-        [item.name, item.text].some(
-          (label) =>
-            typeof label === "string" &&
-            label.toLowerCase() === name.toLowerCase()
-        )
+      !items.some(
+        (item) =>
+          this.#storedItemName(item).toLowerCase() === name.toLowerCase()
       ) &&
       !this.#tags.some(
-        (tag) => tagItem(tag).name.toLowerCase() === name.toLowerCase()
+        (tag) =>
+          storedName(
+            typeof tag === "string" ? { name: tag } : tag
+          ).toLowerCase() === name.toLowerCase()
       )
     );
   }
@@ -413,24 +400,20 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
     const items =
       (typeof this.args.items === "function"
         ? this.args.items(options)
-        : this.args.items) ?? this.#loadedItems;
-    const blocked = new Set(
-      (this.args.blockedTags ?? []).map((tag) =>
-        tagItem(tag).name.toLowerCase()
-      )
-    );
+        : this.args.items) ?? this._loadedItems;
     return names.flatMap((name) => {
-      if (blocked.has(name.toLowerCase())) {
+      if (this.#excludedNames.has(name.toLowerCase())) {
         return [];
       }
       const existing = items.find(
-        (item) => tagItemName(item).toLowerCase() === name.toLowerCase()
+        (item) =>
+          this.#storedItemName(item).toLowerCase() === name.toLowerCase()
       );
       if (existing) {
         return [existing];
       }
       const cleaned = cleanTagName(name, this.siteSettings);
-      return this.#creationAllowed && cleaned && this.maximum !== 0
+      return this.#creationAllowed && cleaned && !this.#zeroCap
         ? [this.createItem(cleaned)]
         : [];
     });
@@ -438,19 +421,69 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
 
   @action
   onChange(ids: SelectValue, items: SelectItem | SelectItem[] | null) {
-    if (!Array.isArray(ids) || !Array.isArray(items)) {
+    const keys = (
+      Array.isArray(ids) ? ids : ids === null ? [] : [ids]
+    ) as TagKey[];
+    const rows = !items ? [] : Array.isArray(items) ? items : [items];
+    const heldKeys = new Set(this.valueItems.map((item) => item.id));
+    if (this.#zeroCap && keys.some((id) => !heldKeys.has(id))) {
       return;
     }
-    const heldKeys = new Set(this.value);
-    if (this.maximum === 0 && ids.some((id) => !heldKeys.has(id as TagKey))) {
-      return;
+    const held = this.#tags.map((tag) => {
+      const item = this.#itemForTag(tag);
+      return typeof tag === "object" ? tag : { ...item, name: tag };
+    });
+    const tags = emitTags(keys, {
+      held,
+      items: rows as unknown as TagObject[],
+    });
+    const result = this.args.emit === "names" ? tags.map(storedName) : tags;
+    this.args.onChange?.(this.multiple ? result : (result[0] ?? null));
+  }
+
+  #itemForTag(
+    tag: TagObject | string
+  ): SelectItem & { id: TagKey; name: string } {
+    if (typeof tag === "string") {
+      const items =
+        Array.isArray(this.args.items) && !this.args.load
+          ? this.args.items
+          : this._loadedItems;
+      const loaded = items.find(
+        (row) => this.#storedItemName(row).toLowerCase() === tag.toLowerCase()
+      );
+      if (loaded) {
+        return loaded as SelectItem & { id: TagKey; name: string };
+      }
     }
-    this.args.onChange(
-      emitTags(ids as TagKey[], {
-        held: this.#tags,
-        items: items as unknown as TagObject[],
-      })
+    return { ...(typeof tag === "object" ? tag : {}), ...tagItem(tag) };
+  }
+
+  #prepareItems(items: SelectItem[]) {
+    const excluded = this.#excludedNames;
+    return items
+      .filter((item) => !excluded.has(this.#storedItemName(item).toLowerCase()))
+      .map((item) =>
+        this.#zeroCap && !this.#isHeld(item)
+          ? { ...item, disabled: true }
+          : item
+      );
+  }
+
+  #isHeld(item: SelectItem) {
+    return this.#tags.some((tag) =>
+      typeof tag === "string"
+        ? tag.toLowerCase() === this.#storedItemName(item).toLowerCase()
+        : tagKey(tag) === item.id
     );
+  }
+
+  #storedItemName(item: SelectItem) {
+    return storedName({
+      name: String(item.name ?? ""),
+      original_name:
+        typeof item.original_name === "string" ? item.original_name : undefined,
+    });
   }
 
   #validationKey(context: TagSearchContext, term: string) {
@@ -471,18 +504,19 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
       @identifier={{@identifier}}
       @instanceContext={{@instanceContext}}
       @invalid={{@invalid}}
-      @items={{@items}}
+      @items={{this.localItems}}
       @kind={{@kind}}
       @kindContext={{@kindContext}}
       @kindOptions={{@kindOptions}}
       @label={{@label}}
       @labelField="name"
-      @load={{this.load}}
+      @legacyKind={{@legacyKind}}
+      @load={{this.sourceLoad}}
       @loadContext={{this.loadContext}}
       @maximum={{this.maximum}}
       @maxVisibleChips={{@maxVisibleChips}}
       @minimum={{@minimum}}
-      @multiple={{true}}
+      @multiple={{this.multiple}}
       @onChange={{this.onChange}}
       @parsePaste={{this.parsePaste}}
       @placeholder={{if
@@ -492,6 +526,7 @@ export default class TagSelectBase extends Component<TagSelectSignature> {
       }}
       @value={{this.value}}
       @valueItems={{this.valueItems}}
+      @variant={{@variant}}
       {{this.resolveHeldNames}}
     >
       <:item as |item options|>

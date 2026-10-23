@@ -4,7 +4,7 @@ import TagSelectBase, {
   TagOption,
   TagSelection,
   type TagSelectSignature,
-} from "discourse/ui-kit/select/recipes/tags/tag-select-base";
+} from "discourse/ui-kit/select/recipes/tags/-internals/tag-select-base";
 
 /** A controlled tag chooser with creation disabled unless explicitly allowed. */
 interface DTagChooserSignature extends Omit<TagSelectSignature, "Args"> {

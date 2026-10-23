@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { searchTagGroups } from "discourse/lib/tag-source";
 import type SiteSettingsService from "discourse/services/site-settings";
 import DSelect from "discourse/ui-kit/select/d-select";
-import { tagItemName } from "discourse/ui-kit/select/recipes/tags/tag-select-base";
+import { tagItemName } from "discourse/ui-kit/select/recipes/tags/-internals/tag-select-base";
 import type {
   SelectLoadOptions,
   SelectValue,

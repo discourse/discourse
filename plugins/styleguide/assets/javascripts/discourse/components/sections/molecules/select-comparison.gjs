@@ -9,15 +9,15 @@ import TagDropdown from "discourse/select-kit/components/tag-dropdown";
 import TagGroupChooserControl from "discourse/select-kit/components/tag-group-chooser";
 import TagsIntersectionChooser from "discourse/select-kit/components/tags-intersection-chooser";
 import DMiniTagChooser from "discourse/ui-kit/select/recipes/tags/d-mini-tag-chooser";
+import {
+  ALL_TAGS_ID,
+  NO_TAG_ID,
+} from "discourse/ui-kit/select/recipes/tags/d-select-tag-filter";
 import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
 import DTagDrop from "discourse/ui-kit/select/recipes/tags/d-tag-drop";
 import DTagDropdown from "discourse/ui-kit/select/recipes/tags/d-tag-dropdown";
 import DTagGroupChooser from "discourse/ui-kit/select/recipes/tags/d-tag-group-chooser";
 import DTagsIntersectionChooser from "discourse/ui-kit/select/recipes/tags/d-tags-intersection-chooser";
-import {
-  ALL_TAGS_ID,
-  NO_TAG_ID,
-} from "discourse/ui-kit/select/recipes/tags/tag-values";
 import { i18n } from "discourse-i18n";
 
 function initialTags() {

@@ -7,11 +7,11 @@ import TagSelectBase, {
   TagOption,
   TagSelection,
   type TagSelectSignature,
-} from "discourse/ui-kit/select/recipes/tags/tag-select-base";
+} from "discourse/ui-kit/select/recipes/tags/-internals/tag-select-base";
 import type {
   HeldTag,
   TagObject,
-} from "discourse/ui-kit/select/recipes/tags/tag-values";
+} from "discourse/ui-kit/select/recipes/tags/-internals/tag-values";
 
 /** Intersection filters retain tag objects and additional name-only tags. */
 interface DTagsIntersectionChooserSignature extends Omit<

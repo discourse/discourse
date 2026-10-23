@@ -7,7 +7,7 @@ import {
   searchTags,
 } from "discourse/lib/tag-source";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { tagKey } from "discourse/ui-kit/select/recipes/tags/tag-values";
+import { tagKey } from "discourse/ui-kit/select/recipes/tags/-internals/tag-values";
 
 module("Unit | Utility | serialize-tags", function (hooks) {
   setupTest(hooks);

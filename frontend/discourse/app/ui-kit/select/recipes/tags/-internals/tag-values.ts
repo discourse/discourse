@@ -8,6 +8,7 @@ export const NO_TAG_ID = "no-tags";
 export interface TagObject {
   id?: number | string | null;
   name: string;
+  original_name?: string;
   isNew?: boolean;
 }
 

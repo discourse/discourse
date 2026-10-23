@@ -10,6 +10,7 @@ import {
   findAll,
   render,
   settled,
+  setupOnerror,
   triggerKeyEvent,
   typeIn,
 } from "@ember/test-helpers";
@@ -22,6 +23,12 @@ import GroupManageTags from "discourse/templates/group/manage/tags";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import DMiniTagChooser from "discourse/ui-kit/select/recipes/tags/d-mini-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
+import DSelectTagFilter, {
+  ALL_TAGS_ID,
+  NO_TAG_ID,
+} from "discourse/ui-kit/select/recipes/tags/d-select-tag-filter";
+import DSelectTagGroup from "discourse/ui-kit/select/recipes/tags/d-select-tag-group";
 import DTagChooser from "discourse/ui-kit/select/recipes/tags/d-tag-chooser";
 import DTagDrop from "discourse/ui-kit/select/recipes/tags/d-tag-drop";
 import DTagDropdown from "discourse/ui-kit/select/recipes/tags/d-tag-dropdown";
@@ -692,6 +699,538 @@ module(
         routeToUrl.lastCall.args[0],
         "/tag/beta/2/edit/general"
       );
+    });
+  }
+);
+
+/** A controlled `DSelectTag`, as a call site would own it. */
+class SelectTagHost extends Component {
+  @tracked
+  value = this.args.value ?? (this.args.multiple === false ? null : []);
+
+  @action
+  onChange(value) {
+    this.args.onChange?.(value);
+    this.value = value;
+  }
+
+  <template>
+    <DSelectTag
+      @allowCreate={{@allowCreate}}
+      @emit={{@emit}}
+      @exclude={{@exclude}}
+      @excludeTagsWithSynonyms={{@excludeTagsWithSynonyms}}
+      @ignoreRestrictions={{@ignoreRestrictions}}
+      @legacyKind={{@legacyKind}}
+      @maximum={{@maximum}}
+      @multiple={{@multiple}}
+      @onChange={{this.onChange}}
+      @suggestRecent={{@suggestRecent}}
+      @value={{this.value}}
+      @variant={{@variant}}
+    />
+  </template>
+}
+
+module(
+  "Integration | ui-kit | select | recipes | DSelectTag",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.siteSettings.tagging_enabled = true;
+      this.siteSettings.max_tags_per_topic = 5;
+      this.siteSettings.max_tag_search_results = 5;
+      getOwner(this).lookup("service:site").set("can_create_tag", true);
+    });
+
+    test("select tag: its kind is select-tag and its legacy class defaults to tag-chooser", async function (assert) {
+      stubSearch();
+      withPluginApi((api) =>
+        api.registerValueTransformer("select-customizations", ({ value }) => {
+          value.forKind("select-tag", (spec) =>
+            spec.row((row) => row.classes.push("x-select-tag"))
+          );
+        })
+      );
+
+      await render(
+        <template>
+          <div class="default"><SelectTagHost /></div>
+          <div class="mini"><SelectTagHost
+              @legacyKind="mini-tag-chooser"
+            /></div>
+        </template>
+      );
+
+      assert.dom(".default .d-select").hasClass("tag-chooser");
+      assert.dom(".mini .d-select").hasClass("mini-tag-chooser");
+      await click(".default .d-select__trigger");
+      assert.true(optionNamed("bug").classList.contains("x-select-tag"));
+    });
+
+    test("select tag: emits tag objects and accepts held names", async function (assert) {
+      stubSearch();
+      const onChange = sinon.spy();
+      const held = ["ui"];
+
+      await render(
+        <template>
+          <SelectTagHost @onChange={{onChange}} @value={{held}} />
+        </template>
+      );
+      assert.dom(".d-select__chip").includesText("ui", "a held name renders");
+
+      await click(".d-select__trigger");
+      await click(optionNamed("bug"));
+
+      const emitted = onChange.lastCall.args[0];
+      assert.deepEqual(
+        emitted.map((tag) => tag.name),
+        ["ui", "bug"],
+        "names in order"
+      );
+      assert.strictEqual(emitted[1].id, 1, "the picked tag is its row object");
+    });
+
+    test("select tag: @emit=names emits stored names, never a translation", async function (assert) {
+      stubSearch([
+        {
+          id: 1,
+          name: "戦略",
+          text: "戦略",
+          original_name: "strategy",
+          count: 3,
+        },
+        { id: 2, name: "ui", text: "ui", count: 2 },
+      ]);
+      const onChange = sinon.spy();
+
+      await render(
+        <template>
+          <SelectTagHost @emit="names" @onChange={{onChange}} />
+        </template>
+      );
+      await click(".d-select__trigger");
+      await click(optionNamed("戦略"));
+      await click(optionNamed("ui"));
+
+      assert.deepEqual(onChange.lastCall.args[0], ["strategy", "ui"]);
+    });
+
+    test("select tag: an unknown @emit value throws in development", async function (assert) {
+      stubSearch();
+      let error;
+      setupOnerror((e) => (error = e));
+
+      await render(<template><SelectTagHost @emit="name" /></template>);
+
+      assert.true(
+        String(error?.message).includes("@emit"),
+        "the assertion names the argument"
+      );
+      setupOnerror();
+    });
+
+    test("select tag: creation needs both @allowCreate and the site permission", async function (assert) {
+      stubSearch();
+      const site = getOwner(this).lookup("service:site");
+
+      await render(
+        <template>
+          <div class="allowed"><SelectTagHost @allowCreate={{true}} /></div>
+          <div class="default"><SelectTagHost /></div>
+        </template>
+      );
+
+      await click(".allowed .d-select__trigger");
+      await fillIn(".allowed [role='combobox']", "newtag");
+      assert
+        .dom("[role='option'].--create")
+        .exists("allowed by the call site and the site");
+      await triggerKeyEvent(".allowed [role='combobox']", "keydown", "Escape");
+
+      await click(".default .d-select__trigger");
+      await fillIn(".default [role='combobox']", "newtag");
+      assert
+        .dom("[role='option'].--create")
+        .doesNotExist("the site permission alone is not enough");
+      await triggerKeyEvent(".default [role='combobox']", "keydown", "Escape");
+
+      site.set("can_create_tag", false);
+      await click(".allowed .d-select__trigger");
+      await fillIn(".allowed [role='combobox']", "othertag");
+      assert
+        .dom("[role='option'].--create")
+        .doesNotExist("the call site alone is not enough");
+    });
+
+    test("select tag: the site tag limit caps by default and false lifts it", async function (assert) {
+      stubSearch();
+      this.siteSettings.max_tags_per_topic = 1;
+      const held = [{ id: 2, name: "ui" }];
+
+      await render(
+        <template>
+          <div class="capped"><SelectTagHost @value={{held}} /></div>
+          <div class="open"><SelectTagHost
+              @maximum={{false}}
+              @value={{held}}
+            /></div>
+        </template>
+      );
+
+      await click(".capped .d-select__trigger");
+      assert
+        .dom(optionNamed("bug"))
+        .hasAttribute("aria-disabled", "true", "at the site limit");
+      await triggerKeyEvent(".capped [role='combobox']", "keydown", "Escape");
+
+      await click(".open .d-select__trigger");
+      assert
+        .dom(optionNamed("bug"))
+        .doesNotHaveAttribute("aria-disabled", "no cap with false");
+    });
+
+    test("select tag: a site limit of 0 blocks additions but keeps removal; an explicit 0 does not", async function (assert) {
+      stubSearch();
+      this.siteSettings.max_tags_per_topic = 0;
+      const onChange = sinon.spy();
+      const held = [{ id: 2, name: "ui" }];
+
+      await render(
+        <template>
+          <div class="site"><SelectTagHost
+              @allowCreate={{true}}
+              @onChange={{onChange}}
+              @value={{held}}
+            /></div>
+          <div class="explicit"><SelectTagHost
+              @maximum={{0}}
+              @value={{held}}
+            /></div>
+        </template>
+      );
+
+      await click(".site .d-select__trigger");
+      assert
+        .dom(optionNamed("bug"))
+        .hasAttribute("aria-disabled", "true", "no additions");
+      await fillIn(".site [role='combobox']", "newtag");
+      assert.dom("[role='option'].--create").doesNotExist("no creation");
+      await triggerKeyEvent(".site [role='combobox']", "keydown", "Escape");
+
+      await click(".site .d-select__chip-remove");
+      assert.deepEqual(
+        onChange.lastCall.args[0],
+        [],
+        "the held tag is removed"
+      );
+
+      await click(".explicit .d-select__trigger");
+      assert
+        .dom(optionNamed("bug"))
+        .doesNotHaveAttribute("aria-disabled", "an explicit 0 means no cap");
+    });
+
+    test("select tag: single mode holds one tag, matched by name, and does not send it as selected", async function (assert) {
+      const requests = stubSearch();
+      const onChange = sinon.spy();
+
+      await render(
+        <template>
+          <SelectTagHost
+            @exclude={{array "perf"}}
+            @multiple={{false}}
+            @onChange={{onChange}}
+            @value="ui"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      assert
+        .dom(optionNamed("ui"))
+        .hasAttribute("aria-selected", "true", "the name matches the row");
+      assert.strictEqual(
+        optionNamed("perf"),
+        undefined,
+        "an excluded tag is not offered"
+      );
+
+      await click(optionNamed("ui"));
+      assert.false(onChange.called, "re-picking the held tag is not a change");
+
+      await click(".d-select__trigger");
+      await click(optionNamed("bug"));
+      assert.strictEqual(onChange.lastCall.args[0].id, 1, "one tag object");
+
+      const selected = [].concat(requests.at(-1)?.selected_tag_ids ?? []);
+      assert.false(selected.includes("2"), "the held tag is not sent");
+    });
+
+    test("select tag: @exclude still sends the excluded ids", async function (assert) {
+      const requests = stubSearch();
+      const excluded = [{ id: 3, name: "perf" }];
+
+      await render(
+        <template><SelectTagHost @exclude={{excluded}} /></template>
+      );
+      await click(".d-select__trigger");
+
+      assert.strictEqual(optionNamed("perf"), undefined, "not offered");
+      assert.true(
+        [].concat(requests.at(-1).selected_tag_ids ?? []).includes("3"),
+        "sent as selected so the server fills the page with usable tags"
+      );
+    });
+
+    test("select tag: search options map onto the request", async function (assert) {
+      this.siteSettings.prioritize_recently_used_tags = true;
+      const requests = stubSearch();
+
+      await render(
+        <template>
+          <div class="restricted"><SelectTagHost /></div>
+          <div class="all"><SelectTagHost
+              @excludeTagsWithSynonyms={{true}}
+              @ignoreRestrictions={{true}}
+              @suggestRecent={{true}}
+            /></div>
+        </template>
+      );
+
+      await click(".restricted .d-select__trigger");
+      assert.strictEqual(requests.at(-1).filterForInput, "true");
+      await triggerKeyEvent(
+        ".restricted [role='combobox']",
+        "keydown",
+        "Escape"
+      );
+
+      await click(".all .d-select__trigger");
+      const last = requests.at(-1);
+      assert.strictEqual(last.filterForInput, undefined, "all tags");
+      assert.strictEqual(last.excludeHasSynonyms, "true");
+      assert.strictEqual(last.prioritizeRecentTags, "true");
+    });
+
+    test("select tag: @variant=button renders a button trigger", async function (assert) {
+      stubSearch();
+
+      await render(
+        <template>
+          <SelectTagHost @multiple={{false}} @variant="button" />
+        </template>
+      );
+
+      assert.dom(".d-select__trigger").doesNotHaveClass("--typeahead");
+      await click(".d-select__trigger");
+      assert.dom(".d-select__panel input").exists("the search is in the panel");
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | recipes | DSelectTagFilter",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.siteSettings.tagging_enabled = true;
+      this.siteSettings.max_tags_per_topic = 5;
+      this.siteSettings.max_tags_in_filter_list = 30;
+      this.siteSettings.max_tag_search_results = 5;
+      this.siteSettings.tags_sort_alphabetically = false;
+      getOwner(this).lookup("service:site").set("top_tags", TOP_TAGS);
+      this.routeToUrl = sinon.stub(DiscourseURL, "routeToUrl");
+      this.routeTo = sinon.stub(DiscourseURL, "routeTo");
+    });
+
+    test("select tag filter: exports the shortcut values", function (assert) {
+      assert.strictEqual(ALL_TAGS_ID, "all-tags");
+      assert.strictEqual(NO_TAG_ID, "no-tags");
+    });
+
+    test("select tag filter: single mode keeps the legacy drop classes", async function (assert) {
+      const tag = { id: 1, name: "alpha", slug: "alpha" };
+
+      await render(
+        <template>
+          <div class="none"><DSelectTagFilter /></div>
+          <div class="tagged"><DSelectTagFilter @value={{tag}} /></div>
+        </template>
+      );
+
+      assert.dom(".none .d-select").hasClass("tag-drop");
+      assert.dom(".none .d-select").hasClass("tag_all");
+      assert.dom(".tagged .d-select").hasClass("tag-alpha");
+    });
+
+    test("select tag filter: shortcuts first, then top tags; picks emit rows and never navigate", async function (assert) {
+      const onChange = sinon.spy();
+      const tag = { id: 1, name: "alpha", slug: "alpha" };
+
+      await render(
+        <template>
+          <DSelectTagFilter @onChange={{onChange}} @value={{tag}} />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      const names = findAll("[role='option']").map((row) =>
+        row.textContent.trim()
+      );
+      assert.true(names[0].includes(i18n("tagging.selector_remove_filter")));
+      assert.true(names[1].includes(i18n("tagging.selector_no_tags")));
+      assert.true(names[2].includes("zeta"));
+
+      await click(optionNamed("zeta"));
+      assert.deepEqual(
+        onChange.lastCall.args[0],
+        { id: 3, name: "zeta", slug: "zeta", count: 1 },
+        "the full row"
+      );
+      assert.false(this.routeToUrl.called, "no navigation");
+      assert.false(this.routeTo.called, "no navigation");
+    });
+
+    test("select tag filter: the shortcuts emit their ids", async function (assert) {
+      const onChange = sinon.spy();
+      const tag = { id: 1, name: "alpha", slug: "alpha" };
+
+      await render(
+        <template>
+          <DSelectTagFilter @onChange={{onChange}} @value={{tag}} />
+        </template>
+      );
+      await click(".d-select__trigger");
+      await click(optionNamed(i18n("tagging.selector_remove_filter")));
+      assert.strictEqual(onChange.lastCall.args[0], ALL_TAGS_ID);
+
+      await click(".d-select__trigger");
+      await click(optionNamed(i18n("tagging.selector_no_tags")));
+      assert.strictEqual(onChange.lastCall.args[0], NO_TAG_ID);
+    });
+
+    test("select tag filter: a tag named none reads as untagged", async function (assert) {
+      const untagged = { name: "none" };
+
+      await render(
+        <template><DSelectTagFilter @value={{untagged}} /></template>
+      );
+
+      assert
+        .dom(".d-select")
+        .hasAttribute("data-name", i18n("tagging.selector_no_tags"));
+    });
+
+    test("select tag filter: multiple mode holds tags in order, by identity, with the intersection classes", async function (assert) {
+      const requests = stubSearch();
+      const onChange = sinon.spy();
+      const main = { id: 2, name: "ui", slug: "ui" };
+      const held = [main];
+
+      await render(
+        <template>
+          <DSelectTagFilter
+            @multiple={{true}}
+            @onChange={{onChange}}
+            @value={{held}}
+          />
+        </template>
+      );
+
+      assert.dom(".d-select").hasClass("tags-intersection-chooser");
+      assert.dom(".d-select").hasClass("mini-tag-chooser");
+
+      await click(".d-select__trigger");
+      assert.strictEqual(
+        optionNamed(i18n("tagging.selector_no_tags")),
+        undefined,
+        "no shortcuts"
+      );
+      assert.strictEqual(
+        requests.at(-1).filterForInput,
+        "true",
+        "searches tags usable on topics"
+      );
+
+      await click(optionNamed("bug"));
+      const emitted = onChange.lastCall.args[0];
+      assert.strictEqual(emitted[0], main, "the held tag keeps its identity");
+      assert.strictEqual(emitted[1].name, "bug");
+      assert.false(this.routeTo.called, "no navigation");
+    });
+
+    test("select tag filter: @items filters a local list", async function (assert) {
+      const requests = stubSearch();
+      const items = [
+        { id: 7, name: "local-one" },
+        { id: 8, name: "local-two" },
+      ];
+
+      await render(<template><DSelectTagFilter @items={{items}} /></template>);
+      await click(".d-select__trigger");
+
+      assert.notStrictEqual(optionNamed("local-one"), undefined);
+      assert.strictEqual(requests.length, 0, "no search request");
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | recipes | DSelectTagGroup",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.siteSettings.tagging_enabled = true;
+      this.siteSettings.max_tag_search_results = 5;
+      pretender.get("/tag_groups/filter/search", () =>
+        response({
+          results: [
+            { name: "Kind", tags: [] },
+            { name: "Area", tags: [] },
+          ],
+        })
+      );
+    });
+
+    test("select tag group: names in, names out, with the legacy classes", async function (assert) {
+      const onChange = sinon.spy();
+      const held = ["Area"];
+
+      await render(
+        <template>
+          <DSelectTagGroup @onChange={{onChange}} @value={{held}} />
+        </template>
+      );
+
+      assert.dom(".d-select").hasClass("tag-group-chooser");
+      assert.dom(".d-select").hasClass("tag-chooser");
+      await click(".d-select__trigger");
+      await click(optionNamed("Kind"));
+
+      assert.deepEqual(onChange.lastCall.args[0], ["Area", "Kind"]);
+    });
+
+    test("select tag group: single mode emits one name", async function (assert) {
+      const onChange = sinon.spy();
+
+      await render(
+        <template>
+          <DSelectTagGroup
+            @multiple={{false}}
+            @onChange={{onChange}}
+            @value="Area"
+          />
+        </template>
+      );
+      await click(".d-select__trigger");
+      await click(optionNamed("Kind"));
+
+      assert.strictEqual(onChange.lastCall.args[0], "Kind");
     });
   }
 );

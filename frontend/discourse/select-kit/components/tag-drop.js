@@ -11,15 +11,15 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
-import {
-  ALL_TAGS_ID,
-  NO_TAG_ID,
-} from "discourse/ui-kit/select/recipes/tags/tag-values";
 import { i18n } from "discourse-i18n";
 import TagDropHeader from "./tag-drop/tag-drop-header.gjs";
 import TagRow from "./tag-row.gjs";
 
-export { ALL_TAGS_ID, NO_TAG_ID };
+/** Shortcut for clearing the tag filter. */
+export const ALL_TAGS_ID = "all-tags";
+
+/** Shortcut for topics without tags. */
+export const NO_TAG_ID = "no-tags";
 
 export const NONE_TAG = "none";
 
