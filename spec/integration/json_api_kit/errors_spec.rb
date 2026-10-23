@@ -734,7 +734,7 @@ RSpec.describe "a refused request" do
 
       it "raises a split order error" do
         expect { document }.to raise_error(
-          JsonApiKit::Pagination::PagePerOwner::SplitOrder,
+          JsonApiKit::Adapters::ActiveRecord::Pagination::PagePerOwner::SplitOrder,
           /edited_at/,
         )
       end

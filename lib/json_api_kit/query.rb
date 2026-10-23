@@ -2,13 +2,10 @@
 
 module JsonApiKit
   class Query
-    def initialize(resource, request, scoped_to: nil)
+    def initialize(resource, request)
       @resource = resource
       @request = request
-      @scoped_to = scoped_to
     end
-
-    def rows = page.rows
 
     def records
       @records ||=
@@ -25,45 +22,19 @@ module JsonApiKit
 
     private
 
-    attr_reader :resource, :request, :scoped_to
+    attr_reader :resource, :request
 
     delegate :guardian, to: :request, private: true
     delegate :type, :namespace, to: :resource, private: true
 
-    def page = @page ||= scoping.page(request.page).paginate(scope, order:, limits:, anchors:)
-
-    def limits = resource.page_limits
-
-    def anchors = resource.anchors(guardian)
-
-    def scope = columns.apply(scoping.apply(filtered_scope))
-
-    def scoping = @scoping ||= Scoping.for(scoped_to)
-
-    def columns
-      fields.columns.with(*order.columns, *owner_keys, *scoping.pairing_keys, primary_key)
-    end
-
-    def owner_keys = relationships.map { schema.owner_key(it.name.to_sym) }
-
-    def primary_key = schema.primary_key
-
-    def schema = @schema ||= resource.schema
-
     def fields = @fields ||= resource.fields(request.fields[type], guardian:)
 
     def sideloads
-      @sideloads ||= Sideloads.for(relationships, paths:, rows:, request:, schema:)
+      @sideloads ||= Sideloads.for(relationships, paths:, rows:, request:, resource:)
     end
 
     def relationships = @relationships ||= fields.relationships.pick(paths.relationship_names)
 
     def paths = @paths ||= resource.allow(request.including)
-
-    def filtered_scope = resource.apply_filters(available_scope, request.filtering)
-
-    def available_scope = request.scope(from: resource.scope_for(guardian))
-
-    def order = @order ||= resource.order(request.ordering)
   end
 end

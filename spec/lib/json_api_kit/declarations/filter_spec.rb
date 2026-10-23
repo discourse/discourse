@@ -7,6 +7,15 @@ RSpec.describe JsonApiKit::Declarations::Filter do
   fab!(:dropped_topic) { Fabricate(:topic, title: "The rows it leaves behind") }
 
   let(:scope) { Topic.all }
+  let(:adapter) do
+    Class
+      .new(JsonApiKit::Resource) do
+        model Topic
+        type :topics
+      end
+      .new(guardian: Guardian.new)
+      .adapter
+  end
 
   describe "#name" do
     subject(:name) { filter.name }
@@ -17,7 +26,7 @@ RSpec.describe JsonApiKit::Declarations::Filter do
   end
 
   describe "#apply" do
-    subject(:kept_ids) { filter.apply(scope, matching_topic.title).map(&:id) }
+    subject(:kept_ids) { filter.apply(scope, matching_topic.title, adapter:).map(&:id) }
 
     it "keeps the rows its declared condition allows" do
       expect(kept_ids).to contain_exactly(matching_topic.id)
@@ -26,16 +35,8 @@ RSpec.describe JsonApiKit::Declarations::Filter do
     context "when the filter declares no condition of its own" do
       subject(:filter) { described_class.new(:title) }
 
-      let(:equality) { instance_spy(described_class::Equality) }
-
-      before do
-        allow(described_class::Equality).to receive(:new).with("title").and_return(equality)
-      end
-
-      it "compares the column of its own name to the value" do
-        filter.apply(scope, matching_topic.title)
-
-        expect(equality).to have_received(:call).with(scope, matching_topic.title)
+      it "uses the adapter's equality filter" do
+        expect(kept_ids).to contain_exactly(matching_topic.id)
       end
     end
   end

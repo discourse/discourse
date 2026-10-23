@@ -120,7 +120,9 @@ RSpec.describe JsonApiKit::Document do
       before do
         allow(resource).to receive(:new).and_return(instance)
         allow(JsonApiKit::Request::Input::Collection).to receive(:new).and_call_original
-        allow(JsonApiKit::Query::Collection).to receive(:new).and_call_original
+        allow(JsonApiKit::Adapters::ActiveRecord::Query::Collection).to receive(
+          :new,
+        ).and_call_original
         document
       end
 
@@ -133,7 +135,7 @@ RSpec.describe JsonApiKit::Document do
       end
 
       it "uses the same instance for execution" do
-        expect(JsonApiKit::Query::Collection).to have_received(:new).with(
+        expect(JsonApiKit::Adapters::ActiveRecord::Query::Collection).to have_received(:new).with(
           instance,
           an_instance_of(JsonApiKit::Request::Collection),
           scoped_to:,
@@ -159,7 +161,9 @@ RSpec.describe JsonApiKit::Document do
 
       before do
         allow(users_resource).to receive(:new).and_return(users)
-        allow(JsonApiKit::Query::Collection).to receive(:new).and_call_original
+        allow(JsonApiKit::Adapters::ActiveRecord::Query::Collection).to receive(
+          :new,
+        ).and_call_original
         document
       end
 
@@ -168,10 +172,10 @@ RSpec.describe JsonApiKit::Document do
       end
 
       it "queries the related records through that instance" do
-        expect(JsonApiKit::Query::Collection).to have_received(:new).with(
+        expect(JsonApiKit::Adapters::ActiveRecord::Query::Collection).to have_received(:new).with(
           users,
           an_instance_of(JsonApiKit::Request::Collection),
-          scoped_to: an_instance_of(JsonApiKit::Scoping::PerOwner),
+          scoped_to: an_instance_of(JsonApiKit::Adapters::ActiveRecord::Scoping::PerOwner),
         )
       end
 
@@ -217,7 +221,9 @@ RSpec.describe JsonApiKit::Document do
       before do
         allow(resource).to receive(:new).and_return(instance)
         allow(JsonApiKit::Request::Input::Individual).to receive(:new).and_call_original
-        allow(JsonApiKit::Query::Individual).to receive(:new).and_call_original
+        allow(JsonApiKit::Adapters::ActiveRecord::Query::Individual).to receive(
+          :new,
+        ).and_call_original
         document
       end
 
@@ -230,7 +236,7 @@ RSpec.describe JsonApiKit::Document do
       end
 
       it "uses the same instance for execution" do
-        expect(JsonApiKit::Query::Individual).to have_received(:new).with(
+        expect(JsonApiKit::Adapters::ActiveRecord::Query::Individual).to have_received(:new).with(
           instance,
           an_instance_of(JsonApiKit::Request::Individual),
         )

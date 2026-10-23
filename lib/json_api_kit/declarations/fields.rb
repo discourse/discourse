@@ -12,27 +12,26 @@ module JsonApiKit
         new(names, **declarations)
       end
 
-      def initialize(names, guardian:, attributes:, relationships:, schema:, type:)
+      def initialize(names, guardian:, attributes:, relationships:, type:)
         @names = names
         @guardian = guardian
         @declared_attributes = attributes
         @declared_relationships = relationships
-        @schema = schema
         @type = type
         verify_field_names
       end
 
       def attributes
-        @attributes ||= Attributes.new(pick(declared_attributes), guardian:, schema:, type:)
+        @attributes ||= Attributes.new(pick(declared_attributes), guardian:, type:)
       end
 
       def relationships = Relationships.new(pick(declared_relationships))
 
-      def columns = attributes.columns
+      def all? = false
 
       private
 
-      attr_reader :names, :guardian, :declared_attributes, :declared_relationships, :schema, :type
+      attr_reader :names, :guardian, :declared_attributes, :declared_relationships, :type
 
       def pick(fields) = readable(fields).select { names.include?(it.name) }
 

@@ -7,10 +7,13 @@ module JsonApiKit
 
       def initialize(name, &condition)
         @name = name.to_s
-        @condition = condition || Equality.new(@name)
+        @condition = condition
       end
 
-      def apply(scope, value) = condition.call(scope, value)
+      def apply(scope, value, adapter:)
+        return condition.call(scope, value) if condition
+        adapter.filter(scope, name, value)
+      end
 
       private
 
