@@ -36,8 +36,6 @@ module PluginGem
 
   GEMS_DIR = File.expand_path("../vendor/plugin-gems", __dir__)
   LOCKFILE = File.join(GEMS_DIR, "Gemfile.lock")
-  # Gems for a plugin's standalone tooling, never needed at boot.
-  TOOLING_GROUPS = %i[development test]
   # Checksums cover a gem server, and a path is the plugin's own code. A git
   # gem keeps its version across commits, so a lock can't pin it, and a
   # bundler plugin's source isn't verified at all.
@@ -158,6 +156,8 @@ module PluginGem
   end
 
   def self.plugin_dependencies(dsl, gemfiles)
+    excluded_groups = %i[development]
+    excluded_groups << :test unless Rails.env.test?
     # Nested declarations use their top-level Gemfile's lock.
     gemfiles.to_h do |gemfile|
       dsl.eval_gemfile(gemfile)
@@ -170,7 +170,7 @@ module PluginGem
         raise "Plugin #{dependency.gemfile.dirname.basename}'s Gemfile declares #{dependency.name} from #{dependency.source.class.name.demodulize.downcase}; a plugin's gems must come from the application's gem sources or a path"
       end
       dependencies.select! do |dependency|
-        dependency.should_include? && (dependency.groups - TOOLING_GROUPS).any?
+        dependency.should_include? && (dependency.groups - excluded_groups).any?
       end
       [gemfile, dependencies]
     end

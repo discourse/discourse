@@ -241,23 +241,33 @@ RSpec.describe PluginGem do
     expect(installed).to be_empty
   end
 
-  it "ignores tooling groups and dependencies for other platforms when selecting lock pins" do
+  it "loads test dependencies only in the test environment and ignores development dependencies" do
     add_plugin(
       "one",
       <<~GEMFILE,
       gem "beta"
       gem "not-on-rubygems", group: :development
-      gem "neither", groups: %i[test development]
+      gem "shared", group: :test
     GEMFILE
       lock: {
         "beta" => "1.0.0",
         "not-on-rubygems" => "1.0.0",
-        "neither" => "1.0.0",
+        "shared" => "1.0.0",
       },
     )
 
+    allow(Rails.env).to receive(:test?).and_return(false)
+    boot
+    expect(activated).to eq(%w[beta-1.0.0])
+
+    allow(Rails.env).to receive(:test?).and_return(true)
+    boot
+    expect(activated).to eq(%w[beta-1.0.0 shared-1.0.0])
+  end
+
+  it "ignores dependencies for other platforms when selecting lock pins" do
     add_plugin(
-      "two",
+      "one",
       %(gem "alpha", platforms: :jruby\n),
       lock: {
         "alpha" => "1.1.0",
@@ -266,7 +276,7 @@ RSpec.describe PluginGem do
     )
 
     boot
-    expect(installed).to eq(%w[beta-1.0.0])
+    expect(installed).to be_empty
   end
 
   it "resolves a path gem's dependencies and activates it from its directory" do
