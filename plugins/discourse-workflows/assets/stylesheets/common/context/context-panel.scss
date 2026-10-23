@@ -237,19 +237,7 @@
   }
 
   &__editor-codemirror {
-    border: 1px solid;
-    border-color: light-dark(var(--primary-100), var(--primary-200));
-    border-radius: var(--d-border-radius);
-    overflow: hidden;
-    font-size: var(--font-down-1);
-
-    .cm-editor {
-      max-height: 50vh;
-    }
-
-    &--read-only .cm-editor {
-      background-color: light-dark(var(--primary-very-low), var(--primary-100));
-    }
+    max-height: 50vh;
   }
 
   &__editor-read {
@@ -265,13 +253,6 @@
     word-break: break-word;
     max-height: 50vh;
     overflow: auto;
-  }
-
-  &__editor-loading {
-    padding: var(--space-2);
-    color: var(--primary-medium);
-    font-style: italic;
-    font-size: var(--font-down-1);
   }
 
   &__editor-error,

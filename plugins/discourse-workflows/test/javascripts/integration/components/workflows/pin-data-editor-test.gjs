@@ -6,13 +6,9 @@ import PinDataEditor from "discourse/plugins/discourse-workflows/admin/component
 import WorkflowEditorSession from "discourse/plugins/discourse-workflows/admin/lib/workflows/editor-session";
 
 async function setBuffer(element, value) {
-  const editorContent = element.querySelector(
-    ".workflows-context-panel__editor .cm-content"
-  );
-  if (!editorContent) {
-    throw new Error("CodeMirror content not found");
-  }
-  const view = editorContent.cmTile?.root?.view;
+  const view = element.querySelector(
+    ".workflows-context-panel__editor .codemirror-editor"
+  )?.codemirrorView;
   if (!view) {
     throw new Error("CodeMirror view not found");
   }

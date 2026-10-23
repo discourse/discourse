@@ -139,6 +139,9 @@ table.group-reports {
   .editor-panel {
     flex: 1 0 50%;
 
+    // Long lines scroll inside the editor instead of squeezing the schema.
+    min-width: 0;
+
     .code-editor {
       --min-height: unset;
       min-height: var(--min-height);
@@ -151,14 +154,6 @@ table.group-reports {
       @include viewport.until(sm) {
         --min-height: 300px;
       }
-    }
-
-    .cm-editor {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
     }
   }
 
@@ -614,7 +609,7 @@ table.group-reports {
     // the grippie lets the editor grow; give it a sensible starting height
     .code-editor {
       width: 100%;
-      min-height: 200px;
+      height: 200px;
 
       > .loading-container {
         width: 100%;
