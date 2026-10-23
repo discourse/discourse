@@ -8,6 +8,7 @@ import { AUTO_GROUPS } from "discourse/lib/constants";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
+import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import DAccessControl from "discourse/ui-kit/d-access-control";
 import DAccessControlField from "discourse/ui-kit/d-access-control-field";
@@ -896,6 +897,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
   });
 
   test("allows an owner manager to remove their own owner row", async function (assert) {
+    this.currentUser = logIn(this.owner);
     const currentUserId = this.currentUser.id;
     const coOwnerId = currentUserId + 1;
     const state = controlledState([
@@ -1128,8 +1130,19 @@ module("Integration | Component | DAccessControlField", function (hooks) {
   setupRenderingTest(hooks);
 
   test("binds a named field and updates FormKit without an onChange callback", async function (assert) {
+    this.currentUser = logIn(this.owner);
     this.site.groups = GROUPS;
-    this.data = { permissions: [] };
+    this.data = {
+      permissions: [
+        {
+          type: "user",
+          id: this.currentUser.id,
+          permission: "owner",
+          username: this.currentUser.username,
+          display_name: this.currentUser.username,
+        },
+      ],
+    };
     this.onSubmit = sinon.spy();
     pretender.post("/access-control/evaluate.json", (request) => {
       const payload = JSON.parse(request.requestBody);
@@ -1139,7 +1152,7 @@ module("Integration | Component | DAccessControlField", function (hooks) {
         "evaluates the target class"
       );
       assert.strictEqual(
-        payload.new_acl[0].id,
+        payload.new_acl.find((entry) => entry.type === "group").id,
         42,
         "evaluates the named field value"
       );
@@ -1167,7 +1180,7 @@ module("Integration | Component | DAccessControlField", function (hooks) {
 
     const data = this.onSubmit.firstCall.args[0];
     assert.strictEqual(
-      data.permissions[0].permission,
+      data.permissions.find((entry) => entry.type === "group").permission,
       "edit",
       "submits the updated permissions"
     );
@@ -1178,6 +1191,7 @@ module("Integration | Component | DAccessControlField", function (hooks) {
   });
 
   test("reports confirmed access loss and allows submission", async function (assert) {
+    this.currentUser = logIn(this.owner);
     const dialog = getOwner(this).lookup("service:dialog");
     sinon.stub(dialog, "confirm").resolves(true);
 
@@ -1191,7 +1205,17 @@ module("Integration | Component | DAccessControlField", function (hooks) {
       })
     );
 
-    this.data = { acl: [] };
+    this.data = {
+      acl: [
+        {
+          type: "user",
+          id: this.currentUser.id,
+          permission: "owner",
+          username: this.currentUser.username,
+          display_name: this.currentUser.username,
+        },
+      ],
+    };
     this.onChange = sinon.spy();
     this.onSubmit = sinon.spy();
     this.onAccessLossConfirmed = sinon.spy();
