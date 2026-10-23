@@ -736,8 +736,8 @@ importers:
         specifier: ^7.0.1
         version: 7.0.1(@babel/core@7.29.7(supports-color@10.2.2))(ember-source@7.3.0(patch_hash=aa23a9187235d165dee5e57e37f5310baafb88869fb08c274dca853d6b804201)(@glimmer/component@2.1.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)
       ember-exam:
-        specifier: ^10.2.0
-        version: 10.2.0(@glint/template@1.9.0)(ember-qunit@9.2.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2))(qunit@3.0.0)(supports-color@10.2.2))(ember-source@7.3.0(patch_hash=aa23a9187235d165dee5e57e37f5310baafb88869fb08c274dca853d6b804201)(@glimmer/component@2.1.1(supports-color@10.2.2))(supports-color@10.2.2))(qunit@3.0.0)(supports-color@10.2.2)
+        specifier: ^10.2.1
+        version: 10.2.1(@glint/template@1.9.0)(ember-qunit@9.2.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2))(qunit@3.0.0)(supports-color@10.2.2))(ember-source@7.3.0(patch_hash=aa23a9187235d165dee5e57e37f5310baafb88869fb08c274dca853d6b804201)(@glimmer/component@2.1.1(supports-color@10.2.2))(supports-color@10.2.2))(qunit@3.0.0)(supports-color@10.2.2)
       ember-modifier:
         specifier: ^4.3.0
         version: 4.3.0(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2)
@@ -3360,14 +3360,6 @@ packages:
     resolution: {integrity: sha512-KMReFUr0B4t+D+OBkjR3KYqvocp2XaSzO55UcB6mgQMd3KbcE+mWTyvVV7D/zsdEbNnV6acZUutkiHQXvTr1Rw==}
     engines: {node: '>= 8'}
 
-  aproba@2.1.0:
-    resolution: {integrity: sha512-tLIEcj5GuR2RSTnxNKdkK0dJ/GrC7P38sUkiDmDuHfsHmbagTFAxDVIBltoklXEVIQ/f14IL8IMJ5pn9Hez1Ew==}
-
-  are-we-there-yet@4.0.2:
-    resolution: {integrity: sha512-ncSWAawFhKMJDTdoAeOV+jyW1VCMj5QIAwULIBV0SSR7B/RLPPEQiknKcg/RIIZlUQrxELpsxMiTUoAQ4sIUyg==}
-    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
-    deprecated: This package is no longer supported.
-
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
 
@@ -3917,10 +3909,6 @@ packages:
   color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
 
-  color-support@1.1.3:
-    resolution: {integrity: sha512-qiBjkpbMLO/HL68y+lh4q0/O1MZFj2RX6X/KmMa3+gJD3z+WwI1ZzDHysvqHGS3mP6mznPckpXmw1nI9cJjyRg==}
-    hasBin: true
-
   colord@2.9.3:
     resolution: {integrity: sha512-jeC1axXpnb0/2nn/Y1LPuLdgXBLH7aDcHu4KEKfqw3CUhX7ZpfBSlPKyqXE6btIgEzfWtrX3/tyBCaCvXvMkOw==}
 
@@ -3983,9 +3971,6 @@ packages:
   connect@3.7.0:
     resolution: {integrity: sha512-ZqRXc+tZukToSNmh5C2iWMSoV3X1YUcPbqEM4DkEG5tNQXrQUZCNVGGv3IuicnkMtPfGf3Xtp8WCXs295iQ1pQ==}
     engines: {node: '>= 0.10.0'}
-
-  console-control-strings@1.1.0:
-    resolution: {integrity: sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==}
 
   console-ui@3.1.2:
     resolution: {integrity: sha512-+5j3R4wZJcEYZeXk30whc4ZU/+fWW9JMTNntVuMYpjZJ9n26Cxr0tUBXco1NRjVZRpRVvZ4DDKKKIHNYeUG9Dw==}
@@ -4477,8 +4462,8 @@ packages:
   ember-estree@0.9.0:
     resolution: {integrity: sha512-CExL0d6FbbffZaQkD0+zA5PaIgle3fbpzapuLVQ+QZfI2KLalnhuof0e85Zvfy/fh8+q9liw7dqUhQX4gibMBA==}
 
-  ember-exam@10.2.0:
-    resolution: {integrity: sha512-nLoBWQwa6icrFUvlCr+Hik9RnwrnbXYRNVcFF1l2FczyZOWkODwDxwwoArwSuCBWAnBqh53WMzoAUlkqqNqa4Q==}
+  ember-exam@10.2.1:
+    resolution: {integrity: sha512-LyvR5V2xosvUhthH2RJRwtBL/QM7YVtDPPI3JbTLjpNBWMNAAMx7w2SPKJDxVHqwHo2vhCi3pX8bScZQoWwGxw==}
     engines: {node: '>= 18'}
     peerDependencies:
       ember-qunit: '*'
@@ -5046,11 +5031,6 @@ packages:
     resolution: {integrity: sha512-trLf4SzuuUxfusZADLINj+dE8clK1frKdmqiJNb1Es75fmI5oY6X2mxLVUciLLjxqw/xr72Dhy+lER6dGd02FQ==}
     engines: {node: '>=10'}
 
-  gauge@5.0.2:
-    resolution: {integrity: sha512-pMaFftXPtiGIHCJHdcUUx9Rby/rFT/Kkt3fIIGCs+9PMDIljSyRiqraTlxNtBReJRDfUefpa263RQ3vnp5G/LQ==}
-    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
-    deprecated: This package is no longer supported.
-
   generator-function@2.0.1:
     resolution: {integrity: sha512-SFdFmIJi+ybC0vjlHN0ZGVGHc3lgE0DxPAT0djjVg+kjOnSqclqmj0KQ7ykTOLP6YxoqOvuAODGdcHJn+43q3g==}
     engines: {node: '>= 0.4'}
@@ -5224,9 +5204,6 @@ packages:
   has-tostringtag@1.0.2:
     resolution: {integrity: sha512-NqADB8VjPFLM2V0VvHUewwwsw0ZWBaIdgo+ieHtK3hasLz4qeCRjYcqfB6AQrBggRKppKF8L52/VqdVsO47Dlw==}
     engines: {node: '>= 0.4'}
-
-  has-unicode@2.0.1:
-    resolution: {integrity: sha512-8Rf9Y83NBReMnx0gFzA8JImQACstCYWUplepDa9xprwwtmgEZUF0h/i5xSA625zB/I37EtrswSST6OXxwaaIJQ==}
 
   hash-for-dep@1.5.2:
     resolution: {integrity: sha512-+kJRJpgO+V8x6c3UQuzO+gzHu5euS8HDOIaIUsOPdQrVu7ajNKkMykbSC8O0VX3LuRnUNf4hHE0o/rJ+nB8czw==}
@@ -6409,11 +6386,6 @@ packages:
     resolution: {integrity: sha512-9qny7Z9DsQU8Ou39ERsPU4OZQlSTP47ShQzuKZ6PRXpYLtIFgl/DEBYEXKlvcEa+9tHVcK8CF81Y2V72qaZhWA==}
     engines: {node: '>=18'}
 
-  npmlog@7.0.1:
-    resolution: {integrity: sha512-uJ0YFk/mCQpLBt+bxN88AKd+gyqZvZDbtiNxk6Waqcj2aPRyfVx8ITawkyQynxUagInjdYT1+qj4NfA5KJJUxg==}
-    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
-    deprecated: This package is no longer supported.
-
   nwsapi@2.2.27:
     resolution: {integrity: sha512-gQPNF78qebCQ6tvVFBYrvJdBNOrYZm90ZlXgpIFm06p6qHDHq/XC4TnJftN6OMbxVE0UTBAoRgcsDeJBBooITw==}
 
@@ -7234,9 +7206,6 @@ packages:
   serve-static@2.2.1:
     resolution: {integrity: sha512-xRXBn0pPqQTVQiC8wyQrKs2MOlX24zQ0POGaj0kultvoOCstBQM5yvOhAVSUwOMjQtTvsPWoNCHfPGwaaQJhTw==}
     engines: {node: '>= 18'}
-
-  set-blocking@2.0.0:
-    resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
 
   set-function-length@1.2.2:
     resolution: {integrity: sha512-pgRc4hJ4/sNjWCSS9AmnS40x3bNMDTknHgL5UaMBTMyJnU90EgWh1Rz+MC9eFu4BuN/UwZjKQuY/1v3rM7HMfg==}
@@ -8195,9 +8164,6 @@ packages:
     resolution: {integrity: sha512-Tb2FUhB4vUsGQlfSquQLYkApkuPAFQXGFzxWKHHumVz2dK+X1RUm/HnID4+TfIGYJ1kTcwOaCk/buYCEJr6YjQ==}
     engines: {node: '>=20.11'}
     hasBin: true
-
-  wide-align@1.1.5:
-    resolution: {integrity: sha512-eDMORYaPNZ4sQIuuYPDHdQvf4gyCF9rEEV/yPxGfwPkRodwEgiMUUXTx/dex+Me0wxx53S+NgUHaP7y3MGlDmg==}
 
   wildcard@1.1.2:
     resolution: {integrity: sha512-DXukZJxpHA8LuotRwL0pP1+rS6CS7FF2qStDDE1C7DDg2rLud2PXRMuEDYIPhgEezwnlHNL4c+N6MfMTjCGTng==}
@@ -11067,10 +11033,6 @@ snapshots:
       normalize-path: 3.0.0
       picomatch: 2.3.2
 
-  aproba@2.1.0: {}
-
-  are-we-there-yet@4.0.2: {}
-
   argparse@2.0.1: {}
 
   argparse@3.0.2: {}
@@ -11833,8 +11795,6 @@ snapshots:
 
   color-name@1.1.4: {}
 
-  color-support@1.1.3: {}
-
   colord@2.9.3: {}
 
   colors@1.0.3: {}
@@ -11903,8 +11863,6 @@ snapshots:
       utils-merge: 1.0.1
     transitivePeerDependencies:
       - supports-color
-
-  console-control-strings@1.1.0: {}
 
   console-ui@3.1.2:
     dependencies:
@@ -12486,7 +12444,7 @@ snapshots:
       content-tag: 4.2.1
       oxc-parser: 0.130.0
 
-  ember-exam@10.2.0(@glint/template@1.9.0)(ember-qunit@9.2.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2))(qunit@3.0.0)(supports-color@10.2.2))(ember-source@7.3.0(patch_hash=aa23a9187235d165dee5e57e37f5310baafb88869fb08c274dca853d6b804201)(@glimmer/component@2.1.1(supports-color@10.2.2))(supports-color@10.2.2))(qunit@3.0.0)(supports-color@10.2.2):
+  ember-exam@10.2.1(@glint/template@1.9.0)(ember-qunit@9.2.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2))(qunit@3.0.0)(supports-color@10.2.2))(ember-source@7.3.0(patch_hash=aa23a9187235d165dee5e57e37f5310baafb88869fb08c274dca853d6b804201)(@glimmer/component@2.1.1(supports-color@10.2.2))(supports-color@10.2.2))(qunit@3.0.0)(supports-color@10.2.2):
     dependencies:
       '@babel/core': 7.29.7(supports-color@10.2.2)
       chalk: 5.6.2
@@ -12499,7 +12457,6 @@ snapshots:
       execa: 8.0.1
       fs-extra: 11.4.0
       js-yaml: 4.3.2
-      npmlog: 7.0.1
       qunit: 3.0.0
       rimraf: 5.0.10
       semver: 7.8.5
@@ -13342,17 +13299,6 @@ snapshots:
 
   fuse.js@7.1.0: {}
 
-  gauge@5.0.2:
-    dependencies:
-      aproba: 2.1.0
-      color-support: 1.1.3
-      console-control-strings: 1.1.0
-      has-unicode: 2.0.1
-      signal-exit: 4.1.0
-      string-width: 4.2.3
-      strip-ansi: 6.0.1
-      wide-align: 1.1.5
-
   generator-function@2.0.1: {}
 
   gensync@1.0.0-beta.2: {}
@@ -13544,8 +13490,6 @@ snapshots:
   has-tostringtag@1.0.2:
     dependencies:
       has-symbols: 1.1.0
-
-  has-unicode@2.0.1: {}
 
   hash-for-dep@1.5.2(supports-color@10.2.2):
     dependencies:
@@ -14713,13 +14657,6 @@ snapshots:
       path-key: 4.0.0
       unicorn-magic: 0.3.0
 
-  npmlog@7.0.1:
-    dependencies:
-      are-we-there-yet: 4.0.2
-      console-control-strings: 1.1.0
-      gauge: 5.0.2
-      set-blocking: 2.0.0
-
   nwsapi@2.2.27: {}
 
   object-assign@4.1.1: {}
@@ -15634,8 +15571,6 @@ snapshots:
       send: 1.2.1(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
-
-  set-blocking@2.0.0: {}
 
   set-function-length@1.2.2:
     dependencies:
@@ -16812,10 +16747,6 @@ snapshots:
       isexe: 4.0.0
 
   why-is-node-running@3.2.1: {}
-
-  wide-align@1.1.5:
-    dependencies:
-      string-width: 4.2.3
 
   wildcard@1.1.2: {}
 
