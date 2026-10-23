@@ -179,7 +179,12 @@ class Admin::SiteTextsController < Admin::AdminController
 
   def dismiss_outdated
     locale = fetch_locale(params[:locale])
-    override = TranslationOverride.find_by(locale: locale, translation_key: params[:id])
+    override =
+      if theme_site_text?
+        ThemeTranslationManager.find_site_text(params[:id], locale:)&.db_record
+      else
+        TranslationOverride.find_by(locale: locale, translation_key: params[:id])
+      end
 
     raise Discourse::NotFound if override.blank?
 

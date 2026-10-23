@@ -9353,6 +9353,7 @@ en:
                 one: "at least %{count} tag is required"
                 other: "at least %{count} tags are required"
             string:
+              invalid_translation_identifier: "Use at most 80 characters, starting with a lowercase letter and containing only lowercase letters, numbers, and underscores."
               too_short:
                 one: "must be at least %{count} character"
                 other: "must be at least %{count} characters"
@@ -10409,17 +10410,21 @@ en:
         theme: "Theme or component"
         all_themes: "All site texts"
         theme_disabled: "Disabled"
+        usable_keys: "Translation keys"
+        manage_translations: "Manage translations"
         filters: "Filters"
         filters_active:
           one: "Filters (%{count})"
           other: "Filters (%{count})"
         edit_title: "Edit site text"
         default_text: "Default text"
+        default_text_language: "Default text · %{language}"
         value_label: "Your text · %{language}"
         invalid_title: "Invalid interpolation placeholders"
         invalid_description: "This text uses unrecognized placeholders. Use the available interpolation keys below."
         status:
           customized: "Customized"
+          unknown: "Unknown baseline"
           outdated: "Outdated"
           invalid: "Invalid"
         title: "Site texts"
@@ -10439,6 +10444,10 @@ en:
         interpolation_key_insert: "Click to insert"
         interpolation_key_used: "Already used"
         interpolation_key_invalid: "Unknown key — will not be interpolated"
+        unknown:
+          title: "The previous default was not recorded"
+          description: "This customization predates default tracking. Review the current default below and acknowledge it to track future changes."
+          acknowledge: "Acknowledge current default"
         outdated:
           title: "This translation is outdated"
           description: "The default translation for this key has changed since this override was created. Please check below that your translation matches any changes that have been made to the original intent."

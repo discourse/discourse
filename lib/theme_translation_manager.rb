@@ -25,8 +25,6 @@ class ThemeTranslationManager
     untranslated: false,
     only_selected_locale: false
   )
-    return [] if outdated || (untranslated && locale.to_s == "en")
-
     regexp = I18n::Backend::DiscourseI18n.create_search_regexp(query)
     themes = Theme.includes(:locale_fields, :theme_translation_overrides)
     themes = themes.where(id: theme.id) if theme
@@ -36,7 +34,16 @@ class ThemeTranslationManager
         translated_keys = locale_translation_keys(selected_theme, locale:) if untranslated
         selected_theme.translations.filter_map do |entry|
           next if overridden && !entry.has_record?
-          next if untranslated && (entry.has_record? || translated_keys.include?(entry.key))
+          if untranslated &&
+               (
+                 entry.default_locale == locale.to_s || entry.has_record? ||
+                   translated_keys.include?(entry.key)
+               )
+            next
+          end
+          if outdated && !%w[outdated invalid_interpolation_keys].include?(entry.db_record&.status)
+            next
+          end
 
           record = entry.site_text
           if regexp.match?(record[:id]) || regexp.match?(record[:value])
@@ -80,16 +87,26 @@ class ThemeTranslationManager
     @theme = theme
   end
 
+  def default_locale
+    ThemeTranslationOverride.new(theme:, locale: @locale, translation_key: key).default_locale
+  end
+
   def site_text
+    override = db_record
+    source = override || ThemeTranslationOverride.new(theme:, locale: @locale, translation_key: key)
+    source_default = source.current_default
+    status = override&.status || "up_to_date"
     {
       id: "js.theme_translations.#{theme.id}.#{key}",
       value: value,
-      status: "up_to_date",
-      old_default: nil,
-      new_default: default,
+      status: status,
+      old_default: override&.original_translation,
+      new_default: source_default,
+      default_text: source_default,
+      default_locale: source.default_locale,
       overridden: has_record?,
       can_revert: has_record?,
-      interpolation_keys: I18nInterpolationKeysFinder.find(default).sort,
+      interpolation_keys: I18nInterpolationKeysFinder.find(source.source_text || default).sort,
     }
   end
 

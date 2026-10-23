@@ -10,6 +10,8 @@ import { i18n } from "discourse-i18n";
 export default class SiteTextSummary extends Component {
   get statusLabel() {
     switch (this.args.siteText.status) {
+      case "unknown":
+        return i18n("admin.site_text.status.unknown");
       case "outdated":
         return i18n("admin.site_text.status.outdated");
       case "invalid_interpolation_keys":

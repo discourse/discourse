@@ -221,6 +221,8 @@ class ThemeField < ActiveRecord::Base
     data = {}
     fallback_data.each { |hash| data.merge!(hash) }
 
+    data.deep_merge!(theme.object_translation_data) unless internal
+
     if with_overrides
       overrides = theme.translation_override_hash.deep_symbolize_keys
       data.deep_merge!(overrides)
@@ -284,7 +286,10 @@ class ThemeField < ActiveRecord::Base
             errors << I18n.t("#{translation_key}.default_not_match_type", name: name)
           end
 
-          if (setting_errors = ThemeSettingsValidator.validate_value(default, type, opts)).present?
+          if (
+               setting_errors =
+                 ThemeSettingsValidator.validate_value(default, type, opts.merge(name:))
+             ).present?
             errors << I18n.t(
               "#{translation_key}.default_value_not_valid",
               name: name,

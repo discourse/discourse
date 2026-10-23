@@ -280,3 +280,94 @@ en:
                 label: URL
                 description: The description for the property
 ```
+
+### Translatable object text
+
+Declare a required string property named `translation_key` and mark text properties with
+`translatable: true` to expose them in **Site texts**. Core reads the defaults from the saved object settings and includes
+them in the normal theme translation assets. Theme components need no backend code.
+
+```yaml
+links:
+  type: objects
+  default:
+    - translation_key: guidelines
+      label: Community guidelines
+  schema:
+    name: link
+    identifier: label
+    properties:
+      translation_key:
+        type: string
+        required: true
+      label:
+        type: string
+        translatable: true
+```
+
+This exposes `js.theme_translations.<theme_id>.links.guidelines.label` with default text
+“Community guidelines” and default text language `en`. The frontend continues to
+use ``i18n(themePrefix(`links.${link.translation_key}.label`), { defaultValue: link.label })``
+for each link in the setting.
+The editor previews relative keys to pass to `themePrefix` and links to
+Site texts filtered to the component. Save changes before managing translations.
+
+Core scopes keys to the installed theme ID and object setting name. The default text language is `en`; optionally set
+`translations: { default_locale: fr }` on the root schema to change it. No
+`translations` block is otherwise needed. Nested schemas declare their own required
+string `translation_key` property and mark their translatable properties;
+ancestor object keys and collection property names are included in each nested key. For example, a section with
+key `getting_started` containing a link with key `guidelines` produces
+`theme_translations.<theme_id>.resource_sections.getting_started.links.guidelines.label`
+for the `resource_sections` setting.
+
+Schemas with translatable fields, including their ancestor object schemas, must
+declare `translation_key` with `type: string` and `required: true`. Schema validation
+checks this even when the default object list is empty. The separate
+`schema.identifier: label` option chooses the editor’s display label; it does not
+select the translation identifier.
+
+Use stable, manually assigned identifiers beginning with a lowercase letter and
+containing only lowercase letters, digits, and underscores. Identifiers must be
+at most 80 characters long and unique within each collection. Reordering preserves translations. Renaming an identifier
+creates new translation keys; duplicating an object requires a different key.
+Separate component installations have independent namespaces.
+
+When adding translatable fields to an existing component, provide a settings migration
+that adds valid `translation_key` values to customized objects. Component updates
+validate the final object translation keys and rebuild their translations after
+settings migrations finish. Invalid final keys roll back the update. Ordinary
+object-editor saves validate immediately.
+
+Only string fields marked `translatable: true` participate. Unmarked fields and fields
+with `translatable: false` are excluded. Empty optional fields retain their keys and
+existing translations. Clearing default text does not delete translations; removing
+the object or field declaration does.
+Nested collections include their property name in the key, so separate collections
+can reuse the same object identifiers.
+Defaults include theme defaults and imported settings. Changing default text
+marks translations outdated. Removing fields, objects, or the component removes
+the associated theme translation overrides. Defaults remain in the object setting;
+translations use the existing `ThemeTranslationOverride` model, just like locale-file
+fields. There is no separate text registry.
+
+After a successful save or completed settings migration, core removes overrides whose
+keys are no longer declared by that component's object settings or locale files.
+Locale-specific plural forms are retained while their base translation exists.
+Cleanup is skipped when settings or locale files are invalid; correcting them runs
+cleanup against the current declarations. Outdated translations and translations
+with invalid interpolation are retained when their keys still exist. Other components'
+overrides are unaffected.
+
+Site texts shows the default text and its language alongside the editable
+translation. Both object-editor fields and strings shipped in locale files use
+`js.theme_translations.<theme_id>.<key>` in Site texts. Translations saved before
+default tracking was available have an unknown baseline and are excluded from the
+outdated filter. Acknowledging the current default establishes a baseline without
+changing the translation. Interpolation placeholders are checked against the shipped
+source text, even when an administrator customizes that source.
+
+The setting name reserves a namespace within the theme. A locale file cannot also
+define that setting's root key: saving the object setting or updating the theme
+rejects the conflict. Text is delivered through the existing cached theme translation
+assets only for the active theme and its components, including previews.

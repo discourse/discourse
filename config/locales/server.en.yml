@@ -353,6 +353,15 @@ en:
       no_multilevels_components: "Themes with child themes can't be child themes themselves"
       optimized_link: Optimized image links are ephemeral and should not be included in theme source code.
     settings_errors:
+      translatable_requires_translation_key: "The '%{schema}' schema has translatable fields and must declare a 'translation_key' property with type string and required: true."
+      translatable_requires_string: "The translatable property '%{property}' must have type string."
+      object_translation_metadata: "The translations option for '%{path}' must be a mapping."
+      object_translation_locale: "The default_locale for '%{path}' must be one supported language; got %{value}."
+      object_translation_identifier: "The identifier at '%{path}' (%{value}) must start with a lowercase letter, contain only lowercase letters, numbers, and underscores, and be at most 80 characters."
+      object_translation_duplicate: "The identifier '%{value}' at '%{path}' is already used in this collection."
+      object_translation_length: "The translation key '%{path}' exceeds 400 bytes."
+      object_translation_property: "The translatable field or collection '%{path}' must start with a lowercase letter and contain only lowercase letters, numbers, and underscores."
+      object_translation_key_conflict: "The object setting %{setting} reserves %{key} for its text. Rename the setting or move locale-file translations out of this namespace before saving."
       invalid_yaml: "Provided YAML is invalid."
       data_type_inclusion: "Setting `%{name}` type is unsupported. Supported types are `integer`, `bool`, `list`, `enum` and `upload`"
       name_too_long: "There is a setting with a too long name. Maximum length is 255"

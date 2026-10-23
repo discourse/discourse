@@ -390,6 +390,10 @@ class RemoteTheme < ActiveRecord::Base
         .theme_fields
         .where(id: field_ids_to_destroy)
         .each do |field|
+          if field.target_id == Theme.targets[:translations] && field.name == "en" &&
+               field.value == "en: {}\n"
+            next
+          end
           field.mark_for_destruction
           theme.changed_fields << field
         end
@@ -400,19 +404,21 @@ class RemoteTheme < ActiveRecord::Base
 
       before_save&.call(theme)
 
-      if raise_if_theme_save_fails
-        theme.save!
-      else
-        raise ActiveRecord::Rollback if !theme.save
-      end
+      theme.with_deferred_object_translations do
+        if raise_if_theme_save_fails
+          theme.save!
+        else
+          raise ActiveRecord::Rollback if !theme.save
+        end
 
-      create_theme_site_settings(theme, theme_info["theme_site_settings"])
+        create_theme_site_settings(theme, theme_info["theme_site_settings"])
 
-      if run_migrations
-        theme.migrate_settings(
-          start_transaction: false,
-          allow_out_of_sequence_migration: allow_out_of_sequence_migration,
-        )
+        if run_migrations
+          theme.migrate_settings(
+            start_transaction: false,
+            allow_out_of_sequence_migration: allow_out_of_sequence_migration,
+          )
+        end
       end
     end
 
