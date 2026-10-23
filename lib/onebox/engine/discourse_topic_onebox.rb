@@ -27,6 +27,7 @@ module Onebox
           event_date_month: event_date&.strftime("%b"),
           event_description: event_description,
           event_ends_at: raw[:event_ends_at],
+          event_has_featured_image: event_has_featured_image?,
           event_starts_at: raw[:event_starts_at],
           event_time: event_time,
           event_timezone: event_timezone,
@@ -41,7 +42,9 @@ module Onebox
       private
 
       def description
-        value = event_description.presence || raw[:description]
+        value = event? ? event_description : raw[:description]
+        return if value.blank?
+
         html_entities.decode(value.to_s.truncate(250, separator: " "))
       end
 
@@ -69,6 +72,14 @@ module Onebox
         return unless event?
 
         raw[:event_description]
+      end
+
+      def event_has_featured_image?
+        width = raw[:image_width].to_f
+        height = raw[:image_height].to_f
+
+        event? && raw[:image].present? && width.positive? && height.positive? &&
+          width >= height * 1.5
       end
 
       def event_time

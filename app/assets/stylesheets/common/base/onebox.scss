@@ -339,21 +339,22 @@ aside.onebox {
 
 .discourse-event-onebox {
   display: grid;
-  grid-template-columns: minmax(8rem, 20%) minmax(0, 1fr);
+  grid-template-columns: 5rem minmax(0, 1fr);
   gap: var(--space-4);
 
   &__media {
     align-self: start;
-    min-height: 5rem;
+    height: 5rem;
     overflow: hidden;
     position: relative;
+    width: 5rem;
   }
 
   &__image.thumbnail {
     float: none;
     height: 100%;
     margin: 0;
-    max-height: 10.625rem;
+    max-height: 100%;
     max-width: 100%;
     object-fit: cover;
     width: 100%;
@@ -364,25 +365,29 @@ aside.onebox {
     background: var(--secondary);
     border: 1px solid var(--primary-low);
     border-radius: var(--d-border-radius);
-    bottom: var(--space-2);
-    color: var(--primary);
     display: flex;
     flex-direction: column;
-    inset-inline-start: var(--space-2);
+    height: 3em;
+    inset: 0;
     justify-content: center;
-    min-height: 3.5rem;
-    min-width: 3.5rem;
+    margin: auto;
+    padding: 0;
     position: absolute;
+    width: 3em;
   }
 
   &__month {
+    color: var(--primary);
     font-size: var(--font-down-2);
+    font-weight: 400;
+    text-align: center;
     text-transform: uppercase;
   }
 
   &__day {
-    font-size: var(--font-up-2);
-    line-height: var(--line-height-small);
+    font-size: var(--font-up-1);
+    font-weight: 400;
+    text-align: center;
   }
 
   &__content {
@@ -393,7 +398,7 @@ aside.onebox {
     align-items: center;
     display: flex;
     gap: var(--space-2);
-    margin-block: var(--space-3);
+    margin-block: var(--space-3) var(--space-1);
 
     .d-icon {
       color: var(--primary-medium);
@@ -418,10 +423,34 @@ aside.onebox {
     }
   }
 
-  @include viewport.until(sm) {
-    grid-template-columns: 1fr;
+  &__metadata {
+    display: flex;
+    justify-content: space-between;
+  }
 
-    &__media {
+  &.--featured-image {
+    grid-template-columns: minmax(8rem, 20%) minmax(0, 1fr);
+
+    .discourse-event-onebox__media {
+      height: 10.625rem;
+      width: auto;
+    }
+
+    .discourse-event-onebox__date {
+      bottom: var(--space-2);
+      inset-inline-end: auto;
+      inset-inline-start: var(--space-2);
+      margin: 0;
+      top: auto;
+    }
+  }
+
+  @include viewport.until(sm) {
+    &.--featured-image {
+      grid-template-columns: 1fr;
+    }
+
+    &.--featured-image &__media {
       max-width: 14rem;
     }
   }
@@ -1030,7 +1059,8 @@ aside.onebox.xkcd .onebox-body img {
 // allowlistedgeneric twitter labels
 .onebox.allowlistedgeneric,
 .onebox.whitelistedgeneric,
-.onebox.discoursetopic {
+.onebox.discoursetopic,
+.onebox.discoursetopic_with_event {
   .label1,
   .label2 {
     color: var(--primary-med-or-secondary-med);
@@ -1072,7 +1102,8 @@ aside.onebox.xkcd .onebox-body img {
   }
 }
 
-.onebox.discoursetopic {
+.onebox.discoursetopic,
+.onebox.discoursetopic_with_event {
   h3 {
     width: 100%;
     margin-bottom: 0.2rem !important;

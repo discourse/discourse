@@ -1,4 +1,4 @@
-<div class="discourse-event-onebox"
+<div class="discourse-event-onebox{{#event_has_featured_image}} --featured-image{{/event_has_featured_image}}"
      data-event-all-day="{{event_all_day}}"
      data-event-ends-at="{{event_ends_at}}"
      data-event-starts-at="{{event_starts_at}}"
@@ -53,7 +53,7 @@
     {{/description}}
 
     {{#data1}}
-      <p>
+      <p class="discourse-event-onebox__metadata">
         <span class="label1">{{label1}}: {{data1}}</span>
         {{#data2}}
           <span class="label2">{{label2}}: {{data2}}</span>
