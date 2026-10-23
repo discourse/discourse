@@ -747,9 +747,6 @@ importers:
       ember-template-imports:
         specifier: ^4.4.0
         version: 4.4.0(supports-color@10.2.2)
-      ember-truth-helpers:
-        specifier: ^5.0.0
-        version: 5.0.0(supports-color@10.2.2)
       expect-type:
         specifier: ^1.4.0
         version: 1.4.0
@@ -4519,9 +4516,6 @@ packages:
   ember-template-imports@4.4.0:
     resolution: {integrity: sha512-HNOHabTEMbRluci1uScvh3ljMDo9E46dHHNcJAIf5yjOhIQ/zN4Y0DVDWrRfcbihlHvt4v/iF69G+8tffC1YkA==}
     engines: {node: 16.* || >= 18}
-
-  ember-truth-helpers@5.0.0:
-    resolution: {integrity: sha512-PnQd6D6hvlNC3k6gBu0SC2cvfXX6wH6W0nToomIIoxqyrD5cllk0zBh/j/1H0KsczVCWeuF9PWj5xJgL4jQAGg==}
 
   emoji-regex@10.6.0:
     resolution: {integrity: sha512-toUI84YS5YmxW219erniWD0CIVOo46xGKColeNQRgOzDorgBi1v4D71/OFzgD9GO2UGKIv1C3Sp8DAn0+j5w7A==}
@@ -12578,12 +12572,6 @@ snapshots:
       broccoli-stew: 3.0.0(supports-color@10.2.2)
       content-tag: 4.2.1
       ember-cli-version-checker: 5.1.2(supports-color@10.2.2)
-    transitivePeerDependencies:
-      - supports-color
-
-  ember-truth-helpers@5.0.0(supports-color@10.2.2):
-    dependencies:
-      '@embroider/addon-shim': 1.10.3(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
