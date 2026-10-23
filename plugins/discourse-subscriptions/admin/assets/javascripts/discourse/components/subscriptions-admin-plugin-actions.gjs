@@ -5,7 +5,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class SubscriptionsAdminPluginActions extends Component {

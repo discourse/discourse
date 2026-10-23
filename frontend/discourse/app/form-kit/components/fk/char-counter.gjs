@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { gt, lt } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class FKCharCounter extends Component {

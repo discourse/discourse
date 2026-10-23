@@ -5,7 +5,6 @@ import { service } from "@ember/service";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
 import DUserLink from "discourse/ui-kit/d-user-link";

@@ -1,1 +1,1 @@
-export { default } from "ember-truth-helpers/helpers/lte";
+export { lte as default } from "@ember/helper";
