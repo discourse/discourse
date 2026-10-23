@@ -15,8 +15,9 @@ RSpec.describe PluginGem do
   let(:loaded_specs) { booted_specs.dup }
   let(:plugins) { [] }
   let(:alpha_lock) { { "alpha" => "1.1.0", "beta" => "1.0.0" } }
-  # Stands in for a gem the application loads from git: to bundler that is a
-  # path source, a checkout with a gemspec, and only its directory matters.
+  # Plays the role of a gem the application loads from git. Once checked out,
+  # a git gem is a path source for bundler: a directory with a gemspec. Only
+  # that directory matters here.
   let(:git_gem) do
     dir = File.join(tmp_dir, "app", "delta")
     write_gemspec(dir, "delta", "1.0.0")
@@ -70,10 +71,11 @@ RSpec.describe PluginGem do
     File.binwrite("#{repo}/specs.4.8.gz", Gem::Util.gzip(Marshal.dump(index)))
   end
 
-  # `lock` is name => version, written as `bundle lock` would with the
-  # dependencies and checksums from the repo; nil writes no Gemfile.lock.
-  # `path` adds path gems: name => [version, dependencies]. `checksums`
-  # replaces checksums by name; nil writes no CHECKSUMS.
+  # `lock` is name => version. The Gemfile.lock is written as `bundle lock`
+  # would write it, with dependencies and checksums taken from the repo. nil
+  # writes no Gemfile.lock. `path` adds path gems: name => [version,
+  # dependencies]. `checksums` replaces checksums by gem name; nil writes no
+  # CHECKSUMS section.
   def add_plugin(name, gemfile, lock:, opt_in: true, **options)
     dir = File.join(tmp_dir, "plugins", name)
     FileUtils.mkdir_p(dir)
@@ -110,7 +112,8 @@ RSpec.describe PluginGem do
       path.map do |name, (version, dependencies)|
         "PATH\n  remote: #{name}\n  specs:\n#{lock_specs([[name, version, dependencies]])}\n\n"
       end
-    # A scoped source leaves bundler's implicit global source in the lock.
+    # With a scoped source block, bundler also writes an empty GEM section
+    # for the implicit global source into the lock.
     File.write(File.join(dir, "Gemfile.lock"), <<~LOCK)
       #{"GEM\n  specs:\n\n" if scoped}#{path_sections.join}GEM
         remote: #{source}/
@@ -139,7 +142,8 @@ RSpec.describe PluginGem do
     gem = "#{repo}/gems/#{name}-#{version}.gem"
     return "sha256=#{Digest::SHA256.file(gem).hexdigest}" if File.exist?(gem)
 
-    # The application's path and git gems have none in its lock.
+    # The application's lock has no checksums for its path and git gems, so
+    # those get a made-up one.
     app_checksums.fetch(name) { "sha256=#{Digest::SHA256.hexdigest(name)}" }
   end
 
@@ -544,7 +548,8 @@ RSpec.describe PluginGem do
     end
 
     it "must match its Gemfile" do
-      # beta comes with alpha, so the lock doesn't know shared at all.
+      # beta is a dependency of alpha and so in the lock; shared isn't in the
+      # lock at all.
       dir = add_plugin("one", %(gem "alpha"\n), lock: alpha_lock)
       File.write(
         File.join(dir, "Gemfile"),
