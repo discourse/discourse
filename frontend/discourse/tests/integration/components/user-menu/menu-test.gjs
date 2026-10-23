@@ -1,10 +1,12 @@
 import { click, findAll, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Menu from "discourse/components/user-menu/menu";
+import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import NotificationFixtures from "discourse/tests/fixtures/notification-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 module("Integration | Component | UserMenu", function (hooks) {
@@ -12,6 +14,170 @@ module("Integration | Component | UserMenu", function (hooks) {
 
   hooks.beforeEach(function () {
     this.siteSettings.enable_user_menu_mentions_tab = true;
+  });
+
+  test("new users only see navigation tabs before receiving notifications", async function (assert) {
+    this.currentUser.set("available_notification_types", []);
+    this.currentUser.set("can_send_private_messages", true);
+    await render(<template><Menu /></template>);
+
+    assert.deepEqual(
+      findAll(".user-menu-tab").map((tab) => tab.id),
+      [
+        "user-menu-button-all-notifications",
+        "user-menu-button-messages",
+        "user-menu-button-bookmarks",
+        "user-menu-button-profile",
+      ],
+      "empty notification filters are hidden while navigation remains available"
+    );
+    assert.deepEqual(
+      findAll(".user-menu-tab").map((tab) => tab.dataset.tabNumber),
+      ["0", "1", "2", "3"],
+      "keyboard tab positions remain consecutive"
+    );
+  });
+
+  test("read notifications reveals filters without unread badges", async function (assert) {
+    this.currentUser.set("available_notification_types", [
+      NOTIFICATION_TYPES.mentioned,
+      NOTIFICATION_TYPES.liked,
+      NOTIFICATION_TYPES.edited,
+    ]);
+    this.currentUser.set("grouped_unread_notifications", {});
+    await render(<template><Menu /></template>);
+
+    assert
+      .dom("#user-menu-button-mentions")
+      .exists("a past direct mention reveals Mentions");
+    assert.dom("#user-menu-button-likes").exists("a past like reveals Likes");
+    assert
+      .dom("#user-menu-button-other-notifications")
+      .exists("a past edit reveals Other notifications");
+    assert
+      .dom("#user-menu-button-replies")
+      .doesNotExist(
+        "a direct mention does not reveal Replies when Mentions is enabled"
+      );
+    assert
+      .dom(".user-menu .badge-notification")
+      .doesNotExist("read history does not add unread badges");
+  });
+
+  test("direct mentions reveal Replies when the mentions feature is disabled", async function (assert) {
+    this.siteSettings.enable_user_menu_mentions_tab = false;
+    this.currentUser.set("available_notification_types", [
+      NOTIFICATION_TYPES.mentioned,
+    ]);
+    await render(<template><Menu /></template>);
+
+    assert
+      .dom("#user-menu-button-replies")
+      .exists("Replies is the applicable filter for direct mentions");
+    assert
+      .dom("#user-menu-button-mentions")
+      .doesNotExist("the disabled feature stays hidden");
+    assert
+      .dom("#user-menu-button-other-notifications")
+      .doesNotExist("mentions are not reassigned to Other");
+  });
+
+  test("hidden filters do not move their types into Other notifications", async function (assert) {
+    let requestedTypes;
+    pretender.get("/notifications", (request) => {
+      requestedTypes = request.queryParams.filter_by_types;
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        { notifications: [] },
+      ];
+    });
+    this.currentUser.set("available_notification_types", [
+      NOTIFICATION_TYPES.edited,
+    ]);
+    await render(<template><Menu /></template>);
+    await click("#user-menu-button-other-notifications");
+
+    assert.false(
+      requestedTypes.split(",").includes("liked"),
+      "hidden Likes still owns like notifications"
+    );
+    assert.false(
+      requestedTypes.split(",").includes("replied"),
+      "hidden Replies still owns reply notifications"
+    );
+    assert.false(
+      requestedTypes.split(",").includes("mentioned"),
+      "hidden Mentions still owns direct mentions"
+    );
+  });
+
+  test("Other excludes plugin-owned types while retaining its own notifications", async function (assert) {
+    registerUserMenuTab(
+      (UserMenuTab) =>
+        class extends UserMenuTab {
+          id = "plugin-notifications";
+          icon = "comment";
+          panelComponent = DButton;
+          notificationTypes = ["chat_mention"];
+
+          get title() {
+            return "Plugin notifications";
+          }
+        }
+    );
+    this.currentUser.set("available_notification_types", [
+      NOTIFICATION_TYPES.chat_mention,
+      NOTIFICATION_TYPES.edited,
+    ]);
+    let requestedTypes;
+    pretender.get("/notifications", (request) => {
+      requestedTypes = request.queryParams.filter_by_types;
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        { notifications: [] },
+      ];
+    });
+    await render(<template><Menu /></template>);
+    assert
+      .dom("#user-menu-button-plugin-notifications")
+      .exists("plugin tab remains available");
+    await click("#user-menu-button-other-notifications");
+    assert.false(
+      requestedTypes.split(",").includes("chat_mention"),
+      "Other does not absorb the plugin-owned notification type"
+    );
+    assert.true(
+      requestedTypes.split(",").includes("edited"),
+      "Other still includes its own notification type"
+    );
+  });
+
+  test("disabling Likes preserves its existing classification into Other", async function (assert) {
+    this.currentUser.set("user_option.likes_notifications_disabled", true);
+    this.currentUser.set("available_notification_types", [
+      NOTIFICATION_TYPES.liked,
+    ]);
+    await render(<template><Menu /></template>);
+
+    assert
+      .dom("#user-menu-button-likes")
+      .doesNotExist("the user preference still hides Likes");
+    assert
+      .dom("#user-menu-button-other-notifications")
+      .exists("Other retains the disabled tab's notification types");
+  });
+
+  test("missing availability data preserves tabs for older servers", async function (assert) {
+    this.currentUser.set("available_notification_types", null);
+    await render(<template><Menu /></template>);
+
+    for (const id of ["replies", "mentions", "likes", "other-notifications"]) {
+      assert
+        .dom(`#user-menu-button-${id}`)
+        .exists("tabs remain usable without availability data");
+    }
   });
 
   test("mentions tab is hidden when the upcoming change is disabled", async function (assert) {
