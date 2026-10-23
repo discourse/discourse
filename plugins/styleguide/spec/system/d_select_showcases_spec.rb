@@ -8,7 +8,7 @@ RSpec.describe "DSelect showcases" do
   before do
     SiteSetting.styleguide_enabled = true
     sign_in(admin)
-    visit "/styleguide/molecules/select?group=together"
+    visit "/styleguide/molecules/select?group=showcases"
   end
 
   it "lets the user exercise rich, asynchronous, and action-oriented selects" do

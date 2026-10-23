@@ -67,7 +67,7 @@ export default class BadgesSelectExample extends Component {
     },
   ].map((badge) => ({
     ...badge,
-    grantLabel: i18n("styleguide.sections.select.pickers.badges.granted", {
+    grantLabel: i18n("styleguide.sections.select.showcases.badges.granted", {
       count: badge.grantCount,
     }),
   }));

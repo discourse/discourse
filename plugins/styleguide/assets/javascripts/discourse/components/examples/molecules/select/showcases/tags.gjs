@@ -67,10 +67,10 @@ export default class TagsSelectExample extends Component {
       @multiple={{true}}
       @onChange={{this.update}}
       @placeholder={{i18n
-        "styleguide.sections.select.pickers.tags.placeholder"
+        "styleguide.sections.select.showcases.tags.placeholder"
       }}
       @searchPlaceholder={{i18n
-        "styleguide.sections.select.pickers.tags.search_placeholder"
+        "styleguide.sections.select.showcases.tags.search_placeholder"
       }}
       @value={{this.value}}
       @valueField="slug"
@@ -82,7 +82,7 @@ export default class TagsSelectExample extends Component {
           <span class="select-examples__primary">
             {{#if tag.__create}}
               {{i18n
-                "styleguide.sections.select.pickers.tags.create"
+                "styleguide.sections.select.showcases.tags.create"
                 tag=tag.label
               }}
             {{else}}

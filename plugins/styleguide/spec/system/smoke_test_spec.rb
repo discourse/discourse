@@ -122,7 +122,7 @@ RSpec.describe "Styleguide Smoke Test" do
   end
 
   it "shows the picker gallery and a category row with its badge, count and lock" do
-    visit "/styleguide/molecules/select?group=together"
+    visit "/styleguide/molecules/select?group=showcases"
     expect(styleguide).to have_heading("Select")
     screenshot_marker(label: "styleguide-select-pickers", only: :desktop)
 
@@ -137,7 +137,7 @@ RSpec.describe "Styleguide Smoke Test" do
   end
 
   it "lets the user compare the color palettes" do
-    visit "/styleguide/molecules/select?group=together"
+    visit "/styleguide/molecules/select?group=showcases"
     colors = PageObjects::Components::UiKit::DSelect.by_identifier("sg-colors")
 
     colors.open_trigger

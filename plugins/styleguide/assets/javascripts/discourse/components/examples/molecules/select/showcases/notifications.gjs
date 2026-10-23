@@ -13,12 +13,14 @@ export default class NotificationsSelectExample extends Component {
   get event() {
     if (this.actionCount > 0) {
       return i18n(
-        "styleguide.sections.select.pickers.notifications.action_count",
+        "styleguide.sections.select.showcases.notifications.action_count",
         { count: this.actionCount }
       );
     }
 
-    return i18n("styleguide.sections.select.pickers.notifications.event_idle");
+    return i18n(
+      "styleguide.sections.select.showcases.notifications.event_idle"
+    );
   }
 
   get items() {

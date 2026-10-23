@@ -89,7 +89,7 @@ const GROUPS = [
   "keyboard",
   "limits",
   "list",
-  "together",
+  "showcases",
 ];
 
 export default class Select extends Component {
@@ -531,7 +531,7 @@ export default class Select extends Component {
         </StyleguideExample>
       </Group>
 
-      <Group @id="together"><SelectShowcases /></Group>
+      <Group @id="showcases"><SelectShowcases /></Group>
     </StyleguideGroups>
   </template>
 }

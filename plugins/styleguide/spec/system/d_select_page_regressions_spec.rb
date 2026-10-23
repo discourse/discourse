@@ -183,7 +183,7 @@ describe "UiKit | DSelect page regressions" do
       "start" => %w[sg-default DefaultSelectExample],
       "data" => %w[sg-min-chars MinimumCharactersSelectExample],
       "content" => %w[sg-content-picker WholePickerSelectExample],
-      "together" => %w[sg-reviewers ReviewersSelectExample],
+      "showcases" => %w[sg-reviewers ReviewersSelectExample],
     }
 
     examples.each do |group, (identifier, component_name)|

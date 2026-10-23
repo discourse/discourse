@@ -13,12 +13,12 @@ export default class ReviewersSelectExample extends Component {
   createUnresolvedItem(value) {
     return {
       id: value,
-      name: i18n("styleguide.sections.select.pickers.reviewers.deleted_name"),
+      name: i18n("styleguide.sections.select.showcases.reviewers.deleted_name"),
       title: i18n(
-        "styleguide.sections.select.pickers.reviewers.deleted_description"
+        "styleguide.sections.select.showcases.reviewers.deleted_description"
       ),
       username: i18n(
-        "styleguide.sections.select.pickers.reviewers.deleted_username"
+        "styleguide.sections.select.showcases.reviewers.deleted_username"
       ),
     };
   }
@@ -37,7 +37,7 @@ export default class ReviewersSelectExample extends Component {
       @multiple={{true}}
       @onChange={{this.update}}
       @placeholder={{i18n
-        "styleguide.sections.select.pickers.reviewers.placeholder"
+        "styleguide.sections.select.showcases.reviewers.placeholder"
       }}
       @resolveValues={{reviewerApi.findMany}}
       @value={{this.value}}

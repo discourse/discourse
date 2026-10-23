@@ -26,7 +26,7 @@ export default class CategoriesSelectExample extends Component {
       @items={{@items}}
       @onChange={{this.update}}
       @placeholder={{i18n
-        "styleguide.sections.select.pickers.categories.placeholder"
+        "styleguide.sections.select.showcases.categories.placeholder"
       }}
       @specialItems={{@specialItems}}
       @value={{this.value}}

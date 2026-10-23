@@ -11,7 +11,7 @@ export default class GroupsSelectExample extends Component {
 
   items = USER_GROUPS.map((group) => ({
     ...group,
-    memberLabel: i18n("styleguide.sections.select.pickers.groups.members", {
+    memberLabel: i18n("styleguide.sections.select.showcases.groups.members", {
       count: group.memberCount,
     }),
   }));
@@ -29,7 +29,7 @@ export default class GroupsSelectExample extends Component {
       @multiple={{true}}
       @onChange={{this.update}}
       @placeholder={{i18n
-        "styleguide.sections.select.pickers.groups.placeholder"
+        "styleguide.sections.select.showcases.groups.placeholder"
       }}
       @value={{this.value}}
     >
@@ -39,7 +39,7 @@ export default class GroupsSelectExample extends Component {
           <span class="select-examples__primary">{{group.fullName}}</span>
           {{#if group.automatic}}
             <span class="select-showcases__pill">
-              {{i18n "styleguide.sections.select.pickers.groups.automatic"}}
+              {{i18n "styleguide.sections.select.showcases.groups.automatic"}}
             </span>
           {{/if}}
           <span class="select-examples__meta">{{group.memberLabel}}</span>
