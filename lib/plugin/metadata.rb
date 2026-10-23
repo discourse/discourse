@@ -40,17 +40,24 @@ class Plugin::Metadata
       end
   end
 
-  # `# gemfile: true` resolves the Gemfile next to plugin.rb together with
-  # those of the other plugins and the application's bundle, before any
-  # plugin.rb runs; see PluginGem.activate_gemfiles. Gems are activated, not
-  # required, so `require:` options have no effect. The plugin's
-  # Gemfile.lock is required. Core's lock takes precedence; otherwise the
-  # highest version any plugin locks wins. Every resolved gem must match a
-  # committed version, platform and source. Downloads must match the locked
-  # SHA256 checksum, and conflicting pins fail the boot. Gems must come from
-  # the application's gem sources or a path with a gemspec. Git gems keep their versions across commits, so a
-  # version lock can't pin them. Each boot reevaluates Gemfiles and gemspecs,
-  # reusing installed gems.
+  # `# gemfile: true` in plugin.rb makes the plugin declare its gems in a
+  # Gemfile next to plugin.rb instead of calling `gem` in plugin.rb. See
+  # PluginGem.activate_gemfiles for the implementation. The rules:
+  # - The Gemfiles of all opted-in plugins are resolved together with the
+  #   application's bundle, before any plugin.rb runs.
+  # - The gems are activated, not required. `require:` options have no
+  #   effect; the plugin requires its gems itself.
+  # - A Gemfile.lock with a CHECKSUMS section must be committed next to the
+  #   Gemfile (`bundle lock --add-checksums`).
+  # - A gem the application has keeps the application's version. For other
+  #   gems the highest version locked by any plugin is used.
+  # - Every resolved gem must match a committed lock in version, platform
+  #   and source, and a downloaded gem must match the locked SHA256
+  #   checksum. Otherwise the boot fails.
+  # - Gems must come from the application's gem servers or from a path with
+  #   a gemspec. Git gems are refused.
+  # - Gemfiles and gemspecs are evaluated on every boot. Installed gems are
+  #   reused.
   def gemfile=(value)
     @gemfile = value == "true"
   end
