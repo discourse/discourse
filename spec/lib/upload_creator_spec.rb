@@ -401,19 +401,33 @@ RSpec.describe UploadCreator do
       # ruby -rzlib -e 'ihdr = [1, 1, 8, 6, 0, 0, 0].pack("NNCCCCC"); chunk = [ihdr.bytesize].pack("N") + "IHDR" + ihdr + [Zlib.crc32("IHDR" + ihdr)].pack("N"); File.binwrite("spec/fixtures/images/broken.png", "\x89PNG\r\n\x1A\n".b + chunk + ("\0".b * 80_000))'
       let(:broken_png_file) { file_from_fixtures("broken.png") }
 
-      it "does not persist the upload" do
-        SiteSetting.png_to_jpg_quality = 1
+      shared_examples "invalid PNG rejection" do |error_class|
+        it "does not persist the upload" do
+          SiteSetting.png_to_jpg_quality = 1
 
-        expect do
           expect do
-            UploadCreator.new(
-              broken_png_file,
-              "broken.png",
-              pasted: true,
-              force_optimize: true,
-            ).create_for(user.id)
-          end.to raise_error(Discourse::Utils::CommandError)
-        end.not_to change(Upload, :count)
+            expect do
+              UploadCreator.new(
+                broken_png_file,
+                "broken.png",
+                pasted: true,
+                force_optimize: true,
+              ).create_for(user.id)
+            end.to raise_error(error_class)
+          end.not_to change(Upload, :count)
+        end
+      end
+
+      context "with ImageMagick" do
+        before { global_setting :enable_vips_image_processing, false }
+
+        include_examples "invalid PNG rejection", Discourse::Utils::CommandError
+      end
+
+      context "with libvips" do
+        before { global_setting :enable_vips_image_processing, true }
+
+        include_examples "invalid PNG rejection", DiscourseVips::InvalidImage
       end
     end
 
