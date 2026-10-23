@@ -63,7 +63,6 @@ export default class AdminPluginConfigPage extends Component {
               title={{this.linkText navLink}}
               @currentWhen={{navLink.currentWhen}}
               @i18nLabel={{this.linkText navLink}}
-              @query={{navLink.query}}
               @route={{navLink.route}}
               @routeParam={{@plugin.id}}
             >

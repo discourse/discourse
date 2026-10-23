@@ -4,9 +4,6 @@ module DiscourseWorkflows
   class WorkflowVariablesController < ::Admin::AdminController
     requires_plugin DiscourseWorkflows::PLUGIN_NAME
 
-    include ManagedWorkflowGuard
-    before_action :ensure_workflow_editable, only: %i[create update destroy import update_value]
-
     def create
       DiscourseWorkflows::WorkflowVariable::Create.call(service_params) do |result|
         on_success do |variable:, workflow:|

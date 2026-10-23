@@ -221,10 +221,6 @@ module DiscourseWorkflows
       end
     end
 
-    def managed_by
-      DiscoursePluginRegistry.apply_modifier(:workflow_managed_by, nil, self)
-    end
-
     def published?
       active_version_id.present?
     end

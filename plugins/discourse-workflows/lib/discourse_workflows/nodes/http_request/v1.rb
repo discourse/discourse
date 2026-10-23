@@ -17,11 +17,6 @@ module DiscourseWorkflows
             run_scope: "per_item",
           },
           properties: {
-            dry_run: {
-              type: :boolean,
-              default: false,
-              no_data_expression: true,
-            },
             method: {
               type: :options,
               required: true,
@@ -215,12 +210,7 @@ module DiscourseWorkflows
                 "max_response_size_kb" =>
                   exec_ctx.get_node_parameter("max_response_size_kb", item_index, default: 1024),
               }
-              result =
-                if exec_ctx.get_node_parameter("dry_run", item_index, default: false) == true
-                  { simulated: true, method: config["method"], url: config["url"] }
-                else
-                  process(config, item_index, exec_ctx)
-                end
+              result = process(config, item_index, exec_ctx)
               wrap_result(result, paired_item: exec_ctx.paired_item_for(item))
             end
           [items]

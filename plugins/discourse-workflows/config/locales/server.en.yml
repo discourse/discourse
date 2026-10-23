@@ -31,7 +31,6 @@ en:
         restricted: "Workflow creation is unavailable on this site."
         disabled: "Workflow authoring or Discourse AI is disabled. An administrator needs to enable the required features before creating workflows."
         unconfigured: "The workflow-authoring AI model is not configured or usable."
-    duplicate_name: "%{name} (copy)"
     ai:
       default_code_node_name: "Code"
       error_agent_not_configured: "The workflow authoring agent is not configured."
@@ -66,7 +65,6 @@ en:
         tool_finished: "Finished %{tool}"
         summarizing: "Preparing workflow authoring response"
     errors:
-      managed_workflow_read_only: "This workflow is managed by a plugin. Edit it there, or duplicate it to create an editable copy."
       access_control:
         invalid_groups: "Groups from input must resolve to an array of valid group IDs."
         missing_groups: "Groups from input contains groups that no longer exist."

@@ -24,8 +24,6 @@ module DiscourseWorkflows
                :variables,
                :tags
 
-    attribute :managed_by
-
     attribute :created_by
     attribute :updated_by
 

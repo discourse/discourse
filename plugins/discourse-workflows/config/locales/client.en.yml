@@ -47,15 +47,6 @@ en:
             other: "%{count} connections"
           cycle: "Includes a cycle"
           unavailable: "This workflow is too complex to draw safely here. Review the exact configuration before approving."
-      managed:
-        plugin_heading: "%{name} plugin"
-        list_description: "These workflows are read-only. Edit their configuration in the plugin, or duplicate a workflow to create an editable copy."
-        title: "Managed by %{name}"
-        description: "This workflow is read-only. Edit its configuration in the plugin, or duplicate it to make an independent, editable copy."
-        configure: "Edit plugin configuration"
-        duplicate: "Duplicate to edit"
-        steps: "Workflow steps"
-        parameters: "View step configuration"
       actor:
         system: "System user"
         anonymous: "Anonymous user"
@@ -1214,8 +1205,6 @@ en:
         batch_size: "Batch size"
         batch_size_description: "Number of items to process per iteration"
       http_request:
-        dry_run: "Simulate request"
-        dry_run_description: "Return request details without making a network request."
         authentication: "Authentication"
         authentication_none: "None"
         authentication_basic_auth: "Basic auth"

@@ -68,14 +68,9 @@ export default class DNavItem extends Component {
       return null;
     }
     try {
-      const routeArgs = [this.args.route];
-      if (this.args.routeParam) {
-        routeArgs.push(this.args.routeParam);
-      }
-      if (this.args.query) {
-        routeArgs.push({ queryParams: this.args.query });
-      }
-      const href = getURL(this.router.urlFor(...routeArgs));
+      const href = this.args.routeParam
+        ? getURL(this.router.urlFor(this.args.route, this.args.routeParam))
+        : getURL(this.router.urlFor(this.args.route));
 
       const shouldRefresh = applyValueTransformer(
         "full-page-refresh-on-navigation",
@@ -96,13 +91,11 @@ export default class DNavItem extends Component {
         <LinkTo
           @current-when={{this.active}}
           @model={{@routeParam}}
-          @query={{@query}}
           @route={{@route}}
         >{{this.contents}}</LinkTo>
       {{else if @route}}
         <LinkTo
           @current-when={{this.active}}
-          @query={{@query}}
           @route={{@route}}
         >{{this.contents}}</LinkTo>
       {{else}}

@@ -4,9 +4,6 @@ module DiscourseWorkflows
   class WorkflowsController < ::Admin::AdminController
     requires_plugin DiscourseWorkflows::PLUGIN_NAME
 
-    include ManagedWorkflowGuard
-    before_action :ensure_workflow_editable, only: %i[update destroy update_pin_data discard_draft]
-
     def index
       DiscourseWorkflows::Workflow::List.call(service_params) do |result|
         on_success do |workflows:, total_rows:, load_more_url:|
@@ -68,29 +65,6 @@ module DiscourseWorkflows
             status: :unprocessable_entity,
           )
         end
-      end
-    end
-
-    def duplicate
-      source = DiscourseWorkflows::Workflow.find(params[:id])
-      raise Discourse::InvalidAccess unless guardian.can_manage_workflows?
-      DiscourseWorkflows::Workflow::Create.call(
-        guardian: guardian,
-        params: {
-          name: I18n.t("discourse_workflows.duplicate_name", name: source.name).truncate(100),
-          nodes: source.nodes,
-          connections: source.connections,
-        },
-      ) do
-        on_success do |workflow:|
-          render_serialized(
-            workflow,
-            DiscourseWorkflows::WorkflowSerializer,
-            root: "workflow",
-            status: :created,
-          )
-        end
-        on_failure { render json: failed_json, status: :unprocessable_entity }
       end
     end
 
