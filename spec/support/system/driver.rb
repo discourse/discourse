@@ -133,34 +133,19 @@ module SystemDrivers
   end
 
   def self.apply_base_chrome_args(args = [], allow_network: [])
-    # A custom --disable-features replaces the generated list. Preserve the existing
-    # launch defaults below, including legacy and Edge entries, when adding our own.
+    # A custom --disable-features replaces the generated list. Keep the browser
+    # safeguards relevant to Chromium in our Linux test image alongside our flags.
     disabled_features = [
       # Avoid Google AI Mode eligibility requests during browser startup.
       "AimEnabled",
-      # Legacy Windows relaunch workaround, removed in Chromium 156.
-      # https://github.com/microsoft/playwright/pull/43460
-      "AutoDeElevate",
       # Avoid headed about:blank navigation hangs.
       # https://github.com/microsoft/playwright/issues/14047
       "AvoidUnnecessaryBeforeUnloadCheckSync",
-      # Let intercepted redirects reapply Origin headers without ERR_INVALID_ARGUMENT.
-      # https://github.com/microsoft/playwright/issues/41690
-      "BlockOriginHeaderModificationOnRedirect",
       # Keep the profile alive when examples close and replace the last browser window.
       "DestroyProfileOnBrowserClose",
-      # Disable DIAL discovery, which can trigger the macOS firewall permission prompt.
-      # https://github.com/microsoft/playwright/pull/13854
-      "DialMediaRouteProvider",
-      # Legacy suppression of media popups, ignored by Chromium 156.
-      # https://chromium.googlesource.com/chromium/src/+/6456af9f61e9518ba50d8331e4c42f42f63d03eb
-      "GlobalMediaControls",
       # Keep HTTP test URLs on HTTP instead of attempting automatic HTTPS upgrades.
       "HttpsUpgrades",
-      # Keep visual search overlays out of the browser UI in branded Chrome builds.
-      "LensOverlay",
-      # Disable casting discovery, which can trigger the macOS firewall permission prompt.
-      # https://github.com/microsoft/playwright/pull/8162
+      # Avoid casting device discovery and its local network traffic in the test container.
       "MediaRouter",
       # Avoid startup requests to Google network time servers.
       "NetworkTimeServiceQuerying",
@@ -172,13 +157,8 @@ module SystemDrivers
       # Preserve browser context storage state when an origin is loaded in an iframe.
       # https://github.com/microsoft/playwright/issues/32230
       "ThirdPartyStoragePartitioning",
-      # Suppress translation prompts that can interrupt navigation waits.
-      # https://github.com/microsoft/playwright/issues/16126
+      # Prevent browser translation prompts from interrupting tests in other locales.
       "Translate",
-      # Edge only: avoid changing macOS browser registration during a test run.
-      "msEdgeUpdateLaunchServicesPreferredVersion",
-      # Edge only: prevent browser account sign in requirements from blocking tests.
-      "msForceBrowserSignIn",
       # Avoid creating the internal address bar popup page when tests replace pages.
       "WebUIOmniboxPopup",
       # Avoid creating the companion AI Mode popup page when tests replace pages.
