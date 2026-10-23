@@ -42,7 +42,6 @@ zh_CN:
       hidden_relation: "您无权访问此内容。"
       allow_groups: "允许群组访问此查询"
       title: "数据资源管理器"
-      create: "创建"
       new_query: "新查询"
       create_placeholder: "查询名称…"
       description_placeholder: "在此处输入描述"
@@ -63,7 +62,6 @@ zh_CN:
         sql_label: "SQL"
         optional: "可选"
       import:
-        label: "导入"
         unparseable_json: "无法解析的 JSON 文件。"
         wrong_json: "错误的 JSON 文件。JSON 文件应包含一个 'query' 对象，该对象至少应具有一个 'sql' 属性。"
       help:
@@ -125,7 +123,6 @@ zh_CN:
         results_json: "结果 (JSON)"
         results_csv: "结果 (CSV)"
         query_json: "查询定义 (JSON)"
-      others_dirty: "查询具有未保存的更改，如果您离开，这些更改将丢失。"
       run_time: "查询在 %{value} 毫秒内完成。"
       cached_result_notice: "正在显示自 %{relative_time} 起的缓存结果。"
       result_count:
@@ -144,7 +141,6 @@ zh_CN:
       column: "第 %{number} 列"
       save_params: "设置默认值"
       reset_params: "重置"
-      search_placeholder: "搜索…"
       filter_by_tag: "按标签筛选"
       filter_by_this_tag: "按此标签筛选列表"
       no_search_results: "抱歉，我们找不到任何与您的文本匹配的结果。"

@@ -75,9 +75,7 @@ ur:
       close: "بند کریں"
       delete: "مٹائیں"
       edit: "ترمیم کریں"
-      back: "واپس"
       save: "محفوظ کریں"
-      apply: "لاگو کریں"
       update_scores_help: "سے تمام لیڈر بورڈز کے لئے تمام اسکور اپ ڈیٹ کریں"
       update_range:
         last_10_days: "پچھلے 10 دن"

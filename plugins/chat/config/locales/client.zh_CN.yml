@@ -863,7 +863,7 @@ zh_CN:
         target_usernames_description: "要向用户发送消息。使用类似 $trigger.user.username 的表达式从每个项目中选择用户。"
         message: "消息"
         actor_username: "发送人"
-        actor_username_description: "私信以该用户的身份发送，接收者看到的是他们自己撰写的。"
+        actor_username_description: "消息以该用户的身份发送，所有人都能看到该用户撰写的消息。向频道发帖时，用户必须是该频道的成员。"
       chat_approval:
         message: "消息"
         buttons: "按钮"

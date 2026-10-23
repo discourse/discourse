@@ -41,7 +41,6 @@ uk:
       admins_only: "Data explorer доступний лише адміністраторам."
       allow_groups: "Дозволити групам доступ до цього запиту"
       title: "Data Explorer"
-      create: "Створити"
       create_placeholder: "Назва запиту..."
       description_placeholder: "Введіть тут опис"
       ai:
@@ -61,7 +60,6 @@ uk:
         sql_label: "SQL"
         optional: "опціонально"
       import:
-        label: "Імпорт"
         unparseable_json: "Непридатний для обробки JSON файл."
         wrong_json: "Неправильний JSON-файл. JSON-файл повинен містити об'єкт 'query', який повинен мати як мінімум властивість 'sql'."
       help:
@@ -115,7 +113,6 @@ uk:
         results_json: "Результати (JSON)"
         results_csv: "Результати (CSV)"
         query_json: "Визначення запиту (JSON)"
-      others_dirty: "У запиті є не збережені зміни, які будуть втрачені, якщо ви перейдете далі."
       run_time: "Запит виконано за %{value} мс."
       cached_result_notice: "Показ кешованих результатів з %{relative_time}."
       result_count:
@@ -139,7 +136,6 @@ uk:
       column: "Колонка %{number}"
       save_params: "Встановити типові значення"
       reset_params: "Скинути"
-      search_placeholder: "Пошук…"
       no_search_results: "На жаль, не вдалося знайти жодного результату, відповідного вашому тексту."
       form:
         errors:

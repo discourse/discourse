@@ -70,7 +70,6 @@ lt:
         recipient_inactive: "\"%{username}\" dar neaktyvavo savo paskyros."
         recipient_chat_disabled: "\"%{username}\" savo nuostatose išjungė pokalbius."
         recipient_cannot_chat: "\"%{username}\" negali naudotis pokalbių funkcija, nes nepriklauso grupei, kuriai tai leidžiama pagal „pokalbiams leidžiamų grupių“ nuostatą."
-        sender_anonymous: "Tiesioginių žinučių negalima siųsti anonimiškai. Pasirinkite naudotoją, kuris bus siuntėjas."
         sender_chat_disabled: "Siuntėjas \"%{sender}\" savo nuostatose išjungė pokalbius."
         sender_cannot_chat: "Siuntėjas \"%{sender}\" negali naudotis pokalbių funkcija, nes nepriklauso grupei, kurią leidžia nustatymas „chat allowed groups“."
         sender_cannot_create_dm: "Siuntėjui \"%{sender}\" neleidžiama siųsti tiesioginių žinučių (žr. nustatymą „grupės, kuriose įgalintos tiesioginės žinutės“)."
@@ -86,7 +85,6 @@ lt:
         preferences_bypassed: "\"%{username}\" nepriima tiesioginių žinučių iš \"%{sender}\", tačiau žinutė buvo pristatyta, nes siuntėjas yra personalo narys."
     logs:
       send_chat_message:
-        sent_to_channel: "Elementas %{item_index}: išsiųstas pranešimas %{message_id} į kanalą %{channel_id}."
         sent_to_user: "Elementas %{item_index}: \"%{sender}\" išsiuntė pranešimą %{message_id} vartotojui \"%{username}\"."
         sent_to_group: "Elementas %{item_index}: \"%{sender}\" išsiuntė žinutę %{message_id} į grupinį susirašinėjimą su %{usernames}."
   reviewable_score_types:
