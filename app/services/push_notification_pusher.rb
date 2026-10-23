@@ -83,10 +83,10 @@ class PushNotificationPusher
     end
 
     new_subscription =
-      if subscriptions.size > 1
+      if subscriptions.size == 1
+        subscriptions.first
+      else
         subscriptions.each(&:destroy!)
-        PushSubscription.create!(user: user, data: data)
-      elsif subscriptions.empty?
         PushSubscription.create!(user: user, data: data)
       end
 
