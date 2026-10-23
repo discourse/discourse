@@ -12,6 +12,110 @@ import {
 } from "discourse/ui-kit/select/-internals/engine/select-sources";
 import SelectEngine from "discourse/ui-kit/select/select-engine";
 
+module("Unit | ui-kit | SelectEngine | maximum diagnostics", function (hooks) {
+  setupTest(hooks);
+
+  let warnStub;
+
+  hooks.beforeEach(function () {
+    warnStub = sinon.stub(console, "warn");
+  });
+
+  hooks.afterEach(function () {
+    warnStub.restore();
+  });
+
+  const capWarnings = () =>
+    warnStub
+      .getCalls()
+      .filter((call) => String(call.args[0]).includes("@maximum={{false}}"));
+
+  test("static caps warn only for invalid numbers, including NaN", function (assert) {
+    for (const [maximum, normalized, warnings] of [
+      [undefined, null, 0],
+      [false, null, 0],
+      [1, 1, 0],
+      [2.9, 2, 0],
+      [Infinity, Infinity, 0],
+      [0, null, 1],
+      [-1, null, 1],
+      [NaN, null, 1],
+      [-Infinity, null, 1],
+      [0.5, null, 1],
+    ]) {
+      warnStub.resetHistory();
+      const engine = new SelectEngine({ multiple: true, maximum });
+
+      assert.strictEqual(engine.maximum, normalized, `${maximum} normalizes`);
+      assert.strictEqual(
+        engine.maximum,
+        normalized,
+        `${maximum} stays normalized`
+      );
+      assert.strictEqual(
+        capWarnings().length,
+        warnings,
+        `${maximum} warns at most once on repeated reads`
+      );
+    }
+  });
+
+  test("live caps warn on the first invalid value and only once per engine", function (assert) {
+    let maximum = 3.9;
+    const engine = new SelectEngine({
+      multiple: true,
+      maximum: 2,
+      getMaximum: () => maximum,
+    });
+
+    assert.strictEqual(
+      engine.maximum,
+      3,
+      "the live cap overrides the static cap"
+    );
+    maximum = false;
+    assert.strictEqual(engine.maximum, null, "false overrides a static cap");
+    maximum = undefined;
+    assert.strictEqual(
+      engine.maximum,
+      2,
+      "undefined falls back to the static cap"
+    );
+    assert.strictEqual(
+      capWarnings().length,
+      0,
+      "valid reads do not consume a warning"
+    );
+
+    for (maximum of [NaN, 0, -2, false]) {
+      assert.strictEqual(engine.maximum, null, `${maximum} removes the cap`);
+      assert.strictEqual(
+        capWarnings().length,
+        1,
+        "later reads never warn again"
+      );
+    }
+
+    maximum = 4;
+    assert.strictEqual(
+      engine.maximum,
+      4,
+      "a valid cap still applies after warning"
+    );
+    const other = new SelectEngine({ multiple: true, maximum: NaN });
+    assert.strictEqual(
+      other.maximum,
+      null,
+      "another engine normalizes independently"
+    );
+    assert.strictEqual(
+      capWarnings().length,
+      2,
+      "another engine has its own warning"
+    );
+  });
+});
+
 // Builds a controlled engine whose value is owned by a local variable that `onChange`
 // updates — simulating the parent's @value / @onChange loop. `engine.value` reads the
 // live variable, so the engine reflects "the parent" the way it does in a template.

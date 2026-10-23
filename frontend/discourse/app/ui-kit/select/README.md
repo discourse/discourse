@@ -656,10 +656,11 @@ by mechanism.
 - Selection limits (`@maximum` / `@minimum`, multi-select). `@maximum` is a hard cap enforced at the
   engine's single `select()` chokepoint (so pointer, keyboard, create-on-the-fly, and the compat
   bridge are all covered) and reinforced by disabling every unselected option at the cap; a value
-  seeded over the cap is displayed and removable, never trimmed. `@minimum` is advisory (message +
-  state only, never blocks removal — the consuming form owns submit-time enforcement). A built-in
-  limit message renders in a dedicated top zone of the panel (never stacking with the footer or an
-  error body). Cap-disabled options also reference this message through `aria-describedby`,
+  seeded over the cap is displayed and removable, never trimmed. Pass `@maximum={{false}}` for no
+  cap. Numbers below 1 and NaN also mean no cap, with a once-per-select development warning.
+  `@minimum` is advisory (message + state only, never blocks removal — the consuming form owns
+  submit-time enforcement). A built-in limit message renders in a dedicated top zone of the panel
+  (never stacking with the footer or an error body). Cap-disabled options also reference this message through `aria-describedby`,
   alongside any item description and group header. The limit state is exposed on the engine and
   yielded to `:footer`.
 - Customization through one `select-customizations` transformer targeting `@kind` or

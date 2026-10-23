@@ -1637,3 +1637,86 @@ module(
     });
   }
 );
+
+module(
+  "Integration | ui-kit | select | DSelect (maximum false)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    let warnStub;
+
+    hooks.beforeEach(function () {
+      warnStub = sinon.stub(console, "warn");
+    });
+
+    hooks.afterEach(function () {
+      warnStub.restore();
+    });
+
+    const capWarnings = () =>
+      warnStub
+        .getCalls()
+        .filter((call) => String(call.args[0]).includes("@maximum={{false}}"));
+
+    test("lets a held selection grow without a cap", async function (assert) {
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          <MultiLimitsHost
+            @maximum={{false}}
+            @onChange={{onChange}}
+            @value={{array 1 2}}
+          />
+        </template>
+      );
+
+      await click(".d-select__input");
+      await click("[role='option'][aria-selected='false']");
+      assert.true(onChange.calledOnce, "a third item is added");
+      assert.dom(".d-select__limit").doesNotExist("no limit message is shown");
+      assert.strictEqual(capWarnings().length, 0, "false never warns");
+    });
+
+    test("a cap of one or more does not warn", async function (assert) {
+      await render(
+        <template>
+          <MultiLimitsHost @maximum={{2}} @value={{array 1}} />
+        </template>
+      );
+      await click(".d-select__input");
+      assert.strictEqual(capWarnings().length, 0, "a real cap is silent");
+    });
+
+    test("zero and negative caps warn once per select in development", async function (assert) {
+      const zeroChange = sinon.spy();
+      await render(
+        <template>
+          <div class="zero-maximum">
+            <MultiLimitsHost
+              @maximum={{0}}
+              @onChange={{zeroChange}}
+              @value={{array 1}}
+            />
+          </div>
+          <div class="negative-maximum">
+            <MultiLimitsHost @maximum={{-1}} @value={{array 1}} />
+          </div>
+        </template>
+      );
+
+      await click(".zero-maximum .d-select__input");
+      await click(".zero-maximum [role='option'][aria-selected='false']");
+      await click(".negative-maximum .d-select__input");
+
+      assert.true(
+        zeroChange.calledOnce,
+        "zero still means no cap, so the addition goes through"
+      );
+      assert.strictEqual(
+        capWarnings().length,
+        2,
+        "each select warns exactly once, however often its cap is read"
+      );
+    });
+  }
+);

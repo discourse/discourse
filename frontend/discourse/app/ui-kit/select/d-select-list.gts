@@ -78,8 +78,8 @@ interface DSelectListSignature {
     virtualized?: boolean;
     /** Omits held options from results without reloading. */
     hideSelected?: boolean;
-    /** Hard selection cap. */
-    maximum?: number;
+    /** Hard selection cap; false means no cap. Invalid numbers warn in development. */
+    maximum?: number | false;
     /** Advisory selection minimum. */
     minimum?: number;
     /** Customization family, fixed at construction. */

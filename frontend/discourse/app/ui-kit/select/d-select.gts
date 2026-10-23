@@ -203,7 +203,8 @@ interface DSelectSignature {
      * appears. The cap never *newly* disables a selected row, so deselecting one is the way back
      * under it (a row the consumer marked `disabled` stays disabled either way, though its chip
      * remains removable); action rows stay enabled too, since they never become a value. Ignored
-     * on a single-select, and unset below `1`.
+     * on a single-select. Pass `false` for no cap; numbers below `1` (including `0` and
+     * negatives) and `NaN` also mean no cap but warn once per select in development.
      *
      * A value that arrives already over the cap is never trimmed: every held id still renders
      * and can still be removed, only additions are refused. The cap is checked against the value
@@ -211,7 +212,7 @@ interface DSelectSignature {
      * replacement; a consumer that applies it asynchronously or merges additively can still
      * exceed it. For a single choice use `@multiple={{false}}` rather than `@maximum={{1}}`.
      */
-    maximum?: number;
+    maximum?: number | false;
     /**
      * Advisory minimum for a multi-select: it shows a "select at least N" message and exposes
      * the state, but never blocks anything — deselecting and clearing always succeed, down to an

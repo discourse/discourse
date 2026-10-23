@@ -305,7 +305,7 @@ export interface SelectEngineOptions {
   getMinChars?: () => number | undefined;
 
   /** Live reader for {@link maximum}. */
-  getMaximum?: () => number | undefined;
+  getMaximum?: () => number | false | undefined;
 
   /** Live reader for {@link minimum}. */
   getMinimum?: () => number | undefined;
@@ -402,8 +402,9 @@ export interface SelectEngineOptions {
   minChars?: number;
 
   /**
-   * Hard cap on a multi-select's selection count. Ignored when not `multiple`, and treated as
-   * unset below `1`. At the cap every add is refused — pointer, keyboard, create-on-the-fly and
+   * Hard cap on a multi-select's selection count. Ignored when not `multiple`; `false` means
+   * no cap. Numbers below `1` and NaN also mean no cap but warn once per engine in development.
+   * At the cap every add is refused — pointer, keyboard, create-on-the-fly and
    * the compat bridge all reach the same guard — and every unselected ordinary option reports
    * itself disabled. See {@link SelectEngine#atMaximum}.
    *
@@ -419,7 +420,7 @@ export interface SelectEngineOptions {
    * held id and can still remove them, because silently dropping data on mount is worse than
    * showing an over-cap selection.
    */
-  maximum?: number;
+  maximum?: number | false;
 
   /**
    * Advisory minimum for a multi-select: it drives {@link SelectEngine#belowMinimum} and the

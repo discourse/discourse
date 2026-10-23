@@ -1,4 +1,5 @@
-import { assert } from "@ember/debug";
+import { DEBUG } from "@glimmer/env";
+import { assert, warn } from "@ember/debug";
 import type {
   SelectPresentationOptions,
   SelectResolvedOptions,
@@ -37,6 +38,7 @@ export default class SelectOptionsView {
   #minChars?: SelectEngineOptions["minChars"];
   #readMaximum?: SelectEngineOptions["getMaximum"];
   #maximum?: SelectEngineOptions["maximum"];
+  #hasWarnedMaximum = false;
   #readMinimum?: SelectEngineOptions["getMinimum"];
   #minimum?: SelectEngineOptions["minimum"];
   #readNoneLabel?: SelectEngineOptions["getNoneLabel"];
@@ -190,14 +192,26 @@ export default class SelectOptionsView {
     return this.#readResolvedOptions!();
   }
 
-  // Multi-only, and `null` for anything below one — which also absorbs `0`, negatives, and
-  // `NaN`, all of which mean "no cap" rather than "cap of nothing".
+  /** Multi-only; false, numbers below one, and NaN normalize to no cap. */
   get maximum(): number | null {
+    const raw = this.#readMaximum?.() ?? this.#maximum;
+    if (
+      DEBUG &&
+      !this.#hasWarnedMaximum &&
+      typeof raw === "number" &&
+      !(raw >= 1)
+    ) {
+      this.#hasWarnedMaximum = true;
+      warn(
+        "DSelect: @maximum below 1 or NaN means no cap. Use @maximum={{false}} for no cap.",
+        false,
+        { id: "discourse.d-select.maximum-below-one" }
+      );
+    }
     if (!this.multiple) {
       return null;
     }
-    const raw = this.#readMaximum?.() ?? this.#maximum;
-    return raw != null && raw >= 1 ? Math.floor(raw) : null;
+    return typeof raw === "number" && raw >= 1 ? Math.floor(raw) : null;
   }
 
   get minimum(): number {
