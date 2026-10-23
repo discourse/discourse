@@ -280,6 +280,16 @@ customization ports are done.
 - **Rollback** of a family is a release-level revert. The flag doesn't change a session that has
   already booted.
 
+## Pending audits
+
+- **Customizable display text.** Inventory every string the select components display or
+  announce, such as placeholders, the search placeholder, the empty and error states, limit
+  messages, the "N selected" count, the create row, the none row, chip hints, remove-button names
+  and live announcements. Then confirm that the API lets a call site override each one, and that
+  every recipe exposes the same overrides instead of fixing them. Strings that cannot be overridden
+  get an argument or a `@kindOptions` key before the families that render them join the flag.
+  Requested 2026-10-23.
+
 ## Verification
 
 - **Test model:** a family's tests branch with the flag. Its existing tests keep driving
