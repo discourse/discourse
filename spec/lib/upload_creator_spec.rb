@@ -1018,6 +1018,108 @@ RSpec.describe UploadCreator do
             expect(result.original_sha1).not_to eq(nil)
           end
         end
+
+        context "with primary upload deduplication" do
+          let(:opts) { { for_private_message: true } }
+
+          it "deduplicates when a primary exists with the same stored bytes and secure status" do
+            # Create first upload which becomes the primary
+            first_upload = UploadCreator.new(file, filename, opts).create_for(user.id)
+            expect(first_upload.primary_upload_id).to be_nil
+            expect(first_upload.storage_sha256).to eq(
+              Digest::SHA256.file(file_from_fixtures(filename).path).hexdigest,
+            )
+            primary_url = first_upload.url
+
+            # Create second upload with same file - should reference the primary
+            second_upload =
+              UploadCreator.new(file_from_fixtures(filename), filename, opts).create_for(user.id)
+
+            expect(second_upload.id).not_to eq(first_upload.id)
+            expect(second_upload.primary_upload_id).to eq(first_upload.id)
+            expect(second_upload.url).to eq(primary_url)
+            expect(second_upload.original_sha1).to eq(first_upload.original_sha1)
+          end
+
+          it "ignores a matching SHA1 when the stored SHA256 differs or is missing" do
+            digest = Upload.generate_digest(file)
+            primary = Fabricate(:secure_upload_s3, original_sha1: digest, storage_sha256: "0" * 64)
+            legacy = Fabricate(:secure_upload_s3, original_sha1: digest, storage_sha256: nil)
+
+            created = UploadCreator.new(file, filename, opts).create_for(user.id)
+
+            expect(created).to be_persisted
+            expect(created.primary_upload_id).to be_nil
+            expect(created.storage_sha256).not_to eq(primary.storage_sha256)
+            expect(created.url).not_to eq(legacy.url)
+          end
+
+          it "deletes the temporary S3 object when reusing primary storage" do
+            primary = UploadCreator.new(file, filename, opts).create_for(user.id)
+            external_key = "temp/duplicate.jpg"
+            created =
+              UploadCreator.new(
+                file_from_fixtures(filename),
+                filename,
+                opts.merge(existing_external_upload_key: external_key),
+              ).create_for(user.id)
+
+            expect(created.primary_upload_id).to eq(primary.id)
+            deletions =
+              Discourse
+                .store
+                .s3_helper
+                .s3_client
+                .api_requests
+                .select { |request| request[:operation_name] == :delete_object }
+                .map { |request| request[:params][:key] }
+            expect(deletions).to include(external_key)
+          end
+
+          it "creates separate primaries for different security contexts" do
+            # Create secure upload
+            secure_upload = UploadCreator.new(file, filename, opts).create_for(user.id)
+            expect(secure_upload.secure).to eq(true)
+            expect(secure_upload.primary_upload_id).to be_nil
+
+            # Create public upload with same file
+            public_opts = { for_site_setting: true }
+            public_upload =
+              UploadCreator.new(file_from_fixtures(filename), filename, public_opts).create_for(
+                admin.id,
+              )
+
+            expect(public_upload.secure).to eq(false)
+            expect(public_upload.primary_upload_id).to be_nil
+            expect(public_upload.original_sha1).to eq(secure_upload.original_sha1)
+            expect(public_upload.url).not_to eq(secure_upload.url)
+          end
+
+          it "does not deduplicate thumbnails" do
+            thumb_opts = opts.merge(type: "thumbnail")
+
+            first_thumb = UploadCreator.new(file, filename, thumb_opts).create_for(user.id)
+            second_thumb =
+              UploadCreator.new(file_from_fixtures(filename), filename, thumb_opts).create_for(
+                user.id,
+              )
+
+            expect(first_thumb.primary_upload_id).to be_nil
+            expect(second_thumb.primary_upload_id).to be_nil
+          end
+
+          it "does not use a thumbnail as the primary for a regular upload" do
+            thumb_opts = opts.merge(type: "thumbnail")
+            thumbnail = UploadCreator.new(file, filename, thumb_opts).create_for(user.id)
+            regular_upload =
+              UploadCreator.new(file_from_fixtures(filename), filename, opts).create_for(user.id)
+
+            expect(thumbnail.primary_upload_id).to be_nil
+            expect(thumbnail.original_sha1).to be_nil
+            expect(regular_upload.primary_upload_id).to be_nil
+            expect(regular_upload.url).not_to eq(thumbnail.url)
+          end
+        end
       end
     end
 
@@ -1188,6 +1290,26 @@ RSpec.describe UploadCreator do
     before do
       setup_s3
       stub_s3_store
+    end
+
+    it "hashes the final bytes after upload callbacks" do
+      SiteSetting.secure_uploads = true
+      SiteSetting.authorized_extensions = "txt"
+      contents = "contents after the upload callback"
+      event = proc { |uploaded_file| File.binwrite(uploaded_file.path, contents) }
+      DiscourseEvent.on(:before_upload_creation, &event)
+
+      source = Tempfile.new(%w[document .txt])
+      source.write("original contents")
+      source.flush
+      created =
+        UploadCreator.new(source, "document.txt", for_private_message: true).create_for(user.id)
+
+      expect(created).to be_persisted
+      expect(created.storage_sha256).to eq(Digest::SHA256.hexdigest(contents))
+    ensure
+      DiscourseEvent.off(:before_upload_creation, &event)
+      source&.close!
     end
 
     it "does not save the upload if an event added errors to the upload" do

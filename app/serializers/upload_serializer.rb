@@ -48,7 +48,11 @@ class UploadSerializer < ApplicationSerializer
     if object.for_site_setting
       object.url
     else
-      UrlHelper.cook_url(object.url, secure: SiteSetting.secure_uploads? && object.secure)
+      UrlHelper.cook_url(
+        object.url,
+        secure: SiteSetting.secure_uploads? && object.secure,
+        upload: object,
+      )
     end
   end
 end

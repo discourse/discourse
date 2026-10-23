@@ -40,7 +40,7 @@ module Chat
       @used_hotlinked_media_ids << info.id if info
 
       if info&.downloaded? && (upload = info.upload)
-        img["src"] = UrlHelper.cook_url(upload.url, secure: upload.secure?)
+        img["src"] = UrlHelper.cook_url(upload.url, secure: upload.secure?, upload: upload)
         img["data-base62-sha1"] = upload.base62_sha1
         img["data-dominant-color"] = upload.dominant_color(calculate_if_missing: true).presence
         img.delete(PrettyText::BLOCKED_HOTLINKED_SRC_ATTR)
@@ -123,7 +123,11 @@ module Chat
           upload = upload_for_base62_sha1(img["data-base62-sha1"])
           next if upload.blank?
 
-          img["data-large-src"] = UrlHelper.cook_url(upload.url, secure: upload.secure?)
+          img["data-large-src"] = UrlHelper.cook_url(
+            upload.url,
+            secure: upload.secure?,
+            upload: upload,
+          )
           img["data-download-href"] = upload.short_path
           img["data-target-width"] = upload.width
           img["data-target-height"] = upload.height

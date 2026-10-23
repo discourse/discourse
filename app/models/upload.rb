@@ -16,6 +16,8 @@ class Upload < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :access_control_post, class_name: "Post"
+  belongs_to :primary_upload, class_name: "Upload", optional: true
+  has_many :dependent_uploads, class_name: "Upload", foreign_key: :primary_upload_id
 
   # when we access this post we don't care if the post
   # is deleted
@@ -55,6 +57,9 @@ class Upload < ActiveRecord::Base
     UserProfile.where(profile_background_upload_id: id).update_all(
       profile_background_upload_id: nil,
     )
+
+    # If this is a primary upload, transfer primary status to a dependent
+    promote_dependent_to_primary! if primary_upload_id.nil?
   end
 
   after_destroy { UserAvatar.remove_upload(id) }
@@ -77,6 +82,14 @@ class Upload < ActiveRecord::Base
         invalid_etag: 3, # Used by S3Inventory to mark S3 Upload records that have an invalid ETag value compared to the ETag value of the inventory file
         s3_file_missing_confirmed: 4, # Used by S3Inventory to skip S3 Upload records that are confirmed to not be backed by a file in the S3 file store
       )
+  end
+
+  def self.get_from_url(url)
+    if url.present? && (sha1 = sha1_from_secure_uploads_url(url))
+      find_by(sha1: sha1)
+    else
+      super
+    end
   end
 
   def self.fetch_from(sha1:, url:)
@@ -207,7 +220,12 @@ class Upload < ActiveRecord::Base
 
   def destroy
     Upload.transaction do
-      Discourse.store.remove_upload(self)
+      reload if persisted? && original_sha1.present?
+      # Skip file removal if this upload depends on another primary or if a dependent
+      # is about to take over this primary's storage in the before_destroy callback.
+      will_transfer = primary_upload_id.nil? && dependent_uploads.exists?
+      should_remove_file = primary_upload_id.nil? && !will_transfer
+      Discourse.store.remove_upload(self) if should_remove_file
       super
     end
   end
@@ -241,33 +259,86 @@ class Upload < ActiveRecord::Base
     upload
   end
 
+  # Find a primary upload for the given content hash and security context.
+  # Primary uploads have primary_upload_id = nil and are the canonical storage
+  # location for deduplicated uploads.
+  def self.find_primary_for(storage_sha256:, secure:)
+    return nil if storage_sha256.blank?
+    where(storage_sha256: storage_sha256, secure: secure, primary_upload_id: nil)
+      .where.not(url: "")
+      .first
+  end
+
+  # Check if this upload is a primary (has dependents or could have dependents)
+  def primary?
+    primary_upload_id.nil? && original_sha1.present?
+  end
+
+  # Check if this upload is a dependent (references a primary)
+  def dependent?
+    primary_upload_id.present?
+  end
+
+  # Get the actual storage URL (from primary if dependent)
+  def storage_url
+    primary_upload&.url || url
+  end
+
+  def promote_dependent_to_primary!
+    new_primary = dependent_uploads.order(:id).first
+    return if new_primary.blank?
+
+    new_primary.update_columns(primary_upload_id: nil, url: url)
+
+    dependent_uploads
+      .where.not(id: new_primary.id)
+      .update_all(primary_upload_id: new_primary.id, url: new_primary.url)
+
+    new_primary
+  end
+
   def self.secure_uploads_url?(url)
     # we do not want to exclude topic links that for whatever reason
     # have secure-uploads in the URL e.g. /t/secure-uploads-are-cool/223452
     route = UrlHelper.rails_route_from_url(url)
     return false if route.blank?
     route[:action] == "show_secure" && route[:controller] == "uploads" &&
-      FileHelper.is_supported_media?(url)
+      FileHelper.is_supported_media?(url.split("?", 2).first)
   rescue ActionController::RoutingError
     false
   end
 
   def self.signed_url_from_secure_uploads_url(url, include_content_disposition:)
+    logical_sha1 = sha1_from_secure_uploads_url(url)
     route = UrlHelper.rails_route_from_url(url)
-    url = Rails.application.routes.url_for(route.merge(only_path: true))
+    url = Rails.application.routes.url_for(route.merge(only_path: true)).split("?", 2).first
     secure_upload_s3_path = url[url.index(route[:path])..-1]
+    if logical_sha1
+      upload = find_by(sha1: logical_sha1)
+      secure_upload_s3_path = upload&.storage_path_for_secure_request(secure_upload_s3_path)
+      raise Discourse::NotFound if secure_upload_s3_path.blank?
+    end
     Discourse.store.signed_url_for_path(secure_upload_s3_path, include_content_disposition:)
   end
 
-  def self.secure_uploads_url_from_upload_url(url)
+  def storage_path_for_secure_request(requested_path)
+    if requested_path.include?("/optimized/") || requested_path.start_with?("optimized/")
+      if optimized_images.any? { |image|
+           URI.parse(image.url).path.delete_prefix("/") == requested_path
+         }
+        requested_path
+      end
+    else
+      URI.parse(storage_url).path.delete_prefix("/")
+    end
+  end
+
+  def self.secure_uploads_url_from_upload_url(url, base62_sha1: nil)
     return url if !url.include?(SiteSetting.Upload.absolute_base_url)
     uri = URI.parse(url)
-    Rails.application.routes.url_for(
-      controller: "uploads",
-      action: "show_secure",
-      path: uri.path[1..-1],
-      only_path: true,
-    )
+    route = { controller: "uploads", action: "show_secure", path: uri.path[1..-1], only_path: true }
+    route[:base62_sha1] = base62_sha1 if base62_sha1.present?
+    Rails.application.routes.url_for(route)
   end
 
   def self.short_path(sha1:, extension:)
@@ -471,12 +542,29 @@ class Upload < ActiveRecord::Base
     sha1_from_base62_encoded($2) if url =~ %r{(upload://)?([a-zA-Z0-9]+)(\..*)?}
   end
 
+  def self.sha1_from_base62(base62)
+    sha1_from_base62_encoded(base62)
+  end
+
+  def self.sha1_from_secure_uploads_url(url)
+    query = URI.parse(url).query
+    return if query.blank?
+
+    base62_sha1 = Rack::Utils.parse_query(query)["base62_sha1"]
+    return if !base62_sha1.is_a?(String) || !base62_sha1.match?(/\A[a-zA-Z0-9]+\z/)
+
+    sha1_from_base62_encoded(base62_sha1)
+  rescue URI::Error, ArgumentError
+    nil
+  end
+
   def self.sha1_from_long_url(url)
     $2 if url =~ URL_REGEX || url =~ OptimizedImage::URL_REGEX
   end
 
   def self.sha1_from_base62_encoded(encoded_sha1)
-    return nil if encoded_sha1.length > MAX_BASE62_SHA1_LENGTH
+    return nil if !encoded_sha1.is_a?(String) || encoded_sha1.length > MAX_BASE62_SHA1_LENGTH
+    return nil if !encoded_sha1.match?(/\A[a-zA-Z0-9]+\z/)
     sha1 = Base62.decode(encoded_sha1).to_s(16)
 
     if sha1.length > SHA1_LENGTH
@@ -499,6 +587,9 @@ class Upload < ActiveRecord::Base
   end
 
   def update_secure_status(source: "unknown", override: nil)
+    # Another upload in the same batch may have promoted or reparented this record.
+    reload if persisted? && original_sha1.present?
+
     if override.nil?
       mark_secure, reason = UploadSecurity.new(self).should_be_secure_with_reason
     else
@@ -507,14 +598,94 @@ class Upload < ActiveRecord::Base
     end
 
     secure_status_did_change = secure? != mark_secure
+
+    # Handle deduplication context transitions before changing secure status
+    handle_dedup_context_transition(mark_secure) if secure_status_did_change
+
     update(secure_params(mark_secure, reason, source))
 
     if secure_status_did_change && Discourse.store.external?
-      Discourse.store.update_upload_access_control(self)
+      if primary_upload_id.nil?
+        Discourse.store.update_upload_access_control(self)
+      else
+        # Dependents share the original file, but own their optimized images.
+        optimized_images.each do |optimized_image|
+          Discourse.store.update_optimized_image_access_control(
+            optimized_image,
+            secure: mark_secure,
+          )
+        end
+      end
       sync_optimized_videos_secure_status(mark_secure)
     end
 
     secure_status_did_change
+  end
+
+  def handle_dedup_context_transition(new_secure_status)
+    return if original_sha1.blank?
+
+    new_primary = Upload.find_primary_for(storage_sha256: storage_sha256, secure: new_secure_status)
+
+    if primary_upload_id.present?
+      if new_primary
+        update_columns(primary_upload_id: new_primary.id, url: new_primary.url)
+      else
+        copy_from_primary_and_become_primary(new_secure_status)
+      end
+      return
+    end
+
+    return if new_primary.blank? && !dependent_uploads.exists?
+
+    promoted_upload = promote_dependent_to_primary!
+
+    if new_primary
+      Discourse.store.remove_upload(self) if promoted_upload.blank?
+      update_columns(primary_upload_id: new_primary.id, url: new_primary.url)
+    elsif promoted_upload
+      copy_from_upload_and_become_primary(promoted_upload, new_secure_status)
+    end
+  end
+
+  def copy_from_primary_and_become_primary(new_secure_status)
+    return if primary_upload_id.nil?
+
+    copy_from_upload_and_become_primary(primary_upload, new_secure_status)
+  end
+
+  def copy_from_upload_and_become_primary(source_upload, new_secure_status)
+    store = Discourse.store
+    extension = self.extension.present? ? ".#{self.extension}" : File.extname(original_filename)
+    destination_path = store.get_path_for("original", id, sha1, extension)
+    # A previous storage path may still be shared by dependents in another context.
+    destination_path =
+      File.join(
+        File.dirname(destination_path),
+        SecureRandom.hex(16),
+        File.basename(destination_path),
+      )
+
+    if store.external?
+      source_path = store.get_path_for_upload(source_upload)
+      if Rails.configuration.multisite
+        if source_path.exclude?(store.upload_path)
+          source_path = File.join(store.upload_path, source_path)
+        end
+        destination_path = File.join(store.upload_path, destination_path)
+      end
+
+      store.copy_file(source: source_path, destination: destination_path, secure: new_secure_status)
+      new_url = File.join(store.absolute_base_url, destination_path)
+    else
+      source_path = store.path_for(source_upload)
+      File.open(source_path, "rb") do |file|
+        store.copy_file(file, "#{store.public_dir}#{destination_path}")
+      end
+      new_url = destination_path
+    end
+
+    update_columns(primary_upload_id: nil, url: new_url)
   end
 
   def sync_optimized_videos_secure_status(mark_secure)
@@ -714,6 +885,7 @@ end
 #  security_last_changed_at     :datetime
 #  security_last_changed_reason :string
 #  sha1                         :string(40)
+#  storage_sha256               :string
 #  thumbnail_height             :integer
 #  thumbnail_width              :integer
 #  url                          :string           not null
@@ -722,6 +894,7 @@ end
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
 #  access_control_post_id       :bigint
+#  primary_upload_id            :bigint
 #  user_id                      :integer          not null
 #
 # Indexes
@@ -733,7 +906,13 @@ end
 #  index_uploads_on_id                      (id) WHERE (dominant_color IS NULL)
 #  index_uploads_on_id_and_url              (id,url)
 #  index_uploads_on_original_sha1           (original_sha1)
+#  index_uploads_on_primary_lookup          (storage_sha256,secure) WHERE ((primary_upload_id IS NULL) AND (storage_sha256 IS NOT NULL))
+#  index_uploads_on_primary_upload_id       (primary_upload_id)
 #  index_uploads_on_sha1                    (sha1) UNIQUE
 #  index_uploads_on_url                     (url)
 #  index_uploads_on_user_id                 (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (primary_upload_id => uploads.id) ON DELETE => nullify
 #

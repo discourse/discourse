@@ -374,7 +374,9 @@ class Post < ActiveRecord::Base
     options = markdown_options(opts)
 
     if should_secure_uploads?
-      each_upload_url do |url|
+      each_upload_url do |url, _path, sha1|
+        next if Upload.secure_uploads_url?(url)
+
         uri = URI.parse(url)
         if FileHelper.is_supported_media?(File.basename(uri.path))
           raw =
@@ -385,6 +387,7 @@ class Post < ActiveRecord::Base
                 action: "show_secure",
                 path: uri.path[1..-1],
                 host: Discourse.current_hostname,
+                base62_sha1: sha1 && Upload.base62_sha1(sha1),
               ),
             )
         end
@@ -1242,7 +1245,9 @@ class Post < ActiveRecord::Base
 
   def image_url
     raw_url = image_upload&.url
-    UrlHelper.cook_url(raw_url, secure: image_upload&.secure?, local: true) if raw_url
+    if raw_url
+      UrlHelper.cook_url(raw_url, secure: image_upload&.secure?, local: true, upload: image_upload)
+    end
   end
 
   def cannot_permanently_delete_reason(user)

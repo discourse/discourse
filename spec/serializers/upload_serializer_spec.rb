@@ -21,8 +21,7 @@ RSpec.describe UploadSerializer do
 
     context "when secure uploads is disabled" do
       it "just returns the normal URL, otherwise S3 errors are encountered" do
-        UrlHelper.expects(:cook_url).with(upload.url, secure: false)
-        serializer.to_json
+        expect(serializer.as_json[:url]).to eq(UrlHelper.cook_url(upload.url, secure: false))
       end
     end
 
@@ -33,8 +32,7 @@ RSpec.describe UploadSerializer do
       end
 
       it "returns the cooked URL based on the upload URL" do
-        UrlHelper.expects(:cook_url).with(upload.url, secure: true)
-        serializer.to_json
+        expect(serializer.as_json[:url]).to eq(UrlHelper.cook_url(upload.url, secure: true))
       end
     end
   end

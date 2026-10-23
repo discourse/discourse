@@ -85,8 +85,9 @@ class UrlHelper
     url.sub(/\Ahttp:/i, "")
   end
 
-  def self.secure_proxy_without_cdn(url)
-    absolute(Upload.secure_uploads_url_from_upload_url(url), nil)
+  def self.secure_proxy_without_cdn(url, upload: nil)
+    base62_sha1 = upload.base62_sha1 if upload&.original_sha1.present?
+    absolute(Upload.secure_uploads_url_from_upload_url(url, base62_sha1: base62_sha1), nil)
   end
 
   def self.normalized_encode(uri)
@@ -125,12 +126,12 @@ class UrlHelper
     nil
   end
 
-  def self.cook_url(url, secure: false, local: nil)
+  def self.cook_url(url, secure: false, local: nil, upload: nil)
     is_secure = SiteSetting.secure_uploads && secure
     local = is_local(url) if local.nil?
     return url if !local
 
-    url = is_secure ? secure_proxy_without_cdn(url) : absolute_without_cdn(url)
+    url = is_secure ? secure_proxy_without_cdn(url, upload: upload) : absolute_without_cdn(url)
 
     # we always want secure uploads to come from
     # Discourse.base_url_no_prefix/secure-uploads

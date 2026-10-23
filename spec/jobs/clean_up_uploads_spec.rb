@@ -40,6 +40,34 @@ RSpec.describe Jobs::CleanUpUploads do
     expect(Upload.exists?(id: expired_upload.id)).to eq(false)
   end
 
+  it "removes shared storage after deleting all orphaned owners in one batch" do
+    setup_s3
+    stub_s3_store
+    primary = Fabricate(:upload_s3, original_sha1: "a" * 40, created_at: 2.hours.ago)
+    dependent =
+      Fabricate(
+        :upload_s3,
+        original_sha1: primary.original_sha1,
+        primary_upload: primary,
+        url: primary.url,
+        created_at: 2.hours.ago,
+      )
+    key = URI.parse(primary.url).path.delete_prefix("/")
+
+    described_class.new.execute(nil)
+
+    expect(Upload.where(id: [primary.id, dependent.id])).to be_empty
+    deleted_keys =
+      Discourse
+        .store
+        .s3_helper
+        .s3_client
+        .api_requests
+        .select { |request| request[:operation_name] == :delete_object }
+        .map { |request| request[:params][:key] }
+    expect(deleted_keys.count(key)).to eq(1)
+  end
+
   describe "unused callbacks" do
     before { Upload.add_unused_callback { |uploads| uploads.where.not(id: expired_upload.id) } }
 

@@ -41,7 +41,11 @@ class HotlinkedMediaDownloader
     # secure-uploads endpoint prevents anonymous downloads, so we
     # need the presigned S3 URL here
     if Upload.secure_uploads_url?(src)
-      src = Upload.signed_url_from_secure_uploads_url(src, include_content_disposition: false)
+      begin
+        src = Upload.signed_url_from_secure_uploads_url(src, include_content_disposition: false)
+      rescue Discourse::NotFound
+        raise ImageBrokenError
+      end
     end
 
     file = download_file(src)
