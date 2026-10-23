@@ -62,14 +62,8 @@ after_initialize do
 
     if filters.present? && patreon_id.present?
       begin
-        reward_id =
-          Patreon::RewardUser.all.except("0").detect { |_k, v| v.include? patreon_id }&.first
-
-        group_ids = filters.select { |_k, v| v.include?(reward_id) || v.include?("0") }.keys
-
-        Group.where(id: group_ids).each { |group| group.add user }
-
         Patreon::Patron.update_local_user(user, patreon_id, true)
+        Patreon::Patron.sync_groups_by(patreon_id: patreon_id)
       rescue => e
         Rails.logger.warn(
           "Patreon group membership callback failed for new user #{id} with error: #{e}.\n\n #{e.backtrace.join("\n")}",
