@@ -469,4 +469,16 @@ acceptance("New Query - AI", function (needs) {
       "does not run the saved query before parameters can be adjusted"
     );
   });
+
+  test("keeps edits to a generated query across a mode switch", async function (assert) {
+    await generate("show me a value");
+
+    await fillIn(".query-new__fields [data-name='name'] input", "Edited name");
+    await click(".query-mode-switch input[value='manual']");
+    await click(".query-mode-switch input[value='ai']");
+
+    assert
+      .dom(".query-new__fields [data-name='name'] input")
+      .hasValue("Edited name", "the edited name survives the mode switch");
+  });
 });
