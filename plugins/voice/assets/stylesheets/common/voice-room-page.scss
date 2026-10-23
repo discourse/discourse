@@ -485,7 +485,7 @@ html.discourse-touch .voice-call-widget {
   }
 }
 
-#main-outlet-wrapper:has(.voice-room-header) {
+body.has-sidebar-page #main-outlet-wrapper:has(.voice-room-header) {
   gap: 0;
 }
 
