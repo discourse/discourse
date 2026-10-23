@@ -8,6 +8,7 @@ class OptimizedVideoSerializer < ApplicationSerializer
       UrlHelper.cook_url(
         object.optimized_upload.url,
         secure: SiteSetting.secure_uploads? && object.optimized_upload.secure,
+        upload: object.optimized_upload,
       )
     end
   end

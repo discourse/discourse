@@ -12,6 +12,43 @@ RSpec.describe TopicUploadSecurityManager do
   let!(:post3) { Fabricate(:post, topic: topic) }
   let!(:post4) { Fabricate(:post, topic: topic) }
 
+  it "removes the old public object when all of its owners become private together" do
+    setup_s3
+    stub_s3_store
+    SiteSetting.secure_uploads = true
+    primary =
+      Fabricate(
+        :upload_s3,
+        secure: false,
+        original_sha1: "a" * 40,
+        storage_sha256: "b" * 64,
+        access_control_post: post1,
+      )
+    dependent =
+      Fabricate(
+        :upload_s3,
+        secure: false,
+        original_sha1: primary.original_sha1,
+        storage_sha256: primary.storage_sha256,
+        primary_upload: primary,
+        url: primary.url,
+        access_control_post: post1,
+      )
+    [primary, dependent].each { |upload| UploadReference.create!(upload: upload, target: post1) }
+    original_key = URI.parse(primary.url).path.delete_prefix("/")
+    topic.update!(category: Fabricate(:private_category, group: group))
+
+    manager.run
+
+    expect([primary, dependent].map { |upload| upload.reload.secure? }).to eq([true, true])
+    requests = Discourse.store.s3_helper.s3_client.api_requests
+    deleted_keys =
+      requests
+        .select { |request| request[:operation_name] == :delete_object }
+        .map { |request| request[:params][:key] }
+    expect(deleted_keys).to include(original_key)
+  end
+
   context "when a topic has posts linked to secure uploads" do
     let!(:upload) { Fabricate(:secure_upload) }
     let!(:upload2) { Fabricate(:secure_upload) }

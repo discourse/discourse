@@ -711,6 +711,209 @@ RSpec.describe UploadsController do
 
         result = response.parsed_body
         expect(result[0]["url"]).to match("secure-uploads")
+        expect(result[0]["url"]).to end_with("?base62_sha1=#{upload.base62_sha1}")
+      end
+
+      context "with a storage-deduplicated upload" do
+        fab!(:allowed_group, :group)
+        fab!(:allowed_category) { Fabricate(:private_category, group: allowed_group) }
+        fab!(:allowed_post) do
+          Fabricate(:post, topic: Fabricate(:topic, category: allowed_category))
+        end
+        fab!(:blocked_post) do
+          Fabricate(
+            :post,
+            topic:
+              Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group))),
+          )
+        end
+        let!(:dependent_upload) do
+          Fabricate(
+            :secure_upload_s3,
+            original_sha1: "a" * 40,
+            primary_upload: upload,
+            url: upload.url,
+            access_control_post: allowed_post,
+          )
+        end
+
+        before do
+          allowed_group.add(user)
+          upload.update!(secure: true, original_sha1: "a" * 40, access_control_post: blocked_post)
+          sign_in(user)
+        end
+
+        it "authorizes against the logical upload while serving the primary storage path" do
+          get Upload.secure_uploads_url_from_upload_url(
+                upload.url,
+                base62_sha1: dependent_upload.base62_sha1,
+              )
+
+          expect(response.status).to eq(302)
+          expect(response.redirect_url).to match("Amz-Expires")
+        end
+
+        it "serves dependent URLs emitted by serializers and post and topic images" do
+          allowed_post.update!(image_upload: dependent_upload)
+          allowed_post.topic.update!(image_upload: dependent_upload)
+          video = Fabricate(:optimized_video, optimized_upload: dependent_upload)
+          SiteSetting.generate_topic_og_image = true
+          public_topic = Fabricate(:topic, og_image_upload: dependent_upload)
+          urls = [
+            UploadSerializer.new(dependent_upload, root: false).as_json[:url],
+            OptimizedVideoSerializer.new(video, root: false).as_json[:url],
+            allowed_post.image_url,
+            allowed_post.topic.image_url,
+            TopicView.new(public_topic, user).og_image_url,
+            *allowed_post.topic.thumbnail_info.map { |info| info[:url] },
+          ]
+
+          urls.each do |url|
+            uri = URI.parse(url)
+            get [uri.path, uri.query].compact.join("?")
+
+            expect(response.status).to eq(302), "could not access #{url}"
+            expect(URI.parse(response.redirect_url).path).to eq(URI.parse(upload.url).path)
+          end
+        end
+
+        it "serves only thumbnails owned by the authorized logical upload" do
+          own_image = Fabricate(:optimized_image, upload: dependent_upload)
+          other_image = Fabricate(:optimized_image, upload: upload)
+          [own_image, other_image].each do |image|
+            image.update!(url: "#{SiteSetting.Upload.absolute_base_url}/#{image.url}")
+          end
+
+          get Upload.secure_uploads_url_from_upload_url(
+                own_image.url,
+                base62_sha1: dependent_upload.base62_sha1,
+              )
+          expect(response.status).to eq(302)
+          expect(URI.parse(response.redirect_url).path).to eq(URI.parse(own_image.url).path)
+
+          get Upload.secure_uploads_url_from_upload_url(
+                other_image.url,
+                base62_sha1: dependent_upload.base62_sha1,
+              )
+          expect(response.status).to eq(404)
+        end
+
+        it "serves dependent topic thumbnails" do
+          image = Fabricate(:optimized_image, upload: dependent_upload)
+          image.update!(url: "#{SiteSetting.Upload.absolute_base_url}/#{image.url}")
+          width, height = Topic.share_thumbnail_size
+          TopicThumbnail.create!(
+            upload: dependent_upload,
+            optimized_image: image,
+            max_width: width,
+            max_height: height,
+          )
+          allowed_post.topic.update!(image_upload: dependent_upload)
+          urls = [
+            allowed_post.topic.image_url,
+            *allowed_post.topic.thumbnail_info.map { |info| info[:url] },
+          ]
+
+          urls.each do |url|
+            uri = URI.parse(url)
+            get [uri.path, uri.query].compact.join("?")
+            expect(response.status).to eq(302), "could not access #{url}"
+          end
+        end
+
+        it "preserves the logical identity when rewriting raw image URLs as secure URLs" do
+          url = "http:#{dependent_upload.url}"
+          raw = "![image](#{url})"
+          allowed_post.cooked =
+            %(<img src="#{url}" data-base62-sha1="#{dependent_upload.base62_sha1}">)
+
+          cooked = Nokogiri::HTML5.fragment(allowed_post.cook(raw))
+          uri = URI.parse(cooked.at_css("img")["src"])
+          get [uri.path, uri.query].compact.join("?")
+
+          expect(response.status).to eq(302), "could not access #{uri} from #{cooked}"
+          expect(URI.parse(response.redirect_url).path).to eq(URI.parse(upload.url).path)
+        end
+
+        it "preserves the logical identity in extracted topic links" do
+          url =
+            Upload.secure_uploads_url_from_upload_url(
+              dependent_upload.url,
+              base62_sha1: dependent_upload.base62_sha1,
+            )
+          allowed_post.update_columns(cooked: %(<a href="#{url}">image</a>))
+
+          TopicLink.extract_from(allowed_post)
+
+          uri = URI.parse(allowed_post.topic_links.sole.url)
+          get [uri.path, uri.query].compact.join("?")
+          expect(response.status).to eq(302)
+        end
+
+        it "only signs the identified upload's current path, regardless of the requested path" do
+          other_upload =
+            Fabricate(:secure_upload_s3, secure: true, access_control_post: allowed_post)
+
+          get Upload.secure_uploads_url_from_upload_url(
+                upload.url,
+                base62_sha1: other_upload.base62_sha1,
+              )
+
+          expect(response.status).to eq(302)
+          expect(URI.parse(response.redirect_url).path).to eq(URI.parse(other_upload.url).path)
+        end
+
+        it "rejects an unauthorized identity even when the requested path is accessible" do
+          get Upload.secure_uploads_url_from_upload_url(
+                dependent_upload.url,
+                base62_sha1: upload.base62_sha1,
+              )
+
+          expect(response.status).to eq(403)
+        end
+
+        it "keeps a dependent's cooked URL working after its primary becomes public and is deleted" do
+          stub_s3_store
+          existing_url =
+            Upload.secure_uploads_url_from_upload_url(
+              dependent_upload.url,
+              base62_sha1: dependent_upload.base62_sha1,
+            )
+
+          upload.update_secure_status(override: false)
+          expect(dependent_upload.reload.secure?).to eq(true)
+          expect(dependent_upload.url).not_to eq(upload.url)
+
+          get existing_url
+          expect(response.status).to eq(302)
+          expect(URI.parse(response.redirect_url).path).to eq(URI.parse(dependent_upload.url).path)
+
+          upload.destroy!
+          get existing_url
+          expect(response.status).to eq(302)
+          expect(URI.parse(response.redirect_url).path).to eq(URI.parse(dependent_upload.url).path)
+        end
+
+        it "rejects missing or malformed logical upload identities" do
+          [Upload.base62_sha1("f" * 40), "not base62"].each do |identity|
+            get Upload.secure_uploads_url_from_upload_url(upload.url, base62_sha1: identity)
+
+            expect(response.status).to eq(404)
+          end
+        end
+
+        it "continues serving the storage path after the original primary is deleted" do
+          secure_url =
+            Upload.secure_uploads_url_from_upload_url(
+              upload.url,
+              base62_sha1: dependent_upload.base62_sha1,
+            )
+          upload.destroy!
+
+          get secure_url
+
+          expect(response.status).to eq(302)
+        end
       end
 
       context "when the upload cannot be found from the URL" do

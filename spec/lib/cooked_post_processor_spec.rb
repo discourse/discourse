@@ -10,6 +10,93 @@ RSpec.describe CookedPostProcessor do
   let(:upload_path) { Discourse.store.upload_path }
 
   describe "#post_process" do
+    it "processes raw images with malformed identity attributes using their URLs" do
+      upload = Fabricate(:upload)
+      post = Fabricate(:post)
+      post.raw = %(<img src="#{upload.url}" data-base62-sha1="bad!">)
+      processor = described_class.new(post)
+
+      processor.post_process
+
+      expect(Nokogiri::HTML5.fragment(processor.html).at_css("img")["src"]).to include(upload.url)
+    end
+
+    it "keeps processing when a secure image's upload identity no longer exists" do
+      setup_s3
+      SiteSetting.secure_uploads = true
+      upload = Fabricate(:secure_upload_s3)
+      url =
+        Upload.secure_uploads_url_from_upload_url(
+          upload.url,
+          base62_sha1: Upload.base62_sha1("f" * 40),
+        )
+      post = Fabricate(:post, raw: "![missing](#{url})")
+      processor = described_class.new(post)
+
+      processor.post_process
+
+      expect(Nokogiri::HTML5.fragment(processor.html).at_css("img")["src"]).to eq(url)
+    end
+
+    it "preserves a dependent's identity in displayed images, responsive images and references" do
+      setup_s3
+      stub_s3_store
+      SiteSetting.secure_uploads = true
+      SiteSetting.login_required = true
+      SiteSetting.create_thumbnails = false
+      SiteSetting.max_image_width = 600
+      SiteSetting.max_image_height = 500
+      primary = Fabricate(:secure_upload_s3, width: 1200, height: 600, filesize: 20_000)
+      dependent =
+        Fabricate(
+          :secure_upload_s3,
+          primary_upload: primary,
+          url: primary.url,
+          width: 1200,
+          height: 600,
+          filesize: 20_000,
+        )
+      thumbnails =
+        [600, 900, 1200].map do |width|
+          image = Fabricate(:optimized_image, upload: dependent, width: width, height: width / 2)
+          image.update!(url: "#{SiteSetting.Upload.absolute_base_url}/#{image.url}")
+          image
+        end
+      post = Fabricate(:post, raw: "![shared image|1200x600](#{dependent.short_url})")
+      processor = CookedPostProcessor.new(post, disable_dominant_color: true)
+
+      processor.post_process
+
+      document = Nokogiri::HTML5.fragment(processor.html)
+      image = document.at_css("img")
+      expect(URI.parse(image["src"]).path).to include(URI.parse(thumbnails.first.url).path)
+      urls = [
+        image["src"],
+        *image["srcset"].split(", ").map { |entry| entry.split.first },
+        document.at_css("a.lightbox")["href"],
+      ]
+      urls.each { |url| expect(Upload.sha1_from_secure_uploads_url(url)).to eq(dependent.sha1) }
+      expect(UploadReference.where(target: post).pluck(:upload_id)).to contain_exactly(dependent.id)
+      expect(primary.reload.access_control_post_id).to be_nil
+    end
+
+    it "links a query-only lightbox identity to its logical upload" do
+      setup_s3
+      SiteSetting.secure_uploads = true
+      primary = Fabricate(:secure_upload_s3)
+      dependent = Fabricate(:secure_upload_s3, primary_upload: primary, url: primary.url)
+      post = Fabricate(:post)
+      url =
+        Upload.secure_uploads_url_from_upload_url(primary.url, base62_sha1: dependent.base62_sha1)
+      fragment = Nokogiri::HTML5.fragment(%(<a class="lightbox" href="#{url}">image</a>))
+
+      post.link_post_uploads(fragments: fragment)
+
+      expect(UploadReference.where(target: post).pluck(:upload_id)).to contain_exactly(dependent.id)
+      expect(primary.reload.access_control_post_id).to be_nil
+      expect(dependent.reload.access_control_post_id).to eq(post.id)
+    end
+
     fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: <<~RAW) }
       <img src="#{upload.url}">
       RAW
@@ -591,7 +678,7 @@ RSpec.describe CookedPostProcessor do
           end
 
           let(:secure_uploads_url) do
-            "//test.localhost/secure-uploads/original/1X/#{upload.sha1}.png"
+            "//test.localhost/secure-uploads/original/1X/#{upload.sha1}.png?base62_sha1=#{upload.base62_sha1}"
           end
 
           let(:cooked_html) { <<~HTML }
@@ -1752,7 +1839,7 @@ RSpec.describe CookedPostProcessor do
 
           expect(cpp.html).to match_html <<~HTML
             <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:" loading="lazy" width="20" height="20"> and an external upload</p>
-            <p><img src="/secure-uploads/#{stored_path}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
+            <p><img src="/secure-uploads/#{stored_path}?base62_sha1=#{upload.base62_sha1}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
           HTML
         end
 
@@ -1834,6 +1921,7 @@ RSpec.describe CookedPostProcessor do
 
             secure_url =
               video_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-uploads")
+            secure_url += "?base62_sha1=#{video_upload.base62_sha1}"
 
             expect(cpp.html).to match_html <<~HTML
               <p>This post has an S3 video onebox:</p><div class="onebox video-onebox">
@@ -1882,8 +1970,10 @@ RSpec.describe CookedPostProcessor do
 
             secure_video_url =
               video_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-uploads")
+            secure_video_url += "?base62_sha1=#{video_upload.base62_sha1}"
             secure_audio_url =
               audio_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-uploads")
+            secure_audio_url += "?base62_sha1=#{audio_upload.base62_sha1}"
 
             expect(cpp.html).to match_html <<~HTML
               <p>This post has a video upload.</p><div class="onebox video-onebox">

@@ -225,8 +225,8 @@ module CookedProcessorMixin
     else
       RemoteImage.size_and_animated(absolute_url)
     end
-  rescue URI::Error
-    # the secure uploads url helpers raise on malformed urls
+  rescue URI::Error, Discourse::NotFound
+    # Missing or malformed secure URLs are rendered as broken images.
   end
 
   def get_filename(upload, src)
@@ -433,7 +433,8 @@ module CookedProcessorMixin
     src = img["src"]
     return if src.blank? || is_a_hyperlink?(img)
 
-    upload = Upload.get_from_url(src)
+    sha1 = Upload.sha1_from_base62(img["data-base62-sha1"]) if img["data-base62-sha1"].present?
+    upload = Upload.fetch_from(sha1: sha1, url: src)
 
     original_width, original_height = nil
 
@@ -520,7 +521,7 @@ module CookedProcessorMixin
 
       still_an_image = false
     elsif info&.downloaded? && upload = info&.upload
-      img["src"] = UrlHelper.cook_url(upload.url, secure: @should_secure_uploads)
+      img["src"] = cooked_upload_url(upload.url, upload)
       img["data-dominant-color"] = upload.dominant_color(calculate_if_missing: true).presence
       img.delete(PrettyText::BLOCKED_HOTLINKED_SRC_ATTR)
     end
@@ -535,6 +536,13 @@ module CookedProcessorMixin
     @post&.post_hotlinked_media&.preload(:upload)&.index_by(&:url)
   end
 
+  def cooked_upload_url(url, upload)
+    if @should_secure_uploads
+      url = Upload.secure_uploads_url_from_upload_url(url, base62_sha1: upload.base62_sha1)
+    end
+    UrlHelper.cook_url(url, secure: @should_secure_uploads)
+  end
+
   def optimize_image!(img, upload, cropped: false)
     w, h = img["width"].to_i, img["height"].to_i
     onebox = img.ancestors(".onebox, .onebox-body").first
@@ -542,7 +550,7 @@ module CookedProcessorMixin
     # note: optimize_urls cooks the src further after this
     thumbnail = upload.thumbnail(w, h)
     if thumbnail && thumbnail.filesize.to_i < upload.filesize
-      img["src"] = thumbnail.url
+      img["src"] = cooked_upload_url(thumbnail.url, upload)
 
       srcset = +""
 
@@ -556,10 +564,10 @@ module CookedProcessorMixin
           resized_h = (h * ratio).to_i
 
           if !cropped && upload.width && resized_w > upload.width
-            cooked_url = UrlHelper.cook_url(upload.url, secure: @should_secure_uploads)
+            cooked_url = cooked_upload_url(upload.url, upload)
             srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0\z/, "")}x"
           elsif t = upload.thumbnail(resized_w, resized_h)
-            cooked_url = UrlHelper.cook_url(t.url, secure: @should_secure_uploads)
+            cooked_url = cooked_upload_url(t.url, upload)
             srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0\z/, "")}x"
           end
 
@@ -569,7 +577,7 @@ module CookedProcessorMixin
         end
       end
     else
-      img["src"] = upload.url
+      img["src"] = cooked_upload_url(upload.url, upload)
     end
 
     if !@disable_dominant_color &&
@@ -587,10 +595,20 @@ module CookedProcessorMixin
     lightbox.add_child(img)
 
     # then, the link to our larger image
-    src_url = Upload.secure_uploads_url?(img["src"]) ? upload&.url || img["src"] : img["src"]
-    src = UrlHelper.cook_url(src_url, secure: @should_secure_uploads)
+    src =
+      if (upload && @should_secure_uploads) || Upload.secure_uploads_url?(img["src"])
+        secure_url =
+          Upload.secure_uploads_url_from_upload_url(
+            upload&.url || img["src"],
+            base62_sha1: upload&.base62_sha1 || img["data-base62-sha1"],
+          )
+        UrlHelper.schemaless(UrlHelper.absolute_without_cdn(secure_url))
+      else
+        UrlHelper.cook_url(img["src"], secure: @should_secure_uploads)
+      end
 
     a = create_link_node("lightbox", src)
+    a["data-base62-sha1"] = upload.base62_sha1 if upload&.dependent?
     img.add_next_sibling(a)
 
     a["data-download-href"] = Discourse.store.download_url(upload) if upload

@@ -209,6 +209,8 @@ RSpec.describe ExternalUploadManager do
         upload = manager.transform!
         expect(upload.sha1).not_to eq(sha1)
         expect(upload.original_sha1).to eq(nil)
+        expect(upload.storage_sha256).to be_nil
+        expect(upload.primary_upload_id).to be_nil
         expect(upload.filesize).to eq(object_size)
       end
 
