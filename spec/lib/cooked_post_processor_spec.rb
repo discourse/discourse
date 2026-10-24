@@ -1143,6 +1143,76 @@ RSpec.describe CookedPostProcessor do
     end
   end
 
+  describe "#deferred_thumbnails" do
+    fab!(:first_upload) { Fabricate(:image_upload, width: 1750, height: 2000, color: "white") }
+    fab!(:second_upload) { Fabricate(:image_upload, width: 1750, height: 2000, color: "red") }
+    fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: <<~HTML) }
+      <img src="#{first_upload.url}">
+      <img src="#{second_upload.url}">
+      HTML
+
+    before do
+      SiteSetting.max_image_height = 2000
+      SiteSetting.create_thumbnails = true
+    end
+
+    around do |example|
+      stub_const(CookedProcessorMixin, :INLINE_THUMBNAIL_IMAGE_LIMIT, 1) { example.run }
+    end
+
+    def lightboxed_sources(cpp)
+      Nokogiri::HTML5
+        .fragment(cpp.html)
+        .css(".lightbox-wrapper a.lightbox img")
+        .map { |image| image["src"] }
+    end
+
+    it "defers every thumbnail and keeps the originals when more images than the limit are missing them" do
+      cpp = CookedPostProcessor.new(post, defer_thumbnails: true, disable_dominant_color: true)
+      cpp.post_process
+
+      expect(first_upload.thumbnail(690, 788)).to be_nil
+      expect(second_upload.thumbnail(690, 788)).to be_nil
+      expect(cpp.deferred_thumbnails).to contain_exactly(
+        { upload_id: first_upload.id, width: 690, height: 788, crop: false },
+        { upload_id: first_upload.id, width: 1035, height: 1182, crop: false },
+        { upload_id: first_upload.id, width: 1380, height: 1576, crop: false },
+        { upload_id: second_upload.id, width: 690, height: 788, crop: false },
+        { upload_id: second_upload.id, width: 1035, height: 1182, crop: false },
+        { upload_id: second_upload.id, width: 1380, height: 1576, crop: false },
+      )
+      expect(lightboxed_sources(cpp)).to eq(
+        ["//test.localhost#{first_upload.url}", "//test.localhost#{second_upload.url}"],
+      )
+    end
+
+    it "generates inline when the images missing thumbnails are within the limit" do
+      [[690, 788], [1035, 1182], [1380, 1576]].each do |width, height|
+        second_upload.create_thumbnail!(width, height, crop: false)
+      end
+
+      cpp = CookedPostProcessor.new(post, defer_thumbnails: true, disable_dominant_color: true)
+      cpp.post_process
+
+      expect(cpp.deferred_thumbnails).to be_empty
+      expect(lightboxed_sources(cpp)).to eq(
+        [
+          "//test.localhost#{first_upload.thumbnail(690, 788).url}",
+          "//test.localhost#{second_upload.thumbnail(690, 788).url}",
+        ],
+      )
+    end
+
+    it "generates every thumbnail inline when deferral is off" do
+      cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
+      cpp.post_process
+
+      expect(cpp.deferred_thumbnails).to be_empty
+      expect(first_upload.thumbnail(690, 788)).to be_present
+      expect(second_upload.thumbnail(690, 788)).to be_present
+    end
+  end
+
   describe "#convert_to_link" do
     fab!(:thumbnail) { Fabricate(:optimized_image, upload: upload, width: 512, height: 384) }
 
