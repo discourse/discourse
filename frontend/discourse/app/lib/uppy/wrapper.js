@@ -33,7 +33,7 @@ export default class UppyWrapper {
   /** @type {Record<string, Set<string>>} pending file ids per preprocessor */
   #preProcessorStatus = {};
   #allCompleteCallbacks = [];
-  #trackingUploads = false;
+  #trackedInstance = null;
 
   constructor(owner) {
     setOwner(this, owner);
@@ -44,6 +44,8 @@ export default class UppyWrapper {
     if (!this.uppyInstance) {
       return;
     }
+
+    this.#trackUploads();
 
     if (!pluginClass.pluginId) {
       throw new Error(
@@ -70,7 +72,6 @@ export default class UppyWrapper {
 
     if (pluginClass.pluginType === "preprocessor") {
       this.#preProcessorStatus[pluginClass.pluginId] = new Set();
-      this.#trackUploads();
     }
   }
 
@@ -81,6 +82,7 @@ export default class UppyWrapper {
   //
   // See: https://uppy.io/docs/writing-plugins/#Progress-events
   onPreProcessProgress(callback) {
+    this.#trackUploads();
     this.uppyInstance.on("preprocess-progress", (file, progress, pluginId) => {
       if (!this.#isPending(pluginId, file)) {
         return;
@@ -93,6 +95,7 @@ export default class UppyWrapper {
   }
 
   onPreProcessComplete(callback, allCompleteCallback = null) {
+    this.#trackUploads();
     if (allCompleteCallback) {
       this.#allCompleteCallbacks.push(allCompleteCallback);
     }
@@ -128,11 +131,15 @@ export default class UppyWrapper {
     );
   }
 
+  // The wrapper outlives its Uppy instance, which is rebuilt whenever the
+  // editor is set up again, so tracking starts over for each instance.
   #trackUploads() {
-    if (this.#trackingUploads) {
+    if (this.#trackedInstance === this.uppyInstance) {
       return;
     }
-    this.#trackingUploads = true;
+    this.#trackedInstance = this.uppyInstance;
+    this.#preProcessorStatus = {};
+    this.#allCompleteCallbacks = [];
 
     this.uppyInstance.on("upload", (uploadId, files) => {
       this.#eachPreProcessor((pluginId, pendingFileIds) => {

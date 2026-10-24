@@ -108,6 +108,27 @@ module("Unit | Lib | uppy/wrapper", function (hooks) {
     assert.strictEqual(this.allComplete, 0);
   });
 
+  test("starts over when the uppy instance is replaced", function (assert) {
+    this.uppy.upload(this.a);
+
+    this.uppy = new FakeUppy();
+    this.wrapper.uppyInstance = this.uppy;
+    this.wrapper.useUploadPlugin(FakePreprocessor);
+    this.wrapper.onPreProcessComplete(
+      (file) => this.completed.push(file.id),
+      () => this.allComplete++
+    );
+
+    this.uppy.upload(this.b);
+    this.uppy.complete(this.b);
+    assert.deepEqual(this.completed, ["b"], "tracks the new instance's files");
+    assert.strictEqual(
+      this.allComplete,
+      1,
+      "completes once, not once per setup"
+    );
+  });
+
   test("addNeedProcessing is a deprecated no-op", function (assert) {
     withSilencedDeprecations("discourse.uppy-wrapper-add-need-processing", () =>
       this.wrapper.addNeedProcessing(2)
