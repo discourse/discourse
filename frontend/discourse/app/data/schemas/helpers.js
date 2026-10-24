@@ -14,3 +14,7 @@ export function belongsTo(name, type) {
     options: { async: false, inverse: null },
   };
 }
+
+export function hasMany(name, type) {
+  return { ...belongsTo(name, type), kind: "hasMany" };
+}
