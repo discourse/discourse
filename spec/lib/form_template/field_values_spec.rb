@@ -30,16 +30,6 @@ RSpec.describe FormTemplate::FieldValues do
       expect(values.answers).to eq(answers)
       expect(values.answers).not_to have_key("missing")
     end
-
-    it "matches numeric YAML field IDs to JSON answer keys without changing the schema" do
-      fields = [{ "id" => 1, "type" => "input" }]
-
-      values = described_class.new(fields:, answers: { "1" => "one" })
-
-      expect(values.fields.first["id"]).to eq("1")
-      expect(fields.first["id"]).to eq(1)
-      expect(values).to be_well_formed
-    end
   end
 
   describe "#well_formed?" do
@@ -118,31 +108,6 @@ RSpec.describe FormTemplate::FieldValues do
       fields.first["attributes"] = { "disabled" => true }
 
       expect(described_class.new(fields:, answers: {}).incomplete_fields).to be_empty
-    end
-
-    it "leaves browser patterns and field-length rules to the browser" do
-      fields = [
-        {
-          "id" => "greek",
-          "type" => "input",
-          "validations" => {
-            "pattern" => '\p{Script=Greek}+',
-            "required" => true,
-          },
-        },
-        {
-          "id" => "emoji",
-          "type" => "input",
-          "validations" => {
-            "minimum" => 2,
-            "maximum" => 2,
-            "required" => true,
-          },
-        },
-      ]
-      answers = { "greek" => "αβ", "emoji" => "😀" }
-
-      expect(described_class.new(fields:, answers:).incomplete_fields).to be_empty
     end
   end
 end

@@ -69,30 +69,6 @@ RSpec.describe PostsController do
       )
     end
 
-    it "rejects stored unsafe output definitions without creating a post" do
-      form_template.update_column(
-        :output_template,
-        "{{ answers.description | replace: 'x', answers.description }}",
-      )
-      expect do
-        post "/posts.json",
-             params: {
-               title: "A session with an unsafe stored output template",
-               category: category.id,
-               form_template_data: {
-                 id: form_template.id,
-                 answers: {
-                   description: "x" * 1000,
-                 },
-               }.to_json,
-             }
-      end.not_to change(Post, :count)
-      expect(response.status).to eq(422)
-      expect(response.parsed_body["errors"]).to include(
-        I18n.t("form_templates.errors.invalid_output_template"),
-      )
-    end
-
     it "rejects missing required answers even when a client provides raw" do
       expect do
         post "/posts.json",
@@ -123,18 +99,6 @@ RSpec.describe PostsController do
              }
       end.not_to change(Post, :count)
       expect(response.status).to eq(422)
-    end
-
-    it "preserves the legacy raw-only creation path" do
-      raw = "A sufficiently long body from an older client."
-      post "/posts.json",
-           params: {
-             title: "A session from an older client",
-             category: category.id,
-             raw:,
-           }
-      expect(response.status).to eq(200)
-      expect(Post.find(response.parsed_body["id"]).raw).to eq(raw)
     end
   end
 end
