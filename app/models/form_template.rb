@@ -27,36 +27,8 @@ class FormTemplate < ActiveRecord::Base
   class NotAllowed < StandardError
   end
 
-  class InvalidAnswers < StandardError
-  end
-
-  def self.render_submission(payload:, category_id:, guardian:, validate: true)
-    raise Discourse::InvalidAccess unless SiteSetting.enable_form_templates
-    unless payload.is_a?(String) && payload.bytesize <= 1.megabyte
-      raise Discourse::InvalidParameters.new(:form_template_data)
-    end
-
-    data = JSON.parse(payload)
-    raise Discourse::InvalidParameters.new(:form_template_data) unless data.is_a?(Hash)
-    category = Category.find_by(id: category_id)
-    unless category && guardian.can_create_topic_on_category?(category)
-      raise Discourse::InvalidAccess
-    end
-    template = category.form_templates.find_by(id: data["id"])
-    raise Discourse::NotFound unless template
-
-    template.process!(guardian)
-    fields = YAML.safe_load(template.template)
-    values =
-      FieldValues.new(
-        fields:,
-        answers: data.fetch("answers"),
-        number_formats: data.fetch("number_formats", {}),
-      )
-    values.validate! if validate
-    OutputRenderer.render(values, template.output_template)
-  rescue JSON::ParserError, KeyError, ArgumentError
-    raise Discourse::InvalidParameters.new(:form_template_data)
+  def fields
+    YAML.safe_load(template)
   end
 
   def process!(guardian)

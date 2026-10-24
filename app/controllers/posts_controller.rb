@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class PostsController < ApplicationController
+  include FormTemplateSubmissions
   include TagParamLimit
 
   # Bug with Rails 7+
@@ -29,10 +30,6 @@ class PostsController < ApplicationController
                      :check_xhr,
                      only: %i[markdown_id markdown_num short_link user_posts_feed]
   skip_before_action :preload_json, :check_xhr, if: -> { request.format.rss? }
-
-  rescue_from FormTemplate::InvalidAnswers do |error|
-    render_json_error(error.message, status: :unprocessable_entity)
-  end
 
   MARKDOWN_TOPIC_PAGE_SIZE = 100
 
@@ -175,11 +172,10 @@ class PostsController < ApplicationController
     manager_params = create_params
     if params[:form_template_data].present?
       raise Discourse::InvalidParameters.new(:topic_id) if manager_params[:topic_id].present?
-      manager_params[:raw] = FormTemplate.render_submission(
-        payload: params[:form_template_data],
-        category_id: manager_params[:category],
-        guardian:,
-      )
+      render_form_submission(category_id: manager_params[:category]) do |raw|
+        manager_params[:raw] = raw
+      end
+      return if performed?
     end
     manager_params[:first_post_checks] = !is_api?
     manager_params[:advance_draft] = !is_api?

@@ -33,7 +33,5 @@ class FormTemplate::OutputRenderer
     template.resource_limits.render_score_limit = 10_000
     template.resource_limits.assign_score_limit = 10_000
     template.render!({ "answers" => field_values.answers }, strict_filters: true)
-  rescue Liquid::Error
-    raise FormTemplate::InvalidAnswers, I18n.t("form_templates.errors.invalid_output_template")
   end
 end

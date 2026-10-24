@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
 class FormTemplatesController < ApplicationController
+  include FormTemplateSubmissions
+
   requires_login
   before_action :ensure_form_templates_enabled
-
-  rescue_from FormTemplate::InvalidAnswers do |error|
-    render_json_error(error.message, status: :unprocessable_entity)
-  end
 
   def index
     form_templates = accessible_form_templates.order(:id)
@@ -26,14 +24,10 @@ class FormTemplatesController < ApplicationController
   end
 
   def render_output
-    raw =
-      FormTemplate.render_submission(
-        payload: params.require(:form_template_data),
-        category_id: params.require(:category_id),
-        guardian:,
-        validate: false,
-      )
-    render json: { raw: }
+    render_form_submission(
+      category_id: params[:category_id],
+      allow_incomplete_answers: true,
+    ) { |raw| render json: { raw: } }
   end
 
   private

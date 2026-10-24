@@ -272,9 +272,6 @@ RSpec.describe FormTemplatesController do
                id: render_template.id,
                answers: {
                  description: "**Hello**\n\nWorld",
-                 seats: 100,
-               },
-               number_formats: {
                  seats: "1e2",
                },
              }.to_json,
@@ -302,7 +299,7 @@ RSpec.describe FormTemplatesController do
       post "/form-templates/render.json",
            params: {
              category_id: category.id,
-             form_template_data: { id: render_template.id, answers: { seats: 20_000 } }.to_json,
+             form_template_data: { id: render_template.id, answers: { seats: "20000" } }.to_json,
            }
       expect(response.status).to eq(422)
       expect(response.parsed_body["errors"]).to include(
@@ -330,12 +327,15 @@ RSpec.describe FormTemplatesController do
       expect(response.status).to eq(403)
     end
 
-    it "rejects malformed answers and incompatible numeric formatting" do
+    it "rejects malformed answers" do
       [
         "not json",
-        { id: render_template.id, answers: { unknown: "value" } }.to_json,
-        { id: render_template.id, answers: { seats: 1 }, number_formats: { seats: "2" } }.to_json,
+        "[]",
+        { answers: {} }.to_json,
+        { id: render_template.id }.to_json,
         { id: render_template.id, answers: [] }.to_json,
+        { id: render_template.id, answers: { unknown: "value" } }.to_json,
+        { id: render_template.id, answers: { seats: 1 } }.to_json,
       ].each do |payload|
         post "/form-templates/render.json",
              params: {

@@ -29,31 +29,21 @@ export function collectFormTemplateAnswers(
 
   const formData = new FormData(form);
   const answers = Object.create(null);
-  const numberFormats = Object.create(null);
 
   for (const field of fields) {
     const values = formData.getAll(field.id);
     if (field.type === "checkbox") {
       answers[field.id] = values.length > 0;
     } else if (values.length > 0) {
-      if (
+      answers[field.id] =
         field.type === "multi-select" ||
         (field.type === "tag-chooser" && field.attributes?.multiple)
-      ) {
-        answers[field.id] = values;
-      } else if (
-        field.type === "input" &&
-        field.validations?.type === "number"
-      ) {
-        numberFormats[field.id] = values[0];
-        answers[field.id] = values[0] === "" ? null : Number(values[0]);
-      } else {
-        answers[field.id] = values[0];
-      }
+          ? values
+          : values[0];
     }
   }
 
-  return { answers, number_formats: numberFormats };
+  return answers;
 }
 
 export default async function renderFormTemplate(
@@ -63,11 +53,11 @@ export default async function renderFormTemplate(
   categoryId,
   checkFormValidity = true
 ) {
-  const values = collectFormTemplateAnswers(form, fields, checkFormValidity);
-  if (!values) {
+  const answers = collectFormTemplateAnswers(form, fields, checkFormValidity);
+  if (!answers) {
     return null;
   }
-  const payload = JSON.stringify({ id, ...values });
+  const payload = JSON.stringify({ id, answers });
   const { raw } = await ajax("/form-templates/render.json", {
     type: "POST",
     data: { category_id: categoryId, form_template_data: payload },
