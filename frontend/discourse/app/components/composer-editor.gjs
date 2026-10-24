@@ -16,7 +16,6 @@ import Wrapper from "discourse/components/form-template-field/wrapper";
 import PostTranslationEditor from "discourse/components/post-translation-editor";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import { setupComposerPosition } from "discourse/lib/composer/composer-position";
 import { decorateImageControls } from "discourse/lib/composer/image-controls";
@@ -550,14 +549,10 @@ export default class ComposerEditor extends Component {
         this.preview = preview;
       }
     } catch (error) {
-      if (
-        sequence === this.#formPreviewSequence &&
-        !this.isDestroying &&
-        model === this.composer.model &&
-        categoryId === model.categoryId &&
-        templateId === this.selectedFormTemplateId
-      ) {
-        popupAjaxError(error);
+      // the preview runs on every keystroke, so a rejected render keeps the
+      // last good preview and leaves reporting to the save
+      if (!error?.jqXHR) {
+        throw error;
       }
     }
   }
