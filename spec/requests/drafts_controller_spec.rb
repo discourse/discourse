@@ -391,6 +391,26 @@ RSpec.describe DraftsController do
       end
     end
 
+    it "does not count discarded drafts against the limit or block a new draft with the same key" do
+      SiteSetting.max_drafts_per_user = 1
+      sign_in(user)
+      data = { reply: "worth keeping" }.to_json
+
+      post "/drafts.json", params: { draft_key: "topic_1", data: data, sequence: 0 }
+      Draft.clear(user, "topic_1", DraftSequence.current(user, "topic_1"))
+
+      post "/drafts.json",
+           params: {
+             draft_key: "topic_1",
+             data: data,
+             sequence: DraftSequence.current(user, "topic_1"),
+           }
+
+      expect(response.status).to eq(200)
+      expect(Draft.live.where(user: user).count).to eq(1)
+      expect(Draft.discarded.where(user: user).count).to eq(1)
+    end
+
     it "returns 403 when the maximum amount of drafts per users is reached" do
       SiteSetting.max_drafts_per_user = 2
 
@@ -597,7 +617,11 @@ RSpec.describe DraftsController do
       expect(Draft.get(user, "draft1", 0)).to eq(nil)
       expect(Draft.get(user, "draft2", 0)).to eq(nil)
       expect(Draft.get(user, "draft3", 0)).to be_present
-      expect(Draft.where(user: user).count).to eq(1)
+      expect(Draft.live.where(user: user).count).to eq(1)
+      expect(Draft.discarded.where(user: user).pluck(:draft_key)).to contain_exactly(
+        "draft1",
+        "draft2",
+      )
     end
 
     it "handles empty draft_keys array" do

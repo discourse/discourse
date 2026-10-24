@@ -23,6 +23,14 @@ export default class Draft extends EmberObject {
     });
   }
 
+  static restoreDiscarded(id) {
+    return ajax(`/discarded_drafts/${id}/restore.json`, { type: "PUT" });
+  }
+
+  static destroyDiscarded(id) {
+    return ajax(`/discarded_drafts/${id}.json`, { type: "DELETE" });
+  }
+
   static get(key) {
     return ajax(`/drafts/${key}.json`);
   }

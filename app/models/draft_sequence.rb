@@ -20,7 +20,7 @@ class DraftSequence < ActiveRecord::Base
         RETURNING sequence
       SQL
 
-    Draft.where(user_id: user_id, draft_key: key).destroy_all
+    Draft.live.where(user_id: user_id, draft_key: key).destroy_all
 
     UserStat.update_draft_count(user_id)
 

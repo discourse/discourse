@@ -13,7 +13,13 @@ class Draft < ActiveRecord::Base
 
   after_commit :update_draft_count, on: %i[create destroy]
 
+  scope :live, -> { where(deleted_at: nil) }
+  scope :discarded, -> { where.not(deleted_at: nil) }
+
   class OutOfSequence < StandardError
+  end
+
+  class RestoreConflict < StandardError
   end
 
   def self.set(user, key, sequence, data, owner = nil, force_save: false)
@@ -31,7 +37,8 @@ class Draft < ActiveRecord::Base
         SELECT id, owner FROM drafts
         WHERE
           user_id = :user_id AND
-          draft_key = :key
+          draft_key = :key AND
+          deleted_at IS NULL
       ),
       draft_sequence AS (
         SELECT sequence
@@ -79,14 +86,16 @@ class Draft < ActiveRecord::Base
       draft_id = DB.query_single(<<~SQL, opts).first
         INSERT INTO drafts (user_id, draft_key, data, sequence, owner, created_at, updated_at)
         VALUES (:user_id, :draft_key, :data, :sequence, :owner, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-        ON CONFLICT (user_id, draft_key) DO
+        ON CONFLICT (user_id, draft_key) WHERE deleted_at IS NULL DO
         UPDATE
         SET
           sequence = :sequence,
           data = :data,
           revisions = drafts.revisions + 1,
           owner = :owner,
-          updated_at = CURRENT_TIMESTAMP
+          updated_at = CURRENT_TIMESTAMP,
+          -- until the full (user_id, draft_key) index is dropped, a discarded draft can be the conflicting row
+          deleted_at = NULL
         RETURNING id
       SQL
 
@@ -111,7 +120,7 @@ class Draft < ActiveRecord::Base
       WITH draft AS (
         SELECT data, sequence
         FROM drafts
-        WHERE draft_key = :draft_key AND user_id = :user_id
+        WHERE draft_key = :draft_key AND user_id = :user_id AND deleted_at IS NULL
       ),
       draft_sequence AS (
         SELECT sequence
@@ -142,7 +151,62 @@ class Draft < ActiveRecord::Base
     raise Draft::OutOfSequence.new("bad draft sequence") if sequence != current_sequence
 
     # corrupt data is not a reason not to leave data
-    Draft.where(user_id: user.id, draft_key: key).destroy_all
+    discard!(user.id, key)
+  end
+
+  # Discarded drafts are kept for `discarded_drafts_retention_days` so users can restore them.
+  def self.discard!(user_id, keys)
+    drafts = Draft.live.where(user_id: user_id, draft_key: keys).to_a
+    return 0 if drafts.empty?
+
+    recoverable, disposable = drafts.partition(&:recoverable?)
+
+    Draft.transaction do
+      Draft.where(id: recoverable.map(&:id)).update_all(deleted_at: Time.zone.now)
+      disposable.each(&:destroy!)
+    end
+
+    UserStat.update_draft_count(user_id)
+    drafts.size
+  end
+
+  def self.purge_discarded!
+    cutoff = SiteSetting.discarded_drafts_retention_days.days.ago
+
+    Draft
+      .discarded
+      .where("deleted_at <= ?", cutoff)
+      .in_batches(of: 1000) do |batch|
+        UploadReference.where(target_type: "Draft", target_id: batch.select(:id)).delete_all
+        batch.delete_all
+      end
+  end
+
+  def restore!
+    sequence = DraftSequence.current(user_id, draft_key)
+
+    begin
+      count =
+        Draft
+          .discarded
+          .where(id: id)
+          .where.not(Draft.live.where(user_id: user_id, draft_key: draft_key).arel.exists)
+          .update_all(deleted_at: nil, sequence: sequence, updated_at: Time.zone.now)
+    rescue ActiveRecord::RecordNotUnique
+      count = 0
+    end
+
+    raise RestoreConflict if count == 0
+
+    UserStat.update_draft_count(user_id)
+    reload
+  end
+
+  def recoverable?
+    return false if SiteSetting.discarded_drafts_retention_days == 0
+
+    content = parsed_data
+    content.is_a?(Hash) && (content["reply"].present? || content["title"].present?)
   end
 
   def display_user
@@ -222,6 +286,7 @@ class Draft < ActiveRecord::Base
 
     stream =
       Draft
+        .live
         .where(user_id: user_id)
         .where(<<~SQL)
           sequence >= COALESCE(
@@ -242,7 +307,7 @@ class Draft < ActiveRecord::Base
   end
 
   def self.cleanup!
-    Draft.where(<<~SQL).in_batches(of: 100).destroy_all
+    Draft.live.where(<<~SQL).in_batches(of: 100).destroy_all
       sequence < (
         SELECT MAX(s.sequence)
           FROM draft_sequences s
@@ -253,7 +318,11 @@ class Draft < ActiveRecord::Base
 
     # remove old drafts
     delete_drafts_older_than_n_days = SiteSetting.delete_drafts_older_than_n_days.days.ago
-    Draft.where("updated_at < ?", delete_drafts_older_than_n_days).in_batches(of: 100).destroy_all
+    Draft
+      .live
+      .where("updated_at < ?", delete_drafts_older_than_n_days)
+      .in_batches(of: 100)
+      .destroy_all
 
     UserStat.update_draft_count
   end
@@ -351,6 +420,7 @@ end
 #
 #  id         :integer          not null, primary key
 #  data       :text             not null
+#  deleted_at :datetime
 #  draft_key  :string           not null
 #  owner      :string
 #  revisions  :integer          default(1), not null
@@ -361,5 +431,7 @@ end
 #
 # Indexes
 #
-#  index_drafts_on_user_id_and_draft_key  (user_id,draft_key) UNIQUE
+#  idx_drafts_on_deleted_at                  (deleted_at) WHERE (deleted_at IS NOT NULL)
+#  idx_drafts_on_user_id                     (user_id)
+#  idx_drafts_on_user_id_and_draft_key_live  (user_id,draft_key) UNIQUE WHERE (deleted_at IS NULL)
 #
