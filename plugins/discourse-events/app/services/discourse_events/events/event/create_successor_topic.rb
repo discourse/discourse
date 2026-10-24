@@ -17,21 +17,27 @@ module DiscourseEvents
 
       EVENT_OPEN_TAG =
         /
-        \[event(?=\s|\])
-        (?:
-          [^"'«“”‘„‚‹\]]+
-          | "[^"]*"
-          | '[^']*'
-          | «[^»]*»
-          | “[^”]*”
-          | ”[^”]*”
-          | ‘[^’]*’
-          | „[^“]*“
-          | ‚[^’]*’
-          | ‹[^›]*›
-        )*+
-        \]
-      /ix
+          \[event(?=\s|\])
+          (?:
+            \s+[-\w]+
+            (?:=
+              (?:
+                "[^"]+"
+                | '[^']+'
+                | «[^»]+»
+                | “[^”]+”
+                | ”[^”]+”
+                | ‘[^’]+’
+                | „[^“]+“
+                | ‚[^’]+’
+                | ‹[^›]+›
+                | [^\s\]]+
+              )
+            )?
+          )*+
+          \s*
+          \]
+        /ix
 
       ATTRIBUTE_VALUE =
         /
@@ -279,7 +285,6 @@ module DiscourseEvents
       def rendered_event_open_tag_match(raw)
         matches = raw.to_enum(:scan, EVENT_OPEN_TAG).map { Regexp.last_match.dup }
         return if matches.empty?
-        return matches.first if matches.one?
 
         marked_raw =
           raw

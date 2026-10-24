@@ -734,6 +734,98 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(successor_post.event.original_starts_at).to eq_time(starts_at + 7.days)
       end
 
+      it "rolls over an event with an unmatched guillemet in an unquoted attribute" do
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Weekly meeting with unquoted guillemet"
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event location=«room start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Meeting notes.
+              [/event]
+            RAW
+
+        original_topic_id = post.topic_id
+        original_event = post.reload.event
+
+        expect(original_event).to be_present
+        expect(original_event.location).to eq("«room")
+
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        successor_topic = Topic.where(title:).where.not(id: original_topic_id).sole
+        successor_post = successor_topic.first_post
+
+        expect(successor_post.raw).to include("location=«room")
+        expect(successor_post.event.location).to eq("«room")
+        expect(successor_post.event.original_starts_at).to eq_time(starts_at + 7.days)
+      end
+
+      it "rolls over an event with an apostrophe in an unquoted attribute" do
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Weekly meeting with unquoted apostrophe"
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event name=John's start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Meeting notes.
+              [/event]
+            RAW
+
+        original_topic_id = post.topic_id
+        expect(post.reload.event).to be_present
+
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        successor_topic = Topic.where(title:).where.not(id: original_topic_id).sole
+        successor_post = successor_topic.first_post
+
+        expect(successor_post.raw).to include("name=John's")
+        expect(successor_post.event.original_starts_at).to eq_time(starts_at + 7.days)
+        expect(post.reload.event.recurrence).to be_blank
+      end
+
+      it "ignores a code-block decoy before an event with an unquoted apostrophe" do
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Weekly meeting with apostrophe and code example"
+        fence = "`" * 3
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              Example of event markup:
+
+              #{fence}
+              [event start="2000-01-01 10:00" recurrence="every_week"]
+              [/event]
+              #{fence}
+
+              [event name=John's start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Actual meeting notes.
+              [/event]
+            RAW
+
+        original_topic_id = post.topic_id
+        expect(post.reload.event).to be_present
+
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        successor_topic = Topic.where(title:).where.not(id: original_topic_id).sole
+        successor_post = successor_topic.first_post
+
+        expect(successor_post.raw).to include(
+          %[event start="2000-01-01 10:00" recurrence="every_week"],
+        )
+        expect(successor_post.raw).to include("name=John's")
+        expect(successor_post.event.original_starts_at).to eq_time(starts_at + 7.days)
+        expect(post.reload.event.recurrence).to be_blank
+      end
+
       it "ignores event markup in code blocks when creating a successor" do
         starts_at = 7.days.after.change(sec: 0)
         ends_at = starts_at + 1.hour
