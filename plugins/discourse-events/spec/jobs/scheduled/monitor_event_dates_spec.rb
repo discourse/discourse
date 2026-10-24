@@ -899,6 +899,113 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(Topic.where(title:).where.not(id: original_topic.id)).to exist
       end
 
+      it "does not publish a successor for a silenced event author" do
+        author = Fabricate(:user, refresh_auto_groups: true)
+        SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
+
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Recurring event by subsequently silenced author"
+
+        post = PostCreator.create!(author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Meeting notes.
+              [/event]
+            RAW
+
+        original_topic = post.topic
+        event_date = post.reload.event.event_dates.pending.first
+
+        expect(original_topic.visible).to eq(true)
+
+        expect(UserSilencer.silence(author, nil, keep_posts: true)).to eq(true)
+
+        expect(author.reload.silenced?).to eq(true)
+        expect(post.reload.hidden?).to eq(false)
+        expect(original_topic.reload.visible).to eq(true)
+
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.not_to change(Topic, :count)
+
+        expect(Topic.where(title:).where.not(id: original_topic.id)).not_to exist
+        expect(author.reload.silenced?).to eq(true)
+        expect(post.reload.hidden?).to eq(false)
+        expect(event_date.reload.finished_at).to be_nil
+        expect(post.reload.event.recurrence).to eq("every_week")
+
+        expect {
+          DiscourseEvents::Events::Event::CreateSuccessorTopic.call(event_date)
+        }.to raise_error(Discourse::InvalidParameters)
+
+        expect(event_date.reload.finished_at).to be_nil
+
+        UserSilencer.unsilence(author)
+        expect(author.reload.silenced?).to eq(false)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        successor_topic = Topic.where(title:).where.not(id: original_topic.id).sole
+
+        expect(successor_topic.first_post.user_id).to eq(author.id)
+        expect(successor_topic.first_post.event).to be_present
+        expect(event_date.reload.finished_at).to be_present
+
+        expect { job.execute({}) }.not_to change(Topic, :count)
+      end
+
+      {
+        "post is hidden" => :post,
+        "topic is non-visible" => :topic,
+      }.each do |description, restriction|
+        it "defers successor creation while the source #{description}" do
+          starts_at = 7.days.after.change(sec: 0)
+          ends_at = starts_at + 1.hour
+          title = "Moderated recurring meeting #{restriction}"
+
+          post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+                [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+                Meeting notes.
+                [/event]
+              RAW
+
+          original_topic = post.topic
+          original_event = post.reload.event
+          event_date = original_event.event_dates.pending.first
+
+          case restriction
+          when :post
+            post.update_columns(hidden: true, hidden_at: Time.current)
+          when :topic
+            original_topic.update_columns(visible: false)
+          end
+
+          freeze_time(ends_at + 1.hour)
+
+          expect { job.execute({}) }.not_to change(Topic, :count)
+
+          expect(event_date.reload.finished_at).to be_nil
+          expect(original_event.reload.recurrence).to eq("every_week")
+          expect(Topic.where(title:).where.not(id: original_topic.id)).not_to exist
+
+          case restriction
+          when :post
+            post.update_columns(hidden: false, hidden_at: nil)
+          when :topic
+            original_topic.update_columns(visible: true)
+          end
+
+          expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+          successor_topic = Topic.where(title:).where.not(id: original_topic.id).sole
+
+          expect(successor_topic.first_post.event).to be_present
+          expect(event_date.reload.finished_at).to be_present
+
+          expect { job.execute({}) }.not_to change(Topic, :count)
+        end
+      end
+
       it "creates a successor when the original author loses event creation permission" do
         restricted_author = Fabricate(:user, refresh_auto_groups: true)
 

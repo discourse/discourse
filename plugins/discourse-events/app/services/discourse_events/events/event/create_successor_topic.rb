@@ -49,6 +49,23 @@ module DiscourseEvents
         )
       /x
 
+      def self.rollover_allowed?(event)
+        source_post = event.post
+        source_topic = source_post&.topic
+        author = source_post&.user
+
+        return false if source_post.nil? || source_topic.nil?
+        return false if source_topic.archetype != Archetype.default
+        return false if source_post.hidden? || source_post.deleted_at.present?
+        return false if !source_topic.visible? || source_topic.deleted_at.present?
+
+        if author && (author.suspended? || SpamRule::AutoSilence.prevent_posting?(author))
+          return false
+        end
+
+        true
+      end
+
       def self.call(event_date)
         new(event_date).call
       end
@@ -59,7 +76,7 @@ module DiscourseEvents
       end
 
       def call
-        raise Discourse::InvalidParameters.new(:event) if topic.archetype != Archetype.default
+        raise Discourse::InvalidParameters.new(:event) unless self.class.rollover_allowed?(event)
 
         original_raw = post.raw
         original_title = topic.title

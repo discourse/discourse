@@ -56,6 +56,10 @@ module Jobs
             SiteSetting.discourse_post_event_recurring_topic_mode == "create_next_topic"
 
         if create_successor_topic
+          unless DiscourseEvents::Events::Event::CreateSuccessorTopic.rollover_allowed?(event)
+            return
+          end
+
           DiscourseEvents::Events::Event.transaction do
             event_date.update!(finished_at: Time.current)
             DiscourseEvents::Events::Event::CreateSuccessorTopic.call(event_date)
