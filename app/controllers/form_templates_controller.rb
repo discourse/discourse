@@ -36,6 +36,7 @@ class FormTemplatesController < ApplicationController
         )
       render json: { raw: submission.render }
     else
+      ensure_form_templates_enabled
       render_form_submission(
         category_id: params[:category_id],
         allow_incomplete_answers: true,

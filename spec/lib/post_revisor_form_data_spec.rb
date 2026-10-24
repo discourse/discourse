@@ -26,6 +26,7 @@ RSpec.describe PostRevisor do
 
   describe "#revise!" do
     it "rejects a stale instance after an answer-only grace edit" do
+      post.update!(last_version_at: Time.now.change(nsec: 123_456_789))
       stale = Post.find(post.id)
       changed = submission.with_answers(submission.answers.merge("confirmed" => true))
       expect(

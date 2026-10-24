@@ -51,7 +51,7 @@ RSpec.describe "Editable form submissions" do
 
     drafts_page.visit(user)
     expect(drafts_page).to have_drafts(count: 1)
-    find(".post-list-item .draft-title").click
+    find(".post-list-item .resume-draft").click
     expect(page).to have_field("seats", with: "0")
     expect(page).to have_select("options", selected: %w[1 3])
     expect(page).to have_unchecked_field("confirmed")
