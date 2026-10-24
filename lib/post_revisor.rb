@@ -530,6 +530,19 @@ class PostRevisor
     "original_form_data_#{(@last_version_at.to_f * 1000).to_i}#{@post.id}"
   end
 
+  def rewrite_cached_original
+    @last_version_at ||= @post.last_version_at
+    changes = {}
+    %i[raw cooked form_data].each do |field|
+      key = public_send("original_#{field}_key")
+      next unless (value = Discourse.redis.get(key))
+      value = JSON.parse(value) if field == :form_data
+      rewritten = yield(field, value)
+      changes[key] = field == :form_data ? rewritten.to_json : rewritten
+    end
+    changes.each { |key, value| Discourse.redis.set(key, value, xx: true, keepttl: true) }
+  end
+
   def cached_original_raw
     @cached_original_raw ||= Discourse.redis.get(original_raw_key)
   end

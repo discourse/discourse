@@ -64,4 +64,65 @@ RSpec.describe Jobs::UpdateUsername do
     expect(category.description).to include(new_username)
     expect(category.description).not_to include(old_username)
   end
+
+  it "rewrites omitted answers and cached originals without mention actions" do
+    template =
+      Fabricate(
+        :form_template,
+        template: [{ id: "note", type: "textarea" }].as_json.to_yaml,
+        output_template: "A fixed invitation for the evening.",
+      )
+    original =
+      FormTemplate::Submission.from_template(
+        template,
+        answers: {
+          "note" => "Ask @#{user.username}",
+        },
+      )
+    post = create_post(raw: original.render, form_data: original.to_h)
+    changed = original.with_answers({ "note" => "Invite @#{user.username}" })
+    PostRevisor.new(post).revise!(post.user, { raw: changed.render, form_data: changed.to_h })
+
+    described_class.new.execute(
+      user_id: user.id,
+      old_username: user.username,
+      new_username: "newname",
+      avatar_template: user.avatar_template,
+    )
+
+    post.reload
+    expect(post.form_submission.answers).to eq("note" => "Invite @newname")
+    final = post.form_submission.with_answers({ "note" => "All invited" })
+    PostRevisor.new(post).revise!(
+      post.user,
+      { raw: final.render, form_data: final.to_h },
+      force_new_version: true,
+    )
+    expect(post.revisions.last.form_data_changes.first.dig("answers", "note")).to eq("Ask @newname")
+  end
+
+  it "leaves generated mentions and their form state unchanged when they cannot be rewritten together" do
+    template =
+      Fabricate(
+        :form_template,
+        template: [{ id: "username", type: "input" }].as_json.to_yaml,
+        output_template: "An invitation for @{{ answers.username }}.",
+      )
+    submission =
+      FormTemplate::Submission.from_template(template, answers: { "username" => user.username })
+    post = create_post(raw: submission.render, form_data: submission.to_h)
+    raw = post.raw
+    cooked = post.cooked
+
+    described_class.new.execute(
+      user_id: user.id,
+      old_username: user.username,
+      new_username: "newname",
+      avatar_template: user.avatar_template,
+    )
+
+    expect(post.reload.raw).to eq(raw)
+    expect(post.cooked).to eq(cooked)
+    expect(post.form_data).to eq(submission.to_h)
+  end
 end
