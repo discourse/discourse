@@ -33,24 +33,19 @@ module("Unit | Lib | form-template-validation", function () {
       form.append(control);
     }
 
-    const values = collectFormTemplateAnswers(form, fields, false);
+    const answers = collectFormTemplateAnswers(form, fields, false);
 
     assert.deepEqual(
-      { ...values.answers },
+      { ...answers },
       {
         checked: true,
         unchecked: false,
-        number: 100,
-        "empty-number": null,
+        number: "1e2",
+        "empty-number": "",
         description: "First\n\n**Second**",
         games: ["First", "Second"],
       },
-      "collects typed answers and omits missing controls"
-    );
-    assert.deepEqual(
-      { ...values.number_formats },
-      { number: "1e2", "empty-number": "" },
-      "retains numeric output spelling"
+      "collects typed answers, keeps numeric spelling, omits missing controls"
     );
   });
 

@@ -1,64 +1,42 @@
 # frozen_string_literal: true
 
 class FormTemplate::FieldValues
-  attr_reader :fields, :answers, :number_formats
+  NUMBER_PATTERN = /\A-?(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:[eE][+-]?[0-9]+)?\z/
 
-  def initialize(fields:, answers:, number_formats: {})
-    raise ArgumentError unless answers.is_a?(Hash) && number_formats.is_a?(Hash)
+  attr_reader :fields, :answers
 
-    @number_formats = number_formats.stringify_keys
+  def initialize(fields:, answers:)
     @fields = fields.map { |field| field.merge("id" => field.fetch("id").to_s) }
     @answers = answers.stringify_keys
+  end
 
-    unknown_ids = @answers.keys - @fields.map { |field| field.fetch("id") }
-    raise ArgumentError, "Unknown field IDs: #{unknown_ids.join(", ")}" if unknown_ids.any?
-
-    @number_formats.each do |id, text|
-      field = @fields.find { |candidate| candidate["id"] == id }
-      unless field && field["type"] == "input" && field.dig("validations", "type") == "number" &&
-               text.is_a?(String)
-        raise ArgumentError
-      end
-      if text.empty?
-        raise ArgumentError unless @answers[id].nil?
-      else
-        unless /\A-?(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:[eE][+-]?[0-9]+)?\z/.match?(text) &&
-                 Float(text).finite? && Float(text) == @answers[id]
-          raise ArgumentError
-        end
-      end
-    end
-
-    @fields.each do |field|
-      id = field.fetch("id")
-      next if !@answers.key?(id) || @answers[id].nil?
-
-      raise ArgumentError, "Invalid value for field: #{id}" unless valid_value?(field, @answers[id])
-    end
+  def well_formed?
+    unknown_ids.empty? && fields.all? { |field| acceptable?(field, answers[field["id"]]) }
   end
 
   # HTML constraints remain browser-side; Ruby regexes, lengths, and choice strings differ.
-  def validate!
-    @fields.each do |field|
-      value = answers[field.fetch("id")]
-      next if field.dig("attributes", "disabled")
-
-      rules = field["validations"] || {}
-      invalid = rules["required"] && (value.nil? || value == false || value == "" || value == [])
-      if invalid
-        raise FormTemplate::InvalidAnswers,
-              I18n.t(
-                "form_templates.invalid_answer",
-                field: field.dig("attributes", "label") || field["id"],
-              )
-      end
-    end
+  def incomplete_fields
+    fields.select { |field| required?(field) && blank_answer?(answers[field["id"]]) }
   end
 
   private
 
-  def valid_value?(field, value)
-    case field.fetch("type")
+  def unknown_ids
+    answers.keys - fields.map { |field| field["id"] }
+  end
+
+  def required?(field)
+    field.dig("validations", "required") && !field.dig("attributes", "disabled")
+  end
+
+  def blank_answer?(value)
+    value.nil? || value == false || value == "" || value == []
+  end
+
+  def acceptable?(field, value)
+    return true if value.nil?
+
+    case field["type"]
     when "checkbox"
       value == true || value == false
     when "multi-select"
@@ -66,11 +44,7 @@ class FormTemplate::FieldValues
     when "tag-chooser"
       field.dig("attributes", "multiple") ? string_array?(value) : value.is_a?(String)
     when "input"
-      if field.dig("validations", "type") == "number"
-        value.is_a?(Integer) || (value.is_a?(Float) && value.finite?)
-      else
-        value.is_a?(String)
-      end
+      field.dig("validations", "type") == "number" ? number?(value) : value.is_a?(String)
     when "dropdown", "textarea", "upload", "composer"
       value.is_a?(String)
     else
@@ -78,7 +52,13 @@ class FormTemplate::FieldValues
     end
   end
 
+  # Numbers keep the spelling typed into the control, so a round trip through
+  # JSON cannot alter them and the control can be repopulated verbatim.
+  def number?(value)
+    value.is_a?(String) && (value.empty? || (NUMBER_PATTERN.match?(value) && Float(value).finite?))
+  end
+
   def string_array?(value)
-    value.is_a?(Array) && value.all? { |item| item.is_a?(String) }
+    value.is_a?(Array) && value.all?(String)
   end
 end

@@ -5,11 +5,8 @@ class FormTemplate::DefaultRenderer
     field_values
       .fields
       .filter_map do |field|
-        value = field_values.answers[field.fetch("id")]
-        if (value.nil? && !field_values.number_formats.key?(field["id"])) || value == false ||
-             value == []
-          next
-        end
+        value = field_values.answers[field["id"]]
+        next if value.nil? || value == false || value == []
 
         text =
           case value
@@ -18,10 +15,8 @@ class FormTemplate::DefaultRenderer
           when Array
             value.join("\n")
           else
-            value.to_s
+            value
           end
-
-        text = field_values.number_formats.fetch(field["id"], text)
 
         # Empty successful controls leave a separator in the existing browser formatter.
         next "" if text.empty?

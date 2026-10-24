@@ -25,7 +25,7 @@ RSpec.describe FormTemplate::DefaultRenderer do
             "description" => "First line\n\n**Second line**",
             "games" => %w[First Second],
             "checked" => true,
-            "price" => 0,
+            "price" => "0",
           },
         )
 

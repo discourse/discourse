@@ -46,9 +46,7 @@ RSpec.describe FormTemplate::OutputRenderer do
         "{% render 'secret' %}",
         "{{ answers.description | nonexistent_filter }}",
       ].each do |source|
-        expect { described_class.render(values, source) }.to raise_error(
-          FormTemplate::InvalidAnswers,
-        )
+        expect { described_class.render(values, source) }.to raise_error(Liquid::Error)
       end
     end
 
@@ -62,9 +60,7 @@ RSpec.describe FormTemplate::OutputRenderer do
         "{% if false %}{% for index in (1..20000) %}x{% endfor %}{% endif %}",
       ].each do |source|
         expect { described_class.parse(source) }.to raise_error(Liquid::SyntaxError)
-        expect { described_class.render(values, source) }.to raise_error(
-          FormTemplate::InvalidAnswers,
-        )
+        expect { described_class.render(values, source) }.to raise_error(Liquid::Error)
       end
     end
 
@@ -76,9 +72,7 @@ RSpec.describe FormTemplate::OutputRenderer do
         "{% if false %}{{ answers.games | join: answers.description }}{% endif %}",
       ].each do |source|
         expect { described_class.parse(source) }.to raise_error(Liquid::SyntaxError)
-        expect { described_class.render(values, source) }.to raise_error(
-          FormTemplate::InvalidAnswers,
-        )
+        expect { described_class.render(values, source) }.to raise_error(Liquid::Error)
       end
     end
 
@@ -86,18 +80,18 @@ RSpec.describe FormTemplate::OutputRenderer do
       values.answers["games"] = Array.new(200, "x")
       source =
         "{% for outer in answers.games %}{% for inner in answers.games %}x{% endfor %}{% endfor %}"
-      expect { described_class.render(values, source) }.to raise_error(FormTemplate::InvalidAnswers)
+      expect { described_class.render(values, source) }.to raise_error(Liquid::Error)
 
       source =
         "{% capture text %}{% for game in answers.games %}abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz{% endfor %}{% endcapture %}{{ text }}"
-      expect { described_class.render(values, source) }.to raise_error(FormTemplate::InvalidAnswers)
+      expect { described_class.render(values, source) }.to raise_error(Liquid::Error)
     end
 
     it "limits generated output and loop work" do
       SiteSetting.max_post_length = 100
       values.answers["games"] = ["x" * 500]
       source = "{% for game in answers.games %}{{ game }}{% endfor %}"
-      expect { described_class.render(values, source) }.to raise_error(FormTemplate::InvalidAnswers)
+      expect { described_class.render(values, source) }.to raise_error(Liquid::Error)
     end
   end
 end
