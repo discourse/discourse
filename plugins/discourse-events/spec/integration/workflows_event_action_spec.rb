@@ -13,14 +13,14 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
     DiscourseWorkflows::WorkflowDependency.clear_cache!
   end
 
-  def create_event_post(attributes: "")
+  def create_event_post(attributes: "", description: "Event description")
     post =
       PostCreator.create!(
         admin,
         title: "Workflow event integration",
         raw:
           "[event start=\"2030-04-24 14:15\" end=\"2030-04-24 15:15\" timezone=\"UTC\"#{attributes}]\n" \
-            "Event description\n" \
+            "#{description}\n" \
             "[/event]",
       )
 
@@ -100,6 +100,36 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
       "topic_id" => post.topic_id,
       "closed" => false,
     )
+  end
+
+  it "closes an event when its post contains a hashtag" do
+    post = create_event_post(description: "Discuss in #general")
+
+    expect(post.event).not_to be_closed
+
+    execute_event_action(post, "close")
+
+    post.reload
+    post.association(:event).reload
+
+    expect(post.event).to be_closed
+    expect(post.raw).to include("Discuss in #general")
+    expect(post.raw).to include("closed=true")
+  end
+
+  it "opens an event when its post contains a hashtag" do
+    post = create_event_post(attributes: ' closed="true"', description: "Discuss in #general")
+
+    expect(post.event).to be_closed
+
+    execute_event_action(post, "open")
+
+    post.reload
+    post.association(:event).reload
+
+    expect(post.event).not_to be_closed
+    expect(post.raw).to include("Discuss in #general")
+    expect(post.raw).not_to match(/\sclosed\s*=/i)
   end
 
   it "preserves quoted attributes when closing an event" do
