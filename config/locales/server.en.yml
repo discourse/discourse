@@ -6762,7 +6762,10 @@ en:
       unsafe: "Payload URL cannot be used because it's unsafe"
 
   form_templates:
+    invalid_answer: "The answer for %{field} is invalid."
+    output_unavailable: "This form's output template could not be rendered. Please contact a staff member."
     errors:
+      invalid_output_template: "contains an invalid output template"
       invalid_yaml: "is not a valid YAML string"
       invalid_type: "contains an invalid template type: %{type} (valid types are: %{valid_types})"
       missing_type: "is missing a field type"

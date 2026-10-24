@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class PostsController < ApplicationController
+  include FormTemplateSubmissions
   include TagParamLimit
 
   # Bug with Rails 7+
@@ -169,6 +170,13 @@ class PostsController < ApplicationController
     return if reject_too_many_tags!(:tags)
 
     manager_params = create_params
+    if params[:form_template_data].present?
+      raise Discourse::InvalidParameters.new(:topic_id) if manager_params[:topic_id].present?
+      render_form_submission(category_id: manager_params[:category]) do |raw|
+        manager_params[:raw] = raw
+      end
+      return if performed?
+    end
     manager_params[:first_post_checks] = !is_api?
     manager_params[:advance_draft] = !is_api?
 

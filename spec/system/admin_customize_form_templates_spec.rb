@@ -66,6 +66,16 @@ describe "Admin Customize Form Templates" do
   end
 
   describe "when visiting the page to edit a form template" do
+    it "saves and reloads an output template" do
+      visit("/admin/customize/form-templates/#{form_template.id}")
+      output = "## Report\n{{ answers.name }}"
+      find("textarea[name='outputTemplate']").fill_in(with: output)
+      form_template_page.click_save_button
+      expect(form_template_page).to have_form_template(form_template.name)
+      visit("/admin/customize/form-templates/#{form_template.id}")
+      expect(page).to have_field("outputTemplate", with: output)
+    end
+
     it "prefills the form data" do
       visit("/admin/customize/form-templates/#{form_template.id}")
       expect(form_template_page).to have_name_value(form_template.name)

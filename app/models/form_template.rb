@@ -14,10 +14,21 @@ class FormTemplate < ActiveRecord::Base
             }
   validates_with FormTemplateYamlValidator, if: ->(ft) { ft.template }
 
+  validates :output_template,
+            length: {
+              maximum: -> { SiteSetting.max_form_template_content_length },
+            },
+            allow_nil: true
+  validate :validate_output_template
+
   has_many :category_form_templates, dependent: :destroy
   has_many :categories, through: :category_form_templates
 
   class NotAllowed < StandardError
+  end
+
+  def fields
+    YAML.safe_load(template)
   end
 
   def process!(guardian)
@@ -64,17 +75,26 @@ class FormTemplate < ActiveRecord::Base
     self.template = YAML.dump(parsed_template)
     self
   end
+
+  private
+
+  def validate_output_template
+    Liquid::Template.parse(output_template) if output_template.present?
+  rescue Liquid::Error
+    errors.add(:output_template, I18n.t("form_templates.errors.invalid_output_template"))
+  end
 end
 
 # == Schema Information
 #
 # Table name: form_templates
 #
-#  id         :bigint           not null, primary key
-#  name       :string           not null
-#  template   :text             not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id              :bigint           not null, primary key
+#  name            :string           not null
+#  output_template :text
+#  template        :text             not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 # Indexes
 #

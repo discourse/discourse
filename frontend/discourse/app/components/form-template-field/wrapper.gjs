@@ -50,6 +50,8 @@ export default class FormTemplateFieldWrapper extends Component {
     composer: ComposerField,
   };
 
+  #templateLoadSequence = 0;
+
   constructor() {
     super(...arguments);
 
@@ -83,22 +85,34 @@ export default class FormTemplateFieldWrapper extends Component {
     return this._fetchTemplate(this.args.id);
   }
 
-  async _loadTemplate(templateContent) {
+  async _loadTemplate(
+    templateContent,
+    id = this.args.id,
+    sequence = ++this.#templateLoadSequence
+  ) {
     try {
       const promise = import("js-yaml");
       waitForPromise(promise);
       const { load } = await promise;
+      if (
+        sequence !== this.#templateLoadSequence ||
+        id !== this.args.id ||
+        this.isDestroying
+      ) {
+        return;
+      }
       this.parsedTemplate = load(templateContent);
-      this.args.onSelectFormTemplate?.(this.parsedTemplate);
+      this.args.onSelectFormTemplate?.(this.parsedTemplate, id);
     } catch (e) {
       this.error = e;
     }
   }
 
   async _fetchTemplate(id) {
+    const sequence = ++this.#templateLoadSequence;
     const response = await FormTemplate.findById(id);
     const templateContent = await response.form_template.template;
-    return this._loadTemplate(templateContent);
+    return this._loadTemplate(templateContent, id, sequence);
   }
 
   <template>
