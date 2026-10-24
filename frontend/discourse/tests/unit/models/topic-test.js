@@ -6,6 +6,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
 import TopicDetails from "discourse/models/topic-details";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Unit | Model | topic", function (hooks) {
   setupTest(hooks);
@@ -307,5 +308,36 @@ module("Unit | Model | topic", function (hooks) {
       "other updated value",
       "other plugin tracked property is updated via updateFromJson"
     );
+  });
+});
+
+module("Unit | Model | topic | updateTags", function (hooks) {
+  setupTest(hooks);
+
+  test("updateTags serializes tags before sending them", async function (assert) {
+    let body;
+    pretender.put("/t/1/tags", (request) => {
+      body = decodeURIComponent(request.requestBody);
+      return response({ success: "OK", tags: [] });
+    });
+    const topic = getOwner(this)
+      .lookup("service:store")
+      .createRecord("topic", { id: 1 });
+
+    await topic.updateTags([
+      { id: "foo", name: "foo", isNew: true },
+      { id: "5", name: "5", isNew: true },
+      { id: 7, name: "seven" },
+      "bar",
+    ]);
+
+    assert.true(body.includes("tags[0][name]=foo"), body);
+    assert.false(body.includes("tags[0][id]"), "a new tag carries no id");
+    assert.false(
+      body.includes("tags[1][id]"),
+      "a new tag named 5 is not tag id 5"
+    );
+    assert.true(body.includes("tags[2][id]=7"), "an existing tag keeps its id");
+    assert.true(body.includes("tags[3][name]=bar"), "a name becomes {name}");
   });
 });

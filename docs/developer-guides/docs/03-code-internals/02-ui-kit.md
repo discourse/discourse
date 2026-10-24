@@ -54,6 +54,7 @@ Before writing a component, check whether the kit already covers the need:
 2. Prefer composing existing primitives over adding a variant. A `d-button` with `@icon` and a `class` attribute is better than a new button component; a `d-empty-state` with a custom `@ctaLabel` is better than a bespoke empty message.
 3. If the need is a **form**, use [FormKit](22-form-kit.md) rather than assembling inputs by hand; FormKit's controls are themselves built on ui-kit primitives.
 4. If the need is **anchored or hover-triggered UI** (tooltips, menus, popovers), use float-kit rather than positioning things yourself. It ships both components (`DTooltip`, `DMenu`, `DPopover`, `DToast`, and their headless variants, imported from `discourse/float-kit/components/...`) and the `tooltip`, `menu`, and `toasts` services for showing the same things programmatically. See [Menus](https://meta.discourse.org/styleguide/molecules/menus), [Tooltips](https://meta.discourse.org/styleguide/molecules/tooltips), and [Toasts](https://meta.discourse.org/styleguide/molecules/toasts).
+5. If the need is a **dropdown**, choose by what it does, following the WAI-ARIA [menu button](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/) and [select-only combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/) patterns. When the control holds a current value that the list chooses among, and the trigger shows it (a setting, a filter, a notification level, a breadcrumb), use `DSelect`: the static variant for a short fixed list, the typeahead when filtering helps, `@multiple` for a set of toggles, and action rows for the occasional command inside a value list. When the items run one-off commands and the trigger label stays the same (delete, log out, bulk actions), use `DMenu`.
 
 Reach for a new component in `frontend/discourse/app/components/` when the thing you are building knows about Discourse domain concepts (a topic, a post, a category, a user's notification level). Add to `ui-kit/` only when the primitive is domain-free and useful to more than one consumer; see [Adding a primitive](#adding-a-primitive) below.
 
@@ -79,6 +80,8 @@ Form-level composition belongs to [FormKit](22-form-kit.md). These are the under
 | Primitive                                                                                                                                                                      | Use it for                                  | Styleguide                                                                       |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------- | -------------------------------------------------------------------------------- |
 | `DNativeSelect`                                                                                                                                                                | A native `<select>` with Discourse styling. | [Dropdowns](https://meta.discourse.org/styleguide/atoms/dropdowns)               |
+| `DSelect`                                                                                                                                                                      | Choose one or more values from a popup.     | [Select](https://meta.discourse.org/styleguide/molecules/select)                 |
+| `DSelectList`                                                                                                                                                                  | Always-open searchable multi-select.        | [Select](https://meta.discourse.org/styleguide/molecules/select)                 |
 | `DMultiSelect`                                                                                                                                                                 | Choose several values with search.          | [Multi select](https://meta.discourse.org/styleguide/molecules/multi-select)     |
 | `DTextField`, `DTextarea`, `DExpandingTextArea`, `DPasswordField`, `DRadioButton`                                                                                              | Single controls.                            | [Forms](https://meta.discourse.org/styleguide/atoms/forms)                       |
 | `DDateInput`, `DDatePicker`, `DTimeInput`, `DDateTimeInput`, `DDateTimeInputRange`, `DFutureDateInput`, `DRelativeTimePicker`, `DTimeShortcutPicker`, `DCalendarDateTimeInput` | Dates, times, and ranges.                   | [Date/time inputs](https://meta.discourse.org/styleguide/atoms/date-time-inputs) |
@@ -141,6 +144,19 @@ Form-level composition belongs to [FormKit](22-form-kit.md). These are the under
 ## Helpers
 
 `d-icon`, `d-icon-or-image`, `d-emoji`, `d-replace-emoji`, `d-format-date`, `d-format-duration`, `d-number`, `d-age-with-tooltip`, `d-dasherize`, `d-dir-span`, `d-unique-id`, `d-base-path`, `d-loading-spinner`, `d-element` (a typed wrapper for a chosen tag, so attributes and modifiers are checked against the right element), and `d-concat-class` (join class names, dropping falsy ones).
+
+### Boolean ARIA attributes
+
+Use the built-in `if` to render boolean ARIA states as strings:
+
+```gjs
+<button aria-expanded={{if @expanded "true" "false"}} />
+<input aria-invalid={{if @invalid "true"}} />
+```
+
+The first form always emits a state, treating null and undefined as false. The second omits the attribute when false, null, or undefined. Preserve the distinction required by the attribute and its role: omission can mean something different from an explicit `"false"`.
+
+Avoid binding a boolean directly: Ember renders `true` as an empty attribute and removes `false`, which does not produce ARIA boolean strings. The legacy `discourse/helpers/boolean-string` helper is deprecated (`discourse.boolean-string-helper`) and remains available for compatibility; use `if` instead, without a helper import or an `omitFalse` option.
 
 ## Modifiers
 
@@ -239,3 +255,6 @@ A section should be designed, with multiple examples that each isolate one capab
 - [Drag, resize, and gesture primitives](30-drag-and-gesture-primitives.md) for the modifiers that handle input.
 - [Types](27-types.md) for the Glint and TypeScript conventions the kit follows.
 - [Private modules](32-private-modules.md) for where `-internals` code goes.
+
+Select recipes under `ui-kit/select/recipes/` are a domain-specific exception: they compose
+the domain-free select engine with tag, category, or other domain behavior.

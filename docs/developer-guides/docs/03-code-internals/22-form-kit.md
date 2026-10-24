@@ -1031,7 +1031,7 @@ By default, Select includes a "none" option when the field is blank or when the 
 
 ## Tag Chooser
 
-Renders a `<TagChooser />` component.
+Renders a `<DSelectTag />` when `enable_new_select_controls` is enabled, and a legacy `<TagChooser />` otherwise. Both controls submit arrays of tag objects. A maximum of one renders a single select and keeps an array at the field boundary. The new control uses the field's title, description, error state, and disabled state for accessibility, and translates the `@placeholder` key. It ignores `@mobilePlacement`, including the manage-tags replacement row's placement override, because DSelect manages its mobile presentation.
 
 Common control arguments:
 
@@ -1042,6 +1042,11 @@ Common control arguments:
 - `@excludeTagsWithSynonyms`
 - `@unlimited`
 - `@placeholder`
+- `@maximum` (one renders a single select; otherwise this caps the selection)
+- `@prioritizeRecentTags`
+
+The new control also accepts `@maximum` and `@prioritizeRecentTags` on `<form.Field>`, with
+arguments on `<field.Control>` taking precedence.
 
 **Example**
 

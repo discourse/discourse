@@ -4850,6 +4850,14 @@ experimental:
       status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/414613"
+  enable_new_select_controls:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "conceptual"
+      impact: "other,all_members"
   enable_composer_redesign:
     default: false
     client: true

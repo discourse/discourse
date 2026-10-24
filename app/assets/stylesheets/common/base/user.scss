@@ -840,7 +840,8 @@
       }
     }
 
-    .select-kit.multi-select {
+    .select-kit.multi-select,
+    .d-select.tag-chooser {
       @include viewport.until(sm) {
         width: 100%;
       }

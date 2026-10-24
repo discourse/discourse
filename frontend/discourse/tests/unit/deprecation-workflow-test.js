@@ -1,6 +1,8 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { DiscourseDeprecationWorkflow } from "discourse/deprecation-workflow";
+import DeprecationWorkflow, {
+  DiscourseDeprecationWorkflow,
+} from "discourse/deprecation-workflow";
 
 module("Unit | deprecation-workflow", function (hooks) {
   setupTest(hooks);
@@ -446,5 +448,95 @@ module("Unit | deprecation-workflow", function (hooks) {
       ["x:silence", "y:log", "y:throw", "z:silence"].sort(),
       "outputs one entry per allowed handler and excludes count, dont-throw, and dont-count"
     );
+  });
+
+  module("select-kit rollout modifyClass deprecation", function (nestedHooks) {
+    const ID = "discourse.select-kit-rollout.modify-class";
+
+    nestedHooks.afterEach(function () {
+      DeprecationWorkflow.setEnvironment(undefined);
+    });
+
+    test("throws in development", function (assert) {
+      DeprecationWorkflow.setEnvironment(makeEnv());
+
+      assert.true(DeprecationWorkflow.shouldThrow(ID));
+      assert.false(DeprecationWorkflow.shouldSilence(ID));
+    });
+
+    test("notifies admins in production, without throwing", function (assert) {
+      DeprecationWorkflow.setEnvironment(makeEnv({ production: true }));
+
+      assert.true(DeprecationWorkflow.shouldNotifyAdmin(ID));
+      assert.false(DeprecationWorkflow.shouldThrow(ID));
+      assert.false(DeprecationWorkflow.shouldSilence(ID));
+    });
+
+    test("neither throws nor notifies under test", function (assert) {
+      for (const env of [
+        makeEnv({ testing: true }),
+        makeEnv({ railsTesting: true }),
+      ]) {
+        DeprecationWorkflow.setEnvironment(env);
+
+        assert.false(DeprecationWorkflow.shouldThrow(ID));
+        assert.false(DeprecationWorkflow.shouldNotifyAdmin(ID));
+        assert.false(DeprecationWorkflow.shouldSilence(ID));
+      }
+    });
+  });
+
+  module("select-kit legacy render notice", function (nestedHooks) {
+    const ID = "discourse.select-kit-rollout.legacy-render";
+
+    nestedHooks.afterEach(function () {
+      DeprecationWorkflow.setEnvironment(undefined);
+    });
+
+    test("logs in development without throwing", function (assert) {
+      DeprecationWorkflow.setEnvironment(makeEnv());
+
+      assert.true(DeprecationWorkflow.shouldLog(ID));
+      assert.false(DeprecationWorkflow.shouldThrow(ID));
+      assert.false(DeprecationWorkflow.shouldSilence(ID));
+    });
+
+    test("notifies admins in production", function (assert) {
+      DeprecationWorkflow.setEnvironment(makeEnv({ production: true }));
+
+      assert.true(DeprecationWorkflow.shouldNotifyAdmin(ID));
+      assert.false(DeprecationWorkflow.shouldThrow(ID));
+      assert.false(DeprecationWorkflow.shouldSilence(ID));
+    });
+  });
+
+  module("modifySelectKit bridge deprecations", function (nestedHooks) {
+    const IDS = [
+      "discourse.select-kit.modify-select-kit-content",
+      "discourse.select-kit.modify-select-kit-on-change",
+    ];
+
+    nestedHooks.afterEach(function () {
+      DeprecationWorkflow.setEnvironment(undefined);
+    });
+
+    test("are reported in every environment, without notifying admins", function (assert) {
+      for (const env of [
+        makeEnv(),
+        makeEnv({ production: true }),
+        makeEnv({ testing: true }),
+      ]) {
+        DeprecationWorkflow.setEnvironment(env);
+
+        for (const id of IDS) {
+          assert.false(DeprecationWorkflow.shouldSilence(id), `${id} is heard`);
+          assert.false(
+            DeprecationWorkflow.shouldNotifyAdmin(id),
+            `${id} never notifies admins, since the callback still works`
+          );
+          assert.true(DeprecationWorkflow.shouldCount(id), `${id} is counted`);
+        }
+      }
+    });
   });
 });

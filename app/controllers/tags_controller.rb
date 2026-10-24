@@ -632,6 +632,8 @@ class TagsController < ::ApplicationController
           end,
       }
 
+      attrs[:original_name] = t.name if tag_name != t.name
+
       if show_pm_tags && SiteSetting.display_personal_messages_tag_counts
         attrs[:pm_count] = t.pm_topic_count
       end

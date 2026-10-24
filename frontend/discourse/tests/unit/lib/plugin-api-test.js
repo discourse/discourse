@@ -6,9 +6,13 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { block } from "discourse/blocks";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
+import DeprecationWorkflow from "discourse/deprecation-workflow";
 import { _INTERNAL_SOURCE_KEY, apiInitializer } from "discourse/lib/api";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { MIGRATED_SELECT_KIT_MODULES } from "discourse/lib/select-kit-modify-class-deprecation";
+import selectKitCompatModules from "discourse/select-kit/compat-modules";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import {
   getBlockEntry,
   hasBlock,
@@ -21,6 +25,25 @@ import {
   disableRaiseOnDeprecation,
   enableRaiseOnDeprecation,
 } from "discourse/tests/helpers/raise-on-deprecation";
+
+// The build emits a frozen source, so these mirror it.
+function pluginOpts(name, opts) {
+  const source = Object.freeze({ type: "plugin", name });
+  return { ...opts, [_INTERNAL_SOURCE_KEY]: source };
+}
+
+function themeOpts(id, opts) {
+  const source = Object.freeze({ type: "theme", id });
+  return { ...opts, [_INTERNAL_SOURCE_KEY]: source };
+}
+
+function makeEnv({ production = false } = {}) {
+  return {
+    isProduction: () => production,
+    isTesting: () => false,
+    isRailsTesting: () => false,
+  };
+}
 
 module("Unit | Utility | plugin-api", function (hooks) {
   setupTest(hooks);
@@ -360,6 +383,237 @@ module("Unit | Utility | plugin-api", function (hooks) {
     });
   });
 
+  module("select-kit modifyClass deprecation", function (nestedHooks) {
+    const ID = "discourse.select-kit-rollout.modify-class";
+
+    // Callback-form patches are undone by `rollbackAllPrepends` after each test; the static ones
+    // use `reopenClass`, which nothing undoes, so they use these keys and are deleted.
+    const STATIC_KEYS = ["__skDeprecationStatic"];
+
+    // A member patch whose presence on the prototype proves it was applied.
+    const probePatch = (Superclass) =>
+      class extends Superclass {
+        __skDeprecationProbe() {
+          return "patched";
+        }
+      };
+
+    nestedHooks.beforeEach(function () {
+      disableRaiseOnDeprecation();
+      this.warnStub = sinon.stub(console, "warn");
+      this.counterStub = sinon.stub(
+        DeprecationCounter.prototype,
+        "incrementCount"
+      );
+      this.shippedMigrated = [...MIGRATED_SELECT_KIT_MODULES];
+      this.siteSettings = getOwner(this).lookup("service:site-settings");
+      this.siteSettings.enable_new_select_controls = true;
+      this.comboBoxPrototype = () =>
+        getOwner(this).factoryFor("component:combo-box").class.prototype;
+    });
+
+    nestedHooks.afterEach(function () {
+      MIGRATED_SELECT_KIT_MODULES.clear();
+      this.shippedMigrated.forEach((path) =>
+        MIGRATED_SELECT_KIT_MODULES.add(path)
+      );
+      STATIC_KEYS.forEach((key) => delete ComboBox[key]);
+      DeprecationWorkflow.setEnvironment(undefined);
+      enableRaiseOnDeprecation();
+    });
+
+    test("deprecates a patch on a migrated module, and still applies it", function (assert) {
+      MIGRATED_SELECT_KIT_MODULES.add("combo-box");
+
+      withPluginApi((api) =>
+        api.modifyClass("component:combo-box", probePatch)
+      );
+
+      assert.true(this.counterStub.calledWith(ID), "triggers the deprecation");
+      assert.strictEqual(
+        this.comboBoxPrototype().__skDeprecationProbe?.(),
+        "patched",
+        "still applies the patch"
+      );
+    });
+
+    test("does not deprecate with the flag off", function (assert) {
+      MIGRATED_SELECT_KIT_MODULES.add("combo-box");
+      this.siteSettings.enable_new_select_controls = false;
+
+      withPluginApi((api) =>
+        api.modifyClass("component:combo-box", probePatch)
+      );
+
+      assert.false(this.counterStub.calledWith(ID));
+    });
+
+    test("does not deprecate a patch on a module that hasn't migrated", function (assert) {
+      withPluginApi((api) =>
+        api.modifyClass("component:combo-box", probePatch)
+      );
+
+      assert.false(this.counterStub.calledWith(ID));
+    });
+
+    test("deprecates a patch on a migrated module with a nested name", function (assert) {
+      MIGRATED_SELECT_KIT_MODULES.add("select-kit/select-kit-row");
+
+      withPluginApi((api) =>
+        api.modifyClass("component:select-kit/select-kit-row", probePatch)
+      );
+
+      assert.true(this.counterStub.calledWith(ID));
+    });
+
+    test("does not deprecate a patch on a subclass of a migrated module", function (assert) {
+      MIGRATED_SELECT_KIT_MODULES.add("combo-box");
+      getOwner(this).register(
+        "component:sk-deprecation-subclass",
+        class extends ComboBox {}
+      );
+
+      withPluginApi((api) =>
+        api.modifyClass("component:sk-deprecation-subclass", probePatch)
+      );
+
+      // A subclass defined elsewhere keeps rendering select-kit, so its patch keeps working.
+      assert.false(this.counterStub.calledWith(ID));
+    });
+
+    test("deprecates a static patch on a migrated module, and still applies it", function (assert) {
+      MIGRATED_SELECT_KIT_MODULES.add("combo-box");
+
+      withPluginApi((api) =>
+        api.modifyClassStatic("component:combo-box", {
+          pluginId: "plugin-api-test",
+          __skDeprecationStatic() {
+            return "patched";
+          },
+        })
+      );
+
+      assert.true(this.counterStub.calledWith(ID), "triggers the deprecation");
+      assert.strictEqual(
+        ComboBox.__skDeprecationStatic?.(),
+        "patched",
+        "still applies the patch"
+      );
+    });
+
+    test("names the plugin that made the patch", function (assert) {
+      MIGRATED_SELECT_KIT_MODULES.add("combo-box");
+
+      withPluginApi(
+        (api) => api.modifyClass("component:combo-box", probePatch),
+        pluginOpts("sk-test-plugin")
+      );
+
+      assert.true(
+        this.warnStub.calledWith(
+          "[PLUGIN sk-test-plugin]",
+          sinon.match(new RegExp(ID.replace(/\./g, "\\.")))
+        )
+      );
+    });
+
+    test("names the theme that made the patch", function (assert) {
+      MIGRATED_SELECT_KIT_MODULES.add("combo-box");
+
+      withPluginApi(
+        (api) => api.modifyClass("component:combo-box", probePatch),
+        themeOpts(7)
+      );
+
+      assert.true(
+        this.warnStub.calledWith(
+          "[THEME 7 '(theme-id: 7)']",
+          sinon.match(new RegExp(ID.replace(/\./g, "\\.")))
+        )
+      );
+    });
+
+    test("every migrated module exists", function (assert) {
+      for (const path of this.shippedMigrated) {
+        assert.notStrictEqual(
+          selectKitCompatModules[`./components/${path}`]?.default,
+          undefined,
+          `${path} is a select-kit module`
+        );
+      }
+      assert.true(true, "checked every shipped entry");
+    });
+
+    test("the tag family has joined, rows included", function (assert) {
+      for (const path of [
+        "mini-tag-chooser",
+        "mini-tag-chooser/selected-collection",
+        "tag-chooser",
+        "tag-chooser-row",
+        "tag-drop",
+        "tag-drop/tag-drop-header",
+        "tag-dropdown",
+        "tag-group-chooser",
+        "tag-row",
+        "tags-intersection-chooser",
+      ]) {
+        assert.true(MIGRATED_SELECT_KIT_MODULES.has(path), path);
+      }
+    });
+
+    test("tag selects that stay on select-kit have not joined", function (assert) {
+      for (const path of [
+        "tag-category-admin-dropdown",
+        "tag-notifications-button",
+      ]) {
+        assert.false(MIGRATED_SELECT_KIT_MODULES.has(path), path);
+      }
+    });
+
+    test("a plugin patch on the mini tag chooser is reported", function (assert) {
+      withPluginApi(
+        (api) => api.modifyClass("component:mini-tag-chooser", probePatch),
+        pluginOpts("sk-tag-plugin")
+      );
+
+      assert.true(this.counterStub.calledWith(ID));
+    });
+
+    test("throws in development, after applying the patch", function (assert) {
+      MIGRATED_SELECT_KIT_MODULES.add("combo-box");
+      DeprecationWorkflow.setEnvironment(makeEnv());
+
+      assert.throws(
+        () =>
+          withPluginApi((api) =>
+            api.modifyClass("component:combo-box", probePatch)
+          ),
+        new RegExp(ID.replace(/\./g, "\\."))
+      );
+      assert.strictEqual(
+        this.comboBoxPrototype().__skDeprecationProbe?.(),
+        "patched",
+        "the patch is applied before the throw"
+      );
+    });
+
+    test("does not throw in production", function (assert) {
+      MIGRATED_SELECT_KIT_MODULES.add("combo-box");
+      DeprecationWorkflow.setEnvironment(makeEnv({ production: true }));
+
+      withPluginApi((api) =>
+        api.modifyClass("component:combo-box", probePatch)
+      );
+
+      assert.true(this.counterStub.calledWith(ID), "triggers the deprecation");
+      assert.strictEqual(
+        this.comboBoxPrototype().__skDeprecationProbe?.(),
+        "patched",
+        "still applies the patch"
+      );
+    });
+  });
+
   module("Block APIs", function (nestedHooks) {
     nestedHooks.beforeEach(function () {
       resetBlockRegistryForTesting();
@@ -482,17 +736,6 @@ module("Unit | Utility | plugin-api", function (hooks) {
     nestedHooks.beforeEach(function () {
       resetBlockRegistryForTesting();
     });
-
-    // The build emits a frozen source, so these mirror it.
-    function pluginOpts(name, opts) {
-      const source = Object.freeze({ type: "plugin", name });
-      return { ...opts, [_INTERNAL_SOURCE_KEY]: source };
-    }
-
-    function themeOpts(id, opts) {
-      const source = Object.freeze({ type: "theme", id });
-      return { ...opts, [_INTERNAL_SOURCE_KEY]: source };
-    }
 
     test("binds the source from opts to the api", function (assert) {
       let boundSource, receivedOpts;

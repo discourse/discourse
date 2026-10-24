@@ -317,6 +317,30 @@ const workflows = [
     handler: "silence",
     matchId: "deprecate-import-meta-from-ember",
   },
+  // A patch on a select-kit class that core has stopped rendering silently does nothing, so
+  // development fails loudly and production tells admins. Keep these above any broader
+  // `discourse.select-kit-rollout.*` entry: the first match wins.
+  {
+    handler: "throw",
+    matchId: "discourse.select-kit-rollout.modify-class",
+    env: "development",
+  },
+  {
+    handler: "notify-admin",
+    matchId: "discourse.select-kit-rollout.modify-class",
+    env: "production",
+  },
+  // Legacy renders of migrated select-kit families tell admins so third-party callers can migrate.
+  {
+    handler: "notify-admin",
+    matchId: "discourse.select-kit-rollout.legacy-render",
+    env: "production",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.select-kit-rollout.legacy-render",
+    env: "development",
+  },
   // CRITICAL DEPRECATIONS that should trigger admin warnings,
   // To keep warnings meaningful and prevent overflowing users with them,
   // we should only add values here after fixing core and official plugins

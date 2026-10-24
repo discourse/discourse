@@ -411,7 +411,8 @@ table.screened-ip-addresses {
     min-width: 300px;
   }
 
-  .select-kit.multi-select.watched-word-input-field {
+  .select-kit.multi-select.watched-word-input-field,
+  .d-select.watched-word-input-field {
     width: 300px;
     margin-bottom: 9px;
   }

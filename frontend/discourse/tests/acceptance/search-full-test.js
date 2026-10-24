@@ -6,6 +6,7 @@ import {
   SEARCH_TYPE_USERS,
 } from "discourse/controllers/full-page-search";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance, selectDate } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -582,6 +583,24 @@ acceptance("Search - Full Page", function (needs) {
       null,
       "does not have likes selected for invalid filter"
     );
+  });
+
+  test("advanced search keeps tag names in the search term", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/search?expanded=true&q=tags:dog");
+
+    assert.dom(".advanced-search-tags .d-select").exists("renders DSelect");
+    assert
+      .dom(".advanced-search-tags .select-kit")
+      .doesNotExist("replaces the legacy tag chooser");
+    await dSelect(".advanced-search-tags .d-select").selectByName("monkey");
+
+    assert
+      .dom(".search-query")
+      .hasValue(
+        "tags:dog,monkey",
+        "preserves held names and appends the chosen tag name"
+      );
   });
 
   test("all tags checkbox only visible for two or more tags", async function (assert) {

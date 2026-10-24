@@ -7,12 +7,12 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
-import {
-  ALL_TAGS_ID,
-  NO_TAG_ID,
-} from "discourse/select-kit/components/tag-drop";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DTextField from "discourse/ui-kit/d-text-field";
+import DSelectTagFilter, {
+  ALL_TAGS_ID,
+  NO_TAG_ID,
+} from "discourse/ui-kit/select/recipes/tags/d-select-tag-filter";
 import { i18n } from "discourse-i18n";
 import Item from "./item.gjs";
 import TagDrop from "./tag-drop.js";
@@ -28,6 +28,12 @@ export default class DTemplatesFilterableList extends Component {
   @tracked replies = [];
   @tracked selectedTag = ALL_TAGS_ID;
   @tracked availableTags = [];
+
+  get sortedAvailableTags() {
+    return [...this.availableTags].sort(
+      (a, b) => b.count - a.count || a.name.localeCompare(b.name)
+    );
+  }
 
   @computed("availableTags.[]", "selectedTag")
   get selectedTagObject() {
@@ -145,6 +151,11 @@ export default class DTemplatesFilterableList extends Component {
   }
 
   @action
+  changeTagFilter(tag) {
+    this.changeSelectedTag(typeof tag === "string" ? tag : tag.id);
+  }
+
+  @action
   insertTemplate(template) {
     this.args.onBeforeInsertTemplate?.();
     this.args.onInsertTemplate?.(template);
@@ -157,11 +168,20 @@ export default class DTemplatesFilterableList extends Component {
       <DConditionalLoadingSpinner @condition={{this.loading}}>
         <div class="templates-filter-bar">
           {{#if this.siteSettings.tagging_enabled}}
-            <TagDrop
-              @availableTags={{this.availableTags}}
-              @onChangeSelectedTag={{this.changeSelectedTag}}
-              @tag={{this.selectedTagObject}}
-            />
+            {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DSelectTagFilter
+                @items={{this.sortedAvailableTags}}
+                @onChange={{this.changeTagFilter}}
+                @value={{this.selectedTagObject}}
+              />
+            {{else}}
+              <TagDrop
+                @availableTags={{this.availableTags}}
+                @onChangeSelectedTag={{this.changeSelectedTag}}
+                @tag={{this.selectedTagObject}}
+              />
+            {{/if}}
           {{/if}}
           <DTextField
             class="templates-filter"

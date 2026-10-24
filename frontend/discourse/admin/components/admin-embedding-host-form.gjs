@@ -11,10 +11,12 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import UserChooser from "discourse/select-kit/components/user-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
 export default class AdminEmbeddingHostForm extends Component {
   @service router;
+  @service siteSettings;
   @service store;
   @controller adminEmbedding;
 
@@ -109,17 +111,31 @@ export default class AdminEmbeddingHostForm extends Component {
                 as |field|
               >
                 <field.Control>
-                  <TagChooser
-                    class="admin-embedding-host-form__tags"
-                    @everyTag={{true}}
-                    @excludeSynonyms={{true}}
-                    @onChange={{field.set}}
-                    @options={{hash
-                      filterPlaceholder="category.tags_placeholder"
-                    }}
-                    @tags={{field.value}}
-                    @unlimitedTagCount={{true}}
-                  />
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DSelectTag
+                      class="admin-embedding-host-form__tags"
+                      @excludeSynonyms={{true}}
+                      @ignoreRestrictions={{true}}
+                      @maximum={{false}}
+                      @onChange={{field.set}}
+                      @placeholder={{i18n "category.tags_placeholder"}}
+                      @value={{field.value}}
+                    />
+                  {{else}}
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    <TagChooser
+                      class="admin-embedding-host-form__tags"
+                      @everyTag={{true}}
+                      @excludeSynonyms={{true}}
+                      @onChange={{field.set}}
+                      @options={{hash
+                        filterPlaceholder="category.tags_placeholder"
+                      }}
+                      @tags={{field.value}}
+                      @unlimitedTagCount={{true}}
+                    />
+                  {{/if}}
                 </field.Control>
               </form.Field>
               <form.Field

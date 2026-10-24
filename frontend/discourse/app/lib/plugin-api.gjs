@@ -111,6 +111,7 @@ import {
   addLogSearchLinkClickedCallbacks,
   addSearchResultsCallback,
 } from "discourse/lib/search";
+import { deprecateSelectKitModifyClass } from "discourse/lib/select-kit-modify-class-deprecation";
 import Sharing from "discourse/lib/sharing";
 import { addAdminSidebarSectionLink } from "discourse/lib/sidebar/admin-sidebar";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
@@ -125,7 +126,10 @@ import {
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { addUserNavSidebarLink } from "discourse/lib/sidebar/user-nav-sidebar";
-import { consolePrefix } from "discourse/lib/source-identifier";
+import {
+  consolePrefix,
+  noticeSourceFor,
+} from "discourse/lib/source-identifier";
 import {
   _addTransformerName,
   _registerTransformer,
@@ -366,6 +370,8 @@ class _PluginApi {
           Object.getOwnPropertyDescriptors(changes)
         );
       }
+
+      this.#deprecateSelectKitModifyClass(klass, resolverName, "modifyClass");
     }
 
     return klass;
@@ -400,6 +406,12 @@ class _PluginApi {
       withPrependsRolledBack(klass.class, () => {
         klass.class.reopenClass(changes);
       });
+
+      this.#deprecateSelectKitModifyClass(
+        klass,
+        resolverName,
+        "modifyClassStatic"
+      );
     }
 
     return klass;
@@ -1761,6 +1773,11 @@ class _PluginApi {
    *
    * Access SelectKit plugin api
    *
+   * @param {string} pluginApiKey - The select-kit identifier to customize.
+   * @param {object} [options]
+   * @param {boolean} [options.bridge=true] - Also apply callbacks to DSelect.
+   *   Set false for callbacks that require a legacy component instance.
+   *
    * Example:
    *
    * api.modifySelectKit("topic-footer-mobile-dropdown").appendContent(() => [{
@@ -1768,8 +1785,12 @@ class _PluginApi {
    *   id: 1
    * }])
    */
-  modifySelectKit(pluginApiKey) {
-    return modifySelectKit(pluginApiKey);
+  modifySelectKit(pluginApiKey, options) {
+    return modifySelectKit(
+      pluginApiKey,
+      noticeSourceFor(this.#source),
+      options
+    );
   }
 
   /**
@@ -3953,6 +3974,16 @@ class _PluginApi {
         id: "discourse.modify-class-model",
         since: "2026.8",
       }
+    );
+  }
+
+  #deprecateSelectKitModifyClass(klass, resolverName, apiName) {
+    deprecateSelectKitModifyClass(
+      klass,
+      resolverName,
+      apiName,
+      this.source,
+      (path) => this._lookupContainer(path)
     );
   }
 

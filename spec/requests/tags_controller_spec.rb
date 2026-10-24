@@ -2240,6 +2240,59 @@ RSpec.describe TagsController do
             include("name" => "strategy", "id" => tag.id),
           )
         end
+
+        it "adds the stored name as original_name when the name shown is a translation" do
+          tag = Fabricate(:tag, name: "strategy", locale: "en", public_topic_count: 1)
+          Fabricate(:tag_localization, tag: tag, locale: "ja", name: "戦略")
+
+          get "/tags/filter/search.json", params: { q: "strat" }
+
+          expect(response.status).to eq(200)
+          row = response.parsed_body["results"].find { |t| t["id"] == tag.id }
+          expect(row).to include("name" => "戦略", "original_name" => "strategy")
+        end
+
+        it "omits original_name when the name shown is not a translation" do
+          tag = Fabricate(:tag, name: "strategy", locale: "en", public_topic_count: 1)
+          Fabricate(:tag_localization, tag: tag, locale: "de", name: "stratégie")
+
+          get "/tags/filter/search.json", params: { q: "strat" }
+
+          row = response.parsed_body["results"].find { |t| t["id"] == tag.id }
+          expect(row).not_to have_key("original_name")
+        end
+
+        it "omits original_name for a tag in another locale that has no translation" do
+          tag = Fabricate(:tag, name: "strategy", locale: "en", public_topic_count: 1)
+
+          get "/tags/filter/search.json", params: { q: "strat" }
+
+          row = response.parsed_body["results"].find { |t| t["id"] == tag.id }
+          expect(row).to include("name" => "strategy")
+          expect(row).not_to have_key("original_name")
+        end
+
+        it "omits original_name when the translation equals the stored name" do
+          tag = Fabricate(:tag, name: "design", locale: "en", public_topic_count: 1)
+          Fabricate(:tag_localization, tag: tag, locale: "ja", name: "design")
+
+          get "/tags/filter/search.json", params: { q: "des" }
+
+          row = response.parsed_body["results"].find { |t| t["id"] == tag.id }
+          expect(row).to include("name" => "design")
+          expect(row).not_to have_key("original_name")
+        end
+
+        it "adds original_name to the tag index rows the same way" do
+          tag = Fabricate(:tag, name: "strategy", locale: "en", public_topic_count: 1)
+          Fabricate(:tag_localization, tag: tag, locale: "ja", name: "戦略")
+
+          get "/tags.json"
+
+          expect(response.status).to eq(200)
+          row = response.parsed_body["tags"].find { |t| t["id"] == tag.id }
+          expect(row).to include("name" => "戦略", "original_name" => "strategy")
+        end
       end
     end
   end

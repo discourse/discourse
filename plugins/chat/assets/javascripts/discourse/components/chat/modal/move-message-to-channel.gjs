@@ -50,6 +50,11 @@ export default class ChatModalMoveMessageToChannel extends Component {
   }
 
   @action
+  changeDestinationChannel(channelId) {
+    this.destinationChannelId = channelId;
+  }
+
+  @action
   moveMessages() {
     return this.chatApi
       .moveChannelMessages(this.sourceChannel.id, {
@@ -84,6 +89,7 @@ export default class ChatModalMoveMessageToChannel extends Component {
           class="chat-modal-move-message-to-channel__channel-chooser"
           @content={{this.availableChannels}}
           @nameProperty="title"
+          @onChange={{this.changeDestinationChannel}}
           @value={{this.destinationChannelId}}
         />
       </:body>

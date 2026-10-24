@@ -255,12 +255,22 @@ module PageObjects
         PageObjects::Components::SelectKit.new("#{setting_row_selector(setting_name)} .combo-box")
       end
 
+      # A DSelect driver under the new select controls, a select-kit one otherwise.
       def tag_list_setting(setting_name)
-        PageObjects::Components::SelectKit.new("#{setting_row_selector(setting_name)} .tag-chooser")
+        selector = "#{setting_row_selector(setting_name)} .tag-chooser"
+        if find(selector).matches_css?(".d-select", wait: 0)
+          PageObjects::Components::UiKit::DSelect.at(selector)
+        else
+          PageObjects::Components::SelectKit.new(selector)
+        end
       end
 
       def has_tags_in_setting?(setting_name, tags)
         tag_chooser = tag_list_setting(setting_name)
+        if tag_chooser.is_a?(PageObjects::Components::UiKit::DSelect)
+          return tag_chooser.has_selected_names?(*tags.map(&:name))
+        end
+
         tag_names = tags.map(&:name).sort
         selected_names = tag_chooser.value&.split(",")&.sort || []
         tag_names == selected_names

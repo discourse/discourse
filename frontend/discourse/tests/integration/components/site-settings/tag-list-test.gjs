@@ -3,6 +3,8 @@ import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import TagList from "discourse/admin/components/site-settings/tag-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 module("Integration | Component | SiteSettings | TagList", function (hooks) {
@@ -64,3 +66,68 @@ module("Integration | Component | SiteSettings | TagList", function (hooks) {
     assert.strictEqual(this.subject.header().value(), null);
   });
 });
+
+module(
+  "Integration | Component | SiteSettings | TagList (new select controls)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.siteSettings.enable_new_select_controls = true;
+      pretender.get("/tags/list.json", () => response({ list_tags: [] }));
+    });
+
+    test("selecting a tag reports the tag name", async function (assert) {
+      const settingValue = tracked("");
+      const changes = [];
+      const changeValue = (value) => {
+        changes.push(value);
+        settingValue.value = value;
+      };
+
+      await render(
+        <template>
+          <TagList
+            @changeValueCallback={{changeValue}}
+            @value={{settingValue.value}}
+          />
+        </template>
+      );
+
+      assert.dom(".d-select").exists("the new control renders");
+      await dSelect(".d-select").selectByName("monkey");
+
+      assert.deepEqual(changes, ["monkey"]);
+    });
+
+    test("pre-selected names show as chips and keep their names", async function (assert) {
+      const settingValue = tracked("foo|bar");
+      const changes = [];
+      const changeValue = (value) => {
+        changes.push(value);
+        settingValue.value = value;
+      };
+
+      await render(
+        <template>
+          <TagList
+            @changeValueCallback={{changeValue}}
+            @value={{settingValue.value}}
+          />
+        </template>
+      );
+
+      assert.dom(".d-select").hasAttribute("data-name", "foo,bar");
+      await dSelect(".d-select").selectByName("monkey");
+      assert.deepEqual(changes, ["foo|bar|monkey"], "held names stay names");
+    });
+
+    test("the control follows @disabled", async function (assert) {
+      await render(
+        <template><TagList @disabled={{true}} @value="foo" /></template>
+      );
+
+      assert.dom(".d-select__trigger").hasClass("--disabled");
+    });
+  }
+);

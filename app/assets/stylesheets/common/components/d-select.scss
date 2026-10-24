@@ -1,0 +1,722 @@
+// Styles for the ui-kit DSelect family.
+.d-select__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  width: 100%;
+  justify-content: space-between;
+  background: var(--d-input-bg-color);
+  color: var(--d-input-text-color);
+  border: var(--d-input-border);
+  border-radius: var(--d-input-border-radius);
+}
+
+// Typeahead: the trigger is a composite [presentation] · [input] · [caret] box. The box
+// owns border/background/padding; the query input is transparent and grows to fill.
+.d-select__trigger.--typeahead {
+  @include form-item-sizing;
+  border: var(--d-input-border);
+  cursor: text;
+
+  &:focus-within {
+    @include default-focus;
+  }
+
+  .d-select__input {
+    flex: 1 1 4em;
+    min-width: 4em;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+
+    &::placeholder {
+      color: var(--primary-medium);
+      opacity: 1;
+    }
+  }
+}
+
+.d-select__trigger.--multiple {
+  justify-content: flex-start;
+}
+
+.d-select__trigger.--control {
+  @include form-item-sizing;
+  border: var(--d-input-border);
+  cursor: pointer;
+
+  &:focus-visible {
+    @include default-focus;
+  }
+}
+
+// Icon-only: with no value text there is nothing to grow, so the trigger shrinks to its icon(s)
+// plus caret, and the leading icon is the primary content rather than a muted adornment.
+.d-select__trigger.--icon-only {
+  width: auto;
+  justify-content: center;
+
+  .d-select__leading-icon {
+    color: inherit;
+  }
+}
+
+// Disabled dims the whole trigger and blocks the pointer; readonly stays visually active
+// (it is focusable and readable, just not editable — the aria/native state carries that).
+.d-select__trigger.--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+// Leading icon and the growing value keep the trailing clear + caret pinned to the end.
+.d-select__leading-icon {
+  flex-shrink: 0;
+  color: var(--primary-medium);
+}
+
+.d-select__value {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.d-select__clear {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--primary-medium);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--primary);
+  }
+}
+
+.d-select__presentation {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+// A badge sizes itself for running text. As a trigger's value it has to match the fields
+// beside it instead, so its own sizing is reset. Trigger-wide, so chips are covered too.
+.d-select__trigger .badge-category__wrapper {
+  font-size: var(--font-0);
+  align-items: center;
+}
+
+.d-select__placeholder {
+  color: var(--primary-medium);
+
+  // As a direct trigger child (control empty state) it grows so the caret stays pinned right;
+  // nested inside a non-flex `.d-select__presentation` (mobile typeahead) this is inert.
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.d-select__caret,
+.d-select__pending-icon {
+  color: var(--primary-medium);
+  flex-shrink: 0;
+}
+
+.d-select__pending-icon {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: rotate-forever 1s infinite linear;
+  }
+}
+
+// Names what a slow source is loading, above its skeleton rows. It shares an option row's
+// padding and type size so it stands in for one row without changing the panel's height.
+.d-select__loading-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em 0.75em;
+  color: var(--primary-medium);
+  list-style: none;
+}
+
+// Floor every dropdown's width so it is never uselessly narrow. `matchTriggerWidth` pins the
+// overlay to the trigger, which is unusably tight for a compact icon-only trigger; the min-width
+// overrides that smaller matched width (and gives the windowed option list a real width to lay its
+// absolutely-positioned rows against). A token so a consumer or theme can tune it.
+.d-select__content {
+  min-width: var(--d-select-menu-min-width, 12em);
+}
+
+.fk-d-menu.d-select__content {
+  z-index: z("modal", "dialog") + 1;
+}
+
+.d-select__content > .fk-d-menu__inner-content {
+  width: 100%;
+}
+
+.d-select__panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-height: var(--d-select-panel-max-height, min(32em, 70dvh));
+
+  > :not(.d-virtual-list, .d-select__listbox--loading) {
+    flex-shrink: 0;
+  }
+
+  &:has(> .d-select__chips .d-select__chip-list:focus-within)
+    .d-select__option.--active,
+  &:has(> .d-select__strip:focus-within) .d-select__option.--active {
+    outline: none;
+  }
+}
+
+.d-select__filter {
+  width: 100%;
+}
+
+.d-select__strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25em;
+  box-sizing: border-box;
+  max-height: var(--d-select-strip-max-height, 8em);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+  margin: 0;
+  padding: 0.5em 0.75em;
+  border-bottom: 1px solid var(--primary-low);
+}
+
+.d-select__strip-item {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.d-select__strip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0.25em 0.5em;
+  border: none;
+  border-radius: var(--d-input-border-radius);
+  background: var(--primary-low);
+  color: var(--primary);
+  font: inherit;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--tertiary);
+    outline-offset: -2px;
+  }
+
+  .discourse-no-touch &:hover {
+    background: var(--primary-low-mid);
+  }
+
+  .fk-d-menu-modal & {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+.d-select__strip-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.d-select__listbox {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+// The scroll viewport is capped and contains its own overscroll. In the content state the
+// list renders through DVirtualList, whose OUTER element is the scroller (the inner sizer ul
+// also carries d-select__listbox but must not scroll); the first-load skeleton renders in
+// a plain ul that scrolls itself.
+.d-select__panel .d-virtual-list,
+.d-select__listbox--loading {
+  flex: 0 1 auto;
+  min-height: 0;
+  max-height: 20em;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.d-select__option {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em 0.75em;
+  cursor: pointer;
+
+  &.--sticky {
+    background: var(--secondary);
+  }
+
+  &.--sticky-end {
+    border-block-end: 1px solid var(--primary-low);
+  }
+
+  // The keyboard cursor is a POSITION, not a state, so it is framed rather than filled. Sharing
+  // the fill channel with the selection made both unreadable: a row just deselected still looked
+  // selected, and on a row that IS selected the cursor vanished — which is exactly where a list
+  // opens, since it reveals the held value. An outline also composes over either fill instead of
+  // replacing it, and it is how the chip cursor is already marked.
+  &.--active {
+    outline: 2px solid var(--tertiary);
+
+    // Drawn inside the row, so it neither overlaps its neighbours nor shifts any layout.
+    outline-offset: -2px;
+  }
+
+  // Hover keeps a fill: the pointer is visibly on the row, so it is never read at the same time
+  // as the keyboard cursor, and a fill is what a list is expected to do under a pointer.
+  .discourse-no-touch &:hover {
+    background: var(--d-hover);
+  }
+
+  // The surface, which consumer markup cannot reach. `font-weight` alone used to be the
+  // affordance and it is inherited, so any custom `:item` that styled its own label overrode it
+  // and the selection silently stopped being visible — which is every rich row.
+  //
+  // The tokens are the ones the list this replaces uses for the same state, so a reader moving
+  // between them sees one language rather than two.
+  &.--selected {
+    background: var(--d-selected);
+    color: var(--d-selected-text-color);
+    font-weight: 700;
+  }
+
+  // Selected AND hovered. The cursor needs no such rule now that it is an outline, but a pointer
+  // over a selected row still replaces one fill with another, so it gets the paired token rather
+  // than the plain hover grey.
+  .discourse-no-touch &.--selected:hover {
+    background: var(--d-selected-hover);
+  }
+
+  &[aria-disabled="true"] {
+    color: var(--primary-medium);
+    cursor: not-allowed;
+  }
+
+  &.--create {
+    color: var(--tertiary);
+  }
+}
+
+.d-select__option-content {
+  min-width: 0;
+}
+
+.d-select__option-description {
+  display: block;
+  color: var(--token-color-text-subtle);
+  font-size: var(--font-down-1);
+  font-weight: normal;
+  overflow-wrap: anywhere;
+}
+
+.d-select__option-selected-icon {
+  flex: none;
+  visibility: hidden;
+  color: var(--tertiary);
+
+  // A checkbox pair carries its own unselected state, so it is always drawn — hiding the empty
+  // box is what left the awkward gap. Muted until selected, where the rule below colours it.
+  &.--checkbox {
+    visibility: visible;
+    color: var(--primary-medium);
+  }
+}
+
+.d-select__option.--selected .d-select__option-selected-icon {
+  visibility: visible;
+
+  // Also restores the accent over the checkbox pair's muted unselected colour.
+  color: var(--tertiary);
+}
+
+.d-select__skeleton {
+  padding: 0.5em 0.75em;
+}
+
+// A group header: a non-interactive section label. The top rule separates it from the rows
+// above; at the list's top edge it reads as a subtle inset.
+.d-select__group-header {
+  padding: 0.5em 0.75em 0.25em;
+  border-top: 1px solid var(--primary-low);
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+  font-weight: 700;
+  cursor: default;
+}
+
+.d-select__divider {
+  height: 1px;
+  padding: 0;
+  background: var(--primary-low);
+}
+
+.d-select__empty,
+.d-select__min-chars,
+.d-select__narrow,
+.d-select__limit,
+.d-select__error {
+  padding: 0.75em;
+  color: var(--primary-medium);
+}
+
+// Sits below the scrolling listbox, so it needs its own separation from the last row.
+.d-select__narrow {
+  border-top: 1px solid var(--primary-low);
+}
+
+// Sits above the scrolling listbox, so it separates from the first row instead.
+.d-select__limit {
+  border-bottom: 1px solid var(--primary-low);
+}
+
+// Message and recovery on one line, the way a form field states a problem and offers the way
+// out: stacked, the retry read as a second paragraph rather than as the answer to the message
+// above it. Wraps rather than crushing the control when the panel is narrow.
+.d-select__error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+}
+
+.d-select__error-message {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+
+  // Takes the slack so the retry sits at the far edge, and shrinks before the control does.
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+// Low emphasis: the failure is the message, not the button. Sized down and coloured as a link
+// so it reads as the way out rather than as a call to action competing with the option list.
+.d-select__retry {
+  flex: none;
+  padding: 0;
+  color: var(--tertiary);
+  font-size: var(--font-down-1);
+
+  &:hover,
+  &:focus {
+    color: var(--tertiary-hover);
+    background: none;
+  }
+}
+
+// Pinned below the scrolling option list (a flex:none panel child), separated by a top rule.
+// Status reads from the leading edge and any action sits at the trailing one, which is the shape
+// a footer takes whatever a consumer puts in it; packed together they read as one run-on phrase.
+.d-select__footer {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+  padding: 0.5em 0.75em;
+  border-top: 1px solid var(--primary-low);
+
+  // The footer states something; it is not a call to action competing with the list above it —
+  // which is what `btn-flat` already means, so a control here wears that class and this only sets
+  // the smaller type. Nothing is restated: flat is transparent at rest, tertiary text, and fills
+  // with `--d-hover` on hover AND on `:focus-visible`. That last one matters more than it looks:
+  // a footer control is a real tab stop, since the panel takes part in the tab sequence, so it
+  // needs a focus indicator — and an earlier `background: none` here silently suppressed it.
+  .btn {
+    font-size: var(--font-down-1);
+  }
+}
+
+// Multi-select chips (rendered in the trigger)
+.d-select__chips {
+  // No inline-start padding: the chips box sits inside a `form-item-sizing` typeahead
+  // trigger that already provides the field inset, so the box aligns the first chip (or the
+  // inline input) with where a single-select value would sit. Adding $hpad here would
+  // double the inset.
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25em;
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+}
+
+.d-select__chip-list {
+  // The chips need real list semantics (ul/li) so assistive tech announces them as a
+  // collection, but they must also flow inline with the query input, which is a sibling of
+  // the list (an <input> cannot be a child of a <ul>). display:contents drops the <ul>'s own
+  // box so its <li> chips participate directly in the parent flex row alongside the input,
+  // keeping the token-input layout while the list role is preserved in the accessibility tree.
+  display: contents;
+}
+
+// While an open panel lists the held items, the trigger shrinks to one line with a count.
+.d-select__chips.--summarized {
+  .d-select__chip,
+  .d-select__chips-more,
+  .d-select__placeholder {
+    display: none;
+  }
+}
+
+.d-select__chips-summary {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--primary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.d-select__chips-more {
+  padding-inline: 0.4em;
+  border-radius: var(--d-input-border-radius);
+  background: var(--primary-low);
+  color: var(--primary);
+}
+
+.d-select__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+
+  // Horizontal inset only. The trigger has no height of its own, so block padding here makes
+  // a multi-select taller than the single-selects beside it and a row of fields stops
+  // aligning. Inheriting type and line-height keeps them identical without a tuned number.
+  padding: 0 0.4em;
+  background: var(--primary-low);
+  color: var(--primary);
+  border-radius: var(--d-input-border-radius, 0.25em);
+
+  &:hover {
+    background: var(--primary-low-mid);
+  }
+
+  // The roving cursor lands on the inner remove button; ring the whole chip so the focus
+  // indicator frames the token being acted on, not just the × control.
+  &:has(.d-select__chip-remove:focus-visible) {
+    outline: 2px solid var(--tertiary);
+    outline-offset: 1px;
+  }
+}
+
+.d-select__chip-remove {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--primary-medium);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--primary);
+  }
+
+  // The whole-chip ring above is the focus indicator, so suppress the button's own
+  // outline to avoid a second ring around the × while it holds the roving focus.
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.d-select.--list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+
+  // Every section starts at the root's edge; the containing panel owns the outer padding.
+  > .d-select__strip {
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  > .d-virtual-list,
+  > .d-select__options,
+  > .d-select__listbox--loading {
+    min-height: 0;
+    max-height: var(--d-select-list-max-height, 20em);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .filter-input-container {
+    width: 100%;
+  }
+
+  .d-select__filter {
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  .d-select__list-header {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  .d-select__option.--placeholder {
+    position: relative;
+    cursor: default;
+    pointer-events: none;
+
+    > :not(.d-skeleton) {
+      visibility: hidden;
+    }
+
+    // A first load has no row to copy, so the label holds a line of varied width instead.
+    .d-select__placeholder-label:empty {
+      display: inline-block;
+      min-width: var(--space-12);
+
+      &::before {
+        content: "\00a0";
+      }
+    }
+
+    &:nth-child(3n + 2) .d-select__placeholder-label:empty {
+      min-width: var(--space-8);
+    }
+
+    &:nth-child(3n) .d-select__placeholder-label:empty {
+      min-width: calc(var(--space-12) + var(--space-8));
+    }
+
+    .d-skeleton {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+    }
+  }
+
+  &:not(:focus-within) .d-select__option.--active,
+  &:has(> .d-select__chips .d-select__chip-list:focus-within)
+    .d-select__option.--active,
+  &:has(> .d-select__strip:focus-within) .d-select__option.--active {
+    outline: none;
+  }
+}
+
+.d-select__chips.--field {
+  @include form-item-sizing;
+  border: var(--d-input-border);
+  border-radius: var(--d-input-border-radius);
+  background: var(--d-input-bg-color);
+  color: var(--d-input-text-color);
+  max-height: var(--d-select-field-max-height, 8em);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  // Rows sit more than 24px apart so the remove targets below never overlap between rows.
+  row-gap: 0.375em;
+
+  &:focus-within {
+    @include default-focus;
+  }
+
+  .d-select__filter {
+    flex: 1 0 8em;
+    min-width: min(8em, 100%);
+    width: auto;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+  }
+
+  .d-select__chip {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .d-select__chip-label {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .d-select__chip-remove {
+    // The hit area grows past the button without sizing it, so a field chip stays as tall as a
+    // trigger chip.
+    position: relative;
+    flex-shrink: 0;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 24px;
+      height: 24px;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+
+.d-select__filter::-webkit-search-cancel-button {
+  display: none;
+}
+
+// The panel's search field and its optional trailing icon, drawn inside the field.
+.d-select__search {
+  position: relative;
+
+  // The wrapper must be exactly as tall as the input for the icon to center on it, so the input's
+  // global bottom margin (the panel's only spacing under the field) moves here.
+  display: flex;
+  margin-bottom: 9px;
+
+  > .d-select__filter {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin-bottom: 0;
+  }
+
+  &.--with-icon .d-select__filter {
+    padding-inline-end: 2em;
+  }
+
+  .d-select__search-icon {
+    position: absolute;
+    inset-inline-end: 0.65em;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+.d-select__search-icon {
+  flex: none;
+  align-self: center;
+  margin-inline-start: auto;
+  color: var(--primary-medium);
+  pointer-events: none;
+}

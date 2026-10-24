@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Archive channel" do
+  with_select_controls(false)
+
   fab!(:channel_1, :chat_channel)
 
   let(:chat) { PageObjects::Pages::Chat.new }
@@ -76,6 +78,37 @@ RSpec.describe "Archive channel" do
           try_until_success do
             archive = Chat::ChannelArchive.find_by(chat_channel: channel_1)
             expect(archive&.destination_tags).to eq([tag.name])
+          end
+        end
+
+        context "with the new select controls" do
+          with_select_controls(true)
+
+          it "archives the channel with tags picked in the new select controls" do
+            SiteSetting.tagging_enabled = true
+            tag = Fabricate(:tag, name: "archived")
+            Jobs.run_immediately!
+
+            chat.visit_channel_settings(channel_1)
+            click_button(I18n.t("js.chat.channel_settings.archive_channel"))
+            find("#split-topic-name").fill_in(with: "An interesting topic for cats")
+
+            tag_chooser =
+              PageObjects::Components::UiKit::DSelect.at(".chat-to-topic-selector .tag-chooser")
+            tag_chooser.search(tag.name)
+            tag_chooser.select_name(tag.name)
+            tag_chooser.close
+
+            expect(tag_chooser).to have_selected_name(tag.name)
+
+            click_button(I18n.t("js.chat.channel_archive.title"))
+
+            expect(page).to have_css(".chat-channel-archive-status", wait: 15)
+
+            try_until_success do
+              archive = Chat::ChannelArchive.find_by(chat_channel: channel_1)
+              expect(archive&.destination_tags).to eq([tag.name])
+            end
           end
         end
 

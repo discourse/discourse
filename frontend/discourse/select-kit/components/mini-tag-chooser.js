@@ -9,6 +9,7 @@ import {
 import { makeArray } from "discourse/lib/helpers";
 import MultiSelectComponent from "discourse/select-kit/components/multi-select";
 import {
+  deprecateImplicitMutation,
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
@@ -90,7 +91,7 @@ export default class MiniTagChooser extends MultiSelectComponent {
     }
     return tags.map((t) => {
       if (typeof t === "object" && t !== null) {
-        const item = this.defaultItem(t.id, t.name);
+        const item = this.defaultItem(t.id ?? t.name, t.name);
         if (t.isNew) {
           item.isNew = true;
         }
@@ -98,6 +99,18 @@ export default class MiniTagChooser extends MultiSelectComponent {
       }
       return this.defaultItem(t, t);
     });
+  }
+
+  getValue(item) {
+    if (
+      item &&
+      typeof item === "object" &&
+      item.id === undefined &&
+      item.name
+    ) {
+      return item.name;
+    }
+    return super.getValue(item);
   }
 
   modifyComponentForRow(collection, item) {
@@ -186,10 +199,20 @@ export default class MiniTagChooser extends MultiSelectComponent {
 
   @action
   _onChange(value, items) {
+    const tags = items.map((item) => {
+      const held = this.tags.find(
+        (tag) => this.getValue(tag) === this.getValue(item)
+      );
+      if (typeof held === "string") {
+        return { name: held };
+      }
+      return held && held.id == null ? { ...held } : item;
+    });
     if (this.onChange) {
-      this.onChange(items);
+      this.onChange(tags);
     } else {
-      this.set("value", items);
+      deprecateImplicitMutation();
+      this.set("value", tags);
     }
   }
 

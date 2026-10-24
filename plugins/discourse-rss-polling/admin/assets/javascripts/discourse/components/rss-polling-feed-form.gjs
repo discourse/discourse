@@ -16,6 +16,7 @@ import UserChooser from "discourse/select-kit/components/user-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 import RssPollingFeedItemList from "discourse/plugins/discourse-rss-polling/discourse/components/rss-polling-feed-item-list";
 import {
@@ -28,6 +29,7 @@ import RssPollingFeedSettings from "../../admin/models/rss-polling-feed-settings
 export default class RssPollingFeedForm extends Component {
   @service dialog;
   @service router;
+  @service siteSettings;
   @service toasts;
 
   @tracked polling = false;
@@ -353,14 +355,28 @@ export default class RssPollingFeedForm extends Component {
                 as |field|
               >
                 <field.Control>
-                  <TagChooser
-                    class="rss-polling-feed-form__tags"
-                    @allowCreate={{false}}
-                    @everyTag={{true}}
-                    @onChange={{field.set}}
-                    @tags={{field.value}}
-                    @unlimitedTagCount={{true}}
-                  />
+                  {{! TODO (select-kit-replacement-cleanup) }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DSelectTag
+                      class="rss-polling-feed-form__tags"
+                      @allowCreate={{false}}
+                      @emit="names"
+                      @ignoreRestrictions={{true}}
+                      @maximum={{false}}
+                      @onChange={{field.set}}
+                      @value={{field.value}}
+                    />
+                  {{else}}
+                    {{! TODO (select-kit-replacement-cleanup) }}
+                    <TagChooser
+                      class="rss-polling-feed-form__tags"
+                      @allowCreate={{false}}
+                      @everyTag={{true}}
+                      @onChange={{field.set}}
+                      @tags={{field.value}}
+                      @unlimitedTagCount={{true}}
+                    />
+                  {{/if}}
                 </field.Control>
                 {{#if this.requiredTagNames.length}}
                   <div class="rss-polling-feed-form__tag-requirement">

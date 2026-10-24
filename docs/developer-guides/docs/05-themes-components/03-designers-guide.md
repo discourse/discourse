@@ -245,6 +245,14 @@ Let's make some changes to this area. To do so, add the following to your `commo
 
 Here we target the `.select-kit-header` to give them each an identical border-radius, as well as a lighter background color.
 
+When the new select controls are enabled, the tag filter keeps the `.d-select.tag-drop`
+classes during the rollout and its trigger uses `.d-select__trigger`. The overlay is
+portaled outside the navigation container: target `.d-tag-drop__shortcut` and
+`.d-tag-drop__filter-for-more` for its recipe-specific content. Use the theme's
+color variables for both light and dark palettes. Caret customizations target the
+`select-tag-filter` kind through `select-customizations`, with `caretDownIcon` (closed)
+and `caretUpIcon` (open) declared as recipe options.
+
 Clicking on either of these, opens up a drop down menu.
 
 ![image|350x439](/assets/designers-guide-8.png)

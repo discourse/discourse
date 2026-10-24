@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -11,6 +12,7 @@ import EmailGroupUserChooser from "discourse/select-kit/components/email-group-u
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 import {
   ASSIGNED_OPTIONS,
@@ -24,6 +26,8 @@ import {
 import BoardsEditableTitle from "../boards-editable-title.gjs";
 
 export default class BoardsColumnSettings extends Component {
+  @service siteSettings;
+
   @tracked showAdvanced = false;
 
   @cached
@@ -66,6 +70,11 @@ export default class BoardsColumnSettings extends Component {
   onTagChange(field, tags) {
     const tag = tags?.[0];
     field.set(typeof tag === "object" ? tag.name : tag || "");
+  }
+
+  @action
+  onSingleTagChange(field, name) {
+    field.set(name || "");
   }
 
   @action
@@ -187,15 +196,29 @@ export default class BoardsColumnSettings extends Component {
                 as |field|
               >
                 <field.Control>
-                  <MiniTagChooser
-                    @onChange={{fn this.onTagChange field}}
-                    @options={{hash
-                      maximum=1
-                      allowCreate=true
-                      categoryId=this.tagChooserCategoryId
-                    }}
-                    @value={{tagToArray data.tag_name}}
-                  />
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                    <DSelectTag
+                      @allowCreate={{true}}
+                      @categoryId={{this.tagChooserCategoryId}}
+                      @emit="names"
+                      @legacyKind="mini-tag-chooser"
+                      @multiple={{false}}
+                      @onChange={{fn this.onSingleTagChange field}}
+                      @value={{data.tag_name}}
+                    />
+                  {{else}}
+                    {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                    <MiniTagChooser
+                      @onChange={{fn this.onTagChange field}}
+                      @options={{hash
+                        maximum=1
+                        allowCreate=true
+                        categoryId=this.tagChooserCategoryId
+                      }}
+                      @value={{tagToArray data.tag_name}}
+                    />
+                  {{/if}}
                   <p class="discourse-boards-column-settings__help">
                     {{i18n "boards.manage.columns.tag_help"}}
                   </p>

@@ -17,6 +17,7 @@ import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -38,11 +39,9 @@ export default class TagSettings extends Component {
 
   constructor() {
     super(...arguments);
-    this.loadTags();
-  }
-
-  get tagNames() {
-    return this.tags.map((t) => t.name);
+    if (!this.siteSettings.enable_new_select_controls) {
+      this.loadTags();
+    }
   }
 
   /** @returns {TagSettingsFormData} */
@@ -133,6 +132,18 @@ export default class TagSettings extends Component {
         name: tag.name,
       }));
     } catch {}
+  }
+
+  @action
+  editTag(tag) {
+    if (tag) {
+      this.router.transitionTo(
+        "tag.edit.tab",
+        tag.slug || `${tag.id}-tag`,
+        tag.id,
+        "general"
+      );
+    }
   }
 
   @action
@@ -269,11 +280,25 @@ export default class TagSettings extends Component {
               "tagging.settings.edit_tag_prefix"
             }}</span>
           <span class="tag-settings-title__dropdown">
-            <TagDropdown
-              aria-label={{i18n "tagging.settings.select_tag"}}
-              @tags={{this.tags}}
-              @value={{@tag.name}}
-            />
+            {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DSelectTag
+                @excludeSynonyms={{true}}
+                @ignoreRestrictions={{true}}
+                @label={{i18n "tagging.settings.select_tag"}}
+                @legacyKind="tag-dropdown"
+                @multiple={{false}}
+                @onChange={{this.editTag}}
+                @value={{@tag}}
+                @variant="button"
+              />
+            {{else}}
+              <TagDropdown
+                aria-label={{i18n "tagging.settings.select_tag"}}
+                @tags={{this.tags}}
+                @value={{@tag.name}}
+              />
+            {{/if}}
           </span>
         </:title>
         <:actions as |actions|>
@@ -377,17 +402,33 @@ export default class TagSettings extends Component {
             as |field|
           >
             <field.Control>
-              <MiniTagChooser
-                @onChange={{this.handleSynonymChange}}
-                @options={{hash
-                  everyTag=true
-                  allowAny=false
-                  blockedTags=this.blockedTags
-                  filterPlaceholder="tagging.settings.add_synonym_placeholder"
-                  maximum=200
-                }}
-                @value={{transientData.synonyms}}
-              />
+              {{#if this.siteSettings.enable_new_select_controls}}
+                {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                <DSelectTag
+                  @exclude={{this.blockedTags}}
+                  @ignoreRestrictions={{true}}
+                  @legacyKind="mini-tag-chooser"
+                  @maximum={{200}}
+                  @onChange={{this.handleSynonymChange}}
+                  @placeholder={{i18n
+                    "tagging.settings.add_synonym_placeholder"
+                  }}
+                  @value={{transientData.synonyms}}
+                />
+              {{else}}
+                {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                <MiniTagChooser
+                  @onChange={{this.handleSynonymChange}}
+                  @options={{hash
+                    everyTag=true
+                    allowAny=false
+                    blockedTags=this.blockedTags
+                    filterPlaceholder="tagging.settings.add_synonym_placeholder"
+                    maximum=200
+                  }}
+                  @value={{transientData.synonyms}}
+                />
+              {{/if}}
             </field.Control>
           </form.Field>
         {{else if (eq @selectedTab "localizations")}}

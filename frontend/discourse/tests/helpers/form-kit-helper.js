@@ -1,4 +1,5 @@
 import { click, fillIn, triggerEvent, waitFor } from "@ember/test-helpers";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -18,11 +19,24 @@ class Field {
   get resolvedControlType() {
     const type = this.controlType;
 
+    if (this.dSelectElement?.matches(".form-kit__control-tag-chooser")) {
+      return "tag-chooser";
+    }
+
     if (type && type !== "custom") {
       return type;
     }
 
     if (type === "custom") {
+      const select = this.element.querySelector(
+        ".form-kit__control-custom .d-select"
+      );
+      if (select) {
+        return select.classList.contains("--multiple")
+          ? "d-select-multiple"
+          : "d-select";
+      }
+
       if (
         this.element.querySelector(".form-kit__control-custom .multi-select")
       ) {
@@ -64,6 +78,18 @@ class Field {
     }
 
     throw new Error("Unable to resolve tag chooser selector");
+  }
+
+  get dSelectControl() {
+    return dSelect(this.dSelectElement);
+  }
+
+  get dSelectElement() {
+    return this.element.matches(".d-select")
+      ? this.element
+      : this.element.querySelector(
+          ".form-kit__control-custom .d-select, .form-kit__control-tag-chooser.d-select"
+        );
   }
 
   get tagChooserKit() {
@@ -109,6 +135,9 @@ class Field {
 
   value() {
     switch (this.resolvedControlType) {
+      case "d-select":
+      case "d-select-multiple":
+        return this.dSelectControl.element().dataset.value;
       case "input-number":
         return parseInt(this.inputElement.value, 10);
       // String-based controls fall through to return raw value
@@ -132,7 +161,9 @@ class Field {
           null
         );
       case "tag-chooser":
-        return this.element.querySelector(".select-kit-header")?.dataset?.value;
+        return this.dSelectElement
+          ? this.dSelectElement.dataset.value
+          : this.element.querySelector(".select-kit-header")?.dataset?.value;
       case "multi-select":
         return this.element.querySelector(".select-kit-header")?.dataset?.value;
       default:
@@ -238,6 +269,13 @@ class Field {
 
   async select(value) {
     switch (this.resolvedControlType) {
+      case "d-select":
+      case "d-select-multiple": {
+        const control = this.dSelectControl;
+        await control.select(value);
+        await control.close();
+        break;
+      }
       case "multi-select": {
         const multiSelect = this.element.querySelector(
           ".form-kit__control-custom .multi-select"
@@ -249,6 +287,12 @@ class Field {
         break;
       }
       case "tag-chooser": {
+        if (this.dSelectElement) {
+          const control = this.dSelectControl;
+          await control.select(value);
+          await control.close();
+          break;
+        }
         const kit = this.tagChooserKit;
         await kit.expand();
         await kit.selectRowByValue(value);
@@ -301,6 +345,14 @@ class Field {
       throw new Error(`Unsupported control type: ${this.resolvedControlType}`);
     }
 
+    if (this.dSelectElement) {
+      const control = this.dSelectControl;
+      await control.search(name);
+      await control.selectByName(name);
+      await control.close();
+      return;
+    }
+
     const kit = this.tagChooserKit;
     await kit.expand();
     await kit.selectRowByName(name);
@@ -312,6 +364,19 @@ class Field {
       throw new Error(`Unsupported control type: ${this.resolvedControlType}`);
     }
 
+    if (this.dSelectElement) {
+      const chip = [
+        ...this.dSelectElement.querySelectorAll(".d-select__chip"),
+      ].find((element) => element.dataset.name === name);
+      if (!chip) {
+        throw new Error(`Selected tag ${name} not found`);
+      }
+      const control = this.dSelectControl;
+      await control.remove(chip.dataset.value);
+      await control.close();
+      return;
+    }
+
     const kit = this.tagChooserKit;
     await kit.expand();
     await kit.deselectItemByName(name);
@@ -321,6 +386,13 @@ class Field {
   async deselectByValue(value) {
     if (this.resolvedControlType !== "tag-chooser") {
       throw new Error(`Unsupported control type: ${this.resolvedControlType}`);
+    }
+
+    if (this.dSelectElement) {
+      const control = this.dSelectControl;
+      await control.remove(value);
+      await control.close();
+      return;
     }
 
     const kit = this.tagChooserKit;

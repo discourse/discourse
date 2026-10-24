@@ -75,6 +75,7 @@ import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-but
 import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
 import { resetLogSearchLinkClickedCallbacks } from "discourse/lib/search";
+import { resetSelectKitLegacyRenderNotices } from "discourse/lib/select-kit-modify-class-deprecation";
 import { clearAdditionalAdminSidebarSectionLinks } from "discourse/lib/sidebar/admin-sidebar";
 import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
@@ -126,6 +127,7 @@ import { resetDragSourcesForTesting } from "discourse/ui-kit/modifiers/d-drag-an
 import { resetPointerDragForTesting } from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n from "discourse-i18n";
 import { setupDNativeSelectAssertions } from "./d-native-select-assertions.js";
+import { setupDSelectAssertions } from "./d-select-assertions.ts";
 import { setupFormKitAssertions } from "./form-kit-assertions.js";
 import { setupNotificationsTrackingAssertions } from "./notifications-tracking-assertions.js";
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper.js";
@@ -228,6 +230,7 @@ export function testCleanup(container, app) {
   resetAdminReportRelatedItemsRenderers();
   resetAdminDashboardSections();
   resetDeferredClassModifications();
+  resetSelectKitLegacyRenderNotices();
   resetExtraClasses();
   clearOutletCache();
   clearHTMLCache();
@@ -517,6 +520,7 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
 
 setupFormKitAssertions();
 setupDNativeSelectAssertions();
+setupDSelectAssertions();
 setupNotificationsTrackingAssertions();
 
 export async function selectDate(selector, date) {
@@ -725,3 +729,15 @@ export function normalizeHtml(html) {
 }
 
 export const metaModifier = { [`${PLATFORM_KEY_MODIFIER}Key`]: true };
+
+/**
+ * Waits one animation frame, then for everything `settled` tracks.
+ *
+ * `settled` does not await frames, so work a browser schedules for the next frame (a coalesced
+ * pointer move, a ResizeObserver report) has not landed when it returns. Await this between an
+ * action and any assertion about work that arrives on the next frame.
+ */
+export async function settledAfterFrame() {
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  await settled();
+}

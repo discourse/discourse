@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Composer Form Template" do
+  with_select_controls(false)
+
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:tag1) { Fabricate(:tag, name: "persian") }
   fab!(:tag2) { Fabricate(:tag, name: "siamese") }
@@ -45,6 +47,47 @@ describe "Composer Form Template" do
     preview = find(".d-editor-preview")
     expect(preview).to have_content("PERSIAN")
     expect(preview).to have_no_content(tag1.id.to_s)
+  end
+
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    let(:composer_tag_chooser) do
+      PageObjects::Components::UiKit::DSelect.at(".tags-input .mini-tag-chooser")
+    end
+
+    def open_composer_in_category
+      visit("/")
+      find("#create-topic").click
+      find(".category-chooser").click
+      find(".category-row[data-value='#{category.id}']").click
+
+      expect(page).to have_css(".form-template-field__multi-select[name='cat-breed']")
+    end
+
+    it "mirrors a form template tag into the composer tag chooser with the new select controls" do
+      open_composer_in_category
+
+      find(".form-template-field__multi-select[name='cat-breed']").select("PERSIAN")
+
+      expect(composer_tag_chooser).to have_selected_names(tag1.name)
+
+      preview = find(".d-editor-preview")
+      expect(preview).to have_content("PERSIAN")
+      expect(preview).to have_no_content(tag1.id.to_s)
+    end
+
+    it "mirrors a composer tag chooser pick into the form template field with the new select controls" do
+      open_composer_in_category
+
+      composer_tag_chooser.search(tag2.name)
+      composer_tag_chooser.select_name(tag2.name)
+      composer_tag_chooser.close
+
+      expect(composer_tag_chooser).to have_selected_names(tag2.name)
+      expect(page).to have_select("cat-breed", selected: "SIAMESE")
+      expect(find(".d-editor-preview")).to have_content("SIAMESE")
+    end
   end
 end
 

@@ -45,3 +45,45 @@
     }
   }
 }
+
+.d-tag-drop__selection {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--primary-high);
+}
+
+.d-tag-drop__shortcut {
+  color: var(--tertiary);
+  font-weight: 700;
+}
+
+.d-tag-drop__filter-for-more {
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+}
+
+// The tag filter's trigger is a short label and its windowed list cannot size the overlay to the
+// longest tag, so the overlay gets a wider floor than the select default.
+.d-select__content.--kind-select-tag-filter {
+  --d-select-menu-min-width: 16em;
+
+  @include viewport.until(sm) {
+    .d-tag-drop__shortcut {
+      font-weight: normal;
+    }
+  }
+}
+
+.d-select.tag-drop.d-select__trigger {
+  &[aria-expanded="true"],
+  &:focus,
+  &:active {
+    @include default-focus;
+  }
+
+  &.--filtering {
+    color: var(--d-nav-border-color--active);
+    border-color: var(--d-nav-border-color--active);
+  }
+}

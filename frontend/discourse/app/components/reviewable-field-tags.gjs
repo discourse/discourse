@@ -2,9 +2,13 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 
 export default class ReviewableFieldTags extends Component {
+  @service siteSettings;
+
   // The reviewable is not updated until the edit is saved, so the picked tags are held
   // here rather than read back from `@value`.
   @tracked editedValue;
@@ -25,10 +29,22 @@ export default class ReviewableFieldTags extends Component {
   }
 
   <template>
-    <MiniTagChooser
-      @onChange={{this.onChange}}
-      @options={{hash categoryId=@tagCategoryId}}
-      @value={{this.value}}
-    />
+    {{#if this.siteSettings.enable_new_select_controls}}
+      {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+      <DSelectTag
+        @allowCreate={{true}}
+        @categoryId={{@tagCategoryId}}
+        @legacyKind="mini-tag-chooser"
+        @onChange={{this.onChange}}
+        @value={{this.value}}
+      />
+    {{else}}
+      {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+      <MiniTagChooser
+        @onChange={{this.onChange}}
+        @options={{hash categoryId=@tagCategoryId}}
+        @value={{this.value}}
+      />
+    {{/if}}
   </template>
 }

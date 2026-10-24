@@ -1,0 +1,635 @@
+import { tracked } from "@glimmer/tracking";
+import { registerDestructor } from "@ember/destroyable";
+import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
+import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
+import type { CapabilitiesService } from "discourse/services/capabilities";
+import { isTouchScreenReader } from "discourse/ui-kit/-internals/interaction-modality";
+import type { DRovingFocusApi } from "discourse/ui-kit/modifiers/d-roving-focus";
+import { handleFieldKeydown } from "discourse/ui-kit/select/-internals/coordinators/field-keyboard";
+import SelectAnnouncer from "discourse/ui-kit/select/-internals/coordinators/select-announcer";
+import VariantPresenter from "discourse/ui-kit/select/-internals/coordinators/variant-presenter";
+import SelectEngine from "discourse/ui-kit/select/select-engine";
+
+interface InteractionCoordinatorOptions {
+  engine: SelectEngine;
+  presenter: VariantPresenter;
+  announcer: SelectAnnouncer;
+  capabilities: CapabilitiesService;
+  onShow: () => void;
+  onClose: () => void;
+  isMultiple: () => boolean | undefined;
+  clearActive: () => void;
+}
+
+export default class InteractionCoordinator {
+  /**
+   * The filter input element, handed to `dRovingFocus` as the combobox controller
+   * (keydown binds to it; `aria-activedescendant` is written on it). In `typeahead` it is
+   * the trigger input; in `button` it is the in-panel filter.
+   */
+  @tracked filterInput: HTMLElement | null = null;
+
+  @tracked listboxElement: HTMLElement | null = null;
+
+  @tracked isExpanded = false;
+
+  @tracked queryActive = false;
+
+  // Whether focus is anywhere within the widget (the trigger input, or the open panel's
+  // footer/options). A custom `:selection` block is a resting adornment, shown only while the
+  // field is unfocused; focusing it — by Tab or by opening — reveals the plain editable label,
+  // so keyboard focus and a click behave alike.
+  @tracked triggerFocused = false;
+
+  /**
+   * Whether this open session moves real focus through the list, decided when it opens: touch
+   * screen readers ignore `aria-activedescendant`.
+   */
+  @tracked usesDirectFocus = false;
+
+  /**
+   * Empty `@untriggers` for `typeahead`: keeps DMenu's default click-to-open on the whole
+   * trigger while disabling close-on-click, so clicking the open trigger/input doesn't
+   * toggle it shut (see template).
+   */
+  emptyTriggers: string[] = [];
+
+  /** Identifies an open session for deferred context checks. */
+  session = 0;
+
+  shouldCorrectKeyboardOcclusion = () =>
+    this.#capabilities.isIOS && this.triggerFocused;
+
+  #announcer: SelectAnnouncer;
+
+  #capabilities: CapabilitiesService;
+  // Controls for moving focus into the multi-select chip group, registered by the
+  // chips' `dRovingFocus` (desktop only). Read imperatively from the keyboard handlers,
+  // so a plain field rather than tracked; `null` while unregistered (mobile / single).
+  #chipRoving: DRovingFocusApi | null = null;
+
+  /** Independent of the trigger chips, which can mount alongside the strip. */
+  #stripRoving: DRovingFocusApi | null = null;
+
+  #stripFocusRequested = false;
+
+  /** The session input; persistent desktop controllers must survive close. */
+  #capturedFilter: HTMLElement | null = null;
+
+  #engine: SelectEngine;
+
+  #isMultiple: () => boolean | undefined;
+  #clearActive: () => void;
+  // The DMenu instance, captured on register so the engine can close the overlay and
+  // the compat bridge can reach the trigger element.
+  #menu: DMenuInstance | null = null;
+
+  #onClose: () => void;
+
+  #onShow: () => void;
+  #presenter: VariantPresenter;
+  // True only for the synchronous span of a programmatic focus whose caret is owned by
+  // something other than the select-on-focus rule (opening from a pointer, or a label
+  // activation), so the query input can tell those from a genuine keyboard focus (Tab-in,
+  // which selects the label for replacement).
+  #suppressSelectOnFocus = false;
+
+  /**
+   * A pointer press anywhere outside the widget ends the interaction: revert a focused
+   * custom-selection field to its resting markup and drop DOM focus. Escape and option-select
+   * keep focus (and the editable label); a click into another focusable element blurs on its
+   * own. The overlay's own close-on-click-outside still fires in parallel.
+   */
+  #handleOutsidePointerDown = (event: PointerEvent): void => {
+    if (!this.triggerFocused) {
+      return;
+    }
+    if (this.#focusEscapedWidget(event.target)) {
+      this.triggerFocused = false;
+      this.filterInput?.blur();
+    }
+  };
+
+  /** Remembers eligibility for this open session, independently of the held count. */
+  @tracked _stripLatched = false;
+
+  constructor({
+    engine,
+    presenter,
+    announcer,
+    capabilities,
+    onShow,
+    onClose,
+    isMultiple,
+    clearActive,
+  }: InteractionCoordinatorOptions) {
+    this.#engine = engine;
+    this.#presenter = presenter;
+    this.#announcer = announcer;
+    this.#capabilities = capabilities;
+    this.#onShow = onShow;
+    this.#onClose = onClose;
+    this.#isMultiple = isMultiple;
+    this.#clearActive = clearActive;
+    // A pointer press outside the widget ends the interaction, so a focused custom-selection
+    // field reverts to its resting markup. The browser leaves DOM focus on the input when the
+    // press lands on a non-focusable element, so revert explicitly rather than waiting for a
+    // blur that never comes; the overlay's own close-on-click-outside runs in parallel.
+    document.addEventListener(
+      "pointerdown",
+      this.#handleOutsidePointerDown,
+      true
+    );
+    registerDestructor(this, () =>
+      document.removeEventListener(
+        "pointerdown",
+        this.#handleOutsidePointerDown,
+        true
+      )
+    );
+  }
+
+  get triggerElement(): HTMLElement | null {
+    return this.#menu?.triggerElement ?? null;
+  }
+
+  /** An empty strip unmounts only after removal has handed focus back. */
+  get showSelectionStrip(): boolean {
+    return (
+      this.#engine.hasValue &&
+      (this._stripLatched || this.#presenter.selectionStripEligible)
+    );
+  }
+
+  /** Called after render so selecting the first item can latch without backtracking. */
+  @action
+  latchSelectionStrip(): void {
+    if (this.isExpanded && this.#presenter.selectionStripEligible) {
+      this._stripLatched = true;
+    }
+  }
+
+  /**
+   * Captures the DMenu instance so the engine can close the overlay on select.
+   *
+   * @param api - The DMenu instance.
+   */
+  @action
+  registerMenu(api: DMenuInstance): void {
+    this.#menu = api;
+  }
+
+  @action
+  focusChip(index: number): boolean {
+    return this.#chipRoving?.focusIndex(index) ?? false;
+  }
+
+  @action
+  focusInput(): void {
+    if (this.filterInput?.isConnected) {
+      this.filterInput.focus();
+    }
+  }
+
+  /** Moves focus within the overlay's selection strip, independently of trigger chips. */
+  @action
+  focusStrip(index: number): boolean {
+    return this.#stripRoving?.focusIndex(index) ?? false;
+  }
+
+  /** Registers the strip's roving controls; teardown never clears the trigger's group. */
+  @action
+  registerStripRoving(api: DRovingFocusApi | null): void {
+    this.#stripRoving = api;
+    if (this.#stripFocusRequested && api) {
+      // The menu must register its content before input blur checks containment.
+      schedule("afterRender", () => {
+        if (
+          this.#stripFocusRequested &&
+          this.#stripRoving === api &&
+          api.focusLast()
+        ) {
+          this.#stripFocusRequested = false;
+        }
+      });
+    }
+  }
+
+  /** Preserves trigger-chip focus; otherwise resolves close focus to the persistent trigger. */
+  @action
+  focusTarget(): HTMLElement | null {
+    const trigger = this.#menu?.triggerElement;
+    const active = document.activeElement;
+    if (
+      this.#presenter.isDesktopTypeahead &&
+      active?.classList.contains("d-select__chip-remove") &&
+      trigger?.contains(active)
+    ) {
+      return null;
+    }
+    const target = this.#presenter.isDesktopTypeahead
+      ? trigger?.querySelector<HTMLInputElement>('input[role="combobox"]')
+      : trigger;
+    return target?.isConnected ? target : null;
+  }
+
+  /**
+   * Captures the chip group's roving-focus controls so the query input can move focus
+   * into the chips (ArrowLeft) and a keyboard removal can restore focus to a neighbor.
+   * The modifier passes `null` on teardown.
+   *
+   * @param api - The roving-focus controls, or `null` on teardown.
+   */
+  @action
+  registerChipRoving(api: DRovingFocusApi | null): void {
+    this.#chipRoving = api;
+  }
+
+  @action
+  registerListbox(element: HTMLElement | null): void {
+    this.listboxElement = element;
+  }
+
+  @action
+  escapePanel(event: KeyboardEvent): void {
+    event.preventDefault();
+    this.closeMenu();
+  }
+
+  /**
+   * Captures the filter input and focuses it synchronously on open (before any async
+   * results arrive — iOS only honors focus requested during the opening gesture).
+   */
+  @action
+  captureFilter(element: HTMLElement): void {
+    this.#capturedFilter = element;
+    this.filterInput = element;
+    element.focus({ preventScroll: true });
+  }
+
+  /**
+   * For **desktop** `static` (a select-only combobox), captures the trigger `<div>` root as
+   * the roving controller — `aria-activedescendant` is written on it and focus stays on it.
+   * Attached to the DMenu root for every variant, so it self-gates: typeahead/multi keep the
+   * input as their controller, `button`'s controller is the panel filter, and static in the
+   * mobile modal roves the tabindex instead (no controller — DOM focus moves into the listbox).
+   */
+  @action
+  registerStaticController(element: HTMLElement): void {
+    if (this.#presenter.isStatic && !this.#presenter.overlayIsModal) {
+      this.filterInput = element;
+    }
+  }
+
+  /**
+   * Captures the desktop typeahead trigger input as the roving controller WITHOUT focusing
+   * it — the trigger input is always present (not opened-into like the panel/modal input),
+   * so focusing on insert would steal focus on page load.
+   */
+  @action
+  registerTriggerInput(element: HTMLElement): void {
+    this.filterInput = element;
+  }
+
+  @action
+  handleClose(): void {
+    // DMenu can invoke its close hook without a real state change (closing an already-closed
+    // instance, teardown), so gate the consumer callback on an actual open→closed transition —
+    // consumers can then treat `@onClose` as exactly one notification per close.
+    const wasExpanded = this.isExpanded;
+    this.isExpanded = false;
+    this._stripLatched = false;
+    this.#stripFocusRequested = false;
+    if (this.filterInput === this.#capturedFilter) {
+      this.filterInput = null;
+    }
+    this.#capturedFilter = null;
+    this.#resetQueryOnClose();
+    this.#announcer.releaseSession();
+    if (wasExpanded) {
+      this.session++;
+      this.#onClose();
+    }
+  }
+
+  @action
+  handleShow(): void {
+    // DMenu can invoke its show hook without a real state change (clicking an already-open
+    // trigger re-enters `show`), so gate the consumer callback on an actual closed→open
+    // transition. The input still re-focuses on every click, which is the desired behavior.
+    const wasExpanded = this.isExpanded;
+    this.isExpanded = true;
+    this.latchSelectionStrip();
+    if (this.#presenter.isTypeahead) {
+      this.#focusTriggerInput();
+    }
+    if (!wasExpanded) {
+      this.session++;
+      this.usesDirectFocus = isTouchScreenReader(this.#capabilities);
+      this.#engine.reloadIfContextChanged();
+      this.#engine.supersedeUpdate();
+      this.#onShow();
+    }
+  }
+
+  /** Covers Enter before a listbox or active row exists; active rows use activateElement. */
+  @action
+  handleControllerKeydown(event: KeyboardEvent): void {
+    if (
+      event.key !== "Enter" ||
+      event.isComposing ||
+      event.target !== this.filterInput ||
+      !this.isExpanded ||
+      this.#presenter.isLocked ||
+      this.#engine.belowMinChars ||
+      !(this.#engine.serverPending || this.#engine.serverAwaitingFirstPage) ||
+      this.#engine.serverRevealPending
+    ) {
+      return;
+    }
+    const activeId = this.filterInput?.getAttribute("aria-activedescendant");
+    if (activeId && document.getElementById(activeId)) {
+      return;
+    }
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this.#announcer.announceStillLoading();
+  }
+
+  @action
+  handleTriggerRootKeydown(event: KeyboardEvent): void {
+    if (
+      !this.#presenter.triggerTakesFocus ||
+      this.isExpanded ||
+      this.#presenter.isLocked ||
+      event.isComposing
+    ) {
+      return;
+    }
+    // Trigger chips are display-only on these roots. Keep descendant controls, such as
+    // the clear button, from inheriting the root's keyboard activation and clear gestures.
+    if (event.target !== event.currentTarget) {
+      return;
+    }
+    if (
+      event.key === "Enter" ||
+      event.key === " " ||
+      event.key === "ArrowDown" ||
+      event.key === "ArrowUp"
+    ) {
+      event.preventDefault();
+      this.#menu?.show();
+      return;
+    }
+    // Keyboard clear for a focusable root: it has no text input, so the closed trigger
+    // IS their empty-query state and Backspace/Delete empties the selection. Not gated on
+    // `@clearable` — that governs the visible × control only — for the same reason the typeahead
+    // path is not: the family this replaces clears from an empty filter unconditionally, and
+    // gating it here left a static select with no way out at all.
+    if (
+      this.#engine.hasValue &&
+      (event.key === "Backspace" || event.key === "Delete")
+    ) {
+      event.preventDefault();
+      this.#engine.clear();
+    }
+  }
+
+  /**
+   * Clears the whole selection from the trigger clear control, stopping the click from toggling
+   * the overlay, then returns focus to the controller (the query input, or the trigger itself).
+   */
+  @action
+  handleClear(event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.#presenter.isLocked) {
+      return;
+    }
+    this.#engine.clear();
+    const target = this.filterInput?.isConnected
+      ? this.filterInput
+      : this.focusTarget();
+    target?.focus();
+  }
+
+  @action
+  beginQuery(): void {
+    this.queryActive = true;
+  }
+
+  /**
+   * Focuses the control when a wrapping label forwards its activation to the trigger's label
+   * sink, so a caption behaves the way it does over a native field.
+   *
+   * The click is stopped short of the trigger root, which would otherwise read it as a trigger
+   * press and open the overlay — a caption should put the user in the field, not in the list.
+   * The caret is placed after the label rather than selecting it: overtype is what a keyboard
+   * focus earns, and this is a pointer.
+   */
+  @action
+  focusFromLabel(event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.#presenter.isLocked) {
+      return;
+    }
+
+    const input = this.filterInput;
+    if (!input) {
+      this.#menu?.triggerElement?.focus();
+      return;
+    }
+
+    this.#suppressSelectOnFocus = true;
+    input.focus();
+    this.#suppressSelectOnFocus = false;
+
+    if (input instanceof HTMLInputElement) {
+      const end = input.value.length;
+      input.setSelectionRange(end, end);
+    }
+  }
+
+  /**
+   * Whether a focus landing on the query input should select the displayed label (for
+   * overtype). True for a genuine keyboard focus; false for a programmatic focus whose caret
+   * belongs to the pointer that caused it.
+   */
+  @action
+  shouldSelectOnFocus(): boolean {
+    return !this.#suppressSelectOnFocus;
+  }
+
+  /**
+   * Keeps focus in the trigger input when an option is pointer-selected: preventing the
+   * `mousedown` default stops the input blurring, which would otherwise close the menu
+   * before the option's `click` resolves. This matters for action rows and multi-select,
+   * which keep the menu open.
+   */
+  @action
+  preventPointerBlur(event: MouseEvent): void {
+    if (this.#presenter.isTypeahead) {
+      event.preventDefault();
+    }
+  }
+
+  /**
+   * Keeps focus in the query input when a press lands on the trigger but outside that input —
+   * the caret indicator, the leading icon, or the padding around them.
+   *
+   * Without this the input blurs on `mousedown` and is refocused by the open that follows, and
+   * that churn swallows the open entirely: pressing the caret did nothing whenever the input
+   * already held focus, which is every time after the first use. A press that starts on the
+   * input itself is left alone, so the browser still places the text caret where it was clicked.
+   */
+  @action
+  preventTriggerBlur(event: MouseEvent): void {
+    if (!this.#presenter.isTypeahead || this.#presenter.isLocked) {
+      return;
+    }
+
+    const input = this.filterInput;
+    const target = event.target as Node | null;
+    if (input && target && (target === input || input.contains(target))) {
+      return;
+    }
+
+    event.preventDefault();
+  }
+
+  /**
+   * Desktop typeahead: focus left the trigger input. Close ONLY when focus genuinely moved
+   * to a focusable element OUTSIDE the widget (a Tab-out / click into another field). A
+   * `null` relatedTarget (clicking any non-focusable element) is deliberately ignored: an
+   * in-trigger click on the label/caret must keep the menu open, and a truly-outside
+   * non-focusable click is dismissed by close-on-click-outside instead. (Edge: a focus
+   * loss with a null relatedTarget and no accompanying pointerdown — Tab into the browser's
+   * own UI, a programmatic blur — won't close here; rare and accepted.)
+   */
+  @action
+  handleTriggerBlur(event: FocusEvent): void {
+    if (this.#focusEscapedWidget(event.relatedTarget)) {
+      this.triggerFocused = false;
+      this.#menu?.close({ focusTrigger: false });
+    }
+  }
+
+  /**
+   * Focus entered the trigger input. Reveal the editable label in place of any custom
+   * `:selection` resting markup (a locked control never becomes editable, so it keeps its
+   * markup). Paired with {@link handleTriggerBlur}, which restores the markup once focus leaves
+   * the whole widget.
+   */
+  @action
+  handleTriggerFocus(): void {
+    if (!this.#presenter.isLocked) {
+      this.triggerFocused = true;
+    }
+  }
+
+  /**
+   * A panel control lost focus. Mirrors {@link handleTriggerBlur} — close when focus
+   * leaves the whole widget — but DESKTOP ONLY: on mobile the overlay is a modal that owns its
+   * dismissal (and whose `content` is undefined, so the containment guard can't run), and closes
+   * with `focusTrigger: false` so a Tab-forward off the last footer control lands on the next page
+   * control rather than being yanked back to the trigger.
+   */
+  @action
+  handlePanelFocusOut(event: FocusEvent): void {
+    if (this.#presenter.overlayIsModal) {
+      return;
+    }
+    if (this.#focusEscapedWidget(event.relatedTarget)) {
+      this.triggerFocused = false;
+      this.#menu?.close({ focusTrigger: false });
+    }
+  }
+
+  @action
+  handleInputKeydown(event: KeyboardEvent): void {
+    this.handleControllerKeydown(event);
+    handleFieldKeydown(event, {
+      engine: this.#engine,
+      multiple: this.#isMultiple(),
+      locked: this.#presenter.isLocked,
+      clearActive: this.#clearActive,
+      selectionInField:
+        !this.#presenter.isPanelSearchable ||
+        this.#presenter.panelListsSelection,
+      navigateToSelection: (keyEvent) => this.#navigateToSelection(keyEvent),
+    });
+  }
+
+  closeMenu(): void {
+    this.#menu?.close();
+  }
+
+  // True when focus moved to a real element outside both the trigger and the overlay content — the
+  // signal that the whole widget lost focus. A `null` relatedTarget is treated as "stayed" (an
+  // in-widget non-focusable click; a truly-outside non-focusable click is caught by
+  // close-on-click-outside), matching the documented trigger-blur edge above.
+  #focusEscapedWidget(next: EventTarget | null): boolean {
+    if (!(next instanceof Node)) {
+      return false;
+    }
+    const trigger = this.#menu?.triggerElement;
+    const content = this.#menu?.content;
+    return !(
+      (trigger && trigger.contains(next)) ||
+      (content && content.contains(next))
+    );
+  }
+
+  /**
+   * On open, moves focus into the query input so a click anywhere on the trigger (label,
+   * caret, gaps — all open the menu via DMenu's trigger-root click) lands the caret in the
+   * input on desktop. Null-safe on mobile: the query input lives in the modal and self-
+   * focuses via `captureFilter` once it mounts (after this runs).
+   */
+  #focusTriggerInput(): void {
+    this.#suppressSelectOnFocus = true;
+    this.filterInput?.focus();
+    this.#suppressSelectOnFocus = false;
+  }
+
+  /** Keeps compact-strip opening and focus ownership with the overlay host. */
+  #navigateToSelection(event: KeyboardEvent): boolean {
+    const target =
+      this.#presenter.isPanelSearchable || this.#presenter.isMobileTypeahead
+        ? "chips"
+        : this.#presenter.previousKeyTarget;
+    if (target === "strip") {
+      event.preventDefault();
+      this.#stripFocusRequested = true;
+      this.#menu?.show();
+      if (this.#stripRoving?.focusLast()) {
+        this.#stripFocusRequested = false;
+      }
+      return true;
+    }
+    if (target === "chips" && this.#chipRoving?.focusLast()) {
+      event.preventDefault();
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Resets the query so the next open starts clean, for every variant.
+   *
+   * A query is draft state that belongs to the session that typed it, and closing ends that
+   * session — so a reopened list must never arrive still narrowed by a term the reader has moved
+   * on from and can no longer see a reason for. That holds wherever the query lives: in the
+   * trigger for a typeahead, or in the panel for a button variant, where it is doubly hidden
+   * because the trigger is showing the value instead.
+   *
+   * Unguarded by the open→closed transition, unlike `@onClose`: a spurious close only fires when
+   * the panel is already shut, where clearing is inert.
+   *
+   * Multi-select also resets on an add, because its menu stays open after selection.
+   */
+  #resetQueryOnClose(): void {
+    this.#engine.setFilter("");
+    this.queryActive = false;
+  }
+}

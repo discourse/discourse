@@ -41,6 +41,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
 const trackFieldsHeight = modifier((element, [enabled]) => {
@@ -478,20 +479,54 @@ export default class ComposerContainer extends Component {
 
                       {{#if this.composer.canEditTags}}
                         <div class="tags-input">
-                          <MiniTagChooser
-                            @onChange={{fn (mut this.composer.model.tags)}}
-                            @options={{hash
-                              disabled=this.composer.disableTagsChooser
-                              categoryId=this.composer.model.categoryId
-                              minimum=this.composer.model.minimumRequiredTags
-                              icon=(if this.composerRedesign "tag")
-                              prioritizeRecentTags=true
-                              useHeaderSelectedCount=(if
-                                this.composerRedesign true
-                              )
-                            }}
-                            @value={{this.composer.model.tags}}
-                          />
+                          {{#if this.siteSettings.enable_new_select_controls}}
+                            {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                            <DSelectTag
+                              class={{if
+                                this.composer.model.tags.length
+                                "has-selection"
+                              }}
+                              @allowCreate={{true}}
+                              @categoryId={{this.composer.model.categoryId}}
+                              @describedBy={{if
+                                this.composer.tagValidation.failed
+                                "composer-tags-validation"
+                              }}
+                              @disabled={{this.composer.disableTagsChooser}}
+                              @icon={{if this.composerRedesign "tag"}}
+                              @identifier="composer-tags"
+                              @instanceContext={{hash
+                                composer=this.composer.model
+                              }}
+                              @invalid={{this.composer.tagValidation.failed}}
+                              @label={{i18n "tagging.choose_for_topic"}}
+                              @legacyKind="mini-tag-chooser"
+                              @maxVisibleChips={{if
+                                (and this.composerRedesign this.site.mobileView)
+                                0
+                              }}
+                              @minimum={{this.composer.model.minimumRequiredTags}}
+                              @onChange={{fn (mut this.composer.model.tags)}}
+                              @suggestRecent={{true}}
+                              @value={{this.composer.model.tags}}
+                            />
+                          {{else}}
+                            {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                            <MiniTagChooser
+                              @onChange={{fn (mut this.composer.model.tags)}}
+                              @options={{hash
+                                disabled=this.composer.disableTagsChooser
+                                categoryId=this.composer.model.categoryId
+                                minimum=this.composer.model.minimumRequiredTags
+                                icon=(if this.composerRedesign "tag")
+                                prioritizeRecentTags=true
+                                useHeaderSelectedCount=(if
+                                  this.composerRedesign true
+                                )
+                              }}
+                              @value={{this.composer.model.tags}}
+                            />
+                          {{/if}}
                           <PluginOutlet
                             @name="after-composer-tag-input"
                             @outletArgs={{lazyHash
@@ -499,6 +534,7 @@ export default class ComposerContainer extends Component {
                             }}
                           />
                           <DPopupInputTip
+                            @elementId="composer-tags-validation"
                             @validation={{this.composer.tagValidation}}
                           />
                         </div>

@@ -2,6 +2,7 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
+import { selectControl } from "discourse/lib/select-control";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 
 export default class ComposerUserSelector extends Component {
@@ -19,7 +20,7 @@ export default class ComposerUserSelector extends Component {
     super.didInsertElement(...arguments);
 
     if (this.focusTarget === "usernames") {
-      this.element.querySelector(".select-kit .select-kit-header").focus();
+      selectControl(this.element)?.focus();
     }
   }
 

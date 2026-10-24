@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Manage Boards Boards" do
+  with_select_controls(false)
+
   fab!(:admin)
   fab!(:manager, :user)
   fab!(:regular_user, :user)
@@ -334,6 +336,89 @@ describe "Manage Boards Boards" do
 
       column = board.reload.columns.find_by(title: "Backlog")
       expect(column.tag_id).to eq(new_tag.id)
+    end
+  end
+
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    before { sign_in(admin) }
+
+    it "persists board tag filter with the new select controls" do
+      Fabricate(:tag, name: "a11y")
+
+      boards_page.visit_page
+      boards_page.click_new_board
+      boards_page.fill_modal_board_name("Accessibility Board")
+      boards_page.board_settings_form.field("constraint_type").select("tags")
+      boards_page.select_modal_board_tag("a11y")
+      boards_page.save_board_modal
+
+      expect(toasts).to have_success(I18n.t("js.saved"))
+
+      board = Boards::Board.find_by(name: "Accessibility Board")
+      expect(board).to be_present
+      expect(board.tag_ids).to contain_exactly(Tag.find_by(name: "a11y").id)
+    end
+
+    describe "for an existing board" do
+      fab!(:board) do
+        Fabricate(
+          :boards_board,
+          name: "Simple Board",
+          created_by: admin,
+          additional_manage_groups: [manage_group],
+        )
+      end
+
+      def open_add_column_modal
+        boards_page.visit_page
+        boards_page.click_board("Simple Board")
+        board_component = PageObjects::Components::BoardsBoard.new
+        board_component.open_board_menu
+        board_component.click_add_column_menu_item
+      end
+
+      it "creates a column with a tag with the new select controls" do
+        open_add_column_modal
+        boards_page.fill_modal_column_title("Todo")
+        boards_page.select_modal_column_tag(todo_tag.name)
+        boards_page.save_column_modal
+
+        expect(toasts).to have_success(I18n.t("js.saved"))
+        expect(board.reload.columns.find_by(title: "Todo").tag_id).to eq(todo_tag.id)
+      end
+
+      it "does not allow the same tag twice with the new select controls" do
+        open_add_column_modal
+        boards_page.select_modal_column_tag(todo_tag.name)
+        boards_page.save_column_modal
+
+        expect(toasts).to have_success(I18n.t("js.saved"))
+
+        board_component = PageObjects::Components::BoardsBoard.new
+        board_component.open_board_menu
+        board_component.click_add_column_menu_item
+        boards_page.select_modal_column_tag(todo_tag.name)
+        boards_page.save_column_modal
+
+        expect(page).to have_content(
+          I18n.t("boards.errors.cannot_use_same_tag_multiple_times", tag_name: todo_tag.name),
+        )
+      end
+
+      it "creates a column and a new tag with the new select controls" do
+        open_add_column_modal
+        boards_page.fill_modal_column_title("Backlog")
+        boards_page.select_modal_column_tag("brand-new")
+        boards_page.save_column_modal
+
+        expect(toasts).to have_success(I18n.t("js.saved"))
+
+        new_tag = Tag.find_by(name: "brand-new")
+        expect(new_tag).to be_present
+        expect(board.reload.columns.find_by(title: "Backlog").tag_id).to eq(new_tag.id)
+      end
     end
   end
 end

@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component, { Input } from "@ember/component";
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -14,12 +14,14 @@ import TagChooser from "discourse/select-kit/components/tag-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import DTextField from "discourse/ui-kit/d-text-field";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class TagGroupsForm extends Component {
   @service dialog;
   @service site;
+  @service siteSettings;
 
   // All but the "everyone" group
   allGroups = this.site.groups.filter(
@@ -57,11 +59,26 @@ export default class TagGroupsForm extends Component {
     return groupIds;
   }
 
+  @computed("buffered.parent_tag")
+  get parentTag() {
+    return this.buffered.get("parent_tag")?.[0] ?? null;
+  }
+
   @action
   setPermissionsGroups(groupIds) {
     let permissions = {};
     groupIds.forEach((id) => (permissions[id] = PermissionType.FULL));
     this.buffered.set("permissions", permissions);
+  }
+
+  @action
+  updateTags(field, tags) {
+    this.buffered.set(field, tags);
+  }
+
+  @action
+  updateParentTag(tag) {
+    this.buffered.set("parent_tag", tag ? [tag] : []);
   }
 
   @action
@@ -142,31 +159,61 @@ export default class TagGroupsForm extends Component {
 
     <section class="group-tags-list">
       <label>{{i18n "tagging.groups.tags_label"}}</label><br />
-      <TagChooser
-        @everyTag={{true}}
-        @excludeSynonyms={{true}}
-        @options={{hash
-          allowAny=true
-          filterPlaceholder="tagging.groups.tags_placeholder"
-        }}
-        @tags={{this.buffered.tags}}
-        @unlimitedTagCount={{true}}
-      />
+      {{! TODO (select-kit-replacement-cleanup) }}
+      {{#if this.siteSettings.enable_new_select_controls}}
+        <DSelectTag
+          @allowCreate={{true}}
+          @excludeSynonyms={{true}}
+          @ignoreRestrictions={{true}}
+          @maximum={{false}}
+          @onChange={{fn this.updateTags "tags"}}
+          @placeholder={{i18n "tagging.groups.tags_placeholder"}}
+          @value={{this.buffered.tags}}
+        />
+      {{else}}
+        {{! TODO (select-kit-replacement-cleanup) }}
+        <TagChooser
+          @everyTag={{true}}
+          @excludeSynonyms={{true}}
+          @onChange={{fn this.updateTags "tags"}}
+          @options={{hash
+            allowAny=true
+            filterPlaceholder="tagging.groups.tags_placeholder"
+          }}
+          @tags={{this.buffered.tags}}
+          @unlimitedTagCount={{true}}
+        />
+      {{/if}}
     </section>
 
     <section class="parent-tag-section">
       <label>{{i18n "tagging.groups.parent_tag_label"}}</label>
       <div>
-        <TagChooser
-          @everyTag={{true}}
-          @excludeSynonyms={{true}}
-          @options={{hash
-            allowAny=true
-            filterPlaceholder="tagging.groups.parent_tag_placeholder"
-            maximum=1
-          }}
-          @tags={{this.buffered.parent_tag}}
-        />
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DSelectTag
+            @allowCreate={{true}}
+            @excludeSynonyms={{true}}
+            @ignoreRestrictions={{true}}
+            @multiple={{false}}
+            @onChange={{this.updateParentTag}}
+            @placeholder={{i18n "tagging.groups.parent_tag_placeholder"}}
+            @value={{this.parentTag}}
+          />
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <TagChooser
+            @everyTag={{true}}
+            @excludeSynonyms={{true}}
+            @onChange={{fn this.updateTags "parent_tag"}}
+            @options={{hash
+              allowAny=true
+              filterPlaceholder="tagging.groups.parent_tag_placeholder"
+              maximum=1
+            }}
+            @tags={{this.buffered.parent_tag}}
+          />
+        {{/if}}
       </div>
       <div class="description">{{i18n
           "tagging.groups.parent_tag_description"
