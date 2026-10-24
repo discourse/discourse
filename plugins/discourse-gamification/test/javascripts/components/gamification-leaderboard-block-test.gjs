@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import BlockOutlet from "discourse/blocks/block-outlet";
 import { resetBlockData } from "discourse/lib/blocks/-internals/data-coordinator";
@@ -36,12 +36,66 @@ module(
 
       await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
-      assert.dom(".user__name").hasText("foo", "the leaderboard rows render");
+      assert
+        .dom(".gamification-block-leaderboard__name")
+        .hasText("foo", "the leaderboard rows render");
+      assert
+        .dom(".d-block-panel__title")
+        .hasText("Leaderboard", "without a name the panel shows the default");
+      assert
+        .dom(".d-block-panel__footer .d-block-panel__link")
+        .hasText("View leaderboard", "the view all link shows by default");
+    });
+
+    test("titles the panel with the leaderboard's name", async function (assert) {
+      pretender.get("/leaderboard", () =>
+        response({
+          leaderboard: { id: 3, name: "Top helpers" },
+          personal: "",
+          users: [{ id: 1, username: "foo" }],
+        })
+      );
+
+      withPluginApi((api) =>
+        api.renderBlocks("hero-blocks", [
+          { block: GamificationLeaderboardBlock },
+        ])
+      );
+
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+      assert.dom(".d-block-panel__title").hasText("Top helpers");
       assert.dom(".d-skeleton").doesNotExist("no skeleton once resolved");
     });
 
-    test("surfaces an inline error when the fetch fails", async function (assert) {
-      pretender.get("/leaderboard", () => response(500, {}));
+    test("shows the empty state when nobody has scored", async function (assert) {
+      pretender.get("/leaderboard", () =>
+        response({ leaderboard: "", personal: "", users: [] })
+      );
+
+      withPluginApi((api) =>
+        api.renderBlocks("hero-blocks", [
+          { block: GamificationLeaderboardBlock },
+        ])
+      );
+
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+      assert.dom(".d-block-panel__empty").hasText("No scores yet");
+      assert.dom(".gamification-block-leaderboard__list").doesNotExist();
+    });
+
+    test("shows an error with a retry that fetches again", async function (assert) {
+      let fail = true;
+      pretender.get("/leaderboard", () =>
+        fail
+          ? response(500, {})
+          : response({
+              leaderboard: "",
+              personal: "",
+              users: [{ id: 1, username: "foo" }],
+            })
+      );
 
       withPluginApi((api) =>
         api.renderBlocks("hero-blocks", [
@@ -52,8 +106,15 @@ module(
       await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
       assert
-        .dom(".hero-blocks__block .alert-error")
-        .exists("the failure surfaces as an inline error");
+        .dom(".hero-blocks__block .d-block-panel__error")
+        .exists("the failure surfaces in the panel");
+
+      fail = false;
+      await click(".d-block-panel__retry");
+
+      assert
+        .dom(".gamification-block-leaderboard__name")
+        .hasText("foo", "retrying fetches the leaderboard again");
     });
   }
 );

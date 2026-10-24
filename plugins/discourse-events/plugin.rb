@@ -36,6 +36,7 @@ register_asset "stylesheets/mobile/discourse-post-event.scss", :mobile
 register_asset "stylesheets/colors.scss", :color_definitions
 register_asset "stylesheets/common/user-preferences.scss"
 register_asset "stylesheets/common/upcoming-events-list.scss"
+register_asset "stylesheets/common/block-upcoming-events.scss"
 register_asset "stylesheets/common/livestream.scss"
 register_asset "stylesheets/desktop/livestream.scss", :desktop
 register_asset "stylesheets/mobile/livestream.scss", :mobile

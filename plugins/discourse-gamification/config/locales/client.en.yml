@@ -30,6 +30,8 @@ en:
           show_footer_link: "Show \"view all\" link"
           footer_link_label: "Footer link label"
           footer_link_default_label: "View leaderboard"
+          default_title: "Leaderboard"
+          empty: "No scores yet"
         modal:
           title: "How does the leaderboard work?"
           text: "Points are awarded for engaging with the community, such as visiting, liking, and posting. Your score is updated every few minutes. So go be helpful, active, and supportive, and rise through the ranks!"

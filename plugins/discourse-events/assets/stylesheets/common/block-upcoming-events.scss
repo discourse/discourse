@@ -1,0 +1,99 @@
+@use "lib/block-panel";
+
+:root {
+  --p-Events-BlockUpcomingEvents-font-size: var(--d-comp-BlockPanel-font-size);
+  --p-Events-BlockUpcomingEvents-font-line-height: var(
+    --d-comp-BlockPanel-font-line-height
+  );
+  --p-Events-BlockUpcomingEvents-color-text-default: var(
+    --d-comp-BlockPanel-color-text-default
+  );
+  --p-Events-BlockUpcomingEvents-color-text-muted: var(
+    --d-comp-BlockPanel-color-text-muted
+  );
+  --p-Events-BlockUpcomingEvents-color-text-accent: var(
+    --d-comp-BlockPanel-color-text-accent
+  );
+  --p-Events-BlockUpcomingEvents-item-size-min-block: var(
+    --d-comp-BlockPanel-item-size-min-block
+  );
+  --p-Events-BlockUpcomingEvents-item-space-gap-inline: var(
+    --d-comp-BlockPanel-item-space-gap-inline
+  );
+  --p-Events-BlockUpcomingEvents-item-space-padding-block: var(
+    --d-comp-BlockPanel-item-space-padding-block
+  );
+  --p-Events-BlockUpcomingEvents-item-space-padding-inline: var(
+    --d-comp-BlockPanel-item-space-padding-inline
+  );
+  --p-Events-BlockUpcomingEvents-item-border-radius: var(
+    --d-comp-BlockPanel-item-border-radius
+  );
+  --p-Events-BlockUpcomingEvents-item-color-background-hovered: var(
+    --d-comp-BlockPanel-item-color-background-hovered
+  );
+  --p-Events-BlockUpcomingEvents-date-size-inline: var(
+    --d-comp-BlockPanel-date-size-inline
+  );
+  --p-Events-BlockUpcomingEvents-date-font-size: var(
+    --d-comp-BlockPanel-date-font-size
+  );
+  --p-Events-BlockUpcomingEvents-date-border-width: var(
+    --d-comp-BlockPanel-border-width
+  );
+  --p-Events-BlockUpcomingEvents-date-color-border: var(
+    --d-comp-BlockPanel-color-border
+  );
+  --p-Events-BlockUpcomingEvents-date-border-radius: var(
+    --d-comp-BlockPanel-item-border-radius
+  );
+}
+
+// The panel restyles the plugin's shared upcoming events list for this block
+// only; other uses of the list keep their own look.
+.events-block-upcoming-events {
+  .upcoming-events-list__event {
+    @include block-panel.item("--p-Events-BlockUpcomingEvents");
+    @include block-panel.item-hover("--p-Events-BlockUpcomingEvents");
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+
+    &:hover .upcoming-events-list__event-name,
+    &:focus-visible .upcoming-events-list__event-name {
+      text-decoration: underline;
+    }
+  }
+
+  .upcoming-events-list__event-date {
+    width: var(--p-Events-BlockUpcomingEvents-date-size-inline);
+    height: var(--p-Events-BlockUpcomingEvents-date-size-inline);
+    border: var(--p-Events-BlockUpcomingEvents-date-border-width) solid
+      var(--p-Events-BlockUpcomingEvents-date-color-border);
+    border-radius: var(--p-Events-BlockUpcomingEvents-date-border-radius);
+    background-color: transparent;
+
+    .month {
+      color: var(--p-Events-BlockUpcomingEvents-color-text-accent);
+      font-size: var(--p-Events-BlockUpcomingEvents-font-size);
+    }
+
+    .day {
+      color: var(--p-Events-BlockUpcomingEvents-color-text-default);
+      font-size: var(--p-Events-BlockUpcomingEvents-date-font-size);
+      font-weight: 400;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  .upcoming-events-list__event-name {
+    color: var(--p-Events-BlockUpcomingEvents-color-text-default);
+    line-height: var(--p-Events-BlockUpcomingEvents-font-line-height);
+  }
+
+  .upcoming-events-list__event-time {
+    color: var(--p-Events-BlockUpcomingEvents-color-text-muted);
+    font-size: var(--p-Events-BlockUpcomingEvents-font-size);
+  }
+}

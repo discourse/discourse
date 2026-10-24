@@ -57,12 +57,15 @@ module("Integration | Block | upcoming-events", function (hooks) {
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
     assert
-      .dom(".upcoming-events-list__heading")
-      .exists("the heading chrome renders");
+      .dom(".events-block-upcoming-events .d-block-panel__title")
+      .exists("the panel heading renders");
     assert
       .dom(".upcoming-events-list__event-name")
       .hasText("Awesome Event", "the event renders from the resolved data");
     assert.dom(".d-skeleton").doesNotExist("no skeleton once resolved");
+    assert
+      .dom(".d-block-panel__footer .d-block-panel__link")
+      .exists("the view all link shows by default");
   });
 
   test("shows the empty message when there are no events", async function (assert) {
@@ -76,12 +79,8 @@ module("Integration | Block | upcoming-events", function (hooks) {
 
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
-    assert
-      .dom(".upcoming-events-list__heading")
-      .exists("the heading still renders");
-    assert
-      .dom(".upcoming-events-list__empty-message")
-      .exists("the empty block renders");
+    assert.dom(".d-block-panel__title").exists("the heading still renders");
+    assert.dom(".d-block-panel__empty").exists("the empty block renders");
   });
 
   test("surfaces an inline error when the fetch fails", async function (assert) {
@@ -93,11 +92,9 @@ module("Integration | Block | upcoming-events", function (hooks) {
 
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
+    assert.dom(".d-block-panel__title").exists("the heading stays on failure");
     assert
-      .dom(".upcoming-events-list__heading")
-      .exists("the heading stays on failure");
-    assert
-      .dom(".hero-blocks__block .alert-error")
-      .exists("the failure surfaces as an inline error");
+      .dom(".hero-blocks__block .d-block-panel__error")
+      .exists("the failure surfaces in the panel with a retry");
   });
 });

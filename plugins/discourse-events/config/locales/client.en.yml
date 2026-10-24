@@ -449,6 +449,7 @@ en:
         try_again: "Try again"
         view_all: "View all"
         block:
+          icon: "Icon"
           count: "Events to show"
           upcoming_days: "Days ahead"
           upcoming_days_help: "How far into the future to look for events."

@@ -1,9 +1,15 @@
 // @ts-check
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import { block, defineBlockDataSource } from "discourse/blocks";
+import BlockPanel from "discourse/blocks/block-panel";
+import getURL from "discourse/lib/get-url";
+import DUserAvatar from "discourse/ui-kit/d-user-avatar";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
-/** @type {import("discourse/plugins/discourse-gamification/discourse/components/minimal-gamification-leaderboard-view.gjs")} */
-import MinimalGamificationLeaderboardView from "../components/minimal-gamification-leaderboard-view";
 import { fetchLeaderboard } from "../lib/leaderboard";
 
 const PERIODS = [
@@ -18,12 +24,16 @@ const PERIODS = [
 const AVATAR_SIZES = ["small", "medium", "large"];
 
 const gamificationLeaderboardDataSource = defineBlockDataSource({
-  resolve: (descriptor) =>
-    fetchLeaderboard({
+  // A leaderboard without scored users resolves empty, so the block shows its
+  // empty state instead of an empty list.
+  resolve: async (descriptor) => {
+    const model = await fetchLeaderboard({
       id: descriptor.leaderboardId,
       count: descriptor.count,
       period: descriptor.period,
-    }),
+    });
+    return model.users.length ? model : null;
+  },
 });
 
 /**
@@ -115,7 +125,7 @@ const gamificationLeaderboardDataSource = defineBlockDataSource({
     },
     showFooterLink: {
       type: "boolean",
-      default: false,
+      default: true,
       ui: {
         control: "toggle",
         label: i18n("gamification.leaderboard.block.show_footer_link"),
@@ -147,29 +157,100 @@ const gamificationLeaderboardDataSource = defineBlockDataSource({
       count: args.count ?? 10,
       period: args.period,
     }),
-    skeleton: (args) => ({ variant: "rect", count: args.count ?? 10 }),
+    skeleton: (args) => ({ rows: "user", count: args.count ?? 10 }),
   },
 })
 export default class GamificationLeaderboardBlock extends Component {
+  @service siteSettings;
+
+  // The header renders outside the data region, so the loaded leaderboard's
+  // name reaches it once the rows have rendered.
+  @tracked leaderboardName;
+
+  rememberName = modifier((element, [name]) => {
+    this.leaderboardName = name;
+  });
+
+  displayName = (user) =>
+    this.siteSettings.prioritize_username_in_ux
+      ? user.username
+      : user.name || user.username;
+
+  get title() {
+    return (
+      this.args.title ||
+      this.leaderboardName ||
+      i18n("gamification.leaderboard.block.default_title")
+    );
+  }
+
+  get leaderboardUrl() {
+    const id = this.args.leaderboardId;
+    return getURL(id ? `/leaderboard/${id}` : "/leaderboard");
+  }
+
+  get footerLinkLabel() {
+    return (
+      this.args.footerLinkLabel ||
+      i18n("gamification.leaderboard.block.footer_link_default_label")
+    );
+  }
+
   <template>
-    <div class="gamification-leaderboard-block">
-      {{! The leaderboard's title and footer derive from the fetched model, so
-          the whole widget is the data region; the reserved-space skeleton (from
-          the block's `skeleton` hint) covers it while loading. }}
-      <@Data>
-        <:content as |model|>
-          <MinimalGamificationLeaderboardView
-            @avatarSize={{@avatarSize}}
-            @footerLinkLabel={{@footerLinkLabel}}
-            @model={{model}}
-            @showColumnHeaders={{@showColumnHeaders}}
-            @showFooterLink={{@showFooterLink}}
-            @showRank={{@showRank}}
-            @title={{@title}}
-            @titleIcon={{@titleIcon}}
-          />
-        </:content>
-      </@Data>
-    </div>
+    <BlockPanel
+      class="gamification-block-leaderboard"
+      @Data={{@Data}}
+      @icon={{@titleIcon}}
+      @title={{this.title}}
+    >
+      <:content as |model|>
+        {{#if @showColumnHeaders}}
+          <div class="gamification-block-leaderboard__columns">
+            {{#if @showRank}}
+              <span>{{i18n "gamification.leaderboard.rank"}}</span>
+            {{/if}}
+            <span class="gamification-block-leaderboard__columns-score">{{i18n
+                "gamification.score"
+              }}</span>
+          </div>
+        {{/if}}
+        <ol
+          class="gamification-block-leaderboard__list"
+          {{this.rememberName model.leaderboard.name}}
+        >
+          {{#each model.users as |user|}}
+            <li class="gamification-block-leaderboard__item">
+              {{#if @showRank}}
+                <span
+                  class="gamification-block-leaderboard__rank"
+                >{{user.position}}</span>
+              {{/if}}
+              <DUserAvatar @size={{@avatarSize}} @user={{user}} />
+              <DUserLink
+                class="gamification-block-leaderboard__name"
+                @user={{user}}
+              >
+                {{this.displayName user}}
+              </DUserLink>
+              <span class="gamification-block-leaderboard__score">
+                {{dNumber user.total_score}}
+              </span>
+            </li>
+          {{/each}}
+        </ol>
+      </:content>
+      <:empty>
+        <p class="d-block-panel__empty">
+          {{i18n "gamification.leaderboard.block.empty"}}
+        </p>
+      </:empty>
+      <:footer>
+        {{#if @showFooterLink}}
+          <a class="d-block-panel__link" href={{this.leaderboardUrl}}>
+            {{this.footerLinkLabel}}
+          </a>
+        {{/if}}
+      </:footer>
+    </BlockPanel>
   </template>
 }

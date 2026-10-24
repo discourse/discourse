@@ -1,0 +1,97 @@
+@use "lib/block-panel";
+
+:root {
+  --p-Gamification-BlockLeaderboard-font-size: var(
+    --d-comp-BlockPanel-font-size
+  );
+  --p-Gamification-BlockLeaderboard-color-text-default: var(
+    --d-comp-BlockPanel-color-text-default
+  );
+  --p-Gamification-BlockLeaderboard-color-text-muted: var(
+    --d-comp-BlockPanel-color-text-muted
+  );
+  --p-Gamification-BlockLeaderboard-list-space-gap-block: var(
+    --d-comp-BlockPanel-list-space-gap-block
+  );
+  --p-Gamification-BlockLeaderboard-columns-space-padding-block: var(
+    --d-comp-BlockPanel-item-space-padding-block
+  );
+  --p-Gamification-BlockLeaderboard-rank-size-inline: var(
+    --d-comp-BlockPanel-size-icon
+  );
+  --p-Gamification-BlockLeaderboard-item-size-min-block: var(
+    --d-comp-BlockPanel-item-size-min-block
+  );
+  --p-Gamification-BlockLeaderboard-item-space-gap-inline: var(
+    --d-comp-BlockPanel-item-space-gap-inline
+  );
+  --p-Gamification-BlockLeaderboard-item-space-padding-block: var(
+    --d-comp-BlockPanel-item-space-padding-block
+  );
+  --p-Gamification-BlockLeaderboard-item-space-padding-inline: var(
+    --d-comp-BlockPanel-item-space-padding-inline
+  );
+  --p-Gamification-BlockLeaderboard-item-border-radius: var(
+    --d-comp-BlockPanel-item-border-radius
+  );
+  --p-Gamification-BlockLeaderboard-item-color-background-hovered: var(
+    --d-comp-BlockPanel-item-color-background-hovered
+  );
+}
+
+.gamification-block-leaderboard {
+  &__columns {
+    display: flex;
+    justify-content: space-between;
+    padding-block-end: var(
+      --p-Gamification-BlockLeaderboard-columns-space-padding-block
+    );
+    color: var(--p-Gamification-BlockLeaderboard-color-text-muted);
+    font-size: var(--p-Gamification-BlockLeaderboard-font-size);
+  }
+
+  &__columns-score {
+    margin-inline-start: auto;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--p-Gamification-BlockLeaderboard-list-space-gap-block);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__item {
+    @include block-panel.item("--p-Gamification-BlockLeaderboard");
+    @include block-panel.item-hover("--p-Gamification-BlockLeaderboard");
+  }
+
+  &__rank {
+    width: var(--p-Gamification-BlockLeaderboard-rank-size-inline);
+    color: var(--p-Gamification-BlockLeaderboard-color-text-muted);
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+  }
+
+  &__name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &,
+    &:visited,
+    &:hover,
+    &:focus-visible {
+      color: var(--p-Gamification-BlockLeaderboard-color-text-default);
+    }
+  }
+
+  &__score {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+}

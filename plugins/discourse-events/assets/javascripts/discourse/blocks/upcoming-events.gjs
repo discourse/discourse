@@ -3,6 +3,7 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { block, defineBlockDataSource } from "discourse/blocks";
+import BlockPanel from "discourse/blocks/block-panel";
 import { i18n } from "discourse-i18n";
 /** @type {import("discourse/plugins/discourse-events/discourse/components/upcoming-events-list-view.gjs")} */
 import UpcomingEventsListView from "../components/upcoming-events-list-view";
@@ -31,6 +32,14 @@ const upcomingEventsDataSource = defineBlockDataSource({
   category: "community",
   description: "Compact sidebar list of upcoming calendar events.",
   args: {
+    icon: {
+      type: "string",
+      default: "",
+      ui: {
+        control: "icon",
+        label: i18n("discourse_post_event.upcoming_events_list.block.icon"),
+      },
+    },
     count: {
       type: "number",
       default: 8,
@@ -100,7 +109,7 @@ const upcomingEventsDataSource = defineBlockDataSource({
       categoryId: args.categoryId,
       includeSubcategories: args.includeSubcategories ?? false,
     }),
-    skeleton: (args) => ({ variant: "rect", count: args.count ?? 8 }),
+    skeleton: (args) => ({ rows: "link", count: args.count ?? 8 }),
   },
 })
 export default class UpcomingEventsBlock extends Component {
@@ -121,40 +130,31 @@ export default class UpcomingEventsBlock extends Component {
   }
 
   <template>
-    <div class="upcoming-events-block">
-      <div class="upcoming-events-list">
-        {{! Chrome: the heading and the view-all footer render from args /
-            settings, so they stay visible while the events load. Only the list
-            inside the boundary shows the reserved-space skeleton. }}
-        <h3 class="upcoming-events-list__heading">{{this.title}}</h3>
-
-        <div class="upcoming-events-list__container">
-          {{! The reserved-space skeleton comes from the block's `skeleton`
-              hint (BlockData's default :loading); no :loading block needed. }}
-          <@Data>
-            <:content as |eventsByMonth|>
-              <UpcomingEventsListView
-                @eventsByMonth={{eventsByMonth}}
-                @timeFormat={{@timeFormat}}
-              />
-            </:content>
-            <:empty>
-              <div class="upcoming-events-list__empty-message">
-                {{i18n "discourse_post_event.upcoming_events_list.empty"}}
-              </div>
-            </:empty>
-          </@Data>
-        </div>
-
-        <div class="upcoming-events-list__footer">
-          <LinkTo
-            class="upcoming-events-list__view-all"
-            @route="discourse-post-event-upcoming-events"
-          >
-            {{i18n "discourse_post_event.upcoming_events_list.view_all"}}
-          </LinkTo>
-        </div>
-      </div>
-    </div>
+    <BlockPanel
+      class="events-block-upcoming-events"
+      @Data={{@Data}}
+      @icon={{@icon}}
+      @title={{this.title}}
+    >
+      <:content as |eventsByMonth|>
+        <UpcomingEventsListView
+          @eventsByMonth={{eventsByMonth}}
+          @timeFormat={{@timeFormat}}
+        />
+      </:content>
+      <:empty>
+        <p class="d-block-panel__empty">
+          {{i18n "discourse_post_event.upcoming_events_list.empty"}}
+        </p>
+      </:empty>
+      <:footer>
+        <LinkTo
+          class="d-block-panel__link"
+          @route="discourse-post-event-upcoming-events"
+        >
+          {{i18n "discourse_post_event.upcoming_events_list.view_all"}}
+        </LinkTo>
+      </:footer>
+    </BlockPanel>
   </template>
 }
