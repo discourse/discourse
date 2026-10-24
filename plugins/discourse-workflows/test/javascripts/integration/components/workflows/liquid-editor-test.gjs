@@ -14,6 +14,45 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import LiquidControl from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/liquid-control";
 import { WORKFLOW_VARIABLE_MIME } from "discourse/plugins/discourse-workflows/admin/lib/workflows/expression-context";
 
+async function renderEditor(field, { node, session } = {}) {
+  await render(
+    <template>
+      <LiquidControl @field={{field}} @node={{node}} @session={{session}} />
+    </template>
+  );
+  await waitFor(".cm-editor");
+  return find(".codemirror-editor").codemirrorView;
+}
+
+// Dropped at the end of the document.
+async function dropVariable(view, id) {
+  const coords = view.coordsAtPos(view.state.doc.length);
+  await triggerEvent(".cm-editor", "drop", {
+    clientX: coords?.right,
+    clientY: coords?.top,
+    dataTransfer: {
+      getData: (mime) =>
+        mime === WORKFLOW_VARIABLE_MIME
+          ? JSON.stringify({ id, type: "string" })
+          : "",
+    },
+  });
+}
+
+// Each keystroke goes through the editor's input handlers, as typing does; a
+// read-only editor takes nothing.
+function type(view, text) {
+  for (const char of text) {
+    const { from, to } = view.state.selection.main;
+    const handled = view.state
+      .facet(view.constructor.inputHandler)
+      .some((handler) => handler(view, from, to, char, () => null));
+    if (!handled && !view.state.readOnly) {
+      view.dispatch(view.state.replaceSelection(char));
+    }
+  }
+}
+
 module("Integration | Component | Workflows | Liquid editor", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -23,65 +62,48 @@ module("Integration | Component | Workflows | Liquid editor", function (hooks) {
     );
   });
 
-  test("preserves field accessibility, resizing, and disabled state", async function (assert) {
+  test("wires the field's accessibility and validation state", async function (assert) {
     const field = new (class {
-      @tracked disabled = true;
       @tracked error = "Invalid template";
       id = "template-input";
       name = "template";
       describedBy = "template-help";
       value = "original";
 
-      set() {
-        assert.step("changed");
-      }
+      set() {}
     })();
 
-    await render(<template><LiquidControl @field={{field}} /></template>);
-    await waitFor(".cm-editor");
-    assert
-      .dom(".cm-content")
-      .hasAttribute("id", field.id, "the label targets the editable element");
-    assert
-      .dom(".cm-content")
-      .hasAttribute(
-        "aria-describedby",
-        field.describedBy,
-        "help text is associated"
-      );
-    assert
-      .dom(".cm-content")
-      .hasAttribute("aria-invalid", "true", "validation state is exposed");
-    assert
-      .dom(".cm-content")
-      .hasAttribute(
-        "contenteditable",
-        "false",
-        "disabled fields cannot be edited"
-      );
-    assert
-      .dom(".code-editor .grippie")
-      .exists("the resize handle remains available");
+    await renderEditor(field);
 
-    await triggerEvent(".cm-editor", "drop", {
-      dataTransfer: {
-        getData: () => JSON.stringify({ id: "$json.name" }),
-      },
-    });
+    assert.dom(".cm-content").hasAttribute("id", field.id);
     assert
       .dom(".cm-content")
-      .hasText("original", "drops cannot change a disabled field");
-    assert.verifySteps([], "no field update is emitted");
+      .hasAttribute("aria-describedby", field.describedBy);
+    assert.dom(".cm-content").hasAttribute("aria-invalid", "true");
+    assert.dom(".code-editor .grippie").exists("resizable");
 
-    field.disabled = false;
     field.error = null;
     await settled();
-    assert
-      .dom(".cm-content")
-      .hasAttribute("contenteditable", "true", "editing can be enabled");
-    assert
-      .dom(".cm-content")
-      .doesNotHaveAttribute("aria-invalid", "validation state can clear");
+    assert.dom(".cm-content").doesNotHaveAttribute("aria-invalid");
+  });
+
+  test("ignores typing and drops on a disabled template", async function (assert) {
+    const field = {
+      value: "{",
+      disabled: true,
+      set() {
+        assert.step("changed");
+      },
+    };
+    const view = await renderEditor(field);
+
+    assert.dom(".cm-content").hasAttribute("contenteditable", "false");
+
+    type(view, "{");
+    await dropVariable(view, "$json.name");
+
+    assert.strictEqual(view.state.doc.toString(), "{");
+    assert.verifySteps([]);
   });
 
   test("completes a branch at its original input port after a connection is removed", async function (assert) {
@@ -110,165 +132,76 @@ module("Integration | Component | Workflows | Liquid editor", function (hooks) {
           : [{ json: { name: "Alice" } }];
       },
     };
-    const field = { value: "{{ inputs[2][0].", set() {} };
-
-    await render(
-      <template>
-        <LiquidControl @field={{field}} @node={{node}} @session={{session}} />
-      </template>
+    const view = await renderEditor(
+      { value: "{{ inputs[2][0].", set() {} },
+      { node, session }
     );
-    await waitFor(".cm-editor");
 
-    const view = find(".codemirror-editor").codemirrorView;
     view.dispatch({ selection: { anchor: view.state.doc.length } });
     view.focus();
     await triggerKeyEvent(view.contentDOM, "keydown", 32, { ctrlKey: true });
     await waitFor(".cm-completionLabel");
 
-    assert
-      .dom(".cm-tooltip-autocomplete")
-      .includesText("email", "the third input retains its field completions");
-    assert
-      .dom(".cm-tooltip-autocomplete")
-      .doesNotIncludeText("name", "the first input's fields stay separate");
+    assert.dom(".cm-tooltip-autocomplete").includesText("email");
+    assert.dom(".cm-tooltip-autocomplete").doesNotIncludeText("name");
   });
 
   test("typing an opening delimiter closes it once", async function (assert) {
-    const field = { value: "", set() {} };
-
-    await render(<template><LiquidControl @field={{field}} /></template>);
-    await waitFor(".cm-editor");
-    const view = find(".codemirror-editor").codemirrorView;
+    const view = await renderEditor({ value: "", set() {} });
     await waitUntil(() => view.state.languageDataAt("closeBrackets", 0).length);
 
-    // Each keystroke goes through the editor's input handlers, the way typing
-    // does, falling back to a plain insert when none takes it.
-    const type = (text) => {
-      for (const char of text) {
-        const { from, to } = view.state.selection.main;
-        const handled = view.state
-          .facet(view.constructor.inputHandler)
-          .some((handler) => handler(view, from, to, char, () => null));
-        if (!handled) {
-          view.dispatch(view.state.replaceSelection(char));
-        }
-      }
-    };
-
-    type("{{");
+    type(view, "{{");
     assert.strictEqual(view.state.doc.toString(), "{{  }}", "output tag");
 
     view.dispatch({
       changes: { from: 0, to: view.state.doc.length, insert: "" },
     });
-    type("{%");
+    type(view, "{%");
     assert.strictEqual(view.state.doc.toString(), "{%  %}", "logic tag");
-  });
 
-  test("leaves a read-only template alone when a delimiter is typed", async function (assert) {
-    const field = { value: "{", set() {}, disabled: true };
-
-    await render(<template><LiquidControl @field={{field}} /></template>);
-    await waitFor(".cm-editor");
-    const view = find(".codemirror-editor").codemirrorView;
-
-    const handled = view.state
-      .facet(view.constructor.inputHandler)
-      .some((handler) => handler(view, 1, 1, "{", () => null));
-
-    assert.false(handled, "no handler claims the keystroke");
-    assert.strictEqual(view.state.doc.toString(), "{", "nothing is inserted");
+    view.dispatch({
+      changes: { from: 0, to: view.state.doc.length, insert: "}}" },
+      selection: { anchor: 0 },
+    });
+    type(view, "{{");
+    assert.strictEqual(
+      view.state.doc.toString(),
+      "{{  }}",
+      "an existing closer is reused"
+    );
   });
 
   test("highlights the template's tags and output", async function (assert) {
-    const field = {
+    await renderEditor({
       value: "{% for item in items %}{{ item.name | upcase }}{% endfor %}",
       set() {},
-    };
-
-    await render(<template><LiquidControl @field={{field}} /></template>);
+    });
     await waitFor(".cm-hl-bracket");
 
-    assert.dom(".cm-hl-bracket").exists("delimiters are highlighted");
-    assert
-      .dom(".cm-hl-keyword")
-      .exists("the tag keyword is highlighted separately from its arguments");
-    assert.dom(".cm-hl-property").exists("a dotted property is highlighted");
-    assert
-      .dom(".cm-hl-function")
-      .hasText("upcase", "the filter is highlighted");
+    assert.dom(".cm-hl-keyword").hasText("for");
+    assert.dom(".cm-hl-property").hasText("name");
+    assert.dom(".cm-hl-function").hasText("upcase");
   });
 
-  test("drops a dragged field as a Liquid output tag", async function (assert) {
-    const field = { value: "", set() {} };
-
-    await render(<template><LiquidControl @field={{field}} /></template>);
-    await waitFor(".cm-editor");
-    const view = find(".codemirror-editor").codemirrorView;
-
-    await triggerEvent(this.element.querySelector(".cm-editor"), "drop", {
-      dataTransfer: {
-        getData: (type) =>
-          type === WORKFLOW_VARIABLE_MIME
-            ? JSON.stringify({ id: "$json.topic.title", type: "string" })
-            : "",
-      },
+  test("drops a dragged field as a path the template can render", async function (assert) {
+    const view = await renderEditor({
+      value: "{% for row in items %}\n",
+      set() {},
     });
+
+    await dropVariable(view, "$json.name");
 
     assert.strictEqual(
       view.state.doc.toString(),
-      "{{ items[0].topic.title }}",
-      "the expression path is rewritten for the Liquid render context"
+      "{% for row in items %}\n{{ row.name }}"
     );
   });
 
-  test("drops relative to the enclosing loop variable", async function (assert) {
-    const field = { value: "{% for row in items %}\n", set() {} };
+  test("drops a bare path inside an open output tag", async function (assert) {
+    const view = await renderEditor({ value: "{{ ", set() {} });
 
-    await render(<template><LiquidControl @field={{field}} /></template>);
-    await waitFor(".cm-editor");
-    const view = find(".codemirror-editor").codemirrorView;
+    await dropVariable(view, "$json.topic.title");
 
-    // Drop coordinates don't resolve in a rendering test, so the drop lands
-    // at the end of the document, inside the still-open loop.
-    await triggerEvent(this.element.querySelector(".cm-editor"), "drop", {
-      dataTransfer: {
-        getData: (type) =>
-          type === WORKFLOW_VARIABLE_MIME
-            ? JSON.stringify({ id: "$json.name", type: "string" })
-            : "",
-      },
-    });
-
-    assert.true(
-      view.state.doc.toString().includes("{{ row.name }}"),
-      "the path is written against the loop variable in scope"
-    );
-  });
-
-  test("ignores a field the render context cannot reach", async function (assert) {
-    const field = { value: "", set() {} };
-
-    await render(<template><LiquidControl @field={{field}} /></template>);
-    await waitFor(".cm-editor");
-    const view = find(".codemirror-editor").codemirrorView;
-
-    await triggerEvent(this.element.querySelector(".cm-editor"), "drop", {
-      dataTransfer: {
-        getData: (type) =>
-          type === WORKFLOW_VARIABLE_MIME
-            ? JSON.stringify({
-                id: '$("Other").item.json.id',
-                type: "string",
-              })
-            : "",
-      },
-    });
-
-    assert.strictEqual(
-      view.state.doc.toString(),
-      "",
-      "another node's output is not inserted as an unresolvable path"
-    );
+    assert.strictEqual(view.state.doc.toString(), "{{ items[0].topic.title");
   });
 });

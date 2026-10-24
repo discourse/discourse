@@ -1,10 +1,10 @@
-import { LIQUID_TAGS } from "discourse/plugins/discourse-workflows/discourse/lib/liquid-tags";
-import { walkScope } from "../expression-context.js";
+import { i18n } from "discourse-i18n";
 import {
-  analyzeLiquidAt,
   LIQUID_FILTERS,
-  loopBindingsAt,
-} from "../liquid-context.js";
+  LIQUID_TAGS,
+} from "discourse/plugins/discourse-workflows/discourse/lib/liquid-syntax";
+import { walkScope } from "../expression-context.js";
+import { analyzeLiquidAt, loopBindingsAt } from "../liquid-context.js";
 
 // Surfaced first, since they are what a template is usually built around.
 const BOOSTED_ROOTS = { item: 10, items: 10, item_index: 5 };
@@ -26,8 +26,6 @@ function scopeOptions(target, { section, boost }) {
 
     return {
       label: name,
-      // Objects re-open completion at the next level; arrays and scalars end
-      // the path, so they insert as-is.
       apply: isContainer && !Array.isArray(value) ? `${name}.` : name,
       type: isContainer ? "property" : "variable",
       detail: valueDetail(value),
@@ -37,18 +35,10 @@ function scopeOptions(target, { section, boost }) {
   });
 }
 
-/**
- * The completion source backing the Liquid editor. Reads only the document
- * text and cursor, so what it offers can be checked without an editor.
- *
- * `scope` may be a function, for a render context that changes while the
- * editor stays mounted.
- */
+/** The completion source behind the Liquid editor; `scope` is read per request. */
 export function liquidCompletionSource({ scope, sections }) {
-  const resolveScope = typeof scope === "function" ? scope : () => scope;
   const tagOptions = LIQUID_TAGS.map(([label, detail]) => ({
     label,
-    // The space only when arguments follow; the delimiter already has one.
     apply: detail ? `${label} ` : label,
     type: "keyword",
     detail,
@@ -77,7 +67,7 @@ export function liquidCompletionSource({ scope, sections }) {
       return { from: analysis.from, options: filterOptions, filter: true };
     }
 
-    const currentScope = resolveScope();
+    const currentScope = scope();
     const localScope = {
       ...currentScope,
       ...loopBindingsAt(currentScope, text, context.pos),
@@ -112,22 +102,23 @@ export function liquidCompletionSource({ scope, sections }) {
   };
 }
 
-export function buildLiquidCompletions(
-  { cmAutocomplete, cmView },
-  { scope, sections }
-) {
-  const { autocompletion, completionKeymap } = cmAutocomplete;
-  const { keymap } = cmView;
+export function buildLiquidCompletions({ cmAutocomplete, utils }, { scope }) {
+  const sections = {
+    ...utils.sections,
+    tags: utils.section(
+      i18n("discourse_workflows.liquid_docs.sections.tags"),
+      1
+    ),
+    filters: utils.section(
+      i18n("discourse_workflows.liquid_docs.sections.filters"),
+      1
+    ),
+  };
 
-  return [
-    autocompletion({
-      override: [liquidCompletionSource({ scope, sections })],
-      activateOnTyping: true,
-      // Re-open after picking a container, whose applied text ends with ".".
-      activateOnCompletion: (completion) =>
-        completion.apply?.toString().endsWith("."),
-      icons: true,
-    }),
-    keymap.of(completionKeymap),
-  ];
+  return cmAutocomplete.autocompletion({
+    override: [liquidCompletionSource({ scope, sections })],
+    // Re-open after picking a container, whose applied text ends with ".".
+    activateOnCompletion: (completion) =>
+      completion.apply?.toString().endsWith("."),
+  });
 }

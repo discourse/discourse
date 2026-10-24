@@ -1,15 +1,7 @@
 import { WORKFLOW_VARIABLE_MIME } from "../expression-context.js";
-import {
-  itemIndexAt,
-  itemPrefixAt,
-  liquidPathForVariable,
-  openDelimiterAt,
-} from "../liquid-context.js";
+import { liquidPathForVariable, openDelimiterAt } from "../liquid-context.js";
 
-export function buildLiquidDragDrop(
-  { cmView },
-  { perItem, scope, inputs = [] }
-) {
+export function buildLiquidDragDrop({ cmView }, { perItem, secondaryInputs }) {
   const { dropCursor, ViewPlugin } = cmView;
 
   function handleDragOver(event) {
@@ -28,7 +20,6 @@ export function buildLiquidDragDrop(
       return;
     }
 
-    // Ours to place (capture phase), ahead of CodeMirror's own drop handling.
     event.preventDefault();
     event.stopPropagation();
 
@@ -39,33 +30,20 @@ export function buildLiquidDragDrop(
       return;
     }
 
-    // Dropped past the last line means append rather than nothing.
+    // Past the last line means append.
     const pos =
       view.posAtCoords({ x: event.clientX, y: event.clientY }) ??
       view.state.doc.length;
 
     const text = view.state.doc.toString();
-    const mode = { perItem: perItem() };
-    const path = liquidPathForVariable(variable.id, {
-      itemPrefix: itemPrefixAt(text, pos, mode),
-      itemIndex: itemIndexAt(text, pos),
-      inputs: inputs.map(({ prefix, inputIndex }) => ({
-        prefix,
-        itemPrefix: itemPrefixAt(text, pos, {
-          ...mode,
-          collection: `inputs[${inputIndex}]`,
-        }),
-      })),
-      scope: scope(),
+    const path = liquidPathForVariable(variable.id, text, pos, {
+      perItem: perItem(),
+      secondaryInputs,
     });
-
-    // Nothing sensible to insert for a source the template cannot reach.
     if (!path) {
       return;
     }
 
-    // Inside a delimiter the path stands alone; in plain text it needs its own
-    // output tag to render.
     const insert = openDelimiterAt(text, pos) ? path : `{{ ${path} }}`;
 
     view.dispatch({
@@ -75,22 +53,21 @@ export function buildLiquidDragDrop(
     view.focus();
   }
 
-  // Bound to the editor element rather than contentDOM so drops below the last
-  // line register; capture runs ahead of CodeMirror's own handler.
+  // On the editor root so drops below the last line land; capture runs ahead
+  // of the editor's own drop handling.
   const dropListeners = ViewPlugin.fromClass(
     class {
       constructor(view) {
         this.view = view;
-        this.onDragOver = handleDragOver;
         this.onDrop = (event) => handleDrop(view, event);
-        view.dom.addEventListener("dragover", this.onDragOver, {
+        view.dom.addEventListener("dragover", handleDragOver, {
           capture: true,
         });
         view.dom.addEventListener("drop", this.onDrop, { capture: true });
       }
 
       destroy() {
-        this.view.dom.removeEventListener("dragover", this.onDragOver, {
+        this.view.dom.removeEventListener("dragover", handleDragOver, {
           capture: true,
         });
         this.view.dom.removeEventListener("drop", this.onDrop, {

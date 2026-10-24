@@ -1,63 +1,9 @@
 import {
-  buildExecutionScope,
   buildScopeFromFields,
   buildSiteSettingsScope,
   buildVarsScope,
   walkScope,
 } from "./expression-context.js";
-
-// Standard Liquid filters, with the arguments each one accepts.
-export const LIQUID_FILTERS = [
-  ["abs", "()"],
-  ["append", "(string)"],
-  ["at_least", "(number)"],
-  ["at_most", "(number)"],
-  ["capitalize", "()"],
-  ["ceil", "()"],
-  ["compact", "()"],
-  ["concat", "(array)"],
-  ["date", "(format)"],
-  ["default", "(value)"],
-  ["divided_by", "(number)"],
-  ["downcase", "()"],
-  ["escape", "()"],
-  ["escape_once", "()"],
-  ["first", "()"],
-  ["floor", "()"],
-  ["join", "(separator)"],
-  ["last", "()"],
-  ["lstrip", "()"],
-  ["map", "(key)"],
-  ["minus", "(number)"],
-  ["modulo", "(number)"],
-  ["newline_to_br", "()"],
-  ["plus", "(number)"],
-  ["prepend", "(string)"],
-  ["remove", "(string)"],
-  ["remove_first", "(string)"],
-  ["replace", "(from, to)"],
-  ["replace_first", "(from, to)"],
-  ["reverse", "()"],
-  ["round", "(precision)"],
-  ["rstrip", "()"],
-  ["size", "()"],
-  ["slice", "(offset, length)"],
-  ["sort", "(key)"],
-  ["sort_natural", "(key)"],
-  ["split", "(separator)"],
-  ["strip", "()"],
-  ["strip_html", "()"],
-  ["strip_newlines", "()"],
-  ["sum", "(key)"],
-  ["times", "(number)"],
-  ["truncate", "(length)"],
-  ["truncatewords", "(count)"],
-  ["uniq", "()"],
-  ["upcase", "()"],
-  ["url_decode", "()"],
-  ["url_encode", "()"],
-  ["where", "(key, value)"],
-];
 
 const FORLOOP = Object.freeze({
   first: false,
@@ -69,40 +15,36 @@ const FORLOOP = Object.freeze({
   rindex0: 0,
 });
 
-// Mirrors the server's per-item hash: the input's json fields, plus the raw
-// wrapper under `item` and a 1-based `item_index`.
+const EXECUTION = Object.freeze({ id: 0, workflow_id: 0, workflow_name: "" });
+
+// Mirrors the server's `template_item`.
 function buildTemplateItem(json) {
   return { ...json, item: { json }, item_index: 1 };
 }
 
 /**
- * Builds an exemplar of the Liquid render context, used to resolve property
- * completions. Values are placeholders of the right shape, not real data.
+ * An exemplar of the render context, with placeholder values of the right
+ * shape, for resolving completions.
  */
 export function buildLiquidScope({
-  inputFields = [],
   branchFields = [],
   siteSettings,
   globalVars,
-  nodes,
   perItem = false,
 } = {}) {
-  const templateItem = buildTemplateItem(buildScopeFromFields(inputFields));
-  const execution = buildExecutionScope(nodes);
+  const inputs = Array.from(branchFields, (fields) =>
+    fields ? [buildTemplateItem(buildScopeFromFields(fields))] : []
+  );
+  const templateItem =
+    inputs[0]?.[0] ?? buildTemplateItem(buildScopeFromFields([]));
 
   const base = {
     items: [templateItem],
-    inputs: Array.from(branchFields, (fields) =>
-      fields ? [buildTemplateItem(buildScopeFromFields(fields))] : []
-    ),
+    inputs,
     items_count: 0,
     vars: buildVarsScope(globalVars),
     workflow: { id: "", name: "", active: true },
-    execution: {
-      id: execution.id,
-      workflow_id: execution.workflow_id,
-      workflow_name: execution.workflow_name,
-    },
+    execution: { ...EXECUTION },
     site_settings: buildSiteSettingsScope(siteSettings),
   };
 
@@ -110,8 +52,7 @@ export function buildLiquidScope({
     return base;
   }
 
-  // Per-item mode merges the current item's fields into the root, with the
-  // shared keys winning on collision — the same order the server uses.
+  // Shared keys win on collision, as on the server.
   return { ...templateItem, ...base, item: templateItem, item_index: 1 };
 }
 
@@ -120,11 +61,9 @@ const LOOP_TAG_RE =
 // `reversed` only counts right after the collection, as in Liquid itself.
 const FOR_BINDING_RE = /^\s*([\w-]+)\s+in\s+([\w.[\]'"-]+)(\s+reversed\b)?/;
 
-/**
- * The `for` loops enclosing `pos`, outermost first, as `{ name, path }` pairs.
- * Unparseable loops are kept as null so nesting stays aligned.
- */
-export function enclosingLoopsAt(text, pos) {
+// The `for` loops enclosing `pos`, outermost first. Unparseable loops stay
+// as null so nesting depth is preserved.
+function enclosingLoopsAt(text, pos) {
   const before = text.slice(0, pos);
   const stack = [];
   let ignoredBlock = null;
@@ -167,22 +106,20 @@ export function enclosingLoopsAt(text, pos) {
       continue;
     }
 
-    const loop = { name: binding[1], path: binding[2] };
-    const options = match[2].slice(binding[0].length);
-    if (/\boffset\s*:/.test(options)) {
-      loop.index = null;
-    } else if (binding[3]) {
-      loop.index = "rindex0";
-    }
-    stack.push(loop);
+    stack.push({
+      name: binding[1],
+      path: binding[2],
+      reversed: Boolean(binding[3]),
+      offset: /\boffset\s*:/.test(match[2].slice(binding[0].length)),
+    });
   }
 
   return stack;
 }
 
 /**
- * Resolves the loop variables in scope at `pos`, so `{% for item in items %}`
- * binds `item` to an element of `items`.
+ * The loop variables in scope at `pos`, each bound to an element of its
+ * collection.
  */
 export function loopBindingsAt(scope, text, pos) {
   const bindings = {};
@@ -190,8 +127,6 @@ export function loopBindingsAt(scope, text, pos) {
     if (!entry) {
       continue;
     }
-    // Each loop resolves against the ones enclosing it, so a nested loop can
-    // iterate over a collection reached through the outer loop's variable.
     const collection = walkScope({ ...scope, ...bindings }, entry.path);
     bindings[entry.name] = Array.isArray(collection) ? collection[0] : {};
     bindings.forloop = FORLOOP;
@@ -200,21 +135,18 @@ export function loopBindingsAt(scope, text, pos) {
   return bindings;
 }
 
-// Environment symbols the render context exposes under a different name.
 const ENVIRONMENT_ALIASES = {
   $execution: "execution",
   $site_settings: "site_settings",
   $vars: "vars",
 };
 
-// A dotted or bracketed path and nothing else: an expression such as
-// `$json.a + 1` has no Liquid equivalent.
+// Paths only: `$json.a + 1` has no Liquid equivalent.
 const PATH_ROOT_RE = /^\$?[A-Za-z_]\w*/;
 const PATH_REST_RE =
   /^(?:\.[A-Za-z_]\w*|\[\d+\]|\["(?:[^"\\]|\\.)*"\]|\['(?:[^'\\]|\\.)*'\])*$/;
 
-// The innermost loop over `collection` enclosing `pos`: its alias when no
-// inner loop shadows it, and the forloop index that addresses the collection.
+// Innermost loop over `collection` at `pos`.
 function itemLoopAt(text, pos, collection) {
   const loops = enclosingLoopsAt(text, pos);
   const paths = collection === "items" ? ["items", "inputs[0]"] : [collection];
@@ -226,12 +158,11 @@ function itemLoopAt(text, pos, collection) {
     }
     if (paths.includes(loop.path)) {
       // Liquid exposes iteration indexes, but not the source offset.
-      const forloop =
-        loop.index === null
-          ? null
-          : `forloop${".parentloop".repeat(loops.length - i - 1)}.${
-              loop.index || "index0"
-            }`;
+      const forloop = loop.offset
+        ? null
+        : `forloop${".parentloop".repeat(loops.length - i - 1)}.${
+            loop.reversed ? "rindex0" : "index0"
+          }`;
       return {
         alias: shadowedNames.has(loop.name) ? null : loop.name,
         path: loop.path,
@@ -244,10 +175,9 @@ function itemLoopAt(text, pos, collection) {
 }
 
 /**
- * Resolves the current item of `collection` at `pos`: a loop alias, an index
- * back into the collection, or the mode's default outside any loop. Another
- * branch pairs with the primary loop's index, since items line up across
- * inputs.
+ * The current item of `collection` at `pos`: a loop alias, an index back into
+ * the collection, or the mode's default outside any loop. Other branches pair
+ * with the primary loop's index.
  */
 export function itemPrefixAt(
   text,
@@ -278,7 +208,7 @@ export function itemPrefixAt(
 
 /**
  * The 0-based index of the current primary item at `pos`, or null outside a
- * loop over it: `item_index` is 1-based, so it is no substitute.
+ * loop over it.
  */
 export function itemIndexAt(text, pos) {
   return itemLoopAt(text, pos, "items")?.forloop ?? null;
@@ -295,29 +225,32 @@ function restAfterPrefix(id, prefix) {
 }
 
 /**
- * Rewrites a dragged field's expression path as its Liquid equivalent, or
- * returns null for a source the render context cannot reach.
- *
- * `itemPrefix` addresses the primary input's current item and `itemIndex`
- * its 0-based index, both resolved at the drop position. `inputs` lists the
- * other connected branches as `{ prefix, itemPrefix }`, and `scope` is the
- * render context exemplar.
+ * A dragged field's path as the template can render it at `pos`, or null for
+ * a source it cannot reach. `secondaryInputs` lists the other connected
+ * branches as `{ prefix, inputIndex }`.
  */
 export function liquidPathForVariable(
   id,
-  { itemPrefix = null, itemIndex = null, inputs = [], scope = null } = {}
+  text,
+  pos,
+  { perItem = false, secondaryInputs = [] } = {}
 ) {
   if (!id) {
     return null;
   }
 
-  for (const input of inputs) {
-    const rest = restAfterPrefix(id, input.prefix);
-    if (rest !== null) {
-      return input.itemPrefix && PATH_REST_RE.test(rest)
-        ? `${input.itemPrefix}${rest}`
-        : null;
+  for (const { prefix, inputIndex } of secondaryInputs) {
+    const rest = restAfterPrefix(id, prefix);
+    if (rest === null) {
+      continue;
     }
+    const itemPrefix = itemPrefixAt(text, pos, {
+      perItem,
+      collection: `inputs[${inputIndex}]`,
+    });
+    return itemPrefix && PATH_REST_RE.test(rest)
+      ? `${itemPrefix}${rest}`
+      : null;
   }
 
   const root = PATH_ROOT_RE.exec(id)?.[0];
@@ -329,14 +262,15 @@ export function liquidPathForVariable(
     return null;
   }
 
-  if (!root.startsWith("$")) {
-    return itemPrefix ? `${itemPrefix}.${id}` : null;
-  }
-  if (root === "$json") {
-    return itemPrefix ? `${itemPrefix}${rest}` : null;
+  if (!root.startsWith("$") || root === "$json") {
+    const itemPrefix = itemPrefixAt(text, pos, { perItem });
+    if (!itemPrefix) {
+      return null;
+    }
+    return root === "$json" ? `${itemPrefix}${rest}` : `${itemPrefix}.${id}`;
   }
   if (root === "$itemIndex") {
-    return rest ? null : itemIndex;
+    return rest ? null : itemIndexAt(text, pos);
   }
 
   const alias = ENVIRONMENT_ALIASES[root];
@@ -344,9 +278,10 @@ export function liquidPathForVariable(
     return null;
   }
   const path = `${alias}${rest}`;
-  // Execution data is a closed shape the exemplar knows in full; variables
-  // and settings are not, so only their roots are checked.
-  if (root === "$execution" && scope && walkScope(scope, path) === undefined) {
+  if (
+    root === "$execution" &&
+    walkScope({ execution: EXECUTION }, path) === undefined
+  ) {
     return null;
   }
   return path;

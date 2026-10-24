@@ -1,44 +1,21 @@
-import { i18n } from "discourse-i18n";
 import { buildLiquidScope } from "../liquid-context.js";
 import { buildAutoCloseDelimiters } from "./auto-close-delimiters.js";
 import { buildLiquidCompletions } from "./completions.js";
 import { buildLiquidDragDrop } from "./drag-drop.js";
 
-export default function buildLiquidExtensions(cmParams, domainOpts = {}) {
-  const sections = {
-    ...cmParams.utils.sections,
-    tags: cmParams.utils.section(
-      i18n("discourse_workflows.liquid_docs.sections.tags"),
-      1
-    ),
-    filters: cmParams.utils.section(
-      i18n("discourse_workflows.liquid_docs.sections.filters"),
-      1
-    ),
-  };
+export default function buildLiquidExtensions(cmParams, options) {
+  // Read per use: the mode is a sibling field, and extensions are built once.
+  const { perItem, secondaryInputs } = options;
 
-  // The run mode is read on every use rather than captured: it is a sibling
-  // field of the template, and CodeMirror's extensions are built only once.
-  const perItem =
-    typeof domainOpts.perItem === "function"
-      ? domainOpts.perItem
-      : () => !!domainOpts.perItem;
-
-  // Both shapes are assembled up front so switching mode costs nothing; the
-  // expensive part, resolving the input schema, already happened.
   const scopes = {
-    allItems: buildLiquidScope({ ...domainOpts, perItem: false }),
-    perItem: buildLiquidScope({ ...domainOpts, perItem: true }),
+    allItems: buildLiquidScope({ ...options, perItem: false }),
+    perItem: buildLiquidScope({ ...options, perItem: true }),
   };
   const scope = () => (perItem() ? scopes.perItem : scopes.allItems);
 
   return [
     buildAutoCloseDelimiters(cmParams),
-    buildLiquidDragDrop(cmParams, {
-      perItem,
-      scope,
-      inputs: domainOpts.inputs || [],
-    }),
-    buildLiquidCompletions(cmParams, { scope, sections }),
+    buildLiquidDragDrop(cmParams, { perItem, secondaryInputs }),
+    buildLiquidCompletions(cmParams, { scope }),
   ];
 }

@@ -15,13 +15,14 @@ import {
 } from "../../../lib/workflows/expression-paths.js";
 import buildLiquidExtensions from "../../../lib/workflows/liquid-extensions/index.js";
 import {
+  nodeTypeCapabilities,
+  typeVersionForNode,
+} from "../../../lib/workflows/node-types.js";
+import {
   inputConnectionsForNode,
   previousNodeForConnection,
   resolveDeclaredOutputSchemas,
 } from "../../../lib/workflows/schema-graph.js";
-
-const MODE_FIELD = "mode";
-const PER_ITEM_MODE = "runOnceForEachItem";
 
 export default class LiquidControl extends Component {
   @service siteSettings;
@@ -46,19 +47,28 @@ export default class LiquidControl extends Component {
   }
 
   get #perItem() {
-    // The form's live value, so switching mode takes effect before the node is
-    // saved; the stored parameters cover the first render.
-    const mode =
-      this.args.formApi?.get(MODE_FIELD) ??
-      (this.args.nodeParameters || this.args.configuration)?.[MODE_FIELD];
+    const node = this.args.node;
+    const runScope = nodeTypeCapabilities(
+      node?.type,
+      typeVersionForNode(node)
+    ).run_scope;
+    if (!runScope?.parameter) {
+      return false;
+    }
 
-    return mode === PER_ITEM_MODE;
+    // The form's live value, so switching mode takes effect before saving.
+    const mode =
+      this.args.formApi?.get(runScope.parameter) ??
+      (this.args.nodeParameters || this.args.configuration)?.[
+        runScope.parameter
+      ];
+
+    return runScope.values?.[mode] === "per_item";
   }
 
   @action
-  async loadVariables() {
-    // The grammar too, so its delimiter rules are in place before the first
-    // keystroke.
+  async load() {
+    // Grammar first, so delimiter rules apply from the first keystroke.
     await Promise.all([
       this.workflowsNodeTypes.loadWorkflowVars(),
       loadCodeEditorLanguage("liquid"),
@@ -82,7 +92,7 @@ export default class LiquidControl extends Component {
     const connections = node ? inputConnectionsForNode(node, graph) : [];
 
     const branchFields = [];
-    const inputs = [];
+    const secondaryInputs = [];
     const primaryConnection = connections[0] || null;
     for (const connection of connections) {
       const inputIndex = inputIndexForConnection(connection);
@@ -94,7 +104,7 @@ export default class LiquidControl extends Component {
         session,
       });
       if (connection !== primaryConnection) {
-        inputs.push({
+        secondaryInputs.push({
           inputIndex,
           prefix: inputFieldPrefixForConnection(
             connection,
@@ -106,12 +116,10 @@ export default class LiquidControl extends Component {
     }
 
     return buildLiquidExtensions(cmParams, {
-      inputFields: branchFields[0] || [],
       branchFields,
-      inputs,
+      secondaryInputs,
       siteSettings: this.siteSettings,
       globalVars: this.workflowsNodeTypes.workflowVars,
-      nodes: graph.nodes,
       perItem: () => this.#perItem,
     });
   }
@@ -135,7 +143,6 @@ export default class LiquidControl extends Component {
       outputIndex,
       graph,
       declaredOutputSchemas,
-      // Pinned sample data, falling back to the last run.
       pinnedItems:
         outputIndex === 0
           ? session?.pinnedItemsForNode(sourceNode?.name)
@@ -144,10 +151,10 @@ export default class LiquidControl extends Component {
   }
 
   <template>
-    <div class="workflows-liquid-control" {{didInsert this.loadVariables}}>
+    <div class="workflows-liquid-control" {{didInsert this.load}}>
       {{#if this.ready}}
         <CodeEditor
-          class="workflows-liquid-control__editor"
+          class="form-kit__control-code workflows-liquid-control__editor"
           name={{@field.name}}
           style={{this.style}}
           @describedBy={{@field.describedBy}}

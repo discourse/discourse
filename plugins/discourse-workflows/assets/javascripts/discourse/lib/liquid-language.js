@@ -1,4 +1,4 @@
-import { LIQUID_TAGS } from "./liquid-tags.js";
+import { LIQUID_TAGS } from "./liquid-syntax.js";
 
 const TAG_KEYWORDS = new Set(LIQUID_TAGS.map(([name]) => name));
 

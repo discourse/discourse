@@ -19,13 +19,13 @@ export function buildAutoCloseDelimiters({ cmAutocomplete, cmView }) {
 
     // Respect a closing pair that is already there, so re-opening an existing
     // tag doesn't leave a stray one behind.
-    const closed =
+    const insert =
       view.state.doc.sliceString(to, to + 2) === delimiter.close
         ? `${text}  `
         : `${text}  ${delimiter.close}`;
 
     view.dispatch({
-      changes: { from, to, insert: closed },
+      changes: { from, to, insert },
       selection: { anchor: from + 2 },
       userEvent: "input.type",
       scrollIntoView: true,
