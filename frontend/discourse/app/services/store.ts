@@ -16,10 +16,12 @@ import RestModel, {
   type RestPayload,
 } from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
+import type UserDraft from "discourse/models/user-draft";
 
-/** Model instances registered by core or plugins through module augmentation. */
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type -- Extended through module augmentation.
-export interface ModelRegistry {}
+/** Model instances by store type name. Plugins add theirs through module augmentation. */
+export interface ModelRegistry {
+  "user-draft": UserDraft;
+}
 
 /** Unregistered names, including dynamic strings, fall back to the base REST model. */
 export type ModelFor<K extends string> = K extends keyof ModelRegistry
