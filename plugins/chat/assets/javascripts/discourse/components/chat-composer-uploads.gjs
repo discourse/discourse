@@ -71,6 +71,8 @@ export default class ChatComposerUploads extends Component {
   existingUploads = null;
   uploadDropZone = null;
 
+  _pasteTarget = null;
+
   get inProgressUploads() {
     return this.uppyUpload.inProgressUploads;
   }
@@ -86,21 +88,12 @@ export default class ChatComposerUploads extends Component {
     }
 
     this.uploads = this.existingUploads ? cloneJSON(this.existingUploads) : [];
-  }
-
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-
-    this.composerInputEl?.addEventListener("paste", this._pasteEventListener);
+    this._listenForPaste(this.composerInputEl);
   }
 
   willDestroyElement() {
     super.willDestroyElement(...arguments);
-
-    this.composerInputEl?.removeEventListener(
-      "paste",
-      this._pasteEventListener
-    );
+    this._listenForPaste(null);
   }
 
   @action
@@ -117,12 +110,19 @@ export default class ChatComposerUploads extends Component {
     this._triggerUploadsChanged();
   }
 
-  @bind
-  _pasteEventListener(event) {
-    if (document.activeElement !== this.composerInputEl) {
+  // The input element changes when the composer switches editors.
+  _listenForPaste(element) {
+    if (this._pasteTarget === element) {
       return;
     }
 
+    this._pasteTarget?.removeEventListener("paste", this._pasteEventListener);
+    element?.addEventListener("paste", this._pasteEventListener);
+    this._pasteTarget = element;
+  }
+
+  @bind
+  _pasteEventListener(event) {
     const { canUpload, canPasteHtml, types } = clipboardHelpers(event, {
       siteSettings: this.siteSettings,
       canUpload: true,

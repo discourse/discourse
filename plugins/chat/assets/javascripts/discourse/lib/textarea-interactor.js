@@ -6,9 +6,8 @@ import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
 
-// This class sole purpose is to provide a way to interact with the textarea
-// using the existing TextareaTextManipulation mixin without using it directly
-// in the composer component. It will make future migration easier.
+// Markdown editor counterpart of RichEditorInteractor: the chat composer and
+// its services talk to either through this same surface.
 export default class TextareaInteractor extends EmberObject {
   @service capabilities;
   @service site;
@@ -32,6 +31,10 @@ export default class TextareaInteractor extends EmberObject {
     registerDestructor(this, (instance) => instance.teardown());
   }
 
+  get value() {
+    return this.textarea.value;
+  }
+
   set value(value) {
     this.textarea.value = value;
     const event = new Event("input", {
@@ -39,6 +42,52 @@ export default class TextareaInteractor extends EmberObject {
       cancelable: true,
     });
     this.textarea.dispatchEvent(event);
+  }
+
+  // Text manipulation writes straight to the textarea, so the draft only
+  // learns about it through a synthetic input event.
+  syncValue(value) {
+    this.value = value;
+  }
+
+  // Captures where a partial `:term` sits before the emoji picker opens, since
+  // closing the keyboard for it loses the caret.
+  emojiTermContext() {
+    const value = this.textarea.value;
+    const caretPosition = this.textarea.selectionStart;
+
+    if (!value || caretPosition === undefined) {
+      return null;
+    }
+
+    const incompleteMatch = value
+      .substring(0, caretPosition)
+      .match(/(:[\p{L}\p{N}_-]+)$/u);
+
+    if (!incompleteMatch) {
+      return null;
+    }
+
+    return {
+      emojiTermStart: caretPosition - incompleteMatch[1].length,
+      emojiTermEnd: caretPosition - 1,
+    };
+  }
+
+  insertEmoji(emoji, context) {
+    if (context?.emojiTermStart == null) {
+      this.emojiSelected(emoji);
+      return;
+    }
+
+    const value = this.textarea.value;
+    const valueUpToCursor = `${value.substring(0, context.emojiTermStart)}:${emoji}: `;
+    const valueAfterCursor = value.substring(context.emojiTermEnd + 1);
+    this.value = `${valueUpToCursor}${valueAfterCursor}`;
+    this.textarea.setSelectionRange(
+      valueUpToCursor.length,
+      valueUpToCursor.length
+    );
   }
 
   teardown() {
@@ -119,11 +168,6 @@ export default class TextareaInteractor extends EmberObject {
   @bind
   applyLink() {
     return this.textManipulation.applyLink(...arguments);
-  }
-
-  @bind
-  isInside() {
-    return this.textManipulation.isInside(...arguments);
   }
 
   emojiSelected(code) {
