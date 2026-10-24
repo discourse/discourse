@@ -65,6 +65,7 @@ end
 def build_info
   info = { "ember_env" => resolved_ember_env, "core_tree_hash" => core_tree_hash }
   info["ci_minify"] = true if ci_minify?
+  info["production_deps"] = true if ENV["DISCOURSE_CI_PRODUCTION_DEPS"] == "1"
   info
 end
 

@@ -52,6 +52,8 @@ const aliases = [
 
 export function buildConfig({ devMode } = {}) {
   const isProduction = process.env.EMBER_ENV === "production";
+  const useProductionDependencies =
+    isProduction || process.env.DISCOURSE_CI_PRODUCTION_DEPS === "1";
 
   if (!isProduction) {
     process.env.NODE_ENV = "development";
@@ -63,7 +65,9 @@ export function buildConfig({ devMode } = {}) {
     tsconfig: false,
     resolve: {
       extensions,
-      conditionNames: isProduction ? ["production"] : ["development"],
+      conditionNames: useProductionDependencies
+        ? ["production"]
+        : ["development"],
     },
     experimental: {
       incrementalBuild: true,
@@ -101,7 +105,9 @@ export function buildConfig({ devMode } = {}) {
       viteAliasPlugin({ entries: aliases }),
       dynamicChunkUrlPlugin(),
       discourseSourceImports(),
-      ...(isProduction ? [productionEmberDeprecations()] : []),
+      ...(useProductionDependencies
+        ? [productionEmberDeprecations({ preserveDebugTools: !isProduction })]
+        : []),
       optimizedEmber(),
       viteImportGlobPlugin(),
       maybeBabel({
