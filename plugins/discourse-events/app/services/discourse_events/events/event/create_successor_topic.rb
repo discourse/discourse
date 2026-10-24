@@ -87,6 +87,20 @@ module DiscourseEvents
               "recurrenceUntil" => nil,
             )
 
+          # SyncFromPost runs on post_edited. Persist the archived attributes
+          # without callbacks so it does not reschedule the completed occurrence
+          # or reset RSVPs. Keep the in-memory recurrence for the event-ended
+          # workflow. The surrounding transaction rolls back on failure.
+          Event.where(id: event.id).update_all(
+            original_starts_at: event_date.starts_at,
+            original_ends_at: event.original_ends_at ? event_date.ends_at : nil,
+            recurrence: nil,
+            recurrence_until: nil,
+          )
+
+          # Ensure SyncFromPost reads the newly persisted event attributes.
+          post.association(:event).reset
+
           revisor = PostRevisor.new(post)
           revised =
             revisor.revise!(

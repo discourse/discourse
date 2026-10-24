@@ -465,6 +465,111 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(successor_topic.title).to eq(title)
       end
 
+      it "preserves the completed occurrence and RSVP statuses when archiving an older recurring series" do
+        starts_at = (Time.current.utc - 8.days).change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Existing weekly meeting"
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="#{starts_at.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Existing weekly meeting notes.
+              [/event]
+            RAW
+
+        event = post.reload.event
+        occurrence = event.event_dates.pending.first
+
+        expect(occurrence.starts_at).to be > event.original_starts_at
+        expect(occurrence.starts_at).to be > Time.current
+
+        invitee =
+          DiscourseEvents::Events::Invitee.create_attendance!(
+            going_once_user.id,
+            event.id,
+            :interested,
+          )
+
+        original_occurrence_id = occurrence.id
+        occurrence_starts_at = occurrence.starts_at
+        occurrence_ends_at = occurrence.ends_at
+
+        freeze_time(occurrence_ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        event.reload
+        occurrence.reload
+        invitee.reload
+
+        expect(event.recurrence).to be_blank
+        expect(event.original_starts_at).to eq_time(occurrence_starts_at)
+        expect(event.original_ends_at).to eq_time(occurrence_ends_at)
+
+        expect(event.event_dates.pluck(:id)).to contain_exactly(original_occurrence_id)
+        expect(occurrence.finished_at).to eq_time(Time.current)
+        expect(occurrence.starts_at).to eq_time(occurrence_starts_at)
+        expect(occurrence.ends_at).to eq_time(occurrence_ends_at)
+
+        expect(invitee.status).to eq(DiscourseEvents::Events::Invitee.statuses[:interested])
+      end
+
+      it "preserves an archived recurring event without an explicit end time" do
+        starts_at = (Time.current.utc - 8.days).change(sec: 0)
+        title = "Weekly meeting without an end time"
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="#{starts_at.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Weekly meeting notes.
+              [/event]
+            RAW
+
+        event = post.reload.event
+        occurrence = event.event_dates.pending.first
+
+        expect(event.original_ends_at).to be_nil
+        expect(occurrence.starts_at).to be > event.original_starts_at
+        expect(occurrence.ends_at).to be_present
+
+        invitee =
+          DiscourseEvents::Events::Invitee.create_attendance!(
+            going_once_user.id,
+            event.id,
+            :interested,
+          )
+
+        occurrence_id = occurrence.id
+        occurrence_starts_at = occurrence.starts_at
+        occurrence_ends_at = occurrence.ends_at
+
+        freeze_time(occurrence_ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        event.reload
+        occurrence.reload
+        invitee.reload
+        post.reload
+
+        expect(event.recurrence).to be_blank
+        expect(event.original_starts_at).to eq_time(occurrence_starts_at)
+        expect(event.original_ends_at).to be_nil
+
+        expect(event.event_dates.pluck(:id)).to contain_exactly(occurrence_id)
+        expect(occurrence.finished_at).to eq_time(Time.current)
+        expect(occurrence.starts_at).to eq_time(occurrence_starts_at)
+        expect(occurrence.ends_at).to eq_time(occurrence_ends_at)
+
+        expect(invitee.status).to eq(DiscourseEvents::Events::Invitee.statuses[:interested])
+
+        expect(post.raw).not_to match(/\\send=/)
+
+        successor_topic = Topic.where(title:).where.not(id: post.topic_id).sole
+        successor_post = successor_topic.first_post
+
+        expect(successor_post.raw).not_to match(/\\send=/)
+        expect(successor_post.reload.event.original_ends_at).to be_nil
+      end
+
       it "archives the final occurrence without creating a successor topic" do
         starts_at = 7.days.after.change(sec: 0)
         ends_at = starts_at + 1.hour
@@ -790,6 +895,62 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         successor_event = successor_topic.first_post.reload.event
 
         expect(successor_event.original_starts_at).to eq_time(starts_at + 7.days)
+      end
+
+      it "rolls back archival when creating the successor post fails" do
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Weekly planning rollback"
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Meeting notes.
+              [/event]
+            RAW
+
+        original_raw = post.raw
+        event = post.reload.event
+        event_date = event.event_dates.pending.first
+
+        invitee =
+          DiscourseEvents::Events::Invitee.create_attendance!(
+            going_once_user.id,
+            event.id,
+            :interested,
+          )
+
+        freeze_time(ends_at + 1.hour)
+
+        allow(PostCreator).to receive(:create!).and_raise(
+          StandardError,
+          "simulated successor post failure",
+        )
+        allow(Discourse).to receive(:warn_exception)
+
+        expect { job.execute({}) }.not_to change(Topic, :count)
+
+        expect(Discourse).to have_received(:warn_exception).with(
+          an_instance_of(StandardError),
+          message: "Failed to process Discourse event date #{event_date.id}",
+        )
+
+        expect(post.reload.raw).to eq(original_raw)
+        expect(post.topic.reload.title).to eq(title)
+        expect(event.reload.recurrence).to eq("every_week")
+        expect(event.original_starts_at).to eq_time(starts_at)
+        expect(event_date.reload.finished_at).to be_nil
+        expect(invitee.reload.status).to eq(DiscourseEvents::Events::Invitee.statuses[:interested])
+
+        # A subsequent monitoring run must be able to complete the rollover.
+        allow(PostCreator).to receive(:create!).and_call_original
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        expect(event_date.reload.finished_at).to eq_time(Time.current)
+        expect(event.reload.recurrence).to be_nil
+
+        successor_topic = Topic.where(title:).where.not(id: post.topic_id).sole
+        expect(successor_topic.first_post.reload.event.recurrence).to eq("every_week")
       end
 
       it "keeps the occurrence pending when successor creation fails" do
