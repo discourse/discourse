@@ -75,6 +75,55 @@ class FormTemplate::Submission
     self.class.new(@data.merge("answers" => answers), validate:)
   end
 
+  def rewrite_text
+    data = to_h
+    data["definition"]["fields"].each do |field|
+      label = field.dig("attributes", "label") || field["id"].to_s
+      rewritten_label = yield(label)
+      (field["attributes"] ||= {})["label"] = rewritten_label if rewritten_label != label
+
+      next if field["type"] == "tag-chooser"
+
+      id = field["id"].to_s
+      value = data["answers"][id]
+      if value.is_a?(String)
+        data["answers"][id] = yield(value)
+      elsif value.is_a?(Array)
+        data["answers"][id] = value.map { |item| yield(item) }
+      end
+      if %w[dropdown multi-select].include?(field["type"])
+        field["choices"]&.map! { |choice| choice.is_a?(String) ? yield(choice) : choice }
+      end
+    end
+
+    if (output = data["definition"]["output_template"])
+      # Only direct answer interpolation is safe across future answer changes.
+      parts = output.split(/({{.*?}}|{%.*?%})/m)
+      expressions = parts.select { |part| part.start_with?("{{", "{%") }
+      data["definition"]["output_template"] = parts
+        .map do |part|
+          rewritten_part = yield(part)
+          if part.start_with?("{{", "{%") && rewritten_part != part
+            raise ArgumentError, "Cannot rewrite references inside Liquid expressions"
+          end
+          rewritten_part
+        end
+        .join
+      if data != @data &&
+           expressions.any? { |expression|
+             !expression.match?(/\A{{-?\s*answers(?:\.[\w-]+|\[["'][^"']+["']\])\s*-?}}\z/)
+           }
+        raise ArgumentError, "Cannot rewrite a form with computed Liquid expressions"
+      end
+    end
+
+    rewritten = self.class.new(data, validate: false)
+    unless rewritten.render == yield(render)
+      raise ArgumentError, "Cannot rewrite generated form content without changing its meaning"
+    end
+    rewritten
+  end
+
   def editor_data(raw:, guardian:)
     fields = @data["definition"]["fields"].deep_dup
     tag_fields = fields.select { |field| field["type"] == "tag-chooser" }

@@ -69,6 +69,57 @@ RSpec.describe PostsController do
   end
 
   describe "#update" do
+    it "preserves username rewrites when editing another answer" do
+      Jobs.run_immediately!
+      UserActionManager.enable
+      mentioned = Fabricate(:user, username: "formfriend")
+      original =
+        submission.with_answers(
+          answers.merge("description" => "Playing with @formfriend this evening."),
+        )
+      saved = create_post(user:, raw: original.render, form_data: original.to_h)
+      changed =
+        original.with_answers(
+          original.answers.merge("description" => "Playing with @formfriend tomorrow evening."),
+        )
+      PostRevisor.new(saved).revise!(
+        user,
+        { raw: changed.render, form_data: changed.to_h },
+        force_new_version: true,
+      )
+      toggled = changed.with_answers(changed.answers.merge("confirmed" => true))
+      PostRevisor.new(saved).revise!(
+        user,
+        { raw: toggled.render, form_data: toggled.to_h },
+        force_new_version: true,
+      )
+
+      expect(UsernameChanger.new(mentioned, "renamedfriend").change(asynchronous: false)).to eq(
+        true,
+      )
+      saved.reload
+      expect(saved.form_submission.render).to eq(saved.raw)
+      expect(saved.raw).to include("@renamedfriend")
+      saved.revisions.each do |revision|
+        expect(revision.form_data_changes.map { |data| data.dig("answers", "description") }).to all(
+          include("@renamedfriend"),
+        )
+      end
+
+      put "/posts/#{saved.id}.json",
+          params: {
+            post: {
+              form_template_data: {
+                answers: saved.form_submission.answers.merge("confirmed" => false),
+              }.to_json,
+              form_state_token: saved.form_state_token,
+            },
+          }
+      expect(response.status).to eq(200), response.body
+      expect(saved.reload.raw).to include("@renamedfriend")
+      expect(saved.form_submission.answers["confirmed"]).to eq(false)
+    end
+
     it "uses the saved definition after template deletion and rejects stale answer-only edits" do
       token = form_post.form_state_token
       form_template.destroy!

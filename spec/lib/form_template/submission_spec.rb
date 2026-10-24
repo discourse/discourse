@@ -56,6 +56,47 @@ RSpec.describe FormTemplate::Submission do
     end
   end
 
+  describe "#rewrite_text" do
+    it "rejects computed templates even when the current output is unchanged" do
+      data = submission.to_h
+      data["definition"]["fields"].find { |field| field["id"] == "options" }["choices"] = ["@old"]
+      data["definition"][
+        "output_template"
+      ] = "{% assign name = '@' | append: 'old' %}{% if answers.description == name %}Chosen{% else %}Other{% endif %}"
+
+      expect do
+        described_class.new(data).rewrite_text { |text| text.gsub("@old", "@new") }
+      end.to raise_error(ArgumentError)
+    end
+
+    it "rewrites labels, choices and literal output while preserving field references and typed values" do
+      data = submission.to_h
+      data["definition"]["fields"] << { "id" => "@old", "type" => "input" }
+      data["definition"]["fields"].find { |field| field["id"] == "options" }["choices"] = ["@old"]
+      data["answers"].merge!(
+        "@old" => "A reply",
+        "description" => "Ask @old",
+        "options" => ["@old"],
+      )
+      data["definition"]["output_template"] = '@old: {{ answers["description"] }}'
+      rewritten = described_class.new(data).rewrite_text { |text| text.gsub("@old", "@new") }
+
+      expect(rewritten.render).to eq("@new: Ask @new")
+      expect(rewritten.answers).to eq(
+        data["answers"].merge("description" => "Ask @new", "options" => ["@new"]),
+      )
+      fields = rewritten.to_h.dig("definition", "fields")
+      expect(fields.last).to eq(
+        "id" => "@old",
+        "type" => "input",
+        "attributes" => {
+          "label" => "@new",
+        },
+      )
+      expect(fields.find { |field| field["id"] == "options" }["choices"]).to eq(["@new"])
+    end
+  end
+
   describe "#editor_data" do
     it "filters saved tag choices using the current editor's permissions without changing the snapshot" do
       tag = Fabricate(:tag, description: "A restricted choice")

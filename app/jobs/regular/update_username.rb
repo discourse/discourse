@@ -90,12 +90,25 @@ module Jobs
         .where(post_number: 1)
         .where("raw ILIKE ?", "%@#{@old_username}%")
         .where.not(id: updated_post_ids)
+        .find_each do |post|
+          update_post(post)
+          updated_post_ids << post.id
+        end
+
+      Post
+        .with_deleted
+        .where("form_data::text ILIKE ?", "%#{Post.sanitize_sql_like(@old_username)}%")
+        .where.not(id: updated_post_ids)
         .find_each { |post| update_post(post) }
     end
 
     def update_revisions
       PostRevision
-        .where("modifications SIMILAR TO ?", "%(raw|cooked)%@#{@old_username}%")
+        .where(
+          "modifications SIMILAR TO ? OR form_data_changes::text ILIKE ?",
+          "%(raw|cooked)%@#{@old_username}%",
+          "%#{Post.sanitize_sql_like(@old_username)}%",
+        )
         .find_each { |revision| update_revision(revision) }
 
       PostRevision
@@ -149,10 +162,25 @@ module Jobs
     protected
 
     def update_post(post)
-      post.raw = update_raw(post.raw)
-      post.cooked = update_cooked(post.cooked)
-
-      post.update_columns(raw: post.raw, cooked: post.cooked)
+      post.with_lock do
+        attributes = { raw: update_raw(post.raw), cooked: update_cooked(post.cooked) }
+        if post.form_data
+          attributes[:form_data] = update_form_data(post.form_data)
+          PostRevisor
+            .new(post)
+            .rewrite_cached_original do |field, value|
+              case field
+              when :raw
+                update_raw(value)
+              when :cooked
+                update_cooked(value)
+              when :form_data
+                update_form_data(value)
+              end
+            end
+        end
+        post.update_columns(attributes)
+      end
       post.sync_first_post_caches
 
       SearchIndexer.index(post, force: true) if post.topic
@@ -161,13 +189,23 @@ module Jobs
     end
 
     def update_revision(revision)
-      if revision.modifications.key?("raw") || revision.modifications.key?("cooked")
+      revision.with_lock do
         revision.modifications["raw"]&.map! { |raw| update_raw(raw) }
         revision.modifications["cooked"]&.map! { |cooked| update_cooked(cooked) }
-        revision.save!
+        revision.form_data_changes =
+          revision.form_data_changes&.map { |data| update_form_data(data) }
+        revision.save! if revision.changed?
       end
     rescue => e
       Discourse.warn_exception(e, message: "Failed to update post revision with id #{revision.id}")
+    end
+
+    def update_form_data(data)
+      return if data.nil?
+      FormTemplate::Submission
+        .new(data, validate: false)
+        .rewrite_text { |text| update_raw(text) }
+        .to_h
     end
 
     def mentioned(post_id_column)
