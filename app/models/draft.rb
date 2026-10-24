@@ -165,6 +165,7 @@ class Draft < ActiveRecord::Base
     Draft.transaction do
       Draft.where(id: recoverable.map(&:id)).update_all(deleted_at: Time.zone.now)
       disposable.each(&:destroy!)
+      evict_excess_discarded!(user_id) if recoverable.any?
     end
 
     UserStat.update_draft_count(user_id)
@@ -177,13 +178,31 @@ class Draft < ActiveRecord::Base
     Draft
       .discarded
       .where("deleted_at <= ?", cutoff)
-      .in_batches(of: 1000) do |batch|
-        # rows go first so a draft restored mid-purge keeps its upload references
-        purged_ids = DB.query_single(<<~SQL, ids: batch.ids)
-          DELETE FROM drafts WHERE id IN (:ids) AND deleted_at IS NOT NULL RETURNING id
-        SQL
-        UploadReference.where(target_type: "Draft", target_id: purged_ids).delete_all
-      end
+      .in_batches(of: 1000) { |batch| delete_discarded!(batch.ids) }
+  end
+
+  # Discarded rows don't count towards `max_drafts_per_user`, so cap them at the same number
+  # to keep a single user from growing the table without bound.
+  def self.evict_excess_discarded!(user_id)
+    excess_ids =
+      Draft
+        .discarded
+        .where(user_id: user_id)
+        .order(deleted_at: :desc, id: :desc)
+        .offset(SiteSetting.max_drafts_per_user)
+        .pluck(:id)
+
+    delete_discarded!(excess_ids)
+  end
+
+  def self.delete_discarded!(ids)
+    return if ids.empty?
+
+    # rows go first so a draft restored meanwhile keeps its upload references
+    purged_ids = DB.query_single(<<~SQL, ids: ids)
+      DELETE FROM drafts WHERE id IN (:ids) AND deleted_at IS NOT NULL RETURNING id
+    SQL
+    UploadReference.where(target_type: "Draft", target_id: purged_ids).delete_all
   end
 
   def restore!

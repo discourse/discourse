@@ -393,6 +393,24 @@ RSpec.describe Draft do
       expect(Draft.discarded.where(user: user, draft_key: key).count).to eq(2)
     end
 
+    it "evicts the oldest discarded drafts beyond max_drafts_per_user" do
+      SiteSetting.max_drafts_per_user = 2
+      upload = Fabricate(:upload)
+
+      Draft.set(user, "new_topic_1", 0, { reply: "![image](#{upload.short_url})" }.to_json)
+      freeze_time(3.days.ago) { discard(user, "new_topic_1") }
+      Draft.set(user, "new_topic_2", 0, content)
+      freeze_time(2.days.ago) { discard(user, "new_topic_2") }
+      Draft.set(user, "new_topic_3", 0, content)
+      discard(user, "new_topic_3")
+
+      expect(Draft.discarded.where(user: user).pluck(:draft_key)).to contain_exactly(
+        "new_topic_2",
+        "new_topic_3",
+      )
+      expect(UploadReference.where(target_type: "Draft", upload_id: upload.id)).not_to exist
+    end
+
     it "keeps discarded drafts when the user posts or drafts are cleaned up" do
       Draft.set(user, key, 0, content)
       discard(user, key)
