@@ -24,12 +24,14 @@ import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { isRailsTesting } from "discourse/lib/environment";
 import renderFormTemplate, {
-  getFormTemplateObject,
+  collectFormTemplateAnswers,
+  initializeFormTemplateAnswers,
 } from "discourse/lib/form-template-validation";
 import { shortDate } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { cloneJSON, deepEqual } from "discourse/lib/object";
 import { buildQuote } from "discourse/lib/quote";
 import { emojiUnescape } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -156,6 +158,7 @@ export default class ComposerService extends Service {
   linkLookup = null;
 
   #renderingForm = false;
+  #formTemplateReady = false;
 
   #onSaved = null;
 
@@ -244,6 +247,10 @@ export default class ComposerService extends Service {
   }
 
   get formTemplateInitialValues() {
+    const draft = this.model?.formTemplateDraft;
+    if (draft && String(draft.id) === String(this.model.formTemplateId)) {
+      return draft.answers;
+    }
     return this._formTemplateInitialValues;
   }
 
@@ -341,8 +348,11 @@ export default class ComposerService extends Service {
     return NEW_PRIVATE_MESSAGE_KEY + "_" + new Date().getTime();
   }
 
-  @computed("model.category", "skipFormTemplate")
+  @computed("model.category", "model.formSubmission", "skipFormTemplate")
   get formTemplateIds() {
+    if (this.model?.formSubmission) {
+      return [this.model.formSubmission.template_id];
+    }
     if (!this.siteSettings.enable_form_templates || this.skipFormTemplate) {
       return null;
     }
@@ -354,7 +364,7 @@ export default class ComposerService extends Service {
     return (
       this.formTemplateIds?.length > 0 &&
       !this.get("model.replyingToTopic") &&
-      !this.get("model.editingPost")
+      (!this.get("model.editingPost") || !!this.model.formSubmission)
     );
   }
 
@@ -755,7 +765,49 @@ export default class ComposerService extends Service {
   }
 
   @action
+  initializeFormTemplateDraft() {
+    const draft = this.model.formTemplateDraft;
+    initializeFormTemplateAnswers(
+      document.querySelector("#form-template-form"),
+      this.selectedFormTemplate,
+      draft && String(draft.id) === String(this.model.formTemplateId)
+        ? draft.answers
+        : null
+    );
+    this.#formTemplateReady = true;
+  }
+
+  captureFormTemplateDraft() {
+    if (
+      !this.#formTemplateReady ||
+      !this.hasFormTemplate ||
+      !this.selectedFormTemplate
+    ) {
+      return;
+    }
+    const values = collectFormTemplateAnswers(
+      document.querySelector("#form-template-form"),
+      this.selectedFormTemplate,
+      false
+    );
+    if (!values) {
+      return;
+    }
+    const draft = { id: this.model.formTemplateId, answers: values };
+    if (
+      !this.model.formTemplateDraft ||
+      this.model.formTemplateDraft.id !== draft.id
+    ) {
+      this.model.set("originalFormTemplateDraft", draft);
+    }
+    if (!deepEqual(this.model.formTemplateDraft, draft)) {
+      this.model.set("formTemplateDraft", draft);
+    }
+  }
+
+  @action
   onSelectFormTemplate(formTemplate, id) {
+    this.#formTemplateReady = false;
     this.selectedFormTemplate = formTemplate;
     this.model.set("formTemplateId", id);
   }
@@ -1282,7 +1334,9 @@ export default class ComposerService extends Service {
           document.querySelector("#form-template-form"),
           this.selectedFormTemplate,
           templateId,
-          categoryId
+          categoryId,
+          true,
+          model.formSubmission ? model.post.id : undefined
         );
         if (
           !result ||
@@ -1805,6 +1859,7 @@ export default class ComposerService extends Service {
   }
 
   cancelComposer() {
+    this.captureFormTemplateDraft();
     this.skipAutoSave = true;
 
     cancel(this._saveDraftDebounce);
@@ -1850,19 +1905,50 @@ export default class ComposerService extends Service {
     });
   }
 
-  saveAndCloseComposer() {
-    if (!this.model.anyDirty) {
+  async saveAndCloseComposer() {
+    const model = this.model;
+    this.captureFormTemplateDraft();
+    if (!model.anyDirty) {
       return this.cancelComposer();
     }
 
     this.skipAutoSave = true;
-    this._saveDraft(true);
-    this.model.clearState();
-    this.close();
-    this.appEvents.trigger("composer:cancelled");
-    this.skipAutoSave = false;
-
-    return true;
+    try {
+      if (this._saveDraftPromise) {
+        await this._saveDraftPromise;
+      }
+      if (this.model !== model) {
+        return false;
+      }
+      this.captureFormTemplateDraft();
+      const submittedState = this.#draftState(model);
+      const saved = await this._saveDraft(true);
+      if (this.model !== model) {
+        return false;
+      }
+      this.captureFormTemplateDraft();
+      if (
+        !saved ||
+        saved.conflict_user ||
+        !deepEqual(submittedState, this.#draftState(model))
+      ) {
+        return false;
+      }
+      model.clearState();
+      this.close();
+      this.appEvents.trigger("composer:cancelled");
+      return true;
+    } catch {
+      return false;
+    } finally {
+      this.skipAutoSave = false;
+      if (
+        this.model?.viewOpen &&
+        (this.model.anyDirty || this.model.hasSavedFormTemplateDraft)
+      ) {
+        this._shouldSaveDraft();
+      }
+    }
   }
 
   unshrink() {
@@ -1922,6 +2008,13 @@ export default class ComposerService extends Service {
   clearLastValidatedAt() {
     this.set("lastValidatedAt", null);
     this.appEvents.trigger("composer-service:last-validated-at-cleared");
+  }
+
+  #draftState(model) {
+    const state = cloneJSON(model.serializeDraftData());
+    delete state.composerTime;
+    delete state.typingTime;
+    return state;
   }
 
   @bind
@@ -2123,19 +2216,19 @@ export default class ComposerService extends Service {
     if (this.model.draftSaving) {
       this._saveDraftDebounce = discourseDebounce(this, this._saveDraft, 2000);
     } else {
-      // This is a temporary solution to avoid losing the current form template state
-      // until we have a proper draft system for these forms
-      if (this.hasFormTemplate) {
-        const form = document.querySelector("#form-template-form");
-        if (form) {
-          this.set("formTemplateInitialValues", getFormTemplateObject(form));
-        }
+      this.captureFormTemplateDraft();
+      if (
+        this.hasFormTemplate &&
+        !this.model.anyDirty &&
+        !this.model.hasSavedFormTemplateDraft
+      ) {
+        return;
       }
 
       this._saveDraftPromise = this.model
         .saveDraft()
-        .then(() => {
-          if (showToast) {
+        .then((result) => {
+          if (showToast && result && !result.conflict_user) {
             this.toasts.success({
               duration: "short",
               data: {
@@ -2143,15 +2236,17 @@ export default class ComposerService extends Service {
               },
             });
           }
+          return result;
         })
         .finally(() => {
           this._lastDraftSaved = Date.now();
           this._saveDraftPromise = null;
         });
+      return this._saveDraftPromise;
     }
   }
 
-  @observes("model.reply", "model.title")
+  @observes("model.reply", "model.title", "model.formTemplateDraft")
   _shouldSaveDraft() {
     if (
       this.model &&

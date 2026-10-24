@@ -1,5 +1,18 @@
 import { ajax } from "discourse/lib/ajax";
+import { cloneJSON, deepEqual } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
+
+const initialValues = new WeakMap();
+
+export function initializeFormTemplateAnswers(form, fields, values) {
+  initialValues.delete(form);
+  if (values) {
+    initialValues.set(form, {
+      saved: cloneJSON(values),
+      displayed: collectFormTemplateAnswers(form, fields, false),
+    });
+  }
+}
 
 export function getFormTemplateObject(form) {
   const formData = new FormData(form);
@@ -43,6 +56,18 @@ export function collectFormTemplateAnswers(
     }
   }
 
+  const initial = initialValues.get(form);
+  if (initial) {
+    for (const { id } of fields) {
+      if (deepEqual(answers[id], initial.displayed[id])) {
+        if (Object.hasOwn(initial.saved, id)) {
+          answers[id] = initial.saved[id];
+        } else {
+          delete answers[id];
+        }
+      }
+    }
+  }
   return answers;
 }
 
@@ -51,7 +76,8 @@ export default async function renderFormTemplate(
   fields,
   id,
   categoryId,
-  checkFormValidity = true
+  checkFormValidity = true,
+  postId
 ) {
   const answers = collectFormTemplateAnswers(form, fields, checkFormValidity);
   if (!answers) {
@@ -60,7 +86,11 @@ export default async function renderFormTemplate(
   const payload = JSON.stringify({ id, answers });
   const { raw } = await ajax("/form-templates/render.json", {
     type: "POST",
-    data: { category_id: categoryId, form_template_data: payload },
+    data: {
+      category_id: categoryId,
+      post_id: postId,
+      form_template_data: payload,
+    },
   });
   return { raw, payload };
 }

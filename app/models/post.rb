@@ -71,6 +71,7 @@ class Post < ActiveRecord::Base
   has_many :reviewables, as: :target, dependent: :destroy
 
   validates_with PostValidator, unless: :skip_validation
+  validates_with PostFormDataValidator
   MAX_EDIT_REASON_LENGTH = 1000
   validates :edit_reason, length: { maximum: MAX_EDIT_REASON_LENGTH }
 
@@ -1123,6 +1124,14 @@ class Post < ActiveRecord::Base
     replies.reject { |r| !secured_ids.include?(r[:id]) }
   end
 
+  def form_submission
+    FormTemplate::Submission.new(form_data) if form_data
+  end
+
+  def form_state_token
+    form_submission&.state_token(raw: raw)
+  end
+
   def revert_to(number)
     return if number >= version
     post_revision = PostRevision.find_by(post_id: id, number: (number + 1))
@@ -1318,6 +1327,7 @@ end
 #  cooked                  :text             not null
 #  deleted_at              :datetime
 #  edit_reason             :string
+#  form_data               :jsonb
 #  hidden                  :boolean          default(FALSE), not null
 #  hidden_at               :datetime
 #  illegal_count           :integer          default(0), not null

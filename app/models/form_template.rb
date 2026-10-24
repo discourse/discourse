@@ -27,6 +27,9 @@ class FormTemplate < ActiveRecord::Base
   class NotAllowed < StandardError
   end
 
+  class InvalidAnswers < StandardError
+  end
+
   def fields
     YAML.safe_load(template)
   end

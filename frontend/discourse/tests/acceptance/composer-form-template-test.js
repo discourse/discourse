@@ -5,6 +5,7 @@ import {
   find,
   settled,
   visit,
+  waitUntil,
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
@@ -169,6 +170,100 @@ acceptance("Composer Form Template", function (needs) {
     });
   });
 
+  test("keeps form answers open when saving the draft fails", async function (assert) {
+    this.siteSettings.show_preview_for_form_templates = false;
+    pretender.post("/drafts.json", () =>
+      response(500, { errors: ["Unavailable"] })
+    );
+    await visit("/");
+    const composer = this.owner.lookup("service:composer");
+    await composer.openNewTopic({ formTemplate: FORM_TEMPLATES[0] });
+    await settled();
+    await fillIn("input[name='full-name']", "Saved host name");
+    await composer.saveAndCloseComposer();
+    await settled();
+    assert.dom("#reply-control").hasClass("open");
+    assert.dom("input[name='full-name']").hasValue("Saved host name");
+  });
+
+  test("preserves input entered while Save & close is waiting", async function (assert) {
+    this.siteSettings.show_preview_for_form_templates = false;
+    await visit("/");
+    const composer = this.owner.lookup("service:composer");
+    await composer.openNewTopic({ formTemplate: FORM_TEMPLATES[0] });
+    await settled();
+    await fillIn("input[name='full-name']", "Original name");
+
+    let receiveRequest;
+    const pending = new Promise((resolve) => (receiveRequest = resolve));
+    pretender.post(
+      "/drafts.json",
+      (request) => {
+        receiveRequest(request);
+        return response({ success: true });
+      },
+      true
+    );
+    const closing = composer.saveAndCloseComposer();
+    const request = await pending;
+    let savedDraft;
+    pretender.post("/drafts.json", (nextRequest) => {
+      savedDraft = JSON.parse(parsePostData(nextRequest.requestBody).data);
+      return response({ success: true });
+    });
+    const typing = fillIn("input[name='full-name']", "");
+    await waitUntil(() => find("input[name='full-name']").value === "");
+    pretender.resolve(request);
+    await closing;
+    await typing;
+    assert
+      .dom("#reply-control")
+      .hasClass("open", "new input keeps the composer open");
+    assert
+      .dom("input[name='full-name']")
+      .hasValue("", "returning to the original value is retained");
+    assert.strictEqual(
+      savedDraft.formTemplateDraft.answers["full-name"],
+      "",
+      "the original value replaces the draft saved while closing"
+    );
+    await composer.saveAndCloseComposer();
+    await settled();
+    assert
+      .dom("#reply-control")
+      .hasClass("closed", "closing succeeds after saving the latest input");
+  });
+
+  test("autosaves answers returned to their original values", async function (assert) {
+    this.siteSettings.show_preview_for_form_templates = false;
+    let savedDraft;
+    pretender.post("/drafts.json", (request) => {
+      savedDraft = JSON.parse(parsePostData(request.requestBody).data);
+      return response({ success: true });
+    });
+    await visit("/");
+    const composer = this.owner.lookup("service:composer");
+    await composer.openNewTopic({ formTemplate: FORM_TEMPLATES[0] });
+    await settled();
+    assert.strictEqual(
+      savedDraft,
+      undefined,
+      "opening an untouched form does not create a draft"
+    );
+    await fillIn("input[name='full-name']", "Temporary name");
+    assert.strictEqual(
+      savedDraft.formTemplateDraft.answers["full-name"],
+      "Temporary name",
+      "the change is autosaved"
+    );
+    await fillIn("input[name='full-name']", "");
+    assert.strictEqual(
+      savedDraft.formTemplateDraft.answers["full-name"],
+      "",
+      "recovery data reflects the restored original value"
+    );
+  });
+
   test("Composer Form Template is shrank and reopened", async function (assert) {
     await visit("/");
     await click("#create-topic");
@@ -217,6 +312,30 @@ acceptance("Composer Form Template", function (needs) {
         "Community manager",
         "keeps the value of the textarea field when composer is re-opened from draft mode"
       );
+  });
+
+  test("switching templates clears saved answers for overlapping field IDs", async function (assert) {
+    this.siteSettings.show_preview_for_form_templates = false;
+    pretender.get("/form-templates/2.json", () =>
+      response({
+        form_template: { ...FORM_TEMPLATES[0], id: 2 },
+      })
+    );
+    await visit("/");
+    const composer = this.owner.lookup("service:composer");
+    await composer.openNewTopic({ formTemplate: FORM_TEMPLATES[0] });
+    await settled();
+    await fillIn("input[name='full-name']", "Previous answer");
+    await selectKit(".form-template-chooser").expand();
+    await selectKit(".form-template-chooser").selectRowByValue("2");
+    assert
+      .dom("input[name='full-name']")
+      .hasValue("", "the new template starts empty");
+    assert.strictEqual(
+      composer.model.formTemplateDraft.answers["full-name"],
+      "",
+      "the draft matches the displayed controls"
+    );
   });
 
   test("Composer opens with the specified form template selected", async function (assert) {

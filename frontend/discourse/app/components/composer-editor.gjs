@@ -292,14 +292,11 @@ export default class ComposerEditor extends Component {
   @computed(
     "composer.formTemplateIds",
     "composer.model.replyingToTopic",
-    "composer.model.editingPost"
+    "composer.model.editingPost",
+    "composer.model.formSubmission"
   )
   get showFormTemplateForm() {
-    return (
-      this.composer?.formTemplateIds?.length > 0 &&
-      !this.composer?.model?.replyingToTopic &&
-      !this.composer?.model?.editingPost
-    );
+    return this.composer.hasFormTemplate;
   }
 
   @computed("composer.model")
@@ -489,6 +486,7 @@ export default class ComposerEditor extends Component {
 
   @action
   updateFormPreview() {
+    this.composer.captureFormTemplateDraft();
     this.#formPreviewSequence++;
     this._updateFormPreview();
   }
@@ -543,7 +541,8 @@ export default class ComposerEditor extends Component {
         this.composer.selectedFormTemplate,
         request.templateId,
         request.categoryId,
-        false
+        false,
+        request.model.formSubmission ? request.model.post.id : undefined
       );
       if (!result || !this.#isCurrentFormPreview(request)) {
         return;
@@ -1029,9 +1028,11 @@ export default class ComposerEditor extends Component {
             {{didInsert this._composerEditorInitFormTemplate}}
           >
             <Wrapper
+              @content={{this.composer.model.formSubmission.template}}
               @id={{this.selectedFormTemplateId}}
               @initialValues={{this.composer.formTemplateInitialValues}}
               @onChange={{this.updateFormPreview}}
+              @onReady={{this.composer.initializeFormTemplateDraft}}
               @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
               @uppyComposerUpload={{this.uppyComposerUpload}}
             />

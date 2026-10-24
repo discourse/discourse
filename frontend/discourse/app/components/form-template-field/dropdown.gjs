@@ -1,7 +1,9 @@
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
-import { eq } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+
+const isSelected = (value, choice) =>
+  value != null && String(value) === String(choice);
 
 const Dropdown = <template>
   <div class="control-group form-template-field" data-field-type="dropdown">
@@ -37,7 +39,7 @@ const Dropdown = <template>
       {{/if}}
       {{#each @choices as |choice|}}
         <option
-          selected={{eq @value choice}}
+          selected={{isSelected @value choice}}
           value={{choice}}
         >{{choice}}</option>
       {{/each}}

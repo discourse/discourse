@@ -1,16 +1,16 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { trustHTML } from "@ember/template";
 import { bind } from "discourse/lib/decorators";
-import {
-  autoTrackedArray,
-  resettableTracked,
-} from "discourse/lib/tracked-tools";
+import { resettableTracked } from "discourse/lib/tracked-tools";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import DButton from "discourse/ui-kit/d-button";
+import DCookText from "discourse/ui-kit/d-cook-text";
 import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
@@ -18,7 +18,6 @@ export default class FormTemplateFieldUpload extends Component {
   @service appEvents;
 
   @resettableTracked uploadValue = this.args.value || "";
-  @autoTrackedArray uploadedFiles = [];
   fileUploadElementId = `${dasherize(this.args.id.toString())}-uploader`;
 
   uppyUpload = new UppyUpload(this, {
@@ -47,6 +46,18 @@ export default class FormTemplateFieldUpload extends Component {
     return this.uppyUpload.uploading || this.uppyUpload.processing;
   }
 
+  get uploads() {
+    return this.uploadValue ? this.uploadValue.split("\n").filter(Boolean) : [];
+  }
+
+  @action
+  removeUpload(index) {
+    const uploads = this.uploads;
+    uploads.splice(index, 1);
+    this.uploadValue = uploads.join("\n");
+    schedule("afterRender", () => this.args.onChange?.());
+  }
+
   @action
   handleReplaceText(oldVal, newVal) {
     if (!this.uploadValue?.includes(oldVal)) {
@@ -54,12 +65,6 @@ export default class FormTemplateFieldUpload extends Component {
     }
 
     this.uploadValue = this.uploadValue.replace(oldVal, newVal ?? "");
-
-    if (!newVal) {
-      this.uploadedFiles = this.uploadedFiles.filter((file) => {
-        return !oldVal.includes(file.short_url);
-      });
-    }
 
     schedule("afterRender", () => {
       this.args.onChange?.();
@@ -91,11 +96,8 @@ export default class FormTemplateFieldUpload extends Component {
   uploadDone(upload) {
     // If re-uploading, clear the existing file if multiple aren't allowed
     if (!this.args.attributes.allow_multiple && this.uploadValue) {
-      this.uploadedFiles = [];
       this.uploadValue = "";
     }
-
-    this.uploadedFiles.push(upload);
 
     const uploadMarkdown = this.buildMarkdown(upload);
     if (this.uploadValue && this.uppyUpload.allowMultipleFiles) {
@@ -161,17 +163,18 @@ export default class FormTemplateFieldUpload extends Component {
         @showButton={{true}}
       />
 
-      {{#if this.uploadedFiles}}
+      {{#if this.uploads}}
         <ul class="form-template-field__uploaded-files">
-          {{#each this.uploadedFiles as |file|}}
+          {{#each this.uploads as |upload index|}}
             <li>
-              {{dIcon "file"}}
-              <a
-                href={{file.url}}
-                rel="noopener noreferrer"
-                target="_blank"
-              >{{file.file_name}}</a>
-              <span>{{file.human_filesize}}</span>
+              <DCookText @rawText={{upload}} />
+              <DButton
+                class="form-template-field__remove-upload"
+                @action={{fn this.removeUpload index}}
+                @disabled={{this.disabled}}
+                @icon="xmark"
+                @label="remove"
+              />
             </li>
           {{/each}}
         </ul>
