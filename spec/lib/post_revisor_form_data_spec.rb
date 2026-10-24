@@ -64,7 +64,8 @@ RSpec.describe PostRevisor do
         end
       expect(post.reload.raw).to eq(submission.render)
       expect(post.form_submission.answers["confirmed"]).to eq(true)
-      expect(post.revisions.last.modifications["form_data"]).to eq([submission.to_h, changed.to_h])
+      expect(post.revisions.last.form_data_changes).to eq([submission.to_h, changed.to_h])
+      expect(post.revisions.last.modifications).not_to have_key("form_data")
       expect(events.map { |event| event[:event_name] }).to include(:post_edited)
       post.revert_to(1)
       expect(post.form_data).to eq(submission.to_h)
@@ -97,7 +98,7 @@ RSpec.describe PostRevisor do
         ),
       ).to eq(true)
       revision = post.reload.revisions.last
-      expect(revision.modifications["form_data"]).to eq([submission.to_h, second.to_h])
+      expect(revision.form_data_changes).to eq([submission.to_h, second.to_h])
       expect(revision.modifications["raw"]).to eq([submission.render, second.render])
     end
 
@@ -119,7 +120,7 @@ RSpec.describe PostRevisor do
         revised_at: post.updated_at + 1.second,
       )
       expect(post.reload.revisions.count).to eq(1)
-      expect(post.revisions.last.modifications["form_data"]).to eq([submission.to_h, second.to_h])
+      expect(post.revisions.last.form_data_changes).to eq([submission.to_h, second.to_h])
     end
 
     it "keeps form state on first posts only" do

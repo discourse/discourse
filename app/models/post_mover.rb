@@ -328,6 +328,7 @@ class PostMover
     PostRevision.copy(post, new_post)
 
     attrs_to_update = {
+      form_data: @move_map[post.post_number] == 1 ? post.form_data : nil,
       reply_count: @reply_count[1] || 0,
       version: post.version,
       public_version: post.public_version,

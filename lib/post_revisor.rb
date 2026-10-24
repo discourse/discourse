@@ -770,6 +770,7 @@ class PostRevisor
         user_id: @post.last_editor_id,
         post_id: @post.id,
         number: @post.version,
+        form_data_changes: modifications.delete("form_data"),
         modifications:,
         hidden: @hidden_revision,
       )
@@ -786,23 +787,24 @@ class PostRevisor
     return unless revision = PostRevision.find_by(post_id: @post.id, number: @post.version)
     revision.user_id = @post.last_editor_id
     modifications = post_changes.merge(topic_diff)
+    revision_changes = revision.modifications_with_form_data
 
     modifications.each_key do |field|
-      if revision.modifications.has_key?(field)
-        old_value = revision.modifications[field][0]
+      if revision_changes.has_key?(field)
+        old_value = revision_changes[field][0]
         new_value = modifications[field][1]
         changed = field == "form_data" ? old_value != new_value : old_value.to_s != new_value.to_s
         if changed
-          revision.modifications[field] = [old_value, new_value]
+          revision_changes[field] = [old_value, new_value]
         else
-          revision.modifications.delete(field)
+          revision_changes.delete(field)
         end
       else
-        revision.modifications[field] = modifications[field]
+        revision_changes[field] = modifications[field]
       end
     end
     # should probably do this before saving the post!
-    if revision.modifications.empty?
+    if revision_changes.empty?
       hidden = revision.hidden
       revision.destroy
       @post.last_editor_id =
@@ -811,6 +813,8 @@ class PostRevisor
       @post.public_version -= 1 unless hidden
       @post.save(validate: @validate_post)
     else
+      revision.form_data_changes = revision_changes.delete("form_data")
+      revision.modifications = revision_changes
       revision.save
     end
   end

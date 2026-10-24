@@ -54,6 +54,36 @@ RSpec.describe PostMover do
     fab!(:first_post) { Fabricate(:post, topic: topic) }
     fab!(:reply) { Fabricate(:post, topic: topic) }
 
+    it "preserves a form snapshot when moves keep it as a first post" do
+      template =
+        Fabricate(
+          :form_template,
+          template: [{ id: "notes", type: "textarea" }].as_json.to_yaml,
+          output_template: "A sufficiently long fixed invitation.",
+        )
+      submission =
+        FormTemplate::Submission.from_template(
+          template,
+          answers: {
+            "notes" => "An unrendered answer",
+          },
+        )
+      first_post.update!(raw: submission.render, form_data: submission.to_h)
+
+      destination =
+        described_class.new(topic, admin, [first_post.id]).to_new_topic("A moved form invitation")
+
+      expect(destination.first_post.form_data).to eq(submission.to_h)
+      expect(destination.first_post.form_submission.answers).to eq(submission.answers)
+
+      later_post = Fabricate(:post, created_at: first_post.created_at + 1.minute)
+      described_class.new(destination, admin, [destination.first_post.id]).to_topic(
+        later_post.topic_id,
+        chronological_order: true,
+      )
+      expect(later_post.topic.reload.first_post.form_data).to eq(submission.to_h)
+    end
+
     it "emits topic_created once for the completed split" do
       mover = described_class.new(topic, admin, [reply.id])
       destination = nil

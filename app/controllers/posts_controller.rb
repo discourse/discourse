@@ -605,16 +605,16 @@ class PostsController < ApplicationController
          post_revision.modifications["category_id"].blank? &&
          post_revision.modifications["tags"].blank? &&
          post_revision.modifications["reply_to_post_number"].blank? &&
-         post_revision.modifications["form_data"].blank?
+         post_revision.form_data_changes.blank?
       return render_json_error(I18n.t("revert_version_same"))
     end
 
     topic = Topic.with_deleted.find(post.topic_id)
 
     changes = {}
-    if post_revision.modifications["form_data"].present? &&
-         post_revision.modifications["form_data"][0] != post.form_data
-      changes[:form_data] = post_revision.modifications["form_data"][0]
+    if post_revision.form_data_changes.present? &&
+         post_revision.form_data_changes[0] != post.form_data
+      changes[:form_data] = post_revision.form_data_changes[0]
     end
     changes[:raw] = post_revision.modifications["raw"][0] if post_revision.modifications[
       "raw"
@@ -843,7 +843,7 @@ class PostsController < ApplicationController
 
     post = find_post_from_params
 
-    post_revision = PostRevision.find_by(post_id: post.id, number: revision)
+    post_revision = PostRevision.without_form_data.find_by(post_id: post.id, number: revision)
     raise Discourse::NotFound unless post_revision
 
     post_revision.post = post
@@ -855,7 +855,7 @@ class PostsController < ApplicationController
   def find_latest_post_revision_from_params
     post = find_post_from_params
 
-    finder = PostRevision.where(post_id: post.id).order(:number)
+    finder = PostRevision.without_form_data.where(post_id: post.id).order(:number)
     finder = finder.where(hidden: false) unless guardian.is_staff?
     post_revision = finder.last
 

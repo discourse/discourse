@@ -293,11 +293,11 @@ class PostRevisionSerializer < ApplicationSerializer
   def all_revisions
     return @all_revisions if @all_revisions
 
+    history = scope.can_edit?(post) ? PostRevision.all : PostRevision.without_form_data
     post_revisions =
-      PostRevision.where(post_id: object.post_id).order(number: :desc).limit(99).to_a.reverse
+      history.where(post_id: object.post_id).order(number: :desc).limit(99).to_a.reverse
 
     latest_modifications = {
-      "form_data" => [post.form_data],
       "raw" => [post.raw],
       "cooked" => [post.cooked],
       "edit_reason" => [post.edit_reason],
@@ -307,6 +307,8 @@ class PostRevisionSerializer < ApplicationSerializer
       "locale" => [post.locale],
       "reply_to_post_number" => [post.reply_to_post_number],
     }
+
+    latest_modifications["form_data"] = [post.form_data] if scope.can_edit?(post)
 
     # Retrieve any `tracked_topic_fields`
     PostRevisor.tracked_topic_fields.each_key do |field|
@@ -339,7 +341,8 @@ class PostRevisionSerializer < ApplicationSerializer
       revision[:revision] = pr.number
       revision[:hidden] = pr.hidden
 
-      pr.modifications.each { |field, (value, _)| revision[field] = value }
+      changes = scope.can_edit?(post) ? pr.modifications_with_form_data : pr.modifications
+      changes.each { |field, (value, _)| revision[field] = value }
 
       @all_revisions << revision
     end
