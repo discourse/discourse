@@ -87,6 +87,12 @@ discourse_events:
   display_post_event_date_on_topic_title:
     default: true
     client: true
+  discourse_post_event_recurring_topic_mode:
+    type: enum
+    default: reuse_topic
+    choices:
+      - reuse_topic
+      - create_next_topic
   use_local_event_date:
     default: false
     client: true
