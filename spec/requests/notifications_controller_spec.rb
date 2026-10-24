@@ -214,8 +214,6 @@ RSpec.describe NotificationsController do
 
           fab!(:pending_reviewable, :reviewable)
 
-          before { SiteSetting.navigation_menu = "sidebar" }
-
           it "gets notifications list with unread ones at the top" do
             get "/notifications.json", params: { recent: true }
 
@@ -435,8 +433,6 @@ RSpec.describe NotificationsController do
 
           context "with 'recent' filter" do
             it "doesn't include notifications from topics the user isn't allowed to see" do
-              SiteSetting.navigation_menu = "sidebar"
-
               get "/notifications.json", params: { recent: true }
               expect(response.status).to eq(200)
               expect_correct_notifications(response)
@@ -445,8 +441,6 @@ RSpec.describe NotificationsController do
 
           context "without 'recent' filter" do
             it "doesn't include notifications from topics the user isn't allowed to see" do
-              SiteSetting.navigation_menu = "sidebar"
-
               get "/notifications.json"
               expect(response.status).to eq(200)
               expect_correct_notifications(response)

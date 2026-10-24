@@ -12,7 +12,6 @@ RSpec.describe "Styleguide sidebar panel" do
 
   before do
     SiteSetting.styleguide_enabled = true
-    SiteSetting.navigation_menu = "sidebar"
     sign_in(admin)
   end
 
@@ -60,10 +59,10 @@ RSpec.describe "Styleguide sidebar panel" do
     expect(sidebar).to have_no_switch_button("styleguide")
   end
 
-  # The styleguide's nav used to render unconditionally, so a reader who prefers the header
-  # dropdown must not lose it now that it lives in the sidebar.
-  it "renders for a reader whose navigation menu preference is the header dropdown" do
-    SiteSetting.navigation_menu = NavigationMenuSiteSetting::HEADER_DROPDOWN
+  # The styleguide's nav used to render unconditionally, so a theme that uses the header dropdown
+  # must not lose it now that it lives in the sidebar.
+  it "renders when the theme uses the header dropdown" do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "header dropdown")
 
     visit "/styleguide/atoms/buttons"
 

@@ -12,13 +12,16 @@ RSpec.describe "AI Bot - Header Toggle" do
   fab!(:gpt_4) { Fabricate(:llm_model, name: "gpt-4") }
   fab!(:gpt_3_5_turbo) { Fabricate(:llm_model, name: "gpt-3.5-turbo") }
 
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+  end
+
   before do
     enable_current_plugin
     SiteSetting.ai_bot_enabled = true
     toggle_enabled_bots(bots: [gpt_4, gpt_3_5_turbo])
     SiteSetting.ai_bot_allowed_groups = group.id.to_s
     SiteSetting.ai_bot_add_to_header = true
-    SiteSetting.navigation_menu = "sidebar"
 
     group.add(user)
     group.save

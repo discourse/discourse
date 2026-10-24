@@ -8,6 +8,10 @@ RSpec.describe "Chat sidebar channel list options" do
 
   let(:chat_sidebar) { PageObjects::Pages::ChatSidebar.new }
 
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+  end
+
   before do
     read_message =
       Fabricate(
@@ -29,7 +33,6 @@ RSpec.describe "Chat sidebar channel list options" do
       )
     unread_channel.update!(last_message: unread_message, messages_count: 1)
 
-    SiteSetting.navigation_menu = "sidebar"
     sign_in(current_user)
   end
 
