@@ -26,13 +26,11 @@ export default <template>
   </div>
 
   {{#if @controller.model.stream.noContent}}
-    {{#unless @controller.model.stream.loading}}
-      <DEmptyState
-        @body={{@controller.model.emptyState.body}}
-        @title={{@controller.model.emptyState.title}}
-      />
-    {{/unless}}
+    <DEmptyState
+      @body={{@controller.model.emptyState.body}}
+      @title={{@controller.model.emptyState.title}}
+    />
+  {{else}}
+    <UserStream @stream={{@controller.model.stream}} />
   {{/if}}
-
-  <UserStream @stream={{@controller.model.stream}} />
 </template>
