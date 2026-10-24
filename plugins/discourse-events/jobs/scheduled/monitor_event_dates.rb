@@ -57,6 +57,7 @@ module Jobs
 
         if create_successor_topic
           unless DiscourseEvents::Events::Event::CreateSuccessorTopic.rollover_allowed?(event)
+            log_deferred_successor_rollover(event_date)
             return
           end
 
@@ -83,6 +84,21 @@ module Jobs
         event.set_next_recurrent_event_date
         TopicTrackingState.publish_latest(event.post.topic)
         event.set_topic_bump
+      end
+
+      def log_deferred_successor_rollover(event_date)
+        key = "discourse-events:successor-rollover-deferred:#{event_date.id}"
+        return unless Discourse.redis.set(key, "1", nx: true, ex: 1.day.to_i)
+
+        topic_id = event_date.event&.post&.topic_id
+
+        Rails.logger.warn(
+          [
+            "Discourse Events: successor rollover deferred for event date #{event_date.id},",
+            "topic #{topic_id || "unknown"}; check author moderation status, topic visibility,",
+            "and cross-user post edits",
+          ].join(" "),
+        )
       end
 
       def due_reminders(event_date)

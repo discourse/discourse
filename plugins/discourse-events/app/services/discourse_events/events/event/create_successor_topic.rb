@@ -65,19 +65,30 @@ module DiscourseEvents
         return false if source_post.hidden? || source_post.deleted_at.present?
         return false if !source_topic.visible? || source_topic.deleted_at.present?
 
-        # Editing someone else's post does not authorise publishing its
-        # contents as a new topic under the original author's identity.
-        # A later owner edit can reset last_editor_id, so consult the
-        # revision history as well.
-        return false if source_post.last_editor_id != source_post.user_id
-
+        # A delegated human content edit must not be republished under
+        # the original author's identity. Trusted system revisions and
+        # metadata-only edits do not introduce that authorship risk.
         non_owner_content_edit =
           source_post
             .post_revisions
-            .where.not(user_id: source_post.user_id)
+            .where.not(user_id: [source_post.user_id, Discourse::SYSTEM_USER_ID])
             .any? { |revision| revision.modifications.key?("raw") }
 
         return false if non_owner_content_edit
+
+        # When the most recent editor is another human, require a
+        # recorded metadata-only revision. Fail closed if their edit
+        # lacks revision history rather than assuming it was harmless.
+        last_editor_id = source_post.last_editor_id
+
+        if last_editor_id != source_post.user_id && last_editor_id != Discourse::SYSTEM_USER_ID
+          latest_revision = source_post.post_revisions.order(number: :desc).first
+
+          if latest_revision.nil? || latest_revision.user_id != last_editor_id ||
+               latest_revision.modifications.key?("raw")
+            return false
+          end
+        end
 
         if author && (author.suspended? || SpamRule::AutoSilence.prevent_posting?(author))
           return false

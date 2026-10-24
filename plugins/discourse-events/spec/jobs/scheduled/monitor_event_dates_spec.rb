@@ -295,6 +295,124 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(successor_post.event.original_starts_at).to eq_time(starts_at + 7.days)
       end
 
+      it "logs a deferred rollover once rather than every monitoring run" do
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+
+        post =
+          PostCreator.create!(
+            event_author,
+            title: "Deferred recurring meeting",
+            category: event_category.id,
+            raw: <<~RAW,
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Meeting notes.
+              [/event]
+            RAW
+          )
+
+        event_date = post.reload.event.event_dates.pending.first
+
+        post.update_columns(hidden: true)
+        expect(post.reload.hidden?).to eq(true)
+
+        freeze_time(ends_at + 1.hour)
+        allow(Rails.logger).to receive(:warn)
+
+        2.times { job.execute({}) }
+
+        expect(Rails.logger).to have_received(:warn).with(
+          /successor rollover deferred for event date #{event_date.id}/,
+        ).once
+
+        expect(event_date.reload.finished_at).to be_nil
+        expect(post.reload.event.recurrence).to eq("every_week")
+        expect(Topic.where(title: "Deferred recurring meeting").count).to eq(1)
+      end
+
+      it "allows successor creation after a trusted system raw edit" do
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Recurring meeting with system processing"
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Original meeting notes.
+              [/event]
+            RAW
+
+        original_topic_id = post.topic_id
+        event_date = post.reload.event.event_dates.pending.first
+
+        expect(
+          PostRevisor.new(post).revise!(
+            Discourse.system_user,
+            { raw: post.raw + "\n\nAutomatically updated media." },
+            bypass_bump: true,
+          ),
+        ).to eq(true)
+
+        expect(post.reload.last_editor_id).to eq(Discourse::SYSTEM_USER_ID)
+        expect(post.reload.event).to be_present
+        expect(
+          post
+            .post_revisions
+            .where(user_id: Discourse::SYSTEM_USER_ID)
+            .any? { |revision| revision.modifications.key?("raw") },
+        ).to eq(true)
+
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        successor_topic = Topic.where(title:).where.not(id: original_topic_id).sole
+
+        expect(successor_topic.first_post.raw).to include("Automatically updated media.")
+        expect(event_date.reload.finished_at).to be_present
+      end
+
+      it "allows successor creation after a moderator changes only the topic title" do
+        author = Fabricate(:user, refresh_auto_groups: true)
+        moderator = Fabricate(:moderator)
+
+        SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
+
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Recurring meeting with metadata edit"
+        revised_title = "Recurring meeting with updated title"
+
+        post = PostCreator.create!(author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Original meeting notes.
+              [/event]
+            RAW
+
+        original_topic_id = post.topic_id
+        event_date = post.reload.event.event_dates.pending.first
+
+        expect(
+          PostRevisor.new(post).revise!(moderator, { title: revised_title }, bypass_bump: true),
+        ).to eq(true)
+
+        expect(post.reload.last_editor_id).to eq(moderator.id)
+        expect(
+          post
+            .post_revisions
+            .where(user_id: moderator.id)
+            .any? { |revision| revision.modifications.key?("raw") },
+        ).to eq(false)
+
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        successor_topic = Topic.where(title: revised_title).where.not(id: original_topic_id).sole
+
+        expect(successor_topic.first_post.user_id).to eq(author.id)
+        expect(event_date.reload.finished_at).to be_present
+      end
+
       it "does not publish a wiki editor's event under the original author's identity" do
         editor = Fabricate(:user, refresh_auto_groups: true)
 
