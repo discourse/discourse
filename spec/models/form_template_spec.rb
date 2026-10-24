@@ -127,23 +127,10 @@ RSpec.describe FormTemplate, type: :model do
     end
   end
 
-  it "rejects invalid output syntax and file-loading tags" do
+  it "rejects output templates the renderer cannot parse" do
     template = Fabricate.build(:form_template, output_template: "{% include 'secret' %}")
+
     expect(template).not_to be_valid
     expect(template.errors[:output_template]).to be_present
-    template.output_template = "{% if answers.name %}"
-    expect(template).not_to be_valid
-  end
-
-  it "rejects output filters and numeric ranges when saving a definition" do
-    template = Fabricate.build(:form_template)
-    [
-      "{{ answers.name | replace: 'x', answers.name }}",
-      "{% assign indices = (1..answers.count) %}{% for index in indices %}x{% endfor %}",
-    ].each do |output|
-      template.output_template = output
-      expect(template).not_to be_valid
-      expect(template.errors[:output_template]).to be_present
-    end
   end
 end

@@ -507,47 +507,55 @@ export default class ComposerEditor extends Component {
     document.getElementById(this.fileUploadElementId).click();
   }
 
-  @debounce(300)
-  async _updateFormPreview() {
-    const sequence = this.#formPreviewSequence;
+  #formPreviewRequest() {
     const model = this.composer.model;
     if (!model || this.isDestroying) {
+      return null;
+    }
+    return {
+      sequence: this.#formPreviewSequence,
+      model,
+      categoryId: model.categoryId,
+      templateId: this.selectedFormTemplateId,
+    };
+  }
+
+  #isCurrentFormPreview({ sequence, model, categoryId, templateId }) {
+    return (
+      sequence === this.#formPreviewSequence &&
+      !this.isDestroying &&
+      model === this.composer.model &&
+      categoryId === model.categoryId &&
+      templateId === this.selectedFormTemplateId
+    );
+  }
+
+  @debounce(300)
+  async _updateFormPreview() {
+    const request = this.#formPreviewRequest();
+    if (!request) {
       return;
     }
-    const categoryId = model.categoryId;
-    const templateId = this.selectedFormTemplateId;
     try {
       const result = await renderFormTemplate(
         document.querySelector("#form-template-form"),
         this.composer.selectedFormTemplate,
-        templateId,
-        categoryId,
+        request.templateId,
+        request.categoryId,
         false
       );
-      if (
-        !result ||
-        sequence !== this.#formPreviewSequence ||
-        this.isDestroying ||
-        model !== this.composer.model ||
-        categoryId !== model.categoryId ||
-        templateId !== this.selectedFormTemplateId
-      ) {
+      if (!result || !this.#isCurrentFormPreview(request)) {
         return;
       }
       const preview = await this.cachedCookAsync(
         result.raw,
         this.markdownOptions
       );
-      if (
-        sequence === this.#formPreviewSequence &&
-        !this.isDestroying &&
-        model === this.composer.model &&
-        categoryId === model.categoryId &&
-        templateId === this.selectedFormTemplateId
-      ) {
-        model.set("reply", result.raw);
-        this.preview = preview;
+      if (!this.#isCurrentFormPreview(request)) {
+        return;
       }
+      request.model.set("reply", result.raw);
+      this.preview = preview;
     } catch (error) {
       // the preview runs on every keystroke, so a rejected render keeps the
       // last good preview and leaves reporting to the save
