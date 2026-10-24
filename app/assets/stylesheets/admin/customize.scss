@@ -26,11 +26,8 @@
   }
 }
 
-.settings-editor {
-  .code-editor {
-    width: 100%;
-    height: 300px;
-  }
+.settings-editor .code-editor {
+  height: 300px;
 }
 
 .theme-settings-editor-dialog {
@@ -414,7 +411,6 @@
     }
 
     .code-editor {
-      position: relative;
       min-height: 0;
       flex: 1 1 0;
       border-radius: 0 0 var(--d-border-radius) var(--d-border-radius);
@@ -874,13 +870,9 @@
   }
 }
 
-.admin-customize-email-style {
-  .code-editor {
-    position: relative;
-    width: 100%;
-    height: calc(100vh - 480px);
-    min-height: 200px;
-  }
+.admin-customize-email-style .code-editor {
+  height: calc(100vh - 480px);
+  min-height: 200px;
 }
 
 .form-templates {
@@ -902,22 +894,14 @@
     }
 
     .code-editor {
-      position: relative;
       height: calc(100vh - 450px);
       min-height: 200px;
-      width: 100%;
       box-shadow: var(--shadow-footer-nav);
       border-radius: 4px;
     }
 
     .cm-editor {
       border-radius: 4px;
-    }
-
-    .cm-placeholder {
-      font-family: inherit;
-      font-size: var(--font-up-1);
-      color: var(--primary-high);
     }
 
     .footer-buttons {

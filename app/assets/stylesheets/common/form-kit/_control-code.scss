@@ -1,18 +1,6 @@
-.form-kit__field[data-control-type="code"] {
-  .code-editor {
-    width: 100%;
-
-    > .loading-container {
-      width: 100%;
-    }
-  }
-}
-
 .form-kit__control-code {
-  // A fixed box that scrolls, resizable from its handle or a field's height.
   height: 250px;
   width: 100%;
-  box-sizing: border-box;
 
   .form-kit__field.has-error & {
     border-color: var(--danger);

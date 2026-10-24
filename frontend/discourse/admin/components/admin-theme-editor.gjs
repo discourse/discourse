@@ -62,7 +62,7 @@ export default class AdminThemeEditor extends Component {
   }
 
   /**
-   * Lines using a theme colour variable directly, which the colour scheme
+   * Lines using a theme color variable directly, which the color scheme
    * cannot override. `color_definitions` is where they are meant to be
    * declared, so it is exempt.
    */
@@ -290,6 +290,7 @@ export default class AdminThemeEditor extends Component {
       </div>
 
       <CodeEditor
+        @autofocus={{true}}
         @language={{this.activeSectionMode}}
         @lineWarnings={{this.colorVariableWarnings}}
         @onChange={{fn (mut this.activeSection)}}

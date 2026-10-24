@@ -6,7 +6,7 @@ import * as lezerHighlight from "@lezer/highlight";
 import type { CodeEditorParams } from "discourse/lib/code-editor-languages";
 import { expressionUtils } from "./expression-utils.js";
 
-export function buildCmParams(): CodeEditorParams {
+export function buildCodeEditorParams(): CodeEditorParams {
   return {
     cmAutocomplete,
     cmLanguage,

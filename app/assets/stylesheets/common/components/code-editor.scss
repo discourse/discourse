@@ -3,10 +3,9 @@
   flex-direction: column;
   box-sizing: border-box;
   border: 1px solid var(--primary-400);
-  border-radius: var(--d-input-border-radius);
 
-  // Not clipped: on touch devices the completion popup is positioned inside
-  // the editor and would be cut off.
+  // No overflow clip: touch devices place the completion popup inside.
+  border-radius: var(--d-input-border-radius);
   background: var(--secondary);
 
   // Flex rather than percentage heights, so a host that only sets a
@@ -123,8 +122,7 @@
     color: var(--primary-medium);
   }
 
-  // CodeMirror injects a light-only baseTheme for its tooltips, so they need
-  // overriding to follow the colour scheme.
+  // The editor's base theme only styles tooltips for light mode.
   .cm-tooltip {
     z-index: z("dropdown");
     background: var(--secondary);
@@ -160,7 +158,6 @@
     font-weight: 700;
   }
 
-  // Diagnostics: the squiggle is drawn by CodeMirror, its panel is not themed.
   .cm-diagnostic {
     color: var(--primary);
   }

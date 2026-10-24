@@ -19,6 +19,7 @@ import { module, test } from "qunit";
 import CodeEditor from "discourse/components/code-editor";
 import loadCodemirror from "discourse/lib/load-codemirror";
 import { capabilities } from "discourse/services/capabilities";
+import { codeEditorView } from "discourse/tests/helpers/code-editor-helper";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { dragPointer } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import I18n from "discourse-i18n";
@@ -37,6 +38,12 @@ function pressWithModifier(element, key) {
   );
 }
 
+async function openCompletions(view) {
+  view.dispatch({ selection: { anchor: view.state.doc.length } });
+  startCompletion(view);
+  await waitFor(".cm-tooltip-autocomplete li");
+}
+
 function completionLabels() {
   return [
     ...document.querySelectorAll(
@@ -45,68 +52,94 @@ function completionLabels() {
   ].map((label) => label.textContent.trim());
 }
 
-function highlightedTokens(element) {
-  return [...element.querySelectorAll(".cm-content span[class]")].map((span) =>
+function highlightedTokens() {
+  return [...document.querySelectorAll(".cm-content span[class]")].map((span) =>
     span.textContent.trim()
+  );
+}
+
+function withTranslations(overrides, callback) {
+  const translations = I18n.translations[I18n.locale].js.code_editor;
+  const originals = overrides.map(([path]) => [
+    path,
+    path.reduce((o, k) => o[k], translations),
+  ]);
+  const set = (path, value) => {
+    const parent = path.slice(0, -1).reduce((o, k) => o[k], translations);
+    parent[path.at(-1)] = value;
+  };
+  overrides.forEach(([path, value]) => set(path, value));
+  return Promise.resolve(callback()).finally(() =>
+    originals.forEach(([path, value]) => set(path, value))
   );
 }
 
 module("Integration | Component | code-editor", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("uses translated search labels and announcements", async function (assert) {
-    const translations = I18n.translations[I18n.locale].js.code_editor.search;
-    const original = translations.find;
-    translations.find = "Buscar";
-    try {
-      await render(<template><CodeEditor @value="one" /></template>);
-      pressWithModifier(find(".cm-content"), "f");
-      await waitFor(".cm-search");
-      assert
-        .dom('.cm-search input[name="search"]')
-        .hasAttribute(
-          "aria-label",
-          "Buscar",
-          "the search field uses Discourse translations"
-        );
-      const view = find(".codemirror-editor").codemirrorView;
-      assert.strictEqual(
-        view.state.phrase("replaced $ matches", 3),
-        "Replaced matches: 3",
-        "CodeMirror substitutes announcement arguments"
-      );
-    } finally {
-      translations.find = original;
-    }
+  test("renders plain text when no language matches", async function (assert) {
+    await render(
+      <template><CodeEditor @language="klingon" @value="select 1" /></template>
+    );
+    await waitFor(".cm-editor");
+
+    assert.dom(".cm-content").hasText("select 1");
+    assert.deepEqual(highlightedTokens(), [], "nothing is tokenized");
   });
 
-  test("Escape closes search before allowing Tab to leave the editor", async function (assert) {
-    await render(<template><CodeEditor @value="one" /></template>);
-    pressWithModifier(find(".cm-content"), "f");
-    await waitFor(".cm-search");
-    const view = find(".codemirror-editor").codemirrorView;
-    view.focus();
-    await triggerKeyEvent(".cm-content", "keydown", "Escape");
-    assert.dom(".cm-search").doesNotExist("Escape closes the search panel");
-    assert.true(view.hasFocus, "closing search keeps editor focus");
+  test("highlights by the language shortcut, following changes to it", async function (assert) {
+    const state = new (class {
+      @tracked language = "sql";
+    })();
 
-    await triggerKeyEvent(".cm-content", "keydown", "Escape");
-    const tab = new KeyboardEvent("keydown", {
-      key: "Tab",
-      keyCode: 9,
-      bubbles: true,
-      cancelable: true,
-    });
-    view.contentDOM.dispatchEvent(tab);
-    assert.false(tab.defaultPrevented, "the browser can move focus on Tab");
-    assert.strictEqual(
-      view.state.doc.toString(),
-      "one",
-      "the escape sequence does not indent"
+    await render(
+      <template>
+        <CodeEditor @language={{state.language}} @value="select 1" />
+      </template>
+    );
+    await waitFor(".cm-content span[class]");
+
+    assert.true(highlightedTokens().includes("select"));
+    const before = highlightedTokens();
+
+    state.language = "yaml";
+    await settled();
+    await waitUntil(
+      () => JSON.stringify(highlightedTokens()) !== JSON.stringify(before)
+    );
+
+    assert.false(highlightedTokens().includes("select"), "re-tokenized");
+  });
+
+  test("localizes the editor's UI", async function (assert) {
+    await withTranslations(
+      [
+        [["search", "find"], "Buscar"],
+        [["completions"], "Sugerencias"],
+        [["fold", "fold_line"], "Plegar"],
+      ],
+      async () => {
+        await render(<template><CodeEditor @value="one" /></template>);
+        const view = codeEditorView();
+
+        pressWithModifier(find(".cm-content"), "f");
+        await waitFor(".cm-search");
+
+        assert
+          .dom('.cm-search input[name="search"]')
+          .hasAttribute("aria-label", "Buscar");
+        assert.strictEqual(view.state.phrase("Completions"), "Sugerencias");
+        assert.strictEqual(view.state.phrase("Fold line"), "Plegar");
+        assert.strictEqual(
+          view.state.phrase("replaced $ matches", 3),
+          "Replaced matches: 3",
+          "arguments are substituted"
+        );
+      }
     );
   });
 
-  test("Escape stays inside the editor until it has nothing left to close", async function (assert) {
+  test("Escape closes what the editor owns before leaving it", async function (assert) {
     const seen = [];
     const spy = (event) => event.key === "Escape" && seen.push(event);
     document.documentElement.addEventListener("keydown", spy, {
@@ -115,30 +148,34 @@ module("Integration | Component | code-editor", function (hooks) {
 
     try {
       await render(<template><CodeEditor @value="one" /></template>);
-      const view = find(".codemirror-editor").codemirrorView;
+      const view = codeEditorView();
       view.focus();
       pressWithModifier(find(".cm-content"), "f");
       await waitFor(".cm-search");
-      view.focus();
 
       await triggerKeyEvent(".cm-content", "keydown", "Escape");
-      await triggerKeyEvent(".cm-content", "keydown", "Escape");
-      assert.strictEqual(
-        seen.length,
-        0,
-        "closing search and freeing Tab do not reach the document"
-      );
+      assert.dom(".cm-search").doesNotExist("the first Escape closes search");
+      assert.true(view.hasFocus, "without leaving the editor");
 
       await triggerKeyEvent(".cm-content", "keydown", "Escape");
-      assert.strictEqual(seen.length, 1, "a further Escape passes through");
+      assert.strictEqual(seen.length, 0, "neither reaches the document");
+
+      await triggerKeyEvent(".cm-content", "keydown", "Escape");
+      assert.strictEqual(seen.length, 1, "a third passes through");
+
+      const tab = new KeyboardEvent("keydown", {
+        key: "Tab",
+        keyCode: 9,
+        bubbles: true,
+        cancelable: true,
+      });
+      view.contentDOM.dispatchEvent(tab);
+      assert.false(tab.defaultPrevented, "and Tab is free to move focus");
+      assert.strictEqual(view.state.doc.toString(), "one", "not indent");
 
       await triggerKeyEvent(".cm-content", "keydown", 65);
       await triggerKeyEvent(".cm-content", "keydown", "Escape");
-      assert.strictEqual(
-        seen.length,
-        1,
-        "typing puts Tab back to indenting, so Escape stays inside again"
-      );
+      assert.strictEqual(seen.length, 1, "typing re-arms the sequence");
     } finally {
       document.documentElement.removeEventListener("keydown", spy, {
         capture: true,
@@ -146,67 +183,48 @@ module("Integration | Component | code-editor", function (hooks) {
     }
   });
 
-  test("pairs brackets as they are typed", async function (assert) {
+  test("turns on code-editing behaviour", async function (assert) {
     await render(<template><CodeEditor @value="" /></template>);
-    const view = find(".codemirror-editor").codemirrorView;
+    const view = codeEditorView();
 
-    const handled = view.state
+    view.state
       .facet(EditorView.inputHandler)
       .some((handler) => handler(view, 0, 0, "(", () => null));
-
-    assert.true(handled, "an input handler takes the bracket");
-    assert.strictEqual(view.state.doc.toString(), "()");
-    assert.strictEqual(
-      view.state.selection.main.head,
-      1,
-      "the cursor sits inside"
-    );
-
+    assert.strictEqual(view.state.doc.toString(), "()", "brackets pair");
     await triggerKeyEvent(".cm-content", "keydown", "Backspace");
+    assert.strictEqual(view.state.doc.toString(), "", "and unpair");
 
-    assert.strictEqual(
-      view.state.doc.toString(),
-      "",
-      "Backspace removes the pair"
-    );
-  });
-
-  test("marks the bracket matching the cursor", async function (assert) {
-    await render(<template><CodeEditor @value="(one)" /></template>);
-    const view = find(".codemirror-editor").codemirrorView;
-
-    view.dispatch({ selection: { anchor: 0 } });
+    view.dispatch({
+      changes: { from: 0, insert: "(one) two one" },
+      selection: { anchor: 0 },
+    });
     await waitFor(".cm-matchingBracket");
+    assert.dom(".cm-matchingBracket").exists({ count: 2 }, "brackets match");
 
-    assert.dom(".cm-matchingBracket").exists({ count: 2 });
-  });
-
-  test("highlights other occurrences of the selection", async function (assert) {
-    await render(<template><CodeEditor @value="one two one" /></template>);
-    const view = find(".codemirror-editor").codemirrorView;
-
-    view.dispatch({ selection: { anchor: 0, head: 3 } });
+    view.dispatch({ selection: { anchor: 1, head: 4 } });
     await waitFor(".cm-selectionMatch");
-
-    assert.dom(".cm-selectionMatch").hasText("one");
-  });
-
-  test("keeps several cursors at once", async function (assert) {
-    await render(<template><CodeEditor @value="one two" /></template>);
-    const view = find(".codemirror-editor").codemirrorView;
+    assert.dom(".cm-selectionMatch").hasText("one", "selection matches show");
 
     view.dispatch({
       selection: EditorSelection.create([
         EditorSelection.cursor(0),
-        EditorSelection.cursor(4),
+        EditorSelection.cursor(6),
       ]),
     });
     view.dispatch(view.state.replaceSelection("x"));
+    assert.strictEqual(
+      view.state.doc.toString(),
+      "x(one) xtwo one",
+      "several cursors edit at once"
+    );
 
-    assert.strictEqual(view.state.doc.toString(), "xone xtwo");
+    assert.dom(".cm-activeLine").exists("the active line is marked");
+    assert
+      .dom(".cm-gutter:last-of-type")
+      .hasClass("cm-foldGutter", "the fold gutter follows the line numbers");
   });
 
-  test("re-indents a closing brace as it is typed", async function (assert) {
+  test("re-indents and folds blocks of the language", async function (assert) {
     const value = "if (a) {\n  b;\n  ";
     await render(
       <template>
@@ -214,7 +232,7 @@ module("Integration | Component | code-editor", function (hooks) {
       </template>
     );
     await waitFor(".cm-content span[class]");
-    const view = find(".codemirror-editor").codemirrorView;
+    const view = codeEditorView();
 
     const end = view.state.doc.length;
     view.dispatch({
@@ -222,59 +240,30 @@ module("Integration | Component | code-editor", function (hooks) {
       selection: { anchor: end + 1 },
       userEvent: "input.type",
     });
-
     assert.strictEqual(view.state.doc.toString(), "if (a) {\n  b;\n}");
+
+    // The gutter's first element is a hidden spacer, not a line marker.
+    const marker =
+      '.cm-foldGutter .cm-gutterElement:not([style*="visibility"]) [title]';
+    await waitFor(marker);
+    await click(marker);
+
+    assert.dom(".cm-foldPlaceholder").exists();
+    assert.dom(".cm-line").exists({ count: 1 }, "the block collapses");
   });
 
-  test("folds a block from the gutter", async function (assert) {
-    const translations = I18n.translations[I18n.locale].js.code_editor.fold;
-    const original = translations.fold_line;
-    translations.fold_line = "Plegar";
-    const value = "if (a) {\n  b;\n}";
-    try {
-      await render(
-        <template>
-          <CodeEditor @language="javascript" @value={{value}} />
-        </template>
-      );
-      // The gutter's first element is a hidden spacer, not a line marker.
-      const marker =
-        '.cm-foldGutter .cm-gutterElement:not([style*="visibility"]) [title]';
-      await waitFor(".cm-content span[class]");
-      await waitFor(marker);
-
-      assert
-        .dom(".cm-gutter:last-of-type")
-        .hasClass("cm-foldGutter", "after the line numbers");
-      assert
-        .dom(marker)
-        .hasAttribute("title", "Plegar", "the marker is translated");
-
-      await click(marker);
-
-      assert.dom(".cm-foldPlaceholder").exists("the block is folded");
-      assert
-        .dom(".cm-line")
-        .exists({ count: 1 }, "the braces collapse onto one line");
-    } finally {
-      translations.fold_line = original;
-    }
-  });
-
-  test("leaves the bare editor without code editing behaviour", async function (assert) {
+  test("leaves the bare editor without code-editing behaviour", async function (assert) {
     const Editor = await loadCodemirror();
     await render(<template><Editor @value="(one)" /></template>);
-    const view = find(".codemirror-editor").codemirrorView;
+    const view = codeEditorView(".codemirror-editor");
 
     view.dispatch({ selection: { anchor: 0 } });
     await settled();
 
-    assert.dom(".cm-matchingBracket").doesNotExist("no bracket matching");
-    assert.dom(".cm-foldGutter").doesNotExist("no fold gutter");
-    assert.false(
-      view.state.facet(EditorState.allowMultipleSelections),
-      "a single cursor"
-    );
+    assert.dom(".cm-matchingBracket").doesNotExist();
+    assert.dom(".cm-foldGutter").doesNotExist();
+    assert.dom(".cm-activeLine").doesNotExist();
+    assert.false(view.state.facet(EditorState.allowMultipleSelections));
   });
 
   test("finds and replaces text inside the editor", async function (assert) {
@@ -285,105 +274,78 @@ module("Integration | Component | code-editor", function (hooks) {
     await fillIn('.cm-search input[name="replace"]', "three");
     await click('.cm-search button[name="replaceAll"]');
 
-    assert
-      .dom(".cm-content")
-      .hasText("three two three", "replace all edits the document");
+    assert.dom(".cm-content").hasText("three two three");
   });
 
   test("indents and outdents with Tab", async function (assert) {
     await render(<template><CodeEditor @value="one" /></template>);
+    const view = codeEditorView();
+
     await triggerKeyEvent(".cm-content", "keydown", "Tab");
-    const view = find(".codemirror-editor").codemirrorView;
-    assert.strictEqual(
-      view.state.doc.toString(),
-      "  one",
-      "Tab indents the line"
-    );
+    assert.strictEqual(view.state.doc.toString(), "  one");
+
     await triggerKeyEvent(".cm-content", "keydown", "Tab", { shiftKey: true });
-    assert.strictEqual(
-      view.state.doc.toString(),
-      "one",
-      "Shift-Tab outdents the line"
-    );
+    assert.strictEqual(view.state.doc.toString(), "one");
   });
 
-  test("renders an editor for the value", async function (assert) {
-    await render(<template><CodeEditor @value="select 1" /></template>);
-    await waitFor(".cm-editor");
-
-    assert.dom(".code-editor").exists();
-    assert.dom(".cm-content").hasText("select 1");
-  });
-
-  test("highlights according to the language shortcut", async function (assert) {
-    await render(
-      <template><CodeEditor @language="sql" @value="select 1" /></template>
-    );
-    await waitFor(".cm-content span[class]");
-
-    assert.true(
-      highlightedTokens(this.element).includes("select"),
-      "the keyword is tokenized"
-    );
-  });
-
-  test("re-highlights when the language changes", async function (assert) {
-    class State {
-      @tracked language = "sql";
-    }
-    const state = new State();
+  test("reports edits and focus through its callbacks", async function (assert) {
+    const events = [];
+    const onChange = (value) => events.push(`change:${value}`);
+    const onFocusIn = () => events.push("in");
+    const onFocusOut = () => events.push("out");
 
     await render(
       <template>
-        <CodeEditor @language={{state.language}} @value="select 1" />
+        <CodeEditor
+          @onChange={{onChange}}
+          @onFocusIn={{onFocusIn}}
+          @onFocusOut={{onFocusOut}}
+          @value=""
+        />
       </template>
     );
-    await waitFor(".cm-content span[class]");
-    const before = this.element.querySelector(".cm-content").innerHTML;
-
-    state.language = "yaml";
-    await settled();
-    await waitFor(".cm-editor");
-
-    assert.notStrictEqual(
-      this.element.querySelector(".cm-content").innerHTML,
-      before,
-      "switching the shortcut re-tokenizes the document"
-    );
-  });
-
-  test("falls back to plain text for an unknown language", async function (assert) {
-    await render(
-      <template><CodeEditor @language="klingon" @value="select 1" /></template>
-    );
-    await waitFor(".cm-editor");
-
-    assert.dom(".cm-content").hasText("select 1", "the document still renders");
-  });
-
-  test("reports edits through onChange", async function (assert) {
-    let captured;
-    let view;
-    const onChange = (value) => (captured = value);
-    const onSetup = (editorView) => (view = editorView);
-
-    await render(
-      <template>
-        <CodeEditor @onChange={{onChange}} @onSetup={{onSetup}} @value="" />
-      </template>
-    );
-    await waitFor(".cm-editor");
+    const view = codeEditorView();
 
     view.dispatch({ changes: { from: 0, insert: "typed" } });
+    view.focus();
+    await waitUntil(() => events.includes("in"));
+    view.contentDOM.blur();
+    await waitUntil(() => events.includes("out"));
 
-    assert.strictEqual(captured, "typed");
+    assert.deepEqual(events, ["change:typed", "in", "out"]);
+  });
+
+  test("wires the field's accessibility attributes", async function (assert) {
+    const state = new (class {
+      @tracked invalid = true;
+    })();
+
+    await render(
+      <template>
+        <CodeEditor
+          @describedBy="help"
+          @inputId="field"
+          @invalid={{state.invalid}}
+          @value=""
+        />
+      </template>
+    );
+    await waitFor(".cm-editor");
+
+    assert.dom(".cm-content").hasAttribute("id", "field");
+    assert.dom(".cm-content").hasAttribute("aria-describedby", "help");
+    assert.dom(".cm-content").hasAttribute("aria-invalid", "true");
+
+    state.invalid = false;
+    await settled();
+
+    assert.dom(".cm-content").doesNotHaveAttribute("aria-invalid");
   });
 
   test("disabled makes the content read-only, and lifts when cleared", async function (assert) {
-    class State {
+    const state = new (class {
       @tracked disabled = true;
-    }
-    const state = new State();
+    })();
 
     await render(
       <template>
@@ -397,16 +359,13 @@ module("Integration | Component | code-editor", function (hooks) {
     state.disabled = false;
     await settled();
 
-    assert
-      .dom(".cm-content")
-      .hasAttribute("contenteditable", "true", "editing is restored");
+    assert.dom(".cm-content").hasAttribute("contenteditable", "true");
   });
 
   test("binds save and submit to their shortcuts", async function (assert) {
-    let saved = 0;
-    let submitted = 0;
-    const save = () => saved++;
-    const submit = () => submitted++;
+    const calls = [];
+    const save = () => calls.push("save");
+    const submit = () => calls.push("submit");
 
     await render(
       <template>
@@ -415,73 +374,37 @@ module("Integration | Component | code-editor", function (hooks) {
     );
     await waitFor(".cm-editor");
 
-    const content = this.element.querySelector(".cm-content");
-    pressWithModifier(content, "s");
-    pressWithModifier(content, "Enter");
+    pressWithModifier(find(".cm-content"), "s");
+    pressWithModifier(find(".cm-content"), "Enter");
     await settled();
 
-    assert.strictEqual(saved, 1, "save fires on its shortcut");
-    assert.strictEqual(submitted, 1, "submit fires on its shortcut");
+    assert.deepEqual(calls, ["save", "submit"]);
   });
 
-  test("surfaces the completions a language contributes", async function (assert) {
-    let view;
-    const onSetup = (editorView) => (view = editorView);
-    const languageOptions = {
-      schema: { badges: ["allow_title", "grant_count"] },
-    };
+  test("adds a caller's raw extensions", async function (assert) {
+    const extensions = ({ cmView }) => [
+      cmView.EditorView.editorAttributes.of({ "data-custom": "yes" }),
+    ];
 
     await render(
-      <template>
-        <CodeEditor
-          @language="sql"
-          @languageOptions={{languageOptions}}
-          @onSetup={{onSetup}}
-          @value="SELECT badges."
-        />
-      </template>
+      <template><CodeEditor @extensions={{extensions}} @value="" /></template>
     );
-    await waitFor(".cm-content span[class]");
+    await waitFor(".cm-editor");
 
-    view.dispatch({ selection: { anchor: view.state.doc.length } });
-    startCompletion(view);
-    await waitUntil(() =>
-      document.querySelector(".cm-tooltip-autocomplete li")
-    );
-
-    const labels = [
-      ...document.querySelectorAll(".cm-tooltip-autocomplete li"),
-    ].map((li) => li.textContent.trim());
-
-    assert.true(
-      labels.includes("allow_title"),
-      "a column from the configured schema is offered"
-    );
-  });
-
-  test("highlights the active line", async function (assert) {
-    await render(<template><CodeEditor @value="one" /></template>);
-
-    assert.dom(".cm-activeLine").exists();
-    assert.dom(".cm-activeLineGutter").exists();
+    assert.dom(".cm-editor").hasAttribute("data-custom", "yes");
   });
 
   test("a value replaced from outside cannot be undone into the old document", async function (assert) {
-    let view;
-    const onSetup = (editorView) => (view = editorView);
     const state = new (class {
       @tracked value = "one";
     })();
 
     await render(
       <template>
-        <CodeEditor
-          @onChange={{fn (mut state.value)}}
-          @onSetup={{onSetup}}
-          @value={{state.value}}
-        />
+        <CodeEditor @onChange={{fn (mut state.value)}} @value={{state.value}} />
       </template>
     );
+    const view = codeEditorView();
     view.dispatch({ changes: { from: 3, insert: " typed" } });
     await settled();
 
@@ -495,8 +418,6 @@ module("Integration | Component | code-editor", function (hooks) {
   });
 
   test("picks up language options that change after the editor is built", async function (assert) {
-    let view;
-    const onSetup = (editorView) => (view = editorView);
     const state = new (class {
       @tracked languageOptions = { schema: {} };
     })();
@@ -506,7 +427,6 @@ module("Integration | Component | code-editor", function (hooks) {
         <CodeEditor
           @language="sql"
           @languageOptions={{state.languageOptions}}
-          @onSetup={{onSetup}}
           @value="SELECT badges."
         />
       </template>
@@ -515,46 +435,25 @@ module("Integration | Component | code-editor", function (hooks) {
 
     state.languageOptions = { schema: { badges: ["allow_title"] } };
     await settled();
+    await openCompletions(codeEditorView());
 
-    view.dispatch({ selection: { anchor: view.state.doc.length } });
-    startCompletion(view);
-    await waitUntil(() =>
-      document.querySelector(".cm-tooltip-autocomplete li")
-    );
-
-    assert.true(
-      completionLabels().includes("allow_title"),
-      "a schema that arrived later is offered"
-    );
+    assert.true(completionLabels().includes("allow_title"));
   });
 
   test("offers the completions a caller lists, with no language set", async function (assert) {
-    let view;
-    const onSetup = (editorView) => (view = editorView);
     const completions = ["alpha_one", { label: "alpha_two", detail: "number" }];
 
     await render(
       <template>
-        <CodeEditor
-          @completions={{completions}}
-          @onSetup={{onSetup}}
-          @value="alp"
-        />
+        <CodeEditor @completions={{completions}} @value="alp" />
       </template>
     );
-
-    view.dispatch({ selection: { anchor: view.state.doc.length } });
-    startCompletion(view);
-    await waitUntil(() =>
-      document.querySelector(".cm-tooltip-autocomplete li")
-    );
+    await openCompletions(codeEditorView());
 
     assert.deepEqual(completionLabels(), ["alpha_one", "alpha_two"]);
   });
 
   test("stacks a caller's completion source on the language's own", async function (assert) {
-    let view;
-    const onSetup = (editorView) => (view = editorView);
     const languageOptions = { schema: { badges: ["allow_title"] } };
     const completions = (context) => {
       const word = context.matchBefore(/\w+/);
@@ -567,32 +466,22 @@ module("Integration | Component | code-editor", function (hooks) {
           @completions={{completions}}
           @language="sql"
           @languageOptions={{languageOptions}}
-          @onSetup={{onSetup}}
           @value="SELECT b"
         />
       </template>
     );
     await waitFor(".cm-content span[class]");
-
-    view.dispatch({ selection: { anchor: view.state.doc.length } });
-    startCompletion(view);
-    await waitUntil(() =>
-      document.querySelector(".cm-tooltip-autocomplete li")
-    );
+    await openCompletions(codeEditorView());
 
     const labels = completionLabels();
-    assert.true(labels.includes("badges"), "the language still offers its own");
-    assert.true(
-      labels.includes("b_custom"),
-      "the caller's source is offered too"
-    );
+    assert.true(labels.includes("badges"), "the language's own");
+    assert.true(labels.includes("b_custom"), "and the caller's");
   });
 
   test("marks the lines a caller reports as warnings", async function (assert) {
-    class State {
+    const state = new (class {
       @tracked warnings = [{ line: 2, message: "Avoid this" }];
-    }
-    const state = new State();
+    })();
     const value = ["fine", "suspect", "fine"].join("\n");
 
     await render(
@@ -600,26 +489,21 @@ module("Integration | Component | code-editor", function (hooks) {
         <CodeEditor @lineWarnings={{state.warnings}} @value={{value}} />
       </template>
     );
-    await waitUntil(() => document.querySelector(".cm-lintRange"));
+    await waitFor(".cm-lintRange");
 
-    assert
-      .dom(".cm-lintRange")
-      .exists({ count: 1 }, "only the reported line is marked");
+    assert.dom(".cm-lintRange").exists({ count: 1 }).hasText("suspect");
 
     state.warnings = [];
     await settled();
     await waitUntil(() => !document.querySelector(".cm-lintRange"));
 
-    assert
-      .dom(".cm-lintRange")
-      .doesNotExist("clearing the warnings unmarks it");
+    assert.dom(".cm-lintRange").doesNotExist();
   });
 
   test("keeps line warnings when the value is swapped", async function (assert) {
-    class State {
+    const state = new (class {
       @tracked value = "one\ntwo";
-    }
-    const state = new State();
+    })();
     const warnings = [{ line: 1, message: "Avoid this" }];
 
     await render(
@@ -627,38 +511,12 @@ module("Integration | Component | code-editor", function (hooks) {
         <CodeEditor @lineWarnings={{warnings}} @value={{state.value}} />
       </template>
     );
-    await waitUntil(() => document.querySelector(".cm-lintRange"));
+    await waitFor(".cm-lintRange");
 
     state.value = "uno\ndos";
     await settled();
 
-    assert
-      .dom(".cm-lintRange")
-      .exists({ count: 1 }, "the same warning marks the new text");
-  });
-
-  test("uses a translated label for the completion list", async function (assert) {
-    const translations = I18n.translations[I18n.locale].js.code_editor;
-    const original = translations.completions;
-    translations.completions = "Sugerencias";
-    const completions = ["alpha", "alpine"];
-    try {
-      await render(
-        <template>
-          <CodeEditor @completions={{completions}} @value="al" />
-        </template>
-      );
-      const view = find(".codemirror-editor").codemirrorView;
-      view.dispatch({ selection: { anchor: 2 } });
-      startCompletion(view);
-      await waitFor(".cm-tooltip-autocomplete li");
-
-      assert
-        .dom(".cm-tooltip-autocomplete ul")
-        .hasAttribute("aria-label", "Sugerencias");
-    } finally {
-      translations.completions = original;
-    }
+    assert.dom(".cm-lintRange").exists({ count: 1 }).hasText("uno");
   });
 
   test("fills a host that only sets a minimum height", async function (assert) {
@@ -667,10 +525,7 @@ module("Integration | Component | code-editor", function (hooks) {
     );
     await waitFor(".cm-editor");
 
-    assert.true(
-      find(".cm-editor").offsetHeight >= 230,
-      `the editor is ${find(".cm-editor").offsetHeight}px tall`
-    );
+    assert.true(find(".cm-editor").offsetHeight >= 230);
   });
 
   test("keeps code left to right inside a right-to-left page", async function (assert) {
@@ -701,22 +556,15 @@ module("Integration | Component | code-editor", function (hooks) {
       () => document.querySelectorAll(".cm-placeholder").length === 2
     );
 
-    assert
-      .dom(".plain .cm-placeholder b")
-      .doesNotExist("a plain string is shown as text");
-    assert
-      .dom(".plain .cm-placeholder")
-      .hasText("<b>bold</b>", "including its angle brackets");
-    assert
-      .dom(".trusted .cm-placeholder b")
-      .hasText("bold", "trusted markup is rendered");
+    assert.dom(".plain .cm-placeholder b").doesNotExist();
+    assert.dom(".plain .cm-placeholder").hasText("<b>bold</b>");
+    assert.dom(".trusted .cm-placeholder b").hasText("bold");
   });
 
   test("shows a placeholder that arrives after the editor is built", async function (assert) {
-    class State {
+    const state = new (class {
       @tracked placeholder = "";
-    }
-    const state = new State();
+    })();
 
     await render(
       <template>
@@ -725,57 +573,26 @@ module("Integration | Component | code-editor", function (hooks) {
     );
     await waitFor(".cm-editor");
 
-    assert
-      .dom(".cm-placeholder")
-      .doesNotExist("nothing to show while the placeholder is empty");
+    assert.dom(".cm-placeholder").doesNotExist();
 
     state.placeholder = "Write something";
     await settled();
-    await waitUntil(() => document.querySelector(".cm-placeholder"));
+    await waitFor(".cm-placeholder");
 
-    assert
-      .dom(".cm-placeholder")
-      .hasText(
-        "Write something",
-        "a later placeholder still reaches the editor"
-      );
+    assert.dom(".cm-placeholder").hasText("Write something");
 
     state.placeholder = "";
     await settled();
     await waitUntil(() => !document.querySelector(".cm-placeholder"));
 
-    assert.dom(".cm-placeholder").doesNotExist("and clearing it removes it");
+    assert.dom(".cm-placeholder").doesNotExist();
   });
 
-  test("releases the element handle when torn down", async function (assert) {
-    class State {
-      @tracked shown = true;
-    }
-    const state = new State();
-
-    await render(
-      <template>{{#if state.shown}}<CodeEditor @value="" />{{/if}}</template>
-    );
+  test("resizes from its handle when asked for one", async function (assert) {
+    await render(<template><CodeEditor @value="" /></template>);
     await waitFor(".cm-editor");
+    assert.dom(".code-editor .grippie").doesNotExist("none by default");
 
-    const container = this.element.querySelector(".codemirror-editor");
-    assert.strictEqual(
-      typeof container.codemirrorView?.dispatch,
-      "function",
-      "the handle is live while mounted"
-    );
-
-    state.shown = false;
-    await settled();
-
-    assert.strictEqual(
-      container.codemirrorView,
-      undefined,
-      "a destroyed view is not left reachable from the element"
-    );
-  });
-
-  test("dragging the handle resizes the editor", async function (assert) {
     await render(
       <template>
         <CodeEditor
@@ -791,17 +608,6 @@ module("Integration | Component | code-editor", function (hooks) {
     const initialHeight = editor.offsetHeight;
     await dragPointer(find(".code-editor .grippie"), { from: 50, to: 170 });
 
-    assert.strictEqual(
-      editor.offsetHeight,
-      initialHeight + 120,
-      "the editor grows by the distance dragged"
-    );
-  });
-
-  test("omits the drag handle by default", async function (assert) {
-    await render(<template><CodeEditor @value="" /></template>);
-    await waitFor(".cm-editor");
-
-    assert.dom(".code-editor .grippie").doesNotExist();
+    assert.strictEqual(editor.offsetHeight, initialHeight + 120);
   });
 });

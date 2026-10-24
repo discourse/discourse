@@ -145,10 +145,8 @@ table.group-reports {
     .code-editor {
       --min-height: unset;
       min-height: var(--min-height);
-      position: relative;
       height: 100%;
       width: 100%;
-      box-sizing: border-box;
       border: none;
 
       @include viewport.until(sm) {
@@ -610,10 +608,6 @@ table.group-reports {
     .code-editor {
       width: 100%;
       height: 200px;
-
-      > .loading-container {
-        width: 100%;
-      }
     }
   }
 

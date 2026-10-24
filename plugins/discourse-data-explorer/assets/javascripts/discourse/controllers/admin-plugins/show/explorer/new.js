@@ -14,7 +14,7 @@ import {
   rememberedMode,
   rememberMode,
 } from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
-import sqlCompletionSchema from "discourse/plugins/discourse-data-explorer/discourse/lib/sql-completion-schema";
+import sqlLanguageOptions from "discourse/plugins/discourse-data-explorer/discourse/lib/sql-language-options";
 
 const HIDE_SCHEMA_KEY = "hide_schema";
 
@@ -53,10 +53,8 @@ export default class AdminPluginsExplorerNew extends Controller {
     );
   }
 
-  // The editor completes table and column names against the live schema.
   get sqlLanguageOptions() {
-    const schema = sqlCompletionSchema(this.schema);
-    return schema ? { schema } : undefined;
+    return sqlLanguageOptions(this.schema);
   }
 
   get groupOptions() {

@@ -287,7 +287,7 @@ export default class PinDataEditor extends Component {
         {{/if}}
 
         <CodeEditor
-          class="workflows-context-panel__editor-codemirror"
+          class="workflows-context-panel__code-editor"
           @language="json"
           @lineWrapping={{true}}
           @onChange={{this.updateBuffer}}
