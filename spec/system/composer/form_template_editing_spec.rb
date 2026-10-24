@@ -2,42 +2,29 @@
 
 RSpec.describe "Editable form submissions" do
   fab!(:user, :admin)
-  fab!(:form_template) do
-    Fabricate(
-      :form_template,
-      template: [
-        {
-          id: "description",
-          type: "input",
-          attributes: {
-            label: "Description",
-          },
-          validations: {
-            required: true,
-          },
-        },
-        {
-          id: "seats",
-          type: "input",
-          attributes: {
-            label: "Seats",
-          },
-          validations: {
-            type: "number",
-          },
-        },
-        { id: "confirmed", type: "checkbox", attributes: { label: "Confirmed" } },
-        {
-          id: "options",
-          type: "multi-select",
-          attributes: {
-            label: "Options",
-          },
-          choices: [1, 2, 3],
-        },
-      ].as_json.to_yaml,
-    )
-  end
+  fab!(:form_template) { Fabricate(:form_template, template: <<~YAML) }
+        - id: description
+          type: input
+          attributes:
+            label: Description
+          validations:
+            required: true
+        - id: seats
+          type: input
+          attributes:
+            label: Seats
+          validations:
+            type: number
+        - id: confirmed
+          type: checkbox
+          attributes:
+            label: Confirmed
+        - id: options
+          type: multi-select
+          attributes:
+            label: Options
+          choices: [1, 2, 3]
+      YAML
   fab!(:category) { Fabricate(:category, form_template_ids: [form_template.id]) }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:drafts_page) { PageObjects::Pages::UserActivityDrafts.new }

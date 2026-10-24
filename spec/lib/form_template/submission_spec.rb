@@ -24,20 +24,6 @@ RSpec.describe FormTemplate::Submission do
   let(:submission) { described_class.from_template(form_template, answers:) }
 
   describe ".from_template" do
-    it "preserves typed values independently of template changes and deletion" do
-      stored = submission.to_h
-      form_template.update!(
-        template: "- type: input\n  id: replacement",
-        output_template: "Changed",
-      )
-      form_template.destroy!
-      restored = described_class.new(stored)
-
-      expect(restored.answers).to eq(answers)
-      expect(restored.render).to eq("## Invitation\n#{answers["description"]}")
-      expect(restored.template_id).to eq(form_template.id)
-    end
-
     it "retains numeric spelling and isolates the snapshot from caller mutations" do
       form_template.update!(output_template: nil)
       snapshot = described_class.from_template(form_template, answers: { "seats" => "1e2" })

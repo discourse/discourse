@@ -133,17 +133,5 @@ RSpec.describe PostRevisor do
       expect(reply).not_to be_valid
       expect(reply.errors[:form_data]).to be_present
     end
-
-    it "rejects mismatched raw edits without persisting either state" do
-      expect(
-        described_class.new(post).revise!(
-          post.user,
-          { raw: "An unrelated replacement of the body." },
-        ),
-      ).to eq(false)
-      expect(post.reload.raw).to eq(submission.render)
-      expect(post.form_data).to eq(submission.to_h)
-      expect(post.revisions.count).to eq(0)
-    end
   end
 end

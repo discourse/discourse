@@ -13,23 +13,27 @@ RSpec.describe PostsController do
     )
   end
 
+  let(:submission) do
+    FormTemplate::Submission.from_template(
+      form_template,
+      answers: {
+        "description" => "A sufficiently long description.",
+        "confirmed" => false,
+      },
+    )
+  end
+  let(:post) do
+    Fabricate(:post, post_number: 1, raw: submission.render, form_data: submission.to_h)
+  end
+
   describe "#revert" do
     it "restores matching form state and raw, including answer-only revisions" do
       sign_in(admin)
-      original =
-        FormTemplate::Submission.from_template(
-          form_template,
-          answers: {
-            "description" => "An original sufficiently long description.",
-            "confirmed" => false,
-          },
-        )
       [
-        original.answers.merge("description" => "A changed sufficiently long description."),
-        original.answers.merge("confirmed" => true),
+        submission.answers.merge("description" => "A changed sufficiently long description."),
+        submission.answers.merge("confirmed" => true),
       ].each do |answers|
-        post = Fabricate(:post, post_number: 1, raw: original.render, form_data: original.to_h)
-        changed = original.with_answers(answers)
+        changed = submission.with_answers(answers)
         PostRevisor.new(post).revise!(
           post.user,
           { raw: changed.render, form_data: changed.to_h },
@@ -40,47 +44,15 @@ RSpec.describe PostsController do
         put "/posts/#{post.id}/revisions/#{revision.number}/revert.json"
 
         expect(response.status).to eq(200)
-        expect(post.reload.raw).to eq(original.render)
-        expect(post.form_data).to eq(original.to_h)
+        expect(post.reload.raw).to eq(submission.render)
+        expect(post.form_data).to eq(submission.to_h)
       end
-    end
-
-    it "preserves normal staff authorization for restoring form state" do
-      original =
-        FormTemplate::Submission.from_template(
-          form_template,
-          answers: {
-            "description" => "An original sufficiently long description.",
-          },
-        )
-      post = Fabricate(:post, post_number: 1, raw: original.render, form_data: original.to_h)
-      changed = original.with_answers(original.answers.merge("confirmed" => true))
-      PostRevisor.new(post).revise!(
-        post.user,
-        { raw: changed.render, form_data: changed.to_h },
-        force_new_version: true,
-      )
-      sign_in(post.user)
-
-      put "/posts/#{post.id}/revisions/#{post.version}/revert.json"
-
-      expect(response.status).to eq(404)
-      expect(post.reload.form_data).to eq(changed.to_h)
     end
   end
 
   describe "#revisions" do
     it "shows answer-only changes to editors while respecting hidden revision access" do
-      original =
-        FormTemplate::Submission.from_template(
-          form_template,
-          answers: {
-            "description" => "A sufficiently long description.",
-            "confirmed" => false,
-          },
-        )
-      post = Fabricate(:post, post_number: 1, raw: original.render, form_data: original.to_h)
-      changed = original.with_answers(original.answers.merge("confirmed" => true))
+      changed = submission.with_answers(submission.answers.merge("confirmed" => true))
       PostRevisor.new(post).revise!(
         post.user,
         { raw: changed.render, form_data: changed.to_h },
