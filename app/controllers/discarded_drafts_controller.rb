@@ -18,7 +18,7 @@ class DiscardedDraftsController < ApplicationController
         .to_a
     Draft.preload_data(drafts, current_user)
 
-    response = { discarded_drafts: serialize_data(drafts, DiscardedDraftSerializer) }
+    response = { discarded_drafts: serialize_data(drafts, DraftSerializer) }
 
     if guardian.can_lazy_load_categories?
       category_ids = drafts.map { |draft| draft.topic&.category_id }.compact.uniq
