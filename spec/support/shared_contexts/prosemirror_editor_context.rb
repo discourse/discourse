@@ -38,18 +38,4 @@ RSpec.shared_context "with prosemirror editor" do
 
     expect(rich).to have_css(".composer-image-node .fk-d-menu", count: 2)
   end
-
-  private
-
-  def reset_composer
-    composer.toggle_rich_editor if composer.editor_toggle_switch["data-rich-editor"]
-    composer.clear_content
-    expect(composer).to have_value("")
-    composer.toggle_rich_editor
-    expect(rich).to have_css("p", count: 1)
-    expect(rich.text).to eq("")
-    composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "z"])
-    expect(rich.text).to eq("")
-    composer.focus
-  end
 end

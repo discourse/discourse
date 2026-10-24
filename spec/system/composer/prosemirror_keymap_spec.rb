@@ -7,6 +7,20 @@ describe "Composer - ProseMirror - Keyboard shortcuts" do
     Fabricate(:category, slug: "cat", emoji: "cat", style_type: "emoji")
   end
 
+  private
+
+  def reset_composer
+    composer.toggle_rich_editor if composer.editor_toggle_switch["data-rich-editor"]
+    composer.clear_content
+    expect(composer).to have_value("")
+    composer.toggle_rich_editor
+    expect(rich).to have_css("p", count: 1)
+    expect(rich.text).to eq("")
+    composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "z"])
+    expect(rich.text).to eq("")
+    composer.focus
+  end
+
   it "applies inline formatting shortcuts to independent documents", aggregate_failures: true do
     open_composer
 

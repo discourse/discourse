@@ -3,56 +3,50 @@
 describe "Composer - ProseMirror - Inline and Block Wrap" do
   include_context "with prosemirror editor"
 
-  it "lets the user create independent wrap documents", aggregate_failures: true do
+  it "supports [wrap] to create a wrap block" do
     open_composer
+    composer.type_content("[wrap]")
 
-    aggregate_failures("supports [wrap] to create a wrap block") do
-      composer.type_content("[wrap]")
+    expect(rich).to have_css(".composer-wrap-node")
 
-      expect(rich).to have_css(".composer-wrap-node")
+    composer.toggle_rich_editor
 
-      composer.toggle_rich_editor
+    expect(composer).to have_value("[wrap]\n\n[/wrap]\n\n")
+  end
 
-      expect(composer).to have_value("[wrap]\n\n[/wrap]\n\n")
-    end
+  it "supports [wrap=name] to create a named wrap block" do
+    open_composer
+    composer.type_content("[wrap=example]")
 
-    reset_composer
+    expect(rich).to have_css(".composer-wrap-node")
 
-    aggregate_failures("supports [wrap=name] to create a named wrap block") do
-      composer.type_content("[wrap=example]")
+    composer.toggle_rich_editor
 
-      expect(rich).to have_css(".composer-wrap-node")
+    expect(composer).to have_value("[wrap=example]\n\n[/wrap]\n\n")
+  end
 
-      composer.toggle_rich_editor
+  it "supports [wrap class=foo] to create a wrap block with attributes" do
+    open_composer
+    composer.type_content("[wrap class=highlight]")
 
-      expect(composer).to have_value("[wrap=example]\n\n[/wrap]\n\n")
-    end
+    expect(rich).to have_css(".composer-wrap-node")
 
-    reset_composer
+    composer.toggle_rich_editor
 
-    aggregate_failures("supports [wrap class=foo] to create a wrap block with attributes") do
-      composer.type_content("[wrap class=highlight]")
+    expect(composer).to have_value("[wrap class=highlight]\n\n[/wrap]\n\n")
+  end
 
-      expect(rich).to have_css(".composer-wrap-node")
+  it "creates inline wrap when not at start of line" do
+    open_composer
+    composer.type_content("Text before [wrap=inline]")
 
-      composer.toggle_rich_editor
+    expect(rich).to have_css(".composer-wrap-node")
+    expect(rich).to have_content("Text before")
+    expect(rich).to have_content("Wrap content")
 
-      expect(composer).to have_value("[wrap class=highlight]\n\n[/wrap]\n\n")
-    end
+    composer.toggle_rich_editor
 
-    reset_composer
-
-    aggregate_failures("creates inline wrap when not at start of line") do
-      composer.type_content("Text before [wrap=inline]")
-
-      expect(rich).to have_css(".composer-wrap-node")
-      expect(rich).to have_content("Text before")
-      expect(rich).to have_content("Wrap content")
-
-      composer.toggle_rich_editor
-
-      expect(composer).to have_value("Text before [wrap=inline]Wrap content[/wrap] ")
-    end
+    expect(composer).to have_value("Text before [wrap=inline]Wrap content[/wrap] ")
   end
 
   it "opens edit modal when clicking wrap indicator" do

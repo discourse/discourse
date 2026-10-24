@@ -44,138 +44,128 @@ describe "Composer - ProseMirror - Toolbar" do
   end
 
   describe "auto-linking/unlinking while typing" do
-    it "lets the user edit independently linked text", aggregate_failures: true do
+    it "auto-links non-protocol URLs and removes the link when no longer a URL" do
       open_composer
 
-      aggregate_failures(
-        "auto-links non-protocol URLs and removes the link when no longer a URL",
-      ) do
-        composer.type_content("www.example.com and also mid-paragraph www.example2.com")
+      composer.type_content("www.example.com and also mid-paragraph www.example2.com")
 
-        expect(rich).to have_css("a", text: "www.example.com")
-        expect(rich).to have_css("a", text: "www.example2.com")
-        expect(rich).to have_css("a", count: 2)
+      expect(rich).to have_css("a", text: "www.example.com")
+      expect(rich).to have_css("a", text: "www.example2.com")
+      expect(rich).to have_css("a", count: 2)
 
-        composer.send_keys(:backspace)
-        composer.send_keys(:backspace)
+      composer.send_keys(:backspace)
+      composer.send_keys(:backspace)
 
-        expect(rich).to have_css("a", count: 1)
+      expect(rich).to have_css("a", count: 1)
 
-        composer.type_content("om")
+      composer.type_content("om")
 
-        expect(rich).to have_css("a", text: "www.example2.com")
-      end
+      expect(rich).to have_css("a", text: "www.example2.com")
+    end
 
-      reset_composer
+    it "auto-links protocol URLs" do
+      open_composer
 
-      aggregate_failures("auto-links protocol URLs") do
-        composer.type_content("https://example.com")
+      composer.type_content("https://example.com")
 
-        expect(rich).to have_css("a", text: "https://example.com")
+      expect(rich).to have_css("a", text: "https://example.com")
 
-        composer.send_keys(:backspace)
-        composer.send_keys(:backspace)
+      composer.send_keys(:backspace)
+      composer.send_keys(:backspace)
 
-        expect(rich).to have_css("a", text: "https://example.c")
-      end
+      expect(rich).to have_css("a", text: "https://example.c")
+    end
 
-      reset_composer
+    it "doesn't auto-link immediately following a `" do
+      open_composer
 
-      aggregate_failures("doesn't auto-link immediately following a `") do
-        composer.type_content("`https://example.com`")
+      composer.type_content("`https://example.com`")
 
-        expect(rich).to have_css("code", text: "https://example.com")
-        expect(rich).to have_no_css("a", text: "https://example.com")
-      end
+      expect(rich).to have_css("code", text: "https://example.com")
+      expect(rich).to have_no_css("a", text: "https://example.com")
+    end
 
-      reset_composer
+    it "doesn't auto-link within code marks" do
+      open_composer
 
-      aggregate_failures("doesn't auto-link within code marks") do
-        composer.type_content("`code mark`")
-        composer.send_keys(:left)
+      composer.type_content("`code mark`")
+      composer.send_keys(:left)
 
-        composer.type_content(" https://example.com")
+      composer.type_content(" https://example.com")
 
-        expect(rich).to have_css("code", text: "code mark https://example.com")
-        expect(rich).to have_no_css("a", text: "https://example.com")
-      end
+      expect(rich).to have_css("code", text: "code mark https://example.com")
+      expect(rich).to have_no_css("a", text: "https://example.com")
+    end
 
-      reset_composer
+    it "doesn't continue a <https://url> markup='autolink'" do
+      open_composer
 
-      aggregate_failures("doesn't continue a <https://url> markup='autolink'") do
-        composer.type_content("<https://example.com>.de")
+      composer.type_content("<https://example.com>.de")
 
-        expect(rich).to have_css("a", text: "https://example.com")
-        expect(rich).to have_no_css("a", text: "https://example.com.de")
+      expect(rich).to have_css("a", text: "https://example.com")
+      expect(rich).to have_no_css("a", text: "https://example.com.de")
 
-        composer.toggle_rich_editor
+      composer.toggle_rich_editor
 
-        expect(composer).to have_value("<https://example.com>.de")
-      end
+      expect(composer).to have_value("<https://example.com>.de")
     end
   end
 
   describe "emojis" do
-    it "lets the user format independent emoji documents", aggregate_failures: true do
+    it "has the only-emoji class if 1-3 emojis are 'alone'" do
       open_composer
 
-      aggregate_failures("has the only-emoji class if 1-3 emojis are 'alone'") do
-        composer.type_content("> :smile: ")
+      composer.type_content("> :smile: ")
 
-        expect(rich).to have_css(".only-emoji", count: 1)
+      expect(rich).to have_css(".only-emoji", count: 1)
 
-        composer.type_content(":P ")
+      composer.type_content(":P ")
 
-        expect(rich).to have_css(".only-emoji", count: 2)
+      expect(rich).to have_css(".only-emoji", count: 2)
 
-        composer.type_content(":D ")
+      composer.type_content(":D ")
 
-        expect(rich).to have_css(".only-emoji", count: 3)
+      expect(rich).to have_css(".only-emoji", count: 3)
 
-        composer.type_content("Hey!")
+      composer.type_content("Hey!")
 
-        expect(rich).to have_no_css(".only-emoji")
-      end
+      expect(rich).to have_no_css(".only-emoji")
+    end
 
-      reset_composer
+    it "preserves formatting marks when replacing text with emojis using :code: pattern" do
+      open_composer
 
-      aggregate_failures(
-        "preserves formatting marks when replacing text with emojis using :code: pattern",
-      ) do
-        composer.type_content("**bold :smile:**")
+      composer.type_content("**bold :smile:**")
 
-        expect(rich).to have_css("strong img.emoji")
-        expect(rich).to have_css("strong", text: "bold")
+      expect(rich).to have_css("strong img.emoji")
+      expect(rich).to have_css("strong", text: "bold")
 
-        composer.toggle_rich_editor
-        expect(composer).to have_value("**bold :smile:**")
-      end
+      composer.toggle_rich_editor
+      expect(composer).to have_value("**bold :smile:**")
+    end
 
-      reset_composer
+    it "preserves formatting marks when replacing text with emojis using text shortcuts" do
+      open_composer
 
-      aggregate_failures(
-        "preserves formatting marks when replacing text with emojis using text shortcuts",
-      ) do
-        composer.type_content("*italics :) *")
+      composer.type_content("*italics :) *")
 
-        expect(rich).to have_css("em img.emoji")
-        expect(rich).to have_css("em", text: "italics")
+      expect(rich).to have_css("em img.emoji")
+      expect(rich).to have_css("em", text: "italics")
 
-        composer.toggle_rich_editor
-        expect(composer).to have_value("*italics :slight_smile:* ")
-      end
+      composer.toggle_rich_editor
+      expect(composer).to have_value("*italics :slight_smile:* ")
+    end
 
-      reset_composer
+    it "preserves link marks when replacing text with emojis" do
+      open_composer
 
-      aggregate_failures("preserves link marks when replacing text with emojis") do
-        composer.type_content("[link text :heart:](https://example.com)")
+      composer.type_content("[link text :heart:](https://example.com)")
 
-        expect(rich).to have_css("a img.emoji")
-        expect(rich).to have_css("a", text: "link text")
+      expect(rich).to have_css("a img.emoji")
+      expect(rich).to have_css("a", text: "link text")
 
-        composer.toggle_rich_editor
-        expect(composer).to have_value("[link text :heart:](https://example.com)")
-      end
+      composer.toggle_rich_editor
+      expect(composer).to have_value("[link text :heart:](https://example.com)")
     end
   end
 
@@ -190,189 +180,179 @@ describe "Composer - ProseMirror - Toolbar" do
       expect(page).to have_css("[data-name='list-ordered']")
     end
 
-    it "lets the user create independent lists", aggregate_failures: true do
+    it "can apply a bullet list from the dropdown" do
       open_composer
 
-      aggregate_failures("can apply a bullet list from the dropdown") do
-        composer.type_content("A list item")
+      composer.type_content("A list item")
 
-        list_menu = composer.list_menu
-        list_menu.expand
-        list_menu.option("[data-name='list-bullet']").click
+      list_menu = composer.list_menu
+      list_menu.expand
+      list_menu.option("[data-name='list-bullet']").click
 
-        expect(rich).to have_css("ul li", text: "A list item")
-      end
+      expect(rich).to have_css("ul li", text: "A list item")
+    end
 
-      reset_composer
+    it "can apply an ordered list from the dropdown" do
+      open_composer
 
-      aggregate_failures("can apply an ordered list from the dropdown") do
-        composer.type_content("A list item")
+      composer.type_content("A list item")
 
-        list_menu = composer.list_menu
-        list_menu.expand
-        list_menu.option("[data-name='list-ordered']").click
+      list_menu = composer.list_menu
+      list_menu.expand
+      list_menu.option("[data-name='list-ordered']").click
 
-        expect(rich).to have_css("ol li", text: "A list item")
-      end
+      expect(rich).to have_css("ol li", text: "A list item")
+    end
 
-      reset_composer
+    it "splits multi-line plain text into bullet list items" do
+      cdp.allow_clipboard
+      open_composer
 
-      aggregate_failures("splits multi-line plain text into bullet list items") do
-        cdp.allow_clipboard
+      cdp.copy_paste("apple\nbanana\ncoconut")
+      composer.select_all
 
-        cdp.copy_paste("apple\nbanana\ncoconut")
-        composer.select_all
+      list_menu = composer.list_menu
+      list_menu.expand
+      list_menu.option("[data-name='list-bullet']").click
 
-        list_menu = composer.list_menu
-        list_menu.expand
-        list_menu.option("[data-name='list-bullet']").click
+      expect(rich).to have_css("ul li", count: 3)
+      expect(rich).to have_css("ul li", text: "apple")
+      expect(rich).to have_css("ul li", text: "banana")
+      expect(rich).to have_css("ul li", text: "coconut")
+    end
 
-        expect(rich).to have_css("ul li", count: 3)
-        expect(rich).to have_css("ul li", text: "apple")
-        expect(rich).to have_css("ul li", text: "banana")
-        expect(rich).to have_css("ul li", text: "coconut")
-      end
+    it "splits multi-line plain text into ordered list items" do
+      cdp.allow_clipboard
+      open_composer
 
-      reset_composer
+      cdp.copy_paste("apple\nbanana\ncoconut")
+      composer.select_all
 
-      aggregate_failures("splits multi-line plain text into ordered list items") do
-        cdp.allow_clipboard
+      list_menu = composer.list_menu
+      list_menu.expand
+      list_menu.option("[data-name='list-ordered']").click
 
-        cdp.copy_paste("apple\nbanana\ncoconut")
-        composer.select_all
-
-        list_menu = composer.list_menu
-        list_menu.expand
-        list_menu.option("[data-name='list-ordered']").click
-
-        expect(rich).to have_css("ol li", count: 3)
-        expect(rich).to have_css("ol li", text: "apple")
-        expect(rich).to have_css("ol li", text: "banana")
-        expect(rich).to have_css("ol li", text: "coconut")
-      end
+      expect(rich).to have_css("ol li", count: 3)
+      expect(rich).to have_css("ol li", text: "apple")
+      expect(rich).to have_css("ol li", text: "banana")
+      expect(rich).to have_css("ol li", text: "coconut")
     end
   end
 
   describe "heading toolbar" do
-    it "lets the user format independent headings", aggregate_failures: true do
+    it "updates toolbar active state and icon based on current heading level" do
       open_composer
 
-      aggregate_failures("updates toolbar active state and icon based on current heading level") do
-        composer.type_content("## This is a test\n#### And this is another test")
-        expect(page).to have_css(".toolbar__button.heading.--active", count: 1)
-        expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-h4")
+      composer.type_content("## This is a test\n#### And this is another test")
+      expect(page).to have_css(".toolbar__button.heading.--active", count: 1)
+      expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-h4")
 
-        composer.send_keys(:up)
-        expect(page).to have_css(".toolbar__button.heading.--active", count: 1)
-        expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-h2")
+      composer.send_keys(:up)
+      expect(page).to have_css(".toolbar__button.heading.--active", count: 1)
+      expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-h2")
 
-        composer.select_all
-        expect(page).to have_no_css(".toolbar__button.heading.--active")
-        expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-text")
-      end
+      composer.select_all
+      expect(page).to have_no_css(".toolbar__button.heading.--active")
+      expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-text")
+    end
 
-      reset_composer
+    it "puts a check next to current heading level in toolbar dropdown, or no check if multiple formats are selected" do
+      open_composer
 
-      aggregate_failures(
-        "puts a check next to current heading level in toolbar dropdown, or no check if multiple formats are selected",
-      ) do
-        composer.type_content("## This is a test\n#### And this is another test")
+      composer.type_content("## This is a test\n#### And this is another test")
 
-        heading_menu = composer.heading_menu
-        heading_menu.expand
-        expect(heading_menu.option("[data-name='heading-4']")).to have_css(".d-icon-check")
-        heading_menu.collapse
+      heading_menu = composer.heading_menu
+      heading_menu.expand
+      expect(heading_menu.option("[data-name='heading-4']")).to have_css(".d-icon-check")
+      heading_menu.collapse
 
-        composer.select_range_rich_editor(0, 0)
-        expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-h2")
-        heading_menu.expand
-        expect(heading_menu.option("[data-name='heading-2']")).to have_css(".d-icon-check")
-        heading_menu.collapse
+      composer.select_range_rich_editor(0, 0)
+      expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-h2")
+      heading_menu.expand
+      expect(heading_menu.option("[data-name='heading-2']")).to have_css(".d-icon-check")
+      heading_menu.collapse
 
-        composer.select_all
-        expect(page).to have_no_css(".toolbar__button.heading.--active")
-        heading_menu.expand
-        expect(heading_menu.option("[data-name='heading-2']")).to have_no_css(".d-icon-check")
-        expect(heading_menu.option("[data-name='heading-4']")).to have_no_css(".d-icon-check")
-      end
+      composer.select_all
+      expect(page).to have_no_css(".toolbar__button.heading.--active")
+      heading_menu.expand
+      expect(heading_menu.option("[data-name='heading-2']")).to have_no_css(".d-icon-check")
+      expect(heading_menu.option("[data-name='heading-4']")).to have_no_css(".d-icon-check")
+    end
 
-      reset_composer
+    it "can change heading level or reset to paragraph" do
+      open_composer
 
-      aggregate_failures("can change heading level or reset to paragraph") do
-        composer.type_content("This is a test")
-        heading_menu = composer.heading_menu
-        heading_menu.expand
-        heading_menu.option("[data-name='heading-2']").click
+      composer.type_content("This is a test")
+      heading_menu = composer.heading_menu
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-2']").click
 
-        expect(rich).to have_css("h2", text: "This is a test")
+      expect(rich).to have_css("h2", text: "This is a test")
 
-        heading_menu.expand
-        heading_menu.option("[data-name='heading-3']").click
-        expect(rich).to have_css("h3", text: "This is a test")
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-3']").click
+      expect(rich).to have_css("h3", text: "This is a test")
 
-        heading_menu.expand
-        heading_menu.option("[data-name='heading-paragraph']").click
-        expect(rich).to have_css("p", text: "This is a test")
-      end
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-paragraph']").click
+      expect(rich).to have_css("p", text: "This is a test")
+    end
 
-      reset_composer
+    it "can insert a heading on an empty line" do
+      open_composer
 
-      aggregate_failures("can insert a heading on an empty line") do
-        heading_menu = composer.heading_menu
-        heading_menu.expand
-        heading_menu.option("[data-name='heading-2']").click
+      heading_menu = composer.heading_menu
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-2']").click
 
-        composer.type_content("This is a test")
-        expect(rich).to have_css("h2", text: "This is a test")
-      end
+      composer.type_content("This is a test")
+      expect(rich).to have_css("h2", text: "This is a test")
+    end
 
-      reset_composer
+    it "lets the user apply and remove small text" do
+      open_composer
 
-      aggregate_failures("lets the user apply and remove small text") do
-        composer.type_content("This is a test")
-        composer.select_all
-        composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :alt, "5"])
+      composer.type_content("This is a test")
+      composer.select_all
+      composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, :alt, "5"])
 
-        expect(rich).to have_css("p small", text: "This is a test")
+      expect(rich).to have_css("p small", text: "This is a test")
 
-        rich.find("small").click
-        heading_menu = composer.heading_menu
-        heading_menu.expand
-        expect(heading_menu.option("[data-name='heading-small']")).to have_css(".d-icon-check")
-        expect(heading_menu.option("[data-name='heading-paragraph']")).to have_no_css(
-          ".d-icon-check",
-        )
-        heading_menu.option("[data-name='heading-small']").click
+      rich.find("small").click
+      heading_menu = composer.heading_menu
+      heading_menu.expand
+      expect(heading_menu.option("[data-name='heading-small']")).to have_css(".d-icon-check")
+      expect(heading_menu.option("[data-name='heading-paragraph']")).to have_no_css(".d-icon-check")
+      heading_menu.option("[data-name='heading-small']").click
 
-        expect(rich).to have_no_css("small")
-        expect(rich).to have_css("p", text: "This is a test")
-      end
+      expect(rich).to have_no_css("small")
+      expect(rich).to have_css("p", text: "This is a test")
+    end
 
-      reset_composer
+    it "lets the user switch between a heading and small text" do
+      open_composer
 
-      aggregate_failures("lets the user switch between a heading and small text") do
-        composer.type_content("This is a test")
-        composer.select_all
+      composer.type_content("This is a test")
+      composer.select_all
 
-        heading_menu = composer.heading_menu
-        heading_menu.expand
-        heading_menu.option("[data-name='heading-2']").click
-        expect(rich).to have_css("h2", text: "This is a test")
+      heading_menu = composer.heading_menu
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-2']").click
+      expect(rich).to have_css("h2", text: "This is a test")
 
-        composer.select_all
-        heading_menu.expand
-        heading_menu.option("[data-name='heading-small']").click
+      composer.select_all
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-small']").click
 
-        expect(rich).to have_css("p small", text: "This is a test")
-        expect(rich).to have_no_css("h2")
+      expect(rich).to have_css("p small", text: "This is a test")
+      expect(rich).to have_no_css("h2")
 
-        composer.select_all
-        heading_menu.expand
-        heading_menu.option("[data-name='heading-2']").click
+      composer.select_all
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-2']").click
 
-        expect(rich).to have_css("h2", text: "This is a test")
-        expect(rich).to have_no_css("small")
-      end
+      expect(rich).to have_css("h2", text: "This is a test")
+      expect(rich).to have_no_css("small")
     end
   end
 end

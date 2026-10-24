@@ -3,6 +3,20 @@
 describe "Composer - ProseMirror - Input rules" do
   include_context "with prosemirror editor"
 
+  private
+
+  def reset_composer
+    composer.toggle_rich_editor if composer.editor_toggle_switch["data-rich-editor"]
+    composer.clear_content
+    expect(composer).to have_value("")
+    composer.toggle_rich_editor
+    expect(rich).to have_css("p", count: 1)
+    expect(rich.text).to eq("")
+    composer.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "z"])
+    expect(rich.text).to eq("")
+    composer.focus
+  end
+
   it "applies block input rules to independent documents", aggregate_failures: true do
     open_composer
 
