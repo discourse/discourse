@@ -1,0 +1,90 @@
+@use "lib/block-panel";
+
+:root {
+  --d-comp-BlockResources-font-size: var(--d-comp-BlockPanel-font-size);
+  --d-comp-BlockResources-font-line-height: var(
+    --d-comp-BlockPanel-font-line-height
+  );
+  --d-comp-BlockResources-color-text-default: var(
+    --d-comp-BlockPanel-color-text-default
+  );
+  --d-comp-BlockResources-color-text-muted: var(
+    --d-comp-BlockPanel-color-text-muted
+  );
+  --d-comp-BlockResources-color-icon-accent: var(
+    --d-comp-BlockPanel-color-icon-accent
+  );
+  --d-comp-BlockResources-size-icon: var(--d-comp-BlockPanel-size-icon);
+  --d-comp-BlockResources-list-space-gap-block: var(
+    --d-comp-BlockPanel-space-gap-block
+  );
+  --d-comp-BlockResources-details-space-gap-block: var(
+    --d-comp-BlockPanel-item-space-gap-block
+  );
+  --d-comp-BlockResources-item-size-min-block: var(
+    --d-comp-BlockPanel-item-size-min-block
+  );
+  --d-comp-BlockResources-item-space-gap-inline: var(
+    --d-comp-BlockPanel-item-space-gap-inline
+  );
+  --d-comp-BlockResources-item-space-padding-block: var(
+    --d-comp-BlockPanel-item-space-padding-block
+  );
+  --d-comp-BlockResources-item-space-padding-inline: var(
+    --d-comp-BlockPanel-item-space-padding-inline
+  );
+  --d-comp-BlockResources-item-border-radius: var(
+    --d-comp-BlockPanel-item-border-radius
+  );
+  --d-comp-BlockResources-item-color-background-hovered: var(
+    --d-comp-BlockPanel-item-color-background-hovered
+  );
+}
+
+.d-block-resources {
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--d-comp-BlockResources-list-space-gap-block);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__link {
+    @include block-panel.item("--d-comp-BlockResources");
+    @include block-panel.item-hover("--d-comp-BlockResources");
+    align-items: flex-start;
+
+    &:hover .d-block-resources__label,
+    &:focus-visible .d-block-resources__label {
+      text-decoration: underline;
+    }
+  }
+
+  &__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    width: var(--d-comp-BlockResources-size-icon);
+    height: var(--d-comp-BlockResources-size-icon);
+    align-items: center;
+    justify-content: center;
+    color: var(--d-comp-BlockResources-color-icon-accent);
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--d-comp-BlockResources-details-space-gap-block);
+    min-width: 0;
+  }
+
+  &__label {
+    font-weight: 600;
+  }
+
+  &__description {
+    color: var(--d-comp-BlockResources-color-text-muted);
+    line-height: var(--d-comp-BlockResources-font-line-height);
+  }
+}

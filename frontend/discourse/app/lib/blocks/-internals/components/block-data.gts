@@ -2,8 +2,8 @@ import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import type { ComponentLike } from "@glint/template";
 import type { TrackedAsyncData } from "ember-async-data";
 import type { BlockSkeletonShape } from "discourse/blocks/types";
+import BlockSkeleton from "discourse/lib/blocks/-internals/components/block-skeleton";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
-import DSkeleton from "discourse/ui-kit/d-skeleton";
 
 interface BlockDataSignature {
   Args: {
@@ -15,6 +15,9 @@ interface BlockDataSignature {
 
     /** The reserved-space shape for the default loading skeleton. */
     skeletonShape: BlockSkeletonShape;
+
+    /** Requests the block's data again after a failure. */
+    retry: () => void;
   };
   Blocks: {
     /** Rendered while the data is pending, overriding the default skeleton. */
@@ -27,10 +30,11 @@ interface BlockDataSignature {
     empty: [];
 
     /**
-     * Rendered on failure, yielding the error and the inline error component
-     * the async-content renderer supplies (pre-bound to the error).
+     * Rendered on failure, yielding the error, the inline error component the
+     * async-content renderer supplies (pre-bound to the error), and an action
+     * that requests the data again.
      */
-    error: [error: Error, inlineError: ComponentLike];
+    error: [error: Error, inlineError: ComponentLike, retry: () => void];
   };
 }
 
@@ -43,7 +47,7 @@ interface BlockDataSignature {
  * hands the block this component already curried, see `block-layout-wrapper`),
  * so a block never wires up the data state itself. It wraps the shared
  * async-content renderer with block-friendly defaults:
- *   - while loading, a reserved-space `DSkeleton` sized from `@skeletonShape`;
+ *   - while loading, a reserved-space skeleton shaped by `@skeletonShape`;
  *   - on failure, the inline error the async-content renderer yields.
  *
  * Both defaults are overridable by providing the matching named block
@@ -65,12 +69,7 @@ const BlockData: TemplateOnlyComponent<BlockDataSignature> = <template>
         {{#if (has-block "loading")}}
           {{yield to="loading"}}
         {{else}}
-          <DSkeleton
-            @count={{@skeletonShape.count}}
-            @height={{@skeletonShape.height}}
-            @variant={{@skeletonShape.variant}}
-            @width={{@skeletonShape.width}}
-          />
+          <BlockSkeleton @shape={{@skeletonShape}} />
         {{/if}}
       </:loading>
       <:content as |value|>
@@ -83,7 +82,7 @@ const BlockData: TemplateOnlyComponent<BlockDataSignature> = <template>
       </:empty>
       <:error as |error inlineError|>
         {{#if (has-block "error")}}
-          {{yield error inlineError to="error"}}
+          {{yield error inlineError @retry to="error"}}
         {{else}}
           {{! Reuse the inline error the async-content renderer yields, so a
               failed fetch surfaces the standard flash in the data region. }}

@@ -1,9 +1,14 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
+import BlockPanel from "discourse/blocks/block-panel";
 import type { BlockDataComponent } from "discourse/blocks/types";
 import { URL_PATTERN } from "discourse/lib/blocks";
-import { VALID_TOPIC_LIST_FILTERS } from "discourse/lib/blocks/-internals/fetch-topic-list";
+import {
+  topicListUrl,
+  VALID_TOPIC_LIST_FILTERS,
+  VALID_TOPIC_LIST_ORDERS,
+} from "discourse/lib/blocks/-internals/fetch-topic-list";
 import { topicListDataSource } from "discourse/lib/blocks/-internals/sources/topic-list";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
@@ -20,15 +25,46 @@ interface FeaturedTopic {
   bumpedAt?: unknown;
 }
 
+interface CategoryOutletArg {
+  id: number;
+  parentCategory?: CategoryOutletArg | null;
+}
+
+interface FeaturedTopicsArgs {
+  categoryId?: number;
+  currentCategory?: boolean;
+  outletArgs?: { category?: CategoryOutletArg | null };
+}
+
+/**
+ * The category whose topics the block lists. With `currentCategory`, a
+ * category page lists its top-level category, so subcategories of one
+ * category share a list; elsewhere the picked category applies.
+ */
+function listCategoryId(args: FeaturedTopicsArgs): number | undefined {
+  if (args.currentCategory) {
+    const category = args.outletArgs?.category;
+    const topLevel = category?.parentCategory ?? category;
+    if (topLevel) {
+      return topLevel.id;
+    }
+  }
+  return args.categoryId;
+}
+
 interface FeaturedTopicsSignature {
   Args: {
     title?: string;
+    icon?: string;
     filter?: string;
+    order?: string;
     count?: number;
     categoryId?: number;
+    currentCategory?: boolean;
     tag?: string;
     linkLabel?: string;
     linkHref?: string;
+    outletArgs?: { category?: CategoryOutletArg | null };
     /**
      * Injected by the framework: the data-region boundary, already curried
      * with this block's resolved topic list.
@@ -59,6 +95,13 @@ interface FeaturedTopicsSignature {
         label: i18n("blocks.builtin.featured_topics.title"),
       },
     },
+    icon: {
+      type: "string",
+      ui: {
+        control: "icon",
+        label: i18n("blocks.builtin.featured_topics.icon"),
+      },
+    },
     filter: {
       type: "string",
       default: "hot",
@@ -66,6 +109,22 @@ interface FeaturedTopicsSignature {
       ui: {
         control: "select",
         label: i18n("blocks.builtin.featured_topics.filter"),
+      },
+    },
+    order: {
+      type: "string",
+      enum: VALID_TOPIC_LIST_ORDERS,
+      ui: {
+        control: "select",
+        label: i18n("blocks.builtin.featured_topics.order"),
+        helpText: i18n("blocks.builtin.featured_topics.order_help"),
+        optionLabels: {
+          activity: i18n("blocks.builtin.featured_topics.order_activity"),
+          created: i18n("blocks.builtin.featured_topics.order_created"),
+          likes: i18n("blocks.builtin.featured_topics.order_likes"),
+          views: i18n("blocks.builtin.featured_topics.order_views"),
+          posts: i18n("blocks.builtin.featured_topics.order_posts"),
+        },
       },
     },
     count: {
@@ -84,6 +143,15 @@ interface FeaturedTopicsSignature {
       ui: {
         control: "category-select",
         label: i18n("blocks.builtin.featured_topics.category_id"),
+      },
+    },
+    currentCategory: {
+      type: "boolean",
+      default: false,
+      ui: {
+        control: "toggle",
+        label: i18n("blocks.builtin.featured_topics.current_category"),
+        helpText: i18n("blocks.builtin.featured_topics.current_category_help"),
       },
     },
     tag: {
@@ -113,68 +181,77 @@ interface FeaturedTopicsSignature {
   },
   data: {
     source: topicListDataSource,
-    request: (args: {
-      filter?: string;
-      categoryId?: number;
-      tag?: string;
-      count?: number;
-    }) => ({
+    request: (
+      args: FeaturedTopicsArgs & {
+        filter?: string;
+        order?: string;
+        tag?: string;
+        count?: number;
+      }
+    ) => ({
       kind: "topic-list",
       filter: args.filter ?? "hot",
-      categoryId: args.categoryId,
+      order: args.order,
+      categoryId: listCategoryId(args),
       tag: args.tag,
       count: args.count ?? 5,
     }),
     skeleton: (args: { count?: number }) => ({
-      variant: "rect",
+      rows: "topic",
       count: args.count ?? 5,
     }),
   },
 })
 export default class FeaturedTopics extends Component<FeaturedTopicsSignature> {
+  /** The full list the block shows a part of, unless a link is given. */
+  get viewAllUrl(): string {
+    return topicListUrl({
+      filterType: this.args.filter ?? "hot",
+      order: this.args.order,
+      categoryId: listCategoryId(this.args),
+      tag: this.args.tag,
+    });
+  }
+
   <template>
-    <div class="d-block-featured-topics">
-      {{! Chrome: the title renders from args, so it stays visible while the
-          list loads. Only the data region below is wrapped in the boundary. }}
-      {{#if @title}}
-        <h3 class="d-block-featured-topics__title">{{@title}}</h3>
-      {{/if}}
-
-      <@Data>
-        <:content as |topics|>
-          <ul class="d-block-featured-topics__list">
-            {{#each topics as |topic|}}
-              <li class="d-block-featured-topics__item">
-                <a
-                  class="d-block-featured-topics__topic-link"
-                  href={{topic.lastUnreadUrl}}
-                >{{trustHTML topic.fancyTitle}}</a>
-                <div class="d-block-featured-topics__meta">
-                  {{#if topic.category}}
-                    {{dCategoryLink topic.category}}
-                  {{/if}}
-                  <span class="d-block-featured-topics__age">{{dAgeWithTooltip
-                      topic.bumpedAt
-                    }}</span>
-                </div>
-              </li>
-            {{/each}}
-          </ul>
-
-          {{#if @linkHref}}
-            <div class="d-block-featured-topics__footer">
-              <a class="d-block-featured-topics__all-link" href={{@linkHref}}>
-                {{@linkLabel}}
-              </a>
-            </div>
-          {{/if}}
-        </:content>
-        <:empty>
-          <div class="d-block-featured-topics__empty">
-            {{i18n "topics.none.latest"}}
-          </div>
-        </:empty>
-      </@Data>
-    </div>
+    <BlockPanel
+      class="d-block-featured-topics"
+      @Data={{@Data}}
+      @icon={{@icon}}
+      @title={{@title}}
+    >
+      <:content as |topics|>
+        <ul class="d-block-featured-topics__list">
+          {{#each topics as |topic|}}
+            <li class="d-block-featured-topics__item">
+              <a
+                class="d-block-featured-topics__topic-link"
+                href={{topic.lastUnreadUrl}}
+              >{{trustHTML topic.fancyTitle}}</a>
+              <div class="d-block-featured-topics__meta">
+                {{#if topic.category}}
+                  {{dCategoryLink topic.category}}
+                {{/if}}
+                <span class="d-block-featured-topics__age">{{dAgeWithTooltip
+                    topic.bumpedAt
+                  }}</span>
+              </div>
+            </li>
+          {{/each}}
+        </ul>
+      </:content>
+      <:empty>
+        <p class="d-block-panel__empty">{{i18n "topics.none.latest"}}</p>
+      </:empty>
+      <:footer>
+        {{#if @linkHref}}
+          <a class="d-block-panel__link" href={{@linkHref}}>{{@linkLabel}}</a>
+        {{else}}
+          <a class="d-block-panel__link" href={{this.viewAllUrl}}>
+            {{i18n "blocks.builtin.featured_topics.view_all"}}
+          </a>
+        {{/if}}
+      </:footer>
+    </BlockPanel>
   </template>
 }

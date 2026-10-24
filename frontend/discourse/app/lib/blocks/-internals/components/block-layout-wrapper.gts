@@ -7,12 +7,16 @@
  * naming and layout structure.
  */
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import type { TrustedHTML } from "@ember/template";
 import type { TrackedAsyncData } from "ember-async-data";
 import curryComponent from "ember-curry-component";
-import type { BlockDataDeclaration } from "discourse/blocks/types";
+import type {
+  BlockDataDeclaration,
+  BlockSkeletonShape,
+} from "discourse/blocks/types";
 import cssIdentifier from "discourse/helpers/css-identifier";
 import BlockData from "discourse/lib/blocks/-internals/components/block-data";
 import { getBlockData } from "discourse/lib/blocks/-internals/data-coordinator";
@@ -27,18 +31,6 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
  * the value and default-type import cannot be combined into a single statement.
  */
 type Owner = import("@ember/owner").default;
-
-/**
- * The reserved-space shape for a loading skeleton, produced by a block's
- * optional `skeleton(args)` hint and forwarded to the default skeleton so it
- * can reserve roughly the space the resolved content will occupy.
- */
-interface BlockSkeletonShape {
-  variant?: string;
-  count?: number;
-  width?: string;
-  height?: string;
-}
 
 interface WrappedBlockLayoutArgs {
   // The outlet name for class generation.
@@ -97,6 +89,10 @@ export function wrapBlockLayout(
  * - `data-block-id` - The block's entry ID (if provided)
  */
 class WrappedBlockLayout extends Component<WrappedBlockLayoutSignature> {
+  // Bumped by `retry` so `blockData` asks the coordinator again. A failed
+  // request is already evicted from its cache, so the next read refetches.
+  @tracked retryCount = 0;
+
   /**
    * Generates the appropriate CSS class based on block type and optional ID.
    * When an ID is provided, adds a BEM modifier class (e.g., `outlet__block--my-id`).
@@ -131,6 +127,7 @@ class WrappedBlockLayout extends Component<WrappedBlockLayoutSignature> {
     }
 
     const descriptor = dataMeta.request(this.args.dataArgs);
+    void this.retryCount;
 
     return getBlockData({
       scope: this.args.outletName,
@@ -168,9 +165,18 @@ class WrappedBlockLayout extends Component<WrappedBlockLayoutSignature> {
 
     return curryComponent(
       BlockData,
-      { state: this.blockData, skeletonShape: this.skeletonShape },
+      {
+        state: this.blockData,
+        skeletonShape: this.skeletonShape,
+        retry: this.retry,
+      },
       getOwner(this)
     );
+  }
+
+  @action
+  retry(): void {
+    this.retryCount++;
   }
 
   <template>

@@ -1,0 +1,115 @@
+/* Shared frame for blocks shown as a panel (`blocks/block-panel`). Its tokens
+   are the defaults every panel block points its own tokens at. Type sizes are
+   in rem: the em-based font scale compounds when panels are nested. */
+
+:root {
+  --d-comp-BlockPanel-color-background: var(--secondary);
+  --d-comp-BlockPanel-color-border: var(--primary-low);
+  --d-comp-BlockPanel-color-text-default: var(--primary);
+  --d-comp-BlockPanel-color-text-muted: var(--primary-medium);
+  --d-comp-BlockPanel-color-text-accent: var(--tertiary);
+  --d-comp-BlockPanel-color-icon-muted: var(--primary-medium);
+  --d-comp-BlockPanel-color-icon-accent: var(--tertiary);
+  --d-comp-BlockPanel-border-width: 1px;
+  --d-comp-BlockPanel-border-radius: var(--d-border-radius-large);
+  --d-comp-BlockPanel-space-padding: var(--space-4);
+  --d-comp-BlockPanel-space-gap-inline: var(--space-2);
+  --d-comp-BlockPanel-space-gap-block: var(--space-2);
+  --d-comp-BlockPanel-font-size: 0.875rem;
+  --d-comp-BlockPanel-title-font-size: 1rem;
+  --d-comp-BlockPanel-font-line-height: var(--line-height-medium);
+  --d-comp-BlockPanel-size-icon: 1.25rem;
+  --d-comp-BlockPanel-size-avatar: 1.75rem;
+  --d-comp-BlockPanel-footer-space-padding-block: var(--space-2);
+  --d-comp-BlockPanel-list-space-gap-block: var(--space-1);
+  --d-comp-BlockPanel-item-size-min-block: 2rem;
+  --d-comp-BlockPanel-item-space-gap-inline: var(--space-2);
+  --d-comp-BlockPanel-item-space-gap-block: var(--space-1);
+  --d-comp-BlockPanel-item-space-padding-block: var(--space-1);
+  --d-comp-BlockPanel-item-space-padding-inline: var(--space-2);
+  --d-comp-BlockPanel-item-border-radius: var(--d-border-radius);
+  --d-comp-BlockPanel-item-color-background-hovered: var(--primary-very-low);
+  --d-comp-BlockPanel-score-size-inline: 2.5rem;
+  --d-comp-BlockPanel-date-size-inline: 2.75rem;
+  --d-comp-BlockPanel-date-font-size: 1.375rem;
+}
+
+.d-block-panel {
+  box-sizing: border-box;
+  background: var(--d-comp-BlockPanel-color-background);
+  border: var(--d-comp-BlockPanel-border-width) solid
+    var(--d-comp-BlockPanel-color-border);
+  border-radius: var(--d-comp-BlockPanel-border-radius);
+  color: var(--d-comp-BlockPanel-color-text-default);
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--d-comp-BlockPanel-space-gap-inline);
+    padding: var(--d-comp-BlockPanel-space-padding);
+    border-bottom: var(--d-comp-BlockPanel-border-width) solid
+      var(--d-comp-BlockPanel-color-border);
+  }
+
+  &__icon {
+    display: inline-flex;
+    color: var(--d-comp-BlockPanel-color-icon-muted);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--d-comp-BlockPanel-title-font-size);
+    font-weight: 600;
+    line-height: var(--d-comp-BlockPanel-font-line-height);
+  }
+
+  &__body {
+    padding: var(--d-comp-BlockPanel-space-padding);
+
+    &:not(:has(*)) {
+      display: none;
+
+      + .d-block-panel__footer {
+        border-top: 0;
+      }
+    }
+  }
+
+  // A footer block whose content is conditional can end up empty.
+  &__footer:not(:has(*)) {
+    display: none;
+  }
+
+  &__footer {
+    padding: var(--d-comp-BlockPanel-footer-space-padding-block)
+      var(--d-comp-BlockPanel-space-padding);
+    border-top: var(--d-comp-BlockPanel-border-width) solid
+      var(--d-comp-BlockPanel-color-border);
+    text-align: center;
+  }
+
+  &__link {
+    color: var(--d-comp-BlockPanel-color-text-accent);
+    font-size: var(--d-comp-BlockPanel-font-size);
+    font-weight: 600;
+  }
+
+  &__empty {
+    margin: 0;
+    color: var(--d-comp-BlockPanel-color-text-muted);
+    font-size: var(--d-comp-BlockPanel-font-size);
+  }
+
+  &__error {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--d-comp-BlockPanel-space-gap-block);
+  }
+
+  &__error-message {
+    margin: 0;
+    font-size: var(--d-comp-BlockPanel-font-size);
+  }
+}

@@ -63,6 +63,9 @@ en:
         condition_failed_hint: "This block is not rendered because its conditions failed."
         unknown_block_hint: "This block reference is not registered. Likely a typo or a missing plugin — check the block name."
         head_hidden_tail_hint: "This block is not rendered because another block was rendered first in the `head` container."
+      panel:
+        load_error: "Couldn't load this content."
+        retry: "Retry"
       builtin:
         placeholders:
           heading_text: "Section heading"
@@ -140,6 +143,24 @@ en:
           max_days: "Only grants from the last N days (0 for no limit)"
           count: "Recipients to show"
           empty: "No badges awarded yet."
+        category_navigation:
+          title: "Title"
+          icon: "Icon"
+          show_description: "Show description"
+          show_topic_counts: "Show topic counts"
+          all_categories_url: "All categories link"
+          all_categories: "All categories"
+          topic_count:
+            one: "%{formatted_number} topic"
+            other: "%{formatted_number} topics"
+        resources:
+          title: "Title"
+          icon: "Icon"
+          links: "Links"
+          link_label: "Label"
+          link_url: "URL"
+          link_icon: "Icon"
+          link_description: "Description"
         category_banner:
           show_logo: "Show logo"
           show_icon: "Show icon / emoji"
@@ -157,12 +178,23 @@ en:
           link_href: "Link href"
         featured_topics:
           title: "Title"
+          icon: "Icon"
           count: "Topics to show"
           filter: "Filter"
+          order: "Order"
+          order_help: "Sorts the list. Leave empty for the list's own order."
+          order_activity: "Activity"
+          order_created: "Created"
+          order_likes: "Likes"
+          order_views: "Views"
+          order_posts: "Replies"
           category_id: "Category"
+          current_category: "Follow the current category"
+          current_category_help: "On a category page, list the topics of its top-level category instead."
           tag: "Tag"
           link_label: "Link label"
           link_href: "Link href"
+          view_all: "View all"
         topic_card:
           topic_id: "Topic"
           topic_id_help: "The topic to feature."

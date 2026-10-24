@@ -1,0 +1,35 @@
+// Shared declarations for list rows inside a panel block (`blocks/block-panel`).
+// Each block passes its own token prefix, e.g. `--d-comp-BlockResources`, and
+// declares the `item` tokens these read.
+
+// A list row: mark or avatar, text, trailing meta.
+@mixin item($prefix) {
+  display: flex;
+  align-items: center;
+  gap: var(#{$prefix}-item-space-gap-inline);
+  min-height: var(#{$prefix}-item-size-min-block);
+  font-size: var(#{$prefix}-font-size);
+
+  // Rows read as text in every state; a block that wants the accent on hover
+  // sets it itself.
+  &,
+  &:visited,
+  &:hover,
+  &:focus-visible {
+    color: var(#{$prefix}-color-text-default);
+  }
+}
+
+// Hover highlight for an interactive row. It bleeds into the body padding so
+// the tint spans the panel width.
+@mixin item-hover($prefix) {
+  padding: var(#{$prefix}-item-space-padding-block)
+    var(#{$prefix}-item-space-padding-inline);
+  margin-inline: calc(-1 * var(#{$prefix}-item-space-padding-inline));
+  border-radius: var(#{$prefix}-item-border-radius);
+
+  &:hover,
+  &:focus-within {
+    background: var(#{$prefix}-item-color-background-hovered);
+  }
+}

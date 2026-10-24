@@ -1,85 +1,88 @@
+@use "lib/block-panel";
+
+:root {
+  --d-comp-BlockFeaturedTopics-font-size: var(--d-comp-BlockPanel-font-size);
+  --d-comp-BlockFeaturedTopics-font-line-height: var(
+    --d-comp-BlockPanel-font-line-height
+  );
+  --d-comp-BlockFeaturedTopics-color-text-default: var(
+    --d-comp-BlockPanel-color-text-default
+  );
+  --d-comp-BlockFeaturedTopics-color-text-muted: var(
+    --d-comp-BlockPanel-color-text-muted
+  );
+  --d-comp-BlockFeaturedTopics-list-space-gap-block: var(
+    --d-comp-BlockPanel-list-space-gap-block
+  );
+  --d-comp-BlockFeaturedTopics-item-space-gap-block: var(
+    --d-comp-BlockPanel-item-space-gap-block
+  );
+  --d-comp-BlockFeaturedTopics-item-space-padding-block: var(
+    --d-comp-BlockPanel-item-space-padding-block
+  );
+  --d-comp-BlockFeaturedTopics-item-space-padding-inline: var(
+    --d-comp-BlockPanel-item-space-padding-inline
+  );
+  --d-comp-BlockFeaturedTopics-item-border-radius: var(
+    --d-comp-BlockPanel-item-border-radius
+  );
+  --d-comp-BlockFeaturedTopics-item-color-background-hovered: var(
+    --d-comp-BlockPanel-item-color-background-hovered
+  );
+  --d-comp-BlockFeaturedTopics-meta-space-gap-inline: var(
+    --d-comp-BlockPanel-space-gap-inline
+  );
+}
+
 .d-block-featured-topics {
-  display: flex;
-  flex-direction: column;
-
-  /* Fill a stretched grid cell; a no-op against an auto-height parent. */
-  min-height: 100%;
-  gap: 0.75rem;
-  padding: 1rem;
-  border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius, 6px);
-  background: var(--secondary);
-
-  &__title {
-    margin: 0 0 0.25rem;
-    font-size: var(--font-up-1);
-    font-weight: 600;
-  }
-
   &__list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.65rem;
+    gap: var(--d-comp-BlockFeaturedTopics-list-space-gap-block);
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
   &__item {
+    @include block-panel.item-hover("--d-comp-BlockFeaturedTopics");
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-    padding-bottom: 0.65rem;
-    border-bottom: 1px solid var(--primary-low);
-
-    &:last-child {
-      border-bottom: 0;
-      padding-bottom: 0;
-    }
+    gap: var(--d-comp-BlockFeaturedTopics-item-space-gap-block);
+    font-size: var(--d-comp-BlockFeaturedTopics-font-size);
   }
 
   &__topic-link {
-    color: var(--primary);
-    font-weight: 500;
-    line-height: 1.3;
-    text-decoration: none;
+    line-height: var(--d-comp-BlockFeaturedTopics-font-line-height);
 
-    &:hover {
-      color: var(--tertiary);
+    &,
+    &:visited,
+    &:hover,
+    &:focus-visible {
+      color: var(--d-comp-BlockFeaturedTopics-color-text-default);
+    }
+
+    &:hover,
+    &:focus-visible {
+      text-decoration: underline;
     }
   }
 
   &__meta {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 0.5rem;
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    gap: var(--d-comp-BlockFeaturedTopics-meta-space-gap-inline);
+    min-width: 0;
+    color: var(--d-comp-BlockFeaturedTopics-color-text-muted);
+
+    .badge-category__wrapper {
+      font-size: inherit;
+    }
   }
 
   &__age {
-    margin-left: auto;
-  }
-
-  &__loading,
-  &__empty {
-    padding: 1rem;
-    text-align: center;
-    color: var(--primary-medium);
-  }
-
-  &__footer {
-    margin-top: 0.25rem;
-  }
-
-  &__all-link {
-    display: inline-block;
-    color: var(--tertiary);
-    font-size: var(--font-down-1);
-    font-weight: 500;
-
-    &:hover {
-      text-decoration: underline;
-    }
+    margin-inline-start: auto;
+    white-space: nowrap;
   }
 }

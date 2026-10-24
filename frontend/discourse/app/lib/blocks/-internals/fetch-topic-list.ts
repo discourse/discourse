@@ -1,3 +1,4 @@
+import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
 import type Topic from "discourse/models/topic";
 import type User from "discourse/models/user";
@@ -58,6 +59,9 @@ interface FetchTopicListParams {
   /** Whether to restrict the list to solved topics. */
   solved?: boolean;
 
+  /** An optional sort order applied to the list. */
+  order?: string;
+
   /** Maximum number of topics to resolve. */
   count?: number;
 }
@@ -79,6 +83,7 @@ export async function fetchTopicList({
   categoryId,
   tag,
   solved,
+  order,
   count = 5,
 }: FetchTopicListParams): Promise<Topic[] | null> {
   if (USER_ONLY_FILTERS.has(filterType) && !currentUser) {
@@ -86,7 +91,10 @@ export async function fetchTopicList({
   }
 
   const filter = buildFilterPath(filterType, categoryId, tag);
-  const requestParams = solved ? { solved } : {};
+  const requestParams = {
+    ...(solved ? { solved } : {}),
+    ...(order ? { order } : {}),
+  };
 
   // `ignoreUnsent: false` so a failed request (including offline) rejects
   // rather than hanging unsettled — the block's loading boundary then surfaces
@@ -111,3 +119,33 @@ export const VALID_TOPIC_LIST_FILTERS = [
   "new",
   "unread",
 ];
+
+/** Sort orders a topic list accepts besides its own default order. */
+export const VALID_TOPIC_LIST_ORDERS = [
+  "activity",
+  "created",
+  "likes",
+  "views",
+  "posts",
+];
+
+/**
+ * The URL of the full topic list a block shows a part of.
+ *
+ * @param params - The list's filter type, sort order, category and tag.
+ * @returns The list URL.
+ */
+export function topicListUrl({
+  filterType,
+  order,
+  categoryId,
+  tag,
+}: {
+  filterType: string;
+  order?: string;
+  categoryId?: number;
+  tag?: string;
+}): string {
+  const url = getURL(`/${buildFilterPath(filterType, categoryId, tag)}`);
+  return order ? `${url}?order=${encodeURIComponent(order)}` : url;
+}

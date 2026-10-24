@@ -296,7 +296,17 @@ export interface BlockSkeletonShape {
 
   /** Explicit skeleton height. */
   height?: string;
+
+  /**
+   * Paints `count` composed list rows instead of plain items: an avatar, name
+   * and score (`user`), an icon with two lines (`link`), or a title with a meta
+   * line (`topic`).
+   */
+  rows?: BlockSkeletonRows;
 }
+
+/** The composed list-row shapes a block skeleton can paint. */
+export type BlockSkeletonRows = "user" | "link" | "topic";
 
 /**
  * Describes how a data source combines multiple block descriptors into one
@@ -651,7 +661,7 @@ export type BlockDataComponent<Value = unknown> = ComponentLike<{
   Blocks: {
     content: [value: Value];
     loading: [];
-    error: [];
+    error: [error: Error, inlineError: ComponentLike, retry: () => void];
     empty: [];
   };
 }>;

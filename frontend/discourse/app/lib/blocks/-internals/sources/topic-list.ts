@@ -14,6 +14,7 @@ interface TopicListDescriptor {
   categoryId?: number;
   tag?: string;
   solved?: boolean;
+  order?: string;
   count: number;
 }
 
@@ -33,6 +34,7 @@ export const topicListDataSource = defineBlockDataSource({
       categoryId: descriptor.categoryId,
       tag: descriptor.tag,
       solved: descriptor.solved,
+      order: descriptor.order,
       count: descriptor.count,
     });
   },

@@ -1,0 +1,160 @@
+@use "lib/block-panel";
+
+:root {
+  --d-comp-BlockCategoryNavigation-font-size: var(
+    --d-comp-BlockPanel-font-size
+  );
+  --d-comp-BlockCategoryNavigation-head-font-size: var(
+    --d-comp-BlockPanel-title-font-size
+  );
+  --d-comp-BlockCategoryNavigation-font-line-height: var(
+    --d-comp-BlockPanel-font-line-height
+  );
+  --d-comp-BlockCategoryNavigation-color-text-default: var(
+    --d-comp-BlockPanel-color-text-default
+  );
+  --d-comp-BlockCategoryNavigation-color-text-muted: var(
+    --d-comp-BlockPanel-color-text-muted
+  );
+  --d-comp-BlockCategoryNavigation-color-text-accent: var(
+    --d-comp-BlockPanel-color-text-accent
+  );
+  --d-comp-BlockCategoryNavigation-intro-space-gap-block: var(
+    --d-comp-BlockPanel-item-space-gap-block
+  );
+  --d-comp-BlockCategoryNavigation-item-size-min-block: var(
+    --d-comp-BlockPanel-item-size-min-block
+  );
+  --d-comp-BlockCategoryNavigation-item-space-gap-inline: var(
+    --d-comp-BlockPanel-item-space-gap-inline
+  );
+  --d-comp-BlockCategoryNavigation-item-space-padding-block: var(
+    --d-comp-BlockPanel-item-space-padding-block
+  );
+  --d-comp-BlockCategoryNavigation-item-space-padding-inline: var(
+    --d-comp-BlockPanel-item-space-padding-inline
+  );
+  --d-comp-BlockCategoryNavigation-item-border-radius: var(
+    --d-comp-BlockPanel-item-border-radius
+  );
+  --d-comp-BlockCategoryNavigation-item-color-background-hovered: var(
+    --d-comp-BlockPanel-item-color-background-hovered
+  );
+  --d-comp-BlockCategoryNavigation-mark-size-icon: var(
+    --d-comp-BlockPanel-size-icon
+  );
+  --d-comp-BlockCategoryNavigation-square-size-icon: var(--category-badge-size);
+  --d-comp-BlockCategoryNavigation-square-border-radius: var(
+    --category-badge-border-radius
+  );
+}
+
+.d-block-category-navigation {
+  &__intro {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--d-comp-BlockCategoryNavigation-intro-space-gap-block);
+    min-width: 0;
+  }
+
+  &__head {
+    @include block-panel.item("--d-comp-BlockCategoryNavigation");
+
+    .d-block-category-navigation__name {
+      font-size: var(--d-comp-BlockCategoryNavigation-head-font-size);
+      font-weight: 600;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+    }
+  }
+
+  &__description {
+    margin: 0;
+    color: var(--d-comp-BlockCategoryNavigation-color-text-muted);
+    font-size: var(--d-comp-BlockCategoryNavigation-font-size);
+    line-height: var(--d-comp-BlockCategoryNavigation-font-line-height);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__link {
+    @include block-panel.item("--d-comp-BlockCategoryNavigation");
+    @include block-panel.item-hover("--d-comp-BlockCategoryNavigation");
+  }
+
+  &__name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__count {
+    color: var(--d-comp-BlockCategoryNavigation-color-text-muted);
+    white-space: nowrap;
+  }
+
+  &__link:hover &__name,
+  &__link:focus-visible &__name,
+  &__head:hover &__name,
+  &__head:focus-visible &__name {
+    color: var(--d-comp-BlockCategoryNavigation-color-text-accent);
+  }
+
+  &__item.--current &__link {
+    font-weight: 700;
+
+    .d-block-category-navigation__name {
+      color: var(--d-comp-BlockCategoryNavigation-color-text-accent);
+    }
+  }
+
+  // On the top-level category's own pages its name takes the accent and the
+  // description firms up with it.
+  &__intro.--current {
+    .d-block-category-navigation__name {
+      color: var(--d-comp-BlockCategoryNavigation-color-text-accent);
+    }
+
+    .d-block-category-navigation__description {
+      font-weight: 600;
+    }
+  }
+
+  &__mark {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--d-comp-BlockCategoryNavigation-mark-size-icon);
+    height: var(--d-comp-BlockCategoryNavigation-mark-size-icon);
+
+    .emoji {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .d-icon {
+      width: 100%;
+      height: 100%;
+      color: var(--category-badge-color);
+    }
+  }
+
+  &__square {
+    width: var(--d-comp-BlockCategoryNavigation-square-size-icon);
+    height: var(--d-comp-BlockCategoryNavigation-square-size-icon);
+    border-radius: var(--d-comp-BlockCategoryNavigation-square-border-radius);
+    background: var(--category-badge-color);
+  }
+}

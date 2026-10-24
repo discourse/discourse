@@ -3,3 +3,55 @@
   // not introduce a box that disturbs the block's own layout.
   display: contents;
 }
+
+// Composed list rows painted while a block's data loads (`rows` skeleton
+// shapes). They mirror the rows of panel blocks, so the sizes point at the
+// panel defaults.
+:root {
+  --d-comp-BlockSkeleton-space-gap-block: var(
+    --d-comp-BlockPanel-space-gap-block
+  );
+  --d-comp-BlockSkeleton-row-size-min-block: var(
+    --d-comp-BlockPanel-item-size-min-block
+  );
+  --d-comp-BlockSkeleton-row-space-gap-inline: var(
+    --d-comp-BlockPanel-item-space-gap-inline
+  );
+  --d-comp-BlockSkeleton-lines-space-gap-block: var(
+    --d-comp-BlockPanel-item-space-gap-block
+  );
+  --d-comp-BlockSkeleton-size-icon: var(--d-comp-BlockPanel-size-icon);
+  --d-comp-BlockSkeleton-size-avatar: var(--d-comp-BlockPanel-size-avatar);
+  --d-comp-BlockSkeleton-score-size-inline: var(
+    --d-comp-BlockPanel-score-size-inline
+  );
+}
+
+.block-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--d-comp-BlockSkeleton-space-gap-block);
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: var(--d-comp-BlockSkeleton-row-space-gap-inline);
+    min-height: var(--d-comp-BlockSkeleton-row-size-min-block);
+
+    // The name line grows; the trailing score keeps its width.
+    &.--user > .d-skeleton:nth-child(2) {
+      flex: 1;
+    }
+
+    &.--topic {
+      align-items: stretch;
+    }
+  }
+
+  &__lines {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--d-comp-BlockSkeleton-lines-space-gap-block);
+  }
+}

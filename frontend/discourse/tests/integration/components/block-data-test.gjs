@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { render, settled, waitFor } from "@ember/test-helpers";
+import { on } from "@ember/modifier";
+import { click, render, settled, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { block, defineBlockDataSource } from "discourse/blocks";
 import BlockOutlet from "discourse/blocks/block-outlet";
@@ -370,5 +371,90 @@ module("Integration | Blocks | block data", function (hooks) {
 
     assert.dom(".plain-content").hasText("plain");
     assert.dom(".d-skeleton").doesNotExist("no skeleton for a plain block");
+  });
+  test("a rows shape paints composed list rows while loading", async function (assert) {
+    let resolveFetch;
+    const fetchPromise = new Promise((resolve) => (resolveFetch = resolve));
+
+    @block("data-rows-skeleton-block", {
+      data: {
+        request: () => DESCRIPTOR,
+        source: defineBlockDataSource({ resolve: () => fetchPromise }),
+        skeleton: () => ({ rows: "user", count: 3 }),
+      },
+    })
+    class DataRowsSkeletonBlock extends Component {
+      <template>
+        <@Data>
+          <:content as |value|>
+            <div class="resolved-content">{{value}}</div>
+          </:content>
+        </@Data>
+      </template>
+    }
+
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [{ block: DataRowsSkeletonBlock }])
+    );
+
+    const renderPromise = render(
+      <template><BlockOutlet @name="hero-blocks" /></template>
+    );
+
+    await waitFor(".block-skeleton");
+    assert
+      .dom(".block-skeleton__row.--user")
+      .exists({ count: 3 }, "one composed row per count");
+
+    resolveFetch("done");
+    await renderPromise;
+    await settled();
+
+    assert.dom(".block-skeleton").doesNotExist("the rows are gone");
+    assert.dom(".resolved-content").hasText("done");
+  });
+
+  test("the :error block's retry requests the data again", async function (assert) {
+    let calls = 0;
+
+    @block("data-retry-block", {
+      data: {
+        request: () => DESCRIPTOR,
+        source: defineBlockDataSource({
+          resolve: () => {
+            calls++;
+            return calls === 1
+              ? Promise.reject(new Error("nope"))
+              : Promise.resolve("recovered");
+          },
+        }),
+      },
+    })
+    class DataRetryBlock extends Component {
+      <template>
+        <@Data>
+          <:content as |value|>
+            <div class="resolved-content">{{value}}</div>
+          </:content>
+          <:error as |error inlineError retry|>
+            <button class="retry-button" type="button" {{on "click" retry}}>
+              retry
+            </button>
+          </:error>
+        </@Data>
+      </template>
+    }
+
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [{ block: DataRetryBlock }])
+    );
+
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+    assert.dom(".retry-button").exists("the failure renders the error block");
+
+    await click(".retry-button");
+
+    assert.strictEqual(calls, 2, "the source resolved again");
+    assert.dom(".resolved-content").hasText("recovered");
   });
 });
