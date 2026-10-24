@@ -70,14 +70,15 @@ end
 #
 # Table name: post_revisions
 #
-#  id            :integer          not null, primary key
-#  hidden        :boolean          default(FALSE), not null
-#  modifications :text
-#  number        :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  post_id       :integer
-#  user_id       :integer
+#  id                :integer          not null, primary key
+#  form_data_changes :jsonb
+#  hidden            :boolean          default(FALSE), not null
+#  modifications     :text
+#  number            :integer
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  post_id           :integer
+#  user_id           :integer
 #
 # Indexes
 #

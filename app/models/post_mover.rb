@@ -225,6 +225,8 @@ class PostMover
       end
     end
 
+    ensure_forms_remain_first(posts, @move_map)
+
     posts.each do |post|
       metadata = movement_metadata(post, new_post_number: @move_map[post.post_number])
       new_post = post.is_first_post? ? create_first_post(post) : move(post)
@@ -283,6 +285,9 @@ class PostMover
       next_post_number += 1
     end
 
+    ensure_forms_remain_first(posts, @move_map)
+    ensure_forms_remain_first(destination_posts, @shift_map)
+
     moved_posts.reverse_each do |post|
       if post.topic_id == destination_topic.id
         metadata = movement_metadata(post, new_post_number: @shift_map[post.post_number])
@@ -301,6 +306,14 @@ class PostMover
 
     # change topic owner if there's a new first post
     destination_topic.update_column(:user_id, posts.first.user_id) if initial_post_number == 1
+  end
+
+  def ensure_forms_remain_first(moving_posts, post_numbers)
+    if moving_posts.any? { |post|
+         post.form_data.present? && post_numbers.fetch(post.post_number, post.post_number) != 1
+       }
+      raise Discourse::InvalidParameters, I18n.t("move_posts.form_must_remain_first")
+    end
   end
 
   def create_first_post(post)
