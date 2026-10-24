@@ -41,16 +41,6 @@ export default class GifsModal extends Component {
     return this.query.length < MIN_QUERY_LENGTH && this.categories.length > 0;
   }
 
-  get darkMediaQuery() {
-    if (this.interfaceColor.darkModeForced) {
-      return "all";
-    } else if (this.interfaceColor.lightModeForced) {
-      return "none";
-    } else {
-      return "(prefers-color-scheme: dark)";
-    }
-  }
-
   @action
   pick(content) {
     const markup = `\n![${content.title}|${content.width}x${content.height}](${content.original})\n`;
@@ -295,6 +285,7 @@ export default class GifsModal extends Component {
                 @loading={{this.loading}}
                 @loadMore={{this.loadMore}}
                 @pick={{this.pick}}
+                @root=".gifs-modal__content"
               />
             </div>
           </div>
@@ -323,7 +314,7 @@ export default class GifsModal extends Component {
       <:footer>
         <picture>
           <source
-            media={{this.darkMediaQuery}}
+            media={{this.interfaceColor.darkMediaQuery}}
             srcset={{getURL "/images/klipy-logo-dark.png"}}
           />
           <img
