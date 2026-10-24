@@ -47,7 +47,8 @@ module Jobs
         event = event_date.event
         recurring = event.recurrence.present?
         create_successor_topic =
-          recurring && SiteSetting.discourse_post_event_recurring_topic_mode == "create_next_topic"
+          recurring && event.post.topic.archetype == Archetype.default &&
+            SiteSetting.discourse_post_event_recurring_topic_mode == "create_next_topic"
 
         if create_successor_topic
           DiscourseEvents::Events::Event.transaction do

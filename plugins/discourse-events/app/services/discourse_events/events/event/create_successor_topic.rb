@@ -59,6 +59,8 @@ module DiscourseEvents
       end
 
       def call
+        raise Discourse::InvalidParameters.new(:event) if topic.archetype != Archetype.default
+
         original_raw = post.raw
         original_title = topic.title
         event_open_tag_match = rendered_event_open_tag_match(original_raw)

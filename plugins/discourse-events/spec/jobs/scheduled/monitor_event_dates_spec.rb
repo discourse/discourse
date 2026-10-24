@@ -226,6 +226,45 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         SiteSetting.discourse_post_event_recurring_topic_mode = "create_next_topic"
       end
 
+      it "keeps recurring private-message events in their original topic" do
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        recipient = Fabricate(:user)
+
+        post =
+          PostCreator.create!(
+            event_author,
+            title: "Private recurring meeting",
+            archetype: Archetype.private_message,
+            target_usernames: recipient.username,
+            raw: <<~RAW,
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Confidential meeting notes.
+              [/event]
+            RAW
+          )
+
+        original_topic = post.topic
+        original_raw = post.raw
+        event = post.reload.event
+
+        expect(event).to be_present
+        expect(original_topic.archetype).to eq(Archetype.private_message)
+
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.not_to change(Topic, :count)
+
+        expect(original_topic.reload.archetype).to eq(Archetype.private_message)
+        expect(post.reload.raw).to eq(original_raw)
+        expect(event.reload.recurrence).to eq("every_week")
+        expect(event.event_dates.pending.first.starts_at).to be > starts_at
+
+        expect {
+          DiscourseEvents::Events::Event::CreateSuccessorTopic.call(event.event_dates.pending.first)
+        }.to raise_error(Discourse::InvalidParameters)
+      end
+
       it "truncates the archived title while preserving the occurrence date" do
         starts_at = 7.days.after.change(sec: 0)
         ends_at = starts_at + 1.hour
