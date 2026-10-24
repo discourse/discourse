@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { cancel, schedule } from "@ember/runloop";
@@ -53,6 +52,7 @@ export default class CodeLoginForm extends Component {
   @service sessionStore;
 
   @tracked email = this.args.initialEmail ?? "";
+  @tracked emailFormData = { email: this.email };
   @tracked verifying = false;
   @tracked codeError;
   @tracked notice;
@@ -373,6 +373,7 @@ export default class CodeLoginForm extends Component {
     this.#clearPendingAvatarUrl();
     this.otpGeneration++;
     this.#clearSignupContinuation();
+    this.emailFormData = { email: this.email };
     this.step = "email";
     this.args.onChangeEmail?.();
   }
@@ -1146,7 +1147,7 @@ export default class CodeLoginForm extends Component {
 
           <Form
             class="code-login-form__email-step"
-            @data={{hash email=this.email}}
+            @data={{this.emailFormData}}
             @onSubmit={{this.submitEmail}}
             as |form|
           >
