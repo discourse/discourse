@@ -307,18 +307,29 @@ module DiscourseEvents
       end
 
       def rewrite_attribute(opening_tag, name, value)
-        pattern =
+        attribute_token =
           /
-            \s+#{Regexp.escape(name)}
+            \G
+            \s+
+            (?<attribute_name>[-\w]+)
             (?:=#{ATTRIBUTE_VALUE})?
-            (?=\s|\])
           /ix
 
-        opening_tag = opening_tag.gsub(pattern, "")
-        return opening_tag if value.nil?
+        # Match complete attributes from immediately after "[event", so
+        # attribute-like words inside quoted values are never removed.
+        rewritten = +opening_tag[0, 6]
+        position = 6
+
+        while (token = attribute_token.match(opening_tag, position))
+          rewritten << token[0] unless token[:attribute_name].casecmp?(name)
+          position = token.end(0)
+        end
+
+        rewritten << opening_tag[position..]
+        return rewritten if value.nil?
 
         serialized = serialize_attribute(name, value)
-        opening_tag.sub(/\]\z/, " #{serialized}]")
+        rewritten.sub(/\]\z/, " #{serialized}]")
       end
 
       def serialize_attribute(name, value)

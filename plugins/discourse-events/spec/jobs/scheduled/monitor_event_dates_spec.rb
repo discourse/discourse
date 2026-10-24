@@ -226,6 +226,75 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         SiteSetting.discourse_post_event_recurring_topic_mode = "create_next_topic"
       end
 
+      it "preserves attribute-like words and brackets inside quoted values" do
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Weekly quoted-value planning"
+        name = "Start End Recurrence recurrenceUntil Party"
+        location = "West End ] Hall"
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event name="#{name}" location="#{location}" start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Meeting notes.
+              [/event]
+            RAW
+
+        original_topic_id = post.topic_id
+        original_event = post.reload.event
+
+        expect(original_event).to be_present
+        expect(original_event.name).to eq(name)
+        expect(original_event.location).to eq(location)
+
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        successor_topic = Topic.where(title:).where.not(id: original_topic_id).sole
+        successor_post = successor_topic.first_post
+        successor_event = successor_post.reload.event
+
+        expect(post.reload.raw).to include(%(name="#{name}"))
+        expect(post.raw).to include(%(location="#{location}"))
+        expect(post.raw).not_to match(/\srecurrence=/)
+
+        expect(successor_post.raw).to include(%(name="#{name}"))
+        expect(successor_post.raw).to include(%(location="#{location}"))
+        expect(successor_event.name).to eq(name)
+        expect(successor_event.location).to eq(location)
+        expect(successor_event.original_starts_at).to eq_time(starts_at + 7.days)
+      end
+
+      it "preserves quoted attribute values containing event attribute names" do
+        starts_at = 7.days.after.change(sec: 0)
+        ends_at = starts_at + 1.hour
+        title = "Weekly year-end planning"
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event name="Year End Party" location="West End Hall" start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Meeting notes.
+              [/event]
+            RAW
+
+        original_topic_id = post.topic_id
+        expect(post.reload.event).to be_present
+
+        freeze_time(ends_at + 1.hour)
+
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        successor_topic = Topic.where(title:).where.not(id: original_topic_id).sole
+        successor_post = successor_topic.first_post
+
+        expect(post.reload.raw).to include('name="Year End Party"')
+        expect(post.raw).to include('location="West End Hall"')
+        expect(post.raw).not_to match(/\srecurrence=/)
+
+        expect(successor_post.raw).to include('name="Year End Party"')
+        expect(successor_post.raw).to include('location="West End Hall"')
+        expect(successor_post.event.original_starts_at).to eq_time(starts_at + 7.days)
+      end
+
       it "keeps recurring private-message events in their original topic" do
         starts_at = 7.days.after.change(sec: 0)
         ends_at = starts_at + 1.hour
