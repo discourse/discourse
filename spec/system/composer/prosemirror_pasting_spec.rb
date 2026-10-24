@@ -3,16 +3,93 @@
 describe "Composer - ProseMirror - Pasting content" do
   include_context "with prosemirror editor"
 
-  it "creates a mention when pasting an HTML anchor with class mention" do
-    cdp.allow_clipboard
+  it "lets the user paste independent HTML fragments", aggregate_failures: true do
     open_composer
-    html = %(<a href="/u/#{current_user.username}" class="mention">@#{current_user.username}</a>)
-    cdp.copy_paste(html, html: true)
-    expect(rich).to have_css("a.mention", text: current_user.username)
-    expect(rich).to have_css("a.mention[data-name='#{current_user.username}']")
-    expect(rich).to have_no_css("a.mention[href]")
-    composer.toggle_rich_editor
-    expect(composer).to have_value("@#{current_user.username}")
+
+    aggregate_failures("creates a mention when pasting an HTML anchor with class mention") do
+      cdp.allow_clipboard
+      html = %(<a href="/u/#{current_user.username}" class="mention">@#{current_user.username}</a>)
+      cdp.copy_paste(html, html: true)
+      expect(rich).to have_css("a.mention", text: current_user.username)
+      expect(rich).to have_css("a.mention[data-name='#{current_user.username}']")
+      expect(rich).to have_no_css("a.mention[href]")
+      composer.toggle_rich_editor
+      expect(composer).to have_value("@#{current_user.username}")
+    end
+
+    reset_composer
+
+    aggregate_failures("parses images copied from cooked with base62-sha1") do
+      cdp.allow_clipboard
+      cdp.copy_paste(
+        '<img src="image.png" alt="alt text" data-base62-sha1="1234567890">',
+        html: true,
+      )
+      expect(rich).to have_css(
+        "img[src$='image.png'][alt='alt text'][data-orig-src='upload://1234567890.png']",
+      )
+    end
+
+    reset_composer
+
+    aggregate_failures("removes newlines from alt/title in pasted image") do
+      cdp.allow_clipboard
+      cdp.copy_paste(<<~HTML, html: true)
+        <img src="https://example.com/image.png" alt="alt
+        with new
+        lines" title="title
+        with new
+        lines">
+      HTML
+      img = rich.find(".composer-image-node img")
+      expect(img["src"]).to eq("https://example.com/image.png")
+      expect(img["alt"]).to eq("alt with new lines")
+      expect(img["title"]).to eq("title with new lines")
+      composer.toggle_rich_editor
+      expect(composer).to have_value(
+        '![alt with new lines](https://example.com/image.png "title with new lines")',
+      )
+    end
+
+    reset_composer
+
+    aggregate_failures("parses html inline tags from pasted HTML") do
+      cdp.allow_clipboard
+      cdp.copy_paste("<mark>mark</mark> my <ins>words</ins> <kbd>ctrl</kbd>", html: true)
+      expect(rich).to have_css("mark", text: "mark")
+      expect(rich).to have_css("ins", text: "words")
+      expect(rich).to have_css("kbd", text: "ctrl")
+      composer.toggle_rich_editor
+      expect(composer).to have_value("<mark>mark</mark> my <ins>words</ins> <kbd>ctrl</kbd> ")
+    end
+
+    reset_composer
+
+    aggregate_failures("pastes web page text without leaving literal span markup") do
+      cdp.allow_clipboard
+      cdp.copy_paste(
+        # the space sits inside the first span, where a surviving span node eats it
+        %(<p><span class="sentence" lang="en">So I have heard. </span><span class="sentence" lang="en">At one time.</span></p>),
+        html: true,
+      )
+      expect(rich).to have_css("p", text: "So I have heard. At one time.")
+      expect(rich).to have_no_css("span[lang]")
+      composer.toggle_rich_editor
+      expect(composer).to have_value("So I have heard. At one time.")
+    end
+
+    reset_composer
+
+    aggregate_failures("converts newlines to hard breaks when parsing `white-space: pre` HTML") do
+      cdp.allow_clipboard
+      cdp.copy_paste("<span style='white-space: pre;'>line1\nline2\nline3</pre>", html: true)
+      expect(rich).to have_css("p", text: "line1")
+      expect(rich).to have_css("p", text: "line2")
+      expect(rich).to have_css("p", text: "line3")
+      expect(rich).to have_css("br", count: 2)
+      composer.toggle_rich_editor
+      expect(composer).to have_value("line1\nline2\nline3")
+    end
   end
 
   it "does not freeze the editor when pasting markdown code blocks without a language" do
@@ -33,38 +110,45 @@ describe "Composer - ProseMirror - Pasting content" do
     end
   end
 
-  it "parses images copied from cooked with base62-sha1" do
-    cdp.allow_clipboard
+  it "lets the user paste URLs into independent selections", aggregate_failures: true do
     open_composer
-    cdp.copy_paste('<img src="image.png" alt="alt text" data-base62-sha1="1234567890">', html: true)
-    expect(rich).to have_css(
-      "img[src$='image.png'][alt='alt text'][data-orig-src='upload://1234567890.png']",
-    )
-  end
 
-  it "respects existing marks when pasting a url over a selection" do
-    cdp.allow_clipboard
-    open_composer
-    cdp.copy_paste("not selected `code`**bold**not*italic* not selected")
-    rich.find("strong").double_click
-    cdp.copy_paste("www.example.com")
-    expect(rich).to have_css("code", text: "code")
-    expect(rich).to have_css("strong", text: "bold")
-    expect(rich).to have_css("em", text: "italic")
-    composer.toggle_rich_editor
-    expect(composer).to have_value(
-      "not selected [`code`**bold**not*italic*](www.example.com) not selected",
-    )
-  end
+    aggregate_failures("respects existing marks when pasting a url over a selection") do
+      cdp.allow_clipboard
+      cdp.copy_paste("not selected `code`**bold**not*italic* not selected")
+      rich.find("strong").double_click
+      cdp.copy_paste("www.example.com")
+      expect(rich).to have_css("code", text: "code")
+      expect(rich).to have_css("strong", text: "bold")
+      expect(rich).to have_css("em", text: "italic")
+      composer.toggle_rich_editor
+      expect(composer).to have_value(
+        "not selected [`code`**bold**not*italic*](www.example.com) not selected",
+      )
+    end
 
-  it "auto-links pasted URLs from text/html over a selection" do
-    cdp.allow_clipboard
-    open_composer
-    cdp.copy_paste("not selected **bold** not selected")
-    rich.find("strong").double_click
-    cdp.copy_paste("<p>www.example.com</p>", html: true)
-    composer.toggle_rich_editor
-    expect(composer).to have_value("not selected **[bold](www.example.com)** not selected")
+    reset_composer
+
+    aggregate_failures("auto-links pasted URLs from text/html over a selection") do
+      cdp.allow_clipboard
+      cdp.copy_paste("not selected **bold** not selected")
+      rich.find("strong").double_click
+      cdp.copy_paste("<p>www.example.com</p>", html: true)
+      composer.toggle_rich_editor
+      expect(composer).to have_value("not selected **[bold](www.example.com)** not selected")
+    end
+
+    reset_composer
+
+    aggregate_failures("merges text with link marks created from parsing") do
+      cdp.allow_clipboard
+      cdp.copy_paste("This is a [link](https://example.com)")
+      expect(rich).to have_css("a", text: "link")
+      composer.type_content(:space)
+      composer.type_content(:left)
+      composer.type_content(:backspace)
+      expect(rich).to have_css("a", text: "lin")
+    end
   end
 
   it "lets the user paste bold text as plain text inside backtick and tilde code fences" do
@@ -86,26 +170,6 @@ describe "Composer - ProseMirror - Pasting content" do
     composer.fill_content("```\n~~~\n```\n")
     cdp.copy_paste(html, html: true, plain_text: plain_text)
     expect(composer).to have_value("```\n~~~\n```\n**bold**")
-  end
-
-  it "removes newlines from alt/title in pasted image" do
-    cdp.allow_clipboard
-    open_composer
-    cdp.copy_paste(<<~HTML, html: true)
-      <img src="https://example.com/image.png" alt="alt
-      with new
-      lines" title="title
-      with new
-      lines">
-    HTML
-    img = rich.find(".composer-image-node img")
-    expect(img["src"]).to eq("https://example.com/image.png")
-    expect(img["alt"]).to eq("alt with new lines")
-    expect(img["title"]).to eq("title with new lines")
-    composer.toggle_rich_editor
-    expect(composer).to have_value(
-      '![alt with new lines](https://example.com/image.png "title with new lines")',
-    )
   end
 
   it "ignores text/html content if Files are present" do
@@ -151,122 +215,128 @@ describe "Composer - ProseMirror - Pasting content" do
   context "when unauthorized to upload" do
     before { SiteSetting.authorized_extensions = "" }
 
-    it "allows pasting text" do
-      cdp.allow_clipboard
+    it "lets the user paste independent documents without upload permission",
+       aggregate_failures: true do
       open_composer
-      cdp.copy_paste("Just some text")
-      expect(rich).to have_css("p", text: "Just some text")
-      composer.toggle_rich_editor
-      expect(composer).to have_value("Just some text")
+
+      aggregate_failures("allows pasting text") do
+        cdp.allow_clipboard
+        cdp.copy_paste("Just some text")
+        expect(rich).to have_css("p", text: "Just some text")
+        composer.toggle_rich_editor
+        expect(composer).to have_value("Just some text")
+      end
+
+      reset_composer
+
+      aggregate_failures("avoids triggering upload for paste") do
+        cdp.allow_clipboard
+        cdp.copy_test_image
+        cdp.paste
+        expect(rich).to have_no_css("img")
+        composer.toggle_rich_editor
+        expect(composer).to have_value("")
+      end
+
+      reset_composer
+
+      aggregate_failures("avoids triggering upload for base64") do
+        valid_png_data_uri =
+          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+        cdp.allow_clipboard
+        html = <<~HTML
+          <img src="#{valid_png_data_uri}" alt="img1" width="100" height="100">
+        HTML
+        cdp.copy_paste(html, html: true)
+        expect(rich).to have_no_css("img")
+        expect(rich).to have_text("image")
+        composer.toggle_rich_editor
+        expect(composer).to have_value("image")
+      end
+
+      reset_composer
+
+      aggregate_failures("replaces multiple base64 images with same data URI") do
+        valid_png_data_uri =
+          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+        cdp.allow_clipboard
+        html = <<~HTML
+          <p>before</p>
+          <img src="#{valid_png_data_uri}" alt="img1">
+          <p>middle</p>
+          <img src="#{valid_png_data_uri}" alt="img2">
+          <p>after</p>
+        HTML
+        cdp.copy_paste(html, html: true)
+        expect(rich).to have_no_css("img")
+        expect(rich).to have_text("before")
+        expect(rich).to have_text("middle")
+        expect(rich).to have_text("after")
+        composer.toggle_rich_editor
+        expect(composer).to have_value("before\n\nimage\n\nmiddle\n\nimage\n\nafter")
+      end
+    end
+  end
+
+  it "lets the user paste into independent list documents", aggregate_failures: true do
+    open_composer
+
+    aggregate_failures(
+      "continues a bullet list when pasting multi-line text into an empty list item",
+    ) do
+      cdp.allow_clipboard
+
+      composer.type_content("* ")
+      cdp.copy_paste("apple\nbanana\ncoconut")
+
+      expect(rich).to have_css("ul li", count: 3)
+      expect(rich).to have_css("ul li", text: "apple")
+      expect(rich).to have_css("ul li", text: "banana")
+      expect(rich).to have_css("ul li", text: "coconut")
     end
 
-    it "avoids triggering upload for paste" do
-      open_composer
+    reset_composer
+
+    aggregate_failures(
+      "continues an ordered list when pasting multi-line text into an empty list item",
+    ) do
       cdp.allow_clipboard
-      cdp.copy_test_image
-      cdp.paste
-      expect(rich).to have_no_css("img")
-      composer.toggle_rich_editor
-      expect(composer).to have_value("")
+
+      composer.type_content("1. ")
+      cdp.copy_paste("apple\nbanana\ncoconut")
+
+      expect(rich).to have_css("ol li", count: 3)
+      expect(rich).to have_css("ol li", text: "apple")
+      expect(rich).to have_css("ol li", text: "banana")
+      expect(rich).to have_css("ol li", text: "coconut")
     end
 
-    it "avoids triggering upload for base64" do
-      valid_png_data_uri =
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+    reset_composer
+
+    aggregate_failures("skips blank lines when continuing a list from pasted multi-line text") do
       cdp.allow_clipboard
-      open_composer
-      html = <<~HTML
-        <img src="#{valid_png_data_uri}" alt="img1" width="100" height="100">
-      HTML
-      cdp.copy_paste(html, html: true)
-      expect(rich).to have_no_css("img")
-      expect(rich).to have_text("image")
-      composer.toggle_rich_editor
-      expect(composer).to have_value("image")
+
+      composer.type_content("* ")
+      cdp.copy_paste("apple\n\nbanana")
+
+      expect(rich).to have_css("ul li", count: 2)
+      expect(rich).to have_css("ul li", text: "apple")
+      expect(rich).to have_css("ul li", text: "banana")
     end
 
-    it "replaces multiple base64 images with same data URI" do
-      valid_png_data_uri =
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+    reset_composer
+
+    aggregate_failures("keeps default paste behavior in a non-empty list item") do
       cdp.allow_clipboard
-      open_composer
-      html = <<~HTML
-        <p>before</p>
-        <img src="#{valid_png_data_uri}" alt="img1">
-        <p>middle</p>
-        <img src="#{valid_png_data_uri}" alt="img2">
-        <p>after</p>
-      HTML
-      cdp.copy_paste(html, html: true)
-      expect(rich).to have_no_css("img")
-      expect(rich).to have_text("before")
-      expect(rich).to have_text("middle")
-      expect(rich).to have_text("after")
-      composer.toggle_rich_editor
-      expect(composer).to have_value("before\n\nimage\n\nmiddle\n\nimage\n\nafter")
+
+      composer.type_content("* existing")
+      cdp.copy_paste("\napple\nbanana")
+
+      expect(rich).to have_css("ul li", count: 1)
+      expect(rich).to have_css("ul li", text: "existing")
+      expect(rich).to have_css("ul li", text: "apple")
+      expect(rich).to have_css("ul li", text: "banana")
     end
-  end
-
-  it "merges text with link marks created from parsing" do
-    cdp.allow_clipboard
-    open_composer
-    cdp.copy_paste("This is a [link](https://example.com)")
-    expect(rich).to have_css("a", text: "link")
-    composer.type_content(:space)
-    composer.type_content(:left)
-    composer.type_content(:backspace)
-    expect(rich).to have_css("a", text: "lin")
-  end
-
-  it "continues a bullet list when pasting multi-line text into an empty list item" do
-    cdp.allow_clipboard
-    open_composer
-
-    composer.type_content("* ")
-    cdp.copy_paste("apple\nbanana\ncoconut")
-
-    expect(rich).to have_css("ul li", count: 3)
-    expect(rich).to have_css("ul li", text: "apple")
-    expect(rich).to have_css("ul li", text: "banana")
-    expect(rich).to have_css("ul li", text: "coconut")
-  end
-
-  it "continues an ordered list when pasting multi-line text into an empty list item" do
-    cdp.allow_clipboard
-    open_composer
-
-    composer.type_content("1. ")
-    cdp.copy_paste("apple\nbanana\ncoconut")
-
-    expect(rich).to have_css("ol li", count: 3)
-    expect(rich).to have_css("ol li", text: "apple")
-    expect(rich).to have_css("ol li", text: "banana")
-    expect(rich).to have_css("ol li", text: "coconut")
-  end
-
-  it "skips blank lines when continuing a list from pasted multi-line text" do
-    cdp.allow_clipboard
-    open_composer
-
-    composer.type_content("* ")
-    cdp.copy_paste("apple\n\nbanana")
-
-    expect(rich).to have_css("ul li", count: 2)
-    expect(rich).to have_css("ul li", text: "apple")
-    expect(rich).to have_css("ul li", text: "banana")
-  end
-
-  it "keeps default paste behavior in a non-empty list item" do
-    cdp.allow_clipboard
-    open_composer
-
-    composer.type_content("* existing")
-    cdp.copy_paste("\napple\nbanana")
-
-    expect(rich).to have_css("ul li", count: 1)
-    expect(rich).to have_css("ul li", text: "existing")
-    expect(rich).to have_css("ul li", text: "apple")
-    expect(rich).to have_css("ul li", text: "banana")
   end
 
   it "clears closed marks from stored marks when using markInputRule" do
@@ -276,43 +346,6 @@ describe "Composer - ProseMirror - Pasting content" do
     expect(rich).to have_css("a code", text: "something")
     expect(rich).to have_content("word")
     expect(rich).to have_no_css("code", text: "word")
-  end
-
-  it "parses html inline tags from pasted HTML" do
-    cdp.allow_clipboard
-    open_composer
-    cdp.copy_paste("<mark>mark</mark> my <ins>words</ins> <kbd>ctrl</kbd>", html: true)
-    expect(rich).to have_css("mark", text: "mark")
-    expect(rich).to have_css("ins", text: "words")
-    expect(rich).to have_css("kbd", text: "ctrl")
-    composer.toggle_rich_editor
-    expect(composer).to have_value("<mark>mark</mark> my <ins>words</ins> <kbd>ctrl</kbd> ")
-  end
-
-  it "pastes web page text without leaving literal span markup" do
-    cdp.allow_clipboard
-    open_composer
-    cdp.copy_paste(
-      # the space sits inside the first span, where a surviving span node eats it
-      %(<p><span class="sentence" lang="en">So I have heard. </span><span class="sentence" lang="en">At one time.</span></p>),
-      html: true,
-    )
-    expect(rich).to have_css("p", text: "So I have heard. At one time.")
-    expect(rich).to have_no_css("span[lang]")
-    composer.toggle_rich_editor
-    expect(composer).to have_value("So I have heard. At one time.")
-  end
-
-  it "converts newlines to hard breaks when parsing `white-space: pre` HTML" do
-    cdp.allow_clipboard
-    open_composer
-    cdp.copy_paste("<span style='white-space: pre;'>line1\nline2\nline3</pre>", html: true)
-    expect(rich).to have_css("p", text: "line1")
-    expect(rich).to have_css("p", text: "line2")
-    expect(rich).to have_css("p", text: "line3")
-    expect(rich).to have_css("br", count: 2)
-    composer.toggle_rich_editor
-    expect(composer).to have_value("line1\nline2\nline3")
   end
 
   context "when pasting tables" do
