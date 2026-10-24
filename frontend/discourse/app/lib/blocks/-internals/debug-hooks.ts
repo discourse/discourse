@@ -326,7 +326,7 @@ export function handleOptionalMissingBlock({
       },
       { outletName: hierarchy }
     );
-    return ghostData ? { ...ghostData, key } : null;
+    return ghostData ? { ...ghostData, key, isGhost: true } : null;
   }
 
   return null;
@@ -404,7 +404,7 @@ export function handleUnknownBlock({
     },
     { outletName: hierarchy }
   );
-  return ghostData ? { ...ghostData, key } : null;
+  return ghostData ? { ...ghostData, key, isGhost: true } : null;
 }
 
 /**
@@ -558,7 +558,9 @@ export function createGhostBlock({
     { outletName: hierarchy }
   );
 
-  return ghostData ? { ...ghostData, key } : null;
+  // A ghost's debug callback may report `isGhost: false` (it paints the ghost
+  // itself), but a parent container still needs to know the entry failed.
+  return ghostData ? { ...ghostData, key, isGhost: true } : null;
 }
 
 /**

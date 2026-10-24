@@ -42,6 +42,7 @@ import {
   captureCallSite,
   raiseBlockError,
 } from "discourse/lib/blocks/-internals/error";
+import { FAILURE_TYPE } from "discourse/lib/blocks/-internals/patterns";
 import {
   _registerLayoutBlockIfNeeded,
   isBlockRegistryFrozen,
@@ -671,9 +672,13 @@ const createChildBlock: CreateChildBlockFn = (entry, owner, debugContext) => {
         {
           name: blockMeta?.blockName,
           id,
+          // The stable key and a failure type let debug consumers paint the
+          // ghost and wire it back to its layout entry.
+          key: debugContext.key,
           args: argsSnapshot,
           containerArgs,
           conditions: debugContext.conditions,
+          failureType: FAILURE_TYPE.CONDITION_FAILED,
           failureReason: reason,
         },
         {

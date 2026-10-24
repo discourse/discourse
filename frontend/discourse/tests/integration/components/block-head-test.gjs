@@ -5,6 +5,10 @@ import { block } from "discourse/blocks";
 import BlockOutlet from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
 import BlockHead from "discourse/blocks/builtin/block-head";
+import {
+  DEBUG_CALLBACK,
+  debugHooks,
+} from "discourse/lib/blocks/-internals/debug-hooks";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   FAILURE_TYPE,
@@ -15,6 +19,12 @@ import { i18n } from "discourse-i18n";
 
 module("Integration | Blocks | BlockHead", function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.afterEach(function () {
+    debugHooks.setCallback(DEBUG_CALLBACK.EDIT_PRESENTATION, null);
+    debugHooks.setCallback(DEBUG_CALLBACK.GHOST_BLOCKS, null);
+    debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, null);
+  });
 
   test("renders only the first child when all children are visible", async function (assert) {
     @block("head-child-a")
@@ -447,5 +457,98 @@ module("Integration | Blocks | BlockHead", function (hooks) {
     assert
       .dom(".ghost-block")
       .doesNotExist("no ghost blocks rendered when overlay disabled");
+  });
+  test("while editing, a later match shows as a ghost", async function (assert) {
+    const GhostStandIn = <template>
+      <div class="ghost-stand-in">ghost</div>
+    </template>;
+    debugHooks.setCallback(DEBUG_CALLBACK.EDIT_PRESENTATION, () => true);
+    debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (data) => ({
+      ...data,
+      Component: data.Component ?? GhostStandIn,
+      isGhost: false,
+    }));
+
+    @block("edit-head-first")
+    class EditHeadFirst extends Component {
+      <template>
+        <div class="edit-head-first">First</div>
+      </template>
+    }
+
+    @block("edit-head-second")
+    class EditHeadSecond extends Component {
+      <template>
+        <div class="edit-head-second">Second</div>
+      </template>
+    }
+
+    withPluginApi((api) =>
+      api.renderBlocks("sidebar-blocks", [
+        {
+          block: BlockHead,
+          children: [{ block: EditHeadFirst }, { block: EditHeadSecond }],
+        },
+      ])
+    );
+
+    await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+    assert.dom(".edit-head-first").exists("the first match renders");
+    assert
+      .dom(".edit-head-second")
+      .doesNotExist("the later match is not rendered as itself");
+    assert.dom(".ghost-stand-in").exists("the later match shows as a ghost");
+  });
+  test("while editing, a match after a failed condition is not marked", async function (assert) {
+    // Like an editor: ghosts on, and a debug callback that paints ghosts itself
+    // while reporting them as not ghosts.
+    const GhostStandIn = <template>
+      <div class="ghost-stand-in">ghost</div>
+    </template>;
+    debugHooks.setCallback(DEBUG_CALLBACK.EDIT_PRESENTATION, () => true);
+    debugHooks.setCallback(DEBUG_CALLBACK.GHOST_BLOCKS, () => true);
+    debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (data) => ({
+      ...data,
+      Component: data.Component ?? GhostStandIn,
+      isGhost: false,
+    }));
+
+    @block("edit-head-scoped")
+    class EditHeadScoped extends Component {
+      <template>
+        <div class="edit-head-scoped">Scoped</div>
+      </template>
+    }
+
+    @block("edit-head-fallback")
+    class EditHeadFallback extends Component {
+      <template>
+        <div class="edit-head-fallback">Fallback</div>
+      </template>
+    }
+
+    withPluginApi((api) =>
+      api.renderBlocks("sidebar-blocks", [
+        {
+          block: BlockHead,
+          children: [
+            {
+              block: EditHeadScoped,
+              conditions: { type: "user", admin: true },
+            },
+            { block: EditHeadFallback },
+          ],
+        },
+      ])
+    );
+
+    await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+    assert.dom(".ghost-stand-in").exists("the failed child shows as a ghost");
+    assert.dom(".edit-head-fallback").exists("the fallback wins and renders");
+    assert
+      .dom(".ghost-stand-in")
+      .exists({ count: 1 }, "only the failed child is a ghost");
   });
 });

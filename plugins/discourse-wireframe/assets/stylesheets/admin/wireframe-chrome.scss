@@ -837,6 +837,25 @@ body.wireframe-active {
     display: contents;
   }
 
+  /* A Conditional (`head`) has no content of its own, so like the outlet
+     root it keeps its frame and label visible; otherwise it can only be
+     reached through its children. */
+
+  .wireframe-block-chrome[data-wf-block-name="head"] {
+    outline: var(--wireframe-container-border-width) dashed
+      var(--wireframe-block-color);
+
+    &:hover:not(:has(.wireframe-block-chrome:hover)),
+    &.--selected {
+      outline-style: solid;
+    }
+
+    > .wireframe-block-toolbar {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
   .wireframe-block-chrome.--outlet-root {
     outline: var(--wireframe-container-border-width) dashed
       var(--wireframe-block-outlet-color);

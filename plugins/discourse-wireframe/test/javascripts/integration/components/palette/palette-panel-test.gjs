@@ -39,7 +39,6 @@ module(
         "icon",
         "video",
         "embed",
-        "head",
       ];
       const palette = buildBlockPalette(blocks);
       this.owner.lookup("service:wireframe-publish-target").setActiveTheme(7);
@@ -78,6 +77,7 @@ module(
         "featured-badges",
         "category-banner",
         "tag-banner",
+        "head",
       ]) {
         assert.true(
           palette.some((entry) => entry.blockName === name),

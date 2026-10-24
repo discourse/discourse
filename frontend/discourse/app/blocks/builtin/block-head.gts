@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { block } from "discourse/blocks";
+import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
 import type { ChildBlockResult } from "discourse/lib/blocks/-internals/types";
 import type Blocks from "discourse/services/blocks";
 import { eq } from "discourse/truth-helpers";
@@ -62,7 +63,6 @@ interface HeadBlockSignature {
  * ```
  */
 @block("head", {
-  paletteHidden: true,
   container: true,
   displayName: "Conditional",
   icon: "code-branch",
@@ -72,6 +72,13 @@ interface HeadBlockSignature {
 })
 export default class HeadBlock extends Component<HeadBlockSignature> {
   @service declare blocks: Blocks;
+
+  /**
+   * Whether a child matches but loses to an earlier match. Compared by key:
+   * child results are rebuilt on every render.
+   */
+  isSkipped = (child: ChildBlockResult): boolean =>
+    !child.isGhost && child.key !== this.firstChild?.key;
 
   /**
    * Children that passed their conditions and could be rendered.
@@ -88,6 +95,14 @@ export default class HeadBlock extends Component<HeadBlockSignature> {
   }
 
   /**
+   * Whether an editing context wants every child shown for direct editing,
+   * not only the one that matches.
+   */
+  get isEditing(): boolean {
+    return debugHooks.isEditPresentation;
+  }
+
+  /**
    * Converts a passed-over sibling into a ghost with the given reason,
    * for the debug visual overlay.
    */
@@ -96,7 +111,29 @@ export default class HeadBlock extends Component<HeadBlockSignature> {
   }
 
   <template>
-    {{#if this.blocks.showGhosts}}
+    {{#if this.isEditing}}
+      {{! Editing: every child stays on the canvas in order, each in the same
+          wrapper. A child that matches after the first match shows as a ghost
+          explaining why it is skipped. }}
+      {{#each @children key="key" as |child|}}
+        <div class="d-block-head__child">
+          {{#if (this.isSkipped child)}}
+            {{#let
+              (this.ghostify
+                child (i18n "js.blocks.ghost_reasons.head_hidden_tail_hint")
+              )
+              as |ghostChild|
+            }}
+              {{#if ghostChild}}
+                <ghostChild.Component />
+              {{/if}}
+            {{/let}}
+          {{else}}
+            <child.Component />
+          {{/if}}
+        </div>
+      {{/each}}
+    {{else if this.blocks.showGhosts}}
       {{!
         When debug mode is enabled, render children in their original order:
         - Ghosts for children that failed conditions
