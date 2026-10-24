@@ -13,7 +13,7 @@ module PageObjects
       end
 
       def has_no_drafts?
-        page.has_css?(".post-list__empty-text")
+        page.has_css?(".empty-state")
       end
 
       def has_bulk_select_checkboxes?

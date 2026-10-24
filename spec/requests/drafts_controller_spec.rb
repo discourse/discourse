@@ -480,6 +480,15 @@ RSpec.describe DraftsController do
       expect(Draft.get(user, "xxx", 0)).to eq(nil)
     end
 
+    it "deletes the draft permanently when asked" do
+      sign_in(user)
+      Draft.set(user, "xxx", 0, { reply: "posted already" }.to_json)
+      delete "/drafts/xxx.json", params: { sequence: 0, permanent: true }
+
+      expect(response.status).to eq(200)
+      expect(Draft.where(user: user)).to be_empty
+    end
+
     it "denies attempts to destroy unowned draft" do
       sign_in(Fabricate(:admin))
       user = Fabricate(:user)

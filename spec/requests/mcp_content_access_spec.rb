@@ -470,7 +470,7 @@ describe "MCP content access" do
 
     expect(response.status).to eq(200)
     expect(response.parsed_body.dig("result", "structuredContent", "deleted")).to eq(true)
-    expect(Draft.find_by(user:, draft_key:)).to be_nil
+    expect(Draft.live.find_by(user:, draft_key:)).to be_nil
   end
 
   it "requires private-message write scope for soft-deleted private-message reply drafts" do

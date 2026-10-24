@@ -3,10 +3,10 @@ import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
 
 export default class Draft extends EmberObject {
-  static clear(key, sequence) {
+  static clear(key, sequence, { permanent = false } = {}) {
     return ajax(`/drafts/${key}.json`, {
       type: "DELETE",
-      data: { draft_key: key, sequence },
+      data: { draft_key: key, sequence, permanent },
     });
   }
 

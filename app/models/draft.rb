@@ -140,7 +140,7 @@ class Draft < ActiveRecord::Base
     data if current_sequence == draft_sequence
   end
 
-  def self.clear(user, key, sequence)
+  def self.clear(user, key, sequence, permanent: false)
     if !user || !user.id || !User.human_user_id?(user.id)
       raise StandardError.new("user not present")
     end
@@ -151,15 +151,16 @@ class Draft < ActiveRecord::Base
     raise Draft::OutOfSequence.new("bad draft sequence") if sequence != current_sequence
 
     # corrupt data is not a reason not to leave data
-    discard!(user.id, key)
+    discard!(user.id, key, permanent: permanent)
   end
 
-  # Discarded drafts are kept for `discarded_drafts_retention_days` so users can restore them.
-  def self.discard!(user_id, keys)
+  # Discarded drafts are kept for `discarded_drafts_retention_days` so users can restore them,
+  # unless the caller knows the content was posted and nothing is lost.
+  def self.discard!(user_id, keys, permanent: false)
     drafts = Draft.live.where(user_id: user_id, draft_key: keys).to_a
     return 0 if drafts.empty?
 
-    recoverable, disposable = drafts.partition(&:recoverable?)
+    recoverable, disposable = permanent ? [[], drafts] : drafts.partition(&:recoverable?)
 
     Draft.transaction do
       Draft.where(id: recoverable.map(&:id)).update_all(deleted_at: Time.zone.now)
