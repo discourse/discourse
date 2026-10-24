@@ -623,7 +623,7 @@ export default class PostStream extends RestModel {
 
     this.topic.setProperties({
       posts_count: (this.topic.posts_count || 0) + 1,
-      last_posted_at: new Date(),
+      last_posted_at: new Date().toISOString(),
       "details.last_poster": user,
       highest_post_number: (this.topic.highest_post_number || 0) + 1,
     });
