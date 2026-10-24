@@ -8,6 +8,12 @@ class PostRevision < ActiveRecord::Base
 
   serialize :modifications, type: Hash, coder: YAML
 
+  scope :without_form_data, -> { select(column_names - ["form_data_changes"]) }
+
+  def modifications_with_form_data
+    form_data_changes ? modifications.merge("form_data" => form_data_changes) : modifications
+  end
+
   after_create :create_notification
 
   def self.ensure_consistency!

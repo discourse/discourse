@@ -5,7 +5,7 @@ require "liquid"
 
 class FormTemplate::Submission
   FORMAT_VERSION = 1
-  MAX_BYTES = 1.megabyte
+  MAX_BYTES = 64.kilobytes
   KEYS = %w[format_version template_id definition answers].freeze
 
   def self.from_template(template, answers:, validate: true)

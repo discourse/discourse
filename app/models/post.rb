@@ -1136,7 +1136,7 @@ class Post < ActiveRecord::Base
   def revert_to(number)
     return if number >= version
     post_revision = PostRevision.find_by(post_id: id, number: (number + 1))
-    post_revision.modifications.each do |attribute, change|
+    post_revision.modifications_with_form_data.each do |attribute, change|
       attribute = "version" if attribute == "cached_version"
       self[attribute] = change[0]
     end
