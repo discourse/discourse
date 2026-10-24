@@ -145,19 +145,13 @@ RSpec.describe FormTemplate::RenderSubmission do
       end
     end
 
-    context "when the output template cannot be rendered" do
+    context "when the output exceeds the post length limit" do
       before do
-        form_template.update_column(
-          :output_template,
-          "{% for outer in answers.games %}{% for inner in answers.games %}x{% endfor %}{% endfor %}",
-        )
-        form_template.update_column(
-          :template,
-          [{ id: "games", type: "multi-select" }].as_json.to_yaml,
-        )
+        SiteSetting.max_post_length = 10
+        form_template.update!(output_template: "{{ answers.description }}")
       end
 
-      let(:answers) { { games: Array.new(200, "x") } }
+      let(:answers) { { description: "x" * 100 } }
 
       it { is_expected.to fail_with_exception(Liquid::Error) }
     end

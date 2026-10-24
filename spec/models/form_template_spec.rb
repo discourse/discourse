@@ -128,7 +128,7 @@ RSpec.describe FormTemplate, type: :model do
   end
 
   it "rejects output templates the renderer cannot parse" do
-    template = Fabricate.build(:form_template, output_template: "{% include 'secret' %}")
+    template = Fabricate.build(:form_template, output_template: "{% if answers.name %}")
 
     expect(template).not_to be_valid
     expect(template.errors[:output_template]).to be_present

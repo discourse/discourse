@@ -291,15 +291,18 @@ RSpec.describe FormTemplatesController do
       expect(response.parsed_body["raw"]).to eq("## Invitation\n")
     end
 
-    it "rejects stored unsafe output definitions during preview" do
-      render_template.update_column(
-        :output_template,
-        "{% assign indices = (1..answers.seats) %}{% for index in indices %}x{% endfor %}",
-      )
+    it "rejects output that exceeds the post length limit" do
+      SiteSetting.max_post_length = 10
+      render_template.update!(output_template: "{{ answers.description }}")
       post "/form-templates/render.json",
            params: {
              category_id: category.id,
-             form_template_data: { id: render_template.id, answers: { seats: "20000" } }.to_json,
+             form_template_data: {
+               id: render_template.id,
+               answers: {
+                 description: "x" * 100,
+               },
+             }.to_json,
            }
       expect(response.status).to eq(422)
       expect(response.parsed_body["errors"]).to include(
