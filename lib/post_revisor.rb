@@ -83,6 +83,7 @@ class PostRevisor
   end
 
   POST_TRACKED_FIELDS = %w[
+    form_data
     raw
     cooked
     edit_reason
@@ -366,6 +367,16 @@ class PostRevisor
     @should_bump_topic = false
 
     Post.transaction do
+      if @post.form_data || @fields.key?(:form_data)
+        locked_state =
+          Post.where(id: @post.id).lock("FOR UPDATE").pick(:raw, :form_data, :last_version_at)
+        # PostgreSQL stores timestamps at microsecond precision.
+        if locked_state != [@post.raw, @post.form_data, @post.last_version_at&.floor(6)]
+          @post.errors.add(:base, :edit_conflict, message: I18n.t("edit_conflict"))
+          @post_successfully_saved = false
+          raise ActiveRecord::Rollback
+        end
+      end
       if (expected_raw = @opts[:expected_raw])
         locked_raw = Post.where(id: @post.id).lock("FOR UPDATE").pick(:raw)
         if locked_raw != expected_raw
@@ -465,6 +476,13 @@ class PostRevisor
       unless cached_original_raw
         self.original_raw = @post.raw
         self.original_cooked = @post.cooked
+        if @post.form_data || @fields[:form_data]
+          Discourse.redis.setex(
+            original_form_data_key,
+            SiteSetting.editing_grace_period + 1,
+            @post.form_data.to_json,
+          )
+        end
       end
       revise
     end
@@ -506,6 +524,23 @@ class PostRevisor
 
   def original_cooked_key
     "original_cooked_#{(@last_version_at.to_f * 1000).to_i}#{@post.id}"
+  end
+
+  def original_form_data_key
+    "original_form_data_#{(@last_version_at.to_f * 1000).to_i}#{@post.id}"
+  end
+
+  def rewrite_cached_original
+    @last_version_at ||= @post.last_version_at
+    changes = {}
+    %i[raw cooked form_data].each do |field|
+      key = public_send("original_#{field}_key")
+      next unless (value = Discourse.redis.get(key))
+      value = JSON.parse(value) if field == :form_data
+      rewritten = yield(field, value)
+      changes[key] = field == :form_data ? rewritten.to_json : rewritten
+    end
+    changes.each { |key, value| Discourse.redis.set(key, value, xx: true, keepttl: true) }
   end
 
   def cached_original_raw
@@ -730,6 +765,17 @@ class PostRevisor
       if modifications["cooked"]
         modifications["cooked"][0] = cached_original_cooked || modifications["cooked"][0]
       end
+      if (@post.form_data || modifications.key?("form_data")) &&
+           (cached_form_data = Discourse.redis.get(original_form_data_key))
+        original_form_data = JSON.parse(cached_form_data)
+        if original_form_data != @post.form_data
+          modifications["form_data"] = [original_form_data, @post.form_data]
+          if cached_original_raw && cached_original_raw != @post.raw
+            modifications["raw"] ||= [cached_original_raw, @post.raw]
+            modifications["cooked"] ||= [cached_original_cooked, @post.cooked]
+          end
+        end
+      end
     end
 
     @post_revision =
@@ -737,6 +783,7 @@ class PostRevisor
         user_id: @post.last_editor_id,
         post_id: @post.id,
         number: @post.version,
+        form_data_changes: modifications.delete("form_data"),
         modifications:,
         hidden: @hidden_revision,
       )
@@ -753,22 +800,24 @@ class PostRevisor
     return unless revision = PostRevision.find_by(post_id: @post.id, number: @post.version)
     revision.user_id = @post.last_editor_id
     modifications = post_changes.merge(topic_diff)
+    revision_changes = revision.modifications_with_form_data
 
     modifications.each_key do |field|
-      if revision.modifications.has_key?(field)
-        old_value = revision.modifications[field][0]
+      if revision_changes.has_key?(field)
+        old_value = revision_changes[field][0]
         new_value = modifications[field][1]
-        if old_value.to_s != new_value.to_s
-          revision.modifications[field] = [old_value, new_value]
+        changed = field == "form_data" ? old_value != new_value : old_value.to_s != new_value.to_s
+        if changed
+          revision_changes[field] = [old_value, new_value]
         else
-          revision.modifications.delete(field)
+          revision_changes.delete(field)
         end
       else
-        revision.modifications[field] = modifications[field]
+        revision_changes[field] = modifications[field]
       end
     end
     # should probably do this before saving the post!
-    if revision.modifications.empty?
+    if revision_changes.empty?
       hidden = revision.hidden
       revision.destroy
       @post.last_editor_id =
@@ -777,6 +826,8 @@ class PostRevisor
       @post.public_version -= 1 unless hidden
       @post.save(validate: @validate_post)
     else
+      revision.form_data_changes = revision_changes.delete("form_data")
+      revision.modifications = revision_changes
       revision.save
     end
   end

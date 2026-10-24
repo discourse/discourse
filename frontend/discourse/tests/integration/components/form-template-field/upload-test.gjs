@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { click, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import FormUpload from "discourse/components/form-template-field/upload";
 import noop from "discourse/helpers/noop";
@@ -8,6 +8,54 @@ module(
   "Integration | Component | FormTemplateField | Upload",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    test("removes saved uploads individually and validates the empty field", async function (assert) {
+      const value =
+        "[first.pdf|attachment](https://example.com/first.pdf) (1 KB)\n[second.pdf|attachment](https://example.com/second.pdf) (2 KB)";
+      const attributes = { allow_multiple: true };
+      const validations = { required: true };
+      const changed = [];
+      const onChange = () =>
+        changed.push(find("input[name='test-upload']").value);
+      await render(
+        <template>
+          <FormUpload
+            @attributes={{attributes}}
+            @id="test-upload"
+            @onChange={{onChange}}
+            @validations={{validations}}
+            @value={{value}}
+          />
+        </template>
+      );
+      assert
+        .dom(".form-template-field__uploaded-files li")
+        .exists({ count: 2 }, "saved uploads have separate controls");
+      await click(".form-template-field__remove-upload");
+      assert
+        .dom("input[name='test-upload']")
+        .hasValue(
+          value.split("\n")[1],
+          "removing one preserves the other upload"
+        );
+      assert.true(
+        find("input[name='test-upload']").checkValidity(),
+        "one retained upload satisfies required validation"
+      );
+      await click(".form-template-field__remove-upload");
+      assert
+        .dom("input[name='test-upload']")
+        .hasValue("", "all uploads can be removed");
+      assert.false(
+        find("input[name='test-upload']").checkValidity(),
+        "required validation rejects an empty upload field"
+      );
+      assert.deepEqual(
+        changed,
+        [value.split("\n")[1], ""],
+        "each removal notifies the composer after updating the input"
+      );
+    });
 
     test("sets required attribute when validation is required", async function (assert) {
       const attributes = {};

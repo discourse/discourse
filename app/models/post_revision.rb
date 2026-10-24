@@ -8,6 +8,12 @@ class PostRevision < ActiveRecord::Base
 
   serialize :modifications, type: Hash, coder: YAML
 
+  scope :without_form_data, -> { select(column_names - ["form_data_changes"]) }
+
+  def modifications_with_form_data
+    form_data_changes ? modifications.merge("form_data" => form_data_changes) : modifications
+  end
+
   after_create :create_notification
 
   def self.ensure_consistency!
@@ -64,14 +70,15 @@ end
 #
 # Table name: post_revisions
 #
-#  id            :integer          not null, primary key
-#  hidden        :boolean          default(FALSE), not null
-#  modifications :text
-#  number        :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  post_id       :integer
-#  user_id       :integer
+#  id                :integer          not null, primary key
+#  form_data_changes :jsonb
+#  hidden            :boolean          default(FALSE), not null
+#  modifications     :text
+#  number            :integer
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  post_id           :integer
+#  user_id           :integer
 #
 # Indexes
 #

@@ -71,6 +71,7 @@ class Post < ActiveRecord::Base
   has_many :reviewables, as: :target, dependent: :destroy
 
   validates_with PostValidator, unless: :skip_validation
+  validates_with PostFormDataValidator
   MAX_EDIT_REASON_LENGTH = 1000
   validates :edit_reason, length: { maximum: MAX_EDIT_REASON_LENGTH }
 
@@ -1124,10 +1125,33 @@ class Post < ActiveRecord::Base
     replies.reject { |r| !secured_ids.include?(r[:id]) }
   end
 
+  def link_post_uploads(fragments: nil)
+    if form_data
+      answer_html =
+        form_submission
+          .answers
+          .values
+          .flatten
+          .grep(String)
+          .map { |text| PrettyText.cook(text, markdown_options) }
+          .join("\n")
+      fragments = Nokogiri::HTML5.fragment("#{fragments || cooked}\n#{answer_html}")
+    end
+    super(fragments:)
+  end
+
+  def form_submission
+    FormTemplate::Submission.new(form_data) if form_data
+  end
+
+  def form_state_token
+    form_submission&.state_token(raw: raw)
+  end
+
   def revert_to(number)
     return if number >= version
     post_revision = PostRevision.find_by(post_id: id, number: (number + 1))
-    post_revision.modifications.each do |attribute, change|
+    post_revision.modifications_with_form_data.each do |attribute, change|
       attribute = "version" if attribute == "cached_version"
       self[attribute] = change[0]
     end
@@ -1319,6 +1343,7 @@ end
 #  cooked                  :text             not null
 #  deleted_at              :datetime
 #  edit_reason             :string
+#  form_data               :jsonb
 #  hidden                  :boolean          default(FALSE), not null
 #  hidden_at               :datetime
 #  illegal_count           :integer          default(0), not null

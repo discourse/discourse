@@ -1909,7 +1909,8 @@ CREATE TABLE public.posts (
     image_upload_id bigint,
     qa_vote_count integer DEFAULT 0,
     outbound_message_id character varying,
-    locale character varying(20)
+    locale character varying(20),
+    form_data jsonb
 );
 
 
@@ -9413,7 +9414,8 @@ CREATE TABLE public.post_revisions (
     number integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    hidden boolean DEFAULT false NOT NULL
+    hidden boolean DEFAULT false NOT NULL,
+    form_data_changes jsonb
 );
 
 
@@ -26161,6 +26163,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261024203308'),
+('20261022212458'),
 ('20261022152814'),
 ('20261020161054'),
 ('20261020160221'),

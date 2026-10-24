@@ -4,6 +4,71 @@ RSpec.describe PostMover do
   fab!(:admin)
   fab!(:evil_trout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
 
+  describe "moving form submissions" do
+    fab!(:source_op, :post)
+    fab!(:destination_op) { Fabricate(:post, created_at: source_op.created_at - 1.minute) }
+    fab!(:reply) { Fabricate(:post, topic: source_op.topic) }
+    fab!(:form_template)
+    let(:submission) do
+      FormTemplate::Submission.from_template(
+        form_template,
+        answers: {
+          "name" => "A sufficiently long form answer",
+        },
+      )
+    end
+
+    it "rejects moves that demote the incoming form, including merging two forms" do
+      source_op.update!(raw: submission.render, form_data: submission.to_h)
+      [false, true].each do |destination_has_form|
+        if destination_has_form
+          destination_op.update!(raw: submission.render, form_data: submission.to_h)
+        end
+        before_posts = Post.order(:id).map(&:attributes)
+        before_topics = Topic.order(:id).map(&:attributes)
+
+        [false, true].each do |chronological_order|
+          expect do
+            described_class.new(source_op.topic, admin, [source_op.id]).to_topic(
+              destination_op.topic_id,
+              chronological_order:,
+            )
+          end.to raise_error(
+            Discourse::InvalidParameters,
+            I18n.t("move_posts.form_must_remain_first"),
+          )
+          expect(Post.order(:id).map(&:attributes)).to eq(before_posts)
+          expect(Topic.order(:id).map(&:attributes)).to eq(before_topics)
+        end
+      end
+
+      described_class.new(source_op.topic, admin, [reply.id]).to_topic(destination_op.topic_id)
+      expect(reply.reload.topic_id).to eq(destination_op.topic_id)
+      expect(destination_op.reload.post_number).to eq(1)
+      expect(destination_op.form_data).to eq(submission.to_h)
+    end
+
+    it "rejects chronological moves that displace an existing form" do
+      source_op.update!(created_at: destination_op.created_at - 1.minute)
+      destination_op.update!(raw: submission.render, form_data: submission.to_h)
+      before_posts = Post.order(:id).map(&:attributes)
+      before_topics = Topic.order(:id).map(&:attributes)
+
+      expect do
+        described_class.new(source_op.topic, admin, [source_op.id]).to_topic(
+          destination_op.topic_id,
+          chronological_order: true,
+        )
+      end.to raise_error(Discourse::InvalidParameters, I18n.t("move_posts.form_must_remain_first"))
+      expect(Post.order(:id).map(&:attributes)).to eq(before_posts)
+      expect(Topic.order(:id).map(&:attributes)).to eq(before_topics)
+
+      described_class.new(source_op.topic, admin, [source_op.id]).to_topic(destination_op.topic_id)
+      expect(destination_op.reload.post_number).to eq(1)
+      expect(destination_op.form_data).to eq(submission.to_h)
+    end
+  end
+
   describe "#to_topic" do
     fab!(:topic)
     fab!(:first_post) { Fabricate(:post, topic: topic) }
@@ -53,6 +118,36 @@ RSpec.describe PostMover do
     fab!(:topic)
     fab!(:first_post) { Fabricate(:post, topic: topic) }
     fab!(:reply) { Fabricate(:post, topic: topic) }
+
+    it "preserves a form snapshot when moves keep it as a first post" do
+      template =
+        Fabricate(
+          :form_template,
+          template: [{ id: "notes", type: "textarea" }].as_json.to_yaml,
+          output_template: "A sufficiently long fixed invitation.",
+        )
+      submission =
+        FormTemplate::Submission.from_template(
+          template,
+          answers: {
+            "notes" => "An unrendered answer",
+          },
+        )
+      first_post.update!(raw: submission.render, form_data: submission.to_h)
+
+      destination =
+        described_class.new(topic, admin, [first_post.id]).to_new_topic("A moved form invitation")
+
+      expect(destination.first_post.form_data).to eq(submission.to_h)
+      expect(destination.first_post.form_submission.answers).to eq(submission.answers)
+
+      later_post = Fabricate(:post, created_at: first_post.created_at + 1.minute)
+      described_class.new(destination, admin, [destination.first_post.id]).to_topic(
+        later_post.topic_id,
+        chronological_order: true,
+      )
+      expect(later_post.topic.reload.first_post.form_data).to eq(submission.to_h)
+    end
 
     it "emits topic_created once for the completed split" do
       mover = described_class.new(topic, admin, [reply.id])
