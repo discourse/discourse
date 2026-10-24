@@ -334,7 +334,21 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
+        run: |
+          mkdir -p tmp/capybara
+          ruby -rbenchmark -e 'value = 0; seconds = Benchmark.realtime { 50_000_000.times { value += 1 } }; puts "Ruby calibration: #{seconds} seconds, #{value} increments"'
+          cat /sys/fs/cgroup/cpu.stat
+          vmstat 2 > tmp/capybara/core-system-vmstat.log &
+          profile_sampler_pid=$!
+          finish_profile() {
+            profile_exit_status=$?
+            kill "$profile_sampler_pid" || true
+            wait "$profile_sampler_pid" || true
+            cat /sys/fs/cgroup/cpu.stat
+            exit "$profile_exit_status"
+          }
+          trap finish_profile EXIT
+          LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error SPEC_OPTS="${SPEC_OPTS:-} --require ./script/profile_system_tests.rb" bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
@@ -390,6 +404,8 @@ jobs:
             tmp/capybara/*.png
             tmp/capybara/*.zip
             tmp/capybara/*.webm
+            tmp/capybara/system-wall-profile-*.json
+            tmp/capybara/core-system-vmstat.log
 
       - name: Check for flaky tests report
         id: check-flaky-spec-report
