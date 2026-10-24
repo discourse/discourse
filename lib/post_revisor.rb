@@ -83,6 +83,7 @@ class PostRevisor
   end
 
   POST_TRACKED_FIELDS = %w[
+    form_data
     raw
     cooked
     edit_reason
@@ -366,6 +367,15 @@ class PostRevisor
     @should_bump_topic = false
 
     Post.transaction do
+      if @post.form_data || @fields.key?(:form_data)
+        locked_state =
+          Post.where(id: @post.id).lock("FOR UPDATE").pick(:raw, :form_data, :last_version_at)
+        if locked_state != [@post.raw, @post.form_data, @post.last_version_at]
+          @post.errors.add(:base, :edit_conflict, message: I18n.t("edit_conflict"))
+          @post_successfully_saved = false
+          raise ActiveRecord::Rollback
+        end
+      end
       if (expected_raw = @opts[:expected_raw])
         locked_raw = Post.where(id: @post.id).lock("FOR UPDATE").pick(:raw)
         if locked_raw != expected_raw
@@ -465,6 +475,13 @@ class PostRevisor
       unless cached_original_raw
         self.original_raw = @post.raw
         self.original_cooked = @post.cooked
+        if @post.form_data || @fields[:form_data]
+          Discourse.redis.setex(
+            original_form_data_key,
+            SiteSetting.editing_grace_period + 1,
+            @post.form_data.to_json,
+          )
+        end
       end
       revise
     end
@@ -506,6 +523,10 @@ class PostRevisor
 
   def original_cooked_key
     "original_cooked_#{(@last_version_at.to_f * 1000).to_i}#{@post.id}"
+  end
+
+  def original_form_data_key
+    "original_form_data_#{(@last_version_at.to_f * 1000).to_i}#{@post.id}"
   end
 
   def cached_original_raw
@@ -730,6 +751,17 @@ class PostRevisor
       if modifications["cooked"]
         modifications["cooked"][0] = cached_original_cooked || modifications["cooked"][0]
       end
+      if (@post.form_data || modifications.key?("form_data")) &&
+           (cached_form_data = Discourse.redis.get(original_form_data_key))
+        original_form_data = JSON.parse(cached_form_data)
+        if original_form_data != @post.form_data
+          modifications["form_data"] = [original_form_data, @post.form_data]
+          if cached_original_raw && cached_original_raw != @post.raw
+            modifications["raw"] ||= [cached_original_raw, @post.raw]
+            modifications["cooked"] ||= [cached_original_cooked, @post.cooked]
+          end
+        end
+      end
     end
 
     @post_revision =
@@ -758,7 +790,8 @@ class PostRevisor
       if revision.modifications.has_key?(field)
         old_value = revision.modifications[field][0]
         new_value = modifications[field][1]
-        if old_value.to_s != new_value.to_s
+        changed = field == "form_data" ? old_value != new_value : old_value.to_s != new_value.to_s
+        if changed
           revision.modifications[field] = [old_value, new_value]
         else
           revision.modifications.delete(field)

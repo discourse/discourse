@@ -267,6 +267,7 @@ class NewPostManager
   def enqueue(reason = nil, creator_opts: {})
     result = NewPostResult.new(:enqueued)
     payload = { raw: @args[:raw], tags: @args[:tags] }
+    payload[:form_data] = @args[:form_data] if @args[:form_data]
     %w[typing_duration_msecs composer_open_duration_msecs reply_to_post_number].each do |a|
       payload[a] = @args[a].to_i if @args[a]
     end

@@ -1020,6 +1020,7 @@ en:
       saving: "Saving…"
       saved: "Classification saved"
     review:
+      form_managed_notice: "This post was created using a form. Its content can be edited through the form after approval."
       show_more: "Show more"
       show_less: "Show less"
       back_to_queue: "Back to queue"

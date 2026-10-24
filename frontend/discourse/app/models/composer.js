@@ -10,6 +10,7 @@ import { Promise } from "rsvp";
 import { extractError, throwAjaxError } from "discourse/lib/ajax-error";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import deprecated from "discourse/lib/deprecated";
+import { deepEqual } from "discourse/lib/object";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
 import { serializeTags } from "discourse/lib/serialize-tags";
 import { prioritizeNameFallback } from "discourse/lib/settings";
@@ -80,6 +81,8 @@ const CLOSED = "closed",
     locale: "locale",
   },
   _update_serializer = {
+    form_template_data: "formTemplateData",
+    form_state_token: "formStateToken",
     raw: "reply",
     topic_id: "topic.id",
     original_text: "originalText",
@@ -95,6 +98,9 @@ const CLOSED = "closed",
     locale: "locale",
   },
   _draft_serializer = {
+    formTemplateDraft: "formTemplateDraft",
+    originalFormTemplateDraft: "originalFormTemplateDraft",
+    formStateToken: "formStateToken",
     reply: "reply",
     action: "action",
     title: "title",
@@ -427,8 +433,22 @@ export default class Composer extends RestModel {
     );
   }
 
-  @computed("reply", "originalText")
+  @computed(
+    "reply",
+    "originalText",
+    "formTemplateDraft",
+    "originalFormTemplateDraft",
+    "formSubmission",
+    "category"
+  )
   get replyDirty() {
+    if (
+      this.formTemplateDraft &&
+      (this.formSubmission ||
+        this.category?.form_template_ids?.includes(this.formTemplateDraft.id))
+    ) {
+      return !deepEqual(this.formTemplateDraft, this.originalFormTemplateDraft);
+    }
     return (this.reply || "").trim() !== (this.originalText || "").trim();
   }
 
@@ -881,7 +901,8 @@ export default class Composer extends RestModel {
     "reply",
     "titleLengthValid",
     "replyLength",
-    "minimumPostLength"
+    "minimumPostLength",
+    "formTemplateDraft"
   )
   get canSaveDraft() {
     if (this.action === Composer.ADD_TRANSLATION) {
@@ -894,6 +915,10 @@ export default class Composer extends RestModel {
 
     if (this.disableDrafts) {
       return false;
+    }
+
+    if (this.formTemplateDraft) {
+      return true;
     }
 
     // Title is only edited when editing topic OP or making a new topic.
@@ -1092,6 +1117,13 @@ export default class Composer extends RestModel {
 
   clearState() {
     this.setProperties({
+      formTemplateDraft: null,
+      hasSavedFormTemplateDraft: false,
+      originalFormTemplateDraft: null,
+      formTemplateData: null,
+      formSubmission: null,
+      formStateToken: null,
+      formTemplateId: null,
       originalText: null,
       originalTitle: null,
       originalTags: null,
@@ -1400,6 +1432,9 @@ export default class Composer extends RestModel {
       { forceSave: this.draftForceSave }
     )
       .then((result) => {
+        if (this.formTemplateDraft) {
+          this.set("hasSavedFormTemplateDraft", true);
+        }
         if ("draft_sequence" in result) {
           this.set("draftSequence", result.draft_sequence);
         }
@@ -1509,6 +1544,11 @@ export default class Composer extends RestModel {
     }
 
     this.setProperties({
+      formTemplateDraft: opts.formTemplateDraft,
+      hasSavedFormTemplateDraft: !!opts.formTemplateDraft,
+      originalFormTemplateDraft: opts.originalFormTemplateDraft,
+      formStateToken: opts.formStateToken,
+      formTemplateId: opts.formTemplateDraft?.id || opts.formTemplateId,
       draftKey: opts.draftKey,
       draftSequence: opts.draftSequence,
       composeState: opts.composerState || OPEN,
@@ -1646,6 +1686,23 @@ export default class Composer extends RestModel {
       this.set("reply", opts.quote);
       this.set("originalText", opts.quote);
     }
+
+    promise = promise.then(() => {
+      if (isEdit(opts.action) && this.post?.form_submission) {
+        const submission = this.post.form_submission;
+        const draft = {
+          id: submission.template_id,
+          answers: submission.answers,
+        };
+        this.setProperties({
+          formSubmission: submission,
+          formTemplateId: submission.template_id,
+          formStateToken: opts.formStateToken || submission.state_token,
+          formTemplateDraft: opts.formTemplateDraft || draft,
+          originalFormTemplateDraft: opts.originalFormTemplateDraft || draft,
+        });
+      }
+    });
 
     if (opts.title) {
       this.set("title", opts.title);
