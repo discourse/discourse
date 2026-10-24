@@ -27,6 +27,32 @@ RSpec.describe PostsController do
   end
 
   describe "#revert" do
+    it "restores an answer-only revision after a later rendered answer changes" do
+      sign_in(admin)
+      changed = submission.with_answers(submission.answers.merge("confirmed" => true))
+      PostRevisor.new(post).revise!(
+        post.user,
+        { raw: changed.render, form_data: changed.to_h },
+        force_new_version: true,
+      )
+      revision = post.revisions.last
+      later =
+        changed.with_answers(
+          changed.answers.merge("description" => "A later description for this invitation."),
+        )
+      PostRevisor.new(post).revise!(
+        post.user,
+        { raw: later.render, form_data: later.to_h },
+        force_new_version: true,
+      )
+
+      put "/posts/#{post.id}/revisions/#{revision.number}/revert.json"
+
+      expect(response.status).to eq(200)
+      expect(post.reload.raw).to eq(submission.render)
+      expect(post.form_data).to eq(submission.to_h)
+    end
+
     it "restores matching form state and raw, including answer-only revisions" do
       sign_in(admin)
       [

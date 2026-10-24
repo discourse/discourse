@@ -619,6 +619,7 @@ class PostsController < ApplicationController
     changes[:raw] = post_revision.modifications["raw"][0] if post_revision.modifications[
       "raw"
     ].present? && post_revision.modifications["raw"][0] != post.raw
+    changes[:raw] = FormTemplate::Submission.new(changes[:form_data]).render if changes[:form_data]
     if post_revision.modifications["reply_to_post_number"].present? &&
          post_revision.modifications["reply_to_post_number"][0] != post.reply_to_post_number
       changes[:reply_to_post_number] = post_revision.modifications["reply_to_post_number"][0]

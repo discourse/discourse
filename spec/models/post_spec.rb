@@ -1869,6 +1869,33 @@ RSpec.describe Post do
     expect(post.revisions.pluck(:number)).to eq([1, 2])
   end
 
+  it "retains uploads in omitted form answers until those answers are removed" do
+    upload = Fabricate(:upload)
+    template =
+      Fabricate(
+        :form_template,
+        template: [
+          { id: "note", type: "composer" },
+          { id: "attachment", type: "upload" },
+        ].as_json.to_yaml,
+        output_template: "An invitation with an omitted attachment.",
+      )
+    submission =
+      FormTemplate::Submission.from_template(
+        template,
+        answers: {
+          "note" => "```",
+          "attachment" => "![attachment](#{upload.short_url})",
+        },
+      )
+    post = create_post(raw: submission.render, form_data: submission.to_h)
+    expect(post.upload_references.pluck(:upload_id)).to eq([upload.id])
+
+    changed = submission.with_answers({})
+    PostRevisor.new(post).revise!(post.user, { raw: changed.render, form_data: changed.to_h })
+    expect(post.reload.upload_references).to be_empty
+  end
+
   describe "video_thumbnails" do
     fab!(:video_upload) { Fabricate(:upload, extension: "mp4") }
     fab!(:image_upload, :upload)
