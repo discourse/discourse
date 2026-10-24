@@ -71,32 +71,41 @@ export function register(user, router, appEvents, applicationServerKey) {
 
   return navigator.serviceWorker.ready.then(
     async (serviceWorkerRegistration) => {
+      const { pushManager } = serviceWorkerRegistration;
+      let subscription;
+
       try {
-        const { pushManager } = serviceWorkerRegistration;
-        let subscription = await pushManager.getSubscription();
+        subscription = await pushManager.getSubscription();
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e);
+        // the existing subscription may still deliver
+        return true;
+      }
 
-        if (subscription) {
-          sendSubscriptionToServer(subscription, false);
-        } else if (
-          keyValueStore.getItem(userSubscriptionKey(user)) === "subscribed"
-        ) {
-          // Browsers can drop a subscription while keeping the permission
-          subscription = await pushManager.subscribe(
-            pushSubscriptionOptions(applicationServerKey)
-          );
+      if (subscription) {
+        sendSubscriptionToServer(subscription, false);
+        return true;
+      }
 
-          // push was turned off while subscribing
-          if (
-            keyValueStore.getItem(userSubscriptionKey(user)) !== "subscribed"
-          ) {
-            await subscription.unsubscribe();
-            return true;
-          }
+      if (keyValueStore.getItem(userSubscriptionKey(user)) !== "subscribed") {
+        return true;
+      }
 
-          // the new endpoint delivers nothing until the server knows it
-          await sendSubscriptionToServer(subscription, false);
+      // Browsers can drop a subscription while keeping the permission
+      try {
+        subscription = await pushManager.subscribe(
+          pushSubscriptionOptions(applicationServerKey)
+        );
+
+        // push was turned off while subscribing
+        if (keyValueStore.getItem(userSubscriptionKey(user)) !== "subscribed") {
+          await subscription.unsubscribe();
+          return true;
         }
 
+        // the new endpoint delivers nothing until the server knows it
+        await sendSubscriptionToServer(subscription, false);
         return true;
       } catch (e) {
         // eslint-disable-next-line no-console

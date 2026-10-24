@@ -154,4 +154,19 @@ module("Unit | Lib | push-notifications | register", function (hooks) {
       "false"
     );
   });
+
+  test("does not fall back when the subscription cannot be read", async function (assert) {
+    keyValueStore.setItem(userSubscriptionKey(user), "subscribed");
+    this.pushManager.getSubscription = sinon
+      .stub()
+      .rejects(new Error("storage"));
+    sinon.stub(console, "error");
+
+    const registered = await register(user, router, appEvents, "1|2|3");
+    await settled();
+
+    assert.notStrictEqual(registered, false);
+    assert.true(this.pushManager.subscribe.notCalled);
+    assert.strictEqual(this.subscribeRequests.length, 0);
+  });
 });
