@@ -17,11 +17,13 @@ import RestModel, {
   type RestPayload,
 } from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
+import type Site from "discourse/models/site";
 import type UserDraft from "discourse/models/user-draft";
 
 /** Model instances by store type name. Plugins add theirs through module augmentation. */
 export interface ModelRegistry {
   category: Category;
+  site: Site;
   "user-draft": UserDraft;
 }
 
