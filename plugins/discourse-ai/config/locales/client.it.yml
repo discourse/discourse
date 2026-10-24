@@ -955,6 +955,15 @@ it:
             compact: "Compatto"
             expanded: "Espanso"
             expanded_description: "con riepiloghi IA"
+      ai_search:
+        related_topics: "Argomenti correlati"
+        related_replies:
+          one: "%{count} risposta"
+          other: "%{count} risposte"
+        tabs:
+          ask: "Chiedi all'IA"
+          topics: "Argomenti"
+          messages: "Messaggi"
       discobot_discoveries:
         main_title: "Chiedi all'IA"
         loading_convo: "Caricamento conversazione"

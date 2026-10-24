@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
@@ -8,7 +7,7 @@ import { i18n } from "discourse-i18n";
 export default class UppyBackupUploader extends Component {
   @service siteSettings;
 
-  uppyUpload = new UppyUpload(getOwner(this), {
+  uppyUpload = new UppyUpload(this, {
     id: "uppy-backup-uploader",
     type: "backup",
     uploadRootPath: "/admin/backups",
@@ -23,6 +22,9 @@ export default class UppyBackupUploader extends Component {
       this.siteSettings.enable_direct_s3_uploads,
 
     validateUploadedFilesOptions: { skipValidation: true },
+
+    // Leaving the tab must not abort a backup upload
+    finishUploadsOnDestroy: true,
 
     uploadDone: (responseData) => {
       this.args.done(responseData.file_name);

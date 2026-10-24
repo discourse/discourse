@@ -2017,7 +2017,9 @@ class UsersController < ApplicationController
     end
 
     reminder_notifications =
-      BookmarkQuery.new(user: current_user).unread_notifications(limit: USER_MENU_LIST_LIMIT)
+      BookmarkQuery.new(user: current_user, guardian:).unread_notifications(
+        limit: USER_MENU_LIST_LIMIT,
+      )
     if reminder_notifications.size < USER_MENU_LIST_LIMIT
       exclude_bookmark_ids =
         reminder_notifications.filter_map { |notification| notification.data_hash[:bookmark_id] }
@@ -2036,20 +2038,11 @@ class UsersController < ApplicationController
 
     if reminder_notifications.present?
       Notification.populate_acting_user(reminder_notifications)
-      serialized_notifications =
-        ActiveModel::ArraySerializer.new(
-          reminder_notifications,
-          each_serializer: NotificationSerializer,
-          scope: guardian,
-        )
+      serialized_notifications = serialize_data(reminder_notifications, NotificationSerializer)
     end
 
     if bookmark_list
-      bookmark_list.bookmark_serializer_opts = { link_to_first_unread_post: true }
-      serialized_bookmarks =
-        serialize_data(bookmark_list, UserBookmarkListSerializer, scope: guardian, root: false)[
-          :bookmarks
-        ]
+      serialized_bookmarks = serialize_data(bookmark_list.bookmarks, UserMenuBookmarkSerializer)
     end
 
     render json: {
@@ -2086,10 +2079,10 @@ class UsersController < ApplicationController
       exclude_topic_ids = unread_notifications.filter_map(&:topic_id).uniq
       limit = USER_MENU_LIST_LIMIT - unread_notifications.size
 
-      messages_list =
+      messages =
         TopicQuery
           .new(current_user, per_page: limit)
-          .list_private_messages_direct_and_groups(
+          .private_messages_direct_and_groups(
             current_user,
             groups_messages_notification_level: :watching,
           ) do |query|
@@ -2109,43 +2102,23 @@ class UsersController < ApplicationController
         Notification.filter_inaccessible_topic_notifications(guardian, read_notifications)
     end
 
+    notifications = unread_notifications + read_notifications.to_a
+    Notification.populate_acting_user(notifications) if notifications.present?
+
     if unread_notifications.present?
-      Notification.populate_acting_user(unread_notifications)
-      serialized_unread_notifications =
-        ActiveModel::ArraySerializer.new(
-          unread_notifications,
-          each_serializer: NotificationSerializer,
-          scope: guardian,
-        )
+      serialized_unread_notifications = serialize_data(unread_notifications, NotificationSerializer)
     end
 
-    if messages_list
-      serialized_messages =
-        serialize_data(messages_list, TopicListSerializer, scope: guardian, root: false)[:topics]
-      serialized_users =
-        if SiteSetting.show_user_menu_avatars || !SiteSetting.prioritize_username_in_ux
-          users = messages_list.topics.map { |t| t.posters.last.user }.flatten.compact.uniq(&:id)
-          serialize_data(users, BasicUserSerializer, scope: guardian, root: false)
-        else
-          []
-        end
-    end
+    serialized_messages = serialize_data(messages, UserMenuMessageSerializer) if messages
 
     if read_notifications.present?
-      Notification.populate_acting_user(read_notifications)
-      serialized_read_notifications =
-        ActiveModel::ArraySerializer.new(
-          read_notifications,
-          each_serializer: NotificationSerializer,
-          scope: guardian,
-        )
+      serialized_read_notifications = serialize_data(read_notifications, NotificationSerializer)
     end
 
     render json: {
              unread_notifications: serialized_unread_notifications || [],
              read_notifications: serialized_read_notifications || [],
              topics: serialized_messages || [],
-             users: serialized_users || [],
            }
   end
 

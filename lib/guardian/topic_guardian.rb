@@ -321,7 +321,7 @@ module TopicGuardian
 
     if topic&.first_post&.wiki &&
          @user.in_any_groups?(SiteSetting.edit_wiki_post_allowed_groups_map)
-      return can_create_post?(topic)
+      return can_edit_post?(topic.first_post)
     end
 
     false

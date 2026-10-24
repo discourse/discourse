@@ -6,6 +6,10 @@
 
 lt:
   js:
+    dsa_notice:
+      title: "Pranešti apie neteisėtą turinį"
+      email: "El. pašto adresas"
+      resend_email_code: "Išsiųsti kodą dar kartą"
     mcp_oauth_client_id_metadata_policy:
       disabled: "Registracija tik administratoriams"
       approved_domains: "CIMD iš patvirtintų domenų"

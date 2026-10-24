@@ -591,6 +591,24 @@ RSpec.describe PostGuardian do
 
       expect(guardian.can_edit?(post)).to be_truthy
     end
+
+    it "returns false for the author of a wiki post hidden during the cooldown" do
+      post.update!(user: user, wiki: true, hidden: true, hidden_at: Time.zone.now)
+
+      expect(user.guardian.can_edit_post?(post)).to eq(false)
+    end
+
+    it "returns true for the author of a wiki post unhidden during the cooldown" do
+      post.update!(user: user, wiki: true, hidden: false, hidden_at: Time.zone.now)
+
+      expect(user.guardian.can_edit_post?(post)).to eq(true)
+    end
+
+    it "returns true for other wiki editors of a wiki post hidden during the cooldown" do
+      post.update!(wiki: true, hidden: true, hidden_at: Time.zone.now)
+
+      expect(user.guardian.can_edit_post?(post)).to eq(true)
+    end
   end
 
   describe "#can_edit_hidden_post?" do

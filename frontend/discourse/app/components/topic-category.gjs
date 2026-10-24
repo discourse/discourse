@@ -26,7 +26,16 @@ export default class TopicCategory extends Component {
       <div class="topic-header-extra">
         {{#if this.siteSettings.tagging_enabled}}
           <div class="list-tags">
-            {{dDiscourseTags @topic mode="list" tags=@topic.tags}}
+            <PluginOutlet
+              @name="topic-category-tags-wrapper"
+              @outletArgs={{lazyHash
+                topic=@topic
+                category=@topic.category
+                tags=@topic.visibleListTags
+              }}
+            >
+              {{dDiscourseTags @topic mode="list" tags=@topic.tags}}
+            </PluginOutlet>
           </div>
         {{/if}}
         {{#if this.siteSettings.topic_featured_link_enabled}}

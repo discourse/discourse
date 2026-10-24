@@ -2,7 +2,7 @@ import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { tags as t } from "@lezer/highlight";
 
 // Classes rather than inline styles, so the palette lives in the stylesheet
-// and follows the colour scheme.
+// and follows the color scheme.
 const HIGHLIGHT_STYLE = HighlightStyle.define([
   { tag: [t.keyword, t.moduleKeyword], class: "cm-hl-keyword" },
   { tag: [t.controlKeyword, t.operatorKeyword], class: "cm-hl-control" },

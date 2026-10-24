@@ -25,7 +25,6 @@ import {
   applyValueTransformer,
 } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
-import { and, eq } from "discourse/truth-helpers";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
@@ -457,7 +456,15 @@ export default class Item extends Component {
                     />{{~! no whitespace ~}}
                   {{/unless}}
                   {{~! no whitespace ~}}
-                  {{dDiscourseTags @topic mode="list"}}
+                  <PluginOutlet
+                    @name="topic-list-tags-wrapper"
+                    @outletArgs={{lazyHash
+                      topic=@topic
+                      tags=@topic.visibleListTags
+                    }}
+                  >
+                    {{~dDiscourseTags @topic mode="list"~}}
+                  </PluginOutlet>
                 </span>
 
                 <div class="num activity last">

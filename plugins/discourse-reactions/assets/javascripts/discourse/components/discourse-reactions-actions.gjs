@@ -19,7 +19,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { deferAnonymousAction } from "discourse/lib/anonymous-action";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { emojiUrlFor } from "discourse/lib/text";
-import { eq, not } from "discourse/truth-helpers";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import { i18n } from "discourse-i18n";
 import CustomReaction from "../models/discourse-reactions-custom-reaction.js";

@@ -26,7 +26,7 @@ module("Unit | Utility | code-editor-languages", function (hooks) {
       assert.notStrictEqual(
         build(),
         undefined,
-        `${name} builds without arguments it cannot supply`
+        `${name} builds with no options`
       );
     }
   });

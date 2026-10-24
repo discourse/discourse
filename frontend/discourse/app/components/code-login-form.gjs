@@ -32,7 +32,6 @@ import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-hel
 import { emailValid } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 import User, { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import { not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DInputTip from "discourse/ui-kit/d-input-tip";
 import DOtp from "discourse/ui-kit/d-otp";

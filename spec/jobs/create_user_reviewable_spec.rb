@@ -24,18 +24,25 @@ RSpec.describe Jobs::CreateUserReviewable do
     expect(reviewable.reviewable_scores.size).to eq(1)
   end
 
-  it "shows staff the current email when a user returns to the review queue" do
+  it "re-queues a returning user with the current email and a new score" do
     SiteSetting.must_approve_users = true
     described_class.new.execute(user_id: user.id)
     reviewable = Reviewable.find_by(target: user)
-    reviewable.update!(status: Reviewable.statuses[:approved])
-
+    reviewable.transition_to(:rejected, Discourse.system_user)
     user.primary_email.update!(email: "replacement@example.com")
-    described_class.new.execute(user_id: user.id)
 
-    reviewable.reload
-    expect(reviewable).to be_pending
-    expect(reviewable.payload["email"]).to eq("replacement@example.com")
+    events =
+      DiscourseEvent.track_events(:reviewable_transitioned_to) do
+        described_class.new.execute(user_id: user.id)
+      end
+
+    expect(events.map { |event| event[:params].last.payload["email"] }).to eq(
+      ["replacement@example.com"],
+    )
+    expect(reviewable.reload).to be_pending
+    expect(reviewable.reviewable_scores.pending.map(&:reviewable_score_type)).to eq(
+      [ReviewableScore.types[:needs_approval]],
+    )
   end
 
   describe "reasons" do

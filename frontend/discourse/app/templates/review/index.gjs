@@ -1,7 +1,6 @@
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import ReviewIndex from "discourse/components/reviewable/index";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import DNavItem from "discourse/ui-kit/d-nav-item";

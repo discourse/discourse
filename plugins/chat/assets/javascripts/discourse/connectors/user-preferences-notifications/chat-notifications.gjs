@@ -14,7 +14,7 @@ import {
   HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import {
-  CHAT_SOUNDS,
+  chatSoundOptions,
   normalizeChatSoundName,
 } from "discourse/plugins/chat/discourse/services/chat-audio-manager";
 
@@ -44,10 +44,7 @@ export default class ChatNotifications extends Component {
   }
 
   get chatSounds() {
-    return Object.keys(CHAT_SOUNDS).map((value) => ({
-      name: i18n(`chat.sounds.${value}`),
-      value,
-    }));
+    return chatSoundOptions();
   }
 
   get headerIndicatorOptions() {

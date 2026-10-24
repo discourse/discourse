@@ -31,7 +31,7 @@ export default class FKControlCode extends FKBaseControl {
       @describedBy={{@field.describedBy}}
       @disabled={{@field.disabled}}
       @inputId={{@field.id}}
-      @invalid={{if @field.error true false}}
+      @invalid={{if @field.error true}}
       @language={{@lang}}
       @onChange={{this.handleInput}}
       @resizable={{true}}

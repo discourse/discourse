@@ -13,7 +13,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { serializedAction, splitWhere } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
-import { gt, has } from "discourse/truth-helpers";
+import { has } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";

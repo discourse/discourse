@@ -2,7 +2,6 @@
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import { removeValueFromArray } from "discourse/lib/array-tools";
@@ -22,7 +21,7 @@ export default class ChatComposerUploads extends Component {
 
   @autoTrackedArray uploads = null;
 
-  uppyUpload = new UppyUpload(getOwner(this), {
+  uppyUpload = new UppyUpload(this, {
     id: "chat-composer-uploader",
     type: "chat-composer",
     useMultipartUploadsIfAvailable: true,

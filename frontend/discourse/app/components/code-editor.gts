@@ -35,7 +35,7 @@ export interface CodeEditorSignature {
      * Configuration for the language, whose shape the language defines. Watched
      * by identity, so pass a stable reference rather than an inline hash.
      *
-     * EXPERIMENTAL: the built-in languages hand it to the underlying editor's
+     * @experimental The built-in languages hand it to the underlying editor's
      * language packages, so the accepted shape may change without warning.
      */
     languageOptions?: object;
@@ -43,7 +43,7 @@ export interface CodeEditorSignature {
      * Words to offer, or a source deciding what to offer at the cursor. Offered
      * beside whatever the language completes.
      *
-     * EXPERIMENTAL except as a list of plain strings: completion objects and
+     * @experimental Except as a list of plain strings: completion objects and
      * sources use the underlying editor's types, and may change without
      * warning.
      */
@@ -52,14 +52,14 @@ export interface CodeEditorSignature {
      * Receives the editor's modules and returns extensions to add on top of
      * the language.
      *
-     * EXPERIMENTAL: exposes the underlying editor library, and may change
+     * @experimental Exposes the underlying editor library, and may change
      * without warning.
      */
     extensions?: CodeEditorExtensionBuilder;
     /**
      * Called with the editor view once it exists.
      *
-     * EXPERIMENTAL: exposes the underlying editor library, and may change
+     * @experimental Exposes the underlying editor library, and may change
      * without warning.
      */
     onSetup?: (view: EditorView) => void;
@@ -103,15 +103,14 @@ type LoadedEditor = ComponentLike<{
   Args: {
     autofocus?: boolean;
     change?: (value: string) => void;
-    codeEditing?: boolean;
+    codeMode?: boolean;
     completions?: CodeEditorSignature["Args"]["completions"];
     describedBy?: string;
     extensions?: CodeEditorExtensionBuilder;
     focusIn?: () => void;
     focusOut?: () => void;
-    highlightActiveLine?: boolean;
     inputId?: string;
-    invalid?: unknown;
+    invalid?: boolean;
     language?: string;
     languageOptions?: object;
     lineNumbers?: boolean;
@@ -120,8 +119,8 @@ type LoadedEditor = ComponentLike<{
     onSetup?: (view: EditorView) => void;
     placeholder?: string | TrustedHTML;
     readOnly?: boolean;
-    save?: () => void;
-    submit?: () => void;
+    onSave?: () => void;
+    onSubmit?: () => void;
     value?: string;
   };
   Element: HTMLDivElement;
@@ -131,8 +130,8 @@ type LoadedEditor = ComponentLike<{
  * A code editor with syntax highlighting, loaded on demand.
  *
  * `@language` picks a named shortcut, `@completions` adds words or a source
- * next to whatever the language offers, and `@extensions` takes over with the
- * underlying editor. With none of them, this is a plain text editor.
+ * next to whatever the language offers, and `@extensions` adds raw editor
+ * extensions on top. With none of them, this is a plain text editor.
  */
 export default class CodeEditor extends Component<CodeEditorSignature> {
   @tracked Editor: LoadedEditor | null = null;
@@ -148,7 +147,9 @@ export default class CodeEditor extends Component<CodeEditorSignature> {
   }
 
   @action
-  async loadEditor() {
+  async setup(element: HTMLDivElement) {
+    this.#editorElement = element;
+
     const Editor = (await loadCodemirrorEditor()) as unknown as LoadedEditor;
 
     if (this.isDestroying) {
@@ -156,11 +157,6 @@ export default class CodeEditor extends Component<CodeEditorSignature> {
     }
 
     this.Editor = Editor;
-  }
-
-  @action
-  registerElement(element: HTMLDivElement) {
-    this.#editorElement = element;
   }
 
   @action
@@ -180,21 +176,19 @@ export default class CodeEditor extends Component<CodeEditorSignature> {
       class="code-editor"
       data-disabled={{if @disabled "true" "false"}}
       ...attributes
-      {{didInsert this.loadEditor}}
-      {{didInsert this.registerElement}}
+      {{didInsert this.setup}}
     >
       <DConditionalLoadingSpinner @condition={{this.isLoading}} @size="small">
         {{#if this.Editor}}
           <this.Editor
             @autofocus={{@autofocus}}
             @change={{@onChange}}
-            @codeEditing={{true}}
+            @codeMode={{true}}
             @completions={{@completions}}
             @describedBy={{@describedBy}}
             @extensions={{@extensions}}
             @focusIn={{@onFocusIn}}
             @focusOut={{@onFocusOut}}
-            @highlightActiveLine={{true}}
             @inputId={{@inputId}}
             @invalid={{@invalid}}
             @language={{@language}}
@@ -202,11 +196,11 @@ export default class CodeEditor extends Component<CodeEditorSignature> {
             @lineNumbers={{this.lineNumbers}}
             @lineWarnings={{@lineWarnings}}
             @lineWrapping={{@lineWrapping}}
+            @onSave={{@onSave}}
             @onSetup={{@onSetup}}
+            @onSubmit={{@onSubmit}}
             @placeholder={{@placeholder}}
             @readOnly={{@disabled}}
-            @save={{@onSave}}
-            @submit={{@onSubmit}}
             @value={{@value}}
           />
         {{/if}}

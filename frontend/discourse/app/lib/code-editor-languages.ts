@@ -3,20 +3,6 @@ import { waitForPromise } from "@ember/test-waiters";
 import type { Extension } from "@codemirror/state";
 
 /**
- * Named shortcuts for a code editor's language support.
- *
- * A shortcut resolves to editor extensions, so it can carry anything a
- * language needs (highlighting, indentation, its own completions) while
- * callers stay free to append more through the editor's `extensions` argument.
- *
- * The built-in set loads on demand; plugins add their own with
- * {@link registerCodeEditorLanguage}.
- *
- * EXPERIMENTAL: the parameters builders receive expose the underlying editor
- * library, and may change without warning.
- */
-
-/**
  * What every extension builder receives. Plugins cannot import the editor's
  * modules themselves, so they arrive here instead.
  *
@@ -79,6 +65,7 @@ const BUILT_IN: Record<string, CodeEditorLanguageLoader> = {
   json: () => import("discourse/static/codemirror/languages/json"),
   scss: () => import("discourse/static/codemirror/languages/scss"),
   sql: () => import("discourse/static/codemirror/languages/sql"),
+  text: () => import("discourse/static/codemirror/languages/text"),
   yaml: () => import("discourse/static/codemirror/languages/yaml"),
 };
 
@@ -97,11 +84,10 @@ export function registerCodeEditorLanguage(
   name: string,
   loader: CodeEditorLanguageLoader
 ) {
-  // Taking a name that already resolves is allowed — a plugin may have a
-  // better grammar for it — but it is worth saying so, since two plugins
-  // claiming one name would otherwise silently come down to load order.
+  // Overrides are allowed; warn so two plugins claiming a name don't silently
+  // depend on load order.
   if (registered.has(name) || BUILT_IN[name]) {
-    warn(`The code editor language "${name}" was already registered.`, {
+    warn(`The code editor language "${name}" already exists.`, {
       id: "discourse.code-editor-language-override",
     });
   }
@@ -129,10 +115,12 @@ export async function loadCodeEditorLanguage(
   return (await waitForPromise(loader())).default;
 }
 
+/** @internal */
 export function codeEditorLanguageNames(): string[] {
   return [...new Set([...Object.keys(BUILT_IN), ...registered.keys()])].sort();
 }
 
+/** @internal */
 export function clearRegisteredCodeEditorLanguages() {
   registered.clear();
 }
