@@ -338,6 +338,29 @@ class AiTool < ActiveRecord::Base
           script: "#{preamble}\n#{load_script("presets/stock_quote.js")}",
           summary: "Get real-time stock quotes using AlphaVantage API",
         },
+        {
+          preset_id: "fxmacrodata",
+          name: "Macro Indicators (FXMacroData)",
+          tool_name: "macro_indicator",
+          description:
+            "Get the latest releases of a macroeconomic indicator for a currency, plus its next release date",
+          parameters: [
+            {
+              name: "indicator",
+              type: "string",
+              required: true,
+              description: "The indicator slug (e.g., inflation, policy_rate, unemployment, gdp)",
+            },
+            {
+              name: "currency",
+              type: "string",
+              description: "The currency code (e.g., USD, EUR, JPY), defaults to USD",
+            },
+            { name: "limit", type: "number", description: "Number of releases to return, max 50" },
+          ],
+          script: "#{preamble}\n#{load_script("presets/fxmacrodata.js")}",
+          summary: "Get macroeconomic indicator releases using FXMacroData API",
+        },
       ] + image_generation_presets +
         [
           {
