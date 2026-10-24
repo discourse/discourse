@@ -1,4 +1,5 @@
 import { cached, tracked } from "@glimmer/tracking";
+import { tagFor, valueForTag } from "@glimmer/validator";
 import EmberObject, { computed, get, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { trackedArray } from "@ember/reactive/collections";
@@ -172,7 +173,10 @@ export default class Site extends RestModel {
   }
 
   @dependentKeyCompat
+  @cached
   get categoriesById() {
+    // Preserve classic invalidation before the cache replaces its dependency tag.
+    valueForTag(tagFor(this, "categoriesById"));
     return new Map(this.categories.map((c) => [c.id, c]));
   }
 
@@ -314,6 +318,58 @@ export default class Site extends RestModel {
       categories.push(newCategory);
       return newCategory;
     }
+  }
+
+  /**
+   * Merges a page in place, appending new records together and marking every id as loaded.
+   * @param {object[]} pojos
+   * @returns {Category[]} Records in page order.
+   */
+  updateCategories(pojos) {
+    const categories = this.categories;
+    const categoriesById = new Map(
+      categories.map((category) => [category.id, category])
+    );
+    const newCategories = [];
+    const loadedCategoryIds = this.loadedCategoryIds || new Set();
+
+    const records = pojos.map((pojo) => {
+      if (pojo instanceof Category) {
+        throw new Error(
+          "updateCategory should be passed a pojo, not a category model instance"
+        );
+      }
+
+      const categoryId = get(pojo, "id");
+      let category = categoriesById.get(categoryId);
+
+      if (pojo.permission === null) {
+        delete pojo.permission;
+      }
+
+      if (pojo.has_children == null) {
+        delete pojo.has_children;
+      }
+
+      if (category) {
+        category.setProperties(pojo);
+        category.setupCategoryTypes();
+      } else {
+        category = this.store.createRecord("category", pojo);
+        categoriesById.set(categoryId, category);
+        newCategories.push(category);
+      }
+
+      loadedCategoryIds.add(categoryId);
+      return category;
+    });
+
+    if (newCategories.length) {
+      categories.push(...newCategories);
+    }
+    this.set("loadedCategoryIds", loadedCategoryIds);
+
+    return records;
   }
 
   #transformTags(tags) {

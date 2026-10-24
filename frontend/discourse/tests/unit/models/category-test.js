@@ -1,3 +1,4 @@
+import EmberObject, { computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
@@ -630,5 +631,266 @@ module("Unit | Model | category", function (hooks) {
     });
 
     await category.save();
+  });
+});
+
+module("Unit | Model | category | site lookups", function (hooks) {
+  setupTest(hooks);
+
+  test("cached lookups resolve parents after several appends", function (assert) {
+    const site = Site.current();
+    const parent = site.updateCategory({ id: 8675301, slug: "parent" });
+    const child = site.updateCategory({
+      id: 8675302,
+      slug: "child",
+      parent_category_id: parent.id,
+    });
+    const sibling = site.updateCategory({
+      id: 8675303,
+      slug: "sibling",
+      parent_category_id: parent.id,
+    });
+
+    assert.deepEqual(
+      parent.subcategories,
+      [child, sibling],
+      "the collection includes both children"
+    );
+    assert.strictEqual(
+      Category.findById(parent.id),
+      parent,
+      "direct lookup finds the appended parent"
+    );
+    assert.strictEqual(
+      child.parentCategory,
+      parent,
+      "the first child resolves its parent"
+    );
+    assert.strictEqual(
+      sibling.parentCategory,
+      parent,
+      "the second child resolves its parent"
+    );
+  });
+
+  test("id map stays cached across record updates and invalidates classic consumers", function (assert) {
+    const store = this.owner.lookup("service:store");
+    const site = store.createRecord("site", {
+      categories: [{ id: 1, name: "One" }],
+    });
+    class Consumer extends EmberObject {
+      @computed("site.categoriesById.[]")
+      get category() {
+        return this.site.categoriesById.get(1);
+      }
+    }
+    const consumer = Consumer.create({ site });
+    const first = site.categoriesById;
+    const existing = consumer.category;
+
+    site.updateCategory({ id: 1, name: "Renamed" });
+
+    assert.strictEqual(
+      site.categoriesById,
+      first,
+      "field updates reuse the map"
+    );
+    assert.strictEqual(
+      first.get(1).name,
+      "Renamed",
+      "the map holds live records"
+    );
+
+    site.removeCategory(1);
+
+    const removed = site.categoriesById;
+    assert.notStrictEqual(removed, first, "removal invalidates the map");
+    assert.false(removed.has(1), "the removed category is absent");
+    assert.strictEqual(
+      consumer.category,
+      undefined,
+      "classic consumers see removal"
+    );
+    assert.strictEqual(
+      site.categoriesById,
+      removed,
+      "reads reuse the rebuilt map"
+    );
+
+    site.categories = [existing];
+
+    assert.notStrictEqual(
+      site.categoriesById,
+      removed,
+      "replacement invalidates the map"
+    );
+    assert.strictEqual(
+      consumer.category,
+      existing,
+      "classic consumers see replacement"
+    );
+    consumer.destroy();
+  });
+
+  test("bulk merge appends once and reuses duplicate ids in page order", function (assert) {
+    const site = this.owner.lookup("service:store").createRecord("site", {
+      categories: [{ id: 1, name: "One" }],
+    });
+    const existing = site.categories[0];
+    const loadedIds = new Set([99]);
+    site.set("loadedCategoryIds", loadedIds);
+    const push = sinon.spy(site.categories, "push");
+    const result = site.updateCategories([
+      { id: 2, name: "Two" },
+      { id: 1, name: "Renamed" },
+      { id: 3, name: "Three" },
+      { id: 2, name: "Two renamed" },
+    ]);
+
+    assert.deepEqual(
+      result.map((category) => category.id),
+      [2, 1, 3, 2],
+      "page order is preserved"
+    );
+    assert.strictEqual(result[1], existing, "existing records retain identity");
+    assert.strictEqual(
+      result[0],
+      result[3],
+      "duplicate ids reuse the new record"
+    );
+    assert.strictEqual(
+      result[0].name,
+      "Two renamed",
+      "later data wins for duplicate ids"
+    );
+    assert.deepEqual(
+      site.categories.map((category) => category.id),
+      [1, 2, 3],
+      "each new id is appended once"
+    );
+    assert.true(push.calledOnce, "the page uses a single append");
+    assert.deepEqual(
+      push.firstCall.args,
+      [result[0], result[2]],
+      "the append contains only new records"
+    );
+    assert.strictEqual(
+      site.loadedCategoryIds,
+      loadedIds,
+      "the existing loaded set is preserved"
+    );
+    assert.deepEqual(
+      [...loadedIds],
+      [99, 2, 1, 3],
+      "all merged ids are recorded without losing earlier ids"
+    );
+  });
+
+  test("bulk merge preserves omitted metadata and refreshes category types", function (assert) {
+    const site = this.owner.lookup("service:store").createRecord("site", {
+      categories: [
+        {
+          id: 123451,
+          name: "One",
+          permission: 1,
+          has_children: true,
+          category_types: { old: true },
+        },
+      ],
+    });
+    const pojos = [
+      {
+        id: 123451,
+        permission: null,
+        has_children: null,
+        category_types: { updated: true },
+      },
+      {
+        id: 123452,
+        name: "Two",
+        permission: null,
+        has_children: undefined,
+        category_types: { created: true },
+      },
+    ];
+
+    const [existing, created] = site.updateCategories(pojos);
+
+    assert.strictEqual(
+      existing.permission,
+      1,
+      "null permission preserves the existing value"
+    );
+    assert.true(
+      existing.has_children,
+      "null children metadata preserves the existing value"
+    );
+    assert.true(
+      existing.categoryTypes.updated,
+      "existing category types are refreshed"
+    );
+    assert.true(created instanceof Category, "new rows are category records");
+    assert.true(
+      created.categoryTypes.created,
+      "new category types are initialized"
+    );
+    for (const pojo of pojos) {
+      assert.false(
+        Object.hasOwn(pojo, "permission"),
+        "null permission is deleted from the input"
+      );
+      assert.false(
+        Object.hasOwn(pojo, "has_children"),
+        "missing children metadata is deleted from the input"
+      );
+    }
+
+    site.updateCategories([{ id: 123451, permission: 0, has_children: false }]);
+
+    assert.strictEqual(
+      existing.permission,
+      0,
+      "non-null falsy permission is applied"
+    );
+    assert.false(
+      existing.has_children,
+      "explicit false children metadata is applied"
+    );
+  });
+
+  test("bulk merge with no new records leaves the category collection intact", function (assert) {
+    const site = this.owner.lookup("service:store").createRecord("site", {
+      categories: [{ id: 1, name: "One" }],
+    });
+    const first = site.categoriesById;
+    const push = sinon.spy(site.categories, "push");
+
+    assert.deepEqual(
+      site.updateCategories([]),
+      [],
+      "an empty page returns no records"
+    );
+    assert.true(
+      site.loadedCategoryIds instanceof Set,
+      "an empty first page initializes loaded ids"
+    );
+    const [record] = site.updateCategories([{ id: 1, name: "Renamed" }]);
+
+    assert.strictEqual(
+      record,
+      first.get(1),
+      "existing-only pages retain identity"
+    );
+    assert.false(push.called, "empty and existing-only pages do not append");
+    assert.strictEqual(
+      site.categoriesById,
+      first,
+      "existing-only pages reuse the id map"
+    );
+    assert.deepEqual(
+      [...site.loadedCategoryIds],
+      [1],
+      "existing ids are also recorded as loaded"
+    );
   });
 });

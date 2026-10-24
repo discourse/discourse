@@ -483,6 +483,12 @@ class CategoriesController < ApplicationController
       else
         false
       end
+    only_postable =
+      if params[:only_postable].present?
+        ActiveModel::Type::Boolean.new.cast(params[:only_postable])
+      else
+        false
+      end
     prioritized_category_id = params[:prioritized_category_id].to_i if params[
       :prioritized_category_id
     ].present?
@@ -531,6 +537,8 @@ class CategoriesController < ApplicationController
     categories = categories.where.not(id: reject_category_ids) if reject_category_ids
 
     categories = categories.where(parent_category_id: nil) if !include_subcategories
+
+    categories = categories.topic_create_allowed(guardian) if only_postable
 
     categories_count = categories.count
 
