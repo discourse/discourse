@@ -62,6 +62,18 @@ RSpec.describe DiscardedDraftsController do
       expect(draft.reload.deleted_at).to be_present
     end
 
+    it "enforces the draft limit" do
+      SiteSetting.max_drafts_per_user = 1
+      draft = discarded_draft(user)
+      Draft.set(user, "new_topic_2", 0, content)
+      sign_in(user)
+
+      put "/discarded_drafts/#{draft.id}/restore.json"
+
+      expect(response.status).to eq(403)
+      expect(draft.reload.deleted_at).to be_present
+    end
+
     it "does not restore another user's draft" do
       draft = discarded_draft(other_user)
       sign_in(user)

@@ -446,6 +446,28 @@ RSpec.describe Draft do
         expect(Draft.discarded.pluck(:draft_key)).to contain_exactly(key)
         expect(UploadReference.where(target_type: "Draft", upload_id: upload.id)).not_to exist
       end
+
+      it "keeps the upload references of a draft restored while it is being purged" do
+        SiteSetting.discarded_drafts_retention_days = 3
+        upload = Fabricate(:upload)
+        Draft.set(user, key, 0, { reply: "![image](#{upload.short_url})" }.to_json)
+        freeze_time(4.days.ago) { discard(user, key) }
+        draft = Draft.discarded.find_by(user: user)
+
+        restored = false
+        allow(DB).to receive(:query_single).and_wrap_original do |original, *args|
+          if !restored && args.first.include?("DELETE FROM drafts")
+            restored = true
+            draft.restore!
+          end
+          original.call(*args)
+        end
+
+        Draft.purge_discarded!
+
+        expect(Draft.live.where(id: draft.id)).to exist
+        expect(UploadReference.where(target_type: "Draft", target_id: draft.id)).to exist
+      end
     end
   end
 

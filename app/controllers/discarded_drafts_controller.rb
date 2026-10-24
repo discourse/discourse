@@ -32,6 +32,10 @@ class DiscardedDraftsController < ApplicationController
   def restore
     draft = find_discarded_draft
 
+    if Draft.live.where(user_id: current_user.id).count >= SiteSetting.max_drafts_per_user
+      return render_json_error I18n.t("draft.too_many_drafts.title"), status: 403
+    end
+
     begin
       draft.restore!
     rescue Draft::RestoreConflict

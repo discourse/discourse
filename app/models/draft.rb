@@ -177,8 +177,11 @@ class Draft < ActiveRecord::Base
       .discarded
       .where("deleted_at <= ?", cutoff)
       .in_batches(of: 1000) do |batch|
-        UploadReference.where(target_type: "Draft", target_id: batch.select(:id)).delete_all
-        batch.delete_all
+        # rows go first so a draft restored mid-purge keeps its upload references
+        purged_ids = DB.query_single(<<~SQL, ids: batch.ids)
+          DELETE FROM drafts WHERE id IN (:ids) AND deleted_at IS NOT NULL RETURNING id
+        SQL
+        UploadReference.where(target_type: "Draft", target_id: purged_ids).delete_all
       end
   end
 
