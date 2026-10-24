@@ -9855,7 +9855,7 @@ en:
         new_template_form:
           output:
             label: "Output template"
-            description: "Optional Markdown with Liquid expressions referencing answers by field ID. Leave blank to use the default headings and answers."
+            description: "Optional Markdown for the post. Insert an answer with its field ID, for example %{example}; Liquid tags and filters are supported. Leave blank to use the default headings and answers."
           submit: "Save"
           cancel: "Cancel"
           name:

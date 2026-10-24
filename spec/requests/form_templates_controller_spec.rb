@@ -305,9 +305,7 @@ RSpec.describe FormTemplatesController do
              }.to_json,
            }
       expect(response.status).to eq(422)
-      expect(response.parsed_body["errors"]).to include(
-        I18n.t("form_templates.errors.invalid_output_template"),
-      )
+      expect(response.parsed_body["errors"]).to include(I18n.t("form_templates.output_unavailable"))
     end
 
     it "rejects templates that do not belong to the selected category" do

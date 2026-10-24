@@ -14,6 +14,8 @@ import DButton from "discourse/ui-kit/d-button";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
+const OUTPUT_ANSWER_EXAMPLE = "{{ answers.name }}";
+
 export default class FormTemplateForm extends Component {
   @service router;
   @service dialog;
@@ -64,6 +66,14 @@ export default class FormTemplateForm extends Component {
     },
   ];
   #outputForm = null;
+
+  get outputAnswerExample() {
+    return OUTPUT_ANSWER_EXAMPLE;
+  }
+
+  get outputPlaceholder() {
+    return `## ${OUTPUT_ANSWER_EXAMPLE}`;
+  }
 
   get disablePreviewButton() {
     return Boolean(!this.templateName.length || !this.templateContent.length);
@@ -222,13 +232,14 @@ export default class FormTemplateForm extends Component {
         <form.Field
           @description={{i18n
             "admin.form_templates.new_template_form.output.description"
+            example=this.outputAnswerExample
           }}
           @name="outputTemplate"
           @title={{i18n "admin.form_templates.new_template_form.output.label"}}
           @type="textarea"
           as |field|
         >
-          <field.Control />
+          <field.Control placeholder={{this.outputPlaceholder}} />
         </form.Field>
       </Form>
 

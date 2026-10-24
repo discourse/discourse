@@ -23,7 +23,7 @@ module FormTemplateSubmissions
       end
       on_exceptions(Liquid::Error) do
         render_json_error(
-          I18n.t("form_templates.errors.invalid_output_template"),
+          I18n.t("form_templates.output_unavailable"),
           status: :unprocessable_entity,
         )
       end
